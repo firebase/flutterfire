@@ -5,6 +5,8 @@
 
 // ignore_for_file: public_member_api_docs
 
+// TODO(Lyokone): should be deleted once all plugins are migrated to use js_interop
+
 import 'dart:async';
 
 import 'package:js/js.dart';

@@ -8,11 +8,13 @@
 @JS('firebase_core')
 library firebase_interop.core;
 
+import 'dart:js_interop';
+
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
-import 'package:js/js.dart';
 
 @JS()
-external List<AppJsImpl> getApps();
+// List<AppJsImpl>
+external JSArray getApps();
 
 /// The current SDK version.
 ///
@@ -27,7 +29,7 @@ external AppJsImpl initializeApp(FirebaseOptions options, [String? name]);
 external AppJsImpl getApp([String? name]);
 
 @JS()
-external PromiseJsImpl<void> deleteApp(AppJsImpl app);
+external JSPromise deleteApp(AppJsImpl app);
 
 /// FirebaseError is a subclass of the standard Error object.
 /// In addition to a message string, it contains a string-valued code.
@@ -35,19 +37,23 @@ external PromiseJsImpl<void> deleteApp(AppJsImpl app);
 /// See: <https://firebase.google.com/docs/reference/js/firebase.FirebaseError>.
 @JS()
 @anonymous
-abstract class FirebaseError {
+@staticInterop
+abstract class FirebaseError {}
+
+extension FirebaseErrorExtension on FirebaseError {
   external String get code;
   external String get message;
   external String get name;
   external String get stack;
 
   /// Not part of the core JS API, but occasionally exposed in error objects.
-  external Object get serverResponse;
+  external JSAny get serverResponse;
 }
 
 /// A structure for options provided to Firebase.
 @JS()
 @anonymous
+@staticInterop
 class FirebaseOptions {
   external factory FirebaseOptions({
     String? apiKey,
@@ -59,7 +65,9 @@ class FirebaseOptions {
     String? measurementId,
     String? appId,
   });
+}
 
+extension FirebaseOptionsExtension on FirebaseOptions {
   external String get apiKey;
   external set apiKey(String s);
   external String get authDomain;

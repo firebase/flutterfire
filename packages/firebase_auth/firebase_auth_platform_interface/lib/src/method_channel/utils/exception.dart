@@ -80,9 +80,15 @@ FirebaseException platformExceptionToFirebaseAuthException(
       }
     }
 
+    var parsedMessage = platformException.message?.split(': ').last;
+    if (parsedMessage?.endsWith(' ]') ?? false) {
+      // Fixes JSON response from Auth blocking function: https://github.com/firebase/flutterfire/issues/11532
+      parsedMessage = parsedMessage!.substring(0, parsedMessage.length - 2);
+    }
+
     return FirebaseAuthException(
       code: code,
-      message: platformException.message?.split(': ').last,
+      message: parsedMessage,
       credential: credential,
       email: email,
     );
