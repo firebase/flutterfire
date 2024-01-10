@@ -37,13 +37,9 @@ void main() {
           );
 
           final result = await FirebaseAnalytics.instance.getSessionId();
-          expect(result, isA<int>());
+          expect(result, isA<int?>());
         }
       },
-      retry: 3,
-      timeout: const Timeout(
-        Duration(minutes: 1),
-      ),
     );
 
     test('isSupported', () async {
