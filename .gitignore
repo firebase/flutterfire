@@ -40,6 +40,9 @@ GeneratedPluginRegistrant.m
 GeneratedPluginRegistrant.java
 GeneratedPluginRegistrant.swift
 generated_plugin_registrant.dart
+generated_plugin_registrant.h
+generated_plugin_registrant.cc
+generated_plugins.cmake
 
 build/
 .flutter-plugins

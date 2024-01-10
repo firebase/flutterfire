@@ -184,7 +184,8 @@ class FirebaseStorage extends FirebasePluginPlatform {
   ///
   /// Note: Must be called immediately, prior to accessing storage methods.
   /// Do not use with production credentials as emulator traffic is not encrypted.
-  Future<void> useStorageEmulator(String host, int port) async {
+  Future<void> useStorageEmulator(String host, int port,
+      {bool automaticHostMapping = true}) async {
     assert(host.isNotEmpty);
     assert(!port.isNegative);
 
@@ -192,7 +193,8 @@ class FirebaseStorage extends FirebasePluginPlatform {
 
     // Android considers localhost as 10.0.2.2 - automatically handle this for users.
     if (defaultTargetPlatform == TargetPlatform.android && !kIsWeb) {
-      if (mappedHost == 'localhost' || mappedHost == '127.0.0.1') {
+      if ((mappedHost == 'localhost' || mappedHost == '127.0.0.1') &&
+          automaticHostMapping) {
         // ignore: avoid_print
         print('Mapping Storage Emulator host "$mappedHost" to "10.0.2.2".');
         mappedHost = '10.0.2.2';

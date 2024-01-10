@@ -79,7 +79,9 @@ external PromiseJsImpl<List> fetchSignInMethodsForEmail(
 external bool isSignInWithEmailLink(String emailLink);
 
 @JS()
-external PromiseJsImpl<UserCredentialJsImpl> getRedirectResult(AuthJsImpl auth);
+external PromiseJsImpl<UserCredentialJsImpl?> getRedirectResult(
+  AuthJsImpl auth,
+);
 
 @JS()
 external PromiseJsImpl<void> sendSignInLinkToEmail(

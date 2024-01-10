@@ -192,6 +192,41 @@ abstract class Query<T extends Object?> {
   });
 
   AggregateQuery count();
+
+  /// Calculates the specified aggregations over the documents in the
+  /// result set of the given query, without actually downloading the documents.
+  AggregateQuery aggregate(
+    AggregateField aggregateField1, [
+    AggregateField? aggregateField2,
+    AggregateField? aggregateField3,
+    AggregateField? aggregateField4,
+    AggregateField? aggregateField5,
+    AggregateField? aggregateField6,
+    AggregateField? aggregateField7,
+    AggregateField? aggregateField8,
+    AggregateField? aggregateField9,
+    AggregateField? aggregateField10,
+    AggregateField? aggregateField11,
+    AggregateField? aggregateField12,
+    AggregateField? aggregateField13,
+    AggregateField? aggregateField14,
+    AggregateField? aggregateField15,
+    AggregateField? aggregateField16,
+    AggregateField? aggregateField17,
+    AggregateField? aggregateField18,
+    AggregateField? aggregateField19,
+    AggregateField? aggregateField20,
+    AggregateField? aggregateField21,
+    AggregateField? aggregateField22,
+    AggregateField? aggregateField23,
+    AggregateField? aggregateField24,
+    AggregateField? aggregateField25,
+    AggregateField? aggregateField26,
+    AggregateField? aggregateField27,
+    AggregateField? aggregateField28,
+    AggregateField? aggregateField29,
+    AggregateField? aggregateField30,
+  ]);
 }
 
 /// Represents a [Query] over the data at a particular location.
@@ -852,6 +887,78 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   AggregateQuery count() {
     return AggregateQuery._(_delegate.count(), this);
   }
+
+  /// Calculates the specified aggregations over the documents in the
+  /// result set of the given query, without actually downloading the documents.
+  @override
+  AggregateQuery aggregate(
+    AggregateField aggregateField1, [
+    AggregateField? aggregateField2,
+    AggregateField? aggregateField3,
+    AggregateField? aggregateField4,
+    AggregateField? aggregateField5,
+    AggregateField? aggregateField6,
+    AggregateField? aggregateField7,
+    AggregateField? aggregateField8,
+    AggregateField? aggregateField9,
+    AggregateField? aggregateField10,
+    AggregateField? aggregateField11,
+    AggregateField? aggregateField12,
+    AggregateField? aggregateField13,
+    AggregateField? aggregateField14,
+    AggregateField? aggregateField15,
+    AggregateField? aggregateField16,
+    AggregateField? aggregateField17,
+    AggregateField? aggregateField18,
+    AggregateField? aggregateField19,
+    AggregateField? aggregateField20,
+    AggregateField? aggregateField21,
+    AggregateField? aggregateField22,
+    AggregateField? aggregateField23,
+    AggregateField? aggregateField24,
+    AggregateField? aggregateField25,
+    AggregateField? aggregateField26,
+    AggregateField? aggregateField27,
+    AggregateField? aggregateField28,
+    AggregateField? aggregateField29,
+    AggregateField? aggregateField30,
+  ]) {
+    return AggregateQuery._(
+      _delegate.aggregate(
+        aggregateField1,
+        aggregateField2,
+        aggregateField3,
+        aggregateField4,
+        aggregateField5,
+        aggregateField6,
+        aggregateField7,
+        aggregateField8,
+        aggregateField9,
+        aggregateField10,
+        aggregateField11,
+        aggregateField12,
+        aggregateField13,
+        aggregateField14,
+        aggregateField15,
+        aggregateField16,
+        aggregateField17,
+        aggregateField18,
+        aggregateField19,
+        aggregateField20,
+        aggregateField21,
+        aggregateField22,
+        aggregateField23,
+        aggregateField24,
+        aggregateField25,
+        aggregateField26,
+        aggregateField27,
+        aggregateField28,
+        aggregateField29,
+        aggregateField30,
+      ),
+      this,
+    );
+  }
 }
 
 class _WithConverterQuery<T extends Object?> implements Query<T> {
@@ -1020,5 +1127,74 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
   @override
   AggregateQuery count() {
     return _originalQuery.count();
+  }
+
+  /// Calculates the specified aggregations over the documents in the
+  /// result set of the given query, without actually downloading the documents.
+  @override
+  AggregateQuery aggregate(
+    AggregateField aggregateField1, [
+    AggregateField? aggregateField2,
+    AggregateField? aggregateField3,
+    AggregateField? aggregateField4,
+    AggregateField? aggregateField5,
+    AggregateField? aggregateField6,
+    AggregateField? aggregateField7,
+    AggregateField? aggregateField8,
+    AggregateField? aggregateField9,
+    AggregateField? aggregateField10,
+    AggregateField? aggregateField11,
+    AggregateField? aggregateField12,
+    AggregateField? aggregateField13,
+    AggregateField? aggregateField14,
+    AggregateField? aggregateField15,
+    AggregateField? aggregateField16,
+    AggregateField? aggregateField17,
+    AggregateField? aggregateField18,
+    AggregateField? aggregateField19,
+    AggregateField? aggregateField20,
+    AggregateField? aggregateField21,
+    AggregateField? aggregateField22,
+    AggregateField? aggregateField23,
+    AggregateField? aggregateField24,
+    AggregateField? aggregateField25,
+    AggregateField? aggregateField26,
+    AggregateField? aggregateField27,
+    AggregateField? aggregateField28,
+    AggregateField? aggregateField29,
+    AggregateField? aggregateField30,
+  ]) {
+    return _originalQuery.aggregate(
+      aggregateField1,
+      aggregateField2,
+      aggregateField3,
+      aggregateField4,
+      aggregateField5,
+      aggregateField6,
+      aggregateField7,
+      aggregateField8,
+      aggregateField9,
+      aggregateField10,
+      aggregateField11,
+      aggregateField12,
+      aggregateField13,
+      aggregateField14,
+      aggregateField15,
+      aggregateField16,
+      aggregateField17,
+      aggregateField18,
+      aggregateField19,
+      aggregateField20,
+      aggregateField21,
+      aggregateField22,
+      aggregateField23,
+      aggregateField24,
+      aggregateField25,
+      aggregateField26,
+      aggregateField27,
+      aggregateField28,
+      aggregateField29,
+      aggregateField30,
+    );
   }
 }

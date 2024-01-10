@@ -2,12 +2,19 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:collection/collection.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 /// [AggregateQuerySnapshotPlatform] represents a response to an [AggregateQueryPlatform] request.
 class AggregateQuerySnapshotPlatform extends PlatformInterface {
-  AggregateQuerySnapshotPlatform({required int count})
-      : _count = count,
+  AggregateQuerySnapshotPlatform({
+    required int? count,
+    required List<AggregateQueryResponse> sum,
+    required List<AggregateQueryResponse> average,
+  })  : _count = count,
+        _sum = sum,
+        _average = average,
         super(token: _token);
 
   static final Object _token = Object();
@@ -22,8 +29,26 @@ class AggregateQuerySnapshotPlatform extends PlatformInterface {
     PlatformInterface.verifyToken(instance, _token);
   }
 
-  final int _count;
+  final int? _count;
+
+  final List<AggregateQueryResponse> _average;
+
+  final List<AggregateQueryResponse> _sum;
 
   /// Returns the count of the documents that match the query.
-  int get count => _count;
+  int? get count => _count;
+
+  /// Returns the average of the documents that match the query.
+  /// The key is the field name and the value is the average.
+  double? getAverage(String field) {
+    return _average
+        .firstWhereOrNull((element) => element.field == field)
+        ?.value;
+  }
+
+  /// Returns the sum of the documents that match the query.
+  /// The key is the field name and the value is the sum.
+  double? getSum(String field) {
+    return _sum.firstWhereOrNull((element) => element.field == field)?.value;
+  }
 }

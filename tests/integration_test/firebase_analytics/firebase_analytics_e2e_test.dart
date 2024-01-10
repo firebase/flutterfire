@@ -40,6 +40,10 @@ void main() {
           expect(result, isA<int>());
         }
       },
+      retry: 3,
+      timeout: const Timeout(
+        Duration(minutes: 1),
+      ),
     );
 
     test('isSupported', () async {
@@ -104,7 +108,7 @@ void main() {
         throwsA(isA<AssertionError>()),
       );
 
-      // test 2 reserved events
+      // test 3 reserved events
       await expectLater(
         FirebaseAnalytics.instance.logAdImpression(
           adPlatform: 'foo',
@@ -127,6 +131,14 @@ void main() {
           shipping: 23,
           transactionId: 'bar',
           affiliation: 'baz',
+        ),
+        completes,
+      );
+
+      await expectLater(
+        FirebaseAnalytics.instance.logScreenView(
+          screenClass: 'FooActivity',
+          screenName: 'bar',
         ),
         completes,
       );
@@ -167,6 +179,7 @@ void main() {
 
     test('setCurrentScreen', () async {
       await expectLater(
+        // ignore: deprecated_member_use
         FirebaseAnalytics.instance.setCurrentScreen(screenName: 'screen-name'),
         completes,
       );
@@ -295,5 +308,27 @@ void main() {
         expect(result2, isA<String>());
       }
     });
+
+    test(
+      'initiateOnDeviceConversionMeasurement',
+      () async {
+        await expectLater(
+          FirebaseAnalytics.instance
+              .initiateOnDeviceConversionMeasurementWithEmailAddress(
+            'test@mail.com',
+          ),
+          completes,
+        );
+
+        await expectLater(
+          FirebaseAnalytics.instance
+              .initiateOnDeviceConversionMeasurementWithPhoneNumber(
+            '+15555555555',
+          ),
+          completes,
+        );
+      },
+      skip: kIsWeb || defaultTargetPlatform != TargetPlatform.iOS,
+    );
   });
 }

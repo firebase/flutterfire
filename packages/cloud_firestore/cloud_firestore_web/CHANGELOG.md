@@ -1,3 +1,7 @@
+## 3.9.0
+
+ - **FEAT**(firestore): add support for `sum` and `average` aggregated queries ([#11757](https://github.com/firebase/flutterfire/issues/11757)). ([82af6c2f](https://github.com/firebase/flutterfire/commit/82af6c2f40160a9e2f74e2d48652003fa48bb161))
+
 ## 3.8.10
 
  - Update a dependency to the latest release.

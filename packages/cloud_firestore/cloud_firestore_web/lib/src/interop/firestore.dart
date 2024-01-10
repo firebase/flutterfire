@@ -9,6 +9,8 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
+    as platform_interface;
 import 'package:cloud_firestore_web/src/utils/encode_utility.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
@@ -833,9 +835,35 @@ abstract class FieldValue {
 class AggregateQuery {
   AggregateQuery(Query query) : _jsQuery = query.jsObject;
   final firestore_interop.QueryJsImpl _jsQuery;
-  Future<AggregateQuerySnapshot> get() async {
+
+  static String name(platform_interface.AggregateQuery query) {
+    return '${query.type.name}_${query.field}';
+  }
+
+  Future<AggregateQuerySnapshot> get(
+    List<platform_interface.AggregateQuery> aggregateQueries,
+  ) async {
+    // Create a map of the requests
+    final Map<String, Object> requests = {};
+    for (final platform_interface.AggregateQuery aggregateQuery
+        in aggregateQueries) {
+      switch (aggregateQuery.type) {
+        case AggregateType.count:
+          requests['count'] = firestore_interop.count();
+          break;
+        case AggregateType.sum:
+          requests[name(aggregateQuery)] =
+              firestore_interop.sum(aggregateQuery.field!);
+          break;
+        case AggregateType.average:
+          requests[name(aggregateQuery)] =
+              firestore_interop.average(aggregateQuery.field!);
+          break;
+      }
+    }
+
     return handleThenable<firestore_interop.AggregateQuerySnapshotJsImpl>(
-            firestore_interop.getCountFromServer(_jsQuery))
+            firestore_interop.getAggregateFromServer(_jsQuery, jsify(requests)))
         .then(AggregateQuerySnapshot.getInstance);
   }
 }
@@ -857,5 +885,8 @@ class AggregateQuerySnapshot
       : _data = Map.from(dartify(jsObject.data())),
         super.fromJsObject(jsObject);
 
-  int get count => _data['count']! as int;
+  int? get count => _data['count'] as int?;
+
+  double getDataValue(platform_interface.AggregateQuery query) =>
+      _data[AggregateQuery.name(query)]! as double;
 }

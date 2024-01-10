@@ -238,4 +238,80 @@ abstract class QueryPlatform extends PlatformInterface {
   AggregateQueryPlatform count() {
     throw UnimplementedError('count() is not implemented');
   }
+
+  AggregateQueryPlatform aggregate(
+    AggregateField aggregateField1, [
+    AggregateField? aggregateField2,
+    AggregateField? aggregateField3,
+    AggregateField? aggregateField4,
+    AggregateField? aggregateField5,
+    AggregateField? aggregateField6,
+    AggregateField? aggregateField7,
+    AggregateField? aggregateField8,
+    AggregateField? aggregateField9,
+    AggregateField? aggregateField10,
+    AggregateField? aggregateField11,
+    AggregateField? aggregateField12,
+    AggregateField? aggregateField13,
+    AggregateField? aggregateField14,
+    AggregateField? aggregateField15,
+    AggregateField? aggregateField16,
+    AggregateField? aggregateField17,
+    AggregateField? aggregateField18,
+    AggregateField? aggregateField19,
+    AggregateField? aggregateField20,
+    AggregateField? aggregateField21,
+    AggregateField? aggregateField22,
+    AggregateField? aggregateField23,
+    AggregateField? aggregateField24,
+    AggregateField? aggregateField25,
+    AggregateField? aggregateField26,
+    AggregateField? aggregateField27,
+    AggregateField? aggregateField28,
+    AggregateField? aggregateField29,
+    AggregateField? aggregateField30,
+  ]) {
+    throw UnimplementedError('aggregate() is not implemented');
+  }
+
+  /// Returns an [AggregateQueryPlatform] which uses the [QueryPlatform] to query for
+  /// metadata
+  ///
+  /// This method is not exposed in the public API, but can be used internally
+  AggregateQueryPlatform sum(String field) {
+    throw UnimplementedError('sum() is not implemented');
+  }
+
+  /// Returns an [AggregateQueryPlatform] which uses the [QueryPlatform] to query for
+  /// metadata
+  ///
+  /// This method is not exposed in the public API, but can be used internally
+  AggregateQueryPlatform average(String field) {
+    throw UnimplementedError('average() is not implemented');
+  }
+}
+
+abstract class AggregateField {}
+
+/// Create a CountAggregateField object that can be used to compute
+/// the count of documents in the result set of a query.
+// ignore: camel_case_types
+class count extends AggregateField {}
+
+/// Create an object that can be used to compute the sum of a specified field
+/// over a range of documents in the result set of a query.
+// ignore: camel_case_types
+class sum extends AggregateField {
+  sum(this.field);
+
+  final String field;
+}
+
+/// Create an object that can be used to compute the average of a specified field
+/// over a range of documents in the result set of a query.
+// ignore: camel_case_types
+class average extends AggregateField {
+  average(this.field);
+
+  final String field;
 }

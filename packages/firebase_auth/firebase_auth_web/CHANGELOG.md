@@ -1,3 +1,7 @@
+## 5.8.13
+
+ - **FIX**(auth,web): fix typing of `getRedirectResult` on Web, preventing a crash ([#12036](https://github.com/firebase/flutterfire/issues/12036)). ([52c53f5c](https://github.com/firebase/flutterfire/commit/52c53f5c470aeca32e652cb0d477c5fc2bba7812))
+
 ## 5.8.12
 
  - Update a dependency to the latest release.

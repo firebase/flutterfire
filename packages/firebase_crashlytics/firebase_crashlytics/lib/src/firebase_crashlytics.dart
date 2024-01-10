@@ -145,7 +145,9 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
     return recordError(
       flutterErrorDetails.exceptionAsString(),
       flutterErrorDetails.stack,
-      reason: flutterErrorDetails.context,
+      reason: flutterErrorDetails.context
+          ?.toStringDeep(minLevel: DiagnosticLevel.info)
+          .trim(),
       information: information,
       printDetails: false,
       fatal: fatal,
