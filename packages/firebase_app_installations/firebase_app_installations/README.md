@@ -6,7 +6,7 @@ A Flutter plugin to use the [Firebase Installations API](https://firebase.google
 
 ## Getting Started
 
-To get started with Firebase Installations for Flutter, please [see the documentation](https://firebase.flutter.dev/docs/installations/overview).
+To get started with Firebase Installations for Flutter, please [see the documentation](https://firebase.google.com/docs/projects/manage-installations#flutter).
 
 ## Usage
 

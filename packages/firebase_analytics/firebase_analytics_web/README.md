@@ -5,7 +5,7 @@ The web implementation of `firebase_analytics`.
 ## Getting Started
 
 To get started with Google Analytics for Firebase on Web,
-please [see the documentation](https://firebase.flutter.dev/docs/analytics/overview)
+please [see the documentation](https://firebase.google.com/docs/analytics/get-started?platform=flutter)
 available at [https://firebase.flutter.dev](https://firebase.flutter.dev)
 
 Once installed, Google Analytics for Firebase needs to be configured for Web Installation.

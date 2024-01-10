@@ -5,7 +5,7 @@ The web implementation of `firebase_remote_config`.
 ## Getting Started
 
 To get started with Firebase Remote Config on Web,
-please [see the documentation](https://firebase.flutter.dev/docs/remote-config/overview)
+please [see the documentation](https://firebase.google.com/docs/remote-config/get-started?platform=flutter)
 available at [https://firebase.flutter.dev](https://firebase.flutter.dev)
 
 Once installed, Firebase Remote Config needs to be configured for Web Installation.

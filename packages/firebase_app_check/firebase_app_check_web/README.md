@@ -5,7 +5,7 @@ The web implementation of `firebase_app_web`.
 ## Getting Started
 
 To get started with Firebase App Check on Web,
-please [see the documentation](https://firebase.flutter.dev/docs/app-check/overview)
+please [see the documentation](https://firebase.google.com/docs/app-check)
 available at [https://firebase.flutter.dev](https://firebase.flutter.dev)
 
 Once installed, Firebase  App Check needs to be configured for Web Installation.

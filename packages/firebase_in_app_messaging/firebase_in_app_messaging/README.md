@@ -8,7 +8,7 @@ To learn more about Firebase In-App Messaging, please visit the [Firebase websit
 
 ## Getting Started
 
-To get started with Firebase In-App Messaging for Flutter, please [see the documentation](https://firebase.flutter.dev/docs/in-app-messaging/overview).
+To get started with Firebase In-App Messaging for Flutter, please [see the documentation](https://firebase.google.com/docs/in-app-messaging/get-started?platform=flutter).
 
 ## Usage
 

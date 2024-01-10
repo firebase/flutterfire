@@ -11,7 +11,7 @@ To learn more about Dynamic Links, please visit the [Firebase website](https://f
 
 ## Getting Started
 
-To get started with Dynamic Links for Flutter, please [see the documentation](https://firebase.flutter.dev/docs/dynamic-links/overview).
+To get started with Dynamic Links for Flutter, please [see the documentation](https://firebase.google.com/docs/dynamic-links).
 
 ## Usage
 
