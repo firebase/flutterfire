@@ -67,8 +67,9 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// own risk as the version might be unsupported or untested against.
   @visibleForTesting
   String get firebaseSDKVersion {
-    return globalContext.getProperty('flutterfire_web_sdk_version'.toJS) ??
-        supportedFirebaseJsSdkVersion;
+    final overridedWebSDKVersion =
+        (globalContext['flutterfire_web_sdk_version'] as JSString?)?.toDart;
+    return overridedWebSDKVersion ?? supportedFirebaseJsSdkVersion;
   }
 
   /// Returns a list of services which won't be automatically injected on
