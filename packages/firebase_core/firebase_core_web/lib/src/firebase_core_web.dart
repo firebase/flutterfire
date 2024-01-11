@@ -67,8 +67,9 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// own risk as the version might be unsupported or untested against.
   @visibleForTesting
   String get firebaseSDKVersion {
-    return context['flutterfire_web_sdk_version'] ??
-        supportedFirebaseJsSdkVersion;
+    final overridedWebSDKVersion =
+        (globalContext['flutterfire_web_sdk_version'] as JSString?)?.toDart;
+    return overridedWebSDKVersion ?? supportedFirebaseJsSdkVersion;
   }
 
   /// Returns a list of services which won't be automatically injected on
@@ -83,8 +84,8 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// You must ensure the Firebase script is injected before using the service.
   List<String> get _ignoredServiceScripts {
     try {
-      JsObject ignored =
-          JsObject.fromBrowserObject(context['flutterfire_ignore_scripts']);
+      JSObject ignored =
+          globalContext.getProperty('flutterfire_ignore_scripts'.toJS);
 
       if (ignored is Iterable) {
         return (ignored as Iterable)
@@ -104,48 +105,49 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// document.
   @visibleForTesting
   Future<void> injectSrcScript(String src, String windowVar) async {
-    DomTrustedScriptUrl? trustedUrl;
-    final trustedPolicyName = _defaultTrustedPolicyName + windowVar;
-    if (trustedTypes != null) {
-      console.debug(
-        'TrustedTypes available. Creating policy:',
-        trustedPolicyName,
+    web.TrustedScriptURL? trustedUrl;
+    final trustedTypePolicyName = _defaultTrustedPolicyName + windowVar;
+    if (web.window.nullableTrustedTypes != null) {
+      web.console.debug(
+        'TrustedTypes available. Creating policy: $trustedTypePolicyName'.toJS,
       );
-      final DomTrustedTypePolicyFactory factory = trustedTypes!;
       try {
-        final DomTrustedTypePolicy policy = factory.createPolicy(
-          trustedPolicyName,
-          DomTrustedTypePolicyOptions(
-            createScriptURL: allowInterop((String url) => src),
+        final web.TrustedTypePolicy policy =
+            web.window.trustedTypes.createPolicy(
+          trustedTypePolicyName,
+          web.TrustedTypePolicyOptions(
+            createScriptURL: ((JSString url) => src).toJS,
           ),
         );
-        trustedUrl = policy.createScriptURL(src);
+        trustedUrl = policy.createScriptURLNoArgs(src);
       } catch (e) {
-        rethrow;
+        throw TrustedTypesException(e.toString());
       }
     }
-    ScriptElement script = ScriptElement();
+
+    final web.HTMLScriptElement script =
+        web.document.createElement('script') as web.HTMLScriptElement;
     script.type = 'text/javascript';
     script.crossOrigin = 'anonymous';
     script.text = '''
       window.ff_trigger_$windowVar = async (callback) => {
         console.debug("Initializing Firebase $windowVar");
-        callback(await import("${trustedUrl != null ? callMethod(trustedUrl, 'toString', []) : src}"));
+        callback(await import("${trustedUrl != null ? trustedUrl.callMethod('toString'.toJS) : src}"));
       };
     ''';
 
-    assert(document.head != null);
-    document.head!.append(script);
+    web.document.head!.appendChild(script);
 
     Completer completer = Completer();
 
-    context.callMethod('ff_trigger_$windowVar', [
-      (module) {
-        context[windowVar] = module;
-        context.deleteProperty('ff_trigger_$windowVar');
+    globalContext.callMethod(
+      'ff_trigger_$windowVar'.toJS,
+      (JSAny module) {
+        globalContext[windowVar] = module;
+        globalContext.delete('ff_trigger_$windowVar'.toJS);
         completer.complete();
-      }
-    ]);
+      }.toJS,
+    );
 
     await completer.future;
   }
@@ -155,7 +157,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
   Future<void> _initializeCore() async {
     // If Firebase is already available, core has already been initialized
     // (or the user has added the scripts to their html file).
-    if (context['firebase_core'] != null) {
+    if (globalContext.getProperty('firebase_core'.toJS) != null) {
       return;
     }
 
@@ -291,7 +293,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
           measurementId: options.measurementId,
         );
       } catch (e) {
-        if (_getJSErrorCode(e) == 'app/duplicate-app') {
+        if (_getJSErrorCode(e as JSError) == 'app/duplicate-app') {
           throw duplicateApp(name);
         }
 
@@ -330,15 +332,14 @@ class FirebaseCoreWeb extends FirebasePlatform {
 
     try {
       app = guardNotInitialized(() => firebase.app(name));
+      return _createFromJsApp(app);
     } catch (e) {
-      if (_getJSErrorCode(e) == 'app/no-app') {
+      if (_getJSErrorCode(e as JSError) == 'app/no-app') {
         throw noAppExists(name);
       }
 
       throw _catchJSError(e);
     }
-
-    return _createFromJsApp(app);
   }
 }
 
@@ -366,4 +367,16 @@ R guardNotInitialized<R>(R Function() cb) {
   } catch (error, stackTrace) {
     _handleException(error, stackTrace);
   }
+}
+
+/// Exception thrown if the Trusted Types feature is supported, enabled, and it
+/// has prevented this loader from injecting the JS SDK.
+class TrustedTypesException implements Exception {
+  ///
+  TrustedTypesException(this.message);
+
+  /// The message of the exception
+  final String message;
+  @override
+  String toString() => 'TrustedTypesException: $message';
 }
