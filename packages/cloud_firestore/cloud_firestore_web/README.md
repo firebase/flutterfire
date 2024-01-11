@@ -7,6 +7,5 @@ The web implementation of `cloud_firestore`.
 To get started with Cloud Firestore Web, please [see the documentation](https://firebase.google.com/docs/firestore/quickstart)
 available at [https://firebase.google.com](https://firebase.google.com/docs/flutter/setup?platform=ios#available-plugins)
 
-Once installed, Firestore needs to be configured for Web Installation.  Please [see the documentation](https://firebase.flutter.dev/docs/firestore/overview#3-web-only-add-the-sdk) on Web Installation
 
 To learn more about Firebase Cloud Firestore, please visit the [Firebase website](https://firebase.google.com/products/firestore)
