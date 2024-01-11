@@ -484,6 +484,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// - **account-exists-with-different-credential**:
   ///  - Thrown if there already exists an account with the email address
   ///    asserted by the credential.
+  // ignore: deprecated_member_use_from_same_package
   ///    Resolve this by calling [fetchSignInMethodsForEmail] and then asking
   ///    the user to sign in using one of the returned providers.
   ///    Once the user is signed in, the original credential can be linked to
