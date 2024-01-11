@@ -35,13 +35,13 @@ class UserWeb extends UserPlatform {
                     ? (js_interop.globalContext.getProperty('Date'.toJS)!
                             as js_interop.JSObject)
                         .callMethod(
-                            'parse'.toJS, _webUser.metadata.creationTime!.toJS)
+                            'parse'.toJS, _webUser.metadata.creationTime)
                     : null,
                 lastSignInTimestamp: _webUser.metadata.lastSignInTime != null
                     ? (js_interop.globalContext.getProperty('Date'.toJS)!
                             as js_interop.JSObject)
-                        .callMethod('parse'.toJS,
-                            _webUser.metadata.lastSignInTime!.toJS)
+                        .callMethod(
+                            'parse'.toJS, _webUser.metadata.lastSignInTime)
                     : null,
                 phoneNumber: _webUser.phoneNumber,
                 photoUrl: _webUser.photoURL,
@@ -283,16 +283,16 @@ class UserWeb extends UserPlatform {
       if (profile.containsKey('displayName') &&
           profile.containsKey('photoURL')) {
         newProfile = auth_interop.UserProfile(
-          displayName: profile['displayName'],
-          photoURL: profile['photoURL'],
+          displayName: profile['displayName']?.toJS,
+          photoURL: profile['photoURL']?.toJS,
         );
       } else if (profile.containsKey('displayName')) {
         newProfile = auth_interop.UserProfile(
-          displayName: profile['displayName'],
+          displayName: profile['displayName']?.toJS,
         );
       } else {
         newProfile = auth_interop.UserProfile(
-          photoURL: profile['photoURL'],
+          photoURL: profile['photoURL']?.toJS,
         );
       }
 

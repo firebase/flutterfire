@@ -32,9 +32,10 @@ bool _hasFirebaseAuthErrorCodeAndMessage(JSError e) {
 /// The firebase-dart wrapper exposes a [core_interop.FirebaseError], allowing us to
 /// use the code and message and convert it into an expected [FirebaseAuthException].
 FirebaseAuthException getFirebaseAuthException(
-  JSError exception, [
+  Object objectException, [
   auth_interop.Auth? auth,
 ]) {
+  final exception = objectException as JSError;
   if (!_hasFirebaseAuthErrorCodeAndMessage(exception)) {
     return FirebaseAuthException(
       code: 'unknown',
@@ -62,7 +63,7 @@ FirebaseAuthException getFirebaseAuthException(
     }
     final resolverWeb = multi_factor_interop.getMultiFactorResolver(
       _auth,
-      exception,
+      exception as dynamic,
     );
 
     return FirebaseAuthMultiFactorExceptionPlatform(

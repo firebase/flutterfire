@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 
 import 'dart:async';
+import 'dart:js_interop';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
@@ -41,22 +42,22 @@ Auth getAuthInstance(App app) {
 class UserInfo<T extends auth_interop.UserInfoJsImpl>
     extends JsObjectWrapper<T> {
   /// User's display name.
-  String? get displayName => jsObject.displayName;
+  String? get displayName => jsObject.displayName.toDart;
 
   /// User's e-mail address.
-  String? get email => jsObject.email;
+  String? get email => jsObject.email.toDart;
 
   /// The user's E.164 formatted phone number (if available).
-  String? get phoneNumber => jsObject.phoneNumber;
+  String? get phoneNumber => jsObject.phoneNumber.toDart;
 
   /// User's profile picture URL.
-  String? get photoURL => jsObject.photoURL;
+  String? get photoURL => jsObject.photoURL.toDart;
 
   /// User's authentication provider ID.
-  String get providerId => jsObject.providerId;
+  String get providerId => jsObject.providerId.toDart;
 
   /// User's unique ID.
-  String get uid => jsObject.uid;
+  String get uid => jsObject.uid.toDart;
 
   /// Creates a new UserInfo from a [jsObject].
   UserInfo._fromJsObject(auth_interop.UserInfoJsImpl jsObject)
@@ -70,21 +71,21 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   static final _expando = Expando<User>();
 
   @override
-  String get uid => jsObject.uid;
+  String get uid => jsObject.uid.toDart;
 
   /// If the user's email address has been already verified.
-  bool get emailVerified => jsObject.emailVerified;
+  bool get emailVerified => jsObject.emailVerified.toDart;
 
   /// If the user is anonymous.
-  bool get isAnonymous => jsObject.isAnonymous;
+  bool get isAnonymous => jsObject.isAnonymous.toDart;
 
-  String? get tenantId => jsObject.tenantId;
+  String? get tenantId => jsObject.tenantId.toDart;
 
   /// Non-null additional metadata about the user.
   auth_interop.UserMetadata get metadata => jsObject.metadata;
 
   /// List of additional provider-specific information about the user.
-  List<UserInfo> get providerData => jsObject.providerData
+  List<UserInfo> get providerData => jsObject.providerData.toDart
       // explicitly typing the param as dynamic to work-around
       // https://github.com/dart-lang/sdk/issues/33537
       // ignore: unnecessary_lambdas, false positive, data is dynamic
@@ -93,7 +94,7 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
       .toList();
 
   /// Refresh token for the user account.
-  String get refreshToken => jsObject.refreshToken;
+  String get refreshToken => jsObject.refreshToken.toDart;
 
   /// Creates a new User from a [jsObject].
   ///
@@ -112,7 +113,7 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
       : super._fromJsObject(jsObject);
 
   /// Deletes and signs out the user.
-  Future<void> delete() => handleThenable(jsObject.delete());
+  Future<void> delete() => jsObject.delete().toDart;
 
   /// Returns a JWT token used to identify the user to a Firebase service.
   ///
@@ -122,43 +123,44 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   /// It forces refresh regardless of token expiration if [forceRefresh]
   /// parameter is `true`.
   Future<String> getIdToken([bool forceRefresh = false]) =>
-      handleThenable(jsObject.getIdToken(forceRefresh));
+      jsObject.getIdToken(forceRefresh.toJS).toDart as Future<String>;
 
   /// Links the user account with the given credentials, and returns any
   /// available additional user information, such as user name.
   Future<UserCredential> linkWithCredential(
           auth_interop.OAuthCredential? credential) =>
-      handleThenable(auth_interop.linkWithCredential(jsObject, credential))
+      (auth_interop.linkWithCredential(jsObject, credential).toDart
+              as Future<auth_interop.UserCredentialJsImpl>)
           .then(UserCredential.fromJsObject);
 
   /// Links the user account with the given [phoneNumber] in E.164 format
   /// (e.g. +16505550101) and [applicationVerifier].
   Future<ConfirmationResult> linkWithPhoneNumber(
           String phoneNumber, ApplicationVerifier applicationVerifier) =>
-      handleThenable(
-        auth_interop.linkWithPhoneNumber(
-            jsObject, phoneNumber, applicationVerifier.jsObject),
-      ).then(ConfirmationResult.fromJsObject);
+      (auth_interop
+              .linkWithPhoneNumber(
+                  jsObject, phoneNumber.toJS, applicationVerifier.jsObject)
+              .toDart as Future<auth_interop.ConfirmationResultJsImpl>)
+          .then(ConfirmationResult.fromJsObject);
 
   /// Links the authenticated [provider] to the user account using
   /// a pop-up based OAuth flow.
   /// It returns the [UserCredential] information if linking is successful.
   Future<UserCredential> linkWithPopup(AuthProvider provider) =>
-      handleThenable(auth_interop.linkWithPopup(jsObject, provider.jsObject))
-          .then(UserCredential.fromJsObject);
+      auth_interop.linkWithPopup(jsObject, provider.jsObject).toDart
+          as Future<UserCredential>;
 
   /// Links the authenticated [provider] to the user account using
   /// a full-page redirect flow.
-  Future<void> linkWithRedirect(AuthProvider provider) => handleThenable(
-      auth_interop.linkWithRedirect(jsObject, provider.jsObject));
+  Future<void> linkWithRedirect(AuthProvider provider) =>
+      auth_interop.linkWithRedirect(jsObject, provider.jsObject).toDart;
 
   /// Re-authenticates a user using a fresh credential, and returns any
   /// available additional user information, such as user name.
   Future<UserCredential> reauthenticateWithCredential(
           auth_interop.OAuthCredential credential) =>
-      handleThenable(
-              auth_interop.reauthenticateWithCredential(jsObject, credential))
-          .then(UserCredential.fromJsObject);
+      auth_interop.reauthenticateWithCredential(jsObject, credential).toDart
+          as Future<UserCredential>;
 
   /// Re-authenticates a user using a fresh credential.
   /// Use before operations such as [updatePassword] that require tokens
@@ -167,26 +169,26 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   /// The user's phone number is in E.164 format (e.g. +16505550101).
   Future<ConfirmationResult> reauthenticateWithPhoneNumber(
           String phoneNumber, ApplicationVerifier applicationVerifier) =>
-      handleThenable(auth_interop.reauthenticateWithPhoneNumber(
-              jsObject, phoneNumber, applicationVerifier.jsObject))
-          .then(ConfirmationResult.fromJsObject);
+      auth_interop
+          .reauthenticateWithPhoneNumber(
+              jsObject, phoneNumber.toJS, applicationVerifier.jsObject)
+          .toDart as Future<ConfirmationResult>;
 
   /// Reauthenticates a user with the specified provider using
   /// a pop-up based OAuth flow.
   /// It returns the [UserCredential] information if reauthentication is successful.
   Future<UserCredential> reauthenticateWithPopup(AuthProvider provider) =>
-      handleThenable(
-              auth_interop.reauthenticateWithPopup(jsObject, provider.jsObject))
-          .then(UserCredential.fromJsObject);
+      auth_interop.reauthenticateWithPopup(jsObject, provider.jsObject).toDart
+          as Future<UserCredential>;
 
   /// Reauthenticates a user with the specified OAuth [provider] using
   /// a full-page redirect flow.
-  Future<void> reauthenticateWithRedirect(AuthProvider provider) =>
-      handleThenable(
-          auth_interop.reauthenticateWithRedirect(jsObject, provider.jsObject));
+  Future<void> reauthenticateWithRedirect(AuthProvider provider) => auth_interop
+      .reauthenticateWithRedirect(jsObject, provider.jsObject)
+      .toDart;
 
   /// If signed in, it refreshes the current user.
-  Future<void> reload() => handleThenable(jsObject.reload());
+  Future<void> reload() => jsObject.reload().toDart;
 
   /// Sends an e-mail verification to a user.
   ///
@@ -208,46 +210,49 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   /// they are configured in the same Firebase Auth project used.
   Future<void> sendEmailVerification(
           [auth_interop.ActionCodeSettings? actionCodeSettings]) =>
-      handleThenable(
-          auth_interop.sendEmailVerification(jsObject, actionCodeSettings));
+      auth_interop.sendEmailVerification(jsObject, actionCodeSettings).toDart;
 
   /// Sends a verification email to a new email address. The user's email will be updated to the new one
   /// after being verified.
   Future<void> verifyBeforeUpdateEmail(String newEmail,
           [auth_interop.ActionCodeSettings? actionCodeSettings]) =>
-      handleThenable(auth_interop.verifyBeforeUpdateEmail(
-          jsObject, newEmail, actionCodeSettings));
+      auth_interop
+          .verifyBeforeUpdateEmail(jsObject, newEmail.toJS, actionCodeSettings)
+          .toDart;
 
   /// Unlinks a provider with [providerId] from a user account.
-  Future<User> unlink(String providerId) =>
-      handleThenable(auth_interop.unlink(jsObject, providerId))
-          .then((user) => User.getInstance(user)!);
+  Future<User> unlink(String providerId) => auth_interop
+      .unlink(jsObject, providerId.toJS)
+      .toDart
+      .then((user) => User.getInstance(user! as auth_interop.UserJsImpl)!);
 
   /// Updates the user's e-mail address to [newEmail].
   Future<void> updateEmail(String newEmail) =>
-      handleThenable(auth_interop.updateEmail(jsObject, newEmail));
+      auth_interop.updateEmail(jsObject, newEmail.toJS).toDart;
 
   /// Updates the user's password to [newPassword].
   /// Requires the user to have recently signed in. If not, ask the user
   /// to authenticate again and then use [reauthenticate()].
   Future<void> updatePassword(String newPassword) =>
-      handleThenable(auth_interop.updatePassword(jsObject, newPassword));
+      auth_interop.updatePassword(jsObject, newPassword.toJS).toDart;
 
   /// Updates the user's phone number.
   Future<void> updatePhoneNumber(
           auth_interop.OAuthCredential? phoneCredential) =>
-      handleThenable(auth_interop.updatePhoneNumber(jsObject, phoneCredential));
+      auth_interop.updatePhoneNumber(jsObject, phoneCredential).toDart;
 
   /// Updates a user's profile data.
   Future<void> updateProfile(auth_interop.UserProfile profile) =>
-      handleThenable(auth_interop.updateProfile(jsObject, profile));
+      auth_interop.updateProfile(jsObject, profile).toDart;
 
+  /// Retrieves the ID token result for the current user, optionally forcing a refresh.
   Future<IdTokenResult> getIdTokenResult([bool? forceRefresh]) {
     final promise = forceRefresh == null
         ? jsObject.getIdTokenResult()
-        : jsObject.getIdTokenResult(forceRefresh);
+        : jsObject.getIdTokenResult(forceRefresh.toJS);
 
-    return handleThenable(promise).then(IdTokenResult._fromJsObject);
+    return (promise.toDart as Future<auth_interop.IdTokenResultImpl>)
+        .then(IdTokenResult._fromJsObject);
   }
 
   /// Returns a JSON-serializable representation of this object.
@@ -274,26 +279,26 @@ class IdTokenResult extends JsObjectWrapper<auth_interop.IdTokenResultImpl> {
   ///
   /// This is the time the user authenticated (signed in) and not the time the
   /// token was refreshed.
-  DateTime get authTime => parseHttpDate(jsObject.authTime);
+  DateTime get authTime => parseHttpDate(jsObject.authTime.toDart);
 
   /// The entire payload claims of the ID token including the standard reserved
   /// claims as well as the custom claims.
   Map<String, dynamic>? get claims => dartify(jsObject.claims);
 
   /// The ID token expiration time.
-  DateTime get expirationTime => parseHttpDate(jsObject.expirationTime);
+  DateTime get expirationTime => parseHttpDate(jsObject.expirationTime.toDart);
 
   /// The ID token issued at time.
-  DateTime get issuedAtTime => parseHttpDate(jsObject.issuedAtTime);
+  DateTime get issuedAtTime => parseHttpDate(jsObject.issuedAtTime.toDart);
 
   /// The sign-in provider through which the ID token was obtained (anonymous,
   /// custom, phone, password, etc).
   ///
   /// Note, this does not map to provider IDs.
-  String get signInProvider => jsObject.signInProvider;
+  String get signInProvider => jsObject.signInProvider.toDart;
 
   /// The Firebase Auth ID token JWT string.
-  String get token => jsObject.token;
+  String get token => jsObject.token.toDart;
 }
 
 /// The Firebase Auth service class.
@@ -310,11 +315,11 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
 
   // Returns the current tenantId for the instance.
   String? get tenantId {
-    return jsObject.tenantId;
+    return jsObject.tenantId?.toDart;
   }
 
   set tenantId(String? tenantId) {
-    jsObject.tenantId = tenantId;
+    jsObject.tenantId = tenantId?.toJS;
   }
 
   /// The current Auth instance's language code.
@@ -325,10 +330,10 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// SMS templates for phone authentication, reCAPTCHA verifier and OAuth
   /// popup/redirect operations provided the specified providers support
   /// localization with the language code specified.
-  String get languageCode => jsObject.languageCode;
+  String get languageCode => jsObject.languageCode.toDart;
 
   set languageCode(String? s) {
-    jsObject.languageCode = s;
+    jsObject.languageCode = s?.toJS;
   }
 
   // set settings(auth_interop.AuthSettings s) {
@@ -352,11 +357,12 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
 
     final errorWrapper = (e) => _changeController!.addError(e);
 
-    final unsubscribe = jsObject.onAuthStateChanged(nextWrapper, errorWrapper);
+    final unsubscribe =
+        jsObject.onAuthStateChanged(nextWrapper, errorWrapper.toJS);
 
     await completer.future;
 
-    unsubscribe();
+    await unsubscribe().toDart;
   }
 
   Func0? _onAuthUnsubscribe;
