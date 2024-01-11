@@ -11,7 +11,7 @@ library firebase_interop.auth;
 
 import 'package:firebase_auth_web/src/interop/auth.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
-import 'package:js/js.dart';
+import 'dart:js_interop';
 
 @JS()
 external AuthJsImpl getAuth([AppJsImpl? app]);

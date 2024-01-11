@@ -12,7 +12,7 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     hide jsify, dartify;
 import 'package:http_parser/http_parser.dart';
-import 'package:js/js.dart';
+import 'dart:js_interop';
 
 import 'auth_interop.dart' as auth_interop;
 import 'utils/utils.dart';

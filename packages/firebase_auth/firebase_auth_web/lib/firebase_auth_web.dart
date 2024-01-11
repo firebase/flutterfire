@@ -4,7 +4,8 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'dart:js_interop';
+import 'package:web/web.dart' as web;
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_web/src/firebase_auth_web_multi_factor.dart';
@@ -90,9 +91,9 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       ensurePluginInitialized: (firebaseApp) async {
         final authDelegate = auth_interop.getAuthInstance(firebaseApp);
         // if localhost, and emulator was previously set in localStorage, use it
-        if (window.location.hostname == 'localhost' && kDebugMode) {
+        if (web.window.location.hostname == 'localhost' && kDebugMode) {
           final String? emulatorOrigin =
-              window.sessionStorage[getOriginName(firebaseApp.name)];
+              web.window.sessionStorage.getItem(getOriginName(firebaseApp.name));
 
           if (emulatorOrigin != null) {
             try {
@@ -464,7 +465,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       // Get current session storage value
       final String? emulatorOrigin =
-          window.sessionStorage[getOriginName(delegate.app.name)];
+          web.window.sessionStorage.getItem(getOriginName(delegate.app.name));
 
       // The generic platform interface is with host and port split to
       // centralize logic between android/ios native, but web takes the
@@ -481,7 +482,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       // Save to session storage so that the emulator is used on refresh
       // only in debug mode
       if (kDebugMode) {
-        window.sessionStorage[getOriginName(delegate.app.name)] = origin;
+        web.window.sessionStorage.setItem(getOriginName(delegate.app.name), origin);
       }
     } catch (e) {
       if (e is auth_interop.AuthError) {

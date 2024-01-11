@@ -5,7 +5,7 @@
 @JS()
 library window_interop;
 
-import 'package:js/js.dart';
+import 'dart:js_interop';
 
 @JS('Error')
 external Object get errorConstructor;

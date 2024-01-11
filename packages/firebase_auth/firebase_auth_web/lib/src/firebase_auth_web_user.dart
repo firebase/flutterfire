@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:js';
+import 'dart:js_interop';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_web/src/firebase_auth_web_user_credential.dart';
