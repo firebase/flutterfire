@@ -12,7 +12,6 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     hide jsify, dartify;
 import 'package:http_parser/http_parser.dart';
-import 'dart:js_interop';
 
 import 'auth_interop.dart' as auth_interop;
 import 'utils/utils.dart';
@@ -346,12 +345,12 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// in `_initUser` and add it manually to the `_changeController`.
   Future<void> onWaitInitState() async {
     final completer = Completer();
-    final nextWrapper = allowInterop((auth_interop.UserJsImpl? user) {
+    final nextWrapper = (auth_interop.UserJsImpl? user) {
       _initUser = User.getInstance(user);
       completer.complete();
-    });
+    };
 
-    final errorWrapper = allowInterop((e) => _changeController!.addError(e));
+    final errorWrapper = (e) => _changeController!.addError(e);
 
     final unsubscribe = jsObject.onAuthStateChanged(nextWrapper, errorWrapper);
 
@@ -373,11 +372,11 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// If the value is `null`, there is no signed-in user.
   Stream<User?> get onAuthStateChanged {
     if (_changeController == null) {
-      final nextWrapper = allowInterop((auth_interop.UserJsImpl? user) {
+      final nextWrapper = (auth_interop.UserJsImpl? user) {
         _changeController!.add(User.getInstance(user));
-      });
+      };
 
-      final errorWrapper = allowInterop((e) => _changeController!.addError(e));
+      final errorWrapper = (e) => _changeController!.addError(e);
 
       void startListen() {
         assert(_onAuthUnsubscribe == null);
@@ -414,12 +413,11 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// If the value is `null`, there is no signed-in user.
   Stream<User?> get onIdTokenChanged {
     if (_idTokenChangedController == null) {
-      final nextWrapper = allowInterop((auth_interop.UserJsImpl? user) {
+      final nextWrapper = (auth_interop.UserJsImpl? user) {
         _idTokenChangedController!.add(User.getInstance(user));
-      });
+      };
 
-      final errorWrapper =
-          allowInterop((e) => _idTokenChangedController!.addError(e));
+      final errorWrapper = (e) => _idTokenChangedController!.addError(e);
 
       void startListen() {
         assert(_onIdTokenChangedUnsubscribe == null);

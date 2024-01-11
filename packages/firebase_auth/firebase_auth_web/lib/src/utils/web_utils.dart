@@ -10,32 +10,17 @@ import 'package:firebase_auth_web/firebase_auth_web.dart';
 import 'package:firebase_auth_web/src/firebase_auth_web_multi_factor.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
-import 'dart:js_interop';
+import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
 import '../interop/auth.dart' as auth_interop;
 import '../interop/multi_factor.dart' as multi_factor_interop;
-import '../interop/window_interop.dart' as window_interop;
 
-/// Workaround test to check whether `e` is practically a FirebaseError.
-///
-/// Ideally we'd check whether `e instanceof FirebaseError` however
-/// there are two definitions of `FirebaseError` in deployed apps, one from
-/// `firebase-auth.js` (which is usually minified) and one from
-/// `firebase-app.js`.
-///
-/// Because they are not the same, the instanceof check fails. Instead, we test
-/// that it is a window.Error (since that's the base class of FirebaseError) and
-/// we check that it defines "customData" property which is on the AuthError but not the FirebaseError it extends
-bool _isFirebaseAuthError(Object e) =>
-    instanceof(e, window_interop.errorConstructor) &&
-    hasProperty(e, 'customData');
-
-bool _hasFirebaseAuthErrorCodeAndMessage(Object e) {
-  if (_isFirebaseAuthError(e)) {
-    String? code = getProperty(e, 'code');
-    String? message = getProperty(e, 'message');
-    if (code == null || !code.startsWith('auth/')) return false;
-    if (message == null || !message.contains('Firebase')) return false;
+bool _hasFirebaseAuthErrorCodeAndMessage(JSError e) {
+  if (e.name == 'FirebaseError') {
+    String code = e.code ?? '';
+    String message = e.message ?? '';
+    if (code.startsWith('auth/')) return false;
+    if (message.contains('Firebase')) return false;
     return true;
   } else {
     return false;
@@ -47,7 +32,7 @@ bool _hasFirebaseAuthErrorCodeAndMessage(Object e) {
 /// The firebase-dart wrapper exposes a [core_interop.FirebaseError], allowing us to
 /// use the code and message and convert it into an expected [FirebaseAuthException].
 FirebaseAuthException getFirebaseAuthException(
-  Object exception, [
+  JSError exception, [
   auth_interop.Auth? auth,
 ]) {
   if (!_hasFirebaseAuthErrorCodeAndMessage(exception)) {
@@ -64,8 +49,7 @@ FirebaseAuthException getFirebaseAuthException(
       .replaceFirst('Firebase: ', '');
 
   // "customData" - see Firebase AuthError docs: https://firebase.google.com/docs/reference/js/auth.autherror
-  final customData =
-      getProperty(exception, 'customData') as auth_interop.AuthErrorCustomData;
+  final customData = exception.customData as auth_interop.AuthErrorCustomData;
 
   if (code == 'multi-factor-auth-required') {
     final _auth = auth;

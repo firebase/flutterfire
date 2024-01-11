@@ -8,4 +8,5 @@ library window_interop;
 import 'dart:js_interop';
 
 @JS('Error')
+@staticInterop
 external Object get errorConstructor;

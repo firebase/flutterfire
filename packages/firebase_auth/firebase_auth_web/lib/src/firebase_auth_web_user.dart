@@ -4,7 +4,8 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:js_interop';
+import 'dart:js_interop' as js_interop;
+import 'dart:js_interop_unsafe';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_web/src/firebase_auth_web_user_credential.dart';
@@ -31,12 +32,16 @@ class UserWeb extends UserPlatform {
                 isEmailVerified: _webUser.emailVerified,
                 isAnonymous: _webUser.isAnonymous,
                 creationTimestamp: _webUser.metadata.creationTime != null
-                    ? context['Date']
-                        .callMethod('parse', [_webUser.metadata.creationTime])
+                    ? (js_interop.globalContext.getProperty('Date'.toJS)!
+                            as js_interop.JSObject)
+                        .callMethod(
+                            'parse'.toJS, _webUser.metadata.creationTime!.toJS)
                     : null,
                 lastSignInTimestamp: _webUser.metadata.lastSignInTime != null
-                    ? context['Date']
-                        .callMethod('parse', [_webUser.metadata.lastSignInTime])
+                    ? (js_interop.globalContext.getProperty('Date'.toJS)!
+                            as js_interop.JSObject)
+                        .callMethod('parse'.toJS,
+                            _webUser.metadata.lastSignInTime!.toJS)
                     : null,
                 phoneNumber: _webUser.phoneNumber,
                 photoUrl: _webUser.photoURL,
