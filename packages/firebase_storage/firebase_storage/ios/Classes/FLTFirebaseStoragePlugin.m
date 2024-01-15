@@ -712,7 +712,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   completion(NO, nil);
 }
 
-- (NSDictionary *)NSDictionaryFromNSError:(NSError *)error {
++ (NSDictionary *)NSDictionaryFromNSError:(NSError *)error {
   NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
   NSString *code = @"unknown";
   NSString *message = [error localizedDescription];
@@ -765,7 +765,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   if (error == nil) {
     return nil;
   }
-  NSDictionary *dictionary = [self NSDictionaryFromNSError:error];
+  NSDictionary *dictionary = [FLTFirebaseStoragePlugin NSDictionaryFromNSError:error];
   return [FlutterError errorWithCode:dictionary[@"code"]
                              message:dictionary[@"message"]
                              details:@{}];
@@ -779,7 +779,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
       [FLTFirebasePlugin firebaseAppNameFromIosName:snapshot.reference.storage.app.name];
   dictionary[kFLTFirebaseStorageKeyBucket] = snapshot.reference.bucket;
   if (snapshot.error != nil) {
-    dictionary[@"error"] = [self NSDictionaryFromNSError:snapshot.error];
+    dictionary[@"error"] = [FLTFirebaseStoragePlugin NSDictionaryFromNSError:snapshot.error];
   } else {
     dictionary[kFLTFirebaseStorageKeySnapshot] =
         [FLTFirebaseStoragePlugin parseTaskSnapshot:snapshot];

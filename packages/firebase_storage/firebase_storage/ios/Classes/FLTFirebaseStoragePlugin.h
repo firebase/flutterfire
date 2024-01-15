@@ -18,4 +18,5 @@
     : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin, FirebaseStorageHostApi>
 
 + (NSDictionary *)parseTaskSnapshot:(FIRStorageTaskSnapshot *)snapshot;
++ (NSDictionary *)NSDictionaryFromNSError:(NSError *)error;
 @end
