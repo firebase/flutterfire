@@ -23,8 +23,11 @@ import 'utils/utils.dart';
 export 'firestore_interop.dart';
 
 /// Given an AppJSImp, return the Firestore instance.
-Firestore getFirestoreInstance(
-    [App? app, firestore_interop.Settings? settings, String? databaseURL]) {
+Firestore getFirestoreInstance([
+  App? app,
+  firestore_interop.FirestoreSettings? settings,
+  String? databaseURL,
+]) {
   String database = databaseURL ?? '(default)';
 
   if (app != null && settings != null) {
@@ -74,6 +77,7 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
           firestore_interop.enableMultiTabIndexedDbPersistence(jsObject));
     }
     return handleThenable(
+        // ignore: deprecated_member_use_from_same_package
         firestore_interop.enableIndexedDbPersistence(jsObject));
   }
 
