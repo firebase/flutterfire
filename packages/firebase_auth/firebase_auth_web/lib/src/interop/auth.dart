@@ -358,7 +358,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
     final errorWrapper = (e) => _changeController!.addError(e);
 
     final unsubscribe =
-        jsObject.onAuthStateChanged(nextWrapper, errorWrapper.toJS);
+        jsObject.onAuthStateChanged(nextWrapper.toJS, errorWrapper.toJS);
 
     await completer.future;
 
@@ -387,7 +387,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
       void startListen() {
         assert(_onAuthUnsubscribe == null);
         _onAuthUnsubscribe =
-            jsObject.onAuthStateChanged(nextWrapper, errorWrapper.toJS);
+            jsObject.onAuthStateChanged(nextWrapper.toJS, errorWrapper.toJS);
       }
 
       void stopListen() {
@@ -428,7 +428,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
       void startListen() {
         assert(_onIdTokenChangedUnsubscribe == null);
         _onIdTokenChangedUnsubscribe =
-            jsObject.onIdTokenChanged(nextWrapper, errorWrapper.toJS);
+            jsObject.onIdTokenChanged(nextWrapper.toJS, errorWrapper.toJS);
       }
 
       void stopListen() {
@@ -1017,8 +1017,9 @@ class PhoneAuthProvider
   /// For abuse prevention, this method also requires an [ApplicationVerifier].
   Future<String> verifyPhoneNumber(
           dynamic phoneOptions, ApplicationVerifier applicationVerifier) =>
-      handleThenable(jsObject.verifyPhoneNumber(
-          phoneOptions, applicationVerifier.jsObject));
+      jsObject
+          .verifyPhoneNumber(phoneOptions, applicationVerifier.jsObject)
+          .toDart as Future<String>;
 
   /// Creates a phone auth credential given the verification ID
   /// from [verifyPhoneNumber] and the [verificationCode] that was sent to the

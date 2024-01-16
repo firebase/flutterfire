@@ -76,7 +76,7 @@ class MultiFactorUser
   /// Recent re-authentication is required for this operation to succeed.
   /// When an existing factor is unenrolled, an email notification is sent to the user’s email.
   Future<void> unenroll(String multiFactorInfoId) {
-    return jsObject.unenroll(multiFactorInfoId).toDart;
+    return jsObject.unenroll(multiFactorInfoId.toJS).toDart;
   }
 }
 

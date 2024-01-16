@@ -18,10 +18,10 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart';
 external AuthJsImpl getAuth([AppJsImpl? app]);
 
 @JS()
-external AuthJsImpl initializeAuth(AppJsImpl app, dynamic debugErrorMap);
+external AuthJsImpl initializeAuth(AppJsImpl app, JSAny debugErrorMap);
 
 @JS('debugErrorMap')
-external Map get debugErrorMap;
+external JSAny get debugErrorMap;
 
 @JS()
 external JSPromise applyActionCode(AuthJsImpl auth, JSString oobCode);
@@ -284,12 +284,12 @@ extension AuthJsImplExtension on AuthJsImpl {
   external JSString? get tenantId;
   external set tenantId(JSString? s);
   external JSFunction onAuthStateChanged(
-    dynamic nextOrObserver, [
+    JSFunction nextOrObserver, [
     JSFunction? opt_error,
     JSFunction? opt_completed,
   ]);
   external JSFunction onIdTokenChanged(
-    dynamic nextOrObserver, [
+    JSFunction nextOrObserver, [
     JSFunction? opt_error,
     JSFunction? opt_completed,
   ]);
@@ -431,7 +431,9 @@ extension OAuthCredentialOptionsExtension on OAuthCredentialOptions {
 @JS('AuthProvider')
 @staticInterop
 @anonymous
-abstract class AuthProviderJsImpl {
+abstract class AuthProviderJsImpl {}
+
+extension AuthProviderJsImplExtension on AuthProviderJsImpl {
   external JSString get providerId;
 }
 
@@ -460,7 +462,7 @@ abstract class FacebookAuthProviderJsImpl extends AuthProviderJsImpl {
 extension FacebookAuthProviderJsImplExtension on FacebookAuthProviderJsImpl {
   external FacebookAuthProviderJsImpl addScope(JSString scope);
   external FacebookAuthProviderJsImpl setCustomParameters(
-    dynamic customOAuthParameters,
+    JSAny customOAuthParameters,
   );
 }
 
@@ -476,7 +478,7 @@ abstract class GithubAuthProviderJsImpl extends AuthProviderJsImpl {
 extension GithubAuthProviderJsImplExtension on GithubAuthProviderJsImpl {
   external GithubAuthProviderJsImpl addScope(JSString scope);
   external GithubAuthProviderJsImpl setCustomParameters(
-    dynamic customOAuthParameters,
+    JSAny customOAuthParameters,
   );
 }
 
@@ -493,7 +495,7 @@ abstract class GoogleAuthProviderJsImpl extends AuthProviderJsImpl {
 extension GoogleAuthProviderJsImplExtension on GoogleAuthProviderJsImpl {
   external GoogleAuthProviderJsImpl addScope(JSString scope);
   external GoogleAuthProviderJsImpl setCustomParameters(
-    dynamic customOAuthParameters,
+    JSAny customOAuthParameters,
   );
 }
 
@@ -510,7 +512,7 @@ class OAuthProviderJsImpl extends AuthProviderJsImpl {
 extension OAuthProviderJsImplExtension on OAuthProviderJsImpl {
   external OAuthProviderJsImpl addScope(JSString scope);
   external OAuthProviderJsImpl setCustomParameters(
-    dynamic customOAuthParameters,
+    JSAny customOAuthParameters,
   );
   external OAuthCredential credential(OAuthCredentialOptions credentialOptions);
 }
@@ -526,7 +528,7 @@ class TwitterAuthProviderJsImpl extends AuthProviderJsImpl {
 
 extension TwitterAuthProviderJsImplExtension on TwitterAuthProviderJsImpl {
   external TwitterAuthProviderJsImpl setCustomParameters(
-    dynamic customOAuthParameters,
+    JSAny customOAuthParameters,
   );
 }
 
@@ -543,8 +545,8 @@ class PhoneAuthProviderJsImpl extends AuthProviderJsImpl {
 }
 
 extension PhoneAuthProviderJsImplExtension on PhoneAuthProviderJsImpl {
-  external PromiseJsImpl<String> verifyPhoneNumber(
-    dynamic /* PhoneInfoOptions | string */ phoneOptions,
+  external JSPromise verifyPhoneNumber(
+    JSAny /* PhoneInfoOptions | string */ phoneOptions,
     ApplicationVerifierJsImpl applicationVerifier,
   );
 }
@@ -573,7 +575,7 @@ extension ApplicationVerifierJsImplExtension on ApplicationVerifierJsImpl {
 class RecaptchaVerifierJsImpl extends ApplicationVerifierJsImpl {
   external factory RecaptchaVerifierJsImpl(
     AuthJsImpl authExtern,
-    containerOrId,
+    JSAny containerOrId,
     JSObject parameters,
   );
 }
@@ -815,7 +817,9 @@ extension AuthSettingsExtension on AuthSettings {
   external set appVerificationDisabledForTesting(JSBoolean? b);
 }
 
-external dynamic get browserPopupRedirectResolver;
+@JS()
+@staticInterop
+external JSAny get browserPopupRedirectResolver;
 
 /// https://firebase.google.com/docs/reference/js/auth.multifactoruser.md#multifactoruser_interface
 @JS()
@@ -828,7 +832,7 @@ extension MultiFactorUserJsImplExtension on MultiFactorUserJsImpl {
   external JSPromise enroll(
       MultiFactorAssertionJsImpl assertion, JSString? displayName);
   external JSPromise getSession();
-  external JSPromise unenroll(dynamic /* MultiFactorInfo | string */ option);
+  external JSPromise unenroll(JSAny /* MultiFactorInfo | string */ option);
 }
 
 /// https://firebase.google.com/docs/reference/js/auth.multifactorinfo
@@ -956,10 +960,11 @@ class TotpMultiFactorAssertionJsImpl extends MultiFactorAssertionJsImpl {}
 @JS()
 @staticInterop
 @anonymous
-class PhoneAuthCredentialJsImpl extends AuthCredential {}
+class PhoneAuthCredentialJsImpl extends AuthCredential {
+  external static PhoneAuthCredentialJsImpl fromJSON(
+      JSAny /*object | string*/ json);
+}
 
 extension PhoneAuthCredentialJsImplExtension on PhoneAuthCredentialJsImpl {
-  external static PhoneAuthCredentialJsImpl fromJSON(
-      dynamic /*object | string*/ json);
   external JSObject toJSON();
 }
