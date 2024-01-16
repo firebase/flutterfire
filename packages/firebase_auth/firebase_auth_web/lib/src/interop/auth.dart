@@ -362,10 +362,10 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
 
     await completer.future;
 
-    await unsubscribe().toDart;
+    await (unsubscribe.dartify()! as Future<void> Function())();
   }
 
-  Func0? _onAuthUnsubscribe;
+  JSFunction? _onAuthUnsubscribe;
   // TODO(rrousselGit): fix memory leak – the controller isn't closed even in onCancel
   // ignore: close_sinks
   StreamController<User?>? _changeController;
@@ -387,11 +387,11 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
       void startListen() {
         assert(_onAuthUnsubscribe == null);
         _onAuthUnsubscribe =
-            jsObject.onAuthStateChanged(nextWrapper, errorWrapper);
+            jsObject.onAuthStateChanged(nextWrapper, errorWrapper.toJS);
       }
 
       void stopListen() {
-        _onAuthUnsubscribe!();
+        (_onAuthUnsubscribe!.dartify()! as Function)();
         _onAuthUnsubscribe = null;
       }
 
@@ -406,7 +406,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
     return _changeController!.stream;
   }
 
-  Func0? _onIdTokenChangedUnsubscribe;
+  JSFunction? _onIdTokenChangedUnsubscribe;
   // TODO(rrousselGit): fix memory leak – the controller isn't closed even in onCancel
   // ignore: close_sinks
   StreamController<User?>? _idTokenChangedController;
@@ -428,11 +428,11 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
       void startListen() {
         assert(_onIdTokenChangedUnsubscribe == null);
         _onIdTokenChangedUnsubscribe =
-            jsObject.onIdTokenChanged(nextWrapper, errorWrapper);
+            jsObject.onIdTokenChanged(nextWrapper, errorWrapper.toJS);
       }
 
       void stopListen() {
-        _onIdTokenChangedUnsubscribe!();
+        (_onIdTokenChangedUnsubscribe!.dartify()! as Function)();
         _onIdTokenChangedUnsubscribe = null;
       }
 
@@ -456,19 +456,19 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// Applies a verification [oobCode] sent to the user by e-mail or by other
   /// out-of-band mechanism.
   Future applyActionCode(String oobCode) =>
-      handleThenable(auth_interop.applyActionCode(jsObject, oobCode));
+      auth_interop.applyActionCode(jsObject, oobCode.toJS).toDart;
 
   /// Checks a verification [code] sent to the user by e-mail or by other
   /// out-of-band mechanism.
   /// It returns [ActionCodeInfo], metadata about the code.
   Future<auth_interop.ActionCodeInfo> checkActionCode(String code) =>
-      handleThenable(auth_interop.checkActionCode(jsObject, code));
+      (auth_interop.checkActionCode(jsObject, code.toJS).toDart)
+          as Future<auth_interop.ActionCodeInfo>;
 
   /// Completes password reset process with a [code] and a [newPassword].
-  Future confirmPasswordReset(String code, String newPassword) =>
-      handleThenable(
-        auth_interop.confirmPasswordReset(jsObject, code, newPassword),
-      );
+  Future confirmPasswordReset(String code, String newPassword) => auth_interop
+      .confirmPasswordReset(jsObject, code.toJS, newPassword.toJS)
+      .toDart;
 
   /// Creates a new user account associated with the specified email address and
   /// password.
@@ -486,11 +486,11 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
     String email,
     String password,
   ) async {
-    final u = await handleThenable(
-      auth_interop.createUserWithEmailAndPassword(jsObject, email, password),
-    );
+    final u = await auth_interop
+        .createUserWithEmailAndPassword(jsObject, email.toJS, password.toJS)
+        .toDart;
 
-    return UserCredential.fromJsObject(u);
+    return UserCredential.fromJsObject(u! as auth_interop.UserCredentialJsImpl);
   }
 
   /// Gets the list of possible sign in methods for the given email address.
@@ -498,22 +498,27 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// This is useful to differentiate methods of sign-in for the same provider,
   /// eg. EmailAuthProvider which has 2 methods of sign-in, email/password and
   /// email/link.
-  Future<List<String>> fetchSignInMethodsForEmail(String email) =>
-      handleThenable(auth_interop.fetchSignInMethodsForEmail(jsObject, email))
-          .then(List<String>.from);
+  Future<List<String>> fetchSignInMethodsForEmail(String email) => auth_interop
+      .fetchSignInMethodsForEmail(jsObject, email.toJS)
+      .toDart
+      .then((value) => List<String>.from(value! as List<dynamic>));
 
   /// Checks if an incoming link is a sign-in with email link.
   bool isSignInWithEmailLink(String emailLink) =>
-      auth_interop.isSignInWithEmailLink(emailLink);
+      auth_interop.isSignInWithEmailLink(emailLink.toJS).toDart;
 
   /// Returns a [UserCredential] from the redirect-based sign in flow.
   /// If sign is successful, returns the signed in user. Or fails with an error
   /// if sign is unsuccessful.
   /// The [UserCredential] with a null [User] is returned if no redirect
   /// operation was called.
-  Future<UserCredential?> getRedirectResult() =>
-      handleThenable(auth_interop.getRedirectResult(jsObject)).then(
-          (value) => value == null ? null : UserCredential.fromJsObject(value));
+  Future<UserCredential?> getRedirectResult() => auth_interop
+      .getRedirectResult(jsObject)
+      .toDart
+      .then((value) => value == null
+          ? null
+          : UserCredential.fromJsObject(
+              value as auth_interop.UserCredentialJsImpl));
 
   /// Sends a sign-in email link to the user with the specified email.
   ///
@@ -527,8 +532,9 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// the email link supplied in the email sent to the user.
   Future sendSignInLinkToEmail(String email,
           [auth_interop.ActionCodeSettings? actionCodeSettings]) =>
-      handleThenable(auth_interop.sendSignInLinkToEmail(
-          jsObject, email, actionCodeSettings));
+      auth_interop
+          .sendSignInLinkToEmail(jsObject, email.toJS, actionCodeSettings)
+          .toDart;
 
   /// Changes the current type of persistence on the current Auth instance for
   /// the currently saved Auth session and applies this type of persistence
@@ -563,7 +569,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
         instance = auth_interop.inMemoryPersistence;
         break;
     }
-    return handleThenable(auth_interop.setPersistence(jsObject, instance));
+    return auth_interop.setPersistence(jsObject, instance).toDart;
   }
 
   /// Sends a password reset e-mail to the given [email].
@@ -587,24 +593,28 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// they are configured in the same Firebase Auth project used.
   Future sendPasswordResetEmail(String email,
           [auth_interop.ActionCodeSettings? actionCodeSettings]) =>
-      handleThenable(auth_interop.sendPasswordResetEmail(
-          jsObject, email, actionCodeSettings));
+      auth_interop
+          .sendPasswordResetEmail(jsObject, email.toJS, actionCodeSettings)
+          .toDart;
 
   /// Asynchronously signs in with the given credentials, and returns any
   /// available additional user information, such as user name.
   Future<UserCredential> signInWithCredential(
           auth_interop.OAuthCredential credential) =>
-      handleThenable(auth_interop.signInWithCredential(jsObject, credential))
-          .then(UserCredential.fromJsObject);
+      auth_interop.signInWithCredential(jsObject, credential).toDart.then(
+          (value) => UserCredential.fromJsObject(
+              value! as auth_interop.UserCredentialJsImpl));
 
   /// Asynchronously signs in as an anonymous user.
   //
   // If there is already an anonymous user signed in, that user will be
   // returned; otherwise, a new anonymous user identity will be created and
   // returned.
-  Future<UserCredential> signInAnonymously() =>
-      handleThenable(auth_interop.signInAnonymously(jsObject))
-          .then(UserCredential.fromJsObject);
+  Future<UserCredential> signInAnonymously() => auth_interop
+      .signInAnonymously(jsObject)
+      .toDart
+      .then((value) => UserCredential.fromJsObject(
+          value! as auth_interop.UserCredentialJsImpl));
 
   /// Asynchronously signs in using a custom token.
   ///
@@ -613,9 +623,11 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   ///
   /// Fails with an error if the token is invalid, expired, or not accepted by
   /// the Firebase Auth service.
-  Future<UserCredential> signInWithCustomToken(String token) =>
-      handleThenable(auth_interop.signInWithCustomToken(jsObject, token))
-          .then(UserCredential.fromJsObject);
+  Future<UserCredential> signInWithCustomToken(String token) => auth_interop
+      .signInWithCustomToken(jsObject, token.toJS)
+      .toDart
+      .then((value) => UserCredential.fromJsObject(
+          value! as auth_interop.UserCredentialJsImpl));
 
   /// Signs in a user asynchronously using a custom [token] and returns any
   /// additional user info data or credentials.
@@ -641,15 +653,19 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// Firebase project.
   Future<UserCredential> signInWithEmailAndPassword(
           String email, String password) =>
-      handleThenable(auth_interop.signInWithEmailAndPassword(
-              jsObject, email, password))
-          .then(UserCredential.fromJsObject);
+      auth_interop
+          .signInWithEmailAndPassword(jsObject, email.toJS, password.toJS)
+          .toDart
+          .then((value) => UserCredential.fromJsObject(
+              value! as auth_interop.UserCredentialJsImpl));
 
   /// Signs in using [email] and [emailLink] link.
   Future<UserCredential> signInWithEmailLink(String email, String emailLink) =>
-      handleThenable(
-              auth_interop.signInWithEmailLink(jsObject, email, emailLink))
-          .then(UserCredential.fromJsObject);
+      auth_interop
+          .signInWithEmailLink(jsObject, email.toJS, emailLink.toJS)
+          .toDart
+          .then((value) => UserCredential.fromJsObject(
+              value! as auth_interop.UserCredentialJsImpl));
 
   /// Asynchronously signs in using a phone number in E.164 format
   /// (e.g. +16505550101).
@@ -663,23 +679,28 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// The Firebase Auth SDK includes a reCAPTCHA-based implementation, [RecaptchaVerifier].
   Future<ConfirmationResult> signInWithPhoneNumber(
           String phoneNumber, ApplicationVerifier applicationVerifier) =>
-      handleThenable(auth_interop.signInWithPhoneNumber(
-              jsObject, phoneNumber, applicationVerifier.jsObject))
-          .then(ConfirmationResult.fromJsObject);
+      auth_interop
+          .signInWithPhoneNumber(
+              jsObject, phoneNumber.toJS, applicationVerifier.jsObject)
+          .toDart
+          .then((value) => ConfirmationResult.fromJsObject(
+              value! as auth_interop.ConfirmationResultJsImpl));
 
   /// Signs in using a popup-based OAuth authentication flow with the
   /// given [provider].
   /// Returns [UserCredential] if successful, or an error object if unsuccessful.
-  Future<UserCredential> signInWithPopup(AuthProvider provider) =>
-      handleThenable(auth_interop.signInWithPopup(jsObject, provider.jsObject))
-          .then(UserCredential.fromJsObject);
+  Future<UserCredential> signInWithPopup(AuthProvider provider) => auth_interop
+      .signInWithPopup(jsObject, provider.jsObject)
+      .toDart
+      .then((value) => UserCredential.fromJsObject(
+          value! as auth_interop.UserCredentialJsImpl));
 
   /// Signs in using a full-page redirect flow with the given [provider].
-  Future signInWithRedirect(AuthProvider provider) => handleThenable(
-      auth_interop.signInWithRedirect(jsObject, provider.jsObject));
+  Future signInWithRedirect(AuthProvider provider) =>
+      auth_interop.signInWithRedirect(jsObject, provider.jsObject).toDart;
 
   /// Signs out the current user.
-  Future signOut() => handleThenable(jsObject.signOut());
+  Future signOut() => jsObject.signOut().toDart;
 
   /// Configures the Auth instance to work with a local emulator
   ///
@@ -688,7 +709,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// Note: must be called before using auth methods, do not use
   /// with production credentials as local connections are unencrypted
   void useAuthEmulator(String origin) =>
-      auth_interop.connectAuthEmulator(jsObject, origin);
+      auth_interop.connectAuthEmulator(jsObject, origin.toJS);
 
   /// Sets the current language to the default device/browser preference.
   void useDeviceLanguage() => auth_interop.useDeviceLanguage(jsObject);
@@ -697,7 +718,8 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// or other out-of-band mechanism.
   /// Returns the user's e-mail address if valid.
   Future<String> verifyPasswordResetCode(String code) =>
-      handleThenable(auth_interop.verifyPasswordResetCode(jsObject, code));
+      auth_interop.verifyPasswordResetCode(jsObject, code.toJS).toDart
+          as Future<String>;
 }
 
 /// Represents an auth provider.
@@ -706,7 +728,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
 abstract class AuthProvider<T extends auth_interop.AuthProviderJsImpl>
     extends JsObjectWrapper<T> {
   /// Provider id.
-  String get providerId => jsObject.providerId;
+  String get providerId => jsObject.providerId.toDart;
 
   /// Creates a new AuthProvider from a [jsObject].
   AuthProvider.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
@@ -717,7 +739,8 @@ abstract class AuthProvider<T extends auth_interop.AuthProviderJsImpl>
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.EmailAuthProvider>.
 class EmailAuthProvider
     extends AuthProvider<auth_interop.EmailAuthProviderJsImpl> {
-  static String PROVIDER_ID = auth_interop.EmailAuthProviderJsImpl.PROVIDER_ID;
+  static String PROVIDER_ID =
+      auth_interop.EmailAuthProviderJsImpl.PROVIDER_ID.toDart;
 
   /// Creates a new EmailAuthProvider.
   factory EmailAuthProvider() =>
@@ -730,14 +753,14 @@ class EmailAuthProvider
   /// Creates a credential for e-mail.
   static auth_interop.OAuthCredential credential(
           String email, String password) =>
-      auth_interop.EmailAuthProviderJsImpl.credential(email, password)
+      auth_interop.EmailAuthProviderJsImpl.credential(email.toJS, password.toJS)
           as auth_interop.OAuthCredential;
 
   /// Creates a credential for e-mail with link.
   static auth_interop.OAuthCredential credentialWithLink(
           String email, String emailLink) =>
-      auth_interop.EmailAuthProviderJsImpl.credentialWithLink(email, emailLink)
-          as auth_interop.OAuthCredential;
+      auth_interop.EmailAuthProviderJsImpl.credentialWithLink(
+          email.toJS, emailLink.toJS) as auth_interop.OAuthCredential;
 }
 
 /// Facebook auth provider.
@@ -746,7 +769,7 @@ class EmailAuthProvider
 class FacebookAuthProvider
     extends AuthProvider<auth_interop.FacebookAuthProviderJsImpl> {
   static String PROVIDER_ID =
-      auth_interop.FacebookAuthProviderJsImpl.PROVIDER_ID;
+      auth_interop.FacebookAuthProviderJsImpl.PROVIDER_ID.toDart;
 
   /// Creates a new FacebookAuthProvider.
   factory FacebookAuthProvider() => FacebookAuthProvider.fromJsObject(
@@ -760,7 +783,7 @@ class FacebookAuthProvider
   /// Adds additional OAuth 2.0 scopes that you want to request from the
   /// authentication provider.
   FacebookAuthProvider addScope(String scope) =>
-      FacebookAuthProvider.fromJsObject(jsObject.addScope(scope));
+      FacebookAuthProvider.fromJsObject(jsObject.addScope(scope.toJS));
 
   /// Sets the OAuth custom parameters to pass in a Facebook OAuth request
   /// for popup and redirect sign-in operations.
@@ -779,7 +802,7 @@ class FacebookAuthProvider
 
   /// Creates a credential for Facebook.
   static auth_interop.OAuthCredential credential(String token) =>
-      auth_interop.FacebookAuthProviderJsImpl.credential(token);
+      auth_interop.FacebookAuthProviderJsImpl.credential(token.toJS);
 }
 
 /// Github auth provider.
@@ -787,7 +810,8 @@ class FacebookAuthProvider
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.GithubAuthProvider>.
 class GithubAuthProvider
     extends AuthProvider<auth_interop.GithubAuthProviderJsImpl> {
-  static String PROVIDER_ID = auth_interop.GithubAuthProviderJsImpl.PROVIDER_ID;
+  static String PROVIDER_ID =
+      auth_interop.GithubAuthProviderJsImpl.PROVIDER_ID.toDart;
 
   /// Creates a new GithubAuthProvider.
   factory GithubAuthProvider() =>
@@ -801,7 +825,7 @@ class GithubAuthProvider
   /// Adds additional OAuth 2.0 scopes that you want to request from the
   /// authentication provider.
   GithubAuthProvider addScope(String scope) =>
-      GithubAuthProvider.fromJsObject(jsObject.addScope(scope));
+      GithubAuthProvider.fromJsObject(jsObject.addScope(scope.toJS));
 
   /// Sets the OAuth custom parameters to pass in a GitHub OAuth request
   /// for popup and redirect sign-in operations.
@@ -820,7 +844,7 @@ class GithubAuthProvider
 
   /// Creates a credential for GitHub.
   static auth_interop.OAuthCredential credential(String token) =>
-      auth_interop.GithubAuthProviderJsImpl.credential(token);
+      auth_interop.GithubAuthProviderJsImpl.credential(token.toJS);
 }
 
 /// Google auth provider.
@@ -828,7 +852,8 @@ class GithubAuthProvider
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.GoogleAuthProvider>.
 class GoogleAuthProvider
     extends AuthProvider<auth_interop.GoogleAuthProviderJsImpl> {
-  static String PROVIDER_ID = auth_interop.GoogleAuthProviderJsImpl.PROVIDER_ID;
+  static String PROVIDER_ID =
+      auth_interop.GoogleAuthProviderJsImpl.PROVIDER_ID.toDart;
 
   /// Creates a new GoogleAuthProvider.
   factory GoogleAuthProvider() =>
@@ -842,7 +867,7 @@ class GoogleAuthProvider
   /// Adds additional OAuth 2.0 scopes that you want to request from the
   /// authentication provider.
   GoogleAuthProvider addScope(String scope) =>
-      GoogleAuthProvider.fromJsObject(jsObject.addScope(scope));
+      GoogleAuthProvider.fromJsObject(jsObject.addScope(scope.toJS));
 
   /// Sets the OAuth custom parameters to pass in a Google OAuth request
   /// for popup and redirect sign-in operations.
@@ -864,7 +889,8 @@ class GoogleAuthProvider
   /// At least one of [idToken] and [accessToken] is required.
   static auth_interop.OAuthCredential credential(
           [String? idToken, String? accessToken]) =>
-      auth_interop.GoogleAuthProviderJsImpl.credential(idToken, accessToken);
+      auth_interop.GoogleAuthProviderJsImpl.credential(
+          idToken?.toJS, accessToken?.toJS);
 }
 
 /// OAuth auth provider.
@@ -872,8 +898,8 @@ class GoogleAuthProvider
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.GoogleAuthProvider>.
 class OAuthProvider extends AuthProvider<auth_interop.OAuthProviderJsImpl> {
   /// Creates a new OAuthProvider.
-  factory OAuthProvider(String providerId) =>
-      OAuthProvider.fromJsObject(auth_interop.OAuthProviderJsImpl(providerId));
+  factory OAuthProvider(String providerId) => OAuthProvider.fromJsObject(
+      auth_interop.OAuthProviderJsImpl(providerId.toJS));
 
   /// Creates a new OAuthProvider from a [jsObject].
   OAuthProvider.fromJsObject(auth_interop.OAuthProviderJsImpl jsObject)
@@ -882,7 +908,7 @@ class OAuthProvider extends AuthProvider<auth_interop.OAuthProviderJsImpl> {
   /// Adds additional OAuth 2.0 scopes that you want to request from the
   /// authentication provider.
   OAuthProvider addScope(String scope) =>
-      OAuthProvider.fromJsObject(jsObject.addScope(scope));
+      OAuthProvider.fromJsObject(jsObject.addScope(scope.toJS));
 
   /// Sets the OAuth custom parameters to pass in an OAuth request for popup
   /// and redirect sign-in operations. For a detailed list, check the reserved
@@ -914,7 +940,7 @@ class OAuthProvider extends AuthProvider<auth_interop.OAuthProviderJsImpl> {
 class TwitterAuthProvider
     extends AuthProvider<auth_interop.TwitterAuthProviderJsImpl> {
   static String PROVIDER_ID =
-      auth_interop.TwitterAuthProviderJsImpl.PROVIDER_ID;
+      auth_interop.TwitterAuthProviderJsImpl.PROVIDER_ID.toDart;
 
   /// Creates a new TwitterAuthProvider.
   factory TwitterAuthProvider() => TwitterAuthProvider.fromJsObject(
@@ -940,7 +966,8 @@ class TwitterAuthProvider
 
   /// Creates a credential for Twitter.
   static auth_interop.OAuthCredential credential(String token, String secret) =>
-      auth_interop.TwitterAuthProviderJsImpl.credential(token, secret);
+      auth_interop.TwitterAuthProviderJsImpl.credential(
+          token.toJS, secret.toJS);
 }
 
 /// SAML auth provider.
@@ -969,7 +996,7 @@ class SAMLAuthProvider
 class PhoneAuthProvider
     extends AuthProvider<auth_interop.PhoneAuthProviderJsImpl> {
   static String get PROVIDER_ID =>
-      auth_interop.PhoneAuthProviderJsImpl.PROVIDER_ID;
+      auth_interop.PhoneAuthProviderJsImpl.PROVIDER_ID.toDart;
 
   /// Creates a new PhoneAuthProvider with the optional [Auth] instance
   /// in which sign-ins should occur.
@@ -999,7 +1026,7 @@ class PhoneAuthProvider
   static auth_interop.PhoneAuthCredentialJsImpl credential(
           String verificationId, String verificationCode) =>
       auth_interop.PhoneAuthProviderJsImpl.credential(
-          verificationId, verificationCode);
+          verificationId.toJS, verificationCode.toJS);
 }
 
 /// A verifier for domain verification and abuse prevention.
@@ -1009,7 +1036,7 @@ abstract class ApplicationVerifier<
         T extends auth_interop.ApplicationVerifierJsImpl>
     extends JsObjectWrapper<T> {
   /// Returns the type of application verifier (e.g. 'recaptcha').
-  String get type => jsObject.type;
+  String get type => jsObject.type.toDart;
 
   /// Creates a new ApplicationVerifier from a [jsObject].
   ApplicationVerifier.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
@@ -1017,7 +1044,7 @@ abstract class ApplicationVerifier<
   /// Executes the verification process.
   /// Returns a Future containing string for a token that can be used to
   /// assert the validity of a request.
-  Future<String> verify() => handleThenable(jsObject.verify());
+  Future<String> verify() => jsObject.verify().toDart as Future<String>;
 }
 
 /// reCAPTCHA verifier.
@@ -1073,7 +1100,7 @@ class RecaptchaVerifier
 
   /// Renders the reCAPTCHA widget on the page.
   /// Returns a Future that resolves with the reCAPTCHA widget ID.
-  Future<num> render() => handleThenable(jsObject.render());
+  Future<num> render() => jsObject.render().toDart as Future<num>;
 }
 
 /// A result from a phone number sign-in, link, or reauthenticate call.
@@ -1084,7 +1111,7 @@ class ConfirmationResult
   /// Returns the phone number authentication operation's verification ID.
   /// This can be used along with the verification code to initialize a phone
   /// auth credential.
-  String get verificationId => jsObject.verificationId;
+  String get verificationId => jsObject.verificationId.toDart;
 
   /// Creates a new ConfirmationResult from a [jsObject].
   ConfirmationResult.fromJsObject(
@@ -1093,9 +1120,11 @@ class ConfirmationResult
 
   /// Finishes a phone number sign-in, link, or reauthentication, given
   /// the code that was sent to the user's mobile device.
-  Future<UserCredential> confirm(String verificationCode) =>
-      handleThenable(jsObject.confirm(verificationCode))
-          .then(UserCredential.fromJsObject);
+  Future<UserCredential> confirm(String verificationCode) => jsObject
+      .confirm(verificationCode.toJS)
+      .toDart
+      .then((value) => UserCredential.fromJsObject(
+          value! as auth_interop.UserCredentialJsImpl));
 }
 
 /// A structure containing a [User], an [OAuthCredential] and [operationType].
@@ -1109,7 +1138,7 @@ class UserCredential
   User? get user => User.getInstance(jsObject.user);
 
   /// Returns the operation type.
-  String get operationType => jsObject.operationType;
+  String get operationType => jsObject.operationType.toDart;
 
   /// Returns additional user information from a federated identity provider.
   AdditionalUserInfo? get additionalUserInfo => AdditionalUserInfo.fromJsObject(
@@ -1127,16 +1156,16 @@ class UserCredential
 class AdditionalUserInfo
     extends JsObjectWrapper<auth_interop.AdditionalUserInfoJsImpl> {
   /// Returns the provider id.
-  String get providerId => jsObject.providerId;
+  String get providerId => jsObject.providerId.toDart;
 
   /// Returns the profile.
   Map<String, dynamic>? get profile => dartify(jsObject.profile);
 
   /// Returns the user name.
-  String get username => jsObject.username;
+  String get username => jsObject.username.toDart;
 
   /// Returns whether a user is a new or returning user.
-  bool get isNewUser => jsObject.isNewUser;
+  bool get isNewUser => jsObject.isNewUser.toDart;
 
   /// Creates a new AdditionalUserInfo from a [jsObject].
   AdditionalUserInfo.fromJsObject(

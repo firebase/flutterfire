@@ -437,11 +437,9 @@ abstract class AuthProviderJsImpl {
 
 @JS('EmailAuthProvider')
 @staticInterop
-class EmailAuthProviderJsImpl extends AuthProviderJsImpl {
+abstract class EmailAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory EmailAuthProviderJsImpl();
-}
 
-extension EmailAuthProviderJsImplExtension on EmailAuthProviderJsImpl {
   external static JSString get PROVIDER_ID;
   external static AuthCredential credential(JSString email, JSString password);
   external static AuthCredential credentialWithLink(
@@ -452,54 +450,61 @@ extension EmailAuthProviderJsImplExtension on EmailAuthProviderJsImpl {
 
 @JS('FacebookAuthProvider')
 @staticInterop
-class FacebookAuthProviderJsImpl extends AuthProviderJsImpl {
+abstract class FacebookAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory FacebookAuthProviderJsImpl();
+
+  external static JSString get PROVIDER_ID;
+  external static OAuthCredential credential(JSString token);
 }
 
 extension FacebookAuthProviderJsImplExtension on FacebookAuthProviderJsImpl {
-  external static JSString get PROVIDER_ID;
   external FacebookAuthProviderJsImpl addScope(JSString scope);
   external FacebookAuthProviderJsImpl setCustomParameters(
     dynamic customOAuthParameters,
   );
-  external static OAuthCredential credential(JSString token);
 }
 
 @JS('GithubAuthProvider')
 @staticInterop
-class GithubAuthProviderJsImpl extends AuthProviderJsImpl {
+abstract class GithubAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory GithubAuthProviderJsImpl();
+
+  external static JSString get PROVIDER_ID;
+  external static OAuthCredential credential(JSString token);
 }
 
 extension GithubAuthProviderJsImplExtension on GithubAuthProviderJsImpl {
-  external static JSString get PROVIDER_ID;
   external GithubAuthProviderJsImpl addScope(JSString scope);
   external GithubAuthProviderJsImpl setCustomParameters(
     dynamic customOAuthParameters,
   );
-  external static OAuthCredential credential(JSString token);
 }
 
 @JS('GoogleAuthProvider')
 @staticInterop
-class GoogleAuthProviderJsImpl extends AuthProviderJsImpl {
+abstract class GoogleAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory GoogleAuthProviderJsImpl();
+
+  external static JSString get PROVIDER_ID;
+  external static OAuthCredential credential(
+      [JSString? idToken, JSString? accessToken]);
 }
 
 extension GoogleAuthProviderJsImplExtension on GoogleAuthProviderJsImpl {
-  external static JSString get PROVIDER_ID;
   external GoogleAuthProviderJsImpl addScope(JSString scope);
   external GoogleAuthProviderJsImpl setCustomParameters(
     dynamic customOAuthParameters,
   );
-  external static OAuthCredential credential(
-      [JSString? idToken, JSString? accessToken]);
 }
 
 @JS('OAuthProvider')
 @staticInterop
 class OAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory OAuthProviderJsImpl(JSString providerId);
+
+  external static OAuthCredential? credentialFromResult(
+    UserCredentialJsImpl userCredential,
+  );
 }
 
 extension OAuthProviderJsImplExtension on OAuthProviderJsImpl {
@@ -508,40 +513,39 @@ extension OAuthProviderJsImplExtension on OAuthProviderJsImpl {
     dynamic customOAuthParameters,
   );
   external OAuthCredential credential(OAuthCredentialOptions credentialOptions);
-  external static OAuthCredential? credentialFromResult(
-    UserCredentialJsImpl userCredential,
-  );
 }
 
 @JS('TwitterAuthProvider')
 @staticInterop
 class TwitterAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory TwitterAuthProviderJsImpl();
+  external static JSString get PROVIDER_ID;
+
+  external static OAuthCredential credential(JSString token, JSString secret);
 }
 
 extension TwitterAuthProviderJsImplExtension on TwitterAuthProviderJsImpl {
-  external static JSString get PROVIDER_ID;
   external TwitterAuthProviderJsImpl setCustomParameters(
     dynamic customOAuthParameters,
   );
-  external static OAuthCredential credential(JSString token, JSString secret);
 }
 
 @JS('PhoneAuthProvider')
 @staticInterop
 class PhoneAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory PhoneAuthProviderJsImpl([AuthJsImpl? auth]);
-}
-
-extension PhoneAuthProviderJsImplExtension on PhoneAuthProviderJsImpl {
   external static JSString get PROVIDER_ID;
-  external PromiseJsImpl<String> verifyPhoneNumber(
-    dynamic /* PhoneInfoOptions | string */ phoneOptions,
-    ApplicationVerifierJsImpl applicationVerifier,
-  );
+
   external static PhoneAuthCredentialJsImpl credential(
     JSString verificationId,
     JSString verificationCode,
+  );
+}
+
+extension PhoneAuthProviderJsImplExtension on PhoneAuthProviderJsImpl {
+  external PromiseJsImpl<String> verifyPhoneNumber(
+    dynamic /* PhoneInfoOptions | string */ phoneOptions,
+    ApplicationVerifierJsImpl applicationVerifier,
   );
 }
 
@@ -549,9 +553,7 @@ extension PhoneAuthProviderJsImplExtension on PhoneAuthProviderJsImpl {
 @staticInterop
 class SAMLAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory SAMLAuthProviderJsImpl(String providerId);
-}
 
-extension SAMLAuthProviderJsImplExtension on SAMLAuthProviderJsImpl {
   external static OAuthCredential? credentialFromResult(
     UserCredentialJsImpl userCredential,
   );
@@ -563,7 +565,7 @@ abstract class ApplicationVerifierJsImpl {}
 
 extension ApplicationVerifierJsImplExtension on ApplicationVerifierJsImpl {
   external JSString get type;
-  external PromiseJsImpl<String> verify();
+  external JSPromise verify();
 }
 
 @JS('RecaptchaVerifier')
@@ -822,12 +824,11 @@ external dynamic get browserPopupRedirectResolver;
 class MultiFactorUserJsImpl {}
 
 extension MultiFactorUserJsImplExtension on MultiFactorUserJsImpl {
-  external List<MultiFactorInfoJsImpl> get enrolledFactors;
-  external PromiseJsImpl<void> enroll(
+  external JSArray get enrolledFactors;
+  external JSPromise enroll(
       MultiFactorAssertionJsImpl assertion, JSString? displayName);
-  external PromiseJsImpl<MultiFactorSessionJsImpl> getSession();
-  external PromiseJsImpl<void> unenroll(
-      dynamic /* MultiFactorInfo | string */ option);
+  external JSPromise getSession();
+  external JSPromise unenroll(dynamic /* MultiFactorInfo | string */ option);
 }
 
 /// https://firebase.google.com/docs/reference/js/auth.multifactorinfo
@@ -900,14 +901,14 @@ extension PhoneMultiFactorEnrollInfoOptionsJsImplExtension
 /// https://firebase.google.com/docs/reference/js/auth.phonemultifactorgenerator
 @JS('PhoneMultiFactorGenerator')
 @staticInterop
-class PhoneMultiFactorGeneratorJsImpl {}
-
-extension PhoneMultiFactorGeneratorJsImplExtension
-    on PhoneMultiFactorGeneratorJsImpl {
+class PhoneMultiFactorGeneratorJsImpl {
   external static JSString get FACTOR_ID;
   external static PhoneMultiFactorAssertionJsImpl? assertion(
       PhoneAuthCredentialJsImpl credential);
 }
+
+extension PhoneMultiFactorGeneratorJsImplExtension
+    on PhoneMultiFactorGeneratorJsImpl {}
 
 /// https://firebase.google.com/docs/reference/js/auth.totpsecret
 @JS('TotpSecret')
@@ -927,18 +928,17 @@ extension TotpSecretJsImplExtension on TotpSecretJsImpl {
 /// https://firebase.google.com/docs/reference/js/auth.totpmultifactorgenerator
 @JS('TotpMultiFactorGenerator')
 @staticInterop
-class TotpMultiFactorGeneratorJsImpl {}
-
-extension TotpMultiFactorGeneratorJsImplExtension
-    on TotpMultiFactorGeneratorJsImpl {
+class TotpMultiFactorGeneratorJsImpl {
   external static JSString get FACTOR_ID;
   external static TotpMultiFactorAssertionJsImpl? assertionForEnrollment(
       TotpSecretJsImpl secret, JSString oneTimePassword);
   external static TotpMultiFactorAssertionJsImpl? assertionForSignIn(
       JSString enrollmentId, JSString oneTimePassword);
-  external static PromiseJsImpl<TotpSecretJsImpl> generateSecret(
-      MultiFactorSessionJsImpl session);
+  external static JSPromise generateSecret(MultiFactorSessionJsImpl session);
 }
+
+extension TotpMultiFactorGeneratorJsImplExtension
+    on TotpMultiFactorGeneratorJsImpl {}
 
 /// https://firebase.google.com/docs/reference/js/auth.phonemultifactorassertion
 @JS()

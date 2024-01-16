@@ -4,6 +4,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:io';
+import 'dart:js_interop';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_web/firebase_auth_web.dart';
@@ -44,8 +45,8 @@ FirebaseAuthException getFirebaseAuthException(
   }
 
   auth_interop.AuthError firebaseError = exception as auth_interop.AuthError;
-  String code = firebaseError.code.replaceFirst('auth/', '');
-  String message = firebaseError.message
+  String code = firebaseError.code.toDart.replaceFirst('auth/', '');
+  String message = firebaseError.message.toDart
       .replaceFirst(' (${firebaseError.code}).', '')
       .replaceFirst('Firebase: ', '');
 
@@ -69,9 +70,9 @@ FirebaseAuthException getFirebaseAuthException(
     return FirebaseAuthMultiFactorExceptionPlatform(
       code: code,
       message: message,
-      email: customData.email,
-      phoneNumber: customData.phoneNumber,
-      tenantId: customData.tenantId,
+      email: customData.email?.toDart,
+      phoneNumber: customData.phoneNumber?.toDart,
+      tenantId: customData.tenantId?.toDart,
       resolver: MultiFactorResolverWeb(
         resolverWeb.hints.map(fromInteropMultiFactorInfo).toList(),
         MultiFactorSessionWeb('web', resolverWeb.session),
@@ -85,9 +86,9 @@ FirebaseAuthException getFirebaseAuthException(
   return FirebaseAuthException(
     code: code,
     message: message,
-    email: customData.email,
-    phoneNumber: customData.phoneNumber,
-    tenantId: customData.tenantId,
+    email: customData.email?.toDart,
+    phoneNumber: customData.phoneNumber?.toDart,
+    tenantId: customData.tenantId?.toDart,
   );
 }
 
@@ -131,8 +132,8 @@ ActionCodeInfo? convertWebActionCodeInfo(
   return ActionCodeInfo(
     operation: ActionCodeInfoOperation.passwordReset,
     data: ActionCodeInfoData(
-      email: webActionCodeInfo.data.email,
-      previousEmail: webActionCodeInfo.data.previousEmail,
+      email: webActionCodeInfo.data.email.toDart,
+      previousEmail: webActionCodeInfo.data.previousEmail.toDart,
     ),
   );
 }
@@ -183,14 +184,14 @@ auth_interop.ActionCodeSettings? convertPlatformActionCodeSettings(
 
   if (actionCodeSettings.dynamicLinkDomain != null) {
     webActionCodeSettings = auth_interop.ActionCodeSettings(
-      url: actionCodeSettings.url,
-      handleCodeInApp: actionCodeSettings.handleCodeInApp,
-      dynamicLinkDomain: actionCodeSettings.dynamicLinkDomain,
+      url: actionCodeSettings.url.toJS,
+      handleCodeInApp: actionCodeSettings.handleCodeInApp.toJS,
+      dynamicLinkDomain: actionCodeSettings.dynamicLinkDomain?.toJS,
     );
   } else {
     webActionCodeSettings = auth_interop.ActionCodeSettings(
-      url: actionCodeSettings.url,
-      handleCodeInApp: actionCodeSettings.handleCodeInApp,
+      url: actionCodeSettings.url.toJS,
+      handleCodeInApp: actionCodeSettings.handleCodeInApp.toJS,
     );
   }
 
@@ -307,8 +308,8 @@ AuthCredential? convertWebAuthCredential(
   }
 
   return AuthCredential(
-    providerId: authCredential.providerId,
-    signInMethod: authCredential.signInMethod,
+    providerId: authCredential.providerId.toDart,
+    signInMethod: authCredential.signInMethod.toDart,
   );
 }
 
@@ -328,11 +329,11 @@ AuthCredential? convertWebOAuthCredential(
     return null;
   }
 
-  return OAuthProvider(authCredential.providerId).credential(
-    signInMethod: authCredential.signInMethod,
-    accessToken: authCredential.accessToken,
-    secret: authCredential.secret,
-    idToken: authCredential.idToken,
+  return OAuthProvider(authCredential.providerId.toDart).credential(
+    signInMethod: authCredential.signInMethod.toDart,
+    accessToken: authCredential.accessToken.toDart,
+    secret: authCredential.secret.toDart,
+    idToken: authCredential.idToken.toDart,
   );
 }
 
@@ -386,9 +387,9 @@ auth_interop.OAuthCredential? convertPlatformCredential(
   if (credential is OAuthCredential) {
     auth_interop.OAuthCredentialOptions credentialOptions =
         auth_interop.OAuthCredentialOptions(
-      accessToken: credential.accessToken,
-      rawNonce: credential.rawNonce,
-      idToken: credential.idToken,
+      accessToken: credential.accessToken?.toJS,
+      rawNonce: credential.rawNonce?.toJS,
+      idToken: credential.idToken?.toJS,
     );
     return auth_interop.OAuthProvider(credential.providerId)
         .credential(credentialOptions);
