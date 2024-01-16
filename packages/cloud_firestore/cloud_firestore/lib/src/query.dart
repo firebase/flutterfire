@@ -646,8 +646,8 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
 
     if (fieldOrFilter is Filter) {
       assert(
-      isEqualTo == null &&
-          isNotEqualTo == null &&
+        isEqualTo == null &&
+            isNotEqualTo == null &&
             isLessThan == null &&
             isLessThanOrEqualTo == null &&
             isGreaterThan == null &&
