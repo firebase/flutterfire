@@ -34,14 +34,16 @@ class UserWeb extends UserPlatform {
                 creationTimestamp: _webUser.metadata.creationTime != null
                     ? (js_interop.globalContext.getProperty('Date'.toJS)!
                             as js_interop.JSObject)
-                        .callMethod(
-                            'parse'.toJS, _webUser.metadata.creationTime)
+                        .callMethod<js_interop.JSNumber>(
+                            'parse'.toJS, _webUser.metadata.lastSignInTime)
+                        .toDartInt
                     : null,
                 lastSignInTimestamp: _webUser.metadata.lastSignInTime != null
                     ? (js_interop.globalContext.getProperty('Date'.toJS)!
                             as js_interop.JSObject)
-                        .callMethod(
+                        .callMethod<js_interop.JSNumber>(
                             'parse'.toJS, _webUser.metadata.lastSignInTime)
+                        .toDartInt
                     : null,
                 phoneNumber: _webUser.phoneNumber,
                 photoUrl: _webUser.photoURL,

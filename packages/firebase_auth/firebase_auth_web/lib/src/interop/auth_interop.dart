@@ -316,10 +316,10 @@ extension IdTokenResultImplExtension on IdTokenResultImpl {
 abstract class UserInfoJsImpl {}
 
 extension UserInfoJsImplExtension on UserInfoJsImpl {
-  external JSString get displayName;
-  external JSString get email;
-  external JSString get phoneNumber;
-  external JSString get photoURL;
+  external JSString? get displayName;
+  external JSString? get email;
+  external JSString? get phoneNumber;
+  external JSString? get photoURL;
   external JSString get providerId;
   external JSString get uid;
 }
@@ -335,7 +335,7 @@ extension UserJsImplExtension on UserJsImpl {
   external JSBoolean get isAnonymous;
   external JSArray get providerData;
   external JSString get refreshToken;
-  external JSString get tenantId;
+  external JSString? get tenantId;
   external UserMetadata get metadata;
   external JSPromise delete();
   external JSPromise getIdToken([JSBoolean? opt_forceRefresh]);

@@ -42,16 +42,16 @@ Auth getAuthInstance(App app) {
 class UserInfo<T extends auth_interop.UserInfoJsImpl>
     extends JsObjectWrapper<T> {
   /// User's display name.
-  String? get displayName => jsObject.displayName.toDart;
+  String? get displayName => jsObject.displayName?.toDart;
 
   /// User's e-mail address.
-  String? get email => jsObject.email.toDart;
+  String? get email => jsObject.email?.toDart;
 
   /// The user's E.164 formatted phone number (if available).
-  String? get phoneNumber => jsObject.phoneNumber.toDart;
+  String? get phoneNumber => jsObject.phoneNumber?.toDart;
 
   /// User's profile picture URL.
-  String? get photoURL => jsObject.photoURL.toDart;
+  String? get photoURL => jsObject.photoURL?.toDart;
 
   /// User's authentication provider ID.
   String get providerId => jsObject.providerId.toDart;
@@ -79,7 +79,7 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   /// If the user is anonymous.
   bool get isAnonymous => jsObject.isAnonymous.toDart;
 
-  String? get tenantId => jsObject.tenantId.toDart;
+  String? get tenantId => jsObject.tenantId?.toDart;
 
   /// Non-null additional metadata about the user.
   auth_interop.UserMetadata get metadata => jsObject.metadata;
@@ -355,7 +355,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
       completer.complete();
     };
 
-    final errorWrapper = (e) => _changeController!.addError(e);
+    final errorWrapper = (JSAny e) => _changeController!.addError(e);
 
     final unsubscribe =
         jsObject.onAuthStateChanged(nextWrapper.toJS, errorWrapper.toJS);
@@ -382,7 +382,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
         _changeController!.add(User.getInstance(user));
       };
 
-      final errorWrapper = (e) => _changeController!.addError(e);
+      final errorWrapper = (JSAny e) => _changeController!.addError(e);
 
       void startListen() {
         assert(_onAuthUnsubscribe == null);
@@ -423,7 +423,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
         _idTokenChangedController!.add(User.getInstance(user));
       };
 
-      final errorWrapper = (e) => _idTokenChangedController!.addError(e);
+      final errorWrapper = (JSAny e) => _idTokenChangedController!.addError(e);
 
       void startListen() {
         assert(_onIdTokenChangedUnsubscribe == null);
