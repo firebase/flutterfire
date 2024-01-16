@@ -146,8 +146,10 @@ void setupTaskTests() {
 
         expect(streamError.plugin, 'firebase_storage');
         expect(streamError.code, 'unauthorized');
-        expect(streamError.message,
-            'User is not authorized to perform the desired action.');
+        expect(
+          streamError.message,
+          'User is not authorized to perform the desired action.',
+        );
 
         expect(task.snapshot.state, TaskState.error);
       });
