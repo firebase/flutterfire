@@ -26,4 +26,7 @@ extension JSErrorExtension on JSError {
   external String? get name;
   external String? get message;
   external String? get code;
+
+  // "customData" - see Firebase AuthError docs: https://firebase.google.com/docs/reference/js/auth.autherror
+  external dynamic get customData;
 }

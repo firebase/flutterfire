@@ -9,21 +9,22 @@
 @JS('firebase_auth')
 library firebase_interop.auth;
 
+import 'dart:js_interop';
+
 import 'package:firebase_auth_web/src/interop/auth.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
-import 'package:js/js.dart';
 
 @JS()
 external AuthJsImpl getAuth([AppJsImpl? app]);
 
 @JS()
-external AuthJsImpl initializeAuth(AppJsImpl app, dynamic debugErrorMap);
+external AuthJsImpl initializeAuth(AppJsImpl app, JSAny debugErrorMap);
 
 @JS('debugErrorMap')
-external Map get debugErrorMap;
+external JSAny get debugErrorMap;
 
 @JS()
-external PromiseJsImpl<void> applyActionCode(AuthJsImpl auth, String oobCode);
+external JSPromise applyActionCode(AuthJsImpl auth, JSString oobCode);
 
 @JS()
 external Persistence inMemoryPersistence;
@@ -35,31 +36,31 @@ external Persistence browserLocalPersistence;
 external Persistence indexedDBLocalPersistence;
 
 @JS()
-external PromiseJsImpl<ActionCodeInfo> checkActionCode(
-    AuthJsImpl auth, String oobCode);
+// Promise<ActionCode>
+external JSPromise checkActionCode(AuthJsImpl auth, JSString oobCode);
 
 @JS()
-external PromiseJsImpl<void> confirmPasswordReset(
+external JSPromise confirmPasswordReset(
   AuthJsImpl auth,
-  String oobCode,
-  String newPassword,
+  JSString oobCode,
+  JSString newPassword,
 );
 
 @JS()
 external void connectAuthEmulator(
   AuthJsImpl auth,
-  String origin,
+  JSString origin,
 );
 
 @JS()
-external PromiseJsImpl<void> setPersistence(
-    AuthJsImpl auth, Persistence persistence);
+external JSPromise setPersistence(AuthJsImpl auth, Persistence persistence);
 
 @JS()
-external PromiseJsImpl<UserCredentialJsImpl> createUserWithEmailAndPassword(
+// Promise<UserCredential>
+external JSPromise createUserWithEmailAndPassword(
   AuthJsImpl auth,
-  String email,
-  String password,
+  JSString email,
+  JSString password,
 );
 
 @JS()
@@ -67,173 +68,189 @@ external AdditionalUserInfoJsImpl getAdditionalUserInfo(
     UserCredentialJsImpl userCredential);
 
 @JS()
-external PromiseJsImpl<void> deleteUser(
+external JSPromise deleteUser(
   UserJsImpl user,
 );
 
 @JS()
-external PromiseJsImpl<List> fetchSignInMethodsForEmail(
-    AuthJsImpl auth, String email);
+// Promise<List>
+external JSPromise fetchSignInMethodsForEmail(AuthJsImpl auth, JSString email);
 
 @JS()
-external bool isSignInWithEmailLink(String emailLink);
+external JSBoolean isSignInWithEmailLink(JSString emailLink);
 
 @JS()
-external PromiseJsImpl<UserCredentialJsImpl?> getRedirectResult(
+// Promise<UserCredential>
+external JSPromise getRedirectResult(
   AuthJsImpl auth,
 );
 
 @JS()
-external PromiseJsImpl<void> sendSignInLinkToEmail(
+external JSPromise sendSignInLinkToEmail(
   AuthJsImpl auth,
-  String email, [
+  JSString email, [
   ActionCodeSettings? actionCodeSettings,
 ]);
 
 @JS()
-external PromiseJsImpl<void> sendPasswordResetEmail(
+external JSPromise sendPasswordResetEmail(
   AuthJsImpl auth,
-  String email, [
+  JSString email, [
   ActionCodeSettings? actionCodeSettings,
 ]);
 
 @JS()
-external PromiseJsImpl<UserCredentialJsImpl> signInWithCredential(
+// Promise<UserCredential>
+external JSPromise signInWithCredential(
   AuthJsImpl auth,
   OAuthCredential credential,
 );
 
 @JS()
-external PromiseJsImpl<UserCredentialJsImpl> signInAnonymously(AuthJsImpl auth);
+// Promise<UserCredential>
+external JSPromise signInAnonymously(AuthJsImpl auth);
 
 @JS()
-external PromiseJsImpl<UserCredentialJsImpl> signInWithCustomToken(
+// Promise<UserCredential>
+external JSPromise signInWithCustomToken(
   AuthJsImpl auth,
-  String token,
+  JSString token,
 );
 
 @JS()
-external PromiseJsImpl<UserCredentialJsImpl> signInWithEmailAndPassword(
+// Promise<UserCredential>
+external JSPromise signInWithEmailAndPassword(
   AuthJsImpl auth,
-  String email,
-  String password,
+  JSString email,
+  JSString password,
 );
 
 @JS()
-external PromiseJsImpl<UserCredentialJsImpl> signInWithEmailLink(
+// Promise<UserCredential>
+external JSPromise signInWithEmailLink(
   AuthJsImpl auth,
-  String email,
-  String emailLink,
+  JSString email,
+  JSString emailLink,
 );
 
 @JS()
-external PromiseJsImpl<ConfirmationResultJsImpl> signInWithPhoneNumber(
+// Promise<ConfirmationResult>
+external JSPromise signInWithPhoneNumber(
   AuthJsImpl auth,
-  String phoneNumber,
+  JSString phoneNumber,
   ApplicationVerifierJsImpl applicationVerifier,
 );
 
 @JS()
-external PromiseJsImpl<UserCredentialJsImpl> signInWithPopup(
+// Promise<UserCredential>
+external JSPromise signInWithPopup(
   AuthJsImpl auth,
   AuthProviderJsImpl provider,
 );
 
 @JS()
-external PromiseJsImpl<void> signInWithRedirect(
+external JSPromise signInWithRedirect(
   AuthJsImpl auth,
   AuthProviderJsImpl provider,
 );
 
 @JS()
-external PromiseJsImpl<String> verifyPasswordResetCode(
+// Promise<String>
+external JSPromise verifyPasswordResetCode(
   AuthJsImpl auth,
-  String code,
+  JSString code,
 );
 
 @JS()
-external PromiseJsImpl<UserCredentialJsImpl> linkWithCredential(
+// Promise<UserCredential>
+external JSPromise linkWithCredential(
   UserJsImpl user,
   OAuthCredential? credential,
 );
 
 @JS()
-external PromiseJsImpl<ConfirmationResultJsImpl> linkWithPhoneNumber(
+// Promise<ConfirmationResult>
+external JSPromise linkWithPhoneNumber(
   UserJsImpl user,
-  String phoneNumber,
+  JSString phoneNumber,
   ApplicationVerifierJsImpl applicationVerifier,
 );
 
 @JS()
-external PromiseJsImpl<UserCredentialJsImpl> linkWithPopup(
+// Promise<UserCredential>
+external JSPromise linkWithPopup(
   UserJsImpl user,
   AuthProviderJsImpl provider,
 );
 
 @JS()
-external PromiseJsImpl<void> linkWithRedirect(
+external JSPromise linkWithRedirect(
   UserJsImpl user,
   AuthProviderJsImpl provider,
 );
 
 @JS()
-external PromiseJsImpl<UserCredentialJsImpl> reauthenticateWithCredential(
+// Promise<UserCredential>
+external JSPromise reauthenticateWithCredential(
   UserJsImpl user,
   OAuthCredential credential,
 );
 
 @JS()
-external PromiseJsImpl<ConfirmationResultJsImpl> reauthenticateWithPhoneNumber(
+// Promise<ConfirmationResult>
+external JSPromise reauthenticateWithPhoneNumber(
   UserJsImpl user,
-  String phoneNumber,
+  JSString phoneNumber,
   ApplicationVerifierJsImpl applicationVerifier,
 );
 
 @JS()
-external PromiseJsImpl<UserCredentialJsImpl> reauthenticateWithPopup(
+// Promise<UserCredential>
+external JSPromise reauthenticateWithPopup(
   UserJsImpl user,
   AuthProviderJsImpl provider,
 );
 
 @JS()
-external PromiseJsImpl<void> reauthenticateWithRedirect(
+external JSPromise reauthenticateWithRedirect(
   UserJsImpl user,
   AuthProviderJsImpl provider,
 );
 
 @JS()
-external PromiseJsImpl<void> sendEmailVerification([
+external JSPromise sendEmailVerification([
   UserJsImpl user,
   ActionCodeSettings? actionCodeSettings,
 ]);
 
 @JS()
-external PromiseJsImpl<void> verifyBeforeUpdateEmail(
+external JSPromise verifyBeforeUpdateEmail(
   UserJsImpl user,
-  String newEmail, [
+  JSString newEmail, [
   ActionCodeSettings? actionCodeSettings,
 ]);
 
 @JS()
-external PromiseJsImpl<UserJsImpl> unlink(UserJsImpl user, String providerId);
+// Promise<User>
+external JSPromise unlink(UserJsImpl user, JSString providerId);
 
 @JS()
-external PromiseJsImpl<void> updateEmail(UserJsImpl user, String newEmail);
+external JSPromise updateEmail(UserJsImpl user, JSString newEmail);
 
 @JS()
-external PromiseJsImpl<void> updatePassword(
+external JSPromise updatePassword(
   UserJsImpl user,
-  String newPassword,
+  JSString newPassword,
 );
 
 @JS()
-external PromiseJsImpl<void> updatePhoneNumber(
+external JSPromise updatePhoneNumber(
   UserJsImpl user,
   OAuthCredential? phoneCredential,
 );
 
 @JS()
-external PromiseJsImpl<void> updateProfile(
+external JSPromise updateProfile(
   UserJsImpl user,
   UserProfile profile,
 );
@@ -255,73 +272,87 @@ external MultiFactorResolverJsImpl getMultiFactorResolver(
 );
 
 @JS('Auth')
-abstract class AuthJsImpl {
+@staticInterop
+abstract class AuthJsImpl {}
+
+extension AuthJsImplExtension on AuthJsImpl {
   external AppJsImpl get app;
   external UserJsImpl get currentUser;
-  external String get languageCode;
-  external set languageCode(String? s);
+  external JSString get languageCode;
+  external set languageCode(JSString? s);
   external AuthSettings get settings;
-  external String? get tenantId;
-  external set tenantId(String? s);
-  external Func0 onAuthStateChanged(
-    dynamic nextOrObserver, [
-    Func1? opt_error,
-    Func0? opt_completed,
+  external JSString? get tenantId;
+  external set tenantId(JSString? s);
+  external JSFunction onAuthStateChanged(
+    JSFunction nextOrObserver, [
+    JSFunction? opt_error,
+    JSFunction? opt_completed,
   ]);
-  external Func0 onIdTokenChanged(
-    dynamic nextOrObserver, [
-    Func1? opt_error,
-    Func0? opt_completed,
+  external JSFunction onIdTokenChanged(
+    JSFunction nextOrObserver, [
+    JSFunction? opt_error,
+    JSFunction? opt_completed,
   ]);
-  external PromiseJsImpl<void> signOut();
+  external JSPromise signOut();
 }
 
 @anonymous
 @JS()
-abstract class IdTokenResultImpl {
-  external String get authTime;
-  external Object get claims;
-  external String get expirationTime;
-  external String get issuedAtTime;
-  external String get signInProvider;
-  external String get token;
+@staticInterop
+abstract class IdTokenResultImpl {}
+
+extension IdTokenResultImplExtension on IdTokenResultImpl {
+  external JSString get authTime;
+  external JSObject get claims;
+  external JSString get expirationTime;
+  external JSString get issuedAtTime;
+  external JSString get signInProvider;
+  external JSString get token;
 }
 
 @anonymous
 @JS()
-abstract class UserInfoJsImpl {
-  external String get displayName;
-  external String get email;
-  external String get phoneNumber;
-  external String get photoURL;
-  external String get providerId;
-  external String get uid;
+@staticInterop
+abstract class UserInfoJsImpl {}
+
+extension UserInfoJsImplExtension on UserInfoJsImpl {
+  external JSString? get displayName;
+  external JSString? get email;
+  external JSString? get phoneNumber;
+  external JSString? get photoURL;
+  external JSString get providerId;
+  external JSString get uid;
 }
 
 /// https://firebase.google.com/docs/reference/js/firebase.User
 @anonymous
 @JS()
-abstract class UserJsImpl extends UserInfoJsImpl {
-  external bool get emailVerified;
-  external bool get isAnonymous;
-  external List<UserInfoJsImpl> get providerData;
-  external String get refreshToken;
-  external String get tenantId;
+@staticInterop
+abstract class UserJsImpl extends UserInfoJsImpl {}
+
+extension UserJsImplExtension on UserJsImpl {
+  external JSBoolean get emailVerified;
+  external JSBoolean get isAnonymous;
+  external JSArray get providerData;
+  external JSString get refreshToken;
+  external JSString? get tenantId;
   external UserMetadata get metadata;
-  external PromiseJsImpl<void> delete();
-  external PromiseJsImpl<String> getIdToken([bool? opt_forceRefresh]);
-  external PromiseJsImpl<IdTokenResultImpl> getIdTokenResult(
-      [bool? opt_forceRefresh]);
-  external PromiseJsImpl<void> reload();
-  external Object toJSON();
+  external JSPromise delete();
+  external JSPromise getIdToken([JSBoolean? opt_forceRefresh]);
+  external JSPromise getIdTokenResult([JSBoolean? opt_forceRefresh]);
+  external JSPromise reload();
+  external JSObject toJSON();
 }
 
 /// An enumeration of the possible persistence mechanism types.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.Auth#.Persistence>
 @JS('Persistence')
-class Persistence {
-  external String get type;
+@staticInterop
+class Persistence {}
+
+extension PersistenceExtension on Persistence {
+  external JSString get type;
 }
 
 /// Interface that represents the credentials returned by an auth provider.
@@ -330,15 +361,18 @@ class Persistence {
 ///
 /// See <https://firebase.google.com/docs/reference/js/firebase.auth.AuthCredential>.
 @JS('AuthCredential')
-abstract class AuthCredential {
+@staticInterop
+abstract class AuthCredential {}
+
+extension AuthCredentialExtension on AuthCredential {
   /// The authentication provider ID for the credential. For example,
   /// 'facebook.com', or 'google.com'.
-  external String get providerId;
+  external JSString get providerId;
 
   /// The authentication sign in method for the credential. For example,
   /// 'password', or 'emailLink'. This corresponds to the sign-in method
   /// identifier as returned in firebase.auth.Auth.fetchSignInMethodsForEmail.
-  external String get signInMethod;
+  external JSString get signInMethod;
 }
 
 /// Interface that represents the OAuth credentials returned by an OAuth
@@ -347,170 +381,227 @@ abstract class AuthCredential {
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.OAuthCredential>.
 @JS()
+@staticInterop
 @anonymous
-abstract class OAuthCredential extends AuthCredential {
+abstract class OAuthCredential extends AuthCredential {}
+
+extension OAuthCredentialExtension on OAuthCredential {
   /// The OAuth access token associated with the credential if it belongs to
   /// an OAuth provider, such as facebook.com, twitter.com, etc.
-  external String get accessToken;
+  external JSString get accessToken;
 
   /// The OAuth ID token associated with the credential if it belongs to an
   /// OIDC provider, such as google.com.
-  external String get idToken;
+  external JSString get idToken;
 
   /// The OAuth access token secret associated with the credential if it
   /// belongs to an OAuth 1.0 provider, such as twitter.com.
-  external String get secret;
+  external JSString get secret;
 }
 
 /// Defines the options for initializing an firebase.auth.OAuthCredential.
 /// For ID tokens with nonce claim, the raw nonce has to also be provided.
 
 @JS()
+@staticInterop
 @anonymous
 class OAuthCredentialOptions {
-  /// The OAuth access token used to initialize the OAuthCredential.
-  external String get accessToken;
-  external set accessToken(String a);
-
-  /// The OAuth ID token used to initialize the OAuthCredential.
-  external String get idToken;
-  external set idToken(String i);
-
-  /// The raw nonce associated with the ID token. It is required when an ID token with a nonce field is provided.
-  /// The SHA-256 hash of the raw nonce must match the nonce field in the ID token.
-  external String get rawNonce;
-  external set rawNonce(String r);
   external factory OAuthCredentialOptions({
-    String? accessToken,
-    String? idToken,
-    String? rawNonce,
+    JSString? accessToken,
+    JSString? idToken,
+    JSString? rawNonce,
   });
 }
 
+extension OAuthCredentialOptionsExtension on OAuthCredentialOptions {
+  /// The OAuth access token used to initialize the OAuthCredential.
+  external JSString get accessToken;
+  external set accessToken(JSString a);
+
+  /// The OAuth ID token used to initialize the OAuthCredential.
+  external JSString get idToken;
+  external set idToken(JSString i);
+
+  /// The raw nonce associated with the ID token. It is required when an ID token with a nonce field is provided.
+  /// The SHA-256 hash of the raw nonce must match the nonce field in the ID token.
+  external JSString get rawNonce;
+  external set rawNonce(JSString r);
+}
+
 @JS('AuthProvider')
+@staticInterop
 @anonymous
-abstract class AuthProviderJsImpl {
-  external String get providerId;
+abstract class AuthProviderJsImpl {}
+
+extension AuthProviderJsImplExtension on AuthProviderJsImpl {
+  external JSString get providerId;
 }
 
 @JS('EmailAuthProvider')
-class EmailAuthProviderJsImpl extends AuthProviderJsImpl {
+@staticInterop
+abstract class EmailAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory EmailAuthProviderJsImpl();
-  external static String get PROVIDER_ID;
-  external static AuthCredential credential(String email, String password);
+
+  external static JSString get PROVIDER_ID;
+  external static AuthCredential credential(JSString email, JSString password);
   external static AuthCredential credentialWithLink(
-    String email,
-    String emailLink,
+    JSString email,
+    JSString emailLink,
   );
 }
 
 @JS('FacebookAuthProvider')
-class FacebookAuthProviderJsImpl extends AuthProviderJsImpl {
+@staticInterop
+abstract class FacebookAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory FacebookAuthProviderJsImpl();
-  external static String get PROVIDER_ID;
-  external FacebookAuthProviderJsImpl addScope(String scope);
+
+  external static JSString get PROVIDER_ID;
+  external static OAuthCredential credential(JSString token);
+}
+
+extension FacebookAuthProviderJsImplExtension on FacebookAuthProviderJsImpl {
+  external FacebookAuthProviderJsImpl addScope(JSString scope);
   external FacebookAuthProviderJsImpl setCustomParameters(
-    dynamic customOAuthParameters,
+    JSAny customOAuthParameters,
   );
-  external static OAuthCredential credential(String token);
 }
 
 @JS('GithubAuthProvider')
-class GithubAuthProviderJsImpl extends AuthProviderJsImpl {
+@staticInterop
+abstract class GithubAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory GithubAuthProviderJsImpl();
-  external static String get PROVIDER_ID;
-  external GithubAuthProviderJsImpl addScope(String scope);
+
+  external static JSString get PROVIDER_ID;
+  external static OAuthCredential credential(JSString token);
+}
+
+extension GithubAuthProviderJsImplExtension on GithubAuthProviderJsImpl {
+  external GithubAuthProviderJsImpl addScope(JSString scope);
   external GithubAuthProviderJsImpl setCustomParameters(
-    dynamic customOAuthParameters,
+    JSAny customOAuthParameters,
   );
-  external static OAuthCredential credential(String token);
 }
 
 @JS('GoogleAuthProvider')
-class GoogleAuthProviderJsImpl extends AuthProviderJsImpl {
+@staticInterop
+abstract class GoogleAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory GoogleAuthProviderJsImpl();
-  external static String get PROVIDER_ID;
-  external GoogleAuthProviderJsImpl addScope(String scope);
-  external GoogleAuthProviderJsImpl setCustomParameters(
-    dynamic customOAuthParameters,
-  );
+
+  external static JSString get PROVIDER_ID;
   external static OAuthCredential credential(
-      [String? idToken, String? accessToken]);
+      [JSString? idToken, JSString? accessToken]);
+}
+
+extension GoogleAuthProviderJsImplExtension on GoogleAuthProviderJsImpl {
+  external GoogleAuthProviderJsImpl addScope(JSString scope);
+  external GoogleAuthProviderJsImpl setCustomParameters(
+    JSAny customOAuthParameters,
+  );
 }
 
 @JS('OAuthProvider')
+@staticInterop
 class OAuthProviderJsImpl extends AuthProviderJsImpl {
-  external factory OAuthProviderJsImpl(String providerId);
-  external OAuthProviderJsImpl addScope(String scope);
-  external OAuthProviderJsImpl setCustomParameters(
-    dynamic customOAuthParameters,
-  );
-  external OAuthCredential credential(OAuthCredentialOptions credentialOptions);
+  external factory OAuthProviderJsImpl(JSString providerId);
+
   external static OAuthCredential? credentialFromResult(
     UserCredentialJsImpl userCredential,
   );
 }
 
+extension OAuthProviderJsImplExtension on OAuthProviderJsImpl {
+  external OAuthProviderJsImpl addScope(JSString scope);
+  external OAuthProviderJsImpl setCustomParameters(
+    JSAny customOAuthParameters,
+  );
+  external OAuthCredential credential(OAuthCredentialOptions credentialOptions);
+}
+
 @JS('TwitterAuthProvider')
+@staticInterop
 class TwitterAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory TwitterAuthProviderJsImpl();
-  external static String get PROVIDER_ID;
+  external static JSString get PROVIDER_ID;
+
+  external static OAuthCredential credential(JSString token, JSString secret);
+}
+
+extension TwitterAuthProviderJsImplExtension on TwitterAuthProviderJsImpl {
   external TwitterAuthProviderJsImpl setCustomParameters(
-    dynamic customOAuthParameters,
+    JSAny customOAuthParameters,
   );
-  external static OAuthCredential credential(String token, String secret);
 }
 
 @JS('PhoneAuthProvider')
+@staticInterop
 class PhoneAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory PhoneAuthProviderJsImpl([AuthJsImpl? auth]);
-  external static String get PROVIDER_ID;
-  external PromiseJsImpl<String> verifyPhoneNumber(
-    dynamic /* PhoneInfoOptions | string */ phoneOptions,
-    ApplicationVerifierJsImpl applicationVerifier,
-  );
+  external static JSString get PROVIDER_ID;
+
   external static PhoneAuthCredentialJsImpl credential(
-    String verificationId,
-    String verificationCode,
+    JSString verificationId,
+    JSString verificationCode,
+  );
+}
+
+extension PhoneAuthProviderJsImplExtension on PhoneAuthProviderJsImpl {
+  external JSPromise verifyPhoneNumber(
+    JSAny /* PhoneInfoOptions | string */ phoneOptions,
+    ApplicationVerifierJsImpl applicationVerifier,
   );
 }
 
 @JS('SAMLAuthProvider')
+@staticInterop
 class SAMLAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory SAMLAuthProviderJsImpl(String providerId);
+
   external static OAuthCredential? credentialFromResult(
     UserCredentialJsImpl userCredential,
   );
 }
 
 @JS('ApplicationVerifier')
-abstract class ApplicationVerifierJsImpl {
-  external String get type;
-  external PromiseJsImpl<String> verify();
+@staticInterop
+abstract class ApplicationVerifierJsImpl {}
+
+extension ApplicationVerifierJsImplExtension on ApplicationVerifierJsImpl {
+  external JSString get type;
+  external JSPromise verify();
 }
 
 @JS('RecaptchaVerifier')
+@staticInterop
 class RecaptchaVerifierJsImpl extends ApplicationVerifierJsImpl {
   external factory RecaptchaVerifierJsImpl(
     AuthJsImpl authExtern,
-    containerOrId,
-    Object parameters,
+    JSAny containerOrId,
+    JSObject parameters,
   );
+}
+
+extension RecaptchaVerifierJsImplExtension on RecaptchaVerifierJsImpl {
   external void clear();
-  external PromiseJsImpl<num> render();
+  external JSPromise render();
 }
 
 @JS('ConfirmationResult')
-abstract class ConfirmationResultJsImpl {
-  external String get verificationId;
-  external PromiseJsImpl<UserCredentialJsImpl> confirm(String verificationCode);
+@staticInterop
+abstract class ConfirmationResultJsImpl {}
+
+extension ConfirmationResultJsImplExtension on ConfirmationResultJsImpl {
+  external JSString get verificationId;
+  external JSPromise confirm(JSString verificationCode);
 }
 
 /// A response from [Auth.checkActionCode].
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.ActionCodeInfo>.
 @JS()
-abstract class ActionCodeInfo {
+@staticInterop
+abstract class ActionCodeInfo {}
+
+extension ActionCodeInfoExtension on ActionCodeInfo {
   external ActionCodeData get data;
 }
 
@@ -518,26 +609,32 @@ abstract class ActionCodeInfo {
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.UserMetadata>.
 @JS()
-abstract class UserMetadata {
+@staticInterop
+abstract class UserMetadata {}
+
+extension UserMetadataExtension on UserMetadata {
   /// The date the user was created, formatted as a UTC string.
   /// For example, 'Fri, 22 Sep 2017 01:49:58 GMT'.
-  external String? get creationTime;
+  external JSString? get creationTime;
 
   /// The date the user last signed in, formatted as a UTC string.
   /// For example, 'Fri, 22 Sep 2017 01:49:58 GMT'.
-  external String? get lastSignInTime;
+  external JSString? get lastSignInTime;
 }
 
 /// A structure for [User]'s user profile.
 @JS()
+@staticInterop
 @anonymous
 class UserProfile {
-  external String get displayName;
-  external set displayName(String s);
-  external String get photoURL;
-  external set photoURL(String s);
+  external factory UserProfile({JSString? displayName, JSString? photoURL});
+}
 
-  external factory UserProfile({String? displayName, String? photoURL});
+extension UserProfileExtension on UserProfile {
+  external JSString get displayName;
+  external set displayName(JSString s);
+  external JSString get photoURL;
+  external set photoURL(JSString s);
 }
 
 @JS()
@@ -548,19 +645,19 @@ abstract class AuthError {}
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.Error>.
 extension AuthErrorExtension on AuthError {
-  external String get code;
-  external set code(String s);
-  external String get message;
-  external set message(String s);
-  external String get email;
-  external set email(String s);
+  external JSString get code;
+  external set code(JSString s);
+  external JSString get message;
+  external set message(JSString s);
+  external JSString get email;
+  external set email(JSString s);
   external AuthCredential get credential;
   external set credential(AuthCredential c);
-  external String get tenantId;
-  external set tenantId(String s);
-  external String get phoneNumber;
-  external set phoneNumber(String s);
-  external Object get customData;
+  external JSString get tenantId;
+  external set tenantId(JSString s);
+  external JSString get phoneNumber;
+  external set phoneNumber(JSString s);
+  external JSObject get customData;
 }
 
 @JS()
@@ -568,17 +665,20 @@ extension AuthErrorExtension on AuthError {
 class AuthErrorCustomData {}
 
 extension AuthErrorCustomDataExtension on AuthErrorCustomData {
-  external String get appName;
-  external String? get email;
-  external String? get phoneNumber;
-  external String? get tenantId;
+  external JSString get appName;
+  external JSString? get email;
+  external JSString? get phoneNumber;
+  external JSString? get tenantId;
 }
 
 @JS()
+@staticInterop
 @anonymous
-class ActionCodeData {
-  external String get email;
-  external String get previousEmail;
+class ActionCodeData {}
+
+extension ActionCodeDataExtension on ActionCodeData {
+  external JSString get email;
+  external JSString get previousEmail;
 }
 
 /// This is the interface that defines the required continue/state URL with
@@ -605,25 +705,29 @@ class ActionCodeData {
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth#.ActionCodeSettings>
 @JS()
+@staticInterop
 @anonymous
 class ActionCodeSettings {
-  external String get url;
-  external set url(String s);
+  external factory ActionCodeSettings({
+    JSString? url,
+    IosSettings? iOS,
+    AndroidSettings? android,
+    JSBoolean? handleCodeInApp,
+    JSString? dynamicLinkDomain,
+  });
+}
+
+extension ActionCodeSettingsExtension on ActionCodeSettings {
+  external JSString get url;
+  external set url(JSString s);
   external IosSettings get iOS;
   external set iOS(IosSettings i);
   external AndroidSettings get android;
   external set android(AndroidSettings a);
-  external bool get handleCodeInApp;
-  external set handleCodeInApp(bool b);
-  external String get dynamicLinkDomain;
-  external set dynamicLinkDomain(String d);
-  external factory ActionCodeSettings({
-    String? url,
-    IosSettings? iOS,
-    AndroidSettings? android,
-    bool? handleCodeInApp,
-    String? dynamicLinkDomain,
-  });
+  external JSBoolean get handleCodeInApp;
+  external set handleCodeInApp(JSBoolean b);
+  external JSString get dynamicLinkDomain;
+  external set dynamicLinkDomain(JSString d);
 }
 
 /// The iOS settings.
@@ -631,11 +735,15 @@ class ActionCodeSettings {
 /// Sets the iOS [bundleId].
 /// This will try to open the link in an iOS app if it is installed.
 @JS()
+@staticInterop
 @anonymous
 class IosSettings {
-  external String get bundleId;
-  external set bundleId(String s);
-  external factory IosSettings({String? bundleId});
+  external factory IosSettings({JSString? bundleId});
+}
+
+extension IosSettingsExtension on IosSettings {
+  external JSString get bundleId;
+  external set bundleId(JSString s);
 }
 
 /// The Android settings.
@@ -652,160 +760,211 @@ class IosSettings {
 /// If [minimumVersion] is specified, and an older version of the app
 /// is installed, the user is taken to the Play Store to upgrade the app.
 @JS()
+@staticInterop
 @anonymous
 class AndroidSettings {
-  external String get packageName;
-  external set packageName(String s);
-  external String get minimumVersion;
-  external set minimumVersion(String s);
-  external bool get installApp;
-  external set installApp(bool b);
   external factory AndroidSettings({
-    String? packageName,
-    String? minimumVersion,
-    bool? installApp,
+    JSString? packageName,
+    JSString? minimumVersion,
+    JSBoolean? installApp,
   });
+}
+
+extension AndroidSettingsExtension on AndroidSettings {
+  external JSString get packageName;
+  external set packageName(JSString s);
+  external JSString get minimumVersion;
+  external set minimumVersion(JSString s);
+  external JSBoolean get installApp;
+  external set installApp(JSBoolean b);
 }
 
 /// https://firebase.google.com/docs/reference/js/auth.usercredential
 @JS()
+@staticInterop
 @anonymous
-class UserCredentialJsImpl {
+class UserCredentialJsImpl {}
+
+extension UserCredentialJsImplExtension on UserCredentialJsImpl {
   external UserJsImpl get user;
-  external String get operationType;
+  external JSString get operationType;
   external AdditionalUserInfoJsImpl get additionalUserInfo;
 }
 
 /// https://firebase.google.com/docs/reference/js/firebase.auth#.AdditionalUserInfo
 @JS()
+@staticInterop
 @anonymous
-class AdditionalUserInfoJsImpl {
-  external String get providerId;
-  external Object get profile;
-  external String get username;
-  external bool get isNewUser;
+class AdditionalUserInfoJsImpl {}
+
+extension AdditionalUserInfoJsImplExtension on AdditionalUserInfoJsImpl {
+  external JSString get providerId;
+  external JSObject get profile;
+  external JSString get username;
+  external JSBoolean get isNewUser;
 }
 
 /// https://firebase.google.com/docs/reference/js/firebase.auth#.AdditionalUserInfo
 @JS()
+@staticInterop
 @anonymous
 class AuthSettings {
-  external bool get appVerificationDisabledForTesting;
-  external set appVerificationDisabledForTesting(bool? b);
-  // external factory AuthSettings({bool appVerificationDisabledForTesting});
+  // external factory AuthSettings({JSBoolean appVerificationDisabledForTesting});
 }
 
-external dynamic get browserPopupRedirectResolver;
+extension AuthSettingsExtension on AuthSettings {
+  external JSBoolean get appVerificationDisabledForTesting;
+  external set appVerificationDisabledForTesting(JSBoolean? b);
+}
+
+@JS()
+@staticInterop
+external JSAny get browserPopupRedirectResolver;
 
 /// https://firebase.google.com/docs/reference/js/auth.multifactoruser.md#multifactoruser_interface
 @JS()
+@staticInterop
 @anonymous
-class MultiFactorUserJsImpl {
-  external List<MultiFactorInfoJsImpl> get enrolledFactors;
-  external PromiseJsImpl<void> enroll(
-      MultiFactorAssertionJsImpl assertion, String? displayName);
-  external PromiseJsImpl<MultiFactorSessionJsImpl> getSession();
-  external PromiseJsImpl<void> unenroll(
-      dynamic /* MultiFactorInfo | string */ option);
+class MultiFactorUserJsImpl {}
+
+extension MultiFactorUserJsImplExtension on MultiFactorUserJsImpl {
+  external JSArray get enrolledFactors;
+  external JSPromise enroll(
+      MultiFactorAssertionJsImpl assertion, JSString? displayName);
+  external JSPromise getSession();
+  external JSPromise unenroll(JSAny /* MultiFactorInfo | string */ option);
 }
 
 /// https://firebase.google.com/docs/reference/js/auth.multifactorinfo
 @JS()
+@staticInterop
 @anonymous
-class MultiFactorInfoJsImpl {
-  external String? get displayName;
-  external String get enrollmentTime;
-  external String get factorId;
-  external String get uid;
+class MultiFactorInfoJsImpl {}
+
+extension MultiFactorInfoJsImplExtension on MultiFactorInfoJsImpl {
+  external JSString? get displayName;
+  external JSString get enrollmentTime;
+  external JSString get factorId;
+  external JSString get uid;
 }
 
 /// https://firebase.google.com/docs/reference/js/auth.multifactorassertion
 @JS()
+@staticInterop
 @anonymous
-class MultiFactorAssertionJsImpl {
-  external String get factorId;
+class MultiFactorAssertionJsImpl {}
+
+extension MultiFactorAssertionJsImplExtension on MultiFactorAssertionJsImpl {
+  external JSString get factorId;
 }
 
 /// https://firebase.google.com/docs/reference/js/auth.multifactorresolver
 @JS()
+@staticInterop
 @anonymous
-class MultiFactorResolverJsImpl {
-  external List<MultiFactorInfoJsImpl> get hints;
+class MultiFactorResolverJsImpl {}
+
+extension MultiFactorResolverJsImplExtension on MultiFactorResolverJsImpl {
+  external JSArray get hints;
   external MultiFactorSessionJsImpl get session;
-  external PromiseJsImpl<UserCredentialJsImpl> resolveSignIn(
-      MultiFactorAssertionJsImpl assertion);
+  external JSPromise resolveSignIn(MultiFactorAssertionJsImpl assertion);
 }
 
 /// https://firebase.google.com/docs/reference/js/auth.multifactorresolver
 @JS()
+@staticInterop
 @anonymous
 class MultiFactorSessionJsImpl {}
 
 /// https://firebase.google.com/docs/reference/js/auth.phonemultifactorinfo
 @JS('PhoneMultiFactorInfo')
-class PhoneMultiFactorInfoJsImpl extends MultiFactorInfoJsImpl {
-  external String get phoneNumber;
+@staticInterop
+class PhoneMultiFactorInfoJsImpl extends MultiFactorInfoJsImpl {}
+
+extension PhoneMultiFactorInfoJsImplExtension on PhoneMultiFactorInfoJsImpl {
+  external JSString get phoneNumber;
 }
 
 /// https://firebase.google.com/docs/reference/js/auth.totpmultifactorinfo
 @JS('TotpMultiFactorInfo')
+@staticInterop
 class TotpMultiFactorInfoJsImpl extends MultiFactorInfoJsImpl {}
 
 /// https://firebase.google.com/docs/reference/js/auth.phonemultifactorenrollinfooptions
 @JS()
+@staticInterop
 @anonymous
-class PhoneMultiFactorEnrollInfoOptionsJsImpl {
-  external String get phoneNumber;
+class PhoneMultiFactorEnrollInfoOptionsJsImpl {}
+
+extension PhoneMultiFactorEnrollInfoOptionsJsImplExtension
+    on PhoneMultiFactorEnrollInfoOptionsJsImpl {
+  external JSString get phoneNumber;
   external MultiFactorSessionJsImpl? get session;
 }
 
 /// https://firebase.google.com/docs/reference/js/auth.phonemultifactorgenerator
 @JS('PhoneMultiFactorGenerator')
+@staticInterop
 class PhoneMultiFactorGeneratorJsImpl {
-  external static String get FACTOR_ID;
+  external static JSString get FACTOR_ID;
   external static PhoneMultiFactorAssertionJsImpl? assertion(
       PhoneAuthCredentialJsImpl credential);
 }
 
+extension PhoneMultiFactorGeneratorJsImplExtension
+    on PhoneMultiFactorGeneratorJsImpl {}
+
 /// https://firebase.google.com/docs/reference/js/auth.totpsecret
 @JS('TotpSecret')
-class TotpSecretJsImpl {
-  external num get codeIntervalSeconds;
-  external num get codeLength;
-  external String get enrollmentCompletionDeadline;
-  external String get hashingAlgorithm;
-  external String get secretKey;
+@staticInterop
+class TotpSecretJsImpl {}
 
-  external String generateQrCodeUrl(String? accountName, String? issuer);
+extension TotpSecretJsImplExtension on TotpSecretJsImpl {
+  external JSNumber get codeIntervalSeconds;
+  external JSNumber get codeLength;
+  external JSString get enrollmentCompletionDeadline;
+  external JSString get hashingAlgorithm;
+  external JSString get secretKey;
+
+  external JSString generateQrCodeUrl(JSString? accountName, JSString? issuer);
 }
 
 /// https://firebase.google.com/docs/reference/js/auth.totpmultifactorgenerator
 @JS('TotpMultiFactorGenerator')
+@staticInterop
 class TotpMultiFactorGeneratorJsImpl {
-  external static String get FACTOR_ID;
+  external static JSString get FACTOR_ID;
   external static TotpMultiFactorAssertionJsImpl? assertionForEnrollment(
-      TotpSecretJsImpl secret, String oneTimePassword);
+      TotpSecretJsImpl secret, JSString oneTimePassword);
   external static TotpMultiFactorAssertionJsImpl? assertionForSignIn(
-      String enrollmentId, String oneTimePassword);
-  external static PromiseJsImpl<TotpSecretJsImpl> generateSecret(
-      MultiFactorSessionJsImpl session);
+      JSString enrollmentId, JSString oneTimePassword);
+  external static JSPromise generateSecret(MultiFactorSessionJsImpl session);
 }
+
+extension TotpMultiFactorGeneratorJsImplExtension
+    on TotpMultiFactorGeneratorJsImpl {}
 
 /// https://firebase.google.com/docs/reference/js/auth.phonemultifactorassertion
 @JS()
+@staticInterop
 @anonymous
 class PhoneMultiFactorAssertionJsImpl extends MultiFactorAssertionJsImpl {}
 
 /// https://firebase.google.com/docs/reference/js/auth.totpmultifactorassertion
 @JS()
+@staticInterop
 @anonymous
 class TotpMultiFactorAssertionJsImpl extends MultiFactorAssertionJsImpl {}
 
 /// https://firebase.google.com/docs/reference/js/auth.phoneauthcredential
 @JS()
+@staticInterop
 @anonymous
 class PhoneAuthCredentialJsImpl extends AuthCredential {
   external static PhoneAuthCredentialJsImpl fromJSON(
-      dynamic /*object | string*/ json);
-  external Object toJSON();
+      JSAny /*object | string*/ json);
+}
+
+extension PhoneAuthCredentialJsImplExtension on PhoneAuthCredentialJsImpl {
+  external JSObject toJSON();
 }

@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'dart:js_interop';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_web/src/firebase_auth_web_multi_factor.dart';
@@ -16,6 +16,7 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:web/web.dart' as web;
 
 import 'src/firebase_auth_web_confirmation_result.dart';
 import 'src/firebase_auth_web_recaptcha_verifier_factory.dart';
@@ -90,9 +91,9 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       ensurePluginInitialized: (firebaseApp) async {
         final authDelegate = auth_interop.getAuthInstance(firebaseApp);
         // if localhost, and emulator was previously set in localStorage, use it
-        if (window.location.hostname == 'localhost' && kDebugMode) {
-          final String? emulatorOrigin =
-              window.sessionStorage[getOriginName(firebaseApp.name)];
+        if (web.window.location.hostname == 'localhost' && kDebugMode) {
+          final String? emulatorOrigin = web.window.sessionStorage
+              .getItem(getOriginName(firebaseApp.name));
 
           if (emulatorOrigin != null) {
             try {
@@ -327,7 +328,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     bool? forceRecaptchaFlow,
   }) async {
     delegate.settings.appVerificationDisabledForTesting =
-        appVerificationDisabledForTesting;
+        appVerificationDisabledForTesting?.toJS;
   }
 
   @override
@@ -464,7 +465,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       // Get current session storage value
       final String? emulatorOrigin =
-          window.sessionStorage[getOriginName(delegate.app.name)];
+          web.window.sessionStorage.getItem(getOriginName(delegate.app.name));
 
       // The generic platform interface is with host and port split to
       // centralize logic between android/ios native, but web takes the
@@ -481,11 +482,12 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       // Save to session storage so that the emulator is used on refresh
       // only in debug mode
       if (kDebugMode) {
-        window.sessionStorage[getOriginName(delegate.app.name)] = origin;
+        web.window.sessionStorage
+            .setItem(getOriginName(delegate.app.name), origin);
       }
     } catch (e) {
       if (e is auth_interop.AuthError) {
-        final String code = e.code;
+        final String code = e.code.toDart;
         // this catches Firebase Error from web that occurs after hot reloading & hot restarting
         if (code != 'auth/emulator-config-failed') {
           throw getFirebaseAuthException(e);
