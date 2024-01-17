@@ -83,8 +83,7 @@ public class TaskStateChannelStreamHandler implements StreamHandler {
           Map<String, Object> event = getTaskEventMap(null, exception);
           event.put(
               TASK_STATE_NAME, GeneratedAndroidFirebaseStorage.PigeonStorageTaskState.ERROR.index);
-          events.error(
-              FlutterFirebaseStoragePlugin.DEFAULT_ERROR_CODE, exception.getMessage(), event);
+          events.success(event);
           flutterTask.destroy();
         });
   }
