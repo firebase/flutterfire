@@ -35,7 +35,7 @@ class UserWeb extends UserPlatform {
                     ? (js_interop.globalContext.getProperty('Date'.toJS)!
                             as js_interop.JSObject)
                         .callMethod<js_interop.JSNumber>(
-                            'parse'.toJS, _webUser.metadata.lastSignInTime)
+                            'parse'.toJS, _webUser.metadata.creationTime)
                         .toDartInt
                     : null,
                 lastSignInTimestamp: _webUser.metadata.lastSignInTime != null
