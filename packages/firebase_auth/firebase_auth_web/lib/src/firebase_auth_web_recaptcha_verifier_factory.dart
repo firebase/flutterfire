@@ -73,9 +73,8 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
         el.remove();
       }
 
-      // TODO(Lyokone) ???
-      // web.window.document.documentElement!.children
-      //     .add(DivElement()..id = _kInvisibleElementId);
+      web.window.document.documentElement!
+          .appendChild(web.Element()..id = _kInvisibleElementId);
 
       element = _kInvisibleElementId;
     } else {
