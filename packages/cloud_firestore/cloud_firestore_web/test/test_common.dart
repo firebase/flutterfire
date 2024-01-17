@@ -3,7 +3,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:js' as js;
+import 'dart:js_interop' as js_interop;
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/cloud_firestore_web.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
@@ -44,15 +44,14 @@ class MockDocumentSnapshot extends Mock implements DocumentSnapshotPlatform {}
 
 web.Firestore mockFirestore() {
   final mockFirestoreWeb = MockFirestoreWeb();
-  final js.JsObject firebaseMock = js.JsObject.jsify(<String, dynamic>{
-    'firestore': js.allowInterop((_) => mockFirestoreWeb),
+  final js_interop.JSObject firebaseMock = Map<String, dynamic>{
+    'firestore': ((_) => mockFirestoreWeb).toJS,
     'app': js.allowInterop((String name) {
       return js.JsObject.jsify(<String, dynamic>{
         'name': name,
         'options': <String, String>{'appId': '123'},
       });
-    })
-  });
+  }).toJS;
   js.context['firebase'] = firebaseMock;
   FirebasePlatform.instance = FirebaseCoreWeb();
   FirebaseFirestorePlatform.instance = FirebaseFirestoreWeb();

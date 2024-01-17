@@ -6,8 +6,7 @@
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
-import 'package:js/js.dart';
-import 'package:js/js_util.dart' as util;
+import 'dart:js_interop';
 
 import '../firestore.dart';
 

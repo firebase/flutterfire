@@ -7,7 +7,7 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import 'package:cloud_firestore_web/cloud_firestore_web.dart'
     show FirebaseFirestoreWeb;
 import 'package:cloud_firestore_web/src/interop/firestore.dart';
-import 'package:js/js_util.dart' as util;
+import 'dart:js_interop';
 
 import '../interop/firestore.dart' as firestore_interop;
 

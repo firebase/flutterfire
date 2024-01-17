@@ -6,16 +6,16 @@
 // ignore_for_file: public_member_api_docs
 
 import 'dart:async';
+import 'dart:js_interop';
 import 'dart:typed_data';
 
-import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
     as platform_interface;
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/src/utils/encode_utility.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     hide jsify, dartify;
-import 'package:js/js.dart';
 
 import 'firestore_interop.dart' as firestore_interop;
 import 'utils/utils.dart';
@@ -32,11 +32,11 @@ Firestore getFirestoreInstance([
 
   if (app != null && settings != null) {
     return Firestore.getInstance(firestore_interop.initializeFirestore(
-        app.jsObject, settings, database));
+        app.jsObject, settings, database.toJS));
   }
 
   return Firestore.getInstance(app != null
-      ? firestore_interop.getFirestore(app.jsObject, database)
+      ? firestore_interop.getFirestore(app.jsObject, database.toJS)
       : firestore_interop.getFirestore());
 }
 
@@ -62,31 +62,32 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
 
   CollectionReference collection(String collectionPath) =>
       CollectionReference.getInstance(
-          firestore_interop.collection(jsObject, collectionPath));
+          firestore_interop.collection(jsObject, collectionPath.toJS));
 
   Query collectionGroup(String collectionId) => Query.fromJsObject(
-      firestore_interop.collectionGroup(jsObject, collectionId));
+      firestore_interop.collectionGroup(jsObject, collectionId.toJS));
 
   DocumentReference doc(String documentPath) => DocumentReference.getInstance(
-      firestore_interop.doc(jsObject, documentPath));
+      firestore_interop.doc(jsObject as JSAny, documentPath.toJS));
 
   Future<void> enablePersistence(
       [firestore_interop.PersistenceSettings? settings]) {
     if (settings != null && settings.synchronizeTabs == true) {
-      return handleThenable(
-          firestore_interop.enableMultiTabIndexedDbPersistence(jsObject));
+      return firestore_interop
+          .enableMultiTabIndexedDbPersistence(jsObject)
+          .toDart;
     }
-    return handleThenable(
+    return
         // ignore: deprecated_member_use_from_same_package
-        firestore_interop.enableIndexedDbPersistence(jsObject));
+        firestore_interop.enableIndexedDbPersistence(jsObject).toDart;
   }
 
   Stream<void> snapshotsInSync() {
     late StreamController<void> controller;
     late ZoneCallback onSnapshotsInSyncUnsubscribe;
-    var nextWrapper = allowInterop((Object? noValue) {
+    var nextWrapper = ((Object? noValue) {
       controller.add(null);
-    });
+    }).toJS;
 
     void startListen() {
       onSnapshotsInSyncUnsubscribe =
@@ -107,24 +108,25 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
   }
 
   Future<void> clearPersistence() =>
-      handleThenable(firestore_interop.clearIndexedDbPersistence(jsObject));
+      firestore_interop.clearIndexedDbPersistence(jsObject).toDart;
 
   Future runTransaction(
       Function(Transaction?) updateFunction, int maxAttempts) {
-    var updateFunctionWrap = allowInterop((transaction) =>
-        handleFutureWithMapper(
-            updateFunction(Transaction.getInstance(transaction)), jsify));
+    var updateFunctionWrap = ((transaction) =>
+        updateFunction(Transaction.getInstance(transaction))).toJS;
 
-    return handleThenable(firestore_interop.runTransaction(
+    return firestore_interop
+        .runTransaction(
             jsObject,
             updateFunctionWrap,
             firestore_interop.TransactionOptionsJsImpl(
-                maxAttempts: maxAttempts)))
+                maxAttempts: maxAttempts.toJS))
+        .toDart
         .then((value) => dartify(null));
   }
 
-  void useEmulator(String host, int port) =>
-      firestore_interop.connectFirestoreEmulator(jsObject, host, port);
+  void useEmulator(String host, int port) => firestore_interop
+      .connectFirestoreEmulator(jsObject, host.toJS, port.toJS);
 
   Future enableNetwork() =>
       handleThenable(firestore_interop.enableNetwork(jsObject));
