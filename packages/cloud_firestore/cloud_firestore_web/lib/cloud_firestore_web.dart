@@ -3,6 +3,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:js_interop';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
@@ -137,21 +138,21 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     } else {
       localCache = firestore_interop
           .persistentLocalCache(firestore_interop.PersistentCacheSettings(
-        cacheSizeBytes: settings.cacheSizeBytes,
+        cacheSizeBytes: settings.cacheSizeBytes?.toJS,
       ));
     }
 
     if (settings.host != null && settings.sslEnabled != null) {
       _settings = firestore_interop.FirestoreSettings(
         localCache: localCache,
-        host: settings.host,
-        ssl: settings.sslEnabled,
-        ignoreUndefinedProperties: settings.ignoreUndefinedProperties,
+        host: settings.host?.toJS,
+        ssl: settings.sslEnabled?.toJS,
+        ignoreUndefinedProperties: settings.ignoreUndefinedProperties.toJS,
       );
     } else {
       _settings = firestore_interop.FirestoreSettings(
         localCache: localCache,
-        ignoreUndefinedProperties: settings.ignoreUndefinedProperties,
+        ignoreUndefinedProperties: settings.ignoreUndefinedProperties.toJS,
       );
     }
   }
@@ -162,7 +163,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     if (settings != null) {
       firestore_interop.PersistenceSettings interopSettings =
           firestore_interop.PersistenceSettings(
-              synchronizeTabs: settings.synchronizeTabs);
+              synchronizeTabs: settings.synchronizeTabs.toJS);
 
       return convertWebExceptions(
           () => _delegate.enablePersistence(interopSettings));

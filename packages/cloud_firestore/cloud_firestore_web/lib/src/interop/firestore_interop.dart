@@ -178,7 +178,7 @@ external JSPromise namedQuery(
 @staticInterop
 external void Function() onSnapshot(
   JSObject reference, // DocumentReference | Query
-  JSFunction optionsOrObserverOrOnNext,
+  JSAny optionsOrObserverOrOnNext,
   JSFunction observerOrOnNextOrOnError, [
   JSFunction? onError,
 ]);

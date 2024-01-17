@@ -128,17 +128,14 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
   void useEmulator(String host, int port) => firestore_interop
       .connectFirestoreEmulator(jsObject, host.toJS, port.toJS);
 
-  Future enableNetwork() =>
-      handleThenable(firestore_interop.enableNetwork(jsObject));
+  Future enableNetwork() => firestore_interop.enableNetwork(jsObject).toDart;
 
-  Future disableNetwork() =>
-      handleThenable(firestore_interop.disableNetwork(jsObject));
+  Future disableNetwork() => firestore_interop.disableNetwork(jsObject).toDart;
 
-  Future<void> terminate() =>
-      handleThenable(firestore_interop.terminate(jsObject));
+  Future<void> terminate() => firestore_interop.terminate(jsObject).toDart;
 
   Future<void> waitForPendingWrites() =>
-      handleThenable(firestore_interop.waitForPendingWrites(jsObject));
+      firestore_interop.waitForPendingWrites(jsObject).toDart;
 
   LoadBundleTask loadBundle(Uint8List bundle) {
     return LoadBundleTask.getInstance(
@@ -146,12 +143,14 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
   }
 
   Future<void> setIndexConfiguration(String indexConfiguration) =>
-      handleThenable(firestore_interop.setIndexConfiguration(
-          jsObject, indexConfiguration));
+      firestore_interop
+          .setIndexConfiguration(jsObject, indexConfiguration.toJS)
+          .toDart;
 
   Future<Query> namedQuery(String name) async {
-    firestore_interop.QueryJsImpl? query =
-        await handleThenable(firestore_interop.namedQuery(jsObject, name));
+    firestore_interop.QueryJsImpl? query = await (firestore_interop
+        .namedQuery(jsObject, name.toJS)
+        .toDart as FutureOr<firestore_interop.QueryJsImpl?>);
 
     if (query == null) {
       // same error as iOS & android to maintain consistency
@@ -167,11 +166,11 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
 
   bool refEqual(dynamic /* DocumentReference | CollectionReference */ left,
       dynamic /* DocumentReference | CollectionReference */ right) {
-    return firestore_interop.refEqual(left, right);
+    return firestore_interop.refEqual(left, right).toDart;
   }
 
   void setLoggingEnabled(String logLevel) {
-    firestore_interop.setLogLevel(logLevel);
+    firestore_interop.setLogLevel(logLevel.toJS);
   }
 }
 
@@ -194,8 +193,8 @@ class LoadBundleTask
     late StreamController<LoadBundleTaskProgress> controller;
     controller = StreamController<LoadBundleTaskProgress>(onListen: () {
       /// Calls underlying onProgress method on a LoadBundleTask [jsObject].
-      jsObject.onProgress(
-          allowInterop((firestore_interop.LoadBundleTaskProgressJsImpl data) {
+      jsObject
+          .onProgress((firestore_interop.LoadBundleTaskProgressJsImpl data) {
         LoadBundleTaskProgress taskProgress =
             LoadBundleTaskProgress._fromJsObject(data);
 
@@ -203,21 +202,24 @@ class LoadBundleTask
           // Error handled in addError() call below.
           controller.add(taskProgress);
         }
-      }));
+      });
 
-      jsObject.then(allowInterop((value) {
-        controller.close();
-      }), allowInterop((error) {
-        controller.addError(
-          FirebaseException(
-            plugin: 'cloud_firestore',
-            message: error.message,
-            code: 'load-bundle-error',
-            stackTrace: StackTrace.fromString(error.stack),
-          ),
-        );
-        controller.close();
-      }));
+      jsObject.then(
+        ((value) {
+          controller.close();
+        }).toJS,
+        ((error) {
+          controller.addError(
+            FirebaseException(
+              plugin: 'cloud_firestore',
+              message: error.message,
+              code: 'load-bundle-error',
+              stackTrace: StackTrace.fromString(error.stack),
+            ),
+          );
+          controller.close();
+        }).toJS,
+      );
     }, onCancel: () {
       controller.close();
     });
@@ -230,11 +232,11 @@ class LoadBundleTaskProgress
     extends JsObjectWrapper<firestore_interop.LoadBundleTaskProgressJsImpl> {
   LoadBundleTaskProgress._fromJsObject(
     firestore_interop.LoadBundleTaskProgressJsImpl jsObject,
-  )   : taskState = convertToTaskState(jsObject.taskState.toLowerCase()),
-        bytesLoaded = int.parse(jsObject.bytesLoaded),
-        documentsLoaded = jsObject.documentsLoaded,
-        totalBytes = int.parse(jsObject.totalBytes),
-        totalDocuments = jsObject.totalDocuments,
+  )   : taskState = convertToTaskState(jsObject.taskState.toDart.toLowerCase()),
+        bytesLoaded = int.parse(jsObject.bytesLoaded.toDart),
+        documentsLoaded = jsObject.documentsLoaded.toDartInt,
+        totalBytes = int.parse(jsObject.totalBytes.toDart),
+        totalDocuments = jsObject.totalDocuments.toDartInt,
         super.fromJsObject(jsObject);
 
   static final _expando = Expando<LoadBundleTaskProgress>();
@@ -266,7 +268,7 @@ class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl>
   WriteBatch._fromJsObject(firestore_interop.WriteBatchJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
-  Future<void> commit() => handleThenable(jsObject.commit());
+  Future<void> commit() => jsObject.commit().toDart;
 
   WriteBatch delete(DocumentReference documentRef) =>
       WriteBatch.getInstance(jsObject.delete(documentRef.jsObject));
@@ -293,12 +295,12 @@ class DocumentReference
   /// This is useful for performing transactions, for example.
   Firestore get firestore => Firestore.getInstance(jsObject.firestore);
 
-  String get id => jsObject.id;
+  String get id => jsObject.id.toDart;
 
   CollectionReference? get parent =>
       CollectionReference.getInstance(jsObject.parent);
 
-  String get path => jsObject.path;
+  String get path => jsObject.path.toDart;
 
   /// Creates a new DocumentReference from a [jsObject].
   static DocumentReference getInstance(
@@ -312,21 +314,23 @@ class DocumentReference
 
   CollectionReference? collection(String collectionPath) {
     return CollectionReference.getInstance(firestore_interop.collection(
-        firestore.jsObject, '$path/$collectionPath'));
+        firestore.jsObject, '$path/$collectionPath'.toJS));
   }
 
-  Future<void> delete() =>
-      handleThenable(firestore_interop.deleteDoc(jsObject));
+  Future<void> delete() => firestore_interop.deleteDoc(jsObject).toDart;
 
   Future<DocumentSnapshot> get([firestore_interop.GetOptions? options]) {
-    if (options == null || options.source == 'default') {
-      return handleThenable(firestore_interop.getDoc(jsObject))
+    if (options == null || options.source.toDart == 'default') {
+      return (firestore_interop.getDoc(jsObject).toDart
+              as Future<firestore_interop.DocumentSnapshotJsImpl>)
           .then(DocumentSnapshot.getInstance);
-    } else if (options.source == 'server') {
-      return handleThenable(firestore_interop.getDocFromServer(jsObject))
+    } else if (options.source.toDart == 'server') {
+      return (firestore_interop.getDocFromServer(jsObject).toDart
+              as Future<firestore_interop.DocumentSnapshotJsImpl>)
           .then(DocumentSnapshot.getInstance);
     } else {
-      return handleThenable(firestore_interop.getDocFromCache(jsObject))
+      return (firestore_interop.getDocFromCache(jsObject).toDart
+              as Future<firestore_interop.DocumentSnapshotJsImpl>)
           .then(DocumentSnapshot.getInstance);
     }
   }
@@ -336,7 +340,8 @@ class DocumentReference
 
   Stream<DocumentSnapshot> get onMetadataChangesSnapshot {
     return _createSnapshotStream(
-      firestore_interop.DocumentListenOptions(includeMetadataChanges: true),
+      firestore_interop.DocumentListenOptions(
+          includeMetadataChanges: true.toJS),
     ).stream;
   }
 
@@ -347,18 +352,18 @@ class DocumentReference
     // ignore: close_sinks, the controler is returned
     late StreamController<DocumentSnapshot> controller;
 
-    final nextWrapper =
-        allowInterop((firestore_interop.DocumentSnapshotJsImpl snapshot) {
+    final nextWrapper = ((firestore_interop.DocumentSnapshotJsImpl snapshot) {
       controller.add(DocumentSnapshot.getInstance(snapshot));
-    });
+    }).toJS;
 
-    final errorWrapper = allowInterop((e) => controller.addError(e));
+    final errorWrapper = ((e) => controller.addError(e)).toJS;
 
     void startListen() {
       onSnapshotUnsubscribe = (options != null)
           ? firestore_interop.onSnapshot(
-              jsObject, options, nextWrapper, errorWrapper)
-          : firestore_interop.onSnapshot(jsObject, nextWrapper, errorWrapper);
+              jsObject as JSObject, options as JSAny, nextWrapper, errorWrapper)
+          : firestore_interop.onSnapshot(
+              jsObject as JSObject, nextWrapper, errorWrapper);
     }
 
     void stopListen() {
@@ -378,7 +383,7 @@ class DocumentReference
         ? firestore_interop.setDoc(jsObject, jsify(data), options)
         : firestore_interop.setDoc(jsObject, jsify(data));
 
-    return handleThenable(jsObjectSet);
+    return jsObjectSet.toDart;
   }
 
   Future<void> update(Map<firestore_interop.FieldPath, dynamic> data) {
@@ -414,23 +419,26 @@ class Query<T extends firestore_interop.QueryJsImpl>
               firestore_interop.endBefore, snapshot, fieldValues)));
 
   Future<QuerySnapshot> get([firestore_interop.GetOptions? options]) {
-    if (options == null || options.source == 'default') {
-      return handleThenable(firestore_interop.getDocs(jsObject))
+    if (options == null || options.source.toDart == 'default') {
+      return (firestore_interop.getDocs(jsObject).toDart
+              as Future<firestore_interop.QuerySnapshotJsImpl>)
           .then(QuerySnapshot.getInstance);
-    } else if (options.source == 'server') {
-      return handleThenable(firestore_interop.getDocsFromServer(jsObject))
+    } else if (options.source.toDart == 'server') {
+      return (firestore_interop.getDocsFromServer(jsObject).toDart
+              as Future<firestore_interop.QuerySnapshotJsImpl>)
           .then(QuerySnapshot.getInstance);
     } else {
-      return handleThenable(firestore_interop.getDocsFromCache(jsObject))
+      return (firestore_interop.getDocsFromCache(jsObject).toDart
+              as Future<firestore_interop.QuerySnapshotJsImpl>)
           .then(QuerySnapshot.getInstance);
     }
   }
 
   Query limit(num limit) => Query.fromJsObject(
-      firestore_interop.query(jsObject, firestore_interop.limit(limit)));
+      firestore_interop.query(jsObject, firestore_interop.limit(limit.toJS)));
 
-  Query limitToLast(num limit) => Query.fromJsObject(
-      firestore_interop.query(jsObject, firestore_interop.limitToLast(limit)));
+  Query limitToLast(num limit) => Query.fromJsObject(firestore_interop.query(
+      jsObject, firestore_interop.limitToLast(limit.toJS)));
 
   late final Stream<QuerySnapshot> onSnapshot =
       _createSnapshotStream(false).stream;
@@ -445,17 +453,16 @@ class Query<T extends firestore_interop.QueryJsImpl>
     // ignore: close_sinks, the controller is returned
     late StreamController<QuerySnapshot> controller;
 
-    final nextWrapper =
-        allowInterop((firestore_interop.QuerySnapshotJsImpl snapshot) {
+    final nextWrapper = ((firestore_interop.QuerySnapshotJsImpl snapshot) {
       controller.add(QuerySnapshot._fromJsObject(snapshot));
-    });
-    final errorWrapper = allowInterop((e) => controller.addError(e));
+    }).toJS;
+    final errorWrapper = ((e) => controller.addError(e)).toJS;
     final options = firestore_interop.SnapshotListenOptions(
-        includeMetadataChanges: includeMetadataChanges);
+        includeMetadataChanges: includeMetadataChanges.toJS);
 
     void startListen() {
       onSnapshotUnsubscribe = firestore_interop.onSnapshot(
-          jsObject, options, nextWrapper, errorWrapper);
+          jsObject as JSObject, options as JSObject, nextWrapper, errorWrapper);
     }
 
     void stopListen() {
@@ -472,7 +479,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
   Query orderBy(/*String|FieldPath*/ dynamic fieldPath,
       [String? /*'desc'|'asc'*/ directionStr]) {
     var jsObjectOrderBy = (directionStr != null)
-        ? firestore_interop.orderBy(fieldPath, directionStr)
+        ? firestore_interop.orderBy(fieldPath, directionStr.toJS)
         : firestore_interop.orderBy(fieldPath);
 
     return Query.fromJsObject(
@@ -492,8 +499,8 @@ class Query<T extends firestore_interop.QueryJsImpl>
               firestore_interop.startAt, snapshot, fieldValues)));
 
   Query where(dynamic fieldPath, String opStr, dynamic value) =>
-      Query.fromJsObject(firestore_interop.query(
-          jsObject, firestore_interop.where(fieldPath, opStr, jsify(value))));
+      Query.fromJsObject(firestore_interop.query(jsObject,
+          firestore_interop.where(fieldPath, opStr.toJS, jsify(value))));
 
   /// Calls js paginating [method] with [DocumentSnapshot] or List of
   /// [fieldValues].
@@ -519,7 +526,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
       String opStr = map['op']! as String;
       dynamic value = EncodeUtility.valueEncode(map['value']);
 
-      return firestore_interop.where(fieldPath, opStr, jsify(value));
+      return firestore_interop.where(fieldPath, opStr.toJS, jsify(value));
     }
 
     String opStr = map['op']! as String;
@@ -549,12 +556,12 @@ class CollectionReference<T extends firestore_interop.CollectionReferenceJsImpl>
     extends Query<T> {
   static final _expando = Expando<CollectionReference>();
 
-  String get id => jsObject.id;
+  String get id => jsObject.id.toDart;
 
   DocumentReference? get parent =>
       DocumentReference.getInstance(jsObject.parent);
 
-  String get path => jsObject.path;
+  String get path => jsObject.path.toDart;
 
   /// Creates a new CollectionReference from a [jsObject].
   static CollectionReference getInstance(
@@ -570,33 +577,33 @@ class CollectionReference<T extends firestore_interop.CollectionReferenceJsImpl>
       : super.fromJsObject(jsObject as T);
 
   Future<DocumentReference> add(Map<String, dynamic> data) =>
-      handleThenable<firestore_interop.DocumentReferenceJsImpl>(
-              firestore_interop.addDoc(jsObject, jsify(data)))
+      (firestore_interop.addDoc(jsObject, jsify(data)).toDart
+              as Future<firestore_interop.DocumentReferenceJsImpl>)
           .then(DocumentReference.getInstance);
 
   DocumentReference doc([String? documentPath]) {
     final ref = documentPath != null
-        ? firestore_interop.doc(jsObject, documentPath)
-        : firestore_interop.doc(jsObject);
+        ? firestore_interop.doc(jsObject as JSObject, documentPath.toJS)
+        : firestore_interop.doc(jsObject as JSObject);
 
     return DocumentReference.getInstance(ref);
   }
 
   bool isEqual(CollectionReference other) =>
-      firestore_interop.queryEqual(jsObject, other.jsObject);
+      firestore_interop.queryEqual(jsObject, other.jsObject).toDart;
 }
 
 class DocumentChange
     extends JsObjectWrapper<firestore_interop.DocumentChangeJsImpl> {
   static final _expando = Expando<DocumentChange>();
 
-  String get type => jsObject.type;
+  String get type => jsObject.type.toDart;
 
   DocumentSnapshot? get doc => DocumentSnapshot.getInstance(jsObject.doc);
 
-  num get oldIndex => jsObject.oldIndex;
+  num get oldIndex => jsObject.oldIndex.toDartInt;
 
-  num get newIndex => jsObject.newIndex;
+  num get newIndex => jsObject.newIndex.toDartInt;
 
   /// Creates a new DocumentChange from a [jsObject].
   static DocumentChange getInstance(
@@ -612,9 +619,9 @@ class DocumentSnapshot
     extends JsObjectWrapper<firestore_interop.DocumentSnapshotJsImpl> {
   static final _expando = Expando<DocumentSnapshot>();
 
-  bool get exists => jsObject.exists();
+  bool get exists => jsObject.exists().toDart;
 
-  String get id => jsObject.id;
+  String get id => jsObject.id.toDart;
 
   firestore_interop.SnapshotMetadata get metadata => jsObject.metadata;
 
@@ -636,8 +643,9 @@ class DocumentSnapshot
   dynamic get(/*String|FieldPath*/ dynamic fieldPath) =>
       dartify(jsObject.get(fieldPath));
 
-  bool isEqual(DocumentSnapshot other) =>
-      firestore_interop.snapshotEqual(jsObject, other.jsObject);
+  bool isEqual(DocumentSnapshot other) => firestore_interop
+      .snapshotEqual(jsObject as JSObject, other.jsObject as JSObject)
+      .toDart;
 }
 
 class QuerySnapshot
@@ -648,8 +656,16 @@ class QuerySnapshot
   List<DocumentChange> docChanges(
       [firestore_interop.SnapshotListenOptions? options]) {
     List<firestore_interop.DocumentChangeJsImpl> changes = options != null
-        ? jsObject.docChanges(jsify(options))
-        : jsObject.docChanges();
+        ? jsObject
+            .docChanges(jsify(options))
+            .toDart
+            .map((e) => e! as firestore_interop.DocumentChangeJsImpl)
+            .toList()
+        : jsObject
+            .docChanges()
+            .toDart
+            .map((e) => e! as firestore_interop.DocumentChangeJsImpl)
+            .toList();
 
     return changes
         // explicitly typing the param as dynamic to work-around
@@ -659,20 +675,20 @@ class QuerySnapshot
         .toList();
   }
 
-  List<DocumentSnapshot?> get docs => jsObject.docs
+  List<DocumentSnapshot?> get docs => jsObject.docs.toDart
       // explicitly typing the param as dynamic to work-around
       // https://github.com/dart-lang/sdk/issues/33537
       // ignore: unnecessary_lambdas
       .map((dynamic e) => DocumentSnapshot.getInstance(e))
       .toList();
 
-  bool get empty => jsObject.empty;
+  bool get empty => jsObject.empty.toDart;
 
   firestore_interop.SnapshotMetadata get metadata => jsObject.metadata;
 
   Query get query => Query.fromJsObject(jsObject.query);
 
-  num get size => jsObject.size;
+  num get size => jsObject.size.toDartInt;
 
   static QuerySnapshot getInstance(
       firestore_interop.QuerySnapshotJsImpl jsObject) {
@@ -683,13 +699,13 @@ class QuerySnapshot
       : super.fromJsObject(jsObject);
 
   void forEach(Function(DocumentSnapshot?) callback) {
-    var callbackWrap =
-        allowInterop((s) => callback(DocumentSnapshot.getInstance(s)));
+    var callbackWrap = ((s) => callback(DocumentSnapshot.getInstance(s))).toJS;
     return jsObject.forEach(callbackWrap);
   }
 
-  bool isEqual(QuerySnapshot other) =>
-      firestore_interop.snapshotEqual(jsObject, other.jsObject);
+  bool isEqual(QuerySnapshot other) => firestore_interop
+      .snapshotEqual(jsObject as JSObject, other.jsObject as JSObject)
+      .toDart;
 }
 
 class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl>
@@ -708,8 +724,8 @@ class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl>
       Transaction.getInstance(jsObject.delete(documentRef.jsObject));
 
   Future<DocumentSnapshot> get(DocumentReference documentRef) =>
-      handleThenable<firestore_interop.DocumentSnapshotJsImpl>(
-              jsObject.get(documentRef.jsObject))
+      (jsObject.get(documentRef.jsObject).toDart
+              as Future<firestore_interop.DocumentSnapshotJsImpl>)
           .then(DocumentSnapshot.getInstance);
 
   Transaction set(DocumentReference documentRef, Map<String, dynamic> data,
@@ -799,7 +815,7 @@ class _FieldValueIncrement implements FieldValue {
   _FieldValueIncrement(this.n);
 
   @override
-  firestore_interop.FieldValue _jsify() => firestore_interop.increment(n);
+  firestore_interop.FieldValue _jsify() => firestore_interop.increment(n.toJS);
 
   @override
   String toString() => 'FieldValue.increment($n)';
@@ -859,17 +875,18 @@ class AggregateQuery {
           break;
         case AggregateType.sum:
           requests[name(aggregateQuery)] =
-              firestore_interop.sum(aggregateQuery.field!);
+              firestore_interop.sum(aggregateQuery.field!.toJS);
           break;
         case AggregateType.average:
           requests[name(aggregateQuery)] =
-              firestore_interop.average(aggregateQuery.field!);
+              firestore_interop.average(aggregateQuery.field!.toJS);
           break;
       }
     }
 
-    return handleThenable<firestore_interop.AggregateQuerySnapshotJsImpl>(
-            firestore_interop.getAggregateFromServer(_jsQuery, jsify(requests)))
+    return (firestore_interop
+            .getAggregateFromServer(_jsQuery, jsify(requests))
+            .toDart as Future<firestore_interop.AggregateQuerySnapshotJsImpl>)
         .then(AggregateQuerySnapshot.getInstance);
   }
 }
