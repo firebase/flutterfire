@@ -20,7 +20,7 @@ external FirestoreJsImpl getFirestore([AppJsImpl? app, String? databasURL]);
 
 @JS()
 external FirestoreJsImpl initializeFirestore(
-    [AppJsImpl app, Settings settings, String? databaseURL]);
+    [AppJsImpl app, FirestoreSettings settings, String? databaseURL]);
 
 @JS()
 external PromiseJsImpl<DocumentReferenceJsImpl> addDoc(
@@ -78,6 +78,9 @@ external DocumentReferenceJsImpl doc(
 external FieldPath documentId();
 
 @JS()
+@Deprecated(
+  'This function will be removed in a future major release. Instead, set FirestoreSettings.localCache to an instance of PersistentLocalCache to turn on IndexedDb cache.',
+)
 external PromiseJsImpl<void> enableIndexedDbPersistence(
   FirestoreJsImpl firestore, [
   PersistenceSettings? settings,
@@ -159,6 +162,34 @@ external QueryConstraintJsImpl orderBy(
   dynamic fieldPath, [
   String? direction,
 ]);
+
+@JS()
+external MemoryLocalCache memoryLocalCache(
+  MemoryCacheSettings? settings,
+);
+
+@JS()
+external MemoryLruGarbageCollector memoryLruGarbageCollector(
+  num? cacheSizeBytes,
+);
+
+@JS()
+external MemoryEagerGarbageCollector memoryEagerGarbageCollector();
+
+@JS()
+external PersistentLocalCache persistentLocalCache(
+  PersistentCacheSettings settings,
+);
+
+@JS()
+external PersistentSingleTabManager persistentSingleTabManager(
+  PersistentSingleTabManagerSettings? settings,
+);
+
+@JS()
+external PersistentMultipleTabManager persistentMultipleTabManager(
+  PersistentSingleTabManagerSettings? settings,
+);
 
 @JS()
 external QueryJsImpl query(
@@ -534,7 +565,8 @@ abstract class SnapshotListenOptions {
 /// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.Settings>.
 @anonymous
 @JS()
-abstract class Settings {
+abstract class FirestoreSettings {
+  @Deprecated('Use FirestoreSettings.localCache instead.')
   //ignore: avoid_setters_without_getters
   external set cacheSizeBytes(int i);
 
@@ -547,12 +579,137 @@ abstract class Settings {
   //ignore: avoid_setters_without_getters
   external set ignoreUndefinedProperties(bool u);
 
-  external factory Settings({
+  /// Specifies the cache used by the SDK.
+  /// Available options are MemoryLocalCache and PersistentLocalCache, each with different configuration options.
+  /// When unspecified, MemoryLocalCache will be used by default.
+  /// NOTE: setting this field and cacheSizeBytes at the same time will throw exception during SDK initialization.
+  /// Instead, using the configuration in the FirestoreLocalCache object to specify the cache size.
+  ///
+  /// Union type MemoryLocalCache | PersistentLocalCache;
+  //ignore: avoid_setters_without_getters
+  external set localCache(dynamic u);
+
+  external factory FirestoreSettings({
     int? cacheSizeBytes,
     String? host,
     bool? ssl,
     bool? ignoreUndefinedProperties,
+    dynamic localCache,
   });
+}
+
+/// Union type from all supported SDK cache layer.
+///
+/// [MemoryLocalCache] and [MemoryCacheSettings] are the two only cache types supported by the SDK. Custom implementation is not supported.
+@anonymous
+@JS()
+abstract class FirestoreLocalCache {}
+
+/// Provides an in-memory cache to the SDK. This is the default cache unless explicitly configured otherwise.
+///
+/// To use, create an instance using the factory function , then set the instance to FirestoreSettings.cache
+/// and call initializeFirestore using the settings object.
+@anonymous
+@JS()
+abstract class MemoryLocalCache extends FirestoreLocalCache {
+  external String get kind;
+}
+
+/// A tab manager supportting only one tab, no synchronization will be performed across tabs.
+@anonymous
+@JS()
+abstract class PersistentSingleTabManager {
+  external String get kind;
+}
+
+/// A tab manager supporting multiple tabs. SDK will synchronize queries and mutations done across all tabs using the SDK.
+@anonymous
+@JS()
+abstract class PersistentMultipleTabManager {
+  external String get kind;
+}
+
+/// A garbage collector deletes documents whenever they are not part of any active queries, and have no local mutations attached to them.
+@anonymous
+@JS()
+abstract class MemoryEagerGarbageCollector {
+  external String get kind;
+}
+
+/// A garbage collector deletes Least-Recently-Used documents in multiple batches.
+@anonymous
+@JS()
+abstract class MemoryLruGarbageCollector {
+  external String get kind;
+}
+
+/// Provides an in-memory cache to the SDK. This is the default cache unless explicitly configured otherwise.
+///
+/// To use, create an instance using the factory function , then set the instance to FirestoreSettings.cache
+/// and call initializeFirestore using the settings object.
+@anonymous
+@JS()
+abstract class PersistentLocalCache extends FirestoreLocalCache {
+  external String get kind;
+}
+
+/// An settings object to configure an MemoryLocalCache instance.
+///
+/// See: <https://firebase.google.com/docs/reference/js/firestore_.memorycachesettings>.
+@anonymous
+@JS()
+abstract class MemoryCacheSettings {
+  /// The garbage collector to use, for the memory cache layer.
+  /// A MemoryEagerGarbageCollector is used when this is undefined.
+  /// Union type MemoryEagerGarbageCollector | MemoryLruGarbageCollector;
+  external dynamic get garbageCollector;
+
+  external set garbageCollector(dynamic v);
+
+  external factory MemoryCacheSettings({Object? garbageCollector});
+}
+
+/// An settings object to configure an PersistentLocalCache instance.
+///
+/// See: <https://firebase.google.com/docs/reference/js/firestore_.persistentcachesettings.md#persistentcachesettings_interface>.
+@anonymous
+@JS()
+abstract class PersistentCacheSettings {
+  /// An approximate cache size threshold for the on-disk data.
+  /// If the cache grows beyond this size, Firestore will start removing data that hasn't been recently used.
+  /// The SDK does not guarantee that the cache will stay below that size,
+  /// only that if the cache exceeds the given size, cleanup will be attempted.
+  /// The default value is 40 MB. The threshold must be set to at least 1 MB,
+  /// and can be set to CACHE_SIZE_UNLIMITED to disable garbage collection.
+  external num? get cacheSizeBytes;
+
+  external set cacheSizeBytes(num? v);
+
+  /// Specifies how multiple tabs/windows will be managed by the SDK.
+  /// Union type PersistentSingleTabManager | PersistentMultipleTabManager
+  external dynamic get tabManager;
+
+  external set tabManager(dynamic v);
+
+  external factory PersistentCacheSettings({
+    num? cacheSizeBytes,
+    Object? tabManager,
+  });
+}
+
+/// An settings object to configure an PersistentLocalCache instance.
+///
+/// See: <https://firebase.google.com/docs/reference/js/firestore_.persistentsingletabmanagersettings>.
+@JS()
+abstract class PersistentSingleTabManagerSettings {
+  /// Whether to force-enable persistent (IndexedDB) cache for the client.
+  /// This cannot be used with multi-tab synchronization and is primarily
+  /// intended for use with Web Workers.
+  /// Setting this to true will enable IndexedDB, but cause other tabs using
+  /// IndexedDB cache to fail.
+  external bool get forceOwnership;
+
+  external set forceOwnership(bool v);
 }
 
 /// Metadata about a snapshot, describing the state of the snapshot.

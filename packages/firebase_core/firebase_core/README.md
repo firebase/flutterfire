@@ -10,7 +10,7 @@ To learn more about Firebase, please visit the [Firebase website](https://fireba
 
 ## Getting Started
 
-To get started with FlutterFire, please [see the documentation](https://firebase.flutter.dev/docs/overview).
+To get started with FlutterFire, please [see the documentation](https://firebase.google.com/docs/flutter/setup?platform=ios).
 
 ## Usage
 

@@ -570,6 +570,7 @@ void main() {
           expect(FirebaseAuth.instance.currentUser!.email, equals(emailBefore));
 
           // Update user email
+          // ignore: deprecated_member_use
           await FirebaseAuth.instance.currentUser!.updateEmail(email);
           expect(FirebaseAuth.instance.currentUser!.email, equals(email));
         });

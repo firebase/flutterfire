@@ -8,7 +8,7 @@ To learn more about Firebase Analytics, please visit the [Firebase website](http
 
 ## Getting Started
 
-To get started with Firebase Analytics for Flutter, please [see the documentation](https://firebase.flutter.dev/docs/analytics/overview).
+To get started with Firebase Analytics for Flutter, please [see the documentation](https://firebase.google.com/docs/analytics/get-started?platform=flutter).
 
 ## Usage
 
