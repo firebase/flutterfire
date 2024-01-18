@@ -3,6 +3,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:js_interop';
+
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
 import '../document_reference_web.dart';
@@ -55,63 +57,73 @@ class EncodeUtility {
       // deep FieldPaths which the web counterpart supports
       switch (length) {
         case 1:
-          return firestore_interop.FieldPath(components[0]);
+          return firestore_interop.FieldPath(components[0].toJS);
         case 2:
-          return firestore_interop.FieldPath(components[0], components[1]);
+          return firestore_interop.FieldPath(
+              components[0].toJS, components[1].toJS);
         case 3:
           return firestore_interop.FieldPath(
-              components[0], components[1], components[2]);
+              components[0].toJS, components[1].toJS, components[2].toJS);
         case 4:
-          return firestore_interop.FieldPath(
-              components[0], components[1], components[2], components[3]);
+          return firestore_interop.FieldPath(components[0].toJS,
+              components[1].toJS, components[2].toJS, components[3].toJS);
         case 5:
-          return firestore_interop.FieldPath(components[0], components[1],
-              components[2], components[3], components[4]);
+          return firestore_interop.FieldPath(
+              components[0].toJS,
+              components[1].toJS,
+              components[2].toJS,
+              components[3].toJS,
+              components[4].toJS);
         case 6:
-          return firestore_interop.FieldPath(components[0], components[1],
-              components[2], components[3], components[4], components[5]);
+          return firestore_interop.FieldPath(
+              components[0].toJS,
+              components[1].toJS,
+              components[2].toJS,
+              components[3].toJS,
+              components[4].toJS,
+              components[5].toJS);
         case 7:
           return firestore_interop.FieldPath(
-              components[0],
-              components[1],
-              components[2],
-              components[3],
-              components[4],
-              components[5],
-              components[6]);
+              components[0].toJS,
+              components[1].toJS,
+              components[2].toJS,
+              components[3].toJS,
+              components[4].toJS,
+              components[5].toJS,
+              components[6].toJS);
         case 8:
           return firestore_interop.FieldPath(
-              components[0],
-              components[1],
-              components[2],
-              components[3],
-              components[4],
-              components[5],
-              components[6],
-              components[7]);
+              components[0].toJS,
+              components[1].toJS,
+              components[2].toJS,
+              components[3].toJS,
+              components[4].toJS,
+              components[5].toJS,
+              components[6].toJS,
+              components[7].toJS);
         case 9:
           return firestore_interop.FieldPath(
-              components[0],
-              components[1],
-              components[2],
-              components[3],
-              components[4],
-              components[5],
-              components[6],
-              components[7],
-              components[8]);
+              components[0].toJS,
+              components[1].toJS,
+              components[2].toJS,
+              components[3].toJS,
+              components[4].toJS,
+              components[5].toJS,
+              components[6].toJS,
+              components[7].toJS,
+              components[8].toJS);
         case 10:
           return firestore_interop.FieldPath(
-              components[0],
-              components[1],
-              components[2],
-              components[3],
-              components[4],
-              components[5],
-              components[6],
-              components[7],
-              components[8],
-              components[9]);
+              components[0].toJS,
+              components[1].toJS,
+              components[2].toJS,
+              components[3].toJS,
+              components[4].toJS,
+              components[5].toJS,
+              components[6].toJS,
+              components[7].toJS,
+              components[8].toJS,
+              components[9].toJS);
         default:
           throw Exception(
               'Firestore web FieldPath only supports 10 levels deep field paths');
@@ -121,9 +133,10 @@ class EncodeUtility {
     } else if (value is Timestamp) {
       return value.toDate();
     } else if (value is GeoPoint) {
-      return firestore_interop.GeoPointJsImpl(value.latitude, value.longitude);
+      return firestore_interop.GeoPointJsImpl(
+          value.latitude.toJS, value.longitude.toJS);
     } else if (value is Blob) {
-      return firestore_interop.BytesJsImpl.fromUint8Array(value.bytes);
+      return firestore_interop.BytesJsImpl.fromUint8Array(value.bytes.toJS);
     } else if (value is DocumentReferenceWeb) {
       return value.firestoreWeb.doc(value.path);
     } else if (value is Map<String, dynamic>) {

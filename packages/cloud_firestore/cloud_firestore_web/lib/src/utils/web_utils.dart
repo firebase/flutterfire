@@ -3,6 +3,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:js_interop';
+
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
 import '../interop/firestore.dart' as firestore_interop;
@@ -64,13 +66,13 @@ DocumentSnapshotPlatform convertWebDocumentSnapshot(
     DecodeUtility.decodeMapData(
       webSnapshot.data(SnapshotOptions(
         serverTimestamps:
-            getServerTimestampBehaviorString(serverTimestampBehavior),
+            getServerTimestampBehaviorString(serverTimestampBehavior).toJS,
       )),
       firestore,
     ),
     PigeonSnapshotMetadata(
-      hasPendingWrites: webSnapshot.metadata.hasPendingWrites,
-      isFromCache: webSnapshot.metadata.fromCache,
+      hasPendingWrites: webSnapshot.metadata.hasPendingWrites.toDart,
+      isFromCache: webSnapshot.metadata.fromCache.toDart,
     ),
   );
 }
@@ -109,8 +111,8 @@ DocumentChangeType convertWebDocumentChangeType(String changeType) {
 /// Converts a [web.SnapshotMetadata] to a [SnapshotMetadataPlatform].
 SnapshotMetadataPlatform convertWebSnapshotMetadata(
     firestore_interop.SnapshotMetadata webSnapshotMetadata) {
-  return SnapshotMetadataPlatform(
-      webSnapshotMetadata.hasPendingWrites, webSnapshotMetadata.fromCache);
+  return SnapshotMetadataPlatform(webSnapshotMetadata.hasPendingWrites.toDart,
+      webSnapshotMetadata.fromCache.toDart);
 }
 
 /// Converts a [GetOptions] to a [web.GetOptions].
@@ -134,7 +136,7 @@ firestore_interop.GetOptions? convertGetOptions(GetOptions? options) {
       break;
   }
 
-  return firestore_interop.GetOptions(source: source);
+  return firestore_interop.GetOptions(source: source.toJS);
 }
 
 /// Converts a [SetOptions] to a [web.SetOptions].
@@ -143,12 +145,13 @@ firestore_interop.SetOptions? convertSetOptions(SetOptions? options) {
 
   firestore_interop.SetOptions? parsedOptions;
   if (options.merge != null) {
-    parsedOptions = firestore_interop.SetOptions(merge: options.merge);
+    parsedOptions = firestore_interop.SetOptions(merge: options.merge?.toJS);
   } else if (options.mergeFields != null) {
     parsedOptions = firestore_interop.SetOptions(
         mergeFields: options.mergeFields!
-            .map((e) => e.components.toList().join('.'))
-            .toList());
+            .map((e) => e.components.toList().join('.').toJS)
+            .toList()
+            .toJSBox as JSArray);
   }
 
   return parsedOptions;
@@ -156,5 +159,6 @@ firestore_interop.SetOptions? convertSetOptions(SetOptions? options) {
 
 /// Converts a [FieldPath] to a [web.FieldPath].
 firestore_interop.FieldPath convertFieldPath(FieldPath fieldPath) {
-  return firestore_interop.FieldPath(fieldPath.components.toList().join('.'));
+  return firestore_interop.FieldPath(
+      fieldPath.components.toList().join('.').toJS);
 }

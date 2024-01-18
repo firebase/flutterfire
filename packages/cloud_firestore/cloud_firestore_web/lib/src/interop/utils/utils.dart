@@ -12,25 +12,25 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart'
 import '../firestore.dart';
 
 /// Returns Dart representation from JS Object.
-dynamic dartify(Object? jsObject) {
-  return core_interop.dartify(jsObject, (Object? object) {
-    if (object == null) {
-      return null;
-    }
-    if (util.instanceof(object, DocumentReferenceJsConstructor)) {
-      return DocumentReference.getInstance(object as DocumentReferenceJsImpl);
-    }
-    if (util.instanceof(object, GeoPointConstructor)) {
-      return object;
-    }
-    if (util.instanceof(object, TimestampJsConstructor)) {
-      return Timestamp((object as TimestampJsImpl).seconds, object.nanoseconds);
-    }
-    if (util.instanceof(object, BytesConstructor)) {
-      return object as BytesJsImpl;
-    }
+dynamic dartify(JSObject? jsObject) {
+  if (jsObject == null) {
     return null;
-  });
+  }
+  if (jsObject.instanceof(DocumentReferenceJsConstructor as JSFunction)) {
+    return DocumentReference.getInstance(jsObject as DocumentReferenceJsImpl);
+  }
+  if (jsObject.instanceof(GeoPointConstructor as JSFunction)) {
+    return jsObject;
+  }
+  if (jsObject.instanceof(TimestampJsConstructor as JSFunction)) {
+    final castedJSObject = jsObject as TimestampJsImpl;
+    return Timestamp(
+        castedJSObject.seconds.toDartInt, castedJSObject.nanoseconds.toDartInt);
+  }
+  if (jsObject.instanceof(BytesConstructor as JSFunction)) {
+    return jsObject as BytesJsImpl;
+  }
+  return jsObject.dartify();
 }
 
 /// Returns the JS implementation from Dart Object.
