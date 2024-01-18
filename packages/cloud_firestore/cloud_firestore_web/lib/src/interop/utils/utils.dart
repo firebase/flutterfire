@@ -65,7 +65,7 @@ dynamic jsify(Object? dartObject) {
       return dartObject;
     }
 
-    if (object is Function) {
+    if (object is JSAny Function()) {
       return object.toJS;
     }
 

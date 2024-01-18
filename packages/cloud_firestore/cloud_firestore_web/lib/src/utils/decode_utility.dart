@@ -35,12 +35,15 @@ class DecodeUtility {
   /// Decodes an incoming value to its proper type.
   static dynamic valueDecode(
       dynamic value, FirebaseFirestorePlatform firestore) {
-    if (value.instanceof(TimestampJsConstructor as JSFunction)) {
-      return GeoPoint(value.latitude as double, value.longitude as double);
+    if (value is JSObject &&
+        value.instanceof(GeoPointConstructor as JSFunction)) {
+      return GeoPoint((value as GeoPointJsImpl).latitude.toDartDouble,
+          (value as GeoPointJsImpl).longitude.toDartDouble);
     } else if (value is DateTime) {
       return Timestamp.fromDate(value);
-    } else if (value.instanceof(BytesConstructor as JSFunction)) {
-      return Blob(value.toUint8Array());
+    } else if (value is JSObject &&
+        value.instanceof(BytesConstructor as JSFunction)) {
+      return Blob((value as BytesJsImpl).toUint8Array().toDart);
     } else if (value is firestore_interop.DocumentReference) {
       return (firestore as FirebaseFirestoreWeb).doc(value.path);
     } else if (value is Map<String, dynamic>) {
