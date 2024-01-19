@@ -250,6 +250,7 @@ external JSBoolean refEqual(
 @staticInterop
 external JSPromise runTransaction(
   FirestoreJsImpl firestore,
+  // JSPromise Function(TransactionJsImpl) updateFunction,
   JSFunction updateFunction, [
   TransactionOptionsJsImpl? options,
 ]);
