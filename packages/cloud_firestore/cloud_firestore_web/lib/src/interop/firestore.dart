@@ -279,8 +279,8 @@ class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl>
   WriteBatch set(DocumentReference documentRef, Map<String, dynamic> data,
       [firestore_interop.SetOptions? options]) {
     var jsObjectSet = (options != null)
-        ? jsObject.set(documentRef.jsObject, jsify(data), options)
-        : jsObject.set(documentRef.jsObject, jsify(data));
+        ? jsObject.set(documentRef.jsObject, jsify(data)! as JSObject, options)
+        : jsObject.set(documentRef.jsObject, jsify(data)! as JSObject);
     return WriteBatch.getInstance(jsObjectSet);
   }
 
@@ -383,8 +383,8 @@ class DocumentReference
   Future<void> set(Map<String, dynamic> data,
       [firestore_interop.SetOptions? options]) {
     var jsObjectSet = (options != null)
-        ? firestore_interop.setDoc(jsObject, jsify(data), options)
-        : firestore_interop.setDoc(jsObject, jsify(data));
+        ? firestore_interop.setDoc(jsObject, jsify(data)! as JSObject, options)
+        : firestore_interop.setDoc(jsObject, jsify(data)! as JSObject);
 
     return jsObjectSet.toDart;
   }
@@ -502,8 +502,10 @@ class Query<T extends firestore_interop.QueryJsImpl>
               firestore_interop.startAt, snapshot, fieldValues)));
 
   Query where(dynamic fieldPath, String opStr, dynamic value) =>
-      Query.fromJsObject(firestore_interop.query(jsObject,
-          firestore_interop.where(fieldPath, opStr.toJS, jsify(value))));
+      Query.fromJsObject(firestore_interop.query(
+          jsObject,
+          firestore_interop.where(
+              fieldPath, opStr.toJS, jsify(value)! as JSObject)));
 
   /// Calls js paginating [method] with [DocumentSnapshot] or List of
   /// [fieldValues].
@@ -529,7 +531,8 @@ class Query<T extends firestore_interop.QueryJsImpl>
       String opStr = map['op']! as String;
       dynamic value = EncodeUtility.valueEncode(map['value']);
 
-      return firestore_interop.where(fieldPath, opStr.toJS, jsify(value));
+      return firestore_interop.where(
+          fieldPath, opStr.toJS, jsify(value)! as JSObject);
     }
 
     String opStr = map['op']! as String;
@@ -580,7 +583,7 @@ class CollectionReference<T extends firestore_interop.CollectionReferenceJsImpl>
       : super.fromJsObject(jsObject as T);
 
   Future<DocumentReference> add(Map<String, dynamic> data) =>
-      (firestore_interop.addDoc(jsObject, jsify(data)).toDart
+      (firestore_interop.addDoc(jsObject, jsify(data)! as JSObject).toDart
               as Future<firestore_interop.DocumentReferenceJsImpl>)
           .then(DocumentReference.getInstance);
 
@@ -660,7 +663,8 @@ class QuerySnapshot
       [firestore_interop.SnapshotListenOptions? options]) {
     List<firestore_interop.DocumentChangeJsImpl> changes = options != null
         ? jsObject
-            .docChanges(jsify(options))
+            .docChanges(
+                jsify(options)! as firestore_interop.SnapshotListenOptions)
             .toDart
             .map((e) => e! as firestore_interop.DocumentChangeJsImpl)
             .toList()
@@ -735,8 +739,8 @@ class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl>
   Transaction set(DocumentReference documentRef, Map<String, dynamic> data,
       [firestore_interop.SetOptions? options]) {
     var jsObjectSet = (options != null)
-        ? jsObject.set(documentRef.jsObject, jsify(data), options)
-        : jsObject.set(documentRef.jsObject, jsify(data));
+        ? jsObject.set(documentRef.jsObject, jsify(data)! as JSObject, options)
+        : jsObject.set(documentRef.jsObject, jsify(data)! as JSObject);
     return Transaction.getInstance(jsObjectSet);
   }
 
@@ -757,7 +761,7 @@ mixin _Updatable {
     var args = [jsify(data)];
     // documentRef has to be the first parameter in list of args
     if (documentRef != null) {
-      args.insert(0, documentRef.jsObject);
+      args.insert(0, documentRef.jsObject as JSObject);
     }
     return callMethod(jsObject, 'update', args);
   }
@@ -825,7 +829,7 @@ class _FieldValueIncrement implements FieldValue {
   String toString() => 'FieldValue.increment($n)';
 }
 
-dynamic jsifyFieldValue(FieldValue fieldValue) => fieldValue._jsify();
+JSAny? jsifyFieldValue(FieldValue fieldValue) => fieldValue._jsify() as JSAny?;
 
 /// Sentinel values that can be used when writing document fields with set()
 /// or update().
@@ -888,10 +892,13 @@ class AggregateQuery {
       }
     }
 
-    return (firestore_interop
-            .getAggregateFromServer(_jsQuery, jsify(requests))
-            .toDart as Future<firestore_interop.AggregateQuerySnapshotJsImpl>)
-        .then(AggregateQuerySnapshot.getInstance);
+    final future = firestore_interop
+        .getAggregateFromServer(_jsQuery, jsify(requests)! as JSObject)
+        .toDart;
+    final result =
+        await future as firestore_interop.AggregateQuerySnapshotJsImpl;
+
+    return AggregateQuerySnapshot.getInstance(result);
   }
 }
 

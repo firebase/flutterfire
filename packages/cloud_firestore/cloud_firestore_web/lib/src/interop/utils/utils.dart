@@ -6,8 +6,6 @@
 import 'dart:js_interop';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:firebase_core_web/firebase_core_web_interop.dart'
-    as core_interop;
 
 import '../firestore.dart';
 
@@ -34,41 +32,41 @@ dynamic dartify(JSObject? jsObject) {
 }
 
 /// Returns the JS implementation from Dart Object.
-dynamic jsify(Object? dartObject) {
+JSAny? jsify(Object? dartObject) {
   if (dartObject == null) {
-    return null;
+    return dartObject?.jsify();
   }
 
-  return core_interop.jsify(dartObject, (Object? object) {
-    if (object is DateTime) {
-      return TimestampJsImpl.fromMillis(object.millisecondsSinceEpoch.toJS);
-    }
+  if (dartObject is DateTime) {
+    return TimestampJsImpl.fromMillis(dartObject.millisecondsSinceEpoch.toJS)
+        as JSAny;
+  }
 
-    if (object is Timestamp) {
-      return TimestampJsImpl.fromMillis(object.millisecondsSinceEpoch.toJS);
-    }
+  if (dartObject is Timestamp) {
+    return TimestampJsImpl.fromMillis(dartObject.millisecondsSinceEpoch.toJS)
+        as JSAny;
+  }
 
-    if (object is DocumentReference) {
-      return object.jsObject;
-    }
+  if (dartObject is DocumentReference) {
+    return dartObject.jsObject as JSAny;
+  }
 
-    if (object is FieldValue) {
-      return jsifyFieldValue(object);
-    }
+  if (dartObject is FieldValue) {
+    return jsifyFieldValue(dartObject);
+  }
 
-    if (object is BytesJsImpl) {
-      return object;
-    }
+  if (dartObject is BytesJsImpl) {
+    return dartObject as JSAny;
+  }
 
-    // NOTE: if the firestore JS lib is not imported, we'll get a DDC warning here
-    if (object is GeoPointJsImpl) {
-      return dartObject;
-    }
+  // NOTE: if the firestore JS lib is not imported, we'll get a DDC warning here
+  if (dartObject is GeoPointJsImpl) {
+    return dartObject as JSAny;
+  }
 
-    if (object is JSAny Function()) {
-      return object.toJS;
-    }
+  if (dartObject is JSAny Function()) {
+    return dartObject.toJS;
+  }
 
-    return null;
-  });
+  return dartObject.jsify();
 }
