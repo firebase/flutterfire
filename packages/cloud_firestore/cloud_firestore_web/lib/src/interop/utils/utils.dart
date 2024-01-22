@@ -51,6 +51,14 @@ JSAny? jsify(Object? dartObject) {
     return dartObject?.jsify();
   }
 
+  if (dartObject is List) {
+    return dartObject.map(jsify).toList().toJS;
+  }
+
+  if (dartObject is Map) {
+    return dartObject.map((key, value) => MapEntry(key, jsify(value))).jsify();
+  }
+
   if (dartObject is DateTime) {
     return TimestampJsImpl.fromMillis(dartObject.millisecondsSinceEpoch.toJS)
         as JSAny;
@@ -80,14 +88,6 @@ JSAny? jsify(Object? dartObject) {
 
   if (dartObject is JSAny Function()) {
     return dartObject.toJS;
-  }
-
-  if (dartObject is List) {
-    return dartObject.map(jsify).toList().toJS;
-  }
-
-  if (dartObject is Map) {
-    return dartObject.map((key, value) => MapEntry(key, jsify(value))).jsify();
   }
 
   return dartObject.jsify();

@@ -304,9 +304,9 @@ external JSPromise waitForPendingWrites(FirestoreJsImpl firestore);
 @JS()
 @staticInterop
 external QueryConstraintJsImpl where(
-  JSObject fieldPath,
+  JSAny fieldPath,
   JSString opStr,
-  JSObject? value,
+  JSAny? value,
 );
 
 // Object type is forced to prevent JS interop from ignoring the value

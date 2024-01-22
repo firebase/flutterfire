@@ -503,10 +503,16 @@ class Query<T extends firestore_interop.QueryJsImpl>
               firestore_interop.startAt, snapshot, fieldValues)));
 
   Query where(dynamic fieldPath, String opStr, dynamic value) =>
-      Query.fromJsObject(firestore_interop.query(
+      Query.fromJsObject(
+        firestore_interop.query(
           jsObject,
           firestore_interop.where(
-              fieldPath, opStr.toJS, jsify(value) as JSObject?)));
+            fieldPath,
+            opStr.toJS,
+            jsify(value),
+          ),
+        ),
+      );
 
   /// Calls js paginating [method] with [DocumentSnapshot] or List of
   /// [fieldValues].
@@ -533,7 +539,10 @@ class Query<T extends firestore_interop.QueryJsImpl>
       dynamic value = EncodeUtility.valueEncode(map['value']);
 
       return firestore_interop.where(
-          fieldPath, opStr.toJS, jsify(value)! as JSObject);
+        fieldPath,
+        opStr.toJS,
+        jsify(value),
+      );
     }
 
     String opStr = map['op']! as String;
