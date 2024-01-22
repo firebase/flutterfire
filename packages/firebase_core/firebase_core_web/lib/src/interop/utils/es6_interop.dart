@@ -8,6 +8,8 @@
 @JS()
 library firebase_interop.core.es6;
 
+import 'dart:js_interop';
+
 import 'package:js/js.dart';
 
 import 'func.dart';
@@ -23,10 +25,12 @@ class PromiseJsImpl<T> {
 class JSError {}
 
 extension JSErrorExtension on JSError {
-  external String? get name;
-  external String? get message;
-  external String? get code;
+  external JSString? get name;
+  external JSString? get message;
+  external JSString? get code;
+
+  external JSString? get stack;
 
   // "customData" - see Firebase AuthError docs: https://firebase.google.com/docs/reference/js/auth.autherror
-  external dynamic get customData;
+  external JSAny get customData;
 }

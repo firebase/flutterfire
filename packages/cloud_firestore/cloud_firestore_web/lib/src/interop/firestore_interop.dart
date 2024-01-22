@@ -511,7 +511,8 @@ extension LoadBundleTaskProgressJsImplExtension
 
   external JSString get taskState;
 
-  external JSString get totalBytes;
+// int or String?
+  external JSAny get totalBytes;
 
   external JSNumber get totalDocuments;
 }

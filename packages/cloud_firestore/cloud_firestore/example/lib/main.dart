@@ -4,13 +4,25 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import 'firebase_options.dart';
 
 /// Requires that a Firestore emulator is running locally.
 /// See https://firebase.flutter.dev/docs/firestore/usage#emulator-usage
-bool shouldUseFirestoreEmulator = false;
+bool shouldUseFirestoreEmulator = true;
+
+Future<Uint8List> loadBundleSetup(int number) async {
+  // endpoint serves a bundle with 3 documents each containing
+  // a 'number' property that increments in value 1-3.
+  final url =
+      Uri.https('api.rnfirebase.io', '/firestore/e2e-tests/bundle-$number');
+  final response = await http.get(url);
+  String string = response.body;
+  return Uint8List.fromList(string.codeUnits);
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +33,36 @@ Future<void> main() async {
   if (shouldUseFirestoreEmulator) {
     FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
   }
+
+  final firestore = FirebaseFirestore.instance;
+
+  Uint8List buffer = await loadBundleSetup(2);
+  LoadBundleTask task = firestore.loadBundle(buffer);
+
+  final list = await task.stream.toList();
+
+  print(
+    list.map((e) => e.totalDocuments),
+  );
+  print(
+    list.map((e) => e.bytesLoaded),
+  );
+  print(
+    list.map((e) => e.documentsLoaded),
+  );
+  print(
+    list.map((e) => e.totalBytes),
+  );
+  print(
+    list,
+  );
+
+  LoadBundleTaskSnapshot lastSnapshot = list.removeLast();
+  print(lastSnapshot.taskState);
+
+  print(
+    list.map((e) => e.taskState),
+  );
 
   runApp(FirestoreExampleApp());
 }

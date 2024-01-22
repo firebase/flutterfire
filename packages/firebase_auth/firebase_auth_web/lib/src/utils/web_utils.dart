@@ -17,9 +17,9 @@ import '../interop/auth.dart' as auth_interop;
 import '../interop/multi_factor.dart' as multi_factor_interop;
 
 bool _hasFirebaseAuthErrorCodeAndMessage(JSError e) {
-  if (e.name == 'FirebaseError') {
-    String code = e.code ?? '';
-    String message = e.message ?? '';
+  if (e.name?.toDart == 'FirebaseError') {
+    String code = e.code?.toDart ?? '';
+    String message = e.message?.toDart ?? '';
     if (code.startsWith('auth/')) return false;
     if (message.contains('Firebase')) return false;
     return true;

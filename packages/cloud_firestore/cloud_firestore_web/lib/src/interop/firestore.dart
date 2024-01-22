@@ -218,10 +218,9 @@ class LoadBundleTask
           controller.addError(
             FirebaseException(
               plugin: 'cloud_firestore',
-              message: error.message,
+              message: error.message?.toDart,
               code: 'load-bundle-error',
-              // TODO(Lyokone): fix stackTrace
-              stackTrace: StackTrace.fromString('error.stack'),
+              stackTrace: StackTrace.fromString(error.stack?.toDart ?? ''),
             ),
           );
           controller.close();
@@ -242,7 +241,9 @@ class LoadBundleTaskProgress
   )   : taskState = convertToTaskState(jsObject.taskState.toDart.toLowerCase()),
         bytesLoaded = jsObject.bytesLoaded.toDartInt,
         documentsLoaded = jsObject.documentsLoaded.toDartInt,
-        totalBytes = int.parse(jsObject.totalBytes.toDart),
+        totalBytes = jsObject.totalBytes is JSNumber
+            ? (jsObject.totalBytes as JSNumber).toDartInt
+            : int.parse((jsObject.totalBytes as JSString).toDart),
         totalDocuments = jsObject.totalDocuments.toDartInt,
         super.fromJsObject(jsObject);
 
