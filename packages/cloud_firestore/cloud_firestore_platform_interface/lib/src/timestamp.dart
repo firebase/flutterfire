@@ -78,8 +78,13 @@ class Timestamp implements Comparable<Timestamp> {
       seconds * _kMillion + nanoseconds ~/ _kThousand;
 
   /// Converts [Timestamp] to [DateTime]
-  DateTime toDate() {
-    return DateTime.fromMicrosecondsSinceEpoch(microsecondsSinceEpoch);
+  ///
+  /// Use [isUtc] to determine whether a returned `DateTime` object is based in UTC.
+  DateTime toDate({bool isUtc = false}) {
+    return DateTime.fromMicrosecondsSinceEpoch(
+      microsecondsSinceEpoch,
+      isUtc: isUtc,
+    );
   }
 
   @override
