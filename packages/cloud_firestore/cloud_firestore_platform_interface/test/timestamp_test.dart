@@ -80,5 +80,28 @@ void main() {
 
       expect(epoch, equals(-9999999999));
     });
+
+    test('isUtc: false return local DateTime', () {
+      Timestamp t = Timestamp.now();
+      DateTime fromT = t.toDate();
+
+      expect(fromT.isUtc, false);
+    });
+
+    test('isUtc: true return utc DateTime', () {
+      Timestamp t = Timestamp.now();
+      DateTime fromT = t.toDate(isUtc: true);
+
+      expect(fromT.isUtc, true);
+    });
+
+    test('isUtc: true return correct uts DateTime', () {
+      DateTime datetime = DateTime.utc(2024, 01, 23, 02, 27, 12, 345, 678);
+      Timestamp t =
+          Timestamp.fromMicrosecondsSinceEpoch(datetime.microsecondsSinceEpoch);
+      DateTime fromT = t.toDate(isUtc: true);
+
+      expect(fromT.microsecondsSinceEpoch, datetime.microsecondsSinceEpoch);
+    });
   });
 }
