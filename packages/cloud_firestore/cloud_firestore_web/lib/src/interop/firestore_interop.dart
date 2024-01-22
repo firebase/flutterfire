@@ -488,8 +488,8 @@ extension QueryConstraintJsImplExtension on QueryConstraintJsImpl {
 abstract class LoadBundleTaskJsImpl {}
 
 extension LoadBundleTaskJsImplExtension on LoadBundleTaskJsImpl {
-  external JSFunction onProgress(
-    JSFunction progress,
+  external void onProgress(
+    JSFunction? next,
   );
 
   external JSPromise then([
@@ -505,7 +505,7 @@ abstract class LoadBundleTaskProgressJsImpl {}
 
 extension LoadBundleTaskProgressJsImplExtension
     on LoadBundleTaskProgressJsImpl {
-  external JSString get bytesLoaded;
+  external JSNumber get bytesLoaded;
 
   external JSNumber get documentsLoaded;
 

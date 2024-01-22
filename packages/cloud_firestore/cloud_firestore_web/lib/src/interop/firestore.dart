@@ -240,7 +240,7 @@ class LoadBundleTaskProgress
   LoadBundleTaskProgress._fromJsObject(
     firestore_interop.LoadBundleTaskProgressJsImpl jsObject,
   )   : taskState = convertToTaskState(jsObject.taskState.toDart.toLowerCase()),
-        bytesLoaded = int.parse(jsObject.bytesLoaded.toDart),
+        bytesLoaded = jsObject.bytesLoaded.toDartInt,
         documentsLoaded = jsObject.documentsLoaded.toDartInt,
         totalBytes = int.parse(jsObject.totalBytes.toDart),
         totalDocuments = jsObject.totalDocuments.toDartInt,
