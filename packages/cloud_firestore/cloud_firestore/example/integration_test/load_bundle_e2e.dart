@@ -69,6 +69,7 @@ void runLoadBundleTests() {
             everyElement(LoadBundleTaskState.running),
           );
         },
+        // Working locally but is failing on CI
         skip: kIsWeb,
       );
 
