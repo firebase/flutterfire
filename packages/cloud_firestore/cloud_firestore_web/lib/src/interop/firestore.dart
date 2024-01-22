@@ -506,7 +506,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
       Query.fromJsObject(firestore_interop.query(
           jsObject,
           firestore_interop.where(
-              fieldPath, opStr.toJS, jsify(value)! as JSObject)));
+              fieldPath, opStr.toJS, jsify(value) as JSObject?)));
 
   /// Calls js paginating [method] with [DocumentSnapshot] or List of
   /// [fieldValues].

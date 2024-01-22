@@ -3279,7 +3279,7 @@ void runQueryTests() {
         (_) async {
           final collection = await initializeTest('foo');
 
-          final query = collection //
+          final query = collection
               .where(Filter('value', isGreaterThan: 0))
               .withConverter<int>(
                 fromFirestore: (snapshots, _) =>
