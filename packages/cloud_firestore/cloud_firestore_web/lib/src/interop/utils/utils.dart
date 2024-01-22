@@ -10,10 +10,13 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import '../firestore.dart';
 
 /// Returns Dart representation from JS Object.
-dynamic dartify(JSObject? jsObject) {
-  if (jsObject == null) {
-    return null;
+dynamic dartify(dynamic object) {
+  if (object is! JSObject) {
+    return object;
   }
+
+  final jsObject = object;
+
   if (jsObject.instanceof(DocumentReferenceJsConstructor as JSFunction)) {
     return DocumentReference.getInstance(jsObject as DocumentReferenceJsImpl);
   }
@@ -28,7 +31,18 @@ dynamic dartify(JSObject? jsObject) {
   if (jsObject.instanceof(BytesConstructor as JSFunction)) {
     return jsObject as BytesJsImpl;
   }
-  return jsObject.dartify();
+
+  final dartObject = jsObject.dartify();
+  if (dartObject is List) {
+    return dartObject.map(dartify).toList();
+  }
+
+  if (dartObject is Map) {
+    return dartObject
+        .map((key, value) => MapEntry(key as String, dartify(value)));
+  }
+
+  return dartObject;
 }
 
 /// Returns the JS implementation from Dart Object.
@@ -66,6 +80,14 @@ JSAny? jsify(Object? dartObject) {
 
   if (dartObject is JSAny Function()) {
     return dartObject.toJS;
+  }
+
+  if (dartObject is List) {
+    return dartObject.map(jsify).toList().toJS;
+  }
+
+  if (dartObject is Map) {
+    return dartObject.map((key, value) => MapEntry(key, jsify(value))).jsify();
   }
 
   return dartObject.jsify();

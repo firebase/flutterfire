@@ -72,7 +72,7 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
 
   Future<void> enablePersistence(
       [firestore_interop.PersistenceSettings? settings]) {
-    if (settings != null && settings.synchronizeTabs == true) {
+    if (settings != null && settings.synchronizeTabs.toDart == true) {
       return firestore_interop
           .enableMultiTabIndexedDbPersistence(jsObject)
           .toDart;
@@ -647,8 +647,14 @@ class DocumentSnapshot
       firestore_interop.DocumentSnapshotJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
-  Map<String, dynamic>? data([firestore_interop.SnapshotOptions? options]) =>
-      Map.from(dartify(jsObject.data(options)));
+  Map<String, dynamic>? data([firestore_interop.SnapshotOptions? options]) {
+    final parsedData = dartify(jsObject.data(options));
+    if (parsedData != null) {
+      return Map<String, dynamic>.from(parsedData);
+    } else {
+      return null;
+    }
+  }
 
   dynamic get(/*String|FieldPath*/ dynamic fieldPath) =>
       dartify(jsObject.get(fieldPath));

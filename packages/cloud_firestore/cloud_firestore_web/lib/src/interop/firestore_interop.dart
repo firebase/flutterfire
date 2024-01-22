@@ -525,7 +525,7 @@ extension DocumentSnapshotJsImplExtension on DocumentSnapshotJsImpl {
   external SnapshotMetadata get metadata;
   external DocumentReferenceJsImpl get ref;
 
-  external JSObject data([SnapshotOptions? options]);
+  external JSObject? data([SnapshotOptions? options]);
   external JSBoolean exists();
   external JSObject get(/*JSString|FieldPath*/ JSObject fieldPath);
 }

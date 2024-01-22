@@ -22,6 +22,38 @@ Future<void> main() async {
     FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
   }
 
+  final CollectionReference<Map<String, dynamic>> collection =
+      FirebaseFirestore.instance.collection('flutter-tests/coucou/query-tests');
+
+  DocumentReference<Map<String, dynamic>> document = collection.doc('doc1');
+
+  await document.set({
+    // 'string': 'foo bar',
+    // 'number_32': 123,
+    // // Equivalent of `Number.MAX_SAFE_INTEGER` in JS, can't go higher than this.
+    // 'number_64': 9007199254740991,
+    // 'bool_true': true,
+    // 'bool_false': false,
+    // 'map': {
+    //   'foo': 'bar',
+    //   'bar': {'baz': 'ben'},
+    // },
+    // 'list': [
+    //   1,
+    //   '2',
+    //   true,
+    //   false,
+    //   {'foo': 'bar'},
+    // ],
+    // 'null': null,
+    'timestamp': Timestamp.now(),
+    // 'geopoint': const GeoPoint(1, 2),
+    // // 'reference': FirebaseFirestore.instance.doc('foo/bar'),
+    // 'nan': double.nan,
+    // 'infinity': double.infinity,
+    // 'negative_infinity': double.negativeInfinity,
+  });
+
   runApp(FirestoreExampleApp());
 }
 
