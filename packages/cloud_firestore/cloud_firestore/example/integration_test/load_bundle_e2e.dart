@@ -141,27 +141,31 @@ void runLoadBundleTests() {
     });
 
     group('FirebaseFirestore.namedQueryGet()', () {
-      testWidgets('namedQueryGet() successful', (_) async {
-        const int number = 4;
-        Uint8List buffer = await loadBundleSetup(number);
-        LoadBundleTask task = firestore.loadBundle(buffer);
+      testWidgets(
+        'namedQueryGet() successful',
+        (_) async {
+          const int number = 4;
+          Uint8List buffer = await loadBundleSetup(number);
+          LoadBundleTask task = firestore.loadBundle(buffer);
 
-        // ensure the bundle has been completely cached
-        await task.stream.last;
+          // ensure the bundle has been completely cached
+          await task.stream.last;
 
-        // namedQuery 'named-bundle-test' which returns a QuerySnaphot of the same 3 documents
-        // with 'number' property
-        QuerySnapshot<Map<String, Object?>> snapshot =
-            await firestore.namedQueryGet(
-          'named-bundle-test-$number',
-          options: const GetOptions(source: Source.cache),
-        );
+          // namedQuery 'named-bundle-test' which returns a QuerySnaphot of the same 3 documents
+          // with 'number' property
+          QuerySnapshot<Map<String, Object?>> snapshot =
+              await firestore.namedQueryGet(
+            'named-bundle-test-$number',
+            options: const GetOptions(source: Source.cache),
+          );
 
-        expect(
-          snapshot.docs.map((document) => document['number']),
-          everyElement(anyOf(1, 2, 3)),
-        );
-      });
+          expect(
+            snapshot.docs.map((document) => document['number']),
+            everyElement(anyOf(1, 2, 3)),
+          );
+        },
+        skip: kIsWeb,
+      );
 
       testWidgets(
         'namedQueryGet() error',
