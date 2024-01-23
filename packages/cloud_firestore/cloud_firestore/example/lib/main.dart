@@ -34,36 +34,6 @@ Future<void> main() async {
     FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
   }
 
-  final firestore = FirebaseFirestore.instance;
-
-  Uint8List buffer = await loadBundleSetup(2);
-  LoadBundleTask task = firestore.loadBundle(buffer);
-
-  final list = await task.stream.toList();
-
-  print(
-    list.map((e) => e.totalDocuments),
-  );
-  print(
-    list.map((e) => e.bytesLoaded),
-  );
-  print(
-    list.map((e) => e.documentsLoaded),
-  );
-  print(
-    list.map((e) => e.totalBytes),
-  );
-  print(
-    list,
-  );
-
-  LoadBundleTaskSnapshot lastSnapshot = list.removeLast();
-  print(lastSnapshot.taskState);
-
-  print(
-    list.map((e) => e.taskState),
-  );
-
   runApp(FirestoreExampleApp());
 }
 
@@ -238,6 +208,36 @@ class _FilmListState extends State<FilmList> {
                       'Count: ${_all.count}');
 
                   return;
+                case 'load_bundle':
+                  Uint8List buffer = await loadBundleSetup(2);
+                  LoadBundleTask task =
+                      FirebaseFirestore.instance.loadBundle(buffer);
+
+                  final list = await task.stream.toList();
+
+                  print(
+                    list.map((e) => e.totalDocuments),
+                  );
+                  print(
+                    list.map((e) => e.bytesLoaded),
+                  );
+                  print(
+                    list.map((e) => e.documentsLoaded),
+                  );
+                  print(
+                    list.map((e) => e.totalBytes),
+                  );
+                  print(
+                    list,
+                  );
+
+                  LoadBundleTaskSnapshot lastSnapshot = list.removeLast();
+                  print(lastSnapshot.taskState);
+
+                  print(
+                    list.map((e) => e.taskState),
+                  );
+                  return;
                 default:
                   return;
               }
@@ -251,6 +251,10 @@ class _FilmListState extends State<FilmList> {
                 const PopupMenuItem(
                   value: 'aggregate',
                   child: Text('Get aggregate data'),
+                ),
+                const PopupMenuItem(
+                  value: 'load_bundle',
+                  child: Text('Load bundle'),
                 ),
               ];
             },
