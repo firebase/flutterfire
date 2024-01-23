@@ -4,7 +4,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io' show Platform;
+import 'dart:ui';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
