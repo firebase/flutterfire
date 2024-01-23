@@ -132,7 +132,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   // https://github.com/firebase/flutterfire/issues/10625
   Future<void> _APNSTokenCheck() async {
     if (defaultTargetPlatform == TargetPlatform.iOS ||
-        defaultTargetPlatform == TargetPlatform.macOS {
+        defaultTargetPlatform == TargetPlatform.macOS) {
       String? token = await getAPNSToken();
 
       if (token == null) {
