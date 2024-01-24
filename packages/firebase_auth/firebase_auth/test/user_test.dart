@@ -253,7 +253,7 @@ void main() {
         when(mockUserPlatform.updateEmail(any)).thenAnswer((i) async {});
 
         const String newEmail = 'newEmail';
-
+        // ignore: deprecated_member_use_from_same_package
         await auth.currentUser!.updateEmail(newEmail);
 
         verify(mockUserPlatform.updateEmail(newEmail));

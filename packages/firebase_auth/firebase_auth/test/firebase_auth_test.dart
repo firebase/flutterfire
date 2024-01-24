@@ -298,7 +298,7 @@ void main() {
         // Necessary as we otherwise get a "null is not a Future<void>" error
         when(mockAuthPlatform.fetchSignInMethodsForEmail(any))
             .thenAnswer((i) async => []);
-
+        // ignore: deprecated_member_use_from_same_package
         await auth.fetchSignInMethodsForEmail(kMockEmail);
         verify(mockAuthPlatform.fetchSignInMethodsForEmail(kMockEmail));
       });

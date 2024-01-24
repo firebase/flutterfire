@@ -50,10 +50,8 @@ public class FlutterFirebaseStoragePlugin
     GeneratedAndroidFirebaseStorage.FlutterError storageException =
         FlutterFirebaseStorageException.parserExceptionToFlutter(exception);
 
-    if (storageException != null) {
-      details.put("code", storageException.code);
-      details.put("message", storageException.getMessage());
-    }
+    details.put("code", storageException.code);
+    details.put("message", storageException.getMessage());
 
     return details;
   }

@@ -17,3 +17,16 @@ class PromiseJsImpl<T> {
   external PromiseJsImpl(Function resolver);
   external PromiseJsImpl then([Func1? onResolve, Func1? onReject]);
 }
+
+@JS()
+@staticInterop
+class JSError {}
+
+extension JSErrorExtension on JSError {
+  external String? get name;
+  external String? get message;
+  external String? get code;
+
+  // "customData" - see Firebase AuthError docs: https://firebase.google.com/docs/reference/js/auth.autherror
+  external dynamic get customData;
+}

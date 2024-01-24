@@ -115,7 +115,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - uses: hendrikmuhs/ccache-action@ca3acd2731eef11f1572ccb126356c2f9298d35e
+      - uses: hendrikmuhs/ccache-action@6d1841ec156c39a52b1b23a810da917ab98da1f4
         name: Xcode Compile Cache
         with:
           key: ${{ runner.os }}-ios-v3
@@ -190,7 +190,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - uses: hendrikmuhs/ccache-action@ca3acd2731eef11f1572ccb126356c2f9298d35e
+      - uses: hendrikmuhs/ccache-action@6d1841ec156c39a52b1b23a810da917ab98da1f4
         name: Xcode Compile Cache
         with:
           key: ${{ runner.os }}-macos-v2

@@ -5,7 +5,7 @@ A Flutter plugin to use the [Firebase ML Model Downloader API](https://firebase.
 
 ## Getting Started
 
-To get started with Firebase ML Model Downloader, please [see the documentation](https://firebase.flutter.dev/docs/ml/overview).
+To get started with Firebase ML Model Downloader, please [see the documentation](https://firebase.google.com/docs/ml/flutter/use-custom-models).
 
 ## Usage
 

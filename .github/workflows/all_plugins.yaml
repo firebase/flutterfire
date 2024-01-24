@@ -143,14 +143,14 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
-      - uses: actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe
+      - uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491
         with:
           go-version: '^1.13.1'
       # Go is used by addlicense command (addlicense is used in melos run
       # check-license-header)
       - run: go install github.com/google/addlicense@latest
       - name: Install Dart
-        uses: dart-lang/setup-dart@d6a63dab3335f427404425de0fbfed4686d93c4f
+        uses: dart-lang/setup-dart@b64355ae6ca0b5d484f0106a033dd1388965d06d
       - name: Install Melos
         uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:

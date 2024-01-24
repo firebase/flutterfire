@@ -9,7 +9,7 @@ To learn more about Functions, please visit the [Firebase website](https://fireb
 
 ## Getting Started
 
-To get started with Cloud Functions for Firebase, please [see the documentation](https://firebase.flutter.dev/docs/functions/overview).
+To get started with Cloud Functions for Firebase, please [see the documentation](https://firebase.google.com/docs/functions/get-started?gen=2nd).
 
 ## Usage
 

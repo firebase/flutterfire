@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
@@ -116,35 +117,63 @@ void setupTaskTests() {
         skip: defaultTargetPlatform == TargetPlatform.macOS,
       );
 
-      //TODO(pr-mais): causes the emulator to crash
-      // test('handles errors, e.g. if permission denied', () async {
-      //   late FirebaseException streamError;
+      test('handles errors, e.g. if permission denied for `snapshotEvents`',
+          () async {
+        late FirebaseException streamError;
 
-      //   List<int> list = utf8.encode('hello world');
-      //   Uint8List data = Uint8List.fromList(list);
-      //   UploadTask task = storage.ref('/uploadNope.jpeg').putData(data);
+        List<int> list = utf8.encode('hello world');
+        Uint8List data = Uint8List.fromList(list);
+        UploadTask task = storage.ref('/uploadNope.jpeg').putData(data);
 
-      //   expect(task.snapshot.state, TaskState.running);
+        bool callsDoneWhenFinished = false;
+        task.snapshotEvents.listen(
+          (TaskSnapshot snapshot) {
+            // noop
+          },
+          onError: (error) {
+            streamError = error;
+          },
+          onDone: () {
+            callsDoneWhenFinished = true;
+          },
+        );
+        // Allow time for listener events to be called
+        await Future.delayed(
+          const Duration(seconds: 2),
+        );
 
-      //   task.snapshotEvents.listen((TaskSnapshot snapshot) {
-      //     // noop
-      //   }, onError: (error) {
-      //     streamError = error;
-      //   }, cancelOnError: true);
+        expect(callsDoneWhenFinished, isTrue);
 
-      //   await expectLater(
-      //     task,
-      //     throwsA(isA<FirebaseException>()
-      //         .having((e) => e.code, 'code', 'unauthorized')),
-      //   );
+        expect(streamError.plugin, 'firebase_storage');
+        expect(streamError.code, 'unauthorized');
+        expect(
+          streamError.message,
+          'User is not authorized to perform the desired action.',
+        );
 
-      //   expect(streamError.plugin, 'firebase_storage');
-      //   expect(streamError.code, 'unauthorized');
-      //   expect(streamError.message,
-      //       'User is not authorized to perform the desired action.');
+        expect(task.snapshot.state, TaskState.error);
+      });
 
-      //   expect(task.snapshot.state, TaskState.error);
-      // });
+      test('handles errors, e.g. if permission denied for `await Task`',
+          () async {
+        List<int> list = utf8.encode('hello world');
+        Uint8List data = Uint8List.fromList(list);
+        UploadTask task = storage.ref('/uploadNope.jpeg').putData(data);
+        try {
+          await task;
+        } catch (e) {
+          expect(e, isA<FirebaseException>());
+          FirebaseException exception = e as FirebaseException;
+          expect(exception.plugin, 'firebase_storage');
+          expect(exception.code, 'unauthorized');
+          expect(
+            exception.message,
+            'User is not authorized to perform the desired action.',
+          );
+        }
+
+        expect(task.snapshot.state, TaskState.error);
+      });
     });
 
     group('snapshot', () {
@@ -247,5 +276,38 @@ void setupTaskTests() {
       },
       skip: true, // Cancel still cannot get correct result in e2e test.
     );
+
+    group('snapshotEvents', () {
+      test('loop through successful `snapshotEvents`', () async {
+        final snapshots = <TaskSnapshot>[];
+        final task = uploadRef.putString('This is an upload task!');
+        // ignore: prefer_foreach
+        await for (final event in task.snapshotEvents) {
+          snapshots.add(event);
+        }
+        expect(snapshots.last.state, TaskState.success);
+      });
+
+      test('failed `snapshotEvents` loop', () async {
+        final snapshots = <TaskSnapshot>[];
+        UploadTask task =
+            storage.ref('/uploadNope.jpeg').putString('This will fail');
+        try {
+          // ignore: prefer_foreach
+          await for (final event in task.snapshotEvents) {
+            snapshots.add(event);
+          }
+        } catch (e) {
+          expect(e, isA<FirebaseException>());
+          FirebaseException exception = e as FirebaseException;
+          expect(exception.plugin, 'firebase_storage');
+          expect(exception.code, 'unauthorized');
+          expect(
+            exception.message,
+            'User is not authorized to perform the desired action.',
+          );
+        }
+      });
+    });
   });
 }

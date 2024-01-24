@@ -4,38 +4,24 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:io';
+import 'dart:js_interop';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_web/firebase_auth_web.dart';
 import 'package:firebase_auth_web/src/firebase_auth_web_multi_factor.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
-import 'package:js/js_util.dart';
+import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
 import '../interop/auth.dart' as auth_interop;
 import '../interop/multi_factor.dart' as multi_factor_interop;
-import '../interop/window_interop.dart' as window_interop;
 
-/// Workaround test to check whether `e` is practically a FirebaseError.
-///
-/// Ideally we'd check whether `e instanceof FirebaseError` however
-/// there are two definitions of `FirebaseError` in deployed apps, one from
-/// `firebase-auth.js` (which is usually minified) and one from
-/// `firebase-app.js`.
-///
-/// Because they are not the same, the instanceof check fails. Instead, we test
-/// that it is a window.Error (since that's the base class of FirebaseError) and
-/// we check that it defines "customData" property which is on the AuthError but not the FirebaseError it extends
-bool _isFirebaseAuthError(Object e) =>
-    instanceof(e, window_interop.errorConstructor) &&
-    hasProperty(e, 'customData');
-
-bool _hasFirebaseAuthErrorCodeAndMessage(Object e) {
-  if (_isFirebaseAuthError(e)) {
-    String? code = getProperty(e, 'code');
-    String? message = getProperty(e, 'message');
-    if (code == null || !code.startsWith('auth/')) return false;
-    if (message == null || !message.contains('Firebase')) return false;
+bool _hasFirebaseAuthErrorCodeAndMessage(JSError e) {
+  if (e.name == 'FirebaseError') {
+    String code = e.code ?? '';
+    String message = e.message ?? '';
+    if (code.startsWith('auth/')) return false;
+    if (message.contains('Firebase')) return false;
     return true;
   } else {
     return false;
@@ -47,9 +33,10 @@ bool _hasFirebaseAuthErrorCodeAndMessage(Object e) {
 /// The firebase-dart wrapper exposes a [core_interop.FirebaseError], allowing us to
 /// use the code and message and convert it into an expected [FirebaseAuthException].
 FirebaseAuthException getFirebaseAuthException(
-  Object exception, [
+  Object objectException, [
   auth_interop.Auth? auth,
 ]) {
+  final exception = objectException as JSError;
   if (!_hasFirebaseAuthErrorCodeAndMessage(exception)) {
     return FirebaseAuthException(
       code: 'unknown',
@@ -58,14 +45,13 @@ FirebaseAuthException getFirebaseAuthException(
   }
 
   auth_interop.AuthError firebaseError = exception as auth_interop.AuthError;
-  String code = firebaseError.code.replaceFirst('auth/', '');
-  String message = firebaseError.message
+  String code = firebaseError.code.toDart.replaceFirst('auth/', '');
+  String message = firebaseError.message.toDart
       .replaceFirst(' (${firebaseError.code}).', '')
       .replaceFirst('Firebase: ', '');
 
   // "customData" - see Firebase AuthError docs: https://firebase.google.com/docs/reference/js/auth.autherror
-  final customData =
-      getProperty(exception, 'customData') as auth_interop.AuthErrorCustomData;
+  final customData = exception.customData as auth_interop.AuthErrorCustomData;
 
   if (code == 'multi-factor-auth-required') {
     final _auth = auth;
@@ -78,15 +64,15 @@ FirebaseAuthException getFirebaseAuthException(
     }
     final resolverWeb = multi_factor_interop.getMultiFactorResolver(
       _auth,
-      exception,
+      exception as dynamic,
     );
 
     return FirebaseAuthMultiFactorExceptionPlatform(
       code: code,
       message: message,
-      email: customData.email,
-      phoneNumber: customData.phoneNumber,
-      tenantId: customData.tenantId,
+      email: customData.email?.toDart,
+      phoneNumber: customData.phoneNumber?.toDart,
+      tenantId: customData.tenantId?.toDart,
       resolver: MultiFactorResolverWeb(
         resolverWeb.hints.map(fromInteropMultiFactorInfo).toList(),
         MultiFactorSessionWeb('web', resolverWeb.session),
@@ -100,9 +86,9 @@ FirebaseAuthException getFirebaseAuthException(
   return FirebaseAuthException(
     code: code,
     message: message,
-    email: customData.email,
-    phoneNumber: customData.phoneNumber,
-    tenantId: customData.tenantId,
+    email: customData.email?.toDart,
+    phoneNumber: customData.phoneNumber?.toDart,
+    tenantId: customData.tenantId?.toDart,
   );
 }
 
@@ -146,8 +132,8 @@ ActionCodeInfo? convertWebActionCodeInfo(
   return ActionCodeInfo(
     operation: ActionCodeInfoOperation.passwordReset,
     data: ActionCodeInfoData(
-      email: webActionCodeInfo.data.email,
-      previousEmail: webActionCodeInfo.data.previousEmail,
+      email: webActionCodeInfo.data.email.toDart,
+      previousEmail: webActionCodeInfo.data.previousEmail.toDart,
     ),
   );
 }
@@ -198,14 +184,14 @@ auth_interop.ActionCodeSettings? convertPlatformActionCodeSettings(
 
   if (actionCodeSettings.dynamicLinkDomain != null) {
     webActionCodeSettings = auth_interop.ActionCodeSettings(
-      url: actionCodeSettings.url,
-      handleCodeInApp: actionCodeSettings.handleCodeInApp,
-      dynamicLinkDomain: actionCodeSettings.dynamicLinkDomain,
+      url: actionCodeSettings.url.toJS,
+      handleCodeInApp: actionCodeSettings.handleCodeInApp.toJS,
+      dynamicLinkDomain: actionCodeSettings.dynamicLinkDomain?.toJS,
     );
   } else {
     webActionCodeSettings = auth_interop.ActionCodeSettings(
-      url: actionCodeSettings.url,
-      handleCodeInApp: actionCodeSettings.handleCodeInApp,
+      url: actionCodeSettings.url.toJS,
+      handleCodeInApp: actionCodeSettings.handleCodeInApp.toJS,
     );
   }
 
@@ -322,8 +308,8 @@ AuthCredential? convertWebAuthCredential(
   }
 
   return AuthCredential(
-    providerId: authCredential.providerId,
-    signInMethod: authCredential.signInMethod,
+    providerId: authCredential.providerId.toDart,
+    signInMethod: authCredential.signInMethod.toDart,
   );
 }
 
@@ -343,11 +329,11 @@ AuthCredential? convertWebOAuthCredential(
     return null;
   }
 
-  return OAuthProvider(authCredential.providerId).credential(
-    signInMethod: authCredential.signInMethod,
-    accessToken: authCredential.accessToken,
-    secret: authCredential.secret,
-    idToken: authCredential.idToken,
+  return OAuthProvider(authCredential.providerId.toDart).credential(
+    signInMethod: authCredential.signInMethod.toDart,
+    accessToken: authCredential.accessToken.toDart,
+    secret: authCredential.secret.toDart,
+    idToken: authCredential.idToken.toDart,
   );
 }
 
@@ -401,9 +387,9 @@ auth_interop.OAuthCredential? convertPlatformCredential(
   if (credential is OAuthCredential) {
     auth_interop.OAuthCredentialOptions credentialOptions =
         auth_interop.OAuthCredentialOptions(
-      accessToken: credential.accessToken,
-      rawNonce: credential.rawNonce,
-      idToken: credential.idToken,
+      accessToken: credential.accessToken?.toJS,
+      rawNonce: credential.rawNonce?.toJS,
+      idToken: credential.idToken?.toJS,
     );
     return auth_interop.OAuthProvider(credential.providerId)
         .credential(credentialOptions);

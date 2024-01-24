@@ -8,7 +8,7 @@ To learn more about Firebase Firebase Database, please visit the [Firebase websi
 
 ## Getting Started
 
-To get started with Firebase Database for Flutter, please [see the documentation](https://firebase.flutter.dev/docs/database/overview).
+To get started with Firebase Database for Flutter, please [see the documentation](https://firebase.google.com/docs/database/flutter/start).
 
 ## Usage
 

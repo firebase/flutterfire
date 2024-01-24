@@ -258,6 +258,9 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// A [FirebaseAuthException] maybe thrown with the following error code:
   /// - **invalid-email**:
   ///  - Thrown if the email address is not valid.
+  @Deprecated('fetchSignInMethodsForEmail() has been deprecated. '
+      'Migrating off of this method is recommended as a security best-practice. Learn more in the Identity Platform documentation: '
+      ' https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection.')
   Future<List<String>> fetchSignInMethodsForEmail(String email) {
     return _delegate.fetchSignInMethodsForEmail(email);
   }
@@ -481,6 +484,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// - **account-exists-with-different-credential**:
   ///  - Thrown if there already exists an account with the email address
   ///    asserted by the credential.
+  // ignore: deprecated_member_use_from_same_package
   ///    Resolve this by calling [fetchSignInMethodsForEmail] and then asking
   ///    the user to sign in using one of the returned providers.
   ///    Once the user is signed in, the original credential can be linked to

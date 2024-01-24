@@ -6,6 +6,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
 import '../../firebase_storage_platform_interface.dart';
@@ -35,21 +36,61 @@ abstract class MethodChannelTask extends TaskPlatform {
         await for (final events in nativePlatformStream) {
           final taskState = TaskState.values[events['taskState']];
 
-          if (_snapshot.state != TaskState.canceled) {
+          if (taskState == TaskState.error) {
+            _didComplete = true;
+            final errorMap = Map<String, dynamic>.from(events['error']);
+            final exception = FirebaseException(
+              plugin: 'firebase_storage',
+              code: errorMap['code'],
+              message: errorMap['message'],
+            );
+            _snapshot = MethodChannelTaskSnapshot(
+              storage,
+              taskState,
+              // We use previous snapshot data as errors from native do not provide snapshot data.
+              {
+                'path': path,
+                'bytesTransferred': _snapshot.bytesTransferred,
+                'totalBytes': _snapshot.totalBytes,
+                'metadata': _snapshot.metadata
+              },
+            );
+            _completer?.completeError(exception);
+            if (_userListening) {
+              // If the user is listening to the stream, yield the error. Otherwise, it results in an unhandled exception.
+              yield* Stream.error(exception);
+            }
+
+            break;
+          }
+          if (taskState == TaskState.canceled) {
+            _didComplete = true;
             MethodChannelTaskSnapshot snapshot = MethodChannelTaskSnapshot(
                 storage,
                 taskState,
                 Map<String, dynamic>.from(events['snapshot']));
             _snapshot = snapshot;
+            break;
           }
 
-          yield _snapshot;
+          if (taskState == TaskState.success ||
+              taskState == TaskState.running ||
+              taskState == TaskState.paused) {
+            MethodChannelTaskSnapshot snapshot = MethodChannelTaskSnapshot(
+                storage,
+                taskState,
+                Map<String, dynamic>.from(events['snapshot']));
+            _snapshot = snapshot;
+
+            yield snapshot;
+          }
 
           // If the stream event is complete, trigger the
           // completer to resolve with the snapshot.
-          if (snapshot.state == TaskState.success) {
+          if (taskState == TaskState.success) {
             _didComplete = true;
             _completer?.complete(snapshot);
+            break;
           }
         }
       } catch (exception, stack) {
@@ -58,7 +99,7 @@ abstract class MethodChannelTask extends TaskPlatform {
     }
 
     _stream = mapNativeStream().asBroadcastStream(
-        onListen: (sub) => sub.resume(), onCancel: (sub) => sub.pause());
+        onListen: (sub) => sub.resume(), onCancel: (sub) => sub.cancel());
 
     // Keep reference to whether the initial "start" task has completed.
     _snapshot = MethodChannelTaskSnapshot(storage, TaskState.running, {
@@ -67,6 +108,8 @@ abstract class MethodChannelTask extends TaskPlatform {
       'totalBytes': 1,
     });
   }
+
+  bool _userListening = false;
 
   ///  FirebaseApp pigeon instance
   static PigeonStorageFirebaseApp pigeonFirebaseApp(
@@ -114,6 +157,7 @@ abstract class MethodChannelTask extends TaskPlatform {
 
   @override
   Stream<TaskSnapshotPlatform> get snapshotEvents {
+    _userListening = true;
     return _stream;
   }
 

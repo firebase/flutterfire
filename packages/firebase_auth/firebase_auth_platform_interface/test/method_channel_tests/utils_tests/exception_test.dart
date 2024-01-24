@@ -30,6 +30,26 @@ void main() {
         ),
       );
     });
+
+    test(
+        'should catch a [PlatformException] and throw a [FirebaseException] with the correct message',
+        () async {
+      PlatformException platformException = PlatformException(
+        code: 'UNKNOWN',
+        message:
+            'An internal error has occurred. [ BLOCKING_FUNCTION_ERROR_RESPONSE:HTTP Cloud Function returned an error: {"error":{"details":"The user is not allowed to log in","message":"","status":"PERMISSION_DENIED"}} ]',
+      );
+
+      expect(
+        () => convertPlatformException(platformException, StackTrace.empty),
+        throwsA(
+          isA<FirebaseAuthException>()
+              .having((e) => e.code, 'code', 'BLOCKING_FUNCTION_ERROR_RESPONSE')
+              .having((e) => e.message, 'message',
+                  '{"error":{"details":"The user is not allowed to log in","message":"","status":"PERMISSION_DENIED"}}'),
+        ),
+      );
+    });
   });
 
   group('platformExceptionToFirebaseAuthException()', () {
