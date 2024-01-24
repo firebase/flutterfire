@@ -47,8 +47,8 @@ FirebaseOptions _createFromJsOptions(firebase.FirebaseOptions options) {
 /// used to identify the specific type of error. This helper function is used
 /// to keep error messages consistent across different platforms.
 String _getJSErrorCode(JSError e) {
-  if (e.name == 'FirebaseError') {
-    return e.code ?? '';
+  if (e.name?.toDart == 'FirebaseError') {
+    return e.code?.toDart ?? '';
   }
 
   return '';
@@ -60,9 +60,9 @@ String _getJSErrorCode(JSError e) {
 /// this function ensures that if the error is Firebase related, it is instead
 /// re-created as a [FirebaseException] with a familiar code and message.
 FirebaseException _catchJSError(JSError e) {
-  if (e.name == 'FirebaseError') {
-    String code = e.code ?? '';
-    String message = e.message ?? '';
+  if (e.name?.toDart == 'FirebaseError') {
+    String code = e.code?.toDart ?? '';
+    String message = e.message?.toDart ?? '';
 
     if (code.contains('/')) {
       List<String> chunks = code.split('/');

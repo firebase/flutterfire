@@ -3,11 +3,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:js_interop';
+
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/cloud_firestore_web.dart'
     show FirebaseFirestoreWeb;
 import 'package:cloud_firestore_web/src/interop/firestore.dart';
-import 'package:js/js_util.dart' as util;
 
 import '../interop/firestore.dart' as firestore_interop;
 
@@ -34,12 +35,15 @@ class DecodeUtility {
   /// Decodes an incoming value to its proper type.
   static dynamic valueDecode(
       dynamic value, FirebaseFirestorePlatform firestore) {
-    if (util.instanceof(value, GeoPointConstructor)) {
-      return GeoPoint(value.latitude as double, value.longitude as double);
+    if (value is JSObject &&
+        value.instanceof(GeoPointConstructor as JSFunction)) {
+      return GeoPoint((value as GeoPointJsImpl).latitude.toDartDouble,
+          (value as GeoPointJsImpl).longitude.toDartDouble);
     } else if (value is DateTime) {
       return Timestamp.fromDate(value);
-    } else if (util.instanceof(value, BytesConstructor)) {
-      return Blob(value.toUint8Array());
+    } else if (value is JSObject &&
+        value.instanceof(BytesConstructor as JSFunction)) {
+      return Blob((value as BytesJsImpl).toUint8Array().toDart);
     } else if (value is firestore_interop.DocumentReference) {
       return (firestore as FirebaseFirestoreWeb).doc(value.path);
     } else if (value is Map<String, dynamic>) {

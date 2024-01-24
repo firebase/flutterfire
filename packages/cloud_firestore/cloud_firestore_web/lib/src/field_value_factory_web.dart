@@ -4,11 +4,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:js/js_util.dart';
 
 import 'field_value_web.dart';
-import 'utils/encode_utility.dart';
 import 'interop/firestore.dart' as firestore_interop;
+import 'utils/encode_utility.dart';
 
 /// An implementation of [FieldValueFactoryPlatform] which builds [FieldValuePlatform]
 /// instances that are [jsify] friendly.

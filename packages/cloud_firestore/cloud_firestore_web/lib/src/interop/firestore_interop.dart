@@ -8,429 +8,527 @@
 @JS('firebase_firestore')
 library firebase_interop.firestore;
 
-import 'dart:typed_data' show Uint8List;
+import 'dart:js_interop';
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
-import 'package:js/js.dart';
 
 import './firestore.dart';
 
 @JS()
-external FirestoreJsImpl getFirestore([AppJsImpl? app, String? databasURL]);
+@staticInterop
+external FirestoreJsImpl getFirestore([AppJsImpl? app, JSString? databaseURL]);
 
 @JS()
+@staticInterop
 external FirestoreJsImpl initializeFirestore(
-    [AppJsImpl app, FirestoreSettings settings, String? databaseURL]);
+    [AppJsImpl app, FirestoreSettings settings, JSString? databaseURL]);
 
 @JS()
-external PromiseJsImpl<DocumentReferenceJsImpl> addDoc(
+@staticInterop
+
+/// Type DocumentReferenceJsImpl
+external JSPromise addDoc(
   CollectionReferenceJsImpl reference,
-  dynamic data,
+  JSAny data,
 );
 
 @JS()
-external PromiseJsImpl<void> clearIndexedDbPersistence(
+@staticInterop
+external JSPromise clearIndexedDbPersistence(
   FirestoreJsImpl firestore,
 );
 
 @JS()
-external PromiseJsImpl<void> setIndexConfiguration(
-    FirestoreJsImpl firestore, String indexConfiguration);
+@staticInterop
+external JSPromise setIndexConfiguration(
+    FirestoreJsImpl firestore, JSString indexConfiguration);
 
 @JS()
+@staticInterop
 external CollectionReferenceJsImpl collection(
   FirestoreJsImpl firestore,
-  String collectionPath,
+  JSString collectionPath,
 );
 
 @JS()
+@staticInterop
 external QueryJsImpl collectionGroup(
   FirestoreJsImpl firestore,
-  String collectionId,
+  JSString collectionId,
 );
 
 @JS()
+@staticInterop
 external void connectFirestoreEmulator(
   FirestoreJsImpl firestore,
-  String host,
-  int port,
+  JSString host,
+  JSNumber port,
 );
 
 @JS()
-external PromiseJsImpl<void> deleteDoc(
+@staticInterop
+external JSPromise deleteDoc(
   DocumentReferenceJsImpl reference,
 );
 
 @JS()
+@staticInterop
 external FieldValue deleteField();
 
 @JS()
-external PromiseJsImpl<void> disableNetwork(FirestoreJsImpl firestore);
+@staticInterop
+external JSPromise disableNetwork(FirestoreJsImpl firestore);
 
 @JS()
+@staticInterop
 external DocumentReferenceJsImpl doc(
-  dynamic reference, // Firestore | CollectionReference
+  JSAny reference, // Firestore | CollectionReference
   [
-  String documentPath,
+  JSString documentPath,
 ]);
 
 @JS()
+@staticInterop
 external FieldPath documentId();
 
 @JS()
+@staticInterop
 @Deprecated(
   'This function will be removed in a future major release. Instead, set FirestoreSettings.localCache to an instance of PersistentLocalCache to turn on IndexedDb cache.',
 )
-external PromiseJsImpl<void> enableIndexedDbPersistence(
+external JSPromise enableIndexedDbPersistence(
   FirestoreJsImpl firestore, [
   PersistenceSettings? settings,
 ]);
 
 @JS()
-external PromiseJsImpl<void> enableMultiTabIndexedDbPersistence(
+@staticInterop
+external JSPromise enableMultiTabIndexedDbPersistence(
   FirestoreJsImpl firestore,
 );
 
 @JS()
-external PromiseJsImpl<void> enableNetwork(FirestoreJsImpl firestore);
+@staticInterop
+external JSPromise enableNetwork(FirestoreJsImpl firestore);
 
 @JS()
-external PromiseJsImpl<DocumentSnapshotJsImpl> getDoc(
+@staticInterop
+external JSPromise getDoc(
   DocumentReferenceJsImpl reference,
 );
 
 @JS()
-external PromiseJsImpl<DocumentSnapshotJsImpl> getDocFromCache(
+@staticInterop
+external JSPromise getDocFromCache(
   DocumentReferenceJsImpl reference,
 );
 
 @JS()
-external PromiseJsImpl<DocumentSnapshotJsImpl> getDocFromServer(
+@staticInterop
+external JSPromise getDocFromServer(
   DocumentReferenceJsImpl reference,
 );
 
 @JS()
-external PromiseJsImpl<QuerySnapshotJsImpl> getDocs(
+@staticInterop
+external JSPromise getDocs(
   QueryJsImpl query,
 );
 
 @JS()
-external PromiseJsImpl<QuerySnapshotJsImpl> getDocsFromCache(
+@staticInterop
+external JSPromise getDocsFromCache(
   QueryJsImpl query,
 );
 
 @JS()
-external PromiseJsImpl<QuerySnapshotJsImpl> getDocsFromServer(
+@staticInterop
+external JSPromise getDocsFromServer(
   QueryJsImpl query,
 );
 
 @JS()
-external FieldValue increment(num n);
+@staticInterop
+external FieldValue increment(JSNumber n);
 
 @JS()
-external QueryConstraintJsImpl limit(num limit);
+@staticInterop
+external QueryConstraintJsImpl limit(JSNumber limit);
 
 @JS()
-external QueryConstraintJsImpl limitToLast(num limit);
+@staticInterop
+external QueryConstraintJsImpl limitToLast(JSNumber limit);
 
 @JS()
+@staticInterop
 external LoadBundleTaskJsImpl loadBundle(
   FirestoreJsImpl firestore,
-  Uint8List bundle,
+  JSUint8Array bundle,
 );
 
 @JS()
-external PromiseJsImpl<QueryJsImpl?> namedQuery(
+@staticInterop
+external JSPromise namedQuery(
   FirestoreJsImpl firestore,
-  String name,
+  JSString name,
 );
 
 @JS()
-external void Function() onSnapshot(
-  dynamic reference, // DocumentReference | Query
-  dynamic optionsOrObserverOrOnNext,
-  dynamic observerOrOnNextOrOnError, [
-  Func1<FirebaseError, dynamic>? onError,
+@staticInterop
+external JSFunction onSnapshot(
+  JSObject reference, // DocumentReference | Query
+  JSAny optionsOrObserverOrOnNext,
+  JSFunction observerOrOnNextOrOnError, [
+  JSFunction? onError,
 ]);
 
 @JS()
-external void Function() onSnapshotsInSync(
-    FirestoreJsImpl firestore, dynamic observer);
+@staticInterop
+external JSFunction onSnapshotsInSync(
+    FirestoreJsImpl firestore, JSFunction observer);
 
 @JS()
+@staticInterop
 external QueryConstraintJsImpl orderBy(
-  dynamic fieldPath, [
-  String? direction,
+  JSObject fieldPath, [
+  JSString? direction,
 ]);
 
 @JS()
+@staticInterop
 external MemoryLocalCache memoryLocalCache(
   MemoryCacheSettings? settings,
 );
 
 @JS()
+@staticInterop
 external MemoryLruGarbageCollector memoryLruGarbageCollector(
-  num? cacheSizeBytes,
+  JSNumber? cacheSizeBytes,
 );
 
 @JS()
+@staticInterop
 external MemoryEagerGarbageCollector memoryEagerGarbageCollector();
 
 @JS()
+@staticInterop
 external PersistentLocalCache persistentLocalCache(
   PersistentCacheSettings settings,
 );
 
 @JS()
+@staticInterop
 external PersistentSingleTabManager persistentSingleTabManager(
   PersistentSingleTabManagerSettings? settings,
 );
 
 @JS()
+@staticInterop
 external PersistentMultipleTabManager persistentMultipleTabManager(
   PersistentSingleTabManagerSettings? settings,
 );
 
 @JS()
+@staticInterop
 external QueryJsImpl query(
   QueryJsImpl query,
   QueryConstraintJsImpl queryConstraint,
 );
 
 @JS()
-external bool queryEqual(QueryJsImpl left, QueryJsImpl right);
+@staticInterop
+external JSBoolean queryEqual(QueryJsImpl left, QueryJsImpl right);
 
 @JS()
-external bool refEqual(
-  dynamic /* DocumentReference | CollectionReference */ left,
-  dynamic /* DocumentReference | CollectionReference */ right,
+@staticInterop
+external JSBoolean refEqual(
+  JSObject /* DocumentReference | CollectionReference */ left,
+  JSObject /* DocumentReference | CollectionReference */ right,
 );
 
 @JS()
-external PromiseJsImpl<void> runTransaction(
+@staticInterop
+external JSPromise runTransaction(
   FirestoreJsImpl firestore,
-  Func1<TransactionJsImpl, PromiseJsImpl> updateFunction, [
+  // JSPromise Function(TransactionJsImpl) updateFunction,
+  JSFunction updateFunction, [
   TransactionOptionsJsImpl? options,
 ]);
 
 @JS('TransactionOptions')
+@staticInterop
 @anonymous
 abstract class TransactionOptionsJsImpl {
-  external factory TransactionOptionsJsImpl({num maxAttempts});
+  external factory TransactionOptionsJsImpl({JSNumber maxAttempts});
 
   /// Maximum number of attempts to commit, after which transaction fails. Default is 5.
-  external static num get maxAttempts;
+  external static JSNumber get maxAttempts;
 }
 
 @JS()
+@staticInterop
 external FieldValue serverTimestamp();
 
 @JS()
-external PromiseJsImpl<void> setDoc(
+@staticInterop
+external JSPromise setDoc(
   DocumentReferenceJsImpl reference,
-  dynamic data, [
+  JSObject data, [
   SetOptions? options,
 ]);
 
 @JS()
-external void setLogLevel(String logLevel);
+@staticInterop
+external void setLogLevel(JSString logLevel);
 
 @JS()
-external bool snapshotEqual(
-  dynamic /* DocumentSnapshot | QuerySnapshot */ left,
-  dynamic /* DocumentSnapshot | QuerySnapshot */ right,
+@staticInterop
+external JSBoolean snapshotEqual(
+  JSObject /* DocumentSnapshot | QuerySnapshot */ left,
+  JSObject /* DocumentSnapshot | QuerySnapshot */ right,
 );
 
 @JS()
-external PromiseJsImpl<void> terminate(FirestoreJsImpl firestore);
+@staticInterop
+external JSPromise terminate(FirestoreJsImpl firestore);
 
 // Object type is forced to prevent JS interop from ignoring the value
 @JS()
-external Object get updateDoc;
+@staticInterop
+external JSObject get updateDoc;
 
 @JS()
-external PromiseJsImpl<void> waitForPendingWrites(FirestoreJsImpl firestore);
+@staticInterop
+external JSPromise waitForPendingWrites(FirestoreJsImpl firestore);
 
 @JS()
+@staticInterop
 external QueryConstraintJsImpl where(
-  dynamic fieldPath,
-  String opStr,
-  dynamic value,
+  JSAny fieldPath,
+  JSString opStr,
+  JSAny? value,
 );
 
 // Object type is forced to prevent JS interop from ignoring the value
 // when using it with an arbitrary number of arguments
 @JS()
-external Object get or;
+@staticInterop
+external JSObject get or;
 
 // Object type is forced to prevent JS interop from ignoring the value
 // when using it with an arbitrary number of arguments
 @JS()
-external Object get and;
+@staticInterop
+external JSObject get and;
 
 @JS()
+@staticInterop
 external WriteBatchJsImpl writeBatch(FirestoreJsImpl firestore);
 
 @JS('Firestore')
-abstract class FirestoreJsImpl {
-  external AppJsImpl get app;
-  external String get type;
+@staticInterop
+abstract class FirestoreJsImpl {}
 
-// TODO how?
-//   external void settings(Settings settings);
+extension FirestoreJsImplExtension on FirestoreJsImpl {
+  external AppJsImpl get app;
+  external JSString get type;
 }
 
 @JS('WriteBatch')
-abstract class WriteBatchJsImpl {
-  external PromiseJsImpl<void> commit();
+@staticInterop
+abstract class WriteBatchJsImpl {}
+
+extension WriteBatchJsImplExtension on WriteBatchJsImpl {
+  external JSPromise commit();
 
   external WriteBatchJsImpl delete(DocumentReferenceJsImpl documentRef);
 
   external WriteBatchJsImpl set(
-      DocumentReferenceJsImpl documentRef, dynamic data,
+      DocumentReferenceJsImpl documentRef, JSObject data,
       [SetOptions? options]);
 
   external WriteBatchJsImpl update(
-      DocumentReferenceJsImpl documentRef, dynamic dataOrFieldsAndValues);
+      DocumentReferenceJsImpl documentRef, JSObject dataOrFieldsAndValues);
 }
 
 @JS('CollectionReference')
+@staticInterop
 class CollectionReferenceJsImpl extends QueryJsImpl {
-  external String get id;
+  external factory CollectionReferenceJsImpl();
+}
+
+extension CollectionReferenceJsImplExtension on CollectionReferenceJsImpl {
+  external JSString get id;
   external DocumentReferenceJsImpl get parent;
-  external String get path;
+  external JSString get path;
 }
 
 @anonymous
 @JS()
+@staticInterop
 class PersistenceSettings {
-  external bool get synchronizeTabs;
-  external factory PersistenceSettings({bool? synchronizeTabs});
+  external factory PersistenceSettings({JSBoolean? synchronizeTabs});
+}
+
+extension PersistenceSettingsExtension on PersistenceSettings {
+  external JSBoolean get synchronizeTabs;
 }
 
 @JS()
+@staticInterop
 class FieldPath {
-  external factory FieldPath(String fieldName0,
-      [String? fieldName1,
-      String? fieldName2,
-      String? fieldName3,
-      String? fieldName4,
-      String? fieldName5,
-      String? fieldName6,
-      String? fieldName7,
-      String? fieldName8,
-      String? fieldName9]);
+  external factory FieldPath(JSString fieldName0,
+      [JSString? fieldName1,
+      JSString? fieldName2,
+      JSString? fieldName3,
+      JSString? fieldName4,
+      JSString? fieldName5,
+      JSString? fieldName6,
+      JSString? fieldName7,
+      JSString? fieldName8,
+      JSString? fieldName9]);
+}
 
-  external bool isEqual(Object other);
+extension FieldPathExtension on FieldPath {
+  external JSBoolean isEqual(JSObject other);
 }
 
 @JS('GeoPoint')
+@staticInterop
 external GeoPointJsImpl get GeoPointConstructor;
 
 @JS('GeoPoint')
+@staticInterop
 class GeoPointJsImpl {
-  external factory GeoPointJsImpl(num latitude, num longitude);
+  external factory GeoPointJsImpl(JSNumber latitude, JSNumber longitude);
+}
 
+extension GeoPointJsImplExtension on GeoPointJsImpl {
   /// The latitude of this GeoPoint instance.
-  external num get latitude;
+  external JSNumber get latitude;
 
   /// The longitude of this GeoPoint instance.
-  external num get longitude;
+  external JSNumber get longitude;
 
   /// Returns `true` if this [GeoPoint] is equal to the provided [other].
-  external bool isEqual(Object other);
+  external JSBoolean isEqual(JSObject other);
 }
 
 @JS('Bytes')
+@staticInterop
 external BytesJsImpl get BytesConstructor;
 
 @JS('Bytes')
+@staticInterop
 @anonymous
 abstract class BytesJsImpl {
-  external static BytesJsImpl fromBase64String(String base64);
+  external static BytesJsImpl fromBase64JSString(JSString base64);
 
-  external static BytesJsImpl fromUint8Array(Uint8List list);
+  external static BytesJsImpl fromUint8Array(JSUint8Array list);
+}
 
-  external String toBase64();
+extension BytesJsImplExtension on BytesJsImpl {
+  external JSString toBase64();
 
-  external Uint8List toUint8Array();
+  external JSUint8Array toUint8Array();
 
   /// Returns `true` if this [Blob] is equal to the provided [other].
-  external bool isEqual(Object other);
+  external JSBoolean isEqual(JSObject other);
 }
 
 @anonymous
 @JS()
-abstract class DocumentChangeJsImpl {
-  external String /*'added'|'removed'|'modified'*/ get type;
+@staticInterop
+abstract class DocumentChangeJsImpl {}
 
-  external set type(String /*'added'|'removed'|'modified'*/ v);
+extension DocumentChangeJsImplExtension on DocumentChangeJsImpl {
+  external JSString /*'added'|'removed'|'modified'*/ get type;
+
+  external set type(JSString /*'added'|'removed'|'modified'*/ v);
 
   external DocumentSnapshotJsImpl get doc;
 
   external set doc(DocumentSnapshotJsImpl v);
 
-  external num get oldIndex;
+  external JSNumber get oldIndex;
 
-  external set oldIndex(num v);
+  external set oldIndex(JSNumber v);
 
-  external num get newIndex;
+  external JSNumber get newIndex;
 
-  external set newIndex(num v);
+  external set newIndex(JSNumber v);
 }
 
 @JS('DocumentReference')
+@staticInterop
 external DocumentReferenceJsImpl get DocumentReferenceJsConstructor;
 
 @JS('DocumentReference')
-abstract class DocumentReferenceJsImpl {
+@staticInterop
+abstract class DocumentReferenceJsImpl {}
+
+extension DocumentReferenceJsImplExtension on DocumentReferenceJsImpl {
   external FirestoreJsImpl get firestore;
-  external String get id;
+  external JSString get id;
   external CollectionReferenceJsImpl get parent;
-  external String get path;
-  external String get type;
+  external JSString get path;
+  external JSString get type;
 }
 
 @JS('QueryConstraint')
-abstract class QueryConstraintJsImpl {
-  external String get type;
+@staticInterop
+abstract class QueryConstraintJsImpl {}
+
+extension QueryConstraintJsImplExtension on QueryConstraintJsImpl {
+  external JSString get type;
 }
 
 @JS('LoadBundleTask')
-abstract class LoadBundleTaskJsImpl {
-  external void Function() onProgress(
-    void Function(LoadBundleTaskProgressJsImpl) progress,
+@staticInterop
+abstract class LoadBundleTaskJsImpl {}
+
+extension LoadBundleTaskJsImplExtension on LoadBundleTaskJsImpl {
+  external void onProgress(
+    JSFunction? next,
   );
 
-  external PromiseJsImpl then([
-    Func1? onResolve,
-    dynamic Function(FirestoreError) onReject,
+  external JSPromise then([
+    JSFunction? onResolve,
+    JSFunction onReject,
   ]);
 }
 
 @JS()
+@staticInterop
 @anonymous
-abstract class LoadBundleTaskProgressJsImpl {
-  external String get bytesLoaded;
+abstract class LoadBundleTaskProgressJsImpl {}
 
-  external int get documentsLoaded;
+extension LoadBundleTaskProgressJsImplExtension
+    on LoadBundleTaskProgressJsImpl {
+  external JSNumber get bytesLoaded;
 
-  external String get taskState;
+  external JSNumber get documentsLoaded;
 
-  external String get totalBytes;
+  external JSString get taskState;
 
-  external int get totalDocuments;
+// int or String?
+  external JSAny get totalBytes;
+
+  external JSNumber get totalDocuments;
 }
 
 @JS('DocumentSnapshot')
-abstract class DocumentSnapshotJsImpl {
-  external String get id;
+@staticInterop
+abstract class DocumentSnapshotJsImpl {}
+
+extension DocumentSnapshotJsImplExtension on DocumentSnapshotJsImpl {
+  external JSString get id;
   external SnapshotMetadata get metadata;
   external DocumentReferenceJsImpl get ref;
 
-  external dynamic data([SnapshotOptions? options]);
-  external bool exists();
-  external dynamic get(/*String|FieldPath*/ dynamic fieldPath);
+  external JSObject? data([SnapshotOptions? options]);
+  external JSBoolean exists();
+  external JSObject get(/*JSString|FieldPath*/ JSObject fieldPath);
 }
 
 /// Sentinel values that can be used when writing document fields with
@@ -438,77 +536,89 @@ abstract class DocumentSnapshotJsImpl {
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.FieldValue>.
 @JS()
+@staticInterop
 @anonymous
-abstract class FieldValue {
+abstract class FieldValue {}
+
+extension FieldValueExtension on FieldValue {
   /// Returns `true` if this [FieldValue] is equal to the provided [other].
-  external bool isEqual(FieldValue other);
+  external JSBoolean isEqual(FieldValue other);
 }
 
 /// Used internally to allow calling FieldValue.arrayUnion and arrayRemove
 @JS('FieldValue')
-external dynamic get fieldValues;
+@staticInterop
+external JSObject get fieldValues;
 
 @JS('Query')
-abstract class QueryJsImpl {
+@staticInterop
+abstract class QueryJsImpl {}
+
+extension QueryJsImplExtension on QueryJsImpl {
   external FirestoreJsImpl get firestore;
-  external String get type;
+  external JSString get type;
 }
 
 @JS('QuerySnapshot')
-abstract class QuerySnapshotJsImpl {
-  external List<DocumentSnapshotJsImpl> get docs;
-  external bool get empty;
+@staticInterop
+abstract class QuerySnapshotJsImpl {}
+
+extension QuerySnapshotJsImplExtension on QuerySnapshotJsImpl {
+  external JSArray get docs;
+  external JSBoolean get empty;
   external SnapshotMetadata get metadata;
-  external num get size;
+  external JSNumber get size;
   external QueryJsImpl get query;
 
-  external List<DocumentChangeJsImpl> docChanges(
-      [SnapshotListenOptions? options]);
+  external JSArray docChanges([SnapshotListenOptions? options]);
 
   external void forEach(
-    void Function(DocumentSnapshotJsImpl) callback, [
-    dynamic thisArg,
+    JSFunction callback, [
+    JSObject thisArg,
   ]);
 }
 
 @JS('Transaction')
-abstract class TransactionJsImpl {
+@staticInterop
+abstract class TransactionJsImpl {}
+
+extension TransactionJsImplExtension on TransactionJsImpl {
   external TransactionJsImpl delete(DocumentReferenceJsImpl documentRef);
 
-  external PromiseJsImpl<DocumentSnapshotJsImpl> get(
-      DocumentReferenceJsImpl documentRef);
+  external JSPromise get(DocumentReferenceJsImpl documentRef);
 
   external TransactionJsImpl set(
-      DocumentReferenceJsImpl documentRef, dynamic data,
+      DocumentReferenceJsImpl documentRef, JSObject data,
       [SetOptions? options]);
 
   external TransactionJsImpl update(
-      DocumentReferenceJsImpl documentRef, dynamic dataOrFieldsAndValues);
+      DocumentReferenceJsImpl documentRef, JSObject dataOrFieldsAndValues);
 }
 
 @JS('Timestamp')
+@staticInterop
 external TimestampJsImpl get TimestampJsConstructor;
 
 @JS('Timestamp')
+@staticInterop
 abstract class TimestampJsImpl {
-  external int get seconds;
-
-  external int get nanoseconds;
-
-  external factory TimestampJsImpl(int seconds, int nanoseconds);
-
-  //external JsDate toDate();
-  external int toMillis();
+  external factory TimestampJsImpl(JSNumber seconds, JSNumber nanoseconds);
 
   external static TimestampJsImpl now();
 
   //external static TimestampJsImpl fromDate(JsDate date);
-  external static TimestampJsImpl fromMillis(int milliseconds);
+  external static TimestampJsImpl fromMillis(JSNumber milliseconds);
+}
 
-  external bool isEqual(TimestampJsImpl other);
+extension TimestampJsImplExtension on TimestampJsImpl {
+  external JSNumber get seconds;
 
-  @override
-  external String toString();
+  external JSNumber get nanoseconds;
+
+  //external JsDate toDate();
+  external JSNumber toMillis();
+
+  external JSBoolean isEqual(TimestampJsImpl other);
 }
 
 /// The set of Cloud Firestore status codes.
@@ -517,46 +627,53 @@ abstract class TimestampJsImpl {
 /// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.FirestoreError>.
 @anonymous
 @JS()
+@staticInterop
 abstract class FirestoreError {
-  external String /*|'cancelled'|'unknown'|'invalid-argument'|'deadline-exceeded'|'not-found'|'already-exists'|'permission-denied'|'resource-exhausted'|'failed-precondition'|'aborted'|'out-of-range'|'unimplemented'|'internal'|'unavailable'|'data-loss'|'unauthenticated'*/
+  external factory FirestoreError(
+      {/*|'cancelled'|'unknown'|'invalid-argument'|'deadline-exceeded'|'not-found'|'already-exists'|'permission-denied'|'resource-exhausted'|'failed-precondition'|'aborted'|'out-of-range'|'unimplemented'|'internal'|'unavailable'|'data-loss'|'unauthenticated'*/ JSString
+          code,
+      JSString? message,
+      JSString? name,
+      JSString? stack});
+}
+
+extension FirestoreErrorExtension on FirestoreError {
+  external JSString /*|'cancelled'|'unknown'|'invalid-argument'|'deadline-exceeded'|'not-found'|'already-exists'|'permission-denied'|'resource-exhausted'|'failed-precondition'|'aborted'|'out-of-range'|'unimplemented'|'internal'|'unavailable'|'data-loss'|'unauthenticated'*/
       get code;
 
   external set code(
       /*|'cancelled'|'unknown'|'invalid-argument'|'deadline-exceeded'|'not-found'|'already-exists'|'permission-denied'|'resource-exhausted'|'failed-precondition'|'aborted'|'out-of-range'|'unimplemented'|'internal'|'unavailable'|'data-loss'|'unauthenticated'*/
-      String v);
+      JSString v);
 
-  external String get message;
+  external JSString get message;
 
-  external set message(String v);
+  external set message(JSString v);
 
-  external String get name;
+  external JSString get name;
 
-  external set name(String v);
+  external set name(JSString v);
 
-  external String get stack;
+  external JSString get stack;
 
-  external set stack(String v);
-
-  external factory FirestoreError(
-      {/*|'cancelled'|'unknown'|'invalid-argument'|'deadline-exceeded'|'not-found'|'already-exists'|'permission-denied'|'resource-exhausted'|'failed-precondition'|'aborted'|'out-of-range'|'unimplemented'|'internal'|'unavailable'|'data-loss'|'unauthenticated'*/ code,
-      String? message,
-      String? name,
-      String? stack});
+  external set stack(JSString v);
 }
 
 /// Options for use with `Query.onSnapshot() to control the behavior of the
 /// snapshot listener.
 @anonymous
 @JS()
+@staticInterop
 abstract class SnapshotListenOptions {
+  external factory SnapshotListenOptions({JSBoolean? includeMetadataChanges});
+}
+
+extension SnapshotListenOptionsExtension on SnapshotListenOptions {
   /// Raise an event even if only metadata of the query or document changes.
   ///
   /// Default is `false`.
-  external bool get includeMetadataChanges;
+  external JSBoolean get includeMetadataChanges;
 
-  external set includeMetadataChanges(bool value);
-
-  external factory SnapshotListenOptions({bool? includeMetadataChanges});
+  external set includeMetadataChanges(JSBoolean value);
 }
 
 /// Specifies custom configurations for your Cloud Firestore instance.
@@ -565,19 +682,30 @@ abstract class SnapshotListenOptions {
 /// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.Settings>.
 @anonymous
 @JS()
+@staticInterop
 abstract class FirestoreSettings {
+  external factory FirestoreSettings({
+    JSNumber? cacheSizeBytes,
+    JSString? host,
+    JSBoolean? ssl,
+    JSBoolean? ignoreUndefinedProperties,
+    JSObject localCache,
+  });
+}
+
+extension FirestoreSettingsExtension on FirestoreSettings {
   @Deprecated('Use FirestoreSettings.localCache instead.')
   //ignore: avoid_setters_without_getters
-  external set cacheSizeBytes(int i);
+  external set cacheSizeBytes(JSNumber i);
 
   //ignore: avoid_setters_without_getters
-  external set host(String h);
+  external set host(JSString h);
 
   //ignore: avoid_setters_without_getters
-  external set ssl(bool v);
+  external set ssl(JSBoolean v);
 
   //ignore: avoid_setters_without_getters
-  external set ignoreUndefinedProperties(bool u);
+  external set ignoreUndefinedProperties(JSBoolean u);
 
   /// Specifies the cache used by the SDK.
   /// Available options are MemoryLocalCache and PersistentLocalCache, each with different configuration options.
@@ -587,15 +715,7 @@ abstract class FirestoreSettings {
   ///
   /// Union type MemoryLocalCache | PersistentLocalCache;
   //ignore: avoid_setters_without_getters
-  external set localCache(dynamic u);
-
-  external factory FirestoreSettings({
-    int? cacheSizeBytes,
-    String? host,
-    bool? ssl,
-    bool? ignoreUndefinedProperties,
-    dynamic localCache,
-  });
+  external set localCache(JSObject u);
 }
 
 /// Union type from all supported SDK cache layer.
@@ -603,6 +723,7 @@ abstract class FirestoreSettings {
 /// [MemoryLocalCache] and [MemoryCacheSettings] are the two only cache types supported by the SDK. Custom implementation is not supported.
 @anonymous
 @JS()
+@staticInterop
 abstract class FirestoreLocalCache {}
 
 /// Provides an in-memory cache to the SDK. This is the default cache unless explicitly configured otherwise.
@@ -611,36 +732,52 @@ abstract class FirestoreLocalCache {}
 /// and call initializeFirestore using the settings object.
 @anonymous
 @JS()
-abstract class MemoryLocalCache extends FirestoreLocalCache {
-  external String get kind;
+@staticInterop
+abstract class MemoryLocalCache extends FirestoreLocalCache {}
+
+extension MemoryLocalCacheExtension on MemoryLocalCache {
+  external JSString get kind;
 }
 
 /// A tab manager supportting only one tab, no synchronization will be performed across tabs.
 @anonymous
 @JS()
-abstract class PersistentSingleTabManager {
-  external String get kind;
+@staticInterop
+abstract class PersistentSingleTabManager {}
+
+extension PersistentSingleTabManagerExtension on PersistentSingleTabManager {
+  external JSString get kind;
 }
 
 /// A tab manager supporting multiple tabs. SDK will synchronize queries and mutations done across all tabs using the SDK.
 @anonymous
 @JS()
-abstract class PersistentMultipleTabManager {
-  external String get kind;
+@staticInterop
+abstract class PersistentMultipleTabManager {}
+
+extension PersistentMultipleTabManagerExtension
+    on PersistentMultipleTabManager {
+  external JSString get kind;
 }
 
 /// A garbage collector deletes documents whenever they are not part of any active queries, and have no local mutations attached to them.
 @anonymous
 @JS()
-abstract class MemoryEagerGarbageCollector {
-  external String get kind;
+@staticInterop
+abstract class MemoryEagerGarbageCollector {}
+
+extension MemoryEagerGarbageCollectorExtension on MemoryEagerGarbageCollector {
+  external JSString get kind;
 }
 
 /// A garbage collector deletes Least-Recently-Used documents in multiple batches.
 @anonymous
 @JS()
-abstract class MemoryLruGarbageCollector {
-  external String get kind;
+@staticInterop
+abstract class MemoryLruGarbageCollector {}
+
+extension MemoryLruGarbageCollectorExtension on MemoryLruGarbageCollector {
+  external JSString get kind;
 }
 
 /// Provides an in-memory cache to the SDK. This is the default cache unless explicitly configured otherwise.
@@ -649,8 +786,11 @@ abstract class MemoryLruGarbageCollector {
 /// and call initializeFirestore using the settings object.
 @anonymous
 @JS()
-abstract class PersistentLocalCache extends FirestoreLocalCache {
-  external String get kind;
+@staticInterop
+abstract class PersistentLocalCache extends FirestoreLocalCache {}
+
+extension PersistentLocalCacheExtension on PersistentLocalCache {
+  external JSString get kind;
 }
 
 /// An settings object to configure an MemoryLocalCache instance.
@@ -658,15 +798,18 @@ abstract class PersistentLocalCache extends FirestoreLocalCache {
 /// See: <https://firebase.google.com/docs/reference/js/firestore_.memorycachesettings>.
 @anonymous
 @JS()
+@staticInterop
 abstract class MemoryCacheSettings {
+  external factory MemoryCacheSettings({JSObject? garbageCollector});
+}
+
+extension MemoryCacheSettingsExtension on MemoryCacheSettings {
   /// The garbage collector to use, for the memory cache layer.
   /// A MemoryEagerGarbageCollector is used when this is undefined.
   /// Union type MemoryEagerGarbageCollector | MemoryLruGarbageCollector;
-  external dynamic get garbageCollector;
+  external JSObject get garbageCollector;
 
-  external set garbageCollector(dynamic v);
-
-  external factory MemoryCacheSettings({Object? garbageCollector});
+  external set garbageCollector(JSObject v);
 }
 
 /// An settings object to configure an PersistentLocalCache instance.
@@ -674,58 +817,68 @@ abstract class MemoryCacheSettings {
 /// See: <https://firebase.google.com/docs/reference/js/firestore_.persistentcachesettings.md#persistentcachesettings_interface>.
 @anonymous
 @JS()
+@staticInterop
 abstract class PersistentCacheSettings {
+  external factory PersistentCacheSettings({
+    JSNumber? cacheSizeBytes,
+    JSObject? tabManager,
+  });
+}
+
+extension PersistentCacheSettingsExtension on PersistentCacheSettings {
   /// An approximate cache size threshold for the on-disk data.
   /// If the cache grows beyond this size, Firestore will start removing data that hasn't been recently used.
   /// The SDK does not guarantee that the cache will stay below that size,
   /// only that if the cache exceeds the given size, cleanup will be attempted.
   /// The default value is 40 MB. The threshold must be set to at least 1 MB,
   /// and can be set to CACHE_SIZE_UNLIMITED to disable garbage collection.
-  external num? get cacheSizeBytes;
+  external JSNumber? get cacheSizeBytes;
 
-  external set cacheSizeBytes(num? v);
+  external set cacheSizeBytes(JSNumber? v);
 
   /// Specifies how multiple tabs/windows will be managed by the SDK.
   /// Union type PersistentSingleTabManager | PersistentMultipleTabManager
-  external dynamic get tabManager;
+  external JSObject get tabManager;
 
-  external set tabManager(dynamic v);
-
-  external factory PersistentCacheSettings({
-    num? cacheSizeBytes,
-    Object? tabManager,
-  });
+  external set tabManager(JSObject v);
 }
 
 /// An settings object to configure an PersistentLocalCache instance.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firestore_.persistentsingletabmanagersettings>.
 @JS()
-abstract class PersistentSingleTabManagerSettings {
+@staticInterop
+abstract class PersistentSingleTabManagerSettings {}
+
+extension PersistentSingleTabManagerSettingsExtension
+    on PersistentSingleTabManagerSettings {
   /// Whether to force-enable persistent (IndexedDB) cache for the client.
   /// This cannot be used with multi-tab synchronization and is primarily
   /// intended for use with Web Workers.
   /// Setting this to true will enable IndexedDB, but cause other tabs using
   /// IndexedDB cache to fail.
-  external bool get forceOwnership;
+  external JSBoolean get forceOwnership;
 
-  external set forceOwnership(bool v);
+  external set forceOwnership(JSBoolean v);
 }
 
 /// Metadata about a snapshot, describing the state of the snapshot.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.SnapshotMetadata>.
 @JS()
-abstract class SnapshotMetadata {
+@staticInterop
+abstract class SnapshotMetadata {}
+
+extension SnapshotMetadataExtension on SnapshotMetadata {
   /// [:true:] if the snapshot includes local writes (set() or update() calls)
   /// that haven't been committed to the backend yet. If your listener has opted
   /// into metadata updates via onDocumentMetadataSnapshot,
   /// onQueryMetadataSnapshot or onMetadataSnapshot, you receive another
   /// snapshot with [hasPendingWrites] set to [:false:] once the writes have
   /// been committed to the backend.
-  external bool get hasPendingWrites;
+  external JSBoolean get hasPendingWrites;
 
-  external set hasPendingWrites(bool v);
+  external set hasPendingWrites(JSBoolean v);
 
   /// [:true:] if the snapshot was created from cached data rather than
   /// guaranteed up-to-date server data. If your listener has opted into
@@ -733,36 +886,42 @@ abstract class SnapshotMetadata {
   /// onMetadataSnapshot) you will receive another snapshot with [fromCache] set
   /// to [:false:] once the client has received up-to-date data from the
   /// backend.
-  external bool get fromCache;
+  external JSBoolean get fromCache;
 
-  external set fromCache(bool v);
+  external set fromCache(JSBoolean v);
 
   /// Returns [true] if this [SnapshotMetadata] is equal to the provided one.
-  external bool isEqual(SnapshotMetadata other);
+  external JSBoolean isEqual(SnapshotMetadata other);
 }
 
 /// Options for use with [DocumentReference.onMetadataChangesSnapshot()] to
 /// control the behavior of the snapshot listener.
 @anonymous
 @JS()
+@staticInterop
 abstract class DocumentListenOptions {
+  external factory DocumentListenOptions({JSBoolean? includeMetadataChanges});
+}
+
+extension DocumentListenOptionsExtension on DocumentListenOptions {
   /// Raise an event even if only metadata of the document changed. Default is
   /// [:false:].
-  external bool get includeMetadataChanges;
+  external JSBoolean get includeMetadataChanges;
 
-  external set includeMetadataChanges(bool v);
-
-  external factory DocumentListenOptions({bool? includeMetadataChanges});
+  external set includeMetadataChanges(JSBoolean v);
 }
 
 /// An object to configure the [DocumentReference.get] and [Query.get] behavior.
 @anonymous
 @JS()
+@staticInterop
 abstract class GetOptions {
-  /// Describes whether we should get from server or cache.
-  external String get source;
+  external factory GetOptions({JSString? source});
+}
 
-  external factory GetOptions({String? source});
+extension GetOptionsExtension on GetOptions {
+  /// Describes whether we should get from server or cache.
+  external JSString get source;
 }
 
 /// An object to configure the [WriteBatch.set] behavior.
@@ -770,17 +929,20 @@ abstract class GetOptions {
 /// argument. Fields omitted will remain untouched.
 @anonymous
 @JS()
+@staticInterop
 abstract class SetOptions {
+  external factory SetOptions({JSBoolean? merge, JSArray? mergeFields});
+}
+
+extension SetOptionsExtension on SetOptions {
   /// Set to true to replace only the values from the new data.
   /// Fields omitted will remain untouched.
-  external bool get merge;
+  external JSBoolean get merge;
 
-  external set merge(bool v);
+  external set merge(JSBoolean v);
 
 //ignore: avoid_setters_without_getters
-  external set mergeFields(List<String> v);
-
-  external factory SetOptions({bool? merge, List<String>? mergeFields});
+  external set mergeFields(JSArray v);
 }
 
 /// Options that configure how data is retrieved from a DocumentSnapshot
@@ -790,59 +952,77 @@ abstract class SetOptions {
 /// See: https://firebase.google.com/docs/reference/js/firebase.firestore.SnapshotOptions.
 @anonymous
 @JS()
+@staticInterop
 abstract class SnapshotOptions {
+  external factory SnapshotOptions({JSString? serverTimestamps});
+}
+
+extension SnapshotOptionsExtension on SnapshotOptions {
   /// If set, controls the return value for server timestamps that have not yet
   /// been set to their final value. Possible values are "estimate", "previous"
   /// and "none".
   /// If omitted or set to 'none', null will be returned by default until the
   /// server value becomes available.
-  external String get serverTimestamps;
-
-  external factory SnapshotOptions({String? serverTimestamps});
+  external JSString get serverTimestamps;
 }
 
 // We type these 6 functions as Object to avoid an issue with dart2js compilation
 // in release mode
 // Discussed internally with dart2js team
 @JS()
-external Object get startAfter;
+@staticInterop
+external JSObject get startAfter;
 
 @JS()
-external Object get startAt;
+@staticInterop
+external JSObject get startAt;
 
 @JS()
-external Object get endBefore;
+@staticInterop
+external JSObject get endBefore;
 
 @JS()
-external Object get endAt;
+@staticInterop
+external JSObject get endAt;
 
 @JS()
-external Object get arrayRemove;
+@staticInterop
+external JSObject get arrayRemove;
 
 @JS()
-external Object get arrayUnion;
+@staticInterop
+external JSObject get arrayUnion;
 
 @JS()
-external Object count();
+@staticInterop
+external JSObject count();
 
 @JS()
-external Object average(String field);
+@staticInterop
+external JSObject average(JSString field);
 
 @JS()
-external Object sum(String field);
+@staticInterop
+external JSObject sum(JSString field);
 
 @JS()
-external PromiseJsImpl<AggregateQuerySnapshotJsImpl> getCountFromServer(
+@staticInterop
+external JSPromise getCountFromServer(
   QueryJsImpl query,
 );
 
 @JS()
-external PromiseJsImpl<AggregateQuerySnapshotJsImpl> getAggregateFromServer(
+@staticInterop
+external JSPromise getAggregateFromServer(
   QueryJsImpl query,
-  Object specs,
+  JSObject specs,
 );
 
 @JS('AggregateQuerySnapshot')
-abstract class AggregateQuerySnapshotJsImpl {
-  external Map<String, Object> data();
+@staticInterop
+abstract class AggregateQuerySnapshotJsImpl {}
+
+extension AggregateQuerySnapshotJsImplExtension
+    on AggregateQuerySnapshotJsImpl {
+  external JSObject data();
 }
