@@ -237,6 +237,24 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///    email/password accounts in the Firebase Console, under the Auth tab.
   /// - **weak-password**:
   ///  - Thrown if the password is not strong enough.
+  /// - **too-many-requests**:
+  ///  - Thrown if the user sent too many requests at the same time, for security
+  ///     the api will not allow too many attemps at the same time, user will have
+  ///     to wait for some time
+  /// - **user-token-expired**:
+  ///  - Thrown if the user is no longer authenticated since his refresh token 
+  ///    has been expired
+  /// - **network-request-failed**:
+  ///  - Thrown if there was a network request error, for example the user don't
+  ///    don't have internet connection
+  /// - **INVALID_LOGIN_CREDENTIALS** or **invalid-credential**:
+  ///  - Thrown if the password is invalid for the given email, or the account
+  ///    corresponding to the email does not have a password set.
+  ///    depending on if you are using firebase emulator or not the code is
+  ///    different
+  /// - **operation-not-allowed**:
+  ///  - Thrown if email/password accounts are not enabled. Enable
+  ///    email/password accounts in the Firebase Console, under the Auth tab.
   Future<UserCredential> createUserWithEmailAndPassword({
     required String email,
     required String password,
@@ -258,9 +276,6 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// A [FirebaseAuthException] maybe thrown with the following error code:
   /// - **invalid-email**:
   ///  - Thrown if the email address is not valid.
-  @Deprecated('fetchSignInMethodsForEmail() has been deprecated. '
-      'Migrating off of this method is recommended as a security best-practice. Learn more in the Identity Platform documentation: '
-      ' https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection.')
   Future<List<String>> fetchSignInMethodsForEmail(String email) {
     return _delegate.fetchSignInMethodsForEmail(email);
   }
@@ -484,7 +499,6 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// - **account-exists-with-different-credential**:
   ///  - Thrown if there already exists an account with the email address
   ///    asserted by the credential.
-  // ignore: deprecated_member_use_from_same_package
   ///    Resolve this by calling [fetchSignInMethodsForEmail] and then asking
   ///    the user to sign in using one of the returned providers.
   ///    Once the user is signed in, the original credential can be linked to
@@ -574,6 +588,24 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// - **wrong-password**:
   ///  - Thrown if the password is invalid for the given email, or the account
   ///    corresponding to the email does not have a password set.
+  /// - **too-many-requests**:
+  ///  - Thrown if the user sent too many requests at the same time, for security
+  ///     the api will not allow too many attemps at the same time, user will have
+  ///     to wait for some time
+  /// - **user-token-expired**:
+  ///  - Thrown if the user is no longer authenticated since his refresh token 
+  ///    has been expired
+  /// - **network-request-failed**:
+  ///  - Thrown if there was a network request error, for example the user don't
+  ///    don't have internet connection
+  /// - **INVALID_LOGIN_CREDENTIALS** or **invalid-credential**:
+  ///  - Thrown if the password is invalid for the given email, or the account
+  ///    corresponding to the email does not have a password set.
+  ///    depending on if you are using firebase emulator or not the code is
+  ///    different
+  /// - **operation-not-allowed**:
+  ///  - Thrown if email/password accounts are not enabled. Enable
+  ///    email/password accounts in the Firebase Console, under the Auth tab.
   Future<UserCredential> signInWithEmailAndPassword({
     required String email,
     required String password,
