@@ -276,7 +276,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// A [FirebaseAuthException] maybe thrown with the following error code:
   /// - **invalid-email**:
   ///  - Thrown if the email address is not valid.
-   @Deprecated('fetchSignInMethodsForEmail() has been deprecated. '
+  @Deprecated('fetchSignInMethodsForEmail() has been deprecated. '
        'Migrating off of this method is recommended as a security best-practice. Learn more in the Identity Platform documentation: '
        ' https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection.')
   Future<List<String>> fetchSignInMethodsForEmail(String email) {
