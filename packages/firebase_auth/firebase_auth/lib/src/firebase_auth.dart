@@ -247,11 +247,6 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// - **network-request-failed**:
   ///  - Thrown if there was a network request error, for example the user don't
   ///    don't have internet connection
-  /// - **INVALID_LOGIN_CREDENTIALS** or **invalid-credential**:
-  ///  - Thrown if the password is invalid for the given email, or the account
-  ///    corresponding to the email does not have a password set.
-  ///    depending on if you are using firebase emulator or not the code is
-  ///    different
   /// - **operation-not-allowed**:
   ///  - Thrown if email/password accounts are not enabled. Enable
   ///    email/password accounts in the Firebase Console, under the Auth tab.
