@@ -73,12 +73,17 @@ external UploadTaskJsImpl uploadBytesResumable(
 @anonymous
 class EmulatorOptions {
   external factory EmulatorOptions({mockUserToken});
+}
+
+extension EmulatorOptionsJsImplX on EmulatorOptions {
   external JSString get mockUserToken;
 }
 
 @JS('FirebaseStorage')
 @staticInterop
-abstract class StorageJsImpl {
+abstract class StorageJsImpl {}
+
+extension StorageJsImplX on StorageJsImpl {
   external AppJsImpl get app;
   external set app(AppJsImpl a);
   external JSNumber get maxOperationRetryTime;
@@ -89,7 +94,9 @@ abstract class StorageJsImpl {
 
 @JS('StorageReference')
 @staticInterop
-abstract class ReferenceJsImpl {
+abstract class ReferenceJsImpl {}
+
+extension ReferenceJsImplX on ReferenceJsImpl {
   external JSString get bucket;
   external set bucket(JSString s);
   external JSString get fullPath;
@@ -117,7 +124,9 @@ class FullMetadataJsImpl extends UploadMetadataJsImpl {
       JSString? contentLanguage,
       JSString? contentType,
       dynamic customMetadata});
+}
 
+extension FullMetadataJsImplX on FullMetadataJsImpl {
   external JSString get bucket;
   // TODO - new API.
   external JSArray? get downloadTokens;
@@ -144,14 +153,18 @@ class UploadMetadataJsImpl extends SettableMetadataJsImpl {
       JSString? contentLanguage,
       JSString? contentType,
       dynamic customMetadata});
+}
 
+extension UploadMetadataJsImplX on UploadMetadataJsImpl {
   external JSString get md5Hash;
   external set md5Hash(JSString s);
 }
 
 @JS('UploadTask')
 @staticInterop
-abstract class UploadTaskJsImpl {
+abstract class UploadTaskJsImpl {}
+
+extension UploadTaskJsImplX on UploadTaskJsImpl {
   external UploadTaskSnapshotJsImpl get snapshot;
   external set snapshot(UploadTaskSnapshotJsImpl t);
   external bool cancel();
@@ -159,14 +172,15 @@ abstract class UploadTaskJsImpl {
       [JSAny nextOrObserver, JSFunction? error, JSFunction? complete]);
   external bool pause();
   external bool resume();
-  @override
   external JSPromise then([JSFunction? onResolve, JSFunction? onReject]);
 }
 
 @JS()
 @staticInterop
 @anonymous
-abstract class UploadTaskSnapshotJsImpl {
+abstract class UploadTaskSnapshotJsImpl {}
+
+extension UploadTaskSnapshotJsImplX on UploadTaskSnapshotJsImpl {
   external JSNumber get bytesTransferred;
   external FullMetadataJsImpl get metadata;
   external ReferenceJsImpl get ref;
@@ -186,7 +200,9 @@ class SettableMetadataJsImpl {
       JSString? contentLanguage,
       JSString? contentType,
       dynamic customMetadata});
+}
 
+extension SettableMetadataJsImplX on SettableMetadataJsImpl {
   external JSString get cacheControl;
   external set cacheControl(JSString s);
   external JSString get contentDisposition;
@@ -206,7 +222,9 @@ class SettableMetadataJsImpl {
 @anonymous
 class ListOptionsJsImpl {
   external factory ListOptionsJsImpl({int? maxResults, JSString? pageToken});
+}
 
+extension ListOptionsJsImplX on ListOptionsJsImpl {
   external set maxResults(JSNumber s);
   external JSNumber get maxResults;
   external set pageToken(JSString s);
@@ -216,7 +234,9 @@ class ListOptionsJsImpl {
 @JS()
 @staticInterop
 @anonymous
-class ListResultJsImpl {
+class ListResultJsImpl {}
+
+extension ListResultJsImplX on ListResultJsImpl {
   external JSArray get items;
   external JSString get nextPageToken;
   external JSArray get prefixes;
@@ -228,7 +248,7 @@ class ListResultJsImpl {
 /// See: <https://firebase.google.com/docs/reference/js/firebase.storage#.JSStringFormat>
 @JS()
 @staticInterop
-class JSStringFormat {
+class StringFormat {
   /// Indicates the string should be interpreted 'raw', that is, as normal text.
   /// The string will be interpreted as UTF-16, then uploaded as a UTF-8 byte
   /// sequence.
