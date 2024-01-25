@@ -6,11 +6,11 @@
 // ignore_for_file: public_member_api_docs
 
 import 'dart:async';
+import 'dart:js_interop';
 
-import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
-import 'package:js/js.dart';
+import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
 import 'storage_interop.dart' as storage_interop;
 
@@ -28,7 +28,7 @@ Storage getStorageInstance([App? app, String? bucket]) {
       app != null ? core_interop.app(app.name) : core_interop.app();
 
   return Storage.getInstance(bucket != null
-      ? storage_interop.getStorage(appImpl.jsObject, bucket)
+      ? storage_interop.getStorage(appImpl.jsObject, bucket.toJS)
       : storage_interop.getStorage(appImpl.jsObject));
 }
 
@@ -47,10 +47,10 @@ class Storage extends JsObjectWrapper<storage_interop.StorageJsImpl> {
 
   /// Returns the maximum time to retry operations other than uploads
   /// or downloads (in milliseconds).
-  int get maxOperationRetryTime => jsObject.maxOperationRetryTime;
+  int get maxOperationRetryTime => jsObject.maxOperationRetryTime.toDartInt;
 
   /// Returns the maximum time to retry uploads (in milliseconds).
-  int get maxUploadRetryTime => jsObject.maxUploadRetryTime;
+  int get maxUploadRetryTime => jsObject.maxUploadRetryTime.toDartInt;
 
   /// Creates a new Storage from a [jsObject].
   static Storage getInstance(storage_interop.StorageJsImpl jsObject) {
@@ -58,21 +58,21 @@ class Storage extends JsObjectWrapper<storage_interop.StorageJsImpl> {
   }
 
   /// Returns a [StorageReference] for the given [path] in the default bucket.
-  StorageReference ref([String? path]) =>
-      StorageReference.getInstance(storage_interop.ref(jsObject, path));
+  StorageReference ref([String? path]) => StorageReference.getInstance(
+      storage_interop.ref(jsObject as JSAny, path?.toJS));
 
   /// Returns a [StorageReference] for the given absolute [url].
-  StorageReference refFromURL(String url) =>
-      StorageReference.getInstance(storage_interop.ref(jsObject, url));
+  StorageReference refFromURL(String url) => StorageReference.getInstance(
+      storage_interop.ref(jsObject as JSAny, url.toJS));
 
   /// Sets the maximum operation retry time to a value of [time].
   set maxOperationRetryTime(int time) {
-    jsObject.maxOperationRetryTime = time;
+    jsObject.maxOperationRetryTime = time.toJS;
   }
 
   /// Sets the maximum upload retry time to a value of [time].
   set maxUploadRetryTime(int time) {
-    jsObject.maxUploadRetryTime = time;
+    jsObject.maxUploadRetryTime = time.toJS;
   }
 
   /// Configures the Storage instance to work with a local emulator.
@@ -80,7 +80,7 @@ class Storage extends JsObjectWrapper<storage_interop.StorageJsImpl> {
   /// Note: must be called before using storage methods, do not use
   /// with production credentials as local connections are unencrypted
   void useStorageEmulator(String host, int port) =>
-      storage_interop.connectStorageEmulator(jsObject, host, port);
+      storage_interop.connectStorageEmulator(jsObject, host.toJS, port.toJS);
 }
 
 /// StorageReference is a reference to a Google Cloud Storage object.
@@ -96,13 +96,13 @@ class StorageReference
   static final _expando = Expando<StorageReference>();
 
   /// The name of the bucket.
-  String get bucket => jsObject.bucket;
+  String get bucket => jsObject.bucket.toDart;
 
   /// The full path.
-  String get fullPath => jsObject.fullPath;
+  String get fullPath => jsObject.fullPath.toDart;
 
   /// The short name. Which is the last component of the full path.
-  String get name => jsObject.name;
+  String get name => jsObject.name.toDart;
 
   /// The reference to the parent location of this reference.
   /// It is `null` in case of root StorageReference.
@@ -122,23 +122,25 @@ class StorageReference
 
   /// Returns a child StorageReference to a relative [path]
   /// from the actual reference.
-  StorageReference child(String path) =>
-      StorageReference.getInstance(storage_interop.ref(jsObject, path));
+  StorageReference child(String path) => StorageReference.getInstance(
+      storage_interop.ref(jsObject as JSAny, path.toJS));
 
   /// Deletes the object at the actual location.
-  Future delete() => handleThenable(storage_interop.deleteObject(jsObject));
+  Future delete() => storage_interop.deleteObject(jsObject).toDart;
 
   /// Returns a long lived download URL for this reference.
   Future<Uri> getDownloadURL() async {
-    var uriString =
-        await handleThenable(storage_interop.getDownloadURL(jsObject));
-    return Uri.parse(uriString);
+    final uriString = await storage_interop.getDownloadURL(jsObject).toDart;
+    final dartString = (uriString! as JSString).toDart;
+    return Uri.parse(dartString);
   }
 
   /// Returns a [FullMetadata] from this reference at actual location.
-  Future<FullMetadata> getMetadata() =>
-      handleThenable(storage_interop.getMetadata(jsObject))
-          .then(FullMetadata.getInstance);
+  Future<FullMetadata> getMetadata() async {
+    final data = await storage_interop.getMetadata(jsObject).toDart;
+    return FullMetadata.getInstance(
+        data! as storage_interop.FullMetadataJsImpl);
+  }
 
   /// List items (files) and prefixes (folders) under this storage reference.
   /// List API is only available for Firebase Storage Rules Version 2.
@@ -150,9 +152,10 @@ class StorageReference
   /// support objects whose paths end with "/' or contain two consecutive '/"s.
   /// Firebase Storage List API will filter these unsupported objects.
   /// [list()] may fail if there are too many unsupported objects in the bucket.
-  Future<ListResult> list(ListOptions? options) =>
-      handleThenable(storage_interop.list(jsObject, options?.jsObject))
-          .then(ListResult.getInstance);
+  Future<ListResult> list(ListOptions? options) async {
+    final data = await storage_interop.list(jsObject, options?.jsObject).toDart;
+    return ListResult.getInstance(data! as storage_interop.ListResultJsImpl);
+  }
 
   /// List all items (files) and prefixes (folders) under this storage reference.
   /// List API is only available for Firebase Rules Version 2.
@@ -165,9 +168,10 @@ class StorageReference
   ///
   /// Warning: [listAll] may potentially consume too many resources if there are
   /// too many results.
-  Future<ListResult> listAll() =>
-      handleThenable(storage_interop.listAll(jsObject))
-          .then(ListResult.getInstance);
+  Future<ListResult> listAll() async {
+    final data = await storage_interop.listAll(jsObject).toDart;
+    return ListResult.getInstance(data! as storage_interop.ListResultJsImpl);
+  }
 
   /// Uploads data [blob] to the actual location with optional [metadata].
   /// Returns the [UploadTask] which can be used to monitor and manage
@@ -318,18 +322,17 @@ class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
     late StreamController<UploadTaskSnapshot> changeController;
     late ZoneCallback onStateChangedUnsubscribe;
 
-    var nextWrapper =
-        allowInterop((storage_interop.UploadTaskSnapshotJsImpl data) {
+    var nextWrapper = ((storage_interop.UploadTaskSnapshotJsImpl data) {
       changeController.add(UploadTaskSnapshot.getInstance(data));
-    });
+    }).toJS;
 
-    var errorWrapper = allowInterop((e) => changeController.addError(e));
-    var onCompletion = allowInterop(() {
+    var errorWrapper = ((e) => changeController.addError(e)).toJS;
+    var onCompletion = (() {
       // Needing a block here (instead of an inline => function) seems to be a
       // dart-lang/sdk quirk/feature.
       // See https://github.com/dart-lang/sdk/issues/43781
       changeController.close();
-    });
+    }).toJS;
 
     void startListen() {
       onStateChangedUnsubscribe = jsObject.on(

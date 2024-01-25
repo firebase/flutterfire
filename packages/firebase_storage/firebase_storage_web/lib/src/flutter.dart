@@ -4,12 +4,12 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:convert';
-import 'dart:html' as html;
 import 'dart:typed_data';
 
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
+import 'package:web/web.dart' as web;
 
 import './firebase_storage_web.dart';
 import './utils/errors.dart';
@@ -156,7 +156,7 @@ class ReferenceWeb extends ReferencePlatform {
   /// Optionally, you can also set metadata onto the uploaded object.
   @override
   TaskPlatform putBlob(dynamic data, [SettableMetadata? metadata]) {
-    assert(data is html.Blob, 'data must be a dart:html Blob object.');
+    assert(data is web.Blob, 'data must be a package:web Blob object.');
 
     return TaskWeb(
       this,
