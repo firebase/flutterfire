@@ -81,6 +81,7 @@ class OAuthCredential extends AuthCredential {
     this.idToken,
     this.secret,
     this.rawNonce,
+    this.serverAuthCode,
   }) : super(
           providerId: providerId,
           signInMethod: signInMethod,
@@ -100,6 +101,9 @@ class OAuthCredential extends AuthCredential {
   /// must match the nonce field in the ID token.
   final String? rawNonce;
 
+  /// the server auth code for Play Games credential.
+  final String? serverAuthCode;
+
   @override
   Map<String, String?> asMap() {
     return <String, String?>{
@@ -109,6 +113,7 @@ class OAuthCredential extends AuthCredential {
       'accessToken': accessToken,
       'secret': secret,
       'rawNonce': rawNonce,
+      'serverAuthCode': serverAuthCode,
     };
   }
 }
