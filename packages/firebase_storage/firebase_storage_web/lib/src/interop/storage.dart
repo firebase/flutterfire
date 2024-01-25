@@ -194,8 +194,7 @@ class StorageReference
   /// Updates metadata from this reference at actual location with
   /// the new [metadata].
   Future<FullMetadata> updateMetadata(SettableMetadata metadata) async {
-    await handleThenable(
-        storage_interop.updateMetadata(jsObject, metadata.jsObject));
+    await storage_interop.updateMetadata(jsObject, metadata.jsObject).toDart;
     return getMetadata();
   }
 }
@@ -210,31 +209,32 @@ class FullMetadata
   static final _expando = Expando<FullMetadata>();
 
   /// The bucket the actual object is contained in.
-  String get bucket => jsObject.bucket;
+  String get bucket => jsObject.bucket.toDart;
 
   /// The full path.
-  String? get fullPath => jsObject.fullPath;
+  String? get fullPath => jsObject.fullPath?.toDart;
 
   /// The generation.
-  String? get generation => jsObject.generation;
+  String? get generation => jsObject.generation?.toDart;
 
   /// The metageneration.
-  String? get metageneration => jsObject.metageneration;
+  String? get metageneration => jsObject.metageneration?.toDart;
 
   /// The short name. Which is the last component of the full path.
-  String? get name => jsObject.name;
+  String? get name => jsObject.name?.toDart;
 
   /// The size in bytes.
-  int? get size => jsObject.size;
+  int? get size => jsObject.size?.toDartInt;
 
   /// Returns the time it was created as a [DateTime].
   DateTime? get timeCreated => jsObject.timeCreated == null
       ? null
-      : DateTime.parse(jsObject.timeCreated!);
+      : DateTime.parse(jsObject.timeCreated!.toDart);
 
   /// Returns the time it was last updated as a [DateTime].
-  DateTime? get updated =>
-      jsObject.updated == null ? null : DateTime.parse(jsObject.updated!);
+  DateTime? get updated => jsObject.updated == null
+      ? null
+      : DateTime.parse(jsObject.updated!.toDart);
 
   /// Creates a new FullMetadata from a [jsObject].
   static FullMetadata getInstance(storage_interop.FullMetadataJsImpl jsObject) {
@@ -257,12 +257,12 @@ class UploadMetadata
           String? contentType,
           Map<String, String>? customMetadata}) =>
       UploadMetadata.fromJsObject(storage_interop.UploadMetadataJsImpl(
-          md5Hash: md5Hash,
-          cacheControl: cacheControl,
-          contentDisposition: contentDisposition,
-          contentEncoding: contentEncoding,
-          contentLanguage: contentLanguage,
-          contentType: contentType,
+          md5Hash: md5Hash?.toJS,
+          cacheControl: cacheControl?.toJS,
+          contentDisposition: contentDisposition?.toJS,
+          contentEncoding: contentEncoding?.toJS,
+          contentLanguage: contentLanguage?.toJS,
+          contentType: contentType?.toJS,
           customMetadata:
               (customMetadata != null) ? jsify(customMetadata) : null));
 
@@ -279,10 +279,10 @@ abstract class _UploadMetadataBase<
   _UploadMetadataBase.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
 
   /// The Base64-encoded MD5 hash for the object being uploaded.
-  String get md5Hash => jsObject.md5Hash;
+  String get md5Hash => jsObject.md5Hash.toDart;
 
   set md5Hash(String s) {
-    jsObject.md5Hash = s;
+    jsObject.md5Hash = s.toJS;
   }
 }
 
@@ -299,9 +299,13 @@ class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
   Future<UploadTaskSnapshot>? _future;
 
   /// Returns the UploadTaskSnapshot when the upload successfully completes.
-  Future<UploadTaskSnapshot> get future {
-    return _future ??=
-        handleThenable(jsObject).then(UploadTaskSnapshot.getInstance);
+  Future<UploadTaskSnapshot> get future async {
+    return _future ??= jsObject
+        .then(((dynamic value) {
+          return UploadTaskSnapshot.getInstance(
+              value as storage_interop.UploadTaskSnapshotJsImpl);
+        }).toJS)
+        .toDart as Future<UploadTaskSnapshot>;
   }
 
   /// Returns the upload task snapshot of the current task state.
@@ -320,7 +324,7 @@ class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
   /// Stream for upload task state changed event.
   Stream<UploadTaskSnapshot> get onStateChanged {
     late StreamController<UploadTaskSnapshot> changeController;
-    late ZoneCallback onStateChangedUnsubscribe;
+    late JSFunction onStateChangedUnsubscribe;
 
     var nextWrapper = ((storage_interop.UploadTaskSnapshotJsImpl data) {
       changeController.add(UploadTaskSnapshot.getInstance(data));
@@ -344,7 +348,7 @@ class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
     }
 
     void stopListen() {
-      onStateChangedUnsubscribe();
+      onStateChangedUnsubscribe.callAsFunction();
       changeController.close();
     }
 
@@ -375,7 +379,7 @@ class UploadTaskSnapshot
   static final _expando = Expando<UploadTaskSnapshot>();
 
   /// The number of bytes that have been successfully transferred.
-  int get bytesTransferred => jsObject.bytesTransferred;
+  int get bytesTransferred => jsObject.bytesTransferred.toDartInt;
 
   /// The metadata. Before the upload completes, it contains the metadata sent
   /// to the server. After the upload completes, it contains the metadata sent
@@ -387,7 +391,7 @@ class UploadTaskSnapshot
 
   /// The actual task state.
   TaskState get state {
-    switch (jsObject.state) {
+    switch (jsObject.state.toDart) {
       case 'running':
         return TaskState.RUNNING;
       case 'paused':
@@ -408,7 +412,7 @@ class UploadTaskSnapshot
   UploadTask get task => UploadTask.getInstance(jsObject.task);
 
   /// The total number of bytes to be uploaded.
-  int get totalBytes => jsObject.totalBytes;
+  int get totalBytes => jsObject.totalBytes.toDartInt;
 
   /// Creates a new UploadTaskSnapshot from a [jsObject].
   static UploadTaskSnapshot getInstance(
@@ -431,11 +435,11 @@ class SettableMetadata
           String? contentType,
           Map? customMetadata}) =>
       SettableMetadata.fromJsObject(storage_interop.SettableMetadataJsImpl(
-          cacheControl: cacheControl,
-          contentDisposition: contentDisposition,
-          contentEncoding: contentEncoding,
-          contentLanguage: contentLanguage,
-          contentType: contentType,
+          cacheControl: cacheControl?.toJS,
+          contentDisposition: contentDisposition?.toJS,
+          contentEncoding: contentEncoding?.toJS,
+          contentLanguage: contentLanguage?.toJS,
+          contentType: contentType?.toJS,
           customMetadata:
               (customMetadata != null) ? jsify(customMetadata) : null));
 
@@ -450,38 +454,38 @@ abstract class _SettableMetadataBase<
   _SettableMetadataBase.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
 
   /// Served as the 'Cache-Control' header on object download.
-  String get cacheControl => jsObject.cacheControl;
+  String get cacheControl => jsObject.cacheControl.toDart;
 
   set cacheControl(String s) {
-    jsObject.cacheControl = s;
+    jsObject.cacheControl = s.toJS;
   }
 
   /// Served as the 'Content-Disposition' header on object download.
-  String get contentDisposition => jsObject.contentDisposition;
+  String get contentDisposition => jsObject.contentDisposition.toDart;
 
   set contentDisposition(String s) {
-    jsObject.contentDisposition = s;
+    jsObject.contentDisposition = s.toJS;
   }
 
   /// Served as the 'Content-Encoding' header on object download.
-  String get contentEncoding => jsObject.contentEncoding;
+  String get contentEncoding => jsObject.contentEncoding.toDart;
 
   set contentEncoding(String s) {
-    jsObject.contentEncoding = s;
+    jsObject.contentEncoding = s.toJS;
   }
 
   /// Served as the 'Content-Language' header on object download.
-  String get contentLanguage => jsObject.contentLanguage;
+  String get contentLanguage => jsObject.contentLanguage.toDart;
 
   set contentLanguage(String s) {
-    jsObject.contentLanguage = s;
+    jsObject.contentLanguage = s.toJS;
   }
 
   /// Served as the 'Content-Type' header on object download.
-  String get contentType => jsObject.contentType;
+  String get contentType => jsObject.contentType.toDart;
 
   set contentType(String s) {
-    jsObject.contentType = s;
+    jsObject.contentType = s.toJS;
   }
 
   /// Additional user-defined custom metadata.
@@ -503,7 +507,7 @@ abstract class _SettableMetadataBase<
 class ListOptions extends JsObjectWrapper<storage_interop.ListOptionsJsImpl> {
   factory ListOptions({int? maxResults, String? pageToken}) {
     return ListOptions._fromJsObject(storage_interop.ListOptionsJsImpl(
-        maxResults: maxResults, pageToken: pageToken));
+        maxResults: maxResults, pageToken: pageToken?.toJS));
   }
 
   ListOptions._fromJsObject(storage_interop.ListOptionsJsImpl jsObject)
@@ -511,16 +515,16 @@ class ListOptions extends JsObjectWrapper<storage_interop.ListOptionsJsImpl> {
 
   /// If set, limits the total number of prefixes and items to return.
   /// The default and maximum maxResults is 1000.
-  int get maxResults => jsObject.maxResults;
+  int get maxResults => jsObject.maxResults.toDartInt;
 
-  set maxResults(int n) => jsObject.maxResults = n;
+  set maxResults(int n) => jsObject.maxResults = n.toJS;
 
   /// The [ListResult.nextPageToken] from a previous call to
   /// [StorageReference.list]. If provided, listing is resumed from the
   /// previous position.
-  String get pageToken => jsObject.pageToken;
+  String get pageToken => jsObject.pageToken.toDart;
 
-  set pageToken(String t) => jsObject.pageToken = t;
+  set pageToken(String t) => jsObject.pageToken = t.toJS;
 }
 
 /// Result returned by [StorageReference.list].
@@ -532,21 +536,21 @@ class ListResult extends JsObjectWrapper<storage_interop.ListResultJsImpl> {
 
   /// Objects in this directory. You can call [getMetadata()] and
   /// [getDownloadUrl()] on them.
-  List<StorageReference> get items => jsObject.items
+  List<StorageReference> get items => jsObject.items.toDart
       // ignore: unnecessary_lambdas, false positive, data is dynamic
       .map((dynamic data) => StorageReference._fromJsObject(data))
       .toList();
 
   /// If set, there might be more results for this list. Use this
   /// token to resume the list.
-  String get nextPageToken => jsObject.nextPageToken;
+  String get nextPageToken => jsObject.nextPageToken.toDart;
 
   /// References to prefixes (sub-folders). You can call [list()] on
   /// them to get its contents.
   /// Folders are implicit based on '/' in the object paths. For example,
   /// if a bucket has two objects '/a/b/1' and '/a/b/2', [list('/a')] will
   /// return '/a/b' as a prefix.
-  List<StorageReference> get prefixes => jsObject.prefixes
+  List<StorageReference> get prefixes => jsObject.prefixes.toDart
       // ignore: unnecessary_lambdas, false positive, data is dynamic
       .map((dynamic data) => StorageReference._fromJsObject(data))
       .toList();
