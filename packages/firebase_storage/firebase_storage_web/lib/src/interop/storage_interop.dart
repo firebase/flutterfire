@@ -72,7 +72,7 @@ external UploadTaskJsImpl uploadBytesResumable(
 @staticInterop
 @anonymous
 class EmulatorOptions {
-  external factory EmulatorOptions({mockUserToken});
+  external factory EmulatorOptions({JSString mockUserToken});
 }
 
 extension EmulatorOptionsJsImplX on EmulatorOptions {
@@ -123,7 +123,7 @@ class FullMetadataJsImpl extends UploadMetadataJsImpl {
       JSString? contentEncoding,
       JSString? contentLanguage,
       JSString? contentType,
-      dynamic customMetadata});
+      JSAny? customMetadata});
 }
 
 extension FullMetadataJsImplX on FullMetadataJsImpl {
@@ -152,7 +152,7 @@ class UploadMetadataJsImpl extends SettableMetadataJsImpl {
       JSString? contentEncoding,
       JSString? contentLanguage,
       JSString? contentType,
-      dynamic customMetadata});
+      JSAny? customMetadata});
 }
 
 extension UploadMetadataJsImplX on UploadMetadataJsImpl {
@@ -199,7 +199,7 @@ class SettableMetadataJsImpl {
       JSString? contentEncoding,
       JSString? contentLanguage,
       JSString? contentType,
-      dynamic customMetadata});
+      JSAny? customMetadata});
 }
 
 extension SettableMetadataJsImplX on SettableMetadataJsImpl {
@@ -213,8 +213,8 @@ extension SettableMetadataJsImplX on SettableMetadataJsImpl {
   external set contentLanguage(JSString s);
   external JSString get contentType;
   external set contentType(JSString s);
-  external dynamic get customMetadata;
-  external set customMetadata(dynamic s);
+  external JSAny? get customMetadata;
+  external set customMetadata(JSAny? s);
 }
 
 @JS()
@@ -267,4 +267,6 @@ class StringFormat {
   external static JSString get DATA_URL;
 }
 
+@JS()
+@staticInterop
 external JSString get TaskEvent;

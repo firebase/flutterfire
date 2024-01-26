@@ -301,11 +301,15 @@ class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
   /// Returns the UploadTaskSnapshot when the upload successfully completes.
   Future<UploadTaskSnapshot> get future async {
     return _future ??= jsObject
-        .then(((dynamic value) {
-          return UploadTaskSnapshot.getInstance(
-              value as storage_interop.UploadTaskSnapshotJsImpl);
+        .then(((JSAny value) {
+          return value as storage_interop.UploadTaskSnapshotJsImpl;
         }).toJS)
-        .toDart as Future<UploadTaskSnapshot>;
+        .toDart
+        .then(
+          (value) => UploadTaskSnapshot.getInstance(
+            value! as storage_interop.UploadTaskSnapshotJsImpl,
+          ),
+        );
   }
 
   /// Returns the upload task snapshot of the current task state.
@@ -330,7 +334,7 @@ class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
       changeController.add(UploadTaskSnapshot.getInstance(data));
     }).toJS;
 
-    var errorWrapper = ((e) => changeController.addError(e)).toJS;
+    var errorWrapper = ((JSError e) => changeController.addError(e)).toJS;
     var onCompletion = (() {
       // Needing a block here (instead of an inline => function) seems to be a
       // dart-lang/sdk quirk/feature.
