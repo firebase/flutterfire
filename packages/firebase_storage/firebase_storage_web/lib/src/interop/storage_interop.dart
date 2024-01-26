@@ -24,32 +24,34 @@ external void connectStorageEmulator(
 
 @JS()
 @staticInterop
-external JSPromise deleteObject(ReferenceJsImpl ref);
+external JSPromise /* void */ deleteObject(ReferenceJsImpl ref);
 
 @JS()
 @staticInterop
-external JSPromise getDownloadURL(ReferenceJsImpl ref);
+external JSPromise /* String */ getDownloadURL(ReferenceJsImpl ref);
 
 @JS()
 @staticInterop
-external JSPromise getBlob(ReferenceJsImpl ref, [int? maxDownloadSizeBytes]);
+external JSPromise /* String */ getBlob(ReferenceJsImpl ref,
+    [int? maxDownloadSizeBytes]);
 
 @JS()
 @staticInterop
-external JSPromise getBytes(ReferenceJsImpl ref,
+external JSPromise /* List<String> */ getBytes(ReferenceJsImpl ref,
     [JSNumber? maxDownloadSizeBytes]);
 
 @JS()
 @staticInterop
-external JSPromise getMetadata(ReferenceJsImpl ref);
+external JSPromise /* FullMetadataJsImpl */ getMetadata(ReferenceJsImpl ref);
 
 @JS()
 @staticInterop
-external JSPromise list(ReferenceJsImpl ref, [ListOptionsJsImpl? listOptions]);
+external JSPromise /* ListResultJsImpl */ list(ReferenceJsImpl ref,
+    [ListOptionsJsImpl? listOptions]);
 
 @JS()
 @staticInterop
-external JSPromise listAll(ReferenceJsImpl ref);
+external JSPromise /* ListResultJsImpl */ listAll(ReferenceJsImpl ref);
 
 @JS()
 @staticInterop
@@ -59,7 +61,7 @@ external ReferenceJsImpl ref(JSAny storageOrRef, [JSString? urlOrPath]);
 
 @JS()
 @staticInterop
-external JSPromise updateMetadata(
+external JSPromise /* FullMetadataJsImpl */ updateMetadata(
     ReferenceJsImpl ref, SettableMetadataJsImpl settableMetadata);
 
 @JS()
@@ -172,7 +174,8 @@ extension UploadTaskJsImplX on UploadTaskJsImpl {
       [JSAny nextOrObserver, JSFunction? error, JSFunction? complete]);
   external bool pause();
   external bool resume();
-  external JSPromise then([JSFunction? onResolve, JSFunction? onReject]);
+  external JSPromise /* void */ then(
+      [JSFunction? onResolve, JSFunction? onReject]);
 }
 
 @JS()
@@ -237,15 +240,15 @@ extension ListOptionsJsImplX on ListOptionsJsImpl {
 class ListResultJsImpl {}
 
 extension ListResultJsImplX on ListResultJsImpl {
-  external JSArray get items;
+  external JSArray /* ReferenceJsImpl */ get items;
   external JSString get nextPageToken;
-  external JSArray get prefixes;
+  external JSArray /* ReferenceJsImpl */ get prefixes;
 }
 
 // ignore: avoid_classes_with_only_static_members
 /// An enumeration of the possible string formats for upload.
 ///
-/// See: <https://firebase.google.com/docs/reference/js/firebase.storage#.JSStringFormat>
+/// See: <https://firebase.google.com/docs/reference/js/firebase.storage#stringformat>
 @JS()
 @staticInterop
 class StringFormat {
