@@ -344,7 +344,7 @@ class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
 
     void startListen() {
       onStateChangedUnsubscribe = jsObject.on(
-        storage_interop.TaskEvent,
+        'state_changed'.toJS,
         nextWrapper,
         errorWrapper,
         onCompletion,
@@ -458,38 +458,38 @@ abstract class _SettableMetadataBase<
   _SettableMetadataBase.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
 
   /// Served as the 'Cache-Control' header on object download.
-  String get cacheControl => jsObject.cacheControl.toDart;
+  String? get cacheControl => jsObject.cacheControl?.toDart;
 
-  set cacheControl(String s) {
-    jsObject.cacheControl = s.toJS;
+  set cacheControl(String? s) {
+    jsObject.cacheControl = s?.toJS;
   }
 
   /// Served as the 'Content-Disposition' header on object download.
-  String get contentDisposition => jsObject.contentDisposition.toDart;
+  String? get contentDisposition => jsObject.contentDisposition?.toDart;
 
-  set contentDisposition(String s) {
-    jsObject.contentDisposition = s.toJS;
+  set contentDisposition(String? s) {
+    jsObject.contentDisposition = s?.toJS;
   }
 
   /// Served as the 'Content-Encoding' header on object download.
-  String get contentEncoding => jsObject.contentEncoding.toDart;
+  String? get contentEncoding => jsObject.contentEncoding?.toDart;
 
-  set contentEncoding(String s) {
-    jsObject.contentEncoding = s.toJS;
+  set contentEncoding(String? s) {
+    jsObject.contentEncoding = s?.toJS;
   }
 
   /// Served as the 'Content-Language' header on object download.
-  String get contentLanguage => jsObject.contentLanguage.toDart;
+  String? get contentLanguage => jsObject.contentLanguage?.toDart;
 
-  set contentLanguage(String s) {
-    jsObject.contentLanguage = s.toJS;
+  set contentLanguage(String? s) {
+    jsObject.contentLanguage = s?.toJS;
   }
 
   /// Served as the 'Content-Type' header on object download.
-  String get contentType => jsObject.contentType.toDart;
+  String? get contentType => jsObject.contentType?.toDart;
 
-  set contentType(String s) {
-    jsObject.contentType = s.toJS;
+  set contentType(String? s) {
+    jsObject.contentType = s?.toJS;
   }
 
   /// Additional user-defined custom metadata.

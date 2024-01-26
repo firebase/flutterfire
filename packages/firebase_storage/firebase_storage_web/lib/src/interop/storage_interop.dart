@@ -203,16 +203,16 @@ class SettableMetadataJsImpl {
 }
 
 extension SettableMetadataJsImplX on SettableMetadataJsImpl {
-  external JSString get cacheControl;
-  external set cacheControl(JSString s);
-  external JSString get contentDisposition;
-  external set contentDisposition(JSString s);
-  external JSString get contentEncoding;
-  external set contentEncoding(JSString s);
-  external JSString get contentLanguage;
-  external set contentLanguage(JSString s);
-  external JSString get contentType;
-  external set contentType(JSString s);
+  external JSString? get cacheControl;
+  external set cacheControl(JSString? s);
+  external JSString? get contentDisposition;
+  external set contentDisposition(JSString? s);
+  external JSString? get contentEncoding;
+  external set contentEncoding(JSString? s);
+  external JSString? get contentLanguage;
+  external set contentLanguage(JSString? s);
+  external JSString? get contentType;
+  external set contentType(JSString? s);
   external JSAny? get customMetadata;
   external set customMetadata(JSAny? s);
 }
@@ -268,5 +268,4 @@ class StringFormat {
 }
 
 @JS()
-@staticInterop
 external JSString get TaskEvent;
