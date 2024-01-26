@@ -8,68 +8,82 @@
 @JS('firebase_app_check')
 library firebase_interop.app_check;
 
+import 'dart:js_interop';
+
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
-import 'package:js/js.dart';
 
 @JS()
+@staticInterop
 external AppCheckJsImpl initializeAppCheck(
   AppJsImpl? app, [
   AppCheckOptions? options,
 ]);
 
 @JS()
+@staticInterop
 external PromiseJsImpl<AppCheckTokenResult> getToken(
   AppCheckJsImpl? appCheck,
-  bool? forceRefresh,
+  JSBoolean? forceRefresh,
 );
 
 @JS()
+@staticInterop
 external PromiseJsImpl<AppCheckTokenResult> getLimitedUseToken(
   AppCheckJsImpl? appCheck,
 );
 
 @JS()
+@staticInterop
 external void setTokenAutoRefreshEnabled(
   AppCheckJsImpl appCheck,
-  bool isTokenAutoRefreshEnabled,
+  JSBoolean isTokenAutoRefreshEnabled,
 );
 
 @JS()
+@staticInterop
 abstract class ReCaptchaProvider {}
 
 @JS()
+@staticInterop
 class ReCaptchaV3Provider implements ReCaptchaProvider {
   external factory ReCaptchaV3Provider(recaptchaKey);
 }
 
 @JS()
+@staticInterop
 class ReCaptchaEnterpriseProvider implements ReCaptchaProvider {
   external factory ReCaptchaEnterpriseProvider(recaptchaKey);
 }
 
 @JS()
-abstract class AppCheckTokenResult {
-  external String get token;
+@staticInterop
+abstract class AppCheckTokenResult {}
+
+extension AppCheckTokenResultJsImplX on AppCheckTokenResult {
+  external JSString get token;
 }
 
 @anonymous
 @JS()
+@staticInterop
 class AppCheckOptions {
-  external bool? get isTokenAutoRefreshEnabled;
-
-  external ReCaptchaProvider get provider;
-
   external factory AppCheckOptions({
-    bool? isTokenAutoRefreshEnabled,
+    JSBoolean? isTokenAutoRefreshEnabled,
     ReCaptchaProvider provider,
   });
 }
 
-external Func0 onTokenChanged(
+extension AppCheckOptionsJsImplX on AppCheckOptions {
+  external JSBoolean? get isTokenAutoRefreshEnabled;
+
+  external ReCaptchaProvider get provider;
+}
+
+external JSFunction onTokenChanged(
   AppCheckJsImpl appCheck,
-  dynamic nextOrObserver, [
-  Func1? opt_error,
-  Func0? opt_completed,
+  JSAny nextOrObserver, [
+  JSFunction? opt_error,
+  JSFunction? opt_completed,
 ]);
 
 @JS('AppCheck')
