@@ -18,10 +18,10 @@ AppCheck? getAppCheckInstance([App? app, WebProvider? provider]) {
   late app_check_interop.ReCaptchaProvider jsProvider;
 
   if (provider is ReCaptchaV3Provider) {
-    jsProvider = app_check_interop.ReCaptchaV3Provider(provider.siteKey);
+    jsProvider = app_check_interop.ReCaptchaV3Provider(provider.siteKey.toJS);
   } else if (provider is ReCaptchaEnterpriseProvider) {
     jsProvider =
-        app_check_interop.ReCaptchaEnterpriseProvider(provider.siteKey);
+        app_check_interop.ReCaptchaEnterpriseProvider(provider.siteKey.toJS);
   } else {
     throw ArgumentError(
       'A `WebProvider` is required for `activate()` to initialise App Check on the web platform',
@@ -58,12 +58,12 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
       );
 
   Future<app_check_interop.AppCheckTokenResult> getToken(bool? forceRefresh) =>
-      handleThenable(app_check_interop.getToken(jsObject, forceRefresh?.toJS));
+      app_check_interop.getToken(jsObject, forceRefresh?.toJS).toDart
+          as Future<app_check_interop.AppCheckTokenResult>;
 
   Future<app_check_interop.AppCheckTokenResult> getLimitedUseToken() =>
-      handleThenable(
-        app_check_interop.getLimitedUseToken(jsObject),
-      );
+      app_check_interop.getLimitedUseToken(jsObject).toDart
+          as Future<app_check_interop.AppCheckTokenResult>;
 
   JSFunction? _idTokenChangedUnsubscribe;
 

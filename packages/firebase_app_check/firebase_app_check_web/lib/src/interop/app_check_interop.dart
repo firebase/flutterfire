@@ -21,14 +21,14 @@ external AppCheckJsImpl initializeAppCheck(
 
 @JS()
 @staticInterop
-external PromiseJsImpl<AppCheckTokenResult> getToken(
+external JSPromise /* AppCheckTokenResult */ getToken(
   AppCheckJsImpl? appCheck,
   JSBoolean? forceRefresh,
 );
 
 @JS()
 @staticInterop
-external PromiseJsImpl<AppCheckTokenResult> getLimitedUseToken(
+external JSPromise /* AppCheckTokenResult */ getLimitedUseToken(
   AppCheckJsImpl? appCheck,
 );
 
@@ -46,13 +46,13 @@ abstract class ReCaptchaProvider {}
 @JS()
 @staticInterop
 class ReCaptchaV3Provider implements ReCaptchaProvider {
-  external factory ReCaptchaV3Provider(recaptchaKey);
+  external factory ReCaptchaV3Provider(JSString recaptchaKey);
 }
 
 @JS()
 @staticInterop
 class ReCaptchaEnterpriseProvider implements ReCaptchaProvider {
-  external factory ReCaptchaEnterpriseProvider(recaptchaKey);
+  external factory ReCaptchaEnterpriseProvider(JSString recaptchaKey);
 }
 
 @JS()
@@ -79,6 +79,8 @@ extension AppCheckOptionsJsImplX on AppCheckOptions {
   external ReCaptchaProvider get provider;
 }
 
+@JS()
+@staticInterop
 external JSFunction onTokenChanged(
   AppCheckJsImpl appCheck,
   JSAny nextOrObserver, [
@@ -87,6 +89,9 @@ external JSFunction onTokenChanged(
 ]);
 
 @JS('AppCheck')
-abstract class AppCheckJsImpl {
+@staticInterop
+abstract class AppCheckJsImpl {}
+
+extension AppCheckJsImplX on AppCheckJsImpl {
   external AppJsImpl get app;
 }
