@@ -5,6 +5,8 @@
 
 // ignore_for_file: public_member_api_docs
 
+import 'dart:js_interop';
+
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
 import 'functions_interop.dart' as functions_interop;
@@ -13,12 +15,10 @@ export 'functions_interop.dart' show HttpsCallableOptions;
 
 /// Given an AppJSImp, return the Functions instance.
 Functions getFunctionsInstance(App app, [String? region]) {
-  functions_interop.FunctionsJsImpl jsObject;
-  if (region == null) {
-    jsObject = functions_interop.getFunctions(app.jsObject);
-  } else {
-    jsObject = functions_interop.getFunctions(app.jsObject, region);
-  }
+  functions_interop.FunctionsJsImpl jsObject = functions_interop.getFunctions(
+    app.jsObject,
+    region?.toJS,
+  );
   return Functions.getInstance(jsObject);
 }
 
@@ -38,49 +38,51 @@ class Functions extends JsObjectWrapper<functions_interop.FunctionsJsImpl> {
 
   HttpsCallable httpsCallable(String name,
       [functions_interop.HttpsCallableOptions? options]) {
-    functions_interop.CustomFunction httpCallableImpl;
+    JSFunction httpCallableImpl;
     if (options != null) {
       httpCallableImpl =
-          functions_interop.httpsCallable(jsObject, name, options);
+          functions_interop.httpsCallable(jsObject, name.toJS, options);
     } else {
-      httpCallableImpl = functions_interop.httpsCallable(jsObject, name);
+      httpCallableImpl = functions_interop.httpsCallable(jsObject, name.toJS);
     }
     return HttpsCallable.getInstance(httpCallableImpl);
   }
 
   HttpsCallable httpsCallableUri(Uri uri,
       [functions_interop.HttpsCallableOptions? options]) {
-    functions_interop.CustomFunction httpCallableImpl;
+    JSFunction httpCallableImpl;
     if (options != null) {
       httpCallableImpl = functions_interop.httpsCallableFromURL(
-          jsObject, uri.toString(), options);
+          jsObject, uri.toString().toJS, options);
     } else {
       httpCallableImpl =
-          functions_interop.httpsCallableFromURL(jsObject, uri.toString());
+          functions_interop.httpsCallableFromURL(jsObject, uri.toString().toJS);
     }
     return HttpsCallable.getInstance(httpCallableImpl);
   }
 
-  void useFunctionsEmulator(String host, int port) =>
-      functions_interop.connectFunctionsEmulator(jsObject, host, port);
+  void useFunctionsEmulator(String host, int port) => functions_interop
+      .connectFunctionsEmulator(jsObject, host.toJS, port.toJS);
 }
 
-class HttpsCallable extends JsObjectWrapper<functions_interop.CustomFunction> {
-  HttpsCallable._fromJsObject(functions_interop.CustomFunction jsObject)
+class HttpsCallable extends JsObjectWrapper<JSFunction> {
+  HttpsCallable._fromJsObject(JSFunction jsObject)
       : super.fromJsObject(jsObject);
 
   static final _expando = Expando<HttpsCallable>();
 
   /// Creates a new HttpsCallable from a [jsObject].
-  static HttpsCallable getInstance(functions_interop.CustomFunction jsObject) {
+  static HttpsCallable getInstance(JSFunction jsObject) {
     return _expando[jsObject] ??= HttpsCallable._fromJsObject(jsObject);
   }
 
-  Future<HttpsCallableResult> call([dynamic data]) =>
-      handleThenable(jsObject.apply(null, [data])).then((result) {
-        return HttpsCallableResult.getInstance(
-            result as functions_interop.HttpsCallableResultJsImpl);
-      });
+  Future<HttpsCallableResult> call(JSAny? data) async {
+    final result = await (jsObject.callAsFunction(data)! as JSPromise).toDart;
+
+    return HttpsCallableResult.getInstance(
+      result! as functions_interop.HttpsCallableResultJsImpl,
+    );
+  }
 }
 
 class HttpsCallableResult

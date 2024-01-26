@@ -8,23 +8,29 @@
 @JS('firebase_functions')
 library firebase_interop.functions;
 
+import 'dart:js_interop';
+
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
-import 'package:js/js.dart';
 
 @JS()
-external FunctionsJsImpl getFunctions([AppJsImpl? app, String? regionOrDomain]);
+@staticInterop
+external FunctionsJsImpl getFunctions(
+    [AppJsImpl? app, JSString? regionOrDomain]);
 
 @JS()
+@staticInterop
 external void connectFunctionsEmulator(
-    FunctionsJsImpl functions, String host, int port);
+    FunctionsJsImpl functions, JSString host, JSNumber port);
 
 @JS()
-external CustomFunction httpsCallable(FunctionsJsImpl functions, String name,
+@staticInterop
+external JSFunction httpsCallable(FunctionsJsImpl functions, JSString name,
     [HttpsCallableOptions? options]);
 
 @JS()
-external CustomFunction httpsCallableFromURL(
-    FunctionsJsImpl functions, String url,
+@staticInterop
+external JSFunction httpsCallableFromURL(
+    FunctionsJsImpl functions, JSString url,
     [HttpsCallableOptions? options]);
 
 /// The Cloud Functions for Firebase service interface.
@@ -32,33 +38,43 @@ external CustomFunction httpsCallableFromURL(
 /// Do not call this constructor directly. Instead, use firebase.functions().
 /// See: <https://firebase.google.com/docs/reference/js/firebase.functions.Functions>.
 @JS('Functions')
-abstract class FunctionsJsImpl {
+@staticInterop
+abstract class FunctionsJsImpl {}
+
+extension FunctionsJsImplExtension on FunctionsJsImpl {
   external AppJsImpl get app;
-  external String? get customDomain;
-  external String get region;
+  external JSString? get customDomain;
+  external JSString get region;
 }
 
 /// An HttpsCallableOptions is an option to set timeout property
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.functions.HttpsCallableOptions>.
 @JS('HttpsCallableOptions')
+@staticInterop
 @anonymous
 abstract class HttpsCallableOptions {
   external factory HttpsCallableOptions(
-      {int? timeout, bool? limitedUseAppCheckTokens});
-  external int get timeout;
-  external set timeout(int t);
-  external bool get limitedUseAppCheckTokens;
-  external set limitedUseAppCheckTokens(bool t);
+      {JSNumber? timeout, JSBoolean? limitedUseAppCheckTokens});
+}
+
+extension HttpsCallableOptionsExtension on HttpsCallableOptions {
+  external JSNumber get timeout;
+  external set timeout(JSNumber t);
+  external JSBoolean get limitedUseAppCheckTokens;
+  external set limitedUseAppCheckTokens(JSBoolean t);
 }
 
 /// An HttpsCallableResult wraps a single result from a function call.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.functions.HttpsCallableResult>.
 @JS('HttpsCallableResult')
+@staticInterop
 @anonymous
-abstract class HttpsCallableResultJsImpl {
-  external Map<String, dynamic> get data;
+abstract class HttpsCallableResultJsImpl {}
+
+extension HttpsCallableResultJsImplExtension on HttpsCallableResultJsImpl {
+  external JSObject get data;
 }
 
 /// The set of Cloud Functions status codes.
@@ -66,32 +82,33 @@ abstract class HttpsCallableResultJsImpl {
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.functions.HttpsError>.
 @JS('HttpsError')
-abstract class HttpsErrorJsImpl {
+@staticInterop
+abstract class HttpsErrorJsImpl {}
+
+extension HttpsErrorJsImplExtension on HttpsErrorJsImpl {
   external ErrorJsImpl get error;
   external set error(ErrorJsImpl e);
-  external String get code;
-  external set code(String v);
-  external dynamic get details;
-  external set details(dynamic d);
-  external String get message;
-  external set message(String v);
-  external String get name;
-  external set name(String v);
-  external String get stack;
-  external set stack(String s);
+  external JSString get code;
+  external set code(JSString v);
+  external JSAny get details;
+  external set details(JSAny d);
+  external JSString get message;
+  external set message(JSString v);
+  external JSString get name;
+  external set name(JSString v);
+  external JSString get stack;
+  external set stack(JSString s);
 }
 
 @JS('Error')
-abstract class ErrorJsImpl {
-  external String get message;
-  external set message(String m);
-  external String get fileName;
-  external set fileName(String f);
-  external String get lineNumber;
-  external set lineNumber(String l);
-}
+@staticInterop
+abstract class ErrorJsImpl {}
 
-@JS('Function')
-class CustomFunction {
-  external PromiseJsImpl<dynamic> apply(dynamic thisArg, List<dynamic> args);
+extension ErrorJsImplExtension on ErrorJsImpl {
+  external JSString get message;
+  external set message(JSString m);
+  external JSString get fileName;
+  external set fileName(JSString f);
+  external JSString get lineNumber;
+  external set lineNumber(JSString l);
 }

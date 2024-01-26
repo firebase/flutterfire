@@ -4,7 +4,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:js_util' as util;
+import 'dart:js_interop';
 
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 
@@ -30,8 +30,8 @@ class HttpsCallableWeb extends HttpsCallablePlatform {
 
     functions_interop.HttpsCallableOptions callableOptions =
         functions_interop.HttpsCallableOptions(
-      timeout: options.timeout.inMilliseconds,
-      limitedUseAppCheckTokens: options.limitedUseAppCheckToken,
+      timeout: options.timeout.inMilliseconds.toJS,
+      limitedUseAppCheckTokens: options.limitedUseAppCheckToken.toJS,
     );
 
     late functions_interop.HttpsCallable callable;
@@ -45,15 +45,11 @@ class HttpsCallableWeb extends HttpsCallablePlatform {
     }
 
     functions_interop.HttpsCallableResult response;
-    var input = parameters;
-    if ((input is Map) || (input is Iterable)) {
-      input = util.jsify(parameters);
-    }
 
     try {
-      response = await callable.call(input);
+      response = await callable.call(parameters?.jsify());
     } catch (e, s) {
-      throw convertFirebaseFunctionsException(e, s);
+      throw convertFirebaseFunctionsException(e as JSObject, s);
     }
 
     return response.data;
