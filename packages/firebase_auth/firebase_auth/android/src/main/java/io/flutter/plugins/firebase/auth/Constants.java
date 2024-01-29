@@ -19,7 +19,7 @@ public class Constants {
   public static final String SIGN_IN_METHOD_GITHUB = "github.com";
   public static final String SIGN_IN_METHOD_PHONE = "phone";
   public static final String SIGN_IN_METHOD_OAUTH = "oauth";
-  public static final String SIGN_IN_METHOD_PlAY_GAMES = "playgames.google.com";
+  public static final String SIGN_IN_METHOD_PLAY_GAMES = "playgames.google.com";
   // User
   public static final String USER = "user";
   public static final String EMAIL = "email";

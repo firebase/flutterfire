@@ -227,7 +227,7 @@ public class PigeonParser {
 
           return builder.build();
         }
-      case Constants.SIGN_IN_METHOD_PlAY_GAMES:
+      case Constants.SIGN_IN_METHOD_PLAY_GAMES:
         {
           String serverAuthCode =
               (String) Objects.requireNonNull(credentialMap.get(Constants.SERVER_AUTH_CODE));
