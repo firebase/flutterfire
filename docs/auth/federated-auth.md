@@ -91,37 +91,27 @@ Ensure the "Google" sign-in provider is enabled on the [Firebase Console](https:
   }
   ```
 
-## Google Play Games {:#games}
+## Google Play Games (Android only) {:#games}
 
-You can authenticate users in your Android game using Play Games Sign-In.
+Ensure the "Play Games" sign-in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers).
+Follow these instructions for [Play Games Firebase project set-up](https://firebase.google.com/docs/auth/android/play-games#set-up-firebase-project).
+
+Follow these [instructions for configuring Play Games services](https://firebase.google.com/docs/auth/android/play-games#configure-play-games-with-firebase-info)
+with your Firebase app.
 
 * {Android}
 
-  Follow the instructions for Google setup on Android, then configure
-  [Play Games services with your Firebase app information](https://firebase.google.com/docs/auth/android/play-games#configure-play-games-with-firebase-info).
+```dart
+Future<void> _signInWithPlayGames() async {
+  // Get server auth code from 3rd party provider
+  final serverAuthCode = '...';
+  final playGamesProvider = PlayGamesAuthProvider.credential(
+                                          serverAuthCode: serverAuthCode);
 
-  The following will trigger the sign-in flow, create a new credential and sign in the user:
-
-  ```dart
-  final googleUser = await GoogleSignIn(
-    signInOption: SignInOption.games,
-  ).signIn();
-
-  final googleAuth = await googleUser?.authentication;
-
-  if (googleAuth != null) {
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
-    // Once signed in, return the UserCredential
-    await _auth.signInWithCredential(credential);
-  }
-  ```
-
-
+  await FirebaseAuth.instance
+    .signInWithCredential(playGamesProvider);
+}
+```
 
 ## Facebook
 
