@@ -105,11 +105,11 @@ with your Firebase app.
 Future<void> _signInWithPlayGames() async {
   // Get server auth code from 3rd party provider
   final serverAuthCode = '...';
-  final playGamesProvider = PlayGamesAuthProvider.credential(
+  final playGamesCredential = PlayGamesAuthProvider.credential(
                                           serverAuthCode: serverAuthCode);
 
   await FirebaseAuth.instance
-    .signInWithCredential(playGamesProvider);
+    .signInWithCredential(playGamesCredential);
 }
 ```
 
