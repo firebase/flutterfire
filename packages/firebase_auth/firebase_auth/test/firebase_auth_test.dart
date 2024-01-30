@@ -230,6 +230,30 @@ void main() {
       });
     });
 
+    group('customAuthDomain', () {
+      test('set customAuthDomain should call delegate method', () async {
+        // Each test uses a unique FirebaseApp instance to avoid sharing state
+        final app = await Firebase.initializeApp(
+            name: 'customAuthDomainTest',
+            options: const FirebaseOptions(
+                apiKey: 'apiKey',
+                appId: 'appId',
+                messagingSenderId: 'messagingSenderId',
+                projectId: 'projectId'));
+
+        FirebaseAuthPlatform.instance =
+            FakeFirebaseAuthPlatform(customAuthDomain: 'foo');
+        auth = FirebaseAuth.instanceFor(app: app);
+
+        expect(auth.customAuthDomain, 'foo');
+
+        auth.customAuthDomain = 'bar';
+
+        expect(auth.customAuthDomain, 'bar');
+        expect(FirebaseAuthPlatform.instance.customAuthDomain, 'bar');
+      });
+    });
+
     group('languageCode', () {
       test('.languageCode should call delegate method', () {
         auth.languageCode;
@@ -1026,10 +1050,13 @@ class MockFirebaseAuth extends Mock
 class FakeFirebaseAuthPlatform extends Fake
     with MockPlatformInterfaceMixin
     implements FirebaseAuthPlatform {
-  FakeFirebaseAuthPlatform({this.tenantId});
+  FakeFirebaseAuthPlatform({this.tenantId, this.customAuthDomain});
 
   @override
   String? tenantId;
+
+  @override
+  String? customAuthDomain;
 
   @override
   FirebaseAuthPlatform delegateFor(
