@@ -36,6 +36,7 @@ export 'src/providers/phone_auth.dart';
 export 'src/providers/saml_auth.dart';
 export 'src/providers/twitter_auth.dart';
 export 'src/providers/yahoo_auth.dart';
+export 'src/providers/play_games_auth.dart';
 export 'src/types.dart';
 export 'src/user_info.dart';
 export 'src/user_metadata.dart';

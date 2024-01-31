@@ -39,6 +39,8 @@ export 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
         EmailAuthCredential,
         FacebookAuthProvider,
         FacebookAuthCredential,
+        PlayGamesAuthProvider,
+        PlayGamesAuthCredential,
         GithubAuthProvider,
         GithubAuthCredential,
         GoogleAuthProvider,
