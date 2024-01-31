@@ -244,6 +244,24 @@ Future<UserCredential> signInWithApple() async {
 }
 ```
 
+## Apple Game Center (Apple only) {:#games}
+
+Ensure the "Game Center" sign-in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers).
+Follow these instructions for [Game Center Firebase project set-up](https://firebase.google.com/docs/auth/ios/game-center#before_you_begin).
+
+You will need to login with Game Center before a Firebase Game Center credential can be issued and logged in via Firebase. [Here are some instructions](https://firebase.google.com/docs/auth/ios/game-center#integrate_game_center_sign-in_into_your_game)
+on how that can be achieved.
+
+* {iOS+}
+
+```dart
+Future<void> _signInWithGameCenter() async {
+  final credential = GameCenterAuthProvider.credential();
+  await FirebaseAuth.instance
+      .signInWithCredential(credential);
+}
+```
+
 ## Microsoft
 
 * {iOS+}
