@@ -52,6 +52,7 @@ class GameCenterAuthProvider extends AuthProvider {
     return this;
   }
 }
+
 /// The auth credential returned from calling
 /// [GameCenterAuthProvider.credential].
 class GameCenterAuthCredential extends OAuthCredential {
