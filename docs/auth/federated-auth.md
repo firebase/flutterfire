@@ -257,7 +257,7 @@ on how that can be achieved.
 ```dart
 Future<void> _signInWithGameCenter() async {
   final credential = GameCenterAuthProvider.credential();
-  final user = await FirebaseAuth.instance
+  await FirebaseAuth.instance
       .signInWithCredential(credential);
 }
 ```
