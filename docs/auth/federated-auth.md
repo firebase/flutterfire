@@ -104,6 +104,8 @@ with your Firebase app.
 ```dart
 Future<void> _signInWithPlayGames() async {
   // Get server auth code from 3rd party provider
+  // See PR description for details on how you might get the server auth code:
+  // https://github.com/firebase/flutterfire/pull/12201#issue-2100392487
   final serverAuthCode = '...';
   final playGamesCredential = PlayGamesAuthProvider.credential(
                                           serverAuthCode: serverAuthCode);
