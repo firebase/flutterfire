@@ -11,7 +11,10 @@
 // This file exports utilities shared between firebase packages, without making
 // them public.
 
+import 'dart:js_interop';
+
 import 'package:firebase_core/firebase_core.dart';
+
 import 'src/interop_shimmer.dart'
     if (dart.library.js) 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
@@ -55,11 +58,12 @@ FirebaseException _firebaseExceptionFromCoreFirebaseError(
   required String Function(String) codeParser,
   required String Function(String code, String message)? messageParser,
 }) {
-  final code = codeParser(firebaseError.code);
+  final code = codeParser(firebaseError.code.toDart);
 
   final message = messageParser != null
-      ? messageParser(code, firebaseError.message)
-      : firebaseError.message.replaceFirst('(${firebaseError.code})', '');
+      ? messageParser(code, firebaseError.message.toDart)
+      : firebaseError.message.toDart
+          .replaceFirst('(${firebaseError.code.toDart})', '');
 
   return FirebaseException(
     plugin: plugin,
