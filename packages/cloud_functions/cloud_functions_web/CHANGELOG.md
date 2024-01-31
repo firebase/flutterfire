@@ -1,3 +1,7 @@
+## 4.6.12
+
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
 ## 4.6.11
 
  - Update a dependency to the latest release.

@@ -1,3 +1,12 @@
+## 2.25.0
+
+ - **FIX**(auth,ios): Initialise static dictionary for custom auth domains ([#12157](https://github.com/firebase/flutterfire/issues/12157)). ([1262f3c6](https://github.com/firebase/flutterfire/commit/1262f3c6c5fb659217ccd609a5c6dc9e37ab8815))
+ - **FEAT**: bump Android SDK to version `32.7.1` ([#12213](https://github.com/firebase/flutterfire/issues/12213)). ([3c75bb52](https://github.com/firebase/flutterfire/commit/3c75bb527acbd7bb7a0d9f712d85e6fbc281e5e9))
+ - **FEAT**: bump iOS SDK to version `10.20.0` ([#12214](https://github.com/firebase/flutterfire/issues/12214)). ([e34e072a](https://github.com/firebase/flutterfire/commit/e34e072a94f19ef83c45080c52228c57d99971c9))
+ - **FEAT**: bump firebase iOS SDK to `10.19.0` ([#12125](https://github.com/firebase/flutterfire/issues/12125)). ([c3861567](https://github.com/firebase/flutterfire/commit/c38615672d53d4a4775cd7897ccbef3902b7fee4))
+ - **FEAT**: bump firebase android SDK BOM to `32.7.0` ([#12124](https://github.com/firebase/flutterfire/issues/12124)). ([a691f3d1](https://github.com/firebase/flutterfire/commit/a691f3d1309b29d6603b15a8aecf21287979e428))
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
 ## 2.24.2
 
  - **FIX**(core,windows): fix release build of Firebase Auth, Firestore and Storage on Windows ([#11997](https://github.com/firebase/flutterfire/issues/11997)). ([12b186a8](https://github.com/firebase/flutterfire/commit/12b186a82578f792d7f4c500f145f5bd4f398545))

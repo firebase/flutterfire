@@ -1,3 +1,7 @@
+## 5.1.4
+
+ - **FIX**(storage): ensure Task listeners correctly propagate exceptions and close properly. ([#12160](https://github.com/firebase/flutterfire/issues/12160)). ([759684b1](https://github.com/firebase/flutterfire/commit/759684b1b445bf238e9644ef1dc495cdc6a55dd8))
+
 ## 5.1.3
 
  - Update a dependency to the latest release.

@@ -3,6 +3,216 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-01-31
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v4.15.0`](#cloud_firestore---v4150)
+ - [`cloud_firestore_web` - `v3.10.0`](#cloud_firestore_web---v3100)
+ - [`cloud_functions` - `v4.6.1`](#cloud_functions---v461)
+ - [`cloud_functions_web` - `v4.6.12`](#cloud_functions_web---v4612)
+ - [`firebase_analytics` - `v10.8.1`](#firebase_analytics---v1081)
+ - [`firebase_analytics_web` - `v0.5.5+13`](#firebase_analytics_web---v05513)
+ - [`firebase_app_check_web` - `v0.1.0+11`](#firebase_app_check_web---v01011)
+ - [`firebase_app_installations` - `v0.2.4+9`](#firebase_app_installations---v0249)
+ - [`firebase_app_installations_web` - `v0.1.3+17`](#firebase_app_installations_web---v01317)
+ - [`firebase_auth` - `v4.17.0`](#firebase_auth---v4170)
+ - [`firebase_auth_platform_interface` - `v7.1.0`](#firebase_auth_platform_interface---v710)
+ - [`firebase_auth_web` - `v5.9.0`](#firebase_auth_web---v590)
+ - [`firebase_core` - `v2.25.0`](#firebase_core---v2250)
+ - [`firebase_core_web` - `v2.11.0`](#firebase_core_web---v2110)
+ - [`firebase_database` - `v10.4.1`](#firebase_database---v1041)
+ - [`firebase_database_web` - `v0.2.3+17`](#firebase_database_web---v02317)
+ - [`firebase_dynamic_links` - `v5.4.9`](#firebase_dynamic_links---v549)
+ - [`firebase_in_app_messaging` - `v0.7.4+9`](#firebase_in_app_messaging---v0749)
+ - [`firebase_messaging` - `v14.7.11`](#firebase_messaging---v14711)
+ - [`firebase_messaging_web` - `v3.6.0`](#firebase_messaging_web---v360)
+ - [`firebase_ml_model_downloader` - `v0.2.4+9`](#firebase_ml_model_downloader---v0249)
+ - [`firebase_performance` - `v0.9.3+9`](#firebase_performance---v0939)
+ - [`firebase_remote_config_web` - `v1.4.17`](#firebase_remote_config_web---v1417)
+ - [`firebase_storage` - `v11.6.1`](#firebase_storage---v1161)
+ - [`firebase_storage_platform_interface` - `v5.1.4`](#firebase_storage_platform_interface---v514)
+ - [`firebase_storage_web` - `v3.6.18`](#firebase_storage_web---v3618)
+ - [`firebase_app_check` - `v0.2.1+9`](#firebase_app_check---v0219)
+ - [`_flutterfire_internals` - `v1.3.17`](#_flutterfire_internals---v1317)
+ - [`firebase_crashlytics` - `v3.4.10`](#firebase_crashlytics---v3410)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.6+17`](#firebase_dynamic_links_platform_interface---v02617)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.4+17`](#firebase_in_app_messaging_platform_interface---v02417)
+ - [`firebase_crashlytics_platform_interface` - `v3.6.17`](#firebase_crashlytics_platform_interface---v3617)
+ - [`firebase_database_platform_interface` - `v0.2.5+17`](#firebase_database_platform_interface---v02517)
+ - [`firebase_remote_config` - `v4.3.9`](#firebase_remote_config---v439)
+ - [`firebase_ml_model_downloader_platform_interface` - `v0.1.4+17`](#firebase_ml_model_downloader_platform_interface---v01417)
+ - [`firebase_messaging_platform_interface` - `v4.5.19`](#firebase_messaging_platform_interface---v4519)
+ - [`firebase_app_installations_platform_interface` - `v0.1.4+17`](#firebase_app_installations_platform_interface---v01417)
+ - [`cloud_functions_platform_interface` - `v5.5.12`](#cloud_functions_platform_interface---v5512)
+ - [`firebase_analytics_platform_interface` - `v3.9.1`](#firebase_analytics_platform_interface---v391)
+ - [`firebase_remote_config_platform_interface` - `v1.4.17`](#firebase_remote_config_platform_interface---v1417)
+ - [`firebase_performance_web` - `v0.1.4+17`](#firebase_performance_web---v01417)
+ - [`cloud_firestore_platform_interface` - `v6.1.1`](#cloud_firestore_platform_interface---v611)
+ - [`firebase_performance_platform_interface` - `v0.1.4+17`](#firebase_performance_platform_interface---v01417)
+ - [`firebase_app_check_platform_interface` - `v0.1.0+11`](#firebase_app_check_platform_interface---v01011)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_app_check` - `v0.2.1+9`
+ - `_flutterfire_internals` - `v1.3.17`
+ - `firebase_crashlytics` - `v3.4.10`
+ - `firebase_dynamic_links_platform_interface` - `v0.2.6+17`
+ - `firebase_in_app_messaging_platform_interface` - `v0.2.4+17`
+ - `firebase_crashlytics_platform_interface` - `v3.6.17`
+ - `firebase_database_platform_interface` - `v0.2.5+17`
+ - `firebase_remote_config` - `v4.3.9`
+ - `firebase_ml_model_downloader_platform_interface` - `v0.1.4+17`
+ - `firebase_messaging_platform_interface` - `v4.5.19`
+ - `firebase_app_installations_platform_interface` - `v0.1.4+17`
+ - `cloud_functions_platform_interface` - `v5.5.12`
+ - `firebase_analytics_platform_interface` - `v3.9.1`
+ - `firebase_remote_config_platform_interface` - `v1.4.17`
+ - `firebase_performance_web` - `v0.1.4+17`
+ - `cloud_firestore_platform_interface` - `v6.1.1`
+ - `firebase_performance_platform_interface` - `v0.1.4+17`
+ - `firebase_app_check_platform_interface` - `v0.1.0+11`
+
+---
+
+#### `cloud_firestore` - `v4.15.0`
+
+ - **FIX**(firestore): revert breaking change to where() API. `null` cannot be used for `isEqualTo` or `isNotEqualTo` in a query. ([#12164](https://github.com/firebase/flutterfire/issues/12164)). ([cff6f767](https://github.com/firebase/flutterfire/commit/cff6f7674014037688815bdbe3198dd903a4b08e))
+ - **FIX**(firestore,web): update `setSettings` to allow usage of a up-to-date persistence on web ([#12041](https://github.com/firebase/flutterfire/issues/12041)). ([c9174334](https://github.com/firebase/flutterfire/commit/c917433452fb9125197c385cb121d8174cc56c20))
+ - **FEAT**(firestore,web): migrate web to js_interop to be compatible with WASM ([#12169](https://github.com/firebase/flutterfire/issues/12169)). ([57ebd529](https://github.com/firebase/flutterfire/commit/57ebd529de5def2bab1557a1bd9967ee4267c08a))
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
+#### `cloud_firestore_web` - `v3.10.0`
+
+ - **FIX**(firestore,web): update `setSettings` to allow usage of a up-to-date persistence on web ([#12041](https://github.com/firebase/flutterfire/issues/12041)). ([c9174334](https://github.com/firebase/flutterfire/commit/c917433452fb9125197c385cb121d8174cc56c20))
+ - **FEAT**(firestore,web): migrate web to js_interop to be compatible with WASM ([#12169](https://github.com/firebase/flutterfire/issues/12169)). ([57ebd529](https://github.com/firebase/flutterfire/commit/57ebd529de5def2bab1557a1bd9967ee4267c08a))
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
+#### `cloud_functions` - `v4.6.1`
+
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
+#### `cloud_functions_web` - `v4.6.12`
+
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
+#### `firebase_analytics` - `v10.8.1`
+
+ - **FIX**(analytics): `setCurrentScreen()` was deprecated, using `logScreenView()` instead ([#12085](https://github.com/firebase/flutterfire/issues/12085)). ([c6341b92](https://github.com/firebase/flutterfire/commit/c6341b92209d6ac80733eb7bfdbac679f44306ec))
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
+#### `firebase_analytics_web` - `v0.5.5+13`
+
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
+#### `firebase_app_check_web` - `v0.1.0+11`
+
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
+#### `firebase_app_installations` - `v0.2.4+9`
+
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
+#### `firebase_app_installations_web` - `v0.1.3+17`
+
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
+#### `firebase_auth` - `v4.17.0`
+
+ - **FIX**(auth): deprecate `updateEmail()` & `fetchSignInMethodsForEmail()` ([#12143](https://github.com/firebase/flutterfire/issues/12143)). ([dcfd9e80](https://github.com/firebase/flutterfire/commit/dcfd9e801c3231d17821355df5865b179cf0bf11))
+ - **FEAT**(auth,apple): Game Center sign-in support ([#12228](https://github.com/firebase/flutterfire/issues/12228)). ([ac625ec7](https://github.com/firebase/flutterfire/commit/ac625ec7a2ceb8c7ef78180f3bcaa8294cf06a2e))
+ - **FEAT**(auth,android): Play Games provider sign-in support ([#12201](https://github.com/firebase/flutterfire/issues/12201)). ([1fb9019d](https://github.com/firebase/flutterfire/commit/1fb9019de1fd832223aa56139d98c1194b2d5efa))
+ - **FEAT**(auth,windows): add support for `creationTime` and `lastSignInTime` ([#12116](https://github.com/firebase/flutterfire/issues/12116)). ([387e9434](https://github.com/firebase/flutterfire/commit/387e94343a237d0976bdfa4f5c0e20c6922456fa))
+
+#### `firebase_auth_platform_interface` - `v7.1.0`
+
+ - **FIX**(firebase_auth): Fix `PlatformException` to `FirebaseAuthException` error message parsing ([#11533](https://github.com/firebase/flutterfire/issues/11533)). ([8fe8cfde](https://github.com/firebase/flutterfire/commit/8fe8cfdec3516b1739c8d1ba341d36d8b9729771))
+ - **FEAT**(auth,apple): Game Center sign-in support ([#12228](https://github.com/firebase/flutterfire/issues/12228)). ([ac625ec7](https://github.com/firebase/flutterfire/commit/ac625ec7a2ceb8c7ef78180f3bcaa8294cf06a2e))
+ - **FEAT**(auth,android): Play Games provider sign-in support ([#12201](https://github.com/firebase/flutterfire/issues/12201)). ([1fb9019d](https://github.com/firebase/flutterfire/commit/1fb9019de1fd832223aa56139d98c1194b2d5efa))
+
+#### `firebase_auth_web` - `v5.9.0`
+
+ - **FEAT**(firestore,web): migrate web to js_interop to be compatible with WASM ([#12169](https://github.com/firebase/flutterfire/issues/12169)). ([57ebd529](https://github.com/firebase/flutterfire/commit/57ebd529de5def2bab1557a1bd9967ee4267c08a))
+ - **FEAT**(auth,web): migrate web to js_interop to be compatible with WASM ([#12145](https://github.com/firebase/flutterfire/issues/12145)). ([8d2df7a1](https://github.com/firebase/flutterfire/commit/8d2df7a1b2198797e9c95c45efaf21b4e5bfe766))
+
+#### `firebase_core` - `v2.25.0`
+
+ - **FIX**(auth,ios): Initialise static dictionary for custom auth domains ([#12157](https://github.com/firebase/flutterfire/issues/12157)). ([1262f3c6](https://github.com/firebase/flutterfire/commit/1262f3c6c5fb659217ccd609a5c6dc9e37ab8815))
+ - **FEAT**: bump Android SDK to version `32.7.1` ([#12213](https://github.com/firebase/flutterfire/issues/12213)). ([3c75bb52](https://github.com/firebase/flutterfire/commit/3c75bb527acbd7bb7a0d9f712d85e6fbc281e5e9))
+ - **FEAT**: bump iOS SDK to version `10.20.0` ([#12214](https://github.com/firebase/flutterfire/issues/12214)). ([e34e072a](https://github.com/firebase/flutterfire/commit/e34e072a94f19ef83c45080c52228c57d99971c9))
+ - **FEAT**: bump firebase iOS SDK to `10.19.0` ([#12125](https://github.com/firebase/flutterfire/issues/12125)). ([c3861567](https://github.com/firebase/flutterfire/commit/c38615672d53d4a4775cd7897ccbef3902b7fee4))
+ - **FEAT**: bump firebase android SDK BOM to `32.7.0` ([#12124](https://github.com/firebase/flutterfire/issues/12124)). ([a691f3d1](https://github.com/firebase/flutterfire/commit/a691f3d1309b29d6603b15a8aecf21287979e428))
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
+#### `firebase_core_web` - `v2.11.0`
+
+ - **FEAT**(firestore,web): migrate web to js_interop to be compatible with WASM ([#12169](https://github.com/firebase/flutterfire/issues/12169)). ([57ebd529](https://github.com/firebase/flutterfire/commit/57ebd529de5def2bab1557a1bd9967ee4267c08a))
+ - **FEAT**(auth,web): migrate web to js_interop to be compatible with WASM ([#12145](https://github.com/firebase/flutterfire/issues/12145)). ([8d2df7a1](https://github.com/firebase/flutterfire/commit/8d2df7a1b2198797e9c95c45efaf21b4e5bfe766))
+ - **FEAT**(core,web): migrate web to js_interop to be compatible with WASM ([#12031](https://github.com/firebase/flutterfire/issues/12031)). ([96f79d21](https://github.com/firebase/flutterfire/commit/96f79d21f51712769f33a601e4564b90d4a60a33))
+
+#### `firebase_database` - `v10.4.1`
+
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
+#### `firebase_database_web` - `v0.2.3+17`
+
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
+#### `firebase_dynamic_links` - `v5.4.9`
+
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
+#### `firebase_in_app_messaging` - `v0.7.4+9`
+
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
+#### `firebase_messaging` - `v14.7.11`
+
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
+#### `firebase_messaging_web` - `v3.6.0`
+
+ - **FEAT**(messaging,web): migrate web to js_interop to be compatible with WASM ([#12223](https://github.com/firebase/flutterfire/issues/12223)). ([6ada2379](https://github.com/firebase/flutterfire/commit/6ada2379f22be7051364670471244330f2528bcb))
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
+#### `firebase_ml_model_downloader` - `v0.2.4+9`
+
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
+#### `firebase_performance` - `v0.9.3+9`
+
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
+#### `firebase_remote_config_web` - `v1.4.17`
+
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
+#### `firebase_storage` - `v11.6.1`
+
+ - **FIX**(storage,windows): `getData()` crash has been fixed ([#12185](https://github.com/firebase/flutterfire/issues/12185)). ([ed8c7c51](https://github.com/firebase/flutterfire/commit/ed8c7c51d28398b1f68af404bdd855b75a1b1f56))
+ - **FIX**(storage): ensure Task listeners correctly propagate exceptions and close properly. ([#12160](https://github.com/firebase/flutterfire/issues/12160)). ([759684b1](https://github.com/firebase/flutterfire/commit/759684b1b445bf238e9644ef1dc495cdc6a55dd8))
+ - **FIX**(storage,android): fix `refFromUrl()` when using firebase storage emulator. Essentially, check `10.0.2.2` domain as well. ([#12047](https://github.com/firebase/flutterfire/issues/12047)). ([cef006a6](https://github.com/firebase/flutterfire/commit/cef006a69bafeae1d3481220e2a5fb7386bdfbe3))
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
+#### `firebase_storage_platform_interface` - `v5.1.4`
+
+ - **FIX**(storage): ensure Task listeners correctly propagate exceptions and close properly. ([#12160](https://github.com/firebase/flutterfire/issues/12160)). ([759684b1](https://github.com/firebase/flutterfire/commit/759684b1b445bf238e9644ef1dc495cdc6a55dd8))
+
+#### `firebase_storage_web` - `v3.6.18`
+
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
+
 ## 2024-01-04
 
 ### Changes

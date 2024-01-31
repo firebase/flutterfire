@@ -1,3 +1,8 @@
+## 5.9.0
+
+ - **FEAT**(firestore,web): migrate web to js_interop to be compatible with WASM ([#12169](https://github.com/firebase/flutterfire/issues/12169)). ([57ebd529](https://github.com/firebase/flutterfire/commit/57ebd529de5def2bab1557a1bd9967ee4267c08a))
+ - **FEAT**(auth,web): migrate web to js_interop to be compatible with WASM ([#12145](https://github.com/firebase/flutterfire/issues/12145)). ([8d2df7a1](https://github.com/firebase/flutterfire/commit/8d2df7a1b2198797e9c95c45efaf21b4e5bfe766))
+
 ## 5.8.13
 
  - **FIX**(auth,web): fix typing of `getRedirectResult` on Web, preventing a crash ([#12036](https://github.com/firebase/flutterfire/issues/12036)). ([52c53f5c](https://github.com/firebase/flutterfire/commit/52c53f5c470aeca32e652cb0d477c5fc2bba7812))

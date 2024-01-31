@@ -1,3 +1,9 @@
+## 2.11.0
+
+ - **FEAT**(firestore,web): migrate web to js_interop to be compatible with WASM ([#12169](https://github.com/firebase/flutterfire/issues/12169)). ([57ebd529](https://github.com/firebase/flutterfire/commit/57ebd529de5def2bab1557a1bd9967ee4267c08a))
+ - **FEAT**(auth,web): migrate web to js_interop to be compatible with WASM ([#12145](https://github.com/firebase/flutterfire/issues/12145)). ([8d2df7a1](https://github.com/firebase/flutterfire/commit/8d2df7a1b2198797e9c95c45efaf21b4e5bfe766))
+ - **FEAT**(core,web): migrate web to js_interop to be compatible with WASM ([#12031](https://github.com/firebase/flutterfire/issues/12031)). ([96f79d21](https://github.com/firebase/flutterfire/commit/96f79d21f51712769f33a601e4564b90d4a60a33))
+
 ## 2.10.0
 
  - **FEAT**: bump JS SDK to version 10.7.0 ([#11980](https://github.com/firebase/flutterfire/issues/11980)). ([ba1924d8](https://github.com/firebase/flutterfire/commit/ba1924d8544507f32071f37258adecb11182cdfe))
