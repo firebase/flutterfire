@@ -1,3 +1,10 @@
+## 4.17.0
+
+ - **FIX**(auth): deprecate `updateEmail()` & `fetchSignInMethodsForEmail()` ([#12143](https://github.com/firebase/flutterfire/issues/12143)). ([dcfd9e80](https://github.com/firebase/flutterfire/commit/dcfd9e801c3231d17821355df5865b179cf0bf11))
+ - **FEAT**(auth,apple): Game Center sign-in support ([#12228](https://github.com/firebase/flutterfire/issues/12228)). ([ac625ec7](https://github.com/firebase/flutterfire/commit/ac625ec7a2ceb8c7ef78180f3bcaa8294cf06a2e))
+ - **FEAT**(auth,android): Play Games provider sign-in support ([#12201](https://github.com/firebase/flutterfire/issues/12201)). ([1fb9019d](https://github.com/firebase/flutterfire/commit/1fb9019de1fd832223aa56139d98c1194b2d5efa))
+ - **FEAT**(auth,windows): add support for `creationTime` and `lastSignInTime` ([#12116](https://github.com/firebase/flutterfire/issues/12116)). ([387e9434](https://github.com/firebase/flutterfire/commit/387e94343a237d0976bdfa4f5c0e20c6922456fa))
+
 ## 4.16.0
 
  - **FIX**(auth,windows): fix a parsing issue of the Pigeon message on Windows for sendPasswordResetEmail ([#12082](https://github.com/firebase/flutterfire/issues/12082)). ([17c4ab12](https://github.com/firebase/flutterfire/commit/17c4ab128650c8e7a4f7e3cea0c55d1fea0998fd))

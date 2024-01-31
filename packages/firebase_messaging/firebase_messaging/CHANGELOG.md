@@ -1,3 +1,7 @@
+## 14.7.11
+
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
 ## 14.7.10
 
  - **FIX**(messaging,android): increase notification storage limit to `100` ([#12060](https://github.com/firebase/flutterfire/issues/12060)). ([2718db66](https://github.com/firebase/flutterfire/commit/2718db663e61ecb2fd4333553a17ebb217e77330))

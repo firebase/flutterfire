@@ -1,3 +1,10 @@
+## 11.6.1
+
+ - **FIX**(storage,windows): `getData()` crash has been fixed ([#12185](https://github.com/firebase/flutterfire/issues/12185)). ([ed8c7c51](https://github.com/firebase/flutterfire/commit/ed8c7c51d28398b1f68af404bdd855b75a1b1f56))
+ - **FIX**(storage): ensure Task listeners correctly propagate exceptions and close properly. ([#12160](https://github.com/firebase/flutterfire/issues/12160)). ([759684b1](https://github.com/firebase/flutterfire/commit/759684b1b445bf238e9644ef1dc495cdc6a55dd8))
+ - **FIX**(storage,android): fix `refFromUrl()` when using firebase storage emulator. Essentially, check `10.0.2.2` domain as well. ([#12047](https://github.com/firebase/flutterfire/issues/12047)). ([cef006a6](https://github.com/firebase/flutterfire/commit/cef006a69bafeae1d3481220e2a5fb7386bdfbe3))
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
 ## 11.6.0
 
  - **FEAT**: allow users to disable automatic host mapping ([#11962](https://github.com/firebase/flutterfire/issues/11962)). ([13c1ce33](https://github.com/firebase/flutterfire/commit/13c1ce333b8cd113241a1f7ac07181c1c76194bc))

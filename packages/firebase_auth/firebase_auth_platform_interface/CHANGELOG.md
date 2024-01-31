@@ -1,3 +1,9 @@
+## 7.1.0
+
+ - **FIX**(firebase_auth): Fix `PlatformException` to `FirebaseAuthException` error message parsing ([#11533](https://github.com/firebase/flutterfire/issues/11533)). ([8fe8cfde](https://github.com/firebase/flutterfire/commit/8fe8cfdec3516b1739c8d1ba341d36d8b9729771))
+ - **FEAT**(auth,apple): Game Center sign-in support ([#12228](https://github.com/firebase/flutterfire/issues/12228)). ([ac625ec7](https://github.com/firebase/flutterfire/commit/ac625ec7a2ceb8c7ef78180f3bcaa8294cf06a2e))
+ - **FEAT**(auth,android): Play Games provider sign-in support ([#12201](https://github.com/firebase/flutterfire/issues/12201)). ([1fb9019d](https://github.com/firebase/flutterfire/commit/1fb9019de1fd832223aa56139d98c1194b2d5efa))
+
 ## 7.0.9
 
  - **FIX**(auth): return email address if one is returned by the auth exception ([#11978](https://github.com/firebase/flutterfire/issues/11978)). ([ceee304d](https://github.com/firebase/flutterfire/commit/ceee304dd87cd66e34a7f7fa67c9961b72c10e72))

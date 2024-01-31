@@ -1,3 +1,7 @@
+## 10.4.1
+
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
 ## 10.4.0
 
  - **FEAT**(database,android): automatically map the host to 10.0.2.2  when using useDatabaseEmulator to match other plugins ([#11976](https://github.com/firebase/flutterfire/issues/11976)). ([6c6c589a](https://github.com/firebase/flutterfire/commit/6c6c589a953a43ba79aa20404a0380bcbefba140))

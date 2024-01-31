@@ -1,3 +1,8 @@
+## 3.6.0
+
+ - **FEAT**(messaging,web): migrate web to js_interop to be compatible with WASM ([#12223](https://github.com/firebase/flutterfire/issues/12223)). ([6ada2379](https://github.com/firebase/flutterfire/commit/6ada2379f22be7051364670471244330f2528bcb))
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
 ## 3.5.18
 
  - Update a dependency to the latest release.
