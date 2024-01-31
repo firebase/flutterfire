@@ -1405,7 +1405,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
         [FlutterError
             errorWithCode:@"sign-in-failure"
                   message:
-                      @"Game Center sign-in requires signing in with 'linkWithCredential()' API."
+                      @"Game Center sign-in requires signing in with 'signInWithCredential()' API."
                   details:@{}]);
     return;
   }
@@ -1648,6 +1648,16 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
                                               FlutterError *_Nullable))completion {
   FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
   FIRUser *currentUser = auth.currentUser;
+  if ([signInProvider.providerId isEqualToString:kSignInMethodGameCenter]) {
+    completion(
+        nil,
+        [FlutterError
+            errorWithCode:@"provider-link-failure"
+                  message:@"Game Center provider requires linking with 'linkWithCredential()' API."
+                  details:@{}]);
+    return;
+  }
+
   if (currentUser == nil) {
     completion(nil, [FlutterError errorWithCode:kErrCodeNoCurrentUser
                                         message:kErrMsgNoCurrentUser
