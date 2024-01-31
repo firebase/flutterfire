@@ -30,14 +30,14 @@ FirebaseAppPlatform _createFromJsApp(firebase.App jsApp) {
 /// Returns a [FirebaseOptions] instance from [firebase.FirebaseOptions].
 FirebaseOptions _createFromJsOptions(firebase.FirebaseOptions options) {
   return FirebaseOptions(
-    apiKey: options.apiKey,
-    authDomain: options.authDomain,
-    databaseURL: options.databaseURL,
-    projectId: options.projectId,
-    storageBucket: options.storageBucket,
-    messagingSenderId: options.messagingSenderId,
-    appId: options.appId,
-    measurementId: options.measurementId,
+    apiKey: options.apiKey.toDart,
+    authDomain: options.authDomain.toDart,
+    databaseURL: options.databaseURL.toDart,
+    projectId: options.projectId.toDart,
+    storageBucket: options.storageBucket.toDart,
+    messagingSenderId: options.messagingSenderId.toDart,
+    appId: options.appId.toDart,
+    measurementId: options.measurementId.toDart,
   );
 }
 

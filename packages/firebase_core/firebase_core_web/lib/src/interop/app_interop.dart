@@ -8,6 +8,8 @@
 @JS('firebase_core')
 library firebase_interop.core.app;
 
+import 'dart:js_interop';
+
 import 'package:js/js.dart';
 
 import 'core_interop.dart';
@@ -17,6 +19,6 @@ import 'core_interop.dart';
 abstract class AppJsImpl {}
 
 extension AppJsImplExtension on AppJsImpl {
-  external String get name;
+  external JSString get name;
   external FirebaseOptions get options;
 }
