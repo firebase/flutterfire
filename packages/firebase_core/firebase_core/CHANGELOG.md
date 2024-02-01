@@ -1,3 +1,7 @@
+## 2.25.1
+
+ - Update a dependency to the latest release.
+
 ## 2.25.0
 
  - **FIX**(auth,ios): Initialise static dictionary for custom auth domains ([#12157](https://github.com/firebase/flutterfire/issues/12157)). ([1262f3c6](https://github.com/firebase/flutterfire/commit/1262f3c6c5fb659217ccd609a5c6dc9e37ab8815))

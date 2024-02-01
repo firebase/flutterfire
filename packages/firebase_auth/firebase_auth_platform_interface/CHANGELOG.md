@@ -1,3 +1,7 @@
+## 7.1.1
+
+ - Update a dependency to the latest release.
+
 ## 7.1.0
 
  - **FIX**(firebase_auth): Fix `PlatformException` to `FirebaseAuthException` error message parsing ([#11533](https://github.com/firebase/flutterfire/issues/11533)). ([8fe8cfde](https://github.com/firebase/flutterfire/commit/8fe8cfdec3516b1739c8d1ba341d36d8b9729771))

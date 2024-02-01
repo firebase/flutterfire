@@ -1,3 +1,7 @@
+## 3.10.1
+
+ - Update a dependency to the latest release.
+
 ## 3.10.0
 
  - **FIX**(firestore,web): update `setSettings` to allow usage of a up-to-date persistence on web ([#12041](https://github.com/firebase/flutterfire/issues/12041)). ([c9174334](https://github.com/firebase/flutterfire/commit/c917433452fb9125197c385cb121d8174cc56c20))

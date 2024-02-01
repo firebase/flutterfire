@@ -1,3 +1,7 @@
+## 2.11.1
+
+ - **FIX**(core,web): fix some JS interop that were incorrectly migrated ([#12239](https://github.com/firebase/flutterfire/issues/12239)). ([e38a510b](https://github.com/firebase/flutterfire/commit/e38a510b770068c1f2e4e515b7ed252f10ac2219))
+
 ## 2.11.0
 
  - **FEAT**(firestore,web): migrate web to js_interop to be compatible with WASM ([#12169](https://github.com/firebase/flutterfire/issues/12169)). ([57ebd529](https://github.com/firebase/flutterfire/commit/57ebd529de5def2bab1557a1bd9967ee4267c08a))
