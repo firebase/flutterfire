@@ -308,7 +308,7 @@ class IdTokenResult extends JsObjectWrapper<auth_interop.IdTokenResultImpl> {
   /// custom, phone, password, etc).
   ///
   /// Note, this does not map to provider IDs.
-  String get signInProvider => jsObject.signInProvider.toDart;
+  String? get signInProvider => jsObject.signInProvider?.toDart;
 
   /// The Firebase Auth ID token JWT string.
   String get token => jsObject.token.toDart;

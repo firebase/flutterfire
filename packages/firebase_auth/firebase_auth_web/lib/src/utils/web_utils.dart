@@ -132,8 +132,8 @@ ActionCodeInfo? convertWebActionCodeInfo(
   return ActionCodeInfo(
     operation: ActionCodeInfoOperation.passwordReset,
     data: ActionCodeInfoData(
-      email: webActionCodeInfo.data.email.toDart,
-      previousEmail: webActionCodeInfo.data.previousEmail.toDart,
+      email: webActionCodeInfo.data.email?.toDart,
+      previousEmail: webActionCodeInfo.data.previousEmail?.toDart,
     ),
   );
 }
