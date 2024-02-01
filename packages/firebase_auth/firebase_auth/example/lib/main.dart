@@ -38,6 +38,11 @@ Future<void> main() async {
     await auth.useAuthEmulator('localhost', 9099);
   }
 
+  await FirebaseAuth.instance.signInAnonymously();
+
+  final idToken = await FirebaseAuth.instance.currentUser?.getIdToken() ?? '';
+  print(idToken);
+
   if (!kIsWeb && Platform.isWindows) {
     await GoogleSignInDart.register(
       clientId:

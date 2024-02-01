@@ -798,9 +798,9 @@ extension UserCredentialJsImplExtension on UserCredentialJsImpl {
 class AdditionalUserInfoJsImpl {}
 
 extension AdditionalUserInfoJsImplExtension on AdditionalUserInfoJsImpl {
-  external JSString get providerId;
-  external JSObject get profile;
-  external JSString get username;
+  external JSString? get providerId;
+  external JSObject? get profile;
+  external JSString? get username;
   external JSBoolean get isNewUser;
 }
 
