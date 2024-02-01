@@ -5,8 +5,8 @@ environment:
   sdk: '>=2.18.0 <4.0.0'
 
 dependencies:
-  cloud_firestore: ^4.15.1
-  firebase_core: ^2.25.1
+  cloud_firestore: ^4.15.2
+  firebase_core: ^2.25.2
   flutter:
     sdk: flutter
   http: ^1.0.0
