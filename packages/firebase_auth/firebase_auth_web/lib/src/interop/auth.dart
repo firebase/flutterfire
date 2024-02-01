@@ -343,7 +343,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// SMS templates for phone authentication, reCAPTCHA verifier and OAuth
   /// popup/redirect operations provided the specified providers support
   /// localization with the language code specified.
-  String get languageCode => jsObject.languageCode.toDart;
+  String? get languageCode => jsObject.languageCode?.toDart;
 
   set languageCode(String? s) {
     jsObject.languageCode = s?.toJS;

@@ -307,7 +307,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   String get languageCode {
-    return delegate.languageCode;
+    return delegate.languageCode ?? 'en';
   }
 
   @override

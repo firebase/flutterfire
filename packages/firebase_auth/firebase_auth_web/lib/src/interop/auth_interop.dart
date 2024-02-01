@@ -277,8 +277,8 @@ abstract class AuthJsImpl {}
 
 extension AuthJsImplExtension on AuthJsImpl {
   external AppJsImpl get app;
-  external UserJsImpl get currentUser;
-  external JSString get languageCode;
+  external UserJsImpl? get currentUser;
+  external JSString? get languageCode;
   external set languageCode(JSString? s);
   external AuthSettings get settings;
   external JSString? get tenantId;
