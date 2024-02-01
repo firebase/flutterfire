@@ -5,12 +5,10 @@
 // A library that mimicks package:firebase_core_web/firebase_core_web_interop.dart
 // for platforms that do not target dart2js``
 
-import 'dart:js_interop';
-
 abstract class FirebaseError {
-  JSString get code;
-  JSString get message;
-  JSString get name;
-  JSString get stack;
-  JSAny get serverResponse;
+  String get code;
+  String get message;
+  String get name;
+  String get stack;
+  dynamic get serverResponse;
 }

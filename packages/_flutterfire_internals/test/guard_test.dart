@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:js_interop';
-
 import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:_flutterfire_internals/src/interop_shimmer.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -59,17 +57,17 @@ void main() {
 
 class _FirebaseError implements FirebaseError {
   @override
-  JSString get code => ''.toJS;
+  String get code => '';
 
   @override
-  JSString get message => ''.toJS;
+  String get message => '';
 
   @override
-  JSString get name => ''.toJS;
+  String get name => '';
 
   @override
-  JSString get serverResponse => ''.toJS;
+  String get serverResponse => '';
 
   @override
-  JSString get stack => ''.toJS;
+  String get stack => '';
 }

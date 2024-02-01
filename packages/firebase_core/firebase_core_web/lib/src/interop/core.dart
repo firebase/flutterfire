@@ -60,3 +60,19 @@ App app([String? name]) {
         : firebase_interop.getApp(),
   );
 }
+
+class FirebaseError {
+  final String code;
+  final String message;
+  final String name;
+  final String stack;
+  final dynamic serverResponse;
+
+  FirebaseError({
+    required this.code,
+    required this.message,
+    required this.name,
+    required this.stack,
+    required this.serverResponse,
+  });
+}

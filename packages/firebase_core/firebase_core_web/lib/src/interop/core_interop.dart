@@ -35,12 +35,12 @@ external JSPromise deleteApp(AppJsImpl app);
 /// In addition to a message string, it contains a string-valued code.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.FirebaseError>.
-@JS()
+@JS('FirebaseError')
 @anonymous
 @staticInterop
-abstract class FirebaseError {}
+abstract class FirebaseErrorJSImpl {}
 
-extension FirebaseErrorExtension on FirebaseError {
+extension FirebaseErrorExtension on FirebaseErrorJSImpl {
   external JSString get code;
   external JSString get message;
   external JSString get name;
