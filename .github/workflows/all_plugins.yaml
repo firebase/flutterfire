@@ -21,6 +21,8 @@ on:
 jobs:
   analyze:
     timeout-minutes: 45
+    env:
+      PUB_HOSTED_URL: https://pub.globe.dev
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
@@ -39,6 +41,8 @@ jobs:
   # You need to switch to Flutter 3.3.0, and run this test manually to check it works and update PR to confirm its success
   pub_dry_run:
     timeout-minutes: 30
+    env:
+      PUB_HOSTED_URL: https://pub.globe.dev
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
@@ -56,6 +60,8 @@ jobs:
 
   pub_get_check:
     timeout-minutes: 30
+    env:
+      PUB_HOSTED_URL: https://pub.globe.dev
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
@@ -74,6 +80,8 @@ jobs:
   format:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      PUB_HOSTED_URL: https://pub.globe.dev
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
       - uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225
@@ -106,6 +114,8 @@ jobs:
 
   build_examples_dart:
     timeout-minutes: 30
+    env:
+      PUB_HOSTED_URL: https://pub.globe.dev
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
@@ -124,6 +134,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      PUB_HOSTED_URL: https://pub.globe.dev
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
       - uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225
@@ -141,6 +153,8 @@ jobs:
   check-files-license-headers:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      PUB_HOSTED_URL: https://pub.globe.dev
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
       - uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491
