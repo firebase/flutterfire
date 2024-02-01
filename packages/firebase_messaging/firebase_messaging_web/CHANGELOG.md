@@ -1,3 +1,7 @@
+## 3.6.1
+
+ - Update a dependency to the latest release.
+
 ## 3.6.0
 
  - **FEAT**(messaging,web): migrate web to js_interop to be compatible with WASM ([#12223](https://github.com/firebase/flutterfire/issues/12223)). ([6ada2379](https://github.com/firebase/flutterfire/commit/6ada2379f22be7051364670471244330f2528bcb))

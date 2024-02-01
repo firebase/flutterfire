@@ -1,3 +1,7 @@
+## 1.3.18
+
+ - **FIX**(core,web): fix some JS interop that were incorrectly migrated ([#12239](https://github.com/firebase/flutterfire/issues/12239)). ([e38a510b](https://github.com/firebase/flutterfire/commit/e38a510b770068c1f2e4e515b7ed252f10ac2219))
+
 ## 1.3.17
 
  - Update a dependency to the latest release.

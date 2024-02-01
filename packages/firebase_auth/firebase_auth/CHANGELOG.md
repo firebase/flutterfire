@@ -1,3 +1,7 @@
+## 4.17.1
+
+ - Update a dependency to the latest release.
+
 ## 4.17.0
 
  - **FIX**(auth): deprecate `updateEmail()` & `fetchSignInMethodsForEmail()` ([#12143](https://github.com/firebase/flutterfire/issues/12143)). ([dcfd9e80](https://github.com/firebase/flutterfire/commit/dcfd9e801c3231d17821355df5865b179cf0bf11))

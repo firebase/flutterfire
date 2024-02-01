@@ -1,3 +1,7 @@
+## 10.8.2
+
+ - Update a dependency to the latest release.
+
 ## 10.8.1
 
  - **FIX**(analytics): `setCurrentScreen()` was deprecated, using `logScreenView()` instead ([#12085](https://github.com/firebase/flutterfire/issues/12085)). ([c6341b92](https://github.com/firebase/flutterfire/commit/c6341b92209d6ac80733eb7bfdbac679f44306ec))

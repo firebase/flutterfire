@@ -1,3 +1,7 @@
+## 4.15.1
+
+ - Update a dependency to the latest release.
+
 ## 4.15.0
 
  - **FIX**(firestore): revert breaking change to where() API. `null` cannot be used for `isEqualTo` or `isNotEqualTo` in a query. ([#12164](https://github.com/firebase/flutterfire/issues/12164)). ([cff6f767](https://github.com/firebase/flutterfire/commit/cff6f7674014037688815bdbe3198dd903a4b08e))

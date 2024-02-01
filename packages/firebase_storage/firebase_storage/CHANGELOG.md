@@ -1,3 +1,7 @@
+## 11.6.2
+
+ - Update a dependency to the latest release.
+
 ## 11.6.1
 
  - **FIX**(storage,windows): `getData()` crash has been fixed ([#12185](https://github.com/firebase/flutterfire/issues/12185)). ([ed8c7c51](https://github.com/firebase/flutterfire/commit/ed8c7c51d28398b1f68af404bdd855b75a1b1f56))

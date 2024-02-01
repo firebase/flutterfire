@@ -6,8 +6,8 @@ environment:
   flutter: '>=3.3.0'
 
 dependencies:
-  cloud_functions: ^4.6.1
-  firebase_core: ^2.25.0
+  cloud_functions: ^4.6.2
+  firebase_core: ^2.25.1
   flutter:
     sdk: flutter
 
