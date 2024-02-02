@@ -1,3 +1,7 @@
+## 4.15.3
+
+ - **FIX**(firestore,web): fix an issue where nested object could be incorrectly decoded from JSObjects ([#12272](https://github.com/firebase/flutterfire/issues/12272)). ([bd27d1d9](https://github.com/firebase/flutterfire/commit/bd27d1d9763acdff88a6a5f42142986f8643fae9))
+
 ## 4.15.2
 
  - Update a dependency to the latest release.
