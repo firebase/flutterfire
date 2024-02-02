@@ -129,10 +129,15 @@ class FirebaseCoreWeb extends FirebasePlatform {
         web.document.createElement('script') as web.HTMLScriptElement;
     script.type = 'text/javascript';
     script.crossOrigin = 'anonymous';
+    final stringUrl = trustedUrl != null
+        // Necessary for the JS interop to work correctly on Flutter Beta 3.19.
+        // ignore: unnecessary_cast
+        ? (trustedUrl as JSObject).callMethod('toString'.toJS)
+        : src;
     script.text = '''
       window.ff_trigger_$windowVar = async (callback) => {
         console.debug("Initializing Firebase $windowVar");
-        callback(await import("${trustedUrl != null ? trustedUrl.callMethod('toString'.toJS) : src}"));
+        callback(await import("$stringUrl"));
       };
     ''';
 
