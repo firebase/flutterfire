@@ -1,3 +1,8 @@
+## 5.9.3
+
+ - **FIX**(auth,web): fix null safety issue in typing JS Interop for OAuthCredential ([#12270](https://github.com/firebase/flutterfire/issues/12270)). ([7de58e43](https://github.com/firebase/flutterfire/commit/7de58e438337355f51a144868a0843bdc2e73f6e))
+ - **FIX**(core,web): fix Recaptcha instantiation error ([#12268](https://github.com/firebase/flutterfire/issues/12268)). ([de2fe990](https://github.com/firebase/flutterfire/commit/de2fe99063d2919e2c109f355f3cf41afdf1f626))
+
 ## 5.9.2
 
  - **FIX**(auth,web): fix null safety issue in typing JS Interop ([#12250](https://github.com/firebase/flutterfire/issues/12250)). ([d0d30405](https://github.com/firebase/flutterfire/commit/d0d30405a895ae221603ddd158b1cb1636312fb4))

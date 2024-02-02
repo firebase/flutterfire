@@ -1,3 +1,8 @@
+## 2.11.3
+
+ - **FIX**(core,web): fix an incompatibility with Flutter Beta that would occur when calling method on TrustedScriptURL ([#12274](https://github.com/firebase/flutterfire/issues/12274)). ([c395da52](https://github.com/firebase/flutterfire/commit/c395da524debb0c310d9a60391a2442e0dcbce1f))
+ - **FIX**(core,web): fix null safety issue in typing JS Interop ([#12266](https://github.com/firebase/flutterfire/issues/12266)). ([8d944a25](https://github.com/firebase/flutterfire/commit/8d944a25e40c52ef1b14e23f8f52d3758e980856))
+
 ## 2.11.2
 
  - **FIX**(auth,web): fix null safety issue in typing JS Interop ([#12250](https://github.com/firebase/flutterfire/issues/12250)). ([d0d30405](https://github.com/firebase/flutterfire/commit/d0d30405a895ae221603ddd158b1cb1636312fb4))

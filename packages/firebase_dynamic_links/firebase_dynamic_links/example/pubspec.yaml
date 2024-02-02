@@ -6,8 +6,8 @@ environment:
   flutter: '>=3.3.0'
 
 dependencies:
-  firebase_core: ^2.25.2
-  firebase_dynamic_links: ^5.4.11
+  firebase_core: ^2.25.3
+  firebase_dynamic_links: ^5.4.12
   flutter:
     sdk: flutter
   url_launcher: ^6.1.10
