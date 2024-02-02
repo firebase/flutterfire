@@ -68,20 +68,20 @@ class FirebaseOptions {
 }
 
 extension FirebaseOptionsExtension on FirebaseOptions {
-  external JSString get apiKey;
-  external set apiKey(JSString s);
-  external JSString get authDomain;
-  external set authDomain(JSString s);
-  external JSString get databaseURL;
-  external set databaseURL(JSString s);
-  external JSString get projectId;
-  external set projectId(JSString s);
-  external JSString get storageBucket;
-  external set storageBucket(JSString s);
-  external JSString get messagingSenderId;
-  external set messagingSenderId(JSString s);
-  external JSString get measurementId;
-  external set measurementId(JSString s);
-  external JSString get appId;
-  external set appId(JSString s);
+  external JSString? get apiKey;
+  external set apiKey(JSString? s);
+  external JSString? get authDomain;
+  external set authDomain(JSString? s);
+  external JSString? get databaseURL;
+  external set databaseURL(JSString? s);
+  external JSString? get projectId;
+  external set projectId(JSString? s);
+  external JSString? get storageBucket;
+  external set storageBucket(JSString? s);
+  external JSString? get messagingSenderId;
+  external set messagingSenderId(JSString? s);
+  external JSString? get measurementId;
+  external set measurementId(JSString? s);
+  external JSString? get appId;
+  external set appId(JSString? s);
 }
