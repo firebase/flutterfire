@@ -38,8 +38,19 @@ dynamic dartify(dynamic object) {
   }
 
   if (dartObject is Map) {
-    return dartObject
-        .map((key, value) => MapEntry(key as String, dartify(value)));
+    final Map<String, dynamic> map = {};
+    for (final key in dartObject.keys) {
+      final value = dartObject[key];
+      if (value is Map) {
+        map[key as String] =
+            value.map((key, value) => MapEntry(key, dartify(value)));
+      } else if (value is List) {
+        map[key as String] = value.map(dartify).toList();
+      } else {
+        map[key as String] = dartify(value);
+      }
+    }
+    return map;
   }
 
   return dartObject;

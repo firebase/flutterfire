@@ -189,6 +189,24 @@ void runFieldValueTests() {
         },
         skip: true,
       );
+
+      testWidgets('query should restore nested Timestamp', (_) async {
+        DocumentReference<Map<String, dynamic>> doc =
+            await initializeTest('nested-timestamp');
+        await Future.wait([
+          doc.set({
+            'nested': {
+              'timestamp': Timestamp.fromDate(DateTime(2020)),
+            },
+            'timestamp': Timestamp.fromDate(DateTime(2020)),
+          }),
+        ]);
+
+        final snapshot = await doc.get();
+
+        expect(snapshot.data()!['timestamp'], isA<Timestamp>());
+        expect(snapshot.data()!['nested']['timestamp'], isA<Timestamp>());
+      });
     });
   });
 }
