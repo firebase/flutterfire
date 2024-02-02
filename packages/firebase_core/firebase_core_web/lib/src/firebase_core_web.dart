@@ -245,9 +245,9 @@ class FirebaseCoreWeb extends FirebasePlatform {
           // check to see if options are roughly identical (so we don't unnecessarily
           // throw on minor differences such as platform specific keys missing,
           // e.g. hot reloads/restarts).
-          if (options.apiKey != app!.options.apiKey.toDart ||
-              options.databaseURL != app.options.databaseURL.toDart ||
-              options.storageBucket != app.options.storageBucket.toDart) {
+          if (options.apiKey != app!.options.apiKey?.toDart ||
+              options.databaseURL != app.options.databaseURL?.toDart ||
+              options.storageBucket != app.options.storageBucket?.toDart) {
             // Options are different; throw.
             throw duplicateApp(defaultFirebaseAppName);
           }
