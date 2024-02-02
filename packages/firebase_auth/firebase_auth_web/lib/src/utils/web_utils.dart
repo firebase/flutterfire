@@ -331,9 +331,9 @@ AuthCredential? convertWebOAuthCredential(
 
   return OAuthProvider(authCredential.providerId.toDart).credential(
     signInMethod: authCredential.signInMethod.toDart,
-    accessToken: authCredential.accessToken.toDart,
-    secret: authCredential.secret.toDart,
-    idToken: authCredential.idToken.toDart,
+    accessToken: authCredential.accessToken?.toDart,
+    secret: authCredential.secret?.toDart,
+    idToken: authCredential.idToken?.toDart,
   );
 }
 

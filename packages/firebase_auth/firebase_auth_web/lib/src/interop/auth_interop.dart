@@ -388,15 +388,15 @@ abstract class OAuthCredential extends AuthCredential {}
 extension OAuthCredentialExtension on OAuthCredential {
   /// The OAuth access token associated with the credential if it belongs to
   /// an OAuth provider, such as facebook.com, twitter.com, etc.
-  external JSString get accessToken;
+  external JSString? get accessToken;
 
   /// The OAuth ID token associated with the credential if it belongs to an
   /// OIDC provider, such as google.com.
-  external JSString get idToken;
+  external JSString? get idToken;
 
   /// The OAuth access token secret associated with the credential if it
   /// belongs to an OAuth 1.0 provider, such as twitter.com.
-  external JSString get secret;
+  external JSString? get secret;
 }
 
 /// Defines the options for initializing an firebase.auth.OAuthCredential.
