@@ -110,8 +110,7 @@ jobs:
             touch adb-log.txt
             $ANDROID_HOME/platform-tools/adb logcat '*:D' >> adb-log.txt &
             $ANDROID_HOME/platform-tools/adb shell su root "setprop ctl.restart zygote"
-            sleep 10
-            sleep $FIRST_BOOT_DELAY
+            sleep 30
             adb logcat --clear
             echo "First boot warmup completed."
       - name: run tests
