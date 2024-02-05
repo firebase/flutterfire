@@ -47,6 +47,11 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        timeout-minutes: 5
+        with:
+          gradle-home-cache-cleanup: true
       - uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84
         name: Gradle Cache
         with:
