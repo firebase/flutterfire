@@ -84,11 +84,11 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// You must ensure the Firebase script is injected before using the service.
   List<String> get _ignoredServiceScripts {
     try {
-      JSObject ignored =
+      JSObject? ignored =
           globalContext.getProperty('flutterfire_ignore_scripts'.toJS);
 
       if (ignored is Iterable) {
-        return (ignored as Iterable)
+        return (ignored! as Iterable)
             .map((e) => e.toString())
             .toList(growable: false);
       }

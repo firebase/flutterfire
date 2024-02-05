@@ -10,8 +10,6 @@ library firebase_interop.core.app;
 
 import 'dart:js_interop';
 
-import 'package:js/js.dart';
-
 import 'core_interop.dart';
 
 @JS('FirebaseApp')
