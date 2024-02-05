@@ -115,7 +115,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-#          script: ./gradlew connectedCheck
+          script: echo "Running AVD emulator."
       - name: 'E2E Tests'
         working-directory: ${{ matrix.working_directory }}
         run: |
