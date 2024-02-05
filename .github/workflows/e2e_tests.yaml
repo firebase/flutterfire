@@ -35,11 +35,6 @@ jobs:
         first-boot-delay: [600]
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
-      - name: Enable KVM group perms
-        run: |
-          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-          sudo udevadm control --reload-rules
-          sudo udevadm trigger --name-match=kvm
       - uses: actions/setup-node@b39b52d1213e96004bfcb1c61a8a6fa8ab84f3e8
         name: Install Node.js 20
         with:
@@ -48,25 +43,6 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-        timeout-minutes: 5
-        with:
-          gradle-home-cache-cleanup: true
-#      - uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84
-#        name: Gradle Cache
-#        with:
-#          path: ~/.gradle/caches
-#          key: ${{ runner.os }}-gradle-v4-${{ hashFiles('**/*.gradle*') }}
-#          restore-keys: ${{ runner.os }}-gradle-v4
-#      - uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84
-#        name: AVD Cache
-#        id: avd-cache
-#        with:
-#          path: |
-#            ~/.android/avd/*
-#            ~/.android/adb*
-#          key: avd
       - name: Firebase Emulator Cache
         uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84
         with:
@@ -88,44 +64,41 @@ jobs:
           sudo npm i -g firebase-tools
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
-#      - name: Warm Gradle Cache
-#      # This makes sure we fetch gradle network resources with a retry
-#        uses: nick-invision/retry@v3
-#        with:
-#         timeout_minutes: 15
-#         retry_wait_seconds: 60
-#         max_attempts: 3
-#         command: ./gradlew packagePlayDebug packagePlayDebugAndroidTest --daemon
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: AVD cache
+        uses: actions/cache@v4
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-ubuntu
       - name: create AVD and generate snapshot for caching
-#        if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
-          arch: x86_64
-          target: google_apis
+          api-level: 30
           force-avd-creation: false
-          avd-name: test-emulator
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: true
-          script: |
-            touch adb-log.txt
-            $ANDROID_HOME/platform-tools/adb logcat '*:D' >> adb-log.txt &
-            $ANDROID_HOME/platform-tools/adb shell su root "setprop ctl.restart zygote"
-            sleep 30
-            adb logcat --clear
-            echo "First boot warmup completed."
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
+
       - name: run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
-          arch: x86_64
-          target: google_apis
+          api-level: ${{ matrix.api-level }}
           force-avd-creation: false
-          avd-name: test-emulator
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: echo "Running AVD emulator."
-      - name: 'E2E Tests'
+          script: ./gradlew connectedCheck
+
+      - name: E2E Tests
         working-directory: ${{ matrix.working_directory }}
         run: |
           flutter test integration_test/e2e_test.dart --dart-define=CI=true
