@@ -28,7 +28,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+      - uses: bluefireteam/melos-action@720a109b686f61979b4f9f0d14f582ab1637647e
         with:
           melos-version: '3.0.1'
       - name: 'Run Analyze'
@@ -46,7 +46,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+      - uses: bluefireteam/melos-action@720a109b686f61979b4f9f0d14f582ab1637647e
         with:
           melos-version: '3.0.1'
       - name: 'Pub Check'
@@ -63,7 +63,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+      - uses: bluefireteam/melos-action@720a109b686f61979b4f9f0d14f582ab1637647e
         with:
           melos-version: '3.0.1'
       - name: 'Flutter Pub Get'
@@ -80,7 +80,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+      - uses: bluefireteam/melos-action@720a109b686f61979b4f9f0d14f582ab1637647e
         with:
           melos-version: '3.0.1'
       - uses: Homebrew/actions/setup-homebrew@master
@@ -113,7 +113,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+      - uses: bluefireteam/melos-action@720a109b686f61979b4f9f0d14f582ab1637647e
         with:
           melos-version: '3.0.1'
       - name: 'Build Examples'
@@ -130,7 +130,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+      - uses: bluefireteam/melos-action@720a109b686f61979b4f9f0d14f582ab1637647e
         with:
           melos-version: '3.0.1'
       - name: 'Flutter Test'
@@ -152,7 +152,7 @@ jobs:
       - name: Install Dart
         uses: dart-lang/setup-dart@fedb1266e91cf51be2fdb382869461a434b920a3
       - name: Install Melos
-        uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+        uses: bluefireteam/melos-action@720a109b686f61979b4f9f0d14f582ab1637647e
         with:
           # Running `melos bootstrap` is not needed because we use Melos just
           # for the `check-license-header` script.

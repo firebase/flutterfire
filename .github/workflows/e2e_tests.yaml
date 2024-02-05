@@ -66,7 +66,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+      - uses: bluefireteam/melos-action@720a109b686f61979b4f9f0d14f582ab1637647e
         with:
           run-bootstrap: false
           melos-version: '3.0.1'
@@ -137,7 +137,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+      - uses: bluefireteam/melos-action@720a109b686f61979b4f9f0d14f582ab1637647e
         with:
           run-bootstrap: false
           melos-version: '3.0.1'
@@ -212,7 +212,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+      - uses: bluefireteam/melos-action@720a109b686f61979b4f9f0d14f582ab1637647e
         with:
           run-bootstrap: false
           melos-version: '3.0.1'
@@ -264,7 +264,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+      - uses: bluefireteam/melos-action@720a109b686f61979b4f9f0d14f582ab1637647e
         with:
           run-bootstrap: false
           melos-version: '3.0.1'
@@ -312,7 +312,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+      - uses: bluefireteam/melos-action@720a109b686f61979b4f9f0d14f582ab1637647e
         with:
           run-bootstrap: false
           melos-version: '3.0.0'
