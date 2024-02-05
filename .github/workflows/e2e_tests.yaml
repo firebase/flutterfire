@@ -82,6 +82,14 @@ jobs:
           sudo npm i -g firebase-tools
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
+      - name: Warm Gradle Cache
+      # This makes sure we fetch gradle network resources with a retry
+        uses: nick-invision/retry@v3
+        with:
+         timeout_minutes: 15
+         retry_wait_seconds: 60
+         max_attempts: 3
+         command: ./gradlew packagePlayDebug packagePlayDebugAndroidTest --daemon
       - name: Create and start Android Emulator
         # change to latest hash for version
         uses: reactivecircus/android-emulator-runner@v2
@@ -90,9 +98,16 @@ jobs:
           api-level: 30
           arch: x86_64
           target: google_apis
+          force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           sdcard-path-or-size: 100M
           disable-animations: true
+          # Give the emulator a little time to run and do first boot stuff before taking snapshot
+          script: |
+            touch adb-log.txt
+            $ANDROID_HOME/platform-tools/adb logcat '*:D' >> adb-log.txt &
+            adb logcat --clear
+            echo "Generated AVD snapshot for caching."
       - name: 'E2E Tests'
         working-directory: ${{ matrix.working_directory }}
         run: |
