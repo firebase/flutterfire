@@ -81,7 +81,7 @@ jobs:
         run: |
           sudo npm i -g firebase-tools
       - name: Start Firebase Emulator
-        run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
+        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: Create and start Android Emulator
         # change to latest hash for version
         uses: reactivecircus/android-emulator-runner@v2
