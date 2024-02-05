@@ -32,7 +32,7 @@ jobs:
       matrix:
         working_directory:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
-      first-boot-delay: [600]
+        first-boot-delay: [600]
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
       - name: Enable KVM group perms
