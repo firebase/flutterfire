@@ -93,7 +93,7 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           sdcard-path-or-size: 100M
           disable-animations: true
-        script: ./gradlew connectedCheck
+          script: ./gradlew connectedCheck
       - name: 'E2E Tests'
         working-directory: ${{ matrix.working_directory }}
         run: |
