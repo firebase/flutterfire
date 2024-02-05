@@ -32,6 +32,7 @@ jobs:
       matrix:
         working_directory:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
+      first-boot-delay: [600]
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
       - name: Enable KVM group perms
@@ -96,20 +97,27 @@ jobs:
 #         max_attempts: 3
 #         command: ./gradlew packagePlayDebug packagePlayDebugAndroidTest --daemon
       - name: create AVD and generate snapshot for caching
-        if: steps.avd-cache.outputs.cache-hit != 'true'
+#        if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 30
+          api-level: 29
           arch: x86_64
           target: google_apis
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: echo "Generated AVD snapshot for caching."
+          script: |
+            touch adb-log.txt
+            $ANDROID_HOME/platform-tools/adb logcat '*:D' >> adb-log.txt &
+            $ANDROID_HOME/platform-tools/adb shell su root "setprop ctl.restart zygote"
+            sleep 10
+            sleep $FIRST_BOOT_DELAY
+            adb logcat --clear
+            echo "First boot warmup completed."
       - name: run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 30
+          api-level: 29
           arch: x86_64
           target: google_apis
           force-avd-creation: false
