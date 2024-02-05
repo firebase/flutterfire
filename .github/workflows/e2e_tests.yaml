@@ -59,14 +59,14 @@ jobs:
 #          path: ~/.gradle/caches
 #          key: ${{ runner.os }}-gradle-v4-${{ hashFiles('**/*.gradle*') }}
 #          restore-keys: ${{ runner.os }}-gradle-v4
-      - uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84
-        name: AVD Cache
-        id: avd-cache
-        with:
-          path: |
-            ~/.android/avd/*
-            ~/.android/adb*
-          key: avd
+#      - uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84
+#        name: AVD Cache
+#        id: avd-cache
+#        with:
+#          path: |
+#            ~/.android/avd/*
+#            ~/.android/adb*
+#          key: avd
       - name: Firebase Emulator Cache
         uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84
         with:
@@ -104,6 +104,7 @@ jobs:
           arch: x86_64
           target: google_apis
           force-avd-creation: false
+          avd-name: test-emulator
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: |
@@ -120,6 +121,7 @@ jobs:
           arch: x86_64
           target: google_apis
           force-avd-creation: false
+          avd-name: test-emulator
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: echo "Running AVD emulator."
