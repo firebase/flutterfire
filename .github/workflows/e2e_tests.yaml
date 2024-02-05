@@ -46,7 +46,7 @@ jobs:
       - uses: actions/setup-java@387ac29b308b003ca37ba93a6cab5eb57c8f5f93
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
         timeout-minutes: 5
