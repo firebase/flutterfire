@@ -94,6 +94,7 @@ jobs:
 
       - name: run tests
         uses: reactivecircus/android-emulator-runner@v2
+        working-directory: ${{ matrix.working_directory }}
         with:
           api-level: 30
           arch: x86_64
@@ -101,12 +102,13 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: echo "Running android emulator."
+          script: |
+            flutter test integration_test/e2e_test.dart --dart-define=CI=true
 
-      - name: E2E Tests
-        working-directory: ${{ matrix.working_directory }}
-        run: |
-          flutter test integration_test/e2e_test.dart --dart-define=CI=true
+#      - name: E2E Tests
+#        working-directory: ${{ matrix.working_directory }}
+#        run: |
+#          flutter test integration_test/e2e_test.dart --dart-define=CI=true
 
   ios:
     # Dropped down to macos-12 as macos-13 was timing out. This suspected issue:https://github.com/actions/runner-images/issues/8023
