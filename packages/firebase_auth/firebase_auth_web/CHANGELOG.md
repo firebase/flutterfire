@@ -1,3 +1,7 @@
+## 5.9.4
+
+ - Update a dependency to the latest release.
+
 ## 5.9.3
 
  - **FIX**(auth,web): fix null safety issue in typing JS Interop for OAuthCredential ([#12270](https://github.com/firebase/flutterfire/issues/12270)). ([7de58e43](https://github.com/firebase/flutterfire/commit/7de58e438337355f51a144868a0843bdc2e73f6e))
