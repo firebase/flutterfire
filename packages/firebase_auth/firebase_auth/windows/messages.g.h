@@ -535,11 +535,11 @@ class PigeonUserDetails {
 
   const flutter::EncodableList& provider_data() const;
   void set_provider_data(const flutter::EncodableList& value_arg);
+
+ private:
   static PigeonUserDetails FromEncodableList(
       const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
-
- private:
   friend class PigeonUserCredential;
   friend class FirebaseAuthHostApi;
   friend class FirebaseAuthHostApiCodecSerializer;

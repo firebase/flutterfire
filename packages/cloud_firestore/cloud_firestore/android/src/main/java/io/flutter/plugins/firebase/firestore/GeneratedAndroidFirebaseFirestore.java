@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import io.flutter.plugin.common.BasicMessageChannel;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MessageCodec;
+import io.flutter.plugin.common.StandardMessageCodec;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -1590,7 +1591,7 @@ public class GeneratedAndroidFirebaseFirestore {
     void error(@NonNull Throwable error);
   }
 
-  private static class FirebaseFirestoreHostApiCodec extends FlutterFirebaseFirestoreMessageCodec {
+  private static class FirebaseFirestoreHostApiCodec extends StandardMessageCodec {
     public static final FirebaseFirestoreHostApiCodec INSTANCE =
         new FirebaseFirestoreHostApiCodec();
 

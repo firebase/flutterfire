@@ -192,7 +192,7 @@ typedef NS_ENUM(NSUInteger, AggregateType) {
 @property(nonatomic, assign) DocumentChangeType type;
 @property(nonatomic, strong) PigeonDocumentSnapshot *document;
 @property(nonatomic, strong) NSNumber *oldIndex;
-@property(nonatomic, strong) NSNumber *index;
+@property(nonatomic, strong) NSNumber *newIndex;
 @end
 
 @interface PigeonQuerySnapshot : NSObject

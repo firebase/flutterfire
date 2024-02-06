@@ -1038,8 +1038,7 @@ EncodableValue FirebaseFirestoreHostApiCodecSerializer::ReadValueOfType(
       return CustomEncodableValue(PigeonTransactionCommand::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
     default:
-      return cloud_firestore_windows::FirestoreCodec::ReadValueOfType(type,
-                                                                      stream);
+      return flutter::StandardCodecSerializer::ReadValueOfType(type, stream);
   }
 }
 
@@ -1152,7 +1151,7 @@ void FirebaseFirestoreHostApiCodecSerializer::WriteValue(
       return;
     }
   }
-  cloud_firestore_windows::FirestoreCodec::WriteValue(value, stream);
+  flutter::StandardCodecSerializer::WriteValue(value, stream);
 }
 
 /// The codec used by FirebaseFirestoreHostApi.

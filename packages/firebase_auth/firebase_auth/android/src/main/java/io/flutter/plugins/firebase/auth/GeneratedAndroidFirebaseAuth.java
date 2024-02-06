@@ -115,7 +115,7 @@ public class GeneratedAndroidFirebaseAuth {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(1);
       toListResult.add(id);
       return toListResult;
@@ -185,7 +185,7 @@ public class GeneratedAndroidFirebaseAuth {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(2);
       toListResult.add(verificationId);
       toListResult.add(verificationCode);
@@ -312,7 +312,7 @@ public class GeneratedAndroidFirebaseAuth {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(5);
       toListResult.add(displayName);
       toListResult.add(enrollmentTimestamp);
@@ -391,7 +391,7 @@ public class GeneratedAndroidFirebaseAuth {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(2);
       toListResult.add(appName);
       toListResult.add(tenantId);
@@ -455,7 +455,7 @@ public class GeneratedAndroidFirebaseAuth {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(2);
       toListResult.add(email);
       toListResult.add(previousEmail);
@@ -528,7 +528,7 @@ public class GeneratedAndroidFirebaseAuth {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(2);
       toListResult.add(operation == null ? null : operation.index);
       toListResult.add((data == null) ? null : data.toList());
@@ -653,7 +653,7 @@ public class GeneratedAndroidFirebaseAuth {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(5);
       toListResult.add(isNewUser);
       toListResult.add(providerId);
@@ -774,7 +774,7 @@ public class GeneratedAndroidFirebaseAuth {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(4);
       toListResult.add(providerId);
       toListResult.add(signInMethod);
@@ -1039,7 +1039,7 @@ public class GeneratedAndroidFirebaseAuth {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(12);
       toListResult.add(uid);
       toListResult.add(email);
@@ -1152,7 +1152,7 @@ public class GeneratedAndroidFirebaseAuth {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(2);
       toListResult.add((userInfo == null) ? null : userInfo.toList());
       toListResult.add(providerData);
@@ -1235,7 +1235,7 @@ public class GeneratedAndroidFirebaseAuth {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(3);
       toListResult.add((user == null) ? null : user.toList());
       toListResult.add((additionalUserInfo == null) ? null : additionalUserInfo.toList());
@@ -1411,7 +1411,7 @@ public class GeneratedAndroidFirebaseAuth {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(7);
       toListResult.add(url);
       toListResult.add(dynamicLinkDomain);
@@ -1551,7 +1551,7 @@ public class GeneratedAndroidFirebaseAuth {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(5);
       toListResult.add(appVerificationDisabledForTesting);
       toListResult.add(userAccessGroup);
@@ -1649,7 +1649,7 @@ public class GeneratedAndroidFirebaseAuth {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(3);
       toListResult.add(providerId);
       toListResult.add(scopes);
@@ -1794,7 +1794,7 @@ public class GeneratedAndroidFirebaseAuth {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(6);
       toListResult.add(phoneNumber);
       toListResult.add(timeout);
@@ -1968,7 +1968,7 @@ public class GeneratedAndroidFirebaseAuth {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(7);
       toListResult.add(token);
       toListResult.add(expirationTimestamp);
@@ -2107,7 +2107,7 @@ public class GeneratedAndroidFirebaseAuth {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(4);
       toListResult.add(displayName);
       toListResult.add(photoUrl);
@@ -2237,7 +2237,7 @@ public class GeneratedAndroidFirebaseAuth {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(5);
       toListResult.add(codeIntervalSeconds);
       toListResult.add(codeLength);

@@ -5,8 +5,6 @@
 // See also: https://pub.dev/packages/pigeon
 
 #import "FirestoreMessages.g.h"
-#import "FLTFirebaseFirestoreReader.h"
-#import "FLTFirebaseFirestoreWriter.h"
 
 #if TARGET_OS_OSX
 #import <FlutterMacOS/FlutterMacOS.h>
@@ -321,7 +319,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   pigeonResult.type = type;
   pigeonResult.document = document;
   pigeonResult.oldIndex = oldIndex;
-  pigeonResult.index = newIndex;
+  pigeonResult.newIndex = newIndex;
   return pigeonResult;
 }
 + (PigeonDocumentChange *)fromList:(NSArray *)list {
@@ -332,8 +330,8 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   NSAssert(pigeonResult.document != nil, @"");
   pigeonResult.oldIndex = GetNullableObjectAtIndex(list, 2);
   NSAssert(pigeonResult.oldIndex != nil, @"");
-  pigeonResult.index = GetNullableObjectAtIndex(list, 3);
-  NSAssert(pigeonResult.index != nil, @"");
+  pigeonResult.newIndex = GetNullableObjectAtIndex(list, 3);
+  NSAssert(pigeonResult.newIndex != nil, @"");
   return pigeonResult;
 }
 + (nullable PigeonDocumentChange *)nullableFromList:(NSArray *)list {
@@ -344,7 +342,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
     @(self.type),
     (self.document ? [self.document toList] : [NSNull null]),
     (self.oldIndex ?: [NSNull null]),
-    (self.index ?: [NSNull null]),
+    (self.newIndex ?: [NSNull null]),
   ];
 }
 @end
@@ -622,7 +620,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 }
 @end
 
-@interface FirebaseFirestoreHostApiCodecReader : FLTFirebaseFirestoreReader
+@interface FirebaseFirestoreHostApiCodecReader : FlutterStandardReader
 @end
 @implementation FirebaseFirestoreHostApiCodecReader
 - (nullable id)readValueOfType:(UInt8)type {
@@ -659,7 +657,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 }
 @end
 
-@interface FirebaseFirestoreHostApiCodecWriter : FLTFirebaseFirestoreWriter
+@interface FirebaseFirestoreHostApiCodecWriter : FlutterStandardWriter
 @end
 @implementation FirebaseFirestoreHostApiCodecWriter
 - (void)writeValue:(id)value {
