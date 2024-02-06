@@ -54,8 +54,10 @@ jobs:
           cache: true
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
-          run-bootstrap: true
+          run-bootstrap: false
           melos-version: '3.0.1'
+      - name: 'Bootstrap package'
+        run: melos bootstrap --scope tests && melos bootstrap --scope "cloud_firestore*"
       - name: 'Install Tools'
         run: |
           sudo npm i -g firebase-tools
@@ -68,8 +70,6 @@ jobs:
           sudo udevadm trigger --name-match=kvm
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@v3
-        with:
-          cache-overwrite-existing: true
       - name: AVD cache
         uses: actions/cache@v4
         id: avd-cache
@@ -86,10 +86,9 @@ jobs:
           target: google_apis
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: false
+          disable-animations: true
           script: echo "Generated AVD snapshot for caching."
-
-      - name: run tests
+      - name: run E2E tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 30
@@ -100,7 +99,6 @@ jobs:
           disable-animations: true
           working-directory: ${{ matrix.working_directory }}
           script: |
-            pwd
             flutter test integration_test/e2e_test.dart --dart-define=CI=true -d emulator-5554
 
   ios:
