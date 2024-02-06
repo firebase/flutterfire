@@ -56,8 +56,6 @@ jobs:
         with:
           run-bootstrap: true
           melos-version: '3.0.1'
-#      - name: 'Bootstrap package'
-#        run: melos bootstrap --scope tests && melos bootstrap --scope "cloud_firestore*"
       - name: 'Install Tools'
         run: |
           sudo npm i -g firebase-tools
