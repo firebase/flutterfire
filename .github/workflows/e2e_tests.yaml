@@ -26,7 +26,7 @@ on:
 
 jobs:
   android:
-    runs-on: macos-13
+    runs-on: ubuntu-latest
     timeout-minutes: 45
     strategy:
       matrix:
@@ -42,20 +42,6 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2
-        name: Gradle Cache
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-v4-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: ${{ runner.os }}-gradle-v4
-      - uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2
-        name: AVD Cache
-        id: avd-cache
-        with:
-          path: |
-            ~/.android/avd/*
-            ~/.android/adb*
-          key: avd
       - name: Firebase Emulator Cache
         uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2
         with:
@@ -76,26 +62,44 @@ jobs:
         run: |
           sudo npm i -g firebase-tools
       - name: Start Firebase Emulator
-        run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
-      - name: Create and start emulator
-        # We use the installed SDK in the macOS image to create and start the emulator
+        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
+      - name: Enable KVM
         run: |
-          echo "List installed packages"
-          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --list_installed
-
-          echo "Installing system image"
-          echo "y" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "system-images;android-33;google_apis;x86_64"
-
-          echo "Creating AVD"
-          echo "no" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/avdmanager create avd -n test_emulator -k "system-images;android-33;google_apis;x86_64" --force
-
-          echo "Starting emulator"
-          $ANDROID_SDK_ROOT/emulator/emulator -avd test_emulator -no-audio -no-boot-anim -no-window &
-          adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done; input keyevent 82'
-      - name: 'E2E Tests'
-        working-directory: ${{ matrix.working_directory }}
-        run: |
-          flutter test integration_test/e2e_test.dart --dart-define=CI=true
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v3
+      - name: AVD cache
+        uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-ubuntu
+      - name: create AVD and generate snapshot for caching
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          arch: x86_64
+          target: google_apis
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: echo "Generated AVD snapshot for caching."
+      - name: run E2E tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          arch: x86_64
+          target: google_apis
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          working-directory: ${{ matrix.working_directory }}
+          script: |
+            flutter test integration_test/e2e_test.dart --dart-define=CI=true -d emulator-5554
 
   ios:
     # Dropped down to macos-12 as macos-13 was timing out. This suspected issue:https://github.com/actions/runner-images/issues/8023
