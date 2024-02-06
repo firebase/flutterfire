@@ -98,9 +98,9 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
+          working-directory: ${{ matrix.working_directory }}
           script: |
-            cd ${{ matrix.working_directory }}
-            echo pwd
+            pwd
             flutter test integration_test/e2e_test.dart --dart-define=CI=true -d emulator-5554
 
   ios:
