@@ -43,7 +43,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Firebase Emulator Cache
-        uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84
+        uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-${{ github.run_id }}
@@ -52,7 +52,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+      - uses: bluefireteam/melos-action@720a109b686f61979b4f9f0d14f582ab1637647e
         with:
           run-bootstrap: false
           melos-version: '3.0.1'
@@ -119,12 +119,12 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - uses: hendrikmuhs/ccache-action@6d1841ec156c39a52b1b23a810da917ab98da1f4
+      - uses: hendrikmuhs/ccache-action@faf867a11c028c0b483fb2ae72b6fc8f7d842714
         name: Xcode Compile Cache
         with:
           key: ${{ runner.os }}-ios-v3
           max-size: 700M
-      - uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84
+      - uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2
         name: Pods Cache
         id: pods-cache
         with:
@@ -132,7 +132,7 @@ jobs:
           key: ${{ runner.os }}-pods-v3-${{ hashFiles('tests/ios/Podfile.lock') }}
           restore-keys: ${{ runner.os }}-ios-pods-v2
       - name: Firebase Emulator Cache
-        uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84
+        uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-${{ github.run_id }}
@@ -141,7 +141,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+      - uses: bluefireteam/melos-action@720a109b686f61979b4f9f0d14f582ab1637647e
         with:
           run-bootstrap: false
           melos-version: '3.0.1'
@@ -194,12 +194,12 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - uses: hendrikmuhs/ccache-action@6d1841ec156c39a52b1b23a810da917ab98da1f4
+      - uses: hendrikmuhs/ccache-action@faf867a11c028c0b483fb2ae72b6fc8f7d842714
         name: Xcode Compile Cache
         with:
           key: ${{ runner.os }}-macos-v2
           max-size: 700M
-      - uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84
+      - uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2
         name: Pods Cache
         id: pods-cache
         with:
@@ -207,7 +207,7 @@ jobs:
           key: ${{ runner.os }}-pods-v2-${{ hashFiles('tests/macos/Podfile.lock') }}
           restore-keys: ${{ runner.os }}-macos-pods-v1
       - name: Cache Firebase Emulator
-        uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84
+        uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-${{ github.run_id }}
@@ -216,7 +216,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+      - uses: bluefireteam/melos-action@720a109b686f61979b4f9f0d14f582ab1637647e
         with:
           run-bootstrap: false
           melos-version: '3.0.1'
@@ -268,7 +268,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+      - uses: bluefireteam/melos-action@720a109b686f61979b4f9f0d14f582ab1637647e
         with:
           run-bootstrap: false
           melos-version: '3.0.1'
@@ -278,7 +278,7 @@ jobs:
         run: |
           sudo npm i -g firebase-tools
       - name: Cache Firebase Emulator
-        uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84
+        uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-${{ github.run_id }}
@@ -316,7 +316,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+      - uses: bluefireteam/melos-action@720a109b686f61979b4f9f0d14f582ab1637647e
         with:
           run-bootstrap: false
           melos-version: '3.0.0'
