@@ -88,7 +88,7 @@ try {
           "doesn't exist.");
       break;
     default:
-      print("Unkown error.");
+      print("Unknown error.");
   }
 }
 ```
