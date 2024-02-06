@@ -11,6 +11,7 @@ import '../firestore.dart';
 
 /// Returns Dart representation from JS Object.
 dynamic dartify(dynamic object) {
+  // Convert JSObject to Dart equivalents directly
   if (object is! JSObject) {
     return object;
   }
@@ -32,28 +33,24 @@ dynamic dartify(dynamic object) {
     return jsObject as BytesJsImpl;
   }
 
+  // Convert nested structures
   final dartObject = jsObject.dartify();
-  if (dartObject is List) {
-    return dartObject.map(dartify).toList();
-  }
+  return convertNested(dartObject);
+}
 
-  if (dartObject is Map) {
-    final Map<String, dynamic> map = {};
-    for (final key in dartObject.keys) {
-      final value = dartObject[key];
-      if (value is Map) {
-        map[key as String] =
-            value.map((key, value) => MapEntry(key, dartify(value)));
-      } else if (value is List) {
-        map[key as String] = value.map(dartify).toList();
-      } else {
-        map[key as String] = dartify(value);
-      }
-    }
+dynamic convertNested(dynamic object) {
+  if (object is List) {
+    return object.map(convertNested).toList();
+  } else if (object is Map) {
+    var map = <String, dynamic>{};
+    object.forEach((key, value) {
+      map[key] = convertNested(value);
+    });
     return map;
+  } else {
+    // For non-nested types, attempt to convert directly
+    return dartify(object);
   }
-
-  return dartObject;
 }
 
 /// Returns the JS implementation from Dart Object.
