@@ -81,7 +81,7 @@ jobs:
       - name: create AVD and generate snapshot for caching
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 33
+          api-level: 32
           arch: x86_64
           target: google_apis
           force-avd-creation: false
@@ -91,7 +91,7 @@ jobs:
       - name: run E2E tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 33
+          api-level: 32
           arch: x86_64
           target: google_apis
           force-avd-creation: false
