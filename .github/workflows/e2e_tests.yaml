@@ -79,7 +79,7 @@ jobs:
             ~/.android/adb*
           key: avd-ubuntu
       - name: create AVD and generate snapshot for caching
-        uses: reactivecircus/android-emulator-runner@6b0df4b0efb23bb0ec63d881db79aefbc976e4b2
+        uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 30
           arch: x86_64
@@ -89,7 +89,7 @@ jobs:
           disable-animations: true
           script: echo "Generated AVD snapshot for caching."
       - name: run E2E tests
-        uses: reactivecircus/android-emulator-runner@6b0df4b0efb23bb0ec63d881db79aefbc976e4b2
+        uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 30
           arch: x86_64
