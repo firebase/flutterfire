@@ -1,3 +1,7 @@
+## 2.11.4
+
+ - **FIX**(core,web): remove unused import that could lead to compilation error ([#12285](https://github.com/firebase/flutterfire/issues/12285)). ([0e67a1a4](https://github.com/firebase/flutterfire/commit/0e67a1a466e7115e4cc1e1a0167c6c3f1122e432))
+
 ## 2.11.3
 
  - **FIX**(core,web): fix an incompatibility with Flutter Beta that would occur when calling method on TrustedScriptURL ([#12274](https://github.com/firebase/flutterfire/issues/12274)). ([c395da52](https://github.com/firebase/flutterfire/commit/c395da524debb0c310d9a60391a2442e0dcbce1f))
