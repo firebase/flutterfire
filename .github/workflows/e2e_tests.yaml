@@ -54,10 +54,10 @@ jobs:
           cache: true
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
-          run-bootstrap: false
+          run-bootstrap: true
           melos-version: '3.0.1'
-      - name: 'Bootstrap package'
-        run: melos bootstrap --scope tests && melos bootstrap --scope "cloud_firestore*"
+#      - name: 'Bootstrap package'
+#        run: melos bootstrap --scope tests && melos bootstrap --scope "cloud_firestore*"
       - name: 'Install Tools'
         run: |
           sudo npm i -g firebase-tools
@@ -88,7 +88,7 @@ jobs:
           target: google_apis
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: false
+          disable-animations: true
           script: echo "Generated AVD snapshot for caching."
 
       - name: run tests
