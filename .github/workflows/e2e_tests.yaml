@@ -82,21 +82,15 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 34
+          target: google_apis
           arch: x86_64
-          target: default
-          force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: true
           script: echo "Generated AVD snapshot for caching."
       - name: run E2E tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 34
+          target: google_apis
           arch: x86_64
-          target: default
-          force-avd-creation: false
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: true
           working-directory: ${{ matrix.working_directory }}
           script: |
             flutter test integration_test/e2e_test.dart --dart-define=CI=true -d emulator-5554
