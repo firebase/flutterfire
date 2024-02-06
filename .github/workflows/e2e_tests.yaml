@@ -100,7 +100,7 @@ jobs:
           disable-animations: true
           script: |
             cd ${{ matrix.working_directory }}
-            flutter test integration_test/e2e_test.dart --dart-define=CI=true
+            flutter test integration_test/e2e_test.dart --dart-define=CI=true -d emulator-5554
 
   ios:
     # Dropped down to macos-12 as macos-13 was timing out. This suspected issue:https://github.com/actions/runner-images/issues/8023
