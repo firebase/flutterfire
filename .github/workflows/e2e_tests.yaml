@@ -100,6 +100,7 @@ jobs:
           disable-animations: true
           script: |
             cd ${{ matrix.working_directory }}
+            echo pwd
             flutter test integration_test/e2e_test.dart --dart-define=CI=true -d emulator-5554
 
   ios:
