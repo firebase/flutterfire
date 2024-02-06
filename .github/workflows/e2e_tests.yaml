@@ -78,7 +78,7 @@ jobs:
             ~/.android/avd/*
             ~/.android/adb*
           key: avd-ubuntu
-      - name: Start AVD and run E2E tests
+      - name: Start AVD then run E2E tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 34
