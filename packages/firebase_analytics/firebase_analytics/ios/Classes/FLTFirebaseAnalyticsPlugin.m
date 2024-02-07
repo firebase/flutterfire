@@ -155,12 +155,12 @@ NSString *const FLTFirebaseAnalyticsChannelName = @"plugins.flutter.io/firebase_
   }
 
   if (adPersonalizationSignalsGranted != nil) {
-    parameters[FIRConsentTypeAnalyticsStorage] =
+    parameters[FIRConsentTypeAdPersonalization] =
         [adPersonalizationSignalsGranted boolValue] ? FIRConsentStatusGranted : FIRConsentStatusDenied;
   }
 
   if (adUserDataGranted != nil) {
-    parameters[FIRConsentTypeAnalyticsStorage] =
+    parameters[FIRConsentTypeAdUserData] =
         [adUserDataGranted boolValue] ? FIRConsentStatusGranted : FIRConsentStatusDenied;
   }
 
