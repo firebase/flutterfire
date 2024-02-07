@@ -67,6 +67,8 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   Future<void> setConsent({
     bool? adStorageConsentGranted,
     bool? analyticsStorageConsentGranted,
+    bool? adPersonalizationGranted,
+    bool? adUserDataGranted,
   }) async {
     throw UnimplementedError('setConsent() is not supported on Web.');
   }
