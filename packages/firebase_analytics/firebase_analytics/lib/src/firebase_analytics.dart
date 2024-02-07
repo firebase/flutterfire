@@ -125,7 +125,15 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     );
   }
 
-  /// Sets the applicable end user consent state. 'default' value for 'adStorageConsentGranted' & 'analyticsStorageConsentGranted' is 'true'
+  /// Sets the applicable end user consent state.
+  /// By default, no consent mode values are set. 
+  ///
+  /// Default consents can be set according to the platform: 
+  /// - [iOS][1]
+  /// - [Android][2]
+  ///
+  /// [1]: https://developers.google.com/tag-platform/security/guides/app-consent?platform=ios#default-consent
+  /// [2]: https://developers.google.com/tag-platform/security/guides/app-consent?platform=android#default-consent
   Future<void> setConsent({
     bool? adStorageConsentGranted,
     bool? analyticsStorageConsentGranted,
