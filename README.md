@@ -38,11 +38,8 @@ and open source.
 
 - [Add Firebase to your Flutter app](https://firebase.google.com/docs/flutter/setup)
 - [Available plugins](https://firebase.google.com/docs/flutter/setup#available-plugins)
-- Firebase UI
-  - [Firebase UI for Authentication](https://github.com/firebase/FirebaseUI-Flutter/blob/main/packages/firebase_ui_auth/README.md)
-  - [Firebase UI for Realtime Database](https://github.com/firebase/FirebaseUI-Flutter/blob/main/packages/firebase_ui_database/README.md)
-  - [Firebase UI for Cloud Firestore](https://github.com/firebase/FirebaseUI-Flutter/blob/main/packages/firebase_ui_firestore/README.md)
-- [Firestore ODM](./packages/cloud_firestore_odm/README.md) (alpha)
+- [Firebase UI](https://github.com/firebase/FirebaseUI-Flutter) has moved to its own repository.
+- [Cloud Firestore ODM](https://github.com/firebaseextended/firestoreodm-flutter) has now moved to its own repository.
 
 ---
 
@@ -51,6 +48,7 @@ and open source.
 | Name                   | pub.dev                                                                                                                                             | Firebase Product                                                     | Documentation                                                                        | View Source                                                                                                                     | Android | iOS | Web | MacOS | Windows |
 | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- | ------- | --- | --- | ----- | ------- |
 | Analytics              | [![Analytics pub.dev badge](https://img.shields.io/pub/v/firebase_analytics.svg)](https://pub.dev/packages/firebase_analytics)                      | [🔗](https://firebase.google.com/products/analytics)                 | [📖](https://firebase.google.com/docs/analytics/get-started?platform=flutter)        | [`firebase_analytics`](https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_analytics)                 | ✔       | ✔   | ✔   | β     | N/A     |
+| App Check              | [![App Check pub.dev badge](https://img.shields.io/pub/v/firebase_app_check.svg)](https://pub.dev/packages/firebase_app_check)                      | [🔗](https://firebase.google.com/docs/app-check)                     | [📖](https://firebase.google.com/docs/app-check/flutter/default-providers)           | [`firebase_app_check`](https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_app_check)                 | ✔       | ✔   | ✔   | β     | N/A     |
 | Authentication         | [![Authentication pub.dev badge](https://img.shields.io/pub/v/firebase_auth.svg)](https://pub.dev/packages/firebase_auth)                           | [🔗](https://firebase.google.com/products/auth)                      | [📖](https://firebase.google.com/docs/auth/flutter/start)                            | [`firebase_auth`](https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_auth)                           | ✔       | ✔   | ✔   | β     | (*)     |
 | Cloud Firestore        | [![Cloud Firestore pub.dev badge](https://img.shields.io/pub/v/cloud_firestore.svg)](https://pub.dev/packages/cloud_firestore)                      | [🔗](https://firebase.google.com/products/firestore)                 | [📖](https://firebase.google.com/docs/firestore/quickstart)                          | [`cloud_firestore`](https://github.com/FirebaseExtended/flutterfire/tree/master/packages/cloud_firestore)                       | ✔       | ✔   | ✔   | β     | (*)     |
 | Cloud Functions        | [![Cloud Functions pub.dev badge](https://img.shields.io/pub/v/cloud_functions.svg)](https://pub.dev/packages/cloud_functions)                      | [🔗](https://firebase.google.com/products/functions)                 | [📖](https://firebase.google.com/docs/functions/get-started?gen=2nd)                 | [`cloud_functions`](https://github.com/FirebaseExtended/flutterfire/tree/master/packages/cloud_functions)                       | ✔       | ✔   | ✔   | β     | N/A     |
@@ -67,26 +65,12 @@ and open source.
 
  (*) for development only. Production on Windows is not supported.
 
-## Beta Plugins
-
-| Name      | pub.dev                                                                                                                        | Firebase Product                                                                                                                                         | Documentation                                              | View Source                                                                                                     | Android | iOS | Web | MacOS |
-|-----------|:--------------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------:|:------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------:|:---------:|:-----:|:-----:|:-------:|
-| App Check | [![App Check pub.dev badge](https://img.shields.io/pub/v/firebase_app_check.svg)](https://pub.dev/packages/firebase_app_check) | [🔗](https://firebase.google.com/docs/app-check) | [📖](https://firebase.flutter.dev/docs/app-check/overview) | [`firebase_app_check`](https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_app_check) | ✔       | ✔   | ✔   | β     |
-
-
 ## Preview Plugins
 
 | Name                | pub.dev                                                                                                                                                      | Firebase Product                                                                                                                                      | Documentation                                                        | View Source                                                                                                                         | Android | iOS | Web | MacOS |
 |---------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------:|:---------:|:-----:|:-----:|:-------:|
 | ML Model Downloader | [![ML Model Downloader pub.dev badge](https://img.shields.io/pub/v/firebase_ml_model_downloader.svg)](https://pub.dev/packages/firebase_ml_model_downloader) | [🔗](https://firebase.google.com/products/ml) | [📖](https://firebase.flutter.dev/docs/ml-model-downloader/overview) | [`firebase_ml_model_downloader`](https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_ml_model_downloader) | ✔       | ✔   | N/A | β     |
 
-## Alpha Plugins
-
-[Cloud Firestore ODM](https://github.com/firebaseextended/firestoreodm-flutter) has now moved to its own repository.
-
-| Name                | pub.dev                                                                                                                                    | Firebase Product                                                                                                                          | Documentation                                                  | View Source                                                                                                       | Android | iOS | Web | MacOS |
-|---------------------|:--------------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------:|:---------:|:-----:|:-----:|:-------:|
-| Cloud Firestore ODM | [![Cloud Firestore ODM pub.dev badge](https://img.shields.io/pub/v/cloud_firestore_odm.svg)](https://pub.dev/packages/cloud_firestore_odm) | [🔗](https://firebase.google.com) | [📖](https://github.com/firebaseextended/firestoreodm-flutter) | [`cloud_firestore_odm`](https://github.com/firebaseextended/firestoreodm-flutter) | ✔       | ✔   | ✔   | β     |
 
 ## Issues
 
