@@ -291,6 +291,10 @@ public class FlutterFirebaseAnalyticsPlugin
                 (Boolean) arguments.get(Constants.AD_STORAGE_CONSENT_GRANTED);
             final Boolean analyticsStorageGranted =
                 (Boolean) arguments.get(Constants.ANALYTICS_STORAGE_CONSENT_GRANTED);
+            final Boolean adPersonalizationGranted =
+                (Boolean) arguments.get(Constants.AD_PERSONALIZATION_CONSENT_GRANTED);
+            final Boolean adUserDataGranted =
+                (Boolean) arguments.get(Constants.AD_USER_DATA_CONSENT_GRANTED);
             HashMap<FirebaseAnalytics.ConsentType, FirebaseAnalytics.ConsentStatus> parameters =
                 new HashMap<>();
 
@@ -306,6 +310,22 @@ public class FlutterFirebaseAnalyticsPlugin
               parameters.put(
                   FirebaseAnalytics.ConsentType.ANALYTICS_STORAGE,
                   analyticsStorageGranted
+                      ? FirebaseAnalytics.ConsentStatus.GRANTED
+                      : FirebaseAnalytics.ConsentStatus.DENIED);
+            }
+
+            if (adPersonalizationGranted != null) {
+              parameters.put(
+                  FirebaseAnalytics.ConsentType.AD_PERSONALIZATION,
+                  adPersonalizationGranted
+                      ? FirebaseAnalytics.ConsentStatus.GRANTED
+                      : FirebaseAnalytics.ConsentStatus.DENIED);
+            }
+
+            if (adUserDataGranted != null) {
+              parameters.put(
+                  FirebaseAnalytics.ConsentType.AD_USER_DATA,
+                  adUserDataGranted
                       ? FirebaseAnalytics.ConsentStatus.GRANTED
                       : FirebaseAnalytics.ConsentStatus.DENIED);
             }
