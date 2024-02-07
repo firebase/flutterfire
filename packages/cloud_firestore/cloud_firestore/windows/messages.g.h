@@ -554,11 +554,12 @@ class AggregateQuery {
 class AggregateQueryResponse {
  public:
   // Constructs an object setting all non-nullable fields.
-  explicit AggregateQueryResponse(const AggregateType& type, double value);
+  explicit AggregateQueryResponse(const AggregateType& type);
 
   // Constructs an object setting all fields.
   explicit AggregateQueryResponse(const AggregateType& type,
-                                  const std::string* field, double value);
+                                  const std::string* field,
+                                  const double* value);
 
   const AggregateType& type() const;
   void set_type(const AggregateType& value_arg);
@@ -567,7 +568,8 @@ class AggregateQueryResponse {
   void set_field(const std::string_view* value_arg);
   void set_field(std::string_view value_arg);
 
-  double value() const;
+  const double* value() const;
+  void set_value(const double* value_arg);
   void set_value(double value_arg);
 
  private:
@@ -578,7 +580,7 @@ class AggregateQueryResponse {
   friend class FirebaseFirestoreHostApiCodecSerializer;
   AggregateType type_;
   std::optional<std::string> field_;
-  double value_;
+  std::optional<double> value_;
 };
 
 class FirebaseFirestoreHostApiCodecSerializer
