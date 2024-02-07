@@ -15,6 +15,8 @@ NSString *const kFLTFirebaseAnalyticsEventName = @"eventName";
 NSString *const kFLTFirebaseAnalyticsParameters = @"parameters";
 NSString *const kFLTFirebaseAnalyticsAdStorageConsentGranted = @"adStorageConsentGranted";
 NSString *const kFLTFirebaseAnalyticsStorageConsentGranted = @"analyticsStorageConsentGranted";
+NSString *const kFLTFirebaseAdPersonalizationConsentGranted = @"adPersonalizationConsentGranted";
+NSString *const kFLTFirebaseAdUserDataConsentGranted = @"adUserDataConsentGranted";
 NSString *const kFLTFirebaseAnalyticsUserId = @"userId";
 
 NSString *const FLTFirebaseAnalyticsChannelName = @"plugins.flutter.io/firebase_analytics";
@@ -137,6 +139,9 @@ NSString *const FLTFirebaseAnalyticsChannelName = @"plugins.flutter.io/firebase_
 - (void)setConsent:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   NSNumber *adStorageGranted = arguments[kFLTFirebaseAnalyticsAdStorageConsentGranted];
   NSNumber *analyticsStorageGranted = arguments[kFLTFirebaseAnalyticsStorageConsentGranted];
+  NSNumber *adPersonalizationGranted = arguments[kFLTFirebaseAdPersonalizationConsentGranted];
+  NSNumber *adUserDataGranted = arguments[kFLTFirebaseAdUserDataConsentGranted];
+
   NSMutableDictionary<FIRConsentType, FIRConsentStatus> *parameters =
       [[NSMutableDictionary alloc] init];
 
@@ -147,6 +152,16 @@ NSString *const FLTFirebaseAnalyticsChannelName = @"plugins.flutter.io/firebase_
   if (analyticsStorageGranted != nil) {
     parameters[FIRConsentTypeAnalyticsStorage] =
         [analyticsStorageGranted boolValue] ? FIRConsentStatusGranted : FIRConsentStatusDenied;
+  }
+
+  if (adPersonalizationGranted != nil) {
+    parameters[FIRConsentTypeAnalyticsStorage] =
+        [adPersonalizationGranted boolValue] ? FIRConsentStatusGranted : FIRConsentStatusDenied;
+  }
+
+  if (adUserDataGranted != nil) {
+    parameters[FIRConsentTypeAnalyticsStorage] =
+        [adUserDataGranted boolValue] ? FIRConsentStatusGranted : FIRConsentStatusDenied;
   }
 
   [FIRAnalytics setConsent:parameters];
