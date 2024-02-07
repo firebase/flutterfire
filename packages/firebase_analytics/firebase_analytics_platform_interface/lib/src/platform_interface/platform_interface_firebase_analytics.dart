@@ -170,8 +170,8 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   Future<void> setConsent({
     bool? adStorageConsentGranted,
     bool? analyticsStorageConsentGranted,
-    bool? adPersonalizationGranted,
-    bool? adUserDataGranted,
+    bool? adPersonalizationSignalsConsentGranted,
+    bool? adUserDataConsentGranted,
   }) {
     throw UnimplementedError('setConsent() is not implemented');
   }

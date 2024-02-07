@@ -73,8 +73,8 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   Future<void> setConsent({
     bool? adStorageConsentGranted,
     bool? analyticsStorageConsentGranted,
-    bool? adPersonalizationGranted,
-    bool? adUserDataGranted,
+    bool? adPersonalizationSignalsConsentGranted,
+    bool? adUserDataConsentGranted,
   }) async {
     try {
       return channel.invokeMethod<void>(
@@ -84,9 +84,9 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
             'adStorageConsentGranted': adStorageConsentGranted,
           if (analyticsStorageConsentGranted != null)
             'analyticsStorageConsentGranted': analyticsStorageConsentGranted,
-          if (adPersonalizationGranted != null)
-            'adPersonalizationGranted': adPersonalizationGranted,
-          if (adUserDataGranted != null) 'adUserDataGranted': adUserDataGranted,
+          if (adPersonalizationSignalsConsentGranted != null)
+            'adPersonalizationSignalsConsentGranted': adPersonalizationSignalsConsentGranted,
+          if (adUserDataConsentGranted != null) 'adUserDataConsentGranted': adUserDataConsentGranted,
         },
       );
     } catch (e, s) {

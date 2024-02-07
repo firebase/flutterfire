@@ -15,7 +15,7 @@ NSString *const kFLTFirebaseAnalyticsEventName = @"eventName";
 NSString *const kFLTFirebaseAnalyticsParameters = @"parameters";
 NSString *const kFLTFirebaseAnalyticsAdStorageConsentGranted = @"adStorageConsentGranted";
 NSString *const kFLTFirebaseAnalyticsStorageConsentGranted = @"analyticsStorageConsentGranted";
-NSString *const kFLTFirebaseAdPersonalizationConsentGranted = @"adPersonalizationConsentGranted";
+NSString *const kFLTFirebaseAdPersonalizationSignalsConsentGranted = @"adPersonalizationSignalsConsentGranted";
 NSString *const kFLTFirebaseAdUserDataConsentGranted = @"adUserDataConsentGranted";
 NSString *const kFLTFirebaseAnalyticsUserId = @"userId";
 
@@ -139,7 +139,7 @@ NSString *const FLTFirebaseAnalyticsChannelName = @"plugins.flutter.io/firebase_
 - (void)setConsent:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   NSNumber *adStorageGranted = arguments[kFLTFirebaseAnalyticsAdStorageConsentGranted];
   NSNumber *analyticsStorageGranted = arguments[kFLTFirebaseAnalyticsStorageConsentGranted];
-  NSNumber *adPersonalizationGranted = arguments[kFLTFirebaseAdPersonalizationConsentGranted];
+  NSNumber *adPersonalizationSignalsGranted = arguments[kFLTFirebaseAdPersonalizationSignalsConsentGranted];
   NSNumber *adUserDataGranted = arguments[kFLTFirebaseAdUserDataConsentGranted];
 
   NSMutableDictionary<FIRConsentType, FIRConsentStatus> *parameters =
@@ -154,9 +154,9 @@ NSString *const FLTFirebaseAnalyticsChannelName = @"plugins.flutter.io/firebase_
         [analyticsStorageGranted boolValue] ? FIRConsentStatusGranted : FIRConsentStatusDenied;
   }
 
-  if (adPersonalizationGranted != nil) {
+  if (adPersonalizationSignalsGranted != nil) {
     parameters[FIRConsentTypeAnalyticsStorage] =
-        [adPersonalizationGranted boolValue] ? FIRConsentStatusGranted : FIRConsentStatusDenied;
+        [adPersonalizationSignalsGranted boolValue] ? FIRConsentStatusGranted : FIRConsentStatusDenied;
   }
 
   if (adUserDataGranted != nil) {

@@ -137,14 +137,14 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> setConsent({
     bool? adStorageConsentGranted,
     bool? analyticsStorageConsentGranted,
-    bool? adPersonalizationGranted,
-    bool? adUserDataGranted,
+    bool? adPersonalizationSignalsConsentGranted,
+    bool? adUserDataConsentGranted,
   }) async {
     await _delegate.setConsent(
       adStorageConsentGranted: adStorageConsentGranted,
       analyticsStorageConsentGranted: analyticsStorageConsentGranted,
-      adPersonalizationGranted: adPersonalizationGranted,
-      adUserDataGranted: adUserDataGranted,
+      adPersonalizationSignalsConsentGranted: adPersonalizationSignalsConsentGranted,
+      adUserDataConsentGranted: adUserDataConsentGranted,
     );
   }
 
