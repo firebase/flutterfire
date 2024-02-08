@@ -796,31 +796,41 @@ FlutterStandardMethodCodec *_codec;
                          break;
                        }
                        case AggregateTypeSum: {
-                         NSNumber * value = [snapshot
-                                             valueForAggregateField:[FIRAggregateField
-                                                                        aggregateFieldForSumOfField:
-                                                                       [queryRequest field]]];
+                         NSNumber *value = [snapshot
+                             valueForAggregateField:[FIRAggregateField
+                                                        aggregateFieldForSumOfField:[queryRequest
+                                                                                        field]]];
 
                          [aggregateResponses
                              addObject:[AggregateQueryResponse
                                            makeWithType:AggregateTypeSum
                                                   field:queryRequest.field
-                                        // This passes either a double (wrapped in NSNumber) or null value
-                                        value: value != ((id)[NSNull null]) ? [NSNumber numberWithDouble:[value doubleValue]] : value ]];
+                                                  // This passes either a double (wrapped in
+                                                  // NSNumber) or null value
+                                                  value:value != ((id)[NSNull null])
+                                                            ? [NSNumber
+                                                                  numberWithDouble:[value
+                                                                                       doubleValue]]
+                                                            : value]];
                          break;
                        }
                        case AggregateTypeAverage: {
                          NSNumber *value = [snapshot
-                             valueForAggregateField:[FIRAggregateField
-                                                        aggregateFieldForAverageOfField:
-                                                       [queryRequest field]]];
+                             valueForAggregateField:
+                                 [FIRAggregateField
+                                     aggregateFieldForAverageOfField:[queryRequest field]]];
 
                          [aggregateResponses
                              addObject:[AggregateQueryResponse
                                            makeWithType:AggregateTypeAverage
                                                   field:queryRequest.field
-                                        // This passes either a double (wrapped in NSNumber) or null value
-                                        value: value != ((id)[NSNull null]) ? [NSNumber numberWithDouble:[value doubleValue]] : value ]];
+                                                  // This passes either a double (wrapped in
+                                                  // NSNumber) or null value
+                                                  value:value != ((id)[NSNull null])
+                                                            ? [NSNumber
+                                                                  numberWithDouble:[value
+                                                                                       doubleValue]]
+                                                            : value]];
                          break;
                        }
                      }
