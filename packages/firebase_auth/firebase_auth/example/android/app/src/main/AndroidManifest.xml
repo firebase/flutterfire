@@ -10,6 +10,8 @@
     <meta-data
       android:name="com.facebook.sdk.ClientToken"
       android:value="@string/facebook_client_token" />
+    <meta-data android:name="com.google.android.gms.games.APP_ID"
+      android:value="@string/game_services_project_id"/>
     <activity
       android:name=".MainActivity"
       android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"

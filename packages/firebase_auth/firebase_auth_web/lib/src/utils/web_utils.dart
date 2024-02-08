@@ -132,8 +132,8 @@ ActionCodeInfo? convertWebActionCodeInfo(
   return ActionCodeInfo(
     operation: ActionCodeInfoOperation.passwordReset,
     data: ActionCodeInfoData(
-      email: webActionCodeInfo.data.email.toDart,
-      previousEmail: webActionCodeInfo.data.previousEmail.toDart,
+      email: webActionCodeInfo.data.email?.toDart,
+      previousEmail: webActionCodeInfo.data.previousEmail?.toDart,
     ),
   );
 }
@@ -331,9 +331,9 @@ AuthCredential? convertWebOAuthCredential(
 
   return OAuthProvider(authCredential.providerId.toDart).credential(
     signInMethod: authCredential.signInMethod.toDart,
-    accessToken: authCredential.accessToken.toDart,
-    secret: authCredential.secret.toDart,
-    idToken: authCredential.idToken.toDart,
+    accessToken: authCredential.accessToken?.toDart,
+    secret: authCredential.secret?.toDart,
+    idToken: authCredential.idToken?.toDart,
   );
 }
 

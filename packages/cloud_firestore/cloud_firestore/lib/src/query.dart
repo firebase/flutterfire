@@ -4,10 +4,6 @@
 
 part of cloud_firestore;
 
-/// Sentinel value to check whether user passed values explicitly through .where() method
-@internal
-const notSetQueryParam = Object();
-
 /// Represents a [Query] over the data at a particular location.
 ///
 /// Can construct refined [Query] objects by adding filters and ordering.
@@ -634,8 +630,8 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   @override
   Query<Map<String, dynamic>> where(
     Object fieldOrFilter, {
-    Object? isEqualTo = notSetQueryParam,
-    Object? isNotEqualTo = notSetQueryParam,
+    Object? isEqualTo,
+    Object? isNotEqualTo,
     Object? isLessThan,
     Object? isLessThanOrEqualTo,
     Object? isGreaterThan,
@@ -650,8 +646,8 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
 
     if (fieldOrFilter is Filter) {
       assert(
-        identical(isEqualTo, notSetQueryParam) &&
-            identical(isNotEqualTo, notSetQueryParam) &&
+        isEqualTo == null &&
+            isNotEqualTo == null &&
             isLessThan == null &&
             isLessThanOrEqualTo == null &&
             isGreaterThan == null &&
@@ -694,12 +690,8 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       conditions.add(condition);
     }
 
-    if (!identical(isEqualTo, notSetQueryParam)) {
-      addCondition(field, '==', isEqualTo);
-    }
-    if (!identical(isNotEqualTo, notSetQueryParam)) {
-      addCondition(field, '!=', isNotEqualTo);
-    }
+    if (isEqualTo != null) addCondition(field, '==', isEqualTo);
+    if (isNotEqualTo != null) addCondition(field, '!=', isNotEqualTo);
     if (isLessThan != null) addCondition(field, '<', isLessThan);
     if (isLessThanOrEqualTo != null) {
       addCondition(field, '<=', isLessThanOrEqualTo);
@@ -1067,8 +1059,8 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
   @override
   Query<T> where(
     Object field, {
-    Object? isEqualTo = notSetQueryParam,
-    Object? isNotEqualTo = notSetQueryParam,
+    Object? isEqualTo,
+    Object? isNotEqualTo,
     Object? isLessThan,
     Object? isLessThanOrEqualTo,
     Object? isGreaterThan,

@@ -6,6 +6,7 @@
 // ignore_for_file: public_member_api_docs
 
 import 'dart:async';
+import 'dart:js_interop';
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'package:js/js.dart';
@@ -32,25 +33,26 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
   }
 
   static Future<bool> isSupported() =>
-      handleThenable(messaging_interop.isSupported());
+      messaging_interop.isSupported().toDart.then((value) => value! as bool);
 
   Messaging._fromJsObject(messaging_interop.MessagingJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
   /// To forcibly stop a registration token from being used, delete it by calling this method.
   /// Calling this method will stop the periodic data transmission to the FCM backend.
-  Future<void> deleteToken() =>
-      handleThenable(messaging_interop.deleteToken(jsObject));
+  Future<void> deleteToken() => messaging_interop.deleteToken(jsObject).toDart;
 
   /// After calling [requestPermission] you can call this method to get an FCM registration token
   /// that can be used to send push messages to this user.
   Future<String> getToken({String? vapidKey}) async {
     try {
-      final token = await handleThenable(messaging_interop.getToken(
-          jsObject,
-          vapidKey == null
-              ? null
-              : messaging_interop.GetTokenOptions(vapidKey: vapidKey)));
+      final token = (await messaging_interop
+          .getToken(
+              jsObject,
+              vapidKey == null
+                  ? null
+                  : messaging_interop.GetTokenOptions(vapidKey: vapidKey.toJS))
+          .toDart)! as String;
       return token;
     } catch (err) {
       // A race condition can happen in which the service worker get registered
@@ -78,15 +80,18 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
     StreamController<MessagePayload>? _controller = controller;
     if (_controller == null) {
       _controller = StreamController.broadcast(sync: true);
-      final nextWrapper = allowInterop((payload) {
-        _controller!.add(MessagePayload._fromJsObject(payload));
+      final nextWrapper = allowInterop((JSAny payload) {
+        _controller!.add(MessagePayload._fromJsObject(
+            payload as messaging_interop.MessagePayloadJsImpl));
       });
-      final errorWrapper = allowInterop((e) {
+      final errorWrapper = allowInterop((JSError e) {
         _controller!.addError(e);
       });
 
-      messaging_interop.onMessage(jsObject,
-          messaging_interop.Observer(next: nextWrapper, error: errorWrapper));
+      messaging_interop.onMessage(
+          jsObject,
+          messaging_interop.Observer(
+              next: nextWrapper.toJS, error: errorWrapper.toJS));
     }
     return _controller.stream;
   }
@@ -98,9 +103,9 @@ class NotificationPayload
       messaging_interop.NotificationPayloadJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
-  String? get title => jsObject.title;
-  String? get body => jsObject.body;
-  String? get image => jsObject.image;
+  String? get title => jsObject.title?.toDart;
+  String? get body => jsObject.body?.toDart;
+  String? get image => jsObject.image?.toDart;
 }
 
 class MessagePayload
@@ -108,8 +113,8 @@ class MessagePayload
   MessagePayload._fromJsObject(messaging_interop.MessagePayloadJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
-  String get messageId => jsObject.messageId;
-  String? get collapseKey => jsObject.collapseKey;
+  String get messageId => jsObject.messageId.toDart;
+  String? get collapseKey => jsObject.collapseKey?.toDart;
   FcmOptions? get fcmOptions => jsObject.fcmOptions == null
       ? null
       : FcmOptions._fromJsObject(jsObject.fcmOptions!);
@@ -117,13 +122,13 @@ class MessagePayload
       ? null
       : NotificationPayload._fromJsObject(jsObject.notification!);
   Map<String, dynamic>? get data => dartify(jsObject.data);
-  String? get from => jsObject.from;
+  String? get from => jsObject.from?.toDart;
 }
 
 class FcmOptions extends JsObjectWrapper<messaging_interop.FcmOptionsJsImpl> {
   FcmOptions._fromJsObject(messaging_interop.FcmOptionsJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
-  String? get analyticsLabel => jsObject.analyticsLabel;
-  String? get link => jsObject.link;
+  String? get analyticsLabel => jsObject.analyticsLabel?.toDart;
+  String? get link => jsObject.link?.toDart;
 }

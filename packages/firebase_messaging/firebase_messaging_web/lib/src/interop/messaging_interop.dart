@@ -8,73 +8,97 @@
 @JS('firebase_messaging')
 library firebase_interop.messaging;
 
+import 'dart:js_interop';
+
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
-import 'package:js/js.dart';
 
 @JS()
+@staticInterop
 external MessagingJsImpl getMessaging([AppJsImpl? app]);
 
 @JS()
-external PromiseJsImpl<bool> deleteToken(MessagingJsImpl messaging);
+@staticInterop
+external JSPromise /* bool */ deleteToken(MessagingJsImpl messaging);
 
 @JS()
-external PromiseJsImpl<String> getToken(
+@staticInterop
+external JSPromise /* String */ getToken(
     MessagingJsImpl messaging, GetTokenOptions? getTokenOptions);
 
 @JS('isSupported')
-external PromiseJsImpl<bool> isSupported();
+@staticInterop
+external JSPromise /* bool */ isSupported();
 
 @JS()
-external void Function() onMessage(
+@staticInterop
+external JSFunction onMessage(
   MessagingJsImpl messaging,
   Observer observer,
 );
 
 @JS('Messaging')
+@staticInterop
 abstract class MessagingJsImpl {}
 
 @JS()
+@staticInterop
 @anonymous
 class Observer {
-  external dynamic get next;
-  external dynamic get error;
-  external factory Observer({dynamic next, dynamic error});
+  external factory Observer({JSAny next, JSAny error});
+}
+
+extension ObserverJsImplX on Observer {
+  external JSAny get next;
+  external JSAny get error;
 }
 
 @JS()
+@staticInterop
 @anonymous
 class GetTokenOptions {
-  external String get vapidKey;
   // TODO - I imagine we won't be implementing serviceWorkerRegistration type as it extends EventTarget class
   // external String get serviceWorkerRegistration
   external factory GetTokenOptions({
-    String? vapidKey,
+    JSString? vapidKey,
     /*dynamic serviceWorkerRegistration */
   });
 }
 
-@JS()
-@anonymous
-abstract class NotificationPayloadJsImpl {
-  external String? get title;
-  external String? get body;
-  external String? get image;
+extension GetTokenOptionsJsImplX on GetTokenOptions {
+  external JSString get vapidKey;
 }
 
 @JS()
+@staticInterop
 @anonymous
-abstract class MessagePayloadJsImpl {
-  external String get messageId;
-  external String? get collapseKey;
+abstract class NotificationPayloadJsImpl {}
+
+extension NotificationPayloadJsImplX on NotificationPayloadJsImpl {
+  external JSString? get title;
+  external JSString? get body;
+  external JSString? get image;
+}
+
+@JS()
+@staticInterop
+@anonymous
+abstract class MessagePayloadJsImpl {}
+
+extension MessagePayloadJsImplX on MessagePayloadJsImpl {
+  external JSString get messageId;
+  external JSString? get collapseKey;
   external FcmOptionsJsImpl? get fcmOptions;
   external NotificationPayloadJsImpl? get notification;
-  external dynamic /*Map<String, String>*/ get data;
-  external String? get from;
+  external JSObject get data;
+  external JSString? get from;
 }
 
 @JS()
+@staticInterop
 @anonymous
-abstract class FcmOptionsJsImpl {
-  external String? get analyticsLabel;
-  external String? get link;
+abstract class FcmOptionsJsImpl {}
+
+extension FcmOptionsJsImplX on FcmOptionsJsImpl {
+  external JSString? get analyticsLabel;
+  external JSString? get link;
 }

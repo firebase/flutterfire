@@ -122,33 +122,38 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   ///
   /// It forces refresh regardless of token expiration if [forceRefresh]
   /// parameter is `true`.
-  Future<String> getIdToken([bool forceRefresh = false]) =>
-      jsObject.getIdToken(forceRefresh.toJS).toDart as Future<String>;
+  Future<String> getIdToken([bool forceRefresh = false]) => jsObject
+      .getIdToken(forceRefresh.toJS)
+      .toDart
+      .then((value) => value! as String);
 
   /// Links the user account with the given credentials, and returns any
   /// available additional user information, such as user name.
   Future<UserCredential> linkWithCredential(
           auth_interop.OAuthCredential? credential) =>
-      (auth_interop.linkWithCredential(jsObject, credential).toDart
-              as Future<auth_interop.UserCredentialJsImpl>)
-          .then(UserCredential.fromJsObject);
+      auth_interop.linkWithCredential(jsObject, credential).toDart.then(
+          (value) => UserCredential.fromJsObject(
+              value! as auth_interop.UserCredentialJsImpl));
 
   /// Links the user account with the given [phoneNumber] in E.164 format
   /// (e.g. +16505550101) and [applicationVerifier].
   Future<ConfirmationResult> linkWithPhoneNumber(
           String phoneNumber, ApplicationVerifier applicationVerifier) =>
-      (auth_interop
-              .linkWithPhoneNumber(
-                  jsObject, phoneNumber.toJS, applicationVerifier.jsObject)
-              .toDart as Future<auth_interop.ConfirmationResultJsImpl>)
-          .then(ConfirmationResult.fromJsObject);
+      auth_interop
+          .linkWithPhoneNumber(
+              jsObject, phoneNumber.toJS, applicationVerifier.jsObject)
+          .toDart
+          .then((value) => ConfirmationResult.fromJsObject(
+              value! as auth_interop.ConfirmationResultJsImpl));
 
   /// Links the authenticated [provider] to the user account using
   /// a pop-up based OAuth flow.
   /// It returns the [UserCredential] information if linking is successful.
-  Future<UserCredential> linkWithPopup(AuthProvider provider) =>
-      auth_interop.linkWithPopup(jsObject, provider.jsObject).toDart
-          as Future<UserCredential>;
+  Future<UserCredential> linkWithPopup(AuthProvider provider) => auth_interop
+      .linkWithPopup(jsObject, provider.jsObject)
+      .toDart
+      .then((value) => UserCredential.fromJsObject(
+          value! as auth_interop.UserCredentialJsImpl));
 
   /// Links the authenticated [provider] to the user account using
   /// a full-page redirect flow.
@@ -159,8 +164,11 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   /// available additional user information, such as user name.
   Future<UserCredential> reauthenticateWithCredential(
           auth_interop.OAuthCredential credential) =>
-      auth_interop.reauthenticateWithCredential(jsObject, credential).toDart
-          as Future<UserCredential>;
+      auth_interop
+          .reauthenticateWithCredential(jsObject, credential)
+          .toDart
+          .then((value) => UserCredential.fromJsObject(
+              value! as auth_interop.UserCredentialJsImpl));
 
   /// Re-authenticates a user using a fresh credential.
   /// Use before operations such as [updatePassword] that require tokens
@@ -172,14 +180,19 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
       auth_interop
           .reauthenticateWithPhoneNumber(
               jsObject, phoneNumber.toJS, applicationVerifier.jsObject)
-          .toDart as Future<ConfirmationResult>;
+          .toDart
+          .then((value) => ConfirmationResult.fromJsObject(
+              value! as auth_interop.ConfirmationResultJsImpl));
 
   /// Reauthenticates a user with the specified provider using
   /// a pop-up based OAuth flow.
   /// It returns the [UserCredential] information if reauthentication is successful.
   Future<UserCredential> reauthenticateWithPopup(AuthProvider provider) =>
-      auth_interop.reauthenticateWithPopup(jsObject, provider.jsObject).toDart
-          as Future<UserCredential>;
+      auth_interop
+          .reauthenticateWithPopup(jsObject, provider.jsObject)
+          .toDart
+          .then((value) => UserCredential.fromJsObject(
+              value! as auth_interop.UserCredentialJsImpl));
 
   /// Reauthenticates a user with the specified OAuth [provider] using
   /// a full-page redirect flow.
@@ -251,8 +264,8 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
         ? jsObject.getIdTokenResult()
         : jsObject.getIdTokenResult(forceRefresh.toJS);
 
-    return (promise.toDart as Future<auth_interop.IdTokenResultImpl>)
-        .then(IdTokenResult._fromJsObject);
+    return promise.toDart.then((value) =>
+        IdTokenResult._fromJsObject(value! as auth_interop.IdTokenResultImpl));
   }
 
   /// Returns a JSON-serializable representation of this object.
@@ -295,7 +308,7 @@ class IdTokenResult extends JsObjectWrapper<auth_interop.IdTokenResultImpl> {
   /// custom, phone, password, etc).
   ///
   /// Note, this does not map to provider IDs.
-  String get signInProvider => jsObject.signInProvider.toDart;
+  String? get signInProvider => jsObject.signInProvider?.toDart;
 
   /// The Firebase Auth ID token JWT string.
   String get token => jsObject.token.toDart;
@@ -330,7 +343,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// SMS templates for phone authentication, reCAPTCHA verifier and OAuth
   /// popup/redirect operations provided the specified providers support
   /// localization with the language code specified.
-  String get languageCode => jsObject.languageCode.toDart;
+  String? get languageCode => jsObject.languageCode?.toDart;
 
   set languageCode(String? s) {
     jsObject.languageCode = s?.toJS;
@@ -462,8 +475,10 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// out-of-band mechanism.
   /// It returns [ActionCodeInfo], metadata about the code.
   Future<auth_interop.ActionCodeInfo> checkActionCode(String code) =>
-      (auth_interop.checkActionCode(jsObject, code.toJS).toDart)
-          as Future<auth_interop.ActionCodeInfo>;
+      auth_interop
+          .checkActionCode(jsObject, code.toJS)
+          .toDart
+          .then((value) => value! as auth_interop.ActionCodeInfo);
 
   /// Completes password reset process with a [code] and a [newPassword].
   Future confirmPasswordReset(String code, String newPassword) => auth_interop
@@ -717,9 +732,10 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// Verifies a password reset [code] sent to the user by email
   /// or other out-of-band mechanism.
   /// Returns the user's e-mail address if valid.
-  Future<String> verifyPasswordResetCode(String code) =>
-      auth_interop.verifyPasswordResetCode(jsObject, code.toJS).toDart
-          as Future<String>;
+  Future<String> verifyPasswordResetCode(String code) => auth_interop
+      .verifyPasswordResetCode(jsObject, code.toJS)
+      .toDart
+      .then((value) => value! as String);
 }
 
 /// Represents an auth provider.
@@ -1019,7 +1035,8 @@ class PhoneAuthProvider
           dynamic phoneOptions, ApplicationVerifier applicationVerifier) =>
       jsObject
           .verifyPhoneNumber(phoneOptions, applicationVerifier.jsObject)
-          .toDart as Future<String>;
+          .toDart
+          .then((value) => value! as String);
 
   /// Creates a phone auth credential given the verification ID
   /// from [verifyPhoneNumber] and the [verificationCode] that was sent to the
@@ -1045,7 +1062,8 @@ abstract class ApplicationVerifier<
   /// Executes the verification process.
   /// Returns a Future containing string for a token that can be used to
   /// assert the validity of a request.
-  Future<String> verify() => jsObject.verify().toDart as Future<String>;
+  Future<String> verify() =>
+      jsObject.verify().toDart.then((value) => value! as String);
 }
 
 /// reCAPTCHA verifier.
@@ -1101,7 +1119,8 @@ class RecaptchaVerifier
 
   /// Renders the reCAPTCHA widget on the page.
   /// Returns a Future that resolves with the reCAPTCHA widget ID.
-  Future<num> render() => jsObject.render().toDart as Future<num>;
+  Future<num> render() =>
+      jsObject.render().toDart.then((value) => value! as num);
 }
 
 /// A result from a phone number sign-in, link, or reauthenticate call.
@@ -1157,13 +1176,14 @@ class UserCredential
 class AdditionalUserInfo
     extends JsObjectWrapper<auth_interop.AdditionalUserInfoJsImpl> {
   /// Returns the provider id.
-  String get providerId => jsObject.providerId.toDart;
+  String? get providerId => jsObject.providerId?.toDart;
 
   /// Returns the profile.
-  Map<String, dynamic>? get profile => dartify(jsObject.profile);
+  Map<String, dynamic>? get profile =>
+      jsObject.profile != null ? dartify(jsObject.profile!) : null;
 
   /// Returns the user name.
-  String get username => jsObject.username.toDart;
+  String? get username => jsObject.username?.toDart;
 
   /// Returns whether a user is a new or returning user.
   bool get isNewUser => jsObject.isNewUser.toDart;

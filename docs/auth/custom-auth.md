@@ -42,7 +42,7 @@ with Firebase.
                 print("The supplied token is for a different Firebase project.");
                 break;
             default:
-                print("Unkown error.");
+                print("Unknown error.");
         }
     }
     ```

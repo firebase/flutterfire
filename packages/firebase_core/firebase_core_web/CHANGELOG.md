@@ -1,3 +1,26 @@
+## 2.11.4
+
+ - **FIX**(core,web): remove unused import that could lead to compilation error ([#12285](https://github.com/firebase/flutterfire/issues/12285)). ([0e67a1a4](https://github.com/firebase/flutterfire/commit/0e67a1a466e7115e4cc1e1a0167c6c3f1122e432))
+
+## 2.11.3
+
+ - **FIX**(core,web): fix an incompatibility with Flutter Beta that would occur when calling method on TrustedScriptURL ([#12274](https://github.com/firebase/flutterfire/issues/12274)). ([c395da52](https://github.com/firebase/flutterfire/commit/c395da524debb0c310d9a60391a2442e0dcbce1f))
+ - **FIX**(core,web): fix null safety issue in typing JS Interop ([#12266](https://github.com/firebase/flutterfire/issues/12266)). ([8d944a25](https://github.com/firebase/flutterfire/commit/8d944a25e40c52ef1b14e23f8f52d3758e980856))
+
+## 2.11.2
+
+ - **FIX**(auth,web): fix null safety issue in typing JS Interop ([#12250](https://github.com/firebase/flutterfire/issues/12250)). ([d0d30405](https://github.com/firebase/flutterfire/commit/d0d30405a895ae221603ddd158b1cb1636312fb4))
+
+## 2.11.1
+
+ - **FIX**(core,web): fix some JS interop that were incorrectly migrated ([#12239](https://github.com/firebase/flutterfire/issues/12239)). ([e38a510b](https://github.com/firebase/flutterfire/commit/e38a510b770068c1f2e4e515b7ed252f10ac2219))
+
+## 2.11.0
+
+ - **FEAT**(firestore,web): migrate web to js_interop to be compatible with WASM ([#12169](https://github.com/firebase/flutterfire/issues/12169)). ([57ebd529](https://github.com/firebase/flutterfire/commit/57ebd529de5def2bab1557a1bd9967ee4267c08a))
+ - **FEAT**(auth,web): migrate web to js_interop to be compatible with WASM ([#12145](https://github.com/firebase/flutterfire/issues/12145)). ([8d2df7a1](https://github.com/firebase/flutterfire/commit/8d2df7a1b2198797e9c95c45efaf21b4e5bfe766))
+ - **FEAT**(core,web): migrate web to js_interop to be compatible with WASM ([#12031](https://github.com/firebase/flutterfire/issues/12031)). ([96f79d21](https://github.com/firebase/flutterfire/commit/96f79d21f51712769f33a601e4564b90d4a60a33))
+
 ## 2.10.0
 
  - **FEAT**: bump JS SDK to version 10.7.0 ([#11980](https://github.com/firebase/flutterfire/issues/11980)). ([ba1924d8](https://github.com/firebase/flutterfire/commit/ba1924d8544507f32071f37258adecb11182cdfe))
