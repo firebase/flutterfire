@@ -811,8 +811,7 @@ public class FlutterFirebaseFirestorePlugin
                       new GeneratedAndroidFirebaseFirestore.AggregateQueryResponse.Builder();
                   builderAverage.setType(GeneratedAndroidFirebaseFirestore.AggregateType.AVERAGE);
                   builderAverage.setValue(
-                      Objects.requireNonNull(
-                          aggregateQuerySnapshot.get(average(queryRequest.getField()))));
+                      aggregateQuerySnapshot.get(average(queryRequest.getField())));
                   builderAverage.setField(queryRequest.getField());
 
                   aggregateResponse.add(builderAverage.build());

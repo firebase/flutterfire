@@ -3881,6 +3881,18 @@ void runQueryTests() {
           );
         },
       );
+
+      testWidgets('count(), average() & sum() on empty collection',
+          (widgetTester) async {
+        final collection = await initializeTest('empty-collection');
+
+        final snapshot = await collection
+            .aggregate(count(), sum('foo'), average('foo'))
+            .get();
+        expect(snapshot.count, 0);
+        expect(snapshot.getSum('foo'), 0);
+        expect(snapshot.getAverage('foo'), null);
+      });
     });
 
     group('startAfterDocument', () {
