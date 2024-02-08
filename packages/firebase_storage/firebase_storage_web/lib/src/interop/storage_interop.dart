@@ -28,17 +28,17 @@ external JSPromise /* void */ deleteObject(ReferenceJsImpl ref);
 
 @JS()
 @staticInterop
-external JSPromise /* String */ getDownloadURL(ReferenceJsImpl ref);
-
-@JS()
-@staticInterop
 external JSPromise /* String */ getBlob(ReferenceJsImpl ref,
-    [int? maxDownloadSizeBytes]);
+    [JSNumber? maxDownloadSizeBytes]);
 
 @JS()
 @staticInterop
 external JSPromise /* List<String> */ getBytes(ReferenceJsImpl ref,
     [JSNumber? maxDownloadSizeBytes]);
+
+@JS()
+@staticInterop
+external JSPromise /* String */ getDownloadURL(ReferenceJsImpl ref);
 
 @JS()
 @staticInterop
@@ -74,11 +74,11 @@ external UploadTaskJsImpl uploadBytesResumable(
 @staticInterop
 @anonymous
 class EmulatorOptions {
-  external factory EmulatorOptions({JSString mockUserToken});
+  external factory EmulatorOptions({JSString? mockUserToken});
 }
 
 extension EmulatorOptionsJsImplX on EmulatorOptions {
-  external JSString get mockUserToken;
+  external JSString? get mockUserToken;
 }
 
 @JS('FirebaseStorage')
@@ -105,8 +105,8 @@ extension ReferenceJsImplX on ReferenceJsImpl {
   external set fullPath(JSString s);
   external JSString get name;
   external set name(JSString s);
-  external ReferenceJsImpl get parent;
-  external set parent(ReferenceJsImpl r);
+  external ReferenceJsImpl? get parent;
+  external set parent(ReferenceJsImpl? r);
   external ReferenceJsImpl get root;
   external set root(ReferenceJsImpl r);
   external StorageJsImpl get storage;
@@ -143,7 +143,7 @@ extension FullMetadataJsImplX on FullMetadataJsImpl {
   external JSString? get updated;
 }
 
-@JS()
+@JS('UploadMetadata')
 @staticInterop
 @anonymous
 class UploadMetadataJsImpl extends SettableMetadataJsImpl {
@@ -158,8 +158,8 @@ class UploadMetadataJsImpl extends SettableMetadataJsImpl {
 }
 
 extension UploadMetadataJsImplX on UploadMetadataJsImpl {
-  external JSString get md5Hash;
-  external set md5Hash(JSString s);
+  external JSString? get md5Hash;
+  external set md5Hash(JSString? s);
 }
 
 @JS('UploadTask')
@@ -169,16 +169,16 @@ abstract class UploadTaskJsImpl {}
 extension UploadTaskJsImplX on UploadTaskJsImpl {
   external UploadTaskSnapshotJsImpl get snapshot;
   external set snapshot(UploadTaskSnapshotJsImpl t);
-  external bool cancel();
+  external JSBoolean cancel();
   external JSFunction on(JSString event,
       [JSAny nextOrObserver, JSFunction? error, JSFunction? complete]);
-  external bool pause();
-  external bool resume();
+  external JSBoolean pause();
+  external JSBoolean resume();
   external JSPromise /* void */ then(
       [JSFunction? onResolve, JSFunction? onReject]);
 }
 
-@JS()
+@JS('UploadTaskSnapshot')
 @staticInterop
 @anonymous
 abstract class UploadTaskSnapshotJsImpl {}
@@ -192,7 +192,7 @@ extension UploadTaskSnapshotJsImplX on UploadTaskSnapshotJsImpl {
   external JSNumber get totalBytes;
 }
 
-@JS()
+@JS('SettableMetadata')
 @staticInterop
 @anonymous
 class SettableMetadataJsImpl {
@@ -220,7 +220,7 @@ extension SettableMetadataJsImplX on SettableMetadataJsImpl {
   external set customMetadata(JSAny? s);
 }
 
-@JS()
+@JS('ListOptions')
 @staticInterop
 @anonymous
 class ListOptionsJsImpl {
@@ -228,20 +228,20 @@ class ListOptionsJsImpl {
 }
 
 extension ListOptionsJsImplX on ListOptionsJsImpl {
-  external set maxResults(JSNumber s);
-  external JSNumber get maxResults;
-  external set pageToken(JSString s);
-  external JSString get pageToken;
+  external set maxResults(JSNumber? s);
+  external JSNumber? get maxResults;
+  external set pageToken(JSString? s);
+  external JSString? get pageToken;
 }
 
-@JS()
+@JS('ListResult')
 @staticInterop
 @anonymous
 class ListResultJsImpl {}
 
 extension ListResultJsImplX on ListResultJsImpl {
   external JSArray /* ReferenceJsImpl */ get items;
-  external JSString get nextPageToken;
+  external JSString? get nextPageToken;
   external JSArray /* ReferenceJsImpl */ get prefixes;
 }
 

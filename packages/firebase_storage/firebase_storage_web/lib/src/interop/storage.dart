@@ -106,7 +106,9 @@ class StorageReference
 
   /// The reference to the parent location of this reference.
   /// It is `null` in case of root StorageReference.
-  StorageReference? get parent => StorageReference.getInstance(jsObject.parent);
+  StorageReference? get parent => jsObject.parent != null
+      ? StorageReference.getInstance(jsObject.parent!)
+      : null;
 
   /// The reference to the root of this storage reference's bucket.
   StorageReference get root => StorageReference.getInstance(jsObject.root);
@@ -279,10 +281,10 @@ abstract class _UploadMetadataBase<
   _UploadMetadataBase.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
 
   /// The Base64-encoded MD5 hash for the object being uploaded.
-  String get md5Hash => jsObject.md5Hash.toDart;
+  String? get md5Hash => jsObject.md5Hash?.toDart;
 
-  set md5Hash(String s) {
-    jsObject.md5Hash = s.toJS;
+  set md5Hash(String? s) {
+    jsObject.md5Hash = s?.toJS;
   }
 }
 
@@ -323,7 +325,7 @@ class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
 
   /// Cancels a running task. Has no effect on a complete or failed task.
   /// Returns [:true:] if it had an effect.
-  bool cancel() => jsObject.cancel();
+  bool cancel() => jsObject.cancel().toDart;
 
   /// Stream for upload task state changed event.
   Stream<UploadTaskSnapshot> get onStateChanged {
@@ -364,11 +366,11 @@ class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
 
   /// Pauses the running task. Has no effect on a paused or failed task.
   /// Returns [:true:] if it had an effect.
-  bool pause() => jsObject.pause();
+  bool pause() => jsObject.pause().toDart;
 
   /// Resumes the paused task. Has no effect on a running or failed task.
   /// Returns [:true:] if it had an effect.
-  bool resume() => jsObject.resume();
+  bool resume() => jsObject.resume().toDart;
 }
 
 /// Holds data about the current state of the upload task.
@@ -519,16 +521,16 @@ class ListOptions extends JsObjectWrapper<storage_interop.ListOptionsJsImpl> {
 
   /// If set, limits the total number of prefixes and items to return.
   /// The default and maximum maxResults is 1000.
-  int get maxResults => jsObject.maxResults.toDartInt;
+  int? get maxResults => jsObject.maxResults?.toDartInt;
 
-  set maxResults(int n) => jsObject.maxResults = n.toJS;
+  set maxResults(int? n) => jsObject.maxResults = n?.toJS;
 
   /// The [ListResult.nextPageToken] from a previous call to
   /// [StorageReference.list]. If provided, listing is resumed from the
   /// previous position.
-  String get pageToken => jsObject.pageToken.toDart;
+  String? get pageToken => jsObject.pageToken?.toDart;
 
-  set pageToken(String t) => jsObject.pageToken = t.toJS;
+  set pageToken(String? t) => jsObject.pageToken = t?.toJS;
 }
 
 /// Result returned by [StorageReference.list].
@@ -547,7 +549,7 @@ class ListResult extends JsObjectWrapper<storage_interop.ListResultJsImpl> {
 
   /// If set, there might be more results for this list. Use this
   /// token to resume the list.
-  String get nextPageToken => jsObject.nextPageToken.toDart;
+  String? get nextPageToken => jsObject.nextPageToken?.toDart;
 
   /// References to prefixes (sub-folders). You can call [list()] on
   /// them to get its contents.
