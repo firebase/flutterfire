@@ -89,8 +89,7 @@ jobs:
             flutter test integration_test/e2e_test.dart --dart-define=CI=true -d emulator-5554
 
   ios:
-    # Dropped down to macos-12 as macos-13 was timing out. This suspected issue:https://github.com/actions/runner-images/issues/8023
-    runs-on: macos-12
+    runs-on: macos-14
     timeout-minutes: 45
     strategy:
       matrix:
@@ -154,8 +153,8 @@ jobs:
         working-directory: ${{ matrix.working_directory }}
         run: |
           # Boot simulator and wait for System app to be ready.
-          # List of available simulators: https://github.com/actions/runner-images/blob/main/images/macos/macos-13-Readme.md#installed-simulators
-          SIMULATOR="iPhone 14"
+          # List of available simulators: https://github.com/actions/runner-images/blob/main/images/macos/macos-14-Readme.md#installed-simulators
+          SIMULATOR="iPhone 15"
           xcrun simctl bootstatus "$SIMULATOR" -b
           xcrun simctl logverbose "$SIMULATOR" enable
           # Sleep to allow simulator to settle.
@@ -165,7 +164,7 @@ jobs:
           flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true
 
   macos:
-    runs-on: macos-13
+    runs-on: macos-14
     timeout-minutes: 45
     strategy:
       matrix:
