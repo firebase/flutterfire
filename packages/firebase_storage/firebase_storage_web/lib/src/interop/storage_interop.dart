@@ -8,225 +8,267 @@
 @JS('firebase_storage')
 library firebase.storage_interop;
 
+import 'dart:js_interop';
+
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
-import 'package:js/js.dart';
 
 @JS()
-external StorageJsImpl getStorage([AppJsImpl? app, String? bucketUrl]);
+@staticInterop
+external StorageJsImpl getStorage([AppJsImpl? app, JSString? bucketUrl]);
 
 @JS()
+@staticInterop
 external void connectStorageEmulator(
-    StorageJsImpl storage, String host, int port,
+    StorageJsImpl storage, JSString host, JSNumber port,
     [EmulatorOptions? options]);
 
 @JS()
-external PromiseJsImpl<void> deleteObject(ReferenceJsImpl ref);
+@staticInterop
+external JSPromise /* void */ deleteObject(ReferenceJsImpl ref);
 
 @JS()
-external PromiseJsImpl<String> getDownloadURL(ReferenceJsImpl ref);
+@staticInterop
+external JSPromise /* String */ getBlob(ReferenceJsImpl ref,
+    [JSNumber? maxDownloadSizeBytes]);
 
 @JS()
-external PromiseJsImpl<String> getBlob(ReferenceJsImpl ref,
-    [int? maxDownloadSizeBytes]);
+@staticInterop
+external JSPromise /* List<String> */ getBytes(ReferenceJsImpl ref,
+    [JSNumber? maxDownloadSizeBytes]);
 
 @JS()
-external PromiseJsImpl<List<String>> getBytes(ReferenceJsImpl ref,
-    [int? maxDownloadSizeBytes]);
+@staticInterop
+external JSPromise /* String */ getDownloadURL(ReferenceJsImpl ref);
 
 @JS()
-external PromiseJsImpl<FullMetadataJsImpl> getMetadata(ReferenceJsImpl ref);
+@staticInterop
+external JSPromise /* FullMetadataJsImpl */ getMetadata(ReferenceJsImpl ref);
 
 @JS()
-external PromiseJsImpl<ListResultJsImpl> list(ReferenceJsImpl ref,
+@staticInterop
+external JSPromise /* ListResultJsImpl */ list(ReferenceJsImpl ref,
     [ListOptionsJsImpl? listOptions]);
 
 @JS()
-external PromiseJsImpl<ListResultJsImpl> listAll(ReferenceJsImpl ref);
+@staticInterop
+external JSPromise /* ListResultJsImpl */ listAll(ReferenceJsImpl ref);
 
 @JS()
+@staticInterop
 /* if 2nd arg is `url`, first arg has to be StorageJsImpl */
 /* if 2nd arg is `path`, first arg can be StorageJsImpl || ReferenceJsImpl */
-external ReferenceJsImpl ref(Object storageOrRef, [String? urlOrPath]);
+external ReferenceJsImpl ref(JSAny storageOrRef, [JSString? urlOrPath]);
 
 @JS()
-external PromiseJsImpl<FullMetadataJsImpl> updateMetadata(
+@staticInterop
+external JSPromise /* FullMetadataJsImpl */ updateMetadata(
     ReferenceJsImpl ref, SettableMetadataJsImpl settableMetadata);
 
 @JS()
+@staticInterop
 external UploadTaskJsImpl uploadBytesResumable(
-    ReferenceJsImpl ref, dynamic /* Blob | Uint8Array | ArrayBuffer */ data,
+    ReferenceJsImpl ref, JSAny /* Blob | Uint8Array | ArrayBuffer */ data,
     [UploadMetadataJsImpl? metadata]);
 
 @JS()
+@staticInterop
 @anonymous
 class EmulatorOptions {
-  external factory EmulatorOptions({mockUserToken});
-  external String get mockUserToken;
+  external factory EmulatorOptions({JSString? mockUserToken});
+}
+
+extension EmulatorOptionsJsImplX on EmulatorOptions {
+  external JSString? get mockUserToken;
 }
 
 @JS('FirebaseStorage')
-abstract class StorageJsImpl {
+@staticInterop
+abstract class StorageJsImpl {}
+
+extension StorageJsImplX on StorageJsImpl {
   external AppJsImpl get app;
   external set app(AppJsImpl a);
-  external int get maxOperationRetryTime;
-  external set maxOperationRetryTime(int t);
-  external int get maxUploadRetryTime;
-  external set maxUploadRetryTime(int t);
+  external JSNumber get maxOperationRetryTime;
+  external set maxOperationRetryTime(JSNumber t);
+  external JSNumber get maxUploadRetryTime;
+  external set maxUploadRetryTime(JSNumber t);
 }
 
 @JS('StorageReference')
-abstract class ReferenceJsImpl {
-  external String get bucket;
-  external set bucket(String s);
-  external String get fullPath;
-  external set fullPath(String s);
-  external String get name;
-  external set name(String s);
-  external ReferenceJsImpl get parent;
-  external set parent(ReferenceJsImpl r);
+@staticInterop
+abstract class ReferenceJsImpl {}
+
+extension ReferenceJsImplX on ReferenceJsImpl {
+  external JSString get bucket;
+  external set bucket(JSString s);
+  external JSString get fullPath;
+  external set fullPath(JSString s);
+  external JSString get name;
+  external set name(JSString s);
+  external ReferenceJsImpl? get parent;
+  external set parent(ReferenceJsImpl? r);
   external ReferenceJsImpl get root;
   external set root(ReferenceJsImpl r);
   external StorageJsImpl get storage;
   external set storage(StorageJsImpl s);
-
-  @override
-  external String toString();
 }
 
 //@JS('FullMetadata')
 @JS()
+@staticInterop
 @anonymous
 class FullMetadataJsImpl extends UploadMetadataJsImpl {
   external factory FullMetadataJsImpl(
-      {String? md5Hash,
-      String? cacheControl,
-      String? contentDisposition,
-      String? contentEncoding,
-      String? contentLanguage,
-      String? contentType,
-      dynamic customMetadata});
-
-  external String get bucket;
-  // TODO - new API.
-  external List<String>? get downloadTokens;
-  // TODO - new API.
-  external ReferenceJsImpl? get ref;
-  external String? get fullPath;
-  external String? get generation;
-  external String? get metageneration;
-  external String? get name;
-  external int? get size;
-  external String? get timeCreated;
-  external String? get updated;
+      {JSString? md5Hash,
+      JSString? cacheControl,
+      JSString? contentDisposition,
+      JSString? contentEncoding,
+      JSString? contentLanguage,
+      JSString? contentType,
+      JSAny? customMetadata});
 }
 
-@JS()
+extension FullMetadataJsImplX on FullMetadataJsImpl {
+  external JSString get bucket;
+  // TODO - new API.
+  external JSArray? get downloadTokens;
+  // TODO - new API.
+  external ReferenceJsImpl? get ref;
+  external JSString? get fullPath;
+  external JSString? get generation;
+  external JSString? get metageneration;
+  external JSString? get name;
+  external JSNumber? get size;
+  external JSString? get timeCreated;
+  external JSString? get updated;
+}
+
+@JS('UploadMetadata')
+@staticInterop
 @anonymous
 class UploadMetadataJsImpl extends SettableMetadataJsImpl {
   external factory UploadMetadataJsImpl(
-      {String? md5Hash,
-      String? cacheControl,
-      String? contentDisposition,
-      String? contentEncoding,
-      String? contentLanguage,
-      String? contentType,
-      dynamic customMetadata});
+      {JSString? md5Hash,
+      JSString? cacheControl,
+      JSString? contentDisposition,
+      JSString? contentEncoding,
+      JSString? contentLanguage,
+      JSString? contentType,
+      JSAny? customMetadata});
+}
 
-  external String get md5Hash;
-  external set md5Hash(String s);
+extension UploadMetadataJsImplX on UploadMetadataJsImpl {
+  external JSString? get md5Hash;
+  external set md5Hash(JSString? s);
 }
 
 @JS('UploadTask')
-abstract class UploadTaskJsImpl
-    implements PromiseJsImpl<UploadTaskSnapshotJsImpl> {
+@staticInterop
+abstract class UploadTaskJsImpl {}
+
+extension UploadTaskJsImplX on UploadTaskJsImpl {
   external UploadTaskSnapshotJsImpl get snapshot;
   external set snapshot(UploadTaskSnapshotJsImpl t);
-  external bool cancel();
-  external Func0 on(String event,
-      [dynamic nextOrObserver, Func1? error, Func0? complete]);
-  external bool pause();
-  external bool resume();
-  @override
-  external PromiseJsImpl<void> then([Func1? onResolve, Func1? onReject]);
+  external JSBoolean cancel();
+  external JSFunction on(JSString event,
+      [JSAny nextOrObserver, JSFunction? error, JSFunction? complete]);
+  external JSBoolean pause();
+  external JSBoolean resume();
+  external JSPromise /* void */ then(
+      [JSFunction? onResolve, JSFunction? onReject]);
 }
 
-@JS()
+@JS('UploadTaskSnapshot')
+@staticInterop
 @anonymous
-abstract class UploadTaskSnapshotJsImpl {
-  external int get bytesTransferred;
+abstract class UploadTaskSnapshotJsImpl {}
+
+extension UploadTaskSnapshotJsImplX on UploadTaskSnapshotJsImpl {
+  external JSNumber get bytesTransferred;
   external FullMetadataJsImpl get metadata;
   external ReferenceJsImpl get ref;
-  external String get state;
+  external JSString get state;
   external UploadTaskJsImpl get task;
-  external int get totalBytes;
+  external JSNumber get totalBytes;
 }
 
-@JS()
+@JS('SettableMetadata')
+@staticInterop
 @anonymous
 class SettableMetadataJsImpl {
   external factory SettableMetadataJsImpl(
-      {String? cacheControl,
-      String? contentDisposition,
-      String? contentEncoding,
-      String? contentLanguage,
-      String? contentType,
-      dynamic customMetadata});
-
-  external String get cacheControl;
-  external set cacheControl(String s);
-  external String get contentDisposition;
-  external set contentDisposition(String s);
-  external String get contentEncoding;
-  external set contentEncoding(String s);
-  external String get contentLanguage;
-  external set contentLanguage(String s);
-  external String get contentType;
-  external set contentType(String s);
-  external dynamic get customMetadata;
-  external set customMetadata(dynamic s);
+      {JSString? cacheControl,
+      JSString? contentDisposition,
+      JSString? contentEncoding,
+      JSString? contentLanguage,
+      JSString? contentType,
+      JSAny? customMetadata});
 }
 
-@JS()
+extension SettableMetadataJsImplX on SettableMetadataJsImpl {
+  external JSString? get cacheControl;
+  external set cacheControl(JSString? s);
+  external JSString? get contentDisposition;
+  external set contentDisposition(JSString? s);
+  external JSString? get contentEncoding;
+  external set contentEncoding(JSString? s);
+  external JSString? get contentLanguage;
+  external set contentLanguage(JSString? s);
+  external JSString? get contentType;
+  external set contentType(JSString? s);
+  external JSAny? get customMetadata;
+  external set customMetadata(JSAny? s);
+}
+
+@JS('ListOptions')
+@staticInterop
 @anonymous
 class ListOptionsJsImpl {
-  external factory ListOptionsJsImpl({int? maxResults, String? pageToken});
-
-  external set maxResults(int s);
-  external int get maxResults;
-  external set pageToken(String s);
-  external String get pageToken;
+  external factory ListOptionsJsImpl({int? maxResults, JSString? pageToken});
 }
 
-@JS()
+extension ListOptionsJsImplX on ListOptionsJsImpl {
+  external set maxResults(JSNumber? s);
+  external JSNumber? get maxResults;
+  external set pageToken(JSString? s);
+  external JSString? get pageToken;
+}
+
+@JS('ListResult')
+@staticInterop
 @anonymous
-class ListResultJsImpl {
-  external List<ReferenceJsImpl> get items;
-  external String get nextPageToken;
-  external List<ReferenceJsImpl> get prefixes;
+class ListResultJsImpl {}
+
+extension ListResultJsImplX on ListResultJsImpl {
+  external JSArray /* ReferenceJsImpl */ get items;
+  external JSString? get nextPageToken;
+  external JSArray /* ReferenceJsImpl */ get prefixes;
 }
 
 // ignore: avoid_classes_with_only_static_members
 /// An enumeration of the possible string formats for upload.
 ///
-/// See: <https://firebase.google.com/docs/reference/js/firebase.storage#.StringFormat>
+/// See: <https://firebase.google.com/docs/reference/js/firebase.storage#stringformat>
 @JS()
+@staticInterop
 class StringFormat {
   /// Indicates the string should be interpreted 'raw', that is, as normal text.
   /// The string will be interpreted as UTF-16, then uploaded as a UTF-8 byte
   /// sequence.
-  external static String get RAW;
+  external static JSString get RAW;
 
   /// Indicates the string should be interpreted as base64-encoded data.
   /// Padding characters (trailing '='s) are optional.
-  external static String get BASE64;
+  external static JSString get BASE64;
 
   /// Indicates the string should be interpreted as base64url-encoded data.
   /// Padding characters (trailing '='s) are optional.
-  external static String get BASE64URL;
+  external static JSString get BASE64URL;
 
   /// Indicates the string is a data URL, such as one obtained from
   /// [:canvas.toDataURL():].
-  external static String get DATA_URL;
+  external static JSString get DATA_URL;
 }
 
-external String get TaskEvent;
+@JS()
+external JSString get TaskEvent;

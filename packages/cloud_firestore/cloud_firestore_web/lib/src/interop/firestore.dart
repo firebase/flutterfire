@@ -926,7 +926,7 @@ class AggregateQuery {
 class AggregateQuerySnapshot
     extends JsObjectWrapper<firestore_interop.AggregateQuerySnapshotJsImpl> {
   static final _expando = Expando<AggregateQuerySnapshot>();
-  late final Map<String, Object> _data;
+  late final Map<String, Object?> _data;
 
   /// Creates a new [AggregateQuerySnapshot] from a [jsObject].
   static AggregateQuerySnapshot getInstance(
@@ -942,6 +942,12 @@ class AggregateQuerySnapshot
 
   int? get count => _data['count'] as int?;
 
-  double getDataValue(platform_interface.AggregateQuery query) =>
-      _data[AggregateQuery.name(query)]! as double;
+  double? getDataValue(platform_interface.AggregateQuery query) {
+    final value = _data[AggregateQuery.name(query)];
+    if (value == null) {
+      return null;
+    } else {
+      return value as double;
+    }
+  }
 }

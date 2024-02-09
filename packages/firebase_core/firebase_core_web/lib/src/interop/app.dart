@@ -21,7 +21,7 @@ class App extends JsObjectWrapper<AppJsImpl> {
   static final _expando = Expando<App>();
 
   /// Name of the app.
-  String get name => jsObject.name;
+  String get name => jsObject.name.toDart;
 
   /// Options used during [firebase.initializeApp()].
   FirebaseOptions get options => jsObject.options;

@@ -939,16 +939,15 @@ AggregateQuery AggregateQuery::FromEncodableList(const EncodableList& list) {
 
 // AggregateQueryResponse
 
-AggregateQueryResponse::AggregateQueryResponse(const AggregateType& type,
-                                               double value)
-    : type_(type), value_(value) {}
+AggregateQueryResponse::AggregateQueryResponse(const AggregateType& type)
+    : type_(type) {}
 
 AggregateQueryResponse::AggregateQueryResponse(const AggregateType& type,
                                                const std::string* field,
-                                               double value)
+                                               const double* value)
     : type_(type),
       field_(field ? std::optional<std::string>(*field) : std::nullopt),
-      value_(value) {}
+      value_(value ? std::optional<double>(*value) : std::nullopt) {}
 
 const AggregateType& AggregateQueryResponse::type() const { return type_; }
 
@@ -968,7 +967,13 @@ void AggregateQueryResponse::set_field(std::string_view value_arg) {
   field_ = value_arg;
 }
 
-double AggregateQueryResponse::value() const { return value_; }
+const double* AggregateQueryResponse::value() const {
+  return value_ ? &(*value_) : nullptr;
+}
+
+void AggregateQueryResponse::set_value(const double* value_arg) {
+  value_ = value_arg ? std::optional<double>(*value_arg) : std::nullopt;
+}
 
 void AggregateQueryResponse::set_value(double value_arg) { value_ = value_arg; }
 
@@ -977,17 +982,20 @@ EncodableList AggregateQueryResponse::ToEncodableList() const {
   list.reserve(3);
   list.push_back(EncodableValue((int)type_));
   list.push_back(field_ ? EncodableValue(*field_) : EncodableValue());
-  list.push_back(EncodableValue(value_));
+  list.push_back(value_ ? EncodableValue(*value_) : EncodableValue());
   return list;
 }
 
 AggregateQueryResponse AggregateQueryResponse::FromEncodableList(
     const EncodableList& list) {
-  AggregateQueryResponse decoded((AggregateType)(std::get<int32_t>(list[0])),
-                                 std::get<double>(list[2]));
+  AggregateQueryResponse decoded((AggregateType)(std::get<int32_t>(list[0])));
   auto& encodable_field = list[1];
   if (!encodable_field.IsNull()) {
     decoded.set_field(std::get<std::string>(encodable_field));
+  }
+  auto& encodable_value = list[2];
+  if (!encodable_value.IsNull()) {
+    decoded.set_value(std::get<double>(encodable_value));
   }
   return decoded;
 }
