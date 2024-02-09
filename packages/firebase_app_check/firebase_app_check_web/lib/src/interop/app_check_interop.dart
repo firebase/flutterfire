@@ -34,6 +34,15 @@ external JSPromise /* AppCheckTokenResult */ getLimitedUseToken(
 
 @JS()
 @staticInterop
+external JSFunction onTokenChanged(
+  AppCheckJsImpl appCheck,
+  JSAny nextOrObserver, [
+  JSFunction? opt_error,
+  JSFunction? opt_completed,
+]);
+
+@JS()
+@staticInterop
 external void setTokenAutoRefreshEnabled(
   AppCheckJsImpl appCheck,
   JSBoolean isTokenAutoRefreshEnabled,
@@ -78,15 +87,6 @@ extension AppCheckOptionsJsImplX on AppCheckOptions {
 
   external ReCaptchaProvider get provider;
 }
-
-@JS()
-@staticInterop
-external JSFunction onTokenChanged(
-  AppCheckJsImpl appCheck,
-  JSAny nextOrObserver, [
-  JSFunction? opt_error,
-  JSFunction? opt_completed,
-]);
 
 @JS('AppCheck')
 @staticInterop
