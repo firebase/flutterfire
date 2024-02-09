@@ -234,7 +234,7 @@ jobs:
             --dart-define=CI=true
 
   web:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     timeout-minutes: 15
     strategy:
       matrix:
