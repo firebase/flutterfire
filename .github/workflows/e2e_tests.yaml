@@ -275,11 +275,15 @@ jobs:
         working-directory: ${{ matrix.working_directory }}
         run: |
           chromedriver --port=4444 --trace-buffer-size=100000 &
-          output=$(flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true 2>&1)
+          flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true | tee output.log
 
+          # Capture the output from the file into a variable
+          output=$(<output.log)
+
+          # Check the captured output for errors
           if [[ "$output" =~ \[E\] ]]; then
-            echo "Error detected in test output"
-            exit 1
+          echo "Error detected in test output"
+          exit 1
           fi
         shell: bash
 #      - name: Run Flutter Web e2e Tests
