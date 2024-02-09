@@ -16,25 +16,37 @@ first crash report to Firebase.
     [configure and initialize Firebase](/docs/flutter/setup) in your Flutter
     project.
 
-1.  **Recommended**: To get features like crash-free users, breadcrumb logs,
-    and velocity alerts, you need to enable {{firebase_analytics}} in your
-    Firebase project.
+1.  **Recommended**: To automatically get
+    [breadcrumb logs](/docs/crashlytics/customize-crash-reports#get-breadcrumb-logs)
+    to understand user actions leading up to a crash, non-fatal, or ANR event,
+    you need to enable {{firebase_analytics}} in your Firebase project.
 
-    All Android and Apple platforms supported by {{crashlytics}} (except
-    watchOS) can take advantage of these features from {{firebase_analytics}}.
+    * If your existing Firebase project doesn't have {{firebase_analytics}}
+      enabled, you can enable {{firebase_analytics}} from the
+      {{firebase_console_integrations_link}} of your
+      <nobr><span class="material-icons">settings</span> > _Project settings_</nobr>
+      in the {{name_appmanager}}.
 
-    Make sure that {{firebase_analytics}} is enabled in your Firebase project:
-    Go to <nobr><span class="material-icons">settings</span> > _Project settings_</nobr> > _Integrations_ tab,
-    then follow the on-screen instructions for {{firebase_analytics}}.
+    * If you're creating a new Firebase project, enable {{firebase_analytics}}
+      during the project creation workflow.
 
+    Note that breadcrumb logs are available for all Android and Apple platforms
+    supported by {{crashlytics}} (except watchOS).
 
 ## **Step 1**: Add {{crashlytics}} to your Flutter project {: #add-sdk}
 
 1.  From the root of your Flutter project, run the following command to install
-    the {{crashlytics}} Flutter plugin:
+    the Flutter plugin for {{crashlytics}}.
+
+    To take advantage of
+    [breadcrumb logs](/docs/crashlytics/customize-crash-reports#get-breadcrumb-logs),
+    also add the Flutter plugin for {{firebase_analytics}} to your app.
+    Make sure that
+    [Google Analytics is enabled](https://support.google.com/firebase/answer/9289399#linkga){: .external}
+    in your Firebase project.
 
     ```sh {: .devsite-terminal .devsite-click-to-copy data-terminal-prefix="your-flutter-proj$ " }
-    flutter pub add firebase_crashlytics
+    flutter pub add firebase_crashlytics && flutter pub add firebase_analytics
     ```
 
 1.  From the root directory of your Flutter project, run the following command:

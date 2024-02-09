@@ -44,7 +44,7 @@ class MethodChannelAggregateQuery extends AggregateQueryPlatform {
       if (query == null) continue;
       switch (query.type) {
         case AggregateType.count:
-          count = query.value.toInt();
+          count = query.value?.toInt();
           break;
         case AggregateType.sum:
           sum.add(query);

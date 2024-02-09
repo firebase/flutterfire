@@ -284,10 +284,10 @@ typedef NS_ENUM(NSUInteger, AggregateType) {
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithType:(AggregateType)type
                        field:(nullable NSString *)field
-                       value:(NSNumber *)value;
+                       value:(nullable NSNumber *)value;
 @property(nonatomic, assign) AggregateType type;
 @property(nonatomic, copy, nullable) NSString *field;
-@property(nonatomic, strong) NSNumber *value;
+@property(nonatomic, strong, nullable) NSNumber *value;
 @end
 
 /// The codec used by FirebaseFirestoreHostApi.

@@ -28,6 +28,7 @@ import com.google.firebase.auth.OAuthCredential;
 import com.google.firebase.auth.OAuthProvider;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.auth.PhoneMultiFactorInfo;
+import com.google.firebase.auth.PlayGamesAuthProvider;
 import com.google.firebase.auth.TwitterAuthProvider;
 import com.google.firebase.auth.UserInfo;
 import java.util.ArrayList;
@@ -225,6 +226,12 @@ public class PigeonParser {
           }
 
           return builder.build();
+        }
+      case Constants.SIGN_IN_METHOD_PLAY_GAMES:
+        {
+          String serverAuthCode =
+              (String) Objects.requireNonNull(credentialMap.get(Constants.SERVER_AUTH_CODE));
+          return PlayGamesAuthProvider.getCredential(serverAuthCode);
         }
       default:
         return null;

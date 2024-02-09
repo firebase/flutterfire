@@ -505,14 +505,14 @@ class AggregateQueryResponse {
   AggregateQueryResponse({
     required this.type,
     this.field,
-    required this.value,
+    this.value,
   });
 
   AggregateType type;
 
   String? field;
 
-  double value;
+  double? value;
 
   Object encode() {
     return <Object?>[
@@ -527,7 +527,7 @@ class AggregateQueryResponse {
     return AggregateQueryResponse(
       type: AggregateType.values[result[0]! as int],
       field: result[1] as String?,
-      value: result[2]! as double,
+      value: result[2] as double?,
     );
   }
 }

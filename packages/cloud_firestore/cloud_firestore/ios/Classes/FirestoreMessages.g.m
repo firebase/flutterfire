@@ -595,7 +595,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 @implementation AggregateQueryResponse
 + (instancetype)makeWithType:(AggregateType)type
                        field:(nullable NSString *)field
-                       value:(NSNumber *)value {
+                       value:(nullable NSNumber *)value {
   AggregateQueryResponse *pigeonResult = [[AggregateQueryResponse alloc] init];
   pigeonResult.type = type;
   pigeonResult.field = field;
@@ -607,7 +607,6 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   pigeonResult.type = [GetNullableObjectAtIndex(list, 0) integerValue];
   pigeonResult.field = GetNullableObjectAtIndex(list, 1);
   pigeonResult.value = GetNullableObjectAtIndex(list, 2);
-  NSAssert(pigeonResult.value != nil, @"");
   return pigeonResult;
 }
 + (nullable AggregateQueryResponse *)nullableFromList:(NSArray *)list {
