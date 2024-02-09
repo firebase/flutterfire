@@ -277,20 +277,15 @@ jobs:
           chromedriver --port=4444 --trace-buffer-size=100000 &
           flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true | tee output.log
 
-          # Capture the output from the file into a variable
+          # We have to check the output for failed tests matching the string "[E]"
           output=$(<output.log)
 
-          # Check the captured output for errors
           if [[ "$output" =~ \[E\] ]]; then
-          echo "Error detected in test output"
+          # You will see "All tests passed." in the logs even when tests failed.
+          echo "All tests did not pass. Please check the logs for more information."
           exit 1
           fi
         shell: bash
-#      - name: Run Flutter Web e2e Tests
-#        run: |
-#          chromedriver --port=4444 --trace-buffer-size=100000 &
-#          cd ./.github/workflows/scripts
-#          ./flutter_web_tests.sh ${{ matrix.working_directory }}
 
   windows:
     runs-on: windows-latest
