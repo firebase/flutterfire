@@ -272,17 +272,7 @@ jobs:
       - name: Start Firebase Emulator
         run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: Run Flutter Web e2e Tests
-        id: flutter_tests
-        run: |
-          bash -c "if flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true | tee /dev/tty | grep '\[E\]'; then echo '::set-output name=status::failed'; else echo '::set-output name=status::passed'; fi"
-      - name: Check Test Results
-        run: |
-          if [ "${{ steps.flutter_tests.outputs.status }}" == "failed" ]; then
-            echo "Tests failed"
-            exit 1
-          else
-            echo "All tests have passed"
-          fi
+        run: ./run_flutter_tests.sh
 
   windows:
     runs-on: windows-latest
