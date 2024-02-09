@@ -69,14 +69,18 @@ void main() {
         );
 
         expect(
-          () => query!.where('number', whereIn: [1, 2]).where('number',
-              whereNotIn: [3, 4]),
+          () => query!.where('number', whereIn: [1, 2]).where(
+            'number',
+            whereNotIn: [3, 4],
+          ),
           throwsAssertionError,
         );
 
         expect(
-          () => query!.where('number', whereNotIn: [3, 4]).where('number',
-              whereIn: [1, 2]),
+          () => query!.where('number', whereNotIn: [3, 4]).where(
+            'number',
+            whereIn: [1, 2],
+          ),
           throwsAssertionError,
         );
       });
