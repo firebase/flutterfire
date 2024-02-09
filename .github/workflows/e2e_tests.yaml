@@ -273,6 +273,7 @@ jobs:
         run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: Run Flutter Web e2e Tests
         run: |
+          chromedriver --port=4444 --trace-buffer-size=100000 &
           cd ./.github/workflows/scripts
           ./flutter_web_tests.sh ${{ matrix.working_directory }}
 
