@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# Navigate to the correct directory if necessary
-# cd path/to/your/flutter/project
-
-# Run the flutter drive command
 echo "HHHHHHHHHHH"
 echo $(pwd)
 

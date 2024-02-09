@@ -273,8 +273,8 @@ jobs:
         run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: Run Flutter Web e2e Tests
         run: |
-          cd ./.github/workflows/scripts ${{ matrix.working_directory }}
-          ./flutter_web_tests.sh
+          cd ./.github/workflows/scripts
+          ./flutter_web_tests.sh ${{ matrix.working_directory }}
 
   windows:
     runs-on: windows-latest
