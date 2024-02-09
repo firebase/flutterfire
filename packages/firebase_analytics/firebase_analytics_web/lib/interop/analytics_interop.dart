@@ -21,7 +21,7 @@ external AnalyticsJsImpl initializeAnalytics([AppJsImpl app]);
 
 @JS()
 @staticInterop
-external JSPromise isSupported();
+external JSPromise /* bool */ isSupported();
 
 @JS()
 @staticInterop
@@ -37,14 +37,6 @@ external void logEvent(
 external void setAnalyticsCollectionEnabled(
   AnalyticsJsImpl analytics,
   JSBoolean enabled,
-);
-
-@JS()
-@staticInterop
-external void setCurrentScreen(
-  AnalyticsJsImpl analytics,
-  JSString? screenName,
-  JSObject? callOptions,
 );
 
 @JS()
