@@ -1813,132 +1813,6 @@ void runQueryTests() {
         expect(snapshot.docs.length, equals(1));
         expect(snapshot.docs[0].get('foo'), equals(ref));
       });
-
-      testWidgets('pass `null` to `isEqualTo`', (_) async {
-        CollectionReference<Map<String, dynamic>> collection =
-            await initializeTest('where-null-isEqualTo');
-
-        await Future.wait([
-          collection.add({
-            'foo': 1,
-          }),
-          collection.add({'foo': 2}),
-          collection.add({
-            'foo': null,
-          }),
-          collection.add({
-            'foo': null,
-          }),
-        ]);
-
-        QuerySnapshot<Map<String, dynamic>> snapshot =
-            await collection.where('foo', isEqualTo: null).get();
-
-        expect(snapshot.docs.length, equals(2));
-        expect(snapshot.docs[0].get('foo'), equals(null));
-        expect(snapshot.docs[1].get('foo'), equals(null));
-      });
-
-      testWidgets('pass `null` to `isNotEqualTo`', (_) async {
-        CollectionReference<Map<String, dynamic>> collection =
-            await initializeTest('where-null-isNotEqualTo');
-
-        await Future.wait([
-          collection.add({
-            'foo': 11,
-          }),
-          collection.add({'foo': 11}),
-          collection.add({
-            'foo': null,
-          }),
-          collection.add({
-            'foo': null,
-          }),
-        ]);
-
-        QuerySnapshot<Map<String, dynamic>> snapshot =
-            await collection.where('foo', isNotEqualTo: null).get();
-
-        expect(snapshot.docs.length, equals(2));
-        expect(snapshot.docs[0].get('foo'), equals(11));
-        expect(snapshot.docs[1].get('foo'), equals(11));
-      });
-
-      testWidgets(
-          'pass `null` to `isNotEqualTo` and ignore other `null` value queries',
-          (_) async {
-        CollectionReference<Map<String, dynamic>> collection =
-            await initializeTest(
-          'where-null-isNotEqualTo-ignore-other-queries',
-        );
-
-        await Future.wait([
-          collection.add({
-            'foo': 11,
-          }),
-          collection.add({'foo': 11}),
-          collection.add({
-            'foo': null,
-          }),
-          collection.add({
-            'foo': null,
-          }),
-        ]);
-
-        QuerySnapshot<Map<String, dynamic>> snapshot = await collection
-            .where(
-              'foo',
-              isNotEqualTo: null,
-              isGreaterThan: null,
-              isLessThan: null,
-              isLessThanOrEqualTo: null,
-              arrayContains: null,
-              isGreaterThanOrEqualTo: null,
-            )
-            .get();
-
-        expect(snapshot.docs.length, equals(2));
-        expect(snapshot.docs[0].get('foo'), equals(11));
-        expect(snapshot.docs[1].get('foo'), equals(11));
-      });
-
-      testWidgets(
-          'pass `null` to `isEqualTo` and ignore other `null` value queries',
-          (_) async {
-        CollectionReference<Map<String, dynamic>> collection =
-            await initializeTest(
-          'where-null-isEqualTo-ignore-other-queries',
-        );
-
-        await Future.wait([
-          collection.add({
-            'foo': 1,
-          }),
-          collection.add({'foo': 2}),
-          collection.add({
-            'foo': null,
-          }),
-          collection.add({
-            'foo': null,
-          }),
-        ]);
-
-        QuerySnapshot<Map<String, dynamic>> snapshot = await collection
-            .where(
-              'foo',
-              isEqualTo: null,
-              isGreaterThan: null,
-              isLessThan: null,
-              isLessThanOrEqualTo: null,
-              arrayContains: null,
-              isGreaterThanOrEqualTo: null,
-            )
-            .get();
-
-        expect(snapshot.docs.length, equals(2));
-        expect(snapshot.docs[0].get('foo'), equals(null));
-        expect(snapshot.docs[1].get('foo'), equals(null));
-      });
     });
 
     group('Query.where() with Filter class', () {
@@ -3279,7 +3153,7 @@ void runQueryTests() {
         (_) async {
           final collection = await initializeTest('foo');
 
-          final query = collection //
+          final query = collection
               .where(Filter('value', isGreaterThan: 0))
               .withConverter<int>(
                 fromFirestore: (snapshots, _) =>
@@ -4007,6 +3881,18 @@ void runQueryTests() {
           );
         },
       );
+
+      testWidgets('count(), average() & sum() on empty collection',
+          (widgetTester) async {
+        final collection = await initializeTest('empty-collection');
+
+        final snapshot = await collection
+            .aggregate(count(), sum('foo'), average('foo'))
+            .get();
+        expect(snapshot.count, 0);
+        expect(snapshot.getSum('foo'), 0);
+        expect(snapshot.getAverage('foo'), null);
+      });
     });
 
     group('startAfterDocument', () {

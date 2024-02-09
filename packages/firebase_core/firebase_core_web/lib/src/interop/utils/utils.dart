@@ -5,7 +5,11 @@
 
 // ignore_for_file: public_member_api_docs
 
+// TODO(Lyokone): should be deleted once all plugins are migrated to use js_interop
+
 import 'dart:async';
+import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 
 import 'package:js/js.dart';
 import 'package:js/js_util.dart' as util;
@@ -117,17 +121,27 @@ Future<T> handleThenable<T>(PromiseJsImpl<T> thenable) async {
 }
 
 /// Handles the [Future] object with the provided [mapper] function.
-PromiseJsImpl<S> handleFutureWithMapper<T, S>(
-  Future<T> future,
+JSPromise handleFutureWithMapper<T, S>(
+  Future<JSAny?> future,
   Func1<T, S> mapper,
 ) {
-  return PromiseJsImpl<S>(allowInterop((
-    Function(S) resolve,
-    Function(Object) reject,
-  ) {
-    future.then((value) {
-      var mappedValue = mapper(value);
-      resolve(mappedValue);
-    }).catchError((error) => reject(error));
-  }));
+  // Taken from js_interop:286
+  return JSPromise((JSFunction resolve, JSFunction reject) {
+    future.then((JSAny? value) {
+      resolve.callAsFunction(resolve, value);
+      return value;
+    }, onError: (Object error, StackTrace stackTrace) {
+      final errorConstructor =
+          globalContext.getProperty('Error'.toJS)! as JSFunction;
+      final wrapper = errorConstructor.callAsConstructor<JSObject>(
+          'Dart exception thrown from converted Future. Use the properties '
+                  "'error' to fetch the boxed error and 'stack' to recover "
+                  'the stack trace.'
+              .toJS);
+      wrapper['error'] = error.toJSBox;
+      wrapper['stack'] = stackTrace.toString().toJS;
+      reject.callAsFunction(reject, wrapper);
+      return wrapper;
+    });
+  }.toJS);
 }

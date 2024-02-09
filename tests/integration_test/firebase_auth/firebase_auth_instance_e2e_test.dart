@@ -327,6 +327,7 @@ void main() {
       group('fetchSignInMethodsForEmail()', () {
         test('should return password provider for an email address', () async {
           var providers =
+          // ignore: deprecated_member_use
               await FirebaseAuth.instance.fetchSignInMethodsForEmail(testEmail);
           expect(providers, isList);
           expect(providers.contains('password'), isTrue);
@@ -334,6 +335,7 @@ void main() {
 
         test('should return empty array for a not found email', () async {
           var providers = await FirebaseAuth.instance
+          // ignore: deprecated_member_use
               .fetchSignInMethodsForEmail(generateRandomEmail());
 
           expect(providers, isList);
@@ -342,6 +344,7 @@ void main() {
 
         test('throws for a bad email address', () async {
           try {
+            // ignore: deprecated_member_use
             await FirebaseAuth.instance.fetchSignInMethodsForEmail('foobar');
             fail('Should have thrown');
           } on FirebaseAuthException catch (e) {

@@ -4,7 +4,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'dart:js_interop';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
@@ -12,6 +12,7 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:web/web.dart' as web;
 
 import 'src/internals.dart';
 import 'src/interop/messaging.dart' as messaging_interop;
@@ -129,7 +130,7 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
 
   @override
   Future<NotificationSettings> getNotificationSettings() async {
-    return utils.getNotificationSettings(Notification.permission);
+    return utils.getNotificationSettings(web.Notification.permission);
   }
 
   @override
@@ -143,7 +144,8 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
     bool sound = true,
   }) {
     return convertWebExceptions(() async {
-      String status = await Notification.requestPermission();
+      String status =
+          (await web.Notification.requestPermission().toDart)! as String;
       return utils.getNotificationSettings(status);
     });
   }

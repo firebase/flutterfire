@@ -53,6 +53,14 @@
 
 static NSMutableDictionary<NSString *, NSString *> *customAuthDomains;
 
+// Initialize static properties
+
++ (void)initialize {
+  if (self == [FLTFirebaseCorePlugin self]) {
+    customAuthDomains = [[NSMutableDictionary alloc] init];
+  }
+}
+
 + (NSString *)getCustomDomain:(NSString *)appName {
   return customAuthDomains[appName];
 }

@@ -6,6 +6,8 @@
 // ignore_for_file: non_constant_identifier_names
 // ignore_for_file: public_member_api_docs
 
+import 'dart:js_interop';
+
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     hide jsify, dartify;
 import 'package:http_parser/http_parser.dart';
@@ -42,15 +44,17 @@ class MultiFactorUser
       : super.fromJsObject(jsObject);
 
   /// Returns a list of the user's enrolled second factors.
-  List<MultiFactorInfo> get enrolledFactors =>
-      jsObject.enrolledFactors.map(fromJsMultiFactorInfo).toList();
+  List<MultiFactorInfo> get enrolledFactors => jsObject.enrolledFactors.toDart
+      .map((value) =>
+          fromJsMultiFactorInfo(value! as auth.MultiFactorInfoJsImpl))
+      .toList();
 
   /// Returns the session identifier for a second factor enrollment operation.
   ///
   /// This is used to identify the user trying to enroll a second factor.
-  Future<MultiFactorSession> get session =>
-      handleThenable(jsObject.getSession())
-          .then(MultiFactorSession.fromJsObject);
+  Future<MultiFactorSession> get session => jsObject.getSession().toDart.then(
+      (value) => MultiFactorSession.fromJsObject(
+          value! as auth_interop.MultiFactorSessionJsImpl));
 
   /// Enrolls a second factor as identified by the [MultiFactorAssertion] for the user.
   ///
@@ -60,7 +64,7 @@ class MultiFactorUser
   /// existing Firebase sessions (refresh tokens) are revoked. When a new factor is enrolled,
   /// an email notification is sent to the user’s email.
   Future<void> enroll(MultiFactorAssertion assertion, String? displayName) {
-    return handleThenable(jsObject.enroll(assertion.jsObject, displayName));
+    return jsObject.enroll(assertion.jsObject, displayName?.toJS).toDart;
   }
 
   /// Unenrolls the specified second factor.
@@ -72,7 +76,7 @@ class MultiFactorUser
   /// Recent re-authentication is required for this operation to succeed.
   /// When an existing factor is unenrolled, an email notification is sent to the user’s email.
   Future<void> unenroll(String multiFactorInfoId) {
-    return handleThenable(jsObject.unenroll(multiFactorInfoId));
+    return jsObject.unenroll(multiFactorInfoId.toJS).toDart;
   }
 }
 
@@ -82,16 +86,16 @@ class MultiFactorInfo<T extends auth_interop.MultiFactorInfoJsImpl>
   MultiFactorInfo.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
 
   /// The user friendly name of the current second factor.
-  String? get displayName => jsObject.displayName;
+  String? get displayName => jsObject.displayName?.toDart;
 
   /// The enrollment date of the second factor formatted as a UTC string.
-  String get enrollmentTime => jsObject.enrollmentTime;
+  String get enrollmentTime => jsObject.enrollmentTime.toDart;
 
   /// The identifier of the second factor.
-  String get factorId => jsObject.factorId;
+  String get factorId => jsObject.factorId.toDart;
 
   /// The multi-factor enrollment ID.
-  String get uid => jsObject.uid;
+  String get uid => jsObject.uid.toDart;
 }
 
 class PhoneMultiFactorInfo
@@ -101,7 +105,7 @@ class PhoneMultiFactorInfo
       : super.fromJsObject(jsObject);
 
   /// The user friendly name of the current second factor.
-  String get phoneNumber => jsObject.phoneNumber;
+  String get phoneNumber => jsObject.phoneNumber.toDart;
 }
 
 class TotpMultiFactorInfo
@@ -123,7 +127,7 @@ class MultiFactorAssertion<T extends auth_interop.MultiFactorAssertionJsImpl>
     extends JsObjectWrapper<T> {
   MultiFactorAssertion.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
 
-  String get factorId => jsObject.factorId;
+  String get factorId => jsObject.factorId.toDart;
 }
 
 /// https://firebase.google.com/docs/reference/js/auth.multifactorsession.md#multifactorsession_interface
@@ -140,23 +144,25 @@ class MultiFactorResolver
   MultiFactorResolver.fromJsObject(auth.MultiFactorResolverJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
-  List<MultiFactorInfo> get hints =>
-      jsObject.hints.map<MultiFactorInfo>(fromJsMultiFactorInfo).toList();
+  List<MultiFactorInfo> get hints => jsObject.hints.toDart
+      .map<MultiFactorInfo>((value) =>
+          fromJsMultiFactorInfo(value! as auth.MultiFactorInfoJsImpl))
+      .toList();
 
   MultiFactorSession get session =>
       MultiFactorSession.fromJsObject(jsObject.session);
 
   Future<auth.UserCredential> resolveSignIn(MultiFactorAssertion assertion) {
-    return handleThenable(jsObject.resolveSignIn(assertion.jsObject))
-        .then(auth.UserCredential.fromJsObject);
+    return jsObject.resolveSignIn(assertion.jsObject).toDart.then((value) =>
+        auth.UserCredential.fromJsObject(value! as auth.UserCredentialJsImpl));
   }
 }
 
 MultiFactorInfo fromJsMultiFactorInfo(auth.MultiFactorInfoJsImpl e) {
-  if (e.factorId == 'phone') {
+  if (e.factorId.toDart == 'phone') {
     return PhoneMultiFactorInfo.fromJsObject(
         e as auth_interop.PhoneMultiFactorInfoJsImpl);
-  } else if (e.factorId == 'totp') {
+  } else if (e.factorId.toDart == 'totp') {
     return TotpMultiFactorInfo.fromJsObject(
         e as auth_interop.TotpMultiFactorInfoJsImpl);
   } else {
@@ -190,15 +196,15 @@ class TotpSecret extends JsObjectWrapper<auth_interop.TotpSecretJsImpl> {
   TotpSecret.fromJsObject(auth_interop.TotpSecretJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
-  int get codeInterval => jsObject.codeIntervalSeconds.toInt();
-  int get codeLength => jsObject.codeLength.toInt();
+  int get codeInterval => jsObject.codeIntervalSeconds.toDartInt;
+  int get codeLength => jsObject.codeLength.toDartInt;
   DateTime get enrollmentCompletionDeadline =>
-      parseHttpDate(jsObject.enrollmentCompletionDeadline);
-  String get hashingAlgorithm => jsObject.hashingAlgorithm;
-  String get secretKey => jsObject.secretKey;
+      parseHttpDate(jsObject.enrollmentCompletionDeadline.toDart);
+  String get hashingAlgorithm => jsObject.hashingAlgorithm.toDart;
+  String get secretKey => jsObject.secretKey.toDart;
 
   String generateQrCodeUrl(String? accountName, String? issuer) {
-    return jsObject.generateQrCodeUrl(accountName, issuer);
+    return jsObject.generateQrCodeUrl(accountName?.toJS, issuer?.toJS).toDart;
   }
 }
 
@@ -212,7 +218,7 @@ class TotpMultiFactorGenerator
       String enrollmentId, String oneTimePassword) {
     return TotpMultiFactorAssertion.fromJsObject(
       auth_interop.TotpMultiFactorGeneratorJsImpl.assertionForSignIn(
-          enrollmentId, oneTimePassword)!,
+          enrollmentId.toJS, oneTimePassword.toJS)!,
     );
   }
 
@@ -221,15 +227,16 @@ class TotpMultiFactorGenerator
     return TotpMultiFactorAssertion.fromJsObject(
       auth_interop.TotpMultiFactorGeneratorJsImpl.assertionForEnrollment(
         secret.jsObject,
-        oneTimePassword,
+        oneTimePassword.toJS,
       )!,
     );
   }
 
   static Future<TotpSecret> generateSecret(MultiFactorSession session) {
-    return handleThenable(
-      auth_interop.TotpMultiFactorGeneratorJsImpl.generateSecret(
-          session.jsObject),
-    ).then(TotpSecret.fromJsObject);
+    return auth_interop.TotpMultiFactorGeneratorJsImpl.generateSecret(
+            session.jsObject)
+        .toDart
+        .then((value) =>
+            TotpSecret.fromJsObject(value! as auth_interop.TotpSecretJsImpl));
   }
 }

@@ -157,6 +157,8 @@ PigeonUserInfo FirebaseAuthPlugin::ParseUserInfo(
   result.set_photo_url(user->photo_url());
   result.set_provider_id(user->provider_id());
   result.set_uid(user->uid());
+  result.set_creation_timestamp(user->metadata().creation_timestamp);
+  result.set_last_sign_in_timestamp(user->metadata().last_sign_in_timestamp);
 
   return result;
 }

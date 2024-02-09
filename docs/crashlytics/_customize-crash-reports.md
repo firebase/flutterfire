@@ -1,22 +1,30 @@
 {# This content gets published to the following location:                                  #}
 {#   https://firebase.google.com/docs/crashlytics/customize-crash-reports?platform=flutter #}
 
-This guide describes how to customize your crash reports using {{crashlytics}}
-APIs. By default, {{crashlytics}} automatically collects platform-native crash
-reports for all your app's users (you can also turn off automatic crash
-reporting and enable
-[opt-in reporting](#enable-reporting) for your users instead). {{crashlytics}}
-provides five logging mechanisms out of the box:
-[custom keys](#custom-keys),
-[custom logs](#custom-logs),
-[user identifiers](#user-identifiers),
-[caught](#report-caught-exceptions) and
-[uncaught](#report-uncaught-exceptions) exceptions.
+In the {{crashlytics}} dashboard, you can click into an issue and get a detailed
+event report. You can customize those reports to help you better understand
+what's happening in your app and the circumstances around events reported to
+{{crashlytics}}.
 
-For Flutter apps, fatal reports are sent to {{crashlytics}} in real-time without
-the need for the user to restart the application. Non-fatal reports are written
-to disk to be sent along with the next fatal report or when the app restarts.
+* Report [uncaught exceptions](#report-uncaught-exceptions) and
+  [caught exceptions](#report-caught-exceptions) to {{crashlytics}}.
 
+* Instrument your app to log [custom keys](#add-keys),
+  [custom log messages](#add-logs), and [user identifiers](#set-user-ids).
+
+* Automatically get [breadcrumb logs](#get-breadcrumb-logs) if your app uses the
+  Firebase SDK for {{firebase_analytics}}. These logs give you visibility into
+  user actions leading up to a {{crashlytics}}-collected event in your app.
+
+* Turn off automatic crash reporting and
+  [enable opt-in reporting](#enable-reporting) for your users. Note that, by
+  default, {{crashlytics}} automatically collects platform-native crash reports
+  for all your app's users.
+
+Note: For Flutter apps, fatal reports are sent to {{crashlytics}} in real-time
+without the need for the user to restart the application. Non-fatal reports are
+written to disk to be sent along with the next fatal report or when the app
+restarts.
 
 ## Report uncaught exceptions {: #report-uncaught-exceptions}
 
@@ -42,7 +50,6 @@ void main() async {
   runApp(MyApp());
 }
 ```
-
 
 ### Asynchronous errors {: #asynchronous-errors}
 
@@ -91,7 +98,6 @@ Isolate.current.addErrorListener(RawReceivePort((pair) async {
   );
 }).sendPort);
 ```
-
 
 ## Report caught exceptions {: #report-caught-exceptions}
 
@@ -145,7 +151,6 @@ minimize the performance impact to your app. To reduce your users’ network
 traffic, {{crashlytics}} will rate-limit the number of reports sent off device,
 if necessary.
 
-
 ## Add custom keys {: #add-keys}
 
 Custom keys help you get the specific state of your app leading up to a crash.
@@ -186,7 +191,6 @@ FirebaseCrashlytics.instance.setCustomKey("float_key", 1.0f);
 FirebaseCrashlytics.instance.setCustomKey("double_key", 1.0);
 ```
 
-
 ## Add custom log messages {: #add-logs}
 
 To give yourself more context for the events leading up to a crash, you can add
@@ -203,7 +207,6 @@ Use `log` to help pinpoint issues. For example:
 ```dart
 FirebaseCrashlytics.instance.log("Higgs-Boson detected! Bailing out");
 ```
-
 
 ## Set user identifiers {: #set-user-ids}
 
@@ -223,6 +226,35 @@ a blank string. Clearing a user identifier does not remove existing
 {{crashlytics}} records. If you need to delete records associated with a user
 ID, [contact Firebase support](/support/troubleshooter/contact/).
 
+## Get breadcrumb logs {: #get-breadcrumb-logs}
+
+Breadcrumb logs give you a better understanding of the interactions that a user
+had with your app leading up to a crash, non-fatal, or ANR event. These logs can
+be helpful when trying to reproduce and debug an issue.
+
+Breadcrumb logs are powered by Google Analytics, so to get breadcrumb logs, you
+need to
+[enable Google Analytics](https://support.google.com/firebase/answer/9289399#linkga){: .external}
+for your Firebase project and
+[add the Firebase SDK for {{firebase_analytics}}](/docs/analytics/get-started#add-sdk)
+to your app. Once these requirements are met, breadcrumb logs are automatically
+included with an event's data within the **Logs** tab when you view the details
+of an issue.
+
+The {{analytics}} SDK
+[automatically logs the `screen_view` event](https://support.google.com/analytics/answer/9234069#screen_view){: .external}
+which enables the breadcrumb logs to show a list of screens viewed before the
+crash, non-fatal, or ANR event. A `screen_view` breadcrumb log contains a
+`firebase_screen_class` parameter.
+
+Breadcrumb logs are also populated with any
+[custom events](/docs/analytics/events) that you manually log within the user's
+session, including the event's parameter data. This data can help show a series
+of user actions leading up to a crash, non-fatal, or ANR event.
+
+Note that you can
+[control the collection and use of {{firebase_analytics}} data](/docs/analytics/configure-data-collection),
+which includes the data that populates breadcrumb logs.
 
 ## Enable opt-in reporting {: #enable-reporting}
 

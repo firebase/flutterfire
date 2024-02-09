@@ -6,15 +6,15 @@
 library firebase_core_web;
 
 import 'dart:async';
-import 'dart:html';
-import 'dart:js';
-import 'dart:js_util';
+import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
-import 'package:firebase_core_web/src/interop/js.dart';
+import 'package:firebase_core_web/src/interop/package_web_tweaks.dart';
+import 'package:firebase_core_web/src/interop/utils/es6_interop.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-import 'package:js/js_util.dart' as js_util;
 import 'package:meta/meta.dart';
+import 'package:web/web.dart' as web;
 
 import 'src/interop/core.dart' as firebase;
 
@@ -30,14 +30,14 @@ FirebaseAppPlatform _createFromJsApp(firebase.App jsApp) {
 /// Returns a [FirebaseOptions] instance from [firebase.FirebaseOptions].
 FirebaseOptions _createFromJsOptions(firebase.FirebaseOptions options) {
   return FirebaseOptions(
-    apiKey: options.apiKey,
-    authDomain: options.authDomain,
-    databaseURL: options.databaseURL,
-    projectId: options.projectId,
-    storageBucket: options.storageBucket,
-    messagingSenderId: options.messagingSenderId,
-    appId: options.appId,
-    measurementId: options.measurementId,
+    apiKey: options.apiKey?.toDart ?? '',
+    projectId: options.projectId?.toDart ?? '',
+    authDomain: options.authDomain?.toDart,
+    databaseURL: options.databaseURL?.toDart,
+    storageBucket: options.storageBucket?.toDart,
+    messagingSenderId: options.messagingSenderId?.toDart ?? '',
+    appId: options.appId?.toDart ?? '',
+    measurementId: options.measurementId?.toDart,
   );
 }
 
@@ -46,9 +46,9 @@ FirebaseOptions _createFromJsOptions(firebase.FirebaseOptions options) {
 /// When the Firebase JS SDK throws an error, it contains a code which can be
 /// used to identify the specific type of error. This helper function is used
 /// to keep error messages consistent across different platforms.
-String _getJSErrorCode(dynamic e) {
-  if (js_util.getProperty(e, 'name') == 'FirebaseError') {
-    return js_util.getProperty(e, 'code') ?? '';
+String _getJSErrorCode(JSError e) {
+  if (e.name?.toDart == 'FirebaseError') {
+    return e.code?.toDart ?? '';
   }
 
   return '';
@@ -59,11 +59,10 @@ String _getJSErrorCode(dynamic e) {
 /// If a JavaScript error is thrown and not manually handled using the code,
 /// this function ensures that if the error is Firebase related, it is instead
 /// re-created as a [FirebaseException] with a familiar code and message.
-FirebaseException _catchJSError(dynamic e) {
-  if (js_util.getProperty(e, 'name') == 'FirebaseError') {
-    String rawCode = js_util.getProperty(e, 'code');
-    String code = rawCode;
-    String message = js_util.getProperty(e, 'message') ?? '';
+FirebaseException _catchJSError(JSError e) {
+  if (e.name?.toDart == 'FirebaseError') {
+    String code = e.code?.toDart ?? '';
+    String message = e.message?.toDart ?? '';
 
     if (code.contains('/')) {
       List<String> chunks = code.split('/');
@@ -73,7 +72,7 @@ FirebaseException _catchJSError(dynamic e) {
     return FirebaseException(
       plugin: 'core',
       code: code,
-      message: message.replaceAll(' ($rawCode)', ''),
+      message: message.replaceAll(' ($code)', ''),
     );
   }
 

@@ -41,7 +41,7 @@
                      events(@{
                        @"taskState" : @(PigeonStorageTaskStateError),
                        @"appName" : snapshot.reference.storage.app.name,
-                       @"snapshot" : [FLTFirebaseStoragePlugin parseTaskSnapshot:snapshot],
+                       @"error" : [FLTFirebaseStoragePlugin NSDictionaryFromNSError:snapshot.error],
                      });
                    }];
   pausedHandle =

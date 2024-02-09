@@ -3,6 +3,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:js_interop';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
@@ -29,7 +30,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   /// instance of Firestore from the web plugin
   firestore_interop.Firestore? _webFirestore;
 
-  firestore_interop.Settings? _settings;
+  firestore_interop.FirestoreSettings? _settings;
 
   /// Lazily initialize [_webFirestore] on first method call
   firestore_interop.Firestore get _delegate {
@@ -129,27 +130,29 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   @override
   set settings(Settings settings) {
-    int? cacheSizeBytes;
-    if (settings.cacheSizeBytes == null) {
-      cacheSizeBytes = 40000000;
-    } else if (settings.cacheSizeBytes == Settings.CACHE_SIZE_UNLIMITED) {
-      // https://github.com/firebase/firebase-js-sdk/blob/e67affba53a53d28492587b2f60521a00166db60/packages/firestore/src/local/lru_garbage_collector.ts#L175
-      cacheSizeBytes = -1;
+    // Union type MemoryLocalCache | PersistentLocalCache
+    dynamic localCache;
+    final persistenceEnabled = settings.persistenceEnabled;
+    if (persistenceEnabled == null || persistenceEnabled == false) {
+      localCache = firestore_interop.memoryLocalCache(null);
     } else {
-      cacheSizeBytes = settings.cacheSizeBytes;
+      localCache = firestore_interop
+          .persistentLocalCache(firestore_interop.PersistentCacheSettings(
+        cacheSizeBytes: settings.cacheSizeBytes?.toJS,
+      ));
     }
 
     if (settings.host != null && settings.sslEnabled != null) {
-      _settings = firestore_interop.Settings(
-        cacheSizeBytes: cacheSizeBytes,
-        host: settings.host,
-        ssl: settings.sslEnabled,
-        ignoreUndefinedProperties: settings.ignoreUndefinedProperties,
+      _settings = firestore_interop.FirestoreSettings(
+        localCache: localCache,
+        host: settings.host?.toJS,
+        ssl: settings.sslEnabled?.toJS,
+        ignoreUndefinedProperties: settings.ignoreUndefinedProperties.toJS,
       );
     } else {
-      _settings = firestore_interop.Settings(
-        cacheSizeBytes: cacheSizeBytes,
-        ignoreUndefinedProperties: settings.ignoreUndefinedProperties,
+      _settings = firestore_interop.FirestoreSettings(
+        localCache: localCache,
+        ignoreUndefinedProperties: settings.ignoreUndefinedProperties.toJS,
       );
     }
   }
@@ -160,7 +163,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     if (settings != null) {
       firestore_interop.PersistenceSettings interopSettings =
           firestore_interop.PersistenceSettings(
-              synchronizeTabs: settings.synchronizeTabs);
+              synchronizeTabs: settings.synchronizeTabs.toJS);
 
       return convertWebExceptions(
           () => _delegate.enablePersistence(interopSettings));

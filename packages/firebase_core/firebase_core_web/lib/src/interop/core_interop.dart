@@ -8,11 +8,13 @@
 @JS('firebase_core')
 library firebase_interop.core;
 
+import 'dart:js_interop';
+
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
-import 'package:js/js.dart';
 
 @JS()
-external List<AppJsImpl> getApps();
+// List<AppJsImpl>
+external JSArray getApps();
 
 /// The current SDK version.
 ///
@@ -21,59 +23,65 @@ external List<AppJsImpl> getApps();
 external String get SDK_VERSION;
 
 @JS()
-external AppJsImpl initializeApp(FirebaseOptions options, [String? name]);
+external AppJsImpl initializeApp(FirebaseOptions options, [JSString? name]);
 
 @JS()
-external AppJsImpl getApp([String? name]);
+external AppJsImpl getApp([JSString? name]);
 
 @JS()
-external PromiseJsImpl<void> deleteApp(AppJsImpl app);
+external JSPromise deleteApp(AppJsImpl app);
 
 /// FirebaseError is a subclass of the standard Error object.
 /// In addition to a message string, it contains a string-valued code.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.FirebaseError>.
-@JS()
+@JS('FirebaseError')
 @anonymous
-abstract class FirebaseError {
-  external String get code;
-  external String get message;
-  external String get name;
-  external String get stack;
+@staticInterop
+abstract class FirebaseErrorJSImpl {}
+
+extension FirebaseErrorExtension on FirebaseErrorJSImpl {
+  external JSString get code;
+  external JSString get message;
+  external JSString get name;
+  external JSString get stack;
 
   /// Not part of the core JS API, but occasionally exposed in error objects.
-  external Object get serverResponse;
+  external JSAny get serverResponse;
 }
 
 /// A structure for options provided to Firebase.
 @JS()
 @anonymous
+@staticInterop
 class FirebaseOptions {
   external factory FirebaseOptions({
-    String? apiKey,
-    String? authDomain,
-    String? databaseURL,
-    String? projectId,
-    String? storageBucket,
-    String? messagingSenderId,
-    String? measurementId,
-    String? appId,
+    JSString? apiKey,
+    JSString? authDomain,
+    JSString? databaseURL,
+    JSString? projectId,
+    JSString? storageBucket,
+    JSString? messagingSenderId,
+    JSString? measurementId,
+    JSString? appId,
   });
+}
 
-  external String get apiKey;
-  external set apiKey(String s);
-  external String get authDomain;
-  external set authDomain(String s);
-  external String get databaseURL;
-  external set databaseURL(String s);
-  external String get projectId;
-  external set projectId(String s);
-  external String get storageBucket;
-  external set storageBucket(String s);
-  external String get messagingSenderId;
-  external set messagingSenderId(String s);
-  external String get measurementId;
-  external set measurementId(String s);
-  external String get appId;
-  external set appId(String s);
+extension FirebaseOptionsExtension on FirebaseOptions {
+  external JSString? get apiKey;
+  external set apiKey(JSString? s);
+  external JSString? get authDomain;
+  external set authDomain(JSString? s);
+  external JSString? get databaseURL;
+  external set databaseURL(JSString? s);
+  external JSString? get projectId;
+  external set projectId(JSString? s);
+  external JSString? get storageBucket;
+  external set storageBucket(JSString? s);
+  external JSString? get messagingSenderId;
+  external set messagingSenderId(JSString? s);
+  external JSString? get measurementId;
+  external set measurementId(JSString? s);
+  external JSString? get appId;
+  external set appId(JSString? s);
 }
