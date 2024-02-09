@@ -271,16 +271,22 @@ jobs:
           restore-keys: firebase-emulators-v3
       - name: Start Firebase Emulator
         run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
-      - name: 'E2E Tests'
-        working-directory: ${{ matrix.working_directory }}
-        # Web devices are not supported for the `flutter test` command yet. As a
-        # workaround we can use the `flutter drive` command. Tracking issue:
-        # https://github.com/flutter/flutter/issues/66264
+      - name: Run Flutter Web e2e Tests
+        id: flutter_tests
         run: |
-          chromedriver --port=4444 --trace-buffer-size=100000 &
-          flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true
-          EXIT_CODE=$?
-          echo "Test exit code $EXIT_CODE"
+          if flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true | tee /dev/tty | grep "\[E\]"; then
+            echo "::set-output name=status::failed"
+          else
+            echo "::set-output name=status::passed"
+          fi
+      - name: Check Test Results
+        run: |
+          if [ "${{ steps.flutter_tests.outputs.status }}" = "failed" ]; then
+            echo "Tests failed"
+            exit 1
+          else
+            echo "All tests have passed"
+          fi
 
   windows:
     runs-on: windows-latest
