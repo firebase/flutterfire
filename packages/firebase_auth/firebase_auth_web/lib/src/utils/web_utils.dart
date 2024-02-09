@@ -20,8 +20,8 @@ bool _hasFirebaseAuthErrorCodeAndMessage(JSError e) {
   if (e.name?.toDart == 'FirebaseError') {
     String code = e.code?.toDart ?? '';
     String message = e.message?.toDart ?? '';
-    if (code.startsWith('auth/')) return false;
-    if (message.contains('Firebase')) return false;
+    if (!code.startsWith('auth/')) return false;
+    if (!message.contains('Firebase')) return false;
     return true;
   } else {
     return false;
