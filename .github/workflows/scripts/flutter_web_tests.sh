@@ -3,13 +3,13 @@
 echo "HHHHHHHHHHH"
 echo $(pwd)
 
-TARGET_PATH="$1/integration_test/e2e_test.dart"
-DRIVER_PATH="$1/test_driver/integration_test.dart"
-
 echo "Running flutter drive with target: $TARGET_PATH and driver: $DRIVER_PATH"
 
+cd "/Users/runner/work/flutterfire/flutterfire/$1"
+echo "switched directory"
+echo $(pwd)
 
-if flutter drive --target="$TARGET_PATH" --driver="$DRIVER_PATH" -d chrome --dart-define=CI=true | grep -q '\[E\]'; then
+if flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true | grep -q '\[E\]'; then
     echo "Tests failed"
     exit 1
 else
