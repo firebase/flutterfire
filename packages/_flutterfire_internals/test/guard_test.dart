@@ -66,7 +66,7 @@ class _FirebaseError implements FirebaseError {
   String get name => '';
 
   @override
-  Object get serverResponse => '';
+  String get serverResponse => '';
 
   @override
   String get stack => '';

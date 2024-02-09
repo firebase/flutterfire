@@ -84,11 +84,11 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// You must ensure the Firebase script is injected before using the service.
   List<String> get _ignoredServiceScripts {
     try {
-      JSObject ignored =
+      JSObject? ignored =
           globalContext.getProperty('flutterfire_ignore_scripts'.toJS);
 
       if (ignored is Iterable) {
-        return (ignored as Iterable)
+        return (ignored! as Iterable)
             .map((e) => e.toString())
             .toList(growable: false);
       }
@@ -129,10 +129,15 @@ class FirebaseCoreWeb extends FirebasePlatform {
         web.document.createElement('script') as web.HTMLScriptElement;
     script.type = 'text/javascript';
     script.crossOrigin = 'anonymous';
+    final stringUrl = trustedUrl != null
+        // Necessary for the JS interop to work correctly on Flutter Beta 3.19.
+        // ignore: unnecessary_cast
+        ? (trustedUrl as JSObject).callMethod('toString'.toJS)
+        : src;
     script.text = '''
       window.ff_trigger_$windowVar = async (callback) => {
         console.debug("Initializing Firebase $windowVar");
-        callback(await import("${trustedUrl != null ? trustedUrl.callMethod('toString'.toJS) : src}"));
+        callback(await import("$stringUrl"));
       };
     ''';
 
@@ -245,9 +250,9 @@ class FirebaseCoreWeb extends FirebasePlatform {
           // check to see if options are roughly identical (so we don't unnecessarily
           // throw on minor differences such as platform specific keys missing,
           // e.g. hot reloads/restarts).
-          if (options.apiKey != app!.options.apiKey ||
-              options.databaseURL != app.options.databaseURL ||
-              options.storageBucket != app.options.storageBucket) {
+          if (options.apiKey != app!.options.apiKey?.toDart ||
+              options.databaseURL != app.options.databaseURL?.toDart ||
+              options.storageBucket != app.options.storageBucket?.toDart) {
             // Options are different; throw.
             throw duplicateApp(defaultFirebaseAppName);
           }

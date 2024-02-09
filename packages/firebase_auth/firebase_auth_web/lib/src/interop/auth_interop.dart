@@ -277,8 +277,8 @@ abstract class AuthJsImpl {}
 
 extension AuthJsImplExtension on AuthJsImpl {
   external AppJsImpl get app;
-  external UserJsImpl get currentUser;
-  external JSString get languageCode;
+  external UserJsImpl? get currentUser;
+  external JSString? get languageCode;
   external set languageCode(JSString? s);
   external AuthSettings get settings;
   external JSString? get tenantId;
@@ -306,7 +306,7 @@ extension IdTokenResultImplExtension on IdTokenResultImpl {
   external JSObject get claims;
   external JSString get expirationTime;
   external JSString get issuedAtTime;
-  external JSString get signInProvider;
+  external JSString? get signInProvider;
   external JSString get token;
 }
 
@@ -388,15 +388,15 @@ abstract class OAuthCredential extends AuthCredential {}
 extension OAuthCredentialExtension on OAuthCredential {
   /// The OAuth access token associated with the credential if it belongs to
   /// an OAuth provider, such as facebook.com, twitter.com, etc.
-  external JSString get accessToken;
+  external JSString? get accessToken;
 
   /// The OAuth ID token associated with the credential if it belongs to an
   /// OIDC provider, such as google.com.
-  external JSString get idToken;
+  external JSString? get idToken;
 
   /// The OAuth access token secret associated with the credential if it
   /// belongs to an OAuth 1.0 provider, such as twitter.com.
-  external JSString get secret;
+  external JSString? get secret;
 }
 
 /// Defines the options for initializing an firebase.auth.OAuthCredential.
@@ -415,17 +415,17 @@ class OAuthCredentialOptions {
 
 extension OAuthCredentialOptionsExtension on OAuthCredentialOptions {
   /// The OAuth access token used to initialize the OAuthCredential.
-  external JSString get accessToken;
-  external set accessToken(JSString a);
+  external JSString? get accessToken;
+  external set accessToken(JSString? a);
 
   /// The OAuth ID token used to initialize the OAuthCredential.
-  external JSString get idToken;
-  external set idToken(JSString i);
+  external JSString? get idToken;
+  external set idToken(JSString? i);
 
   /// The raw nonce associated with the ID token. It is required when an ID token with a nonce field is provided.
   /// The SHA-256 hash of the raw nonce must match the nonce field in the ID token.
-  external JSString get rawNonce;
-  external set rawNonce(JSString r);
+  external JSString? get rawNonce;
+  external set rawNonce(JSString? r);
 }
 
 @JS('AuthProvider')
@@ -677,8 +677,8 @@ extension AuthErrorCustomDataExtension on AuthErrorCustomData {
 class ActionCodeData {}
 
 extension ActionCodeDataExtension on ActionCodeData {
-  external JSString get email;
-  external JSString get previousEmail;
+  external JSString? get email;
+  external JSString? get previousEmail;
 }
 
 /// This is the interface that defines the required continue/state URL with
@@ -798,9 +798,9 @@ extension UserCredentialJsImplExtension on UserCredentialJsImpl {
 class AdditionalUserInfoJsImpl {}
 
 extension AdditionalUserInfoJsImplExtension on AdditionalUserInfoJsImpl {
-  external JSString get providerId;
-  external JSObject get profile;
-  external JSString get username;
+  external JSString? get providerId;
+  external JSObject? get profile;
+  external JSString? get username;
   external JSBoolean get isNewUser;
 }
 

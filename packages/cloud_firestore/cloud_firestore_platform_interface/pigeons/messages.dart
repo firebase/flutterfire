@@ -265,7 +265,7 @@ class AggregateQueryResponse {
 
   final AggregateType type;
   final String? field;
-  final double value;
+  final double? value;
 }
 
 @HostApi(dartHostTestHandler: 'TestFirebaseFirestoreHostApi')

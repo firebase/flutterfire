@@ -73,8 +73,16 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
         el.remove();
       }
 
-      web.window.document.documentElement!
-          .appendChild(web.Element()..id = _kInvisibleElementId);
+      final documentElement = web.window.document.documentElement;
+
+      if (documentElement == null) {
+        throw StateError('No document element found');
+      }
+
+      final childElement = web.window.document.createElement('div')
+        ..id = _kInvisibleElementId;
+
+      documentElement.appendChild(childElement);
 
       element = _kInvisibleElementId;
     } else {
