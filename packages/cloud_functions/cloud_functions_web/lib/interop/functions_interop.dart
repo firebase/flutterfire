@@ -59,10 +59,10 @@ abstract class HttpsCallableOptions {
 }
 
 extension HttpsCallableOptionsExtension on HttpsCallableOptions {
-  external JSNumber get timeout;
-  external set timeout(JSNumber t);
-  external JSBoolean get limitedUseAppCheckTokens;
-  external set limitedUseAppCheckTokens(JSBoolean t);
+  external JSNumber? get timeout;
+  external set timeout(JSNumber? t);
+  external JSBoolean? get limitedUseAppCheckTokens;
+  external set limitedUseAppCheckTokens(JSBoolean? t);
 }
 
 /// An HttpsCallableResult wraps a single result from a function call.
@@ -75,40 +75,4 @@ abstract class HttpsCallableResultJsImpl {}
 
 extension HttpsCallableResultJsImplExtension on HttpsCallableResultJsImpl {
   external JSObject get data;
-}
-
-/// The set of Cloud Functions status codes.
-/// These status codes are also exposed by gRPC.
-///
-/// See: <https://firebase.google.com/docs/reference/js/firebase.functions.HttpsError>.
-@JS('HttpsError')
-@staticInterop
-abstract class HttpsErrorJsImpl {}
-
-extension HttpsErrorJsImplExtension on HttpsErrorJsImpl {
-  external ErrorJsImpl get error;
-  external set error(ErrorJsImpl e);
-  external JSString get code;
-  external set code(JSString v);
-  external JSAny get details;
-  external set details(JSAny d);
-  external JSString get message;
-  external set message(JSString v);
-  external JSString get name;
-  external set name(JSString v);
-  external JSString get stack;
-  external set stack(JSString s);
-}
-
-@JS('Error')
-@staticInterop
-abstract class ErrorJsImpl {}
-
-extension ErrorJsImplExtension on ErrorJsImpl {
-  external JSString get message;
-  external set message(JSString m);
-  external JSString get fileName;
-  external set fileName(JSString f);
-  external JSString get lineNumber;
-  external set lineNumber(JSString l);
 }
