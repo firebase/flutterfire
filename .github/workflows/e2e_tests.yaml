@@ -271,11 +271,22 @@ jobs:
           restore-keys: firebase-emulators-v3
       - name: Start Firebase Emulator
         run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
-      - name: Run Flutter Web e2e Tests
+      - name: Run Flutter tests
+        working-directory: ${{ matrix.working_directory }}
         run: |
           chromedriver --port=4444 --trace-buffer-size=100000 &
-          cd ./.github/workflows/scripts
-          ./flutter_web_tests.sh ${{ matrix.working_directory }}
+          output=$(flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true 2>&1)
+
+          if [[ "$output" =~ \[E\] ]]; then
+            echo "Error detected in test output"
+            exit 1
+          fi
+        shell: bash
+#      - name: Run Flutter Web e2e Tests
+#        run: |
+#          chromedriver --port=4444 --trace-buffer-size=100000 &
+#          cd ./.github/workflows/scripts
+#          ./flutter_web_tests.sh ${{ matrix.working_directory }}
 
   windows:
     runs-on: windows-latest
