@@ -13,10 +13,7 @@
 
 import 'package:firebase_core/firebase_core.dart';
 
-import 'src/interop_shimmer.dart'
-    if (dart.library.js) 'package:firebase_core_web/firebase_core_web_interop.dart'
-    as core_interop;
-
+import 'package:firebase_core_web/firebase_core_web_interop.dart';
 export 'src/exception.dart';
 
 /// An extension that adds utilities for safely casting objects
@@ -51,16 +48,18 @@ extension ObjectX<T> on T? {
 }
 
 FirebaseException _firebaseExceptionFromCoreFirebaseError(
-  core_interop.FirebaseError firebaseError, {
+  JSError firebaseError, {
   required String plugin,
   required String Function(String) codeParser,
   required String Function(String code, String message)? messageParser,
 }) {
-  final code = codeParser(firebaseError.code);
+  final convertCode = firebaseError.code! as String;
+  final code = codeParser(convertCode);
 
+  final convertMessage = firebaseError.message! as String;
   final message = messageParser != null
-      ? messageParser(code, firebaseError.message)
-      : firebaseError.message.replaceFirst('(${firebaseError.code})', '');
+      ? messageParser(code, convertMessage)
+      : convertMessage.replaceFirst('(${firebaseError.code})', '');
 
   return FirebaseException(
     plugin: plugin,
@@ -76,8 +75,10 @@ FirebaseException _firebaseExceptionFromCoreFirebaseError(
 /// exceptions that should not be transformed preserve their stracktrace.
 ///
 /// See also https://github.com/dart-lang/sdk/issues/30741
-bool _testException(Object? exception) {
-  return exception is core_interop.FirebaseError;
+bool _testException(Object? objectException) {
+  final exception = objectException as JSError;
+  final message = exception.message as String;
+  return message.contains('Firebase');
 }
 
 /// Transforms internal errors in something more readable for end-users.
@@ -89,7 +90,7 @@ Object _mapException(
 }) {
   assert(_testException(exception));
 
-  if (exception is core_interop.FirebaseError) {
+  if (exception is JSError) {
     return _firebaseExceptionFromCoreFirebaseError(
       exception,
       plugin: plugin,
