@@ -11,7 +11,7 @@ import 'package:firebase_storage_platform_interface/firebase_storage_platform_in
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:meta/meta.dart';
 
-import 'flutter.dart';
+import 'reference_web.dart';
 import 'interop/storage.dart' as storage_interop;
 import 'utils/errors.dart';
 
