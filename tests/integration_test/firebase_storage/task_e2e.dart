@@ -93,14 +93,17 @@ void setupTaskTests() {
         }
       }
 
-      // TODO(Salakar): Test fails on emulator.
       test(
-        'successfully pauses and resumes a download task',
+        'successfully pauses and resumes a `writeToFile` download task',
         () async {
-          file = await createFile('ok.jpeg');
-          task = downloadRef.writeToFile(file);
+          if (!kIsWeb) {
+            file = await createFile('ok.jpeg');
+            task = downloadRef.writeToFile(file);
+          } else {
+            task = downloadRef
+                .putBlob(createBlob('some content to write to blob'));
+          }
           await _testPauseTask('Download');
-          // Skip on web: There's no DownloadTask on web.
         },
         retry: 3,
       );
@@ -180,8 +183,14 @@ void setupTaskTests() {
       test(
         'returns the latest snapshot for download task',
         () async {
-          file = await createFile('ok.jpeg');
-          final downloadTask = downloadRef.writeToFile(file);
+          var downloadTask;
+          if (!kIsWeb) {
+            file = await createFile('ok.jpeg');
+            downloadTask = downloadRef.writeToFile(file);
+          } else {
+            downloadTask = downloadRef
+                .putBlob(createBlob('some content to write to blob'));
+          }
 
           expect(downloadTask.snapshot, isNotNull);
 
@@ -192,10 +201,8 @@ void setupTaskTests() {
           expect(snapshot.state, TaskState.success);
           expect(snapshot.bytesTransferred, completedSnapshot.bytesTransferred);
           expect(snapshot.totalBytes, completedSnapshot.totalBytes);
-          expect(snapshot.metadata, isNull);
+          expect(snapshot.metadata, isA<FullMetadata>());
         },
-        // There's no DownloadTask on web.
-        // skip: kIsWeb
         retry: 2,
       );
 
@@ -262,10 +269,15 @@ void setupTaskTests() {
         test(
           'successfully cancels download task',
           () async {
-            file = await createFile('ok.jpeg');
-            task = downloadRef.writeToFile(file);
+            if (!kIsWeb) {
+              file = await createFile('ok.jpeg');
+              task = downloadRef.writeToFile(file);
+            } else {
+              task = downloadRef
+                  .putBlob(createBlob('some content to write to blob'));
+            }
+
             await _testCancelTask();
-            // There's no DownloadTask on web.
           },
         );
 
