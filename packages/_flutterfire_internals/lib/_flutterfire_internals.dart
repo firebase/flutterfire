@@ -13,7 +13,9 @@
 
 import 'package:firebase_core/firebase_core.dart';
 
-import 'package:firebase_core_web/firebase_core_web_interop.dart';
+import 'src/interop_shimmer.dart'
+if (dart.library.js) 'package:firebase_core_web/firebase_core_web_interop.dart'
+as core_interop;
 export 'src/exception.dart';
 
 /// An extension that adds utilities for safely casting objects
@@ -48,15 +50,16 @@ extension ObjectX<T> on T? {
 }
 
 FirebaseException _firebaseExceptionFromCoreFirebaseError(
-  JSError firebaseError, {
+    core_interop.JSError firebaseError, {
   required String plugin,
   required String Function(String) codeParser,
   required String Function(String code, String message)? messageParser,
 }) {
-  final convertCode = firebaseError.code! as String;
+  // ignore: unnecessary_cast
+  final convertCode = firebaseError.code as String;
   final code = codeParser(convertCode);
-
-  final convertMessage = firebaseError.message! as String;
+// ignore: unnecessary_cast
+  final convertMessage = firebaseError.message as String;
   final message = messageParser != null
       ? messageParser(code, convertMessage)
       : convertMessage.replaceFirst('(${firebaseError.code})', '');
@@ -76,7 +79,8 @@ FirebaseException _firebaseExceptionFromCoreFirebaseError(
 ///
 /// See also https://github.com/dart-lang/sdk/issues/30741
 bool _testException(Object? objectException) {
-  final exception = objectException as JSError;
+  final exception = objectException! as core_interop.JSError;
+  // ignore: unnecessary_cast
   final message = exception.message as String;
   return message.contains('Firebase');
 }
@@ -90,7 +94,7 @@ Object _mapException(
 }) {
   assert(_testException(exception));
 
-  if (exception is JSError) {
+  if (exception is core_interop.JSError) {
     return _firebaseExceptionFromCoreFirebaseError(
       exception,
       plugin: plugin,
