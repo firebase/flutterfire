@@ -94,7 +94,7 @@ void setupTaskTests() {
       }
 
       test(
-        'successfully pauses and resumes a `writeToFile` download task',
+        'successfully pauses and resumes a download task',
         () async {
           if (!kIsWeb) {
             file = await createFile('ok.jpeg');
