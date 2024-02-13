@@ -7,6 +7,7 @@ package io.flutter.plugins.firebase.storage;
 
 import androidx.annotation.Nullable;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageTask;
 import io.flutter.plugin.common.EventChannel.EventSink;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
@@ -21,6 +22,7 @@ public class TaskStateChannelStreamHandler implements StreamHandler {
   private final String TASK_STATE_NAME = "taskState";
   private final String TASK_APP_NAME = "appName";
   private final String TASK_SNAPSHOT = "snapshot";
+  private final String TASK_ERROR = "error";
 
   public TaskStateChannelStreamHandler(
       FlutterFirebaseStorageTask flutterTask,
@@ -71,7 +73,17 @@ public class TaskStateChannelStreamHandler implements StreamHandler {
           Map<String, Object> event = getTaskEventMap(null, null);
           event.put(
               TASK_STATE_NAME,
-              GeneratedAndroidFirebaseStorage.PigeonStorageTaskState.CANCELED.index);
+              // We use "Error" state as we synthetically update snapshot cancel state in cancel() method in Dart
+              // This is also inline with iOS which doesn't have a cancel state, only failure
+              GeneratedAndroidFirebaseStorage.PigeonStorageTaskState.ERROR.index);
+          // We need to pass an exception that the task was canceled like the other platforms
+          Map<String, Object> syntheticException = new HashMap<>();
+          syntheticException.put(
+              "code", FlutterFirebaseStorageException.getCode(StorageException.ERROR_CANCELED));
+          syntheticException.put(
+              "message",
+              FlutterFirebaseStorageException.getMessage(StorageException.ERROR_CANCELED));
+          event.put(TASK_ERROR, syntheticException);
           events.success(event);
           flutterTask.notifyCancelObjects();
           flutterTask.destroy();
@@ -90,7 +102,8 @@ public class TaskStateChannelStreamHandler implements StreamHandler {
 
   @Override
   public void onCancel(Object arguments) {
-    // Task already destroyed, do nothing.
+    if (!androidTask.isCanceled()) androidTask.cancel();
+    if (!flutterTask.isDestroyed()) flutterTask.destroy();
   }
 
   private Map<String, Object> getTaskEventMap(
@@ -101,7 +114,7 @@ public class TaskStateChannelStreamHandler implements StreamHandler {
       arguments.put(TASK_SNAPSHOT, FlutterFirebaseStorageTask.parseTaskSnapshot(snapshot));
     }
     if (exception != null) {
-      arguments.put("error", FlutterFirebaseStoragePlugin.getExceptionDetails(exception));
+      arguments.put(TASK_ERROR, FlutterFirebaseStoragePlugin.getExceptionDetails(exception));
     }
     return arguments;
   }
