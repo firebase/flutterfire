@@ -201,7 +201,7 @@ void setupTaskTests() {
           expect(snapshot.state, TaskState.success);
           expect(snapshot.bytesTransferred, completedSnapshot.bytesTransferred);
           expect(snapshot.totalBytes, completedSnapshot.totalBytes);
-          expect(snapshot.metadata, isA<FullMetadata>());
+          expect(snapshot.metadata, isA<FullMetadata?>());
         },
         retry: 2,
       );
@@ -217,7 +217,7 @@ void setupTaskTests() {
           expect(snapshot, isA<TaskSnapshot>());
           expect(snapshot.bytesTransferred, completedSnapshot.bytesTransferred);
           expect(snapshot.totalBytes, completedSnapshot.totalBytes);
-          expect(snapshot.metadata, isA<FullMetadata>());
+          expect(snapshot.metadata, isA<FullMetadata?>());
         },
         retry: 2,
       );
@@ -286,7 +286,6 @@ void setupTaskTests() {
           await _testCancelTask();
         });
       },
-      skip: true, // Cancel still cannot get correct result in e2e test.
     );
 
     group('snapshotEvents', () {
@@ -319,6 +318,40 @@ void setupTaskTests() {
             'User is not authorized to perform the desired action.',
           );
         }
+      });
+
+      test('listen to successful snapshotEvents, ensure `onDone` is called',
+          () async {
+        final snapshots = <TaskSnapshot>[];
+        final task = uploadRef.putString('This is an upload task!');
+        bool onDoneIsCalled = false;
+        task.snapshotEvents.listen(snapshots.add, onDone: () {
+          onDoneIsCalled = true;
+        });
+
+        await Future.delayed(const Duration(seconds: 1));
+        expect(onDoneIsCalled, isTrue);
+        expect(snapshots.last.state, TaskState.success);
+      });
+
+      test('listen to failed snapshotEvents, ensure `onDone` is called',
+          () async {
+        final snapshots = <TaskSnapshot>[];
+        final task = storage
+            .ref('/uploadNope.jpeg')
+            .putString('This is an upload task!');
+        bool onDoneIsCalled = false;
+        FirebaseException? streamError;
+        task.snapshotEvents.listen(snapshots.add, onError: (e) {
+          streamError = e;
+        }, onDone: () {
+          onDoneIsCalled = true;
+        });
+
+        await Future.delayed(const Duration(seconds: 1));
+        expect(onDoneIsCalled, isTrue);
+        expect(snapshots.last.state, TaskState.running);
+        expect(streamError, isA<FirebaseException>());
       });
     });
   });
