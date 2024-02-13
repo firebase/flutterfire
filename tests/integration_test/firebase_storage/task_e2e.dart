@@ -325,9 +325,12 @@ void setupTaskTests() {
         final snapshots = <TaskSnapshot>[];
         final task = uploadRef.putString('This is an upload task!');
         bool onDoneIsCalled = false;
-        task.snapshotEvents.listen(snapshots.add, onDone: () {
-          onDoneIsCalled = true;
-        });
+        task.snapshotEvents.listen(
+          snapshots.add,
+          onDone: () {
+            onDoneIsCalled = true;
+          },
+        );
 
         await Future.delayed(const Duration(seconds: 1));
         expect(onDoneIsCalled, isTrue);
@@ -342,11 +345,15 @@ void setupTaskTests() {
             .putString('This is an upload task!');
         bool onDoneIsCalled = false;
         FirebaseException? streamError;
-        task.snapshotEvents.listen(snapshots.add, onError: (e) {
-          streamError = e;
-        }, onDone: () {
-          onDoneIsCalled = true;
-        });
+        task.snapshotEvents.listen(
+          snapshots.add,
+          onError: (e) {
+            streamError = e;
+          },
+          onDone: () {
+            onDoneIsCalled = true;
+          },
+        );
 
         await Future.delayed(const Duration(seconds: 1));
         expect(onDoneIsCalled, isTrue);
