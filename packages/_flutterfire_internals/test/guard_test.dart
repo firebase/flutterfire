@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:_flutterfire_internals/_flutterfire_internals.dart';
-import 'package:firebase_core_web/firebase_core_web_interop.dart';
+import 'package:_flutterfire_internals/src/interop_shimmer.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

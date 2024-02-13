@@ -183,7 +183,7 @@ void setupTaskTests() {
       test(
         'returns the latest snapshot for download task',
         () async {
-          var downloadTask;
+          Task downloadTask;
           if (!kIsWeb) {
             file = await createFile('ok.jpeg');
             downloadTask = downloadRef.writeToFile(file);
