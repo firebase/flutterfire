@@ -58,7 +58,7 @@ FirebaseException _firebaseExceptionFromCoreFirebaseError(
   // ignore: unnecessary_cast
   final convertCode = firebaseError.code as String;
   final code = codeParser(convertCode);
-// ignore: unnecessary_cast
+  // ignore: unnecessary_cast
   final convertMessage = firebaseError.message as String;
   final message = messageParser != null
       ? messageParser(code, convertMessage)
