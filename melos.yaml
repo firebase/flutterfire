@@ -185,7 +185,7 @@ scripts:
   test:e2e:web:cloud_firestore:
     run: |
       cd packages/cloud_firestore/cloud_firestore/example
-      flutter drive --target=./integration_test/cloud_firestore_e2e_test.dart --driver=./test_driver/integration_test.dart --release -d chrome
+      flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome
     description: |
       Run all e2e tests for cloud_firestore on web platform. Please ensure you have "chromedriver" installed and running.
 
