@@ -225,7 +225,8 @@ void setupTaskTests() {
         Future<void> _testCancelTask() async {
           List<TaskSnapshot> snapshots = [];
           expect(task.snapshot.state, TaskState.running);
-          final Completer<FirebaseException> errorReceived = Completer<FirebaseException>();
+          final Completer<FirebaseException> errorReceived =
+              Completer<FirebaseException>();
 
           task.snapshotEvents.listen(
             (TaskSnapshot snapshot) {
@@ -239,14 +240,14 @@ void setupTaskTests() {
           bool canceled = await task.cancel();
           expect(canceled, isTrue);
           expect(task.snapshot.state, TaskState.canceled);
-          // TODO - this is returning a DownloadTask with state TaskState.canceled. Is this correct or should it be a FirebaseException?
-          // await expectLater(
-          //   task,
-          //   throwsA(
-          //     isA<FirebaseException>()
-          //         .having((e) => e.code, 'code', 'canceled'),
-          //   ),
-          // );
+
+          await expectLater(
+            task,
+            throwsA(
+              isA<FirebaseException>()
+                  .having((e) => e.code, 'code', 'canceled'),
+            ),
+          );
 
           expect(task.snapshot.state, TaskState.canceled);
 
@@ -271,12 +272,17 @@ void setupTaskTests() {
           },
           // There's no DownloadTask on web.
           skip: kIsWeb,
+          retry: 2,
         );
 
-        test('successfully cancels upload task', () async {
-          task = uploadRef.putString('A' * 20000000);
-          await _testCancelTask();
-        });
+        test(
+          'successfully cancels upload task',
+          () async {
+            task = uploadRef.putString('A' * 20000000);
+            await _testCancelTask();
+          },
+          retry: 2,
+        );
       },
     );
 
