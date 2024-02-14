@@ -40,6 +40,10 @@ Future<File> createFile(String name) async {
   return file;
 }
 
+Uint8List createBlob(String content) {
+  return Uint8List.fromList(content.codeUnits);
+}
+
 // Initializes a secondary app with or without a
 // default storageBucket value in FirebaseOptions for testing
 Future<FirebaseApp> testInitializeSecondaryApp({
