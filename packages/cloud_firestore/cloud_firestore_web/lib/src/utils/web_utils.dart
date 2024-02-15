@@ -10,7 +10,7 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import '../interop/firestore.dart' as firestore_interop;
 import '../interop/firestore_interop.dart'
     hide GetOptions, SetOptions, FieldPath;
-import '../utils/decode_utility.dart';
+import './decode_utility.dart';
 
 const _kChangeTypeAdded = 'added';
 const _kChangeTypeModified = 'modified';
@@ -148,10 +148,11 @@ firestore_interop.SetOptions? convertSetOptions(SetOptions? options) {
     parsedOptions = firestore_interop.SetOptions(merge: options.merge?.toJS);
   } else if (options.mergeFields != null) {
     parsedOptions = firestore_interop.SetOptions(
-        mergeFields: options.mergeFields!
-            .map((e) => e.components.toList().join('.').toJS)
-            .toList()
-            .toJSBox as JSArray);
+      mergeFields: options.mergeFields!
+          .map((e) => e.components.toList().join('.').toJS)
+          .toList()
+          .toJS,
+    );
   }
 
   return parsedOptions;
