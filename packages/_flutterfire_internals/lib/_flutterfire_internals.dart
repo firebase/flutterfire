@@ -83,7 +83,8 @@ bool _testException(Object? objectException) {
   // ignore: unnecessary_cast
   final message = exception.message as String;
   // Firestore web does not contain `Firebase` in the message so we check the exception itself.
-  return message.contains('Firebase') || exception.toString().contains('FirebaseError');
+  return message.contains('Firebase') ||
+      exception.toString().contains('FirebaseError');
 }
 
 /// Transforms internal errors in something more readable for end-users.
