@@ -49,10 +49,11 @@ void runSecondDatabaseTests() {
       );
       QuerySnapshot<Map<String, dynamic>> snapshot = await collection.get();
 
-      await Future.forEach(snapshot.docs,
-          (QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
+      List<Future> deleteFutures = snapshot.docs.map((documentSnapshot) {
         return documentSnapshot.reference.delete();
-      });
+      }).toList();
+
+      await Future.wait(deleteFutures);
       return collection;
     }
 
