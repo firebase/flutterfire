@@ -71,22 +71,22 @@ void runDocumentReferenceTests() {
               await initializeTest('document-snapshot');
           Stream<DocumentSnapshot<Map<String, dynamic>>> stream =
               document.snapshots();
-          int call = 0;
+          StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
+              subscription;
 
-          stream.listen(
+          subscription = stream.listen(
             expectAsync1(
               (DocumentSnapshot<Map<String, dynamic>> snapshot) {
-                call++;
-                if (call == 1) {
-                  expect(snapshot.exists, isFalse);
-                } else {
-                  fail('Should not have been called');
-                }
+                expect(snapshot.exists, isFalse);
               },
               count: 1,
               reason: 'Stream should only have been called once.',
             ),
           );
+
+          addTearDown(() async {
+            await subscription?.cancel();
+          });
         });
 
         testWidgets('listens to multiple documents', (_) async {
