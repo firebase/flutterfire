@@ -18,10 +18,21 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart';
 external AuthJsImpl getAuth([AppJsImpl? app]);
 
 @JS()
-external AuthJsImpl initializeAuth(AppJsImpl app, JSAny debugErrorMap);
+external AuthJsImpl initializeAuth(AppJsImpl app, AuthOptions authOptions);
+
+extension type AuthOptions._(JSObject o) implements JSObject {
+  external AuthOptions({
+    JSObject errorMap,
+    JSArray? persistence,
+    JSObject? popupRedirectResolver,
+  });
+  external JSObject? get errorMap;
+  external JSArray? get persistence;
+  external JSObject? get popupRedirectResolver;
+}
 
 @JS('debugErrorMap')
-external JSAny get debugErrorMap;
+external JSObject get debugErrorMap;
 
 @JS()
 external JSPromise applyActionCode(AuthJsImpl auth, JSString oobCode);
@@ -348,10 +359,7 @@ extension UserJsImplExtension on UserJsImpl {
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.Auth#.Persistence>
 @JS('Persistence')
-@staticInterop
-class Persistence {}
-
-extension PersistenceExtension on Persistence {
+extension type Persistence._(JSObject _) implements JSObject {
   external JSString get type;
 }
 
@@ -809,7 +817,7 @@ extension AdditionalUserInfoJsImplExtension on AdditionalUserInfoJsImpl {
 @staticInterop
 @anonymous
 class AuthSettings {
-  // external factory AuthSettings({JSBoolean appVerificationDisabledForTesting});
+// external factory AuthSettings({JSBoolean appVerificationDisabledForTesting});
 }
 
 extension AuthSettingsExtension on AuthSettings {
@@ -819,7 +827,7 @@ extension AuthSettingsExtension on AuthSettings {
 
 @JS()
 @staticInterop
-external JSAny get browserPopupRedirectResolver;
+external JSObject get browserPopupRedirectResolver;
 
 /// https://firebase.google.com/docs/reference/js/auth.multifactoruser.md#multifactoruser_interface
 @JS()

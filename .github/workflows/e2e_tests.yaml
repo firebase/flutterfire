@@ -272,7 +272,7 @@ jobs:
           key: firebase-emulators-v3-${{ github.run_id }}
           restore-keys: firebase-emulators-v3
       - name: Start Firebase Emulator
-        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
+        run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: 'E2E Tests'
         working-directory: ${{ matrix.working_directory }}
         # Web devices are not supported for the `flutter test` command yet. As a
