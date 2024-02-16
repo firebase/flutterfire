@@ -11,17 +11,17 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 String getCurrentPlatform() {
-  if (kIsWeb) {
-    return 'web';
-  } else if (Platform.isAndroid) {
+   if (defaultTargetPlatform == TargetPlatform.android) {
     return 'android';
-  } else if (Platform.isIOS) {
+  } else if (defaultTargetPlatform == TargetPlatform.iOS) {
     return 'ios';
-  } else if (Platform.isMacOS) {
+  } else if (defaultTargetPlatform == TargetPlatform.macOS) {
     return 'macos';
-  } else if (Platform.isWindows) {
+  } else if (defaultTargetPlatform == TargetPlatform.windows) {
     return 'windows';
-  } else {
+  } else if (kIsWeb) {
+     return 'web';
+   }  else {
     return 'unknown';
   }
 }
@@ -45,7 +45,7 @@ void runSecondDatabaseTests() {
 
       CollectionReference<Map<String, dynamic>> collection =
           firestore.collection(
-        '$collectionForSecondDatabase/$id/${getCurrentPlatform()}',
+        '$collectionForSecondDatabase/${getCurrentPlatform()}/$id',
       );
       QuerySnapshot<Map<String, dynamic>> snapshot = await collection.get();
 
