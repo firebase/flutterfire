@@ -11,7 +11,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 String getCurrentPlatform() {
-   if (defaultTargetPlatform == TargetPlatform.android) {
+  if (defaultTargetPlatform == TargetPlatform.android) {
     return 'android';
   } else if (defaultTargetPlatform == TargetPlatform.iOS) {
     return 'ios';
@@ -20,8 +20,8 @@ String getCurrentPlatform() {
   } else if (defaultTargetPlatform == TargetPlatform.windows) {
     return 'windows';
   } else if (kIsWeb) {
-     return 'web';
-   }  else {
+    return 'web';
+  } else {
     return 'unknown';
   }
 }
