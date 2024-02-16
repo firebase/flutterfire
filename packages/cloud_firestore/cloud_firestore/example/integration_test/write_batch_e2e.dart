@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void runWriteBatchTests() {
@@ -100,14 +99,11 @@ void runWriteBatchTests() {
       batch.update(doc3, <String, dynamic>{'bar': 'ben'});
       batch.set(doc4, <String, dynamic>{'bar': 'ben'}, SetOptions(merge: true));
 
-      // TODO(ehesp): firebase-dart does not support mergeFields
-      if (!kIsWeb) {
-        batch.set(
-          doc5,
-          <String, dynamic>{'bar': 'ben'},
-          SetOptions(mergeFields: ['bar']),
-        );
-      }
+      batch.set(
+        doc5,
+        <String, dynamic>{'bar': 'ben'},
+        SetOptions(mergeFields: ['bar']),
+      );
 
       await batch.commit();
 
@@ -127,14 +123,11 @@ void runWriteBatchTests() {
         snapshot.docs.firstWhere((doc) => doc.id == 'doc4').data(),
         equals(<String, dynamic>{'foo': 'bar', 'bar': 'ben'}),
       );
-      // ignore: todo
-      // TODO(ehesp): firebase-dart does not support mergeFields
-      if (!kIsWeb) {
-        expect(
-          snapshot.docs.firstWhere((doc) => doc.id == 'doc5').data(),
-          equals(<String, dynamic>{'foo': 'bar', 'bar': 'ben'}),
-        );
-      }
+
+      expect(
+        snapshot.docs.firstWhere((doc) => doc.id == 'doc5').data(),
+        equals(<String, dynamic>{'foo': 'bar', 'bar': 'ben'}),
+      );
     });
   });
 }
