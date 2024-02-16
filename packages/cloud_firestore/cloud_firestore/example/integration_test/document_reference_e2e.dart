@@ -172,8 +172,6 @@ void runDocumentReferenceTests() {
           fail('Should have thrown a [FirebaseException]');
         });
       },
-      // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
-      skip: kIsWeb,
     );
 
     group('DocumentReference.delete()', () {
@@ -255,9 +253,7 @@ void runDocumentReferenceTests() {
             return;
           }
           fail('Should have thrown a [FirebaseException]');
-          // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
         },
-        skip: kIsWeb,
       );
     });
 
@@ -320,7 +316,6 @@ void runDocumentReferenceTests() {
             equals({'foo': 'bar', 'bar': 456, 'baz': 'foo'}),
           );
         },
-        skip: kIsWeb,
       );
 
       testWidgets(
@@ -340,9 +335,7 @@ void runDocumentReferenceTests() {
             return;
           }
           fail('Should have thrown a [FirebaseException]');
-          // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
         },
-        skip: kIsWeb,
       );
 
       testWidgets('set and return all possible datatypes', (_) async {
@@ -513,8 +506,6 @@ void runDocumentReferenceTests() {
             );
           }
         },
-        // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
-        skip: kIsWeb,
       );
     });
 
