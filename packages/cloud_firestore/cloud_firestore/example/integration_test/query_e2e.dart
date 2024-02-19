@@ -7,7 +7,6 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void runQueryTests() {
@@ -210,8 +209,6 @@ void runQueryTests() {
           }
           fail('Should have thrown a [FirebaseException]');
         },
-        // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
-        skip: kIsWeb,
       );
 
       testWidgets(
@@ -234,8 +231,6 @@ void runQueryTests() {
             );
           }
         },
-        // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
-        skip: kIsWeb,
       );
     });
 
@@ -257,27 +252,24 @@ void runQueryTests() {
         await collection.add({'foo': 'bar'});
         Stream<QuerySnapshot<Map<String, dynamic>>> stream =
             collection.snapshots();
-        int call = 0;
+        StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? subscription;
 
-        stream.listen(
+        subscription = stream.listen(
           expectAsync1(
             (QuerySnapshot<Map<String, dynamic>> snapshot) {
-              call++;
-              if (call == 1) {
-                expect(snapshot.docs.length, equals(1));
-
-                expect(snapshot.docs[0], isA<QueryDocumentSnapshot>());
-                QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-                    snapshot.docs[0];
-                expect(documentSnapshot.data()['foo'], equals('bar'));
-              } else {
-                fail('Should not have been called');
-              }
+              expect(snapshot.docs.length, equals(1));
+              expect(snapshot.docs[0], isA<QueryDocumentSnapshot>());
+              QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+                  snapshot.docs[0];
+              expect(documentSnapshot.data()['foo'], equals('bar'));
             },
             count: 1,
             reason: 'Stream should only have been called once.',
           ),
         );
+        addTearDown(() async {
+          await subscription?.cancel();
+        });
       });
 
       testWidgets('listens to multiple queries', (_) async {
@@ -381,9 +373,7 @@ void runQueryTests() {
           }
 
           fail('Should have thrown a [FirebaseException]');
-          // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
         },
-        skip: kIsWeb,
       );
     });
 
@@ -2224,8 +2214,8 @@ void runQueryTests() {
           CollectionReference<Map<String, dynamic>> collection =
               await initializeTest('multiple-conjunctive-queries');
 
-          try {
-            await collection
+          await expectLater(
+            collection
                 .where(
                   Filter.and(
                     Filter('rating1', isEqualTo: 3.8),
@@ -2262,22 +2252,13 @@ void runQueryTests() {
                   ),
                 )
                 .orderBy('rating1', descending: true)
-                .get();
-          } catch (e) {
-            expect(
-              (e as FirebaseException)
-                      .message!
-                      .contains('Client specified an invalid argument.') ||
-                  e.message!.contains(
-                    'An error occurred while parsing query arguments',
-                  ),
-              isTrue,
-            );
-            expect(e, isA<FirebaseException>());
-          }
+                .get(),
+            throwsA(
+              isA<FirebaseException>()
+                  .having((e) => e.code, 'code', 'invalid-argument'),
+            ),
+          );
         },
-        // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
-        skip: kIsWeb,
       );
 
       testWidgets('allow multiple disjunctive queries', (_) async {
@@ -2401,8 +2382,8 @@ void runQueryTests() {
           CollectionReference<Map<String, dynamic>> collection =
               await initializeTest('multiple-disjunctive-queries');
 
-          try {
-            await collection
+          await expectLater(
+            collection
                 .where(
                   Filter.or(
                     Filter('rating', isEqualTo: 3.8),
@@ -2445,22 +2426,13 @@ void runQueryTests() {
                   ),
                 )
                 .orderBy('rating', descending: true)
-                .get();
-          } catch (e) {
-            expect(
-              (e as FirebaseException)
-                      .message!
-                      .contains('Client specified an invalid argument.') ||
-                  e.message!.contains(
-                    'An error occurred while parsing query arguments',
-                  ),
-              isTrue,
-            );
-            expect(e, isA<FirebaseException>());
-          }
+                .get(),
+            throwsA(
+              isA<FirebaseException>()
+                  .having((e) => e.code, 'code', 'invalid-argument'),
+            ),
+          );
         },
-        // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
-        skip: kIsWeb,
       );
 
       testWidgets(
