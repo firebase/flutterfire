@@ -1,3 +1,10 @@
+## 4.15.5
+
+ - **FIX**(firestore,web): Propagate `FirebaseException` properly, fix `mergeFields` bug, fix `bytesLoaded` different type under different conditions ([#12334](https://github.com/firebase/flutterfire/issues/12334)). ([fdde75b0](https://github.com/firebase/flutterfire/commit/fdde75b02fe4bd4d40ce14798e7212eca7c8e557))
+ - **FIX**(firestore): expose `AggregateField` type to users ([#12305](https://github.com/firebase/flutterfire/issues/12305)). ([2b83defa](https://github.com/firebase/flutterfire/commit/2b83defa84056e717bb230a7abd220f211c2e15e))
+ - **FIX**(firestore): cannot use `not-in` & `in` filters in the same query ([#12307](https://github.com/firebase/flutterfire/issues/12307)). ([e538338c](https://github.com/firebase/flutterfire/commit/e538338c7e1bef38973ee43db37f3def20a3d4b0))
+ - **FIX**(firestore): aggregate query `average()` is `null` when collection is empty or collection doesn't exist or the property doesn't exist on docs ([#12304](https://github.com/firebase/flutterfire/issues/12304)). ([4d3b578d](https://github.com/firebase/flutterfire/commit/4d3b578dbb88da441e308179f3656822c5612ef1))
+
 ## 4.15.4
 
  - **FIX**(firestore,web): fix an issue where nested object could be incorrectly decoded from JSObjects ([#12289](https://github.com/firebase/flutterfire/issues/12289)). ([991f5bd4](https://github.com/firebase/flutterfire/commit/991f5bd416880d0a5a49e1ff466f4769d6730e77))

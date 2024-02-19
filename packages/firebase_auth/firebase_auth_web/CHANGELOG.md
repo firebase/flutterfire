@@ -1,3 +1,8 @@
+## 5.9.5
+
+ - **FIX**(auth,web): flutter `3.19.0` interop broke auth persistence setting. Updated the way we initialise JS Map inline with latest interop. ([#12338](https://github.com/firebase/flutterfire/issues/12338)). ([9d5480f8](https://github.com/firebase/flutterfire/commit/9d5480f8f943d095dd3ca94d4868ec75bed84b22))
+ - **FIX**(auth,web): `signInWithEmailAndPassword()` throwing with incorrect exception code ([#12310](https://github.com/firebase/flutterfire/issues/12310)). ([004f6d41](https://github.com/firebase/flutterfire/commit/004f6d4195801359583f047c1909f55205125840))
+
 ## 5.9.4
 
  - Update a dependency to the latest release.

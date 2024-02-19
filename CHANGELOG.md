@@ -3,6 +3,126 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-02-19
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`_flutterfire_internals` - `v1.3.22`](#_flutterfire_internals---v1322)
+ - [`cloud_firestore` - `v4.15.5`](#cloud_firestore---v4155)
+ - [`cloud_firestore_platform_interface` - `v6.1.6`](#cloud_firestore_platform_interface---v616)
+ - [`cloud_firestore_web` - `v3.10.5`](#cloud_firestore_web---v3105)
+ - [`firebase_auth_web` - `v5.9.5`](#firebase_auth_web---v595)
+ - [`firebase_storage_web` - `v3.7.0`](#firebase_storage_web---v370)
+ - [`firebase_crashlytics_platform_interface` - `v3.6.22`](#firebase_crashlytics_platform_interface---v3622)
+ - [`firebase_auth_platform_interface` - `v7.1.5`](#firebase_auth_platform_interface---v715)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.4+22`](#firebase_in_app_messaging_platform_interface---v02422)
+ - [`firebase_database_platform_interface` - `v0.2.5+22`](#firebase_database_platform_interface---v02522)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.6+22`](#firebase_dynamic_links_platform_interface---v02622)
+ - [`firebase_messaging_web` - `v3.6.5`](#firebase_messaging_web---v365)
+ - [`firebase_remote_config_platform_interface` - `v1.4.22`](#firebase_remote_config_platform_interface---v1422)
+ - [`firebase_messaging_platform_interface` - `v4.5.24`](#firebase_messaging_platform_interface---v4524)
+ - [`firebase_app_installations_web` - `v0.1.3+22`](#firebase_app_installations_web---v01322)
+ - [`firebase_analytics_platform_interface` - `v3.9.6`](#firebase_analytics_platform_interface---v396)
+ - [`firebase_analytics_web` - `v0.5.5+18`](#firebase_analytics_web---v05518)
+ - [`firebase_storage_platform_interface` - `v5.1.9`](#firebase_storage_platform_interface---v519)
+ - [`firebase_app_installations_platform_interface` - `v0.1.4+22`](#firebase_app_installations_platform_interface---v01422)
+ - [`firebase_performance_web` - `v0.1.4+22`](#firebase_performance_web---v01422)
+ - [`firebase_performance_platform_interface` - `v0.1.4+22`](#firebase_performance_platform_interface---v01422)
+ - [`firebase_app_check_platform_interface` - `v0.1.0+16`](#firebase_app_check_platform_interface---v01016)
+ - [`firebase_app_check_web` - `v0.1.0+16`](#firebase_app_check_web---v01016)
+ - [`firebase_crashlytics` - `v3.4.15`](#firebase_crashlytics---v3415)
+ - [`firebase_auth` - `v4.17.5`](#firebase_auth---v4175)
+ - [`firebase_in_app_messaging` - `v0.7.4+14`](#firebase_in_app_messaging---v07414)
+ - [`firebase_database_web` - `v0.2.3+22`](#firebase_database_web---v02322)
+ - [`firebase_database` - `v10.4.6`](#firebase_database---v1046)
+ - [`firebase_dynamic_links` - `v5.4.14`](#firebase_dynamic_links---v5414)
+ - [`firebase_messaging` - `v14.7.16`](#firebase_messaging---v14716)
+ - [`firebase_remote_config_web` - `v1.4.22`](#firebase_remote_config_web---v1422)
+ - [`firebase_remote_config` - `v4.3.14`](#firebase_remote_config---v4314)
+ - [`firebase_app_installations` - `v0.2.4+14`](#firebase_app_installations---v02414)
+ - [`firebase_analytics` - `v10.8.6`](#firebase_analytics---v1086)
+ - [`firebase_storage` - `v11.6.6`](#firebase_storage---v1166)
+ - [`firebase_performance` - `v0.9.3+14`](#firebase_performance---v09314)
+ - [`firebase_app_check` - `v0.2.1+14`](#firebase_app_check---v02114)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_crashlytics_platform_interface` - `v3.6.22`
+ - `firebase_auth_platform_interface` - `v7.1.5`
+ - `firebase_in_app_messaging_platform_interface` - `v0.2.4+22`
+ - `firebase_database_platform_interface` - `v0.2.5+22`
+ - `firebase_dynamic_links_platform_interface` - `v0.2.6+22`
+ - `firebase_messaging_web` - `v3.6.5`
+ - `firebase_remote_config_platform_interface` - `v1.4.22`
+ - `firebase_messaging_platform_interface` - `v4.5.24`
+ - `firebase_app_installations_web` - `v0.1.3+22`
+ - `firebase_analytics_platform_interface` - `v3.9.6`
+ - `firebase_analytics_web` - `v0.5.5+18`
+ - `firebase_storage_platform_interface` - `v5.1.9`
+ - `firebase_app_installations_platform_interface` - `v0.1.4+22`
+ - `firebase_performance_web` - `v0.1.4+22`
+ - `firebase_performance_platform_interface` - `v0.1.4+22`
+ - `firebase_app_check_platform_interface` - `v0.1.0+16`
+ - `firebase_app_check_web` - `v0.1.0+16`
+ - `firebase_crashlytics` - `v3.4.15`
+ - `firebase_auth` - `v4.17.5`
+ - `firebase_in_app_messaging` - `v0.7.4+14`
+ - `firebase_database_web` - `v0.2.3+22`
+ - `firebase_database` - `v10.4.6`
+ - `firebase_dynamic_links` - `v5.4.14`
+ - `firebase_messaging` - `v14.7.16`
+ - `firebase_remote_config_web` - `v1.4.22`
+ - `firebase_remote_config` - `v4.3.14`
+ - `firebase_app_installations` - `v0.2.4+14`
+ - `firebase_analytics` - `v10.8.6`
+ - `firebase_storage` - `v11.6.6`
+ - `firebase_performance` - `v0.9.3+14`
+ - `firebase_app_check` - `v0.2.1+14`
+
+---
+
+#### `_flutterfire_internals` - `v1.3.22`
+
+ - **FIX**(firestore,web): Propagate `FirebaseException` properly, fix `mergeFields` bug, fix `bytesLoaded` different type under different conditions ([#12334](https://github.com/firebase/flutterfire/issues/12334)). ([fdde75b0](https://github.com/firebase/flutterfire/commit/fdde75b02fe4bd4d40ce14798e7212eca7c8e557))
+ - **FIX**(storage,web): fixed web stream handlers, e2e web tests, incorrect NativeError being thrown instead of FirebaseException on web ([#12319](https://github.com/firebase/flutterfire/issues/12319)). ([d32b5a93](https://github.com/firebase/flutterfire/commit/d32b5a936cfb05fbeeff199248474c23af293a3c))
+
+#### `cloud_firestore` - `v4.15.5`
+
+ - **FIX**(firestore,web): Propagate `FirebaseException` properly, fix `mergeFields` bug, fix `bytesLoaded` different type under different conditions ([#12334](https://github.com/firebase/flutterfire/issues/12334)). ([fdde75b0](https://github.com/firebase/flutterfire/commit/fdde75b02fe4bd4d40ce14798e7212eca7c8e557))
+ - **FIX**(firestore): expose `AggregateField` type to users ([#12305](https://github.com/firebase/flutterfire/issues/12305)). ([2b83defa](https://github.com/firebase/flutterfire/commit/2b83defa84056e717bb230a7abd220f211c2e15e))
+ - **FIX**(firestore): cannot use `not-in` & `in` filters in the same query ([#12307](https://github.com/firebase/flutterfire/issues/12307)). ([e538338c](https://github.com/firebase/flutterfire/commit/e538338c7e1bef38973ee43db37f3def20a3d4b0))
+ - **FIX**(firestore): aggregate query `average()` is `null` when collection is empty or collection doesn't exist or the property doesn't exist on docs ([#12304](https://github.com/firebase/flutterfire/issues/12304)). ([4d3b578d](https://github.com/firebase/flutterfire/commit/4d3b578dbb88da441e308179f3656822c5612ef1))
+
+#### `cloud_firestore_platform_interface` - `v6.1.6`
+
+ - **FIX**(firestore): aggregate query `average()` is `null` when collection is empty or collection doesn't exist or the property doesn't exist on docs ([#12304](https://github.com/firebase/flutterfire/issues/12304)). ([4d3b578d](https://github.com/firebase/flutterfire/commit/4d3b578dbb88da441e308179f3656822c5612ef1))
+
+#### `cloud_firestore_web` - `v3.10.5`
+
+ - **FIX**(firestore,web): Propagate `FirebaseException` properly, fix `mergeFields` bug, fix `bytesLoaded` different type under different conditions ([#12334](https://github.com/firebase/flutterfire/issues/12334)). ([fdde75b0](https://github.com/firebase/flutterfire/commit/fdde75b02fe4bd4d40ce14798e7212eca7c8e557))
+ - **FIX**(firestore): aggregate query `average()` is `null` when collection is empty or collection doesn't exist or the property doesn't exist on docs ([#12304](https://github.com/firebase/flutterfire/issues/12304)). ([4d3b578d](https://github.com/firebase/flutterfire/commit/4d3b578dbb88da441e308179f3656822c5612ef1))
+
+#### `firebase_auth_web` - `v5.9.5`
+
+ - **FIX**(auth,web): flutter `3.19.0` interop broke auth persistence setting. Updated the way we initialise JS Map inline with latest interop. ([#12338](https://github.com/firebase/flutterfire/issues/12338)). ([9d5480f8](https://github.com/firebase/flutterfire/commit/9d5480f8f943d095dd3ca94d4868ec75bed84b22))
+ - **FIX**(auth,web): `signInWithEmailAndPassword()` throwing with incorrect exception code ([#12310](https://github.com/firebase/flutterfire/issues/12310)). ([004f6d41](https://github.com/firebase/flutterfire/commit/004f6d4195801359583f047c1909f55205125840))
+
+#### `firebase_storage_web` - `v3.7.0`
+
+ - **FIX**(storage,web): fixed web stream handlers, e2e web tests, incorrect NativeError being thrown instead of FirebaseException on web ([#12319](https://github.com/firebase/flutterfire/issues/12319)). ([d32b5a93](https://github.com/firebase/flutterfire/commit/d32b5a936cfb05fbeeff199248474c23af293a3c))
+ - **FEAT**(storage,web): migrate web to js_interop to be compatible with WASM ([#12202](https://github.com/firebase/flutterfire/issues/12202)). ([7cae803a](https://github.com/firebase/flutterfire/commit/7cae803a3f5e146cd53b2a313b61417a12de52dc))
+
+
 ## 2024-02-06
 
 ### Changes

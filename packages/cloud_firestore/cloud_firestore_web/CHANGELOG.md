@@ -1,3 +1,8 @@
+## 3.10.5
+
+ - **FIX**(firestore,web): Propagate `FirebaseException` properly, fix `mergeFields` bug, fix `bytesLoaded` different type under different conditions ([#12334](https://github.com/firebase/flutterfire/issues/12334)). ([fdde75b0](https://github.com/firebase/flutterfire/commit/fdde75b02fe4bd4d40ce14798e7212eca7c8e557))
+ - **FIX**(firestore): aggregate query `average()` is `null` when collection is empty or collection doesn't exist or the property doesn't exist on docs ([#12304](https://github.com/firebase/flutterfire/issues/12304)). ([4d3b578d](https://github.com/firebase/flutterfire/commit/4d3b578dbb88da441e308179f3656822c5612ef1))
+
 ## 3.10.4
 
  - **FIX**(firestore,web): fix an issue where nested object could be incorrectly decoded from JSObjects ([#12289](https://github.com/firebase/flutterfire/issues/12289)). ([991f5bd4](https://github.com/firebase/flutterfire/commit/991f5bd416880d0a5a49e1ff466f4769d6730e77))
