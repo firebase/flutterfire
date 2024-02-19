@@ -10,13 +10,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 String getCurrentPlatform() {
-  if (defaultTargetPlatform == TargetPlatform.android) {
+  if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
     return 'android';
-  } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+  } else if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS) {
     return 'ios';
-  } else if (defaultTargetPlatform == TargetPlatform.macOS) {
+  } else if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
     return 'macos';
-  } else if (defaultTargetPlatform == TargetPlatform.windows) {
+  } else if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows) {
     return 'windows';
   } else if (kIsWeb) {
     return 'web';
