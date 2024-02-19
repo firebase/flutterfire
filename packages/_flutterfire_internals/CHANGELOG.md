@@ -1,3 +1,8 @@
+## 1.3.22
+
+ - **FIX**(firestore,web): Propagate `FirebaseException` properly, fix `mergeFields` bug, fix `bytesLoaded` different type under different conditions ([#12334](https://github.com/firebase/flutterfire/issues/12334)). ([fdde75b0](https://github.com/firebase/flutterfire/commit/fdde75b02fe4bd4d40ce14798e7212eca7c8e557))
+ - **FIX**(storage,web): fixed web stream handlers, e2e web tests, incorrect NativeError being thrown instead of FirebaseException on web ([#12319](https://github.com/firebase/flutterfire/issues/12319)). ([d32b5a93](https://github.com/firebase/flutterfire/commit/d32b5a936cfb05fbeeff199248474c23af293a3c))
+
 ## 1.3.21
 
  - Update a dependency to the latest release.
