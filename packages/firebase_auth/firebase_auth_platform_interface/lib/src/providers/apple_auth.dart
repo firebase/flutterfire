@@ -47,12 +47,12 @@ class AppleAuthProvider extends AuthProvider {
   }
 
   /// Create a new [AppleAuthCredential] from a provided [idToken], [rawNonce] and [appleFullPersonName];
-  static OAuthCredential appleCredentialWithIDToken(
+  static OAuthCredential credentialWithIDToken(
     String idToken,
     String rawNonce,
     AppleFullPersonName appleFullPersonName,
   ) {
-    return AppleAuthCredential._appleCredentialWithIDToken(
+    return AppleAuthCredential._credentialWithIDToken(
       idToken,
       rawNonce,
       appleFullPersonName,
@@ -121,7 +121,7 @@ class AppleAuthCredential extends OAuthCredential {
     );
   }
 
-  factory AppleAuthCredential._appleCredentialWithIDToken(
+  factory AppleAuthCredential._credentialWithIDToken(
     String idToken,
     String rawNonce,
     AppleFullPersonName appleFullPersonName,
