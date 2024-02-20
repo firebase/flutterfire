@@ -86,7 +86,7 @@ jobs:
       - uses: Homebrew/actions/setup-homebrew@master
       - name: 'Install Tools'
         run: |
-          brew install python3
+          alias python=python3
           flutter pub global activate flutter_plugin_tools
           brew install swiftformat
           brew install clang-format

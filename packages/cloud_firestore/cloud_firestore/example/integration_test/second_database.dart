@@ -1,7 +1,6 @@
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
-import 'dart:io';
 import 'dart:async';
 import 'dart:math';
 
@@ -11,16 +10,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 String getCurrentPlatform() {
-  if (kIsWeb) {
-    return 'web';
-  } else if (Platform.isAndroid) {
+  if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
     return 'android';
-  } else if (Platform.isIOS) {
+  } else if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS) {
     return 'ios';
-  } else if (Platform.isMacOS) {
+  } else if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
     return 'macos';
-  } else if (Platform.isWindows) {
+  } else if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows) {
     return 'windows';
+  } else if (kIsWeb) {
+    return 'web';
   } else {
     return 'unknown';
   }
@@ -45,7 +44,7 @@ void runSecondDatabaseTests() {
 
       CollectionReference<Map<String, dynamic>> collection =
           firestore.collection(
-        '$collectionForSecondDatabase/$id/${getCurrentPlatform()}',
+        '$collectionForSecondDatabase/${getCurrentPlatform()}/$id',
       );
       QuerySnapshot<Map<String, dynamic>> snapshot = await collection.get();
 
