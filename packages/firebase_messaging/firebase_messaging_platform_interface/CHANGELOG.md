@@ -1,3 +1,7 @@
+## 4.5.25
+
+ - **FEAT**: Support get notification raw data
+
 ## 4.5.24
 
  - Update a dependency to the latest release.

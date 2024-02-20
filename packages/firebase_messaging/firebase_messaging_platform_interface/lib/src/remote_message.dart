@@ -8,20 +8,22 @@ import 'package:firebase_messaging_platform_interface/firebase_messaging_platfor
 /// A class representing a message sent from Firebase Cloud Messaging.
 class RemoteMessage {
   // ignore: public_member_api_docs
-  const RemoteMessage(
-      {this.senderId,
-      this.category,
-      this.collapseKey,
-      this.contentAvailable = false,
-      this.data = const <String, dynamic>{},
-      this.from,
-      this.messageId,
-      this.messageType,
-      this.mutableContent = false,
-      this.notification,
-      this.sentTime,
-      this.threadId,
-      this.ttl});
+  const RemoteMessage({
+    this.senderId,
+    this.category,
+    this.collapseKey,
+    this.contentAvailable = false,
+    this.data = const <String, dynamic>{},
+    this.from,
+    this.messageId,
+    this.messageType,
+    this.mutableContent = false,
+    this.notification,
+    this.sentTime,
+    this.threadId,
+    this.ttl,
+    this.notificationRawData,
+  });
 
   /// Constructs a [RemoteMessage] from a raw Map.
   factory RemoteMessage.fromMap(Map<String, dynamic> map) {
@@ -49,6 +51,9 @@ class RemoteMessage {
               int.parse(map['sentTime'].toString())),
       threadId: map['threadId'],
       ttl: map['ttl'],
+      notificationRawData: map['notification'] == null
+          ? null
+          : Map<String, dynamic>.from(map['notification']),
     );
   }
 
@@ -110,4 +115,7 @@ class RemoteMessage {
 
   /// The time to live for the message in seconds.
   final int? ttl;
+
+  /// Any additional notification raw data.
+  final Map<String, dynamic>? notificationRawData;
 }
