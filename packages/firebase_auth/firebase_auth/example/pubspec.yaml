@@ -15,7 +15,8 @@ dependencies:
 
 dev_dependencies:
   http: ^0.13.3
-  patrol: ^2.1.0
+  patrol:
+    path: /Users/julia/patrol/packages/patrol
 
 flutter:
   uses-material-design: true

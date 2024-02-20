@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "name": "attach debugger",
+            "request": "attach",
+            "type": "dart",
+            "cwd": "integration_test",
+            "vmServiceUri": "${command:dart.promptForVmService}",
+        },
+    ]
+}

@@ -7,6 +7,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:patrol/patrol.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+class ResourceIds {}
+
 void main() {
   patrolTest(
     'log in with Google account',

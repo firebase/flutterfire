@@ -27,12 +27,15 @@ void main() {
         );
       }
 
+      await sendNotification();
+
       await $.pumpAndSettle();
 
       await $.native.openNotifications();
       final notification = await $.native.getFirstNotification();
       expect(notification.title, 'title');
       expect(notification.content, 'body');
+      await $.native.closeNotifications();
     },
   );
 }
@@ -49,7 +52,8 @@ Future<void> sendNotification() async {
 
   await http.post(
     Uri.parse(
-        'https://fcm.googleapis.com/v1/projects/patrol-poc/messages:send'),
+      'https://fcm.googleapis.com/v1/projects/patrol-poc/messages:send',
+    ),
     headers: {
       'Authorization': 'Bearer $accessToken',
     },
