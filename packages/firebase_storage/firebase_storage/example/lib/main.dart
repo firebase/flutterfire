@@ -100,15 +100,15 @@ class _TaskManager extends State<TaskManager> {
         .child('flutter-tests')
         .child('/some-image.jpg');
 
-    // final metadata = SettableMetadata(
-    //   contentType: 'image/jpeg',
-    //   customMetadata: {'picked-file-path': file.path},
-    // );
+    final metadata = SettableMetadata(
+      contentType: 'image/jpeg',
+      customMetadata: {'picked-file-path': file.path},
+    );
 
     if (kIsWeb) {
-      uploadTask = ref.putData(await file.readAsBytes());
+      uploadTask = ref.putData(await file.readAsBytes(), metadata);
     } else {
-      uploadTask = ref.putFile(io.File(file.path));
+      uploadTask = ref.putFile(io.File(file.path), metadata);
     }
 
     return Future.value(uploadTask);
