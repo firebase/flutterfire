@@ -2209,55 +2209,41 @@ void runQueryTests() {
       });
 
       testWidgets(
-        'Exception thrown when combining `arrayContainsAny` & `isNotEqualTo` in multiple conjunctive queries',
+        'Can combine `arrayContainsAny` & `isNotEqualTo` in multiple conjunctive queries',
         (_) async {
           CollectionReference<Map<String, dynamic>> collection =
-              await initializeTest('multiple-conjunctive-queries');
-
-          await expectLater(
-            collection
-                .where(
-                  Filter.and(
-                    Filter('rating1', isEqualTo: 3.8),
-                    Filter('year1', isEqualTo: 1970),
-                    Filter('runtime1', isEqualTo: 90),
-                    Filter('director1', isEqualTo: 'Director2'),
-                    Filter('producer1', isEqualTo: 'Producer2'),
-                    Filter('budget1', isEqualTo: 20000000),
-                    Filter('boxOffice1', isEqualTo: 50000000),
-                    Filter('actor1', isEqualTo: 'Actor2'),
-                    Filter('language1', isEqualTo: 'English'),
-                    Filter('award1', isEqualTo: 'Award2'),
-                    Filter('genre1', arrayContainsAny: ['sci-fi']),
-                    Filter('country1', isEqualTo: 'USA'),
-                    Filter('released1', isEqualTo: true),
-                    Filter('screenplay1', isEqualTo: 'Screenplay2'),
-                    Filter('cinematography1', isEqualTo: 'Cinematography2'),
-                    Filter('music1', isEqualTo: 'Music2'),
-                    Filter('rating2', isEqualTo: 4.2),
-                    Filter('year2', isEqualTo: 1982),
-                    Filter('runtime2', isEqualTo: 60),
-                    Filter('director2', isEqualTo: 'Director3'),
-                    Filter('producer2', isEqualTo: 'Producer3'),
-                    Filter('budget2', isEqualTo: 30000000),
-                    Filter('boxOffice2', isEqualTo: 60000000),
-                    Filter('actor2', isEqualTo: 'Actor3'),
-                    Filter('language2', isEqualTo: 'Korean'),
-                    Filter('award2', isEqualTo: 'Award3'),
-                    Filter('genre2', isEqualTo: ['sci-fi', 'action']),
-                    Filter('country2', isEqualTo: 'South Korea'),
-                    Filter('released2', isEqualTo: false),
-                    // Fails because this is not allowed when arrayContainsAny is included in the Query
-                    Filter('screenplay2', isNotEqualTo: 'blah'),
-                  ),
-                )
-                .orderBy('rating1', descending: true)
-                .get(),
-            throwsA(
-              isA<FirebaseException>()
-                  .having((e) => e.code, 'code', 'invalid-argument'),
-            ),
+              await initializeTest(
+            'array-contain-not-equal-conjunctive-queries',
           );
+
+          await Future.wait([
+            collection.doc('doc1').set({
+              'genre': ['fantasy', 'sci-fi'],
+              'screenplay2': 'bar',
+            }),
+            collection.doc('doc2').set({
+              'genre': ['fantasy', 'sci-fi'],
+              'screenplay2': 'bar',
+            }),
+            collection.doc('doc3').set({
+              'genre': ['fantasy', 'sci-fi'],
+              'screenplay2': 'foo',
+            }),
+          ]);
+
+          final results = await collection
+              .where(
+                Filter.and(
+                  Filter('genre', arrayContainsAny: ['sci-fi']),
+                  Filter('screenplay2', isNotEqualTo: 'foo'),
+                ),
+              )
+              .orderBy('screenplay2', descending: true)
+              .get();
+
+          expect(results.docs.length, equals(2));
+          expect(results.docs[0].id, equals('doc2'));
+          expect(results.docs[1].id, equals('doc1'));
         },
       );
 
@@ -2377,61 +2363,45 @@ void runQueryTests() {
       });
 
       testWidgets(
-        'Exception thrown when combining `arrayContainsAny` & `isNotEqualTo` in multiple disjunctive queries',
+        'Can combine  `arrayContainsAny` & `isNotEqualTo` in disjunctive queries',
         (_) async {
           CollectionReference<Map<String, dynamic>> collection =
-              await initializeTest('multiple-disjunctive-queries');
-
-          await expectLater(
-            collection
-                .where(
-                  Filter.or(
-                    Filter('rating', isEqualTo: 3.8),
-                    Filter('year', isEqualTo: 1970),
-                    Filter('runtime', isEqualTo: 90),
-                    Filter('director', isEqualTo: 'Director2'),
-                    Filter('country', isEqualTo: 'Wales'),
-                    Filter('budget', isEqualTo: 20000000),
-                    Filter('boxOffice', isEqualTo: 50000000),
-                    Filter('genre', arrayContainsAny: ['sci-fi']),
-                    Filter('actor', isEqualTo: 'Actor2'),
-                    Filter('language', isEqualTo: 'English'),
-                    Filter('award', isEqualTo: 'Award2'),
-                    Filter('screenWriter', isEqualTo: 'ScreenWriter2'),
-                    Filter('editor', isEqualTo: 'Editor2'),
-                    Filter('cinematographer', isEqualTo: 'Cinematographer2'),
-                    Filter('releaseCountry', isEqualTo: 'Country2'),
-                    Filter('distributor', isEqualTo: 'Distributor2'),
-                    Filter('ratingSystem', isEqualTo: 'RatingSystem2'),
-                    Filter('soundtrackComposer', isEqualTo: 'Composer2'),
-                    Filter(
-                      'visualEffectsCompany',
-                      isEqualTo: 'EffectsCompany2',
-                    ),
-                    Filter(
-                      'productionCompany',
-                      isEqualTo: 'ProductionCompany2',
-                    ),
-                    Filter('filmFormat', isEqualTo: 'FilmFormat2'),
-                    Filter('aspectRatio', isEqualTo: 'AspectRatio2'),
-                    Filter('colorProcess', isEqualTo: 'ColorProcess2'),
-                    Filter('soundProcess', isEqualTo: 'SoundProcess2'),
-                    Filter('numberOfTheaters', isEqualTo: 2000),
-                    Filter('openingWeekendRevenue', isEqualTo: 10000000),
-                    Filter('totalDomesticRevenue', isEqualTo: 60000000),
-                    Filter('totalWorldwideRevenue', isEqualTo: 200000000),
-                    Filter('estimatedProfit', isEqualTo: 140000000),
-                    // Fails because this is not allowed when arrayContainsAny is included in the Query
-                    Filter('mainCharacter', isNotEqualTo: 'MainCharacter2'),
-                  ),
-                )
-                .orderBy('rating', descending: true)
-                .get(),
-            throwsA(
-              isA<FirebaseException>()
-                  .having((e) => e.code, 'code', 'invalid-argument'),
-            ),
+              await initializeTest(
+            'array-contain-not-equal-disjunctive-queries',
           );
+
+          await Future.wait([
+            collection.doc('doc1').set({
+              'genre': ['fantasy', 'sci-fi'],
+              'screenplay2': 'bar',
+            }),
+            collection.doc('doc2').set({
+              'genre': ['fantasy', 'sci-fi'],
+              'mainCharacter': 'MainCharacter2',
+            }),
+            collection.doc('doc3').set({
+              'genre': ['fantasy', 'something else'],
+              'mainCharacter': 'foo',
+            }),
+            collection.doc('doc4').set({
+              'genre': ['fantasy', 'something else'],
+              'mainCharacter': 'MainCharacter2',
+            }),
+          ]);
+
+          final results = await collection
+              .where(
+                Filter.or(
+                  Filter('genre', arrayContainsAny: ['sci-fi']),
+                  Filter('mainCharacter', isNotEqualTo: 'MainCharacter2'),
+                ),
+              )
+              .orderBy('mainCharacter', descending: true)
+              .get();
+
+          expect(results.docs.length, equals(2));
+          expect(results.docs[0].id, equals('doc3'));
+          expect(results.docs[1].id, equals('doc2'));
         },
       );
 
