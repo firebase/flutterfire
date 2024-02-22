@@ -389,8 +389,11 @@ public class FlutterFirebaseStoragePlugin
             });
   }
 
-  StorageMetadata getMetaDataFromPigeon(
-      GeneratedAndroidFirebaseStorage.PigeonSettableMetadata pigeonSettableMetatdata) {
+  @Nullable StorageMetadata getMetaDataFromPigeon(
+      @Nullable GeneratedAndroidFirebaseStorage.PigeonSettableMetadata pigeonSettableMetatdata) {
+    if (pigeonSettableMetatdata == null) {
+      return null;
+    }
     StorageMetadata.Builder androidMetaDataBuilder =
         new StorageMetadata.Builder()
             .setCacheControl(pigeonSettableMetatdata.getCacheControl())
@@ -438,7 +441,7 @@ public class FlutterFirebaseStoragePlugin
       @NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseStorage.PigeonStorageReference reference,
       @NonNull byte[] data,
-      @NonNull GeneratedAndroidFirebaseStorage.PigeonSettableMetadata settableMetaData,
+      @Nullable GeneratedAndroidFirebaseStorage.PigeonSettableMetadata settableMetaData,
       @NonNull Long handle,
       @NonNull GeneratedAndroidFirebaseStorage.Result<String> result) {
 
@@ -464,7 +467,7 @@ public class FlutterFirebaseStoragePlugin
       @NonNull GeneratedAndroidFirebaseStorage.PigeonStorageReference reference,
       @NonNull String data,
       @NonNull Long format,
-      @NonNull GeneratedAndroidFirebaseStorage.PigeonSettableMetadata settableMetaData,
+      @Nullable GeneratedAndroidFirebaseStorage.PigeonSettableMetadata settableMetaData,
       @NonNull Long handle,
       @NonNull GeneratedAndroidFirebaseStorage.Result<String> result) {
 
@@ -493,7 +496,7 @@ public class FlutterFirebaseStoragePlugin
       @NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseStorage.PigeonStorageReference reference,
       @NonNull String filePath,
-      @NonNull GeneratedAndroidFirebaseStorage.PigeonSettableMetadata settableMetaData,
+      @Nullable GeneratedAndroidFirebaseStorage.PigeonSettableMetadata settableMetaData,
       @NonNull Long handle,
       @NonNull GeneratedAndroidFirebaseStorage.Result<String> result) {
 

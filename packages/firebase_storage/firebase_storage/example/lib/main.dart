@@ -98,7 +98,7 @@ class _TaskManager extends State<TaskManager> {
     Reference ref = FirebaseStorage.instance
         .ref()
         .child('flutter-tests')
-        .child('/some-image.jpeg');
+        .child('/some-image.jpg');
 
     // final metadata = SettableMetadata(
     //   contentType: 'image/jpeg',
