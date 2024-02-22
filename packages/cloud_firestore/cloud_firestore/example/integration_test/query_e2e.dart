@@ -2213,7 +2213,8 @@ void runQueryTests() {
         (_) async {
           CollectionReference<Map<String, dynamic>> collection =
               await initializeTest(
-                  'array-contain-not-equal-conjunctive-queries');
+            'array-contain-not-equal-conjunctive-queries',
+          );
 
           await Future.wait([
             collection.doc('doc1').set({
@@ -2366,7 +2367,8 @@ void runQueryTests() {
         (_) async {
           CollectionReference<Map<String, dynamic>> collection =
               await initializeTest(
-                  'array-contain-not-equal-disjunctive-queries');
+            'array-contain-not-equal-disjunctive-queries',
+          );
 
           await Future.wait([
             collection.doc('doc1').set({
