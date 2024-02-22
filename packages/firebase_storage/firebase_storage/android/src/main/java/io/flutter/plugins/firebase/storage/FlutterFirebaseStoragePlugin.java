@@ -389,7 +389,8 @@ public class FlutterFirebaseStoragePlugin
             });
   }
 
-  @Nullable StorageMetadata getMetaDataFromPigeon(
+  @Nullable
+  StorageMetadata getMetaDataFromPigeon(
       @Nullable GeneratedAndroidFirebaseStorage.PigeonSettableMetadata pigeonSettableMetatdata) {
     if (pigeonSettableMetatdata == null) {
       return null;
