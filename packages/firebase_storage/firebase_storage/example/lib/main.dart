@@ -98,17 +98,17 @@ class _TaskManager extends State<TaskManager> {
     Reference ref = FirebaseStorage.instance
         .ref()
         .child('flutter-tests')
-        .child('/some-image.jpg');
+        .child('/some-image.jpeg');
 
-    final metadata = SettableMetadata(
-      contentType: 'image/jpeg',
-      customMetadata: {'picked-file-path': file.path},
-    );
+    // final metadata = SettableMetadata(
+    //   contentType: 'image/jpeg',
+    //   customMetadata: {'picked-file-path': file.path},
+    // );
 
     if (kIsWeb) {
-      uploadTask = ref.putData(await file.readAsBytes(), metadata);
+      uploadTask = ref.putData(await file.readAsBytes());
     } else {
-      uploadTask = ref.putFile(io.File(file.path), metadata);
+      uploadTask = ref.putFile(io.File(file.path));
     }
 
     return Future.value(uploadTask);
