@@ -33,7 +33,7 @@ Auth getAuthInstance(App app) {
       app.jsObject,
       auth_interop.AuthOptions(
         errorMap: auth_interop.debugErrorMap,
-        persistence: persistences.toJS,
+        persistence: customJSList(persistences),
         popupRedirectResolver: auth_interop.browserPopupRedirectResolver,
       ),
     ),
