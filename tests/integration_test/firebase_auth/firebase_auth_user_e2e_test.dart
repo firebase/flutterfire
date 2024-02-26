@@ -492,8 +492,6 @@ void main() {
             }
             expect(FirebaseAuth.instance.currentUser, isNotNull);
           },
-          // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
-          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS,
         );
       }, skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,);
 
@@ -658,9 +656,7 @@ void main() {
           },
           // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
           // iOS supports it
-          skip: kIsWeb ||
-              defaultTargetPlatform == TargetPlatform.macOS ||
-              defaultTargetPlatform == TargetPlatform.iOS,
+          skip: kIsWeb,
         );
 
         test(
@@ -849,8 +845,7 @@ void main() {
             );
           },
           // setting `photoURL` on web throws an error
-          // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
-          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS  || defaultTargetPlatform == TargetPlatform.windows,
+          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
         );
       },);
 
@@ -1036,7 +1031,5 @@ void main() {
         });
       }, skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,);
     },
-    // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
-    skip: defaultTargetPlatform == TargetPlatform.macOS,
   );
 }

@@ -26,9 +26,7 @@ void main() {
         () async {
           final id = await FirebaseInstallations.instance.getId();
           expect(id, isNotEmpty);
-          // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
         },
-        skip: defaultTargetPlatform == TargetPlatform.macOS,
       );
 
       test(
@@ -46,9 +44,7 @@ void main() {
 
           final newId = await FirebaseInstallations.instance.getId();
           expect(newId, isNot(equals(id)));
-          // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
         },
-        skip: defaultTargetPlatform == TargetPlatform.macOS,
       );
 
       test(
@@ -56,9 +52,7 @@ void main() {
         () async {
           final token = await FirebaseInstallations.instance.getToken();
           expect(token, isNotEmpty);
-          // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
         },
-        skip: defaultTargetPlatform == TargetPlatform.macOS,
       );
     },
   );
