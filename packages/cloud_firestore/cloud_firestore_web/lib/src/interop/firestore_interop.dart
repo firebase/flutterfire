@@ -505,7 +505,8 @@ abstract class LoadBundleTaskProgressJsImpl {}
 
 extension LoadBundleTaskProgressJsImplExtension
     on LoadBundleTaskProgressJsImpl {
-  external JSNumber get bytesLoaded;
+// int or String?
+  external JSAny get bytesLoaded;
 
   external JSNumber get documentsLoaded;
 

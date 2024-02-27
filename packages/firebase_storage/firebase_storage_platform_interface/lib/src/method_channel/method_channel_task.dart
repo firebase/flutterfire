@@ -35,26 +35,31 @@ abstract class MethodChannelTask extends TaskPlatform {
       try {
         await for (final events in nativePlatformStream) {
           final taskState = TaskState.values[events['taskState']];
-
           if (taskState == TaskState.error) {
             _didComplete = true;
             final errorMap = Map<String, dynamic>.from(events['error']);
+            final code = errorMap['code'];
+
             final exception = FirebaseException(
               plugin: 'firebase_storage',
-              code: errorMap['code'],
+              code: code,
               message: errorMap['message'],
             );
-            _snapshot = MethodChannelTaskSnapshot(
-              storage,
-              taskState,
-              // We use previous snapshot data as errors from native do not provide snapshot data.
-              {
-                'path': path,
-                'bytesTransferred': _snapshot.bytesTransferred,
-                'totalBytes': _snapshot.totalBytes,
-                'metadata': _snapshot.metadata
-              },
-            );
+            if (code != 'canceled') {
+              // If the task was canceled, we keep the previous snapshot data with canceled state.
+              _snapshot = MethodChannelTaskSnapshot(
+                storage,
+                taskState,
+                // We use previous snapshot data as errors from native do not provide snapshot data.
+                {
+                  'path': path,
+                  'bytesTransferred': _snapshot.bytesTransferred,
+                  'totalBytes': _snapshot.totalBytes,
+                  'metadata': _snapshot.metadata
+                },
+              );
+            }
+            _exception = exception;
             _completer?.completeError(exception);
             if (_userListening) {
               // If the user is listening to the stream, yield the error. Otherwise, it results in an unhandled exception.
@@ -73,9 +78,12 @@ abstract class MethodChannelTask extends TaskPlatform {
             break;
           }
 
-          if (taskState == TaskState.success ||
-              taskState == TaskState.running ||
-              taskState == TaskState.paused) {
+          if ((taskState == TaskState.success ||
+                  taskState == TaskState.running ||
+                  taskState == TaskState.paused)
+              // Required for android which fires another event when already cancelled
+              &&
+              snapshot.state != TaskState.canceled) {
             MethodChannelTaskSnapshot snapshot = MethodChannelTaskSnapshot(
                 storage,
                 taskState,
@@ -138,8 +146,6 @@ abstract class MethodChannelTask extends TaskPlatform {
 
   Object? _exception;
 
-  late StackTrace _stackTrace;
-
   bool _didComplete = false;
 
   Completer<TaskSnapshotPlatform>? _completer;
@@ -169,11 +175,15 @@ abstract class MethodChannelTask extends TaskPlatform {
     if (_didComplete && _exception == null) {
       return Future.value(snapshot);
     } else if (_didComplete && _exception != null) {
-      return catchFuturePlatformException(_exception!, _stackTrace);
+      return catchFuturePlatformException(_exception!, StackTrace.current);
     } else {
       // Call _stream.last to trigger the stream initialization, in case it hasn't been.
       // ignore: unawaited_futures
-      _stream.last;
+      _stream.last.catchError((_) {
+        // We ignore the exception here, stream exceptions are propagated in the stream handler above
+        // This causes unhandled exceptions when task.listen & onComplete are used together.
+        return Future.value(snapshot);
+      });
       _completer ??= Completer<TaskSnapshotPlatform>();
       return _completer!.future;
     }

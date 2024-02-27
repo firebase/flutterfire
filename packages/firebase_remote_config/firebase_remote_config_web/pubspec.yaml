@@ -3,7 +3,7 @@ description: The web implementation of firebase_remote_config
 homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_remote_config/firebase_remote_config_web
 repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_remote_config/firebase_remote_config_web
 
-version: 1.4.21
+version: 1.4.22
 
 environment:
   sdk: '>=2.18.0 <4.0.0'
@@ -12,7 +12,7 @@ environment:
 dependencies:
   firebase_core: ^2.25.4
   firebase_core_web: ^2.11.4
-  firebase_remote_config_platform_interface: ^1.4.21
+  firebase_remote_config_platform_interface: ^1.4.22
   flutter:
     sdk: flutter
   flutter_web_plugins:
