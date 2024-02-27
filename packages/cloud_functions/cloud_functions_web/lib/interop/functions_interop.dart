@@ -67,12 +67,12 @@ extension HttpsCallableOptionsExtension on HttpsCallableOptions {
 
 /// An HttpsCallableResult wraps a single result from a function call.
 ///
-/// See: <https://firebase.google.com/docs/reference/js/firebase.functions.HttpsCallableResult>.
+/// See: <https://firebase.google.com/docs/reference/js/functions.httpscallableresult>.
 @JS('HttpsCallableResult')
 @staticInterop
 @anonymous
 abstract class HttpsCallableResultJsImpl {}
 
 extension HttpsCallableResultJsImplExtension on HttpsCallableResultJsImpl {
-  external JSObject get data;
+  external JSAny? get data;
 }

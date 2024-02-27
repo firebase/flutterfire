@@ -77,7 +77,8 @@ class HttpsCallable extends JsObjectWrapper<JSFunction> {
   }
 
   Future<HttpsCallableResult> call(JSAny? data) async {
-    final result = await (jsObject.callAsFunction(data)! as JSPromise).toDart;
+    final result =
+        await (jsObject.callAsFunction(null, data)! as JSPromise).toDart;
 
     return HttpsCallableResult.getInstance(
       result! as functions_interop.HttpsCallableResultJsImpl,
@@ -85,11 +86,40 @@ class HttpsCallable extends JsObjectWrapper<JSFunction> {
   }
 }
 
+/// Returns Dart representation from JS Object.
+dynamic _dartify(dynamic object) {
+  // Convert JSObject to Dart equivalents directly
+  if (object is! JSObject) {
+    return object;
+  }
+
+  final jsObject = object;
+
+  // Convert nested structures
+  final dartObject = jsObject.dartify();
+  return _convertNested(dartObject);
+}
+
+dynamic _convertNested(dynamic object) {
+  if (object is List) {
+    return object.map(_convertNested).toList();
+  } else if (object is Map) {
+    var map = <String, dynamic>{};
+    object.forEach((key, value) {
+      map[key] = _convertNested(value);
+    });
+    return map;
+  } else {
+    // For non-nested types, attempt to convert directly
+    return dartify(object);
+  }
+}
+
 class HttpsCallableResult
     extends JsObjectWrapper<functions_interop.HttpsCallableResultJsImpl> {
   HttpsCallableResult._fromJsObject(
       functions_interop.HttpsCallableResultJsImpl jsObject)
-      : _data = dartify(jsObject.data),
+      : _data = _dartify(jsObject.data),
         super.fromJsObject(jsObject);
 
   static final _expando = Expando<HttpsCallableResult>();

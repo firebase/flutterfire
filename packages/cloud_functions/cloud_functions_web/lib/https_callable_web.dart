@@ -21,7 +21,7 @@ class HttpsCallableWeb extends HttpsCallablePlatform {
   final functions_interop.Functions _webFunctions;
 
   @override
-  Future<dynamic> call([dynamic parameters]) async {
+  Future<dynamic> call([Object? parameters]) async {
     if (origin != null) {
       final uri = Uri.parse(origin!);
 
@@ -46,8 +46,10 @@ class HttpsCallableWeb extends HttpsCallablePlatform {
 
     functions_interop.HttpsCallableResult response;
 
+    final JSAny? parametersJS = parameters?.jsify();
+
     try {
-      response = await callable.call(parameters?.jsify());
+      response = await callable.call(parametersJS);
     } catch (e, s) {
       throw convertFirebaseFunctionsException(e as JSObject, s);
     }

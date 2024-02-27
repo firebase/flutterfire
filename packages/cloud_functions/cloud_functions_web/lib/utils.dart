@@ -19,8 +19,9 @@ FirebaseFunctionsException convertFirebaseFunctionsException(JSObject exception,
       .replaceFirst('($originalCode)', '');
 
   return FirebaseFunctionsException(
-      code: code,
-      message: message,
-      stackTrace: stackTrace,
-      details: exception.getProperty('details'.toJS)?.toJSBox);
+    code: code,
+    message: message,
+    stackTrace: stackTrace,
+    details: exception.getProperty('details'.toJS)?.dartify(),
+  );
 }
