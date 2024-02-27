@@ -105,7 +105,11 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// document.
   @visibleForTesting
   Future<void> injectSrcScript(String src, String windowVar) async {
-    web.TrustedScriptURL? trustedUrl;
+    final web.HTMLScriptElement script =
+        web.document.createElement('script') as web.HTMLScriptElement;
+    script.type = 'text/javascript';
+    script.crossOrigin = 'anonymous';
+
     final trustedTypePolicyName = _defaultTrustedPolicyName + windowVar;
     if (web.window.nullableTrustedTypes != null) {
       web.console.debug(
@@ -117,31 +121,38 @@ class FirebaseCoreWeb extends FirebasePlatform {
           trustedTypePolicyName,
           web.TrustedTypePolicyOptions(
             createScriptURL: ((JSString url) => src).toJS,
+            createScript: ((JSString script, JSString? type) => script).toJS,
           ),
         );
-        trustedUrl = policy.createScriptURLNoArgs(src);
+        final trustedUrl = policy.createScriptURLNoArgs(src);
+        final stringUrl = (trustedUrl as JSObject).callMethod('toString'.toJS);
+        final trustedScript = policy.createScript(
+          '''
+            window.ff_trigger_$windowVar = async (callback) => {
+              console.debug("Initializing Firebase $windowVar");
+              callback(await import("$stringUrl"));
+            };
+          ''',
+          null,
+        );
+
+        script.trustedScript = trustedScript;
+
+        web.document.head!.appendChild(script);
       } catch (e) {
         throw TrustedTypesException(e.toString());
       }
-    }
-
-    final web.HTMLScriptElement script =
-        web.document.createElement('script') as web.HTMLScriptElement;
-    script.type = 'text/javascript';
-    script.crossOrigin = 'anonymous';
-    final stringUrl = trustedUrl != null
-        // Necessary for the JS interop to work correctly on Flutter Beta 3.19.
-        // ignore: unnecessary_cast
-        ? (trustedUrl as JSObject).callMethod('toString'.toJS)
-        : src;
-    script.text = '''
+    } else {
+      final stringUrl = src;
+      script.text = '''
       window.ff_trigger_$windowVar = async (callback) => {
         console.debug("Initializing Firebase $windowVar");
         callback(await import("$stringUrl"));
       };
     ''';
 
-    web.document.head!.appendChild(script);
+      web.document.head!.appendChild(script);
+    }
 
     Completer completer = Completer();
 
