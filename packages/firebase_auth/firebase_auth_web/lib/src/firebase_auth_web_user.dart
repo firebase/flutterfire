@@ -223,6 +223,7 @@ class UserWeb extends UserPlatform {
 
     final userPlatform = await guardAuthExceptions(
       () => _webUser.unlink(providerId),
+      auth: _webAuth,
     );
 
     return UserWeb(

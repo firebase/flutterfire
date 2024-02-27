@@ -197,7 +197,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   Future<void> applyActionCode(String code) async {
-    return guardAuthExceptions(
+    await guardAuthExceptions(
       () => delegate.applyActionCode(code),
     );
   }
@@ -340,7 +340,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   @override
   Future<UserCredentialPlatform> signInAnonymously() async {
     final userCredential = await guardAuthExceptions(
-      delegate.getRedirectResult,
+      delegate.signInAnonymously,
       auth: _webAuth,
     );
 

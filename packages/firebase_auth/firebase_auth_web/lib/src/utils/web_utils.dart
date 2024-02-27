@@ -33,7 +33,15 @@ R guardAuthExceptions<R>(
   auth_interop.Auth? auth,
 }) {
   try {
-    return cb();
+    final value = cb();
+    if (value is Future) {
+      return value.catchError((err, stack) {
+        final exception = getFirebaseAuthException(err, auth);
+        return Error.throwWithStackTrace(exception, stack);
+      }) as R;
+    }
+
+    return value;
   } catch (e, stackTrace) {
     final exception = e as JSError;
     if (!_hasFirebaseAuthErrorCodeAndMessage(e)) {
