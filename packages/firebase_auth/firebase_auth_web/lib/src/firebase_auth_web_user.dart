@@ -202,7 +202,7 @@ class UserWeb extends UserPlatform {
   @override
   Future<void> reload() async {
     _assertIsSignedOut(auth);
-    await guardAuthExceptions(_webUser.reload);
+    await guardAuthExceptions(_webUser.reload, auth: _webAuth);
     auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
   }
 
@@ -214,6 +214,7 @@ class UserWeb extends UserPlatform {
       () => _webUser.sendEmailVerification(
         convertPlatformActionCodeSettings(actionCodeSettings),
       ),
+      auth: _webAuth,
     );
   }
 
@@ -240,6 +241,7 @@ class UserWeb extends UserPlatform {
 
     await guardAuthExceptions(
       () => _webUser.updateEmail(newEmail),
+      auth: _webAuth,
     );
     await guardAuthExceptions(_webUser.reload);
     auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
@@ -251,6 +253,7 @@ class UserWeb extends UserPlatform {
 
     await guardAuthExceptions(
       () => _webUser.updatePassword(newPassword),
+      auth: _webAuth,
     );
     await guardAuthExceptions(_webUser.reload);
     auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
@@ -264,8 +267,12 @@ class UserWeb extends UserPlatform {
       () => _webUser.updatePhoneNumber(
         convertPlatformCredential(phoneCredential),
       ),
+      auth: _webAuth,
     );
-    await guardAuthExceptions(_webUser.reload);
+    await guardAuthExceptions(
+      _webUser.reload,
+      auth: _webAuth,
+    );
     auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
   }
 
@@ -292,8 +299,12 @@ class UserWeb extends UserPlatform {
 
     await guardAuthExceptions(
       () => _webUser.updateProfile(newProfile),
+      auth: _webAuth,
     );
-    await guardAuthExceptions(_webUser.reload);
+    await guardAuthExceptions(
+      _webUser.reload,
+      auth: _webAuth,
+    );
     auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
   }
 
