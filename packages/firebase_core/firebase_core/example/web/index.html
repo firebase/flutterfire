@@ -19,10 +19,18 @@
     <meta charset="UTF-8" />
     <meta content="IE=Edge" http-equiv="X-UA-Compatible" />
 
-    <meta
+    <!-- 
+      If you want to test the require-trusted-types-for CSP, uncomment the line below
+      and run the app in a browser that supports Trusted Types (e.g. Chrome 83+).
+      Note that you need to run the app in release mode until this issue is fixed:  
+      https://github.com/requirejs/requirejs/issues/1832
+
+      Quick script: flutter build web && serve build/web
+
+      <meta
       http-equiv="Content-Security-Policy"
       content="require-trusted-types-for 'script'"
-    />
+    /> -->
 
     <title>Firebase Core Example</title>
     <link rel="manifest" href="manifest.json" />

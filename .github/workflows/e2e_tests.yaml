@@ -234,9 +234,11 @@ jobs:
             --dart-define=CI=true
 
   web:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     timeout-minutes: 15
     strategy:
+      # Temp measure for testing web tests. Please remove as soon as e2e tests are stable.
+      fail-fast: false
       matrix:
         working_directory:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
@@ -262,7 +264,8 @@ jobs:
         run: melos bootstrap --scope tests && melos bootstrap --scope "cloud_firestore*"
       - name: 'Install Tools'
         run: |
-          sudo npm i -g firebase-tools
+          # Temporary measure to install firebase-tools 13.3.0 until the issue is resolved: https://github.com/firebase/firebase-tools/issues/6808
+          sudo npm i -g firebase-tools@13.3.0
       - name: Cache Firebase Emulator
         uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2
         with:
@@ -270,7 +273,7 @@ jobs:
           key: firebase-emulators-v3-${{ github.run_id }}
           restore-keys: firebase-emulators-v3
       - name: Start Firebase Emulator
-        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
+        run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: 'E2E Tests'
         working-directory: ${{ matrix.working_directory }}
         # Web devices are not supported for the `flutter test` command yet. As a
@@ -278,12 +281,15 @@ jobs:
         # https://github.com/flutter/flutter/issues/66264
         run: |
           chromedriver --port=4444 --trace-buffer-size=100000 &
-          flutter drive \
-            --verbose-system-logs \
-            -d web-server \
-            --driver=test_driver/integration_test.dart \
-            --target=integration_test/e2e_test.dart \
-            --dart-define=CI=true
+          flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true | tee output.log
+          # We have to check the output for failed tests matching the string "[E]"
+          output=$(<output.log)
+          if [[ "$output" =~ \[E\] ]]; then
+          # You will see "All tests passed." in the logs even when tests failed.
+          echo "All tests did not pass. Please check the logs for more information."
+          exit 1
+          fi
+        shell: bash
 
   windows:
     runs-on: windows-latest

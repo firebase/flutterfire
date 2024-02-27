@@ -7,7 +7,6 @@
 
 import 'dart:async';
 import 'dart:js_interop';
-import 'dart:typed_data';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
     as platform_interface;
@@ -16,6 +15,7 @@ import 'package:cloud_firestore_web/src/utils/encode_utility.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     hide jsify, dartify;
+import 'package:flutter/foundation.dart';
 
 import 'firestore_interop.dart' as firestore_interop;
 import 'utils/utils.dart';
@@ -31,8 +31,17 @@ Firestore getFirestoreInstance([
   String database = databaseURL ?? '(default)';
 
   if (app != null && settings != null) {
-    return Firestore.getInstance(firestore_interop.initializeFirestore(
-        app.jsObject, settings, database.toJS));
+    try {
+      return Firestore.getInstance(firestore_interop.initializeFirestore(
+          app.jsObject, settings, database.toJS));
+    } catch (e) {
+      if (kDebugMode) {
+        // Fallback to initialize without settings, happens during hot restart
+        return Firestore.getInstance(
+            firestore_interop.getFirestore(app.jsObject, database.toJS));
+      }
+      rethrow;
+    }
   }
 
   return Firestore.getInstance(app != null
@@ -239,7 +248,9 @@ class LoadBundleTaskProgress
   LoadBundleTaskProgress._fromJsObject(
     firestore_interop.LoadBundleTaskProgressJsImpl jsObject,
   )   : taskState = convertToTaskState(jsObject.taskState.toDart.toLowerCase()),
-        bytesLoaded = jsObject.bytesLoaded.toDartInt,
+        bytesLoaded = jsObject.bytesLoaded is JSNumber
+            ? (jsObject.bytesLoaded as JSNumber).toDartInt
+            : int.parse((jsObject.bytesLoaded as JSString).toDart),
         documentsLoaded = jsObject.documentsLoaded.toDartInt,
         totalBytes = jsObject.totalBytes is JSNumber
             ? (jsObject.totalBytes as JSNumber).toDartInt

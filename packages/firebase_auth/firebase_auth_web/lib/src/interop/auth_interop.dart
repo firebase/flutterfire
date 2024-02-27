@@ -18,10 +18,21 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart';
 external AuthJsImpl getAuth([AppJsImpl? app]);
 
 @JS()
-external AuthJsImpl initializeAuth(AppJsImpl app, JSAny debugErrorMap);
+external AuthJsImpl initializeAuth(AppJsImpl app, AuthOptions authOptions);
+
+@anonymous
+@JS()
+@staticInterop
+abstract class AuthOptions {
+  external factory AuthOptions({
+    JSObject? errorMap,
+    JSArray? persistence,
+    JSObject? popupRedirectResolver,
+  });
+}
 
 @JS('debugErrorMap')
-external JSAny get debugErrorMap;
+external JSObject get debugErrorMap;
 
 @JS()
 external JSPromise applyActionCode(AuthJsImpl auth, JSString oobCode);
@@ -809,7 +820,7 @@ extension AdditionalUserInfoJsImplExtension on AdditionalUserInfoJsImpl {
 @staticInterop
 @anonymous
 class AuthSettings {
-  // external factory AuthSettings({JSBoolean appVerificationDisabledForTesting});
+// external factory AuthSettings({JSBoolean appVerificationDisabledForTesting});
 }
 
 extension AuthSettingsExtension on AuthSettings {
@@ -819,7 +830,7 @@ extension AuthSettingsExtension on AuthSettings {
 
 @JS()
 @staticInterop
-external JSAny get browserPopupRedirectResolver;
+external JSObject get browserPopupRedirectResolver;
 
 /// https://firebase.google.com/docs/reference/js/auth.multifactoruser.md#multifactoruser_interface
 @JS()

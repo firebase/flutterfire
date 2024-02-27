@@ -1,7 +1,6 @@
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
-import 'dart:io';
 import 'dart:async';
 import 'dart:math';
 
@@ -11,16 +10,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 String getCurrentPlatform() {
-  if (kIsWeb) {
-    return 'web';
-  } else if (Platform.isAndroid) {
+  if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
     return 'android';
-  } else if (Platform.isIOS) {
+  } else if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS) {
     return 'ios';
-  } else if (Platform.isMacOS) {
+  } else if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
     return 'macos';
-  } else if (Platform.isWindows) {
+  } else if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows) {
     return 'windows';
+  } else if (kIsWeb) {
+    return 'web';
   } else {
     return 'unknown';
   }
@@ -45,14 +44,15 @@ void runSecondDatabaseTests() {
 
       CollectionReference<Map<String, dynamic>> collection =
           firestore.collection(
-        '$collectionForSecondDatabase/$id/${getCurrentPlatform()}',
+        '$collectionForSecondDatabase/${getCurrentPlatform()}/$id',
       );
       QuerySnapshot<Map<String, dynamic>> snapshot = await collection.get();
 
-      await Future.forEach(snapshot.docs,
-          (QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
+      List<Future> deleteFutures = snapshot.docs.map((documentSnapshot) {
         return documentSnapshot.reference.delete();
-      });
+      }).toList();
+
+      await Future.wait(deleteFutures);
       return collection;
     }
 
@@ -185,8 +185,6 @@ void runSecondDatabaseTests() {
           }
           fail('Should have thrown a [FirebaseException]');
         },
-        // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
-        skip: kIsWeb,
       );
     });
 
@@ -208,27 +206,27 @@ void runSecondDatabaseTests() {
         await collection.add({'foo': 'bar'});
         Stream<QuerySnapshot<Map<String, dynamic>>> stream =
             collection.snapshots();
-        int call = 0;
 
-        stream.listen(
+        StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? subscription;
+
+        subscription = stream.listen(
           expectAsync1(
             (QuerySnapshot<Map<String, dynamic>> snapshot) {
-              call++;
-              if (call == 1) {
-                expect(snapshot.docs.length, equals(1));
+              expect(snapshot.docs.length, equals(1));
 
-                expect(snapshot.docs[0], isA<QueryDocumentSnapshot>());
-                QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-                    snapshot.docs[0];
-                expect(documentSnapshot.data()['foo'], equals('bar'));
-              } else {
-                fail('Should not have been called');
-              }
+              expect(snapshot.docs[0], isA<QueryDocumentSnapshot>());
+              QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+                  snapshot.docs[0];
+              expect(documentSnapshot.data()['foo'], equals('bar'));
             },
             count: 1,
             reason: 'Stream should only have been called once.',
           ),
         );
+
+        addTearDown(() async {
+          await subscription?.cancel();
+        });
       });
 
       testWidgets('listens to multiple queries', (_) async {
@@ -332,9 +330,7 @@ void runSecondDatabaseTests() {
           }
 
           fail('Should have thrown a [FirebaseException]');
-          // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
         },
-        skip: kIsWeb,
       );
     });
 
@@ -1772,8 +1768,8 @@ void runSecondDatabaseTests() {
           CollectionReference<Map<String, dynamic>> collection =
               await initializeTest('multiple-conjunctive-queries');
 
-          try {
-            await collection
+          await expectLater(
+            collection
                 .where(
                   Filter.and(
                     Filter('rating1', isEqualTo: 3.8),
@@ -1810,22 +1806,13 @@ void runSecondDatabaseTests() {
                   ),
                 )
                 .orderBy('rating1', descending: true)
-                .get();
-          } catch (e) {
-            expect(
-              (e as FirebaseException)
-                      .message!
-                      .contains('Client specified an invalid argument.') ||
-                  e.message!.contains(
-                    'An error occurred while parsing query arguments',
-                  ),
-              isTrue,
-            );
-            expect(e, isA<FirebaseException>());
-          }
+                .get(),
+            throwsA(
+              isA<FirebaseException>()
+                  .having((e) => e.code, 'code', 'invalid-argument'),
+            ),
+          );
         },
-        // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
-        skip: kIsWeb,
       );
 
       testWidgets(
@@ -1834,8 +1821,8 @@ void runSecondDatabaseTests() {
           CollectionReference<Map<String, dynamic>> collection =
               await initializeTest('multiple-disjunctive-queries');
 
-          try {
-            await collection
+          await expectLater(
+            collection
                 .where(
                   Filter.or(
                     Filter('rating', isEqualTo: 3.8),
@@ -1878,22 +1865,13 @@ void runSecondDatabaseTests() {
                   ),
                 )
                 .orderBy('rating', descending: true)
-                .get();
-          } catch (e) {
-            expect(
-              (e as FirebaseException)
-                      .message!
-                      .contains('Client specified an invalid argument.') ||
-                  e.message!.contains(
-                    'An error occurred while parsing query arguments',
-                  ),
-              isTrue,
-            );
-            expect(e, isA<FirebaseException>());
-          }
+                .get(),
+            throwsA(
+              isA<FirebaseException>()
+                  .having((e) => e.code, 'code', 'invalid-argument'),
+            ),
+          );
         },
-        // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
-        skip: kIsWeb,
       );
 
       testWidgets('isEqualTo filter', (_) async {

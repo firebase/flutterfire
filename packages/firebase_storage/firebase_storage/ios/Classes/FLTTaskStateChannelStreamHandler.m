@@ -38,10 +38,17 @@
   failureHandle =
       [_task observeStatus:FIRStorageTaskStatusFailure
                    handler:^(FIRStorageTaskSnapshot *snapshot) {
+                     NSError *error = snapshot.error;
+                     // If the snapshot.error is "unknown" and there is an underlying error, use
+                     // this. For UploadTasks, the correct error is in the underlying error.
+                     if (snapshot.error.code == FIRStorageErrorCodeUnknown &&
+                         snapshot.error.userInfo[@"NSUnderlyingError"] != nil) {
+                       error = snapshot.error.userInfo[@"NSUnderlyingError"];
+                     }
                      events(@{
                        @"taskState" : @(PigeonStorageTaskStateError),
                        @"appName" : snapshot.reference.storage.app.name,
-                       @"error" : [FLTFirebaseStoragePlugin NSDictionaryFromNSError:snapshot.error],
+                       @"error" : [FLTFirebaseStoragePlugin NSDictionaryFromNSError:error],
                      });
                    }];
   pausedHandle =

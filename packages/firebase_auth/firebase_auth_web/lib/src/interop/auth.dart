@@ -21,19 +21,23 @@ export 'auth_interop.dart';
 
 /// Given an AppJSImp, return the Auth instance.
 Auth getAuthInstance(App app) {
-  return Auth.getInstance(auth_interop.initializeAuth(
+  // Default persistence can be seen here
+  // https://github.com/firebase/firebase-js-sdk/blob/master/packages/auth/src/platform_browser/index.ts#L47
+  final persistences = [
+    auth_interop.indexedDBLocalPersistence,
+    auth_interop.browserLocalPersistence,
+    auth_interop.browserSessionPersistence,
+  ];
+  return Auth.getInstance(
+    auth_interop.initializeAuth(
       app.jsObject,
-      jsify({
-        'errorMap': auth_interop.debugErrorMap,
-        // Default persistence can be seen here
-        // https://github.com/firebase/firebase-js-sdk/blob/master/packages/auth/src/platform_browser/index.ts#L47
-        'persistence': [
-          auth_interop.indexedDBLocalPersistence,
-          auth_interop.browserLocalPersistence,
-          auth_interop.browserSessionPersistence
-        ],
-        'popupRedirectResolver': auth_interop.browserPopupRedirectResolver
-      })));
+      auth_interop.AuthOptions(
+        errorMap: auth_interop.debugErrorMap,
+        persistence: customJSList(persistences),
+        popupRedirectResolver: auth_interop.browserPopupRedirectResolver,
+      ),
+    ),
+  );
 }
 
 /// User profile information, visible only to the Firebase project's apps.
@@ -379,6 +383,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   }
 
   JSFunction? _onAuthUnsubscribe;
+
   // TODO(rrousselGit): fix memory leak – the controller isn't closed even in onCancel
   // ignore: close_sinks
   StreamController<User?>? _changeController;
@@ -420,6 +425,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   }
 
   JSFunction? _onIdTokenChangedUnsubscribe;
+
   // TODO(rrousselGit): fix memory leak – the controller isn't closed even in onCancel
   // ignore: close_sinks
   StreamController<User?>? _idTokenChangedController;
