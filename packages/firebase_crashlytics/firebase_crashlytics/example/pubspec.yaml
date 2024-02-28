@@ -6,9 +6,9 @@ environment:
   flutter: '>=3.3.0'
 
 dependencies:
-  firebase_analytics: ^10.8.6
-  firebase_core: ^2.25.4
-  firebase_crashlytics: ^3.4.15
+  firebase_analytics: ^10.8.7
+  firebase_core: ^2.25.5
+  firebase_crashlytics: ^3.4.16
   flutter:
     sdk: flutter
 

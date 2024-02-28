@@ -1,3 +1,7 @@
+## 6.1.7
+
+ - Update a dependency to the latest release.
+
 ## 6.1.6
 
  - **FIX**(firestore): aggregate query `average()` is `null` when collection is empty or collection doesn't exist or the property doesn't exist on docs ([#12304](https://github.com/firebase/flutterfire/issues/12304)). ([4d3b578d](https://github.com/firebase/flutterfire/commit/4d3b578dbb88da441e308179f3656822c5612ef1))
