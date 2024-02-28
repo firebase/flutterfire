@@ -197,65 +197,58 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   Future<void> applyActionCode(String code) async {
-    try {
-      await delegate.applyActionCode(code);
-    } catch (e) {
-      throw getFirebaseAuthException(e);
-    }
+    await guardAuthExceptions(
+      () => delegate.applyActionCode(code),
+    );
   }
 
   @override
   Future<ActionCodeInfo> checkActionCode(String code) async {
-    try {
-      return convertWebActionCodeInfo(await delegate.checkActionCode(code))!;
-    } catch (e) {
-      throw getFirebaseAuthException(e);
-    }
+    final actionCode = await guardAuthExceptions(
+      () => delegate.checkActionCode(code),
+    );
+
+    return convertWebActionCodeInfo(actionCode)!;
   }
 
   @override
   Future<void> confirmPasswordReset(String code, String newPassword) async {
-    try {
-      await delegate.confirmPasswordReset(code, newPassword);
-    } catch (e) {
-      throw getFirebaseAuthException(e);
-    }
+    return guardAuthExceptions(
+      () => delegate.confirmPasswordReset(code, newPassword),
+    );
   }
 
   @override
   Future<UserCredentialPlatform> createUserWithEmailAndPassword(
       String email, String password) async {
-    try {
-      return UserCredentialWeb(
-        this,
-        await delegate.createUserWithEmailAndPassword(email, password),
-        _webAuth,
-      );
-    } catch (e) {
-      throw getFirebaseAuthException(e);
-    }
+    final userCredential = await guardAuthExceptions(
+      () => delegate.createUserWithEmailAndPassword(email, password),
+    );
+
+    return UserCredentialWeb(
+      this,
+      userCredential,
+      _webAuth,
+    );
   }
 
   @override
   Future<List<String>> fetchSignInMethodsForEmail(String email) async {
-    try {
-      return await delegate.fetchSignInMethodsForEmail(email);
-    } catch (e) {
-      throw getFirebaseAuthException(e);
-    }
+    return guardAuthExceptions(
+      () => delegate.fetchSignInMethodsForEmail(email),
+    );
   }
 
   @override
   Future<UserCredentialPlatform> getRedirectResult() async {
-    try {
-      return UserCredentialWeb(
-        this,
-        await delegate.getRedirectResult(),
-        _webAuth,
-      );
-    } catch (e) {
-      throw getFirebaseAuthException(e);
-    }
+    final userCredential =
+        await guardAuthExceptions(delegate.getRedirectResult);
+
+    return UserCredentialWeb(
+      this,
+      userCredential,
+      _webAuth,
+    );
   }
 
   @override
@@ -284,12 +277,14 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     String email, [
     ActionCodeSettings? actionCodeSettings,
   ]) async {
-    try {
-      await delegate.sendPasswordResetEmail(
-          email, convertPlatformActionCodeSettings(actionCodeSettings));
-    } catch (e) {
-      throw getFirebaseAuthException(e);
-    }
+    return guardAuthExceptions(
+      () => delegate.sendPasswordResetEmail(
+        email,
+        convertPlatformActionCodeSettings(
+          actionCodeSettings,
+        ),
+      ),
+    );
   }
 
   @override
@@ -297,12 +292,14 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     String email, [
     ActionCodeSettings? actionCodeSettings,
   ]) async {
-    try {
-      await delegate.sendSignInLinkToEmail(
-          email, convertPlatformActionCodeSettings(actionCodeSettings));
-    } catch (e) {
-      throw getFirebaseAuthException(e);
-    }
+    return guardAuthExceptions(
+      () => delegate.sendSignInLinkToEmail(
+        email,
+        convertPlatformActionCodeSettings(
+          actionCodeSettings,
+        ),
+      ),
+    );
   }
 
   @override
@@ -333,81 +330,86 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   Future<void> setPersistence(Persistence persistence) async {
-    try {
-      return delegate.setPersistence(persistence);
-    } catch (e) {
-      throw getFirebaseAuthException(e);
-    }
+    return guardAuthExceptions(
+      () => delegate.setPersistence(
+        persistence,
+      ),
+    );
   }
 
   @override
   Future<UserCredentialPlatform> signInAnonymously() async {
-    try {
-      return UserCredentialWeb(
-        this,
-        await delegate.signInAnonymously(),
-        _webAuth,
-      );
-    } catch (e) {
-      throw getFirebaseAuthException(e, _webAuth);
-    }
+    final userCredential = await guardAuthExceptions(
+      delegate.signInAnonymously,
+      auth: _webAuth,
+    );
+
+    return UserCredentialWeb(
+      this,
+      userCredential,
+      _webAuth,
+    );
   }
 
   @override
   Future<UserCredentialPlatform> signInWithCredential(
     AuthCredential credential,
   ) async {
-    try {
-      return UserCredentialWeb(
-        this,
-        await delegate
-            .signInWithCredential(convertPlatformCredential(credential)!),
-        _webAuth,
-      );
-    } catch (e) {
-      throw getFirebaseAuthException(e, _webAuth);
-    }
+    final authCredential = await guardAuthExceptions(
+      () =>
+          delegate.signInWithCredential(convertPlatformCredential(credential)!),
+      auth: _webAuth,
+    );
+
+    return UserCredentialWeb(
+      this,
+      authCredential,
+      _webAuth,
+    );
   }
 
   @override
   Future<UserCredentialPlatform> signInWithCustomToken(String token) async {
-    try {
-      return UserCredentialWeb(
-        this,
-        await delegate.signInWithCustomToken(token),
-        _webAuth,
-      );
-    } catch (e) {
-      throw getFirebaseAuthException(e, _webAuth);
-    }
+    final userCredential = await guardAuthExceptions(
+      () => delegate.signInWithCustomToken(token),
+      auth: _webAuth,
+    );
+
+    return UserCredentialWeb(
+      this,
+      userCredential,
+      _webAuth,
+    );
   }
 
   @override
   Future<UserCredentialPlatform> signInWithEmailAndPassword(
       String email, String password) async {
-    try {
-      return UserCredentialWeb(
-        this,
-        await delegate.signInWithEmailAndPassword(email, password),
-        _webAuth,
-      );
-    } catch (e) {
-      throw getFirebaseAuthException(e, _webAuth);
-    }
+    final userCredential = await guardAuthExceptions(
+      () => delegate.signInWithEmailAndPassword(email, password),
+      auth: _webAuth,
+    );
+
+    return UserCredentialWeb(
+      this,
+      userCredential,
+      _webAuth,
+    );
   }
 
   @override
   Future<UserCredentialPlatform> signInWithEmailLink(
       String email, String emailLink) async {
-    try {
-      return UserCredentialWeb(
-        this,
-        await delegate.signInWithEmailLink(email, emailLink),
-        _webAuth,
-      );
-    } catch (e) {
-      throw getFirebaseAuthException(e, _webAuth);
-    }
+    final userCredential = await guardAuthExceptions(
+      () => delegate.signInWithEmailLink(email, emailLink),
+      auth: _webAuth,
+    );
+
+    return UserCredentialWeb(
+      this,
+      userCredential,
+      _webAuth,
+    );
   }
 
   @override
@@ -415,49 +417,51 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     String phoneNumber,
     RecaptchaVerifierFactoryPlatform applicationVerifier,
   ) async {
-    try {
-      // Do not inline - type is not inferred & error is thrown.
-      auth_interop.RecaptchaVerifier verifier = applicationVerifier.delegate;
+    // Do not inline - type is not inferred & error is thrown.
+    auth_interop.RecaptchaVerifier verifier = applicationVerifier.delegate;
 
-      return ConfirmationResultWeb(
-        this,
-        await delegate.signInWithPhoneNumber(phoneNumber, verifier),
-        _webAuth,
-      );
-    } catch (e) {
-      throw getFirebaseAuthException(e, _webAuth);
-    }
+    final confirmationResult = await guardAuthExceptions(
+      () => delegate.signInWithPhoneNumber(
+        phoneNumber,
+        verifier,
+      ),
+    );
+    return ConfirmationResultWeb(
+      this,
+      confirmationResult,
+      _webAuth,
+    );
   }
 
   @override
   Future<UserCredentialPlatform> signInWithPopup(AuthProvider provider) async {
-    try {
-      return UserCredentialWeb(
-        this,
-        await delegate.signInWithPopup(convertPlatformAuthProvider(provider)),
-        _webAuth,
-      );
-    } catch (e) {
-      throw getFirebaseAuthException(e, _webAuth);
-    }
+    final userCredential = await guardAuthExceptions(
+      () => delegate.signInWithPopup(
+        convertPlatformAuthProvider(provider),
+      ),
+      auth: _webAuth,
+    );
+
+    return UserCredentialWeb(
+      this,
+      userCredential,
+      _webAuth,
+    );
   }
 
   @override
   Future<void> signInWithRedirect(AuthProvider provider) async {
-    try {
-      return delegate.signInWithRedirect(convertPlatformAuthProvider(provider));
-    } catch (e) {
-      throw getFirebaseAuthException(e, _webAuth);
-    }
+    return guardAuthExceptions(
+      () => delegate.signInWithRedirect(
+        convertPlatformAuthProvider(provider),
+      ),
+      auth: _webAuth,
+    );
   }
 
   @override
   Future<void> signOut() async {
-    try {
-      await delegate.signOut();
-    } catch (e) {
-      throw getFirebaseAuthException(e);
-    }
+    return guardAuthExceptions(delegate.signOut);
   }
 
   @override
@@ -500,11 +504,9 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   Future<String> verifyPasswordResetCode(String code) async {
-    try {
-      return await delegate.verifyPasswordResetCode(code);
-    } catch (e) {
-      throw getFirebaseAuthException(e);
-    }
+    return guardAuthExceptions(
+      () => delegate.verifyPasswordResetCode(code),
+    );
   }
 
   @override
