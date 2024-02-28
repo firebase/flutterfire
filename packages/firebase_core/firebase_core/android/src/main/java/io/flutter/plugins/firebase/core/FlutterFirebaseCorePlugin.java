@@ -205,7 +205,8 @@ public class FlutterFirebaseCorePlugin
             final FirebaseOptions options = FirebaseOptions.fromResource(applicationContext);
             if (options == null) {
               taskCompletionSource.setException(
-                  new Exception("Failed to load FirebaseOptions from resource. Check that you have defined values.xml correctly."));
+                  new Exception(
+                      "Failed to load FirebaseOptions from resource. Check that you have defined values.xml correctly."));
               return;
             }
             taskCompletionSource.setResult(firebaseOptionsToMap(options));
