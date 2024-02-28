@@ -29,6 +29,7 @@ void main() {
         'notification': {
           'title': 'Hello FlutterFire!',
           'body': 'This notification was created from unit tests!',
+          'click_action': 'HANDLE_BREAKING_NEWS',
         },
         'sentTime': DateTime.now().millisecondsSinceEpoch,
         'threadId': 'threadId',
@@ -76,6 +77,11 @@ void main() {
       expect(message.sentTime, isA<DateTime>());
       expect(message.threadId, mockMessageMap!['threadId']);
       expect(message.ttl, mockMessageMap!['ttl']);
+      expect(message.notificationRawData, mockMessageMap!['notification']);
+      expect(
+        'HANDLE_BREAKING_NEWS',
+        mockMessageMap!['notification']['click_action'],
+      );
     });
 
     test(
@@ -96,6 +102,8 @@ void main() {
       expect(message.sentTime, null);
       expect(message.threadId, mockNullableMessageMap['threadId']);
       expect(message.ttl, mockNullableMessageMap['ttl']);
+      expect(
+          message.notificationRawData, mockNullableMessageMap['notification']);
     });
 
     test('Use RemoteMessage constructor to create every available property',
@@ -116,6 +124,7 @@ void main() {
         sentTime: date,
         threadId: mockMessageMap!['threadId'],
         ttl: mockMessageMap!['ttl'],
+        notificationRawData: mockMessageMap!['notification'],
       );
 
       expect(message.senderId, mockMessageMap!['senderId']);
@@ -133,6 +142,7 @@ void main() {
       expect(message.sentTime, date);
       expect(message.threadId, mockMessageMap!['threadId']);
       expect(message.ttl, mockMessageMap!['ttl']);
+      expect(message.notificationRawData, mockMessageMap!['notification']);
     });
 
     test(
@@ -167,9 +177,15 @@ void main() {
       expect(message.sentTime, null);
       expect(message.threadId, mockNullableMessageMap['threadId']);
       expect(message.ttl, mockNullableMessageMap['ttl']);
+      expect(
+          message.notificationRawData, mockNullableMessageMap['notification']);
     });
 
     test('"RemoteMessage.toMap" returns "RemoteMessage" as Map', () {
+      const remoteNotification = RemoteNotification(
+        title: 'notification_title',
+        body: 'notification_body',
+      );
       final RemoteMessage remoteMessage = RemoteMessage(
         senderId: 'senderId',
         category: 'category',
@@ -180,13 +196,11 @@ void main() {
         messageId: 'messageId',
         messageType: 'messageType',
         mutableContent: true,
-        notification: const RemoteNotification(
-          title: 'notification_title',
-          body: 'notification_body',
-        ),
+        notification: remoteNotification,
         sentTime: DateTime.now(),
         threadId: 'threadId',
         ttl: 30000,
+        notificationRawData: remoteNotification.toMap(),
       );
 
       final Map<String, dynamic> map = remoteMessage.toMap();
@@ -211,6 +225,7 @@ void main() {
       expect(map['sentTime'], remoteMessage.sentTime!.millisecondsSinceEpoch);
       expect(map['threadId'], remoteMessage.threadId);
       expect(map['ttl'], remoteMessage.ttl);
+      expect(map['notification'], remoteMessage.notificationRawData);
     });
   });
 }
