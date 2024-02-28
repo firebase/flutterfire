@@ -2532,7 +2532,8 @@ void runSecondDatabaseTests() {
                   .get()
                   .then((d) => d.docs),
               [
-                isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 42),
+                isA<DocumentSnapshot<int>>()
+                    .having((e) => e.data(), 'data', 42),
               ],
             );
           },
