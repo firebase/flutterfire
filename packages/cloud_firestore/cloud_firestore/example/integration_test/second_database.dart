@@ -3015,6 +3015,7 @@ void runSecondDatabaseTests() {
         });
       });
     },
+    // Skipped on CI for web as the data is live and it clashes with other tests running in CI
     skip: kIsWeb && skipTestsOnCI,
   );
 }
