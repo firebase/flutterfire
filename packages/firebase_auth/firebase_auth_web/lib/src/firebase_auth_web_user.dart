@@ -137,6 +137,7 @@ class UserWeb extends UserPlatform {
       () => _webUser.linkWithRedirect(
         convertPlatformAuthProvider(provider),
       ),
+      auth: _webAuth,
     );
   }
 
