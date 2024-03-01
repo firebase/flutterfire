@@ -43,7 +43,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Firebase Emulator Cache
-        uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2
+        uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-${{ github.run_id }}
@@ -71,7 +71,7 @@ jobs:
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@v3
       - name: AVD cache
-        uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2
+        uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319
         id: avd-cache
         with:
           path: |
@@ -110,7 +110,7 @@ jobs:
         with:
           key: ${{ runner.os }}-ios-v3
           max-size: 700M
-      - uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2
+      - uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319
         name: Pods Cache
         id: pods-cache
         with:
@@ -118,7 +118,7 @@ jobs:
           key: ${{ runner.os }}-pods-v3-${{ hashFiles('tests/ios/Podfile.lock') }}
           restore-keys: ${{ runner.os }}-ios-pods-v2
       - name: Firebase Emulator Cache
-        uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2
+        uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-${{ github.run_id }}
@@ -185,7 +185,7 @@ jobs:
         with:
           key: ${{ runner.os }}-macos-v2
           max-size: 700M
-      - uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2
+      - uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319
         name: Pods Cache
         id: pods-cache
         with:
@@ -193,7 +193,7 @@ jobs:
           key: ${{ runner.os }}-pods-v2-${{ hashFiles('tests/macos/Podfile.lock') }}
           restore-keys: ${{ runner.os }}-macos-pods-v1
       - name: Cache Firebase Emulator
-        uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2
+        uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-${{ github.run_id }}
@@ -267,7 +267,7 @@ jobs:
           # Temporary measure to install firebase-tools 13.3.0 until the issue is resolved: https://github.com/firebase/firebase-tools/issues/6808
           sudo npm i -g firebase-tools@13.3.0
       - name: Cache Firebase Emulator
-        uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2
+        uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-${{ github.run_id }}
