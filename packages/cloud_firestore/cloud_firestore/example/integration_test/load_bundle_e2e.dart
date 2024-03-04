@@ -97,9 +97,7 @@ void runLoadBundleTests() {
                   .having((e) => e.code, 'code', 'load-bundle-error'),
             ),
           );
-          // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
         },
-        skip: kIsWeb,
       );
 
       testWidgets(
@@ -181,16 +179,13 @@ void runLoadBundleTests() {
               'wrong-name',
               options: const GetOptions(source: Source.cache),
             ),
-            // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
-            // expect(error, isA<FirebaseException>());
             throwsA(
               isA<FirebaseException>()
                   .having((e) => e.code, 'code', 'non-existent-named-query'),
             ),
           );
         },
-        // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
-        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+        skip: defaultTargetPlatform == TargetPlatform.windows,
       );
     });
 
@@ -241,8 +236,7 @@ void runLoadBundleTests() {
             ),
           );
         },
-        // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
-        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+        skip: defaultTargetPlatform == TargetPlatform.windows,
       );
     });
   });

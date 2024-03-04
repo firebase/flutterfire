@@ -16,23 +16,29 @@ const token = '<ADD YOUR TOKEN HERE>';
 // are aggressive with their throttling policy.
 admin
   .messaging()
-  .sendToDevice(
-    [token],
+  .send(
     {
+      token: token,
       data: {
-        foo:'bar',
+        foo: 'bar',
       },
       notification: {
         title: 'A great title',
         body: 'Great content',
       },
+      android: {
+        // Required for background/terminated app state messages on Android
+        priority: 'high',
+      },
+      apns: {
+        payload: {
+          aps: {
+            // Required for background/terminated app state messages on iOS
+            contentAvailable: true,
+          },
+        },
+      },
     },
-    {
-      // Required for background/terminated app state messages on iOS
-      contentAvailable: true,
-      // Required for background/terminated app state messages on Android
-      priority: 'high',
-    }
   )
   .then((res) => {
     if (res.failureCount) {
