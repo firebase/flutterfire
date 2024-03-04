@@ -93,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics#public-void-logevent-string-name,-bundle-params
     await widget.analytics.logEvent(
       name: 'test_event',
-      parameters: <String, dynamic>{
+      parameters: <String, Object>{
         'string': 'string',
         'int': 42,
         'long': 12345678910,
