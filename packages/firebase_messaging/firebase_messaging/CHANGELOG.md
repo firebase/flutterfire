@@ -1,3 +1,7 @@
+## 14.7.18
+
+ - Update a dependency to the latest release.
+
 ## 14.7.17
 
  - **FIX**(messaging,android): revert changes made to potential fix as it was causing ANR reports for users ([#12396](https://github.com/firebase/flutterfire/issues/12396)). ([07ef4879](https://github.com/firebase/flutterfire/commit/07ef487971edb23a670d2b1dd315c02542b1c848))

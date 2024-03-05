@@ -1,3 +1,7 @@
+## 4.15.7
+
+ - **FIX**(firestore): fix an issue that would cause FieldValue.increment to not work for big int ([#12426](https://github.com/firebase/flutterfire/issues/12426)). ([a776dec5](https://github.com/firebase/flutterfire/commit/a776dec5e181b2656bfc659a23514d21930b5556))
+
 ## 4.15.6
 
  - **FIX**(firestore,windows): fix compilation issue on Windows ([#12375](https://github.com/firebase/flutterfire/issues/12375)). ([f24d0a76](https://github.com/firebase/flutterfire/commit/f24d0a76ff384cf40605ae59af705b2854e53ba7))
