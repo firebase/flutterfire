@@ -1,3 +1,8 @@
+## 2.26.0
+
+ - **FIX**(core,android): fix a null issue when initializing `fromResource()` ([#12404](https://github.com/firebase/flutterfire/issues/12404)). ([635cd781](https://github.com/firebase/flutterfire/commit/635cd7819476d8768b4ccbae323e230e6063967b))
+ - **FEAT**: bump iOS SDK to version 10.22.0 ([#12430](https://github.com/firebase/flutterfire/issues/12430)). ([741c5519](https://github.com/firebase/flutterfire/commit/741c55196677d248603153b2ccca323c7591b2d6))
+
 ## 2.25.5
 
  - **FIX**(core,web): fix compatibility with TrustedTypes ([#12383](https://github.com/firebase/flutterfire/issues/12383)). ([6c1f73d0](https://github.com/firebase/flutterfire/commit/6c1f73d0c8357db83e1ee81e084a3a5b531e0e0c))

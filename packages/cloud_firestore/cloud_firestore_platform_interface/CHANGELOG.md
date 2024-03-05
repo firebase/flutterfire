@@ -1,3 +1,7 @@
+## 6.1.8
+
+ - **FIX**(firestore): fix an issue that would cause FieldValue.increment to not work for big int ([#12426](https://github.com/firebase/flutterfire/issues/12426)). ([a776dec5](https://github.com/firebase/flutterfire/commit/a776dec5e181b2656bfc659a23514d21930b5556))
+
 ## 6.1.7
 
  - Update a dependency to the latest release.

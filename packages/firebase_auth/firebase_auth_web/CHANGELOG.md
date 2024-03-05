@@ -1,3 +1,7 @@
+## 5.9.7
+
+ - Update a dependency to the latest release.
+
 ## 5.9.6
 
  - **REFACTOR**(auth,web): update error handling to ensure stack traces are preserved. ([#12392](https://github.com/firebase/flutterfire/issues/12392)). ([280dcb3d](https://github.com/firebase/flutterfire/commit/280dcb3d77ab5688258fe9d75fa69dd2424fda98))
