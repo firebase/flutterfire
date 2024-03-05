@@ -1,3 +1,7 @@
+## 3.7.1
+
+ - Update a dependency to the latest release.
+
 ## 3.7.0
 
  - **FIX**(storage,web): fixed web stream handlers, e2e web tests, incorrect NativeError being thrown instead of FirebaseException on web ([#12319](https://github.com/firebase/flutterfire/issues/12319)). ([d32b5a93](https://github.com/firebase/flutterfire/commit/d32b5a936cfb05fbeeff199248474c23af293a3c))
