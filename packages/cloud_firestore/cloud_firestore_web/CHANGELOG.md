@@ -1,3 +1,7 @@
+## 3.10.7
+
+ - Update a dependency to the latest release.
+
 ## 3.10.6
 
  - **FIX**(firestore,web): fix an issue where hot restart would throw an error in console ([#12382](https://github.com/firebase/flutterfire/issues/12382)). ([a5dc05da](https://github.com/firebase/flutterfire/commit/a5dc05daaba8baddbc59cd22ff84954f73f225c9))

@@ -9,9 +9,9 @@ environment:
   sdk: '>=2.18.0 <4.0.0'
 
 dependencies:
-  cloud_firestore: ^4.15.6
-  firebase_app_check: ^0.2.1+15
-  firebase_core: ^2.25.5
+  cloud_firestore: ^4.15.7
+  firebase_app_check: ^0.2.1+16
+  firebase_core: ^2.26.0
   flutter:
     sdk: flutter
 
