@@ -84,7 +84,7 @@ class FirestoreMessageCodec extends StandardMessageCodec {
       final int code = _kFieldValueCodes[delegate.type]!;
       // We turn int superior to 2^32 into double here to avoid precision loss.
       if (delegate.type == FieldValueType.incrementInteger &&
-          delegate.value > 2147483647) {
+          (delegate.value > 2147483647 || delegate.value < -2147483648)) {
         buffer.putUint8(_kIncrementDouble);
         writeValue(buffer, (delegate.value as int).toDouble());
       } else {
