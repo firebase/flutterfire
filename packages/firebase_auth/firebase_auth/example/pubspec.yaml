@@ -6,9 +6,9 @@ environment:
 
 dependencies:
   barcode_widget: ^2.0.4
-  firebase_auth: ^4.17.7
-  firebase_core: ^2.26.0
-  firebase_messaging: ^14.7.18
+  firebase_auth: ^4.17.8
+  firebase_core: ^2.27.0
+  firebase_messaging: ^14.7.19
   flutter:
     sdk: flutter
   flutter_facebook_auth: ^6.0.0
