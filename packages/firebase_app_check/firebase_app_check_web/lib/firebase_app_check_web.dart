@@ -4,6 +4,7 @@
 // found in the LICENSE file.
 import 'dart:async';
 import 'dart:html';
+import 'dart:js_interop';
 
 import 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -124,7 +125,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
             StreamController<String?>.broadcast();
 
         _delegate!.onTokenChanged().map((event) {
-          _tokenChangesListeners[app.name]!.add(event.token);
+          _tokenChangesListeners[app.name]!.add(event.token.toDart);
         });
       }
     });
@@ -135,7 +136,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
     return convertWebExceptions<Future<String?>>(() async {
       app_check_interop.AppCheckTokenResult result =
           await _delegate!.getToken(forceRefresh);
-      return result.token;
+      return result.token.toDart;
     });
   }
 
@@ -144,7 +145,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
     return convertWebExceptions<Future<String>>(() async {
       app_check_interop.AppCheckTokenResult result =
           await _delegate!.getLimitedUseToken();
-      return result.token;
+      return result.token.toDart;
     });
   }
 
