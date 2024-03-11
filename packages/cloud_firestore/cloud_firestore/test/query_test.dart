@@ -61,6 +61,30 @@ void main() {
             .where('foo.bar', isGreaterThan: 1234);
       });
 
+      test('throw an exception when making query combining `in` & `not-in`',
+          () {
+        expect(
+          () => query!.where('number', whereIn: [1, 2], whereNotIn: [3, 4]),
+          throwsAssertionError,
+        );
+
+        expect(
+          () => query!.where('number', whereIn: [1, 2]).where(
+            'number',
+            whereNotIn: [3, 4],
+          ),
+          throwsAssertionError,
+        );
+
+        expect(
+          () => query!.where('number', whereNotIn: [3, 4]).where(
+            'number',
+            whereIn: [1, 2],
+          ),
+          throwsAssertionError,
+        );
+      });
+
       test('throws if inequality is different to first orderBy', () {
         expect(
           () => query!.where('foo', isGreaterThan: 123).orderBy('bar'),

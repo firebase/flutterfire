@@ -1,3 +1,39 @@
+## 5.4.17
+
+ - Update a dependency to the latest release.
+
+## 5.4.16
+
+ - Update a dependency to the latest release.
+
+## 5.4.15
+
+ - Update a dependency to the latest release.
+
+## 5.4.14
+
+ - Update a dependency to the latest release.
+
+## 5.4.13
+
+ - Update a dependency to the latest release.
+
+## 5.4.12
+
+ - Update a dependency to the latest release.
+
+## 5.4.11
+
+ - Update a dependency to the latest release.
+
+## 5.4.10
+
+ - Update a dependency to the latest release.
+
+## 5.4.9
+
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
 ## 5.4.8
 
  - Update a dependency to the latest release.

@@ -1514,16 +1514,13 @@ public class GeneratedAndroidFirebaseFirestore {
       this.field = setterArg;
     }
 
-    private @NonNull Double value;
+    private @Nullable Double value;
 
-    public @NonNull Double getValue() {
+    public @Nullable Double getValue() {
       return value;
     }
 
-    public void setValue(@NonNull Double setterArg) {
-      if (setterArg == null) {
-        throw new IllegalStateException("Nonnull field \"value\" is null.");
-      }
+    public void setValue(@Nullable Double setterArg) {
       this.value = setterArg;
     }
 
@@ -1548,7 +1545,7 @@ public class GeneratedAndroidFirebaseFirestore {
 
       private @Nullable Double value;
 
-      public @NonNull Builder setValue(@NonNull Double setterArg) {
+      public @NonNull Builder setValue(@Nullable Double setterArg) {
         this.value = setterArg;
         return this;
       }

@@ -62,6 +62,11 @@ dynamic jsifyList(
   return js.toJSArray(list.map((item) => jsify(item, customJsify)).toList());
 }
 
+/// Converts a List into a JS Array without converting the items.
+dynamic customJSList(List list) {
+  return js.toJSArray(list.toList());
+}
+
 /// Returns the JS implementation from Dart Object.
 ///
 /// The optional [customJsify] function may return `null` to indicate,

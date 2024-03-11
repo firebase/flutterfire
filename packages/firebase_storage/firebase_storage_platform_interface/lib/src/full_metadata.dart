@@ -7,8 +7,8 @@ import 'package:meta/meta.dart' show protected;
 
 /// The result of calling [getMetadata] on a storage object reference.
 class FullMetadata {
-  // ignore: public_member_api_docs
   @protected
+  // ignore: public_member_api_docs
   FullMetadata(this._metadata);
 
   final Map<String, dynamic> _metadata;

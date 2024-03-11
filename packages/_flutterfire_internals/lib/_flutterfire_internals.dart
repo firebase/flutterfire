@@ -12,10 +12,10 @@
 // them public.
 
 import 'package:firebase_core/firebase_core.dart';
+
 import 'src/interop_shimmer.dart'
     if (dart.library.js) 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
-
 export 'src/exception.dart';
 
 /// An extension that adds utilities for safely casting objects
@@ -50,16 +50,19 @@ extension ObjectX<T> on T? {
 }
 
 FirebaseException _firebaseExceptionFromCoreFirebaseError(
-  core_interop.FirebaseError firebaseError, {
+  core_interop.JSError firebaseError, {
   required String plugin,
   required String Function(String) codeParser,
   required String Function(String code, String message)? messageParser,
 }) {
-  final code = codeParser(firebaseError.code);
-
+  // ignore: unnecessary_cast
+  final convertCode = firebaseError.code as String;
+  final code = codeParser(convertCode);
+  // ignore: unnecessary_cast
+  final convertMessage = firebaseError.message as String;
   final message = messageParser != null
-      ? messageParser(code, firebaseError.message)
-      : firebaseError.message.replaceFirst('(${firebaseError.code})', '');
+      ? messageParser(code, convertMessage)
+      : convertMessage.replaceFirst('(${firebaseError.code})', '');
 
   return FirebaseException(
     plugin: plugin,
@@ -75,8 +78,13 @@ FirebaseException _firebaseExceptionFromCoreFirebaseError(
 /// exceptions that should not be transformed preserve their stracktrace.
 ///
 /// See also https://github.com/dart-lang/sdk/issues/30741
-bool _testException(Object? exception) {
-  return exception is core_interop.FirebaseError;
+bool _testException(Object? objectException) {
+  final exception = objectException! as core_interop.JSError;
+  // ignore: unnecessary_cast
+  final message = exception.message as String;
+  // Firestore web does not contain `Firebase` in the message so we check the exception itself.
+  return message.contains('Firebase') ||
+      exception.toString().contains('FirebaseError');
 }
 
 /// Transforms internal errors in something more readable for end-users.
@@ -88,7 +96,7 @@ Object _mapException(
 }) {
   assert(_testException(exception));
 
-  if (exception is core_interop.FirebaseError) {
+  if (exception is core_interop.JSError) {
     return _firebaseExceptionFromCoreFirebaseError(
       exception,
       plugin: plugin,

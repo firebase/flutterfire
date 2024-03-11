@@ -82,8 +82,15 @@ class FirestoreMessageCodec extends StandardMessageCodec {
     } else if (value is FieldValuePlatform) {
       MethodChannelFieldValue delegate = FieldValuePlatform.getDelegate(value);
       final int code = _kFieldValueCodes[delegate.type]!;
-      buffer.putUint8(code);
-      if (delegate.value != null) writeValue(buffer, delegate.value);
+      // We turn int superior to 2^32 into double here to avoid precision loss.
+      if (delegate.type == FieldValueType.incrementInteger &&
+          (delegate.value > 2147483647 || delegate.value < -2147483648)) {
+        buffer.putUint8(_kIncrementDouble);
+        writeValue(buffer, (delegate.value as int).toDouble());
+      } else {
+        buffer.putUint8(code);
+        if (delegate.value != null) writeValue(buffer, delegate.value);
+      }
     } else if (value is FieldPathType) {
       final int code = _kFieldPathCodes[value]!;
       buffer.putUint8(code);

@@ -1,3 +1,41 @@
+## 2.27.0
+
+ - **FEAT**: bump Android SDK to version 3.7.3 ([#12443](https://github.com/firebase/flutterfire/issues/12443)). ([2509d91a](https://github.com/firebase/flutterfire/commit/2509d91aa7d95af19407b5823815b65085902347))
+
+## 2.26.0
+
+ - **FIX**(core,android): fix a null issue when initializing `fromResource()` ([#12404](https://github.com/firebase/flutterfire/issues/12404)). ([635cd781](https://github.com/firebase/flutterfire/commit/635cd7819476d8768b4ccbae323e230e6063967b))
+ - **FEAT**: bump iOS SDK to version 10.22.0 ([#12430](https://github.com/firebase/flutterfire/issues/12430)). ([741c5519](https://github.com/firebase/flutterfire/commit/741c55196677d248603153b2ccca323c7591b2d6))
+
+## 2.25.5
+
+ - **FIX**(core,web): fix compatibility with TrustedTypes ([#12383](https://github.com/firebase/flutterfire/issues/12383)). ([6c1f73d0](https://github.com/firebase/flutterfire/commit/6c1f73d0c8357db83e1ee81e084a3a5b531e0e0c))
+
+## 2.25.4
+
+ - Update a dependency to the latest release.
+
+## 2.25.3
+
+ - Update a dependency to the latest release.
+
+## 2.25.2
+
+ - **FIX**(auth,web): fix null safety issue in typing JS Interop ([#12250](https://github.com/firebase/flutterfire/issues/12250)). ([d0d30405](https://github.com/firebase/flutterfire/commit/d0d30405a895ae221603ddd158b1cb1636312fb4))
+
+## 2.25.1
+
+ - Update a dependency to the latest release.
+
+## 2.25.0
+
+ - **FIX**(auth,ios): Initialise static dictionary for custom auth domains ([#12157](https://github.com/firebase/flutterfire/issues/12157)). ([1262f3c6](https://github.com/firebase/flutterfire/commit/1262f3c6c5fb659217ccd609a5c6dc9e37ab8815))
+ - **FEAT**: bump Android SDK to version `32.7.1` ([#12213](https://github.com/firebase/flutterfire/issues/12213)). ([3c75bb52](https://github.com/firebase/flutterfire/commit/3c75bb527acbd7bb7a0d9f712d85e6fbc281e5e9))
+ - **FEAT**: bump iOS SDK to version `10.20.0` ([#12214](https://github.com/firebase/flutterfire/issues/12214)). ([e34e072a](https://github.com/firebase/flutterfire/commit/e34e072a94f19ef83c45080c52228c57d99971c9))
+ - **FEAT**: bump firebase iOS SDK to `10.19.0` ([#12125](https://github.com/firebase/flutterfire/issues/12125)). ([c3861567](https://github.com/firebase/flutterfire/commit/c38615672d53d4a4775cd7897ccbef3902b7fee4))
+ - **FEAT**: bump firebase android SDK BOM to `32.7.0` ([#12124](https://github.com/firebase/flutterfire/issues/12124)). ([a691f3d1](https://github.com/firebase/flutterfire/commit/a691f3d1309b29d6603b15a8aecf21287979e428))
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
 ## 2.24.2
 
  - **FIX**(core,windows): fix release build of Firebase Auth, Firestore and Storage on Windows ([#11997](https://github.com/firebase/flutterfire/issues/11997)). ([12b186a8](https://github.com/firebase/flutterfire/commit/12b186a82578f792d7f4c500f145f5bd4f398545))

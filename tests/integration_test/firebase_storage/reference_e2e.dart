@@ -302,9 +302,8 @@ void setupReferenceTests() {
               ),
             ),
           );
-
-          // This *must* be skipped in web, the test is intended for native platforms.
         },
+        // This *must* be skipped in web, the test is intended for native platforms.
         skip: kIsWeb,
       );
     });
@@ -333,6 +332,8 @@ void setupReferenceTests() {
             // expect(complete.metadata?.contentLanguage, 'en');
             // expect(complete.metadata?.customMetadata!['activity'], 'test');
           },
+          // putFile is not supported on the web platform.
+          skip: kIsWeb,
         );
 
         // TODO(ehesp): Emulator rules issue - comment back in once fixed

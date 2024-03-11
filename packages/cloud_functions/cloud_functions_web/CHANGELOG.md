@@ -1,3 +1,35 @@
+## 4.7.2
+
+ - Update a dependency to the latest release.
+
+## 4.7.1
+
+ - Update a dependency to the latest release.
+
+## 4.7.0
+
+ - **FEAT**(functions,web): migrate web to js_interop to be compatible with WASM ([#12205](https://github.com/firebase/flutterfire/issues/12205)). ([51f6563e](https://github.com/firebase/flutterfire/commit/51f6563e1c87e0de997387399a549adc341c37b1))
+
+## 4.6.16
+
+ - Update a dependency to the latest release.
+
+## 4.6.15
+
+ - Update a dependency to the latest release.
+
+## 4.6.14
+
+ - Update a dependency to the latest release.
+
+## 4.6.13
+
+ - Update a dependency to the latest release.
+
+## 4.6.12
+
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
 ## 4.6.11
 
  - Update a dependency to the latest release.
