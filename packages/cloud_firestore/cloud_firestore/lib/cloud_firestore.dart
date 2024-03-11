@@ -18,6 +18,7 @@ import 'package:meta/meta.dart';
 
 export 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
     show
+        AggregateField,
         AggregateSource,
         ListEquality,
         FieldPath,

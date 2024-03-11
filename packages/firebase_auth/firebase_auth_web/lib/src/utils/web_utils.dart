@@ -20,11 +20,38 @@ bool _hasFirebaseAuthErrorCodeAndMessage(JSError e) {
   if (e.name?.toDart == 'FirebaseError') {
     String code = e.code?.toDart ?? '';
     String message = e.message?.toDart ?? '';
-    if (code.startsWith('auth/')) return false;
-    if (message.contains('Firebase')) return false;
+    if (!code.startsWith('auth/')) return false;
+    if (!message.contains('Firebase')) return false;
     return true;
   } else {
     return false;
+  }
+}
+
+R guardAuthExceptions<R>(
+  R Function() cb, {
+  auth_interop.Auth? auth,
+}) {
+  try {
+    final value = cb();
+    if (value is Future) {
+      return value.catchError((err, stack) {
+        final exception = getFirebaseAuthException(err, auth);
+        return Error.throwWithStackTrace(exception, stack);
+      }) as R;
+    }
+
+    return value;
+  } catch (e, stackTrace) {
+    final exception = e as JSError;
+    if (!_hasFirebaseAuthErrorCodeAndMessage(e)) {
+      // Not a firebase auth exception, rethrow & make sure to preserve the stacktrace
+      rethrow;
+    }
+
+    final error = getFirebaseAuthException(exception, auth);
+
+    Error.throwWithStackTrace(error, stackTrace);
   }
 }
 

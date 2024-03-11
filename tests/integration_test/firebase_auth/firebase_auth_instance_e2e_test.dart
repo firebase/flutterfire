@@ -476,11 +476,14 @@ void main() {
         test(
           'should allow null value and set to null',
           () async {
+            // Isn't possible anymore to set the language code to null
+            // See API: https://firebase.google.com/docs/reference/js/auth.md?_gl=1*120kqub*_up*MQ..*_ga*NTg2MzgzNDU0LjE3MDc5MTYxMjI.*_ga_CW55HF8NVT*MTcwNzkxNjEyMi4xLjAuMTcwNzkxNjEyMi4wLjAuMA..#usedevicelanguage_2a61ea7
+            // Effectively will set the language code to the device language.
             await FirebaseAuth.instance.setLanguageCode(null);
-
+            // This will return the device language now. e.g. "en-GB"
             expect(FirebaseAuth.instance.languageCode, null);
           },
-          skip: !kIsWeb,
+          skip: true,
         );
       });
 

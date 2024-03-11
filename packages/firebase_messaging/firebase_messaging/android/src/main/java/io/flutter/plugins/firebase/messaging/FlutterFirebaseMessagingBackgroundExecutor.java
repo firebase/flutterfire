@@ -13,7 +13,6 @@ import android.os.Looper;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import com.google.firebase.messaging.RemoteMessage;
-import io.flutter.FlutterInjector;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.embedding.engine.FlutterShellArgs;
 import io.flutter.embedding.engine.dart.DartExecutor;
@@ -139,7 +138,6 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
    *       handle does not resolve to a Dart callback then this method does nothing.
    * </ul>
    */
-  @SuppressWarnings("ConstantConditions")
   public void startBackgroundIsolate(long callbackHandle, FlutterShellArgs shellArgs) {
     if (backgroundFlutterEngine != null) {
       Log.e(TAG, "Background isolate already started.");
@@ -180,14 +178,6 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
                   DartExecutor executor = backgroundFlutterEngine.getDartExecutor();
                   initializeMethodChannel(executor);
 
-                  if (appBundlePath == null) {
-                    // appBundlePath is possibly "null", this will allow us to fallback to the alternative lookup method.
-                    // See: https://github.com/firebase/flutterfire/issues/9345#issuecomment-1467601511
-                    Log.w(
-                        TAG,
-                        "startBackgroundIsolate: 'appBundlePath' was null, using alternative lookup method.");
-                    appBundlePath = FlutterInjector.instance().flutterLoader().findAppBundlePath();
-                  }
                   DartCallback dartCallback =
                       new DartCallback(assets, appBundlePath, flutterCallback);
 

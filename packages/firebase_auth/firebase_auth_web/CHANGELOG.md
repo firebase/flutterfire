@@ -1,3 +1,21 @@
+## 5.9.8
+
+ - Update a dependency to the latest release.
+
+## 5.9.7
+
+ - Update a dependency to the latest release.
+
+## 5.9.6
+
+ - **REFACTOR**(auth,web): update error handling to ensure stack traces are preserved. ([#12392](https://github.com/firebase/flutterfire/issues/12392)). ([280dcb3d](https://github.com/firebase/flutterfire/commit/280dcb3d77ab5688258fe9d75fa69dd2424fda98))
+ - **FIX**(auth,web): lower SDK minimum version constraint to "3.2.0" ([#12369](https://github.com/firebase/flutterfire/issues/12369)). ([fa412b44](https://github.com/firebase/flutterfire/commit/fa412b448247224adedf2b770faeeea462f3c5d4))
+
+## 5.9.5
+
+ - **FIX**(auth,web): flutter `3.19.0` interop broke auth persistence setting. Updated the way we initialise JS Map inline with latest interop. ([#12338](https://github.com/firebase/flutterfire/issues/12338)). ([9d5480f8](https://github.com/firebase/flutterfire/commit/9d5480f8f943d095dd3ca94d4868ec75bed84b22))
+ - **FIX**(auth,web): `signInWithEmailAndPassword()` throwing with incorrect exception code ([#12310](https://github.com/firebase/flutterfire/issues/12310)). ([004f6d41](https://github.com/firebase/flutterfire/commit/004f6d4195801359583f047c1909f55205125840))
+
 ## 5.9.4
 
  - Update a dependency to the latest release.

@@ -1442,8 +1442,10 @@ void CloudFirestorePlugin::AggregateQuery(
               case AggregateType::count: {
                 double doubleValue =
                     static_cast<double>(aggregateQuerySnapshot->count());
-                aggregateResponses.push_back(CustomEncodableValue(
-                    AggregateQueryResponse(AggregateType::count, doubleValue)));
+                AggregateQueryResponse aggregateResponse(AggregateType::count,
+                                                         nullptr, &doubleValue);
+                aggregateResponses.push_back(
+                    CustomEncodableValue(aggregateResponse));
                 break;
               }
               case AggregateType::sum: {

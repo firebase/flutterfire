@@ -52,7 +52,17 @@ class TaskWeb extends TaskPlatform {
       });
 
       group.add(onStateChangedStream);
-      group.add(onComplete.asStream());
+
+      onComplete.asStream().last.then((value) async {
+        // If successful, we add a final snapshot with the state "success"
+        await group.add(onComplete.asStream());
+        await group.close();
+      }).catchError((e) async {
+        // We don't care about the error here as it has already propagated via `guard()`
+        // We need to remove the onStateChangedStream from the group and close group for onDone callback to be called
+        await group.remove(onStateChangedStream);
+        await group.close();
+      });
 
       return group.stream;
     });

@@ -55,7 +55,7 @@ void main() {
   });
 }
 
-class _FirebaseError implements FirebaseError {
+class _FirebaseError implements JSError {
   @override
   String get code => '';
 

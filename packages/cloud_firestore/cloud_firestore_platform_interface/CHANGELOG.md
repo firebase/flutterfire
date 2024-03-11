@@ -1,3 +1,19 @@
+## 6.1.9
+
+ - **FIX**(firestore): fix an issue that would cause FieldValue.increment to be interpreted as double ([#12444](https://github.com/firebase/flutterfire/issues/12444)). ([e9823a41](https://github.com/firebase/flutterfire/commit/e9823a415bec0a46209608fdaf856c2413d46fbf))
+
+## 6.1.8
+
+ - **FIX**(firestore): fix an issue that would cause FieldValue.increment to not work for big int ([#12426](https://github.com/firebase/flutterfire/issues/12426)). ([a776dec5](https://github.com/firebase/flutterfire/commit/a776dec5e181b2656bfc659a23514d21930b5556))
+
+## 6.1.7
+
+ - Update a dependency to the latest release.
+
+## 6.1.6
+
+ - **FIX**(firestore): aggregate query `average()` is `null` when collection is empty or collection doesn't exist or the property doesn't exist on docs ([#12304](https://github.com/firebase/flutterfire/issues/12304)). ([4d3b578d](https://github.com/firebase/flutterfire/commit/4d3b578dbb88da441e308179f3656822c5612ef1))
+
 ## 6.1.5
 
  - Update a dependency to the latest release.
