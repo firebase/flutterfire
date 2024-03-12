@@ -263,9 +263,7 @@ jobs:
       - name: 'Bootstrap package'
         run: melos bootstrap --scope tests && melos bootstrap --scope "cloud_firestore*"
       - name: 'Install Tools'
-        run: |
-          # Temporary measure to install firebase-tools 13.3.0 until the issue is resolved: https://github.com/firebase/firebase-tools/issues/6808
-          sudo npm i -g firebase-tools@13.3.0
+        run: sudo npm i -g firebase-tools
       - name: Cache Firebase Emulator
         uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319
         with:
