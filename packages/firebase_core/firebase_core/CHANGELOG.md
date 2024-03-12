@@ -1,3 +1,7 @@
+## 2.27.1
+
+ - Update a dependency to the latest release.
+
 ## 2.27.0
 
  - **FEAT**: bump Android SDK to version 3.7.3 ([#12443](https://github.com/firebase/flutterfire/issues/12443)). ([2509d91a](https://github.com/firebase/flutterfire/commit/2509d91aa7d95af19407b5823815b65085902347))
