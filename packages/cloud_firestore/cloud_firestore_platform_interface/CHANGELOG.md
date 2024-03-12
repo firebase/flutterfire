@@ -1,3 +1,7 @@
+## 6.1.10
+
+ - Update a dependency to the latest release.
+
 ## 6.1.9
 
  - **FIX**(firestore): fix an issue that would cause FieldValue.increment to be interpreted as double ([#12444](https://github.com/firebase/flutterfire/issues/12444)). ([e9823a41](https://github.com/firebase/flutterfire/commit/e9823a415bec0a46209608fdaf856c2413d46fbf))

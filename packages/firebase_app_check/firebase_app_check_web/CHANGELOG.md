@@ -1,3 +1,8 @@
+## 0.1.1
+
+ - **FEAT**: update `web` package to 0.5.1 ([#12469](https://github.com/firebase/flutterfire/issues/12469)). ([f5c4354a](https://github.com/firebase/flutterfire/commit/f5c4354a66377da9d231c5e3fc7e955ddb7ef8cf))
+ - **FEAT**(app_check,web): migrate web to js_interop to be compatible with WASM ([#12209](https://github.com/firebase/flutterfire/issues/12209)). ([69e2e772](https://github.com/firebase/flutterfire/commit/69e2e772dacbc759657b0cc086ac1423c6b67c3d))
+
 ## 0.1.0+19
 
  - Update a dependency to the latest release.
