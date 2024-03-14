@@ -6,4 +6,4 @@
 part of firebase_core_web;
 
 /// The currently supported Firebase JS SDK version.
-const String supportedFirebaseJsSdkVersion = '10.7.0';
+const String supportedFirebaseJsSdkVersion = '10.8.1';
