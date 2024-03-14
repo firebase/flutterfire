@@ -173,7 +173,9 @@ void main() {
         test(
           'should enroll and unenroll factor with signing out in the middle',
           () async {
-            String testPhoneNumber = '+441444555666';
+            String email = generateRandomEmail();
+
+            String testPhoneNumber = '+441444555626';
             User? user;
             UserCredential userCredential;
 
