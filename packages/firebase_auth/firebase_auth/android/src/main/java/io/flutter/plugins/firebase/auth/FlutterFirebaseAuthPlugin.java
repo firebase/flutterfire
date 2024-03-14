@@ -444,7 +444,8 @@ public class FlutterFirebaseAuthPlugin
     try {
       FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
       if (firebaseAuth.getCurrentUser() != null) {
-        final Map<String, MultiFactor> appMultiFactorUser = multiFactorUserMap.get(app.getAppName());
+        final Map<String, MultiFactor> appMultiFactorUser =
+            multiFactorUserMap.get(app.getAppName());
         if (appMultiFactorUser != null) {
           appMultiFactorUser.remove(firebaseAuth.getCurrentUser().getUid());
         }
