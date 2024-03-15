@@ -18,7 +18,7 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
   js: ^0.6.3
-  web: '>=0.3.0 <0.5.0'
+  web: ^0.5.1
 
 dev_dependencies:
   build_runner: ^2.3.3
