@@ -3,8 +3,11 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:convert' show utf8;
+import 'dart:js_interop';
+
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart';
+
 import 'firebase_remote_config_interop.dart' as remote_config_interop;
 
 /// Given an AppJSImp, return the Remote Config instance.
@@ -55,12 +58,14 @@ class RemoteConfig
 
   /// Returns the timestamp of the last *successful* fetch.
   DateTime get fetchTime {
-    return DateTime.fromMillisecondsSinceEpoch(jsObject.fetchTimeMillis);
+    return DateTime.fromMillisecondsSinceEpoch(
+      jsObject.fetchTimeMillis.toDartInt,
+    );
   }
 
   /// The status of the last fetch attempt.
   RemoteConfigFetchStatus get lastFetchStatus {
-    switch (jsObject.lastFetchStatus) {
+    switch (jsObject.lastFetchStatus.toDart) {
       case 'no-fetch-yet':
         return RemoteConfigFetchStatus.notFetchedYet;
       case 'success':
@@ -70,29 +75,33 @@ class RemoteConfig
       case 'throttle':
         return RemoteConfigFetchStatus.throttle;
       default:
-        throw UnimplementedError(jsObject.lastFetchStatus);
+        throw UnimplementedError(jsObject.lastFetchStatus.toDart);
     }
   }
 
   ///  Makes the last fetched config available to the getters.
   ///  Returns a future which resolves to `true` if the current call activated the fetched configs.
   ///  If the fetched configs were already activated, the promise will resolve to `false`.
-  Future<bool> activate() async =>
-      handleThenable(remote_config_interop.activate(jsObject));
+  Future<bool> activate() async => remote_config_interop
+      .activate(jsObject)
+      .toDart
+      .then((value) => value! as bool);
 
   ///  Ensures the last activated config are available to the getters.
   Future<void> ensureInitialized() async =>
-      handleThenable(remote_config_interop.ensureInitialized(jsObject));
+      remote_config_interop.ensureInitialized(jsObject).toDart;
 
   /// Fetches and caches configuration from the Remote Config service.
   Future<void> fetch() async =>
-      handleThenable(remote_config_interop.fetchConfig(jsObject));
+      remote_config_interop.fetchConfig(jsObject).toDart;
 
   /// Performs fetch and activate operations, as a convenience.
   /// Returns a promise which resolves to true if the current call activated the fetched configs.
   /// If the fetched configs were already activated, the promise will resolve to false.
   Future<bool> fetchAndActivate() async =>
-      handleThenable(remote_config_interop.fetchAndActivate(jsObject));
+      remote_config_interop.fetchAndActivate(jsObject).toDart.then(
+            (value) => value! as bool,
+          );
 
   /// Returns all config values.
   Map<String, RemoteConfigValue> getAll() {
@@ -104,23 +113,28 @@ class RemoteConfig
   }
 
   RemoteConfigValue getValue(String key) => RemoteConfigValue(
-        utf8.encode(remote_config_interop.getValue(jsObject, key).asString()),
-        getSource(remote_config_interop.getValue(jsObject, key).getSource()),
+        utf8.encode(
+          remote_config_interop.getValue(jsObject, key.toJS).asString().toDart,
+        ),
+        getSource(
+          remote_config_interop.getValue(jsObject, key.toJS).getSource().toDart,
+        ),
       );
 
   ///  Gets the value for the given key as a boolean.
   ///  Convenience method for calling `remoteConfig.getValue(key).asString()`.
   bool getBoolean(String key) =>
-      remote_config_interop.getBoolean(jsObject, key);
+      remote_config_interop.getBoolean(jsObject, key.toJS).toDart;
 
   ///  Gets the value for the given key as a number.
   ///  Convenience method for calling `remoteConfig.getValue(key).asNumber()`.
-  num getNumber(String key) => remote_config_interop.getNumber(jsObject, key);
+  num getNumber(String key) =>
+      remote_config_interop.getNumber(jsObject, key.toJS).toDartDouble;
 
   ///  Gets the value for the given key as a string.
   ///  Convenience method for calling `remoteConfig.getValue(key).asString()`.
   String getString(String key) =>
-      remote_config_interop.getString(jsObject, key);
+      remote_config_interop.getString(jsObject, key.toJS).toDart;
 
   void setLogLevel(RemoteConfigLogLevel value) {
     remote_config_interop.setLogLevel(
@@ -129,7 +143,8 @@ class RemoteConfig
         RemoteConfigLogLevel.debug: 'debug',
         RemoteConfigLogLevel.error: 'error',
         RemoteConfigLogLevel.silent: 'silent',
-      }[value]!,
+      }[value]!
+          .toJS,
     );
   }
 }
@@ -157,19 +172,19 @@ class RemoteConfigSettings
   ///  Defines the maximum age in milliseconds of an entry in the config cache before
   ///  it is considered stale. Defaults to twelve hours.
   Duration get minimumFetchInterval =>
-      Duration(milliseconds: jsObject.minimumFetchIntervalMillis);
+      Duration(milliseconds: jsObject.minimumFetchIntervalMillis.toDartInt);
 
   set minimumFetchInterval(Duration value) {
-    jsObject.minimumFetchIntervalMillis = value.inMilliseconds;
+    jsObject.minimumFetchIntervalMillis = value.inMilliseconds.toJS;
   }
 
   /// Defines the maximum amount of time to wait for a response when fetching
   /// configuration from the Remote Config server. Defaults to one minute.
   Duration get fetchTimeoutMillis =>
-      Duration(milliseconds: jsObject.fetchTimeoutMillis);
+      Duration(milliseconds: jsObject.fetchTimeoutMillis.toDartInt);
 
   set fetchTimeoutMillis(Duration value) {
-    jsObject.fetchTimeoutMillis = value.inMilliseconds;
+    jsObject.fetchTimeoutMillis = value.inMilliseconds.toJS;
   }
 }
 
