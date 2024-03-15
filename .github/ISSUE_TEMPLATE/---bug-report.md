@@ -9,6 +9,10 @@ assignees: ''
 
 ## Bug report
 
+[] **I've checked if the issue already exists**
+
+[] **I've added the correct `plugin:` and `platform:` labels (for instance `plugin: auth` and `platform: android`)**
+
 **Describe the bug**
 A clear and concise description of what the bug is.
 
