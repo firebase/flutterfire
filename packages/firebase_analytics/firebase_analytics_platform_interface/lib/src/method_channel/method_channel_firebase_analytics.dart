@@ -75,6 +75,9 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     bool? analyticsStorageConsentGranted,
     bool? adPersonalizationSignalsConsentGranted,
     bool? adUserDataConsentGranted,
+    bool? functionalityStorageConsentGranted,
+    bool? personalizationStorageConsentGranted,
+    bool? securityStorageConsentGranted,
   }) async {
     try {
       return channel.invokeMethod<void>(
@@ -85,8 +88,10 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
           if (analyticsStorageConsentGranted != null)
             'analyticsStorageConsentGranted': analyticsStorageConsentGranted,
           if (adPersonalizationSignalsConsentGranted != null)
-            'adPersonalizationSignalsConsentGranted': adPersonalizationSignalsConsentGranted,
-          if (adUserDataConsentGranted != null) 'adUserDataConsentGranted': adUserDataConsentGranted,
+            'adPersonalizationSignalsConsentGranted':
+                adPersonalizationSignalsConsentGranted,
+          if (adUserDataConsentGranted != null)
+            'adUserDataConsentGranted': adUserDataConsentGranted,
         },
       );
     } catch (e, s) {

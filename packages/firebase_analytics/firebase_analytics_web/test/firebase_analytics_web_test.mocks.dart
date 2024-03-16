@@ -148,6 +148,9 @@ class MockFirebaseAnalyticsWeb extends _i1.Mock
     bool? analyticsStorageConsentGranted,
     bool? adPersonalizationSignalsConsentGranted,
     bool? adUserDataConsentGranted,
+    bool? functionalityStorageConsentGranted,
+    bool? personalizationStorageConsentGranted,
+    bool? securityStorageConsentGranted,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -159,6 +162,11 @@ class MockFirebaseAnalyticsWeb extends _i1.Mock
             #adPersonalizationSignalsConsentGranted:
                 adPersonalizationSignalsConsentGranted,
             #adUserDataConsentGranted: adUserDataConsentGranted,
+            #functionalityStorageConsentGranted:
+                functionalityStorageConsentGranted,
+            #personalizationStorageConsentGranted:
+                personalizationStorageConsentGranted,
+            #securityStorageConsentGranted: securityStorageConsentGranted,
           },
         ),
         returnValue: _i5.Future<void>.value(),
