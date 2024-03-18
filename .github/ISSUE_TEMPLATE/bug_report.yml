@@ -17,15 +17,19 @@ body:
     attributes:
       value: |
         ---
-  - type: checkboxes
+  - type: input
     attributes:
-      label: Have you added the correct labels to this issue?
-      description: |
-        If your issue is related to a specific plugin, please add the relevant plugin label (`plugin: auth` for instance). 
-        If your issue is related to a specific platform, please add the relevant platform label (`platform: android` for instance).
-      options:
-        - label: I have added the correct labels to this issue
-          required: true
+      label: Which plugins are affected?
+      placeholder: "Auth, Firestore ..."
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Which platforms are affected?
+      placeholder: "Android / iOS / Web / Windows ..."
+    validations:
+      required: true
 
   - type: markdown
     attributes:
