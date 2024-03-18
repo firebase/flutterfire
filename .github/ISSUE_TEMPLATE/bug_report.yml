@@ -58,7 +58,7 @@ body:
 
   - type: input
     attributes:
-      label: `firebase_core` version
+      label: Firebase Core version
       description: What version of `firebase_core` has this issue?
       placeholder: "2.27.0"
     validations:
