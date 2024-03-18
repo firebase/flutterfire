@@ -17,15 +17,40 @@ body:
     attributes:
       value: |
         ---
-  - type: checkboxes
+        
+  - type: dropdown
+    id: plugins
     attributes:
-      label: I have added the correct labels to this issue
-      description: |
-        If your issue is related to a specific plugin, please add the relevant plugin label (`plugin: auth` for instance). 
-        If your issue is related to a specific platform, please add the relevant platform label (`platform: android` for instance).
+      label: Which plugins are affected?
+      multiple: true
       options:
-        - label: I have added the correct labels to this issue
-          required: true
+        - Core
+        - Analytics
+        - App Check
+        - App Installations
+        - Auth
+        - Cloud Functions
+        - Crashlytics
+        - Database
+        - In-App Messaging
+        - Messaging
+        - ML Custom
+        - Performance
+        - Remote Config
+        - Storage
+        - Other
+
+  - type: dropdown
+    id: platforms
+    attributes:
+      label: Which platforms are affected?
+      multiple: true
+      options:
+        - Android
+        - iOS
+        - macOS
+        - Web
+        - Windows
 
   - type: markdown
     attributes:
