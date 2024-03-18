@@ -17,19 +17,40 @@ body:
     attributes:
       value: |
         ---
-  - type: input
+        
+  - type: dropdown
+    id: plugins
     attributes:
       label: Which plugins are affected?
-      placeholder: "Auth, Firestore ..."
-    validations:
-      required: true
+      multiple: true
+      options:
+        - Core
+        - Analytics
+        - App Check
+        - App Installations
+        - Auth
+        - Cloud Functions
+        - Crashlytics
+        - Database
+        - In-App Messaging
+        - Messaging
+        - ML Custom
+        - Performance
+        - Remote Config
+        - Storage
+        - Other
 
-  - type: input
+  - type: dropdown
+    id: platforms
     attributes:
       label: Which platforms are affected?
-      placeholder: "Android / iOS / Web / Windows ..."
-    validations:
-      required: true
+      multiple: true
+      options:
+        - Android
+        - iOS
+        - macOS
+        - Web
+        - Windows
 
   - type: markdown
     attributes:
