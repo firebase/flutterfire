@@ -53,6 +53,42 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
     );
   }
 
+  void setConsent({
+    bool? adPersonalizationSignalsConsentGranted,
+    bool? adStorageConsentGranted,
+    bool? adUserDataConsentGranted,
+    bool? analyticsStorageConsentGranted,
+    bool? functionalityStorageConsentGranted,
+    bool? personalizationStorageConsentGranted,
+    bool? securityStorageConsentGranted,
+  }) {
+    final consentSettings = {
+      if (adPersonalizationSignalsConsentGranted != null)
+        'ad_personalization':
+            adPersonalizationSignalsConsentGranted ? 'granted' : 'denied',
+      if (adStorageConsentGranted != null)
+        'ad_storage': adStorageConsentGranted ? 'granted' : 'denied',
+      if (adUserDataConsentGranted != null)
+        'ad_user_data': adUserDataConsentGranted ? 'granted' : 'denied',
+      if (analyticsStorageConsentGranted != null)
+        'analytics_storage':
+            analyticsStorageConsentGranted ? 'granted' : 'denied',
+      if (functionalityStorageConsentGranted != null)
+        'functionality_storage':
+            functionalityStorageConsentGranted ? 'granted' : 'denied',
+      if (personalizationStorageConsentGranted != null)
+        'personalization_storage':
+            personalizationStorageConsentGranted ? 'granted' : 'denied',
+      if (securityStorageConsentGranted != null)
+        'security_storage':
+            securityStorageConsentGranted ? 'granted' : 'denied',
+    }.jsify();
+
+    return analytics_interop.setConsent(
+      consentSettings,
+    );
+  }
+
   void setAnalyticsCollectionEnabled({required bool enabled}) {
     return analytics_interop.setAnalyticsCollectionEnabled(
       jsObject,

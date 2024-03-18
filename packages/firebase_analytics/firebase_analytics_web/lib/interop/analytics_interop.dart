@@ -34,6 +34,12 @@ external void logEvent(
 
 @JS()
 @staticInterop
+external void setConsent(
+  JSAny? consentSettings,
+);
+
+@JS()
+@staticInterop
 external void setAnalyticsCollectionEnabled(
   AnalyticsJsImpl analytics,
   JSBoolean enabled,
