@@ -126,9 +126,9 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   }
 
   /// Sets the applicable end user consent state.
-  /// By default, no consent mode values are set. 
+  /// By default, no consent mode values are set.
   ///
-  /// Default consents can be set according to the platform: 
+  /// Default consents can be set according to the platform:
   /// - [iOS][1]
   /// - [Android][2]
   ///
@@ -143,7 +143,8 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     await _delegate.setConsent(
       adStorageConsentGranted: adStorageConsentGranted,
       analyticsStorageConsentGranted: analyticsStorageConsentGranted,
-      adPersonalizationSignalsConsentGranted: adPersonalizationSignalsConsentGranted,
+      adPersonalizationSignalsConsentGranted:
+          adPersonalizationSignalsConsentGranted,
       adUserDataConsentGranted: adUserDataConsentGranted,
     );
   }

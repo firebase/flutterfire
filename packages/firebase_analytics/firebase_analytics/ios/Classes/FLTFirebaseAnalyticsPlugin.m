@@ -15,7 +15,8 @@ NSString *const kFLTFirebaseAnalyticsEventName = @"eventName";
 NSString *const kFLTFirebaseAnalyticsParameters = @"parameters";
 NSString *const kFLTFirebaseAnalyticsAdStorageConsentGranted = @"adStorageConsentGranted";
 NSString *const kFLTFirebaseAnalyticsStorageConsentGranted = @"analyticsStorageConsentGranted";
-NSString *const kFLTFirebaseAdPersonalizationSignalsConsentGranted = @"adPersonalizationSignalsConsentGranted";
+NSString *const kFLTFirebaseAdPersonalizationSignalsConsentGranted =
+    @"adPersonalizationSignalsConsentGranted";
 NSString *const kFLTFirebaseAdUserDataConsentGranted = @"adUserDataConsentGranted";
 NSString *const kFLTFirebaseAnalyticsUserId = @"userId";
 
@@ -139,7 +140,8 @@ NSString *const FLTFirebaseAnalyticsChannelName = @"plugins.flutter.io/firebase_
 - (void)setConsent:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   NSNumber *adStorageGranted = arguments[kFLTFirebaseAnalyticsAdStorageConsentGranted];
   NSNumber *analyticsStorageGranted = arguments[kFLTFirebaseAnalyticsStorageConsentGranted];
-  NSNumber *adPersonalizationSignalsGranted = arguments[kFLTFirebaseAdPersonalizationSignalsConsentGranted];
+  NSNumber *adPersonalizationSignalsGranted =
+      arguments[kFLTFirebaseAdPersonalizationSignalsConsentGranted];
   NSNumber *adUserDataGranted = arguments[kFLTFirebaseAdUserDataConsentGranted];
 
   NSMutableDictionary<FIRConsentType, FIRConsentStatus> *parameters =
@@ -155,8 +157,9 @@ NSString *const FLTFirebaseAnalyticsChannelName = @"plugins.flutter.io/firebase_
   }
 
   if (adPersonalizationSignalsGranted != nil) {
-    parameters[FIRConsentTypeAdPersonalization] =
-        [adPersonalizationSignalsGranted boolValue] ? FIRConsentStatusGranted : FIRConsentStatusDenied;
+    parameters[FIRConsentTypeAdPersonalization] = [adPersonalizationSignalsGranted boolValue]
+                                                      ? FIRConsentStatusGranted
+                                                      : FIRConsentStatusDenied;
   }
 
   if (adUserDataGranted != nil) {
