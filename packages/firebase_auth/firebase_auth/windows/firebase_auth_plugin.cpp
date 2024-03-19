@@ -638,11 +638,8 @@ firebase::auth::Credential getCredentialFromArguments(
   if (signInMethod == kSignInMethodOAuth) {
     std::string providerId =
         std::get<std::string>(arguments[kArgumentProviderId]);
-    // As of my knowledge cutoff in September 2021, Firebase C++ SDK doesn't
-    // support creating OAuthProvider credentials directly
-    std::cout << "Creating OAuthProvider credentials directly is not supported "
-                 "in Firebase C++ SDK as of September 2021.\n";
-    return firebase::auth::Credential();
+    return firebase::auth::OAuthProvider::GetCredential(
+        providerId.c_str(), idToken.c_str(), accessToken.c_str());
   }
 
   // If no known auth method matched
