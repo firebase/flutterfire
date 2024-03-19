@@ -48,13 +48,26 @@ storage_interop.SettableMetadata settableMetadataToFbSettableMetadata(
 storage_interop.UploadMetadata settableMetadataToFbUploadMetadata(
     SettableMetadata metadata,
     {String? md5Hash}) {
+  // We are removing null values from the customMetadata map.
+  // since we are setting the whole map, whereas in Android and iOS we can
+  // set individual keys.
+  final listOfCustomMetadata = metadata.customMetadata?.entries
+      .where((entry) => entry.value != null)
+      .map((entry) => MapEntry(entry.key, entry.value))
+      .cast<MapEntry<String, String>>();
+
+  final Map<String, String>? filteredCustomMetadata =
+      listOfCustomMetadata != null
+          ? Map.fromEntries(listOfCustomMetadata)
+          : null;
+
   return storage_interop.UploadMetadata(
     cacheControl: metadata.cacheControl,
     contentDisposition: metadata.contentDisposition,
     contentEncoding: metadata.contentEncoding,
     contentLanguage: metadata.contentLanguage,
     contentType: metadata.contentType,
-    customMetadata: metadata.customMetadata,
+    customMetadata: filteredCustomMetadata,
     md5Hash: md5Hash,
   );
 }

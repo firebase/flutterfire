@@ -41,7 +41,7 @@ class SettableMetadata {
   final String? contentType;
 
   /// Additional user-defined custom metadata.
-  final Map<String, String>? customMetadata;
+  final Map<String, String?>? customMetadata;
 
   /// Returns the settable metadata as a [Map].
   Map<String, dynamic> asMap() {
