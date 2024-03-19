@@ -58,12 +58,14 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
       );
 
   Future<app_check_interop.AppCheckTokenResult> getToken(bool? forceRefresh) =>
-      app_check_interop.getToken(jsObject, forceRefresh?.toJS).toDart
-          as Future<app_check_interop.AppCheckTokenResult>;
+      app_check_interop.getToken(jsObject, forceRefresh?.toJS).toDart.then(
+            (value) => value! as app_check_interop.AppCheckTokenResult,
+          );
 
   Future<app_check_interop.AppCheckTokenResult> getLimitedUseToken() =>
-      app_check_interop.getLimitedUseToken(jsObject).toDart
-          as Future<app_check_interop.AppCheckTokenResult>;
+      app_check_interop.getLimitedUseToken(jsObject).toDart.then(
+            (value) => value! as app_check_interop.AppCheckTokenResult,
+          );
 
   JSFunction? _idTokenChangedUnsubscribe;
 

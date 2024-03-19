@@ -4,6 +4,7 @@
 
 package io.flutter.plugins.firebase.auth;
 
+import static io.flutter.plugins.firebase.auth.FlutterFirebaseMultiFactor.multiFactorUserMap;
 import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.registerPlugin;
 
 import android.app.Activity;
@@ -17,6 +18,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.MultiFactor;
 import com.google.firebase.auth.MultiFactorInfo;
 import com.google.firebase.auth.MultiFactorSession;
 import com.google.firebase.auth.OAuthProvider;
@@ -441,6 +443,13 @@ public class FlutterFirebaseAuthPlugin
       @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
     try {
       FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
+      if (firebaseAuth.getCurrentUser() != null) {
+        final Map<String, MultiFactor> appMultiFactorUser =
+            multiFactorUserMap.get(app.getAppName());
+        if (appMultiFactorUser != null) {
+          appMultiFactorUser.remove(firebaseAuth.getCurrentUser().getUid());
+        }
+      }
       firebaseAuth.signOut();
       result.success(null);
     } catch (Exception e) {
