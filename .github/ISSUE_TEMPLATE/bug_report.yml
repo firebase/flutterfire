@@ -120,7 +120,7 @@ body:
       label: Flutter dependencies
       description: Seeing your dependencies can help us debug versioning issues.
       value: |
-         <!--- Look below for instructions on how to share your Flutter Dependencies. --->
+        <!--- Look below for instructions on how to share your Flutter Dependencies. --->
 
         <details>
         <summary>Expand <code>Flutter dependencies</code> snippet</summary>
