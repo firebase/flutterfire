@@ -131,7 +131,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// - [adStorageConsentGranted] - Enables storage, such as cookies, related to advertising. (Platform: Android, iOS, Web)
   /// - [analyticsStorageConsentGranted] - Enables storage, such as cookies, related to analytics (for example, visit duration). (Platform: Android, iOS, Web)
   /// - [adPersonalizationSignalsConsentGranted] - Sets consent for personalized advertising. (Platform: Android, iOS, Web)
-  /// - [adUserDataConsentGranted] - Sets consent for sending user data to Google for advertising purposes. (Platform: Android, iOS)
+  /// - [adUserDataConsentGranted] - Sets consent for sending user data to Google for advertising purposes. (Platform: Android, iOS, Web)
   /// - [functionalityStorageConsentGranted] - Enables storage that supports the functionality of the website or app such as language settings. (Platform: Web)
   /// - [personalizationStorageConsentGranted] - Enables storage related to personalization such as video recommendations. (Platform: Web)
   /// - [securityStorageConsentGranted] - Enables storage related to security such as authentication functionality, fraud prevention, and other user protection. (Platform: Web)
