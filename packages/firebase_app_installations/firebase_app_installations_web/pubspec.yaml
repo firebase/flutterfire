@@ -5,7 +5,7 @@ homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_
 repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_app_installations/firebase_app_installations_web
 
 environment:
-  sdk: '>=2.18.0 <4.0.0'
+  sdk: '>=3.2.0 <4.0.0'
   flutter: '>=3.3.0'
 
 dependencies:
@@ -18,7 +18,7 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
   js: ^0.6.3
-
+  web: ^0.5.1
 dev_dependencies:
   firebase_core_platform_interface: ^5.0.0
   flutter_test:
