@@ -167,9 +167,32 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   }
 
   /// Sets the applicable end user consent state.
+  /// By default, no consent mode values are set.
+  ///
+  /// - [adStorageConsentGranted] - Enables storage, such as cookies, related to advertising. (Platform: Android, iOS, Web)
+  /// - [analyticsStorageConsentGranted] - Enables storage, such as cookies, related to analytics (for example, visit duration). (Platform: Android, iOS, Web)
+  /// - [adPersonalizationSignalsConsentGranted] - Sets consent for personalized advertising. (Platform: Android, iOS, Web)
+  /// - [adUserDataConsentGranted] - Sets consent for sending user data to Google for advertising purposes. (Platform: Android, iOS, Web)
+  /// - [functionalityStorageConsentGranted] - Enables storage that supports the functionality of the website or app such as language settings. (Platform: Web)
+  /// - [personalizationStorageConsentGranted] - Enables storage related to personalization such as video recommendations. (Platform: Web)
+  /// - [securityStorageConsentGranted] - Enables storage related to security such as authentication functionality, fraud prevention, and other user protection. (Platform: Web)
+  ///
+  /// Default consents can be set according to the platform:
+  /// - [iOS][1]
+  /// - [Android][2]
+  /// - [Web][3]
+  ///
+  /// [1]: https://developers.google.com/tag-platform/security/guides/app-consent?platform=ios#default-consent
+  /// [2]: https://developers.google.com/tag-platform/security/guides/app-consent?platform=android#default-consent
+  /// [3]: https://firebase.google.com/docs/reference/js/analytics.md#setconsent_1697027
   Future<void> setConsent({
     bool? adStorageConsentGranted,
     bool? analyticsStorageConsentGranted,
+    bool? adPersonalizationSignalsConsentGranted,
+    bool? adUserDataConsentGranted,
+    bool? functionalityStorageConsentGranted,
+    bool? personalizationStorageConsentGranted,
+    bool? securityStorageConsentGranted,
   }) {
     throw UnimplementedError('setConsent() is not implemented');
   }
