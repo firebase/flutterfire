@@ -182,23 +182,25 @@ You're all set! Your Flutter apps are registered and configured to use Firebase.
 
 {% setvar YES %}<div class="center compare-yes"></div>{% endsetvar %}
 
-Product                                          | Plugin name                    | iOS     | Android | Web     | Other Apple<br>(macOS, etc.)
--------------------------------------------------|--------------------------------|---------|---------|---------|--------------------------
-[{{analytics}}][analytics docs]                  | `firebase_analytics`           | {{YES}} | {{YES}} | {{YES}} | beta
-[{{app_check}}][app check docs]                  | `firebase_app_check`           | {{YES}} | {{YES}} | {{YES}} | beta
-[{{auth}}][auth docs]                            | `firebase_auth`                | {{YES}} | {{YES}} | {{YES}} | beta
-[{{firestore}}][firestore docs]                  | `cloud_firestore`              | {{YES}} | {{YES}} | {{YES}} | beta
-[{{cloud_functions}}][functions docs]            | `cloud_functions`              | {{YES}} | {{YES}} | {{YES}} | beta
-[{{messaging_longer}}][fcm docs]                 | `firebase_messaging`           | {{YES}} | {{YES}} | {{YES}} | beta
-[{{storage}}][storage docs]                      | `firebase_storage`             | {{YES}} | {{YES}} | {{YES}} | beta
-[{{crashlytics}}][crashlytics docs]              | `firebase_crashlytics`         | {{YES}} | {{YES}} |         | beta
-[{{ddls}}][ddls docs]                            | `firebase_dynamic_links`       | {{YES}} | {{YES}} |         |
-[{{inappmessaging}}][fiam docs]                  | `firebase_in_app_messaging`    | {{YES}} | {{YES}} |         |
-[{{firebase_installations}}][installations docs] | `firebase_app_installations`   | {{YES}} | {{YES}} | {{YES}} | beta
-[ML Model Downloader][ml docs]                   | `firebase_ml_model_downloader` | {{YES}} | {{YES}} |         | beta
-[{{perfmon}}][perfmon docs]                      | `firebase_performance`         | {{YES}} | {{YES}} | {{YES}} |
-[{{database}}][rtdb docs]                        | `firebase_database`            | {{YES}} | {{YES}} | {{YES}} | beta
-[{{remote_config}}][remote config docs]          | `firebase_remote_config`       | {{YES}} | {{YES}} | {{YES}} | beta
+Product                                          | Plugin name                    | iOS     | Android | Web     | Other Apple<br>(macOS, etc.) | Windows
+-------------------------------------------------|--------------------------------|---------|---------|---------|--------------------------|--------
+[{{analytics}}][analytics docs]                  | `firebase_analytics`           | {{YES}} | {{YES}} | {{YES}} | beta |
+[{{app_check}}][app check docs]                  | `firebase_app_check`           | {{YES}} | {{YES}} | {{YES}} | beta |
+[{{auth}}][auth docs]                            | `firebase_auth`                | {{YES}} | {{YES}} | {{YES}} | beta | beta
+[{{firestore}}][firestore docs]                  | `cloud_firestore`              | {{YES}} | {{YES}} | {{YES}} | beta | beta
+[{{cloud_functions}}][functions docs]            | `cloud_functions`              | {{YES}} | {{YES}} | {{YES}} | beta |
+[{{messaging_longer}}][fcm docs]                 | `firebase_messaging`           | {{YES}} | {{YES}} | {{YES}} | beta |
+[{{storage}}][storage docs]                      | `firebase_storage`             | {{YES}} | {{YES}} | {{YES}} | beta | beta
+[{{crashlytics}}][crashlytics docs]              | `firebase_crashlytics`         | {{YES}} | {{YES}} |         | beta |
+[{{ddls}}][ddls docs]                            | `firebase_dynamic_links`       | {{YES}} | {{YES}} |         | |
+[{{inappmessaging}}][fiam docs]                  | `firebase_in_app_messaging`    | {{YES}} | {{YES}} |         | |
+[{{firebase_installations}}][installations docs] | `firebase_app_installations`   | {{YES}} | {{YES}} | {{YES}} | beta |
+[ML Model Downloader][ml docs]                   | `firebase_ml_model_downloader` | {{YES}} | {{YES}} |         | beta |
+[{{perfmon}}][perfmon docs]                      | `firebase_performance`         | {{YES}} | {{YES}} | {{YES}} | |
+[{{database}}][rtdb docs]                        | `firebase_database`            | {{YES}} | {{YES}} | {{YES}} | beta |
+[{{remote_config}}][remote config docs]          | `firebase_remote_config`       | {{YES}} | {{YES}} | {{YES}} | beta |
+
+Caution: Firebase on Windows is not intended for production use cases, only local development workflows.
 
 ## Try out an example app with {{analytics}} {: #try-analytics-example-app}
 
