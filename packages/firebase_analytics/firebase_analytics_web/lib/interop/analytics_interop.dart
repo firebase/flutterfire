@@ -35,6 +35,7 @@ external void logEvent(
 @JS()
 @staticInterop
 external void setConsent(
+  // https://firebase.google.com/docs/reference/js/analytics.consentsettings.md#consentsettings_interface
   JSAny? consentSettings,
 );
 
