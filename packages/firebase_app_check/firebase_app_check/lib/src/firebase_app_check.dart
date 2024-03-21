@@ -11,9 +11,6 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
   FirebaseAppCheck._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_app_check');
 
-  /// Cached instance of [FirebaseAppCheck];
-  static FirebaseAppCheck? _instance;
-
   /// The [FirebaseApp] for this current [FirebaseAppCheck] instance.
   FirebaseApp app;
 
@@ -36,8 +33,9 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
 
   /// Returns an instance using the default [FirebaseApp].
   static FirebaseAppCheck get instance {
-    _instance ??= FirebaseAppCheck._(app: Firebase.app());
-    return _instance!;
+    FirebaseApp defaultAppInstance = Firebase.app();
+
+    return FirebaseAppCheck.instanceFor(app: defaultAppInstance);
   }
 
   /// Returns an instance using a specified [FirebaseApp].

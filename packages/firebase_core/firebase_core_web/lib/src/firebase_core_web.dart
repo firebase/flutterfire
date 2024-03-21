@@ -84,11 +84,11 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// You must ensure the Firebase script is injected before using the service.
   List<String> get _ignoredServiceScripts {
     try {
-      JSObject ignored =
+      JSObject? ignored =
           globalContext.getProperty('flutterfire_ignore_scripts'.toJS);
 
       if (ignored is Iterable) {
-        return (ignored as Iterable)
+        return (ignored! as Iterable)
             .map((e) => e.toString())
             .toList(growable: false);
       }
@@ -105,7 +105,11 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// document.
   @visibleForTesting
   Future<void> injectSrcScript(String src, String windowVar) async {
-    web.TrustedScriptURL? trustedUrl;
+    final web.HTMLScriptElement script =
+        web.document.createElement('script') as web.HTMLScriptElement;
+    script.type = 'text/javascript';
+    script.crossOrigin = 'anonymous';
+
     final trustedTypePolicyName = _defaultTrustedPolicyName + windowVar;
     if (web.window.nullableTrustedTypes != null) {
       web.console.debug(
@@ -117,26 +121,38 @@ class FirebaseCoreWeb extends FirebasePlatform {
           trustedTypePolicyName,
           web.TrustedTypePolicyOptions(
             createScriptURL: ((JSString url) => src).toJS,
+            createScript: ((JSString script, JSString? type) => script).toJS,
           ),
         );
-        trustedUrl = policy.createScriptURLNoArgs(src);
+        final trustedUrl = policy.createScriptURLNoArgs(src);
+        final stringUrl = (trustedUrl as JSObject).callMethod('toString'.toJS);
+        final trustedScript = policy.createScript(
+          '''
+            window.ff_trigger_$windowVar = async (callback) => {
+              console.debug("Initializing Firebase $windowVar");
+              callback(await import("$stringUrl"));
+            };
+          ''',
+          null,
+        );
+
+        script.trustedScript = trustedScript;
+
+        web.document.head!.appendChild(script);
       } catch (e) {
         throw TrustedTypesException(e.toString());
       }
-    }
-
-    final web.HTMLScriptElement script =
-        web.document.createElement('script') as web.HTMLScriptElement;
-    script.type = 'text/javascript';
-    script.crossOrigin = 'anonymous';
-    script.text = '''
+    } else {
+      final stringUrl = src;
+      script.text = '''
       window.ff_trigger_$windowVar = async (callback) => {
         console.debug("Initializing Firebase $windowVar");
-        callback(await import("${trustedUrl != null ? trustedUrl.callMethod('toString'.toJS) : src}"));
+        callback(await import("$stringUrl"));
       };
     ''';
 
-    web.document.head!.appendChild(script);
+      web.document.head!.appendChild(script);
+    }
 
     Completer completer = Completer();
 
@@ -245,9 +261,9 @@ class FirebaseCoreWeb extends FirebasePlatform {
           // check to see if options are roughly identical (so we don't unnecessarily
           // throw on minor differences such as platform specific keys missing,
           // e.g. hot reloads/restarts).
-          if (options.apiKey != app!.options.apiKey ||
-              options.databaseURL != app.options.databaseURL ||
-              options.storageBucket != app.options.storageBucket) {
+          if (options.apiKey != app!.options.apiKey?.toDart ||
+              options.databaseURL != app.options.databaseURL?.toDart ||
+              options.storageBucket != app.options.storageBucket?.toDart) {
             // Options are different; throw.
             throw duplicateApp(defaultFirebaseAppName);
           }

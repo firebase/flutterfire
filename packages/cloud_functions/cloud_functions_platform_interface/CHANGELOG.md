@@ -1,3 +1,39 @@
+## 5.5.20
+
+ - Update a dependency to the latest release.
+
+## 5.5.19
+
+ - Update a dependency to the latest release.
+
+## 5.5.18
+
+ - Update a dependency to the latest release.
+
+## 5.5.17
+
+ - Update a dependency to the latest release.
+
+## 5.5.16
+
+ - Update a dependency to the latest release.
+
+## 5.5.15
+
+ - Update a dependency to the latest release.
+
+## 5.5.14
+
+ - Update a dependency to the latest release.
+
+## 5.5.13
+
+ - Update a dependency to the latest release.
+
+## 5.5.12
+
+ - Update a dependency to the latest release.
+
 ## 5.5.11
 
  - Update a dependency to the latest release.

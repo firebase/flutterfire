@@ -25,26 +25,24 @@ void setupSecondBucketTests() {
         bucket: secondStorageBucket,
       );
       await storage.useStorageEmulator(testEmulatorHost, testEmulatorPort);
-      final File file = await createFile('flt-ok.txt');
+      // Cannot putFile as it will fail on web e2e tests
+      const string = 'some text for creating new files';
       final Reference ref = storage.ref('flutter-tests').child('flt-ok.txt');
-      await ref.putFile(file);
+      await ref.putString(string);
 
       //allowable-lists-2nd-bucket
-      final File file1 = await createFile('list-1.txt');
-      final File file2 = await createFile('list-2.txt');
-      final File file3 = await createFile('list-3.txt');
       await storage
           .ref(allowableListsSecondBucket)
           .child('list-1.txt')
-          .putFile(file1);
+          .putString(string);
       await storage
           .ref(allowableListsSecondBucket)
           .child('list-2.txt')
-          .putFile(file2);
+          .putString(string);
       await storage
           .ref(allowableListsSecondBucket)
           .child('list-3.txt')
-          .putFile(file3);
+          .putString(string);
     });
 
     group('bucket', () {

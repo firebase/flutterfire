@@ -208,23 +208,18 @@ void main() {
     test(
       'setConsent',
       () async {
-        if (kIsWeb) {
-          await expectLater(
-            FirebaseAnalytics.instance.setConsent(
-              analyticsStorageConsentGranted: false,
-              adStorageConsentGranted: true,
-            ),
-            throwsA(isA<UnimplementedError>()),
-          );
-        } else {
-          await expectLater(
-            FirebaseAnalytics.instance.setConsent(
-              analyticsStorageConsentGranted: false,
-              adStorageConsentGranted: true,
-            ),
-            completes,
-          );
-        }
+        await expectLater(
+          FirebaseAnalytics.instance.setConsent(
+            analyticsStorageConsentGranted: true,
+            adStorageConsentGranted: true,
+            adPersonalizationSignalsConsentGranted: true,
+            adUserDataConsentGranted: true,
+            functionalityStorageConsentGranted: true,
+            personalizationStorageConsentGranted: true,
+            securityStorageConsentGranted: true,
+          ),
+          completes,
+        );
       },
     );
 
@@ -289,6 +284,14 @@ void main() {
           throwsA(isA<UnimplementedError>()),
         );
       } else {
+        await expectLater(
+          FirebaseAnalytics.instance.setConsent(
+            analyticsStorageConsentGranted: false,
+            adStorageConsentGranted: false,
+          ),
+          completes,
+        );
+
         final result = await FirebaseAnalytics.instance.appInstanceId;
         expect(result, isNull);
 

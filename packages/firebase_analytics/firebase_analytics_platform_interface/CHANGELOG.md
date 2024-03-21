@@ -1,3 +1,43 @@
+## 3.9.10
+
+ - Update a dependency to the latest release.
+
+## 3.9.9
+
+ - Update a dependency to the latest release.
+
+## 3.9.8
+
+ - Update a dependency to the latest release.
+
+## 3.9.7
+
+ - Update a dependency to the latest release.
+
+## 3.9.6
+
+ - Update a dependency to the latest release.
+
+## 3.9.5
+
+ - Update a dependency to the latest release.
+
+## 3.9.4
+
+ - Update a dependency to the latest release.
+
+## 3.9.3
+
+ - Update a dependency to the latest release.
+
+## 3.9.2
+
+ - Update a dependency to the latest release.
+
+## 3.9.1
+
+ - Update a dependency to the latest release.
+
 ## 3.9.0
 
  - **FEAT**(analytics,ios): add support for initiateOnDeviceConversionMeasurement using email address or phone number ([#11926](https://github.com/firebase/flutterfire/issues/11926)). ([9bc83f1e](https://github.com/firebase/flutterfire/commit/9bc83f1e6770d263092f6367ca3cfe46a83bb1b1))

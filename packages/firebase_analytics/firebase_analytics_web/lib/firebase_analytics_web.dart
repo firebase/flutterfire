@@ -44,8 +44,7 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   }
 
   @override
-  Future<int?> getSessionId() {
-    // TODO: change UnimplementedError to UnsupportedError
+  Future<int?> getSessionId() async {
     throw UnimplementedError('getSessionId() is not supported on Web.');
   }
 
@@ -68,8 +67,25 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   Future<void> setConsent({
     bool? adStorageConsentGranted,
     bool? analyticsStorageConsentGranted,
+    bool? adPersonalizationSignalsConsentGranted,
+    bool? adUserDataConsentGranted,
+    bool? functionalityStorageConsentGranted,
+    bool? personalizationStorageConsentGranted,
+    bool? securityStorageConsentGranted,
   }) async {
-    throw UnimplementedError('setConsent() is not supported on Web.');
+    return convertWebExceptions(() {
+      return _delegate.setConsent(
+        adStorageConsentGranted: adStorageConsentGranted,
+        analyticsStorageConsentGranted: analyticsStorageConsentGranted,
+        adPersonalizationSignalsConsentGranted:
+            adPersonalizationSignalsConsentGranted,
+        adUserDataConsentGranted: adUserDataConsentGranted,
+        functionalityStorageConsentGranted: functionalityStorageConsentGranted,
+        personalizationStorageConsentGranted:
+            personalizationStorageConsentGranted,
+        securityStorageConsentGranted: securityStorageConsentGranted,
+      );
+    });
   }
 
   @override

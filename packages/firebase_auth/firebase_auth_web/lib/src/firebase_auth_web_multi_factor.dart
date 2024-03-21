@@ -21,11 +21,9 @@ class MultiFactorWeb extends MultiFactorPlatform {
 
   @override
   Future<MultiFactorSession> getSession() async {
-    try {
-      return convertMultiFactorSession(await _webMultiFactorUser.session);
-    } catch (e) {
-      throw getFirebaseAuthException(e);
-    }
+    return convertMultiFactorSession(
+      await guardAuthExceptions(() => _webMultiFactorUser.session),
+    );
   }
 
   @override
@@ -33,15 +31,13 @@ class MultiFactorWeb extends MultiFactorPlatform {
     MultiFactorAssertionPlatform assertion, {
     String? displayName,
   }) async {
-    try {
-      final webAssertion = assertion as MultiFactorAssertionWeb;
-      return await _webMultiFactorUser.enroll(
+    final webAssertion = assertion as MultiFactorAssertionWeb;
+    await guardAuthExceptions(
+      () => _webMultiFactorUser.enroll(
         webAssertion.assertion,
         displayName,
-      );
-    } catch (e) {
-      throw getFirebaseAuthException(e);
-    }
+      ),
+    );
   }
 
   @override
@@ -56,13 +52,9 @@ class MultiFactorWeb extends MultiFactorPlatform {
       );
     }
 
-    try {
-      await _webMultiFactorUser.unenroll(
-        uidToUnenroll,
-      );
-    } catch (e) {
-      throw getFirebaseAuthException(e);
-    }
+    await guardAuthExceptions(() => _webMultiFactorUser.unenroll(
+          uidToUnenroll,
+        ));
   }
 
   @override
@@ -98,16 +90,15 @@ class MultiFactorResolverWeb extends MultiFactorResolverPlatform {
     MultiFactorAssertionPlatform assertion,
   ) async {
     final webAssertion = assertion as MultiFactorAssertionWeb;
+    final userCredential = await guardAuthExceptions(
+      () => _webMultiFactorResolver.resolveSignIn(webAssertion.assertion),
+    );
 
-    try {
-      return UserCredentialWeb(
-        _auth,
-        await _webMultiFactorResolver.resolveSignIn(webAssertion.assertion),
-        _webAuth,
-      );
-    } catch (e) {
-      throw getFirebaseAuthException(e);
-    }
+    return UserCredentialWeb(
+      _auth,
+      userCredential,
+      _webAuth,
+    );
   }
 }
 

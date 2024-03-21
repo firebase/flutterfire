@@ -804,10 +804,19 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
           !hasNotEqualTo,
           "You cannot use 'not-in' filters with '!=' filters.",
         );
+        assert(
+          !hasIn,
+          "You cannot use 'not-in' filters with 'in' filters.",
+        );
+        hasNotIn = true;
       }
 
       if (operator == 'in') {
         assert(!hasIn, "You cannot use 'whereIn' filters more than once.");
+        assert(
+          !hasNotIn,
+          "You cannot use 'in' filters with 'not-in' filters.",
+        );
         hasIn = true;
       }
 

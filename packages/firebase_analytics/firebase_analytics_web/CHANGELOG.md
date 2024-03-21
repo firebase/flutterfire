@@ -1,3 +1,43 @@
+## 0.5.5+22
+
+ - Update a dependency to the latest release.
+
+## 0.5.5+21
+
+ - Update a dependency to the latest release.
+
+## 0.5.5+20
+
+ - Update a dependency to the latest release.
+
+## 0.5.5+19
+
+ - Update a dependency to the latest release.
+
+## 0.5.5+18
+
+ - Update a dependency to the latest release.
+
+## 0.5.5+17
+
+ - Update a dependency to the latest release.
+
+## 0.5.5+16
+
+ - Update a dependency to the latest release.
+
+## 0.5.5+15
+
+ - Update a dependency to the latest release.
+
+## 0.5.5+14
+
+ - Update a dependency to the latest release.
+
+## 0.5.5+13
+
+ - **DOCS**: change old documentation links of packages in README files ([#12136](https://github.com/firebase/flutterfire/issues/12136)). ([24b9ac7e](https://github.com/firebase/flutterfire/commit/24b9ac7ec29fc9ca466c0941c2cff26d75b8568d))
+
 ## 0.5.5+12
 
  - Update a dependency to the latest release.

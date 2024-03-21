@@ -3,6 +3,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:js_interop';
+
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 
 import '../interop/storage.dart' as storage_interop;
@@ -58,10 +60,10 @@ storage_interop.UploadMetadata settableMetadataToFbUploadMetadata(
 }
 
 Map<PutStringFormat, String> _putStringFormatToFbStringFormat = {
-  PutStringFormat.base64: storage_interop.StringFormat.BASE64,
-  PutStringFormat.base64Url: storage_interop.StringFormat.BASE64URL,
-  PutStringFormat.dataUrl: storage_interop.StringFormat.DATA_URL,
-  PutStringFormat.raw: storage_interop.StringFormat.RAW,
+  PutStringFormat.base64: storage_interop.StringFormat.BASE64.toDart,
+  PutStringFormat.base64Url: storage_interop.StringFormat.BASE64URL.toDart,
+  PutStringFormat.dataUrl: storage_interop.StringFormat.DATA_URL.toDart,
+  PutStringFormat.raw: storage_interop.StringFormat.RAW.toDart,
 };
 
 /// Converts PutStringFormat from the plugin to the correct StringFormat for the JS interop layer.
