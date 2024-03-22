@@ -17,12 +17,12 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
   js: ^0.6.3
+  web: ^0.5.1
+
 
 dev_dependencies:
-  build_runner: ^2.3.3
   flutter_test:
     sdk: flutter
-  mockito: ^5.0.10
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
