@@ -120,8 +120,8 @@ void runSecondDatabaseTests() {
         });
       });
       /**
-     * get
-     */
+       * get
+       */
       group('Query.get()', () {
         testWidgets('returns a [QuerySnapshot]', (_) async {
           CollectionReference<Map<String, dynamic>> collection =
@@ -194,8 +194,8 @@ void runSecondDatabaseTests() {
       });
 
       /**
-     * snapshots
-     */
+       * snapshots
+       */
       group('Query.snapshots()', () {
         testWidgets('returns a [Stream]', (_) async {
           CollectionReference<Map<String, dynamic>> collection =
@@ -340,8 +340,8 @@ void runSecondDatabaseTests() {
       });
 
       /**
-     * End At
-     */
+       * End At
+       */
 
       group('Query.endAt{Document}()', () {
         testWidgets('ends at string field paths', (_) async {
@@ -506,8 +506,8 @@ void runSecondDatabaseTests() {
       });
 
       /**
-     * Start At
-     */
+       * Start At
+       */
 
       group('Query.startAt{Document}()', () {
         testWidgets('starts at string field paths', (_) async {
@@ -671,8 +671,8 @@ void runSecondDatabaseTests() {
       });
 
       /**
-     * End Before
-     */
+       * End Before
+       */
 
       group('Query.endBefore{Document}()', () {
         testWidgets('ends before string field paths', (_) async {
@@ -837,8 +837,8 @@ void runSecondDatabaseTests() {
       });
 
       /**
-     * Start after
-     */
+       * Start after
+       */
       group('Query.startAfter{Document}()', () {
         testWidgets('starts after string field paths', (_) async {
           CollectionReference<Map<String, dynamic>> collection =
@@ -968,8 +968,8 @@ void runSecondDatabaseTests() {
       });
 
       /**
-     * Start & End
-     */
+       * Start & End
+       */
 
       group('Query.startAt/endAt', () {
         testWidgets('starts at & ends at a document', (_) async {
@@ -1084,8 +1084,8 @@ void runSecondDatabaseTests() {
       });
 
       /**
-     * Limit
-     */
+       * Limit
+       */
 
       group('Query.limit{toLast}()', () {
         testWidgets('limits documents', (_) async {
@@ -1152,8 +1152,8 @@ void runSecondDatabaseTests() {
       });
 
       /**
-     * Order
-     */
+       * Order
+       */
       group('Query.orderBy()', () {
         testWidgets('allows ordering by documentId', (_) async {
           CollectionReference<Map<String, dynamic>> collection =
@@ -1236,8 +1236,8 @@ void runSecondDatabaseTests() {
       });
 
       /**
-     * Where filters
-     */
+       * Where filters
+       */
 
       group('Query.where()', () {
         testWidgets(
@@ -1820,7 +1820,7 @@ void runSecondDatabaseTests() {
                       Filter('totalDomesticRevenue', isEqualTo: 60000000),
                       Filter('totalWorldwideRevenue', isEqualTo: 200000000),
                       Filter('estimatedProfit', isEqualTo: 140000000),
-                      // Fails because this is not allowed when arrayContainsAny is included in the Query
+                      // Inequality causes "failed-precondition" exception and asks user to create an index
                       Filter('mainCharacter', isNotEqualTo: 'MainCharacter2'),
                     ),
                   )
@@ -1828,7 +1828,74 @@ void runSecondDatabaseTests() {
                   .get(),
               throwsA(
                 isA<FirebaseException>()
-                    .having((e) => e.code, 'code', 'invalid-argument'),
+                    .having((e) => e.code, 'code', 'failed-precondition')
+                    .having(
+                      (e) => e.message,
+                      'message',
+                      contains(
+                        'The query contains range and inequality filters on multiple fields',
+                      ),
+                    ),
+              ),
+            );
+          },
+        );
+
+        testWidgets(
+          'Exception thrown when combining `arrayContainsAny` & `isNotEqualTo` in multiple conjunctive queries',
+          (_) async {
+            CollectionReference<Map<String, dynamic>> collection =
+                await initializeTest('multiple-conjunctive-queries');
+
+            await expectLater(
+              collection
+                  .where(
+                    Filter.and(
+                      Filter('rating1', isEqualTo: 3.8),
+                      Filter('year1', isEqualTo: 1970),
+                      Filter('runtime1', isEqualTo: 90),
+                      Filter('director1', isEqualTo: 'Director2'),
+                      Filter('producer1', isEqualTo: 'Producer2'),
+                      Filter('budget1', isEqualTo: 20000000),
+                      Filter('boxOffice1', isEqualTo: 50000000),
+                      Filter('actor1', isEqualTo: 'Actor2'),
+                      Filter('language1', isEqualTo: 'English'),
+                      Filter('award1', isEqualTo: 'Award2'),
+                      Filter('genre1', arrayContainsAny: ['sci-fi']),
+                      Filter('country1', isEqualTo: 'USA'),
+                      Filter('released1', isEqualTo: true),
+                      Filter('screenplay1', isEqualTo: 'Screenplay2'),
+                      Filter('cinematography1', isEqualTo: 'Cinematography2'),
+                      Filter('music1', isEqualTo: 'Music2'),
+                      Filter('rating2', isEqualTo: 4.2),
+                      Filter('year2', isEqualTo: 1982),
+                      Filter('runtime2', isEqualTo: 60),
+                      Filter('director2', isEqualTo: 'Director3'),
+                      Filter('producer2', isEqualTo: 'Producer3'),
+                      Filter('budget2', isEqualTo: 30000000),
+                      Filter('boxOffice2', isEqualTo: 60000000),
+                      Filter('actor2', isEqualTo: 'Actor3'),
+                      Filter('language2', isEqualTo: 'Korean'),
+                      Filter('award2', isEqualTo: 'Award3'),
+                      Filter('genre2', isEqualTo: ['sci-fi', 'action']),
+                      Filter('country2', isEqualTo: 'South Korea'),
+                      Filter('released2', isEqualTo: false),
+                      // Inequality causes "failed-precondition" exception and asks user to create an index
+                      Filter('screenplay2', isNotEqualTo: 'blah'),
+                    ),
+                  )
+                  .orderBy('rating1', descending: true)
+                  .get(),
+              throwsA(
+                isA<FirebaseException>()
+                    .having((e) => e.code, 'code', 'failed-precondition')
+                    .having(
+                      (e) => e.message,
+                      'message',
+                      contains(
+                        'The query contains range and inequality filters on multiple fields',
+                      ),
+                    ),
               ),
             );
           },
