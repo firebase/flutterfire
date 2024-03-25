@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:js_interop';
+
 import 'package:firebase_core_web/firebase_core_web_interop.dart' hide jsify;
 
 import 'performance_interop.dart' as performance_interop;
@@ -38,45 +40,46 @@ class Performance
       : super.fromJsObject(jsObject);
 
   Trace trace(String traceName) =>
-      Trace.fromJsObject(performance_interop.trace(jsObject, traceName));
+      Trace.fromJsObject(performance_interop.trace(jsObject, traceName.toJS));
 
   /// Non-null App for this instance of firestore service.
   App get app => App.getInstance(jsObject.app);
 
-  bool get instrumentationEnabled => jsObject.instrumentationEnabled;
-  bool get dataCollectionEnabled => jsObject.dataCollectionEnabled;
+  bool get instrumentationEnabled => jsObject.instrumentationEnabled.toDart;
+  bool get dataCollectionEnabled => jsObject.dataCollectionEnabled.toDart;
 }
 
 class Trace extends JsObjectWrapper<performance_interop.TraceJsImpl> {
   Trace.fromJsObject(performance_interop.TraceJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
-  String getAttribute(String attr) => jsObject.getAttribute(attr);
+  String getAttribute(String attr) => jsObject.getAttribute(attr.toJS).toDart;
 
   Map<String, String> getAttributes() {
     return dartify(jsObject.getAttributes()).cast<String, String>();
   }
 
-  int getMetric(String metricName) => jsObject.getMetric(metricName);
+  int getMetric(String metricName) =>
+      jsObject.getMetric(metricName.toJS).toDartInt;
 
   void incrementMetric(String metricName, [int? num]) {
     if (num != null) {
-      return jsObject.incrementMetric(metricName, num);
+      return jsObject.incrementMetric(metricName.toJS, num.toJS);
     } else {
-      return jsObject.incrementMetric(metricName);
+      return jsObject.incrementMetric(metricName.toJS);
     }
   }
 
   void putMetric(String metricName, int num) {
-    return jsObject.putMetric(metricName, num);
+    return jsObject.putMetric(metricName.toJS, num.toJS);
   }
 
   void putAttribute(String attr, String value) {
-    return jsObject.putAttribute(attr, value);
+    return jsObject.putAttribute(attr.toJS, value.toJS);
   }
 
   void removeAttribute(String attr) {
-    return jsObject.removeAttribute(attr);
+    return jsObject.removeAttribute(attr.toJS);
   }
 
   void start() {
@@ -97,8 +100,8 @@ class PerformanceSettings
     bool? instrumentationEnabled,
   ]) {
     final jsObject = performance_interop.PerformanceSettingsJsImpl(
-      dataCollectionEnabled: dataCollectionEnabled,
-      instrumentationEnabled: instrumentationEnabled,
+      dataCollectionEnabled: dataCollectionEnabled?.toJS,
+      instrumentationEnabled: instrumentationEnabled?.toJS,
     );
     return _expando[jsObject] ??= PerformanceSettings._fromJsObject(jsObject);
   }
@@ -107,13 +110,13 @@ class PerformanceSettings
     performance_interop.PerformanceSettingsJsImpl jsObject,
   ) : super.fromJsObject(jsObject);
 
-  bool? get dataCollectionEnabled => jsObject.dataCollectionEnabled;
+  bool? get dataCollectionEnabled => jsObject.dataCollectionEnabled?.toDart;
   set dataCollectionEnabled(bool? b) {
-    jsObject.dataCollectionEnabled = b;
+    jsObject.dataCollectionEnabled = b?.toJS;
   }
 
-  bool? get instrumentationEnabled => jsObject.instrumentationEnabled;
+  bool? get instrumentationEnabled => jsObject.instrumentationEnabled?.toDart;
   set instrumentationEnabled(bool? b) {
-    jsObject.instrumentationEnabled = b;
+    jsObject.instrumentationEnabled = b?.toJS;
   }
 }
