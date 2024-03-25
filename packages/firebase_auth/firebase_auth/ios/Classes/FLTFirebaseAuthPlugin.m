@@ -636,10 +636,9 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
   auth.tenantID = pigeonApp.tenantId;
   auth.customAuthDomain = [FLTFirebaseCorePlugin getCustomDomain:app.name];
   // Auth's `customAuthDomain` supersedes value from `getCustomDomain` set by `initializeApp`
-  if(pigeonApp.customAuthDomain != nil) {
+  if (pigeonApp.customAuthDomain != nil) {
     auth.customAuthDomain = pigeonApp.customAuthDomain;
   }
-  
 
   return auth;
 }
