@@ -1832,7 +1832,9 @@ void runSecondDatabaseTests() {
                     .having(
                       (e) => e.message,
                       'message',
-                      'The query contains range and inequality filters on multiple fields',
+                      contains(
+                        'The query contains range and inequality filters on multiple fields',
+                      ),
                     ),
               ),
             );
@@ -1890,7 +1892,9 @@ void runSecondDatabaseTests() {
                     .having(
                       (e) => e.message,
                       'message',
-                      'The query contains range and inequality filters on multiple fields',
+                      contains(
+                        'The query contains range and inequality filters on multiple fields',
+                      ),
                     ),
               ),
             );
