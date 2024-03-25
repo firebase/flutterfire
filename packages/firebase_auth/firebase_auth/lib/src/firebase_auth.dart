@@ -176,8 +176,12 @@ class FirebaseAuth extends FirebasePluginPlatform {
   set customAuthDomain(String? customAuthDomain) {
     // Web and windows do not support setting custom auth domains on the auth instance
     if (defaultTargetPlatform == TargetPlatform.windows || kIsWeb) {
+      final message = defaultTargetPlatform == TargetPlatform.windows
+          ? 'Cannot set custom auth domain on a FirebaseAuth instance for windows platform'
+          : 'Cannot set custom auth domain on a FirebaseAuth instance. Set the custom auth domain on `FirebaseOptions.authDomain` instance and pass into `Firebase.initializeApp()` instead.';
       throw UnimplementedError(
-          'Cannot set custom auth domain on a FirebaseAuth instance for ${defaultTargetPlatform == TargetPlatform.windows ? 'windows' : 'web'} platform');
+        message,
+      );
     }
     _delegate.customAuthDomain = customAuthDomain;
   }
