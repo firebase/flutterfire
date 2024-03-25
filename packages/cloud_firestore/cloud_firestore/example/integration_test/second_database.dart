@@ -1775,8 +1775,6 @@ void runSecondDatabaseTests() {
       });
 
       group('Query.where() with Filter class', () {
-
-
         testWidgets('isEqualTo filter', (_) async {
           CollectionReference<Map<String, dynamic>> collection =
               await initializeTest('where-filter-isequalto');
