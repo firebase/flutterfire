@@ -10,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -246,11 +247,18 @@ void main() {
         auth = FirebaseAuth.instanceFor(app: app);
 
         expect(auth.customAuthDomain, 'foo');
+        if (defaultTargetPlatform == TargetPlatform.windows || kIsWeb) {
+          try {
+            auth.customAuthDomain = 'bar';
+          } on UnimplementedError catch (e) {
+            expect(e.message, contains('Cannot set auth domain'));
+          }
+        } else {
+          auth.customAuthDomain = 'bar';
 
-        auth.customAuthDomain = 'bar';
-
-        expect(auth.customAuthDomain, 'bar');
-        expect(FirebaseAuthPlatform.instance.customAuthDomain, 'bar');
+          expect(auth.customAuthDomain, 'bar');
+          expect(FirebaseAuthPlatform.instance.customAuthDomain, 'bar');
+        }
       });
     });
 
