@@ -1820,7 +1820,7 @@ void runSecondDatabaseTests() {
                       Filter('totalDomesticRevenue', isEqualTo: 60000000),
                       Filter('totalWorldwideRevenue', isEqualTo: 200000000),
                       Filter('estimatedProfit', isEqualTo: 140000000),
-                      // Fails because this is not allowed when arrayContainsAny is included in the Query
+                      // Inequality causes "failed-precondition" exception and asks user to create an index
                       Filter('mainCharacter', isNotEqualTo: 'MainCharacter2'),
                     ),
                   )
@@ -1880,7 +1880,7 @@ void runSecondDatabaseTests() {
                       Filter('genre2', isEqualTo: ['sci-fi', 'action']),
                       Filter('country2', isEqualTo: 'South Korea'),
                       Filter('released2', isEqualTo: false),
-                      // Fails because this is not allowed when arrayContainsAny is included in the Query
+                      // Inequality causes "failed-precondition" exception and asks user to create an index
                       Filter('screenplay2', isNotEqualTo: 'blah'),
                     ),
                   )
