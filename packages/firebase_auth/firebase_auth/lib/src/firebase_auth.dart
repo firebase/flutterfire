@@ -167,13 +167,18 @@ class FirebaseAuth extends FirebasePluginPlatform {
     return _delegate.customAuthDomain;
   }
 
-  /// Set the current Auth instance's auth domain.
+  /// Set the current Auth instance's auth domain for apple and android platforms.
   /// The auth domain used to handle redirects from OAuth provides, for example
   /// "my-awesome-app.firebaseapp.com". By default, this is set to `null` and
   /// default auth domain is used.
   ///
   /// If not `null`, this value will supersede `authDomain` property set in `initializeApp`.
   set customAuthDomain(String? customAuthDomain) {
+    // Web and windows do not support setting custom auth domains on the auth instance
+    if (defaultTargetPlatform == TargetPlatform.windows || kIsWeb) {
+      throw UnimplementedError(
+          'Cannot set custom auth domain on a FirebaseAuth instance for ${defaultTargetPlatform == TargetPlatform.windows ? 'windows' : 'web'} platform');
+    }
     _delegate.customAuthDomain = customAuthDomain;
   }
 

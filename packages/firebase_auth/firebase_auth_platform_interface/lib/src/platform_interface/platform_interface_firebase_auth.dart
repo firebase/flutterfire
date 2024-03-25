@@ -33,7 +33,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// parent project. By default, this is set to `null`.
   String? tenantId;
 
-  /// The current Auth instance's auth domain.
+  /// Set the current Auth instance's auth domain for apple and android platforms.
   /// The auth domain used to handle redirects from OAuth provides, for example
   /// "my-awesome-app.firebaseapp.com". By default, this is set to `null` and
   /// default auth domain is used.
