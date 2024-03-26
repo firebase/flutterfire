@@ -181,7 +181,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   /// Set [applyLocally] to `false` to not see intermediate states.
   Future<Transaction> transaction(
       TransactionHandler transactionUpdate, bool applyLocally) async {
-    final transactionUpdateWrap = ((JSAny update) {
+    final JSAny? Function(JSAny) transactionUpdateWrap = ((JSAny update) {
       final dartUpdate = dartify(update);
       final transaction = transactionUpdate(dartUpdate);
       if (transaction.aborted) {
@@ -340,7 +340,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   ///
   /// Two [DatabaseReference] objects are equivalent if they represent the same
   /// location and are from the same instance of [App].
-  bool isEqual(Query other) => jsObject.isEqual(other.jsObject);
+  bool isEqual(Query other) => jsObject.isEqual(other.jsObject).toDart;
 
   /// Returns a new Query limited to the first specific number of children
   /// provided by [limit].
@@ -363,7 +363,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
       streamController.add(QueryEvent(DataSnapshot.getInstance(data), string));
     });
 
-    final cancelCallbackWrap = ((Object error) {
+    final void Function(JSObject) cancelCallbackWrap = ((JSObject error) {
       final dartified = dartify(error);
       streamController
           .addError(convertFirebaseDatabaseException(dartified ?? {}));
@@ -373,23 +373,38 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
     void startListen() {
       if (eventType == 'child_added') {
         database_interop.onChildAdded(
-            jsObject, callbackWrap.toJS, cancelCallbackWrap.toJS);
+          jsObject,
+          callbackWrap.toJS,
+          cancelCallbackWrap.toJS,
+        );
       }
       if (eventType == 'value') {
         database_interop.onValue(
-            jsObject, callbackWrap.toJS, cancelCallbackWrap.toJS);
+          jsObject,
+          callbackWrap.toJS,
+          cancelCallbackWrap.toJS,
+        );
       }
       if (eventType == 'child_removed') {
         database_interop.onChildRemoved(
-            jsObject, callbackWrap.toJS, cancelCallbackWrap.toJS);
+          jsObject,
+          callbackWrap.toJS,
+          cancelCallbackWrap.toJS,
+        );
       }
       if (eventType == 'child_changed') {
         database_interop.onChildChanged(
-            jsObject, callbackWrap.toJS, cancelCallbackWrap.toJS);
+          jsObject,
+          callbackWrap.toJS,
+          cancelCallbackWrap.toJS,
+        );
       }
       if (eventType == 'child_moved') {
         database_interop.onChildMoved(
-            jsObject, callbackWrap.toJS, cancelCallbackWrap.toJS);
+          jsObject,
+          callbackWrap.toJS,
+          cancelCallbackWrap.toJS,
+        );
       }
     }
 
@@ -533,8 +548,9 @@ class DataSnapshot
 
   /// Enumerates the top-level children of the DataSnapshot in their query-order.
   /// [action] is called for each child DataSnapshot.
-  bool forEach(Function(DataSnapshot) action) {
-    final actionWrap = ((d) => action(DataSnapshot.getInstance(d))).toJS;
+  bool forEach(void Function(DataSnapshot) action) {
+    final actionWrap = ((database_interop.DataSnapshotJsImpl d) =>
+        action(DataSnapshot.getInstance(d))).toJS;
     return (jsObject.forEach(actionWrap) as JSBoolean).toDart;
   }
 
@@ -597,8 +613,10 @@ class OnDisconnect
 /// See: <https://firebase.google.com/docs/reference/js/firebase.database.ThenableReference>.
 class ThenableReference
     extends DatabaseReference<database_interop.ThenableReferenceJsImpl> {
-  late final Future<DatabaseReference> _future = (jsObject)
-      .then(DatabaseReference.getInstance.toJS)
+  late final Future<DatabaseReference> _future = jsObject
+      .then(((database_interop.ReferenceJsImpl reference) {
+        DatabaseReference.getInstance(reference);
+      }).toJS)
       .toDart
       .then((value) => value as DatabaseReference);
 

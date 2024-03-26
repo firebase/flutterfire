@@ -7,7 +7,9 @@ part of firebase.database_interop;
 @JS('DataSnapshot')
 @staticInterop
 @anonymous
-abstract class DataSnapshotJsImpl {
+abstract class DataSnapshotJsImpl {}
+
+extension DataSnapshotJsImpl$ on DataSnapshotJsImpl {
   external JSString get key;
 
   external ReferenceJsImpl get ref;

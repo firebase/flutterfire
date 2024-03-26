@@ -208,9 +208,7 @@ external JSPromise setWithPriority(ReferenceJsImpl ref, JSAny value,
 @anonymous
 abstract class TransactionOptions {
   external factory TransactionOptions({JSBoolean applyLocally});
-}
 
-extension TransactionOptionsExtension on TransactionOptions {
   /// By default, events are raised each time the transaction update function runs.
   /// So if it is run multiple times, you may see intermediate states. You can set
   /// this to false to suppress these intermediate states and instead wait until
@@ -308,10 +306,7 @@ extension TransactionJsImplExtension on TransactionJsImpl {
 @anonymous
 abstract class ListenOptions {
   external factory ListenOptions({JSBoolean onlyOnce});
-}
 
-extension ListenOptionsExtension on ListenOptions {
-  // Whether to remove the listener after its first invocation.
   external static JSBoolean get onlyOnce;
 }
 
