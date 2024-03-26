@@ -1,3 +1,7 @@
+## 7.2.0
+
+ - **FEAT**(firebase_auth): add custom auth domain setter to Firebase Auth ([#12218](https://github.com/firebase/flutterfire/issues/12218)). ([e1297800](https://github.com/firebase/flutterfire/commit/e12978009e0fd785f267db560972ab0bbe021fcb))
+
 ## 7.1.9
 
  - Update a dependency to the latest release.

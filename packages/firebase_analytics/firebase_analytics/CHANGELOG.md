@@ -1,3 +1,7 @@
+## 10.9.0
+
+ - **FEAT**(analytics): add consent mode v2 ([#12298](https://github.com/firebase/flutterfire/issues/12298)). ([19f3dbdd](https://github.com/firebase/flutterfire/commit/19f3dbdd197c57cf95853448f9541f6cebfe810c))
+
 ## 10.8.10
 
  - Update a dependency to the latest release.

@@ -1,3 +1,7 @@
+## 0.1.5
+
+ - **FEAT**(performance,web): migrate web to `js_interop` to be compatible with WASM ([#12515](https://github.com/firebase/flutterfire/issues/12515)). ([775397d2](https://github.com/firebase/flutterfire/commit/775397d2984a4a9ade1fc62eff053b84b3cb64ee))
+
 ## 0.1.4+26
 
  - Update a dependency to the latest release.
