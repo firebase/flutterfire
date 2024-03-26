@@ -4,7 +4,7 @@
 
 import 'dart:js_interop';
 
-import 'package:firebase_core_web/firebase_core_web_interop.dart' hide jsify;
+import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
 import 'performance_interop.dart' as performance_interop;
 
