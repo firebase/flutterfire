@@ -1,3 +1,7 @@
+## 1.5.0
+
+ - **FEAT**(remote_config,web): migrate web to js_interop to be compatible with WASM ([#12489](https://github.com/firebase/flutterfire/issues/12489)). ([85a9b187](https://github.com/firebase/flutterfire/commit/85a9b1879a1e29da53c304f73da031083e6ae8a6))
+
 ## 1.4.26
 
  - Update a dependency to the latest release.

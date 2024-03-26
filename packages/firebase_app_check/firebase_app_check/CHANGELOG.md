@@ -1,3 +1,7 @@
+## 0.2.1+19
+
+ - **REFACTOR**(app_check,web): small refactor around initialisation of FirebaseAppCheckWeb ([#12474](https://github.com/firebase/flutterfire/issues/12474)). ([83aab7f8](https://github.com/firebase/flutterfire/commit/83aab7f8f6a6dde6e71765826c0e1f9aabc110a0))
+
 ## 0.2.1+18
 
  - Update a dependency to the latest release.

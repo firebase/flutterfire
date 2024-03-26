@@ -1,3 +1,7 @@
+## 2.27.2
+
+ - **FIX**: bump Android SDK to version 32.7.4 ([#12499](https://github.com/firebase/flutterfire/issues/12499)). ([39cdd623](https://github.com/firebase/flutterfire/commit/39cdd6235ae8aed2537fd39031c50d2d36a44b43))
+
 ## 2.27.1
 
  - Update a dependency to the latest release.

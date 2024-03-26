@@ -1,3 +1,7 @@
+## 3.7.1
+
+ - Update a dependency to the latest release.
+
 ## 3.7.0
 
  - **FEAT**: update `web` package to 0.5.1 ([#12469](https://github.com/firebase/flutterfire/issues/12469)). ([f5c4354a](https://github.com/firebase/flutterfire/commit/f5c4354a66377da9d231c5e3fc7e955ddb7ef8cf))

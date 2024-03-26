@@ -1,3 +1,9 @@
+## 0.5.6
+
+ - **FEAT**(analytics): add consent mode v2 ([#12298](https://github.com/firebase/flutterfire/issues/12298)). ([19f3dbdd](https://github.com/firebase/flutterfire/commit/19f3dbdd197c57cf95853448f9541f6cebfe810c))
+ - **FEAT**(analytics,web): update web version to 0.5.1 ([#12490](https://github.com/firebase/flutterfire/issues/12490)). ([bd522fc8](https://github.com/firebase/flutterfire/commit/bd522fc86bcd16433b49d4ab46e62f9a530a1ddb))
+ - **FEAT**(analytics,web): migrate web to js_interop to be compatible with WASM ([#12206](https://github.com/firebase/flutterfire/issues/12206)). ([3a88eea4](https://github.com/firebase/flutterfire/commit/3a88eea40894dc4d5a35d477e7785f9499cb2cb1))
+
 ## 0.5.5+22
 
  - Update a dependency to the latest release.

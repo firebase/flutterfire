@@ -1,3 +1,7 @@
+## 2.13.0
+
+ - **FEAT**: bump JS SDK to version 10.8.1 ([#12480](https://github.com/firebase/flutterfire/issues/12480)). ([db38220f](https://github.com/firebase/flutterfire/commit/db38220ff01c06c1bc49c15af787b9640012a259))
+
 ## 2.12.0
 
  - **FEAT**: update `web` package to 0.5.1 ([#12469](https://github.com/firebase/flutterfire/issues/12469)). ([f5c4354a](https://github.com/firebase/flutterfire/commit/f5c4354a66377da9d231c5e3fc7e955ddb7ef8cf))
