@@ -173,7 +173,7 @@ class User {
   /// - **invalid-email**:
   ///  - Thrown if the email used in a [EmailAuthProvider.credential] is
   ///    invalid.
-  /// - **invalid-email**:
+  /// - **invalid-password**:
   ///  - Thrown if the password used in a [EmailAuthProvider.credential] is not
   ///    correct or when the user associated with the email does not have a
   ///    password.
