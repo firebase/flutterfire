@@ -410,7 +410,7 @@ public class GeneratedAndroidFirebaseAuth {
 
     @NonNull
     ArrayList<Object> toList() {
-      ArrayList<Object> toListResult = new ArrayList<Object>(2);
+      ArrayList<Object> toListResult = new ArrayList<Object>(3);
       toListResult.add(appName);
       toListResult.add(tenantId);
       toListResult.add(customAuthDomain);
@@ -423,8 +423,8 @@ public class GeneratedAndroidFirebaseAuth {
       pigeonResult.setAppName((String) appName);
       Object tenantId = list.get(1);
       pigeonResult.setTenantId((String) tenantId);
-      Object setCustomAuthDomain = list.get(2);
-      pigeonResult.setCustomAuthDomain((String) setCustomAuthDomain);
+      Object customAuthDomain = list.get(2);
+      pigeonResult.setCustomAuthDomain((String) customAuthDomain);
       return pigeonResult;
     }
   }
