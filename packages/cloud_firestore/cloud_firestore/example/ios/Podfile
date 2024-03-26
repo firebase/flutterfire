@@ -8,6 +8,9 @@ pubspec = YAML.load_file(File.join('..', File.join('..', 'pubspec.yaml')))
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
+source 'https://github.com/russellwheatley/firestore-ios-sdk-frameworks.git'
+source 'https://github.com/CocoaPods/Specs.git'
+
 project 'Runner', {
   'Debug' => :debug,
   'Profile' => :release,
@@ -51,7 +54,7 @@ target 'Runner' do
     end
   end
 
-  pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => "#{firebase_sdk_version}"
+  pod 'FirebaseFirestore', :git => 'https://github.com/russellwheatley/firestore-ios-sdk-frameworks', :branch => "main"
 end
 
 post_install do |installer|
