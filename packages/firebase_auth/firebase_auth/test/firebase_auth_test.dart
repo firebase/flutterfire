@@ -10,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -227,6 +228,37 @@ void main() {
 
         expect(auth.tenantId, 'bar');
         expect(FirebaseAuthPlatform.instance.tenantId, 'bar');
+      });
+    });
+
+    group('customAuthDomain', () {
+      test('set customAuthDomain should call delegate method', () async {
+        // Each test uses a unique FirebaseApp instance to avoid sharing state
+        final app = await Firebase.initializeApp(
+            name: 'customAuthDomainTest',
+            options: const FirebaseOptions(
+                apiKey: 'apiKey',
+                appId: 'appId',
+                messagingSenderId: 'messagingSenderId',
+                projectId: 'projectId'));
+
+        FirebaseAuthPlatform.instance =
+            FakeFirebaseAuthPlatform(customAuthDomain: 'foo');
+        auth = FirebaseAuth.instanceFor(app: app);
+
+        expect(auth.customAuthDomain, 'foo');
+        if (defaultTargetPlatform == TargetPlatform.windows || kIsWeb) {
+          try {
+            auth.customAuthDomain = 'bar';
+          } on UnimplementedError catch (e) {
+            expect(e.message, contains('Cannot set auth domain'));
+          }
+        } else {
+          auth.customAuthDomain = 'bar';
+
+          expect(auth.customAuthDomain, 'bar');
+          expect(FirebaseAuthPlatform.instance.customAuthDomain, 'bar');
+        }
       });
     });
 
@@ -1026,10 +1058,13 @@ class MockFirebaseAuth extends Mock
 class FakeFirebaseAuthPlatform extends Fake
     with MockPlatformInterfaceMixin
     implements FirebaseAuthPlatform {
-  FakeFirebaseAuthPlatform({this.tenantId});
+  FakeFirebaseAuthPlatform({this.tenantId, this.customAuthDomain});
 
   @override
   String? tenantId;
+
+  @override
+  String? customAuthDomain;
 
   @override
   FirebaseAuthPlatform delegateFor(

@@ -91,9 +91,12 @@ typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
 @interface AuthPigeonFirebaseApp : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)makeWithAppName:(NSString *)appName tenantId:(nullable NSString *)tenantId;
++ (instancetype)makeWithAppName:(NSString *)appName
+                       tenantId:(nullable NSString *)tenantId
+               customAuthDomain:(nullable NSString *)customAuthDomain;
 @property(nonatomic, copy) NSString *appName;
 @property(nonatomic, copy, nullable) NSString *tenantId;
+@property(nonatomic, copy, nullable) NSString *customAuthDomain;
 @end
 
 @interface PigeonActionCodeInfoData : NSObject

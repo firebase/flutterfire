@@ -363,6 +363,16 @@ public class GeneratedAndroidFirebaseAuth {
       this.tenantId = setterArg;
     }
 
+    private @Nullable String customAuthDomain;
+
+    public @Nullable String getCustomAuthDomain() {
+      return customAuthDomain;
+    }
+
+    public void setCustomAuthDomain(@Nullable String setterArg) {
+      this.customAuthDomain = setterArg;
+    }
+
     /** Constructor is non-public to enforce null safety; use Builder. */
     AuthPigeonFirebaseApp() {}
 
@@ -382,19 +392,28 @@ public class GeneratedAndroidFirebaseAuth {
         return this;
       }
 
+      private @Nullable String customAuthDomain;
+
+      public @NonNull Builder setCustomAuthDomain(@Nullable String setterArg) {
+        this.customAuthDomain = setterArg;
+        return this;
+      }
+
       public @NonNull AuthPigeonFirebaseApp build() {
         AuthPigeonFirebaseApp pigeonReturn = new AuthPigeonFirebaseApp();
         pigeonReturn.setAppName(appName);
         pigeonReturn.setTenantId(tenantId);
+        pigeonReturn.setCustomAuthDomain(customAuthDomain);
         return pigeonReturn;
       }
     }
 
     @NonNull
     ArrayList<Object> toList() {
-      ArrayList<Object> toListResult = new ArrayList<Object>(2);
+      ArrayList<Object> toListResult = new ArrayList<Object>(3);
       toListResult.add(appName);
       toListResult.add(tenantId);
+      toListResult.add(customAuthDomain);
       return toListResult;
     }
 
@@ -404,6 +423,8 @@ public class GeneratedAndroidFirebaseAuth {
       pigeonResult.setAppName((String) appName);
       Object tenantId = list.get(1);
       pigeonResult.setTenantId((String) tenantId);
+      Object customAuthDomain = list.get(2);
+      pigeonResult.setCustomAuthDomain((String) customAuthDomain);
       return pigeonResult;
     }
   }

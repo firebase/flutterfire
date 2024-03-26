@@ -238,10 +238,13 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 @end
 
 @implementation AuthPigeonFirebaseApp
-+ (instancetype)makeWithAppName:(NSString *)appName tenantId:(nullable NSString *)tenantId {
++ (instancetype)makeWithAppName:(NSString *)appName
+                       tenantId:(nullable NSString *)tenantId
+               customAuthDomain:(nullable NSString *)customAuthDomain {
   AuthPigeonFirebaseApp *pigeonResult = [[AuthPigeonFirebaseApp alloc] init];
   pigeonResult.appName = appName;
   pigeonResult.tenantId = tenantId;
+  pigeonResult.customAuthDomain = customAuthDomain;
   return pigeonResult;
 }
 + (AuthPigeonFirebaseApp *)fromList:(NSArray *)list {
@@ -249,6 +252,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   pigeonResult.appName = GetNullableObjectAtIndex(list, 0);
   NSAssert(pigeonResult.appName != nil, @"");
   pigeonResult.tenantId = GetNullableObjectAtIndex(list, 1);
+  pigeonResult.customAuthDomain = GetNullableObjectAtIndex(list, 2);
   return pigeonResult;
 }
 + (nullable AuthPigeonFirebaseApp *)nullableFromList:(NSArray *)list {
@@ -258,6 +262,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   return @[
     (self.appName ?: [NSNull null]),
     (self.tenantId ?: [NSNull null]),
+    (self.customAuthDomain ?: [NSNull null]),
   ];
 }
 @end
