@@ -8,6 +8,8 @@
 @JS('firebase_database')
 library firebase.database_interop;
 
+import 'dart:js_interop';
+
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     show PromiseJsImpl, Func1, AppJsImpl;
 import 'package:js/js.dart';

@@ -5,31 +5,32 @@
 part of firebase.database_interop;
 
 @JS('DataSnapshot')
+@staticInterop
 @anonymous
 abstract class DataSnapshotJsImpl {
-  external String get key;
+  external JSString get key;
 
   external ReferenceJsImpl get ref;
 
-  external dynamic /* string | num | null*/ get priority;
+  external JSAny /* JSString | num | null*/ get priority;
 
-  external int get size;
+  external JSNumber get size;
 
-  external DataSnapshotJsImpl child(String path);
+  external DataSnapshotJsImpl child(JSString path);
 
-  external bool exists();
+  external JSBoolean exists();
 
   external dynamic exportVal();
 
-  external bool forEach(void Function(dynamic) action);
+  external JSAny forEach(void Function(JSAny) action);
 
   external dynamic getPriority();
 
-  external bool hasChild(String path);
+  external JSBoolean hasChild(JSString path);
 
-  external bool hasChildren();
+  external JSBoolean hasChildren();
 
-  external Object toJSON();
+  external JSObject toJSON();
 
-  external dynamic val();
+  external JSAny val();
 }
