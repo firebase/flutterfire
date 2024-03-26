@@ -37,7 +37,7 @@ external void enableLogging(
 @staticInterop
 external JSPromise update(
   ReferenceJsImpl ref,
-  JSAny values,
+  JSAny? values,
 );
 // TODO - new API for implementing post web v9 SDK integration
 @JS()
@@ -150,7 +150,7 @@ external QueryConstraintJsImpl orderByValue();
 
 @JS()
 @staticInterop
-external ThenableReferenceJsImpl push(ReferenceJsImpl ref, JSAny value);
+external ThenableReferenceJsImpl push(ReferenceJsImpl ref, JSAny? value);
 
 @JS()
 @staticInterop
@@ -191,17 +191,17 @@ external JSAny serverTimestamp();
 
 @JS()
 @staticInterop
-external JSPromise set(ReferenceJsImpl ref, JSAny value);
+external JSPromise set(ReferenceJsImpl ref, JSAny? value);
 
 @JS()
 @staticInterop
 external JSPromise setPriority(
-    ReferenceJsImpl ref, /* JSString | JSNumber | null */ JSAny priority);
+    ReferenceJsImpl ref, /* JSString | JSNumber | null */ JSAny? priority);
 
 @JS()
 @staticInterop
-external JSPromise setWithPriority(ReferenceJsImpl ref, JSAny value,
-    /* JSString | JSNumber | null */ JSAny priority);
+external JSPromise setWithPriority(ReferenceJsImpl ref, JSAny? value,
+    /* JSString | JSNumber | null */ JSAny? priority);
 
 @JS()
 @staticInterop

@@ -14,7 +14,7 @@ extension DataSnapshotJsImpl$ on DataSnapshotJsImpl {
 
   external ReferenceJsImpl get ref;
 
-  external JSAny /* JSString | num | null*/ get priority;
+  external JSAny? /* JSString | num | null*/ get priority;
 
   external JSNumber get size;
 
@@ -22,11 +22,9 @@ extension DataSnapshotJsImpl$ on DataSnapshotJsImpl {
 
   external JSBoolean exists();
 
-  external dynamic exportVal();
+  external JSAny? exportVal();
 
   external JSAny forEach(JSFunction action);
-
-  external dynamic getPriority();
 
   external JSBoolean hasChild(JSString path);
 
@@ -34,5 +32,5 @@ extension DataSnapshotJsImpl$ on DataSnapshotJsImpl {
 
   external JSObject toJSON();
 
-  external JSAny val();
+  external JSAny? val();
 }

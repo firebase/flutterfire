@@ -130,7 +130,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   /// This method returns [ThenableReference], [DatabaseReference]
   /// with a [Future] property.
   ThenableReference push([value]) => ThenableReference.fromJsObject(
-      database_interop.push(jsObject, jsify(value)));
+      database_interop.push(jsObject, value?.jsify()));
 
   /// Removes data from actual database location.
   Future remove() => database_interop.remove(jsObject).toDart;
