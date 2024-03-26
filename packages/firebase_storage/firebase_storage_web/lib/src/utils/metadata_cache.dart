@@ -31,7 +31,7 @@ class SettableMetadataCache {
       return _cache;
     }
 
-    final newMetadata = <String, String>{
+    final newMetadata = <String, String?>{
       ...?incoming.customMetadata,
       ...?_cache.customMetadata,
     };

@@ -391,6 +391,27 @@ void setupReferenceTests() {
         expect(fullMetadata.customMetadata!['foo'], 'bar');
       });
 
+      test('delete metadata', () async {
+        Reference ref = storage.ref('flutter-tests').child('flt-ok.txt');
+        FullMetadata fullMetadata = await ref
+            .updateMetadata(SettableMetadata(customMetadata: {'foo': 'bar'}));
+        expect(fullMetadata.customMetadata!['foo'], 'bar');
+
+        fullMetadata = await ref.updateMetadata(
+          SettableMetadata(
+            customMetadata: {
+              'foo': null,
+            },
+          ),
+        );
+        expect(fullMetadata.customMetadata!['foo'], isNull);
+
+        // Setting it again
+        fullMetadata = await ref
+            .updateMetadata(SettableMetadata(customMetadata: {'foo': 'bar2'}));
+        expect(fullMetadata.customMetadata!['foo'], 'bar2');
+      });
+
       test('errors if property does not exist', () async {
         Reference ref = storage.ref('flutter-tests/iDoNotExist.jpeg');
 
