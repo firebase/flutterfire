@@ -4,6 +4,8 @@
 
 part of firebase_database_web;
 
+// Cannot use `guardWebExceptions` since we are inferring the
+// exception type from the message.
 FirebaseException convertFirebaseDatabaseException(Object exception,
     [StackTrace? stackTrace]) {
   final castedJSObject = exception as core_interop.JSError;

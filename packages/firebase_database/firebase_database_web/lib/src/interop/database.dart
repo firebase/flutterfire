@@ -181,8 +181,8 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   /// Set [applyLocally] to `false` to not see intermediate states.
   Future<Transaction> transaction(
       TransactionHandler transactionUpdate, bool applyLocally) async {
-    final JSAny? Function(JSAny) transactionUpdateWrap = ((JSAny update) {
-      final dartUpdate = dartify(update);
+    final JSAny? Function(JSAny?) transactionUpdateWrap = ((JSAny? update) {
+      final dartUpdate = update?.dartify();
       final transaction = transactionUpdate(dartUpdate);
       if (transaction.aborted) {
         return context['undefined'];

@@ -91,12 +91,12 @@ class DatabaseReferenceWeb extends QueryWeb
     TransactionHandler transactionHandler, {
     bool applyLocally = true,
   }) async {
-    final value = await convertWebExceptions(() async {
+    try {
       return TransactionResultWeb._(
           this, await _delegate.transaction(transactionHandler, applyLocally));
-    });
-
-    return value;
+    } catch (e, s) {
+      throw convertFirebaseDatabaseException(e, s);
+    }
   }
 
   @override
