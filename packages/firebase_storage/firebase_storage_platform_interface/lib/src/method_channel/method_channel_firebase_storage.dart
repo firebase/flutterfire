@@ -88,10 +88,7 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
 
   /// Convert a [SettableMetadata] to [PigeonSettableMetadata]
   static PigeonSettableMetadata getPigeonSettableMetaData(
-      SettableMetadata? metaData) {
-    if (metaData == null) {
-      return PigeonSettableMetadata();
-    }
+      SettableMetadata metaData) {
     return PigeonSettableMetadata(
         cacheControl: metaData.cacheControl,
         contentDisposition: metaData.contentDisposition,

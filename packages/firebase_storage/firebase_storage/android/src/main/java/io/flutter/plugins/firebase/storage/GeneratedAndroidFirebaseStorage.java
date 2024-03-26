@@ -779,7 +779,7 @@ public class GeneratedAndroidFirebaseStorage {
         @NonNull PigeonStorageFirebaseApp app,
         @NonNull PigeonStorageReference reference,
         @NonNull byte[] data,
-        @NonNull PigeonSettableMetadata settableMetaData,
+        @Nullable PigeonSettableMetadata settableMetaData,
         @NonNull Long handle,
         @NonNull Result<String> result);
 
@@ -788,7 +788,7 @@ public class GeneratedAndroidFirebaseStorage {
         @NonNull PigeonStorageReference reference,
         @NonNull String data,
         @NonNull Long format,
-        @NonNull PigeonSettableMetadata settableMetaData,
+        @Nullable PigeonSettableMetadata settableMetaData,
         @NonNull Long handle,
         @NonNull Result<String> result);
 
@@ -796,7 +796,7 @@ public class GeneratedAndroidFirebaseStorage {
         @NonNull PigeonStorageFirebaseApp app,
         @NonNull PigeonStorageReference reference,
         @NonNull String filePath,
-        @NonNull PigeonSettableMetadata settableMetaData,
+        @Nullable PigeonSettableMetadata settableMetaData,
         @NonNull Long handle,
         @NonNull Result<String> result);
 

@@ -236,7 +236,7 @@ abstract class FirebaseStorageHostApi {
     PigeonStorageFirebaseApp app,
     PigeonStorageReference reference,
     Uint8List data,
-    PigeonSettableMetadata settableMetaData,
+    PigeonSettableMetadata? settableMetaData,
     int handle,
   );
 
@@ -246,7 +246,7 @@ abstract class FirebaseStorageHostApi {
     PigeonStorageReference reference,
     String data,
     int format,
-    PigeonSettableMetadata settableMetaData,
+    PigeonSettableMetadata? settableMetaData,
     int handle,
   );
 
@@ -255,7 +255,7 @@ abstract class FirebaseStorageHostApi {
     PigeonStorageFirebaseApp app,
     PigeonStorageReference reference,
     String filePath,
-    PigeonSettableMetadata settableMetaData,
+    PigeonSettableMetadata? settableMetaData,
     int handle,
   );
 

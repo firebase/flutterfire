@@ -336,6 +336,25 @@ void setupReferenceTests() {
           skip: kIsWeb,
         );
 
+        test(
+          'uploads a file with jpeg extension',
+          () async {
+            final File file = await createFile('flt-ok.jpeg');
+
+            final Reference ref =
+                storage.ref('flutter-tests').child('flt-ok.jpeg');
+
+            final TaskSnapshot complete = await ref.putFile(
+              file,
+            );
+
+            // Check the content type is set correctly
+            expect(complete.metadata?.contentType, 'image/jpeg');
+          },
+          // putFile is not supported on the web platform.
+          skip: kIsWeb,
+        );
+
         // TODO(ehesp): Emulator rules issue - comment back in once fixed
         // test('errors if permission denied', () async {
         //   File file = await createFile('flt-ok.txt');

@@ -7,6 +7,7 @@
 // ignore_for_file: avoid_relative_lib_imports
 import 'dart:async';
 import 'dart:typed_data' show Uint8List;
+
 import 'package:firebase_storage_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:flutter/foundation.dart' show ReadBuffer, WriteBuffer;
 import 'package:flutter/services.dart';
@@ -99,7 +100,7 @@ abstract class TestFirebaseStorageHostApi {
       PigeonStorageFirebaseApp app,
       PigeonStorageReference reference,
       Uint8List data,
-      PigeonSettableMetadata settableMetaData,
+      PigeonSettableMetadata? settableMetaData,
       int handle);
 
   Future<String> referencePutString(
@@ -107,14 +108,14 @@ abstract class TestFirebaseStorageHostApi {
       PigeonStorageReference reference,
       String data,
       int format,
-      PigeonSettableMetadata settableMetaData,
+      PigeonSettableMetadata? settableMetaData,
       int handle);
 
   Future<String> referencePutFile(
       PigeonStorageFirebaseApp app,
       PigeonStorageReference reference,
       String filePath,
-      PigeonSettableMetadata settableMetaData,
+      PigeonSettableMetadata? settableMetaData,
       int handle);
 
   Future<String> referenceDownloadFile(PigeonStorageFirebaseApp app,
@@ -484,13 +485,11 @@ abstract class TestFirebaseStorageHostApi {
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutData was null, expected non-null Uint8List.');
           final PigeonSettableMetadata? arg_settableMetaData =
               (args[3] as PigeonSettableMetadata?);
-          assert(arg_settableMetaData != null,
-              'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutData was null, expected non-null PigeonSettableMetadata.');
           final int? arg_handle = (args[4] as int?);
           assert(arg_handle != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutData was null, expected non-null int.');
           final String output = await api.referencePutData(arg_app!,
-              arg_reference!, arg_data!, arg_settableMetaData!, arg_handle!);
+              arg_reference!, arg_data!, arg_settableMetaData, arg_handle!);
           return <Object?>[output];
         });
       }
@@ -526,8 +525,6 @@ abstract class TestFirebaseStorageHostApi {
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString was null, expected non-null int.');
           final PigeonSettableMetadata? arg_settableMetaData =
               (args[4] as PigeonSettableMetadata?);
-          assert(arg_settableMetaData != null,
-              'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString was null, expected non-null PigeonSettableMetadata.');
           final int? arg_handle = (args[5] as int?);
           assert(arg_handle != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString was null, expected non-null int.');
@@ -536,7 +533,7 @@ abstract class TestFirebaseStorageHostApi {
               arg_reference!,
               arg_data!,
               arg_format!,
-              arg_settableMetaData!,
+              arg_settableMetaData,
               arg_handle!);
           return <Object?>[output];
         });
@@ -570,17 +567,11 @@ abstract class TestFirebaseStorageHostApi {
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile was null, expected non-null String.');
           final PigeonSettableMetadata? arg_settableMetaData =
               (args[3] as PigeonSettableMetadata?);
-          assert(arg_settableMetaData != null,
-              'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile was null, expected non-null PigeonSettableMetadata.');
           final int? arg_handle = (args[4] as int?);
           assert(arg_handle != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile was null, expected non-null int.');
-          final String output = await api.referencePutFile(
-              arg_app!,
-              arg_reference!,
-              arg_filePath!,
-              arg_settableMetaData!,
-              arg_handle!);
+          final String output = await api.referencePutFile(arg_app!,
+              arg_reference!, arg_filePath!, arg_settableMetaData, arg_handle!);
           return <Object?>[output];
         });
       }

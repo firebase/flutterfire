@@ -595,7 +595,7 @@ class FirebaseStorageHostApi {
       PigeonStorageFirebaseApp arg_app,
       PigeonStorageReference arg_reference,
       Uint8List arg_data,
-      PigeonSettableMetadata arg_settableMetaData,
+      PigeonSettableMetadata? arg_settableMetaData,
       int arg_handle) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutData',
@@ -634,7 +634,7 @@ class FirebaseStorageHostApi {
       PigeonStorageReference arg_reference,
       String arg_data,
       int arg_format,
-      PigeonSettableMetadata arg_settableMetaData,
+      PigeonSettableMetadata? arg_settableMetaData,
       int arg_handle) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString',
@@ -673,7 +673,7 @@ class FirebaseStorageHostApi {
       PigeonStorageFirebaseApp arg_app,
       PigeonStorageReference arg_reference,
       String arg_filePath,
-      PigeonSettableMetadata arg_settableMetaData,
+      PigeonSettableMetadata? arg_settableMetaData,
       int arg_handle) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile',

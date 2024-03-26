@@ -86,18 +86,18 @@ class FirebaseStoragePlugin : public flutter::Plugin,
   virtual void ReferencePutData(
       const PigeonStorageFirebaseApp& app,
       const PigeonStorageReference& reference, const std::vector<uint8_t>& data,
-      const PigeonSettableMetadata& settable_meta_data, int64_t handle,
+      const PigeonSettableMetadata* settable_meta_data, int64_t handle,
       std::function<void(ErrorOr<std::string> reply)> result) override;
   virtual void ReferencePutString(
       const PigeonStorageFirebaseApp& app,
       const PigeonStorageReference& reference, const std::string& data,
-      int64_t format, const PigeonSettableMetadata& settable_meta_data,
+      int64_t format, const PigeonSettableMetadata* settable_meta_data,
       int64_t handle,
       std::function<void(ErrorOr<std::string> reply)> result) override;
   virtual void ReferencePutFile(
       const PigeonStorageFirebaseApp& app,
       const PigeonStorageReference& reference, const std::string& file_path,
-      const PigeonSettableMetadata& settable_meta_data, int64_t handle,
+      const PigeonSettableMetadata* settable_meta_data, int64_t handle,
       std::function<void(ErrorOr<std::string> reply)> result) override;
   virtual void ReferenceDownloadFile(
       const PigeonStorageFirebaseApp& app,
