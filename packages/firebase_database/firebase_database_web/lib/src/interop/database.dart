@@ -6,8 +6,8 @@
 // ignore_for_file: public_member_api_docs
 
 import 'dart:async';
-import 'dart:js';
 import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
@@ -185,7 +185,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
       final dartUpdate = update?.dartify();
       final transaction = transactionUpdate(dartUpdate);
       if (transaction.aborted) {
-        return context['undefined'];
+        return globalContext.getProperty("undefined".toJS);
       }
       return transaction.value.jsify();
     });
