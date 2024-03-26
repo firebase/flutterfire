@@ -6,8 +6,9 @@ part of firebase_database_web;
 
 FirebaseException convertFirebaseDatabaseException(Object exception,
     [StackTrace? stackTrace]) {
+  final castedJSObject = exception as core_interop.JSError;
   String code = 'unknown';
-  String message = util.getProperty(exception, 'message');
+  String message = castedJSObject.message?.toDart ?? '';
 
   // FirebaseWeb SDK for Database has no error codes, so we manually map known
   // messages to known error codes for cross platform consistency.
