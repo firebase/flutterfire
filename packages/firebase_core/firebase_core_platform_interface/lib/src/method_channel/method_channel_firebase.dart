@@ -124,7 +124,9 @@ class MethodChannelFirebase extends FirebasePlatform {
       // check to see if options are roughly identical (so we don't unnecessarily
       // throw on minor differences such as platform specific keys missing
       // e.g. hot reloads/restarts).
-      if (defaultApp != null && _options != null) {
+      if (defaultApp != null &&
+          _options != null &&
+          !_options.projectId.startsWith('demo-')) {
         if (_options.apiKey != defaultApp.options.apiKey ||
             (_options.databaseURL != null &&
                 _options.databaseURL != defaultApp.options.databaseURL) ||
