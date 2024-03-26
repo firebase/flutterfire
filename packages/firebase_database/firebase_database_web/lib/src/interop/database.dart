@@ -137,8 +137,8 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   /// Overwrites any existing data at actual location and all child locations.
   ///
   /// The [value] must be a Dart basic type or the error is thrown.
-  Future set(Object value) =>
-      database_interop.set(jsObject, value.toJSBox).toDart;
+  Future set(Object? value) =>
+      database_interop.set(jsObject, value?.toJSBox).toDart;
 
   /// Sets a priority for data at actual database location.
   ///
@@ -154,8 +154,8 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   /// The [newVal] must be a Dart basic type or the error is thrown.
   /// The [newPriority] must be a [String], [num] or `null`, or the error
   /// is thrown.
-  Future setWithPriority(Object newVal, newPriority) => database_interop
-      .setWithPriority(jsObject, newVal.toJSBox, newPriority)
+  Future setWithPriority(Object? newVal, newPriority) => database_interop
+      .setWithPriority(jsObject, newVal?.toJSBox, newPriority)
       .toDart;
 
   /// Atomically updates data at actual database location.
@@ -541,7 +541,7 @@ class DataSnapshot
   bool exists() => jsObject.exists().toDart;
 
   /// Exports the contents of the DataSnapshot as a Dart object.
-  dynamic exportVal() => dartify(jsObject.exportVal());
+  dynamic exportVal() => jsObject.exportVal().dartify();
 
   /// Enumerates the top-level children of the DataSnapshot in their query-order.
   /// [action] is called for each child DataSnapshot.
@@ -561,10 +561,10 @@ class DataSnapshot
   bool hasChildren() => jsObject.hasChildren().toDart;
 
   /// Returns Dart value from a DataSnapshot.
-  dynamic val() => dartify(jsObject.val());
+  dynamic val() => (jsObject.val()).dartify();
 
   /// Returns a JSON-serializable representation of this object.
-  dynamic toJson() => dartify(jsObject.toJSON());
+  dynamic toJson() => (jsObject.toJSON()).dartify();
 }
 
 /// The OnDisconnect class allows you to write or clear data when your client
@@ -588,20 +588,20 @@ class OnDisconnect
   /// when the client is disconnected.
   ///
   /// The [value] must be a Dart basic type or the error is thrown.
-  Future set(value) => (jsObject.set(jsify(value))).toDart;
+  Future set(Object? value) => (jsObject.set((value)?.toJSBox)).toDart;
 
   /// Ensures the data for actual location is set to the specified [value]
   /// and [priority] when the client is disconnected.
   ///
   /// The [value] must be a Dart basic type or the error is thrown.
   /// The [priority] must be a [String], [num] or `null`, or the error is thrown.
-  Future setWithPriority(value, priority) =>
-      (jsObject.setWithPriority(jsify(value), priority)).toDart;
+  Future setWithPriority(Object? value, priority) =>
+      (jsObject.setWithPriority((value)?.toJSBox, priority)).toDart;
 
   /// Writes multiple [values] at actual location when the client is disconnected.
   ///
   /// The [values] must be a Dart basic type or the error is thrown.
-  Future update(values) => (jsObject.update(jsify(values))).toDart;
+  Future update(Object? values) => (jsObject.update((values)?.toJSBox)).toDart;
 }
 
 /// The ThenableReference class represents [DatabaseReference] with a

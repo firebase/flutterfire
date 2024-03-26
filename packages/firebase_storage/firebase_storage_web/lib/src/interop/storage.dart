@@ -266,7 +266,7 @@ class UploadMetadata
           contentLanguage: contentLanguage?.toJS,
           contentType: contentType?.toJS,
           customMetadata:
-              (customMetadata != null) ? jsify(customMetadata) : null));
+              (customMetadata != null) ? customMetadata.toJSBox : null));
 
   /// Creates a new UploadMetadata from a [jsObject].
   UploadMetadata.fromJsObject(storage_interop.UploadMetadataJsImpl jsObject)
@@ -447,7 +447,7 @@ class SettableMetadata
           contentLanguage: contentLanguage?.toJS,
           contentType: contentType?.toJS,
           customMetadata:
-              (customMetadata != null) ? jsify(customMetadata) : null));
+              (customMetadata != null) ? customMetadata.toJSBox : null));
 
   /// Creates a new SettableMetadata from a [jsObject].
   SettableMetadata.fromJsObject(storage_interop.SettableMetadataJsImpl jsObject)
@@ -496,16 +496,13 @@ abstract class _SettableMetadataBase<
 
   /// Additional user-defined custom metadata.
   Map<String, String> get customMetadata {
-    Map<String, dynamic>? metadata = dartify(jsObject.customMetadata);
-    if (metadata != null) {
-      return Map<String, String>.from(metadata);
-    } else {
-      return {};
-    }
+    Map<String, dynamic>? metadata =
+        jsObject.customMetadata?.dartify() as Map<String, dynamic>?;
+    return Map<String, String>.from(metadata ?? {});
   }
 
   set customMetadata(Map<String, String> m) {
-    jsObject.customMetadata = jsify(m);
+    jsObject.customMetadata = m.toJSBox;
   }
 }
 

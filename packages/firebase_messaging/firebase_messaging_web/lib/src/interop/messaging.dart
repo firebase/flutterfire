@@ -121,7 +121,8 @@ class MessagePayload
   NotificationPayload? get notification => jsObject.notification == null
       ? null
       : NotificationPayload._fromJsObject(jsObject.notification!);
-  Map<String, dynamic>? get data => dartify(jsObject.data);
+  Map<String, dynamic>? get data =>
+      jsObject.data.dartify() as Map<String, dynamic>?;
   String? get from => jsObject.from?.toDart;
 }
 
