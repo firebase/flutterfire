@@ -545,6 +545,7 @@ class PigeonUserDetails {
   static PigeonUserDetails FromEncodableList(
       const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
+
  private:
   friend class PigeonUserCredential;
   friend class FirebaseAuthHostApi;
