@@ -1654,6 +1654,7 @@ class DocumentSnapshotStreamHandler
                                           : MetadataChanges::kExclude;
 
     events_ = std::move(events);
+    events.reset();
 
     listener_ = reference_->AddSnapshotListener(
         metadataChanges,
