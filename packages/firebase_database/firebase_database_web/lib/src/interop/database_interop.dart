@@ -224,7 +224,7 @@ abstract class TransactionOptions {
 @JS()
 @staticInterop
 abstract class ServerValue {
-  external static Object get TIMESTAMP;
+  external static JSAny get TIMESTAMP;
 }
 
 @JS('Database')
@@ -261,18 +261,18 @@ extension OnDisconnectJsImplExtension on OnDisconnectJsImpl {
   ]);
 
   external JSPromise set(
-    value, [
+    JSAny? value, [
     JSFunction onComplete,
     //void Function(JSAny) onComplete
   ]);
 
   external JSPromise setWithPriority(
-    value,
-    priority,
+    JSAny? value,
+    JSAny? priority,
   );
 
   external JSPromise update(
-    values,
+    JSAny? values,
   );
 }
 
