@@ -32,7 +32,7 @@ jobs:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
-      - uses: actions/setup-node@b39b52d1213e96004bfcb1c61a8a6fa8ab84f3e8
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8
         name: Install Node.js 20
         with:
           node-version: '20'
@@ -95,7 +95,7 @@ jobs:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
-      - uses: actions/setup-node@b39b52d1213e96004bfcb1c61a8a6fa8ab84f3e8
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8
         name: Install Node.js 20
         with:
           node-version: '20'
@@ -170,7 +170,7 @@ jobs:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
-      - uses: actions/setup-node@b39b52d1213e96004bfcb1c61a8a6fa8ab84f3e8
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8
         name: Install Node.js 20
         with:
           node-version: '20'
@@ -242,7 +242,7 @@ jobs:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
-      - uses: actions/setup-node@b39b52d1213e96004bfcb1c61a8a6fa8ab84f3e8
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8
         name: Install Node.js 20
         with:
           node-version: '20'
@@ -296,7 +296,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - uses: actions/setup-node@b39b52d1213e96004bfcb1c61a8a6fa8ab84f3e8
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8
         name: Install Node.js 20
         with:
           node-version: "20"
