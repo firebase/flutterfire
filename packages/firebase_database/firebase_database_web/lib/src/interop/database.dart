@@ -20,7 +20,6 @@ import 'package:flutter/widgets.dart';
 import 'package:js/js_util.dart';
 
 import 'database_interop.dart' as database_interop;
-import 'utils/utils.dart';
 
 /// Given an AppJSImp, return the Database instance.
 Database getDatabaseInstance([App? app, String? databaseURL]) {
@@ -182,13 +181,13 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   /// Set [applyLocally] to `false` to not see intermediate states.
   Future<Transaction> transaction(
       TransactionHandler transactionUpdate, bool applyLocally) async {
-    final transactionUpdateWrap = ((update) {
+    final transactionUpdateWrap = ((JSAny update) {
       final dartUpdate = dartify(update);
       final transaction = transactionUpdate(dartUpdate);
       if (transaction.aborted) {
         return context['undefined'];
       }
-      return jsify(transaction.value);
+      return transaction.value.jsify();
     });
 
     try {
@@ -208,7 +207,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
       );
     } catch (e) {
       final dartified = dartify(e);
-      throw convertFirebaseDatabaseException(dartified);
+      throw convertFirebaseDatabaseException(dartified ?? {});
     }
   }
 
@@ -366,7 +365,8 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
 
     final cancelCallbackWrap = ((Object error) {
       final dartified = dartify(error);
-      streamController.addError(convertFirebaseDatabaseException(dartified));
+      streamController
+          .addError(convertFirebaseDatabaseException(dartified ?? {}));
       streamController.close();
     });
 
@@ -413,7 +413,10 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
       ((database_interop.DataSnapshotJsImpl snapshot, [String? string]) {
         c.complete(QueryEvent(DataSnapshot.getInstance(snapshot), string));
       }).toJS,
-      resolveError(c).toJS,
+      ((JSAny error) {
+        final dartified = dartify(error);
+        c.completeError(convertFirebaseDatabaseException(dartified ?? {}));
+      }).toJS,
       database_interop.ListenOptions(onlyOnce: true.toJS),
     );
 
