@@ -7,14 +7,14 @@
 
 import 'dart:async';
 import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
     as platform_interface;
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/src/utils/encode_utility.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_core_web/firebase_core_web_interop.dart'
-    hide jsify, dartify;
+import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'package:flutter/foundation.dart';
 
 import 'firestore_interop.dart' as firestore_interop;
@@ -409,10 +409,12 @@ class DocumentReference
         .expand((e) => e)
         .toList();
 
-    return handleThenable(callMethod(firestore_interop.updateDoc, 'apply', [
-      null,
-      [jsObject, ...alternatingFieldValues]
-    ]));
+    return firestore_interop.updateDoc.callMethod(
+      'apply'.toJS,
+      [
+        [jsObject, ...alternatingFieldValues]
+      ].toJSBox,
+    );
   }
 }
 
@@ -541,7 +543,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
         ? [snapshot.jsObject]
         : fieldValues!.map(jsify).toList();
 
-    return callMethod(method, 'apply', [null, jsify(args)]);
+    return (method as JSObject).callMethod('apply'.toJS, [jsify(args)].toJS);
   }
 
   Object _parseFilterWith(Map<String, Object?> map) {
@@ -566,9 +568,10 @@ class Query<T extends firestore_interop.QueryJsImpl>
     }
 
     if (opStr == 'OR') {
-      return callMethod(firestore_interop.or, 'apply', [null, jsFilters]);
+      return firestore_interop.or.callMethod('apply'.toJS, [jsFilters].toJSBox);
     } else if (opStr == 'AND') {
-      return callMethod(firestore_interop.and, 'apply', [null, jsFilters]);
+      return firestore_interop.and
+          .callMethod('apply'.toJS, [jsFilters].toJSBox);
     }
 
     throw Exception('InvalidOperator');
@@ -795,7 +798,7 @@ mixin _Updatable {
     if (documentRef != null) {
       args.insert(0, documentRef.jsObject as JSObject);
     }
-    return callMethod(jsObject, 'update', args);
+    return (jsObject as JSObject).callMethod('update'.toJS, args.toJS);
   }
 }
 
@@ -827,8 +830,8 @@ class _FieldValueArrayUnion extends _FieldValueArray {
   @override
   firestore_interop.FieldValue? _jsify() {
     // This uses var arg so cannot use js package
-    return callMethod(
-        firestore_interop.arrayUnion, 'apply', [null, jsify(elements)]);
+    return firestore_interop.arrayUnion
+        .callMethod('apply'.toJS, [jsify(elements)].toJS);
   }
 
   @override
@@ -841,8 +844,8 @@ class _FieldValueArrayRemove extends _FieldValueArray {
   @override
   firestore_interop.FieldValue? _jsify() {
     // This uses var arg so cannot use js package
-    return callMethod(
-        firestore_interop.arrayRemove, 'apply', [null, jsify(elements)]);
+    return firestore_interop.arrayRemove
+        .callMethod('apply'.toJS, [jsify(elements)].toJS);
   }
 
   @override
