@@ -12,7 +12,6 @@ import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
-import 'package:firebase_database_web/src/utils/internals.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 import 'src/interop/database.dart' as database_interop;
