@@ -14,6 +14,13 @@ To get started with Firebase Analytics for Flutter, please [see the documentatio
 
 To use this plugin, please visit the [Analytics Usage documentation](https://firebase.google.com/docs/analytics/events?platform=flutter)
 
+## iOS [App Tracking Transparency](https://developer.apple.com/documentation/apptrackingtransparency) 
+
+If you wish to use Firebase Analytics without IDFA collection capability, open your - `/ios/Podfile` and add the following global variable to the top of the file:
+```
+$FirebaseAnalyticsWithoutAdIdSupport = true
+```
+
 ## Issues and feedback
 
 Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/firebase/flutterfire/issues/new).
