@@ -862,7 +862,7 @@ class GithubAuthProvider
     Map<Object?, Object?> customOAuthParameters,
   ) {
     return GithubAuthProvider.fromJsObject(
-      jsObject.setCustomParameters(jsify(customOAuthParameters)),
+      jsObject.setCustomParameters(customOAuthParameters.toJSBox),
     );
   }
 
@@ -905,7 +905,7 @@ class GoogleAuthProvider
     Map<Object?, Object?> customOAuthParameters,
   ) {
     return GoogleAuthProvider.fromJsObject(
-      jsObject.setCustomParameters(jsify(customOAuthParameters)),
+      jsObject.setCustomParameters(customOAuthParameters.toJSBox),
     );
   }
 
@@ -942,7 +942,7 @@ class OAuthProvider extends AuthProvider<auth_interop.OAuthProviderJsImpl> {
     Map<Object?, Object?> customOAuthParameters,
   ) {
     return OAuthProvider.fromJsObject(
-      jsObject.setCustomParameters(jsify(customOAuthParameters)),
+      jsObject.setCustomParameters(customOAuthParameters.toJSBox),
     );
   }
 
@@ -984,7 +984,7 @@ class TwitterAuthProvider
     Map<Object?, Object?> customOAuthParameters,
   ) {
     return TwitterAuthProvider.fromJsObject(
-      jsObject.setCustomParameters(jsify(customOAuthParameters)),
+      jsObject.setCustomParameters(customOAuthParameters.toJSBox),
     );
   }
 
@@ -1113,7 +1113,7 @@ class RecaptchaVerifier
       auth_interop.RecaptchaVerifierJsImpl(
         auth.jsObject,
         container,
-        jsify(parameters),
+        parameters.toJSBox,
       ),
     );
   }
@@ -1187,8 +1187,9 @@ class AdditionalUserInfo
   String? get providerId => jsObject.providerId?.toDart;
 
   /// Returns the profile.
-  Map<String, dynamic>? get profile =>
-      jsObject.profile != null ? dartify(jsObject.profile!) : null;
+  Map<String, dynamic>? get profile => jsObject.profile != null
+      ? (jsObject.profile!).dartify()! as Map<String, dynamic>
+      : null;
 
   /// Returns the user name.
   String? get username => jsObject.username?.toDart;

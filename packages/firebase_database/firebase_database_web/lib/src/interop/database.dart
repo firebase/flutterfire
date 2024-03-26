@@ -11,13 +11,11 @@ import 'dart:js_interop_unsafe';
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
-import 'package:firebase_core_web/firebase_core_web_interop.dart'
-    hide jsify, dartify, callMethod;
+import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:firebase_database_web/firebase_database_web.dart'
     show convertFirebaseDatabaseException;
 import 'package:flutter/widgets.dart';
-import 'package:js/js_util.dart';
 
 import 'database_interop.dart' as database_interop;
 
@@ -139,7 +137,8 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   /// Overwrites any existing data at actual location and all child locations.
   ///
   /// The [value] must be a Dart basic type or the error is thrown.
-  Future set(value) => database_interop.set(jsObject, jsify(value)).toDart;
+  Future set(Object value) =>
+      database_interop.set(jsObject, value.toJSBox).toDart;
 
   /// Sets a priority for data at actual database location.
   ///
@@ -155,8 +154,8 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   /// The [newVal] must be a Dart basic type or the error is thrown.
   /// The [newPriority] must be a [String], [num] or `null`, or the error
   /// is thrown.
-  Future setWithPriority(newVal, newPriority) => database_interop
-      .setWithPriority(jsObject, jsify(newVal), newPriority)
+  Future setWithPriority(Object newVal, newPriority) => database_interop
+      .setWithPriority(jsObject, newVal.toJSBox, newPriority)
       .toDart;
 
   /// Atomically updates data at actual database location.
@@ -206,7 +205,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
         snapshot: DataSnapshot._fromJsObject(castedJsTransaction.snapshot),
       );
     } catch (e) {
-      final dartified = dartify(e);
+      final dartified = (e as JSObject).dartify();
       throw convertFirebaseDatabaseException(dartified ?? {});
     }
   }
@@ -214,8 +213,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   /// Updates data with [values] at actual database location.
   ///
   /// The [values] must be a Dart basic type or the error is thrown.
-  Future update(values) =>
-      database_interop.update(jsObject, jsify(values)).toDart;
+  Future update(values) => database_interop.update(jsObject, values).toDart;
 }
 
 /// Event fired when data changes at location.
@@ -290,11 +288,10 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   /// Gets the most up-to-date result for this query.
   Future<DataSnapshot> get() async {
     final jsSnapshotPromise = database_interop.get(jsObject);
-    final snapshot = await promiseToFuture<database_interop.DataSnapshotJsImpl>(
-      jsSnapshotPromise,
-    );
+    final snapshot = await jsSnapshotPromise.toDart;
 
-    return DataSnapshot.getInstance(snapshot);
+    return DataSnapshot.getInstance(
+        snapshot as database_interop.DataSnapshotJsImpl);
   }
 
   /// Returns a Query with the ending point [value]. The ending point
@@ -364,7 +361,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
     });
 
     final void Function(JSObject) cancelCallbackWrap = ((JSObject error) {
-      final dartified = dartify(error);
+      final dartified = error.dartify();
       streamController
           .addError(convertFirebaseDatabaseException(dartified ?? {}));
       streamController.close();
@@ -429,7 +426,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
         c.complete(QueryEvent(DataSnapshot.getInstance(snapshot), string));
       }).toJS,
       ((JSAny error) {
-        final dartified = dartify(error);
+        final dartified = error.dartify();
         c.completeError(convertFirebaseDatabaseException(dartified ?? {}));
       }).toJS,
       database_interop.ListenOptions(onlyOnce: true.toJS),
@@ -481,15 +478,15 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   String toString() => jsObject.toString();
 
   /// Returns a JSON-serializable representation of this object.
-  dynamic toJson() => dartify(jsObject.toJSON());
+  dynamic toJson() => jsObject.toJSON().dartify();
 
   S? _createQueryConstraint<S>(
       Object method, List<dynamic>? /*list of primitive value */ args) {
     if (args == null) {
       throw ArgumentError('Please provide "args" parameter.');
     }
-    var params = args.map(jsify).toList();
-    return callMethod(method, 'apply', [null, jsify(params)]);
+    var params = args.jsify();
+    return (method as JSObject).callMethod('apply'.toJS, params);
   }
 }
 
