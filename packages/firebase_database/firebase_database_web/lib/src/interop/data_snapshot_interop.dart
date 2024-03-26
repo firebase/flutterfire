@@ -22,7 +22,7 @@ abstract class DataSnapshotJsImpl {
 
   external dynamic exportVal();
 
-  external JSAny forEach(void Function(JSAny) action);
+  external JSAny forEach(JSFunction action);
 
   external dynamic getPriority();
 
