@@ -138,7 +138,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   ///
   /// The [value] must be a Dart basic type or the error is thrown.
   Future set(Object? value) {
-    return database_interop.set(jsObject, value?.toJSBox).toDart;
+    return database_interop.set(jsObject, value?.jsify()).toDart;
   }
 
   /// Sets a priority for data at actual database location.
@@ -156,7 +156,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   /// The [newPriority] must be a [String], [num] or `null`, or the error
   /// is thrown.
   Future setWithPriority(Object? newVal, newPriority) => database_interop
-      .setWithPriority(jsObject, newVal?.toJSBox, newPriority)
+      .setWithPriority(jsObject, newVal?.jsify(), newPriority)
       .toDart;
 
   /// Atomically updates data at actual database location.
@@ -305,7 +305,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
     return Query.fromJsObject(
       database_interop.query(
         jsObject,
-        database_interop.endAt(value?.toJSBox, key?.toJS),
+        database_interop.endAt(value?.jsify(), key?.toJS),
       ),
     );
   }
@@ -320,7 +320,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
     return Query.fromJsObject(
       database_interop.query(
         jsObject,
-        database_interop.endBefore(value?.toJSBox, key?.toJS),
+        database_interop.endBefore(value?.jsify(), key?.toJS),
       ),
     );
   }
@@ -334,7 +334,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
     return Query.fromJsObject(
       database_interop.query(
         jsObject,
-        database_interop.equalTo(value?.toJSBox, key?.toJS),
+        database_interop.equalTo(value?.jsify(), key?.toJS),
       ),
     );
   }
@@ -486,7 +486,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
     return Query.fromJsObject(
       database_interop.query(
         jsObject,
-        database_interop.startAt(value?.toJSBox, key?.toJS),
+        database_interop.startAt(value?.jsify(), key?.toJS),
       ),
     );
   }
@@ -495,7 +495,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
     return Query.fromJsObject(
       database_interop.query(
         jsObject,
-        database_interop.startAfter(value?.toJSBox, key?.toJS),
+        database_interop.startAfter(value?.jsify(), key?.toJS),
       ),
     );
   }
@@ -606,7 +606,7 @@ class OnDisconnect
   /// when the client is disconnected.
   ///
   /// The [value] must be a Dart basic type or the error is thrown.
-  Future set(Object? value) => (jsObject.set((value)?.toJSBox)).toDart;
+  Future set(Object? value) => (jsObject.set((value)?.jsify())).toDart;
 
   /// Ensures the data for actual location is set to the specified [value]
   /// and [priority] when the client is disconnected.
@@ -614,12 +614,12 @@ class OnDisconnect
   /// The [value] must be a Dart basic type or the error is thrown.
   /// The [priority] must be a [String], [num] or `null`, or the error is thrown.
   Future setWithPriority(Object? value, priority) =>
-      (jsObject.setWithPriority((value)?.toJSBox, priority)).toDart;
+      (jsObject.setWithPriority((value)?.jsify(), priority)).toDart;
 
   /// Writes multiple [values] at actual location when the client is disconnected.
   ///
   /// The [values] must be a Dart basic type or the error is thrown.
-  Future update(Object? values) => (jsObject.update((values)?.toJSBox)).toDart;
+  Future update(Object? values) => (jsObject.update((values)?.jsify())).toDart;
 }
 
 /// The ThenableReference class represents [DatabaseReference] with a
