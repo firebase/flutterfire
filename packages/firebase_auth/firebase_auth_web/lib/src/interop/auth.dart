@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 
 import 'dart:async';
+import 'dart:js';
 import 'dart:js_interop';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
@@ -31,7 +32,7 @@ Auth getAuthInstance(App app) {
       app.jsObject,
       auth_interop.AuthOptions(
         errorMap: auth_interop.debugErrorMap,
-        persistence: persistences.toJSBox as JSArray,
+        persistence: JsArray.from(persistences) as JSArray<JSAny>,
         popupRedirectResolver: auth_interop.browserPopupRedirectResolver,
       ),
     ),
