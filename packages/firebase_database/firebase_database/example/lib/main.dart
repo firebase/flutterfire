@@ -34,6 +34,16 @@ Future<void> main() async {
     FirebaseDatabase.instance.useDatabaseEmulator(emulatorHost, emulatorPort);
   }
 
+  final database = FirebaseDatabase.instance;
+
+  await database.ref('tests/flutterfire').set(0);
+
+  final ref = database.ref('tests/flutterfire');
+
+  final snapshot = await ref.get();
+  print(snapshot.key);
+  print(snapshot.value);
+
   runApp(
     const MaterialApp(
       title: 'Flutter Database Example',

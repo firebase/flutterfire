@@ -329,28 +329,28 @@ extension FirebaseErrorExtension on FirebaseError {
 // Discussed internally with dart2js team
 @JS()
 @staticInterop
-external JSAny get endAt;
+external QueryConstraintJsImpl endAt(JSAny? value, [JSString? key]);
 
 @JS()
 @staticInterop
-external JSAny get endBefore;
+external QueryConstraintJsImpl endBefore(JSAny? value, [JSString? key]);
 
 @JS()
 @staticInterop
-external JSAny get equalTo;
+external QueryConstraintJsImpl equalTo(JSAny? value, [JSString? key]);
 
 @JS()
 @staticInterop
-external JSAny get startAfter;
+external QueryConstraintJsImpl startAfter(JSAny? value, [JSString? key]);
 
 @JS()
 @staticInterop
-external JSAny get startAt;
+external QueryConstraintJsImpl startAt(JSAny? value, [JSString? key]);
 
 @JS()
 @staticInterop
-external JSAny get limitToFirst;
+external QueryConstraintJsImpl limitToFirst(JSNumber limit);
 
 @JS()
 @staticInterop
-external JSAny get limitToLast;
+external QueryConstraintJsImpl limitToLast(JSNumber limit);

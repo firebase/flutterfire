@@ -137,8 +137,9 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   /// Overwrites any existing data at actual location and all child locations.
   ///
   /// The [value] must be a Dart basic type or the error is thrown.
-  Future set(Object? value) =>
-      database_interop.set(jsObject, value?.toJSBox).toDart;
+  Future set(Object? value) {
+    return database_interop.set(jsObject, value?.toJSBox).toDart;
+  }
 
   /// Sets a priority for data at actual database location.
   ///
@@ -300,11 +301,14 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   /// The [value] must be a [num], [String], [bool], or `null`, or the error
   /// is thrown.
   /// The optional [key] can be used to further limit the range of the query.
-  Query endAt(value, [String? key]) => Query.fromJsObject(key == null
-      ? database_interop.query(
-          jsObject, _createQueryConstraint(database_interop.endAt, [value]))
-      : database_interop.query(jsObject,
-          _createQueryConstraint(database_interop.endAt, [value, key])));
+  Query endAt(Object? value, [String? key]) {
+    return Query.fromJsObject(
+      database_interop.query(
+        jsObject,
+        database_interop.endAt(value?.toJSBox, key?.toJS),
+      ),
+    );
+  }
 
   /// Creates a [Query] with the specified ending point (exclusive)
   /// The ending point is exclusive. If only a value is provided,
@@ -312,22 +316,28 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   /// the query. If a key is specified, then children must have a value lesss
   /// than or equal to the specified value and a a key name less than the
   /// specified key.
-  Query endBefore(value, [String? key]) => Query.fromJsObject(key == null
-      ? database_interop.query(
-          jsObject, _createQueryConstraint(database_interop.endBefore, [value]))
-      : database_interop.query(jsObject,
-          _createQueryConstraint(database_interop.endBefore, [value, key])));
+  Query endBefore(Object? value, [String? key]) {
+    return Query.fromJsObject(
+      database_interop.query(
+        jsObject,
+        database_interop.endBefore(value?.toJSBox, key?.toJS),
+      ),
+    );
+  }
 
   /// Returns a Query which includes children which match the specified [value].
   ///
   /// The [value] must be a [num], [String], [bool], or `null`, or the error
   /// is thrown.
   /// The optional [key] can be used to further limit the range of the query.
-  Query equalTo(value, [String? key]) => Query.fromJsObject(key == null
-      ? database_interop.query(
-          jsObject, _createQueryConstraint(database_interop.equalTo, [value]))
-      : database_interop.query(jsObject,
-          _createQueryConstraint(database_interop.equalTo, [value, key])));
+  Query equalTo(Object? value, [String? key]) {
+    return Query.fromJsObject(
+      database_interop.query(
+        jsObject,
+        database_interop.equalTo(value?.toJSBox, key?.toJS),
+      ),
+    );
+  }
 
   /// Returns `true` if the current and [other] queries are equal - they
   /// represent the exactly same location, have the same query parameters,
@@ -341,14 +351,25 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
 
   /// Returns a new Query limited to the first specific number of children
   /// provided by [limit].
-  Query limitToFirst(int limit) => Query.fromJsObject(database_interop.query(
-      jsObject,
-      _createQueryConstraint(database_interop.limitToFirst, [limit])));
+  Query limitToFirst(int limit) {
+    return Query.fromJsObject(
+      database_interop.query(
+        jsObject,
+        database_interop.limitToFirst(limit.toJS),
+      ),
+    );
+  }
 
   /// Returns a new Query limited to the last specific number of children
   /// provided by [limit].
-  Query limitToLast(int limit) => Query.fromJsObject(database_interop.query(
-      jsObject, _createQueryConstraint(database_interop.limitToLast, [limit])));
+  Query limitToLast(int limit) {
+    return Query.fromJsObject(
+      database_interop.query(
+        jsObject,
+        database_interop.limitToLast(limit.toJS),
+      ),
+    );
+  }
 
   Stream<QueryEvent> _createStream(String eventType) {
     late StreamController<QueryEvent> streamController;
@@ -461,17 +482,23 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   /// The [value] must be a [num], [String], [bool], or `null`, or the error
   /// is thrown.
   /// The optional [key] can be used to further limit the range of the query.
-  Query startAt(value, [String? key]) => Query.fromJsObject(key == null
-      ? database_interop.query(
-          jsObject, _createQueryConstraint(database_interop.startAt, [value]))
-      : database_interop.query(jsObject,
-          _createQueryConstraint(database_interop.startAt, [value, key])));
+  Query startAt(Object? value, [String? key]) {
+    return Query.fromJsObject(
+      database_interop.query(
+        jsObject,
+        database_interop.startAt(value?.toJSBox, key?.toJS),
+      ),
+    );
+  }
 
-  Query startAfter(value, [String? key]) => Query.fromJsObject(key == null
-      ? database_interop.query(jsObject,
-          _createQueryConstraint(database_interop.startAfter, [value]))
-      : database_interop.query(jsObject,
-          _createQueryConstraint(database_interop.startAfter, [value, key])));
+  Query startAfter(Object? value, [String? key]) {
+    return Query.fromJsObject(
+      database_interop.query(
+        jsObject,
+        database_interop.startAfter(value?.toJSBox, key?.toJS),
+      ),
+    );
+  }
 
   /// Returns a String representation of Query object.
   @override
@@ -479,15 +506,6 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
 
   /// Returns a JSON-serializable representation of this object.
   dynamic toJson() => jsObject.toJSON().dartify();
-
-  S? _createQueryConstraint<S>(
-      Object method, List<dynamic>? /*list of primitive value */ args) {
-    if (args == null) {
-      throw ArgumentError('Please provide "args" parameter.');
-    }
-    var params = args.jsify();
-    return (method as JSObject).callMethod('apply'.toJS, params);
-  }
 }
 
 class TransactionResult
