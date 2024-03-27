@@ -39,9 +39,9 @@ void main() {
 
     setupConfigurationTests();
     setupDatabaseTests();
-    // setupDatabaseReferenceTests();
-    // setupQueryTests();
-    // setupDataSnapshotTests();
+    setupDatabaseReferenceTests();
+    setupQueryTests();
+    setupDataSnapshotTests();
     // TODO(ehesp): Fix broken tests
     // runOnDisconnectTests();
   });

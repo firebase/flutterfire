@@ -141,6 +141,12 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
     return database_interop.set(jsObject, value?.jsify()).toDart;
   }
 
+  /// Updates data with [value] at actual database location.
+  ///
+  /// The [value] must be a Dart basic type or the error is thrown.
+  Future update(Object? value) =>
+      database_interop.update(jsObject, value?.jsify()).toDart;
+
   /// Sets a priority for data at actual database location.
   ///
   /// The [priority] must be a [String], [num] or `null`, or the error is thrown.
@@ -210,11 +216,6 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
       throw convertFirebaseDatabaseException(dartified ?? {});
     }
   }
-
-  /// Updates data with [values] at actual database location.
-  ///
-  /// The [values] must be a Dart basic type or the error is thrown.
-  Future update(values) => database_interop.update(jsObject, values).toDart;
 }
 
 /// Event fired when data changes at location.
