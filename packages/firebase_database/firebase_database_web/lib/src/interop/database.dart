@@ -306,7 +306,9 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
     return Query.fromJsObject(
       database_interop.query(
         jsObject,
-        database_interop.endAt(value?.jsify(), key?.toJS),
+        key == null
+            ? database_interop.endAt(value?.jsify())
+            : database_interop.endAt(value?.jsify(), key.toJS),
       ),
     );
   }
@@ -321,7 +323,9 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
     return Query.fromJsObject(
       database_interop.query(
         jsObject,
-        database_interop.endBefore(value?.jsify(), key?.toJS),
+        key == null
+            ? database_interop.endBefore(value?.jsify())
+            : database_interop.endBefore(value?.jsify(), key.toJS),
       ),
     );
   }
@@ -335,7 +339,9 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
     return Query.fromJsObject(
       database_interop.query(
         jsObject,
-        database_interop.equalTo(value?.jsify(), key?.toJS),
+        key == null
+            ? database_interop.equalTo(value?.jsify())
+            : database_interop.equalTo(value?.jsify(), key.toJS),
       ),
     );
   }
@@ -487,7 +493,9 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
     return Query.fromJsObject(
       database_interop.query(
         jsObject,
-        database_interop.startAt(value?.jsify(), key?.toJS),
+        key == null
+            ? database_interop.startAt(value?.jsify())
+            : database_interop.startAt(value?.jsify(), key.toJS),
       ),
     );
   }
@@ -496,7 +504,9 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
     return Query.fromJsObject(
       database_interop.query(
         jsObject,
-        database_interop.startAfter(value?.jsify(), key?.toJS),
+        key == null
+            ? database_interop.startAfter(value?.jsify())
+            : database_interop.startAfter(value?.jsify(), key.toJS),
       ),
     );
   }
