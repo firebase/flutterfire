@@ -447,7 +447,7 @@ class SettableMetadata
           contentLanguage: contentLanguage?.toJS,
           contentType: contentType?.toJS,
           customMetadata:
-              (customMetadata != null) ? customMetadata.toJSBox : null));
+              (customMetadata != null) ? customMetadata.jsify() : null));
 
   /// Creates a new SettableMetadata from a [jsObject].
   SettableMetadata.fromJsObject(storage_interop.SettableMetadataJsImpl jsObject)
@@ -496,7 +496,11 @@ abstract class _SettableMetadataBase<
 
   /// Additional user-defined custom metadata.
   Map<String, String> get customMetadata {
-    return (jsObject.customMetadata!.dartify()! as Map).cast<String, String>();
+    final customMetadata = jsObject.customMetadata.dartify();
+    if (customMetadata == null) {
+      return <String, String>{};
+    }
+    return (customMetadata as Map).cast<String, String>();
   }
 
   set customMetadata(Map<String, String> m) {
