@@ -7,7 +7,6 @@
 // ignore_for_file: public_member_api_docs
 
 import 'dart:async';
-import 'dart:js';
 import 'dart:js_interop';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
@@ -22,17 +21,17 @@ export 'auth_interop.dart';
 Auth getAuthInstance(App app) {
   // Default persistence can be seen here
   // https://github.com/firebase/firebase-js-sdk/blob/master/packages/auth/src/platform_browser/index.ts#L47
-  final persistences = [
-    auth_interop.indexedDBLocalPersistence,
-    auth_interop.browserLocalPersistence,
-    auth_interop.browserSessionPersistence,
+  final List<JSAny?> persistences = [
+    auth_interop.indexedDBLocalPersistence as JSAny,
+    auth_interop.browserLocalPersistence as JSAny,
+    auth_interop.browserSessionPersistence as JSAny,
   ];
   return Auth.getInstance(
     auth_interop.initializeAuth(
       app.jsObject,
       auth_interop.AuthOptions(
         errorMap: auth_interop.debugErrorMap,
-        persistence: JsArray.from(persistences) as JSArray<JSAny>,
+        persistence: persistences.toJS,
         popupRedirectResolver: auth_interop.browserPopupRedirectResolver,
       ),
     ),
