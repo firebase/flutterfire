@@ -537,7 +537,7 @@ class DataSnapshot
   static final _expando = Expando<DataSnapshot>();
 
   /// The last part of the path at location for this DataSnapshot.
-  String get key => jsObject.key.toDart;
+  String? get key => jsObject.key?.toDart;
 
   /// The DatabaseReference for the location that generated this DataSnapshot.
   DatabaseReference get ref => DatabaseReference.getInstance(jsObject.ref);
@@ -566,7 +566,7 @@ class DataSnapshot
   bool forEach(void Function(DataSnapshot) action) {
     final actionWrap = ((database_interop.DataSnapshotJsImpl d) =>
         action(DataSnapshot.getInstance(d))).toJS;
-    return (jsObject.forEach(actionWrap) as JSBoolean).toDart;
+    return (jsObject.forEach(actionWrap)).toDart;
   }
 
   /// Returns priority for data in this DataSnapshot.
