@@ -10,11 +10,11 @@ part of firebase.database_interop;
 abstract class DataSnapshotJsImpl {}
 
 extension DataSnapshotJsImpl$ on DataSnapshotJsImpl {
-  external JSString get key;
-
-  external ReferenceJsImpl get ref;
+  external JSString? get key;
 
   external JSAny? /* JSString | num | null*/ get priority;
+
+  external ReferenceJsImpl get ref;
 
   external JSNumber get size;
 
@@ -24,13 +24,13 @@ extension DataSnapshotJsImpl$ on DataSnapshotJsImpl {
 
   external JSAny? exportVal();
 
-  external JSAny forEach(JSFunction action);
+  external JSBoolean forEach(JSFunction action);
 
   external JSBoolean hasChild(JSString path);
 
   external JSBoolean hasChildren();
 
-  external JSObject toJSON();
+  external JSObject? toJSON();
 
   external JSAny? val();
 }

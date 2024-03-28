@@ -11,13 +11,11 @@ import 'dart:js_interop_unsafe';
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
-import 'package:firebase_core_web/firebase_core_web_interop.dart'
-    hide jsify, dartify, callMethod;
+import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:firebase_database_web/firebase_database_web.dart'
     show convertFirebaseDatabaseException;
 import 'package:flutter/widgets.dart';
-import 'package:js/js_util.dart';
 
 import 'database_interop.dart' as database_interop;
 
@@ -139,7 +137,15 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   /// Overwrites any existing data at actual location and all child locations.
   ///
   /// The [value] must be a Dart basic type or the error is thrown.
-  Future set(value) => database_interop.set(jsObject, jsify(value)).toDart;
+  Future set(Object? value) {
+    return database_interop.set(jsObject, value?.jsify()).toDart;
+  }
+
+  /// Updates data with [value] at actual database location.
+  ///
+  /// The [value] must be a Dart basic type or the error is thrown.
+  Future update(Object? value) =>
+      database_interop.update(jsObject, value?.jsify()).toDart;
 
   /// Sets a priority for data at actual database location.
   ///
@@ -155,8 +161,8 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   /// The [newVal] must be a Dart basic type or the error is thrown.
   /// The [newPriority] must be a [String], [num] or `null`, or the error
   /// is thrown.
-  Future setWithPriority(newVal, newPriority) => database_interop
-      .setWithPriority(jsObject, jsify(newVal), newPriority)
+  Future setWithPriority(Object? newVal, newPriority) => database_interop
+      .setWithPriority(jsObject, newVal?.jsify(), newPriority)
       .toDart;
 
   /// Atomically updates data at actual database location.
@@ -206,16 +212,10 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
         snapshot: DataSnapshot._fromJsObject(castedJsTransaction.snapshot),
       );
     } catch (e) {
-      final dartified = dartify(e);
+      final dartified = (e as JSObject).dartify();
       throw convertFirebaseDatabaseException(dartified ?? {});
     }
   }
-
-  /// Updates data with [values] at actual database location.
-  ///
-  /// The [values] must be a Dart basic type or the error is thrown.
-  Future update(values) =>
-      database_interop.update(jsObject, jsify(values)).toDart;
 }
 
 /// Event fired when data changes at location.
@@ -290,11 +290,10 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   /// Gets the most up-to-date result for this query.
   Future<DataSnapshot> get() async {
     final jsSnapshotPromise = database_interop.get(jsObject);
-    final snapshot = await promiseToFuture<database_interop.DataSnapshotJsImpl>(
-      jsSnapshotPromise,
-    );
+    final snapshot = await jsSnapshotPromise.toDart;
 
-    return DataSnapshot.getInstance(snapshot);
+    return DataSnapshot.getInstance(
+        snapshot as database_interop.DataSnapshotJsImpl);
   }
 
   /// Returns a Query with the ending point [value]. The ending point
@@ -303,11 +302,16 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   /// The [value] must be a [num], [String], [bool], or `null`, or the error
   /// is thrown.
   /// The optional [key] can be used to further limit the range of the query.
-  Query endAt(value, [String? key]) => Query.fromJsObject(key == null
-      ? database_interop.query(
-          jsObject, _createQueryConstraint(database_interop.endAt, [value]))
-      : database_interop.query(jsObject,
-          _createQueryConstraint(database_interop.endAt, [value, key])));
+  Query endAt(Object? value, [String? key]) {
+    return Query.fromJsObject(
+      database_interop.query(
+        jsObject,
+        key == null
+            ? database_interop.endAt(value?.jsify())
+            : database_interop.endAt(value?.jsify(), key.toJS),
+      ),
+    );
+  }
 
   /// Creates a [Query] with the specified ending point (exclusive)
   /// The ending point is exclusive. If only a value is provided,
@@ -315,22 +319,32 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   /// the query. If a key is specified, then children must have a value lesss
   /// than or equal to the specified value and a a key name less than the
   /// specified key.
-  Query endBefore(value, [String? key]) => Query.fromJsObject(key == null
-      ? database_interop.query(
-          jsObject, _createQueryConstraint(database_interop.endBefore, [value]))
-      : database_interop.query(jsObject,
-          _createQueryConstraint(database_interop.endBefore, [value, key])));
+  Query endBefore(Object? value, [String? key]) {
+    return Query.fromJsObject(
+      database_interop.query(
+        jsObject,
+        key == null
+            ? database_interop.endBefore(value?.jsify())
+            : database_interop.endBefore(value?.jsify(), key.toJS),
+      ),
+    );
+  }
 
   /// Returns a Query which includes children which match the specified [value].
   ///
   /// The [value] must be a [num], [String], [bool], or `null`, or the error
   /// is thrown.
   /// The optional [key] can be used to further limit the range of the query.
-  Query equalTo(value, [String? key]) => Query.fromJsObject(key == null
-      ? database_interop.query(
-          jsObject, _createQueryConstraint(database_interop.equalTo, [value]))
-      : database_interop.query(jsObject,
-          _createQueryConstraint(database_interop.equalTo, [value, key])));
+  Query equalTo(Object? value, [String? key]) {
+    return Query.fromJsObject(
+      database_interop.query(
+        jsObject,
+        key == null
+            ? database_interop.equalTo(value?.jsify())
+            : database_interop.equalTo(value?.jsify(), key.toJS),
+      ),
+    );
+  }
 
   /// Returns `true` if the current and [other] queries are equal - they
   /// represent the exactly same location, have the same query parameters,
@@ -344,14 +358,25 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
 
   /// Returns a new Query limited to the first specific number of children
   /// provided by [limit].
-  Query limitToFirst(int limit) => Query.fromJsObject(database_interop.query(
-      jsObject,
-      _createQueryConstraint(database_interop.limitToFirst, [limit])));
+  Query limitToFirst(int limit) {
+    return Query.fromJsObject(
+      database_interop.query(
+        jsObject,
+        database_interop.limitToFirst(limit.toJS),
+      ),
+    );
+  }
 
   /// Returns a new Query limited to the last specific number of children
   /// provided by [limit].
-  Query limitToLast(int limit) => Query.fromJsObject(database_interop.query(
-      jsObject, _createQueryConstraint(database_interop.limitToLast, [limit])));
+  Query limitToLast(int limit) {
+    return Query.fromJsObject(
+      database_interop.query(
+        jsObject,
+        database_interop.limitToLast(limit.toJS),
+      ),
+    );
+  }
 
   Stream<QueryEvent> _createStream(String eventType) {
     late StreamController<QueryEvent> streamController;
@@ -364,7 +389,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
     });
 
     final void Function(JSObject) cancelCallbackWrap = ((JSObject error) {
-      final dartified = dartify(error);
+      final dartified = error.dartify();
       streamController
           .addError(convertFirebaseDatabaseException(dartified ?? {}));
       streamController.close();
@@ -429,7 +454,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
         c.complete(QueryEvent(DataSnapshot.getInstance(snapshot), string));
       }).toJS,
       ((JSAny error) {
-        final dartified = dartify(error);
+        final dartified = error.dartify();
         c.completeError(convertFirebaseDatabaseException(dartified ?? {}));
       }).toJS,
       database_interop.ListenOptions(onlyOnce: true.toJS),
@@ -464,33 +489,34 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   /// The [value] must be a [num], [String], [bool], or `null`, or the error
   /// is thrown.
   /// The optional [key] can be used to further limit the range of the query.
-  Query startAt(value, [String? key]) => Query.fromJsObject(key == null
-      ? database_interop.query(
-          jsObject, _createQueryConstraint(database_interop.startAt, [value]))
-      : database_interop.query(jsObject,
-          _createQueryConstraint(database_interop.startAt, [value, key])));
+  Query startAt(Object? value, [String? key]) {
+    return Query.fromJsObject(
+      database_interop.query(
+        jsObject,
+        key == null
+            ? database_interop.startAt(value?.jsify())
+            : database_interop.startAt(value?.jsify(), key.toJS),
+      ),
+    );
+  }
 
-  Query startAfter(value, [String? key]) => Query.fromJsObject(key == null
-      ? database_interop.query(jsObject,
-          _createQueryConstraint(database_interop.startAfter, [value]))
-      : database_interop.query(jsObject,
-          _createQueryConstraint(database_interop.startAfter, [value, key])));
+  Query startAfter(Object? value, [String? key]) {
+    return Query.fromJsObject(
+      database_interop.query(
+        jsObject,
+        key == null
+            ? database_interop.startAfter(value?.jsify())
+            : database_interop.startAfter(value?.jsify(), key.toJS),
+      ),
+    );
+  }
 
   /// Returns a String representation of Query object.
   @override
   String toString() => jsObject.toString();
 
   /// Returns a JSON-serializable representation of this object.
-  dynamic toJson() => dartify(jsObject.toJSON());
-
-  S? _createQueryConstraint<S>(
-      Object method, List<dynamic>? /*list of primitive value */ args) {
-    if (args == null) {
-      throw ArgumentError('Please provide "args" parameter.');
-    }
-    var params = args.map(jsify).toList();
-    return callMethod(method, 'apply', [null, jsify(params)]);
-  }
+  dynamic toJson() => jsObject.toJSON().dartify();
 }
 
 class TransactionResult
@@ -522,7 +548,7 @@ class DataSnapshot
   static final _expando = Expando<DataSnapshot>();
 
   /// The last part of the path at location for this DataSnapshot.
-  String get key => jsObject.key.toDart;
+  String? get key => jsObject.key?.toDart;
 
   /// The DatabaseReference for the location that generated this DataSnapshot.
   DatabaseReference get ref => DatabaseReference.getInstance(jsObject.ref);
@@ -544,14 +570,14 @@ class DataSnapshot
   bool exists() => jsObject.exists().toDart;
 
   /// Exports the contents of the DataSnapshot as a Dart object.
-  dynamic exportVal() => dartify(jsObject.exportVal());
+  dynamic exportVal() => jsObject.exportVal().dartify();
 
   /// Enumerates the top-level children of the DataSnapshot in their query-order.
   /// [action] is called for each child DataSnapshot.
   bool forEach(void Function(DataSnapshot) action) {
     final actionWrap = ((database_interop.DataSnapshotJsImpl d) =>
         action(DataSnapshot.getInstance(d))).toJS;
-    return (jsObject.forEach(actionWrap) as JSBoolean).toDart;
+    return (jsObject.forEach(actionWrap)).toDart;
   }
 
   /// Returns priority for data in this DataSnapshot.
@@ -564,10 +590,10 @@ class DataSnapshot
   bool hasChildren() => jsObject.hasChildren().toDart;
 
   /// Returns Dart value from a DataSnapshot.
-  dynamic val() => dartify(jsObject.val());
+  dynamic val() => (jsObject.val()).dartify();
 
   /// Returns a JSON-serializable representation of this object.
-  dynamic toJson() => dartify(jsObject.toJSON());
+  dynamic toJson() => (jsObject.toJSON()).dartify();
 }
 
 /// The OnDisconnect class allows you to write or clear data when your client
@@ -591,20 +617,20 @@ class OnDisconnect
   /// when the client is disconnected.
   ///
   /// The [value] must be a Dart basic type or the error is thrown.
-  Future set(value) => (jsObject.set(jsify(value))).toDart;
+  Future set(Object? value) => (jsObject.set((value)?.jsify())).toDart;
 
   /// Ensures the data for actual location is set to the specified [value]
   /// and [priority] when the client is disconnected.
   ///
   /// The [value] must be a Dart basic type or the error is thrown.
   /// The [priority] must be a [String], [num] or `null`, or the error is thrown.
-  Future setWithPriority(value, priority) =>
-      (jsObject.setWithPriority(jsify(value), priority)).toDart;
+  Future setWithPriority(Object? value, priority) =>
+      (jsObject.setWithPriority((value)?.jsify(), priority)).toDart;
 
   /// Writes multiple [values] at actual location when the client is disconnected.
   ///
   /// The [values] must be a Dart basic type or the error is thrown.
-  Future update(values) => (jsObject.update(jsify(values))).toDart;
+  Future update(Object? values) => (jsObject.update((values)?.jsify())).toDart;
 }
 
 /// The ThenableReference class represents [DatabaseReference] with a

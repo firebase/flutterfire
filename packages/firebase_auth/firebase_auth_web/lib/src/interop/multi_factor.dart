@@ -8,8 +8,7 @@
 
 import 'dart:js_interop';
 
-import 'package:firebase_core_web/firebase_core_web_interop.dart'
-    hide jsify, dartify;
+import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'package:http_parser/http_parser.dart';
 
 import 'auth.dart' as auth;

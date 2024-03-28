@@ -14,7 +14,7 @@ extension TransactionResultJsImplExtension on TransactionResultJsImpl {
   external DataSnapshotJsImpl get snapshot;
 }
 
-@JS('Reference')
+@JS('DatabaseReference')
 @staticInterop
 abstract class ReferenceJsImpl extends QueryJsImpl {}
 

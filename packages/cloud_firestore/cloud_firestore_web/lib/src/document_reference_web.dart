@@ -40,7 +40,8 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
   @override
   Future<void> update(Map<Object, dynamic> data) {
     return convertWebExceptions(
-        () => _delegate.update(EncodeUtility.encodeMapDataFieldPath(data)!));
+      () => _delegate.update(EncodeUtility.encodeMapDataFieldPath(data)!),
+    );
   }
 
   @override

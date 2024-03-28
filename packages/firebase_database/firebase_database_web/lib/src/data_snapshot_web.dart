@@ -32,7 +32,7 @@ class DataSnapshotWeb extends DataSnapshotPlatform {
     return Iterable<DataSnapshotPlatform>.generate(snapshots.length,
         (int index) {
       database_interop.DataSnapshot snapshot = snapshots[index];
-      return DataSnapshotWeb(ref.child(snapshot.key), snapshot);
+      return DataSnapshotWeb(ref.child(snapshot.key!), snapshot);
     });
   }
 }

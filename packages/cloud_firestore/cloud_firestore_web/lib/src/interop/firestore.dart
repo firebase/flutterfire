@@ -7,14 +7,14 @@
 
 import 'dart:async';
 import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
     as platform_interface;
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/src/utils/encode_utility.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_core_web/firebase_core_web_interop.dart'
-    hide jsify, dartify;
+import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'package:flutter/foundation.dart';
 
 import 'firestore_interop.dart' as firestore_interop;
@@ -275,8 +275,7 @@ class LoadBundleTaskProgress
   final int totalDocuments;
 }
 
-class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl>
-    with _Updatable {
+class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl> {
   static final _expando = Expando<WriteBatch>();
 
   /// Creates a new WriteBatch from a [jsObject].
@@ -302,12 +301,12 @@ class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl>
 
   WriteBatch update(DocumentReference documentRef, Map<String, dynamic> data) =>
       WriteBatch.getInstance(
-          _wrapUpdateFunctionCall(jsObject, data, documentRef));
+        jsObject.update(documentRef.jsObject, jsify(data)! as JSObject),
+      );
 }
 
 class DocumentReference
-    extends JsObjectWrapper<firestore_interop.DocumentReferenceJsImpl>
-    with _Updatable {
+    extends JsObjectWrapper<firestore_interop.DocumentReferenceJsImpl> {
   static final _expando = Expando<DocumentReference>();
 
   /// Non-null [Firestore] the document is in.
@@ -395,24 +394,25 @@ class DocumentReference
   }
 
   Future<void> set(Map<String, dynamic> data,
-      [firestore_interop.SetOptions? options]) {
-    var jsObjectSet = (options != null)
-        ? firestore_interop.setDoc(jsObject, jsify(data)! as JSObject, options)
-        : firestore_interop.setDoc(jsObject, jsify(data)! as JSObject);
-
-    return jsObjectSet.toDart;
+      [firestore_interop.SetOptions? options]) async {
+    if (options != null) {
+      await firestore_interop.setDoc(jsObject, jsify(data), options).toDart;
+      return;
+    }
+    await firestore_interop.setDoc(jsObject, jsify(data)).toDart;
   }
 
-  Future<void> update(Map<firestore_interop.FieldPath, dynamic> data) {
-    final alternatingFieldValues = data.keys
+  Future<void> update(Map<firestore_interop.FieldPath, dynamic> data) async {
+    final List<JSAny?> alternatingFieldValues = data.keys
         .map((e) => [jsify(e), jsify(data[e])])
         .expand((e) => e)
         .toList();
 
-    return handleThenable(callMethod(firestore_interop.updateDoc, 'apply', [
+    await firestore_interop.updateDoc
+        .callMethodVarArgs<JSPromise>('apply'.toJS, [
       null,
-      [jsObject, ...alternatingFieldValues]
-    ]));
+      [jsObject, ...alternatingFieldValues].jsify()
+    ]).toDart;
   }
 }
 
@@ -503,16 +503,28 @@ class Query<T extends firestore_interop.QueryJsImpl>
   }
 
   Query startAfter({DocumentSnapshot? snapshot, List<dynamic>? fieldValues}) =>
-      Query.fromJsObject(firestore_interop.query(
+      Query.fromJsObject(
+        firestore_interop.query(
           jsObject,
           _createQueryConstraint(
-              firestore_interop.startAfter, snapshot, fieldValues)));
+            firestore_interop.startAfter,
+            snapshot,
+            fieldValues,
+          ),
+        ),
+      );
 
   Query startAt({DocumentSnapshot? snapshot, List<dynamic>? fieldValues}) =>
-      Query.fromJsObject(firestore_interop.query(
+      Query.fromJsObject(
+        firestore_interop.query(
           jsObject,
           _createQueryConstraint(
-              firestore_interop.startAt, snapshot, fieldValues)));
+            firestore_interop.startAt,
+            snapshot,
+            fieldValues,
+          ),
+        ),
+      );
 
   Query where(dynamic fieldPath, String opStr, dynamic value) =>
       Query.fromJsObject(
@@ -530,18 +542,24 @@ class Query<T extends firestore_interop.QueryJsImpl>
   /// [fieldValues].
   /// We need to call this method in all paginating methods to fix that Dart
   /// doesn't support varargs - we need to use [List] to call js function.
-  S? _createQueryConstraint<S>(
+  firestore_interop.QueryConstraintJsImpl _createQueryConstraint<S>(
       Object method, DocumentSnapshot? snapshot, List<dynamic>? fieldValues) {
     if (snapshot == null && fieldValues == null) {
       throw ArgumentError(
           'Please provide either snapshot or fieldValues parameter.');
     }
 
-    var args = (snapshot != null)
+    final args = (snapshot != null)
         ? [snapshot.jsObject]
         : fieldValues!.map(jsify).toList();
 
-    return callMethod(method, 'apply', [null, jsify(args)]);
+    return (method as JSObject).callMethodVarArgs<JSAny>(
+      'apply'.toJS,
+      [
+        null,
+        jsify(args).jsify(),
+      ],
+    ) as firestore_interop.QueryConstraintJsImpl;
   }
 
   Object _parseFilterWith(Map<String, Object?> map) {
@@ -566,9 +584,21 @@ class Query<T extends firestore_interop.QueryJsImpl>
     }
 
     if (opStr == 'OR') {
-      return callMethod(firestore_interop.or, 'apply', [null, jsFilters]);
+      return firestore_interop.or.callMethodVarArgs<JSAny>(
+        'apply'.toJS,
+        [
+          null,
+          jsFilters.jsify(),
+        ],
+      );
     } else if (opStr == 'AND') {
-      return callMethod(firestore_interop.and, 'apply', [null, jsFilters]);
+      return firestore_interop.and.callMethodVarArgs<JSAny>(
+        'apply'.toJS,
+        [
+          null,
+          jsFilters.jsify(),
+        ],
+      );
     }
 
     throw Exception('InvalidOperator');
@@ -747,8 +777,7 @@ class QuerySnapshot
       .toDart;
 }
 
-class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl>
-    with _Updatable {
+class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl> {
   static final _expando = Expando<Transaction>();
 
   /// Creates a new Transaction from a [jsObject].
@@ -779,24 +808,8 @@ class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl>
   Transaction update(
           DocumentReference documentRef, Map<String, dynamic> data) =>
       Transaction.getInstance(
-          _wrapUpdateFunctionCall(jsObject, data, documentRef));
-}
-
-/// Mixin class for all classes with the [update()] method. We need to call
-/// [_wrapUpdateFunctionCall()] in all [update()] methods to fix that Dart
-/// doesn't support varargs - we need to use [List] to call js function.
-mixin _Updatable {
-  /// Calls js [:update():] method on [jsObject] with [data] or list of
-  /// [fieldsAndValues] and optionally [documentRef].
-  T? _wrapUpdateFunctionCall<T>(jsObject, Map<String, dynamic> data,
-      [DocumentReference? documentRef]) {
-    var args = [jsify(data)];
-    // documentRef has to be the first parameter in list of args
-    if (documentRef != null) {
-      args.insert(0, documentRef.jsObject as JSObject);
-    }
-    return callMethod(jsObject, 'update', args);
-  }
+        jsObject.update(documentRef.jsObject, jsify(data)!),
+      );
 }
 
 class _FieldValueDelete implements FieldValue {
@@ -826,9 +839,13 @@ class _FieldValueArrayUnion extends _FieldValueArray {
 
   @override
   firestore_interop.FieldValue? _jsify() {
-    // This uses var arg so cannot use js package
-    return callMethod(
-        firestore_interop.arrayUnion, 'apply', [null, jsify(elements)]);
+    return firestore_interop.arrayUnion.callMethodVarArgs<JSAny>(
+      'apply'.toJS,
+      [
+        null,
+        jsify(elements),
+      ],
+    ) as firestore_interop.FieldValue;
   }
 
   @override
@@ -840,9 +857,13 @@ class _FieldValueArrayRemove extends _FieldValueArray {
 
   @override
   firestore_interop.FieldValue? _jsify() {
-    // This uses var arg so cannot use js package
-    return callMethod(
-        firestore_interop.arrayRemove, 'apply', [null, jsify(elements)]);
+    return firestore_interop.arrayRemove.callMethodVarArgs<JSAny>(
+      'apply'.toJS,
+      [
+        null,
+        jsify(elements),
+      ],
+    ) as firestore_interop.FieldValue;
   }
 
   @override

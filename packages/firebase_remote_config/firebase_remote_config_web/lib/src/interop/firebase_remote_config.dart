@@ -49,11 +49,12 @@ class RemoteConfig
   /// defaultsMap['x'] = 1;                       // remoteConfig.defaultConfig will not be updated.
   /// remoteConfig.defaultConfig['x'] = 1;        // Runtime error: attempt to modify an unmodifiable map.
   /// ```
-  Map<String, dynamic> get defaultConfig =>
-      Map.unmodifiable(dartify(jsObject.defaultConfig));
+  Map<String, dynamic> get defaultConfig => Map.unmodifiable(
+        jsObject.defaultConfig.dartify()! as Map<String, dynamic>,
+      );
 
   set defaultConfig(Map<String, dynamic> value) {
-    jsObject.defaultConfig = jsify(value);
+    jsObject.defaultConfig = value.toJSBox;
   }
 
   /// Returns the timestamp of the last *successful* fetch.
@@ -105,7 +106,8 @@ class RemoteConfig
 
   /// Returns all config values.
   Map<String, RemoteConfigValue> getAll() {
-    final keys = objectKeys(remote_config_interop.getAll(jsObject));
+    final keys =
+        remote_config_interop.getAll(jsObject).dartify()! as List<String>;
     final entries = keys.map<MapEntry<String, RemoteConfigValue>>(
       (dynamic k) => MapEntry<String, RemoteConfigValue>(k, getValue(k)),
     );

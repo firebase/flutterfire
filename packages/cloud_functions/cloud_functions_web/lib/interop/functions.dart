@@ -111,7 +111,7 @@ dynamic _convertNested(dynamic object) {
     return map;
   } else {
     // For non-nested types, attempt to convert directly
-    return dartify(object);
+    return _dartify(object);
   }
 }
 

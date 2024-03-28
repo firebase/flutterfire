@@ -19,7 +19,6 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
   http: '>=0.13.0 <2.0.0'
-  js: ^0.6.3
   meta: ^1.8.0
   web: ^0.5.1
 

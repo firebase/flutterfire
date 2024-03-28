@@ -38,9 +38,9 @@ void main() {
   group('FlutterFire', () {
     if (kIsWeb || !Platform.isWindows) {
       firebase_core.main();
+      firebase_auth.main();
       firebase_database.main();
       firebase_crashlytics.main();
-      firebase_auth.main();
       firebase_analytics.main();
       cloud_functions.main();
       firebase_app_check.main();
