@@ -413,7 +413,7 @@ class DocumentReference
       'apply'.toJS,
       [
         [jsObject, ...alternatingFieldValues]
-      ].toJSBox,
+      ].jsify(),
     );
   }
 }
@@ -568,10 +568,10 @@ class Query<T extends firestore_interop.QueryJsImpl>
     }
 
     if (opStr == 'OR') {
-      return firestore_interop.or.callMethod('apply'.toJS, [jsFilters].toJSBox);
+      return firestore_interop.or.callMethod('apply'.toJS, [jsFilters].jsify());
     } else if (opStr == 'AND') {
       return firestore_interop.and
-          .callMethod('apply'.toJS, [jsFilters].toJSBox);
+          .callMethod('apply'.toJS, [jsFilters].jsify());
     }
 
     throw Exception('InvalidOperator');
