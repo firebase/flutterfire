@@ -504,16 +504,28 @@ class Query<T extends firestore_interop.QueryJsImpl>
   }
 
   Query startAfter({DocumentSnapshot? snapshot, List<dynamic>? fieldValues}) =>
-      Query.fromJsObject(firestore_interop.query(
+      Query.fromJsObject(
+        firestore_interop.query(
           jsObject,
           _createQueryConstraint(
-              firestore_interop.startAfter, snapshot, fieldValues)));
+            firestore_interop.startAfter,
+            snapshot,
+            fieldValues,
+          ),
+        ),
+      );
 
   Query startAt({DocumentSnapshot? snapshot, List<dynamic>? fieldValues}) =>
-      Query.fromJsObject(firestore_interop.query(
+      Query.fromJsObject(
+        firestore_interop.query(
           jsObject,
           _createQueryConstraint(
-              firestore_interop.startAt, snapshot, fieldValues)));
+            firestore_interop.startAt,
+            snapshot,
+            fieldValues,
+          ),
+        ),
+      );
 
   Query where(dynamic fieldPath, String opStr, dynamic value) =>
       Query.fromJsObject(
@@ -531,18 +543,24 @@ class Query<T extends firestore_interop.QueryJsImpl>
   /// [fieldValues].
   /// We need to call this method in all paginating methods to fix that Dart
   /// doesn't support varargs - we need to use [List] to call js function.
-  S? _createQueryConstraint<S>(
+  firestore_interop.QueryConstraintJsImpl _createQueryConstraint<S>(
       Object method, DocumentSnapshot? snapshot, List<dynamic>? fieldValues) {
     if (snapshot == null && fieldValues == null) {
       throw ArgumentError(
           'Please provide either snapshot or fieldValues parameter.');
     }
 
-    var args = (snapshot != null)
+    final args = (snapshot != null)
         ? [snapshot.jsObject]
         : fieldValues!.map(jsify).toList();
 
-    return (method as JSObject).callMethod('apply'.toJS, [jsify(args)].toJS);
+    return (method as JSObject).callMethodVarArgs<JSAny>(
+      'apply'.toJS,
+      [
+        null,
+        jsify(args).jsify(),
+      ],
+    ) as firestore_interop.QueryConstraintJsImpl;
   }
 
   Object _parseFilterWith(Map<String, Object?> map) {
@@ -571,7 +589,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
         'apply'.toJS,
         [
           null,
-          [jsFilters].jsify(),
+          jsFilters.jsify(),
         ],
       );
     } else if (opStr == 'AND') {
@@ -579,7 +597,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
         'apply'.toJS,
         [
           null,
-          [jsFilters].jsify(),
+          jsFilters.jsify(),
         ],
       );
     }
