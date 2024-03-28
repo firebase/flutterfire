@@ -273,7 +273,7 @@ external FieldValue serverTimestamp();
 @staticInterop
 external JSPromise setDoc(
   DocumentReferenceJsImpl reference,
-  JSObject data, [
+  JSAny? data, [
   SetOptions? options,
 ]);
 

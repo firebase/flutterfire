@@ -395,12 +395,12 @@ class DocumentReference
   }
 
   Future<void> set(Map<String, dynamic> data,
-      [firestore_interop.SetOptions? options]) {
-    var jsObjectSet = (options != null)
-        ? firestore_interop.setDoc(jsObject, jsify(data)! as JSObject, options)
-        : firestore_interop.setDoc(jsObject, jsify(data)! as JSObject);
-
-    return jsObjectSet.toDart;
+      [firestore_interop.SetOptions? options]) async {
+    if (options != null) {
+      await firestore_interop.setDoc(jsObject, jsify(data), options).toDart;
+      return;
+    }
+    await firestore_interop.setDoc(jsObject, jsify(data)).toDart;
   }
 
   Future<void> update(Map<firestore_interop.FieldPath, dynamic> data) async {
@@ -567,10 +567,21 @@ class Query<T extends firestore_interop.QueryJsImpl>
     }
 
     if (opStr == 'OR') {
-      return firestore_interop.or.callMethod('apply'.toJS, [jsFilters].jsify());
+      return firestore_interop.or.callMethodVarArgs<JSAny>(
+        'apply'.toJS,
+        [
+          null,
+          [jsFilters].jsify(),
+        ],
+      );
     } else if (opStr == 'AND') {
-      return firestore_interop.and
-          .callMethod('apply'.toJS, [jsFilters].jsify());
+      return firestore_interop.and.callMethodVarArgs<JSAny>(
+        'apply'.toJS,
+        [
+          null,
+          [jsFilters].jsify(),
+        ],
+      );
     }
 
     throw Exception('InvalidOperator');
@@ -828,9 +839,13 @@ class _FieldValueArrayUnion extends _FieldValueArray {
 
   @override
   firestore_interop.FieldValue? _jsify() {
-    // This uses var arg so cannot use js package
-    return firestore_interop.arrayUnion
-        .callMethod('apply'.toJS, [jsify(elements)].toJS);
+    return firestore_interop.arrayUnion.callMethodVarArgs<JSAny>(
+      'apply'.toJS,
+      [
+        null,
+        jsify(elements),
+      ],
+    ) as firestore_interop.FieldValue;
   }
 
   @override
@@ -842,9 +857,13 @@ class _FieldValueArrayRemove extends _FieldValueArray {
 
   @override
   firestore_interop.FieldValue? _jsify() {
-    // This uses var arg so cannot use js package
-    return firestore_interop.arrayRemove
-        .callMethod('apply'.toJS, [jsify(elements)].toJS);
+    return firestore_interop.arrayRemove.callMethodVarArgs<JSAny>(
+      'apply'.toJS,
+      [
+        null,
+        jsify(elements),
+      ],
+    ) as firestore_interop.FieldValue;
   }
 
   @override
