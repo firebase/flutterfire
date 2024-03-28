@@ -403,18 +403,17 @@ class DocumentReference
     return jsObjectSet.toDart;
   }
 
-  Future<void> update(Map<firestore_interop.FieldPath, dynamic> data) {
-    final alternatingFieldValues = data.keys
+  Future<void> update(Map<firestore_interop.FieldPath, dynamic> data) async {
+    final List<JSAny?> alternatingFieldValues = data.keys
         .map((e) => [jsify(e), jsify(data[e])])
         .expand((e) => e)
         .toList();
 
-    return firestore_interop.updateDoc.callMethod(
-      'apply'.toJS,
-      [
-        [jsObject, ...alternatingFieldValues]
-      ].jsify(),
-    );
+    await firestore_interop.updateDoc
+        .callMethodVarArgs<JSPromise>('apply'.toJS, [
+      null,
+      [jsObject, ...alternatingFieldValues].jsify()
+    ]).toDart;
   }
 }
 
