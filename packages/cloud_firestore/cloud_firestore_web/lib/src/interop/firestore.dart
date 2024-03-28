@@ -275,8 +275,7 @@ class LoadBundleTaskProgress
   final int totalDocuments;
 }
 
-class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl>
-    with _Updatable {
+class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl> {
   static final _expando = Expando<WriteBatch>();
 
   /// Creates a new WriteBatch from a [jsObject].
@@ -302,12 +301,12 @@ class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl>
 
   WriteBatch update(DocumentReference documentRef, Map<String, dynamic> data) =>
       WriteBatch.getInstance(
-          _wrapUpdateFunctionCall(jsObject, data, documentRef));
+        jsObject.update(documentRef.jsObject, jsify(data)! as JSObject),
+      );
 }
 
 class DocumentReference
-    extends JsObjectWrapper<firestore_interop.DocumentReferenceJsImpl>
-    with _Updatable {
+    extends JsObjectWrapper<firestore_interop.DocumentReferenceJsImpl> {
   static final _expando = Expando<DocumentReference>();
 
   /// Non-null [Firestore] the document is in.
@@ -778,8 +777,7 @@ class QuerySnapshot
       .toDart;
 }
 
-class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl>
-    with _Updatable {
+class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl> {
   static final _expando = Expando<Transaction>();
 
   /// Creates a new Transaction from a [jsObject].
@@ -810,24 +808,8 @@ class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl>
   Transaction update(
           DocumentReference documentRef, Map<String, dynamic> data) =>
       Transaction.getInstance(
-          _wrapUpdateFunctionCall(jsObject, data, documentRef));
-}
-
-/// Mixin class for all classes with the [update()] method. We need to call
-/// [_wrapUpdateFunctionCall()] in all [update()] methods to fix that Dart
-/// doesn't support varargs - we need to use [List] to call js function.
-mixin _Updatable {
-  /// Calls js [:update():] method on [jsObject] with [data] or list of
-  /// [fieldsAndValues] and optionally [documentRef].
-  T? _wrapUpdateFunctionCall<T>(jsObject, Map<String, dynamic> data,
-      [DocumentReference? documentRef]) {
-    var args = [jsify(data)];
-    // documentRef has to be the first parameter in list of args
-    if (documentRef != null) {
-      args.insert(0, documentRef.jsObject as JSObject);
-    }
-    return (jsObject as JSObject).callMethod('update'.toJS, args.toJS);
-  }
+        jsObject.update(documentRef.jsObject, jsify(data)!),
+      );
 }
 
 class _FieldValueDelete implements FieldValue {
