@@ -13,10 +13,8 @@
 // limitations under the License.
 
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:typed_data';
-import 'package:firebase_vertex_ai/firebase_vertex_ai.dart';
-import 'package:google_generative_ai/google_generative_ai.dart' as googleAI;
+import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
 
 /// The base structured datatype containing multi-part content of a message.
 final class Content {
@@ -33,7 +31,7 @@ final class Content {
 
   Content(this.role, this.parts);
 
-  factory Content.fromGoogleAIContent(googleAI.Content content) => Content(
+  factory Content.fromGoogleAIContent(google_ai.Content content) => Content(
       content.role,
       content.parts.map((p) => Part.fromGoogleAIPart(p)).toList());
 
@@ -47,8 +45,8 @@ final class Content {
         if (role case final role?) 'role': role,
         'parts': parts.map((p) => p.toJson()).toList()
       };
-  googleAI.Content toGoogleAIContent() =>
-      googleAI.Content(role, parts.map((p) => p.toPart()).toList());
+  google_ai.Content toGoogleAIContent() =>
+      google_ai.Content(role, parts.map((p) => p.toPart()).toList());
 }
 
 Content parseContent(Object jsonObject) {
@@ -75,10 +73,10 @@ Part _parsePart(Object? jsonObject) {
 /// A datatype containing media that is part of a multi-part [Content] message.
 sealed class Part {
   Object toJson();
-  googleAI.Part toPart();
-  factory Part.fromGoogleAIPart(googleAI.Part part) => switch (part) {
-        googleAI.TextPart textPart => TextPart(textPart.text),
-        googleAI.DataPart dataPart =>
+  google_ai.Part toPart();
+  factory Part.fromGoogleAIPart(google_ai.Part part) => switch (part) {
+        google_ai.TextPart textPart => TextPart(textPart.text),
+        google_ai.DataPart dataPart =>
           DataPart(dataPart.mimeType, dataPart.bytes),
       };
 }
@@ -89,7 +87,7 @@ final class TextPart implements Part {
   @override
   Object toJson() => {'text': text};
   @override
-  googleAI.Part toPart() => googleAI.TextPart(text);
+  google_ai.Part toPart() => google_ai.TextPart(text);
 }
 
 final class DataPart implements Part {
@@ -101,5 +99,5 @@ final class DataPart implements Part {
         'inlineData': {'data': base64Encode(bytes), 'mimeType': mimeType}
       };
   @override
-  googleAI.Part toPart() => googleAI.DataPart(mimeType, bytes);
+  google_ai.Part toPart() => google_ai.DataPart(mimeType, bytes);
 }

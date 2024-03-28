@@ -16,11 +16,11 @@ import 'dart:async';
 
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:google_generative_ai/google_generative_ai.dart' as googleAI;
-import 'vertex_api.dart';
-import 'vertex_content.dart';
+import 'package:firebase_vertex_ai/firebase_vertex_ai.dart';
+import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
 
-final _baseUrl = Uri.https('staging-firebaseml.sandbox.googleapis.com');
+const _baseUrl = 'staging-firebaseml.sandbox.googleapis.com';
+const _apiVersion = 'v2beta';
 
 /// A multimodel generative model (like Gemini).
 ///
@@ -33,7 +33,7 @@ final class GenerativeModel {
   final List<SafetySetting> _safetySettings;
   final GenerationConfig? _generationConfig;
   final String _location;
-  final googleAI.GenerativeModel _model;
+  final google_ai.GenerativeModel _model;
 
   /// Create a [GenerativeModel] backed by the generative model named [model].
   ///
@@ -70,14 +70,42 @@ final class GenerativeModel {
         _safetySettings = safetySettings ?? [],
         _generationConfig = generationConfig,
         _location = location,
-        _model = googleAI.GenerativeModel(
-            model: _normalizeModelName(modelName), apiKey: apiKey);
+        _model = google_ai.GenerativeModel(
+            model: _normalizeModelName(modelName),
+            apiKey: apiKey,
+            safetySettings: safetySettings != null
+                ? safetySettings
+                    .map((setting) => setting.toGoogleAISafetySetting())
+                    .toList()
+                : [],
+            generationConfig:
+                _convertGenerationConfig(generationConfig, app, location));
 
   static const _modelsPrefix = 'models/';
   static String _normalizeModelName(String modelName) =>
       modelName.startsWith(_modelsPrefix)
           ? modelName.substring(_modelsPrefix.length)
           : modelName;
+
+  static google_ai.VertexConfig _vertexConfig(
+      FirebaseApp app, String location) {
+    var projectId = app.options.projectId;
+    var uri = Uri.https(
+      _baseUrl,
+      '/$_apiVersion/projects/$projectId/locations/$location/publishers/google/',
+    );
+    return google_ai.VertexConfig(modelUri: uri);
+  }
+
+  static google_ai.GenerationConfig _convertGenerationConfig(
+      GenerationConfig? config, FirebaseApp app, String location) {
+    var vertexConfig = _vertexConfig(app, location);
+    if (config == null) {
+      return google_ai.GenerationConfig(vertexConfig: vertexConfig);
+    } else {
+      return config.toGoogleAIGenerationConfig(vertexConfig);
+    }
+  }
 
   /// Generates content responding to [prompt].
   ///
@@ -92,14 +120,18 @@ final class GenerativeModel {
   Future<GenerateContentResponse> generateContent(Iterable<Content> prompt,
       {List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig}) async {
+    Iterable<google_ai.Content> googlePrompt =
+        prompt.map((content) => content.toGoogleAIContent());
+    List<google_ai.SafetySetting> googleSafetySettings = safetySettings != null
+        ? safetySettings
+            .map((setting) => setting.toGoogleAISafetySetting())
+            .toList()
+        : [];
     return _model
-        .generateContent(prompt.map((content) => content.toGoogleAIContent()),
-            safetySettings: safetySettings != null
-                ? safetySettings
-                    .map((setting) => setting.toGoogleAISafetySetting())
-                    .toList()
-                : [],
-            generationConfig: generationConfig?.toGoogleAIGenerationConfig())
+        .generateContent(googlePrompt,
+            safetySettings: googleSafetySettings,
+            generationConfig: _convertGenerationConfig(
+                generationConfig, _firebaseApp, _location))
         .then((value) =>
             GenerateContentResponse.fromGoogleAIGenerateContentResponse(value));
   }
@@ -128,7 +160,8 @@ final class GenerativeModel {
                     .map((setting) => setting.toGoogleAISafetySetting())
                     .toList()
                 : [],
-            generationConfig: generationConfig?.toGoogleAIGenerationConfig())
+            generationConfig: generationConfig?.toGoogleAIGenerationConfig(
+                _vertexConfig(_firebaseApp, _location)))
         .map((event) =>
             GenerateContentResponse.fromGoogleAIGenerateContentResponse(event));
   }

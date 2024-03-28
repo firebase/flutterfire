@@ -96,3 +96,5 @@ flutter:
 dependency_overrides:
   firebase_vertex_ai:
     path: ../../firebase_vertex_ai
+  google_generative_ai:
+    path: ../../../../../generative-ai-dart/pkgs/google_generative_ai

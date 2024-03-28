@@ -15,8 +15,7 @@
 import 'package:firebase_vertex_ai/firebase_vertex_ai.dart';
 
 import 'vertex_content.dart';
-import 'vertex_model.dart';
-import 'package:google_generative_ai/google_generative_ai.dart' as googleAI;
+import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
 
 final class CountTokensResponse {
   /// The number of tokens that the `model` tokenizes the `prompt` into.
@@ -27,12 +26,12 @@ final class CountTokensResponse {
   CountTokensResponse(this.totalTokens);
 
   factory CountTokensResponse.fromGoogleAICountTokensResponse(
-          googleAI.CountTokensResponse countTokensResponse) =>
+          google_ai.CountTokensResponse countTokensResponse) =>
       CountTokensResponse(countTokensResponse.totalTokens);
 
-  /// Converts this response to a [googleAI.CountTokensResponse].
-  googleAI.CountTokensResponse toGoogleAICountTokensResponse() =>
-      googleAI.CountTokensResponse(totalTokens);
+  /// Converts this response to a [google_ai.CountTokensResponse].
+  google_ai.CountTokensResponse toGoogleAICountTokensResponse() =>
+      google_ai.CountTokensResponse(totalTokens);
 }
 
 /// Response from the model; supports multiple candidates.
@@ -46,18 +45,20 @@ final class GenerateContentResponse {
   GenerateContentResponse(this.candidates, this.promptFeedback);
 
   factory GenerateContentResponse.fromGoogleAIGenerateContentResponse(
-          googleAI.GenerateContentResponse generateContentResponse) =>
+          google_ai.GenerateContentResponse generateContentResponse) =>
       GenerateContentResponse(
           generateContentResponse.candidates
               .map((candidate) => Candidate.fromGoogleAICandidate(candidate))
               .toList(),
-          PromptFeedback.fromGoogleAIPromptFeedback(
-              generateContentResponse.promptFeedback!));
+          generateContentResponse.promptFeedback != null
+              ? PromptFeedback.fromGoogleAIPromptFeedback(
+                  generateContentResponse.promptFeedback!)
+              : null);
 
   /// Converts this response to a [GenerateContentResponse].
 
-  googleAI.GenerateContentResponse toGoogleAIGenerateContentResponse() =>
-      googleAI.GenerateContentResponse(
+  google_ai.GenerateContentResponse toGoogleAIGenerateContentResponse() =>
+      google_ai.GenerateContentResponse(
           candidates
               .map(
                 (candidate) => candidate.toGoogleAICandidate(),
@@ -84,7 +85,7 @@ final class GenerateContentResponse {
             :final blockReasonMessage,
           ) =>
             // TODO: Add a specific subtype for this exception?
-            throw googleAI.GenerativeAIException('Response was blocked'
+            throw google_ai.GenerativeAIException('Response was blocked'
                 '${blockReason != null ? ' due to $blockReason' : ''}'
                 '${blockReasonMessage != null ? ': $blockReasonMessage' : ''}'),
           _ => null,
@@ -97,7 +98,7 @@ final class GenerateContentResponse {
         ),
         ...
       ] =>
-        throw googleAI.GenerativeAIException(
+        throw google_ai.GenerativeAIException(
           // ignore: prefer_interpolation_to_compose_strings
           'Candidate was blocked due to $finishReason' +
               (finishMessage != null && finishMessage.isNotEmpty
@@ -117,14 +118,14 @@ final class EmbedContentResponse {
 
   EmbedContentResponse(this.embedding);
   factory EmbedContentResponse.fromGoogleAIEmbedContentResponse(
-          googleAI.EmbedContentResponse embedContentResponse) =>
+          google_ai.EmbedContentResponse embedContentResponse) =>
       EmbedContentResponse(ContentEmbedding.fromGoogleAIContentEmbedding(
           embedContentResponse.embedding));
 
   /// Converts this response to a [EmbedContentResponse].
 
-  googleAI.EmbedContentResponse toGoogleAIEmbedContentResponse() =>
-      googleAI.EmbedContentResponse(embedding.toGoogleAIContentEmbedding());
+  google_ai.EmbedContentResponse toGoogleAIEmbedContentResponse() =>
+      google_ai.EmbedContentResponse(embedding.toGoogleAIContentEmbedding());
 }
 
 /// An embedding, as defined by a list of values.
@@ -134,12 +135,12 @@ final class ContentEmbedding {
 
   ContentEmbedding(this.values);
   factory ContentEmbedding.fromGoogleAIContentEmbedding(
-          googleAI.ContentEmbedding contentEmbedding) =>
+          google_ai.ContentEmbedding contentEmbedding) =>
       ContentEmbedding(contentEmbedding.values);
 
-  /// Converts this embedding to a [googleAI.ContentEmbedding].
-  googleAI.ContentEmbedding toGoogleAIContentEmbedding() =>
-      googleAI.ContentEmbedding(values);
+  /// Converts this embedding to a [google_ai.ContentEmbedding].
+  google_ai.ContentEmbedding toGoogleAIContentEmbedding() =>
+      google_ai.ContentEmbedding(values);
 }
 
 /// Feedback metadata of a prompt specified in a [GenerativeModel] request.
@@ -158,7 +159,7 @@ final class PromptFeedback {
 
   PromptFeedback(this.blockReason, this.blockReasonMessage, this.safetyRatings);
   factory PromptFeedback.fromGoogleAIPromptFeedback(
-          googleAI.PromptFeedback promptFeedback) =>
+          google_ai.PromptFeedback promptFeedback) =>
       PromptFeedback(
         promptFeedback.blockReason != null
             ? BlockReason.fromGoogleAIBlockReason(promptFeedback.blockReason!)
@@ -170,8 +171,9 @@ final class PromptFeedback {
             .toList(),
       );
 
-  /// Converts this feedback to a [googleAI.PromptFeedback].
-  googleAI.PromptFeedback toGoogleAIPromptFeedback() => googleAI.PromptFeedback(
+  /// Converts this feedback to a [google_ai.PromptFeedback].
+  google_ai.PromptFeedback toGoogleAIPromptFeedback() =>
+      google_ai.PromptFeedback(
         blockReason?.toGoogleAIBlockReason(),
         blockReasonMessage,
         safetyRatings
@@ -207,7 +209,7 @@ final class Candidate {
   // TODO: token count?
   Candidate(this.content, this.safetyRatings, this.citationMetadata,
       this.finishReason, this.finishMessage);
-  factory Candidate.fromGoogleAICandidate(googleAI.Candidate candidate) =>
+  factory Candidate.fromGoogleAICandidate(google_ai.Candidate candidate) =>
       Candidate(
           Content.fromGoogleAIContent(candidate.content),
           candidate.safetyRatings
@@ -222,7 +224,7 @@ final class Candidate {
               : null,
           candidate.finishMessage);
 
-  googleAI.Candidate toGoogleAICandidate() => googleAI.Candidate(
+  google_ai.Candidate toGoogleAICandidate() => google_ai.Candidate(
         content.toGoogleAIContent(),
         safetyRatings?.map((s) => s.toGoogleAISafetyRating()).toList(),
         citationMetadata?.toGoogleAICitationMetadata(),
@@ -246,12 +248,12 @@ final class SafetyRating {
 
   SafetyRating(this.category, this.probability);
   factory SafetyRating.fromGoogleAISafetyRating(
-          googleAI.SafetyRating safetyRating) =>
+          google_ai.SafetyRating safetyRating) =>
       SafetyRating(HarmCategory.fromGoogleAIHarmCategory(safetyRating.category),
           HarmProbability.fromHarmProbability(safetyRating.probability));
 
-  /// Converts this rating to a [googleAI.SafetyRating].
-  googleAI.SafetyRating toGoogleAISafetyRating() => googleAI.SafetyRating(
+  /// Converts this rating to a [google_ai.SafetyRating].
+  google_ai.SafetyRating toGoogleAISafetyRating() => google_ai.SafetyRating(
       category.toGoogleAIHarmCategory(), probability.toHarmProbability());
 }
 
@@ -283,21 +285,21 @@ enum BlockReason {
   const BlockReason(this._jsonString);
 
   static BlockReason fromGoogleAIBlockReason(
-      googleAI.BlockReason googleAIBlockReason) {
+      google_ai.BlockReason googleAIBlockReason) {
     return switch (googleAIBlockReason) {
-      googleAI.BlockReason.unspecified => BlockReason.unspecified,
-      googleAI.BlockReason.safety => BlockReason.safety,
-      googleAI.BlockReason.other => BlockReason.other,
+      google_ai.BlockReason.unspecified => BlockReason.unspecified,
+      google_ai.BlockReason.safety => BlockReason.safety,
+      google_ai.BlockReason.other => BlockReason.other,
     };
   }
 
-  /// Converts this blocking reason to a [googleAI.BlockReason].
+  /// Converts this blocking reason to a [google_ai.BlockReason].
 
-  googleAI.BlockReason toGoogleAIBlockReason() {
+  google_ai.BlockReason toGoogleAIBlockReason() {
     return switch (this) {
-      BlockReason.unspecified => googleAI.BlockReason.unspecified,
-      BlockReason.safety => googleAI.BlockReason.safety,
-      BlockReason.other => googleAI.BlockReason.other
+      BlockReason.unspecified => google_ai.BlockReason.unspecified,
+      BlockReason.safety => google_ai.BlockReason.safety,
+      BlockReason.other => google_ai.BlockReason.other
     };
   }
 
@@ -343,13 +345,13 @@ enum HarmCategory {
 
   const HarmCategory(this._jsonString);
   factory HarmCategory.fromGoogleAIHarmCategory(
-      googleAI.HarmCategory harmCategory) {
+      google_ai.HarmCategory harmCategory) {
     return switch (harmCategory) {
-      googleAI.HarmCategory.unspecified => HarmCategory.unspecified,
-      googleAI.HarmCategory.harassment => HarmCategory.harassment,
-      googleAI.HarmCategory.hateSpeech => HarmCategory.hateSpeech,
-      googleAI.HarmCategory.sexuallyExplicit => HarmCategory.sexuallyExplicit,
-      googleAI.HarmCategory.dangerousContent => HarmCategory.dangerousContent,
+      google_ai.HarmCategory.unspecified => HarmCategory.unspecified,
+      google_ai.HarmCategory.harassment => HarmCategory.harassment,
+      google_ai.HarmCategory.hateSpeech => HarmCategory.hateSpeech,
+      google_ai.HarmCategory.sexuallyExplicit => HarmCategory.sexuallyExplicit,
+      google_ai.HarmCategory.dangerousContent => HarmCategory.dangerousContent,
     };
   }
 
@@ -360,15 +362,15 @@ enum HarmCategory {
 
   String toJson() => _jsonString;
 
-  /// Converts this harm category to a [googleAI.HarmCategory].
+  /// Converts this harm category to a [google_ai.HarmCategory].
 
-  googleAI.HarmCategory toGoogleAIHarmCategory() {
+  google_ai.HarmCategory toGoogleAIHarmCategory() {
     return switch (this) {
-      HarmCategory.unspecified => googleAI.HarmCategory.unspecified,
-      HarmCategory.harassment => googleAI.HarmCategory.harassment,
-      HarmCategory.hateSpeech => googleAI.HarmCategory.hateSpeech,
-      HarmCategory.sexuallyExplicit => googleAI.HarmCategory.sexuallyExplicit,
-      HarmCategory.dangerousContent => googleAI.HarmCategory.dangerousContent,
+      HarmCategory.unspecified => google_ai.HarmCategory.unspecified,
+      HarmCategory.harassment => google_ai.HarmCategory.harassment,
+      HarmCategory.hateSpeech => google_ai.HarmCategory.hateSpeech,
+      HarmCategory.sexuallyExplicit => google_ai.HarmCategory.sexuallyExplicit,
+      HarmCategory.dangerousContent => google_ai.HarmCategory.dangerousContent,
     };
   }
 }
@@ -408,23 +410,23 @@ enum HarmProbability {
   const HarmProbability(this._jsonString);
 
   factory HarmProbability.fromHarmProbability(
-      googleAI.HarmProbability harmProbability) {
+      google_ai.HarmProbability harmProbability) {
     return switch (harmProbability) {
-      googleAI.HarmProbability.unspecified => HarmProbability.unspecified,
-      googleAI.HarmProbability.negligible => HarmProbability.negligible,
-      googleAI.HarmProbability.low => HarmProbability.low,
-      googleAI.HarmProbability.medium => HarmProbability.medium,
-      googleAI.HarmProbability.high => HarmProbability.high,
+      google_ai.HarmProbability.unspecified => HarmProbability.unspecified,
+      google_ai.HarmProbability.negligible => HarmProbability.negligible,
+      google_ai.HarmProbability.low => HarmProbability.low,
+      google_ai.HarmProbability.medium => HarmProbability.medium,
+      google_ai.HarmProbability.high => HarmProbability.high,
     };
   }
 
-  googleAI.HarmProbability toHarmProbability() {
+  google_ai.HarmProbability toHarmProbability() {
     return switch (this) {
-      HarmProbability.unspecified => googleAI.HarmProbability.unspecified,
-      HarmProbability.negligible => googleAI.HarmProbability.negligible,
-      HarmProbability.low => googleAI.HarmProbability.low,
-      HarmProbability.medium => googleAI.HarmProbability.medium,
-      HarmProbability.high => googleAI.HarmProbability.high,
+      HarmProbability.unspecified => google_ai.HarmProbability.unspecified,
+      HarmProbability.negligible => google_ai.HarmProbability.negligible,
+      HarmProbability.low => google_ai.HarmProbability.low,
+      HarmProbability.medium => google_ai.HarmProbability.medium,
+      HarmProbability.high => google_ai.HarmProbability.high,
     };
   }
 
@@ -443,13 +445,13 @@ final class CitationMetadata {
 
   CitationMetadata(this.citationSources);
   factory CitationMetadata.fromGoogleAICitationMetadata(
-          googleAI.CitationMetadata citationMetadata) =>
+          google_ai.CitationMetadata citationMetadata) =>
       CitationMetadata(citationMetadata.citationSources
           .map((e) => CitationSource.fromGoogleAICiationSource(e))
           .toList());
 
-  googleAI.CitationMetadata toGoogleAICitationMetadata() =>
-      googleAI.CitationMetadata(
+  google_ai.CitationMetadata toGoogleAICitationMetadata() =>
+      google_ai.CitationMetadata(
           citationSources.map((e) => e.toGoogleAICiationSource()).toList());
 }
 
@@ -473,12 +475,12 @@ final class CitationSource {
 
   CitationSource(this.startIndex, this.endIndex, this.uri, this.license);
   factory CitationSource.fromGoogleAICiationSource(
-          googleAI.CitationSource source) =>
+          google_ai.CitationSource source) =>
       CitationSource(
           source.startIndex, source.endIndex, source.uri, source.license);
 
-  googleAI.CitationSource toGoogleAICiationSource() =>
-      googleAI.CitationSource(startIndex, endIndex, uri, license);
+  google_ai.CitationSource toGoogleAICiationSource() =>
+      google_ai.CitationSource(startIndex, endIndex, uri, license);
 }
 
 /// Reason why a model stopped generating tokens.
@@ -506,25 +508,25 @@ enum FinishReason {
   const FinishReason(this._jsonString);
 
   factory FinishReason.fromGoogleAIFinishReason(
-      googleAI.FinishReason finishReason) {
+      google_ai.FinishReason finishReason) {
     return switch (finishReason) {
-      googleAI.FinishReason.unspecified => FinishReason.unspecified,
-      googleAI.FinishReason.stop => FinishReason.stop,
-      googleAI.FinishReason.maxTokens => FinishReason.maxTokens,
-      googleAI.FinishReason.safety => FinishReason.safety,
-      googleAI.FinishReason.recitation => FinishReason.recitation,
-      googleAI.FinishReason.other => FinishReason.other,
+      google_ai.FinishReason.unspecified => FinishReason.unspecified,
+      google_ai.FinishReason.stop => FinishReason.stop,
+      google_ai.FinishReason.maxTokens => FinishReason.maxTokens,
+      google_ai.FinishReason.safety => FinishReason.safety,
+      google_ai.FinishReason.recitation => FinishReason.recitation,
+      google_ai.FinishReason.other => FinishReason.other,
     };
   }
 
-  googleAI.FinishReason toGoogleAIFinishReason() {
+  google_ai.FinishReason toGoogleAIFinishReason() {
     return switch (this) {
-      FinishReason.unspecified => googleAI.FinishReason.unspecified,
-      FinishReason.stop => googleAI.FinishReason.stop,
-      FinishReason.maxTokens => googleAI.FinishReason.maxTokens,
-      FinishReason.safety => googleAI.FinishReason.safety,
-      FinishReason.recitation => googleAI.FinishReason.recitation,
-      FinishReason.other => googleAI.FinishReason.other,
+      FinishReason.unspecified => google_ai.FinishReason.unspecified,
+      FinishReason.stop => google_ai.FinishReason.stop,
+      FinishReason.maxTokens => google_ai.FinishReason.maxTokens,
+      FinishReason.safety => google_ai.FinishReason.safety,
+      FinishReason.recitation => google_ai.FinishReason.recitation,
+      FinishReason.other => google_ai.FinishReason.other,
     };
   }
 
@@ -561,11 +563,11 @@ final class SafetySetting {
 
   SafetySetting(this.category, this.threshold);
   factory SafetySetting.fromGoogleAISafetySetting(
-          googleAI.SafetySetting setting) =>
+          google_ai.SafetySetting setting) =>
       SafetySetting(HarmCategory.fromGoogleAIHarmCategory(setting.category),
           HarmBlockThreshold.fromGoogleAIHarmBlockThreshold(setting.threshold));
 
-  googleAI.SafetySetting toGoogleAISafetySetting() => googleAI.SafetySetting(
+  google_ai.SafetySetting toGoogleAISafetySetting() => google_ai.SafetySetting(
       category.toGoogleAIHarmCategory(),
       threshold.toGoogleAIHarmBlockThreshold());
 
@@ -609,23 +611,25 @@ enum HarmBlockThreshold {
 
   const HarmBlockThreshold(this._jsonString);
   factory HarmBlockThreshold.fromGoogleAIHarmBlockThreshold(
-      googleAI.HarmBlockThreshold threshold) {
+      google_ai.HarmBlockThreshold threshold) {
     return switch (threshold) {
-      googleAI.HarmBlockThreshold.unspecified => HarmBlockThreshold.unspecified,
-      googleAI.HarmBlockThreshold.low => HarmBlockThreshold.low,
-      googleAI.HarmBlockThreshold.medium => HarmBlockThreshold.medium,
-      googleAI.HarmBlockThreshold.high => HarmBlockThreshold.high,
-      googleAI.HarmBlockThreshold.none => HarmBlockThreshold.none,
+      google_ai.HarmBlockThreshold.unspecified =>
+        HarmBlockThreshold.unspecified,
+      google_ai.HarmBlockThreshold.low => HarmBlockThreshold.low,
+      google_ai.HarmBlockThreshold.medium => HarmBlockThreshold.medium,
+      google_ai.HarmBlockThreshold.high => HarmBlockThreshold.high,
+      google_ai.HarmBlockThreshold.none => HarmBlockThreshold.none,
     };
   }
 
-  googleAI.HarmBlockThreshold toGoogleAIHarmBlockThreshold() {
+  google_ai.HarmBlockThreshold toGoogleAIHarmBlockThreshold() {
     return switch (this) {
-      HarmBlockThreshold.unspecified => googleAI.HarmBlockThreshold.unspecified,
-      HarmBlockThreshold.low => googleAI.HarmBlockThreshold.low,
-      HarmBlockThreshold.medium => googleAI.HarmBlockThreshold.medium,
-      HarmBlockThreshold.high => googleAI.HarmBlockThreshold.high,
-      HarmBlockThreshold.none => googleAI.HarmBlockThreshold.none,
+      HarmBlockThreshold.unspecified =>
+        google_ai.HarmBlockThreshold.unspecified,
+      HarmBlockThreshold.low => google_ai.HarmBlockThreshold.low,
+      HarmBlockThreshold.medium => google_ai.HarmBlockThreshold.medium,
+      HarmBlockThreshold.high => google_ai.HarmBlockThreshold.high,
+      HarmBlockThreshold.none => google_ai.HarmBlockThreshold.none,
     };
   }
 
@@ -691,7 +695,7 @@ final class GenerationConfig {
       this.topK});
 
   factory GenerationConfig.fromGoogleAIGenerationConfig(
-          googleAI.GenerationConfig config) =>
+          google_ai.GenerationConfig config) =>
       GenerationConfig(
           candidateCount: config.candidateCount,
           stopSequences: config.stopSequences,
@@ -711,14 +715,16 @@ final class GenerationConfig {
         if (topK case final topK?) 'topK': topK,
       };
 
-  googleAI.GenerationConfig toGoogleAIGenerationConfig() =>
-      googleAI.GenerationConfig(
+  google_ai.GenerationConfig toGoogleAIGenerationConfig(
+          google_ai.VertexConfig? vertexConfig) =>
+      google_ai.GenerationConfig(
           candidateCount: candidateCount,
           stopSequences: stopSequences,
           maxOutputTokens: maxOutputTokens,
           temperature: temperature,
           topP: topP,
-          topK: topK);
+          topK: topK,
+          vertexConfig: vertexConfig);
 }
 
 /// Type of task for which the embedding will be used.
@@ -744,14 +750,14 @@ enum TaskType {
   final String _jsonString;
 
   const TaskType(this._jsonString);
-  factory TaskType.fromGoogleAITaskType(googleAI.TaskType type) {
+  factory TaskType.fromGoogleAITaskType(google_ai.TaskType type) {
     return switch (type) {
-      googleAI.TaskType.unspecified => TaskType.unspecified,
-      googleAI.TaskType.retrievalQuery => TaskType.retrievalQuery,
-      googleAI.TaskType.retrievalDocument => TaskType.retrievalDocument,
-      googleAI.TaskType.semanticSimilarity => TaskType.semanticSimilarity,
-      googleAI.TaskType.classification => TaskType.classification,
-      googleAI.TaskType.clustering => TaskType.clustering,
+      google_ai.TaskType.unspecified => TaskType.unspecified,
+      google_ai.TaskType.retrievalQuery => TaskType.retrievalQuery,
+      google_ai.TaskType.retrievalDocument => TaskType.retrievalDocument,
+      google_ai.TaskType.semanticSimilarity => TaskType.semanticSimilarity,
+      google_ai.TaskType.classification => TaskType.classification,
+      google_ai.TaskType.clustering => TaskType.clustering,
     };
   }
 
@@ -768,14 +774,14 @@ enum TaskType {
   }
 
   Object toJson() => _jsonString;
-  googleAI.TaskType toGoogleAITaskType() {
+  google_ai.TaskType toGoogleAITaskType() {
     return switch (this) {
-      TaskType.unspecified => googleAI.TaskType.unspecified,
-      TaskType.retrievalQuery => googleAI.TaskType.retrievalQuery,
-      TaskType.retrievalDocument => googleAI.TaskType.retrievalDocument,
-      TaskType.semanticSimilarity => googleAI.TaskType.semanticSimilarity,
-      TaskType.classification => googleAI.TaskType.classification,
-      TaskType.clustering => googleAI.TaskType.clustering,
+      TaskType.unspecified => google_ai.TaskType.unspecified,
+      TaskType.retrievalQuery => google_ai.TaskType.retrievalQuery,
+      TaskType.retrievalDocument => google_ai.TaskType.retrievalDocument,
+      TaskType.semanticSimilarity => google_ai.TaskType.semanticSimilarity,
+      TaskType.classification => google_ai.TaskType.classification,
+      TaskType.clustering => google_ai.TaskType.clustering,
     };
   }
 }
