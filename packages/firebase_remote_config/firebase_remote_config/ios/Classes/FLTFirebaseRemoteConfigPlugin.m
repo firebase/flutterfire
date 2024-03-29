@@ -257,7 +257,6 @@ BOOL _fetchAndActivateRetry;
   [self.listenersMap removeAllObjects];
 }
 
-
 - (void)didReinitializeFirebaseCore:(void (^)(void))completion {
   _fetchAndActivateRetry = false;
   [self cleanupWithCompletion];
@@ -303,7 +302,8 @@ BOOL _fetchAndActivateRetry;
 
 - (FlutterError *_Nullable)onCancelWithArguments:(id _Nullable)arguments {
   NSString *appName = (NSString *)arguments[@"appName"];
-  // arguments will be null on hot restart, so we will clean up listeners in didReinitializeFirebaseCore()
+  // arguments will be null on hot restart, so we will clean up listeners in
+  // didReinitializeFirebaseCore()
   if (!appName) return nil;
   [self.listenersMap[appName] remove];
   [self.listenersMap removeObjectForKey:appName];

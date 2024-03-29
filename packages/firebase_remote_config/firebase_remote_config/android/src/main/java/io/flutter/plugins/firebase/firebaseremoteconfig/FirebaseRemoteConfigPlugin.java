@@ -323,9 +323,7 @@ public class FirebaseRemoteConfigPlugin
     }
   }
 
-  /**
-   * Remove all registered listeners.
-   */
+  /** Remove all registered listeners. */
   private void removeEventListeners() {
     for (ConfigUpdateListenerRegistration listener : listenersMap.values()) {
       listener.remove();
