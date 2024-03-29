@@ -37,6 +37,8 @@ BOOL _fetchAndActivateRetry;
 
 - (instancetype)init {
   self = [super init];
+  if (!self) return self;
+  _listenersMap = [NSMutableDictionary dictionary];
   return self;
 }
 
