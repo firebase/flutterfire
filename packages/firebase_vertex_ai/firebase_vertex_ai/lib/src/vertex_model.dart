@@ -12,12 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:async';
-
-import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_vertex_ai/firebase_vertex_ai.dart';
-import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
+part of firebase_vertex_ai;
 
 const _baseUrl = 'staging-firebaseml.sandbox.googleapis.com';
 const _apiVersion = 'v2beta';
@@ -29,7 +24,6 @@ const _apiVersion = 'v2beta';
 final class GenerativeModel {
   final String _modelName;
   final FirebaseApp _firebaseApp;
-  final FirebaseAppCheck _appCheck;
   final List<SafetySetting> _safetySettings;
   final GenerationConfig? _generationConfig;
   final String _location;
@@ -66,7 +60,6 @@ final class GenerativeModel {
     GenerationConfig? generationConfig,
   })  : _modelName = _normalizeModelName(modelName),
         _firebaseApp = app,
-        _appCheck = FirebaseAppCheck.instance,
         _safetySettings = safetySettings ?? [],
         _generationConfig = generationConfig,
         _location = location,
@@ -205,5 +198,12 @@ final class GenerativeModel {
             taskType: taskType?.toGoogleAITaskType(), title: title)
         .then((value) =>
             EmbedContentResponse.fromGoogleAIEmbedContentResponse(value));
+  }
+
+  google_ai.GenerativeModel googleAIModel() => _model;
+
+  google_ai.GenerationConfig? generationConfig(GenerationConfig? config) {
+    return config
+        ?.toGoogleAIGenerationConfig(_vertexConfig(_firebaseApp, _location));
   }
 }

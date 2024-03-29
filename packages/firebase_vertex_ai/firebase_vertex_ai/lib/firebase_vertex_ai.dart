@@ -14,26 +14,17 @@
 
 library firebase_vertex_ai;
 
-export 'src/vertex_api.dart'
-    show
-        BlockReason,
-        Candidate,
-        CitationMetadata,
-        CitationSource,
-        ContentEmbedding,
-        CountTokensResponse,
-        EmbedContentResponse,
-        FinishReason,
-        GenerateContentResponse,
-        GenerationConfig,
-        HarmBlockThreshold,
-        HarmCategory,
-        HarmProbability,
-        PromptFeedback,
-        SafetyRating,
-        SafetySetting,
-        TaskType;
+import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
 
-export 'src/vertex_model.dart' show GenerativeModel;
-//export 'src/vertex_chat.dart' show VertexChatSession, VertexStartChatExtension;
-export 'src/vertex_content.dart' show Content, DataPart, Part, TextPart;
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
+    show FirebasePluginPlatform;
+import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
+
+part 'src/firebase_vertex_ai.dart';
+part 'src/vertex_api.dart';
+part 'src/vertex_model.dart';
+part 'src/vertex_content.dart';
+part 'src/vertex_chat.dart';

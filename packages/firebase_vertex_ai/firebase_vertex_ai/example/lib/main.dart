@@ -83,7 +83,7 @@ class ChatWidget extends StatefulWidget {
 class _ChatWidgetState extends State<ChatWidget> {
   late final GenerativeModel _model;
   late final GenerativeModel _visionModel;
-  //late final VertexChatSession _chat;
+  late final ChatSession _chat;
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
   final FocusNode _textFieldFocus = FocusNode();
@@ -95,19 +95,11 @@ class _ChatWidgetState extends State<ChatWidget> {
   void initState() {
     super.initState();
     Firebase.initializeApp().then((value) {
-      _model = GenerativeModel(
-        modelName: 'gemini-pro',
-        apiKey: _apiKey,
-        location: 'us-west1',
-        app: Firebase.app(),
-      );
-      _visionModel = GenerativeModel(
-        modelName: 'gemini-pro-vision',
-        apiKey: _apiKey,
-        location: 'us-west1',
-        app: Firebase.app(),
-      );
-      //_chat = _model.startChat();
+      _model =
+          FirebaseVertexAI.instance.generativeModel(modelName: 'gemini-pro');
+      _visionModel = FirebaseVertexAI.instance
+          .generativeModel(modelName: 'gemini-pro-vision');
+      _chat = _model.startChat();
     });
   }
 
@@ -289,8 +281,8 @@ class _ChatWidgetState extends State<ChatWidget> {
 
     try {
       _generatedContent.add((image: null, text: message, fromUser: true));
-      var response = await _model.generateContent(
-        [Content.text(message)],
+      var response = await _chat.sendMessage(
+        Content.text(message),
       );
       var text = response.text;
       _generatedContent.add((image: null, text: text, fromUser: false));

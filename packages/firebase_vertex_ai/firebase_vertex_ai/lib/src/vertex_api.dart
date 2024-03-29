@@ -12,10 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:firebase_vertex_ai/firebase_vertex_ai.dart';
-
-import 'vertex_content.dart';
-import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
+part of firebase_vertex_ai;
 
 final class CountTokensResponse {
   /// The number of tokens that the `model` tokenizes the `prompt` into.

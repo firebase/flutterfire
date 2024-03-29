@@ -12,9 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:convert';
-import 'dart:typed_data';
-import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
+part of firebase_vertex_ai;
 
 /// The base structured datatype containing multi-part content of a message.
 final class Content {
