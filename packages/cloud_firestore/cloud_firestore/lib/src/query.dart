@@ -261,6 +261,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     return parameters['endAt'] != null || parameters['endBefore'] != null;
   }
 
+
   bool isNotIn(String operator) {
     return operator == 'not-in';
   }
@@ -501,36 +502,6 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       FieldPath fieldPath =
           field is String ? FieldPath.fromString(field) : field as FieldPath;
       orders.add([fieldPath, descending]);
-    }
-
-    final List<List<dynamic>> conditions =
-        List<List<dynamic>>.from(parameters['where']);
-
-    if (conditions.isNotEmpty) {
-      for (final dynamic condition in conditions) {
-        dynamic conditionField = condition[0];
-        String operator = condition[1];
-
-        for (final dynamic order in orders) {
-          dynamic orderField = order[0];
-
-          // Any where() fieldPath parameter cannot match any orderBy() parameter when
-          // '==' operand is invoked
-          if (operator == '==') {
-            assert(
-              conditionField != orderField,
-              "The '$orderField' cannot be the same as your where() field parameter '$conditionField'.",
-            );
-          }
-
-          if (conditionField == FieldPath.documentId) {
-            assert(
-              orderField == FieldPath.documentId,
-              "'[FieldPath.documentId]' cannot be used in conjunction with a different orderBy() parameter.",
-            );
-          }
-        }
-      }
     }
 
     return _JsonQuery(firestore, _delegate.orderBy(orders));
