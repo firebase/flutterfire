@@ -39,7 +39,7 @@ android {
     namespace 'io.flutter.plugins.firebase.crashlytics'
   }
 
-  compileSdk 33
+  compileSdk 34
 
   defaultConfig {
     minSdk 19

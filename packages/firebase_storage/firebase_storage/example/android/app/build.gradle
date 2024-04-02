@@ -27,7 +27,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
     namespace 'io.flutter.plugins.firebasestorageexample'
 
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId 'io.flutter.plugins.firebasestorageexample'
