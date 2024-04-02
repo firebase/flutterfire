@@ -273,7 +273,7 @@ external FieldValue serverTimestamp();
 @staticInterop
 external JSPromise setDoc(
   DocumentReferenceJsImpl reference,
-  JSObject data, [
+  JSAny? data, [
   SetOptions? options,
 ]);
 
@@ -348,7 +348,9 @@ extension WriteBatchJsImplExtension on WriteBatchJsImpl {
       [SetOptions? options]);
 
   external WriteBatchJsImpl update(
-      DocumentReferenceJsImpl documentRef, JSObject dataOrFieldsAndValues);
+    DocumentReferenceJsImpl documentRef,
+    JSAny? dataOrFieldsAndValues,
+  );
 }
 
 @JS('CollectionReference')
@@ -593,7 +595,7 @@ extension TransactionJsImplExtension on TransactionJsImpl {
       [SetOptions? options]);
 
   external TransactionJsImpl update(
-      DocumentReferenceJsImpl documentRef, JSObject dataOrFieldsAndValues);
+      DocumentReferenceJsImpl documentRef, JSAny dataOrFieldsAndValues);
 }
 
 @JS('Timestamp')

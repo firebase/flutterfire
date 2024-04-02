@@ -1,3 +1,7 @@
+## 1.6.0
+
+ - **FEAT**(web): remove the dependency on `package:js` in favor of `dart:js_interop` ([#12534](https://github.com/firebase/flutterfire/issues/12534)). ([d83f6327](https://github.com/firebase/flutterfire/commit/d83f632753707c974fef2ac8a7f9bf6cb8ba8758))
+
 ## 1.5.0
 
  - **FEAT**(remote_config,web): migrate web to js_interop to be compatible with WASM ([#12489](https://github.com/firebase/flutterfire/issues/12489)). ([85a9b187](https://github.com/firebase/flutterfire/commit/85a9b1879a1e29da53c304f73da031083e6ae8a6))

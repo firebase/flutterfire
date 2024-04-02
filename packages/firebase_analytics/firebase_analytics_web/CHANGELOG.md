@@ -1,3 +1,7 @@
+## 0.5.7
+
+ - **FEAT**(web): remove the dependency on `package:js` in favor of `dart:js_interop` ([#12534](https://github.com/firebase/flutterfire/issues/12534)). ([d83f6327](https://github.com/firebase/flutterfire/commit/d83f632753707c974fef2ac8a7f9bf6cb8ba8758))
+
 ## 0.5.6
 
  - **FEAT**(analytics): add consent mode v2 ([#12298](https://github.com/firebase/flutterfire/issues/12298)). ([19f3dbdd](https://github.com/firebase/flutterfire/commit/19f3dbdd197c57cf95853448f9541f6cebfe810c))

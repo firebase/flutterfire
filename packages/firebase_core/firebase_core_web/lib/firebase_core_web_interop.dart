@@ -9,5 +9,4 @@ export 'src/interop/core.dart';
 export 'src/interop/utils/es6_interop.dart';
 export 'src/interop/utils/func.dart';
 export 'src/interop/utils/js.dart';
-export 'src/interop/utils/js_interop.dart';
 export 'src/interop/utils/utils.dart';

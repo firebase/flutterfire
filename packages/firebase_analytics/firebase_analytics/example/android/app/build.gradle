@@ -28,7 +28,7 @@ apply plugin: 'com.google.gms.google-services'
 android {
     namespace 'io.flutter.plugins.firebase.analytics.example'
 
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "io.flutter.plugins.firebase.analytics.example"
