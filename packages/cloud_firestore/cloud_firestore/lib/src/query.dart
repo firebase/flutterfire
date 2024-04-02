@@ -261,7 +261,6 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     return parameters['endAt'] != null || parameters['endBefore'] != null;
   }
 
-
   bool isNotIn(String operator) {
     return operator == 'not-in';
   }
