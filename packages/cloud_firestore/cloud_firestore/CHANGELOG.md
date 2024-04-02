@@ -1,3 +1,8 @@
+## 4.16.0
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+ - **FEAT**(firestore): allow query with range and inequality filters on multiple fields ([#12564](https://github.com/firebase/flutterfire/issues/12564)). ([00ae837f](https://github.com/firebase/flutterfire/commit/00ae837fecf893d8b1eda927fb7085a7d917e671))
+
 ## 4.15.10
 
  - Update a dependency to the latest release.

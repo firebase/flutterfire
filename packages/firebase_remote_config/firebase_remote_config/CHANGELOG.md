@@ -1,3 +1,8 @@
+## 4.4.0
+
+ - **FIX**(remote_config): fixing an issue that could cause duplicate listeners on hot restart ([#12545](https://github.com/firebase/flutterfire/issues/12545)). ([4b789875](https://github.com/firebase/flutterfire/commit/4b7898751f658125279b9e904e0179ca6c33cb25))
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
 ## 4.3.19
 
  - Update a dependency to the latest release.

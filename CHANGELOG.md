@@ -3,6 +3,204 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-04-02
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v4.16.0`](#cloud_firestore---v4160)
+ - [`cloud_firestore_platform_interface` - `v6.1.12`](#cloud_firestore_platform_interface---v6112)
+ - [`cloud_firestore_web` - `v3.11.0`](#cloud_firestore_web---v3110)
+ - [`cloud_functions` - `v4.7.0`](#cloud_functions---v470)
+ - [`cloud_functions_web` - `v4.9.0`](#cloud_functions_web---v490)
+ - [`firebase_analytics` - `v10.10.0`](#firebase_analytics---v10100)
+ - [`firebase_analytics_web` - `v0.5.7`](#firebase_analytics_web---v057)
+ - [`firebase_app_check` - `v0.2.2`](#firebase_app_check---v022)
+ - [`firebase_app_check_web` - `v0.1.2`](#firebase_app_check_web---v012)
+ - [`firebase_app_installations` - `v0.2.5`](#firebase_app_installations---v025)
+ - [`firebase_app_installations_web` - `v0.1.5`](#firebase_app_installations_web---v015)
+ - [`firebase_auth` - `v4.19.0`](#firebase_auth---v4190)
+ - [`firebase_auth_web` - `v5.11.0`](#firebase_auth_web---v5110)
+ - [`firebase_core` - `v2.28.0`](#firebase_core---v2280)
+ - [`firebase_core_web` - `v2.14.0`](#firebase_core_web---v2140)
+ - [`firebase_crashlytics` - `v3.5.0`](#firebase_crashlytics---v350)
+ - [`firebase_database` - `v10.5.0`](#firebase_database---v1050)
+ - [`firebase_database_web` - `v0.2.5`](#firebase_database_web---v025)
+ - [`firebase_dynamic_links` - `v5.5.0`](#firebase_dynamic_links---v550)
+ - [`firebase_in_app_messaging` - `v0.7.5`](#firebase_in_app_messaging---v075)
+ - [`firebase_messaging` - `v14.8.0`](#firebase_messaging---v1480)
+ - [`firebase_messaging_web` - `v3.8.0`](#firebase_messaging_web---v380)
+ - [`firebase_ml_model_downloader` - `v0.2.5`](#firebase_ml_model_downloader---v025)
+ - [`firebase_performance` - `v0.9.4`](#firebase_performance---v094)
+ - [`firebase_performance_web` - `v0.1.6`](#firebase_performance_web---v016)
+ - [`firebase_remote_config` - `v4.4.0`](#firebase_remote_config---v440)
+ - [`firebase_remote_config_web` - `v1.6.0`](#firebase_remote_config_web---v160)
+ - [`firebase_storage` - `v11.7.0`](#firebase_storage---v1170)
+ - [`firebase_storage_web` - `v3.9.0`](#firebase_storage_web---v390)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.6+28`](#firebase_dynamic_links_platform_interface---v02628)
+ - [`_flutterfire_internals` - `v1.3.28`](#_flutterfire_internals---v1328)
+ - [`firebase_database_platform_interface` - `v0.2.5+28`](#firebase_database_platform_interface---v02528)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.4+28`](#firebase_in_app_messaging_platform_interface---v02428)
+ - [`firebase_remote_config_platform_interface` - `v1.4.28`](#firebase_remote_config_platform_interface---v1428)
+ - [`firebase_auth_platform_interface` - `v7.2.1`](#firebase_auth_platform_interface---v721)
+ - [`firebase_app_installations_platform_interface` - `v0.1.4+28`](#firebase_app_installations_platform_interface---v01428)
+ - [`firebase_crashlytics_platform_interface` - `v3.6.28`](#firebase_crashlytics_platform_interface---v3628)
+ - [`firebase_messaging_platform_interface` - `v4.5.30`](#firebase_messaging_platform_interface---v4530)
+ - [`firebase_app_check_platform_interface` - `v0.1.0+22`](#firebase_app_check_platform_interface---v01022)
+ - [`firebase_ml_model_downloader_platform_interface` - `v0.1.4+27`](#firebase_ml_model_downloader_platform_interface---v01427)
+ - [`firebase_analytics_platform_interface` - `v3.10.1`](#firebase_analytics_platform_interface---v3101)
+ - [`cloud_functions_platform_interface` - `v5.5.22`](#cloud_functions_platform_interface---v5522)
+ - [`firebase_storage_platform_interface` - `v5.1.15`](#firebase_storage_platform_interface---v5115)
+ - [`firebase_performance_platform_interface` - `v0.1.4+28`](#firebase_performance_platform_interface---v01428)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_dynamic_links_platform_interface` - `v0.2.6+28`
+ - `_flutterfire_internals` - `v1.3.28`
+ - `firebase_database_platform_interface` - `v0.2.5+28`
+ - `firebase_in_app_messaging_platform_interface` - `v0.2.4+28`
+ - `firebase_remote_config_platform_interface` - `v1.4.28`
+ - `firebase_auth_platform_interface` - `v7.2.1`
+ - `firebase_app_installations_platform_interface` - `v0.1.4+28`
+ - `firebase_crashlytics_platform_interface` - `v3.6.28`
+ - `firebase_messaging_platform_interface` - `v4.5.30`
+ - `firebase_app_check_platform_interface` - `v0.1.0+22`
+ - `firebase_ml_model_downloader_platform_interface` - `v0.1.4+27`
+ - `firebase_analytics_platform_interface` - `v3.10.1`
+ - `cloud_functions_platform_interface` - `v5.5.22`
+ - `firebase_storage_platform_interface` - `v5.1.15`
+ - `firebase_performance_platform_interface` - `v0.1.4+28`
+
+---
+
+#### `cloud_firestore` - `v4.16.0`
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+ - **FEAT**(firestore): allow query with range and inequality filters on multiple fields ([#12564](https://github.com/firebase/flutterfire/issues/12564)). ([00ae837f](https://github.com/firebase/flutterfire/commit/00ae837fecf893d8b1eda927fb7085a7d917e671))
+
+#### `cloud_firestore_platform_interface` - `v6.1.12`
+
+ - **FIX**(firestore): fix documentation since `persistenceEnabled` has been enabled on Web ([#12565](https://github.com/firebase/flutterfire/issues/12565)). ([9431b78f](https://github.com/firebase/flutterfire/commit/9431b78f967c85825d14e02db6eab9962216733d))
+
+#### `cloud_firestore_web` - `v3.11.0`
+
+ - **FEAT**(web): remove the dependency on `package:js` in favor of `dart:js_interop` ([#12534](https://github.com/firebase/flutterfire/issues/12534)). ([d83f6327](https://github.com/firebase/flutterfire/commit/d83f632753707c974fef2ac8a7f9bf6cb8ba8758))
+
+#### `cloud_functions` - `v4.7.0`
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
+#### `cloud_functions_web` - `v4.9.0`
+
+ - **FEAT**(web): remove the dependency on `package:js` in favor of `dart:js_interop` ([#12534](https://github.com/firebase/flutterfire/issues/12534)). ([d83f6327](https://github.com/firebase/flutterfire/commit/d83f632753707c974fef2ac8a7f9bf6cb8ba8758))
+
+#### `firebase_analytics` - `v10.10.0`
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
+#### `firebase_analytics_web` - `v0.5.7`
+
+ - **FEAT**(web): remove the dependency on `package:js` in favor of `dart:js_interop` ([#12534](https://github.com/firebase/flutterfire/issues/12534)). ([d83f6327](https://github.com/firebase/flutterfire/commit/d83f632753707c974fef2ac8a7f9bf6cb8ba8758))
+
+#### `firebase_app_check` - `v0.2.2`
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
+#### `firebase_app_check_web` - `v0.1.2`
+
+ - **FEAT**(web): remove the dependency on `package:js` in favor of `dart:js_interop` ([#12534](https://github.com/firebase/flutterfire/issues/12534)). ([d83f6327](https://github.com/firebase/flutterfire/commit/d83f632753707c974fef2ac8a7f9bf6cb8ba8758))
+
+#### `firebase_app_installations` - `v0.2.5`
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
+#### `firebase_app_installations_web` - `v0.1.5`
+
+ - **FEAT**(web): remove the dependency on `package:js` in favor of `dart:js_interop` ([#12534](https://github.com/firebase/flutterfire/issues/12534)). ([d83f6327](https://github.com/firebase/flutterfire/commit/d83f632753707c974fef2ac8a7f9bf6cb8ba8758))
+
+#### `firebase_auth` - `v4.19.0`
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
+#### `firebase_auth_web` - `v5.11.0`
+
+ - **FEAT**(web): remove the dependency on `package:js` in favor of `dart:js_interop` ([#12534](https://github.com/firebase/flutterfire/issues/12534)). ([d83f6327](https://github.com/firebase/flutterfire/commit/d83f632753707c974fef2ac8a7f9bf6cb8ba8758))
+
+#### `firebase_core` - `v2.28.0`
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
+#### `firebase_core_web` - `v2.14.0`
+
+ - **FEAT**(web): remove the dependency on `package:js` in favor of `dart:js_interop` ([#12534](https://github.com/firebase/flutterfire/issues/12534)). ([d83f6327](https://github.com/firebase/flutterfire/commit/d83f632753707c974fef2ac8a7f9bf6cb8ba8758))
+
+#### `firebase_crashlytics` - `v3.5.0`
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
+#### `firebase_database` - `v10.5.0`
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
+#### `firebase_database_web` - `v0.2.5`
+
+ - **FEAT**(web): remove the dependency on `package:js` in favor of `dart:js_interop` ([#12534](https://github.com/firebase/flutterfire/issues/12534)). ([d83f6327](https://github.com/firebase/flutterfire/commit/d83f632753707c974fef2ac8a7f9bf6cb8ba8758))
+
+#### `firebase_dynamic_links` - `v5.5.0`
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
+#### `firebase_in_app_messaging` - `v0.7.5`
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
+#### `firebase_messaging` - `v14.8.0`
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
+#### `firebase_messaging_web` - `v3.8.0`
+
+ - **FEAT**(web): remove the dependency on `package:js` in favor of `dart:js_interop` ([#12534](https://github.com/firebase/flutterfire/issues/12534)). ([d83f6327](https://github.com/firebase/flutterfire/commit/d83f632753707c974fef2ac8a7f9bf6cb8ba8758))
+
+#### `firebase_ml_model_downloader` - `v0.2.5`
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
+#### `firebase_performance` - `v0.9.4`
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
+#### `firebase_performance_web` - `v0.1.6`
+
+ - **FEAT**(web): remove the dependency on `package:js` in favor of `dart:js_interop` ([#12534](https://github.com/firebase/flutterfire/issues/12534)). ([d83f6327](https://github.com/firebase/flutterfire/commit/d83f632753707c974fef2ac8a7f9bf6cb8ba8758))
+
+#### `firebase_remote_config` - `v4.4.0`
+
+ - **FIX**(remote_config): fixing an issue that could cause duplicate listeners on hot restart ([#12545](https://github.com/firebase/flutterfire/issues/12545)). ([4b789875](https://github.com/firebase/flutterfire/commit/4b7898751f658125279b9e904e0179ca6c33cb25))
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
+#### `firebase_remote_config_web` - `v1.6.0`
+
+ - **FEAT**(web): remove the dependency on `package:js` in favor of `dart:js_interop` ([#12534](https://github.com/firebase/flutterfire/issues/12534)). ([d83f6327](https://github.com/firebase/flutterfire/commit/d83f632753707c974fef2ac8a7f9bf6cb8ba8758))
+
+#### `firebase_storage` - `v11.7.0`
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
+#### `firebase_storage_web` - `v3.9.0`
+
+ - **FEAT**(web): remove the dependency on `package:js` in favor of `dart:js_interop` ([#12534](https://github.com/firebase/flutterfire/issues/12534)). ([d83f6327](https://github.com/firebase/flutterfire/commit/d83f632753707c974fef2ac8a7f9bf6cb8ba8758))
+
+
 ## 2024-03-26
 
 ### Changes

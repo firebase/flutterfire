@@ -1,3 +1,7 @@
+## 10.10.0
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
 ## 10.9.0
 
  - **FEAT**(analytics): add consent mode v2 ([#12298](https://github.com/firebase/flutterfire/issues/12298)). ([19f3dbdd](https://github.com/firebase/flutterfire/commit/19f3dbdd197c57cf95853448f9541f6cebfe810c))
