@@ -15,6 +15,7 @@
 part of firebase_vertex_ai;
 
 const _baseUrl = 'staging-firebaseml.sandbox.googleapis.com';
+//const _baseUrl = 'firebaseml.googleapis.com';
 const _apiVersion = 'v2beta';
 
 /// A multimodel generative model (like Gemini).
@@ -27,7 +28,7 @@ final class GenerativeModel {
   final List<SafetySetting> _safetySettings;
   final GenerationConfig? _generationConfig;
   final String _location;
-  final google_ai.GenerativeModel _model;
+  final google_ai.GenerativeModel _googleAIModel;
 
   /// Create a [GenerativeModel] backed by the generative model named [model].
   ///
@@ -37,23 +38,12 @@ final class GenerativeModel {
   /// a known and supported model. If not, attempts to generate content
   /// will fail.
   ///
-  /// A Google Cloud [apiKey] is required for all requests.
-  /// See documentation about [API keys][] for more information.
-  ///
-  /// [API keys]: https://cloud.google.com/docs/authentication/api-keys "Google Cloud API keys"
-  ///
   /// The optional [safetySettings] and [generationConfig] can be used to
   /// control and guide the generation. See [SafetySetting] and
   /// [GenerationConfig] for details.
   ///
-  /// Content creation requests are sent to a server through the [httpClient],
-  /// which can be used to control, for example, the number of allowed
-  /// concurrent requests.
-  /// If the `httpClient` is omitted, a new [http.Client] is created for each
-  /// request.
-  GenerativeModel({
+  GenerativeModel._({
     required String modelName,
-    required String apiKey,
     required String location,
     required FirebaseApp app,
     List<SafetySetting>? safetySettings,
@@ -63,9 +53,9 @@ final class GenerativeModel {
         _safetySettings = safetySettings ?? [],
         _generationConfig = generationConfig,
         _location = location,
-        _model = google_ai.GenerativeModel(
+        _googleAIModel = google_ai.GenerativeModel(
             model: _normalizeModelName(modelName),
-            apiKey: apiKey,
+            apiKey: app.options.apiKey,
             safetySettings: safetySettings != null
                 ? safetySettings
                     .map((setting) => setting.toGoogleAISafetySetting())
@@ -120,7 +110,7 @@ final class GenerativeModel {
             .map((setting) => setting.toGoogleAISafetySetting())
             .toList()
         : [];
-    return _model
+    return _googleAIModel
         .generateContent(googlePrompt,
             safetySettings: googleSafetySettings,
             generationConfig: _convertGenerationConfig(
@@ -145,7 +135,7 @@ final class GenerativeModel {
       Iterable<Content> prompt,
       {List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig}) {
-    return _model
+    return _googleAIModel
         .generateContentStream(
             prompt.map((content) => content.toGoogleAIContent()),
             safetySettings: safetySettings != null
@@ -177,8 +167,10 @@ final class GenerativeModel {
   /// }
   /// ```
   Future<CountTokensResponse> countTokens(Iterable<Content> contents) async {
-    return _model.countTokens(contents.map((e) => e.toGoogleAIContent())).then(
-        (value) => CountTokensResponse.fromGoogleAICountTokensResponse(value));
+    return _googleAIModel
+        .countTokens(contents.map((e) => e.toGoogleAIContent()))
+        .then((value) =>
+            CountTokensResponse.fromGoogleAICountTokensResponse(value));
   }
 
   /// Creates an embedding (list of float values) representing [content].
@@ -193,14 +185,14 @@ final class GenerativeModel {
   /// ```
   Future<EmbedContentResponse> embedContent(Content content,
       {TaskType? taskType, String? title}) async {
-    return _model
+    return _googleAIModel
         .embedContent(content.toGoogleAIContent(),
             taskType: taskType?.toGoogleAITaskType(), title: title)
         .then((value) =>
             EmbedContentResponse.fromGoogleAIEmbedContentResponse(value));
   }
 
-  google_ai.GenerativeModel googleAIModel() => _model;
+  google_ai.GenerativeModel googleAIModel() => _googleAIModel;
 
   google_ai.GenerationConfig? generationConfig(GenerationConfig? config) {
     return config

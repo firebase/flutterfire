@@ -47,8 +47,7 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
       return _cachedInstances[app.name]!;
     }
 
-    options ??=
-        RequestOptions(apiKey: app.options.apiKey, location: _defaultLocation);
+    options ??= RequestOptions(location: _defaultLocation);
     FirebaseVertexAI newInstance =
         FirebaseVertexAI._(app: app, options: options);
     _cachedInstances[app.name] = newInstance;
@@ -56,14 +55,24 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
     return newInstance;
   }
 
+  /// Create a [GenerativeModel] backed by the generative model named [model].
+  ///
+  /// The [model] argument can be a model name (such as `'gemini-pro'`) or a
+  /// model code (such as `'models/gemini-pro'`).
+  /// There is no creation time check for whether the `model` string identifies
+  /// a known and supported model. If not, attempts to generate content
+  /// will fail.
+  ///
+  /// The optional [safetySettings] and [generationConfig] can be used to
+  /// control and guide the generation. See [SafetySetting] and
+  /// [GenerationConfig] for details.
   GenerativeModel generativeModel(
-      {required String modelName,
+      {required String model,
       List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig}) {
-    return GenerativeModel(
-        modelName: modelName,
+    return GenerativeModel._(
+        modelName: model,
         app: app,
-        apiKey: options.apiKey,
         location: options.location,
         safetySettings: safetySettings,
         generationConfig: generationConfig);
@@ -72,10 +81,8 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
 
 class RequestOptions {
   RequestOptions({
-    required this.apiKey,
     required this.location,
   });
 
-  final String apiKey;
   final String location;
 }

@@ -95,10 +95,9 @@ class _ChatWidgetState extends State<ChatWidget> {
   void initState() {
     super.initState();
     Firebase.initializeApp().then((value) {
-      _model =
-          FirebaseVertexAI.instance.generativeModel(modelName: 'gemini-pro');
-      _visionModel = FirebaseVertexAI.instance
-          .generativeModel(modelName: 'gemini-pro-vision');
+      _model = FirebaseVertexAI.instance.generativeModel(model: 'gemini-pro');
+      _visionModel =
+          FirebaseVertexAI.instance.generativeModel(model: 'gemini-pro-vision');
       _chat = _model.startChat();
     });
   }
@@ -145,27 +144,18 @@ class _ChatWidgetState extends State<ChatWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: _apiKey.isNotEmpty
-                ? ListView.builder(
-                    controller: _scrollController,
-                    itemBuilder: (context, idx) {
-                      var content = _generatedContent[idx];
-                      return MessageWidget(
-                        text: content.text,
-                        image: content.image,
-                        isFromUser: content.fromUser,
-                      );
-                    },
-                    itemCount: _generatedContent.length,
-                  )
-                : ListView(
-                    children: const [
-                      Text(
-                        'No API key found. Please provide an API Key using '
-                        "'--dart-define' to set the 'API_KEY' declaration.",
-                      ),
-                    ],
-                  ),
+            child: ListView.builder(
+              controller: _scrollController,
+              itemBuilder: (context, idx) {
+                var content = _generatedContent[idx];
+                return MessageWidget(
+                  text: content.text,
+                  image: content.image,
+                  isFromUser: content.fromUser,
+                );
+              },
+              itemCount: _generatedContent.length,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(

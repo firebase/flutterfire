@@ -21,13 +21,6 @@ part of firebase_vertex_ai;
 /// [GenerateContentResponse], other candidates may be available on the returned
 /// response.
 final class ChatSession {
-  final Future<GenerateContentResponse> Function(Iterable<Content> content,
-      {List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig}) _generateContent;
-  final Stream<GenerateContentResponse> Function(Iterable<Content> content,
-      {List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig}) _generateContentStream;
-
   final List<Content> _history;
   final List<SafetySetting>? _safetySettings;
   final GenerationConfig? _generationConfig;
@@ -36,7 +29,7 @@ final class ChatSession {
 
   /// Creates a new chat session with the provided model.
 
-  ChatSession._(this._generateContent, this._generateContentStream,
+  ChatSession._(
       this._history, this._safetySettings, this._generationConfig, this._model)
       : _googleAIChatSession = _model.googleAIModel().startChat(
             history: _history.map((e) => e.toGoogleAIContent()).toList(),
@@ -111,6 +104,5 @@ extension StartChatExtension on GenerativeModel {
           {List<Content>? history,
           List<SafetySetting>? safetySettings,
           GenerationConfig? generationConfig}) =>
-      ChatSession._(generateContent, generateContentStream, history ?? [],
-          safetySettings, generationConfig, this);
+      ChatSession._(history ?? [], safetySettings, generationConfig, this);
 }
