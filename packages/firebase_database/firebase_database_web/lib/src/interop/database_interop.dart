@@ -12,7 +12,6 @@ import 'dart:js_interop';
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     show AppJsImpl;
-import 'package:js/js.dart';
 
 part 'data_snapshot_interop.dart';
 part 'query_interop.dart';
@@ -225,7 +224,7 @@ abstract class TransactionOptions {
 @JS()
 @staticInterop
 abstract class ServerValue {
-  external static Object get TIMESTAMP;
+  external static JSAny get TIMESTAMP;
 }
 
 @JS('Database')
@@ -262,18 +261,18 @@ extension OnDisconnectJsImplExtension on OnDisconnectJsImpl {
   ]);
 
   external JSPromise set(
-    value, [
+    JSAny? value, [
     JSFunction onComplete,
     //void Function(JSAny) onComplete
   ]);
 
   external JSPromise setWithPriority(
-    value,
-    priority,
+    JSAny? value,
+    JSAny? priority,
   );
 
   external JSPromise update(
-    values,
+    JSAny? values,
   );
 }
 
@@ -330,28 +329,28 @@ extension FirebaseErrorExtension on FirebaseError {
 // Discussed internally with dart2js team
 @JS()
 @staticInterop
-external JSAny get endAt;
+external QueryConstraintJsImpl endAt(JSAny? value, [JSString? key]);
 
 @JS()
 @staticInterop
-external JSAny get endBefore;
+external QueryConstraintJsImpl endBefore(JSAny? value, [JSString? key]);
 
 @JS()
 @staticInterop
-external JSAny get equalTo;
+external QueryConstraintJsImpl equalTo(JSAny? value, [JSString? key]);
 
 @JS()
 @staticInterop
-external JSAny get startAfter;
+external QueryConstraintJsImpl startAfter(JSAny? value, [JSString? key]);
 
 @JS()
 @staticInterop
-external JSAny get startAt;
+external QueryConstraintJsImpl startAt(JSAny? value, [JSString? key]);
 
 @JS()
 @staticInterop
-external JSAny get limitToFirst;
+external QueryConstraintJsImpl limitToFirst(JSNumber limit);
 
 @JS()
 @staticInterop
-external JSAny get limitToLast;
+external QueryConstraintJsImpl limitToLast(JSNumber limit);

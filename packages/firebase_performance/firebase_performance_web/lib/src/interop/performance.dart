@@ -4,7 +4,7 @@
 
 import 'dart:js_interop';
 
-import 'package:firebase_core_web/firebase_core_web_interop.dart' hide jsify;
+import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
 import 'performance_interop.dart' as performance_interop;
 
@@ -56,7 +56,8 @@ class Trace extends JsObjectWrapper<performance_interop.TraceJsImpl> {
   String getAttribute(String attr) => jsObject.getAttribute(attr.toJS).toDart;
 
   Map<String, String> getAttributes() {
-    return dartify(jsObject.getAttributes()).cast<String, String>();
+    return (jsObject.getAttributes().dartify()! as Map<String, String>)
+        .cast<String, String>();
   }
 
   int getMetric(String metricName) =>

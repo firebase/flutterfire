@@ -10,12 +10,10 @@ import 'dart:async';
 import 'dart:js_interop';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
-import 'package:firebase_core_web/firebase_core_web_interop.dart'
-    hide jsify, dartify;
+import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'package:http_parser/http_parser.dart';
 
 import 'auth_interop.dart' as auth_interop;
-import 'utils/utils.dart';
 
 export 'auth_interop.dart';
 
@@ -23,17 +21,17 @@ export 'auth_interop.dart';
 Auth getAuthInstance(App app) {
   // Default persistence can be seen here
   // https://github.com/firebase/firebase-js-sdk/blob/master/packages/auth/src/platform_browser/index.ts#L47
-  final persistences = [
-    auth_interop.indexedDBLocalPersistence,
-    auth_interop.browserLocalPersistence,
-    auth_interop.browserSessionPersistence,
+  final List<JSAny?> persistences = [
+    auth_interop.indexedDBLocalPersistence as JSAny,
+    auth_interop.browserLocalPersistence as JSAny,
+    auth_interop.browserSessionPersistence as JSAny,
   ];
   return Auth.getInstance(
     auth_interop.initializeAuth(
       app.jsObject,
       auth_interop.AuthOptions(
         errorMap: auth_interop.debugErrorMap,
-        persistence: customJSList(persistences),
+        persistence: persistences.toJS,
         popupRedirectResolver: auth_interop.browserPopupRedirectResolver,
       ),
     ),
@@ -273,7 +271,10 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   }
 
   /// Returns a JSON-serializable representation of this object.
-  Map<String, dynamic> toJson() => dartify(jsObject.toJSON());
+  Map<String, dynamic> toJson() {
+    final result = jsObject.toJSON();
+    return (result as JSAny).dartify()! as Map<String, dynamic>;
+  }
 
   @override
   String toString() => 'User: $uid';
@@ -300,7 +301,10 @@ class IdTokenResult extends JsObjectWrapper<auth_interop.IdTokenResultImpl> {
 
   /// The entire payload claims of the ID token including the standard reserved
   /// claims as well as the custom claims.
-  Map<String, dynamic>? get claims => dartify(jsObject.claims);
+  Map<String, dynamic>? get claims {
+    final claims = jsObject.claims.dartify();
+    return claims == null ? null : (claims as Map).cast<String, dynamic>();
+  }
 
   /// The ID token expiration time.
   DateTime get expirationTime => parseHttpDate(jsObject.expirationTime.toDart);
@@ -818,7 +822,7 @@ class FacebookAuthProvider
     Map<Object?, Object?> customOAuthParameters,
   ) {
     return FacebookAuthProvider.fromJsObject(
-      jsObject.setCustomParameters(jsify(customOAuthParameters)),
+      jsObject.setCustomParameters(customOAuthParameters.toJSBox),
     );
   }
 
@@ -860,7 +864,7 @@ class GithubAuthProvider
     Map<Object?, Object?> customOAuthParameters,
   ) {
     return GithubAuthProvider.fromJsObject(
-      jsObject.setCustomParameters(jsify(customOAuthParameters)),
+      jsObject.setCustomParameters(customOAuthParameters.toJSBox),
     );
   }
 
@@ -903,7 +907,7 @@ class GoogleAuthProvider
     Map<Object?, Object?> customOAuthParameters,
   ) {
     return GoogleAuthProvider.fromJsObject(
-      jsObject.setCustomParameters(jsify(customOAuthParameters)),
+      jsObject.setCustomParameters(customOAuthParameters.toJSBox),
     );
   }
 
@@ -940,7 +944,7 @@ class OAuthProvider extends AuthProvider<auth_interop.OAuthProviderJsImpl> {
     Map<Object?, Object?> customOAuthParameters,
   ) {
     return OAuthProvider.fromJsObject(
-      jsObject.setCustomParameters(jsify(customOAuthParameters)),
+      jsObject.setCustomParameters(customOAuthParameters.toJSBox),
     );
   }
 
@@ -982,7 +986,7 @@ class TwitterAuthProvider
     Map<Object?, Object?> customOAuthParameters,
   ) {
     return TwitterAuthProvider.fromJsObject(
-      jsObject.setCustomParameters(jsify(customOAuthParameters)),
+      jsObject.setCustomParameters(customOAuthParameters.toJSBox),
     );
   }
 
@@ -1111,7 +1115,7 @@ class RecaptchaVerifier
       auth_interop.RecaptchaVerifierJsImpl(
         auth.jsObject,
         container,
-        jsify(parameters),
+        parameters.toJSBox,
       ),
     );
   }
@@ -1185,8 +1189,9 @@ class AdditionalUserInfo
   String? get providerId => jsObject.providerId?.toDart;
 
   /// Returns the profile.
-  Map<String, dynamic>? get profile =>
-      jsObject.profile != null ? dartify(jsObject.profile!) : null;
+  Map<String, dynamic>? get profile => jsObject.profile != null
+      ? ((jsObject.profile!).dartify()! as Map).cast<String, dynamic>()
+      : null;
 
   /// Returns the user name.
   String? get username => jsObject.username?.toDart;
