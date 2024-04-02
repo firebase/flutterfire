@@ -1,3 +1,7 @@
+## 2.14.0
+
+ - **FEAT**(web): remove the dependency on `package:js` in favor of `dart:js_interop` ([#12534](https://github.com/firebase/flutterfire/issues/12534)). ([d83f6327](https://github.com/firebase/flutterfire/commit/d83f632753707c974fef2ac8a7f9bf6cb8ba8758))
+
 ## 2.13.0
 
  - **FEAT**: bump JS SDK to version 10.8.1 ([#12480](https://github.com/firebase/flutterfire/issues/12480)). ([db38220f](https://github.com/firebase/flutterfire/commit/db38220ff01c06c1bc49c15af787b9640012a259))

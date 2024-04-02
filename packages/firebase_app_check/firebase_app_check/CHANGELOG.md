@@ -1,3 +1,7 @@
+## 0.2.2
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
 ## 0.2.1+19
 
  - **REFACTOR**(app_check,web): small refactor around initialisation of FirebaseAppCheckWeb ([#12474](https://github.com/firebase/flutterfire/issues/12474)). ([83aab7f8](https://github.com/firebase/flutterfire/commit/83aab7f8f6a6dde6e71765826c0e1f9aabc110a0))

@@ -1,3 +1,7 @@
+## 4.19.0
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
 ## 4.18.0
 
  - **FIX**(auth,android): fixing an issue that could cause `getEnrolledFactors` to return an empty list if signing out in the same app session ([#12488](https://github.com/firebase/flutterfire/issues/12488)). ([04280a31](https://github.com/firebase/flutterfire/commit/04280a31310dbbe51a8e619f031f5190d02e695d))
