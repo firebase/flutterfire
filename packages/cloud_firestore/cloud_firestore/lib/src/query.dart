@@ -261,15 +261,6 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     return parameters['endAt'] != null || parameters['endBefore'] != null;
   }
 
-  /// Returns whether the current operator is an inequality operator.
-  bool _isInequality(String operator) {
-    return operator == '<' ||
-        operator == '<=' ||
-        operator == '>' ||
-        operator == '>=' ||
-        operator == '!=';
-  }
-
   bool isNotIn(String operator) {
     return operator == 'not-in';
   }
@@ -520,16 +511,6 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
         dynamic conditionField = condition[0];
         String operator = condition[1];
 
-        // Initial orderBy() parameter has to match every where() fieldPath parameter when
-        // inequality or 'not-in' operator is invoked
-        if (_isInequality(operator) || isNotIn(operator)) {
-          assert(
-            conditionField == orders[0][0],
-            'The initial orderBy() field "$orders[0][0]" has to be the same as '
-            'the where() field parameter "$conditionField" when an inequality operator is invoked.',
-          );
-        }
-
         for (final dynamic order in orders) {
           dynamic orderField = order[0];
 
@@ -716,7 +697,6 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       }
     }
 
-    dynamic hasInequality;
     bool hasIn = false;
     bool hasNotIn = false;
     bool hasNotEqualTo = false;
@@ -731,17 +711,6 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       dynamic field = condition[0]; // FieldPath or FieldPathType
       String operator = condition[1];
       dynamic value = condition[2];
-
-      // Initial orderBy() parameter has to match every where() fieldPath parameter when
-      // inequality operator is invoked
-      List<List<dynamic>> orders = List.from(parameters['orderBy']);
-      if (_isInequality(operator) && orders.isNotEmpty) {
-        assert(
-          field == orders[0][0],
-          "The initial orderBy() field '$orders[0][0]' has to be the same as "
-          "the where() field parameter '$field' when an inequality operator is invoked.",
-        );
-      }
 
       if (field != FieldPath.documentId && hasDocumentIdField) {
         assert(
@@ -841,18 +810,6 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
           !(hasArrayContains && hasArrayContainsAny),
           "You cannot use both 'array-contains-any' or 'array-contains' filters together.",
         );
-      }
-
-      if (_isInequality(operator)) {
-        if (hasInequality == null) {
-          hasInequality = field;
-        } else {
-          assert(
-            hasInequality == field,
-            'All where filters with an inequality (<, <=, >, or >=) must be '
-            "on the same field. But you have inequality filters on '$hasInequality' and '$field'.",
-          );
-        }
       }
     }
 
