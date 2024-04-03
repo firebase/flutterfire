@@ -23,11 +23,6 @@ const _apiVersion = 'v2beta';
 /// Allows generating content, creating embeddings, and counting the number of
 /// tokens in a piece of content.
 final class GenerativeModel {
-  final String _modelName;
-  final FirebaseApp _firebaseApp;
-  final List<SafetySetting> _safetySettings;
-  final GenerationConfig? _generationConfig;
-  final String _location;
   final google_ai.GenerativeModel _googleAIModel;
 
   /// Create a [GenerativeModel] backed by the generative model named [model].
@@ -48,21 +43,16 @@ final class GenerativeModel {
     required FirebaseApp app,
     List<SafetySetting>? safetySettings,
     GenerationConfig? generationConfig,
-  })  : _modelName = _normalizeModelName(modelName),
-        _firebaseApp = app,
-        _safetySettings = safetySettings ?? [],
-        _generationConfig = generationConfig,
-        _location = location,
-        _googleAIModel = google_ai.GenerativeModel(
+  }) : _googleAIModel = google_ai.createModelWithBaseUri(
             model: _normalizeModelName(modelName),
+            baseUri: _vertexUri(app, location),
             apiKey: app.options.apiKey,
             safetySettings: safetySettings != null
                 ? safetySettings
                     .map((setting) => setting.toGoogleAISafetySetting())
                     .toList()
                 : [],
-            generationConfig:
-                _convertGenerationConfig(generationConfig, app, location));
+            generationConfig: generationConfig?.toGoogleAIGenerationConfig());
 
   static const _modelsPrefix = 'models/';
   static String _normalizeModelName(String modelName) =>
@@ -70,24 +60,12 @@ final class GenerativeModel {
           ? modelName.substring(_modelsPrefix.length)
           : modelName;
 
-  static google_ai.VertexConfig _vertexConfig(
-      FirebaseApp app, String location) {
+  static Uri _vertexUri(FirebaseApp app, String location) {
     var projectId = app.options.projectId;
-    var uri = Uri.https(
+    return Uri.https(
       _baseUrl,
       '/$_apiVersion/projects/$projectId/locations/$location/publishers/google/',
     );
-    return google_ai.VertexConfig(modelUri: uri);
-  }
-
-  static google_ai.GenerationConfig _convertGenerationConfig(
-      GenerationConfig? config, FirebaseApp app, String location) {
-    var vertexConfig = _vertexConfig(app, location);
-    if (config == null) {
-      return google_ai.GenerationConfig(vertexConfig: vertexConfig);
-    } else {
-      return config.toGoogleAIGenerationConfig(vertexConfig);
-    }
   }
 
   /// Generates content responding to [prompt].
@@ -113,8 +91,7 @@ final class GenerativeModel {
     return _googleAIModel
         .generateContent(googlePrompt,
             safetySettings: googleSafetySettings,
-            generationConfig: _convertGenerationConfig(
-                generationConfig, _firebaseApp, _location))
+            generationConfig: generationConfig?.toGoogleAIGenerationConfig())
         .then((value) =>
             GenerateContentResponse.fromGoogleAIGenerateContentResponse(value));
   }
@@ -143,8 +120,7 @@ final class GenerativeModel {
                     .map((setting) => setting.toGoogleAISafetySetting())
                     .toList()
                 : [],
-            generationConfig: generationConfig?.toGoogleAIGenerationConfig(
-                _vertexConfig(_firebaseApp, _location)))
+            generationConfig: generationConfig?.toGoogleAIGenerationConfig())
         .map((event) =>
             GenerateContentResponse.fromGoogleAIGenerateContentResponse(event));
   }
@@ -195,7 +171,6 @@ final class GenerativeModel {
   google_ai.GenerativeModel googleAIModel() => _googleAIModel;
 
   google_ai.GenerationConfig? generationConfig(GenerationConfig? config) {
-    return config
-        ?.toGoogleAIGenerationConfig(_vertexConfig(_firebaseApp, _location));
+    return config?.toGoogleAIGenerationConfig();
   }
 }

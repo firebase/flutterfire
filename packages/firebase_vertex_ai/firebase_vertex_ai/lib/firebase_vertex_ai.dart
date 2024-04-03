@@ -22,6 +22,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebasePluginPlatform;
 import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
+// ignore: implementation_imports, tightly coupled packages
+import 'package:google_generative_ai/src/model.dart' as google_ai;
 
 part 'src/firebase_vertex_ai.dart';
 part 'src/vertex_api.dart';

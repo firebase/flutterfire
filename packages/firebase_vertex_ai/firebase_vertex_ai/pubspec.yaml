@@ -61,4 +61,7 @@ flutter:
 # the same repo as the sample.
 dependency_overrides:
   google_generative_ai:
-    path: ../../../../generative-ai-dart/pkgs/google_generative_ai
+    git:
+      url: https://github.com/google/generative-ai-dart.git
+      path: pkgs/google_generative_ai
+      ref: url-overrides

@@ -712,16 +712,15 @@ final class GenerationConfig {
         if (topK case final topK?) 'topK': topK,
       };
 
-  google_ai.GenerationConfig toGoogleAIGenerationConfig(
-          google_ai.VertexConfig? vertexConfig) =>
+  google_ai.GenerationConfig toGoogleAIGenerationConfig() =>
       google_ai.GenerationConfig(
-          candidateCount: candidateCount,
-          stopSequences: stopSequences,
-          maxOutputTokens: maxOutputTokens,
-          temperature: temperature,
-          topP: topP,
-          topK: topK,
-          vertexConfig: vertexConfig);
+        candidateCount: candidateCount,
+        stopSequences: stopSequences,
+        maxOutputTokens: maxOutputTokens,
+        temperature: temperature,
+        topP: topP,
+        topK: topK,
+      );
 }
 
 /// Type of task for which the embedding will be used.
