@@ -68,13 +68,13 @@ public class FirebaseInstallationsPlugin
     TaskCompletionSource<String> taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
-      () -> {
-        try {
-          taskCompletionSource.setResult(Tasks.await(getInstallations(arguments).getId()));
-        } catch (Exception e) {
-          taskCompletionSource.setException(e);
-        }
-      });
+        () -> {
+          try {
+            taskCompletionSource.setResult(Tasks.await(getInstallations(arguments).getId()));
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
 
     return taskCompletionSource.getTask();
   }
@@ -83,48 +83,47 @@ public class FirebaseInstallationsPlugin
     TaskCompletionSource<String> taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
-      () -> {
-        try {
-          FirebaseInstallations firebaseInstallations = getInstallations(arguments);
-          Boolean forceRefresh = (Boolean) Objects.requireNonNull(arguments.get("forceRefresh"));
-          InstallationTokenResult tokenResult =
-            Tasks.await(firebaseInstallations.getToken(forceRefresh));
+        () -> {
+          try {
+            FirebaseInstallations firebaseInstallations = getInstallations(arguments);
+            Boolean forceRefresh = (Boolean) Objects.requireNonNull(arguments.get("forceRefresh"));
+            InstallationTokenResult tokenResult =
+                Tasks.await(firebaseInstallations.getToken(forceRefresh));
 
-          taskCompletionSource.setResult(tokenResult.getToken());
-        } catch (Exception e) {
-          taskCompletionSource.setException(e);
-        }
-      });
+            taskCompletionSource.setResult(tokenResult.getToken());
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
 
     return taskCompletionSource.getTask();
-
   }
 
   private Task<String> registerIdChangeListener(Map<String, Object> arguments) {
     TaskCompletionSource<String> taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
-      () -> {
-        try {
-          String appName = (String) Objects.requireNonNull(arguments.get("appName"));
-          FirebaseInstallations firebaseInstallations = getInstallations(arguments);
+        () -> {
+          try {
+            String appName = (String) Objects.requireNonNull(arguments.get("appName"));
+            FirebaseInstallations firebaseInstallations = getInstallations(arguments);
 
-          io.flutter.plugins.firebase.installations.firebase_app_installations
-            .TokenChannelStreamHandler
-            handler =
-            new io.flutter.plugins.firebase.installations.firebase_app_installations
-              .TokenChannelStreamHandler(firebaseInstallations);
+            io.flutter.plugins.firebase.installations.firebase_app_installations
+                    .TokenChannelStreamHandler
+                handler =
+                    new io.flutter.plugins.firebase.installations.firebase_app_installations
+                        .TokenChannelStreamHandler(firebaseInstallations);
 
-          final String name = METHOD_CHANNEL_NAME + "/token/" + appName;
-          final EventChannel channel = new EventChannel(messenger, name);
-          channel.setStreamHandler(handler);
-          streamHandlers.put(channel, handler);
+            final String name = METHOD_CHANNEL_NAME + "/token/" + appName;
+            final EventChannel channel = new EventChannel(messenger, name);
+            channel.setStreamHandler(handler);
+            streamHandlers.put(channel, handler);
 
-          taskCompletionSource.setResult(name);
-        } catch (Exception e) {
-          taskCompletionSource.setException(e);
-        }
-      });
+            taskCompletionSource.setResult(name);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
 
     return taskCompletionSource.getTask();
   }
@@ -133,15 +132,15 @@ public class FirebaseInstallationsPlugin
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
-      () -> {
-        try {
-          Tasks.await(getInstallations(arguments).delete());
+        () -> {
+          try {
+            Tasks.await(getInstallations(arguments).delete());
 
-          taskCompletionSource.setResult(null);
-        } catch (Exception e) {
-          taskCompletionSource.setException(e);
-        }
-      });
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
 
     return taskCompletionSource.getTask();
   }
@@ -199,13 +198,13 @@ public class FirebaseInstallationsPlugin
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
-      () -> {
-        try {
-          taskCompletionSource.setResult(new HashMap<String, Object>() {});
-        } catch (Exception e) {
-          taskCompletionSource.setException(e);
-        }
-      });
+        () -> {
+          try {
+            taskCompletionSource.setResult(new HashMap<String, Object>() {});
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
 
     return taskCompletionSource.getTask();
   }
@@ -215,13 +214,13 @@ public class FirebaseInstallationsPlugin
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
-      () -> {
-        try {
-          taskCompletionSource.setResult(null);
-        } catch (Exception e) {
-          taskCompletionSource.setException(e);
-        }
-      });
+        () -> {
+          try {
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
 
     return taskCompletionSource.getTask();
   }
