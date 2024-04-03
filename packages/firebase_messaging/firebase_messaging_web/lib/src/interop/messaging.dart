@@ -8,7 +8,6 @@
 import 'dart:async';
 import 'dart:js_interop';
 
-import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
 import 'messaging_interop.dart' as messaging_interop;
