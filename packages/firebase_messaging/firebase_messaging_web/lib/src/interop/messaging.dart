@@ -8,6 +8,7 @@
 import 'dart:async';
 import 'dart:js_interop';
 
+import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
 import 'messaging_interop.dart' as messaging_interop;
@@ -121,7 +122,7 @@ class MessagePayload
       ? null
       : NotificationPayload._fromJsObject(jsObject.notification!);
   Map<String, dynamic>? get data =>
-      jsObject.data.dartify() as Map<String, dynamic>?;
+      (jsObject.data.dartify() as Map<Object?, Object?>?)?.cast<String, dynamic>();
   String? get from => jsObject.from?.toDart;
 }
 
