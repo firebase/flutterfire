@@ -292,6 +292,7 @@ public class PigeonParser {
     }
     // Deserialize a FilterOperator
     String op = (String) map.get("op");
+    @SuppressWarnings("unchecked")
     List<Map<String, Object>> queries = (List<Map<String, Object>>) map.get("queries");
 
     // Map queries recursively
