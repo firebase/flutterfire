@@ -90,7 +90,6 @@ public class FlutterFirebaseAppCheckPlugin
 
   // SafetyNet is deprecated and is already annotated as such on the user facing Dart API.
   @SuppressWarnings("deprecation")
-
   private Task<Void> activate(Map<String, Object> arguments) {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
