@@ -53,6 +53,8 @@ public class FlutterFirebaseMessagingReceiver extends BroadcastReceiver {
     onBackgroundMessageIntent.putExtra(
         FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE, remoteMessage);
     FlutterFirebaseMessagingBackgroundService.enqueueMessageProcessing(
-        context, onBackgroundMessageIntent);
+        context,
+        onBackgroundMessageIntent,
+        remoteMessage.getOriginalPriority() == RemoteMessage.PRIORITY_HIGH);
   }
 }
