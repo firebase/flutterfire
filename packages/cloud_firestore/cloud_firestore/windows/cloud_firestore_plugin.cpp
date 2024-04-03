@@ -185,7 +185,8 @@ CloudFirestorePlugin::~CloudFirestorePlugin() {}
 Firestore* GetFirestoreFromPigeon(const FirestorePigeonFirebaseApp& pigeonApp) {
   if (CloudFirestorePlugin::firestoreInstances_.find(pigeonApp.app_name()) !=
       CloudFirestorePlugin::firestoreInstances_.end()) {
-    return CloudFirestorePlugin::firestoreInstances_[pigeonApp.app_name()].get();
+    return CloudFirestorePlugin::firestoreInstances_[pigeonApp.app_name()]
+        .get();
   }
 
   App* app = App::GetInstance(pigeonApp.app_name().c_str());
@@ -222,7 +223,8 @@ Firestore* GetFirestoreFromPigeon(const FirestorePigeonFirebaseApp& pigeonApp) {
 
   firestore->set_settings(settings);
 
-  CloudFirestorePlugin::firestoreInstances_[pigeonApp.app_name()] = std::unique_ptr<firebase::firestore::Firestore>(firestore);
+  CloudFirestorePlugin::firestoreInstances_[pigeonApp.app_name()] =
+      std::unique_ptr<firebase::firestore::Firestore>(firestore);
 
   return firestore;
 }
