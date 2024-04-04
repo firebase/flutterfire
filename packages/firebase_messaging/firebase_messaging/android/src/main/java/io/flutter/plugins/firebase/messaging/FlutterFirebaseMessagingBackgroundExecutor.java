@@ -261,28 +261,6 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
     } else {
       Log.e(TAG, "RemoteMessage byte array not found in Intent.");
     }
-    // Handle the message event in Dart.
-    //    String mapJson = intent.getStringExtra(FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE);
-    //
-    //    if (mapJson != null && !mapJson.isEmpty()) {
-    //      Gson gson = new GsonBuilder()
-    //        .registerTypeAdapter(new TypeToken<Map<String, Object>>(){}.getType(), new DeserialiseRemoteMessageJSON())
-    //        .create();
-    //      Type type = new TypeToken<Map<String, Object>>(){}.getType();
-    //      Map<String, Object> remoteMessageMap = gson.fromJson(mapJson, type);
-    //
-    //      backgroundChannel.invokeMethod(
-    //          "MessagingBackground#onMessage",
-    //          new HashMap<String, Object>() {
-    //            {
-    //              put("userCallbackHandle", getUserCallbackHandle());
-    //              put("message", remoteMessageMap);
-    //            }
-    //          },
-    //          result);
-    //    } else {
-    //      Log.e(TAG, "RemoteMessage instance not found in Intent.");
-    //    }
   }
 
   /**
