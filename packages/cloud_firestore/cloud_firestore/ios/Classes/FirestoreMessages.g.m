@@ -40,6 +40,22 @@
 }
 @end
 
+/// The listener retrieves data and listens to updates from the local Firestore cache only.
+/// If the cache is empty, an empty snapshot will be returned.
+/// Snapshot events will be triggered on cache updates, like local mutations or load bundles.
+///
+/// Note that the data might be stale if the cache hasn't synchronized with recent server-side
+/// changes.
+@implementation ListenSourceBox
+- (instancetype)initWithValue:(ListenSource)value {
+  self = [super init];
+  if (self) {
+    _value = value;
+  }
+  return self;
+}
+@end
+
 @implementation ServerTimestampBehaviorBox
 - (instancetype)initWithValue:(ServerTimestampBehavior)value {
   self = [super init];

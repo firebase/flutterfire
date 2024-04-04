@@ -182,6 +182,7 @@ class QueryWeb extends QueryPlatform {
   @override
   Stream<QuerySnapshotPlatform> snapshots({
     bool includeMetadataChanges = false,
+    ListenSource source = ListenSource.defaultSource,
   }) {
     Stream<firestore_interop.QuerySnapshot> querySnapshots;
     if (includeMetadataChanges) {

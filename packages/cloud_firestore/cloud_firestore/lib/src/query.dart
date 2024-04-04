@@ -84,7 +84,10 @@ abstract class Query<T extends Object?> {
   Query<T> limitToLast(int limit);
 
   /// Notifies of query results at this location.
-  Stream<QuerySnapshot<T>> snapshots({bool includeMetadataChanges = false});
+  Stream<QuerySnapshot<T>> snapshots({
+    bool includeMetadataChanges = false,
+    ListenSource source = ListenSource.defaultSource,
+  });
 
   /// Creates and returns a new [Query] that's additionally sorted by the specified
   /// [field].
@@ -451,9 +454,13 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   @override
   Stream<QuerySnapshot<Map<String, dynamic>>> snapshots({
     bool includeMetadataChanges = false,
+    ListenSource source = ListenSource.defaultSource,
   }) {
     return _delegate
-        .snapshots(includeMetadataChanges: includeMetadataChanges)
+        .snapshots(
+          includeMetadataChanges: includeMetadataChanges,
+          source: source,
+        )
         .map((item) => _JsonQuerySnapshot(firestore, item));
   }
 
@@ -925,7 +932,10 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
   }
 
   @override
-  Stream<QuerySnapshot<T>> snapshots({bool includeMetadataChanges = false}) {
+  Stream<QuerySnapshot<T>> snapshots({
+    bool includeMetadataChanges = false,
+    ListenSource source = ListenSource.defaultSource,
+  }) {
     return _originalQuery
         .snapshots(includeMetadataChanges: includeMetadataChanges)
         .map(
