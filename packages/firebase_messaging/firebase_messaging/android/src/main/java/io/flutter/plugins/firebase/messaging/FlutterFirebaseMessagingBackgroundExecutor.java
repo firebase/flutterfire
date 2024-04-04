@@ -10,8 +10,10 @@ import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Parcel;
 import android.util.Log;
 import androidx.annotation.NonNull;
+
 import com.google.firebase.messaging.RemoteMessage;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.embedding.engine.FlutterShellArgs;
@@ -24,6 +26,8 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.view.FlutterCallbackInformation;
+
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -227,19 +231,22 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
             }
           };
     }
+    // RemoteMessage is passed as byte array. Check it exists first
+    byte[] parcelBytes = intent.getByteArrayExtra(FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE);
+    if (parcelBytes != null) {
+      Parcel parcel = Parcel.obtain();
+      try {
+        // This converts raw byte array into data and request this happens on the entire array
+        parcel.unmarshall(parcelBytes, 0, parcelBytes.length);
+        // Sets the starting position of the data which is 0 on array
+        parcel.setDataPosition(0);
 
-    // Handle the message event in Dart.
-    RemoteMessage remoteMessage;
-    // Using android >= 33 API causes sporadic crashes. See: https://github.com/firebase/flutterfire/issues/11142
-    // remoteMessage =
-    //          intent.getParcelableExtra(
-    //              FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE, RemoteMessage.class);
-    remoteMessage = intent.getParcelableExtra(FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE);
-
-    if (remoteMessage != null) {
-      Map<String, Object> remoteMessageMap =
+        // Now recreate the RemoteMessage from the Parcel
+        RemoteMessage remoteMessage = RemoteMessage.CREATOR.createFromParcel(parcel);
+        Map<String, Object> remoteMessageMap =
           FlutterFirebaseMessagingUtils.remoteMessageToMap(remoteMessage);
-      backgroundChannel.invokeMethod(
+
+        backgroundChannel.invokeMethod(
           "MessagingBackground#onMessage",
           new HashMap<String, Object>() {
             {
@@ -248,9 +255,36 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
             }
           },
           result);
+
+      } finally {
+        // Recycle the Parcel when done
+        parcel.recycle();
+      }
     } else {
-      Log.e(TAG, "RemoteMessage instance not found in Intent.");
+      Log.e(TAG, "RemoteMessage byte array not found in Intent.");
     }
+    // Handle the message event in Dart.
+//    String mapJson = intent.getStringExtra(FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE);
+//
+//    if (mapJson != null && !mapJson.isEmpty()) {
+//      Gson gson = new GsonBuilder()
+//        .registerTypeAdapter(new TypeToken<Map<String, Object>>(){}.getType(), new DeserialiseRemoteMessageJSON())
+//        .create();
+//      Type type = new TypeToken<Map<String, Object>>(){}.getType();
+//      Map<String, Object> remoteMessageMap = gson.fromJson(mapJson, type);
+//
+//      backgroundChannel.invokeMethod(
+//          "MessagingBackground#onMessage",
+//          new HashMap<String, Object>() {
+//            {
+//              put("userCallbackHandle", getUserCallbackHandle());
+//              put("message", remoteMessageMap);
+//            }
+//          },
+//          result);
+//    } else {
+//      Log.e(TAG, "RemoteMessage instance not found in Intent.");
+//    }
   }
 
   /**

@@ -7,6 +7,7 @@ package io.flutter.plugins.firebase.messaging;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcel;
 import android.util.Log;
 import com.google.firebase.messaging.RemoteMessage;
 import java.util.HashMap;
@@ -50,8 +51,11 @@ public class FlutterFirebaseMessagingReceiver extends BroadcastReceiver {
     //   ------------------------
     Intent onBackgroundMessageIntent =
         new Intent(context, FlutterFirebaseMessagingBackgroundService.class);
-    onBackgroundMessageIntent.putExtra(
-        FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE, remoteMessage);
+
+    Parcel parcel = Parcel.obtain();
+    remoteMessage.writeToParcel(parcel, 0);
+    onBackgroundMessageIntent.putExtra(FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE, parcel.marshall());
+
     FlutterFirebaseMessagingBackgroundService.enqueueMessageProcessing(
         context,
         onBackgroundMessageIntent,
