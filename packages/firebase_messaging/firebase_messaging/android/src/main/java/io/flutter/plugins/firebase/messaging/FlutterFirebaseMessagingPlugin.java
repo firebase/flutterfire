@@ -320,8 +320,8 @@ public class FlutterFirebaseMessagingPlugin
                     FlutterFirebaseMessagingUtils.getRemoteMessageForArguments(messageMap);
 
                 if (messageMap.get("notification") != null) {
-                  // noinspection unchecked
-                  notificationMap = (Map<String, Object>) messageMap.get("notification");
+                  // noinspection
+                  notificationMap = (Map<String, Object>) safelyCastToMap(messageMap.get("notification"));
                 }
               }
               FlutterFirebaseMessagingStore.getInstance().removeFirebaseMessage(messageId);
@@ -612,5 +612,11 @@ public class FlutterFirebaseMessagingPlugin
     cachedThreadPool.execute(() -> taskCompletionSource.setResult(null));
 
     return taskCompletionSource.getTask();
+  }
+
+  private Map<String, Object> safelyCastToMap(Object obj) {
+    @SuppressWarnings("unchecked")
+    Map<String, Object> result = (Map<String, Object>) obj;
+    return result;
   }
 }
