@@ -36,7 +36,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
   flutter_markdown: ^0.6.20
-  firebase_vertex_ai: any
+  firebase_vertexai: any
   firebase_core: ^2.27.0
 
 dev_dependencies:
@@ -66,5 +66,5 @@ flutter:
 # Note: this section is only used in order to resolve vertex ai to
 # the same repo as the sample.
 dependency_overrides:
-  firebase_vertex_ai:
-    path: ../../firebase_vertex_ai
+  firebase_vertexai:
+    path: ../../firebase_vertexai

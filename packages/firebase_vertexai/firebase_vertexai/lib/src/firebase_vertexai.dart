@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of firebase_vertex_ai;
+part of firebase_vertexai;
 
 const _defaultLocation = 'us-central1';
 const int int64MaxValue = 9223372036854775807;

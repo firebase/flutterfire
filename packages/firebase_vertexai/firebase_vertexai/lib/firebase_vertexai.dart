@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-library firebase_vertex_ai;
+library firebase_vertexai;
 
 import 'dart:async';
 import 'dart:convert';
@@ -25,7 +25,7 @@ import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
 // ignore: implementation_imports, tightly coupled packages
 import 'package:google_generative_ai/src/model.dart' as google_ai;
 
-part 'src/firebase_vertex_ai.dart';
+part 'src/firebase_vertexai.dart';
 part 'src/vertex_api.dart';
 part 'src/vertex_model.dart';
 part 'src/vertex_content.dart';

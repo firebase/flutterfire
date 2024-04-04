@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of firebase_vertex_ai;
+part of firebase_vertexai;
 
 const _baseUrl = 'staging-firebaseml.sandbox.googleapis.com';
 //const _baseUrl = 'firebaseml.googleapis.com';
