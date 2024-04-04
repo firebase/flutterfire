@@ -321,7 +321,8 @@ public class FlutterFirebaseMessagingPlugin
 
                 if (messageMap.get("notification") != null) {
                   // noinspection
-                  notificationMap = (Map<String, Object>) safelyCastToMap(messageMap.get("notification"));
+                  notificationMap =
+                      (Map<String, Object>) safelyCastToMap(messageMap.get("notification"));
                 }
               }
               FlutterFirebaseMessagingStore.getInstance().removeFirebaseMessage(messageId);

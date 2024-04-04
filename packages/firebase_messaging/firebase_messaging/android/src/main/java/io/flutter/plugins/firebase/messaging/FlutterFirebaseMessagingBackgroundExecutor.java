@@ -13,7 +13,6 @@ import android.os.Looper;
 import android.os.Parcel;
 import android.util.Log;
 import androidx.annotation.NonNull;
-
 import com.google.firebase.messaging.RemoteMessage;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.embedding.engine.FlutterShellArgs;
@@ -26,8 +25,6 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.view.FlutterCallbackInformation;
-
-import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -232,7 +229,8 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
           };
     }
     // RemoteMessage is passed as byte array. Check it exists first
-    byte[] parcelBytes = intent.getByteArrayExtra(FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE);
+    byte[] parcelBytes =
+        intent.getByteArrayExtra(FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE);
     if (parcelBytes != null) {
       Parcel parcel = Parcel.obtain();
       try {
@@ -244,17 +242,17 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
         // Now recreate the RemoteMessage from the Parcel
         RemoteMessage remoteMessage = RemoteMessage.CREATOR.createFromParcel(parcel);
         Map<String, Object> remoteMessageMap =
-          FlutterFirebaseMessagingUtils.remoteMessageToMap(remoteMessage);
+            FlutterFirebaseMessagingUtils.remoteMessageToMap(remoteMessage);
 
         backgroundChannel.invokeMethod(
-          "MessagingBackground#onMessage",
-          new HashMap<String, Object>() {
-            {
-              put("userCallbackHandle", getUserCallbackHandle());
-              put("message", remoteMessageMap);
-            }
-          },
-          result);
+            "MessagingBackground#onMessage",
+            new HashMap<String, Object>() {
+              {
+                put("userCallbackHandle", getUserCallbackHandle());
+                put("message", remoteMessageMap);
+              }
+            },
+            result);
 
       } finally {
         // Recycle the Parcel when done
@@ -264,27 +262,27 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
       Log.e(TAG, "RemoteMessage byte array not found in Intent.");
     }
     // Handle the message event in Dart.
-//    String mapJson = intent.getStringExtra(FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE);
-//
-//    if (mapJson != null && !mapJson.isEmpty()) {
-//      Gson gson = new GsonBuilder()
-//        .registerTypeAdapter(new TypeToken<Map<String, Object>>(){}.getType(), new DeserialiseRemoteMessageJSON())
-//        .create();
-//      Type type = new TypeToken<Map<String, Object>>(){}.getType();
-//      Map<String, Object> remoteMessageMap = gson.fromJson(mapJson, type);
-//
-//      backgroundChannel.invokeMethod(
-//          "MessagingBackground#onMessage",
-//          new HashMap<String, Object>() {
-//            {
-//              put("userCallbackHandle", getUserCallbackHandle());
-//              put("message", remoteMessageMap);
-//            }
-//          },
-//          result);
-//    } else {
-//      Log.e(TAG, "RemoteMessage instance not found in Intent.");
-//    }
+    //    String mapJson = intent.getStringExtra(FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE);
+    //
+    //    if (mapJson != null && !mapJson.isEmpty()) {
+    //      Gson gson = new GsonBuilder()
+    //        .registerTypeAdapter(new TypeToken<Map<String, Object>>(){}.getType(), new DeserialiseRemoteMessageJSON())
+    //        .create();
+    //      Type type = new TypeToken<Map<String, Object>>(){}.getType();
+    //      Map<String, Object> remoteMessageMap = gson.fromJson(mapJson, type);
+    //
+    //      backgroundChannel.invokeMethod(
+    //          "MessagingBackground#onMessage",
+    //          new HashMap<String, Object>() {
+    //            {
+    //              put("userCallbackHandle", getUserCallbackHandle());
+    //              put("message", remoteMessageMap);
+    //            }
+    //          },
+    //          result);
+    //    } else {
+    //      Log.e(TAG, "RemoteMessage instance not found in Intent.");
+    //    }
   }
 
   /**

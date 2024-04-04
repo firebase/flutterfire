@@ -54,7 +54,8 @@ public class FlutterFirebaseMessagingReceiver extends BroadcastReceiver {
 
     Parcel parcel = Parcel.obtain();
     remoteMessage.writeToParcel(parcel, 0);
-    onBackgroundMessageIntent.putExtra(FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE, parcel.marshall());
+    onBackgroundMessageIntent.putExtra(
+        FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE, parcel.marshall());
 
     FlutterFirebaseMessagingBackgroundService.enqueueMessageProcessing(
         context,
