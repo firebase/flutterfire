@@ -703,13 +703,21 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// For abuse prevention, this method also requires a [ApplicationVerifier].
   /// The Firebase Auth SDK includes a reCAPTCHA-based implementation, [RecaptchaVerifier].
   Future<ConfirmationResult> signInWithPhoneNumber(
-          String phoneNumber, ApplicationVerifier applicationVerifier) =>
-      auth_interop
-          .signInWithPhoneNumber(
-              jsObject, phoneNumber.toJS, applicationVerifier.jsObject)
-          .toDart
-          .then((value) => ConfirmationResult.fromJsObject(
-              value! as auth_interop.ConfirmationResultJsImpl));
+    String phoneNumber,
+    ApplicationVerifier applicationVerifier,
+  ) async {
+    final result = await auth_interop
+        .signInWithPhoneNumber(
+          jsObject,
+          phoneNumber.toJS,
+          applicationVerifier.jsObject,
+        )
+        .toDart;
+
+    return ConfirmationResult.fromJsObject(
+      result! as auth_interop.ConfirmationResultJsImpl,
+    );
+  }
 
   /// Signs in using a popup-based OAuth authentication flow with the
   /// given [provider].
@@ -1115,7 +1123,7 @@ class RecaptchaVerifier
       auth_interop.RecaptchaVerifierJsImpl(
         auth.jsObject,
         container,
-        parameters.toJSBox,
+        parameters.jsify(),
       ),
     );
   }
