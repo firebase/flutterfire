@@ -175,6 +175,7 @@ class MethodChannelQuery extends QueryPlatform {
             serverTimestampBehavior: serverTimestampBehavior,
           ),
           includeMetadataChanges,
+          source,
         );
 
         snapshotStreamSubscription =

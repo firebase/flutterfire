@@ -892,6 +892,7 @@ public class FlutterFirebaseFirestorePlugin
       @NonNull GeneratedAndroidFirebaseFirestore.PigeonQueryParameters parameters,
       @NonNull GeneratedAndroidFirebaseFirestore.PigeonGetOptions options,
       @NonNull Boolean includeMetadataChanges,
+      @NonNull GeneratedAndroidFirebaseFirestore.ListenSource source,
       @NonNull GeneratedAndroidFirebaseFirestore.Result<String> result) {
     Query query =
         PigeonParser.parseQuery(getFirestoreFromPigeon(app), path, isCollectionGroup, parameters);

@@ -55,6 +55,8 @@ public class PigeonParser {
     }
   }
 
+  
+
   public static GeneratedAndroidFirebaseFirestore.PigeonQuerySnapshot toPigeonQuerySnapshot(
       com.google.firebase.firestore.QuerySnapshot querySnapshot,
       DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior) {

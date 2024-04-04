@@ -122,12 +122,14 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
       onListen: () async {
         final observerId = await MethodChannelFirebaseFirestore.pigeonChannel
             .documentReferenceSnapshot(
-                pigeonApp,
-                DocumentReferenceRequest(
-                  path: _pointer.path,
-                  serverTimestampBehavior: serverTimestampBehavior,
-                ),
-                includeMetadataChanges);
+          pigeonApp,
+          DocumentReferenceRequest(
+            path: _pointer.path,
+            serverTimestampBehavior: serverTimestampBehavior,
+          ),
+          includeMetadataChanges,
+          source,
+        );
         snapshotStreamSubscription =
             MethodChannelFirebaseFirestore.documentSnapshotChannel(observerId)
                 .receiveGuardedBroadcastStream(

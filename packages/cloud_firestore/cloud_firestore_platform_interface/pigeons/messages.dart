@@ -418,6 +418,7 @@ abstract class FirebaseFirestoreHostApi {
     PigeonQueryParameters parameters,
     PigeonGetOptions options,
     bool includeMetadataChanges,
+    ListenSource source,
   );
 
   @async
@@ -425,5 +426,6 @@ abstract class FirebaseFirestoreHostApi {
     FirestorePigeonFirebaseApp app,
     DocumentReferenceRequest parameters,
     bool includeMetadataChanges,
+    ListenSource source,
   );
 }

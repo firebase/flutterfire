@@ -391,10 +391,12 @@ NSObject<FlutterMessageCodec> *FirebaseFirestoreHostApiGetCodec(void);
                 parameters:(PigeonQueryParameters *)parameters
                    options:(PigeonGetOptions *)options
     includeMetadataChanges:(NSNumber *)includeMetadataChanges
+                    source:(ListenSource)source
                 completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
 - (void)documentReferenceSnapshotApp:(FirestorePigeonFirebaseApp *)app
                           parameters:(DocumentReferenceRequest *)parameters
               includeMetadataChanges:(NSNumber *)includeMetadataChanges
+                              source:(ListenSource)source
                           completion:
                               (void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
 @end

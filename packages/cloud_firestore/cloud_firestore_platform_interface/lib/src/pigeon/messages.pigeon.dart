@@ -1234,6 +1234,7 @@ class FirebaseFirestoreHostApi {
     PigeonQueryParameters arg_parameters,
     PigeonGetOptions arg_options,
     bool arg_includeMetadataChanges,
+    ListenSource arg_source,
   ) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
       'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot',
@@ -1247,6 +1248,7 @@ class FirebaseFirestoreHostApi {
       arg_parameters,
       arg_options,
       arg_includeMetadataChanges,
+      arg_source.index,
     ]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
@@ -1273,15 +1275,19 @@ class FirebaseFirestoreHostApi {
     FirestorePigeonFirebaseApp arg_app,
     DocumentReferenceRequest arg_parameters,
     bool arg_includeMetadataChanges,
+    ListenSource arg_source,
   ) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
       'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot',
       codec,
       binaryMessenger: _binaryMessenger,
     );
-    final List<Object?>? replyList = await channel.send(
-      <Object?>[arg_app, arg_parameters, arg_includeMetadataChanges],
-    ) as List<Object?>?;
+    final List<Object?>? replyList = await channel.send(<Object?>[
+      arg_app,
+      arg_parameters,
+      arg_includeMetadataChanges,
+      arg_source.index,
+    ]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
