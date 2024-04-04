@@ -110,6 +110,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
     bool includeMetadataChanges = false,
     ServerTimestampBehavior serverTimestampBehavior =
         ServerTimestampBehavior.none,
+    ListenSource source = ListenSource.defaultSource,
   }) {
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
