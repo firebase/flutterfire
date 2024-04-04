@@ -63,10 +63,8 @@ flutter:
   assets:
     - assets/images/
 
-# Note: this section is only used in order to resolve google_generative_ai to
+# Note: this section is only used in order to resolve vertex ai to
 # the same repo as the sample.
 dependency_overrides:
   firebase_vertex_ai:
     path: ../../firebase_vertex_ai
-  google_generative_ai:
-    path: ../../../../../generative-ai-dart/pkgs/google_generative_ai

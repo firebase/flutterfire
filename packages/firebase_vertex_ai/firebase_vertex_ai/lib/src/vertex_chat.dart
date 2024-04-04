@@ -31,14 +31,15 @@ final class ChatSession {
 
   ChatSession._(
       this._history, this._safetySettings, this._generationConfig, this._model)
-      : _googleAIChatSession = _model.googleAIModel().startChat(
-            history: _history.map((e) => e.toGoogleAIContent()).toList(),
+      : _googleAIChatSession = _model._googleAIModel.startChat(
+            history: _history.map((e) => e._toGoogleAIContent()).toList(),
             safetySettings: _safetySettings != null
                 ? _safetySettings
-                    .map((setting) => setting.toGoogleAISafetySetting())
+                    .map((setting) => setting._toGoogleAISafetySetting())
                     .toList()
                 : [],
-            generationConfig: _model.generationConfig(_generationConfig));
+            generationConfig:
+                _model._googleAIGenerationConfig(_generationConfig));
 
   /// The content that has been successfully sent to, or received from, the
   /// generative model.
@@ -62,9 +63,9 @@ final class ChatSession {
   /// Successful messages and responses for ongoing or pending requests will
   /// be reflected in the history sent for this message.
   Future<GenerateContentResponse> sendMessage(Content message) async {
-    return _googleAIChatSession.sendMessage(message.toGoogleAIContent()).then(
-        (value) =>
-            GenerateContentResponse.fromGoogleAIGenerateContentResponse(value));
+    return _googleAIChatSession.sendMessage(message._toGoogleAIContent()).then(
+        (value) => GenerateContentResponse._fromGoogleAIGenerateContentResponse(
+            value));
   }
 
   /// Continues the chat with a new [message].
@@ -86,9 +87,10 @@ final class ChatSession {
   /// and response and allowing pending messages to be sent.
   Stream<GenerateContentResponse> sendMessageStream(Content message) {
     return _googleAIChatSession
-        .sendMessageStream(message.toGoogleAIContent())
+        .sendMessageStream(message._toGoogleAIContent())
         .map((event) =>
-            GenerateContentResponse.fromGoogleAIGenerateContentResponse(event));
+            GenerateContentResponse._fromGoogleAIGenerateContentResponse(
+                event));
   }
 }
 

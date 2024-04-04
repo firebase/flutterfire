@@ -13,7 +13,7 @@ dependencies:
   firebase_core_platform_interface: ^5.0.0
   flutter:
     sdk: flutter
-  google_generative_ai: any
+  google_generative_ai: ^0.2.3
 
 dev_dependencies:
   flutter_test:
@@ -57,8 +57,3 @@ flutter:
   # For details regarding fonts in packages, see
   # https://flutter.dev/custom-fonts/#from-packages
 
-# Note: this section is only used in order to resolve google_generative_ai to
-# the same repo as the sample.
-dependency_overrides:
-  google_generative_ai:
-    path: ../../../../generative-ai-dart/pkgs/google_generative_ai

@@ -29,9 +29,9 @@ final class Content {
 
   Content(this.role, this.parts);
 
-  factory Content.fromGoogleAIContent(google_ai.Content content) => Content(
+  factory Content._fromGoogleAIContent(google_ai.Content content) => Content(
       content.role,
-      content.parts.map((p) => Part.fromGoogleAIPart(p)).toList());
+      content.parts.map((p) => Part._fromGoogleAIPart(p)).toList());
 
   static Content text(String text) => Content('user', [TextPart(text)]);
   static Content data(String mimeType, Uint8List bytes) =>
@@ -43,7 +43,7 @@ final class Content {
         if (role case final role?) 'role': role,
         'parts': parts.map((p) => p.toJson()).toList()
       };
-  google_ai.Content toGoogleAIContent() =>
+  google_ai.Content _toGoogleAIContent() =>
       google_ai.Content(role, parts.map((p) => p.toPart()).toList());
 }
 
@@ -72,7 +72,7 @@ Part _parsePart(Object? jsonObject) {
 sealed class Part {
   Object toJson();
   google_ai.Part toPart();
-  factory Part.fromGoogleAIPart(google_ai.Part part) => switch (part) {
+  factory Part._fromGoogleAIPart(google_ai.Part part) => switch (part) {
         google_ai.TextPart textPart => TextPart(textPart.text),
         google_ai.DataPart dataPart =>
           DataPart(dataPart.mimeType, dataPart.bytes),

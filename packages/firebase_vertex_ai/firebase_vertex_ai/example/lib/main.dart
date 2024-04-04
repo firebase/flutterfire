@@ -34,7 +34,7 @@ class GenerativeAISample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter + Generative AI',
+      title: 'Flutter + Vertex AI',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           brightness: Brightness.dark,
@@ -42,7 +42,7 @@ class GenerativeAISample extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const ChatScreen(title: 'Flutter + Generative AI'),
+      home: const ChatScreen(title: 'Flutter + Vertex AI'),
     );
   }
 }

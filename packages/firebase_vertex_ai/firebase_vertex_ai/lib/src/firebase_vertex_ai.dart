@@ -15,6 +15,7 @@
 part of firebase_vertex_ai;
 
 const _defaultLocation = 'us-central1';
+const int int64MaxValue = 9223372036854775807;
 
 class FirebaseVertexAI extends FirebasePluginPlatform {
   FirebaseVertexAI._({required this.app, required this.options})
@@ -47,7 +48,8 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
       return _cachedInstances[app.name]!;
     }
 
-    options ??= RequestOptions(location: _defaultLocation);
+    options ??=
+        RequestOptions(timeout: const Duration(milliseconds: int64MaxValue));
     FirebaseVertexAI newInstance =
         FirebaseVertexAI._(app: app, options: options);
     _cachedInstances[app.name] = newInstance;
@@ -73,7 +75,7 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
     return GenerativeModel._(
         modelName: model,
         app: app,
-        location: options.location,
+        location: _defaultLocation,
         safetySettings: safetySettings,
         generationConfig: generationConfig);
   }
@@ -81,8 +83,8 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
 
 class RequestOptions {
   RequestOptions({
-    required this.location,
+    required this.timeout,
   });
 
-  final String location;
+  final Duration timeout;
 }

@@ -22,12 +22,12 @@ final class CountTokensResponse {
 
   CountTokensResponse(this.totalTokens);
 
-  factory CountTokensResponse.fromGoogleAICountTokensResponse(
+  factory CountTokensResponse._fromGoogleAICountTokensResponse(
           google_ai.CountTokensResponse countTokensResponse) =>
       CountTokensResponse(countTokensResponse.totalTokens);
 
   /// Converts this response to a [google_ai.CountTokensResponse].
-  google_ai.CountTokensResponse toGoogleAICountTokensResponse() =>
+  google_ai.CountTokensResponse _toGoogleAICountTokensResponse() =>
       google_ai.CountTokensResponse(totalTokens);
 }
 
@@ -41,27 +41,27 @@ final class GenerateContentResponse {
 
   GenerateContentResponse(this.candidates, this.promptFeedback);
 
-  factory GenerateContentResponse.fromGoogleAIGenerateContentResponse(
+  factory GenerateContentResponse._fromGoogleAIGenerateContentResponse(
           google_ai.GenerateContentResponse generateContentResponse) =>
       GenerateContentResponse(
           generateContentResponse.candidates
-              .map((candidate) => Candidate.fromGoogleAICandidate(candidate))
+              .map((candidate) => Candidate._fromGoogleAICandidate(candidate))
               .toList(),
           generateContentResponse.promptFeedback != null
-              ? PromptFeedback.fromGoogleAIPromptFeedback(
+              ? PromptFeedback._fromGoogleAIPromptFeedback(
                   generateContentResponse.promptFeedback!)
               : null);
 
   /// Converts this response to a [GenerateContentResponse].
 
-  google_ai.GenerateContentResponse toGoogleAIGenerateContentResponse() =>
+  google_ai.GenerateContentResponse _toGoogleAIGenerateContentResponse() =>
       google_ai.GenerateContentResponse(
           candidates
               .map(
-                (candidate) => candidate.toGoogleAICandidate(),
+                (candidate) => candidate._toGoogleAICandidate(),
               )
               .toList(),
-          promptFeedback?.toGoogleAIPromptFeedback());
+          promptFeedback?._toGoogleAIPromptFeedback());
 
   /// The text content of the first part of the first of [candidates], if any.
   ///
@@ -114,15 +114,15 @@ final class EmbedContentResponse {
   final ContentEmbedding embedding;
 
   EmbedContentResponse(this.embedding);
-  factory EmbedContentResponse.fromGoogleAIEmbedContentResponse(
+  factory EmbedContentResponse._fromGoogleAIEmbedContentResponse(
           google_ai.EmbedContentResponse embedContentResponse) =>
-      EmbedContentResponse(ContentEmbedding.fromGoogleAIContentEmbedding(
+      EmbedContentResponse(ContentEmbedding._fromGoogleAIContentEmbedding(
           embedContentResponse.embedding));
 
   /// Converts this response to a [EmbedContentResponse].
 
-  google_ai.EmbedContentResponse toGoogleAIEmbedContentResponse() =>
-      google_ai.EmbedContentResponse(embedding.toGoogleAIContentEmbedding());
+  google_ai.EmbedContentResponse _toGoogleAIEmbedContentResponse() =>
+      google_ai.EmbedContentResponse(embedding._toGoogleAIContentEmbedding());
 }
 
 /// An embedding, as defined by a list of values.
@@ -131,12 +131,12 @@ final class ContentEmbedding {
   final List<double> values;
 
   ContentEmbedding(this.values);
-  factory ContentEmbedding.fromGoogleAIContentEmbedding(
+  factory ContentEmbedding._fromGoogleAIContentEmbedding(
           google_ai.ContentEmbedding contentEmbedding) =>
       ContentEmbedding(contentEmbedding.values);
 
   /// Converts this embedding to a [google_ai.ContentEmbedding].
-  google_ai.ContentEmbedding toGoogleAIContentEmbedding() =>
+  google_ai.ContentEmbedding _toGoogleAIContentEmbedding() =>
       google_ai.ContentEmbedding(values);
 }
 
@@ -155,26 +155,26 @@ final class PromptFeedback {
   final List<SafetyRating> safetyRatings;
 
   PromptFeedback(this.blockReason, this.blockReasonMessage, this.safetyRatings);
-  factory PromptFeedback.fromGoogleAIPromptFeedback(
+  factory PromptFeedback._fromGoogleAIPromptFeedback(
           google_ai.PromptFeedback promptFeedback) =>
       PromptFeedback(
         promptFeedback.blockReason != null
-            ? BlockReason.fromGoogleAIBlockReason(promptFeedback.blockReason!)
+            ? BlockReason._fromGoogleAIBlockReason(promptFeedback.blockReason!)
             : null,
         promptFeedback.blockReasonMessage,
         promptFeedback.safetyRatings
             .map((safetyRating) =>
-                SafetyRating.fromGoogleAISafetyRating(safetyRating))
+                SafetyRating._fromGoogleAISafetyRating(safetyRating))
             .toList(),
       );
 
   /// Converts this feedback to a [google_ai.PromptFeedback].
-  google_ai.PromptFeedback toGoogleAIPromptFeedback() =>
+  google_ai.PromptFeedback _toGoogleAIPromptFeedback() =>
       google_ai.PromptFeedback(
-        blockReason?.toGoogleAIBlockReason(),
+        blockReason?._toGoogleAIBlockReason(),
         blockReasonMessage,
         safetyRatings
-            .map((safetyRating) => safetyRating.toGoogleAISafetyRating())
+            .map((safetyRating) => safetyRating._toGoogleAISafetyRating())
             .toList(),
       );
 }
@@ -206,26 +206,26 @@ final class Candidate {
   // TODO: token count?
   Candidate(this.content, this.safetyRatings, this.citationMetadata,
       this.finishReason, this.finishMessage);
-  factory Candidate.fromGoogleAICandidate(google_ai.Candidate candidate) =>
+  factory Candidate._fromGoogleAICandidate(google_ai.Candidate candidate) =>
       Candidate(
-          Content.fromGoogleAIContent(candidate.content),
+          Content._fromGoogleAIContent(candidate.content),
           candidate.safetyRatings
-              ?.map((s) => SafetyRating.fromGoogleAISafetyRating(s))
+              ?.map((s) => SafetyRating._fromGoogleAISafetyRating(s))
               .toList(),
           candidate.citationMetadata != null
-              ? CitationMetadata.fromGoogleAICitationMetadata(
+              ? CitationMetadata._fromGoogleAICitationMetadata(
                   candidate.citationMetadata!)
               : null,
           candidate.finishReason != null
-              ? FinishReason.fromGoogleAIFinishReason(candidate.finishReason!)
+              ? FinishReason._fromGoogleAIFinishReason(candidate.finishReason!)
               : null,
           candidate.finishMessage);
 
-  google_ai.Candidate toGoogleAICandidate() => google_ai.Candidate(
-        content.toGoogleAIContent(),
-        safetyRatings?.map((s) => s.toGoogleAISafetyRating()).toList(),
-        citationMetadata?.toGoogleAICitationMetadata(),
-        finishReason?.toGoogleAIFinishReason(),
+  google_ai.Candidate _toGoogleAICandidate() => google_ai.Candidate(
+        content._toGoogleAIContent(),
+        safetyRatings?.map((s) => s._toGoogleAISafetyRating()).toList(),
+        citationMetadata?._toGoogleAICitationMetadata(),
+        finishReason?._toGoogleAIFinishReason(),
         finishMessage,
       );
 }
@@ -244,14 +244,17 @@ final class SafetyRating {
   final HarmProbability probability;
 
   SafetyRating(this.category, this.probability);
-  factory SafetyRating.fromGoogleAISafetyRating(
+  factory SafetyRating._fromGoogleAISafetyRating(
           google_ai.SafetyRating safetyRating) =>
-      SafetyRating(HarmCategory.fromGoogleAIHarmCategory(safetyRating.category),
-          HarmProbability.fromHarmProbability(safetyRating.probability));
+      SafetyRating(
+          HarmCategory._fromGoogleAIHarmCategory(safetyRating.category),
+          HarmProbability._fromGoogleAIHarmProbability(
+              safetyRating.probability));
 
   /// Converts this rating to a [google_ai.SafetyRating].
-  google_ai.SafetyRating toGoogleAISafetyRating() => google_ai.SafetyRating(
-      category.toGoogleAIHarmCategory(), probability.toHarmProbability());
+  google_ai.SafetyRating _toGoogleAISafetyRating() => google_ai.SafetyRating(
+      category._toGoogleAIHarmCategory(),
+      probability._toGoogleAIHarmProbability());
 }
 
 /// The reason why a prompt was blocked.
@@ -281,7 +284,7 @@ enum BlockReason {
 
   const BlockReason(this._jsonString);
 
-  static BlockReason fromGoogleAIBlockReason(
+  static BlockReason _fromGoogleAIBlockReason(
       google_ai.BlockReason googleAIBlockReason) {
     return switch (googleAIBlockReason) {
       google_ai.BlockReason.unspecified => BlockReason.unspecified,
@@ -292,7 +295,7 @@ enum BlockReason {
 
   /// Converts this blocking reason to a [google_ai.BlockReason].
 
-  google_ai.BlockReason toGoogleAIBlockReason() {
+  google_ai.BlockReason _toGoogleAIBlockReason() {
     return switch (this) {
       BlockReason.unspecified => google_ai.BlockReason.unspecified,
       BlockReason.safety => google_ai.BlockReason.safety,
@@ -341,7 +344,7 @@ enum HarmCategory {
   }
 
   const HarmCategory(this._jsonString);
-  factory HarmCategory.fromGoogleAIHarmCategory(
+  factory HarmCategory._fromGoogleAIHarmCategory(
       google_ai.HarmCategory harmCategory) {
     return switch (harmCategory) {
       google_ai.HarmCategory.unspecified => HarmCategory.unspecified,
@@ -361,7 +364,7 @@ enum HarmCategory {
 
   /// Converts this harm category to a [google_ai.HarmCategory].
 
-  google_ai.HarmCategory toGoogleAIHarmCategory() {
+  google_ai.HarmCategory _toGoogleAIHarmCategory() {
     return switch (this) {
       HarmCategory.unspecified => google_ai.HarmCategory.unspecified,
       HarmCategory.harassment => google_ai.HarmCategory.harassment,
@@ -406,7 +409,7 @@ enum HarmProbability {
 
   const HarmProbability(this._jsonString);
 
-  factory HarmProbability.fromHarmProbability(
+  factory HarmProbability._fromGoogleAIHarmProbability(
       google_ai.HarmProbability harmProbability) {
     return switch (harmProbability) {
       google_ai.HarmProbability.unspecified => HarmProbability.unspecified,
@@ -417,7 +420,7 @@ enum HarmProbability {
     };
   }
 
-  google_ai.HarmProbability toHarmProbability() {
+  google_ai.HarmProbability _toGoogleAIHarmProbability() {
     return switch (this) {
       HarmProbability.unspecified => google_ai.HarmProbability.unspecified,
       HarmProbability.negligible => google_ai.HarmProbability.negligible,
@@ -441,15 +444,15 @@ final class CitationMetadata {
   final List<CitationSource> citationSources;
 
   CitationMetadata(this.citationSources);
-  factory CitationMetadata.fromGoogleAICitationMetadata(
+  factory CitationMetadata._fromGoogleAICitationMetadata(
           google_ai.CitationMetadata citationMetadata) =>
       CitationMetadata(citationMetadata.citationSources
-          .map((e) => CitationSource.fromGoogleAICiationSource(e))
+          .map((e) => CitationSource._fromGoogleAICiationSource(e))
           .toList());
 
-  google_ai.CitationMetadata toGoogleAICitationMetadata() =>
+  google_ai.CitationMetadata _toGoogleAICitationMetadata() =>
       google_ai.CitationMetadata(
-          citationSources.map((e) => e.toGoogleAICiationSource()).toList());
+          citationSources.map((e) => e._toGoogleAICiationSource()).toList());
 }
 
 /// Citation to a source for a portion of a specific response.
@@ -471,12 +474,12 @@ final class CitationSource {
   final String? license;
 
   CitationSource(this.startIndex, this.endIndex, this.uri, this.license);
-  factory CitationSource.fromGoogleAICiationSource(
+  factory CitationSource._fromGoogleAICiationSource(
           google_ai.CitationSource source) =>
       CitationSource(
           source.startIndex, source.endIndex, source.uri, source.license);
 
-  google_ai.CitationSource toGoogleAICiationSource() =>
+  google_ai.CitationSource _toGoogleAICiationSource() =>
       google_ai.CitationSource(startIndex, endIndex, uri, license);
 }
 
@@ -504,7 +507,7 @@ enum FinishReason {
 
   const FinishReason(this._jsonString);
 
-  factory FinishReason.fromGoogleAIFinishReason(
+  factory FinishReason._fromGoogleAIFinishReason(
       google_ai.FinishReason finishReason) {
     return switch (finishReason) {
       google_ai.FinishReason.unspecified => FinishReason.unspecified,
@@ -516,7 +519,7 @@ enum FinishReason {
     };
   }
 
-  google_ai.FinishReason toGoogleAIFinishReason() {
+  google_ai.FinishReason _toGoogleAIFinishReason() {
     return switch (this) {
       FinishReason.unspecified => google_ai.FinishReason.unspecified,
       FinishReason.stop => google_ai.FinishReason.stop,
@@ -559,14 +562,16 @@ final class SafetySetting {
   final HarmBlockThreshold threshold;
 
   SafetySetting(this.category, this.threshold);
-  factory SafetySetting.fromGoogleAISafetySetting(
+  factory SafetySetting._fromGoogleAISafetySetting(
           google_ai.SafetySetting setting) =>
-      SafetySetting(HarmCategory.fromGoogleAIHarmCategory(setting.category),
-          HarmBlockThreshold.fromGoogleAIHarmBlockThreshold(setting.threshold));
+      SafetySetting(
+          HarmCategory._fromGoogleAIHarmCategory(setting.category),
+          HarmBlockThreshold._fromGoogleAIHarmBlockThreshold(
+              setting.threshold));
 
-  google_ai.SafetySetting toGoogleAISafetySetting() => google_ai.SafetySetting(
-      category.toGoogleAIHarmCategory(),
-      threshold.toGoogleAIHarmBlockThreshold());
+  google_ai.SafetySetting _toGoogleAISafetySetting() => google_ai.SafetySetting(
+      category._toGoogleAIHarmCategory(),
+      threshold._toGoogleAIHarmBlockThreshold());
 
   Object toJson() =>
       {'category': category.toJson(), 'threshold': threshold.toJson()};
@@ -607,7 +612,7 @@ enum HarmBlockThreshold {
   final String _jsonString;
 
   const HarmBlockThreshold(this._jsonString);
-  factory HarmBlockThreshold.fromGoogleAIHarmBlockThreshold(
+  factory HarmBlockThreshold._fromGoogleAIHarmBlockThreshold(
       google_ai.HarmBlockThreshold threshold) {
     return switch (threshold) {
       google_ai.HarmBlockThreshold.unspecified =>
@@ -619,7 +624,7 @@ enum HarmBlockThreshold {
     };
   }
 
-  google_ai.HarmBlockThreshold toGoogleAIHarmBlockThreshold() {
+  google_ai.HarmBlockThreshold _toGoogleAIHarmBlockThreshold() {
     return switch (this) {
       HarmBlockThreshold.unspecified =>
         google_ai.HarmBlockThreshold.unspecified,
@@ -691,7 +696,7 @@ final class GenerationConfig {
       this.topP,
       this.topK});
 
-  factory GenerationConfig.fromGoogleAIGenerationConfig(
+  factory GenerationConfig._fromGoogleAIGenerationConfig(
           google_ai.GenerationConfig config) =>
       GenerationConfig(
           candidateCount: config.candidateCount,
@@ -712,16 +717,14 @@ final class GenerationConfig {
         if (topK case final topK?) 'topK': topK,
       };
 
-  google_ai.GenerationConfig toGoogleAIGenerationConfig(
-          google_ai.VertexConfig? vertexConfig) =>
+  google_ai.GenerationConfig _toGoogleAIGenerationConfig() =>
       google_ai.GenerationConfig(
           candidateCount: candidateCount,
           stopSequences: stopSequences,
           maxOutputTokens: maxOutputTokens,
           temperature: temperature,
           topP: topP,
-          topK: topK,
-          vertexConfig: vertexConfig);
+          topK: topK);
 }
 
 /// Type of task for which the embedding will be used.
@@ -747,7 +750,7 @@ enum TaskType {
   final String _jsonString;
 
   const TaskType(this._jsonString);
-  factory TaskType.fromGoogleAITaskType(google_ai.TaskType type) {
+  factory TaskType._fromGoogleAITaskType(google_ai.TaskType type) {
     return switch (type) {
       google_ai.TaskType.unspecified => TaskType.unspecified,
       google_ai.TaskType.retrievalQuery => TaskType.retrievalQuery,
@@ -771,7 +774,7 @@ enum TaskType {
   }
 
   Object toJson() => _jsonString;
-  google_ai.TaskType toGoogleAITaskType() {
+  google_ai.TaskType _toGoogleAITaskType() {
     return switch (this) {
       TaskType.unspecified => google_ai.TaskType.unspecified,
       TaskType.retrievalQuery => google_ai.TaskType.retrievalQuery,
