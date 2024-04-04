@@ -587,7 +587,7 @@ class RecaptchaVerifierJsImpl extends ApplicationVerifierJsImpl {
   external factory RecaptchaVerifierJsImpl(
     AuthJsImpl authExtern,
     JSAny containerOrId,
-    JSObject parameters,
+    JSAny? parameters,
   );
 }
 
