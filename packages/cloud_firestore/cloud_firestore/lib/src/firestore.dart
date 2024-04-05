@@ -334,8 +334,8 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// require indexing even if the indices are not yet available. Query execution will automatically
   /// start using the index once the index entries have been written.
   ///
-  /// This API is in preview mode and is subject to change.
-  @experimental
+  /// This API is now deprecated
+  @Deprecated('setIndexConfiguration() has been deprecated.')
   Future<void> setIndexConfiguration({
     required List<Index> indexes,
     List<FieldOverrides>? fieldOverrides,
