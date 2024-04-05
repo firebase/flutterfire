@@ -16,6 +16,7 @@ import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.Source;
+import com.google.firebase.firestore.ListenSource;
 import io.flutter.plugins.firebase.firestore.GeneratedAndroidFirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +56,6 @@ public class PigeonParser {
     }
   }
 
-  
 
   public static GeneratedAndroidFirebaseFirestore.PigeonQuerySnapshot toPigeonQuerySnapshot(
       com.google.firebase.firestore.QuerySnapshot querySnapshot,
@@ -115,6 +115,18 @@ public class PigeonParser {
         return GeneratedAndroidFirebaseFirestore.DocumentChangeType.REMOVED;
       default:
         throw new IllegalArgumentException("Unknown change type: " + type);
+    }
+  }
+
+  public static ListenSource parseListenSource(
+      GeneratedAndroidFirebaseFirestore.ListenSource source) {
+    switch (source) {
+      case DEFAULT_SOURCE:
+        return ListenSource.DEFAULT;
+      case CACHE:
+        return ListenSource.CACHE;
+      default:
+        throw new IllegalArgumentException("Unknown ListenSource value: " + source);
     }
   }
 
