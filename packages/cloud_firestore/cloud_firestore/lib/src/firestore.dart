@@ -16,9 +16,17 @@ part of cloud_firestore;
 /// FirebaseFirestore firestore = FirebaseFirestore.instanceFor(app: secondaryApp);
 /// ```
 class FirebaseFirestore extends FirebasePluginPlatform {
-  FirebaseFirestore._({required this.app, required this.databaseURL})
-      : super(app.name, 'plugins.flutter.io/firebase_firestore') {
+  FirebaseFirestore._({
+    required this.app,
+    @Deprecated(
+      '`databaseURL` has been deprecated. Please use `databaseId` instead.',
+    )
+    required this.databaseURL,
+    required this.databaseId,
+  }) : super(app.name, 'plugins.flutter.io/firebase_firestore') {
+    // ignore: deprecated_member_use_from_same_package
     if (databaseURL.endsWith('/')) {
+      // ignore: deprecated_member_use_from_same_package
       databaseURL = databaseURL.substring(0, databaseURL.length - 1);
     }
   }
@@ -35,16 +43,21 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// Returns an instance using a specified [FirebaseApp].
   static FirebaseFirestore instanceFor({
     required FirebaseApp app,
+    @Deprecated(
+      '`databaseURL` has been deprecated. Please use `databaseId` instead.',
+    )
     String? databaseURL,
+    String? databaseId,
   }) {
-    String url = databaseURL ?? '(default)';
+    String url = databaseId ?? databaseURL ?? '(default)';
     String cacheKey = '${app.name}|$url';
     if (_cachedInstances.containsKey(cacheKey)) {
       return _cachedInstances[cacheKey]!;
     }
 
     FirebaseFirestore newInstance =
-        FirebaseFirestore._(app: app, databaseURL: url);
+        // Both databaseURL and databaseId are required so we have to pass both for now. We can remove databaseURL in a future release.
+        FirebaseFirestore._(app: app, databaseURL: url, databaseId: url);
     _cachedInstances[cacheKey] = newInstance;
 
     return newInstance;
@@ -58,6 +71,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   FirebaseFirestorePlatform get _delegate {
     return _delegatePackingProperty ??= FirebaseFirestorePlatform.instanceFor(
       app: app,
+      // ignore: deprecated_member_use_from_same_package
       databaseURL: databaseURL,
     );
   }
@@ -65,8 +79,15 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// The [FirebaseApp] for this current [FirebaseFirestore] instance.
   FirebaseApp app;
 
-  /// Firestore Database URL for this instance. Falls back to default database: "(default)"
+  /// Firestore Database ID for this instance. Falls back to default database: "(default)"
+  /// This is deprecated in favor of [databaseId].
+  @Deprecated(
+    '`databaseURL` has been deprecated. Please use `databaseId` instead.',
+  )
   String databaseURL;
+
+  /// Firestore Database ID for this instance. Falls back to default database: "(default)"
+  String databaseId;
 
   /// Gets a [CollectionReference] for the specified Firestore path.
   CollectionReference<Map<String, dynamic>> collection(String collectionPath) {
