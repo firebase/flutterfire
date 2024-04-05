@@ -322,7 +322,7 @@ public class FlutterFirebaseMessagingPlugin
                 if (messageMap.get("notification") != null) {
                   // noinspection
                   notificationMap =
-                      (Map<String, Object>) safelyCastToMap(messageMap.get("notification"));
+                      (Map<String, Object>) uncheckedCastToMap(messageMap.get("notification"));
                 }
               }
               FlutterFirebaseMessagingStore.getInstance().removeFirebaseMessage(messageId);
@@ -615,7 +615,7 @@ public class FlutterFirebaseMessagingPlugin
     return taskCompletionSource.getTask();
   }
 
-  private Map<String, Object> safelyCastToMap(Object obj) {
+  private Map<String, Object> uncheckedCastToMap(Object obj) {
     @SuppressWarnings("unchecked")
     Map<String, Object> result = (Map<String, Object>) obj;
     return result;
