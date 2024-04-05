@@ -58,7 +58,11 @@
     }
   };
 
-  self.listenerRegistration = [query addSnapshotListenerWithOptions:options listener:listener];
+  FIRSnapshotListenOptions *options = [[FIRSnapshotListenOptions alloc] init];
+  FIRSnapshotListenOptions *optionsWithSourceAndMetadata = [[options
+      optionsWithIncludeMetadataChanges:_includeMetadataChanges] optionsWithSource:_source];
+
+  self.listenerRegistration = [_reference addSnapshotListenerWithOptions:options listener:listener];
 
   return nil;
 }
