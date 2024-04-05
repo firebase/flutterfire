@@ -454,6 +454,7 @@ public class FlutterFirebaseFirestorePlugin
   }
 
   @Override
+  // Suppressed because we have already annotated the user facing Dart API as deprecated.
   @SuppressWarnings("deprecation")
   public void setIndexConfiguration(
       @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
