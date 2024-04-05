@@ -15,7 +15,6 @@ import com.google.firebase.firestore.ListenSource;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.SnapshotListenOptions;
-
 import io.flutter.plugin.common.EventChannel.EventSink;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
 import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
@@ -31,8 +30,6 @@ public class DocumentSnapshotsStreamHandler implements StreamHandler {
 
   DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior;
   ListenSource source;
-
-
 
   public DocumentSnapshotsStreamHandler(
       FirebaseFirestore firestore,

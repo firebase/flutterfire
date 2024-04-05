@@ -19,13 +19,15 @@
 - (nonnull instancetype)initWithFirestore:(nonnull FIRFirestore *)firestore
                                 reference:(nonnull FIRDocumentReference *)reference
                    includeMetadataChanges:(BOOL)includeMetadataChanges
-                  serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior {
+                  serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior
+                                   source:(FIRListenSource)source {
   self = [super init];
   if (self) {
     self.firestore = firestore;
     self.reference = reference;
     self.includeMetadataChanges = includeMetadataChanges;
     self.serverTimestampBehavior = serverTimestampBehavior;
+    self.source = source;
   }
   return self;
 }
@@ -56,9 +58,7 @@
     }
   };
 
-  self.listenerRegistration =
-      [_reference addSnapshotListenerWithIncludeMetadataChanges:_includeMetadataChanges
-                                                       listener:listener];
+  self.listenerRegistration = [query addSnapshotListenerWithOptions:options listener:listener];
 
   return nil;
 }

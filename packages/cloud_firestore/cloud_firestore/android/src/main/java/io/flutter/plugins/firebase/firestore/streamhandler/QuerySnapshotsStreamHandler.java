@@ -15,13 +15,11 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.SnapshotListenOptions;
-
 import io.flutter.plugin.common.EventChannel.EventSink;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
 import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
 import io.flutter.plugins.firebase.firestore.utils.PigeonParser;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class QuerySnapshotsStreamHandler implements StreamHandler {
@@ -54,7 +52,7 @@ public class QuerySnapshotsStreamHandler implements StreamHandler {
 
     listenerRegistration =
         query.addSnapshotListener(
-          optionsBuilder.build(),
+            optionsBuilder.build(),
             (querySnapshot, exception) -> {
               if (exception != null) {
                 Map<String, String> exceptionDetails = ExceptionConverter.createDetails(exception);

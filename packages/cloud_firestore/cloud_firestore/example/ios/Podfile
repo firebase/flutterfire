@@ -1,5 +1,5 @@
 # Uncomment this line to define a global platform for your project
-platform :ios, '11.0'
+platform :ios, '12.0'
 
 require 'yaml'
 
@@ -51,7 +51,7 @@ target 'Runner' do
     end
   end
 
-  pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => "#{firebase_sdk_version}"
+  # pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => "#{firebase_sdk_version}"
 end
 
 post_install do |installer|
