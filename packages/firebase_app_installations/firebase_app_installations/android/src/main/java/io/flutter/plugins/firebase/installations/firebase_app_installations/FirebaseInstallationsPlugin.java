@@ -7,6 +7,7 @@ package io.flutter.plugins.firebase.installations.firebase_app_installations;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.installations.FirebaseInstallations;
@@ -64,45 +65,84 @@ public class FirebaseInstallationsPlugin
   }
 
   private Task<String> getId(Map<String, Object> arguments) {
-    return Tasks.call(cachedThreadPool, () -> Tasks.await(getInstallations(arguments).getId()));
+    TaskCompletionSource<String> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            taskCompletionSource.setResult(Tasks.await(getInstallations(arguments).getId()));
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<String> getToken(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<String> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          FirebaseInstallations firebaseInstallations = getInstallations(arguments);
-          Boolean forceRefresh = (Boolean) Objects.requireNonNull(arguments.get("forceRefresh"));
-          InstallationTokenResult tokenResult =
-              Tasks.await(firebaseInstallations.getToken(forceRefresh));
-          return tokenResult.getToken();
+          try {
+            FirebaseInstallations firebaseInstallations = getInstallations(arguments);
+            Boolean forceRefresh = (Boolean) Objects.requireNonNull(arguments.get("forceRefresh"));
+            InstallationTokenResult tokenResult =
+                Tasks.await(firebaseInstallations.getToken(forceRefresh));
+
+            taskCompletionSource.setResult(tokenResult.getToken());
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<String> registerIdChangeListener(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<String> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          String appName = (String) Objects.requireNonNull(arguments.get("appName"));
-          FirebaseInstallations firebaseInstallations = getInstallations(arguments);
+          try {
+            String appName = (String) Objects.requireNonNull(arguments.get("appName"));
+            FirebaseInstallations firebaseInstallations = getInstallations(arguments);
 
-          io.flutter.plugins.firebase.installations.firebase_app_installations
-                  .TokenChannelStreamHandler
-              handler =
-                  new io.flutter.plugins.firebase.installations.firebase_app_installations
-                      .TokenChannelStreamHandler(firebaseInstallations);
+            io.flutter.plugins.firebase.installations.firebase_app_installations
+                    .TokenChannelStreamHandler
+                handler =
+                    new io.flutter.plugins.firebase.installations.firebase_app_installations
+                        .TokenChannelStreamHandler(firebaseInstallations);
 
-          final String name = METHOD_CHANNEL_NAME + "/token/" + appName;
-          final EventChannel channel = new EventChannel(messenger, name);
-          channel.setStreamHandler(handler);
-          streamHandlers.put(channel, handler);
+            final String name = METHOD_CHANNEL_NAME + "/token/" + appName;
+            final EventChannel channel = new EventChannel(messenger, name);
+            channel.setStreamHandler(handler);
+            streamHandlers.put(channel, handler);
 
-          return name;
+            taskCompletionSource.setResult(name);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> deleteId(Map<String, Object> arguments) {
-    return Tasks.call(cachedThreadPool, () -> Tasks.await(getInstallations(arguments).delete()));
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            Tasks.await(getInstallations(arguments).delete());
+
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
   }
 
   @Override
@@ -155,12 +195,34 @@ public class FirebaseInstallationsPlugin
 
   @Override
   public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(FirebaseApp firebaseApp) {
-    return Tasks.call(cachedThreadPool, () -> null);
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            taskCompletionSource.setResult(new HashMap<String, Object>() {});
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
   }
 
   @Override
   public Task<Void> didReinitializeFirebaseCore() {
-    return Tasks.call(cachedThreadPool, () -> null);
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
   }
 
   private void removeEventListeners() {
