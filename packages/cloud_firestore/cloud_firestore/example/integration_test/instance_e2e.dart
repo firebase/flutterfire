@@ -226,7 +226,7 @@ void runInstanceTests() {
             ],
             collectionGroup: 'collectiongroup',
           );
-
+          // ignore_for_file: deprecated_member_use
           await firestore.setIndexConfiguration(
             indexes: [index1, index2],
             fieldOverrides: [fieldOverride1, fieldOverride2],

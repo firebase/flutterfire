@@ -213,7 +213,8 @@ class AuthPigeonFirebaseApp {
 
   // Constructs an object setting all fields.
   explicit AuthPigeonFirebaseApp(const std::string& app_name,
-                                 const std::string* tenant_id);
+                                 const std::string* tenant_id,
+                                 const std::string* custom_auth_domain);
 
   const std::string& app_name() const;
   void set_app_name(std::string_view value_arg);
@@ -221,6 +222,10 @@ class AuthPigeonFirebaseApp {
   const std::string* tenant_id() const;
   void set_tenant_id(const std::string_view* value_arg);
   void set_tenant_id(std::string_view value_arg);
+
+  const std::string* custom_auth_domain() const;
+  void set_custom_auth_domain(const std::string_view* value_arg);
+  void set_custom_auth_domain(std::string_view value_arg);
 
  private:
   static AuthPigeonFirebaseApp FromEncodableList(
@@ -242,6 +247,7 @@ class AuthPigeonFirebaseApp {
   friend class GenerateInterfacesCodecSerializer;
   std::string app_name_;
   std::optional<std::string> tenant_id_;
+  std::optional<std::string> custom_auth_domain_;
 };
 
 // Generated class from Pigeon that represents data sent in messages.
@@ -535,6 +541,7 @@ class PigeonUserDetails {
 
   const flutter::EncodableList& provider_data() const;
   void set_provider_data(const flutter::EncodableList& value_arg);
+
   static PigeonUserDetails FromEncodableList(
       const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;

@@ -262,14 +262,14 @@ public class FlutterFirebaseFirestorePlugin
   private void removeEventListeners() {
     synchronized (eventChannels) {
       for (String identifier : eventChannels.keySet()) {
-        eventChannels.get(identifier).setStreamHandler(null);
+        Objects.requireNonNull(eventChannels.get(identifier)).setStreamHandler(null);
       }
       eventChannels.clear();
     }
 
     synchronized (streamHandlers) {
       for (String identifier : streamHandlers.keySet()) {
-        streamHandlers.get(identifier).onCancel(null);
+        Objects.requireNonNull(streamHandlers.get(identifier)).onCancel(null);
       }
       streamHandlers.clear();
     }
@@ -291,7 +291,7 @@ public class FlutterFirebaseFirestorePlugin
         Long receivedCacheSizeBytes = pigeonApp.getSettings().getCacheSizeBytes();
         // This is the maximum amount of cache allowed:
         // https://firebase.google.com/docs/firestore/manage-data/enable-offline#configure_cache_size
-        Long cacheSizeBytes = 104857600L;
+        long cacheSizeBytes = 104857600L;
         if (receivedCacheSizeBytes != null && receivedCacheSizeBytes != -1) {
           cacheSizeBytes = receivedCacheSizeBytes;
         }
@@ -454,6 +454,8 @@ public class FlutterFirebaseFirestorePlugin
   }
 
   @Override
+  // Suppressed because we have already annotated the user facing Dart API as deprecated.
+  @SuppressWarnings("deprecation")
   public void setIndexConfiguration(
       @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull String indexConfiguration,

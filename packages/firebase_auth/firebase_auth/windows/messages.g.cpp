@@ -200,11 +200,15 @@ PigeonMultiFactorInfo PigeonMultiFactorInfo::FromEncodableList(
 AuthPigeonFirebaseApp::AuthPigeonFirebaseApp(const std::string& app_name)
     : app_name_(app_name) {}
 
-AuthPigeonFirebaseApp::AuthPigeonFirebaseApp(const std::string& app_name,
-                                             const std::string* tenant_id)
+AuthPigeonFirebaseApp::AuthPigeonFirebaseApp(
+    const std::string& app_name, const std::string* tenant_id,
+    const std::string* custom_auth_domain)
     : app_name_(app_name),
       tenant_id_(tenant_id ? std::optional<std::string>(*tenant_id)
-                           : std::nullopt) {}
+                           : std::nullopt),
+      custom_auth_domain_(custom_auth_domain
+                              ? std::optional<std::string>(*custom_auth_domain)
+                              : std::nullopt) {}
 
 const std::string& AuthPigeonFirebaseApp::app_name() const { return app_name_; }
 
@@ -225,11 +229,27 @@ void AuthPigeonFirebaseApp::set_tenant_id(std::string_view value_arg) {
   tenant_id_ = value_arg;
 }
 
+const std::string* AuthPigeonFirebaseApp::custom_auth_domain() const {
+  return custom_auth_domain_ ? &(*custom_auth_domain_) : nullptr;
+}
+
+void AuthPigeonFirebaseApp::set_custom_auth_domain(
+    const std::string_view* value_arg) {
+  custom_auth_domain_ =
+      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+}
+
+void AuthPigeonFirebaseApp::set_custom_auth_domain(std::string_view value_arg) {
+  custom_auth_domain_ = value_arg;
+}
+
 EncodableList AuthPigeonFirebaseApp::ToEncodableList() const {
   EncodableList list;
-  list.reserve(2);
+  list.reserve(3);
   list.push_back(EncodableValue(app_name_));
   list.push_back(tenant_id_ ? EncodableValue(*tenant_id_) : EncodableValue());
+  list.push_back(custom_auth_domain_ ? EncodableValue(*custom_auth_domain_)
+                                     : EncodableValue());
   return list;
 }
 
@@ -239,6 +259,11 @@ AuthPigeonFirebaseApp AuthPigeonFirebaseApp::FromEncodableList(
   auto& encodable_tenant_id = list[1];
   if (!encodable_tenant_id.IsNull()) {
     decoded.set_tenant_id(std::get<std::string>(encodable_tenant_id));
+  }
+  auto& encodable_custom_auth_domain = list[2];
+  if (!encodable_custom_auth_domain.IsNull()) {
+    decoded.set_custom_auth_domain(
+        std::get<std::string>(encodable_custom_auth_domain));
   }
   return decoded;
 }

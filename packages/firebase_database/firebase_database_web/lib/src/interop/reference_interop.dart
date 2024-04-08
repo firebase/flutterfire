@@ -5,15 +5,21 @@
 part of firebase.database_interop;
 
 @JS('TransactionResult')
-abstract class TransactionResultJsImpl {
-  external dynamic toJSON();
-  external bool get committed;
+@staticInterop
+abstract class TransactionResultJsImpl {}
+
+extension TransactionResultJsImplExtension on TransactionResultJsImpl {
+  external JSObject toJSON();
+  external JSBoolean get committed;
   external DataSnapshotJsImpl get snapshot;
 }
 
-@JS('Reference')
-abstract class ReferenceJsImpl extends QueryJsImpl {
-  external String? get key;
+@JS('DatabaseReference')
+@staticInterop
+abstract class ReferenceJsImpl extends QueryJsImpl {}
+
+extension ReferenceJsImplExtension on ReferenceJsImpl {
+  external JSString? get key;
 
   external ReferenceJsImpl? get parent;
 

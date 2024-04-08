@@ -66,10 +66,12 @@ class AuthPigeonFirebaseApp {
   const AuthPigeonFirebaseApp({
     required this.appName,
     required this.tenantId,
+    required this.customAuthDomain,
   });
 
   final String appName;
   final String? tenantId;
+  final String? customAuthDomain;
 }
 
 /// The type of operation that generated the action code from calling

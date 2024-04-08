@@ -5,13 +5,13 @@
 part of firebase.database_interop;
 
 @JS('Query')
-abstract class QueryJsImpl {
+@staticInterop
+abstract class QueryJsImpl {}
+
+extension ExtensionQueryJsImpl on QueryJsImpl {
   external ReferenceJsImpl get ref;
 
-  external bool isEqual(QueryJsImpl other);
+  external JSBoolean isEqual(QueryJsImpl other);
 
-  external Object toJSON();
-
-  @override
-  external String toString();
+  external JSObject toJSON();
 }

@@ -11,7 +11,6 @@ on:
       - 'website/**'
       - '**/example/**'
       - '**/flutterfire_ui/**'
-      - '**/cloud_firestore_odm/**'
       - '**.md'
   push:
     branches:
@@ -21,7 +20,6 @@ on:
       - 'website/**'
       - '**/example/**'
       - '**/flutterfire_ui/**'
-      - '**/cloud_firestore_odm/**'
       - '**.md'
 
 jobs:
@@ -34,16 +32,16 @@ jobs:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
-      - uses: actions/setup-node@b39b52d1213e96004bfcb1c61a8a6fa8ab84f3e8
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: actions/setup-java@9704b39bf258b59bc04b50fa2dd55e9ed76b47a8
+      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
         with:
           distribution: 'temurin'
           java-version: '17'
       - name: Firebase Emulator Cache
-        uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-${{ github.run_id }}
@@ -52,7 +50,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@720a109b686f61979b4f9f0d14f582ab1637647e
+      - uses: bluefireteam/melos-action@5a8367ec4b9942d712528c398ff3f996e03bc230
         with:
           run-bootstrap: false
           melos-version: '3.0.1'
@@ -71,7 +69,7 @@ jobs:
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@v3
       - name: AVD cache
-        uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
         id: avd-cache
         with:
           path: |
@@ -97,11 +95,11 @@ jobs:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
-      - uses: actions/setup-node@b39b52d1213e96004bfcb1c61a8a6fa8ab84f3e8
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: actions/setup-java@9704b39bf258b59bc04b50fa2dd55e9ed76b47a8
+      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -110,7 +108,7 @@ jobs:
         with:
           key: ${{ runner.os }}-ios-v3
           max-size: 700M
-      - uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319
+      - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
         name: Pods Cache
         id: pods-cache
         with:
@@ -118,7 +116,7 @@ jobs:
           key: ${{ runner.os }}-pods-v3-${{ hashFiles('tests/ios/Podfile.lock') }}
           restore-keys: ${{ runner.os }}-ios-pods-v2
       - name: Firebase Emulator Cache
-        uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-${{ github.run_id }}
@@ -127,7 +125,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@720a109b686f61979b4f9f0d14f582ab1637647e
+      - uses: bluefireteam/melos-action@5a8367ec4b9942d712528c398ff3f996e03bc230
         with:
           run-bootstrap: false
           melos-version: '3.0.1'
@@ -172,11 +170,11 @@ jobs:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
-      - uses: actions/setup-node@b39b52d1213e96004bfcb1c61a8a6fa8ab84f3e8
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: actions/setup-java@9704b39bf258b59bc04b50fa2dd55e9ed76b47a8
+      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -185,7 +183,7 @@ jobs:
         with:
           key: ${{ runner.os }}-macos-v2
           max-size: 700M
-      - uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319
+      - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
         name: Pods Cache
         id: pods-cache
         with:
@@ -193,7 +191,7 @@ jobs:
           key: ${{ runner.os }}-pods-v2-${{ hashFiles('tests/macos/Podfile.lock') }}
           restore-keys: ${{ runner.os }}-macos-pods-v1
       - name: Cache Firebase Emulator
-        uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-${{ github.run_id }}
@@ -202,7 +200,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@720a109b686f61979b4f9f0d14f582ab1637647e
+      - uses: bluefireteam/melos-action@5a8367ec4b9942d712528c398ff3f996e03bc230
         with:
           run-bootstrap: false
           melos-version: '3.0.1'
@@ -244,11 +242,11 @@ jobs:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
-      - uses: actions/setup-node@b39b52d1213e96004bfcb1c61a8a6fa8ab84f3e8
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: actions/setup-java@9704b39bf258b59bc04b50fa2dd55e9ed76b47a8
+      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -256,7 +254,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@720a109b686f61979b4f9f0d14f582ab1637647e
+      - uses: bluefireteam/melos-action@5a8367ec4b9942d712528c398ff3f996e03bc230
         with:
           run-bootstrap: false
           melos-version: '3.0.1'
@@ -265,7 +263,7 @@ jobs:
       - name: 'Install Tools'
         run: sudo npm i -g firebase-tools
       - name: Cache Firebase Emulator
-        uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-${{ github.run_id }}
@@ -294,11 +292,11 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
-      - uses: actions/setup-java@9704b39bf258b59bc04b50fa2dd55e9ed76b47a8
+      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
         with:
           distribution: 'temurin'
           java-version: '17'
-      - uses: actions/setup-node@b39b52d1213e96004bfcb1c61a8a6fa8ab84f3e8
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8
         name: Install Node.js 20
         with:
           node-version: "20"
@@ -306,7 +304,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@720a109b686f61979b4f9f0d14f582ab1637647e
+      - uses: bluefireteam/melos-action@5a8367ec4b9942d712528c398ff3f996e03bc230
         with:
           run-bootstrap: false
           melos-version: '3.0.0'

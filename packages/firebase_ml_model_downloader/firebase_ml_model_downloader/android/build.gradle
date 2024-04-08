@@ -40,7 +40,7 @@ android {
     namespace 'io.flutter.plugins.firebase.firebase_ml_model_downloader'
   }
 
-  compileSdk 33
+  compileSdk 34
 
   defaultConfig {
     minSdk 19
