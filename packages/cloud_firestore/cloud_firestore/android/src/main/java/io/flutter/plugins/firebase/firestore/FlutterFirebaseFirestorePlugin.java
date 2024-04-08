@@ -936,6 +936,7 @@ public class FlutterFirebaseFirestorePlugin
                 documentReference,
                 includeMetadataChanges,
                 PigeonParser.parsePigeonServerTimestampBehavior(
-                    parameters.getServerTimestampBehavior()))));
+                    parameters.getServerTimestampBehavior()),
+                PigeonParser.parseListenSource(source))));
   }
 }
