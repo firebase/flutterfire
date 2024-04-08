@@ -13,9 +13,8 @@
 
 import 'package:firebase_core/firebase_core.dart';
 
-import 'src/interop_shimmer.dart'
-    if (dart.library.js) 'package:firebase_core_web/firebase_core_web_interop.dart'
-    as core_interop;
+import 'src/interop.dart' as core_interop;
+
 export 'src/exception.dart';
 
 /// An extension that adds utilities for safely casting objects
@@ -56,10 +55,10 @@ FirebaseException _firebaseExceptionFromCoreFirebaseError(
   required String Function(String code, String message)? messageParser,
 }) {
   // ignore: unnecessary_cast
-  final convertCode = firebaseError.code as String;
+  final convertCode = firebaseError.code! as String;
   final code = codeParser(convertCode);
   // ignore: unnecessary_cast
-  final convertMessage = firebaseError.message as String;
+  final convertMessage = firebaseError.message! as String;
   final message = messageParser != null
       ? messageParser(code, convertMessage)
       : convertMessage.replaceFirst('(${firebaseError.code})', '');
@@ -81,7 +80,7 @@ FirebaseException _firebaseExceptionFromCoreFirebaseError(
 bool _testException(Object? objectException) {
   final exception = objectException! as core_interop.JSError;
   // ignore: unnecessary_cast
-  final message = exception.message as String;
+  final message = exception.message! as String;
   // Firestore web does not contain `Firebase` in the message so we check the exception itself.
   return message.contains('Firebase') ||
       exception.toString().contains('FirebaseError');
