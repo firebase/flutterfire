@@ -18,12 +18,6 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-/// The API key to use when accessing the Gemini API.
-///
-/// To learn how to generate and specify this key,
-/// check out the README file of this sample.
-const String _apiKey = String.fromEnvironment('API_KEY');
-
 void main() {
   runApp(const GenerativeAISample());
 }
@@ -63,18 +57,15 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: const ChatWidget(apiKey: _apiKey),
+      body: const ChatWidget(),
     );
   }
 }
 
 class ChatWidget extends StatefulWidget {
   const ChatWidget({
-    required this.apiKey,
     super.key,
   });
-
-  final String apiKey;
 
   @override
   State<ChatWidget> createState() => _ChatWidgetState();

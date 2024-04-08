@@ -14,8 +14,7 @@
 
 part of firebase_vertexai;
 
-const _baseUrl = 'staging-firebaseml.sandbox.googleapis.com';
-//const _baseUrl = 'firebaseml.googleapis.com';
+const _baseUrl = 'firebaseml.googleapis.com';
 const _apiVersion = 'v2beta';
 
 /// A multimodel generative model (like Gemini).
