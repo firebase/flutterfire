@@ -477,8 +477,8 @@ class PutDataStreamHandler
                        Controller* controller) {
     storage_ = storage;
     reference_path_ = reference_path;
-    data_ = data;
-    buffer_size_ = buffer_size;
+    auto data_bytes_ptr = static_cast<const uint8_t*>(data);
+    data_.assign(data_bytes_ptr, data_bytes_ptr + buffer_size);
     controller_ = controller;
   }
 
@@ -492,7 +492,7 @@ class PutDataStreamHandler
     TaskStateListener putStringListener = TaskStateListener(events_.get());
     StorageReference reference = storage_->GetReference(reference_path_);
     Future<Metadata> future_result = reference.PutBytes(
-        data_, buffer_size_, &putStringListener, controller_);
+        data_.data(), data_.size(), &putStringListener, controller_);
     ::Sleep(1);  // timing for c++ sdk grabbing a mutex
 
     future_result.OnCompletion([this](const Future<Metadata>& data_result) {
@@ -529,8 +529,7 @@ class PutDataStreamHandler
  public:
   Storage* storage_;
   std::string reference_path_;
-  const void* data_;
-  size_t buffer_size_;
+  std::vector<uint8_t> data_;
   Controller* controller_;
   std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events_ =
       nullptr;
@@ -678,7 +677,7 @@ void FirebaseStoragePlugin::ReferencePutData(
   controllers_[handle] = std::make_unique<Controller>();
 
   auto handler = std::make_unique<PutDataStreamHandler>(
-      cpp_storage, pigeon_reference.full_path(), &data, sizeof(data),
+      cpp_storage, pigeon_reference.full_path(), data.data(), data.size(),
       controllers_[handle].get());
 
   std::string channelName = RegisterEventChannel(
@@ -698,7 +697,7 @@ void FirebaseStoragePlugin::ReferencePutString(
   controllers_[handle] = std::make_unique<Controller>();
 
   auto handler = std::make_unique<PutDataStreamHandler>(
-      cpp_storage, pigeon_reference.full_path(), &data, data.size(),
+      cpp_storage, pigeon_reference.full_path(), data.data(), data.length(),
       controllers_[handle].get());
 
   std::string channelName = RegisterEventChannel(
