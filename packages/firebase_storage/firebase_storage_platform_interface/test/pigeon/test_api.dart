@@ -7,10 +7,11 @@
 // ignore_for_file: avoid_relative_lib_imports
 import 'dart:async';
 import 'dart:typed_data' show Uint8List;
-import 'package:firebase_storage_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:flutter/foundation.dart' show ReadBuffer, WriteBuffer;
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'package:firebase_storage_platform_interface/src/pigeon/messages.pigeon.dart';
 
 class _TestFirebaseStorageHostApiCodec extends StandardMessageCodec {
   const _TestFirebaseStorageHostApiCodec();
@@ -114,7 +115,7 @@ abstract class TestFirebaseStorageHostApi {
       PigeonStorageFirebaseApp app,
       PigeonStorageReference reference,
       String filePath,
-      PigeonSettableMetadata settableMetaData,
+      PigeonSettableMetadata? settableMetaData,
       int handle);
 
   Future<String> referenceDownloadFile(PigeonStorageFirebaseApp app,
@@ -570,17 +571,11 @@ abstract class TestFirebaseStorageHostApi {
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile was null, expected non-null String.');
           final PigeonSettableMetadata? arg_settableMetaData =
               (args[3] as PigeonSettableMetadata?);
-          assert(arg_settableMetaData != null,
-              'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile was null, expected non-null PigeonSettableMetadata.');
           final int? arg_handle = (args[4] as int?);
           assert(arg_handle != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile was null, expected non-null int.');
-          final String output = await api.referencePutFile(
-              arg_app!,
-              arg_reference!,
-              arg_filePath!,
-              arg_settableMetaData!,
-              arg_handle!);
+          final String output = await api.referencePutFile(arg_app!,
+              arg_reference!, arg_filePath!, arg_settableMetaData, arg_handle!);
           return <Object?>[output];
         });
       }
