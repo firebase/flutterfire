@@ -1,3 +1,7 @@
+## 0.2.2+1
+
+ - **FIX**(app-check,android): fix unnecessary deprecation warning ([#12578](https://github.com/firebase/flutterfire/issues/12578)). ([805ca028](https://github.com/firebase/flutterfire/commit/805ca028d20c582e93bcebbeca3105deab365edc))
+
 ## 0.2.2
 
  - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))

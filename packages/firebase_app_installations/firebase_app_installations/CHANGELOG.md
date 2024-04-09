@@ -1,3 +1,7 @@
+## 0.2.5+1
+
+ - **FIX**(app-installations,android): update deprecated API to latest Task implementation ([#12579](https://github.com/firebase/flutterfire/issues/12579)). ([88d86e9a](https://github.com/firebase/flutterfire/commit/88d86e9a375cbb57c9fdbba965b75be4dc17376c))
+
 ## 0.2.5
 
  - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))

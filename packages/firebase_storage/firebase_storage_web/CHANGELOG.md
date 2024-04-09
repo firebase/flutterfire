@@ -1,3 +1,7 @@
+## 3.9.1
+
+ - **FIX**(web): fix typing conversion for Maps ([#12615](https://github.com/firebase/flutterfire/issues/12615)). ([2cc16189](https://github.com/firebase/flutterfire/commit/2cc161898573736216dbf6cba25c4951e571fa13))
+
 ## 3.9.0
 
  - **FEAT**(web): remove the dependency on `package:js` in favor of `dart:js_interop` ([#12534](https://github.com/firebase/flutterfire/issues/12534)). ([d83f6327](https://github.com/firebase/flutterfire/commit/d83f632753707c974fef2ac8a7f9bf6cb8ba8758))
