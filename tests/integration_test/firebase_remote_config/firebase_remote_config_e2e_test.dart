@@ -77,6 +77,11 @@ void main() {
             FirebaseRemoteConfig.instance.getValue('nonexisting').source,
             ValueSource.valueStatic,
           );
+
+          expect(
+            FirebaseRemoteConfig.instance.getAll(),
+            isA<Map<String, RemoteConfigValue>>(),
+          );
         },
         // iOS v9.2.0 hangs on ci if `fetchAndActivate()` is used, but works locally.
         // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
