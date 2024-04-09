@@ -55,8 +55,9 @@ Future<void> saveAsBytes(Uint8List bytes, String suggestedName) async {
       _createAnchorElement(path, suggestedName);
 
   // Clear the children in our container so we can add an element to click
-  for (int i = 0; i < target.children.length; i++) {
-    target.children.item(i)?.remove();
-  }
+  do {
+    target.children.item(0)?.remove();
+  } while (target.children.length > 0);
+
   _addElementToContainerAndClick(target, element);
 }
