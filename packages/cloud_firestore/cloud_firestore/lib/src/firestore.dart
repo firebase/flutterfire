@@ -69,8 +69,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   FirebaseFirestorePlatform get _delegate {
     return _delegatePackingProperty ??= FirebaseFirestorePlatform.instanceFor(
       app: app,
-      // ignore: deprecated_member_use_from_same_package
-      databaseURL: databaseURL,
+      databaseId: databaseId,
     );
   }
 
