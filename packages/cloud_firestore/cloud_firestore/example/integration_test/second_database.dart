@@ -37,8 +37,7 @@ void runSecondDatabaseTests() {
       setUpAll(() async {
         firestore = FirebaseFirestore.instanceFor(
           app: Firebase.app(),
-          // ignore: deprecated_member_use
-          databaseURL: 'flutterfire-2',
+          databaseId: 'flutterfire-2',
         );
       });
 
