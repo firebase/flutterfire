@@ -571,7 +571,6 @@ abstract class JobIntentService extends Service {
         mCompatWorkEnqueuer.serviceProcessingStarted();
       }
       if (DEBUG) Log.d(TAG, "Starting processor: " + mCurProcessor);
-      // Just need to call execute() here
       mCurProcessor.execute();
     }
   }
