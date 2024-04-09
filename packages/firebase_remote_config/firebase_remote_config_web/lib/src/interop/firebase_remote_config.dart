@@ -54,7 +54,7 @@ class RemoteConfig
       );
 
   set defaultConfig(Map<String, dynamic> value) {
-    jsObject.defaultConfig = value.toJSBox;
+    jsObject.defaultConfig = value.jsify()! as JSObject;
   }
 
   /// Returns the timestamp of the last *successful* fetch.

@@ -830,7 +830,7 @@ class FacebookAuthProvider
     Map<Object?, Object?> customOAuthParameters,
   ) {
     return FacebookAuthProvider.fromJsObject(
-      jsObject.setCustomParameters(customOAuthParameters.toJSBox),
+      jsObject.setCustomParameters(customOAuthParameters.jsify()!),
     );
   }
 
@@ -872,7 +872,7 @@ class GithubAuthProvider
     Map<Object?, Object?> customOAuthParameters,
   ) {
     return GithubAuthProvider.fromJsObject(
-      jsObject.setCustomParameters(customOAuthParameters.toJSBox),
+      jsObject.setCustomParameters(customOAuthParameters.jsify()!),
     );
   }
 
@@ -915,7 +915,7 @@ class GoogleAuthProvider
     Map<Object?, Object?> customOAuthParameters,
   ) {
     return GoogleAuthProvider.fromJsObject(
-      jsObject.setCustomParameters(customOAuthParameters.toJSBox),
+      jsObject.setCustomParameters(customOAuthParameters.jsify()!),
     );
   }
 
@@ -952,7 +952,7 @@ class OAuthProvider extends AuthProvider<auth_interop.OAuthProviderJsImpl> {
     Map<Object?, Object?> customOAuthParameters,
   ) {
     return OAuthProvider.fromJsObject(
-      jsObject.setCustomParameters(customOAuthParameters.toJSBox),
+      jsObject.setCustomParameters(customOAuthParameters.jsify()!),
     );
   }
 
@@ -994,7 +994,7 @@ class TwitterAuthProvider
     Map<Object?, Object?> customOAuthParameters,
   ) {
     return TwitterAuthProvider.fromJsObject(
-      jsObject.setCustomParameters(customOAuthParameters.toJSBox),
+      jsObject.setCustomParameters(customOAuthParameters.jsify()!),
     );
   }
 
