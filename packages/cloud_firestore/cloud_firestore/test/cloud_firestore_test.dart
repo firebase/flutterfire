@@ -40,6 +40,34 @@ void main() {
       );
     });
 
+    test('databaseId and databaseURL', () {
+      // ignore: deprecated_member_use_from_same_package
+      final firestore = FirebaseFirestore.instanceFor(
+          app: Firebase.app(), databaseURL: 'foo');
+
+      // ignore: deprecated_member_use_from_same_package
+      expect(firestore.databaseURL, equals('foo'));
+
+      expect(firestore.databaseId, equals('foo'));
+
+      final firestore2 =
+          FirebaseFirestore.instanceFor(app: Firebase.app(), databaseId: 'bar');
+
+      // ignore: deprecated_member_use_from_same_package
+      expect(firestore2.databaseURL, equals('bar'));
+
+      expect(firestore2.databaseId, equals('bar'));
+
+      // ignore: deprecated_member_use_from_same_package
+      final firestore3 = FirebaseFirestore.instanceFor(
+          app: Firebase.app(), databaseId: 'fire', databaseURL: 'not-this');
+
+      // databaseId should take precedence
+      expect(firestore3.databaseId, equals('fire'));
+      // ignore: deprecated_member_use_from_same_package
+      expect(firestore3.databaseURL, equals('fire'));
+    });
+
     test('returns the correct $FirebaseApp', () {
       expect(firestore!.app, equals(Firebase.app()));
       expect(firestoreSecondary!.app, equals(Firebase.app('foo')));
