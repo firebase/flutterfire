@@ -41,9 +41,10 @@ void main() {
     });
 
     test('databaseId and databaseURL', () {
-      // ignore: deprecated_member_use_from_same_package
       final firestore = FirebaseFirestore.instanceFor(
-          app: Firebase.app(), databaseURL: 'foo');
+        // ignore: deprecated_member_use_from_same_package
+        app: Firebase.app(), databaseURL: 'foo',
+      );
 
       // ignore: deprecated_member_use_from_same_package
       expect(firestore.databaseURL, equals('foo'));
@@ -58,9 +59,10 @@ void main() {
 
       expect(firestore2.databaseId, equals('bar'));
 
-      // ignore: deprecated_member_use_from_same_package
       final firestore3 = FirebaseFirestore.instanceFor(
-          app: Firebase.app(), databaseId: 'fire', databaseURL: 'not-this');
+        // ignore: deprecated_member_use_from_same_package
+        app: Firebase.app(), databaseId: 'fire', databaseURL: 'not-this',
+      );
 
       // databaseId should take precedence
       expect(firestore3.databaseId, equals('fire'));
