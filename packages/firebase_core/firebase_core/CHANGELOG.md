@@ -1,3 +1,7 @@
+## 2.29.0
+
+ - **FEAT**: bump Android SDK to version 32.8.0 ([#12584](https://github.com/firebase/flutterfire/issues/12584)). ([a81d9104](https://github.com/firebase/flutterfire/commit/a81d9104f72e88e917612ab7f11ba7ed6b1bdd76))
+
 ## 2.28.0
 
  - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))

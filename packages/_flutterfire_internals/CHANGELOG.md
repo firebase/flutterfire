@@ -1,3 +1,7 @@
+## 1.3.29
+
+ - **FIX**(web): remove remaining references to `dart:html` ([#12601](https://github.com/firebase/flutterfire/issues/12601)). ([fbffedb6](https://github.com/firebase/flutterfire/commit/fbffedb65c180d29a07436af90b36ca56e97bfe7))
+
 ## 1.3.28
 
  - Update a dependency to the latest release.

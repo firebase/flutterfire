@@ -1,3 +1,7 @@
+## 6.1.13
+
+ - Update a dependency to the latest release.
+
 ## 6.1.12
 
  - **FIX**(firestore): fix documentation since `persistenceEnabled` has been enabled on Web ([#12565](https://github.com/firebase/flutterfire/issues/12565)). ([9431b78f](https://github.com/firebase/flutterfire/commit/9431b78f967c85825d14e02db6eab9962216733d))

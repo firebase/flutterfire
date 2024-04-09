@@ -1,3 +1,8 @@
+## 4.16.1
+
+ - **FIX**(firestore,android): lint warnings and deprecated API ([#12577](https://github.com/firebase/flutterfire/issues/12577)). ([1b6ef739](https://github.com/firebase/flutterfire/commit/1b6ef73935062a4fa2c43bb4ef9b6d080a3ca5b4))
+ - **FIX**(firestore,windows): improve memory management ([#12575](https://github.com/firebase/flutterfire/issues/12575)). ([7f10940b](https://github.com/firebase/flutterfire/commit/7f10940bef3ea17255c4e33663d152473874c25b))
+
 ## 4.16.0
 
  - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))

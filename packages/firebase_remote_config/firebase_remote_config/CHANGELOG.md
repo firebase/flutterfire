@@ -1,3 +1,7 @@
+## 4.4.1
+
+ - Update a dependency to the latest release.
+
 ## 4.4.0
 
  - **FIX**(remote_config): fixing an issue that could cause duplicate listeners on hot restart ([#12545](https://github.com/firebase/flutterfire/issues/12545)). ([4b789875](https://github.com/firebase/flutterfire/commit/4b7898751f658125279b9e904e0179ca6c33cb25))

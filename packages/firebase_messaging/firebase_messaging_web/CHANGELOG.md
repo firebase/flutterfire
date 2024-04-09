@@ -1,3 +1,8 @@
+## 3.8.1
+
+ - **FIX**(messaging,web): `MessagePayload.data` can be `null` ([#12605](https://github.com/firebase/flutterfire/issues/12605)). ([95b95601](https://github.com/firebase/flutterfire/commit/95b9560189da0fa7fb1478988983e4a6af070c04))
+ - **FIX**(messaging,web): Fix incorrect type casting. ([#12573](https://github.com/firebase/flutterfire/issues/12573)). ([153ba0d5](https://github.com/firebase/flutterfire/commit/153ba0d54a243c9605e9e3841fce18566cb0f145))
+
 ## 3.8.0
 
  - **FEAT**(web): remove the dependency on `package:js` in favor of `dart:js_interop` ([#12534](https://github.com/firebase/flutterfire/issues/12534)). ([d83f6327](https://github.com/firebase/flutterfire/commit/d83f632753707c974fef2ac8a7f9bf6cb8ba8758))
