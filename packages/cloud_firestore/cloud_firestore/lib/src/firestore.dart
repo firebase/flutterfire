@@ -49,15 +49,19 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     String? databaseURL,
     String? databaseId,
   }) {
-    String url = databaseId ?? databaseURL ?? '(default)';
-    String cacheKey = '${app.name}|$url';
+    String firestoreDatabaseId = databaseId ?? databaseURL ?? '(default)';
+    String cacheKey = '${app.name}|$firestoreDatabaseId';
     if (_cachedInstances.containsKey(cacheKey)) {
       return _cachedInstances[cacheKey]!;
     }
 
     FirebaseFirestore newInstance =
         // Both databaseURL and databaseId are required so we have to pass both for now. We can remove databaseURL in a future release.
-        FirebaseFirestore._(app: app, databaseURL: url, databaseId: url);
+        FirebaseFirestore._(
+      app: app,
+      databaseURL: firestoreDatabaseId,
+      databaseId: firestoreDatabaseId,
+    );
     _cachedInstances[cacheKey] = newInstance;
 
     return newInstance;
