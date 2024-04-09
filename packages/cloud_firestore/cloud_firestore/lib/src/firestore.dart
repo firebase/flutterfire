@@ -23,13 +23,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     )
     required this.databaseURL,
     required this.databaseId,
-  }) : super(app.name, 'plugins.flutter.io/firebase_firestore') {
-    // ignore: deprecated_member_use_from_same_package
-    if (databaseURL.endsWith('/')) {
-      // ignore: deprecated_member_use_from_same_package
-      databaseURL = databaseURL.substring(0, databaseURL.length - 1);
-    }
-  }
+  }) : super(app.name, 'plugins.flutter.io/firebase_firestore');
 
   static final Map<String, FirebaseFirestore> _cachedInstances = {};
 
