@@ -335,7 +335,7 @@ void setupReferenceTests() {
             // Check without SettableMetadata
             final Reference ref2 =
                 storage.ref('flutter-tests').child('flt-ok-2.txt');
-            final TaskSnapshot complete2 = await ref.putFile(
+            final TaskSnapshot complete2 = await ref2.putFile(
               file,
             );
             expect(complete2.metadata?.size, kTestString.length);
