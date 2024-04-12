@@ -1713,8 +1713,7 @@ void CloudFirestorePlugin::DocumentReferenceSnapshot(
     const ListenSource& source,
     std::function<void(ErrorOr<std::string> reply)> result) {
   if (source == ListenSource::cache) {
-    result(
-        FlutterError("Listening from cache isn't supported on Windows"));
+    result(FlutterError("Listening from cache isn't supported on Windows"));
     return;
   }
   Firestore* firestore = GetFirestoreFromPigeon(app);
