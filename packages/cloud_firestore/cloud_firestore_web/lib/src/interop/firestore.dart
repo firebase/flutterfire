@@ -49,6 +49,15 @@ Firestore getFirestoreInstance([
       : firestore_interop.getFirestore());
 }
 
+JSString convertListenSource(ListenSource source) {
+  switch (source) {
+    case ListenSource.defaultSource:
+      return 'default'.toJS;
+    case ListenSource.cache:
+      return 'cache'.toJS;
+  }
+}
+
 /// The Cloud Firestore service interface.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.Firestore>.
@@ -352,14 +361,16 @@ class DocumentReference
   }
 
   /// Attaches a listener for [DocumentSnapshot] events.
-  Stream<DocumentSnapshot> get onSnapshot => _createSnapshotStream().stream;
-
-  Stream<DocumentSnapshot> get onMetadataChangesSnapshot {
-    return _createSnapshotStream(
-      firestore_interop.DocumentListenOptions(
-          includeMetadataChanges: true.toJS),
-    ).stream;
-  }
+  Stream<DocumentSnapshot> onSnapshot({
+    bool includeMetadataChanges = false,
+    ListenSource source = ListenSource.defaultSource,
+  }) =>
+      _createSnapshotStream(
+        firestore_interop.DocumentListenOptions(
+          includeMetadataChanges: includeMetadataChanges.toJS,
+          source: convertListenSource(source),
+        ),
+      ).stream;
 
   StreamController<DocumentSnapshot> _createSnapshotStream([
     firestore_interop.DocumentListenOptions? options,
@@ -456,14 +467,19 @@ class Query<T extends firestore_interop.QueryJsImpl>
   Query limitToLast(num limit) => Query.fromJsObject(firestore_interop.query(
       jsObject, firestore_interop.limitToLast(limit.toJS)));
 
-  late final Stream<QuerySnapshot> onSnapshot =
-      _createSnapshotStream(false).stream;
-
-  late final Stream<QuerySnapshot> onSnapshotMetadata =
-      _createSnapshotStream(true).stream;
+  Stream<QuerySnapshot> onSnapshot({
+    bool includeMetadataChanges = false,
+    ListenSource source = ListenSource.defaultSource,
+  }) =>
+      _createSnapshotStream(
+        firestore_interop.DocumentListenOptions(
+          includeMetadataChanges: includeMetadataChanges.toJS,
+          source: convertListenSource(source),
+        ),
+      ).stream;
 
   StreamController<QuerySnapshot> _createSnapshotStream(
-    bool includeMetadataChanges,
+    firestore_interop.DocumentListenOptions options,
   ) {
     late JSFunction onSnapshotUnsubscribe;
     // ignore: close_sinks, the controller is returned
@@ -473,8 +489,6 @@ class Query<T extends firestore_interop.QueryJsImpl>
       controller.add(QuerySnapshot._fromJsObject(snapshot));
     }).toJS;
     final errorWrapper = ((JSError e) => controller.addError(e)).toJS;
-    final options = firestore_interop.SnapshotListenOptions(
-        includeMetadataChanges: includeMetadataChanges.toJS);
 
     void startListen() {
       onSnapshotUnsubscribe = firestore_interop.onSnapshot(

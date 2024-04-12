@@ -137,6 +137,22 @@ enum Source {
   cache,
 }
 
+/// The listener retrieves data and listens to updates from the local Firestore cache only.
+/// If the cache is empty, an empty snapshot will be returned.
+/// Snapshot events will be triggered on cache updates, like local mutations or load bundles.
+///
+/// Note that the data might be stale if the cache hasn't synchronized with recent server-side changes.
+enum ListenSource {
+  /// The default behavior. The listener attempts to return initial snapshot from cache and retrieve up-to-date snapshots from the Firestore server.
+  /// Snapshot events will be triggered on local mutations and server side updates.
+  defaultSource,
+
+  /// The listener retrieves data and listens to updates from the local Firestore cache only.
+  /// If the cache is empty, an empty snapshot will be returned.
+  /// Snapshot events will be triggered on cache updates, like local mutations or load bundles.
+  cache,
+}
+
 enum ServerTimestampBehavior {
   /// Return null for [FieldValue.serverTimestamp()] values that have not yet
   none,
@@ -402,6 +418,7 @@ abstract class FirebaseFirestoreHostApi {
     PigeonQueryParameters parameters,
     PigeonGetOptions options,
     bool includeMetadataChanges,
+    ListenSource source,
   );
 
   @async
@@ -409,5 +426,6 @@ abstract class FirebaseFirestoreHostApi {
     FirestorePigeonFirebaseApp app,
     DocumentReferenceRequest parameters,
     bool includeMetadataChanges,
+    ListenSource source,
   );
 }

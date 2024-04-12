@@ -71,8 +71,10 @@ abstract class DocumentReferencePlatform extends PlatformInterface {
   }
 
   /// Notifies of documents at this location
-  Stream<DocumentSnapshotPlatform> snapshots(
-      {bool includeMetadataChanges = false}) {
+  Stream<DocumentSnapshotPlatform> snapshots({
+    bool includeMetadataChanges = false,
+    ListenSource source = ListenSource.defaultSource,
+  }) {
     throw UnimplementedError('snapshots() is not implemented');
   }
 

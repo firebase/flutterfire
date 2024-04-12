@@ -272,6 +272,32 @@ void runQueryTests() {
         });
       });
 
+      testWidgets('listens to a single response from cache', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('get-single-cache');
+        await collection.add({'foo': 'bar'});
+        Stream<QuerySnapshot<Map<String, dynamic>>> stream =
+            collection.snapshots(source: ListenSource.cache);
+        StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? subscription;
+
+        subscription = stream.listen(
+          expectAsync1(
+            (QuerySnapshot<Map<String, dynamic>> snapshot) {
+              expect(snapshot.docs.length, equals(1));
+              expect(snapshot.docs[0], isA<QueryDocumentSnapshot>());
+              QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+                  snapshot.docs[0];
+              expect(documentSnapshot.data()['foo'], equals('bar'));
+            },
+            count: 1,
+            reason: 'Stream should only have been called once.',
+          ),
+        );
+        addTearDown(() async {
+          await subscription?.cancel();
+        });
+      });
+
       testWidgets('listens to multiple queries', (_) async {
         CollectionReference<Map<String, dynamic>> collection1 =
             await initializeTest('document-snapshot-1');
