@@ -32,7 +32,7 @@ jobs:
         with:
           melos-version: '3.0.1'
       - name: 'Run Analyze'
-        run: melos run analyze
+        run: melos analyze-ci
 
   # Separated from "analyse" action as pubspec_override file is not being taken into account when running `flutter pub publish --dry-run`
   # This will fail on CI until this is fixed: https://github.com/invertase/melos/issues/467
