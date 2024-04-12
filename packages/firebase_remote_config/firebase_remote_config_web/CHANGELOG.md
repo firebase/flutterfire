@@ -1,3 +1,8 @@
+## 1.6.1
+
+ - **FIX**(remote-config,web): `getAll()` API throwing runtime exception with incorrect cast to `List<String>` ([#12602](https://github.com/firebase/flutterfire/issues/12602)). ([70e257e9](https://github.com/firebase/flutterfire/commit/70e257e9a3bf930b6873161562c728ebd84031a2))
+ - **FIX**(web): fix typing conversion for Maps ([#12615](https://github.com/firebase/flutterfire/issues/12615)). ([2cc16189](https://github.com/firebase/flutterfire/commit/2cc161898573736216dbf6cba25c4951e571fa13))
+
 ## 1.6.0
 
  - **FEAT**(web): remove the dependency on `package:js` in favor of `dart:js_interop` ([#12534](https://github.com/firebase/flutterfire/issues/12534)). ([d83f6327](https://github.com/firebase/flutterfire/commit/d83f632753707c974fef2ac8a7f9bf6cb8ba8758))

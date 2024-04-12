@@ -17,18 +17,18 @@ import 'method_channel_firestore.dart';
 class MethodChannelTransaction extends TransactionPlatform {
   /// [FirebaseApp] name used for this [MethodChannelTransaction]
   final String appName;
-  final String databaseURL;
+  final String databaseId;
   late String _transactionId;
   late FirebaseFirestorePlatform _firestore;
   FirestorePigeonFirebaseApp pigeonApp;
 
   /// Constructor.
   MethodChannelTransaction(
-      String transactionId, this.appName, this.pigeonApp, this.databaseURL)
+      String transactionId, this.appName, this.pigeonApp, this.databaseId)
       : _transactionId = transactionId,
         super() {
     _firestore = FirebaseFirestorePlatform.instanceFor(
-        app: Firebase.app(appName), databaseURL: databaseURL);
+        app: Firebase.app(appName), databaseId: databaseId);
   }
 
   List<PigeonTransactionCommand> _commands = [];
