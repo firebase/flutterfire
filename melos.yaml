@@ -25,10 +25,10 @@ command:
 
 scripts:
   lint:all:
-    run: melos run analyze && melos run format
+    run: melos run analyze-ci && melos run format-ci
     description: Run all static analysis checks.
 
-  analyze:
+  analyze-ci:
     # We are setting the concurrency to 1 because a higher concurrency can crash
     # the analysis server on low performance machines (like GitHub Actions).
     run: |
@@ -46,7 +46,7 @@ scripts:
       integration testing.
        - Requires Node.js and NPM installed.
 
-  format:
+  format-ci:
     run: |
       dart pub global run flutter_plugin_tools format && \
       swiftformat .
