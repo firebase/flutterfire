@@ -456,6 +456,13 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     bool includeMetadataChanges = false,
     ListenSource source = ListenSource.defaultSource,
   }) {
+    if (source == ListenSource.cache &&
+        defaultTargetPlatform == TargetPlatform.windows) {
+      throw UnimplementedError(
+        'Listening from cache is not supported on Windows',
+      );
+    }
+
     return _delegate
         .snapshots(
           includeMetadataChanges: includeMetadataChanges,
@@ -937,7 +944,10 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
     ListenSource source = ListenSource.defaultSource,
   }) {
     return _originalQuery
-        .snapshots(includeMetadataChanges: includeMetadataChanges)
+        .snapshots(
+          includeMetadataChanges: includeMetadataChanges,
+          source: source,
+        )
         .map(
           (snapshot) => _WithConverterQuerySnapshot<T>(
             snapshot,
