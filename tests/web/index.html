@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <!--
+  <head>
+    <!--
     If you are serving your web app in a path other than the root, change the
     href value below to reflect the base path you are serving from.
 
@@ -31,9 +31,9 @@
 
   <title>tests</title>
   <link rel="manifest" href="manifest.json">
-</head>
-<body>
-<script>
+  </head>
+  <body>
+    <script>
       var serviceWorkerVersion = null;
       var scriptLoaded = false;
       function loadMainDartJs() {
@@ -51,7 +51,9 @@
         // Service workers are supported. Use them.
         window.addEventListener('load', function () {
           // Register Firebase Messaging service worker.
-          navigator.serviceWorker.register('firebase-messaging-sw.js');
+          navigator.serviceWorker.register('firebase-messaging-sw.js', {
+            scope: '/firebase-cloud-messaging-push-scope',
+          });
 
           // Wait for registration to finish before dropping the <script> tag.
           // Otherwise, the browser will load the script multiple times,
@@ -100,6 +102,6 @@
         // Service workers not supported. Just drop the <script> tag.
         loadMainDartJs();
       }
-  </script>
-</body>
+    </script>
+  </body>
 </html>
