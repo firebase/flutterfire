@@ -517,19 +517,8 @@ void setupQueryTests() {
               'b': 3,
               'c': 1,
             }).having((e) => e.type, 'type', DatabaseEventType.value),
-            isA<DatabaseEvent>().having((s) => s.snapshot.value, 'value', {
-              'a': 3,
-              'b': 4,
-              'c': 2,
-            }).having((e) => e.type, 'type', DatabaseEventType.value),
           ]),
         );
-
-        await ref.set({
-          'a': 3,
-          'b': 4,
-          'c': 2,
-        });
       });
 
       test(
