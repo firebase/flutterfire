@@ -15,9 +15,10 @@ import android.app.job.JobWorkItem;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.util.Log;
 import androidx.annotation.NonNull;
@@ -25,6 +26,8 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 // Issue added for this file, we will migrate this in the future
 @SuppressWarnings("all")
@@ -36,7 +39,6 @@ abstract class JobIntentService extends Service {
   CompatJobEngine mJobImpl;
   WorkEnqueuer mCompatWorkEnqueuer;
   CommandProcessor mCurProcessor;
-  boolean mInterruptIfStopped = false;
   boolean mStopped = false;
   boolean mDestroyed = false;
 
@@ -342,32 +344,42 @@ abstract class JobIntentService extends Service {
   }
 
   /** This is a task to dequeue and process work in the background. */
-  final class CommandProcessor extends AsyncTask<Void, Void, Void> {
-    @Override
-    protected Void doInBackground(Void... params) {
-      GenericWorkItem work;
+  final class CommandProcessor {
+    private final Executor executor = Executors.newSingleThreadExecutor(); // Background thread
+    private final Handler handler = new Handler(Looper.getMainLooper()); // UI Thread
 
-      if (DEBUG) Log.d(TAG, "Starting to dequeue work...");
+    public void execute() {
+      executor.execute(
+          new Runnable() {
+            @Override
+            public void run() {
+              // This replaces doInBackground method
+              GenericWorkItem work;
 
-      while ((work = dequeueWork()) != null) {
-        if (DEBUG) Log.d(TAG, "Processing next work: " + work);
-        onHandleWork(work.getIntent());
-        if (DEBUG) Log.d(TAG, "Completing work: " + work);
-        work.complete();
-      }
+              if (DEBUG) Log.d(TAG, "Starting to dequeue work...");
 
-      if (DEBUG) Log.d(TAG, "Done processing work!");
+              while ((work = dequeueWork()) != null) {
+                if (DEBUG) Log.d(TAG, "Processing next work: " + work);
+                onHandleWork(work.getIntent());
+                if (DEBUG) Log.d(TAG, "Completing work: " + work);
+                work.complete();
+              }
 
-      return null;
+              if (DEBUG) Log.d(TAG, "Done processing work!");
+
+              // This replaces onPostExecute method
+              handler.post(
+                  new Runnable() {
+                    @Override
+                    public void run() {
+                      processorFinished();
+                    }
+                  });
+            }
+          });
     }
 
-    @Override
-    protected void onCancelled(Void aVoid) {
-      processorFinished();
-    }
-
-    @Override
-    protected void onPostExecute(Void aVoid) {
+    public void cancel() {
       processorFinished();
     }
   }
@@ -523,18 +535,6 @@ abstract class JobIntentService extends Service {
   protected abstract void onHandleWork(@NonNull Intent intent);
 
   /**
-   * Control whether code executing in {@link #onHandleWork(Intent)} will be interrupted if the job
-   * is stopped. By default this is false. If called and set to true, any time {@link
-   * #onStopCurrentWork()} is called, the class will first call {@link AsyncTask#cancel(boolean)
-   * AsyncTask.cancel(true)} to interrupt the running task.
-   *
-   * @param interruptIfStopped Set to true to allow the system to interrupt actively running work.
-   */
-  public void setInterruptIfStopped(boolean interruptIfStopped) {
-    mInterruptIfStopped = interruptIfStopped;
-  }
-
-  /**
    * Returns true if {@link #onStopCurrentWork()} has been called. You can use this, while executing
    * your work, to see if it should be stopped.
    */
@@ -558,7 +558,7 @@ abstract class JobIntentService extends Service {
 
   boolean doStopCurrentWork() {
     if (mCurProcessor != null) {
-      mCurProcessor.cancel(mInterruptIfStopped);
+      mCurProcessor.cancel();
     }
     mStopped = true;
     return onStopCurrentWork();
@@ -571,7 +571,7 @@ abstract class JobIntentService extends Service {
         mCompatWorkEnqueuer.serviceProcessingStarted();
       }
       if (DEBUG) Log.d(TAG, "Starting processor: " + mCurProcessor);
-      mCurProcessor.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+      mCurProcessor.execute();
     }
   }
 
