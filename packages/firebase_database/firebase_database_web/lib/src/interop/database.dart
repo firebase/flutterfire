@@ -389,9 +389,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
     });
 
     final void Function(JSObject) cancelCallbackWrap = ((JSObject error) {
-      final dartified = error.dartify();
-      streamController
-          .addError(convertFirebaseDatabaseException(dartified ?? {}));
+      streamController.addError(error);
       streamController.close();
     });
 
@@ -434,7 +432,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
     }
 
     void stopListen() {
-      database_interop.off(jsObject, eventType.toJS, callbackWrap.toJS);
+      // database_interop.off(jsObject, eventType.toJS, callbackWrap.toJS);
     }
 
     streamController = StreamController<QueryEvent>.broadcast(
