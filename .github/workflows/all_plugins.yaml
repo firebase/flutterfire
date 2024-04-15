@@ -88,7 +88,7 @@ jobs:
         run: |
           alias python=python3
           flutter pub global activate flutter_plugin_tools
-          brew install swiftformat@0.53.0
+          brew install swiftformat
           brew install clang-format
           brew link --overwrite --force clang-format
       - name: 'Formatter version'
