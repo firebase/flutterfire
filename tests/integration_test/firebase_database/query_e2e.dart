@@ -532,14 +532,19 @@ void setupQueryTests() {
         });
       });
 
-      test('throw a `permission-denied` exception when accessing restricted data', () async {
+      test(
+          'throw a `permission-denied` exception when accessing restricted data',
+          () async {
         final Completer<FirebaseException> errorReceived =
-        Completer<FirebaseException>();
-        FirebaseDatabase.instance.ref().child('restricted').onValue.listen((event) {
-          // Do nothing
-        }, onError: (error) {
-          errorReceived.complete(error);
-        });
+            Completer<FirebaseException>();
+        FirebaseDatabase.instance.ref().child('restricted').onValue.listen(
+          (event) {
+            // Do nothing
+          },
+          onError: (error) {
+            errorReceived.complete(error);
+          },
+        );
 
         final streamError = await errorReceived.future;
         expect(streamError, isA<FirebaseException>());
