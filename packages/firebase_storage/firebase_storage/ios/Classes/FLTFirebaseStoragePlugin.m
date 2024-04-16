@@ -175,7 +175,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 
 - (FIRStorageMetadata *_Nullable)getFIRStorageMetadataFromPigeon:
     (PigeonSettableMetadata *)pigeonMetadata {
-  if (pigeonMetadata) {
+  if (pigeonMetadata == nil) {
     return nil;
   }
 
