@@ -1,3 +1,7 @@
+## 5.11.2
+
+ - Update a dependency to the latest release.
+
 ## 5.11.1
 
  - **FIX**(web): fix typing conversion for Maps ([#12615](https://github.com/firebase/flutterfire/issues/12615)). ([2cc16189](https://github.com/firebase/flutterfire/commit/2cc161898573736216dbf6cba25c4951e571fa13))

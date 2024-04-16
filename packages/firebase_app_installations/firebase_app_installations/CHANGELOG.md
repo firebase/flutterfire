@@ -1,3 +1,7 @@
+## 0.2.5+2
+
+ - Update a dependency to the latest release.
+
 ## 0.2.5+1
 
  - **FIX**(app-installations,android): update deprecated API to latest Task implementation ([#12579](https://github.com/firebase/flutterfire/issues/12579)). ([88d86e9a](https://github.com/firebase/flutterfire/commit/88d86e9a375cbb57c9fdbba965b75be4dc17376c))

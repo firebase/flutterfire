@@ -1,3 +1,7 @@
+## 0.2.5+2
+
+ - **FIX**(database,web): fix broken exception handling on streams ([#12647](https://github.com/firebase/flutterfire/issues/12647)). ([0115f79d](https://github.com/firebase/flutterfire/commit/0115f79d2eb539205101070eb3b329165c9e4e61))
+
 ## 0.2.5+1
 
  - Update a dependency to the latest release.

@@ -1,3 +1,7 @@
+## 4.5.32
+
+ - Update a dependency to the latest release.
+
 ## 4.5.31
 
  - Update a dependency to the latest release.
