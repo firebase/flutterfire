@@ -301,7 +301,7 @@ Some things to keep in mind before publishing the release:
 2. Run `git pull origin master`.
 3. Run `git pull --tags` to make sure all tags are fetched.
 4. Create new branch with the signature "release/[year]-[month]-[day]".
-5. Push your branch to git
+5. Push your branch to git running `git push origin [RELEASE BRANCH NAME]`.
 6. Run `melos version` to automatically version packages and update Changelogs.
 7. Run `melos publish` to dry run and confirm all packages are publishable.
 8. Run `git push origin [RELEASE BRANCH NAME]` & open pull request for review on GitHub.
