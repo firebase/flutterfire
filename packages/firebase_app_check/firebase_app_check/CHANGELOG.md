@@ -1,3 +1,7 @@
+## 0.2.2+2
+
+ - Update a dependency to the latest release.
+
 ## 0.2.2+1
 
  - **FIX**(app-check,android): fix unnecessary deprecation warning ([#12578](https://github.com/firebase/flutterfire/issues/12578)). ([805ca028](https://github.com/firebase/flutterfire/commit/805ca028d20c582e93bcebbeca3105deab365edc))

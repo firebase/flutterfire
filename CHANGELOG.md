@@ -3,6 +3,135 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-04-16
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v4.17.0`](#cloud_firestore---v4170)
+ - [`cloud_firestore_platform_interface` - `v6.2.0`](#cloud_firestore_platform_interface---v620)
+ - [`cloud_firestore_web` - `v3.12.0`](#cloud_firestore_web---v3120)
+ - [`firebase_core` - `v2.30.0`](#firebase_core---v2300)
+ - [`firebase_database_web` - `v0.2.5+2`](#firebase_database_web---v0252)
+ - [`firebase_messaging` - `v14.8.2`](#firebase_messaging---v1482)
+ - [`firebase_crashlytics` - `v3.5.2`](#firebase_crashlytics---v352)
+ - [`_flutterfire_internals` - `v1.3.30`](#_flutterfire_internals---v1330)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.4+30`](#firebase_in_app_messaging_platform_interface---v02430)
+ - [`firebase_in_app_messaging` - `v0.7.5+2`](#firebase_in_app_messaging---v0752)
+ - [`firebase_remote_config_platform_interface` - `v1.4.30`](#firebase_remote_config_platform_interface---v1430)
+ - [`firebase_remote_config` - `v4.4.2`](#firebase_remote_config---v442)
+ - [`firebase_database` - `v10.5.2`](#firebase_database---v1052)
+ - [`firebase_auth` - `v4.19.2`](#firebase_auth---v4192)
+ - [`firebase_auth_platform_interface` - `v7.2.3`](#firebase_auth_platform_interface---v723)
+ - [`firebase_remote_config_web` - `v1.6.2`](#firebase_remote_config_web---v162)
+ - [`firebase_crashlytics_platform_interface` - `v3.6.30`](#firebase_crashlytics_platform_interface---v3630)
+ - [`firebase_database_platform_interface` - `v0.2.5+30`](#firebase_database_platform_interface---v02530)
+ - [`firebase_auth_web` - `v5.11.2`](#firebase_auth_web---v5112)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.6+30`](#firebase_dynamic_links_platform_interface---v02630)
+ - [`firebase_app_installations` - `v0.2.5+2`](#firebase_app_installations---v0252)
+ - [`firebase_dynamic_links` - `v5.5.2`](#firebase_dynamic_links---v552)
+ - [`firebase_app_installations_platform_interface` - `v0.1.4+30`](#firebase_app_installations_platform_interface---v01430)
+ - [`firebase_messaging_platform_interface` - `v4.5.32`](#firebase_messaging_platform_interface---v4532)
+ - [`firebase_messaging_web` - `v3.8.2`](#firebase_messaging_web---v382)
+ - [`firebase_analytics_platform_interface` - `v3.10.3`](#firebase_analytics_platform_interface---v3103)
+ - [`firebase_analytics` - `v10.10.2`](#firebase_analytics---v10102)
+ - [`cloud_functions_web` - `v4.9.2`](#cloud_functions_web---v492)
+ - [`firebase_app_installations_web` - `v0.1.5+2`](#firebase_app_installations_web---v0152)
+ - [`firebase_ml_model_downloader` - `v0.2.5+2`](#firebase_ml_model_downloader---v0252)
+ - [`firebase_analytics_web` - `v0.5.7+2`](#firebase_analytics_web---v0572)
+ - [`firebase_ml_model_downloader_platform_interface` - `v0.1.4+29`](#firebase_ml_model_downloader_platform_interface---v01429)
+ - [`cloud_functions` - `v4.7.2`](#cloud_functions---v472)
+ - [`firebase_app_check_web` - `v0.1.2+2`](#firebase_app_check_web---v0122)
+ - [`firebase_app_check` - `v0.2.2+2`](#firebase_app_check---v0222)
+ - [`firebase_storage` - `v11.7.2`](#firebase_storage---v1172)
+ - [`cloud_functions_platform_interface` - `v5.5.24`](#cloud_functions_platform_interface---v5524)
+ - [`firebase_storage_platform_interface` - `v5.1.17`](#firebase_storage_platform_interface---v5117)
+ - [`firebase_performance` - `v0.9.4+2`](#firebase_performance---v0942)
+ - [`firebase_app_check_platform_interface` - `v0.1.0+24`](#firebase_app_check_platform_interface---v01024)
+ - [`firebase_performance_platform_interface` - `v0.1.4+30`](#firebase_performance_platform_interface---v01430)
+ - [`firebase_performance_web` - `v0.1.6+2`](#firebase_performance_web---v0162)
+ - [`firebase_storage_web` - `v3.9.2`](#firebase_storage_web---v392)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_crashlytics` - `v3.5.2`
+ - `_flutterfire_internals` - `v1.3.30`
+ - `firebase_in_app_messaging_platform_interface` - `v0.2.4+30`
+ - `firebase_in_app_messaging` - `v0.7.5+2`
+ - `firebase_remote_config_platform_interface` - `v1.4.30`
+ - `firebase_remote_config` - `v4.4.2`
+ - `firebase_database` - `v10.5.2`
+ - `firebase_auth` - `v4.19.2`
+ - `firebase_auth_platform_interface` - `v7.2.3`
+ - `firebase_remote_config_web` - `v1.6.2`
+ - `firebase_crashlytics_platform_interface` - `v3.6.30`
+ - `firebase_database_platform_interface` - `v0.2.5+30`
+ - `firebase_auth_web` - `v5.11.2`
+ - `firebase_dynamic_links_platform_interface` - `v0.2.6+30`
+ - `firebase_app_installations` - `v0.2.5+2`
+ - `firebase_dynamic_links` - `v5.5.2`
+ - `firebase_app_installations_platform_interface` - `v0.1.4+30`
+ - `firebase_messaging_platform_interface` - `v4.5.32`
+ - `firebase_messaging_web` - `v3.8.2`
+ - `firebase_analytics_platform_interface` - `v3.10.3`
+ - `firebase_analytics` - `v10.10.2`
+ - `cloud_functions_web` - `v4.9.2`
+ - `firebase_app_installations_web` - `v0.1.5+2`
+ - `firebase_ml_model_downloader` - `v0.2.5+2`
+ - `firebase_analytics_web` - `v0.5.7+2`
+ - `firebase_ml_model_downloader_platform_interface` - `v0.1.4+29`
+ - `cloud_functions` - `v4.7.2`
+ - `firebase_app_check_web` - `v0.1.2+2`
+ - `firebase_app_check` - `v0.2.2+2`
+ - `firebase_storage` - `v11.7.2`
+ - `cloud_functions_platform_interface` - `v5.5.24`
+ - `firebase_storage_platform_interface` - `v5.1.17`
+ - `firebase_performance` - `v0.9.4+2`
+ - `firebase_app_check_platform_interface` - `v0.1.0+24`
+ - `firebase_performance_platform_interface` - `v0.1.4+30`
+ - `firebase_performance_web` - `v0.1.6+2`
+ - `firebase_storage_web` - `v3.9.2`
+
+---
+
+#### `cloud_firestore` - `v4.17.0`
+
+ - **FIX**(firestore): remove `nanopb` version constraints from podspec ([#12632](https://github.com/firebase/flutterfire/issues/12632)). ([c899a7bc](https://github.com/firebase/flutterfire/commit/c899a7bc9cdd7b552d3c10058f4899106a4c1994))
+ - **FIX**(firestore): deprecate `databaseURL` in favor of `databaseId` ([#12593](https://github.com/firebase/flutterfire/issues/12593)). ([8966f483](https://github.com/firebase/flutterfire/commit/8966f4837afe7e32a3847b7b677d787b1398b682))
+ - **FEAT**(firestore): add support for listening snapshot from cache ([#12585](https://github.com/firebase/flutterfire/issues/12585)). ([f2cef8c1](https://github.com/firebase/flutterfire/commit/f2cef8c13f590cdeda0cadbe3d85d6e246d5ad7f))
+
+#### `cloud_firestore_platform_interface` - `v6.2.0`
+
+ - **FIX**(firestore): deprecate `databaseURL` in favor of `databaseId` ([#12593](https://github.com/firebase/flutterfire/issues/12593)). ([8966f483](https://github.com/firebase/flutterfire/commit/8966f4837afe7e32a3847b7b677d787b1398b682))
+ - **FEAT**(firestore): add support for listening snapshot from cache ([#12585](https://github.com/firebase/flutterfire/issues/12585)). ([f2cef8c1](https://github.com/firebase/flutterfire/commit/f2cef8c13f590cdeda0cadbe3d85d6e246d5ad7f))
+
+#### `cloud_firestore_web` - `v3.12.0`
+
+ - **FIX**(firestore): deprecate `databaseURL` in favor of `databaseId` ([#12593](https://github.com/firebase/flutterfire/issues/12593)). ([8966f483](https://github.com/firebase/flutterfire/commit/8966f4837afe7e32a3847b7b677d787b1398b682))
+ - **FEAT**(firestore): add support for listening snapshot from cache ([#12585](https://github.com/firebase/flutterfire/issues/12585)). ([f2cef8c1](https://github.com/firebase/flutterfire/commit/f2cef8c13f590cdeda0cadbe3d85d6e246d5ad7f))
+
+#### `firebase_core` - `v2.30.0`
+
+ - **FEAT**: bump Firebase iOS SDK to `10.24.0` ([#12626](https://github.com/firebase/flutterfire/issues/12626)). ([b39c0e25](https://github.com/firebase/flutterfire/commit/b39c0e258233438acf368da891102784b7af2542))
+
+#### `firebase_database_web` - `v0.2.5+2`
+
+ - **FIX**(database,web): fix broken exception handling on streams ([#12647](https://github.com/firebase/flutterfire/issues/12647)). ([0115f79d](https://github.com/firebase/flutterfire/commit/0115f79d2eb539205101070eb3b329165c9e4e61))
+
+#### `firebase_messaging` - `v14.8.2`
+
+ - **FIX**(messaging,android): Replace deprecated AsyncTask API and other deprecated API ([#12580](https://github.com/firebase/flutterfire/issues/12580)). ([ac089e56](https://github.com/firebase/flutterfire/commit/ac089e5653715744892b6fe298d1814f81160970))
+
+
 ## 2024-04-09
 
 ### Changes

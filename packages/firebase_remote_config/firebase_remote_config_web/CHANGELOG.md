@@ -1,3 +1,7 @@
+## 1.6.2
+
+ - Update a dependency to the latest release.
+
 ## 1.6.1
 
  - **FIX**(remote-config,web): `getAll()` API throwing runtime exception with incorrect cast to `List<String>` ([#12602](https://github.com/firebase/flutterfire/issues/12602)). ([70e257e9](https://github.com/firebase/flutterfire/commit/70e257e9a3bf930b6873161562c728ebd84031a2))

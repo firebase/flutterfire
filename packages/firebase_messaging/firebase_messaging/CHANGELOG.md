@@ -1,3 +1,7 @@
+## 14.8.2
+
+ - **FIX**(messaging,android): Replace deprecated AsyncTask API and other deprecated API ([#12580](https://github.com/firebase/flutterfire/issues/12580)). ([ac089e56](https://github.com/firebase/flutterfire/commit/ac089e5653715744892b6fe298d1814f81160970))
+
 ## 14.8.1
 
  - Update a dependency to the latest release.
