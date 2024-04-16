@@ -72,7 +72,8 @@ jobs:
             "flutter pub get"
 
   format:
-    runs-on: ubuntu-latest
+    # switch back to ubuntu-latest when swiftformat is working again
+    runs-on: macos-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
