@@ -173,12 +173,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   return [storage referenceWithPath:reference.fullPath];
 }
 
-- (FIRStorageMetadata *_Nullable)getFIRStorageMetadataFromPigeon:
-    (PigeonSettableMetadata *)pigeonMetadata {
-  if (pigeonMetadata == nil) {
-    return nil;
-  }
-
+- (FIRStorageMetadata *)getFIRStorageMetadataFromPigeon:(PigeonSettableMetadata *)pigeonMetadata {
   FIRStorageMetadata *metadata = [[FIRStorageMetadata alloc] init];
   metadata.cacheControl = pigeonMetadata.cacheControl;
   metadata.contentDisposition = pigeonMetadata.contentDisposition;
@@ -457,13 +452,13 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
                  completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion {
   FIRStorageReference *storage_reference = [self getFIRStorageReferenceFromPigeon:app
                                                                         reference:reference];
-  FIRStorageMetadata *metadata = [self getFIRStorageMetadataFromPigeon:settableMetaData];
 
   NSURL *fileUrl = [NSURL fileURLWithPath:filePath];
   FIRStorageObservableTask<FIRStorageTaskManagement> *task;
-  if (metadata == nil) {
+  if (settableMetaData == nil) {
     task = [storage_reference putFile:fileUrl];
   } else {
+    FIRStorageMetadata *metadata = [self getFIRStorageMetadataFromPigeon:settableMetaData];
     task = [storage_reference putFile:fileUrl metadata:metadata];
   }
 
