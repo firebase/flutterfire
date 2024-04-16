@@ -203,6 +203,20 @@
   }
 }
 
++ (FIRListenSource)parseListenSource:(ListenSource)source {
+  switch (source) {
+    case ListenSourceDefaultSource:
+      return FIRListenSourceDefault;
+    case ListenSourceCache:
+      return FIRListenSourceCache;
+    default:
+      @throw
+          [NSException exceptionWithName:@"Invalid ListenSource"
+                                  reason:@"This ListenSource Behavior is not supported by the SDK"
+                                userInfo:nil];
+  }
+}
+
 + (PigeonSnapshotMetadata *)toPigeonSnapshotMetadata:(FIRSnapshotMetadata *)snapshotMetadata {
   return [PigeonSnapshotMetadata
       makeWithHasPendingWrites:[NSNumber numberWithBool:snapshotMetadata.hasPendingWrites]

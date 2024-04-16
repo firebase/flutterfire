@@ -894,6 +894,7 @@ public class FlutterFirebaseFirestorePlugin
       @NonNull GeneratedAndroidFirebaseFirestore.PigeonQueryParameters parameters,
       @NonNull GeneratedAndroidFirebaseFirestore.PigeonGetOptions options,
       @NonNull Boolean includeMetadataChanges,
+      @NonNull GeneratedAndroidFirebaseFirestore.ListenSource source,
       @NonNull GeneratedAndroidFirebaseFirestore.Result<String> result) {
     Query query =
         PigeonParser.parseQuery(getFirestoreFromPigeon(app), path, isCollectionGroup, parameters);
@@ -914,7 +915,8 @@ public class FlutterFirebaseFirestorePlugin
                 query,
                 includeMetadataChanges,
                 PigeonParser.parsePigeonServerTimestampBehavior(
-                    options.getServerTimestampBehavior()))));
+                    options.getServerTimestampBehavior()),
+                PigeonParser.parseListenSource(source))));
   }
 
   @Override
@@ -922,6 +924,7 @@ public class FlutterFirebaseFirestorePlugin
       @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseFirestore.DocumentReferenceRequest parameters,
       @NonNull Boolean includeMetadataChanges,
+      @NonNull GeneratedAndroidFirebaseFirestore.ListenSource source,
       @NonNull GeneratedAndroidFirebaseFirestore.Result<String> result) {
     FirebaseFirestore firestore = getFirestoreFromPigeon(app);
     DocumentReference documentReference =
@@ -935,6 +938,7 @@ public class FlutterFirebaseFirestorePlugin
                 documentReference,
                 includeMetadataChanges,
                 PigeonParser.parsePigeonServerTimestampBehavior(
-                    parameters.getServerTimestampBehavior()))));
+                    parameters.getServerTimestampBehavior()),
+                PigeonParser.parseListenSource(source))));
   }
 }

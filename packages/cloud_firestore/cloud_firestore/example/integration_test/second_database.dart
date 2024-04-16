@@ -37,7 +37,7 @@ void runSecondDatabaseTests() {
       setUpAll(() async {
         firestore = FirebaseFirestore.instanceFor(
           app: Firebase.app(),
-          databaseURL: 'flutterfire-2',
+          databaseId: 'flutterfire-2',
         );
       });
 

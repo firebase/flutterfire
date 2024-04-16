@@ -1,3 +1,7 @@
+## 0.1.2+1
+
+ - **FIX**(web): remove remaining references to `dart:html` ([#12601](https://github.com/firebase/flutterfire/issues/12601)). ([fbffedb6](https://github.com/firebase/flutterfire/commit/fbffedb65c180d29a07436af90b36ca56e97bfe7))
+
 ## 0.1.2
 
  - **FEAT**(web): remove the dependency on `package:js` in favor of `dart:js_interop` ([#12534](https://github.com/firebase/flutterfire/issues/12534)). ([d83f6327](https://github.com/firebase/flutterfire/commit/d83f632753707c974fef2ac8a7f9bf6cb8ba8758))
