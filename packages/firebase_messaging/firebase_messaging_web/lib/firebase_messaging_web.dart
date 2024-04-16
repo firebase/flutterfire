@@ -145,7 +145,7 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   }) {
     return convertWebExceptions(() async {
       String status =
-          (await web.Notification.requestPermission().toDart)! as String;
+          (await web.Notification.requestPermission().toDart) as String;
       return utils.getNotificationSettings(status);
     });
   }

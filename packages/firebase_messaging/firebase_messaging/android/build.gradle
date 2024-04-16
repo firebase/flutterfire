@@ -40,7 +40,7 @@ android {
     namespace 'io.flutter.plugins.firebase.messaging'
   }
 
-  compileSdk 33
+  compileSdk 34
 
   defaultConfig {
     minSdk 19
@@ -65,7 +65,7 @@ android {
     implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
-    implementation 'androidx.annotation:annotation:1.7.0'
+    implementation 'androidx.annotation:annotation:1.7.1'
     implementation ('com.google.firebase:firebase-iid:21.1.0') {
       transitive = true
     }

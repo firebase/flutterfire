@@ -2174,9 +2174,16 @@ void FirebaseFirestoreHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
               }
               const auto& include_metadata_changes_arg =
                   std::get<bool>(encodable_include_metadata_changes_arg);
+              const auto& encodable_source_arg = args.at(6);
+              if (encodable_source_arg.IsNull()) {
+                reply(WrapError("source_arg unexpectedly null."));
+                return;
+              }
+              const ListenSource& source_arg =
+                  (ListenSource)encodable_source_arg.LongValue();
               api->QuerySnapshot(
                   app_arg, path_arg, is_collection_group_arg, parameters_arg,
-                  options_arg, include_metadata_changes_arg,
+                  options_arg, include_metadata_changes_arg, source_arg,
                   [reply](ErrorOr<std::string>&& output) {
                     if (output.has_error()) {
                       reply(WrapError(output.error()));
@@ -2231,9 +2238,16 @@ void FirebaseFirestoreHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
               }
               const auto& include_metadata_changes_arg =
                   std::get<bool>(encodable_include_metadata_changes_arg);
+              const auto& encodable_source_arg = args.at(3);
+              if (encodable_source_arg.IsNull()) {
+                reply(WrapError("source_arg unexpectedly null."));
+                return;
+              }
+              const ListenSource& source_arg =
+                  (ListenSource)encodable_source_arg.LongValue();
               api->DocumentReferenceSnapshot(
                   app_arg, parameters_arg, include_metadata_changes_arg,
-                  [reply](ErrorOr<std::string>&& output) {
+                  source_arg, [reply](ErrorOr<std::string>&& output) {
                     if (output.has_error()) {
                       reply(WrapError(output.error()));
                       return;

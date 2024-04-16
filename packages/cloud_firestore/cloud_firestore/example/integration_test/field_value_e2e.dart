@@ -29,6 +29,17 @@ void runFieldValueTests() {
         await doc.update({'foo': FieldValue.increment(1)});
         DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
         expect(snapshot.data()!['foo'], equals(3));
+        // Expect it to be a int
+        expect(snapshot.data()!['foo'], isA<int>());
+      });
+
+      testWidgets('increments a big number if it exists', (_) async {
+        DocumentReference<Map<String, dynamic>> doc =
+            await initializeTest('field-value-increment-exists');
+        await doc.set({'foo': 0});
+        await doc.update({'foo': FieldValue.increment(2148000000)});
+        DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
+        expect(snapshot.data()!['foo'], equals(2148000000));
       });
 
       testWidgets('decrements a number', (_) async {

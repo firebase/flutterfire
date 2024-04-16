@@ -1,3 +1,33 @@
+## 4.16.1
+
+ - **FIX**(firestore,android): lint warnings and deprecated API ([#12577](https://github.com/firebase/flutterfire/issues/12577)). ([1b6ef739](https://github.com/firebase/flutterfire/commit/1b6ef73935062a4fa2c43bb4ef9b6d080a3ca5b4))
+ - **FIX**(firestore,windows): improve memory management ([#12575](https://github.com/firebase/flutterfire/issues/12575)). ([7f10940b](https://github.com/firebase/flutterfire/commit/7f10940bef3ea17255c4e33663d152473874c25b))
+
+## 4.16.0
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+ - **FEAT**(firestore): allow query with range and inequality filters on multiple fields ([#12564](https://github.com/firebase/flutterfire/issues/12564)). ([00ae837f](https://github.com/firebase/flutterfire/commit/00ae837fecf893d8b1eda927fb7085a7d917e671))
+
+## 4.15.10
+
+ - Update a dependency to the latest release.
+
+## 4.15.9
+
+ - Update a dependency to the latest release.
+
+## 4.15.8
+
+ - **FIX**(firestore): fix an issue that would cause FieldValue.increment to be interpreted as double ([#12444](https://github.com/firebase/flutterfire/issues/12444)). ([e9823a41](https://github.com/firebase/flutterfire/commit/e9823a415bec0a46209608fdaf856c2413d46fbf))
+
+## 4.15.7
+
+ - **FIX**(firestore): fix an issue that would cause FieldValue.increment to not work for big int ([#12426](https://github.com/firebase/flutterfire/issues/12426)). ([a776dec5](https://github.com/firebase/flutterfire/commit/a776dec5e181b2656bfc659a23514d21930b5556))
+
+## 4.15.6
+
+ - **FIX**(firestore,windows): fix compilation issue on Windows ([#12375](https://github.com/firebase/flutterfire/issues/12375)). ([f24d0a76](https://github.com/firebase/flutterfire/commit/f24d0a76ff384cf40605ae59af705b2854e53ba7))
+
 ## 4.15.5
 
  - **FIX**(firestore,web): Propagate `FirebaseException` properly, fix `mergeFields` bug, fix `bytesLoaded` different type under different conditions ([#12334](https://github.com/firebase/flutterfire/issues/12334)). ([fdde75b0](https://github.com/firebase/flutterfire/commit/fdde75b02fe4bd4d40ce14798e7212eca7c8e557))

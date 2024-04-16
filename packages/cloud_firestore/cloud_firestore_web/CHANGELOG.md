@@ -1,3 +1,31 @@
+## 3.11.1
+
+ - Update a dependency to the latest release.
+
+## 3.11.0
+
+ - **FEAT**(web): remove the dependency on `package:js` in favor of `dart:js_interop` ([#12534](https://github.com/firebase/flutterfire/issues/12534)). ([d83f6327](https://github.com/firebase/flutterfire/commit/d83f632753707c974fef2ac8a7f9bf6cb8ba8758))
+
+## 3.10.10
+
+ - Update a dependency to the latest release.
+
+## 3.10.9
+
+ - Update a dependency to the latest release.
+
+## 3.10.8
+
+ - Update a dependency to the latest release.
+
+## 3.10.7
+
+ - Update a dependency to the latest release.
+
+## 3.10.6
+
+ - **FIX**(firestore,web): fix an issue where hot restart would throw an error in console ([#12382](https://github.com/firebase/flutterfire/issues/12382)). ([a5dc05da](https://github.com/firebase/flutterfire/commit/a5dc05daaba8baddbc59cd22ff84954f73f225c9))
+
 ## 3.10.5
 
  - **FIX**(firestore,web): Propagate `FirebaseException` properly, fix `mergeFields` bug, fix `bytesLoaded` different type under different conditions ([#12334](https://github.com/firebase/flutterfire/issues/12334)). ([fdde75b0](https://github.com/firebase/flutterfire/commit/fdde75b02fe4bd4d40ce14798e7212eca7c8e557))

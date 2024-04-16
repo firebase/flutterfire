@@ -4,6 +4,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:js_interop';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_web/firebase_auth_web.dart';
@@ -43,28 +44,28 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
     RecaptchaVerifierOnExpired? onExpired,
   }) : super() {
     String element;
-    Map<String, dynamic> parameters = {};
+    Map<String, JSAny> parameters = {};
 
     if (onSuccess != null) {
-      parameters['callback'] = (resp) {
+      parameters['callback'] = ((JSObject resp) {
         onSuccess();
-      };
+      }).toJS;
     }
 
     if (onExpired != null) {
-      parameters['expired-callback'] = () {
+      parameters['expired-callback'] = (() {
         onExpired();
-      };
+      }).toJS;
     }
 
     if (onError != null) {
-      parameters['error-callback'] = (Object error) {
+      parameters['error-callback'] = ((JSObject error) {
         onError(getFirebaseAuthException(error));
-      };
+      }).toJS;
     }
 
     if (container == null || container.isEmpty) {
-      parameters['size'] = 'invisible';
+      parameters['size'] = 'invisible'.toJS;
       web.Element? el =
           web.window.document.getElementById(_kInvisibleElementId);
 
@@ -79,15 +80,15 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
         throw StateError('No document element found');
       }
 
-      final childElement = web.window.document.createElement('div')
-        ..id = _kInvisibleElementId;
+      final childElement = web.window.document.createElement('div');
+      childElement.id = _kInvisibleElementId;
 
       documentElement.appendChild(childElement);
 
       element = _kInvisibleElementId;
     } else {
-      parameters['size'] = convertRecaptchaVerifierSize(size);
-      parameters['theme'] = convertRecaptchaVerifierTheme(theme);
+      parameters['size'] = convertRecaptchaVerifierSize(size).toJS;
+      parameters['theme'] = convertRecaptchaVerifierTheme(theme).toJS;
 
       assert(
         web.window.document.getElementById(container) != null,

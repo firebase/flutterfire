@@ -84,7 +84,10 @@ abstract class Query<T extends Object?> {
   Query<T> limitToLast(int limit);
 
   /// Notifies of query results at this location.
-  Stream<QuerySnapshot<T>> snapshots({bool includeMetadataChanges = false});
+  Stream<QuerySnapshot<T>> snapshots({
+    bool includeMetadataChanges = false,
+    ListenSource source = ListenSource.defaultSource,
+  });
 
   /// Creates and returns a new [Query] that's additionally sorted by the specified
   /// [field].
@@ -259,15 +262,6 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   /// Returns whether the current query has a "end" cursor query.
   bool _hasEndCursor() {
     return parameters['endAt'] != null || parameters['endBefore'] != null;
-  }
-
-  /// Returns whether the current operator is an inequality operator.
-  bool _isInequality(String operator) {
-    return operator == '<' ||
-        operator == '<=' ||
-        operator == '>' ||
-        operator == '>=' ||
-        operator == '!=';
   }
 
   bool isNotIn(String operator) {
@@ -460,9 +454,20 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   @override
   Stream<QuerySnapshot<Map<String, dynamic>>> snapshots({
     bool includeMetadataChanges = false,
+    ListenSource source = ListenSource.defaultSource,
   }) {
+    if (source == ListenSource.cache &&
+        defaultTargetPlatform == TargetPlatform.windows) {
+      throw UnimplementedError(
+        'Listening from cache is not supported on Windows',
+      );
+    }
+
     return _delegate
-        .snapshots(includeMetadataChanges: includeMetadataChanges)
+        .snapshots(
+          includeMetadataChanges: includeMetadataChanges,
+          source: source,
+        )
         .map((item) => _JsonQuerySnapshot(firestore, item));
   }
 
@@ -510,46 +515,6 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       FieldPath fieldPath =
           field is String ? FieldPath.fromString(field) : field as FieldPath;
       orders.add([fieldPath, descending]);
-    }
-
-    final List<List<dynamic>> conditions =
-        List<List<dynamic>>.from(parameters['where']);
-
-    if (conditions.isNotEmpty) {
-      for (final dynamic condition in conditions) {
-        dynamic conditionField = condition[0];
-        String operator = condition[1];
-
-        // Initial orderBy() parameter has to match every where() fieldPath parameter when
-        // inequality or 'not-in' operator is invoked
-        if (_isInequality(operator) || isNotIn(operator)) {
-          assert(
-            conditionField == orders[0][0],
-            'The initial orderBy() field "$orders[0][0]" has to be the same as '
-            'the where() field parameter "$conditionField" when an inequality operator is invoked.',
-          );
-        }
-
-        for (final dynamic order in orders) {
-          dynamic orderField = order[0];
-
-          // Any where() fieldPath parameter cannot match any orderBy() parameter when
-          // '==' operand is invoked
-          if (operator == '==') {
-            assert(
-              conditionField != orderField,
-              "The '$orderField' cannot be the same as your where() field parameter '$conditionField'.",
-            );
-          }
-
-          if (conditionField == FieldPath.documentId) {
-            assert(
-              orderField == FieldPath.documentId,
-              "'[FieldPath.documentId]' cannot be used in conjunction with a different orderBy() parameter.",
-            );
-          }
-        }
-      }
     }
 
     return _JsonQuery(firestore, _delegate.orderBy(orders));
@@ -716,7 +681,6 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       }
     }
 
-    dynamic hasInequality;
     bool hasIn = false;
     bool hasNotIn = false;
     bool hasNotEqualTo = false;
@@ -731,17 +695,6 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       dynamic field = condition[0]; // FieldPath or FieldPathType
       String operator = condition[1];
       dynamic value = condition[2];
-
-      // Initial orderBy() parameter has to match every where() fieldPath parameter when
-      // inequality operator is invoked
-      List<List<dynamic>> orders = List.from(parameters['orderBy']);
-      if (_isInequality(operator) && orders.isNotEmpty) {
-        assert(
-          field == orders[0][0],
-          "The initial orderBy() field '$orders[0][0]' has to be the same as "
-          "the where() field parameter '$field' when an inequality operator is invoked.",
-        );
-      }
 
       if (field != FieldPath.documentId && hasDocumentIdField) {
         assert(
@@ -841,18 +794,6 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
           !(hasArrayContains && hasArrayContainsAny),
           "You cannot use both 'array-contains-any' or 'array-contains' filters together.",
         );
-      }
-
-      if (_isInequality(operator)) {
-        if (hasInequality == null) {
-          hasInequality = field;
-        } else {
-          assert(
-            hasInequality == field,
-            'All where filters with an inequality (<, <=, >, or >=) must be '
-            "on the same field. But you have inequality filters on '$hasInequality' and '$field'.",
-          );
-        }
       }
     }
 
@@ -998,9 +939,15 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
   }
 
   @override
-  Stream<QuerySnapshot<T>> snapshots({bool includeMetadataChanges = false}) {
+  Stream<QuerySnapshot<T>> snapshots({
+    bool includeMetadataChanges = false,
+    ListenSource source = ListenSource.defaultSource,
+  }) {
     return _originalQuery
-        .snapshots(includeMetadataChanges: includeMetadataChanges)
+        .snapshots(
+          includeMetadataChanges: includeMetadataChanges,
+          source: source,
+        )
         .map(
           (snapshot) => _WithConverterQuerySnapshot<T>(
             snapshot,

@@ -691,17 +691,26 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
                                     [task removeObserverWithHandle:failureHandle];
                                     completion(NO, nil);
                                   }];
-      failureHandle =
-          [task observeStatus:FIRStorageTaskStatusFailure
-                      handler:^(FIRStorageTaskSnapshot *snapshot) {
-                        [task removeObserverWithHandle:successHandle];
-                        [task removeObserverWithHandle:failureHandle];
-                        if (snapshot.error && snapshot.error.code == FIRStorageErrorCodeCancelled) {
-                          completion(YES, [FLTFirebaseStoragePlugin parseTaskSnapshot:snapshot]);
-                        } else {
-                          completion(NO, nil);
-                        }
-                      }];
+      failureHandle = [task
+          observeStatus:FIRStorageTaskStatusFailure
+                handler:^(FIRStorageTaskSnapshot *snapshot) {
+                  [task removeObserverWithHandle:successHandle];
+                  [task removeObserverWithHandle:failureHandle];
+
+                  if (snapshot.error && snapshot.error && snapshot.error.userInfo) {
+                    // For UploadTask, the error code is found in the userInfo
+                    // We use it to match this:
+                    // https://github.com/firebase/firebase-ios-sdk/blob/main/FirebaseStorage/Sources/StorageError.swift#L37
+                    NSNumber *responseErrorCode = snapshot.error.userInfo[@"ResponseErrorCode"];
+                    if ([responseErrorCode integerValue] == FIRStorageErrorCodeCancelled ||
+                        snapshot.error.code == FIRStorageErrorCodeCancelled) {
+                      completion(YES, [FLTFirebaseStoragePlugin parseTaskSnapshot:snapshot]);
+                      return;
+                    }
+                  }
+
+                  completion(NO, nil);
+                }];
       [task cancel];
     } else {
       completion(NO, nil);

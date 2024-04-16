@@ -1,3 +1,25 @@
+## 2.15.0
+
+ - **FIX**(web): remove remaining references to `dart:html` ([#12601](https://github.com/firebase/flutterfire/issues/12601)). ([fbffedb6](https://github.com/firebase/flutterfire/commit/fbffedb65c180d29a07436af90b36ca56e97bfe7))
+ - **FEAT**: bump JS SDK to version 10.10.0 ([#12592](https://github.com/firebase/flutterfire/issues/12592)). ([e6d33f6c](https://github.com/firebase/flutterfire/commit/e6d33f6cf04753c1ea5bf53de0933b97b2103794))
+
+## 2.14.0
+
+ - **FEAT**(web): remove the dependency on `package:js` in favor of `dart:js_interop` ([#12534](https://github.com/firebase/flutterfire/issues/12534)). ([d83f6327](https://github.com/firebase/flutterfire/commit/d83f632753707c974fef2ac8a7f9bf6cb8ba8758))
+
+## 2.13.0
+
+ - **FEAT**: bump JS SDK to version 10.8.1 ([#12480](https://github.com/firebase/flutterfire/issues/12480)). ([db38220f](https://github.com/firebase/flutterfire/commit/db38220ff01c06c1bc49c15af787b9640012a259))
+
+## 2.12.0
+
+ - **FEAT**: update `web` package to 0.5.1 ([#12469](https://github.com/firebase/flutterfire/issues/12469)). ([f5c4354a](https://github.com/firebase/flutterfire/commit/f5c4354a66377da9d231c5e3fc7e955ddb7ef8cf))
+
+## 2.11.5
+
+ - **FIX**(core,web): fix compatibility with TrustedTypes ([#12383](https://github.com/firebase/flutterfire/issues/12383)). ([6c1f73d0](https://github.com/firebase/flutterfire/commit/6c1f73d0c8357db83e1ee81e084a3a5b531e0e0c))
+ - **FIX**(auth,web): lower SDK minimum version constraint to "3.2.0" ([#12369](https://github.com/firebase/flutterfire/issues/12369)). ([fa412b44](https://github.com/firebase/flutterfire/commit/fa412b448247224adedf2b770faeeea462f3c5d4))
+
 ## 2.11.4
 
  - **FIX**(core,web): remove unused import that could lead to compilation error ([#12285](https://github.com/firebase/flutterfire/issues/12285)). ([0e67a1a4](https://github.com/firebase/flutterfire/commit/0e67a1a466e7115e4cc1e1a0167c6c3f1122e432))

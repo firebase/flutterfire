@@ -128,16 +128,20 @@ class AuthPigeonFirebaseApp {
   AuthPigeonFirebaseApp({
     required this.appName,
     this.tenantId,
+    this.customAuthDomain,
   });
 
   String appName;
 
   String? tenantId;
 
+  String? customAuthDomain;
+
   Object encode() {
     return <Object?>[
       appName,
       tenantId,
+      customAuthDomain,
     ];
   }
 
@@ -146,6 +150,7 @@ class AuthPigeonFirebaseApp {
     return AuthPigeonFirebaseApp(
       appName: result[0]! as String,
       tenantId: result[1] as String?,
+      customAuthDomain: result[2] as String?,
     );
   }
 }

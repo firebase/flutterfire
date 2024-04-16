@@ -1,3 +1,31 @@
+## 14.8.1
+
+ - Update a dependency to the latest release.
+
+## 14.8.0
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
+## 14.7.21
+
+ - Update a dependency to the latest release.
+
+## 14.7.20
+
+ - Update a dependency to the latest release.
+
+## 14.7.19
+
+ - Update a dependency to the latest release.
+
+## 14.7.18
+
+ - Update a dependency to the latest release.
+
+## 14.7.17
+
+ - **FIX**(messaging,android): revert changes made to potential fix as it was causing ANR reports for users ([#12396](https://github.com/firebase/flutterfire/issues/12396)). ([07ef4879](https://github.com/firebase/flutterfire/commit/07ef487971edb23a670d2b1dd315c02542b1c848))
+
 ## 14.7.16
 
  - Update a dependency to the latest release.

@@ -48,7 +48,7 @@ android {
         namespace 'io.flutter.plugins.firebase.storage'
     }
 
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         minSdk 19

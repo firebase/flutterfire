@@ -198,10 +198,10 @@ commands can be run locally to highlight any issues before committing your code:
 
 ```bash
 # Run the analyze check
-melos run analyze
+melos analyze-ci
 
 # Format code
-melos run format
+melos format-ci
 ```
 
 Assuming all is successful, commit and push your code:

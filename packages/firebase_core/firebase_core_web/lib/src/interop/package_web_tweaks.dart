@@ -32,7 +32,6 @@ extension CreateScriptUrlWithoutArgs on web.TrustedTypePolicy {
 /// This extension allows setting a TrustedScriptURL as the src of a script element,
 /// which currently only accepts a string.
 extension TrustedTypeSrcAttribute on web.HTMLScriptElement {
-  ///
-  @JS('src')
-  external set srcTT(web.TrustedScriptURL value);
+  @JS('text')
+  external set trustedScript(web.TrustedScript value);
 }

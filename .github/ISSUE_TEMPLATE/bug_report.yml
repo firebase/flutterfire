@@ -1,0 +1,144 @@
+name: ⚠️ Bug Report
+description:
+  Report a bug with existing FlutterFire features
+title: "[PLUGIN_NAME_HERE]: <YOUR TITLE HERE>"
+labels: ["Needs Attention", "type: bug"]
+body:
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for this?
+      description: |
+        Please search to see if an issue already exists for the bug you encountered.
+      options:
+        - label: I have searched the existing issues.
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        
+  - type: dropdown
+    id: plugins
+    attributes:
+      label: Which plugins are affected?
+      multiple: true
+      options:
+        - Core
+        - Analytics
+        - App Check
+        - App Installations
+        - Auth
+        - Cloud Functions
+        - Crashlytics
+        - Database
+        - In-App Messaging
+        - Messaging
+        - ML Custom
+        - Performance
+        - Remote Config
+        - Storage
+        - Other
+
+  - type: dropdown
+    id: platforms
+    attributes:
+      label: Which platforms are affected?
+      multiple: true
+      options:
+        - Android
+        - iOS
+        - macOS
+        - Web
+        - Windows
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+  - type: textarea
+    attributes:
+      label: Description
+      description: |
+        Describe the issue. Explain what you _expected_ to happen and what
+        _actually_ happened.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Reproducing the issue
+      description: |
+        Please provide either **steps to reproduce** or a [**minimal reproducible example**](https://stackoverflow.com/help/minimal-reproducible-example).
+        Providing a minimal reproducible example will help us triage your issue
+        faster.
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+  - type: input
+    attributes:
+      label: Firebase Core version
+      description: What version of `firebase_core` has this issue?
+      placeholder: "2.27.0"
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Flutter Version
+      description: What version of Flutter is being used?
+      placeholder: "3.19.0"
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+  - type: textarea
+    attributes:
+      label: Relevant Log Output
+      description: |
+        Please copy and paste any relevant log output.
+      placeholder: |
+        Paste your logs here. Please redact any personally identifiable
+        information. This will be automatically formatted into code, so no
+        need for backticks.
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Flutter dependencies
+      description: Seeing your dependencies can help us debug versioning issues.
+      value: |
+        <!--- Look below for instructions on how to share your Flutter Dependencies. --->
+
+        <details>
+        <summary>Expand <code>Flutter dependencies</code> snippet</summary>
+        <br>
+
+        ```yaml
+
+        Replace this line with the contents of your `flutter pub deps -- --style=compact`.
+
+        ```
+
+        </details>
+    validations:
+      required: false
+
+  - type: textarea
+    id: comments
+    attributes:
+      label: Additional context and comments
+      description: |
+        Anything else you want to add for this issue?

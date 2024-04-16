@@ -1,3 +1,31 @@
+## 11.7.1
+
+ - **FIX**(web): remove remaining references to `dart:html` ([#12601](https://github.com/firebase/flutterfire/issues/12601)). ([fbffedb6](https://github.com/firebase/flutterfire/commit/fbffedb65c180d29a07436af90b36ca56e97bfe7))
+
+## 11.7.0
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
+## 11.6.11
+
+ - Update a dependency to the latest release.
+
+## 11.6.10
+
+ - Update a dependency to the latest release.
+
+## 11.6.9
+
+ - Update a dependency to the latest release.
+
+## 11.6.8
+
+ - Update a dependency to the latest release.
+
+## 11.6.7
+
+ - **FIX**(storage): `Task.cancel()` method wasn't properly updating `task.snapshot` and `cancel()` wasn't working in certain conditions. ([#12322](https://github.com/firebase/flutterfire/issues/12322)). ([c3ca5d10](https://github.com/firebase/flutterfire/commit/c3ca5d101b735e2203ca3d4e52f0b457794b3a47))
+
 ## 11.6.6
 
  - Update a dependency to the latest release.

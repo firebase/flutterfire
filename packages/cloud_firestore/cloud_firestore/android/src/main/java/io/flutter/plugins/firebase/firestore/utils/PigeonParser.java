@@ -14,6 +14,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenSource;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.Source;
 import io.flutter.plugins.firebase.firestore.GeneratedAndroidFirebaseFirestore;
@@ -113,6 +114,18 @@ public class PigeonParser {
         return GeneratedAndroidFirebaseFirestore.DocumentChangeType.REMOVED;
       default:
         throw new IllegalArgumentException("Unknown change type: " + type);
+    }
+  }
+
+  public static ListenSource parseListenSource(
+      GeneratedAndroidFirebaseFirestore.ListenSource source) {
+    switch (source) {
+      case DEFAULT_SOURCE:
+        return ListenSource.DEFAULT;
+      case CACHE:
+        return ListenSource.CACHE;
+      default:
+        throw new IllegalArgumentException("Unknown ListenSource value: " + source);
     }
   }
 
@@ -292,6 +305,7 @@ public class PigeonParser {
     }
     // Deserialize a FilterOperator
     String op = (String) map.get("op");
+    @SuppressWarnings("unchecked")
     List<Map<String, Object>> queries = (List<Map<String, Object>>) map.get("queries");
 
     // Map queries recursively

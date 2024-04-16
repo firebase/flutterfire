@@ -5,62 +5,84 @@
 @JS('firebase_performance')
 library firebase.performance_interop;
 
+import 'dart:js_interop';
+
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
-import 'package:js/js.dart';
 
 @JS()
+@staticInterop
 external PerformanceJsImpl getPerformance([AppJsImpl? app]);
 
 @JS()
+@staticInterop
 external PerformanceJsImpl initializePerformance(
   AppJsImpl app, [
   PerformanceSettingsJsImpl? settings,
 ]);
 
 @JS()
-external TraceJsImpl trace(PerformanceJsImpl performance, String traceName);
+@staticInterop
+external TraceJsImpl trace(PerformanceJsImpl performance, JSString traceName);
 
 @JS('Performance')
-abstract class PerformanceJsImpl {
+@staticInterop
+abstract class PerformanceJsImpl {}
+
+extension PerformanceJsImplExtension on PerformanceJsImpl {
   external AppJsImpl get app;
-  external bool dataCollectionEnabled;
-  external bool instrumentationEnabled;
+  external JSBoolean dataCollectionEnabled;
+  external JSBoolean instrumentationEnabled;
 }
 
 @JS('Trace')
+@staticInterop
 @anonymous
-class TraceJsImpl {
-  external String getAttribute(String attr);
-  external Object getAttributes();
-  external int getMetric(String metricName);
-  external void incrementMetric(String metricName, [int? num]);
-  external void putMetric(String metricName, int num);
-  external void putAttribute(String attr, String value);
-  external void removeAttribute(String attr);
+class TraceJsImpl {}
+
+extension TraceJsImplExtension on TraceJsImpl {
+  external JSString getAttribute(JSString attr);
+  external JSAny getAttributes();
+  external JSNumber getMetric(JSString metricName);
+  external void incrementMetric(JSString metricName, [JSNumber? num]);
+  external void putMetric(JSString metricName, JSNumber num);
+  external void putAttribute(JSString attr, JSString value);
+  external void removeAttribute(JSString attr);
   external void start();
-  external void record(int number, int duration, [RecordOptions? options]);
+  external void record(
+    JSNumber number,
+    JSNumber duration, [
+    RecordOptions? options,
+  ]);
   external void stop();
 }
 
 @JS()
+@staticInterop
 @anonymous
 class RecordOptions {
+  external factory RecordOptions({JSAny? metrics, JSAny? attributes});
+}
+
+extension RecordOptionsExtension on RecordOptions {
   /* map of metrics */
-  external Object? get metrics;
+  external JSAny? get metrics;
   /* map of attributes */
-  external Object? get attributes;
-  external factory RecordOptions({Object? metrics, Object? attributes});
+  external JSAny? get attributes;
 }
 
 @JS()
+@staticInterop
 @anonymous
 class PerformanceSettingsJsImpl {
-  external bool? get dataCollectionEnabled;
-  external set dataCollectionEnabled(bool? b);
-  external bool? get instrumentationEnabled;
-  external set instrumentationEnabled(bool? b);
   external factory PerformanceSettingsJsImpl({
-    bool? dataCollectionEnabled,
-    bool? instrumentationEnabled,
+    JSBoolean? dataCollectionEnabled,
+    JSBoolean? instrumentationEnabled,
   });
+}
+
+extension PerformanceSettingsJsImplExtension on PerformanceSettingsJsImpl {
+  external JSBoolean? get dataCollectionEnabled;
+  external set dataCollectionEnabled(JSBoolean? b);
+  external JSBoolean? get instrumentationEnabled;
+  external set instrumentationEnabled(JSBoolean? b);
 }

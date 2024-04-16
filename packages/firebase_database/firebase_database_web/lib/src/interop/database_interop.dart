@@ -8,164 +8,211 @@
 @JS('firebase_database')
 library firebase.database_interop;
 
+import 'dart:js_interop';
+
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
-    show PromiseJsImpl, Func1, AppJsImpl;
-import 'package:js/js.dart';
+    show AppJsImpl;
 
 part 'data_snapshot_interop.dart';
 part 'query_interop.dart';
 part 'reference_interop.dart';
 
 @JS()
-external ReferenceJsImpl child(ReferenceJsImpl parentRef, String path);
+@staticInterop
+external ReferenceJsImpl child(ReferenceJsImpl parentRef, JSString path);
 
 @JS()
+@staticInterop
 external void connectDatabaseEmulator(
-    DatabaseJsImpl database, String host, int port);
+    DatabaseJsImpl database, JSString host, JSNumber port);
 
 @JS()
+@staticInterop
 external void enableLogging(
-    [/* Func message || bool enabled */ loggerOrEnabled, bool persistent]);
+    [JSAny /* Func message || JSBoolean enabled */ loggerOrEnabled,
+    JSBoolean persistent]);
 
 @JS()
-external PromiseJsImpl<void> update(
+@staticInterop
+external JSPromise update(
   ReferenceJsImpl ref,
-  Object values,
+  JSAny? values,
 );
 // TODO - new API for implementing post web v9 SDK integration
 @JS()
+@staticInterop
 external void forceLongPolling();
 
 // TODO - new API for implementing post web v9 SDK integration
 @JS()
+@staticInterop
 external void forceWebSockets();
 
 @JS()
-external PromiseJsImpl<DataSnapshotJsImpl> get(QueryJsImpl query);
+@staticInterop
+external JSPromise /*DataSnapshotJsImpl*/ get(QueryJsImpl query);
 
 @JS()
-external DatabaseJsImpl getDatabase([AppJsImpl? app, String? databaseUrl]);
+@staticInterop
+external DatabaseJsImpl getDatabase([AppJsImpl? app, JSString? databaseUrl]);
 
 @JS()
+@staticInterop
 external void goOffline(DatabaseJsImpl database);
 
 @JS()
+@staticInterop
 external void goOnline(DatabaseJsImpl database);
 
 @JS()
-external dynamic increment(int delta);
+@staticInterop
+external JSAny increment(JSNumber delta);
 
 @JS()
+@staticInterop
 external void off([
   QueryJsImpl query,
-  String eventType,
-  dynamic Function(DataSnapshotJsImpl, [String previousChildName]) callback,
+  JSString eventType,
+  JSFunction callback,
+  /*JSAny Function(DataSnapshotJsImpl, [JSString previousChildName]) callback*/
 ]);
 
 @JS()
+@staticInterop
 external QueryConstraintJsImpl onChildAdded(
   QueryJsImpl query,
-  dynamic Function(DataSnapshotJsImpl, [String previousChildName]) callback,
-  dynamic Function(FirebaseError error) cancelCallback,
+  JSFunction callback,
+  // JSAny Function(DataSnapshotJsImpl, [JSString previousChildName]) callback,
+  JSFunction cancelCallback,
+  // JSAny Function(FirebaseError error) cancelCallback,
 );
 
 @JS()
+@staticInterop
 external QueryConstraintJsImpl onChildChanged(
   QueryJsImpl query,
-  dynamic Function(DataSnapshotJsImpl, [String previousChildName]) callback,
-  dynamic Function(FirebaseError error) cancelCallback,
+  JSFunction callback,
+  // JSAny Function(DataSnapshotJsImpl, [JSString previousChildName]) callback,
+  JSFunction cancelCallback,
+  // JSAny Function(FirebaseError error) cancelCallback,
 );
 
 @JS()
+@staticInterop
 external QueryConstraintJsImpl onChildMoved(
   QueryJsImpl query,
-  dynamic Function(DataSnapshotJsImpl, [String previousChildName]) callback,
-  dynamic Function(FirebaseError error) cancelCallback,
+  JSFunction callback,
+  // JSAny Function(DataSnapshotJsImpl, [JSString previousChildName]) callback,
+  JSFunction cancelCallback,
+  // JSAny Function(FirebaseError error) cancelCallback,
 );
 
 @JS()
+@staticInterop
 external QueryConstraintJsImpl onChildRemoved(
   QueryJsImpl query,
-  dynamic Function(DataSnapshotJsImpl, [String previousChildName]) callback,
-  dynamic Function(FirebaseError error) cancelCallback,
+  JSFunction callback,
+  // JSAny Function(DataSnapshotJsImpl, [JSString previousChildName]) callback,
+  JSFunction cancelCallback,
+  // JSAny Function(FirebaseError error) cancelCallback,
 );
 
 @JS()
+@staticInterop
 external OnDisconnectJsImpl onDisconnect(ReferenceJsImpl ref);
 
 @JS()
+@staticInterop
 external void onValue(
     QueryJsImpl query,
-    dynamic Function(DataSnapshotJsImpl) callback,
-    dynamic Function(FirebaseError error) cancelCallback,
+    JSFunction callback,
+    // JSAny Function(DataSnapshotJsImpl, [JSString previousChildName]) callback,
+    JSFunction cancelCallback,
+    // JSAny Function(FirebaseError error) cancelCallback,
     [ListenOptions options]);
 
 @JS()
-external QueryConstraintJsImpl orderByChild(String path);
+@staticInterop
+external QueryConstraintJsImpl orderByChild(JSString path);
 
 @JS()
+@staticInterop
 external QueryConstraintJsImpl orderByKey();
 
 @JS()
+@staticInterop
 external QueryConstraintJsImpl orderByPriority();
 
 @JS()
+@staticInterop
 external QueryConstraintJsImpl orderByValue();
 
 @JS()
-external ThenableReferenceJsImpl push(ReferenceJsImpl ref, dynamic value);
+@staticInterop
+external ThenableReferenceJsImpl push(ReferenceJsImpl ref, JSAny? value);
 
 @JS()
+@staticInterop
 external QueryJsImpl query(
   QueryJsImpl query,
   QueryConstraintJsImpl queryConstraint,
 );
 
 @JS()
-external ReferenceJsImpl ref(DatabaseJsImpl database, [String path]);
+@staticInterop
+external ReferenceJsImpl ref(DatabaseJsImpl database, [JSString path]);
 
 @JS()
+@staticInterop
 external ReferenceJsImpl refFromURL(
   DatabaseJsImpl database,
-  String url,
+  JSString url,
 );
 
 @JS()
-external PromiseJsImpl<void> remove(
+@staticInterop
+external JSPromise remove(
   ReferenceJsImpl ref,
 );
 
 @JS()
-external PromiseJsImpl<TransactionResultJsImpl> runTransaction(
+@staticInterop
+external JSPromise/*<TransactionResultJsImpl>*/ runTransaction(
   ReferenceJsImpl ref,
-  Function(dynamic currentData) transactionUpdate,
+  JSFunction transactionUpdate,
+  // Function(JSAny currentData) transactionUpdate,
   TransactionOptions options,
 );
 
 @JS()
-external dynamic serverTimestamp();
+@staticInterop
+external JSAny serverTimestamp();
 
 @JS()
-external PromiseJsImpl<void> set(ReferenceJsImpl ref, dynamic value);
+@staticInterop
+external JSPromise set(ReferenceJsImpl ref, JSAny? value);
 
 @JS()
-external PromiseJsImpl<void> setPriority(
-    ReferenceJsImpl ref, /* string | int | null */ dynamic priority);
+@staticInterop
+external JSPromise setPriority(
+    ReferenceJsImpl ref, /* JSString | JSNumber | null */ JSAny? priority);
 
 @JS()
-external PromiseJsImpl<void> setWithPriority(ReferenceJsImpl ref, dynamic value,
-    /* string | int | null */ dynamic priority);
+@staticInterop
+external JSPromise setWithPriority(ReferenceJsImpl ref, JSAny? value,
+    /* JSString | JSNumber | null */ JSAny? priority);
 
 @JS()
+@staticInterop
 @anonymous
 abstract class TransactionOptions {
+  external factory TransactionOptions({JSBoolean applyLocally});
+
   /// By default, events are raised each time the transaction update function runs.
   /// So if it is run multiple times, you may see intermediate states. You can set
   /// this to false to suppress these intermediate states and instead wait until
   /// the transaction has completed before events are raised.
-  external static bool get applyLocally;
-
-  external factory TransactionOptions({bool applyLocally});
+  external static JSBoolean get applyLocally;
 }
 
 // ignore: avoid_classes_with_only_static_members
@@ -175,101 +222,135 @@ abstract class TransactionOptions {
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.database#.ServerValue>.
 @JS()
+@staticInterop
 abstract class ServerValue {
-  external static Object get TIMESTAMP;
+  external static JSAny get TIMESTAMP;
 }
 
 @JS('Database')
-abstract class DatabaseJsImpl {
+@staticInterop
+abstract class DatabaseJsImpl {}
+
+extension DatabaseJsImplExtension on DatabaseJsImpl {
   external AppJsImpl get app;
   external set app(AppJsImpl a);
-  external String get type;
+  external JSString get type;
 }
 
 @JS('QueryConstraint')
-abstract class QueryConstraintJsImpl {
-  external String get type;
+@staticInterop
+abstract class QueryConstraintJsImpl {}
+
+extension QueryConstraintJsImplExtension on QueryConstraintJsImpl {
+  external JSString get type;
 }
 
 @JS('OnDisconnect')
-abstract class OnDisconnectJsImpl {
-  external PromiseJsImpl<void> cancel([void Function(dynamic) onComplete]);
+@staticInterop
+abstract class OnDisconnectJsImpl {}
 
-  external PromiseJsImpl<void> remove([void Function(dynamic) onComplete]);
+extension OnDisconnectJsImplExtension on OnDisconnectJsImpl {
+  external JSPromise cancel([
+    JSFunction onComplete,
+    //void Function(JSAny) onComplete
+  ]);
 
-  external PromiseJsImpl<void> set(value, [void Function(dynamic) onComplete]);
+  external JSPromise remove([
+    JSFunction onComplete,
+    //void Function(JSAny) onComplete
+  ]);
 
-  external PromiseJsImpl<void> setWithPriority(
-    value,
-    priority,
+  external JSPromise set(
+    JSAny? value, [
+    JSFunction onComplete,
+    //void Function(JSAny) onComplete
+  ]);
+
+  external JSPromise setWithPriority(
+    JSAny? value,
+    JSAny? priority,
   );
 
-  external PromiseJsImpl<void> update(
-    values,
+  external JSPromise update(
+    JSAny? values,
   );
 }
 
 @JS('ThenableReference')
-abstract class ThenableReferenceJsImpl extends ReferenceJsImpl
-    implements PromiseJsImpl<ReferenceJsImpl> {
-  @override
-  external PromiseJsImpl<void> then([Func1? onResolve, Func1? onReject]);
+@staticInterop
+abstract class ThenableReferenceJsImpl extends ReferenceJsImpl {}
+
+extension ThenableReferenceJsImplExtension on ThenableReferenceJsImpl {
+  external JSPromise then([JSFunction? onResolve, JSFunction? onReject]);
 }
 
 @JS()
+@staticInterop
 @anonymous
 class TransactionJsImpl {
-  external bool get committed;
-
-  external DataSnapshotJsImpl get snapshot;
-
   external factory TransactionJsImpl({
-    bool? committed,
+    JSBoolean? committed,
     DataSnapshotJsImpl? snapshot,
   });
 }
 
-@JS()
-@anonymous
-abstract class ListenOptions {
-  // Whether to remove the listener after its first invocation.
-  external static bool get onlyOnce;
+extension TransactionJsImplExtension on TransactionJsImpl {
+  external JSBoolean get committed;
 
-  external factory ListenOptions({bool onlyOnce});
+  external DataSnapshotJsImpl get snapshot;
 }
 
 @JS()
+@staticInterop
 @anonymous
-abstract class FirebaseError {
-  external String get code;
-  external String get message;
-  external String get name;
-  external String get stack;
+abstract class ListenOptions {
+  external factory ListenOptions({JSBoolean onlyOnce});
+
+  external static JSBoolean get onlyOnce;
+}
+
+@JS()
+@staticInterop
+@anonymous
+abstract class FirebaseError {}
+
+extension FirebaseErrorExtension on FirebaseError {
+  external JSString get code;
+  external JSString get message;
+  external JSString get name;
+  external JSString get stack;
 
   /// Not part of the core JS API, but occasionally exposed in error objects.
-  external Object get serverResponse;
+  external JSAny get serverResponse;
 }
 
 // We type those 7 functions as Object to avoid an issue with dart2js compilation
 // in release mode
 // Discussed internally with dart2js team
 @JS()
-external Object get endAt;
+@staticInterop
+external QueryConstraintJsImpl endAt(JSAny? value, [JSString? key]);
 
 @JS()
-external Object get endBefore;
+@staticInterop
+external QueryConstraintJsImpl endBefore(JSAny? value, [JSString? key]);
 
 @JS()
-external Object get equalTo;
+@staticInterop
+external QueryConstraintJsImpl equalTo(JSAny? value, [JSString? key]);
 
 @JS()
-external Object get startAfter;
+@staticInterop
+external QueryConstraintJsImpl startAfter(JSAny? value, [JSString? key]);
 
 @JS()
-external Object get startAt;
+@staticInterop
+external QueryConstraintJsImpl startAt(JSAny? value, [JSString? key]);
 
 @JS()
-external Object get limitToFirst;
+@staticInterop
+external QueryConstraintJsImpl limitToFirst(JSNumber limit);
 
 @JS()
-external Object get limitToLast;
+@staticInterop
+external QueryConstraintJsImpl limitToLast(JSNumber limit);

@@ -73,68 +73,72 @@ class UserWeb extends UserPlatform {
   @override
   Future<void> delete() async {
     _assertIsSignedOut(auth);
-    try {
-      await _webUser.delete();
-    } catch (e) {
-      throw getFirebaseAuthException(e);
-    }
+    await guardAuthExceptions(_webUser.delete);
   }
 
   @override
   Future<String> getIdToken(bool forceRefresh) async {
     _assertIsSignedOut(auth);
-
-    try {
-      return await _webUser.getIdToken(forceRefresh);
-    } catch (e) {
-      throw getFirebaseAuthException(e);
-    }
+    final token = await guardAuthExceptions(
+      () => _webUser.getIdToken(forceRefresh),
+    );
+    return token;
   }
 
   @override
   Future<IdTokenResult> getIdTokenResult(bool forceRefresh) async {
     _assertIsSignedOut(auth);
-    return convertWebIdTokenResult(
-        await _webUser.getIdTokenResult(forceRefresh));
+    final result = convertWebIdTokenResult(
+      await guardAuthExceptions(
+        () => _webUser.getIdTokenResult(forceRefresh),
+      ),
+    );
+    return result;
   }
 
   @override
   Future<UserCredentialPlatform> linkWithCredential(
       AuthCredential credential) async {
     _assertIsSignedOut(auth);
-    try {
-      return UserCredentialWeb(
-        auth,
-        await _webUser
-            .linkWithCredential(convertPlatformCredential(credential)),
-        _webAuth,
-      );
-    } catch (e) {
-      throw getFirebaseAuthException(e, _webAuth);
-    }
+    final userCredential = await guardAuthExceptions(
+      () => _webUser.linkWithCredential(
+        convertPlatformCredential(credential),
+      ),
+      auth: _webAuth,
+    );
+
+    return UserCredentialWeb(
+      auth,
+      userCredential,
+      _webAuth,
+    );
   }
 
   @override
   Future<UserCredentialPlatform> linkWithPopup(AuthProvider provider) async {
     _assertIsSignedOut(auth);
-    try {
-      return UserCredentialWeb(
-        auth,
-        await _webUser.linkWithPopup(convertPlatformAuthProvider(provider)),
-        _webAuth,
-      );
-    } catch (e) {
-      throw getFirebaseAuthException(e, _webAuth);
-    }
+    final userCredential = await guardAuthExceptions(
+      () => _webUser.linkWithPopup(
+        convertPlatformAuthProvider(provider),
+      ),
+      auth: _webAuth,
+    );
+
+    return UserCredentialWeb(
+      auth,
+      userCredential,
+      _webAuth,
+    );
   }
 
   @override
   Future<void> linkWithRedirect(AuthProvider provider) async {
-    try {
-      return _webUser.linkWithRedirect(convertPlatformAuthProvider(provider));
-    } catch (e) {
-      throw getFirebaseAuthException(e, _webAuth);
-    }
+    await guardAuthExceptions(
+      () => _webUser.linkWithRedirect(
+        convertPlatformAuthProvider(provider),
+      ),
+      auth: _webAuth,
+    );
   }
 
   @override
@@ -143,167 +147,166 @@ class UserWeb extends UserPlatform {
     RecaptchaVerifierFactoryPlatform applicationVerifier,
   ) async {
     _assertIsSignedOut(auth);
-    try {
-      // Do not inline - type is not inferred & error is thrown.
-      auth_interop.RecaptchaVerifier verifier = applicationVerifier.delegate;
 
-      return ConfirmationResultWeb(
-        auth,
-        await _webUser.linkWithPhoneNumber(phoneNumber, verifier),
-        _webAuth,
-      );
-    } catch (e) {
-      throw getFirebaseAuthException(e, _webAuth);
-    }
+    // Do not inline - type is not inferred & error is thrown.
+    auth_interop.RecaptchaVerifier verifier = applicationVerifier.delegate;
+    final confirmationResult = await guardAuthExceptions(
+      () => _webUser.linkWithPhoneNumber(phoneNumber, verifier),
+      auth: _webAuth,
+    );
+    return ConfirmationResultWeb(
+      auth,
+      confirmationResult,
+      _webAuth,
+    );
   }
 
   @override
   Future<UserCredentialPlatform> reauthenticateWithCredential(
       AuthCredential credential) async {
     _assertIsSignedOut(auth);
-    try {
-      auth_interop.UserCredential userCredential = await _webUser
-          .reauthenticateWithCredential(convertPlatformCredential(credential)!);
-      return UserCredentialWeb(auth, userCredential, _webAuth);
-    } catch (e) {
-      throw getFirebaseAuthException(e, _webAuth);
-    }
+
+    auth_interop.UserCredential userCredential = await guardAuthExceptions(
+      () => _webUser.reauthenticateWithCredential(
+        convertPlatformCredential(credential)!,
+      ),
+      auth: _webAuth,
+    );
+    return UserCredentialWeb(auth, userCredential, _webAuth);
   }
 
   @override
   Future<UserCredentialPlatform> reauthenticateWithPopup(
       AuthProvider provider) async {
     _assertIsSignedOut(auth);
-    try {
-      auth_interop.UserCredential userCredential = await _webUser
-          .reauthenticateWithPopup(convertPlatformAuthProvider(provider));
-      return UserCredentialWeb(auth, userCredential, _webAuth);
-    } catch (e) {
-      throw getFirebaseAuthException(e, _webAuth);
-    }
+
+    auth_interop.UserCredential userCredential = await guardAuthExceptions(
+      () => _webUser.reauthenticateWithPopup(
+        convertPlatformAuthProvider(provider),
+      ),
+      auth: _webAuth,
+    );
+    return UserCredentialWeb(auth, userCredential, _webAuth);
   }
 
   @override
   Future<void> reauthenticateWithRedirect(AuthProvider provider) async {
     _assertIsSignedOut(auth);
-    try {
-      return _webUser
-          .reauthenticateWithRedirect(convertPlatformAuthProvider(provider));
-    } catch (e) {
-      throw getFirebaseAuthException(e);
-    }
+
+    return guardAuthExceptions(
+      () => _webUser.reauthenticateWithRedirect(
+        convertPlatformAuthProvider(provider),
+      ),
+    );
   }
 
   @override
   Future<void> reload() async {
     _assertIsSignedOut(auth);
-
-    try {
-      await _webUser.reload();
-      auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
-    } catch (e) {
-      throw getFirebaseAuthException(e, _webAuth);
-    }
+    await guardAuthExceptions(_webUser.reload, auth: _webAuth);
+    auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
   }
 
   @override
   Future<void> sendEmailVerification(ActionCodeSettings? actionCodeSettings) {
     _assertIsSignedOut(auth);
 
-    try {
-      return _webUser.sendEmailVerification(
+    return guardAuthExceptions(
+      () => _webUser.sendEmailVerification(
         convertPlatformActionCodeSettings(actionCodeSettings),
-      );
-    } catch (e) {
-      throw getFirebaseAuthException(e, _webAuth);
-    }
+      ),
+      auth: _webAuth,
+    );
   }
 
   @override
   Future<UserPlatform> unlink(String providerId) async {
     _assertIsSignedOut(auth);
 
-    try {
-      return UserWeb(
-        auth,
-        multiFactor,
-        await _webUser.unlink(providerId),
-        _webAuth,
-      );
-    } catch (e) {
-      throw getFirebaseAuthException(e, _webAuth);
-    }
+    final userPlatform = await guardAuthExceptions(
+      () => _webUser.unlink(providerId),
+      auth: _webAuth,
+    );
+
+    return UserWeb(
+      auth,
+      multiFactor,
+      userPlatform,
+      _webAuth,
+    );
   }
 
   @override
   Future<void> updateEmail(String newEmail) async {
     _assertIsSignedOut(auth);
 
-    try {
-      await _webUser.updateEmail(newEmail);
-      await _webUser.reload();
-      auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
-    } catch (e) {
-      throw getFirebaseAuthException(e, _webAuth);
-    }
+    await guardAuthExceptions(
+      () => _webUser.updateEmail(newEmail),
+      auth: _webAuth,
+    );
+    await guardAuthExceptions(_webUser.reload);
+    auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
   }
 
   @override
   Future<void> updatePassword(String newPassword) async {
     _assertIsSignedOut(auth);
 
-    try {
-      await _webUser.updatePassword(newPassword);
-      await _webUser.reload();
-      auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
-    } catch (e) {
-      throw getFirebaseAuthException(e, _webAuth);
-    }
+    await guardAuthExceptions(
+      () => _webUser.updatePassword(newPassword),
+      auth: _webAuth,
+    );
+    await guardAuthExceptions(_webUser.reload);
+    auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
   }
 
   @override
   Future<void> updatePhoneNumber(PhoneAuthCredential phoneCredential) async {
     _assertIsSignedOut(auth);
 
-    try {
-      await _webUser
-          .updatePhoneNumber(convertPlatformCredential(phoneCredential));
-      await _webUser.reload();
-      auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
-    } catch (e) {
-      throw getFirebaseAuthException(e, _webAuth);
-    }
+    await guardAuthExceptions(
+      () => _webUser.updatePhoneNumber(
+        convertPlatformCredential(phoneCredential),
+      ),
+      auth: _webAuth,
+    );
+    await guardAuthExceptions(
+      _webUser.reload,
+      auth: _webAuth,
+    );
+    auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
   }
 
   @override
   Future<void> updateProfile(Map<String, String?> profile) async {
     _assertIsSignedOut(auth);
 
-    try {
-      auth_interop.UserProfile newProfile;
+    auth_interop.UserProfile newProfile;
 
-      if (profile.containsKey('displayName') &&
-          profile.containsKey('photoURL')) {
-        newProfile = auth_interop.UserProfile(
-          displayName: profile['displayName']?.toJS,
-          photoURL: profile['photoURL']?.toJS,
-        );
-      } else if (profile.containsKey('displayName')) {
-        newProfile = auth_interop.UserProfile(
-          displayName: profile['displayName']?.toJS,
-        );
-      } else {
-        newProfile = auth_interop.UserProfile(
-          photoURL: profile['photoURL']?.toJS,
-        );
-      }
-
-      await _webUser.updateProfile(newProfile);
-      await _webUser.reload();
-      auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
-    } catch (e) {
-      throw getFirebaseAuthException(e, _webAuth);
+    if (profile.containsKey('displayName') && profile.containsKey('photoURL')) {
+      newProfile = auth_interop.UserProfile(
+        displayName: profile['displayName']?.toJS,
+        photoURL: profile['photoURL']?.toJS,
+      );
+    } else if (profile.containsKey('displayName')) {
+      newProfile = auth_interop.UserProfile(
+        displayName: profile['displayName']?.toJS,
+      );
+    } else {
+      newProfile = auth_interop.UserProfile(
+        photoURL: profile['photoURL']?.toJS,
+      );
     }
+
+    await guardAuthExceptions(
+      () => _webUser.updateProfile(newProfile),
+      auth: _webAuth,
+    );
+    await guardAuthExceptions(
+      _webUser.reload,
+      auth: _webAuth,
+    );
+    auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
   }
 
   @override
@@ -312,14 +315,14 @@ class UserWeb extends UserPlatform {
     ActionCodeSettings? actionCodeSettings,
   ]) async {
     _assertIsSignedOut(auth);
-    try {
-      await _webUser.verifyBeforeUpdateEmail(
+
+    await guardAuthExceptions(
+      () => _webUser.verifyBeforeUpdateEmail(
         newEmail,
         convertPlatformActionCodeSettings(actionCodeSettings),
-      );
-    } catch (e) {
-      throw getFirebaseAuthException(e, _webAuth);
-    }
+      ),
+      auth: _webAuth,
+    );
   }
 }
 

@@ -10,9 +10,11 @@ import static io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlug
 
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.ListenSource;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.SnapshotListenOptions;
 import io.flutter.plugin.common.EventChannel.EventSink;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
 import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
@@ -28,21 +30,29 @@ public class QuerySnapshotsStreamHandler implements StreamHandler {
   MetadataChanges metadataChanges;
   DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior;
 
+  ListenSource source;
+
   public QuerySnapshotsStreamHandler(
       Query query,
       Boolean includeMetadataChanges,
-      DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior) {
+      DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior,
+      ListenSource source) {
     this.query = query;
     this.metadataChanges =
         includeMetadataChanges ? MetadataChanges.INCLUDE : MetadataChanges.EXCLUDE;
     this.serverTimestampBehavior = serverTimestampBehavior;
+    this.source = source;
   }
 
   @Override
   public void onListen(Object arguments, EventSink events) {
+    SnapshotListenOptions.Builder optionsBuilder = new SnapshotListenOptions.Builder();
+    optionsBuilder.setMetadataChanges(metadataChanges);
+    optionsBuilder.setSource(source);
+
     listenerRegistration =
         query.addSnapshotListener(
-            metadataChanges,
+            optionsBuilder.build(),
             (querySnapshot, exception) -> {
               if (exception != null) {
                 Map<String, String> exceptionDetails = ExceptionConverter.createDetails(exception);

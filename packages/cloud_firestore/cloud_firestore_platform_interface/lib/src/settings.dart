@@ -25,7 +25,6 @@ class Settings {
   static const int CACHE_SIZE_UNLIMITED = -1;
 
   /// Attempts to enable persistent storage, if possible.
-  /// This setting has no effect on Web, for Web use [FirebaseFirestore.enablePersistence] instead.
   final bool? persistenceEnabled;
 
   /// The hostname to connect to.

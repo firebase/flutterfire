@@ -27,14 +27,13 @@ class ConfirmationResultWeb extends ConfirmationResultPlatform {
 
   @override
   Future<UserCredentialPlatform> confirm(String verificationCode) async {
-    try {
-      return UserCredentialWeb(
-        _auth,
-        await _webConfirmationResult.confirm(verificationCode),
-        _webAuth,
-      );
-    } catch (e) {
-      throw getFirebaseAuthException(e);
-    }
+    final userCredential = await guardAuthExceptions(
+      () => _webConfirmationResult.confirm(verificationCode),
+    );
+    return UserCredentialWeb(
+      _auth,
+      userCredential,
+      _webAuth,
+    );
   }
 }

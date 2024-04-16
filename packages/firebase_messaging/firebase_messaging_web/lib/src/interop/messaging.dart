@@ -9,7 +9,6 @@ import 'dart:async';
 import 'dart:js_interop';
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
-import 'package:js/js.dart';
 
 import 'messaging_interop.dart' as messaging_interop;
 
@@ -80,13 +79,13 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
     StreamController<MessagePayload>? _controller = controller;
     if (_controller == null) {
       _controller = StreamController.broadcast(sync: true);
-      final nextWrapper = allowInterop((JSAny payload) {
+      final nextWrapper = (JSAny payload) {
         _controller!.add(MessagePayload._fromJsObject(
             payload as messaging_interop.MessagePayloadJsImpl));
-      });
-      final errorWrapper = allowInterop((JSError e) {
+      };
+      final errorWrapper = (JSError e) {
         _controller!.addError(e);
-      });
+      };
 
       messaging_interop.onMessage(
           jsObject,
@@ -121,7 +120,9 @@ class MessagePayload
   NotificationPayload? get notification => jsObject.notification == null
       ? null
       : NotificationPayload._fromJsObject(jsObject.notification!);
-  Map<String, dynamic>? get data => dartify(jsObject.data);
+  Map<String, dynamic>? get data =>
+      (jsObject.data?.dartify() as Map<Object?, Object?>?)
+          ?.cast<String, dynamic>();
   String? get from => jsObject.from?.toDart;
 }
 

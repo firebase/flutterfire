@@ -7,56 +7,65 @@
 @JS('firebase_analytics')
 library firebase_interop.analytics;
 
-import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
+import 'dart:js_interop';
+
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
-import 'package:js/js.dart';
-
 @JS()
+@staticInterop
 external AnalyticsJsImpl getAnalytics([AppJsImpl? app]);
 
 @JS()
+@staticInterop
 external AnalyticsJsImpl initializeAnalytics([AppJsImpl app]);
 
 @JS()
-external PromiseJsImpl<bool> isSupported();
+@staticInterop
+external JSPromise /* bool */ isSupported();
 
 @JS()
+@staticInterop
 external void logEvent(
   AnalyticsJsImpl analytics,
-  String eventName,
-  dynamic parameters,
-  AnalyticsCallOptions? callOptions,
+  JSString eventName,
+  JSAny? parameters,
+  JSObject? callOptions,
 );
 
 @JS()
+@staticInterop
+external void setConsent(
+  // https://firebase.google.com/docs/reference/js/analytics.consentsettings.md#consentsettings_interface
+  JSAny? consentSettings,
+);
+
+@JS()
+@staticInterop
 external void setAnalyticsCollectionEnabled(
   AnalyticsJsImpl analytics,
-  bool enabled,
+  JSBoolean enabled,
 );
 
 @JS()
-external void setCurrentScreen(
-  AnalyticsJsImpl analytics,
-  String? screenName,
-  AnalyticsCallOptions? callOptions,
-);
-
-@JS()
+@staticInterop
 external void setUserId(
   AnalyticsJsImpl analytics,
-  String? id,
-  AnalyticsCallOptions? callOptions,
+  JSString? id,
+  JSObject? callOptions,
 );
 
 @JS()
+@staticInterop
 external void setUserProperties(
   AnalyticsJsImpl analytics,
-  dynamic property,
-  AnalyticsCallOptions? callOptions,
+  JSAny? property,
+  JSObject? callOptions,
 );
 
 @JS('Analytics')
-abstract class AnalyticsJsImpl {
+@staticInterop
+abstract class AnalyticsJsImpl {}
+
+extension AnalyticsJsImplExtension on AnalyticsJsImpl {
   external AppJsImpl get app;
 }

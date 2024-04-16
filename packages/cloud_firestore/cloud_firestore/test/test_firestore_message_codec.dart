@@ -60,12 +60,12 @@ class TestFirestoreMessageCodec extends FirestoreMessageCodec {
         );
       case _kFirestoreInstance:
         String appName = readValue(buffer)! as String;
-        String databaseURL = readValue(buffer)! as String;
+        String databaseId = readValue(buffer)! as String;
         readValue(buffer);
         final FirebaseApp app = Firebase.app(appName);
         return MethodChannelFirebaseFirestore(
           app: app,
-          databaseURL: databaseURL,
+          databaseId: databaseId,
         );
       case _kFirestoreQuery:
         String appName = readValue(buffer)! as String;
@@ -73,7 +73,7 @@ class TestFirestoreMessageCodec extends FirestoreMessageCodec {
             readValue(buffer)! as Map<dynamic, dynamic>;
         final FirebaseApp app = Firebase.app(appName);
         return MethodChannelQuery(
-          MethodChannelFirebaseFirestore(app: app, databaseURL: '(default)'),
+          MethodChannelFirebaseFirestore(app: app, databaseId: '(default)'),
           values['path'],
           FirestorePigeonFirebaseApp(
             appName: "['DEFAULT']",
