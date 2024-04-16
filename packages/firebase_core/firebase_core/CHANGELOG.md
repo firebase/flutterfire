@@ -1,3 +1,7 @@
+## 2.30.0
+
+ - **FEAT**: bump Firebase iOS SDK to `10.24.0` ([#12626](https://github.com/firebase/flutterfire/issues/12626)). ([b39c0e25](https://github.com/firebase/flutterfire/commit/b39c0e258233438acf368da891102784b7af2542))
+
 ## 2.29.0
 
  - **FEAT**: bump Android SDK to version 32.8.0 ([#12584](https://github.com/firebase/flutterfire/issues/12584)). ([a81d9104](https://github.com/firebase/flutterfire/commit/a81d9104f72e88e917612ab7f11ba7ed6b1bdd76))

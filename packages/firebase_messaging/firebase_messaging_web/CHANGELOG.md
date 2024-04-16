@@ -1,3 +1,7 @@
+## 3.8.2
+
+ - Update a dependency to the latest release.
+
 ## 3.8.1
 
  - **FIX**(messaging,web): `MessagePayload.data` can be `null` ([#12605](https://github.com/firebase/flutterfire/issues/12605)). ([95b95601](https://github.com/firebase/flutterfire/commit/95b9560189da0fa7fb1478988983e4a6af070c04))
