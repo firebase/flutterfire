@@ -21,7 +21,6 @@ void setupExceptionTests() {
         }
 
         final cases = [
-          // [message, convertedCode]
           ['Capital small', 'unknown'],
           [null, 'unknown'],
           ['Index not defined', 'index-not-defined'],
