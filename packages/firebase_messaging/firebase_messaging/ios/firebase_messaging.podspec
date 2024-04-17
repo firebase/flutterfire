@@ -32,6 +32,10 @@ Pod::Spec.new do |s|
 
   s.dependency 'Flutter'
 
+  s.resource_bundles = {
+      "#{s.module_name}_Privacy" => 'Resources/PrivacyManifest.xcprivacy'
+  }
+
   s.dependency 'firebase_core'
   s.dependency 'Firebase/Messaging', firebase_sdk_version
   s.static_framework = true
