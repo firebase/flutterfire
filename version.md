@@ -1,3 +1,38 @@
+--- JSON Data
+{
+    "1.0.0": {
+        "firebase_core": "2.30.0",
+        "firebase_auth": "4.0.0",
+        "cloud_firestore": "3.0.0",
+        "firebase_database": "10.0.0",
+        "firebase_storage": "10.0.0",
+        "firebase_messaging": "11.0.0",
+        "firebase_crashlytics": "3.0.0",
+        "firebase_performance": "2.0.0",
+        "firebase_remote_config": "4.0.0",
+        "firebase_analytics": "10.0.0",
+        "firebase_in_app_messaging": "1.0.0",
+        "firebase_app_check": "1.0.0",
+        "firebase_ml_vision": "1.0.0"
+    },
+    "1.1.0": {
+        "firebase_core": "2.30.0",
+        "firebase_auth": "4.0.0",
+        "cloud_firestore": "3.0.0",
+        "firebase_database": "10.0.0",
+        "firebase_storage": "10.0.0",
+        "firebase_messaging": "11.0.0",
+        "firebase_crashlytics": "3.0.0",
+        "firebase_performance": "2.0.0",
+        "firebase_remote_config": "4.0.0",
+        "firebase_analytics": "10.0.0",
+        "firebase_in_app_messaging": "1.0.0",
+        "firebase_app_check": "1.0.0",
+        "firebase_ml_vision": "1.0.0"
+    }
+}
+---
+
 # FlutterFire Compatible Versions
 
 This document is listing all the compatible versions of the FlutterFire plugins. This document is updated whenever a new version of the FlutterFire plugins is released.
