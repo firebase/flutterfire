@@ -33,7 +33,7 @@ void setupExceptionTests() {
 
           expect(
             converted.message,
-            message,
+            message ?? '',
             reason: '[$i] Failed message check',
           );
           expect(
