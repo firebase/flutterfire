@@ -11,7 +11,7 @@ import 'package:tests/firebase_options.dart';
 import 'data_snapshot_e2e.dart';
 import 'database_e2e.dart';
 import 'database_reference_e2e.dart';
-import 'exception.dart';
+import 'web_only_stub.dart' if (dart.library.js_interop) 'web_only.dart';
 import 'firebase_database_configuration_e2e.dart';
 import 'query_e2e.dart';
 
@@ -43,7 +43,7 @@ void main() {
     setupDatabaseReferenceTests();
     setupQueryTests();
     setupDataSnapshotTests();
-    setupExceptionTests();
+    setupWebOnlyTests();
     // TODO(ehesp): Fix broken tests
     // runOnDisconnectTests();
   });

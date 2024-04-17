@@ -9,7 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:firebase_database_web/firebase_database_web.dart';
 
-void setupExceptionTests() {
+void setupWebOnlyTests() {
   group(
     'web',
     () {
