@@ -4,7 +4,7 @@ This document is listing all the compatible versions of the FlutterFire plugins.
 
 # Versions
 
-## [Flutter BoM 0.1.0 (2024-04-16)](https://github.com/firebase/flutterfire/blob/master/CHANGELOG.md#2024-04-16)
+## [Flutter BoM 0.1.0 (2024-04-18)](https://github.com/firebase/flutterfire/blob/master/CHANGELOG.md#2024-04-18)
 
 <!--- When ready can be included
 Install this version using FlutterFire CLI

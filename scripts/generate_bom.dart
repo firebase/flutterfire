@@ -44,20 +44,23 @@ void main(List<String> arguments) async {
 
   // Fetch native versions
   String androidSdkVersion = await getSdkVersion(
-    r"awk -F '=' '/FirebaseSDKVersion/{print $2}' $VERSION_FILE",
     androidVersionFile,
+    'FirebaseSDKVersion=(.+)',
   );
+
   String iosSdkVersion = await getSdkVersion(
-    "awk -F \"'\" '/def firebase_sdk_version!()/ {getline; print \$2}' \$VERSION_FILE",
     iosVersionFile,
+    r"def firebase_sdk_version!\(\)\s*'(.+)'",
   );
+
   String webSdkVersion = await getSdkVersion(
-    "awk -F \"'\" '/const String supportedFirebaseJsSdkVersion =/ {print \$2}' \$VERSION_FILE",
     webVersionFile,
+    "const String supportedFirebaseJsSdkVersion = '(.+)'",
   );
+
   String windowsSdkVersion = await getSdkVersion(
-    "awk -F '\"' '/set\\(FIREBASE_SDK_VERSION/ {print \$2}' \$VERSION_FILE",
     windowsVersionFile,
+    r'set\(FIREBASE_SDK_VERSION "(.+)"\)',
   );
 
   // Read current versions JSON file
@@ -69,18 +72,19 @@ void main(List<String> arguments) async {
   Map<String, Map<String, Object>> jsonData = <String, Map<String, Object>>{
     '$version': {
       'date': date,
-      'native_sdk': {
+      'firebase_sdk': {
         'android': androidSdkVersion,
         'ios': iosSdkVersion,
         'web': webSdkVersion,
         'windows': windowsSdkVersion,
       },
+      'packages': <String, String>{},
     },
   };
 
   for (final package in packages) {
     String packageVersion = getPluginVersion(package);
-    jsonData[version]?[package] = packageVersion;
+    (jsonData[version]!['packages']! as Map)[package] = packageVersion;
   }
 
   // Write JSON to file
@@ -95,7 +99,7 @@ void main(List<String> arguments) async {
   print('JSON version data has been successfully written to $versionsJsonFile');
 
   // Append static text part to end of the document
-  appendStaticText(
+  await appendStaticText(
     version,
     date,
     androidSdkVersion,
@@ -116,13 +120,14 @@ void main(List<String> arguments) async {
   Process.runSync('git', ['commit', '-m', 'chore: BoM Version $version']);
 }
 
-Future<String> getSdkVersion(String command, String versionFile) async {
-  ProcessResult result = await Process.run(
-    'bash',
-    ['-c', command],
-    environment: {'VERSION_FILE': versionFile},
-  );
-  return result.stdout.toString().trim();
+Future<String> getSdkVersion(
+  String versionFile,
+  String pattern,
+) async {
+  RegExp regex = RegExp(pattern);
+  String fileContents = await File(versionFile).readAsString();
+  Match? match = regex.firstMatch(fileContents);
+  return match?.group(1)?.trim() ?? 'Version not found';
 }
 
 String getPluginVersion(String package) {
@@ -133,7 +138,7 @@ String getPluginVersion(String package) {
   return pubspecFile.version.toString();
 }
 
-void appendStaticText(
+Future<void> appendStaticText(
   String? version,
   String date,
   String androidSdkVersion,
@@ -141,7 +146,7 @@ void appendStaticText(
   String webSdkVersion,
   String windowsSdkVersion,
   List<String> packages,
-) {
+) async {
   File currentContent = File(versionsFile);
   String content = currentContent.readAsStringSync();
 
@@ -206,5 +211,6 @@ void appendStaticText(
   sink.write(content);
 
   // Closing the sink to flush all data to the file
-  sink.close();
+  await sink.flush();
+  await sink.close();
 }
