@@ -110,7 +110,9 @@ void main(List<String> arguments) async {
   // Commit the files and create an annotated tag and a commit
   Process.runSync('git', ['add', versionsFile, versionsJsonFile]);
   Process.runSync(
-      'git', ['tag', '-a', 'v$version', '-m', 'BoM Version $version']);
+    'git',
+    ['tag', '-a', 'BoM-v$version', '-m', 'BoM Version $version'],
+  );
   Process.runSync('git', ['commit', '-m', 'chore: BoM Version $version']);
 }
 
