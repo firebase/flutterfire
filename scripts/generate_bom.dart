@@ -6,6 +6,8 @@ import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:pubspec_parse/pubspec_parse.dart' as pubspec;
 
+import 'bom_analysis.dart';
+
 const packagesDir = 'packages';
 const versionsFile = 'VERSIONS.md';
 const versionsJsonFile = 'scripts/versions.json';
@@ -24,22 +26,31 @@ const List<String> packages = [
   'firebase_auth',
   'cloud_firestore',
   'firebase_storage',
+  'cloud_functions',
   'firebase_database',
   'firebase_messaging',
   'firebase_crashlytics',
   'firebase_performance',
   'firebase_remote_config',
   'firebase_analytics',
+  'firebase_dynamic_links',
   'firebase_in_app_messaging',
   'firebase_app_check',
+  'firebase_app_installations',
   'firebase_ml_model_downloader',
 ];
 
 const jsonEncoder = JsonEncoder.withIndent('    ');
 
 void main(List<String> arguments) async {
-  stdout.write('BoM Version number: ');
-  String? version = stdin.readLineSync();
+  final suggestedVersion = await getBoMNextVersion();
+  if (suggestedVersion == null) {
+    print('No changes detected');
+    return;
+  }
+  stdout.write('New BoM version number ($suggestedVersion): ');
+  final readData = stdin.readLineSync()?.trim() ?? '';
+  String version = readData.isEmpty ? suggestedVersion : readData;
   String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
   // Fetch native versions
@@ -70,7 +81,7 @@ void main(List<String> arguments) async {
 
   // Create JSON data
   Map<String, Map<String, Object>> jsonData = <String, Map<String, Object>>{
-    '$version': {
+    version: {
       'date': date,
       'firebase_sdk': {
         'android': androidSdkVersion,
