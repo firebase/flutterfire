@@ -95,7 +95,6 @@ void main(List<String> arguments) async {
     iosSdkVersion,
     webSdkVersion,
     windowsSdkVersion,
-    packages,
   );
 
   print('Version $version has been generated successfully!');
@@ -136,7 +135,6 @@ Future<void> appendStaticText(
   String iosSdkVersion,
   String webSdkVersion,
   String windowsSdkVersion,
-  List<String> packages,
 ) async {
   File currentContent = File(versionsFile);
   String content = currentContent.readAsStringSync();
