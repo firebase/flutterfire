@@ -15,9 +15,8 @@ flutterfire install 0.1.0
 -->
 
 ### Included Native Firebase SDK Versions
-
 | Firebase SDK | Version | Link |
-|------------|---------|------|
+|--------------|---------|------|
 | Android SDK | 32.8.0 | [Release Notes](https://firebase.google.com/support/release-notes/android) |
 | iOS SDK | 10.24.0 | [Release Notes](https://firebase.google.com/support/release-notes/ios) |
 | Web SDK | 10.10.0 | [Release Notes](https://firebase.google.com/support/release-notes/js) |
@@ -29,8 +28,8 @@ flutterfire install 0.1.0
 | [firebase_core](https://pub.dev/packages/firebase_core/versions/2.30.0) | 2.30.0 |
 | [firebase_auth](https://pub.dev/packages/firebase_auth/versions/4.19.2) | 4.19.2 |
 | [cloud_firestore](https://pub.dev/packages/cloud_firestore/versions/4.17.0) | 4.17.0 |
-| [firebase_database](https://pub.dev/packages/firebase_database/versions/10.5.2) | 10.5.2 |
 | [firebase_storage](https://pub.dev/packages/firebase_storage/versions/11.7.2) | 11.7.2 |
+| [firebase_database](https://pub.dev/packages/firebase_database/versions/10.5.2) | 10.5.2 |
 | [firebase_messaging](https://pub.dev/packages/firebase_messaging/versions/14.8.2) | 14.8.2 |
 | [firebase_crashlytics](https://pub.dev/packages/firebase_crashlytics/versions/3.5.2) | 3.5.2 |
 | [firebase_performance](https://pub.dev/packages/firebase_performance/versions/0.9.4+2) | 0.9.4+2 |
