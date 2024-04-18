@@ -25,15 +25,18 @@ const windowsVersionFile =
 
 const jsonEncoder = JsonEncoder.withIndent('  ');
 
+/// Generates a new BoM version based on the current state of the packages.
+///
+/// Arguments:
+/// - The new version number to use. If not provided, the script will suggest a version number.
 void main(List<String> arguments) async {
   final suggestedVersion = await getBoMNextVersion();
   if (suggestedVersion == null) {
     print('No changes detected');
     return;
   }
-  stdout.write('New BoM version number ($suggestedVersion): ');
-  final readData = stdin.readLineSync()?.trim() ?? '';
-  String version = readData.isEmpty ? suggestedVersion : readData;
+  final version = arguments.isNotEmpty ? arguments.first : suggestedVersion;
+  stdout.write('New BoM version number: $version');
   String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
   // Fetch native versions

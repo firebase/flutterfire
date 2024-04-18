@@ -306,3 +306,7 @@ scripts:
         --ignore "**/flutter/generated_plugin_registrant.cc" \
         .
     description: Add a license header to all necessary files.
+
+  bom:
+    run: dart scripts/generate_bom.dart
+    description: Generate a Bill of Materials (BOM) file for all packages.
