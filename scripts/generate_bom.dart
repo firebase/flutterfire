@@ -36,7 +36,7 @@ void main(List<String> arguments) async {
     return;
   }
   final version = arguments.isNotEmpty ? arguments.first : suggestedVersion;
-  stdout.write('New BoM version number: $version');
+  print('New BoM version number: $version');
   String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
   // Fetch native versions
