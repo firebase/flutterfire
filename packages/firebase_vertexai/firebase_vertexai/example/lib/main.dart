@@ -17,6 +17,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 
 void main() {
   runApp(const GenerativeAISample());
@@ -73,7 +74,6 @@ class ChatWidget extends StatefulWidget {
 
 class _ChatWidgetState extends State<ChatWidget> {
   late final GenerativeModel _model;
-  late final GenerativeModel _visionModel;
   late final ChatSession _chat;
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
@@ -85,12 +85,23 @@ class _ChatWidgetState extends State<ChatWidget> {
   @override
   void initState() {
     super.initState();
-    Firebase.initializeApp().then((value) {
-      _model = FirebaseVertexAI.instance.generativeModel(model: 'gemini-pro');
-      _visionModel =
-          FirebaseVertexAI.instance.generativeModel(model: 'gemini-pro-vision');
+
+    initFirebase().then((value) {
+      _model = FirebaseVertexAI.instance
+          .generativeModel(model: 'gemini-1.5-pro-preview-0409');
       _chat = _model.startChat();
     });
+  }
+
+  Future<void> initFirebase() async {
+    await Firebase.initializeApp();
+    // Only need if wants to hook up FirebaseAppCheck
+    // await FirebaseAppCheck.instance
+    //     // Your personal reCaptcha public key goes here:
+    //     .activate(
+    //   androidProvider: AndroidProvider.debug,
+    //   appleProvider: AppleProvider.debug,
+    // );
   }
 
   void _scrollDown() {
@@ -228,7 +239,7 @@ class _ChatWidgetState extends State<ChatWidget> {
         fromUser: true
       ));
 
-      var response = await _visionModel.generateContent(content);
+      var response = await _model.generateContent(content);
       var text = response.text;
       _generatedContent.add((image: null, text: text, fromUser: false));
 

@@ -22,11 +22,7 @@ const _apiVersion = 'v2beta';
 /// Allows generating content, creating embeddings, and counting the number of
 /// tokens in a piece of content.
 final class GenerativeModel {
-  final String _modelName;
   final FirebaseApp _firebaseApp;
-  final List<SafetySetting> _safetySettings;
-  final GenerationConfig? _generationConfig;
-  final String _location;
   final google_ai.GenerativeModel _googleAIModel;
 
   /// Create a [GenerativeModel] backed by the generative model named [model].
@@ -42,20 +38,18 @@ final class GenerativeModel {
   /// [GenerationConfig] for details.
   ///
   GenerativeModel._({
-    required String modelName,
+    required String model,
     required String location,
     required FirebaseApp app,
+    FirebaseAppCheck? appCheck,
     List<SafetySetting>? safetySettings,
     GenerationConfig? generationConfig,
-  })  : _modelName = _normalizeModelName(modelName),
-        _firebaseApp = app,
-        _safetySettings = safetySettings ?? [],
-        _generationConfig = generationConfig,
-        _location = location,
+  })  : _firebaseApp = app,
         _googleAIModel = google_ai.createModelWithBaseUri(
-            model: _normalizeModelName(modelName),
-            baseUri: _vertexUri(app, location),
+            model: _normalizeModelName(model),
             apiKey: app.options.apiKey,
+            baseUri: _vertexUri(app, location),
+            requestHeaders: _appCheckToken(appCheck),
             safetySettings: safetySettings != null
                 ? safetySettings
                     .map((setting) => setting._toGoogleAISafetySetting())
@@ -78,12 +72,26 @@ final class GenerativeModel {
   }
 
   static google_ai.GenerationConfig _convertGenerationConfig(
-      GenerationConfig? config, FirebaseApp app, String location) {
+      GenerationConfig? config, FirebaseApp app) {
     if (config == null) {
       return google_ai.GenerationConfig();
     } else {
       return config._toGoogleAIGenerationConfig();
     }
+  }
+
+  static FutureOr<Map<String, String>> Function() _appCheckToken(
+      FirebaseAppCheck? appCheck) {
+    return () async {
+      Map<String, String> headers = {};
+      if (appCheck != null) {
+        final token = await appCheck.getToken();
+        if (token != null) {
+          headers['X-Firebase-AppCheck'] = token;
+        }
+      }
+      return headers;
+    };
   }
 
   /// Generates content responding to [prompt].
@@ -109,8 +117,8 @@ final class GenerativeModel {
     return _googleAIModel
         .generateContent(googlePrompt,
             safetySettings: googleSafetySettings,
-            generationConfig: _convertGenerationConfig(
-                generationConfig, _firebaseApp, _location))
+            generationConfig:
+                _convertGenerationConfig(generationConfig, _firebaseApp))
         .then((value) =>
             GenerateContentResponse._fromGoogleAIGenerateContentResponse(
                 value));

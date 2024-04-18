@@ -18,11 +18,13 @@ const _defaultLocation = 'us-central1';
 const int int64MaxValue = 9223372036854775807;
 
 class FirebaseVertexAI extends FirebasePluginPlatform {
-  FirebaseVertexAI._({required this.app, required this.options})
+  FirebaseVertexAI._({required this.app, required this.options, this.appCheck})
       : super(app.name, 'plugins.flutter.io/firebase_vertex_ai');
 
   /// The [FirebaseApp] for this current [FirebaseVertexAI] instance.
   FirebaseApp app;
+
+  FirebaseAppCheck? appCheck;
 
   RequestOptions options;
 
@@ -40,6 +42,7 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
   /// If [app] is not provided, the default Firebase app will be used.
   static FirebaseVertexAI instanceFor({
     FirebaseApp? app,
+    FirebaseAppCheck? appCheck,
     RequestOptions? options,
   }) {
     app ??= Firebase.app();
@@ -51,7 +54,7 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
     options ??=
         RequestOptions(timeout: const Duration(milliseconds: int64MaxValue));
     FirebaseVertexAI newInstance =
-        FirebaseVertexAI._(app: app, options: options);
+        FirebaseVertexAI._(app: app, options: options, appCheck: appCheck);
     _cachedInstances[app.name] = newInstance;
 
     return newInstance;
@@ -73,8 +76,9 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
       List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig}) {
     return GenerativeModel._(
-        modelName: model,
+        model: model,
         app: app,
+        appCheck: appCheck,
         location: _defaultLocation,
         safetySettings: safetySettings,
         generationConfig: generationConfig);

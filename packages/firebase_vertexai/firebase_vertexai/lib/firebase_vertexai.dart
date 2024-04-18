@@ -21,12 +21,13 @@ import 'dart:typed_data';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebasePluginPlatform;
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
 // ignore: implementation_imports, tightly coupled packages
 import 'package:google_generative_ai/src/model.dart' as google_ai;
 
 part 'src/firebase_vertexai.dart';
 part 'src/vertex_api.dart';
-part 'src/vertex_model.dart';
-part 'src/vertex_content.dart';
 part 'src/vertex_chat.dart';
+part 'src/vertex_content.dart';
+part 'src/vertex_model.dart';
