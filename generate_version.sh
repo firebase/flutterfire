@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the version of the document
-VERSION="0.1.0"
+read -p 'BoM Version number: ' VERSION
 DATE=$(date +"%Y-%m-%d")
 
 # Define package directory and native version file paths
@@ -63,13 +63,13 @@ This document is listing all the compatible versions of the FlutterFire plugins.
 
 ## [Flutter BoM $VERSION ($DATE)](https://github.com/firebase/flutterfire/blob/master/CHANGELOG.md#$DATE)
 
-<!-- When ready can be included
+{/* When ready can be included
 Install this version using FlutterFire CLI
 
 \`\`\`bash
 flutterfire install $VERSION
 \`\`\`
--->
+*/}
 
 ### Included Native Firebase SDK Versions
 
