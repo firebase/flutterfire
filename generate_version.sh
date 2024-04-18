@@ -42,7 +42,7 @@ TEMP_FILE="temp_versions_file"
     echo "            \"ios\": \"$IOS_SDK_VERSION\","
     echo "            \"web\": \"$WEB_SDK_VERSION\","
     echo "            \"windows\": \"$WINDOWS_SDK_VERSION\""
-    echo "        },"
+    echo "        }"
     echo "    },"
 } > "$TEMP_FILE"
 
