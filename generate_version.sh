@@ -19,7 +19,7 @@ WEB_SDK_VERSION=$(awk -F "'" '/const String supportedFirebaseJsSdkVersion =/ {pr
 WINDOWS_SDK_VERSION=$(awk -F '"' '/set\(FIREBASE_SDK_VERSION/ {print $2}' $WINDOWS_VERSION_FILE)
 
 # Remove top mdx part
-sed -i '' '/^--- *$/d; /^{ *$/d' $VERSIONS_FILE
+awk '/^--- *$/{ if (!seen["---"]++) next } /^{ *$/{ if (!seen["{"]++) next } 1' $VERSIONS_FILE > temp_file && mv temp_file $VERSIONS_FILE
 
 
 # List of packages
@@ -54,7 +54,6 @@ sed -i '' '/# FlutterFire Compatible Versions/,/released./{/# FlutterFire Compat
 
 # Append static text part to end the document
 NEW_VERSION_SECTION=$(cat <<EOF
-
 # FlutterFire Compatible Versions
 
 This document is listing all the compatible versions of the FlutterFire plugins. This document is updated whenever a new version of the FlutterFire plugins is released.
@@ -111,3 +110,4 @@ rm "$temp_new_version"
 sed -i '' 's/\\n/\
 /g' $VERSIONS_FILE
 
+echo "Version $VERSION has been generated successfully!"
