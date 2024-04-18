@@ -13,14 +13,9 @@ dependencies:
   firebase_core_platform_interface: ^5.0.0
   flutter:
     sdk: flutter
-  google_generative_ai: ^0.2.3
-  http: ^1.1.0
+  google_generative_ai: ^0.3.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
-
-dependency_overrides:
-  google_generative_ai:
-    path: ../../../../generative-ai-dart/pkgs/google_generative_ai
