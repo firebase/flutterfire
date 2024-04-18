@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:intl/intl.dart';
-import 'package:pubspec_parse/pubspec_parse.dart' as pubspec;
+import 'package:pub_semver/src/version.dart';
 
 import 'bom_analysis.dart';
 
@@ -40,7 +40,7 @@ const List<String> packages = [
   'firebase_ml_model_downloader',
 ];
 
-const jsonEncoder = JsonEncoder.withIndent('    ');
+const jsonEncoder = JsonEncoder.withIndent('  ');
 
 void main(List<String> arguments) async {
   final suggestedVersion = await getBoMNextVersion();
@@ -89,14 +89,11 @@ void main(List<String> arguments) async {
         'web': webSdkVersion,
         'windows': windowsSdkVersion,
       },
-      'packages': <String, String>{},
+      'packages': (await getPackagesUsingMelos()).map((key, value) {
+        return MapEntry(key, value.toString());
+      }),
     },
   };
-
-  for (final package in packages) {
-    String packageVersion = getPluginVersion(package);
-    (jsonData[version]!['packages']! as Map)[package] = packageVersion;
-  }
 
   // Write JSON to file
   File versionsJson = File(versionsJsonFile);
@@ -105,6 +102,7 @@ void main(List<String> arguments) async {
       ...jsonData,
       ...currentVersions,
     }),
+    flush: true,
   );
 
   print('JSON version data has been successfully written to $versionsJsonFile');
@@ -141,12 +139,14 @@ Future<String> getSdkVersion(
   return match?.group(1)?.trim() ?? 'Version not found';
 }
 
-String getPluginVersion(String package) {
-  String filePath = '$packagesDir/$package/$package/pubspec.yaml';
-  pubspec.Pubspec pubspecFile = pubspec.Pubspec.parse(
-    File(filePath).readAsStringSync(),
-  );
-  return pubspecFile.version.toString();
+Future<Map<String, Version>> getPackagesUsingMelos() async {
+  final workspace = await getMelosWorkspace();
+
+  final currentPackageNameAndVersionsMap = workspace.filteredPackages.values
+      .map((package) => {package.name: package.version})
+      .reduce((value, element) => value..addAll(element));
+
+  return currentPackageNameAndVersionsMap;
 }
 
 Future<void> appendStaticText(
@@ -210,11 +210,12 @@ Future<void> appendStaticText(
   sink.writeln('| Plugin | Version |');
   sink.writeln('|--------|---------|');
 
+  final packages = await getPackagesUsingMelos();
+
   // Adding rows for each package
-  for (final package in packages) {
-    String packageVersion = getPluginVersion(package);
+  for (final package in packages.entries) {
     sink.writeln(
-      '| [$package](https://pub.dev/packages/$package/versions/$packageVersion) | $packageVersion |',
+      '| [${package.key}](https://pub.dev/packages/${package.key}/versions/${package.value}) | ${package.value} |',
     );
   }
 

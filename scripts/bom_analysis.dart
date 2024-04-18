@@ -19,13 +19,12 @@ void main(List<String> arguments) async {
   }
 }
 
-Future<String?> getBoMNextVersion({bool shouldLog = false}) async {
+Future<melos.MelosWorkspace> getMelosWorkspace() async {
   final packageFilters = melos.PackageFilters(
     includePrivatePackages: false,
     ignore: [
       Glob('*web*'),
       Glob('*platform*'),
-      Glob('*generator*'),
       Glob('*internals*'),
     ],
   );
@@ -35,6 +34,10 @@ Future<String?> getBoMNextVersion({bool shouldLog = false}) async {
     packageFilters: packageFilters,
   );
 
+  return workspace;
+}
+
+Future<String?> getBoMNextVersion({bool shouldLog = false}) async {
   File currentVersionsJson = File(versionsJsonFile);
   Map<String, dynamic> currentVersions =
       jsonDecode(currentVersionsJson.readAsStringSync());
@@ -44,11 +47,11 @@ Future<String?> getBoMNextVersion({bool shouldLog = false}) async {
 
   final currentBoMVersion = melos.Version.parse(currentVersionNumber);
   final previousBoMPackageNameAndVersions =
-      currentVersions[currentVersionNumber]['packages'] as Map<String, dynamic>;
+      currentVersions[currentVersionNumber]['packages']
+              as Map<String, dynamic>? ??
+          {};
 
-  final currentPackageNameAndVersionsMap = workspace.filteredPackages.values
-      .map((package) => {package.name: package.version})
-      .reduce((value, element) => value..addAll(element));
+  final currentPackageNameAndVersionsMap = await getPackagesUsingMelos();
   final changes = <String, int>{};
   final changedPackages = <String, List<String>>{};
   for (final entry in currentPackageNameAndVersionsMap.entries) {
