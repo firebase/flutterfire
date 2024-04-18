@@ -7,8 +7,8 @@ import 'package:intl/intl.dart';
 import 'package:pubspec_parse/pubspec_parse.dart' as pubspec;
 
 const packagesDir = 'packages';
-const versionsFile = 'versions.md';
-const versionsJsonFile = 'versions.json';
+const versionsFile = 'VERSIONS.md';
+const versionsJsonFile = 'scripts/versions.json';
 const androidVersionFile =
     '$packagesDir/firebase_core/firebase_core/android/gradle.properties';
 const iosVersionFile =
