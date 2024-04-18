@@ -20,26 +20,6 @@ const webVersionFile =
 const windowsVersionFile =
     '$packagesDir/firebase_core/firebase_core/windows/CMakeLists.txt';
 
-// Used to display the packages in the correct order
-const List<String> packages = [
-  'firebase_core',
-  'firebase_auth',
-  'cloud_firestore',
-  'firebase_storage',
-  'cloud_functions',
-  'firebase_database',
-  'firebase_messaging',
-  'firebase_crashlytics',
-  'firebase_performance',
-  'firebase_remote_config',
-  'firebase_analytics',
-  'firebase_dynamic_links',
-  'firebase_in_app_messaging',
-  'firebase_app_check',
-  'firebase_app_installations',
-  'firebase_ml_model_downloader',
-];
-
 const jsonEncoder = JsonEncoder.withIndent('  ');
 
 void main(List<String> arguments) async {
