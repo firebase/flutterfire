@@ -109,7 +109,7 @@ void main(List<String> arguments) async {
 
   print('JSON version data has been successfully written to $versionsJsonFile');
 
-  // Append static text part to end of the document
+  // Append static text part to beginning of the document
   await appendStaticText(
     version,
     date,
