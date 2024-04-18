@@ -18,6 +18,7 @@ const webVersionFile =
 const windowsVersionFile =
     '$packagesDir/firebase_core/firebase_core/windows/CMakeLists.txt';
 
+// Used to display the packages in the correct order
 const List<String> packages = [
   'firebase_core',
   'firebase_auth',
@@ -105,6 +106,12 @@ void main(List<String> arguments) async {
   );
 
   print('Version $version has been generated successfully!');
+
+  // Commit the files and create an annotated tag and a commit
+  Process.runSync('git', ['add', versionsFile, versionsJsonFile]);
+  Process.runSync(
+      'git', ['tag', '-a', 'v$version', '-m', 'BoM Version $version']);
+  Process.runSync('git', ['commit', '-m', 'chore: BoM Version $version']);
 }
 
 Future<String> getSdkVersion(String command, String versionFile) async {
