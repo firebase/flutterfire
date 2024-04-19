@@ -1177,7 +1177,16 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
            actionCodeSettings:[PigeonParser parseActionCodeSettings:actionCodeSettings]
                    completion:^(NSError *_Nullable error) {
                      if (error != nil) {
-                       completion([FLTFirebaseAuthPlugin convertToFlutterError:error]);
+                       if (error.code == FIRAuthErrorCodeInternalError) {
+                         [self
+                             handleInternalError:^(PigeonUserCredential *_Nullable creds,
+                                                   FlutterError *_Nullable error) {
+                               completion(error);
+                             }
+                                       withError:error];
+                       } else {
+                         completion([FLTFirebaseAuthPlugin convertToFlutterError:error]);
+                       }
                      } else {
                        completion(nil);
                      }
