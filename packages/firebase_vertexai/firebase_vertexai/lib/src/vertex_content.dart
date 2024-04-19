@@ -76,6 +76,11 @@ sealed class Part {
         google_ai.TextPart textPart => TextPart(textPart.text),
         google_ai.DataPart dataPart =>
           DataPart(dataPart.mimeType, dataPart.bytes),
+        google_ai.FilePart filePart => FilePart(filePart.uri),
+        // TODO: Handle this case.
+        google_ai.FunctionCall() => throw UnimplementedError(),
+        // TODO: Handle this case.
+        google_ai.FunctionResponse() => throw UnimplementedError(),
       };
 }
 
@@ -88,6 +93,7 @@ final class TextPart implements Part {
   google_ai.Part toPart() => google_ai.TextPart(text);
 }
 
+/// A [Part] with the byte content of a file.
 final class DataPart implements Part {
   final String mimeType;
   final Uint8List bytes;
@@ -98,4 +104,18 @@ final class DataPart implements Part {
       };
   @override
   google_ai.Part toPart() => google_ai.DataPart(mimeType, bytes);
+}
+
+/// A [Part] referring to an uploaded file.
+///
+/// The [uri] should refer to a file uploaded to the Google AI File Service API.
+final class FilePart implements Part {
+  final Uri uri;
+  FilePart(this.uri);
+  @override
+  Object toJson() => {
+        'file_data': {'file_uri': '$uri'}
+      };
+  @override
+  google_ai.Part toPart() => google_ai.FilePart(uri);
 }
