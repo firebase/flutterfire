@@ -15,8 +15,11 @@
 part of firebase_vertexai;
 
 const _defaultLocation = 'us-central1';
-const int int64MaxValue = 9223372036854775807;
 
+/// Default timeout duration, 30 minutes in millisecond
+const int defaultTimeout = 1800000;
+
+/// The entrypoint for [FirebaseVertexAI].
 class FirebaseVertexAI extends FirebasePluginPlatform {
   FirebaseVertexAI._({required this.app, required this.options, this.appCheck})
       : super(app.name, 'plugins.flutter.io/firebase_vertex_ai');
@@ -24,8 +27,11 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
   /// The [FirebaseApp] for this current [FirebaseVertexAI] instance.
   FirebaseApp app;
 
+  /// The optional [FirebaseAppCheck] for this current [FirebaseVertexAI] instance.
+  /// https://firebase.google.com/docs/app-check
   FirebaseAppCheck? appCheck;
 
+  /// Configuration parameters for sending requests to the backend.
   RequestOptions options;
 
   static final Map<String, FirebaseVertexAI> _cachedInstances = {};
@@ -40,6 +46,7 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
   /// Returns an instance using a specified [FirebaseApp].
   ///
   /// If [app] is not provided, the default Firebase app will be used.
+  /// If pass in [appCheck], request session will get protected from abusing.
   static FirebaseVertexAI instanceFor({
     FirebaseApp? app,
     FirebaseAppCheck? appCheck,
@@ -52,7 +59,7 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
     }
 
     options ??=
-        RequestOptions(timeout: const Duration(milliseconds: int64MaxValue));
+        RequestOptions(timeout: const Duration(milliseconds: defaultTimeout));
     FirebaseVertexAI newInstance =
         FirebaseVertexAI._(app: app, options: options, appCheck: appCheck);
     _cachedInstances[app.name] = newInstance;
@@ -85,10 +92,13 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
   }
 }
 
+/// Options for request to backend.
 class RequestOptions {
+  /// [timeout] timeout duration for the request.
   RequestOptions({
     required this.timeout,
   });
 
+  /// Timeout for the request, default to 30 minutes, in milliseconds.
   final Duration timeout;
 }
