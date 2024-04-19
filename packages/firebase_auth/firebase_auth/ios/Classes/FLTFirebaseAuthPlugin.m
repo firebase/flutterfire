@@ -1180,8 +1180,8 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
                        if (error.code == FIRAuthErrorCodeInternalError) {
                          [self
                              handleInternalError:^(PigeonUserCredential *_Nullable creds,
-                                                   FlutterError *_Nullable error) {
-                               completion(error);
+                                                   FlutterError *_Nullable internalError) {
+                               completion(internalError);
                              }
                                        withError:error];
                        } else {
