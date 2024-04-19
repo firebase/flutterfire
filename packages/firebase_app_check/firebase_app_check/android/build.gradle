@@ -45,6 +45,7 @@ android {
   defaultConfig {
     minSdk 19
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    buildConfigField "String", "FIREBASE_APP_CHECK_DEBUG_TOKEN", "\"${System.env.FIREBASE_APP_CHECK_DEBUG_TOKEN}\""
   }
 
   compileOptions {
