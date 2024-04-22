@@ -208,7 +208,9 @@ Next, the worker must be registered. Within the entry file, **after** the `main.
         // Service workers are supported. Use them.
         window.addEventListener('load', function () {
           // Register Firebase Messaging service worker.
-          navigator.serviceWorker.register('firebase-messaging-sw.js');
+          navigator.serviceWorker.register('firebase-messaging-sw.js', {
+            scope: '/firebase-cloud-messaging-push-scope',
+          });
 
           // Wait for registration to finish before dropping the <script> tag.
           // Otherwise, the browser will load the script multiple times,
