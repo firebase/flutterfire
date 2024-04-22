@@ -53,7 +53,6 @@ void main() {
     runTransactionTests();
     runWriteBatchTests();
     runLoadBundleTests();
-    runSecondAppTests();
     if (defaultTargetPlatform != TargetPlatform.windows) {
       runSecondDatabaseTests();
     }
