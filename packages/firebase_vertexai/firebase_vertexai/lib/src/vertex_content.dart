@@ -16,6 +16,11 @@ part of firebase_vertexai;
 
 /// The base structured datatype containing multi-part content of a message.
 final class Content {
+  /// Constructor
+  Content(this.role, this.parts);
+  factory Content._fromGoogleAIContent(google_ai.Content content) =>
+      Content(content.role, content.parts.map(Part._fromGoogleAIPart).toList());
+
   /// The producer of the content.
   ///
   /// Must be either 'user' or 'model'. Useful to set for multi-turn
@@ -27,18 +32,20 @@ final class Content {
   /// Parts may have different MIME types.
   final List<Part> parts;
 
-  Content(this.role, this.parts);
-
-  factory Content._fromGoogleAIContent(google_ai.Content content) => Content(
-      content.role,
-      content.parts.map((p) => Part._fromGoogleAIPart(p)).toList());
-
+  /// Return a [Content] with [TextPart].
   static Content text(String text) => Content('user', [TextPart(text)]);
+
+  /// Return a [Content] with [DataPart].
   static Content data(String mimeType, Uint8List bytes) =>
       Content('user', [DataPart(mimeType, bytes)]);
+
+  /// Return a [Content] with multiple [Part]s.
   static Content multi(Iterable<Part> parts) => Content('user', [...parts]);
+
+  /// Return a [Content] with multiple [Part]s from the model.
   static Content model(Iterable<Part> parts) => Content('model', [...parts]);
 
+  /// Convert the [Content] to json format.
   Map<String, Object?> toJson() => {
         if (role case final role?) 'role': role,
         'parts': parts.map((p) => p.toJson()).toList()
@@ -47,6 +54,7 @@ final class Content {
       google_ai.Content(role, parts.map((p) => p.toPart()).toList());
 }
 
+/// Parse the [Content] from json object.
 Content parseContent(Object jsonObject) {
   return switch (jsonObject) {
     {'parts': final List<Object?> parts} => Content(
@@ -70,23 +78,31 @@ Part _parsePart(Object? jsonObject) {
 
 /// A datatype containing media that is part of a multi-part [Content] message.
 sealed class Part {
-  Object toJson();
-  google_ai.Part toPart();
   factory Part._fromGoogleAIPart(google_ai.Part part) => switch (part) {
         google_ai.TextPart textPart => TextPart(textPart.text),
         google_ai.DataPart dataPart =>
           DataPart(dataPart.mimeType, dataPart.bytes),
-        google_ai.FilePart filePart => FilePart(filePart.uri),
+        google_ai.FilePart() => throw UnimplementedError(),
         // TODO: Handle this case.
         google_ai.FunctionCall() => throw UnimplementedError(),
         // TODO: Handle this case.
         google_ai.FunctionResponse() => throw UnimplementedError(),
       };
+
+  /// Convert the [Part] content to json format.
+  Object toJson();
+
+  /// Convert the [Part] content to [google_ai.Part].
+  google_ai.Part toPart();
 }
 
+/// A [Part] with the text content.
 final class TextPart implements Part {
-  final String text;
+  /// Constructor
   TextPart(this.text);
+
+  /// The text content of the [Part]
+  final String text;
   @override
   Object toJson() => {'text': text};
   @override
@@ -95,27 +111,18 @@ final class TextPart implements Part {
 
 /// A [Part] with the byte content of a file.
 final class DataPart implements Part {
-  final String mimeType;
-  final Uint8List bytes;
+  /// Constructor
   DataPart(this.mimeType, this.bytes);
+
+  /// File type of the [DataPart]. https://cloud.google.com/document-ai/docs/file-types
+  final String mimeType;
+
+  /// Data contents in bytes.
+  final Uint8List bytes;
   @override
   Object toJson() => {
         'inlineData': {'data': base64Encode(bytes), 'mimeType': mimeType}
       };
   @override
   google_ai.Part toPart() => google_ai.DataPart(mimeType, bytes);
-}
-
-/// A [Part] referring to an uploaded file.
-///
-/// The [uri] should refer to a file uploaded to the Google AI File Service API.
-final class FilePart implements Part {
-  final Uri uri;
-  FilePart(this.uri);
-  @override
-  Object toJson() => {
-        'file_data': {'file_uri': '$uri'}
-      };
-  @override
-  google_ai.Part toPart() => google_ai.FilePart(uri);
 }

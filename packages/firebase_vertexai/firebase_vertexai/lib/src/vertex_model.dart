@@ -22,9 +22,6 @@ const _apiVersion = 'v2beta';
 /// Allows generating content, creating embeddings, and counting the number of
 /// tokens in a piece of content.
 final class GenerativeModel {
-  final FirebaseApp _firebaseApp;
-  final google_ai.GenerativeModel _googleAIModel;
-
   /// Create a [GenerativeModel] backed by the generative model named [model].
   ///
   /// The [model] argument can be a model name (such as `'gemini-pro'`) or a
@@ -56,6 +53,8 @@ final class GenerativeModel {
                     .toList()
                 : [],
             generationConfig: generationConfig?._toGoogleAIGenerationConfig());
+  final FirebaseApp _firebaseApp;
+  final google_ai.GenerativeModel _googleAIModel;
 
   static const _modelsPrefix = 'models/';
   static String _normalizeModelName(String modelName) =>
@@ -119,9 +118,7 @@ final class GenerativeModel {
             safetySettings: googleSafetySettings,
             generationConfig:
                 _convertGenerationConfig(generationConfig, _firebaseApp))
-        .then((value) =>
-            GenerateContentResponse._fromGoogleAIGenerateContentResponse(
-                value));
+        .then(GenerateContentResponse._fromGoogleAIGenerateContentResponse);
   }
 
   /// Generates a stream of content responding to [prompt].
@@ -149,9 +146,7 @@ final class GenerativeModel {
                     .toList()
                 : [],
             generationConfig: generationConfig?._toGoogleAIGenerationConfig())
-        .map((event) =>
-            GenerateContentResponse._fromGoogleAIGenerateContentResponse(
-                event));
+        .map(GenerateContentResponse._fromGoogleAIGenerateContentResponse);
   }
 
   /// Counts the total number of tokens in [contents].
@@ -174,8 +169,7 @@ final class GenerativeModel {
   Future<CountTokensResponse> countTokens(Iterable<Content> contents) async {
     return _googleAIModel
         .countTokens(contents.map((e) => e._toGoogleAIContent()))
-        .then((value) =>
-            CountTokensResponse._fromGoogleAICountTokensResponse(value));
+        .then(CountTokensResponse._fromGoogleAICountTokensResponse);
   }
 
   /// Creates an embedding (list of float values) representing [content].
@@ -193,8 +187,7 @@ final class GenerativeModel {
     return _googleAIModel
         .embedContent(content._toGoogleAIContent(),
             taskType: taskType?._toGoogleAITaskType(), title: title)
-        .then((value) =>
-            EmbedContentResponse._fromGoogleAIEmbedContentResponse(value));
+        .then(EmbedContentResponse._fromGoogleAIEmbedContentResponse);
   }
 
   google_ai.GenerationConfig? _googleAIGenerationConfig(

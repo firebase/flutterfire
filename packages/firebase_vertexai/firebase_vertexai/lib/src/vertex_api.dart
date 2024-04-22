@@ -14,46 +14,50 @@
 
 part of firebase_vertexai;
 
+/// Response for Count Tokens
 final class CountTokensResponse {
+  /// Constructor
+  CountTokensResponse(this.totalTokens);
+  factory CountTokensResponse._fromGoogleAICountTokensResponse(
+          google_ai.CountTokensResponse countTokensResponse) =>
+      CountTokensResponse(countTokensResponse.totalTokens);
+
   /// The number of tokens that the `model` tokenizes the `prompt` into.
   ///
   /// Always non-negative.
   final int totalTokens;
 
-  CountTokensResponse(this.totalTokens);
-
-  factory CountTokensResponse._fromGoogleAICountTokensResponse(
-          google_ai.CountTokensResponse countTokensResponse) =>
-      CountTokensResponse(countTokensResponse.totalTokens);
-
   /// Converts this response to a [google_ai.CountTokensResponse].
+  // ignore: unused_element
   google_ai.CountTokensResponse _toGoogleAICountTokensResponse() =>
       google_ai.CountTokensResponse(totalTokens);
 }
 
 /// Response from the model; supports multiple candidates.
 final class GenerateContentResponse {
-  /// Candidate responses from the model.
-  final List<Candidate> candidates;
-
-  /// Returns the prompt's feedback related to the content filters.
-  final PromptFeedback? promptFeedback;
-
+  /// Constructor
   GenerateContentResponse(this.candidates, this.promptFeedback);
 
   factory GenerateContentResponse._fromGoogleAIGenerateContentResponse(
           google_ai.GenerateContentResponse generateContentResponse) =>
       GenerateContentResponse(
           generateContentResponse.candidates
-              .map((candidate) => Candidate._fromGoogleAICandidate(candidate))
+              .map(Candidate._fromGoogleAICandidate)
               .toList(),
           generateContentResponse.promptFeedback != null
               ? PromptFeedback._fromGoogleAIPromptFeedback(
                   generateContentResponse.promptFeedback!)
               : null);
 
+  /// Candidate responses from the model.
+  final List<Candidate> candidates;
+
+  /// Returns the prompt's feedback related to the content filters.
+  final PromptFeedback? promptFeedback;
+
   /// Converts this response to a [GenerateContentResponse].
 
+  // ignore: unused_element
   google_ai.GenerateContentResponse _toGoogleAIGenerateContentResponse() =>
       google_ai.GenerateContentResponse(
           candidates
@@ -109,31 +113,34 @@ final class GenerateContentResponse {
   }
 }
 
+/// Response for Embed Content.
 final class EmbedContentResponse {
-  /// The embedding generated from the input content.
-  final ContentEmbedding embedding;
-
+  /// Constructor
   EmbedContentResponse(this.embedding);
   factory EmbedContentResponse._fromGoogleAIEmbedContentResponse(
           google_ai.EmbedContentResponse embedContentResponse) =>
       EmbedContentResponse(ContentEmbedding._fromGoogleAIContentEmbedding(
           embedContentResponse.embedding));
 
-  /// Converts this response to a [EmbedContentResponse].
+  /// The embedding generated from the input content.
+  final ContentEmbedding embedding;
 
+  /// Converts this response to a [EmbedContentResponse].
+  // ignore: unused_element
   google_ai.EmbedContentResponse _toGoogleAIEmbedContentResponse() =>
       google_ai.EmbedContentResponse(embedding._toGoogleAIContentEmbedding());
 }
 
 /// An embedding, as defined by a list of values.
 final class ContentEmbedding {
-  /// The embedding values.
-  final List<double> values;
-
+  /// Constructor
   ContentEmbedding(this.values);
   factory ContentEmbedding._fromGoogleAIContentEmbedding(
           google_ai.ContentEmbedding contentEmbedding) =>
       ContentEmbedding(contentEmbedding.values);
+
+  /// The embedding values.
+  final List<double> values;
 
   /// Converts this embedding to a [google_ai.ContentEmbedding].
   google_ai.ContentEmbedding _toGoogleAIContentEmbedding() =>
@@ -142,18 +149,7 @@ final class ContentEmbedding {
 
 /// Feedback metadata of a prompt specified in a [GenerativeModel] request.
 final class PromptFeedback {
-  /// If set, the prompt was blocked and no candidates are returned.
-  ///
-  /// Rephrase your prompt.
-  final BlockReason? blockReason;
-
-  final String? blockReasonMessage;
-
-  /// Ratings for safety of the prompt.
-  ///
-  /// There is at most one rating per category.
-  final List<SafetyRating> safetyRatings;
-
+  /// Constructor
   PromptFeedback(this.blockReason, this.blockReasonMessage, this.safetyRatings);
   factory PromptFeedback._fromGoogleAIPromptFeedback(
           google_ai.PromptFeedback promptFeedback) =>
@@ -163,10 +159,22 @@ final class PromptFeedback {
             : null,
         promptFeedback.blockReasonMessage,
         promptFeedback.safetyRatings
-            .map((safetyRating) =>
-                SafetyRating._fromGoogleAISafetyRating(safetyRating))
+            .map(SafetyRating._fromGoogleAISafetyRating)
             .toList(),
       );
+
+  /// If set, the prompt was blocked and no candidates are returned.
+  ///
+  /// Rephrase your prompt.
+  final BlockReason? blockReason;
+
+  /// Message for the block reason.
+  final String? blockReasonMessage;
+
+  /// Ratings for safety of the prompt.
+  ///
+  /// There is at most one rating per category.
+  final List<SafetyRating> safetyRatings;
 
   /// Converts this feedback to a [google_ai.PromptFeedback].
   google_ai.PromptFeedback _toGoogleAIPromptFeedback() =>
@@ -181,6 +189,24 @@ final class PromptFeedback {
 
 /// Response candidate generated from a [GenerativeModel].
 final class Candidate {
+  // TODO: token count?
+  Candidate(this.content, this.safetyRatings, this.citationMetadata,
+      this.finishReason, this.finishMessage);
+  factory Candidate._fromGoogleAICandidate(google_ai.Candidate candidate) =>
+      Candidate(
+          Content._fromGoogleAIContent(candidate.content),
+          candidate.safetyRatings
+              ?.map(SafetyRating._fromGoogleAISafetyRating)
+              .toList(),
+          candidate.citationMetadata != null
+              ? CitationMetadata._fromGoogleAICitationMetadata(
+                  candidate.citationMetadata!)
+              : null,
+          candidate.finishReason != null
+              ? FinishReason._fromGoogleAIFinishReason(candidate.finishReason!)
+              : null,
+          candidate.finishMessage);
+
   /// Generated content returned from the model.
   final Content content;
 
@@ -201,25 +227,8 @@ final class Candidate {
   /// If empty, the model has not stopped generating the tokens.
   final FinishReason? finishReason;
 
+  /// Message for finish reason.
   final String? finishMessage;
-
-  // TODO: token count?
-  Candidate(this.content, this.safetyRatings, this.citationMetadata,
-      this.finishReason, this.finishMessage);
-  factory Candidate._fromGoogleAICandidate(google_ai.Candidate candidate) =>
-      Candidate(
-          Content._fromGoogleAIContent(candidate.content),
-          candidate.safetyRatings
-              ?.map((s) => SafetyRating._fromGoogleAISafetyRating(s))
-              .toList(),
-          candidate.citationMetadata != null
-              ? CitationMetadata._fromGoogleAICitationMetadata(
-                  candidate.citationMetadata!)
-              : null,
-          candidate.finishReason != null
-              ? FinishReason._fromGoogleAIFinishReason(candidate.finishReason!)
-              : null,
-          candidate.finishMessage);
 
   google_ai.Candidate _toGoogleAICandidate() => google_ai.Candidate(
         content._toGoogleAIContent(),
@@ -237,12 +246,7 @@ final class Candidate {
 /// safety across a number of harm categories and the probability of the harm
 /// classification is included here.
 final class SafetyRating {
-  /// The category for this rating.
-  final HarmCategory category;
-
-  /// The probability of harm for this content.
-  final HarmProbability probability;
-
+  /// Constructor
   SafetyRating(this.category, this.probability);
   factory SafetyRating._fromGoogleAISafetyRating(
           google_ai.SafetyRating safetyRating) =>
@@ -250,6 +254,12 @@ final class SafetyRating {
           HarmCategory._fromGoogleAIHarmCategory(safetyRating.category),
           HarmProbability._fromGoogleAIHarmProbability(
               safetyRating.probability));
+
+  /// The category for this rating.
+  final HarmCategory category;
+
+  /// The probability of harm for this content.
+  final HarmProbability probability;
 
   /// Converts this rating to a [google_ai.SafetyRating].
   google_ai.SafetyRating _toGoogleAISafetyRating() => google_ai.SafetyRating(
@@ -273,6 +283,7 @@ enum BlockReason {
   /// Prompt was blocked due to other unspecified reasons.
   other('OTHER');
 
+  const BlockReason(this._jsonString);
   static BlockReason _parseValue(String jsonObject) {
     return switch (jsonObject) {
       'BLOCK_REASON_UNSPECIFIED' => BlockReason.unspecified,
@@ -281,8 +292,6 @@ enum BlockReason {
       _ => throw FormatException('Unhandled BlockReason format', jsonObject),
     };
   }
-
-  const BlockReason(this._jsonString);
 
   static BlockReason _fromGoogleAIBlockReason(
       google_ai.BlockReason googleAIBlockReason) {
@@ -305,6 +314,7 @@ enum BlockReason {
 
   final String _jsonString;
 
+  /// Convert to json format
   String toJson() => _jsonString;
 
   @override
@@ -316,6 +326,7 @@ enum BlockReason {
 /// These categories cover various kinds of harms that developers may wish to
 /// adjust.
 enum HarmCategory {
+  /// Harm category is not specified.
   unspecified('HARM_CATEGORY_UNSPECIFIED'),
 
   /// Malicious, intimidating, bullying, or abusive comments targeting another
@@ -332,17 +343,6 @@ enum HarmCategory {
   /// Promotes or enables access to harmful goods, services, and activities.
   dangerousContent('HARM_CATEGORY_DANGEROUS_CONTENT');
 
-  static HarmCategory _parseValue(Object jsonObject) {
-    return switch (jsonObject) {
-      'HARM_CATEGORY_UNSPECIFIED' => HarmCategory.unspecified,
-      'HARM_CATEGORY_HARASSMENT' => HarmCategory.harassment,
-      'HARM_CATEGORY_HATE_SPEECH' => HarmCategory.hateSpeech,
-      'HARM_CATEGORY_SEXUALLY_EXPLICIT' => HarmCategory.sexuallyExplicit,
-      'HARM_CATEGORY_DANGEROUS_CONTENT' => HarmCategory.dangerousContent,
-      _ => throw FormatException('Unhandled HarmCategory format', jsonObject),
-    };
-  }
-
   const HarmCategory(this._jsonString);
   factory HarmCategory._fromGoogleAIHarmCategory(
       google_ai.HarmCategory harmCategory) {
@@ -354,12 +354,23 @@ enum HarmCategory {
       google_ai.HarmCategory.dangerousContent => HarmCategory.dangerousContent,
     };
   }
+  static HarmCategory _parseValue(Object jsonObject) {
+    return switch (jsonObject) {
+      'HARM_CATEGORY_UNSPECIFIED' => HarmCategory.unspecified,
+      'HARM_CATEGORY_HARASSMENT' => HarmCategory.harassment,
+      'HARM_CATEGORY_HATE_SPEECH' => HarmCategory.hateSpeech,
+      'HARM_CATEGORY_SEXUALLY_EXPLICIT' => HarmCategory.sexuallyExplicit,
+      'HARM_CATEGORY_DANGEROUS_CONTENT' => HarmCategory.dangerousContent,
+      _ => throw FormatException('Unhandled HarmCategory format', jsonObject),
+    };
+  }
 
   @override
   String toString() => name;
 
   final String _jsonString;
 
+  /// Convert to json format.
   String toJson() => _jsonString;
 
   /// Converts this harm category to a [google_ai.HarmCategory].
@@ -395,18 +406,6 @@ enum HarmProbability {
   /// Content has a high probability of being unsafe.
   high('HIGH');
 
-  static HarmProbability _parseValue(Object jsonObject) {
-    return switch (jsonObject) {
-      'UNSPECIFIED' => HarmProbability.unspecified,
-      'NEGLIGIBLE' => HarmProbability.negligible,
-      'LOW' => HarmProbability.low,
-      'MEDIUM' => HarmProbability.medium,
-      'HIGH' => HarmProbability.high,
-      _ =>
-        throw FormatException('Unhandled HarmProbability format', jsonObject),
-    };
-  }
-
   const HarmProbability(this._jsonString);
 
   factory HarmProbability._fromGoogleAIHarmProbability(
@@ -417,6 +416,17 @@ enum HarmProbability {
       google_ai.HarmProbability.low => HarmProbability.low,
       google_ai.HarmProbability.medium => HarmProbability.medium,
       google_ai.HarmProbability.high => HarmProbability.high,
+    };
+  }
+  static HarmProbability _parseValue(Object jsonObject) {
+    return switch (jsonObject) {
+      'UNSPECIFIED' => HarmProbability.unspecified,
+      'NEGLIGIBLE' => HarmProbability.negligible,
+      'LOW' => HarmProbability.low,
+      'MEDIUM' => HarmProbability.medium,
+      'HIGH' => HarmProbability.high,
+      _ =>
+        throw FormatException('Unhandled HarmProbability format', jsonObject),
     };
   }
 
@@ -432,6 +442,7 @@ enum HarmProbability {
 
   final String _jsonString;
 
+  /// Convert to json format.
   String toJson() => _jsonString;
 
   @override
@@ -440,23 +451,31 @@ enum HarmProbability {
 
 /// Source attributions for a piece of content.
 final class CitationMetadata {
-  /// Citations to sources for a specific response.
-  final List<CitationSource> citationSources;
-
+  /// Constructor
   CitationMetadata(this.citationSources);
   factory CitationMetadata._fromGoogleAICitationMetadata(
           google_ai.CitationMetadata citationMetadata) =>
       CitationMetadata(citationMetadata.citationSources
-          .map((e) => CitationSource._fromGoogleAICiationSource(e))
+          .map(CitationSource._fromGoogleAICitationSource)
           .toList());
+
+  /// Citations to sources for a specific response.
+  final List<CitationSource> citationSources;
 
   google_ai.CitationMetadata _toGoogleAICitationMetadata() =>
       google_ai.CitationMetadata(
-          citationSources.map((e) => e._toGoogleAICiationSource()).toList());
+          citationSources.map((e) => e._toGoogleAICitationSource()).toList());
 }
 
 /// Citation to a source for a portion of a specific response.
 final class CitationSource {
+  /// Constructor
+  CitationSource(this.startIndex, this.endIndex, this.uri, this.license);
+  factory CitationSource._fromGoogleAICitationSource(
+          google_ai.CitationSource source) =>
+      CitationSource(
+          source.startIndex, source.endIndex, source.uri, source.license);
+
   /// Start of segment of the response that is attributed to this source.
   ///
   /// Index indicates the start of the segment, measured in bytes.
@@ -473,13 +492,7 @@ final class CitationSource {
   /// License info is required for code citations.
   final String? license;
 
-  CitationSource(this.startIndex, this.endIndex, this.uri, this.license);
-  factory CitationSource._fromGoogleAICiationSource(
-          google_ai.CitationSource source) =>
-      CitationSource(
-          source.startIndex, source.endIndex, source.uri, source.license);
-
-  google_ai.CitationSource _toGoogleAICiationSource() =>
+  google_ai.CitationSource _toGoogleAICitationSource() =>
       google_ai.CitationSource(startIndex, endIndex, uri, license);
 }
 
@@ -487,7 +500,7 @@ final class CitationSource {
 enum FinishReason {
   /// Default value to use when a finish reason isn't set.
   ///
-  /// Never used as the reason for finshing.
+  /// Never used as the reason for finishing.
   unspecified('UNSPECIFIED'),
 
   /// Natural stop point of the model or provided stop sequence.
@@ -532,6 +545,7 @@ enum FinishReason {
 
   final String _jsonString;
 
+  /// Convert to json format
   String toJson() => _jsonString;
 
   static FinishReason _parseValue(Object jsonObject) {
@@ -555,13 +569,9 @@ enum FinishReason {
 /// Passing a safety setting for a category changes the allowed probability that
 /// content is blocked.
 final class SafetySetting {
-  /// The category for this setting.
-  final HarmCategory category;
-
-  /// Controls the probability threshold at which harm is blocked.
-  final HarmBlockThreshold threshold;
-
+  /// Constructor
   SafetySetting(this.category, this.threshold);
+  // ignore: unused_element
   factory SafetySetting._fromGoogleAISafetySetting(
           google_ai.SafetySetting setting) =>
       SafetySetting(
@@ -569,10 +579,17 @@ final class SafetySetting {
           HarmBlockThreshold._fromGoogleAIHarmBlockThreshold(
               setting.threshold));
 
+  /// The category for this setting.
+  final HarmCategory category;
+
+  /// Controls the probability threshold at which harm is blocked.
+  final HarmBlockThreshold threshold;
+
   google_ai.SafetySetting _toGoogleAISafetySetting() => google_ai.SafetySetting(
       category._toGoogleAIHarmCategory(),
       threshold._toGoogleAIHarmBlockThreshold());
 
+  /// Convert to json format.
   Object toJson() =>
       {'category': category.toJson(), 'threshold': threshold.toJson()};
 }
@@ -597,6 +614,19 @@ enum HarmBlockThreshold {
   /// Always show regardless of probability of unsafe content.
   none('BLOCK_NONE');
 
+  const HarmBlockThreshold(this._jsonString);
+  factory HarmBlockThreshold._fromGoogleAIHarmBlockThreshold(
+      google_ai.HarmBlockThreshold threshold) {
+    return switch (threshold) {
+      google_ai.HarmBlockThreshold.unspecified =>
+        HarmBlockThreshold.unspecified,
+      google_ai.HarmBlockThreshold.low => HarmBlockThreshold.low,
+      google_ai.HarmBlockThreshold.medium => HarmBlockThreshold.medium,
+      google_ai.HarmBlockThreshold.high => HarmBlockThreshold.high,
+      google_ai.HarmBlockThreshold.none => HarmBlockThreshold.none,
+    };
+  }
+  // ignore: unused_element
   static HarmBlockThreshold _parseValue(Object jsonObject) {
     return switch (jsonObject) {
       'HARM_BLOCK_THRESHOLD_UNSPECIFIED' => HarmBlockThreshold.unspecified,
@@ -610,19 +640,6 @@ enum HarmBlockThreshold {
   }
 
   final String _jsonString;
-
-  const HarmBlockThreshold(this._jsonString);
-  factory HarmBlockThreshold._fromGoogleAIHarmBlockThreshold(
-      google_ai.HarmBlockThreshold threshold) {
-    return switch (threshold) {
-      google_ai.HarmBlockThreshold.unspecified =>
-        HarmBlockThreshold.unspecified,
-      google_ai.HarmBlockThreshold.low => HarmBlockThreshold.low,
-      google_ai.HarmBlockThreshold.medium => HarmBlockThreshold.medium,
-      google_ai.HarmBlockThreshold.high => HarmBlockThreshold.high,
-      google_ai.HarmBlockThreshold.none => HarmBlockThreshold.none,
-    };
-  }
 
   google_ai.HarmBlockThreshold _toGoogleAIHarmBlockThreshold() {
     return switch (this) {
@@ -638,11 +655,32 @@ enum HarmBlockThreshold {
   @override
   String toString() => name;
 
+  /// Convert to json format.
   Object toJson() => _jsonString;
 }
 
 /// Configuration options for model generation and outputs.
 final class GenerationConfig {
+  /// Constructor
+  GenerationConfig(
+      {this.candidateCount,
+      this.stopSequences = const [],
+      this.maxOutputTokens,
+      this.temperature,
+      this.topP,
+      this.topK});
+
+  // ignore: unused_element
+  factory GenerationConfig._fromGoogleAIGenerationConfig(
+          google_ai.GenerationConfig config) =>
+      GenerationConfig(
+          candidateCount: config.candidateCount,
+          stopSequences: config.stopSequences,
+          maxOutputTokens: config.maxOutputTokens,
+          temperature: config.temperature,
+          topP: config.topP,
+          topK: config.topK);
+
   /// Number of generated responses to return.
   ///
   /// This value must be between [1, 8], inclusive. If unset, this will default
@@ -688,24 +726,7 @@ final class GenerationConfig {
   /// Note: The default value varies by model.
   final int? topK;
 
-  GenerationConfig(
-      {this.candidateCount,
-      this.stopSequences = const [],
-      this.maxOutputTokens,
-      this.temperature,
-      this.topP,
-      this.topK});
-
-  factory GenerationConfig._fromGoogleAIGenerationConfig(
-          google_ai.GenerationConfig config) =>
-      GenerationConfig(
-          candidateCount: config.candidateCount,
-          stopSequences: config.stopSequences,
-          maxOutputTokens: config.maxOutputTokens,
-          temperature: config.temperature,
-          topP: config.topP,
-          topK: config.topK);
-
+  /// Convert to json format
   Map<String, Object?> toJson() => {
         if (candidateCount case final candidateCount?)
           'candidateCount': candidateCount,
@@ -747,9 +768,8 @@ enum TaskType {
   /// Specifies that the embeddings will be used for clustering.
   clustering('CLUSTERING');
 
-  final String _jsonString;
-
   const TaskType(this._jsonString);
+  // ignore: unused_element
   factory TaskType._fromGoogleAITaskType(google_ai.TaskType type) {
     return switch (type) {
       google_ai.TaskType.unspecified => TaskType.unspecified,
@@ -761,6 +781,7 @@ enum TaskType {
     };
   }
 
+  // ignore: unused_element
   static TaskType _parseValue(Object jsonObject) {
     return switch (jsonObject) {
       'TASK_TYPE_UNSPECIFIED' => TaskType.unspecified,
@@ -773,6 +794,7 @@ enum TaskType {
     };
   }
 
+  final String _jsonString;
   Object toJson() => _jsonString;
   google_ai.TaskType _toGoogleAITaskType() {
     return switch (this) {
@@ -786,6 +808,7 @@ enum TaskType {
   }
 }
 
+/// Parse to [GenerateContentResponse] from json object.
 GenerateContentResponse parseGenerateContentResponse(Object jsonObject) {
   return switch (jsonObject) {
     {'candidates': final List<Object?> candidates} => GenerateContentResponse(
@@ -802,6 +825,7 @@ GenerateContentResponse parseGenerateContentResponse(Object jsonObject) {
   };
 }
 
+/// Parse to [CountTokensResponse] from json object.
 CountTokensResponse parseCountTokensResponse(Object jsonObject) {
   return switch (jsonObject) {
     {'totalTokens': final int totalTokens} => CountTokensResponse(totalTokens),
@@ -810,6 +834,7 @@ CountTokensResponse parseCountTokensResponse(Object jsonObject) {
   };
 }
 
+/// Parse to [EmbedContentResponse] from json object.
 EmbedContentResponse parseEmbedContentResponse(Object jsonObject) {
   return switch (jsonObject) {
     {'embedding': final Object embedding} =>

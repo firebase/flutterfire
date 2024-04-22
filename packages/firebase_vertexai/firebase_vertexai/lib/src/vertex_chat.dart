@@ -21,12 +21,6 @@ part of firebase_vertexai;
 /// [GenerateContentResponse], other candidates may be available on the returned
 /// response.
 final class ChatSession {
-  final List<Content> _history;
-  final List<SafetySetting>? _safetySettings;
-  final GenerationConfig? _generationConfig;
-  final GenerativeModel _model;
-  final google_ai.ChatSession _googleAIChatSession;
-
   /// Creates a new chat session with the provided model.
 
   ChatSession._(
@@ -40,6 +34,11 @@ final class ChatSession {
                 : [],
             generationConfig:
                 _model._googleAIGenerationConfig(_generationConfig));
+  final List<Content> _history;
+  final List<SafetySetting>? _safetySettings;
+  final GenerationConfig? _generationConfig;
+  final GenerativeModel _model;
+  final google_ai.ChatSession _googleAIChatSession;
 
   /// The content that has been successfully sent to, or received from, the
   /// generative model.
@@ -63,9 +62,9 @@ final class ChatSession {
   /// Successful messages and responses for ongoing or pending requests will
   /// be reflected in the history sent for this message.
   Future<GenerateContentResponse> sendMessage(Content message) async {
-    return _googleAIChatSession.sendMessage(message._toGoogleAIContent()).then(
-        (value) => GenerateContentResponse._fromGoogleAIGenerateContentResponse(
-            value));
+    return _googleAIChatSession
+        .sendMessage(message._toGoogleAIContent())
+        .then(GenerateContentResponse._fromGoogleAIGenerateContentResponse);
   }
 
   /// Continues the chat with a new [message].
@@ -88,12 +87,11 @@ final class ChatSession {
   Stream<GenerateContentResponse> sendMessageStream(Content message) {
     return _googleAIChatSession
         .sendMessageStream(message._toGoogleAIContent())
-        .map((event) =>
-            GenerateContentResponse._fromGoogleAIGenerateContentResponse(
-                event));
+        .map(GenerateContentResponse._fromGoogleAIGenerateContentResponse);
   }
 }
 
+/// [StartChatExtension] on [GenerativeModel]
 extension StartChatExtension on GenerativeModel {
   /// Starts a [ChatSession] that will use this model to respond to messages.
   ///
