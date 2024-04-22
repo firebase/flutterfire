@@ -548,7 +548,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
       /// We add the passthrough method for LegacyJsObject
       final verificationId =
-          await provider.verifyPhoneNumber(phoneOptions.toJSBox, verifier);
+          await provider.verifyPhoneNumber(phoneOptions.jsify(), verifier);
 
       codeSent(verificationId, null);
     } catch (e) {
