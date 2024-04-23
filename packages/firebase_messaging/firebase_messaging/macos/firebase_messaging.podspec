@@ -56,6 +56,10 @@ Pod::Spec.new do |s|
   s.dependency 'Firebase/CoreOnly', "~> #{firebase_sdk_version}"
   s.dependency 'Firebase/Messaging', "~> #{firebase_sdk_version}"
 
+  s.resource_bundles = {
+      "#{s.module_name}_Privacy" => 'Resources/PrivacyManifest.xcprivacy'
+  }
+
   s.static_framework = true
   s.pod_target_xcconfig = {
     'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{library_version}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-fcm\\\"",

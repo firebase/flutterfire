@@ -383,7 +383,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
 
     await completer.future;
 
-    await (unsubscribe.dartify()! as Future<void> Function())();
+    await (unsubscribe.callAsFunction() as JSPromise<JSAny?>?)?.toDart;
   }
 
   JSFunction? _onAuthUnsubscribe;
