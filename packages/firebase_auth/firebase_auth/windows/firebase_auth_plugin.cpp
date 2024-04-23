@@ -606,7 +606,8 @@ firebase::auth::Credential getCredentialFromArguments(
     return firebase::auth::Credential();
   }
 
-  // Lambda function to extract an optional string from the arguments map. This allows us to pass nullptr if no value exists
+  // Lambda function to extract an optional string from the arguments map. This
+  // allows us to pass nullptr if no value exists
   auto getStringOpt =
       [&](const std::string& key) -> std::optional<std::string> {
     auto it = arguments.find(key);
@@ -616,7 +617,6 @@ firebase::auth::Credential getCredentialFromArguments(
     }
     return std::nullopt;
   };
-
 
   std::optional<std::string> idToken = getStringOpt(kArgumentIdToken);
   std::optional<std::string> accessToken = getStringOpt(kArgumentAccessToken);
