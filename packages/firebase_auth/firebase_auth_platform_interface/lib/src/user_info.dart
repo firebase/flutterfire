@@ -25,8 +25,8 @@ class UserInfo {
           providerId: data['providerId'] as String?,
           tenantId: data['tenantId'] as String?,
           refreshToken: data['refreshToken'] as String?,
-          creationTimestamp: data['creationTimestamp'] as int?,
-          lastSignInTimestamp: data['lastSignInTimestamp'] as int?,
+          creationTimestamp: (data['creationTimestamp'] as num?)?.toInt(),
+          lastSignInTimestamp: (data['lastSignInTimestamp'] as num?)?.toInt(),
         );
 
   final PigeonUserInfo _data;

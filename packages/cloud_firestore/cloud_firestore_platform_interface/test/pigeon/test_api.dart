@@ -544,12 +544,12 @@ abstract class TestFirebaseFirestoreHostApi {
             arg_app != null,
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate was null, expected non-null FirestorePigeonFirebaseApp.',
           );
-          final int? arg_timeout = (args[1] as int?);
+          final int? arg_timeout = (args[1] as num?)?.toInt();
           assert(
             arg_timeout != null,
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate was null, expected non-null int.',
           );
-          final int? arg_maxAttempts = (args[2] as int?);
+          final int? arg_maxAttempts = (args[2] as num?)?.toInt();
           assert(
             arg_maxAttempts != null,
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate was null, expected non-null int.',
@@ -588,7 +588,7 @@ abstract class TestFirebaseFirestoreHostApi {
           );
           final PigeonTransactionResult? arg_resultType = args[1] == null
               ? null
-              : PigeonTransactionResult.values[args[1]! as int];
+              : PigeonTransactionResult.values[(args[1]! as num).toInt()];
           assert(
             arg_resultType != null,
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionStoreResult was null, expected non-null PigeonTransactionResult.',
@@ -877,7 +877,7 @@ abstract class TestFirebaseFirestoreHostApi {
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery was null, expected non-null PigeonQueryParameters.',
           );
           final AggregateSource? arg_source =
-              args[3] == null ? null : AggregateSource.values[args[3]! as int];
+              args[3] == null ? null : AggregateSource.values[(args[3]! as num).toInt()];
           assert(
             arg_source != null,
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery was null, expected non-null AggregateSource.',
@@ -991,7 +991,7 @@ abstract class TestFirebaseFirestoreHostApi {
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot was null, expected non-null bool.',
           );
           final ListenSource? arg_source =
-              args[6] == null ? null : ListenSource.values[args[6]! as int];
+              args[6] == null ? null : ListenSource.values[(args[6]! as num).toInt()];
           assert(
             arg_source != null,
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot was null, expected non-null ListenSource.',
@@ -1045,7 +1045,7 @@ abstract class TestFirebaseFirestoreHostApi {
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot was null, expected non-null bool.',
           );
           final ListenSource? arg_source =
-              args[3] == null ? null : ListenSource.values[args[3]! as int];
+              args[3] == null ? null : ListenSource.values[(args[3]! as num).toInt()];
           assert(
             arg_source != null,
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot was null, expected non-null ListenSource.',

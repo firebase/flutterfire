@@ -35,7 +35,7 @@ void runWriteBatchTests() {
 
       DocumentReference<int> doc = collection.doc('doc1').withConverter(
             fromFirestore: (snapshot, options) {
-              return snapshot.data()!['value'] as int;
+              return (snapshot.data()!['value']! as num).toInt();
             },
             toFirestore: (value, options) => {'value': value},
           );

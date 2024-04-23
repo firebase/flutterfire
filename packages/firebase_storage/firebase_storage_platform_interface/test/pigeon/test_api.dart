@@ -184,7 +184,7 @@ abstract class TestFirebaseStorageHostApi {
               (args[0] as PigeonStorageFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxOperationRetryTime was null, expected non-null PigeonStorageFirebaseApp.');
-          final int? arg_time = (args[1] as int?);
+          final int? arg_time = (args[1] as num?)?.toInt();
           assert(arg_time != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxOperationRetryTime was null, expected non-null int.');
           await api.setMaxOperationRetryTime(arg_app!, arg_time!);
@@ -211,7 +211,7 @@ abstract class TestFirebaseStorageHostApi {
               (args[0] as PigeonStorageFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxUploadRetryTime was null, expected non-null PigeonStorageFirebaseApp.');
-          final int? arg_time = (args[1] as int?);
+          final int? arg_time = (args[1] as num?)?.toInt();
           assert(arg_time != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxUploadRetryTime was null, expected non-null int.');
           await api.setMaxUploadRetryTime(arg_app!, arg_time!);
@@ -238,7 +238,7 @@ abstract class TestFirebaseStorageHostApi {
               (args[0] as PigeonStorageFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxDownloadRetryTime was null, expected non-null PigeonStorageFirebaseApp.');
-          final int? arg_time = (args[1] as int?);
+          final int? arg_time = (args[1] as num?).toInt();
           assert(arg_time != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxDownloadRetryTime was null, expected non-null int.');
           await api.setMaxDownloadRetryTime(arg_app!, arg_time!);
@@ -268,7 +268,7 @@ abstract class TestFirebaseStorageHostApi {
           final String? arg_host = (args[1] as String?);
           assert(arg_host != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.useStorageEmulator was null, expected non-null String.');
-          final int? arg_port = (args[2] as int?);
+          final int? arg_port = (args[2] as num?).toInt();
           assert(arg_port != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.useStorageEmulator was null, expected non-null int.');
           await api.useStorageEmulator(arg_app!, arg_host!, arg_port!);
@@ -447,7 +447,7 @@ abstract class TestFirebaseStorageHostApi {
               (args[1] as PigeonStorageReference?);
           assert(arg_reference != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetData was null, expected non-null PigeonStorageReference.');
-          final int? arg_maxSize = (args[2] as int?);
+          final int? arg_maxSize = (args[2] as num?).toInt();
           assert(arg_maxSize != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetData was null, expected non-null int.');
           final Uint8List? output = await api.referenceGetData(
@@ -486,7 +486,7 @@ abstract class TestFirebaseStorageHostApi {
               (args[3] as PigeonSettableMetadata?);
           assert(arg_settableMetaData != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutData was null, expected non-null PigeonSettableMetadata.');
-          final int? arg_handle = (args[4] as int?);
+          final int? arg_handle = (args[4] as num?)?.toInt();
           assert(arg_handle != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutData was null, expected non-null int.');
           final String output = await api.referencePutData(arg_app!,
@@ -521,14 +521,14 @@ abstract class TestFirebaseStorageHostApi {
           final String? arg_data = (args[2] as String?);
           assert(arg_data != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString was null, expected non-null String.');
-          final int? arg_format = (args[3] as int?);
+          final int? arg_format = (args[3] as num?)?.toInt();
           assert(arg_format != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString was null, expected non-null int.');
           final PigeonSettableMetadata? arg_settableMetaData =
               (args[4] as PigeonSettableMetadata?);
           assert(arg_settableMetaData != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString was null, expected non-null PigeonSettableMetadata.');
-          final int? arg_handle = (args[5] as int?);
+          final int? arg_handle = (args[5] as num?)?.toInt();
           assert(arg_handle != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString was null, expected non-null int.');
           final String output = await api.referencePutString(
@@ -570,7 +570,7 @@ abstract class TestFirebaseStorageHostApi {
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile was null, expected non-null String.');
           final PigeonSettableMetadata? arg_settableMetaData =
               (args[3] as PigeonSettableMetadata?);
-          final int? arg_handle = (args[4] as int?);
+          final int? arg_handle = (args[4] as num?)?.toInt();
           assert(arg_handle != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile was null, expected non-null int.');
           final String output = await api.referencePutFile(arg_app!,
@@ -605,7 +605,7 @@ abstract class TestFirebaseStorageHostApi {
           final String? arg_filePath = (args[2] as String?);
           assert(arg_filePath != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDownloadFile was null, expected non-null String.');
-          final int? arg_handle = (args[3] as int?);
+          final int? arg_handle = (args[3] as num?)?.toInt();
           assert(arg_handle != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDownloadFile was null, expected non-null int.');
           final String output = await api.referenceDownloadFile(
@@ -666,7 +666,7 @@ abstract class TestFirebaseStorageHostApi {
               (args[0] as PigeonStorageFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskPause was null, expected non-null PigeonStorageFirebaseApp.');
-          final int? arg_handle = (args[1] as int?);
+          final int? arg_handle = (args[1] as num?)?.toInt();
           assert(arg_handle != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskPause was null, expected non-null int.');
           final Map<String?, Object?> output =
@@ -694,7 +694,7 @@ abstract class TestFirebaseStorageHostApi {
               (args[0] as PigeonStorageFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskResume was null, expected non-null PigeonStorageFirebaseApp.');
-          final int? arg_handle = (args[1] as int?);
+          final int? arg_handle = (args[1] as num?)?.toInt();
           assert(arg_handle != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskResume was null, expected non-null int.');
           final Map<String?, Object?> output =
@@ -722,7 +722,7 @@ abstract class TestFirebaseStorageHostApi {
               (args[0] as PigeonStorageFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskCancel was null, expected non-null PigeonStorageFirebaseApp.');
-          final int? arg_handle = (args[1] as int?);
+          final int? arg_handle = (args[1] as num?)?.toInt();
           assert(arg_handle != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskCancel was null, expected non-null int.');
           final Map<String?, Object?> output =

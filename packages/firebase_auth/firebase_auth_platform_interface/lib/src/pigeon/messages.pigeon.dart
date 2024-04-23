@@ -116,7 +116,7 @@ class PigeonMultiFactorInfo {
     result as List<Object?>;
     return PigeonMultiFactorInfo(
       displayName: result[0] as String?,
-      enrollmentTimestamp: result[1]! as double,
+      enrollmentTimestamp: (result[1]! as num).toDouble(),
       factorId: result[2] as String?,
       uid: result[3]! as String,
       phoneNumber: result[4] as String?,
@@ -201,7 +201,7 @@ class PigeonActionCodeInfo {
   static PigeonActionCodeInfo decode(Object result) {
     result as List<Object?>;
     return PigeonActionCodeInfo(
-      operation: ActionCodeInfoOperation.values[result[0]! as int],
+      operation: ActionCodeInfoOperation.values[(result[0]! as num).toInt()],
       data: PigeonActionCodeInfoData.decode(result[1]! as List<Object?>),
     );
   }
@@ -278,7 +278,7 @@ class PigeonAuthCredential {
     return PigeonAuthCredential(
       providerId: result[0]! as String,
       signInMethod: result[1]! as String,
-      nativeId: result[2]! as int,
+      nativeId: (result[2]! as num).toInt(),
       accessToken: result[3] as String?,
     );
   }
@@ -354,8 +354,8 @@ class PigeonUserInfo {
       providerId: result[7] as String?,
       tenantId: result[8] as String?,
       refreshToken: result[9] as String?,
-      creationTimestamp: result[10] as int?,
-      lastSignInTimestamp: result[11] as int?,
+      creationTimestamp: (result[10] as num?)?.toInt(),
+      lastSignInTimestamp: (result[11] as num?)?.toInt(),
     );
   }
 }
@@ -585,8 +585,8 @@ class PigeonVerifyPhoneNumberRequest {
     result as List<Object?>;
     return PigeonVerifyPhoneNumberRequest(
       phoneNumber: result[0] as String?,
-      timeout: result[1]! as int,
-      forceResendingToken: result[2] as int?,
+      timeout: (result[1]! as num).toInt(),
+      forceResendingToken: (result[2] as num?)?.toInt(),
       autoRetrievedSmsCodeForTesting: result[3] as String?,
       multiFactorInfoId: result[4] as String?,
       multiFactorSessionId: result[5] as String?,
@@ -635,9 +635,9 @@ class PigeonIdTokenResult {
     result as List<Object?>;
     return PigeonIdTokenResult(
       token: result[0] as String?,
-      expirationTimestamp: result[1] as int?,
-      authTimestamp: result[2] as int?,
-      issuedAtTimestamp: result[3] as int?,
+      expirationTimestamp: (result[1] as num?)?.toInt(),
+      authTimestamp: (result[2] as num?)?.toInt(),
+      issuedAtTimestamp: (result[3] as num?)?.toInt(),
       signInProvider: result[4] as String?,
       claims: (result[5] as Map<Object?, Object?>?)?.cast<String?, Object?>(),
       signInSecondFactor: result[6] as String?,
@@ -713,9 +713,9 @@ class PigeonTotpSecret {
   static PigeonTotpSecret decode(Object result) {
     result as List<Object?>;
     return PigeonTotpSecret(
-      codeIntervalSeconds: result[0] as int?,
-      codeLength: result[1] as int?,
-      enrollmentCompletionDeadline: result[2] as int?,
+      codeIntervalSeconds: (result[0] as num?).toInt(),
+      codeLength: (result[1] as num?)?.toInt(),
+      enrollmentCompletionDeadline: (result[2] as num?)?.toInt(),
       hashingAlgorithm: result[3] as String?,
       secretKey: result[4]! as String,
     );

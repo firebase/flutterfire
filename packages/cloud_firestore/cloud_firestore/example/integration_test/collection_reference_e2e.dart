@@ -92,7 +92,7 @@ void runCollectionReferenceTests() {
             final foo = await initializeTest('foo');
             final fooConverter = foo.withConverter<int>(
               fromFirestore: (snapshots, _) =>
-                  snapshots.data()!['value']! as int,
+                  (snapshots.data()!['value']! as num).toInt(),
               toFirestore: (value, _) => {'value': value},
             );
 

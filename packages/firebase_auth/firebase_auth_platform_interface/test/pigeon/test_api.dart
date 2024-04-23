@@ -258,7 +258,7 @@ abstract class TestFirebaseAuthHostApi {
           final String? arg_host = (args[1] as String?);
           assert(arg_host != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.useEmulator was null, expected non-null String.');
-          final int? arg_port = (args[2] as int?);
+          final int? arg_port = (args[2] as num?)?.toInt();
           assert(arg_port != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.useEmulator was null, expected non-null int.');
           await api.useEmulator(arg_app!, arg_host!, arg_port!);

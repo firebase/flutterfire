@@ -105,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
       (DatabaseEvent event) {
         setState(() {
           _error = null;
-          _counter = (event.snapshot.value ?? 0) as int;
+          _counter = ((event.snapshot.value ?? 0) as num).toInt();
         });
       },
       onError: (Object o) {
@@ -147,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _incrementAsTransaction() async {
     try {
       final transactionResult = await _counterRef.runTransaction((mutableData) {
-        return Transaction.success((mutableData as int? ?? 0) + 1);
+        return Transaction.success((mutableData as num? ?? 0).toInt() + 1);
       });
 
       if (transactionResult.committed) {

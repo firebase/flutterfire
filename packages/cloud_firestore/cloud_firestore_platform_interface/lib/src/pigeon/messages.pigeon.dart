@@ -132,7 +132,7 @@ class PigeonFirebaseSettings {
       persistenceEnabled: result[0] as bool?,
       host: result[1] as String?,
       sslEnabled: result[2] as bool?,
-      cacheSizeBytes: result[3] as int?,
+      cacheSizeBytes: (result[3] as num?)?.toInt(),
       ignoreUndefinedProperties: result[4]! as bool,
     );
   }
@@ -254,10 +254,10 @@ class PigeonDocumentChange {
   static PigeonDocumentChange decode(Object result) {
     result as List<Object?>;
     return PigeonDocumentChange(
-      type: DocumentChangeType.values[result[0]! as int],
+      type: DocumentChangeType.values[(result[0]! as num).toInt()],
       document: PigeonDocumentSnapshot.decode(result[1]! as List<Object?>),
-      oldIndex: result[2]! as int,
-      newIndex: result[3]! as int,
+      oldIndex: (result[2]! as num).toInt(),
+      newIndex: (result[3]! as num).toInt(),
     );
   }
 }
@@ -314,9 +314,9 @@ class PigeonGetOptions {
   static PigeonGetOptions decode(Object result) {
     result as List<Object?>;
     return PigeonGetOptions(
-      source: Source.values[result[0]! as int],
+      source: Source.values[(result[0]! as num).toInt()],
       serverTimestampBehavior:
-          ServerTimestampBehavior.values[result[1]! as int],
+          ServerTimestampBehavior.values[(result[1]! as num).toInt()],
     );
   }
 }
@@ -375,7 +375,7 @@ class PigeonTransactionCommand {
   static PigeonTransactionCommand decode(Object result) {
     result as List<Object?>;
     return PigeonTransactionCommand(
-      type: PigeonTransactionType.values[result[0]! as int],
+      type: PigeonTransactionType.values[(result[0]! as num).toInt()],
       path: result[1]! as String,
       data: (result[2] as Map<Object?, Object?>?)?.cast<String?, Object?>(),
       option: result[3] != null
@@ -422,9 +422,9 @@ class DocumentReferenceRequest {
       option: result[2] != null
           ? PigeonDocumentOption.decode(result[2]! as List<Object?>)
           : null,
-      source: result[3] != null ? Source.values[result[3]! as int] : null,
+      source: result[3] != null ? Source.values[(result[3]! as num).toInt()] : null,
       serverTimestampBehavior: result[4] != null
-          ? ServerTimestampBehavior.values[result[4]! as int]
+          ? ServerTimestampBehavior.values[(result[4]! as num).toInt()]
           : null,
     );
   }
@@ -480,8 +480,8 @@ class PigeonQueryParameters {
     return PigeonQueryParameters(
       where: (result[0] as List<Object?>?)?.cast<List<Object?>?>(),
       orderBy: (result[1] as List<Object?>?)?.cast<List<Object?>?>(),
-      limit: result[2] as int?,
-      limitToLast: result[3] as int?,
+      limit: (result[2] as num?)?.toInt(),
+      limitToLast: (result[3] as num?)?.toInt(),
       startAt: (result[4] as List<Object?>?)?.cast<Object?>(),
       startAfter: (result[5] as List<Object?>?)?.cast<Object?>(),
       endAt: (result[6] as List<Object?>?)?.cast<Object?>(),
@@ -511,7 +511,7 @@ class AggregateQuery {
   static AggregateQuery decode(Object result) {
     result as List<Object?>;
     return AggregateQuery(
-      type: AggregateType.values[result[0]! as int],
+      type: AggregateType.values[(result[0]! as num).toInt()],
       field: result[1] as String?,
     );
   }
@@ -541,9 +541,9 @@ class AggregateQueryResponse {
   static AggregateQueryResponse decode(Object result) {
     result as List<Object?>;
     return AggregateQueryResponse(
-      type: AggregateType.values[result[0]! as int],
+      type: AggregateType.values[(result[0]! as num).toInt()],
       field: result[1] as String?,
-      value: result[2] as double?,
+      value: (result[2] as num?)?.toDouble(),
     );
   }
 }

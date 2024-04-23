@@ -2385,7 +2385,7 @@ void runSecondDatabaseTests() {
                 .where('value', isGreaterThan: 0)
                 .withConverter<int>(
                   fromFirestore: (snapshots, _) =>
-                      snapshots.data()!['value']! as int,
+                      (snapshots.data()!['value']! as num).toInt(),
                   toFirestore: (value, _) => {'value': value},
                 );
 
@@ -2436,7 +2436,7 @@ void runSecondDatabaseTests() {
                 .where(Filter('value', isGreaterThan: 0))
                 .withConverter<int>(
                   fromFirestore: (snapshots, _) =>
-                      snapshots.data()!['value']! as int,
+                      (snapshots.data()!['value']! as num).toInt(),
                   toFirestore: (value, _) => {'value': value},
                 );
 
@@ -2485,7 +2485,7 @@ void runSecondDatabaseTests() {
 
             final converted = collection.withConverter<int>(
               fromFirestore: (snapshots, _) =>
-                  snapshots.data()!['value']! as int,
+                  (snapshots.data()!['value']! as num).toInt(),
               toFirestore: (value, _) => {'value': value},
             );
 
@@ -2533,7 +2533,7 @@ void runSecondDatabaseTests() {
 
             final converted = collection.withConverter<int>(
               fromFirestore: (snapshots, _) =>
-                  snapshots.data()!['value']! as int,
+                  (snapshots.data()!['value']! as num).toInt(),
               toFirestore: (value, _) => {'value': value},
             );
 
@@ -2561,7 +2561,7 @@ void runSecondDatabaseTests() {
 
             final converted = collection.withConverter<int>(
               fromFirestore: (snapshots, _) =>
-                  snapshots.data()!['value']! as int,
+                  (snapshots.data()!['value']! as num).toInt(),
               toFirestore: (value, _) => {'value': value},
             );
 
@@ -2588,7 +2588,7 @@ void runSecondDatabaseTests() {
 
             final converted = collection.withConverter<int>(
               fromFirestore: (snapshots, _) =>
-                  snapshots.data()!['value']! as int,
+                  (snapshots.data()!['value']! as num).toInt(),
               toFirestore: (value, _) => {'value': value},
             );
 
@@ -2617,7 +2617,7 @@ void runSecondDatabaseTests() {
 
             final converted = collection.withConverter<int>(
               fromFirestore: (snapshots, _) =>
-                  snapshots.data()!['value']! as int,
+                  (snapshots.data()!['value']! as num).toInt(),
               toFirestore: (value, _) => {'value': value},
             );
 
@@ -2643,7 +2643,7 @@ void runSecondDatabaseTests() {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
-            fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+            fromFirestore: (snapshots, _) => (snapshots.data()!['value']! as num).toInt(),
             toFirestore: (value, _) => {'value': value},
           );
 
@@ -2668,7 +2668,7 @@ void runSecondDatabaseTests() {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
-            fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+            fromFirestore: (snapshots, _) => (snapshots.data()!['value']! as num).toInt(),
             toFirestore: (value, _) => {'value': value},
           );
 
@@ -2696,7 +2696,7 @@ void runSecondDatabaseTests() {
 
             final converted = collection.withConverter<int>(
               fromFirestore: (snapshots, _) =>
-                  snapshots.data()!['value']! as int,
+                  (snapshots.data()!['value']! as num).toInt(),
               toFirestore: (value, _) => {'value': value},
             );
 
@@ -2723,7 +2723,7 @@ void runSecondDatabaseTests() {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
-            fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+            fromFirestore: (snapshots, _) => (snapshots.data()!['value']! as num).toInt(),
             toFirestore: (value, _) => {'value': value},
           );
 
@@ -2745,7 +2745,7 @@ void runSecondDatabaseTests() {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
-            fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+            fromFirestore: (snapshots, _) => (snapshots.data()!['value']! as num).toInt(),
             toFirestore: (value, _) => {'value': value},
           );
 
@@ -2770,7 +2770,7 @@ void runSecondDatabaseTests() {
 
             final converted = collection.withConverter<int>(
               fromFirestore: (snapshots, _) =>
-                  snapshots.data()!['value']! as int,
+                  (snapshots.data()!['value']! as num).toInt(),
               toFirestore: (value, _) => {'value': value},
             );
 
@@ -2797,7 +2797,7 @@ void runSecondDatabaseTests() {
 
             final converted = collection.withConverter<int>(
               fromFirestore: (snapshots, _) =>
-                  snapshots.data()!['value']! as int,
+                  (snapshots.data()!['value']! as num).toInt(),
               toFirestore: (value, _) => {'value': value},
             );
 
@@ -2827,7 +2827,7 @@ void runSecondDatabaseTests() {
 
             final converted = collection.withConverter<int>(
               fromFirestore: (snapshots, _) =>
-                  snapshots.data()!['value']! as int,
+                  (snapshots.data()!['value']! as num).toInt(),
               toFirestore: (value, _) => {'value': value},
             );
 
@@ -2857,7 +2857,7 @@ void runSecondDatabaseTests() {
 
             final converted = collection.withConverter<int>(
               fromFirestore: (snapshots, _) =>
-                  snapshots.data()!['value']! as int,
+                  (snapshots.data()!['value']! as num).toInt(),
               toFirestore: (value, _) => {'value': value},
             );
 
@@ -2887,7 +2887,7 @@ void runSecondDatabaseTests() {
 
             final converted = collection.withConverter<int>(
               fromFirestore: (snapshots, _) =>
-                  snapshots.data()!['value']! as int,
+                  (snapshots.data()!['value']! as num).toInt(),
               toFirestore: (value, _) => {'value': value},
             );
 
@@ -2914,7 +2914,7 @@ void runSecondDatabaseTests() {
 
             final converted = collection.withConverter<int>(
               fromFirestore: (snapshots, _) =>
-                  snapshots.data()!['value']! as int,
+                  (snapshots.data()!['value']! as num).toInt(),
               toFirestore: (value, _) => {'value': value},
             );
 
@@ -2941,7 +2941,7 @@ void runSecondDatabaseTests() {
 
             final converted = collection.withConverter<int>(
               fromFirestore: (snapshots, _) =>
-                  snapshots.data()!['value']! as int,
+                  (snapshots.data()!['value']! as num).toInt(),
               toFirestore: (value, _) => {'value': value},
             );
 

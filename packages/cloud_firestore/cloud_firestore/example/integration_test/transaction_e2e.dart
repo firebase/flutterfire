@@ -32,7 +32,7 @@ void runTransactionTests() {
 
         DocumentReference<int> doc = rawDoc.withConverter(
           fromFirestore: (snapshot, options) {
-            return snapshot.data()!['value'] as int;
+            return (snapshot.data()!['value']! as num).toInt();
           },
           toFirestore: (value, options) => {'value': value},
         );

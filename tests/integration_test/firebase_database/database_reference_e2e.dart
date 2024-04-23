@@ -114,7 +114,7 @@ void setupDatabaseReferenceTests() {
         expect(snapshot.value, 5);
 
         final result = await ref.runTransaction((value) {
-          final nextValue = (value as int? ?? 0) + 1;
+          final nextValue = (value as num? ?? 0).toInt() + 1;
           if (nextValue > 5) {
             return Transaction.abort();
           }
@@ -127,13 +127,13 @@ void setupDatabaseReferenceTests() {
 
       test('executes transaction', () async {
         final snapshot = await ref.get();
-        final value = (snapshot.value ?? 0) as int;
+        final value = (snapshot.value as num? ?? 0).toInt();
         final result = await ref.runTransaction((value) {
-          return Transaction.success((value as int? ?? 0) + 1);
+          return Transaction.success((value as num? ?? 0).toInt() + 1);
         });
 
         expect(result.committed, true);
-        expect((result.snapshot.value ?? 0) as int > value, true);
+        expect((result.snapshot.value as num? ?? 0).toInt() > value, true);
         expect(result.snapshot.key, ref.key);
       });
 

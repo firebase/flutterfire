@@ -538,7 +538,7 @@ void runDocumentReferenceTests() {
         (_) async {
           final foo = await initializeTest('foo');
           final fooConverter = foo.withConverter<int>(
-            fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+            fromFirestore: (snapshots, _) => (snapshots.data()!['value']! as num).toInt(),
             toFirestore: (value, _) => {'value': value},
           );
 

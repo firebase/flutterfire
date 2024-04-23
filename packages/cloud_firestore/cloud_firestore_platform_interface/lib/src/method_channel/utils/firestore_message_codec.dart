@@ -86,7 +86,7 @@ class FirestoreMessageCodec extends StandardMessageCodec {
       if (delegate.type == FieldValueType.incrementInteger &&
           (delegate.value > 2147483647 || delegate.value < -2147483648)) {
         buffer.putUint8(_kIncrementDouble);
-        writeValue(buffer, (delegate.value as int).toDouble());
+        writeValue(buffer, (delegate.value as num).toDouble());
       } else {
         buffer.putUint8(code);
         if (delegate.value != null) writeValue(buffer, delegate.value);

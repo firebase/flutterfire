@@ -245,7 +245,7 @@ class MockFirebaseRemoteConfigWeb extends _i1.Mock
         ),
         returnValue: 0,
         returnValueForMissingStub: 0,
-      ) as int);
+      ) as num).toInt();
   @override
   double getDouble(String? key) => (super.noSuchMethod(
         Invocation.method(
@@ -254,7 +254,7 @@ class MockFirebaseRemoteConfigWeb extends _i1.Mock
         ),
         returnValue: 0.0,
         returnValueForMissingStub: 0.0,
-      ) as double);
+      ) as num).toDouble();
   @override
   String getString(String? key) => (super.noSuchMethod(
         Invocation.method(

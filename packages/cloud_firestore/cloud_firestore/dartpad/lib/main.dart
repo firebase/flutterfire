@@ -397,12 +397,12 @@ class Movie {
   Movie.fromJson(Map<String, Object?> json)
       : this(
           genre: (json['genre']! as List).cast<String>(),
-          likes: json['likes']! as int,
+          likes: (json['likes']! as num).toInt(),
           poster: json['poster']! as String,
           rated: json['rated']! as String,
           runtime: json['runtime']! as String,
           title: json['title']! as String,
-          year: json['year']! as int,
+          year: (json['year']! as num).toInt(),
         );
 
   final String poster;

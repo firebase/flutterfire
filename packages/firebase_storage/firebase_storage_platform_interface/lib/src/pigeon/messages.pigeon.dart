@@ -139,7 +139,7 @@ class PigeonListOptions {
   static PigeonListOptions decode(Object result) {
     result as List<Object?>;
     return PigeonListOptions(
-      maxResults: result[0]! as int,
+      maxResults: (result[0]! as num).toInt(),
       pageToken: result[1] as String?,
     );
   }
