@@ -654,8 +654,8 @@ firebase::auth::Credential getCredentialFromArguments(
     std::string providerId =
         std::get<std::string>(arguments[kArgumentProviderId]);
     return firebase::auth::OAuthProvider::GetCredential(
-        providerId.c_str(), idToken ? idToken.value().c_str() : nullptr,
-        accessToken ? accessToken.value().c_str() : nullptr);
+        providerId.c_str(), idToken.value().c_str(),
+        accessToken.value().c_str());
   }
 
   // If no known auth method matched
