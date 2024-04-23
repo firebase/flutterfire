@@ -1,3 +1,8 @@
+## 5.11.3
+
+ - **FIX**(auth,web): fix verifyPhoneNumber by using jsify() to convert phone options to javascript ([#12681](https://github.com/firebase/flutterfire/issues/12681)). ([967aa5d2](https://github.com/firebase/flutterfire/commit/967aa5d2a86b238314ab58857999110b17bd34bc))
+ - **FIX**(auth,web): invocation of unsubscribe callback for dart2wasm compatibility. ([#12669](https://github.com/firebase/flutterfire/issues/12669)). ([2b84feb1](https://github.com/firebase/flutterfire/commit/2b84feb1b6ec32b1a3605824ed1370b08912184c))
+
 ## 5.11.2
 
  - Update a dependency to the latest release.
