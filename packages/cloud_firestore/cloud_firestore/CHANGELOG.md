@@ -1,3 +1,7 @@
+## 4.17.1
+
+ - Update a dependency to the latest release.
+
 ## 4.17.0
 
  - **FIX**(firestore): remove `nanopb` version constraints from podspec ([#12632](https://github.com/firebase/flutterfire/issues/12632)). ([c899a7bc](https://github.com/firebase/flutterfire/commit/c899a7bc9cdd7b552d3c10058f4899106a4c1994))

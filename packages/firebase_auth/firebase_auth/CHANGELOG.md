@@ -1,3 +1,7 @@
+## 4.19.3
+
+ - **FIX**(auth,ios): Give more details on internal error when calling `sendSignInLinkToEmail`. ([#12671](https://github.com/firebase/flutterfire/issues/12671)). ([2b086029](https://github.com/firebase/flutterfire/commit/2b0860296bf577c99810643bb286b7219ee9291f))
+
 ## 4.19.2
 
  - Update a dependency to the latest release.
