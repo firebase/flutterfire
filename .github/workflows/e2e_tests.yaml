@@ -309,7 +309,7 @@ jobs:
       - uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225
         with:
           # TODO: Remove this once WASM is on stable.
-          channel: 'beta'
+          channel: 'master'
           cache: true
       - uses: bluefireteam/melos-action@5a8367ec4b9942d712528c398ff3f996e03bc230
         with:
