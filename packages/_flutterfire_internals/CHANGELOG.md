@@ -1,3 +1,7 @@
+## 1.3.32
+
+ - **FIX**(web): fix type casting for JSString in error parsing ([#12698](https://github.com/firebase/flutterfire/issues/12698)). ([93efcffb](https://github.com/firebase/flutterfire/commit/93efcffbaba854fe50c5dd26b590d8a02d6e2d4e))
+
 ## 1.3.31
 
  - Update a dependency to the latest release.
