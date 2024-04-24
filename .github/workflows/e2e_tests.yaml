@@ -335,7 +335,7 @@ jobs:
         run: |
           chromedriver --port=4444 --trace-buffer-size=100000 &
           mv ./web/wasm_index.html ./web/index.html
-          flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --web-renderer=skwasm --dart-define=CI=true | tee output.log
+          flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --wasm --dart-define=CI=true | tee output.log
           # We have to check the output for failed tests matching the string "[E]"
           output=$(<output.log)
           if [[ "$output" =~ \[E\] ]]; then
