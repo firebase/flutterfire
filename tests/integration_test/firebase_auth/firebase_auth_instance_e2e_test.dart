@@ -656,6 +656,7 @@ void main() {
             fail(e.toString());
           }
         });
+
         test(
             'throw Exception when using incorrect auth details with GoogleAuthProvider',
             () async {
