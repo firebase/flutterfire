@@ -8,7 +8,7 @@ environment:
 
 dependencies:
   firebase_core: ^2.30.1
-  firebase_performance: ^0.9.4+3
+  firebase_performance: ^0.9.4+4
   flutter:
     sdk: flutter
   http: ^1.0.0

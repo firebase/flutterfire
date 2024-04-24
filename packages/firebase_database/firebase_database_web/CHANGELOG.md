@@ -1,3 +1,7 @@
+## 0.2.5+4
+
+ - Update a dependency to the latest release.
+
 ## 0.2.5+3
 
  - **FIX**(database,web): Fix exceptions being converted into lowercase ([#12661](https://github.com/firebase/flutterfire/issues/12661)). ([f9f46a53](https://github.com/firebase/flutterfire/commit/f9f46a53e022503455e637c7fda08765888d9b13))
