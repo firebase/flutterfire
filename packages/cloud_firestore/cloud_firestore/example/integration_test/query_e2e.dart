@@ -272,7 +272,8 @@ void runQueryTests() {
         });
       });
 
-      testWidgets('listens to a single response from cache', (_) async {
+      testWidgets('listens to a single response from cache with QuerySnapshot',
+          (_) async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('get-single-cache');
         await collection.add({'foo': 'bar'});
@@ -378,7 +379,7 @@ void runQueryTests() {
       });
 
       testWidgets(
-        'listeners throws a [FirebaseException]',
+        'listeners throws a [FirebaseException] with Query',
         (_) async {
           CollectionReference<Map<String, dynamic>> collection =
               firestore.collection('not-allowed');

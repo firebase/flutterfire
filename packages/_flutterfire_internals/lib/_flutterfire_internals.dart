@@ -11,6 +11,8 @@
 // This file exports utilities shared between firebase packages, without making
 // them public.
 
+import 'dart:js_interop';
+
 import 'package:firebase_core/firebase_core.dart';
 
 import 'src/interop_shimmer.dart'
@@ -56,11 +58,22 @@ FirebaseException _firebaseExceptionFromCoreFirebaseError(
   required String Function(String) codeParser,
   required String Function(String code, String message)? messageParser,
 }) {
-  // ignore: unnecessary_cast
-  final convertCode = firebaseError.code as String;
+  late final String convertCode;
+  if ((firebaseError.code) is JSAny) {
+    convertCode = (firebaseError.code as JSString).toDart;
+  } else {
+    // ignore: unnecessary_cast
+    convertCode = firebaseError.code as String;
+  }
   final code = codeParser(convertCode);
-  // ignore: unnecessary_cast
-  final convertMessage = firebaseError.message as String;
+
+  late final String convertMessage;
+  if (firebaseError.message is JSAny) {
+    convertMessage = (firebaseError.message as JSString).toDart;
+  } else {
+    // ignore: unnecessary_cast
+    convertMessage = firebaseError.message as String;
+  }
   final message = messageParser != null
       ? messageParser(code, convertMessage)
       : convertMessage.replaceFirst('(${firebaseError.code})', '');
@@ -81,8 +94,14 @@ FirebaseException _firebaseExceptionFromCoreFirebaseError(
 /// See also https://github.com/dart-lang/sdk/issues/30741
 bool _testException(Object? objectException) {
   final exception = objectException! as core_interop.JSError;
-  // ignore: unnecessary_cast
-  final message = exception.message as String;
+
+  late final String message;
+  if (exception.message is JSAny) {
+    message = (exception.message as JSString).toDart;
+  } else {
+    // ignore: unnecessary_cast
+    message = exception.message as String;
+  }
   // Firestore web does not contain `Firebase` in the message so we check the exception itself.
   return message.contains('Firebase') ||
       exception.toString().contains('FirebaseError');
