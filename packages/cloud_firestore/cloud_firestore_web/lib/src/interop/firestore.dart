@@ -986,14 +986,14 @@ class AggregateQuerySnapshot
       : _data = Map.from(dartify(jsObject.data())),
         super.fromJsObject(jsObject);
 
-  int? get count => _data['count'] as int?;
+  int? get count => (_data['count'] as num?)?.toInt();
 
   double? getDataValue(platform_interface.AggregateQuery query) {
     final value = _data[AggregateQuery.name(query)];
     if (value == null) {
       return null;
     } else {
-      return value as double;
+      return (value as num).toDouble();
     }
   }
 }
