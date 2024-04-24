@@ -347,8 +347,8 @@ void main() {
           test('should return password provider for an email address',
               () async {
             var providers =
-                // ignore: deprecated_member_use
                 await FirebaseAuth.instance
+                // ignore: deprecated_member_use
                     .fetchSignInMethodsForEmail(testEmail);
             expect(providers, isList);
             expect(providers.contains('password'), isTrue);
