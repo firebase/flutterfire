@@ -88,7 +88,21 @@ class _CodecUtility {
       return replaceDelegatesWithValueInArray(value, firestore);
     } else if (value is Map<dynamic, dynamic>) {
       return replaceDelegatesWithValueInMap(value, firestore);
+    } else if (value is num) {
+      return convertNum(value);
     }
     return value;
   }
+}
+
+num convertNum(num input) {
+  // Should be running only for WASM
+  if (input is int) {
+    return input; // It's already an int
+  } else if (input is double) {
+    if (input == input.toInt()) {
+      return input.toInt(); // Convert to int if no fractional part
+    }
+  }
+  return input; // Return as double if fractional part exists
 }

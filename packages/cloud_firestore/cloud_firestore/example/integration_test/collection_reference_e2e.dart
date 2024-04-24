@@ -96,9 +96,13 @@ void runCollectionReferenceTests() {
               toFirestore: (value, _) => {'value': value},
             );
 
+            print('fooConverter: $fooConverter');
+
             final fooSnapshot = foo.snapshots();
             final fooConverterSnapshot = fooConverter.snapshots();
 
+            print('fooSnapshot: $fooSnapshot');
+            
             await expectLater(
               fooSnapshot,
               emits(
