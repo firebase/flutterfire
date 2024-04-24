@@ -12,3 +12,9 @@ abstract class JSError {
   String get stack;
   dynamic get serverResponse;
 }
+
+abstract class JSAny {}
+
+abstract class JSString {
+  String get toDart;
+}
