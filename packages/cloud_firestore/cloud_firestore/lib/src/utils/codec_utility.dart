@@ -101,13 +101,19 @@ class _CodecUtility {
 }
 
 num convertNum(num input) {
-  // Should be running only for WASM
-  if (input is int) {
-    return input; // It's already an int
-  } else if (input is double) {
-    if (input == input.toInt()) {
-      return input.toInt(); // Convert to int if no fractional part
+  // Can fail for NaN, Infinity, etc.
+  try {
+    // Should be running only for WASM
+    if (input is int) {
+      return input; // It's already an int
+    } else if (input is double) {
+      if (input == input.toInt()) {
+        return input.toInt(); // Convert to int if no fractional part
+      }
     }
+
+    return input; // Return as double if fractional part exists
+  } catch (_) {
+    return input;
   }
-  return input; // Return as double if fractional part exists
 }
