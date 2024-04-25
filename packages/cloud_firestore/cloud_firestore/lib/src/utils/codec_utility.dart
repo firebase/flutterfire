@@ -93,7 +93,7 @@ class _CodecUtility {
       return replaceDelegatesWithValueInArray(value, firestore);
     } else if (value is Map<dynamic, dynamic>) {
       return replaceDelegatesWithValueInMap(value, firestore);
-    } else if (value is num && kIsWasm) {
+    } else if (value is num) {
       return convertNum(value);
     }
     return value;
@@ -101,9 +101,12 @@ class _CodecUtility {
 }
 
 num convertNum(num input) {
+  // This workaround is only needed for WASM
+  if (!kIsWasm) {
+    return input;
+  }
   // Can fail for NaN, Infinity, etc.
   try {
-    // Should be running only for WASM
     if (input is int) {
       return input; // It's already an int
     } else if (input is double) {
