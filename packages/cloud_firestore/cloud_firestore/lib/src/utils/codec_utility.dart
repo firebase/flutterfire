@@ -4,6 +4,11 @@
 
 part of cloud_firestore;
 
+// ignore: do_not_use_environment
+const kIsWasm = bool.fromEnvironment('dart.library.js_interop') &&
+    // ignore: do_not_use_environment
+    bool.fromEnvironment('dart.library.ffi');
+
 class _CodecUtility {
   static Map<String, dynamic>? replaceValueWithDelegatesInMap(
     Map<dynamic, dynamic>? data,
@@ -88,7 +93,7 @@ class _CodecUtility {
       return replaceDelegatesWithValueInArray(value, firestore);
     } else if (value is Map<dynamic, dynamic>) {
       return replaceDelegatesWithValueInMap(value, firestore);
-    } else if (value is num) {
+    } else if (value is num && kIsWasm) {
       return convertNum(value);
     }
     return value;
