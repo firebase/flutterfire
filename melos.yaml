@@ -199,6 +199,17 @@ scripts:
     run: git clean -x -d -f -q
     description: Clean things very deeply, can be used to establish "pristine checkout" status.
 
+  test:e2e:windows:
+    run: |
+      melos exec -c 1 --fail-fast -- \
+        "flutter test integration_test/e2e_test.dart -d windows"
+    description: |
+      Run all e2e tests.
+    packageFilters:
+      dirExists:
+        - integration_test
+      scope: '*tests*'
+
   qualitycheck:
     run: |
       melos run clean:deep && \
