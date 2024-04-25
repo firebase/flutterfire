@@ -682,7 +682,7 @@ void main() {
             FirebaseAuth.instance.signInWithCredential(credential2),
             throwsA(
               isA<FirebaseAuthException>(),
-              // Live project has this error code, emualtor throws "internal-error"
+              // Live project has this error code, emulator throws "internal-error"
               // .having(
               //   (e) => e.code,
               //   'code',
