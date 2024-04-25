@@ -53,7 +53,7 @@ jobs:
       - uses: bluefireteam/melos-action@5a8367ec4b9942d712528c398ff3f996e03bc230
         with:
           run-bootstrap: false
-          melos-version: '3.0.1'
+          melos-version: '5.3.0'
       - name: 'Bootstrap package'
         run: melos bootstrap --scope tests && melos bootstrap --scope "cloud_firestore*"
       - name: 'Install Tools'
@@ -128,7 +128,7 @@ jobs:
       - uses: bluefireteam/melos-action@5a8367ec4b9942d712528c398ff3f996e03bc230
         with:
           run-bootstrap: false
-          melos-version: '3.0.1'
+          melos-version: '5.3.0'
       - name: 'Bootstrap package'
         run: melos bootstrap --scope tests && melos bootstrap --scope "cloud_firestore*"
       - name: 'Install Tools'
@@ -203,7 +203,7 @@ jobs:
       - uses: bluefireteam/melos-action@5a8367ec4b9942d712528c398ff3f996e03bc230
         with:
           run-bootstrap: false
-          melos-version: '3.0.1'
+          melos-version: '5.3.0'
       - name: 'Bootstrap package'
         run: melos bootstrap --scope tests && melos bootstrap --scope "cloud_firestore*"
       - name: 'Install Tools'
@@ -257,7 +257,7 @@ jobs:
       - uses: bluefireteam/melos-action@5a8367ec4b9942d712528c398ff3f996e03bc230
         with:
           run-bootstrap: false
-          melos-version: '3.0.1'
+          melos-version: '5.3.0'
       - name: 'Bootstrap package'
         run: melos bootstrap --scope tests && melos bootstrap --scope "cloud_firestore*"
       - name: 'Install Tools'
@@ -286,6 +286,65 @@ jobs:
           exit 1
           fi
         shell: bash
+
+  web-wasm:
+    runs-on: macos-latest
+    timeout-minutes: 15
+    strategy:
+      # Temp measure for testing web tests. Please remove as soon as e2e tests are stable.
+      fail-fast: false
+      matrix:
+        working_directory:
+          ['tests', 'packages/cloud_firestore/cloud_firestore/example']
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8
+        name: Install Node.js 20
+        with:
+          node-version: '20'
+      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225
+        with:
+          # TODO: Remove this once WASM is on stable.
+          channel: 'master'
+          cache: true
+      - uses: bluefireteam/melos-action@5a8367ec4b9942d712528c398ff3f996e03bc230
+        with:
+          run-bootstrap: false
+          melos-version: '5.3.0'
+      - name: 'Bootstrap package'
+        run: melos bootstrap --scope tests && melos bootstrap --scope "cloud_firestore*"
+      - name: 'Install Tools'
+        run: sudo npm i -g firebase-tools
+      - name: Cache Firebase Emulator
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+        with:
+          path: ~/.cache/firebase/emulators
+          key: firebase-emulators-v3-${{ github.run_id }}
+          restore-keys: firebase-emulators-v3
+      - name: Start Firebase Emulator
+        run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
+      - name: 'E2E Tests'
+        working-directory: ${{ matrix.working_directory }}
+        # Web devices are not supported for the `flutter test` command yet. As a
+        # workaround we can use the `flutter drive` command. Tracking issue:
+        # https://github.com/flutter/flutter/issues/66264
+        run: |
+          chromedriver --port=4444 --trace-buffer-size=100000 &
+          mv ./web/wasm_index.html ./web/index.html
+          flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --wasm --dart-define=CI=true | tee output.log
+          # We have to check the output for failed tests matching the string "[E]"
+          output=$(<output.log)
+          if [[ "$output" =~ \[E\] ]]; then
+          # You will see "All tests passed." in the logs even when tests failed.
+          echo "All tests did not pass. Please check the logs for more information."
+          exit 1
+          fi
+        shell: bash
+      
 
   windows:
     runs-on: windows-latest
