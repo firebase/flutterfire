@@ -11,13 +11,13 @@
 // This file exports utilities shared between firebase packages, without making
 // them public.
 
-import 'dart:js_interop';
-
 import 'package:firebase_core/firebase_core.dart';
 
 import 'src/interop_shimmer.dart'
     if (dart.library.js_interop) 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
+import 'src/interop_shimmer.dart' if (dart.library.js_interop) 'dart:js_interop'
+    as js_interop;
 
 export 'src/exception.dart';
 
@@ -52,28 +52,26 @@ extension ObjectX<T> on T? {
   }
 }
 
+// Necessary because of the conditional import
+String _safeConvertFromPossibleJSObject(dynamic value) {
+  if (value is js_interop.JSAny) {
+    return (value as js_interop.JSString).toDart;
+  } else {
+    return value as String;
+  }
+}
+
 FirebaseException _firebaseExceptionFromCoreFirebaseError(
   core_interop.JSError firebaseError, {
   required String plugin,
   required String Function(String) codeParser,
   required String Function(String code, String message)? messageParser,
 }) {
-  late final String convertCode;
-  if ((firebaseError.code) is JSAny) {
-    convertCode = (firebaseError.code as JSString).toDart;
-  } else {
-    // ignore: unnecessary_cast
-    convertCode = firebaseError.code as String;
-  }
+  final convertCode = _safeConvertFromPossibleJSObject(firebaseError.code);
   final code = codeParser(convertCode);
 
-  late final String convertMessage;
-  if (firebaseError.message is JSAny) {
-    convertMessage = (firebaseError.message as JSString).toDart;
-  } else {
-    // ignore: unnecessary_cast
-    convertMessage = firebaseError.message as String;
-  }
+  final String convertMessage =
+      _safeConvertFromPossibleJSObject(firebaseError.message);
   final message = messageParser != null
       ? messageParser(code, convertMessage)
       : convertMessage.replaceFirst('(${firebaseError.code})', '');
@@ -95,13 +93,7 @@ FirebaseException _firebaseExceptionFromCoreFirebaseError(
 bool _testException(Object? objectException) {
   final exception = objectException! as core_interop.JSError;
 
-  late final String message;
-  if (exception.message is JSAny) {
-    message = (exception.message as JSString).toDart;
-  } else {
-    // ignore: unnecessary_cast
-    message = exception.message as String;
-  }
+  final message = _safeConvertFromPossibleJSObject(exception.message);
   // Firestore web does not contain `Firebase` in the message so we check the exception itself.
   return message.contains('Firebase') ||
       exception.toString().contains('FirebaseError');
