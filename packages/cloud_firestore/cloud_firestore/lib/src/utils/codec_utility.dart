@@ -4,6 +4,11 @@
 
 part of cloud_firestore;
 
+// ignore: do_not_use_environment
+const kIsWasm = bool.fromEnvironment('dart.library.js_interop') &&
+    // ignore: do_not_use_environment
+    bool.fromEnvironment('dart.library.ffi');
+
 class _CodecUtility {
   static Map<String, dynamic>? replaceValueWithDelegatesInMap(
     Map<dynamic, dynamic>? data,
@@ -88,7 +93,30 @@ class _CodecUtility {
       return replaceDelegatesWithValueInArray(value, firestore);
     } else if (value is Map<dynamic, dynamic>) {
       return replaceDelegatesWithValueInMap(value, firestore);
+    } else if (value is num) {
+      return convertNum(value);
     }
     return value;
+  }
+}
+
+num convertNum(num input) {
+  // This workaround is only needed for WASM
+  if (!kIsWasm) {
+    return input;
+  }
+  // Can fail for NaN, Infinity, etc.
+  try {
+    if (input is int) {
+      return input; // It's already an int
+    } else if (input is double) {
+      if (input == input.toInt()) {
+        return input.toInt(); // Convert to int if no fractional part
+      }
+    }
+
+    return input; // Return as double if fractional part exists
+  } catch (_) {
+    return input;
   }
 }

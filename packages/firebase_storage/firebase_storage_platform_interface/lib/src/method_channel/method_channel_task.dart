@@ -262,7 +262,9 @@ class MethodChannelPutFileTask extends MethodChannelTask {
       MethodChannelFirebaseStorage.getPigeonReference(
           storage.bucket, path, 'putFile'),
       file.path,
-      MethodChannelFirebaseStorage.getPigeonSettableMetaData(metadata),
+      metadata == null
+          ? null
+          : MethodChannelFirebaseStorage.getPigeonSettableMetaData(metadata),
       handle,
     );
   }

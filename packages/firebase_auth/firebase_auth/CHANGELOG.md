@@ -1,3 +1,19 @@
+## 4.19.4
+
+ - Update a dependency to the latest release.
+
+## 4.19.3
+
+ - **FIX**(auth,ios): Give more details on internal error when calling `sendSignInLinkToEmail`. ([#12671](https://github.com/firebase/flutterfire/issues/12671)). ([2b086029](https://github.com/firebase/flutterfire/commit/2b0860296bf577c99810643bb286b7219ee9291f))
+
+## 4.19.2
+
+ - Update a dependency to the latest release.
+
+## 4.19.1
+
+ - Update a dependency to the latest release.
+
 ## 4.19.0
 
  - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))

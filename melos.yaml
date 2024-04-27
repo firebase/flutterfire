@@ -25,10 +25,10 @@ command:
 
 scripts:
   lint:all:
-    run: melos run analyze && melos run format
+    run: melos run analyze-ci && melos run format-ci
     description: Run all static analysis checks.
 
-  analyze:
+  analyze-ci:
     # We are setting the concurrency to 1 because a higher concurrency can crash
     # the analysis server on low performance machines (like GitHub Actions).
     run: |
@@ -46,7 +46,7 @@ scripts:
       integration testing.
        - Requires Node.js and NPM installed.
 
-  format:
+  format-ci:
     run: |
       dart pub global run flutter_plugin_tools format && \
       swiftformat .
@@ -198,6 +198,17 @@ scripts:
   clean:deep:
     run: git clean -x -d -f -q
     description: Clean things very deeply, can be used to establish "pristine checkout" status.
+
+  test:e2e:windows:
+    run: |
+      melos exec -c 1 --fail-fast -- \
+        "flutter test integration_test/e2e_test.dart -d windows"
+    description: |
+      Run all e2e tests.
+    packageFilters:
+      dirExists:
+        - integration_test
+      scope: '*tests*'
 
   qualitycheck:
     run: |

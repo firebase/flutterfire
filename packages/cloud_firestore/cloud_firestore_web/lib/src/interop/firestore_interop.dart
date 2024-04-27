@@ -667,7 +667,10 @@ extension FirestoreErrorExtension on FirestoreError {
 @JS()
 @staticInterop
 abstract class SnapshotListenOptions {
-  external factory SnapshotListenOptions({JSBoolean? includeMetadataChanges});
+  external factory SnapshotListenOptions({
+    JSBoolean? includeMetadataChanges,
+    JSString? source,
+  });
 }
 
 extension SnapshotListenOptionsExtension on SnapshotListenOptions {
@@ -677,6 +680,10 @@ extension SnapshotListenOptionsExtension on SnapshotListenOptions {
   external JSBoolean get includeMetadataChanges;
 
   external set includeMetadataChanges(JSBoolean value);
+
+  /// Describes whether we should get from server or cache.
+  external JSString get source;
+  external set source(JSString value);
 }
 
 /// Specifies custom configurations for your Cloud Firestore instance.
@@ -903,7 +910,10 @@ extension SnapshotMetadataExtension on SnapshotMetadata {
 @JS()
 @staticInterop
 abstract class DocumentListenOptions {
-  external factory DocumentListenOptions({JSBoolean? includeMetadataChanges});
+  external factory DocumentListenOptions({
+    JSBoolean? includeMetadataChanges,
+    JSString? source,
+  });
 }
 
 extension DocumentListenOptionsExtension on DocumentListenOptions {
@@ -912,6 +922,10 @@ extension DocumentListenOptionsExtension on DocumentListenOptions {
   external JSBoolean get includeMetadataChanges;
 
   external set includeMetadataChanges(JSBoolean v);
+
+  /// Describes whether we should get from server or cache.
+  external JSString get source;
+  external set source(JSString v);
 }
 
 /// An object to configure the [DocumentReference.get] and [Query.get] behavior.

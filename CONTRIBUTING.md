@@ -198,10 +198,10 @@ commands can be run locally to highlight any issues before committing your code:
 
 ```bash
 # Run the analyze check
-melos run analyze
+melos analyze-ci
 
 # Format code
-melos run format
+melos format-ci
 ```
 
 Assuming all is successful, commit and push your code:
@@ -301,12 +301,12 @@ Some things to keep in mind before publishing the release:
 2. Run `git pull origin master`.
 3. Run `git pull --tags` to make sure all tags are fetched.
 4. Create new branch with the signature "release/[year]-[month]-[day]".
-5. Run `melos version --no-git-tag-version` to automatically version packages and update Changelogs.
-6. Run `melos publish` to dry run and confirm all packages are publishable.
-7. After successful dry run, commit all changes with the signature "chore(release): prepare for release".
+5. Push your branch to git running `git push origin [RELEASE BRANCH NAME]`.
+6. Run `melos version` to automatically version packages and update Changelogs.
+7. Run `melos publish` to dry run and confirm all packages are publishable.
 8. Run `git push origin [RELEASE BRANCH NAME]` & open pull request for review on GitHub.
 9. After successful review and merge of the pull request, switch to `master` branch locally, & run `git pull origin master`.
-10. Run `melos publish --no-dry-run --git-tag-version` to now publish to Pub.dev.
+10. Run `melos publish --no-dry-run` to now publish to Pub.dev.
 11. Run `git push --tags` to push tags to repository.
 12. Ping @kevinthecheung to get the changelog in Firebase releases.
 

@@ -1621,7 +1621,13 @@ void CloudFirestorePlugin::QuerySnapshot(
     const FirestorePigeonFirebaseApp& app, const std::string& path,
     bool is_collection_group, const PigeonQueryParameters& parameters,
     const PigeonGetOptions& options, bool include_metadata_changes,
+    const ListenSource& source,
     std::function<void(ErrorOr<std::string> reply)> result) {
+  if (source == ListenSource::cache) {
+    result(FlutterError("Listening from cache isn't supported on Windows"));
+    return;
+  }
+
   Firestore* firestore = GetFirestoreFromPigeon(app);
   std::unique_ptr<Query> query_ptr = std::make_unique<Query>(
       ParseQuery(firestore, path, is_collection_group, parameters));
@@ -1704,7 +1710,12 @@ class DocumentSnapshotStreamHandler
 void CloudFirestorePlugin::DocumentReferenceSnapshot(
     const FirestorePigeonFirebaseApp& app,
     const DocumentReferenceRequest& parameters, bool include_metadata_changes,
+    const ListenSource& source,
     std::function<void(ErrorOr<std::string> reply)> result) {
+  if (source == ListenSource::cache) {
+    result(FlutterError("Listening from cache isn't supported on Windows"));
+    return;
+  }
   Firestore* firestore = GetFirestoreFromPigeon(app);
   std::unique_ptr<DocumentReference> documentReference =
       std::make_unique<DocumentReference>(

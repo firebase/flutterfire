@@ -54,7 +54,10 @@ abstract class DocumentReference<T extends Object?> {
   ///
   /// An initial event is immediately sent, and further events will be
   /// sent whenever the document is modified.
-  Stream<DocumentSnapshot<T>> snapshots({bool includeMetadataChanges = false});
+  Stream<DocumentSnapshot<T>> snapshots({
+    bool includeMetadataChanges = false,
+    ListenSource source = ListenSource.defaultSource,
+  });
 
   /// Sets data on the document, overwriting any existing data. If the document
   /// does not yet exist, it will be created.
@@ -154,7 +157,15 @@ class _JsonDocumentReference
   @override
   Stream<DocumentSnapshot<Map<String, dynamic>>> snapshots({
     bool includeMetadataChanges = false,
+    ListenSource source = ListenSource.defaultSource,
   }) {
+    if (source == ListenSource.cache &&
+        defaultTargetPlatform == TargetPlatform.windows) {
+      throw UnimplementedError(
+        'Listening from cache is not supported on Windows',
+      );
+    }
+
     return _delegate
         .snapshots(includeMetadataChanges: includeMetadataChanges)
         .map(
@@ -271,9 +282,13 @@ class _WithConverterDocumentReference<T extends Object?>
   @override
   Stream<_WithConverterDocumentSnapshot<T>> snapshots({
     bool includeMetadataChanges = false,
+    ListenSource source = ListenSource.defaultSource,
   }) {
     return _originalDocumentReference
-        .snapshots(includeMetadataChanges: includeMetadataChanges)
+        .snapshots(
+      includeMetadataChanges: includeMetadataChanges,
+      source: source,
+    )
         .map((snapshot) {
       return _WithConverterDocumentSnapshot<T>(
         snapshot,

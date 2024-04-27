@@ -126,16 +126,12 @@ class QueryWeb extends QueryPlatform {
     DatabaseEventType eventType,
     Stream<database_interop.QueryEvent> stream,
   ) {
-    return stream
-        .map(
+    return stream.map(
       (database_interop.QueryEvent event) => webEventToPlatformEvent(
         ref,
         eventType,
         event,
       ),
-    )
-        .handleError((e, s) {
-      throw convertFirebaseDatabaseException(e, s);
-    });
+    );
   }
 }

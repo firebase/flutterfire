@@ -1,3 +1,15 @@
+## 4.9.3
+
+ - Update a dependency to the latest release.
+
+## 4.9.2
+
+ - Update a dependency to the latest release.
+
+## 4.9.1
+
+ - Update a dependency to the latest release.
+
 ## 4.9.0
 
  - **FEAT**(web): remove the dependency on `package:js` in favor of `dart:js_interop` ([#12534](https://github.com/firebase/flutterfire/issues/12534)). ([d83f6327](https://github.com/firebase/flutterfire/commit/d83f632753707c974fef2ac8a7f9bf6cb8ba8758))

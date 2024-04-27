@@ -493,16 +493,18 @@ public class FlutterFirebaseStoragePlugin
       @NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseStorage.PigeonStorageReference reference,
       @NonNull String filePath,
-      @NonNull GeneratedAndroidFirebaseStorage.PigeonSettableMetadata settableMetaData,
+      @Nullable GeneratedAndroidFirebaseStorage.PigeonSettableMetadata settableMetaData,
       @NonNull Long handle,
       @NonNull GeneratedAndroidFirebaseStorage.Result<String> result) {
 
     StorageReference androidReference = getReferenceFromPigeon(app, reference);
-    StorageMetadata androidMetaData = getMetaDataFromPigeon(settableMetaData);
 
     FlutterFirebaseStorageTask storageTask =
         FlutterFirebaseStorageTask.uploadFile(
-            handle.intValue(), androidReference, Uri.fromFile(new File(filePath)), androidMetaData);
+            handle.intValue(),
+            androidReference,
+            Uri.fromFile(new File(filePath)),
+            settableMetaData == null ? null : getMetaDataFromPigeon(settableMetaData));
 
     try {
       TaskStateChannelStreamHandler handler = storageTask.startTaskWithMethodChannel(channel);

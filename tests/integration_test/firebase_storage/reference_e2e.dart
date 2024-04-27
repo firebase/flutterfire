@@ -331,6 +331,14 @@ void setupReferenceTests() {
             // Metadata isn't saved on objects when using the emulator which fails test
             // expect(complete.metadata?.contentLanguage, 'en');
             // expect(complete.metadata?.customMetadata!['activity'], 'test');
+
+            // Check without SettableMetadata
+            final Reference ref2 =
+                storage.ref('flutter-tests').child('flt-ok-2.txt');
+            final TaskSnapshot complete2 = await ref2.putFile(
+              file,
+            );
+            expect(complete2.metadata?.size, kTestString.length);
           },
           // putFile is not supported on the web platform.
           skip: kIsWeb,

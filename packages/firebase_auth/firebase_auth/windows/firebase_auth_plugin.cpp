@@ -30,6 +30,7 @@
 #include <future>
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -605,33 +606,47 @@ firebase::auth::Credential getCredentialFromArguments(
     return firebase::auth::Credential();
   }
 
-  std::string idToken = std::get<std::string>(arguments[kArgumentIdToken]);
-  std::string accessToken =
-      std::get<std::string>(arguments[kArgumentAccessToken]);
+  // Lambda function to extract an optional string from the arguments map. This
+  // allows us to pass nullptr if no value exists
+  auto getStringOpt =
+      [&](const std::string& key) -> std::optional<std::string> {
+    auto it = arguments.find(key);
+    if (it != arguments.end() &&
+        std::holds_alternative<std::string>(it->second)) {
+      return std::get<std::string>(it->second);
+    }
+    return std::nullopt;
+  };
+
+  std::optional<std::string> idToken = getStringOpt(kArgumentIdToken);
+  std::optional<std::string> accessToken = getStringOpt(kArgumentAccessToken);
 
   // Facebook Auth
   if (signInMethod == kSignInMethodFacebook) {
     return firebase::auth::FacebookAuthProvider::GetCredential(
-        accessToken.c_str());
+        accessToken.value().c_str());
   }
 
   // Google Auth
   if (signInMethod == kSignInMethodGoogle) {
+    // Both accessToken and idToken arguments can be null. You can use one or
+    // the other
     return firebase::auth::GoogleAuthProvider::GetCredential(
-        idToken.c_str(), accessToken.c_str());
+        idToken ? idToken.value().c_str() : nullptr,
+        accessToken ? accessToken.value().c_str() : nullptr);
   }
 
   // Twitter Auth
   if (signInMethod == kSignInMethodTwitter) {
     std::string secret = std::get<std::string>(arguments[kArgumentSecret]);
-    return firebase::auth::TwitterAuthProvider::GetCredential(idToken.c_str(),
-                                                              secret.c_str());
+    return firebase::auth::TwitterAuthProvider::GetCredential(
+        idToken.value().c_str(), secret.c_str());
   }
 
   // GitHub Auth
   if (signInMethod == kSignInMethodGithub) {
     return firebase::auth::GitHubAuthProvider::GetCredential(
-        accessToken.c_str());
+        accessToken.value().c_str());
   }
 
   // OAuth
@@ -639,7 +654,8 @@ firebase::auth::Credential getCredentialFromArguments(
     std::string providerId =
         std::get<std::string>(arguments[kArgumentProviderId]);
     return firebase::auth::OAuthProvider::GetCredential(
-        providerId.c_str(), idToken.c_str(), accessToken.c_str());
+        providerId.c_str(), idToken.value().c_str(),
+        accessToken.value().c_str());
   }
 
   // If no known auth method matched

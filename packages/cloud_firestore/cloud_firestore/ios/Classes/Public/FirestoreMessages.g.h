@@ -57,6 +57,29 @@ typedef NS_ENUM(NSUInteger, Source) {
 - (instancetype)initWithValue:(Source)value;
 @end
 
+/// The listener retrieves data and listens to updates from the local Firestore cache only.
+/// If the cache is empty, an empty snapshot will be returned.
+/// Snapshot events will be triggered on cache updates, like local mutations or load bundles.
+///
+/// Note that the data might be stale if the cache hasn't synchronized with recent server-side
+/// changes.
+typedef NS_ENUM(NSUInteger, ListenSource) {
+  /// The default behavior. The listener attempts to return initial snapshot from cache and retrieve
+  /// up-to-date snapshots from the Firestore server.
+  /// Snapshot events will be triggered on local mutations and server side updates.
+  ListenSourceDefaultSource = 0,
+  /// The listener retrieves data and listens to updates from the local Firestore cache only.
+  /// If the cache is empty, an empty snapshot will be returned.
+  /// Snapshot events will be triggered on cache updates, like local mutations or load bundles.
+  ListenSourceCache = 1,
+};
+
+/// Wrapper for ListenSource to allow for nullability.
+@interface ListenSourceBox : NSObject
+@property(nonatomic, assign) ListenSource value;
+- (instancetype)initWithValue:(ListenSource)value;
+@end
+
 typedef NS_ENUM(NSUInteger, ServerTimestampBehavior) {
   /// Return null for [FieldValue.serverTimestamp()] values that have not yet
   ServerTimestampBehaviorNone = 0,
@@ -368,10 +391,12 @@ NSObject<FlutterMessageCodec> *FirebaseFirestoreHostApiGetCodec(void);
                 parameters:(PigeonQueryParameters *)parameters
                    options:(PigeonGetOptions *)options
     includeMetadataChanges:(NSNumber *)includeMetadataChanges
+                    source:(ListenSource)source
                 completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
 - (void)documentReferenceSnapshotApp:(FirestorePigeonFirebaseApp *)app
                           parameters:(DocumentReferenceRequest *)parameters
               includeMetadataChanges:(NSNumber *)includeMetadataChanges
+                              source:(ListenSource)source
                           completion:
                               (void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
 @end

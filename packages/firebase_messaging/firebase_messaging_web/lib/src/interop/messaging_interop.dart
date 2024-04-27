@@ -89,7 +89,7 @@ extension MessagePayloadJsImplX on MessagePayloadJsImpl {
   external JSString? get collapseKey;
   external FcmOptionsJsImpl? get fcmOptions;
   external NotificationPayloadJsImpl? get notification;
-  external JSObject get data;
+  external JSObject? get data;
   external JSString? get from;
 }
 

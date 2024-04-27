@@ -258,7 +258,8 @@ class UploadMetadata
           String? contentLanguage,
           String? contentType,
           Map<String, String>? customMetadata}) =>
-      UploadMetadata.fromJsObject(storage_interop.UploadMetadataJsImpl(
+      UploadMetadata.fromJsObject(
+        storage_interop.UploadMetadataJsImpl(
           md5Hash: md5Hash?.toJS,
           cacheControl: cacheControl?.toJS,
           contentDisposition: contentDisposition?.toJS,
@@ -266,7 +267,9 @@ class UploadMetadata
           contentLanguage: contentLanguage?.toJS,
           contentType: contentType?.toJS,
           customMetadata:
-              (customMetadata != null) ? customMetadata.toJSBox : null));
+              (customMetadata != null) ? customMetadata.jsify() : null,
+        ),
+      );
 
   /// Creates a new UploadMetadata from a [jsObject].
   UploadMetadata.fromJsObject(storage_interop.UploadMetadataJsImpl jsObject)
@@ -504,7 +507,7 @@ abstract class _SettableMetadataBase<
   }
 
   set customMetadata(Map<String, String> m) {
-    jsObject.customMetadata = m.toJSBox;
+    jsObject.customMetadata = m.jsify()! as JSObject;
   }
 }
 
