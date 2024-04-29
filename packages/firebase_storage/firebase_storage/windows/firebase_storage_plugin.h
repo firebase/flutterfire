@@ -14,6 +14,7 @@
 #include <memory>
 
 #include "firebase/storage/common.h"
+#include "firebase/storage/metadata.h"
 #include "firebase/storage/controller.h"
 #include "messages.g.h"
 
@@ -33,11 +34,19 @@ class FirebaseStoragePlugin : public flutter::Plugin,
   // Disallow copy and assign.
   FirebaseStoragePlugin(const FirebaseStoragePlugin&) = delete;
   FirebaseStoragePlugin& operator=(const FirebaseStoragePlugin&) = delete;
+  // Helper functions
+  // Static function declarations
+  static firebase::storage::Metadata CreateStorageMetadataFromPigeon(
+      const PigeonSettableMetadata* pigeonMetaData);
+  static std::map<std::string, std::string> ProcessCustomMetadataMap(
+      const flutter::EncodableMap& customMetadata);
 
   // Parser functions
   static std::string GetStorageErrorCode(Error cppError);
   static std::string GetStorageErrorMessage(Error cppError);
   static FlutterError ParseError(const firebase::FutureBase& future);
+
+  
 
   // FirebaseStorageHostApi
   virtual void GetReferencebyPath(
