@@ -7,7 +7,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:intl/intl.dart';
-import 'package:pub_semver/src/version.dart';
+import 'package:melos/melos.dart';
 
 import 'bom_analysis.dart';
 
@@ -76,7 +76,7 @@ void main(List<String> arguments) async {
         'windows': windowsSdkVersion,
       },
       'packages': (await getPackagesUsingMelos()).map((key, value) {
-        return MapEntry(key, value.toString());
+        return MapEntry(key, value.version.toString());
       }),
     },
   };
@@ -124,11 +124,11 @@ Future<String> getSdkVersion(
   return match?.group(1)?.trim() ?? 'Version not found';
 }
 
-Future<Map<String, Version>> getPackagesUsingMelos() async {
+Future<Map<String, Package>> getPackagesUsingMelos() async {
   final workspace = await getMelosWorkspace();
 
   final currentPackageNameAndVersionsMap = workspace.filteredPackages.values
-      .map((package) => {package.name: package.version})
+      .map((package) => {package.name: package})
       .reduce((value, element) => value..addAll(element));
 
   return currentPackageNameAndVersionsMap;
@@ -191,15 +191,15 @@ Future<void> appendStaticText(
   );
   sink.writeln();
   sink.writeln('### FlutterFire Plugin Versions');
-  sink.writeln('| Plugin | Version |');
-  sink.writeln('|--------|---------|');
+  sink.writeln('| Plugin | Version | Dart Version | Flutter Version |');
+  sink.writeln('|--------|---------|--------------|-----------------|');
 
   final packages = await getPackagesUsingMelos();
 
   // Adding rows for each package
   for (final package in packages.entries) {
     sink.writeln(
-      '| [${package.key}](https://pub.dev/packages/${package.key}/versions/${package.value}) | ${package.value} |',
+      '| [${package.key}](https://pub.dev/packages/${package.key}/versions/${package.value.version}) | ${package.value.version} | ${package.value.pubSpec.environment?.sdkConstraint.toString() ?? ''} | ${package.value.pubSpec.environment?.toJson()['flutter'] ?? ''} |',
     );
   }
 

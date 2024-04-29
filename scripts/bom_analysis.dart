@@ -66,7 +66,7 @@ Future<String?> getBoMNextVersion({bool shouldLog = false}) async {
       }
     } else {
       final previous = melos.Version.parse(previousVersion);
-      final current = entry.value;
+      final current = entry.value.version;
       if (current.major > previous.major) {
         changes['major'] = (changes['major'] ?? 0) + 1;
         changedPackages[entry.key] = [previousVersion, current.toString()];
