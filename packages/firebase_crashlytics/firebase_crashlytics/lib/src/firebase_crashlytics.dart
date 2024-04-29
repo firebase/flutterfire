@@ -34,6 +34,12 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
     return _instance!;
   }
 
+  /// Returns an instance using a specified [FirebaseApp].
+  static FirebaseCrashlytics instanceFor({required FirebaseApp app}) {
+    _instance ??= FirebaseCrashlytics._(app: app);
+    return _instance!;
+  }
+
   /// Whether the current Crashlytics instance is collecting reports. If false,
   /// then no crash reporting data is sent to Firebase.
   ///
