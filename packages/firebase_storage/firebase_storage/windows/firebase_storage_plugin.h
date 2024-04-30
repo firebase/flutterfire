@@ -34,13 +34,15 @@ class FirebaseStoragePlugin : public flutter::Plugin,
   // Disallow copy and assign.
   FirebaseStoragePlugin(const FirebaseStoragePlugin&) = delete;
   FirebaseStoragePlugin& operator=(const FirebaseStoragePlugin&) = delete;
-  // Helper functions
   // Static function declarations
+  // Helper functions
   static firebase::storage::Metadata CreateStorageMetadataFromPigeon(
       const PigeonSettableMetadata* pigeonMetaData);
   static std::map<std::string, std::string> ProcessCustomMetadataMap(
       const flutter::EncodableMap& customMetadata);
-
+  static std::vector<unsigned char> stringToByteData(const std::string& data,
+                                                     int64_t format);
+  static std::vector<unsigned char> base64_decode(const std::string& encoded_string);
   // Parser functions
   static std::string GetStorageErrorCode(Error cppError);
   static std::string GetStorageErrorMessage(Error cppError);

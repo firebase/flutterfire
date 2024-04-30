@@ -47,6 +47,7 @@ using ::firebase::storage::StorageReference;
 using flutter::EncodableValue;
 
 namespace firebase_storage_windows {
+enum PutStringFormat { Base64 = 1, Base64Url = 2 };
 
 static std::string kLibraryName = "flutter-fire-gcs";
 static std::string kStorageMethodChannelName =
@@ -754,7 +755,8 @@ void FirebaseStoragePlugin::ReferencePutString(
       GetCPPStorageFromPigeon(pigeon_app, pigeon_reference.bucket());
   controllers_[handle] = std::make_unique<Controller>();
 
-  std::vector<uint8_t> decoded_data = stringToByteData(data, format);
+  std::vector<uint8_t> decoded_data =
+      FirebaseStoragePlugin::stringToByteData(data, format);
 
   auto handler = std::make_unique<PutDataStreamHandler>(
       cpp_storage, pigeon_reference.full_path(), decoded_data.data(),
@@ -873,50 +875,45 @@ void FirebaseStoragePlugin::TaskCancel(
   result(task_result);
 }
 
-}  // namespace firebase_storage_windows
-
-
-// Private helper functions
-namespace {
-const std::string base64_chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    "abcdefghijklmnopqrstuvwxyz"
-    "0123456789+/";
-
-enum PutStringFormat { Base64 = 1, Base64Url = 2 };
-
-std::vector<unsigned char> stringToByteData(const std::string& data,
-                                            int format) {
+std::vector<unsigned char> FirebaseStoragePlugin::stringToByteData(
+    const std::string& data, int64_t format) {
   switch (format) {
     case Base64:
-      return base64_decode(data);
+      return FirebaseStoragePlugin::base64_decode(data);
     case Base64Url: {
       std::string url_safe_data = data;
       std::replace(url_safe_data.begin(), url_safe_data.end(), '-', '+');
       std::replace(url_safe_data.begin(), url_safe_data.end(), '_', '/');
-      return base64_decode(url_safe_data);
+      return FirebaseStoragePlugin::base64_decode(url_safe_data);
     }
     default:
       return {};  // Return empty vector for unsupported formats
   }
 }
 
-std::vector<unsigned char> base64_decode(const std::string& encoded_string) {
-  int in_len = encoded_string.size();
-  int i = 0;
-  int j = 0;
-  int in_ = 0;
+std::vector<unsigned char> FirebaseStoragePlugin::base64_decode(
+    const std::string& encoded_string) {
+  std::string base64_chars =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+      "abcdefghijklmnopqrstuvwxyz"
+      "0123456789+/";
+  size_t in_len = encoded_string.size();
+  size_t i = 0;
+  size_t j = 0;
+  size_t in_ = 0;
   unsigned char char_array_4[4], char_array_3[3];
   std::vector<unsigned char> ret;
 
   while (in_len-- && (encoded_string[in_] != '=') &&
-             isalnum(encoded_string[in_]) ||
-         (encoded_string[in_] == '+') || (encoded_string[in_] == '/')) {
+         (isalnum(encoded_string[in_]) || encoded_string[in_] == '+' ||
+          encoded_string[in_] == '/')) {
     char_array_4[i++] = encoded_string[in_];
     in_++;
     if (i == 4) {
-      for (i = 0; i < 4; i++)
-        char_array_4[i] = base64_chars.find(char_array_4[i]);
+      for (i = 0; i < 4; i++) {
+        char_array_4[i] =
+            static_cast<unsigned char>(base64_chars.find(char_array_4[i]));
+      }
 
       char_array_3[0] =
           (char_array_4[0] << 2) + ((char_array_4[1] & 0x30) >> 4);
@@ -930,10 +927,11 @@ std::vector<unsigned char> base64_decode(const std::string& encoded_string) {
   }
 
   if (i) {
-    for (j = i; j < 4; j++) char_array_4[j] = 0;
-
     for (j = 0; j < 4; j++)
-      char_array_4[j] = base64_chars.find(char_array_4[j]);
+      char_array_4[j] =
+          base64_chars.find(char_array_4[j]) != std::string::npos
+              ? static_cast<unsigned char>(base64_chars.find(char_array_4[j]))
+              : 0;
 
     char_array_3[0] = (char_array_4[0] << 2) + ((char_array_4[1] & 0x30) >> 4);
     char_array_3[1] =
@@ -945,4 +943,5 @@ std::vector<unsigned char> base64_decode(const std::string& encoded_string) {
 
   return ret;
 }
-}  // namespace
+
+}  // namespace firebase_storage_windows
