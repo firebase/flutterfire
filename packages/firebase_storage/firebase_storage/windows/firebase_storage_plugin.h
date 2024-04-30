@@ -40,9 +40,9 @@ class FirebaseStoragePlugin : public flutter::Plugin,
       const PigeonSettableMetadata* pigeonMetaData);
   static std::map<std::string, std::string> ProcessCustomMetadataMap(
       const flutter::EncodableMap& customMetadata);
-  static std::vector<unsigned char> stringToByteData(const std::string& data,
+  static std::vector<unsigned char> StringToByteData(const std::string& data,
                                                      int64_t format);
-  static std::vector<unsigned char> base64_decode(const std::string& encoded_string);
+  static std::vector<unsigned char> Base64Decode(const std::string& encoded_string);
   // Parser functions
   static std::string GetStorageErrorCode(Error cppError);
   static std::string GetStorageErrorMessage(Error cppError);

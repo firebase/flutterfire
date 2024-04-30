@@ -756,7 +756,7 @@ void FirebaseStoragePlugin::ReferencePutString(
   controllers_[handle] = std::make_unique<Controller>();
 
   std::vector<uint8_t> decoded_data =
-      FirebaseStoragePlugin::stringToByteData(data, format);
+      FirebaseStoragePlugin::StringToByteData(data, format);
 
   auto handler = std::make_unique<PutDataStreamHandler>(
       cpp_storage, pigeon_reference.full_path(), decoded_data.data(),
@@ -875,23 +875,23 @@ void FirebaseStoragePlugin::TaskCancel(
   result(task_result);
 }
 
-std::vector<unsigned char> FirebaseStoragePlugin::stringToByteData(
+std::vector<unsigned char> FirebaseStoragePlugin::StringToByteData(
     const std::string& data, int64_t format) {
   switch (format) {
     case Base64:
-      return FirebaseStoragePlugin::base64_decode(data);
+      return FirebaseStoragePlugin::Base64Decode(data);
     case Base64Url: {
       std::string url_safe_data = data;
       std::replace(url_safe_data.begin(), url_safe_data.end(), '-', '+');
       std::replace(url_safe_data.begin(), url_safe_data.end(), '_', '/');
-      return FirebaseStoragePlugin::base64_decode(url_safe_data);
+      return FirebaseStoragePlugin::Base64Decode(url_safe_data);
     }
     default:
       return {};  // Return empty vector for unsupported formats
   }
 }
 
-std::vector<unsigned char> FirebaseStoragePlugin::base64_decode(
+std::vector<unsigned char> FirebaseStoragePlugin::Base64Decode(
     const std::string& encoded_string) {
   std::string base64_chars =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
