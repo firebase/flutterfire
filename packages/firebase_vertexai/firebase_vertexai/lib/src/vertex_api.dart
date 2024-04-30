@@ -111,6 +111,15 @@ final class GenerateContentResponse {
       [Candidate(), ...] => null,
     };
   }
+
+  /// The function call parts of the first candidate in [candidates], if any.
+  ///
+  /// Returns an empty list if there are no candidates, or if the first
+  /// candidate has no [FunctionCall] parts. There is no error thrown if the
+  /// prompt or response were blocked.
+  Iterable<FunctionCall> get functionCalls =>
+      candidates.firstOrNull?.content.parts.whereType<FunctionCall>() ??
+      const [];
 }
 
 /// Response for Embed Content.
@@ -129,6 +138,46 @@ final class EmbedContentResponse {
   // ignore: unused_element
   google_ai.EmbedContentResponse _toGoogleAIEmbedContentResponse() =>
       google_ai.EmbedContentResponse(embedding._toGoogleAIContentEmbedding());
+}
+
+/// Response for Embed Content in batch.
+final class BatchEmbedContentsResponse {
+  /// Constructor
+  BatchEmbedContentsResponse(this.embeddings);
+
+  factory BatchEmbedContentsResponse._fromGoogleAIBatchEmbedContentsResponse(
+          google_ai.BatchEmbedContentsResponse embedContentResponse) =>
+      BatchEmbedContentsResponse(embedContentResponse.embeddings
+          .map(ContentEmbedding._fromGoogleAIContentEmbedding)
+          .toList());
+
+  /// The embeddings generated from the input content for each request, in the
+  /// same order as provided in the batch request.
+  final List<ContentEmbedding> embeddings;
+}
+
+final class EmbedContentRequest {
+  /// Constructor
+  EmbedContentRequest(this.content, {this.taskType, this.title, this.model});
+  final Content content;
+  final TaskType? taskType;
+  final String? title;
+  final String? model;
+
+  Object toJson({String? defaultModel}) => {
+        'content': content.toJson(),
+        if (taskType case final taskType?) 'taskType': taskType.toJson(),
+        if (title != null) 'title': title,
+        if (model ?? defaultModel case final model?) 'model': model,
+      };
+
+  /// Converts this response to a [EmbedContentResponse].
+  // ignore: unused_element
+  google_ai.EmbedContentRequest _toGoogleAIEmbedContentRequest() =>
+      google_ai.EmbedContentRequest(content._toGoogleAIContent(),
+          taskType: taskType?._toGoogleAITaskType(),
+          title: title,
+          model: model);
 }
 
 /// An embedding, as defined by a list of values.

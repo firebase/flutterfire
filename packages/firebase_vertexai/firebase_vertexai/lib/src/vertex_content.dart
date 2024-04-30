@@ -45,6 +45,12 @@ final class Content {
   /// Return a [Content] with multiple [Part]s from the model.
   static Content model(Iterable<Part> parts) => Content('model', [...parts]);
 
+  static Content functionResponse(
+          String name, Map<String, Object?>? response) =>
+      Content('function', [FunctionResponse(name, response)]);
+  static Content system(String instructions) =>
+      Content('system', [TextPart(instructions)]);
+
   /// Convert the [Content] to json format.
   Map<String, Object?> toJson() => {
         if (role case final role?) 'role': role,
@@ -83,10 +89,10 @@ sealed class Part {
         google_ai.DataPart dataPart =>
           DataPart(dataPart.mimeType, dataPart.bytes),
         google_ai.FilePart() => throw UnimplementedError(),
-        // TODO: Handle this case.
-        google_ai.FunctionCall() => throw UnimplementedError(),
-        // TODO: Handle this case.
-        google_ai.FunctionResponse() => throw UnimplementedError(),
+        google_ai.FunctionCall functionCall =>
+          FunctionCall(functionCall.name, functionCall.args),
+        google_ai.FunctionResponse functionResponse =>
+          FunctionResponse(functionResponse.name, functionResponse.response),
       };
 
   /// Convert the [Part] content to json format.
@@ -125,4 +131,48 @@ final class DataPart implements Part {
       };
   @override
   google_ai.Part toPart() => google_ai.DataPart(mimeType, bytes);
+}
+
+/// A predicted `FunctionCall` returned from the model that contains
+/// a string representing the `FunctionDeclaration.name` with the
+/// arguments and their values.
+final class FunctionCall implements Part {
+  /// Constructor
+  FunctionCall(this.name, this.args);
+
+  /// The name of the function to call.
+  final String name;
+
+  /// The function parameters and values.
+  final Map<String, Object?> args;
+
+  @override
+  // TODO: Do we need the wrapper object?
+  Object toJson() => {
+        'functionCall': {'name': name, 'args': args}
+      };
+  @override
+  google_ai.Part toPart() => google_ai.FunctionCall(name, args);
+}
+
+/// The response class for [FunctionCall]
+final class FunctionResponse implements Part {
+  /// Constructor
+  FunctionResponse(this.name, this.response);
+
+  /// The name of the function that was called.
+  final String name;
+
+  /// The function response.
+  ///
+  /// The values must be JSON compatible types; `String`, `num`, `bool`, `List`
+  /// of JSON compatibles types, or `Map` from String to JSON compatible types.
+  final Map<String, Object?>? response;
+
+  @override
+  Object toJson() => {
+        'functionResponse': {'name': name, 'response': response}
+      };
+  @override
+  google_ai.Part toPart() => google_ai.FunctionResponse(name, response);
 }

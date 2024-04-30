@@ -22,7 +22,7 @@ const int defaultTimeout = 1800000;
 /// The entrypoint for [FirebaseVertexAI].
 class FirebaseVertexAI extends FirebasePluginPlatform {
   FirebaseVertexAI._({required this.app, required this.options, this.appCheck})
-      : super(app.name, 'plugins.flutter.io/firebase_vertex_ai');
+      : super(app.name, 'plugins.flutter.io/firebase_vertexai');
 
   /// The [FirebaseApp] for this current [FirebaseVertexAI] instance.
   FirebaseApp app;
@@ -81,14 +81,20 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
   GenerativeModel generativeModel(
       {required String model,
       List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig}) {
+      GenerationConfig? generationConfig,
+      Content? systemInstruction,
+      List<Tool>? tools,
+      ToolConfig? toolConfig}) {
     return GenerativeModel._(
         model: model,
         app: app,
         appCheck: appCheck,
         location: _defaultLocation,
         safetySettings: safetySettings,
-        generationConfig: generationConfig);
+        generationConfig: generationConfig,
+        systemInstruction: systemInstruction,
+        tools: tools,
+        toolConfig: toolConfig);
   }
 }
 

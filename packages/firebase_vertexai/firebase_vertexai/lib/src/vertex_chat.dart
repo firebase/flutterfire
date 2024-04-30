@@ -33,7 +33,7 @@ final class ChatSession {
                     .toList()
                 : [],
             generationConfig:
-                _model._googleAIGenerationConfig(_generationConfig));
+                GenerativeModel._googleAIGenerationConfig(_generationConfig));
   final List<Content> _history;
   final List<SafetySetting>? _safetySettings;
   final GenerationConfig? _generationConfig;

@@ -41,18 +41,27 @@ final class GenerativeModel {
     FirebaseAppCheck? appCheck,
     List<SafetySetting>? safetySettings,
     GenerationConfig? generationConfig,
+    List<Tool>? tools,
+    Content? systemInstruction,
+    ToolConfig? toolConfig,
   })  : _firebaseApp = app,
         _googleAIModel = google_ai.createModelWithBaseUri(
-            model: _normalizeModelName(model),
-            apiKey: app.options.apiKey,
-            baseUri: _vertexUri(app, location),
-            requestHeaders: _appCheckToken(appCheck),
-            safetySettings: safetySettings != null
-                ? safetySettings
-                    .map((setting) => setting._toGoogleAISafetySetting())
-                    .toList()
-                : [],
-            generationConfig: generationConfig?._toGoogleAIGenerationConfig());
+          model: _normalizeModelName(model),
+          apiKey: app.options.apiKey,
+          baseUri: _vertexUri(app, location),
+          requestHeaders: _appCheckToken(appCheck),
+          safetySettings: safetySettings != null
+              ? safetySettings
+                  .map((setting) => setting._toGoogleAISafetySetting())
+                  .toList()
+              : [],
+          generationConfig: generationConfig?._toGoogleAIGenerationConfig(),
+          systemInstruction: systemInstruction?._toGoogleAIContent(),
+          tools: tools != null
+              ? tools.map((tool) => tool._toGoogleAITool()).toList()
+              : [],
+          toolConfig: toolConfig?._toGoogleAIToolConfig(),
+        );
   final FirebaseApp _firebaseApp;
   final google_ai.GenerativeModel _googleAIModel;
 
@@ -91,6 +100,11 @@ final class GenerativeModel {
       }
       return headers;
     };
+  }
+
+  static google_ai.GenerationConfig? _googleAIGenerationConfig(
+      GenerationConfig? config) {
+    return config?._toGoogleAIGenerationConfig();
   }
 
   /// Generates content responding to [prompt].
@@ -190,8 +204,26 @@ final class GenerativeModel {
         .then(EmbedContentResponse._fromGoogleAIEmbedContentResponse);
   }
 
-  google_ai.GenerationConfig? _googleAIGenerationConfig(
-      GenerationConfig? config) {
-    return config?._toGoogleAIGenerationConfig();
+  /// Creates embeddings (list of float values) representing each content in
+  /// [requests].
+  ///
+  /// Sends a "batchEmbedContents" API request for the configured model.
+  ///
+  /// Example:
+  /// ```dart
+  /// final requests = [
+  ///   EmbedContentRequest(Content.text(first)),
+  ///   EmbedContentRequest(Content.text(second))
+  /// ];
+  /// final promptEmbeddings =
+  ///     (await model.embedContent(requests)).embedding.values;
+  /// ```
+  Future<BatchEmbedContentsResponse> batchEmbedContents(
+      Iterable<EmbedContentRequest> requests) async {
+    return _googleAIModel
+        .batchEmbedContents(
+            requests.map((e) => e._toGoogleAIEmbedContentRequest()))
+        .then(
+            BatchEmbedContentsResponse._fromGoogleAIBatchEmbedContentsResponse);
   }
 }

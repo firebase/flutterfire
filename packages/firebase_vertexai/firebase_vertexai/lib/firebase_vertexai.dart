@@ -30,4 +30,5 @@ part 'src/firebase_vertexai.dart';
 part 'src/vertex_api.dart';
 part 'src/vertex_chat.dart';
 part 'src/vertex_content.dart';
+part 'src/vertex_function_calling.dart';
 part 'src/vertex_model.dart';
