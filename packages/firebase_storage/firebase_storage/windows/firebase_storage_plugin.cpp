@@ -588,12 +588,13 @@ class PutFileStreamHandler
  public:
   PutFileStreamHandler(Storage* storage, std::string reference_path,
                        std::string file_path, Controller* controller,
-                       const PigeonSettableMetadata* pigeon_meta_data) {
+                       const PigeonSettableMetadata* pigeon_meta_data)
+      : meta_data_(
+            std::make_unique<PigeonSettableMetadata>(*pigeon_meta_data)) {
     storage_ = storage;
     reference_path_ = reference_path;
     file_path_ = file_path;
     controller_ = controller;
-    meta_data_ = pigeon_meta_data;
   }
 
   std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
@@ -608,7 +609,8 @@ class PutFileStreamHandler
     Future<Metadata> future_result;
     if (meta_data_) {
       Metadata storage_metadata =
-          FirebaseStoragePlugin::CreateStorageMetadataFromPigeon(meta_data_);
+          FirebaseStoragePlugin::CreateStorageMetadataFromPigeon(
+              meta_data_.get());
       future_result =
           reference.PutFile(file_path_.c_str(), storage_metadata, &putFileListener, controller_);
     } else {
@@ -655,7 +657,7 @@ class PutFileStreamHandler
   Controller* controller_;
   std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events_ =
       nullptr;
-  const PigeonSettableMetadata* meta_data_;
+  std::unique_ptr<PigeonSettableMetadata> meta_data_;
 };
 
 class GetFileStreamHandler
