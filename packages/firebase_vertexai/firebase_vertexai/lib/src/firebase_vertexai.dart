@@ -80,6 +80,7 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
   /// [GenerationConfig] for details.
   GenerativeModel generativeModel(
       {required String model,
+      String? location,
       List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig,
       Content? systemInstruction,
@@ -89,7 +90,7 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
         model: model,
         app: app,
         appCheck: appCheck,
-        location: _defaultLocation,
+        location: location ?? _defaultLocation,
         safetySettings: safetySettings,
         generationConfig: generationConfig,
         systemInstruction: systemInstruction,
