@@ -280,53 +280,66 @@ void FirebaseStoragePlugin::ReferenceGetDownloadURL(
       });
 }
 
-firebase::storage::Metadata FirebaseStoragePlugin::CreateStorageMetadataFromPigeon(
+firebase::storage::Metadata*
+FirebaseStoragePlugin::CreateStorageMetadataFromPigeon(
     const PigeonSettableMetadata* pigeonMetaData) {
-  Metadata metaData;
+  if (pigeonMetaData == nullptr) {
+    return nullptr;  // No metadata to process
+  }
 
-  if (pigeonMetaData != nullptr) {
-    // Set Cache Control
-    if (pigeonMetaData->cache_control()) {
-      metaData.set_cache_control(pigeonMetaData->cache_control()->c_str());
-    }
+  auto metaData = std::make_unique<Metadata>();
 
-    // Set Content Disposition
-    if (pigeonMetaData->content_disposition()) {
-      metaData.set_content_disposition(
-          pigeonMetaData->content_disposition()->c_str());
-    }
+  bool hasValidData = false;
 
-    // Set Content Encoding
-    if (pigeonMetaData->content_encoding()) {
-      metaData.set_content_encoding(
-          pigeonMetaData->content_encoding()->c_str());
-    }
+  // Set Cache Control
+  if (pigeonMetaData->cache_control()) {
+    metaData->set_cache_control(pigeonMetaData->cache_control()->c_str());
+    hasValidData = true;
+  }
 
-    // Set Content Language
-    if (pigeonMetaData->content_language()) {
-      metaData.set_content_language(
-          pigeonMetaData->content_language()->c_str());
-    }
+  // Set Content Disposition
+  if (pigeonMetaData->content_disposition()) {
+    metaData->set_content_disposition(
+        pigeonMetaData->content_disposition()->c_str());
+    hasValidData = true;
+  }
 
-    // Set Content Type
-    if (pigeonMetaData->content_type()) {
-      metaData.set_content_type(pigeonMetaData->content_type()->c_str());
-    }
+  // Set Content Encoding
+  if (pigeonMetaData->content_encoding()) {
+    metaData->set_content_encoding(pigeonMetaData->content_encoding()->c_str());
+    hasValidData = true;
+  }
 
-    // Set Custom Metadata
-    if (pigeonMetaData->custom_metadata()) {
-      // Update EncodableValues to std::string key-values
-      std::map<std::string, std::string> customMetaDataMap =
-          FirebaseStoragePlugin::ProcessCustomMetadataMap(
-              *pigeonMetaData->custom_metadata());
-      // Set parsed map to MetaData.custom_metadata()
+  // Set Content Language
+  if (pigeonMetaData->content_language()) {
+    metaData->set_content_language(pigeonMetaData->content_language()->c_str());
+    hasValidData = true;
+  }
+
+  // Set Content Type
+  if (pigeonMetaData->content_type()) {
+    metaData->set_content_type(pigeonMetaData->content_type()->c_str());
+    hasValidData = true;
+  }
+
+  // Set Custom Metadata
+  if (pigeonMetaData->custom_metadata()) {
+    std::map<std::string, std::string> customMetaDataMap =
+        FirebaseStoragePlugin::ProcessCustomMetadataMap(
+            *pigeonMetaData->custom_metadata());
+    if (!customMetaDataMap.empty()) {
       std::map<std::string, std::string>* metaDataMap =
-          metaData.custom_metadata();
+          metaData->custom_metadata();
       metaDataMap->insert(customMetaDataMap.begin(), customMetaDataMap.end());
+      hasValidData = true;
     }
   }
 
-  return metaData;
+  if (!hasValidData) {
+    return nullptr;  // If no valid data was set, return nullptr
+  }
+
+  return metaData.release();  // Successfully created and populated metadata, release the pointer
 }
 
 std::map<std::string, std::string>
@@ -534,10 +547,19 @@ class PutDataStreamHandler
     TaskStateListener putStringListener = TaskStateListener(events_.get());
     StorageReference reference = storage_->GetReference(reference_path_);
     
-      Metadata storage_metadata =
+      Metadata* storage_metadata =
           FirebaseStoragePlugin::CreateStorageMetadataFromPigeon(&meta_data_);
-      Future<Metadata> future_result= reference.PutBytes(data_.data(), data_.size(),
-                             storage_metadata, &putStringListener, controller_);
+    Future<Metadata> future_result;
+      if (storage_metadata) {
+      future_result =
+          reference.PutBytes(data_.data(), data_.size(), *storage_metadata,
+                             &putStringListener, controller_);
+      } else {
+      future_result =
+          reference.PutBytes(data_.data(), data_.size(),
+                             &putStringListener, controller_);
+      }
+      
     
     
     ::Sleep(1);  // timing for c++ sdk grabbing a mutex
@@ -606,13 +628,15 @@ class PutFileStreamHandler
 
     TaskStateListener putFileListener = TaskStateListener(events_.get());
     StorageReference reference = storage_->GetReference(reference_path_);
-    Future<Metadata> future_result;
-    if (meta_data_) {
-      Metadata storage_metadata =
+    
+    Metadata* storage_metadata =
           FirebaseStoragePlugin::CreateStorageMetadataFromPigeon(
               meta_data_.get());
-      future_result =
-          reference.PutFile(file_path_.c_str(), storage_metadata, &putFileListener, controller_);
+    Future<Metadata> future_result;
+      
+      if (storage_metadata) {
+      future_result = reference.PutFile(file_path_.c_str(), *storage_metadata,
+                                        &putFileListener, controller_);
     } else {
       future_result =
           reference.PutFile(file_path_.c_str(), &putFileListener, controller_);
@@ -820,10 +844,10 @@ void FirebaseStoragePlugin::ReferenceUpdateMetadata(
     std::function<void(ErrorOr<PigeonFullMetaData> reply)> result) {
   StorageReference cpp_reference =
       GetCPPStorageReferenceFromPigeon(app, reference);
-  Metadata cpp_meta =
+  Metadata* cpp_meta =
       FirebaseStoragePlugin::CreateStorageMetadataFromPigeon(&metadata);
 
-  Future<Metadata> future_result = cpp_reference.UpdateMetadata(cpp_meta);
+  Future<Metadata> future_result = cpp_reference.UpdateMetadata(*cpp_meta);
   ::Sleep(1);  // timing for c++ sdk grabbing a mutex
   future_result.OnCompletion([result](const Future<Metadata>& data_result) {
     if (data_result.error() == firebase::storage::kErrorNone) {

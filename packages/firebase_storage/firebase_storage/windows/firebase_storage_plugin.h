@@ -36,7 +36,7 @@ class FirebaseStoragePlugin : public flutter::Plugin,
   FirebaseStoragePlugin& operator=(const FirebaseStoragePlugin&) = delete;
   // Static function declarations
   // Helper functions
-  static firebase::storage::Metadata CreateStorageMetadataFromPigeon(
+  static firebase::storage::Metadata* CreateStorageMetadataFromPigeon(
       const PigeonSettableMetadata* pigeonMetaData);
   static std::map<std::string, std::string> ProcessCustomMetadataMap(
       const flutter::EncodableMap& customMetadata);
