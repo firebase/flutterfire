@@ -869,10 +869,14 @@ void FirebaseStoragePlugin::TaskPause(
   bool status = controllers_[handle]->Pause();
   flutter::EncodableMap task_result = flutter::EncodableMap();
   flutter::EncodableMap task_data = flutter::EncodableMap();
-  task_result["status"] = status;
-  task_data["bytesTransferred"] = controllers_[handle]->bytes_transferred();
-  task_data["totalBytes"] = controllers_[handle]->total_byte_count();
-  task_result["snapshot"] = task_data;
+ 
+  task_result[flutter::EncodableValue("status")] =
+      flutter::EncodableValue(status);
+  task_data[flutter::EncodableValue("bytesTransferred")] =
+      flutter::EncodableValue(controllers_[handle]->bytes_transferred());
+  task_data[flutter::EncodableValue("totalBytes")] =
+      flutter::EncodableValue(controllers_[handle]->total_byte_count());
+  task_result[flutter::EncodableValue("snapshot")] = flutter::EncodableValue(task_data);
   result(task_result);
 }
 
@@ -882,10 +886,14 @@ void FirebaseStoragePlugin::TaskResume(
   bool status = controllers_[handle]->Resume();
   flutter::EncodableMap task_result = flutter::EncodableMap();
   flutter::EncodableMap task_data = flutter::EncodableMap();
-  task_result["status"] = status;
-  task_data["bytesTransferred"] = controllers_[handle]->bytes_transferred();
-  task_data["totalBytes"] = controllers_[handle]->total_byte_count();
-  task_result["snapshot"] = task_data;
+  task_result[flutter::EncodableValue("status")] =
+      flutter::EncodableValue(status);
+  task_data[flutter::EncodableValue("bytesTransferred")] =
+      flutter::EncodableValue(controllers_[handle]->bytes_transferred());
+  task_data[flutter::EncodableValue("totalBytes")] =
+      flutter::EncodableValue(controllers_[handle]->total_byte_count());
+  task_result[flutter::EncodableValue("snapshot")] =
+      flutter::EncodableValue(task_data);
   result(task_result);
 }
 
@@ -895,10 +903,14 @@ void FirebaseStoragePlugin::TaskCancel(
   bool status = controllers_[handle]->Cancel();
   flutter::EncodableMap task_result = flutter::EncodableMap();
   flutter::EncodableMap task_data = flutter::EncodableMap();
-  task_result["status"] = status;
-  task_data["bytesTransferred"] = controllers_[handle]->bytes_transferred();
-  task_data["totalBytes"] = controllers_[handle]->total_byte_count();
-  task_result["snapshot"] = task_data;
+  task_result[flutter::EncodableValue("status")] =
+      flutter::EncodableValue(status);
+  task_data[flutter::EncodableValue("bytesTransferred")] =
+      flutter::EncodableValue(controllers_[handle]->bytes_transferred());
+  task_data[flutter::EncodableValue("totalBytes")] =
+      flutter::EncodableValue(controllers_[handle]->total_byte_count());
+  task_result[flutter::EncodableValue("snapshot")] =
+      flutter::EncodableValue(task_data);
   result(task_result);
 }
 
