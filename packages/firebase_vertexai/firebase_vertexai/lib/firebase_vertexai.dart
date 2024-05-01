@@ -26,6 +26,8 @@ import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
 // ignore: implementation_imports, tightly coupled packages
 import 'package:google_generative_ai/src/model.dart' as google_ai;
 
+import 'src/vertex_version.dart';
+
 part 'src/firebase_vertexai.dart';
 part 'src/vertex_api.dart';
 part 'src/vertex_chat.dart';

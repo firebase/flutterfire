@@ -92,6 +92,8 @@ final class GenerativeModel {
       FirebaseAppCheck? appCheck) {
     return () async {
       Map<String, String> headers = {};
+      // Override the client name in Google AI SDK
+      headers['x-goog-api-client'] = 'gl-dart/flutter fire/$packageVersion';
       if (appCheck != null) {
         final token = await appCheck.getToken();
         if (token != null) {
