@@ -46,7 +46,7 @@ jobs:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-${{ github.run_id }}
           restore-keys: firebase-emulators-v3
-      - uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225
+      - uses: subosito/flutter-action@44ac965b96f18d999802d4b807e3256d5a3f9fa1
         with:
           channel: 'stable'
           cache: true
@@ -121,7 +121,7 @@ jobs:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-${{ github.run_id }}
           restore-keys: firebase-emulators-v3
-      - uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225
+      - uses: subosito/flutter-action@44ac965b96f18d999802d4b807e3256d5a3f9fa1
         with:
           channel: 'stable'
           cache: true
@@ -196,7 +196,7 @@ jobs:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-${{ github.run_id }}
           restore-keys: firebase-emulators-v3
-      - uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225
+      - uses: subosito/flutter-action@44ac965b96f18d999802d4b807e3256d5a3f9fa1
         with:
           channel: 'stable'
           cache: true
@@ -250,7 +250,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225
+      - uses: subosito/flutter-action@44ac965b96f18d999802d4b807e3256d5a3f9fa1
         with:
           channel: 'stable'
           cache: true
@@ -306,7 +306,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225
+      - uses: subosito/flutter-action@44ac965b96f18d999802d4b807e3256d5a3f9fa1
         with:
           # TODO: Remove this once WASM is on stable.
           channel: 'master'
@@ -359,7 +359,7 @@ jobs:
         name: Install Node.js 20
         with:
           node-version: "20"
-      - uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225
+      - uses: subosito/flutter-action@44ac965b96f18d999802d4b807e3256d5a3f9fa1
         with:
           channel: 'stable'
           cache: true
