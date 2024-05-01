@@ -491,7 +491,6 @@ class TaskStateListener : public Listener {
     events_ = events;
   }
   virtual void OnProgress(firebase::storage::Controller* controller) {
-    // A progress event occurred
     // TODO error handling
 
     flutter::EncodableMap event = flutter::EncodableMap();
@@ -507,7 +506,6 @@ class TaskStateListener : public Listener {
   }
 
   virtual void OnPaused(firebase::storage::Controller* controller) {
-    // A progress event occurred
     // TODO error handling
     flutter::EncodableMap event = flutter::EncodableMap();
     event[kTaskStateName] = static_cast<int>(PigeonStorageTaskState::paused);
@@ -545,7 +543,7 @@ class PutDataStreamHandler
       override {
     events_ = std::move(events);
 
-    TaskStateListener putStringListener = TaskStateListener(events_.get());
+    TaskStateListener* putStringListener = new TaskStateListener(events_.get());
     StorageReference reference = storage_->GetReference(reference_path_);
     
       Metadata* storage_metadata =
@@ -554,11 +552,11 @@ class PutDataStreamHandler
       if (storage_metadata) {
       future_result =
           reference.PutBytes(data_.data(), data_.size(), *storage_metadata,
-                             &putStringListener, controller_);
+                             putStringListener, controller_);
       } else {
       future_result =
           reference.PutBytes(data_.data(), data_.size(),
-                             &putStringListener, controller_);
+                             putStringListener, controller_);
       }
       
     
@@ -627,7 +625,7 @@ class PutFileStreamHandler
       override {
     events_ = std::move(events);
 
-    TaskStateListener putFileListener = TaskStateListener(events_.get());
+    TaskStateListener* putFileListener = new TaskStateListener(events_.get());
     StorageReference reference = storage_->GetReference(reference_path_);
     
     Metadata* storage_metadata =
@@ -637,10 +635,10 @@ class PutFileStreamHandler
       
       if (storage_metadata) {
       future_result = reference.PutFile(file_path_.c_str(), *storage_metadata,
-                                        &putFileListener, controller_);
+                                        putFileListener, controller_);
     } else {
       future_result =
-          reference.PutFile(file_path_.c_str(), &putFileListener, controller_);
+          reference.PutFile(file_path_.c_str(), putFileListener, controller_);
     }
 
     ::Sleep(1);  // timing for c++ sdk grabbing a mutex
@@ -704,11 +702,11 @@ class GetFileStreamHandler
     events_ = std::move(events);
     std::unique_lock<std::mutex> lock(mtx_);
 
-    TaskStateListener getFileListener = TaskStateListener(events_.get());
+    TaskStateListener* getFileListener = new TaskStateListener(events_.get());
     StorageReference reference = storage_->GetReference(reference_path_);
     Future<size_t> future_result =
-        reference.GetFile(file_path_.c_str(), &getFileListener, controller_);
-
+        reference.GetFile(file_path_.c_str(), getFileListener, controller_);
+    
     ::Sleep(1);  // timing for c++ sdk grabbing a mutex
     future_result.OnCompletion([this](const Future<size_t>& data_result) {
       if (data_result.error() == firebase::storage::kErrorNone) {
