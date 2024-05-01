@@ -367,7 +367,8 @@ std::string kContentDispositionName = "contentDisposition";
 std::string kContentEncodingName = "contentEncoding";
 std::string kContentLanguageName = "contentLanguage";
 std::string kContentTypeName = "contentType";
-std::string kCustomMetadataName = "metadata";
+std::string kCustomMetadataName = "customMetadata";
+std::string kMetadataName = "metadata";
 std::string kSizeName = "size";
 
 flutter::EncodableMap ConvertMedadataToPigeon(const Metadata* meta) {
@@ -575,7 +576,7 @@ class PutDataStreamHandler
         snapshot[kTaskSnapshotTotalBytes] = data_result.result()->size_bytes();
         snapshot[kTaskSnapshotBytesTransferred] =
             data_result.result()->size_bytes();
-        snapshot[kCustomMetadataName] =
+        snapshot[kMetadataName] =
             ConvertMedadataToPigeon(data_result.result());
         event[kTaskSnapshotName] = snapshot;
 
