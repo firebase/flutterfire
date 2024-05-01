@@ -655,7 +655,7 @@ class PutFileStreamHandler
         snapshot[kTaskSnapshotTotalBytes] = data_result.result()->size_bytes();
         snapshot[kTaskSnapshotBytesTransferred] =
             data_result.result()->size_bytes();
-        snapshot[kCustomMetadataName] =
+        snapshot[kMetadataName] =
             ConvertMedadataToPigeon(data_result.result());
         event[kTaskSnapshotName] = snapshot;
 
