@@ -24,7 +24,9 @@ void setupSecondBucketTests() {
         app: Firebase.app(),
         bucket: secondStorageBucket,
       );
-      await storage.useStorageEmulator(testEmulatorHost, testEmulatorPort);
+      if (defaultTargetPlatform != TargetPlatform.windows) {
+        await storage.useStorageEmulator(testEmulatorHost, testEmulatorPort);
+      }
       // Cannot putFile as it will fail on web e2e tests
       const string = 'some text for creating new files';
       final Reference ref = storage.ref('flutter-tests').child('flt-ok.txt');
