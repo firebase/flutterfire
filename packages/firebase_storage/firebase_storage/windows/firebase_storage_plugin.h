@@ -47,6 +47,8 @@ class FirebaseStoragePlugin : public flutter::Plugin,
   static std::string GetStorageErrorCode(Error cppError);
   static std::string GetStorageErrorMessage(Error cppError);
   static FlutterError ParseError(const firebase::FutureBase& future);
+  static flutter::EncodableMap ErrorStreamEvent(
+      const firebase::FutureBase& data_result, const std::string& app_name);
 
   // FirebaseStorageHostApi
   virtual void GetReferencebyPath(

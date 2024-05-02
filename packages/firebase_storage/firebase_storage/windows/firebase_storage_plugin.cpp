@@ -200,6 +200,30 @@ std::string FirebaseStoragePlugin::GetStorageErrorMessage(Error storageError) {
   }
 }
 
+// For Tasks, we stream exception back as a map to match other platforms
+ flutter::EncodableMap FirebaseStoragePlugin::ErrorStreamEvent(
+    const firebase::FutureBase& data_result,
+    const std::string& app_name) {
+  flutter::EncodableMap error;
+  const Error errorCode = static_cast<const Error>(data_result.error());
+  flutter::EncodableValue code(
+      FirebaseStoragePlugin::GetStorageErrorCode(errorCode));
+  flutter::EncodableValue message(
+      FirebaseStoragePlugin::GetStorageErrorMessage(errorCode));
+
+  error[flutter::EncodableValue("code")] = code;
+  error[flutter::EncodableValue("message")] = message;
+
+  flutter::EncodableMap event;
+  event[flutter::EncodableValue("appName")] =
+      flutter::EncodableValue(app_name);
+  event[flutter::EncodableValue("taskState")] =
+      flutter::EncodableValue(static_cast<int>(PigeonStorageTaskState::error));
+  event[flutter::EncodableValue("error")] = error;
+
+  return event;
+}
+
 FlutterError FirebaseStoragePlugin::ParseError(
     const firebase::FutureBase& completed_future) {
   const Error errorCode = static_cast<const Error>(completed_future.error());
@@ -484,6 +508,7 @@ std::string kTaskSnapshotName = "snapshot";
 std::string kTaskSnapshotPath = "path";
 std::string kTaskSnapshotBytesTransferred = "bytesTransferred";
 std::string kTaskSnapshotTotalBytes = "totalBytes";
+std::string kErrorName = "error";
 
 class TaskStateListener : public Listener {
  public:
@@ -491,8 +516,6 @@ class TaskStateListener : public Listener {
     events_ = events;
   }
   virtual void OnProgress(firebase::storage::Controller* controller) {
-    // TODO error handling
-
     flutter::EncodableMap event = flutter::EncodableMap();
     event[kTaskStateName] = static_cast<int>(PigeonStorageTaskState::running);
     event[kTaskAppName] = controller->GetReference().storage()->app()->name();
@@ -506,7 +529,6 @@ class TaskStateListener : public Listener {
   }
 
   virtual void OnPaused(firebase::storage::Controller* controller) {
-    // TODO error handling
     flutter::EncodableMap event = flutter::EncodableMap();
     event[kTaskStateName] = static_cast<int>(PigeonStorageTaskState::paused);
     event[kTaskAppName] = controller->GetReference().storage()->app()->name();
@@ -580,10 +602,10 @@ class PutDataStreamHandler
 
         events_->Success(event);
       } else {
-        const Error errorCode = static_cast<const Error>(data_result.error());
-        events_->Error(
-            FirebaseStoragePlugin::GetStorageErrorCode(errorCode),
-            FirebaseStoragePlugin::GetStorageErrorMessage(errorCode));
+        flutter::EncodableMap map = FirebaseStoragePlugin::ErrorStreamEvent(
+            data_result, storage_->app()->name());
+
+        events_->Success(map);
       }
     });
     return nullptr;
@@ -659,10 +681,10 @@ class PutFileStreamHandler
 
         events_->Success(event);
       } else {
-        const Error errorCode = static_cast<const Error>(data_result.error());
-        events_->Error(
-            FirebaseStoragePlugin::GetStorageErrorCode(errorCode),
-            FirebaseStoragePlugin::GetStorageErrorMessage(errorCode));
+        flutter::EncodableMap map = FirebaseStoragePlugin::ErrorStreamEvent(
+            data_result, storage_->app()->name());
+
+        events_->Success(map);
       }
     });
     return nullptr;
@@ -724,10 +746,10 @@ class GetFileStreamHandler
 
         events_->Success(event);
       } else {
-        const Error errorCode = static_cast<const Error>(data_result.error());
-        events_->Error(
-            FirebaseStoragePlugin::GetStorageErrorCode(errorCode),
-            FirebaseStoragePlugin::GetStorageErrorMessage(errorCode));
+        flutter::EncodableMap map = FirebaseStoragePlugin::ErrorStreamEvent(
+            data_result, storage_->app()->name());
+
+        events_->Success(map);
       }
     });
     return nullptr;
