@@ -201,9 +201,8 @@ std::string FirebaseStoragePlugin::GetStorageErrorMessage(Error storageError) {
 }
 
 // For Tasks, we stream exception back as a map to match other platforms
- flutter::EncodableMap FirebaseStoragePlugin::ErrorStreamEvent(
-    const firebase::FutureBase& data_result,
-    const std::string& app_name) {
+flutter::EncodableMap FirebaseStoragePlugin::ErrorStreamEvent(
+    const firebase::FutureBase& data_result, const std::string& app_name) {
   flutter::EncodableMap error;
   const Error errorCode = static_cast<const Error>(data_result.error());
   flutter::EncodableValue code(
@@ -215,8 +214,7 @@ std::string FirebaseStoragePlugin::GetStorageErrorMessage(Error storageError) {
   error[flutter::EncodableValue("message")] = message;
 
   flutter::EncodableMap event;
-  event[flutter::EncodableValue("appName")] =
-      flutter::EncodableValue(app_name);
+  event[flutter::EncodableValue("appName")] = flutter::EncodableValue(app_name);
   event[flutter::EncodableValue("taskState")] =
       flutter::EncodableValue(static_cast<int>(PigeonStorageTaskState::error));
   event[flutter::EncodableValue("error")] = error;
@@ -363,7 +361,8 @@ FirebaseStoragePlugin::CreateStorageMetadataFromPigeon(
     return nullptr;  // If no valid data was set, return nullptr
   }
 
-  return metaData.release();  // Successfully created and populated metadata, release the pointer
+  return metaData.release();  // Successfully created and populated metadata,
+                              // release the pointer
 }
 
 std::map<std::string, std::string>
@@ -384,7 +383,6 @@ FirebaseStoragePlugin::ProcessCustomMetadataMap(
 
   return processedMetadata;
 }
-
 
 std::string kCacheControlName = "cacheControl";
 std::string kContentDispositionName = "contentDisposition";
@@ -550,7 +548,8 @@ class PutDataStreamHandler
   PutDataStreamHandler(Storage* storage, std::string reference_path,
                        const void* data, size_t buffer_size,
                        Controller* controller,
-                       const PigeonSettableMetadata& pigeon_meta_data): meta_data_(pigeon_meta_data) {
+                       const PigeonSettableMetadata& pigeon_meta_data)
+      : meta_data_(pigeon_meta_data) {
     storage_ = storage;
     reference_path_ = reference_path;
     auto data_bytes_ptr = static_cast<const uint8_t*>(data);
@@ -567,22 +566,19 @@ class PutDataStreamHandler
 
     TaskStateListener* putStringListener = new TaskStateListener(events_.get());
     StorageReference reference = storage_->GetReference(reference_path_);
-    
-      Metadata* storage_metadata =
-          FirebaseStoragePlugin::CreateStorageMetadataFromPigeon(&meta_data_);
+
+    Metadata* storage_metadata =
+        FirebaseStoragePlugin::CreateStorageMetadataFromPigeon(&meta_data_);
     Future<Metadata> future_result;
-      if (storage_metadata) {
+    if (storage_metadata) {
       future_result =
           reference.PutBytes(data_.data(), data_.size(), *storage_metadata,
                              putStringListener, controller_);
-      } else {
-      future_result =
-          reference.PutBytes(data_.data(), data_.size(),
-                             putStringListener, controller_);
-      }
-      
-    
-    
+    } else {
+      future_result = reference.PutBytes(data_.data(), data_.size(),
+                                         putStringListener, controller_);
+    }
+
     ::Sleep(1);  // timing for c++ sdk grabbing a mutex
 
     future_result.OnCompletion([this](const Future<Metadata>& data_result) {
@@ -596,8 +592,7 @@ class PutDataStreamHandler
         snapshot[kTaskSnapshotTotalBytes] = data_result.result()->size_bytes();
         snapshot[kTaskSnapshotBytesTransferred] =
             data_result.result()->size_bytes();
-        snapshot[kMetadataName] =
-            ConvertMedadataToPigeon(data_result.result());
+        snapshot[kMetadataName] = ConvertMedadataToPigeon(data_result.result());
         event[kTaskSnapshotName] = snapshot;
 
         events_->Success(event);
@@ -649,13 +644,13 @@ class PutFileStreamHandler
 
     TaskStateListener* putFileListener = new TaskStateListener(events_.get());
     StorageReference reference = storage_->GetReference(reference_path_);
-    
+
     Metadata* storage_metadata =
-          FirebaseStoragePlugin::CreateStorageMetadataFromPigeon(
-              meta_data_.get());
+        FirebaseStoragePlugin::CreateStorageMetadataFromPigeon(
+            meta_data_.get());
     Future<Metadata> future_result;
-      
-      if (storage_metadata) {
+
+    if (storage_metadata) {
       future_result = reference.PutFile(file_path_.c_str(), *storage_metadata,
                                         putFileListener, controller_);
     } else {
@@ -675,8 +670,7 @@ class PutFileStreamHandler
         snapshot[kTaskSnapshotTotalBytes] = data_result.result()->size_bytes();
         snapshot[kTaskSnapshotBytesTransferred] =
             data_result.result()->size_bytes();
-        snapshot[kMetadataName] =
-            ConvertMedadataToPigeon(data_result.result());
+        snapshot[kMetadataName] = ConvertMedadataToPigeon(data_result.result());
         event[kTaskSnapshotName] = snapshot;
 
         events_->Success(event);
@@ -728,7 +722,7 @@ class GetFileStreamHandler
     StorageReference reference = storage_->GetReference(reference_path_);
     Future<size_t> future_result =
         reference.GetFile(file_path_.c_str(), getFileListener, controller_);
-    
+
     ::Sleep(1);  // timing for c++ sdk grabbing a mutex
     future_result.OnCompletion([this](const Future<size_t>& data_result) {
       if (data_result.error() == firebase::storage::kErrorNone) {
@@ -807,8 +801,7 @@ void FirebaseStoragePlugin::ReferencePutString(
 
   auto handler = std::make_unique<PutDataStreamHandler>(
       cpp_storage, pigeon_reference.full_path(), decoded_data.data(),
-      decoded_data.size(),
-      controllers_[handle].get(), settable_meta_data);
+      decoded_data.size(), controllers_[handle].get(), settable_meta_data);
 
   std::string channelName = RegisterEventChannel(
       kStorageMethodChannelName + "/" + kStorageTaskEventName,
@@ -889,14 +882,15 @@ void FirebaseStoragePlugin::TaskPause(
   bool status = controllers_[handle]->Pause();
   flutter::EncodableMap task_result = flutter::EncodableMap();
   flutter::EncodableMap task_data = flutter::EncodableMap();
- 
+
   task_result[flutter::EncodableValue("status")] =
       flutter::EncodableValue(status);
   task_data[flutter::EncodableValue("bytesTransferred")] =
       flutter::EncodableValue(controllers_[handle]->bytes_transferred());
   task_data[flutter::EncodableValue("totalBytes")] =
       flutter::EncodableValue(controllers_[handle]->total_byte_count());
-  task_result[flutter::EncodableValue("snapshot")] = flutter::EncodableValue(task_data);
+  task_result[flutter::EncodableValue("snapshot")] =
+      flutter::EncodableValue(task_data);
   result(task_result);
 }
 

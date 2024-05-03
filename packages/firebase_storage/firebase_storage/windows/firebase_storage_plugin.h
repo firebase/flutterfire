@@ -14,8 +14,8 @@
 #include <memory>
 
 #include "firebase/storage/common.h"
-#include "firebase/storage/metadata.h"
 #include "firebase/storage/controller.h"
+#include "firebase/storage/metadata.h"
 #include "messages.g.h"
 
 using firebase::storage::Error;
@@ -42,7 +42,8 @@ class FirebaseStoragePlugin : public flutter::Plugin,
       const flutter::EncodableMap& customMetadata);
   static std::vector<unsigned char> StringToByteData(const std::string& data,
                                                      int64_t format);
-  static std::vector<unsigned char> Base64Decode(const std::string& encoded_string);
+  static std::vector<unsigned char> Base64Decode(
+      const std::string& encoded_string);
   // Parser functions
   static std::string GetStorageErrorCode(Error cppError);
   static std::string GetStorageErrorMessage(Error cppError);
