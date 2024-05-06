@@ -20,6 +20,9 @@ part of firebase_vertexai;
 /// external systems to perform an action, or set of actions, outside of
 /// knowledge and scope of the model.
 final class Tool {
+  /// Constructor
+  Tool({this.functionDeclarations});
+
   /// A list of `FunctionDeclarations` available to the model that can be used
   /// for function calling.
   ///
@@ -30,8 +33,7 @@ final class Tool {
   /// with the role "function" generation context for the next model turn.
   final List<FunctionDeclaration>? functionDeclarations;
 
-  Tool({this.functionDeclarations});
-
+  /// Convert to json object.
   Map<String, Object> toJson() => {
         if (functionDeclarations case final functionDeclarations?)
           'functionDeclarations':
@@ -52,6 +54,9 @@ final class Tool {
 /// FunctionDeclaration is a representation of a block of code that can be used
 /// as a `Tool` by the model and executed by the client.
 final class FunctionDeclaration {
+  /// Constructor
+  FunctionDeclaration(this.name, this.description, this.parameters);
+
   /// The name of the function.
   ///
   /// Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum
@@ -61,10 +66,10 @@ final class FunctionDeclaration {
   /// A brief description of the function.
   final String description;
 
+  /// The definition of an input or output data types.
   final Schema? parameters;
 
-  FunctionDeclaration(this.name, this.description, this.parameters);
-
+  /// Convert to json object.
   Map<String, Object?> toJson() => {
         'name': name,
         'description': description,

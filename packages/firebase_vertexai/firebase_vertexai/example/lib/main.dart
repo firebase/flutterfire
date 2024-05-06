@@ -74,6 +74,7 @@ class ChatWidget extends StatefulWidget {
 
 class _ChatWidgetState extends State<ChatWidget> {
   late final GenerativeModel _model;
+  late final GenerativeModel _functionCallModel;
   late final ChatSession _chat;
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
@@ -89,10 +90,12 @@ class _ChatWidgetState extends State<ChatWidget> {
     initFirebase().then((value) {
       _model = FirebaseVertexAI.instance.generativeModel(
         model: 'gemini-1.5-pro-preview-0409',
-        // tools: [
-        //   Tool(functionDeclarations: [exchangeRateTool])
-        // ],
-        // systemInstruction: Content.system('You are a cat. Your name is Neko.'),
+      );
+      _functionCallModel = FirebaseVertexAI.instance.generativeModel(
+        model: 'gemini-1.5-pro-preview-0409',
+        tools: [
+          Tool(functionDeclarations: [exchangeRateTool])
+        ],
       );
       _chat = _model.startChat();
     });
@@ -343,8 +346,8 @@ class _ChatWidgetState extends State<ChatWidget> {
     setState(() {
       _loading = true;
     });
-    final chat = _model.startChat();
-    final prompt = 'How much is 50 US dollars worth in Swedish krona?';
+    final chat = _functionCallModel.startChat();
+    const prompt = 'How much is 50 US dollars worth in Swedish krona?';
 
     // Send the message to the generative model.
     var response = await chat.sendMessage(Content.text(prompt));

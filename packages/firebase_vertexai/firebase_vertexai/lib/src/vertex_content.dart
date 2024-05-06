@@ -120,7 +120,8 @@ final class DataPart implements Part {
   /// Constructor
   DataPart(this.mimeType, this.bytes);
 
-  /// File type of the [DataPart]. https://cloud.google.com/document-ai/docs/file-types
+  /// File type of the [DataPart].
+  /// https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-multimodal-prompts#media_requirements
   final String mimeType;
 
   /// Data contents in bytes.
