@@ -1,3 +1,8 @@
+## 14.9.2
+
+ - **FIX**(messaging,apple): rename to `PrivacyInfo.xcprivacy` for privacy manifest ([#12752](https://github.com/firebase/flutterfire/issues/12752)). ([c5bdebc8](https://github.com/firebase/flutterfire/commit/c5bdebc89c64419e755f0b375108719785129716))
+ - **FIX**(messaging,android): remove deprecated instance ID (iid) dependency ([#12702](https://github.com/firebase/flutterfire/issues/12702)). ([7b2990b3](https://github.com/firebase/flutterfire/commit/7b2990b36197a2848f424aefb6603b5d9c87f73e))
+
 ## 14.9.1
 
  - Update a dependency to the latest release.
