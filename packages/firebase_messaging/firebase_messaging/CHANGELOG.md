@@ -1,3 +1,7 @@
+## 14.9.1
+
+ - Update a dependency to the latest release.
+
 ## 14.9.0
 
  - **FIX**(firebase_messaging,web): Define scope for 'firebase-messaging-sw.js' on registration ([#12639](https://github.com/firebase/flutterfire/issues/12639)). ([02c26b34](https://github.com/firebase/flutterfire/commit/02c26b34a2baa2f335770db648dd57055e92066d))

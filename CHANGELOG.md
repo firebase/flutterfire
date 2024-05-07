@@ -3,6 +3,110 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-04-24
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`_flutterfire_internals` - `v1.3.32`](#_flutterfire_internals---v1332)
+ - [`cloud_firestore_web` - `v3.12.2`](#cloud_firestore_web---v3122)
+ - [`firebase_auth_web` - `v5.11.4`](#firebase_auth_web---v5114)
+ - [`firebase_auth_platform_interface` - `v7.2.5`](#firebase_auth_platform_interface---v725)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.4+32`](#firebase_in_app_messaging_platform_interface---v02432)
+ - [`firebase_database_platform_interface` - `v0.2.5+32`](#firebase_database_platform_interface---v02532)
+ - [`cloud_firestore_platform_interface` - `v6.2.2`](#cloud_firestore_platform_interface---v622)
+ - [`firebase_app_installations_web` - `v0.1.5+4`](#firebase_app_installations_web---v0154)
+ - [`firebase_analytics_platform_interface` - `v3.10.5`](#firebase_analytics_platform_interface---v3105)
+ - [`firebase_app_installations_platform_interface` - `v0.1.4+32`](#firebase_app_installations_platform_interface---v01432)
+ - [`firebase_analytics_web` - `v0.5.7+4`](#firebase_analytics_web---v0574)
+ - [`firebase_crashlytics_platform_interface` - `v3.6.32`](#firebase_crashlytics_platform_interface---v3632)
+ - [`firebase_messaging_web` - `v3.8.4`](#firebase_messaging_web---v384)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.6+32`](#firebase_dynamic_links_platform_interface---v02632)
+ - [`firebase_remote_config_platform_interface` - `v1.4.32`](#firebase_remote_config_platform_interface---v1432)
+ - [`firebase_messaging_platform_interface` - `v4.5.34`](#firebase_messaging_platform_interface---v4534)
+ - [`firebase_app_check_web` - `v0.1.2+4`](#firebase_app_check_web---v0124)
+ - [`firebase_app_check_platform_interface` - `v0.1.0+26`](#firebase_app_check_platform_interface---v01026)
+ - [`firebase_performance_platform_interface` - `v0.1.4+32`](#firebase_performance_platform_interface---v01432)
+ - [`firebase_storage_web` - `v3.9.4`](#firebase_storage_web---v394)
+ - [`firebase_performance_web` - `v0.1.6+4`](#firebase_performance_web---v0164)
+ - [`firebase_storage_platform_interface` - `v5.1.19`](#firebase_storage_platform_interface---v5119)
+ - [`firebase_auth` - `v4.19.4`](#firebase_auth---v4194)
+ - [`firebase_in_app_messaging` - `v0.7.5+4`](#firebase_in_app_messaging---v0754)
+ - [`cloud_firestore` - `v4.17.2`](#cloud_firestore---v4172)
+ - [`firebase_database_web` - `v0.2.5+4`](#firebase_database_web---v0254)
+ - [`firebase_database` - `v10.5.4`](#firebase_database---v1054)
+ - [`firebase_app_installations` - `v0.2.5+4`](#firebase_app_installations---v0254)
+ - [`firebase_analytics` - `v10.10.4`](#firebase_analytics---v10104)
+ - [`firebase_crashlytics` - `v3.5.4`](#firebase_crashlytics---v354)
+ - [`firebase_messaging` - `v14.9.1`](#firebase_messaging---v1491)
+ - [`firebase_dynamic_links` - `v5.5.4`](#firebase_dynamic_links---v554)
+ - [`firebase_remote_config` - `v4.4.4`](#firebase_remote_config---v444)
+ - [`firebase_remote_config_web` - `v1.6.4`](#firebase_remote_config_web---v164)
+ - [`firebase_app_check` - `v0.2.2+4`](#firebase_app_check---v0224)
+ - [`firebase_performance` - `v0.9.4+4`](#firebase_performance---v0944)
+ - [`firebase_storage` - `v11.7.4`](#firebase_storage---v1174)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_auth_platform_interface` - `v7.2.5`
+ - `firebase_in_app_messaging_platform_interface` - `v0.2.4+32`
+ - `firebase_database_platform_interface` - `v0.2.5+32`
+ - `cloud_firestore_platform_interface` - `v6.2.2`
+ - `firebase_app_installations_web` - `v0.1.5+4`
+ - `firebase_analytics_platform_interface` - `v3.10.5`
+ - `firebase_app_installations_platform_interface` - `v0.1.4+32`
+ - `firebase_analytics_web` - `v0.5.7+4`
+ - `firebase_crashlytics_platform_interface` - `v3.6.32`
+ - `firebase_messaging_web` - `v3.8.4`
+ - `firebase_dynamic_links_platform_interface` - `v0.2.6+32`
+ - `firebase_remote_config_platform_interface` - `v1.4.32`
+ - `firebase_messaging_platform_interface` - `v4.5.34`
+ - `firebase_app_check_web` - `v0.1.2+4`
+ - `firebase_app_check_platform_interface` - `v0.1.0+26`
+ - `firebase_performance_platform_interface` - `v0.1.4+32`
+ - `firebase_storage_web` - `v3.9.4`
+ - `firebase_performance_web` - `v0.1.6+4`
+ - `firebase_storage_platform_interface` - `v5.1.19`
+ - `firebase_auth` - `v4.19.4`
+ - `firebase_in_app_messaging` - `v0.7.5+4`
+ - `cloud_firestore` - `v4.17.2`
+ - `firebase_database_web` - `v0.2.5+4`
+ - `firebase_database` - `v10.5.4`
+ - `firebase_app_installations` - `v0.2.5+4`
+ - `firebase_analytics` - `v10.10.4`
+ - `firebase_crashlytics` - `v3.5.4`
+ - `firebase_messaging` - `v14.9.1`
+ - `firebase_dynamic_links` - `v5.5.4`
+ - `firebase_remote_config` - `v4.4.4`
+ - `firebase_remote_config_web` - `v1.6.4`
+ - `firebase_app_check` - `v0.2.2+4`
+ - `firebase_performance` - `v0.9.4+4`
+ - `firebase_storage` - `v11.7.4`
+
+---
+
+#### `_flutterfire_internals` - `v1.3.32`
+
+ - **FIX**(web): fix type casting for JSString in error parsing ([#12698](https://github.com/firebase/flutterfire/issues/12698)). ([93efcffb](https://github.com/firebase/flutterfire/commit/93efcffbaba854fe50c5dd26b590d8a02d6e2d4e))
+
+#### `cloud_firestore_web` - `v3.12.2`
+
+ - **FIX**(web): fixing some uncorrect type casting for Web ([#12696](https://github.com/firebase/flutterfire/issues/12696)). ([471b5072](https://github.com/firebase/flutterfire/commit/471b507265a08bbc68277d3a2fdb7ef608c9efcc))
+
+#### `firebase_auth_web` - `v5.11.4`
+
+ - **FIX**(web): fixing some uncorrect type casting for Web ([#12696](https://github.com/firebase/flutterfire/issues/12696)). ([471b5072](https://github.com/firebase/flutterfire/commit/471b507265a08bbc68277d3a2fdb7ef608c9efcc))
+
+
 ## 2024-04-23
 
 ### Changes

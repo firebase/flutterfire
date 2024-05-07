@@ -16,6 +16,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'src/interop_shimmer.dart'
     if (dart.library.js_interop) 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
+import 'src/interop_shimmer.dart' if (dart.library.js_interop) 'dart:js_interop'
+    as js_interop;
 
 export 'src/exception.dart';
 
@@ -50,17 +52,26 @@ extension ObjectX<T> on T? {
   }
 }
 
+// Necessary because of the conditional import
+String _safeConvertFromPossibleJSObject(dynamic value) {
+  if (value is js_interop.JSAny) {
+    return (value as js_interop.JSString).toDart;
+  } else {
+    return value as String;
+  }
+}
+
 FirebaseException _firebaseExceptionFromCoreFirebaseError(
   core_interop.JSError firebaseError, {
   required String plugin,
   required String Function(String) codeParser,
   required String Function(String code, String message)? messageParser,
 }) {
-  // ignore: unnecessary_cast
-  final convertCode = firebaseError.code as String;
+  final convertCode = _safeConvertFromPossibleJSObject(firebaseError.code);
   final code = codeParser(convertCode);
-  // ignore: unnecessary_cast
-  final convertMessage = firebaseError.message as String;
+
+  final String convertMessage =
+      _safeConvertFromPossibleJSObject(firebaseError.message);
   final message = messageParser != null
       ? messageParser(code, convertMessage)
       : convertMessage.replaceFirst('(${firebaseError.code})', '');
@@ -81,8 +92,8 @@ FirebaseException _firebaseExceptionFromCoreFirebaseError(
 /// See also https://github.com/dart-lang/sdk/issues/30741
 bool _testException(Object? objectException) {
   final exception = objectException! as core_interop.JSError;
-  // ignore: unnecessary_cast
-  final message = exception.message as String;
+
+  final message = _safeConvertFromPossibleJSObject(exception.message);
   // Firestore web does not contain `Firebase` in the message so we check the exception itself.
   return message.contains('Firebase') ||
       exception.toString().contains('FirebaseError');
