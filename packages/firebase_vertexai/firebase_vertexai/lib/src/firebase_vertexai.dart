@@ -21,7 +21,11 @@ const int defaultTimeout = 1800000;
 
 /// The entrypoint for [FirebaseVertexAI].
 class FirebaseVertexAI extends FirebasePluginPlatform {
-  FirebaseVertexAI._({required this.app, required this.options, this.appCheck})
+  FirebaseVertexAI._(
+      {required this.app,
+      required this.options,
+      required this.location,
+      this.appCheck})
       : super(app.name, 'plugins.flutter.io/firebase_vertexai');
 
   /// The [FirebaseApp] for this current [FirebaseVertexAI] instance.
@@ -33,6 +37,9 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
 
   /// Configuration parameters for sending requests to the backend.
   RequestOptions options;
+
+  /// The service location for this [FirebaseVertexAI] instance.
+  String location;
 
   static final Map<String, FirebaseVertexAI> _cachedInstances = {};
 
@@ -51,6 +58,7 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
     FirebaseApp? app,
     FirebaseAppCheck? appCheck,
     RequestOptions? options,
+    String? location,
   }) {
     app ??= Firebase.app();
 
@@ -60,8 +68,11 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
 
     options ??=
         RequestOptions(timeout: const Duration(milliseconds: defaultTimeout));
-    FirebaseVertexAI newInstance =
-        FirebaseVertexAI._(app: app, options: options, appCheck: appCheck);
+
+    location ??= _defaultLocation;
+
+    FirebaseVertexAI newInstance = FirebaseVertexAI._(
+        app: app, options: options, location: location, appCheck: appCheck);
     _cachedInstances[app.name] = newInstance;
 
     return newInstance;
@@ -80,7 +91,6 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
   /// [GenerationConfig] for details.
   GenerativeModel generativeModel(
       {required String model,
-      String? location,
       List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig,
       Content? systemInstruction,
@@ -90,7 +100,7 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
         model: model,
         app: app,
         appCheck: appCheck,
-        location: location ?? _defaultLocation,
+        location: location,
         safetySettings: safetySettings,
         generationConfig: generationConfig,
         systemInstruction: systemInstruction,
