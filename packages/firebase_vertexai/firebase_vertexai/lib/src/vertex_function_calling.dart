@@ -84,10 +84,15 @@ final class FunctionDeclaration {
       );
 }
 
+/// Config for tools to use with model.
 final class ToolConfig {
-  final FunctionCallingConfig? functionCallingConfig;
+  /// Constructor
   ToolConfig({this.functionCallingConfig});
 
+  /// Config for function calling.
+  final FunctionCallingConfig? functionCallingConfig;
+
+  /// Convert to json object.
   Map<String, Object?> toJson() => {
         if (functionCallingConfig case final config?)
           'functionCallingConfig': config.toJson(),
@@ -101,6 +106,9 @@ final class ToolConfig {
 /// Configuration specifying how the model should use the functions provided as
 /// tools.
 final class FunctionCallingConfig {
+  /// Constructor
+  FunctionCallingConfig({this.mode, this.allowedFunctionNames});
+
   /// The mode in which function calling should execute.
   ///
   /// If null, the default behavior will match [FunctionCallingMode.auto].
@@ -114,8 +122,8 @@ final class FunctionCallingConfig {
   /// `any`, model will predict a function call from the set of function names
   /// provided.
   final Set<String>? allowedFunctionNames;
-  FunctionCallingConfig({this.mode, this.allowedFunctionNames});
 
+  /// Convert to json object.
   Object toJson() => {
         if (mode case final mode?) 'mode': mode.toJson(),
         if (allowedFunctionNames case final allowedFunctionNames?)
@@ -129,11 +137,12 @@ final class FunctionCallingConfig {
       );
 }
 
+/// The mode in which the model should use the functions provided as tools.
 enum FunctionCallingMode {
   /// The mode with default model behavior.
   ///
   /// Model decides to predict either a function call or a natural language
-  /// repspose.
+  /// response.
   auto,
 
   /// A mode where the Model is constrained to always predicting a function
@@ -145,6 +154,7 @@ enum FunctionCallingMode {
   /// Model behavior is same as when not passing any function declarations.
   none;
 
+  /// Convert to json object.
   String toJson() => switch (this) {
         auto => 'AUTO',
         any => 'ANY',
@@ -165,6 +175,19 @@ enum FunctionCallingMode {
 /// Represents a select subset of an
 /// [OpenAPI 3.0 schema object](https://spec.openapis.org/oas/v3.0.3#schema).
 final class Schema {
+  // TODO: Add named constructors for the types?
+  /// Constructor
+  Schema(
+    this.type, {
+    this.format,
+    this.description,
+    this.nullable,
+    this.enumValues,
+    this.items,
+    this.properties,
+    this.requiredProperties,
+  });
+
   /// The type of this value.
   SchemaType type;
 
@@ -200,18 +223,7 @@ final class Schema {
   /// [SchemaType.object].
   List<String>? requiredProperties;
 
-  // TODO: Add named constructors for the types?
-  Schema(
-    this.type, {
-    this.format,
-    this.description,
-    this.nullable,
-    this.enumValues,
-    this.items,
-    this.properties,
-    this.requiredProperties,
-  });
-
+  /// Convert to json object.
   Map<String, Object> toJson() => {
         'type': type.toJson(),
         if (format case final format?) 'format': format,
@@ -242,13 +254,25 @@ final class Schema {
 
 /// The value type of a [Schema].
 enum SchemaType {
+  /// string type.
   string,
+
+  /// number type
   number,
+
+  /// integer type
   integer,
+
+  /// boolean type
   boolean,
+
+  /// array type
   array,
+
+  /// object type
   object;
 
+  /// Convert to json object.
   String toJson() => switch (this) {
         string => 'STRING',
         number => 'NUMBER',
