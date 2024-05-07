@@ -11,7 +11,7 @@ To get started with Vertex AI for Firebase Flutter, please [see the documentatio
 
 ## Usage
 
-To start use this plugin, please visit the [Storage Usage documentation](https://firebase.google.com/docs/vertex-ai/text-gen-from-text?platform=flutter)
+To start use this plugin, please visit the [Text only prompt documentation](https://firebase.google.com/docs/vertex-ai/text-gen-from-text?platform=flutter)
 
 ## Issues and feedback
 
