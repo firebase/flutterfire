@@ -1,3 +1,7 @@
+## 2.31.0
+
+ - **FEAT**: bump firebase iOS SDK to `10.25.0` ([#12738](https://github.com/firebase/flutterfire/issues/12738)). ([86b05c3c](https://github.com/firebase/flutterfire/commit/86b05c3c25d4ebc8b8c142e71593c0210f06d6be))
+
 ## 2.30.1
 
  - Update a dependency to the latest release.

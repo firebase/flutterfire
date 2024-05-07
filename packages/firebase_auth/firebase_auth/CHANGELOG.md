@@ -1,3 +1,7 @@
+## 4.19.5
+
+ - **FIX**(auth,windows): allow `idToken` and `accessToken` to be nullable to stop windows crashing for `signInWithCredential()` ([#12688](https://github.com/firebase/flutterfire/issues/12688)). ([ca9f92d0](https://github.com/firebase/flutterfire/commit/ca9f92d05f717b46c80307987f560454b90a4d67))
+
 ## 4.19.4
 
  - Update a dependency to the latest release.

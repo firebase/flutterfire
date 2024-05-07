@@ -1,3 +1,7 @@
+## 5.11.5
+
+ - Update a dependency to the latest release.
+
 ## 5.11.4
 
  - **FIX**(web): fixing some uncorrect type casting for Web ([#12696](https://github.com/firebase/flutterfire/issues/12696)). ([471b5072](https://github.com/firebase/flutterfire/commit/471b507265a08bbc68277d3a2fdb7ef608c9efcc))
