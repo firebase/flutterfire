@@ -20,15 +20,17 @@ final class CountTokensResponse {
   CountTokensResponse(this.totalTokens, {this.totalBillableCharacters});
   factory CountTokensResponse._fromGoogleAICountTokensResponse(
       google_ai.CountTokensResponse countTokensResponse) {
-    if (countTokensResponse.extraFields != null) {
-      return CountTokensResponse(
-        countTokensResponse.totalTokens,
-        totalBillableCharacters:
-            countTokensResponse.extraFields?['totalBillableCharacters'] as int?,
-      );
-    } else {
-      return CountTokensResponse(countTokensResponse.totalTokens);
-    }
+    // comment out the functionality until the GoogleAI SDK updated to 0.3.4
+    // if (countTokensResponse.extraFields != null) {
+    //   return CountTokensResponse(
+    //     countTokensResponse.totalTokens,
+    //     totalBillableCharacters:
+    //         countTokensResponse.extraFields?['totalBillableCharacters'] as int?,
+    //   );
+    // } else {
+    //   return CountTokensResponse(countTokensResponse.totalTokens);
+    // }
+    return CountTokensResponse(countTokensResponse.totalTokens);
   }
 
   /// The number of tokens that the `model` tokenizes the `prompt` into.
