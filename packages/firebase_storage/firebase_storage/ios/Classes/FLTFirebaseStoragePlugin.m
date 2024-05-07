@@ -452,11 +452,15 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
                  completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion {
   FIRStorageReference *storage_reference = [self getFIRStorageReferenceFromPigeon:app
                                                                         reference:reference];
-  FIRStorageMetadata *metadata = [self getFIRStorageMetadataFromPigeon:settableMetaData];
 
   NSURL *fileUrl = [NSURL fileURLWithPath:filePath];
-  FIRStorageObservableTask<FIRStorageTaskManagement> *task = [storage_reference putFile:fileUrl
-                                                                               metadata:metadata];
+  FIRStorageObservableTask<FIRStorageTaskManagement> *task;
+  if (settableMetaData == nil) {
+    task = [storage_reference putFile:fileUrl];
+  } else {
+    FIRStorageMetadata *metadata = [self getFIRStorageMetadataFromPigeon:settableMetaData];
+    task = [storage_reference putFile:fileUrl metadata:metadata];
+  }
 
   @synchronized(self->_tasks) {
     self->_tasks[handle] = task;

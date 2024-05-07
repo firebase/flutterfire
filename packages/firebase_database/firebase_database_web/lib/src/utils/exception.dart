@@ -11,26 +11,25 @@ FirebaseException convertFirebaseDatabaseException(Object exception,
   final castedJSObject = exception as core_interop.JSError;
   String code = 'unknown';
   String message = castedJSObject.message?.toDart ?? '';
+  String lowerCaseMessage = message.toLowerCase();
 
   // FirebaseWeb SDK for Database has no error codes, so we manually map known
   // messages to known error codes for cross platform consistency.
-  if (message.toLowerCase().contains('index not defined')) {
+  if (lowerCaseMessage.contains('index not defined')) {
     code = 'index-not-defined';
-  } else if (message.toLowerCase().contains('permission denied')) {
+  } else if (lowerCaseMessage.contains('permission denied') ||
+      lowerCaseMessage.contains('permission_denied')) {
     code = 'permission-denied';
-  } else if (message
-      .toLowerCase()
+  } else if (lowerCaseMessage
       .contains('transaction needs to be run again with current data')) {
     code = 'data-stale';
-  } else if (message
-      .toLowerCase()
-      .contains('transaction had too many retries')) {
+  } else if (lowerCaseMessage.contains('transaction had too many retries')) {
     code = 'max-retries';
-  } else if (message.toLowerCase().contains('service is unavailable')) {
+  } else if (lowerCaseMessage.contains('service is unavailable')) {
     code = 'unavailable';
-  } else if (message.toLowerCase().contains('network error')) {
+  } else if (lowerCaseMessage.contains('network error')) {
     code = 'network-error';
-  } else if (message.toLowerCase().contains('write was canceled')) {
+  } else if (lowerCaseMessage.contains('write was canceled')) {
     code = 'write-cancelled';
   }
 

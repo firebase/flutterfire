@@ -211,9 +211,8 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
         committed: (castedJsTransaction.committed).toDart,
         snapshot: DataSnapshot._fromJsObject(castedJsTransaction.snapshot),
       );
-    } catch (e) {
-      final dartified = (e as JSObject).dartify();
-      throw convertFirebaseDatabaseException(dartified ?? {});
+    } catch (e, s) {
+      throw convertFirebaseDatabaseException(e, s);
     }
   }
 }
@@ -389,9 +388,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
     });
 
     final void Function(JSObject) cancelCallbackWrap = ((JSObject error) {
-      final dartified = error.dartify();
-      streamController
-          .addError(convertFirebaseDatabaseException(dartified ?? {}));
+      streamController.addError(convertFirebaseDatabaseException(error));
       streamController.close();
     });
 
@@ -454,8 +451,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
         c.complete(QueryEvent(DataSnapshot.getInstance(snapshot), string));
       }).toJS,
       ((JSAny error) {
-        final dartified = error.dartify();
-        c.completeError(convertFirebaseDatabaseException(dartified ?? {}));
+        c.completeError(convertFirebaseDatabaseException(error));
       }).toJS,
       database_interop.ListenOptions(onlyOnce: true.toJS),
     );

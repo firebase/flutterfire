@@ -2,7 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
 import 'package:collection/collection.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -498,6 +500,45 @@ void setupQueryTests() {
         },
         retry: 2,
       );
+    });
+
+    group('onValue', () {
+      test('emits an event when the data changes', () async {
+        await ref.set({
+          'a': 2,
+          'b': 3,
+          'c': 1,
+        });
+        expect(
+          ref.onValue,
+          emitsInOrder([
+            isA<DatabaseEvent>().having((s) => s.snapshot.value, 'value', {
+              'a': 2,
+              'b': 3,
+              'c': 1,
+            }).having((e) => e.type, 'type', DatabaseEventType.value),
+          ]),
+        );
+      });
+
+      test(
+          'throw a `permission-denied` exception when accessing restricted data',
+          () async {
+        final Completer<FirebaseException> errorReceived =
+            Completer<FirebaseException>();
+        FirebaseDatabase.instance.ref().child('restricted').onValue.listen(
+          (event) {
+            // Do nothing
+          },
+          onError: (error) {
+            errorReceived.complete(error);
+          },
+        );
+
+        final streamError = await errorReceived.future;
+        expect(streamError, isA<FirebaseException>());
+        expect(streamError.code, 'permission-denied');
+      });
     });
   });
 }

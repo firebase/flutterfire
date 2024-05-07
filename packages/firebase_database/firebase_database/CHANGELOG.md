@@ -1,3 +1,19 @@
+## 10.5.5
+
+ - **FIX**(database,web): Stop transaction & stream handling exceptions from throwing twice ([#12706](https://github.com/firebase/flutterfire/issues/12706)). ([9b3244f7](https://github.com/firebase/flutterfire/commit/9b3244f7f328095fd5887aac25debe77ecf3e569))
+
+## 10.5.4
+
+ - Update a dependency to the latest release.
+
+## 10.5.3
+
+ - Update a dependency to the latest release.
+
+## 10.5.2
+
+ - Update a dependency to the latest release.
+
 ## 10.5.1
 
  - Update a dependency to the latest release.

@@ -199,6 +199,17 @@ scripts:
     run: git clean -x -d -f -q
     description: Clean things very deeply, can be used to establish "pristine checkout" status.
 
+  test:e2e:windows:
+    run: |
+      melos exec -c 1 --fail-fast -- \
+        "flutter test integration_test/e2e_test.dart -d windows"
+    description: |
+      Run all e2e tests.
+    packageFilters:
+      dirExists:
+        - integration_test
+      scope: '*tests*'
+
   qualitycheck:
     run: |
       melos run clean:deep && \
@@ -306,3 +317,7 @@ scripts:
         --ignore "**/flutter/generated_plugin_registrant.cc" \
         .
     description: Add a license header to all necessary files.
+
+  bom:
+    run: dart scripts/generate_bom.dart
+    description: Generate a Bill of Materials (BOM) file for all packages.

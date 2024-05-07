@@ -1,3 +1,19 @@
+## 4.19.5
+
+ - **FIX**(auth,windows): allow `idToken` and `accessToken` to be nullable to stop windows crashing for `signInWithCredential()` ([#12688](https://github.com/firebase/flutterfire/issues/12688)). ([ca9f92d0](https://github.com/firebase/flutterfire/commit/ca9f92d05f717b46c80307987f560454b90a4d67))
+
+## 4.19.4
+
+ - Update a dependency to the latest release.
+
+## 4.19.3
+
+ - **FIX**(auth,ios): Give more details on internal error when calling `sendSignInLinkToEmail`. ([#12671](https://github.com/firebase/flutterfire/issues/12671)). ([2b086029](https://github.com/firebase/flutterfire/commit/2b0860296bf577c99810643bb286b7219ee9291f))
+
+## 4.19.2
+
+ - Update a dependency to the latest release.
+
 ## 4.19.1
 
  - Update a dependency to the latest release.
