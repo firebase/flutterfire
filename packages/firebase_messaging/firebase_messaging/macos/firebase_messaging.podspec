@@ -57,7 +57,7 @@ Pod::Spec.new do |s|
   s.dependency 'Firebase/Messaging', "~> #{firebase_sdk_version}"
 
   s.resource_bundles = {
-      "#{s.module_name}_Privacy" => 'Resources/PrivacyManifest.xcprivacy'
+      "#{s.module_name}_Privacy" => 'Resources/PrivacyInfo.xcprivacy'
   }
 
   s.static_framework = true
