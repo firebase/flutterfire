@@ -304,11 +304,24 @@ Some things to keep in mind before publishing the release:
 5. Push your branch to git running `git push origin [RELEASE BRANCH NAME]`.
 6. Run `melos version` to automatically version packages and update Changelogs.
 7. Run `melos publish` to dry run and confirm all packages are publishable.
-8. Run `git push origin [RELEASE BRANCH NAME]` & open pull request for review on GitHub.
-9. After successful review and merge of the pull request, switch to `master` branch locally, & run `git pull origin master`.
-10. Run `melos publish --no-dry-run` to now publish to Pub.dev.
-11. Run `git push --tags` to push tags to repository.
-12. Ping @kevinthecheung to get the changelog in Firebase releases.
+8. Run `melos bom [optional-version]` to update the `VERSIONS.md` and `scripts/versions.json` files.
+9. Run `git push origin [RELEASE BRANCH NAME]` & open pull request for review on GitHub.
+10. After successful review and merge of the pull request, switch to `master` branch locally, & run `git pull origin master`.
+11. Run `melos publish --no-dry-run` to now publish to Pub.dev.
+12. Run `git push --tags` to push tags to repository.
+13. Ping @kevinthecheung to get the changelog in Firebase releases.
+
+### Run a BoM release only...
+
+1. Switch to `master` branch locally.
+2. Run `git pull origin master`.
+3. Run `git pull --tags` to make sure all tags are fetched.
+4. Create new branch with the signature "release/[year]-[month]-[day]-BoM".
+5. Run `melos bom [optional-version]` to update the `VERSIONS.md` and `scripts/versions.json` files.
+6. Push your branch to git running `git push origin [RELEASE BRANCH NAME]`.
+7. After successful review and merge of the pull request, switch to `master` branch locally, & run `git pull origin master`.
+8. Run `git push --tags` to push tags to repository.
+9. Ping @kevinthecheung to get the changelog in Firebase releases.
 
 ### Graduate packages
 
