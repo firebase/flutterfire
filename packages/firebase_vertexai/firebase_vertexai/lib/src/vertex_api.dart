@@ -17,20 +17,29 @@ part of firebase_vertexai;
 /// Response for Count Tokens
 final class CountTokensResponse {
   /// Constructor
-  CountTokensResponse(this.totalTokens);
+  CountTokensResponse(this.totalTokens, {this.totalBillableCharacters});
   factory CountTokensResponse._fromGoogleAICountTokensResponse(
-          google_ai.CountTokensResponse countTokensResponse) =>
-      CountTokensResponse(countTokensResponse.totalTokens);
+      google_ai.CountTokensResponse countTokensResponse) {
+    if (countTokensResponse.extraFields != null) {
+      return CountTokensResponse(
+        countTokensResponse.totalTokens,
+        totalBillableCharacters:
+            countTokensResponse.extraFields?['totalBillableCharacters'] as int?,
+      );
+    } else {
+      return CountTokensResponse(countTokensResponse.totalTokens);
+    }
+  }
 
   /// The number of tokens that the `model` tokenizes the `prompt` into.
   ///
   /// Always non-negative.
   final int totalTokens;
 
-  /// Converts this response to a [google_ai.CountTokensResponse].
-  // ignore: unused_element
-  google_ai.CountTokensResponse _toGoogleAICountTokensResponse() =>
-      google_ai.CountTokensResponse(totalTokens);
+  /// The number of characters that the `model` could bill at.
+  ///
+  /// Always non-negative.
+  final int? totalBillableCharacters;
 }
 
 /// Response from the model; supports multiple candidates.
