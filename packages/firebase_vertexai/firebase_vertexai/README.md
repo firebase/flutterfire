@@ -1,23 +1,24 @@
-# Firebase Vertex AI SDK
+# Vertex AI for Firebase Flutter
+[![pub package](https://img.shields.io/pub/v/firebase_vertexai.svg)](https://pub.dev/packages/firebase_vertexai)
 
-## Features
+A Flutter plugin to use the [Vertex AI](https://firebase.google.com/docs/vertex-ai/).
 
-TODO
+To learn more about Vertex AI, please visit the [website](https://cloud.google.com/vertex-ai)
 
-## Getting started
+## Getting Started
 
-TODO
+To get started with Vertex AI for Firebase Flutter, please [see the documentation](https://firebase.google.com/docs/vertex-ai/get-started?platform=flutter).
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+To start use this plugin, please visit the [Storage Usage documentation](https://firebase.google.com/docs/vertex-ai/text-gen-from-text?platform=flutter)
 
-```dart
-const like = 'sample';
-```
+## Issues and feedback
 
-## License
+Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/firebase/flutterfire/issues/new).
 
-The contents of this repository are licensed under the
-[Apache License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+Plugin issues that are not specific to FlutterFire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
+
+To contribute a change to this plugin,
+please review our [contribution guide](https://github.com/firebase/flutterfire/blob/master/CONTRIBUTING.md)
+and open a [pull request](https://github.com/firebase/flutterfire/pulls).
