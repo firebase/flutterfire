@@ -45,9 +45,12 @@ final class Content {
   /// Return a [Content] with multiple [Part]s from the model.
   static Content model(Iterable<Part> parts) => Content('model', [...parts]);
 
+  /// Return a [Content] with [FunctionResponse].
   static Content functionResponse(
           String name, Map<String, Object?>? response) =>
       Content('function', [FunctionResponse(name, response)]);
+
+  /// Return a [Content] with [TextPart] of system instruction.
   static Content system(String instructions) =>
       Content('system', [TextPart(instructions)]);
 

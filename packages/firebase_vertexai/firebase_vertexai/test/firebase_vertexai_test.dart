@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:flutter_test/flutter_test.dart';
-
-import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_vertexai/firebase_vertexai.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 import 'vertex_mock.dart';
 
@@ -31,6 +30,7 @@ void main() {
     });
 
     test('instance', () async {
+      expect(app, isA<FirebaseApp>());
       expect(vertexAI, isA<FirebaseVertexAI>());
       expect(vertexAI, equals(FirebaseVertexAI.instance));
     });

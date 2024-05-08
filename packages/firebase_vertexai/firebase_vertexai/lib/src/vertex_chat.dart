@@ -35,8 +35,11 @@ final class ChatSession {
             generationConfig:
                 GenerativeModel._googleAIGenerationConfig(_generationConfig));
   final List<Content> _history;
+  // ignore: unused_field
   final List<SafetySetting>? _safetySettings;
+  // ignore: unused_field
   final GenerationConfig? _generationConfig;
+  // ignore: unused_field
   final GenerativeModel _model;
   final google_ai.ChatSession _googleAIChatSession;
 
