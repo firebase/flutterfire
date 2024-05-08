@@ -1,4 +1,4 @@
-# example
+# firebase_vertexai_example
 
 A new Flutter project.
 
