@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// ignore_for_file: use_late_for_private_fields_and_variables
+
 part of firebase_vertexai;
 
 const _baseUrl = 'firebaseml.googleapis.com';
