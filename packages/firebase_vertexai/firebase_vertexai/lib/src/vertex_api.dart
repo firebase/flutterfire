@@ -167,14 +167,24 @@ final class BatchEmbedContentsResponse {
   final List<ContentEmbedding> embeddings;
 }
 
+/// Request for Embed Content.
 final class EmbedContentRequest {
   /// Constructor
   EmbedContentRequest(this.content, {this.taskType, this.title, this.model});
+
+  /// The content to embed.
   final Content content;
+
+  /// The type of task to perform.
   final TaskType? taskType;
+
+  /// The title of the content.
   final String? title;
+
+  /// The model to use.
   final String? model;
 
+  /// Converts this request to a json object.
   Object toJson({String? defaultModel}) => {
         'content': content.toJson(),
         if (taskType case final taskType?) 'taskType': taskType.toJson(),
@@ -250,6 +260,7 @@ final class PromptFeedback {
 /// Response candidate generated from a [GenerativeModel].
 final class Candidate {
   // TODO: token count?
+  /// Constructor
   Candidate(this.content, this.safetyRatings, this.citationMetadata,
       this.finishReason, this.finishMessage);
   factory Candidate._fromGoogleAICandidate(google_ai.Candidate candidate) =>
@@ -855,6 +866,8 @@ enum TaskType {
   }
 
   final String _jsonString;
+
+  /// Convert to json format
   Object toJson() => _jsonString;
   google_ai.TaskType _toGoogleAITaskType() {
     return switch (this) {
