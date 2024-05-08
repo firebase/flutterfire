@@ -12,11 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:firebase_vertexai/firebase_vertexai.dart'; // Your library
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
 
