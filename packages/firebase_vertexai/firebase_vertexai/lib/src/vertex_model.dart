@@ -47,7 +47,7 @@ final class GenerativeModel {
     Content? systemInstruction,
     ToolConfig? toolConfig,
   })  : _firebaseApp = app,
-        _googleAIModel = google_ai.createModelWithBaseUri(
+        _googleAIModel = google_ai_model.createModelWithBaseUri(
           model: _normalizeModelName(model),
           apiKey: app.options.apiKey,
           baseUri: _vertexUri(app, location),
@@ -65,7 +65,7 @@ final class GenerativeModel {
           toolConfig: toolConfig?._toGoogleAIToolConfig(),
         );
   final FirebaseApp _firebaseApp;
-  final google_ai.GenerativeModel _googleAIModel;
+  final google_ai_model.GenerativeModel _googleAIModel;
 
   static const _modelsPrefix = 'models/';
   static String _normalizeModelName(String modelName) =>

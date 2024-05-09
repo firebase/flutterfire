@@ -23,8 +23,8 @@ part of firebase_vertexai;
 final class ChatSession {
   /// Creates a new chat session with the provided model.
 
-  ChatSession._(
-      this._history, this._safetySettings, this._generationConfig, this._model)
+  ChatSession._(this._history, List<SafetySetting>? _safetySettings,
+      GenerationConfig? _generationConfig, GenerativeModel _model)
       : _googleAIChatSession = _model._googleAIModel.startChat(
             history: _history.map((e) => e._toGoogleAIContent()).toList(),
             safetySettings: _safetySettings != null
@@ -35,12 +35,7 @@ final class ChatSession {
             generationConfig:
                 GenerativeModel._googleAIGenerationConfig(_generationConfig));
   final List<Content> _history;
-  // ignore: unused_field
-  final List<SafetySetting>? _safetySettings;
-  // ignore: unused_field
-  final GenerationConfig? _generationConfig;
-  // ignore: unused_field
-  final GenerativeModel _model;
+
   final google_ai.ChatSession _googleAIChatSession;
 
   /// The content that has been successfully sent to, or received from, the

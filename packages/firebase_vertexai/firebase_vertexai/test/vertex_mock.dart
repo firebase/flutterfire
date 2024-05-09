@@ -67,11 +67,6 @@ void setupFirebaseVertexAIMocks() {
 class MockFirebaseVertexAI extends Mock
     with
         // ignore: prefer_mixin, plugin_platform_interface needs to migrate to use `mixin`
-        MockPlatformInterfaceMixin
-// implements
-//     TestFirebaseStoragePlatform
-{
-  MockFirebaseVertexAI() {
-    // TestFirebaseStoragePlatform();
-  }
+        MockPlatformInterfaceMixin {
+  MockFirebaseVertexAI();
 }

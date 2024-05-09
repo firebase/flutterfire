@@ -79,6 +79,17 @@ Content parseContent(Object jsonObject) {
 Part _parsePart(Object? jsonObject) {
   return switch (jsonObject) {
     {'text': final String text} => TextPart(text),
+    {
+      'functionCall': {
+        'name': final String name,
+        'args': final Map<String, Object?> args
+      }
+    } =>
+      FunctionCall(name, args),
+    {
+      'functionResponse': {'name': String _, 'response': Map<String, Object?> _}
+    } =>
+      throw UnimplementedError('FunctionResponse part not yet supported'),
     {'inlineData': {'mimeType': String _, 'data': String _}} =>
       throw UnimplementedError('inlineData content part not yet supported'),
     _ => throw FormatException('Unhandled Part format', jsonObject),
