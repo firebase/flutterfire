@@ -63,7 +63,7 @@
       optionsWithIncludeMetadataChanges:_includeMetadataChanges] optionsWithSource:_source];
 
   self.listenerRegistration = [_reference addSnapshotListenerWithOptions:optionsWithSourceAndMetadata
-                                                          listener:listener];
+                                                                listener:listener];
 
   return nil;
 }
