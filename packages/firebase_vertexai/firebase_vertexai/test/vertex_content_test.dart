@@ -172,5 +172,13 @@ void main() {
       expect((newPart as google_ai.FunctionResponse).name, 'myFunction');
       expect(newPart.response?.length, 1);
     });
+
+    test('FileData toJson', () {
+      final part = FileData('image/png', 'gs://bucket-name/path');
+      final json = part.toJson();
+      expect((json as Map)['file_data']['mime_type'], 'image/png');
+      expect(json['file_data']['file_uri'], 'gs://bucket-name/path');
+      // ... verify json structure
+    });
   });
 }
