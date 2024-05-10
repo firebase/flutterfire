@@ -298,9 +298,11 @@ class _ChatWidgetState extends State<ChatWidget> {
       final content = [
         Content.multi([
           TextPart(message),
-          FileData('image/jpeg',
-              'gs://vertex-ai-example-ef5a2.appspot.com/foodpic.jpg'),
-        ])
+          FileData(
+            'image/jpeg',
+            'gs://vertex-ai-example-ef5a2.appspot.com/foodpic.jpg',
+          ),
+        ]),
       ];
       _generatedContent.add((image: null, text: message, fromUser: true));
 
