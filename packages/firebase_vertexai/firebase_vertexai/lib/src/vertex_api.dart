@@ -20,17 +20,10 @@ final class CountTokensResponse {
   CountTokensResponse(this.totalTokens, {this.totalBillableCharacters});
   factory CountTokensResponse._fromGoogleAICountTokensResponse(
       google_ai.CountTokensResponse countTokensResponse) {
-    // comment out the functionality until the GoogleAI SDK updated to 0.3.4
-    // if (countTokensResponse.extraFields != null) {
-    //   return CountTokensResponse(
-    //     countTokensResponse.totalTokens,
-    //     totalBillableCharacters:
-    //         countTokensResponse.extraFields?['totalBillableCharacters'] as int?,
-    //   );
-    // } else {
-    //   return CountTokensResponse(countTokensResponse.totalTokens);
-    // }
-    return CountTokensResponse(countTokensResponse.totalTokens);
+    return CountTokensResponse(
+      countTokensResponse.totalTokens,
+      totalBillableCharacters: countTokensResponse.totalBillableCharacters,
+    );
   }
 
   /// The number of tokens that the `model` tokenizes the `prompt` into.
@@ -42,6 +35,13 @@ final class CountTokensResponse {
   ///
   /// Always non-negative.
   final int? totalBillableCharacters;
+}
+
+/// Extension on [google_ai.CountTokensResponse] to access extra fields
+extension CountTokensResponseFields on google_ai.CountTokensResponse {
+  /// total billable Characters for the prompt.
+  int? get totalBillableCharacters =>
+      countTokensResponseFields(this)?['totalBillableCharacters'] as int?;
 }
 
 /// Response from the model; supports multiple candidates.

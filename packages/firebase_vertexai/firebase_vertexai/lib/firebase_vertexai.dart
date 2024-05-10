@@ -25,6 +25,8 @@ import 'package:firebase_core_platform_interface/firebase_core_platform_interfac
 import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
 // ignore: implementation_imports, tightly coupled packages
 import 'package:google_generative_ai/src/model.dart' as google_ai_model;
+// ignore: implementation_imports, tightly coupled packages
+import 'package:google_generative_ai/src/vertex_hooks.dart';
 
 import 'src/vertex_version.dart';
 

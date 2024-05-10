@@ -1,9 +1,11 @@
-# Vertex AI for Firebase Flutter
+# Vertex AI for Firebase Flutter (PREVIEW)
 [![pub package](https://img.shields.io/pub/v/firebase_vertexai.svg)](https://pub.dev/packages/firebase_vertexai)
 
 A Flutter plugin to use the [Vertex AI](https://firebase.google.com/docs/vertex-ai/).
 
 To learn more about Vertex AI, please visit the [website](https://cloud.google.com/vertex-ai)
+
+**NOTE**: The Vertex AI for Firebase plugin is in **Public Preview**.
 
 ## Getting Started
 
