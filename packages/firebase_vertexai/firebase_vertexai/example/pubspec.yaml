@@ -22,9 +22,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_markdown: ^0.6.20
-  firebase_vertexai: any
   firebase_core: ^2.27.0
-  firebase_app_check: ^0.2.2+2
+  firebase_vertexai: ^0.0.1
 
 dev_dependencies:
   flutter_lints: ^3.0.0
