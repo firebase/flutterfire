@@ -79,8 +79,8 @@ PigeonFirebaseOptions optionsFromFIROptions(
   PigeonFirebaseOptions pigeon_options = PigeonFirebaseOptions();
   pigeon_options.set_api_key(options.api_key());
   pigeon_options.set_app_id(options.app_id());
-  // AppOptions initialises as empty char so we check to stop empty string to Flutter 
-  // Same for storage bucket below
+  // AppOptions initialises as empty char so we check to stop empty string to
+  // Flutter Same for storage bucket below
   const char *db_url = options.database_url();
   if (db_url != nullptr && db_url[0] != '\0') {
     pigeon_options.set_database_u_r_l(db_url);
