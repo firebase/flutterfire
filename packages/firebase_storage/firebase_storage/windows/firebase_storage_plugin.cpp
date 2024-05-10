@@ -392,6 +392,7 @@ std::string kContentTypeName = "contentType";
 std::string kCustomMetadataName = "customMetadata";
 std::string kMetadataName = "metadata";
 std::string kSizeName = "size";
+std::string kBucketName = "bucket";
 
 flutter::EncodableMap ConvertMedadataToPigeon(const Metadata* meta) {
   flutter::EncodableMap meta_map = flutter::EncodableMap();
@@ -414,6 +415,10 @@ flutter::EncodableMap ConvertMedadataToPigeon(const Metadata* meta) {
   if (meta->content_type() != nullptr) {
     meta_map[flutter::EncodableValue(kContentTypeName)] =
         flutter::EncodableValue(meta->content_type());
+  }
+  if (meta->bucket() != nullptr) {
+    meta_map[flutter::EncodableValue(kBucketName)] =
+        flutter::EncodableValue(meta->bucket());
   }
   meta_map[flutter::EncodableValue(kSizeName)] =
       flutter::EncodableValue(meta->size_bytes());
@@ -736,6 +741,7 @@ class GetFileStreamHandler
             flutter::EncodableValue(static_cast<int64_t>(data_size));
         snapshot[kTaskSnapshotBytesTransferred] =
             flutter::EncodableValue(static_cast<int64_t>(data_size));
+        snapshot[kTaskSnapshotPath] = EncodableValue(reference_path_);
         event[kTaskSnapshotName] = snapshot;
 
         events_->Success(event);
