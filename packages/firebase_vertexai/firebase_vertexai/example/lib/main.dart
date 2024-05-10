@@ -108,7 +108,7 @@ class _ChatWidgetState extends State<ChatWidget> {
       {
         'date': arguments['currencyDate'],
         'base': arguments['currencyFrom'],
-        'rates': <String, Object?>{arguments['currencyTo'] as String: 0.091}
+        'rates': <String, Object?>{arguments['currencyTo']! as String: 0.091}
       };
 
   final exchangeRateTool = FunctionDeclaration(
@@ -198,18 +198,31 @@ class _ChatWidgetState extends State<ChatWidget> {
                     focusNode: _textFieldFocus,
                     decoration: textFieldDecoration,
                     controller: _textController,
-                    onSubmitted: (String value) {
-                      _sendChatMessage(value);
-                    },
+                    onSubmitted: _sendChatMessage,
                   ),
                 ),
                 const SizedBox.square(
                   dimension: 15,
                 ),
                 IconButton(
+                  tooltip: 'tokenCount Test',
                   onPressed: !_loading
                       ? () async {
-                          _testFunctionCalling();
+                          await _testCountToken();
+                        }
+                      : null,
+                  icon: Icon(
+                    Icons.numbers,
+                    color: _loading
+                        ? Theme.of(context).colorScheme.secondary
+                        : Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                IconButton(
+                  tooltip: 'function calling Test',
+                  onPressed: !_loading
+                      ? () async {
+                          await _testFunctionCalling();
                         }
                       : null,
                   icon: Icon(
@@ -220,9 +233,10 @@ class _ChatWidgetState extends State<ChatWidget> {
                   ),
                 ),
                 IconButton(
+                  tooltip: 'image prompt',
                   onPressed: !_loading
                       ? () async {
-                          _sendImagePrompt(_textController.text);
+                          await _sendImagePrompt(_textController.text);
                         }
                       : null,
                   icon: Icon(
@@ -235,7 +249,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                 if (!_loading)
                   IconButton(
                     onPressed: () async {
-                      _sendChatMessage(_textController.text);
+                      await _sendChatMessage(_textController.text);
                     },
                     icon: Icon(
                       Icons.send,
@@ -268,12 +282,12 @@ class _ChatWidgetState extends State<ChatWidget> {
         ])
       ];
       _generatedContent.add((
-        image: Image.asset("assets/images/cat.jpg"),
+        image: Image.asset('assets/images/cat.jpg'),
         text: message,
         fromUser: true
       ));
       _generatedContent.add((
-        image: Image.asset("assets/images/scones.jpg"),
+        image: Image.asset('assets/images/scones.jpg'),
         text: null,
         fromUser: true
       ));
@@ -375,6 +389,21 @@ class _ChatWidgetState extends State<ChatWidget> {
         _loading = false;
       });
     }
+  }
+
+  Future<void> _testCountToken() async {
+    setState(() {
+      _loading = true;
+    });
+
+    const prompt = 'tell a short story';
+    var response = await _model.countTokens([Content.text(prompt)]);
+    print(
+        'token: ${response.totalTokens}, billable characters: ${response.totalBillableCharacters}');
+
+    setState(() {
+      _loading = false;
+    });
   }
 
   void _showError(String message) {
