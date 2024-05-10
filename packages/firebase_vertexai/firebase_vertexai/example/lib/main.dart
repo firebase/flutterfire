@@ -112,19 +112,29 @@ class _ChatWidgetState extends State<ChatWidget> {
       };
 
   final exchangeRateTool = FunctionDeclaration(
-      'findExchangeRate',
-      'Returns the exchange rate between currencies on given date.',
-      Schema(SchemaType.object, properties: {
-        'currencyDate': Schema(SchemaType.string,
-            description: 'A date in YYYY-MM-DD format or '
-                'the exact value "latest" if a time period is not specified.'),
-        'currencyFrom': Schema(SchemaType.string,
-            description: 'The currency code of the currency to convert from, '
-                'such as "USD".'),
-        'currencyTo': Schema(SchemaType.string,
-            description: 'The currency code of the currency to convert to, '
-                'such as "USD".')
-      }));
+    'findExchangeRate',
+    'Returns the exchange rate between currencies on given date.',
+    Schema(
+      SchemaType.object,
+      properties: {
+        'currencyDate': Schema(
+          SchemaType.string,
+          description: 'A date in YYYY-MM-DD format or '
+              'the exact value "latest" if a time period is not specified.',
+        ),
+        'currencyFrom': Schema(
+          SchemaType.string,
+          description: 'The currency code of the currency to convert from, '
+              'such as "USD".',
+        ),
+        'currencyTo': Schema(
+          SchemaType.string,
+          description: 'The currency code of the currency to convert to, '
+              'such as "USD".',
+        ),
+      },
+    ),
+  );
 
   Future<void> initFirebase() async {
     await Firebase.initializeApp();
@@ -166,7 +176,7 @@ class _ChatWidgetState extends State<ChatWidget> {
     );
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -399,7 +409,8 @@ class _ChatWidgetState extends State<ChatWidget> {
     const prompt = 'tell a short story';
     var response = await _model.countTokens([Content.text(prompt)]);
     print(
-        'token: ${response.totalTokens}, billable characters: ${response.totalBillableCharacters}');
+      'token: ${response.totalTokens}, billable characters: ${response.totalBillableCharacters}',
+    );
 
     setState(() {
       _loading = false;
@@ -448,23 +459,27 @@ class MessageWidget extends StatelessWidget {
           isFromUser ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
         Flexible(
-            child: Container(
-                constraints: const BoxConstraints(maxWidth: 600),
-                decoration: BoxDecoration(
-                  color: isFromUser
-                      ? Theme.of(context).colorScheme.primaryContainer
-                      : Theme.of(context).colorScheme.surfaceVariant,
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 15,
-                  horizontal: 20,
-                ),
-                margin: const EdgeInsets.only(bottom: 8),
-                child: Column(children: [
-                  if (text case final text?) MarkdownBody(data: text),
-                  if (image case final image?) image,
-                ]))),
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 600),
+            decoration: BoxDecoration(
+              color: isFromUser
+                  ? Theme.of(context).colorScheme.primaryContainer
+                  : Theme.of(context).colorScheme.surfaceVariant,
+              borderRadius: BorderRadius.circular(18),
+            ),
+            padding: const EdgeInsets.symmetric(
+              vertical: 15,
+              horizontal: 20,
+            ),
+            margin: const EdgeInsets.only(bottom: 8),
+            child: Column(
+              children: [
+                if (text case final text?) MarkdownBody(data: text),
+                if (image case final image?) image,
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
