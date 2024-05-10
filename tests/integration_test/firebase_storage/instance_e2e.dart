@@ -56,9 +56,6 @@ void setupInstanceTests() {
           );
         }
       },
-      // Skipping for now,  empty string is being returned for storage bucket rather than null, possibly from native here:
-      // https://github.com/firebase/flutterfire/blob/master/packages/firebase_storage/firebase_storage/lib/src/firebase_storage.dart#L65
-      skip: defaultTargetPlatform == TargetPlatform.windows,
     );
 
     group('ref', () {
