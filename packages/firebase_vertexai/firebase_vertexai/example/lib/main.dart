@@ -93,7 +93,7 @@ class _ChatWidgetState extends State<ChatWidget> {
       _functionCallModel = FirebaseVertexAI.instance.generativeModel(
         model: 'gemini-1.5-pro-preview-0409',
         tools: [
-          Tool(functionDeclarations: [exchangeRateTool])
+          Tool(functionDeclarations: [exchangeRateTool]),
         ],
       );
       _chat = _model.startChat();
@@ -108,7 +108,7 @@ class _ChatWidgetState extends State<ChatWidget> {
       {
         'date': arguments['currencyDate'],
         'base': arguments['currencyFrom'],
-        'rates': <String, Object?>{arguments['currencyTo']! as String: 0.091}
+        'rates': <String, Object?>{arguments['currencyTo']! as String: 0.091},
       };
 
   final exchangeRateTool = FunctionDeclaration(
@@ -289,18 +289,22 @@ class _ChatWidgetState extends State<ChatWidget> {
           // The only accepted mime types are image/*.
           DataPart('image/jpeg', catBytes.buffer.asUint8List()),
           DataPart('image/jpeg', sconeBytes.buffer.asUint8List()),
-        ])
+        ]),
       ];
-      _generatedContent.add((
-        image: Image.asset('assets/images/cat.jpg'),
-        text: message,
-        fromUser: true
-      ));
-      _generatedContent.add((
-        image: Image.asset('assets/images/scones.jpg'),
-        text: null,
-        fromUser: true
-      ));
+      _generatedContent.add(
+        (
+          image: Image.asset('assets/images/cat.jpg'),
+          text: message,
+          fromUser: true
+        ),
+      );
+      _generatedContent.add(
+        (
+          image: Image.asset('assets/images/scones.jpg'),
+          text: null,
+          fromUser: true
+        ),
+      );
 
       var response = await _model.generateContent(content);
       var text = response.text;
@@ -385,7 +389,8 @@ class _ChatWidgetState extends State<ChatWidget> {
         // Throw an exception if the model attempted to call a function that was
         // not declared.
         _ => throw UnimplementedError(
-            'Function not implemented: ${functionCall.name}')
+            'Function not implemented: ${functionCall.name}',
+          )
       };
       // Send the response to the model so that it can use the result to generate
       // text for the user.
@@ -432,7 +437,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                 Navigator.of(context).pop();
               },
               child: const Text('OK'),
-            )
+            ),
           ],
         );
       },
