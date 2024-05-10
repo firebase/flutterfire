@@ -39,7 +39,7 @@ final class CountTokensResponse {
 
 /// Extension on [google_ai.CountTokensResponse] to access extra fields
 extension CountTokensResponseFields on google_ai.CountTokensResponse {
-  /// total billable Characters for the prompt.
+  /// Total billable Characters for the prompt.
   int? get totalBillableCharacters =>
       countTokensResponseFields(this)?['totalBillableCharacters'] as int?;
 }
