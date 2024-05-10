@@ -256,6 +256,20 @@ class _ChatWidgetState extends State<ChatWidget> {
                         : Theme.of(context).colorScheme.primary,
                   ),
                 ),
+                IconButton(
+                  tooltip: 'storage prompt',
+                  onPressed: !_loading
+                      ? () async {
+                          await _sendStorageUriPrompt(_textController.text);
+                        }
+                      : null,
+                  icon: Icon(
+                    Icons.folder,
+                    color: _loading
+                        ? Theme.of(context).colorScheme.secondary
+                        : Theme.of(context).colorScheme.primary,
+                  ),
+                ),
                 if (!_loading)
                   IconButton(
                     onPressed: () async {
@@ -274,6 +288,49 @@ class _ChatWidgetState extends State<ChatWidget> {
         ],
       ),
     );
+  }
+
+  Future<void> _sendStorageUriPrompt(String message) async {
+    setState(() {
+      _loading = true;
+    });
+    try {
+      final content = [
+        Content.multi([
+          TextPart(message),
+          FileData(
+            'image/jpeg',
+            'gs://vertex-ai-example-ef5a2.appspot.com/foodpic.jpg',
+          ),
+        ]),
+      ];
+      _generatedContent.add((image: null, text: message, fromUser: true));
+
+      var response = await _model.generateContent(content);
+      var text = response.text;
+      _generatedContent.add((image: null, text: text, fromUser: false));
+
+      if (text == null) {
+        _showError('No response from API.');
+        return;
+      } else {
+        setState(() {
+          _loading = false;
+          _scrollDown();
+        });
+      }
+    } catch (e) {
+      _showError(e.toString());
+      setState(() {
+        _loading = false;
+      });
+    } finally {
+      _textController.clear();
+      setState(() {
+        _loading = false;
+      });
+      _textFieldFocus.requestFocus();
+    }
   }
 
   Future<void> _sendImagePrompt(String message) async {

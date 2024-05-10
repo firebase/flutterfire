@@ -87,6 +87,13 @@ Part _parsePart(Object? jsonObject) {
     } =>
       FunctionCall(name, args),
     {
+      'file_data': {
+        'file_uri': final String fileUri,
+        'mime_type': final String mimeType
+      }
+    } =>
+      FileData(mimeType, fileUri),
+    {
       'functionResponse': {'name': String _, 'response': Map<String, Object?> _}
     } =>
       throw UnimplementedError('FunctionResponse part not yet supported'),
@@ -103,10 +110,12 @@ sealed class Part {
         google_ai.DataPart dataPart =>
           DataPart(dataPart.mimeType, dataPart.bytes),
         google_ai.FilePart() => throw UnimplementedError(),
+        _PartProxy proxy => _parsePart(proxy.toJson()),
         google_ai.FunctionCall functionCall =>
           FunctionCall(functionCall.name, functionCall.args),
         google_ai.FunctionResponse functionResponse =>
           FunctionResponse(functionResponse.name, functionResponse.response),
+        google_ai.Part part => _parsePart(part.toJson()),
       };
 
   /// Convert the [Part] content to json format.
@@ -190,4 +199,37 @@ final class FunctionResponse implements Part {
       };
   @override
   google_ai.Part toPart() => google_ai.FunctionResponse(name, response);
+}
+
+/// A [google_ai.Part] to proxy Vertex specific part data
+final class _PartProxy implements google_ai.Part {
+  /// Constructor
+  _PartProxy(this.jsonObject);
+
+  /// File type of the [DataPart].
+  /// https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-multimodal-prompts#media_requirements
+  final Object jsonObject;
+
+  @override
+  Object toJson() => jsonObject;
+}
+
+/// A [Part] with Firebase Storage uri as prompt content
+final class FileData implements Part {
+  /// Constructor
+  FileData(this.mimeType, this.fileUri);
+
+  /// File type of the [DataPart].
+  /// https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-multimodal-prompts#media_requirements
+  final String mimeType;
+
+  /// The gs link for Firebase Storage reference
+  final String fileUri;
+
+  @override
+  Object toJson() => {
+        'file_data': {'file_uri': fileUri, 'mime_type': mimeType}
+      };
+  @override
+  google_ai.Part toPart() => _PartProxy(toJson());
 }

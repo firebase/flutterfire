@@ -1,6 +1,6 @@
 # firebase_vertexai_example
 
-A new Flutter project.
+Sample app to show how to use Vertex AI for Firebase.
 
 ## Getting Started
 

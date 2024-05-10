@@ -20,17 +20,10 @@ final class CountTokensResponse {
   CountTokensResponse(this.totalTokens, {this.totalBillableCharacters});
   factory CountTokensResponse._fromGoogleAICountTokensResponse(
       google_ai.CountTokensResponse countTokensResponse) {
-    // comment out the functionality until the GoogleAI SDK updated to 0.3.4
-    // if (countTokensResponse.extraFields != null) {
-    //   return CountTokensResponse(
-    //     countTokensResponse.totalTokens,
-    //     totalBillableCharacters:
-    //         countTokensResponse.extraFields?['totalBillableCharacters'] as int?,
-    //   );
-    // } else {
-    //   return CountTokensResponse(countTokensResponse.totalTokens);
-    // }
-    return CountTokensResponse(countTokensResponse.totalTokens);
+    return CountTokensResponse(
+      countTokensResponse.totalTokens,
+      totalBillableCharacters: countTokensResponse.totalBillableCharacters,
+    );
   }
 
   /// The number of tokens that the `model` tokenizes the `prompt` into.
@@ -42,6 +35,13 @@ final class CountTokensResponse {
   ///
   /// Always non-negative.
   final int? totalBillableCharacters;
+}
+
+/// Extension on [google_ai.CountTokensResponse] to access extra fields
+extension CountTokensResponseFields on google_ai.CountTokensResponse {
+  /// Total billable Characters for the prompt.
+  int? get totalBillableCharacters =>
+      countTokensResponseFields(this)?['totalBillableCharacters'] as int?;
 }
 
 /// Response from the model; supports multiple candidates.
@@ -739,7 +739,8 @@ final class GenerationConfig {
       this.maxOutputTokens,
       this.temperature,
       this.topP,
-      this.topK});
+      this.topK,
+      this.responseMimeType});
 
   // ignore: unused_element
   factory GenerationConfig._fromGoogleAIGenerationConfig(
@@ -750,7 +751,8 @@ final class GenerationConfig {
           maxOutputTokens: config.maxOutputTokens,
           temperature: config.temperature,
           topP: config.topP,
-          topK: config.topK);
+          topK: config.topK,
+          responseMimeType: config.responseMimeType);
 
   /// Number of generated responses to return.
   ///
@@ -797,6 +799,13 @@ final class GenerationConfig {
   /// Note: The default value varies by model.
   final int? topK;
 
+  /// Output response mimetype of the generated candidate text.
+  ///
+  /// Supported mimetype:
+  /// - `text/plain`: (default) Text output.
+  /// - `application/json`: JSON response in the candidates.
+  final String? responseMimeType;
+
   /// Convert to json format
   Map<String, Object?> toJson() => {
         if (candidateCount case final candidateCount?)
@@ -807,16 +816,20 @@ final class GenerationConfig {
         if (temperature case final temperature?) 'temperature': temperature,
         if (topP case final topP?) 'topP': topP,
         if (topK case final topK?) 'topK': topK,
+        if (responseMimeType case final responseMimeType?)
+          'responseMimeType': responseMimeType,
       };
 
   google_ai.GenerationConfig _toGoogleAIGenerationConfig() =>
       google_ai.GenerationConfig(
-          candidateCount: candidateCount,
-          stopSequences: stopSequences,
-          maxOutputTokens: maxOutputTokens,
-          temperature: temperature,
-          topP: topP,
-          topK: topK);
+        candidateCount: candidateCount,
+        stopSequences: stopSequences,
+        maxOutputTokens: maxOutputTokens,
+        temperature: temperature,
+        topP: topP,
+        topK: topK,
+        responseMimeType: responseMimeType,
+      );
 }
 
 /// Type of task for which the embedding will be used.
