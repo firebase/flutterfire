@@ -61,9 +61,6 @@ void main() {
     setupListResultTests();
     setupReferenceTests();
     setupTaskTests();
-    if (defaultTargetPlatform != TargetPlatform.windows) {
-      // TODO(russellwheatley): some tests failing, need to circle back to this
-      setupSecondBucketTests();
-    }
+    setupSecondBucketTests();
   });
 }
