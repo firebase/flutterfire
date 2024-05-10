@@ -25,7 +25,7 @@ void main() {
         options: DefaultFirebaseOptions.currentPlatform,
       );
       if (defaultTargetPlatform != TargetPlatform.windows) {
-        // windows don't support emulator yet
+        // windows doesn't support emulator yet
         await FirebaseStorage.instance
             .useStorageEmulator(testEmulatorHost, testEmulatorPort);
       }

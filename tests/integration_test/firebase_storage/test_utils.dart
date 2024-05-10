@@ -33,7 +33,7 @@ const int testEmulatorPort = 9199;
 
 // Creates a test file with a specified name to
 // a locally directory
-Future<File> createFile(String name, { String? largeString }) async {
+Future<File> createFile(String name, {String? largeString}) async {
   final Directory systemTempDir = Directory.systemTemp;
   final File file = await File('${systemTempDir.path}/$name').create();
   await file.writeAsString(largeString ?? kTestString);
@@ -53,7 +53,10 @@ Future<FirebaseApp> testInitializeSecondaryApp({
       withDefaultBucket ? 'testapp' : 'testapp-no-bucket';
 
   FirebaseOptions testAppOptions;
-  if (!kIsWeb && (Platform.isIOS || Platform.isMacOS)) {
+  if (!kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.macOS ||
+          defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.windows)) {
     testAppOptions = FirebaseOptions(
       appId: DefaultFirebaseOptions.currentPlatform.appId,
       apiKey: DefaultFirebaseOptions.currentPlatform.apiKey,
