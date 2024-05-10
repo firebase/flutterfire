@@ -135,7 +135,8 @@ void setupTaskTests() {
           UploadTask task = storage.ref('/uploadNope.jpeg').putData(data);
           final Completer<FirebaseException> errorReceived =
               Completer<FirebaseException>();
-          bool callsDoneWhenFinished = false;
+          final Completer<bool> finished = Completer<bool>();
+
           task.snapshotEvents.listen(
             (TaskSnapshot snapshot) {
               // noop
@@ -144,13 +145,11 @@ void setupTaskTests() {
               errorReceived.complete(error);
             },
             onDone: () {
-              callsDoneWhenFinished = true;
+              finished.complete(true);
             },
           );
           // Allow time for listener events to be called
           FirebaseException streamError = await errorReceived.future;
-
-          expect(callsDoneWhenFinished, isTrue);
 
           expect(streamError.plugin, 'firebase_storage');
           expect(streamError.code, 'unauthorized');
@@ -158,11 +157,11 @@ void setupTaskTests() {
             streamError.message,
             'User is not authorized to perform the desired action.',
           );
+          final complete = await finished.future;
 
+          expect(complete, true);
           expect(task.snapshot.state, TaskState.error);
         },
-        // skipped on windows, task.snapshot.state == TaskState.running, but is correct if running in example app
-        skip: defaultTargetPlatform == TargetPlatform.windows,
       );
 
       test('handles errors, e.g. if permission denied for `await Task`',
