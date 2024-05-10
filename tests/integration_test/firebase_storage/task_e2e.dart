@@ -284,7 +284,7 @@ void setupTaskTests() {
             await _testCancelTask();
           },
           // There's no DownloadTask on web.
-          // Windows is returning "false", same code on example app works as intended
+          // Windows `task.cancel()` is returning "false", same code on example app works as intended
           skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
           retry: 2,
         );
@@ -296,7 +296,7 @@ void setupTaskTests() {
             await _testCancelTask();
           },
           retry: 2,
-          // Windows is returning "false", same code on example app works as intended
+          // Windows `task.cancel()` is returning "false", same code on example app works as intended
           skip: defaultTargetPlatform == TargetPlatform.windows,
         );
       },
