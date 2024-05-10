@@ -739,7 +739,8 @@ final class GenerationConfig {
       this.maxOutputTokens,
       this.temperature,
       this.topP,
-      this.topK});
+      this.topK,
+      this.responseMimeType});
 
   // ignore: unused_element
   factory GenerationConfig._fromGoogleAIGenerationConfig(
@@ -750,7 +751,8 @@ final class GenerationConfig {
           maxOutputTokens: config.maxOutputTokens,
           temperature: config.temperature,
           topP: config.topP,
-          topK: config.topK);
+          topK: config.topK,
+          responseMimeType: config.responseMimeType);
 
   /// Number of generated responses to return.
   ///
@@ -797,6 +799,13 @@ final class GenerationConfig {
   /// Note: The default value varies by model.
   final int? topK;
 
+  /// Output response mimetype of the generated candidate text.
+  ///
+  /// Supported mimetype:
+  /// - `text/plain`: (default) Text output.
+  /// - `application/json`: JSON response in the candidates.
+  final String? responseMimeType;
+
   /// Convert to json format
   Map<String, Object?> toJson() => {
         if (candidateCount case final candidateCount?)
@@ -807,16 +816,20 @@ final class GenerationConfig {
         if (temperature case final temperature?) 'temperature': temperature,
         if (topP case final topP?) 'topP': topP,
         if (topK case final topK?) 'topK': topK,
+        if (responseMimeType case final responseMimeType?)
+          'responseMimeType': responseMimeType,
       };
 
   google_ai.GenerationConfig _toGoogleAIGenerationConfig() =>
       google_ai.GenerationConfig(
-          candidateCount: candidateCount,
-          stopSequences: stopSequences,
-          maxOutputTokens: maxOutputTokens,
-          temperature: temperature,
-          topP: topP,
-          topK: topK);
+        candidateCount: candidateCount,
+        stopSequences: stopSequences,
+        maxOutputTokens: maxOutputTokens,
+        temperature: temperature,
+        topP: topP,
+        topK: topK,
+        responseMimeType: responseMimeType,
+      );
 }
 
 /// Type of task for which the embedding will be used.
