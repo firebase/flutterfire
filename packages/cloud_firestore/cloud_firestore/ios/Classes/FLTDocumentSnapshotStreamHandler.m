@@ -62,8 +62,8 @@
   FIRSnapshotListenOptions *optionsWithSourceAndMetadata = [[options
       optionsWithIncludeMetadataChanges:_includeMetadataChanges] optionsWithSource:_source];
 
-  self.listenerRegistration = [_reference addSnapshotListenerWithOptions:optionsWithSourceAndMetadata
-                                                                listener:listener];
+  self.listenerRegistration =
+      [_reference addSnapshotListenerWithOptions:optionsWithSourceAndMetadata listener:listener];
 
   return nil;
 }
