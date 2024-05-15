@@ -224,7 +224,6 @@ void runSecondDatabaseTests() {
                     snapshot.docs[0];
                 expect(documentSnapshot.data()['foo'], equals('bar'));
               },
-              count: 1,
               reason: 'Stream should only have been called once.',
             ),
           );
