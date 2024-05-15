@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of firebase_vertexai;
+part of '../firebase_vertexai.dart';
 
 const _defaultLocation = 'us-central1';
 

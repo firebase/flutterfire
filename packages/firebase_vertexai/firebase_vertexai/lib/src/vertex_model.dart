@@ -14,7 +14,7 @@
 
 // ignore_for_file: use_late_for_private_fields_and_variables
 
-part of firebase_vertexai;
+part of '../firebase_vertexai.dart';
 
 const _baseUrl = 'firebaseml.googleapis.com';
 const _apiVersion = 'v2beta';
