@@ -111,6 +111,7 @@ class FirebaseSortedList extends ListBase<DataSnapshot>
     });
     final int index = _snapshots.indexOf(snapshot);
     _snapshots[index] = event.snapshot;
+    _snapshots.sort(comparator);
     onChildChanged!(index, event.snapshot);
   }
 

@@ -79,7 +79,6 @@ void runDocumentReferenceTests() {
               (DocumentSnapshot<Map<String, dynamic>> snapshot) {
                 expect(snapshot.exists, isFalse);
               },
-              count: 1,
               reason: 'Stream should only have been called once.',
             ),
           );
@@ -102,7 +101,6 @@ void runDocumentReferenceTests() {
               (DocumentSnapshot<Map<String, dynamic>> snapshot) {
                 expect(snapshot.exists, isFalse);
               },
-              count: 1,
               reason: 'Stream should only have been called once.',
             ),
           );

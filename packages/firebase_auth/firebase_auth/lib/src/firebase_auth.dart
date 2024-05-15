@@ -71,11 +71,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///
   /// See [setLanguageCode] to update the language code.
   String? get languageCode {
-    if (_delegate.languageCode != null) {
-      return _delegate.languageCode;
-    }
-
-    return null;
+    return _delegate.languageCode;
   }
 
   /// Changes this instance to point to an Auth emulator running locally.
