@@ -25,7 +25,7 @@ void main() {
   group('HttpsCallable', () {
     group('call()', () {
       test('parameter validation accepts null values', () async {
-        expect((await httpsCallable!.call(null)).data, isNull);
+        expect((await httpsCallable!.call()).data, isNull);
       });
 
       test('parameter validation accepts string values', () async {
