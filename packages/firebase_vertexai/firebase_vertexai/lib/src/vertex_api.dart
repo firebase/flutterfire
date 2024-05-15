@@ -40,31 +40,40 @@ final class CountTokensResponse {
 /// Extension on [google_ai.CountTokensResponse] to access extra fields
 extension CountTokensResponseFields on google_ai.CountTokensResponse {
   /// Total billable Characters for the prompt.
-  int? get totalBillableCharacters =>
-      countTokensResponseFields(this)?['totalBillableCharacters'] as int?;
+  int? get totalBillableCharacters => google_ai_hooks
+      .countTokensResponseFields(this)?['totalBillableCharacters'] as int?;
 }
 
 /// Response from the model; supports multiple candidates.
 final class GenerateContentResponse {
   /// Constructor
-  GenerateContentResponse(this.candidates, this.promptFeedback);
+  GenerateContentResponse(this.candidates, this.promptFeedback,
+      {this.usageMetadata});
 
   factory GenerateContentResponse._fromGoogleAIGenerateContentResponse(
           google_ai.GenerateContentResponse generateContentResponse) =>
       GenerateContentResponse(
-          generateContentResponse.candidates
-              .map(Candidate._fromGoogleAICandidate)
-              .toList(),
-          generateContentResponse.promptFeedback != null
-              ? PromptFeedback._fromGoogleAIPromptFeedback(
-                  generateContentResponse.promptFeedback!)
-              : null);
+        generateContentResponse.candidates
+            .map(Candidate._fromGoogleAICandidate)
+            .toList(),
+        generateContentResponse.promptFeedback != null
+            ? PromptFeedback._fromGoogleAIPromptFeedback(
+                generateContentResponse.promptFeedback!)
+            : null,
+        usageMetadata: generateContentResponse.usageMetadata != null
+            ? UsageMetadata._fromGoogleAIUsageMetadata(
+                generateContentResponse.usageMetadata!)
+            : null,
+      );
 
   /// Candidate responses from the model.
   final List<Candidate> candidates;
 
   /// Returns the prompt's feedback related to the content filters.
   final PromptFeedback? promptFeedback;
+
+  /// Meta data for the response
+  final UsageMetadata? usageMetadata;
 
   /// Converts this response to a [GenerateContentResponse].
 
@@ -76,19 +85,20 @@ final class GenerateContentResponse {
                 (candidate) => candidate._toGoogleAICandidate(),
               )
               .toList(),
-          promptFeedback?._toGoogleAIPromptFeedback());
+          promptFeedback?._toGoogleAIPromptFeedback(),
+          usageMetadata: usageMetadata?._toGoogleAIUsageMetadata());
 
-  /// The text content of the first part of the first of [candidates], if any.
+  /// The text content of the text parts of the first of [candidates], if any.
   ///
   /// If the prompt was blocked, or the first candidate was finished for a reason
   /// of [FinishReason.recitation] or [FinishReason.safety], accessing this text
-  /// will throw a [GenerativeAIException].
+  /// will throw a [google_ai.GenerativeAIException].
   ///
-  /// If the first candidate's content starts with a text part, this value is
-  /// that text.
+  /// If the first candidate's content contains any text parts, this value is
+  /// the concatenation of the text.
   ///
-  /// If there are no candidates, or if the first candidate does not start with
-  /// a text part, this value is `null`.
+  /// If there are no candidates, or if the first candidate does not contain any
+  /// text parts, this value is `null`.
   String? get text {
     return switch (candidates) {
       [] => switch (promptFeedback) {
@@ -117,8 +127,12 @@ final class GenerateContentResponse {
                   ? ': $finishMessage'
                   : ''),
         ),
+      // Special case for a single TextPart to avoid iterable chain.
       [Candidate(content: Content(parts: [TextPart(:final text)])), ...] =>
         text,
+      [Candidate(content: Content(:final parts)), ...]
+          when parts.any((p) => p is TextPart) =>
+        parts.whereType<TextPart>().map((p) => p.text).join(),
       [Candidate(), ...] => null,
     };
   }
@@ -254,6 +268,41 @@ final class PromptFeedback {
         safetyRatings
             .map((safetyRating) => safetyRating._toGoogleAISafetyRating())
             .toList(),
+      );
+}
+
+/// Metadata on the generation request's token usage.
+final class UsageMetadata {
+  /// Constructor
+  UsageMetadata({
+    this.promptTokenCount,
+    this.candidatesTokenCount,
+    this.totalTokenCount,
+  });
+
+  factory UsageMetadata._fromGoogleAIUsageMetadata(
+          google_ai_hooks.UsageMetadata usageMetadata) =>
+      UsageMetadata(
+        promptTokenCount: usageMetadata.promptTokenCount,
+        candidatesTokenCount: usageMetadata.candidatesTokenCount,
+        totalTokenCount: usageMetadata.totalTokenCount,
+      );
+
+  /// Number of tokens in the prompt.
+  final int? promptTokenCount;
+
+  /// Total number of tokens across the generated candidates.
+  final int? candidatesTokenCount;
+
+  /// Total token count for the generation request (prompt + candidates).
+  final int? totalTokenCount;
+
+  /// Converts this metadata to a [google_ai_hooks.UsageMetadata].
+  google_ai_hooks.UsageMetadata _toGoogleAIUsageMetadata() =>
+      google_ai_hooks.UsageMetadata(
+        promptTokenCount: promptTokenCount,
+        candidatesTokenCount: candidatesTokenCount,
+        totalTokenCount: totalTokenCount,
       );
 }
 
@@ -896,132 +945,29 @@ enum TaskType {
 
 /// Parse to [GenerateContentResponse] from json object.
 GenerateContentResponse parseGenerateContentResponse(Object jsonObject) {
-  return switch (jsonObject) {
-    {'candidates': final List<Object?> candidates} => GenerateContentResponse(
-        candidates.map(_parseCandidate).toList(),
-        switch (jsonObject) {
-          {'promptFeedback': final promptFeedback?} =>
-            _parsePromptFeedback(promptFeedback),
-          _ => null
-        }),
-    {'promptFeedback': final promptFeedback?} =>
-      GenerateContentResponse([], _parsePromptFeedback(promptFeedback)),
-    _ => throw FormatException(
-        'Unhandled GenerateContentResponse format', jsonObject)
-  };
+  google_ai.GenerateContentResponse response =
+      google_ai_hooks.parseGenerateContentResponse(jsonObject);
+  return GenerateContentResponse._fromGoogleAIGenerateContentResponse(response);
 }
 
 /// Parse to [CountTokensResponse] from json object.
 CountTokensResponse parseCountTokensResponse(Object jsonObject) {
-  return switch (jsonObject) {
-    {'totalTokens': final int totalTokens} => CountTokensResponse(totalTokens),
-    _ =>
-      throw FormatException('Unhandled CountTokensResponse format', jsonObject)
-  };
+  google_ai.CountTokensResponse response =
+      google_ai_hooks.parseCountTokensResponse(jsonObject);
+  return CountTokensResponse._fromGoogleAICountTokensResponse(response);
 }
 
 /// Parse to [EmbedContentResponse] from json object.
 EmbedContentResponse parseEmbedContentResponse(Object jsonObject) {
-  return switch (jsonObject) {
-    {'embedding': final Object embedding} =>
-      EmbedContentResponse(_parseContentEmbedding(embedding)),
-    _ =>
-      throw FormatException('Unhandled EmbedContentResponse format', jsonObject)
-  };
+  google_ai.EmbedContentResponse response =
+      google_ai_hooks.parseEmbedContentResponse(jsonObject);
+  return EmbedContentResponse._fromGoogleAIEmbedContentResponse(response);
 }
 
-Candidate _parseCandidate(Object? jsonObject) {
-  if (jsonObject is! Map) {
-    throw FormatException('Unhandled Candidate format', jsonObject);
-  }
-
-  return Candidate(
-    jsonObject.containsKey('content')
-        ? parseContent(jsonObject['content'] as Object)
-        : Content(null, []),
-    switch (jsonObject) {
-      {'safetyRatings': final List<Object?> safetyRatings} =>
-        safetyRatings.map(_parseSafetyRating).toList(),
-      _ => null
-    },
-    switch (jsonObject) {
-      {'citationMetadata': final Object citationMetadata} =>
-        _parseCitationMetadata(citationMetadata),
-      _ => null
-    },
-    switch (jsonObject) {
-      {'finishReason': final Object finishReason} =>
-        FinishReason._parseValue(finishReason),
-      _ => null
-    },
-    switch (jsonObject) {
-      {'finishMessage': final String finishMessage} => finishMessage,
-      _ => null
-    },
-  );
-}
-
-PromptFeedback _parsePromptFeedback(Object jsonObject) {
-  return switch (jsonObject) {
-    {
-      'safetyRatings': final List<Object?> safetyRatings,
-    } =>
-      PromptFeedback(
-          switch (jsonObject) {
-            {'blockReason': final String blockReason} =>
-              BlockReason._parseValue(blockReason),
-            _ => null,
-          },
-          switch (jsonObject) {
-            {'blockReasonMessage': final String blockReasonMessage} =>
-              blockReasonMessage,
-            _ => null,
-          },
-          safetyRatings.map(_parseSafetyRating).toList()),
-    _ => throw FormatException('Unhandled PromptFeedback format', jsonObject),
-  };
-}
-
-SafetyRating _parseSafetyRating(Object? jsonObject) {
-  return switch (jsonObject) {
-    {
-      'category': final Object category,
-      'probability': final Object probability
-    } =>
-      SafetyRating(HarmCategory._parseValue(category),
-          HarmProbability._parseValue(probability)),
-    _ => throw FormatException('Unhandled SafetyRating format', jsonObject),
-  };
-}
-
-ContentEmbedding _parseContentEmbedding(Object? jsonObject) {
-  return switch (jsonObject) {
-    {'values': final List<Object?> values} => ContentEmbedding(<double>[
-        ...values.cast<double>(),
-      ]),
-    _ => throw FormatException('Unhandled ContentEmbedding format', jsonObject),
-  };
-}
-
-CitationMetadata _parseCitationMetadata(Object? jsonObject) {
-  return switch (jsonObject) {
-    {'citationSources': final List<Object?> citationSources} =>
-      CitationMetadata(citationSources.map(_parseCitationSource).toList()),
-    _ => throw FormatException('Unhandled CitationMetadata format', jsonObject),
-  };
-}
-
-CitationSource _parseCitationSource(Object? jsonObject) {
-  if (jsonObject is! Map) {
-    throw FormatException('Unhandled CitationSource format', jsonObject);
-  }
-
-  final uriString = jsonObject['uri'] as String?;
-
-  return CitationSource(
-    jsonObject['startIndex'] as int?,
-    jsonObject['endIndex'] as int?,
-    uriString != null ? Uri.parse(uriString) : null,
-    jsonObject['license'] as String?,
-  );
+/// Parse to [BatchEmbedContentsResponse] from json object.
+BatchEmbedContentsResponse parseBatchEmbedContentsResponse(Object jsonObject) {
+  google_ai.BatchEmbedContentsResponse response =
+      google_ai_hooks.parseBatchEmbedContentsResponse(jsonObject);
+  return BatchEmbedContentsResponse._fromGoogleAIBatchEmbedContentsResponse(
+      response);
 }

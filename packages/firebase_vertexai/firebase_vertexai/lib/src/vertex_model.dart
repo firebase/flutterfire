@@ -47,7 +47,7 @@ final class GenerativeModel {
     Content? systemInstruction,
     ToolConfig? toolConfig,
   })  : _firebaseApp = app,
-        _googleAIModel = createModelWithBaseUri(
+        _googleAIModel = google_ai_hooks.createModelWithBaseUri(
           model: _normalizeModelName(model),
           apiKey: app.options.apiKey,
           baseUri: _vertexUri(app, location),
