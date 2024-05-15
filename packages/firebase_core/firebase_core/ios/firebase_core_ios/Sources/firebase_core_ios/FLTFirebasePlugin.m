@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#import "FLTFirebasePlugin.h"
+#import "./include/firebase_core_ios/FLTFirebasePlugin.h"
 
 // Firebase default app name.
 NSString *_Nonnull const kFIRDefaultAppNameIOS = @"__FIRAPP_DEFAULT";

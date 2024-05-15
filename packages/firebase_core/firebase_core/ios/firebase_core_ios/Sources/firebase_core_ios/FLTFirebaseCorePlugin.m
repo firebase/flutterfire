@@ -2,9 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#import "FLTFirebaseCorePlugin.h"
-#import "FLTFirebasePluginRegistry.h"
-#import "messages.g.h"
+#import "./include/firebase_core_ios/FLTFirebaseCorePlugin.h"
+#import "./include/firebase_core_ios/FLTFirebasePluginRegistry.h"
+#import "./include/firebase_core_ios/messages.g.h"
 
 @implementation FLTFirebaseCorePlugin {
   BOOL _coreInitialized;

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#import "FLTFirebasePluginRegistry.h"
+#import "./include/firebase_core_ios/FLTFirebasePluginRegistry.h"
 
 #if __has_include(<FirebaseCore/FIRAppInternal.h>)
 #import <FirebaseCore/FIRAppInternal.h>
