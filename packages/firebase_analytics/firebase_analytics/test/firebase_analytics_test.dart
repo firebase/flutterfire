@@ -593,7 +593,7 @@ void main() {
           shipping: SHIPPING_DOUBLE,
           transactionId: TRANSACTION_ID,
           affiliation: AFFILIATION,
-          parameters: {'a': 'b'},
+          parameters: {'a': 'b', 'c': null,},
         );
 
         expect(

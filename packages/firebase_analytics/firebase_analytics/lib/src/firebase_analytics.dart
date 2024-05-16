@@ -1498,8 +1498,8 @@ List<Map<String, dynamic>>? _marshalItems(List<AnalyticsEventItem>? items) {
 void _assertParameterTypesAreCorrect(Map<String, Object?>? parameters) =>
     parameters?.forEach((key, value) {
       assert(
-        value is String || value is num,
-        "'string' OR 'number' must be set as the value of the parameter: $key. $value found instead",
+        value is String || value is num || value == null,
+        "'string' OR 'number' or 'null' must be set as the value of the parameter: $key. $value found instead",
       );
     });
 
