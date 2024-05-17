@@ -9,21 +9,20 @@
 
 import PackageDescription
 import Foundation
-// import Yams
 
-// func loadPubspecVersion() -> String {
-//     let pubspecPath = "../pubspec.yaml"
-//     do {
-//         let yamlString = try String(contentsOfFile: pubspecPath, encoding: .utf8)
-//         if let yaml = try Yams.load(yaml: yamlString) as? [String: Any],
-//            let version = yaml["version"] as? String {
-//             return version.replacingOccurrences(of: "+", with: "-")
-//         }
-//     } catch {
-//         print("Error loading or parsing pubspec.yaml: \(error)")
-//     }
-//     return "1.0.0" // Default version if parsing fails
-// }
+func loadPubspecVersion() -> String {
+    let pubspecPath = "../firebase_core/pubspec.yaml"
+    do {
+        let yamlString = try String(contentsOfFile: pubspecPath, encoding: .utf8)
+        if let versionLine = yamlString.split(separator: "\n").first(where: { $0.starts(with: "version:") }) {
+            let version = versionLine.split(separator: ":")[1].trimmingCharacters(in: .whitespaces)
+            return version.replacingOccurrences(of: "+", with: "-")
+        }
+    } catch {
+        print("Error loading or parsing pubspec.yaml: \(error)")
+    }
+    return "1.0.0" // Default version if parsing fails
+}
 
 // Function to load Firebase SDK version from a Ruby script file
 func loadFirebaseSDKVersion() -> String {
@@ -43,8 +42,7 @@ func loadFirebaseSDKVersion() -> String {
     return "10.25.0" // Default version if parsing fails
 }
 
-let library_version = "2.30.1"
-// let library_version = loadPubspecVersion()
+let library_version: String = loadPubspecVersion()
 let firebase_sdk_version_string: String = loadFirebaseSDKVersion()
 
 guard let firebase_sdk_version = Version(firebase_sdk_version_string) else {
@@ -55,23 +53,20 @@ let package = Package(
   name: "firebase_core",
   platforms: [
     .iOS("11.0"),
-    .macOS("10.14"),
+    .macOS("10.13"),
   ],
   products: [
     .library(name: "firebase-core", targets: ["firebase_core"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version),
-    .package(url: "https://github.com/jpsim/Yams", from: "4.0.0")
-
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version)
   ],
   targets: [
     .target(
       name: "firebase_core",
       // Using FirebaseInstallations as FirebaseCore isn't a product and this is really small
       dependencies: [
-        .product(name: "FirebaseInstallations", package: "firebase-ios-sdk"),
-        .product(name: "Yams", package: "Yams")
+        .product(name: "FirebaseInstallations", package: "firebase-ios-sdk")
                     ],
       resources: [
         .process("Resources"),
