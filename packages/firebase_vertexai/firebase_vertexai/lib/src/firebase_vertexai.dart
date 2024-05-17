@@ -12,7 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of firebase_vertexai;
+import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
+    show FirebasePluginPlatform;
+
+import 'vertex_api.dart';
+import 'vertex_content.dart';
+import 'vertex_function_calling.dart';
+import 'vertex_model.dart';
 
 const _defaultLocation = 'us-central1';
 
@@ -96,7 +104,7 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
       Content? systemInstruction,
       List<Tool>? tools,
       ToolConfig? toolConfig}) {
-    return GenerativeModel._(
+    return createGenerativeModel(
         model: model,
         app: app,
         appCheck: appCheck,
@@ -108,6 +116,7 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
         toolConfig: toolConfig);
   }
 }
+
 
 /// Options for request to backend.
 class RequestOptions {

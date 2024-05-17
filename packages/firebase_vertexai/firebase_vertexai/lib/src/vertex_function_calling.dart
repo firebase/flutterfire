@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of firebase_vertexai;
+import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
 
 /// Tool details that the model may use to generate a response.
 ///
@@ -39,8 +39,10 @@ final class Tool {
           'functionDeclarations':
               functionDeclarations.map((f) => f.toJson()).toList(),
       };
+}
 
-  google_ai.Tool _toGoogleAITool() => google_ai.Tool(
+extension ToolConversion on Tool {
+  google_ai.Tool toGoogleAI() => google_ai.Tool(
         functionDeclarations: functionDeclarations
             ?.map((f) => f._toGoogleAIToolFunctionDeclaration())
             .toList(),
@@ -97,7 +99,11 @@ final class ToolConfig {
         if (functionCallingConfig case final config?)
           'functionCallingConfig': config.toJson(),
       };
-  google_ai.ToolConfig _toGoogleAIToolConfig() => google_ai.ToolConfig(
+}
+
+
+extension ToolConfigConversion on ToolConfig {
+  google_ai.ToolConfig toGoogleAI() => google_ai.ToolConfig(
         functionCallingConfig:
             functionCallingConfig?._toGoogleAIFunctionCallingConfig(),
       );

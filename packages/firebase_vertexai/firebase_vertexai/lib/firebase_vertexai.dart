@@ -12,25 +12,58 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-library firebase_vertexai;
-
-import 'dart:async';
-import 'dart:convert';
-import 'dart:typed_data';
-
-import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
-    show FirebasePluginPlatform;
-import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
-// ignore: implementation_imports, tightly coupled packages
-import 'package:google_generative_ai/src/vertex_hooks.dart';
-
-import 'src/vertex_version.dart';
-
-part 'src/firebase_vertexai.dart';
-part 'src/vertex_api.dart';
-part 'src/vertex_chat.dart';
-part 'src/vertex_content.dart';
-part 'src/vertex_function_calling.dart';
-part 'src/vertex_model.dart';
+export 'src/firebase_vertexai.dart'
+    show
+        // TODO(next breaking): Remove defaultTimeout
+        defaultTimeout,
+        FirebaseVertexAI,
+        RequestOptions;
+export 'src/vertex_api.dart'
+    show
+        BatchEmbedContentsResponse,
+        BlockReason,
+        Candidate,
+        CitationMetadata,
+        CitationSource,
+        ContentEmbedding,
+        CountTokensResponse,
+        // TODO(next breaking): Remove CountTokensResponseFields
+        CountTokensResponseFields,
+        EmbedContentRequest,
+        EmbedContentResponse,
+        FinishReason,
+        GenerateContentResponse,
+        GenerationConfig,
+        HarmBlockThreshold,
+        HarmCategory,
+        HarmProbability,
+        PromptFeedback,
+        SafetyRating,
+        SafetySetting,
+        TaskType,
+        // TODO(next breaking): Remove parse* methods
+        parseCountTokensResponse,
+        parseEmbedContentResponse,
+        parseGenerateContentResponse;
+export 'src/vertex_chat.dart' show ChatSession, StartChatExtension;
+export 'src/vertex_content.dart'
+    show
+        Content,
+        DataPart,
+        FileData,
+        FunctionCall,
+        FunctionResponse,
+        Part,
+        TextPart,
+        // TODO(next breaking): Remove parseContent
+        parseContent;
+export 'src/vertex_function_calling.dart'
+    show
+        FunctionCallingConfig,
+        FunctionCallingMode,
+        FunctionDeclaration,
+        Schema,
+        SchemaType,
+        Tool,
+        ToolConfig;
+export 'src/vertex_model.dart' show GenerativeModel;
