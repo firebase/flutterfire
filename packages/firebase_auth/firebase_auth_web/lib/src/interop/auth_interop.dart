@@ -518,6 +518,8 @@ class OAuthProviderJsImpl extends AuthProviderJsImpl {
   external static OAuthCredential? credentialFromResult(
     UserCredentialJsImpl userCredential,
   );
+
+  external static OAuthCredential? credentialFromError(JSError error);
 }
 
 extension OAuthProviderJsImplExtension on OAuthProviderJsImpl {
