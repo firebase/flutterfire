@@ -64,6 +64,20 @@ FirebaseAuthException getFirebaseAuthException(
   auth_interop.Auth? auth,
 ]) {
   final exception = objectException as JSError;
+  final authJsCredential =
+      auth_interop.OAuthProviderJsImpl.credentialFromError(exception);
+
+  OAuthCredential? credential;
+
+  if (authJsCredential != null) {
+    credential = OAuthProvider(authJsCredential.providerId.toDart).credential(
+      signInMethod: authJsCredential.signInMethod.toDart,
+      accessToken: authJsCredential.accessToken?.toDart,
+      secret: authJsCredential.secret?.toDart,
+      idToken: authJsCredential.idToken?.toDart,
+    );
+  }
+
   if (!_hasFirebaseAuthErrorCodeAndMessage(exception)) {
     return FirebaseAuthException(
       code: 'unknown',
@@ -116,6 +130,7 @@ FirebaseAuthException getFirebaseAuthException(
     email: customData.email?.toDart,
     phoneNumber: customData.phoneNumber?.toDart,
     tenantId: customData.tenantId?.toDart,
+    credential: credential,
   );
 }
 
