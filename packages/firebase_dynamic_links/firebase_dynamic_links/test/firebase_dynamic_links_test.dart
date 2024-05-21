@@ -12,6 +12,8 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import './mock.dart';
 
+// ignore_for_file: deprecated_member_use_from_same_package
+
 MockFirebaseDynamicLinks mockDynamicLinksPlatform = MockFirebaseDynamicLinks();
 
 DynamicLinkParameters buildDynamicLinkParameters() {

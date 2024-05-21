@@ -1,3 +1,7 @@
+## 4.17.4
+
+ - **FIX**(firestore,ios): fix document stream handler options. ([#12764](https://github.com/firebase/flutterfire/issues/12764)). ([786e73ca](https://github.com/firebase/flutterfire/commit/786e73ca17527493a47914c7ead1a12a4f0adde5))
+
 ## 4.17.3
 
  - **FIX**(firestore,ios): fix query stream handler options. ([#12739](https://github.com/firebase/flutterfire/issues/12739)). ([953bf929](https://github.com/firebase/flutterfire/commit/953bf929bf19e7bbb3564c69901f5a4fca5fc981))
