@@ -114,7 +114,6 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
     Content? systemInstruction,
     List<Tool>? tools,
     ToolConfig? toolConfig,
-    FirebaseAuth? auth,
   }) {
     return createGenerativeModel(
         model: model,
