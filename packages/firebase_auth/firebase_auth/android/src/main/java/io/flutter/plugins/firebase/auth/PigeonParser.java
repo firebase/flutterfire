@@ -218,7 +218,9 @@ public class PigeonParser {
           String providerId =
               (String) Objects.requireNonNull(credentialMap.get(Constants.PROVIDER_ID));
           OAuthProvider.CredentialBuilder builder = OAuthProvider.newCredentialBuilder(providerId);
-          builder.setAccessToken(Objects.requireNonNull(accessToken));
+          if (accessToken != null) {
+            builder.setAccessToken(accessToken);
+          }
           if (rawNonce == null) {
             builder.setIdToken(Objects.requireNonNull(idToken));
           } else {

@@ -443,7 +443,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     didReceiveRemoteNotification:(NSDictionary *)userInfo
           fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
 #if __has_include(<FirebaseAuth/FirebaseAuth.h>)
-  if ([[FIRAuth auth] canHandleNotification:userInfo]) {
+  if ([FIRApp defaultApp] != nil && [[FIRAuth auth] canHandleNotification:userInfo]) {
     completionHandler(UIBackgroundFetchResultNoData);
     return YES;
   }

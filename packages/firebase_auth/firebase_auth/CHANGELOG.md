@@ -1,3 +1,7 @@
+## 4.19.6
+
+ - **FIX**(auth,android): allow nullable `accessToken` when creating `OAuthProvider` ([#12795](https://github.com/firebase/flutterfire/issues/12795)). ([490319d4](https://github.com/firebase/flutterfire/commit/490319d4c046917bdd227c19fd37185d63076b4a))
+
 ## 4.19.5
 
  - **FIX**(auth,windows): allow `idToken` and `accessToken` to be nullable to stop windows crashing for `signInWithCredential()` ([#12688](https://github.com/firebase/flutterfire/issues/12688)). ([ca9f92d0](https://github.com/firebase/flutterfire/commit/ca9f92d05f717b46c80307987f560454b90a4d67))
