@@ -228,7 +228,7 @@ final class GenerativeModel {
   }
 }
 
-extension GoogleAIGenerativeModelModel on GenerativeModel {
+extension GoogleAIGenerativeModelConversion on GenerativeModel {
   google_ai.GenerativeModel get googleAIModel => _googleAIModel;
 }
 
