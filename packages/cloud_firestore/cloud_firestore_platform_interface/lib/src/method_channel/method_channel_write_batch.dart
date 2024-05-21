@@ -45,6 +45,9 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
       await MethodChannelFirebaseFirestore.pigeonChannel
           .writeBatchCommit(pigeonApp, _writes);
     } catch (e, stack) {
+      /// set _committed to false so that users can catch this platform
+      /// exception and try again if desired.
+      _committed = false;
       convertPlatformException(e, stack);
     }
   }
@@ -84,6 +87,18 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
       type: PigeonTransactionType.update,
       data: data,
     ));
+  }
+
+  @override
+  void removeFromBatch(String documentPath) {
+    _assertNotCommitted();
+    _writes.removeWhere((element) => element.path.compareTo(documentPath) == 0);
+  }
+
+  /// Used for debugging/crashlytics purposes
+  @override
+  List<PigeonTransactionCommand> getBatchData() {
+    return _writes;
   }
 
   /// Ensures that once a batch has been committed, it can not be modified again.

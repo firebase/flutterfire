@@ -63,4 +63,14 @@ abstract class WriteBatchPlatform extends PlatformInterface {
   ) {
     throw UnimplementedError('update() is not implemented');
   }
+
+  /// Remove fields in the batch referred to by [documentPath].
+  void removeFromBatch(String documentPath) {
+    throw UnimplementedError('removeFromBatch() is not implemented');
+  }
+
+  /// Used for debugging/crashlytics purposes
+  List<PigeonTransactionCommand> getBatchData() {
+    throw UnimplementedError('getBatchData() is not implemented');
+  }
 }
