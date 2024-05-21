@@ -107,14 +107,13 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
   /// The optional [safetySettings] and [generationConfig] can be used to
   /// control and guide the generation. See [SafetySetting] and
   /// [GenerationConfig] for details.
-  GenerativeModel generativeModel({
-    required String model,
-    List<SafetySetting>? safetySettings,
-    GenerationConfig? generationConfig,
-    Content? systemInstruction,
-    List<Tool>? tools,
-    ToolConfig? toolConfig,
-  }) {
+  GenerativeModel generativeModel(
+      {required String model,
+      List<SafetySetting>? safetySettings,
+      GenerationConfig? generationConfig,
+      Content? systemInstruction,
+      List<Tool>? tools,
+      ToolConfig? toolConfig}) {
     return createGenerativeModel(
         model: model,
         app: app,
