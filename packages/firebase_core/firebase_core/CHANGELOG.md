@@ -1,3 +1,7 @@
+## 2.31.1
+
+ - **FIX**(storage,windows): putFile(), putString(), putData() & Task streaming event fixes ([#12723](https://github.com/firebase/flutterfire/issues/12723)). ([de69e07a](https://github.com/firebase/flutterfire/commit/de69e07a36a9e2ce967d9f4470f4a14e987abf53))
+
 ## 2.31.0
 
  - **FEAT**: bump firebase iOS SDK to `10.25.0` ([#12738](https://github.com/firebase/flutterfire/issues/12738)). ([86b05c3c](https://github.com/firebase/flutterfire/commit/86b05c3c25d4ebc8b8c142e71593c0210f06d6be))

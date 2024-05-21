@@ -1,3 +1,7 @@
+## 11.7.6
+
+ - **FIX**(storage,windows): putFile(), putString(), putData() & Task streaming event fixes ([#12723](https://github.com/firebase/flutterfire/issues/12723)). ([de69e07a](https://github.com/firebase/flutterfire/commit/de69e07a36a9e2ce967d9f4470f4a14e987abf53))
+
 ## 11.7.5
 
  - Update a dependency to the latest release.

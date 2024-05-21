@@ -1,3 +1,7 @@
+## 14.9.3
+
+ - **FIX**(messaging): ensure default app is available before checking auth notification ([#12810](https://github.com/firebase/flutterfire/issues/12810)). ([eca2df61](https://github.com/firebase/flutterfire/commit/eca2df615deaf1612ff027044cec3c0df3cf95c1))
+
 ## 14.9.2
 
  - **FIX**(messaging,apple): rename to `PrivacyInfo.xcprivacy` for privacy manifest ([#12752](https://github.com/firebase/flutterfire/issues/12752)). ([c5bdebc8](https://github.com/firebase/flutterfire/commit/c5bdebc89c64419e755f0b375108719785129716))
