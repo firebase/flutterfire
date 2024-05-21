@@ -17,6 +17,7 @@
 import 'dart:async';
 
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
 // ignore: implementation_imports, tightly coupled packages
@@ -248,6 +249,7 @@ GenerativeModel createGenerativeModel({
   required String model,
   Content? systemInstruction,
   FirebaseAppCheck? appCheck,
+  FirebaseAuth? auth,
   GenerationConfig? generationConfig,
   List<SafetySetting>? safetySettings,
   List<Tool>? tools,
@@ -257,6 +259,7 @@ GenerativeModel createGenerativeModel({
       model: model,
       app: app,
       appCheck: appCheck,
+      auth: auth,
       location: location,
       safetySettings: safetySettings,
       generationConfig: generationConfig,
