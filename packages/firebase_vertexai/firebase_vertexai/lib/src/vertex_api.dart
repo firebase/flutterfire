@@ -281,7 +281,7 @@ final class UsageMetadata {
   });
 
   factory UsageMetadata._fromGoogleAIUsageMetadata(
-          google_ai_hooks.UsageMetadata usageMetadata) =>
+          google_ai.UsageMetadata usageMetadata) =>
       UsageMetadata(
         promptTokenCount: usageMetadata.promptTokenCount,
         candidatesTokenCount: usageMetadata.candidatesTokenCount,
@@ -297,9 +297,8 @@ final class UsageMetadata {
   /// Total token count for the generation request (prompt + candidates).
   final int? totalTokenCount;
 
-  /// Converts this metadata to a [google_ai_hooks.UsageMetadata].
-  google_ai_hooks.UsageMetadata _toGoogleAIUsageMetadata() =>
-      google_ai_hooks.UsageMetadata(
+  /// Converts this metadata to a [google_ai.UsageMetadata].
+  google_ai.UsageMetadata _toGoogleAIUsageMetadata() => google_ai.UsageMetadata(
         promptTokenCount: promptTokenCount,
         candidatesTokenCount: candidatesTokenCount,
         totalTokenCount: totalTokenCount,
