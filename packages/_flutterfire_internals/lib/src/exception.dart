@@ -49,8 +49,8 @@ FirebaseException platformExceptionToFirebaseException(
     code = (details['code'] as String?) ?? code;
 
     if ((code?.compareTo('not-found') == 0) && message.contains('NOT_FOUND:')) {
-      // For not-found exceptions, return the Firestore provided reason and
-      // document path rather than generic error message.
+      /// For not-found exceptions, return the Firestore provided reason and
+      /// document path rather than generic error message.
       message = message.split('NOT_FOUND:').last.trim();
     } else {
       message = (details['message'] as String?) ?? message;
