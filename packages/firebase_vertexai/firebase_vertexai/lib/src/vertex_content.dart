@@ -62,12 +62,16 @@ final class Content {
       };
 }
 
+/// Conversion utilities for [Content].
 extension ContentConversion on Content {
+  /// Returns this content as a [google_ai.Content].
   google_ai.Content toGoogleAI() =>
       google_ai.Content(role, parts.map((p) => p.toPart()).toList());
 }
 
+/// Conversion utilities for [google_ai.Content].
 extension GoogleAIContentConversion on google_ai.Content {
+  /// Returns this content as a [Content].
   Content toVertex() =>
       Content(role, parts.map(Part._fromGoogleAIPart).toList());
 }

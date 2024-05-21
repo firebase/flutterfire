@@ -228,10 +228,13 @@ final class GenerativeModel {
   }
 }
 
+/// Conversion utilities for [GenerativeModel].
 extension GoogleAIGenerativeModelConversion on GenerativeModel {
+  /// Return this model as a [google_ai.GenerativeModel].
   google_ai.GenerativeModel get googleAIModel => _googleAIModel;
 }
 
+/// Returns a [GenerativeModel] using it's private constructor.
 GenerativeModel createGenerativeModel({
   required FirebaseApp app,
   required String location,

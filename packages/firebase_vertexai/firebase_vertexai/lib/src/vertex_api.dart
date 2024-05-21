@@ -34,8 +34,10 @@ final class CountTokensResponse {
   final int? totalBillableCharacters;
 }
 
+/// Conversion utilities for [google_ai.CountTokensResponse].
 extension GoogleAICountTokensResponseConversion
     on google_ai.CountTokensResponse {
+  /// Returns this response as a [CountTokensResponse].
   CountTokensResponse toVertex() => CountTokensResponse(
         totalTokens,
         totalBillableCharacters: totalBillableCharacters,
@@ -115,8 +117,10 @@ final class GenerateContentResponse {
       const [];
 }
 
+/// Conversion utilities for [google_ai.GenerateContentResponse].
 extension GoogleAIGenerateContentResponseConversion
     on google_ai.GenerateContentResponse {
+  /// Returns this response as a [GenerateContentResponse].
   GenerateContentResponse toVertex() => GenerateContentResponse(
         candidates.map((c) => c.toVertex()).toList(),
         promptFeedback?.toVertex(),
@@ -132,8 +136,10 @@ final class EmbedContentResponse {
   final ContentEmbedding embedding;
 }
 
+/// Conversion utilities for [google_ai.EmbedContentResponse].
 extension GoogleAIEmbedContentResponseConvesion
     on google_ai.EmbedContentResponse {
+  /// Returns this response as a [EmbedContentResponse].
   EmbedContentResponse toVertex() => EmbedContentResponse(embedding.toVertex());
 }
 
@@ -147,8 +153,10 @@ final class BatchEmbedContentsResponse {
   final List<ContentEmbedding> embeddings;
 }
 
+/// Conversion utilities for [google_ai.BatchEmbedContentsResponse].
 extension GoogleAIBatchEmbedContentsResponseConversion
     on google_ai.BatchEmbedContentsResponse {
+  /// Returns this response as a [BatchEmbedContentsResponse].
   BatchEmbedContentsResponse toVertex() =>
       BatchEmbedContentsResponse(embeddings.map((e) => e.toVertex()).toList());
 }
@@ -179,9 +187,9 @@ final class EmbedContentRequest {
       };
 }
 
+/// Conversion utilities for [EmbedContentRequest].
 extension EmbedContentRequestConversion on EmbedContentRequest {
   /// Converts this response to a [EmbedContentResponse].
-  // ignore: unused_element
   google_ai.EmbedContentRequest toGoogleAI() =>
       google_ai.EmbedContentRequest(content.toGoogleAI(),
           taskType: taskType?.toGoogleAI(), title: title, model: model);
@@ -196,7 +204,9 @@ final class ContentEmbedding {
   final List<double> values;
 }
 
+/// Conversion utilities for [google_ai.ContentEmbedding].
 extension GoogleAIContentEmbeddingConversion on google_ai.ContentEmbedding {
+  /// Returns this embedding as a [ContentEmbedding].
   ContentEmbedding toVertex() => ContentEmbedding(values);
 }
 
@@ -219,7 +229,9 @@ final class PromptFeedback {
   final List<SafetyRating> safetyRatings;
 }
 
+/// Conversion utilities for [google_ai.PromptFeedback].
 extension GoogleAIPromptFeedback on google_ai.PromptFeedback {
+  /// Returns this feedback a [PromptFeedback].
   PromptFeedback toVertex() => PromptFeedback(
         blockReason?.toVertex(),
         blockReasonMessage,
@@ -258,7 +270,9 @@ final class Candidate {
   final String? finishMessage;
 }
 
+/// Conversion utilities for [google_ai.Candidate].
 extension GooglAICandidateConversion on google_ai.Candidate {
+  /// Returns this candidate as a [Candidate].
   Candidate toVertex() => Candidate(
         content.toVertex(),
         safetyRatings?.map((r) => r.toVertex()).toList(),
@@ -285,7 +299,9 @@ final class SafetyRating {
   final HarmProbability probability;
 }
 
+/// Conversion utilities for [google_ai.SafetyRating].
 extension GoogleAISafetyRatingConversion on google_ai.SafetyRating {
+  /// Returns this safety rating as a [SafetyRating].
   SafetyRating toVertex() =>
       SafetyRating(category.toVertex(), probability.toVertex());
 }
@@ -325,7 +341,9 @@ enum BlockReason {
   String toString() => name;
 }
 
+/// Conversion utilities for [google_ai.BlockReason].
 extension GoogleAIBlockReasonConversion on google_ai.BlockReason {
+  /// Returns this block reason as a [BlockReason].
   BlockReason toVertex() => switch (this) {
         google_ai.BlockReason.unspecified => BlockReason.unspecified,
         google_ai.BlockReason.safety => BlockReason.safety,
@@ -376,7 +394,9 @@ enum HarmCategory {
   String toJson() => _jsonString;
 }
 
+/// Conversion utilities for [google_ai.HarmCategory].
 extension GoogleAIHarmCategoryConversion on google_ai.HarmCategory {
+  /// Returns this harm category as a [HarmCategory].
   HarmCategory toVertex() => switch (this) {
         google_ai.HarmCategory.unspecified => HarmCategory.unspecified,
         google_ai.HarmCategory.harassment => HarmCategory.harassment,
@@ -388,7 +408,9 @@ extension GoogleAIHarmCategoryConversion on google_ai.HarmCategory {
       };
 }
 
+/// Conversion utilities for [HarmCategory].
 extension HarmCategoryConversion on HarmCategory {
+  /// Returns this harm category as a [google_ai.HarmCategory].
   google_ai.HarmCategory toGoogleAI() {
     return switch (this) {
       HarmCategory.unspecified => google_ai.HarmCategory.unspecified,
@@ -443,7 +465,9 @@ enum HarmProbability {
   String toString() => name;
 }
 
+/// Conversion utilities for [google_ai.HarmProbability].
 extension GoogleAIHarmProbabilityConverison on google_ai.HarmProbability {
+  /// Returns this harm probability as a [HarmProbability].
   HarmProbability toVertex() => switch (this) {
         google_ai.HarmProbability.unspecified => HarmProbability.unspecified,
         google_ai.HarmProbability.negligible => HarmProbability.negligible,
@@ -462,7 +486,9 @@ final class CitationMetadata {
   final List<CitationSource> citationSources;
 }
 
+/// Conversion utilities for [google_ai.CitationMetadata].
 extension GoogleAICitationMetadataConversion on google_ai.CitationMetadata {
+  /// Returns this citation metadata as a [CitationMetadata].
   CitationMetadata toVertex() =>
       CitationMetadata(citationSources.map((s) => s.toVertex()).toList());
 }
@@ -489,7 +515,9 @@ final class CitationSource {
   final String? license;
 }
 
+/// Conversion utilities for [google_ai.CitationSource].
 extension GoogleAICitationSourceConversion on google_ai.CitationSource {
+  /// Returns this citation source as a [CitationSource].
   CitationSource toVertex() =>
       CitationSource(startIndex, endIndex, uri, license);
 }
@@ -539,7 +567,9 @@ enum FinishReason {
   String toString() => name;
 }
 
+/// Conversion utilities for [google_ai.FinishReason].
 extension GoogleAIFinishReasonConversion on google_ai.FinishReason {
+  /// Returns this finish reason as a [FinishReason].
   FinishReason toVertex() => switch (this) {
         google_ai.FinishReason.unspecified => FinishReason.unspecified,
         google_ai.FinishReason.stop => FinishReason.stop,
@@ -576,7 +606,9 @@ final class SafetySetting {
       {'category': category.toJson(), 'threshold': threshold.toJson()};
 }
 
+/// Conversion utilities for [SafetySetting].
 extension SafetySettingConversion on SafetySetting {
+  /// Returns this safety setting as a [google_ai.SafetySetting].
   google_ai.SafetySetting toGoogleAI() =>
       google_ai.SafetySetting(category.toGoogleAI(), threshold.toGoogleAI());
 }
@@ -635,7 +667,9 @@ enum HarmBlockThreshold {
   Object toJson() => _jsonString;
 }
 
+/// Conversion utilities for [HarmBlockThreshold].
 extension HarmBlockThresholdConversion on HarmBlockThreshold {
+  /// Returns this block threshold as a [toGoogleAI()].
   google_ai.HarmBlockThreshold toGoogleAI() {
     return switch (this) {
       HarmBlockThreshold.unspecified =>
@@ -648,7 +682,9 @@ extension HarmBlockThresholdConversion on HarmBlockThreshold {
   }
 }
 
+/// Conversion utilities for [google_ai.HarmBlockThreshold].
 extension GoogleAIHarmBlockThresholdConversion on google_ai.HarmBlockThreshold {
+  /// Returns this harm block threshold as a [HarmBlockThreshold].
   HarmBlockThreshold toVertex() => switch (this) {
         google_ai.HarmBlockThreshold.unspecified =>
           HarmBlockThreshold.unspecified,
@@ -750,7 +786,9 @@ final class GenerationConfig {
       };
 }
 
+/// Conversion utilities for [GenerationConfig].
 extension GenerationConfigConversion on GenerationConfig {
+  /// Returns this generation config as a [google_ai.GenerationConfig].
   google_ai.GenerationConfig toGoogleAI() => google_ai.GenerationConfig(
         candidateCount: candidateCount,
         stopSequences: stopSequences,
@@ -814,7 +852,9 @@ enum TaskType {
   Object toJson() => _jsonString;
 }
 
+/// Conversion utilities for [TaskType].
 extension TaskTypeConversion on TaskType {
+  /// Returns this task type as a [google_ai.TaskType].
   google_ai.TaskType toGoogleAI() => switch (this) {
         TaskType.unspecified => google_ai.TaskType.unspecified,
         TaskType.retrievalQuery => google_ai.TaskType.retrievalQuery,

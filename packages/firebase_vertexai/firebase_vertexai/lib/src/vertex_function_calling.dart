@@ -41,7 +41,9 @@ final class Tool {
       };
 }
 
+/// Conversion utilities for [Tool].
 extension ToolConversion on Tool {
+  /// Returns this tool as a [google_ai.Tool].
   google_ai.Tool toGoogleAI() => google_ai.Tool(
         functionDeclarations: functionDeclarations
             ?.map((f) => f._toGoogleAIToolFunctionDeclaration())
@@ -101,8 +103,9 @@ final class ToolConfig {
       };
 }
 
-
+/// Conversion utilities for [ToolConfig].
 extension ToolConfigConversion on ToolConfig {
+  /// Returns this tool config as a [google_ai.ToolConfig].
   google_ai.ToolConfig toGoogleAI() => google_ai.ToolConfig(
         functionCallingConfig:
             functionCallingConfig?._toGoogleAIFunctionCallingConfig(),
