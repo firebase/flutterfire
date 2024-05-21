@@ -117,7 +117,6 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
   }
 }
 
-
 /// Options for request to backend.
 class RequestOptions {
   /// [timeout] duration for the request.
