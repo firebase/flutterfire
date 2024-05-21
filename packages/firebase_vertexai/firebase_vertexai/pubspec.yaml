@@ -9,6 +9,7 @@ environment:
 
 dependencies:
   firebase_app_check: ^0.2.2+6
+  firebase_auth: ^4.19.5
   firebase_core: ^2.31.1
   firebase_core_platform_interface: ^5.0.0
   flutter:

@@ -25,7 +25,8 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
       {required this.app,
       required this.options,
       required this.location,
-      this.appCheck})
+      this.appCheck,
+      this.auth})
       : super(app.name, 'plugins.flutter.io/firebase_vertexai');
 
   /// The [FirebaseApp] for this current [FirebaseVertexAI] instance.
@@ -34,6 +35,9 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
   /// The optional [FirebaseAppCheck] for this current [FirebaseVertexAI] instance.
   /// https://firebase.google.com/docs/app-check
   FirebaseAppCheck? appCheck;
+
+  /// The optional [FirebaseAuth] for this current [FirebaseVertexAI] instance.
+  FirebaseAuth? auth;
 
   /// Configuration parameters for sending requests to the backend.
   RequestOptions options;
@@ -57,6 +61,7 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
   static FirebaseVertexAI instanceFor({
     FirebaseApp? app,
     FirebaseAppCheck? appCheck,
+    FirebaseAuth? auth,
     RequestOptions? options,
     String? location,
   }) {
@@ -72,7 +77,11 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
     location ??= _defaultLocation;
 
     FirebaseVertexAI newInstance = FirebaseVertexAI._(
-        app: app, options: options, location: location, appCheck: appCheck);
+        app: app,
+        options: options,
+        location: location,
+        appCheck: appCheck,
+        auth: auth);
     _cachedInstances[app.name] = newInstance;
 
     return newInstance;
@@ -100,6 +109,7 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
         model: model,
         app: app,
         appCheck: appCheck,
+        auth: auth,
         location: location,
         safetySettings: safetySettings,
         generationConfig: generationConfig,

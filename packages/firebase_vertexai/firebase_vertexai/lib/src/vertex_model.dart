@@ -41,6 +41,7 @@ final class GenerativeModel {
     required String location,
     required FirebaseApp app,
     FirebaseAppCheck? appCheck,
+    FirebaseAuth? auth,
     List<SafetySetting>? safetySettings,
     GenerationConfig? generationConfig,
     List<Tool>? tools,
@@ -51,7 +52,7 @@ final class GenerativeModel {
           model: _normalizeModelName(model),
           apiKey: app.options.apiKey,
           baseUri: _vertexUri(app, location),
-          requestHeaders: _appCheckToken(appCheck),
+          requestHeaders: _firebaseTokens(appCheck, auth),
           safetySettings: safetySettings != null
               ? safetySettings
                   .map((setting) => setting._toGoogleAISafetySetting())
@@ -90,16 +91,22 @@ final class GenerativeModel {
     }
   }
 
-  static FutureOr<Map<String, String>> Function() _appCheckToken(
-      FirebaseAppCheck? appCheck) {
+  static FutureOr<Map<String, String>> Function() _firebaseTokens(
+      FirebaseAppCheck? appCheck, FirebaseAuth? auth) {
     return () async {
       Map<String, String> headers = {};
       // Override the client name in Google AI SDK
       headers['x-goog-api-client'] = 'gl-dart/flutter fire/$packageVersion';
       if (appCheck != null) {
-        final token = await appCheck.getToken();
-        if (token != null) {
-          headers['X-Firebase-AppCheck'] = token;
+        final appCheckToken = await appCheck.getToken();
+        if (appCheckToken != null) {
+          headers['X-Firebase-AppCheck'] = appCheckToken;
+        }
+      }
+      if (auth != null) {
+        final idToken = await auth.currentUser?.getIdToken();
+        if (idToken != null) {
+          headers['Authorization'] = idToken;
         }
       }
       return headers;
