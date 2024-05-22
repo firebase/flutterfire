@@ -12,19 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of firebase_vertexai;
+import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
+// ignore: implementation_imports, tightly coupled packages
+import 'package:google_generative_ai/src/vertex_hooks.dart';
+
+import 'vertex_content.dart';
 
 /// Response for Count Tokens
 final class CountTokensResponse {
   /// Constructor
   CountTokensResponse(this.totalTokens, {this.totalBillableCharacters});
-  factory CountTokensResponse._fromGoogleAICountTokensResponse(
-      google_ai.CountTokensResponse countTokensResponse) {
-    return CountTokensResponse(
-      countTokensResponse.totalTokens,
-      totalBillableCharacters: countTokensResponse.totalBillableCharacters,
-    );
-  }
 
   /// The number of tokens that the `model` tokenizes the `prompt` into.
   ///
@@ -35,6 +32,16 @@ final class CountTokensResponse {
   ///
   /// Always non-negative.
   final int? totalBillableCharacters;
+}
+
+/// Conversion utilities for [google_ai.CountTokensResponse].
+extension GoogleAICountTokensResponseConversion
+    on google_ai.CountTokensResponse {
+  /// Returns this response as a [CountTokensResponse].
+  CountTokensResponse toVertex() => CountTokensResponse(
+        totalTokens,
+        totalBillableCharacters: totalBillableCharacters,
+      );
 }
 
 /// Extension on [google_ai.CountTokensResponse] to access extra fields
@@ -50,22 +57,6 @@ final class GenerateContentResponse {
   GenerateContentResponse(this.candidates, this.promptFeedback,
       {this.usageMetadata});
 
-  factory GenerateContentResponse._fromGoogleAIGenerateContentResponse(
-          google_ai.GenerateContentResponse generateContentResponse) =>
-      GenerateContentResponse(
-        generateContentResponse.candidates
-            .map(Candidate._fromGoogleAICandidate)
-            .toList(),
-        generateContentResponse.promptFeedback != null
-            ? PromptFeedback._fromGoogleAIPromptFeedback(
-                generateContentResponse.promptFeedback!)
-            : null,
-        usageMetadata: generateContentResponse.usageMetadata != null
-            ? UsageMetadata._fromGoogleAIUsageMetadata(
-                generateContentResponse.usageMetadata!)
-            : null,
-      );
-
   /// Candidate responses from the model.
   final List<Candidate> candidates;
 
@@ -75,20 +66,7 @@ final class GenerateContentResponse {
   /// Meta data for the response
   final UsageMetadata? usageMetadata;
 
-  /// Converts this response to a [GenerateContentResponse].
-
-  // ignore: unused_element
-  google_ai.GenerateContentResponse _toGoogleAIGenerateContentResponse() =>
-      google_ai.GenerateContentResponse(
-          candidates
-              .map(
-                (candidate) => candidate._toGoogleAICandidate(),
-              )
-              .toList(),
-          promptFeedback?._toGoogleAIPromptFeedback(),
-          usageMetadata: usageMetadata?._toGoogleAIUsageMetadata());
-
-  /// The text content of the text parts of the first of [candidates], if any.
+  /// The text content of the first part of the first of [candidates], if any.
   ///
   /// If the prompt was blocked, or the first candidate was finished for a reason
   /// of [FinishReason.recitation] or [FinishReason.safety], accessing this text
@@ -147,22 +125,30 @@ final class GenerateContentResponse {
       const [];
 }
 
+/// Conversion utilities for [google_ai.GenerateContentResponse].
+extension GoogleAIGenerateContentResponseConversion
+    on google_ai.GenerateContentResponse {
+  /// Returns this response as a [GenerateContentResponse].
+  GenerateContentResponse toVertex() => GenerateContentResponse(
+        candidates.map((c) => c.toVertex()).toList(),
+        promptFeedback?.toVertex(),
+      );
+}
+
 /// Response for Embed Content.
 final class EmbedContentResponse {
   /// Constructor
   EmbedContentResponse(this.embedding);
-  factory EmbedContentResponse._fromGoogleAIEmbedContentResponse(
-          google_ai.EmbedContentResponse embedContentResponse) =>
-      EmbedContentResponse(ContentEmbedding._fromGoogleAIContentEmbedding(
-          embedContentResponse.embedding));
 
   /// The embedding generated from the input content.
   final ContentEmbedding embedding;
+}
 
-  /// Converts this response to a [EmbedContentResponse].
-  // ignore: unused_element
-  google_ai.EmbedContentResponse _toGoogleAIEmbedContentResponse() =>
-      google_ai.EmbedContentResponse(embedding._toGoogleAIContentEmbedding());
+/// Conversion utilities for [google_ai.EmbedContentResponse].
+extension GoogleAIEmbedContentResponseConversion
+    on google_ai.EmbedContentResponse {
+  /// Returns this response as a [EmbedContentResponse].
+  EmbedContentResponse toVertex() => EmbedContentResponse(embedding.toVertex());
 }
 
 /// Response for Embed Content in batch.
@@ -170,15 +156,17 @@ final class BatchEmbedContentsResponse {
   /// Constructor
   BatchEmbedContentsResponse(this.embeddings);
 
-  factory BatchEmbedContentsResponse._fromGoogleAIBatchEmbedContentsResponse(
-          google_ai.BatchEmbedContentsResponse embedContentResponse) =>
-      BatchEmbedContentsResponse(embedContentResponse.embeddings
-          .map(ContentEmbedding._fromGoogleAIContentEmbedding)
-          .toList());
-
   /// The embeddings generated from the input content for each request, in the
   /// same order as provided in the batch request.
   final List<ContentEmbedding> embeddings;
+}
+
+/// Conversion utilities for [google_ai.BatchEmbedContentsResponse].
+extension GoogleAIBatchEmbedContentsResponseConversion
+    on google_ai.BatchEmbedContentsResponse {
+  /// Returns this response as a [BatchEmbedContentsResponse].
+  BatchEmbedContentsResponse toVertex() =>
+      BatchEmbedContentsResponse(embeddings.map((e) => e.toVertex()).toList());
 }
 
 /// Request for Embed Content.
@@ -205,47 +193,35 @@ final class EmbedContentRequest {
         if (title != null) 'title': title,
         if (model ?? defaultModel case final model?) 'model': model,
       };
+}
 
+/// Conversion utilities for [EmbedContentRequest].
+extension EmbedContentRequestConversion on EmbedContentRequest {
   /// Converts this response to a [EmbedContentResponse].
-  // ignore: unused_element
-  google_ai.EmbedContentRequest _toGoogleAIEmbedContentRequest() =>
-      google_ai.EmbedContentRequest(content._toGoogleAIContent(),
-          taskType: taskType?._toGoogleAITaskType(),
-          title: title,
-          model: model);
+  google_ai.EmbedContentRequest toGoogleAI() =>
+      google_ai.EmbedContentRequest(content.toGoogleAI(),
+          taskType: taskType?.toGoogleAI(), title: title, model: model);
 }
 
 /// An embedding, as defined by a list of values.
 final class ContentEmbedding {
   /// Constructor
   ContentEmbedding(this.values);
-  factory ContentEmbedding._fromGoogleAIContentEmbedding(
-          google_ai.ContentEmbedding contentEmbedding) =>
-      ContentEmbedding(contentEmbedding.values);
 
   /// The embedding values.
   final List<double> values;
+}
 
-  /// Converts this embedding to a [google_ai.ContentEmbedding].
-  google_ai.ContentEmbedding _toGoogleAIContentEmbedding() =>
-      google_ai.ContentEmbedding(values);
+/// Conversion utilities for [google_ai.ContentEmbedding].
+extension GoogleAIContentEmbeddingConversion on google_ai.ContentEmbedding {
+  /// Returns this embedding as a [ContentEmbedding].
+  ContentEmbedding toVertex() => ContentEmbedding(values);
 }
 
 /// Feedback metadata of a prompt specified in a [GenerativeModel] request.
 final class PromptFeedback {
   /// Constructor
   PromptFeedback(this.blockReason, this.blockReasonMessage, this.safetyRatings);
-  factory PromptFeedback._fromGoogleAIPromptFeedback(
-          google_ai.PromptFeedback promptFeedback) =>
-      PromptFeedback(
-        promptFeedback.blockReason != null
-            ? BlockReason._fromGoogleAIBlockReason(promptFeedback.blockReason!)
-            : null,
-        promptFeedback.blockReasonMessage,
-        promptFeedback.safetyRatings
-            .map(SafetyRating._fromGoogleAISafetyRating)
-            .toList(),
-      );
 
   /// If set, the prompt was blocked and no candidates are returned.
   ///
@@ -259,15 +235,49 @@ final class PromptFeedback {
   ///
   /// There is at most one rating per category.
   final List<SafetyRating> safetyRatings;
+}
 
-  /// Converts this feedback to a [google_ai.PromptFeedback].
-  google_ai.PromptFeedback _toGoogleAIPromptFeedback() =>
-      google_ai.PromptFeedback(
-        blockReason?._toGoogleAIBlockReason(),
+/// Conversion utilities for [google_ai.PromptFeedback].
+extension GoogleAIPromptFeedback on google_ai.PromptFeedback {
+  /// Returns this feedback a [PromptFeedback].
+  PromptFeedback toVertex() => PromptFeedback(
+        blockReason?.toVertex(),
         blockReasonMessage,
-        safetyRatings
-            .map((safetyRating) => safetyRating._toGoogleAISafetyRating())
-            .toList(),
+        safetyRatings.map((r) => r.toVertex()).toList(),
+      );
+}
+
+/// Metadata on the generation request's token usage.
+final class UsageMetadata {
+  /// Constructor
+  UsageMetadata({
+    this.promptTokenCount,
+    this.candidatesTokenCount,
+    this.totalTokenCount,
+  });
+
+  factory UsageMetadata._fromGoogleAIUsageMetadata(
+          google_ai.UsageMetadata usageMetadata) =>
+      UsageMetadata(
+        promptTokenCount: usageMetadata.promptTokenCount,
+        candidatesTokenCount: usageMetadata.candidatesTokenCount,
+        totalTokenCount: usageMetadata.totalTokenCount,
+      );
+
+  /// Number of tokens in the prompt.
+  final int? promptTokenCount;
+
+  /// Total number of tokens across the generated candidates.
+  final int? candidatesTokenCount;
+
+  /// Total token count for the generation request (prompt + candidates).
+  final int? totalTokenCount;
+
+  /// Converts this metadata to a [google_ai.UsageMetadata].
+  google_ai.UsageMetadata _toGoogleAIUsageMetadata() => google_ai.UsageMetadata(
+        promptTokenCount: promptTokenCount,
+        candidatesTokenCount: candidatesTokenCount,
+        totalTokenCount: totalTokenCount,
       );
 }
 
@@ -311,20 +321,6 @@ final class Candidate {
   /// Constructor
   Candidate(this.content, this.safetyRatings, this.citationMetadata,
       this.finishReason, this.finishMessage);
-  factory Candidate._fromGoogleAICandidate(google_ai.Candidate candidate) =>
-      Candidate(
-          Content._fromGoogleAIContent(candidate.content),
-          candidate.safetyRatings
-              ?.map(SafetyRating._fromGoogleAISafetyRating)
-              .toList(),
-          candidate.citationMetadata != null
-              ? CitationMetadata._fromGoogleAICitationMetadata(
-                  candidate.citationMetadata!)
-              : null,
-          candidate.finishReason != null
-              ? FinishReason._fromGoogleAIFinishReason(candidate.finishReason!)
-              : null,
-          candidate.finishMessage);
 
   /// Generated content returned from the model.
   final Content content;
@@ -348,12 +344,16 @@ final class Candidate {
 
   /// Message for finish reason.
   final String? finishMessage;
+}
 
-  google_ai.Candidate _toGoogleAICandidate() => google_ai.Candidate(
-        content._toGoogleAIContent(),
-        safetyRatings?.map((s) => s._toGoogleAISafetyRating()).toList(),
-        citationMetadata?._toGoogleAICitationMetadata(),
-        finishReason?._toGoogleAIFinishReason(),
+/// Conversion utilities for [google_ai.Candidate].
+extension GooglAICandidateConversion on google_ai.Candidate {
+  /// Returns this candidate as a [Candidate].
+  Candidate toVertex() => Candidate(
+        content.toVertex(),
+        safetyRatings?.map((r) => r.toVertex()).toList(),
+        citationMetadata?.toVertex(),
+        finishReason?.toVertex(),
         finishMessage,
       );
 }
@@ -367,23 +367,19 @@ final class Candidate {
 final class SafetyRating {
   /// Constructor
   SafetyRating(this.category, this.probability);
-  factory SafetyRating._fromGoogleAISafetyRating(
-          google_ai.SafetyRating safetyRating) =>
-      SafetyRating(
-          HarmCategory._fromGoogleAIHarmCategory(safetyRating.category),
-          HarmProbability._fromGoogleAIHarmProbability(
-              safetyRating.probability));
 
   /// The category for this rating.
   final HarmCategory category;
 
   /// The probability of harm for this content.
   final HarmProbability probability;
+}
 
-  /// Converts this rating to a [google_ai.SafetyRating].
-  google_ai.SafetyRating _toGoogleAISafetyRating() => google_ai.SafetyRating(
-      category._toGoogleAIHarmCategory(),
-      probability._toGoogleAIHarmProbability());
+/// Conversion utilities for [google_ai.SafetyRating].
+extension GoogleAISafetyRatingConversion on google_ai.SafetyRating {
+  /// Returns this safety rating as a [SafetyRating].
+  SafetyRating toVertex() =>
+      SafetyRating(category.toVertex(), probability.toVertex());
 }
 
 /// The reason why a prompt was blocked.
@@ -412,25 +408,6 @@ enum BlockReason {
     };
   }
 
-  static BlockReason _fromGoogleAIBlockReason(
-      google_ai.BlockReason googleAIBlockReason) {
-    return switch (googleAIBlockReason) {
-      google_ai.BlockReason.unspecified => BlockReason.unspecified,
-      google_ai.BlockReason.safety => BlockReason.safety,
-      google_ai.BlockReason.other => BlockReason.other,
-    };
-  }
-
-  /// Converts this blocking reason to a [google_ai.BlockReason].
-
-  google_ai.BlockReason _toGoogleAIBlockReason() {
-    return switch (this) {
-      BlockReason.unspecified => google_ai.BlockReason.unspecified,
-      BlockReason.safety => google_ai.BlockReason.safety,
-      BlockReason.other => google_ai.BlockReason.other
-    };
-  }
-
   final String _jsonString;
 
   /// Convert to json format
@@ -438,6 +415,16 @@ enum BlockReason {
 
   @override
   String toString() => name;
+}
+
+/// Conversion utilities for [google_ai.BlockReason].
+extension GoogleAIBlockReasonConversion on google_ai.BlockReason {
+  /// Returns this block reason as a [BlockReason].
+  BlockReason toVertex() => switch (this) {
+        google_ai.BlockReason.unspecified => BlockReason.unspecified,
+        google_ai.BlockReason.safety => BlockReason.safety,
+        google_ai.BlockReason.other => BlockReason.other,
+      };
 }
 
 /// The category of a rating.
@@ -463,16 +450,6 @@ enum HarmCategory {
   dangerousContent('HARM_CATEGORY_DANGEROUS_CONTENT');
 
   const HarmCategory(this._jsonString);
-  factory HarmCategory._fromGoogleAIHarmCategory(
-      google_ai.HarmCategory harmCategory) {
-    return switch (harmCategory) {
-      google_ai.HarmCategory.unspecified => HarmCategory.unspecified,
-      google_ai.HarmCategory.harassment => HarmCategory.harassment,
-      google_ai.HarmCategory.hateSpeech => HarmCategory.hateSpeech,
-      google_ai.HarmCategory.sexuallyExplicit => HarmCategory.sexuallyExplicit,
-      google_ai.HarmCategory.dangerousContent => HarmCategory.dangerousContent,
-    };
-  }
   static HarmCategory _parseValue(Object jsonObject) {
     return switch (jsonObject) {
       'HARM_CATEGORY_UNSPECIFIED' => HarmCategory.unspecified,
@@ -491,10 +468,26 @@ enum HarmCategory {
 
   /// Convert to json format.
   String toJson() => _jsonString;
+}
 
-  /// Converts this harm category to a [google_ai.HarmCategory].
+/// Conversion utilities for [google_ai.HarmCategory].
+extension GoogleAIHarmCategoryConversion on google_ai.HarmCategory {
+  /// Returns this harm category as a [HarmCategory].
+  HarmCategory toVertex() => switch (this) {
+        google_ai.HarmCategory.unspecified => HarmCategory.unspecified,
+        google_ai.HarmCategory.harassment => HarmCategory.harassment,
+        google_ai.HarmCategory.hateSpeech => HarmCategory.hateSpeech,
+        google_ai.HarmCategory.sexuallyExplicit =>
+          HarmCategory.sexuallyExplicit,
+        google_ai.HarmCategory.dangerousContent =>
+          HarmCategory.dangerousContent,
+      };
+}
 
-  google_ai.HarmCategory _toGoogleAIHarmCategory() {
+/// Conversion utilities for [HarmCategory].
+extension HarmCategoryConversion on HarmCategory {
+  /// Returns this harm category as a [google_ai.HarmCategory].
+  google_ai.HarmCategory toGoogleAI() {
     return switch (this) {
       HarmCategory.unspecified => google_ai.HarmCategory.unspecified,
       HarmCategory.harassment => google_ai.HarmCategory.harassment,
@@ -527,16 +520,6 @@ enum HarmProbability {
 
   const HarmProbability(this._jsonString);
 
-  factory HarmProbability._fromGoogleAIHarmProbability(
-      google_ai.HarmProbability harmProbability) {
-    return switch (harmProbability) {
-      google_ai.HarmProbability.unspecified => HarmProbability.unspecified,
-      google_ai.HarmProbability.negligible => HarmProbability.negligible,
-      google_ai.HarmProbability.low => HarmProbability.low,
-      google_ai.HarmProbability.medium => HarmProbability.medium,
-      google_ai.HarmProbability.high => HarmProbability.high,
-    };
-  }
   static HarmProbability _parseValue(Object jsonObject) {
     return switch (jsonObject) {
       'UNSPECIFIED' => HarmProbability.unspecified,
@@ -549,16 +532,6 @@ enum HarmProbability {
     };
   }
 
-  google_ai.HarmProbability _toGoogleAIHarmProbability() {
-    return switch (this) {
-      HarmProbability.unspecified => google_ai.HarmProbability.unspecified,
-      HarmProbability.negligible => google_ai.HarmProbability.negligible,
-      HarmProbability.low => google_ai.HarmProbability.low,
-      HarmProbability.medium => google_ai.HarmProbability.medium,
-      HarmProbability.high => google_ai.HarmProbability.high,
-    };
-  }
-
   final String _jsonString;
 
   /// Convert to json format.
@@ -568,32 +541,38 @@ enum HarmProbability {
   String toString() => name;
 }
 
+/// Conversion utilities for [google_ai.HarmProbability].
+extension GoogleAIHarmProbabilityConverison on google_ai.HarmProbability {
+  /// Returns this harm probability as a [HarmProbability].
+  HarmProbability toVertex() => switch (this) {
+        google_ai.HarmProbability.unspecified => HarmProbability.unspecified,
+        google_ai.HarmProbability.negligible => HarmProbability.negligible,
+        google_ai.HarmProbability.low => HarmProbability.low,
+        google_ai.HarmProbability.medium => HarmProbability.medium,
+        google_ai.HarmProbability.high => HarmProbability.high,
+      };
+}
+
 /// Source attributions for a piece of content.
 final class CitationMetadata {
   /// Constructor
   CitationMetadata(this.citationSources);
-  factory CitationMetadata._fromGoogleAICitationMetadata(
-          google_ai.CitationMetadata citationMetadata) =>
-      CitationMetadata(citationMetadata.citationSources
-          .map(CitationSource._fromGoogleAICitationSource)
-          .toList());
 
   /// Citations to sources for a specific response.
   final List<CitationSource> citationSources;
+}
 
-  google_ai.CitationMetadata _toGoogleAICitationMetadata() =>
-      google_ai.CitationMetadata(
-          citationSources.map((e) => e._toGoogleAICitationSource()).toList());
+/// Conversion utilities for [google_ai.CitationMetadata].
+extension GoogleAICitationMetadataConversion on google_ai.CitationMetadata {
+  /// Returns this citation metadata as a [CitationMetadata].
+  CitationMetadata toVertex() =>
+      CitationMetadata(citationSources.map((s) => s.toVertex()).toList());
 }
 
 /// Citation to a source for a portion of a specific response.
 final class CitationSource {
   /// Constructor
   CitationSource(this.startIndex, this.endIndex, this.uri, this.license);
-  factory CitationSource._fromGoogleAICitationSource(
-          google_ai.CitationSource source) =>
-      CitationSource(
-          source.startIndex, source.endIndex, source.uri, source.license);
 
   /// Start of segment of the response that is attributed to this source.
   ///
@@ -610,9 +589,13 @@ final class CitationSource {
   ///
   /// License info is required for code citations.
   final String? license;
+}
 
-  google_ai.CitationSource _toGoogleAICitationSource() =>
-      google_ai.CitationSource(startIndex, endIndex, uri, license);
+/// Conversion utilities for [google_ai.CitationSource].
+extension GoogleAICitationSourceConversion on google_ai.CitationSource {
+  /// Returns this citation source as a [CitationSource].
+  CitationSource toVertex() =>
+      CitationSource(startIndex, endIndex, uri, license);
 }
 
 /// Reason why a model stopped generating tokens.
@@ -639,29 +622,6 @@ enum FinishReason {
 
   const FinishReason(this._jsonString);
 
-  factory FinishReason._fromGoogleAIFinishReason(
-      google_ai.FinishReason finishReason) {
-    return switch (finishReason) {
-      google_ai.FinishReason.unspecified => FinishReason.unspecified,
-      google_ai.FinishReason.stop => FinishReason.stop,
-      google_ai.FinishReason.maxTokens => FinishReason.maxTokens,
-      google_ai.FinishReason.safety => FinishReason.safety,
-      google_ai.FinishReason.recitation => FinishReason.recitation,
-      google_ai.FinishReason.other => FinishReason.other,
-    };
-  }
-
-  google_ai.FinishReason _toGoogleAIFinishReason() {
-    return switch (this) {
-      FinishReason.unspecified => google_ai.FinishReason.unspecified,
-      FinishReason.stop => google_ai.FinishReason.stop,
-      FinishReason.maxTokens => google_ai.FinishReason.maxTokens,
-      FinishReason.safety => google_ai.FinishReason.safety,
-      FinishReason.recitation => google_ai.FinishReason.recitation,
-      FinishReason.other => google_ai.FinishReason.other,
-    };
-  }
-
   final String _jsonString;
 
   /// Convert to json format
@@ -683,6 +643,19 @@ enum FinishReason {
   String toString() => name;
 }
 
+/// Conversion utilities for [google_ai.FinishReason].
+extension GoogleAIFinishReasonConversion on google_ai.FinishReason {
+  /// Returns this finish reason as a [FinishReason].
+  FinishReason toVertex() => switch (this) {
+        google_ai.FinishReason.unspecified => FinishReason.unspecified,
+        google_ai.FinishReason.stop => FinishReason.stop,
+        google_ai.FinishReason.maxTokens => FinishReason.maxTokens,
+        google_ai.FinishReason.safety => FinishReason.safety,
+        google_ai.FinishReason.recitation => FinishReason.recitation,
+        google_ai.FinishReason.other => FinishReason.other,
+      };
+}
+
 /// Safety setting, affecting the safety-blocking behavior.
 ///
 /// Passing a safety setting for a category changes the allowed probability that
@@ -694,7 +667,7 @@ final class SafetySetting {
   factory SafetySetting._fromGoogleAISafetySetting(
           google_ai.SafetySetting setting) =>
       SafetySetting(
-          HarmCategory._fromGoogleAIHarmCategory(setting.category),
+          setting.category.toVertex(),
           HarmBlockThreshold._fromGoogleAIHarmBlockThreshold(
               setting.threshold));
 
@@ -704,13 +677,16 @@ final class SafetySetting {
   /// Controls the probability threshold at which harm is blocked.
   final HarmBlockThreshold threshold;
 
-  google_ai.SafetySetting _toGoogleAISafetySetting() => google_ai.SafetySetting(
-      category._toGoogleAIHarmCategory(),
-      threshold._toGoogleAIHarmBlockThreshold());
-
   /// Convert to json format.
   Object toJson() =>
       {'category': category.toJson(), 'threshold': threshold.toJson()};
+}
+
+/// Conversion utilities for [SafetySetting].
+extension SafetySettingConversion on SafetySetting {
+  /// Returns this safety setting as a [google_ai.SafetySetting].
+  google_ai.SafetySetting toGoogleAI() =>
+      google_ai.SafetySetting(category.toGoogleAI(), threshold.toGoogleAI());
 }
 
 /// Probability of harm which causes content to be blocked.
@@ -760,7 +736,17 @@ enum HarmBlockThreshold {
 
   final String _jsonString;
 
-  google_ai.HarmBlockThreshold _toGoogleAIHarmBlockThreshold() {
+  @override
+  String toString() => name;
+
+  /// Convert to json format.
+  Object toJson() => _jsonString;
+}
+
+/// Conversion utilities for [HarmBlockThreshold].
+extension HarmBlockThresholdConversion on HarmBlockThreshold {
+  /// Returns this block threshold as a [toGoogleAI()].
+  google_ai.HarmBlockThreshold toGoogleAI() {
     return switch (this) {
       HarmBlockThreshold.unspecified =>
         google_ai.HarmBlockThreshold.unspecified,
@@ -770,12 +756,19 @@ enum HarmBlockThreshold {
       HarmBlockThreshold.none => google_ai.HarmBlockThreshold.none,
     };
   }
+}
 
-  @override
-  String toString() => name;
-
-  /// Convert to json format.
-  Object toJson() => _jsonString;
+/// Conversion utilities for [google_ai.HarmBlockThreshold].
+extension GoogleAIHarmBlockThresholdConversion on google_ai.HarmBlockThreshold {
+  /// Returns this harm block threshold as a [HarmBlockThreshold].
+  HarmBlockThreshold toVertex() => switch (this) {
+        google_ai.HarmBlockThreshold.unspecified =>
+          HarmBlockThreshold.unspecified,
+        google_ai.HarmBlockThreshold.low => HarmBlockThreshold.low,
+        google_ai.HarmBlockThreshold.medium => HarmBlockThreshold.medium,
+        google_ai.HarmBlockThreshold.high => HarmBlockThreshold.high,
+        google_ai.HarmBlockThreshold.none => HarmBlockThreshold.none,
+      };
 }
 
 /// Configuration options for model generation and outputs.
@@ -867,9 +860,12 @@ final class GenerationConfig {
         if (responseMimeType case final responseMimeType?)
           'responseMimeType': responseMimeType,
       };
+}
 
-  google_ai.GenerationConfig _toGoogleAIGenerationConfig() =>
-      google_ai.GenerationConfig(
+/// Conversion utilities for [GenerationConfig].
+extension GenerationConfigConversion on GenerationConfig {
+  /// Returns this generation config as a [google_ai.GenerationConfig].
+  google_ai.GenerationConfig toGoogleAI() => google_ai.GenerationConfig(
         candidateCount: candidateCount,
         stopSequences: stopSequences,
         maxOutputTokens: maxOutputTokens,
@@ -930,16 +926,19 @@ enum TaskType {
 
   /// Convert to json format
   Object toJson() => _jsonString;
-  google_ai.TaskType _toGoogleAITaskType() {
-    return switch (this) {
-      TaskType.unspecified => google_ai.TaskType.unspecified,
-      TaskType.retrievalQuery => google_ai.TaskType.retrievalQuery,
-      TaskType.retrievalDocument => google_ai.TaskType.retrievalDocument,
-      TaskType.semanticSimilarity => google_ai.TaskType.semanticSimilarity,
-      TaskType.classification => google_ai.TaskType.classification,
-      TaskType.clustering => google_ai.TaskType.clustering,
-    };
-  }
+}
+
+/// Conversion utilities for [TaskType].
+extension TaskTypeConversion on TaskType {
+  /// Returns this task type as a [google_ai.TaskType].
+  google_ai.TaskType toGoogleAI() => switch (this) {
+        TaskType.unspecified => google_ai.TaskType.unspecified,
+        TaskType.retrievalQuery => google_ai.TaskType.retrievalQuery,
+        TaskType.retrievalDocument => google_ai.TaskType.retrievalDocument,
+        TaskType.semanticSimilarity => google_ai.TaskType.semanticSimilarity,
+        TaskType.classification => google_ai.TaskType.classification,
+        TaskType.clustering => google_ai.TaskType.clustering,
+      };
 }
 
 /// Parse to [GenerateContentResponse] from json object.

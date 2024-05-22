@@ -1,3 +1,7 @@
+## 10.5.6
+
+ - **FIX**(database): sorting was not applied when database child changed. ([#12664](https://github.com/firebase/flutterfire/issues/12664)). ([c074de28](https://github.com/firebase/flutterfire/commit/c074de287f755a7157bcb494b219cec14ef57f7b))
+
 ## 10.5.5
 
  - **FIX**(database,web): Stop transaction & stream handling exceptions from throwing twice ([#12706](https://github.com/firebase/flutterfire/issues/12706)). ([9b3244f7](https://github.com/firebase/flutterfire/commit/9b3244f7f328095fd5887aac25debe77ecf3e569))
