@@ -281,40 +281,6 @@ final class UsageMetadata {
       );
 }
 
-/// Metadata on the generation request's token usage.
-final class UsageMetadata {
-  /// Constructor
-  UsageMetadata({
-    this.promptTokenCount,
-    this.candidatesTokenCount,
-    this.totalTokenCount,
-  });
-
-  factory UsageMetadata._fromGoogleAIUsageMetadata(
-          google_ai.UsageMetadata usageMetadata) =>
-      UsageMetadata(
-        promptTokenCount: usageMetadata.promptTokenCount,
-        candidatesTokenCount: usageMetadata.candidatesTokenCount,
-        totalTokenCount: usageMetadata.totalTokenCount,
-      );
-
-  /// Number of tokens in the prompt.
-  final int? promptTokenCount;
-
-  /// Total number of tokens across the generated candidates.
-  final int? candidatesTokenCount;
-
-  /// Total token count for the generation request (prompt + candidates).
-  final int? totalTokenCount;
-
-  /// Converts this metadata to a [google_ai.UsageMetadata].
-  google_ai.UsageMetadata _toGoogleAIUsageMetadata() => google_ai.UsageMetadata(
-        promptTokenCount: promptTokenCount,
-        candidatesTokenCount: candidatesTokenCount,
-        totalTokenCount: totalTokenCount,
-      );
-}
-
 /// Response candidate generated from a [GenerativeModel].
 final class Candidate {
   // TODO: token count?
