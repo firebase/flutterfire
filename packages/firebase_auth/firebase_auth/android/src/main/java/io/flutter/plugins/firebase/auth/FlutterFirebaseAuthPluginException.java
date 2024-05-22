@@ -66,9 +66,6 @@ public class FlutterFirebaseAuthPluginException {
           multiFactorException.getErrorCode(), multiFactorException.getLocalizedMessage(), output);
     }
 
-    if (nativeException instanceof ExecutionException) {
-      return FlutterFirebaseAuthPluginException.noSuchProvider();
-    }
 
     if (nativeException instanceof FirebaseNetworkException
         || (nativeException.getCause() != null
