@@ -258,8 +258,7 @@ void setupReferenceTests() {
           );
 
           expect(complete.metadata?.size, text.length);
-          // Metadata isn't saved on objects when using the emulator which fails test
-          // expect(complete.metadata?.contentLanguage, 'en');
+          expect(complete.metadata?.contentLanguage, 'en');
 
           // Download the file from Firebase Storage
           final downloadedData = await ref.getData();
@@ -332,15 +331,15 @@ void setupReferenceTests() {
               file,
               SettableMetadata(
                 contentLanguage: 'en',
+                contentType: 'text/plain',
                 customMetadata: <String, String>{'activity': 'test'},
               ),
             );
-
+            // metadata.contentType appears as application/octet-stream if not set. contentType is not inferred on emulator
             expect(complete.metadata?.size, kTestString.length);
-            // Metadata isn't saved on objects when using the emulator which fails test
-            // expect(complete.metadata?.contentLanguage, 'en');
-            // expect(complete.metadata?.customMetadata!['activity'], 'test');
-
+            expect(complete.metadata?.contentLanguage, 'en');
+            expect(complete.metadata?.customMetadata!['activity'], 'test');
+            expect(complete.metadata?.contentType, 'text/plain');
             // Check without SettableMetadata
             final Reference ref2 =
                 storage.ref('flutter-tests').child('flt-ok-2.txt');
@@ -348,6 +347,7 @@ void setupReferenceTests() {
               file,
             );
             expect(complete2.metadata?.size, kTestString.length);
+            expect(complete2.metadata?.customMetadata, isA<Map>());
           },
           // putFile is not supported on the web platform.
           skip: kIsWeb,

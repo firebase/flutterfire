@@ -251,25 +251,38 @@ class UploadMetadata
     extends _UploadMetadataBase<storage_interop.UploadMetadataJsImpl> {
   /// Creates a new UploadMetadata with optional metadata parameters.
   factory UploadMetadata(
-          {String? md5Hash,
-          String? cacheControl,
-          String? contentDisposition,
-          String? contentEncoding,
-          String? contentLanguage,
-          String? contentType,
-          Map<String, String>? customMetadata}) =>
-      UploadMetadata.fromJsObject(
-        storage_interop.UploadMetadataJsImpl(
-          md5Hash: md5Hash?.toJS,
-          cacheControl: cacheControl?.toJS,
-          contentDisposition: contentDisposition?.toJS,
-          contentEncoding: contentEncoding?.toJS,
-          contentLanguage: contentLanguage?.toJS,
-          contentType: contentType?.toJS,
-          customMetadata:
-              (customMetadata != null) ? customMetadata.jsify() : null,
-        ),
-      );
+      {String? md5Hash,
+      String? cacheControl,
+      String? contentDisposition,
+      String? contentEncoding,
+      String? contentLanguage,
+      String? contentType,
+      Map<String, String>? customMetadata}) {
+    final metadata = storage_interop.UploadMetadataJsImpl();
+
+    if (md5Hash != null) {
+      metadata.md5Hash = md5Hash.toJS;
+    }
+    if (cacheControl != null) {
+      metadata.cacheControl = cacheControl.toJS;
+    }
+    if (contentDisposition != null) {
+      metadata.contentDisposition = contentDisposition.toJS;
+    }
+    if (contentEncoding != null) {
+      metadata.contentEncoding = contentEncoding.toJS;
+    }
+    if (contentLanguage != null) {
+      metadata.contentLanguage = contentLanguage.toJS;
+    }
+    if (contentType != null) {
+      metadata.contentType = contentType.toJS;
+    }
+    if (customMetadata != null) {
+      metadata.customMetadata = customMetadata.jsify();
+    }
+    return UploadMetadata.fromJsObject(metadata);
+  }
 
   /// Creates a new UploadMetadata from a [jsObject].
   UploadMetadata.fromJsObject(storage_interop.UploadMetadataJsImpl jsObject)
@@ -437,20 +450,34 @@ class SettableMetadata
     extends _SettableMetadataBase<storage_interop.SettableMetadataJsImpl> {
   /// Creates a new SettableMetadata with optional metadata parameters.
   factory SettableMetadata(
-          {String? cacheControl,
-          String? contentDisposition,
-          String? contentEncoding,
-          String? contentLanguage,
-          String? contentType,
-          Map? customMetadata}) =>
-      SettableMetadata.fromJsObject(storage_interop.SettableMetadataJsImpl(
-          cacheControl: cacheControl?.toJS,
-          contentDisposition: contentDisposition?.toJS,
-          contentEncoding: contentEncoding?.toJS,
-          contentLanguage: contentLanguage?.toJS,
-          contentType: contentType?.toJS,
-          customMetadata:
-              (customMetadata != null) ? customMetadata.jsify() : null));
+      {String? cacheControl,
+      String? contentDisposition,
+      String? contentEncoding,
+      String? contentLanguage,
+      String? contentType,
+      Map? customMetadata}) {
+    final metadata = storage_interop.SettableMetadataJsImpl();
+
+    if (cacheControl != null) {
+      metadata.cacheControl = cacheControl.toJS;
+    }
+    if (contentDisposition != null) {
+      metadata.contentDisposition = contentDisposition.toJS;
+    }
+    if (contentEncoding != null) {
+      metadata.contentEncoding = contentEncoding.toJS;
+    }
+    if (contentLanguage != null) {
+      metadata.contentLanguage = contentLanguage.toJS;
+    }
+    if (contentType != null) {
+      metadata.contentType = contentType.toJS;
+    }
+    if (customMetadata != null) {
+      metadata.customMetadata = customMetadata.jsify();
+    }
+    return SettableMetadata.fromJsObject(metadata);
+  }
 
   /// Creates a new SettableMetadata from a [jsObject].
   SettableMetadata.fromJsObject(storage_interop.SettableMetadataJsImpl jsObject)
