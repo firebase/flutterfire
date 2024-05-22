@@ -137,7 +137,7 @@ final class EmbedContentResponse {
 }
 
 /// Conversion utilities for [google_ai.EmbedContentResponse].
-extension GoogleAIEmbedContentResponseConvesion
+extension GoogleAIEmbedContentResponseConversion
     on google_ai.EmbedContentResponse {
   /// Returns this response as a [EmbedContentResponse].
   EmbedContentResponse toVertex() => EmbedContentResponse(embedding.toVertex());
