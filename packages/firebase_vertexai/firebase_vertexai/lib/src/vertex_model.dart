@@ -14,7 +14,19 @@
 
 // ignore_for_file: use_late_for_private_fields_and_variables
 
-part of firebase_vertexai;
+import 'dart:async';
+
+import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
+// ignore: implementation_imports, tightly coupled packages
+import 'package:google_generative_ai/src/vertex_hooks.dart';
+
+import 'vertex_api.dart';
+import 'vertex_content.dart';
+import 'vertex_function_calling.dart';
+import 'vertex_version.dart';
 
 const _baseUrl = 'firebaseml.googleapis.com';
 const _apiVersion = 'v2beta';
@@ -54,16 +66,14 @@ final class GenerativeModel {
           baseUri: _vertexUri(app, location),
           requestHeaders: _firebaseTokens(appCheck, auth),
           safetySettings: safetySettings != null
-              ? safetySettings
-                  .map((setting) => setting._toGoogleAISafetySetting())
-                  .toList()
+              ? safetySettings.map((setting) => setting.toGoogleAI()).toList()
               : [],
-          generationConfig: generationConfig?._toGoogleAIGenerationConfig(),
-          systemInstruction: systemInstruction?._toGoogleAIContent(),
+          generationConfig: generationConfig?.toGoogleAI(),
+          systemInstruction: systemInstruction?.toGoogleAI(),
           tools: tools != null
-              ? tools.map((tool) => tool._toGoogleAITool()).toList()
+              ? tools.map((tool) => tool.toGoogleAI()).toList()
               : [],
-          toolConfig: toolConfig?._toGoogleAIToolConfig(),
+          toolConfig: toolConfig?.toGoogleAI(),
         );
   final FirebaseApp _firebaseApp;
   final google_ai.GenerativeModel _googleAIModel;
@@ -87,7 +97,7 @@ final class GenerativeModel {
     if (config == null) {
       return google_ai.GenerationConfig();
     } else {
-      return config._toGoogleAIGenerationConfig();
+      return config.toGoogleAI();
     }
   }
 
@@ -113,11 +123,6 @@ final class GenerativeModel {
     };
   }
 
-  static google_ai.GenerationConfig? _googleAIGenerationConfig(
-      GenerationConfig? config) {
-    return config?._toGoogleAIGenerationConfig();
-  }
-
   /// Generates content responding to [prompt].
   ///
   /// Sends a "generateContent" API request for the configured model,
@@ -132,18 +137,15 @@ final class GenerativeModel {
       {List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig}) async {
     Iterable<google_ai.Content> googlePrompt =
-        prompt.map((content) => content._toGoogleAIContent());
+        prompt.map((content) => content.toGoogleAI());
     List<google_ai.SafetySetting> googleSafetySettings = safetySettings != null
-        ? safetySettings
-            .map((setting) => setting._toGoogleAISafetySetting())
-            .toList()
+        ? safetySettings.map((setting) => setting.toGoogleAI()).toList()
         : [];
-    return _googleAIModel
-        .generateContent(googlePrompt,
-            safetySettings: googleSafetySettings,
-            generationConfig:
-                _convertGenerationConfig(generationConfig, _firebaseApp))
-        .then(GenerateContentResponse._fromGoogleAIGenerateContentResponse);
+    final response = await _googleAIModel.generateContent(googlePrompt,
+        safetySettings: googleSafetySettings,
+        generationConfig:
+            _convertGenerationConfig(generationConfig, _firebaseApp));
+    return response.toVertex();
   }
 
   /// Generates a stream of content responding to [prompt].
@@ -163,15 +165,12 @@ final class GenerativeModel {
       {List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig}) {
     return _googleAIModel
-        .generateContentStream(
-            prompt.map((content) => content._toGoogleAIContent()),
+        .generateContentStream(prompt.map((content) => content.toGoogleAI()),
             safetySettings: safetySettings != null
-                ? safetySettings
-                    .map((setting) => setting._toGoogleAISafetySetting())
-                    .toList()
+                ? safetySettings.map((setting) => setting.toGoogleAI()).toList()
                 : [],
-            generationConfig: generationConfig?._toGoogleAIGenerationConfig())
-        .map(GenerateContentResponse._fromGoogleAIGenerateContentResponse);
+            generationConfig: generationConfig?.toGoogleAI())
+        .map((r) => r.toVertex());
   }
 
   /// Counts the total number of tokens in [contents].
@@ -193,8 +192,8 @@ final class GenerativeModel {
   /// ```
   Future<CountTokensResponse> countTokens(Iterable<Content> contents) async {
     return _googleAIModel
-        .countTokens(contents.map((e) => e._toGoogleAIContent()))
-        .then(CountTokensResponse._fromGoogleAICountTokensResponse);
+        .countTokens(contents.map((e) => e.toGoogleAI()))
+        .then((r) => r.toVertex());
   }
 
   /// Creates an embedding (list of float values) representing [content].
@@ -210,9 +209,9 @@ final class GenerativeModel {
   Future<EmbedContentResponse> embedContent(Content content,
       {TaskType? taskType, String? title}) async {
     return _googleAIModel
-        .embedContent(content._toGoogleAIContent(),
-            taskType: taskType?._toGoogleAITaskType(), title: title)
-        .then(EmbedContentResponse._fromGoogleAIEmbedContentResponse);
+        .embedContent(content.toGoogleAI(),
+            taskType: taskType?.toGoogleAI(), title: title)
+        .then((r) => r.toVertex());
   }
 
   /// Creates embeddings (list of float values) representing each content in
@@ -232,9 +231,39 @@ final class GenerativeModel {
   Future<BatchEmbedContentsResponse> batchEmbedContents(
       Iterable<EmbedContentRequest> requests) async {
     return _googleAIModel
-        .batchEmbedContents(
-            requests.map((e) => e._toGoogleAIEmbedContentRequest()))
-        .then(
-            BatchEmbedContentsResponse._fromGoogleAIBatchEmbedContentsResponse);
+        .batchEmbedContents(requests.map((e) => e.toGoogleAI()))
+        .then((r) => r.toVertex());
   }
 }
+
+/// Conversion utilities for [GenerativeModel].
+extension GoogleAIGenerativeModelConversion on GenerativeModel {
+  /// Return this model as a [google_ai.GenerativeModel].
+  google_ai.GenerativeModel get googleAIModel => _googleAIModel;
+}
+
+/// Returns a [GenerativeModel] using it's private constructor.
+GenerativeModel createGenerativeModel({
+  required FirebaseApp app,
+  required String location,
+  required String model,
+  Content? systemInstruction,
+  FirebaseAppCheck? appCheck,
+  FirebaseAuth? auth,
+  GenerationConfig? generationConfig,
+  List<SafetySetting>? safetySettings,
+  List<Tool>? tools,
+  ToolConfig? toolConfig,
+}) =>
+    GenerativeModel._(
+      model: model,
+      app: app,
+      appCheck: appCheck,
+      auth: auth,
+      location: location,
+      safetySettings: safetySettings,
+      generationConfig: generationConfig,
+      systemInstruction: systemInstruction,
+      tools: tools,
+      toolConfig: toolConfig,
+    );
