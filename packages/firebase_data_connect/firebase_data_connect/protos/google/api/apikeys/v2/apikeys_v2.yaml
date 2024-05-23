@@ -1,0 +1,55 @@
+type: google.api.Service
+config_version: 3
+name: apikeys.googleapis.com
+title: API Keys API
+
+apis:
+- name: google.api.apikeys.v2.ApiKeys
+- name: google.longrunning.Operations
+
+documentation:
+  summary: Manages the API keys associated with developer projects.
+
+backend:
+  rules:
+  - selector: 'google.api.apikeys.v2.ApiKeys.*'
+    deadline: 120.0
+  - selector: google.longrunning.Operations.GetOperation
+    deadline: 120.0
+
+http:
+  rules:
+  - selector: google.longrunning.Operations.GetOperation
+    get: '/v2/{name=operations/*}'
+
+authentication:
+  rules:
+  - selector: 'google.api.apikeys.v2.ApiKeys.*'
+    oauth:
+      canonical_scopes: |-
+        https://www.googleapis.com/auth/cloud-platform
+  - selector: google.api.apikeys.v2.ApiKeys.GetKey
+    oauth:
+      canonical_scopes: |-
+        https://www.googleapis.com/auth/cloud-platform,
+        https://www.googleapis.com/auth/cloud-platform.read-only
+  - selector: google.api.apikeys.v2.ApiKeys.GetKeyString
+    oauth:
+      canonical_scopes: |-
+        https://www.googleapis.com/auth/cloud-platform,
+        https://www.googleapis.com/auth/cloud-platform.read-only
+  - selector: google.api.apikeys.v2.ApiKeys.ListKeys
+    oauth:
+      canonical_scopes: |-
+        https://www.googleapis.com/auth/cloud-platform,
+        https://www.googleapis.com/auth/cloud-platform.read-only
+  - selector: google.api.apikeys.v2.ApiKeys.LookupKey
+    oauth:
+      canonical_scopes: |-
+        https://www.googleapis.com/auth/cloud-platform,
+        https://www.googleapis.com/auth/cloud-platform.read-only
+  - selector: google.longrunning.Operations.GetOperation
+    oauth:
+      canonical_scopes: |-
+        https://www.googleapis.com/auth/cloud-platform,
+        https://www.googleapis.com/auth/cloud-platform.read-only

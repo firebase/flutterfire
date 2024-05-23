@@ -1,0 +1,41 @@
+# This build file includes a target for the Ruby wrapper library for
+# google-cloud-api_keys.
+
+# This is an API workspace, having public visibility by default makes perfect sense.
+package(default_visibility = ["//visibility:public"])
+
+# Export yaml configs.
+exports_files(glob(["*.yaml"]))
+
+load(
+    "@com_google_googleapis_imports//:imports.bzl",
+    "ruby_cloud_gapic_library",
+    "ruby_gapic_assembly_pkg",
+)
+
+# Generates a Ruby wrapper client for apikeys.
+# Ruby wrapper clients are versionless, but are generated from source protos
+# for a particular service version, v2 in this case.
+ruby_cloud_gapic_library(
+    name = "apikeys_ruby_wrapper",
+    srcs = ["//google/api/apikeys/v2:apikeys_proto_with_info"],
+    extra_protoc_parameters = [
+        "ruby-cloud-api-id=apikeys.googleapis.com",
+        "ruby-cloud-api-shortname=apikeys",
+        "ruby-cloud-gem-name=google-cloud-api_keys",
+        "ruby-cloud-product-url=https://cloud.google.com/api-keys/",
+        "ruby-cloud-wrapper-of=v2:0.5",
+    ],
+    ruby_cloud_description = "An API key is a simple encrypted string that you can use when calling Google Cloud APIs. The API Keys service manages the API keys associated with developer projects.",
+    ruby_cloud_title = "API Keys",
+    transport = "grpc+rest",
+)
+
+# Open Source package.
+ruby_gapic_assembly_pkg(
+    name = "google-cloud-apikeys-ruby",
+    deps = [
+        ":apikeys_ruby_wrapper",
+    ],
+)
+

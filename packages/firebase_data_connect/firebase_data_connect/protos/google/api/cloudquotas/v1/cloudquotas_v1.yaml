@@ -1,0 +1,63 @@
+type: google.api.Service
+config_version: 3
+name: cloudquotas.googleapis.com
+title: Cloud Quotas API
+
+apis:
+- name: google.api.cloudquotas.v1.CloudQuotas
+
+documentation:
+  summary: |-
+    Cloud Quotas API provides Google Cloud service consumers with management
+    and observability for resource usage, quotas, and restrictions of the
+    services they consume.
+
+authentication:
+  rules:
+  - selector: 'google.api.cloudquotas.v1.CloudQuotas.*'
+    oauth:
+      canonical_scopes: |-
+        https://www.googleapis.com/auth/cloud-platform
+
+publishing:
+  new_issue_uri: https://issuetracker.google.com/issues/new?component=445904
+  documentation_uri: https://cloud.google.com/docs/quotas/api-overview
+  api_short_name: cloudquotas
+  github_label: 'api: cloudquotas'
+  doc_tag_prefix: cloudquotas
+  organization: CLOUD
+  library_settings:
+  - version: google.api.cloudquotas.v1
+    launch_stage: BETA
+    java_settings:
+      common:
+        destinations:
+        - PACKAGE_MANAGER
+    cpp_settings:
+      common:
+        destinations:
+        - PACKAGE_MANAGER
+    php_settings:
+      common:
+        destinations:
+        - PACKAGE_MANAGER
+    python_settings:
+      common:
+        destinations:
+        - PACKAGE_MANAGER
+    node_settings:
+      common:
+        destinations:
+        - PACKAGE_MANAGER
+    dotnet_settings:
+      common:
+        destinations:
+        - PACKAGE_MANAGER
+    ruby_settings:
+      common:
+        destinations:
+        - PACKAGE_MANAGER
+    go_settings:
+      common:
+        destinations:
+        - PACKAGE_MANAGER

@@ -1,0 +1,1 @@
+protoc --dart_out=grpc:lib/src/generated  -I./protos -I./protos/google protos/connector_service.proto google/protobuf/struct.proto protos/graphql_error.proto

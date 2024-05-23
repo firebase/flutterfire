@@ -79,41 +79,41 @@ class _TestFirebaseAuthHostApiCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
-      case 128:
+      case 128: 
         return AuthPigeonFirebaseApp.decode(readValue(buffer)!);
-      case 129:
+      case 129: 
         return PigeonActionCodeInfo.decode(readValue(buffer)!);
-      case 130:
+      case 130: 
         return PigeonActionCodeInfoData.decode(readValue(buffer)!);
-      case 131:
+      case 131: 
         return PigeonActionCodeSettings.decode(readValue(buffer)!);
-      case 132:
+      case 132: 
         return PigeonAdditionalUserInfo.decode(readValue(buffer)!);
-      case 133:
+      case 133: 
         return PigeonAuthCredential.decode(readValue(buffer)!);
-      case 134:
+      case 134: 
         return PigeonFirebaseAuthSettings.decode(readValue(buffer)!);
-      case 135:
+      case 135: 
         return PigeonIdTokenResult.decode(readValue(buffer)!);
-      case 136:
+      case 136: 
         return PigeonMultiFactorInfo.decode(readValue(buffer)!);
-      case 137:
+      case 137: 
         return PigeonMultiFactorSession.decode(readValue(buffer)!);
-      case 138:
+      case 138: 
         return PigeonPhoneMultiFactorAssertion.decode(readValue(buffer)!);
-      case 139:
+      case 139: 
         return PigeonSignInProvider.decode(readValue(buffer)!);
-      case 140:
+      case 140: 
         return PigeonTotpSecret.decode(readValue(buffer)!);
-      case 141:
+      case 141: 
         return PigeonUserCredential.decode(readValue(buffer)!);
-      case 142:
+      case 142: 
         return PigeonUserDetails.decode(readValue(buffer)!);
-      case 143:
+      case 143: 
         return PigeonUserInfo.decode(readValue(buffer)!);
-      case 144:
+      case 144: 
         return PigeonUserProfile.decode(readValue(buffer)!);
-      case 145:
+      case 145: 
         return PigeonVerifyPhoneNumberRequest.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -122,8 +122,7 @@ class _TestFirebaseAuthHostApiCodec extends StandardMessageCodec {
 }
 
 abstract class TestFirebaseAuthHostApi {
-  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding =>
-      TestDefaultBinaryMessengerBinding.instance;
+  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding => TestDefaultBinaryMessengerBinding.instance;
   static const MessageCodec<Object?> codec = _TestFirebaseAuthHostApiCodec();
 
   Future<String> registerIdTokenListener(AuthPigeonFirebaseApp app);
@@ -134,77 +133,55 @@ abstract class TestFirebaseAuthHostApi {
 
   Future<void> applyActionCode(AuthPigeonFirebaseApp app, String code);
 
-  Future<PigeonActionCodeInfo> checkActionCode(
-      AuthPigeonFirebaseApp app, String code);
+  Future<PigeonActionCodeInfo> checkActionCode(AuthPigeonFirebaseApp app, String code);
 
-  Future<void> confirmPasswordReset(
-      AuthPigeonFirebaseApp app, String code, String newPassword);
+  Future<void> confirmPasswordReset(AuthPigeonFirebaseApp app, String code, String newPassword);
 
-  Future<PigeonUserCredential> createUserWithEmailAndPassword(
-      AuthPigeonFirebaseApp app, String email, String password);
+  Future<PigeonUserCredential> createUserWithEmailAndPassword(AuthPigeonFirebaseApp app, String email, String password);
 
   Future<PigeonUserCredential> signInAnonymously(AuthPigeonFirebaseApp app);
 
-  Future<PigeonUserCredential> signInWithCredential(
-      AuthPigeonFirebaseApp app, Map<String?, Object?> input);
+  Future<PigeonUserCredential> signInWithCredential(AuthPigeonFirebaseApp app, Map<String?, Object?> input);
 
-  Future<PigeonUserCredential> signInWithCustomToken(
-      AuthPigeonFirebaseApp app, String token);
+  Future<PigeonUserCredential> signInWithCustomToken(AuthPigeonFirebaseApp app, String token);
 
-  Future<PigeonUserCredential> signInWithEmailAndPassword(
-      AuthPigeonFirebaseApp app, String email, String password);
+  Future<PigeonUserCredential> signInWithEmailAndPassword(AuthPigeonFirebaseApp app, String email, String password);
 
-  Future<PigeonUserCredential> signInWithEmailLink(
-      AuthPigeonFirebaseApp app, String email, String emailLink);
+  Future<PigeonUserCredential> signInWithEmailLink(AuthPigeonFirebaseApp app, String email, String emailLink);
 
-  Future<PigeonUserCredential> signInWithProvider(
-      AuthPigeonFirebaseApp app, PigeonSignInProvider signInProvider);
+  Future<PigeonUserCredential> signInWithProvider(AuthPigeonFirebaseApp app, PigeonSignInProvider signInProvider);
 
   Future<void> signOut(AuthPigeonFirebaseApp app);
 
-  Future<List<String?>> fetchSignInMethodsForEmail(
-      AuthPigeonFirebaseApp app, String email);
+  Future<List<String?>> fetchSignInMethodsForEmail(AuthPigeonFirebaseApp app, String email);
 
-  Future<void> sendPasswordResetEmail(AuthPigeonFirebaseApp app, String email,
-      PigeonActionCodeSettings? actionCodeSettings);
+  Future<void> sendPasswordResetEmail(AuthPigeonFirebaseApp app, String email, PigeonActionCodeSettings? actionCodeSettings);
 
-  Future<void> sendSignInLinkToEmail(AuthPigeonFirebaseApp app, String email,
-      PigeonActionCodeSettings actionCodeSettings);
+  Future<void> sendSignInLinkToEmail(AuthPigeonFirebaseApp app, String email, PigeonActionCodeSettings actionCodeSettings);
 
-  Future<String> setLanguageCode(
-      AuthPigeonFirebaseApp app, String? languageCode);
+  Future<String> setLanguageCode(AuthPigeonFirebaseApp app, String? languageCode);
 
-  Future<void> setSettings(
-      AuthPigeonFirebaseApp app, PigeonFirebaseAuthSettings settings);
+  Future<void> setSettings(AuthPigeonFirebaseApp app, PigeonFirebaseAuthSettings settings);
 
-  Future<String> verifyPasswordResetCode(
-      AuthPigeonFirebaseApp app, String code);
+  Future<String> verifyPasswordResetCode(AuthPigeonFirebaseApp app, String code);
 
-  Future<String> verifyPhoneNumber(
-      AuthPigeonFirebaseApp app, PigeonVerifyPhoneNumberRequest request);
+  Future<String> verifyPhoneNumber(AuthPigeonFirebaseApp app, PigeonVerifyPhoneNumberRequest request);
 
-  Future<void> revokeTokenWithAuthorizationCode(
-      AuthPigeonFirebaseApp app, String authorizationCode);
+  Future<void> revokeTokenWithAuthorizationCode(AuthPigeonFirebaseApp app, String authorizationCode);
 
-  static void setup(TestFirebaseAuthHostApi? api,
-      {BinaryMessenger? binaryMessenger}) {
+  static void setup(TestFirebaseAuthHostApi? api, {BinaryMessenger? binaryMessenger}) {
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerIdTokenListener',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerIdTokenListener', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerIdTokenListener was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerIdTokenListener was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerIdTokenListener was null, expected non-null AuthPigeonFirebaseApp.');
           final String output = await api.registerIdTokenListener(arg_app!);
@@ -214,21 +191,16 @@ abstract class TestFirebaseAuthHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerAuthStateListener',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerAuthStateListener', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerAuthStateListener was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerAuthStateListener was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerAuthStateListener was null, expected non-null AuthPigeonFirebaseApp.');
           final String output = await api.registerAuthStateListener(arg_app!);
@@ -238,21 +210,16 @@ abstract class TestFirebaseAuthHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.useEmulator',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.useEmulator', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.useEmulator was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.useEmulator was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.useEmulator was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_host = (args[1] as String?);
@@ -268,21 +235,16 @@ abstract class TestFirebaseAuthHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.applyActionCode',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.applyActionCode', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.applyActionCode was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.applyActionCode was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.applyActionCode was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_code = (args[1] as String?);
@@ -295,49 +257,38 @@ abstract class TestFirebaseAuthHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.checkActionCode',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.checkActionCode', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.checkActionCode was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.checkActionCode was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.checkActionCode was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_code = (args[1] as String?);
           assert(arg_code != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.checkActionCode was null, expected non-null String.');
-          final PigeonActionCodeInfo output =
-              await api.checkActionCode(arg_app!, arg_code!);
+          final PigeonActionCodeInfo output = await api.checkActionCode(arg_app!, arg_code!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.confirmPasswordReset',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.confirmPasswordReset', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.confirmPasswordReset was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.confirmPasswordReset was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.confirmPasswordReset was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_code = (args[1] as String?);
@@ -353,21 +304,16 @@ abstract class TestFirebaseAuthHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.createUserWithEmailAndPassword',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.createUserWithEmailAndPassword', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.createUserWithEmailAndPassword was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.createUserWithEmailAndPassword was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.createUserWithEmailAndPassword was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_email = (args[1] as String?);
@@ -376,112 +322,86 @@ abstract class TestFirebaseAuthHostApi {
           final String? arg_password = (args[2] as String?);
           assert(arg_password != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.createUserWithEmailAndPassword was null, expected non-null String.');
-          final PigeonUserCredential output =
-              await api.createUserWithEmailAndPassword(
-                  arg_app!, arg_email!, arg_password!);
+          final PigeonUserCredential output = await api.createUserWithEmailAndPassword(arg_app!, arg_email!, arg_password!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInAnonymously',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInAnonymously', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInAnonymously was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInAnonymously was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInAnonymously was null, expected non-null AuthPigeonFirebaseApp.');
-          final PigeonUserCredential output =
-              await api.signInAnonymously(arg_app!);
+          final PigeonUserCredential output = await api.signInAnonymously(arg_app!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCredential',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCredential', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCredential was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCredential was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCredential was null, expected non-null AuthPigeonFirebaseApp.');
-          final Map<String?, Object?>? arg_input =
-              (args[1] as Map<Object?, Object?>?)?.cast<String?, Object?>();
+          final Map<String?, Object?>? arg_input = (args[1] as Map<Object?, Object?>?)?.cast<String?, Object?>();
           assert(arg_input != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCredential was null, expected non-null Map<String?, Object?>.');
-          final PigeonUserCredential output =
-              await api.signInWithCredential(arg_app!, arg_input!);
+          final PigeonUserCredential output = await api.signInWithCredential(arg_app!, arg_input!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCustomToken',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCustomToken', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCustomToken was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCustomToken was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCustomToken was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_token = (args[1] as String?);
           assert(arg_token != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCustomToken was null, expected non-null String.');
-          final PigeonUserCredential output =
-              await api.signInWithCustomToken(arg_app!, arg_token!);
+          final PigeonUserCredential output = await api.signInWithCustomToken(arg_app!, arg_token!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailAndPassword',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailAndPassword', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailAndPassword was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailAndPassword was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailAndPassword was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_email = (args[1] as String?);
@@ -490,29 +410,23 @@ abstract class TestFirebaseAuthHostApi {
           final String? arg_password = (args[2] as String?);
           assert(arg_password != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailAndPassword was null, expected non-null String.');
-          final PigeonUserCredential output = await api
-              .signInWithEmailAndPassword(arg_app!, arg_email!, arg_password!);
+          final PigeonUserCredential output = await api.signInWithEmailAndPassword(arg_app!, arg_email!, arg_password!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailLink',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailLink', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailLink was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailLink was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailLink was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_email = (args[1] as String?);
@@ -521,58 +435,45 @@ abstract class TestFirebaseAuthHostApi {
           final String? arg_emailLink = (args[2] as String?);
           assert(arg_emailLink != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailLink was null, expected non-null String.');
-          final PigeonUserCredential output = await api.signInWithEmailLink(
-              arg_app!, arg_email!, arg_emailLink!);
+          final PigeonUserCredential output = await api.signInWithEmailLink(arg_app!, arg_email!, arg_emailLink!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithProvider',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithProvider', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithProvider was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithProvider was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithProvider was null, expected non-null AuthPigeonFirebaseApp.');
-          final PigeonSignInProvider? arg_signInProvider =
-              (args[1] as PigeonSignInProvider?);
+          final PigeonSignInProvider? arg_signInProvider = (args[1] as PigeonSignInProvider?);
           assert(arg_signInProvider != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithProvider was null, expected non-null PigeonSignInProvider.');
-          final PigeonUserCredential output =
-              await api.signInWithProvider(arg_app!, arg_signInProvider!);
+          final PigeonUserCredential output = await api.signInWithProvider(arg_app!, arg_signInProvider!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signOut',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signOut', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signOut was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signOut was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signOut was null, expected non-null AuthPigeonFirebaseApp.');
           await api.signOut(arg_app!);
@@ -582,141 +483,109 @@ abstract class TestFirebaseAuthHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.fetchSignInMethodsForEmail',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.fetchSignInMethodsForEmail', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.fetchSignInMethodsForEmail was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.fetchSignInMethodsForEmail was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.fetchSignInMethodsForEmail was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_email = (args[1] as String?);
           assert(arg_email != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.fetchSignInMethodsForEmail was null, expected non-null String.');
-          final List<String?> output =
-              await api.fetchSignInMethodsForEmail(arg_app!, arg_email!);
+          final List<String?> output = await api.fetchSignInMethodsForEmail(arg_app!, arg_email!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendPasswordResetEmail',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendPasswordResetEmail', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendPasswordResetEmail was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendPasswordResetEmail was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendPasswordResetEmail was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_email = (args[1] as String?);
           assert(arg_email != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendPasswordResetEmail was null, expected non-null String.');
-          final PigeonActionCodeSettings? arg_actionCodeSettings =
-              (args[2] as PigeonActionCodeSettings?);
-          await api.sendPasswordResetEmail(
-              arg_app!, arg_email!, arg_actionCodeSettings);
+          final PigeonActionCodeSettings? arg_actionCodeSettings = (args[2] as PigeonActionCodeSettings?);
+          await api.sendPasswordResetEmail(arg_app!, arg_email!, arg_actionCodeSettings);
           return <Object?>[];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendSignInLinkToEmail',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendSignInLinkToEmail', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendSignInLinkToEmail was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendSignInLinkToEmail was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendSignInLinkToEmail was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_email = (args[1] as String?);
           assert(arg_email != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendSignInLinkToEmail was null, expected non-null String.');
-          final PigeonActionCodeSettings? arg_actionCodeSettings =
-              (args[2] as PigeonActionCodeSettings?);
+          final PigeonActionCodeSettings? arg_actionCodeSettings = (args[2] as PigeonActionCodeSettings?);
           assert(arg_actionCodeSettings != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendSignInLinkToEmail was null, expected non-null PigeonActionCodeSettings.');
-          await api.sendSignInLinkToEmail(
-              arg_app!, arg_email!, arg_actionCodeSettings!);
+          await api.sendSignInLinkToEmail(arg_app!, arg_email!, arg_actionCodeSettings!);
           return <Object?>[];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setLanguageCode',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setLanguageCode', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setLanguageCode was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setLanguageCode was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setLanguageCode was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_languageCode = (args[1] as String?);
-          final String output =
-              await api.setLanguageCode(arg_app!, arg_languageCode);
+          final String output = await api.setLanguageCode(arg_app!, arg_languageCode);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setSettings',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setSettings', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setSettings was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setSettings was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setSettings was null, expected non-null AuthPigeonFirebaseApp.');
-          final PigeonFirebaseAuthSettings? arg_settings =
-              (args[1] as PigeonFirebaseAuthSettings?);
+          final PigeonFirebaseAuthSettings? arg_settings = (args[1] as PigeonFirebaseAuthSettings?);
           assert(arg_settings != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setSettings was null, expected non-null PigeonFirebaseAuthSettings.');
           await api.setSettings(arg_app!, arg_settings!);
@@ -726,85 +595,66 @@ abstract class TestFirebaseAuthHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPasswordResetCode',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPasswordResetCode', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPasswordResetCode was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPasswordResetCode was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPasswordResetCode was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_code = (args[1] as String?);
           assert(arg_code != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPasswordResetCode was null, expected non-null String.');
-          final String output =
-              await api.verifyPasswordResetCode(arg_app!, arg_code!);
+          final String output = await api.verifyPasswordResetCode(arg_app!, arg_code!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPhoneNumber',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPhoneNumber', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPhoneNumber was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPhoneNumber was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPhoneNumber was null, expected non-null AuthPigeonFirebaseApp.');
-          final PigeonVerifyPhoneNumberRequest? arg_request =
-              (args[1] as PigeonVerifyPhoneNumberRequest?);
+          final PigeonVerifyPhoneNumberRequest? arg_request = (args[1] as PigeonVerifyPhoneNumberRequest?);
           assert(arg_request != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPhoneNumber was null, expected non-null PigeonVerifyPhoneNumberRequest.');
-          final String output =
-              await api.verifyPhoneNumber(arg_app!, arg_request!);
+          final String output = await api.verifyPhoneNumber(arg_app!, arg_request!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeTokenWithAuthorizationCode',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeTokenWithAuthorizationCode', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeTokenWithAuthorizationCode was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeTokenWithAuthorizationCode was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeTokenWithAuthorizationCode was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_authorizationCode = (args[1] as String?);
           assert(arg_authorizationCode != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeTokenWithAuthorizationCode was null, expected non-null String.');
-          await api.revokeTokenWithAuthorizationCode(
-              arg_app!, arg_authorizationCode!);
+          await api.revokeTokenWithAuthorizationCode(arg_app!, arg_authorizationCode!);
           return <Object?>[];
         });
       }
@@ -878,41 +728,41 @@ class _TestFirebaseAuthUserHostApiCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
-      case 128:
+      case 128: 
         return AuthPigeonFirebaseApp.decode(readValue(buffer)!);
-      case 129:
+      case 129: 
         return PigeonActionCodeInfo.decode(readValue(buffer)!);
-      case 130:
+      case 130: 
         return PigeonActionCodeInfoData.decode(readValue(buffer)!);
-      case 131:
+      case 131: 
         return PigeonActionCodeSettings.decode(readValue(buffer)!);
-      case 132:
+      case 132: 
         return PigeonAdditionalUserInfo.decode(readValue(buffer)!);
-      case 133:
+      case 133: 
         return PigeonAuthCredential.decode(readValue(buffer)!);
-      case 134:
+      case 134: 
         return PigeonFirebaseAuthSettings.decode(readValue(buffer)!);
-      case 135:
+      case 135: 
         return PigeonIdTokenResult.decode(readValue(buffer)!);
-      case 136:
+      case 136: 
         return PigeonMultiFactorInfo.decode(readValue(buffer)!);
-      case 137:
+      case 137: 
         return PigeonMultiFactorSession.decode(readValue(buffer)!);
-      case 138:
+      case 138: 
         return PigeonPhoneMultiFactorAssertion.decode(readValue(buffer)!);
-      case 139:
+      case 139: 
         return PigeonSignInProvider.decode(readValue(buffer)!);
-      case 140:
+      case 140: 
         return PigeonTotpSecret.decode(readValue(buffer)!);
-      case 141:
+      case 141: 
         return PigeonUserCredential.decode(readValue(buffer)!);
-      case 142:
+      case 142: 
         return PigeonUserDetails.decode(readValue(buffer)!);
-      case 143:
+      case 143: 
         return PigeonUserInfo.decode(readValue(buffer)!);
-      case 144:
+      case 144: 
         return PigeonUserProfile.decode(readValue(buffer)!);
-      case 145:
+      case 145: 
         return PigeonVerifyPhoneNumberRequest.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -921,70 +771,50 @@ class _TestFirebaseAuthUserHostApiCodec extends StandardMessageCodec {
 }
 
 abstract class TestFirebaseAuthUserHostApi {
-  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding =>
-      TestDefaultBinaryMessengerBinding.instance;
-  static const MessageCodec<Object?> codec =
-      _TestFirebaseAuthUserHostApiCodec();
+  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding => TestDefaultBinaryMessengerBinding.instance;
+  static const MessageCodec<Object?> codec = _TestFirebaseAuthUserHostApiCodec();
 
   Future<void> delete(AuthPigeonFirebaseApp app);
 
-  Future<PigeonIdTokenResult> getIdToken(
-      AuthPigeonFirebaseApp app, bool forceRefresh);
+  Future<PigeonIdTokenResult> getIdToken(AuthPigeonFirebaseApp app, bool forceRefresh);
 
-  Future<PigeonUserCredential> linkWithCredential(
-      AuthPigeonFirebaseApp app, Map<String?, Object?> input);
+  Future<PigeonUserCredential> linkWithCredential(AuthPigeonFirebaseApp app, Map<String?, Object?> input);
 
-  Future<PigeonUserCredential> linkWithProvider(
-      AuthPigeonFirebaseApp app, PigeonSignInProvider signInProvider);
+  Future<PigeonUserCredential> linkWithProvider(AuthPigeonFirebaseApp app, PigeonSignInProvider signInProvider);
 
-  Future<PigeonUserCredential> reauthenticateWithCredential(
-      AuthPigeonFirebaseApp app, Map<String?, Object?> input);
+  Future<PigeonUserCredential> reauthenticateWithCredential(AuthPigeonFirebaseApp app, Map<String?, Object?> input);
 
-  Future<PigeonUserCredential> reauthenticateWithProvider(
-      AuthPigeonFirebaseApp app, PigeonSignInProvider signInProvider);
+  Future<PigeonUserCredential> reauthenticateWithProvider(AuthPigeonFirebaseApp app, PigeonSignInProvider signInProvider);
 
   Future<PigeonUserDetails> reload(AuthPigeonFirebaseApp app);
 
-  Future<void> sendEmailVerification(
-      AuthPigeonFirebaseApp app, PigeonActionCodeSettings? actionCodeSettings);
+  Future<void> sendEmailVerification(AuthPigeonFirebaseApp app, PigeonActionCodeSettings? actionCodeSettings);
 
-  Future<PigeonUserCredential> unlink(
-      AuthPigeonFirebaseApp app, String providerId);
+  Future<PigeonUserCredential> unlink(AuthPigeonFirebaseApp app, String providerId);
 
-  Future<PigeonUserDetails> updateEmail(
-      AuthPigeonFirebaseApp app, String newEmail);
+  Future<PigeonUserDetails> updateEmail(AuthPigeonFirebaseApp app, String newEmail);
 
-  Future<PigeonUserDetails> updatePassword(
-      AuthPigeonFirebaseApp app, String newPassword);
+  Future<PigeonUserDetails> updatePassword(AuthPigeonFirebaseApp app, String newPassword);
 
-  Future<PigeonUserDetails> updatePhoneNumber(
-      AuthPigeonFirebaseApp app, Map<String?, Object?> input);
+  Future<PigeonUserDetails> updatePhoneNumber(AuthPigeonFirebaseApp app, Map<String?, Object?> input);
 
-  Future<PigeonUserDetails> updateProfile(
-      AuthPigeonFirebaseApp app, PigeonUserProfile profile);
+  Future<PigeonUserDetails> updateProfile(AuthPigeonFirebaseApp app, PigeonUserProfile profile);
 
-  Future<void> verifyBeforeUpdateEmail(AuthPigeonFirebaseApp app,
-      String newEmail, PigeonActionCodeSettings? actionCodeSettings);
+  Future<void> verifyBeforeUpdateEmail(AuthPigeonFirebaseApp app, String newEmail, PigeonActionCodeSettings? actionCodeSettings);
 
-  static void setup(TestFirebaseAuthUserHostApi? api,
-      {BinaryMessenger? binaryMessenger}) {
+  static void setup(TestFirebaseAuthUserHostApi? api, {BinaryMessenger? binaryMessenger}) {
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.delete',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.delete', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.delete was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.delete was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.delete was null, expected non-null AuthPigeonFirebaseApp.');
           await api.delete(arg_app!);
@@ -994,165 +824,126 @@ abstract class TestFirebaseAuthUserHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.getIdToken',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.getIdToken', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.getIdToken was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.getIdToken was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.getIdToken was null, expected non-null AuthPigeonFirebaseApp.');
           final bool? arg_forceRefresh = (args[1] as bool?);
           assert(arg_forceRefresh != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.getIdToken was null, expected non-null bool.');
-          final PigeonIdTokenResult output =
-              await api.getIdToken(arg_app!, arg_forceRefresh!);
+          final PigeonIdTokenResult output = await api.getIdToken(arg_app!, arg_forceRefresh!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithCredential',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithCredential', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithCredential was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithCredential was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithCredential was null, expected non-null AuthPigeonFirebaseApp.');
-          final Map<String?, Object?>? arg_input =
-              (args[1] as Map<Object?, Object?>?)?.cast<String?, Object?>();
+          final Map<String?, Object?>? arg_input = (args[1] as Map<Object?, Object?>?)?.cast<String?, Object?>();
           assert(arg_input != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithCredential was null, expected non-null Map<String?, Object?>.');
-          final PigeonUserCredential output =
-              await api.linkWithCredential(arg_app!, arg_input!);
+          final PigeonUserCredential output = await api.linkWithCredential(arg_app!, arg_input!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithProvider',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithProvider', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithProvider was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithProvider was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithProvider was null, expected non-null AuthPigeonFirebaseApp.');
-          final PigeonSignInProvider? arg_signInProvider =
-              (args[1] as PigeonSignInProvider?);
+          final PigeonSignInProvider? arg_signInProvider = (args[1] as PigeonSignInProvider?);
           assert(arg_signInProvider != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithProvider was null, expected non-null PigeonSignInProvider.');
-          final PigeonUserCredential output =
-              await api.linkWithProvider(arg_app!, arg_signInProvider!);
+          final PigeonUserCredential output = await api.linkWithProvider(arg_app!, arg_signInProvider!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithCredential',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithCredential', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithCredential was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithCredential was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithCredential was null, expected non-null AuthPigeonFirebaseApp.');
-          final Map<String?, Object?>? arg_input =
-              (args[1] as Map<Object?, Object?>?)?.cast<String?, Object?>();
+          final Map<String?, Object?>? arg_input = (args[1] as Map<Object?, Object?>?)?.cast<String?, Object?>();
           assert(arg_input != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithCredential was null, expected non-null Map<String?, Object?>.');
-          final PigeonUserCredential output =
-              await api.reauthenticateWithCredential(arg_app!, arg_input!);
+          final PigeonUserCredential output = await api.reauthenticateWithCredential(arg_app!, arg_input!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithProvider',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithProvider', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithProvider was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithProvider was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithProvider was null, expected non-null AuthPigeonFirebaseApp.');
-          final PigeonSignInProvider? arg_signInProvider =
-              (args[1] as PigeonSignInProvider?);
+          final PigeonSignInProvider? arg_signInProvider = (args[1] as PigeonSignInProvider?);
           assert(arg_signInProvider != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithProvider was null, expected non-null PigeonSignInProvider.');
-          final PigeonUserCredential output = await api
-              .reauthenticateWithProvider(arg_app!, arg_signInProvider!);
+          final PigeonUserCredential output = await api.reauthenticateWithProvider(arg_app!, arg_signInProvider!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reload',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reload', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reload was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reload was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reload was null, expected non-null AuthPigeonFirebaseApp.');
           final PigeonUserDetails output = await api.reload(arg_app!);
@@ -1162,25 +953,19 @@ abstract class TestFirebaseAuthUserHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.sendEmailVerification',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.sendEmailVerification', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.sendEmailVerification was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.sendEmailVerification was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.sendEmailVerification was null, expected non-null AuthPigeonFirebaseApp.');
-          final PigeonActionCodeSettings? arg_actionCodeSettings =
-              (args[1] as PigeonActionCodeSettings?);
+          final PigeonActionCodeSettings? arg_actionCodeSettings = (args[1] as PigeonActionCodeSettings?);
           await api.sendEmailVerification(arg_app!, arg_actionCodeSettings);
           return <Object?>[];
         });
@@ -1188,172 +973,133 @@ abstract class TestFirebaseAuthUserHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.unlink',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.unlink', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.unlink was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.unlink was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.unlink was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_providerId = (args[1] as String?);
           assert(arg_providerId != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.unlink was null, expected non-null String.');
-          final PigeonUserCredential output =
-              await api.unlink(arg_app!, arg_providerId!);
+          final PigeonUserCredential output = await api.unlink(arg_app!, arg_providerId!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateEmail',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateEmail', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateEmail was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateEmail was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateEmail was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_newEmail = (args[1] as String?);
           assert(arg_newEmail != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateEmail was null, expected non-null String.');
-          final PigeonUserDetails output =
-              await api.updateEmail(arg_app!, arg_newEmail!);
+          final PigeonUserDetails output = await api.updateEmail(arg_app!, arg_newEmail!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePassword',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePassword', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePassword was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePassword was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePassword was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_newPassword = (args[1] as String?);
           assert(arg_newPassword != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePassword was null, expected non-null String.');
-          final PigeonUserDetails output =
-              await api.updatePassword(arg_app!, arg_newPassword!);
+          final PigeonUserDetails output = await api.updatePassword(arg_app!, arg_newPassword!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePhoneNumber',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePhoneNumber', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePhoneNumber was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePhoneNumber was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePhoneNumber was null, expected non-null AuthPigeonFirebaseApp.');
-          final Map<String?, Object?>? arg_input =
-              (args[1] as Map<Object?, Object?>?)?.cast<String?, Object?>();
+          final Map<String?, Object?>? arg_input = (args[1] as Map<Object?, Object?>?)?.cast<String?, Object?>();
           assert(arg_input != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePhoneNumber was null, expected non-null Map<String?, Object?>.');
-          final PigeonUserDetails output =
-              await api.updatePhoneNumber(arg_app!, arg_input!);
+          final PigeonUserDetails output = await api.updatePhoneNumber(arg_app!, arg_input!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateProfile',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateProfile', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateProfile was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateProfile was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateProfile was null, expected non-null AuthPigeonFirebaseApp.');
-          final PigeonUserProfile? arg_profile =
-              (args[1] as PigeonUserProfile?);
+          final PigeonUserProfile? arg_profile = (args[1] as PigeonUserProfile?);
           assert(arg_profile != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateProfile was null, expected non-null PigeonUserProfile.');
-          final PigeonUserDetails output =
-              await api.updateProfile(arg_app!, arg_profile!);
+          final PigeonUserDetails output = await api.updateProfile(arg_app!, arg_profile!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_newEmail = (args[1] as String?);
           assert(arg_newEmail != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail was null, expected non-null String.');
-          final PigeonActionCodeSettings? arg_actionCodeSettings =
-              (args[2] as PigeonActionCodeSettings?);
-          await api.verifyBeforeUpdateEmail(
-              arg_app!, arg_newEmail!, arg_actionCodeSettings);
+          final PigeonActionCodeSettings? arg_actionCodeSettings = (args[2] as PigeonActionCodeSettings?);
+          await api.verifyBeforeUpdateEmail(arg_app!, arg_newEmail!, arg_actionCodeSettings);
           return <Object?>[];
         });
       }
@@ -1385,13 +1131,13 @@ class _TestMultiFactorUserHostApiCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
-      case 128:
+      case 128: 
         return AuthPigeonFirebaseApp.decode(readValue(buffer)!);
-      case 129:
+      case 129: 
         return PigeonMultiFactorInfo.decode(readValue(buffer)!);
-      case 130:
+      case 130: 
         return PigeonMultiFactorSession.decode(readValue(buffer)!);
-      case 131:
+      case 131: 
         return PigeonPhoneMultiFactorAssertion.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -1400,46 +1146,35 @@ class _TestMultiFactorUserHostApiCodec extends StandardMessageCodec {
 }
 
 abstract class TestMultiFactorUserHostApi {
-  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding =>
-      TestDefaultBinaryMessengerBinding.instance;
+  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding => TestDefaultBinaryMessengerBinding.instance;
   static const MessageCodec<Object?> codec = _TestMultiFactorUserHostApiCodec();
 
-  Future<void> enrollPhone(AuthPigeonFirebaseApp app,
-      PigeonPhoneMultiFactorAssertion assertion, String? displayName);
+  Future<void> enrollPhone(AuthPigeonFirebaseApp app, PigeonPhoneMultiFactorAssertion assertion, String? displayName);
 
-  Future<void> enrollTotp(
-      AuthPigeonFirebaseApp app, String assertionId, String? displayName);
+  Future<void> enrollTotp(AuthPigeonFirebaseApp app, String assertionId, String? displayName);
 
   Future<PigeonMultiFactorSession> getSession(AuthPigeonFirebaseApp app);
 
   Future<void> unenroll(AuthPigeonFirebaseApp app, String factorUid);
 
-  Future<List<PigeonMultiFactorInfo?>> getEnrolledFactors(
-      AuthPigeonFirebaseApp app);
+  Future<List<PigeonMultiFactorInfo?>> getEnrolledFactors(AuthPigeonFirebaseApp app);
 
-  static void setup(TestMultiFactorUserHostApi? api,
-      {BinaryMessenger? binaryMessenger}) {
+  static void setup(TestMultiFactorUserHostApi? api, {BinaryMessenger? binaryMessenger}) {
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollPhone',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollPhone', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollPhone was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollPhone was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollPhone was null, expected non-null AuthPigeonFirebaseApp.');
-          final PigeonPhoneMultiFactorAssertion? arg_assertion =
-              (args[1] as PigeonPhoneMultiFactorAssertion?);
+          final PigeonPhoneMultiFactorAssertion? arg_assertion = (args[1] as PigeonPhoneMultiFactorAssertion?);
           assert(arg_assertion != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollPhone was null, expected non-null PigeonPhoneMultiFactorAssertion.');
           final String? arg_displayName = (args[2] as String?);
@@ -1450,21 +1185,16 @@ abstract class TestMultiFactorUserHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_assertionId = (args[1] as String?);
@@ -1478,46 +1208,35 @@ abstract class TestMultiFactorUserHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getSession',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getSession', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getSession was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getSession was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getSession was null, expected non-null AuthPigeonFirebaseApp.');
-          final PigeonMultiFactorSession output =
-              await api.getSession(arg_app!);
+          final PigeonMultiFactorSession output = await api.getSession(arg_app!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.unenroll',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.unenroll', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.unenroll was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.unenroll was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.unenroll was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_factorUid = (args[1] as String?);
@@ -1530,25 +1249,19 @@ abstract class TestMultiFactorUserHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getEnrolledFactors',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getEnrolledFactors', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getEnrolledFactors was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getEnrolledFactors was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AuthPigeonFirebaseApp? arg_app =
-              (args[0] as AuthPigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app = (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getEnrolledFactors was null, expected non-null AuthPigeonFirebaseApp.');
-          final List<PigeonMultiFactorInfo?> output =
-              await api.getEnrolledFactors(arg_app!);
+          final List<PigeonMultiFactorInfo?> output = await api.getEnrolledFactors(arg_app!);
           return <Object?>[output];
         });
       }
@@ -1586,17 +1299,17 @@ class _TestMultiFactoResolverHostApiCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
-      case 128:
+      case 128: 
         return PigeonAdditionalUserInfo.decode(readValue(buffer)!);
-      case 129:
+      case 129: 
         return PigeonAuthCredential.decode(readValue(buffer)!);
-      case 130:
+      case 130: 
         return PigeonPhoneMultiFactorAssertion.decode(readValue(buffer)!);
-      case 131:
+      case 131: 
         return PigeonUserCredential.decode(readValue(buffer)!);
-      case 132:
+      case 132: 
         return PigeonUserDetails.decode(readValue(buffer)!);
-      case 133:
+      case 133: 
         return PigeonUserInfo.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -1605,39 +1318,29 @@ class _TestMultiFactoResolverHostApiCodec extends StandardMessageCodec {
 }
 
 abstract class TestMultiFactoResolverHostApi {
-  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding =>
-      TestDefaultBinaryMessengerBinding.instance;
-  static const MessageCodec<Object?> codec =
-      _TestMultiFactoResolverHostApiCodec();
+  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding => TestDefaultBinaryMessengerBinding.instance;
+  static const MessageCodec<Object?> codec = _TestMultiFactoResolverHostApiCodec();
 
-  Future<PigeonUserCredential> resolveSignIn(String resolverId,
-      PigeonPhoneMultiFactorAssertion? assertion, String? totpAssertionId);
+  Future<PigeonUserCredential> resolveSignIn(String resolverId, PigeonPhoneMultiFactorAssertion? assertion, String? totpAssertionId);
 
-  static void setup(TestMultiFactoResolverHostApi? api,
-      {BinaryMessenger? binaryMessenger}) {
+  static void setup(TestMultiFactoResolverHostApi? api, {BinaryMessenger? binaryMessenger}) {
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactoResolverHostApi.resolveSignIn',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactoResolverHostApi.resolveSignIn', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactoResolverHostApi.resolveSignIn was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactoResolverHostApi.resolveSignIn was null.');
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_resolverId = (args[0] as String?);
           assert(arg_resolverId != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactoResolverHostApi.resolveSignIn was null, expected non-null String.');
-          final PigeonPhoneMultiFactorAssertion? arg_assertion =
-              (args[1] as PigeonPhoneMultiFactorAssertion?);
+          final PigeonPhoneMultiFactorAssertion? arg_assertion = (args[1] as PigeonPhoneMultiFactorAssertion?);
           final String? arg_totpAssertionId = (args[2] as String?);
-          final PigeonUserCredential output = await api.resolveSignIn(
-              arg_resolverId!, arg_assertion, arg_totpAssertionId);
+          final PigeonUserCredential output = await api.resolveSignIn(arg_resolverId!, arg_assertion, arg_totpAssertionId);
           return <Object?>[output];
         });
       }
@@ -1660,7 +1363,7 @@ class _TestMultiFactoResolverHostApiCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
-      case 128:
+      case 128: 
         return PigeonTotpSecret.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -1669,59 +1372,45 @@ class _TestMultiFactoResolverHostApiCodec extends StandardMessageCodec {
 }
 
 abstract class TestMultiFactoResolverHostApi {
-  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding =>
-      TestDefaultBinaryMessengerBinding.instance;
-  static const MessageCodec<Object?> codec =
-      _TestMultiFactoResolverHostApiCodec();
+  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding => TestDefaultBinaryMessengerBinding.instance;
+  static const MessageCodec<Object?> codec = _TestMultiFactoResolverHostApiCodec();
 
   Future<PigeonTotpSecret> generateSecret(String sessionId);
 
-  Future<String> getAssertionForEnrollment(
-      String secretKey, String oneTimePassword);
+  Future<String> getAssertionForEnrollment(String secretKey, String oneTimePassword);
 
-  Future<String> getAssertionForSignIn(
-      String enrollmentId, String oneTimePassword);
+  Future<String> getAssertionForSignIn(String enrollmentId, String oneTimePassword);
 
-  static void setup(TestMultiFactoResolverHostApi? api,
-      {BinaryMessenger? binaryMessenger}) {
+  static void setup(TestMultiFactoResolverHostApi? api, {BinaryMessenger? binaryMessenger}) {
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.generateSecret',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.generateSecret', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.generateSecret was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.generateSecret was null.');
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_sessionId = (args[0] as String?);
           assert(arg_sessionId != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.generateSecret was null, expected non-null String.');
-          final PigeonTotpSecret output =
-              await api.generateSecret(arg_sessionId!);
+          final PigeonTotpSecret output = await api.generateSecret(arg_sessionId!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForEnrollment',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForEnrollment', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForEnrollment was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForEnrollment was null.');
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_secretKey = (args[0] as String?);
           assert(arg_secretKey != null,
@@ -1729,26 +1418,21 @@ abstract class TestMultiFactoResolverHostApi {
           final String? arg_oneTimePassword = (args[1] as String?);
           assert(arg_oneTimePassword != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForEnrollment was null, expected non-null String.');
-          final String output = await api.getAssertionForEnrollment(
-              arg_secretKey!, arg_oneTimePassword!);
+          final String output = await api.getAssertionForEnrollment(arg_secretKey!, arg_oneTimePassword!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForSignIn',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForSignIn', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForSignIn was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForSignIn was null.');
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_enrollmentId = (args[0] as String?);
           assert(arg_enrollmentId != null,
@@ -1756,8 +1440,7 @@ abstract class TestMultiFactoResolverHostApi {
           final String? arg_oneTimePassword = (args[1] as String?);
           assert(arg_oneTimePassword != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForSignIn was null, expected non-null String.');
-          final String output = await api.getAssertionForSignIn(
-              arg_enrollmentId!, arg_oneTimePassword!);
+          final String output = await api.getAssertionForSignIn(arg_enrollmentId!, arg_oneTimePassword!);
           return <Object?>[output];
         });
       }
@@ -1766,57 +1449,45 @@ abstract class TestMultiFactoResolverHostApi {
 }
 
 abstract class TestMultiFactoResolverHostApi {
-  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding =>
-      TestDefaultBinaryMessengerBinding.instance;
+  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding => TestDefaultBinaryMessengerBinding.instance;
   static const MessageCodec<Object?> codec = StandardMessageCodec();
 
-  Future<String> generateQrCodeUrl(
-      String secretKey, String? accountName, String? issuer);
+  Future<String> generateQrCodeUrl(String secretKey, String? accountName, String? issuer);
 
   Future<void> openInOtpApp(String secretKey, String qrCodeUrl);
 
-  static void setup(TestMultiFactoResolverHostApi? api,
-      {BinaryMessenger? binaryMessenger}) {
+  static void setup(TestMultiFactoResolverHostApi? api, {BinaryMessenger? binaryMessenger}) {
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.generateQrCodeUrl',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.generateQrCodeUrl', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.generateQrCodeUrl was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.generateQrCodeUrl was null.');
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_secretKey = (args[0] as String?);
           assert(arg_secretKey != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.generateQrCodeUrl was null, expected non-null String.');
           final String? arg_accountName = (args[1] as String?);
           final String? arg_issuer = (args[2] as String?);
-          final String output = await api.generateQrCodeUrl(
-              arg_secretKey!, arg_accountName, arg_issuer);
+          final String output = await api.generateQrCodeUrl(arg_secretKey!, arg_accountName, arg_issuer);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp',
-          codec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp was null.');
+          'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp was null.');
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_secretKey = (args[0] as String?);
           assert(arg_secretKey != null,
