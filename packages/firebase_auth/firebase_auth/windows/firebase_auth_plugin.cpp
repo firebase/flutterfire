@@ -1127,7 +1127,6 @@ void FirebaseAuthPlugin::UpdateEmail(
   firebase::Future<void> future = user.UpdateEmail(new_email.c_str());
 #pragma warning(pop)
 
-
   future.OnCompletion([result, firebaseAuth](
                           const firebase::Future<void>& completed_future) {
     // We are probably in a different thread right now.
