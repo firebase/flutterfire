@@ -14,7 +14,7 @@
 
 import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
 // ignore: implementation_imports, tightly coupled packages
-import 'package:google_generative_ai/src/vertex_hooks.dart';
+import 'package:google_generative_ai/src/vertex_hooks.dart' as google_ai_hooks;
 
 import 'vertex_content.dart';
 
@@ -132,6 +132,7 @@ extension GoogleAIGenerateContentResponseConversion
   GenerateContentResponse toVertex() => GenerateContentResponse(
         candidates.map((c) => c.toVertex()).toList(),
         promptFeedback?.toVertex(),
+        usageMetadata: usageMetadata?.toVertex(),
       );
 }
 
@@ -256,14 +257,6 @@ final class UsageMetadata {
     this.totalTokenCount,
   });
 
-  factory UsageMetadata._fromGoogleAIUsageMetadata(
-          google_ai.UsageMetadata usageMetadata) =>
-      UsageMetadata(
-        promptTokenCount: usageMetadata.promptTokenCount,
-        candidatesTokenCount: usageMetadata.candidatesTokenCount,
-        totalTokenCount: usageMetadata.totalTokenCount,
-      );
-
   /// Number of tokens in the prompt.
   final int? promptTokenCount;
 
@@ -272,9 +265,12 @@ final class UsageMetadata {
 
   /// Total token count for the generation request (prompt + candidates).
   final int? totalTokenCount;
+}
 
-  /// Converts this metadata to a [google_ai.UsageMetadata].
-  google_ai.UsageMetadata _toGoogleAIUsageMetadata() => google_ai.UsageMetadata(
+/// Conversion utilities for [google_ai.UsageMetadata].
+extension GoogleAIUsageMetadata on google_ai.UsageMetadata {
+  /// Returns this response as a [GenerateContentResponse].
+  UsageMetadata toVertex() => UsageMetadata(
         promptTokenCount: promptTokenCount,
         candidatesTokenCount: candidatesTokenCount,
         totalTokenCount: totalTokenCount,
@@ -911,27 +907,26 @@ extension TaskTypeConversion on TaskType {
 GenerateContentResponse parseGenerateContentResponse(Object jsonObject) {
   google_ai.GenerateContentResponse response =
       google_ai_hooks.parseGenerateContentResponse(jsonObject);
-  return GenerateContentResponse._fromGoogleAIGenerateContentResponse(response);
+  return response.toVertex();
 }
 
 /// Parse to [CountTokensResponse] from json object.
 CountTokensResponse parseCountTokensResponse(Object jsonObject) {
   google_ai.CountTokensResponse response =
       google_ai_hooks.parseCountTokensResponse(jsonObject);
-  return CountTokensResponse._fromGoogleAICountTokensResponse(response);
+  return response.toVertex();
 }
 
 /// Parse to [EmbedContentResponse] from json object.
 EmbedContentResponse parseEmbedContentResponse(Object jsonObject) {
   google_ai.EmbedContentResponse response =
       google_ai_hooks.parseEmbedContentResponse(jsonObject);
-  return EmbedContentResponse._fromGoogleAIEmbedContentResponse(response);
+  return response.toVertex();
 }
 
 /// Parse to [BatchEmbedContentsResponse] from json object.
 BatchEmbedContentsResponse parseBatchEmbedContentsResponse(Object jsonObject) {
   google_ai.BatchEmbedContentsResponse response =
       google_ai_hooks.parseBatchEmbedContentsResponse(jsonObject);
-  return BatchEmbedContentsResponse._fromGoogleAIBatchEmbedContentsResponse(
-      response);
+  return response.toVertex();
 }
