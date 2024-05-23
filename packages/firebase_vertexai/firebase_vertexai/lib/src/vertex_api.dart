@@ -269,7 +269,7 @@ final class UsageMetadata {
 
 /// Conversion utilities for [google_ai.UsageMetadata].
 extension GoogleAIUsageMetadata on google_ai.UsageMetadata {
-  /// Returns this response as a [GenerateContentResponse].
+  /// Returns this as a [UsageMetadata].
   UsageMetadata toVertex() => UsageMetadata(
         promptTokenCount: promptTokenCount,
         candidatesTokenCount: candidatesTokenCount,
