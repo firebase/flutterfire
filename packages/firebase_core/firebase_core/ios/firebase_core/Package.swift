@@ -49,22 +49,21 @@ func loadFirebaseSDKVersion() throws -> String {
     }
 }
 
-let library_version: String
-let firebase_sdk_version_string: String
+let library_version: String = "2.31.1"
+let firebase_sdk_version_string: String = "10.25.0"
 
-do {
-    library_version = try loadPubspecVersion()
-    firebase_sdk_version_string = try loadFirebaseSDKVersion()
-} catch {
-    fatalError("Failed to load configuration: \(error)")
-}
+// TODO - this works fine when running via Flutter (i.e. "flutter run"), it does not work
+// when running from Xcode as it cannot find the appropriate files to extract versions
+//do {
+//    library_version = try loadPubspecVersion()
+//    firebase_sdk_version_string = try loadFirebaseSDKVersion()
+//} catch {
+//    fatalError("Failed to load configuration: \(error)")
+//}
 
 guard let firebase_sdk_version = Version(firebase_sdk_version_string) else {
     fatalError("Invalid Firebase SDK version: \(firebase_sdk_version_string)")
 }
-
-print("Library Version: \(library_version)")
-print("Firebase SDK Version: \(firebase_sdk_version)")
 
 let package = Package(
     name: "firebase_core",
