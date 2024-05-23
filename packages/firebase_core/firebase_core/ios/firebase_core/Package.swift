@@ -5,28 +5,32 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
-
 import PackageDescription
 import Foundation
 
-func loadPubspecVersion() -> String {
-    let pubspecPath = "../firebase_core/pubspec.yaml"
+enum ConfigurationError: Error {
+    case fileNotFound(String)
+    case parsingError(String)
+    case invalidFormat(String)
+}
+
+func loadPubspecVersion() throws -> String {
+    let pubspecPath = "../../../firebase_core/pubspec.yaml"
     do {
         let yamlString = try String(contentsOfFile: pubspecPath, encoding: .utf8)
         if let versionLine = yamlString.split(separator: "\n").first(where: { $0.starts(with: "version:") }) {
             let version = versionLine.split(separator: ":")[1].trimmingCharacters(in: .whitespaces)
             return version.replacingOccurrences(of: "+", with: "-")
+        } else {
+            throw ConfigurationError.invalidFormat("No version line found in pubspec.yaml")
         }
     } catch {
-        print("Error loading or parsing pubspec.yaml: \(error)")
+        throw ConfigurationError.fileNotFound("Error loading or parsing pubspec.yaml: \(error)")
     }
-    return "1.0.0" // Default version if parsing fails
 }
 
-// Function to load Firebase SDK version from a Ruby script file
-func loadFirebaseSDKVersion() -> String {
-    let firebaseCoreScriptPath = "../firebase_core/ios/firebase_sdk_version.rb"
+func loadFirebaseSDKVersion() throws -> String {
+    let firebaseCoreScriptPath = "../../../firebase_core/ios/firebase_sdk_version.rb"
     do {
         let content = try String(contentsOfFile: firebaseCoreScriptPath, encoding: .utf8)
         let pattern = #"def firebase_sdk_version!\(\)\n\s+'([^']+)'\nend"#
@@ -34,48 +38,60 @@ func loadFirebaseSDKVersion() -> String {
            let match = regex.firstMatch(in: content, range: NSRange(content.startIndex..., in: content)) {
             if let versionRange = Range(match.range(at: 1), in: content) {
                 return String(content[versionRange])
+            } else {
+                throw ConfigurationError.invalidFormat("Invalid format in firebase_sdk_version.rb")
             }
+        } else {
+            throw ConfigurationError.parsingError("No match found in firebase_sdk_version.rb")
         }
     } catch {
-        print("Error loading or parsing firebase_sdk_version.rb: \(error)")
+        throw ConfigurationError.fileNotFound("Error loading or parsing firebase_sdk_version.rb: \(error)")
     }
-    return "10.25.0" // Default version if parsing fails
 }
 
-let library_version: String = loadPubspecVersion()
-let firebase_sdk_version_string: String = loadFirebaseSDKVersion()
+let library_version: String
+let firebase_sdk_version_string: String
+
+do {
+    library_version = try loadPubspecVersion()
+    firebase_sdk_version_string = try loadFirebaseSDKVersion()
+} catch {
+    fatalError("Failed to load configuration: \(error)")
+}
 
 guard let firebase_sdk_version = Version(firebase_sdk_version_string) else {
     fatalError("Invalid Firebase SDK version: \(firebase_sdk_version_string)")
 }
 
+print("Library Version: \(library_version)")
+print("Firebase SDK Version: \(firebase_sdk_version)")
+
 let package = Package(
-  name: "firebase_core",
-  platforms: [
-    .iOS("11.0"),
-    .macOS("10.13"),
-  ],
-  products: [
-    .library(name: "firebase-core", targets: ["firebase_core"]),
-  ],
-  dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version)
-  ],
-  targets: [
-    .target(
-      name: "firebase_core",
-      // Using FirebaseInstallations as FirebaseCore isn't a product and this is really small
-      dependencies: [
-        .product(name: "FirebaseInstallations", package: "firebase-ios-sdk")
-                    ],
-      resources: [
-        .process("Resources"),
-      ],
-      cSettings: [
-        .headerSearchPath("include/firebase_core"),
-        .define("LIBRARY_VERSION", to: "\"\(library_version)\""),
-        .define("LIBRARY_NAME", to: "\"flutter-fire-core\"")
-      ]
-    ),
-  ]
+    name: "firebase_core",
+    platforms: [
+        .iOS("11.0"),
+        .macOS("10.13"),
+    ],
+    products: [
+        .library(name: "firebase-core", targets: ["firebase_core"]),
+    ],
+    dependencies: [
+        .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version)
+    ],
+    targets: [
+        .target(
+            name: "firebase_core",
+            dependencies: [
+                .product(name: "FirebaseInstallations", package: "firebase-ios-sdk")
+            ],
+            resources: [
+                .process("Resources"),
+            ],
+            cSettings: [
+                .headerSearchPath("include/firebase_core"),
+                .define("LIBRARY_VERSION", to: "\"\(library_version)\""),
+                .define("LIBRARY_NAME", to: "\"flutter-fire-core\"")
+            ]
+        ),
+    ]
 )
