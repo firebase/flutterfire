@@ -1,1 +1,1 @@
-../../../../ios/firebase_core/Sources/firebase_core/FLTFirebasePlugin.h
+../../../../ios/firebase_core/Sources/firebase_core/FLTFirebasePlugin.m
