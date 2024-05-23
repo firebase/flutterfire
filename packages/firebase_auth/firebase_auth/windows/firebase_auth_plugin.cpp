@@ -1235,10 +1235,25 @@ void FirebaseAuthPlugin::VerifyBeforeUpdateEmail(
     const AuthPigeonFirebaseApp& app, const std::string& new_email,
     const PigeonActionCodeSettings* action_code_settings,
     std::function<void(std::optional<FlutterError> reply)> result) {
-  result(FlutterError(
-      "unimplemented",
-      "VerifyBeforeUpdateEmail is not available on this platform yet.",
-      nullptr));
+  firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
+  firebase::auth::User user = firebaseAuth->current_user();
+
+  if (action_code_settings != nullptr) {
+    printf("Firebase C++ SDK does not support using `ActionCodeSettings` for `verifyBeforeUpdateEmail()` API currently");
+  }
+
+ firebase::Future<void> future =
+      user.SendEmailVerificationBeforeUpdatingEmail(new_email.c_str());
+
+ future.OnCompletion([result, firebaseAuth](
+                         const firebase::Future<void>& completed_future) {
+
+   if (completed_future.error() == 0) {
+     result(std::nullopt);
+   } else {
+     result(FirebaseAuthPlugin::ParseError(completed_future));
+   }
+ });
 }
 
 void FirebaseAuthPlugin::RevokeTokenWithAuthorizationCode(
