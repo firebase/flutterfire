@@ -106,7 +106,8 @@ final class GenerativeModel {
     return () async {
       Map<String, String> headers = {};
       // Override the client name in Google AI SDK
-      headers['x-goog-api-client'] = 'gl-dart/flutter fire/$packageVersion';
+      headers['x-goog-api-client'] =
+          'gl-dart/$packageVersion fire/$packageVersion';
       if (appCheck != null) {
         final appCheckToken = await appCheck.getToken();
         if (appCheckToken != null) {
