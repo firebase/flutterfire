@@ -1122,7 +1122,10 @@ void FirebaseAuthPlugin::UpdateEmail(
   firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
   firebase::auth::User user = firebaseAuth->current_user();
 
+#pragma warning(push)
+#pragma warning(disable : 4996)
   firebase::Future<void> future = user.UpdateEmail(new_email.c_str());
+#pragma warning(pop)
 
   future.OnCompletion([result, firebaseAuth](
                           const firebase::Future<void>& completed_future) {
