@@ -1239,20 +1239,22 @@ void FirebaseAuthPlugin::VerifyBeforeUpdateEmail(
   firebase::auth::User user = firebaseAuth->current_user();
 
   if (action_code_settings == nullptr) {
-    printf("Firebase C++ SDK does not support using `ActionCodeSettings` for `verifyBeforeUpdateEmail()` API currently");
+    printf(
+        "Firebase C++ SDK does not support using `ActionCodeSettings` for "
+        "`verifyBeforeUpdateEmail()` API currently");
   }
 
- firebase::Future<void> future =
+  firebase::Future<void> future =
       user.SendEmailVerificationBeforeUpdatingEmail(new_email.c_str());
 
- future.OnCompletion([result, firebaseAuth](
-                         const firebase::Future<void>& completed_future) {
-   if (completed_future.error() == 0) {
-     result(std::nullopt);
-   } else {
-     result(FirebaseAuthPlugin::ParseError(completed_future));
-   }
- });
+  future.OnCompletion(
+      [result, firebaseAuth](const firebase::Future<void>& completed_future) {
+        if (completed_future.error() == 0) {
+          result(std::nullopt);
+        } else {
+          result(FirebaseAuthPlugin::ParseError(completed_future));
+        }
+      });
 }
 
 void FirebaseAuthPlugin::RevokeTokenWithAuthorizationCode(

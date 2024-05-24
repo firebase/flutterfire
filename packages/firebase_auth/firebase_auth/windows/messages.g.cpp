@@ -3924,7 +3924,8 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
               const auto& new_email_arg =
                   std::get<std::string>(encodable_new_email_arg);
               const auto& encodable_action_code_settings_arg = args.at(2);
-              // IF CODE REGENERATED, PLEASE REINSERT THIS. IF ARG IS NULL, APP CRASHES
+              // IF CODE REGENERATED, PLEASE REINSERT THIS. IF ARG IS NULL, APP
+              // CRASHES
               const PigeonActionCodeSettings* action_code_settings_arg =
                   nullptr;
               if (!encodable_action_code_settings_arg.IsNull()) {
