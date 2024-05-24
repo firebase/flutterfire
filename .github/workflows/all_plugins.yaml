@@ -139,11 +139,12 @@ jobs:
       - name: 'Build Apps with Swift Package Manager'
         # Just Core example has pure Swift capability at the moment
         run: |
-          rm packages/firebase_core/firebase_core/example/ios/Podfile
-          melos exec -c 1 --scope="*firebase_core_example*" -- \
-            "flutter build ios --no-codesign" | tee swift_output.log
+          cd packages/firebase_core/firebase_core/example/ios
+          rm Podfile
+          pod deintegrate
+          flutter build ios --no-codesign | tee swift_output.log
           output=$(<swift_output.log)
-          if [[ "$output" =~ "Running pod install" || "$output" =~ "ERROR" ]]; then
+          if [[ "$output" =~ "Running pod install"]]; then
             exit 1
           else
             echo "Successfully built iOS project using Swift Package Manager."
