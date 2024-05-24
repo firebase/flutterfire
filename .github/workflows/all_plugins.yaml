@@ -142,14 +142,23 @@ jobs:
           cd packages/firebase_core/firebase_core/example/ios
           rm Podfile
           pod deintegrate
-          flutter build ios --no-codesign | tee swift_output.log
-          output=$(<swift_output.log)
-          if [[ "$output" =~ "Running pod install"]]; then
+          # Run the flutter build command and capture the output and exit status
+          flutter_output=$(flutter build ios --no-codesign | tee swift_output.log)
+          flutter_exit_code=${PIPESTATUS[0]}
+
+          # Check if the flutter build command was successful
+          if [[ $flutter_exit_code -ne 0 ]]; then
+            echo "Flutter build failed with exit code $flutter_exit_code."
+            exit 1
+          fi
+
+          # Check the output for the specific string
+          if [[ "$flutter_output" =~ "Running pod install" ]]; then
             exit 1
           else
             echo "Successfully built iOS project using Swift Package Manager."
             exit 0
-          fi          
+          fi  
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 30
