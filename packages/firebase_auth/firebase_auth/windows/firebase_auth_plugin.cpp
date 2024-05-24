@@ -1238,7 +1238,7 @@ void FirebaseAuthPlugin::VerifyBeforeUpdateEmail(
   firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
   firebase::auth::User user = firebaseAuth->current_user();
 
-  if (action_code_settings == nullptr) {
+  if (action_code_settings != nullptr) {
     printf(
         "Firebase C++ SDK does not support using `ActionCodeSettings` for "
         "`verifyBeforeUpdateEmail()` API currently");
