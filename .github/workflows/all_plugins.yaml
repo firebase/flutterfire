@@ -141,7 +141,7 @@ jobs:
         run: |
           rm packages/firebase_core/firebase_core/example/ios/Podfile
           melos exec -c 1 --scope="*firebase_core_example*" -- \
-            "flutter build ios --debug" | tee swift_output.log
+            "flutter build ios --no-codesign" | tee swift_output.log
           output=$(<swift_output.log)
           if [[ "$output" =~ "Running pod install" || "$output" =~ "ERROR" ]]; then
             exit 1
