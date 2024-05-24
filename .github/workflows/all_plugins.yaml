@@ -144,7 +144,7 @@ jobs:
           pod deintegrate
           # Run the flutter build command and capture the output and exit status
           flutter_output=$(flutter build ios --no-codesign)
-          flutter_exit_code=${PIPESTATUS[0]}
+          flutter_exit_code=$?
 
           # Check if the flutter build command was successful
           if [[ $flutter_exit_code -ne 0 ]]; then
