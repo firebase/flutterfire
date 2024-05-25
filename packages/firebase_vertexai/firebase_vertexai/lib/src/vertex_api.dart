@@ -361,14 +361,6 @@ enum BlockReason {
   other('OTHER');
 
   const BlockReason(this._jsonString);
-  static BlockReason _parseValue(String jsonObject) {
-    return switch (jsonObject) {
-      'BLOCK_REASON_UNSPECIFIED' => BlockReason.unspecified,
-      'SAFETY' => BlockReason.safety,
-      'OTHER' => BlockReason.other,
-      _ => throw FormatException('Unhandled BlockReason format', jsonObject),
-    };
-  }
 
   final String _jsonString;
 
