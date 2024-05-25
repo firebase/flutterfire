@@ -361,6 +361,15 @@ enum BlockReason {
   other('OTHER');
 
   const BlockReason(this._jsonString);
+  // ignore: unused_element
+  static BlockReason _parseValue(String jsonObject) {
+    return switch (jsonObject) {
+      'BLOCK_REASON_UNSPECIFIED' => BlockReason.unspecified,
+      'SAFETY' => BlockReason.safety,
+      'OTHER' => BlockReason.other,
+      _ => throw FormatException('Unhandled BlockReason format', jsonObject),
+    };
+  }
 
   final String _jsonString;
 
@@ -404,6 +413,7 @@ enum HarmCategory {
   dangerousContent('HARM_CATEGORY_DANGEROUS_CONTENT');
 
   const HarmCategory(this._jsonString);
+  // ignore: unused_element
   static HarmCategory _parseValue(Object jsonObject) {
     return switch (jsonObject) {
       'HARM_CATEGORY_UNSPECIFIED' => HarmCategory.unspecified,
@@ -474,6 +484,7 @@ enum HarmProbability {
 
   const HarmProbability(this._jsonString);
 
+  // ignore: unused_element
   static HarmProbability _parseValue(Object jsonObject) {
     return switch (jsonObject) {
       'UNSPECIFIED' => HarmProbability.unspecified,
@@ -581,6 +592,7 @@ enum FinishReason {
   /// Convert to json format
   String toJson() => _jsonString;
 
+  // ignore: unused_element
   static FinishReason _parseValue(Object jsonObject) {
     return switch (jsonObject) {
       'UNSPECIFIED' => FinishReason.unspecified,
