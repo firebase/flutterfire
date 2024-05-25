@@ -59,8 +59,7 @@ final class GenerativeModel {
     List<Tool>? tools,
     Content? systemInstruction,
     ToolConfig? toolConfig,
-  })  : _firebaseApp = app,
-        _googleAIModel = google_ai_hooks.createModelWithBaseUri(
+  }) : _googleAIModel = google_ai_hooks.createModelWithBaseUri(
           model: _normalizeModelName(model),
           apiKey: app.options.apiKey,
           baseUri: _vertexUri(app, location),
@@ -75,7 +74,6 @@ final class GenerativeModel {
               : [],
           toolConfig: toolConfig?.toGoogleAI(),
         );
-  final FirebaseApp _firebaseApp;
   final google_ai.GenerativeModel _googleAIModel;
 
   static const _modelsPrefix = 'models/';
@@ -90,15 +88,6 @@ final class GenerativeModel {
       _baseUrl,
       '/$_apiVersion/projects/$projectId/locations/$location/publishers/google',
     );
-  }
-
-  static google_ai.GenerationConfig _convertGenerationConfig(
-      GenerationConfig? config, FirebaseApp app) {
-    if (config == null) {
-      return google_ai.GenerationConfig();
-    } else {
-      return config.toGoogleAI();
-    }
   }
 
   static FutureOr<Map<String, String>> Function() _firebaseTokens(
@@ -136,7 +125,9 @@ final class GenerativeModel {
   /// ```
   Future<GenerateContentResponse> generateContent(Iterable<Content> prompt,
       {List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig}) async {
+      GenerationConfig? generationConfig,
+      List<Tool>? tools,
+      ToolConfig? toolConfig}) async {
     Iterable<google_ai.Content> googlePrompt =
         prompt.map((content) => content.toGoogleAI());
     List<google_ai.SafetySetting> googleSafetySettings = safetySettings != null
@@ -144,8 +135,11 @@ final class GenerativeModel {
         : [];
     final response = await _googleAIModel.generateContent(googlePrompt,
         safetySettings: googleSafetySettings,
-        generationConfig:
-            _convertGenerationConfig(generationConfig, _firebaseApp));
+        generationConfig: generationConfig?.toGoogleAI(),
+        tools: tools != null
+            ? tools.map((tool) => tool.toGoogleAI()).toList()
+            : [],
+        toolConfig: toolConfig?.toGoogleAI());
     return response.toVertex();
   }
 
@@ -164,13 +158,19 @@ final class GenerativeModel {
   Stream<GenerateContentResponse> generateContentStream(
       Iterable<Content> prompt,
       {List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig}) {
+      GenerationConfig? generationConfig,
+      List<Tool>? tools,
+      ToolConfig? toolConfig}) {
     return _googleAIModel
         .generateContentStream(prompt.map((content) => content.toGoogleAI()),
             safetySettings: safetySettings != null
                 ? safetySettings.map((setting) => setting.toGoogleAI()).toList()
                 : [],
-            generationConfig: generationConfig?.toGoogleAI())
+            generationConfig: generationConfig?.toGoogleAI(),
+            tools: tools != null
+                ? tools.map((tool) => tool.toGoogleAI()).toList()
+                : [],
+            toolConfig: toolConfig?.toGoogleAI())
         .map((r) => r.toVertex());
   }
 
@@ -191,9 +191,23 @@ final class GenerativeModel {
   ///   print(response.text);
   /// }
   /// ```
-  Future<CountTokensResponse> countTokens(Iterable<Content> contents) async {
+  Future<CountTokensResponse> countTokens(
+    Iterable<Content> contents, {
+    List<SafetySetting>? safetySettings,
+    GenerationConfig? generationConfig,
+    List<Tool>? tools,
+    ToolConfig? toolConfig,
+  }) async {
     return _googleAIModel
-        .countTokens(contents.map((e) => e.toGoogleAI()))
+        .countTokens(contents.map((e) => e.toGoogleAI()),
+            safetySettings: safetySettings != null
+                ? safetySettings.map((setting) => setting.toGoogleAI()).toList()
+                : [],
+            generationConfig: generationConfig?.toGoogleAI(),
+            tools: tools != null
+                ? tools.map((tool) => tool.toGoogleAI()).toList()
+                : [],
+            toolConfig: toolConfig?.toGoogleAI())
         .then((r) => r.toVertex());
   }
 
@@ -208,10 +222,12 @@ final class GenerativeModel {
   ///     (await model.embedContent([Content.text(prompt)])).embedding.values;
   /// ```
   Future<EmbedContentResponse> embedContent(Content content,
-      {TaskType? taskType, String? title}) async {
+      {TaskType? taskType, String? title, int? outputDimensionality}) async {
     return _googleAIModel
         .embedContent(content.toGoogleAI(),
-            taskType: taskType?.toGoogleAI(), title: title)
+            taskType: taskType?.toGoogleAI(),
+            title: title,
+            outputDimensionality: outputDimensionality)
         .then((r) => r.toVertex());
   }
 
