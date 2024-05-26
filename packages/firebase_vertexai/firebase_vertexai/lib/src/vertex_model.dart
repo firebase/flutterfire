@@ -21,7 +21,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
 // ignore: implementation_imports, tightly coupled packages
-import 'package:google_generative_ai/src/vertex_hooks.dart';
+import 'package:google_generative_ai/src/vertex_hooks.dart' as google_ai_hooks;
 
 import 'vertex_api.dart';
 import 'vertex_content.dart';
@@ -59,7 +59,7 @@ final class GenerativeModel {
     List<Tool>? tools,
     Content? systemInstruction,
     ToolConfig? toolConfig,
-  }) : _googleAIModel = createModelWithBaseUri(
+  }) : _googleAIModel = google_ai_hooks.createModelWithBaseUri(
           model: _normalizeModelName(model),
           apiKey: app.options.apiKey,
           baseUri: _vertexUri(app, location),
@@ -95,7 +95,8 @@ final class GenerativeModel {
     return () async {
       Map<String, String> headers = {};
       // Override the client name in Google AI SDK
-      headers['x-goog-api-client'] = 'gl-dart/flutter fire/$packageVersion';
+      headers['x-goog-api-client'] =
+          'gl-dart/$packageVersion fire/$packageVersion';
       if (appCheck != null) {
         final appCheckToken = await appCheck.getToken();
         if (appCheckToken != null) {
