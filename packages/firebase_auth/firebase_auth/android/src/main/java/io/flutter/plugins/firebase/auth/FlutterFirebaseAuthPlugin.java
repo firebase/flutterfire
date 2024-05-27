@@ -33,6 +33,8 @@ import io.flutter.plugin.common.EventChannel.StreamHandler;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.firebase.core.FlutterFirebaseCorePlugin;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -697,8 +699,7 @@ public class FlutterFirebaseAuthPlugin
             }
 
             if (user != null) {
-              final Object parsedUser = user.toList();
-              constants.put("APP_CURRENT_USER", parsedUser);
+              constants.put("APP_CURRENT_USER", PigeonParser.manuallyToList(user));
             }
 
             taskCompletionSource.setResult(constants);

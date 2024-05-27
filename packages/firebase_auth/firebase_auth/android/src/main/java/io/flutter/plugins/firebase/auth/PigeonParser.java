@@ -38,6 +38,13 @@ import java.util.Map;
 import java.util.Objects;
 
 public class PigeonParser {
+  static List<Object> manuallyToList(GeneratedAndroidFirebaseAuth.PigeonUserDetails pigeonUserDetails) {
+    List<Object> output = new ArrayList<>();
+    output.add(pigeonUserDetails.getUserInfo().toList());
+    output.add(pigeonUserDetails.getProviderData());
+    return output;
+  }
+
   static GeneratedAndroidFirebaseAuth.PigeonUserCredential parseAuthResult(
       @NonNull AuthResult authResult) {
     GeneratedAndroidFirebaseAuth.PigeonUserCredential.Builder builder =
