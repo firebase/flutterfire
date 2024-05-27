@@ -141,12 +141,11 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
   // FlutterPluginRegistrar.
   // TODO(Salakar): addApplicationDelegate does not exist on MacOS version of
   // FlutterPluginRegistrar. (https://github.com/flutter/flutter/issues/41471)
-  FirebaseAuthHostApiSetup(registrar.messenger, instance);
-  FirebaseAuthUserHostApiSetup(registrar.messenger, instance);
+  SetUpFirebaseAuthHostApi(registrar.messenger, instance);
+  SetUpFirebaseAuthUserHostApi(registrar.messenger, instance);
 #else
   [registrar publish:instance];
   [registrar addApplicationDelegate:instance];
-  SetUpFirebaseAuthHostApi(registrar.messenger, instance);
   SetUpFirebaseAuthHostApi(registrar.messenger, instance);
   SetUpFirebaseAuthUserHostApi(registrar.messenger, instance);
   SetUpMultiFactorUserHostApi(registrar.messenger, instance);
