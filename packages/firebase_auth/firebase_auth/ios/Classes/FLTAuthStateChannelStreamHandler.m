@@ -29,7 +29,7 @@
         }
 
         if (user) {
-          events(@{@"user" : [[PigeonParser getPigeonDetails:user] toList]});
+          events(@{@"user" : [PigeonParser getManualList:[PigeonParser getPigeonDetails:[auth currentUser]]]});
         } else {
           events(@{
             @"user" : [NSNull null],

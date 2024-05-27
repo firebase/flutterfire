@@ -298,7 +298,7 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
   return @{
     @"APP_LANGUAGE_CODE" : (id)[auth languageCode] ?: [NSNull null],
     @"APP_CURRENT_USER" : [auth currentUser]
-        ? [[PigeonParser getPigeonDetails:[auth currentUser]] toList]
+        ? [PigeonParser getManualList:[PigeonParser getPigeonDetails:[auth currentUser]]]
         : [NSNull null],
   };
 }
