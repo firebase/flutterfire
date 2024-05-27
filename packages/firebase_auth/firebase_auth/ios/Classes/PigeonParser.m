@@ -37,8 +37,8 @@
                  photoUrl:(user.photoURL.absoluteString.length > 0) ? user.photoURL.absoluteString
                                                                     : nil
               phoneNumber:user.phoneNumber
-              isAnonymous:[NSNumber numberWithBool:user.isAnonymous]
-          isEmailVerified:[NSNumber numberWithBool:user.emailVerified]
+              isAnonymous:user.isAnonymous
+          isEmailVerified:user.emailVerified
                providerId:user.providerID
                  tenantId:user.tenantID
              refreshToken:user.refreshToken
@@ -73,7 +73,7 @@
 
 + (PigeonAdditionalUserInfo *)getPigeonAdditionalUserInfo:(nonnull FIRAdditionalUserInfo *)userInfo
                                         authorizationCode:(nullable NSString *)authorizationCode {
-  return [PigeonAdditionalUserInfo makeWithIsNewUser:[NSNumber numberWithBool:userInfo.isNewUser]
+  return [PigeonAdditionalUserInfo makeWithIsNewUser:userInfo.isNewUser
                                           providerId:userInfo.providerID
                                             username:userInfo.username
                                    authorizationCode:authorizationCode
