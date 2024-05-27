@@ -322,11 +322,15 @@ class FlutterIdTokenListener : public firebase::auth::IdTokenListener {
 
     using flutter::EncodableMap;
     using flutter::EncodableValue;
+    using flutter::EncodableList;
 
     if (event_sink_) {
       if (user.is_valid()) {
+          EncodableList userDetailsList = EncodableList();
+          userDetailsList.push_back(userDetails.user_info().ToEncodableList());
+          userDetailsList.push_back(userDetails.provider_data());
         event_sink_->Success(EncodableValue(EncodableMap{
-            {EncodableValue("user"), userDetails.ToEncodableList()}}));
+            {EncodableValue("user"), userDetailsList}}));
       } else {
         event_sink_->Success(EncodableValue(EncodableMap{
             {EncodableValue("user"), EncodableValue(std::monostate{})}}));
@@ -402,11 +406,16 @@ class FlutterAuthStateListener : public firebase::auth::AuthStateListener {
 
     using flutter::EncodableMap;
     using flutter::EncodableValue;
+    using flutter::EncodableList;
 
     if (event_sink_) {
       if (user.is_valid()) {
+          EncodableList userDetailsList = EncodableList();
+          userDetailsList.push_back(userDetails.user_info().ToEncodableList());
+          userDetailsList.push_back(userDetails.provider_data());
+
         event_sink_->Success(EncodableValue(EncodableMap{
-            {EncodableValue("user"), userDetails.ToEncodableList()}}));
+            {EncodableValue("user"), userDetailsList}}));
       } else {
         event_sink_->Success(EncodableValue(EncodableMap{
             {EncodableValue("user"), EncodableValue(std::monostate{})}}));
