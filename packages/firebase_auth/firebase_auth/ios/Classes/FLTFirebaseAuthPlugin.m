@@ -1572,7 +1572,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
 }
 
 - (void)getIdTokenApp:(nonnull AuthPigeonFirebaseApp *)app
-         forceRefresh:(nonnull NSNumber *)forceRefresh
+         forceRefresh:(BOOL)forceRefresh
            completion:(nonnull void (^)(PigeonIdTokenResult *_Nullable,
                                         FlutterError *_Nullable))completion {
   FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
@@ -1585,7 +1585,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
   }
 
   [currentUser
-      getIDTokenResultForcingRefresh:[forceRefresh boolValue]
+      getIDTokenResultForcingRefresh:forceRefresh
                           completion:^(FIRAuthTokenResult *tokenResult, NSError *error) {
                             if (error != nil) {
                               completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
