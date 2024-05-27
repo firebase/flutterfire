@@ -10,7 +10,7 @@
 
 @interface PigeonParser : NSObject
 
-+ (NSArray *) getManualList:(nonnull PigeonUserDetails *)userDetails;
++ (NSArray *)getManualList:(nonnull PigeonUserDetails *)userDetails;
 + (PigeonUserCredential *_Nullable)
     getPigeonUserCredentialFromAuthResult:(nonnull FIRAuthDataResult *)authResult
                         authorizationCode:(nullable NSString *)authorizationCode;

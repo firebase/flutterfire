@@ -38,7 +38,8 @@ import java.util.Map;
 import java.util.Objects;
 
 public class PigeonParser {
-  static List<Object> manuallyToList(GeneratedAndroidFirebaseAuth.PigeonUserDetails pigeonUserDetails) {
+  static List<Object> manuallyToList(
+      GeneratedAndroidFirebaseAuth.PigeonUserDetails pigeonUserDetails) {
     List<Object> output = new ArrayList<>();
     output.add(pigeonUserDetails.getUserInfo().toList());
     output.add(pigeonUserDetails.getProviderData());

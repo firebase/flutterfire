@@ -320,17 +320,17 @@ class FlutterIdTokenListener : public firebase::auth::IdTokenListener {
     firebase::auth::User user = auth->current_user();
     PigeonUserDetails userDetails = FirebaseAuthPlugin::ParseUserDetails(user);
 
+    using flutter::EncodableList;
     using flutter::EncodableMap;
     using flutter::EncodableValue;
-    using flutter::EncodableList;
 
     if (event_sink_) {
       if (user.is_valid()) {
-          EncodableList userDetailsList = EncodableList();
-          userDetailsList.push_back(userDetails.user_info().ToEncodableList());
-          userDetailsList.push_back(userDetails.provider_data());
-        event_sink_->Success(EncodableValue(EncodableMap{
-            {EncodableValue("user"), userDetailsList}}));
+        EncodableList userDetailsList = EncodableList();
+        userDetailsList.push_back(userDetails.user_info().ToEncodableList());
+        userDetailsList.push_back(userDetails.provider_data());
+        event_sink_->Success(EncodableValue(
+            EncodableMap{{EncodableValue("user"), userDetailsList}}));
       } else {
         event_sink_->Success(EncodableValue(EncodableMap{
             {EncodableValue("user"), EncodableValue(std::monostate{})}}));
@@ -404,18 +404,18 @@ class FlutterAuthStateListener : public firebase::auth::AuthStateListener {
     firebase::auth::User user = auth->current_user();
     PigeonUserDetails userDetails = FirebaseAuthPlugin::ParseUserDetails(user);
 
+    using flutter::EncodableList;
     using flutter::EncodableMap;
     using flutter::EncodableValue;
-    using flutter::EncodableList;
 
     if (event_sink_) {
       if (user.is_valid()) {
-          EncodableList userDetailsList = EncodableList();
-          userDetailsList.push_back(userDetails.user_info().ToEncodableList());
-          userDetailsList.push_back(userDetails.provider_data());
+        EncodableList userDetailsList = EncodableList();
+        userDetailsList.push_back(userDetails.user_info().ToEncodableList());
+        userDetailsList.push_back(userDetails.provider_data());
 
-        event_sink_->Success(EncodableValue(EncodableMap{
-            {EncodableValue("user"), userDetailsList}}));
+        event_sink_->Success(EncodableValue(
+            EncodableMap{{EncodableValue("user"), userDetailsList}}));
       } else {
         event_sink_->Success(EncodableValue(EncodableMap{
             {EncodableValue("user"), EncodableValue(std::monostate{})}}));
