@@ -149,9 +149,7 @@
     codeSettings.dynamicLinkDomain = settings.dynamicLinkDomain;
   }
 
-  if (settings.handleCodeInApp != nil) {
-    codeSettings.handleCodeInApp = [settings.handleCodeInApp boolValue];
-  }
+  codeSettings.handleCodeInApp = settings.handleCodeInApp;
 
   if (settings.iOSBundleId != nil) {
     codeSettings.iOSBundleID = settings.iOSBundleId;

@@ -17,6 +17,8 @@ class UserMetadata {
   /// When this account was created as dictated by the server clock.
   DateTime? get creationTime => _creationTimestamp == null
       ? null
+      // Needed to support Flutter <3.19
+      // ignore: unnecessary_non_null_assertion
       : DateTime.fromMillisecondsSinceEpoch(_creationTimestamp!, isUtc: true);
 
   /// When the user last signed in as dictated by the server clock.
@@ -25,6 +27,8 @@ class UserMetadata {
   /// sign-in attempts.
   DateTime? get lastSignInTime => _lastSignInTime == null
       ? null
+      // Needed to support Flutter <3.19
+      // ignore: unnecessary_non_null_assertion
       : DateTime.fromMillisecondsSinceEpoch(_lastSignInTime!, isUtc: true);
 
   @override
