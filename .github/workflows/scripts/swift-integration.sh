@@ -1,3 +1,7 @@
+#!/bin/bash
+
+set -e
+
 # Just Core example has pure Swift capability at the moment
 
 
@@ -26,9 +30,10 @@ else
   exit 0
 fi
 
+echo "1111111111"
 # Come back to root
 cd ~
-
+echo "222222222"
 # firebase_core macOS example
 
 # Setup for SPM integration
