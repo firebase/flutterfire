@@ -30,13 +30,10 @@ else
   exit 0
 fi
 
-cd ../macos
-echo "222222222"
-
 # firebase_core macOS example
 
 # Setup for SPM integration
-cd packages/firebase_core/firebase_core/example/macos
+cd ../macos
 rm Podfile
 pod deintegrate
 
