@@ -83,7 +83,6 @@ let package = Package(
   name: "firebase_core",
   platforms: [
     .iOS("11.0"),
-    .macOS("10.13"),
   ],
   products: [
     .library(name: "firebase-core", targets: ["firebase_core"]),
