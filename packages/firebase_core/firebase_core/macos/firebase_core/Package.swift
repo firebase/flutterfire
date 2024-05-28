@@ -14,8 +14,11 @@ enum ConfigurationError: Error {
   case invalidFormat(String)
 }
 
+let macosRootDirectory = String(URL(string: #file)!.deletingLastPathComponent().absoluteString
+  .dropLast())
+
 func loadPubspecVersion() throws -> String {
-  let pubspecPath = "../../../firebase_core/pubspec.yaml"
+  let pubspecPath = NSString.path(withComponents: [macosRootDirectory, "..", "..", "pubspec.yaml"])
   do {
     let yamlString = try String(contentsOfFile: pubspecPath, encoding: .utf8)
     if let versionLine = yamlString.split(separator: "\n")
@@ -31,7 +34,15 @@ func loadPubspecVersion() throws -> String {
 }
 
 func loadFirebaseSDKVersion() throws -> String {
-  let firebaseCoreScriptPath = "../../../firebase_core/ios/firebase_sdk_version.rb"
+  let firebaseCoreScriptPath = NSString.path(withComponents: [
+    macosRootDirectory,
+    "..",
+    "..",
+    "..",
+    "firebase_core",
+    "ios",
+    "firebase_sdk_version.rb",
+  ])
   do {
     let content = try String(contentsOfFile: firebaseCoreScriptPath, encoding: .utf8)
     let pattern = #"def firebase_sdk_version!\(\)\n\s+'([^']+)'\nend"#
@@ -54,17 +65,15 @@ func loadFirebaseSDKVersion() throws -> String {
   }
 }
 
-let library_version: String = "2.31.1"
-let firebase_sdk_version_string: String = "10.25.0"
+let library_version: String
+let firebase_sdk_version_string: String
 
-// TODO: - this works fine when running via Flutter (i.e. "flutter run"), it does not work
-// when running from Xcode as it cannot find the appropriate files to extract versions
-// do {
-//    library_version = try loadPubspecVersion()
-//    firebase_sdk_version_string = try loadFirebaseSDKVersion()
-// } catch {
-//    fatalError("Failed to load configuration: \(error)")
-// }
+do {
+  library_version = try loadPubspecVersion()
+  firebase_sdk_version_string = try loadFirebaseSDKVersion()
+} catch {
+  fatalError("Failed to load configuration: \(error)")
+}
 
 guard let firebase_sdk_version = Version(firebase_sdk_version_string) else {
   fatalError("Invalid Firebase SDK version: \(firebase_sdk_version_string)")
@@ -73,7 +82,6 @@ guard let firebase_sdk_version = Version(firebase_sdk_version_string) else {
 let package = Package(
   name: "firebase_core",
   platforms: [
-    .iOS("11.0"),
     .macOS("10.13"),
   ],
   products: [
@@ -86,6 +94,7 @@ let package = Package(
     .target(
       name: "firebase_core",
       dependencies: [
+        // No product for firebase-core so we pull in the smallest one
         .product(name: "FirebaseInstallations", package: "firebase-ios-sdk"),
       ],
       resources: [
