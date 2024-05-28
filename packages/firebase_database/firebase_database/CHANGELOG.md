@@ -1,3 +1,7 @@
+## 10.5.7
+
+ - Update a dependency to the latest release.
+
 ## 10.5.6
 
  - **FIX**(database): sorting was not applied when database child changed. ([#12664](https://github.com/firebase/flutterfire/issues/12664)). ([c074de28](https://github.com/firebase/flutterfire/commit/c074de287f755a7157bcb494b219cec14ef57f7b))

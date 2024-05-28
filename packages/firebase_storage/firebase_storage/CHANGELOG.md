@@ -1,3 +1,7 @@
+## 11.7.7
+
+ - **FIX**(storage): do not set metadata property unless it has a value ([#12805](https://github.com/firebase/flutterfire/issues/12805)). ([978a87db](https://github.com/firebase/flutterfire/commit/978a87db70218d63abbf0c6bf22e9d00633b5d83))
+
 ## 11.7.6
 
  - **FIX**(storage,windows): putFile(), putString(), putData() & Task streaming event fixes ([#12723](https://github.com/firebase/flutterfire/issues/12723)). ([de69e07a](https://github.com/firebase/flutterfire/commit/de69e07a36a9e2ce967d9f4470f4a14e987abf53))

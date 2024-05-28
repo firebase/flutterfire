@@ -1,3 +1,7 @@
+## 4.17.5
+
+ - Update a dependency to the latest release.
+
 ## 4.17.4
 
  - **FIX**(firestore,ios): fix document stream handler options. ([#12764](https://github.com/firebase/flutterfire/issues/12764)). ([786e73ca](https://github.com/firebase/flutterfire/commit/786e73ca17527493a47914c7ead1a12a4f0adde5))
