@@ -190,9 +190,7 @@ Next, the worker must be registered. Within the `index.html` file, register the 
 ```html
 <script src="flutter_bootstrap.js" async>
   if ('serviceWorker' in navigator) {
-    // Service workers are supported. Use them.
     window.addEventListener('load', function () {
-      // Register Firebase Messaging service worker.
       navigator.serviceWorker.register('firebase-messaging-sw.js', {
         scope: '/firebase-cloud-messaging-push-scope',
       });
