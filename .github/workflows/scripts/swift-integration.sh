@@ -27,7 +27,6 @@ if [[ "$flutter_output" =~ "Running pod install" ]]; then
   exit 1
 else
   echo "Successfully built iOS project using Swift Package Manager."
-  exit 0
 fi
 
 # firebase_core macOS example
