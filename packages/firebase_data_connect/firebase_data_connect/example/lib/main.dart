@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 
+import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -155,7 +158,7 @@ class EmptyDataConnectClass<T> extends DataConnectClass<T> {
   @override
   String toJson() {
     // TODO: implement toJson
-    throw UnimplementedError();
+    return '';
   }
 }
 
@@ -168,133 +171,149 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
   List<Movie> _movies = [];
   double _rating = 0;
 
+  Future<void> triggerReload() async {
+    QueryRef<ListMoviesResponse, EmptyDataConnectClass> ref =
+        FirebaseDataConnect.instance
+            .query<ListMoviesResponse, EmptyDataConnectClass>(
+                "listMovies", serializer, EmptyDataConnectClass());
+
+    ref.execute();
+  }
+
   @override
   void initState() {
     super.initState();
-
     initFirebase().then((value) {
       FirebaseDataConnect.instanceFor(
           app: Firebase.app(),
           connectorConfig:
               ConnectorConfig("us-central1", "movies", "dataconnect"));
-      FirebaseDataConnect.instance
-          .useDataConnectEmulator("10.0.2.2", 9510, false);
+      String host = 'localhost';
+      try {
+        if (Platform.isAndroid) {
+          host = '10.0.2.2';
+        }
+      } catch (_) {
+        print("Ignoring");
+      }
+      print(host);
+      int port = kIsWeb ? 9509 : 9510;
+      FirebaseDataConnect.instance.useDataConnectEmulator(host, port, false);
       QueryRef<ListMoviesResponse, EmptyDataConnectClass> ref =
           FirebaseDataConnect.instance
               .query<ListMoviesResponse, EmptyDataConnectClass>(
                   "listMovies", serializer, EmptyDataConnectClass());
-
-      ref.execute().then((res) {
+      ref.subscribe().listen((event) {
         setState(() {
-          _movies = res.data.movies;
+          _movies = event.movies;
         });
       });
+      triggerReload();
     });
   }
 
   Future<void> initFirebase() async {
-    if (Firebase.apps.isEmpty) {
-      await Firebase.initializeApp(
-          options: const FirebaseOptions(
-              apiKey: "AIzaSyAnwsYb6cDdptN41ez8pRB_CGPet7NRD20",
-              appId: "appId",
-              messagingSenderId: "",
-              projectId: "fdc-bugbash-mtewani"));
-    }
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.all(10.0),
-        child: Column(
-          children: [
-            // Flexible(
-            // child: Padding(
-            // padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-            TextFormField(
-              decoration: const InputDecoration(
-                border: UnderlineInputBorder(),
-                labelText: 'Name',
-              ),
-              controller: _titleController,
+        child: Flex(direction: Axis.vertical, children: [
+          // Flexible(
+          // child: Padding(
+          // padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          TextFormField(
+            decoration: const InputDecoration(
+              border: UnderlineInputBorder(),
+              labelText: 'Name',
             ),
-            // Flexible(
-            TextFormField(
-              decoration: const InputDecoration(
-                border: UnderlineInputBorder(),
-                labelText: 'Genre',
-              ),
-              controller: _genreController,
+            controller: _titleController,
+          ),
+          // Flexible(
+          TextFormField(
+            decoration: const InputDecoration(
+              border: UnderlineInputBorder(),
+              labelText: 'Genre',
             ),
-            RatingBar.builder(
-              initialRating: 3,
-              minRating: 1,
-              direction: Axis.horizontal,
-              allowHalfRating: true,
-              itemCount: 5,
-              itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-              itemBuilder: (context, _) => const Icon(
-                Icons.star,
-                color: Colors.amber,
-              ),
-              onRatingUpdate: (rating) {
-                _rating = rating;
-              },
+            controller: _genreController,
+          ),
+          RatingBar.builder(
+            initialRating: 3,
+            minRating: 1,
+            direction: Axis.horizontal,
+            allowHalfRating: true,
+            itemCount: 5,
+            itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+            itemBuilder: (context, _) => const Icon(
+              Icons.star,
+              color: Colors.amber,
             ),
-            TextButton(
-              style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-              ),
-              onPressed: () {
-                String title = _titleController.text;
-                String genre = _genreController.text;
-                if (title == '' || genre == '') {
-                  return;
-                }
-                AddMovie newData = AddMovie(title, genre, _rating);
-                FirebaseDataConnect.instanceFor(
-                    app: Firebase.app(),
-                    connectorConfig: ConnectorConfig(
-                        "us-central1", "movies", "dataconnect"));
-                MutationRef<AddMovieResponse, AddMovie> ref =
-                    FirebaseDataConnect.instance
-                        .mutation("addMovie", addMovieSerializer, newData);
-                ref.execute().then((res) {
-                  print("Completed!");
-                });
-              },
-              child: const Text('Add Movie'),
+            onRatingUpdate: (rating) {
+              _rating = rating;
+            },
+          ),
+          TextButton(
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
             ),
+            onPressed: () {
+              String title = _titleController.text;
+              String genre = _genreController.text;
+              if (title == '' || genre == '') {
+                return;
+              }
+              AddMovie newData = AddMovie(title, genre, _rating);
+              FirebaseDataConnect.instanceFor(
+                  app: Firebase.app(),
+                  connectorConfig:
+                      ConnectorConfig("us-central1", "movies", "dataconnect"));
+              MutationRef<AddMovieResponse, AddMovie> ref = FirebaseDataConnect
+                  .instance
+                  .mutation("addMovie", addMovieSerializer, newData);
+              ref.execute().then((res) {
+                triggerReload();
+              });
+            },
+            child: const Text('Add Movie'),
+          ),
 
-            const Center(
-              child: Text(
-                "Movies",
-                style: TextStyle(fontSize: 35.0),
-              ),
+          const Center(
+            child: Text(
+              "Movies",
+              style: TextStyle(fontSize: 35.0),
             ),
+          ),
 
-            ListView(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                children: _movies
-                    .map(
-                      (movie) => Card(
-                          child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Center(
-                          child: Text(
-                            movie.title,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      )),
-                    )
-                    .toList())
-          ],
-        ));
+          Expanded(
+              child: Column(
+            children: [
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: () => triggerReload(),
+                  child: ListView(
+                      scrollDirection: Axis.vertical,
+                      children: _movies
+                          .map((movie) => Card(
+                                  child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Center(
+                                  child: Text(
+                                    movie.title,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              )))
+                          .toList()),
+                ),
+              )
+            ],
+          ))
+        ]));
   }
 
   _showError(String message) {
@@ -355,30 +374,23 @@ class _MyHomePageState extends State<MyHomePage> {
       body: const Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          children: <Widget>[
-            DataConnectWidget(),
-          ],
-        ),
+        // Column is also a layout widget. It takes a list of children and
+        // arranges them vertically. By default, it sizes itself to fit its
+        // children horizontally, and tries to be as tall as its parent.
+        //
+        // Column has various properties to control how it sizes itself and
+        // how it positions its children. Here we use mainAxisAlignment to
+        // center the children vertically; the main axis here is the vertical
+        // axis because Columns are vertical (the cross axis would be
+        // horizontal).
+        //
+        // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
+        // action in the IDE, or press "p" in the console), to see the
+        // wireframe for each widget.
+
+        child: DataConnectWidget(),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+    // This trailing comma makes auto-formatting nicer for build methods.
   }
 }

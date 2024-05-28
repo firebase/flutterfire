@@ -3,6 +3,7 @@ part of firebase_data_connect;
 /// DataConnect class
 class FirebaseDataConnect extends FirebasePluginPlatform {
   /// Constructor
+  late QueryManager _queryManager;
   FirebaseDataConnect._(
       {required this.app, required this.connectorConfig, this.auth})
       : super(app.name, 'plugins.flutter.io/firebase_data_connect') {
@@ -11,13 +12,14 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
         connectorConfig.location,
         connectorConfig.connector,
         connectorConfig.serviceId);
+    _queryManager = QueryManager();
   }
 
   /// FirebaseApp
   FirebaseApp app;
 
   /// GRPCTransport
-  late GRPCTransport transport;
+  late DataConnectTransport transport;
 
   /// FirebaseAuth
   FirebaseAuth? auth;
@@ -31,12 +33,10 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   TransportOptions? _transportOptions;
 
   void _checkTransportInit() {
-    print("Initializing transport");
-    transport = GRPCTransport(_transportOptions!, options);
+    transport = getTransport(_transportOptions!, options);
   }
 
   void _checkTransportOptionsInit() {
-    print(_transportOptions == null);
     _transportOptions ??=
         TransportOptions('firebasedataconnect.googleapis.com', null, true);
   }
@@ -47,7 +47,8 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
           String queryName, Serializer<Data> serializer, Variables? vars) {
     _checkTransportOptionsInit();
     _checkTransportInit();
-    return QueryRef<Data, Variables>(queryName, vars, transport, serializer);
+    return QueryRef<Data, Variables>(
+        queryName, vars, transport, serializer, _queryManager);
   }
 
   /// mutation
@@ -61,7 +62,6 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
 
   /// useDataConnectEmulator connects to the DataConnect emulator.
   void useDataConnectEmulator(String host, int? port, bool? isSecure) {
-    print("Use Data Connect Emulator");
     _transportOptions = TransportOptions(host, port, isSecure);
   }
 
@@ -95,30 +95,4 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
 
     return newInstance;
   }
-}
-
-/// DataConnectOptions
-class DataConnectOptions extends ConnectorConfig {
-  /// Constructor
-  DataConnectOptions(
-      this.projectId, String location, String connector, String serviceId)
-      : super(location, connector, serviceId);
-
-  /// projectId for Firebase App
-  String projectId;
-}
-
-/// ConnectorConfig
-class ConnectorConfig {
-  /// Constructor
-  ConnectorConfig(this.location, this.connector, this.serviceId);
-
-  /// location
-  String location;
-
-  /// connector
-  String connector;
-
-  /// serviceId
-  String serviceId;
 }

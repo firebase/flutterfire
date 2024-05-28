@@ -16,6 +16,7 @@ dependencies:
     sdk: flutter
   google_generative_ai: ^0.4.0
   grpc: ^3.2.4
+  http: ^1.2.1
   json_annotation: ^4.9.0
 
 dev_dependencies:
