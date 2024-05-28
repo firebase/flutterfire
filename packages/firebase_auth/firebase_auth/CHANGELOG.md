@@ -1,3 +1,10 @@
+## 4.20.0
+
+ - **FIX**(auth,android): remove unecessary error type guarding ([#12816](https://github.com/firebase/flutterfire/issues/12816)). ([7d4c200a](https://github.com/firebase/flutterfire/commit/7d4c200ac6f06a50c2e7ee852aea2c9fa7bcb0ff))
+ - **FEAT**(auth,windows): `verifyBeforeUpdateEmail()` API  support ([#12825](https://github.com/firebase/flutterfire/issues/12825)). ([111b1ad9](https://github.com/firebase/flutterfire/commit/111b1ad91e985b0462532bc579e64342b7f46fe2))
+ - **FEAT**(auth): update Pigeon version to 19 ([#12828](https://github.com/firebase/flutterfire/issues/12828)). ([5e76153f](https://github.com/firebase/flutterfire/commit/5e76153fbcd337a26e83abc2b43b651ab6c501bc))
+ - **FEAT**: bump CPP SDK to version 11.10.0 ([#12749](https://github.com/firebase/flutterfire/issues/12749)). ([2e410a23](https://github.com/firebase/flutterfire/commit/2e410a232758292baa70f8e78464bd3c62ec0373))
+
 ## 4.19.6
 
  - **FIX**(auth,android): allow nullable `accessToken` when creating `OAuthProvider` ([#12795](https://github.com/firebase/flutterfire/issues/12795)). ([490319d4](https://github.com/firebase/flutterfire/commit/490319d4c046917bdd227c19fd37185d63076b4a))

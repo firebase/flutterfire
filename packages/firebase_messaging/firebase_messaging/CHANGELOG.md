@@ -1,3 +1,7 @@
+## 14.9.4
+
+ - Update a dependency to the latest release.
+
 ## 14.9.3
 
  - **FIX**(messaging): ensure default app is available before checking auth notification ([#12810](https://github.com/firebase/flutterfire/issues/12810)). ([eca2df61](https://github.com/firebase/flutterfire/commit/eca2df615deaf1612ff027044cec3c0df3cf95c1))

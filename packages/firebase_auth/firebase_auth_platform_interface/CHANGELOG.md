@@ -1,3 +1,7 @@
+## 7.3.0
+
+ - **FEAT**(auth): update Pigeon version to 19 ([#12828](https://github.com/firebase/flutterfire/issues/12828)). ([5e76153f](https://github.com/firebase/flutterfire/commit/5e76153fbcd337a26e83abc2b43b651ab6c501bc))
+
 ## 7.2.7
 
  - Update a dependency to the latest release.
