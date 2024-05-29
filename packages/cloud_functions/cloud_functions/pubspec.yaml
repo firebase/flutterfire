@@ -7,7 +7,7 @@ topics:
   - firebase
   - cloud
   - functions
-  - scales
+  - scalable
 
 false_secrets:
   - example/**
