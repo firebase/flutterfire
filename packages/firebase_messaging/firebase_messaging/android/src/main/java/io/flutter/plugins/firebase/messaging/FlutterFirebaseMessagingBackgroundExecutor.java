@@ -176,6 +176,14 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
                   // lookup will fail.
                   FlutterCallbackInformation flutterCallback =
                       FlutterCallbackInformation.lookupCallbackInformation(callbackHandle);
+
+                  if(flutterCallback == null) {
+                    Log.e(TAG, "Failed to find registered callback");
+                    return;
+                  }
+
+                  // Essentially, the above fails because the flutterCallback is null
+
                   DartExecutor executor = backgroundFlutterEngine.getDartExecutor();
                   initializeMethodChannel(executor);
 
