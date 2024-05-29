@@ -55,6 +55,10 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
    */
   public static void setCallbackDispatcher(long callbackHandle) {
     Context context = ContextHolder.getApplicationContext();
+    if(context == null) {
+      Log.e(TAG, "Context is null, cannot continue.");
+      return;
+    }
     SharedPreferences prefs =
         context.getSharedPreferences(FlutterFirebaseMessagingUtils.SHARED_PREFERENCES_KEY, 0);
     prefs.edit().putLong(CALLBACK_HANDLE_KEY, callbackHandle).apply();
