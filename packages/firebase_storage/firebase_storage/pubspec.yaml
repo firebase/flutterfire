@@ -4,6 +4,12 @@ description: Flutter plugin for Firebase Cloud Storage, a powerful, simple, and
 homepage: https://firebase.google.com/docs/storage/flutter/start
 repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_storage/firebase_storage
 version: 11.7.7
+topics:
+  - firebase
+  - storage
+  - upload
+  - download
+  - files
 
 false_secrets:
   - example/**
