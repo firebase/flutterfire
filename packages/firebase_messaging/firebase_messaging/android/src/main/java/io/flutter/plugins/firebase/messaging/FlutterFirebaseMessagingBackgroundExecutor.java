@@ -182,8 +182,6 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
                     return;
                   }
 
-                  // Essentially, the above fails because the flutterCallback is null
-
                   DartExecutor executor = backgroundFlutterEngine.getDartExecutor();
                   initializeMethodChannel(executor);
 
