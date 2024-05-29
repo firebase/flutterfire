@@ -55,7 +55,7 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
    */
   public static void setCallbackDispatcher(long callbackHandle) {
     Context context = ContextHolder.getApplicationContext();
-    if(context == null) {
+    if (context == null) {
       Log.e(TAG, "Context is null, cannot continue.");
       return;
     }
@@ -181,7 +181,7 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
                   FlutterCallbackInformation flutterCallback =
                       FlutterCallbackInformation.lookupCallbackInformation(callbackHandle);
 
-                  if(flutterCallback == null) {
+                  if (flutterCallback == null) {
                     Log.e(TAG, "Failed to find registered callback");
                     return;
                   }
