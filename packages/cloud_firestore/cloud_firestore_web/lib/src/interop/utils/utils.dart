@@ -21,7 +21,7 @@ dynamic dartify(dynamic object) {
   if (jsObject.instanceof(DocumentReferenceJsConstructor as JSFunction)) {
     return DocumentReference.getInstance(jsObject as DocumentReferenceJsImpl);
   }
-  if (jsObject.instanceof(GeoPointConstructor as JSFunction)) {
+  if (jsObject.isA<GeoPointJsImpl>()) {
     return jsObject;
   }
   if (jsObject.instanceof(TimestampJsConstructor as JSFunction)) {
