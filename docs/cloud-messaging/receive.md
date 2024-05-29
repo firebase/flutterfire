@@ -185,9 +185,23 @@ messaging.onBackgroundMessage((message) => {
 
 The file must import both the app and messaging SDKs, initialize Firebase and expose the `messaging` variable.
 
-Next, the worker must be registered. Within the entry file, **after** the `main.dart.js` file has loaded, register your worker:
+Next, the worker must be registered. Within the `index.html` file, register the worker by modifying the `<script>` tag which bootstraps Flutter:
 
-```js
+```html
+<script src="flutter_bootstrap.js" async>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('firebase-messaging-sw.js', {
+        scope: '/firebase-cloud-messaging-push-scope',
+      });
+    });
+  }
+</script>
+```
+
+If you are still using the old templating system, you can register the worker by modifying the `<script>` tag which bootstraps Flutter as follows:
+
+```html
 <html>
 <body>
   <script>
@@ -260,6 +274,7 @@ Next, the worker must be registered. Within the entry file, **after** the `main.
         loadMainDartJs();
       }
   </script>
+</body>
 ```
 
 Next restart your Flutter application. The worker will be registered and any background messages will be handled via this file.
