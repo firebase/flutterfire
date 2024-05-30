@@ -89,7 +89,7 @@ class HttpsCallable extends JsObjectWrapper<JSFunction> {
 /// Returns Dart representation from JS Object.
 dynamic _dartify(dynamic object) {
   // Convert JSObject to Dart equivalents directly
-  if (object is! JSObject) {
+  if (object.isA<JSObject>()) {
     return object;
   }
 

@@ -650,14 +650,10 @@ extension UserProfileExtension on UserProfile {
   external set photoURL(JSString s);
 }
 
-@JS()
-@staticInterop
-abstract class AuthError {}
-
 /// An authentication error.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.Error>.
-extension AuthErrorExtension on AuthError {
+extension type AuthError(JSObject _) implements JSObject {
   external JSString get code;
   external set code(JSString s);
   external JSString get message;

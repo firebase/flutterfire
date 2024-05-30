@@ -489,8 +489,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
             .setItem(getOriginName(delegate.app.name), origin);
       }
     } catch (e) {
-      if (e is auth_interop.AuthError) {
-        final String code = e.code.toDart;
+      if ((e as JSObject).isA<auth_interop.AuthError>()) {
+        final String code = (e as auth_interop.AuthError).code.toDart;
         // this catches Firebase Error from web that occurs after hot reloading & hot restarting
         if (code != 'auth/emulator-config-failed') {
           throw getFirebaseAuthException(e);

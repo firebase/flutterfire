@@ -87,8 +87,9 @@ class FirebaseCoreWeb extends FirebasePlatform {
       JSObject? ignored =
           globalContext.getProperty('flutterfire_ignore_scripts'.toJS);
 
-      if (ignored is Iterable) {
-        return (ignored! as Iterable)
+      if (ignored.isA<JSArray>()) {
+        return (ignored! as JSArray)
+            .toDart
             .map((e) => e.toString())
             .toList(growable: false);
       }

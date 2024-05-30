@@ -127,7 +127,7 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   Future<String> getIdToken([bool forceRefresh = false]) => jsObject
       .getIdToken(forceRefresh.toJS)
       .toDart
-      .then((value) => value! as String);
+      .then((value) => (value! as JSString).toDart);
 
   /// Links the user account with the given credentials, and returns any
   /// available additional user information, such as user name.
@@ -526,7 +526,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   Future<List<String>> fetchSignInMethodsForEmail(String email) => auth_interop
       .fetchSignInMethodsForEmail(jsObject, email.toJS)
       .toDart
-      .then((value) => List<String>.from(value! as List<dynamic>));
+      .then((value) => List<String>.from((value! as JSArray).toDart));
 
   /// Checks if an incoming link is a sign-in with email link.
   bool isSignInWithEmailLink(String emailLink) =>
@@ -753,7 +753,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   Future<String> verifyPasswordResetCode(String code) => auth_interop
       .verifyPasswordResetCode(jsObject, code.toJS)
       .toDart
-      .then((value) => value! as String);
+      .then((value) => (value! as JSString).toDart);
 }
 
 /// Represents an auth provider.
@@ -1054,7 +1054,7 @@ class PhoneAuthProvider
       jsObject
           .verifyPhoneNumber(phoneOptions, applicationVerifier.jsObject)
           .toDart
-          .then((value) => value! as String);
+          .then((value) => (value! as JSString).toDart);
 
   /// Creates a phone auth credential given the verification ID
   /// from [verifyPhoneNumber] and the [verificationCode] that was sent to the
@@ -1081,7 +1081,7 @@ abstract class ApplicationVerifier<
   /// Returns a Future containing string for a token that can be used to
   /// assert the validity of a request.
   Future<String> verify() =>
-      jsObject.verify().toDart.then((value) => value! as String);
+      jsObject.verify().toDart.then((value) => (value! as JSString).toDart);
 }
 
 /// reCAPTCHA verifier.
@@ -1137,8 +1137,8 @@ class RecaptchaVerifier
 
   /// Renders the reCAPTCHA widget on the page.
   /// Returns a Future that resolves with the reCAPTCHA widget ID.
-  Future<num> render() =>
-      jsObject.render().toDart.then((value) => value! as num);
+  Future<int> render() =>
+      jsObject.render().toDart.then((value) => (value! as JSNumber).toDartInt);
 }
 
 /// A result from a phone number sign-in, link, or reauthenticate call.

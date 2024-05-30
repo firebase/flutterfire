@@ -12,7 +12,7 @@ import '../firestore.dart';
 /// Returns Dart representation from JS Object.
 dynamic dartify(dynamic object) {
   // Convert JSObject to Dart equivalents directly
-  if (object is! JSObject) {
+  if (object.isA<JSObject>()) {
     return object;
   }
 
@@ -21,7 +21,7 @@ dynamic dartify(dynamic object) {
   if (jsObject.instanceof(DocumentReferenceJsConstructor as JSFunction)) {
     return DocumentReference.getInstance(jsObject as DocumentReferenceJsImpl);
   }
-  if (jsObject.instanceof(GeoPointConstructor as JSFunction)) {
+  if (jsObject.isA<GeoPointJsImpl>()) {
     return jsObject;
   }
   if (jsObject.instanceof(TimestampJsConstructor as JSFunction)) {
@@ -29,7 +29,7 @@ dynamic dartify(dynamic object) {
     return Timestamp(
         castedJSObject.seconds.toDartInt, castedJSObject.nanoseconds.toDartInt);
   }
-  if (jsObject.instanceof(BytesConstructor as JSFunction)) {
+  if (jsObject.isA<BytesJsImpl>()) {
     return jsObject as BytesJsImpl;
   }
 
@@ -85,11 +85,12 @@ JSAny? jsify(Object? dartObject) {
     return jsifyFieldValue(dartObject);
   }
 
+  // ignore: invalid_runtime_check_with_js_interop_types
   if (dartObject is BytesJsImpl) {
     return dartObject as JSAny;
   }
 
-  // NOTE: if the firestore JS lib is not imported, we'll get a DDC warning here
+  // ignore: invalid_runtime_check_with_js_interop_types
   if (dartObject is GeoPointJsImpl) {
     return dartObject as JSAny;
   }
