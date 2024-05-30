@@ -27,6 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     strategy:
+      fail-fast: false
       matrix:
         working_directory:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
@@ -90,6 +91,7 @@ jobs:
     runs-on: macos-14
     timeout-minutes: 45
     strategy:
+      fail-fast: false
       matrix:
         working_directory:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
@@ -165,6 +167,7 @@ jobs:
     runs-on: macos-14
     timeout-minutes: 45
     strategy:
+      fail-fast: false
       matrix:
         working_directory:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
@@ -235,7 +238,6 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 15
     strategy:
-      # Temp measure for testing web tests. Please remove as soon as e2e tests are stable.
       fail-fast: false
       matrix:
         working_directory:
@@ -291,7 +293,6 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 15
     strategy:
-      # Temp measure for testing web tests. Please remove as soon as e2e tests are stable.
       fail-fast: false
       matrix:
         working_directory:
