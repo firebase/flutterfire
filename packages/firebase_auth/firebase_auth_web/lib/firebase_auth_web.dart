@@ -489,6 +489,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
             .setItem(getOriginName(delegate.app.name), origin);
       }
     } catch (e) {
+      // Cannot be done with 3.2 constraints
+      // ignore: invalid_runtime_check_with_js_interop_types
       if (e is auth_interop.AuthError) {
         final String code = e.code.toDart;
         // this catches Firebase Error from web that occurs after hot reloading & hot restarting

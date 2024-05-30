@@ -71,7 +71,7 @@ the request can be used to determine the user's overall decision:
 
 Note: On Android versions prior to 13, `authorizationStatus` returns
 `authorized` if the user has not disabled notifications for the app in the
-operating system settings.
+operating system settings. On Android versions 13 and above, there is no way to determine if the user has chosen whether to grant/deny permission. A `denied` value conveys an undetermined or denied permission state, and it will be up to you to track if a permission request has been made.
 
 The other properties on `NotificationSettings` return whether a specific permission is enabled, disabled or not supported on the current
 device.
