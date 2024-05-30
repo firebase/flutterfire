@@ -396,16 +396,9 @@ extension FieldPathExtension on FieldPath {
 }
 
 @JS('GeoPoint')
-@staticInterop
-external GeoPointJsImpl get GeoPointConstructor;
-
-@JS('GeoPoint')
-@staticInterop
-class GeoPointJsImpl {
+extension type GeoPointJsImpl._(JSObject _) implements JSObject {
   external factory GeoPointJsImpl(JSNumber latitude, JSNumber longitude);
-}
 
-extension GeoPointJsImplExtension on GeoPointJsImpl {
   /// The latitude of this GeoPoint instance.
   external JSNumber get latitude;
 
@@ -417,19 +410,11 @@ extension GeoPointJsImplExtension on GeoPointJsImpl {
 }
 
 @JS('Bytes')
-@staticInterop
-external BytesJsImpl get BytesConstructor;
-
-@JS('Bytes')
-@staticInterop
-@anonymous
-abstract class BytesJsImpl {
+extension type BytesJsImpl(JSObject _) implements JSObject {
   external static BytesJsImpl fromBase64JSString(JSString base64);
 
   external static BytesJsImpl fromUint8Array(JSUint8Array list);
-}
 
-extension BytesJsImplExtension on BytesJsImpl {
   external JSString toBase64();
 
   external JSUint8Array toUint8Array();
