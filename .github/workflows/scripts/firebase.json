@@ -1,8 +1,15 @@
 {
-  "firestore": {
-    "rules": "firestore.rules",
-    "indexes": "firestore.indexes.json"
-  },
+  "firestore": [
+    {
+      "database": "(default)",
+      "rules": "firestore.rules",
+      "indexes": "firestore.indexes.json"
+    },
+    {
+      "database": "flutterfire-2",
+      "rules": "firestore.flutterfire-2.rules"
+    }
+  ],
   "database": {
     "rules": "database.rules.json"
   },
