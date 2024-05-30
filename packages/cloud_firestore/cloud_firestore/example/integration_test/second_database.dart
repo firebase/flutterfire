@@ -39,6 +39,8 @@ void runSecondDatabaseTests() {
           app: Firebase.app(),
           databaseId: 'flutterfire-2',
         );
+
+        firestore.useFirestoreEmulator('localhost', 8080);
       });
 
       Future<CollectionReference<Map<String, dynamic>>> initializeTest(
@@ -190,6 +192,8 @@ void runSecondDatabaseTests() {
             }
             fail('Should have thrown a [FirebaseException]');
           },
+          // Emulator for 2nd database allows this request, the live project correctly throws a "permission-denied" error
+          skip: true,
         );
       });
 
@@ -335,6 +339,8 @@ void runSecondDatabaseTests() {
 
             fail('Should have thrown a [FirebaseException]');
           },
+          // Emulator for 2nd database allows this request, the live project correctly throws a "permission-denied" error
+          skip: true,
         );
       });
 
@@ -1838,6 +1844,8 @@ void runSecondDatabaseTests() {
               ),
             );
           },
+          // Emulator for 2nd database allows this request, the live project correctly throws a "permission-denied" error
+          skip: true,
         );
 
         testWidgets(
@@ -1898,6 +1906,8 @@ void runSecondDatabaseTests() {
               ),
             );
           },
+          // Emulator for 2nd database allows this request, the live project correctly throws a "permission-denied" error
+          skip: true,
         );
 
         testWidgets('isEqualTo filter', (_) async {
