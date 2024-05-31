@@ -435,7 +435,7 @@ void setupQueryTests() {
       // Create own reference as this clashed with previous tests on web platform
       late DatabaseReference childRef;
       setUp(() async {
-        childRef = FirebaseDatabase.instance.ref('child-ref');
+        childRef = FirebaseDatabase.instance.ref('tests').child('child-ref');
         // Wipe the database before each test
         await childRef.remove();
       });
