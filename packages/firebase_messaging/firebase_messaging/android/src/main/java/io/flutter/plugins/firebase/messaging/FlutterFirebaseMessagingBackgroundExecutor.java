@@ -14,6 +14,7 @@ import android.os.Parcel;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import com.google.firebase.messaging.RemoteMessage;
+import io.flutter.FlutterInjector;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.embedding.engine.FlutterShellArgs;
 import io.flutter.embedding.engine.dart.DartExecutor;
@@ -30,7 +31,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 /**
  * An background execution abstraction which handles initializing a background isolate running a
  * callback dispatcher, used to invoke Dart callbacks while backgrounded.
@@ -149,7 +149,7 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
       return;
     }
 
-    FlutterLoader loader = new FlutterLoader();
+    FlutterLoader loader = FlutterInjector.instance().flutterLoader();
     Handler mainHandler = new Handler(Looper.getMainLooper());
     Runnable myRunnable =
         () -> {
