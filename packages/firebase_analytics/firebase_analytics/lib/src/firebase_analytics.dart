@@ -92,7 +92,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// [1]: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event
   Future<void> logEvent({
     required String name,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
     AnalyticsCallOptions? callOptions,
   }) async {
     _logEventNameValidation(name);
@@ -273,7 +273,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? paymentType,
     double? value,
     List<AnalyticsEventItem>? items,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _assertParameterTypesAreCorrect(parameters);
@@ -305,7 +305,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     double? value,
     String? shippingTier,
     List<AnalyticsEventItem>? items,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _assertParameterTypesAreCorrect(parameters);
@@ -336,7 +336,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     List<AnalyticsEventItem>? items,
     double? value,
     String? currency,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
@@ -368,7 +368,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     List<AnalyticsEventItem>? items,
     double? value,
     String? currency,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
@@ -402,7 +402,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? adUnitName,
     double? value,
     String? currency,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
@@ -429,7 +429,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#APP_OPEN
   Future<void> logAppOpen({
     AnalyticsCallOptions? callOptions,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
   }) {
     _assertParameterTypesAreCorrect(parameters);
 
@@ -452,7 +452,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? currency,
     List<AnalyticsEventItem>? items,
     String? coupon,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
@@ -486,7 +486,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? content,
     String? aclid,
     String? cp1,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _assertParameterTypesAreCorrect(parameters);
@@ -517,7 +517,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> logEarnVirtualCurrency({
     required String virtualCurrencyName,
     required num value,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _assertParameterTypesAreCorrect(parameters);
@@ -544,7 +544,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> logGenerateLead({
     String? currency,
     double? value,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
@@ -571,7 +571,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#JOIN_GROUP
   Future<void> logJoinGroup({
     required String groupId,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _assertParameterTypesAreCorrect(parameters);
@@ -596,7 +596,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> logLevelUp({
     required int level,
     String? character,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _assertParameterTypesAreCorrect(parameters);
@@ -617,7 +617,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#LEVEL_START
   Future<void> logLevelStart({
     required String levelName,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _assertParameterTypesAreCorrect(parameters);
@@ -638,7 +638,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> logLevelEnd({
     required String levelName,
     int? success,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _assertParameterTypesAreCorrect(parameters);
@@ -660,7 +660,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> logSetCheckoutOption({
     required int checkoutStep,
     required String checkoutOption,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
   }) {
     _assertParameterTypesAreCorrect(parameters);
 
@@ -682,7 +682,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#LOGIN
   Future<void> logLogin({
     String? loginMethod,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _assertParameterTypesAreCorrect(parameters);
@@ -709,7 +709,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     required int score,
     int? level,
     String? character,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _assertParameterTypesAreCorrect(parameters);
@@ -742,7 +742,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     double? shipping,
     String? transactionId,
     String? affiliation,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
@@ -776,7 +776,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? currency,
     double? value,
     List<AnalyticsEventItem>? items,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
@@ -804,7 +804,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> logScreenView({
     String? screenClass,
     String? screenName,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _assertParameterTypesAreCorrect(parameters);
@@ -829,7 +829,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? itemListId,
     String? itemListName,
     List<AnalyticsEventItem>? items,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _assertParameterTypesAreCorrect(parameters);
@@ -859,7 +859,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? locationId,
     String? promotionId,
     String? promotionName,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _assertParameterTypesAreCorrect(parameters);
@@ -889,7 +889,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? currency,
     double? value,
     List<AnalyticsEventItem>? items,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _assertParameterTypesAreCorrect(parameters);
@@ -924,7 +924,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? startDate,
     String? endDate,
     String? travelClass,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _assertParameterTypesAreCorrect(parameters);
@@ -960,7 +960,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> logSelectContent({
     required String contentType,
     required String itemId,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
   }) {
     _assertParameterTypesAreCorrect(parameters);
 
@@ -984,7 +984,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     required String contentType,
     required String itemId,
     required String method,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
   }) {
     _assertParameterTypesAreCorrect(parameters);
 
@@ -1009,7 +1009,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#SIGN_UP
   Future<void> logSignUp({
     required String signUpMethod,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
   }) {
     _assertParameterTypesAreCorrect(parameters);
 
@@ -1032,7 +1032,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     required String itemName,
     required String virtualCurrencyName,
     required num value,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
   }) {
     _assertParameterTypesAreCorrect(parameters);
 
@@ -1055,7 +1055,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#TUTORIAL_BEGIN
   Future<void> logTutorialBegin({
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
   }) {
     _assertParameterTypesAreCorrect(parameters);
 
@@ -1073,7 +1073,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#TUTORIAL_COMPLETE
   Future<void> logTutorialComplete({
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
   }) {
     _assertParameterTypesAreCorrect(parameters);
 
@@ -1094,7 +1094,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#UNLOCK_ACHIEVEMENT
   Future<void> logUnlockAchievement({
     required String id,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
   }) {
     _assertParameterTypesAreCorrect(parameters);
 
@@ -1121,7 +1121,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? currency,
     double? value,
     List<AnalyticsEventItem>? items,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
@@ -1149,7 +1149,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     List<AnalyticsEventItem>? items,
     String? itemListId,
     String? itemListName,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
   }) {
     _assertParameterTypesAreCorrect(parameters);
     _assertItemsParameterTypesAreCorrect(items);
@@ -1177,7 +1177,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? locationId,
     String? promotionId,
     String? promotionName,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
   }) {
     _assertParameterTypesAreCorrect(parameters);
     _assertItemsParameterTypesAreCorrect(items);
@@ -1204,7 +1204,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#VIEW_SEARCH_RESULTS
   Future<void> logViewSearchResults({
     required String searchTerm,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
   }) {
     _assertParameterTypesAreCorrect(parameters);
 
@@ -1231,7 +1231,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? transactionId,
     String? affiliation,
     List<AnalyticsEventItem>? items,
-    Map<String, Object?>? parameters,
+    Map<String, Object>? parameters,
   }) {
     _assertParameterTypesAreCorrect(parameters);
     _assertItemsParameterTypesAreCorrect(items);
@@ -1343,7 +1343,9 @@ List<Map<String, dynamic>>? _marshalItems(List<AnalyticsEventItem>? items) {
   return items.map((AnalyticsEventItem item) => item.asMap()).toList();
 }
 
-void _assertParameterTypesAreCorrect(Map<String, Object?>? parameters) =>
+void _assertParameterTypesAreCorrect(
+  Map<String, Object>? parameters,
+) =>
     parameters?.forEach((key, value) {
       assert(
         value is String || value is num,
