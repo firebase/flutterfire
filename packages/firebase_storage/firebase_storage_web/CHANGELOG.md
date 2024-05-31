@@ -1,3 +1,7 @@
+## 3.9.7
+
+ - **FIX**(storage): do not set metadata property unless it has a value ([#12805](https://github.com/firebase/flutterfire/issues/12805)). ([978a87db](https://github.com/firebase/flutterfire/commit/978a87db70218d63abbf0c6bf22e9d00633b5d83))
+
 ## 3.9.6
 
  - Update a dependency to the latest release.

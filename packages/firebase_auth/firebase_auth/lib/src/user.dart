@@ -641,10 +641,6 @@ class User {
   }
 
   /// Updates a user's profile data.
-  @Deprecated(
-    'Will be removed in version 2.0.0. '
-    'Use updatePhotoURL and updateDisplayName instead.',
-  )
   Future<void> updateProfile({String? displayName, String? photoURL}) {
     return _delegate.updateProfile(<String, String?>{
       'displayName': displayName,

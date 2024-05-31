@@ -1,3 +1,7 @@
+## 5.12.0
+
+ - **FEAT**(auth): update Pigeon version to 19 ([#12828](https://github.com/firebase/flutterfire/issues/12828)). ([5e76153f](https://github.com/firebase/flutterfire/commit/5e76153fbcd337a26e83abc2b43b651ab6c501bc))
+
 ## 5.11.6
 
  - **FIX**(auth,web): get auth credential from exception and pass to user if one is available ([#12780](https://github.com/firebase/flutterfire/issues/12780)). ([39f6e7bd](https://github.com/firebase/flutterfire/commit/39f6e7bd7843178f72052ad5e08e66a5c6ba7908))

@@ -62,7 +62,7 @@ public class FlutterFirebaseMultiFactor
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseAuth.PigeonPhoneMultiFactorAssertion assertion,
       @Nullable String displayName,
-      @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseAuth.VoidResult result) {
     final MultiFactor multiFactor;
     try {
       multiFactor = getAppMultiFactor(app);
@@ -82,7 +82,7 @@ public class FlutterFirebaseMultiFactor
         .addOnCompleteListener(
             task -> {
               if (task.isSuccessful()) {
-                result.success(null);
+                result.success();
               } else {
                 result.error(
                     FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
@@ -96,7 +96,7 @@ public class FlutterFirebaseMultiFactor
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull String assertionId,
       @Nullable String displayName,
-      @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseAuth.VoidResult result) {
     final MultiFactor multiFactor;
     try {
       multiFactor = getAppMultiFactor(app);
@@ -113,7 +113,7 @@ public class FlutterFirebaseMultiFactor
         .addOnCompleteListener(
             task -> {
               if (task.isSuccessful()) {
-                result.success(null);
+                result.success();
               } else {
                 result.error(
                     FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
@@ -160,7 +160,7 @@ public class FlutterFirebaseMultiFactor
   public void unenroll(
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull String factorUid,
-      @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseAuth.VoidResult result) {
     final MultiFactor multiFactor;
     try {
       multiFactor = getAppMultiFactor(app);
@@ -174,7 +174,7 @@ public class FlutterFirebaseMultiFactor
         .addOnCompleteListener(
             task -> {
               if (task.isSuccessful()) {
-                result.success(null);
+                result.success();
               } else {
                 result.error(
                     FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
