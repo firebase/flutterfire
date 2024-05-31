@@ -33,6 +33,14 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// parent project. By default, this is set to `null`.
   String? tenantId;
 
+  /// Set the current Auth instance's auth domain for apple and android platforms.
+  /// The auth domain used to handle redirects from OAuth provides, for example
+  /// "my-awesome-app.firebaseapp.com". By default, this is set to `null` and
+  /// default auth domain is used.
+  ///
+  /// If not `null`, this value will supersede `authDomain` property set in `initializeApp`.
+  String? customAuthDomain;
+
   /// Create an instance using [app]
   FirebaseAuthPlatform({this.appInstance}) : super(token: _token);
 
@@ -56,7 +64,9 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
 
     if (currentUser != null) {
       currentUser as List<Object?>;
-      currentUser = PigeonUserDetails.decode(currentUser);
+      final firstElement = PigeonUserInfo.decode(currentUser[0]!);
+      final secondElement = currentUser[1]!;
+      currentUser = PigeonUserDetails.decode([firstElement, secondElement]);
     }
     return FirebaseAuthPlatform.instance.delegateFor(app: app).setInitialValues(
           languageCode: pluginConstants['APP_LANGUAGE_CODE'],

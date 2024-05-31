@@ -87,7 +87,10 @@ class FirebaseCoreWeb extends FirebasePlatform {
       JSObject? ignored =
           globalContext.getProperty('flutterfire_ignore_scripts'.toJS);
 
+      // Cannot be done with Dart 3.2 constraints
+      // ignore: invalid_runtime_check_with_js_interop_types
       if (ignored is Iterable) {
+        // ignore: invalid_runtime_check_with_js_interop_types
         return (ignored! as Iterable)
             .map((e) => e.toString())
             .toList(growable: false);

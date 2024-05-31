@@ -3,7 +3,8 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:js';
+import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 
 import 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
@@ -17,10 +18,10 @@ AppCheck? getAppCheckInstance([App? app, WebProvider? provider]) {
   late app_check_interop.ReCaptchaProvider jsProvider;
 
   if (provider is ReCaptchaV3Provider) {
-    jsProvider = app_check_interop.ReCaptchaV3Provider(provider.siteKey);
+    jsProvider = app_check_interop.ReCaptchaV3Provider(provider.siteKey.toJS);
   } else if (provider is ReCaptchaEnterpriseProvider) {
     jsProvider =
-        app_check_interop.ReCaptchaEnterpriseProvider(provider.siteKey);
+        app_check_interop.ReCaptchaEnterpriseProvider(provider.siteKey.toJS);
   } else {
     throw ArgumentError(
       'A `WebProvider` is required for `activate()` to initialise App Check on the web platform',
@@ -32,7 +33,10 @@ AppCheck? getAppCheckInstance([App? app, WebProvider? provider]) {
   return AppCheck.getInstance(
     app != null
         ? app_check_interop.initializeAppCheck(app.jsObject, options)
-        : app_check_interop.initializeAppCheck(context['undefined'], options),
+        : app_check_interop.initializeAppCheck(
+            globalContext.getProperty('undefined'.toJS),
+            options,
+          ),
   );
 }
 
@@ -50,18 +54,20 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
   void setTokenAutoRefreshEnabled(bool isTokenAutoRefreshEnabled) =>
       app_check_interop.setTokenAutoRefreshEnabled(
         jsObject,
-        isTokenAutoRefreshEnabled,
+        isTokenAutoRefreshEnabled.toJS,
       );
 
   Future<app_check_interop.AppCheckTokenResult> getToken(bool? forceRefresh) =>
-      handleThenable(app_check_interop.getToken(jsObject, forceRefresh));
+      app_check_interop.getToken(jsObject, forceRefresh?.toJS).toDart.then(
+            (value) => value! as app_check_interop.AppCheckTokenResult,
+          );
 
   Future<app_check_interop.AppCheckTokenResult> getLimitedUseToken() =>
-      handleThenable(
-        app_check_interop.getLimitedUseToken(jsObject),
-      );
+      app_check_interop.getLimitedUseToken(jsObject).toDart.then(
+            (value) => value! as app_check_interop.AppCheckTokenResult,
+          );
 
-  Func0? _idTokenChangedUnsubscribe;
+  JSFunction? _idTokenChangedUnsubscribe;
 
   StreamController<app_check_interop.AppCheckTokenResult>?
       // ignore: close_sinks
@@ -69,13 +75,12 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
 
   Stream<app_check_interop.AppCheckTokenResult> onTokenChanged() {
     if (_idTokenChangedController == null) {
-      final nextWrapper =
-          allowInterop((app_check_interop.AppCheckTokenResult result) {
+      final nextWrapper = ((app_check_interop.AppCheckTokenResult result) {
         _idTokenChangedController!.add(result);
-      });
+      }).toJS;
 
       final errorWrapper =
-          allowInterop((e) => _idTokenChangedController!.addError(e));
+          ((JSError e) => _idTokenChangedController!.addError(e)).toJS;
 
       void startListen() {
         assert(_idTokenChangedUnsubscribe == null);
@@ -87,7 +92,7 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
       }
 
       void stopListen() {
-        _idTokenChangedUnsubscribe!();
+        _idTokenChangedUnsubscribe?.callAsFunction();
         _idTokenChangedUnsubscribe = null;
       }
 

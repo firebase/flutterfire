@@ -1,3 +1,51 @@
+## 7.3.0
+
+ - **FEAT**(auth): update Pigeon version to 19 ([#12828](https://github.com/firebase/flutterfire/issues/12828)). ([5e76153f](https://github.com/firebase/flutterfire/commit/5e76153fbcd337a26e83abc2b43b651ab6c501bc))
+
+## 7.2.7
+
+ - Update a dependency to the latest release.
+
+## 7.2.6
+
+ - Update a dependency to the latest release.
+
+## 7.2.5
+
+ - Update a dependency to the latest release.
+
+## 7.2.4
+
+ - Update a dependency to the latest release.
+
+## 7.2.3
+
+ - Update a dependency to the latest release.
+
+## 7.2.2
+
+ - Update a dependency to the latest release.
+
+## 7.2.1
+
+ - Update a dependency to the latest release.
+
+## 7.2.0
+
+ - **FEAT**(firebase_auth): add custom auth domain setter to Firebase Auth ([#12218](https://github.com/firebase/flutterfire/issues/12218)). ([e1297800](https://github.com/firebase/flutterfire/commit/e12978009e0fd785f267db560972ab0bbe021fcb))
+
+## 7.1.9
+
+ - Update a dependency to the latest release.
+
+## 7.1.8
+
+ - Update a dependency to the latest release.
+
+## 7.1.7
+
+ - Update a dependency to the latest release.
+
 ## 7.1.6
 
  - Update a dependency to the latest release.

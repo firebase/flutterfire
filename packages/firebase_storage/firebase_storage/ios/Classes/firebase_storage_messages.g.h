@@ -187,7 +187,7 @@ NSObject<FlutterMessageCodec> *FirebaseStorageHostApiGetCodec(void);
 - (void)referencePutFileApp:(PigeonStorageFirebaseApp *)app
                   reference:(PigeonStorageReference *)reference
                    filePath:(NSString *)filePath
-           settableMetaData:(PigeonSettableMetadata *)settableMetaData
+           settableMetaData:(nullable PigeonSettableMetadata *)settableMetaData
                      handle:(NSNumber *)handle
                  completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
 - (void)referenceDownloadFileApp:(PigeonStorageFirebaseApp *)app

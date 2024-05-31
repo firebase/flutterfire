@@ -113,19 +113,29 @@ extension ReferenceJsImplX on ReferenceJsImpl {
   external set storage(StorageJsImpl s);
 }
 
-//@JS('FullMetadata')
-@JS()
+@JS('FullMetadata')
 @staticInterop
 @anonymous
 class FullMetadataJsImpl extends UploadMetadataJsImpl {
-  external factory FullMetadataJsImpl(
-      {JSString? md5Hash,
-      JSString? cacheControl,
-      JSString? contentDisposition,
-      JSString? contentEncoding,
-      JSString? contentLanguage,
-      JSString? contentType,
-      JSAny? customMetadata});
+  external factory FullMetadataJsImpl({
+    JSString bucket,
+    JSArray? downloadTokens,
+    ReferenceJsImpl? ref,
+    JSString? fullPath,
+    JSString? generation,
+    JSString? metageneration,
+    JSString? name,
+    JSNumber? size,
+    JSString? timeCreated,
+    JSString? updated,
+    JSString? md5Hash,
+    JSString? cacheControl,
+    JSString? contentDisposition,
+    JSString? contentEncoding,
+    JSString? contentLanguage,
+    JSString? contentType,
+    JSAny? customMetadata,
+  });
 }
 
 extension FullMetadataJsImplX on FullMetadataJsImpl {

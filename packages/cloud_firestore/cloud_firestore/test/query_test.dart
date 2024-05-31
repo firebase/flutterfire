@@ -45,14 +45,10 @@ void main() {
         expect(() => query!.where(123), throwsAssertionError);
       });
 
-      test('throws if multiple inequalities on different paths is provided',
-          () {
-        expect(
-          () => query!
-              .where('foo.bar', isGreaterThanOrEqualTo: 123)
-              .where('bar', isLessThan: 123),
-          throwsAssertionError,
-        );
+      test('allows multiple inequalities on different paths is provided', () {
+        query!
+            .where('foo.bar', isGreaterThanOrEqualTo: 123)
+            .where('bar', isLessThan: 123);
       });
 
       test('allows inequality on the same path', () {
@@ -85,59 +81,17 @@ void main() {
         );
       });
 
-      test('throws if inequality is different to first orderBy', () {
-        expect(
-          () => query!.where('foo', isGreaterThan: 123).orderBy('bar'),
-          throwsAssertionError,
-        );
-        expect(
-          () => query!.orderBy('bar').where('foo', isGreaterThan: 123),
-          throwsAssertionError,
-        );
-        expect(
-          () => query!
-              .where('foo', isGreaterThan: 123)
-              .orderBy('bar')
-              .orderBy('foo'),
-          throwsAssertionError,
-        );
-        expect(
-          () => query!
-              .orderBy('bar')
-              .orderBy('foo')
-              .where('foo', isGreaterThan: 123),
-          throwsAssertionError,
-        );
-
-        expect(
-          () => query!
-              .where(FieldPath.documentId, whereNotIn: ['bar']).orderBy('foo'),
-          throwsAssertionError,
-        );
-        expect(
-          () =>
-              query!.where(FieldPath.documentId, isLessThan: 3).orderBy('foo'),
-          throwsAssertionError,
-        );
-        expect(
-          () => query!
-              .where(FieldPath.documentId, isGreaterThan: 3)
-              .orderBy('foo'),
-          throwsAssertionError,
-        );
-
-        expect(
-          () => query!.where('foo', whereNotIn: ['bar']).orderBy('baz'),
-          throwsAssertionError,
-        );
-        expect(
-          () => query!.where('foo', isLessThan: 3).orderBy('bar'),
-          throwsAssertionError,
-        );
-        expect(
-          () => query!.where('foo', isGreaterThan: 3).orderBy('bar'),
-          throwsAssertionError,
-        );
+      test('allows inequality  different to first orderBy', () {
+        query!.where('foo', isGreaterThan: 123).orderBy('bar');
+        query!.orderBy('bar').where('foo', isGreaterThan: 123);
+        query!.where('foo', isGreaterThan: 123).orderBy('bar').orderBy('foo');
+        query!.orderBy('bar').orderBy('foo').where('foo', isGreaterThan: 123);
+        query!.where(FieldPath.documentId, whereNotIn: ['bar']).orderBy('foo');
+        query!.where(FieldPath.documentId, isLessThan: 3).orderBy('foo');
+        query!.where(FieldPath.documentId, isGreaterThan: 3).orderBy('foo');
+        query!.where('foo', whereNotIn: ['bar']).orderBy('baz');
+        query!.where('foo', isLessThan: 3).orderBy('bar');
+        query!.where('foo', isGreaterThan: 3).orderBy('bar');
       });
 
       test('throws if whereIn query length is greater than 30', () {

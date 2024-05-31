@@ -9,7 +9,6 @@ import 'dart:async';
 import 'dart:js_interop';
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
-import 'package:js/js.dart';
 
 import 'messaging_interop.dart' as messaging_interop;
 
@@ -32,8 +31,10 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
     return _expando[jsObject] ??= Messaging._fromJsObject(jsObject);
   }
 
-  static Future<bool> isSupported() =>
-      messaging_interop.isSupported().toDart.then((value) => value! as bool);
+  static Future<bool> isSupported() => messaging_interop
+      .isSupported()
+      .toDart
+      .then((value) => (value! as JSBoolean).toDart);
 
   Messaging._fromJsObject(messaging_interop.MessagingJsImpl jsObject)
       : super.fromJsObject(jsObject);
@@ -46,13 +47,15 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
   /// that can be used to send push messages to this user.
   Future<String> getToken({String? vapidKey}) async {
     try {
-      final token = (await messaging_interop
-          .getToken(
-              jsObject,
-              vapidKey == null
-                  ? null
-                  : messaging_interop.GetTokenOptions(vapidKey: vapidKey.toJS))
-          .toDart)! as String;
+      final token = ((await messaging_interop
+              .getToken(
+                  jsObject,
+                  vapidKey == null
+                      ? null
+                      : messaging_interop.GetTokenOptions(
+                          vapidKey: vapidKey.toJS))
+              .toDart)! as JSString)
+          .toDart;
       return token;
     } catch (err) {
       // A race condition can happen in which the service worker get registered
@@ -80,13 +83,13 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
     StreamController<MessagePayload>? _controller = controller;
     if (_controller == null) {
       _controller = StreamController.broadcast(sync: true);
-      final nextWrapper = allowInterop((JSAny payload) {
+      final nextWrapper = (JSAny payload) {
         _controller!.add(MessagePayload._fromJsObject(
             payload as messaging_interop.MessagePayloadJsImpl));
-      });
-      final errorWrapper = allowInterop((JSError e) {
+      };
+      final errorWrapper = (JSError e) {
         _controller!.addError(e);
-      });
+      };
 
       messaging_interop.onMessage(
           jsObject,
@@ -121,7 +124,9 @@ class MessagePayload
   NotificationPayload? get notification => jsObject.notification == null
       ? null
       : NotificationPayload._fromJsObject(jsObject.notification!);
-  Map<String, dynamic>? get data => dartify(jsObject.data);
+  Map<String, dynamic>? get data =>
+      (jsObject.data?.dartify() as Map<Object?, Object?>?)
+          ?.cast<String, dynamic>();
   String? get from => jsObject.from?.toDart;
 }
 

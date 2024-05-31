@@ -135,7 +135,7 @@ std::map<std::string,
     cloud_firestore_windows::CloudFirestorePlugin::transaction_handlers_;
 std::map<std::string, std::shared_ptr<firebase::firestore::Transaction>>
     cloud_firestore_windows::CloudFirestorePlugin::transactions_;
-std::map<std::string, firebase::firestore::Firestore*>
+std::map<std::string, std::unique_ptr<firebase::firestore::Firestore>>
     cloud_firestore_windows::CloudFirestorePlugin::firestoreInstances_;
 
 std::string RegisterEventChannelWithUUID(
@@ -185,7 +185,8 @@ CloudFirestorePlugin::~CloudFirestorePlugin() {}
 Firestore* GetFirestoreFromPigeon(const FirestorePigeonFirebaseApp& pigeonApp) {
   if (CloudFirestorePlugin::firestoreInstances_.find(pigeonApp.app_name()) !=
       CloudFirestorePlugin::firestoreInstances_.end()) {
-    return CloudFirestorePlugin::firestoreInstances_[pigeonApp.app_name()];
+    return CloudFirestorePlugin::firestoreInstances_[pigeonApp.app_name()]
+        .get();
   }
 
   App* app = App::GetInstance(pigeonApp.app_name().c_str());
@@ -222,7 +223,8 @@ Firestore* GetFirestoreFromPigeon(const FirestorePigeonFirebaseApp& pigeonApp) {
 
   firestore->set_settings(settings);
 
-  CloudFirestorePlugin::firestoreInstances_[pigeonApp.app_name()] = firestore;
+  CloudFirestorePlugin::firestoreInstances_[pigeonApp.app_name()] =
+      std::unique_ptr<firebase::firestore::Firestore>(firestore);
 
   return firestore;
 }
@@ -538,6 +540,7 @@ class LoadBundleStreamHandler
       std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
       override {
     events_ = std::move(events);
+    events.reset();
     firestore_->LoadBundle(
         bundle_, [this](const LoadBundleTaskProgress& progress) {
           flutter::EncodableMap map;
@@ -755,6 +758,7 @@ class SnapshotInSyncStreamHandler
       std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
       override {
     events_ = std::move(events);
+    events.reset();
     // We do this to bind the event to the main channel
     auto boundSendEvent =
         std::bind(&SnapshotInSyncStreamHandler::SendEvent, this);
@@ -830,6 +834,7 @@ class TransactionStreamHandler
       std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
       override {
     events_ = std::move(events);
+    events.reset();
     TransactionOptions options;
     options.set_max_attempts(maxAttempts_);
 
@@ -1549,6 +1554,7 @@ class QuerySnapshotStreamHandler
                                           : MetadataChanges::kExclude;
 
     events_ = std::move(events);
+    events.reset();
 
     listener_ = query_->AddSnapshotListener(
         metadataChanges,
@@ -1615,7 +1621,13 @@ void CloudFirestorePlugin::QuerySnapshot(
     const FirestorePigeonFirebaseApp& app, const std::string& path,
     bool is_collection_group, const PigeonQueryParameters& parameters,
     const PigeonGetOptions& options, bool include_metadata_changes,
+    const ListenSource& source,
     std::function<void(ErrorOr<std::string> reply)> result) {
+  if (source == ListenSource::cache) {
+    result(FlutterError("Listening from cache isn't supported on Windows"));
+    return;
+  }
+
   Firestore* firestore = GetFirestoreFromPigeon(app);
   std::unique_ptr<Query> query_ptr = std::make_unique<Query>(
       ParseQuery(firestore, path, is_collection_group, parameters));
@@ -1654,6 +1666,7 @@ class DocumentSnapshotStreamHandler
                                           : MetadataChanges::kExclude;
 
     events_ = std::move(events);
+    events.reset();
 
     listener_ = reference_->AddSnapshotListener(
         metadataChanges,
@@ -1697,7 +1710,12 @@ class DocumentSnapshotStreamHandler
 void CloudFirestorePlugin::DocumentReferenceSnapshot(
     const FirestorePigeonFirebaseApp& app,
     const DocumentReferenceRequest& parameters, bool include_metadata_changes,
+    const ListenSource& source,
     std::function<void(ErrorOr<std::string> reply)> result) {
+  if (source == ListenSource::cache) {
+    result(FlutterError("Listening from cache isn't supported on Windows"));
+    return;
+  }
   Firestore* firestore = GetFirestoreFromPigeon(app);
   std::unique_ptr<DocumentReference> documentReference =
       std::make_unique<DocumentReference>(

@@ -196,12 +196,14 @@ abstract class TestFirebaseFirestoreHostApi {
     PigeonQueryParameters parameters,
     PigeonGetOptions options,
     bool includeMetadataChanges,
+    ListenSource source,
   );
 
   Future<String> documentReferenceSnapshot(
     FirestorePigeonFirebaseApp app,
     DocumentReferenceRequest parameters,
     bool includeMetadataChanges,
+    ListenSource source,
   );
 
   static void setup(
@@ -988,6 +990,12 @@ abstract class TestFirebaseFirestoreHostApi {
             arg_includeMetadataChanges != null,
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot was null, expected non-null bool.',
           );
+          final ListenSource? arg_source =
+              args[6] == null ? null : ListenSource.values[args[6]! as int];
+          assert(
+            arg_source != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot was null, expected non-null ListenSource.',
+          );
           final String output = await api.querySnapshot(
             arg_app!,
             arg_path!,
@@ -995,6 +1003,7 @@ abstract class TestFirebaseFirestoreHostApi {
             arg_parameters!,
             arg_options!,
             arg_includeMetadataChanges!,
+            arg_source!,
           );
           return <Object?>[output];
         });
@@ -1035,10 +1044,17 @@ abstract class TestFirebaseFirestoreHostApi {
             arg_includeMetadataChanges != null,
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot was null, expected non-null bool.',
           );
+          final ListenSource? arg_source =
+              args[3] == null ? null : ListenSource.values[args[3]! as int];
+          assert(
+            arg_source != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot was null, expected non-null ListenSource.',
+          );
           final String output = await api.documentReferenceSnapshot(
             arg_app!,
             arg_parameters!,
             arg_includeMetadataChanges!,
+            arg_source!,
           );
           return <Object?>[output];
         });

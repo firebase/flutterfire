@@ -37,6 +37,8 @@ BOOL _fetchAndActivateRetry;
 
 - (instancetype)init {
   self = [super init];
+  if (!self) return self;
+  _listenersMap = [NSMutableDictionary dictionary];
   return self;
 }
 
@@ -248,8 +250,16 @@ BOOL _fetchAndActivateRetry;
 
 #pragma mark - FLTFirebasePlugin
 
+- (void)cleanupWithCompletion {
+  for (FIRConfigUpdateListenerRegistration *listener in self.listenersMap.allValues) {
+    [listener remove];
+  }
+  [self.listenersMap removeAllObjects];
+}
+
 - (void)didReinitializeFirebaseCore:(void (^)(void))completion {
   _fetchAndActivateRetry = false;
+  [self cleanupWithCompletion];
   completion();
 }
 
@@ -291,7 +301,9 @@ BOOL _fetchAndActivateRetry;
 }
 
 - (FlutterError *_Nullable)onCancelWithArguments:(id _Nullable)arguments {
-  NSString *appName = (NSString *)arguments;
+  NSString *appName = (NSString *)arguments[@"appName"];
+  // arguments will be null on hot restart, so we will clean up listeners in
+  // didReinitializeFirebaseCore()
   if (!appName) return nil;
   [self.listenersMap[appName] remove];
   [self.listenersMap removeObjectForKey:appName];

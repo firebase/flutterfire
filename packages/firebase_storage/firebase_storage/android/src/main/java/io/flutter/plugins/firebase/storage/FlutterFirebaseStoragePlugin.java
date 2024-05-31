@@ -391,13 +391,23 @@ public class FlutterFirebaseStoragePlugin
 
   StorageMetadata getMetaDataFromPigeon(
       GeneratedAndroidFirebaseStorage.PigeonSettableMetadata pigeonSettableMetatdata) {
-    StorageMetadata.Builder androidMetaDataBuilder =
-        new StorageMetadata.Builder()
-            .setCacheControl(pigeonSettableMetatdata.getCacheControl())
-            .setContentDisposition(pigeonSettableMetatdata.getContentDisposition())
-            .setContentEncoding(pigeonSettableMetatdata.getContentEncoding())
-            .setContentLanguage(pigeonSettableMetatdata.getContentLanguage())
-            .setContentType(pigeonSettableMetatdata.getContentType());
+    StorageMetadata.Builder androidMetaDataBuilder = new StorageMetadata.Builder();
+
+    if (pigeonSettableMetatdata.getContentType() != null) {
+      androidMetaDataBuilder.setContentType(pigeonSettableMetatdata.getContentType());
+    }
+    if (pigeonSettableMetatdata.getCacheControl() != null) {
+      androidMetaDataBuilder.setCacheControl(pigeonSettableMetatdata.getCacheControl());
+    }
+    if (pigeonSettableMetatdata.getContentDisposition() != null) {
+      androidMetaDataBuilder.setContentDisposition(pigeonSettableMetatdata.getContentDisposition());
+    }
+    if (pigeonSettableMetatdata.getContentEncoding() != null) {
+      androidMetaDataBuilder.setContentEncoding(pigeonSettableMetatdata.getContentEncoding());
+    }
+    if (pigeonSettableMetatdata.getContentLanguage() != null) {
+      androidMetaDataBuilder.setContentLanguage(pigeonSettableMetatdata.getContentLanguage());
+    }
 
     Map<String, String> pigeonCustomMetadata = pigeonSettableMetatdata.getCustomMetadata();
     if (pigeonCustomMetadata != null) {
@@ -493,16 +503,18 @@ public class FlutterFirebaseStoragePlugin
       @NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseStorage.PigeonStorageReference reference,
       @NonNull String filePath,
-      @NonNull GeneratedAndroidFirebaseStorage.PigeonSettableMetadata settableMetaData,
+      @Nullable GeneratedAndroidFirebaseStorage.PigeonSettableMetadata settableMetaData,
       @NonNull Long handle,
       @NonNull GeneratedAndroidFirebaseStorage.Result<String> result) {
 
     StorageReference androidReference = getReferenceFromPigeon(app, reference);
-    StorageMetadata androidMetaData = getMetaDataFromPigeon(settableMetaData);
 
     FlutterFirebaseStorageTask storageTask =
         FlutterFirebaseStorageTask.uploadFile(
-            handle.intValue(), androidReference, Uri.fromFile(new File(filePath)), androidMetaData);
+            handle.intValue(),
+            androidReference,
+            Uri.fromFile(new File(filePath)),
+            settableMetaData == null ? null : getMetaDataFromPigeon(settableMetaData));
 
     try {
       TaskStateChannelStreamHandler handler = storageTask.startTaskWithMethodChannel(channel);

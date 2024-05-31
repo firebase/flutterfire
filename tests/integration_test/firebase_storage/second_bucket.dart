@@ -24,7 +24,9 @@ void setupSecondBucketTests() {
         app: Firebase.app(),
         bucket: secondStorageBucket,
       );
-      await storage.useStorageEmulator(testEmulatorHost, testEmulatorPort);
+      if (defaultTargetPlatform != TargetPlatform.windows) {
+        await storage.useStorageEmulator(testEmulatorHost, testEmulatorPort);
+      }
       // Cannot putFile as it will fail on web e2e tests
       const string = 'some text for creating new files';
       final Reference ref = storage.ref('flutter-tests').child('flt-ok.txt');
@@ -453,22 +455,27 @@ void setupSecondBucketTests() {
         expect(fullMetadata.bucket, secondStorageBucket);
       });
 
-      test('errors if property does not exist', () async {
-        Reference ref = storage.ref('flutter-tests/iDoNotExist.jpeg');
+      test(
+        'errors if property does not exist',
+        () async {
+          Reference ref = storage.ref('flutter-tests/iDoNotExist.jpeg');
 
-        await expectLater(
-          () => ref.updateMetadata(SettableMetadata(contentType: 'unknown')),
-          throwsA(
-            isA<FirebaseException>()
-                .having((e) => e.code, 'code', 'object-not-found')
-                .having(
-                  (e) => e.message,
-                  'message',
-                  'No object exists at the desired reference.',
-                ),
-          ),
-        );
-      });
+          await expectLater(
+            () => ref.updateMetadata(SettableMetadata(contentType: 'unknown')),
+            throwsA(
+              isA<FirebaseException>()
+                  .having((e) => e.code, 'code', 'object-not-found')
+                  .having(
+                    (e) => e.message,
+                    'message',
+                    'No object exists at the desired reference.',
+                  ),
+            ),
+          );
+        },
+        // TODO(russellwheatley): raise issue on C++ SDK, if object does not exist, it throws "unauthorized" exception
+        skip: defaultTargetPlatform == TargetPlatform.windows,
+      );
 
       test(
         'errors if permission denied',

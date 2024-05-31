@@ -45,7 +45,7 @@ void main() {
       });
 
       test('accepts `null arguments', () async {
-        HttpsCallableResult result = await callable(null);
+        HttpsCallableResult result = await callable();
         expect(result.data, equals('null'));
       });
 
@@ -241,7 +241,7 @@ void main() {
             ),
           );
 
-          HttpsCallableResult results = await timeoutCallable(null);
+          HttpsCallableResult results = await timeoutCallable();
           expect(results.data, equals('null'));
         },
       );

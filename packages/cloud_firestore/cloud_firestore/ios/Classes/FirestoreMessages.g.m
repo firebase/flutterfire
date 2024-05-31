@@ -40,6 +40,22 @@
 }
 @end
 
+/// The listener retrieves data and listens to updates from the local Firestore cache only.
+/// If the cache is empty, an empty snapshot will be returned.
+/// Snapshot events will be triggered on cache updates, like local mutations or load bundles.
+///
+/// Note that the data might be stale if the cache hasn't synchronized with recent server-side
+/// changes.
+@implementation ListenSourceBox
+- (instancetype)initWithValue:(ListenSource)value {
+  self = [super init];
+  if (self) {
+    _value = value;
+  }
+  return self;
+}
+@end
+
 @implementation ServerTimestampBehaviorBox
 - (instancetype)initWithValue:(ServerTimestampBehavior)value {
   self = [super init];
@@ -1259,14 +1275,14 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
         binaryMessenger:binaryMessenger
                   codec:FirebaseFirestoreHostApiGetCodec()];
     if (api) {
-      NSCAssert(
-          [api respondsToSelector:@selector(querySnapshotApp:
-                                                        path:isCollectionGroup:parameters:options
-                                                            :includeMetadataChanges:completion:)],
-          @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
-          @"@selector(querySnapshotApp:path:isCollectionGroup:parameters:options:"
-          @"includeMetadataChanges:completion:)",
-          api);
+      NSCAssert([api respondsToSelector:@selector
+                     (querySnapshotApp:
+                                  path:isCollectionGroup:parameters:options:includeMetadataChanges
+                                      :source:completion:)],
+                @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
+                @"@selector(querySnapshotApp:path:isCollectionGroup:parameters:options:"
+                @"includeMetadataChanges:source:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
@@ -1275,12 +1291,14 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
         PigeonQueryParameters *arg_parameters = GetNullableObjectAtIndex(args, 3);
         PigeonGetOptions *arg_options = GetNullableObjectAtIndex(args, 4);
         NSNumber *arg_includeMetadataChanges = GetNullableObjectAtIndex(args, 5);
+        ListenSource arg_source = [GetNullableObjectAtIndex(args, 6) integerValue];
         [api querySnapshotApp:arg_app
                               path:arg_path
                  isCollectionGroup:arg_isCollectionGroup
                         parameters:arg_parameters
                            options:arg_options
             includeMetadataChanges:arg_includeMetadataChanges
+                            source:arg_source
                         completion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
                           callback(wrapResult(output, error));
                         }];
@@ -1296,20 +1314,23 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
         binaryMessenger:binaryMessenger
                   codec:FirebaseFirestoreHostApiGetCodec()];
     if (api) {
-      NSCAssert(
-          [api respondsToSelector:@selector
-               (documentReferenceSnapshotApp:parameters:includeMetadataChanges:completion:)],
-          @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
-          @"@selector(documentReferenceSnapshotApp:parameters:includeMetadataChanges:completion:)",
-          api);
+      NSCAssert([api respondsToSelector:@selector
+                     (documentReferenceSnapshotApp:
+                                        parameters:includeMetadataChanges:source:completion:)],
+                @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
+                @"@selector(documentReferenceSnapshotApp:parameters:includeMetadataChanges:source:"
+                @"completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         DocumentReferenceRequest *arg_parameters = GetNullableObjectAtIndex(args, 1);
         NSNumber *arg_includeMetadataChanges = GetNullableObjectAtIndex(args, 2);
+        ListenSource arg_source = [GetNullableObjectAtIndex(args, 3) integerValue];
         [api documentReferenceSnapshotApp:arg_app
                                parameters:arg_parameters
                    includeMetadataChanges:arg_includeMetadataChanges
+                                   source:arg_source
                                completion:^(NSString *_Nullable output,
                                             FlutterError *_Nullable error) {
                                  callback(wrapResult(output, error));

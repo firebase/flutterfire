@@ -37,22 +37,25 @@ void setupInstanceTests() {
       expect(secondaryStorage.app.name, 'testapp');
     });
 
-    test('default bucket cannot be null', () async {
-      try {
-        secondaryAppWithoutBucket =
-            await testInitializeSecondaryApp(withDefaultBucket: false);
+    test(
+      'default bucket cannot be null',
+      () async {
+        try {
+          secondaryAppWithoutBucket =
+              await testInitializeSecondaryApp(withDefaultBucket: false);
 
-        FirebaseStorage.instanceFor(
-          app: secondaryAppWithoutBucket,
-        );
-        fail('should have thrown an error');
-      } on FirebaseException catch (e) {
-        expect(
-          e.message,
-          "No storage bucket could be found for the app 'testapp-no-bucket'. Ensure you have set the [storageBucket] on [FirebaseOptions] whilst initializing the secondary Firebase app.",
-        );
-      }
-    });
+          FirebaseStorage.instanceFor(
+            app: secondaryAppWithoutBucket,
+          );
+          fail('should have thrown an error');
+        } on FirebaseException catch (e) {
+          expect(
+            e.message,
+            "No storage bucket could be found for the app 'testapp-no-bucket'. Ensure you have set the [storageBucket] on [FirebaseOptions] whilst initializing the secondary Firebase app.",
+          );
+        }
+      },
+    );
 
     group('ref', () {
       test('uses default path if none provided', () {

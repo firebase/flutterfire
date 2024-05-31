@@ -110,6 +110,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
     bool includeMetadataChanges = false,
     ServerTimestampBehavior serverTimestampBehavior =
         ServerTimestampBehavior.none,
+    ListenSource source = ListenSource.defaultSource,
   }) {
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
@@ -121,12 +122,14 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
       onListen: () async {
         final observerId = await MethodChannelFirebaseFirestore.pigeonChannel
             .documentReferenceSnapshot(
-                pigeonApp,
-                DocumentReferenceRequest(
-                  path: _pointer.path,
-                  serverTimestampBehavior: serverTimestampBehavior,
-                ),
-                includeMetadataChanges);
+          pigeonApp,
+          DocumentReferenceRequest(
+            path: _pointer.path,
+            serverTimestampBehavior: serverTimestampBehavior,
+          ),
+          includeMetadataChanges,
+          source,
+        );
         snapshotStreamSubscription =
             MethodChannelFirebaseFirestore.documentSnapshotChannel(observerId)
                 .receiveGuardedBroadcastStream(

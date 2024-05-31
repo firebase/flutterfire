@@ -1,3 +1,52 @@
+## 0.1.2+7
+
+ - Update a dependency to the latest release.
+
+## 0.1.2+6
+
+ - Update a dependency to the latest release.
+
+## 0.1.2+5
+
+ - Update a dependency to the latest release.
+
+## 0.1.2+4
+
+ - Update a dependency to the latest release.
+
+## 0.1.2+3
+
+ - Update a dependency to the latest release.
+
+## 0.1.2+2
+
+ - Update a dependency to the latest release.
+
+## 0.1.2+1
+
+ - **FIX**(web): remove remaining references to `dart:html` ([#12601](https://github.com/firebase/flutterfire/issues/12601)). ([fbffedb6](https://github.com/firebase/flutterfire/commit/fbffedb65c180d29a07436af90b36ca56e97bfe7))
+
+## 0.1.2
+
+ - **FEAT**(web): remove the dependency on `package:js` in favor of `dart:js_interop` ([#12534](https://github.com/firebase/flutterfire/issues/12534)). ([d83f6327](https://github.com/firebase/flutterfire/commit/d83f632753707c974fef2ac8a7f9bf6cb8ba8758))
+
+## 0.1.1+1
+
+ - **FIX**(app_check,web): fix typing inference for `getToken` on web ([#12501](https://github.com/firebase/flutterfire/issues/12501)). ([67dd9c78](https://github.com/firebase/flutterfire/commit/67dd9c7803975a5c1cdfcc6ebf03d1f8f372e183))
+
+## 0.1.1
+
+ - **FEAT**: update `web` package to 0.5.1 ([#12469](https://github.com/firebase/flutterfire/issues/12469)). ([f5c4354a](https://github.com/firebase/flutterfire/commit/f5c4354a66377da9d231c5e3fc7e955ddb7ef8cf))
+ - **FEAT**(app_check,web): migrate web to js_interop to be compatible with WASM ([#12209](https://github.com/firebase/flutterfire/issues/12209)). ([69e2e772](https://github.com/firebase/flutterfire/commit/69e2e772dacbc759657b0cc086ac1423c6b67c3d))
+
+## 0.1.0+19
+
+ - Update a dependency to the latest release.
+
+## 0.1.0+18
+
+ - Update a dependency to the latest release.
+
 ## 0.1.0+17
 
  - Update a dependency to the latest release.

@@ -8,7 +8,6 @@ import 'dart:js_interop';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_web/src/firebase_auth_web_multi_factor.dart';
-import 'package:firebase_auth_web/src/interop/utils/utils.dart';
 import 'package:firebase_auth_web/src/utils/web_utils.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
@@ -490,6 +489,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
             .setItem(getOriginName(delegate.app.name), origin);
       }
     } catch (e) {
+      // Cannot be done with 3.2 constraints
+      // ignore: invalid_runtime_check_with_js_interop_types
       if (e is auth_interop.AuthError) {
         final String code = e.code.toDart;
         // this catches Firebase Error from web that occurs after hot reloading & hot restarting
@@ -548,8 +549,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       ).delegate;
 
       /// We add the passthrough method for LegacyJsObject
-      final verificationId = await provider.verifyPhoneNumber(
-          jsify(phoneOptions, (object) => object), verifier);
+      final verificationId =
+          await provider.verifyPhoneNumber(phoneOptions.jsify(), verifier);
 
       codeSent(verificationId, null);
     } catch (e) {

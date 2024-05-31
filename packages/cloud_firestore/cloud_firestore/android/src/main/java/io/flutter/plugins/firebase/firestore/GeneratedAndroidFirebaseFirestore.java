@@ -104,6 +104,35 @@ public class GeneratedAndroidFirebaseFirestore {
     }
   }
 
+  /**
+   * The listener retrieves data and listens to updates from the local Firestore cache only. If the
+   * cache is empty, an empty snapshot will be returned. Snapshot events will be triggered on cache
+   * updates, like local mutations or load bundles.
+   *
+   * <p>Note that the data might be stale if the cache hasn't synchronized with recent server-side
+   * changes.
+   */
+  public enum ListenSource {
+    /**
+     * The default behavior. The listener attempts to return initial snapshot from cache and
+     * retrieve up-to-date snapshots from the Firestore server. Snapshot events will be triggered on
+     * local mutations and server side updates.
+     */
+    DEFAULT_SOURCE(0),
+    /**
+     * The listener retrieves data and listens to updates from the local Firestore cache only. If
+     * the cache is empty, an empty snapshot will be returned. Snapshot events will be triggered on
+     * cache updates, like local mutations or load bundles.
+     */
+    CACHE(1);
+
+    final int index;
+
+    private ListenSource(final int index) {
+      this.index = index;
+    }
+  }
+
   public enum ServerTimestampBehavior {
     /** Return null for [FieldValue.serverTimestamp()] values that have not yet */
     NONE(0),
@@ -1776,12 +1805,14 @@ public class GeneratedAndroidFirebaseFirestore {
         @NonNull PigeonQueryParameters parameters,
         @NonNull PigeonGetOptions options,
         @NonNull Boolean includeMetadataChanges,
+        @NonNull ListenSource source,
         @NonNull Result<String> result);
 
     void documentReferenceSnapshot(
         @NonNull FirestorePigeonFirebaseApp app,
         @NonNull DocumentReferenceRequest parameters,
         @NonNull Boolean includeMetadataChanges,
+        @NonNull ListenSource source,
         @NonNull Result<String> result);
 
     /** The codec used by FirebaseFirestoreHostApi. */
@@ -2476,6 +2507,7 @@ public class GeneratedAndroidFirebaseFirestore {
                 PigeonQueryParameters parametersArg = (PigeonQueryParameters) args.get(3);
                 PigeonGetOptions optionsArg = (PigeonGetOptions) args.get(4);
                 Boolean includeMetadataChangesArg = (Boolean) args.get(5);
+                ListenSource sourceArg = ListenSource.values()[(int) args.get(6)];
                 Result<String> resultCallback =
                     new Result<String>() {
                       public void success(String result) {
@@ -2496,6 +2528,7 @@ public class GeneratedAndroidFirebaseFirestore {
                     parametersArg,
                     optionsArg,
                     includeMetadataChangesArg,
+                    sourceArg,
                     resultCallback);
               });
         } else {
@@ -2516,6 +2549,7 @@ public class GeneratedAndroidFirebaseFirestore {
                 FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
                 DocumentReferenceRequest parametersArg = (DocumentReferenceRequest) args.get(1);
                 Boolean includeMetadataChangesArg = (Boolean) args.get(2);
+                ListenSource sourceArg = ListenSource.values()[(int) args.get(3)];
                 Result<String> resultCallback =
                     new Result<String>() {
                       public void success(String result) {
@@ -2530,7 +2564,7 @@ public class GeneratedAndroidFirebaseFirestore {
                     };
 
                 api.documentReferenceSnapshot(
-                    appArg, parametersArg, includeMetadataChangesArg, resultCallback);
+                    appArg, parametersArg, includeMetadataChangesArg, sourceArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);

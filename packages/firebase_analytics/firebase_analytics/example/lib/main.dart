@@ -130,7 +130,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _testSetConsent() async {
-    await widget.analytics.setConsent(adStorageConsentGranted: true);
+    await widget.analytics.setConsent(
+      adStorageConsentGranted: true,
+      adUserDataConsentGranted: true,
+      adPersonalizationSignalsConsentGranted: true,
+    );
     setMessage('setConsent succeeded');
   }
 

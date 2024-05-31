@@ -1,3 +1,51 @@
+## 0.2.5+7
+
+ - Update a dependency to the latest release.
+
+## 0.2.5+6
+
+ - Update a dependency to the latest release.
+
+## 0.2.5+5
+
+ - Update a dependency to the latest release.
+
+## 0.2.5+4
+
+ - Update a dependency to the latest release.
+
+## 0.2.5+3
+
+ - Update a dependency to the latest release.
+
+## 0.2.5+2
+
+ - Update a dependency to the latest release.
+
+## 0.2.5+1
+
+ - **FIX**(app-installations,android): update deprecated API to latest Task implementation ([#12579](https://github.com/firebase/flutterfire/issues/12579)). ([88d86e9a](https://github.com/firebase/flutterfire/commit/88d86e9a375cbb57c9fdbba965b75be4dc17376c))
+
+## 0.2.5
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
+## 0.2.4+19
+
+ - Update a dependency to the latest release.
+
+## 0.2.4+18
+
+ - Update a dependency to the latest release.
+
+## 0.2.4+17
+
+ - Update a dependency to the latest release.
+
+## 0.2.4+16
+
+ - Update a dependency to the latest release.
+
 ## 0.2.4+15
 
  - Update a dependency to the latest release.

@@ -30,7 +30,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   final String? databaseChoice;
 
   /// Firestore Database URL for this instance. Falls back to default database: "(default)"
-  String get databaseURL {
+  String get databaseId {
     return databaseChoice ?? '(default)';
   }
 
@@ -39,10 +39,10 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   /// Create an instance using [app] using the existing implementation
   factory FirebaseFirestorePlatform.instanceFor({
     required FirebaseApp app,
-    required String databaseURL,
+    required String databaseId,
   }) {
     return FirebaseFirestorePlatform.instance
-        .delegateFor(app: app, databaseURL: databaseURL);
+        .delegateFor(app: app, databaseId: databaseId);
   }
 
   /// The current default [FirebaseFirestorePlatform] instance.
@@ -51,7 +51,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   /// if no other implementation was provided.
   static FirebaseFirestorePlatform get instance {
     return _instance ??= MethodChannelFirebaseFirestore(
-        app: Firebase.app(), databaseURL: '(default)');
+        app: Firebase.app(), databaseId: '(default)');
   }
 
   static FirebaseFirestorePlatform? _instance;
@@ -66,7 +66,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   /// [FirebaseApp] instance is required by the user.
   @protected
   FirebaseFirestorePlatform delegateFor(
-      {required FirebaseApp app, required String databaseURL}) {
+      {required FirebaseApp app, required String databaseId}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 
@@ -85,7 +85,16 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
     throw UnimplementedError('batch() is not implemented');
   }
 
-  /// Clears any persisted data for the current instance.
+  /// Clears the persistent storage, including pending writes and cached documents.
+  ///
+  /// Must be called while the FirebaseFirestore instance is not started (after the app is shutdown or when the app is first initialized).
+  /// On startup, this method must be called before other methods (other than [FirebaseFirestore.instance.settings]).
+  /// If the FirebaseFirestore instance is still running, the Future will fail.
+  ///
+  /// Note: clearPersistence() is primarily intended to help write reliable tests that use Cloud Firestore.
+  /// It uses an efficient mechanism for dropping existing data but does not attempt to securely
+  /// overwrite or otherwise make cached data unrecoverable. For applications that are sensitive to
+  /// the disclosure of cached data in between user sessions, we strongly recommend not enabling persistence at all.
   Future<void> clearPersistence() {
     throw UnimplementedError('clearPersistence() is not implemented');
   }
