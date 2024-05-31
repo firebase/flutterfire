@@ -1559,21 +1559,6 @@ const String _PROMOTION_ID = 'promotion_id';
 /// The name of a product promotion
 const String _PROMOTION_NAME = 'promotion_name';
 
-/// Location.
-const String _LOCATION = 'location';
-
-/// Item category.
-const String _ITEM_CATEGORY = 'item_category';
-
-/// Purchase quantity (long).
-const String _QUANTITY = 'quantity';
-
-/// Purchase price (double).
-const String _PRICE = 'price';
-
-/// The Google Place ID that corresponds to the associated item.
-const String _ITEM_LOCATION_ID = 'item_location_id';
-
 /// The checkout step (1..N).
 const String _CHECKOUT_STEP = 'checkout_step';
 
