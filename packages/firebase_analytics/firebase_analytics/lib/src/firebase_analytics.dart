@@ -9,25 +9,6 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   FirebaseAnalytics._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_analytics');
 
-  /// Namespace for analytics API available on Android only. This is deprecated in favor of
-  /// `FirebaseAnalytics.instance.setSessionTimeoutDuration()`.
-  ///
-  /// The value of this field is `null` on non-Android platforms. If you are
-  /// writing cross-platform code, consider using null-aware operator when
-  /// accessing it.
-  ///
-  /// Example:
-  ///
-  ///     FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  ///     analytics.android?.setSessionTimeoutDuration(true);
-  @Deprecated(
-    'Android namespace will be removed in a future release. Please use FirebaseAnalytics.instance.setSessionTimeoutDuration()',
-  )
-  final FirebaseAnalyticsAndroid? android =
-      defaultTargetPlatform == TargetPlatform.android && !kIsWeb
-          ? FirebaseAnalyticsAndroid()
-          : null;
-
   static Map<String, FirebaseAnalytics> _firebaseAnalyticsInstances = {};
 
   // Cached and lazily loaded instance of [FirebaseAnalyticsPlatform] to avoid
