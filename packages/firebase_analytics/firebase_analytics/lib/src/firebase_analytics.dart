@@ -9,25 +9,6 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   FirebaseAnalytics._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_analytics');
 
-  /// Namespace for analytics API available on Android only. This is deprecated in favor of
-  /// `FirebaseAnalytics.instance.setSessionTimeoutDuration()`.
-  ///
-  /// The value of this field is `null` on non-Android platforms. If you are
-  /// writing cross-platform code, consider using null-aware operator when
-  /// accessing it.
-  ///
-  /// Example:
-  ///
-  ///     FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  ///     analytics.android?.setSessionTimeoutDuration(true);
-  @Deprecated(
-    'Android namespace will be removed in a future release. Please use FirebaseAnalytics.instance.setSessionTimeoutDuration()',
-  )
-  final FirebaseAnalyticsAndroid? android =
-      defaultTargetPlatform == TargetPlatform.android && !kIsWeb
-          ? FirebaseAnalyticsAndroid()
-          : null;
-
   static Map<String, FirebaseAnalytics> _firebaseAnalyticsInstances = {};
 
   // Cached and lazily loaded instance of [FirebaseAnalyticsPlatform] to avoid
@@ -407,59 +388,6 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     );
   }
 
-  /// Logs the standard `ecommerce_purchase` event. This event has been deprecated, please use `purchase` instead.
-  ///
-  /// This event signifies that an item was purchased by a user. Note: This is
-  /// different from the in-app purchase event, which is reported automatically
-  /// for Google Play-based apps. Note: If you supply the [value] parameter,
-  /// you must also supply the [currency] parameter so that revenue metrics can
-  /// be computed accurately.
-  ///
-  /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#ECOMMERCE_PURCHASE
-  @Deprecated(
-    'logEcommercePurchase() has been deprecated. Please use logPurchase()',
-  )
-  Future<void> logEcommercePurchase({
-    String? currency,
-    double? value,
-    String? transactionId,
-    double? tax,
-    double? shipping,
-    String? coupon,
-    String? location,
-    int? numberOfNights,
-    int? numberOfRooms,
-    int? numberOfPassengers,
-    String? origin,
-    String? destination,
-    String? startDate,
-    String? endDate,
-    String? travelClass,
-  }) {
-    _requireValueAndCurrencyTogether(value, currency);
-
-    return _delegate.logEvent(
-      name: 'ecommerce_purchase',
-      parameters: filterOutNulls(<String, Object?>{
-        _CURRENCY: currency,
-        _VALUE: value,
-        _TRANSACTION_ID: transactionId,
-        _TAX: tax,
-        _SHIPPING: shipping,
-        _COUPON: coupon,
-        _LOCATION: location,
-        _NUMBER_OF_NIGHTS: numberOfNights,
-        _NUMBER_OF_ROOMS: numberOfRooms,
-        _NUMBER_OF_PASSENGERS: numberOfPassengers,
-        _ORIGIN: origin,
-        _DESTINATION: destination,
-        _START_DATE: startDate,
-        _END_DATE: endDate,
-        _TRAVEL_CLASS: travelClass,
-      }),
-    );
-  }
-
   /// Logs the standard `ad_impression` event.
   ///
   /// This event signifies when a user sees an ad impression. Note: If you supply
@@ -605,70 +533,6 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     );
   }
 
-  /// Logs the standard `present_offer` event.  This event has been deprecated, please use `view_promotion` instead.
-  ///
-  /// This event signifies that the app has presented a purchase offer to a
-  /// user. Add this event to a funnel with the [logAddToCart] and
-  /// [logEcommercePurchase] to gauge your conversion process. Note: If you
-  /// supply the [value] parameter, you must also supply the [currency]
-  /// parameter so that revenue metrics can be computed accurately.
-  ///
-  /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#PRESENT_OFFER
-  @Deprecated(
-    'logPresentOffer() has been deprecated. Please use logViewPromotion()',
-  )
-  Future<void> logPresentOffer({
-    required String itemId,
-    required String itemName,
-    required String itemCategory,
-    required int quantity,
-    double? price,
-    double? value,
-    String? currency,
-    String? itemLocationId,
-  }) {
-    _requireValueAndCurrencyTogether(value, currency);
-
-    return _delegate.logEvent(
-      name: 'present_offer',
-      parameters: filterOutNulls(<String, Object?>{
-        _ITEM_ID: itemId,
-        _ITEM_NAME: itemName,
-        _ITEM_CATEGORY: itemCategory,
-        _QUANTITY: quantity,
-        _PRICE: price,
-        _VALUE: value,
-        _CURRENCY: currency,
-        _ITEM_LOCATION_ID: itemLocationId,
-      }),
-    );
-  }
-
-  /// Logs the standard `purchase_refund` event. This event has been deprecated, please use `refund` instead.
-  ///
-  /// This event signifies that an item purchase was refunded. Note: If you
-  /// supply the [value] parameter, you must also supply the [currency]
-  /// parameter so that revenue metrics can be computed accurately.
-  ///
-  /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#PURCHASE_REFUND
-  @Deprecated('logPurchaseRefund() has been deprecated. Please use logRefund()')
-  Future<void> logPurchaseRefund({
-    String? currency,
-    double? value,
-    String? transactionId,
-  }) {
-    _requireValueAndCurrencyTogether(value, currency);
-
-    return _delegate.logEvent(
-      name: 'purchase_refund',
-      parameters: filterOutNulls(<String, Object?>{
-        _CURRENCY: currency,
-        _VALUE: value,
-        _TRANSACTION_ID: transactionId,
-      }),
-    );
-  }
-
   /// Logs the standard `generate_lead` event.
   ///
   /// Log this event when a lead has been generated in the app to understand
@@ -792,6 +656,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
 
   /// Logs the standard `set_checkout_option` event. This event has been deprecated and is unsupported in updated Enhanced Ecommerce reports.
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#SET_CHECKOUT_OPTION
+  @Deprecated('logSetCheckoutOption() has been deprecated.')
   Future<void> logSetCheckoutOption({
     required int checkoutStep,
     required String checkoutOption,
@@ -1429,23 +1294,6 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   }
 }
 
-/// Android-specific analytics API.
-class FirebaseAnalyticsAndroid {
-  final _platformInstance = FirebaseAnalyticsPlatform.instance;
-
-  /// Sets the duration of inactivity that terminates the current session.
-  ///
-  /// The default value is 1800000 (30 minutes).
-  @Deprecated(
-    'Android namespace will be removed in a future release. Please use FirebaseAnalytics.instance.setSessionTimeoutDuration()',
-  )
-  Future<void> setSessionTimeoutDuration(int milliseconds) async {
-    final timeout = Duration(milliseconds: milliseconds);
-
-    await _platformInstance.setSessionTimeoutDuration(timeout);
-  }
-}
-
 /// Creates a new map containing all of the key/value pairs from [parameters]
 /// except those whose value is `null`.
 @visibleForTesting
@@ -1712,21 +1560,6 @@ const String _PROMOTION_ID = 'promotion_id';
 
 /// The name of a product promotion
 const String _PROMOTION_NAME = 'promotion_name';
-
-/// Location.
-const String _LOCATION = 'location';
-
-/// Item category.
-const String _ITEM_CATEGORY = 'item_category';
-
-/// Purchase quantity (long).
-const String _QUANTITY = 'quantity';
-
-/// Purchase price (double).
-const String _PRICE = 'price';
-
-/// The Google Place ID that corresponds to the associated item.
-const String _ITEM_LOCATION_ID = 'item_location_id';
 
 /// The checkout step (1..N).
 const String _CHECKOUT_STEP = 'checkout_step';
