@@ -105,6 +105,8 @@ void main(List<String> arguments) async {
 
   print('Version $version has been generated successfully!');
 
+  await addLinkInChangelog(version, date);
+
   // Commit the files and create an annotated tag and a commit
   Process.runSync('git', ['add', versionsFile, versionsJsonFile]);
   Process.runSync(
@@ -166,13 +168,11 @@ Future<void> appendStaticText(
     '## [Flutter BoM $version ($date)](https://github.com/firebase/flutterfire/blob/master/CHANGELOG.md#$date)',
   );
   sink.writeln();
-  sink.writeln('<!--- When ready can be included');
   sink.writeln('Install this version using FlutterFire CLI');
   sink.writeln();
   sink.writeln('```bash');
   sink.writeln('flutterfire install $version');
   sink.writeln('```');
-  sink.writeln('-->');
   sink.writeln();
   sink.writeln('### Included Native Firebase SDK Versions');
   sink.writeln('| Firebase SDK | Version | Link |');
@@ -209,4 +209,35 @@ Future<void> appendStaticText(
   // Closing the sink to flush all data to the file
   await sink.flush();
   await sink.close();
+}
+
+Future<void> addLinkInChangelog(String version, String date) async {
+  String originalLine = '## $date';
+  String newLine =
+      '## $date - [BoM $version](https://github.com/firebase/flutterfire/blob/master/VERSIONS.md#flutter-bom-${version.replaceAll('.', '')}-$date)';
+
+  String escapedOriginalLine =
+      originalLine.replaceAll(r'$', r'\$').replaceAll('#', r'\#');
+  String escapedNewLine = newLine
+      .replaceAll(r'$', r'\$')
+      .replaceAll('(', r'\(')
+      .replaceAll(')', r'\)')
+      .replaceAll('#', r'\#')
+      .replaceAll('-', r'\-')
+      .replaceAll('.', r'\.');
+
+  // Works only if runned using `melos run bom`
+  String filePath = 'CHANGELOG.md';
+
+  String command =
+      'sed -i "" "s|$escapedOriginalLine|$escapedNewLine|" $filePath';
+
+  ProcessResult result = await Process.run('bash', ['-c', command]);
+
+  // Check for errors
+  if (result.exitCode != 0) {
+    throw 'Error: ${result.stderr}';
+  } else {
+    print('Line replaced successfully');
+  }
 }
