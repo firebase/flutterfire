@@ -6,13 +6,11 @@ This document is listing all the compatible versions of the FlutterFire plugins.
 
 ## [Flutter BoM 1.1.0 (2024-05-28)](https://github.com/firebase/flutterfire/blob/master/CHANGELOG.md#2024-05-28)
 
-<!--- When ready can be included
 Install this version using FlutterFire CLI
 
 ```bash
 flutterfire install 1.1.0
 ```
--->
 
 ### Included Native Firebase SDK Versions
 | Firebase SDK | Version | Link |
@@ -46,13 +44,11 @@ flutterfire install 1.1.0
 
 ## [Flutter BoM 1.0.1 (2024-05-21)](https://github.com/firebase/flutterfire/blob/master/CHANGELOG.md#2024-05-21)
 
-<!--- When ready can be included
 Install this version using FlutterFire CLI
 
 ```bash
 flutterfire install 1.0.1
 ```
--->
 
 ### Included Native Firebase SDK Versions
 | Firebase SDK | Version | Link |
