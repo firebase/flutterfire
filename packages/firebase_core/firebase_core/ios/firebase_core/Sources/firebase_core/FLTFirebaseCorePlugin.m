@@ -2,9 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#import "FLTFirebaseCorePlugin.h"
-#import "FLTFirebasePluginRegistry.h"
-#import "messages.g.h"
+#import "include/firebase_core/FLTFirebaseCorePlugin.h"
+#import "include/firebase_core/FLTFirebasePluginRegistry.h"
+#import "include/firebase_core/messages.g.h"
 
 @implementation FLTFirebaseCorePlugin {
   BOOL _coreInitialized;
@@ -105,11 +105,11 @@ static NSMutableDictionary<NSString *, NSString *> *customAuthDomains;
 }
 
 - (NSString *_Nonnull)firebaseLibraryName {
-  return LIBRARY_NAME;
+  return @LIBRARY_NAME;
 }
 
 - (NSString *_Nonnull)firebaseLibraryVersion {
-  return LIBRARY_VERSION;
+  return @LIBRARY_VERSION;
 }
 
 - (NSString *_Nonnull)flutterChannelName {
