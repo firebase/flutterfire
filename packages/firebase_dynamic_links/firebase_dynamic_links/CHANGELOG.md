@@ -1,3 +1,39 @@
+## 5.5.7
+
+ - Update a dependency to the latest release.
+
+## 5.5.6
+
+ - Update a dependency to the latest release.
+
+## 5.5.5
+
+ - Update a dependency to the latest release.
+
+## 5.5.4
+
+ - Update a dependency to the latest release.
+
+## 5.5.3
+
+ - Update a dependency to the latest release.
+
+## 5.5.2
+
+ - Update a dependency to the latest release.
+
+## 5.5.1
+
+ - Update a dependency to the latest release.
+
+## 5.5.0
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
+## 5.4.19
+
+ - Update a dependency to the latest release.
+
 ## 5.4.18
 
  - Update a dependency to the latest release.

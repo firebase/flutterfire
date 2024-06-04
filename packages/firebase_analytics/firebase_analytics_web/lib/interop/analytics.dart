@@ -34,7 +34,7 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
 
   static Future<bool> isSupported() async {
     final result = await analytics_interop.isSupported().toDart;
-    return result! as bool;
+    return (result! as JSBoolean).toDart;
   }
 
   /// Non-null App for this instance of analytics service.
@@ -50,6 +50,42 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
       name.toJS,
       parameters?.jsify(),
       callOptions?.asMap().jsify() as JSObject?,
+    );
+  }
+
+  void setConsent({
+    bool? adPersonalizationSignalsConsentGranted,
+    bool? adStorageConsentGranted,
+    bool? adUserDataConsentGranted,
+    bool? analyticsStorageConsentGranted,
+    bool? functionalityStorageConsentGranted,
+    bool? personalizationStorageConsentGranted,
+    bool? securityStorageConsentGranted,
+  }) {
+    final consentSettings = {
+      if (adPersonalizationSignalsConsentGranted != null)
+        'ad_personalization':
+            adPersonalizationSignalsConsentGranted ? 'granted' : 'denied',
+      if (adStorageConsentGranted != null)
+        'ad_storage': adStorageConsentGranted ? 'granted' : 'denied',
+      if (adUserDataConsentGranted != null)
+        'ad_user_data': adUserDataConsentGranted ? 'granted' : 'denied',
+      if (analyticsStorageConsentGranted != null)
+        'analytics_storage':
+            analyticsStorageConsentGranted ? 'granted' : 'denied',
+      if (functionalityStorageConsentGranted != null)
+        'functionality_storage':
+            functionalityStorageConsentGranted ? 'granted' : 'denied',
+      if (personalizationStorageConsentGranted != null)
+        'personalization_storage':
+            personalizationStorageConsentGranted ? 'granted' : 'denied',
+      if (securityStorageConsentGranted != null)
+        'security_storage':
+            securityStorageConsentGranted ? 'granted' : 'denied',
+    }.jsify();
+
+    return analytics_interop.setConsent(
+      consentSettings,
     );
   }
 

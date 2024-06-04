@@ -1,3 +1,39 @@
+## 5.1.22
+
+ - Update a dependency to the latest release.
+
+## 5.1.21
+
+ - **FIX**(storage,windows): putFile(), putString(), putData() & Task streaming event fixes ([#12723](https://github.com/firebase/flutterfire/issues/12723)). ([de69e07a](https://github.com/firebase/flutterfire/commit/de69e07a36a9e2ce967d9f4470f4a14e987abf53))
+
+## 5.1.20
+
+ - Update a dependency to the latest release.
+
+## 5.1.19
+
+ - Update a dependency to the latest release.
+
+## 5.1.18
+
+ - **FIX**(storage): pass StorageMetadata as nullable for `putFile()` API. Metadata ought to be inferred from File. ([#12612](https://github.com/firebase/flutterfire/issues/12612)). ([e75d134f](https://github.com/firebase/flutterfire/commit/e75d134faef2cbf156d8936fa3f1c8c69cd59ec2))
+
+## 5.1.17
+
+ - Update a dependency to the latest release.
+
+## 5.1.16
+
+ - Update a dependency to the latest release.
+
+## 5.1.15
+
+ - Update a dependency to the latest release.
+
+## 5.1.14
+
+ - Update a dependency to the latest release.
+
 ## 5.1.13
 
  - Update a dependency to the latest release.

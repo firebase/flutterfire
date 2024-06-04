@@ -128,7 +128,8 @@ public class FlutterFirebaseDatabaseException extends Exception {
       // detect it.
       code = "index-not-defined";
       message = message.replaceFirst("java.lang.Exception: ", "");
-    } else if (message.contains("Permission denied")) {
+    } else if (message.contains("Permission denied")
+        || message.contains("Client doesn't have permission")) {
       // Permission denied when using Firebase emulator does not correctly come
       // through as a DatabaseError.
       code = "permission-denied";

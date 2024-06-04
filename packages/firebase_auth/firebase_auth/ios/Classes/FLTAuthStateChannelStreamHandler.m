@@ -21,21 +21,23 @@
 - (FlutterError *)onListenWithArguments:(id)arguments eventSink:(FlutterEventSink)events {
   bool __block initialAuthState = YES;
 
-  _listener =
-      [_auth addAuthStateDidChangeListener:^(FIRAuth *_Nonnull auth, FIRUser *_Nullable user) {
-        if (initialAuthState) {
-          initialAuthState = NO;
-          return;
-        }
+  _listener = [_auth addAuthStateDidChangeListener:^(FIRAuth *_Nonnull auth,
+                                                     FIRUser *_Nullable user) {
+    if (initialAuthState) {
+      initialAuthState = NO;
+      return;
+    }
 
-        if (user) {
-          events(@{@"user" : [[PigeonParser getPigeonDetails:user] toList]});
-        } else {
-          events(@{
-            @"user" : [NSNull null],
-          });
-        }
-      }];
+    if (user) {
+      events(@{
+        @"user" : [PigeonParser getManualList:[PigeonParser getPigeonDetails:[auth currentUser]]]
+      });
+    } else {
+      events(@{
+        @"user" : [NSNull null],
+      });
+    }
+  }];
 
   return nil;
 }

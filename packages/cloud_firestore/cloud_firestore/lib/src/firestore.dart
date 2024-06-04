@@ -16,12 +16,14 @@ part of cloud_firestore;
 /// FirebaseFirestore firestore = FirebaseFirestore.instanceFor(app: secondaryApp);
 /// ```
 class FirebaseFirestore extends FirebasePluginPlatform {
-  FirebaseFirestore._({required this.app, required this.databaseURL})
-      : super(app.name, 'plugins.flutter.io/firebase_firestore') {
-    if (databaseURL.endsWith('/')) {
-      databaseURL = databaseURL.substring(0, databaseURL.length - 1);
-    }
-  }
+  FirebaseFirestore._({
+    required this.app,
+    @Deprecated(
+      '`databaseURL` has been deprecated. Please use `databaseId` instead.',
+    )
+    required this.databaseURL,
+    required this.databaseId,
+  }) : super(app.name, 'plugins.flutter.io/firebase_firestore');
 
   static final Map<String, FirebaseFirestore> _cachedInstances = {};
 
@@ -35,16 +37,25 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// Returns an instance using a specified [FirebaseApp].
   static FirebaseFirestore instanceFor({
     required FirebaseApp app,
+    @Deprecated(
+      '`databaseURL` has been deprecated. Please use `databaseId` instead.',
+    )
     String? databaseURL,
+    String? databaseId,
   }) {
-    String url = databaseURL ?? '(default)';
-    String cacheKey = '${app.name}|$url';
+    String firestoreDatabaseId = databaseId ?? databaseURL ?? '(default)';
+    String cacheKey = '${app.name}|$firestoreDatabaseId';
     if (_cachedInstances.containsKey(cacheKey)) {
       return _cachedInstances[cacheKey]!;
     }
 
     FirebaseFirestore newInstance =
-        FirebaseFirestore._(app: app, databaseURL: url);
+        // Both databaseURL and databaseId are required so we have to pass both for now. We can remove databaseURL in a future release.
+        FirebaseFirestore._(
+      app: app,
+      databaseURL: firestoreDatabaseId,
+      databaseId: firestoreDatabaseId,
+    );
     _cachedInstances[cacheKey] = newInstance;
 
     return newInstance;
@@ -58,15 +69,22 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   FirebaseFirestorePlatform get _delegate {
     return _delegatePackingProperty ??= FirebaseFirestorePlatform.instanceFor(
       app: app,
-      databaseURL: databaseURL,
+      databaseId: databaseId,
     );
   }
 
   /// The [FirebaseApp] for this current [FirebaseFirestore] instance.
   FirebaseApp app;
 
-  /// Firestore Database URL for this instance. Falls back to default database: "(default)"
+  /// Firestore Database ID for this instance. Falls back to default database: "(default)"
+  /// This is deprecated in favor of [databaseId].
+  @Deprecated(
+    '`databaseURL` has been deprecated. Please use `databaseId` instead.',
+  )
   String databaseURL;
+
+  /// Firestore Database ID for this instance. Falls back to default database: "(default)"
+  String databaseId;
 
   /// Gets a [CollectionReference] for the specified Firestore path.
   CollectionReference<Map<String, dynamic>> collection(String collectionPath) {
@@ -95,7 +113,16 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     return WriteBatch._(this, _delegate.batch());
   }
 
-  /// Clears any persisted data for the current instance.
+  /// Clears the persistent storage, including pending writes and cached documents.
+  ///
+  /// Must be called while the FirebaseFirestore instance is not started (after the app is shutdown or when the app is first initialized).
+  /// On startup, this method must be called before other methods (other than [FirebaseFirestore.instance.settings]).
+  /// If the FirebaseFirestore instance is still running, the Future will fail.
+  ///
+  /// Note: clearPersistence() is primarily intended to help write reliable tests that use Cloud Firestore.
+  /// It uses an efficient mechanism for dropping existing data but does not attempt to securely
+  /// overwrite or otherwise make cached data unrecoverable. For applications that are sensitive to
+  /// the disclosure of cached data in between user sessions, we strongly recommend not enabling persistence at all.
   Future<void> clearPersistence() {
     return _delegate.clearPersistence();
   }
@@ -334,8 +361,8 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// require indexing even if the indices are not yet available. Query execution will automatically
   /// start using the index once the index entries have been written.
   ///
-  /// This API is in preview mode and is subject to change.
-  @experimental
+  /// This API is now deprecated
+  @Deprecated('setIndexConfiguration() has been deprecated.')
   Future<void> setIndexConfiguration({
     required List<Index> indexes,
     List<FieldOverrides>? fieldOverrides,

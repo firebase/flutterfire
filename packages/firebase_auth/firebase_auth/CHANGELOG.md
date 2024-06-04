@@ -1,3 +1,44 @@
+## 4.20.0
+
+ - **FIX**(auth,android): remove unecessary error type guarding ([#12816](https://github.com/firebase/flutterfire/issues/12816)). ([7d4c200a](https://github.com/firebase/flutterfire/commit/7d4c200ac6f06a50c2e7ee852aea2c9fa7bcb0ff))
+ - **FEAT**(auth,windows): `verifyBeforeUpdateEmail()` API  support ([#12825](https://github.com/firebase/flutterfire/issues/12825)). ([111b1ad9](https://github.com/firebase/flutterfire/commit/111b1ad91e985b0462532bc579e64342b7f46fe2))
+ - **FEAT**(auth): update Pigeon version to 19 ([#12828](https://github.com/firebase/flutterfire/issues/12828)). ([5e76153f](https://github.com/firebase/flutterfire/commit/5e76153fbcd337a26e83abc2b43b651ab6c501bc))
+ - **FEAT**: bump CPP SDK to version 11.10.0 ([#12749](https://github.com/firebase/flutterfire/issues/12749)). ([2e410a23](https://github.com/firebase/flutterfire/commit/2e410a232758292baa70f8e78464bd3c62ec0373))
+
+## 4.19.6
+
+ - **FIX**(auth,android): allow nullable `accessToken` when creating `OAuthProvider` ([#12795](https://github.com/firebase/flutterfire/issues/12795)). ([490319d4](https://github.com/firebase/flutterfire/commit/490319d4c046917bdd227c19fd37185d63076b4a))
+
+## 4.19.5
+
+ - **FIX**(auth,windows): allow `idToken` and `accessToken` to be nullable to stop windows crashing for `signInWithCredential()` ([#12688](https://github.com/firebase/flutterfire/issues/12688)). ([ca9f92d0](https://github.com/firebase/flutterfire/commit/ca9f92d05f717b46c80307987f560454b90a4d67))
+
+## 4.19.4
+
+ - Update a dependency to the latest release.
+
+## 4.19.3
+
+ - **FIX**(auth,ios): Give more details on internal error when calling `sendSignInLinkToEmail`. ([#12671](https://github.com/firebase/flutterfire/issues/12671)). ([2b086029](https://github.com/firebase/flutterfire/commit/2b0860296bf577c99810643bb286b7219ee9291f))
+
+## 4.19.2
+
+ - Update a dependency to the latest release.
+
+## 4.19.1
+
+ - Update a dependency to the latest release.
+
+## 4.19.0
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
+## 4.18.0
+
+ - **FIX**(auth,android): fixing an issue that could cause `getEnrolledFactors` to return an empty list if signing out in the same app session ([#12488](https://github.com/firebase/flutterfire/issues/12488)). ([04280a31](https://github.com/firebase/flutterfire/commit/04280a31310dbbe51a8e619f031f5190d02e695d))
+ - **FEAT**(firebase_auth): add custom auth domain setter to Firebase Auth ([#12218](https://github.com/firebase/flutterfire/issues/12218)). ([e1297800](https://github.com/firebase/flutterfire/commit/e12978009e0fd785f267db560972ab0bbe021fcb))
+ - **FEAT**(auth,windows): add support for oAuth with credentials on Windows ([#12154](https://github.com/firebase/flutterfire/issues/12154)). ([cc708e6f](https://github.com/firebase/flutterfire/commit/cc708e6fdce6053772da0f08c9872e1dbe9899b1))
+
 ## 4.17.9
 
  - Update a dependency to the latest release.

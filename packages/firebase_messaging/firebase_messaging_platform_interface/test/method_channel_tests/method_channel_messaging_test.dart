@@ -63,6 +63,8 @@ void main() {
     });
 
     setUp(() {
+      // Default platform to run tests against; can be overridden for each test.
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
       log.clear();
       messaging = MethodChannelFirebaseMessaging(app: app);
     });

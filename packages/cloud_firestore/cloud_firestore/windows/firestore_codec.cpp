@@ -215,7 +215,7 @@ cloud_firestore_windows::FirestoreCodec::ReadValueOfType(
       if (CloudFirestorePlugin::firestoreInstances_.find(appName) !=
           CloudFirestorePlugin::firestoreInstances_.end()) {
         return CustomEncodableValue(
-            CloudFirestorePlugin::firestoreInstances_[appName]);
+            CloudFirestorePlugin::firestoreInstances_[appName].get());
       }
 
       firebase::App* app = firebase::App::GetInstance(appName.c_str());
@@ -223,7 +223,8 @@ cloud_firestore_windows::FirestoreCodec::ReadValueOfType(
       Firestore* firestore = Firestore::GetInstance(app);
       firestore->set_settings(settings);
 
-      CloudFirestorePlugin::firestoreInstances_[appName] = firestore;
+      CloudFirestorePlugin::firestoreInstances_[appName] =
+          std::unique_ptr<firebase::firestore::Firestore>(firestore);
 
       return CustomEncodableValue(firestore);
     }

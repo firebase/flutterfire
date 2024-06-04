@@ -103,7 +103,7 @@ class FirestoreMessageCodec extends StandardMessageCodec {
     } else if (value is MethodChannelFirebaseFirestore) {
       buffer.putUint8(_kFirestoreInstance);
       writeValue(buffer, value.app.name);
-      writeValue(buffer, value.databaseURL);
+      writeValue(buffer, value.databaseId);
       writeValue(buffer, value.settings);
     } else if (value is MethodChannelQuery) {
       buffer.putUint8(_kFirestoreQuery);
@@ -141,12 +141,12 @@ class FirestoreMessageCodec extends StandardMessageCodec {
       case _kDocumentReference:
         final String appName = readValue(buffer)! as String;
         final String path = readValue(buffer)! as String;
-        final String databaseURL = readValue(buffer)! as String;
+        final String databaseId = readValue(buffer)! as String;
 
         final FirebaseApp app = Firebase.app(appName);
         final FirebaseFirestorePlatform firestore =
             FirebaseFirestorePlatform.instanceFor(
-                app: app, databaseURL: databaseURL);
+                app: app, databaseId: databaseId);
         return firestore.doc(path);
       case _kBlob:
         final int length = readSize(buffer);

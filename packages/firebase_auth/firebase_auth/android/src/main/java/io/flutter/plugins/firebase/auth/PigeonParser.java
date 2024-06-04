@@ -38,6 +38,14 @@ import java.util.Map;
 import java.util.Objects;
 
 public class PigeonParser {
+  static List<Object> manuallyToList(
+      GeneratedAndroidFirebaseAuth.PigeonUserDetails pigeonUserDetails) {
+    List<Object> output = new ArrayList<>();
+    output.add(pigeonUserDetails.getUserInfo().toList());
+    output.add(pigeonUserDetails.getProviderData());
+    return output;
+  }
+
   static GeneratedAndroidFirebaseAuth.PigeonUserCredential parseAuthResult(
       @NonNull AuthResult authResult) {
     GeneratedAndroidFirebaseAuth.PigeonUserCredential.Builder builder =
@@ -218,7 +226,9 @@ public class PigeonParser {
           String providerId =
               (String) Objects.requireNonNull(credentialMap.get(Constants.PROVIDER_ID));
           OAuthProvider.CredentialBuilder builder = OAuthProvider.newCredentialBuilder(providerId);
-          builder.setAccessToken(Objects.requireNonNull(accessToken));
+          if (accessToken != null) {
+            builder.setAccessToken(accessToken);
+          }
           if (rawNonce == null) {
             builder.setIdToken(Objects.requireNonNull(idToken));
           } else {

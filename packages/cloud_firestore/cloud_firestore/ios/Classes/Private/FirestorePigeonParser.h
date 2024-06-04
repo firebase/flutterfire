@@ -18,6 +18,7 @@
 + (FIRFirestoreSource)parseSource:(Source)source;
 + (FIRServerTimestampBehavior)parseServerTimestampBehavior:
     (ServerTimestampBehavior)serverTimestampBehavior;
++ (FIRListenSource)parseListenSource:(ListenSource)source;
 + (PigeonDocumentSnapshot *)toPigeonDocumentSnapshot:(FIRDocumentSnapshot *)documentSnapshot
                              serverTimestampBehavior:
                                  (FIRServerTimestampBehavior)serverTimestampBehavior;

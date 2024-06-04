@@ -388,6 +388,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
     }
     // Deserialize a FilterOperator
     String op = (String) map.get("op");
+    @SuppressWarnings("unchecked")
     List<Map<String, Object>> queries = (List<Map<String, Object>>) map.get("queries");
 
     // Map queries recursively
@@ -428,7 +429,9 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
 
       boolean isFilterQuery = parameters.containsKey("filters");
       if (isFilterQuery) {
-        Filter filter = filterFromJson((Map<String, Object>) parameters.get("filters"));
+        @SuppressWarnings("unchecked")
+        Filter filter =
+            filterFromJson((Map<String, Object>) Objects.requireNonNull(parameters.get("filters")));
         query = query.where(filter);
       }
 

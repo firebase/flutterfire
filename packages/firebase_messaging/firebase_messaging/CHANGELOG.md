@@ -1,3 +1,41 @@
+## 14.9.4
+
+ - Update a dependency to the latest release.
+
+## 14.9.3
+
+ - **FIX**(messaging): ensure default app is available before checking auth notification ([#12810](https://github.com/firebase/flutterfire/issues/12810)). ([eca2df61](https://github.com/firebase/flutterfire/commit/eca2df615deaf1612ff027044cec3c0df3cf95c1))
+
+## 14.9.2
+
+ - **FIX**(messaging,apple): rename to `PrivacyInfo.xcprivacy` for privacy manifest ([#12752](https://github.com/firebase/flutterfire/issues/12752)). ([c5bdebc8](https://github.com/firebase/flutterfire/commit/c5bdebc89c64419e755f0b375108719785129716))
+ - **FIX**(messaging,android): remove deprecated instance ID (iid) dependency ([#12702](https://github.com/firebase/flutterfire/issues/12702)). ([7b2990b3](https://github.com/firebase/flutterfire/commit/7b2990b36197a2848f424aefb6603b5d9c87f73e))
+
+## 14.9.1
+
+ - Update a dependency to the latest release.
+
+## 14.9.0
+
+ - **FIX**(firebase_messaging,web): Define scope for 'firebase-messaging-sw.js' on registration ([#12639](https://github.com/firebase/flutterfire/issues/12639)). ([02c26b34](https://github.com/firebase/flutterfire/commit/02c26b34a2baa2f335770db648dd57055e92066d))
+ - **FEAT**(messaging,apple): provide privacy manifest for `NSUserDefaults` usage in plugin ([#12665](https://github.com/firebase/flutterfire/issues/12665)). ([933e343e](https://github.com/firebase/flutterfire/commit/933e343e6457f8d4e5fd1b8237d631fd69850076))
+
+## 14.8.2
+
+ - **FIX**(messaging,android): Replace deprecated AsyncTask API and other deprecated API ([#12580](https://github.com/firebase/flutterfire/issues/12580)). ([ac089e56](https://github.com/firebase/flutterfire/commit/ac089e5653715744892b6fe298d1814f81160970))
+
+## 14.8.1
+
+ - Update a dependency to the latest release.
+
+## 14.8.0
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
+## 14.7.21
+
+ - Update a dependency to the latest release.
+
 ## 14.7.20
 
  - Update a dependency to the latest release.

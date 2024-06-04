@@ -27,11 +27,11 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
   namespace 'io.flutter.plugins.firebase.database.example'
 
-  compileSdk 33
+  compileSdk 34
 
   defaultConfig {
     applicationId 'io.flutter.plugins.firebase.database.example'
-    minSdk 19
+    minSdk 21
     targetSdk 33
     versionCode flutterVersionCode.toInteger()
     versionName flutterVersionName

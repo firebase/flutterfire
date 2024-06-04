@@ -67,12 +67,12 @@ public class FlutterFirebaseAuthPlugin
   private void initInstance(BinaryMessenger messenger) {
     registerPlugin(METHOD_CHANNEL_NAME, this);
     channel = new MethodChannel(messenger, METHOD_CHANNEL_NAME);
-    GeneratedAndroidFirebaseAuth.FirebaseAuthHostApi.setup(messenger, this);
-    GeneratedAndroidFirebaseAuth.FirebaseAuthUserHostApi.setup(messenger, firebaseAuthUser);
-    GeneratedAndroidFirebaseAuth.MultiFactorUserHostApi.setup(messenger, firebaseMultiFactor);
-    GeneratedAndroidFirebaseAuth.MultiFactoResolverHostApi.setup(messenger, firebaseMultiFactor);
-    GeneratedAndroidFirebaseAuth.MultiFactorTotpHostApi.setup(messenger, firebaseTotpMultiFactor);
-    GeneratedAndroidFirebaseAuth.MultiFactorTotpSecretHostApi.setup(messenger, firebaseTotpSecret);
+    GeneratedAndroidFirebaseAuth.FirebaseAuthHostApi.setUp(messenger, this);
+    GeneratedAndroidFirebaseAuth.FirebaseAuthUserHostApi.setUp(messenger, firebaseAuthUser);
+    GeneratedAndroidFirebaseAuth.MultiFactorUserHostApi.setUp(messenger, firebaseMultiFactor);
+    GeneratedAndroidFirebaseAuth.MultiFactoResolverHostApi.setUp(messenger, firebaseMultiFactor);
+    GeneratedAndroidFirebaseAuth.MultiFactorTotpHostApi.setUp(messenger, firebaseTotpMultiFactor);
+    GeneratedAndroidFirebaseAuth.MultiFactorTotpSecretHostApi.setUp(messenger, firebaseTotpSecret);
 
     this.messenger = messenger;
   }
@@ -87,12 +87,12 @@ public class FlutterFirebaseAuthPlugin
     channel.setMethodCallHandler(null);
 
     assert messenger != null;
-    GeneratedAndroidFirebaseAuth.FirebaseAuthHostApi.setup(messenger, null);
-    GeneratedAndroidFirebaseAuth.FirebaseAuthUserHostApi.setup(messenger, null);
-    GeneratedAndroidFirebaseAuth.MultiFactorUserHostApi.setup(messenger, null);
-    GeneratedAndroidFirebaseAuth.MultiFactoResolverHostApi.setup(messenger, null);
-    GeneratedAndroidFirebaseAuth.MultiFactorTotpHostApi.setup(messenger, null);
-    GeneratedAndroidFirebaseAuth.MultiFactorTotpSecretHostApi.setup(messenger, null);
+    GeneratedAndroidFirebaseAuth.FirebaseAuthHostApi.setUp(messenger, null);
+    GeneratedAndroidFirebaseAuth.FirebaseAuthUserHostApi.setUp(messenger, null);
+    GeneratedAndroidFirebaseAuth.MultiFactorUserHostApi.setUp(messenger, null);
+    GeneratedAndroidFirebaseAuth.MultiFactoResolverHostApi.setUp(messenger, null);
+    GeneratedAndroidFirebaseAuth.MultiFactorTotpHostApi.setUp(messenger, null);
+    GeneratedAndroidFirebaseAuth.MultiFactorTotpSecretHostApi.setUp(messenger, null);
 
     channel = null;
     messenger = null;
@@ -142,6 +142,11 @@ public class FlutterFirebaseAuthPlugin
       auth.setCustomAuthDomain(customDomain);
     }
 
+    // Auth's `getCustomAuthDomain` supersedes value from `customAuthDomain` map set by `initializeApp`
+    if (pigeonApp.getCustomAuthDomain() != null) {
+      auth.setCustomAuthDomain(pigeonApp.getCustomAuthDomain());
+    }
+
     return auth;
   }
 
@@ -184,11 +189,11 @@ public class FlutterFirebaseAuthPlugin
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull String host,
       @NonNull Long port,
-      @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseAuth.VoidResult result) {
     try {
       FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
       firebaseAuth.useEmulator(host, port.intValue());
-      result.success(null);
+      result.success();
     } catch (Exception e) {
       result.error(e);
     }
@@ -198,14 +203,14 @@ public class FlutterFirebaseAuthPlugin
   public void applyActionCode(
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull String code,
-      @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseAuth.VoidResult result) {
     FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
     firebaseAuth
         .applyActionCode(code)
         .addOnCompleteListener(
             task -> {
               if (task.isSuccessful()) {
-                result.success(null);
+                result.success();
               } else {
                 result.error(
                     FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
@@ -242,7 +247,7 @@ public class FlutterFirebaseAuthPlugin
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull String code,
       @NonNull String newPassword,
-      @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseAuth.VoidResult result) {
     FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
 
     firebaseAuth
@@ -250,7 +255,7 @@ public class FlutterFirebaseAuthPlugin
         .addOnCompleteListener(
             task -> {
               if (task.isSuccessful()) {
-                result.success(null);
+                result.success();
               } else {
                 result.error(
                     FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
@@ -440,7 +445,7 @@ public class FlutterFirebaseAuthPlugin
   @Override
   public void signOut(
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
-      @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseAuth.VoidResult result) {
     try {
       FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
       if (firebaseAuth.getCurrentUser() != null) {
@@ -451,7 +456,7 @@ public class FlutterFirebaseAuthPlugin
         }
       }
       firebaseAuth.signOut();
-      result.success(null);
+      result.success();
     } catch (Exception e) {
       result.error(e);
     }
@@ -484,7 +489,7 @@ public class FlutterFirebaseAuthPlugin
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull String email,
       @Nullable GeneratedAndroidFirebaseAuth.PigeonActionCodeSettings actionCodeSettings,
-      @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseAuth.VoidResult result) {
     FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
 
     if (actionCodeSettings == null) {
@@ -493,7 +498,7 @@ public class FlutterFirebaseAuthPlugin
           .addOnCompleteListener(
               task -> {
                 if (task.isSuccessful()) {
-                  result.success(null);
+                  result.success();
                 } else {
                   result.error(
                       FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
@@ -508,7 +513,7 @@ public class FlutterFirebaseAuthPlugin
         .addOnCompleteListener(
             task -> {
               if (task.isSuccessful()) {
-                result.success(null);
+                result.success();
               } else {
                 result.error(
                     FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
@@ -522,7 +527,7 @@ public class FlutterFirebaseAuthPlugin
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull String email,
       @NonNull GeneratedAndroidFirebaseAuth.PigeonActionCodeSettings actionCodeSettings,
-      @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseAuth.VoidResult result) {
     FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
 
     firebaseAuth
@@ -530,7 +535,7 @@ public class FlutterFirebaseAuthPlugin
         .addOnCompleteListener(
             task -> {
               if (task.isSuccessful()) {
-                result.success(null);
+                result.success();
               } else {
                 result.error(
                     FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
@@ -563,7 +568,7 @@ public class FlutterFirebaseAuthPlugin
   public void setSettings(
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseAuthSettings settings,
-      @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseAuth.VoidResult result) {
     try {
       FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
 
@@ -584,7 +589,7 @@ public class FlutterFirebaseAuthPlugin
                 settings.getPhoneNumber(), settings.getSmsCode());
       }
 
-      result.success(null);
+      result.success();
     } catch (Exception e) {
       result.error(e);
     }
@@ -667,8 +672,9 @@ public class FlutterFirebaseAuthPlugin
   public void revokeTokenWithAuthorizationCode(
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull String authorizationCode,
-      @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseAuth.VoidResult result) {
     // Should never get here as we throw Exception on Dart side.
+    result.success();
   }
 
   @Override
@@ -691,8 +697,7 @@ public class FlutterFirebaseAuthPlugin
             }
 
             if (user != null) {
-              final Object parsedUser = user.toList();
-              constants.put("APP_CURRENT_USER", parsedUser);
+              constants.put("APP_CURRENT_USER", PigeonParser.manuallyToList(user));
             }
 
             taskCompletionSource.setResult(constants);

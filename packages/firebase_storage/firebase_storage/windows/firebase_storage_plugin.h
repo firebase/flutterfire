@@ -15,6 +15,7 @@
 
 #include "firebase/storage/common.h"
 #include "firebase/storage/controller.h"
+#include "firebase/storage/metadata.h"
 #include "messages.g.h"
 
 using firebase::storage::Error;
@@ -33,11 +34,22 @@ class FirebaseStoragePlugin : public flutter::Plugin,
   // Disallow copy and assign.
   FirebaseStoragePlugin(const FirebaseStoragePlugin&) = delete;
   FirebaseStoragePlugin& operator=(const FirebaseStoragePlugin&) = delete;
-
+  // Static function declarations
+  // Helper functions
+  static firebase::storage::Metadata* CreateStorageMetadataFromPigeon(
+      const PigeonSettableMetadata* pigeonMetaData);
+  static std::map<std::string, std::string> ProcessCustomMetadataMap(
+      const flutter::EncodableMap& customMetadata);
+  static std::vector<unsigned char> StringToByteData(const std::string& data,
+                                                     int64_t format);
+  static std::vector<unsigned char> Base64Decode(
+      const std::string& encoded_string);
   // Parser functions
   static std::string GetStorageErrorCode(Error cppError);
   static std::string GetStorageErrorMessage(Error cppError);
   static FlutterError ParseError(const firebase::FutureBase& future);
+  static flutter::EncodableMap ErrorStreamEvent(
+      const firebase::FutureBase& data_result, const std::string& app_name);
 
   // FirebaseStorageHostApi
   virtual void GetReferencebyPath(
@@ -97,7 +109,7 @@ class FirebaseStoragePlugin : public flutter::Plugin,
   virtual void ReferencePutFile(
       const PigeonStorageFirebaseApp& app,
       const PigeonStorageReference& reference, const std::string& file_path,
-      const PigeonSettableMetadata& settable_meta_data, int64_t handle,
+      const PigeonSettableMetadata* settable_meta_data, int64_t handle,
       std::function<void(ErrorOr<std::string> reply)> result) override;
   virtual void ReferenceDownloadFile(
       const PigeonStorageFirebaseApp& app,

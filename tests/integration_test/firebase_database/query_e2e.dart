@@ -2,7 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
 import 'package:collection/collection.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -430,14 +432,22 @@ void setupQueryTests() {
     });
 
     group('onChildChanged', () {
+      // Create own reference as this clashed with previous tests on web platform
+      late DatabaseReference childRef;
+      setUp(() async {
+        childRef = FirebaseDatabase.instance.ref('tests').child('child-ref');
+        // Wipe the database before each test
+        await childRef.remove();
+      });
+
       test(
         'emits an event when a child is changed',
         () async {
-          await ref.child('foo').set('foo');
-          await ref.child('bar').set('bar');
+          await childRef.child('foo').set('foo');
+          await childRef.child('bar').set('bar');
 
           expect(
-            ref.onChildChanged,
+            childRef.onChildChanged,
             emitsInOrder([
               isA<DatabaseEvent>()
                   .having((s) => s.snapshot.key, 'key', 'bar')
@@ -460,8 +470,8 @@ void setupQueryTests() {
           // Give time for listen to be registered on native.
           // TODO is there a better way to do this?
           await Future.delayed(const Duration(seconds: 1));
-          await ref.child('bar').set('baz');
-          await ref.child('foo').set('bar');
+          await childRef.child('bar').set('baz');
+          await childRef.child('foo').set('bar');
         },
         retry: 2,
       );
@@ -498,6 +508,45 @@ void setupQueryTests() {
         },
         retry: 2,
       );
+    });
+
+    group('onValue', () {
+      test('emits an event when the data changes', () async {
+        await ref.set({
+          'a': 2,
+          'b': 3,
+          'c': 1,
+        });
+        expect(
+          ref.onValue,
+          emitsInOrder([
+            isA<DatabaseEvent>().having((s) => s.snapshot.value, 'value', {
+              'a': 2,
+              'b': 3,
+              'c': 1,
+            }).having((e) => e.type, 'type', DatabaseEventType.value),
+          ]),
+        );
+      });
+
+      test(
+          'throw a `permission-denied` exception when accessing restricted data',
+          () async {
+        final Completer<FirebaseException> errorReceived =
+            Completer<FirebaseException>();
+        FirebaseDatabase.instance.ref().child('restricted').onValue.listen(
+          (event) {
+            // Do nothing
+          },
+          onError: (error) {
+            errorReceived.complete(error);
+          },
+        );
+
+        final streamError = await errorReceived.future;
+        expect(streamError, isA<FirebaseException>());
+        expect(streamError.code, 'permission-denied');
+      });
     });
   });
 }

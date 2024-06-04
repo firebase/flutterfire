@@ -4,7 +4,7 @@
 # customers of the plugin.
 cmake_minimum_required(VERSION 3.14)
 
-set(FIREBASE_SDK_VERSION "11.6.0")
+set(FIREBASE_SDK_VERSION "12.0.0")
 
 if (EXISTS $ENV{FIREBASE_CPP_SDK_DIR}/include/firebase/version.h)
     file(READ "$ENV{FIREBASE_CPP_SDK_DIR}/include/firebase/version.h" existing_version)
@@ -37,12 +37,16 @@ else()
         if(NOT status_code EQUAL 0)
             message(FATAL_ERROR "Download failed: ${download_log}")
         endif()
+    else()
+        message(STATUS "Using cached Firebase SDK zip file")
     endif()
 
     if(NOT EXISTS ${extracted_path})
         file(MAKE_DIRECTORY ${extracted_path})
         file(ARCHIVE_EXTRACT INPUT ${firebase_sdk_filename}
              DESTINATION ${extracted_path})
+    else()
+        message(STATUS "Using cached extracted Firebase SDK")
     endif()
     set(FIREBASE_CPP_SDK_DIR "${extracted_path}/firebase_cpp_sdk_windows")
 endif()
