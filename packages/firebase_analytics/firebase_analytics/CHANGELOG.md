@@ -1,3 +1,12 @@
+## 11.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: android plugins require `minSdk 21`, auth requires `minSdk 23` ahead of android BOM `>=33.0.0` ([#12873](https://github.com/firebase/flutterfire/issues/12873)). ([52accfc6](https://github.com/firebase/flutterfire/commit/52accfc6c39d6360d9c0f36efe369ede990b7362))
+ - **BREAKING** **REFACTOR**: bump all iOS deployment targets to iOS 13 ahead of Firebase iOS SDK `v11` breaking change ([#12872](https://github.com/firebase/flutterfire/issues/12872)). ([de0cea2c](https://github.com/firebase/flutterfire/commit/de0cea2c3c36694a76361be784255986fac84a43))
+ - **BREAKING** **REFACTOR**(analytics): remove deprecated API ahead of breaking change release ([#12858](https://github.com/firebase/flutterfire/issues/12858)). ([f22f46a1](https://github.com/firebase/flutterfire/commit/f22f46a117efd91c617de0412195ac7d4faabb3e))
+ - **BREAKING** **FIX**(analytics): fix typing of event parameters to `Map<String, Object>?` ([#12427](https://github.com/firebase/flutterfire/issues/12427)). ([3705ee1b](https://github.com/firebase/flutterfire/commit/3705ee1b35cd2194cca4ca1057384b04b48ccf90))
+
 ## 10.10.7
 
  - Update a dependency to the latest release.
