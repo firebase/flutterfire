@@ -42,10 +42,20 @@ class Firebase {
     String? demoProjectId,
   }) async {
     if (demoProjectId != null) {
+      late final String platformString;
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        platformString = 'android';
+      } else if (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.macOS) {
+        platformString = 'ios';
+      } else {
+        // We use 'web' as the default platform for unknown platforms.
+        platformString = 'web';
+      }
       FirebaseAppPlatform app = await _delegate.initializeApp(
         options: FirebaseOptions(
           apiKey: '',
-          appId: '1:1:1:1',
+          appId: '1:1:$platformString:1',
           messagingSenderId: '',
           projectId: demoProjectId,
         ),
