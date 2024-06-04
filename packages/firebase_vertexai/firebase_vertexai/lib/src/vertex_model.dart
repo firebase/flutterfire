@@ -198,16 +198,11 @@ final class GenerativeModel {
     List<Tool>? tools,
     ToolConfig? toolConfig,
   }) async {
+    final parameters = <String, Object?>{
+      'contents': contents.map((c) => c.toJson()).toList()
+    };
     return _googleAIModel
-        .countTokens(contents.map((e) => e.toGoogleAI()),
-            safetySettings: safetySettings != null
-                ? safetySettings.map((setting) => setting.toGoogleAI()).toList()
-                : [],
-            generationConfig: generationConfig?.toGoogleAI(),
-            tools: tools != null
-                ? tools.map((tool) => tool.toGoogleAI()).toList()
-                : [],
-            toolConfig: toolConfig?.toGoogleAI())
+        .countTokensVertex(parameters)
         .then((r) => r.toVertex());
   }
 
