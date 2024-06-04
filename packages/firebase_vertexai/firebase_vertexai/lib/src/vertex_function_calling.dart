@@ -184,7 +184,93 @@ enum FunctionCallingMode {
 /// Represents a select subset of an
 /// [OpenAPI 3.0 schema object](https://spec.openapis.org/oas/v3.0.3#schema).
 final class Schema {
-  // TODO: Add named constructors for the types?
+  /// Construct a schema for an object with one or more properties.
+  Schema.object({
+    required Map<String, Schema> properties,
+    List<String>? requiredProperties,
+    String? description,
+    bool? nullable,
+  }) : this(
+          SchemaType.object,
+          properties: properties,
+          requiredProperties: requiredProperties,
+          description: description,
+          nullable: nullable,
+        );
+
+  /// Construct a schema for an array of values with a specified type.
+  Schema.array({
+    required Schema items,
+    String? description,
+    bool? nullable,
+  }) : this(
+          SchemaType.array,
+          description: description,
+          nullable: nullable,
+          items: items,
+        );
+
+  /// Construct a schema for bool value.
+  Schema.boolean({
+    String? description,
+    bool? nullable,
+  }) : this(
+          SchemaType.boolean,
+          description: description,
+          nullable: nullable,
+        );
+
+  /// Construct a schema for an integer number.
+  ///
+  /// The [format] may be "int32" or "int64".
+  Schema.integer({
+    String? description,
+    bool? nullable,
+    String? format,
+  }) : this(
+          SchemaType.integer,
+          description: description,
+          nullable: nullable,
+          format: format,
+        );
+
+  /// Construct a schema for a non-integer number.
+  ///
+  /// The [format] may be "float" or "double".
+  Schema.number({
+    String? description,
+    bool? nullable,
+    String? format,
+  }) : this(
+          SchemaType.number,
+          description: description,
+          nullable: nullable,
+          format: format,
+        );
+
+  /// Construct a schema for String value with enumerated possible values.
+  Schema.enumString({
+    required List<String> enumValues,
+    String? description,
+    bool? nullable,
+  }) : this(
+          SchemaType.string,
+          enumValues: enumValues,
+          description: description,
+          nullable: nullable,
+          format: 'enum',
+        );
+
+  /// Construct a schema for a String value.
+  Schema.string({
+    String? description,
+    bool? nullable,
+  }) : this(
+          SchemaType.string,
+          description: description,
+          nullable: nullable,
+        );
+
   /// Constructor
   Schema(
     this.type, {
