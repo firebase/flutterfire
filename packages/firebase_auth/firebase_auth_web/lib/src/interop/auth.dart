@@ -416,6 +416,12 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
     }
   }
 
+  void _removeWindowsListener(String key) {
+    if (kDebugMode) {
+      web.window.delete(key.toJS);
+    }
+  }
+
   /// Sends events when the users sign-in state changes.
   ///
   /// After 4.0.0, this is only triggered on sign-in or sign-out.
@@ -444,6 +450,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
         _onAuthUnsubscribe!.callAsFunction();
         _onAuthUnsubscribe = null;
         _changeController = null;
+        _removeWindowsListener(authStateWindowsKey);
       }
 
       _changeController = StreamController<User?>.broadcast(
@@ -489,6 +496,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
         _onIdTokenChangedUnsubscribe!.callAsFunction();
         _onIdTokenChangedUnsubscribe = null;
         _idTokenChangedController = null;
+        _removeWindowsListener(idTokenStateWindowsKey);
       }
 
       _idTokenChangedController = StreamController<User?>.broadcast(
