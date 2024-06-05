@@ -388,7 +388,9 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
 
   JSFunction? _onAuthUnsubscribe;
 
-  // TODO(rrousselGit): fix memory leak – the controller isn't closed even in onCancel
+  StreamController<User?>? get authStateController => _changeController;
+  StreamController<User?>? get idTokenController => _idTokenChangedController;
+
   // ignore: close_sinks
   StreamController<User?>? _changeController;
 
@@ -412,9 +414,11 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
             jsObject.onAuthStateChanged(nextWrapper.toJS, errorWrapper.toJS);
       }
 
-      void stopListen() {
-        (_onAuthUnsubscribe!.dartify()! as Function)();
+      Future<void> stopListen() async {
+        await (_onAuthUnsubscribe!.callAsFunction() as JSPromise<JSAny?>?)
+            ?.toDart;
         _onAuthUnsubscribe = null;
+        _changeController = null;
       }
 
       _changeController = StreamController<User?>.broadcast(
@@ -430,7 +434,6 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
 
   JSFunction? _onIdTokenChangedUnsubscribe;
 
-  // TODO(rrousselGit): fix memory leak – the controller isn't closed even in onCancel
   // ignore: close_sinks
   StreamController<User?>? _idTokenChangedController;
 
@@ -454,9 +457,12 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
             jsObject.onIdTokenChanged(nextWrapper.toJS, errorWrapper.toJS);
       }
 
-      void stopListen() {
-        (_onIdTokenChangedUnsubscribe!.dartify()! as Function)();
+      Future<void> stopListen() async {
+        await (_onIdTokenChangedUnsubscribe!.callAsFunction()
+                as JSPromise<JSAny?>?)
+            ?.toDart;
         _onIdTokenChangedUnsubscribe = null;
+        _idTokenChangedController = null;
       }
 
       _idTokenChangedController = StreamController<User?>.broadcast(
