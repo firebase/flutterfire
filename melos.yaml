@@ -17,7 +17,7 @@ command:
     workspaceChangelog: true
     hooks:
       preCommit: |
-        dart run scripts/generate_version.dart && \
+        dart run scripts/generate_vertex_version.dart && \
         git add packages/firebase_vertexai/firebase_vertexai/lib/src/vertex_version.dart
 
   bootstrap:
