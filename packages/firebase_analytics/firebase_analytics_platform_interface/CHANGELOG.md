@@ -1,3 +1,9 @@
+## 4.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FIX**(analytics): fix typing of event parameters to `Map<String, Object>?` ([#12427](https://github.com/firebase/flutterfire/issues/12427)). ([3705ee1b](https://github.com/firebase/flutterfire/commit/3705ee1b35cd2194cca4ca1057384b04b48ccf90))
+
 ## 3.10.8
 
  - Update a dependency to the latest release.

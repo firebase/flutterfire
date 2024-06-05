@@ -1,3 +1,11 @@
+## 5.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: android plugins require `minSdk 21`, auth requires `minSdk 23` ahead of android BOM `>=33.0.0` ([#12873](https://github.com/firebase/flutterfire/issues/12873)). ([52accfc6](https://github.com/firebase/flutterfire/commit/52accfc6c39d6360d9c0f36efe369ede990b7362))
+ - **BREAKING** **REFACTOR**: bump all iOS deployment targets to iOS 13 ahead of Firebase iOS SDK `v11` breaking change ([#12872](https://github.com/firebase/flutterfire/issues/12872)). ([de0cea2c](https://github.com/firebase/flutterfire/commit/de0cea2c3c36694a76361be784255986fac84a43))
+ - **BREAKING** **REFACTOR**(auth): remove deprecated API ahead of breaking change release ([#12859](https://github.com/firebase/flutterfire/issues/12859)). ([995fa7e1](https://github.com/firebase/flutterfire/commit/995fa7e19540fe52ba75a66865823c8ca86b6657))
+
 ## 4.20.0
 
  - **FIX**(auth,android): remove unecessary error type guarding ([#12816](https://github.com/firebase/flutterfire/issues/12816)). ([7d4c200a](https://github.com/firebase/flutterfire/commit/7d4c200ac6f06a50c2e7ee852aea2c9fa7bcb0ff))

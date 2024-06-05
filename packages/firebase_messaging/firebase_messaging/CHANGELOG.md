@@ -1,3 +1,13 @@
+## 15.0.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**(messaging,android): use only one `FlutterLoader` instance ([#12845](https://github.com/firebase/flutterfire/issues/12845)). ([40966c78](https://github.com/firebase/flutterfire/commit/40966c786a29e8ffbd0eadf369a2822a2f09f51e))
+ - **FIX**(messaging,android): stop app from crashing when `DartCallback` or `Context` is `null` ([#12842](https://github.com/firebase/flutterfire/issues/12842)). ([1424757b](https://github.com/firebase/flutterfire/commit/1424757bd6cd2dfd3ccd436ab8511a9ba832049a))
+ - **DOCS**(messaging,web): update the documentation for how to load the service worker in Flutter 3.22 ([#12836](https://github.com/firebase/flutterfire/issues/12836)). ([9659749d](https://github.com/firebase/flutterfire/commit/9659749d2979a8f1c82c79dc485160aa8293583f))
+ - **BREAKING** **REFACTOR**: android plugins require `minSdk 21`, auth requires `minSdk 23` ahead of android BOM `>=33.0.0` ([#12873](https://github.com/firebase/flutterfire/issues/12873)). ([52accfc6](https://github.com/firebase/flutterfire/commit/52accfc6c39d6360d9c0f36efe369ede990b7362))
+ - **BREAKING** **REFACTOR**: bump all iOS deployment targets to iOS 13 ahead of Firebase iOS SDK `v11` breaking change ([#12872](https://github.com/firebase/flutterfire/issues/12872)). ([de0cea2c](https://github.com/firebase/flutterfire/commit/de0cea2c3c36694a76361be784255986fac84a43))
+
 ## 14.9.4
 
  - Update a dependency to the latest release.

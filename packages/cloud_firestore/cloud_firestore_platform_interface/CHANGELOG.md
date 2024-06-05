@@ -1,3 +1,7 @@
+## 6.2.6
+
+ - **DOCS**(firestore): update documentation for `clearPersistence` ([#12843](https://github.com/firebase/flutterfire/issues/12843)). ([35b78f04](https://github.com/firebase/flutterfire/commit/35b78f04edd12f2319d3d6cce06c66bfdbd13d8c))
+
 ## 6.2.5
 
  - Update a dependency to the latest release.

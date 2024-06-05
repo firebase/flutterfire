@@ -1,3 +1,11 @@
+## 5.0.0
+
+> Note: This release has breaking changes.
+
+ - **DOCS**(firestore): update documentation for `clearPersistence` ([#12843](https://github.com/firebase/flutterfire/issues/12843)). ([35b78f04](https://github.com/firebase/flutterfire/commit/35b78f04edd12f2319d3d6cce06c66bfdbd13d8c))
+ - **BREAKING** **REFACTOR**: android plugins require `minSdk 21`, auth requires `minSdk 23` ahead of android BOM `>=33.0.0` ([#12873](https://github.com/firebase/flutterfire/issues/12873)). ([52accfc6](https://github.com/firebase/flutterfire/commit/52accfc6c39d6360d9c0f36efe369ede990b7362))
+ - **BREAKING** **REFACTOR**: bump all iOS deployment targets to iOS 13 ahead of Firebase iOS SDK `v11` breaking change ([#12872](https://github.com/firebase/flutterfire/issues/12872)). ([de0cea2c](https://github.com/firebase/flutterfire/commit/de0cea2c3c36694a76361be784255986fac84a43))
+
 ## 4.17.5
 
  - Update a dependency to the latest release.

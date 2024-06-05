@@ -1,3 +1,11 @@
+## 12.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: android plugins require `minSdk 21`, auth requires `minSdk 23` ahead of android BOM `>=33.0.0` ([#12873](https://github.com/firebase/flutterfire/issues/12873)). ([52accfc6](https://github.com/firebase/flutterfire/commit/52accfc6c39d6360d9c0f36efe369ede990b7362))
+ - **BREAKING** **REFACTOR**: bump all iOS deployment targets to iOS 13 ahead of Firebase iOS SDK `v11` breaking change ([#12872](https://github.com/firebase/flutterfire/issues/12872)). ([de0cea2c](https://github.com/firebase/flutterfire/commit/de0cea2c3c36694a76361be784255986fac84a43))
+ - **BREAKING** **REFACTOR**(storage): remove deprecated API ahead of breaking change ([#12863](https://github.com/firebase/flutterfire/issues/12863)). ([aaf01ac5](https://github.com/firebase/flutterfire/commit/aaf01ac5488e4d599f42f361f9a51f1297dce7c3))
+
 ## 11.7.7
 
  - **FIX**(storage): do not set metadata property unless it has a value ([#12805](https://github.com/firebase/flutterfire/issues/12805)). ([978a87db](https://github.com/firebase/flutterfire/commit/978a87db70218d63abbf0c6bf22e9d00633b5d83))
