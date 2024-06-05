@@ -196,6 +196,42 @@ void main() {
         skip: !kIsWeb && Platform.isWindows,
       );
 
+      group('test all stream listeners', () {
+        Matcher containsExactlyThreeUsers() => predicate<List>(
+              (list) => list.where((element) => element is User).length == 3,
+              'a list containing exactly 3 User instances',
+            );
+        test('create, cancel and reopen all user event stream handlers', () async {
+          final auth = FirebaseAuth.instance;
+          final events = [];
+          final streamHandler = events.add;
+
+          StreamSubscription<User?> userChanges =
+              auth.userChanges().listen(streamHandler);
+
+          StreamSubscription<User?> authStateChanges =
+              auth.authStateChanges().listen(streamHandler);
+
+          StreamSubscription<User?> idTokenChanges =
+              auth.idTokenChanges().listen(streamHandler);
+
+          await userChanges.cancel();
+          await authStateChanges.cancel();
+          await idTokenChanges.cancel();
+
+          userChanges = auth.userChanges().listen(streamHandler);
+          authStateChanges = auth.authStateChanges().listen(streamHandler);
+          idTokenChanges = auth.idTokenChanges().listen(streamHandler);
+
+          await auth.signInWithEmailAndPassword(
+            email: testEmail,
+            password: testPassword,
+          );
+
+          expect(events, containsExactlyThreeUsers());
+        });
+      });
+
       group('currentUser', () {
         test('should return currentUser', () async {
           await ensureSignedIn(testEmail);
