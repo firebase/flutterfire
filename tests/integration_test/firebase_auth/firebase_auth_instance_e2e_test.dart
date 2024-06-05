@@ -198,7 +198,7 @@ void main() {
 
       group('test all stream listeners', () {
         Matcher containsExactlyThreeUsers() => predicate<List>(
-              (list) => list.where((element) => element is User).length == 3,
+              (list) => list.whereType<User>().length == 3,
               'a list containing exactly 3 User instances',
             );
         test('create, cancel and reopen all user event stream handlers', () async {
