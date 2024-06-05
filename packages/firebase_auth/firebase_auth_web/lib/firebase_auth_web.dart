@@ -103,97 +103,98 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   bool _cancelIdTokenStream = false;
 
   void _createStreamListener(String appName, StateListener stateListener) {
-    if (StateListener.authStateChange == stateListener) {
-      _authStateChangesListeners[appName] =
-          StreamController<UserPlatform?>.broadcast(
-        onCancel: () {
-          _authStateChangesListeners[appName]!.close();
-          _authStateChangesListeners.remove(appName);
-          delegate.authStateController?.close();
-        },
-      );
-      delegate.onAuthStateChanged.map((auth_interop.User? webUser) {
-        if (!_initialized.isCompleted) {
-          _initialized.complete();
-        }
+    switch (stateListener) {
+      case StateListener.authStateChange:
+        _authStateChangesListeners[appName] =
+            StreamController<UserPlatform?>.broadcast(
+          onCancel: () {
+            _authStateChangesListeners[appName]!.close();
+            _authStateChangesListeners.remove(appName);
+            delegate.authStateController?.close();
+          },
+        );
+        delegate.onAuthStateChanged.map((auth_interop.User? webUser) {
+          if (!_initialized.isCompleted) {
+            _initialized.complete();
+          }
 
-        if (webUser == null) {
-          return null;
-        } else {
-          return UserWeb(
-            this,
-            MultiFactorWeb(this, multi_factor.multiFactor(webUser)),
-            webUser,
-            _webAuth,
-          );
-        }
-      }).listen((UserWeb? webUser) {
-        _authStateChangesListeners[app.name]!.add(webUser);
-      });
-    }
-    if (StateListener.idTokenChange == stateListener) {
-      _cancelIdTokenStream = false;
-      _idTokenChangesListeners[appName] =
-          StreamController<UserPlatform?>.broadcast(
-        onCancel: () {
-          if (_userChangesListeners[appName] == null) {
-            // We cannot remove if there is a userChanges listener as we use this stream for it
-            _idTokenChangesListeners[appName]!.close();
-            _idTokenChangesListeners.remove(appName);
-            delegate.idTokenController?.close();
+          if (webUser == null) {
+            return null;
           } else {
-            // We need to do this because if idTokenListener and userChanges are being listened to
-            // We need to cancel both at the same time otherwise neither will be closed & removed
-            _cancelIdTokenStream = true;
+            return UserWeb(
+              this,
+              MultiFactorWeb(this, multi_factor.multiFactor(webUser)),
+              webUser,
+              _webAuth,
+            );
           }
+        }).listen((UserWeb? webUser) {
+          _authStateChangesListeners[app.name]!.add(webUser);
+        });
+        break;
+      case StateListener.idTokenChange:
+        _cancelIdTokenStream = false;
+        _idTokenChangesListeners[appName] =
+            StreamController<UserPlatform?>.broadcast(
+          onCancel: () {
+            if (_userChangesListeners[appName] == null) {
+              // We cannot remove if there is a userChanges listener as we use this stream for it
+              _idTokenChangesListeners[appName]!.close();
+              _idTokenChangesListeners.remove(appName);
+              delegate.idTokenController?.close();
+            } else {
+              // We need to do this because if idTokenListener and userChanges are being listened to
+              // We need to cancel both at the same time otherwise neither will be closed & removed
+              _cancelIdTokenStream = true;
+            }
 
-          if (_cancelUserStream) {
-            _userChangesListeners[appName]!.close();
-            _userChangesListeners.remove(appName);
-          }
-        },
-      );
+            if (_cancelUserStream) {
+              _userChangesListeners[appName]!.close();
+              _userChangesListeners.remove(appName);
+            }
+          },
+        );
 
-      // Also triggers `userChanged` events
-      delegate.onIdTokenChanged.map((auth_interop.User? webUser) {
-        if (webUser == null) {
-          return null;
-        } else {
-          return UserWeb(
-            this,
-            MultiFactorWeb(this, multi_factor.multiFactor(webUser)),
-            webUser,
-            _webAuth,
-          );
-        }
-      }).listen((UserWeb? webUser) {
-        _idTokenChangesListeners[app.name]!.add(webUser);
-        _userChangesListeners[app.name]!.add(webUser);
-      });
-    }
-
-    if (StateListener.userStateChange == stateListener) {
-      _cancelUserStream = false;
-      _userChangesListeners[appName] =
-          StreamController<UserPlatform?>.broadcast(
-        onCancel: () {
-          if (_idTokenChangesListeners[appName] == null) {
-            _userChangesListeners[appName]!.close();
-            _userChangesListeners.remove(appName);
-            // There is no delegate for userChanges as we use idTokenChanges
+        // Also triggers `userChanged` events
+        delegate.onIdTokenChanged.map((auth_interop.User? webUser) {
+          if (webUser == null) {
+            return null;
           } else {
-            _cancelUserStream = true;
+            return UserWeb(
+              this,
+              MultiFactorWeb(this, multi_factor.multiFactor(webUser)),
+              webUser,
+              _webAuth,
+            );
           }
+        }).listen((UserWeb? webUser) {
+          _idTokenChangesListeners[app.name]!.add(webUser);
+          _userChangesListeners[app.name]!.add(webUser);
+        });
+        break;
+      case StateListener.userStateChange:
+        _cancelUserStream = false;
+        _userChangesListeners[appName] =
+            StreamController<UserPlatform?>.broadcast(
+          onCancel: () {
+            if (_idTokenChangesListeners[appName] == null) {
+              _userChangesListeners[appName]!.close();
+              _userChangesListeners.remove(appName);
+              // There is no delegate for userChanges as we use idTokenChanges
+            } else {
+              _cancelUserStream = true;
+            }
 
-          if (_cancelIdTokenStream) {
-            // We need to do this because if idTokenListener and userChanges are being listened to
-            // We need to cancel both at the same time otherwise neither will be closed & removed
-            _idTokenChangesListeners[appName]!.close();
-            _idTokenChangesListeners.remove(appName);
-            delegate.idTokenController?.close();
-          }
-        },
-      );
+            if (_cancelIdTokenStream) {
+              // We need to do this because if idTokenListener and userChanges are being listened to
+              // We need to cancel both at the same time otherwise neither will be closed & removed
+              _idTokenChangesListeners[appName]!.close();
+              _idTokenChangesListeners.remove(appName);
+              delegate.idTokenController?.close();
+            }
+          },
+        );
+        break;
     }
   }
 
