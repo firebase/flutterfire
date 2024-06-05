@@ -201,9 +201,8 @@ final class GenerativeModel {
     final parameters = <String, Object?>{
       'contents': contents.map((c) => c.toJson()).toList()
     };
-    return _googleAIModel
-        .countTokensVertex(parameters)
-        .then((r) => r.toVertex());
+    return _googleAIModel.makeRequest(
+        google_ai_hooks.Task.countTokens, parameters, parseCountTokensResponse);
   }
 
   /// Creates an embedding (list of float values) representing [content].
