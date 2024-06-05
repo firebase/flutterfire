@@ -1,6 +1,6 @@
 {
-    "name": "example",
-    "short_name": "example",
+    "name": "fluttefrire_vertixai",
+    "short_name": "fluttefrire_vertixai",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
