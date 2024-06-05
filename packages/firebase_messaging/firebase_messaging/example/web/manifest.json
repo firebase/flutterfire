@@ -1,6 +1,6 @@
 {
-    "name": "example",
-    "short_name": "example",
+    "name": "fluttefrire_messaging",
+    "short_name": "fluttefrire_messaging",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
