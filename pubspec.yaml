@@ -8,4 +8,7 @@ dev_dependencies:
   glob: ^2.1.2
   intl: ^0.19.0
   melos: ^5.3.0
+  path: ^1.9.0
   pub_semver: ^2.1.4
+  yaml: ^3.1.2
+  

@@ -15,6 +15,10 @@ command:
     # branch: master
     # Additionally build a changelog at the root of the workspace.
     workspaceChangelog: true
+    hooks:
+      preCommit: |
+        dart run scripts/generate_version.dart && \
+        git add packages/firebase_vertexai/firebase_vertexai/lib/src/vertex_version.dart
 
   bootstrap:
     # It seems so that running "pub get" in parallel has some issues (like
