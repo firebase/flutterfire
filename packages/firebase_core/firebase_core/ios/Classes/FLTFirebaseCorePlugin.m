@@ -140,42 +140,36 @@ static NSMutableDictionary<NSString *, NSString *> *customAuthDomains;
   options.projectID = initializeAppRequest.projectId;
 
   // kFirebaseOptionsDatabaseUrl
-  if (initializeAppRequest.databaseURL != nil &&
-      ![initializeAppRequest.databaseURL isEqual:[NSNull null]]) {
+  if (![initializeAppRequest.databaseURL isEqual:[NSNull null]]) {
     options.databaseURL = initializeAppRequest.databaseURL;
   }
 
   // kFirebaseOptionsStorageBucket
-  if (options.storageBucket != nil && ![options.storageBucket isEqual:[NSNull null]]) {
+  if (![options.storageBucket isEqual:[NSNull null]]) {
     options.storageBucket = initializeAppRequest.storageBucket;
   }
 
   // kFirebaseOptionsDeepLinkURLScheme
-  if (initializeAppRequest.deepLinkURLScheme != nil &&
-      ![initializeAppRequest.deepLinkURLScheme isEqual:[NSNull null]]) {
+  if (![initializeAppRequest.deepLinkURLScheme isEqual:[NSNull null]]) {
     options.deepLinkURLScheme = initializeAppRequest.deepLinkURLScheme;
   }
 
   // kFirebaseOptionsIosBundleId
-  if (initializeAppRequest.iosBundleId != nil &&
-      ![initializeAppRequest.iosBundleId isEqual:[NSNull null]]) {
+  if (![initializeAppRequest.iosBundleId isEqual:[NSNull null]]) {
     options.bundleID = initializeAppRequest.iosBundleId;
   }
 
   // kFirebaseOptionsIosClientId
-  if (initializeAppRequest.iosClientId != nil &&
-      ![initializeAppRequest.iosClientId isEqual:[NSNull null]]) {
+  if (![initializeAppRequest.iosClientId isEqual:[NSNull null]]) {
     options.clientID = initializeAppRequest.iosClientId;
   }
 
   // kFirebaseOptionsAppGroupId
-  if (initializeAppRequest.appGroupId != nil &&
-      ![initializeAppRequest.appGroupId isEqual:[NSNull null]]) {
+  if (![initializeAppRequest.appGroupId isEqual:[NSNull null]]) {
     options.appGroupID = initializeAppRequest.appGroupId;
   }
 
-  if (initializeAppRequest.authDomain != nil &&
-      ![initializeAppRequest.authDomain isEqual:[NSNull null]]) {
+  if (initializeAppRequest.authDomain != nil) {
     customAuthDomains[appNameIos] = initializeAppRequest.authDomain;
   }
 
