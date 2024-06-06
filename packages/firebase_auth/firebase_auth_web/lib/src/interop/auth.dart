@@ -393,7 +393,8 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   StreamController<User?>? _changeController;
 
   String get _authStateWindowsKey => 'flutterfire-${app.name}_authStateChanges';
-  String get _idTokenStateWindowsKey => 'flutterfire-${app.name}_idTokenChanges';
+  String get _idTokenStateWindowsKey =>
+      'flutterfire-${app.name}_idTokenChanges';
 
   /// Sends events when the users sign-in state changes.
   ///
