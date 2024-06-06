@@ -8,9 +8,6 @@
 
 import 'dart:async';
 import 'dart:js_interop';
-import 'dart:js_interop_unsafe';
-import 'package:flutter/foundation.dart';
-import 'package:web/web.dart' as web;
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'package:http_parser/http_parser.dart';
@@ -395,32 +392,8 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   // ignore: close_sinks
   StreamController<User?>? _changeController;
 
-  String get authStateWindowsKey => 'flutterfire-${app.name}_authStateChanges';
-  String get idTokenStateWindowsKey => 'flutterfire-${app.name}_idTokenChanges';
-
-  // No way to unsubscribe from event listeners on hot reload so we set on the windows object
-  // and clean up on hot restart if it exists.
-  // See: https://github.com/firebase/flutterfire/issues/7064
-  void _unsubscribeWindowsListener(String key) {
-    if (kDebugMode) {
-      final unsubscribe = web.window.getProperty(key.toJS);
-      if (unsubscribe != null) {
-        (unsubscribe as JSFunction).callAsFunction();
-      }
-    }
-  }
-
-  void _setWindowsListener(String key, JSFunction unsubscribe) {
-    if (kDebugMode) {
-      web.window.setProperty(key.toJS, unsubscribe);
-    }
-  }
-
-  void _removeWindowsListener(String key) {
-    if (kDebugMode) {
-      web.window.delete(key.toJS);
-    }
-  }
+  String get _authStateWindowsKey => 'flutterfire-${app.name}_authStateChanges';
+  String get _idTokenStateWindowsKey => 'flutterfire-${app.name}_idTokenChanges';
 
   /// Sends events when the users sign-in state changes.
   ///
@@ -429,7 +402,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   ///
   /// If the value is `null`, there is no signed-in user.
   Stream<User?> get onAuthStateChanged {
-    _unsubscribeWindowsListener(authStateWindowsKey);
+    unsubscribeWindowsListener(_authStateWindowsKey);
 
     if (_changeController == null) {
       final nextWrapper = (auth_interop.UserJsImpl? user) {
@@ -443,14 +416,14 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
         final unsubscribe =
             jsObject.onAuthStateChanged(nextWrapper.toJS, errorWrapper.toJS);
         _onAuthUnsubscribe = unsubscribe;
-        _setWindowsListener(authStateWindowsKey, unsubscribe);
+        setWindowsListener(_authStateWindowsKey, unsubscribe);
       }
 
       void stopListen() {
         _onAuthUnsubscribe!.callAsFunction();
         _onAuthUnsubscribe = null;
         _changeController = null;
-        _removeWindowsListener(authStateWindowsKey);
+        removeWindowsListener(_authStateWindowsKey);
       }
 
       _changeController = StreamController<User?>.broadcast(
@@ -476,7 +449,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   ///
   /// If the value is `null`, there is no signed-in user.
   Stream<User?> get onIdTokenChanged {
-    _unsubscribeWindowsListener(idTokenStateWindowsKey);
+    unsubscribeWindowsListener(_idTokenStateWindowsKey);
     if (_idTokenChangedController == null) {
       final nextWrapper = (auth_interop.UserJsImpl? user) {
         _idTokenChangedController!.add(User.getInstance(user));
@@ -489,14 +462,14 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
         final unsubscribe =
             jsObject.onIdTokenChanged(nextWrapper.toJS, errorWrapper.toJS);
         _onIdTokenChangedUnsubscribe = unsubscribe;
-        _setWindowsListener(idTokenStateWindowsKey, unsubscribe);
+        setWindowsListener(_idTokenStateWindowsKey, unsubscribe);
       }
 
       void stopListen() {
         _onIdTokenChangedUnsubscribe!.callAsFunction();
         _onIdTokenChangedUnsubscribe = null;
         _idTokenChangedController = null;
-        _removeWindowsListener(idTokenStateWindowsKey);
+        removeWindowsListener(_idTokenStateWindowsKey);
       }
 
       _idTokenChangedController = StreamController<User?>.broadcast(
