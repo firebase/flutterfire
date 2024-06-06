@@ -79,7 +79,7 @@ external void off([
 
 @JS()
 @staticInterop
-external QueryConstraintJsImpl onChildAdded(
+external JSFunction onChildAdded(
   QueryJsImpl query,
   JSFunction callback,
   // JSAny Function(DataSnapshotJsImpl, [JSString previousChildName]) callback,
@@ -89,7 +89,7 @@ external QueryConstraintJsImpl onChildAdded(
 
 @JS()
 @staticInterop
-external QueryConstraintJsImpl onChildChanged(
+external JSFunction onChildChanged(
   QueryJsImpl query,
   JSFunction callback,
   // JSAny Function(DataSnapshotJsImpl, [JSString previousChildName]) callback,
@@ -99,7 +99,7 @@ external QueryConstraintJsImpl onChildChanged(
 
 @JS()
 @staticInterop
-external QueryConstraintJsImpl onChildMoved(
+external JSFunction onChildMoved(
   QueryJsImpl query,
   JSFunction callback,
   // JSAny Function(DataSnapshotJsImpl, [JSString previousChildName]) callback,
@@ -109,7 +109,7 @@ external QueryConstraintJsImpl onChildMoved(
 
 @JS()
 @staticInterop
-external QueryConstraintJsImpl onChildRemoved(
+external JSFunction onChildRemoved(
   QueryJsImpl query,
   JSFunction callback,
   // JSAny Function(DataSnapshotJsImpl, [JSString previousChildName]) callback,
@@ -123,7 +123,7 @@ external OnDisconnectJsImpl onDisconnect(ReferenceJsImpl ref);
 
 @JS()
 @staticInterop
-external void onValue(
+external JSFunction onValue(
     QueryJsImpl query,
     JSFunction callback,
     // JSAny Function(DataSnapshotJsImpl, [JSString previousChildName]) callback,

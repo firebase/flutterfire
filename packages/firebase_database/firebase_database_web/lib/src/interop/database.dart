@@ -251,37 +251,47 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   /// DatabaseReference to the Query's location.
   DatabaseReference get ref => DatabaseReference.getInstance(jsObject.ref);
 
-  late final Stream<QueryEvent> _onValue = _createStream('value');
+  Stream<QueryEvent> _onValue(int hashCode) => _createStream('value', hashCode);
 
   /// Stream for a value event. Event is triggered once with the initial
   /// data stored at location, and then again each time the data changes.
-  Stream<QueryEvent> get onValue => _onValue;
+  Stream<QueryEvent> onValue(int hashCode) => _onValue(hashCode);
 
-  late final Stream<QueryEvent> _onChildAdded = _createStream('child_added');
+  Stream<QueryEvent> _onChildAdded(int hashCode) => _createStream(
+        'child_added',
+        hashCode,
+      );
 
   /// Stream for a child_added event. Event is triggered once for each
   /// initial child at location, and then again every time a new child is added.
-  Stream<QueryEvent> get onChildAdded => _onChildAdded;
+  Stream<QueryEvent> onChildAdded(int hashCode) => _onChildAdded(hashCode);
 
-  late final Stream<QueryEvent> _onChildRemoved =
-      _createStream('child_removed');
+  Stream<QueryEvent> _onChildRemoved(int hashCode) => _createStream(
+        'child_removed',
+        hashCode,
+      );
 
   /// Stream for a child_removed event. Event is triggered once every time
   /// a child is removed.
-  Stream<QueryEvent> get onChildRemoved => _onChildRemoved;
+  Stream<QueryEvent> onChildRemoved(int hashCode) => _onChildRemoved(hashCode);
 
-  late final Stream<QueryEvent> _onChildChanged =
-      _createStream('child_changed');
+  Stream<QueryEvent> _onChildChanged(int hashCode) => _createStream(
+        'child_changed',
+        hashCode,
+      );
 
   /// Stream for a child_changed event. Event is triggered when the data
   /// stored in a child (or any of its descendants) changes.
   /// Single child_changed event may represent multiple changes to the child.
-  Stream<QueryEvent> get onChildChanged => _onChildChanged;
-  late final Stream<QueryEvent> _onChildMoved = _createStream('child_moved');
+  Stream<QueryEvent> onChildChanged(int hashCode) => _onChildChanged(hashCode);
+  Stream<QueryEvent> _onChildMoved(int hashCode) => _createStream(
+        'child_moved',
+        hashCode,
+      );
 
   /// Stream for a child_moved event. Event is triggered when a child's priority
   /// changes such that its position relative to its siblings changes.
-  Stream<QueryEvent> get onChildMoved => _onChildMoved;
+  Stream<QueryEvent> onChildMoved(int hashCode) => _onChildMoved(hashCode);
 
   /// Creates a new Query from a [jsObject].
   Query.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
@@ -376,10 +386,13 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
       ),
     );
   }
+  // TODO - get appName
+  String _streamWindowsKey(String eventType, int hashCode) =>
+      'flutterfire-${eventType}_${hashCode}_documentSnapshot';
 
-  Stream<QueryEvent> _createStream(String eventType) {
+  Stream<QueryEvent> _createStream(String eventType, int hashCode) {
     late StreamController<QueryEvent> streamController;
-
+    unsubscribeWindowsListener(_streamWindowsKey(eventType, hashCode));
     final callbackWrap = ((
       database_interop.DataSnapshotJsImpl data, [
       String? string,
@@ -393,45 +406,48 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
     });
 
     void startListen() {
+      var unsubscribe;
       if (eventType == 'child_added') {
-        database_interop.onChildAdded(
+        unsubscribe = database_interop.onChildAdded(
           jsObject,
           callbackWrap.toJS,
           cancelCallbackWrap.toJS,
         );
       }
       if (eventType == 'value') {
-        database_interop.onValue(
+        unsubscribe = database_interop.onValue(
           jsObject,
           callbackWrap.toJS,
           cancelCallbackWrap.toJS,
         );
       }
       if (eventType == 'child_removed') {
-        database_interop.onChildRemoved(
+        unsubscribe = database_interop.onChildRemoved(
           jsObject,
           callbackWrap.toJS,
           cancelCallbackWrap.toJS,
         );
       }
       if (eventType == 'child_changed') {
-        database_interop.onChildChanged(
+        unsubscribe = database_interop.onChildChanged(
           jsObject,
           callbackWrap.toJS,
           cancelCallbackWrap.toJS,
         );
       }
       if (eventType == 'child_moved') {
-        database_interop.onChildMoved(
+        unsubscribe = database_interop.onChildMoved(
           jsObject,
           callbackWrap.toJS,
           cancelCallbackWrap.toJS,
         );
       }
+      setWindowsListener(_streamWindowsKey(eventType, hashCode), unsubscribe);
     }
 
     void stopListen() {
       database_interop.off(jsObject, eventType.toJS, callbackWrap.toJS);
+      removeWindowsListener(_streamWindowsKey(eventType, hashCode));
     }
 
     streamController = StreamController<QueryEvent>.broadcast(

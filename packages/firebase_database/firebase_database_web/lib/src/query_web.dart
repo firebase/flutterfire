@@ -94,29 +94,41 @@ class QueryWeb extends QueryPlatform {
       QueryModifiers modifiers, DatabaseEventType eventType) {
     database_interop.Query instance = _getQueryDelegateInstance(modifiers);
 
+    final hashCode = Object.hash(
+      runtimeType,
+      database,
+      path,
+      instance,
+      eventType,
+      modifiers,
+    );
+
     switch (eventType) {
       case DatabaseEventType.childAdded:
         return _webStreamToPlatformStream(
           eventType,
-          instance.onChildAdded,
+          instance.onChildAdded(hashCode),
         );
       case DatabaseEventType.childChanged:
         return _webStreamToPlatformStream(
           eventType,
-          instance.onChildChanged,
+          instance.onChildChanged(hashCode),
         );
       case DatabaseEventType.childMoved:
         return _webStreamToPlatformStream(
           eventType,
-          instance.onChildMoved,
+          instance.onChildMoved(hashCode),
         );
       case DatabaseEventType.childRemoved:
         return _webStreamToPlatformStream(
           eventType,
-          instance.onChildRemoved,
+          instance.onChildRemoved(hashCode),
         );
       case DatabaseEventType.value:
-        return _webStreamToPlatformStream(eventType, instance.onValue);
+        return _webStreamToPlatformStream(
+          eventType,
+          instance.onValue(hashCode),
+        );
       default:
         throw Exception("Invalid event type: $eventType");
     }
