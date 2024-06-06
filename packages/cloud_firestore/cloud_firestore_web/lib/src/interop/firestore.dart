@@ -100,7 +100,11 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
         firestore_interop.enableIndexedDbPersistence(jsObject).toDart;
   }
 
+  String get _snapshotInSyncWindowsKey =>
+      'flutterfire-${app.name}_snapshotInSync';
+
   Stream<void> snapshotsInSync() {
+    unsubscribeWindowsListener(_snapshotInSyncWindowsKey);
     late StreamController<void> controller;
     late JSFunction onSnapshotsInSyncUnsubscribe;
     var nextWrapper = ((JSObject? noValue) {
@@ -110,11 +114,16 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
     void startListen() {
       onSnapshotsInSyncUnsubscribe =
           firestore_interop.onSnapshotsInSync(jsObject, nextWrapper);
+      setWindowsListener(
+        _snapshotInSyncWindowsKey,
+        onSnapshotsInSyncUnsubscribe,
+      );
     }
 
     void stopListen() {
       onSnapshotsInSyncUnsubscribe.callAsFunction();
       controller.close();
+      removeWindowsListener(_snapshotInSyncWindowsKey);
     }
 
     controller = StreamController<void>.broadcast(
@@ -364,6 +373,9 @@ class DocumentReference
         (result)! as firestore_interop.DocumentSnapshotJsImpl);
   }
 
+  String get _documentSnapshotWindowsKey =>
+      'flutterfire-${firestore.app.name}_${path}_documentSnapshot';
+
   /// Attaches a listener for [DocumentSnapshot] events.
   Stream<DocumentSnapshot> onSnapshot({
     bool includeMetadataChanges = false,
@@ -379,8 +391,9 @@ class DocumentReference
   StreamController<DocumentSnapshot> _createSnapshotStream([
     firestore_interop.DocumentListenOptions? options,
   ]) {
+    unsubscribeWindowsListener(_documentSnapshotWindowsKey);
     late JSFunction onSnapshotUnsubscribe;
-    // ignore: close_sinks, the controler is returned
+    // ignore: close_sinks, the controller is returned
     late StreamController<DocumentSnapshot> controller;
 
     final nextWrapper = ((firestore_interop.DocumentSnapshotJsImpl snapshot) {
@@ -395,10 +408,12 @@ class DocumentReference
               jsObject as JSObject, options as JSAny, nextWrapper, errorWrapper)
           : firestore_interop.onSnapshot(
               jsObject as JSObject, nextWrapper, errorWrapper);
+      setWindowsListener(_documentSnapshotWindowsKey, onSnapshotUnsubscribe);
     }
 
     void stopListen() {
       onSnapshotUnsubscribe.callAsFunction();
+      removeWindowsListener(_documentSnapshotWindowsKey);
     }
 
     return controller = StreamController<DocumentSnapshot>.broadcast(
@@ -471,20 +486,26 @@ class Query<T extends firestore_interop.QueryJsImpl>
   Query limitToLast(num limit) => Query.fromJsObject(firestore_interop.query(
       jsObject, firestore_interop.limitToLast(limit.toJS)));
 
-  Stream<QuerySnapshot> onSnapshot({
-    bool includeMetadataChanges = false,
-    ListenSource source = ListenSource.defaultSource,
-  }) =>
+  String _querySnapshotWindowsKey(hashCode) =>
+      'flutterfire-${firestore.app.name}_${hashCode}_querySnapshot';
+
+  Stream<QuerySnapshot> onSnapshot(
+          {bool includeMetadataChanges = false,
+          ListenSource source = ListenSource.defaultSource,
+          required int hashCode}) =>
       _createSnapshotStream(
         firestore_interop.DocumentListenOptions(
           includeMetadataChanges: includeMetadataChanges.toJS,
           source: convertListenSource(source),
         ),
+        hashCode,
       ).stream;
 
   StreamController<QuerySnapshot> _createSnapshotStream(
     firestore_interop.DocumentListenOptions options,
+    int hashCode,
   ) {
+    unsubscribeWindowsListener(_querySnapshotWindowsKey(hashCode));
     late JSFunction onSnapshotUnsubscribe;
     // ignore: close_sinks, the controller is returned
     late StreamController<QuerySnapshot> controller;
@@ -497,10 +518,13 @@ class Query<T extends firestore_interop.QueryJsImpl>
     void startListen() {
       onSnapshotUnsubscribe = firestore_interop.onSnapshot(
           jsObject as JSObject, options as JSObject, nextWrapper, errorWrapper);
+      setWindowsListener(
+          _querySnapshotWindowsKey(hashCode), onSnapshotUnsubscribe);
     }
 
     void stopListen() {
       onSnapshotUnsubscribe.callAsFunction();
+      removeWindowsListener(_querySnapshotWindowsKey(hashCode));
     }
 
     return controller = StreamController<QuerySnapshot>.broadcast(
