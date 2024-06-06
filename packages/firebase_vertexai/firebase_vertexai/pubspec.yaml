@@ -1,6 +1,6 @@
 name: firebase_vertexai
 description: "Firebase Vertex AI SDK."
-version: 0.2.0
+version: 0.2.1
 homepage: https://firebase.google.com/docs/vertex-ai/get-started?platform=flutter
 topics:
   - firebase
