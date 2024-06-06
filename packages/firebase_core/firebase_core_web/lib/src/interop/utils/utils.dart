@@ -61,6 +61,8 @@ void setWindowsListener(String key, JSFunction unsubscribe) {
 
 void removeWindowsListener(String key) {
   if (kDebugMode) {
-    web.window.delete(key.toJS);
+    if (web.window.hasProperty(key.toJS) == true.toJS) {
+      web.window.delete(key.toJS);
+    }
   }
 }
