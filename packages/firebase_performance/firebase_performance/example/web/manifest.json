@@ -1,6 +1,6 @@
 {
-    "name": "fluttefrire_performance",
-    "short_name": "fluttefrire_performance",
+    "name": "flutterfire_performance",
+    "short_name": "flutterfire_performance",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -1,6 +1,6 @@
 {
-    "name": "fluttefrire_analytics",
-    "short_name": "fluttefrire_analytics",
+    "name": "flutterfire_analytics",
+    "short_name": "flutterfire_analytics",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

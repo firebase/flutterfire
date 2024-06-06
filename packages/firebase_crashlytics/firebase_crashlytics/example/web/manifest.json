@@ -1,6 +1,6 @@
 {
-    "name": "fluttefrire_crashlytics",
-    "short_name": "fluttefrire_crashlytics",
+    "name": "flutterfire_crashlytics",
+    "short_name": "flutterfire_crashlytics",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

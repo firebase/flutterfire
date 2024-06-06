@@ -1,6 +1,6 @@
 {
-    "name": "fluttefrire_app_check",
-    "short_name": "fluttefrire_app_check",
+    "name": "flutterfire_app_check",
+    "short_name": "flutterfire_app_check",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

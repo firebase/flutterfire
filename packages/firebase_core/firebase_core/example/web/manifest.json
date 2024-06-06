@@ -1,6 +1,6 @@
 {
-    "name": "fluttefrire_core",
-    "short_name": "fluttefrire_core",
+    "name": "flutterfire_core",
+    "short_name": "flutterfire_core",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

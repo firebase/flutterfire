@@ -1,6 +1,6 @@
 {
-    "name": "fluttefrire_cloud_funtions",
-    "short_name": "fluttefrire_cloud_funtions",
+    "name": "flutterfire_cloud_funtions",
+    "short_name": "flutterfire_cloud_funtions",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

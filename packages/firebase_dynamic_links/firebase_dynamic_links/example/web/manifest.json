@@ -1,6 +1,6 @@
 {
-    "name": "fluttefrire_dynamic_links",
-    "short_name": "fluttefrire_dynamic_links",
+    "name": "flutterfire_dynamic_links",
+    "short_name": "flutterfire_dynamic_links",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

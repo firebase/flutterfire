@@ -1,6 +1,6 @@
 {
-    "name": "fluttefrire_database",
-    "short_name": "fluttefrire_database",
+    "name": "flutterfire_database",
+    "short_name": "flutterfire_database",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
