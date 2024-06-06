@@ -6,10 +6,14 @@ part of firebase_analytics;
 
 /// Firebase Analytics API.
 class FirebaseAnalytics extends FirebasePluginPlatform {
-  FirebaseAnalytics._({required this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_analytics');
+  FirebaseAnalytics._({
+    required this.app,
+    this.webOptions,
+  }) : super(app.name, 'plugins.flutter.io/firebase_analytics');
 
   static Map<String, FirebaseAnalytics> _firebaseAnalyticsInstances = {};
+
+  final Map<String, dynamic>? webOptions;
 
   // Cached and lazily loaded instance of [FirebaseAnalyticsPlatform] to avoid
   // creating a [MethodChannelFirebaseAnalytics] when not needed or creating an
@@ -18,16 +22,19 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
 
   FirebaseAnalyticsPlatform get _delegate {
     return _delegatePackingProperty ??=
-        FirebaseAnalyticsPlatform.instanceFor(app: app);
+        FirebaseAnalyticsPlatform.instanceFor(app: app, webOptions: webOptions);
   }
 
   /// Returns an instance using a specified [FirebaseApp].
   ///
   /// Note; multi-app support is only supported on web.
-  factory FirebaseAnalytics.instanceFor({required FirebaseApp app}) {
+  factory FirebaseAnalytics.instanceFor({
+    required FirebaseApp app,
+    Map<String, dynamic>? webOptions,
+  }) {
     if (kIsWeb || app.name == defaultFirebaseAppName) {
       return _firebaseAnalyticsInstances.putIfAbsent(app.name, () {
-        return FirebaseAnalytics._(app: app);
+        return FirebaseAnalytics._(app: app, webOptions: webOptions);
       });
     }
 

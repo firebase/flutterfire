@@ -34,7 +34,10 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
       MethodChannel('plugins.flutter.io/firebase_analytics');
 
   @override
-  FirebaseAnalyticsPlatform delegateFor({required FirebaseApp app}) {
+  FirebaseAnalyticsPlatform delegateFor({
+    required FirebaseApp app,
+    Map<String, dynamic>? webOptions,
+  }) {
     return MethodChannelFirebaseAnalytics(app: app);
   }
 

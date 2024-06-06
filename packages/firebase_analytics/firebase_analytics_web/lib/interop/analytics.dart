@@ -14,10 +14,13 @@ import 'analytics_interop.dart' as analytics_interop;
 export 'analytics_interop.dart';
 
 /// Given an AppJSImp, return the Analytics instance.
-Analytics getAnalyticsInstance([App? app]) {
+Analytics getAnalyticsInstance([
+  App? app,
+  Map<String, dynamic>? options = const {},
+]) {
   return Analytics.getInstance(
     app != null
-        ? analytics_interop.getAnalytics(app.jsObject)
+        ? analytics_interop.initializeAnalytics(app.jsObject, options.jsify())
         : analytics_interop.getAnalytics(),
   );
 }
