@@ -472,6 +472,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
 
     void stopListen() {
       onUnsubscribe.callAsFunction();
+      streamController.close();
       removeWindowsListener(_streamWindowsKey(
         appName,
         eventType,
