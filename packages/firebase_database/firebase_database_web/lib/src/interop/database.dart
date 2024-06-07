@@ -226,7 +226,6 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
 ///       DataSnapshot dataSnapshot = e.snapshot;
 ///       //...
 ///     });
-// TODO maybe it is the wrong one?
 class QueryEvent {
   /// Immutable copy of the data at a database location.
   final DataSnapshot snapshot;
