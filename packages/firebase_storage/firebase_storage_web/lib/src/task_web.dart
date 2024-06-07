@@ -46,8 +46,13 @@ class TaskWeb extends TaskPlatform {
 
       // This stream converts the UploadTask Snapshots from JS to the plugins'
       // It can also throw a FirebaseError internally, so we handle it.
-      final onStateChangedStream =
-          _task.onStateChanged.map<TaskSnapshotPlatform>((snapshot) {
+      final onStateChangedStream = _task
+          .onStateChanged(
+        _reference.storage.app.name,
+        _reference.bucket,
+        _reference.fullPath,
+      )
+          .map<TaskSnapshotPlatform>((snapshot) {
         return fbUploadTaskSnapshotToTaskSnapshot(_reference, snapshot);
       });
 
