@@ -418,10 +418,8 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
       database_interop.DataSnapshotJsImpl data, [
       String? prevChild,
     ]) {
-      if (!streamController.isClosed) {
-        streamController
-            .add(QueryEvent(DataSnapshot.getInstance(data), prevChild));
-      }
+      streamController
+          .add(QueryEvent(DataSnapshot.getInstance(data), prevChild));
     });
 
     final void Function(JSObject) cancelCallbackWrap = ((JSObject error) {
