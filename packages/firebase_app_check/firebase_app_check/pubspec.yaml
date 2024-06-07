@@ -3,6 +3,11 @@ description: App Check works alongside other Firebase services to help protect y
 homepage: https://firebase.google.com/docs/app-check
 repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_app_check/firebase_app_check
 version: 0.3.0
+topics:
+  - firebase
+  - app-check
+  - security
+  - protection
 
 false_secrets:
   - example/**

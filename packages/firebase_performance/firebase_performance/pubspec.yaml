@@ -6,6 +6,11 @@ description:
 homepage: https://firebase.google.com/docs/perf-mon
 repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_performance/firebase_performance
 version: 0.10.0
+topics:
+  - firebase
+  - performance
+  - monitoring
+  - insights
 
 false_secrets:
   - example/**

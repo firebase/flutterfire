@@ -192,15 +192,11 @@ final class GenerativeModel {
     List<Tool>? tools,
     ToolConfig? toolConfig,
   }) async {
-    return _googleAIModel
-        .countTokens(contents.map((e) => e.toGoogleAI()),
-            safetySettings: safetySettings != null
-                ? safetySettings.map((setting) => setting.toGoogleAI()).toList()
-                : [],
-            generationConfig: generationConfig?.toGoogleAI(),
-            tools: tools?.map((tool) => tool.toGoogleAI()).toList(),
-            toolConfig: toolConfig?.toGoogleAI())
-        .then((r) => r.toVertex());
+    final parameters = <String, Object?>{
+      'contents': contents.map((c) => c.toJson()).toList()
+    };
+    return _googleAIModel.makeRequest(
+        google_ai_hooks.Task.countTokens, parameters, parseCountTokensResponse);
   }
 
   /// Creates an embedding (list of float values) representing [content].

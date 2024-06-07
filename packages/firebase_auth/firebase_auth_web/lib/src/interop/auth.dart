@@ -8,7 +8,6 @@
 
 import 'dart:async';
 import 'dart:js_interop';
-
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'package:http_parser/http_parser.dart';
@@ -382,15 +381,20 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
         jsObject.onAuthStateChanged(nextWrapper.toJS, errorWrapper.toJS);
 
     await completer.future;
-
-    await (unsubscribe.callAsFunction() as JSPromise<JSAny?>?)?.toDart;
+    unsubscribe.callAsFunction();
   }
 
   JSFunction? _onAuthUnsubscribe;
 
-  // TODO(rrousselGit): fix memory leak – the controller isn't closed even in onCancel
+  StreamController<User?>? get authStateController => _changeController;
+  StreamController<User?>? get idTokenController => _idTokenChangedController;
+
   // ignore: close_sinks
   StreamController<User?>? _changeController;
+
+  String get _authStateWindowsKey => 'flutterfire-${app.name}_authStateChanges';
+  String get _idTokenStateWindowsKey =>
+      'flutterfire-${app.name}_idTokenChanges';
 
   /// Sends events when the users sign-in state changes.
   ///
@@ -399,6 +403,8 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   ///
   /// If the value is `null`, there is no signed-in user.
   Stream<User?> get onAuthStateChanged {
+    unsubscribeWindowsListener(_authStateWindowsKey);
+
     if (_changeController == null) {
       final nextWrapper = (auth_interop.UserJsImpl? user) {
         _changeController!.add(User.getInstance(user));
@@ -408,13 +414,17 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
 
       void startListen() {
         assert(_onAuthUnsubscribe == null);
-        _onAuthUnsubscribe =
+        final unsubscribe =
             jsObject.onAuthStateChanged(nextWrapper.toJS, errorWrapper.toJS);
+        _onAuthUnsubscribe = unsubscribe;
+        setWindowsListener(_authStateWindowsKey, unsubscribe);
       }
 
       void stopListen() {
-        (_onAuthUnsubscribe!.dartify()! as Function)();
+        _onAuthUnsubscribe!.callAsFunction();
         _onAuthUnsubscribe = null;
+        _changeController = null;
+        removeWindowsListener(_authStateWindowsKey);
       }
 
       _changeController = StreamController<User?>.broadcast(
@@ -430,7 +440,6 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
 
   JSFunction? _onIdTokenChangedUnsubscribe;
 
-  // TODO(rrousselGit): fix memory leak – the controller isn't closed even in onCancel
   // ignore: close_sinks
   StreamController<User?>? _idTokenChangedController;
 
@@ -441,6 +450,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   ///
   /// If the value is `null`, there is no signed-in user.
   Stream<User?> get onIdTokenChanged {
+    unsubscribeWindowsListener(_idTokenStateWindowsKey);
     if (_idTokenChangedController == null) {
       final nextWrapper = (auth_interop.UserJsImpl? user) {
         _idTokenChangedController!.add(User.getInstance(user));
@@ -450,13 +460,17 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
 
       void startListen() {
         assert(_onIdTokenChangedUnsubscribe == null);
-        _onIdTokenChangedUnsubscribe =
+        final unsubscribe =
             jsObject.onIdTokenChanged(nextWrapper.toJS, errorWrapper.toJS);
+        _onIdTokenChangedUnsubscribe = unsubscribe;
+        setWindowsListener(_idTokenStateWindowsKey, unsubscribe);
       }
 
       void stopListen() {
-        (_onIdTokenChangedUnsubscribe!.dartify()! as Function)();
+        _onIdTokenChangedUnsubscribe!.callAsFunction();
         _onIdTokenChangedUnsubscribe = null;
+        _idTokenChangedController = null;
+        removeWindowsListener(_idTokenStateWindowsKey);
       }
 
       _idTokenChangedController = StreamController<User?>.broadcast(

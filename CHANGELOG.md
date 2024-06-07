@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-06-06
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_vertexai` - `v0.2.1`](#firebase_vertexai---v021)
+
+---
+
+#### `firebase_vertexai` - `v0.2.1`
+
+ - **FIX**(vertexai): fix the countTokens brokage ([#12899](https://github.com/firebase/flutterfire/issues/12899)). ([e946eb9b](https://github.com/firebase/flutterfire/commit/e946eb9b429da16bea617b68dda32f23d0deb5bc))
+
+
 ## 2024-06-04 - [BoM 2.0.0](https://github.com/firebase/flutterfire/blob/master/VERSIONS.md#flutter-bom-200-2024-06-04)
 
 ### Changes

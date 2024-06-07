@@ -595,7 +595,24 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
                             underlyingError.userInfo[@"FIRAuthErrorUserInfoDes"
                                                      @"erializedResponseKey"];
 
-                        if (firebaseDictionary != nil && firebaseDictionary[@"message"] != nil) {
+                        if (firebaseDictionary == nil &&
+                            userInfo[@"FIRAuthErrorUserInfoNameKey"] != nil) {
+                          // Removing since it's not parsed and causing issue when sending back the
+                          // object to Flutter
+                          NSMutableDictionary *mutableUserInfo = [userInfo mutableCopy];
+                          [mutableUserInfo
+                              removeObjectForKey:@"FIRAuthErrorUserInfoUpdatedCredentialKey"];
+                          NSError *modifiedError = [NSError errorWithDomain:error.domain
+                                                                       code:error.code
+                                                                   userInfo:mutableUserInfo];
+
+                          completion(nil,
+                                     [FlutterError errorWithCode:@"sign-in-failed"
+                                                         message:userInfo[@"NSLocalizedDescription"]
+                                                         details:modifiedError.userInfo]);
+
+                        } else if (firebaseDictionary != nil &&
+                                   firebaseDictionary[@"message"] != nil) {
                           // error from firebase-ios-sdk is
                           // buried in underlying error.
                           completion(nil,
