@@ -444,7 +444,6 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
         );
       }
       if (eventType == 'child_removed') {
-        //change callback, only snap
         onUnsubscribe = database_interop.onChildRemoved(
           jsObject,
           callbackWrap.toJS,
