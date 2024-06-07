@@ -184,6 +184,18 @@ enum FunctionCallingMode {
 /// Represents a select subset of an
 /// [OpenAPI 3.0 schema object](https://spec.openapis.org/oas/v3.0.3#schema).
 final class Schema {
+  /// Constructor
+  Schema(
+    this.type, {
+    this.format,
+    this.description,
+    this.nullable,
+    this.enumValues,
+    this.items,
+    this.properties,
+    this.requiredProperties,
+  });
+
   /// Construct a schema for an object with one or more properties.
   Schema.object({
     required Map<String, Schema> properties,
@@ -270,18 +282,6 @@ final class Schema {
           description: description,
           nullable: nullable,
         );
-
-  /// Constructor
-  Schema(
-    this.type, {
-    this.format,
-    this.description,
-    this.nullable,
-    this.enumValues,
-    this.items,
-    this.properties,
-    this.requiredProperties,
-  });
 
   /// The type of this value.
   SchemaType type;
