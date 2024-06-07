@@ -115,8 +115,14 @@ external OnDisconnectJsImpl onDisconnect(ReferenceJsImpl ref);
 @JS()
 @staticInterop
 external JSFunction onValue(
-    QueryJsImpl query, JSFunction callback, JSFunction cancelCallback,
-    [ListenOptions options]);
+  QueryJsImpl query,
+  JSFunction callback,
+  // JSAny Function(DataSnapshotJsImpl, [JSString previousChildName]) callback,
+  JSFunction cancelCallback,
+  // JSAny Function(FirebaseError error) cancelCallback,
+  [
+  ListenOptions options,
+]);
 
 @JS()
 @staticInterop
