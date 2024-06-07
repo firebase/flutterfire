@@ -70,15 +70,6 @@ external JSAny increment(JSNumber delta);
 
 @JS()
 @staticInterop
-external void off([
-  QueryJsImpl query,
-  JSString eventType,
-  JSFunction callback,
-  /*JSAny Function(DataSnapshotJsImpl, [JSString previousChildName]) callback*/
-]);
-
-@JS()
-@staticInterop
 external JSFunction onChildAdded(
   QueryJsImpl query,
   JSFunction callback,
@@ -124,11 +115,7 @@ external OnDisconnectJsImpl onDisconnect(ReferenceJsImpl ref);
 @JS()
 @staticInterop
 external JSFunction onValue(
-    QueryJsImpl query,
-    JSFunction callback,
-    // JSAny Function(DataSnapshotJsImpl, [JSString previousChildName]) callback,
-    JSFunction cancelCallback,
-    // JSAny Function(FirebaseError error) cancelCallback,
+    QueryJsImpl query, JSFunction callback, JSFunction cancelCallback,
     [ListenOptions options]);
 
 @JS()
