@@ -20,6 +20,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   static const recaptchaTypeV3 = 'recaptcha-v3';
   static const recaptchaTypeEnterprise = 'enterprise';
   static Map<String, StreamController<String?>> _tokenChangesListeners = {};
+
   /// Stub initializer to allow the [registerWith] to create an instance without
   /// registering the web delegates or listeners.
   FirebaseAppCheckWeb._()
