@@ -6,6 +6,7 @@ packages:
   - packages/*/*
   - packages/*/*/*
   - tests
+  - ../FirebaseUI-Flutter/packages/*
 
 command:
   version:
@@ -15,6 +16,13 @@ command:
     # branch: master
     # Additionally build a changelog at the root of the workspace.
     workspaceChangelog: true
+    changelogs:
+      - path: ../FirebaseUI-Flutter/CHANGELOG.md
+        packageFilters:
+          scope: firebase_ui_*
+        description: |
+          All notable changes for firebase_ui packages
+
     hooks:
       preCommit: |
         dart run scripts/generate_vertexai_version.dart && \
