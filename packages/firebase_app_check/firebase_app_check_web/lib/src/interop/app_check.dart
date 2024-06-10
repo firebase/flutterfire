@@ -76,7 +76,11 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
       // ignore: close_sinks
       _idTokenChangedController;
 
-  Stream<app_check_interop.AppCheckTokenResult> onTokenChanged() {
+  String _appCheckWindowsKey(String appName) =>
+      'flutterfire-${appName}_onTokenChanged';
+  Stream<app_check_interop.AppCheckTokenResult> onTokenChanged(String appName) {
+    final appCheckWindowsKey = _appCheckWindowsKey(appName);
+    unsubscribeWindowsListener(appCheckWindowsKey);
     if (_idTokenChangedController == null) {
       final nextWrapper = ((app_check_interop.AppCheckTokenResult result) {
         _idTokenChangedController!.add(result);
@@ -91,12 +95,14 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
           nextWrapper,
           errorWrapper,
         );
+        setWindowsListener(appCheckWindowsKey, _idTokenChangedUnsubscribe!);
       }
 
       void stopListen() {
         _idTokenChangedUnsubscribe?.callAsFunction();
         _idTokenChangedUnsubscribe = null;
         _idTokenChangedController = null;
+        removeWindowsListener(appCheckWindowsKey);
       }
 
       _idTokenChangedController =

@@ -132,7 +132,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
           _delegate!.idTokenChangedController?.close();
         },
       );
-      _delegate!.onTokenChanged().listen((event) {
+      _delegate!.onTokenChanged(app.name).listen((event) {
         _tokenChangesListeners[app.name]!.add(event.token.toDart);
       });
     }
