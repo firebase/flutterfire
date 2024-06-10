@@ -17,7 +17,7 @@ command:
     # Additionally build a changelog at the root of the workspace.
     workspaceChangelog: true
     changelogs:
-      - path: ../FirebaseUI-Flutter/CHANGELOG.md
+      - path: FirebaseUI-Flutter-CHANGELOG.md
         packageFilters:
           scope: firebase_ui_*
         description: |
