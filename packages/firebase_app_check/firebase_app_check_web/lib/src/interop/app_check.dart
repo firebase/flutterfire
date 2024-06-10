@@ -70,6 +70,9 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
   JSFunction? _idTokenChangedUnsubscribe;
 
   StreamController<app_check_interop.AppCheckTokenResult>?
+      get idTokenChangedController => _idTokenChangedController;
+
+  StreamController<app_check_interop.AppCheckTokenResult>?
       // ignore: close_sinks
       _idTokenChangedController;
 
@@ -83,7 +86,6 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
           ((JSError e) => _idTokenChangedController!.addError(e)).toJS;
 
       void startListen() {
-        assert(_idTokenChangedUnsubscribe == null);
         _idTokenChangedUnsubscribe = app_check_interop.onTokenChanged(
           jsObject,
           nextWrapper,
@@ -94,6 +96,7 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
       void stopListen() {
         _idTokenChangedUnsubscribe?.callAsFunction();
         _idTokenChangedUnsubscribe = null;
+        _idTokenChangedController = null;
       }
 
       _idTokenChangedController =
