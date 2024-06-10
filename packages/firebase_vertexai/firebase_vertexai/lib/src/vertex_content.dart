@@ -50,6 +50,7 @@ final class Content {
   static Content functionResponse(
           String name, Map<String, Object?>? response) =>
       Content('function', [FunctionResponse(name, response)]);
+
   /// Return a [Content] with multiple [FunctionResponse].
   static Content functionResponses(Iterable<FunctionResponse> responses) =>
       Content('function', responses.toList());
