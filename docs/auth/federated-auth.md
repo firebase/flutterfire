@@ -226,21 +226,21 @@ Future<UserCredential> signInWithApple() async {
 
 #### Apple platform sign-in only
 
-Apple sign-in on iOS+ platforms can also be achieved with either of the following two methods:
+Apple sign-in on iOS+ platforms can also be achieved with the following method:
 
 ```dart
-// You can create nonce and hash SHA-256 string of nonce using `crypto` package on pub.dev registry
+// Create a nonce
 String rawNonce = createNonce();
-// This will be needed to pass to request for Apple Authorization credential to get the `idToken` 
+// Create a hash SHA-256 string of the nonce. Consider using the `crypto` package on pub.dev registry
 String hashSHA256String = createHashSHA256String(rawNonce);
-// This can be achieved using external dependencies such as the `sign_in_with_apple` Flutter plugin on pub.dev registry
+// Use the hash SHA-256 string of the nonce to get the idToken. Consider using the `sign_in_with_apple` plugin on pub.dev registry
 String idToken = await getIdToken();
 
 final fullName = AppleFullPersonName(
   familyName: 'Name',
   givenName: 'Your',
 );
-
+// Use the `rawNonce` and `idToken` to get the credential
 final credential = AppleAuthProvider.credentialWithIDToken(
   idToken,
   rawNonce,
