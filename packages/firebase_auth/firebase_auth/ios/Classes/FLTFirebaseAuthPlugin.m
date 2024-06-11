@@ -52,6 +52,12 @@ NSString *const kArgumentToken = @"token";
 NSString *const kArgumentVerificationId = @"verificationId";
 NSString *const kArgumentSmsCode = @"smsCode";
 NSString *const kArgumentActionCodeSettings = @"actionCodeSettings";
+NSString *const kArgumentFamilyName = @"familyName";
+NSString *const kArgumentGivenName = @"givenName";
+NSString *const kArgumentMiddleName = @"middleName";
+NSString *const kArgumentNickname = @"nickname";
+NSString *const kArgumentNamePrefix = @"namePrefix";
+NSString *const kArgumentNameSuffix = @"nameSuffix";
 
 // MultiFactor
 NSString *const kArgumentMultiFactorHints = @"multiFactorHints";
@@ -754,7 +760,31 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
     return;
 #endif
   }
+  // Apple Auth
+  if ([signInMethod isEqualToString:kSignInMethodApple]) {
+    if (idToken && rawNonce) {
+      // Credential with idToken, rawNonce and fullName
+      NSPersonNameComponents *fullName = [[NSPersonNameComponents alloc] init];
+      fullName.givenName =
+          arguments[kArgumentGivenName] == [NSNull null] ? nil : arguments[kArgumentGivenName];
+      fullName.familyName =
+          arguments[kArgumentFamilyName] == [NSNull null] ? nil : arguments[kArgumentFamilyName];
+      fullName.nickname =
+          arguments[kArgumentNickname] == [NSNull null] ? nil : arguments[kArgumentNickname];
+      fullName.namePrefix =
+          arguments[kArgumentNamePrefix] == [NSNull null] ? nil : arguments[kArgumentNamePrefix];
+      fullName.nameSuffix =
+          arguments[kArgumentNameSuffix] == [NSNull null] ? nil : arguments[kArgumentNameSuffix];
+      fullName.middleName =
+          arguments[kArgumentMiddleName] == [NSNull null] ? nil : arguments[kArgumentMiddleName];
 
+      completion([FIROAuthProvider appleCredentialWithIDToken:idToken
+                                                     rawNonce:rawNonce
+                                                     fullName:fullName],
+                 nil);
+      return;
+    }
+  }
   // OAuth
   if ([signInMethod isEqualToString:kSignInMethodOAuth]) {
     NSString *providerId = arguments[kArgumentProviderId];
