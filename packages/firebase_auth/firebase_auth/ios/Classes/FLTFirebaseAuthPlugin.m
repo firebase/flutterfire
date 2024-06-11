@@ -762,12 +762,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
   }
   // Apple Auth
   if ([signInMethod isEqualToString:kSignInMethodApple]) {
-    if (accessToken) {
-      // Credential with just an access token.
-      completion([FIROAuthProvider credentialWithProviderID:kSignInMethodApple
-                                                accessToken:accessToken],
-                 nil);
-    } else {
+    if (idToken && rawNonce) {
       // Credential with idToken, rawNonce and fullName
       NSPersonNameComponents *fullName = [[NSPersonNameComponents alloc] init];
       fullName.givenName =
@@ -787,8 +782,8 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
                                                      rawNonce:rawNonce
                                                      fullName:fullName],
                  nil);
+      return;
     }
-    return;
   }
   // OAuth
   if ([signInMethod isEqualToString:kSignInMethodOAuth]) {
