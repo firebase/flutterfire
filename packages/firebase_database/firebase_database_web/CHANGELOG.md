@@ -1,3 +1,27 @@
+## 0.2.5+8
+
+ - Update a dependency to the latest release.
+
+## 0.2.5+7
+
+ - Update a dependency to the latest release.
+
+## 0.2.5+6
+
+ - Update a dependency to the latest release.
+
+## 0.2.5+5
+
+ - **FIX**(database,web): Stop transaction & stream handling exceptions from throwing twice ([#12706](https://github.com/firebase/flutterfire/issues/12706)). ([9b3244f7](https://github.com/firebase/flutterfire/commit/9b3244f7f328095fd5887aac25debe77ecf3e569))
+
+## 0.2.5+4
+
+ - Update a dependency to the latest release.
+
+## 0.2.5+3
+
+ - **FIX**(database,web): Fix exceptions being converted into lowercase ([#12661](https://github.com/firebase/flutterfire/issues/12661)). ([f9f46a53](https://github.com/firebase/flutterfire/commit/f9f46a53e022503455e637c7fda08765888d9b13))
+
 ## 0.2.5+2
 
  - **FIX**(database,web): fix broken exception handling on streams ([#12647](https://github.com/firebase/flutterfire/issues/12647)). ([0115f79d](https://github.com/firebase/flutterfire/commit/0115f79d2eb539205101070eb3b329165c9e4e61))

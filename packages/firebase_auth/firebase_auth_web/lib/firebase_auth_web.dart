@@ -24,6 +24,8 @@ import 'src/firebase_auth_web_user_credential.dart';
 import 'src/interop/auth.dart' as auth_interop;
 import 'src/interop/multi_factor.dart' as multi_factor;
 
+enum StateListener { authStateChange, userStateChange, idTokenChange }
+
 /// The web delegate implementation for [FirebaseAuth].
 class FirebaseAuthWeb extends FirebaseAuthPlatform {
   /// Stub initializer to allow the [registerWith] to create an instance without
@@ -37,50 +39,9 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   /// The entry point for the [FirebaseAuthWeb] class.
   FirebaseAuthWeb({required FirebaseApp app}) : super(appInstance: app) {
     // Create a app instance broadcast stream for both delegate listener events
-    _userChangesListeners[app.name] =
-        StreamController<UserPlatform?>.broadcast();
-    _authStateChangesListeners[app.name] =
-        StreamController<UserPlatform?>.broadcast();
-    _idTokenChangesListeners[app.name] =
-        StreamController<UserPlatform?>.broadcast();
-
-    // TODO(rrousselGit): close StreamSubscription
-    delegate.onAuthStateChanged.map((auth_interop.User? webUser) {
-      if (!_initialized.isCompleted) {
-        _initialized.complete();
-      }
-
-      if (webUser == null) {
-        return null;
-      } else {
-        return UserWeb(
-          this,
-          MultiFactorWeb(this, multi_factor.multiFactor(webUser)),
-          webUser,
-          _webAuth,
-        );
-      }
-    }).listen((UserWeb? webUser) {
-      _authStateChangesListeners[app.name]!.add(webUser);
-    });
-
-    // TODO(rrousselGit): close StreamSubscription
-    // Also triggers `userChanged` events
-    delegate.onIdTokenChanged.map((auth_interop.User? webUser) {
-      if (webUser == null) {
-        return null;
-      } else {
-        return UserWeb(
-          this,
-          MultiFactorWeb(this, multi_factor.multiFactor(webUser)),
-          webUser,
-          _webAuth,
-        );
-      }
-    }).listen((UserWeb? webUser) {
-      _idTokenChangesListeners[app.name]!.add(webUser);
-      _userChangesListeners[app.name]!.add(webUser);
-    });
+    _createStreamListener(app.name, StateListener.authStateChange);
+    _createStreamListener(app.name, StateListener.idTokenChange);
+    _createStreamListener(app.name, StateListener.userStateChange);
   }
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
@@ -136,6 +97,105 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   /// Initializes a stub instance to allow the class to be registered.
   static FirebaseAuthWeb get instance {
     return FirebaseAuthWeb._();
+  }
+
+  bool _cancelUserStream = false;
+  bool _cancelIdTokenStream = false;
+
+  void _createStreamListener(String appName, StateListener stateListener) {
+    switch (stateListener) {
+      case StateListener.authStateChange:
+        _authStateChangesListeners[appName] =
+            StreamController<UserPlatform?>.broadcast(
+          onCancel: () {
+            _authStateChangesListeners[appName]!.close();
+            _authStateChangesListeners.remove(appName);
+            delegate.authStateController?.close();
+          },
+        );
+        delegate.onAuthStateChanged.map((auth_interop.User? webUser) {
+          if (!_initialized.isCompleted) {
+            _initialized.complete();
+          }
+
+          if (webUser == null) {
+            return null;
+          } else {
+            return UserWeb(
+              this,
+              MultiFactorWeb(this, multi_factor.multiFactor(webUser)),
+              webUser,
+              _webAuth,
+            );
+          }
+        }).listen((UserWeb? webUser) {
+          _authStateChangesListeners[app.name]!.add(webUser);
+        });
+        break;
+      case StateListener.idTokenChange:
+        _cancelIdTokenStream = false;
+        _idTokenChangesListeners[appName] =
+            StreamController<UserPlatform?>.broadcast(
+          onCancel: () {
+            if (_userChangesListeners[appName] == null) {
+              // We cannot remove if there is a userChanges listener as we use this stream for it
+              _idTokenChangesListeners[appName]!.close();
+              _idTokenChangesListeners.remove(appName);
+              delegate.idTokenController?.close();
+            } else {
+              // We need to do this because if idTokenListener and userChanges are being listened to
+              // We need to cancel both at the same time otherwise neither will be closed & removed
+              _cancelIdTokenStream = true;
+            }
+
+            if (_cancelUserStream) {
+              _userChangesListeners[appName]!.close();
+              _userChangesListeners.remove(appName);
+            }
+          },
+        );
+
+        // Also triggers `userChanged` events
+        delegate.onIdTokenChanged.map((auth_interop.User? webUser) {
+          if (webUser == null) {
+            return null;
+          } else {
+            return UserWeb(
+              this,
+              MultiFactorWeb(this, multi_factor.multiFactor(webUser)),
+              webUser,
+              _webAuth,
+            );
+          }
+        }).listen((UserWeb? webUser) {
+          _idTokenChangesListeners[app.name]!.add(webUser);
+          _userChangesListeners[app.name]!.add(webUser);
+        });
+        break;
+      case StateListener.userStateChange:
+        _cancelUserStream = false;
+        _userChangesListeners[appName] =
+            StreamController<UserPlatform?>.broadcast(
+          onCancel: () {
+            if (_idTokenChangesListeners[appName] == null) {
+              _userChangesListeners[appName]!.close();
+              _userChangesListeners.remove(appName);
+              // There is no delegate for userChanges as we use idTokenChanges
+            } else {
+              _cancelUserStream = true;
+            }
+
+            if (_cancelIdTokenStream) {
+              // We need to do this because if idTokenListener and userChanges are being listened to
+              // We need to cancel both at the same time otherwise neither will be closed & removed
+              _idTokenChangesListeners[appName]!.close();
+              _idTokenChangesListeners.remove(appName);
+              delegate.idTokenController?.close();
+            }
+          },
+        );
+        break;
+    }
   }
 
   /// instance of Auth from the web plugin
@@ -254,6 +314,9 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   Stream<UserPlatform?> authStateChanges() async* {
     await _initialized.future;
     yield currentUser;
+    if (_authStateChangesListeners[app.name] == null) {
+      _createStreamListener(app.name, StateListener.authStateChange);
+    }
     yield* _authStateChangesListeners[app.name]!.stream;
   }
 
@@ -261,6 +324,9 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   Stream<UserPlatform?> idTokenChanges() async* {
     await _initialized.future;
     yield currentUser;
+    if (_idTokenChangesListeners[app.name] == null) {
+      _createStreamListener(app.name, StateListener.idTokenChange);
+    }
     yield* _idTokenChangesListeners[app.name]!.stream;
   }
 
@@ -268,6 +334,9 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   Stream<UserPlatform?> userChanges() async* {
     await _initialized.future;
     yield currentUser;
+    if (_userChangesListeners[app.name] == null) {
+      _createStreamListener(app.name, StateListener.userStateChange);
+    }
     yield* _userChangesListeners[app.name]!.stream;
   }
 
@@ -489,6 +558,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
             .setItem(getOriginName(delegate.app.name), origin);
       }
     } catch (e) {
+      // Cannot be done with 3.2 constraints
+      // ignore: invalid_runtime_check_with_js_interop_types
       if (e is auth_interop.AuthError) {
         final String code = e.code.toDart;
         // this catches Firebase Error from web that occurs after hot reloading & hot restarting
@@ -548,7 +619,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
       /// We add the passthrough method for LegacyJsObject
       final verificationId =
-          await provider.verifyPhoneNumber(phoneOptions.toJSBox, verifier);
+          await provider.verifyPhoneNumber(phoneOptions.jsify(), verifier);
 
       codeSent(verificationId, null);
     } catch (e) {

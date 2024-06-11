@@ -20,7 +20,12 @@ public class FlutterFirebaseMessagingReceiver extends BroadcastReceiver {
   public void onReceive(Context context, Intent intent) {
     Log.d(TAG, "broadcast received for message");
     if (ContextHolder.getApplicationContext() == null) {
-      ContextHolder.setApplicationContext(context.getApplicationContext());
+      Context aContext = context;
+      if (context.getApplicationContext() != null) {
+        aContext = context.getApplicationContext();
+      }
+
+      ContextHolder.setApplicationContext(aContext);
     }
 
     if (intent.getExtras() == null) {

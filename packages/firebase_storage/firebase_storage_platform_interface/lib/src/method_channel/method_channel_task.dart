@@ -7,7 +7,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../firebase_storage_platform_interface.dart';
 import '../pigeon/messages.pigeon.dart';
@@ -257,12 +257,22 @@ class MethodChannelPutFileTask extends MethodChannelTask {
 
   static Future<String> _getTask(int handle, FirebaseStoragePlatform storage,
       String path, File file, SettableMetadata? metadata) {
+    PigeonSettableMetadata? pigeonSettableMetadata;
+    if (defaultTargetPlatform == TargetPlatform.windows) {
+      // TODO(russellwheatley): sending null to windows throws exception so we pass empty metadata
+      pigeonSettableMetadata =
+          MethodChannelFirebaseStorage.getPigeonSettableMetaData(metadata);
+    } else {
+      pigeonSettableMetadata = metadata == null
+          ? null
+          : MethodChannelFirebaseStorage.getPigeonSettableMetaData(metadata);
+    }
     return MethodChannelFirebaseStorage.pigeonChannel.referencePutFile(
       MethodChannelTask.pigeonFirebaseApp(storage),
       MethodChannelFirebaseStorage.getPigeonReference(
           storage.bucket, path, 'putFile'),
       file.path,
-      MethodChannelFirebaseStorage.getPigeonSettableMetaData(metadata),
+      pigeonSettableMetadata,
       handle,
     );
   }

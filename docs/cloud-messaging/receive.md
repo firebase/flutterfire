@@ -71,7 +71,7 @@ the request can be used to determine the user's overall decision:
 
 Note: On Android versions prior to 13, `authorizationStatus` returns
 `authorized` if the user has not disabled notifications for the app in the
-operating system settings.
+operating system settings. On Android versions 13 and above, there is no way to determine if the user has chosen whether to grant/deny permission. A `denied` value conveys an undetermined or denied permission state, and it will be up to you to track if a permission request has been made.
 
 The other properties on `NotificationSettings` return whether a specific permission is enabled, disabled or not supported on the current
 device.
@@ -185,9 +185,23 @@ messaging.onBackgroundMessage((message) => {
 
 The file must import both the app and messaging SDKs, initialize Firebase and expose the `messaging` variable.
 
-Next, the worker must be registered. Within the entry file, **after** the `main.dart.js` file has loaded, register your worker:
+Next, the worker must be registered. Within the `index.html` file, register the worker by modifying the `<script>` tag which bootstraps Flutter:
 
-```js
+```html
+<script src="flutter_bootstrap.js" async>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('firebase-messaging-sw.js', {
+        scope: '/firebase-cloud-messaging-push-scope',
+      });
+    });
+  }
+</script>
+```
+
+If you are still using the old templating system, you can register the worker by modifying the `<script>` tag which bootstraps Flutter as follows:
+
+```html
 <html>
 <body>
   <script>
@@ -208,7 +222,9 @@ Next, the worker must be registered. Within the entry file, **after** the `main.
         // Service workers are supported. Use them.
         window.addEventListener('load', function () {
           // Register Firebase Messaging service worker.
-          navigator.serviceWorker.register('firebase-messaging-sw.js');
+          navigator.serviceWorker.register('firebase-messaging-sw.js', {
+            scope: '/firebase-cloud-messaging-push-scope',
+          });
 
           // Wait for registration to finish before dropping the <script> tag.
           // Otherwise, the browser will load the script multiple times,
@@ -258,6 +274,7 @@ Next, the worker must be registered. Within the entry file, **after** the `main.
         loadMainDartJs();
       }
   </script>
+</body>
 ```
 
 Next restart your Flutter application. The worker will be registered and any background messages will be handled via this file.

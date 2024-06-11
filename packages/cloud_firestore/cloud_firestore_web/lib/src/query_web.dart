@@ -188,6 +188,7 @@ class QueryWeb extends QueryPlatform {
         _buildWebQueryWithParameters().onSnapshot(
       includeMetadataChanges: includeMetadataChanges,
       source: source,
+      hashCode: hashCode,
     );
 
     return convertWebExceptions(

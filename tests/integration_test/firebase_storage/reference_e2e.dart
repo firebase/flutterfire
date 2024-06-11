@@ -240,8 +240,10 @@ void setupReferenceTests() {
     group(
       'putData',
       () {
-        test('uploads a file with buffer', () async {
-          List<int> list = utf8.encode(kTestString);
+        test('uploads a file with buffer and download to check content matches',
+            () async {
+          const text = 'put data text to compare with uploaded and downloaded';
+          List<int> list = utf8.encode(text);
 
           Uint8List data = Uint8List.fromList(list);
 
@@ -255,9 +257,15 @@ void setupReferenceTests() {
             ),
           );
 
-          expect(complete.metadata?.size, kTestString.length);
-          // Metadata isn't saved on objects when using the emulator which fails test
-          // expect(complete.metadata?.contentLanguage, 'en');
+          expect(complete.metadata?.size, text.length);
+          expect(complete.metadata?.contentLanguage, 'en');
+
+          // Download the file from Firebase Storage
+          final downloadedData = await ref.getData();
+          final downloadedContent = String.fromCharCodes(downloadedData!);
+
+          // Verify that the downloaded content matches the original content
+          expect(downloadedContent, equals(text));
         });
 
         //TODO(pr-mais): causes the emulator to crash
@@ -323,18 +331,53 @@ void setupReferenceTests() {
               file,
               SettableMetadata(
                 contentLanguage: 'en',
+                contentType: 'text/plain',
                 customMetadata: <String, String>{'activity': 'test'},
               ),
             );
-
+            // metadata.contentType appears as application/octet-stream if not set. contentType is not inferred on emulator
             expect(complete.metadata?.size, kTestString.length);
-            // Metadata isn't saved on objects when using the emulator which fails test
-            // expect(complete.metadata?.contentLanguage, 'en');
-            // expect(complete.metadata?.customMetadata!['activity'], 'test');
+            expect(complete.metadata?.contentLanguage, 'en');
+            expect(complete.metadata?.customMetadata!['activity'], 'test');
+            expect(complete.metadata?.contentType, 'text/plain');
+            // Check without SettableMetadata
+            final Reference ref2 =
+                storage.ref('flutter-tests').child('flt-ok-2.txt');
+            final TaskSnapshot complete2 = await ref2.putFile(
+              file,
+            );
+            expect(complete2.metadata?.size, kTestString.length);
+            expect(complete2.metadata?.customMetadata, isA<Map>());
           },
           // putFile is not supported on the web platform.
           skip: kIsWeb,
         );
+
+        test('Upload and download text file and ensure content is the same',
+            () async {
+          const text =
+              'put file some text to compare with uploaded and downloaded';
+          final File file = await createFile(
+            'read-and-write.txt',
+            largeString: text,
+          );
+
+          final Reference ref =
+              storage.ref('flutter-tests').child('read-and-write.txt');
+
+          final TaskSnapshot complete = await ref.putFile(
+            file,
+          );
+
+          expect(complete.state, TaskState.success);
+
+          // Download the file from Firebase Storage
+          final downloadedData = await ref.getData();
+          final downloadedContent = String.fromCharCodes(downloadedData!);
+
+          // Verify that the downloaded content matches the original content
+          expect(downloadedContent, equals(text));
+        });
 
         // TODO(ehesp): Emulator rules issue - comment back in once fixed
         // test('errors if permission denied', () async {
@@ -358,10 +401,20 @@ void setupReferenceTests() {
     );
 
     group('putString', () {
-      test('uploads a string', () async {
+      test('uploads a string and downloads to check its content', () async {
+        const text =
+            'put string some text to compare with uploaded and downloaded';
         final Reference ref = storage.ref('flutter-tests').child('flt-ok.txt');
-        final TaskSnapshot complete = await ref.putString('data');
+        final TaskSnapshot complete = await ref.putString(text);
         expect(complete.totalBytes, greaterThan(0));
+        expect(complete.state, TaskState.success);
+
+        // Download the file from Firebase Storage
+        final downloadedData = await ref.getData();
+        final downloadedContent = String.fromCharCodes(downloadedData!);
+
+        // Verify that the downloaded content matches the original content
+        expect(downloadedContent, equals(text));
       });
 
       // Emulator continues to make request rather than throw unauthorized exception as expected
@@ -391,22 +444,27 @@ void setupReferenceTests() {
         expect(fullMetadata.customMetadata!['foo'], 'bar');
       });
 
-      test('errors if property does not exist', () async {
-        Reference ref = storage.ref('flutter-tests/iDoNotExist.jpeg');
+      test(
+        'errors if property does not exist',
+        () async {
+          Reference ref = storage.ref('flutter-tests/iDoNotExist.jpeg');
 
-        await expectLater(
-          () => ref.updateMetadata(SettableMetadata(contentType: 'unknown')),
-          throwsA(
-            isA<FirebaseException>()
-                .having((e) => e.code, 'code', 'object-not-found')
-                .having(
-                  (e) => e.message,
-                  'message',
-                  'No object exists at the desired reference.',
-                ),
-          ),
-        );
-      });
+          await expectLater(
+            () => ref.updateMetadata(SettableMetadata(contentType: 'unknown')),
+            throwsA(
+              isA<FirebaseException>()
+                  .having((e) => e.code, 'code', 'object-not-found')
+                  .having(
+                    (e) => e.message,
+                    'message',
+                    'No object exists at the desired reference.',
+                  ),
+            ),
+          );
+        },
+        // TODO(russellwheatley): raise issue on C++ SDK, if object does not exist, it throws "unauthorized" exception
+        skip: defaultTargetPlatform == TargetPlatform.windows,
+      );
 
       test(
         'errors if permission denied',

@@ -87,6 +87,7 @@ public class FlutterFirebaseMessagingPlugin
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
+    ContextHolder.setApplicationContext(binding.getApplicationContext());
     initInstance(binding.getBinaryMessenger());
   }
 

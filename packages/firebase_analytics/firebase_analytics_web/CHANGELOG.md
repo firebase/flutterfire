@@ -1,3 +1,27 @@
+## 0.5.7+8
+
+ - **FIX**(web): fix some casting issue on Web JS Interop ([#12852](https://github.com/firebase/flutterfire/issues/12852)). ([4b56df1c](https://github.com/firebase/flutterfire/commit/4b56df1cc187d77ef22a82688a37f1c7aba4ed40))
+
+## 0.5.7+7
+
+ - Update a dependency to the latest release.
+
+## 0.5.7+6
+
+ - Update a dependency to the latest release.
+
+## 0.5.7+5
+
+ - Update a dependency to the latest release.
+
+## 0.5.7+4
+
+ - Update a dependency to the latest release.
+
+## 0.5.7+3
+
+ - Update a dependency to the latest release.
+
 ## 0.5.7+2
 
  - Update a dependency to the latest release.
