@@ -85,8 +85,8 @@ DocumentChangePlatform convertWebDocumentChange(
 ) {
   return DocumentChangePlatform(
       convertWebDocumentChangeType(webDocumentChange.type),
-      webDocumentChange.oldIndex as int,
-      webDocumentChange.newIndex as int,
+      webDocumentChange.oldIndex.toInt(),
+      webDocumentChange.newIndex.toInt(),
       convertWebDocumentSnapshot(
         firestore,
         webDocumentChange.doc!,

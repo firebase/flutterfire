@@ -79,14 +79,19 @@ PigeonFirebaseOptions optionsFromFIROptions(
   PigeonFirebaseOptions pigeon_options = PigeonFirebaseOptions();
   pigeon_options.set_api_key(options.api_key());
   pigeon_options.set_app_id(options.app_id());
-  if (options.database_url() != nullptr) {
-    pigeon_options.set_database_u_r_l(options.database_url());
+  // AppOptions initialises as empty char so we check to stop empty string to
+  // Flutter Same for storage bucket below
+  const char *db_url = options.database_url();
+  if (db_url != nullptr && db_url[0] != '\0') {
+    pigeon_options.set_database_u_r_l(db_url);
   }
   pigeon_options.set_tracking_id(nullptr);
   pigeon_options.set_messaging_sender_id(options.messaging_sender_id());
   pigeon_options.set_project_id(options.project_id());
-  if (options.storage_bucket() != nullptr) {
-    pigeon_options.set_storage_bucket(options.storage_bucket());
+
+  const char *storage_bucket = options.storage_bucket();
+  if (storage_bucket != nullptr && storage_bucket[0] != '\0') {
+    pigeon_options.set_storage_bucket(storage_bucket);
   }
   return pigeon_options;
 }

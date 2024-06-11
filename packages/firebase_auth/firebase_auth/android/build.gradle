@@ -40,10 +40,10 @@ android {
       namespace 'io.flutter.plugins.firebase.auth'
     }
 
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
-        minSdk 19
+        minSdk 23
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     compileOptions {

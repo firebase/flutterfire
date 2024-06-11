@@ -1,3 +1,59 @@
+## 1.3.36
+
+ - Update a dependency to the latest release.
+
+## 1.3.35
+
+ - Update a dependency to the latest release.
+
+## 1.3.34
+
+ - Update a dependency to the latest release.
+
+## 1.3.33
+
+ - Update a dependency to the latest release.
+
+## 1.3.32
+
+ - **FIX**(web): fix type casting for JSString in error parsing ([#12698](https://github.com/firebase/flutterfire/issues/12698)). ([93efcffb](https://github.com/firebase/flutterfire/commit/93efcffbaba854fe50c5dd26b590d8a02d6e2d4e))
+
+## 1.3.31
+
+ - Update a dependency to the latest release.
+
+## 1.3.30
+
+ - Update a dependency to the latest release.
+
+## 1.3.29
+
+ - **FIX**(web): remove remaining references to `dart:html` ([#12601](https://github.com/firebase/flutterfire/issues/12601)). ([fbffedb6](https://github.com/firebase/flutterfire/commit/fbffedb65c180d29a07436af90b36ca56e97bfe7))
+
+## 1.3.28
+
+ - Update a dependency to the latest release.
+
+## 1.3.27
+
+ - Update a dependency to the latest release.
+
+## 1.3.26
+
+ - Update a dependency to the latest release.
+
+## 1.3.25
+
+ - Update a dependency to the latest release.
+
+## 1.3.24
+
+ - Update a dependency to the latest release.
+
+## 1.3.23
+
+ - Update a dependency to the latest release.
+
 ## 1.3.22
 
  - **FIX**(firestore,web): Propagate `FirebaseException` properly, fix `mergeFields` bug, fix `bytesLoaded` different type under different conditions ([#12334](https://github.com/firebase/flutterfire/issues/12334)). ([fdde75b0](https://github.com/firebase/flutterfire/commit/fdde75b02fe4bd4d40ce14798e7212eca7c8e557))

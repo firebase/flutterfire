@@ -8,14 +8,11 @@
 
 import 'dart:async';
 import 'dart:js_interop';
-
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
-import 'package:firebase_core_web/firebase_core_web_interop.dart'
-    hide jsify, dartify;
+import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'package:http_parser/http_parser.dart';
 
 import 'auth_interop.dart' as auth_interop;
-import 'utils/utils.dart';
 
 export 'auth_interop.dart';
 
@@ -23,10 +20,10 @@ export 'auth_interop.dart';
 Auth getAuthInstance(App app) {
   // Default persistence can be seen here
   // https://github.com/firebase/firebase-js-sdk/blob/master/packages/auth/src/platform_browser/index.ts#L47
-  final persistences = [
-    auth_interop.indexedDBLocalPersistence,
-    auth_interop.browserLocalPersistence,
-    auth_interop.browserSessionPersistence,
+  final List<JSAny?> persistences = [
+    auth_interop.indexedDBLocalPersistence as JSAny,
+    auth_interop.browserLocalPersistence as JSAny,
+    auth_interop.browserSessionPersistence as JSAny,
   ];
   return Auth.getInstance(
     auth_interop.initializeAuth(
@@ -129,7 +126,7 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   Future<String> getIdToken([bool forceRefresh = false]) => jsObject
       .getIdToken(forceRefresh.toJS)
       .toDart
-      .then((value) => value! as String);
+      .then((value) => (value! as JSString).toDart);
 
   /// Links the user account with the given credentials, and returns any
   /// available additional user information, such as user name.
@@ -273,7 +270,10 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   }
 
   /// Returns a JSON-serializable representation of this object.
-  Map<String, dynamic> toJson() => dartify(jsObject.toJSON());
+  Map<String, dynamic> toJson() {
+    final result = jsObject.toJSON();
+    return (result as JSAny).dartify()! as Map<String, dynamic>;
+  }
 
   @override
   String toString() => 'User: $uid';
@@ -300,7 +300,10 @@ class IdTokenResult extends JsObjectWrapper<auth_interop.IdTokenResultImpl> {
 
   /// The entire payload claims of the ID token including the standard reserved
   /// claims as well as the custom claims.
-  Map<String, dynamic>? get claims => dartify(jsObject.claims);
+  Map<String, dynamic>? get claims {
+    final claims = jsObject.claims.dartify();
+    return claims == null ? null : (claims as Map).cast<String, dynamic>();
+  }
 
   /// The ID token expiration time.
   DateTime get expirationTime => parseHttpDate(jsObject.expirationTime.toDart);
@@ -378,15 +381,20 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
         jsObject.onAuthStateChanged(nextWrapper.toJS, errorWrapper.toJS);
 
     await completer.future;
-
-    await (unsubscribe.dartify()! as Future<void> Function())();
+    unsubscribe.callAsFunction();
   }
 
   JSFunction? _onAuthUnsubscribe;
 
-  // TODO(rrousselGit): fix memory leak – the controller isn't closed even in onCancel
+  StreamController<User?>? get authStateController => _changeController;
+  StreamController<User?>? get idTokenController => _idTokenChangedController;
+
   // ignore: close_sinks
   StreamController<User?>? _changeController;
+
+  String get _authStateWindowsKey => 'flutterfire-${app.name}_authStateChanges';
+  String get _idTokenStateWindowsKey =>
+      'flutterfire-${app.name}_idTokenChanges';
 
   /// Sends events when the users sign-in state changes.
   ///
@@ -395,6 +403,8 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   ///
   /// If the value is `null`, there is no signed-in user.
   Stream<User?> get onAuthStateChanged {
+    unsubscribeWindowsListener(_authStateWindowsKey);
+
     if (_changeController == null) {
       final nextWrapper = (auth_interop.UserJsImpl? user) {
         _changeController!.add(User.getInstance(user));
@@ -404,13 +414,17 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
 
       void startListen() {
         assert(_onAuthUnsubscribe == null);
-        _onAuthUnsubscribe =
+        final unsubscribe =
             jsObject.onAuthStateChanged(nextWrapper.toJS, errorWrapper.toJS);
+        _onAuthUnsubscribe = unsubscribe;
+        setWindowsListener(_authStateWindowsKey, unsubscribe);
       }
 
       void stopListen() {
-        (_onAuthUnsubscribe!.dartify()! as Function)();
+        _onAuthUnsubscribe!.callAsFunction();
         _onAuthUnsubscribe = null;
+        _changeController = null;
+        removeWindowsListener(_authStateWindowsKey);
       }
 
       _changeController = StreamController<User?>.broadcast(
@@ -426,7 +440,6 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
 
   JSFunction? _onIdTokenChangedUnsubscribe;
 
-  // TODO(rrousselGit): fix memory leak – the controller isn't closed even in onCancel
   // ignore: close_sinks
   StreamController<User?>? _idTokenChangedController;
 
@@ -437,6 +450,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   ///
   /// If the value is `null`, there is no signed-in user.
   Stream<User?> get onIdTokenChanged {
+    unsubscribeWindowsListener(_idTokenStateWindowsKey);
     if (_idTokenChangedController == null) {
       final nextWrapper = (auth_interop.UserJsImpl? user) {
         _idTokenChangedController!.add(User.getInstance(user));
@@ -446,13 +460,17 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
 
       void startListen() {
         assert(_onIdTokenChangedUnsubscribe == null);
-        _onIdTokenChangedUnsubscribe =
+        final unsubscribe =
             jsObject.onIdTokenChanged(nextWrapper.toJS, errorWrapper.toJS);
+        _onIdTokenChangedUnsubscribe = unsubscribe;
+        setWindowsListener(_idTokenStateWindowsKey, unsubscribe);
       }
 
       void stopListen() {
-        (_onIdTokenChangedUnsubscribe!.dartify()! as Function)();
+        _onIdTokenChangedUnsubscribe!.callAsFunction();
         _onIdTokenChangedUnsubscribe = null;
+        _idTokenChangedController = null;
+        removeWindowsListener(_idTokenStateWindowsKey);
       }
 
       _idTokenChangedController = StreamController<User?>.broadcast(
@@ -522,7 +540,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   Future<List<String>> fetchSignInMethodsForEmail(String email) => auth_interop
       .fetchSignInMethodsForEmail(jsObject, email.toJS)
       .toDart
-      .then((value) => List<String>.from(value! as List<dynamic>));
+      .then((value) => List<String>.from((value! as JSArray).toDart));
 
   /// Checks if an incoming link is a sign-in with email link.
   bool isSignInWithEmailLink(String emailLink) =>
@@ -699,13 +717,21 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// For abuse prevention, this method also requires a [ApplicationVerifier].
   /// The Firebase Auth SDK includes a reCAPTCHA-based implementation, [RecaptchaVerifier].
   Future<ConfirmationResult> signInWithPhoneNumber(
-          String phoneNumber, ApplicationVerifier applicationVerifier) =>
-      auth_interop
-          .signInWithPhoneNumber(
-              jsObject, phoneNumber.toJS, applicationVerifier.jsObject)
-          .toDart
-          .then((value) => ConfirmationResult.fromJsObject(
-              value! as auth_interop.ConfirmationResultJsImpl));
+    String phoneNumber,
+    ApplicationVerifier applicationVerifier,
+  ) async {
+    final result = await auth_interop
+        .signInWithPhoneNumber(
+          jsObject,
+          phoneNumber.toJS,
+          applicationVerifier.jsObject,
+        )
+        .toDart;
+
+    return ConfirmationResult.fromJsObject(
+      result! as auth_interop.ConfirmationResultJsImpl,
+    );
+  }
 
   /// Signs in using a popup-based OAuth authentication flow with the
   /// given [provider].
@@ -741,7 +767,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   Future<String> verifyPasswordResetCode(String code) => auth_interop
       .verifyPasswordResetCode(jsObject, code.toJS)
       .toDart
-      .then((value) => value! as String);
+      .then((value) => (value! as JSString).toDart);
 }
 
 /// Represents an auth provider.
@@ -818,7 +844,7 @@ class FacebookAuthProvider
     Map<Object?, Object?> customOAuthParameters,
   ) {
     return FacebookAuthProvider.fromJsObject(
-      jsObject.setCustomParameters(jsify(customOAuthParameters)),
+      jsObject.setCustomParameters(customOAuthParameters.jsify()!),
     );
   }
 
@@ -860,7 +886,7 @@ class GithubAuthProvider
     Map<Object?, Object?> customOAuthParameters,
   ) {
     return GithubAuthProvider.fromJsObject(
-      jsObject.setCustomParameters(jsify(customOAuthParameters)),
+      jsObject.setCustomParameters(customOAuthParameters.jsify()!),
     );
   }
 
@@ -903,7 +929,7 @@ class GoogleAuthProvider
     Map<Object?, Object?> customOAuthParameters,
   ) {
     return GoogleAuthProvider.fromJsObject(
-      jsObject.setCustomParameters(jsify(customOAuthParameters)),
+      jsObject.setCustomParameters(customOAuthParameters.jsify()!),
     );
   }
 
@@ -940,7 +966,7 @@ class OAuthProvider extends AuthProvider<auth_interop.OAuthProviderJsImpl> {
     Map<Object?, Object?> customOAuthParameters,
   ) {
     return OAuthProvider.fromJsObject(
-      jsObject.setCustomParameters(jsify(customOAuthParameters)),
+      jsObject.setCustomParameters(customOAuthParameters.jsify()!),
     );
   }
 
@@ -982,7 +1008,7 @@ class TwitterAuthProvider
     Map<Object?, Object?> customOAuthParameters,
   ) {
     return TwitterAuthProvider.fromJsObject(
-      jsObject.setCustomParameters(jsify(customOAuthParameters)),
+      jsObject.setCustomParameters(customOAuthParameters.jsify()!),
     );
   }
 
@@ -1042,7 +1068,7 @@ class PhoneAuthProvider
       jsObject
           .verifyPhoneNumber(phoneOptions, applicationVerifier.jsObject)
           .toDart
-          .then((value) => value! as String);
+          .then((value) => (value! as JSString).toDart);
 
   /// Creates a phone auth credential given the verification ID
   /// from [verifyPhoneNumber] and the [verificationCode] that was sent to the
@@ -1069,7 +1095,7 @@ abstract class ApplicationVerifier<
   /// Returns a Future containing string for a token that can be used to
   /// assert the validity of a request.
   Future<String> verify() =>
-      jsObject.verify().toDart.then((value) => value! as String);
+      jsObject.verify().toDart.then((value) => (value! as JSString).toDart);
 }
 
 /// reCAPTCHA verifier.
@@ -1111,7 +1137,7 @@ class RecaptchaVerifier
       auth_interop.RecaptchaVerifierJsImpl(
         auth.jsObject,
         container,
-        jsify(parameters),
+        parameters.jsify(),
       ),
     );
   }
@@ -1125,8 +1151,8 @@ class RecaptchaVerifier
 
   /// Renders the reCAPTCHA widget on the page.
   /// Returns a Future that resolves with the reCAPTCHA widget ID.
-  Future<num> render() =>
-      jsObject.render().toDart.then((value) => value! as num);
+  Future<int> render() =>
+      jsObject.render().toDart.then((value) => (value! as JSNumber).toDartInt);
 }
 
 /// A result from a phone number sign-in, link, or reauthenticate call.
@@ -1185,8 +1211,9 @@ class AdditionalUserInfo
   String? get providerId => jsObject.providerId?.toDart;
 
   /// Returns the profile.
-  Map<String, dynamic>? get profile =>
-      jsObject.profile != null ? dartify(jsObject.profile!) : null;
+  Map<String, dynamic>? get profile => jsObject.profile != null
+      ? ((jsObject.profile!).dartify()! as Map).cast<String, dynamic>()
+      : null;
 
   /// Returns the user name.
   String? get username => jsObject.username?.toDart;

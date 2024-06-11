@@ -171,6 +171,123 @@ void main() {
         );
 
         test(
+          'should enroll and unenroll factor with signing out in the middle',
+          () async {
+            String email = generateRandomEmail();
+
+            String testPhoneNumber = '+441444555626';
+            User? user;
+            UserCredential userCredential;
+
+            userCredential =
+                await FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: email,
+              password: testPassword,
+            );
+            user = userCredential.user;
+
+            await user!.sendEmailVerification();
+            final oobCode = (await emulatorOutOfBandCode(
+              email,
+              EmulatorOobCodeType.verifyEmail,
+            ))!;
+
+            await emulatorVerifyEmail(
+              oobCode.oobCode!,
+            );
+
+            await FirebaseAuth.instance.signOut();
+
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
+              email: email,
+              password: testPassword,
+            );
+
+            final multiFactor = user.multiFactor;
+            final session = await multiFactor.getSession();
+
+            Future<String> getCredential() async {
+              Completer completer = Completer<String>();
+
+              unawaited(
+                FirebaseAuth.instance.verifyPhoneNumber(
+                  phoneNumber: testPhoneNumber,
+                  multiFactorSession: session,
+                  verificationCompleted: (PhoneAuthCredential credential) {
+                    if (!completer.isCompleted) {
+                      return completer.completeError(
+                        Exception(
+                          'verificationCompleted should not have been called',
+                        ),
+                      );
+                    }
+                  },
+                  verificationFailed: (FirebaseException e) {
+                    if (!completer.isCompleted) {
+                      return completer.completeError(
+                        Exception(
+                          'verificationFailed should not have been called',
+                        ),
+                      );
+                    }
+                  },
+                  codeSent: (String verificationId, int? resetToken) {
+                    completer.complete(verificationId);
+                  },
+                  codeAutoRetrievalTimeout: (String foo) {
+                    if (!completer.isCompleted) {
+                      return completer.completeError(
+                        Exception(
+                          'codeAutoRetrievalTimeout should not have been called',
+                        ),
+                      );
+                    }
+                  },
+                ),
+              );
+
+              return completer.future as FutureOr<String>;
+            }
+
+            final verificationId = await getCredential();
+
+            final smsCode = await emulatorPhoneVerificationCode(
+              testPhoneNumber,
+            );
+
+            final credential = PhoneAuthProvider.credential(
+              verificationId: verificationId,
+              smsCode: smsCode!,
+            );
+
+            expect(credential, isA<PhoneAuthCredential>());
+
+            await user.multiFactor.enroll(
+              PhoneMultiFactorGenerator.getAssertion(
+                credential,
+              ),
+              displayName: 'My phone number',
+            );
+
+            final enrolledFactors = await multiFactor.getEnrolledFactors();
+
+            // Assertions
+            expect(enrolledFactors.length, 1);
+            expect(enrolledFactors.first.displayName, 'My phone number');
+
+            await user.multiFactor.unenroll(
+              multiFactorInfo: enrolledFactors.first,
+            );
+
+            final enrolledFactorsAfter = await multiFactor.getEnrolledFactors();
+
+            // Assertions
+            expect(enrolledFactorsAfter.length, 0);
+          },
+          skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
+        );
+
+        test(
           'should enroll and throw if trying to unenroll an unknown factor',
           () async {
             final email = generateRandomEmail();

@@ -10,3 +10,7 @@
 @interface PigeonUserDetails (Map)
 - (NSDictionary *)toList;
 @end
+
+@interface PigeonUserInfo (Map)
+- (NSDictionary *)toList;
+@end

@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Parcel;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import com.google.firebase.messaging.RemoteMessage;
@@ -30,7 +31,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 /**
  * An background execution abstraction which handles initializing a background isolate running a
  * callback dispatcher, used to invoke Dart callbacks while backgrounded.
@@ -55,6 +55,10 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
    */
   public static void setCallbackDispatcher(long callbackHandle) {
     Context context = ContextHolder.getApplicationContext();
+    if (context == null) {
+      Log.e(TAG, "Context is null, cannot continue.");
+      return;
+    }
     SharedPreferences prefs =
         context.getSharedPreferences(FlutterFirebaseMessagingUtils.SHARED_PREFERENCES_KEY, 0);
     prefs.edit().putLong(CALLBACK_HANDLE_KEY, callbackHandle).apply();
@@ -139,14 +143,13 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
    *       handle does not resolve to a Dart callback then this method does nothing.
    * </ul>
    */
-  @SuppressWarnings("ConstantConditions")
   public void startBackgroundIsolate(long callbackHandle, FlutterShellArgs shellArgs) {
     if (backgroundFlutterEngine != null) {
       Log.e(TAG, "Background isolate already started.");
       return;
     }
 
-    FlutterLoader loader = new FlutterLoader();
+    FlutterLoader loader = FlutterInjector.instance().flutterLoader();
     Handler mainHandler = new Handler(Looper.getMainLooper());
     Runnable myRunnable =
         () -> {
@@ -177,17 +180,15 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
                   // lookup will fail.
                   FlutterCallbackInformation flutterCallback =
                       FlutterCallbackInformation.lookupCallbackInformation(callbackHandle);
+
+                  if (flutterCallback == null) {
+                    Log.e(TAG, "Failed to find registered callback");
+                    return;
+                  }
+
                   DartExecutor executor = backgroundFlutterEngine.getDartExecutor();
                   initializeMethodChannel(executor);
 
-                  if (appBundlePath == null) {
-                    // appBundlePath is possibly "null", this will allow us to fallback to the alternative lookup method.
-                    // See: https://github.com/firebase/flutterfire/issues/9345#issuecomment-1467601511
-                    Log.w(
-                        TAG,
-                        "startBackgroundIsolate: 'appBundlePath' was null, using alternative lookup method.");
-                    appBundlePath = FlutterInjector.instance().flutterLoader().findAppBundlePath();
-                  }
                   DartCallback dartCallback =
                       new DartCallback(assets, appBundlePath, flutterCallback);
 
@@ -237,29 +238,38 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
             }
           };
     }
+    // RemoteMessage is passed as byte array. Check it exists first
+    byte[] parcelBytes =
+        intent.getByteArrayExtra(FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE);
+    if (parcelBytes != null) {
+      Parcel parcel = Parcel.obtain();
+      try {
+        // This converts raw byte array into data and request this happens on the entire array
+        parcel.unmarshall(parcelBytes, 0, parcelBytes.length);
+        // Sets the starting position of the data which is 0 on array
+        parcel.setDataPosition(0);
 
-    // Handle the message event in Dart.
-    RemoteMessage remoteMessage;
-    // Using android >= 33 API causes sporadic crashes. See: https://github.com/firebase/flutterfire/issues/11142
-    // remoteMessage =
-    //          intent.getParcelableExtra(
-    //              FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE, RemoteMessage.class);
-    remoteMessage = intent.getParcelableExtra(FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE);
+        // Now recreate the RemoteMessage from the Parcel
+        RemoteMessage remoteMessage = RemoteMessage.CREATOR.createFromParcel(parcel);
+        Map<String, Object> remoteMessageMap =
+            FlutterFirebaseMessagingUtils.remoteMessageToMap(remoteMessage);
 
-    if (remoteMessage != null) {
-      Map<String, Object> remoteMessageMap =
-          FlutterFirebaseMessagingUtils.remoteMessageToMap(remoteMessage);
-      backgroundChannel.invokeMethod(
-          "MessagingBackground#onMessage",
-          new HashMap<String, Object>() {
-            {
-              put("userCallbackHandle", getUserCallbackHandle());
-              put("message", remoteMessageMap);
-            }
-          },
-          result);
+        backgroundChannel.invokeMethod(
+            "MessagingBackground#onMessage",
+            new HashMap<String, Object>() {
+              {
+                put("userCallbackHandle", getUserCallbackHandle());
+                put("message", remoteMessageMap);
+              }
+            },
+            result);
+
+      } finally {
+        // Recycle the Parcel when done
+        parcel.recycle();
+      }
     } else {
-      Log.e(TAG, "RemoteMessage instance not found in Intent.");
+      Log.e(TAG, "RemoteMessage byte array not found in Intent.");
     }
   }
 

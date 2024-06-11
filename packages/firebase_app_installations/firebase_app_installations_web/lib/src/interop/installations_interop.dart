@@ -5,28 +5,37 @@
 @JS('firebase_installations')
 library firebase_interop.installations;
 
+import 'dart:js_interop';
+
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
-import 'package:js/js.dart';
 
 @JS()
+@staticInterop
 external InstallationsJsImpl getInstallations([AppJsImpl? app]);
 
 @JS()
-external PromiseJsImpl<String> getId(InstallationsJsImpl installations);
+@staticInterop
+external JSPromise /* String */ getId(InstallationsJsImpl installations);
 
 @JS()
-external PromiseJsImpl<String> getToken(InstallationsJsImpl installations,
-    [bool? forceRefresh]);
+@staticInterop
+external JSPromise /* String */ getToken(InstallationsJsImpl installations,
+    [JSBoolean? forceRefresh]);
 
 @JS()
-external PromiseJsImpl<void> deleteInstallations(
+@staticInterop
+external JSPromise /* void */ deleteInstallations(
     InstallationsJsImpl installations);
 
 @JS()
-external Func0 onIdChange(
-    InstallationsJsImpl installations, Func1<String, void> forceRefresh);
+@staticInterop
+external JSFunction onIdChange(
+    InstallationsJsImpl installations, JSFunction forceRefresh);
 
 @JS('Installations')
-abstract class InstallationsJsImpl {
+@staticInterop
+abstract class InstallationsJsImpl {}
+
+extension InstallationsJsImplExtension on InstallationsJsImpl {
   external AppJsImpl get app;
 }

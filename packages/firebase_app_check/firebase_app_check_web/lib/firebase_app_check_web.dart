@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 import 'dart:async';
-import 'dart:html';
+import 'dart:js_interop';
 
 import 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -11,6 +11,7 @@ import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:web/web.dart' as web;
 
 import 'src/internals.dart';
 import 'src/interop/app_check.dart' as app_check_interop;
@@ -38,9 +39,9 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
       ensurePluginInitialized: (firebaseApp) async {
         final instance =
             FirebaseAppCheckWeb(app: Firebase.app(firebaseApp.name));
-        final recaptchaType =
-            window.sessionStorage[_sessionKeyRecaptchaType(firebaseApp.name)];
-        final recaptchaSiteKey = window
+        final recaptchaType = web
+            .window.sessionStorage[_sessionKeyRecaptchaType(firebaseApp.name)];
+        final recaptchaSiteKey = web.window
             .sessionStorage[_sessionKeyRecaptchaSiteKey(firebaseApp.name)];
         if (recaptchaType != null && recaptchaSiteKey != null) {
           final WebProvider provider;
@@ -110,8 +111,9 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
       } else {
         throw Exception('Invalid web provider: $webProvider');
       }
-      window.sessionStorage[_sessionKeyRecaptchaType(app.name)] = recaptchaType;
-      window.sessionStorage[_sessionKeyRecaptchaSiteKey(app.name)] =
+      web.window.sessionStorage[_sessionKeyRecaptchaType(app.name)] =
+          recaptchaType;
+      web.window.sessionStorage[_sessionKeyRecaptchaSiteKey(app.name)] =
           webProvider.siteKey;
     }
 
@@ -124,7 +126,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
             StreamController<String?>.broadcast();
 
         _delegate!.onTokenChanged().map((event) {
-          _tokenChangesListeners[app.name]!.add(event.token);
+          _tokenChangesListeners[app.name]!.add(event.token.toDart);
         });
       }
     });
@@ -135,7 +137,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
     return convertWebExceptions<Future<String?>>(() async {
       app_check_interop.AppCheckTokenResult result =
           await _delegate!.getToken(forceRefresh);
-      return result.token;
+      return result.token.toDart;
     });
   }
 
@@ -144,7 +146,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
     return convertWebExceptions<Future<String>>(() async {
       app_check_interop.AppCheckTokenResult result =
           await _delegate!.getLimitedUseToken();
-      return result.token;
+      return result.token.toDart;
     });
   }
 

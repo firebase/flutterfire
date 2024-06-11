@@ -1,3 +1,67 @@
+## 15.0.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**(messaging,android): use only one `FlutterLoader` instance ([#12845](https://github.com/firebase/flutterfire/issues/12845)). ([40966c78](https://github.com/firebase/flutterfire/commit/40966c786a29e8ffbd0eadf369a2822a2f09f51e))
+ - **FIX**(messaging,android): stop app from crashing when `DartCallback` or `Context` is `null` ([#12842](https://github.com/firebase/flutterfire/issues/12842)). ([1424757b](https://github.com/firebase/flutterfire/commit/1424757bd6cd2dfd3ccd436ab8511a9ba832049a))
+ - **DOCS**(messaging,web): update the documentation for how to load the service worker in Flutter 3.22 ([#12836](https://github.com/firebase/flutterfire/issues/12836)). ([9659749d](https://github.com/firebase/flutterfire/commit/9659749d2979a8f1c82c79dc485160aa8293583f))
+ - **BREAKING** **REFACTOR**: android plugins require `minSdk 21`, auth requires `minSdk 23` ahead of android BOM `>=33.0.0` ([#12873](https://github.com/firebase/flutterfire/issues/12873)). ([52accfc6](https://github.com/firebase/flutterfire/commit/52accfc6c39d6360d9c0f36efe369ede990b7362))
+ - **BREAKING** **REFACTOR**: bump all iOS deployment targets to iOS 13 ahead of Firebase iOS SDK `v11` breaking change ([#12872](https://github.com/firebase/flutterfire/issues/12872)). ([de0cea2c](https://github.com/firebase/flutterfire/commit/de0cea2c3c36694a76361be784255986fac84a43))
+
+## 14.9.4
+
+ - Update a dependency to the latest release.
+
+## 14.9.3
+
+ - **FIX**(messaging): ensure default app is available before checking auth notification ([#12810](https://github.com/firebase/flutterfire/issues/12810)). ([eca2df61](https://github.com/firebase/flutterfire/commit/eca2df615deaf1612ff027044cec3c0df3cf95c1))
+
+## 14.9.2
+
+ - **FIX**(messaging,apple): rename to `PrivacyInfo.xcprivacy` for privacy manifest ([#12752](https://github.com/firebase/flutterfire/issues/12752)). ([c5bdebc8](https://github.com/firebase/flutterfire/commit/c5bdebc89c64419e755f0b375108719785129716))
+ - **FIX**(messaging,android): remove deprecated instance ID (iid) dependency ([#12702](https://github.com/firebase/flutterfire/issues/12702)). ([7b2990b3](https://github.com/firebase/flutterfire/commit/7b2990b36197a2848f424aefb6603b5d9c87f73e))
+
+## 14.9.1
+
+ - Update a dependency to the latest release.
+
+## 14.9.0
+
+ - **FIX**(firebase_messaging,web): Define scope for 'firebase-messaging-sw.js' on registration ([#12639](https://github.com/firebase/flutterfire/issues/12639)). ([02c26b34](https://github.com/firebase/flutterfire/commit/02c26b34a2baa2f335770db648dd57055e92066d))
+ - **FEAT**(messaging,apple): provide privacy manifest for `NSUserDefaults` usage in plugin ([#12665](https://github.com/firebase/flutterfire/issues/12665)). ([933e343e](https://github.com/firebase/flutterfire/commit/933e343e6457f8d4e5fd1b8237d631fd69850076))
+
+## 14.8.2
+
+ - **FIX**(messaging,android): Replace deprecated AsyncTask API and other deprecated API ([#12580](https://github.com/firebase/flutterfire/issues/12580)). ([ac089e56](https://github.com/firebase/flutterfire/commit/ac089e5653715744892b6fe298d1814f81160970))
+
+## 14.8.1
+
+ - Update a dependency to the latest release.
+
+## 14.8.0
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
+## 14.7.21
+
+ - Update a dependency to the latest release.
+
+## 14.7.20
+
+ - Update a dependency to the latest release.
+
+## 14.7.19
+
+ - Update a dependency to the latest release.
+
+## 14.7.18
+
+ - Update a dependency to the latest release.
+
+## 14.7.17
+
+ - **FIX**(messaging,android): revert changes made to potential fix as it was causing ANR reports for users ([#12396](https://github.com/firebase/flutterfire/issues/12396)). ([07ef4879](https://github.com/firebase/flutterfire/commit/07ef487971edb23a670d2b1dd315c02542b1c848))
+
 ## 14.7.16
 
  - Update a dependency to the latest release.

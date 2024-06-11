@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:math';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -149,6 +150,22 @@ void setupDatabaseReferenceTests() {
         var value = transactionResult.snapshot.value as dynamic;
         expect(value, isNotNull);
         expect(value['list'], data);
+      });
+
+      test('Exception handling', () async {
+        final FirebaseDatabase database = FirebaseDatabase.instance;
+        final DatabaseReference ref = database.ref('permission-denied');
+        final Completer<FirebaseException> errorReceived =
+        Completer<FirebaseException>();
+        await ref.runTransaction((value) => Transaction.success(1)).then((result) {
+          // No-op
+        }).catchError((e){
+          errorReceived.complete(e as FirebaseException);
+        });
+
+        final streamError = await errorReceived.future;
+        expect(streamError, isA<FirebaseException>());
+        expect(streamError.code, 'permission-denied');
       });
 
       test('Server.increment', () async {

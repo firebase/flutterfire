@@ -7,15 +7,15 @@
 
 import 'dart:async';
 import 'dart:js_interop';
-import 'dart:typed_data';
+import 'dart:js_interop_unsafe';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
     as platform_interface;
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/src/utils/encode_utility.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_core_web/firebase_core_web_interop.dart'
-    hide jsify, dartify;
+import 'package:firebase_core_web/firebase_core_web_interop.dart';
+import 'package:flutter/foundation.dart';
 
 import 'firestore_interop.dart' as firestore_interop;
 import 'utils/utils.dart';
@@ -31,13 +31,31 @@ Firestore getFirestoreInstance([
   String database = databaseURL ?? '(default)';
 
   if (app != null && settings != null) {
-    return Firestore.getInstance(firestore_interop.initializeFirestore(
-        app.jsObject, settings, database.toJS));
+    try {
+      return Firestore.getInstance(firestore_interop.initializeFirestore(
+          app.jsObject, settings, database.toJS));
+    } catch (e) {
+      if (kDebugMode) {
+        // Fallback to initialize without settings, happens during hot restart
+        return Firestore.getInstance(
+            firestore_interop.getFirestore(app.jsObject, database.toJS));
+      }
+      rethrow;
+    }
   }
 
   return Firestore.getInstance(app != null
       ? firestore_interop.getFirestore(app.jsObject, database.toJS)
       : firestore_interop.getFirestore());
+}
+
+JSString convertListenSource(ListenSource source) {
+  switch (source) {
+    case ListenSource.defaultSource:
+      return 'default'.toJS;
+    case ListenSource.cache:
+      return 'cache'.toJS;
+  }
 }
 
 /// The Cloud Firestore service interface.
@@ -82,7 +100,11 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
         firestore_interop.enableIndexedDbPersistence(jsObject).toDart;
   }
 
+  String get _snapshotInSyncWindowsKey =>
+      'flutterfire-${app.name}_snapshotInSync';
+
   Stream<void> snapshotsInSync() {
+    unsubscribeWindowsListener(_snapshotInSyncWindowsKey);
     late StreamController<void> controller;
     late JSFunction onSnapshotsInSyncUnsubscribe;
     var nextWrapper = ((JSObject? noValue) {
@@ -92,11 +114,16 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
     void startListen() {
       onSnapshotsInSyncUnsubscribe =
           firestore_interop.onSnapshotsInSync(jsObject, nextWrapper);
+      setWindowsListener(
+        _snapshotInSyncWindowsKey,
+        onSnapshotsInSyncUnsubscribe,
+      );
     }
 
     void stopListen() {
       onSnapshotsInSyncUnsubscribe.callAsFunction();
       controller.close();
+      removeWindowsListener(_snapshotInSyncWindowsKey);
     }
 
     controller = StreamController<void>.broadcast(
@@ -239,10 +266,14 @@ class LoadBundleTaskProgress
   LoadBundleTaskProgress._fromJsObject(
     firestore_interop.LoadBundleTaskProgressJsImpl jsObject,
   )   : taskState = convertToTaskState(jsObject.taskState.toDart.toLowerCase()),
+        // Cannot be done with Dart 3.2 constraints
+        // ignore: invalid_runtime_check_with_js_interop_types
         bytesLoaded = jsObject.bytesLoaded is JSNumber
             ? (jsObject.bytesLoaded as JSNumber).toDartInt
             : int.parse((jsObject.bytesLoaded as JSString).toDart),
         documentsLoaded = jsObject.documentsLoaded.toDartInt,
+        // Cannot be done with Dart 3.2 constraints
+        // ignore: invalid_runtime_check_with_js_interop_types
         totalBytes = jsObject.totalBytes is JSNumber
             ? (jsObject.totalBytes as JSNumber).toDartInt
             : int.parse((jsObject.totalBytes as JSString).toDart),
@@ -266,8 +297,7 @@ class LoadBundleTaskProgress
   final int totalDocuments;
 }
 
-class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl>
-    with _Updatable {
+class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl> {
   static final _expando = Expando<WriteBatch>();
 
   /// Creates a new WriteBatch from a [jsObject].
@@ -293,12 +323,12 @@ class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl>
 
   WriteBatch update(DocumentReference documentRef, Map<String, dynamic> data) =>
       WriteBatch.getInstance(
-          _wrapUpdateFunctionCall(jsObject, data, documentRef));
+        jsObject.update(documentRef.jsObject, jsify(data)! as JSObject),
+      );
 }
 
 class DocumentReference
-    extends JsObjectWrapper<firestore_interop.DocumentReferenceJsImpl>
-    with _Updatable {
+    extends JsObjectWrapper<firestore_interop.DocumentReferenceJsImpl> {
   static final _expando = Expando<DocumentReference>();
 
   /// Non-null [Firestore] the document is in.
@@ -343,21 +373,27 @@ class DocumentReference
         (result)! as firestore_interop.DocumentSnapshotJsImpl);
   }
 
-  /// Attaches a listener for [DocumentSnapshot] events.
-  Stream<DocumentSnapshot> get onSnapshot => _createSnapshotStream().stream;
+  String get _documentSnapshotWindowsKey =>
+      'flutterfire-${firestore.app.name}_${path}_documentSnapshot';
 
-  Stream<DocumentSnapshot> get onMetadataChangesSnapshot {
-    return _createSnapshotStream(
-      firestore_interop.DocumentListenOptions(
-          includeMetadataChanges: true.toJS),
-    ).stream;
-  }
+  /// Attaches a listener for [DocumentSnapshot] events.
+  Stream<DocumentSnapshot> onSnapshot({
+    bool includeMetadataChanges = false,
+    ListenSource source = ListenSource.defaultSource,
+  }) =>
+      _createSnapshotStream(
+        firestore_interop.DocumentListenOptions(
+          includeMetadataChanges: includeMetadataChanges.toJS,
+          source: convertListenSource(source),
+        ),
+      ).stream;
 
   StreamController<DocumentSnapshot> _createSnapshotStream([
     firestore_interop.DocumentListenOptions? options,
   ]) {
+    unsubscribeWindowsListener(_documentSnapshotWindowsKey);
     late JSFunction onSnapshotUnsubscribe;
-    // ignore: close_sinks, the controler is returned
+    // ignore: close_sinks, the controller is returned
     late StreamController<DocumentSnapshot> controller;
 
     final nextWrapper = ((firestore_interop.DocumentSnapshotJsImpl snapshot) {
@@ -372,10 +408,12 @@ class DocumentReference
               jsObject as JSObject, options as JSAny, nextWrapper, errorWrapper)
           : firestore_interop.onSnapshot(
               jsObject as JSObject, nextWrapper, errorWrapper);
+      setWindowsListener(_documentSnapshotWindowsKey, onSnapshotUnsubscribe);
     }
 
     void stopListen() {
       onSnapshotUnsubscribe.callAsFunction();
+      removeWindowsListener(_documentSnapshotWindowsKey);
     }
 
     return controller = StreamController<DocumentSnapshot>.broadcast(
@@ -386,24 +424,25 @@ class DocumentReference
   }
 
   Future<void> set(Map<String, dynamic> data,
-      [firestore_interop.SetOptions? options]) {
-    var jsObjectSet = (options != null)
-        ? firestore_interop.setDoc(jsObject, jsify(data)! as JSObject, options)
-        : firestore_interop.setDoc(jsObject, jsify(data)! as JSObject);
-
-    return jsObjectSet.toDart;
+      [firestore_interop.SetOptions? options]) async {
+    if (options != null) {
+      await firestore_interop.setDoc(jsObject, jsify(data), options).toDart;
+      return;
+    }
+    await firestore_interop.setDoc(jsObject, jsify(data)).toDart;
   }
 
-  Future<void> update(Map<firestore_interop.FieldPath, dynamic> data) {
-    final alternatingFieldValues = data.keys
+  Future<void> update(Map<firestore_interop.FieldPath, dynamic> data) async {
+    final List<JSAny?> alternatingFieldValues = data.keys
         .map((e) => [jsify(e), jsify(data[e])])
         .expand((e) => e)
         .toList();
 
-    return handleThenable(callMethod(firestore_interop.updateDoc, 'apply', [
+    await firestore_interop.updateDoc
+        .callMethodVarArgs<JSPromise>('apply'.toJS, [
       null,
-      [jsObject, ...alternatingFieldValues]
-    ]));
+      [jsObject, ...alternatingFieldValues].jsify()
+    ]).toDart;
   }
 }
 
@@ -447,15 +486,26 @@ class Query<T extends firestore_interop.QueryJsImpl>
   Query limitToLast(num limit) => Query.fromJsObject(firestore_interop.query(
       jsObject, firestore_interop.limitToLast(limit.toJS)));
 
-  late final Stream<QuerySnapshot> onSnapshot =
-      _createSnapshotStream(false).stream;
+  String _querySnapshotWindowsKey(hashCode) =>
+      'flutterfire-${firestore.app.name}_${hashCode}_querySnapshot';
 
-  late final Stream<QuerySnapshot> onSnapshotMetadata =
-      _createSnapshotStream(true).stream;
+  Stream<QuerySnapshot> onSnapshot(
+          {bool includeMetadataChanges = false,
+          ListenSource source = ListenSource.defaultSource,
+          required int hashCode}) =>
+      _createSnapshotStream(
+        firestore_interop.DocumentListenOptions(
+          includeMetadataChanges: includeMetadataChanges.toJS,
+          source: convertListenSource(source),
+        ),
+        hashCode,
+      ).stream;
 
   StreamController<QuerySnapshot> _createSnapshotStream(
-    bool includeMetadataChanges,
+    firestore_interop.DocumentListenOptions options,
+    int hashCode,
   ) {
+    unsubscribeWindowsListener(_querySnapshotWindowsKey(hashCode));
     late JSFunction onSnapshotUnsubscribe;
     // ignore: close_sinks, the controller is returned
     late StreamController<QuerySnapshot> controller;
@@ -464,16 +514,17 @@ class Query<T extends firestore_interop.QueryJsImpl>
       controller.add(QuerySnapshot._fromJsObject(snapshot));
     }).toJS;
     final errorWrapper = ((JSError e) => controller.addError(e)).toJS;
-    final options = firestore_interop.SnapshotListenOptions(
-        includeMetadataChanges: includeMetadataChanges.toJS);
 
     void startListen() {
       onSnapshotUnsubscribe = firestore_interop.onSnapshot(
           jsObject as JSObject, options as JSObject, nextWrapper, errorWrapper);
+      setWindowsListener(
+          _querySnapshotWindowsKey(hashCode), onSnapshotUnsubscribe);
     }
 
     void stopListen() {
       onSnapshotUnsubscribe.callAsFunction();
+      removeWindowsListener(_querySnapshotWindowsKey(hashCode));
     }
 
     return controller = StreamController<QuerySnapshot>.broadcast(
@@ -494,16 +545,28 @@ class Query<T extends firestore_interop.QueryJsImpl>
   }
 
   Query startAfter({DocumentSnapshot? snapshot, List<dynamic>? fieldValues}) =>
-      Query.fromJsObject(firestore_interop.query(
+      Query.fromJsObject(
+        firestore_interop.query(
           jsObject,
           _createQueryConstraint(
-              firestore_interop.startAfter, snapshot, fieldValues)));
+            firestore_interop.startAfter,
+            snapshot,
+            fieldValues,
+          ),
+        ),
+      );
 
   Query startAt({DocumentSnapshot? snapshot, List<dynamic>? fieldValues}) =>
-      Query.fromJsObject(firestore_interop.query(
+      Query.fromJsObject(
+        firestore_interop.query(
           jsObject,
           _createQueryConstraint(
-              firestore_interop.startAt, snapshot, fieldValues)));
+            firestore_interop.startAt,
+            snapshot,
+            fieldValues,
+          ),
+        ),
+      );
 
   Query where(dynamic fieldPath, String opStr, dynamic value) =>
       Query.fromJsObject(
@@ -521,18 +584,24 @@ class Query<T extends firestore_interop.QueryJsImpl>
   /// [fieldValues].
   /// We need to call this method in all paginating methods to fix that Dart
   /// doesn't support varargs - we need to use [List] to call js function.
-  S? _createQueryConstraint<S>(
+  firestore_interop.QueryConstraintJsImpl _createQueryConstraint<S>(
       Object method, DocumentSnapshot? snapshot, List<dynamic>? fieldValues) {
     if (snapshot == null && fieldValues == null) {
       throw ArgumentError(
           'Please provide either snapshot or fieldValues parameter.');
     }
 
-    var args = (snapshot != null)
+    final args = (snapshot != null)
         ? [snapshot.jsObject]
         : fieldValues!.map(jsify).toList();
 
-    return callMethod(method, 'apply', [null, jsify(args)]);
+    return (method as JSObject).callMethodVarArgs<JSAny>(
+      'apply'.toJS,
+      [
+        null,
+        jsify(args).jsify(),
+      ],
+    ) as firestore_interop.QueryConstraintJsImpl;
   }
 
   Object _parseFilterWith(Map<String, Object?> map) {
@@ -557,9 +626,21 @@ class Query<T extends firestore_interop.QueryJsImpl>
     }
 
     if (opStr == 'OR') {
-      return callMethod(firestore_interop.or, 'apply', [null, jsFilters]);
+      return firestore_interop.or.callMethodVarArgs<JSAny>(
+        'apply'.toJS,
+        [
+          null,
+          jsFilters.jsify(),
+        ],
+      );
     } else if (opStr == 'AND') {
-      return callMethod(firestore_interop.and, 'apply', [null, jsFilters]);
+      return firestore_interop.and.callMethodVarArgs<JSAny>(
+        'apply'.toJS,
+        [
+          null,
+          jsFilters.jsify(),
+        ],
+      );
     }
 
     throw Exception('InvalidOperator');
@@ -738,8 +819,7 @@ class QuerySnapshot
       .toDart;
 }
 
-class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl>
-    with _Updatable {
+class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl> {
   static final _expando = Expando<Transaction>();
 
   /// Creates a new Transaction from a [jsObject].
@@ -770,24 +850,8 @@ class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl>
   Transaction update(
           DocumentReference documentRef, Map<String, dynamic> data) =>
       Transaction.getInstance(
-          _wrapUpdateFunctionCall(jsObject, data, documentRef));
-}
-
-/// Mixin class for all classes with the [update()] method. We need to call
-/// [_wrapUpdateFunctionCall()] in all [update()] methods to fix that Dart
-/// doesn't support varargs - we need to use [List] to call js function.
-mixin _Updatable {
-  /// Calls js [:update():] method on [jsObject] with [data] or list of
-  /// [fieldsAndValues] and optionally [documentRef].
-  T? _wrapUpdateFunctionCall<T>(jsObject, Map<String, dynamic> data,
-      [DocumentReference? documentRef]) {
-    var args = [jsify(data)];
-    // documentRef has to be the first parameter in list of args
-    if (documentRef != null) {
-      args.insert(0, documentRef.jsObject as JSObject);
-    }
-    return callMethod(jsObject, 'update', args);
-  }
+        jsObject.update(documentRef.jsObject, jsify(data)!),
+      );
 }
 
 class _FieldValueDelete implements FieldValue {
@@ -817,9 +881,13 @@ class _FieldValueArrayUnion extends _FieldValueArray {
 
   @override
   firestore_interop.FieldValue? _jsify() {
-    // This uses var arg so cannot use js package
-    return callMethod(
-        firestore_interop.arrayUnion, 'apply', [null, jsify(elements)]);
+    return firestore_interop.arrayUnion.callMethodVarArgs<JSAny>(
+      'apply'.toJS,
+      [
+        null,
+        jsify(elements),
+      ],
+    ) as firestore_interop.FieldValue;
   }
 
   @override
@@ -831,9 +899,13 @@ class _FieldValueArrayRemove extends _FieldValueArray {
 
   @override
   firestore_interop.FieldValue? _jsify() {
-    // This uses var arg so cannot use js package
-    return callMethod(
-        firestore_interop.arrayRemove, 'apply', [null, jsify(elements)]);
+    return firestore_interop.arrayRemove.callMethodVarArgs<JSAny>(
+      'apply'.toJS,
+      [
+        null,
+        jsify(elements),
+      ],
+    ) as firestore_interop.FieldValue;
   }
 
   @override
@@ -942,14 +1014,14 @@ class AggregateQuerySnapshot
       : _data = Map.from(dartify(jsObject.data())),
         super.fromJsObject(jsObject);
 
-  int? get count => _data['count'] as int?;
+  int? get count => (_data['count'] as num?)?.toInt();
 
   double? getDataValue(platform_interface.AggregateQuery query) {
     final value = _data[AggregateQuery.name(query)];
     if (value == null) {
       return null;
     } else {
-      return value as double;
+      return (value as num).toDouble();
     }
   }
 }

@@ -20,15 +20,15 @@ external AuthJsImpl getAuth([AppJsImpl? app]);
 @JS()
 external AuthJsImpl initializeAuth(AppJsImpl app, AuthOptions authOptions);
 
-extension type AuthOptions._(JSObject o) implements JSObject {
-  external AuthOptions({
-    JSObject errorMap,
+@anonymous
+@JS()
+@staticInterop
+abstract class AuthOptions {
+  external factory AuthOptions({
+    JSObject? errorMap,
     JSArray? persistence,
     JSObject? popupRedirectResolver,
   });
-  external JSObject? get errorMap;
-  external JSArray? get persistence;
-  external JSObject? get popupRedirectResolver;
 }
 
 @JS('debugErrorMap')
@@ -359,7 +359,10 @@ extension UserJsImplExtension on UserJsImpl {
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.Auth#.Persistence>
 @JS('Persistence')
-extension type Persistence._(JSObject _) implements JSObject {
+@staticInterop
+class Persistence {}
+
+extension PersistenceExtension on Persistence {
   external JSString get type;
 }
 
@@ -515,6 +518,8 @@ class OAuthProviderJsImpl extends AuthProviderJsImpl {
   external static OAuthCredential? credentialFromResult(
     UserCredentialJsImpl userCredential,
   );
+
+  external static OAuthCredential? credentialFromError(JSError error);
 }
 
 extension OAuthProviderJsImplExtension on OAuthProviderJsImpl {
@@ -584,7 +589,7 @@ class RecaptchaVerifierJsImpl extends ApplicationVerifierJsImpl {
   external factory RecaptchaVerifierJsImpl(
     AuthJsImpl authExtern,
     JSAny containerOrId,
-    JSObject parameters,
+    JSAny? parameters,
   );
 }
 

@@ -1,3 +1,59 @@
+## 3.9.8
+
+ - Update a dependency to the latest release.
+
+## 3.9.7
+
+ - **FIX**(storage): do not set metadata property unless it has a value ([#12805](https://github.com/firebase/flutterfire/issues/12805)). ([978a87db](https://github.com/firebase/flutterfire/commit/978a87db70218d63abbf0c6bf22e9d00633b5d83))
+
+## 3.9.6
+
+ - Update a dependency to the latest release.
+
+## 3.9.5
+
+ - Update a dependency to the latest release.
+
+## 3.9.4
+
+ - Update a dependency to the latest release.
+
+## 3.9.3
+
+ - Update a dependency to the latest release.
+
+## 3.9.2
+
+ - Update a dependency to the latest release.
+
+## 3.9.1
+
+ - **FIX**(web): fix typing conversion for Maps ([#12615](https://github.com/firebase/flutterfire/issues/12615)). ([2cc16189](https://github.com/firebase/flutterfire/commit/2cc161898573736216dbf6cba25c4951e571fa13))
+
+## 3.9.0
+
+ - **FEAT**(web): remove the dependency on `package:js` in favor of `dart:js_interop` ([#12534](https://github.com/firebase/flutterfire/issues/12534)). ([d83f6327](https://github.com/firebase/flutterfire/commit/d83f632753707c974fef2ac8a7f9bf6cb8ba8758))
+
+## 3.8.1
+
+ - Update a dependency to the latest release.
+
+## 3.8.0
+
+ - **FEAT**: update `web` package to 0.5.1 ([#12469](https://github.com/firebase/flutterfire/issues/12469)). ([f5c4354a](https://github.com/firebase/flutterfire/commit/f5c4354a66377da9d231c5e3fc7e955ddb7ef8cf))
+
+## 3.7.3
+
+ - Update a dependency to the latest release.
+
+## 3.7.2
+
+ - Update a dependency to the latest release.
+
+## 3.7.1
+
+ - Update a dependency to the latest release.
+
 ## 3.7.0
 
  - **FIX**(storage,web): fixed web stream handlers, e2e web tests, incorrect NativeError being thrown instead of FirebaseException on web ([#12319](https://github.com/firebase/flutterfire/issues/12319)). ([d32b5a93](https://github.com/firebase/flutterfire/commit/d32b5a936cfb05fbeeff199248474c23af293a3c))

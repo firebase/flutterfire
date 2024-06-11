@@ -25,6 +25,7 @@ class MethodChannelUser extends UserPlatform {
     return AuthPigeonFirebaseApp(
       appName: auth.app.name,
       tenantId: auth.tenantId,
+      customAuthDomain: auth.customAuthDomain,
     );
   }
 

@@ -94,29 +94,64 @@ class QueryWeb extends QueryPlatform {
       QueryModifiers modifiers, DatabaseEventType eventType) {
     database_interop.Query instance = _getQueryDelegateInstance(modifiers);
 
+    int hashCode = 0;
+    final appName =
+        _database.app != null ? _database.app!.name : Firebase.app().name;
+    if (kDebugMode) {
+      // Purely for unsubscribing purposes in debug mode on "hot restart"
+      // if not running in debug mode, hashCode won't be used
+      hashCode = Object.hashAll([
+        appName,
+        path,
+        ...modifiers
+            .toList()
+            .map((e) => const DeepCollectionEquality().hash(e))
+            .toList(),
+        eventType.index,
+      ]);
+    }
+
     switch (eventType) {
       case DatabaseEventType.childAdded:
         return _webStreamToPlatformStream(
           eventType,
-          instance.onChildAdded,
+          instance.onChildAdded(
+            appName,
+            hashCode,
+          ),
         );
       case DatabaseEventType.childChanged:
         return _webStreamToPlatformStream(
           eventType,
-          instance.onChildChanged,
+          instance.onChildChanged(
+            appName,
+            hashCode,
+          ),
         );
       case DatabaseEventType.childMoved:
         return _webStreamToPlatformStream(
           eventType,
-          instance.onChildMoved,
+          instance.onChildMoved(
+            appName,
+            hashCode,
+          ),
         );
       case DatabaseEventType.childRemoved:
         return _webStreamToPlatformStream(
           eventType,
-          instance.onChildRemoved,
+          instance.onChildRemoved(
+            appName,
+            hashCode,
+          ),
         );
       case DatabaseEventType.value:
-        return _webStreamToPlatformStream(eventType, instance.onValue);
+        return _webStreamToPlatformStream(
+          eventType,
+          instance.onValue(
+            appName,
+            hashCode,
+          ),
+        );
       default:
         throw Exception("Invalid event type: $eventType");
     }
@@ -126,16 +161,12 @@ class QueryWeb extends QueryPlatform {
     DatabaseEventType eventType,
     Stream<database_interop.QueryEvent> stream,
   ) {
-    return stream
-        .map(
+    return stream.map(
       (database_interop.QueryEvent event) => webEventToPlatformEvent(
         ref,
         eventType,
         event,
       ),
-    )
-        .handleError((e, s) {
-      throw convertFirebaseDatabaseException(e, s);
-    });
+    );
   }
 }

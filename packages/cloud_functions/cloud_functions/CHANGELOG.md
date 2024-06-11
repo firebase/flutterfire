@@ -1,3 +1,58 @@
+## 5.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: android plugins require `minSdk 21`, auth requires `minSdk 23` ahead of android BOM `>=33.0.0` ([#12873](https://github.com/firebase/flutterfire/issues/12873)). ([52accfc6](https://github.com/firebase/flutterfire/commit/52accfc6c39d6360d9c0f36efe369ede990b7362))
+ - **BREAKING** **REFACTOR**: bump all iOS deployment targets to iOS 13 ahead of Firebase iOS SDK `v11` breaking change ([#12872](https://github.com/firebase/flutterfire/issues/12872)). ([de0cea2c](https://github.com/firebase/flutterfire/commit/de0cea2c3c36694a76361be784255986fac84a43))
+
+## 4.7.6
+
+ - Update a dependency to the latest release.
+
+## 4.7.5
+
+ - Update a dependency to the latest release.
+
+## 4.7.4
+
+ - Update a dependency to the latest release.
+
+## 4.7.3
+
+ - Update a dependency to the latest release.
+
+## 4.7.2
+
+ - Update a dependency to the latest release.
+
+## 4.7.1
+
+ - Update a dependency to the latest release.
+
+## 4.7.0
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
+## 4.6.10
+
+ - Update a dependency to the latest release.
+
+## 4.6.9
+
+ - Update a dependency to the latest release.
+
+## 4.6.8
+
+ - Update a dependency to the latest release.
+
+## 4.6.7
+
+ - Update a dependency to the latest release.
+
+## 4.6.6
+
+ - Update a dependency to the latest release.
+
 ## 4.6.5
 
  - Update a dependency to the latest release.

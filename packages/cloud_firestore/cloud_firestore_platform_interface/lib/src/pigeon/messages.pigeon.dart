@@ -46,6 +46,22 @@ enum Source {
   cache,
 }
 
+/// The listener retrieves data and listens to updates from the local Firestore cache only.
+/// If the cache is empty, an empty snapshot will be returned.
+/// Snapshot events will be triggered on cache updates, like local mutations or load bundles.
+///
+/// Note that the data might be stale if the cache hasn't synchronized with recent server-side changes.
+enum ListenSource {
+  /// The default behavior. The listener attempts to return initial snapshot from cache and retrieve up-to-date snapshots from the Firestore server.
+  /// Snapshot events will be triggered on local mutations and server side updates.
+  defaultSource,
+
+  /// The listener retrieves data and listens to updates from the local Firestore cache only.
+  /// If the cache is empty, an empty snapshot will be returned.
+  /// Snapshot events will be triggered on cache updates, like local mutations or load bundles.
+  cache,
+}
+
 enum ServerTimestampBehavior {
   /// Return null for [FieldValue.serverTimestamp()] values that have not yet
   none,
@@ -1218,6 +1234,7 @@ class FirebaseFirestoreHostApi {
     PigeonQueryParameters arg_parameters,
     PigeonGetOptions arg_options,
     bool arg_includeMetadataChanges,
+    ListenSource arg_source,
   ) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
       'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot',
@@ -1231,6 +1248,7 @@ class FirebaseFirestoreHostApi {
       arg_parameters,
       arg_options,
       arg_includeMetadataChanges,
+      arg_source.index,
     ]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
@@ -1257,15 +1275,19 @@ class FirebaseFirestoreHostApi {
     FirestorePigeonFirebaseApp arg_app,
     DocumentReferenceRequest arg_parameters,
     bool arg_includeMetadataChanges,
+    ListenSource arg_source,
   ) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
       'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot',
       codec,
       binaryMessenger: _binaryMessenger,
     );
-    final List<Object?>? replyList = await channel.send(
-      <Object?>[arg_app, arg_parameters, arg_includeMetadataChanges],
-    ) as List<Object?>?;
+    final List<Object?>? replyList = await channel.send(<Object?>[
+      arg_app,
+      arg_parameters,
+      arg_includeMetadataChanges,
+      arg_source.index,
+    ]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',

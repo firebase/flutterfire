@@ -15,6 +15,10 @@ command:
     # branch: master
     # Additionally build a changelog at the root of the workspace.
     workspaceChangelog: true
+    hooks:
+      preCommit: |
+        dart run scripts/generate_vertexai_version.dart && \
+        git add packages/firebase_vertexai/firebase_vertexai/lib/src/vertex_version.dart
 
   bootstrap:
     # It seems so that running "pub get" in parallel has some issues (like
@@ -25,10 +29,10 @@ command:
 
 scripts:
   lint:all:
-    run: melos run analyze && melos run format
+    run: melos run analyze-ci && melos run format-ci
     description: Run all static analysis checks.
 
-  analyze:
+  analyze-ci:
     # We are setting the concurrency to 1 because a higher concurrency can crash
     # the analysis server on low performance machines (like GitHub Actions).
     run: |
@@ -46,7 +50,7 @@ scripts:
       integration testing.
        - Requires Node.js and NPM installed.
 
-  format:
+  format-ci:
     run: |
       dart pub global run flutter_plugin_tools format && \
       swiftformat .
@@ -133,7 +137,6 @@ scripts:
         - test
       ignore:
         - '*web*'
-        - '*odm*'
         - '*example*'
 
   test:web:
@@ -200,6 +203,17 @@ scripts:
     run: git clean -x -d -f -q
     description: Clean things very deeply, can be used to establish "pristine checkout" status.
 
+  test:e2e:windows:
+    run: |
+      melos exec -c 1 --fail-fast -- \
+        "flutter test integration_test/e2e_test.dart -d windows"
+    description: |
+      Run all e2e tests.
+    packageFilters:
+      dirExists:
+        - integration_test
+      scope: '*tests*'
+
   qualitycheck:
     run: |
       melos run clean:deep && \
@@ -234,57 +248,6 @@ scripts:
     packageFilters:
       dirExists: 'android'
     description: Transform the method toList() into a public one to be used in EventChannel
-
-  odm:test:
-    run: |
-      melos run odm:test:dart &&
-      melos run odm:test:flutter
-    description: Run all tests for the ODM.
-
-  odm:test:dart:
-    run: |
-      melos exec -- \
-        "dart test"
-    description: Run Dart tests for the ODM.
-    packageFilters:
-      dirExists: 'test'
-      dependsOn: 'test'
-      scope: '*odm*'
-
-  odm:test:flutter:
-    run: |
-      melos exec -- \
-        "flutter test"
-    description: Run Flutter tests for the ODM.
-    packageFilters:
-      dirExists: 'test'
-      noDependsOn: 'test'
-      scope: '*odm*'
-
-  odm:example_build_runner:build:
-    run: |
-      melos exec -- \
-        "flutter pub run build_runner build --delete-conflicting-outputs"
-    description: Run a build_runner build in the ODM example app.
-    packageFilters:
-      scope: '*odm_example*'
-
-  odm:generator_test_build_runner:build:
-    run: |
-      melos exec -c 1 -- \
-        "dart pub get && flutter pub run build_runner build --delete-conflicting-outputs"
-    description: Run a build_runner build generator test.
-    packageFilters:
-      scope:
-        - '*odm_generator_integration*'
-
-  odm:example_build_runner:watch:
-    run: |
-      melos exec -c 5 -- \
-        "flutter pub run build_runner watch --delete-conflicting-outputs"
-    description: Run build_runner watch in the ODM example app.
-    packageFilters:
-      scope: '*odm_example*'
 
   # Additional cleanup lifecycle script, executed when `melos clean` is run.
   postclean: >
@@ -358,3 +321,7 @@ scripts:
         --ignore "**/flutter/generated_plugin_registrant.cc" \
         .
     description: Add a license header to all necessary files.
+
+  bom:
+    run: dart scripts/generate_bom.dart
+    description: Generate a Bill of Materials (BOM) file for all packages.

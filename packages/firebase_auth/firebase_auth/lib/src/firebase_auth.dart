@@ -71,52 +71,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///
   /// See [setLanguageCode] to update the language code.
   String? get languageCode {
-    if (_delegate.languageCode != null) {
-      return _delegate.languageCode;
-    }
-
-    return null;
-  }
-
-  /// Changes this instance to point to an Auth emulator running locally.
-  ///
-  /// Set the [origin] of the local emulator, such as "http://localhost:9099"
-  ///
-  /// Note: Must be called immediately, prior to accessing auth methods.
-  /// Do not use with production credentials as emulator traffic is not encrypted.
-  ///
-  /// Note: auth emulator is not supported for web yet. firebase-js-sdk does not support
-  /// auth.useEmulator until v8.2.4, but FlutterFire does not support firebase-js-sdk v8+ yet
-  @Deprecated(
-    'Will be removed in future release. '
-    'Use useAuthEmulator().',
-  )
-  Future<void> useEmulator(String origin) async {
-    assert(origin.isNotEmpty);
-    String mappedOrigin = origin;
-
-    // Android considers localhost as 10.0.2.2 - automatically handle this for users.
-    if (defaultTargetPlatform == TargetPlatform.android && !kIsWeb) {
-      if (mappedOrigin.startsWith('http://localhost')) {
-        mappedOrigin =
-            mappedOrigin.replaceFirst('http://localhost', 'http://10.0.2.2');
-      } else if (mappedOrigin.startsWith('http://127.0.0.1')) {
-        mappedOrigin =
-            mappedOrigin.replaceFirst('http://127.0.0.1', 'http://10.0.2.2');
-      }
-    }
-
-    // Native calls take the host and port split out
-    final hostPortRegex = RegExp(r'^http:\/\/([\w\d.]+):(\d+)$');
-    final RegExpMatch? match = hostPortRegex.firstMatch(mappedOrigin);
-    if (match == null) {
-      throw ArgumentError('firebase.auth().useEmulator() origin format error');
-    }
-    // Two non-empty groups in RegExp match - which is null-tested - these are non-null now
-    final String host = match.group(1)!;
-    final int port = int.parse(match.group(2)!);
-
-    await useAuthEmulator(host, port);
+    return _delegate.languageCode;
   }
 
   /// Changes this instance to point to an Auth emulator running locally.
@@ -155,6 +110,35 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// parent project. By default, this is set to `null`.
   set tenantId(String? tenantId) {
     _delegate.tenantId = tenantId;
+  }
+
+  /// The current Auth instance's custom auth domain.
+  /// The auth domain used to handle redirects from OAuth provides, for example
+  /// "my-awesome-app.firebaseapp.com". By default, this is set to `null` and
+  /// default auth domain is used.
+  ///
+  /// If not `null`, this value will supersede `authDomain` property set in `initializeApp`.
+  String? get customAuthDomain {
+    return _delegate.customAuthDomain;
+  }
+
+  /// Set the current Auth instance's auth domain for apple and android platforms.
+  /// The auth domain used to handle redirects from OAuth provides, for example
+  /// "my-awesome-app.firebaseapp.com". By default, this is set to `null` and
+  /// default auth domain is used.
+  ///
+  /// If not `null`, this value will supersede `authDomain` property set in `initializeApp`.
+  set customAuthDomain(String? customAuthDomain) {
+    // Web and windows do not support setting custom auth domains on the auth instance
+    if (defaultTargetPlatform == TargetPlatform.windows || kIsWeb) {
+      final message = defaultTargetPlatform == TargetPlatform.windows
+          ? 'Cannot set custom auth domain on a FirebaseAuth instance for windows platform'
+          : 'Cannot set custom auth domain on a FirebaseAuth instance. Set the custom auth domain on `FirebaseOptions.authDomain` instance and pass into `Firebase.initializeApp()` instead.';
+      throw UnimplementedError(
+        message,
+      );
+    }
+    _delegate.customAuthDomain = customAuthDomain;
   }
 
   /// Applies a verification code sent to the user by email or other out-of-band
@@ -619,19 +603,6 @@ class FirebaseAuth extends FirebasePluginPlatform {
     } catch (e) {
       rethrow;
     }
-  }
-
-  /// Signs in with an AuthProvider using native authentication flow. This is
-  /// deprecated in favor of `signInWithProvider()`.
-  ///
-  /// A [FirebaseAuthException] maybe thrown with the following error code:
-  /// - **user-disabled**:
-  ///  - Thrown if the user corresponding to the given email has been disabled.
-  @Deprecated('You should use signInWithProvider instead')
-  Future<UserCredential> signInWithAuthProvider(
-    AuthProvider provider,
-  ) async {
-    return signInWithProvider(provider);
   }
 
   /// Signs in with an AuthProvider using native authentication flow.

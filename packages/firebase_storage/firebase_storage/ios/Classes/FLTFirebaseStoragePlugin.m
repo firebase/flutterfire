@@ -175,13 +175,28 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 
 - (FIRStorageMetadata *)getFIRStorageMetadataFromPigeon:(PigeonSettableMetadata *)pigeonMetadata {
   FIRStorageMetadata *metadata = [[FIRStorageMetadata alloc] init];
-  metadata.cacheControl = pigeonMetadata.cacheControl;
-  metadata.contentDisposition = pigeonMetadata.contentDisposition;
-  metadata.contentEncoding = pigeonMetadata.contentEncoding;
-  metadata.contentLanguage = pigeonMetadata.contentLanguage;
-  metadata.contentType = pigeonMetadata.contentType;
 
-  metadata.customMetadata = pigeonMetadata.customMetadata;
+  if (pigeonMetadata.cacheControl != nil) {
+    metadata.cacheControl = pigeonMetadata.cacheControl;
+  }
+  if (pigeonMetadata.contentType != nil) {
+    metadata.contentType = pigeonMetadata.contentType;
+  }
+  if (pigeonMetadata.contentDisposition != nil) {
+    metadata.contentDisposition = pigeonMetadata.contentDisposition;
+  }
+
+  if (pigeonMetadata.contentEncoding != nil) {
+    metadata.contentEncoding = pigeonMetadata.contentEncoding;
+  }
+
+  if (pigeonMetadata.contentLanguage != nil) {
+    metadata.contentLanguage = pigeonMetadata.contentLanguage;
+  }
+
+  if (pigeonMetadata.customMetadata != nil) {
+    metadata.customMetadata = pigeonMetadata.customMetadata;
+  }
 
   return metadata;
 }
@@ -452,11 +467,15 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
                  completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion {
   FIRStorageReference *storage_reference = [self getFIRStorageReferenceFromPigeon:app
                                                                         reference:reference];
-  FIRStorageMetadata *metadata = [self getFIRStorageMetadataFromPigeon:settableMetaData];
 
   NSURL *fileUrl = [NSURL fileURLWithPath:filePath];
-  FIRStorageObservableTask<FIRStorageTaskManagement> *task = [storage_reference putFile:fileUrl
-                                                                               metadata:metadata];
+  FIRStorageObservableTask<FIRStorageTaskManagement> *task;
+  if (settableMetaData == nil) {
+    task = [storage_reference putFile:fileUrl];
+  } else {
+    FIRStorageMetadata *metadata = [self getFIRStorageMetadataFromPigeon:settableMetaData];
+    task = [storage_reference putFile:fileUrl metadata:metadata];
+  }
 
   @synchronized(self->_tasks) {
     self->_tasks[handle] = task;
@@ -691,17 +710,26 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
                                     [task removeObserverWithHandle:failureHandle];
                                     completion(NO, nil);
                                   }];
-      failureHandle =
-          [task observeStatus:FIRStorageTaskStatusFailure
-                      handler:^(FIRStorageTaskSnapshot *snapshot) {
-                        [task removeObserverWithHandle:successHandle];
-                        [task removeObserverWithHandle:failureHandle];
-                        if (snapshot.error && snapshot.error.code == FIRStorageErrorCodeCancelled) {
-                          completion(YES, [FLTFirebaseStoragePlugin parseTaskSnapshot:snapshot]);
-                        } else {
-                          completion(NO, nil);
-                        }
-                      }];
+      failureHandle = [task
+          observeStatus:FIRStorageTaskStatusFailure
+                handler:^(FIRStorageTaskSnapshot *snapshot) {
+                  [task removeObserverWithHandle:successHandle];
+                  [task removeObserverWithHandle:failureHandle];
+
+                  if (snapshot.error && snapshot.error && snapshot.error.userInfo) {
+                    // For UploadTask, the error code is found in the userInfo
+                    // We use it to match this:
+                    // https://github.com/firebase/firebase-ios-sdk/blob/main/FirebaseStorage/Sources/StorageError.swift#L37
+                    NSNumber *responseErrorCode = snapshot.error.userInfo[@"ResponseErrorCode"];
+                    if ([responseErrorCode integerValue] == FIRStorageErrorCodeCancelled ||
+                        snapshot.error.code == FIRStorageErrorCodeCancelled) {
+                      completion(YES, [FLTFirebaseStoragePlugin parseTaskSnapshot:snapshot]);
+                      return;
+                    }
+                  }
+
+                  completion(NO, nil);
+                }];
       [task cancel];
     } else {
       completion(NO, nil);

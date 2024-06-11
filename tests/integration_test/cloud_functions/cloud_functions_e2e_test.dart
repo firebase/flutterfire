@@ -45,7 +45,7 @@ void main() {
       });
 
       test('accepts `null arguments', () async {
-        HttpsCallableResult result = await callable(null);
+        HttpsCallableResult result = await callable();
         expect(result.data, equals('null'));
       });
 
@@ -230,15 +230,18 @@ void main() {
 
       test(
         'allow passing of `limitedUseAppCheckToken` as option',
-            () async {
+        () async {
           final instance = FirebaseFunctions.instance;
           instance.useFunctionsEmulator('localhost', 5001);
           final timeoutCallable = FirebaseFunctions.instance.httpsCallable(
             kTestFunctionDefaultRegion,
-            options: HttpsCallableOptions(timeout: const Duration(seconds: 3), limitedUseAppCheckToken: true),
+            options: HttpsCallableOptions(
+              timeout: const Duration(seconds: 3),
+              limitedUseAppCheckToken: true,
+            ),
           );
 
-          HttpsCallableResult results = await timeoutCallable(null);
+          HttpsCallableResult results = await timeoutCallable();
           expect(results.data, equals('null'));
         },
       );

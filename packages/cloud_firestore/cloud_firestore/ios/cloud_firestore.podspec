@@ -29,14 +29,11 @@ Pod::Spec.new do |s|
   s.public_header_files = 'Classes/Public/*.h'
   s.private_header_files = 'Classes/Private/*.h'
 
-  s.ios.deployment_target = '11.0'
+  s.ios.deployment_target = '13.0'
   s.dependency 'Flutter'
 
   s.dependency 'firebase_core'
   s.dependency 'Firebase/Firestore', firebase_sdk_version
-  # required until firestore-ios-sdk-frameworks is updated, otherwise users of that distribution will have compile failures
-  # see https://github.com/invertase/firestore-ios-sdk-frameworks/issues/59
-  s.dependency 'nanopb', '>= 2.30908.0', '< 2.30910.0'
 
   s.static_framework = true
   s.pod_target_xcconfig = {

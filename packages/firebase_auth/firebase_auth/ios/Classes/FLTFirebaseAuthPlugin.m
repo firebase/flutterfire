@@ -147,17 +147,17 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
   // FlutterPluginRegistrar.
   // TODO(Salakar): addApplicationDelegate does not exist on MacOS version of
   // FlutterPluginRegistrar. (https://github.com/flutter/flutter/issues/41471)
-  FirebaseAuthHostApiSetup(registrar.messenger, instance);
-  FirebaseAuthUserHostApiSetup(registrar.messenger, instance);
+  SetUpFirebaseAuthHostApi(registrar.messenger, instance);
+  SetUpFirebaseAuthUserHostApi(registrar.messenger, instance);
 #else
   [registrar publish:instance];
   [registrar addApplicationDelegate:instance];
-  FirebaseAuthHostApiSetup(registrar.messenger, instance);
-  FirebaseAuthUserHostApiSetup(registrar.messenger, instance);
-  MultiFactorUserHostApiSetup(registrar.messenger, instance);
-  MultiFactoResolverHostApiSetup(registrar.messenger, instance);
-  MultiFactorTotpHostApiSetup(registrar.messenger, instance);
-  MultiFactorTotpSecretHostApiSetup(registrar.messenger, instance);
+  SetUpFirebaseAuthHostApi(registrar.messenger, instance);
+  SetUpFirebaseAuthUserHostApi(registrar.messenger, instance);
+  SetUpMultiFactorUserHostApi(registrar.messenger, instance);
+  SetUpMultiFactoResolverHostApi(registrar.messenger, instance);
+  SetUpMultiFactorTotpHostApi(registrar.messenger, instance);
+  SetUpMultiFactorTotpSecretHostApi(registrar.messenger, instance);
 #endif
 }
 
@@ -303,7 +303,7 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
   return @{
     @"APP_LANGUAGE_CODE" : (id)[auth languageCode] ?: [NSNull null],
     @"APP_CURRENT_USER" : [auth currentUser]
-        ? [[PigeonParser getPigeonDetails:[auth currentUser]] toList]
+        ? [PigeonParser getManualList:[PigeonParser getPigeonDetails:[auth currentUser]]]
         : [NSNull null],
   };
 }
@@ -524,8 +524,7 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
 
     PigeonMultiFactorInfo *object = [PigeonMultiFactorInfo
         makeWithDisplayName:multiFactorInfo.displayName
-        enrollmentTimestamp:[NSNumber numberWithDouble:multiFactorInfo.enrollmentDate
-                                                           .timeIntervalSince1970]
+        enrollmentTimestamp:multiFactorInfo.enrollmentDate.timeIntervalSince1970
                    factorId:multiFactorInfo.factorID
                         uid:multiFactorInfo.UID
                 phoneNumber:phoneNumber];
@@ -602,7 +601,24 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
                             underlyingError.userInfo[@"FIRAuthErrorUserInfoDes"
                                                      @"erializedResponseKey"];
 
-                        if (firebaseDictionary != nil && firebaseDictionary[@"message"] != nil) {
+                        if (firebaseDictionary == nil &&
+                            userInfo[@"FIRAuthErrorUserInfoNameKey"] != nil) {
+                          // Removing since it's not parsed and causing issue when sending back the
+                          // object to Flutter
+                          NSMutableDictionary *mutableUserInfo = [userInfo mutableCopy];
+                          [mutableUserInfo
+                              removeObjectForKey:@"FIRAuthErrorUserInfoUpdatedCredentialKey"];
+                          NSError *modifiedError = [NSError errorWithDomain:error.domain
+                                                                       code:error.code
+                                                                   userInfo:mutableUserInfo];
+
+                          completion(nil,
+                                     [FlutterError errorWithCode:@"sign-in-failed"
+                                                         message:userInfo[@"NSLocalizedDescription"]
+                                                         details:modifiedError.userInfo]);
+
+                        } else if (firebaseDictionary != nil &&
+                                   firebaseDictionary[@"message"] != nil) {
                           // error from firebase-ios-sdk is
                           // buried in underlying error.
                           completion(nil,
@@ -641,6 +657,10 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
 
   auth.tenantID = pigeonApp.tenantId;
   auth.customAuthDomain = [FLTFirebaseCorePlugin getCustomDomain:app.name];
+  // Auth's `customAuthDomain` supersedes value from `getCustomDomain` set by `initializeApp`
+  if (pigeonApp.customAuthDomain != nil) {
+    auth.customAuthDomain = pigeonApp.customAuthDomain;
+  }
 
   return auth;
 }
@@ -860,14 +880,12 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
       phoneNumber = phoneFactorInfo.phoneNumber;
     }
 
-    [results
-        addObject:[PigeonMultiFactorInfo
-                      makeWithDisplayName:multiFactorInfo.displayName
-                      enrollmentTimestamp:[NSNumber numberWithDouble:multiFactorInfo.enrollmentDate
-                                                                         .timeIntervalSince1970]
-                                 factorId:multiFactorInfo.factorID
-                                      uid:multiFactorInfo.UID
-                              phoneNumber:phoneNumber]];
+    [results addObject:[PigeonMultiFactorInfo
+                           makeWithDisplayName:multiFactorInfo.displayName
+                           enrollmentTimestamp:multiFactorInfo.enrollmentDate.timeIntervalSince1970
+                                      factorId:multiFactorInfo.factorID
+                                           uid:multiFactorInfo.UID
+                                   phoneNumber:phoneNumber]];
   }
 
   completion(results, nil);
@@ -1208,7 +1226,16 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
            actionCodeSettings:[PigeonParser parseActionCodeSettings:actionCodeSettings]
                    completion:^(NSError *_Nullable error) {
                      if (error != nil) {
-                       completion([FLTFirebaseAuthPlugin convertToFlutterError:error]);
+                       if (error.code == FIRAuthErrorCodeInternalError) {
+                         [self
+                             handleInternalError:^(PigeonUserCredential *_Nullable creds,
+                                                   FlutterError *_Nullable internalError) {
+                               completion(internalError);
+                             }
+                                       withError:error];
+                       } else {
+                         completion([FLTFirebaseAuthPlugin convertToFlutterError:error]);
+                       }
                      } else {
                        completion(nil);
                      }
@@ -1247,7 +1274,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
   }
 
 #if TARGET_OS_IPHONE
-  if ([settings.appVerificationDisabledForTesting boolValue]) {
+  if (settings.appVerificationDisabledForTesting) {
     auth.settings.appVerificationDisabledForTesting = settings.appVerificationDisabledForTesting;
   }
 #else
@@ -1495,10 +1522,10 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
 
 - (void)useEmulatorApp:(nonnull AuthPigeonFirebaseApp *)app
                   host:(nonnull NSString *)host
-                  port:(nonnull NSNumber *)port
+                  port:(long)port
             completion:(nonnull void (^)(FlutterError *_Nullable))completion {
   FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
-  [auth useEmulatorWithHost:host port:[port integerValue]];
+  [auth useEmulatorWithHost:host port:port];
   completion(nil);
 }
 
@@ -1597,7 +1624,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
 }
 
 - (void)getIdTokenApp:(nonnull AuthPigeonFirebaseApp *)app
-         forceRefresh:(nonnull NSNumber *)forceRefresh
+         forceRefresh:(BOOL)forceRefresh
            completion:(nonnull void (^)(PigeonIdTokenResult *_Nullable,
                                         FlutterError *_Nullable))completion {
   FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
@@ -1610,7 +1637,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
   }
 
   [currentUser
-      getIDTokenResultForcingRefresh:[forceRefresh boolValue]
+      getIDTokenResultForcingRefresh:forceRefresh
                           completion:^(FIRAuthTokenResult *tokenResult, NSError *error) {
                             if (error != nil) {
                               completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
@@ -2040,11 +2067,11 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
 
   FIRUserProfileChangeRequest *changeRequest = [currentUser profileChangeRequest];
 
-  if ([profile.displayNameChanged boolValue]) {
+  if (profile.displayNameChanged) {
     changeRequest.displayName = profile.displayName;
   }
 
-  if ([profile.photoUrlChanged boolValue]) {
+  if (profile.photoUrlChanged) {
     if (profile.photoUrl == nil) {
       // We apparently cannot set photoURL to nil/NULL to remove it.
       // Instead, setting it to empty string appears to work.

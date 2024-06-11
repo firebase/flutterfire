@@ -30,6 +30,7 @@
 #include <future>
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -319,13 +320,17 @@ class FlutterIdTokenListener : public firebase::auth::IdTokenListener {
     firebase::auth::User user = auth->current_user();
     PigeonUserDetails userDetails = FirebaseAuthPlugin::ParseUserDetails(user);
 
+    using flutter::EncodableList;
     using flutter::EncodableMap;
     using flutter::EncodableValue;
 
     if (event_sink_) {
       if (user.is_valid()) {
-        event_sink_->Success(EncodableValue(EncodableMap{
-            {EncodableValue("user"), userDetails.ToEncodableList()}}));
+        EncodableList userDetailsList = EncodableList();
+        userDetailsList.push_back(userDetails.user_info().ToEncodableList());
+        userDetailsList.push_back(userDetails.provider_data());
+        event_sink_->Success(EncodableValue(
+            EncodableMap{{EncodableValue("user"), userDetailsList}}));
       } else {
         event_sink_->Success(EncodableValue(EncodableMap{
             {EncodableValue("user"), EncodableValue(std::monostate{})}}));
@@ -399,13 +404,18 @@ class FlutterAuthStateListener : public firebase::auth::AuthStateListener {
     firebase::auth::User user = auth->current_user();
     PigeonUserDetails userDetails = FirebaseAuthPlugin::ParseUserDetails(user);
 
+    using flutter::EncodableList;
     using flutter::EncodableMap;
     using flutter::EncodableValue;
 
     if (event_sink_) {
       if (user.is_valid()) {
-        event_sink_->Success(EncodableValue(EncodableMap{
-            {EncodableValue("user"), userDetails.ToEncodableList()}}));
+        EncodableList userDetailsList = EncodableList();
+        userDetailsList.push_back(userDetails.user_info().ToEncodableList());
+        userDetailsList.push_back(userDetails.provider_data());
+
+        event_sink_->Success(EncodableValue(
+            EncodableMap{{EncodableValue("user"), userDetailsList}}));
       } else {
         event_sink_->Success(EncodableValue(EncodableMap{
             {EncodableValue("user"), EncodableValue(std::monostate{})}}));
@@ -605,44 +615,56 @@ firebase::auth::Credential getCredentialFromArguments(
     return firebase::auth::Credential();
   }
 
-  std::string idToken = std::get<std::string>(arguments[kArgumentIdToken]);
-  std::string accessToken =
-      std::get<std::string>(arguments[kArgumentAccessToken]);
+  // Lambda function to extract an optional string from the arguments map. This
+  // allows us to pass nullptr if no value exists
+  auto getStringOpt =
+      [&](const std::string& key) -> std::optional<std::string> {
+    auto it = arguments.find(key);
+    if (it != arguments.end() &&
+        std::holds_alternative<std::string>(it->second)) {
+      return std::get<std::string>(it->second);
+    }
+    return std::nullopt;
+  };
+
+  std::optional<std::string> idToken = getStringOpt(kArgumentIdToken);
+  std::optional<std::string> accessToken = getStringOpt(kArgumentAccessToken);
 
   // Facebook Auth
   if (signInMethod == kSignInMethodFacebook) {
     return firebase::auth::FacebookAuthProvider::GetCredential(
-        accessToken.c_str());
+        accessToken.value().c_str());
   }
 
   // Google Auth
   if (signInMethod == kSignInMethodGoogle) {
+    // Both accessToken and idToken arguments can be null. You can use one or
+    // the other
     return firebase::auth::GoogleAuthProvider::GetCredential(
-        idToken.c_str(), accessToken.c_str());
+        idToken ? idToken.value().c_str() : nullptr,
+        accessToken ? accessToken.value().c_str() : nullptr);
   }
 
   // Twitter Auth
   if (signInMethod == kSignInMethodTwitter) {
     std::string secret = std::get<std::string>(arguments[kArgumentSecret]);
-    return firebase::auth::TwitterAuthProvider::GetCredential(idToken.c_str(),
-                                                              secret.c_str());
+    return firebase::auth::TwitterAuthProvider::GetCredential(
+        idToken.value().c_str(), secret.c_str());
   }
 
   // GitHub Auth
   if (signInMethod == kSignInMethodGithub) {
     return firebase::auth::GitHubAuthProvider::GetCredential(
-        accessToken.c_str());
+        accessToken.value().c_str());
   }
 
   // OAuth
   if (signInMethod == kSignInMethodOAuth) {
     std::string providerId =
         std::get<std::string>(arguments[kArgumentProviderId]);
-    // As of my knowledge cutoff in September 2021, Firebase C++ SDK doesn't
-    // support creating OAuthProvider credentials directly
-    std::cout << "Creating OAuthProvider credentials directly is not supported "
-                 "in Firebase C++ SDK as of September 2021.\n";
-    return firebase::auth::Credential();
+    return firebase::auth::OAuthProvider::GetCredential(
+        providerId.c_str(), idToken.value().c_str(),
+        accessToken.value().c_str());
   }
 
   // If no known auth method matched
@@ -1109,7 +1131,10 @@ void FirebaseAuthPlugin::UpdateEmail(
   firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
   firebase::auth::User user = firebaseAuth->current_user();
 
+#pragma warning(push)
+#pragma warning(disable : 4996)
   firebase::Future<void> future = user.UpdateEmail(new_email.c_str());
+#pragma warning(pop)
 
   future.OnCompletion([result, firebaseAuth](
                           const firebase::Future<void>& completed_future) {
@@ -1219,10 +1244,26 @@ void FirebaseAuthPlugin::VerifyBeforeUpdateEmail(
     const AuthPigeonFirebaseApp& app, const std::string& new_email,
     const PigeonActionCodeSettings* action_code_settings,
     std::function<void(std::optional<FlutterError> reply)> result) {
-  result(FlutterError(
-      "unimplemented",
-      "VerifyBeforeUpdateEmail is not available on this platform yet.",
-      nullptr));
+  firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
+  firebase::auth::User user = firebaseAuth->current_user();
+
+  if (action_code_settings != nullptr) {
+    printf(
+        "Firebase C++ SDK does not support using `ActionCodeSettings` for "
+        "`verifyBeforeUpdateEmail()` API currently");
+  }
+
+  firebase::Future<void> future =
+      user.SendEmailVerificationBeforeUpdatingEmail(new_email.c_str());
+
+  future.OnCompletion(
+      [result, firebaseAuth](const firebase::Future<void>& completed_future) {
+        if (completed_future.error() == 0) {
+          result(std::nullopt);
+        } else {
+          result(FirebaseAuthPlugin::ParseError(completed_future));
+        }
+      });
 }
 
 void FirebaseAuthPlugin::RevokeTokenWithAuthorizationCode(

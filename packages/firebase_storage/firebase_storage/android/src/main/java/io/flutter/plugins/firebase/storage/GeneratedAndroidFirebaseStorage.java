@@ -796,7 +796,7 @@ public class GeneratedAndroidFirebaseStorage {
         @NonNull PigeonStorageFirebaseApp app,
         @NonNull PigeonStorageReference reference,
         @NonNull String filePath,
-        @NonNull PigeonSettableMetadata settableMetaData,
+        @Nullable PigeonSettableMetadata settableMetaData,
         @NonNull Long handle,
         @NonNull Result<String> result);
 

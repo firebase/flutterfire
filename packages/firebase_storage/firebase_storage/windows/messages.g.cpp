@@ -1253,14 +1253,10 @@ void FirebaseStorageHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
               const auto& file_path_arg =
                   std::get<std::string>(encodable_file_path_arg);
               const auto& encodable_settable_meta_data_arg = args.at(3);
-              if (encodable_settable_meta_data_arg.IsNull()) {
-                reply(WrapError("settable_meta_data_arg unexpectedly null."));
-                return;
-              }
-              const auto& settable_meta_data_arg =
-                  std::any_cast<const PigeonSettableMetadata&>(
+              const auto* settable_meta_data_arg =
+                  &(std::any_cast<const PigeonSettableMetadata&>(
                       std::get<CustomEncodableValue>(
-                          encodable_settable_meta_data_arg));
+                          encodable_settable_meta_data_arg)));
               const auto& encodable_handle_arg = args.at(4);
               if (encodable_handle_arg.IsNull()) {
                 reply(WrapError("handle_arg unexpectedly null."));

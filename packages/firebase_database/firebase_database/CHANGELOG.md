@@ -1,3 +1,63 @@
+## 11.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: android plugins require `minSdk 21`, auth requires `minSdk 23` ahead of android BOM `>=33.0.0` ([#12873](https://github.com/firebase/flutterfire/issues/12873)). ([52accfc6](https://github.com/firebase/flutterfire/commit/52accfc6c39d6360d9c0f36efe369ede990b7362))
+ - **BREAKING** **REFACTOR**: bump all iOS deployment targets to iOS 13 ahead of Firebase iOS SDK `v11` breaking change ([#12872](https://github.com/firebase/flutterfire/issues/12872)). ([de0cea2c](https://github.com/firebase/flutterfire/commit/de0cea2c3c36694a76361be784255986fac84a43))
+ - **BREAKING** **REFACTOR**(database): remove deprecated API ahead of breaking change release ([#12862](https://github.com/firebase/flutterfire/issues/12862)). ([2a6d6f85](https://github.com/firebase/flutterfire/commit/2a6d6f85969b83f576e0b8538e7fdd9f6240d96c))
+
+## 10.5.7
+
+ - Update a dependency to the latest release.
+
+## 10.5.6
+
+ - **FIX**(database): sorting was not applied when database child changed. ([#12664](https://github.com/firebase/flutterfire/issues/12664)). ([c074de28](https://github.com/firebase/flutterfire/commit/c074de287f755a7157bcb494b219cec14ef57f7b))
+
+## 10.5.5
+
+ - **FIX**(database,web): Stop transaction & stream handling exceptions from throwing twice ([#12706](https://github.com/firebase/flutterfire/issues/12706)). ([9b3244f7](https://github.com/firebase/flutterfire/commit/9b3244f7f328095fd5887aac25debe77ecf3e569))
+
+## 10.5.4
+
+ - Update a dependency to the latest release.
+
+## 10.5.3
+
+ - Update a dependency to the latest release.
+
+## 10.5.2
+
+ - Update a dependency to the latest release.
+
+## 10.5.1
+
+ - Update a dependency to the latest release.
+
+## 10.5.0
+
+ - **FEAT**(android): Bump `compileSdk` version of Android plugins to latest stable (34) ([#12566](https://github.com/firebase/flutterfire/issues/12566)). ([e891fab2](https://github.com/firebase/flutterfire/commit/e891fab291e9beebc223000b133a6097e066a7fc))
+
+## 10.4.11
+
+ - Update a dependency to the latest release.
+
+## 10.4.10
+
+ - Update a dependency to the latest release.
+
+## 10.4.9
+
+ - Update a dependency to the latest release.
+
+## 10.4.8
+
+ - Update a dependency to the latest release.
+
+## 10.4.7
+
+ - Update a dependency to the latest release.
+
 ## 10.4.6
 
  - Update a dependency to the latest release.

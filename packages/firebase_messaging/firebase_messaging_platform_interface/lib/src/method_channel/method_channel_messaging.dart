@@ -4,7 +4,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io' show Platform;
 import 'dart:ui';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -131,7 +130,8 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   // Messaging requests. See this issue:
   // https://github.com/firebase/flutterfire/issues/10625
   Future<void> _APNSTokenCheck() async {
-    if (Platform.isMacOS || Platform.isIOS) {
+    if (defaultTargetPlatform == TargetPlatform.macOS ||
+        defaultTargetPlatform == TargetPlatform.iOS) {
       String? token = await getAPNSToken();
 
       if (token == null) {

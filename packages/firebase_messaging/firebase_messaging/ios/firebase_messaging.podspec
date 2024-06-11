@@ -28,9 +28,13 @@ Pod::Spec.new do |s|
   s.source_files     = 'Classes/**/*.{h,m}'
   s.public_header_files = 'Classes/*.h'
 
-  s.ios.deployment_target = '11.0'
+  s.ios.deployment_target = '13.0'
 
   s.dependency 'Flutter'
+
+  s.resource_bundles = {
+      "#{s.module_name}_Privacy" => 'Resources/PrivacyInfo.xcprivacy'
+  }
 
   s.dependency 'firebase_core'
   s.dependency 'Firebase/Messaging', firebase_sdk_version

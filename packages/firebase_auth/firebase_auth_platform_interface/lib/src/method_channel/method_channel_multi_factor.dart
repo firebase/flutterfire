@@ -19,6 +19,7 @@ class MethodChannelMultiFactor extends MultiFactorPlatform {
     return AuthPigeonFirebaseApp(
       appName: auth.app.name,
       tenantId: auth.tenantId,
+      customAuthDomain: auth.customAuthDomain,
     );
   }
 
