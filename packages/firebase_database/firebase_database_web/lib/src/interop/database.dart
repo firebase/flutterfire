@@ -251,37 +251,64 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   /// DatabaseReference to the Query's location.
   DatabaseReference get ref => DatabaseReference.getInstance(jsObject.ref);
 
-  late final Stream<QueryEvent> _onValue = _createStream('value');
+  Stream<QueryEvent> _onValue(String appName, int hashCode) => _createStream(
+        'value',
+        appName,
+        hashCode,
+      );
 
   /// Stream for a value event. Event is triggered once with the initial
   /// data stored at location, and then again each time the data changes.
-  Stream<QueryEvent> get onValue => _onValue;
+  Stream<QueryEvent> onValue(String appName, int hashCode) =>
+      _onValue(appName, hashCode);
 
-  late final Stream<QueryEvent> _onChildAdded = _createStream('child_added');
+  Stream<QueryEvent> _onChildAdded(String appName, int hashCode) =>
+      _createStream(
+        'child_added',
+        appName,
+        hashCode,
+      );
 
   /// Stream for a child_added event. Event is triggered once for each
   /// initial child at location, and then again every time a new child is added.
-  Stream<QueryEvent> get onChildAdded => _onChildAdded;
+  Stream<QueryEvent> onChildAdded(String appName, int hashCode) =>
+      _onChildAdded(appName, hashCode);
 
-  late final Stream<QueryEvent> _onChildRemoved =
-      _createStream('child_removed');
+  Stream<QueryEvent> _onChildRemoved(String appName, int hashCode) =>
+      _createStream(
+        'child_removed',
+        appName,
+        hashCode,
+      );
 
   /// Stream for a child_removed event. Event is triggered once every time
   /// a child is removed.
-  Stream<QueryEvent> get onChildRemoved => _onChildRemoved;
+  Stream<QueryEvent> onChildRemoved(String appName, int hashCode) =>
+      _onChildRemoved(appName, hashCode);
 
-  late final Stream<QueryEvent> _onChildChanged =
-      _createStream('child_changed');
+  Stream<QueryEvent> _onChildChanged(String appName, int hashCode) =>
+      _createStream(
+        'child_changed',
+        appName,
+        hashCode,
+      );
 
   /// Stream for a child_changed event. Event is triggered when the data
   /// stored in a child (or any of its descendants) changes.
   /// Single child_changed event may represent multiple changes to the child.
-  Stream<QueryEvent> get onChildChanged => _onChildChanged;
-  late final Stream<QueryEvent> _onChildMoved = _createStream('child_moved');
+  Stream<QueryEvent> onChildChanged(String appName, int hashCode) =>
+      _onChildChanged(appName, hashCode);
+  Stream<QueryEvent> _onChildMoved(String appName, int hashCode) =>
+      _createStream(
+        'child_moved',
+        appName,
+        hashCode,
+      );
 
   /// Stream for a child_moved event. Event is triggered when a child's priority
   /// changes such that its position relative to its siblings changes.
-  Stream<QueryEvent> get onChildMoved => _onChildMoved;
+  Stream<QueryEvent> onChildMoved(String appName, int hashCode) =>
+      _onChildMoved(appName, hashCode);
 
   /// Creates a new Query from a [jsObject].
   Query.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
@@ -377,66 +404,86 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
     );
   }
 
-  Stream<QueryEvent> _createStream(String eventType) {
-    late StreamController<QueryEvent> streamController;
+  String _streamWindowsKey(String appName, String eventType, int hashCode) =>
+      'flutterfire-${appName}_${eventType}_${hashCode}_snapshot';
 
+  Stream<QueryEvent> _createStream(
+    String eventType,
+    String appName,
+    int hashCode,
+  ) {
+    late StreamController<QueryEvent> streamController;
+    unsubscribeWindowsListener(_streamWindowsKey(appName, eventType, hashCode));
     final callbackWrap = ((
       database_interop.DataSnapshotJsImpl data, [
-      String? string,
+      String? prevChild,
     ]) {
-      streamController.add(QueryEvent(DataSnapshot.getInstance(data), string));
+      streamController
+          .add(QueryEvent(DataSnapshot.getInstance(data), prevChild));
     });
 
     final void Function(JSObject) cancelCallbackWrap = ((JSObject error) {
       streamController.addError(convertFirebaseDatabaseException(error));
-      streamController.close();
     });
+
+    late JSFunction onUnsubscribe;
 
     void startListen() {
       if (eventType == 'child_added') {
-        database_interop.onChildAdded(
+        onUnsubscribe = database_interop.onChildAdded(
           jsObject,
           callbackWrap.toJS,
           cancelCallbackWrap.toJS,
         );
       }
       if (eventType == 'value') {
-        database_interop.onValue(
+        onUnsubscribe = database_interop.onValue(
           jsObject,
           callbackWrap.toJS,
           cancelCallbackWrap.toJS,
         );
       }
       if (eventType == 'child_removed') {
-        database_interop.onChildRemoved(
+        onUnsubscribe = database_interop.onChildRemoved(
           jsObject,
           callbackWrap.toJS,
           cancelCallbackWrap.toJS,
         );
       }
       if (eventType == 'child_changed') {
-        database_interop.onChildChanged(
+        onUnsubscribe = database_interop.onChildChanged(
           jsObject,
           callbackWrap.toJS,
           cancelCallbackWrap.toJS,
         );
       }
       if (eventType == 'child_moved') {
-        database_interop.onChildMoved(
+        onUnsubscribe = database_interop.onChildMoved(
           jsObject,
           callbackWrap.toJS,
           cancelCallbackWrap.toJS,
         );
       }
+      setWindowsListener(
+        _streamWindowsKey(appName, eventType, hashCode),
+        onUnsubscribe,
+      );
     }
 
     void stopListen() {
-      database_interop.off(jsObject, eventType.toJS, callbackWrap.toJS);
+      onUnsubscribe.callAsFunction();
+      streamController.close();
+      removeWindowsListener(_streamWindowsKey(
+        appName,
+        eventType,
+        hashCode,
+      ));
     }
 
     streamController = StreamController<QueryEvent>.broadcast(
       onListen: startListen,
       onCancel: stopListen,
+      sync: true,
     );
     return streamController.stream;
   }
@@ -447,8 +494,8 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
 
     database_interop.onValue(
       jsObject,
-      ((database_interop.DataSnapshotJsImpl snapshot, [String? string]) {
-        c.complete(QueryEvent(DataSnapshot.getInstance(snapshot), string));
+      ((database_interop.DataSnapshotJsImpl snapshot, [String? prevChild]) {
+        c.complete(QueryEvent(DataSnapshot.getInstance(snapshot), prevChild));
       }).toJS,
       ((JSAny error) {
         c.completeError(convertFirebaseDatabaseException(error));
