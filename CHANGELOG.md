@@ -132,7 +132,6 @@ Packages with dependency updates only:
 
 #### `firebase_auth_web` - `v5.12.2`
 
- - **FIX**(firestore,web): ensure streams are removed on "hot restart" ([#12913](https://github.com/firebase/flutterfire/issues/12913)). ([c1a67e54](https://github.com/firebase/flutterfire/commit/c1a67e54894cbfb316b3445505b5803e2d041ed5))
  - **FIX**(auth,web): unsubscribe from stream handlers after "hot restart" ([#12908](https://github.com/firebase/flutterfire/issues/12908)). ([a76c8866](https://github.com/firebase/flutterfire/commit/a76c8866c7f62dd62764f147f114f42f4137b66d))
  - **FIX**(auth,web): stream handlers are properly cleaned up and recreated ([#12903](https://github.com/firebase/flutterfire/issues/12903)). ([daaef12c](https://github.com/firebase/flutterfire/commit/daaef12c7cf0f403bbe2b4bc2210f3db2c33125b))
 
