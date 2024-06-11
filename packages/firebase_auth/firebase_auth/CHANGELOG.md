@@ -1,3 +1,8 @@
+## 5.1.0
+
+ - **FIX**(auth,ios): fix the parsing of an error that could specifically happen when using MicrosoftProvider ([#12920](https://github.com/firebase/flutterfire/issues/12920)). ([3b415e64](https://github.com/firebase/flutterfire/commit/3b415e641e6107b131a170277bbc1fa0e2908e27))
+ - **FEAT**(auth,apple): create a credential with `idToken`, `rawNonce` & `appleFullPersonName` ([#12356](https://github.com/firebase/flutterfire/issues/12356)). ([17793080](https://github.com/firebase/flutterfire/commit/177930802ca13a3af1610968e54b8ce79f0781ca))
+
 ## 5.0.0
 
 > Note: This release has breaking changes.

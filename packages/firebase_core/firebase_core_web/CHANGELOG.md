@@ -1,3 +1,7 @@
+## 2.17.2
+
+ - **FIX**(firestore,web): ensure streams are removed on "hot restart" ([#12913](https://github.com/firebase/flutterfire/issues/12913)). ([c1a67e54](https://github.com/firebase/flutterfire/commit/c1a67e54894cbfb316b3445505b5803e2d041ed5))
+
 ## 2.17.1
 
  - **FIX**(web): fix some casting issue on Web JS Interop ([#12852](https://github.com/firebase/flutterfire/issues/12852)). ([4b56df1c](https://github.com/firebase/flutterfire/commit/4b56df1cc187d77ef22a82688a37f1c7aba4ed40))

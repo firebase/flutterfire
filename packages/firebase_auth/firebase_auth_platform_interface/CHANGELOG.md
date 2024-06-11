@@ -1,3 +1,7 @@
+## 7.4.0
+
+ - **FEAT**(auth,apple): create a credential with `idToken`, `rawNonce` & `appleFullPersonName` ([#12356](https://github.com/firebase/flutterfire/issues/12356)). ([17793080](https://github.com/firebase/flutterfire/commit/177930802ca13a3af1610968e54b8ce79f0781ca))
+
 ## 7.3.1
 
  - Update a dependency to the latest release.
