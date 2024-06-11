@@ -136,16 +136,16 @@ class AppleAuthCredential extends OAuthCredential {
 
 class AppleFullPersonName {
   AppleFullPersonName({
-    required this.givenName,
-    required this.familyName,
+    this.givenName,
+    this.familyName,
     this.middleName,
     this.nickname,
     this.namePrefix,
     this.nameSuffix,
   });
 
-  final String givenName;
-  final String familyName;
+  final String? givenName;
+  final String? familyName;
   final String? middleName;
   final String? nickname;
   final String? namePrefix;
