@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 2024-06-11
+## 2024-06-11 - [BoM 2.1.0](https://github.com/firebase/flutterfire/blob/master/VERSIONS.md#flutter-bom-210-2024-06-11)
 
 ### Changes
 
