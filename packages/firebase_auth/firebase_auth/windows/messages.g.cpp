@@ -3755,10 +3755,10 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
               const PigeonActionCodeSettings* action_code_settings_arg =
                   nullptr;
               if (!encodable_action_code_settings_arg.IsNull()) {
-                  action_code_settings_arg =
-                      &(std::any_cast<const PigeonActionCodeSettings&>(
-                          std::get<CustomEncodableValue>(
-                              encodable_action_code_settings_arg)));
+                action_code_settings_arg =
+                    &(std::any_cast<const PigeonActionCodeSettings&>(
+                        std::get<CustomEncodableValue>(
+                            encodable_action_code_settings_arg)));
               }
               api->SendEmailVerification(
                   app_arg, action_code_settings_arg,
