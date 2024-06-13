@@ -193,13 +193,14 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
     additionalData[kArgumentEmail] = [error userInfo][FIRAuthErrorUserInfoEmailKey];
   }
   // We want to store the credential if present for future sign in if the exception contains a
-  // credential
-  [FLTFirebaseAuthPlugin storeAuthCredentialIfPresent:error];
+  // credential, we pass a token back to Flutter to allow retreival of the credential.
+  NSNumber *token = [FLTFirebaseAuthPlugin storeAuthCredentialIfPresent:error];
 
   // additionalData.authCredential
   if ([error userInfo][FIRAuthErrorUserInfoUpdatedCredentialKey] != nil) {
     FIRAuthCredential *authCredential = [error userInfo][FIRAuthErrorUserInfoUpdatedCredentialKey];
-    additionalData[@"authCredential"] = [PigeonParser getPigeonAuthCredential:authCredential];
+    additionalData[@"authCredential"] = [PigeonParser getPigeonAuthCredential:authCredential
+                                                                        token:token];
   }
 
   // Manual message overrides to ensure messages/codes matches other platforms.
@@ -641,14 +642,16 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
 
 #pragma mark - Utilities
 
-+ (void)storeAuthCredentialIfPresent:(NSError *)error {
++ (NSNumber *_Nullable)storeAuthCredentialIfPresent:(NSError *)error {
   if ([error userInfo][FIRAuthErrorUserInfoUpdatedCredentialKey] != nil) {
     FIRAuthCredential *authCredential = [error userInfo][FIRAuthErrorUserInfoUpdatedCredentialKey];
     // We temporarily store the non-serializable credential so the
     // Dart API can consume these at a later time.
     NSNumber *authCredentialHash = @([authCredential hash]);
     credentialsMap[authCredentialHash] = authCredential;
+    return authCredentialHash;
   }
+  return nil;
 }
 
 - (FIRAuth *_Nullable)getFIRAuthFromAppNameFromPigeon:(AuthPigeonFirebaseApp *)pigeonApp {
