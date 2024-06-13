@@ -15,7 +15,7 @@
             makeWithUser:[self getPigeonDetails:authResult.user]
       additionalUserInfo:[self getPigeonAdditionalUserInfo:authResult.additionalUserInfo
                                          authorizationCode:authorizationCode]
-              credential:[self getPigeonAuthCredential:authResult.credential]];
+              credential:[self getPigeonAuthCredential:authResult.credential token:nil]];
 }
 
 + (PigeonUserCredential *)getPigeonUserCredentialFromFIRUser:(nonnull FIRUser *)user {
@@ -88,7 +88,8 @@
                                              secretKey:secret.sharedSecretKey];
 }
 
-+ (PigeonAuthCredential *)getPigeonAuthCredential:(FIRAuthCredential *)authCredential {
++ (PigeonAuthCredential *)getPigeonAuthCredential:(FIRAuthCredential *)authCredential
+                                            token:(NSNumber *_Nullable)token {
   if (authCredential == nil) {
     return nil;
   }
@@ -103,9 +104,12 @@
     }
   }
 
+  NSUInteger nativeId =
+      token != nil ? [token unsignedLongValue] : (NSUInteger)[authCredential hash];
+
   return [PigeonAuthCredential makeWithProviderId:authCredential.provider
                                      signInMethod:authCredential.provider
-                                         nativeId:@([authCredential hash])
+                                         nativeId:nativeId
                                       accessToken:accessToken ?: nil];
 }
 
