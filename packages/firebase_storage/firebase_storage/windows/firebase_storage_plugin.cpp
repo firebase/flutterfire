@@ -436,8 +436,8 @@ flutter::EncodableMap ConvertMedadataToPigeon(const Metadata* meta) {
       flutter::EncodableValue(meta->creation_time());
 
   meta_map[flutter::EncodableValue(kUpdatedTimeMillisName)] =
-    flutter::EncodableValue(meta->updated_time());
-  
+      flutter::EncodableValue(meta->updated_time());
+
   return meta_map;
 }
 
