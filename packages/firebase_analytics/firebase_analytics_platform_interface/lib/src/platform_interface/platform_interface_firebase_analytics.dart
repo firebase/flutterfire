@@ -208,6 +208,8 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   Future<void> initiateOnDeviceConversionMeasurement({
     String? emailAddress,
     String? phoneNumber,
+    String? hashedEmailAddress,
+    String? hashedPhoneNumber,
   }) {
     throw UnimplementedError(
       'initiateOnDeviceConversionMeasurement() is not implemented',
