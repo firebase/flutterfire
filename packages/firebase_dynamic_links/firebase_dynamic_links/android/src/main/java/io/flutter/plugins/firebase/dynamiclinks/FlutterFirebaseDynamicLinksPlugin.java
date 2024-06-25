@@ -109,6 +109,9 @@ public class FlutterFirebaseDynamicLinksPlugin
 
   @Override
   public boolean onNewIntent(@NonNull Intent intent) {
+    if (FirebaseApp.getApps(activity.get()).isEmpty()) {
+      return false;
+    }
     getDynamicLinkInstance(null)
         .getDynamicLink(intent)
         .addOnSuccessListener(
