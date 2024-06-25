@@ -186,12 +186,22 @@ NSString *const FLTFirebaseAnalyticsChannelName = @"plugins.flutter.io/firebase_
                          withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   NSString *emailAddress = arguments[@"emailAddress"];
   NSString *phoneNumber = arguments[@"phoneNumber"];
+  NSString *hashedEmailAddress = arguments[@"hashedEmailAddress"];
+  NSString *hashedPhoneNumber = arguments[@"hashedPhoneNumber"];
 
   if (![emailAddress isKindOfClass:[NSNull class]]) {
     [FIRAnalytics initiateOnDeviceConversionMeasurementWithEmailAddress:emailAddress];
   }
   if (![phoneNumber isKindOfClass:[NSNull class]]) {
     [FIRAnalytics initiateOnDeviceConversionMeasurementWithPhoneNumber:phoneNumber];
+  }
+  if (![hashedEmailAddress isKindOfClass:[NSNull class]]) {
+    NSData *data = [hashedEmailAddress dataUsingEncoding:NSUTF8StringEncoding];
+    [FIRAnalytics initiateOnDeviceConversionMeasurementWithHashedEmailAddress:data];
+  }
+  if (![hashedPhoneNumber isKindOfClass:[NSNull class]]) {
+    NSData *data = [hashedPhoneNumber dataUsingEncoding:NSUTF8StringEncoding];
+    [FIRAnalytics initiateOnDeviceConversionMeasurementWithHashedPhoneNumber:data];
   }
   result.success(nil);
 }
