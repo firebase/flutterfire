@@ -1,3 +1,7 @@
+## 5.0.2
+
+ - Update a dependency to the latest release.
+
 ## 5.0.1
 
  - **FIX**(firestore,macos): add Nonull decorator to PigeonParser to remove warnings when building ([#12930](https://github.com/firebase/flutterfire/issues/12930)). ([264b7643](https://github.com/firebase/flutterfire/commit/264b764346e0f35cc11e0a2b1f8070a6036c6631))

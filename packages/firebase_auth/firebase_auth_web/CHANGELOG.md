@@ -1,3 +1,7 @@
+## 5.12.3
+
+ - Update a dependency to the latest release.
+
 ## 5.12.2
 
  - **FIX**(auth,web): unsubscribe from stream handlers after "hot restart" ([#12908](https://github.com/firebase/flutterfire/issues/12908)). ([a76c8866](https://github.com/firebase/flutterfire/commit/a76c8866c7f62dd62764f147f114f42f4137b66d))
