@@ -1,0 +1,29 @@
+scalar Movie_Key
+input Movie_Data {
+  id: UUID
+  id_expr: UUID_Expr
+  genre: String
+  genre_expr: String_Expr
+  rating: Float
+  title: String
+  title_expr: String_Expr
+}
+input Movie_Filter {
+  _and: [Movie_Filter!]
+  _not: Movie_Filter
+  _or: [Movie_Filter!]
+  id: UUID_Filter
+  genre: String_Filter
+  rating: Float_Filter
+  title: String_Filter
+}
+input Movie_ListFilter {
+  count: Int_Filter
+  exist: Movie_Filter
+}
+input Movie_Order {
+  id: OrderDirection
+  genre: OrderDirection
+  rating: OrderDirection
+  title: OrderDirection
+}

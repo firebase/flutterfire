@@ -1,0 +1,33 @@
+## Example schema for simple email app
+# type User @table(key: "uid") {
+# 	uid: String!
+# 	name: String!
+# 	address: String!
+# }
+
+# type Email @table {
+# 	subject: String!
+# 	sent: Date!
+# 	text: String!
+# 	from: User!
+# }
+
+# type Recipient @table(key: ["email", "user"]) {
+# 	email: Email!
+# 	user: User!
+# }
+
+# type EmailMeta @table(key: ["user", "email"]) {
+# 	user: User!
+# 	email: Email!
+# 	labels: [String]
+# 	read: Boolean!
+# 	starred: Boolean!
+# 	muted: Boolean!
+# 	snoozed: Date
+# }
+type Movie @table {
+    genre: String!
+    title: String!
+    rating: Float!
+}

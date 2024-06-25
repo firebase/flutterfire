@@ -1,0 +1,11 @@
+{
+  "name": "@myorg/movies",
+  "version": "1.0.0",
+  "author": "Your Name <name@example.com>",
+  "typings": "index.d.ts",
+  "module": "index.esm.js",
+  "main": "index.cjs.js",
+  "peerDependencies": {
+    "firebase": "^10.4.0"
+  }
+}

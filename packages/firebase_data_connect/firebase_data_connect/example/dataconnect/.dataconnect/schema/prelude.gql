@@ -1,0 +1,947 @@
+"AccessLevel specifies coarse access policies for common situations."
+enum AccessLevel {
+  """
+  This operation can be executed by anyone with or without authentication.
+  Equivalent to @auth(expr: "true")
+  """
+  PUBLIC
+
+  """
+  This operation can only be executed with a valid Firebase Auth ID token.
+  Note: it allows anonymous auth and unverified accounts, so may be subjected to abuses.
+  It’s equivalent to @auth(expr: "auth.uid != nil")
+  """
+  USER_ANON
+
+  """
+  This operation can only be executed by a non-anonymous Firebase Auth account.
+  It’s equivalent to @auth(expr: "auth.uid != nil && auth.token.firebase.sign_in_provider != 'anonymous'")"
+  """
+  USER
+
+  """
+  This operation can only be executed by a verified Firebase Auth account.
+  It’s equivalent to @auth(expr: "auth.uid != nil && auth.token.email_verified")"
+  """
+  USER_EMAIL_VERIFIED
+
+  """
+  This operation can not be executed with no IAM credentials.
+  It’s equivalent to @auth(expr: "false")
+  """
+  NO_ACCESS
+}
+
+"""
+Defines the auth policy for a query or mutation. This directive must be added to
+any operation you wish to be accessible from a client application. If left
+unspecified, defaults to `@auth(level: NO_ACCESS)`.
+"""
+directive @auth(
+  "The minimal level of access required to perform this operation."
+  level: AccessLevel @fdc_oneOf(required: true)
+  """
+  A CEL expression that allows access to this operation if the expression
+  evaluates to `true`.
+  """
+  expr: Boolean_Expr @fdc_oneOf(required: true)
+) on QUERY | MUTATION
+"Conditions on a string value"
+input String_Filter {
+  isNull: Boolean
+  eq: String @fdc_oneOf(group: "eq")
+  eq_expr: String_Expr @fdc_oneOf(group: "eq")
+  ne: String @fdc_oneOf(group: "ne")
+  ne_expr: String_Expr @fdc_oneOf(group: "ne")
+  in: [String!]
+  nin: [String!]
+  gt: String
+  ge: String
+  lt: String
+  le: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  pattern: String_Pattern
+}
+
+"""
+The pattern match condition on a string. Specify either like or regex.
+https://www.postgresql.org/docs/current/functions-matching.html
+"""
+input String_Pattern {
+  "the LIKE expression to use"
+  like: String
+  "the POSIX regular expression"
+  regex: String
+  "when true, it's case-insensitive. In Postgres: ILIKE, ~*"
+  ignoreCase: Boolean
+  "when true, invert the condition. In Postgres: NOT LIKE, !~"
+  invert: Boolean
+}
+
+"Conditions on a string list"
+input String_ListFilter {
+  includes: String
+  excludes: String
+  includesAll: [String!]
+  excludesAll: [String!]
+}
+
+"Conditions on a UUID value"
+input UUID_Filter {
+  isNull: Boolean
+  eq: UUID
+  ne: UUID
+  in: [UUID!]
+  nin: [UUID!]
+}
+
+"Conditions on a UUID list"
+input UUID_ListFilter {
+  includes: UUID
+  excludes: UUID
+  includesAll: [UUID!]
+  excludesAll: [UUID!]
+}
+
+"Conditions on an Int value"
+input Int_Filter {
+  isNull: Boolean
+  eq: Int
+  ne: Int
+  in: [Int!]
+  nin: [Int!]
+  gt: Int
+  ge: Int
+  lt: Int
+  le: Int
+}
+
+"Conditions on an Int list"
+input Int_ListFilter {
+  includes: Int
+  excludes: Int
+  includesAll: [Int!]
+  excludesAll: [Int!]
+}
+
+"Conditions on an Int64 value"
+input Int64_Filter {
+  isNull: Boolean
+  eq: Int64
+  ne: Int64
+  in: [Int64!]
+  nin: [Int64!]
+  gt: Int64
+  ge: Int64
+  lt: Int64
+  le: Int64
+}
+
+"Conditions on an Int64 list"
+input Int64_ListFilter {
+  includes: Int64
+  excludes: Int64
+  includesAll: [Int64!]
+  excludesAll: [Int64!]
+}
+
+"Conditions on a Float value"
+input Float_Filter {
+  isNull: Boolean
+  eq: Float
+  ne: Float
+  in: [Float!]
+  nin: [Float!]
+  gt: Float
+  ge: Float
+  lt: Float
+  le: Float
+}
+
+"Conditions on a Float list"
+input Float_ListFilter {
+  includes: Float
+  excludes: Float
+  includesAll: [Float!]
+  excludesAll: [Float!]
+}
+
+"Conditions on a Boolean value"
+input Boolean_Filter {
+  isNull: Boolean
+  eq: Boolean
+  ne: Boolean
+  in: [Boolean!]
+  nin: [Boolean!]
+}
+
+"Conditions on a Boolean list"
+input Boolean_ListFilter {
+  includes: Boolean
+  excludes: Boolean
+  includesAll: [Boolean!]
+  excludesAll: [Boolean!]
+}
+
+"Conditions on an Any value"
+input Any_Filter {
+  isNull: Boolean
+  eq: Any
+  ne: Any
+  in: [Any!]
+  nin: [Any!]
+}
+
+"Conditions on a Any list"
+input Any_ListFilter {
+  includes: Any
+  excludes: Any
+  includesAll: [Any!]
+  excludesAll: [Any!]
+}
+type Query {
+  _service: _Service!
+}
+
+type Mutation {
+  # This is just a dummy field so that Mutation is always non-empty.
+  _firebase: Void @fdc_deprecated(reason: "dummy field -- does nothing useful")
+}
+
+type _Service {
+  sdl: String!
+}
+
+"(Internal) Added to things that may be removed from FDC and will soon be no longer usable in schema or operations."
+directive @fdc_deprecated(reason: String = "No longer supported") on
+  | SCHEMA
+  | SCALAR
+  | OBJECT
+  | FIELD_DEFINITION
+  | ARGUMENT_DEFINITION
+  | INTERFACE
+  | UNION
+  | ENUM
+  | ENUM_VALUE
+  | INPUT_OBJECT
+  | INPUT_FIELD_DEFINITION
+
+"(Internal) Added to scalars representing quoted CEL expressions."
+directive @fdc_celExpression(
+  "The expected CEL type that the expression should evaluate to."
+  returnType: String
+) on SCALAR
+
+"(Internal) Added to scalars representing quoted SQL expressions."
+directive @fdc_sqlExpression(
+  "The expected SQL type that the expression should evaluate to."
+  dataType: String
+) on SCALAR
+
+"(Internal) Added to types that may not be used as variables."
+directive @fdc_forbiddenAsVariableType on SCALAR | OBJECT | INTERFACE | UNION | ENUM | INPUT_OBJECT
+
+"(Internal) Added to types that may not be used as fields in schema."
+directive @fdc_forbiddenAsFieldType on SCALAR | OBJECT | INTERFACE | UNION | ENUM | INPUT_OBJECT
+
+"Provides a frequently used example for this type / field / argument."
+directive @fdc_example(
+  "A GraphQL literal value (verbatim) whose type matches the target."
+  value: Any
+  "A human-readable text description of what `value` means in this context."
+  description: String
+) repeatable on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | INTERFACE | UNION | ENUM | INPUT_OBJECT | INPUT_FIELD_DEFINITION
+
+"(Internal) Marks this field / argument as conflicting with others in the same group."
+directive @fdc_oneOf(
+  "The group name where fields / arguments conflict with each other."
+  group: String! = ""
+  "If true, exactly one field / argument in the group must be specified."
+  required: Boolean! = false
+) repeatable on FIELD_DEFINITION | ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+"""
+UUID is a string with hex digits representing an RFC4122 value.
+
+Outputs will always be 32 lower-case hex digits with no delimiters or curly
+braces. Inputs in the following formats are also accepted (case insensitive):
+
+    xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    urn:uuid:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    {xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}
+"""
+scalar UUID @specifiedBy(url: "https://tools.ietf.org/html/rfc4122")
+scalar Int64
+
+scalar Any
+scalar Void
+"""
+The `True` scalar type only accepts the boolean `true`.
+
+An optional field / argument typed `True` may either be set to `true` or omitted
+(not provided at all). `false` or `null` is not accepted.
+"""
+scalar True
+  @fdc_forbiddenAsFieldType
+  @fdc_forbiddenAsVariableType
+  @fdc_example(value: true, description: "The only allowed value.")
+"Define the intervals used in timestamps and dates (subset)"
+enum TimestampInterval @fdc_deprecated {
+  second
+  minute
+  hour
+  day
+  week
+  month
+  year
+}
+"""
+A Common Expression Language (CEL) expression that returns a boolean at runtime.
+
+The expression can reference the `auth` variable, which is null if Firebase Auth
+is not used. Otherwise, it contains the following fields:
+
+    - `auth.uid`: The current user ID.
+    - `auth.token`: A map of all token fields (i.e. "claims").
+"""
+scalar Boolean_Expr
+  @specifiedBy(url: "https://github.com/google/cel-spec")
+  @fdc_celExpression(returnType: "bool")
+  @fdc_forbiddenAsVariableType
+  @fdc_forbiddenAsFieldType
+  @fdc_example(value: "auth != null", description: "Allow only if a Firebase Auth user is present.")
+
+"""
+A Common Expression Language (CEL) expression that returns a string at runtime.
+
+Limitation: Right now, only a few expressions are supported. Those are listed
+using the @fdc_example directive on this scalar.
+"""
+scalar String_Expr
+  @specifiedBy(url: "https://github.com/google/cel-spec")
+  @fdc_celExpression(returnType: "string")
+  @fdc_forbiddenAsVariableType
+  @fdc_forbiddenAsFieldType
+  @fdc_example(value: "auth.uid", description: "The ID of the currently logged in user in Firebase Auth. (Errors if not logged in.)")
+  @fdc_example(value: "uuidV4()", description: "Generates a new random UUID (version 4) string, formatted as 32 lower-case hex digits without delimiters.")
+
+"""
+A Common Expression Language (CEL) expression that returns a UUID string at runtime.
+
+Limitation: Right now, only a few expressions are supported. Those are listed
+using the @fdc_example directive on this scalar.
+"""
+scalar UUID_Expr
+  @specifiedBy(url: "https://github.com/google/cel-spec")
+  @fdc_celExpression(returnType: "string")
+  @fdc_forbiddenAsVariableType
+  @fdc_forbiddenAsFieldType
+  @fdc_example(value: "uuidV4()", description: "Generates a new random UUID (version 4) every time.")
+
+"""
+A Common Expression Language (CEL) expression whose return type is unspecified.
+
+Limitation: Only a limited set of expressions are supported for now for each
+type. For type XXX, see the @fdc_example directives on XXX_Expr for a full list.
+"""
+scalar Any_Expr
+  @specifiedBy(url: "https://github.com/google/cel-spec")
+  @fdc_celExpression
+  @fdc_forbiddenAsVariableType
+  @fdc_forbiddenAsFieldType
+  @fdc_example(value: "auth.uid", description: "The ID of the currently logged in user in Firebase Auth. (Errors if not logged in.)")
+  @fdc_example(value: "uuidV4()", description: "Generates a new random UUID version 4 (formatted as 32 lower-case hex digits without delimiters if result type is String).")
+  @fdc_example(value: "request.time", description: "The timestamp when the request is received (with microseconds precision).")
+
+"""
+A PostgreSQL value expression whose return type is unspecified.
+"""
+scalar Any_SQL
+  @specifiedBy(url: "https://www.postgresql.org/docs/current/sql-expressions.html")
+  @fdc_sqlExpression
+  @fdc_forbiddenAsVariableType
+  @fdc_forbiddenAsFieldType
+"""
+Defines a relational database table.
+
+Given `type TableName @table`,
+
+ - `TableName` is the GQL type name.
+ - `tableName` is the singular name. Override with `@table(singular)`.
+ - `tableNames` is the plural name. Override with `@table(plural)`.
+ - `table_name` is the SQL table id. Override with `@table(name)`.
+
+Only a table type can be configured further with:
+
+ - Customized data types. See `@col`.
+ - Index. See `@index`
+ - Unique constraint. See `@unqiue`
+ - Relation. See `@ref`
+ - Embedded Json. See `@embed`
+
+A scalar field map to a SQL database column.
+An object field (like `type TableName @table { field: AnotherType }`) are either
+
+ - a relation reference field if `AnotherType` is annotated with `@table`.
+ - an embedded json field if `field` is annotated with `@embed`.
+
+"""
+directive @table(
+  "Override the SQL database table name. Defaults to <table_name>."
+  name: String
+  "Override the singular name. Default is the camel case of the type name."
+  singular: String
+  "Override the plural name. Default is generated based on English patterns."
+  plural: String
+  "The primary key of the table. Defaults to a single field `id: UUID!`. Generate if missing."
+  key: [String!]
+) on OBJECT
+
+"""
+Defines a relational database view.
+
+Given `type ViewName @view`,
+ - `ViewName` is the GQL type name.
+ - `viewName` is the singular name. Override with `@view(singular)`.
+ - `viewNames` is the plural name. Override with `@view(plural)`.
+ - `view_name` is the SQL view id. Override with `@view(name)`.
+    When `@view(sql)` is defined, it uses the given raw SQL as the view instead.
+
+A view type can be used just as a table type with queries.
+A view type may have a nullable `@ref` field to another table, but cannot be
+referenced in a `@ref`.
+
+WARNING: Firebase Data Connect does not validate the SQL of the view or
+evaluate whether it matches the defined fields.
+
+If the SQL view is invalid or undefined, related requests may fail.
+If the SQL view return incompatible types. Firebase Data Connect will surface
+an error in the response.
+"""
+directive @view(
+  """
+  The SQL view name. If no `name` or `sql` are provided, defaults to
+  snake_case of the singular type name.
+  """
+  name: String @fdc_oneOf
+  """
+  SQL SELECT statement to use as the basis for this type. Note that all SQL
+  identifiers should be snake_case and all GraphQL identifiers should be
+  camelCase.
+  """
+  sql: String @fdc_oneOf
+  "Override the singular name. Default is the camel case of the type name."
+  singular: String
+  "Override the plural name. Default is generated based on English patterns."
+  plural: String
+) on OBJECT
+
+"""
+Specify additional column options.
+
+Given `type TableName @table { fieldName: Int } `
+
+ - `field_name` is the SQL column name. Override with `@col(name)`.
+
+"""
+directive @col(
+  "The SQL database column name. Defaults to <field_name>."
+  name: String
+  """
+  Override SQL columns data type.
+  Each GraphQL type could map to many SQL data types.
+  Refer to Postgres supported data types and mappings to GQL.
+  """
+  dataType: String
+  """
+  Defines a fixed column size for certain scalar types.
+
+  - For Vector, size is required. It establishes the length of the vector.
+  - For String, size converts `text` type to `varchar(size)`.
+  """
+  size: Int
+) on FIELD_DEFINITION
+
+
+"""
+Define a reference field to another table.
+
+Given `type TableName @table { refField: AnotherTableName }`, it defines a foreign-key constraint
+
+ - with id `table_name_ref_field_fkey` (override with `@ref(constraintName)`)
+ - from `table_name.ref_field` (override with `@ref(fields)`)
+ - to `another_table_name.id` (override with `@ref(references)`)
+
+Does not support `[AnotherTableName]` because array fields cannot have foreign-key constraints.
+Nullability determines whether the reference is required.
+
+ - `refField: AnotherTableName`: optional reference, SET_NULL on delete.
+ - `refField: AnotherTableName!`: required reference, CASCADE on delete.
+
+Consider all types of SQL relations:
+
+ - many-to-one relations involve a reference field on the many-side.
+    - many-to-maybe-one if `refField: AnotherTableName`.
+    - many-to-exactly-one if `refField: AnotherTableName!`.
+ - one-to-one relations involve a unique reference field on one side.
+    - maybe-one-to-maybe-one if `refField: AnotherTableName @unique`.
+    - maybe-one-to-exact-one if `refField: AnotherTableName! @unique`.
+    - exact-one-to-exact-one shall be represented as a single table instead.
+ - many-to-many relations involve a join table.
+    - Its primary keys must be two non-null reference fields to tables bridged together to guarantee at most one relation per pair.
+
+type TableNameToAnotherTableName @table(key: ["refField", "anotherRefField"]) {
+  refField: TableName!
+  anotherRefField: AnotherTableName!
+}
+
+"""
+directive @ref(
+  "The SQL database foreign key constraint name. Default to <table_name>_<field_name>_fkey."
+  constraintName: String
+  """
+  Foreign key fields. Default to <tableName><PrimaryIdName>.
+  """
+  fields: [String!]
+  "The fields that the foreign key references in the other table. Default to the primary key."
+  references: [String!]
+) on FIELD_DEFINITION
+
+"Define the direction of an orderby query"
+enum OrderDirection {
+  ASC
+  DESC
+}
+
+enum ColDefault @fdc_deprecated {
+  """
+  Generates a random UUID (v4) as the default column value.
+  Compatible with String or UUID typed fields.
+  """
+  UUID
+  """
+  Generates an auto-incrementing sequence as the default column value.
+  Compatible with Int and Int64 typed fields.
+  """
+  SEQUENCE
+  """
+  Populates the default column value with the current date or timestamp.
+  Compatible with Date and Timestamp typed fields.
+  """
+  NOW
+}
+
+"""
+Specify the default column value.
+
+The supported arguments vary based on the field type.
+"""
+directive @default(
+  "A constant value. Validated against the field GraphQL type at compile-time."
+  value: Any @fdc_oneOf(required: true)
+  "(Deprecated) Built-in common ways to generate initial value."
+  generate: ColDefault @fdc_oneOf(required: true) @deprecated
+  "A CEL expression, whose return value must match the field data type."
+  expr: Any_Expr @fdc_oneOf(required: true)
+  """
+  A raw SQL expression, whose SQL data type must match the underlying column.
+
+  The value is any variable-free expression (in particular, cross-references to
+  other columns in the current table are not allowed). Subqueries are not allowed either.
+  https://www.postgresql.org/docs/current/sql-createtable.html#SQL-CREATETABLE-PARMS-DEFAULT
+  """
+  sql: Any_SQL @fdc_oneOf(required: true)
+) on FIELD_DEFINITION
+"""
+Date is a string in the YYYY-MM-DD format representing a local-only date.
+
+See the description for Timestamp for range and limitations.
+
+As a FDC-specific extension, inputs that includes time portions (as specified by
+the Timestamp scalar) are accepted but only the date portion is used. In other
+words, only the part before "T" is used and the rest discarded. This effectively
+truncates it to the local date in the specified time-zone.
+
+Outputs will always be in the canonical YYYY-MM-DD format.
+"""
+scalar Date @specifiedBy(url: "https://scalars.graphql.org/andimarek/local-date.html")
+
+"""
+Timestamp is a RFC 3339 string that represents an exact point in time.
+
+The serialization format follows https://scalars.graphql.org/andimarek/date-time
+except the "Non-optional exact milliseconds" Section. As a FDC-specific
+extension, inputs and outputs may contain 0, 3, 6, or 9 fractional digits.
+
+Specifically, output precision varies by server-side factors such as data source
+support and clients must not rely on an exact number of digits. Clients may
+truncate extra digits as fit, with the caveat that there may be information loss
+if the truncated value is subsequently sent back to the server.
+
+FDC only supports year 1583 to 9999 (inclusive) and uses the ISO-8601 calendar
+system for all date-time calculations. Notably, the expanded year representation
+(+/-YYYYY) is rejected and Year 1582 and before may either be rejected or cause
+undefined behavior.
+"""
+scalar Timestamp @specifiedBy(url: "https://scalars.graphql.org/andimarek/date-time")
+
+"""
+A Common Expression Language (CEL) expression that returns a Timestamp at runtime.
+
+Limitation: Right now, only a few expressions are supported. Those are listed
+using the @fdc_example directive on this scalar.
+"""
+scalar Timestamp_Expr
+  @specifiedBy(url: "https://github.com/google/cel-spec")
+  @fdc_celExpression(returnType: "google.protobuf.Timestamp")
+  @fdc_forbiddenAsVariableType
+  @fdc_forbiddenAsFieldType
+  @fdc_example(value: "request.time", description: "The timestamp when the request is received (with microseconds precision).")
+
+"""
+A Common Expression Language (CEL) expression that returns a Timestamp at runtime,
+which is then truncated to UTC date only. The time-of-day parts are discarded.
+
+Limitation: Right now, only a few expressions are supported. Those are listed
+using the @fdc_example directive on this scalar.
+"""
+scalar Date_Expr
+  @specifiedBy(url: "https://github.com/google/cel-spec")
+  @fdc_celExpression(returnType: "google.protobuf.Timestamp")
+  @fdc_forbiddenAsVariableType
+  @fdc_forbiddenAsFieldType
+  @fdc_example(value: "request.time", description: "The UTC date on which the request is received.")
+
+"Conditions on a Date value"
+input Date_Filter {
+  isNull: Boolean
+  eq: Date @fdc_oneOf(group: "eq")
+  eq_expr: Date_Expr @fdc_oneOf(group: "eq")
+  eq_date: Date_Relative @fdc_oneOf(group: "eq")
+  ne: Date @fdc_oneOf(group: "ne")
+  ne_expr: Date_Expr @fdc_oneOf(group: "ne")
+  ne_date: Date_Relative @fdc_oneOf(group: "ne")
+  in: [Date!]
+  nin: [Date!]
+  gt: Date @fdc_oneOf(group: "gt")
+  gt_expr: Date_Expr @fdc_oneOf(group: "gt")
+  gt_date: Date_Relative @fdc_oneOf(group: "gt")
+  ge: Date @fdc_oneOf(group: "ge")
+  ge_expr: Date_Expr @fdc_oneOf(group: "ge")
+  ge_date: Date_Relative @fdc_oneOf(group: "ge")
+  lt: Date @fdc_oneOf(group: "lt")
+  lt_expr: Date_Expr @fdc_oneOf(group: "lt")
+  lt_date: Date_Relative @fdc_oneOf(group: "lt")
+  le: Date @fdc_oneOf(group: "le")
+  le_expr: Date_Expr @fdc_oneOf(group: "le")
+  le_date: Date_Relative @fdc_oneOf(group: "le")
+}
+
+"Conditions on a Date list"
+input Date_ListFilter {
+  includes: Date @fdc_oneOf(group: "includes")
+  includes_expr: Date_Expr @fdc_oneOf(group: "includes")
+  includes_date: Date_Relative @fdc_oneOf(group: "includes")
+  excludes: Date @fdc_oneOf(group: "excludes")
+  excludes_expr: Date_Expr @fdc_oneOf(group: "excludes")
+  excludes_date: Date_Relative @fdc_oneOf(group: "excludes")
+  includesAll: [Date!]
+  excludesAll: [Date!]
+}
+
+"Conditions on an Timestamp value"
+input Timestamp_Filter {
+  isNull: Boolean
+  eq: Timestamp @fdc_oneOf(group: "eq")
+  eq_expr: Timestamp_Expr @fdc_oneOf(group: "eq")
+  eq_time: Timestamp_Relative @fdc_oneOf(group: "eq")
+  ne: Timestamp @fdc_oneOf(group: "ne")
+  ne_expr: Timestamp_Expr @fdc_oneOf(group: "ne")
+  ne_time: Timestamp_Relative @fdc_oneOf(group: "ne")
+  in: [Timestamp!]
+  nin: [Timestamp!]
+  gt: Timestamp @fdc_oneOf(group: "gt")
+  gt_expr: Timestamp_Expr @fdc_oneOf(group: "gt")
+  gt_time: Timestamp_Relative @fdc_oneOf(group: "gt")
+  ge: Timestamp @fdc_oneOf(group: "ge")
+  ge_expr: Timestamp_Expr @fdc_oneOf(group: "ge")
+  ge_time: Timestamp_Relative @fdc_oneOf(group: "ge")
+  lt: Timestamp @fdc_oneOf(group: "lt")
+  lt_expr: Timestamp_Expr @fdc_oneOf(group: "lt")
+  lt_time: Timestamp_Relative @fdc_oneOf(group: "lt")
+  le: Timestamp @fdc_oneOf(group: "le")
+  le_expr: Timestamp_Expr @fdc_oneOf(group: "le")
+  le_time: Timestamp_Relative @fdc_oneOf(group: "le")
+}
+
+"Conditions on a Timestamp list"
+input Timestamp_ListFilter {
+  includes: Timestamp @fdc_oneOf(group: "includes")
+  includes_expr: Timestamp_Expr @fdc_oneOf(group: "includes")
+  includes_time: Timestamp_Relative @fdc_oneOf(group: "includes")
+  excludes: Timestamp @fdc_oneOf(group: "excludes")
+  excludes_expr: Timestamp_Expr @fdc_oneOf(group: "excludes")
+  excludes_time: Timestamp_Relative @fdc_oneOf(group: "excludes")
+  includesAll: [Timestamp!]
+  excludesAll: [Timestamp!]
+}
+
+"Update input of a Date value"
+input Date_Update {
+  set: Date @fdc_oneOf(group: "set")
+  set_expr: Date_Expr @fdc_oneOf(group: "set")
+  set_date: Date_Relative @fdc_oneOf(group: "set")
+}
+
+"Update input of a Date list value"
+input Date_ListUpdate {
+  set: [Date!]
+  append: [Date!]
+  prepend: [Date!]
+  delete: Int
+  i: Int
+  update: Date
+}
+
+"Update input of a Timestamp value"
+input Timestamp_Update {
+  set: Timestamp @fdc_oneOf(group: "set")
+  set_expr: Timestamp_Expr @fdc_oneOf(group: "set")
+  set_time: Timestamp_Relative @fdc_oneOf(group: "set")
+}
+
+"Update input of a Timestamp list value"
+input Timestamp_ListUpdate {
+  set: [Timestamp!]
+  append: [Timestamp!]
+  prepend: [Timestamp!]
+  delete: Int
+  i: Int
+  update: Timestamp
+}
+
+"A runtime-calculated Timestamp value relative to `now` or `at`."
+input Timestamp_Relative @fdc_forbiddenAsVariableType @fdc_forbiddenAsFieldType {
+  now: True @fdc_oneOf(group: "from", required: true)
+  at: Timestamp @fdc_oneOf(group: "from", required: true)
+
+  add: Timestamp_Duration
+  sub: Timestamp_Duration
+
+  truncateTo: Timestamp_Interval
+}
+
+input Timestamp_Duration @fdc_forbiddenAsVariableType @fdc_forbiddenAsFieldType {
+  milliseconds: Int! = 0
+  seconds: Int! = 0
+  minutes: Int! = 0
+  hours: Int! = 0
+  days: Int! = 0
+  weeks: Int! = 0
+  months: Int! = 0
+  years: Int! = 0
+}
+
+enum Timestamp_Interval @fdc_forbiddenAsFieldType {
+  SECOND
+  MINUTE
+  HOUR
+  DAY
+  WEEK
+  MONTH
+  YEAR
+}
+
+"A runtime-calculated Date value relative to `today` or `on`."
+input Date_Relative @fdc_forbiddenAsVariableType @fdc_forbiddenAsFieldType {
+  today: True @fdc_oneOf(group: "from", required: true)
+  on: Date @fdc_oneOf(group: "from", required: true)
+
+  add: Date_Duration
+  sub: Date_Duration
+
+  truncateTo: Date_Interval
+}
+
+input Date_Duration @fdc_forbiddenAsVariableType @fdc_forbiddenAsFieldType {
+  days: Int! = 0
+  weeks: Int! = 0
+  months: Int! = 0
+  years: Int! = 0
+}
+
+enum Date_Interval @fdc_forbiddenAsFieldType {
+  WEEK
+  MONTH
+  YEAR
+}
+"Update input of a String value"
+input String_Update {
+  set: String @fdc_oneOf(group: "set")
+  set_expr: String_Expr @fdc_oneOf(group: "set")
+}
+
+"Update input of a String list value"
+input String_ListUpdate {
+  set: [String!]
+  append: [String!]
+  prepend: [String!]
+}
+
+"Update input of a UUID value"
+input UUID_Update {
+  set: UUID @fdc_oneOf(group: "set")
+  set_expr: UUID_Expr @fdc_oneOf(group: "set")
+}
+
+"Update input of an ID list value"
+input UUID_ListUpdate {
+  set: [UUID!]
+  append: [UUID!]
+  prepend: [UUID!]
+}
+
+"Update input of an Int value"
+input Int_Update {
+  set: Int
+  inc: Int
+  dec: Int
+}
+
+"Update input of an Int list value"
+input Int_ListUpdate {
+  set: [Int!]
+  append: [Int!]
+  prepend: [Int!]
+}
+
+"Update input of an Int64 value"
+input Int64_Update {
+  set: Int64
+  inc: Int64
+  dec: Int64
+}
+
+"Update input of an Int64 list value"
+input Int64_ListUpdate {
+  set: [Int64!]
+  append: [Int64!]
+  prepend: [Int64!]
+}
+
+"Update input of a Float value"
+input Float_Update {
+  set: Float
+  inc: Float
+  dec: Float
+}
+
+"Update input of a Float list value"
+input Float_ListUpdate {
+  set: [Float!]
+  append: [Float!]
+  prepend: [Float!]
+}
+
+"Update input of a Boolean value"
+input Boolean_Update {
+  set: Boolean
+}
+
+"Update input of a Boolean list value"
+input Boolean_ListUpdate {
+  set: [Boolean!]
+  append: [Boolean!]
+  prepend: [Boolean!]
+}
+
+"Update input of an Any value"
+input Any_Update {
+  set: Any
+}
+
+"Update input of an Any list value"
+input Any_ListUpdate {
+  set: [Any!]
+  append: [Any!]
+  prepend: [Any!]
+}
+"""
+Vector is an array of single-precision floating-point numbers, serialized
+as a JSON array. All elements must be finite (no NaN, Infinity or -Infinity).
+
+Example: [1.1, 2, 3.3]
+"""
+scalar Vector
+
+"""
+Defines what siliarlity function to use for fetching vectors.
+Details here: https://github.com/pgvector/pgvector?tab=readme-ov-file#vector-functions
+"""
+enum VectorSimilarityMethod {
+  L2
+  COSINE
+  INNER_PRODUCT
+}
+
+"Conditions on an Vector value"
+input Vector_Filter {
+  eq: Vector
+  ne: Vector
+  in: [Vector!]
+  nin: [Vector!]
+  isNull: Boolean
+}
+
+input Vector_ListFilter {
+  "When true, will match if the list includes the supplied vector."
+  includes: Vector
+  excludes: Vector
+  includesAll: [Vector!]
+  excludesAll: [Vector!]
+}
+
+"Update input of an Vector value"
+input Vector_Update {
+  set: Vector @fdc_oneOf(group: "set")
+  set_embed: Vector_Embed @fdc_oneOf(group: "set")
+}
+
+"Update input of a Vector list value"
+input Vector_ListUpdate {
+  set: [Vector]
+  append: [Vector]
+  prepend: [Vector]
+  delete: Int
+  i: Int
+  update: Vector
+}
+
+"""
+Create a vector embedding of text using the given model on Vertex AI.
+
+Example: {text: "Hi there", model: "textembedding-gecko@003"}
+See: https://cloud.google.com/vertex-ai/generative-ai/docs/embeddings/get-text-embeddings
+
+Limitation: In the emulator, if Vertex AI is not configured, a pseudorandom
+vector is generated from text as a fake implementation for testing only.
+"""
+input Vector_Embed @fdc_forbiddenAsVariableType {
+  model: Vector_Embed_Model!
+  text: String!
+}
+
+"""
+A string that specifies a Vertex AI model and version.
+
+It is strongly recommended to specify a stable model version (for example,
+textembedding-gecko@003). The latest version of a model is in Preview and is not
+General Availability (GA). Because the latest version is in Preview, it isn't
+guaranteed to be production ready.
+"""
+scalar Vector_Embed_Model
+  @specifiedBy(url: "https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versioning")
+  @fdc_forbiddenAsVariableType
+  @fdc_forbiddenAsFieldType
+  @fdc_example(value: "textembedding-gecko@003", description: "A stable version of the textembedding-gecko model")

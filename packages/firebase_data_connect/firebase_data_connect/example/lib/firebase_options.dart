@@ -55,7 +55,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBhecSmkiqmlXyC-lmOENaQ7ueA5svNXV4',
-    appId: '1:1033042013828:android:53d4efdf798c1ab02e5cd1',
+    appId: '1:1033042013828:android:f01703e343cd64d72e5cd1',
     messagingSenderId: '1033042013828',
     projectId: 'fdc-bugbash-mtewani',
     databaseURL: 'https://fdc-bugbash-mtewani-default-rtdb.firebaseio.com',
@@ -69,7 +69,10 @@ class DefaultFirebaseOptions {
     projectId: 'fdc-bugbash-mtewani',
     databaseURL: 'https://fdc-bugbash-mtewani-default-rtdb.firebaseio.com',
     storageBucket: 'fdc-bugbash-mtewani.appspot.com',
-    iosClientId: '1033042013828-dakdhgkbr6dtt3att3j9da51dlric008.apps.googleusercontent.com',
+    androidClientId:
+        '1033042013828-tb1nf5n7sv5ksf0v3vs4ral3b5mmiguc.apps.googleusercontent.com',
+    iosClientId:
+        '1033042013828-dakdhgkbr6dtt3att3j9da51dlric008.apps.googleusercontent.com',
     iosBundleId: 'com.example.example',
   );
 
@@ -80,7 +83,10 @@ class DefaultFirebaseOptions {
     projectId: 'fdc-bugbash-mtewani',
     databaseURL: 'https://fdc-bugbash-mtewani-default-rtdb.firebaseio.com',
     storageBucket: 'fdc-bugbash-mtewani.appspot.com',
-    iosClientId: '1033042013828-9qpuh32lallu9sg3cjb63kkin1cntvsb.apps.googleusercontent.com',
+    androidClientId:
+        '1033042013828-tb1nf5n7sv5ksf0v3vs4ral3b5mmiguc.apps.googleusercontent.com',
+    iosClientId:
+        '1033042013828-9qpuh32lallu9sg3cjb63kkin1cntvsb.apps.googleusercontent.com',
     iosBundleId: 'com.example.example.RunnerTests',
   );
 }

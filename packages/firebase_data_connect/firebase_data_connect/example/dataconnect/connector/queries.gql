@@ -1,0 +1,60 @@
+# # Example queries for a simple email app.
+
+## @auth() directives control who can call each operation.
+## Only admins should be able to list all users, so we use NO_ACCESS
+# query ListUsers @auth(level: NO_ACCESS) {
+#   users { uid, name, email: address }
+# }
+
+## Everyone should be able to see their inbox though, so we use PUBLIC
+# query ListInbox(
+#   $uid: String
+# ) @auth(level: PUBLIC) {
+## where allows you to filter lists
+## Here, we use it to filter to only emails where this user is one of the recipients.
+#   emails(where: {
+#     users_via_Recipient: { 
+#       exist: { uid: { eq: $uid }
+#     }}
+#   }) {
+#     id subject sent 
+#     content: text 
+#     sender: from { name email: address uid }
+
+## <field>_on_<foreign_key_field> makes it easy to grab info from another table
+## Here, we use it to grab all the recipients of the email.
+#     to: recipients_on_email {
+#       user { name email: address uid }
+#     }
+#   }
+# }
+
+# query GetUidByEmail($emails: [String!]) @auth(level: PUBLIC) {
+#   users(where: { address: { in: $emails } }) {
+#     uid email: address
+#   }
+# }
+
+# query ListSent(
+#   $uid: String
+# ) @auth(level: PUBLIC) {
+#   emails(where: { 
+#     fromUid: { eq: $uid }
+#   }) {
+#     id subject sent 
+#     content: text 
+#     sender: from { name email: address uid }
+#     to: recipients_on_email {
+#       user { name email: address uid }
+#     }
+#   }
+# }
+
+query listMovies @auth(level: USER) {
+    movies {
+        id,
+        genre,
+        title,
+        rating
+    }
+}

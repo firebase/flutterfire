@@ -5,20 +5,12 @@ abstract class Listener<Data, Variables> {
   // void onError();
 }
 
-class TrackedQuery<Data, Variables> {
-  TrackedQuery({required this.name, required this.variables});
-  String name;
-  Variables variables;
-}
-
 class QueryManager {
   Map<String, Map<String, StreamController<dynamic>>> trackedQueries = {};
-  Stream addQuery<Variables extends DataConnectClass>(
-      String queryName, Variables variables) {
-    TrackedQuery<dynamic, Variables> trackedQuery =
-        TrackedQuery<dynamic, Variables>(name: queryName, variables: variables);
+  Stream addQuery<Variables>(
+      String queryName, Variables variables, String varsAsStr) {
     // TODO(mtewani): Replace with more stable encoder
-    String key = variables.toJson();
+    String key = varsAsStr;
     if (trackedQueries[queryName] == null) {
       trackedQueries[queryName] = <String, StreamController>{};
       debugPrint('Creating map for $queryName');
@@ -31,45 +23,54 @@ class QueryManager {
     return trackedQueries[queryName]![key]!.stream;
   }
 
-  triggerCallback<Data, Variables extends DataConnectClass>(
-      String operationName, Variables variables, Data data) {
-    String key = '';
-    if (variables.runtimeType != EmptyDataConnectClass) {
-      key = variables.toJson();
-    }
-    print('Checking broadcast stream for $operationName, $key');
+  triggerCallback<Data, Variables>(
+      String operationName, String varsAsStr, Data data) {
+    String key = varsAsStr;
     if (trackedQueries[operationName] == null ||
         trackedQueries[operationName]![key] == null) {
-      print(trackedQueries);
       return;
     }
     trackedQueries[operationName]![key]!.add(data);
   }
 }
 
-class QueryRef<Data extends DataConnectClass,
-    Variables extends DataConnectClass> extends OperationRef<Data, Variables> {
-  QueryRef(operationName, variables, transport, serializer, this._queryManager)
-      : super(operationName, variables, transport, OperationType.QUERY,
-            serializer);
-  late QueryManager _queryManager;
+class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
+  QueryRef(
+      FirebaseAuth? auth,
+      String operationName,
+      Variables variables,
+      DataConnectTransport transport,
+      Deserializer<Data> deserializer,
+      Serializer<Variables> serializer,
+      this._queryManager)
+      : super(auth, operationName, variables, transport, OperationType.query,
+            deserializer, serializer);
+  QueryManager _queryManager;
   @override
   Future<OperationResult<Data, Variables>> execute() async {
     OperationResult<Data, Variables> res = await super.execute();
     _queryManager.triggerCallback<Data, Variables>(
-        operationName, variables, res.data);
+        operationName, serializer(variables), res.data);
     return res;
   }
 
   /// @example: ref.subscribe()
+  // TODO(mtewani): Implement ability to execute a query if no cache is available.
   Stream<Data> subscribe() {
-    return _queryManager.addQuery(operationName, variables).cast<Data>();
+    return _queryManager
+        .addQuery(operationName, variables, serializer(variables))
+        .cast<Data>();
   }
 }
 
-class MutationRef<Data extends DataConnectClass,
-    Variables extends DataConnectClass> extends OperationRef<Data, Variables> {
-  MutationRef(operationName, variables, transport, serializer)
-      : super(operationName, variables, transport, OperationType.MUTATION,
-            serializer);
+class MutationRef<Data, Variables> extends OperationRef<Data, Variables> {
+  MutationRef(
+    FirebaseAuth? auth,
+    String operationName,
+    Variables variables,
+    DataConnectTransport transport,
+    Deserializer<Data> deserializer,
+    Serializer<Variables> serializer,
+  ) : super(auth, operationName, variables, transport, OperationType.mutation,
+            deserializer, serializer);
 }

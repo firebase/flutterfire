@@ -19,10 +19,13 @@ class RestTransport implements DataConnectTransport {
   late String _url;
   TransportOptions transportOptions;
   DataConnectOptions options;
-  @override
-  Future<OperationResult<Data, Variables>> invokeMutation<
-          Data extends DataConnectClass, Variables extends DataConnectClass>(
-      String queryName, Serializer serialize, Variables? vars) async {
+  Future<Data> invokeOperation<Data, Variables>(
+      String queryName,
+      Deserializer<Data> deserializer,
+      Serializer<Variables> serializer,
+      Variables vars,
+      OperationType opType,
+      String? token) async {
     String project = options.projectId;
     String location = options.location;
     String service = options.serviceId;
@@ -31,45 +34,44 @@ class RestTransport implements DataConnectTransport {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     };
+    if (token != null) {
+      headers['X-Firebase-Auth-Token'] = token;
+    }
     Map<String, dynamic> body = {
       'name':
           'projects/$project/locations/$location/services/$service/connectors/$connector',
       'operationName': queryName,
     };
-    if (vars != null && vars.toJson() != '') {
-      body['variables'] = json.decode(vars.toJson());
+    if (vars != null) {
+      body['variables'] = json.decode(serializer(vars));
     }
-    print(json.encode(body));
-    http.Response r = await http.post(Uri.parse('$_url:executeMutation'),
+    String endpoint =
+        opType == OperationType.query ? 'executeQuery' : 'executeMutation';
+    http.Response r = await http.post(Uri.parse('$_url:$endpoint'),
         body: json.encode(body), headers: headers);
-    return OperationResult(
-        serialize(jsonEncode(jsonDecode(r.body)['data'])), vars);
+    return deserializer(jsonEncode(jsonDecode(r.body)['data']));
   }
 
   @override
-  Future<OperationResult<Data, Variables>> invokeQuery<
-          Data extends DataConnectClass, Variables extends DataConnectClass>(
-      String queryName, Serializer serialize, Variables? vars) async {
-    String project = options.projectId;
-    String location = options.location;
-    String service = options.serviceId;
-    String connector = options.connector;
-    Map<String, String> headers = {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-    };
-    Map<String, dynamic> body = {
-      'name':
-          'projects/$project/locations/$location/services/$service/connectors/$connector',
-      'operationName': queryName,
-    };
-    if (vars != null && vars.toJson() != '') {
-      body['variables'] = vars;
-    }
-    http.Response r = await http.post(Uri.parse('$_url:executeQuery'),
-        body: json.encode(body), headers: headers);
-    return OperationResult(
-        serialize(jsonEncode(jsonDecode(r.body)['data'])), vars);
+  Future<Data> invokeQuery<Data, Variables>(
+      String queryName,
+      Deserializer<Data> deserializer,
+      Serializer<Variables> serializer,
+      Variables vars,
+      String? token) async {
+    return invokeOperation(
+        queryName, deserializer, serializer, vars, OperationType.query, token);
+  }
+
+  @override
+  Future<Data> invokeMutation<Data, Variables>(
+      String queryName,
+      Deserializer<Data> deserializer,
+      Serializer<Variables> serializer,
+      Variables vars,
+      String? token) async {
+    return invokeOperation(queryName, deserializer, serializer, vars,
+        OperationType.mutation, token);
   }
 }
 

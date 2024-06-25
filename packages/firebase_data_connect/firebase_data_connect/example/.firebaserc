@@ -1,0 +1,10 @@
+{
+  "projects": {
+    "default": "movie-app-dart"
+  },
+  "dataconnectEmulatorConfig": {
+    "postgres": {
+      "localConnectionString": "postgresql://localhost:5432?sslmode=disable"
+    }
+  }
+}

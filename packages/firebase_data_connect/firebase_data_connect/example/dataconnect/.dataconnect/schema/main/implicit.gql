@@ -1,0 +1,3 @@
+extend type Movie {
+  id: UUID! @default(expr: "uuidV4()")
+}

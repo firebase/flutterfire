@@ -1,5 +1,9 @@
-import 'dart:convert';
 import 'dart:io';
+import 'package:example/generated/add_movie_variables.dart';
+import 'package:example/generated/list_movies_movies.dart';
+import 'package:example/generated/list_movies_variables.dart';
+import 'package:example/generated/movies.dart';
+import 'package:example/login.dart';
 import 'package:flutter/foundation.dart';
 
 import 'firebase_options.dart';
@@ -8,20 +12,11 @@ import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
+ConnectorConfig config =
+    ConnectorConfig("europe-north1", "movies", "dataconnect");
+
 void main() {
   runApp(const MyApp());
-}
-
-class AddMovie implements DataConnectClass {
-  AddMovie(this.title, this.genre, this.rating);
-  String title;
-  String genre;
-  double rating;
-  @override
-  toJson() {
-    // return '{"title"}';
-    return jsonEncode({'title': title, 'genre': genre, 'rating': rating});
-  }
 }
 
 class MyApp extends StatelessWidget {
@@ -51,7 +46,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Data Connect Home Page'),
+      home: const Login(),
     );
   }
 }
@@ -80,87 +75,28 @@ class DataConnectWidget extends StatefulWidget {
   State<DataConnectWidget> createState() => _DataConnectWidgetState();
 }
 
-class ListMoviesResponse extends DataConnectClass {
-  late List<Movie> movies;
-  static fromRealJson(String json) {
-    Map<String, dynamic> data = jsonDecode(json);
-    final parsed = (data['movies'] as List).cast<Map<String, dynamic>>();
-    ListMoviesResponse response = new ListMoviesResponse();
-    response.movies =
-        parsed.map<Movie>((json) => Movie.fromJson(json)).toList();
-    return response;
-  }
+// class AddMovieResponse {
+//   AddMovieResponse(this.movie_insert) {}
+//   @override
+//   String toJson() {
+//     // TODO: implement toJson
+//     throw UnimplementedError();
+//   }
 
-  @override
-  fromJson(String json) {
-    // TODO: implement fromJson
-    Map<String, dynamic> data = jsonDecode(json);
-    final parsed = (data['movies'] as List).cast<Map<String, dynamic>>();
-    movies = parsed.map<Movie>((json) => Movie.fromJson(json)).toList();
-    return this;
-  }
+//   String movie_insert;
+//   static fromRealJson(String json) {
+//     Map<String, dynamic> map = jsonDecode(json);
+//     return AddMovieResponse(map['movie_insert']['id']);
+//   }
+// }
 
-  @override
-  String toJson() {
-    return jsonEncode(this);
-  }
-}
+// String addMovieSerializer(AddMovie addMovie) {
+//   return addMovie.toJson();
+// }
 
-class Movie {
-  final String title;
-  final String genre;
-  final String id;
-  final double rating;
-  Movie(
-      {required this.title,
-      required this.genre,
-      required this.id,
-      required this.rating});
-  factory Movie.fromJson(Map<String, dynamic> json) {
-    return Movie(
-        genre: json['genre'] as String,
-        id: json['id'] as String,
-        rating: json['rating'] as double,
-        title: json['title'] as String);
-  }
-}
-
-ListMoviesResponse serializer(String json) {
-  return ListMoviesResponse.fromRealJson(json);
-}
-
-class AddMovieResponse implements DataConnectClass {
-  AddMovieResponse(this.movie_insert) {}
-  @override
-  String toJson() {
-    // TODO: implement toJson
-    throw UnimplementedError();
-  }
-
-  String movie_insert;
-  static fromRealJson(String json) {
-    Map<String, dynamic> map = jsonDecode(json);
-    return AddMovieResponse(map['movie_insert']['id']);
-  }
-}
-
-AddMovieResponse addMovieSerializer(String json) {
-  return AddMovieResponse.fromRealJson(json);
-}
-
-class EmptyDataConnectClass<T> extends DataConnectClass<T> {
-  @override
-  fromJson(String json) {
-    // TODO: implement fromJson
-    throw UnimplementedError();
-  }
-
-  @override
-  String toJson() {
-    // TODO: implement toJson
-    return '';
-  }
-}
+// AddMovieResponse addMovieDeserializer(String json) {
+//   return AddMovieResponse.fromRealJson(json);
+// }
 
 class _DataConnectWidgetState extends State<DataConnectWidget> {
   final ScrollController _scrollController = ScrollController();
@@ -168,48 +104,49 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
   final TextEditingController _genreController = TextEditingController();
   final List<({Image? image, String? text, bool fromUser})> _generatedContent =
       <({Image? image, String? text, bool fromUser})>[];
-  List<Movie> _movies = [];
+  List<ListMoviesMovies> _movies = [];
   double _rating = 0;
 
   Future<void> triggerReload() async {
-    QueryRef<ListMoviesResponse, EmptyDataConnectClass> ref =
-        FirebaseDataConnect.instance
-            .query<ListMoviesResponse, EmptyDataConnectClass>(
-                "listMovies", serializer, EmptyDataConnectClass());
+    QueryRef ref =
+        MoviesConnector.instance.listMovies.ref(ListMoviesVariables());
 
-    ref.execute();
+    ref.execute().then((event) {
+      print(event);
+      // Map<String, String> timestampData = {
+      //   "timestamp": "1985-04-12T23:20:50.123456789Z"
+      // };
+      // print(Dummydate.fromJson(timestampData).timestamp.value!.nanoseconds);
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    initFirebase().then((value) {
-      FirebaseDataConnect.instanceFor(
-          app: Firebase.app(),
-          connectorConfig:
-              ConnectorConfig("us-central1", "movies", "dataconnect"));
-      String host = 'localhost';
-      try {
-        if (Platform.isAndroid) {
-          host = '10.0.2.2';
-        }
-      } catch (_) {
-        print("Ignoring");
+    String host = 'localhost';
+    try {
+      if (Platform.isAndroid) {
+        host = '10.0.2.2';
       }
-      print(host);
-      int port = kIsWeb ? 9509 : 9510;
-      FirebaseDataConnect.instance.useDataConnectEmulator(host, port, false);
-      QueryRef<ListMoviesResponse, EmptyDataConnectClass> ref =
-          FirebaseDataConnect.instance
-              .query<ListMoviesResponse, EmptyDataConnectClass>(
-                  "listMovies", serializer, EmptyDataConnectClass());
-      ref.subscribe().listen((event) {
-        setState(() {
-          _movies = event.movies;
-        });
+    } catch (_) {
+      print("Ignoring");
+    }
+    int port = kIsWeb ? 9509 : 3628;
+    FirebaseDataConnect.instanceFor(
+            app: Firebase.app(), connectorConfig: config)
+        .useDataConnectEmulator(host, port: port);
+
+    QueryRef ref =
+        MoviesConnector.instance.listMovies.ref(ListMoviesVariables());
+    // FirebaseDataConnect.instanceFor(connectorConfig: config)
+    //     .query<ListMoviesResponse, void>(
+    //         "listMovies", deserializer, serializer, null);
+    ref.subscribe().listen((event) {
+      setState(() {
+        _movies = event.movies;
       });
-      triggerReload();
     });
+    triggerReload();
   }
 
   Future<void> initFirebase() async {
@@ -265,14 +202,9 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
               if (title == '' || genre == '') {
                 return;
               }
-              AddMovie newData = AddMovie(title, genre, _rating);
-              FirebaseDataConnect.instanceFor(
-                  app: Firebase.app(),
-                  connectorConfig:
-                      ConnectorConfig("us-central1", "movies", "dataconnect"));
-              MutationRef<AddMovieResponse, AddMovie> ref = FirebaseDataConnect
-                  .instance
-                  .mutation("addMovie", addMovieSerializer, newData);
+
+              MutationRef ref = MoviesConnector.instance.addMovie
+                  .ref(AddMovieVariables(genre, title, _rating));
               ref.execute().then((res) {
                 triggerReload();
               });

@@ -1,0 +1,37 @@
+# # Example mutations for a simple email app
+
+# mutation CreateUser($uid: String, $name: String, $address: String) @auth(level: NO_ACCESS) {
+## <type>_insert lets you create a new row in your table.
+#   user_insert(data: {
+#     uid: $uid,
+#     name: $name,
+#     address: $address
+#   })
+# }
+# mutation CreateEmail($content: String, $subject: String, $fromUid: String) @auth(level: PUBLIC) {
+#   email_insert(data: {
+#     text: $content,
+#     subject: $subject,
+#     fromUid: $fromUid,
+## Server values let your service populate data for you
+## Here, we use sent_date: { today: true } to set 'sent' to today's date.
+#     sent_date: { today: true }
+#   })
+# }
+# mutation CreateRecipient($emailId: UUID, $uid: String) @auth(level: PUBLIC) {
+#   recipient_insert(data: {
+#     emailId: $emailId,
+#     userUid: $uid
+#   })
+# }
+# mutation DeleteEmail($emailId: UUID, $uid: String) @auth(level: PUBLIC) {
+## <type>_ delete lets you delete rows from your table.
+#   recipient_delete(key: {emailId: $emailId, userUid: $uid})
+# }
+mutation addMovie($genre: String!, $title: String!, $rating: Float) @auth(level: PUBLIC) {
+    movie_insert(data: {
+         genre: $genre,
+         title: $title,
+        rating: $rating
+    })
+}

@@ -24,65 +24,74 @@ class ConnectorConfig {
 
   /// serviceId
   String serviceId;
+
+  /// String representation of connectorConfig
+  String toJson() {
+    return jsonEncode({
+      location: location,
+      connector: connector,
+      serviceId: serviceId,
+    });
+  }
 }
 
 abstract class DataConnectTransport {
   DataConnectTransport(this.transportOptions, this.options);
   TransportOptions transportOptions;
   DataConnectOptions options;
-  Future<OperationResult<Data, Variables>> invokeQuery<
-          Data extends DataConnectClass, Variables extends DataConnectClass>(
-      String queryName, Serializer serialize, Variables? vars);
+  Future<Data> invokeQuery<Data, Variables>(
+      String queryName,
+      Deserializer<Data> deserializer,
+      Serializer<Variables> serializer,
+      Variables vars,
+      String? token);
 
-  Future<OperationResult<Data, Variables>> invokeMutation<
-          Data extends DataConnectClass, Variables extends DataConnectClass>(
-      String queryName, Serializer serialize, Variables? vars);
-}
-
-class EmptyDataConnectClass implements DataConnectClass {
-  @override
-  String toJson() {
-    // TODO: implement toJson
-    throw UnimplementedError();
-  }
-
-  @override
-  fromJson(String json) {
-    // TODO: implement fromJson
-    throw UnimplementedError();
-  }
-}
-
-abstract class DataConnectClass<T> {
-  String toJson();
+  Future<Data> invokeMutation<Data, Variables>(
+      String queryName,
+      Deserializer<Data> deserializer,
+      Serializer<Variables> serializer,
+      Variables vars,
+      String? token);
 }
 
 class OperationResult<Data, Variables> {
-  OperationResult(this.data, this.variables);
+  OperationResult(this.data, this.ref);
   Data data;
-  Variables? variables;
+  OperationRef<Data, Variables> ref;
 }
 
-enum OperationType { QUERY, MUTATION }
+enum OperationType { query, mutation }
 
-class OperationRef<Data extends DataConnectClass,
-    Variables extends DataConnectClass> {
+class OperationRef<Data, Variables> {
   /// Constructor
-  OperationRef(this.operationName, this.variables, this._transport, this.opType,
-      this._serializer);
+  OperationRef(this.auth, this.operationName, this.variables, this._transport,
+      this.opType, this.deserializer, this.serializer);
+  FirebaseAuth? auth;
   Variables variables;
   String operationName;
   DataConnectTransport _transport;
-  Serializer<Data> _serializer;
+  Deserializer<Data> deserializer;
+  Serializer<Variables> serializer;
   OperationType opType;
 
-  Future<OperationResult<Data, Variables>> execute() {
-    if (this.opType == OperationType.QUERY) {
-      return this._transport.invokeQuery<Data, Variables>(
-          this.operationName, this._serializer, variables);
+  Future<OperationResult<Data, Variables>> execute() async {
+    String? token = await this.auth?.currentUser?.getIdToken();
+    if (this.opType == OperationType.query) {
+      Data data = await this._transport.invokeQuery<Data, Variables>(
+          this.operationName,
+          this.deserializer,
+          this.serializer,
+          variables,
+          token);
+      return OperationResult(data, this);
     } else {
-      return this._transport.invokeMutation<Data, Variables>(
-          this.operationName, this._serializer, variables);
+      Data data = await this._transport.invokeMutation<Data, Variables>(
+          this.operationName,
+          this.deserializer,
+          this.serializer,
+          variables,
+          token);
+      return OperationResult(data, this);
     }
   }
 }
@@ -101,4 +110,5 @@ class TransportOptions {
   bool? isSecure;
 }
 
-typedef Serializer<Data> = Data Function(String json);
+typedef Serializer<Variables> = String Function(Variables vars);
+typedef Deserializer<Data> = Data Function(String data);

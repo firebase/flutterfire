@@ -9,17 +9,23 @@ class TransportStub implements DataConnectTransport {
   TransportOptions transportOptions;
 
   @override
-  Future<OperationResult<Data, Variables>> invokeMutation<
-          Data extends DataConnectClass, Variables extends DataConnectClass>(
-      String queryName, Serializer serialize, Variables? vars) {
+  Future<Data> invokeMutation<Data, Variables>(
+      String queryName,
+      Deserializer<Data> deserializer,
+      Serializer<Variables> serializer,
+      Variables vars,
+      String? token) async {
     // TODO: implement invokeMutation
     throw UnimplementedError();
   }
 
   @override
-  Future<OperationResult<Data, Variables>> invokeQuery<
-          Data extends DataConnectClass, Variables extends DataConnectClass>(
-      String queryName, Serializer serialize, Variables? vars) {
+  Future<Data> invokeQuery<Data, Variables>(
+      String queryName,
+      Deserializer<Data> deserializer,
+      Serializer<Variables> serialize,
+      Variables vars,
+      String? token) async {
     // TODO: implement invokeQuery
     throw UnimplementedError();
   }
