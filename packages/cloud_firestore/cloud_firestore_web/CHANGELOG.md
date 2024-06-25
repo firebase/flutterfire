@@ -1,3 +1,7 @@
+## 4.0.2
+
+ - Update a dependency to the latest release.
+
 ## 4.0.1
 
  - **FIX**(firestore,web): ensure streams are removed on "hot restart" ([#12913](https://github.com/firebase/flutterfire/issues/12913)). ([c1a67e54](https://github.com/firebase/flutterfire/commit/c1a67e54894cbfb316b3445505b5803e2d041ed5))

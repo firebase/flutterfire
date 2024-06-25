@@ -1,3 +1,7 @@
+## 3.9.10
+
+ - Update a dependency to the latest release.
+
 ## 3.9.9
 
  - **FIX**(storage,web): clean up stream handlers on "hot restart" ([#12927](https://github.com/firebase/flutterfire/issues/12927)). ([0ea7099c](https://github.com/firebase/flutterfire/commit/0ea7099c137e505d0765faae27dc6d4bae2b78a1))

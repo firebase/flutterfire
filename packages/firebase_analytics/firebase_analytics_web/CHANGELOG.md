@@ -1,3 +1,7 @@
+## 0.5.8
+
+ - **FEAT**(analytics,ios): add support for `initiateOnDeviceConversionMeasurementWithPhoneNumber` and `initiateOnDeviceConversionMeasurementWithHashedEmailAddress` ([#12976](https://github.com/firebase/flutterfire/issues/12976)). ([1e25ec1e](https://github.com/firebase/flutterfire/commit/1e25ec1e55d7e9ecb79e5edb98ae9592a387d0b0))
+
 ## 0.5.7+9
 
  - Update a dependency to the latest release.

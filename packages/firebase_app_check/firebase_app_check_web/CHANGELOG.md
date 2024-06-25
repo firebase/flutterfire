@@ -1,3 +1,7 @@
+## 0.1.2+10
+
+ - Update a dependency to the latest release.
+
 ## 0.1.2+9
 
  - **FIX**(app-check,web): fixed broken `onTokenChanged` and ensured it is properly cleaned up. Streams are also cleaned up on "hot restart" ([#12933](https://github.com/firebase/flutterfire/issues/12933)). ([093b5fef](https://github.com/firebase/flutterfire/commit/093b5fef8c3b8314835dc954ce02daacd1e077f4))
