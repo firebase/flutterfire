@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of firebase_database_web;
+part of '../firebase_database_web.dart';
 
 /// Web implementation for firebase [DatabaseReferencePlatform]
 class DatabaseReferenceWeb extends QueryWeb
@@ -10,9 +10,9 @@ class DatabaseReferenceWeb extends QueryWeb
   /// Builds an instance of [DatabaseReferenceWeb] delegating to a package:firebase [DatabaseReferencePlatform]
   /// to delegate queries to underlying firebase web plugin
   DatabaseReferenceWeb(
-    DatabasePlatform _database,
+    DatabasePlatform database,
     this._delegate,
-  ) : super(_database, _delegate);
+  ) : super(database, _delegate);
 
   final database_interop.DatabaseReference _delegate;
 
