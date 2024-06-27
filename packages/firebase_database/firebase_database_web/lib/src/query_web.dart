@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of firebase_database_web;
+part of '../firebase_database_web.dart';
 
 /// An implementation of [QueryPlatform] which proxies calls to js objects
 class QueryWeb extends QueryPlatform {
@@ -105,8 +105,7 @@ class QueryWeb extends QueryPlatform {
         path,
         ...modifiers
             .toList()
-            .map((e) => const DeepCollectionEquality().hash(e))
-            .toList(),
+            .map((e) => const DeepCollectionEquality().hash(e)),
         eventType.index,
       ]);
     }

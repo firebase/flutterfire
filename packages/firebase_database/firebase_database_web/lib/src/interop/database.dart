@@ -51,8 +51,7 @@ class Database
   static Database getInstance(database_interop.DatabaseJsImpl jsObject) =>
       _expando[jsObject] ??= Database._fromJsObject(jsObject);
 
-  Database._fromJsObject(database_interop.DatabaseJsImpl jsObject)
-      : super.fromJsObject(jsObject);
+  Database._fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// Disconnects from the server, all database operations will be
   /// completed offline.
@@ -103,7 +102,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   ) =>
       _expando[jsObject] ??= DatabaseReference._fromJsObject(jsObject);
 
-  DatabaseReference._fromJsObject(T jsObject) : super.fromJsObject(jsObject);
+  DatabaseReference._fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// Returns child DatabaseReference from provided relative [path].
   DatabaseReference child(String path) => DatabaseReference.getInstance(
@@ -311,7 +310,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
       _onChildMoved(appName, hashCode);
 
   /// Creates a new Query from a [jsObject].
-  Query.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
+  Query.fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// Gets the most up-to-date result for this query.
   Future<DataSnapshot> get() async {
@@ -572,9 +571,7 @@ class TransactionResult
   ) =>
       _expando[jsObject] ??= TransactionResult._fromJsObject(jsObject);
 
-  TransactionResult._fromJsObject(
-      database_interop.TransactionResultJsImpl jsObject)
-      : super.fromJsObject(jsObject);
+  TransactionResult._fromJsObject(super.jsObject) : super.fromJsObject();
 
   bool get committed => jsObject.committed.toDart;
 
@@ -602,8 +599,7 @@ class DataSnapshot
   ) =>
       _expando[jsObject] ??= DataSnapshot._fromJsObject(jsObject);
 
-  DataSnapshot._fromJsObject(database_interop.DataSnapshotJsImpl jsObject)
-      : super.fromJsObject(jsObject);
+  DataSnapshot._fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// Returns DataSnapshot for the location at the specified relative [path].
   DataSnapshot child(String path) =>
@@ -645,8 +641,7 @@ class DataSnapshot
 /// See: <https://firebase.google.com/docs/reference/js/firebase.database.OnDisconnect>.
 class OnDisconnect
     extends JsObjectWrapper<database_interop.OnDisconnectJsImpl> {
-  OnDisconnect.fromJsObject(database_interop.OnDisconnectJsImpl jsObject)
-      : super.fromJsObject(jsObject);
+  OnDisconnect.fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// Cancels all previously queued onDisconnect() events for actual location
   /// and all children.
@@ -691,8 +686,8 @@ class ThenableReference
 
   /// Creates a new ThenableReference from a [jsObject].
   ThenableReference.fromJsObject(
-    database_interop.ThenableReferenceJsImpl jsObject,
-  ) : super._fromJsObject(jsObject);
+    super.jsObject,
+  ) : super._fromJsObject();
 
   /// A Future property.
   Future<DatabaseReference> get future => _future;
@@ -717,6 +712,5 @@ class Transaction extends JsObjectWrapper<database_interop.TransactionJsImpl> {
       );
 
   /// Creates a new Transaction from a [jsObject].
-  Transaction.fromJsObject(database_interop.TransactionJsImpl jsObject)
-      : super.fromJsObject(jsObject);
+  Transaction.fromJsObject(super.jsObject) : super.fromJsObject();
 }
