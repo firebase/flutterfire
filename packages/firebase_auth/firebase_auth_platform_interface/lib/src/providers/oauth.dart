@@ -82,6 +82,7 @@ class OAuthCredential extends AuthCredential {
     this.secret,
     this.rawNonce,
     this.serverAuthCode,
+    this.appleFullPersonName,
   }) : super(
           providerId: providerId,
           signInMethod: signInMethod,
@@ -104,6 +105,12 @@ class OAuthCredential extends AuthCredential {
   /// the server auth code for Play Games credential.
   final String? serverAuthCode;
 
+  /// The full name of the user. Used to create an AuthCredential for the
+  /// Sign in with Apple OAuth 2 provider identified by ID token, raw nonce,
+  /// and full name. This method is specific to the Sign in with Apple OAuth 2
+  /// provider as this provider requires the full name to be passed explicitly.
+  final AppleFullPersonName? appleFullPersonName;
+
   @override
   Map<String, String?> asMap() {
     return <String, String?>{
@@ -114,6 +121,12 @@ class OAuthCredential extends AuthCredential {
       'secret': secret,
       'rawNonce': rawNonce,
       'serverAuthCode': serverAuthCode,
+      'familyName': appleFullPersonName?.familyName,
+      'givenName': appleFullPersonName?.givenName,
+      'middleName': appleFullPersonName?.middleName,
+      'nickname': appleFullPersonName?.nickname,
+      'namePrefix': appleFullPersonName?.namePrefix,
+      'nameSuffix': appleFullPersonName?.nameSuffix,
     };
   }
 }

@@ -60,10 +60,10 @@
   @throw [NSException exceptionWithName:@"InvalidOperator" reason:@"Invalid operator" userInfo:nil];
 }
 
-+ (FIRQuery *)parseQueryWithParameters:(nonnull PigeonQueryParameters *)parameters
-                             firestore:(nonnull FIRFirestore *)firestore
-                                  path:(nonnull NSString *)path
-                     isCollectionGroup:(Boolean)isCollectionGroup {
++ (FIRQuery *_Nonnull)parseQueryWithParameters:(nonnull PigeonQueryParameters *)parameters
+                                     firestore:(nonnull FIRFirestore *)firestore
+                                          path:(nonnull NSString *)path
+                             isCollectionGroup:(Boolean)isCollectionGroup {
   @try {
     FIRQuery *query;
 
@@ -177,7 +177,8 @@
   }
 }
 
-+ (NSArray<FIRFieldPath *> *)parseFieldPath:(NSArray<NSArray<NSString *> *> *)fieldPaths {
++ (NSArray<FIRFieldPath *> *_Nonnull)parseFieldPath:
+    (NSArray<NSArray<NSString *> *> *_Nonnull)fieldPaths {
   NSMutableArray<FIRFieldPath *> *paths = [NSMutableArray arrayWithCapacity:[fieldPaths count]];
   for (NSArray<NSString *> *fieldPath in fieldPaths) {
     FIRFieldPath *parsed = [[FIRFieldPath alloc] initWithFields:fieldPath];
@@ -217,15 +218,16 @@
   }
 }
 
-+ (PigeonSnapshotMetadata *)toPigeonSnapshotMetadata:(FIRSnapshotMetadata *)snapshotMetadata {
++ (PigeonSnapshotMetadata *_Nonnull)toPigeonSnapshotMetadata:
+    (FIRSnapshotMetadata *_Nonnull)snapshotMetadata {
   return [PigeonSnapshotMetadata
       makeWithHasPendingWrites:[NSNumber numberWithBool:snapshotMetadata.hasPendingWrites]
                    isFromCache:[NSNumber numberWithBool:snapshotMetadata.isFromCache]];
 }
 
-+ (PigeonDocumentSnapshot *)toPigeonDocumentSnapshot:(FIRDocumentSnapshot *)documentSnapshot
-                             serverTimestampBehavior:
-                                 (FIRServerTimestampBehavior)serverTimestampBehavior {
++ (PigeonDocumentSnapshot *_Nonnull)
+    toPigeonDocumentSnapshot:(FIRDocumentSnapshot *_Nonnull)documentSnapshot
+     serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior {
   return [PigeonDocumentSnapshot
       makeWithPath:documentSnapshot.reference.path
               data:[documentSnapshot dataWithServerTimestampBehavior:serverTimestampBehavior]
@@ -247,9 +249,9 @@
   }
 }
 
-+ (PigeonDocumentChange *)toPigeonDocumentChange:(FIRDocumentChange *)documentChange
-                         serverTimestampBehavior:
-                             (FIRServerTimestampBehavior)serverTimestampBehavior {
++ (PigeonDocumentChange *_Nonnull)toPigeonDocumentChange:(FIRDocumentChange *_Nonnull)documentChange
+                                 serverTimestampBehavior:
+                                     (FIRServerTimestampBehavior)serverTimestampBehavior {
   NSNumber *oldIndex;
   NSNumber *newIndex;
 
@@ -279,8 +281,8 @@
           newIndex:newIndex];
 }
 
-+ (NSArray<PigeonDocumentChange *> *)
-    toPigeonDocumentChanges:(NSArray<FIRDocumentChange *> *)documentChanges
++ (NSArray<PigeonDocumentChange *> *_Nonnull)
+    toPigeonDocumentChanges:(NSArray<FIRDocumentChange *> *_Nonnull)documentChanges
     serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior {
   NSMutableArray *pigeonDocumentChanges = [NSMutableArray array];
   for (FIRDocumentChange *documentChange in documentChanges) {
@@ -291,8 +293,9 @@
   return pigeonDocumentChanges;
 }
 
-+ (PigeonQuerySnapshot *)toPigeonQuerySnapshot:(FIRQuerySnapshot *)querySnaphot
-                       serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior {
++ (PigeonQuerySnapshot *_Nonnull)toPigeonQuerySnapshot:(FIRQuerySnapshot *_Nonnull)querySnaphot
+                               serverTimestampBehavior:
+                                   (FIRServerTimestampBehavior)serverTimestampBehavior {
   NSMutableArray *documentSnapshots = [NSMutableArray array];
   for (FIRDocumentSnapshot *documentSnapshot in querySnaphot.documents) {
     [documentSnapshots

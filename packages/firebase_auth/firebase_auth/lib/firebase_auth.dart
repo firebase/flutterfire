@@ -34,6 +34,7 @@ export 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
         AuthCredential,
         AuthProvider,
         AppleAuthProvider,
+        AppleFullPersonName,
         AppleAuthCredential,
         EmailAuthProvider,
         EmailAuthCredential,

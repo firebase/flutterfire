@@ -217,6 +217,8 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   Future<void> initiateOnDeviceConversionMeasurement({
     String? emailAddress,
     String? phoneNumber,
+    String? hashedEmailAddress,
+    String? hashedPhoneNumber,
   }) {
     try {
       return channel.invokeMethod<void>(
@@ -224,6 +226,8 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
         <String, String?>{
           'emailAddress': emailAddress,
           'phoneNumber': phoneNumber,
+          'hashedEmailAddress': hashedEmailAddress,
+          'hashedPhoneNumber': hashedPhoneNumber,
         },
       );
     } catch (e, s) {

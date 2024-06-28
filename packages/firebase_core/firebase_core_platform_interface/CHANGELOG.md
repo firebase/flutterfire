@@ -1,3 +1,7 @@
+## 5.1.0
+
+ - **FEAT**: add support for demo project ([#11973](https://github.com/firebase/flutterfire/issues/11973)). ([859ec1dd](https://github.com/firebase/flutterfire/commit/859ec1dd4424c422bbdf96617a77d123d8b1f409))
+
 ## 5.0.0
 
 > Note: This release has breaking changes.

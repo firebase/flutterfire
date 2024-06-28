@@ -301,6 +301,8 @@ class MockFirebaseAnalyticsWeb extends _i1.Mock
   _i5.Future<void> initiateOnDeviceConversionMeasurement({
     String? emailAddress,
     String? phoneNumber,
+    String? hashedEmailAddress,
+    String? hashedPhoneNumber,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -309,6 +311,8 @@ class MockFirebaseAnalyticsWeb extends _i1.Mock
           {
             #emailAddress: emailAddress,
             #phoneNumber: phoneNumber,
+            #hashedEmailAddress: hashedEmailAddress,
+            #hashedPhoneNumber: hashedPhoneNumber,
           },
         ),
         returnValue: _i5.Future<void>.value(),

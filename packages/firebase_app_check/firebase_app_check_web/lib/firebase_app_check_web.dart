@@ -19,7 +19,6 @@ import 'src/interop/app_check.dart' as app_check_interop;
 class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   static const recaptchaTypeV3 = 'recaptcha-v3';
   static const recaptchaTypeEnterprise = 'enterprise';
-
   static Map<String, StreamController<String?>> _tokenChangesListeners = {};
 
   /// Stub initializer to allow the [registerWith] to create an instance without
@@ -121,15 +120,23 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
     return convertWebExceptions<Future<void>>(() async {
       _webAppCheck ??= app_check_interop.getAppCheckInstance(
           core_interop.app(app.name), webProvider);
-      if (_tokenChangesListeners[app.name] == null) {
-        _tokenChangesListeners[app.name] =
-            StreamController<String?>.broadcast();
-
-        _delegate!.onTokenChanged().map((event) {
-          _tokenChangesListeners[app.name]!.add(event.token.toDart);
-        });
-      }
+      _initialiseStreamController();
     });
+  }
+
+  void _initialiseStreamController() {
+    if (_tokenChangesListeners[app.name] == null) {
+      _tokenChangesListeners[app.name] = StreamController<String?>.broadcast(
+        onCancel: () {
+          _tokenChangesListeners[app.name]!.close();
+          _tokenChangesListeners.remove(app.name);
+          _delegate!.idTokenChangedController?.close();
+        },
+      );
+      _delegate!.onTokenChanged(app.name).listen((event) {
+        _tokenChangesListeners[app.name]!.add(event.token.toDart);
+      });
+    }
   }
 
   @override
@@ -162,6 +169,9 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
 
   @override
   Stream<String?> get onTokenChange {
-    return _tokenChangesListeners[app.name]!.stream;
+    _initialiseStreamController();
+    return convertWebExceptions(
+      () => _tokenChangesListeners[app.name]!.stream,
+    );
   }
 }
