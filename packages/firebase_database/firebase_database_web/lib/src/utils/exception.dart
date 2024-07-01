@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_database_web;
+part of '../../firebase_database_web.dart';
 
 // Cannot use `guardWebExceptions` since we are inferring the
 // exception type from the message.

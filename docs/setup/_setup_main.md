@@ -141,6 +141,16 @@ flutterfire configure
     flutter run
     ```
 
+If you would rather use a demo project, you can start the [Firebase Emulator](https://firebase.google.com/docs/emulator-suite) and
+in your `lib/main.dart` file initialize Firebase using `demoProjectId` (it should start with `demo-`):
+
+  ```dart
+  await Firebase.initializeApp(
+    demoProjectId: "demo-project-id",
+  );
+  ```
+
+
 
 ## **Step 4**: Add Firebase plugins {: #add-plugins}
 
