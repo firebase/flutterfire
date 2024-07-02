@@ -111,10 +111,11 @@ class QueryWeb extends QueryPlatform {
         int count = _streamHashCodeMap[hashCode] ?? 0;
         final updatedCount = count + 1;
         _streamHashCodeMap[hashCode] = updatedCount;
-        hashCode = hashCode + '-$updatedCount';
+        hashCode = '$hashCode-$updatedCount';
       } else {
+        // initial stream
         _streamHashCodeMap[hashCode] = 0;
-        hashCode = hashCode + '-0';
+        hashCode = '$hashCode-0';
       }
     }
     return hashCode;
