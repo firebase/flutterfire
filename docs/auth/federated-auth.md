@@ -231,9 +231,9 @@ Apple sign-in on iOS+ platforms can also be achieved with the following method:
 ```dart
 // Create a nonce
 String rawNonce = createNonce();
-// Create a hash SHA-256 string of the nonce. Consider using the `crypto` package on pub.dev registry
+// Create a SHA-256 hash of the nonce. Consider using the `crypto` package from the pub.dev registry.
 String hashSHA256String = createHashSHA256String(rawNonce);
-// Use the hash SHA-256 string of the nonce to get the idToken. Consider using the `sign_in_with_apple` plugin on pub.dev registry
+// Use the hash of the nonce to get the idToken. Consider using the `sign_in_with_apple` plugin from the pub.dev registry.
 String idToken = await getIdToken();
 
 final fullName = AppleFullPersonName(
