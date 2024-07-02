@@ -229,7 +229,8 @@ Future<UserCredential> signInWithApple() async {
 Apple sign-in on iOS+ platforms can also be achieved with the following method:
 
 ```dart
-// Create a nonce
+// Implement a function that generates a nonce. See iOS documentation for how to create a nonce:
+// https://firebase.google.com/docs/auth/ios/apple#sign_in_with_apple_and_authenticate_with_firebase
 String rawNonce = createNonce();
 // Create a SHA-256 hash of the nonce. Consider using the `crypto` package from the pub.dev registry.
 String hashSHA256String = createHashSHA256String(rawNonce);
