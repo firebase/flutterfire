@@ -126,7 +126,7 @@ class QueryWeb extends QueryPlatform {
     database_interop.Query instance = _getQueryDelegateInstance(modifiers);
     final appName =
         _database.app != null ? _database.app!.name : Firebase.app().name;
-    
+
     // Purely for unsubscribing purposes in debug mode on "hot restart"
     // if not running in debug mode, hashCode won't be used
     String hashCode = _createHashCode(modifiers, eventType, appName);
