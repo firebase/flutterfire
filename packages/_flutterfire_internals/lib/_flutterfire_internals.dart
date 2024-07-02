@@ -16,8 +16,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'src/interop_shimmer.dart'
     if (dart.library.js_interop) 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
-import 'src/interop_shimmer.dart' if (dart.library.js_interop) 'dart:js_interop'
-    as js_interop;
+import 'src/interop_shimmer.dart'
+    if (dart.library.js_interop) 'src/js_interop.dart' as js_interop;
 
 export 'src/exception.dart';
 
