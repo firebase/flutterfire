@@ -51,7 +51,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@5a8367ec4b9942d712528c398ff3f996e03bc230
+      - uses: bluefireteam/melos-action@6085791af7036f6366c9a4b9d55105c0ef9c6388
         with:
           run-bootstrap: false
           melos-version: '5.3.0'
@@ -127,7 +127,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@5a8367ec4b9942d712528c398ff3f996e03bc230
+      - uses: bluefireteam/melos-action@6085791af7036f6366c9a4b9d55105c0ef9c6388
         with:
           run-bootstrap: false
           melos-version: '5.3.0'
@@ -203,7 +203,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@5a8367ec4b9942d712528c398ff3f996e03bc230
+      - uses: bluefireteam/melos-action@6085791af7036f6366c9a4b9d55105c0ef9c6388
         with:
           run-bootstrap: false
           melos-version: '5.3.0'
@@ -256,7 +256,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@5a8367ec4b9942d712528c398ff3f996e03bc230
+      - uses: bluefireteam/melos-action@6085791af7036f6366c9a4b9d55105c0ef9c6388
         with:
           run-bootstrap: false
           melos-version: '5.3.0'
@@ -312,7 +312,7 @@ jobs:
           # TODO: Remove this once WASM is on stable.
           channel: 'master'
           cache: true
-      - uses: bluefireteam/melos-action@5a8367ec4b9942d712528c398ff3f996e03bc230
+      - uses: bluefireteam/melos-action@6085791af7036f6366c9a4b9d55105c0ef9c6388
         with:
           run-bootstrap: false
           melos-version: '5.3.0'
@@ -364,7 +364,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@5a8367ec4b9942d712528c398ff3f996e03bc230
+      - uses: bluefireteam/melos-action@6085791af7036f6366c9a4b9d55105c0ef9c6388
         with:
           run-bootstrap: false
           melos-version: '3.0.0'
