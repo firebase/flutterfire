@@ -432,14 +432,22 @@ void setupQueryTests() {
     });
 
     group('onChildChanged', () {
+      // Create own reference as this clashed with previous tests on web platform
+      late DatabaseReference childRef;
+      setUp(() async {
+        childRef = FirebaseDatabase.instance.ref('tests').child('child-ref');
+        // Wipe the database before each test
+        await childRef.remove();
+      });
+
       test(
         'emits an event when a child is changed',
         () async {
-          await ref.child('foo').set('foo');
-          await ref.child('bar').set('bar');
+          await childRef.child('foo').set('foo');
+          await childRef.child('bar').set('bar');
 
           expect(
-            ref.onChildChanged,
+            childRef.onChildChanged,
             emitsInOrder([
               isA<DatabaseEvent>()
                   .having((s) => s.snapshot.key, 'key', 'bar')
@@ -462,8 +470,8 @@ void setupQueryTests() {
           // Give time for listen to be registered on native.
           // TODO is there a better way to do this?
           await Future.delayed(const Duration(seconds: 1));
-          await ref.child('bar').set('baz');
-          await ref.child('foo').set('bar');
+          await childRef.child('bar').set('baz');
+          await childRef.child('foo').set('bar');
         },
         retry: 2,
       );

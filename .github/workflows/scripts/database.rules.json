@@ -27,6 +27,11 @@
         ".indexOn": [
           "value"
         ]
+      },
+      "children": {
+        ".read": true,
+        ".write": true,
+        ".indexOn": [".value"]
       }
     }
   }

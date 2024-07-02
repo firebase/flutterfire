@@ -1,3 +1,15 @@
+## 3.9.10
+
+ - Update a dependency to the latest release.
+
+## 3.9.9
+
+ - **FIX**(storage,web): clean up stream handlers on "hot restart" ([#12927](https://github.com/firebase/flutterfire/issues/12927)). ([0ea7099c](https://github.com/firebase/flutterfire/commit/0ea7099c137e505d0765faae27dc6d4bae2b78a1))
+
+## 3.9.8
+
+ - Update a dependency to the latest release.
+
 ## 3.9.7
 
  - **FIX**(storage): do not set metadata property unless it has a value ([#12805](https://github.com/firebase/flutterfire/issues/12805)). ([978a87db](https://github.com/firebase/flutterfire/commit/978a87db70218d63abbf0c6bf22e9d00633b5d83))

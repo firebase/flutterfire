@@ -1,6 +1,6 @@
 {
-    "name": "example",
-    "short_name": "example",
+    "name": "flutterfire_app_installations",
+    "short_name": "flutterfire_app_installations",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

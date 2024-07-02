@@ -1,3 +1,15 @@
+## 0.5.8
+
+ - **FEAT**(analytics,ios): add support for `initiateOnDeviceConversionMeasurementWithPhoneNumber` and `initiateOnDeviceConversionMeasurementWithHashedEmailAddress` ([#12976](https://github.com/firebase/flutterfire/issues/12976)). ([1e25ec1e](https://github.com/firebase/flutterfire/commit/1e25ec1e55d7e9ecb79e5edb98ae9592a387d0b0))
+
+## 0.5.7+9
+
+ - Update a dependency to the latest release.
+
+## 0.5.7+8
+
+ - **FIX**(web): fix some casting issue on Web JS Interop ([#12852](https://github.com/firebase/flutterfire/issues/12852)). ([4b56df1c](https://github.com/firebase/flutterfire/commit/4b56df1cc187d77ef22a82688a37f1c7aba4ed40))
+
 ## 0.5.7+7
 
  - Update a dependency to the latest release.

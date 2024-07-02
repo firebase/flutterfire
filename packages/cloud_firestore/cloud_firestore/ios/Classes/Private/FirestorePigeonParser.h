@@ -10,28 +10,42 @@
 
 @interface FirestorePigeonParser : NSObject
 
-+ (FIRQuery *)parseQueryWithParameters:(nonnull PigeonQueryParameters *)parameters
-                             firestore:(nonnull FIRFirestore *)firestore
-                                  path:(nonnull NSString *)path
-                     isCollectionGroup:(Boolean)isCollectionGroup;
 + (FIRFilter *_Nonnull)filterFromJson:(NSDictionary<NSString *, id> *_Nullable)map;
+
++ (FIRQuery *_Nonnull)parseQueryWithParameters:(nonnull PigeonQueryParameters *)parameters
+                                     firestore:(nonnull FIRFirestore *)firestore
+                                          path:(nonnull NSString *)path
+                             isCollectionGroup:(Boolean)isCollectionGroup;
+
 + (FIRFirestoreSource)parseSource:(Source)source;
+
++ (NSArray<FIRFieldPath *> *_Nonnull)parseFieldPath:
+    (NSArray<NSArray<NSString *> *> *_Nonnull)fieldPaths;
+
 + (FIRServerTimestampBehavior)parseServerTimestampBehavior:
     (ServerTimestampBehavior)serverTimestampBehavior;
+
 + (FIRListenSource)parseListenSource:(ListenSource)source;
-+ (PigeonDocumentSnapshot *)toPigeonDocumentSnapshot:(FIRDocumentSnapshot *)documentSnapshot
-                             serverTimestampBehavior:
-                                 (FIRServerTimestampBehavior)serverTimestampBehavior;
-+ (PigeonQuerySnapshot *)toPigeonQuerySnapshot:(FIRQuerySnapshot *)querySnaphot
-                       serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior;
-+ (NSArray<PigeonDocumentChange *> *)
-    toPigeonDocumentChanges:(NSArray<FIRDocumentChange *> *)documentChanges
-    serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior;
-+ (PigeonDocumentChange *)toPigeonDocumentChange:(FIRDocumentChange *)documentChange
-                         serverTimestampBehavior:
-                             (FIRServerTimestampBehavior)serverTimestampBehavior;
-+ (PigeonSnapshotMetadata *)toPigeonSnapshotMetadata:(FIRSnapshotMetadata *)snapshotMetadata;
+
++ (PigeonSnapshotMetadata *_Nonnull)toPigeonSnapshotMetadata:
+    (FIRSnapshotMetadata *_Nonnull)snapshotMetadata;
+
++ (PigeonDocumentSnapshot *_Nonnull)
+    toPigeonDocumentSnapshot:(FIRDocumentSnapshot *_Nonnull)documentSnapshot
+     serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior;
+
 + (DocumentChangeType)toPigeonDocumentChangeType:(FIRDocumentChangeType)documentChangeType;
-+ (NSArray<FIRFieldPath *> *)parseFieldPath:(NSArray<NSArray<NSString *> *> *)fieldPaths;
+
++ (PigeonDocumentChange *_Nonnull)toPigeonDocumentChange:(FIRDocumentChange *_Nonnull)documentChange
+                                 serverTimestampBehavior:
+                                     (FIRServerTimestampBehavior)serverTimestampBehavior;
+
++ (NSArray<PigeonDocumentChange *> *_Nonnull)
+    toPigeonDocumentChanges:(NSArray<FIRDocumentChange *> *_Nonnull)documentChanges
+    serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior;
+
++ (PigeonQuerySnapshot *_Nonnull)toPigeonQuerySnapshot:(FIRQuerySnapshot *_Nonnull)querySnaphot
+                               serverTimestampBehavior:
+                                   (FIRServerTimestampBehavior)serverTimestampBehavior;
 
 @end

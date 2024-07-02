@@ -69,9 +69,7 @@ final class GenerativeModel {
               : [],
           generationConfig: generationConfig?.toGoogleAI(),
           systemInstruction: systemInstruction?.toGoogleAI(),
-          tools: tools != null
-              ? tools.map((tool) => tool.toGoogleAI()).toList()
-              : [],
+          tools: tools?.map((tool) => tool.toGoogleAI()).toList(),
           toolConfig: toolConfig?.toGoogleAI(),
         );
   final google_ai.GenerativeModel _googleAIModel;
@@ -136,9 +134,7 @@ final class GenerativeModel {
     final response = await _googleAIModel.generateContent(googlePrompt,
         safetySettings: googleSafetySettings,
         generationConfig: generationConfig?.toGoogleAI(),
-        tools: tools != null
-            ? tools.map((tool) => tool.toGoogleAI()).toList()
-            : [],
+        tools: tools?.map((tool) => tool.toGoogleAI()).toList(),
         toolConfig: toolConfig?.toGoogleAI());
     return response.toVertex();
   }
@@ -167,9 +163,7 @@ final class GenerativeModel {
                 ? safetySettings.map((setting) => setting.toGoogleAI()).toList()
                 : [],
             generationConfig: generationConfig?.toGoogleAI(),
-            tools: tools != null
-                ? tools.map((tool) => tool.toGoogleAI()).toList()
-                : [],
+            tools: tools?.map((tool) => tool.toGoogleAI()).toList(),
             toolConfig: toolConfig?.toGoogleAI())
         .map((r) => r.toVertex());
   }
@@ -198,17 +192,11 @@ final class GenerativeModel {
     List<Tool>? tools,
     ToolConfig? toolConfig,
   }) async {
-    return _googleAIModel
-        .countTokens(contents.map((e) => e.toGoogleAI()),
-            safetySettings: safetySettings != null
-                ? safetySettings.map((setting) => setting.toGoogleAI()).toList()
-                : [],
-            generationConfig: generationConfig?.toGoogleAI(),
-            tools: tools != null
-                ? tools.map((tool) => tool.toGoogleAI()).toList()
-                : [],
-            toolConfig: toolConfig?.toGoogleAI())
-        .then((r) => r.toVertex());
+    final parameters = <String, Object?>{
+      'contents': contents.map((c) => c.toJson()).toList()
+    };
+    return _googleAIModel.makeRequest(
+        google_ai_hooks.Task.countTokens, parameters, parseCountTokensResponse);
   }
 
   /// Creates an embedding (list of float values) representing [content].

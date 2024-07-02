@@ -343,8 +343,17 @@ class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
   /// Returns [:true:] if it had an effect.
   bool cancel() => jsObject.cancel().toDart;
 
+  String _taskSnapshotWindowsKey(String appName, String bucket, String path) =>
+      'flutterfire-${appName}_${bucket}_${path}_storageTask';
+
   /// Stream for upload task state changed event.
-  Stream<UploadTaskSnapshot> get onStateChanged {
+  Stream<UploadTaskSnapshot> onStateChanged(
+    String appName,
+    String bucket,
+    String path,
+  ) {
+    final windowsKey = _taskSnapshotWindowsKey(appName, bucket, path);
+    unsubscribeWindowsListener(windowsKey);
     late StreamController<UploadTaskSnapshot> changeController;
     late JSFunction onStateChangedUnsubscribe;
 
@@ -367,11 +376,16 @@ class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
         errorWrapper,
         onCompletion,
       );
+      setWindowsListener(
+        windowsKey,
+        onStateChangedUnsubscribe,
+      );
     }
 
     void stopListen() {
       onStateChangedUnsubscribe.callAsFunction();
       changeController.close();
+      removeWindowsListener(windowsKey);
     }
 
     changeController = StreamController<UploadTaskSnapshot>.broadcast(

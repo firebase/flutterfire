@@ -1,3 +1,16 @@
+## 5.12.3
+
+ - Update a dependency to the latest release.
+
+## 5.12.2
+
+ - **FIX**(auth,web): unsubscribe from stream handlers after "hot restart" ([#12908](https://github.com/firebase/flutterfire/issues/12908)). ([a76c8866](https://github.com/firebase/flutterfire/commit/a76c8866c7f62dd62764f147f114f42f4137b66d))
+ - **FIX**(auth,web): stream handlers are properly cleaned up and recreated ([#12903](https://github.com/firebase/flutterfire/issues/12903)). ([daaef12c](https://github.com/firebase/flutterfire/commit/daaef12c7cf0f403bbe2b4bc2210f3db2c33125b))
+
+## 5.12.1
+
+ - **FIX**(web): fix some casting issue on Web JS Interop ([#12852](https://github.com/firebase/flutterfire/issues/12852)). ([4b56df1c](https://github.com/firebase/flutterfire/commit/4b56df1cc187d77ef22a82688a37f1c7aba4ed40))
+
 ## 5.12.0
 
  - **FEAT**(auth): update Pigeon version to 19 ([#12828](https://github.com/firebase/flutterfire/issues/12828)). ([5e76153f](https://github.com/firebase/flutterfire/commit/5e76153fbcd337a26e83abc2b43b651ab6c501bc))

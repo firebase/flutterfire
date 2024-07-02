@@ -10,6 +10,8 @@
 import 'dart:async';
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
+import 'package:web/web.dart' as web;
+import 'package:flutter/foundation.dart';
 
 import 'func.dart';
 
@@ -37,4 +39,30 @@ JSPromise handleFutureWithMapper<T, S>(
       return wrapper;
     });
   }.toJS);
+}
+
+// No way to unsubscribe from event listeners on hot reload so we set on the windows object
+// and clean up on hot restart if it exists.
+// See: https://github.com/firebase/flutterfire/issues/7064
+void unsubscribeWindowsListener(String key) {
+  if (kDebugMode) {
+    final unsubscribe = web.window.getProperty(key.toJS);
+    if (unsubscribe != null) {
+      (unsubscribe as JSFunction).callAsFunction();
+    }
+  }
+}
+
+void setWindowsListener(String key, JSFunction unsubscribe) {
+  if (kDebugMode) {
+    web.window.setProperty(key.toJS, unsubscribe);
+  }
+}
+
+void removeWindowsListener(String key) {
+  if (kDebugMode) {
+    if (web.window.hasProperty(key.toJS) == true.toJS) {
+      web.window.delete(key.toJS);
+    }
+  }
 }
