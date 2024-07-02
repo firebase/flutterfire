@@ -77,19 +77,28 @@ class MockFirebaseAnalyticsWeb extends _i1.Mock
       ) as _i2.FirebaseApp);
 
   @override
-  _i3.FirebaseAnalyticsPlatform delegateFor({_i2.FirebaseApp? app}) =>
+  _i3.FirebaseAnalyticsPlatform delegateFor({
+    _i2.FirebaseApp? app,
+    Map<String, dynamic>? webOptions,
+  }) =>
       (super.noSuchMethod(
         Invocation.method(
           #delegateFor,
           [],
-          {#app: app},
+          {
+            #app: app,
+            #webOptions: webOptions,
+          },
         ),
         returnValue: _FakeFirebaseAnalyticsPlatform_1(
           this,
           Invocation.method(
             #delegateFor,
             [],
-            {#app: app},
+            {
+              #app: app,
+              #webOptions: webOptions,
+            },
           ),
         ),
         returnValueForMissingStub: _FakeFirebaseAnalyticsPlatform_1(
@@ -97,7 +106,10 @@ class MockFirebaseAnalyticsWeb extends _i1.Mock
           Invocation.method(
             #delegateFor,
             [],
-            {#app: app},
+            {
+              #app: app,
+              #webOptions: webOptions,
+            },
           ),
         ),
       ) as _i3.FirebaseAnalyticsPlatform);
