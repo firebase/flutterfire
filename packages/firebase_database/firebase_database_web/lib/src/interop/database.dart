@@ -250,7 +250,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   /// DatabaseReference to the Query's location.
   DatabaseReference get ref => DatabaseReference.getInstance(jsObject.ref);
 
-  Stream<QueryEvent> _onValue(String appName, int hashCode) => _createStream(
+  Stream<QueryEvent> _onValue(String appName, String hashCode) => _createStream(
         'value',
         appName,
         hashCode,
@@ -258,10 +258,10 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
 
   /// Stream for a value event. Event is triggered once with the initial
   /// data stored at location, and then again each time the data changes.
-  Stream<QueryEvent> onValue(String appName, int hashCode) =>
+  Stream<QueryEvent> onValue(String appName, String hashCode) =>
       _onValue(appName, hashCode);
 
-  Stream<QueryEvent> _onChildAdded(String appName, int hashCode) =>
+  Stream<QueryEvent> _onChildAdded(String appName, String hashCode) =>
       _createStream(
         'child_added',
         appName,
@@ -270,10 +270,10 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
 
   /// Stream for a child_added event. Event is triggered once for each
   /// initial child at location, and then again every time a new child is added.
-  Stream<QueryEvent> onChildAdded(String appName, int hashCode) =>
+  Stream<QueryEvent> onChildAdded(String appName, String hashCode) =>
       _onChildAdded(appName, hashCode);
 
-  Stream<QueryEvent> _onChildRemoved(String appName, int hashCode) =>
+  Stream<QueryEvent> _onChildRemoved(String appName, String hashCode) =>
       _createStream(
         'child_removed',
         appName,
@@ -282,10 +282,10 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
 
   /// Stream for a child_removed event. Event is triggered once every time
   /// a child is removed.
-  Stream<QueryEvent> onChildRemoved(String appName, int hashCode) =>
+  Stream<QueryEvent> onChildRemoved(String appName, String hashCode) =>
       _onChildRemoved(appName, hashCode);
 
-  Stream<QueryEvent> _onChildChanged(String appName, int hashCode) =>
+  Stream<QueryEvent> _onChildChanged(String appName, String hashCode) =>
       _createStream(
         'child_changed',
         appName,
@@ -295,9 +295,9 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   /// Stream for a child_changed event. Event is triggered when the data
   /// stored in a child (or any of its descendants) changes.
   /// Single child_changed event may represent multiple changes to the child.
-  Stream<QueryEvent> onChildChanged(String appName, int hashCode) =>
+  Stream<QueryEvent> onChildChanged(String appName, String hashCode) =>
       _onChildChanged(appName, hashCode);
-  Stream<QueryEvent> _onChildMoved(String appName, int hashCode) =>
+  Stream<QueryEvent> _onChildMoved(String appName, String hashCode) =>
       _createStream(
         'child_moved',
         appName,
@@ -306,7 +306,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
 
   /// Stream for a child_moved event. Event is triggered when a child's priority
   /// changes such that its position relative to its siblings changes.
-  Stream<QueryEvent> onChildMoved(String appName, int hashCode) =>
+  Stream<QueryEvent> onChildMoved(String appName, String hashCode) =>
       _onChildMoved(appName, hashCode);
 
   /// Creates a new Query from a [jsObject].
@@ -403,13 +403,13 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
     );
   }
 
-  String _streamWindowsKey(String appName, String eventType, int hashCode) =>
+  String _streamWindowsKey(String appName, String eventType, String hashCode) =>
       'flutterfire-${appName}_${eventType}_${hashCode}_snapshot';
 
   Stream<QueryEvent> _createStream(
     String eventType,
     String appName,
-    int hashCode,
+    String hashCode,
   ) {
     late StreamController<QueryEvent> streamController;
     unsubscribeWindowsListener(_streamWindowsKey(appName, eventType, hashCode));
