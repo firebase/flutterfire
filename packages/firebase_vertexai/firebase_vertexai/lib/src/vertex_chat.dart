@@ -29,17 +29,16 @@ import 'vertex_model.dart';
 final class ChatSession {
   /// Creates a new chat session with the provided model.
 
-  ChatSession._(this._history, List<SafetySetting>? _safetySettings,
+  ChatSession._(List<Content> initialHistory, List<SafetySetting>? _safetySettings,
       GenerationConfig? _generationConfig, GenerativeModel _model)
       : _googleAIChatSession = _model.googleAIModel.startChat(
-            history: _history.map((e) => e.toGoogleAI()).toList(),
-            safetySettings: _safetySettings != null
-                ? _safetySettings
-                    .map((setting) => setting.toGoogleAI())
-                    .toList()
-                : [],
-            generationConfig: _generationConfig?.toGoogleAI());
-  final List<Content> _history;
+      history: initialHistory.map((e) => e.toGoogleAI()).toList(),
+      safetySettings: _safetySettings != null
+          ? _safetySettings
+          .map((setting) => setting.toGoogleAI())
+          .toList()
+          : [],
+      generationConfig: _generationConfig?.toGoogleAI());
 
   final google_ai.ChatSession _googleAIChatSession;
 
@@ -50,7 +49,7 @@ final class ChatSession {
   /// [sendMessageStream], these will not be reflected in the history.
   /// Messages without a candidate in the response are not recorded in history,
   /// including the message sent to the model.
-  Iterable<Content> get history => _history.skip(0);
+  Iterable<Content> get history => _googleAIChatSession.history.map((e) => e.toVertex());
 
   /// Sends [message] to the model as a continuation of the chat [history].
   ///
