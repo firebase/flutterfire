@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library firebase_database_web;
-
 import 'dart:async';
 import 'dart:js_interop';
 import 'package:collection/collection.dart';
@@ -49,8 +47,7 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
 
   /// Builds an instance of [DatabaseWeb] with an optional [FirebaseApp] instance
   /// If [app] is null then the created instance will use the default [FirebaseApp]
-  FirebaseDatabaseWeb({FirebaseApp? app, String? databaseURL})
-      : super(app: app, databaseURL: databaseURL);
+  FirebaseDatabaseWeb({super.app, super.databaseURL});
 
   @override
   DatabasePlatform delegateFor(

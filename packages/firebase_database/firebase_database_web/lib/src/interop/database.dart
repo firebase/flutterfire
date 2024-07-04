@@ -51,8 +51,7 @@ class Database
   static Database getInstance(database_interop.DatabaseJsImpl jsObject) =>
       _expando[jsObject] ??= Database._fromJsObject(jsObject);
 
-  Database._fromJsObject(database_interop.DatabaseJsImpl jsObject)
-      : super.fromJsObject(jsObject);
+  Database._fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// Disconnects from the server, all database operations will be
   /// completed offline.
@@ -103,7 +102,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   ) =>
       _expando[jsObject] ??= DatabaseReference._fromJsObject(jsObject);
 
-  DatabaseReference._fromJsObject(T jsObject) : super.fromJsObject(jsObject);
+  DatabaseReference._fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// Returns child DatabaseReference from provided relative [path].
   DatabaseReference child(String path) => DatabaseReference.getInstance(
@@ -251,7 +250,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   /// DatabaseReference to the Query's location.
   DatabaseReference get ref => DatabaseReference.getInstance(jsObject.ref);
 
-  Stream<QueryEvent> _onValue(String appName, int hashCode) => _createStream(
+  Stream<QueryEvent> _onValue(String appName, String hashCode) => _createStream(
         'value',
         appName,
         hashCode,
@@ -259,10 +258,10 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
 
   /// Stream for a value event. Event is triggered once with the initial
   /// data stored at location, and then again each time the data changes.
-  Stream<QueryEvent> onValue(String appName, int hashCode) =>
+  Stream<QueryEvent> onValue(String appName, String hashCode) =>
       _onValue(appName, hashCode);
 
-  Stream<QueryEvent> _onChildAdded(String appName, int hashCode) =>
+  Stream<QueryEvent> _onChildAdded(String appName, String hashCode) =>
       _createStream(
         'child_added',
         appName,
@@ -271,10 +270,10 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
 
   /// Stream for a child_added event. Event is triggered once for each
   /// initial child at location, and then again every time a new child is added.
-  Stream<QueryEvent> onChildAdded(String appName, int hashCode) =>
+  Stream<QueryEvent> onChildAdded(String appName, String hashCode) =>
       _onChildAdded(appName, hashCode);
 
-  Stream<QueryEvent> _onChildRemoved(String appName, int hashCode) =>
+  Stream<QueryEvent> _onChildRemoved(String appName, String hashCode) =>
       _createStream(
         'child_removed',
         appName,
@@ -283,10 +282,10 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
 
   /// Stream for a child_removed event. Event is triggered once every time
   /// a child is removed.
-  Stream<QueryEvent> onChildRemoved(String appName, int hashCode) =>
+  Stream<QueryEvent> onChildRemoved(String appName, String hashCode) =>
       _onChildRemoved(appName, hashCode);
 
-  Stream<QueryEvent> _onChildChanged(String appName, int hashCode) =>
+  Stream<QueryEvent> _onChildChanged(String appName, String hashCode) =>
       _createStream(
         'child_changed',
         appName,
@@ -296,9 +295,9 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   /// Stream for a child_changed event. Event is triggered when the data
   /// stored in a child (or any of its descendants) changes.
   /// Single child_changed event may represent multiple changes to the child.
-  Stream<QueryEvent> onChildChanged(String appName, int hashCode) =>
+  Stream<QueryEvent> onChildChanged(String appName, String hashCode) =>
       _onChildChanged(appName, hashCode);
-  Stream<QueryEvent> _onChildMoved(String appName, int hashCode) =>
+  Stream<QueryEvent> _onChildMoved(String appName, String hashCode) =>
       _createStream(
         'child_moved',
         appName,
@@ -307,11 +306,11 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
 
   /// Stream for a child_moved event. Event is triggered when a child's priority
   /// changes such that its position relative to its siblings changes.
-  Stream<QueryEvent> onChildMoved(String appName, int hashCode) =>
+  Stream<QueryEvent> onChildMoved(String appName, String hashCode) =>
       _onChildMoved(appName, hashCode);
 
   /// Creates a new Query from a [jsObject].
-  Query.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
+  Query.fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// Gets the most up-to-date result for this query.
   Future<DataSnapshot> get() async {
@@ -404,13 +403,13 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
     );
   }
 
-  String _streamWindowsKey(String appName, String eventType, int hashCode) =>
+  String _streamWindowsKey(String appName, String eventType, String hashCode) =>
       'flutterfire-${appName}_${eventType}_${hashCode}_snapshot';
 
   Stream<QueryEvent> _createStream(
     String eventType,
     String appName,
-    int hashCode,
+    String hashCode,
   ) {
     late StreamController<QueryEvent> streamController;
     unsubscribeWindowsListener(_streamWindowsKey(appName, eventType, hashCode));
@@ -572,9 +571,7 @@ class TransactionResult
   ) =>
       _expando[jsObject] ??= TransactionResult._fromJsObject(jsObject);
 
-  TransactionResult._fromJsObject(
-      database_interop.TransactionResultJsImpl jsObject)
-      : super.fromJsObject(jsObject);
+  TransactionResult._fromJsObject(super.jsObject) : super.fromJsObject();
 
   bool get committed => jsObject.committed.toDart;
 
@@ -602,8 +599,7 @@ class DataSnapshot
   ) =>
       _expando[jsObject] ??= DataSnapshot._fromJsObject(jsObject);
 
-  DataSnapshot._fromJsObject(database_interop.DataSnapshotJsImpl jsObject)
-      : super.fromJsObject(jsObject);
+  DataSnapshot._fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// Returns DataSnapshot for the location at the specified relative [path].
   DataSnapshot child(String path) =>
@@ -645,8 +641,7 @@ class DataSnapshot
 /// See: <https://firebase.google.com/docs/reference/js/firebase.database.OnDisconnect>.
 class OnDisconnect
     extends JsObjectWrapper<database_interop.OnDisconnectJsImpl> {
-  OnDisconnect.fromJsObject(database_interop.OnDisconnectJsImpl jsObject)
-      : super.fromJsObject(jsObject);
+  OnDisconnect.fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// Cancels all previously queued onDisconnect() events for actual location
   /// and all children.
@@ -691,8 +686,8 @@ class ThenableReference
 
   /// Creates a new ThenableReference from a [jsObject].
   ThenableReference.fromJsObject(
-    database_interop.ThenableReferenceJsImpl jsObject,
-  ) : super._fromJsObject(jsObject);
+    super.jsObject,
+  ) : super._fromJsObject();
 
   /// A Future property.
   Future<DatabaseReference> get future => _future;
@@ -717,6 +712,5 @@ class Transaction extends JsObjectWrapper<database_interop.TransactionJsImpl> {
       );
 
   /// Creates a new Transaction from a [jsObject].
-  Transaction.fromJsObject(database_interop.TransactionJsImpl jsObject)
-      : super.fromJsObject(jsObject);
+  Transaction.fromJsObject(super.jsObject) : super.fromJsObject();
 }

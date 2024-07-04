@@ -28,7 +28,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@5a8367ec4b9942d712528c398ff3f996e03bc230
+      - uses: bluefireteam/melos-action@6085791af7036f6366c9a4b9d55105c0ef9c6388
         with:
           melos-version: '5.3.0'
       - name: 'Run Analyze'
@@ -46,7 +46,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@5a8367ec4b9942d712528c398ff3f996e03bc230
+      - uses: bluefireteam/melos-action@6085791af7036f6366c9a4b9d55105c0ef9c6388
         with:
           melos-version: '5.3.0'
       - name: 'Pub Check'
@@ -63,7 +63,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@5a8367ec4b9942d712528c398ff3f996e03bc230
+      - uses: bluefireteam/melos-action@6085791af7036f6366c9a4b9d55105c0ef9c6388
         with:
           melos-version: '5.3.0'
       - name: 'Flutter Pub Get'
@@ -81,7 +81,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@5a8367ec4b9942d712528c398ff3f996e03bc230
+      - uses: bluefireteam/melos-action@6085791af7036f6366c9a4b9d55105c0ef9c6388
         with:
           melos-version: '5.3.0'
       - uses: Homebrew/actions/setup-homebrew@master
@@ -115,7 +115,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@5a8367ec4b9942d712528c398ff3f996e03bc230
+      - uses: bluefireteam/melos-action@6085791af7036f6366c9a4b9d55105c0ef9c6388
         with:
           melos-version: '5.3.0'
       - name: 'Build Examples'
@@ -132,7 +132,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@5a8367ec4b9942d712528c398ff3f996e03bc230
+      - uses: bluefireteam/melos-action@6085791af7036f6366c9a4b9d55105c0ef9c6388
         with:
           melos-version: '5.3.0'
       - name: 'Flutter Test'
@@ -152,9 +152,9 @@ jobs:
       # check-license-header)
       - run: go install github.com/google/addlicense@latest
       - name: Install Dart
-        uses: dart-lang/setup-dart@fedb1266e91cf51be2fdb382869461a434b920a3
+        uses: dart-lang/setup-dart@0a8a0fc875eb934c15d08629302413c671d3f672
       - name: Install Melos
-        uses: bluefireteam/melos-action@5a8367ec4b9942d712528c398ff3f996e03bc230
+        uses: bluefireteam/melos-action@6085791af7036f6366c9a4b9d55105c0ef9c6388
         with:
           # Running `melos bootstrap` is not needed because we use Melos just
           # for the `check-license-header` script.
