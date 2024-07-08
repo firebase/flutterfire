@@ -26,6 +26,15 @@ if (flutterVersionName == null) {
     flutterVersionName = "1.0"
 }
 
+// Add this block to use android BOM: 32.5.0
+project.ext {
+  set('FlutterFire', [
+    FirebaseSDKVersion: "32.5.0",
+  ])
+}
+println "Configured Firebase SDK Version: ${project.FlutterFire.FirebaseSDKVersion}"
+
+
 android {
     namespace = "io.flutter.plugins.firebase.auth.example"
     compileSdk = flutter.compileSdkVersion
