@@ -21,7 +21,7 @@ typedef ErrorCallback = void Function(FirebaseException error);
 /// Sorts the results of `query` on the client side using `DataSnapshot.key`.
 class FirebaseList extends ListBase<DataSnapshot>
     with
-        // ignore: prefer_mixin
+        // ignore: prefer_mixin, class_used_as_mixin
         StreamSubscriberMixin<DatabaseEvent> {
   FirebaseList({
     required this.query,
