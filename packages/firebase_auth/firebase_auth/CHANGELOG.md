@@ -1,3 +1,7 @@
+## 5.1.2
+
+ - **DOCS**(auth): add information about error codes for `verifyBeforeUpdateEmail` ([#13036](https://github.com/firebase/flutterfire/issues/13036)). ([8ef7421d](https://github.com/firebase/flutterfire/commit/8ef7421d6a524938087769537ac70ec249096ed4))
+
 ## 5.1.1
 
  - **FIX**(auth,apple): bug with cached `AuthCredential`, hash key was producing different value ([#12957](https://github.com/firebase/flutterfire/issues/12957)). ([ef0077e3](https://github.com/firebase/flutterfire/commit/ef0077e37744360264eb60d6eea4359a5cc13227))
