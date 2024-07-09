@@ -1,3 +1,7 @@
+## 0.2.5+11
+
+ - **FIX**(database,web): ensure exact same streams are not unsubscribed in debug mode ([#13029](https://github.com/firebase/flutterfire/issues/13029)). ([f122380d](https://github.com/firebase/flutterfire/commit/f122380d5f738cf4053afe6716cc2876b2d9d5bf))
+
 ## 0.2.5+10
 
  - Update a dependency to the latest release.

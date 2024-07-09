@@ -1,3 +1,7 @@
+## 11.2.0
+
+ - **FEAT**(analytics,web): add support for options on Web ([#12914](https://github.com/firebase/flutterfire/issues/12914)). ([dd7ce8c2](https://github.com/firebase/flutterfire/commit/dd7ce8c20c28d7bd67cee9b7542af2e38c1aa6c7))
+
 ## 11.1.0
 
  - **FEAT**(analytics,ios): add support for `initiateOnDeviceConversionMeasurementWithPhoneNumber` and `initiateOnDeviceConversionMeasurementWithHashedEmailAddress` ([#12976](https://github.com/firebase/flutterfire/issues/12976)). ([1e25ec1e](https://github.com/firebase/flutterfire/commit/1e25ec1e55d7e9ecb79e5edb98ae9592a387d0b0))

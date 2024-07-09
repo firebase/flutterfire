@@ -1,3 +1,7 @@
+## 5.1.0
+
+ - **FEAT**(firestore,windows): support multiple databases ([#12998](https://github.com/firebase/flutterfire/issues/12998)). ([f80768a4](https://github.com/firebase/flutterfire/commit/f80768a4a4258932cac75dbd310589573bf14306))
+
 ## 5.0.2
 
  - Update a dependency to the latest release.

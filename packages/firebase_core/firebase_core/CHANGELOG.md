@@ -1,3 +1,7 @@
+## 3.2.0
+
+ - **FEAT**: bump Firebase iOS SDK to `10.28.0` ([#12999](https://github.com/firebase/flutterfire/issues/12999)). ([e7bd7882](https://github.com/firebase/flutterfire/commit/e7bd7882d213cf291a2fbd49acc81c03b92df746))
+
 ## 3.1.1
 
  - **FIX**(auth,windows): fix a crash that could happen when using `sendEmailVerification` or `sendPasswordResetEmail` ([#12946](https://github.com/firebase/flutterfire/issues/12946)). ([a1008290](https://github.com/firebase/flutterfire/commit/a100829087dbf83ea59e73c3811d87b67e2a4012))
