@@ -396,7 +396,6 @@ class DocumentReference
       } else {
         _docListeners[key] = 0;
       }
-      print('DDD: $key-${_docListeners[key]}');
       return '$key-${_docListeners[key]}';
     }
     return 'no-op';
