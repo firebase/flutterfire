@@ -391,13 +391,23 @@ public class FlutterFirebaseStoragePlugin
 
   StorageMetadata getMetaDataFromPigeon(
       GeneratedAndroidFirebaseStorage.PigeonSettableMetadata pigeonSettableMetatdata) {
-    StorageMetadata.Builder androidMetaDataBuilder =
-        new StorageMetadata.Builder()
-            .setCacheControl(pigeonSettableMetatdata.getCacheControl())
-            .setContentDisposition(pigeonSettableMetatdata.getContentDisposition())
-            .setContentEncoding(pigeonSettableMetatdata.getContentEncoding())
-            .setContentLanguage(pigeonSettableMetatdata.getContentLanguage())
-            .setContentType(pigeonSettableMetatdata.getContentType());
+    StorageMetadata.Builder androidMetaDataBuilder = new StorageMetadata.Builder();
+
+    if (pigeonSettableMetatdata.getContentType() != null) {
+      androidMetaDataBuilder.setContentType(pigeonSettableMetatdata.getContentType());
+    }
+    if (pigeonSettableMetatdata.getCacheControl() != null) {
+      androidMetaDataBuilder.setCacheControl(pigeonSettableMetatdata.getCacheControl());
+    }
+    if (pigeonSettableMetatdata.getContentDisposition() != null) {
+      androidMetaDataBuilder.setContentDisposition(pigeonSettableMetatdata.getContentDisposition());
+    }
+    if (pigeonSettableMetatdata.getContentEncoding() != null) {
+      androidMetaDataBuilder.setContentEncoding(pigeonSettableMetatdata.getContentEncoding());
+    }
+    if (pigeonSettableMetatdata.getContentLanguage() != null) {
+      androidMetaDataBuilder.setContentLanguage(pigeonSettableMetatdata.getContentLanguage());
+    }
 
     Map<String, String> pigeonCustomMetadata = pigeonSettableMetatdata.getCustomMetadata();
     if (pigeonCustomMetadata != null) {

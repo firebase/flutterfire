@@ -16,7 +16,7 @@ import 'utils/stream_subscriber_mixin.dart';
 // https://github.com/firebase/FirebaseUI-iOS/blob/master/FirebaseDatabaseUI/FUISortedArray.m
 class FirebaseSortedList extends ListBase<DataSnapshot>
     with
-        // ignore: prefer_mixin
+        // ignore: prefer_mixin, class_used_as_mixin
         StreamSubscriberMixin<DatabaseEvent> {
   FirebaseSortedList({
     required this.query,

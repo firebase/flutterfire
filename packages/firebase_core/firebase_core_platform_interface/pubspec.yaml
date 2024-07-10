@@ -4,10 +4,10 @@ homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_
 repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_core/firebase_core_platform_interface
 # NOTE: We strongly prefer non-breaking changes, even at the expense of a
 # less-clean API. See https://flutter.dev/go/platform-interface-breaking-changes
-version: 5.0.0
+version: 5.1.0
 
 environment:
-  sdk: '>=2.18.0 <4.0.0'
+  sdk: '>=3.2.0 <4.0.0'
   flutter: '>=3.3.0'
 
 dependencies:

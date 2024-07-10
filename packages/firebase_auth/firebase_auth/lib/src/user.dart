@@ -641,10 +641,6 @@ class User {
   }
 
   /// Updates a user's profile data.
-  @Deprecated(
-    'Will be removed in version 2.0.0. '
-    'Use updatePhotoURL and updateDisplayName instead.',
-  )
   Future<void> updateProfile({String? displayName, String? photoURL}) {
     return _delegate.updateProfile(<String, String?>{
       'displayName': displayName,
@@ -657,6 +653,18 @@ class User {
   ///
   /// If you have a custom email action handler, you can complete the
   /// verification process by calling [applyActionCode].
+  ///
+  /// A [FirebaseAuthException] maybe thrown with the following error code:
+  /// - **missing-android-pkg-name**:
+  ///  - An Android package name must be provided if the Android app is required to be installed.
+  /// - **missing-continue-uri**:
+  ///  - A continue URL must be provided in the request.
+  /// - **missing-ios-bundle-id**:
+  ///  - An iOS bundle ID must be provided if an App Store ID is provided.
+  /// - **invalid-continue-uri**:
+  ///  - The continue URL provided in the request is invalid.
+  /// - **unauthorized-continue-uri**:
+  ///  - The domain of the continue URL is not whitelisted. Whitelist the domain in the Firebase console.
   Future<void> verifyBeforeUpdateEmail(
     String newEmail, [
     ActionCodeSettings? actionCodeSettings,

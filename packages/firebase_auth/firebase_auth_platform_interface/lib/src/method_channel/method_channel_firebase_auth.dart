@@ -136,13 +136,18 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       _multiFactorInstances[appName] = multiFactorInstance;
     }
 
-    final userMap = arguments['user'];
-    if (userMap == null) {
+    final userList = arguments['user'];
+    if (userList == null) {
       instance.currentUser = null;
       streamController.add(const _ValueWrapper.absent());
     } else {
       final MethodChannelUser user = MethodChannelUser(
-          instance, multiFactorInstance, PigeonUserDetails.decode(userMap));
+        instance,
+        multiFactorInstance,
+        PigeonUserDetails.decode(
+          [PigeonUserInfo.decode(userList[0]!), userList[1]],
+        ),
+      );
 
       instance.currentUser = user;
       streamController.add(_ValueWrapper(instance.currentUser));
@@ -170,14 +175,19 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       _multiFactorInstances[appName] = multiFactorInstance;
     }
 
-    final userMap = arguments['user'];
-    if (userMap == null) {
+    final userList = arguments['user'];
+    if (userList == null) {
       instance.currentUser = null;
       idTokenStreamController.add(const _ValueWrapper.absent());
       userChangesStreamController.add(const _ValueWrapper.absent());
     } else {
       final MethodChannelUser user = MethodChannelUser(
-          instance, multiFactorInstance, PigeonUserDetails.decode(userMap));
+        instance,
+        multiFactorInstance,
+        PigeonUserDetails.decode(
+          [PigeonUserInfo.decode(userList[0]!), userList[1]],
+        ),
+      );
 
       instance.currentUser = user;
       idTokenStreamController.add(_ValueWrapper(user));

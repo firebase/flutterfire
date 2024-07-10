@@ -5,20 +5,25 @@ description:
   iOS.
 homepage: https://firebase.google.com/docs/perf-mon
 repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_performance/firebase_performance
-version: 0.9.4+6
+version: 0.10.0+3
+topics:
+  - firebase
+  - performance
+  - monitoring
+  - insights
 
 false_secrets:
   - example/**
 
 environment:
-  sdk: '>=2.18.0 <4.0.0'
+  sdk: '>=3.2.0 <4.0.0'
   flutter: '>=3.3.0'
 
 dependencies:
-  firebase_core: ^2.31.1
-  firebase_core_platform_interface: ^5.0.0
-  firebase_performance_platform_interface: ^0.1.4+34
-  firebase_performance_web: ^0.1.6+6
+  firebase_core: ^3.2.0
+  firebase_core_platform_interface: ^5.1.0
+  firebase_performance_platform_interface: ^0.1.4+39
+  firebase_performance_web: ^0.1.6+11
   flutter:
     sdk: flutter
 

@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of firebase_vertexai;
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
 
 /// The base structured datatype containing multi-part content of a message.
 final class Content {
   /// Constructor
   Content(this.role, this.parts);
-  factory Content._fromGoogleAIContent(google_ai.Content content) =>
-      Content(content.role, content.parts.map(Part._fromGoogleAIPart).toList());
 
   /// The producer of the content.
   ///
@@ -50,6 +51,10 @@ final class Content {
           String name, Map<String, Object?>? response) =>
       Content('function', [FunctionResponse(name, response)]);
 
+  /// Return a [Content] with multiple [FunctionResponse].
+  static Content functionResponses(Iterable<FunctionResponse> responses) =>
+      Content('function', responses.toList());
+
   /// Return a [Content] with [TextPart] of system instruction.
   static Content system(String instructions) =>
       Content('system', [TextPart(instructions)]);
@@ -59,8 +64,20 @@ final class Content {
         if (role case final role?) 'role': role,
         'parts': parts.map((p) => p.toJson()).toList()
       };
-  google_ai.Content _toGoogleAIContent() =>
+}
+
+/// Conversion utilities for [Content].
+extension ContentConversion on Content {
+  /// Returns this content as a [google_ai.Content].
+  google_ai.Content toGoogleAI() =>
       google_ai.Content(role, parts.map((p) => p.toPart()).toList());
+}
+
+/// Conversion utilities for [google_ai.Content].
+extension GoogleAIContentConversion on google_ai.Content {
+  /// Returns this content as a [Content].
+  Content toVertex() =>
+      Content(role, parts.map(Part._fromGoogleAIPart).toList());
 }
 
 /// Parse the [Content] from json object.

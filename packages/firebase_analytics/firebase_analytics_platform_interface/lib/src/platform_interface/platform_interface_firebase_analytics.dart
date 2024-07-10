@@ -40,8 +40,12 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   }
 
   /// Create an instance using [app] using the existing implementation
-  factory FirebaseAnalyticsPlatform.instanceFor({required FirebaseApp app}) {
-    return FirebaseAnalyticsPlatform.instance.delegateFor(app: app);
+  factory FirebaseAnalyticsPlatform.instanceFor({
+    required FirebaseApp app,
+    Map<String, dynamic>? webOptions,
+  }) {
+    return FirebaseAnalyticsPlatform.instance
+        .delegateFor(app: app, webOptions: webOptions);
   }
 
   /// The current default [FirebaseAnalyticsPlatform] instance.
@@ -59,7 +63,10 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   }
 
   /// Enables delegates to create new instances of themselves
-  FirebaseAnalyticsPlatform delegateFor({required FirebaseApp app}) {
+  FirebaseAnalyticsPlatform delegateFor({
+    required FirebaseApp app,
+    Map<String, dynamic>? webOptions,
+  }) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 
@@ -208,6 +215,8 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   Future<void> initiateOnDeviceConversionMeasurement({
     String? emailAddress,
     String? phoneNumber,
+    String? hashedEmailAddress,
+    String? hashedPhoneNumber,
   }) {
     throw UnimplementedError(
       'initiateOnDeviceConversionMeasurement() is not implemented',

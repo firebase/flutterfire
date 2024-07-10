@@ -4,6 +4,7 @@
 
 #import "Private/PigeonParser.h"
 #import <Foundation/Foundation.h>
+#import "Public/CustomPigeonHeader.h"
 
 @implementation PigeonParser
 
@@ -14,7 +15,7 @@
             makeWithUser:[self getPigeonDetails:authResult.user]
       additionalUserInfo:[self getPigeonAdditionalUserInfo:authResult.additionalUserInfo
                                          authorizationCode:authorizationCode]
-              credential:[self getPigeonAuthCredential:authResult.credential]];
+              credential:[self getPigeonAuthCredential:authResult.credential token:nil]];
 }
 
 + (PigeonUserCredential *)getPigeonUserCredentialFromFIRUser:(nonnull FIRUser *)user {
@@ -36,8 +37,8 @@
                  photoUrl:(user.photoURL.absoluteString.length > 0) ? user.photoURL.absoluteString
                                                                     : nil
               phoneNumber:user.phoneNumber
-              isAnonymous:[NSNumber numberWithBool:user.isAnonymous]
-          isEmailVerified:[NSNumber numberWithBool:user.emailVerified]
+              isAnonymous:user.isAnonymous
+          isEmailVerified:user.emailVerified
                providerId:user.providerID
                  tenantId:user.tenantID
              refreshToken:user.refreshToken
@@ -72,7 +73,7 @@
 
 + (PigeonAdditionalUserInfo *)getPigeonAdditionalUserInfo:(nonnull FIRAdditionalUserInfo *)userInfo
                                         authorizationCode:(nullable NSString *)authorizationCode {
-  return [PigeonAdditionalUserInfo makeWithIsNewUser:[NSNumber numberWithBool:userInfo.isNewUser]
+  return [PigeonAdditionalUserInfo makeWithIsNewUser:userInfo.isNewUser
                                           providerId:userInfo.providerID
                                             username:userInfo.username
                                    authorizationCode:authorizationCode
@@ -87,7 +88,8 @@
                                              secretKey:secret.sharedSecretKey];
 }
 
-+ (PigeonAuthCredential *)getPigeonAuthCredential:(FIRAuthCredential *)authCredential {
++ (PigeonAuthCredential *)getPigeonAuthCredential:(FIRAuthCredential *)authCredential
+                                            token:(NSNumber *_Nullable)token {
   if (authCredential == nil) {
     return nil;
   }
@@ -102,9 +104,12 @@
     }
   }
 
+  NSUInteger nativeId =
+      token != nil ? [token unsignedLongValue] : (NSUInteger)[authCredential hash];
+
   return [PigeonAuthCredential makeWithProviderId:authCredential.provider
                                      signInMethod:authCredential.provider
-                                         nativeId:@([authCredential hash])
+                                         nativeId:nativeId
                                       accessToken:accessToken ?: nil];
 }
 
@@ -149,9 +154,7 @@
     codeSettings.dynamicLinkDomain = settings.dynamicLinkDomain;
   }
 
-  if (settings.handleCodeInApp != nil) {
-    codeSettings.handleCodeInApp = [settings.handleCodeInApp boolValue];
-  }
+  codeSettings.handleCodeInApp = settings.handleCodeInApp;
 
   if (settings.iOSBundleId != nil) {
     codeSettings.iOSBundleID = settings.iOSBundleId;
@@ -172,6 +175,18 @@
                              signInProvider:tokenResult.signInProvider
                                      claims:tokenResult.claims
                          signInSecondFactor:tokenResult.signInSecondFactor];
+}
+
++ (NSArray *)getManualList:(nonnull PigeonUserDetails *)userDetails {
+  NSMutableArray *output = [NSMutableArray array];
+
+  id userInfoList = [[userDetails userInfo] toList];
+  [output addObject:userInfoList];
+
+  id providerData = [userDetails providerData];
+  [output addObject:providerData];
+
+  return [output copy];
 }
 
 @end
