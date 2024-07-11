@@ -12,13 +12,9 @@ import androidx.annotation.Nullable;
 import io.flutter.plugin.common.BasicMessageChannel;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MessageCodec;
-import io.flutter.plugin.common.StandardMessageCodec;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,8 +31,7 @@ public class GeneratedAndroidFirebaseFirestore {
     /** The error details. Must be a datatype supported by the api codec. */
     public final Object details;
 
-    public FlutterError(@NonNull String code, @Nullable String message, @Nullable Object details) 
-    {
+    public FlutterError(@NonNull String code, @Nullable String message, @Nullable Object details) {
       super(message);
       this.code = code;
       this.details = details;
@@ -55,23 +50,20 @@ public class GeneratedAndroidFirebaseFirestore {
       errorList.add(exception.toString());
       errorList.add(exception.getClass().getSimpleName());
       errorList.add(
-        "Cause: " + exception.getCause() + ", Stacktrace: " + Log.getStackTraceString(exception));
+          "Cause: " + exception.getCause() + ", Stacktrace: " + Log.getStackTraceString(exception));
     }
     return errorList;
   }
 
   /** An enumeration of document change types. */
   public enum DocumentChangeType {
-    /**
-     * Indicates a new document was added to the set of documents matching the
-     * query.
-     */
+    /** Indicates a new document was added to the set of documents matching the query. */
     ADDED(0),
     /** Indicates a document within the query was modified. */
     MODIFIED(1),
     /**
-     * Indicates a document within the query was removed (either deleted or no
-     * longer matches the query.
+     * Indicates a document within the query was removed (either deleted or no longer matches the
+     * query.
      */
     REMOVED(2);
 
@@ -85,23 +77,23 @@ public class GeneratedAndroidFirebaseFirestore {
   /** An enumeration of firestore source types. */
   public enum Source {
     /**
-     * Causes Firestore to try to retrieve an up-to-date (server-retrieved) snapshot, but fall back to
-     * returning cached data if the server can't be reached.
+     * Causes Firestore to try to retrieve an up-to-date (server-retrieved) snapshot, but fall back
+     * to returning cached data if the server can't be reached.
      */
     SERVER_AND_CACHE(0),
     /**
-     * Causes Firestore to avoid the cache, generating an error if the server cannot be reached. Note
-     * that the cache will still be updated if the server request succeeds. Also note that
-     * latency-compensation still takes effect, so any pending write operations will be visible in the
-     * returned data (merged into the server-provided data).
+     * Causes Firestore to avoid the cache, generating an error if the server cannot be reached.
+     * Note that the cache will still be updated if the server request succeeds. Also note that
+     * latency-compensation still takes effect, so any pending write operations will be visible in
+     * the returned data (merged into the server-provided data).
      */
     SERVER(1),
     /**
      * Causes Firestore to immediately return a value from the cache, ignoring the server completely
      * (implying that the returned value may be stale with respect to the value on the server). If
-     * there is no data in the cache to satisfy the `get` call,
-     * [DocumentReference.get] will throw a [FirebaseException] and
-     * [Query.get] will return an empty [QuerySnapshotPlatform] with no documents.
+     * there is no data in the cache to satisfy the `get` call, [DocumentReference.get] will throw a
+     * [FirebaseException] and [Query.get] will return an empty [QuerySnapshotPlatform] with no
+     * documents.
      */
     CACHE(2);
 
@@ -113,22 +105,24 @@ public class GeneratedAndroidFirebaseFirestore {
   }
 
   /**
-   * The listener retrieves data and listens to updates from the local Firestore cache only.
-   * If the cache is empty, an empty snapshot will be returned.
-   * Snapshot events will be triggered on cache updates, like local mutations or load bundles.
+   * The listener retrieves data and listens to updates from the local Firestore cache only. If the
+   * cache is empty, an empty snapshot will be returned. Snapshot events will be triggered on cache
+   * updates, like local mutations or load bundles.
    *
-   * Note that the data might be stale if the cache hasn't synchronized with recent server-side changes.
+   * <p>Note that the data might be stale if the cache hasn't synchronized with recent server-side
+   * changes.
    */
   public enum ListenSource {
     /**
-     * The default behavior. The listener attempts to return initial snapshot from cache and retrieve up-to-date snapshots from the Firestore server.
-     * Snapshot events will be triggered on local mutations and server side updates.
+     * The default behavior. The listener attempts to return initial snapshot from cache and
+     * retrieve up-to-date snapshots from the Firestore server. Snapshot events will be triggered on
+     * local mutations and server side updates.
      */
     DEFAULT_SOURCE(0),
     /**
-     * The listener retrieves data and listens to updates from the local Firestore cache only.
-     * If the cache is empty, an empty snapshot will be returned.
-     * Snapshot events will be triggered on cache updates, like local mutations or load bundles.
+     * The listener retrieves data and listens to updates from the local Firestore cache only. If
+     * the cache is empty, an empty snapshot will be returned. Snapshot events will be triggered on
+     * cache updates, like local mutations or load bundles.
      */
     CACHE(1);
 
@@ -142,9 +136,15 @@ public class GeneratedAndroidFirebaseFirestore {
   public enum ServerTimestampBehavior {
     /** Return null for [FieldValue.serverTimestamp()] values that have not yet */
     NONE(0),
-    /** Return local estimates for [FieldValue.serverTimestamp()] values that have not yet been set to their final value. */
+    /**
+     * Return local estimates for [FieldValue.serverTimestamp()] values that have not yet been set
+     * to their final value.
+     */
     ESTIMATE(1),
-    /** Return the previous value for [FieldValue.serverTimestamp()] values that have not yet been set to their final value. */
+    /**
+     * Return the previous value for [FieldValue.serverTimestamp()] values that have not yet been
+     * set to their final value.
+     */
     PREVIOUS(2);
 
     final int index;
@@ -309,7 +309,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(5);
       toListResult.add(persistenceEnabled);
       toListResult.add(host);
@@ -328,7 +328,12 @@ public class GeneratedAndroidFirebaseFirestore {
       Object sslEnabled = list.get(2);
       pigeonResult.setSslEnabled((Boolean) sslEnabled);
       Object cacheSizeBytes = list.get(3);
-      pigeonResult.setCacheSizeBytes((cacheSizeBytes == null) ? null : ((cacheSizeBytes instanceof Integer) ? (Integer) cacheSizeBytes : (Long) cacheSizeBytes));
+      pigeonResult.setCacheSizeBytes(
+          (cacheSizeBytes == null)
+              ? null
+              : ((cacheSizeBytes instanceof Integer)
+                  ? (Integer) cacheSizeBytes
+                  : (Long) cacheSizeBytes));
       Object ignoreUndefinedProperties = list.get(4);
       pigeonResult.setIgnoreUndefinedProperties((Boolean) ignoreUndefinedProperties);
       return pigeonResult;
@@ -412,7 +417,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(3);
       toListResult.add(appName);
       toListResult.add((settings == null) ? null : settings.toList());
@@ -425,7 +430,10 @@ public class GeneratedAndroidFirebaseFirestore {
       Object appName = list.get(0);
       pigeonResult.setAppName((String) appName);
       Object settings = list.get(1);
-      pigeonResult.setSettings((settings == null) ? null : PigeonFirebaseSettings.fromList((ArrayList<Object>) settings));
+      pigeonResult.setSettings(
+          (settings == null)
+              ? null
+              : PigeonFirebaseSettings.fromList((ArrayList<Object>) settings));
       Object databaseURL = list.get(2);
       pigeonResult.setDatabaseURL((String) databaseURL);
       return pigeonResult;
@@ -488,7 +496,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(2);
       toListResult.add(hasPendingWrites);
       toListResult.add(isFromCache);
@@ -579,7 +587,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(3);
       toListResult.add(path);
       toListResult.add(data);
@@ -594,7 +602,10 @@ public class GeneratedAndroidFirebaseFirestore {
       Object data = list.get(1);
       pigeonResult.setData((Map<String, Object>) data);
       Object metadata = list.get(2);
-      pigeonResult.setMetadata((metadata == null) ? null : PigeonSnapshotMetadata.fromList((ArrayList<Object>) metadata));
+      pigeonResult.setMetadata(
+          (metadata == null)
+              ? null
+              : PigeonSnapshotMetadata.fromList((ArrayList<Object>) metadata));
       return pigeonResult;
     }
   }
@@ -697,7 +708,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(4);
       toListResult.add(type == null ? null : type.index);
       toListResult.add((document == null) ? null : document.toList());
@@ -711,11 +722,20 @@ public class GeneratedAndroidFirebaseFirestore {
       Object type = list.get(0);
       pigeonResult.setType(DocumentChangeType.values()[(int) type]);
       Object document = list.get(1);
-      pigeonResult.setDocument((document == null) ? null : PigeonDocumentSnapshot.fromList((ArrayList<Object>) document));
+      pigeonResult.setDocument(
+          (document == null)
+              ? null
+              : PigeonDocumentSnapshot.fromList((ArrayList<Object>) document));
       Object oldIndex = list.get(2);
-      pigeonResult.setOldIndex((oldIndex == null) ? null : ((oldIndex instanceof Integer) ? (Integer) oldIndex : (Long) oldIndex));
+      pigeonResult.setOldIndex(
+          (oldIndex == null)
+              ? null
+              : ((oldIndex instanceof Integer) ? (Integer) oldIndex : (Long) oldIndex));
       Object newIndex = list.get(3);
-      pigeonResult.setNewIndex((newIndex == null) ? null : ((newIndex instanceof Integer) ? (Integer) newIndex : (Long) newIndex));
+      pigeonResult.setNewIndex(
+          (newIndex == null)
+              ? null
+              : ((newIndex instanceof Integer) ? (Integer) newIndex : (Long) newIndex));
       return pigeonResult;
     }
   }
@@ -797,7 +817,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(3);
       toListResult.add(documents);
       toListResult.add(documentChanges);
@@ -812,7 +832,10 @@ public class GeneratedAndroidFirebaseFirestore {
       Object documentChanges = list.get(1);
       pigeonResult.setDocumentChanges((List<PigeonDocumentChange>) documentChanges);
       Object metadata = list.get(2);
-      pigeonResult.setMetadata((metadata == null) ? null : PigeonSnapshotMetadata.fromList((ArrayList<Object>) metadata));
+      pigeonResult.setMetadata(
+          (metadata == null)
+              ? null
+              : PigeonSnapshotMetadata.fromList((ArrayList<Object>) metadata));
       return pigeonResult;
     }
   }
@@ -859,7 +882,8 @@ public class GeneratedAndroidFirebaseFirestore {
 
       private @Nullable ServerTimestampBehavior serverTimestampBehavior;
 
-      public @NonNull Builder setServerTimestampBehavior(@NonNull ServerTimestampBehavior setterArg) {
+      public @NonNull Builder setServerTimestampBehavior(
+          @NonNull ServerTimestampBehavior setterArg) {
         this.serverTimestampBehavior = setterArg;
         return this;
       }
@@ -873,7 +897,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(2);
       toListResult.add(source == null ? null : source.index);
       toListResult.add(serverTimestampBehavior == null ? null : serverTimestampBehavior.index);
@@ -885,7 +909,8 @@ public class GeneratedAndroidFirebaseFirestore {
       Object source = list.get(0);
       pigeonResult.setSource(Source.values()[(int) source]);
       Object serverTimestampBehavior = list.get(1);
-      pigeonResult.setServerTimestampBehavior(ServerTimestampBehavior.values()[(int) serverTimestampBehavior]);
+      pigeonResult.setServerTimestampBehavior(
+          ServerTimestampBehavior.values()[(int) serverTimestampBehavior]);
       return pigeonResult;
     }
   }
@@ -937,7 +962,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(2);
       toListResult.add(merge);
       toListResult.add(mergeFields);
@@ -1046,7 +1071,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(4);
       toListResult.add(type == null ? null : type.index);
       toListResult.add(path);
@@ -1064,7 +1089,8 @@ public class GeneratedAndroidFirebaseFirestore {
       Object data = list.get(2);
       pigeonResult.setData((Map<String, Object>) data);
       Object option = list.get(3);
-      pigeonResult.setOption((option == null) ? null : PigeonDocumentOption.fromList((ArrayList<Object>) option));
+      pigeonResult.setOption(
+          (option == null) ? null : PigeonDocumentOption.fromList((ArrayList<Object>) option));
       return pigeonResult;
     }
   }
@@ -1159,7 +1185,8 @@ public class GeneratedAndroidFirebaseFirestore {
 
       private @Nullable ServerTimestampBehavior serverTimestampBehavior;
 
-      public @NonNull Builder setServerTimestampBehavior(@Nullable ServerTimestampBehavior setterArg) {
+      public @NonNull Builder setServerTimestampBehavior(
+          @Nullable ServerTimestampBehavior setterArg) {
         this.serverTimestampBehavior = setterArg;
         return this;
       }
@@ -1176,7 +1203,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(5);
       toListResult.add(path);
       toListResult.add(data);
@@ -1193,11 +1220,15 @@ public class GeneratedAndroidFirebaseFirestore {
       Object data = list.get(1);
       pigeonResult.setData((Map<Object, Object>) data);
       Object option = list.get(2);
-      pigeonResult.setOption((option == null) ? null : PigeonDocumentOption.fromList((ArrayList<Object>) option));
+      pigeonResult.setOption(
+          (option == null) ? null : PigeonDocumentOption.fromList((ArrayList<Object>) option));
       Object source = list.get(3);
       pigeonResult.setSource(source == null ? null : Source.values()[(int) source]);
       Object serverTimestampBehavior = list.get(4);
-      pigeonResult.setServerTimestampBehavior(serverTimestampBehavior == null ? null : ServerTimestampBehavior.values()[(int) serverTimestampBehavior]);
+      pigeonResult.setServerTimestampBehavior(
+          serverTimestampBehavior == null
+              ? null
+              : ServerTimestampBehavior.values()[(int) serverTimestampBehavior]);
       return pigeonResult;
     }
   }
@@ -1375,7 +1406,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(9);
       toListResult.add(where);
       toListResult.add(orderBy);
@@ -1396,9 +1427,13 @@ public class GeneratedAndroidFirebaseFirestore {
       Object orderBy = list.get(1);
       pigeonResult.setOrderBy((List<List<Object>>) orderBy);
       Object limit = list.get(2);
-      pigeonResult.setLimit((limit == null) ? null : ((limit instanceof Integer) ? (Integer) limit : (Long) limit));
+      pigeonResult.setLimit(
+          (limit == null) ? null : ((limit instanceof Integer) ? (Integer) limit : (Long) limit));
       Object limitToLast = list.get(3);
-      pigeonResult.setLimitToLast((limitToLast == null) ? null : ((limitToLast instanceof Integer) ? (Integer) limitToLast : (Long) limitToLast));
+      pigeonResult.setLimitToLast(
+          (limitToLast == null)
+              ? null
+              : ((limitToLast instanceof Integer) ? (Integer) limitToLast : (Long) limitToLast));
       Object startAt = list.get(4);
       pigeonResult.setStartAt((List<Object>) startAt);
       Object startAfter = list.get(5);
@@ -1466,7 +1501,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(2);
       toListResult.add(type == null ? null : type.index);
       toListResult.add(field);
@@ -1554,7 +1589,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(3);
       toListResult.add(type == null ? null : type.index);
       toListResult.add(field);
@@ -1581,8 +1616,9 @@ public class GeneratedAndroidFirebaseFirestore {
     void error(@NonNull Throwable error);
   }
 
-  private static class FirebaseFirestoreHostApiCodec extends StandardMessageCodec {
-    public static final FirebaseFirestoreHostApiCodec INSTANCE = new FirebaseFirestoreHostApiCodec();
+  private static class FirebaseFirestoreHostApiCodec extends FlutterFirebaseFirestoreMessageCodec {
+    public static final FirebaseFirestoreHostApiCodec INSTANCE =
+        new FirebaseFirestoreHostApiCodec();
 
     private FirebaseFirestoreHostApiCodec() {}
 
@@ -1670,9 +1706,16 @@ public class GeneratedAndroidFirebaseFirestore {
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface FirebaseFirestoreHostApi {
 
-    void loadBundle(@NonNull FirestorePigeonFirebaseApp app, @NonNull byte[] bundle, @NonNull Result<String> result);
+    void loadBundle(
+        @NonNull FirestorePigeonFirebaseApp app,
+        @NonNull byte[] bundle,
+        @NonNull Result<String> result);
 
-    void namedQueryGet(@NonNull FirestorePigeonFirebaseApp app, @NonNull String name, @NonNull PigeonGetOptions options, @NonNull Result<PigeonQuerySnapshot> result);
+    void namedQueryGet(
+        @NonNull FirestorePigeonFirebaseApp app,
+        @NonNull String name,
+        @NonNull PigeonGetOptions options,
+        @NonNull Result<PigeonQuerySnapshot> result);
 
     void clearPersistence(@NonNull FirestorePigeonFirebaseApp app, @NonNull Result<Void> result);
 
@@ -1682,48 +1725,112 @@ public class GeneratedAndroidFirebaseFirestore {
 
     void terminate(@NonNull FirestorePigeonFirebaseApp app, @NonNull Result<Void> result);
 
-    void waitForPendingWrites(@NonNull FirestorePigeonFirebaseApp app, @NonNull Result<Void> result);
+    void waitForPendingWrites(
+        @NonNull FirestorePigeonFirebaseApp app, @NonNull Result<Void> result);
 
-    void setIndexConfiguration(@NonNull FirestorePigeonFirebaseApp app, @NonNull String indexConfiguration, @NonNull Result<Void> result);
+    void setIndexConfiguration(
+        @NonNull FirestorePigeonFirebaseApp app,
+        @NonNull String indexConfiguration,
+        @NonNull Result<Void> result);
 
     void setLoggingEnabled(@NonNull Boolean loggingEnabled, @NonNull Result<Void> result);
 
-    void snapshotsInSyncSetup(@NonNull FirestorePigeonFirebaseApp app, @NonNull Result<String> result);
+    void snapshotsInSyncSetup(
+        @NonNull FirestorePigeonFirebaseApp app, @NonNull Result<String> result);
 
-    void transactionCreate(@NonNull FirestorePigeonFirebaseApp app, @NonNull Long timeout, @NonNull Long maxAttempts, @NonNull Result<String> result);
+    void transactionCreate(
+        @NonNull FirestorePigeonFirebaseApp app,
+        @NonNull Long timeout,
+        @NonNull Long maxAttempts,
+        @NonNull Result<String> result);
 
-    void transactionStoreResult(@NonNull String transactionId, @NonNull PigeonTransactionResult resultType, @Nullable List<PigeonTransactionCommand> commands, @NonNull Result<Void> result);
+    void transactionStoreResult(
+        @NonNull String transactionId,
+        @NonNull PigeonTransactionResult resultType,
+        @Nullable List<PigeonTransactionCommand> commands,
+        @NonNull Result<Void> result);
 
-    void transactionGet(@NonNull FirestorePigeonFirebaseApp app, @NonNull String transactionId, @NonNull String path, @NonNull Result<PigeonDocumentSnapshot> result);
+    void transactionGet(
+        @NonNull FirestorePigeonFirebaseApp app,
+        @NonNull String transactionId,
+        @NonNull String path,
+        @NonNull Result<PigeonDocumentSnapshot> result);
 
-    void documentReferenceSet(@NonNull FirestorePigeonFirebaseApp app, @NonNull DocumentReferenceRequest request, @NonNull Result<Void> result);
+    void documentReferenceSet(
+        @NonNull FirestorePigeonFirebaseApp app,
+        @NonNull DocumentReferenceRequest request,
+        @NonNull Result<Void> result);
 
-    void documentReferenceUpdate(@NonNull FirestorePigeonFirebaseApp app, @NonNull DocumentReferenceRequest request, @NonNull Result<Void> result);
+    void documentReferenceUpdate(
+        @NonNull FirestorePigeonFirebaseApp app,
+        @NonNull DocumentReferenceRequest request,
+        @NonNull Result<Void> result);
 
-    void documentReferenceGet(@NonNull FirestorePigeonFirebaseApp app, @NonNull DocumentReferenceRequest request, @NonNull Result<PigeonDocumentSnapshot> result);
+    void documentReferenceGet(
+        @NonNull FirestorePigeonFirebaseApp app,
+        @NonNull DocumentReferenceRequest request,
+        @NonNull Result<PigeonDocumentSnapshot> result);
 
-    void documentReferenceDelete(@NonNull FirestorePigeonFirebaseApp app, @NonNull DocumentReferenceRequest request, @NonNull Result<Void> result);
+    void documentReferenceDelete(
+        @NonNull FirestorePigeonFirebaseApp app,
+        @NonNull DocumentReferenceRequest request,
+        @NonNull Result<Void> result);
 
-    void queryGet(@NonNull FirestorePigeonFirebaseApp app, @NonNull String path, @NonNull Boolean isCollectionGroup, @NonNull PigeonQueryParameters parameters, @NonNull PigeonGetOptions options, @NonNull Result<PigeonQuerySnapshot> result);
+    void queryGet(
+        @NonNull FirestorePigeonFirebaseApp app,
+        @NonNull String path,
+        @NonNull Boolean isCollectionGroup,
+        @NonNull PigeonQueryParameters parameters,
+        @NonNull PigeonGetOptions options,
+        @NonNull Result<PigeonQuerySnapshot> result);
 
-    void aggregateQuery(@NonNull FirestorePigeonFirebaseApp app, @NonNull String path, @NonNull PigeonQueryParameters parameters, @NonNull AggregateSource source, @NonNull List<AggregateQuery> queries, @NonNull Boolean isCollectionGroup, @NonNull Result<List<AggregateQueryResponse>> result);
+    void aggregateQuery(
+        @NonNull FirestorePigeonFirebaseApp app,
+        @NonNull String path,
+        @NonNull PigeonQueryParameters parameters,
+        @NonNull AggregateSource source,
+        @NonNull List<AggregateQuery> queries,
+        @NonNull Boolean isCollectionGroup,
+        @NonNull Result<List<AggregateQueryResponse>> result);
 
-    void writeBatchCommit(@NonNull FirestorePigeonFirebaseApp app, @NonNull List<PigeonTransactionCommand> writes, @NonNull Result<Void> result);
+    void writeBatchCommit(
+        @NonNull FirestorePigeonFirebaseApp app,
+        @NonNull List<PigeonTransactionCommand> writes,
+        @NonNull Result<Void> result);
 
-    void querySnapshot(@NonNull FirestorePigeonFirebaseApp app, @NonNull String path, @NonNull Boolean isCollectionGroup, @NonNull PigeonQueryParameters parameters, @NonNull PigeonGetOptions options, @NonNull Boolean includeMetadataChanges, @NonNull ListenSource source, @NonNull Result<String> result);
+    void querySnapshot(
+        @NonNull FirestorePigeonFirebaseApp app,
+        @NonNull String path,
+        @NonNull Boolean isCollectionGroup,
+        @NonNull PigeonQueryParameters parameters,
+        @NonNull PigeonGetOptions options,
+        @NonNull Boolean includeMetadataChanges,
+        @NonNull ListenSource source,
+        @NonNull Result<String> result);
 
-    void documentReferenceSnapshot(@NonNull FirestorePigeonFirebaseApp app, @NonNull DocumentReferenceRequest parameters, @NonNull Boolean includeMetadataChanges, @NonNull ListenSource source, @NonNull Result<String> result);
+    void documentReferenceSnapshot(
+        @NonNull FirestorePigeonFirebaseApp app,
+        @NonNull DocumentReferenceRequest parameters,
+        @NonNull Boolean includeMetadataChanges,
+        @NonNull ListenSource source,
+        @NonNull Result<String> result);
 
     /** The codec used by FirebaseFirestoreHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
       return FirebaseFirestoreHostApiCodec.INSTANCE;
     }
-    /**Sets up an instance of `FirebaseFirestoreHostApi` to handle messages through the `binaryMessenger`. */
-    static void setup(@NonNull BinaryMessenger binaryMessenger, @Nullable FirebaseFirestoreHostApi api) {
+    /**
+     * Sets up an instance of `FirebaseFirestoreHostApi` to handle messages through the
+     * `binaryMessenger`.
+     */
+    static void setup(
+        @NonNull BinaryMessenger binaryMessenger, @Nullable FirebaseFirestoreHostApi api) {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.loadBundle", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.loadBundle",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -1753,7 +1860,9 @@ public class GeneratedAndroidFirebaseFirestore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.namedQueryGet", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.namedQueryGet",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -1784,7 +1893,9 @@ public class GeneratedAndroidFirebaseFirestore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.clearPersistence", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.clearPersistence",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -1813,7 +1924,9 @@ public class GeneratedAndroidFirebaseFirestore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.disableNetwork", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.disableNetwork",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -1842,7 +1955,9 @@ public class GeneratedAndroidFirebaseFirestore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.enableNetwork", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.enableNetwork",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -1871,7 +1986,9 @@ public class GeneratedAndroidFirebaseFirestore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.terminate", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.terminate",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -1900,7 +2017,9 @@ public class GeneratedAndroidFirebaseFirestore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.waitForPendingWrites", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.waitForPendingWrites",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -1929,7 +2048,9 @@ public class GeneratedAndroidFirebaseFirestore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setIndexConfiguration", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setIndexConfiguration",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -1959,7 +2080,9 @@ public class GeneratedAndroidFirebaseFirestore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setLoggingEnabled", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setLoggingEnabled",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -1988,7 +2111,9 @@ public class GeneratedAndroidFirebaseFirestore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.snapshotsInSyncSetup", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.snapshotsInSyncSetup",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2017,7 +2142,9 @@ public class GeneratedAndroidFirebaseFirestore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2039,7 +2166,11 @@ public class GeneratedAndroidFirebaseFirestore {
                       }
                     };
 
-                api.transactionCreate(appArg, (timeoutArg == null) ? null : timeoutArg.longValue(), (maxAttemptsArg == null) ? null : maxAttemptsArg.longValue(), resultCallback);
+                api.transactionCreate(
+                    appArg,
+                    (timeoutArg == null) ? null : timeoutArg.longValue(),
+                    (maxAttemptsArg == null) ? null : maxAttemptsArg.longValue(),
+                    resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
@@ -2048,15 +2179,19 @@ public class GeneratedAndroidFirebaseFirestore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionStoreResult", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionStoreResult",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
                 String transactionIdArg = (String) args.get(0);
-                PigeonTransactionResult resultTypeArg = PigeonTransactionResult.values()[(int) args.get(1)];
-                List<PigeonTransactionCommand> commandsArg = (List<PigeonTransactionCommand>) args.get(2);
+                PigeonTransactionResult resultTypeArg =
+                    PigeonTransactionResult.values()[(int) args.get(1)];
+                List<PigeonTransactionCommand> commandsArg =
+                    (List<PigeonTransactionCommand>) args.get(2);
                 Result<Void> resultCallback =
                     new Result<Void>() {
                       public void success(Void result) {
@@ -2070,7 +2205,8 @@ public class GeneratedAndroidFirebaseFirestore {
                       }
                     };
 
-                api.transactionStoreResult(transactionIdArg, resultTypeArg, commandsArg, resultCallback);
+                api.transactionStoreResult(
+                    transactionIdArg, resultTypeArg, commandsArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
@@ -2079,7 +2215,9 @@ public class GeneratedAndroidFirebaseFirestore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionGet", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionGet",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2110,7 +2248,9 @@ public class GeneratedAndroidFirebaseFirestore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSet", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSet",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2140,7 +2280,9 @@ public class GeneratedAndroidFirebaseFirestore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceUpdate", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceUpdate",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2170,7 +2312,9 @@ public class GeneratedAndroidFirebaseFirestore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceGet", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceGet",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2200,7 +2344,9 @@ public class GeneratedAndroidFirebaseFirestore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceDelete", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceDelete",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2230,7 +2376,9 @@ public class GeneratedAndroidFirebaseFirestore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.queryGet", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.queryGet",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2254,7 +2402,13 @@ public class GeneratedAndroidFirebaseFirestore {
                       }
                     };
 
-                api.queryGet(appArg, pathArg, isCollectionGroupArg, parametersArg, optionsArg, resultCallback);
+                api.queryGet(
+                    appArg,
+                    pathArg,
+                    isCollectionGroupArg,
+                    parametersArg,
+                    optionsArg,
+                    resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
@@ -2263,7 +2417,9 @@ public class GeneratedAndroidFirebaseFirestore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2288,7 +2444,14 @@ public class GeneratedAndroidFirebaseFirestore {
                       }
                     };
 
-                api.aggregateQuery(appArg, pathArg, parametersArg, sourceArg, queriesArg, isCollectionGroupArg, resultCallback);
+                api.aggregateQuery(
+                    appArg,
+                    pathArg,
+                    parametersArg,
+                    sourceArg,
+                    queriesArg,
+                    isCollectionGroupArg,
+                    resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
@@ -2297,14 +2460,17 @@ public class GeneratedAndroidFirebaseFirestore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.writeBatchCommit", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.writeBatchCommit",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
                 FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
-                List<PigeonTransactionCommand> writesArg = (List<PigeonTransactionCommand>) args.get(1);
+                List<PigeonTransactionCommand> writesArg =
+                    (List<PigeonTransactionCommand>) args.get(1);
                 Result<Void> resultCallback =
                     new Result<Void>() {
                       public void success(Void result) {
@@ -2327,7 +2493,9 @@ public class GeneratedAndroidFirebaseFirestore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2353,7 +2521,15 @@ public class GeneratedAndroidFirebaseFirestore {
                       }
                     };
 
-                api.querySnapshot(appArg, pathArg, isCollectionGroupArg, parametersArg, optionsArg, includeMetadataChangesArg, sourceArg, resultCallback);
+                api.querySnapshot(
+                    appArg,
+                    pathArg,
+                    isCollectionGroupArg,
+                    parametersArg,
+                    optionsArg,
+                    includeMetadataChangesArg,
+                    sourceArg,
+                    resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
@@ -2362,7 +2538,9 @@ public class GeneratedAndroidFirebaseFirestore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2385,7 +2563,8 @@ public class GeneratedAndroidFirebaseFirestore {
                       }
                     };
 
-                api.documentReferenceSnapshot(appArg, parametersArg, includeMetadataChangesArg, sourceArg, resultCallback);
+                api.documentReferenceSnapshot(
+                    appArg, parametersArg, includeMetadataChangesArg, sourceArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);

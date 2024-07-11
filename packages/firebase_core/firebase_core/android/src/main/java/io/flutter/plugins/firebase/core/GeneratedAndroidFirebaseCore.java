@@ -16,9 +16,6 @@ import io.flutter.plugin.common.StandardMessageCodec;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,8 +32,7 @@ public class GeneratedAndroidFirebaseCore {
     /** The error details. Must be a datatype supported by the api codec. */
     public final Object details;
 
-    public FlutterError(@NonNull String code, @Nullable String message, @Nullable Object details) 
-    {
+    public FlutterError(@NonNull String code, @Nullable String message, @Nullable Object details) {
       super(message);
       this.code = code;
       this.details = details;
@@ -55,7 +51,7 @@ public class GeneratedAndroidFirebaseCore {
       errorList.add(exception.toString());
       errorList.add(exception.getClass().getSimpleName());
       errorList.add(
-        "Cause: " + exception.getCause() + ", Stacktrace: " + Log.getStackTraceString(exception));
+          "Cause: " + exception.getCause() + ", Stacktrace: " + Log.getStackTraceString(exception));
     }
     return errorList;
   }
@@ -338,7 +334,7 @@ public class GeneratedAndroidFirebaseCore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(14);
       toListResult.add(apiKey);
       toListResult.add(appId);
@@ -486,7 +482,7 @@ public class GeneratedAndroidFirebaseCore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(4);
       toListResult.add(name);
       toListResult.add((options == null) ? null : options.toList());
@@ -500,7 +496,8 @@ public class GeneratedAndroidFirebaseCore {
       Object name = list.get(0);
       pigeonResult.setName((String) name);
       Object options = list.get(1);
-      pigeonResult.setOptions((options == null) ? null : PigeonFirebaseOptions.fromList((ArrayList<Object>) options));
+      pigeonResult.setOptions(
+          (options == null) ? null : PigeonFirebaseOptions.fromList((ArrayList<Object>) options));
       Object isAutomaticDataCollectionEnabled = list.get(2);
       pigeonResult.setIsAutomaticDataCollectionEnabled((Boolean) isAutomaticDataCollectionEnabled);
       Object pluginConstants = list.get(3);
@@ -550,7 +547,10 @@ public class GeneratedAndroidFirebaseCore {
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface FirebaseCoreHostApi {
 
-    void initializeApp(@NonNull String appName, @NonNull PigeonFirebaseOptions initializeAppRequest, @NonNull Result<PigeonInitializeResponse> result);
+    void initializeApp(
+        @NonNull String appName,
+        @NonNull PigeonFirebaseOptions initializeAppRequest,
+        @NonNull Result<PigeonInitializeResponse> result);
 
     void initializeCore(@NonNull Result<List<PigeonInitializeResponse>> result);
 
@@ -560,12 +560,17 @@ public class GeneratedAndroidFirebaseCore {
     static @NonNull MessageCodec<Object> getCodec() {
       return FirebaseCoreHostApiCodec.INSTANCE;
     }
-    /**Sets up an instance of `FirebaseCoreHostApi` to handle messages through the `binaryMessenger`. */
+    /**
+     * Sets up an instance of `FirebaseCoreHostApi` to handle messages through the
+     * `binaryMessenger`.
+     */
     static void setup(@NonNull BinaryMessenger binaryMessenger, @Nullable FirebaseCoreHostApi api) {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.FirebaseCoreHostApi.initializeApp", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.FirebaseCoreHostApi.initializeApp",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -595,7 +600,9 @@ public class GeneratedAndroidFirebaseCore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.FirebaseCoreHostApi.initializeCore", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.FirebaseCoreHostApi.initializeCore",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -622,7 +629,9 @@ public class GeneratedAndroidFirebaseCore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.FirebaseCoreHostApi.optionsFromResource", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.FirebaseCoreHostApi.optionsFromResource",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -651,9 +660,11 @@ public class GeneratedAndroidFirebaseCore {
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface FirebaseAppHostApi {
 
-    void setAutomaticDataCollectionEnabled(@NonNull String appName, @NonNull Boolean enabled, @NonNull Result<Void> result);
+    void setAutomaticDataCollectionEnabled(
+        @NonNull String appName, @NonNull Boolean enabled, @NonNull Result<Void> result);
 
-    void setAutomaticResourceManagementEnabled(@NonNull String appName, @NonNull Boolean enabled, @NonNull Result<Void> result);
+    void setAutomaticResourceManagementEnabled(
+        @NonNull String appName, @NonNull Boolean enabled, @NonNull Result<Void> result);
 
     void delete(@NonNull String appName, @NonNull Result<Void> result);
 
@@ -661,12 +672,16 @@ public class GeneratedAndroidFirebaseCore {
     static @NonNull MessageCodec<Object> getCodec() {
       return new StandardMessageCodec();
     }
-    /**Sets up an instance of `FirebaseAppHostApi` to handle messages through the `binaryMessenger`. */
+    /**
+     * Sets up an instance of `FirebaseAppHostApi` to handle messages through the `binaryMessenger`.
+     */
     static void setup(@NonNull BinaryMessenger binaryMessenger, @Nullable FirebaseAppHostApi api) {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticDataCollectionEnabled", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticDataCollectionEnabled",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -696,7 +711,9 @@ public class GeneratedAndroidFirebaseCore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticResourceManagementEnabled", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticResourceManagementEnabled",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
