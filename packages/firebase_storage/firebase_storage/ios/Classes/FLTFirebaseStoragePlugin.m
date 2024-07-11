@@ -175,13 +175,28 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 
 - (FIRStorageMetadata *)getFIRStorageMetadataFromPigeon:(PigeonSettableMetadata *)pigeonMetadata {
   FIRStorageMetadata *metadata = [[FIRStorageMetadata alloc] init];
-  metadata.cacheControl = pigeonMetadata.cacheControl;
-  metadata.contentDisposition = pigeonMetadata.contentDisposition;
-  metadata.contentEncoding = pigeonMetadata.contentEncoding;
-  metadata.contentLanguage = pigeonMetadata.contentLanguage;
-  metadata.contentType = pigeonMetadata.contentType;
 
-  metadata.customMetadata = pigeonMetadata.customMetadata;
+  if (pigeonMetadata.cacheControl != nil) {
+    metadata.cacheControl = pigeonMetadata.cacheControl;
+  }
+  if (pigeonMetadata.contentType != nil) {
+    metadata.contentType = pigeonMetadata.contentType;
+  }
+  if (pigeonMetadata.contentDisposition != nil) {
+    metadata.contentDisposition = pigeonMetadata.contentDisposition;
+  }
+
+  if (pigeonMetadata.contentEncoding != nil) {
+    metadata.contentEncoding = pigeonMetadata.contentEncoding;
+  }
+
+  if (pigeonMetadata.contentLanguage != nil) {
+    metadata.contentLanguage = pigeonMetadata.contentLanguage;
+  }
+
+  if (pigeonMetadata.customMetadata != nil) {
+    metadata.customMetadata = pigeonMetadata.customMetadata;
+  }
 
   return metadata;
 }

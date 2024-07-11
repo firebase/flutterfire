@@ -135,7 +135,7 @@ class AnalyticsEventItem {
   /// Extra parameters to pass along default ones
   ///
   /// Only strings and numbers are correctly handled by Google Analytics
-  final Map<String, Object?>? parameters;
+  final Map<String, Object>? parameters;
 
   /// Returns the current instance as a [Map].
   Map<String, dynamic> asMap() {

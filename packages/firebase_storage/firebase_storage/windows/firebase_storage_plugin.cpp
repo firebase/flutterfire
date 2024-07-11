@@ -393,6 +393,8 @@ std::string kCustomMetadataName = "customMetadata";
 std::string kMetadataName = "metadata";
 std::string kSizeName = "size";
 std::string kBucketName = "bucket";
+std::string kCreationTimeMillisName = "creationTimeMillis";
+std::string kUpdatedTimeMillisName = "updatedTimeMillis";
 
 flutter::EncodableMap ConvertMedadataToPigeon(const Metadata* meta) {
   flutter::EncodableMap meta_map = flutter::EncodableMap();
@@ -430,6 +432,12 @@ flutter::EncodableMap ConvertMedadataToPigeon(const Metadata* meta) {
     }
     meta_map[flutter::EncodableValue(kCustomMetadataName)] = custom_meta_map;
   }
+  meta_map[flutter::EncodableValue(kCreationTimeMillisName)] =
+      flutter::EncodableValue(meta->creation_time());
+
+  meta_map[flutter::EncodableValue(kUpdatedTimeMillisName)] =
+      flutter::EncodableValue(meta->updated_time());
+
   return meta_map;
 }
 

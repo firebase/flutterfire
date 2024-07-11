@@ -1,3 +1,15 @@
+## 2.17.3
+
+ - **FIX**(core,web): do not throw if `Firebase.apps` called before initialising app ([#13045](https://github.com/firebase/flutterfire/issues/13045)). ([86ae6fe5](https://github.com/firebase/flutterfire/commit/86ae6fe5b8a72bafab0418aff3d6a84715f33dc0))
+
+## 2.17.2
+
+ - **FIX**(firestore,web): ensure streams are removed on "hot restart" ([#12913](https://github.com/firebase/flutterfire/issues/12913)). ([c1a67e54](https://github.com/firebase/flutterfire/commit/c1a67e54894cbfb316b3445505b5803e2d041ed5))
+
+## 2.17.1
+
+ - **FIX**(web): fix some casting issue on Web JS Interop ([#12852](https://github.com/firebase/flutterfire/issues/12852)). ([4b56df1c](https://github.com/firebase/flutterfire/commit/4b56df1cc187d77ef22a82688a37f1c7aba4ed40))
+
 ## 2.17.0
 
  - **FEAT**: bump Firebase JS SDK to version 10.11.1 ([#12720](https://github.com/firebase/flutterfire/issues/12720)). ([f00fe1ca](https://github.com/firebase/flutterfire/commit/f00fe1caec80b64cc4e20dd665f3fac3a6a623d3))

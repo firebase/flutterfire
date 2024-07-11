@@ -14,10 +14,13 @@ import 'analytics_interop.dart' as analytics_interop;
 export 'analytics_interop.dart';
 
 /// Given an AppJSImp, return the Analytics instance.
-Analytics getAnalyticsInstance([App? app]) {
+Analytics getAnalyticsInstance([
+  App? app,
+  Map<String, dynamic>? options = const {},
+]) {
   return Analytics.getInstance(
     app != null
-        ? analytics_interop.getAnalytics(app.jsObject)
+        ? analytics_interop.initializeAnalytics(app.jsObject, options.jsify())
         : analytics_interop.getAnalytics(),
   );
 }
@@ -34,7 +37,7 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
 
   static Future<bool> isSupported() async {
     final result = await analytics_interop.isSupported().toDart;
-    return result! as bool;
+    return (result! as JSBoolean).toDart;
   }
 
   /// Non-null App for this instance of analytics service.

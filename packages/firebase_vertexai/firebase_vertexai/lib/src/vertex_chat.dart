@@ -12,7 +12,13 @@
 // // See the License for the specific language governing permissions and
 // // limitations under the License.
 
-part of firebase_vertexai;
+import 'dart:async';
+
+import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
+
+import 'vertex_api.dart';
+import 'vertex_content.dart';
+import 'vertex_model.dart';
 
 /// A back-and-forth chat with a generative model.
 ///
@@ -25,15 +31,14 @@ final class ChatSession {
 
   ChatSession._(this._history, List<SafetySetting>? _safetySettings,
       GenerationConfig? _generationConfig, GenerativeModel _model)
-      : _googleAIChatSession = _model._googleAIModel.startChat(
-            history: _history.map((e) => e._toGoogleAIContent()).toList(),
+      : _googleAIChatSession = _model.googleAIModel.startChat(
+            history: _history.map((e) => e.toGoogleAI()).toList(),
             safetySettings: _safetySettings != null
                 ? _safetySettings
-                    .map((setting) => setting._toGoogleAISafetySetting())
+                    .map((setting) => setting.toGoogleAI())
                     .toList()
                 : [],
-            generationConfig:
-                GenerativeModel._googleAIGenerationConfig(_generationConfig));
+            generationConfig: _generationConfig?.toGoogleAI());
   final List<Content> _history;
 
   final google_ai.ChatSession _googleAIChatSession;
@@ -61,8 +66,8 @@ final class ChatSession {
   /// be reflected in the history sent for this message.
   Future<GenerateContentResponse> sendMessage(Content message) async {
     return _googleAIChatSession
-        .sendMessage(message._toGoogleAIContent())
-        .then(GenerateContentResponse._fromGoogleAIGenerateContentResponse);
+        .sendMessage(message.toGoogleAI())
+        .then((r) => r.toVertex());
   }
 
   /// Continues the chat with a new [message].
@@ -84,8 +89,8 @@ final class ChatSession {
   /// and response and allowing pending messages to be sent.
   Stream<GenerateContentResponse> sendMessageStream(Content message) {
     return _googleAIChatSession
-        .sendMessageStream(message._toGoogleAIContent())
-        .map(GenerateContentResponse._fromGoogleAIGenerateContentResponse);
+        .sendMessageStream(message.toGoogleAI())
+        .map((r) => r.toVertex());
   }
 }
 

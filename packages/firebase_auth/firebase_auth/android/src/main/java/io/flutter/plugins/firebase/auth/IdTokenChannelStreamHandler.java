@@ -43,7 +43,8 @@ public class IdTokenChannelStreamHandler implements StreamHandler {
           if (user == null) {
             event.put(Constants.USER, null);
           } else {
-            event.put(Constants.USER, PigeonParser.parseFirebaseUser(user).toList());
+            event.put(
+                Constants.USER, PigeonParser.manuallyToList(PigeonParser.parseFirebaseUser(user)));
           }
 
           events.success(event);

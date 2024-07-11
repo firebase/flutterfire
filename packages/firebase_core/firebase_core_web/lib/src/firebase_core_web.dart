@@ -87,7 +87,10 @@ class FirebaseCoreWeb extends FirebasePlatform {
       JSObject? ignored =
           globalContext.getProperty('flutterfire_ignore_scripts'.toJS);
 
+      // Cannot be done with Dart 3.2 constraints
+      // ignore: invalid_runtime_check_with_js_interop_types
       if (ignored is Iterable) {
+        // ignore: invalid_runtime_check_with_js_interop_types
         return (ignored! as Iterable)
             .map((e) => e.toString())
             .toList(growable: false);
@@ -197,9 +200,16 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// Returns all created [FirebaseAppPlatform] instances.
   @override
   List<FirebaseAppPlatform> get apps {
-    return guardNotInitialized(
-      () => firebase.apps.map(_createFromJsApp).toList(growable: false),
-    );
+    try {
+      return firebase.apps.map(_createFromJsApp).toList(growable: false);
+    } catch (exception) {
+      if (exception.toString().contains('of undefined')) {
+        // Keeps behavior consistent with other platforms which can access list without initializing app.
+        return [];
+      } else {
+        rethrow;
+      }
+    }
   }
 
   /// Initializes a new [FirebaseAppPlatform] instance by [name] and [options] and returns

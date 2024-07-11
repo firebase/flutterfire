@@ -92,7 +92,7 @@ class AnalyticsEventExample extends StatelessWidget {
   Future<void> _sendAnalyticsEvent() async {
     await MyApp.analytics.logEvent(
       name: 'awesome_event',
-      parameters: <String, dynamic>{
+      parameters: <String, Object>{
         //'id': 1, // not required?
       },
     );

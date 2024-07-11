@@ -46,7 +46,7 @@ public class FlutterFirebaseAuthUser
   @Override
   public void delete(
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
-      @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseAuth.VoidResult result) {
     FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
 
     if (firebaseUser == null) {
@@ -59,7 +59,7 @@ public class FlutterFirebaseAuthUser
         .addOnCompleteListener(
             task -> {
               if (task.isSuccessful()) {
-                result.success(null);
+                result.success();
               } else {
                 result.error(
                     FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
@@ -253,7 +253,7 @@ public class FlutterFirebaseAuthUser
   public void sendEmailVerification(
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @Nullable GeneratedAndroidFirebaseAuth.PigeonActionCodeSettings actionCodeSettings,
-      @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseAuth.VoidResult result) {
     FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
 
     if (firebaseUser == null) {
@@ -267,7 +267,7 @@ public class FlutterFirebaseAuthUser
           .addOnCompleteListener(
               task -> {
                 if (task.isSuccessful()) {
-                  result.success(null);
+                  result.success();
                 } else {
                   result.error(
                       FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
@@ -282,7 +282,7 @@ public class FlutterFirebaseAuthUser
         .addOnCompleteListener(
             task -> {
               if (task.isSuccessful()) {
-                result.success(null);
+                result.success();
               } else {
                 result.error(
                     FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
@@ -508,7 +508,7 @@ public class FlutterFirebaseAuthUser
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull String newEmail,
       @Nullable GeneratedAndroidFirebaseAuth.PigeonActionCodeSettings actionCodeSettings,
-      @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseAuth.VoidResult result) {
     FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
 
     if (firebaseUser == null) {
@@ -522,7 +522,7 @@ public class FlutterFirebaseAuthUser
           .addOnCompleteListener(
               task -> {
                 if (task.isSuccessful()) {
-                  result.success(null);
+                  result.success();
                 } else {
                   result.error(
                       FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
@@ -537,7 +537,7 @@ public class FlutterFirebaseAuthUser
         .addOnCompleteListener(
             task -> {
               if (task.isSuccessful()) {
-                result.success(null);
+                result.success();
               } else {
                 result.error(
                     FlutterFirebaseAuthPluginException.parserExceptionToFlutter(

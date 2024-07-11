@@ -35,12 +35,16 @@ class DecodeUtility {
   /// Decodes an incoming value to its proper type.
   static dynamic valueDecode(
       dynamic value, FirebaseFirestorePlatform firestore) {
+    // Cannot be done with Dart 3.2 constraints
+    // ignore: invalid_runtime_check_with_js_interop_types
     if (value is JSObject &&
         value.instanceof(GeoPointConstructor as JSFunction)) {
       return GeoPoint((value as GeoPointJsImpl).latitude.toDartDouble,
           (value as GeoPointJsImpl).longitude.toDartDouble);
     } else if (value is DateTime) {
       return Timestamp.fromDate(value);
+      // Cannot be done with Dart 3.2 constraints
+      // ignore: invalid_runtime_check_with_js_interop_types
     } else if (value is JSObject &&
         value.instanceof(BytesConstructor as JSFunction)) {
       return Blob((value as BytesJsImpl).toUint8Array().toDart);

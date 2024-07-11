@@ -27,9 +27,7 @@ class Installations
     return _expando[jsObject] ??= Installations._fromJsObject(jsObject);
   }
 
-  Installations._fromJsObject(
-      installations_interop.InstallationsJsImpl jsObject)
-      : super.fromJsObject(jsObject);
+  Installations._fromJsObject(super.jsObject) : super.fromJsObject();
 
   Future<void> delete() =>
       (installations_interop.deleteInstallations(jsObject)).toDart;

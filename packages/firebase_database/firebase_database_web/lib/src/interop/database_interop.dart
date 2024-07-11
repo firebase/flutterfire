@@ -6,7 +6,7 @@
 // ignore_for_file: public_member_api_docs
 
 @JS('firebase_database')
-library firebase.database_interop;
+library;
 
 import 'dart:js_interop';
 
@@ -70,16 +70,7 @@ external JSAny increment(JSNumber delta);
 
 @JS()
 @staticInterop
-external void off([
-  QueryJsImpl query,
-  JSString eventType,
-  JSFunction callback,
-  /*JSAny Function(DataSnapshotJsImpl, [JSString previousChildName]) callback*/
-]);
-
-@JS()
-@staticInterop
-external QueryConstraintJsImpl onChildAdded(
+external JSFunction onChildAdded(
   QueryJsImpl query,
   JSFunction callback,
   // JSAny Function(DataSnapshotJsImpl, [JSString previousChildName]) callback,
@@ -89,7 +80,7 @@ external QueryConstraintJsImpl onChildAdded(
 
 @JS()
 @staticInterop
-external QueryConstraintJsImpl onChildChanged(
+external JSFunction onChildChanged(
   QueryJsImpl query,
   JSFunction callback,
   // JSAny Function(DataSnapshotJsImpl, [JSString previousChildName]) callback,
@@ -99,7 +90,7 @@ external QueryConstraintJsImpl onChildChanged(
 
 @JS()
 @staticInterop
-external QueryConstraintJsImpl onChildMoved(
+external JSFunction onChildMoved(
   QueryJsImpl query,
   JSFunction callback,
   // JSAny Function(DataSnapshotJsImpl, [JSString previousChildName]) callback,
@@ -109,7 +100,7 @@ external QueryConstraintJsImpl onChildMoved(
 
 @JS()
 @staticInterop
-external QueryConstraintJsImpl onChildRemoved(
+external JSFunction onChildRemoved(
   QueryJsImpl query,
   JSFunction callback,
   // JSAny Function(DataSnapshotJsImpl, [JSString previousChildName]) callback,
@@ -123,13 +114,15 @@ external OnDisconnectJsImpl onDisconnect(ReferenceJsImpl ref);
 
 @JS()
 @staticInterop
-external void onValue(
-    QueryJsImpl query,
-    JSFunction callback,
-    // JSAny Function(DataSnapshotJsImpl, [JSString previousChildName]) callback,
-    JSFunction cancelCallback,
-    // JSAny Function(FirebaseError error) cancelCallback,
-    [ListenOptions options]);
+external JSFunction onValue(
+  QueryJsImpl query,
+  JSFunction callback,
+  // JSAny Function(DataSnapshotJsImpl, [JSString previousChildName]) callback,
+  JSFunction cancelCallback,
+  // JSAny Function(FirebaseError error) cancelCallback,
+  [
+  ListenOptions options,
+]);
 
 @JS()
 @staticInterop

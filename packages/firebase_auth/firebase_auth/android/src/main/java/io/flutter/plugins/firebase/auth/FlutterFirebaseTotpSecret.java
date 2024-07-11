@@ -33,10 +33,10 @@ public class FlutterFirebaseTotpSecret
   public void openInOtpApp(
       @NonNull String secretKey,
       @NonNull String qrCodeUrl,
-      @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseAuth.VoidResult result) {
     final TotpSecret secret = FlutterFirebaseTotpMultiFactor.multiFactorSecret.get(secretKey);
     assert secret != null;
     secret.openInOtpApp(qrCodeUrl);
-    result.success(null);
+    result.success();
   }
 }
