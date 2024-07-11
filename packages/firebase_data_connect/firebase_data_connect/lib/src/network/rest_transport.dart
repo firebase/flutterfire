@@ -22,8 +22,8 @@ class RestTransport implements DataConnectTransport {
   Future<Data> invokeOperation<Data, Variables>(
       String queryName,
       Deserializer<Data> deserializer,
-      Serializer<Variables> serializer,
-      Variables vars,
+      Serializer<Variables>? serializer,
+      Variables? vars,
       OperationType opType,
       String? token) async {
     String project = options.projectId;
@@ -42,7 +42,7 @@ class RestTransport implements DataConnectTransport {
           'projects/$project/locations/$location/services/$service/connectors/$connector',
       'operationName': queryName,
     };
-    if (vars != null) {
+    if (vars != null && serializer != null) {
       body['variables'] = json.decode(serializer(vars));
     }
     String endpoint =
@@ -56,8 +56,8 @@ class RestTransport implements DataConnectTransport {
   Future<Data> invokeQuery<Data, Variables>(
       String queryName,
       Deserializer<Data> deserializer,
-      Serializer<Variables> serializer,
-      Variables vars,
+      Serializer<Variables>? serializer,
+      Variables? vars,
       String? token) async {
     return invokeOperation(
         queryName, deserializer, serializer, vars, OperationType.query, token);
@@ -67,8 +67,8 @@ class RestTransport implements DataConnectTransport {
   Future<Data> invokeMutation<Data, Variables>(
       String queryName,
       Deserializer<Data> deserializer,
-      Serializer<Variables> serializer,
-      Variables vars,
+      Serializer<Variables>? serializer,
+      Variables? vars,
       String? token) async {
     return invokeOperation(queryName, deserializer, serializer, vars,
         OperationType.mutation, token);

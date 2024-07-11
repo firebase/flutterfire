@@ -1,3 +1,10 @@
+extend type DirectedBy {
+  movieId: UUID!
+  directedbyId: UUID!
+}
 extend type Movie {
+  id: UUID! @default(expr: "uuidV4()")
+}
+extend type Person {
   id: UUID! @default(expr: "uuidV4()")
 }

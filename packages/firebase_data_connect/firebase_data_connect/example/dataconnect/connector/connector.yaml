@@ -1,12 +1,6 @@
-connectorId: "movies"
-authMode: "PUBLIC" 
+connectorId: movies
+authMode: PUBLIC
 generate:
-  javascriptSdk:
-    outputDir: "../../js-movie-generated"
-    package: "@movie-app/movies"
-    packageJsonDir: "../../"
   dartSdk:
-    outputDir: "../../lib/generated"
-  kotlinSdk:
-    outputDir: ../src/main/java/com/myapplication
-    package: com.myapplication
+    outputDir: ../../lib/generated
+    package: movies

@@ -9,6 +9,7 @@ class GRPCTransport implements DataConnectTransport {
         transportOptions.isSecure == null || transportOptions.isSecure == true;
     print(isSecure);
     print(transportOptions.port);
+    print(transportOptions.host);
     channel = ClientChannel(transportOptions.host,
         port: transportOptions.port ?? 443,
         options: ChannelOptions(
@@ -26,8 +27,8 @@ class GRPCTransport implements DataConnectTransport {
   Future<Data> invokeQuery<Data, Variables>(
       String queryName,
       Deserializer<Data> deserializer,
-      Serializer<Variables> serialize,
-      Variables vars,
+      Serializer<Variables>? serialize,
+      Variables? vars,
       String? token) async {
     ExecuteQueryResponse response;
 
@@ -40,7 +41,7 @@ class GRPCTransport implements DataConnectTransport {
     if (token != null) {
       metadata['x-firebase-auth-token'] = token;
     }
-    if (vars != null) {
+    if (vars != null && serialize != null) {
       Struct varStruct = Struct.fromJson(serialize(vars));
       response = await stub.executeQuery(
           ExecuteQueryRequest(
@@ -62,8 +63,8 @@ class GRPCTransport implements DataConnectTransport {
   Future<Data> invokeMutation<Data, Variables>(
       String queryName,
       Deserializer<Data> deserializer,
-      Serializer<Variables> serializer,
-      Variables vars,
+      Serializer<Variables>? serializer,
+      Variables? vars,
       String? token) async {
     ExecuteMutationResponse response;
     String name =
@@ -75,7 +76,7 @@ class GRPCTransport implements DataConnectTransport {
     if (token != null) {
       metadata['x-firebase-auth-token'] = token;
     }
-    if (vars != null) {
+    if (vars != null && serializer != null) {
       Struct struct = Struct.create();
       struct.mergeFromProto3Json(jsonDecode(serializer(vars)));
       // Struct varStruct = Struct.fromJson(serializer(vars));

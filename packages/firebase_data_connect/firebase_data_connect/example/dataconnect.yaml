@@ -1,3 +1,4 @@
+location: "us-west2"
 specVersion: "v1alpha"
 serviceId: "dataconnect"
 schema:

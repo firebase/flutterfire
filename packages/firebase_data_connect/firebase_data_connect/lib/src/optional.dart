@@ -4,7 +4,12 @@ part of firebase_data_connect;
 enum OptionalState { unset, set }
 
 class Optional<T> {
+  Optional.optional(this.deserializer, this.serializer);
+
+  Optional(this.deserializer);
   OptionalState state = OptionalState.unset;
+  Serializer<T>? serializer;
+  Deserializer<T> deserializer;
   T? _value;
   set value(T? val) {
     _value = val;
@@ -13,5 +18,30 @@ class Optional<T> {
 
   T? get value {
     return _value;
+  }
+
+  void fromJson(dynamic json) {
+    if (json is List) {
+      value = (json as List).map((e) => deserializer(e)) as T;
+    } else {
+      print('$json is not a list');
+      value = deserializer(json as String);
+    }
+  }
+
+  String toJson() {
+    if (_value != null) {
+      if (serializer != null) {
+        if (_value is List) {
+          return (_value! as List).map((e) => serializer!(e)).toString();
+        } else {
+          print('$_value is not a list');
+        }
+        return serializer!(_value as T);
+      } else {
+        return _value.toString();
+      }
+    }
+    return '';
   }
 }

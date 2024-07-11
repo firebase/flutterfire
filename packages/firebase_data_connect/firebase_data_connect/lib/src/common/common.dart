@@ -42,15 +42,15 @@ abstract class DataConnectTransport {
   Future<Data> invokeQuery<Data, Variables>(
       String queryName,
       Deserializer<Data> deserializer,
-      Serializer<Variables> serializer,
-      Variables vars,
+      Serializer<Variables>? serializer,
+      Variables? vars,
       String? token);
 
   Future<Data> invokeMutation<Data, Variables>(
       String queryName,
       Deserializer<Data> deserializer,
-      Serializer<Variables> serializer,
-      Variables vars,
+      Serializer<Variables>? serializer,
+      Variables? vars,
       String? token);
 }
 
@@ -65,13 +65,17 @@ enum OperationType { query, mutation }
 class OperationRef<Data, Variables> {
   /// Constructor
   OperationRef(this.auth, this.operationName, this.variables, this._transport,
-      this.opType, this.deserializer, this.serializer);
+      this.opType, this.deserializer, this.serializer) {
+    if (this.variables != null && this.serializer == null) {
+      throw Exception('Serializer required for variables');
+    }
+  }
   FirebaseAuth? auth;
-  Variables variables;
+  Variables? variables;
   String operationName;
   DataConnectTransport _transport;
   Deserializer<Data> deserializer;
-  Serializer<Variables> serializer;
+  Serializer<Variables>? serializer;
   OperationType opType;
 
   Future<OperationResult<Data, Variables>> execute() async {

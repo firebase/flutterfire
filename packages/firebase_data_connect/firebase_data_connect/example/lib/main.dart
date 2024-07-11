@@ -1,19 +1,12 @@
 import 'dart:io';
-import 'package:example/generated/add_movie_variables.dart';
-import 'package:example/generated/list_movies_movies.dart';
-import 'package:example/generated/list_movies_variables.dart';
 import 'package:example/generated/movies.dart';
 import 'package:example/login.dart';
-import 'package:flutter/foundation.dart';
 
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-
-ConnectorConfig config =
-    ConnectorConfig("europe-north1", "movies", "dataconnect");
 
 void main() {
   runApp(const MyApp());
@@ -102,17 +95,16 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _genreController = TextEditingController();
+  DateTime _releaseYearDate = DateTime(1920);
   final List<({Image? image, String? text, bool fromUser})> _generatedContent =
       <({Image? image, String? text, bool fromUser})>[];
   List<ListMoviesMovies> _movies = [];
   double _rating = 0;
 
   Future<void> triggerReload() async {
-    QueryRef ref =
-        MoviesConnector.instance.listMovies.ref(ListMoviesVariables());
+    QueryRef ref = MoviesConnector.instance.listMovies.ref();
 
     ref.execute().then((event) {
-      print(event);
       // Map<String, String> timestampData = {
       //   "timestamp": "1985-04-12T23:20:50.123456789Z"
       // };
@@ -131,19 +123,19 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
     } catch (_) {
       print("Ignoring");
     }
-    int port = kIsWeb ? 9509 : 3628;
+    int port = 9399;
     FirebaseDataConnect.instanceFor(
-            app: Firebase.app(), connectorConfig: config)
+            app: Firebase.app(),
+            connectorConfig: MoviesConnector.connectorConfig)
         .useDataConnectEmulator(host, port: port);
 
-    QueryRef ref =
-        MoviesConnector.instance.listMovies.ref(ListMoviesVariables());
-    // FirebaseDataConnect.instanceFor(connectorConfig: config)
-    //     .query<ListMoviesResponse, void>(
-    //         "listMovies", deserializer, serializer, null);
+    QueryRef<ListMoviesResponse, void> ref =
+        MoviesConnector.instance.listMovies.ref();
+
     ref.subscribe().listen((event) {
+      print(event.data.movies.length);
       setState(() {
-        _movies = event.movies;
+        _movies = event.data.movies;
       });
     });
     triggerReload();
@@ -162,36 +154,56 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
           // Flexible(
           // child: Padding(
           // padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-          TextFormField(
-            decoration: const InputDecoration(
-              border: UnderlineInputBorder(),
-              labelText: 'Name',
+          Flexible(
+            flex: 1,
+            child: TextFormField(
+              decoration: const InputDecoration(
+                border: UnderlineInputBorder(),
+                labelText: 'Name',
+              ),
+              controller: _titleController,
             ),
-            controller: _titleController,
           ),
           // Flexible(
-          TextFormField(
-            decoration: const InputDecoration(
-              border: UnderlineInputBorder(),
-              labelText: 'Genre',
-            ),
-            controller: _genreController,
-          ),
-          RatingBar.builder(
-            initialRating: 3,
-            minRating: 1,
-            direction: Axis.horizontal,
-            allowHalfRating: true,
-            itemCount: 5,
-            itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-            itemBuilder: (context, _) => const Icon(
-              Icons.star,
-              color: Colors.amber,
-            ),
-            onRatingUpdate: (rating) {
-              _rating = rating;
-            },
-          ),
+          Flexible(
+              flex: 1,
+              child: TextFormField(
+                decoration: const InputDecoration(
+                  border: UnderlineInputBorder(),
+                  labelText: 'Genre',
+                ),
+                controller: _genreController,
+              )),
+          Flexible(
+              flex: 1,
+              child: RatingBar.builder(
+                initialRating: 3,
+                minRating: 1,
+                direction: Axis.horizontal,
+                allowHalfRating: true,
+                itemCount: 5,
+                itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                itemBuilder: (context, _) => const Icon(
+                  Icons.star,
+                  color: Colors.amber,
+                ),
+                onRatingUpdate: (rating) {
+                  _rating = rating;
+                },
+              )),
+          Flexible(
+              flex: 1,
+              child: YearPicker(
+                firstDate: DateTime(1990),
+                lastDate: DateTime.now(),
+                selectedDate: _releaseYearDate,
+                onChanged: (value) {
+                  setState(() {
+                    _releaseYearDate = value;
+                  });
+                },
+              )),
+
           TextButton(
             style: ButtonStyle(
               foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
@@ -203,8 +215,9 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
                 return;
               }
 
-              MutationRef ref = MoviesConnector.instance.addMovie
-                  .ref(AddMovieVariables(genre, title, _rating));
+              MutationRef ref = MoviesConnector.instance.createMovie.ref(
+                  CreateMovieVariables(
+                      title, _releaseYearDate.year, genre, _rating, null));
               ref.execute().then((res) {
                 triggerReload();
               });

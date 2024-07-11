@@ -1,37 +1,121 @@
-# # Example mutations for a simple email app
-
-# mutation CreateUser($uid: String, $name: String, $address: String) @auth(level: NO_ACCESS) {
-## <type>_insert lets you create a new row in your table.
-#   user_insert(data: {
-#     uid: $uid,
-#     name: $name,
-#     address: $address
-#   })
-# }
-# mutation CreateEmail($content: String, $subject: String, $fromUid: String) @auth(level: PUBLIC) {
-#   email_insert(data: {
-#     text: $content,
-#     subject: $subject,
-#     fromUid: $fromUid,
-## Server values let your service populate data for you
-## Here, we use sent_date: { today: true } to set 'sent' to today's date.
-#     sent_date: { today: true }
-#   })
-# }
-# mutation CreateRecipient($emailId: UUID, $uid: String) @auth(level: PUBLIC) {
-#   recipient_insert(data: {
-#     emailId: $emailId,
-#     userUid: $uid
-#   })
-# }
-# mutation DeleteEmail($emailId: UUID, $uid: String) @auth(level: PUBLIC) {
-## <type>_ delete lets you delete rows from your table.
-#   recipient_delete(key: {emailId: $emailId, userUid: $uid})
-# }
-mutation addMovie($genre: String!, $title: String!, $rating: Float) @auth(level: PUBLIC) {
-    movie_insert(data: {
-         genre: $genre,
-         title: $title,
-        rating: $rating
-    })
+# Create a movie based on user input
+mutation addPerson($name: String) @auth(level: PUBLIC) {
+  person_insert(data: {
+    name: $name
+  })
 }
+mutation addDirectorToMovie($personId: Person_Key, $movieId: UUID) {
+  directedBy_insert(data: {
+    directedby: $personId,
+    movieId: $movieId
+  })
+}
+mutation createMovie(
+  $title: String!
+  $releaseYear: Int!
+  $genre: String!
+  $rating: Float
+  $description: String
+) @auth(level: PUBLIC) {
+  movie_insert(
+    data: {
+      title: $title
+      releaseYear: $releaseYear
+      genre: $genre
+      rating: $rating
+      description: $description
+
+    }
+  )
+}
+
+# # Update movie information based on the provided ID
+# mutation updateMovie(
+#   $id: UUID!
+#   $title: String
+#   $releaseYear: Int
+#   $genre: String
+#   $rating: Float
+#   $description: String
+#   $imageUrl: String
+#   $tags: [String!] = []
+# ) {
+#   movie_update(
+#     id: $id
+#     data: {
+#       title: $title
+#       releaseYear: $releaseYear
+#       genre: $genre
+#       rating: $rating
+#       description: $description
+#       imageUrl: $imageUrl
+#       tags: $tags
+#     }
+#   )
+# }
+
+# # Delete a movie by its ID
+# mutation deleteMovie($id: UUID!) {
+#   movie_delete(id: $id)
+# }
+
+# # Delete movies with a rating lower than the specified minimum rating
+# mutation deleteUnpopularMovies($minRating: Float!) {
+#   movie_deleteMany(where: { rating: { le: $minRating } })
+# }
+
+# # Add a movie to the user's watched list
+# mutation addWatchedMovie($movieId: UUID!) @auth(level: USER) {
+#   watchedMovie_upsert(data: { userId_expr: "auth.uid", movieId: $movieId })
+# }
+
+# # Remove a movie from the user's watched list
+# mutation deleteWatchedMovie($userId: String!, $movieId: UUID!) @auth(level: USER) {
+#   watchedMovie_delete(key: { userId: $userId, movieId: $movieId })
+# }
+
+# # Add a movie to the user's favorites list
+# mutation addFavoritedMovie($movieId: UUID!) @auth(level: USER) {
+#   favoriteMovie_upsert(data: { userId_expr: "auth.uid", movieId: $movieId })
+# }
+
+# # Remove a movie from the user's favorites list
+# mutation deleteFavoritedMovie($userId: String!, $movieId: UUID!) @auth(level: USER) {
+#   favoriteMovie_delete(key: { userId: $userId, movieId: $movieId })
+# }
+
+# # Add an actor to the user's favorites list
+# mutation addFavoritedActor($actorId: UUID!) @auth(level: USER) {
+#   favoriteActor_upsert(data: { userId_expr: "auth.uid", actorId: $actorId })
+# }
+
+# # Remove an actor from the user's favorites list
+# mutation deleteFavoriteActor($userId: String!, $actorId: UUID!) @auth(level: USER) {
+#   favoriteActor_delete(key: { userId: $userId, actorId: $actorId })
+# }
+
+# # Add a review for a movie
+# mutation addReview($movieId: UUID!, $rating: Int!, $reviewText: String!) @auth(level: USER) {
+#   review_upsert(
+#     data: {
+#       userId_expr: "auth.uid"
+#       movieId: $movieId
+#       rating: $rating
+#       reviewText: $reviewText
+#       reviewDate_date: { today: true }
+#     }
+#   )
+# }
+
+# # Delete a user's review for a movie
+# mutation deleteReview($movieId: UUID!, $userId: String!) @auth(level: USER) {
+#   review_delete(key: { userId: $userId, movieId: $movieId })
+# }
+
+# # Upsert (update or insert) a user based on their username
+# mutation upsertUser($username: String!) @auth(level: USER) {
+#   user_upsert(data: {
+#     id_expr: "auth.uid",
+#     username: $username
+#   })
+# }

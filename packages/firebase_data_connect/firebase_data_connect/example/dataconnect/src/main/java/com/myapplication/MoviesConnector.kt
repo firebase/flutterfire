@@ -32,7 +32,7 @@ public interface MoviesConnector : GeneratedConnector {
     @Suppress("MemberVisibilityCanBePrivate")
     public val config: ConnectorConfig = ConnectorConfig(
       connector = "movies",
-      location = "us-central1",
+      location = "us-west2",
       serviceId = "dataconnect",
     )
 

@@ -12,8 +12,8 @@ class TransportStub implements DataConnectTransport {
   Future<Data> invokeMutation<Data, Variables>(
       String queryName,
       Deserializer<Data> deserializer,
-      Serializer<Variables> serializer,
-      Variables vars,
+      Serializer<Variables>? serializer,
+      Variables? vars,
       String? token) async {
     // TODO: implement invokeMutation
     throw UnimplementedError();
@@ -23,8 +23,8 @@ class TransportStub implements DataConnectTransport {
   Future<Data> invokeQuery<Data, Variables>(
       String queryName,
       Deserializer<Data> deserializer,
-      Serializer<Variables> serialize,
-      Variables vars,
+      Serializer<Variables>? serialize,
+      Variables? vars,
       String? token) async {
     // TODO: implement invokeQuery
     throw UnimplementedError();

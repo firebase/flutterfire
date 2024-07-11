@@ -46,7 +46,9 @@ public interface AddMovieMutation :
     val title:
     String,
     val rating:
-    OptionalVariable<Double?>
+    OptionalVariable<Double?>,
+    val description:
+    OptionalVariable<String?>
   ) {
     
     
@@ -58,6 +60,7 @@ public interface AddMovieMutation :
         public var genre: String
         public var title: String
         public var rating: Double?
+        public var description: String?
         
       }
 
@@ -70,6 +73,7 @@ public interface AddMovieMutation :
           var genre= genre
             var title= title
             var rating: OptionalVariable<Double?> = OptionalVariable.Undefined
+            var description: OptionalVariable<String?> = OptionalVariable.Undefined
             
 
           return object : Builder {
@@ -85,11 +89,15 @@ public interface AddMovieMutation :
               get() = throw UnsupportedOperationException("getting builder values is not supported")
               set(value_) { rating = OptionalVariable.Value(value_) }
               
+            override var description: String?
+              get() = throw UnsupportedOperationException("getting builder values is not supported")
+              set(value_) { description = OptionalVariable.Value(value_) }
+              
             
           }.apply(block_)
           .let {
             Variables(
-              genre=genre,title=title,rating=rating,
+              genre=genre,title=title,rating=rating,description=description,
             )
           }
         }

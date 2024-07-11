@@ -1,26 +1,74 @@
 extend type Mutation {
   """
+  Insert a single DirectedBy into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  directedBy_insert(data: DirectedBy_Data!): DirectedBy_Key!
+  """
   Insert a single Movie into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
   """
   movie_insert(data: Movie_Data!): Movie_Key!
+  """
+  Insert a single Person into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  person_insert(data: Person_Data!): Person_Key!
+  """
+  Insert or update a single DirectedBy into the table, based on the primary key. Returns the key of the newly inserted DirectedBy.
+  """
+  directedBy_upsert(data: DirectedBy_Data!): DirectedBy_Key!
   """
   Insert or update a single Movie into the table, based on the primary key. Returns the key of the newly inserted Movie.
   """
   movie_upsert(data: Movie_Data!): Movie_Key!
   """
+  Insert or update a single Person into the table, based on the primary key. Returns the key of the newly inserted Person.
+  """
+  person_upsert(data: Person_Data!): Person_Key!
+  """
+  Update a single DirectedBy based on `id` or `key`, setting columns specified in `data`. Returns `null` if not found.
+  """
+  directedBy_update(key: DirectedBy_Key, data: DirectedBy_Data!): DirectedBy_Key
+  """
   Update a single Movie based on `id` or `key`, setting columns specified in `data`. Returns `null` if not found.
   """
   movie_update(id: UUID, key: Movie_Key, data: Movie_Data!): Movie_Key
+  """
+  Update a single Person based on `id` or `key`, setting columns specified in `data`. Returns `null` if not found.
+  """
+  person_update(id: UUID, key: Person_Key, data: Person_Data!): Person_Key
+  """
+  Update DirectedBy entries matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  directedBy_updateMany(where: DirectedBy_Filter, all: Boolean = false, data: DirectedBy_Data!): Int!
   """
   Update Movie entries matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
   """
   movie_updateMany(where: Movie_Filter, all: Boolean = false, data: Movie_Data!): Int!
   """
+  Update Person entries matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  person_updateMany(where: Person_Filter, all: Boolean = false, data: Person_Data!): Int!
+  """
+  Delete a single DirectedBy based on `id` or `key` and return its key (or `null` if not found).
+  """
+  directedBy_delete(key: DirectedBy_Key): DirectedBy_Key
+  """
   Delete a single Movie based on `id` or `key` and return its key (or `null` if not found).
   """
   movie_delete(id: UUID, key: Movie_Key): Movie_Key
   """
+  Delete a single Person based on `id` or `key` and return its key (or `null` if not found).
+  """
+  person_delete(id: UUID, key: Person_Key): Person_Key
+  """
+  Delete DirectedBy entries matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  directedBy_deleteMany(where: DirectedBy_Filter, all: Boolean = false): Int!
+  """
   Delete Movie entries matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
   """
   movie_deleteMany(where: Movie_Filter, all: Boolean = false): Int!
+  """
+  Delete Person entries matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  person_deleteMany(where: Person_Filter, all: Boolean = false): Int!
 }

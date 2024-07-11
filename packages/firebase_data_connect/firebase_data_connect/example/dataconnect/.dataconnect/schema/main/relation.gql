@@ -1,0 +1,20 @@
+extend type Movie {
+  """
+  ✨ List DirectedBy entries in a one-to-many relationship with this object (i.e. where `DirectedBy.movie` equals this object).
+  """
+  directedBies_on_movie(where: DirectedBy_Filter, orderBy: [DirectedBy_Order!], limit: Int = 100): [DirectedBy!]!
+  """
+  ✨ List related Person entries using DirectedBy as a join table (i.e. where an entry of DirectedBy exists whose movie == this and directedby == that).
+  """
+  people_via_DirectedBy(where: DirectedBy_Filter, orderBy: [DirectedBy_Order!], limit: Int = 100): [Person!]!
+}
+extend type Person {
+  """
+  ✨ List DirectedBy entries in a one-to-many relationship with this object (i.e. where `DirectedBy.directedby` equals this object).
+  """
+  directedBies_on_directedby(where: DirectedBy_Filter, orderBy: [DirectedBy_Order!], limit: Int = 100): [DirectedBy!]!
+  """
+  ✨ List related Movie entries using DirectedBy as a join table (i.e. where an entry of DirectedBy exists whose directedby == this and movie == that).
+  """
+  movies_via_DirectedBy(where: DirectedBy_Filter, orderBy: [DirectedBy_Order!], limit: Int = 100): [Movie!]!
+}

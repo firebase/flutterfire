@@ -1,377 +1,161 @@
-I0509 13:38:56.786663       1 log_spam.go:43] Process id 87958
-I0509 13:38:56.789985       1 log_spam.go:47] Current working directory /Users/mtewani/source/mantle/examples/task-list-manager/dataconnect
-I0509 13:38:56.790063       1 log_spam.go:49] Current timezone is PDT (currently UTC -07:00)
-I0509 13:38:56.790604       1 log_spam.go:50] Built on Dec 31 1969 16:00:00 -0800 (0)
- at redacted@redacted:.
- as unknown
- with gc go1.23-20240419-RC02 cl/626470163 +7f76c00fc5 X:fieldtrack,boringcrypto for darwin/amd64
- from changelist 0 in a unknown client based on redacted
-Build tool: unknown
-Build target: unknown
-Build id: unknown
-Built with PGO profile: unknown
-I0509 13:38:56.790612       1 log_spam.go:51] Command line arguments:
-I0509 13:38:56.790623       1 log_spam.go:53]  argv[0]: '/Users/mtewani/bin/cli_macos'
-I0509 13:38:56.790628       1 log_spam.go:53]  argv[1]: '--logtostderr'
-I0509 13:38:56.790632       1 log_spam.go:53]  argv[2]: '-v=9'
-I0509 13:38:56.790636       1 log_spam.go:53]  argv[3]: 'dev'
-I0509 13:38:56.790640       1 log_spam.go:53]  argv[4]: '--local_connection_string=postgresql://postgres:secretpassword@localhost:5432/postgres?sslmode=disable'
-I0509 13:38:56.790644       1 log_spam.go:53]  argv[5]: '--project_id=fdc-bugbash-mtewani'
-I0509 13:38:56.794116       1 privacycontextdefaults.go:802] PrivacyContext default attribute configuration initialization.
-I0509 13:38:56.810683       1 tracesink.go:579] Starting tracingd dapper tracing
-I0509 13:38:56.812890      16 tracesink.go:326] Failed loading config; disabling tracing: open /export/hda3/trace_data/trace_config.proto: no such file or directory
-I0509 13:38:56.813697       1 server.go:159] Got error when getting machine owner: failed to get proto for GMI path: open /etc/googlemachineidentity/live/machine_identity.pb: no such file or directory
-I0509 13:38:56.814115       1 log.go:18] RegisterServiceDesc("Operations", &{Filename:google/longrunning/operations.proto ServiceName:Operations HandlerType:<nil> GRPCHandlerType:<nil> FullName:google.longrunning.Operations FailureDetectionDelay:0 Methods:[{MethodName:ListOperations PackageName:google.longrunning ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1795060 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:GetOperation PackageName:google.longrunning ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1795220 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:DeleteOperation PackageName:google.longrunning ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17953e0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:CancelOperation PackageName:google.longrunning ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17955a0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:WaitOperation PackageName:google.longrunning ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1795760 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4}] Streams:[] OptionalFields:1})
-I0509 13:38:56.817054       1 log.go:18] RegisterServiceDesc("google.longrunning.Operations", &{Filename:google/longrunning/operations.proto ServiceName:Operations HandlerType:<nil> GRPCHandlerType:<nil> FullName:google.longrunning.Operations FailureDetectionDelay:0 Methods:[{MethodName:ListOperations PackageName:google.longrunning ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1795060 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:GetOperation PackageName:google.longrunning ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1795220 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:DeleteOperation PackageName:google.longrunning ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17953e0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:CancelOperation PackageName:google.longrunning ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17955a0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:WaitOperation PackageName:google.longrunning ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1795760 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4}] Streams:[] OptionalFields:1})
-I0509 13:38:56.817099       1 log.go:18] RegisterServiceDesc("ConnectorService", &{Filename:google/firebase/dataconnect/v1alpha/connector_service.proto ServiceName:ConnectorService HandlerType:<nil> GRPCHandlerType:<nil> FullName:google.firebase.dataconnect.v1alpha.ConnectorService FailureDetectionDelay:0 Methods:[{MethodName:ExecuteQuery PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca0020 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:ExecuteMutation PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca01e0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4}] Streams:[] OptionalFields:1})
-I0509 13:38:56.818518       1 log.go:18] RegisterServiceDesc("google.firebase.dataconnect.v1alpha.ConnectorService", &{Filename:google/firebase/dataconnect/v1alpha/connector_service.proto ServiceName:ConnectorService HandlerType:<nil> GRPCHandlerType:<nil> FullName:google.firebase.dataconnect.v1alpha.ConnectorService FailureDetectionDelay:0 Methods:[{MethodName:ExecuteQuery PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca0020 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:ExecuteMutation PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca01e0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4}] Streams:[] OptionalFields:1})
-I0509 13:38:56.818547       1 log.go:18] RegisterServiceDesc("GraphqlService", &{Filename:google/firebase/dataconnect/v1alpha/graphql_service.proto ServiceName:GraphqlService HandlerType:<nil> GRPCHandlerType:<nil> FullName:google.firebase.dataconnect.v1alpha.GraphqlService FailureDetectionDelay:0 Methods:[{MethodName:ExecuteGraphql PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca1840 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:ExecuteGraphqlRead PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca1a00 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4}] Streams:[] OptionalFields:1})
-I0509 13:38:56.819147       1 log.go:18] RegisterServiceDesc("google.firebase.dataconnect.v1alpha.GraphqlService", &{Filename:google/firebase/dataconnect/v1alpha/graphql_service.proto ServiceName:GraphqlService HandlerType:<nil> GRPCHandlerType:<nil> FullName:google.firebase.dataconnect.v1alpha.GraphqlService FailureDetectionDelay:0 Methods:[{MethodName:ExecuteGraphql PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca1840 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:ExecuteGraphqlRead PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca1a00 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4}] Streams:[] OptionalFields:1})
-I0509 13:38:56.819172       1 log.go:18] RegisterServiceDesc("FirebaseDataConnect", &{Filename:google/firebase/dataconnect/v1alpha/v1main.proto ServiceName:FirebaseDataConnect HandlerType:<nil> GRPCHandlerType:<nil> FullName:google.firebase.dataconnect.v1alpha.FirebaseDataConnect FailureDetectionDelay:0 Methods:[{MethodName:ListServices PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca8c40 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:GetService PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca8e00 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:CreateService PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca8fc0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:UpdateService PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca9180 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:DeleteService PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca9340 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:GetSchema PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca9500 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:ListSchemas PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca96c0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:CreateSchema PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca9880 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:UpdateSchema PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca9a40 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:DeleteSchema PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca9c00 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:ListSchemaRevisions PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca9dc0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:GetSchemaRevision PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca9f80 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:DeleteSchemaRevision PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1caa140 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:ListConnectors PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1caa300 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:GetConnector PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1caa4c0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:CreateConnector PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1caa680 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:UpdateConnector PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1caa840 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:DeleteConnector PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1caaa00 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:ListConnectorRevisions PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1caabc0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:GetConnectorRevision PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1caad80 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:DeleteConnectorRevision PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1caaf40 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4}] Streams:[] OptionalFields:1})
-I0509 13:38:56.828302       1 log.go:18] RegisterServiceDesc("google.firebase.dataconnect.v1alpha.FirebaseDataConnect", &{Filename:google/firebase/dataconnect/v1alpha/v1main.proto ServiceName:FirebaseDataConnect HandlerType:<nil> GRPCHandlerType:<nil> FullName:google.firebase.dataconnect.v1alpha.FirebaseDataConnect FailureDetectionDelay:0 Methods:[{MethodName:ListServices PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca8c40 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:GetService PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca8e00 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:CreateService PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca8fc0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:UpdateService PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca9180 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:DeleteService PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca9340 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:GetSchema PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca9500 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:ListSchemas PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca96c0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:CreateSchema PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca9880 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:UpdateSchema PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca9a40 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:DeleteSchema PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca9c00 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:ListSchemaRevisions PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca9dc0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:GetSchemaRevision PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ca9f80 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:DeleteSchemaRevision PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1caa140 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:ListConnectors PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1caa300 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:GetConnector PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1caa4c0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:CreateConnector PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1caa680 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:UpdateConnector PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1caa840 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:DeleteConnector PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1caaa00 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:ListConnectorRevisions PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1caabc0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:GetConnectorRevision PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1caad80 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:DeleteConnectorRevision PackageName:google.firebase.dataconnect.v1alpha ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1caaf40 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4}] Streams:[] OptionalFields:1})
-I0509 13:38:56.828424       1 log.go:18] RegisterServiceDesc("ConnectorService", &{Filename:google/firebase/dataconnect/v1main/connector_service.proto ServiceName:ConnectorService HandlerType:<nil> GRPCHandlerType:<nil> FullName:google.firebase.dataconnect.v1main.ConnectorService FailureDetectionDelay:0 Methods:[{MethodName:ExecuteQuery PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1797c40 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:ExecuteMutation PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1797e00 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4}] Streams:[] OptionalFields:1})
-I0509 13:38:56.829608       1 log.go:18] RegisterServiceDesc("google.firebase.dataconnect.v1main.ConnectorService", &{Filename:google/firebase/dataconnect/v1main/connector_service.proto ServiceName:ConnectorService HandlerType:<nil> GRPCHandlerType:<nil> FullName:google.firebase.dataconnect.v1main.ConnectorService FailureDetectionDelay:0 Methods:[{MethodName:ExecuteQuery PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1797c40 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:ExecuteMutation PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1797e00 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4}] Streams:[] OptionalFields:1})
-I0509 13:38:56.829627       1 log.go:18] RegisterServiceDesc("GraphqlService", &{Filename:google/firebase/dataconnect/v1main/graphql_service.proto ServiceName:GraphqlService HandlerType:<nil> GRPCHandlerType:<nil> FullName:google.firebase.dataconnect.v1main.GraphqlService FailureDetectionDelay:0 Methods:[{MethodName:ExecuteGraphql PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1799460 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:ExecuteGraphqlRead PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1799620 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4}] Streams:[] OptionalFields:1})
-I0509 13:38:56.830083       1 log.go:18] RegisterServiceDesc("google.firebase.dataconnect.v1main.GraphqlService", &{Filename:google/firebase/dataconnect/v1main/graphql_service.proto ServiceName:GraphqlService HandlerType:<nil> GRPCHandlerType:<nil> FullName:google.firebase.dataconnect.v1main.GraphqlService FailureDetectionDelay:0 Methods:[{MethodName:ExecuteGraphql PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1799460 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:ExecuteGraphqlRead PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1799620 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4}] Streams:[] OptionalFields:1})
-I0509 13:38:56.830104       1 log.go:18] RegisterServiceDesc("FirebaseDataConnect", &{Filename:google/firebase/dataconnect/v1main/v1main.proto ServiceName:FirebaseDataConnect HandlerType:<nil> GRPCHandlerType:<nil> FullName:google.firebase.dataconnect.v1main.FirebaseDataConnect FailureDetectionDelay:0 Methods:[{MethodName:ListServices PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a0860 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:GetService PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a0a20 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:CreateService PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a0be0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:UpdateService PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a0da0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:DeleteService PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a0f60 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:GetSchema PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a1120 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:ListSchemas PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a12e0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:CreateSchema PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a14a0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:UpdateSchema PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a1660 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:DeleteSchema PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a1820 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:ListSchemaRevisions PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a19e0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:GetSchemaRevision PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a1ba0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:DeleteSchemaRevision PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a1d60 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:ListConnectors PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a1f20 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:GetConnector PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a20e0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:CreateConnector PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a22a0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:UpdateConnector PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a2460 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:DeleteConnector PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a2620 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:ListConnectorRevisions PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a27e0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:GetConnectorRevision PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a29a0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:DeleteConnectorRevision PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a2b60 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4}] Streams:[] OptionalFields:1})
-I0509 13:38:56.836988       1 log.go:18] RegisterServiceDesc("google.firebase.dataconnect.v1main.FirebaseDataConnect", &{Filename:google/firebase/dataconnect/v1main/v1main.proto ServiceName:FirebaseDataConnect HandlerType:<nil> GRPCHandlerType:<nil> FullName:google.firebase.dataconnect.v1main.FirebaseDataConnect FailureDetectionDelay:0 Methods:[{MethodName:ListServices PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a0860 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:GetService PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a0a20 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:CreateService PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a0be0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:UpdateService PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a0da0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:DeleteService PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a0f60 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:GetSchema PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a1120 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:ListSchemas PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a12e0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:CreateSchema PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a14a0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:UpdateSchema PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a1660 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:DeleteSchema PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a1820 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:ListSchemaRevisions PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a19e0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:GetSchemaRevision PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a1ba0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:DeleteSchemaRevision PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a1d60 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:ListConnectors PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a1f20 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:GetConnector PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a20e0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:CreateConnector PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a22a0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:UpdateConnector PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a2460 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:DeleteConnector PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a2620 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:ListConnectorRevisions PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a27e0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:GetConnectorRevision PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a29a0 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4} {MethodName:DeleteConnectorRevision PackageName:google.firebase.dataconnect.v1main ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x17a2b60 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4}] Streams:[] OptionalFields:1})
-I0509 13:38:56.837102       1 log.go:18] RegisterServiceDesc("Health", &{Filename:third_party/grpc_proto/grpc/health/v1/health.proto ServiceName:Health HandlerType:<nil> GRPCHandlerType:<nil> FullName:grpc.health.v1.Health FailureDetectionDelay:0 Methods:[{MethodName:Check PackageName:grpc.health.v1 ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ce3e20 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4}] Streams:[{StreamName:Watch PackageName:grpc.health.v1 ClientMessageType:<nil> ServerMessageType:<nil> ClientInitialTokens:0 ServerInitialTokens:0 TokenUnit:BYTE SecurityLevel: ServerRequiredSecurityLevel: SecurityLabel: ClientLogging:0 ServerLogging:0 Deadline:0 FailFast:false EndUserCredsRequested:false ResponseFormat: RequestFormat: LegacyResultType:<nil> LegacyStreamType:<nil> LegacyMixedResultType:<nil> OptionalFields:4 Handler:0x1ce3fe0 securityState:0 serverRequiredSecurityState:4}] OptionalFields:1})
-I0509 13:38:56.837707       1 log.go:18] RegisterServiceDesc("grpc.health.v1.Health", &{Filename:third_party/grpc_proto/grpc/health/v1/health.proto ServiceName:Health HandlerType:<nil> GRPCHandlerType:<nil> FullName:grpc.health.v1.Health FailureDetectionDelay:0 Methods:[{MethodName:Check PackageName:grpc.health.v1 ArgumentType:<nil> ResultType:<nil> StreamType:<nil> LegacyResponseType:<nil> Protocol: Deadline:0 DuplicateSuppression:false FailFast:false ClientLogging:0 ServerLogging:0 SecurityLevel: ServerRequiredSecurityLevel: ResponseFormat: RequestFormat: SecurityLabel: EndUserCredsRequested:false LegacyClientInitialTokens:0 LegacyServerInitialTokens:0 OptionalFields:0 Handler:0x1ce3e20 isRegisteredHandler:false securityState:0 serverRequiredSecurityState:4}] Streams:[{StreamName:Watch PackageName:grpc.health.v1 ClientMessageType:<nil> ServerMessageType:<nil> ClientInitialTokens:0 ServerInitialTokens:0 TokenUnit:BYTE SecurityLevel: ServerRequiredSecurityLevel: SecurityLabel: ClientLogging:0 ServerLogging:0 Deadline:0 FailFast:false EndUserCredsRequested:false ResponseFormat: RequestFormat: LegacyResultType:<nil> LegacyStreamType:<nil> LegacyMixedResultType:<nil> OptionalFields:4 Handler:0x1ce3fe0 securityState:0 serverRequiredSecurityState:4}] OptionalFields:1})
-I0509 13:38:56.837724       1 log.go:18] RegisterServiceDesc("ServerReflection", &{Filename:third_party/grpc_proto/grpc/reflection/v1alpha/reflection.proto ServiceName:ServerReflection HandlerType:<nil> GRPCHandlerType:<nil> FullName:grpc.reflection.v1alpha.ServerReflection FailureDetectionDelay:0 Methods:[] Streams:[{StreamName:ServerReflectionInfo PackageName:grpc.reflection.v1alpha ClientMessageType:<nil> ServerMessageType:<nil> ClientInitialTokens:0 ServerInitialTokens:0 TokenUnit:BYTE SecurityLevel: ServerRequiredSecurityLevel: SecurityLabel: ClientLogging:0 ServerLogging:0 Deadline:0 FailFast:false EndUserCredsRequested:false ResponseFormat: RequestFormat: LegacyResultType:<nil> LegacyStreamType:<nil> LegacyMixedResultType:<nil> OptionalFields:4 Handler:0x1cf8780 securityState:0 serverRequiredSecurityState:4}] OptionalFields:1})
-I0509 13:38:56.838318       1 log.go:18] RegisterServiceDesc("grpc.reflection.v1alpha.ServerReflection", &{Filename:third_party/grpc_proto/grpc/reflection/v1alpha/reflection.proto ServiceName:ServerReflection HandlerType:<nil> GRPCHandlerType:<nil> FullName:grpc.reflection.v1alpha.ServerReflection FailureDetectionDelay:0 Methods:[] Streams:[{StreamName:ServerReflectionInfo PackageName:grpc.reflection.v1alpha ClientMessageType:<nil> ServerMessageType:<nil> ClientInitialTokens:0 ServerInitialTokens:0 TokenUnit:BYTE SecurityLevel: ServerRequiredSecurityLevel: SecurityLabel: ClientLogging:0 ServerLogging:0 Deadline:0 FailFast:false EndUserCredsRequested:false ResponseFormat: RequestFormat: LegacyResultType:<nil> LegacyStreamType:<nil> LegacyMixedResultType:<nil> OptionalFields:4 Handler:0x1cf8780 securityState:0 serverRequiredSecurityState:4}] OptionalFields:1})
-I0509 13:38:56.838330       1 log.go:18] RegisterServiceDesc("ServerReflection", &{Filename:third_party/grpc_proto/grpc/reflection/v1/reflection.proto ServiceName:ServerReflection HandlerType:<nil> GRPCHandlerType:<nil> FullName:grpc.reflection.v1.ServerReflection FailureDetectionDelay:0 Methods:[] Streams:[{StreamName:ServerReflectionInfo PackageName:grpc.reflection.v1 ClientMessageType:<nil> ServerMessageType:<nil> ClientInitialTokens:0 ServerInitialTokens:0 TokenUnit:BYTE SecurityLevel: ServerRequiredSecurityLevel: SecurityLabel: ClientLogging:0 ServerLogging:0 Deadline:0 FailFast:false EndUserCredsRequested:false ResponseFormat: RequestFormat: LegacyResultType:<nil> LegacyStreamType:<nil> LegacyMixedResultType:<nil> OptionalFields:4 Handler:0x1cfd200 securityState:0 serverRequiredSecurityState:4}] OptionalFields:1})
-I0509 13:38:56.838957       1 log.go:18] RegisterServiceDesc("grpc.reflection.v1.ServerReflection", &{Filename:third_party/grpc_proto/grpc/reflection/v1/reflection.proto ServiceName:ServerReflection HandlerType:<nil> GRPCHandlerType:<nil> FullName:grpc.reflection.v1.ServerReflection FailureDetectionDelay:0 Methods:[] Streams:[{StreamName:ServerReflectionInfo PackageName:grpc.reflection.v1 ClientMessageType:<nil> ServerMessageType:<nil> ClientInitialTokens:0 ServerInitialTokens:0 TokenUnit:BYTE SecurityLevel: ServerRequiredSecurityLevel: SecurityLabel: ClientLogging:0 ServerLogging:0 Deadline:0 FailFast:false EndUserCredsRequested:false ResponseFormat: RequestFormat: LegacyResultType:<nil> LegacyStreamType:<nil> LegacyMixedResultType:<nil> OptionalFields:4 Handler:0x1cfd200 securityState:0 serverRequiredSecurityState:4}] OptionalFields:1})
-E0509 13:38:56.841066       1 load.go:21] Reloading schema and connectors...
-I0509 13:38:57.074350       1 control.go:44] [engine.Service fdc-bugbash-mtewani/emulator/task-service 3c3ab] UpdateSchema(): succeeds! Sources: 
-[schema/schema.gql]:
-# # Example schema
-# # TODO: Replace with a really good illustrative example from devrel!
-# type Product @table {
-#   name: String!
-#   price: Int!
-# }
-
-# type Order @table {
-#   name: String!
-# }
-
-# type OrderItem @table(key: ["order", "product"]) {
-#   order: Order!
-#   product: Product!
-#   quantity: Int!
-# }
-type Task @table {
-    description: String!
-    completed: Boolean!
-    date: Date!
-    owner: String!
-}
-
-I0509 13:38:57.086786       1 service.go:78] [engine.Service fdc-bugbash-mtewani/emulator/task-service 3c3ab] ClearConnectors(): succeeds!
-I0509 13:38:57.166033       1 control.go:72] [engine.Service fdc-bugbash-mtewani/emulator/task-service 3c3ab] UpdateConnector(tasks): succeeds! Sources: 
-[connector/mutations.gql]:
-# # Example mutations
-# # TODO: Replace with a really good illustrative example from devrel!
-# mutation createOrder($name: String!) {
-#   order_insert(data : {name: $name})
-# }
-mutation createTask($description: String!, $date: Date!) @auth(level: USER) {
-    task_insert(data: {
-        description: $description,
-        date: $date,
-        completed: false,
-        owner_expr: "auth.uid"
-    })
-}
-mutation toggleCompleted($id: UUID!, $completed: Boolean!) @auth(level: USER) {
-    task_update(id: $id, data: {
-        completed: $completed,
-        owner_expr: "auth.uid"
-    })
-}
-mutation removeTask($id: UUID) @auth(level: USER) {
-    task_delete(id: $id)
-}
-
-[connector/queries.gql]:
-# # Example query
-# # TODO: Replace with a really good illustrative example from devrel!
-# query listOrders {
-#   orders {
-#     name
-#   }
-# }
-query listTasks @auth(level: PUBLIC){
-    tasks(where: { owner: {
-        eq_expr: "auth.uid"
-    }}){
-        description,
-        id,
-        completed,
-        owner,
-        date
-    }
-}
-
-query listTasksForToday($day: Date!) @auth(level: USER){
-    tasks(where: {
-        date: {
-            eq: $day
-        },
-        owner: {
-            eq_expr: "auth.uid"
-        }
-    }) {
-        id,
-        description,
-        completed,
-        date,
-        owner
-    }
-}
-query listTasksPUBLIC @auth(level: PUBLIC){
-    tasks{
-        description,
-        id,
-        completed,
-        owner,
-        date
-    }
-}
-
-I0509 13:38:57.166778       1 codegen.go:39] Generating code for project folder /Users/mtewani/source/mantle/examples/task-list-manager/dataconnect, num connectors 1, service location us-central1
-I0509 13:38:57.169744       1 codegen.go:47] Loaded schema and validated
-I0509 13:38:57.170057       1 codegen.go:56] Parsing connectorFolder /Users/mtewani/source/mantle/examples/task-list-manager/dataconnect/connector
-I0509 13:38:57.170830       1 parser.go:101] skipping non-GQL Schema file /Users/mtewani/source/mantle/examples/task-list-manager/dataconnect/connector/connector.yaml
-I0509 13:38:57.172119       1 parser.go:44] Validated Schema and Operations
-I0509 13:38:57.173303       1 parser.go:250] Table directive not found on Date_Duration when extracting key fields
-I0509 13:38:57.173346       1 parser.go:250] Table directive not found on Vector_ListUpdate when extracting key fields
-I0509 13:38:57.173367       1 parser.go:250] Table directive not found on __InputValue when extracting key fields
-I0509 13:38:57.173376       1 parser.go:250] Table directive not found on Int_ListUpdate when extracting key fields
-I0509 13:38:57.173381       1 parser.go:250] Table directive not found on Any_Update when extracting key fields
-I0509 13:38:57.173386       1 parser.go:250] Table directive not found on Date_Update when extracting key fields
-I0509 13:38:57.173391       1 parser.go:250] Table directive not found on UUID_Update when extracting key fields
-I0509 13:38:57.173402       1 parser.go:250] Table directive not found on Boolean_ListFilter when extracting key fields
-I0509 13:38:57.173407       1 parser.go:250] Table directive not found on Query when extracting key fields
-I0509 13:38:57.173418       1 parser.go:250] Table directive not found on _Service when extracting key fields
-I0509 13:38:57.173423       1 parser.go:250] Table directive not found on Float_Update when extracting key fields
-I0509 13:38:57.173429       1 parser.go:250] Table directive not found on Int64_ListFilter when extracting key fields
-I0509 13:38:57.173434       1 parser.go:250] Table directive not found on Float_ListFilter when extracting key fields
-I0509 13:38:57.173439       1 parser.go:250] Table directive not found on Mutation when extracting key fields
-I0509 13:38:57.173447       1 parser.go:250] Table directive not found on Int64_Update when extracting key fields
-I0509 13:38:57.173451       1 parser.go:250] Table directive not found on Int64_ListUpdate when extracting key fields
-I0509 13:38:57.173458       1 parser.go:250] Table directive not found on Boolean_Update when extracting key fields
-I0509 13:38:57.173462       1 parser.go:250] Table directive not found on Task_ListFilter when extracting key fields
-I0509 13:38:57.173470       1 parser.go:250] Table directive not found on String_Filter when extracting key fields
-I0509 13:38:57.173476       1 parser.go:250] Table directive not found on Boolean_Filter when extracting key fields
-I0509 13:38:57.173484       1 parser.go:250] Table directive not found on Timestamp_Update when extracting key fields
-I0509 13:38:57.173490       1 parser.go:250] Table directive not found on Timestamp_ListUpdate when extracting key fields
-I0509 13:38:57.173495       1 parser.go:250] Table directive not found on Timestamp_Duration when extracting key fields
-I0509 13:38:57.173505       1 parser.go:250] Table directive not found on Date_Relative when extracting key fields
-I0509 13:38:57.173510       1 parser.go:250] Table directive not found on Vector_Embed when extracting key fields
-I0509 13:38:57.173514       1 parser.go:250] Table directive not found on Any_Filter when extracting key fields
-I0509 13:38:57.173519       1 parser.go:250] Table directive not found on Task_Data when extracting key fields
-I0509 13:38:57.173524       1 parser.go:250] Table directive not found on Vector_Filter when extracting key fields
-I0509 13:38:57.173529       1 parser.go:250] Table directive not found on __Type when extracting key fields
-I0509 13:38:57.173535       1 parser.go:250] Table directive not found on Float_Filter when extracting key fields
-I0509 13:38:57.173542       1 parser.go:250] Table directive not found on Task_Filter when extracting key fields
-I0509 13:38:57.173547       1 parser.go:250] Table directive not found on Int_Filter when extracting key fields
-I0509 13:38:57.173556       1 parser.go:250] Table directive not found on Int_ListFilter when extracting key fields
-I0509 13:38:57.173562       1 parser.go:250] Table directive not found on __Field when extracting key fields
-I0509 13:38:57.173570       1 parser.go:250] Table directive not found on Any_ListFilter when extracting key fields
-I0509 13:38:57.173575       1 parser.go:250] Table directive not found on Boolean_ListUpdate when extracting key fields
-I0509 13:38:57.173579       1 parser.go:250] Table directive not found on __EnumValue when extracting key fields
-I0509 13:38:57.173584       1 parser.go:250] Table directive not found on Timestamp_ListFilter when extracting key fields
-I0509 13:38:57.173589       1 parser.go:250] Table directive not found on Task_Order when extracting key fields
-I0509 13:38:57.173593       1 parser.go:250] Table directive not found on Timestamp_Filter when extracting key fields
-I0509 13:38:57.173600       1 parser.go:250] Table directive not found on String_Update when extracting key fields
-I0509 13:38:57.173605       1 parser.go:250] Table directive not found on String_ListUpdate when extracting key fields
-I0509 13:38:57.173615       1 parser.go:250] Table directive not found on Any_ListUpdate when extracting key fields
-I0509 13:38:57.173620       1 parser.go:250] Table directive not found on Vector_ListFilter when extracting key fields
-I0509 13:38:57.173625       1 parser.go:250] Table directive not found on __Directive when extracting key fields
-I0509 13:38:57.173630       1 parser.go:250] Table directive not found on Date_ListFilter when extracting key fields
-I0509 13:38:57.173635       1 parser.go:250] Table directive not found on Date_ListUpdate when extracting key fields
-I0509 13:38:57.173642       1 parser.go:250] Table directive not found on UUID_ListUpdate when extracting key fields
-I0509 13:38:57.173647       1 parser.go:250] Table directive not found on Int64_Filter when extracting key fields
-I0509 13:38:57.173652       1 parser.go:250] Table directive not found on Date_Filter when extracting key fields
-I0509 13:38:57.173674       1 parser.go:250] Table directive not found on String_ListFilter when extracting key fields
-I0509 13:38:57.173680       1 parser.go:250] Table directive not found on UUID_Filter when extracting key fields
-I0509 13:38:57.173687       1 parser.go:250] Table directive not found on UUID_ListFilter when extracting key fields
-I0509 13:38:57.173692       1 parser.go:250] Table directive not found on Timestamp_Relative when extracting key fields
-I0509 13:38:57.173700       1 parser.go:250] Table directive not found on String_Pattern when extracting key fields
-I0509 13:38:57.173705       1 parser.go:250] Table directive not found on Int_Update when extracting key fields
-I0509 13:38:57.173714       1 parser.go:250] Table directive not found on Float_ListUpdate when extracting key fields
-I0509 13:38:57.173718       1 parser.go:250] Table directive not found on Vector_Update when extracting key fields
-I0509 13:38:57.173745       1 parser.go:250] Table directive not found on __Schema when extracting key fields
-I0509 13:38:57.183054       1 jsgen.go:221] Starting JS code generation for connector tasks
-I0509 13:38:57.183291       1 jsgen.go:257] Writing JS code generation files to /Users/mtewani/source/mantle/examples/task-list-manager/tasks-generated
-I0509 13:38:57.183952       1 jsgen.go:76] Embedded count 6
-I0509 13:38:57.183988       1 jsgen.go:78] Embedded file index.cjs.js.go.tmpl
-I0509 13:38:57.183993       1 jsgen.go:78] Embedded file index.d.ts.go.tmpl
-I0509 13:38:57.183997       1 jsgen.go:78] Embedded file index.esm.js.go.tmpl
-I0509 13:38:57.184000       1 jsgen.go:78] Embedded file package.json.go.tmpl
-I0509 13:38:57.184004       1 jsgen.go:78] Embedded file refFns.js.go.tmpl
-I0509 13:38:57.184007       1 jsgen.go:78] Embedded file utils.js.go.tmpl
-I0509 13:38:57.208929       1 installsdk.go:45] Package @task-list-manager/tasks already installed. Returning
-I0509 13:38:57.208980       1 jsgen.go:271] Finished JS code generation for connector tasks
-I0509 13:38:57.211133       1 codegen.go:76] Finished SDK Gen.
-I0509 13:38:57.211362       1 load.go:89] Done Generating SDK...
-E0509 13:38:57.211394       1 load.go:92] Finished reloading
-E0509 13:38:57.214642      74 watch.go:44] unable to walk dir ``: addWatchDir got err <nil>: lstat : no such file or directory
-I0509 13:38:57.218814      72 dev.go:123] Server is now listening on port 9510
-I0509 13:38:59.796543      14 binarylog.go:94] Starting disk-based binary logging
-I0509 13:38:59.801427      14 binarylog.go:304] rpc: flushed binary log to ""
-I0509 13:39:07.557680     161 executor.go:101] [operation "listTasksForToday" attempt 1] preparePlan succeeded
-I0509 13:39:07.558272     161 executor.go:92] [operation "listTasksForToday" attempt 1] DBStats beforePrepare: sql.DBStats{MaxOpenConnections:0, OpenConnections:1, InUse:0, Idle:1, WaitCount:0, WaitDuration:0, MaxIdleClosed:0, MaxIdleTimeClosed:0, MaxLifetimeClosed:0}, afterPrepare: sql.DBStats{MaxOpenConnections:0, OpenConnections:1, InUse:0, Idle:1, WaitCount:0, WaitDuration:0, MaxIdleClosed:0, MaxIdleTimeClosed:0, MaxLifetimeClosed:0}
-W0509 13:39:07.567262     161 engine.go:149] [engine.Service fdc-bugbash-mtewani/emulator/task-service 3c3ab] ExecuteQuery listTasksForToday: failed with explicit status error: rpc error: code = Unauthenticated desc = unauthenticated: this operation requires a signed-in user.
-Connector: tasks
-Auth: public
-Variables: map[day:2024-05-09]
-Status: rpc error: code = Unauthenticated desc = unauthenticated: this operation requires a signed-in user
-Sources: 
-[connector/mutations.gql]:
-# # Example mutations
-# # TODO: Replace with a really good illustrative example from devrel!
-# mutation createOrder($name: String!) {
-#   order_insert(data : {name: $name})
-# }
-mutation createTask($description: String!, $date: Date!) @auth(level: USER) {
-    task_insert(data: {
-        description: $description,
-        date: $date,
-        completed: false,
-        owner_expr: "auth.uid"
-    })
-}
-mutation toggleCompleted($id: UUID!, $completed: Boolean!) @auth(level: USER) {
-    task_update(id: $id, data: {
-        completed: $completed,
-        owner_expr: "auth.uid"
-    })
-}
-mutation removeTask($id: UUID) @auth(level: USER) {
-    task_delete(id: $id)
-}
-
-[connector/queries.gql]:
-# # Example query
-# # TODO: Replace with a really good illustrative example from devrel!
-# query listOrders {
-#   orders {
-#     name
-#   }
-# }
-query listTasks @auth(level: PUBLIC){
-    tasks(where: { owner: {
-        eq_expr: "auth.uid"
-    }}){
-        description,
-        id,
-        completed,
-        owner,
-        date
-    }
-}
-
-query listTasksForToday($day: Date!) @auth(level: USER){
-    tasks(where: {
-        date: {
-            eq: $day
-        },
-        owner: {
-            eq_expr: "auth.uid"
-        }
-    }) {
-        id,
-        description,
-        completed,
-        date,
-        owner
-    }
-}
-query listTasksPUBLIC @auth(level: PUBLIC){
-    tasks{
-        description,
-        id,
-        completed,
-        owner,
-        date
-    }
-}
-
-W0509 13:39:07.995662     146 engine.go:149] [engine.Service fdc-bugbash-mtewani/emulator/task-service 3c3ab] ExecuteQuery listTasksForToday: failed with explicit status error: rpc error: code = Unauthenticated desc = unauthenticated: this operation requires a signed-in user.
-Connector: tasks
-Auth: public
-Variables: map[day:2024-05-09]
-Status: rpc error: code = Unauthenticated desc = unauthenticated: this operation requires a signed-in user
-Sources: 
-[connector/mutations.gql]:
-# # Example mutations
-# # TODO: Replace with a really good illustrative example from devrel!
-# mutation createOrder($name: String!) {
-#   order_insert(data : {name: $name})
-# }
-mutation createTask($description: String!, $date: Date!) @auth(level: USER) {
-    task_insert(data: {
-        description: $description,
-        date: $date,
-        completed: false,
-        owner_expr: "auth.uid"
-    })
-}
-mutation toggleCompleted($id: UUID!, $completed: Boolean!) @auth(level: USER) {
-    task_update(id: $id, data: {
-        completed: $completed,
-        owner_expr: "auth.uid"
-    })
-}
-mutation removeTask($id: UUID) @auth(level: USER) {
-    task_delete(id: $id)
-}
-
-[connector/queries.gql]:
-# # Example query
-# # TODO: Replace with a really good illustrative example from devrel!
-# query listOrders {
-#   orders {
-#     name
-#   }
-# }
-query listTasks @auth(level: PUBLIC){
-    tasks(where: { owner: {
-        eq_expr: "auth.uid"
-    }}){
-        description,
-        id,
-        completed,
-        owner,
-        date
-    }
-}
-
-query listTasksForToday($day: Date!) @auth(level: USER){
-    tasks(where: {
-        date: {
-            eq: $day
-        },
-        owner: {
-            eq_expr: "auth.uid"
-        }
-    }) {
-        id,
-        description,
-        completed,
-        date,
-        owner
-    }
-}
-query listTasksPUBLIC @auth(level: PUBLIC){
-    tasks{
-        description,
-        id,
-        completed,
-        owner,
-        date
-    }
-}
-
+I0701 15:44:57.834681      67 codegen.go:55] [connector "movies" Javascript SDKs] Start Generating Sources into "../../web"...
+I0701 15:44:57.834789      67 jsgen.go:307] Writing JS code generation files to /Users/mtewani/source/flutterfire/packages/firebase_data_connect/firebase_data_connect/example/web
+I0701 15:44:57.834848      67 jsgen.go:90] Embedded count 6
+I0701 15:44:57.834856      67 jsgen.go:92] Embedded file esm
+I0701 15:44:57.834860      67 jsgen.go:92] Embedded file index.cjs.js.go.tmpl
+I0701 15:44:57.834863      67 jsgen.go:92] Embedded file index.d.ts.go.tmpl
+I0701 15:44:57.834865      67 jsgen.go:92] Embedded file package.json.go.tmpl
+I0701 15:44:57.834868      67 jsgen.go:92] Embedded file refFns.js.go.tmpl
+I0701 15:44:57.834872      67 jsgen.go:92] Embedded file utils.js.go.tmpl
+I0701 15:44:57.846417      67 jsgen.go:323] PackageJsonDir not specified, skipping automatic installation of package
+I0701 15:44:57.846447      67 codegen.go:61] [connector "movies" Javascript SDKs] Successfully Generated Sources into "../../web"
+I0701 15:44:57.846456      67 codegen.go:55] [connector "movies" Dart SDKs] Start Generating Sources into "../../lib/generated"...
+I0701 15:44:57.846461      67 dartgen.go:275] Started Dart code generation for connector movies
+I0701 15:44:57.846475      67 dartgen.go:324] Field Name: movie_insert, type name: Movie_Key, kind: TypeKey
+I0701 15:44:57.846486      67 dartgen.go:339] Printing for CreateMovieResponse
+I0701 15:44:57.846491      67 dartgen.go:341] Field Name: movie_insert, type name: Movie_Key, kind: TypeKey
+I0701 15:44:57.846668      67 dartgen.go:324] Field Name: movie_update, type name: Movie_Key, kind: TypeKey
+I0701 15:44:57.846679      67 dartgen.go:339] Printing for UpdateMovieResponse
+I0701 15:44:57.846684      67 dartgen.go:341] Field Name: movie_update, type name: Movie_Key, kind: TypeKey
+I0701 15:44:57.846857      67 dartgen.go:324] Field Name: movie_delete, type name: Movie_Key, kind: TypeKey
+I0701 15:44:57.846867      67 dartgen.go:339] Printing for DeleteMovieResponse
+I0701 15:44:57.846871      67 dartgen.go:341] Field Name: movie_delete, type name: Movie_Key, kind: TypeKey
+I0701 15:44:57.847020      67 dartgen.go:324] Field Name: movie_deleteMany, type name: Int, kind: NativeScalar
+I0701 15:44:57.847029      67 dartgen.go:339] Printing for DeleteUnpopularMoviesResponse
+I0701 15:44:57.847033      67 dartgen.go:341] Field Name: movie_deleteMany, type name: Int, kind: NativeScalar
+I0701 15:44:57.847178      67 dartgen.go:324] Field Name: watchedMovie_upsert, type name: WatchedMovie_Key, kind: TypeKey
+I0701 15:44:57.847188      67 dartgen.go:339] Printing for AddWatchedMovieResponse
+I0701 15:44:57.847192      67 dartgen.go:341] Field Name: watchedMovie_upsert, type name: WatchedMovie_Key, kind: TypeKey
+I0701 15:44:57.847341      67 dartgen.go:324] Field Name: watchedMovie_delete, type name: WatchedMovie_Key, kind: TypeKey
+I0701 15:44:57.847352      67 dartgen.go:339] Printing for DeleteWatchedMovieResponse
+I0701 15:44:57.847356      67 dartgen.go:341] Field Name: watchedMovie_delete, type name: WatchedMovie_Key, kind: TypeKey
+I0701 15:44:57.847513      67 dartgen.go:324] Field Name: favoriteMovie_upsert, type name: FavoriteMovie_Key, kind: TypeKey
+I0701 15:44:57.847523      67 dartgen.go:339] Printing for AddFavoritedMovieResponse
+I0701 15:44:57.847527      67 dartgen.go:341] Field Name: favoriteMovie_upsert, type name: FavoriteMovie_Key, kind: TypeKey
+I0701 15:44:57.847679      67 dartgen.go:324] Field Name: favoriteMovie_delete, type name: FavoriteMovie_Key, kind: TypeKey
+I0701 15:44:57.847688      67 dartgen.go:339] Printing for DeleteFavoritedMovieResponse
+I0701 15:44:57.847692      67 dartgen.go:341] Field Name: favoriteMovie_delete, type name: FavoriteMovie_Key, kind: TypeKey
+I0701 15:44:57.847835      67 dartgen.go:324] Field Name: favoriteActor_upsert, type name: FavoriteActor_Key, kind: TypeKey
+I0701 15:44:57.847844      67 dartgen.go:339] Printing for AddFavoritedActorResponse
+I0701 15:44:57.847847      67 dartgen.go:341] Field Name: favoriteActor_upsert, type name: FavoriteActor_Key, kind: TypeKey
+I0701 15:44:57.847994      67 dartgen.go:324] Field Name: favoriteActor_delete, type name: FavoriteActor_Key, kind: TypeKey
+I0701 15:44:57.848004      67 dartgen.go:339] Printing for DeleteFavoriteActorResponse
+I0701 15:44:57.848008      67 dartgen.go:341] Field Name: favoriteActor_delete, type name: FavoriteActor_Key, kind: TypeKey
+I0701 15:44:57.848150      67 dartgen.go:324] Field Name: review_upsert, type name: Review_Key, kind: TypeKey
+I0701 15:44:57.848160      67 dartgen.go:339] Printing for AddReviewResponse
+I0701 15:44:57.848163      67 dartgen.go:341] Field Name: review_upsert, type name: Review_Key, kind: TypeKey
+I0701 15:44:57.848327      67 dartgen.go:324] Field Name: review_delete, type name: Review_Key, kind: TypeKey
+I0701 15:44:57.848336      67 dartgen.go:339] Printing for DeleteReviewResponse
+I0701 15:44:57.848340      67 dartgen.go:341] Field Name: review_delete, type name: Review_Key, kind: TypeKey
+I0701 15:44:57.848494      67 dartgen.go:324] Field Name: user_upsert, type name: User_Key, kind: TypeKey
+I0701 15:44:57.848502      67 dartgen.go:339] Printing for UpsertUserResponse
+I0701 15:44:57.848506      67 dartgen.go:341] Field Name: user_upsert, type name: User_Key, kind: TypeKey
+I0701 15:44:57.848691      67 dartgen.go:324] Field Name: movies, type name: ListMoviesMovies, kind: Composite
+I0701 15:44:57.848702      67 dartgen.go:339] Printing for ListMoviesResponse
+I0701 15:44:57.848706      67 dartgen.go:341] Field Name: movies, type name: Movie, kind: Composite
+I0701 15:44:57.849009      67 dartgen.go:324] Field Name: users, type name: ListUsersUsers, kind: Composite
+I0701 15:44:57.849047      67 dartgen.go:339] Printing for ListUsersResponse
+I0701 15:44:57.849055      67 dartgen.go:341] Field Name: users, type name: User, kind: Composite
+I0701 15:44:57.849300      67 dartgen.go:324] Field Name: mostPopular, type name: ListMoviesByGenreMostPopular, kind: Composite
+I0701 15:44:57.849313      67 dartgen.go:324] Field Name: mostRecent, type name: ListMoviesByGenreMostRecent, kind: Composite
+I0701 15:44:57.849317      67 dartgen.go:339] Printing for ListMoviesByGenreResponse
+I0701 15:44:57.849322      67 dartgen.go:341] Field Name: mostPopular, type name: Movie.mostPopular, kind: Composite
+I0701 15:44:57.849326      67 dartgen.go:341] Field Name: mostRecent, type name: Movie.mostRecent, kind: Composite
+I0701 15:44:57.849521      67 dartgen.go:324] Field Name: movies, type name: ListMoviesByReleaseYearMovies, kind: Composite
+I0701 15:44:57.849531      67 dartgen.go:339] Printing for ListMoviesByReleaseYearResponse
+I0701 15:44:57.849546      67 dartgen.go:341] Field Name: movies, type name: Movie, kind: Composite
+I0701 15:44:57.849727      67 dartgen.go:324] Field Name: movie, type name: GetMovieByIdMovie, kind: Composite
+I0701 15:44:57.849745      67 dartgen.go:339] Printing for GetMovieByIdResponse
+I0701 15:44:57.849751      67 dartgen.go:341] Field Name: movie, type name: Movie, kind: Composite
+I0701 15:44:57.849981      67 dartgen.go:324] Field Name: actor, type name: GetActorByIdActor, kind: Composite
+I0701 15:44:57.849995      67 dartgen.go:339] Printing for GetActorByIdResponse
+I0701 15:44:57.850000      67 dartgen.go:341] Field Name: actor, type name: Actor, kind: Composite
+I0701 15:44:57.850211      67 dartgen.go:324] Field Name: users, type name: UserMoviePreferencesUsers, kind: Composite
+I0701 15:44:57.850221      67 dartgen.go:339] Printing for UserMoviePreferencesResponse
+I0701 15:44:57.850227      67 dartgen.go:341] Field Name: users, type name: User, kind: Composite
+I0701 15:44:57.850407      67 dartgen.go:324] Field Name: movie, type name: GetMovieMetadataMovie, kind: Composite
+I0701 15:44:57.850417      67 dartgen.go:339] Printing for GetMovieMetadataResponse
+I0701 15:44:57.850421      67 dartgen.go:341] Field Name: movie, type name: Movie, kind: Composite
+I0701 15:44:57.850600      67 dartgen.go:324] Field Name: movie, type name: GetMovieCastMovie, kind: Composite
+I0701 15:44:57.850610      67 dartgen.go:324] Field Name: actor, type name: GetMovieCastActor, kind: Composite
+I0701 15:44:57.850614      67 dartgen.go:339] Printing for GetMovieCastResponse
+I0701 15:44:57.850618      67 dartgen.go:341] Field Name: movie, type name: Movie, kind: Composite
+I0701 15:44:57.850622      67 dartgen.go:341] Field Name: actor, type name: Actor, kind: Composite
+I0701 15:44:57.850781      67 dartgen.go:324] Field Name: movies, type name: ListMoviesByPartialTitleMovies, kind: Composite
+I0701 15:44:57.850790      67 dartgen.go:339] Printing for ListMoviesByPartialTitleResponse
+I0701 15:44:57.850793      67 dartgen.go:341] Field Name: movies, type name: Movie, kind: Composite
+I0701 15:44:57.851058      67 dartgen.go:324] Field Name: movie, type name: MovieByKeyMovie, kind: Composite
+I0701 15:44:57.851073      67 dartgen.go:339] Printing for MovieByKeyResponse
+I0701 15:44:57.851079      67 dartgen.go:341] Field Name: movie, type name: Movie, kind: Composite
+I0701 15:44:57.851299      67 dartgen.go:324] Field Name: movies, type name: MovieByTitleMovies, kind: Composite
+I0701 15:44:57.851311      67 dartgen.go:339] Printing for MovieByTitleResponse
+I0701 15:44:57.851317      67 dartgen.go:341] Field Name: movies, type name: Movie, kind: Composite
+I0701 15:44:57.851531      67 dartgen.go:324] Field Name: mostPopular, type name: MovieByTopRatingMostPopular, kind: Composite
+I0701 15:44:57.851544      67 dartgen.go:339] Printing for MovieByTopRatingResponse
+I0701 15:44:57.851549      67 dartgen.go:341] Field Name: mostPopular, type name: Movie.mostPopular, kind: Composite
+I0701 15:44:57.851933      67 dartgen.go:324] Field Name: movies, type name: ListMoviesByTagMovies, kind: Composite
+I0701 15:44:57.851961      67 dartgen.go:339] Printing for ListMoviesByTagResponse
+I0701 15:44:57.851967      67 dartgen.go:341] Field Name: movies, type name: Movie, kind: Composite
+I0701 15:44:57.852172      67 dartgen.go:324] Field Name: movies, type name: MoviesTop10Movies, kind: Composite
+I0701 15:44:57.852183      67 dartgen.go:339] Printing for MoviesTop10Response
+I0701 15:44:57.852188      67 dartgen.go:341] Field Name: movies, type name: Movie, kind: Composite
+I0701 15:44:57.852354      67 dartgen.go:324] Field Name: movies, type name: MoviesByReleaseYearMovies, kind: Composite
+I0701 15:44:57.852363      67 dartgen.go:339] Printing for MoviesByReleaseYearResponse
+I0701 15:44:57.852368      67 dartgen.go:341] Field Name: movies, type name: Movie, kind: Composite
+I0701 15:44:57.852536      67 dartgen.go:324] Field Name: movies, type name: MoviesRecentlyReleasedMovies, kind: Composite
+I0701 15:44:57.852547      67 dartgen.go:339] Printing for MoviesRecentlyReleasedResponse
+I0701 15:44:57.852552      67 dartgen.go:341] Field Name: movies, type name: Movie, kind: Composite
+I0701 15:44:57.852718      67 dartgen.go:324] Field Name: movies, type name: ListMoviesFilterMovies, kind: Composite
+I0701 15:44:57.852726      67 dartgen.go:339] Printing for ListMoviesFilterResponse
+I0701 15:44:57.852730      67 dartgen.go:341] Field Name: movies, type name: Movie, kind: Composite
+I0701 15:44:57.852938      67 dartgen.go:324] Field Name: prefixed, type name: ListMoviesByTitleStringPrefixed, kind: Composite
+I0701 15:44:57.852952      67 dartgen.go:324] Field Name: suffixed, type name: ListMoviesByTitleStringSuffixed, kind: Composite
+I0701 15:44:57.852958      67 dartgen.go:324] Field Name: contained, type name: ListMoviesByTitleStringContained, kind: Composite
+I0701 15:44:57.852965      67 dartgen.go:339] Printing for ListMoviesByTitleStringResponse
+I0701 15:44:57.852970      67 dartgen.go:341] Field Name: prefixed, type name: Movie.prefixed, kind: Composite
+I0701 15:44:57.852976      67 dartgen.go:341] Field Name: suffixed, type name: Movie.suffixed, kind: Composite
+I0701 15:44:57.852981      67 dartgen.go:341] Field Name: contained, type name: Movie.contained, kind: Composite
+I0701 15:44:57.853172      67 dartgen.go:324] Field Name: movies, type name: ListMoviesByRatingAndGenreMovies, kind: Composite
+I0701 15:44:57.853180      67 dartgen.go:339] Printing for ListMoviesByRatingAndGenreResponse
+I0701 15:44:57.853184      67 dartgen.go:341] Field Name: movies, type name: Movie, kind: Composite
+I0701 15:44:57.853343      67 dartgen.go:324] Field Name: user, type name: GetFavoriteMoviesByIdUser, kind: Composite
+I0701 15:44:57.853350      67 dartgen.go:339] Printing for GetFavoriteMoviesByIdResponse
+I0701 15:44:57.853354      67 dartgen.go:341] Field Name: user, type name: User, kind: Composite
+I0701 15:44:57.853508      67 dartgen.go:324] Field Name: user, type name: GetFavoriteActorsByIdUser, kind: Composite
+I0701 15:44:57.853514      67 dartgen.go:339] Printing for GetFavoriteActorsByIdResponse
+I0701 15:44:57.853518      67 dartgen.go:341] Field Name: user, type name: User, kind: Composite
+I0701 15:44:57.853671      67 dartgen.go:324] Field Name: user, type name: GetWatchedMoviesByAuthIdUser, kind: Composite
+I0701 15:44:57.853678      67 dartgen.go:339] Printing for GetWatchedMoviesByAuthIdResponse
+I0701 15:44:57.853682      67 dartgen.go:341] Field Name: user, type name: User, kind: Composite
+I0701 15:44:57.853833      67 dartgen.go:324] Field Name: user, type name: GetUserByIdUser, kind: Composite
+I0701 15:44:57.853843      67 dartgen.go:339] Printing for GetUserByIdResponse
+I0701 15:44:57.853847      67 dartgen.go:341] Field Name: user, type name: User, kind: Composite
+I0701 15:44:57.854017      67 dartgen.go:324] Field Name: watchedMovie, type name: GetIfWatchedWatchedMovie, kind: Composite
+I0701 15:44:57.854025      67 dartgen.go:339] Printing for GetIfWatchedResponse
+I0701 15:44:57.854030      67 dartgen.go:341] Field Name: watchedMovie, type name: WatchedMovie, kind: Composite
+I0701 15:44:57.854223      67 dartgen.go:324] Field Name: favoriteMovie, type name: GetIfFavoritedMovieFavoriteMovie, kind: Composite
+I0701 15:44:57.854233      67 dartgen.go:339] Printing for GetIfFavoritedMovieResponse
+I0701 15:44:57.854237      67 dartgen.go:341] Field Name: favoriteMovie, type name: FavoriteMovie, kind: Composite
+I0701 15:44:57.854395      67 dartgen.go:324] Field Name: favoriteActor, type name: GetIfFavoritedActorFavoriteActor, kind: Composite
+I0701 15:44:57.854403      67 dartgen.go:339] Printing for GetIfFavoritedActorResponse
+I0701 15:44:57.854408      67 dartgen.go:341] Field Name: favoriteActor, type name: FavoriteActor, kind: Composite
+I0701 15:44:57.854620      67 dartgen.go:324] Field Name: moviesMatchingTitle, type name: FuzzySearchMoviesMatchingTitle, kind: Composite
+I0701 15:44:57.854641      67 dartgen.go:324] Field Name: moviesMatchingDescription, type name: FuzzySearchMoviesMatchingDescription, kind: Composite
+I0701 15:44:57.854652      67 dartgen.go:324] Field Name: actorsMatchingName, type name: FuzzySearchActorsMatchingName, kind: Composite
+I0701 15:44:57.854658      67 dartgen.go:324] Field Name: reviewsMatchingText, type name: FuzzySearchReviewsMatchingText, kind: Composite
+I0701 15:44:57.854662      67 dartgen.go:339] Printing for FuzzySearchResponse
+I0701 15:44:57.854667      67 dartgen.go:341] Field Name: moviesMatchingTitle, type name: Movie.moviesMatchingTitle, kind: Composite
+I0701 15:44:57.854671      67 dartgen.go:341] Field Name: moviesMatchingDescription, type name: Movie.moviesMatchingDescription, kind: Composite
+I0701 15:44:57.854674      67 dartgen.go:341] Field Name: actorsMatchingName, type name: Actor.actorsMatchingName, kind: Composite
+I0701 15:44:57.854677      67 dartgen.go:341] Field Name: reviewsMatchingText, type name: Review.reviewsMatchingText, kind: Composite
+I0701 15:44:57.854890      67 dartgen.go:324] Field Name: movies_descriptionEmbedding_similarity, type name: SearchMovieDescriptionUsingL2similarityMoviesDescriptionEmbeddingSimilarity, kind: Composite
+I0701 15:44:57.854900      67 dartgen.go:339] Printing for SearchMovieDescriptionUsingL2similarityResponse
+I0701 15:44:57.854905      67 dartgen.go:341] Field Name: movies_descriptionEmbedding_similarity, type name: Movie, kind: Composite
+I0701 15:44:57.855076      67 dartgen.go:324] Field Name: movies_descriptionEmbedding_similarity, type name: SearchMovieDescriptionUsingL2similarity1MoviesDescriptionEmbeddingSimilarity, kind: Composite
+I0701 15:44:57.855085      67 dartgen.go:339] Printing for SearchMovieDescriptionUsingL2similarity1Response
+I0701 15:44:57.855089      67 dartgen.go:341] Field Name: movies_descriptionEmbedding_similarity, type name: Movie, kind: Composite
+I0701 15:44:57.901848      67 dartgen.go:390] Time taken to generate code: 55.379542ms
+I0701 15:44:57.901881      67 dartgen.go:391] Finished Dart code generation for connector movies
+I0701 15:44:57.901886      67 codegen.go:61] [connector "movies" Dart SDKs] Successfully Generated Sources into "../../lib/generated"
+I0701 15:44:57.903040      67 load.go:56] Finished reloading
+^C
