@@ -1,3 +1,7 @@
+## 4.0.3
+
+ - **FIX**(firestore,web): ensure exact same streams are not unsubscribed ([#13032](https://github.com/firebase/flutterfire/issues/13032)). ([110dfae3](https://github.com/firebase/flutterfire/commit/110dfae31c1bee9956f3d16977355a2b12b385c5))
+
 ## 4.0.2
 
  - Update a dependency to the latest release.

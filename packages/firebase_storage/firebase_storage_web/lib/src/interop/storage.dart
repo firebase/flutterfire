@@ -11,6 +11,7 @@ import 'dart:js_interop';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
+import 'package:flutter/foundation.dart';
 
 import 'storage_interop.dart' as storage_interop;
 
@@ -343,8 +344,20 @@ class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
   /// Returns [:true:] if it had an effect.
   bool cancel() => jsObject.cancel().toDart;
 
-  String _taskSnapshotWindowsKey(String appName, String bucket, String path) =>
-      'flutterfire-${appName}_${bucket}_${path}_storageTask';
+  // purely for debug mode and tracking listeners to clean up on "hot restart"
+  final Map<String, int> _snapshotListeners = {};
+  String _taskSnapshotWindowsKey(String appName, String bucket, String path) {
+    if (kDebugMode) {
+      final key = 'flutterfire-${appName}_${bucket}_${path}_storageTask';
+      if (_snapshotListeners.containsKey(key)) {
+        _snapshotListeners[key] = _snapshotListeners[key]! + 1;
+      } else {
+        _snapshotListeners[key] = 0;
+      }
+      return '$key-${_snapshotListeners[key]}';
+    }
+    return 'no-op';
+  }
 
   /// Stream for upload task state changed event.
   Stream<UploadTaskSnapshot> onStateChanged(

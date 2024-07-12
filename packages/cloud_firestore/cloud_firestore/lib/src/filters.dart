@@ -385,9 +385,9 @@ class Filter extends FilterPlatformInterface {
         [
           for (final filter in filters)
             if (filter != null && filter._filterQuery != null)
-              filter._filterQuery!
+              filter._filterQuery
             else if (filter != null && filter._filterOperator != null)
-              filter._filterOperator!,
+              filter._filterOperator,
         ],
       ),
     );
@@ -397,9 +397,9 @@ class Filter extends FilterPlatformInterface {
   @override
   Map<String, Object?> toJson() {
     if (_filterOperator != null) {
-      return _filterOperator!.build();
+      return _filterOperator.build();
     } else if (_filterQuery != null) {
-      return _filterQuery!.build();
+      return _filterQuery.build();
     }
     throw Exception('Exactly one operator must be specified');
   }
