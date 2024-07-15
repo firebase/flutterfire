@@ -215,7 +215,7 @@ typedef NS_ENUM(NSUInteger, AggregateType) {
 @property(nonatomic, assign) DocumentChangeType type;
 @property(nonatomic, strong) PigeonDocumentSnapshot *document;
 @property(nonatomic, strong) NSNumber *oldIndex;
-@property(nonatomic, strong) NSNumber *index;
+@property(nonatomic, strong) NSNumber *newIndex;
 @end
 
 @interface PigeonQuerySnapshot : NSObject
@@ -399,6 +399,12 @@ NSObject<FlutterMessageCodec> *FirebaseFirestoreHostApiGetCodec(void);
                               source:(ListenSource)source
                           completion:
                               (void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
+- (void)enableIndexAutoCreationApp:(FirestorePigeonFirebaseApp *)app
+                        completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)disableIndexAutoCreationApp:(FirestorePigeonFirebaseApp *)app
+                         completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)deleteAllIndexesApp:(FirestorePigeonFirebaseApp *)app
+                 completion:(void (^)(FlutterError *_Nullable))completion;
 @end
 
 extern void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,

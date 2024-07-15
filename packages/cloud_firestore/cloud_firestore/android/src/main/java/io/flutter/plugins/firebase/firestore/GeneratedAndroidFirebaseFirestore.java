@@ -1815,6 +1815,14 @@ public class GeneratedAndroidFirebaseFirestore {
         @NonNull ListenSource source,
         @NonNull Result<String> result);
 
+    void enableIndexAutoCreation(
+        @NonNull FirestorePigeonFirebaseApp app, @NonNull Result<Void> result);
+
+    void disableIndexAutoCreation(
+        @NonNull FirestorePigeonFirebaseApp app, @NonNull Result<Void> result);
+
+    void deleteAllIndexes(@NonNull FirestorePigeonFirebaseApp app, @NonNull Result<Void> result);
+
     /** The codec used by FirebaseFirestoreHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
       return FirebaseFirestoreHostApiCodec.INSTANCE;
@@ -2565,6 +2573,99 @@ public class GeneratedAndroidFirebaseFirestore {
 
                 api.documentReferenceSnapshot(
                     appArg, parametersArg, includeMetadataChangesArg, sourceArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.enableIndexAutoCreation",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
+                Result<Void> resultCallback =
+                    new Result<Void>() {
+                      public void success(Void result) {
+                        wrapped.add(0, null);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.enableIndexAutoCreation(appArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.disableIndexAutoCreation",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
+                Result<Void> resultCallback =
+                    new Result<Void>() {
+                      public void success(Void result) {
+                        wrapped.add(0, null);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.disableIndexAutoCreation(appArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.deleteAllIndexes",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
+                Result<Void> resultCallback =
+                    new Result<Void>() {
+                      public void success(Void result) {
+                        wrapped.add(0, null);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.deleteAllIndexes(appArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);

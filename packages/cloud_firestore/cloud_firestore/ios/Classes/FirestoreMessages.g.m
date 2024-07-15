@@ -1340,4 +1340,73 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
       [channel setMessageHandler:nil];
     }
   }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.cloud_firestore_platform_interface."
+                        @"FirebaseFirestoreHostApi.enableIndexAutoCreation"
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseFirestoreHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(enableIndexAutoCreationApp:completion:)],
+                @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
+                @"@selector(enableIndexAutoCreationApp:completion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        [api enableIndexAutoCreationApp:arg_app
+                             completion:^(FlutterError *_Nullable error) {
+                               callback(wrapResult(nil, error));
+                             }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.cloud_firestore_platform_interface."
+                        @"FirebaseFirestoreHostApi.disableIndexAutoCreation"
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseFirestoreHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(disableIndexAutoCreationApp:completion:)],
+                @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
+                @"@selector(disableIndexAutoCreationApp:completion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        [api disableIndexAutoCreationApp:arg_app
+                              completion:^(FlutterError *_Nullable error) {
+                                callback(wrapResult(nil, error));
+                              }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.cloud_firestore_platform_interface."
+                        @"FirebaseFirestoreHostApi.deleteAllIndexes"
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseFirestoreHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(deleteAllIndexesApp:completion:)],
+                @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
+                @"@selector(deleteAllIndexesApp:completion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        [api deleteAllIndexesApp:arg_app
+                      completion:^(FlutterError *_Nullable error) {
+                        callback(wrapResult(nil, error));
+                      }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
 }
