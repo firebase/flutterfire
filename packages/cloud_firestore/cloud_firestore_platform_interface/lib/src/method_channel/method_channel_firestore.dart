@@ -339,7 +339,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   @override
   PersistentCacheIndexManagerPlatform persistentCacheIndexManager() {
-    return PersistentCacheIndexManager(api, pigeonApp, this);
+    return PersistentCacheIndexManager(pigeonChannel, pigeonApp, this);
   }
 
   @override

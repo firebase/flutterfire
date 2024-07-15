@@ -380,6 +380,11 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   }
 
   PersistentCacheIndexManager persistentCacheIndexManager() {
+    if (defaultTargetPlatform == TargetPlatform.windows) {
+      throw UnimplementedError(
+        '`PersistentCacheIndexManager` is not available on Windows platform',
+      );
+    }
     return PersistentCacheIndexManager._(
       _delegate.persistentCacheIndexManager(),
     );

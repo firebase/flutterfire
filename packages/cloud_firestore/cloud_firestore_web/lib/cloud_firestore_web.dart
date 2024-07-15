@@ -9,6 +9,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/src/internals.dart';
 import 'package:cloud_firestore_web/src/load_bundle_task_web.dart';
+import 'package:cloud_firestore_web/src/persistent_cache_index_manager_web.dart';
 import 'package:cloud_firestore_web/src/utils/web_utils.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
@@ -209,6 +210,10 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
       indexConfiguration,
     );
   }
+
+  @override
+  PersistentCacheIndexManagerWeb persistentCacheIndexManager() =>
+      PersistentCacheIndexManagerWeb(_delegate, this);
 
   @override
   Future<void> setLoggingEnabled(bool enabled) async {

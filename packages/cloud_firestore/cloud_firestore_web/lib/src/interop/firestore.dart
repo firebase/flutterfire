@@ -12,6 +12,7 @@ import 'dart:js_interop_unsafe';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
     as platform_interface;
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:cloud_firestore_web/src/persistent_cache_index_manager_web.dart';
 import 'package:cloud_firestore_web/src/utils/encode_utility.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
@@ -191,6 +192,30 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
       firestore_interop
           .setIndexConfiguration(jsObject, indexConfiguration.toJS)
           .toDart;
+
+  Future<void> persistenceCacheIndexManagerRequest(
+    PersistenceCacheIndexManagerRequest request,
+  ) async {
+    firestore_interop.PersistentCacheIndexManager? indexManager =
+        firestore_interop.getPersistentCacheIndexManager(jsObject);
+
+    if (indexManager != null) {
+      switch (request) {
+        case PersistenceCacheIndexManagerRequest.enableIndexAutoCreation:
+          return firestore_interop
+              .enablePersistentCacheIndexAutoCreation(indexManager);
+        case PersistenceCacheIndexManagerRequest.disableIndexAutoCreation:
+          return firestore_interop
+              .disablePersistentCacheIndexAutoCreation(indexManager);
+        case PersistenceCacheIndexManagerRequest.deleteAllIndexes:
+          return firestore_interop
+              .deleteAllPersistentCacheIndexes(indexManager);
+      }
+    } else {
+      // ignore: avoid_print
+      print('Firestore: `PersistentCacheIndexManager` is not available');
+    }
+  }
 
   Future<Query> namedQuery(String name) async {
     final future = firestore_interop.namedQuery(jsObject, name.toJS).toDart;
