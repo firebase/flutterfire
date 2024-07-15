@@ -577,10 +577,13 @@ FlutterStandardMethodCodec *_codec;
     switch (request) {
       case PersistenceCacheIndexManagerRequestEnableIndexAutoCreation:
         [persistentCacheIndexManager enableIndexAutoCreation];
+        break;
       case PersistenceCacheIndexManagerRequestDisableIndexAutoCreation:
         [persistentCacheIndexManager disableIndexAutoCreation];
+        break;
       case PersistenceCacheIndexManagerRequestDeleteAllIndexes:
         [persistentCacheIndexManager deleteAllIndexes];
+        break;
     }
   } else {
     // Put because `persistentCacheIndexManager` is a nullable property
