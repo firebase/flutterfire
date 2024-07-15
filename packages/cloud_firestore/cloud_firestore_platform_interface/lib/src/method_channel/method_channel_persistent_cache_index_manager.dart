@@ -16,16 +16,16 @@ class PersistentCacheIndexManager extends PersistentCacheIndexManagerPlatform {
   final FirestorePigeonFirebaseApp app;
   @override
   Future<void> enableIndexAutoCreation() async {
-    // return api.enableIndexAutoCreation();
+    return api.enableIndexAutoCreation(app);
   }
 
   @override
   Future<void> disableIndexAutoCreation() async {
-    // return api.disableIndexAutoCreation();
+    return api.disableIndexAutoCreation(app);
   }
 
   @override
   Future<void> deleteAllIndexes() async {
-    // return api.deleteAllIndexes();
+    return api.deleteAllIndexes(app);
   }
 }
