@@ -7,8 +7,7 @@ class PersistentCacheIndexManagerWeb
     extends PersistentCacheIndexManagerPlatform {
   PersistentCacheIndexManagerWeb(
     this.delegate,
-    FirebaseFirestorePlatform firestore,
-  ) : super(firestore);
+  ) : super();
 
   final firestore_interop.Firestore delegate;
   @override

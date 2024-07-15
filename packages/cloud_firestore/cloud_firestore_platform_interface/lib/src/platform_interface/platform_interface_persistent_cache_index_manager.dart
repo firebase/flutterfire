@@ -2,16 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 class PersistentCacheIndexManagerPlatform extends PlatformInterface {
-  PersistentCacheIndexManagerPlatform(this.firestore) : super(token: _token);
+  PersistentCacheIndexManagerPlatform() : super(token: _token);
 
   static final Object _token = Object();
-
-  /// The Firestore instance associated with this document reference
-  final FirebaseFirestorePlatform firestore;
 
   /// Throws an [AssertionError] if [instance] does not extend
   /// [PersistentCacheIndexManagerPlatform].
