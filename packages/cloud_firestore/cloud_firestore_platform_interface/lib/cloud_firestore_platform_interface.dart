@@ -34,6 +34,7 @@ export 'src/platform_interface/platform_interface_query.dart';
 export 'src/platform_interface/platform_interface_query_snapshot.dart';
 export 'src/platform_interface/platform_interface_transaction.dart';
 export 'src/platform_interface/platform_interface_write_batch.dart';
+export 'src/platform_interface/platform_interface_persistent_cache_index_manager.dart';
 export 'src/platform_interface/utils/load_bundle_task_state.dart';
 export 'src/set_options.dart';
 export 'src/settings.dart';

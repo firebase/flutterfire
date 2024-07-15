@@ -428,4 +428,19 @@ abstract class FirebaseFirestoreHostApi {
     bool includeMetadataChanges,
     ListenSource source,
   );
+
+  @async
+  void enableIndexAutoCreation(
+    FirestorePigeonFirebaseApp app,
+  );
+
+  @async
+  void disableIndexAutoCreation(
+    FirestorePigeonFirebaseApp app,
+  );
+
+  @async
+  void deleteAllIndexes(
+    FirestorePigeonFirebaseApp app,
+  );
 }
