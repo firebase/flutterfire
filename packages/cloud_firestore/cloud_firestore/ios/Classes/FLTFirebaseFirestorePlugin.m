@@ -6,6 +6,7 @@
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 
 #import <TargetConditionals.h>
+#import "FirebaseFirestoreInternal/FIRPersistentCacheIndexManager.h"
 #import "Private/FLTDocumentSnapshotStreamHandler.h"
 #import "Private/FLTFirebaseFirestoreReader.h"
 #import "Private/FLTFirebaseFirestoreUtils.h"
@@ -564,6 +565,49 @@ FlutterStandardMethodCodec *_codec;
                                     completion(nil);
                                   }
                                 }];
+}
+
+- (void)enableIndexAutoCreationApp:(FirestorePigeonFirebaseApp *)app
+                        completion:(void (^)(FlutterError *_Nullable))completion {
+  FIRPersistentCacheIndexManager *persistentCacheIndexManager =
+      [self getFIRFirestoreFromAppNameFromPigeon:app].persistentCacheIndexManager;
+
+  if (persistentCacheIndexManager) {
+    [persistentCacheIndexManager enableIndexAutoCreation];
+  } else {
+    // Put because `persistentCacheIndexManager` is a nullable property
+    NSLog(@"FLTFirebaseFirestore: `PersistentCacheIndexManager` is not available.");
+  }
+  completion(nil);
+}
+
+- (void)disableIndexAutoCreationApp:(FirestorePigeonFirebaseApp *)app
+                         completion:(void (^)(FlutterError *_Nullable))completion {
+  FIRPersistentCacheIndexManager *persistentCacheIndexManager =
+      [self getFIRFirestoreFromAppNameFromPigeon:app].persistentCacheIndexManager;
+
+  if (persistentCacheIndexManager) {
+    [persistentCacheIndexManager disableIndexAutoCreation];
+  } else {
+    // Put because `persistentCacheIndexManager` is a nullable property
+    NSLog(@"FLTFirebaseFirestore: `PersistentCacheIndexManager` is not available.");
+  }
+
+  completion(nil);
+}
+
+- (void)deleteAllIndexesApp:(FirestorePigeonFirebaseApp *)app
+                 completion:(void (^)(FlutterError *_Nullable))completion {
+  FIRPersistentCacheIndexManager *persistentCacheIndexManager =
+      [self getFIRFirestoreFromAppNameFromPigeon:app].persistentCacheIndexManager;
+
+  if (persistentCacheIndexManager) {
+    [persistentCacheIndexManager deleteAllIndexes];
+  } else {
+    // Put because `persistentCacheIndexManager` is a nullable property
+    NSLog(@"FLTFirebaseFirestore: `PersistentCacheIndexManager` is not available.");
+  }
+  completion(nil);
 }
 
 - (void)setLoggingEnabledLoggingEnabled:(nonnull NSNumber *)loggingEnabled
