@@ -363,7 +363,8 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   ///
   /// This API is now deprecated
   @Deprecated(
-      'setIndexConfiguration() has been deprecated. Please use `PersistentCacheIndexManager` instead.')
+    'setIndexConfiguration() has been deprecated. Please use `PersistentCacheIndexManager` instead.',
+  )
   Future<void> setIndexConfiguration({
     required List<Index> indexes,
     List<FieldOverrides>? fieldOverrides,

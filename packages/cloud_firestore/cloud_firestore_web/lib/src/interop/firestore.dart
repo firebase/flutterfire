@@ -12,7 +12,6 @@ import 'dart:js_interop_unsafe';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
     as platform_interface;
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:cloud_firestore_web/src/persistent_cache_index_manager_web.dart';
 import 'package:cloud_firestore_web/src/utils/encode_utility.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
