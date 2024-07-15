@@ -213,7 +213,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   @override
   PersistentCacheIndexManagerWeb persistentCacheIndexManager() =>
-      PersistentCacheIndexManagerWeb(_delegate, this);
+      PersistentCacheIndexManagerWeb(_delegate);
 
   @override
   Future<void> setLoggingEnabled(bool enabled) async {
