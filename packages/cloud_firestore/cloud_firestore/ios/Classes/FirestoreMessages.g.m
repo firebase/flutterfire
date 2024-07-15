@@ -77,6 +77,18 @@
 }
 @end
 
+/// [PersistenceCacheIndexManagerRequest] represents the request types for the persistence cache
+/// index manager.
+@implementation PersistenceCacheIndexManagerRequestBox
+- (instancetype)initWithValue:(PersistenceCacheIndexManagerRequest)value {
+  self = [super init];
+  if (self) {
+    _value = value;
+  }
+  return self;
+}
+@end
+
 @implementation PigeonTransactionResultBox
 - (instancetype)initWithValue:(PigeonTransactionResult)value {
   self = [super init];
@@ -1343,67 +1355,25 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
   {
     FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
            initWithName:@"dev.flutter.pigeon.cloud_firestore_platform_interface."
-                        @"FirebaseFirestoreHostApi.enableIndexAutoCreation"
+                        @"FirebaseFirestoreHostApi.persistenceCacheIndexManagerRequest"
         binaryMessenger:binaryMessenger
                   codec:FirebaseFirestoreHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(enableIndexAutoCreationApp:completion:)],
+      NSCAssert([api respondsToSelector:@selector
+                     (persistenceCacheIndexManagerRequestApp:request:completion:)],
                 @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
-                @"@selector(enableIndexAutoCreationApp:completion:)",
+                @"@selector(persistenceCacheIndexManagerRequestApp:request:completion:)",
                 api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
-        [api enableIndexAutoCreationApp:arg_app
-                             completion:^(FlutterError *_Nullable error) {
-                               callback(wrapResult(nil, error));
-                             }];
-      }];
-    } else {
-      [channel setMessageHandler:nil];
-    }
-  }
-  {
-    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
-           initWithName:@"dev.flutter.pigeon.cloud_firestore_platform_interface."
-                        @"FirebaseFirestoreHostApi.disableIndexAutoCreation"
-        binaryMessenger:binaryMessenger
-                  codec:FirebaseFirestoreHostApiGetCodec()];
-    if (api) {
-      NSCAssert([api respondsToSelector:@selector(disableIndexAutoCreationApp:completion:)],
-                @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
-                @"@selector(disableIndexAutoCreationApp:completion:)",
-                api);
-      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        NSArray *args = message;
-        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
-        [api disableIndexAutoCreationApp:arg_app
-                              completion:^(FlutterError *_Nullable error) {
-                                callback(wrapResult(nil, error));
-                              }];
-      }];
-    } else {
-      [channel setMessageHandler:nil];
-    }
-  }
-  {
-    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
-           initWithName:@"dev.flutter.pigeon.cloud_firestore_platform_interface."
-                        @"FirebaseFirestoreHostApi.deleteAllIndexes"
-        binaryMessenger:binaryMessenger
-                  codec:FirebaseFirestoreHostApiGetCodec()];
-    if (api) {
-      NSCAssert([api respondsToSelector:@selector(deleteAllIndexesApp:completion:)],
-                @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
-                @"@selector(deleteAllIndexesApp:completion:)",
-                api);
-      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        NSArray *args = message;
-        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
-        [api deleteAllIndexesApp:arg_app
-                      completion:^(FlutterError *_Nullable error) {
-                        callback(wrapResult(nil, error));
-                      }];
+        PersistenceCacheIndexManagerRequest arg_request =
+            [GetNullableObjectAtIndex(args, 1) integerValue];
+        [api persistenceCacheIndexManagerRequestApp:arg_app
+                                            request:arg_request
+                                         completion:^(FlutterError *_Nullable error) {
+                                           callback(wrapResult(nil, error));
+                                         }];
       }];
     } else {
       [channel setMessageHandler:nil];

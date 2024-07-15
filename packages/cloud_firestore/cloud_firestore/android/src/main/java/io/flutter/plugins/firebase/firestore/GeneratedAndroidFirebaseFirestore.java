@@ -166,6 +166,22 @@ public class GeneratedAndroidFirebaseFirestore {
     }
   }
 
+  /**
+   * [PersistenceCacheIndexManagerRequest] represents the request types for the persistence cache
+   * index manager.
+   */
+  public enum PersistenceCacheIndexManagerRequest {
+    ENABLE_INDEX_AUTO_CREATION(0),
+    DISABLE_INDEX_AUTO_CREATION(1),
+    DELETE_ALL_INDEXES(2);
+
+    final int index;
+
+    private PersistenceCacheIndexManagerRequest(final int index) {
+      this.index = index;
+    }
+  }
+
   public enum PigeonTransactionResult {
     SUCCESS(0),
     FAILURE(1);
@@ -1815,13 +1831,10 @@ public class GeneratedAndroidFirebaseFirestore {
         @NonNull ListenSource source,
         @NonNull Result<String> result);
 
-    void enableIndexAutoCreation(
-        @NonNull FirestorePigeonFirebaseApp app, @NonNull Result<Void> result);
-
-    void disableIndexAutoCreation(
-        @NonNull FirestorePigeonFirebaseApp app, @NonNull Result<Void> result);
-
-    void deleteAllIndexes(@NonNull FirestorePigeonFirebaseApp app, @NonNull Result<Void> result);
+    void persistenceCacheIndexManagerRequest(
+        @NonNull FirestorePigeonFirebaseApp app,
+        @NonNull PersistenceCacheIndexManagerRequest request,
+        @NonNull Result<Void> result);
 
     /** The codec used by FirebaseFirestoreHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
@@ -2582,7 +2595,7 @@ public class GeneratedAndroidFirebaseFirestore {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
                 binaryMessenger,
-                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.enableIndexAutoCreation",
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.persistenceCacheIndexManagerRequest",
                 getCodec());
         if (api != null) {
           channel.setMessageHandler(
@@ -2590,6 +2603,8 @@ public class GeneratedAndroidFirebaseFirestore {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
                 FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
+                PersistenceCacheIndexManagerRequest requestArg =
+                    PersistenceCacheIndexManagerRequest.values()[(int) args.get(1)];
                 Result<Void> resultCallback =
                     new Result<Void>() {
                       public void success(Void result) {
@@ -2603,69 +2618,7 @@ public class GeneratedAndroidFirebaseFirestore {
                       }
                     };
 
-                api.enableIndexAutoCreation(appArg, resultCallback);
-              });
-        } else {
-          channel.setMessageHandler(null);
-        }
-      }
-      {
-        BasicMessageChannel<Object> channel =
-            new BasicMessageChannel<>(
-                binaryMessenger,
-                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.disableIndexAutoCreation",
-                getCodec());
-        if (api != null) {
-          channel.setMessageHandler(
-              (message, reply) -> {
-                ArrayList<Object> wrapped = new ArrayList<Object>();
-                ArrayList<Object> args = (ArrayList<Object>) message;
-                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
-                Result<Void> resultCallback =
-                    new Result<Void>() {
-                      public void success(Void result) {
-                        wrapped.add(0, null);
-                        reply.reply(wrapped);
-                      }
-
-                      public void error(Throwable error) {
-                        ArrayList<Object> wrappedError = wrapError(error);
-                        reply.reply(wrappedError);
-                      }
-                    };
-
-                api.disableIndexAutoCreation(appArg, resultCallback);
-              });
-        } else {
-          channel.setMessageHandler(null);
-        }
-      }
-      {
-        BasicMessageChannel<Object> channel =
-            new BasicMessageChannel<>(
-                binaryMessenger,
-                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.deleteAllIndexes",
-                getCodec());
-        if (api != null) {
-          channel.setMessageHandler(
-              (message, reply) -> {
-                ArrayList<Object> wrapped = new ArrayList<Object>();
-                ArrayList<Object> args = (ArrayList<Object>) message;
-                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
-                Result<Void> resultCallback =
-                    new Result<Void>() {
-                      public void success(Void result) {
-                        wrapped.add(0, null);
-                        reply.reply(wrapped);
-                      }
-
-                      public void error(Throwable error) {
-                        ArrayList<Object> wrappedError = wrapError(error);
-                        reply.reply(wrappedError);
-                      }
-                    };
-
-                api.deleteAllIndexes(appArg, resultCallback);
+                api.persistenceCacheIndexManagerRequest(appArg, requestArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);

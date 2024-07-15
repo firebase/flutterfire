@@ -476,51 +476,26 @@ public class FlutterFirebaseFirestorePlugin
   }
 
   @Override
-  public void enableIndexAutoCreation(
+  public void persistenceCacheIndexManagerRequest(
       @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.PersistenceCacheIndexManagerRequest request,
       @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
     cachedThreadPool.execute(
         () -> {
           PersistentCacheIndexManager indexManager =
               getFirestoreFromPigeon(app).getPersistentCacheIndexManager();
           if (indexManager != null) {
-            indexManager.enableIndexAutoCreation();
-          } else {
-            Log.d(TAG, "`PersistentCacheIndexManager` is not available.");
-          }
-
-          result.success(null);
-        });
-  }
-
-  @Override
-  public void disableIndexAutoCreation(
-      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
-      @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
-    cachedThreadPool.execute(
-        () -> {
-          PersistentCacheIndexManager indexManager =
-              getFirestoreFromPigeon(app).getPersistentCacheIndexManager();
-          if (indexManager != null) {
-            indexManager.disableIndexAutoCreation();
-          } else {
-            Log.d(TAG, "`PersistentCacheIndexManager` is not available.");
-          }
-
-          result.success(null);
-        });
-  }
-
-  @Override
-  public void deleteAllIndexes(
-      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
-      @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
-    cachedThreadPool.execute(
-        () -> {
-          PersistentCacheIndexManager indexManager =
-              getFirestoreFromPigeon(app).getPersistentCacheIndexManager();
-          if (indexManager != null) {
-            indexManager.deleteAllIndexes();
+            switch (request) {
+              case ENABLE_INDEX_AUTO_CREATION:
+                indexManager.enableIndexAutoCreation();
+                break;
+              case DISABLE_INDEX_AUTO_CREATION:
+                indexManager.disableIndexAutoCreation();
+                break;
+              case DELETE_ALL_INDEXES:
+                indexManager.deleteAllIndexes();
+                break;
+            }
           } else {
             Log.d(TAG, "`PersistentCacheIndexManager` is not available.");
           }

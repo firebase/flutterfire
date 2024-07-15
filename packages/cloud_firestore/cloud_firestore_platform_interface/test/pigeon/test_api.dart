@@ -206,11 +206,10 @@ abstract class TestFirebaseFirestoreHostApi {
     ListenSource source,
   );
 
-  Future<void> enableIndexAutoCreation(FirestorePigeonFirebaseApp app);
-
-  Future<void> disableIndexAutoCreation(FirestorePigeonFirebaseApp app);
-
-  Future<void> deleteAllIndexes(FirestorePigeonFirebaseApp app);
+  Future<void> persistenceCacheIndexManagerRequest(
+    FirestorePigeonFirebaseApp app,
+    PersistenceCacheIndexManagerRequest request,
+  );
 
   static void setup(
     TestFirebaseFirestoreHostApi? api, {
@@ -1068,7 +1067,7 @@ abstract class TestFirebaseFirestoreHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.enableIndexAutoCreation',
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.persistenceCacheIndexManagerRequest',
         codec,
         binaryMessenger: binaryMessenger,
       );
@@ -1081,74 +1080,24 @@ abstract class TestFirebaseFirestoreHostApi {
                 (Object? message) async {
           assert(
             message != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.enableIndexAutoCreation was null.',
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.persistenceCacheIndexManagerRequest was null.',
           );
           final List<Object?> args = (message as List<Object?>?)!;
           final FirestorePigeonFirebaseApp? arg_app =
               (args[0] as FirestorePigeonFirebaseApp?);
           assert(
             arg_app != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.enableIndexAutoCreation was null, expected non-null FirestorePigeonFirebaseApp.',
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.persistenceCacheIndexManagerRequest was null, expected non-null FirestorePigeonFirebaseApp.',
           );
-          await api.enableIndexAutoCreation(arg_app!);
-          return <Object?>[];
-        });
-      }
-    }
-    {
-      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.disableIndexAutoCreation',
-        codec,
-        binaryMessenger: binaryMessenger,
-      );
-      if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
-      } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+          final PersistenceCacheIndexManagerRequest? arg_request =
+              args[1] == null
+                  ? null
+                  : PersistenceCacheIndexManagerRequest.values[args[1]! as int];
           assert(
-            message != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.disableIndexAutoCreation was null.',
+            arg_request != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.persistenceCacheIndexManagerRequest was null, expected non-null PersistenceCacheIndexManagerRequest.',
           );
-          final List<Object?> args = (message as List<Object?>?)!;
-          final FirestorePigeonFirebaseApp? arg_app =
-              (args[0] as FirestorePigeonFirebaseApp?);
-          assert(
-            arg_app != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.disableIndexAutoCreation was null, expected non-null FirestorePigeonFirebaseApp.',
-          );
-          await api.disableIndexAutoCreation(arg_app!);
-          return <Object?>[];
-        });
-      }
-    }
-    {
-      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.deleteAllIndexes',
-        codec,
-        binaryMessenger: binaryMessenger,
-      );
-      if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
-      } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
-          assert(
-            message != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.deleteAllIndexes was null.',
-          );
-          final List<Object?> args = (message as List<Object?>?)!;
-          final FirestorePigeonFirebaseApp? arg_app =
-              (args[0] as FirestorePigeonFirebaseApp?);
-          assert(
-            arg_app != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.deleteAllIndexes was null, expected non-null FirestorePigeonFirebaseApp.',
-          );
-          await api.deleteAllIndexes(arg_app!);
+          await api.persistenceCacheIndexManagerRequest(arg_app!, arg_request!);
           return <Object?>[];
         });
       }

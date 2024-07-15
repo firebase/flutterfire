@@ -2269,7 +2269,7 @@ void FirebaseFirestoreHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
         "dev.flutter.pigeon.cloud_firestore_platform_interface."
-        "FirebaseFirestoreHostApi.enableIndexAutoCreation",
+        "FirebaseFirestoreHostApi.persistenceCacheIndexManagerRequest",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -2285,84 +2285,17 @@ void FirebaseFirestoreHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
               const auto& app_arg =
                   std::any_cast<const FirestorePigeonFirebaseApp&>(
                       std::get<CustomEncodableValue>(encodable_app_arg));
-              api->EnableIndexAutoCreation(
-                  app_arg, [reply](std::optional<FlutterError>&& output) {
-                    if (output.has_value()) {
-                      reply(WrapError(output.value()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(EncodableValue());
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel->SetMessageHandler(nullptr);
-    }
-  }
-  {
-    auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger,
-        "dev.flutter.pigeon.cloud_firestore_platform_interface."
-        "FirebaseFirestoreHostApi.disableIndexAutoCreation",
-        &GetCodec());
-    if (api != nullptr) {
-      channel->SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
+              const auto& encodable_request_arg = args.at(1);
+              if (encodable_request_arg.IsNull()) {
+                reply(WrapError("request_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg =
-                  std::any_cast<const FirestorePigeonFirebaseApp&>(
-                      std::get<CustomEncodableValue>(encodable_app_arg));
-              api->DisableIndexAutoCreation(
-                  app_arg, [reply](std::optional<FlutterError>&& output) {
-                    if (output.has_value()) {
-                      reply(WrapError(output.value()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(EncodableValue());
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel->SetMessageHandler(nullptr);
-    }
-  }
-  {
-    auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger,
-        "dev.flutter.pigeon.cloud_firestore_platform_interface."
-        "FirebaseFirestoreHostApi.deleteAllIndexes",
-        &GetCodec());
-    if (api != nullptr) {
-      channel->SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg =
-                  std::any_cast<const FirestorePigeonFirebaseApp&>(
-                      std::get<CustomEncodableValue>(encodable_app_arg));
-              api->DeleteAllIndexes(
-                  app_arg, [reply](std::optional<FlutterError>&& output) {
+              const PersistenceCacheIndexManagerRequest& request_arg =
+                  (PersistenceCacheIndexManagerRequest)
+                      encodable_request_arg.LongValue();
+              api->PersistenceCacheIndexManagerRequest(
+                  app_arg, request_arg,
+                  [reply](std::optional<FlutterError>&& output) {
                     if (output.has_value()) {
                       reply(WrapError(output.value()));
                       return;
