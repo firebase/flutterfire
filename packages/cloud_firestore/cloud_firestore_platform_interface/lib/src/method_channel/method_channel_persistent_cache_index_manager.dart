@@ -4,8 +4,9 @@
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
-class PersistentCacheIndexManager extends PersistentCacheIndexManagerPlatform {
-  PersistentCacheIndexManager(
+class MethodChannelPersistentCacheIndexManager
+    extends PersistentCacheIndexManagerPlatform {
+  MethodChannelPersistentCacheIndexManager(
     this.api,
     this.app,
   ) : super();
