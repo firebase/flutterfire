@@ -313,61 +313,60 @@ void runInstanceTests() {
             .set(
           {'some': 'data'},
         );
-
-        testWidgets(
-          '`PersistenceCacheIndexManager` with default persistence settings for each platform',
-          (widgetTester) async {
-            if (defaultTargetPlatform == TargetPlatform.windows) {
-              try {
-                FirebaseFirestore.instance.persistentCacheIndexManager();
-              } catch (e) {
-                expect(e, isInstanceOf<UnimplementedError>());
-              }
-            } else {
-              if (kIsWeb) {
-                PersistentCacheIndexManager? indexManager =
-                    FirebaseFirestore.instance.persistentCacheIndexManager();
-                // persistence is disabled by default
-                expect(indexManager, isNull);
-              } else {
-                // macOS, android, iOS have persistence enabled by default
-                PersistentCacheIndexManager? indexManager =
-                    FirebaseFirestore.instance.persistentCacheIndexManager();
-                await indexManager!.enableIndexAutoCreation();
-                await indexManager.disableIndexAutoCreation();
-                await indexManager.deleteAllIndexes();
-              }
+      });
+      testWidgets(
+        '`PersistenceCacheIndexManager` with default persistence settings for each platform',
+        (widgetTester) async {
+          if (defaultTargetPlatform == TargetPlatform.windows) {
+            try {
+              FirebaseFirestore.instance.persistentCacheIndexManager();
+            } catch (e) {
+              expect(e, isInstanceOf<UnimplementedError>());
             }
-          },
-        );
-
-        testWidgets(
-          '`PersistenceCacheIndexManager` with persistence enabled for web, and disabled for other platforms',
-          (widgetTester) async {
-            final firestore = FirebaseFirestore.instanceFor(
-              app: Firebase.app(),
-              databaseId: 'flutterfire-2',
-            );
-
+          } else {
             if (kIsWeb) {
-              // persistence is disabled by default so we enable it
-              firestore.settings = const Settings(persistenceEnabled: true);
               PersistentCacheIndexManager? indexManager =
-                  firestore.persistentCacheIndexManager();
+                  FirebaseFirestore.instance.persistentCacheIndexManager();
+              // persistence is disabled by default
+              expect(indexManager, isNull);
+            } else {
+              // macOS, android, iOS have persistence enabled by default
+              PersistentCacheIndexManager? indexManager =
+                  FirebaseFirestore.instance.persistentCacheIndexManager();
               await indexManager!.enableIndexAutoCreation();
               await indexManager.disableIndexAutoCreation();
               await indexManager.deleteAllIndexes();
-            } else {
-              // macOS, android, iOS have persistence enabled by default so we disable it
-              firestore.settings = const Settings(persistenceEnabled: false);
-              PersistentCacheIndexManager? indexManager =
-                  firestore.persistentCacheIndexManager();
-              expect(indexManager, isNull);
             }
-          },
-          skip: defaultTargetPlatform == TargetPlatform.windows,
-        );
-      });
+          }
+        },
+      );
+
+      testWidgets(
+        '`PersistenceCacheIndexManager` with persistence enabled for web, and disabled for other platforms',
+        (widgetTester) async {
+          final firestore = FirebaseFirestore.instanceFor(
+            app: Firebase.app(),
+            databaseId: 'flutterfire-2',
+          );
+
+          if (kIsWeb) {
+            // persistence is disabled by default so we enable it
+            firestore.settings = const Settings(persistenceEnabled: true);
+            PersistentCacheIndexManager? indexManager =
+                firestore.persistentCacheIndexManager();
+            await indexManager!.enableIndexAutoCreation();
+            await indexManager.disableIndexAutoCreation();
+            await indexManager.deleteAllIndexes();
+          } else {
+            // macOS, android, iOS have persistence enabled by default so we disable it
+            firestore.settings = const Settings(persistenceEnabled: false);
+            PersistentCacheIndexManager? indexManager =
+                firestore.persistentCacheIndexManager();
+            expect(indexManager, isNull);
+          }
+        },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
+      );
     },
   );
 }
