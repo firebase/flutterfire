@@ -5,12 +5,11 @@
 part of cloud_firestore;
 
 class PersistentCacheIndexManager {
-  // PersistentCacheIndexManager(this.delegate);
   PersistentCacheIndexManager._(this._delegate) {
     PersistentCacheIndexManagerPlatform.verify(_delegate);
   }
 
-  /// The Firestore instance associated with this document reference
+  /// The platform delegate that interacts with the platform code.
   final PersistentCacheIndexManagerPlatform _delegate;
 
   /// Enables the SDK to create persistent cache indexes automatically for local query
