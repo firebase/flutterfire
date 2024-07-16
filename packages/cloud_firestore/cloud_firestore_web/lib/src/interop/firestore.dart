@@ -218,6 +218,47 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
   void setLoggingEnabled(String logLevel) {
     firestore_interop.setLogLevel(logLevel.toJS);
   }
+
+  // purely for debug mode and tracking listeners to clean up on "hot restart"
+  final Map<String, int> _docListeners = {};
+  String _documentSnapshotWindowsKey(String path) {
+    if (kDebugMode) {
+      final key = 'flutterfire-${app.name}_${path}_documentSnapshot';
+      var refCount = _docListeners[key] = (_docListeners[key] ?? 0) + 1;
+      return '$key-$refCount';
+    }
+    return 'no-op';
+  }
+
+  void _removeDocumentSnapshotWindowsKey(String key) {
+    if (kDebugMode) {
+      var refCount = (_docListeners[key] ?? 0) - 1;
+      if (refCount <= 0) {
+        _docListeners.remove(key);
+      }
+    }
+  }
+
+  // purely for debug mode and tracking listeners to clean up on "hot restart"
+  final Map<String, int> _snapshotListeners = {};
+  String _querySnapshotWindowsKey(hashCode) {
+    if (kDebugMode) {
+      final key = 'flutterfire-${app.name}_${hashCode}_querySnapshot';
+      var refCount =
+          _snapshotListeners[key] = (_snapshotListeners[key] ?? 0) + 1;
+      return '$key-$refCount';
+    }
+    return 'no-op';
+  }
+
+  void _removeQuerySnapshotWindowsKey(String key) {
+    if (kDebugMode) {
+      var refCount = (_snapshotListeners[key] ?? 0) - 1;
+      if (refCount <= 0) {
+        _snapshotListeners.remove(key);
+      }
+    }
+  }
 }
 
 class LoadBundleTask
@@ -386,21 +427,6 @@ class DocumentReference
         (result)! as firestore_interop.DocumentSnapshotJsImpl);
   }
 
-  // purely for debug mode and tracking listeners to clean up on "hot restart"
-  final Map<String, int> _docListeners = {};
-  String _documentSnapshotWindowsKey() {
-    if (kDebugMode) {
-      final key = 'flutterfire-${firestore.app.name}_${path}_documentSnapshot';
-      if (_docListeners.containsKey(key)) {
-        _docListeners[key] = _docListeners[key]! + 1;
-      } else {
-        _docListeners[key] = 0;
-      }
-      return '$key-${_docListeners[key]}';
-    }
-    return 'no-op';
-  }
-
   /// Attaches a listener for [DocumentSnapshot] events.
   Stream<DocumentSnapshot> onSnapshot({
     bool includeMetadataChanges = false,
@@ -416,8 +442,8 @@ class DocumentReference
   StreamController<DocumentSnapshot> _createSnapshotStream([
     firestore_interop.DocumentListenOptions? options,
   ]) {
-    final documentKey = _documentSnapshotWindowsKey();
-    unsubscribeWindowsListener(documentKey);
+    late String documentKey;
+
     late JSFunction onSnapshotUnsubscribe;
     // ignore: close_sinks, the controller is returned
     late StreamController<DocumentSnapshot> controller;
@@ -429,6 +455,9 @@ class DocumentReference
     final errorWrapper = ((JSError e) => controller.addError(e)).toJS;
 
     void startListen() {
+      documentKey = firestore._documentSnapshotWindowsKey(path);
+      unsubscribeWindowsListener(documentKey);
+
       onSnapshotUnsubscribe = (options != null)
           ? firestore_interop.onSnapshot(
               jsObject as JSObject, options as JSAny, nextWrapper, errorWrapper)
@@ -440,6 +469,7 @@ class DocumentReference
     void stopListen() {
       onSnapshotUnsubscribe.callAsFunction();
       removeWindowsListener(documentKey);
+      firestore._removeDocumentSnapshotWindowsKey(documentKey);
     }
 
     return controller = StreamController<DocumentSnapshot>.broadcast(
@@ -512,21 +542,6 @@ class Query<T extends firestore_interop.QueryJsImpl>
   Query limitToLast(num limit) => Query.fromJsObject(firestore_interop.query(
       jsObject, firestore_interop.limitToLast(limit.toJS)));
 
-  // purely for debug mode and tracking listeners to clean up on "hot restart"
-  final Map<String, int> _snapshotListeners = {};
-  String _querySnapshotWindowsKey(hashCode) {
-    if (kDebugMode) {
-      final key = 'flutterfire-${firestore.app.name}_${hashCode}_querySnapshot';
-      if (_snapshotListeners.containsKey(key)) {
-        _snapshotListeners[key] = _snapshotListeners[key]! + 1;
-      } else {
-        _snapshotListeners[key] = 0;
-      }
-      return '$key-${_snapshotListeners[key]}';
-    }
-    return 'no-op';
-  }
-
   Stream<QuerySnapshot> onSnapshot(
           {bool includeMetadataChanges = false,
           ListenSource source = ListenSource.defaultSource,
@@ -543,8 +558,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
     firestore_interop.DocumentListenOptions options,
     int hashCode,
   ) {
-    final snapshotKey = _querySnapshotWindowsKey(hashCode);
-    unsubscribeWindowsListener(snapshotKey);
+    late String snapshotKey;
     late JSFunction onSnapshotUnsubscribe;
     // ignore: close_sinks, the controller is returned
     late StreamController<QuerySnapshot> controller;
@@ -555,6 +569,9 @@ class Query<T extends firestore_interop.QueryJsImpl>
     final errorWrapper = ((JSError e) => controller.addError(e)).toJS;
 
     void startListen() {
+      snapshotKey = firestore._querySnapshotWindowsKey(hashCode);
+      unsubscribeWindowsListener(snapshotKey);
+
       onSnapshotUnsubscribe = firestore_interop.onSnapshot(
           jsObject as JSObject, options as JSObject, nextWrapper, errorWrapper);
       setWindowsListener(
@@ -566,6 +583,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
     void stopListen() {
       onSnapshotUnsubscribe.callAsFunction();
       removeWindowsListener(snapshotKey);
+      firestore._removeQuerySnapshotWindowsKey(snapshotKey);
     }
 
     return controller = StreamController<QuerySnapshot>.broadcast(
