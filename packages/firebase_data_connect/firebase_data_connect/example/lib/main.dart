@@ -120,9 +120,7 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
       if (Platform.isAndroid) {
         host = '10.0.2.2';
       }
-    } catch (_) {
-      print("Ignoring");
-    }
+    } catch (_) {}
     int port = 9399;
     FirebaseDataConnect.instanceFor(
             app: Firebase.app(),
@@ -133,7 +131,6 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
         MoviesConnector.instance.listMovies.ref();
 
     ref.subscribe().listen((event) {
-      print(event.data.movies.length);
       setState(() {
         _movies = event.data.movies;
       });

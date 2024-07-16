@@ -7,9 +7,6 @@ class GRPCTransport implements DataConnectTransport {
   GRPCTransport(this.transportOptions, this.options) {
     bool isSecure =
         transportOptions.isSecure == null || transportOptions.isSecure == true;
-    print(isSecure);
-    print(transportOptions.port);
-    print(transportOptions.host);
     channel = ClientChannel(transportOptions.host,
         port: transportOptions.port ?? 443,
         options: ChannelOptions(

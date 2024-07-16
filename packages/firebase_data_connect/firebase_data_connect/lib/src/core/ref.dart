@@ -13,11 +13,9 @@ class QueryManager {
     String key = varsAsStr;
     if (trackedQueries[queryName] == null) {
       trackedQueries[queryName] = <String, StreamController>{};
-      print("Creating map for $queryName");
       debugPrint('Creating map for $queryName');
     }
     if (trackedQueries[queryName]![key] == null) {
-      print("Creating stream for $queryName");
       trackedQueries[queryName]![key] = StreamController.broadcast();
     }
     return trackedQueries[queryName]![key]!.stream;
@@ -28,7 +26,6 @@ class QueryManager {
     String key = varsAsStr;
     if (trackedQueries[operationName] == null ||
         trackedQueries[operationName]![key] == null) {
-      print("No streams available yet!");
       return;
     }
     trackedQueries[operationName]![key]!

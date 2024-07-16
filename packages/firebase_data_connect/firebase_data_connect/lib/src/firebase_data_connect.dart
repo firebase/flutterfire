@@ -67,7 +67,6 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
 
   /// useDataConnectEmulator connects to the DataConnect emulator.
   void useDataConnectEmulator(String host, {int? port, bool isSecure = false}) {
-    print(host);
     _transportOptions = TransportOptions(host, port, isSecure);
   }
 
