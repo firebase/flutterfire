@@ -130,41 +130,52 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   }
 
   @override
-  set settings(Settings settings) {
+  set settings(Settings firestoreSettings) {
+    settings.copyWith(
+      persistenceEnabled: firestoreSettings.persistenceEnabled,
+      host: firestoreSettings.host,
+      sslEnabled: firestoreSettings.sslEnabled,
+      cacheSizeBytes: firestoreSettings.cacheSizeBytes,
+      ignoreUndefinedProperties: firestoreSettings.ignoreUndefinedProperties,
+    );
     // Union type MemoryLocalCache | PersistentLocalCache
     dynamic localCache;
-    final persistenceEnabled = settings.persistenceEnabled;
+    final persistenceEnabled = firestoreSettings.persistenceEnabled;
     if (persistenceEnabled == null || persistenceEnabled == false) {
       localCache = firestore_interop.memoryLocalCache(null);
     } else {
       localCache = firestore_interop
           .persistentLocalCache(firestore_interop.PersistentCacheSettings(
-        cacheSizeBytes: settings.cacheSizeBytes?.toJS,
+        cacheSizeBytes: firestoreSettings.cacheSizeBytes?.toJS,
       ));
     }
 
-    if (settings.host != null && settings.sslEnabled != null) {
+    if (firestoreSettings.host != null &&
+        firestoreSettings.sslEnabled != null) {
       _settings = firestore_interop.FirestoreSettings(
         localCache: localCache,
-        host: settings.host?.toJS,
-        ssl: settings.sslEnabled?.toJS,
-        ignoreUndefinedProperties: settings.ignoreUndefinedProperties.toJS,
+        host: firestoreSettings.host?.toJS,
+        ssl: firestoreSettings.sslEnabled?.toJS,
+        ignoreUndefinedProperties:
+            firestoreSettings.ignoreUndefinedProperties.toJS,
       );
     } else {
       _settings = firestore_interop.FirestoreSettings(
         localCache: localCache,
-        ignoreUndefinedProperties: settings.ignoreUndefinedProperties.toJS,
+        ignoreUndefinedProperties:
+            firestoreSettings.ignoreUndefinedProperties.toJS,
       );
     }
   }
 
   /// Enable persistence of Firestore data.
   @override
-  Future<void> enablePersistence([PersistenceSettings? settings]) {
-    if (settings != null) {
+  Future<void> enablePersistence([PersistenceSettings? persistenceSettings]) {
+    settings.copyWith(persistenceEnabled: true);
+    if (persistenceSettings != null) {
       firestore_interop.PersistenceSettings interopSettings =
           firestore_interop.PersistenceSettings(
-              synchronizeTabs: settings.synchronizeTabs.toJS);
+              synchronizeTabs: persistenceSettings.synchronizeTabs.toJS);
 
       return convertWebExceptions(
           () => _delegate.enablePersistence(interopSettings));
@@ -212,8 +223,13 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   }
 
   @override
-  PersistentCacheIndexManagerWeb persistentCacheIndexManager() =>
-      PersistentCacheIndexManagerWeb(_delegate);
+  PersistentCacheIndexManagerWeb? persistentCacheIndexManager() {
+    if (settings.persistenceEnabled != null && settings.persistenceEnabled!) {
+      // default for web is no persistence, so we return only if persistence is enabled
+      return PersistentCacheIndexManagerWeb(_delegate);
+    }
+    return null;
+  }
 
   @override
   Future<void> setLoggingEnabled(bool enabled) async {

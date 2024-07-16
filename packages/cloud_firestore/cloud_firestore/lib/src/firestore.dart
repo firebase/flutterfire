@@ -380,15 +380,21 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     return _delegate.setIndexConfiguration(json);
   }
 
-  PersistentCacheIndexManager persistentCacheIndexManager() {
+  PersistentCacheIndexManager? persistentCacheIndexManager() {
     if (defaultTargetPlatform == TargetPlatform.windows) {
       throw UnimplementedError(
         '`PersistentCacheIndexManager` is not available on Windows platform',
       );
     }
-    return PersistentCacheIndexManager._(
-      _delegate.persistentCacheIndexManager(),
-    );
+
+    PersistentCacheIndexManagerPlatform? indexManager =
+        _delegate.persistentCacheIndexManager();
+    if (indexManager != null) {
+      return PersistentCacheIndexManager._(
+        indexManager,
+      );
+    }
+    return null;
   }
 
   /// Configures indexing for local query execution. Any previous index configuration is overridden.

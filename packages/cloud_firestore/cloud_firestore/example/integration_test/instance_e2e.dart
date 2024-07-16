@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -314,7 +315,7 @@ void runInstanceTests() {
         );
 
         testWidgets(
-          'PersistenceCacheIndexManager',
+          '`PersistenceCacheIndexManager` with default persistence settings for each platform',
           (widgetTester) async {
             if (defaultTargetPlatform == TargetPlatform.windows) {
               try {
@@ -323,14 +324,48 @@ void runInstanceTests() {
                 expect(e, isInstanceOf<UnimplementedError>());
               }
             } else {
-              PersistentCacheIndexManager indexManager =
-                  FirebaseFirestore.instance.persistentCacheIndexManager();
-
-              await indexManager.enableIndexAutoCreation();
-              await indexManager.disableIndexAutoCreation();
-              await indexManager.deleteAllIndexes();
+              if (kIsWeb) {
+                PersistentCacheIndexManager? indexManager =
+                    FirebaseFirestore.instance.persistentCacheIndexManager();
+                // persistence is disabled by default
+                expect(indexManager, isNull);
+              } else {
+                // macOS, android, iOS have persistence enabled by default
+                PersistentCacheIndexManager? indexManager =
+                    FirebaseFirestore.instance.persistentCacheIndexManager();
+                await indexManager!.enableIndexAutoCreation();
+                await indexManager.disableIndexAutoCreation();
+                await indexManager.deleteAllIndexes();
+              }
             }
           },
+        );
+
+        testWidgets(
+          '`PersistenceCacheIndexManager` with persistence enabled for web, and disabled for other platforms',
+          (widgetTester) async {
+            final firestore = FirebaseFirestore.instanceFor(
+              app: Firebase.app(),
+              databaseId: 'flutterfire-2',
+            );
+
+            if (kIsWeb) {
+              // persistence is disabled by default so we enable it
+              firestore.settings = const Settings(persistenceEnabled: true);
+              PersistentCacheIndexManager? indexManager =
+                  firestore.persistentCacheIndexManager();
+              await indexManager!.enableIndexAutoCreation();
+              await indexManager.disableIndexAutoCreation();
+              await indexManager.deleteAllIndexes();
+            } else {
+              // macOS, android, iOS have persistence enabled by default so we disable it
+              firestore.settings = const Settings(persistenceEnabled: false);
+              PersistentCacheIndexManager? indexManager =
+                  firestore.persistentCacheIndexManager();
+              expect(indexManager, isNull);
+            }
+          },
+          skip: defaultTargetPlatform == TargetPlatform.windows,
         );
       });
     },

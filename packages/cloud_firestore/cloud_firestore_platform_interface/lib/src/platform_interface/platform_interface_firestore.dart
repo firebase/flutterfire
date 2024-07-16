@@ -242,7 +242,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   }
 
   /// Gets the PersistentCacheIndexManager instance used by this firestore instance.
-  PersistentCacheIndexManagerPlatform persistentCacheIndexManager() {
+  PersistentCacheIndexManagerPlatform? persistentCacheIndexManager() {
     throw UnimplementedError(
         'persistentCacheIndexManager() is not implemented');
   }

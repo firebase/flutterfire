@@ -338,7 +338,9 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   }
 
   @override
-  PersistentCacheIndexManagerPlatform persistentCacheIndexManager() {
+  PersistentCacheIndexManagerPlatform? persistentCacheIndexManager() {
+    // Persistence is enabled by default, if the user has disabled it, return null.
+    if (settings.persistenceEnabled == false) return null;
     return MethodChannelPersistentCacheIndexManager(
       pigeonChannel,
       pigeonApp,
