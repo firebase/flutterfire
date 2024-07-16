@@ -10,27 +10,27 @@ import 'package:cloud_firestore_web/src/interop/firestore.dart'
 class PersistentCacheIndexManagerWeb
     extends PersistentCacheIndexManagerPlatform {
   PersistentCacheIndexManagerWeb(
-    this.delegate,
+    this._delegate,
   ) : super();
 
-  final firestore_interop.Firestore delegate;
+  final firestore_interop.Firestore _delegate;
   @override
   Future<void> enableIndexAutoCreation() async {
-    return delegate.persistenceCacheIndexManagerRequest(
+    return _delegate.persistenceCacheIndexManagerRequest(
       PersistenceCacheIndexManagerRequest.enableIndexAutoCreation,
     );
   }
 
   @override
   Future<void> disableIndexAutoCreation() async {
-    return delegate.persistenceCacheIndexManagerRequest(
+    return _delegate.persistenceCacheIndexManagerRequest(
       PersistenceCacheIndexManagerRequest.disableIndexAutoCreation,
     );
   }
 
   @override
   Future<void> deleteAllIndexes() async {
-    return delegate.persistenceCacheIndexManagerRequest(
+    return _delegate.persistenceCacheIndexManagerRequest(
       PersistenceCacheIndexManagerRequest.deleteAllIndexes,
     );
   }
