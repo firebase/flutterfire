@@ -4,6 +4,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -310,6 +311,26 @@ void runInstanceTests() {
             .doc('new-doc')
             .set(
           {'some': 'data'},
+        );
+
+        testWidgets(
+          'PersistenceCacheIndexManager',
+          (widgetTester) async {
+            if (defaultTargetPlatform == TargetPlatform.windows) {
+              try {
+                FirebaseFirestore.instance.persistentCacheIndexManager();
+              } catch (e) {
+                expect(e, isInstanceOf<UnimplementedError>());
+              }
+            } else {
+              PersistentCacheIndexManager indexManager =
+                  FirebaseFirestore.instance.persistentCacheIndexManager();
+
+              await indexManager.enableIndexAutoCreation();
+              await indexManager.disableIndexAutoCreation();
+              await indexManager.deleteAllIndexes();
+            }
+          },
         );
       });
     },
