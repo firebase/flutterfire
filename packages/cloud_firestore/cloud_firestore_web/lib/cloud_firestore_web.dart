@@ -31,12 +31,12 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   /// instance of Firestore from the web plugin
   firestore_interop.Firestore? _webFirestore;
 
-  firestore_interop.FirestoreSettings? _settings;
+  firestore_interop.FirestoreSettings? _interopSettings;
 
   /// Lazily initialize [_webFirestore] on first method call
   firestore_interop.Firestore get _delegate {
     return _webFirestore ??= firestore_interop.getFirestoreInstance(
-        core_interop.app(app.name), _settings, databaseId);
+        core_interop.app(app.name), _interopSettings, databaseId);
   }
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
@@ -124,14 +124,16 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     return null;
   }
 
+  Settings _settings = const Settings();
+
   @override
   Settings get settings {
-    return const Settings();
+    return _settings;
   }
 
   @override
   set settings(Settings firestoreSettings) {
-    settings.copyWith(
+    _settings = _settings.copyWith(
       persistenceEnabled: firestoreSettings.persistenceEnabled,
       host: firestoreSettings.host,
       sslEnabled: firestoreSettings.sslEnabled,
@@ -152,7 +154,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
     if (firestoreSettings.host != null &&
         firestoreSettings.sslEnabled != null) {
-      _settings = firestore_interop.FirestoreSettings(
+      _interopSettings = firestore_interop.FirestoreSettings(
         localCache: localCache,
         host: firestoreSettings.host?.toJS,
         ssl: firestoreSettings.sslEnabled?.toJS,
@@ -160,7 +162,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
             firestoreSettings.ignoreUndefinedProperties.toJS,
       );
     } else {
-      _settings = firestore_interop.FirestoreSettings(
+      _interopSettings = firestore_interop.FirestoreSettings(
         localCache: localCache,
         ignoreUndefinedProperties:
             firestoreSettings.ignoreUndefinedProperties.toJS,
@@ -171,7 +173,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   /// Enable persistence of Firestore data.
   @override
   Future<void> enablePersistence([PersistenceSettings? persistenceSettings]) {
-    settings.copyWith(persistenceEnabled: true);
+    _settings = _settings.copyWith(persistenceEnabled: true);
     if (persistenceSettings != null) {
       firestore_interop.PersistenceSettings interopSettings =
           firestore_interop.PersistenceSettings(
