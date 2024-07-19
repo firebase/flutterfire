@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -312,6 +313,121 @@ void runInstanceTests() {
           {'some': 'data'},
         );
       });
+      testWidgets(
+        '`PersistenceCacheIndexManager` with default persistence settings for each platform',
+        (widgetTester) async {
+          if (defaultTargetPlatform == TargetPlatform.windows) {
+            try {
+              // Windows does not have `PersistenceCacheIndexManager` support
+              FirebaseFirestore.instance.persistentCacheIndexManager();
+            } catch (e) {
+              expect(e, isInstanceOf<UnimplementedError>());
+            }
+          } else {
+            if (kIsWeb) {
+              // persistence is disabled by default on web
+              final firestore = FirebaseFirestore.instanceFor(
+                app: Firebase.app(),
+                // Use different firestore instance to test behavior
+                databaseId: 'default-web',
+              );
+              PersistentCacheIndexManager? indexManager =
+                  firestore.persistentCacheIndexManager();
+              expect(indexManager, isNull);
+            } else {
+              final firestore = FirebaseFirestore.instanceFor(
+                app: Firebase.app(),
+                // Use different firestore instance to test behavior
+                databaseId: 'default-other-platform-test',
+              );
+              // macOS, android, iOS have persistence enabled by default
+              PersistentCacheIndexManager? indexManager =
+                  firestore.persistentCacheIndexManager();
+              await indexManager!.enableIndexAutoCreation();
+              await indexManager.disableIndexAutoCreation();
+              await indexManager.deleteAllIndexes();
+            }
+          }
+        },
+      );
+
+      testWidgets(
+        '`PersistenceCacheIndexManager` with persistence enabled for each platform',
+        (widgetTester) async {
+          if (kIsWeb) {
+            final firestore = FirebaseFirestore.instanceFor(
+              app: Firebase.app(),
+              databaseId: 'web-enabled',
+            );
+            // persistence is disabled by default so we enable it
+            firestore.settings = const Settings(persistenceEnabled: true);
+
+            PersistentCacheIndexManager? indexManager =
+                firestore.persistentCacheIndexManager();
+
+            await indexManager!.enableIndexAutoCreation();
+            await indexManager.disableIndexAutoCreation();
+            await indexManager.deleteAllIndexes();
+
+            final firestore2 = FirebaseFirestore.instanceFor(
+              app: Firebase.app(),
+              databaseId: 'web-disabled-2',
+            );
+
+            // Now try using `enablePersistence()`, web only API
+            await firestore2.enablePersistence();
+
+            PersistentCacheIndexManager? indexManager2 =
+                firestore2.persistentCacheIndexManager();
+
+            await indexManager2!.enableIndexAutoCreation();
+            await indexManager2.disableIndexAutoCreation();
+            await indexManager2.deleteAllIndexes();
+          } else {
+            final firestore = FirebaseFirestore.instanceFor(
+              app: Firebase.app(),
+              databaseId: 'other-platform-enabled',
+            );
+            firestore.settings = const Settings(persistenceEnabled: true);
+            PersistentCacheIndexManager? indexManager =
+                firestore.persistentCacheIndexManager();
+            await indexManager!.enableIndexAutoCreation();
+            await indexManager.disableIndexAutoCreation();
+            await indexManager.deleteAllIndexes();
+          }
+        },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
+      );
+
+      testWidgets(
+        '`PersistenceCacheIndexManager` with persistence disabled for each platform',
+        (widgetTester) async {
+          if (kIsWeb) {
+            final firestore = FirebaseFirestore.instanceFor(
+              app: Firebase.app(),
+              databaseId: 'web-disabled-1',
+            );
+            // persistence is disabled by default so we enable it
+            firestore.settings = const Settings(persistenceEnabled: false);
+
+            PersistentCacheIndexManager? indexManager =
+                firestore.persistentCacheIndexManager();
+
+            expect(indexManager, isNull);
+          } else {
+            final firestore = FirebaseFirestore.instanceFor(
+              app: Firebase.app(),
+              databaseId: 'other-platform-disabled',
+            );
+            // macOS, android, iOS have persistence enabled by default so we disable it
+            firestore.settings = const Settings(persistenceEnabled: false);
+            PersistentCacheIndexManager? indexManager =
+                firestore.persistentCacheIndexManager();
+            expect(indexManager, isNull);
+          }
+        },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
+      );
     },
   );
 }
