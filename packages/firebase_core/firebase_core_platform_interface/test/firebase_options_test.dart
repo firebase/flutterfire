@@ -67,6 +67,52 @@ void main() {
       expect(options1 == options2, isTrue);
     });
 
+    test('should copyWith new values', () {
+      const options = FirebaseOptions(
+        apiKey: 'apiKey',
+        appId: 'appId',
+        messagingSenderId: 'messagingSenderId',
+        projectId: 'projectId',
+      );
+
+      final newOptions = options.copyWith(
+        apiKey: 'newApiKey',
+        appId: 'newAppId',
+        messagingSenderId: 'newMessagingSenderId',
+        projectId: 'newProjectId',
+        authDomain: 'newAuthDomain',
+        databaseURL: 'newDatabaseURL',
+        storageBucket: 'newStorageBucket',
+        measurementId: 'newMeasurementId',
+        trackingId: 'newTrackingId',
+        deepLinkURLScheme: 'newDeepLinkURLScheme',
+        androidClientId: 'newAndroidClientId',
+        iosClientId: 'newIosClientId',
+        iosBundleId: 'newIosBundleId',
+        appGroupId: 'newAppGroupId',
+      );
+
+      expect(
+        newOptions,
+        const FirebaseOptions(
+          apiKey: 'newApiKey',
+          appId: 'newAppId',
+          messagingSenderId: 'newMessagingSenderId',
+          projectId: 'newProjectId',
+          authDomain: 'newAuthDomain',
+          databaseURL: 'newDatabaseURL',
+          storageBucket: 'newStorageBucket',
+          measurementId: 'newMeasurementId',
+          trackingId: 'newTrackingId',
+          deepLinkURLScheme: 'newDeepLinkURLScheme',
+          androidClientId: 'newAndroidClientId',
+          iosClientId: 'newIosClientId',
+          iosBundleId: 'newIosBundleId',
+          appGroupId: 'newAppGroupId',
+        ),
+      );
+    });
+
     test('should return a Map', () {
       const options = FirebaseOptions(
         apiKey: 'apiKey',
