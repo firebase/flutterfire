@@ -30,9 +30,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_core: ^2.31.1
-  google_sign_in: '^6.2.1'
-  firebase_auth: ^4.19.6
+  firebase_core: ^3.2.0
+  google_sign_in: ^6.1.0
+  firebase_auth: ^5.1.2
   firebase_data_connect:
     path: ../
 

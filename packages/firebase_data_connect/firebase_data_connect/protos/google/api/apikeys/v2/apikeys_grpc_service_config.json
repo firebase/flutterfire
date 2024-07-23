@@ -1,8 +1,0 @@
-{
-  "methodConfig": [{
-    "name": [
-      { "service": "google.api.apikeys.v2.ApiKeys" }
-    ],
-    "timeout": "10s"
-  }]
-}
