@@ -79,6 +79,8 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
     WebProvider? webProvider,
     AndroidProvider? androidProvider,
     AppleProvider? appleProvider,
+    String? androidDebugToken,
+    String? iosDebugToken,
   }) async {
     try {
       await channel.invokeMethod<void>('FirebaseAppCheck#activate', {
@@ -86,8 +88,12 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
         // Allow value to pass for debug mode for unit testing
         if (Platform.isAndroid || kDebugMode)
           'androidProvider': getAndroidProviderString(androidProvider),
+        if(androidDebugToken != null)
+          'androidDebugToken': androidDebugToken,
         if (Platform.isIOS || Platform.isMacOS || kDebugMode)
           'appleProvider': getAppleProviderString(appleProvider),
+        if(iosDebugToken != null)
+          'iosDebugToken': iosDebugToken,
       });
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
