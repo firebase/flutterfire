@@ -1,3 +1,19 @@
+## 0.2.5+11
+
+ - **FIX**(database,web): ensure exact same streams are not unsubscribed in debug mode ([#13029](https://github.com/firebase/flutterfire/issues/13029)). ([f122380d](https://github.com/firebase/flutterfire/commit/f122380d5f738cf4053afe6716cc2876b2d9d5bf))
+
+## 0.2.5+10
+
+ - Update a dependency to the latest release.
+
+## 0.2.5+9
+
+ - **FIX**(database,web): clean up stream handlers on "hot restart" ([#12915](https://github.com/firebase/flutterfire/issues/12915)). ([e298cb4e](https://github.com/firebase/flutterfire/commit/e298cb4e5750a75c458acd907959b256a7f1d40d))
+
+## 0.2.5+8
+
+ - Update a dependency to the latest release.
+
 ## 0.2.5+7
 
  - Update a dependency to the latest release.

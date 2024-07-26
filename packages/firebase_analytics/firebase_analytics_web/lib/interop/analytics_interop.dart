@@ -17,7 +17,10 @@ external AnalyticsJsImpl getAnalytics([AppJsImpl? app]);
 
 @JS()
 @staticInterop
-external AnalyticsJsImpl initializeAnalytics([AppJsImpl app]);
+external AnalyticsJsImpl initializeAnalytics(
+  AppJsImpl app, [
+  JSAny? options,
+]);
 
 @JS()
 @staticInterop

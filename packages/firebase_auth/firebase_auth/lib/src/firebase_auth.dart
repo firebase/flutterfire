@@ -318,7 +318,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// - **auth/unauthorized-continue-uri**\
   ///   The domain of the continue URL is not whitelisted. Whitelist the domain in the Firebase console.
   /// - **auth/user-not-found**\
-  ///   Thrown if there is no user corresponding to the email address.
+  ///   Thrown if there is no user corresponding to the email address. Note: This exception is no longer thrown when enabling email enumeration protection.
   Future<void> sendPasswordResetEmail({
     required String email,
     ActionCodeSettings? actionCodeSettings,

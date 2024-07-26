@@ -99,22 +99,6 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
   /**
    * Starts running a background Dart isolate within a new {@link FlutterEngine} using a previously
    * used entrypoint.
-   *
-   * <p>The isolate is configured as follows:
-   *
-   * <ul>
-   *   <li>Bundle Path: {@code io.flutter.view.FlutterMain.findAppBundlePath(context)}.
-   *   <li>Entrypoint: The Dart method used the last time this plugin was initialized in the
-   *       foreground.
-   *   <li>Run args: none.
-   * </ul>
-   *
-   * <p>Preconditions:
-   *
-   * <ul>
-   *   <li>The given callback must correspond to a registered Dart callback. If the handle does not
-   *       resolve to a Dart callback then this method does nothing.
-   * </ul>
    */
   public void startBackgroundIsolate() {
     if (isNotRunning()) {
@@ -125,24 +109,7 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
     }
   }
 
-  /**
-   * Starts running a background Dart isolate within a new {@link FlutterEngine}.
-   *
-   * <p>The isolate is configured as follows:
-   *
-   * <ul>
-   *   <li>Bundle Path: {@code io.flutter.view.FlutterMain.findAppBundlePath(context)}.
-   *   <li>Entrypoint: The Dart method represented by {@code callbackHandle}.
-   *   <li>Run args: none.
-   * </ul>
-   *
-   * <p>Preconditions:
-   *
-   * <ul>
-   *   <li>The given {@code callbackHandle} must correspond to a registered Dart callback. If the
-   *       handle does not resolve to a Dart callback then this method does nothing.
-   * </ul>
-   */
+  /** Starts running a background Dart isolate within a new {@link FlutterEngine}. */
   public void startBackgroundIsolate(long callbackHandle, FlutterShellArgs shellArgs) {
     if (backgroundFlutterEngine != null) {
       Log.e(TAG, "Background isolate already started.");

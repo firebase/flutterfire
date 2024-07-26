@@ -1,3 +1,19 @@
+## 1.3.39
+
+ - **FIX**(web): indirect dart:js_interop conditional import to fix dart2js build issue ([#12925](https://github.com/firebase/flutterfire/issues/12925)). ([6710e999](https://github.com/firebase/flutterfire/commit/6710e9990297425e3d7c5653721dad0153f3f694))
+
+## 1.3.38
+
+ - Update a dependency to the latest release.
+
+## 1.3.37
+
+ - Update a dependency to the latest release.
+
+## 1.3.36
+
+ - Update a dependency to the latest release.
+
 ## 1.3.35
 
  - Update a dependency to the latest release.

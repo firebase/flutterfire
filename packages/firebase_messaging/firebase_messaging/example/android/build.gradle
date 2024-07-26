@@ -1,37 +1,16 @@
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:8.1.2'
-        classpath 'com.google.gms:google-services:4.4.0'
-    }
-}
-
 allprojects {
     repositories {
         google()
         mavenCentral()
     }
-// Use this to lint the project
-//    gradle.projectsEvaluated {
-//      tasks.withType(JavaCompile).tap {
-//        configureEach {
-//          options.compilerArgs << "-Xlint:deprecation"
-//          options.compilerArgs << "-Xlint:unchecked"
-//        }
-//      }
-//    }
 }
 
-rootProject.buildDir = '../build'
+rootProject.buildDir = "../build"
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
 subprojects {
-    project.evaluationDependsOn(':app')
+    project.evaluationDependsOn(":app")
 }
 
 tasks.register("clean", Delete) {

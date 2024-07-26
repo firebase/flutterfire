@@ -17,15 +17,22 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   /// instance of Analytics from the web plugin
   analytics_interop.Analytics? _webAnalytics;
 
+  final Map<String, dynamic>? webOptions;
+
   /// Lazily initialize [_webAnalytics] on first method call
   analytics_interop.Analytics get _delegate {
-    return _webAnalytics ??=
-        analytics_interop.getAnalyticsInstance(core_interop.app(app.name));
+    return _webAnalytics ??= analytics_interop.getAnalyticsInstance(
+      core_interop.app(app.name),
+      webOptions,
+    );
   }
 
   /// Builds an instance of [FirebaseAnalyticsWeb] with an optional [FirebaseApp] instance
   /// If [app] is null then the created instance will use the default [FirebaseApp]
-  FirebaseAnalyticsWeb({FirebaseApp? app}) : super(appInstance: app);
+  FirebaseAnalyticsWeb({
+    FirebaseApp? app,
+    this.webOptions,
+  }) : super(appInstance: app);
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
@@ -34,8 +41,11 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   }
 
   @override
-  FirebaseAnalyticsPlatform delegateFor({FirebaseApp? app}) {
-    return FirebaseAnalyticsWeb(app: app);
+  FirebaseAnalyticsPlatform delegateFor({
+    FirebaseApp? app,
+    Map<String, dynamic>? webOptions,
+  }) {
+    return FirebaseAnalyticsWeb(app: app, webOptions: webOptions);
   }
 
   @override

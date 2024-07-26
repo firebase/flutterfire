@@ -23,5 +23,6 @@
 + (PigeonIdTokenResult *_Nonnull)parseIdTokenResult:(nonnull FIRAuthTokenResult *)tokenResult;
 + (PigeonTotpSecret *_Nonnull)getPigeonTotpSecret:(nonnull FIRTOTPSecret *)secret;
 + (PigeonAuthCredential *_Nullable)getPigeonAuthCredential:
-    (FIRAuthCredential *_Nullable)authCredential;
+                                       (FIRAuthCredential *_Nullable)authCredentialToken
+                                                     token:(NSNumber *_Nullable)token;
 @end

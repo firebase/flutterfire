@@ -13,6 +13,7 @@ import 'bom_analysis.dart';
 
 const packagesDir = 'packages';
 const versionsFile = 'VERSIONS.md';
+const changelogFile = 'CHANGELOG.md';
 const versionsJsonFile = 'scripts/versions.json';
 const androidVersionFile =
     '$packagesDir/firebase_core/firebase_core/android/gradle.properties';
@@ -108,7 +109,10 @@ void main(List<String> arguments) async {
   await addLinkInChangelog(version, date);
 
   // Commit the files and create an annotated tag and a commit
-  Process.runSync('git', ['add', versionsFile, versionsJsonFile]);
+  Process.runSync(
+    'git',
+    ['add', versionsFile, versionsJsonFile, changelogFile],
+  );
   Process.runSync(
     'git',
     ['tag', '-a', 'BoM-v$version', '-m', 'BoM Version $version'],
@@ -226,11 +230,8 @@ Future<void> addLinkInChangelog(String version, String date) async {
       .replaceAll('-', r'\-')
       .replaceAll('.', r'\.');
 
-  // Works only if runned using `melos run bom`
-  String filePath = 'CHANGELOG.md';
-
   String command =
-      'sed -i "" "s|$escapedOriginalLine|$escapedNewLine|" $filePath';
+      'sed -i "" "s|$escapedOriginalLine|$escapedNewLine|" $changelogFile';
 
   ProcessResult result = await Process.run('bash', ['-c', command]);
 

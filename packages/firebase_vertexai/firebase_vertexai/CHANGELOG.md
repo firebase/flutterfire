@@ -1,3 +1,25 @@
+## 0.2.2+2
+
+ - Update a dependency to the latest release.
+
+## 0.2.2+1
+
+ - Update a dependency to the latest release.
+
+## 0.2.2
+
+ - **FEAT**(vertexai): add name constructor for function calling schema ([#12898](https://github.com/firebase/flutterfire/issues/12898)). ([466884b6](https://github.com/firebase/flutterfire/commit/466884b6474b47ffe4f3f4ca5b3e989a5898dba9))
+
+## 0.2.1
+
+ - **FIX**(vertexai): fix the countTokens brokage ([#12899](https://github.com/firebase/flutterfire/issues/12899)). ([e946eb9b](https://github.com/firebase/flutterfire/commit/e946eb9b429da16bea617b68dda32f23d0deb5bc))
+
+## 0.2.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: bump all iOS deployment targets to iOS 13 ahead of Firebase iOS SDK `v11` breaking change ([#12872](https://github.com/firebase/flutterfire/issues/12872)). ([de0cea2c](https://github.com/firebase/flutterfire/commit/de0cea2c3c36694a76361be784255986fac84a43))
+
 ## 0.1.1
 
  - **REFACTOR**(vertexai): Split into separate libraries ([#12794](https://github.com/firebase/flutterfire/issues/12794)). ([85a517f4](https://github.com/firebase/flutterfire/commit/85a517f42930ce902881be9b321e360b0801530f))

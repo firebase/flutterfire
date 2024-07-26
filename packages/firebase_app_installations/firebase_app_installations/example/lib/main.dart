@@ -3,9 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:developer';
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:firebase_app_installations/firebase_app_installations.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 
 import 'firebase_options.dart';
 
@@ -20,7 +21,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +38,10 @@ class MyApp extends StatelessWidget {
 }
 
 class InstallationsCard extends StatefulWidget {
-  const InstallationsCard({Key? key}) : super(key: key);
+  const InstallationsCard({super.key});
 
   @override
-  _InstallationsCardState createState() => _InstallationsCardState();
+  State<InstallationsCard> createState() => _InstallationsCardState();
 }
 
 class _InstallationsCardState extends State<InstallationsCard> {
@@ -58,6 +59,7 @@ class _InstallationsCardState extends State<InstallationsCard> {
       // Make sure that the Auth Token is updated once the Installation Id is updated
       getAuthToken();
 
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('New Firebase Installations Id generated 🎉'),
         backgroundColor: Colors.green,
@@ -89,10 +91,10 @@ class _InstallationsCardState extends State<InstallationsCard> {
 
   Future<void> getId() async {
     try {
-      final _newid = await FirebaseInstallations.instance.getId();
+      final newId = await FirebaseInstallations.instance.getId();
 
       setState(() {
-        id = _newid;
+        id = newId;
       });
     } catch (e) {
       log('$e');

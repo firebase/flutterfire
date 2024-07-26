@@ -1,3 +1,20 @@
+## 7.4.2
+
+ - **FIX**(auth): fixing scopes and parameters that would not work for GoogleAuthProvider ([#13018](https://github.com/firebase/flutterfire/issues/13018)). ([a292282d](https://github.com/firebase/flutterfire/commit/a292282d0e64808e4498f065d033852f89795dc0))
+ - **DOCS**(auth): add information about error codes for `verifyBeforeUpdateEmail` ([#13036](https://github.com/firebase/flutterfire/issues/13036)). ([8ef7421d](https://github.com/firebase/flutterfire/commit/8ef7421d6a524938087769537ac70ec249096ed4))
+
+## 7.4.1
+
+ - Update a dependency to the latest release.
+
+## 7.4.0
+
+ - **FEAT**(auth,apple): create a credential with `idToken`, `rawNonce` & `appleFullPersonName` ([#12356](https://github.com/firebase/flutterfire/issues/12356)). ([17793080](https://github.com/firebase/flutterfire/commit/177930802ca13a3af1610968e54b8ce79f0781ca))
+
+## 7.3.1
+
+ - Update a dependency to the latest release.
+
 ## 7.3.0
 
  - **FEAT**(auth): update Pigeon version to 19 ([#12828](https://github.com/firebase/flutterfire/issues/12828)). ([5e76153f](https://github.com/firebase/flutterfire/commit/5e76153fbcd337a26e83abc2b43b651ab6c501bc))
