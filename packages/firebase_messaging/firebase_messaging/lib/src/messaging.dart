@@ -87,8 +87,8 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   /// This should be used to determine whether specific notification interaction
   /// should open the app with a specific purpose (e.g. opening a chat message,
   /// specific screen etc).
-  /// 
-  /// on Android, if the message was received in the foreground, and the notification was 
+  ///
+  /// on Android, if the message was received in the foreground, and the notification was
   /// pressed whilst the app is in a background/terminated state, this will return `null`.
   Future<RemoteMessage?> getInitialMessage() {
     return _delegate.getInitialMessage();
