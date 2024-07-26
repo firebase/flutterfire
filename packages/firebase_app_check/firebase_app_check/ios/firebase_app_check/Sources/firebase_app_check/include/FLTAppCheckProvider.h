@@ -10,7 +10,7 @@
 
 @property id<FIRAppCheckProvider> delegateProvider;
 
-- (void)configure:(FIRApp *)app providerName:(NSString *)providerName;
+- (void)configure:(FIRApp *)app providerName:(NSString *)providerName debugToken:(NSString *)debugToken;
 
 - (id)initWithApp:(FIRApp *)app;
 
