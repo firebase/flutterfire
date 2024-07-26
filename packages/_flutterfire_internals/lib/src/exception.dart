@@ -46,6 +46,10 @@ FirebaseException platformExceptionToFirebaseException(
   String message = platformException.message ?? '';
 
   if (details != null) {
+    print('platformException.code: ${platformException.code}');
+    print('platformException.details: ${platformException.details}');
+    print('platformException.message: ${platformException.message}');
+
     code = (details['code'] as String?) ?? code;
 
     if ((code?.compareTo('not-found') == 0) && message.contains('NOT_FOUND:')) {

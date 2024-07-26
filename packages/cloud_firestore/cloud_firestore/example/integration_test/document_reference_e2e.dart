@@ -532,8 +532,11 @@ void runDocumentReferenceTests() {
             // 'Some requested document was not found'
             expect(
               e,
-              isA<FirebaseException>().having((e) => e.message, 'message',
-                  isNot(contains('Some requested document was not found'))),
+              isA<FirebaseException>().having(
+                (e) => e.message,
+                'message',
+                isNot(contains('Some requested document was not found')),
+              ),
             );
           }
         },
