@@ -376,9 +376,11 @@ Here's how to use the second method:
 
    ```json
    {
-     "data": {
-       "title_loc_key": "notification_title",
-       "body_loc_key": "notification_message"
+     "android": {
+        "notification": {
+          "title_loc_key": "notification_title",
+          "body_loc_key": "notification_message"
+        }
      }
    }
    ```
@@ -403,9 +405,13 @@ Here's how to use the second method:
 
    ```json
    {
-     "data": {
-       "title_loc_key": "NOTIFICATION_TITLE",
-       "body_loc_key": "NOTIFICATION_MESSAGE"
+     "apns": {
+        "payload": {
+          "alert": {
+            "title-loc-key": "NOTIFICATION_TITLE",
+            "loc-key": "NOTIFICATION_MESSAGE"
+          }
+        }
      }
    }
    ```
