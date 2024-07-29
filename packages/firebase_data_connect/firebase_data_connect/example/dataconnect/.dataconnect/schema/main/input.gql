@@ -19,7 +19,7 @@ input DirectedBy_Filter {
   movie: Movie_Filter
 }
 input DirectedBy_ListFilter {
-  count: Int_Filter
+  count: Int_Filter = {gt:0}
   exist: DirectedBy_Filter
 }
 input DirectedBy_Order {
@@ -52,7 +52,7 @@ input Movie_Filter {
   people_via_DirectedBy: Person_ListFilter
 }
 input Movie_ListFilter {
-  count: Int_Filter
+  count: Int_Filter = {gt:0}
   exist: Movie_Filter
 }
 input Movie_Order {
@@ -79,7 +79,7 @@ input Person_Filter {
   movies_via_DirectedBy: Movie_ListFilter
 }
 input Person_ListFilter {
-  count: Int_Filter
+  count: Int_Filter = {gt:0}
   exist: Person_Filter
 }
 input Person_Order {

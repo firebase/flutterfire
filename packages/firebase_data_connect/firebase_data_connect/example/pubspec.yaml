@@ -42,12 +42,9 @@ dependencies:
   cupertino_icons: ^1.0.6
   flutter_rating_bar: ^4.0.1
   protobuf: ^3.1.0
-  json_annotation: ^4.9.0
-  json: ^0.20.2
 
 dev_dependencies:
   build_runner: ^2.3.3
-  json_serializable: ^6.8.0
 
   flutter_test:
     sdk: flutter
