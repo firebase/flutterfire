@@ -192,6 +192,30 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
           .setIndexConfiguration(jsObject, indexConfiguration.toJS)
           .toDart;
 
+  Future<void> persistenceCacheIndexManagerRequest(
+    PersistenceCacheIndexManagerRequest request,
+  ) async {
+    firestore_interop.PersistentCacheIndexManager? indexManager =
+        firestore_interop.getPersistentCacheIndexManager(jsObject);
+
+    if (indexManager != null) {
+      switch (request) {
+        case PersistenceCacheIndexManagerRequest.enableIndexAutoCreation:
+          return firestore_interop
+              .enablePersistentCacheIndexAutoCreation(indexManager);
+        case PersistenceCacheIndexManagerRequest.disableIndexAutoCreation:
+          return firestore_interop
+              .disablePersistentCacheIndexAutoCreation(indexManager);
+        case PersistenceCacheIndexManagerRequest.deleteAllIndexes:
+          return firestore_interop
+              .deleteAllPersistentCacheIndexes(indexManager);
+      }
+    } else {
+      // ignore: avoid_print
+      print('Firestore: `PersistentCacheIndexManager` is not available');
+    }
+  }
+
   Future<Query> namedQuery(String name) async {
     final future = firestore_interop.namedQuery(jsObject, name.toJS).toDart;
     final result = await future;

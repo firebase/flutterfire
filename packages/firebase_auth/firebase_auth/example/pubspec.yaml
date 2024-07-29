@@ -11,7 +11,7 @@ dependencies:
   firebase_messaging: ^15.0.3
   flutter:
     sdk: flutter
-  flutter_facebook_auth: ^6.0.0
+  flutter_facebook_auth: ^7.0.1
   flutter_signin_button: ^2.0.0
   google_sign_in: ^6.1.0
   google_sign_in_dartio: ^0.3.0

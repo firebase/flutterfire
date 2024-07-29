@@ -9,6 +9,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/src/internals.dart';
 import 'package:cloud_firestore_web/src/load_bundle_task_web.dart';
+import 'package:cloud_firestore_web/src/persistent_cache_index_manager_web.dart';
 import 'package:cloud_firestore_web/src/utils/web_utils.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
@@ -30,12 +31,12 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   /// instance of Firestore from the web plugin
   firestore_interop.Firestore? _webFirestore;
 
-  firestore_interop.FirestoreSettings? _settings;
+  firestore_interop.FirestoreSettings? _interopSettings;
 
   /// Lazily initialize [_webFirestore] on first method call
   firestore_interop.Firestore get _delegate {
     return _webFirestore ??= firestore_interop.getFirestoreInstance(
-        core_interop.app(app.name), _settings, databaseId);
+        core_interop.app(app.name), _interopSettings, databaseId);
   }
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
@@ -123,47 +124,60 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     return null;
   }
 
+  Settings _settings = const Settings();
+
   @override
   Settings get settings {
-    return const Settings();
+    return _settings;
   }
 
   @override
-  set settings(Settings settings) {
+  set settings(Settings firestoreSettings) {
+    _settings = _settings.copyWith(
+      persistenceEnabled: firestoreSettings.persistenceEnabled,
+      host: firestoreSettings.host,
+      sslEnabled: firestoreSettings.sslEnabled,
+      cacheSizeBytes: firestoreSettings.cacheSizeBytes,
+      ignoreUndefinedProperties: firestoreSettings.ignoreUndefinedProperties,
+    );
     // Union type MemoryLocalCache | PersistentLocalCache
     dynamic localCache;
-    final persistenceEnabled = settings.persistenceEnabled;
+    final persistenceEnabled = firestoreSettings.persistenceEnabled;
     if (persistenceEnabled == null || persistenceEnabled == false) {
       localCache = firestore_interop.memoryLocalCache(null);
     } else {
       localCache = firestore_interop
           .persistentLocalCache(firestore_interop.PersistentCacheSettings(
-        cacheSizeBytes: settings.cacheSizeBytes?.toJS,
+        cacheSizeBytes: firestoreSettings.cacheSizeBytes?.toJS,
       ));
     }
 
-    if (settings.host != null && settings.sslEnabled != null) {
-      _settings = firestore_interop.FirestoreSettings(
+    if (firestoreSettings.host != null &&
+        firestoreSettings.sslEnabled != null) {
+      _interopSettings = firestore_interop.FirestoreSettings(
         localCache: localCache,
-        host: settings.host?.toJS,
-        ssl: settings.sslEnabled?.toJS,
-        ignoreUndefinedProperties: settings.ignoreUndefinedProperties.toJS,
+        host: firestoreSettings.host?.toJS,
+        ssl: firestoreSettings.sslEnabled?.toJS,
+        ignoreUndefinedProperties:
+            firestoreSettings.ignoreUndefinedProperties.toJS,
       );
     } else {
-      _settings = firestore_interop.FirestoreSettings(
+      _interopSettings = firestore_interop.FirestoreSettings(
         localCache: localCache,
-        ignoreUndefinedProperties: settings.ignoreUndefinedProperties.toJS,
+        ignoreUndefinedProperties:
+            firestoreSettings.ignoreUndefinedProperties.toJS,
       );
     }
   }
 
   /// Enable persistence of Firestore data.
   @override
-  Future<void> enablePersistence([PersistenceSettings? settings]) {
-    if (settings != null) {
+  Future<void> enablePersistence([PersistenceSettings? persistenceSettings]) {
+    _settings = _settings.copyWith(persistenceEnabled: true);
+    if (persistenceSettings != null) {
       firestore_interop.PersistenceSettings interopSettings =
           firestore_interop.PersistenceSettings(
-              synchronizeTabs: settings.synchronizeTabs.toJS);
+              synchronizeTabs: persistenceSettings.synchronizeTabs.toJS);
 
       return convertWebExceptions(
           () => _delegate.enablePersistence(interopSettings));
@@ -208,6 +222,15 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     return _delegate.setIndexConfiguration(
       indexConfiguration,
     );
+  }
+
+  @override
+  PersistentCacheIndexManagerWeb? persistentCacheIndexManager() {
+    if (settings.persistenceEnabled != null && settings.persistenceEnabled!) {
+      // default for web is no persistence, so we return only if persistence is enabled
+      return PersistentCacheIndexManagerWeb(_delegate);
+    }
+    return null;
   }
 
   @override
