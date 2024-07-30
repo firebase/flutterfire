@@ -101,7 +101,7 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
   }
 
 // purely for debug mode and tracking listeners to clean up on "hot restart"
-  final Map<String, int> _snapshotInSyncListeners = {};
+  static final Map<String, int> _snapshotInSyncListeners = {};
   String _snapshotInSyncWindowsKey() {
     if (kDebugMode) {
       final key = 'flutterfire-${app.name}_snapshotInSync';
@@ -411,7 +411,7 @@ class DocumentReference
   }
 
   // purely for debug mode and tracking listeners to clean up on "hot restart"
-  final Map<String, int> _docListeners = {};
+  static final Map<String, int> _docListeners = {};
   String _documentSnapshotWindowsKey() {
     if (kDebugMode) {
       final key = 'flutterfire-${firestore.app.name}_${path}_documentSnapshot';
@@ -537,7 +537,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
       jsObject, firestore_interop.limitToLast(limit.toJS)));
 
   // purely for debug mode and tracking listeners to clean up on "hot restart"
-  final Map<String, int> _snapshotListeners = {};
+  static final Map<String, int> _snapshotListeners = {};
   String _querySnapshotWindowsKey(hashCode) {
     if (kDebugMode) {
       final key = 'flutterfire-${firestore.app.name}_${hashCode}_querySnapshot';
