@@ -96,12 +96,9 @@ class DataConnectWidget extends StatefulWidget {
 // }
 
 class _DataConnectWidgetState extends State<DataConnectWidget> {
-  final ScrollController _scrollController = ScrollController();
-  final TextEditingController _titleController = TextEditingController();
   final TextEditingController _genreController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
   DateTime _releaseYearDate = DateTime(1920);
-  final List<({Image? image, String? text, bool fromUser})> _generatedContent =
-      <({Image? image, String? text, bool fromUser})>[];
   List<ListMoviesMovies> _movies = [];
   double _rating = 0;
 
@@ -207,7 +204,7 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
 
           TextButton(
             style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+              foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
             ),
             onPressed: () {
               String title = _titleController.text;
@@ -262,42 +259,30 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
         ]));
   }
 
-  _showError(String message) {
-    showDialog<void>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Something went wrong'),
-          content: SingleChildScrollView(
-            child: SelectableText(message),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // _showError(String message) {
+  //   showDialog<void>(
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         title: const Text('Something went wrong'),
+  //         content: SingleChildScrollView(
+  //           child: SelectableText(message),
+  //         ),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //             child: const Text('OK'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {

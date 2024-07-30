@@ -8,9 +8,8 @@ part of firebase_data_connect;
 enum OptionalState { unset, set }
 
 class Optional<T> {
-  Optional.optional(this.deserializer, this.serializer);
-
   Optional(this.deserializer);
+  Optional.optional(this.deserializer, this.serializer);
   OptionalState state = OptionalState.unset;
   Serializer<T>? serializer;
   Deserializer<T> deserializer;
@@ -26,7 +25,7 @@ class Optional<T> {
 
   void fromJson(dynamic json) {
     if (json is List) {
-      value = (json as List).map((e) => deserializer(e)) as T;
+      value = json.map((e) => deserializer(e)) as T;
     } else {
       debugPrint('$json is not a list');
       value = deserializer(json as String);

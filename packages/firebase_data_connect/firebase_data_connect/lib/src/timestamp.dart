@@ -8,8 +8,9 @@ class Timestamp {
   Timestamp(this.nanoseconds, this.seconds);
   // TODO(mtewani): Fix this so that it keeps track of positional arguments so you don't have to repeatedly search the string multiple times.
   Timestamp.fromJson(String date) {
+    // ignore: use_raw_strings
     var regex = RegExp(
-        '^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{0,9})?(Z|[+-]\\d{2}:\\d{2})\$');
+        r'^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{0,9})?(Z|[+-]\\d{2}:\\d{2})\$');
     if (!regex.hasMatch(date)) {
       throw Exception('Invalid Date provided!');
     }

@@ -5,7 +5,6 @@
 part of firebase_data_connect_grpc;
 
 class GRPCTransport implements DataConnectTransport {
-  late ConnectorServiceClient stub;
 
   /// GRPCTransport creates a new channel
   GRPCTransport(this.transportOptions, this.options) {
@@ -19,8 +18,11 @@ class GRPCTransport implements DataConnectTransport {
                 : const ChannelCredentials.insecure())));
     stub = ConnectorServiceClient(channel);
   }
+  late ConnectorServiceClient stub;
   late ClientChannel channel;
+  @override
   TransportOptions transportOptions;
+  @override
   DataConnectOptions options;
 
   /// Invokes emulator

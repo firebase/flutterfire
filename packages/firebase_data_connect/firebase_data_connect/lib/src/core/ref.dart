@@ -4,11 +4,6 @@
 
 part of firebase_data_connect;
 
-abstract class Listener<Data, Variables> {
-  Stream<OperationResult<Data, Variables>> onResult();
-  // void onError();
-}
-
 class QueryManager {
   Map<String, Map<String, StreamController<dynamic>>> trackedQueries = {};
   Stream addQuery<Variables>(
@@ -25,7 +20,7 @@ class QueryManager {
     return trackedQueries[queryName]![key]!.stream;
   }
 
-  triggerCallback<Data, Variables>(String operationName, String varsAsStr,
+  void triggerCallback<Data, Variables>(String operationName, String varsAsStr,
       Data data, QueryRef<Data, Variables> ref) {
     String key = varsAsStr;
     if (trackedQueries[operationName] == null ||

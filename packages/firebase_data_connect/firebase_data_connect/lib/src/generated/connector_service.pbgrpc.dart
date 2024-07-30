@@ -25,6 +25,11 @@ export 'connector_service.pb.dart';
 
 @$pb.GrpcServiceName('google.firebase.dataconnect.v1alpha.ConnectorService')
 class ConnectorServiceClient extends $grpc.Client {
+
+  ConnectorServiceClient($grpc.ClientChannel channel,
+      {$grpc.CallOptions? options,
+      $core.Iterable<$grpc.ClientInterceptor>? interceptors})
+      : super(channel, options: options, interceptors: interceptors);
   static final _$executeQuery =
       $grpc.ClientMethod<$0.ExecuteQueryRequest, $0.ExecuteQueryResponse>(
           '/google.firebase.dataconnect.v1alpha.ConnectorService/ExecuteQuery',
@@ -37,11 +42,6 @@ class ConnectorServiceClient extends $grpc.Client {
       ($0.ExecuteMutationRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) =>
           $0.ExecuteMutationResponse.fromBuffer(value));
-
-  ConnectorServiceClient($grpc.ClientChannel channel,
-      {$grpc.CallOptions? options,
-      $core.Iterable<$grpc.ClientInterceptor>? interceptors})
-      : super(channel, options: options, interceptors: interceptors);
 
   $grpc.ResponseFuture<$0.ExecuteQueryResponse> executeQuery(
       $0.ExecuteQueryRequest request,
@@ -58,8 +58,6 @@ class ConnectorServiceClient extends $grpc.Client {
 
 @$pb.GrpcServiceName('google.firebase.dataconnect.v1alpha.ConnectorService')
 abstract class ConnectorServiceBase extends $grpc.Service {
-  $core.String get $name =>
-      'google.firebase.dataconnect.v1alpha.ConnectorService';
 
   ConnectorServiceBase() {
     $addMethod(
@@ -81,6 +79,8 @@ abstract class ConnectorServiceBase extends $grpc.Service {
             $0.ExecuteMutationRequest.fromBuffer(value),
         ($0.ExecuteMutationResponse value) => value.writeToBuffer()));
   }
+  $core.String get $name =>
+      'google.firebase.dataconnect.v1alpha.ConnectorService';
 
   $async.Future<$0.ExecuteQueryResponse> executeQuery_Pre(
       $grpc.ServiceCall call,

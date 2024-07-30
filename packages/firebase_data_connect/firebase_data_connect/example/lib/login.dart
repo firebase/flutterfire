@@ -98,15 +98,15 @@ class _LoginState extends State<Login> {
         child: Container(
           height: 150.0,
           width: 190.0,
-          padding: EdgeInsets.only(top: 40),
+          padding: const EdgeInsets.only(top: 40),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(200),
           ),
           child: Padding(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: TextButton(
-              child: Text("Log in"),
               onPressed: logIn,
+              child: const Text("Log in"),
             ),
           ),
         ),

@@ -21,7 +21,9 @@ class RestTransport implements DataConnectTransport {
         '$protocol://$host:$port/v1alpha/projects/$project/locations/$location/services/$service/connectors/$connector';
   }
   late String _url;
+  @override
   TransportOptions transportOptions;
+  @override
   DataConnectOptions options;
   Future<Data> invokeOperation<Data, Variables>(
       String queryName,
