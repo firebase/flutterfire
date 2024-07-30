@@ -33,6 +33,7 @@ void runSecondDatabaseTests() {
     'Second Database',
     () {
       late FirebaseFirestore firestore;
+      String collectionForSecondDatabase = 'flutterfire-2';
 
       setUpAll(() async {
         firestore = FirebaseFirestore.instanceFor(
@@ -47,7 +48,6 @@ void runSecondDatabaseTests() {
         String id,
       ) async {
         // Pushed rules which only allow database "flutterfire-2" to have "flutterfire-2" collection writes
-        String collectionForSecondDatabase = 'flutterfire-2';
 
         CollectionReference<Map<String, dynamic>> collection =
             firestore.collection(
@@ -62,6 +62,23 @@ void runSecondDatabaseTests() {
         await Future.wait(deleteFutures);
         return collection;
       }
+
+      group(
+          'queries for default database are banned for this collection: "$collectionForSecondDatabase"',
+          () {
+        testWidgets('barred query', (_) async {
+          final defaultFirestore = FirebaseFirestore.instance;
+          try {
+            await defaultFirestore
+                .collection('flutterfire-2')
+                .add({'foo': 'bar'});
+            fail('Should have thrown a [FirebaseException]');
+          } catch (e) {
+            expect(e, isA<FirebaseException>());
+            expect((e as FirebaseException).code, equals('permission-denied'));
+          }
+        });
+      });
 
       group('equality', () {
         // testing == override using e2e tests as it is dependent on the platform

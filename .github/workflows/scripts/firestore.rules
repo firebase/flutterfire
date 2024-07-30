@@ -36,5 +36,10 @@ service cloud.firestore {
     match /root/{document=**} {
       allow read, write: if true;
     }
+
+    match /flutterfire-2/{document=**} {
+      // separate rules are not supported so we need to use the same rules for both databases to prove it is querying different databases
+      allow read, write: if database == "flutterfire-2";
+    }
   }
 }
