@@ -440,7 +440,7 @@ class DocumentReference
   StreamController<DocumentSnapshot> _createSnapshotStream([
     firestore_interop.DocumentListenOptions? options,
   ]) {
-    final documentKey = _documentSnapshotWindowsKey();  
+    final documentKey = _documentSnapshotWindowsKey();
     unsubscribeWindowsListener(documentKey);
     late JSFunction onSnapshotUnsubscribe;
     // ignore: close_sinks, the controller is returned
