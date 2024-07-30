@@ -1,3 +1,7 @@
+## 3.9.12
+
+ - Update a dependency to the latest release.
+
 ## 3.9.11
 
  - **FIX**(storage,web): ensure exact same streams are not unsubscribed ([#13034](https://github.com/firebase/flutterfire/issues/13034)). ([20d00023](https://github.com/firebase/flutterfire/commit/20d000234072ece9def6c91bf4dfec57091ea8db))

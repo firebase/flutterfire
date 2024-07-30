@@ -1,3 +1,7 @@
+## 6.3.0
+
+ - **FEAT**(firestore): support for `PersistentCacheIndexManager` for firestore instances for managing cache indexes. ([#13070](https://github.com/firebase/flutterfire/issues/13070)). ([806c15d7](https://github.com/firebase/flutterfire/commit/806c15d7eadaf48b8dfb22586bea4ed684672a86))
+
 ## 6.2.9
 
  - Update a dependency to the latest release.

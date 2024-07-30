@@ -1,3 +1,7 @@
+## 5.1.3
+
+ - **DOCS**(auth): add information about error codes for email/password functions ([#13100](https://github.com/firebase/flutterfire/issues/13100)). ([aeafc356](https://github.com/firebase/flutterfire/commit/aeafc356953a0531003f765e766ffcff2387401d))
+
 ## 5.1.2
 
  - **DOCS**(auth): add information about error codes for `verifyBeforeUpdateEmail` ([#13036](https://github.com/firebase/flutterfire/issues/13036)). ([8ef7421d](https://github.com/firebase/flutterfire/commit/8ef7421d6a524938087769537ac70ec249096ed4))
