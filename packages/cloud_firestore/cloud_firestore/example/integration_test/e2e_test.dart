@@ -22,6 +22,7 @@ import 'snapshot_metadata_e2e.dart';
 import 'timestamp_e2e.dart';
 import 'transaction_e2e.dart';
 import 'write_batch_e2e.dart';
+import 'web_snapshot_listeners.dart';
 
 bool kUseFirestoreEmulator = true;
 
@@ -52,6 +53,7 @@ void main() {
     runTransactionTests();
     runWriteBatchTests();
     runLoadBundleTests();
+    runWebSnapshotListenersTests();
     if (defaultTargetPlatform != TargetPlatform.windows) {
       runSecondDatabaseTests();
     }
