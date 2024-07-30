@@ -1,3 +1,7 @@
+## 12.1.1
+
+ - Update a dependency to the latest release.
+
 ## 12.1.0
 
  - **FEAT**(storage,windows): add support for creationTime and updateTime ([#12966](https://github.com/firebase/flutterfire/issues/12966)). ([70a3fbc9](https://github.com/firebase/flutterfire/commit/70a3fbc97ec34c811616e92333aae299dd2ef569))

@@ -224,6 +224,33 @@ Future<UserCredential> signInWithApple() async {
 }
 ```
 
+#### Apple platform sign-in only
+
+Apple sign-in on iOS+ platforms can also be achieved with the following method:
+
+```dart
+// Implement a function that generates a nonce. See iOS documentation for how to create a nonce:
+// https://firebase.google.com/docs/auth/ios/apple#sign_in_with_apple_and_authenticate_with_firebase
+String rawNonce = createNonce();
+// Create a SHA-256 hash of the nonce. Consider using the `crypto` package from the pub.dev registry.
+String hashSHA256String = createHashSHA256String(rawNonce);
+// Use the hash of the nonce to get the idToken. Consider using the `sign_in_with_apple` plugin from the pub.dev registry.
+String idToken = await getIdToken();
+
+final fullName = AppleFullPersonName(
+  familyName: 'Name',
+  givenName: 'Your',
+);
+// Use the `rawNonce` and `idToken` to get the credential
+final credential = AppleAuthProvider.credentialWithIDToken(
+  idToken,
+  rawNonce,
+  fullName,
+);
+
+await FirebaseAuth.instance.signInWithCredential(credential);
+```
+
 ### Revoke Apple auth tokens {:#revoke-apple}
 
 Apple sign-in on Apple platforms returns an authorization code that can be used

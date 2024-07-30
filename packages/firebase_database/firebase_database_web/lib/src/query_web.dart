@@ -64,6 +64,8 @@ class QueryWeb extends QueryPlatform {
     return instance;
   }
 
+  final Map<String, int> _streamHashCodeMap = {};
+
   @override
   String get path {
     final refPath = Uri.parse(_queryDelegate.ref.toString()).path;
@@ -89,17 +91,13 @@ class QueryWeb extends QueryPlatform {
     throw UnsupportedError('keepSynced() is not supported on web');
   }
 
-  @override
-  Stream<DatabaseEventPlatform> observe(
-      QueryModifiers modifiers, DatabaseEventType eventType) {
-    database_interop.Query instance = _getQueryDelegateInstance(modifiers);
-
-    int hashCode = 0;
-    final appName =
-        _database.app != null ? _database.app!.name : Firebase.app().name;
+  String _createHashCode(
+    QueryModifiers modifiers,
+    DatabaseEventType eventType,
+    String appName,
+  ) {
+    String hashCode = '0';
     if (kDebugMode) {
-      // Purely for unsubscribing purposes in debug mode on "hot restart"
-      // if not running in debug mode, hashCode won't be used
       hashCode = Object.hashAll([
         appName,
         path,
@@ -107,8 +105,32 @@ class QueryWeb extends QueryPlatform {
             .toList()
             .map((e) => const DeepCollectionEquality().hash(e)),
         eventType.index,
-      ]);
+      ]).toString();
+      // Need to track as the same properties to create hash could be used multiple times
+      if (_streamHashCodeMap.containsKey(hashCode)) {
+        int count = _streamHashCodeMap[hashCode] ?? 0;
+        final updatedCount = count + 1;
+        _streamHashCodeMap[hashCode] = updatedCount;
+        hashCode = '$hashCode-$updatedCount';
+      } else {
+        // initial stream
+        _streamHashCodeMap[hashCode] = 0;
+        hashCode = '$hashCode-0';
+      }
     }
+    return hashCode;
+  }
+
+  @override
+  Stream<DatabaseEventPlatform> observe(
+      QueryModifiers modifiers, DatabaseEventType eventType) {
+    database_interop.Query instance = _getQueryDelegateInstance(modifiers);
+    final appName =
+        _database.app != null ? _database.app!.name : Firebase.app().name;
+
+    // Purely for unsubscribing purposes in debug mode on "hot restart"
+    // if not running in debug mode, hashCode won't be used
+    String hashCode = _createHashCode(modifiers, eventType, appName);
 
     switch (eventType) {
       case DatabaseEventType.childAdded:

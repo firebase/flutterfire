@@ -200,9 +200,16 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// Returns all created [FirebaseAppPlatform] instances.
   @override
   List<FirebaseAppPlatform> get apps {
-    return guardNotInitialized(
-      () => firebase.apps.map(_createFromJsApp).toList(growable: false),
-    );
+    try {
+      return firebase.apps.map(_createFromJsApp).toList(growable: false);
+    } catch (exception) {
+      if (exception.toString().contains('of undefined')) {
+        // Keeps behavior consistent with other platforms which can access list without initializing app.
+        return [];
+      } else {
+        rethrow;
+      }
+    }
   }
 
   /// Initializes a new [FirebaseAppPlatform] instance by [name] and [options] and returns

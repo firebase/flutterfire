@@ -20,7 +20,10 @@ Analytics getAnalyticsInstance([
 ]) {
   return Analytics.getInstance(
     app != null
-        ? analytics_interop.initializeAnalytics(app.jsObject, options.jsify())
+        ? analytics_interop.initializeAnalytics(
+            app.jsObject,
+            options?.jsify() ?? {}.jsify(),
+          )
         : analytics_interop.getAnalytics(),
   );
 }

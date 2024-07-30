@@ -1,3 +1,7 @@
+## 2.17.3
+
+ - **FIX**(core,web): do not throw if `Firebase.apps` called before initialising app ([#13045](https://github.com/firebase/flutterfire/issues/13045)). ([86ae6fe5](https://github.com/firebase/flutterfire/commit/86ae6fe5b8a72bafab0418aff3d6a84715f33dc0))
+
 ## 2.17.2
 
  - **FIX**(firestore,web): ensure streams are removed on "hot restart" ([#12913](https://github.com/firebase/flutterfire/issues/12913)). ([c1a67e54](https://github.com/firebase/flutterfire/commit/c1a67e54894cbfb316b3445505b5803e2d041ed5))

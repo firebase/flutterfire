@@ -8,6 +8,7 @@ import 'dart:js_interop_unsafe';
 
 import 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
+import 'package:flutter/foundation.dart';
 
 import 'app_check_interop.dart' as app_check_interop;
 
@@ -76,8 +77,21 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
       // ignore: close_sinks
       _idTokenChangedController;
 
-  String _appCheckWindowsKey(String appName) =>
-      'flutterfire-${appName}_onTokenChanged';
+  // purely for debug mode and tracking listeners to clean up on "hot restart"
+  final Map<String, int> _tokenListeners = {};
+  String _appCheckWindowsKey(String appName) {
+    if (kDebugMode) {
+      final key = 'flutterfire-${appName}_onTokenChanged';
+      if (_tokenListeners.containsKey(key)) {
+        _tokenListeners[key] = _tokenListeners[key]! + 1;
+      } else {
+        _tokenListeners[key] = 0;
+      }
+      return '$key-${_tokenListeners[key]}';
+    }
+    return 'no-op';
+  }
+
   Stream<app_check_interop.AppCheckTokenResult> onTokenChanged(String appName) {
     final appCheckWindowsKey = _appCheckWindowsKey(appName);
     unsubscribeWindowsListener(appCheckWindowsKey);
