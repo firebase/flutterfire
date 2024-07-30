@@ -1,3 +1,7 @@
+## 3.3.0
+
+ - **FEAT**: bump iOS SDK to version 10.29.0 ([#13113](https://github.com/firebase/flutterfire/issues/13113)). ([45fa2f58](https://github.com/firebase/flutterfire/commit/45fa2f589abe60a4bf06ac5fd64895c7df94c19c))
+
 ## 3.2.0
 
  - **FEAT**: bump Firebase iOS SDK to `10.28.0` ([#12999](https://github.com/firebase/flutterfire/issues/12999)). ([e7bd7882](https://github.com/firebase/flutterfire/commit/e7bd7882d213cf291a2fbd49acc81c03b92df746))

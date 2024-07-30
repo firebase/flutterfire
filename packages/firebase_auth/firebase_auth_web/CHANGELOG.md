@@ -1,3 +1,7 @@
+## 5.12.5
+
+ - Update a dependency to the latest release.
+
 ## 5.12.4
 
  - **FIX**(auth,web): ensure exact same streams are not unsubscribed ([#13033](https://github.com/firebase/flutterfire/issues/13033)). ([111f5f64](https://github.com/firebase/flutterfire/commit/111f5f647b0b3d9b6c932a6e491a22602d71197c))

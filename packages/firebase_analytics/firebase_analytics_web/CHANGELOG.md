@@ -1,3 +1,7 @@
+## 0.5.9+1
+
+ - **FIX**(analytics,web): Default to empty object for intializeAnalytics ([#13083](https://github.com/firebase/flutterfire/issues/13083)). ([8f1346e5](https://github.com/firebase/flutterfire/commit/8f1346e5dcb97daec47a57d9df45c5f89f032804))
+
 ## 0.5.9
 
  - **FEAT**(analytics,web): add support for options on Web ([#12914](https://github.com/firebase/flutterfire/issues/12914)). ([dd7ce8c2](https://github.com/firebase/flutterfire/commit/dd7ce8c20c28d7bd67cee9b7542af2e38c1aa6c7))
