@@ -5,7 +5,6 @@
 part of firebase_data_connect_grpc;
 
 class GRPCTransport implements DataConnectTransport {
-
   /// GRPCTransport creates a new channel
   GRPCTransport(this.transportOptions, this.options) {
     bool isSecure =

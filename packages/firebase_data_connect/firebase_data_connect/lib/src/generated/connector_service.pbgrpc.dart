@@ -25,7 +25,6 @@ export 'connector_service.pb.dart';
 
 @$pb.GrpcServiceName('google.firebase.dataconnect.v1alpha.ConnectorService')
 class ConnectorServiceClient extends $grpc.Client {
-
   ConnectorServiceClient($grpc.ClientChannel channel,
       {$grpc.CallOptions? options,
       $core.Iterable<$grpc.ClientInterceptor>? interceptors})
@@ -58,7 +57,6 @@ class ConnectorServiceClient extends $grpc.Client {
 
 @$pb.GrpcServiceName('google.firebase.dataconnect.v1alpha.ConnectorService')
 abstract class ConnectorServiceBase extends $grpc.Service {
-
   ConnectorServiceBase() {
     $addMethod(
         $grpc.ServiceMethod<$0.ExecuteQueryRequest, $0.ExecuteQueryResponse>(
