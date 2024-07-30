@@ -70,7 +70,7 @@ void runSecondDatabaseTests() {
           final defaultFirestore = FirebaseFirestore.instance;
           try {
             await defaultFirestore
-                .collection('flutterfire-2')
+                .collection(collectionForSecondDatabase)
                 .add({'foo': 'bar'});
             fail('Should have thrown a [FirebaseException]');
           } catch (e) {
