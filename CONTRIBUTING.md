@@ -28,7 +28,7 @@ _See also: [Flutter's code of conduct](https://flutter.io/design-principles/#cod
   to generate an SSH key.
 - `git clone git@github.com:<your_name_here>/flutterfire.git`
 - `git remote add upstream git@github.com:firebase/flutterfire.git` (So that you
-  fetch from the master repository, not your clone, when running `git fetch`
+  fetch from the main repository, not your clone, when running `git fetch`
   et al.)
 
 ## 3. Environment Setup
@@ -174,7 +174,7 @@ For the rest of the plugins:
 melos run test:e2e:web
 ```
 
-A full list of all commands can be found within the [`melos.yaml`](https://github.com/firebase/flutterfire/blob/master/melos.yaml)
+A full list of all commands can be found within the [`melos.yaml`](https://github.com/firebase/flutterfire/blob/main/melos.yaml)
 file.
 
 ## 7. Contributing code
@@ -190,7 +190,7 @@ keep the code consistent and avoid common pitfalls.
 To start working on a patch:
 
 1. `git fetch upstream`
-2. `git checkout upstream/master -b <name_of_your_branch>`
+2. `git checkout upstream/main -b <name_of_your_branch>`
 3. Hack away!
 
 Once you have made your changes, ensure that it passes the internal analyzer & formatting checks. The following
@@ -279,12 +279,12 @@ generated via the commit types and changelogs via the commit messages.
 
 Some things to keep in mind before publishing the release:
 
-- Has CI ran on the master commit and gone green? Even if CI shows as green on
+- Has CI ran on the main commit and gone green? Even if CI shows as green on
   the PR it's still possible for it to fail on merge, for multiple reasons.
   There may have been some bug in the merge that introduced new failures. CI
   runs on PRs as it's configured on their branch state, and not on tip of tree.
   CI on PRs also only runs tests for packages that it detects have been directly
-  changed, vs running on every single package on master.
+  changed, vs running on every single package on main.
 - [Publishing is
   forever.](https://dart.dev/tools/pub/publishing#publishing-is-forever)
   Hopefully any bugs or breaking in changes in this PR have already been caught
@@ -297,8 +297,8 @@ Some things to keep in mind before publishing the release:
 
 ### Run a release...
 
-1. Switch to `master` branch locally.
-2. Run `git pull origin master`.
+1. Switch to `main` branch locally.
+2. Run `git pull origin main`.
 3. Run `git pull --tags` to make sure all tags are fetched.
 4. Create new branch with the signature "release/[year]-[month]-[day]".
 5. Push your branch to git running `git push origin [RELEASE BRANCH NAME]`.
@@ -306,20 +306,20 @@ Some things to keep in mind before publishing the release:
 7. Run `melos publish` to dry run and confirm all packages are publishable.
 8. Run `melos bom [optional-version]` to update the `VERSIONS.md` and `scripts/versions.json` files.
 9. Run `git push origin [RELEASE BRANCH NAME]` & open pull request for review on GitHub.
-10. After successful review and merge of the pull request, switch to `master` branch locally, & run `git pull origin master`.
+10. After successful review and merge of the pull request, switch to `main` branch locally, & run `git pull origin main`.
 11. Run `melos publish --no-dry-run` to now publish to Pub.dev.
 12. Run `git push --tags` to push tags to repository.
 13. Ping @kevinthecheung to get the changelog in Firebase releases.
 
 ### Run a BoM release only...
 
-1. Switch to `master` branch locally.
-2. Run `git pull origin master`.
+1. Switch to `main` branch locally.
+2. Run `git pull origin main`.
 3. Run `git pull --tags` to make sure all tags are fetched.
 4. Create new branch with the signature "release/[year]-[month]-[day]-BoM".
 5. Run `melos bom [optional-version]` to update the `VERSIONS.md` and `scripts/versions.json` files.
 6. Push your branch to git running `git push origin [RELEASE BRANCH NAME]`.
-7. After successful review and merge of the pull request, switch to `master` branch locally, & run `git pull origin master`.
+7. After successful review and merge of the pull request, switch to `main` branch locally, & run `git pull origin main`.
 8. Run `git push --tags` to push tags to repository.
 9. Ping @kevinthecheung to get the changelog in Firebase releases.
 
@@ -328,8 +328,8 @@ Some things to keep in mind before publishing the release:
 Sometimes you may need to 'graduate' a package from a 'dev' or 'beta' (versions tagged like this: `0.10.0-dev.4`) to a stable version. Melos can also be used
 to graduate multiple packages using the following steps:
 
-1. Switch to `master` branch locally.
-2. Run 'git pull origin master'.
+1. Switch to `main` branch locally.
+2. Run 'git pull origin main'.
 3. Run `git fetch --all` to make sure all tags and commits are fetched.
 4. Run `melos version --graduate` to prompt a list of all packages to be graduated (You may also specifically select packages using the scope flag like this: `--scope="*firestore*"`)
 5. Run `git push --follow-tags` to push the auto commits and tags to the remote repository.

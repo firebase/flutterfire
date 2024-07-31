@@ -23,7 +23,7 @@ void _check(bool expr, String name, int value) {
 /// 9999-12-31T23:59:59.999999999Z. By restricting to that range, we ensure that we
 /// can convert to and from RFC 3339 date strings.
 ///
-/// For more information, see [the reference timestamp definition](https://github.com/google/protobuf/blob/master/src/google/protobuf/timestamp.proto)
+/// For more information, see [the reference timestamp definition](https://github.com/google/protobuf/blob/main/src/google/protobuf/timestamp.proto)
 @immutable
 class Timestamp implements Comparable<Timestamp> {
   /// Creates a [Timestamp]

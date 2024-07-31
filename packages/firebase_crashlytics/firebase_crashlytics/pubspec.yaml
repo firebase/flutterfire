@@ -4,7 +4,7 @@ description:
   Firebase console.
 version: 4.0.4
 homepage: https://firebase.google.com/docs/crashlytics
-repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_crashlytics/firebase_crashlytics
+repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_crashlytics/firebase_crashlytics
 topics:
   - firebase
   - crashlytics

@@ -4,7 +4,7 @@ This document is listing all the compatible versions of the FlutterFire plugins.
 
 # Versions
 
-## [Flutter BoM 2.4.0 (2024-07-30)](https://github.com/firebase/flutterfire/blob/master/CHANGELOG.md#2024-07-30)
+## [Flutter BoM 2.4.0 (2024-07-30)](https://github.com/firebase/flutterfire/blob/main/CHANGELOG.md#2024-07-30)
 
 Install this version using FlutterFire CLI
 
@@ -42,7 +42,7 @@ flutterfire install 2.4.0
 | [firebase_vertexai](https://pub.dev/packages/firebase_vertexai/versions/0.2.2+3) | 0.2.2+3 | >=3.2.0 <4.0.0 | >=3.16.0 |
 
 
-## [Flutter BoM 2.3.0 (2024-07-09)](https://github.com/firebase/flutterfire/blob/master/CHANGELOG.md#2024-07-09)
+## [Flutter BoM 2.3.0 (2024-07-09)](https://github.com/firebase/flutterfire/blob/main/CHANGELOG.md#2024-07-09)
 
 Install this version using FlutterFire CLI
 
@@ -80,7 +80,7 @@ flutterfire install 2.3.0
 | [firebase_vertexai](https://pub.dev/packages/firebase_vertexai/versions/0.2.2+2) | 0.2.2+2 | >=3.2.0 <4.0.0 | >=3.16.0 |
 
 
-## [Flutter BoM 2.2.0 (2024-06-25)](https://github.com/firebase/flutterfire/blob/master/CHANGELOG.md#2024-06-25)
+## [Flutter BoM 2.2.0 (2024-06-25)](https://github.com/firebase/flutterfire/blob/main/CHANGELOG.md#2024-06-25)
 
 Install this version using FlutterFire CLI
 
@@ -118,7 +118,7 @@ flutterfire install 2.2.0
 | [firebase_vertexai](https://pub.dev/packages/firebase_vertexai/versions/0.2.2+1) | 0.2.2+1 | >=3.2.0 <4.0.0 | >=3.16.0 |
 
 
-## [Flutter BoM 2.1.0 (2024-06-11)](https://github.com/firebase/flutterfire/blob/master/CHANGELOG.md#2024-06-11)
+## [Flutter BoM 2.1.0 (2024-06-11)](https://github.com/firebase/flutterfire/blob/main/CHANGELOG.md#2024-06-11)
 
 Install this version using FlutterFire CLI
 
@@ -156,7 +156,7 @@ flutterfire install 2.1.0
 | [firebase_vertexai](https://pub.dev/packages/firebase_vertexai/versions/0.2.2) | 0.2.2 | >=3.2.0 <4.0.0 | >=3.16.0 |
 
 
-## [Flutter BoM 2.0.0 (2024-06-04)](https://github.com/firebase/flutterfire/blob/master/CHANGELOG.md#2024-06-04)
+## [Flutter BoM 2.0.0 (2024-06-04)](https://github.com/firebase/flutterfire/blob/main/CHANGELOG.md#2024-06-04)
 
 Install this version using FlutterFire CLI
 
@@ -194,7 +194,7 @@ flutterfire install 2.0.0
 | [firebase_vertexai](https://pub.dev/packages/firebase_vertexai/versions/0.2.0) | 0.2.0 | >=3.2.0 <4.0.0 | >=3.16.0 |
 
 
-## [Flutter BoM 1.1.0 (2024-05-28)](https://github.com/firebase/flutterfire/blob/master/CHANGELOG.md#2024-05-28)
+## [Flutter BoM 1.1.0 (2024-05-28)](https://github.com/firebase/flutterfire/blob/main/CHANGELOG.md#2024-05-28)
 
 Install this version using FlutterFire CLI
 
@@ -232,7 +232,7 @@ flutterfire install 1.1.0
 | [firebase_vertexai](https://pub.dev/packages/firebase_vertexai/versions/0.1.1) | 0.1.1 | >=3.2.0 <4.0.0 | >=3.16.0 |
 
 
-## [Flutter BoM 1.0.1 (2024-05-21)](https://github.com/firebase/flutterfire/blob/master/CHANGELOG.md#2024-05-21)
+## [Flutter BoM 1.0.1 (2024-05-21)](https://github.com/firebase/flutterfire/blob/main/CHANGELOG.md#2024-05-21)
 
 Install this version using FlutterFire CLI
 
@@ -270,7 +270,7 @@ flutterfire install 1.0.1
 | [firebase_vertexai](https://pub.dev/packages/firebase_vertexai/versions/0.1.0+1) | 0.1.0+1 | >=3.2.0 <4.0.0 | >=3.16.0 |
 
 
-## [Flutter BoM 1.0.0 (2024-05-07)](https://github.com/firebase/flutterfire/blob/master/CHANGELOG.md#2024-05-07)
+## [Flutter BoM 1.0.0 (2024-05-07)](https://github.com/firebase/flutterfire/blob/main/CHANGELOG.md#2024-05-07)
 
 Install this version using FlutterFire CLI
 
