@@ -525,6 +525,19 @@ void runDocumentReferenceTests() {
               isA<FirebaseException>()
                   .having((e) => e.code, 'code', 'not-found'),
             );
+
+            // https://github.com/firebase/flutterfire/pull/12813
+            // Use platformException.message, which is more detailed, rather than the
+            // platformException.details['message'] which is the generic:
+            // 'Some requested document was not found'
+            expect(
+              e,
+              isA<FirebaseException>().having(
+                (e) => e.message,
+                'message',
+                isNot(contains('Some requested document was not found')),
+              ),
+            );
           }
         },
       );
