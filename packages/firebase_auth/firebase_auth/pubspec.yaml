@@ -3,7 +3,7 @@ description: Flutter plugin for Firebase Auth, enabling
   authentication using passwords, phone numbers and identity providers
   like Google, Facebook and Twitter.
 homepage: https://firebase.google.com/docs/auth
-repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_auth/firebase_auth
+repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_auth/firebase_auth
 version: 5.1.3
 topics:
   - firebase

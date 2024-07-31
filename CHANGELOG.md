@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 2024-07-30 - [BoM 2.4.0](https://github.com/firebase/flutterfire/blob/master/VERSIONS.md#flutter-bom-240-2024-07-30)
+## 2024-07-30 - [BoM 2.4.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-240-2024-07-30)
 
 ### Changes
 
@@ -148,7 +148,7 @@ Packages with dependency updates only:
  - **DOCS**(messaging,android): update inline documentation on behavior ([#12948](https://github.com/firebase/flutterfire/issues/12948)). ([8d7e2217](https://github.com/firebase/flutterfire/commit/8d7e2217446618b93c064933ef0bf2506c219275))
 
 
-## 2024-07-09 - [BoM 2.3.0](https://github.com/firebase/flutterfire/blob/master/VERSIONS.md#flutter-bom-230-2024-07-09)
+## 2024-07-09 - [BoM 2.3.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-230-2024-07-09)
 
 ### Changes
 
@@ -302,7 +302,7 @@ Packages with dependency updates only:
  - **FIX**(storage,web): ensure exact same streams are not unsubscribed ([#13034](https://github.com/firebase/flutterfire/issues/13034)). ([20d00023](https://github.com/firebase/flutterfire/commit/20d000234072ece9def6c91bf4dfec57091ea8db))
 
 
-## 2024-06-25 - [BoM 2.2.0](https://github.com/firebase/flutterfire/blob/master/VERSIONS.md#flutter-bom-220-2024-06-25)
+## 2024-06-25 - [BoM 2.2.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-220-2024-06-25)
 
 ### Changes
 
@@ -431,7 +431,7 @@ Packages with dependency updates only:
  - **FEAT**(storage,windows): add support for creationTime and updateTime ([#12966](https://github.com/firebase/flutterfire/issues/12966)). ([70a3fbc9](https://github.com/firebase/flutterfire/commit/70a3fbc97ec34c811616e92333aae299dd2ef569))
 
 
-## 2024-06-11 - [BoM 2.1.0](https://github.com/firebase/flutterfire/blob/master/VERSIONS.md#flutter-bom-210-2024-06-11)
+## 2024-06-11 - [BoM 2.1.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-210-2024-06-11)
 
 ### Changes
 
@@ -609,7 +609,7 @@ Packages with other changes:
  - **FIX**(vertexai): fix the countTokens brokage ([#12899](https://github.com/firebase/flutterfire/issues/12899)). ([e946eb9b](https://github.com/firebase/flutterfire/commit/e946eb9b429da16bea617b68dda32f23d0deb5bc))
 
 
-## 2024-06-04 - [BoM 2.0.0](https://github.com/firebase/flutterfire/blob/master/VERSIONS.md#flutter-bom-200-2024-06-04)
+## 2024-06-04 - [BoM 2.0.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-200-2024-06-04)
 
 ### Changes
 
@@ -827,7 +827,7 @@ Packages with dependency updates only:
  - **FIX**(web): fix some casting issue on Web JS Interop ([#12852](https://github.com/firebase/flutterfire/issues/12852)). ([4b56df1c](https://github.com/firebase/flutterfire/commit/4b56df1cc187d77ef22a82688a37f1c7aba4ed40))
 
 
-## 2024-05-28 - [BoM 1.1.0](https://github.com/firebase/flutterfire/blob/master/VERSIONS.md#flutter-bom-110-2024-05-28)
+## 2024-05-28 - [BoM 1.1.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-110-2024-05-28)
 
 ### Changes
 

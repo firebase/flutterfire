@@ -8,6 +8,7 @@
 
 import 'dart:async';
 import 'dart:js_interop';
+
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'package:flutter/foundation.dart';
@@ -20,7 +21,7 @@ export 'auth_interop.dart';
 /// Given an AppJSImp, return the Auth instance.
 Auth getAuthInstance(App app) {
   // Default persistence can be seen here
-  // https://github.com/firebase/firebase-js-sdk/blob/master/packages/auth/src/platform_browser/index.ts#L47
+  // https://github.com/firebase/firebase-js-sdk/blob/main/packages/auth/src/platform_browser/index.ts#L47
   final List<JSAny?> persistences = [
     auth_interop.indexedDBLocalPersistence as JSAny,
     auth_interop.browserLocalPersistence as JSAny,
