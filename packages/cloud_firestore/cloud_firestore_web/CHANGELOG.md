@@ -1,3 +1,7 @@
+## 4.1.1
+
+ - Update a dependency to the latest release.
+
 ## 4.1.0
 
  - **FIX**(firestore,web): stop cleaning up snapshot listeners in debug ([#13119](https://github.com/firebase/flutterfire/issues/13119)). ([82a63c8b](https://github.com/firebase/flutterfire/commit/82a63c8bf9bad0c262ed48d7829fb05110a9fe08))

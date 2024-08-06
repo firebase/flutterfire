@@ -3,6 +3,51 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-08-06
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v5.2.1`](#cloud_firestore---v521)
+ - [`cloud_firestore_platform_interface` - `v6.3.1`](#cloud_firestore_platform_interface---v631)
+ - [`firebase_auth` - `v5.1.4`](#firebase_auth---v514)
+ - [`firebase_storage` - `v12.1.3`](#firebase_storage---v1213)
+ - [`cloud_firestore_web` - `v4.1.1`](#cloud_firestore_web---v411)
+ - [`firebase_vertexai` - `v0.2.2+4`](#firebase_vertexai---v0224)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `cloud_firestore_web` - `v4.1.1`
+ - `firebase_vertexai` - `v0.2.2+4`
+
+---
+
+#### `cloud_firestore` - `v5.2.1`
+
+ - **FIX**: compilation issue on Windows ([#13135](https://github.com/firebase/flutterfire/issues/13135)). ([de8c9e0f](https://github.com/firebase/flutterfire/commit/de8c9e0f2d3117b3614ac8295b041fea7ed3ee7f))
+
+#### `cloud_firestore_platform_interface` - `v6.3.1`
+
+ - **FIX**: compilation issue on Windows ([#13135](https://github.com/firebase/flutterfire/issues/13135)). ([de8c9e0f](https://github.com/firebase/flutterfire/commit/de8c9e0f2d3117b3614ac8295b041fea7ed3ee7f))
+
+#### `firebase_auth` - `v5.1.4`
+
+ - **FIX**(firebase_auth): added supporting rawNonce for OAuth credential on Windows platform ([#13086](https://github.com/firebase/flutterfire/issues/13086)). ([12e87de9](https://github.com/firebase/flutterfire/commit/12e87de93ddc39d41a6a634d7d03766b3e36996a))
+
+#### `firebase_storage` - `v12.1.3`
+
+ - **FIX**(storage,windows): add log to explain that the Storage Emulator is not available on Windows ([#13147](https://github.com/firebase/flutterfire/issues/13147)). ([8d1ea80c](https://github.com/firebase/flutterfire/commit/8d1ea80cf7b007459572405c876e813b43c3b4cf))
+
+
 ## 2024-07-30 - [BoM 2.4.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-240-2024-07-30)
 
 ### Changes

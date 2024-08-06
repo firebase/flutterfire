@@ -1,3 +1,7 @@
+## 5.1.4
+
+ - **FIX**(firebase_auth): added supporting rawNonce for OAuth credential on Windows platform ([#13086](https://github.com/firebase/flutterfire/issues/13086)). ([12e87de9](https://github.com/firebase/flutterfire/commit/12e87de93ddc39d41a6a634d7d03766b3e36996a))
+
 ## 5.1.3
 
  - **DOCS**(auth): add information about error codes for email/password functions ([#13100](https://github.com/firebase/flutterfire/issues/13100)). ([aeafc356](https://github.com/firebase/flutterfire/commit/aeafc356953a0531003f765e766ffcff2387401d))
