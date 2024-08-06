@@ -23,7 +23,7 @@
 
 ---
 
-FlutterFire is a set of [Flutter plugins](https://flutter.io/platform-plugins/)
+FlutterFire is a set of [Flutter plugins](https://flutter.dev/platform-plugins/)
 that enable Flutter apps to use [Firebase](https://firebase.google.com/) services. You can follow an example that shows
 how to use these plugins in
 the [Firebase for Flutter](https://firebase.google.com/codelabs/firebase-get-to-know-flutter) codelab.
@@ -69,7 +69,7 @@ and open source.
 
 | Name                | pub.dev                                                                                                                                                      | Firebase Product                                                                                                                                      | Documentation                                                        | View Source                                                                                                                         | Android | iOS | Web | MacOS |
 |---------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------:|:---------:|:-----:|:-----:|:-------:|
-| ML Model Downloader | [![ML Model Downloader pub.dev badge](https://img.shields.io/pub/v/firebase_ml_model_downloader.svg)](https://pub.dev/packages/firebase_ml_model_downloader) | [🔗](https://firebase.google.com/products/ml) | [📖](https://firebase.flutter.dev/docs/ml-model-downloader/overview) | [`firebase_ml_model_downloader`](https://github.com/FirebaseExtended/flutterfire/tree/main/packages/firebase_ml_model_downloader) | ✔       | ✔   | N/A | β     |
+| ML Model Downloader | [![ML Model Downloader pub.dev badge](https://img.shields.io/pub/v/firebase_ml_model_downloader.svg)](https://pub.dev/packages/firebase_ml_model_downloader) | [🔗](https://firebase.google.com/products/ml) | [📖](https://firebase.google.com/docs/ml/flutter/use-custom-models) | [`firebase_ml_model_downloader`](https://github.com/FirebaseExtended/flutterfire/tree/main/packages/firebase_ml_model_downloader) | ✔       | ✔   | N/A | β     |
 
 
 ## Issues
