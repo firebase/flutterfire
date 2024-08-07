@@ -5,7 +5,7 @@
 part of movies;
 
 class ListMovies {
-  String name = "ListMovies";
+  String name = "ListMove";
   ListMovies({required this.dataConnect});
 
   Deserializer<ListMoviesResponse> dataDeserializer = (String json) =>

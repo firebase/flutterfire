@@ -8,4 +8,6 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
+part 'dataconnect_error.dart';
+
 part 'common.dart';

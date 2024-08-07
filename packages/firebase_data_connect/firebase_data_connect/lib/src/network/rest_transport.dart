@@ -39,6 +39,7 @@ class RestTransport implements DataConnectTransport {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
+      'x-goog-api-client': 'gl-dart/flutter fire/$packageVersion'
     };
     if (token != null) {
       headers['X-Firebase-Auth-Token'] = token;
@@ -53,12 +54,18 @@ class RestTransport implements DataConnectTransport {
     }
     String endpoint =
         opType == OperationType.query ? 'executeQuery' : 'executeMutation';
-    http.Response r = await http.post(Uri.parse('$_url:$endpoint'),
-        body: json.encode(body), headers: headers);
+    try {
+      http.Response r = await http.post(Uri.parse('$_url:$endpoint'),
+          body: json.encode(body), headers: headers);
+      return deserializer(jsonEncode(jsonDecode(r.body)['data']));
+    } on Exception catch (e) {
+      throw FirebaseDataConnectError(DataConnectErrorCode.other,
+          'Failed to invoke operation: ${e.toString()}');
+    }
+
     /// The response we get is in the data field of the response
     /// Once we get the data back, it's not quite json-encoded,
     /// so we have to encode it and then send it to the user's deserializer.
-    return deserializer(jsonEncode(jsonDecode(r.body)['data']));
   }
 
   @override

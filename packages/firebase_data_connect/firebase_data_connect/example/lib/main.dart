@@ -105,12 +105,7 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
   Future<void> triggerReload() async {
     QueryRef ref = MoviesConnector.instance.listMovies.ref();
 
-    ref.execute().then((event) {
-      // Map<String, String> timestampData = {
-      //   "timestamp": "1985-04-12T23:20:50.123456789Z"
-      // };
-      // print(Dummydate.fromJson(timestampData).timestamp.value!.nanoseconds);
-    });
+    ref.execute().ignore();
   }
 
   @override
@@ -122,7 +117,7 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
         host = '10.0.2.2';
       }
     } catch (_) {}
-    int port = 9399;
+    int port = 3628;
     FirebaseDataConnect.instanceFor(
             app: Firebase.app(),
             connectorConfig: MoviesConnector.connectorConfig)
@@ -135,8 +130,9 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
       setState(() {
         _movies = event.data.movies;
       });
+    }).onError((e) {
+      print("Got an error: " + e.toString());
     });
-    triggerReload();
   }
 
   Future<void> initFirebase() async {
@@ -218,6 +214,8 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
                       title, _releaseYearDate.year, genre, _rating, null));
               ref.execute().then((res) {
                 triggerReload();
+              }).catchError((err) {
+                print(err);
               });
             },
             child: const Text('Add Movie'),
