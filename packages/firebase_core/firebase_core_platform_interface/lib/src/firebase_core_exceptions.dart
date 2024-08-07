@@ -43,7 +43,7 @@ Firebase has not been correctly initialized.
 
 Usually this means you've attempted to use a Firebase service before calling `Firebase.initializeApp`.
 
-View the documentation for more information: https://firebase.flutter.dev/docs/overview#initialization
+View the documentation for more information: https://firebase.google.com/docs/flutter/setup
     ''';
 
   return FirebaseException(

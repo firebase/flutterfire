@@ -1,7 +1,7 @@
 {# This content gets published to the following location: #}
 {#   https://firebase.google.com/docs/flutter/setup       #}
 
-* Install your preferred [editor or IDE](//flutter.io/get-started/editor/).
+* Install your preferred [editor or IDE](//docs.flutter.dev/get-started/editor/).
 
 * Set up a physical Apple device or use a simulator to run your app.
 
@@ -13,7 +13,7 @@
   * iOS {{min_ios_os_version}}
   * macOS {{min_mac_os_version}}
 
-* [Install Flutter](//flutter.io/get-started/install/) for your specific
+* [Install Flutter](//docs.flutter.dev/get-started/install/) for your specific
   operating system, including the following:
 
     * Flutter SDK
@@ -24,7 +24,7 @@
   account.
 
 If you don't already have a Flutter app, you can complete the [Get
-Started: Test Drive](//flutter.io/get-started/test-drive/#androidstudio) to
+Started: Test Drive](//docs.flutter.dev/get-started/test-drive/#androidstudio) to
 create a new Flutter app using your preferred editor or IDE.
 
 Note: If you're targeting macOS or macOS Catalyst, you must add the [Keychain Sharing capability](https://firebase.google.com/docs/ios/troubleshooting-faq#macos-keychain-sharing) to your target. In Xcode, navigate to your target's *Signing & Capabilities* tab, and then click **+ Capabilities** to add a new capability.
