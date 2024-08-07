@@ -7,9 +7,12 @@ part of firebase_data_connect;
 /// DataConnect class
 class FirebaseDataConnect extends FirebasePluginPlatform {
   /// Constructor
-  FirebaseDataConnect._(
-      {required this.app, required this.connectorConfig, this.auth})
-      : options = DataConnectOptions(
+  FirebaseDataConnect._({
+    required this.app,
+    required this.connectorConfig,
+    this.auth,
+    this.appCheck,
+  })  : options = DataConnectOptions(
             app.options.projectId,
             connectorConfig.location,
             connectorConfig.connector,
@@ -21,6 +24,9 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
 
   /// FirebaseApp
   FirebaseApp app;
+
+  /// FirebaseAppCheck
+  FirebaseAppCheck? appCheck;
 
   /// GRPCTransport
   late DataConnectTransport transport;
@@ -53,7 +59,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
       Variables? vars) {
     _checkTransportOptionsInit();
     _checkTransportInit();
-    return QueryRef<Data, Variables>(auth, queryName, vars, transport,
+    return QueryRef<Data, Variables>(auth, appCheck, queryName, vars, transport,
         dataDeserializer, varsSerializer, _queryManager);
   }
 
@@ -66,7 +72,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     _checkTransportOptionsInit();
     _checkTransportInit();
     return MutationRef<Data, Variables>(
-        auth, queryName, vars, transport, deserializer, serializer);
+        auth, appCheck, queryName, vars, transport, deserializer, serializer);
   }
 
   /// useDataConnectEmulator connects to the DataConnect emulator.
@@ -84,10 +90,12 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   static FirebaseDataConnect instanceFor({
     FirebaseApp? app,
     FirebaseAuth? auth,
+    FirebaseAppCheck? appCheck,
     required ConnectorConfig connectorConfig,
   }) {
     app ??= Firebase.app();
     auth ??= FirebaseAuth.instanceFor(app: app);
+    appCheck ??= FirebaseAppCheck.instanceFor(app: app);
 
     if (_cachedInstances[app.name] != null &&
         _cachedInstances[app.name]![connectorConfig.toJson()] != null) {
@@ -95,7 +103,10 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     }
 
     FirebaseDataConnect newInstance = FirebaseDataConnect._(
-        app: app, auth: auth, connectorConfig: connectorConfig);
+        app: app,
+        auth: auth,
+        appCheck: appCheck,
+        connectorConfig: connectorConfig);
     if (_cachedInstances[app.name] == null) {
       _cachedInstances[app.name] = <String, FirebaseDataConnect>{};
     }

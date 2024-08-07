@@ -48,14 +48,16 @@ abstract class DataConnectTransport {
       Deserializer<Data> deserializer,
       Serializer<Variables>? serializer,
       Variables? vars,
-      String? token);
+      String? token,
+      String? appCheckToken);
 
   Future<Data> invokeMutation<Data, Variables>(
       String queryName,
       Deserializer<Data> deserializer,
       Serializer<Variables>? serializer,
       Variables? vars,
-      String? token);
+      String? token,
+      String? appCheckToken);
 }
 
 class OperationResult<Data, Variables> {
@@ -68,13 +70,14 @@ enum OperationType { query, mutation }
 
 class OperationRef<Data, Variables> {
   /// Constructor
-  OperationRef(this.auth, this.operationName, this.variables, this._transport,
-      this.opType, this.deserializer, this.serializer) {
+  OperationRef(this.auth, this.appCheck, this.operationName, this.variables,
+      this._transport, this.opType, this.deserializer, this.serializer) {
     if (this.variables != null && this.serializer == null) {
       throw Exception('Serializer required for variables');
     }
   }
   FirebaseAuth? auth;
+  FirebaseAppCheck? appCheck;
   Variables? variables;
   String operationName;
   DataConnectTransport _transport;
@@ -83,14 +86,16 @@ class OperationRef<Data, Variables> {
   OperationType opType;
 
   Future<OperationResult<Data, Variables>> execute() async {
-    String? token = await this.auth?.currentUser?.getIdToken();
+    String? authToken = await this.auth?.currentUser?.getIdToken();
+    String? appCheckToken = await this.appCheck?.getToken();
     if (this.opType == OperationType.query) {
       Data data = await this._transport.invokeQuery<Data, Variables>(
           this.operationName,
           this.deserializer,
           this.serializer,
           variables,
-          token);
+          authToken,
+          appCheckToken);
       return OperationResult(data, this);
     } else {
       Data data = await this._transport.invokeMutation<Data, Variables>(
@@ -98,7 +103,8 @@ class OperationRef<Data, Variables> {
           this.deserializer,
           this.serializer,
           variables,
-          token);
+          authToken,
+          appCheckToken);
       return OperationResult(data, this);
     }
   }

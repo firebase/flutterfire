@@ -35,14 +35,15 @@ class QueryManager {
 class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
   QueryRef(
       FirebaseAuth? auth,
+      FirebaseAppCheck? appCheck,
       String operationName,
       Variables? variables,
       DataConnectTransport transport,
       Deserializer<Data> deserializer,
       Serializer<Variables>? serializer,
       this._queryManager)
-      : super(auth, operationName, variables, transport, OperationType.query,
-            deserializer, serializer);
+      : super(auth, appCheck, operationName, variables, transport,
+            OperationType.query, deserializer, serializer);
   QueryManager _queryManager;
   @override
   Future<OperationResult<Data, Variables>> execute() async {
@@ -68,11 +69,12 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 class MutationRef<Data, Variables> extends OperationRef<Data, Variables> {
   MutationRef(
     FirebaseAuth? auth,
+    FirebaseAppCheck? appCheck,
     String operationName,
     Variables? variables,
     DataConnectTransport transport,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
-  ) : super(auth, operationName, variables, transport, OperationType.mutation,
-            deserializer, serializer);
+  ) : super(auth, appCheck, operationName, variables, transport,
+            OperationType.mutation, deserializer, serializer);
 }

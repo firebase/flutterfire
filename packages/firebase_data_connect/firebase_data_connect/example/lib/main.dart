@@ -5,6 +5,7 @@
 import 'dart:io';
 import 'package:example/generated/movies.dart';
 import 'package:example/login.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
@@ -103,6 +104,7 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
   double _rating = 0;
 
   Future<void> triggerReload() async {
+    await appcheck();
     QueryRef ref = MoviesConnector.instance.listMovies.ref();
 
     ref.execute().then((event) {
@@ -122,7 +124,7 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
         host = '10.0.2.2';
       }
     } catch (_) {}
-    int port = 9399;
+    int port = 3628;
     FirebaseDataConnect.instanceFor(
             app: Firebase.app(),
             connectorConfig: MoviesConnector.connectorConfig)
@@ -137,11 +139,6 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
       });
     });
     triggerReload();
-  }
-
-  Future<void> initFirebase() async {
-    await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform);
   }
 
   @override
@@ -257,6 +254,28 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
             ],
           ))
         ]));
+  }
+
+  appcheck() async {
+    await FirebaseAppCheck.instance.activate(
+      // You can also use a `ReCaptchaEnterpriseProvider` provider instance as an
+      // argument for `webProvider`
+      webProvider:
+          ReCaptchaV3Provider('6LdWwiEqAAAAAMFx1RaaSY-r2JVBMlXaOrrDmIlT'),
+      // Default provider for Android is the Play Integrity provider. You can use the "AndroidProvider" enum to choose
+      // your preferred provider. Choose from:
+      // 1. Debug provider
+      // 2. Safety Net provider
+      // 3. Play Integrity provider
+      androidProvider: AndroidProvider.debug,
+      // Default provider for iOS/macOS is the Device Check provider. You can use the "AppleProvider" enum to choose
+      // your preferred provider. Choose from:
+      // 1. Debug provider
+      // 2. Device Check provider
+      // 3. App Attest provider
+      // 4. App Attest provider with fallback to Device Check provider (App Attest provider is only available on iOS 14.0+, macOS 14.0+)
+      appleProvider: AppleProvider.appAttest,
+    );
   }
 
   // _showError(String message) {

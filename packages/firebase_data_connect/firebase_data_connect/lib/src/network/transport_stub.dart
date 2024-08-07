@@ -18,7 +18,8 @@ class TransportStub implements DataConnectTransport {
       Deserializer<Data> deserializer,
       Serializer<Variables>? serializer,
       Variables? vars,
-      String? token) async {
+      String? token,
+      String? appCheckToken) async {
     // TODO: implement invokeMutation
     throw UnimplementedError();
   }
@@ -29,7 +30,8 @@ class TransportStub implements DataConnectTransport {
       Deserializer<Data> deserializer,
       Serializer<Variables>? serialize,
       Variables? vars,
-      String? token) async {
+      String? token,
+      String? appCheckToken) async {
     // TODO: implement invokeQuery
     throw UnimplementedError();
   }
