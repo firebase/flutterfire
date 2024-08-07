@@ -1,0 +1,10 @@
+extend type DirectedBy {
+  movieId: UUID! @fdc_generated(from: "DirectedBy.movie", purpose: IMPLICIT_REF_FIELD)
+  directedbyId: UUID! @fdc_generated(from: "DirectedBy.directedby", purpose: IMPLICIT_REF_FIELD)
+}
+extend type Movie {
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Movie", purpose: IMPLICIT_KEY_FIELD)
+}
+extend type Person {
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Person", purpose: IMPLICIT_KEY_FIELD)
+}

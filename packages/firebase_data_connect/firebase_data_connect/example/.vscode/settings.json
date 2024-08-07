@@ -1,0 +1,6 @@
+{
+    "dart.showTodos": false,
+    "files.watcherExclude": {
+        "**/target": true
+    }
+}

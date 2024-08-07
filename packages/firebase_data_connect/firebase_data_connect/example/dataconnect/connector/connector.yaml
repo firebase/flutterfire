@@ -1,0 +1,6 @@
+connectorId: movies
+authMode: PUBLIC
+generate:
+  dartSdk:
+    outputDir: ../../lib/generated
+    package: movies
