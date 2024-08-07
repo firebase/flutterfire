@@ -6,7 +6,7 @@ part of firebase_data_connect;
 
 /// DataConnect class
 class FirebaseDataConnect extends FirebasePluginPlatform {
-  /// Constructor
+  /// Constructor for initializing Data Connect
   FirebaseDataConnect._(
       {required this.app, required this.connectorConfig, this.auth})
       : options = DataConnectOptions(
@@ -17,12 +17,14 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
         _queryManager = QueryManager(),
         super(app.name, 'plugins.flutter.io/firebase_data_connect');
 
+  /// QueryManager manages ongoing queries, and their subscriptions.
   QueryManager _queryManager;
 
   /// FirebaseApp
   FirebaseApp app;
 
-  /// GRPCTransport
+  /// Due to compatibility issues with grpc-web, we swap out the transport based on what platform the user is using.
+  /// For web, we use RestTransport. For mobile, we use GRPCTransport.
   late DataConnectTransport transport;
 
   /// FirebaseAuth
@@ -31,21 +33,24 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   /// ConnectorConfig + projectId
   DataConnectOptions options;
 
-  /// ConnectorConfig info
+  /// Data Connect specific config information
   ConnectorConfig connectorConfig;
 
+  /// Custom transport options for connecting to the Data Connect service.
   TransportOptions? _transportOptions;
 
+  /// Checks whether the transport has been properly initialized.
   void _checkTransportInit() {
     transport = getTransport(_transportOptions!, options);
   }
 
+  /// Initializes [_transportOptions] with defaults if not specified.
   void _checkTransportOptionsInit() {
     _transportOptions ??=
         TransportOptions('firebasedataconnect.googleapis.com', null, true);
   }
 
-  /// query
+  /// Returns a [QueryRef] object.
   QueryRef<Data, Variables> query<Data, Variables>(
       String queryName,
       Deserializer<Data> dataDeserializer,
@@ -53,20 +58,20 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
       Variables? vars) {
     _checkTransportOptionsInit();
     _checkTransportInit();
-    return QueryRef<Data, Variables>(auth, queryName, vars, transport,
-        dataDeserializer, varsSerializer, _queryManager);
+    return QueryRef<Data, Variables>(queryName, transport, dataDeserializer,
+        _queryManager, auth, vars, varsSerializer);
   }
 
-  /// mutation
+  /// Returns a [MutationRef] object.
   MutationRef<Data, Variables> mutation<Data, Variables>(
       String queryName,
-      Deserializer<Data> deserializer,
-      Serializer<Variables>? serializer,
+      Deserializer<Data> dataDeserializer,
+      Serializer<Variables>? varsSerializer,
       Variables? vars) {
     _checkTransportOptionsInit();
     _checkTransportInit();
     return MutationRef<Data, Variables>(
-        auth, queryName, vars, transport, deserializer, serializer);
+        queryName, transport, dataDeserializer, auth, vars, varsSerializer);
   }
 
   /// useDataConnectEmulator connects to the DataConnect emulator.
@@ -74,6 +79,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     _transportOptions = TransportOptions(host, port, isSecure);
   }
 
+  /// Currently cached DataConnect instances. Maps from app name to <ConnectorConfigStr, DataConnect>.
   static final Map<String, Map<String, FirebaseDataConnect>> _cachedInstances =
       {};
 
