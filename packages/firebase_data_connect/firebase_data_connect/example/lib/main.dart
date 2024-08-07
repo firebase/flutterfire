@@ -260,7 +260,8 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
     await FirebaseAppCheck.instance.activate(
       // You can also use a `ReCaptchaEnterpriseProvider` provider instance as an
       // argument for `webProvider`
-      webProvider: ReCaptchaV3Provider('your-site-key'),
+      webProvider:
+          ReCaptchaV3Provider('6LdWwiEqAAAAAMFx1RaaSY-r2JVBMlXaOrrDmIlT'),
       // Default provider for Android is the Play Integrity provider. You can use the "AndroidProvider" enum to choose
       // your preferred provider. Choose from:
       // 1. Debug provider

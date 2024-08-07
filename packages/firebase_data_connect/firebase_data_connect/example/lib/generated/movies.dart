@@ -34,8 +34,8 @@ class MoviesConnector {
 
   static ConnectorConfig connectorConfig = ConnectorConfig(
     'us-west2',
-    'my-connector',
-    'dart-service',
+    'movies',
+    'dataconnect',
   );
 
   MoviesConnector({required this.dataConnect});
