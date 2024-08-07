@@ -34,13 +34,13 @@ class QueryManager {
 
 class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
   QueryRef(
-      FirebaseAuth? auth,
       String operationName,
-      Variables? variables,
       DataConnectTransport transport,
       Deserializer<Data> deserializer,
-      Serializer<Variables>? serializer,
-      this._queryManager)
+      this._queryManager,
+      FirebaseAuth? auth,
+      Variables? variables,
+      Serializer<Variables>? serializer)
       : super(auth, operationName, variables, transport, OperationType.query,
             deserializer, serializer);
   QueryManager _queryManager;
@@ -55,7 +55,6 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
     return res;
   }
 
-  /// @example: ref.subscribe()
   // TODO(mtewani): Implement ability to execute a query if no cache is available.
   Stream<OperationResult<Data, Variables>> subscribe() {
     return _queryManager
@@ -67,11 +66,11 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 
 class MutationRef<Data, Variables> extends OperationRef<Data, Variables> {
   MutationRef(
-    FirebaseAuth? auth,
     String operationName,
-    Variables? variables,
     DataConnectTransport transport,
     Deserializer<Data> deserializer,
+    FirebaseAuth? auth,
+    Variables? variables,
     Serializer<Variables>? serializer,
   ) : super(auth, operationName, variables, transport, OperationType.mutation,
             deserializer, serializer);

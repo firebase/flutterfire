@@ -81,7 +81,6 @@ class GRPCTransport implements DataConnectTransport {
     if (vars != null && serializer != null) {
       Struct struct = Struct.create();
       struct.mergeFromProto3Json(jsonDecode(serializer(vars)));
-      // Struct varStruct = Struct.fromJson(serializer(vars));
       response = await stub.executeMutation(
           ExecuteMutationRequest(
               name: name, operationName: queryName, variables: struct),

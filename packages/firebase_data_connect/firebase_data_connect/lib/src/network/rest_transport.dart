@@ -55,6 +55,9 @@ class RestTransport implements DataConnectTransport {
         opType == OperationType.query ? 'executeQuery' : 'executeMutation';
     http.Response r = await http.post(Uri.parse('$_url:$endpoint'),
         body: json.encode(body), headers: headers);
+    /// The response we get is in the data field of the response
+    /// Once we get the data back, it's not quite json-encoded,
+    /// so we have to encode it and then send it to the user's deserializer.
     return deserializer(jsonEncode(jsonDecode(r.body)['data']));
   }
 
