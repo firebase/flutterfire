@@ -1,7 +1,7 @@
 {
   "file_generated_by": "FlutterFire CLI",
   "purpose": "FirebaseAppID & ProjectID for this Firebase app in this directory",
-  "GOOGLE_APP_ID": "1:1033042013828:ios:a56668abf3ea77b62e5cd1",
-  "FIREBASE_PROJECT_ID": "fdc-bugbash-mtewani",
-  "GCM_SENDER_ID": "1033042013828"
+  "GOOGLE_APP_ID": "1:958807142248:ios:49c71843d6dda882e270dd",
+  "FIREBASE_PROJECT_ID": "movie-app-dart",
+  "GCM_SENDER_ID": "958807142248"
 }
