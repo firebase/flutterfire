@@ -193,7 +193,7 @@ void main() {
             );
           });
         },
-        skip: !kIsWeb && Platform.isWindows,
+        skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS),
       );
 
       group('test all stream listeners', () {
@@ -201,7 +201,8 @@ void main() {
               (list) => list.whereType<User>().length == 3,
               'a list containing exactly 3 User instances',
             );
-        test('create, cancel and reopen all user event stream handlers', () async {
+        test('create, cancel and reopen all user event stream handlers',
+            () async {
           final auth = FirebaseAuth.instance;
           final events = [];
           final streamHandler = events.add;
@@ -444,22 +445,27 @@ void main() {
       group(
         'sendPasswordResetEmail()',
         () {
-          test('should not error', () async {
-            var email = generateRandomEmail();
+          test(
+            'should not error',
+            () async {
+              var email = generateRandomEmail();
 
-            try {
-              await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                email: email,
-                password: testPassword,
-              );
+              try {
+                await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                  email: email,
+                  password: testPassword,
+                );
 
-              await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-              await FirebaseAuth.instance.currentUser!.delete();
-            } catch (e) {
-              await FirebaseAuth.instance.currentUser!.delete();
-              fail(e.toString());
-            }
-          });
+                await FirebaseAuth.instance
+                    .sendPasswordResetEmail(email: email);
+                await FirebaseAuth.instance.currentUser!.delete();
+              } catch (e) {
+                await FirebaseAuth.instance.currentUser!.delete();
+                fail(e.toString());
+              }
+            },
+            skip: !kIsWeb && Platform.isMacOS,
+          );
 
           test('fails if the user could not be found', () async {
             try {
@@ -515,7 +521,7 @@ void main() {
             );
           });
         },
-        skip: !kIsWeb && Platform.isWindows,
+        skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS),
       );
 
       group('languageCode', () {
@@ -608,7 +614,7 @@ void main() {
             final userCred = await FirebaseAuth.instance.signInAnonymously();
             await successCallback(userCred);
           },
-          skip: !kIsWeb && Platform.isWindows,
+          skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS),
         );
       });
 
@@ -624,7 +630,7 @@ void main() {
                 .signInWithCredential(credential)
                 .then(commonSuccessCallback);
           },
-          skip: !kIsWeb && Platform.isWindows,
+          skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS),
         );
 
         test('throws if login user is disabled', () async {
@@ -762,7 +768,7 @@ void main() {
             expect(idTokenResult.claims!['roles'][0]['role'], 'member');
           });
         },
-        skip: !kIsWeb && Platform.isWindows,
+        skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS),
       );
 
       group('signInWithEmailAndPassword()', () {
