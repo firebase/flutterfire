@@ -530,11 +530,12 @@ void main() {
               }
               expect(FirebaseAuth.instance.currentUser, isNotNull);
             },
-            skip: kIsWeb,
+            // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
+            skip: kIsWeb ||
+                defaultTargetPlatform == TargetPlatform.macOS ||
+                defaultTargetPlatform == TargetPlatform.windows,
           );
         },
-        // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
-
         skip: !kIsWeb &&
             (defaultTargetPlatform == TargetPlatform.windows ||
                 defaultTargetPlatform == TargetPlatform.macOS),
@@ -777,7 +778,9 @@ void main() {
             expect(metadata?.creationTime!.year, DateTime.now().year);
           });
         },
-        skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,
+        skip: !kIsWeb &&
+            (defaultTargetPlatform == TargetPlatform.windows ||
+                defaultTargetPlatform == TargetPlatform.macOS),
       );
 
       group('updateDisplayName', () {
