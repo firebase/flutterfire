@@ -215,7 +215,7 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
               ref.execute().then((res) {
                 triggerReload();
               }).catchError((err) {
-                print(err);
+                print("unable to create a movie: " + err);
               });
             },
             child: const Text('Add Movie'),
