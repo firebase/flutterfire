@@ -27,7 +27,6 @@ class Optional<T> {
     if (json is List) {
       value = json.map((e) => deserializer(e)) as T;
     } else {
-      debugPrint('$json is not a list');
       value = deserializer(json as String);
     }
   }
@@ -37,8 +36,6 @@ class Optional<T> {
       if (serializer != null) {
         if (_value is List) {
           return (_value! as List).map((e) => serializer!(e)).toString();
-        } else {
-          debugPrint('$_value is not a list');
         }
         return serializer!(_value as T);
       } else {

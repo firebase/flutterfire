@@ -19,7 +19,6 @@ class QueryManager {
     String key = varsAsStr;
     if (trackedQueries[queryName] == null) {
       trackedQueries[queryName] = <String, StreamController>{};
-      debugPrint('Creating map for $queryName');
     }
     if (trackedQueries[queryName]![key] == null) {
       trackedQueries[queryName]![key] = StreamController.broadcast();
