@@ -52,18 +52,16 @@ class _LoginState extends State<Login> {
     }
   }
 
-  void logIn() {
-    initFirebase().then((_) {
-      signInWithGoogle().then((_) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const MyHomePage(
-                    title: "Data Connect Home Page",
-                  )),
-        );
-      });
-    });
+  void logIn() async {
+    await initFirebase();
+    await signInWithGoogle();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => const MyHomePage(
+                title: "Data Connect Home Page",
+              )),
+    );
   }
 
   @override

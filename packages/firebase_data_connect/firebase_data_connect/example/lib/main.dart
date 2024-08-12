@@ -202,7 +202,7 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
             style: ButtonStyle(
               foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
             ),
-            onPressed: () {
+            onPressed: () async {
               String title = _titleController.text;
               String genre = _genreController.text;
               if (title == '' || genre == '') {
@@ -212,11 +212,12 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
               MutationRef ref = MoviesConnector.instance.createMovie.ref(
                   CreateMovieVariables(
                       title, _releaseYearDate.year, genre, _rating, null));
-              ref.execute().then((res) {
+              try {
+                await ref.execute();
                 triggerReload();
-              }).catchError((err) {
-                print("unable to create a movie: " + err);
-              });
+              } catch (e) {
+                print("unable to create a movie: " + e.toString());
+              }
             },
             child: const Text('Add Movie'),
           ),
