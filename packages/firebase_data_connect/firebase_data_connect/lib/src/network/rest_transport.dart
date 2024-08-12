@@ -57,15 +57,15 @@ class RestTransport implements DataConnectTransport {
     try {
       http.Response r = await http.post(Uri.parse('$_url:$endpoint'),
           body: json.encode(body), headers: headers);
+
+      /// The response we get is in the data field of the response
+      /// Once we get the data back, it's not quite json-encoded,
+      /// so we have to encode it and then send it to the user's deserializer.
       return deserializer(jsonEncode(jsonDecode(r.body)['data']));
     } on Exception catch (e) {
       throw FirebaseDataConnectError(DataConnectErrorCode.other,
           'Failed to invoke operation: ${e.toString()}');
     }
-
-    /// The response we get is in the data field of the response
-    /// Once we get the data back, it's not quite json-encoded,
-    /// so we have to encode it and then send it to the user's deserializer.
   }
 
   @override
