@@ -5,7 +5,7 @@
 part of movies;
 
 class CreateMovie {
-  String name = "createMovi";
+  String name = "createMovie";
   CreateMovie({required this.dataConnect});
 
   Deserializer<CreateMovieResponse> dataDeserializer = (String json) =>
