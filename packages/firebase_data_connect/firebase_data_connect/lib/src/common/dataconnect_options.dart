@@ -1,4 +1,4 @@
-part of firebase_data_connect;
+part of firebase_data_connect_common;
 
 /// ConnectorConfig options required for connecting to a Data Connect instance.
 class ConnectorConfig {

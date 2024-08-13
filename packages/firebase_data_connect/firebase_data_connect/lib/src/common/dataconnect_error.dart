@@ -1,4 +1,4 @@
-part of firebase_data_connect;
+part of firebase_data_connect_common;
 
 /// Types of DataConnect errors that can occur.
 enum DataConnectErrorCode { unavailable, unauthorized, other }
@@ -11,3 +11,8 @@ class FirebaseDataConnectError implements Exception {
   @override
   String toString() => 'FirebaseDataConnectError: $code:$message';
 }
+
+typedef Serializer<Variables> = String Function(Variables vars);
+typedef Deserializer<Data> = Data Function(String data);
+
+enum OperationType { query, mutation }

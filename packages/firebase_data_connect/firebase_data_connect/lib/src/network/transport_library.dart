@@ -4,6 +4,5 @@
 
 library firebase_data_connect_transport;
 
-import '../../firebase_data_connect.dart';
-
+import '../common/common_library.dart';
 part 'transport_stub.dart';

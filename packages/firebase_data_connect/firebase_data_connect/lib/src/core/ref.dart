@@ -11,15 +11,6 @@ class OperationResult<Data, Variables> {
   OperationRef<Data, Variables> ref;
 }
 
-/// Takes in a variable and returns a String.
-typedef Serializer<Variables> = String Function(Variables vars);
-
-/// Takes in a String and deserialized the String to a Data class.
-typedef Deserializer<Data> = Data Function(String data);
-
-/// Types of mutations.
-enum OperationType { query, mutation }
-
 /// Reference to a specific query.
 /// Contains variables, transport to execute queries, and serialization/deserialization strategies.
 class OperationRef<Data, Variables> {
