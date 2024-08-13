@@ -4,6 +4,7 @@
 
 part of firebase_data_connect_grpc;
 
+/// Transport used for Android/iOS. Uses a GRPC transport instead of REST.
 class GRPCTransport implements DataConnectTransport {
   /// GRPCTransport creates a new channel
   GRPCTransport(this.transportOptions, this.options) {
@@ -19,14 +20,25 @@ class GRPCTransport implements DataConnectTransport {
     name =
         'projects/${options.projectId}/locations/${options.location}/services/${options.serviceId}/connectors/${options.connector}';
   }
+
+  /// Name of the endpoint.
   late String name;
+
+  /// ConnectorServiceClient used to execute the query/mutation.
   late ConnectorServiceClient stub;
+
+  /// ClientChannel used to configure connection to the GRPC server.
   late ClientChannel channel;
+
+  /// Current host configuration.
   @override
   TransportOptions transportOptions;
+
+  /// Data Connect backend configuration options.
   @override
   DataConnectOptions options;
 
+  /// Get headers required for all requests.
   Map<String, String> getMetadata(String? authToken) {
     Map<String, String> metadata = {
       'x-goog-request-params': 'location=${options.location}&frontend=data',
@@ -38,7 +50,7 @@ class GRPCTransport implements DataConnectTransport {
     return metadata;
   }
 
-  /// Invokes emulator
+  /// Invokes GPRC query endpoint.
   @override
   Future<Data> invokeQuery<Data, Variables>(
       String queryName,
@@ -64,6 +76,7 @@ class GRPCTransport implements DataConnectTransport {
     }
   }
 
+  /// Converts the variables into a proto Struct.
   Struct getStruct<Variables>(
       Variables vars, Serializer<Variables> serializer) {
     Struct struct = Struct.create();
@@ -71,7 +84,7 @@ class GRPCTransport implements DataConnectTransport {
     return struct;
   }
 
-  /// Invokes emulator
+  /// Invokes GPRC mutation endpoint.
   @override
   Future<Data> invokeMutation<Data, Variables>(
       String queryName,
@@ -97,6 +110,7 @@ class GRPCTransport implements DataConnectTransport {
   }
 }
 
+/// Initializes GRPC transport for Data Connect.
 DataConnectTransport getTransport(
         TransportOptions transportOptions, DataConnectOptions options) =>
     GRPCTransport(transportOptions, options);

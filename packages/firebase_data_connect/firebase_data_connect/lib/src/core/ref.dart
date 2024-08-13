@@ -4,17 +4,24 @@
 
 part of firebase_data_connect;
 
+/// Result of an Operation Request (query/mutation).
 class OperationResult<Data, Variables> {
   OperationResult(this.data, this.ref);
   Data data;
   OperationRef<Data, Variables> ref;
 }
 
+/// Takes in a variable and returns a String.
 typedef Serializer<Variables> = String Function(Variables vars);
+
+/// Takes in a String and deserialized the String to a Data class.
 typedef Deserializer<Data> = Data Function(String data);
 
+/// Types of mutations.
 enum OperationType { query, mutation }
 
+/// Reference to a specific query.
+/// Contains variables, transport to execute queries, and serialization/deserialization strategies.
 class OperationRef<Data, Variables> {
   /// Constructor
   OperationRef(this.auth, this.operationName, this.variables, this._transport,
@@ -53,7 +60,9 @@ class OperationRef<Data, Variables> {
   }
 }
 
+/// Tracks currently active queries, and emits events when a new query is executed.
 class QueryManager {
+  /// Keeps track of what queries are currently active.
   Map<String, Map<String, StreamController<dynamic>>> trackedQueries = {};
   bool containsQuery<Variables>(
       String queryName, Variables variables, String varsAsStr) {

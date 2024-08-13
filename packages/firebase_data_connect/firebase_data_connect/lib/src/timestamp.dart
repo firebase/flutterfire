@@ -4,7 +4,9 @@
 
 part of firebase_data_connect;
 
+/// Timestamp class is a custom class that allows for storing of nanoseconds.
 class Timestamp {
+  /// Constructor
   Timestamp(this.nanoseconds, this.seconds);
   // TODO(mtewani): Fix this so that it keeps track of positional arguments so you don't have to repeatedly search the string multiple times.
   Timestamp.fromJson(String date) {
@@ -54,6 +56,9 @@ class Timestamp {
     return DateTime.utc((seconds * 1000 + (nanoseconds / 1000000)).floor());
   }
 
+  /// Current nanoseconds
   int nanoseconds = 0;
+
+  /// Current seconds
   int seconds = 0;
 }

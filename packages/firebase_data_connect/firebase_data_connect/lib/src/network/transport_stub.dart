@@ -4,6 +4,7 @@
 
 part of firebase_data_connect_transport;
 
+/// Transport Options for connecting to a specific host.
 class TransportOptions {
   /// Constructor
   TransportOptions(this.host, this.port, this.isSecure);
@@ -18,10 +19,18 @@ class TransportOptions {
   bool? isSecure;
 }
 
+/// Interface for transports connecting to the DataConnect backend.
 abstract class DataConnectTransport {
+  /// Constructor.
   DataConnectTransport(this.transportOptions, this.options);
+
+  /// Transport options.
   TransportOptions transportOptions;
+
+  /// DataConnect backend configuration.
   DataConnectOptions options;
+
+  /// Invokes corresponding query endpoint.
   Future<Data> invokeQuery<Data, Variables>(
       String queryName,
       Deserializer<Data> deserializer,
@@ -29,6 +38,7 @@ abstract class DataConnectTransport {
       Variables? vars,
       String? token);
 
+  /// Invokes corresponding mutation endpoint.
   Future<Data> invokeMutation<Data, Variables>(
       String queryName,
       Deserializer<Data> deserializer,
@@ -37,14 +47,20 @@ abstract class DataConnectTransport {
       String? token);
 }
 
+/// Default TransportStub to satisfy compilation of the library.
 class TransportStub implements DataConnectTransport {
+  /// Constructor.
   TransportStub(this.transportOptions, this.options);
+
+  /// DataConnect backend options.
   @override
   DataConnectOptions options;
 
+  /// Network configuration options.
   @override
   TransportOptions transportOptions;
 
+  /// Stub for invoking a mutation.
   @override
   Future<Data> invokeMutation<Data, Variables>(
       String queryName,
@@ -55,6 +71,7 @@ class TransportStub implements DataConnectTransport {
     throw UnimplementedError();
   }
 
+  /// Stub for invoking a query.
   @override
   Future<Data> invokeQuery<Data, Variables>(
       String queryName,

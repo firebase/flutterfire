@@ -4,7 +4,9 @@
 
 part of firebase_data_connect_rest;
 
+/// RestTransport makes requests out to the REST endpoints of the configured backend.
 class RestTransport implements DataConnectTransport {
+  /// Initializes necessary protocol and port.
   RestTransport(this.transportOptions, this.options) {
     String protocol = 'http';
     if (transportOptions.isSecure == null ||
@@ -20,11 +22,19 @@ class RestTransport implements DataConnectTransport {
     _url =
         '$protocol://$host:$port/v1alpha/projects/$project/locations/$location/services/$service/connectors/$connector';
   }
+
+  /// Current endpoint URL.
   late String _url;
+
+  /// Current host configuration.
   @override
   TransportOptions transportOptions;
+
+  /// Data Connect backend configuration options.
   @override
   DataConnectOptions options;
+
+  /// Invokes the current operation, whether its a query or mutation.
   Future<Data> invokeOperation<Data, Variables>(
       String queryName,
       Deserializer<Data> deserializer,
@@ -68,6 +78,7 @@ class RestTransport implements DataConnectTransport {
     }
   }
 
+  /// Invokes query REST endpoint.
   @override
   Future<Data> invokeQuery<Data, Variables>(
       String queryName,
@@ -79,6 +90,7 @@ class RestTransport implements DataConnectTransport {
         queryName, deserializer, serializer, vars, OperationType.query, token);
   }
 
+  /// Invokes mutation REST endpoint.
   @override
   Future<Data> invokeMutation<Data, Variables>(
       String queryName,
@@ -91,6 +103,7 @@ class RestTransport implements DataConnectTransport {
   }
 }
 
+/// Initializes Rest transport for Data Connect.
 DataConnectTransport getTransport(
         TransportOptions transportOptions, DataConnectOptions options) =>
     RestTransport(transportOptions, options);

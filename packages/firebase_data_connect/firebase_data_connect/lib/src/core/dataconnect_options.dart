@@ -1,6 +1,6 @@
 part of firebase_data_connect;
 
-/// ConnectorConfig
+/// ConnectorConfig options required for connecting to a Data Connect instance.
 class ConnectorConfig {
   /// Constructor
   ConnectorConfig(this.location, this.connector, this.serviceId);
@@ -24,7 +24,7 @@ class ConnectorConfig {
   }
 }
 
-/// DataConnectOptions
+/// DataConnectOptions includes the Project ID along with the existing ConnectorConfig.
 class DataConnectOptions extends ConnectorConfig {
   /// Constructor
   DataConnectOptions(
