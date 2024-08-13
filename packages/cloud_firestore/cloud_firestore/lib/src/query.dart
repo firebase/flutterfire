@@ -466,7 +466,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     return _delegate
         .snapshots(
           includeMetadataChanges: includeMetadataChanges,
-          source: source,
+          listenSource: source,
         )
         .map((item) => _JsonQuerySnapshot(firestore, item));
   }
