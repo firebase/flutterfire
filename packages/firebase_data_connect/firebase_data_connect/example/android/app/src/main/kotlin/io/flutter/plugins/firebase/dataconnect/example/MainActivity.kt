@@ -1,4 +1,4 @@
-package io.flutter.plugins.firebase.data_connect.example
+package io.flutter.plugins.firebase.dataconnect.example
 
 import io.flutter.embedding.android.FlutterActivity
 

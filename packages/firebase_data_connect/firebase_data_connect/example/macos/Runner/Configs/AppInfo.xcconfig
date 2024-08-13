@@ -8,7 +8,7 @@
 PRODUCT_NAME = example
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebase.data_connect.example
+PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebase.dataconnect.example
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2024 com.example. All rights reserved.
