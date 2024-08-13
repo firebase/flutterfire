@@ -3,14 +3,16 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:io';
-import 'package:example/generated/movies.dart';
-import 'package:example/login.dart';
+
+import 'package:firebase_data_connect_example/login.dart';
 
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+
+import 'generated/movies.dart';
 
 void main() {
   runApp(const MyApp());
@@ -72,29 +74,6 @@ class DataConnectWidget extends StatefulWidget {
   State<DataConnectWidget> createState() => _DataConnectWidgetState();
 }
 
-// class AddMovieResponse {
-//   AddMovieResponse(this.movie_insert) {}
-//   @override
-//   String toJson() {
-//     // TODO: implement toJson
-//     throw UnimplementedError();
-//   }
-
-//   String movie_insert;
-//   static fromRealJson(String json) {
-//     Map<String, dynamic> map = jsonDecode(json);
-//     return AddMovieResponse(map['movie_insert']['id']);
-//   }
-// }
-
-// String addMovieSerializer(AddMovie addMovie) {
-//   return addMovie.toJson();
-// }
-
-// AddMovieResponse addMovieDeserializer(String json) {
-//   return AddMovieResponse.fromRealJson(json);
-// }
-
 class _DataConnectWidgetState extends State<DataConnectWidget> {
   final TextEditingController _genreController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
@@ -131,7 +110,7 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
         _movies = event.data.movies;
       });
     }).onError((e) {
-      print("Got an error: " + e.toString());
+      print("Got an error: $e");
     });
   }
 
@@ -216,7 +195,7 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
                 await ref.execute();
                 triggerReload();
               } catch (e) {
-                print("unable to create a movie: " + e.toString());
+                print("unable to create a movie: $e");
               }
             },
             child: const Text('Add Movie'),

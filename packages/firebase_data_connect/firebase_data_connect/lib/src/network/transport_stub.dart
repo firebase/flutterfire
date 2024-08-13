@@ -4,6 +4,39 @@
 
 part of firebase_data_connect_transport;
 
+class TransportOptions {
+  /// Constructor
+  TransportOptions(this.host, this.port, this.isSecure);
+
+  /// Host to connect to
+  String host;
+
+  /// Port to connect to
+  int? port;
+
+  /// isSecure - use secure protocol
+  bool? isSecure;
+}
+
+abstract class DataConnectTransport {
+  DataConnectTransport(this.transportOptions, this.options);
+  TransportOptions transportOptions;
+  DataConnectOptions options;
+  Future<Data> invokeQuery<Data, Variables>(
+      String queryName,
+      Deserializer<Data> deserializer,
+      Serializer<Variables>? serializer,
+      Variables? vars,
+      String? token);
+
+  Future<Data> invokeMutation<Data, Variables>(
+      String queryName,
+      Deserializer<Data> deserializer,
+      Serializer<Variables>? serializer,
+      Variables? vars,
+      String? token);
+}
+
 class TransportStub implements DataConnectTransport {
   TransportStub(this.transportOptions, this.options);
   @override
@@ -19,7 +52,6 @@ class TransportStub implements DataConnectTransport {
       Serializer<Variables>? serializer,
       Variables? vars,
       String? token) async {
-    // TODO: implement invokeMutation
     throw UnimplementedError();
   }
 
@@ -30,7 +62,6 @@ class TransportStub implements DataConnectTransport {
       Serializer<Variables>? serialize,
       Variables? vars,
       String? token) async {
-    // TODO: implement invokeQuery
     throw UnimplementedError();
   }
 }

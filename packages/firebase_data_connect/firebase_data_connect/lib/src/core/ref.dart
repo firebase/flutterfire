@@ -4,6 +4,55 @@
 
 part of firebase_data_connect;
 
+class OperationResult<Data, Variables> {
+  OperationResult(this.data, this.ref);
+  Data data;
+  OperationRef<Data, Variables> ref;
+}
+
+typedef Serializer<Variables> = String Function(Variables vars);
+typedef Deserializer<Data> = Data Function(String data);
+
+enum OperationType { query, mutation }
+
+class OperationRef<Data, Variables> {
+  /// Constructor
+  OperationRef(this.auth, this.operationName, this.variables, this._transport,
+      this.opType, this.deserializer, this.serializer) {
+    if (this.variables != null && this.serializer == null) {
+      throw Exception('Serializer required for variables');
+    }
+  }
+  FirebaseAuth? auth;
+  Variables? variables;
+  String operationName;
+  DataConnectTransport _transport;
+  Deserializer<Data> deserializer;
+  Serializer<Variables>? serializer;
+  OperationType opType;
+
+  Future<OperationResult<Data, Variables>> execute() async {
+    String? token = await this.auth?.currentUser?.getIdToken();
+    if (this.opType == OperationType.query) {
+      Data data = await this._transport.invokeQuery<Data, Variables>(
+          this.operationName,
+          this.deserializer,
+          this.serializer,
+          variables,
+          token);
+      return OperationResult(data, this);
+    } else {
+      Data data = await this._transport.invokeMutation<Data, Variables>(
+          this.operationName,
+          this.deserializer,
+          this.serializer,
+          variables,
+          token);
+      return OperationResult(data, this);
+    }
+  }
+}
+
 class QueryManager {
   Map<String, Map<String, StreamController<dynamic>>> trackedQueries = {};
   bool containsQuery<Variables>(
@@ -57,7 +106,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
   @override
   Future<OperationResult<Data, Variables>> execute() async {
     try {
-      print("executing");
+      print('executing');
       OperationResult<Data, Variables> res = await super.execute();
       _queryManager.triggerCallback<Data, Variables>(
           operationName,

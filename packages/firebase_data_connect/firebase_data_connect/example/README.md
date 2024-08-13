@@ -1,10 +1,20 @@
-# example
+# Firebase Data Connect Example
 
-A new Flutter project.
+This example showcases Firebase Auth and Data Connect.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+1. Sign up for early access [here](https://firebase.google.com/products/data-connect) and receive an invitation.
+
+    Note: This is not required for public preview.
+2. Upgrade your Firebase project billing to the Blaze plan, you will not be charged for the duration of gated preview.
+3. Initialize DataConnect in the [Firebase Console](https://console.firebase.google.com/u/0/).
+4. Update `firebase-tools` with `npm install -g firebase-tools`.
+5. Initialize your Firebase project in the `dataconnect` folder with `firebase init` and select DataConnect. Do not overwrite the dataconnect files when prompted.
+6. Install the VSCode extension from [here](https://firebasestorage.googleapis.com/v0/b/firemat-preview-drop/o/vsix%2Ffirebase-vscode-latest.vsix?alt=media).
+7. Install postgres using the documentation provided [here](https://firebase.google.com/docs/data-connect/quickstart#optional_install_postgresql_locally).
+7. Run the mutation in `dataconnect/connector/movie_insert.gql`
+8. Run `flutter run`
 
 A few resources to get you started if this is your first Flutter project:
 

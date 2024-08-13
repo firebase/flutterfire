@@ -47,5 +47,4 @@ app.*.map.json
 /macos/firebase_app_id_file.json
 
 ios/Runner/GoogleService-Info.plist
-
-
+.firebaserc

@@ -40,12 +40,8 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   TransportOptions? _transportOptions;
 
   /// Checks whether the transport has been properly initialized.
-  void _checkTransportInit() {
+  void _checkTransport() {
     transport = getTransport(_transportOptions!, options);
-  }
-
-  /// Initializes [_transportOptions] with defaults if not specified.
-  void _checkTransportOptionsInit() {
     _transportOptions ??=
         TransportOptions('firebasedataconnect.googleapis.com', null, true);
   }
@@ -56,8 +52,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
       Deserializer<Data> dataDeserializer,
       Serializer<Variables>? varsSerializer,
       Variables? vars) {
-    _checkTransportOptionsInit();
-    _checkTransportInit();
+    _checkTransport();
     return QueryRef<Data, Variables>(queryName, transport, dataDeserializer,
         _queryManager, auth, vars, varsSerializer);
   }
@@ -68,8 +63,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
       Deserializer<Data> dataDeserializer,
       Serializer<Variables>? varsSerializer,
       Variables? vars) {
-    _checkTransportOptionsInit();
-    _checkTransportInit();
+    _checkTransport();
     return MutationRef<Data, Variables>(
         queryName, transport, dataDeserializer, auth, vars, varsSerializer);
   }

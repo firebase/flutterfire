@@ -1,4 +1,4 @@
-part of firebase_data_connect_common;
+part of firebase_data_connect;
 
 enum DataConnectErrorCode { unavailable, unauthorized, other }
 
