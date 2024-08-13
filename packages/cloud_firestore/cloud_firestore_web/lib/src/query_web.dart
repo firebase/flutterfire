@@ -187,7 +187,7 @@ class QueryWeb extends QueryPlatform {
     Stream<firestore_interop.QuerySnapshot> querySnapshots =
         _buildWebQueryWithParameters().onSnapshot(
       includeMetadataChanges: includeMetadataChanges,
-      source: listenSource,
+      listenSource: listenSource,
       hashCode: hashCode,
     );
 
