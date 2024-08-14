@@ -18,7 +18,7 @@ dependencies:
     sdk: flutter
   http_parser: ^4.0.0
   meta: ^1.8.0
-  web: ^0.5.1
+  web: ^1.0.0
 
 dev_dependencies:
   flutter_test:
