@@ -294,8 +294,8 @@ class _ChatWidgetState extends State<ChatWidget> {
               left: 15,
               right: 15,
               bottom: 25,
-          ),
-          child: Text(
+            ),
+            child: Text(
               'Total message count: ${_chat?.history.length ?? 0}',
             ),
           ),

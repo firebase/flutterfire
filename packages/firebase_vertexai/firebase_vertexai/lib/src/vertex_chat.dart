@@ -34,16 +34,19 @@ final class ChatSession {
   /// and [GenerationConfig]. The history is passed to the `google_generative_ai`
   /// package to start the chat session.
 
-  ChatSession._(List<Content> initialHistory, List<SafetySetting>? _safetySettings,
-      GenerationConfig? _generationConfig, GenerativeModel _model)
+  ChatSession._(
+      List<Content> initialHistory,
+      List<SafetySetting>? _safetySettings,
+      GenerationConfig? _generationConfig,
+      GenerativeModel _model)
       : _googleAIChatSession = _model.googleAIModel.startChat(
-      history: initialHistory.map((e) => e.toGoogleAI()).toList(),
-      safetySettings: _safetySettings != null
-          ? _safetySettings
-          .map((setting) => setting.toGoogleAI())
-          .toList()
-          : [],
-      generationConfig: _generationConfig?.toGoogleAI());
+            history: initialHistory.map((e) => e.toGoogleAI()).toList(),
+            safetySettings: _safetySettings != null
+                ? _safetySettings
+                    .map((setting) => setting.toGoogleAI())
+                    .toList()
+                : [],
+            generationConfig: _generationConfig?.toGoogleAI());
 
   final google_ai.ChatSession _googleAIChatSession;
 
@@ -58,7 +61,8 @@ final class ChatSession {
   /// The history is maintained by the `google_generative_ai` package and reflects
   /// the most current state of the chat session, ensuring that the history
   /// returned is always up-to-date and consistent with the ongoing chat session.
-  Iterable<Content> get history => _googleAIChatSession.history.map((e) => e.toVertex());
+  Iterable<Content> get history =>
+      _googleAIChatSession.history.map((e) => e.toVertex());
 
   /// Sends [message] to the model as a continuation of the chat [history].
   ///
