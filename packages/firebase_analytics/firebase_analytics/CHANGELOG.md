@@ -1,3 +1,7 @@
+## 11.2.1
+
+ - Update a dependency to the latest release.
+
 ## 11.2.0
 
  - **FEAT**(analytics,web): add support for options on Web ([#12914](https://github.com/firebase/flutterfire/issues/12914)). ([dd7ce8c2](https://github.com/firebase/flutterfire/commit/dd7ce8c20c28d7bd67cee9b7542af2e38c1aa6c7))

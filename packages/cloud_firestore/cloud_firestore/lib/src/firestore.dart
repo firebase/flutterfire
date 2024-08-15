@@ -362,7 +362,9 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// start using the index once the index entries have been written.
   ///
   /// This API is now deprecated
-  @Deprecated('setIndexConfiguration() has been deprecated.')
+  @Deprecated(
+    'setIndexConfiguration() has been deprecated. Please use `PersistentCacheIndexManager` instead.',
+  )
   Future<void> setIndexConfiguration({
     required List<Index> indexes,
     List<FieldOverrides>? fieldOverrides,
@@ -376,6 +378,23 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     );
 
     return _delegate.setIndexConfiguration(json);
+  }
+
+  PersistentCacheIndexManager? persistentCacheIndexManager() {
+    if (defaultTargetPlatform == TargetPlatform.windows) {
+      throw UnimplementedError(
+        '`PersistentCacheIndexManager` is not available on Windows platform',
+      );
+    }
+
+    PersistentCacheIndexManagerPlatform? indexManager =
+        _delegate.persistentCacheIndexManager();
+    if (indexManager != null) {
+      return PersistentCacheIndexManager._(
+        indexManager,
+      );
+    }
+    return null;
   }
 
   /// Configures indexing for local query execution. Any previous index configuration is overridden.

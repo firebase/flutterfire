@@ -3,7 +3,197 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 2024-07-09 - [BoM 2.3.0](https://github.com/firebase/flutterfire/blob/master/VERSIONS.md#flutter-bom-230-2024-07-09)
+## 2024-08-06 - [BoM 2.4.1](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-241-2024-08-06)
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v5.2.1`](#cloud_firestore---v521)
+ - [`cloud_firestore_platform_interface` - `v6.3.1`](#cloud_firestore_platform_interface---v631)
+ - [`firebase_auth` - `v5.1.4`](#firebase_auth---v514)
+ - [`firebase_storage` - `v12.1.3`](#firebase_storage---v1213)
+ - [`cloud_firestore_web` - `v4.1.1`](#cloud_firestore_web---v411)
+ - [`firebase_vertexai` - `v0.2.2+4`](#firebase_vertexai---v0224)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `cloud_firestore_web` - `v4.1.1`
+ - `firebase_vertexai` - `v0.2.2+4`
+
+---
+
+#### `cloud_firestore` - `v5.2.1`
+
+ - **FIX**: compilation issue on Windows ([#13135](https://github.com/firebase/flutterfire/issues/13135)). ([de8c9e0f](https://github.com/firebase/flutterfire/commit/de8c9e0f2d3117b3614ac8295b041fea7ed3ee7f))
+
+#### `cloud_firestore_platform_interface` - `v6.3.1`
+
+ - **FIX**: compilation issue on Windows ([#13135](https://github.com/firebase/flutterfire/issues/13135)). ([de8c9e0f](https://github.com/firebase/flutterfire/commit/de8c9e0f2d3117b3614ac8295b041fea7ed3ee7f))
+
+#### `firebase_auth` - `v5.1.4`
+
+ - **FIX**(firebase_auth): added supporting rawNonce for OAuth credential on Windows platform ([#13086](https://github.com/firebase/flutterfire/issues/13086)). ([12e87de9](https://github.com/firebase/flutterfire/commit/12e87de93ddc39d41a6a634d7d03766b3e36996a))
+
+#### `firebase_storage` - `v12.1.3`
+
+ - **FIX**(storage,windows): add log to explain that the Storage Emulator is not available on Windows ([#13147](https://github.com/firebase/flutterfire/issues/13147)). ([8d1ea80c](https://github.com/firebase/flutterfire/commit/8d1ea80cf7b007459572405c876e813b43c3b4cf))
+
+
+## 2024-07-30 - [BoM 2.4.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-240-2024-07-30)
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v5.2.0`](#cloud_firestore---v520)
+ - [`cloud_firestore_platform_interface` - `v6.3.0`](#cloud_firestore_platform_interface---v630)
+ - [`cloud_firestore_web` - `v4.1.0`](#cloud_firestore_web---v410)
+ - [`firebase_analytics_web` - `v0.5.9+1`](#firebase_analytics_web---v0591)
+ - [`firebase_auth` - `v5.1.3`](#firebase_auth---v513)
+ - [`firebase_auth_platform_interface` - `v7.4.3`](#firebase_auth_platform_interface---v743)
+ - [`firebase_core` - `v3.3.0`](#firebase_core---v330)
+ - [`firebase_core_platform_interface` - `v5.2.0`](#firebase_core_platform_interface---v520)
+ - [`firebase_messaging` - `v15.0.4`](#firebase_messaging---v1504)
+ - [`firebase_messaging_platform_interface` - `v4.5.42`](#firebase_messaging_platform_interface---v4542)
+ - [`firebase_analytics` - `v11.2.1`](#firebase_analytics---v1121)
+ - [`firebase_vertexai` - `v0.2.2+3`](#firebase_vertexai---v0223)
+ - [`firebase_auth_web` - `v5.12.5`](#firebase_auth_web---v5125)
+ - [`_flutterfire_internals` - `v1.3.40`](#_flutterfire_internals---v1340)
+ - [`firebase_remote_config_web` - `v1.6.12`](#firebase_remote_config_web---v1612)
+ - [`firebase_remote_config` - `v5.0.4`](#firebase_remote_config---v504)
+ - [`firebase_database_web` - `v0.2.5+12`](#firebase_database_web---v02512)
+ - [`firebase_remote_config_platform_interface` - `v1.4.40`](#firebase_remote_config_platform_interface---v1440)
+ - [`firebase_database` - `v11.0.4`](#firebase_database---v1104)
+ - [`firebase_database_platform_interface` - `v0.2.5+40`](#firebase_database_platform_interface---v02540)
+ - [`firebase_crashlytics` - `v4.0.4`](#firebase_crashlytics---v404)
+ - [`firebase_crashlytics_platform_interface` - `v3.6.40`](#firebase_crashlytics_platform_interface---v3640)
+ - [`firebase_dynamic_links` - `v6.0.4`](#firebase_dynamic_links---v604)
+ - [`firebase_in_app_messaging` - `v0.8.0+4`](#firebase_in_app_messaging---v0804)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.4+40`](#firebase_in_app_messaging_platform_interface---v02440)
+ - [`firebase_app_installations_platform_interface` - `v0.1.4+40`](#firebase_app_installations_platform_interface---v01440)
+ - [`firebase_app_installations` - `v0.3.0+4`](#firebase_app_installations---v0304)
+ - [`firebase_messaging_web` - `v3.8.12`](#firebase_messaging_web---v3812)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.6+40`](#firebase_dynamic_links_platform_interface---v02640)
+ - [`firebase_app_installations_web` - `v0.1.5+12`](#firebase_app_installations_web---v01512)
+ - [`firebase_analytics_platform_interface` - `v4.2.1`](#firebase_analytics_platform_interface---v421)
+ - [`firebase_ml_model_downloader_platform_interface` - `v0.1.4+38`](#firebase_ml_model_downloader_platform_interface---v01438)
+ - [`firebase_ml_model_downloader` - `v0.3.0+4`](#firebase_ml_model_downloader---v0304)
+ - [`cloud_functions_platform_interface` - `v5.5.33`](#cloud_functions_platform_interface---v5533)
+ - [`cloud_functions_web` - `v4.9.11`](#cloud_functions_web---v4911)
+ - [`cloud_functions` - `v5.0.4`](#cloud_functions---v504)
+ - [`firebase_storage_web` - `v3.9.12`](#firebase_storage_web---v3912)
+ - [`firebase_storage_platform_interface` - `v5.1.27`](#firebase_storage_platform_interface---v5127)
+ - [`firebase_app_check` - `v0.3.0+4`](#firebase_app_check---v0304)
+ - [`firebase_storage` - `v12.1.2`](#firebase_storage---v1212)
+ - [`firebase_app_check_platform_interface` - `v0.1.0+34`](#firebase_app_check_platform_interface---v01034)
+ - [`firebase_performance_platform_interface` - `v0.1.4+40`](#firebase_performance_platform_interface---v01440)
+ - [`firebase_app_check_web` - `v0.1.2+12`](#firebase_app_check_web---v01212)
+ - [`firebase_performance` - `v0.10.0+4`](#firebase_performance---v01004)
+ - [`firebase_performance_web` - `v0.1.6+12`](#firebase_performance_web---v01612)
+ - [`firebase_core_web` - `v2.17.4`](#firebase_core_web---v2174)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_analytics` - `v11.2.1`
+ - `firebase_vertexai` - `v0.2.2+3`
+ - `firebase_auth_web` - `v5.12.5`
+ - `_flutterfire_internals` - `v1.3.40`
+ - `firebase_remote_config_web` - `v1.6.12`
+ - `firebase_remote_config` - `v5.0.4`
+ - `firebase_database_web` - `v0.2.5+12`
+ - `firebase_remote_config_platform_interface` - `v1.4.40`
+ - `firebase_database` - `v11.0.4`
+ - `firebase_database_platform_interface` - `v0.2.5+40`
+ - `firebase_crashlytics` - `v4.0.4`
+ - `firebase_crashlytics_platform_interface` - `v3.6.40`
+ - `firebase_dynamic_links` - `v6.0.4`
+ - `firebase_in_app_messaging` - `v0.8.0+4`
+ - `firebase_in_app_messaging_platform_interface` - `v0.2.4+40`
+ - `firebase_app_installations_platform_interface` - `v0.1.4+40`
+ - `firebase_app_installations` - `v0.3.0+4`
+ - `firebase_messaging_web` - `v3.8.12`
+ - `firebase_dynamic_links_platform_interface` - `v0.2.6+40`
+ - `firebase_app_installations_web` - `v0.1.5+12`
+ - `firebase_analytics_platform_interface` - `v4.2.1`
+ - `firebase_ml_model_downloader_platform_interface` - `v0.1.4+38`
+ - `firebase_ml_model_downloader` - `v0.3.0+4`
+ - `cloud_functions_platform_interface` - `v5.5.33`
+ - `cloud_functions_web` - `v4.9.11`
+ - `cloud_functions` - `v5.0.4`
+ - `firebase_storage_web` - `v3.9.12`
+ - `firebase_storage_platform_interface` - `v5.1.27`
+ - `firebase_app_check` - `v0.3.0+4`
+ - `firebase_storage` - `v12.1.2`
+ - `firebase_app_check_platform_interface` - `v0.1.0+34`
+ - `firebase_performance_platform_interface` - `v0.1.4+40`
+ - `firebase_app_check_web` - `v0.1.2+12`
+ - `firebase_performance` - `v0.10.0+4`
+ - `firebase_performance_web` - `v0.1.6+12`
+ - `firebase_core_web` - `v2.17.4`
+
+---
+
+#### `cloud_firestore` - `v5.2.0`
+
+ - **FIX**(firestore,web): stop cleaning up snapshot listeners in debug ([#13119](https://github.com/firebase/flutterfire/issues/13119)). ([82a63c8b](https://github.com/firebase/flutterfire/commit/82a63c8bf9bad0c262ed48d7829fb05110a9fe08))
+ - **FEAT**(firestore): support for `PersistentCacheIndexManager` for firestore instances for managing cache indexes. ([#13070](https://github.com/firebase/flutterfire/issues/13070)). ([806c15d7](https://github.com/firebase/flutterfire/commit/806c15d7eadaf48b8dfb22586bea4ed684672a86))
+
+#### `cloud_firestore_platform_interface` - `v6.3.0`
+
+ - **FEAT**(firestore): support for `PersistentCacheIndexManager` for firestore instances for managing cache indexes. ([#13070](https://github.com/firebase/flutterfire/issues/13070)). ([806c15d7](https://github.com/firebase/flutterfire/commit/806c15d7eadaf48b8dfb22586bea4ed684672a86))
+
+#### `cloud_firestore_web` - `v4.1.0`
+
+ - **FIX**(firestore,web): stop cleaning up snapshot listeners in debug ([#13119](https://github.com/firebase/flutterfire/issues/13119)). ([82a63c8b](https://github.com/firebase/flutterfire/commit/82a63c8bf9bad0c262ed48d7829fb05110a9fe08))
+ - **FEAT**(firestore): support for `PersistentCacheIndexManager` for firestore instances for managing cache indexes. ([#13070](https://github.com/firebase/flutterfire/issues/13070)). ([806c15d7](https://github.com/firebase/flutterfire/commit/806c15d7eadaf48b8dfb22586bea4ed684672a86))
+
+#### `firebase_analytics_web` - `v0.5.9+1`
+
+ - **FIX**(analytics,web): Default to empty object for intializeAnalytics ([#13083](https://github.com/firebase/flutterfire/issues/13083)). ([8f1346e5](https://github.com/firebase/flutterfire/commit/8f1346e5dcb97daec47a57d9df45c5f89f032804))
+
+#### `firebase_auth` - `v5.1.3`
+
+ - **DOCS**(auth): add information about error codes for email/password functions ([#13100](https://github.com/firebase/flutterfire/issues/13100)). ([aeafc356](https://github.com/firebase/flutterfire/commit/aeafc356953a0531003f765e766ffcff2387401d))
+
+#### `firebase_auth_platform_interface` - `v7.4.3`
+
+ - **DOCS**(auth): add information about error codes for email/password functions ([#13100](https://github.com/firebase/flutterfire/issues/13100)). ([aeafc356](https://github.com/firebase/flutterfire/commit/aeafc356953a0531003f765e766ffcff2387401d))
+
+#### `firebase_core` - `v3.3.0`
+
+ - **FEAT**: bump iOS SDK to version 10.29.0 ([#13113](https://github.com/firebase/flutterfire/issues/13113)). ([45fa2f58](https://github.com/firebase/flutterfire/commit/45fa2f589abe60a4bf06ac5fd64895c7df94c19c))
+
+#### `firebase_core_platform_interface` - `v5.2.0`
+
+ - **FEAT**(firebase_core_platform_interface): Add copyWith to FirebaseOptions ([#13084](https://github.com/firebase/flutterfire/issues/13084)). ([c7963d63](https://github.com/firebase/flutterfire/commit/c7963d63b1cd8cf6471959f0ee7fbf45b5f51edc))
+
+#### `firebase_messaging` - `v15.0.4`
+
+ - **DOCS**(messaging,android): update inline documentation on behavior ([#12948](https://github.com/firebase/flutterfire/issues/12948)). ([8d7e2217](https://github.com/firebase/flutterfire/commit/8d7e2217446618b93c064933ef0bf2506c219275))
+
+#### `firebase_messaging_platform_interface` - `v4.5.42`
+
+ - **DOCS**(messaging,android): update inline documentation on behavior ([#12948](https://github.com/firebase/flutterfire/issues/12948)). ([8d7e2217](https://github.com/firebase/flutterfire/commit/8d7e2217446618b93c064933ef0bf2506c219275))
+
+
+## 2024-07-09 - [BoM 2.3.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-230-2024-07-09)
 
 ### Changes
 
@@ -157,7 +347,7 @@ Packages with dependency updates only:
  - **FIX**(storage,web): ensure exact same streams are not unsubscribed ([#13034](https://github.com/firebase/flutterfire/issues/13034)). ([20d00023](https://github.com/firebase/flutterfire/commit/20d000234072ece9def6c91bf4dfec57091ea8db))
 
 
-## 2024-06-25 - [BoM 2.2.0](https://github.com/firebase/flutterfire/blob/master/VERSIONS.md#flutter-bom-220-2024-06-25)
+## 2024-06-25 - [BoM 2.2.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-220-2024-06-25)
 
 ### Changes
 
@@ -286,7 +476,7 @@ Packages with dependency updates only:
  - **FEAT**(storage,windows): add support for creationTime and updateTime ([#12966](https://github.com/firebase/flutterfire/issues/12966)). ([70a3fbc9](https://github.com/firebase/flutterfire/commit/70a3fbc97ec34c811616e92333aae299dd2ef569))
 
 
-## 2024-06-11 - [BoM 2.1.0](https://github.com/firebase/flutterfire/blob/master/VERSIONS.md#flutter-bom-210-2024-06-11)
+## 2024-06-11 - [BoM 2.1.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-210-2024-06-11)
 
 ### Changes
 
@@ -464,7 +654,7 @@ Packages with other changes:
  - **FIX**(vertexai): fix the countTokens brokage ([#12899](https://github.com/firebase/flutterfire/issues/12899)). ([e946eb9b](https://github.com/firebase/flutterfire/commit/e946eb9b429da16bea617b68dda32f23d0deb5bc))
 
 
-## 2024-06-04 - [BoM 2.0.0](https://github.com/firebase/flutterfire/blob/master/VERSIONS.md#flutter-bom-200-2024-06-04)
+## 2024-06-04 - [BoM 2.0.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-200-2024-06-04)
 
 ### Changes
 
@@ -682,7 +872,7 @@ Packages with dependency updates only:
  - **FIX**(web): fix some casting issue on Web JS Interop ([#12852](https://github.com/firebase/flutterfire/issues/12852)). ([4b56df1c](https://github.com/firebase/flutterfire/commit/4b56df1cc187d77ef22a82688a37f1c7aba4ed40))
 
 
-## 2024-05-28 - [BoM 1.1.0](https://github.com/firebase/flutterfire/blob/master/VERSIONS.md#flutter-bom-110-2024-05-28)
+## 2024-05-28 - [BoM 1.1.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-110-2024-05-28)
 
 ### Changes
 

@@ -26,6 +26,7 @@ void main() {
   const String kMockEmail = 'test@example.com';
   const String kMockPassword = 'passw0rd';
   const String kMockIdToken = '12345';
+  const String kMockRawNonce = 'abcde12345';
   const String kMockAccessToken = '67890';
   const String kMockGithubToken = 'github';
   const String kMockCustomToken = '12345';
@@ -587,6 +588,45 @@ void main() {
         expect(captured.providerId, equals('apple.com'));
         expect(captured.idToken, equals(kMockIdToken));
         expect(captured.accessToken, equals(kMockAccessToken));
+        expect(captured.rawNonce, equals(null));
+      });
+
+      test('OAuthProvider signInWithCredential for Apple with rawNonce',
+          () async {
+        OAuthProvider oAuthProvider = OAuthProvider('apple.com');
+        final AuthCredential credential = oAuthProvider.credential(
+          idToken: kMockIdToken,
+          rawNonce: kMockRawNonce,
+          accessToken: kMockAccessToken,
+        );
+        await auth.signInWithCredential(credential);
+        final captured =
+            verify(mockAuthPlatform.signInWithCredential(captureAny))
+                .captured
+                .single;
+        expect(captured.providerId, equals('apple.com'));
+        expect(captured.idToken, equals(kMockIdToken));
+        expect(captured.rawNonce, equals(kMockRawNonce));
+        expect(captured.accessToken, equals(kMockAccessToken));
+      });
+
+      test(
+          'OAuthProvider signInWithCredential for Apple with rawNonce (empty accessToken)',
+          () async {
+        OAuthProvider oAuthProvider = OAuthProvider('apple.com');
+        final AuthCredential credential = oAuthProvider.credential(
+          idToken: kMockIdToken,
+          rawNonce: kMockRawNonce,
+        );
+        await auth.signInWithCredential(credential);
+        final captured =
+            verify(mockAuthPlatform.signInWithCredential(captureAny))
+                .captured
+                .single;
+        expect(captured.providerId, equals('apple.com'));
+        expect(captured.idToken, equals(kMockIdToken));
+        expect(captured.rawNonce, equals(kMockRawNonce));
+        expect(captured.accessToken, equals(null));
       });
 
       test('PhoneAuthProvider signInWithCredential', () async {

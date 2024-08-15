@@ -1,3 +1,7 @@
+## 4.5.42
+
+ - **DOCS**(messaging,android): update inline documentation on behavior ([#12948](https://github.com/firebase/flutterfire/issues/12948)). ([8d7e2217](https://github.com/firebase/flutterfire/commit/8d7e2217446618b93c064933ef0bf2506c219275))
+
 ## 4.5.41
 
  - Update a dependency to the latest release.

@@ -1,3 +1,7 @@
+## 7.4.3
+
+ - **DOCS**(auth): add information about error codes for email/password functions ([#13100](https://github.com/firebase/flutterfire/issues/13100)). ([aeafc356](https://github.com/firebase/flutterfire/commit/aeafc356953a0531003f765e766ffcff2387401d))
+
 ## 7.4.2
 
  - **FIX**(auth): fixing scopes and parameters that would not work for GoogleAuthProvider ([#13018](https://github.com/firebase/flutterfire/issues/13018)). ([a292282d](https://github.com/firebase/flutterfire/commit/a292282d0e64808e4498f065d033852f89795dc0))

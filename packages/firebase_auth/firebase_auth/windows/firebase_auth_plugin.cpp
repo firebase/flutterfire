@@ -662,9 +662,18 @@ firebase::auth::Credential getCredentialFromArguments(
   if (signInMethod == kSignInMethodOAuth) {
     std::string providerId =
         std::get<std::string>(arguments[kArgumentProviderId]);
-    return firebase::auth::OAuthProvider::GetCredential(
-        providerId.c_str(), idToken.value().c_str(),
-        accessToken.value().c_str());
+    std::optional<std::string> rawNonce = getStringOpt(kArgumentRawNonce);
+    // If rawNonce provided use corresponding credential builder
+    // e.g. AppleID auth through the webView
+    if (rawNonce) {
+      return firebase::auth::OAuthProvider::GetCredential(
+          providerId.c_str(), idToken.value().c_str(), rawNonce.value().c_str(),
+          accessToken ? accessToken.value().c_str() : nullptr);
+    } else {
+      return firebase::auth::OAuthProvider::GetCredential(
+          providerId.c_str(), idToken.value().c_str(),
+          accessToken.value().c_str());
+    }
   }
 
   // If no known auth method matched

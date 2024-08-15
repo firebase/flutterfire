@@ -1,3 +1,12 @@
+## 5.2.1
+
+ - **FIX**: compilation issue on Windows ([#13135](https://github.com/firebase/flutterfire/issues/13135)). ([de8c9e0f](https://github.com/firebase/flutterfire/commit/de8c9e0f2d3117b3614ac8295b041fea7ed3ee7f))
+
+## 5.2.0
+
+ - **FIX**(firestore,web): stop cleaning up snapshot listeners in debug ([#13119](https://github.com/firebase/flutterfire/issues/13119)). ([82a63c8b](https://github.com/firebase/flutterfire/commit/82a63c8bf9bad0c262ed48d7829fb05110a9fe08))
+ - **FEAT**(firestore): support for `PersistentCacheIndexManager` for firestore instances for managing cache indexes. ([#13070](https://github.com/firebase/flutterfire/issues/13070)). ([806c15d7](https://github.com/firebase/flutterfire/commit/806c15d7eadaf48b8dfb22586bea4ed684672a86))
+
 ## 5.1.0
 
  - **FEAT**(firestore,windows): support multiple databases ([#12998](https://github.com/firebase/flutterfire/issues/12998)). ([f80768a4](https://github.com/firebase/flutterfire/commit/f80768a4a4258932cac75dbd310589573bf14306))

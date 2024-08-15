@@ -1,3 +1,7 @@
+## 5.2.0
+
+ - **FEAT**(firebase_core_platform_interface): Add copyWith to FirebaseOptions ([#13084](https://github.com/firebase/flutterfire/issues/13084)). ([c7963d63](https://github.com/firebase/flutterfire/commit/c7963d63b1cd8cf6471959f0ee7fbf45b5f51edc))
+
 ## 5.1.0
 
  - **FEAT**: add support for demo project ([#11973](https://github.com/firebase/flutterfire/issues/11973)). ([859ec1dd](https://github.com/firebase/flutterfire/commit/859ec1dd4424c422bbdf96617a77d123d8b1f409))

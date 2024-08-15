@@ -124,7 +124,7 @@ body:
     attributes:
       label: Are you sending messages to your app from the Firebase Admin SDK?
       description: |
-        For an example of sending messages to your app, please see [FlutterFire's nodejs Firebase Admin SDK script](https://github.com/firebase/flutterfire/blob/master/packages/firebase_messaging/firebase_messaging/example/scripts/send-message.js). FlutterFire does not support sending messages from 3rd party packages.
+        For an example of sending messages to your app, please see [FlutterFire's nodejs Firebase Admin SDK script](https://github.com/firebase/flutterfire/blob/main/packages/firebase_messaging/firebase_messaging/example/scripts/send-message.js). FlutterFire does not support sending messages from 3rd party packages.
 
         It is essential you include the `contentAvailable` flag in your message payload when sending messages to your app from the Firebase Admin SDK.
 
@@ -201,8 +201,8 @@ body:
           5. Now send the message to your device
           6. Select all the rows on the logs & copy them, Cmd + C (not available on right-click menu)
 
-          [Example of successfully delivered data-only background message](https://github.com/firebase/flutterfire/blob/master/.github/images/ios-background-message-delivered.png)
-          [Example of unsuccessfully delivered data-only background message](https://github.com/firebase/flutterfire/blob/master/.github/images/ios-background-message-not-delivered.png)
+          [Example of successfully delivered data-only background message](https://github.com/firebase/flutterfire/blob/main/.github/images/ios-background-message-delivered.png)
+          [Example of unsuccessfully delivered data-only background message](https://github.com/firebase/flutterfire/blob/main/.github/images/ios-background-message-not-delivered.png)
 
           REQUIRED: Please paste your logs from the above steps in the text area so we can see if a message was delivered but not received by the background message handler.
     validations:

@@ -45,6 +45,26 @@ external JSPromise setIndexConfiguration(
 
 @JS()
 @staticInterop
+external PersistentCacheIndexManager? getPersistentCacheIndexManager(
+    FirestoreJsImpl firestore);
+
+@JS()
+@staticInterop
+external void enablePersistentCacheIndexAutoCreation(
+    PersistentCacheIndexManager indexManager);
+
+@JS()
+@staticInterop
+external void disablePersistentCacheIndexAutoCreation(
+    PersistentCacheIndexManager indexManager);
+
+@JS()
+@staticInterop
+external void deleteAllPersistentCacheIndexes(
+    PersistentCacheIndexManager indexManager);
+
+@JS()
+@staticInterop
 external CollectionReferenceJsImpl collection(
   FirestoreJsImpl firestore,
   JSString collectionPath,
@@ -1043,3 +1063,8 @@ extension AggregateQuerySnapshotJsImplExtension
     on AggregateQuerySnapshotJsImpl {
   external JSObject data();
 }
+
+@anonymous
+@JS()
+@staticInterop
+abstract class PersistentCacheIndexManager {}

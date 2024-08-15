@@ -79,6 +79,13 @@ enum AggregateSource {
   server,
 }
 
+/// [PersistenceCacheIndexManagerRequest] represents the request types for the persistence cache index manager.
+enum PersistenceCacheIndexManagerRequest {
+  enableIndexAutoCreation,
+  disableIndexAutoCreation,
+  deleteAllIndexes,
+}
+
 enum PigeonTransactionResult {
   success,
   failure,
@@ -1306,6 +1313,33 @@ class FirebaseFirestoreHostApi {
       );
     } else {
       return (replyList[0] as String?)!;
+    }
+  }
+
+  Future<void> persistenceCacheIndexManagerRequest(
+    FirestorePigeonFirebaseApp arg_app,
+    PersistenceCacheIndexManagerRequest arg_request,
+  ) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+      'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.persistenceCacheIndexManagerRequest',
+      codec,
+      binaryMessenger: _binaryMessenger,
+    );
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_app, arg_request.index]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else {
+      return;
     }
   }
 }
