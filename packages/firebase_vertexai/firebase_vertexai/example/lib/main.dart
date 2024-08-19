@@ -77,7 +77,7 @@ class ChatWidget extends StatefulWidget {
 class _ChatWidgetState extends State<ChatWidget> {
   late final GenerativeModel _model;
   late final GenerativeModel _functionCallModel;
-  late final ChatSession _chat;
+  ChatSession? _chat;
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
   final FocusNode _textFieldFocus = FocusNode();
@@ -289,6 +289,16 @@ class _ChatWidgetState extends State<ChatWidget> {
               ],
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 15,
+              right: 15,
+              bottom: 25,
+            ),
+            child: Text(
+              'Total message count: ${_chat?.history.length ?? 0}',
+            ),
+          ),
         ],
       ),
     );
@@ -401,10 +411,10 @@ class _ChatWidgetState extends State<ChatWidget> {
 
     try {
       _generatedContent.add((image: null, text: message, fromUser: true));
-      var response = await _chat.sendMessage(
+      var response = await _chat?.sendMessage(
         Content.text(message),
       );
-      var text = response.text;
+      var text = response?.text;
       _generatedContent.add((image: null, text: text, fromUser: false));
 
       if (text == null) {
