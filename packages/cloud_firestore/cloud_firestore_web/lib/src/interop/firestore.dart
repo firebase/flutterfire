@@ -553,12 +553,12 @@ class Query<T extends firestore_interop.QueryJsImpl>
 
   Stream<QuerySnapshot> onSnapshot(
           {bool includeMetadataChanges = false,
-          ListenSource source = ListenSource.defaultSource,
+          required ListenSource listenSource,
           required int hashCode}) =>
       _createSnapshotStream(
         firestore_interop.DocumentListenOptions(
           includeMetadataChanges: includeMetadataChanges.toJS,
-          source: convertListenSource(source),
+          source: convertListenSource(listenSource),
         ),
         hashCode,
       ).stream;

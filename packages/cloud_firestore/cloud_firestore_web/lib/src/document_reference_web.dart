@@ -67,12 +67,12 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
   @override
   Stream<DocumentSnapshotPlatform> snapshots({
     bool includeMetadataChanges = false,
-    ListenSource source = ListenSource.defaultSource,
+    required ListenSource listenSource,
   }) {
     Stream<firestore_interop.DocumentSnapshot> querySnapshots =
         _delegate.onSnapshot(
       includeMetadataChanges: includeMetadataChanges,
-      source: source,
+      source: listenSource,
     );
 
     return convertWebExceptions(
