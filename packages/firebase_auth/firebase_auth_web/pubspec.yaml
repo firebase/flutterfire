@@ -5,8 +5,8 @@ repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_
 version: 5.12.5
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
-  flutter: '>=3.16.0'
+  sdk: '>=3.4.0 <4.0.0'
+  flutter: '>=3.22.0'
 
 dependencies:
   firebase_auth_platform_interface: ^7.4.3
@@ -18,7 +18,7 @@ dependencies:
     sdk: flutter
   http_parser: ^4.0.0
   meta: ^1.8.0
-  web: ^0.5.1
+  web: ^1.0.0
 
 dev_dependencies:
   flutter_test:
