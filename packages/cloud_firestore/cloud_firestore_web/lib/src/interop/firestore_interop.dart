@@ -719,6 +719,7 @@ abstract class FirestoreSettings {
     JSString? host,
     JSBoolean? ssl,
     JSBoolean? ignoreUndefinedProperties,
+    JSBoolean? experimentalForceLongPolling,
     JSObject localCache,
   });
 }

@@ -14,7 +14,7 @@ import 'firebase_options.dart';
 
 /// Requires that a Firestore emulator is running locally.
 /// See https://firebase.google.com/docs/firestore/quickstart#optional_prototype_and_test_with
-bool shouldUseFirestoreEmulator = true;
+bool shouldUseFirestoreEmulator = false;
 
 Future<Uint8List> loadBundleSetup(int number) async {
   // endpoint serves a bundle with 3 documents each containing

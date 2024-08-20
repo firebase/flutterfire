@@ -14,6 +14,7 @@ void main() {
           persistenceEnabled: true,
           host: 'foo bar',
           sslEnabled: true,
+          experimentalForceLongPolling: false,
           cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
         ),
         equals(
@@ -21,6 +22,7 @@ void main() {
             persistenceEnabled: true,
             host: 'foo bar',
             sslEnabled: true,
+            experimentalForceLongPolling: false,
             cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
           ),
         ),
@@ -60,7 +62,8 @@ void main() {
         'persistenceEnabled': null,
         'host': null,
         'sslEnabled': null,
-        'cacheSizeBytes': null
+        'cacheSizeBytes': null,
+        'experimentalForceLongPolling': true
       });
 
       expect(
@@ -75,6 +78,7 @@ void main() {
             'host': 'foo bar',
             'sslEnabled': true,
             'cacheSizeBytes': Settings.CACHE_SIZE_UNLIMITED,
+            'experimentalForceLongPolling': true
           });
     });
 
