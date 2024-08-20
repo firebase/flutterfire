@@ -1168,7 +1168,7 @@ class RecaptchaVerifier
   ///       }
   ///     });
   factory RecaptchaVerifier(
-      container, Map<String, dynamic> parameters, Auth auth) {
+      JSAny container, Map<String, dynamic> parameters, Auth auth) {
     return RecaptchaVerifier.fromJsObject(
       auth_interop.RecaptchaVerifierJsImpl(
         auth.jsObject,
