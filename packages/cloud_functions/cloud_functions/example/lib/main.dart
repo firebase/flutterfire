@@ -2,7 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
 
@@ -11,23 +10,6 @@ import 'package:cloud_functions_example/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-class Fruit {
-  final String name;
-  final String color;
-  final String taste;
-
-  Fruit({required this.name, required this.color, required this.taste});
-
-  // Factory constructor to create a Fruit object from JSON
-  factory Fruit.fromJson(Map<String, dynamic> json) {
-    return Fruit(
-      name: json['name'],
-      color: json['color'],
-      taste: json['taste'],
-    );
-  }
-}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -101,7 +83,6 @@ class _MyAppState extends State<MyApp> {
                   onPressed: () async {
                     // See .github/workflows/scripts/functions/src/index.ts for the example function we
                     // are using for this example
-                    debugPrint("Calling 2nd Gen Function ${localhostMapped}");
                     HttpsCallable callable =
                         FirebaseFunctions.instance.httpsCallableFromUrl(
                       'http://$localhostMapped:5001/flutterfire-e2e-tests/us-central1/listfruits2ndgen',
@@ -130,17 +111,9 @@ class _MyAppState extends State<MyApp> {
   ) async {
     try {
       final result = await callable();
-      // debugPrint("Result is >>> $result");
-       result.data;
-        // final decodedJson =  json.decode(result.data);
-        debugPrint("Decoded json ${result.data}");
-        List<Fruit> fruits = List<Fruit>.from(result.data.map((model)=> Fruit.fromJson(model)));
- 
       setState(() {
         fruit.clear();
         result.data.forEach((f) {
-          debugPrint("Result is >>> $f");
-
           fruit.add(f);
         });
       });
