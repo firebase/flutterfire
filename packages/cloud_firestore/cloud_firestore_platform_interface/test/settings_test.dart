@@ -14,7 +14,7 @@ void main() {
           persistenceEnabled: true,
           host: 'foo bar',
           sslEnabled: true,
-          experimentalForceLongPolling: false,
+          webExperimentalForceLongPolling: false,
           cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
         ),
         equals(
@@ -22,7 +22,7 @@ void main() {
             persistenceEnabled: true,
             host: 'foo bar',
             sslEnabled: true,
-            experimentalForceLongPolling: false,
+            webExperimentalForceLongPolling: false,
             cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
           ),
         ),
@@ -63,7 +63,7 @@ void main() {
         'host': null,
         'sslEnabled': null,
         'cacheSizeBytes': null,
-        'experimentalForceLongPolling': true
+        'webExperimentalForceLongPolling': true
       });
 
       expect(
@@ -78,7 +78,7 @@ void main() {
             'host': 'foo bar',
             'sslEnabled': true,
             'cacheSizeBytes': Settings.CACHE_SIZE_UNLIMITED,
-            'experimentalForceLongPolling': true
+            'webExperimentalForceLongPolling': true
           });
     });
 

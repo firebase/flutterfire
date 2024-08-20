@@ -16,7 +16,7 @@ class Settings {
     this.host,
     this.sslEnabled,
     this.cacheSizeBytes,
-    this.experimentalForceLongPolling = true,
+    this.webExperimentalForceLongPolling = true,
     this.ignoreUndefinedProperties = false,
   });
 
@@ -59,7 +59,7 @@ class Settings {
   /// This avoids incompatibility issues with certain proxies, antivirus software, etc. 
   /// that incorrectly buffer traffic indefinitely.
   /// Use of this option will cause some performance degradation though.
-  final bool experimentalForceLongPolling;
+  final bool webExperimentalForceLongPolling;
 
   /// Returns the settings as a [Map]
   Map<String, dynamic> get asMap {
@@ -68,7 +68,7 @@ class Settings {
       'host': host,
       'sslEnabled': sslEnabled,
       'cacheSizeBytes': cacheSizeBytes,
-      'experimentalForceLongPolling': experimentalForceLongPolling,
+      'webExperimentalForceLongPolling': webExperimentalForceLongPolling,
       if (kIsWeb) 'ignoreUndefinedProperties': ignoreUndefinedProperties,
     };
   }
@@ -78,7 +78,7 @@ class Settings {
     String? host,
     bool? sslEnabled,
     int? cacheSizeBytes,
-    bool? experimentalForceLongPolling,
+    bool? webExperimentalForceLongPolling,
     bool? ignoreUndefinedProperties,
   }) {
     assert(
@@ -93,7 +93,7 @@ class Settings {
       host: host ?? this.host,
       sslEnabled: sslEnabled ?? this.sslEnabled,
       cacheSizeBytes: cacheSizeBytes ?? this.cacheSizeBytes,
-      experimentalForceLongPolling: experimentalForceLongPolling ?? this.experimentalForceLongPolling,
+      webExperimentalForceLongPolling: webExperimentalForceLongPolling ?? this.webExperimentalForceLongPolling,
       ignoreUndefinedProperties:
           ignoreUndefinedProperties ?? this.ignoreUndefinedProperties,
     );
@@ -107,7 +107,7 @@ class Settings {
       other.host == host &&
       other.sslEnabled == sslEnabled &&
       other.cacheSizeBytes == cacheSizeBytes &&
-      other.experimentalForceLongPolling == experimentalForceLongPolling &&
+      other.webExperimentalForceLongPolling == webExperimentalForceLongPolling &&
       other.ignoreUndefinedProperties == ignoreUndefinedProperties;
 
   @override
@@ -117,7 +117,7 @@ class Settings {
         host,
         sslEnabled,
         cacheSizeBytes,
-        experimentalForceLongPolling,
+        webExperimentalForceLongPolling,
         ignoreUndefinedProperties,
       );
 
