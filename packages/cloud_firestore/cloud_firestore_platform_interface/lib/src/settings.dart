@@ -68,6 +68,11 @@ class Settings {
   ///This is very similar to [webExperimentalForceLongPolling], but only uses long-polling if required.
   final bool? webExperimentalAutoDetectLongPolling;
 
+  /// Options that configure the SDK’s underlying network transport (WebChannel) when long-polling is used.
+  /// 
+  /// These options are only used if experimentalForceLongPolling is true
+  /// or if [webExperimentalAutoDetectLongPolling] is true and the auto-detection determined that long-polling was needed.
+  /// Otherwise, these options have no effect.
   final WebExperimentalLongPollingOptions? webExperimentalLongPollingOptions;
 
   /// Returns the settings as a [Map]
@@ -153,10 +158,7 @@ class Settings {
   String toString() => 'Settings($asMap)';
 }
 
-/// Options that configure the SDK’s underlying network transport (WebChannel) when long-polling is used
-/// These options are only used if experimentalForceLongPolling is true
-/// or if experimentalAutoDetectLongPolling is true and the auto-detection determined that long-polling was needed.
-/// Otherwise, these options have no effect.
+/// Options that configure the SDK’s underlying network transport (WebChannel) when long-polling is used.
 @immutable
 class WebExperimentalLongPollingOptions {
   /// The desired maximum timeout interval, in seconds, to complete a long-polling GET response
