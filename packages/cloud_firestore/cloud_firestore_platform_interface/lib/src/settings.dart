@@ -68,15 +68,6 @@ class Settings {
   ///This is very similar to [webExperimentalForceLongPolling], but only uses long-polling if required.
   final bool? webExperimentalAutoDetectLongPolling;
 
-  /// The desired maximum timeout interval, in seconds, to complete a long-polling GET response
-  ///
-  /// Valid values are between 5 and 30, inclusive.
-  /// By default, when long-polling is used the "hanging GET" request sent by the client times out after 30 seconds.
-  /// To request a different timeout from the server, set this setting with the desired timeout.
-  /// Changing the default timeout may be useful, for example,
-  /// if the buffering proxy that necessitated enabling long-polling in the first place has a shorter timeout for hanging GET requests,
-  /// in which case setting the long-polling timeout to a shorter value,
-  /// such as 25 seconds, may fix prematurely-closed hanging GET requests.
   final WebExperimentalLongPollingOptions? webExperimentalLongPollingOptions;
 
   /// Returns the settings as a [Map]
@@ -122,7 +113,8 @@ class Settings {
       webExperimentalAutoDetectLongPolling:
           webExperimentalAutoDetectLongPolling ??
               this.webExperimentalAutoDetectLongPolling,
-      webExperimentalLongPollingOptions: webExperimentalLongPollingOptions ?? this.webExperimentalLongPollingOptions,
+      webExperimentalLongPollingOptions: webExperimentalLongPollingOptions ??
+          this.webExperimentalLongPollingOptions,
       ignoreUndefinedProperties:
           ignoreUndefinedProperties ?? this.ignoreUndefinedProperties,
     );
@@ -160,7 +152,6 @@ class Settings {
   @override
   String toString() => 'Settings($asMap)';
 }
-
 
 /// Options that configure the SDK’s underlying network transport (WebChannel) when long-polling is used
 /// These options are only used if experimentalForceLongPolling is true
