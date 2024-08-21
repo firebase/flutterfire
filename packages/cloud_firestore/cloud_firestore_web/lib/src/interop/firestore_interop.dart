@@ -721,7 +721,7 @@ abstract class FirestoreSettings {
     JSBoolean? ignoreUndefinedProperties,
     JSBoolean? experimentalForceLongPolling,
     JSBoolean? experimentalAutoDetectLongPolling,
-    JSObject? experimentalLongPollingOptions,
+    JSAny? experimentalLongPollingOptions,
     JSObject localCache,
   });
 }

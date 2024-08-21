@@ -317,6 +317,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
       cacheSizeBytes: settings.cacheSizeBytes,
       webExperimentalForceLongPolling: settings.webExperimentalForceLongPolling,
       webExperimentalAutoDetectLongPolling: settings.webExperimentalAutoDetectLongPolling,
+      webExperimentalLongPollingOptions: settings.webExperimentalLongPollingOptions,
     );
   }
 

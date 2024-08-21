@@ -152,8 +152,8 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
       ));
     }
 
-    dynamic experimentalLongPollingOptions = firestore_interop.ExperimentalLongPollingOptions(
-        timeoutSeconds: firestoreSettings.timeoutSeconds.toJS);
+    JSAny experimentalLongPollingOptions = firestore_interop.ExperimentalLongPollingOptions(
+        timeoutSeconds: firestoreSettings.webExperimentalLongPollingOptions?.timeoutDuration?.inSeconds.toJS) as JSAny;
 
     if (firestoreSettings.host != null &&
         firestoreSettings.sslEnabled != null) {
@@ -162,9 +162,9 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
         host: firestoreSettings.host?.toJS,
         ssl: firestoreSettings.sslEnabled?.toJS,
         experimentalForceLongPolling:
-            firestoreSettings.webExperimentalForceLongPolling.toJS,
+            firestoreSettings.webExperimentalForceLongPolling?.toJS,
         experimentalAutoDetectLongPolling:
-            firestoreSettings.webExperimentalAutoDetectLongPolling.toJS,
+            firestoreSettings.webExperimentalAutoDetectLongPolling?.toJS,
         experimentalLongPollingOptions: experimentalLongPollingOptions,
         ignoreUndefinedProperties:
             firestoreSettings.ignoreUndefinedProperties.toJS,
@@ -173,9 +173,10 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
       _interopSettings = firestore_interop.FirestoreSettings(
         localCache: localCache,
         experimentalForceLongPolling:
-            firestoreSettings.webExperimentalForceLongPolling.toJS,
+            firestoreSettings.webExperimentalForceLongPolling?.toJS,
         experimentalAutoDetectLongPolling:
-            firestoreSettings.webExperimentalAutoDetectLongPolling.toJS,
+            firestoreSettings.webExperimentalAutoDetectLongPolling?.toJS,
+        experimentalLongPollingOptions: experimentalLongPollingOptions,
         ignoreUndefinedProperties:
             firestoreSettings.ignoreUndefinedProperties.toJS,
       );
