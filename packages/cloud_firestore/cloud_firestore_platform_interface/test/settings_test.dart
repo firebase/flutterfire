@@ -11,19 +11,22 @@ void main() {
     test('equality', () {
       expect(
         const Settings(
-          persistenceEnabled: true,
-          host: 'foo bar',
-          sslEnabled: true,
-          webExperimentalForceLongPolling: false,
-          cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
-        ),
+            persistenceEnabled: true,
+            host: 'foo bar',
+            sslEnabled: true,
+            webExperimentalForceLongPolling: false,
+            webExperimentalAutoDetectLongPolling: false,
+            cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+            timeoutSeconds: 25),
         equals(
           const Settings(
             persistenceEnabled: true,
             host: 'foo bar',
             sslEnabled: true,
             webExperimentalForceLongPolling: false,
+            webExperimentalAutoDetectLongPolling: false,
             cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+            timeoutSeconds: 25,
           ),
         ),
       );
@@ -51,6 +54,9 @@ void main() {
         persistenceEnabled: true,
         host: 'foo bar',
         sslEnabled: true,
+        webExperimentalAutoDetectLongPolling: false,
+        webExperimentalForceLongPolling: false,
+        timeoutSeconds: 25,
         cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
       );
 
@@ -63,7 +69,8 @@ void main() {
         'host': null,
         'sslEnabled': null,
         'cacheSizeBytes': null,
-        'webExperimentalForceLongPolling': true
+        'webExperimentalForceLongPolling': true,
+        'webExperimentalAutoDetectLongPolling': true
       });
 
       expect(
@@ -78,7 +85,8 @@ void main() {
             'host': 'foo bar',
             'sslEnabled': true,
             'cacheSizeBytes': Settings.CACHE_SIZE_UNLIMITED,
-            'webExperimentalForceLongPolling': true
+            'webExperimentalForceLongPolling': true,
+            'webExperimentalAutoDetectLongPolling': true,
           });
     });
 

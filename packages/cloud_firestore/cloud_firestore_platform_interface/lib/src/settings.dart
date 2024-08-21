@@ -17,6 +17,8 @@ class Settings {
     this.sslEnabled,
     this.cacheSizeBytes,
     this.webExperimentalForceLongPolling = true,
+    this.webExperimentalAutoDetectLongPolling = true,
+    this.timeoutSeconds = 30,
     this.ignoreUndefinedProperties = false,
   });
 
@@ -61,6 +63,22 @@ class Settings {
   /// Use of this option will cause some performance degradation though.
   final bool webExperimentalForceLongPolling;
 
+  ///	Configures the SDK's underlying transport (WebChannel) to automatically detect if long-polling should be used.
+  ///
+  ///This is very similar to [webExperimentalForceLongPolling], but only uses long-polling if required.
+  final bool webExperimentalAutoDetectLongPolling;
+
+  /// The desired maximum timeout interval, in seconds, to complete a long-polling GET response
+  /// 
+  /// Valid values are between 5 and 30, inclusive.
+  /// By default, when long-polling is used the "hanging GET" request sent by the client times out after 30 seconds.
+  /// To request a different timeout from the server, set this setting with the desired timeout.
+  /// Changing the default timeout may be useful, for example, 
+  /// if the buffering proxy that necessitated enabling long-polling in the first place has a shorter timeout for hanging GET requests, 
+  /// in which case setting the long-polling timeout to a shorter value, 
+  /// such as 25 seconds, may fix prematurely-closed hanging GET requests.
+  final int timeoutSeconds;
+
   /// Returns the settings as a [Map]
   Map<String, dynamic> get asMap {
     return {
@@ -69,6 +87,8 @@ class Settings {
       'sslEnabled': sslEnabled,
       'cacheSizeBytes': cacheSizeBytes,
       'webExperimentalForceLongPolling': webExperimentalForceLongPolling,
+      'webExperimentalAutoDetectLongPolling': webExperimentalAutoDetectLongPolling,
+      'timeoutSeconds': timeoutSeconds,
       if (kIsWeb) 'ignoreUndefinedProperties': ignoreUndefinedProperties,
     };
   }
@@ -79,7 +99,9 @@ class Settings {
     bool? sslEnabled,
     int? cacheSizeBytes,
     bool? webExperimentalForceLongPolling,
+    bool? webExperimentalAutoDetectLongPolling,
     bool? ignoreUndefinedProperties,
+    int? timeoutSeconds,
   }) {
     assert(
         cacheSizeBytes == null ||
@@ -94,6 +116,8 @@ class Settings {
       sslEnabled: sslEnabled ?? this.sslEnabled,
       cacheSizeBytes: cacheSizeBytes ?? this.cacheSizeBytes,
       webExperimentalForceLongPolling: webExperimentalForceLongPolling ?? this.webExperimentalForceLongPolling,
+      webExperimentalAutoDetectLongPolling: webExperimentalAutoDetectLongPolling ?? this.webExperimentalAutoDetectLongPolling,
+      timeoutSeconds: timeoutSeconds ?? this.timeoutSeconds,
       ignoreUndefinedProperties:
           ignoreUndefinedProperties ?? this.ignoreUndefinedProperties,
     );
@@ -108,6 +132,8 @@ class Settings {
       other.sslEnabled == sslEnabled &&
       other.cacheSizeBytes == cacheSizeBytes &&
       other.webExperimentalForceLongPolling == webExperimentalForceLongPolling &&
+      other.webExperimentalAutoDetectLongPolling == webExperimentalAutoDetectLongPolling &&
+      other.timeoutSeconds == timeoutSeconds &&
       other.ignoreUndefinedProperties == ignoreUndefinedProperties;
 
   @override
@@ -118,6 +144,7 @@ class Settings {
         sslEnabled,
         cacheSizeBytes,
         webExperimentalForceLongPolling,
+        webExperimentalAutoDetectLongPolling,
         ignoreUndefinedProperties,
       );
 

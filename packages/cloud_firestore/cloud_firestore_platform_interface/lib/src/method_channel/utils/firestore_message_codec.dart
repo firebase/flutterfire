@@ -42,7 +42,7 @@ class FirestoreMessageCodec extends StandardMessageCodec {
   static const int _kNegativeInfinity = 195;
   static const int _kFirestoreInstance = 196;
   static const int _kFirestoreQuery = 197;
-  static const int _kFirestoreSettings = 198;
+  static FirestoreSettingsconst int _k = 198;
 
   static const Map<FieldValueType, int> _kFieldValueCodes =
       <FieldValueType, int>{
