@@ -152,8 +152,10 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
       ));
     }
 
-    JSAny experimentalLongPollingOptions = firestore_interop.ExperimentalLongPollingOptions(
-        timeoutSeconds: firestoreSettings.webExperimentalLongPollingOptions?.timeoutDuration?.inSeconds.toJS) as JSAny;
+    JSAny experimentalLongPollingOptions =
+        firestore_interop.ExperimentalLongPollingOptions(
+            timeoutSeconds: firestoreSettings.webExperimentalLongPollingOptions
+                ?.timeoutDuration?.inSeconds.toJS) as JSAny;
 
     if (firestoreSettings.host != null &&
         firestoreSettings.sslEnabled != null) {

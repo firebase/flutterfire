@@ -69,7 +69,7 @@ class Settings {
   final bool? webExperimentalAutoDetectLongPolling;
 
   /// Options that configure the SDK’s underlying network transport (WebChannel) when long-polling is used.
-  /// 
+  ///
   /// These options are only used if experimentalForceLongPolling is true
   /// or if [webExperimentalAutoDetectLongPolling] is true and the auto-detection determined that long-polling was needed.
   /// Otherwise, these options have no effect.

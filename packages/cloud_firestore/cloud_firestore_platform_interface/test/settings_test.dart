@@ -102,7 +102,7 @@ void main() {
             'webExperimentalForceLongPolling': true,
             'webExperimentalAutoDetectLongPolling': true,
             'webExperimentalLongPollingOptions':
-                WebExperimentalLongPollingOptions(
+                const WebExperimentalLongPollingOptions(
               timeoutDuration: Duration(seconds: 4),
             ).asMap
           });
