@@ -41,7 +41,8 @@ class RestTransport implements DataConnectTransport {
       Serializer<Variables>? serializer,
       Variables? vars,
       OperationType opType,
-      String? token) async {
+      String? token,
+      String? appCheckToken) async {
     String project = options.projectId;
     String location = options.location;
     String service = options.serviceId;
@@ -54,6 +55,10 @@ class RestTransport implements DataConnectTransport {
     if (token != null) {
       headers['X-Firebase-Auth-Token'] = token;
     }
+    if (appCheckToken != null) {
+      headers['X-Firebase-AppCheck'] = appCheckToken;
+    }
+
     Map<String, dynamic> body = {
       'name':
           'projects/$project/locations/$location/services/$service/connectors/$connector',
@@ -99,9 +104,10 @@ class RestTransport implements DataConnectTransport {
       Deserializer<Data> deserializer,
       Serializer<Variables>? serializer,
       Variables? vars,
-      String? token) async {
-    return invokeOperation(
-        queryName, deserializer, serializer, vars, OperationType.query, token);
+      String? token,
+      String? appCheckToken) async {
+    return invokeOperation(queryName, deserializer, serializer, vars,
+        OperationType.query, token, appCheckToken);
   }
 
   /// Invokes mutation REST endpoint.
@@ -111,9 +117,10 @@ class RestTransport implements DataConnectTransport {
       Deserializer<Data> deserializer,
       Serializer<Variables>? serializer,
       Variables? vars,
-      String? token) async {
+      String? token,
+      String? appCheckToken) async {
     return invokeOperation(queryName, deserializer, serializer, vars,
-        OperationType.mutation, token);
+        OperationType.mutation, token, appCheckToken);
   }
 }
 

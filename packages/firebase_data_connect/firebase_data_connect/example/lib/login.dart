@@ -3,13 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_data_connect_example/main.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
-import 'firebase_options.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -19,11 +16,6 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  Future<void> initFirebase() async {
-    await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform);
-  }
-
   Future<UserCredential> signInWithGoogle() async {
     // Trigger the authentication flow
     if (kIsWeb) {
@@ -53,7 +45,6 @@ class _LoginState extends State<Login> {
   }
 
   void logIn() async {
-    await initFirebase();
     await signInWithGoogle();
     Navigator.push(
       context,

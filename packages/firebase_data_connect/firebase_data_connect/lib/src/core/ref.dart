@@ -15,13 +15,14 @@ class OperationResult<Data, Variables> {
 /// Contains variables, transport to execute queries, and serialization/deserialization strategies.
 class OperationRef<Data, Variables> {
   /// Constructor
-  OperationRef(this.auth, this.operationName, this.variables, this._transport,
-      this.opType, this.deserializer, this.serializer) {
+  OperationRef(this.auth, this.appCheck, this.operationName, this.variables,
+      this._transport, this.opType, this.deserializer, this.serializer) {
     if (this.variables != null && this.serializer == null) {
       throw Exception('Serializer required for variables');
     }
   }
   FirebaseAuth? auth;
+  FirebaseAppCheck? appCheck;
   Variables? variables;
   String operationName;
   DataConnectTransport _transport;
@@ -99,10 +100,11 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
       Deserializer<Data> deserializer,
       this._queryManager,
       FirebaseAuth? auth,
+      FirebaseAppCheck? appCheck,
       Variables? variables,
       Serializer<Variables>? serializer)
-      : super(auth, operationName, variables, transport, OperationType.query,
-            deserializer, serializer);
+      : super(auth, appCheck, operationName, variables, transport,
+            OperationType.query, deserializer, serializer);
   _QueryManager _queryManager;
   @override
   Future<OperationResult<Data, Variables>> execute() async {
@@ -146,8 +148,9 @@ class MutationRef<Data, Variables> extends OperationRef<Data, Variables> {
     DataConnectTransport transport,
     Deserializer<Data> deserializer,
     FirebaseAuth? auth,
+    FirebaseAppCheck? appCheck,
     Variables? variables,
     Serializer<Variables>? serializer,
-  ) : super(auth, operationName, variables, transport, OperationType.mutation,
-            deserializer, serializer);
+  ) : super(auth, appCheck, operationName, variables, transport,
+            OperationType.mutation, deserializer, serializer);
 }

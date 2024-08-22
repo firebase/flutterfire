@@ -38,14 +38,16 @@ class GRPCTransport implements DataConnectTransport {
   @override
   DataConnectOptions options;
 
-  /// Get headers required for all requests.
-  Map<String, String> getMetadata(String? authToken) {
+  Map<String, String> getMetadata(String? authToken, String? appCheckToken) {
     Map<String, String> metadata = {
       'x-goog-request-params': 'location=${options.location}&frontend=data',
       'x-goog-api-client': 'gl-dart/flutter fire/$packageVersion'
     };
     if (authToken != null) {
       metadata['x-firebase-auth-token'] = authToken;
+    }
+    if (appCheckToken != null) {
+      metadata['X-Firebase-AppCheck'] = appCheckToken;
     }
     return metadata;
   }
@@ -57,10 +59,11 @@ class GRPCTransport implements DataConnectTransport {
       Deserializer<Data> deserializer,
       Serializer<Variables>? serializer,
       Variables? vars,
-      String? token) async {
+      String? token,
+      String? appCheckToken) async {
     ExecuteQueryResponse response;
 
-    Map<String, String> metadata = getMetadata(token);
+    Map<String, String> metadata = getMetadata(token, appCheckToken);
     ExecuteQueryRequest request =
         ExecuteQueryRequest(name: name, operationName: queryName);
     if (vars != null && serializer != null) {
@@ -91,9 +94,10 @@ class GRPCTransport implements DataConnectTransport {
       Deserializer<Data> deserializer,
       Serializer<Variables>? serializer,
       Variables? vars,
-      String? token) async {
+      String? token,
+      String? appCheckToken) async {
     ExecuteMutationResponse response;
-    Map<String, String> metadata = getMetadata(token);
+    Map<String, String> metadata = getMetadata(token, appCheckToken);
     ExecuteMutationRequest request =
         ExecuteMutationRequest(name: name, operationName: queryName);
     if (vars != null && serializer != null) {
