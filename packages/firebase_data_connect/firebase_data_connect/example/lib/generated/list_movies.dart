@@ -5,25 +5,30 @@
 part of movies;
 
 class ListMovies {
-  String name = "ListMovie";
+  String name = "ListMovies";
   ListMovies({required this.dataConnect});
 
   Deserializer<ListMoviesResponse> dataDeserializer = (String json) =>
       ListMoviesResponse.fromJson(jsonDecode(json) as Map<String, dynamic>);
-
-  QueryRef<ListMoviesResponse, void> ref() {
-    return dataConnect.query(name, dataDeserializer, null, null);
+  Serializer<ListMoviesVariables> varsSerializer = jsonEncode;
+  QueryRef<ListMoviesResponse, ListMoviesVariables> ref(
+      {String? title, ListMoviesVariables? listMoviesVariables}) {
+    ListMoviesVariables vars1 = ListMoviesVariables(
+      title: title,
+    );
+    ListMoviesVariables vars = listMoviesVariables ?? vars1;
+    return dataConnect.query(this.name, dataDeserializer, varsSerializer, vars);
   }
 
   FirebaseDataConnect dataConnect;
 }
 
 class ListMoviesMovies {
-  String id;
+  late String id;
 
-  String title;
+  late String title;
 
-  List<ListMoviesMoviesDirectedBy> directed_by;
+  late List<ListMoviesMoviesDirectedBy> directed_by;
 
   ListMoviesMovies.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -45,15 +50,17 @@ class ListMoviesMovies {
     return json;
   }
 
-  ListMoviesMovies(
-    this.id,
-    this.title,
-    this.directed_by,
-  );
+  ListMoviesMovies({
+    required this.id,
+    required this.title,
+    required this.directed_by,
+  }) {
+    // TODO(mtewani): Only show this if there are optional fields.
+  }
 }
 
 class ListMoviesMoviesDirectedBy {
-  String name;
+  late String name;
 
   ListMoviesMoviesDirectedBy.fromJson(Map<String, dynamic> json)
       : name = json['name'] {}
@@ -67,13 +74,15 @@ class ListMoviesMoviesDirectedBy {
     return json;
   }
 
-  ListMoviesMoviesDirectedBy(
-    this.name,
-  );
+  ListMoviesMoviesDirectedBy({
+    required this.name,
+  }) {
+    // TODO(mtewani): Only show this if there are optional fields.
+  }
 }
 
 class ListMoviesResponse {
-  List<ListMoviesMovies> movies;
+  late List<ListMoviesMovies> movies;
 
   ListMoviesResponse.fromJson(Map<String, dynamic> json)
       : movies = (json['movies'] as List<dynamic>)
@@ -89,7 +98,46 @@ class ListMoviesResponse {
     return json;
   }
 
-  ListMoviesResponse(
-    this.movies,
-  );
+  ListMoviesResponse({
+    required this.movies,
+  }) {
+    // TODO(mtewani): Only show this if there are optional fields.
+  }
+}
+
+class ListMoviesVariables {
+  late Optional<String> _title = Optional.optional(
+      nativeFromJson as Deserializer<String>,
+      nativeToJson as Serializer<String>);
+
+  set title(String t) {
+    this._title.value = t;
+  }
+
+  String get title => this._title.value!;
+
+  ListMoviesVariables.fromJson(Map<String, dynamic> json) {
+    if (json.containsKey('title')) {
+      _title.value = json['title'];
+    }
+  }
+
+  // TODO(mtewani): Fix up to create a map on the fly
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> json = {};
+
+    if (title != null) {
+      json['title'] = title;
+    }
+
+    return json;
+  }
+
+  ListMoviesVariables({
+    String? title,
+  }) {
+    // TODO(mtewani): Only show this if there are optional fields.
+
+    this._title = Optional.optional(nativeFromJson, nativeToJson);
+  }
 }

@@ -71,7 +71,7 @@ class GRPCTransport implements DataConnectTransport {
           options: CallOptions(metadata: metadata));
       return deserializer(jsonEncode(response.data.toProto3Json()));
     } on Exception catch (e) {
-      throw FirebaseDataConnectError(DataConnectErrorCode.other,
+      throw DataConnectError(DataConnectErrorCode.other,
           'Failed to invoke operation: ${e.toString()}');
     }
   }
@@ -104,7 +104,7 @@ class GRPCTransport implements DataConnectTransport {
           options: CallOptions(metadata: metadata));
       return deserializer(jsonEncode(response.data.toProto3Json()));
     } on Exception catch (e) {
-      throw FirebaseDataConnectError(DataConnectErrorCode.other,
+      throw DataConnectError(DataConnectErrorCode.other,
           'Failed to invoke operation: ${e.toString()}');
     }
   }

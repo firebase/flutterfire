@@ -10,6 +10,5 @@ import 'package:http/http.dart' as http;
 
 import '../common/common_library.dart';
 import '../dataconnect_version.dart';
-import 'transport_library.dart';
 
 part 'rest_transport.dart';

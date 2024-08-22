@@ -64,3 +64,37 @@ class Optional<T> {
     return '';
   }
 }
+
+String nativeToJson<T>(T type) {
+  switch (T.runtimeType) {
+    case bool:
+    case int:
+    case double:
+    case num:
+      return type.toString();
+    case String:
+      return type as String;
+    default:
+      throw UnimplementedError(
+          'This type is unimplemented: ${type.runtimeType}');
+  }
+}
+
+T nativeFromJson<T>(String json) {
+  switch (T.runtimeType) {
+    case bool:
+      return bool.parse(json) as T;
+    case int:
+      return int.parse(json) as T;
+    case double:
+      double.parse(json);
+    case num:
+      return num.parse(json) as T;
+    case String:
+      return json as T;
+    default:
+      throw UnimplementedError(
+          'This type is unimplemented: ${json.runtimeType}');
+  }
+  throw Exception('Null!');
+}

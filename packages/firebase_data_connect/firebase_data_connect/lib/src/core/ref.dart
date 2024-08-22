@@ -30,7 +30,8 @@ class OperationRef<Data, Variables> {
   OperationType opType;
 
   Future<OperationResult<Data, Variables>> execute() async {
-    String? token = await this.auth?.currentUser?.getIdToken();
+    String? token;
+    token = await this.auth?.currentUser?.getIdToken();
     if (this.opType == OperationType.query) {
       Data data = await this._transport.invokeQuery<Data, Variables>(
           this.operationName,
@@ -52,7 +53,7 @@ class OperationRef<Data, Variables> {
 }
 
 /// Tracks currently active queries, and emits events when a new query is executed.
-class QueryManager {
+class _QueryManager {
   /// Keeps track of what queries are currently active.
   Map<String, Map<String, StreamController<dynamic>>> trackedQueries = {};
   bool containsQuery<Variables>(
@@ -102,11 +103,10 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
       Serializer<Variables>? serializer)
       : super(auth, operationName, variables, transport, OperationType.query,
             deserializer, serializer);
-  QueryManager _queryManager;
+  _QueryManager _queryManager;
   @override
   Future<OperationResult<Data, Variables>> execute() async {
     try {
-      print('executing');
       OperationResult<Data, Variables> res = await super.execute();
       _queryManager.triggerCallback<Data, Variables>(
           operationName,

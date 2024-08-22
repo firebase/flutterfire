@@ -79,7 +79,6 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
 
     QueryRef<ListMoviesResponse, void> ref =
         MoviesConnector.instance.listMovies.ref();
-
     ref.subscribe().listen((event) {
       setState(() {
         _movies = event.data.movies;
@@ -161,8 +160,10 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
               }
 
               MutationRef ref = MoviesConnector.instance.createMovie.ref(
-                  CreateMovieVariables(
-                      title, _releaseYearDate.year, genre, _rating, null));
+                  title: title,
+                  releaseYear: _releaseYearDate.year,
+                  genre: genre,
+                  rating: _rating);
               try {
                 await ref.execute();
                 triggerReload();

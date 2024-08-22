@@ -14,11 +14,11 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
             connectorConfig.location,
             connectorConfig.connector,
             connectorConfig.serviceId),
-        _queryManager = QueryManager(),
+        _queryManager = _QueryManager(),
         super(app.name, 'plugins.flutter.io/firebase_data_connect');
 
   /// QueryManager manages ongoing queries, and their subscriptions.
-  QueryManager _queryManager;
+  _QueryManager _queryManager;
 
   /// FirebaseApp
   FirebaseApp app;
@@ -41,9 +41,9 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
 
   /// Checks whether the transport has been properly initialized.
   void _checkTransport() {
-    transport = getTransport(_transportOptions!, options);
     _transportOptions ??=
         TransportOptions('firebasedataconnect.googleapis.com', null, true);
+    transport = getTransport(_transportOptions!, options);
   }
 
   /// Returns a [QueryRef] object.

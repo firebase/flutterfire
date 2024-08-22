@@ -67,13 +67,27 @@ class RestTransport implements DataConnectTransport {
     try {
       http.Response r = await http.post(Uri.parse('$_url:$endpoint'),
           body: json.encode(body), headers: headers);
+      if (r.statusCode != 200) {
+        Map<String, dynamic> bodyJson =
+            jsonDecode(r.body) as Map<String, dynamic>;
+        String message =
+            bodyJson.containsKey('message') ? bodyJson['message']! : r.body;
+        throw DataConnectError(
+            r.statusCode == 401
+                ? DataConnectErrorCode.unauthorized
+                : DataConnectErrorCode.other,
+            "Received a status code of ${r.statusCode} with a message '${message}'");
+      }
 
       /// The response we get is in the data field of the response
       /// Once we get the data back, it's not quite json-encoded,
       /// so we have to encode it and then send it to the user's deserializer.
       return deserializer(jsonEncode(jsonDecode(r.body)['data']));
     } on Exception catch (e) {
-      throw FirebaseDataConnectError(DataConnectErrorCode.other,
+      if (e is DataConnectError) {
+        rethrow;
+      }
+      throw DataConnectError(DataConnectErrorCode.other,
           'Failed to invoke operation: ${e.toString()}');
     }
   }
