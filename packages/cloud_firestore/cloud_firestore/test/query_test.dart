@@ -230,6 +230,95 @@ void main() {
           throwsAssertionError,
         );
       });
+
+      test('throws if empty array used for andFromList filters', () {
+        expect(
+            () => query!.where(Filter.andFromList([])), throwsAssertionError);
+      });
+
+      test('throws if empty array used for orFromList filters', () {
+        expect(() => query!.where(Filter.orFromList([])), throwsAssertionError);
+      });
+
+      test(
+          'throws if arrays length used for andFromList filters is bigger than 30',
+          () {
+        expect(
+            () => query!.where(Filter.andFromList([
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                ])),
+            throwsAssertionError);
+      });
+
+      test(
+          'throws if arrays length used for orFromList filters is bigger than 30',
+          () {
+        expect(
+            () => query!.where(Filter.orFromList([
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                  Filter('foo', isEqualTo: 'bar'),
+                ])),
+            throwsAssertionError);
+      });
     });
 
     group('cursor queries', () {
