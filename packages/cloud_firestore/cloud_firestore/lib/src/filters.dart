@@ -11,8 +11,7 @@ class _FilterObject {
 }
 
 class _FilterQuery extends _FilterObject {
-  _FilterQuery(this._field, this._operator, this._value)
-      : assert(_field is FieldPathType || _field is FieldPath);
+  _FilterQuery(this._field, this._operator, this._value) : assert(_field is FieldPathType || _field is FieldPath);
 
   final Object _field;
   final String _operator;
@@ -51,8 +50,7 @@ class Filter extends FilterPlatformInterface {
 
   Filter._(this._filterQuery, this._filterOperator)
       : assert(
-          (_filterQuery != null && _filterOperator == null) ||
-              (_filterQuery == null && _filterOperator != null),
+          (_filterQuery != null && _filterOperator == null) || (_filterQuery == null && _filterOperator != null),
           'Exactly one operator must be specified',
         );
 
@@ -295,6 +293,28 @@ class Filter extends FilterPlatformInterface {
     );
   }
 
+  /// Creates a new filter that is a disjunction of the given filter list.
+  ///
+  /// A disjunction filter includes a document if it satisfies any of the given filter list.
+  static Filter orFromList(List<Filter> filters) {
+    // Number of OR operation should be minimum 1
+    // We let here 1 as a minimum
+    assert(
+      filters.isNotEmpty,
+      'At least one filters must be specified',
+    );
+    // Number of OR operation is limited on the server side
+    // We let here 30 as a limit
+    assert(
+      filters.length <= 30,
+      'At most 30 filters can be specified',
+    );
+    return _generateFilter(
+      'OR',
+      filters,
+    );
+  }
+
   /// Creates a new filter that is a conjunction of the given filters.
   ///
   /// A conjunction filter includes document if it satisfies all of the given filters.
@@ -367,6 +387,28 @@ class Filter extends FilterPlatformInterface {
     );
   }
 
+  /// Creates a new filter that is a conjunction of the given filter list.
+  ///
+  /// A conjunction filter includes document if it satisfies all of the given filter list.
+  static Filter andFromList(List<Filter> filters) {
+    // Number of OR operation should be minimum 1
+    // We let here 1 as a minimum
+    assert(
+      filters.isNotEmpty,
+      'At least one filters must be specified',
+    );
+    // Number of OR operation is limited on the server side
+    // We let here 30 as a limit
+    assert(
+      filters.length <= 30,
+      'At most 30 filters can be specified',
+    );
+    return _generateFilter(
+      'AND',
+      filters,
+    );
+  }
+
   static Filter _generateFilter(
     String operator,
     List<Filter?> filters,
@@ -384,10 +426,7 @@ class Filter extends FilterPlatformInterface {
         operator,
         [
           for (final filter in filters)
-            if (filter != null && filter._filterQuery != null)
-              filter._filterQuery
-            else if (filter != null && filter._filterOperator != null)
-              filter._filterOperator,
+            if (filter != null && filter._filterQuery != null) filter._filterQuery else if (filter != null && filter._filterOperator != null) filter._filterOperator,
         ],
       ),
     );
