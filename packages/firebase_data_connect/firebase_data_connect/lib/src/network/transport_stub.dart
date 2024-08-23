@@ -7,7 +7,13 @@ part of firebase_data_connect_transport;
 /// Default TransportStub to satisfy compilation of the library.
 class TransportStub implements DataConnectTransport {
   /// Constructor.
-  TransportStub(this.transportOptions, this.options);
+  TransportStub(this.transportOptions, this.options, this.auth, this.appCheck);
+
+  /// FirebaseAuth
+  FirebaseAuth? auth;
+
+  /// FirebaseAppCheck
+  FirebaseAppCheck? appCheck;
 
   /// DataConnect backend options.
   @override
@@ -23,9 +29,7 @@ class TransportStub implements DataConnectTransport {
       String queryName,
       Deserializer<Data> deserializer,
       Serializer<Variables>? serializer,
-      Variables? vars,
-      String? token,
-      String? appCheckToken) async {
+      Variables? vars) async {
     // TODO: implement invokeMutation
     throw UnimplementedError();
   }
@@ -36,14 +40,15 @@ class TransportStub implements DataConnectTransport {
       String queryName,
       Deserializer<Data> deserializer,
       Serializer<Variables>? serialize,
-      Variables? vars,
-      String? token,
-      String? appCheckToken) async {
+      Variables? vars) async {
     // TODO: implement invokeQuery
     throw UnimplementedError();
   }
 }
 
 DataConnectTransport getTransport(
-        TransportOptions transportOptions, DataConnectOptions options) =>
-    TransportStub(transportOptions, options);
+        TransportOptions transportOptions,
+        DataConnectOptions options,
+        FirebaseAuth? auth,
+        FirebaseAppCheck? appCheck) =>
+    TransportStub(transportOptions, options, auth, appCheck);

@@ -6,7 +6,8 @@ library firebase_data_connect_common;
 
 import 'dart:convert';
 
-import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 part 'dataconnect_error.dart';
 part 'dataconnect_options.dart';
@@ -37,19 +38,23 @@ abstract class DataConnectTransport {
   /// DataConnect backend configuration.
   DataConnectOptions options;
 
+  /// FirebaseAuth to use to get auth token.
+  FirebaseAuth? auth;
+
+  /// FirebaseAppCheck to use to get app check token.
+  FirebaseAppCheck? appCheck;
+
   /// Invokes corresponding query endpoint.
   Future<Data> invokeQuery<Data, Variables>(
       String queryName,
       Deserializer<Data> deserializer,
       Serializer<Variables>? serializer,
-      Variables? vars,
-      String? token);
+      Variables? vars);
 
   /// Invokes corresponding mutation endpoint.
   Future<Data> invokeMutation<Data, Variables>(
       String queryName,
       Deserializer<Data> deserializer,
       Serializer<Variables>? serializer,
-      Variables? vars,
-      String? token);
+      Variables? vars);
 }

@@ -21,6 +21,12 @@ class GRPCTransport implements DataConnectTransport {
         'projects/${options.projectId}/locations/${options.location}/services/${options.serviceId}/connectors/${options.connector}';
   }
 
+  /// FirebaseAuth
+  FirebaseAuth? auth;
+
+  /// FirebaseAppCheck
+  FirebaseAppCheck? appCheck;
+
   /// Name of the endpoint.
   late String name;
 
@@ -38,11 +44,14 @@ class GRPCTransport implements DataConnectTransport {
   @override
   DataConnectOptions options;
 
-  Map<String, String> getMetadata(String? authToken, String? appCheckToken) {
+  Future<Map<String, String>> getMetadata() async {
+    String? authToken = await auth?.currentUser?.getIdToken();
+    String? appCheckToken = await appCheck?.getToken();
     Map<String, String> metadata = {
       'x-goog-request-params': 'location=${options.location}&frontend=data',
       'x-goog-api-client': 'gl-dart/flutter fire/$packageVersion'
     };
+
     if (authToken != null) {
       metadata['x-firebase-auth-token'] = authToken;
     }
@@ -55,15 +64,13 @@ class GRPCTransport implements DataConnectTransport {
   /// Invokes GPRC query endpoint.
   @override
   Future<Data> invokeQuery<Data, Variables>(
-      String queryName,
-      Deserializer<Data> deserializer,
-      Serializer<Variables>? serializer,
-      Variables? vars,
-      String? token,
-      String? appCheckToken) async {
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+  ) async {
     ExecuteQueryResponse response;
 
-    Map<String, String> metadata = getMetadata(token, appCheckToken);
     ExecuteQueryRequest request =
         ExecuteQueryRequest(name: name, operationName: queryName);
     if (vars != null && serializer != null) {
@@ -71,7 +78,7 @@ class GRPCTransport implements DataConnectTransport {
     }
     try {
       response = await stub.executeQuery(request,
-          options: CallOptions(metadata: metadata));
+          options: CallOptions(metadata: await getMetadata()));
       return deserializer(jsonEncode(response.data.toProto3Json()));
     } on Exception catch (e) {
       throw DataConnectError(DataConnectErrorCode.other,
@@ -93,11 +100,8 @@ class GRPCTransport implements DataConnectTransport {
       String queryName,
       Deserializer<Data> deserializer,
       Serializer<Variables>? serializer,
-      Variables? vars,
-      String? token,
-      String? appCheckToken) async {
+      Variables? vars) async {
     ExecuteMutationResponse response;
-    Map<String, String> metadata = getMetadata(token, appCheckToken);
     ExecuteMutationRequest request =
         ExecuteMutationRequest(name: name, operationName: queryName);
     if (vars != null && serializer != null) {
@@ -105,7 +109,7 @@ class GRPCTransport implements DataConnectTransport {
     }
     try {
       response = await stub.executeMutation(request,
-          options: CallOptions(metadata: metadata));
+          options: CallOptions(metadata: await getMetadata()));
       return deserializer(jsonEncode(response.data.toProto3Json()));
     } on Exception catch (e) {
       throw DataConnectError(DataConnectErrorCode.other,

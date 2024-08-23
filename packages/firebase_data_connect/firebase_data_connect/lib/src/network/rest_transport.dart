@@ -7,7 +7,7 @@ part of firebase_data_connect_rest;
 /// RestTransport makes requests out to the REST endpoints of the configured backend.
 class RestTransport implements DataConnectTransport {
   /// Initializes necessary protocol and port.
-  RestTransport(this.transportOptions, this.options) {
+  RestTransport(this.transportOptions, this.options, this.auth, this.appCheck) {
     String protocol = 'http';
     if (transportOptions.isSecure == null ||
         transportOptions.isSecure == true) {
@@ -22,6 +22,12 @@ class RestTransport implements DataConnectTransport {
     _url =
         '$protocol://$host:$port/v1alpha/projects/$project/locations/$location/services/$service/connectors/$connector';
   }
+
+  @override
+  FirebaseAuth? auth;
+
+  @override
+  FirebaseAppCheck? appCheck;
 
   /// Current endpoint URL.
   late String _url;
@@ -40,9 +46,7 @@ class RestTransport implements DataConnectTransport {
       Deserializer<Data> deserializer,
       Serializer<Variables>? serializer,
       Variables? vars,
-      OperationType opType,
-      String? token,
-      String? appCheckToken) async {
+      OperationType opType) async {
     String project = options.projectId;
     String location = options.location;
     String service = options.serviceId;
@@ -52,6 +56,8 @@ class RestTransport implements DataConnectTransport {
       'Accept': 'application/json',
       'x-goog-api-client': 'gl-dart/flutter fire/$packageVersion'
     };
+    String? token = await auth?.currentUser?.getIdToken();
+    String? appCheckToken = await appCheck?.getToken();
     if (token != null) {
       headers['X-Firebase-Auth-Token'] = token;
     }
@@ -100,31 +106,32 @@ class RestTransport implements DataConnectTransport {
   /// Invokes query REST endpoint.
   @override
   Future<Data> invokeQuery<Data, Variables>(
-      String queryName,
-      Deserializer<Data> deserializer,
-      Serializer<Variables>? serializer,
-      Variables? vars,
-      String? token,
-      String? appCheckToken) async {
-    return invokeOperation(queryName, deserializer, serializer, vars,
-        OperationType.query, token, appCheckToken);
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+  ) async {
+    return invokeOperation(
+        queryName, deserializer, serializer, vars, OperationType.query);
   }
 
   /// Invokes mutation REST endpoint.
   @override
   Future<Data> invokeMutation<Data, Variables>(
-      String queryName,
-      Deserializer<Data> deserializer,
-      Serializer<Variables>? serializer,
-      Variables? vars,
-      String? token,
-      String? appCheckToken) async {
-    return invokeOperation(queryName, deserializer, serializer, vars,
-        OperationType.mutation, token, appCheckToken);
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+  ) async {
+    return invokeOperation(
+        queryName, deserializer, serializer, vars, OperationType.mutation);
   }
 }
 
 /// Initializes Rest transport for Data Connect.
 DataConnectTransport getTransport(
-        TransportOptions transportOptions, DataConnectOptions options) =>
-    RestTransport(transportOptions, options);
+        TransportOptions transportOptions,
+        DataConnectOptions options,
+        FirebaseAuth auth,
+        FirebaseAppCheck appCheck) =>
+    RestTransport(transportOptions, options, auth, appCheck);

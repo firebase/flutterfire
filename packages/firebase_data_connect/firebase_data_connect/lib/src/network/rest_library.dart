@@ -6,6 +6,8 @@ library firebase_data_connect_rest;
 
 import 'dart:convert';
 
+import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 
 import '../common/common_library.dart';

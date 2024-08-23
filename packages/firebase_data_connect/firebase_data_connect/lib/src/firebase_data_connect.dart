@@ -12,7 +12,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     required this.connectorConfig,
     this.auth,
     this.appCheck,
-  })  : options = DataConnectOptions(
+  })  : _options = DataConnectOptions(
             app.options.projectId,
             connectorConfig.location,
             connectorConfig.connector,
@@ -37,7 +37,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   FirebaseAuth? auth;
 
   /// ConnectorConfig + projectId
-  DataConnectOptions options;
+  DataConnectOptions _options;
 
   /// Data Connect specific config information
   ConnectorConfig connectorConfig;
@@ -49,7 +49,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   void _checkTransport() {
     _transportOptions ??=
         TransportOptions('firebasedataconnect.googleapis.com', null, true);
-    transport = getTransport(_transportOptions!, options);
+    transport = getTransport(_transportOptions!, _options, auth, appCheck);
   }
 
   /// Returns a [QueryRef] object.
@@ -60,7 +60,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
       Variables? vars) {
     _checkTransport();
     return QueryRef<Data, Variables>(queryName, transport, dataDeserializer,
-        _queryManager, auth, appCheck, vars, varsSerializer);
+        _queryManager, vars, varsSerializer);
   }
 
   /// Returns a [MutationRef] object.
@@ -70,8 +70,8 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
       Serializer<Variables>? varsSerializer,
       Variables? vars) {
     _checkTransport();
-    return MutationRef<Data, Variables>(queryName, transport, dataDeserializer,
-        auth, appCheck, vars, varsSerializer);
+    return MutationRef<Data, Variables>(
+        queryName, transport, dataDeserializer, vars, varsSerializer);
   }
 
   /// useDataConnectEmulator connects to the DataConnect emulator.
