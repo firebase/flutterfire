@@ -7,7 +7,7 @@ part of firebase_data_connect_grpc;
 /// Transport used for Android/iOS. Uses a GRPC transport instead of REST.
 class GRPCTransport implements DataConnectTransport {
   /// GRPCTransport creates a new channel
-  GRPCTransport(this.transportOptions, this.options) {
+  GRPCTransport(this.transportOptions, this.options, this.auth, this.appCheck) {
     bool isSecure =
         transportOptions.isSecure == null || transportOptions.isSecure == true;
     channel = ClientChannel(transportOptions.host,
@@ -45,8 +45,18 @@ class GRPCTransport implements DataConnectTransport {
   DataConnectOptions options;
 
   Future<Map<String, String>> getMetadata() async {
-    String? authToken = await auth?.currentUser?.getIdToken();
-    String? appCheckToken = await appCheck?.getToken();
+    String? authToken;
+    try {
+      authToken = await auth?.currentUser?.getIdToken();
+    } catch (e) {
+      print('Unable to get auth token: ' + e.toString());
+    }
+    String? appCheckToken;
+    try {
+      authToken = await appCheck?.getToken();
+    } catch (e) {
+      print('Unable to get app check token: ' + e.toString());
+    }
     Map<String, String> metadata = {
       'x-goog-request-params': 'location=${options.location}&frontend=data',
       'x-goog-api-client': 'gl-dart/flutter fire/$packageVersion'
@@ -120,5 +130,8 @@ class GRPCTransport implements DataConnectTransport {
 
 /// Initializes GRPC transport for Data Connect.
 DataConnectTransport getTransport(
-        TransportOptions transportOptions, DataConnectOptions options) =>
-    GRPCTransport(transportOptions, options);
+        TransportOptions transportOptions,
+        DataConnectOptions options,
+        FirebaseAuth? auth,
+        FirebaseAppCheck? appCheck) =>
+    GRPCTransport(transportOptions, options, auth, appCheck);

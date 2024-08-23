@@ -56,10 +56,20 @@ class RestTransport implements DataConnectTransport {
       'Accept': 'application/json',
       'x-goog-api-client': 'gl-dart/flutter fire/$packageVersion'
     };
-    String? token = await auth?.currentUser?.getIdToken();
-    String? appCheckToken = await appCheck?.getToken();
-    if (token != null) {
-      headers['X-Firebase-Auth-Token'] = token;
+    String? authToken;
+    try {
+      authToken = await auth?.currentUser?.getIdToken();
+    } catch (e) {
+      print('Unable to get auth token: ' + e.toString());
+    }
+    String? appCheckToken;
+    try {
+      authToken = await appCheck?.getToken();
+    } catch (e) {
+      print('Unable to get app check token: ' + e.toString());
+    }
+    if (authToken != null) {
+      headers['X-Firebase-Auth-Token'] = authToken;
     }
     if (appCheckToken != null) {
       headers['X-Firebase-AppCheck'] = appCheckToken;
@@ -71,7 +81,9 @@ class RestTransport implements DataConnectTransport {
       'operationName': queryName,
     };
     if (vars != null && serializer != null) {
+      print('decoding');
       body['variables'] = json.decode(serializer(vars));
+      print('done decoding');
     }
     String endpoint =
         opType == OperationType.query ? 'executeQuery' : 'executeMutation';
@@ -132,6 +144,6 @@ class RestTransport implements DataConnectTransport {
 DataConnectTransport getTransport(
         TransportOptions transportOptions,
         DataConnectOptions options,
-        FirebaseAuth auth,
-        FirebaseAppCheck appCheck) =>
+        FirebaseAuth? auth,
+        FirebaseAppCheck? appCheck) =>
     RestTransport(transportOptions, options, auth, appCheck);

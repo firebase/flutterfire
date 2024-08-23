@@ -60,7 +60,7 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
   double _rating = 0;
 
   Future<void> triggerReload() async {
-    await appcheck();
+    // await appcheck();
     QueryRef ref = MoviesConnector.instance.listMovies.ref();
 
     ref.execute().ignore();
@@ -75,7 +75,8 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
         host = '10.0.2.2';
       }
     } catch (_) {}
-    int port = 3628;
+    print('Test!');
+    int port = 1242;
     FirebaseDataConnect.instanceFor(
             app: Firebase.app(),
             connectorConfig: MoviesConnector.connectorConfig)
@@ -83,11 +84,13 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
 
     QueryRef<ListMoviesResponse, void> ref =
         MoviesConnector.instance.listMovies.ref();
+    print('listening');
     ref.subscribe().listen((event) {
       setState(() {
         _movies = event.data.movies;
       });
     }).onError((e) {
+      print(e.toString());
       if (kDebugMode) {
         _showError("Got an error: $e");
       }

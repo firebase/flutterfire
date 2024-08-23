@@ -1,7 +1,3 @@
-// Copyright 2024, the Chromium project authors.  Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
-
 part of movies;
 
 class ListMovies {
@@ -10,14 +6,9 @@ class ListMovies {
 
   Deserializer<ListMoviesResponse> dataDeserializer = (String json) =>
       ListMoviesResponse.fromJson(jsonDecode(json) as Map<String, dynamic>);
-  Serializer<ListMoviesVariables> varsSerializer = jsonEncode;
-  QueryRef<ListMoviesResponse, ListMoviesVariables> ref(
-      {String? title, ListMoviesVariables? listMoviesVariables}) {
-    ListMoviesVariables vars1 = ListMoviesVariables(
-      title: title,
-    );
-    ListMoviesVariables vars = listMoviesVariables ?? vars1;
-    return dataConnect.query(this.name, dataDeserializer, varsSerializer, vars);
+
+  QueryRef<ListMoviesResponse, void> ref() {
+    return dataConnect.query(this.name, dataDeserializer, null, null);
   }
 
   FirebaseDataConnect dataConnect;
@@ -102,42 +93,5 @@ class ListMoviesResponse {
     required this.movies,
   }) {
     // TODO(mtewani): Only show this if there are optional fields.
-  }
-}
-
-class ListMoviesVariables {
-  late Optional<String> _title = Optional.optional(
-      nativeFromJson as Deserializer<String>,
-      nativeToJson as Serializer<String>);
-
-  set title(String t) {
-    this._title.value = t;
-  }
-
-  String get title => this._title.value!;
-
-  ListMoviesVariables.fromJson(Map<String, dynamic> json) {
-    if (json.containsKey('title')) {
-      _title.value = json['title'];
-    }
-  }
-
-  // TODO(mtewani): Fix up to create a map on the fly
-  Map<String, dynamic> toJson() {
-    Map<String, dynamic> json = {};
-
-    if (title != null) {
-      json['title'] = title;
-    }
-
-    return json;
-  }
-
-  ListMoviesVariables({
-    String? title,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
-
-    this._title = Optional.optional(nativeFromJson, nativeToJson);
   }
 }

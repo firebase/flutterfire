@@ -34,8 +34,10 @@ class OperationRef<Data, Variables> {
           this.operationName, this.deserializer, this.serializer, variables);
       return OperationResult(data, this);
     } else {
+      print('executing');
       Data data = await this._transport.invokeMutation<Data, Variables>(
           this.operationName, this.deserializer, this.serializer, variables);
+      print('done executing');
       return OperationResult(data, this);
     }
   }

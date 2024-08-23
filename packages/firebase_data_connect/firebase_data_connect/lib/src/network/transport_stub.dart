@@ -10,9 +10,11 @@ class TransportStub implements DataConnectTransport {
   TransportStub(this.transportOptions, this.options, this.auth, this.appCheck);
 
   /// FirebaseAuth
+  @override
   FirebaseAuth? auth;
 
   /// FirebaseAppCheck
+  @override
   FirebaseAppCheck? appCheck;
 
   /// DataConnect backend options.

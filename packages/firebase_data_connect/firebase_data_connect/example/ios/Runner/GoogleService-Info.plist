@@ -3,23 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>406099696497-134k3722m01rtrsklhf3b7k8sqa5r7in.apps.googleusercontent.com</string>
+	<string>958807142248-rn8oj5p9j3257gtfh2h4bejlrscp23fq.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.406099696497-134k3722m01rtrsklhf3b7k8sqa5r7in</string>
-	<key>ANDROID_CLIENT_ID</key>
-	<string>406099696497-17qn06u8a0dc717u8ul7s49ampk13lul.apps.googleusercontent.com</string>
+	<string>com.googleusercontent.apps.958807142248-rn8oj5p9j3257gtfh2h4bejlrscp23fq</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDooSUGSf63Ghq02_iIhtnmwMDs4HlWS6c</string>
+	<string>AIzaSyDXv1JQMr64c7UT0GbE_s4RecrtGbqpUZE</string>
 	<key>GCM_SENDER_ID</key>
-	<string>406099696497</string>
+	<string>958807142248</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>io.flutter.plugins.firebase.auth.example</string>
+	<string>io.flutter.plugins.firebase.dataconnect.example</string>
 	<key>PROJECT_ID</key>
-	<string>flutterfire-e2e-tests</string>
+	<string>movie-app-dart</string>
 	<key>STORAGE_BUCKET</key>
-	<string>flutterfire-e2e-tests.appspot.com</string>
+	<string>movie-app-dart.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,8 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:406099696497:ios:58cbc26aca8e5cf83574d0</string>
-	<key>DATABASE_URL</key>
-	<string>https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app</string>
+	<string>1:958807142248:ios:07cd4a76219e451de270dd</string>
 </dict>
 </plist>

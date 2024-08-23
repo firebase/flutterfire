@@ -45,54 +45,40 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyB7wZb2tO1-Fs6GbDADUSTs2Qs3w08Hovw',
-    appId: '1:406099696497:web:87e25e51afe982cd3574d0',
-    messagingSenderId: '406099696497',
-    projectId: 'flutterfire-e2e-tests',
-    authDomain: 'flutterfire-e2e-tests.firebaseapp.com',
-    databaseURL:
-        'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
-    storageBucket: 'flutterfire-e2e-tests.appspot.com',
-    measurementId: 'G-JN95N1JV2E',
+    apiKey: 'AIzaSyChANFrQztBhU1Jg86xbhhMpRY72BPpEIw',
+    appId: '1:958807142248:web:902a4fb0bd5a12d7e270dd',
+    messagingSenderId: '958807142248',
+    projectId: 'movie-app-dart',
+    authDomain: 'movie-app-dart.firebaseapp.com',
+    storageBucket: 'movie-app-dart.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCdRjCVZlhrq72RuEklEyyxYlBRCYhI2Sw',
-    appId: '1:406099696497:android:175ea7a64b2faf5e3574d0',
-    messagingSenderId: '406099696497',
-    projectId: 'flutterfire-e2e-tests',
-    databaseURL:
-        'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
-    storageBucket: 'flutterfire-e2e-tests.appspot.com',
+    apiKey: 'AIzaSyDkU8nvE88wqNZ4IiyNBuiXO0bZLnrZzr8',
+    appId: '1:958807142248:android:65427dbcc342aa78e270dd',
+    messagingSenderId: '958807142248',
+    projectId: 'movie-app-dart',
+    storageBucket: 'movie-app-dart.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDooSUGSf63Ghq02_iIhtnmwMDs4HlWS6c',
-    appId: '1:406099696497:ios:0670bc5fe8574a9c3574d0',
-    messagingSenderId: '406099696497',
-    projectId: 'flutterfire-e2e-tests',
-    databaseURL:
-        'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
-    storageBucket: 'flutterfire-e2e-tests.appspot.com',
-    androidClientId:
-        '406099696497-17qn06u8a0dc717u8ul7s49ampk13lul.apps.googleusercontent.com',
-    iosClientId:
-        '406099696497-l9gojfp6b3h1cgie1se28a9ol9fmsvvk.apps.googleusercontent.com',
-    iosBundleId: 'io.flutter.plugins.firebase.firestore.example',
+    apiKey: 'AIzaSyDXv1JQMr64c7UT0GbE_s4RecrtGbqpUZE',
+    appId: '1:958807142248:ios:07cd4a76219e451de270dd',
+    messagingSenderId: '958807142248',
+    projectId: 'movie-app-dart',
+    storageBucket: 'movie-app-dart.appspot.com',
+    iosClientId: '958807142248-rn8oj5p9j3257gtfh2h4bejlrscp23fq.apps.googleusercontent.com',
+    iosBundleId: 'io.flutter.plugins.firebase.dataconnect.example',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDooSUGSf63Ghq02_iIhtnmwMDs4HlWS6c',
-    appId: '1:406099696497:ios:0670bc5fe8574a9c3574d0',
-    messagingSenderId: '406099696497',
-    projectId: 'flutterfire-e2e-tests',
-    databaseURL:
-        'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
-    storageBucket: 'flutterfire-e2e-tests.appspot.com',
-    androidClientId:
-        '406099696497-17qn06u8a0dc717u8ul7s49ampk13lul.apps.googleusercontent.com',
-    iosClientId:
-        '406099696497-l9gojfp6b3h1cgie1se28a9ol9fmsvvk.apps.googleusercontent.com',
-    iosBundleId: 'io.flutter.plugins.firebase.firestore.example',
+    apiKey: 'AIzaSyDXv1JQMr64c7UT0GbE_s4RecrtGbqpUZE',
+    appId: '1:958807142248:ios:07cd4a76219e451de270dd',
+    messagingSenderId: '958807142248',
+    projectId: 'movie-app-dart',
+    storageBucket: 'movie-app-dart.appspot.com',
+    iosClientId: '958807142248-rn8oj5p9j3257gtfh2h4bejlrscp23fq.apps.googleusercontent.com',
+    iosBundleId: 'io.flutter.plugins.firebase.dataconnect.example',
   );
+
 }
