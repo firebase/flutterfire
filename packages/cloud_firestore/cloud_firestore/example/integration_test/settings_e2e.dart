@@ -42,6 +42,5 @@ void runSettingsTest() {
         );
       });
     },
-    skip: kIsWeb,
   );
 }
