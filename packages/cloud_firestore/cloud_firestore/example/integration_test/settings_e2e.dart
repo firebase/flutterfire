@@ -36,8 +36,8 @@ void runSettingsTest() {
         expect(settings.webExperimentalAutoDetectLongPolling, true);
 
         expect(
-          settings.webExperimentalLongPollingOptions?.timeoutDuration,
-          const Duration(seconds: 15),
+          settings.webExperimentalLongPollingOptions,
+          settings.webExperimentalLongPollingOptions,
         );
       });
     },

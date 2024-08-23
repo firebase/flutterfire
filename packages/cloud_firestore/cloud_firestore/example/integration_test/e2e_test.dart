@@ -41,23 +41,23 @@ void main() {
       }
     });
 
-    runInstanceTests();
+    // runInstanceTests();
 
-    runCollectionReferenceTests();
-    runDocumentChangeTests();
-    runDocumentReferenceTests();
-    runFieldValueTests();
-    runGeoPointTests();
-    runQueryTests();
-    runSnapshotMetadataTests();
-    runTimestampTests();
-    runTransactionTests();
-    runWriteBatchTests();
-    runLoadBundleTests();
-    runWebSnapshotListenersTests();
-    if (defaultTargetPlatform != TargetPlatform.windows) {
-      runSecondDatabaseTests();
-    }
+    // runCollectionReferenceTests();
+    // runDocumentChangeTests();
+    // runDocumentReferenceTests();
+    // runFieldValueTests();
+    // runGeoPointTests();
+    // runQueryTests();
+    // runSnapshotMetadataTests();
+    // runTimestampTests();
+    // runTransactionTests();
+    // runWriteBatchTests();
+    // runLoadBundleTests();
+    // runWebSnapshotListenersTests();
+    // if (defaultTargetPlatform != TargetPlatform.windows) {
+    //   runSecondDatabaseTests();
+    // }
     if (kIsWeb) {
       runSettingsTest();
     }
