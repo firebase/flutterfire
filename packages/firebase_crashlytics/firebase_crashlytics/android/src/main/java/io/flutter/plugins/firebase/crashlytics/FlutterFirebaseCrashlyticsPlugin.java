@@ -6,6 +6,8 @@ package io.flutter.plugins.firebase.crashlytics;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -16,6 +18,7 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.crashlytics.FlutterFirebaseCrashlyticsInternal;
+import com.google.firebase.crashlytics.internal.Logger;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
@@ -34,6 +37,9 @@ public class FlutterFirebaseCrashlyticsPlugin
     implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
   public static final String TAG = "FLTFirebaseCrashlytics";
   private MethodChannel channel;
+
+  private static final String FIREBASE_CRASHLYTICS_COLLECTION_ENABLED =
+      "firebase_crashlytics_collection_enabled";
 
   private void initInstance(BinaryMessenger messenger) {
     String channelName = "plugins.flutter.io/firebase_crashlytics";
@@ -380,18 +386,45 @@ public class FlutterFirebaseCrashlyticsPlugin
     SharedPreferences crashlyticsSharedPrefs =
         getCrashlyticsSharedPrefs(app.getApplicationContext());
 
-    if (crashlyticsSharedPrefs.contains("firebase_crashlytics_collection_enabled")) {
-      enabled = crashlyticsSharedPrefs.getBoolean("firebase_crashlytics_collection_enabled", true);
+    if (crashlyticsSharedPrefs.contains(FIREBASE_CRASHLYTICS_COLLECTION_ENABLED)) {
+      enabled = crashlyticsSharedPrefs.getBoolean(FIREBASE_CRASHLYTICS_COLLECTION_ENABLED, true);
     } else {
-      if (app.isDataCollectionDefaultEnabled()) {
+
+      Boolean manifestEnabled =
+          readCrashlyticsDataCollectionEnabledFromManifest(app.getApplicationContext());
+
+      if (manifestEnabled != null) {
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(manifestEnabled);
+        enabled = manifestEnabled;
+      } else {
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         enabled = true;
-      } else {
-        enabled = false;
       }
     }
 
     return enabled;
+  }
+
+  private static Boolean readCrashlyticsDataCollectionEnabledFromManifest(
+      Context applicationContext) {
+    try {
+      final PackageManager packageManager = applicationContext.getPackageManager();
+      if (packageManager != null) {
+        final ApplicationInfo applicationInfo =
+            packageManager.getApplicationInfo(
+                applicationContext.getPackageName(), PackageManager.GET_META_DATA);
+        if (applicationInfo != null
+            && applicationInfo.metaData != null
+            && applicationInfo.metaData.containsKey(FIREBASE_CRASHLYTICS_COLLECTION_ENABLED)) {
+          return applicationInfo.metaData.getBoolean(FIREBASE_CRASHLYTICS_COLLECTION_ENABLED);
+        }
+      }
+    } catch (PackageManager.NameNotFoundException e) {
+      // This shouldn't happen since it's this app's package, but fall through to default
+      // if so.
+      Logger.getLogger().e("Could not read data collection permission from manifest", e);
+    }
+    return null;
   }
 
   @Override
