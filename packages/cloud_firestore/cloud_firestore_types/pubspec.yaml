@@ -8,8 +8,8 @@ environment:
   sdk: ^3.0.0
 
 dependencies:
-  meta: ^1.8.0
   collection: ^1.19.0
+  meta: ^1.8.0
 
 dev_dependencies:
   test: ^1.24.0
