@@ -21,16 +21,20 @@ void main() {
         );
       });
 
-      group('isCrashlyticsCollectionEnabled', () {
-        test(
-            'checks isCrashlyticsCollectionEnabled value set from AndroidManifest.xml',
-            () async {
-          bool isCrashlyticsCollectionEnabled =
-              FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled;
+      group(
+        'isCrashlyticsCollectionEnabled',
+        () {
+          test(
+              'checks isCrashlyticsCollectionEnabled value set from AndroidManifest.xml',
+              () async {
+            bool isCrashlyticsCollectionEnabled =
+                FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled;
 
-          expect(isCrashlyticsCollectionEnabled, false);
-        });
-      });
+            expect(isCrashlyticsCollectionEnabled, false);
+          });
+        },
+        skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
+      );
 
       group('checkForUnsentReports', () {
         test('should throw if automatic crash report is enabled', () async {
