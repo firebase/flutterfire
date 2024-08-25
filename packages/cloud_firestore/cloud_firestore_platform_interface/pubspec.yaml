@@ -16,6 +16,8 @@ dependencies:
     sdk: flutter
   meta: ^1.8.0
   plugin_platform_interface: ^2.1.3
+  cloud_firestore_types:
+    path: ../cloud_firestore_types
 
 dev_dependencies:
   firebase_core_platform_interface: ^5.2.0
