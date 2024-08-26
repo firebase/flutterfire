@@ -393,13 +393,8 @@ public class FlutterFirebaseCrashlyticsPlugin
       Boolean manifestEnabled =
           readCrashlyticsDataCollectionEnabledFromManifest(app.getApplicationContext());
 
-      if (manifestEnabled != null) {
-        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(manifestEnabled);
-        enabled = manifestEnabled;
-      } else {
-        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
-        enabled = true;
-      }
+      FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(manifestEnabled);
+      enabled = manifestEnabled;
     }
 
     return enabled;
@@ -424,7 +419,7 @@ public class FlutterFirebaseCrashlyticsPlugin
       // if so.
       Logger.getLogger().e("Could not read data collection permission from manifest", e);
     }
-    return null;
+    return true;
   }
 
   @Override
