@@ -24,6 +24,22 @@ void runQueryTests() {
         final result = value.data;
         expect(result.movies.length, 0);
       });
+
+      testWidgets('can add a movie', (WidgetTester tester) async {
+        MutationRef ref = MoviesConnector.instance.createMovie.ref(
+          genre: 'Action',
+          title: 'The Matrix',
+          releaseYear: 1999,
+          rating: 4.5,
+        );
+
+        await ref.execute();
+
+        final value = await MoviesConnector.instance.listMovies.ref().execute();
+        final result = value.data;
+        expect(result.movies.length, 1);
+        expect(result.movies[0].title, 'The Matrix');
+      });
     },
   );
 }

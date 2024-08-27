@@ -9,6 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
 import 'firebase_options.dart';
+import 'generation_e2e.dart';
 import 'instance_e2e.dart';
 import 'query_e2e.dart';
 
@@ -33,5 +34,6 @@ void main() {
 
     runInstanceTests();
     runQueryTests();
+    runGenerationTest();
   });
 }
