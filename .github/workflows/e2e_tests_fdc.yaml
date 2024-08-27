@@ -162,9 +162,6 @@ jobs:
     timeout-minutes: 15
     strategy:
       fail-fast: false
-      matrix:
-        working_directory:
-          ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
       - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8
@@ -196,7 +193,7 @@ jobs:
       - name: Start Firebase Emulator
         run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./packages/firebase_data_connect/firebase_data_connect/example && ./start-firebase-emulator.sh
       - name: 'E2E Tests'
-        working-directory: ${{ matrix.working_directory }}
+        working-directory: 'packages/firebase_data_connect/firebase_data_connect/example'
         # Web devices are not supported for the `flutter test` command yet. As a
         # workaround we can use the `flutter drive` command. Tracking issue:
         # https://github.com/flutter/flutter/issues/66264
