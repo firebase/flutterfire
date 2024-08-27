@@ -14,28 +14,9 @@ if ! [ -x "$(command -v npm)" ]; then
   exit 1
 fi
 
-# Run NPM install if node modules does not exist.
-if [[ ! -d "functions/node_modules" ]]; then
-  cd functions
-  if npm i; then
-    echo "✅ NPM install successful."
-  else
-    if [[ -z "${CI}" ]]; then
-      echo "❌ NPM install failed."
-      exit 1
-    else
-      # TODO temporary workaround for GitHub Actions CI issue:
-      # npm ERR! Your cache folder contains root-owned files, due to a bug in
-      # npm ERR! previous versions of npm which has since been addressed.
-      sudo chown -R 501:20 "/Users/runner/.npm" || exit 1
-      npm i || exit 1
-    fi
-  fi
-  cd ..
-fi
 
 export STORAGE_EMULATOR_DEBUG=true
-EMU_START_COMMAND="firebase emulators:start --only auth,firestore,functions,storage,database --project flutterfire-e2e-tests"
+EMU_START_COMMAND="firebase emulators:start --project movie-app-dart"
 
 MAX_RETRIES=3
 MAX_CHECKATTEMPTS=60
