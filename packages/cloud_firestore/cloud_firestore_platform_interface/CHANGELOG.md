@@ -1,3 +1,7 @@
+## 6.3.2
+
+ - **FIX**(firestore): not passing correctly the ListenSource when listening to as single `DocumentReference` ([#13179](https://github.com/firebase/flutterfire/issues/13179)). ([ce6e1c97](https://github.com/firebase/flutterfire/commit/ce6e1c97efc1398bc3c209d7a522e3bb67db3d0f))
+
 ## 6.3.1
 
  - **FIX**: compilation issue on Windows ([#13135](https://github.com/firebase/flutterfire/issues/13135)). ([de8c9e0f](https://github.com/firebase/flutterfire/commit/de8c9e0f2d3117b3614ac8295b041fea7ed3ee7f))

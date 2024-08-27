@@ -1,3 +1,7 @@
+## 4.1.2
+
+ - **FIX**(firestore): not passing correctly the ListenSource when listening to as single `DocumentReference` ([#13179](https://github.com/firebase/flutterfire/issues/13179)). ([ce6e1c97](https://github.com/firebase/flutterfire/commit/ce6e1c97efc1398bc3c209d7a522e3bb67db3d0f))
+
 ## 4.1.1
 
  - Update a dependency to the latest release.

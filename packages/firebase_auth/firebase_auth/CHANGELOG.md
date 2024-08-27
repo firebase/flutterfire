@@ -1,3 +1,8 @@
+## 5.2.0
+
+ - **FEAT**: bump iOS SDK to version 11.0.0 ([#13158](https://github.com/firebase/flutterfire/issues/13158)). ([c0e0c997](https://github.com/firebase/flutterfire/commit/c0e0c99703ea394d1bb873ac225c5fe3539b002d))
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
 ## 5.1.4
 
  - **FIX**(firebase_auth): added supporting rawNonce for OAuth credential on Windows platform ([#13086](https://github.com/firebase/flutterfire/issues/13086)). ([12e87de9](https://github.com/firebase/flutterfire/commit/12e87de93ddc39d41a6a634d7d03766b3e36996a))

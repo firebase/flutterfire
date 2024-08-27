@@ -3,6 +3,197 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-08-27
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v5.3.0`](#cloud_firestore---v530)
+ - [`cloud_firestore_platform_interface` - `v6.3.2`](#cloud_firestore_platform_interface---v632)
+ - [`cloud_firestore_web` - `v4.1.2`](#cloud_firestore_web---v412)
+ - [`cloud_functions` - `v5.1.0`](#cloud_functions---v510)
+ - [`firebase_analytics` - `v11.3.0`](#firebase_analytics---v1130)
+ - [`firebase_app_check` - `v0.3.0+5`](#firebase_app_check---v0305)
+ - [`firebase_app_installations` - `v0.3.1`](#firebase_app_installations---v031)
+ - [`firebase_auth` - `v5.2.0`](#firebase_auth---v520)
+ - [`firebase_auth_web` - `v5.12.6`](#firebase_auth_web---v5126)
+ - [`firebase_core` - `v3.4.0`](#firebase_core---v340)
+ - [`firebase_core_platform_interface` - `v5.2.1`](#firebase_core_platform_interface---v521)
+ - [`firebase_core_web` - `v2.17.5`](#firebase_core_web---v2175)
+ - [`firebase_crashlytics` - `v4.1.0`](#firebase_crashlytics---v410)
+ - [`firebase_database` - `v11.1.0`](#firebase_database---v1110)
+ - [`firebase_dynamic_links` - `v6.0.5`](#firebase_dynamic_links---v605)
+ - [`firebase_messaging` - `v15.1.0`](#firebase_messaging---v1510)
+ - [`firebase_ml_model_downloader` - `v0.3.1`](#firebase_ml_model_downloader---v031)
+ - [`firebase_performance` - `v0.10.0+5`](#firebase_performance---v01005)
+ - [`firebase_performance_platform_interface` - `v0.1.4+41`](#firebase_performance_platform_interface---v01441)
+ - [`firebase_remote_config` - `v5.1.0`](#firebase_remote_config---v510)
+ - [`firebase_storage` - `v12.2.0`](#firebase_storage---v1220)
+ - [`firebase_vertexai` - `v0.2.3`](#firebase_vertexai---v023)
+ - [`firebase_in_app_messaging` - `v0.8.0+5`](#firebase_in_app_messaging---v0805)
+ - [`_flutterfire_internals` - `v1.3.41`](#_flutterfire_internals---v1341)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.4+41`](#firebase_in_app_messaging_platform_interface---v02441)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.6+41`](#firebase_dynamic_links_platform_interface---v02641)
+ - [`firebase_messaging_platform_interface` - `v4.5.43`](#firebase_messaging_platform_interface---v4543)
+ - [`firebase_ml_model_downloader_platform_interface` - `v0.1.4+39`](#firebase_ml_model_downloader_platform_interface---v01439)
+ - [`firebase_database_web` - `v0.2.5+13`](#firebase_database_web---v02513)
+ - [`firebase_app_installations_platform_interface` - `v0.1.4+41`](#firebase_app_installations_platform_interface---v01441)
+ - [`firebase_app_check_platform_interface` - `v0.1.0+35`](#firebase_app_check_platform_interface---v01035)
+ - [`firebase_analytics_web` - `v0.5.9+2`](#firebase_analytics_web---v0592)
+ - [`firebase_messaging_web` - `v3.8.13`](#firebase_messaging_web---v3813)
+ - [`firebase_remote_config_platform_interface` - `v1.4.41`](#firebase_remote_config_platform_interface---v1441)
+ - [`firebase_remote_config_web` - `v1.6.13`](#firebase_remote_config_web---v1613)
+ - [`firebase_analytics_platform_interface` - `v4.2.2`](#firebase_analytics_platform_interface---v422)
+ - [`firebase_app_installations_web` - `v0.1.5+13`](#firebase_app_installations_web---v01513)
+ - [`firebase_database_platform_interface` - `v0.2.5+41`](#firebase_database_platform_interface---v02541)
+ - [`firebase_app_check_web` - `v0.1.2+13`](#firebase_app_check_web---v01213)
+ - [`firebase_crashlytics_platform_interface` - `v3.6.41`](#firebase_crashlytics_platform_interface---v3641)
+ - [`firebase_auth_platform_interface` - `v7.4.4`](#firebase_auth_platform_interface---v744)
+ - [`firebase_storage_web` - `v3.9.13`](#firebase_storage_web---v3913)
+ - [`cloud_functions_web` - `v4.9.12`](#cloud_functions_web---v4912)
+ - [`firebase_storage_platform_interface` - `v5.1.28`](#firebase_storage_platform_interface---v5128)
+ - [`cloud_functions_platform_interface` - `v5.5.34`](#cloud_functions_platform_interface---v5534)
+ - [`firebase_performance_web` - `v0.1.6+13`](#firebase_performance_web---v01613)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_in_app_messaging` - `v0.8.0+5`
+ - `_flutterfire_internals` - `v1.3.41`
+ - `firebase_in_app_messaging_platform_interface` - `v0.2.4+41`
+ - `firebase_dynamic_links_platform_interface` - `v0.2.6+41`
+ - `firebase_messaging_platform_interface` - `v4.5.43`
+ - `firebase_ml_model_downloader_platform_interface` - `v0.1.4+39`
+ - `firebase_database_web` - `v0.2.5+13`
+ - `firebase_app_installations_platform_interface` - `v0.1.4+41`
+ - `firebase_app_check_platform_interface` - `v0.1.0+35`
+ - `firebase_analytics_web` - `v0.5.9+2`
+ - `firebase_messaging_web` - `v3.8.13`
+ - `firebase_remote_config_platform_interface` - `v1.4.41`
+ - `firebase_remote_config_web` - `v1.6.13`
+ - `firebase_analytics_platform_interface` - `v4.2.2`
+ - `firebase_app_installations_web` - `v0.1.5+13`
+ - `firebase_database_platform_interface` - `v0.2.5+41`
+ - `firebase_app_check_web` - `v0.1.2+13`
+ - `firebase_crashlytics_platform_interface` - `v3.6.41`
+ - `firebase_auth_platform_interface` - `v7.4.4`
+ - `firebase_storage_web` - `v3.9.13`
+ - `cloud_functions_web` - `v4.9.12`
+ - `firebase_storage_platform_interface` - `v5.1.28`
+ - `cloud_functions_platform_interface` - `v5.5.34`
+ - `firebase_performance_web` - `v0.1.6+13`
+
+---
+
+#### `cloud_firestore` - `v5.3.0`
+
+ - **FIX**(firestore): not passing correctly the ListenSource when listening to as single `DocumentReference` ([#13179](https://github.com/firebase/flutterfire/issues/13179)). ([ce6e1c97](https://github.com/firebase/flutterfire/commit/ce6e1c97efc1398bc3c209d7a522e3bb67db3d0f))
+ - **FEAT**: bump iOS SDK to version 11.0.0 ([#13158](https://github.com/firebase/flutterfire/issues/13158)). ([c0e0c997](https://github.com/firebase/flutterfire/commit/c0e0c99703ea394d1bb873ac225c5fe3539b002d))
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
+#### `cloud_firestore_platform_interface` - `v6.3.2`
+
+ - **FIX**(firestore): not passing correctly the ListenSource when listening to as single `DocumentReference` ([#13179](https://github.com/firebase/flutterfire/issues/13179)). ([ce6e1c97](https://github.com/firebase/flutterfire/commit/ce6e1c97efc1398bc3c209d7a522e3bb67db3d0f))
+
+#### `cloud_firestore_web` - `v4.1.2`
+
+ - **FIX**(firestore): not passing correctly the ListenSource when listening to as single `DocumentReference` ([#13179](https://github.com/firebase/flutterfire/issues/13179)). ([ce6e1c97](https://github.com/firebase/flutterfire/commit/ce6e1c97efc1398bc3c209d7a522e3bb67db3d0f))
+
+#### `cloud_functions` - `v5.1.0`
+
+ - **FEAT**: bump iOS SDK to version 11.0.0 ([#13158](https://github.com/firebase/flutterfire/issues/13158)). ([c0e0c997](https://github.com/firebase/flutterfire/commit/c0e0c99703ea394d1bb873ac225c5fe3539b002d))
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
+#### `firebase_analytics` - `v11.3.0`
+
+ - **FEAT**: bump iOS SDK to version 11.0.0 ([#13158](https://github.com/firebase/flutterfire/issues/13158)). ([c0e0c997](https://github.com/firebase/flutterfire/commit/c0e0c99703ea394d1bb873ac225c5fe3539b002d))
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
+#### `firebase_app_check` - `v0.3.0+5`
+
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
+#### `firebase_app_installations` - `v0.3.1`
+
+ - **FEAT**: bump iOS SDK to version 11.0.0 ([#13158](https://github.com/firebase/flutterfire/issues/13158)). ([c0e0c997](https://github.com/firebase/flutterfire/commit/c0e0c99703ea394d1bb873ac225c5fe3539b002d))
+
+#### `firebase_auth` - `v5.2.0`
+
+ - **FEAT**: bump iOS SDK to version 11.0.0 ([#13158](https://github.com/firebase/flutterfire/issues/13158)). ([c0e0c997](https://github.com/firebase/flutterfire/commit/c0e0c99703ea394d1bb873ac225c5fe3539b002d))
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
+#### `firebase_auth_web` - `v5.12.6`
+
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
+#### `firebase_core` - `v3.4.0`
+
+ - **FEAT**: bump iOS SDK to version 11.0.0 ([#13158](https://github.com/firebase/flutterfire/issues/13158)). ([c0e0c997](https://github.com/firebase/flutterfire/commit/c0e0c99703ea394d1bb873ac225c5fe3539b002d))
+
+#### `firebase_core_platform_interface` - `v5.2.1`
+
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
+#### `firebase_core_web` - `v2.17.5`
+
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
+#### `firebase_crashlytics` - `v4.1.0`
+
+ - **FIX**(crashlytics): read firebase_crashlytics_collection_enabled from AndroidManifest.xml ([#13217](https://github.com/firebase/flutterfire/issues/13217)). ([fa8d3205](https://github.com/firebase/flutterfire/commit/fa8d3205ad5200a9e8c4c2a9ab3c8065d8d696ba))
+ - **FEAT**: bump iOS SDK to version 11.0.0 ([#13158](https://github.com/firebase/flutterfire/issues/13158)). ([c0e0c997](https://github.com/firebase/flutterfire/commit/c0e0c99703ea394d1bb873ac225c5fe3539b002d))
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
+#### `firebase_database` - `v11.1.0`
+
+ - **FEAT**: bump iOS SDK to version 11.0.0 ([#13158](https://github.com/firebase/flutterfire/issues/13158)). ([c0e0c997](https://github.com/firebase/flutterfire/commit/c0e0c99703ea394d1bb873ac225c5fe3539b002d))
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
+#### `firebase_dynamic_links` - `v6.0.5`
+
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
+#### `firebase_messaging` - `v15.1.0`
+
+ - **FEAT**: bump iOS SDK to version 11.0.0 ([#13158](https://github.com/firebase/flutterfire/issues/13158)). ([c0e0c997](https://github.com/firebase/flutterfire/commit/c0e0c99703ea394d1bb873ac225c5fe3539b002d))
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
+#### `firebase_ml_model_downloader` - `v0.3.1`
+
+ - **FEAT**: bump iOS SDK to version 11.0.0 ([#13158](https://github.com/firebase/flutterfire/issues/13158)). ([c0e0c997](https://github.com/firebase/flutterfire/commit/c0e0c99703ea394d1bb873ac225c5fe3539b002d))
+
+#### `firebase_performance` - `v0.10.0+5`
+
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
+#### `firebase_performance_platform_interface` - `v0.1.4+41`
+
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
+#### `firebase_remote_config` - `v5.1.0`
+
+ - **FEAT**: bump iOS SDK to version 11.0.0 ([#13158](https://github.com/firebase/flutterfire/issues/13158)). ([c0e0c997](https://github.com/firebase/flutterfire/commit/c0e0c99703ea394d1bb873ac225c5fe3539b002d))
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
+#### `firebase_storage` - `v12.2.0`
+
+ - **FEAT**: bump iOS SDK to version 11.0.0 ([#13158](https://github.com/firebase/flutterfire/issues/13158)). ([c0e0c997](https://github.com/firebase/flutterfire/commit/c0e0c99703ea394d1bb873ac225c5fe3539b002d))
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
+#### `firebase_vertexai` - `v0.2.3`
+
+ - **FIX**(vertexai): update history getter to reflect google_generative_ai updates ([#13040](https://github.com/firebase/flutterfire/issues/13040)). ([cc542d76](https://github.com/firebase/flutterfire/commit/cc542d76b989d550f29a9b0a1adb761da64372a7))
+ - **FEAT**: bump iOS SDK to version 11.0.0 ([#13158](https://github.com/firebase/flutterfire/issues/13158)). ([c0e0c997](https://github.com/firebase/flutterfire/commit/c0e0c99703ea394d1bb873ac225c5fe3539b002d))
+
+
 ## 2024-08-06 - [BoM 2.4.1](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-241-2024-08-06)
 
 ### Changes
