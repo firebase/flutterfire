@@ -1,3 +1,9 @@
+## 5.3.0
+
+ - **FIX**(firestore): not passing correctly the ListenSource when listening to as single `DocumentReference` ([#13179](https://github.com/firebase/flutterfire/issues/13179)). ([ce6e1c97](https://github.com/firebase/flutterfire/commit/ce6e1c97efc1398bc3c209d7a522e3bb67db3d0f))
+ - **FEAT**: bump iOS SDK to version 11.0.0 ([#13158](https://github.com/firebase/flutterfire/issues/13158)). ([c0e0c997](https://github.com/firebase/flutterfire/commit/c0e0c99703ea394d1bb873ac225c5fe3539b002d))
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
 ## 5.2.1
 
  - **FIX**: compilation issue on Windows ([#13135](https://github.com/firebase/flutterfire/issues/13135)). ([de8c9e0f](https://github.com/firebase/flutterfire/commit/de8c9e0f2d3117b3614ac8295b041fea7ed3ee7f))
