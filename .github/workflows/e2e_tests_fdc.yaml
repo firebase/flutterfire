@@ -48,6 +48,8 @@ jobs:
         with:
           channel: 'stable'
           cache: true
+      - name: Setup PostgreSQL for Linux/macOS/Windows
+        uses: ikalnytskyi/action-setup-postgres@v6
       - uses: bluefireteam/melos-action@6085791af7036f6366c9a4b9d55105c0ef9c6388
         with:
           run-bootstrap: false
