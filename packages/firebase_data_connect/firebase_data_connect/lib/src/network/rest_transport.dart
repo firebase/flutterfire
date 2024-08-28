@@ -46,7 +46,7 @@ class RestTransport implements DataConnectTransport {
       Deserializer<Data> deserializer,
       Serializer<Variables>? serializer,
       Variables? vars,
-      OperationType opType) async {
+      String endpoint) async {
     String project = options.projectId;
     String location = options.location;
     String service = options.serviceId;
@@ -85,8 +85,6 @@ class RestTransport implements DataConnectTransport {
       body['variables'] = json.decode(serializer(vars));
       print('done decoding');
     }
-    String endpoint =
-        opType == OperationType.query ? 'executeQuery' : 'executeMutation';
     try {
       http.Response r = await http.post(Uri.parse('$_url:$endpoint'),
           body: json.encode(body), headers: headers);
@@ -124,7 +122,7 @@ class RestTransport implements DataConnectTransport {
     Variables? vars,
   ) async {
     return invokeOperation(
-        queryName, deserializer, serializer, vars, OperationType.query);
+        queryName, deserializer, serializer, vars, 'executeQuery');
   }
 
   /// Invokes mutation REST endpoint.
@@ -136,7 +134,7 @@ class RestTransport implements DataConnectTransport {
     Variables? vars,
   ) async {
     return invokeOperation(
-        queryName, deserializer, serializer, vars, OperationType.mutation);
+        queryName, deserializer, serializer, vars, 'executeMutation');
   }
 }
 

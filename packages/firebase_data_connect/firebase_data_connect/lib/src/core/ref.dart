@@ -6,17 +6,23 @@ part of firebase_data_connect;
 
 /// Result of an Operation Request (query/mutation).
 class OperationResult<Data, Variables> {
-  OperationResult(this.data, this.ref);
+  OperationResult(this.dataConnect, this.data, this.ref);
   Data data;
   OperationRef<Data, Variables> ref;
+  FirebaseDataConnect dataConnect;
+}
+
+/// Result of a query request. Created to hold extra variables in the future.
+class QueryResult<Data, Variables> extends OperationResult<Data, Variables> {
+  QueryResult(super.dataConnect, super.data, super.ref);
 }
 
 /// Reference to a specific query.
 /// Contains variables, transport to execute queries, and serialization/deserialization strategies.
-class OperationRef<Data, Variables> {
+abstract class OperationRef<Data, Variables> {
   /// Constructor
-  OperationRef(this.operationName, this.variables, this._transport, this.opType,
-      this.deserializer, this.serializer) {
+  OperationRef(this.dataConnect, this.operationName, this.variables,
+      this._transport, this.deserializer, this.serializer) {
     if (this.variables != null && this.serializer == null) {
       throw Exception('Serializer required for variables');
     }
@@ -26,25 +32,19 @@ class OperationRef<Data, Variables> {
   DataConnectTransport _transport;
   Deserializer<Data> deserializer;
   Serializer<Variables>? serializer;
-  OperationType opType;
 
-  Future<OperationResult<Data, Variables>> execute() async {
-    if (this.opType == OperationType.query) {
-      Data data = await this._transport.invokeQuery<Data, Variables>(
-          this.operationName, this.deserializer, this.serializer, variables);
-      return OperationResult(data, this);
-    } else {
-      print('executing');
-      Data data = await this._transport.invokeMutation<Data, Variables>(
-          this.operationName, this.deserializer, this.serializer, variables);
-      print('done executing');
-      return OperationResult(data, this);
-    }
-  }
+  FirebaseDataConnect dataConnect;
+
+  Future<OperationResult<Data, Variables>> execute();
 }
 
 /// Tracks currently active queries, and emits events when a new query is executed.
 class _QueryManager {
+  _QueryManager(this.dataConnect);
+
+  /// FirebaseDataConnect instance;
+  FirebaseDataConnect dataConnect;
+
   /// Keeps track of what queries are currently active.
   Map<String, Map<String, StreamController<dynamic>>> trackedQueries = {};
   bool containsQuery<Variables>(
@@ -78,26 +78,31 @@ class _QueryManager {
     if (error != null) {
       stream.addError(error);
     } else {
-      stream.add(OperationResult<Data, Variables>(data as Data, ref));
+      stream.add(OperationResult<Data, Variables>(
+          this.dataConnect, data as Data, ref));
     }
   }
 }
 
 class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
   QueryRef(
+      FirebaseDataConnect dataConnect,
       String operationName,
       DataConnectTransport transport,
       Deserializer<Data> deserializer,
       this._queryManager,
       Variables? variables,
       Serializer<Variables>? serializer)
-      : super(operationName, variables, transport, OperationType.query,
-            deserializer, serializer);
+      : super(dataConnect, operationName, variables, transport, deserializer,
+            serializer);
+
   _QueryManager _queryManager;
   @override
-  Future<OperationResult<Data, Variables>> execute() async {
+  Future<QueryResult<Data, Variables>> execute() async {
     try {
-      OperationResult<Data, Variables> res = await super.execute();
+      Data data = await _transport.invokeQuery<Data, Variables>(
+          operationName, deserializer, serializer, variables);
+      QueryResult<Data, Variables> res = QueryResult(dataConnect, data, this);
       _queryManager.triggerCallback<Data, Variables>(
           operationName,
           serializer != null ? serializer!(variables as Variables) : '',
@@ -116,13 +121,13 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
     }
   }
 
-  Stream<OperationResult<Data, Variables>> subscribe() {
+  Stream<QueryResult<Data, Variables>> subscribe() {
     String varsSerialized =
         serializer != null ? serializer!(variables as Variables) : '';
 
-    Stream<OperationResult<Data, Variables>> res = _queryManager
+    Stream<QueryResult<Data, Variables>> res = _queryManager
         .addQuery(operationName, variables, varsSerialized)
-        .cast<OperationResult<Data, Variables>>();
+        .cast<QueryResult<Data, Variables>>();
     if (_queryManager.containsQuery(operationName, variables, varsSerialized)) {
       this.execute().ignore();
     }
@@ -132,11 +137,18 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 
 class MutationRef<Data, Variables> extends OperationRef<Data, Variables> {
   MutationRef(
+    FirebaseDataConnect dataConnect,
     String operationName,
     DataConnectTransport transport,
     Deserializer<Data> deserializer,
     Variables? variables,
     Serializer<Variables>? serializer,
-  ) : super(operationName, variables, transport, OperationType.mutation,
-            deserializer, serializer);
+  ) : super(dataConnect, operationName, variables, transport, deserializer,
+            serializer);
+  @override
+  Future<OperationResult<Data, Variables>> execute() async {
+    Data data = await _transport.invokeMutation<Data, Variables>(
+        operationName, deserializer, serializer, variables);
+    return OperationResult(dataConnect, data, this);
+  }
 }

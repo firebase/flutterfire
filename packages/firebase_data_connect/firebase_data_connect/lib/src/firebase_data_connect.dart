@@ -17,11 +17,12 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
             connectorConfig.location,
             connectorConfig.connector,
             connectorConfig.serviceId),
-        _queryManager = _QueryManager(),
-        super(app.name, 'plugins.flutter.io/firebase_data_connect');
+        super(app.name, 'plugins.flutter.io/firebase_data_connect') {
+    _queryManager = _QueryManager(this);
+  }
 
   /// QueryManager manages ongoing queries, and their subscriptions.
-  _QueryManager _queryManager;
+  late _QueryManager _queryManager;
 
   /// FirebaseApp
   FirebaseApp app;
@@ -59,8 +60,8 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
       Serializer<Variables>? varsSerializer,
       Variables? vars) {
     _checkTransport();
-    return QueryRef<Data, Variables>(queryName, transport, dataDeserializer,
-        _queryManager, vars, varsSerializer);
+    return QueryRef<Data, Variables>(this, queryName, transport,
+        dataDeserializer, _queryManager, vars, varsSerializer);
   }
 
   /// Returns a [MutationRef] object.
@@ -71,7 +72,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
       Variables? vars) {
     _checkTransport();
     return MutationRef<Data, Variables>(
-        queryName, transport, dataDeserializer, vars, varsSerializer);
+        this, queryName, transport, dataDeserializer, vars, varsSerializer);
   }
 
   /// useDataConnectEmulator connects to the DataConnect emulator.
