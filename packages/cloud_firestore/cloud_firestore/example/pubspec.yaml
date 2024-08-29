@@ -8,6 +8,7 @@ dependencies:
   cloud_firestore: ^5.3.0
   firebase_core: ^3.4.0
   firebase_crashlytics: ^4.1.0
+  
   flutter:
     sdk: flutter
   http: ^1.0.0

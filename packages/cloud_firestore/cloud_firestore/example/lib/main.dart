@@ -22,6 +22,7 @@ Future<Uint8List> loadBundleSetup(int number) async {
   final url =
       Uri.https('api.rnfirebase.io', '/firestore/e2e-tests/bundle-$number');
   final response = await http.get(url);
+
   String string = response.body;
   return Uint8List.fromList(string.codeUnits);
 }
