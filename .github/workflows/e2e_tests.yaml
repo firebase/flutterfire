@@ -37,7 +37,7 @@ jobs:
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
+      - uses: actions/setup-java@6a0805fcefea3d4657a47ac4c165951e33482018
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -101,7 +101,7 @@ jobs:
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
+      - uses: actions/setup-java@6a0805fcefea3d4657a47ac4c165951e33482018
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -177,7 +177,7 @@ jobs:
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
+      - uses: actions/setup-java@6a0805fcefea3d4657a47ac4c165951e33482018
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -248,7 +248,7 @@ jobs:
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
+      - uses: actions/setup-java@6a0805fcefea3d4657a47ac4c165951e33482018
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -303,7 +303,7 @@ jobs:
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
+      - uses: actions/setup-java@6a0805fcefea3d4657a47ac4c165951e33482018
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -352,7 +352,7 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
-      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
+      - uses: actions/setup-java@6a0805fcefea3d4657a47ac4c165951e33482018
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -382,7 +382,7 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
-      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
+      - uses: actions/setup-java@6a0805fcefea3d4657a47ac4c165951e33482018
         with:
           distribution: 'temurin'
           java-version: '17'
