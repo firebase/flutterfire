@@ -25,7 +25,7 @@ void runQueryTests() {
         expect(result.movies.length, 0);
       });
 
-      testWidgets('can add a movie', (WidgetTester tester) async {
+      testWidgets('can add a movie and delete it', (WidgetTester tester) async {
         MutationRef ref = MoviesConnector.instance.createMovie.ref(
           genre: 'Action',
           title: 'The Matrix',
@@ -39,6 +39,14 @@ void runQueryTests() {
         final result = value.data;
         expect(result.movies.length, 1);
         expect(result.movies[0].title, 'The Matrix');
+      });
+
+      testWidgets('can add a person', (WidgetTester tester) async {
+        MutationRef ref = MoviesConnector.instance.addPerson.ref(
+          name: 'Keanu Reeves',
+        );
+
+        await ref.execute();
       });
     },
   );
