@@ -80,8 +80,7 @@ class _QueryManager {
     if (error != null) {
       stream.addError(error);
     } else {
-      stream.add(
-          OperationResult<Data, Variables>(dataConnect, data as Data, ref));
+      stream.add(QueryResult<Data, Variables>(dataConnect, data as Data, ref));
     }
   }
 }
@@ -93,8 +92,8 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
       DataConnectTransport transport,
       Deserializer<Data> deserializer,
       this._queryManager,
-      Variables? variables,
-      Serializer<Variables> serializer)
+      Serializer<Variables> serializer,
+      Variables? variables)
       : super(dataConnect, operationName, variables, transport, deserializer,
             serializer);
 
@@ -109,6 +108,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
           serializer(variables as Variables), this, res.data, null);
       return res;
     } on Exception catch (e) {
+      print(e);
       await _queryManager.triggerCallback<Data, Variables>(
           operationName, serializer(variables as Variables), this, null, e);
       rethrow;
@@ -134,8 +134,8 @@ class MutationRef<Data, Variables> extends OperationRef<Data, Variables> {
     String operationName,
     DataConnectTransport transport,
     Deserializer<Data> deserializer,
-    Variables? variables,
     Serializer<Variables> serializer,
+    Variables? variables,
   ) : super(dataConnect, operationName, variables, transport, deserializer,
             serializer);
   @override

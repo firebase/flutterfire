@@ -66,7 +66,7 @@ class RestTransport implements DataConnectTransport {
     try {
       appCheckToken = await appCheck?.getToken();
     } catch (e) {
-      log('Unable to get app check token: $e');
+      print('Unable to get app check token: $e');
     }
     if (authToken != null) {
       headers['X-Firebase-Auth-Token'] = authToken;

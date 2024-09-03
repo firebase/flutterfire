@@ -61,7 +61,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
       Variables? vars) {
     _checkTransport();
     return QueryRef<Data, Variables>(this, operationName, transport,
-        dataDeserializer, _queryManager, vars, varsSerializer);
+        dataDeserializer, _queryManager, varsSerializer, vars);
   }
 
   /// Returns a [MutationRef] object.
@@ -72,7 +72,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
       Variables? vars) {
     _checkTransport();
     return MutationRef<Data, Variables>(
-        this, operationName, transport, dataDeserializer, vars, varsSerializer);
+        this, operationName, transport, dataDeserializer, varsSerializer, vars);
   }
 
   /// useDataConnectEmulator connects to the DataConnect emulator.

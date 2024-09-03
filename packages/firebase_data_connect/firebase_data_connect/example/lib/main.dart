@@ -16,11 +16,32 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import 'generated/movies.dart';
 
-const appCheckEnabled = false;
+const appCheckEnabled = true;
+const configureEmulator = true;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  if (appCheckEnabled) {
+    await FirebaseAppCheck.instance.activate(
+      // You can also use a `ReCaptchaEnterpriseProvider` provider instance as an
+      // argument for `webProvider`
+      webProvider: ReCaptchaV3Provider('your site key here'),
+      // Default provider for Android is the Play Integrity provider. You can use the "AndroidProvider" enum to choose
+      // your preferred provider. Choose from:
+      // 1. Debug provider
+      // 2. Safety Net provider
+      // 3. Play Integrity provider
+      androidProvider: AndroidProvider.debug,
+      // Default provider for iOS/macOS is the Device Check provider. You can use the "AppleProvider" enum to choose
+      // your preferred provider. Choose from:
+      // 1. Debug provider
+      // 2. Device Check provider
+      // 3. App Attest provider
+      // 4. App Attest provider with fallback to Device Check provider (App Attest provider is only available on iOS 14.0+, macOS 14.0+)
+      appleProvider: AppleProvider.appAttest,
+    );
+  }
   runApp(const MyApp());
 }
 
@@ -62,34 +83,30 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
   double _rating = 0;
 
   Future<void> triggerReload() async {
-    if (appCheckEnabled) {
-      await appcheck();
-    }
     QueryRef ref = MoviesConnector.instance.listMovies.ref();
-
     ref.execute().ignore();
   }
 
   @override
   void initState() {
     super.initState();
-    int port = 1242;
-    FirebaseDataConnect.instanceFor(
-            app: Firebase.app(),
-            connectorConfig: MoviesConnector.connectorConfig)
-        .useDataConnectEmulator('locahost', port);
+    if (configureEmulator) {
+      int port = 9399;
+      FirebaseDataConnect.instanceFor(
+              app: Firebase.app(),
+              connectorConfig: MoviesConnector.connectorConfig)
+          .useDataConnectEmulator('127.0.0.1', port);
 
-    QueryRef<ListMoviesResponse, void> ref =
-        MoviesConnector.instance.listMovies.ref();
-    ref.subscribe().listen((event) {
-      setState(() {
-        _movies = event.data.movies;
-      });
-    }).onError((e) {
-      if (kDebugMode) {
+      QueryRef<ListMoviesResponse, void> ref =
+          MoviesConnector.instance.listMovies.ref();
+      ref.subscribe().listen((event) {
+        setState(() {
+          _movies = event.data.movies;
+        });
+      }).onError((e) {
         _showError("Got an error: $e");
-      }
-    });
+      });
+    }
   }
 
   @override
@@ -224,27 +241,6 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
           ],
         );
       },
-    );
-  }
-
-  appcheck() async {
-    await FirebaseAppCheck.instance.activate(
-      // You can also use a `ReCaptchaEnterpriseProvider` provider instance as an
-      // argument for `webProvider`
-      webProvider: ReCaptchaV3Provider('your site key'),
-      // Default provider for Android is the Play Integrity provider. You can use the "AndroidProvider" enum to choose
-      // your preferred provider. Choose from:
-      // 1. Debug provider
-      // 2. Safety Net provider
-      // 3. Play Integrity provider
-      androidProvider: AndroidProvider.debug,
-      // Default provider for iOS/macOS is the Device Check provider. You can use the "AppleProvider" enum to choose
-      // your preferred provider. Choose from:
-      // 1. Debug provider
-      // 2. Device Check provider
-      // 3. App Attest provider
-      // 4. App Attest provider with fallback to Device Check provider (App Attest provider is only available on iOS 14.0+, macOS 14.0+)
-      appleProvider: AppleProvider.appAttest,
     );
   }
 }
