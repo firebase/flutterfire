@@ -8,6 +8,7 @@ import 'dart:async';
 
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_common/firebase_common.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 
@@ -22,3 +23,4 @@ part 'src/core/ref.dart';
 part 'src/firebase_data_connect.dart';
 part 'src/optional.dart';
 part 'src/timestamp.dart';
+part 'src/core/empty_serializer.dart';

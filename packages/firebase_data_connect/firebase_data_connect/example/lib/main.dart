@@ -16,6 +16,8 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import 'generated/movies.dart';
 
+const appCheckEnabled = false;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -60,7 +62,9 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
   double _rating = 0;
 
   Future<void> triggerReload() async {
-    // await appcheck();
+    if (appCheckEnabled) {
+      await appcheck();
+    }
     QueryRef ref = MoviesConnector.instance.listMovies.ref();
 
     ref.execute().ignore();
@@ -69,28 +73,19 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
   @override
   void initState() {
     super.initState();
-    String host = 'localhost';
-    try {
-      if (Platform.isAndroid) {
-        host = '10.0.2.2';
-      }
-    } catch (_) {}
-    print('Test!');
     int port = 1242;
     FirebaseDataConnect.instanceFor(
             app: Firebase.app(),
             connectorConfig: MoviesConnector.connectorConfig)
-        .useDataConnectEmulator(host, port: port);
+        .useDataConnectEmulator('locahost', port);
 
     QueryRef<ListMoviesResponse, void> ref =
         MoviesConnector.instance.listMovies.ref();
-    print('listening');
     ref.subscribe().listen((event) {
       setState(() {
         _movies = event.data.movies;
       });
     }).onError((e) {
-      print(e.toString());
       if (kDebugMode) {
         _showError("Got an error: $e");
       }

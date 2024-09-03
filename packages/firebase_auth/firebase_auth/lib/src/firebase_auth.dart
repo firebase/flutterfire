@@ -83,16 +83,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// Do not use with production credentials as emulator traffic is not encrypted.
   Future<void> useAuthEmulator(String host, int port,
       {bool automaticHostMapping = true}) async {
-    String mappedHost = host;
-
-    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-      if ((mappedHost == 'localhost' || mappedHost == '127.0.0.1') &&
-          automaticHostMapping) {
-        // ignore: avoid_print
-        print('Mapping Auth Emulator host "$mappedHost" to "10.0.2.2".');
-        mappedHost = '10.0.2.2';
-      }
-    }
+    String mappedHost = automaticHostMapping ? getMappedHost(host) : host;
 
     await _delegate.useAuthEmulator(mappedHost, port);
   }

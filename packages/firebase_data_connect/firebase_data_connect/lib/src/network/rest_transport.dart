@@ -60,13 +60,13 @@ class RestTransport implements DataConnectTransport {
     try {
       authToken = await auth?.currentUser?.getIdToken();
     } catch (e) {
-      print('Unable to get auth token: ' + e.toString());
+      log('Unable to get auth token: $e');
     }
     String? appCheckToken;
     try {
-      authToken = await appCheck?.getToken();
+      appCheckToken = await appCheck?.getToken();
     } catch (e) {
-      print('Unable to get app check token: ' + e.toString());
+      log('Unable to get app check token: $e');
     }
     if (authToken != null) {
       headers['X-Firebase-Auth-Token'] = authToken;
@@ -81,9 +81,7 @@ class RestTransport implements DataConnectTransport {
       'operationName': queryName,
     };
     if (vars != null && serializer != null) {
-      print('decoding');
       body['variables'] = json.decode(serializer(vars));
-      print('done decoding');
     }
     try {
       http.Response r = await http.post(Uri.parse('$_url:$endpoint'),

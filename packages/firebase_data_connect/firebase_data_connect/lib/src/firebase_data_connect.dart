@@ -57,7 +57,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   QueryRef<Data, Variables> query<Data, Variables>(
       String queryName,
       Deserializer<Data> dataDeserializer,
-      Serializer<Variables>? varsSerializer,
+      Serializer<Variables> varsSerializer,
       Variables? vars) {
     _checkTransport();
     return QueryRef<Data, Variables>(this, queryName, transport,
@@ -68,7 +68,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   MutationRef<Data, Variables> mutation<Data, Variables>(
       String queryName,
       Deserializer<Data> dataDeserializer,
-      Serializer<Variables>? varsSerializer,
+      Serializer<Variables> varsSerializer,
       Variables? vars) {
     _checkTransport();
     return MutationRef<Data, Variables>(
@@ -76,8 +76,10 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   }
 
   /// useDataConnectEmulator connects to the DataConnect emulator.
-  void useDataConnectEmulator(String host, {int? port, bool isSecure = false}) {
-    _transportOptions = TransportOptions(host, port, isSecure);
+  void useDataConnectEmulator(String host, int port,
+      {bool automaticHostMapping = true, bool isSecure = false}) {
+    String mappedHost = automaticHostMapping ? getMappedHost(host) : host;
+    _transportOptions = TransportOptions(mappedHost, port, isSecure);
   }
 
   /// Currently cached DataConnect instances. Maps from app name to <ConnectorConfigStr, DataConnect>.

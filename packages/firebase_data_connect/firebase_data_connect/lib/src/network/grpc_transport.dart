@@ -22,9 +22,11 @@ class GRPCTransport implements DataConnectTransport {
   }
 
   /// FirebaseAuth
+  @override
   FirebaseAuth? auth;
 
   /// FirebaseAppCheck
+  @override
   FirebaseAppCheck? appCheck;
 
   /// Name of the endpoint.
@@ -49,13 +51,13 @@ class GRPCTransport implements DataConnectTransport {
     try {
       authToken = await auth?.currentUser?.getIdToken();
     } catch (e) {
-      print('Unable to get auth token: ' + e.toString());
+      log('Unable to get auth token: $e');
     }
     String? appCheckToken;
     try {
-      authToken = await appCheck?.getToken();
+      appCheckToken = await appCheck?.getToken();
     } catch (e) {
-      print('Unable to get app check token: ' + e.toString());
+      log('Unable to get app check token: $e');
     }
     Map<String, String> metadata = {
       'x-goog-request-params': 'location=${options.location}&frontend=data',

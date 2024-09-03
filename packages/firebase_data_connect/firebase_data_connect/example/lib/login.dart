@@ -45,9 +45,10 @@ class _LoginState extends State<Login> {
   }
 
   void logIn() async {
+    final navigator = Navigator.of(context);
     await signInWithGoogle();
-    Navigator.push(
-      context,
+
+    navigator.push(
       MaterialPageRoute(
           builder: (context) => const MyHomePage(
                 title: "Data Connect Home Page",
