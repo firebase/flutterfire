@@ -1,3 +1,12 @@
+## 11.3.0
+
+ - **FEAT**: bump iOS SDK to version 11.0.0 ([#13158](https://github.com/firebase/flutterfire/issues/13158)). ([c0e0c997](https://github.com/firebase/flutterfire/commit/c0e0c99703ea394d1bb873ac225c5fe3539b002d))
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
+## 11.2.1
+
+ - Update a dependency to the latest release.
+
 ## 11.2.0
 
  - **FEAT**(analytics,web): add support for options on Web ([#12914](https://github.com/firebase/flutterfire/issues/12914)). ([dd7ce8c2](https://github.com/firebase/flutterfire/commit/dd7ce8c20c28d7bd67cee9b7542af2e38c1aa6c7))

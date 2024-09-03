@@ -134,6 +134,14 @@ enum class AggregateSource {
   server = 0
 };
 
+// [PersistenceCacheIndexManagerRequest] represents the request types for the
+// persistence cache index manager.
+enum class PersistenceCacheIndexManagerRequestEnum {
+  enableIndexAutoCreation = 0,
+  disableIndexAutoCreation = 1,
+  deleteAllIndexes = 2
+};
+
 enum class PigeonTransactionResult { success = 0, failure = 1 };
 
 enum class PigeonTransactionType {
@@ -714,6 +722,10 @@ class FirebaseFirestoreHostApi {
       const DocumentReferenceRequest& parameters, bool include_metadata_changes,
       const ListenSource& source,
       std::function<void(ErrorOr<std::string> reply)> result) = 0;
+  virtual void PersistenceCacheIndexManagerRequest(
+      const FirestorePigeonFirebaseApp& app,
+      const PersistenceCacheIndexManagerRequestEnum& request,
+      std::function<void(std::optional<FlutterError> reply)> result) = 0;
 
   // The codec used by FirebaseFirestoreHostApi.
   static const flutter::StandardMessageCodec& GetCodec();

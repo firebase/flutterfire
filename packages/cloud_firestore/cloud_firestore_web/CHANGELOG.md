@@ -1,3 +1,20 @@
+## 4.2.0
+
+ - **FEAT**(firestore,web): expose `webExperimentalForceLongPolling`, `webExperimentalAutoDetectLongPolling` and `timeoutSeconds` on web ([#13201](https://github.com/firebase/flutterfire/issues/13201)). ([6ec2a103](https://github.com/firebase/flutterfire/commit/6ec2a103a3a325a73550bdfff4c0d524ae7e4068))
+
+## 4.1.2
+
+ - **FIX**(firestore): not passing correctly the ListenSource when listening to as single `DocumentReference` ([#13179](https://github.com/firebase/flutterfire/issues/13179)). ([ce6e1c97](https://github.com/firebase/flutterfire/commit/ce6e1c97efc1398bc3c209d7a522e3bb67db3d0f))
+
+## 4.1.1
+
+ - Update a dependency to the latest release.
+
+## 4.1.0
+
+ - **FIX**(firestore,web): stop cleaning up snapshot listeners in debug ([#13119](https://github.com/firebase/flutterfire/issues/13119)). ([82a63c8b](https://github.com/firebase/flutterfire/commit/82a63c8bf9bad0c262ed48d7829fb05110a9fe08))
+ - **FEAT**(firestore): support for `PersistentCacheIndexManager` for firestore instances for managing cache indexes. ([#13070](https://github.com/firebase/flutterfire/issues/13070)). ([806c15d7](https://github.com/firebase/flutterfire/commit/806c15d7eadaf48b8dfb22586bea4ed684672a86))
+
 ## 4.0.3
 
  - **FIX**(firestore,web): ensure exact same streams are not unsubscribed ([#13032](https://github.com/firebase/flutterfire/issues/13032)). ([110dfae3](https://github.com/firebase/flutterfire/commit/110dfae31c1bee9956f3d16977355a2b12b385c5))

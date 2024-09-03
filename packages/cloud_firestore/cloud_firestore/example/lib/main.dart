@@ -13,7 +13,7 @@ import 'package:http/http.dart' as http;
 import 'firebase_options.dart';
 
 /// Requires that a Firestore emulator is running locally.
-/// See https://firebase.flutter.dev/docs/firestore/usage#emulator-usage
+/// See https://firebase.google.com/docs/firestore/quickstart#optional_prototype_and_test_with
 bool shouldUseFirestoreEmulator = true;
 
 Future<Uint8List> loadBundleSetup(int number) async {

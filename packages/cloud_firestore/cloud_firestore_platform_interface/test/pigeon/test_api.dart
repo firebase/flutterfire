@@ -206,6 +206,11 @@ abstract class TestFirebaseFirestoreHostApi {
     ListenSource source,
   );
 
+  Future<void> persistenceCacheIndexManagerRequest(
+    FirestorePigeonFirebaseApp app,
+    PersistenceCacheIndexManagerRequest request,
+  );
+
   static void setup(
     TestFirebaseFirestoreHostApi? api, {
     BinaryMessenger? binaryMessenger,
@@ -1057,6 +1062,43 @@ abstract class TestFirebaseFirestoreHostApi {
             arg_source!,
           );
           return <Object?>[output];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.persistenceCacheIndexManagerRequest',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.persistenceCacheIndexManagerRequest was null.',
+          );
+          final List<Object?> args = (message as List<Object?>?)!;
+          final FirestorePigeonFirebaseApp? arg_app =
+              (args[0] as FirestorePigeonFirebaseApp?);
+          assert(
+            arg_app != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.persistenceCacheIndexManagerRequest was null, expected non-null FirestorePigeonFirebaseApp.',
+          );
+          final PersistenceCacheIndexManagerRequest? arg_request =
+              args[1] == null
+                  ? null
+                  : PersistenceCacheIndexManagerRequest.values[args[1]! as int];
+          assert(
+            arg_request != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.persistenceCacheIndexManagerRequest was null, expected non-null PersistenceCacheIndexManagerRequest.',
+          );
+          await api.persistenceCacheIndexManagerRequest(arg_app!, arg_request!);
+          return <Object?>[];
         });
       }
     }

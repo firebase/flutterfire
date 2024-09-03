@@ -169,7 +169,7 @@ Future<void> appendStaticText(
   sink.writeln('# Versions');
   sink.writeln();
   sink.writeln(
-    '## [Flutter BoM $version ($date)](https://github.com/firebase/flutterfire/blob/master/CHANGELOG.md#$date)',
+    '## [Flutter BoM $version ($date)](https://github.com/firebase/flutterfire/blob/main/CHANGELOG.md#$date)',
   );
   sink.writeln();
   sink.writeln('Install this version using FlutterFire CLI');
@@ -218,7 +218,7 @@ Future<void> appendStaticText(
 Future<void> addLinkInChangelog(String version, String date) async {
   String originalLine = '## $date';
   String newLine =
-      '## $date - [BoM $version](https://github.com/firebase/flutterfire/blob/master/VERSIONS.md#flutter-bom-${version.replaceAll('.', '')}-$date)';
+      '## $date - [BoM $version](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-${version.replaceAll('.', '')}-$date)';
 
   String escapedOriginalLine =
       originalLine.replaceAll(r'$', r'\$').replaceAll('#', r'\#');

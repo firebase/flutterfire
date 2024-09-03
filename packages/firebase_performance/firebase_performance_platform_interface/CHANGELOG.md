@@ -1,3 +1,11 @@
+## 0.1.4+41
+
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
+## 0.1.4+40
+
+ - Update a dependency to the latest release.
+
 ## 0.1.4+39
 
  - Update a dependency to the latest release.

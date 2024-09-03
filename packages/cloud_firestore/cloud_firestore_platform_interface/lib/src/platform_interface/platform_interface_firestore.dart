@@ -241,6 +241,12 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
     throw UnimplementedError('setIndexConfiguration() is not implemented');
   }
 
+  /// Gets the PersistentCacheIndexManager instance used by this firestore instance.
+  PersistentCacheIndexManagerPlatform? persistentCacheIndexManager() {
+    throw UnimplementedError(
+        'persistentCacheIndexManager() is not implemented');
+  }
+
   /// Globally enables / disables Cloud Firestore logging for the SDK.
   Future<void> setLoggingEnabled(bool enabled) {
     throw UnimplementedError('setLoggingEnabled() is not implemented');

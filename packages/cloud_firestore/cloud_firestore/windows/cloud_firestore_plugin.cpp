@@ -1736,4 +1736,11 @@ void CloudFirestorePlugin::DocumentReferenceSnapshot(
   result(channelName);
 }
 
+void CloudFirestorePlugin::PersistenceCacheIndexManagerRequest(
+    const FirestorePigeonFirebaseApp& app,
+    const PersistenceCacheIndexManagerRequestEnum& request,
+    std::function<void(std::optional<FlutterError> reply)> result) {
+  result(FlutterError("Not implemented on Windows"));
+}
+
 }  // namespace cloud_firestore_windows

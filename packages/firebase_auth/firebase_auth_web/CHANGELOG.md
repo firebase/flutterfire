@@ -1,3 +1,11 @@
+## 5.12.6
+
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
+## 5.12.5
+
+ - Update a dependency to the latest release.
+
 ## 5.12.4
 
  - **FIX**(auth,web): ensure exact same streams are not unsubscribed ([#13033](https://github.com/firebase/flutterfire/issues/13033)). ([111f5f64](https://github.com/firebase/flutterfire/commit/111f5f647b0b3d9b6c932a6e491a22602d71197c))

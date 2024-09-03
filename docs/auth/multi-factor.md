@@ -140,7 +140,7 @@ The code below shows a complete example of enrolling a second factor:
     verificationFailed: (_) {},
     codeSent: (String verificationId, int? resendToken) async {
       // See `firebase_auth` example app for a method of retrieving user's sms code: 
-      // https://github.com/firebase/flutterfire/blob/master/packages/firebase_auth/firebase_auth/example/lib/auth.dart#L591
+      // https://github.com/firebase/flutterfire/blob/main/packages/firebase_auth/firebase_auth/example/lib/auth.dart#L591
       final smsCode = await getSmsCodeFromUser(context);
 
       if (smsCode != null) {
@@ -270,7 +270,7 @@ try {
     verificationFailed: (_) {},
     codeSent: (String verificationId, int? resendToken) async {
       // See `firebase_auth` example app for a method of retrieving user's sms code: 
-      // https://github.com/firebase/flutterfire/blob/master/packages/firebase_auth/firebase_auth/example/lib/auth.dart#L591
+      // https://github.com/firebase/flutterfire/blob/main/packages/firebase_auth/firebase_auth/example/lib/auth.dart#L591
       final smsCode = await getSmsCodeFromUser(context);
 
       if (smsCode != null) {

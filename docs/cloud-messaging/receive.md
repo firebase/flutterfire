@@ -161,7 +161,7 @@ To get started, create a new file in the your `web` directory, and call it `fire
 
 ```js title=web/firebase-messaging-sw.js
 // Please see this file for the latest firebase-js-sdk version:
-// https://github.com/firebase/flutterfire/blob/master/packages/firebase_core/firebase_core_web/lib/src/firebase_sdk_version.dart
+// https://github.com/firebase/flutterfire/blob/main/packages/firebase_core/firebase_core_web/lib/src/firebase_sdk_version.dart
 importScripts("https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js");
 importScripts("https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging-compat.js");
 
@@ -376,9 +376,11 @@ Here's how to use the second method:
 
    ```json
    {
-     "data": {
-       "title_loc_key": "notification_title",
-       "body_loc_key": "notification_message"
+     "android": {
+        "notification": {
+          "title_loc_key": "notification_title",
+          "body_loc_key": "notification_message"
+        }
      }
    }
    ```
@@ -403,9 +405,13 @@ Here's how to use the second method:
 
    ```json
    {
-     "data": {
-       "title_loc_key": "NOTIFICATION_TITLE",
-       "body_loc_key": "NOTIFICATION_MESSAGE"
+     "apns": {
+        "payload": {
+          "alert": {
+            "title-loc-key": "NOTIFICATION_TITLE",
+            "loc-key": "NOTIFICATION_MESSAGE"
+          }
+        }
      }
    }
    ```
@@ -460,7 +466,7 @@ For iOS, you need to change the `AppDelegate.m` with the following content.
 For Web, you need to change your service worker in order to use the v9 version of the SDK.
 The v9 version needs to be bundled, so you need to use a bundler like `esbuild` for instance
 to get the service worker to work.
-See [the example app](https://github.com/firebase/flutterfire/blob/master/packages/firebase_messaging/firebase_messaging/example/bundled-service-worker) to see how to achieve this.
+See [the example app](https://github.com/firebase/flutterfire/blob/main/packages/firebase_messaging/firebase_messaging/example/bundled-service-worker) to see how to achieve this.
 
 Once you've migrated to the v9 SDK, you can use the following code:
 

@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:firebase_vertexai/firebase_vertexai.dart';
-import 'package:firebase_core/firebase_core.dart';
+
+// REQUIRED if you want to run on Web
+const FirebaseOptions? options = null;
 
 void main() {
   runApp(const GenerativeAISample());
@@ -74,7 +77,7 @@ class ChatWidget extends StatefulWidget {
 class _ChatWidgetState extends State<ChatWidget> {
   late final GenerativeModel _model;
   late final GenerativeModel _functionCallModel;
-  late final ChatSession _chat;
+  ChatSession? _chat;
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
   final FocusNode _textFieldFocus = FocusNode();
@@ -137,7 +140,8 @@ class _ChatWidgetState extends State<ChatWidget> {
   );
 
   Future<void> initFirebase() async {
-    await Firebase.initializeApp();
+    // ignore: avoid_redundant_argument_values
+    await Firebase.initializeApp(options: options);
   }
 
   void _scrollDown() {
@@ -285,6 +289,16 @@ class _ChatWidgetState extends State<ChatWidget> {
               ],
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 15,
+              right: 15,
+              bottom: 25,
+            ),
+            child: Text(
+              'Total message count: ${_chat?.history.length ?? 0}',
+            ),
+          ),
         ],
       ),
     );
@@ -397,10 +411,10 @@ class _ChatWidgetState extends State<ChatWidget> {
 
     try {
       _generatedContent.add((image: null, text: message, fromUser: true));
-      var response = await _chat.sendMessage(
+      var response = await _chat?.sendMessage(
         Content.text(message),
       );
-      var text = response.text;
+      var text = response?.text;
       _generatedContent.add((image: null, text: text, fromUser: false));
 
       if (text == null) {
