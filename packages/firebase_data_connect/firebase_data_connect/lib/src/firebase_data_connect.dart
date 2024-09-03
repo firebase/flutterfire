@@ -55,24 +55,24 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
 
   /// Returns a [QueryRef] object.
   QueryRef<Data, Variables> query<Data, Variables>(
-      String queryName,
+      String operationName,
       Deserializer<Data> dataDeserializer,
       Serializer<Variables> varsSerializer,
       Variables? vars) {
     _checkTransport();
-    return QueryRef<Data, Variables>(this, queryName, transport,
+    return QueryRef<Data, Variables>(this, operationName, transport,
         dataDeserializer, _queryManager, vars, varsSerializer);
   }
 
   /// Returns a [MutationRef] object.
   MutationRef<Data, Variables> mutation<Data, Variables>(
-      String queryName,
+      String operationName,
       Deserializer<Data> dataDeserializer,
       Serializer<Variables> varsSerializer,
       Variables? vars) {
     _checkTransport();
     return MutationRef<Data, Variables>(
-        this, queryName, transport, dataDeserializer, vars, varsSerializer);
+        this, operationName, transport, dataDeserializer, vars, varsSerializer);
   }
 
   /// useDataConnectEmulator connects to the DataConnect emulator.
