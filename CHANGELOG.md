@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 2024-09-03
+## 2024-09-03 - [BoM 2.6.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-260-2024-09-03)
 
 ### Changes
 
