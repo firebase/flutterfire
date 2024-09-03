@@ -1,3 +1,7 @@
+## 0.3.1+1
+
+ - **FIX**(installations,apple): update the plugin to support parallels method calling ([#13256](https://github.com/firebase/flutterfire/issues/13256)). ([fe18362f](https://github.com/firebase/flutterfire/commit/fe18362f817d4bac33e98199e076a2c3d65656c5))
+
 ## 0.3.1
 
  - **FEAT**: bump iOS SDK to version 11.0.0 ([#13158](https://github.com/firebase/flutterfire/issues/13158)). ([c0e0c997](https://github.com/firebase/flutterfire/commit/c0e0c99703ea394d1bb873ac225c5fe3539b002d))

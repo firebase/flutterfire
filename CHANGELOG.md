@@ -3,6 +3,61 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-09-03
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v5.4.0`](#cloud_firestore---v540)
+ - [`cloud_firestore_platform_interface` - `v6.4.0`](#cloud_firestore_platform_interface---v640)
+ - [`cloud_firestore_web` - `v4.2.0`](#cloud_firestore_web---v420)
+ - [`firebase_app_check` - `v0.3.1`](#firebase_app_check---v031)
+ - [`firebase_app_installations` - `v0.3.1+1`](#firebase_app_installations---v0311)
+ - [`firebase_database_web` - `v0.2.5+14`](#firebase_database_web---v02514)
+ - [`firebase_vertexai` - `v0.2.3+1`](#firebase_vertexai---v0231)
+ - [`firebase_database` - `v11.1.1`](#firebase_database---v1111)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_vertexai` - `v0.2.3+1`
+ - `firebase_database` - `v11.1.1`
+
+---
+
+#### `cloud_firestore` - `v5.4.0`
+
+ - **FEAT**(firestore,web): expose `webExperimentalForceLongPolling`, `webExperimentalAutoDetectLongPolling` and `timeoutSeconds` on web ([#13201](https://github.com/firebase/flutterfire/issues/13201)). ([6ec2a103](https://github.com/firebase/flutterfire/commit/6ec2a103a3a325a73550bdfff4c0d524ae7e4068))
+
+#### `cloud_firestore_platform_interface` - `v6.4.0`
+
+ - **FEAT**(firestore,web): expose `webExperimentalForceLongPolling`, `webExperimentalAutoDetectLongPolling` and `timeoutSeconds` on web ([#13201](https://github.com/firebase/flutterfire/issues/13201)). ([6ec2a103](https://github.com/firebase/flutterfire/commit/6ec2a103a3a325a73550bdfff4c0d524ae7e4068))
+
+#### `cloud_firestore_web` - `v4.2.0`
+
+ - **FEAT**(firestore,web): expose `webExperimentalForceLongPolling`, `webExperimentalAutoDetectLongPolling` and `timeoutSeconds` on web ([#13201](https://github.com/firebase/flutterfire/issues/13201)). ([6ec2a103](https://github.com/firebase/flutterfire/commit/6ec2a103a3a325a73550bdfff4c0d524ae7e4068))
+
+#### `firebase_app_check` - `v0.3.1`
+
+ - **FEAT**(firestore,web): expose `webExperimentalForceLongPolling`, `webExperimentalAutoDetectLongPolling` and `timeoutSeconds` on web ([#13201](https://github.com/firebase/flutterfire/issues/13201)). ([6ec2a103](https://github.com/firebase/flutterfire/commit/6ec2a103a3a325a73550bdfff4c0d524ae7e4068))
+
+#### `firebase_app_installations` - `v0.3.1+1`
+
+ - **FIX**(installations,apple): update the plugin to support parallels method calling ([#13256](https://github.com/firebase/flutterfire/issues/13256)). ([fe18362f](https://github.com/firebase/flutterfire/commit/fe18362f817d4bac33e98199e076a2c3d65656c5))
+
+#### `firebase_database_web` - `v0.2.5+14`
+
+ - **FIX**(database,web): fix an issue that would remove duplicate streams in Debug mode ([#13253](https://github.com/firebase/flutterfire/issues/13253)). ([2546971b](https://github.com/firebase/flutterfire/commit/2546971bb0d253b4c7bb6584f40064ab997bbb5f))
+
+
 ## 2024-08-27 - [BoM 2.5.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-250-2024-08-27)
 
 ### Changes
