@@ -8,21 +8,21 @@ class CreateMovie {
       CreateMovieResponse.fromJson(jsonDecode(json) as Map<String, dynamic>);
   Serializer<CreateMovieVariables> varsSerializer =
       (CreateMovieVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<CreateMovieResponse, CreateMovieVariables> ref(
-      {required String title,
-      required int releaseYear,
-      required String genre,
-      double? rating,
-      String? description,
-      CreateMovieVariables? createMovieVariables}) {
-    CreateMovieVariables vars1 = CreateMovieVariables(
+  MutationRef<CreateMovieResponse, CreateMovieVariables> ref({
+    required String title,
+    required int releaseYear,
+    required String genre,
+    double? rating,
+    String? description,
+  }) {
+    CreateMovieVariables vars = CreateMovieVariables(
       title: title,
       releaseYear: releaseYear,
       genre: genre,
       rating: rating,
       description: description,
     );
-    CreateMovieVariables vars = createMovieVariables ?? vars1;
+
     return dataConnect.mutation(
         this.name, dataDeserializer, varsSerializer, vars);
   }

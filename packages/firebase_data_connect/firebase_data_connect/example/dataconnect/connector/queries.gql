@@ -1,9 +1,13 @@
 
 # List subset of fields for movies
-query ListMovies @auth(level: USER) {
-  movies {
+query ListMovies($orderByRating: OrderDirection) @auth(level: PUBLIC) {
+   movies(orderBy: [
+      { rating: $orderByRating }
+   ]
+  ) {
     id
     title,
+    rating,
     directed_by: people_via_DirectedBy {
       name,
     }

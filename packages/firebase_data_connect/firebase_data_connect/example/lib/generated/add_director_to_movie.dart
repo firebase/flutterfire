@@ -9,15 +9,15 @@ class AddDirectorToMovie {
           jsonDecode(json) as Map<String, dynamic>);
   Serializer<AddDirectorToMovieVariables> varsSerializer =
       (AddDirectorToMovieVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<AddDirectorToMovieResponse, AddDirectorToMovieVariables> ref(
-      {AddDirectorToMovieVariablesPersonId? personId,
-      String? movieId,
-      AddDirectorToMovieVariables? addDirectorToMovieVariables}) {
-    AddDirectorToMovieVariables vars1 = AddDirectorToMovieVariables(
+  MutationRef<AddDirectorToMovieResponse, AddDirectorToMovieVariables> ref({
+    AddDirectorToMovieVariablesPersonId? personId,
+    String? movieId,
+  }) {
+    AddDirectorToMovieVariables vars = AddDirectorToMovieVariables(
       personId: personId,
       movieId: movieId,
     );
-    AddDirectorToMovieVariables vars = addDirectorToMovieVariables ?? vars1;
+
     return dataConnect.mutation(
         this.name, dataDeserializer, varsSerializer, vars);
   }

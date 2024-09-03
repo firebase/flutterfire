@@ -8,12 +8,13 @@ class AddPerson {
       AddPersonResponse.fromJson(jsonDecode(json) as Map<String, dynamic>);
   Serializer<AddPersonVariables> varsSerializer =
       (AddPersonVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<AddPersonResponse, AddPersonVariables> ref(
-      {String? name, AddPersonVariables? addPersonVariables}) {
-    AddPersonVariables vars1 = AddPersonVariables(
+  MutationRef<AddPersonResponse, AddPersonVariables> ref({
+    String? name,
+  }) {
+    AddPersonVariables vars = AddPersonVariables(
       name: name,
     );
-    AddPersonVariables vars = addPersonVariables ?? vars1;
+
     return dataConnect.mutation(
         this.name, dataDeserializer, varsSerializer, vars);
   }

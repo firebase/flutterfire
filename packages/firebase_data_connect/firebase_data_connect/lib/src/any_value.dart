@@ -29,8 +29,12 @@ class AnyValue {
         try {
           return jsonEncode(value.toJson());
         } catch (e) {
-          throw Exception(
-              'Unable to convert to json type ${value.runtimeType}.');
+          // empty cache to try and encode the value
+        }
+        try {
+          return jsonEncode(value);
+        } catch (e) {
+          throw Exception('Could not encode type ${value.runtimeType}');
         }
     }
   }
