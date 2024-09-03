@@ -32,6 +32,20 @@ void main() {
       );
 
       test(
+        'running get id in parallel',
+        () async {
+          final ids = await Future.wait([
+            FirebaseInstallations.instance.getId(),
+            FirebaseInstallations.instance.getId(),
+            FirebaseInstallations.instance.getId(),
+            FirebaseInstallations.instance.getId(),
+            FirebaseInstallations.instance.getId(),
+          ]);
+          expect(ids, isNotNull);
+        },
+      );
+
+      test(
         '.delete',
         () async {
           final id = await FirebaseInstallations.instance.getId();
