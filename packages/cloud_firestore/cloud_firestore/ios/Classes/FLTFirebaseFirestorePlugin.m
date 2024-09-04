@@ -6,6 +6,7 @@
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 
 #import <TargetConditionals.h>
+#import "FirebaseFirestoreInternal/FIRPersistentCacheIndexManager.h"
 #import "Private/FLTDocumentSnapshotStreamHandler.h"
 #import "Private/FLTFirebaseFirestoreReader.h"
 #import "Private/FLTFirebaseFirestoreUtils.h"
@@ -564,6 +565,31 @@ FlutterStandardMethodCodec *_codec;
                                     completion(nil);
                                   }
                                 }];
+}
+
+- (void)persistenceCacheIndexManagerRequestApp:(FirestorePigeonFirebaseApp *)app
+                                       request:(PersistenceCacheIndexManagerRequest)request
+                                    completion:(void (^)(FlutterError *_Nullable))completion {
+  FIRPersistentCacheIndexManager *persistentCacheIndexManager =
+      [self getFIRFirestoreFromAppNameFromPigeon:app].persistentCacheIndexManager;
+
+  if (persistentCacheIndexManager) {
+    switch (request) {
+      case PersistenceCacheIndexManagerRequestEnableIndexAutoCreation:
+        [persistentCacheIndexManager enableIndexAutoCreation];
+        break;
+      case PersistenceCacheIndexManagerRequestDisableIndexAutoCreation:
+        [persistentCacheIndexManager disableIndexAutoCreation];
+        break;
+      case PersistenceCacheIndexManagerRequestDeleteAllIndexes:
+        [persistentCacheIndexManager deleteAllIndexes];
+        break;
+    }
+  } else {
+    // Put because `persistentCacheIndexManager` is a nullable property
+    NSLog(@"FLTFirebaseFirestore: `PersistentCacheIndexManager` is not available.");
+  }
+  completion(nil);
 }
 
 - (void)setLoggingEnabledLoggingEnabled:(nonnull NSNumber *)loggingEnabled

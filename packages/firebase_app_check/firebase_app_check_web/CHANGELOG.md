@@ -1,3 +1,27 @@
+## 0.1.2+13
+
+ - Update a dependency to the latest release.
+
+## 0.1.2+12
+
+ - Update a dependency to the latest release.
+
+## 0.1.2+11
+
+ - **FIX**(app-check,web): ensure exact same streams are not unsubscribed ([#13035](https://github.com/firebase/flutterfire/issues/13035)). ([93f1517b](https://github.com/firebase/flutterfire/commit/93f1517b3a36ed3ab9f282624f495e5d404b7b23))
+
+## 0.1.2+10
+
+ - Update a dependency to the latest release.
+
+## 0.1.2+9
+
+ - **FIX**(app-check,web): fixed broken `onTokenChanged` and ensured it is properly cleaned up. Streams are also cleaned up on "hot restart" ([#12933](https://github.com/firebase/flutterfire/issues/12933)). ([093b5fef](https://github.com/firebase/flutterfire/commit/093b5fef8c3b8314835dc954ce02daacd1e077f4))
+
+## 0.1.2+8
+
+ - Update a dependency to the latest release.
+
 ## 0.1.2+7
 
  - Update a dependency to the latest release.

@@ -13,6 +13,7 @@ import 'bom_analysis.dart';
 
 const packagesDir = 'packages';
 const versionsFile = 'VERSIONS.md';
+const changelogFile = 'CHANGELOG.md';
 const versionsJsonFile = 'scripts/versions.json';
 const androidVersionFile =
     '$packagesDir/firebase_core/firebase_core/android/gradle.properties';
@@ -105,8 +106,13 @@ void main(List<String> arguments) async {
 
   print('Version $version has been generated successfully!');
 
+  await addLinkInChangelog(version, date);
+
   // Commit the files and create an annotated tag and a commit
-  Process.runSync('git', ['add', versionsFile, versionsJsonFile]);
+  Process.runSync(
+    'git',
+    ['add', versionsFile, versionsJsonFile, changelogFile],
+  );
   Process.runSync(
     'git',
     ['tag', '-a', 'BoM-v$version', '-m', 'BoM Version $version'],
@@ -163,16 +169,14 @@ Future<void> appendStaticText(
   sink.writeln('# Versions');
   sink.writeln();
   sink.writeln(
-    '## [Flutter BoM $version ($date)](https://github.com/firebase/flutterfire/blob/master/CHANGELOG.md#$date)',
+    '## [Flutter BoM $version ($date)](https://github.com/firebase/flutterfire/blob/main/CHANGELOG.md#$date)',
   );
   sink.writeln();
-  sink.writeln('<!--- When ready can be included');
   sink.writeln('Install this version using FlutterFire CLI');
   sink.writeln();
   sink.writeln('```bash');
   sink.writeln('flutterfire install $version');
   sink.writeln('```');
-  sink.writeln('-->');
   sink.writeln();
   sink.writeln('### Included Native Firebase SDK Versions');
   sink.writeln('| Firebase SDK | Version | Link |');
@@ -209,4 +213,32 @@ Future<void> appendStaticText(
   // Closing the sink to flush all data to the file
   await sink.flush();
   await sink.close();
+}
+
+Future<void> addLinkInChangelog(String version, String date) async {
+  String originalLine = '## $date';
+  String newLine =
+      '## $date - [BoM $version](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-${version.replaceAll('.', '')}-$date)';
+
+  String escapedOriginalLine =
+      originalLine.replaceAll(r'$', r'\$').replaceAll('#', r'\#');
+  String escapedNewLine = newLine
+      .replaceAll(r'$', r'\$')
+      .replaceAll('(', r'\(')
+      .replaceAll(')', r'\)')
+      .replaceAll('#', r'\#')
+      .replaceAll('-', r'\-')
+      .replaceAll('.', r'\.');
+
+  String command =
+      'sed -i "" "s|$escapedOriginalLine|$escapedNewLine|" $changelogFile';
+
+  ProcessResult result = await Process.run('bash', ['-c', command]);
+
+  // Check for errors
+  if (result.exitCode != 0) {
+    throw 'Error: ${result.stderr}';
+  } else {
+    print('Line replaced successfully');
+  }
 }

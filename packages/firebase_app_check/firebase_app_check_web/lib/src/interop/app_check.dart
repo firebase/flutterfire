@@ -8,6 +8,7 @@ import 'dart:js_interop_unsafe';
 
 import 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
+import 'package:flutter/foundation.dart';
 
 import 'app_check_interop.dart' as app_check_interop;
 
@@ -70,10 +71,30 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
   JSFunction? _idTokenChangedUnsubscribe;
 
   StreamController<app_check_interop.AppCheckTokenResult>?
+      get idTokenChangedController => _idTokenChangedController;
+
+  StreamController<app_check_interop.AppCheckTokenResult>?
       // ignore: close_sinks
       _idTokenChangedController;
 
-  Stream<app_check_interop.AppCheckTokenResult> onTokenChanged() {
+  // purely for debug mode and tracking listeners to clean up on "hot restart"
+  final Map<String, int> _tokenListeners = {};
+  String _appCheckWindowsKey(String appName) {
+    if (kDebugMode) {
+      final key = 'flutterfire-${appName}_onTokenChanged';
+      if (_tokenListeners.containsKey(key)) {
+        _tokenListeners[key] = _tokenListeners[key]! + 1;
+      } else {
+        _tokenListeners[key] = 0;
+      }
+      return '$key-${_tokenListeners[key]}';
+    }
+    return 'no-op';
+  }
+
+  Stream<app_check_interop.AppCheckTokenResult> onTokenChanged(String appName) {
+    final appCheckWindowsKey = _appCheckWindowsKey(appName);
+    unsubscribeWindowsListener(appCheckWindowsKey);
     if (_idTokenChangedController == null) {
       final nextWrapper = ((app_check_interop.AppCheckTokenResult result) {
         _idTokenChangedController!.add(result);
@@ -83,17 +104,19 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
           ((JSError e) => _idTokenChangedController!.addError(e)).toJS;
 
       void startListen() {
-        assert(_idTokenChangedUnsubscribe == null);
         _idTokenChangedUnsubscribe = app_check_interop.onTokenChanged(
           jsObject,
           nextWrapper,
           errorWrapper,
         );
+        setWindowsListener(appCheckWindowsKey, _idTokenChangedUnsubscribe!);
       }
 
       void stopListen() {
         _idTokenChangedUnsubscribe?.callAsFunction();
         _idTokenChangedUnsubscribe = null;
+        _idTokenChangedController = null;
+        removeWindowsListener(appCheckWindowsKey);
       }
 
       _idTokenChangedController =

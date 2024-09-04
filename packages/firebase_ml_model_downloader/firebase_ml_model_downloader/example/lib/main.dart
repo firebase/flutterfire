@@ -2,8 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:firebase_ml_model_downloader/firebase_ml_model_downloader.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_ml_model_downloader/firebase_ml_model_downloader.dart';
 import 'package:flutter/material.dart';
 
 import 'firebase_options.dart';
@@ -19,7 +19,7 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -36,11 +36,11 @@ class _MyAppState extends State<MyApp> {
 
   /// Initially get the lcoal model if found, and asynchronously get the latest one in background.
   initWithLocalModel() async {
-    final _model = await FirebaseModelDownloader.instance.getModel(
+    final newModel = await FirebaseModelDownloader.instance.getModel(
         kModelName, FirebaseModelDownloadType.localModelUpdateInBackground);
 
     setState(() {
-      model = _model;
+      model = newModel;
     });
   }
 
@@ -82,12 +82,13 @@ class _MyAppState extends State<MyApp> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () async {
-                          final _model = await FirebaseModelDownloader.instance
-                              .getModel(kModelName,
+                          final newModel =
+                              await FirebaseModelDownloader.instance.getModel(
+                                  kModelName,
                                   FirebaseModelDownloadType.latestModel);
 
                           setState(() {
-                            model = _model;
+                            model = newModel;
                           });
                         },
                         child: const Text('Get latest model'),

@@ -167,7 +167,7 @@ Note that real-time Remote Config is not available for Web.
 
 Tip: Check out the
 [Flutterfire Remote Config
-example](https://github.com/firebase/flutterfire/tree/master/packages/firebase_remote_config/firebase_remote_config/example)
+example](https://github.com/firebase/flutterfire/tree/main/packages/firebase_remote_config/firebase_remote_config/example)
 for an example implementation.
 
 ## Throttling {: #throttling }

@@ -4,7 +4,7 @@ echo "Generate Pigeon Files."
 (cd .. && dart run pigeon --input ./pigeons/messages.dart)
 echo "Generation complete."
 echo "First formatting."
-melos format > /dev/null
+melos format-ci > /dev/null
 echo "Formatting complete."
 
 # # Fix Java files
@@ -62,7 +62,7 @@ sed -i '' -E 's/import '\''dart:typed_data'\'' show Float64List, Int32List, Int6
 echo "Dart modification complete."
 
 echo "Final formatting."
-melos format > /dev/null
+melos format-ci > /dev/null
 echo "Formatting complete."
 
 echo "All modifications complete."

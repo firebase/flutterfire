@@ -3,17 +3,16 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/services.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
-
-import 'package:firebase_performance_platform_interface/firebase_performance_platform_interface.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
+import 'package:firebase_performance_platform_interface/firebase_performance_platform_interface.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
-import 'src/trace.dart';
 import 'src/interop/performance.dart' as performance_interop;
+import 'src/trace.dart';
 
 /// Web implementation for [FirebasePerformancePlatform]
 class FirebasePerformanceWeb extends FirebasePerformancePlatform {
@@ -69,7 +68,7 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
 
   @override
   Future<bool> isPerformanceCollectionEnabled() async {
-    // Default setting for "dataCollectionEnabled" is `true`. See https://github.com/firebase/firebase-js-sdk/blob/master/packages/performance/src/services/settings_service.ts#L27
+    // Default setting for "dataCollectionEnabled" is `true`. See https://github.com/firebase/firebase-js-sdk/blob/main/packages/performance/src/services/settings_service.ts#L27
     return Future.value(
       _settings == null ? true : _settings!.dataCollectionEnabled,
     );

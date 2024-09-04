@@ -141,6 +141,16 @@ flutterfire configure
     flutter run
     ```
 
+If you would rather use a demo project, you can start the [Firebase Emulator](https://firebase.google.com/docs/emulator-suite) and
+in your `lib/main.dart` file initialize Firebase using `demoProjectId` (it should start with `demo-`):
+
+  ```dart
+  await Firebase.initializeApp(
+    demoProjectId: "demo-project-id",
+  );
+  ```
+
+
 
 ## **Step 4**: Add Firebase plugins {: #add-plugins}
 
@@ -205,7 +215,7 @@ Caution: Firebase on Windows is not intended for production use cases, only loca
 ## Try out an example app with {{analytics}} {: #try-analytics-example-app}
 
 Like all packages, the `firebase_analytics` plugin comes with an
-[example program](//github.com/firebase/flutterfire/tree/master/packages/firebase_analytics/firebase_analytics/example){: .external}.
+[example program](//github.com/firebase/flutterfire/tree/main/packages/firebase_analytics/firebase_analytics/example){: .external}.
 
 1.  Open a Flutter app that you've already configured to use Firebase (see
     instructions on this page).
@@ -214,7 +224,7 @@ Like all packages, the `firebase_analytics` plugin comes with an
     file.
 
 1.  From the {{firebase_analytics}}
-    [example program repository](//github.com/firebase/flutterfire/tree/master/packages/firebase_analytics/firebase_analytics/example/lib){: .external},
+    [example program repository](//github.com/firebase/flutterfire/tree/main/packages/firebase_analytics/firebase_analytics/example/lib){: .external},
     copy-paste the following two files into your app's `lib` directory:
 
       * `main.dart`

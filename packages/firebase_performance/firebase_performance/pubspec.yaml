@@ -4,21 +4,26 @@ description:
   measurement solution that monitors traces and HTTP/S network requests on Android and
   iOS.
 homepage: https://firebase.google.com/docs/perf-mon
-repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_performance/firebase_performance
-version: 0.9.4+7
+repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_performance/firebase_performance
+version: 0.10.0+5
+topics:
+  - firebase
+  - performance
+  - monitoring
+  - insights
 
 false_secrets:
   - example/**
 
 environment:
-  sdk: '>=2.18.0 <4.0.0'
+  sdk: '>=3.2.0 <4.0.0'
   flutter: '>=3.3.0'
 
 dependencies:
-  firebase_core: ^2.32.0
-  firebase_core_platform_interface: ^5.0.0
-  firebase_performance_platform_interface: ^0.1.4+35
-  firebase_performance_web: ^0.1.6+7
+  firebase_core: ^3.4.0
+  firebase_core_platform_interface: ^5.2.1
+  firebase_performance_platform_interface: ^0.1.4+41
+  firebase_performance_web: ^0.1.6+13
   flutter:
     sdk: flutter
 

@@ -6,7 +6,7 @@ import 'dart:async';
 
 /// Mixin for classes that own `StreamSubscription`s and expose an API for
 /// disposing of themselves by cancelling the subscriptions
-abstract class StreamSubscriberMixin<T> {
+mixin class StreamSubscriberMixin<T> {
   List<StreamSubscription<T>> _subscriptions = <StreamSubscription<T>>[];
 
   /// Listens to a stream and saves it to the list of subscriptions.

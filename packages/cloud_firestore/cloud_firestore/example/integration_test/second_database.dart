@@ -33,19 +33,21 @@ void runSecondDatabaseTests() {
     'Second Database',
     () {
       late FirebaseFirestore firestore;
+      String collectionForSecondDatabase = 'flutterfire-2';
 
       setUpAll(() async {
         firestore = FirebaseFirestore.instanceFor(
           app: Firebase.app(),
           databaseId: 'flutterfire-2',
         );
+
+        firestore.useFirestoreEmulator('localhost', 8080);
       });
 
       Future<CollectionReference<Map<String, dynamic>>> initializeTest(
         String id,
       ) async {
         // Pushed rules which only allow database "flutterfire-2" to have "flutterfire-2" collection writes
-        String collectionForSecondDatabase = 'flutterfire-2';
 
         CollectionReference<Map<String, dynamic>> collection =
             firestore.collection(
@@ -60,6 +62,23 @@ void runSecondDatabaseTests() {
         await Future.wait(deleteFutures);
         return collection;
       }
+
+      group(
+          'queries for default database are banned for this collection: "$collectionForSecondDatabase"',
+          () {
+        testWidgets('barred query', (_) async {
+          final defaultFirestore = FirebaseFirestore.instance;
+          try {
+            await defaultFirestore
+                .collection(collectionForSecondDatabase)
+                .add({'foo': 'bar'});
+            fail('Should have thrown a [FirebaseException]');
+          } catch (e) {
+            expect(e, isA<FirebaseException>());
+            expect((e as FirebaseException).code, equals('permission-denied'));
+          }
+        });
+      });
 
       group('equality', () {
         // testing == override using e2e tests as it is dependent on the platform
@@ -190,6 +209,8 @@ void runSecondDatabaseTests() {
             }
             fail('Should have thrown a [FirebaseException]');
           },
+          // Emulator for 2nd database allows this request, the live project correctly throws a "permission-denied" error
+          skip: true,
         );
       });
 
@@ -335,6 +356,8 @@ void runSecondDatabaseTests() {
 
             fail('Should have thrown a [FirebaseException]');
           },
+          // Emulator for 2nd database allows this request, the live project correctly throws a "permission-denied" error
+          skip: true,
         );
       });
 
@@ -1810,6 +1833,8 @@ void runSecondDatabaseTests() {
             expect(result.docs.length, equals(1));
             expect(result.docs[0].data()['genre'], equals('sci-fi'));
           },
+          // Emulator for 2nd database allows this request, the live project correctly throws a "permission-denied" error
+          skip: true,
         );
 
         testWidgets(
@@ -1849,6 +1874,8 @@ void runSecondDatabaseTests() {
             expect(results.docs[0].id, equals('doc2'));
             expect(results.docs[1].id, equals('doc1'));
           },
+          // Emulator for 2nd database allows this request, the live project correctly throws a "permission-denied" error
+          skip: true,
         );
 
         testWidgets('isEqualTo filter', (_) async {

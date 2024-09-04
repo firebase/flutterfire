@@ -20,7 +20,7 @@ You can build and run the app directly on emulators. To view the performance dat
 
 1. Follow the [instructions](https://firebase.google.com/docs/ios/setup#create-firebase-project) to create your Firebase project and register an iOS app.
 
-1. Download `GoogleService-Info.plist`, and [install it via Xcode](https://firebase.flutter.dev/docs/installation/ios#installing-your-firebase-configuration-file). Make sure you replace the existing one in `ios/Runner` with yours.
+1. Download `GoogleService-Info.plist`, and [install it via Xcode](https://firebase.google.com/docs/ios/setup#add-config-file). Make sure you replace the existing one in `ios/Runner` with yours.
 
 1. (Optional) [Enable logging in Xcode](https://firebase.google.com/docs/perf-mon/get-started-ios).
 

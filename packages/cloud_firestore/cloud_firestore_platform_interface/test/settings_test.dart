@@ -14,14 +14,25 @@ void main() {
           persistenceEnabled: true,
           host: 'foo bar',
           sslEnabled: true,
+          webExperimentalForceLongPolling: false,
+          webExperimentalAutoDetectLongPolling: false,
           cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+          webExperimentalLongPollingOptions: WebExperimentalLongPollingOptions(
+            timeoutDuration: Duration(seconds: 4),
+          ),
         ),
         equals(
           const Settings(
             persistenceEnabled: true,
             host: 'foo bar',
             sslEnabled: true,
+            webExperimentalForceLongPolling: false,
+            webExperimentalAutoDetectLongPolling: false,
             cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+            webExperimentalLongPollingOptions:
+                WebExperimentalLongPollingOptions(
+              timeoutDuration: Duration(seconds: 4),
+            ),
           ),
         ),
       );
@@ -49,6 +60,11 @@ void main() {
         persistenceEnabled: true,
         host: 'foo bar',
         sslEnabled: true,
+        webExperimentalAutoDetectLongPolling: false,
+        webExperimentalForceLongPolling: false,
+        webExperimentalLongPollingOptions: WebExperimentalLongPollingOptions(
+          timeoutDuration: Duration(seconds: 4),
+        ),
         cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
       );
 
@@ -60,21 +76,35 @@ void main() {
         'persistenceEnabled': null,
         'host': null,
         'sslEnabled': null,
-        'cacheSizeBytes': null
+        'cacheSizeBytes': null,
+        'webExperimentalForceLongPolling': null,
+        'webExperimentalAutoDetectLongPolling': null,
+        'webExperimentalLongPollingOptions': null,
       });
 
       expect(
           const Settings(
-            persistenceEnabled: true,
-            host: 'foo bar',
-            sslEnabled: true,
-            cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
-          ).asMap,
+              persistenceEnabled: true,
+              host: 'foo bar',
+              sslEnabled: true,
+              cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+              webExperimentalAutoDetectLongPolling: true,
+              webExperimentalForceLongPolling: true,
+              webExperimentalLongPollingOptions:
+                  WebExperimentalLongPollingOptions(
+                timeoutDuration: Duration(seconds: 4),
+              )).asMap,
           <String, dynamic>{
             'persistenceEnabled': true,
             'host': 'foo bar',
             'sslEnabled': true,
             'cacheSizeBytes': Settings.CACHE_SIZE_UNLIMITED,
+            'webExperimentalForceLongPolling': true,
+            'webExperimentalAutoDetectLongPolling': true,
+            'webExperimentalLongPollingOptions':
+                const WebExperimentalLongPollingOptions(
+              timeoutDuration: Duration(seconds: 4),
+            ).asMap
           });
     });
 

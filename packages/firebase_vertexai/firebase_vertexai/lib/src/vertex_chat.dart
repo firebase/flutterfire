@@ -25,21 +25,28 @@ import 'vertex_model.dart';
 /// Records messages sent and received in [history]. The history will always
 /// record the content from the first candidate in the
 /// [GenerateContentResponse], other candidates may be available on the returned
-/// response.
+/// response. The history is maintained and updated by the `google_generative_ai`
+/// package and reflects the most current state of the chat session.
 final class ChatSession {
   /// Creates a new chat session with the provided model.
+  ///
+  /// Initializes the chat session with the given [initialHistory], [SafetySetting],
+  /// and [GenerationConfig]. The history is passed to the `google_generative_ai`
+  /// package to start the chat session.
 
-  ChatSession._(this._history, List<SafetySetting>? _safetySettings,
-      GenerationConfig? _generationConfig, GenerativeModel _model)
+  ChatSession._(
+      List<Content> initialHistory,
+      List<SafetySetting>? _safetySettings,
+      GenerationConfig? _generationConfig,
+      GenerativeModel _model)
       : _googleAIChatSession = _model.googleAIModel.startChat(
-            history: _history.map((e) => e.toGoogleAI()).toList(),
+            history: initialHistory.map((e) => e.toGoogleAI()).toList(),
             safetySettings: _safetySettings != null
                 ? _safetySettings
                     .map((setting) => setting.toGoogleAI())
                     .toList()
                 : [],
             generationConfig: _generationConfig?.toGoogleAI());
-  final List<Content> _history;
 
   final google_ai.ChatSession _googleAIChatSession;
 
@@ -50,7 +57,12 @@ final class ChatSession {
   /// [sendMessageStream], these will not be reflected in the history.
   /// Messages without a candidate in the response are not recorded in history,
   /// including the message sent to the model.
-  Iterable<Content> get history => _history.skip(0);
+  ///
+  /// The history is maintained by the `google_generative_ai` package and reflects
+  /// the most current state of the chat session, ensuring that the history
+  /// returned is always up-to-date and consistent with the ongoing chat session.
+  Iterable<Content> get history =>
+      _googleAIChatSession.history.map((e) => e.toVertex());
 
   /// Sends [message] to the model as a continuation of the chat [history].
   ///
