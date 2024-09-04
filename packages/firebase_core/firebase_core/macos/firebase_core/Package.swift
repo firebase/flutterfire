@@ -82,7 +82,7 @@ guard let firebase_sdk_version = Version(firebase_sdk_version_string) else {
 let package = Package(
   name: "firebase_core",
   platforms: [
-    .macOS("10.13"),
+    .macOS("10.15"),
   ],
   products: [
     .library(name: "firebase-core", targets: ["firebase_core"]),
