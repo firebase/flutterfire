@@ -8,6 +8,12 @@ topics:
   - gemini
   - generative-ai
 
+platforms:
+  android:
+  ios:
+  macos:
+  web:
+
 environment:
   sdk: '>=3.2.0 <4.0.0'
   flutter: ">=3.16.0"
