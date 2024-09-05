@@ -13,7 +13,6 @@ environment:
 dependencies:
   firebase_app_check: ^0.3.0+3
   firebase_auth: ^5.1.2
-  firebase_common: ^0.0.1
   firebase_core: ^3.2.0
   firebase_core_platform_interface: ^5.1.0
   flutter:

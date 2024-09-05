@@ -13,8 +13,8 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import 'generated/movies.dart';
 
-const appCheckEnabled = true;
-const configureEmulator = true;
+const appCheckEnabled = false;
+const configureEmulator = false;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +23,8 @@ void main() async {
     await FirebaseAppCheck.instance.activate(
       // You can also use a `ReCaptchaEnterpriseProvider` provider instance as an
       // argument for `webProvider`
-      webProvider: ReCaptchaV3Provider('your site key here'),
+      webProvider:
+          ReCaptchaV3Provider('6LeZ7DUqAAAAAFn2ToPSYbKKFMjFH_EAQ2sPoXqY'),
       // Default provider for Android is the Play Integrity provider. You can use the "AndroidProvider" enum to choose
       // your preferred provider. Choose from:
       // 1. Debug provider
@@ -81,7 +82,7 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
 
   Future<void> triggerReload() async {
     QueryRef ref = MoviesConnector.instance.listMovies.ref();
-    ref.execute().ignore();
+    ref.execute();
   }
 
   @override
@@ -91,17 +92,19 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
       int port = 9399;
       MoviesConnector.instance.dataConnect
           .useDataConnectEmulator('127.0.0.1', port);
-
-      QueryRef<ListMoviesResponse, void> ref =
-          MoviesConnector.instance.listMovies.ref();
-      ref.subscribe().listen((event) {
-        setState(() {
-          _movies = event.data.movies;
-        });
-      }).onError((e) {
-        _showError("Got an error: $e");
-      });
     }
+
+    QueryRef<ListMoviesResponse, void> ref =
+        MoviesConnector.instance.listMovies.ref();
+    ref.subscribe().listen((event) {
+      print(event);
+      setState(() {
+        _movies = event.data.movies;
+      });
+    }).onError((e) {
+      print(e);
+      _showError("Got an error: $e");
+    });
   }
 
   @override

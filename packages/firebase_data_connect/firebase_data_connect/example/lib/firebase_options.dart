@@ -1,4 +1,4 @@
-// Copyright 2021 The Chromium Authors. All rights reserved.
+// Copyright 2022 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -31,7 +31,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
-        return android;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for windows - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -45,40 +48,54 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyChANFrQztBhU1Jg86xbhhMpRY72BPpEIw',
-    appId: '1:958807142248:web:902a4fb0bd5a12d7e270dd',
-    messagingSenderId: '958807142248',
-    projectId: 'movie-app-dart',
-    authDomain: 'movie-app-dart.firebaseapp.com',
-    storageBucket: 'movie-app-dart.appspot.com',
+    apiKey: 'AIzaSyB7wZb2tO1-Fs6GbDADUSTs2Qs3w08Hovw',
+    appId: '1:406099696497:web:87e25e51afe982cd3574d0',
+    messagingSenderId: '406099696497',
+    projectId: 'flutterfire-e2e-tests',
+    authDomain: 'flutterfire-e2e-tests.firebaseapp.com',
+    databaseURL:
+        'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'flutterfire-e2e-tests.appspot.com',
+    measurementId: 'G-JN95N1JV2E',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDkU8nvE88wqNZ4IiyNBuiXO0bZLnrZzr8',
-    appId: '1:958807142248:android:65427dbcc342aa78e270dd',
-    messagingSenderId: '958807142248',
-    projectId: 'movie-app-dart',
-    storageBucket: 'movie-app-dart.appspot.com',
+    apiKey: 'AIzaSyCdRjCVZlhrq72RuEklEyyxYlBRCYhI2Sw',
+    appId: '1:406099696497:android:3ef965ff044efc0b3574d0',
+    messagingSenderId: '406099696497',
+    projectId: 'flutterfire-e2e-tests',
+    databaseURL:
+        'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'flutterfire-e2e-tests.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDXv1JQMr64c7UT0GbE_s4RecrtGbqpUZE',
-    appId: '1:958807142248:ios:07cd4a76219e451de270dd',
-    messagingSenderId: '958807142248',
-    projectId: 'movie-app-dart',
-    storageBucket: 'movie-app-dart.appspot.com',
-    iosClientId: '958807142248-rn8oj5p9j3257gtfh2h4bejlrscp23fq.apps.googleusercontent.com',
-    iosBundleId: 'io.flutter.plugins.firebase.dataconnect.example',
+    apiKey: 'AIzaSyDooSUGSf63Ghq02_iIhtnmwMDs4HlWS6c',
+    appId: '1:406099696497:ios:e31ee2c5dc99d4743574d0',
+    messagingSenderId: '406099696497',
+    projectId: 'flutterfire-e2e-tests',
+    databaseURL:
+        'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'flutterfire-e2e-tests.appspot.com',
+    androidClientId:
+        '406099696497-17qn06u8a0dc717u8ul7s49ampk13lul.apps.googleusercontent.com',
+    iosClientId:
+        '406099696497-1ugbsqv8nkfn788ep0k233e750aupb7u.apps.googleusercontent.com',
+    iosBundleId: 'io.flutter.plugins.firebaseDatabaseExample',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDXv1JQMr64c7UT0GbE_s4RecrtGbqpUZE',
-    appId: '1:958807142248:ios:07cd4a76219e451de270dd',
-    messagingSenderId: '958807142248',
-    projectId: 'movie-app-dart',
-    storageBucket: 'movie-app-dart.appspot.com',
-    iosClientId: '958807142248-rn8oj5p9j3257gtfh2h4bejlrscp23fq.apps.googleusercontent.com',
-    iosBundleId: 'io.flutter.plugins.firebase.dataconnect.example',
+    apiKey: 'AIzaSyDooSUGSf63Ghq02_iIhtnmwMDs4HlWS6c',
+    appId: '1:406099696497:ios:e31ee2c5dc99d4743574d0',
+    messagingSenderId: '406099696497',
+    projectId: 'flutterfire-e2e-tests',
+    databaseURL:
+        'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'flutterfire-e2e-tests.appspot.com',
+    androidClientId:
+        '406099696497-17qn06u8a0dc717u8ul7s49ampk13lul.apps.googleusercontent.com',
+    iosClientId:
+        '406099696497-1ugbsqv8nkfn788ep0k233e750aupb7u.apps.googleusercontent.com',
+    iosBundleId: 'io.flutter.plugins.firebaseDatabaseExample',
   );
-
 }

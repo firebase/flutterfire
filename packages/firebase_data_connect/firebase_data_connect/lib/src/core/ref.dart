@@ -117,7 +117,6 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 
   Stream<QueryResult<Data, Variables>> subscribe() {
     String varsSerialized = serializer(variables as Variables);
-
     Stream<QueryResult<Data, Variables>> res = _queryManager
         .addQuery(operationName, variables, varsSerialized)
         .cast<QueryResult<Data, Variables>>();

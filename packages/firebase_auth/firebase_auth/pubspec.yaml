@@ -22,7 +22,6 @@ environment:
 dependencies:
   firebase_auth_platform_interface: ^7.4.4
   firebase_auth_web: ^5.12.6
-  firebase_common: ^0.0.1
   firebase_core: ^3.4.0
   firebase_core_platform_interface: ^5.2.1
   flutter:
