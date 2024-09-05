@@ -23,8 +23,7 @@ void main() async {
     await FirebaseAppCheck.instance.activate(
       // You can also use a `ReCaptchaEnterpriseProvider` provider instance as an
       // argument for `webProvider`
-      webProvider:
-          ReCaptchaV3Provider('6LeZ7DUqAAAAAFn2ToPSYbKKFMjFH_EAQ2sPoXqY'),
+      webProvider: ReCaptchaV3Provider('your-site-key'),
       // Default provider for Android is the Play Integrity provider. You can use the "AndroidProvider" enum to choose
       // your preferred provider. Choose from:
       // 1. Debug provider
@@ -97,12 +96,10 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
     QueryRef<ListMoviesResponse, void> ref =
         MoviesConnector.instance.listMovies.ref();
     ref.subscribe().listen((event) {
-      print(event);
       setState(() {
         _movies = event.data.movies;
       });
     }).onError((e) {
-      print(e);
       _showError("Got an error: $e");
     });
   }
