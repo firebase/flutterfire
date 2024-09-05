@@ -21,8 +21,8 @@ class QueryResult<Data, Variables> extends OperationResult<Data, Variables> {
 /// Contains variables, transport to execute queries, and serialization/deserialization strategies.
 abstract class OperationRef<Data, Variables> {
   /// Constructor
-  OperationRef(this.dataConnect, this.operationName, this.variables,
-      this._transport, this.deserializer, this.serializer);
+  OperationRef(this.dataConnect, this.operationName, this._transport,
+      this.deserializer, this.serializer, this.variables);
   Variables? variables;
   String operationName;
   DataConnectTransport _transport;
@@ -94,8 +94,8 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
       this._queryManager,
       Serializer<Variables> serializer,
       Variables? variables)
-      : super(dataConnect, operationName, variables, transport, deserializer,
-            serializer);
+      : super(dataConnect, operationName, transport, deserializer, serializer,
+            variables);
 
   _QueryManager _queryManager;
   @override
@@ -136,8 +136,8 @@ class MutationRef<Data, Variables> extends OperationRef<Data, Variables> {
     Deserializer<Data> deserializer,
     Serializer<Variables> serializer,
     Variables? variables,
-  ) : super(dataConnect, operationName, variables, transport, deserializer,
-            serializer);
+  ) : super(dataConnect, operationName, transport, deserializer, serializer,
+            variables);
   @override
   Future<OperationResult<Data, Variables>> execute() async {
     Data data = await _transport.invokeMutation<Data, Variables>(

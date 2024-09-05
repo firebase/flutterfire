@@ -2,11 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:io';
-
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_data_connect_example/login.dart';
-import 'package:flutter/foundation.dart';
 
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
@@ -92,9 +89,7 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
     super.initState();
     if (configureEmulator) {
       int port = 9399;
-      FirebaseDataConnect.instanceFor(
-              app: Firebase.app(),
-              connectorConfig: MoviesConnector.connectorConfig)
+      MoviesConnector.instance.dataConnect
           .useDataConnectEmulator('127.0.0.1', port);
 
       QueryRef<ListMoviesResponse, void> ref =
