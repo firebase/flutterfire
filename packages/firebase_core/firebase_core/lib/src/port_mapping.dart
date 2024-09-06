@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 part of firebase_core;
+
 String getMappedHost(String originalHost) {
   String mappedHost = originalHost;
 
