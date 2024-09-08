@@ -8,6 +8,7 @@ topics:
   - gemini
   - generative-ai
 
+# Explicit about the supported platforms.
 platforms:
   android:
   ios:

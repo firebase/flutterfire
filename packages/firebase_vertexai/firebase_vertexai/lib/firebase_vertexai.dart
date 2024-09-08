@@ -57,6 +57,13 @@ export 'src/vertex_content.dart'
         TextPart,
         // TODO(next breaking): Remove parseContent
         parseContent;
+export 'src/vertex_error.dart'
+    show
+        VertexAIException,
+        VertexAISdkException,
+        InvalidApiKey,
+        ServerException,
+        UnsupportedUserLocation;
 export 'src/vertex_function_calling.dart'
     show
         FunctionCallingConfig,
