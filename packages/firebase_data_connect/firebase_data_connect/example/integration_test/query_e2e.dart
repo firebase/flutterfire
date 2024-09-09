@@ -6,14 +6,6 @@ import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'package:firebase_data_connect_example/generated/movies.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-void clearMovies() async {
-  final value = await MoviesConnector.instance.listMovies.ref().execute();
-  final result = value.data;
-  for (var movie in result.movies) {
-    await MoviesConnector.instance.deleteMovie.ref(id: movie.id).execute();
-  }
-}
-
 void runQueryTests() {
   group(
     '$FirebaseDataConnect.instance query',
