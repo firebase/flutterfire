@@ -51,7 +51,6 @@ class Timestamp {
     final string = toJson();
     final date = DateTime.parse(string);
     return date;
-    return DateTime.parse(toJson());
   }
 
   /// Current nanoseconds
