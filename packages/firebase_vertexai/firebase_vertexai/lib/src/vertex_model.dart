@@ -246,19 +246,12 @@ final class GenerativeModel {
     GenerationConfig? generationConfig,
     List<Tool>? tools,
     ToolConfig? toolConfig,
-  }) =>
-      makeRequest(
-          Task.countTokens,
-          {
-            'generateContentRequest': _generateContentRequest(
-              contents,
-              safetySettings: safetySettings,
-              generationConfig: generationConfig,
-              tools: tools,
-              toolConfig: toolConfig,
-            )
-          },
-          parseCountTokensResponse);
+  }) async {
+    final parameters = <String, Object?>{
+      'contents': contents.map((c) => c.toJson()).toList()
+    };
+    return makeRequest(Task.countTokens, parameters, parseCountTokensResponse);
+  }
 
   /// Creates an embedding (list of float values) representing [content].
   ///
