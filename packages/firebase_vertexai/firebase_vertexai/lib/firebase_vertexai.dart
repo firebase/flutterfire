@@ -12,12 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export 'src/firebase_vertexai.dart'
-    show
-        // TODO(next breaking): Remove defaultTimeout
-        defaultTimeout,
-        FirebaseVertexAI,
-        RequestOptions;
+export 'src/firebase_vertexai.dart' show FirebaseVertexAI, RequestOptions;
 export 'src/vertex_api.dart'
     show
         BatchEmbedContentsResponse,
@@ -27,8 +22,6 @@ export 'src/vertex_api.dart'
         CitationSource,
         ContentEmbedding,
         CountTokensResponse,
-        // TODO(next breaking): Remove CountTokensResponseFields
-        CountTokensResponseFields,
         EmbedContentRequest,
         EmbedContentResponse,
         FinishReason,
@@ -40,11 +33,7 @@ export 'src/vertex_api.dart'
         PromptFeedback,
         SafetyRating,
         SafetySetting,
-        TaskType,
-        // TODO(next breaking): Remove parse* methods
-        parseCountTokensResponse,
-        parseEmbedContentResponse,
-        parseGenerateContentResponse;
+        TaskType;
 export 'src/vertex_chat.dart' show ChatSession, StartChatExtension;
 export 'src/vertex_content.dart'
     show
@@ -54,9 +43,7 @@ export 'src/vertex_content.dart'
         FunctionCall,
         FunctionResponse,
         Part,
-        TextPart,
-        // TODO(next breaking): Remove parseContent
-        parseContent;
+        TextPart;
 export 'src/vertex_error.dart'
     show
         VertexAIException,
