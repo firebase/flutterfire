@@ -1,14 +1,9 @@
 # Create a movie based on user input
 mutation addPerson($name: String) @auth(level: PUBLIC) {
-  person_insert(data: {
-    name: $name
-  })
+  person_insert(data: { name: $name })
 }
 mutation addDirectorToMovie($personId: Person_Key, $movieId: UUID) {
-  directedBy_insert(data: {
-    directedby: $personId,
-    movieId: $movieId
-  })
+  directedBy_insert(data: { directedby: $personId, movieId: $movieId })
 }
 mutation createMovie(
   $title: String!
@@ -24,7 +19,6 @@ mutation createMovie(
       genre: $genre
       rating: $rating
       description: $description
-
     }
   )
 }
@@ -55,9 +49,9 @@ mutation createMovie(
 # }
 
 # # Delete a movie by its ID
-# mutation deleteMovie($id: UUID!) {
-#   movie_delete(id: $id)
-# }
+mutation deleteMovie($id: UUID!) {
+  movie_delete(id: $id)
+}
 
 # # Delete movies with a rating lower than the specified minimum rating
 # mutation deleteUnpopularMovies($minRating: Float!) {
