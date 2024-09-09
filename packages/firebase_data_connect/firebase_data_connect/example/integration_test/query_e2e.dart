@@ -10,6 +10,7 @@ void runQueryTests() {
   group(
     '$FirebaseDataConnect.instance query',
     () {
+      // ignore: unused_local_variable
       late FirebaseDataConnect fdc;
 
       setUpAll(() async {

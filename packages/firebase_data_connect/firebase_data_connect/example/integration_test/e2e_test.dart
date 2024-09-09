@@ -28,7 +28,7 @@ void main() {
 
       if (kUseFDCEmulator) {
         FirebaseDataConnect.instanceFor(connectorConfig: connector)
-            .useDataConnectEmulator('localhost', port: 1242);
+            .useDataConnectEmulator('localhost', 1242);
       }
     });
 
