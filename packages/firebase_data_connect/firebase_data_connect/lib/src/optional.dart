@@ -66,35 +66,21 @@ class Optional<T> {
 }
 
 String nativeToJson<T>(T type) {
-  switch (T.runtimeType) {
-    case bool:
-    case int:
-    case double:
-    case num:
-      return type.toString();
-    case String:
-      return type as String;
-    default:
-      throw UnimplementedError(
-          'This type is unimplemented: ${type.runtimeType}');
+  if (type is bool || type is int || type is double || type is num) {
+    return type.toString();
+  } else if (type is String) {
+    return type;
+  } else {
+    throw UnimplementedError('This type is unimplemented: ${type.runtimeType}');
   }
 }
 
 T nativeFromJson<T>(String json) {
-  switch (T.runtimeType) {
-    case bool:
-      return bool.parse(json) as T;
-    case int:
-      return int.parse(json) as T;
-    case double:
-      double.parse(json);
-    case num:
-      return num.parse(json) as T;
-    case String:
-      return json as T;
-    default:
-      throw UnimplementedError(
-          'This type is unimplemented: ${json.runtimeType}');
-  }
-  throw Exception('Null!');
+  if (T == bool) return (json.toLowerCase() == 'true') as T;
+  if (T == int) return int.parse(json) as T;
+  if (T == double) return double.parse(json) as T;
+  if (T == num) return num.parse(json) as T;
+  if (T == String) return json as T;
+
+  throw UnimplementedError('This type is unimplemented: ${T.runtimeType}');
 }

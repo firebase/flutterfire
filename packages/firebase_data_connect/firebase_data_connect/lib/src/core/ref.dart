@@ -35,8 +35,9 @@ abstract class OperationRef<Data, Variables> {
 }
 
 /// Tracks currently active queries, and emits events when a new query is executed.
-class _QueryManager {
-  _QueryManager(this.dataConnect);
+@visibleForTesting
+class QueryManager {
+  QueryManager(this.dataConnect);
 
   /// FirebaseDataConnect instance;
   FirebaseDataConnect dataConnect;
@@ -97,7 +98,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
       : super(dataConnect, operationName, transport, deserializer, serializer,
             variables);
 
-  _QueryManager _queryManager;
+  QueryManager _queryManager;
   @override
   Future<QueryResult<Data, Variables>> execute() async {
     try {
