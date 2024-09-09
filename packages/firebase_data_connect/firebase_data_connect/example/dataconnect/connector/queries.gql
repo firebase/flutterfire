@@ -9,6 +9,16 @@ query ListMovies @auth(level: USER) {
   }
 }
 
+# List movies by partial title match
+query ListMoviesByPartialTitle($input: String!) @auth(level: PUBLIC) {
+  movies(where: { title: { contains: $input } }) {
+    id
+    title
+    genre
+    rating
+  }
+}
+
 # List subset of fields for users
 # query ListUsers @auth(level: PUBLIC) {
 #   users {
@@ -212,16 +222,6 @@ query ListMovies @auth(level: USER) {
 #     }
 #   }
 # }
-
-# # List movies by partial title match
-query ListMoviesByPartialTitle($input: String!) @auth(level: PUBLIC) {
-  movies(where: { title: { contains: $input } }) {
-    id
-    title
-    genre
-    rating
-  }
-}
 
 # # Fetch a single movie using key scalars (same as get movie by id)
 # query MovieByKey($key: Movie_Key!) @auth(level: PUBLIC) {

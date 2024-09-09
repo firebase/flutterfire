@@ -23,6 +23,11 @@ mutation createMovie(
   )
 }
 
+# Delete a movie by its ID
+mutation deleteMovie($id: UUID!) {
+  movie_delete(id: $id)
+}
+
 # # Update movie information based on the provided ID
 # mutation updateMovie(
 #   $id: UUID!
@@ -47,11 +52,6 @@ mutation createMovie(
 #     }
 #   )
 # }
-
-# # Delete a movie by its ID
-mutation deleteMovie($id: UUID!) {
-  movie_delete(id: $id)
-}
 
 # # Delete movies with a rating lower than the specified minimum rating
 # mutation deleteUnpopularMovies($minRating: Float!) {
