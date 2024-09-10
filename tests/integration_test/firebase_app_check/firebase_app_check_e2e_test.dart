@@ -34,7 +34,6 @@ void main() {
           );
           // Consistently throttles on web CI
         },
-        skip: kIsWeb,
       );
 
       test(
