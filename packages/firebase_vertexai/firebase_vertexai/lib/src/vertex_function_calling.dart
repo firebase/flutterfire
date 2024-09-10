@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
-
 /// Tool details that the model may use to generate a response.
 ///
 /// A `Tool` is a piece of code that enables the system to interact with
@@ -39,16 +37,6 @@ final class Tool {
           'functionDeclarations':
               functionDeclarations.map((f) => f.toJson()).toList(),
       };
-}
-
-/// Conversion utilities for [Tool].
-extension ToolConversion on Tool {
-  /// Returns this tool as a [google_ai.Tool].
-  google_ai.Tool toGoogleAI() => google_ai.Tool(
-        functionDeclarations: functionDeclarations
-            ?.map((f) => f._toGoogleAIToolFunctionDeclaration())
-            .toList(),
-      );
 }
 
 /// Structured representation of a function declaration as defined by the
@@ -79,13 +67,6 @@ final class FunctionDeclaration {
         'description': description,
         if (parameters case final parameters?) 'parameters': parameters.toJson()
       };
-
-  google_ai.FunctionDeclaration _toGoogleAIToolFunctionDeclaration() =>
-      google_ai.FunctionDeclaration(
-        name,
-        description,
-        parameters?._toGoogleAIToolSchema(),
-      );
 }
 
 /// Config for tools to use with model.
@@ -101,15 +82,6 @@ final class ToolConfig {
         if (functionCallingConfig case final config?)
           'functionCallingConfig': config.toJson(),
       };
-}
-
-/// Conversion utilities for [ToolConfig].
-extension ToolConfigConversion on ToolConfig {
-  /// Returns this tool config as a [google_ai.ToolConfig].
-  google_ai.ToolConfig toGoogleAI() => google_ai.ToolConfig(
-        functionCallingConfig:
-            functionCallingConfig?._toGoogleAIFunctionCallingConfig(),
-      );
 }
 
 /// Configuration specifying how the model should use the functions provided as
@@ -138,12 +110,6 @@ final class FunctionCallingConfig {
         if (allowedFunctionNames case final allowedFunctionNames?)
           'allowedFunctionNames': allowedFunctionNames.toList(),
       };
-
-  google_ai.FunctionCallingConfig _toGoogleAIFunctionCallingConfig() =>
-      google_ai.FunctionCallingConfig(
-        mode: mode?._toGoogleAIFunctionCallingMode(),
-        allowedFunctionNames: allowedFunctionNames?.toSet(),
-      );
 }
 
 /// The mode in which the model should use the functions provided as tools.
@@ -168,13 +134,6 @@ enum FunctionCallingMode {
         auto => 'AUTO',
         any => 'ANY',
         none => 'NONE',
-      };
-
-  google_ai.FunctionCallingMode _toGoogleAIFunctionCallingMode() =>
-      switch (this) {
-        auto => google_ai.FunctionCallingMode.auto,
-        any => google_ai.FunctionCallingMode.any,
-        none => google_ai.FunctionCallingMode.none,
       };
 }
 
@@ -334,17 +293,6 @@ final class Schema {
         if (requiredProperties case final requiredProperties?)
           'required': requiredProperties
       };
-
-  google_ai.Schema _toGoogleAIToolSchema() => google_ai.Schema(
-      type._toGoogleAIToolSchemaType(),
-      format: format,
-      description: description,
-      nullable: nullable,
-      enumValues: enumValues,
-      items: items?._toGoogleAIToolSchema(),
-      properties: properties
-          ?.map((key, value) => MapEntry(key, value._toGoogleAIToolSchema())),
-      requiredProperties: requiredProperties);
 }
 
 /// The value type of a [Schema].
@@ -375,14 +323,5 @@ enum SchemaType {
         boolean => 'BOOLEAN',
         array => 'ARRAY',
         object => 'OBJECT',
-      };
-
-  google_ai.SchemaType _toGoogleAIToolSchemaType() => switch (this) {
-        string => google_ai.SchemaType.string,
-        number => google_ai.SchemaType.number,
-        integer => google_ai.SchemaType.integer,
-        boolean => google_ai.SchemaType.boolean,
-        array => google_ai.SchemaType.array,
-        object => google_ai.SchemaType.object,
       };
 }

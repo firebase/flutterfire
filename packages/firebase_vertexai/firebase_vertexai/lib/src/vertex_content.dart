@@ -15,8 +15,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
-
 /// The base structured datatype containing multi-part content of a message.
 final class Content {
   /// Constructor
@@ -66,20 +64,6 @@ final class Content {
       };
 }
 
-/// Conversion utilities for [Content].
-extension ContentConversion on Content {
-  /// Returns this content as a [google_ai.Content].
-  google_ai.Content toGoogleAI() =>
-      google_ai.Content(role, parts.map((p) => p.toPart()).toList());
-}
-
-/// Conversion utilities for [google_ai.Content].
-extension GoogleAIContentConversion on google_ai.Content {
-  /// Returns this content as a [Content].
-  Content toVertex() =>
-      Content(role, parts.map(Part._fromGoogleAIPart).toList());
-}
-
 /// Parse the [Content] from json object.
 Content parseContent(Object jsonObject) {
   return switch (jsonObject) {
@@ -122,24 +106,8 @@ Part _parsePart(Object? jsonObject) {
 
 /// A datatype containing media that is part of a multi-part [Content] message.
 sealed class Part {
-  factory Part._fromGoogleAIPart(google_ai.Part part) => switch (part) {
-        google_ai.TextPart textPart => TextPart(textPart.text),
-        google_ai.DataPart dataPart =>
-          DataPart(dataPart.mimeType, dataPart.bytes),
-        google_ai.FilePart() => throw UnimplementedError(),
-        _PartProxy proxy => _parsePart(proxy.toJson()),
-        google_ai.FunctionCall functionCall =>
-          FunctionCall(functionCall.name, functionCall.args),
-        google_ai.FunctionResponse functionResponse =>
-          FunctionResponse(functionResponse.name, functionResponse.response),
-        google_ai.Part part => _parsePart(part.toJson()),
-      };
-
   /// Convert the [Part] content to json format.
   Object toJson();
-
-  /// Convert the [Part] content to [google_ai.Part].
-  google_ai.Part toPart();
 }
 
 /// A [Part] with the text content.
@@ -151,8 +119,6 @@ final class TextPart implements Part {
   final String text;
   @override
   Object toJson() => {'text': text};
-  @override
-  google_ai.Part toPart() => google_ai.TextPart(text);
 }
 
 /// A [Part] with the byte content of a file.
@@ -170,8 +136,6 @@ final class DataPart implements Part {
   Object toJson() => {
         'inlineData': {'data': base64Encode(bytes), 'mimeType': mimeType}
       };
-  @override
-  google_ai.Part toPart() => google_ai.DataPart(mimeType, bytes);
 }
 
 /// A predicted `FunctionCall` returned from the model that contains
@@ -192,8 +156,6 @@ final class FunctionCall implements Part {
   Object toJson() => {
         'functionCall': {'name': name, 'args': args}
       };
-  @override
-  google_ai.Part toPart() => google_ai.FunctionCall(name, args);
 }
 
 /// The response class for [FunctionCall]
@@ -214,21 +176,6 @@ final class FunctionResponse implements Part {
   Object toJson() => {
         'functionResponse': {'name': name, 'response': response}
       };
-  @override
-  google_ai.Part toPart() => google_ai.FunctionResponse(name, response);
-}
-
-/// A [google_ai.Part] to proxy Vertex specific part data
-final class _PartProxy implements google_ai.Part {
-  /// Constructor
-  _PartProxy(this.jsonObject);
-
-  /// File type of the [DataPart].
-  /// https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-multimodal-prompts#media_requirements
-  final Object jsonObject;
-
-  @override
-  Object toJson() => jsonObject;
 }
 
 /// A [Part] with Firebase Storage uri as prompt content
@@ -247,6 +194,4 @@ final class FileData implements Part {
   Object toJson() => {
         'file_data': {'file_uri': fileUri, 'mime_type': mimeType}
       };
-  @override
-  google_ai.Part toPart() => _PartProxy(toJson());
 }

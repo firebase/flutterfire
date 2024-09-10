@@ -8,6 +8,13 @@ topics:
   - gemini
   - generative-ai
 
+# Explicit about the supported platforms.
+platforms:
+  android:
+  ios:
+  macos:
+  web:
+
 environment:
   sdk: '>=3.2.0 <4.0.0'
   flutter: ">=3.16.0"
@@ -19,7 +26,7 @@ dependencies:
   firebase_core_platform_interface: ^5.2.1
   flutter:
     sdk: flutter
-  google_generative_ai: ^0.4.3
+  http: ^1.1.0
 
 dev_dependencies:
   flutter_lints: ^4.0.0

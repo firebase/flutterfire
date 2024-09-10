@@ -19,17 +19,35 @@ import 'dart:async';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
-// ignore: implementation_imports, tightly coupled packages
-import 'package:google_generative_ai/src/vertex_hooks.dart' as google_ai_hooks;
+
+import 'package:http/http.dart' as http;
 
 import 'vertex_api.dart';
+import 'vertex_client.dart';
 import 'vertex_content.dart';
 import 'vertex_function_calling.dart';
 import 'vertex_version.dart';
 
 const _baseUrl = 'firebaseml.googleapis.com';
 const _apiVersion = 'v2beta';
+
+/// [Task] enum class for [GenerativeModel] to make request.
+enum Task {
+  /// Request type to generate content.
+  generateContent,
+
+  /// Request type to stream content.
+  streamGenerateContent,
+
+  /// Request type to count token.
+  countTokens,
+
+  /// Request type to embed content.
+  embedContent,
+
+  /// Request type to batch embed content.
+  batchEmbedContents;
+}
 
 /// A multimodel generative model (like Gemini).
 ///
@@ -59,26 +77,39 @@ final class GenerativeModel {
     List<Tool>? tools,
     Content? systemInstruction,
     ToolConfig? toolConfig,
-  }) : _googleAIModel = google_ai_hooks.createModelWithBaseUri(
-          model: _normalizeModelName(model),
-          apiKey: app.options.apiKey,
-          baseUri: _vertexUri(app, location),
-          requestHeaders: _firebaseTokens(appCheck, auth),
-          safetySettings: safetySettings != null
-              ? safetySettings.map((setting) => setting.toGoogleAI()).toList()
-              : [],
-          generationConfig: generationConfig?.toGoogleAI(),
-          systemInstruction: systemInstruction?.toGoogleAI(),
-          tools: tools?.map((tool) => tool.toGoogleAI()).toList(),
-          toolConfig: toolConfig?.toGoogleAI(),
-        );
-  final google_ai.GenerativeModel _googleAIModel;
+    http.Client? httpClient,
+  })  : _model = _normalizeModelName(model),
+        _baseUri = _vertexUri(app, location),
+        _safetySettings = safetySettings ?? [],
+        _generationConfig = generationConfig,
+        _tools = tools,
+        _systemInstruction = systemInstruction,
+        _toolConfig = toolConfig,
+        _client = HttpApiClient(
+            apiKey: app.options.apiKey,
+            httpClient: httpClient,
+            requestHeaders: _firebaseTokens(appCheck, auth));
 
-  static const _modelsPrefix = 'models/';
-  static String _normalizeModelName(String modelName) =>
-      modelName.startsWith(_modelsPrefix)
-          ? modelName.substring(_modelsPrefix.length)
-          : modelName;
+  final ({String prefix, String name}) _model;
+  final List<SafetySetting> _safetySettings;
+  final GenerationConfig? _generationConfig;
+  final List<Tool>? _tools;
+  final ApiClient _client;
+  final Uri _baseUri;
+  final Content? _systemInstruction;
+  final ToolConfig? _toolConfig;
+
+  //static const _modelsPrefix = 'models/';
+
+  /// Returns the model code for a user friendly model name.
+  ///
+  /// If the model name is already a model code (contains a `/`), use the parts
+  /// directly. Otherwise, return a `models/` model code.
+  static ({String prefix, String name}) _normalizeModelName(String modelName) {
+    if (!modelName.contains('/')) return (prefix: 'models', name: modelName);
+    final parts = modelName.split('/');
+    return (prefix: parts.first, name: parts.skip(1).join('/'));
+  }
 
   static Uri _vertexUri(FirebaseApp app, String location) {
     var projectId = app.options.projectId;
@@ -111,6 +142,40 @@ final class GenerativeModel {
     };
   }
 
+  Uri _taskUri(Task task) => _baseUri.replace(
+      pathSegments: _baseUri.pathSegments
+          .followedBy([_model.prefix, '${_model.name}:${task.name}']));
+
+  /// Make a unary request for [task] with JSON encodable [params].
+  Future<T> makeRequest<T>(Task task, Map<String, Object?> params,
+          T Function(Map<String, Object?>) parse) =>
+      _client.makeRequest(_taskUri(task), params).then(parse);
+
+  Map<String, Object?> _generateContentRequest(
+    Iterable<Content> contents, {
+    List<SafetySetting>? safetySettings,
+    GenerationConfig? generationConfig,
+    List<Tool>? tools,
+    ToolConfig? toolConfig,
+  }) {
+    safetySettings ??= _safetySettings;
+    generationConfig ??= _generationConfig;
+    tools ??= _tools;
+    toolConfig ??= _toolConfig;
+    return {
+      'model': '${_model.prefix}/${_model.name}',
+      'contents': contents.map((c) => c.toJson()).toList(),
+      if (safetySettings.isNotEmpty)
+        'safetySettings': safetySettings.map((s) => s.toJson()).toList(),
+      if (generationConfig != null)
+        'generationConfig': generationConfig.toJson(),
+      if (tools != null) 'tools': tools.map((t) => t.toJson()).toList(),
+      if (toolConfig != null) 'toolConfig': toolConfig.toJson(),
+      if (_systemInstruction case final systemInstruction?)
+        'systemInstruction': systemInstruction.toJson(),
+    };
+  }
+
   /// Generates content responding to [prompt].
   ///
   /// Sends a "generateContent" API request for the configured model,
@@ -122,22 +187,20 @@ final class GenerativeModel {
   /// print(response.text);
   /// ```
   Future<GenerateContentResponse> generateContent(Iterable<Content> prompt,
-      {List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig,
-      List<Tool>? tools,
-      ToolConfig? toolConfig}) async {
-    Iterable<google_ai.Content> googlePrompt =
-        prompt.map((content) => content.toGoogleAI());
-    List<google_ai.SafetySetting> googleSafetySettings = safetySettings != null
-        ? safetySettings.map((setting) => setting.toGoogleAI()).toList()
-        : [];
-    final response = await _googleAIModel.generateContent(googlePrompt,
-        safetySettings: googleSafetySettings,
-        generationConfig: generationConfig?.toGoogleAI(),
-        tools: tools?.map((tool) => tool.toGoogleAI()).toList(),
-        toolConfig: toolConfig?.toGoogleAI());
-    return response.toVertex();
-  }
+          {List<SafetySetting>? safetySettings,
+          GenerationConfig? generationConfig,
+          List<Tool>? tools,
+          ToolConfig? toolConfig}) =>
+      makeRequest(
+          Task.generateContent,
+          _generateContentRequest(
+            prompt,
+            safetySettings: safetySettings,
+            generationConfig: generationConfig,
+            tools: tools,
+            toolConfig: toolConfig,
+          ),
+          parseGenerateContentResponse);
 
   /// Generates a stream of content responding to [prompt].
   ///
@@ -157,15 +220,16 @@ final class GenerativeModel {
       GenerationConfig? generationConfig,
       List<Tool>? tools,
       ToolConfig? toolConfig}) {
-    return _googleAIModel
-        .generateContentStream(prompt.map((content) => content.toGoogleAI()),
-            safetySettings: safetySettings != null
-                ? safetySettings.map((setting) => setting.toGoogleAI()).toList()
-                : [],
-            generationConfig: generationConfig?.toGoogleAI(),
-            tools: tools?.map((tool) => tool.toGoogleAI()).toList(),
-            toolConfig: toolConfig?.toGoogleAI())
-        .map((r) => r.toVertex());
+    final response = _client.streamRequest(
+        _taskUri(Task.streamGenerateContent),
+        _generateContentRequest(
+          prompt,
+          safetySettings: safetySettings,
+          generationConfig: generationConfig,
+          tools: tools,
+          toolConfig: toolConfig,
+        ));
+    return response.map(parseGenerateContentResponse);
   }
 
   /// Counts the total number of tokens in [contents].
@@ -195,8 +259,7 @@ final class GenerativeModel {
     final parameters = <String, Object?>{
       'contents': contents.map((c) => c.toJson()).toList()
     };
-    return _googleAIModel.makeRequest(
-        google_ai_hooks.Task.countTokens, parameters, parseCountTokensResponse);
+    return makeRequest(Task.countTokens, parameters, parseCountTokensResponse);
   }
 
   /// Creates an embedding (list of float values) representing [content].
@@ -210,14 +273,17 @@ final class GenerativeModel {
   ///     (await model.embedContent([Content.text(prompt)])).embedding.values;
   /// ```
   Future<EmbedContentResponse> embedContent(Content content,
-      {TaskType? taskType, String? title, int? outputDimensionality}) async {
-    return _googleAIModel
-        .embedContent(content.toGoogleAI(),
-            taskType: taskType?.toGoogleAI(),
-            title: title,
-            outputDimensionality: outputDimensionality)
-        .then((r) => r.toVertex());
-  }
+          {TaskType? taskType, String? title, int? outputDimensionality}) =>
+      makeRequest(
+          Task.embedContent,
+          {
+            'content': content.toJson(),
+            if (taskType != null) 'taskType': taskType.toJson(),
+            if (title != null) 'title': title,
+            if (outputDimensionality != null)
+              'outputDimensionality': outputDimensionality,
+          },
+          parseEmbedContentResponse);
 
   /// Creates embeddings (list of float values) representing each content in
   /// [requests].
@@ -234,17 +300,16 @@ final class GenerativeModel {
   ///     (await model.embedContent(requests)).embedding.values;
   /// ```
   Future<BatchEmbedContentsResponse> batchEmbedContents(
-      Iterable<EmbedContentRequest> requests) async {
-    return _googleAIModel
-        .batchEmbedContents(requests.map((e) => e.toGoogleAI()))
-        .then((r) => r.toVertex());
-  }
-}
-
-/// Conversion utilities for [GenerativeModel].
-extension GoogleAIGenerativeModelConversion on GenerativeModel {
-  /// Return this model as a [google_ai.GenerativeModel].
-  google_ai.GenerativeModel get googleAIModel => _googleAIModel;
+          Iterable<EmbedContentRequest> requests) =>
+      makeRequest(
+          Task.batchEmbedContents,
+          {
+            'requests': requests
+                .map((r) =>
+                    r.toJson(defaultModel: '${_model.prefix}/${_model.name}'))
+                .toList()
+          },
+          parseBatchEmbedContentsResponse);
 }
 
 /// Returns a [GenerativeModel] using it's private constructor.

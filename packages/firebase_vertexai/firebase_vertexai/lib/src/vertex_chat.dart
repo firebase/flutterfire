@@ -14,8 +14,7 @@
 
 import 'dart:async';
 
-import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
-
+import 'utils/mutex.dart';
 import 'vertex_api.dart';
 import 'vertex_content.dart';
 import 'vertex_model.dart';
@@ -28,27 +27,20 @@ import 'vertex_model.dart';
 /// response. The history is maintained and updated by the `google_generative_ai`
 /// package and reflects the most current state of the chat session.
 final class ChatSession {
-  /// Creates a new chat session with the provided model.
-  ///
-  /// Initializes the chat session with the given [initialHistory], [SafetySetting],
-  /// and [GenerationConfig]. The history is passed to the `google_generative_ai`
-  /// package to start the chat session.
+  ChatSession._(this._generateContent, this._generateContentStream,
+      this._history, this._safetySettings, this._generationConfig);
+  final Future<GenerateContentResponse> Function(Iterable<Content> content,
+      {List<SafetySetting>? safetySettings,
+      GenerationConfig? generationConfig}) _generateContent;
+  final Stream<GenerateContentResponse> Function(Iterable<Content> content,
+      {List<SafetySetting>? safetySettings,
+      GenerationConfig? generationConfig}) _generateContentStream;
 
-  ChatSession._(
-      List<Content> initialHistory,
-      List<SafetySetting>? _safetySettings,
-      GenerationConfig? _generationConfig,
-      GenerativeModel _model)
-      : _googleAIChatSession = _model.googleAIModel.startChat(
-            history: initialHistory.map((e) => e.toGoogleAI()).toList(),
-            safetySettings: _safetySettings != null
-                ? _safetySettings
-                    .map((setting) => setting.toGoogleAI())
-                    .toList()
-                : [],
-            generationConfig: _generationConfig?.toGoogleAI());
+  final _mutex = Mutex();
 
-  final google_ai.ChatSession _googleAIChatSession;
+  final List<Content> _history;
+  final List<SafetySetting>? _safetySettings;
+  final GenerationConfig? _generationConfig;
 
   /// The content that has been successfully sent to, or received from, the
   /// generative model.
@@ -57,12 +49,7 @@ final class ChatSession {
   /// [sendMessageStream], these will not be reflected in the history.
   /// Messages without a candidate in the response are not recorded in history,
   /// including the message sent to the model.
-  ///
-  /// The history is maintained by the `google_generative_ai` package and reflects
-  /// the most current state of the chat session, ensuring that the history
-  /// returned is always up-to-date and consistent with the ongoing chat session.
-  Iterable<Content> get history =>
-      _googleAIChatSession.history.map((e) => e.toVertex());
+  Iterable<Content> get history => _history.skip(0);
 
   /// Sends [message] to the model as a continuation of the chat [history].
   ///
@@ -77,9 +64,21 @@ final class ChatSession {
   /// Successful messages and responses for ongoing or pending requests will
   /// be reflected in the history sent for this message.
   Future<GenerateContentResponse> sendMessage(Content message) async {
-    return _googleAIChatSession
-        .sendMessage(message.toGoogleAI())
-        .then((r) => r.toVertex());
+    final lock = await _mutex.acquire();
+    try {
+      final response = await _generateContent(_history.followedBy([message]),
+          safetySettings: _safetySettings, generationConfig: _generationConfig);
+      if (response.candidates case [final candidate, ...]) {
+        _history.add(message);
+        final normalizedContent = candidate.content.role == null
+            ? Content('model', candidate.content.parts)
+            : candidate.content;
+        _history.add(normalizedContent);
+      }
+      return response;
+    } finally {
+      lock.release();
+    }
   }
 
   /// Continues the chat with a new [message].
@@ -100,9 +99,70 @@ final class ChatSession {
   /// Waits to read the entire streamed response before recording the message
   /// and response and allowing pending messages to be sent.
   Stream<GenerateContentResponse> sendMessageStream(Content message) {
-    return _googleAIChatSession
-        .sendMessageStream(message.toGoogleAI())
-        .map((r) => r.toVertex());
+    final controller = StreamController<GenerateContentResponse>(sync: true);
+    _mutex.acquire().then((lock) async {
+      try {
+        final responses = _generateContentStream(_history.followedBy([message]),
+            safetySettings: _safetySettings,
+            generationConfig: _generationConfig);
+        final content = <Content>[];
+        await for (final response in responses) {
+          if (response.candidates case [final candidate, ...]) {
+            content.add(candidate.content);
+          }
+          controller.add(response);
+        }
+        if (content.isNotEmpty) {
+          _history.add(message);
+          _history.add(_aggregate(content));
+        }
+      } catch (e, s) {
+        controller.addError(e, s);
+      }
+      lock.release();
+      unawaited(controller.close());
+    });
+    return controller.stream;
+  }
+
+  /// Aggregates a list of [Content] responses into a single [Content].
+  ///
+  /// Includes all the [Content.parts] of every element of [contents],
+  /// and concatenates adjacent [TextPart]s into a single [TextPart],
+  /// even across adjacent [Content]s.
+  Content _aggregate(List<Content> contents) {
+    assert(contents.isNotEmpty);
+    final role = contents.first.role ?? 'model';
+    final textBuffer = StringBuffer();
+    // If non-null, only a single text part has been seen.
+    TextPart? previousText;
+    final parts = <Part>[];
+    void addBufferedText() {
+      if (textBuffer.isEmpty) return;
+      if (previousText case final singleText?) {
+        parts.add(singleText);
+        previousText = null;
+      } else {
+        parts.add(TextPart(textBuffer.toString()));
+      }
+      textBuffer.clear();
+    }
+
+    for (final content in contents) {
+      for (final part in content.parts) {
+        if (part case TextPart(:final text)) {
+          if (text.isNotEmpty) {
+            previousText = textBuffer.isEmpty ? part : null;
+            textBuffer.write(text);
+          }
+        } else {
+          addBufferedText();
+          parts.add(part);
+        }
+      }
+    }
+    addBufferedText();
+    return Content(role, parts);
   }
 }
 
@@ -119,5 +179,6 @@ extension StartChatExtension on GenerativeModel {
           {List<Content>? history,
           List<SafetySetting>? safetySettings,
           GenerationConfig? generationConfig}) =>
-      ChatSession._(history ?? [], safetySettings, generationConfig, this);
+      ChatSession._(generateContent, generateContentStream, history ?? [],
+          safetySettings, generationConfig);
 }
