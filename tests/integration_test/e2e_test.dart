@@ -43,12 +43,9 @@ void main() {
       firebase_crashlytics.main();
       firebase_analytics.main();
       cloud_functions.main();
-      if (kIsWeb) {
-        // ignore: do_not_use_environment
-        if (const String.fromEnvironment('APP_CHECK_E2E') == 'true') {
-          // Separate test for App Check on web
-          firebase_app_check.main();
-        }
+      // ignore: do_not_use_environment
+      if (kIsWeb && const String.fromEnvironment('APP_CHECK_E2E') == 'true') {
+        firebase_app_check.main();
       } else {
         firebase_app_check.main();
       }
