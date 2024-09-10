@@ -1,4 +1,4 @@
-name: web
+name: e2e-web
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

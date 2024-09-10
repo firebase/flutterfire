@@ -1,4 +1,4 @@
-name: android
+name: e2e-android
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

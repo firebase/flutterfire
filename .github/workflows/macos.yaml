@@ -1,4 +1,4 @@
-name: macOS
+name: e2e-macOS
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

@@ -1,4 +1,4 @@
-name: windows
+name: e2e-windows
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

@@ -1,4 +1,4 @@
-name: iOS
+name: e2e-iOS
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
