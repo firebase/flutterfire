@@ -47,9 +47,7 @@ void main() {
         // ignore: avoid_print
         print('APP_CHECK_E2E: ${const String.fromEnvironment('GITHUB_ACTIONS')}');
         // ignore: do_not_use_environment
-        if (const String.fromEnvironment('APP_CHECK_E2E') == 'true' &&
-        // ignore: do_not_use_environment
-            const String.fromEnvironment('GITHUB_ACTIONS') == 'true') {
+        if (const String.fromEnvironment('GITHUB_ACTIONS') != 'true' || const String.fromEnvironment('APP_CHECK_E2E') == 'true') {
 
           // Separate test for App Check on web
           firebase_app_check.main();
