@@ -18,7 +18,7 @@ bool kUseFDCEmulator = true;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('cloud_firestore', () {
+  group('firebase_data_connect', () {
     setUpAll(() async {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
