@@ -282,6 +282,7 @@ scripts:
         --ignore "**/FlutterMultiDexApplication.java" \
         --ignore "**/GeneratedPluginRegistrant.swift" \
         --ignore "**/Pods/**" \
+        --ignore "**/generated/**" \
         --ignore "**/flutter/generated_plugin_registrant.h" \
         --ignore "**/flutter/generated_plugin_registrant.cc" \
         .
@@ -317,6 +318,7 @@ scripts:
         --ignore "**/FlutterMultiDexApplication.java" \
         --ignore "**/GeneratedPluginRegistrant.swift" \
         --ignore "**/Pods/**" \
+        --ignore "**/generated/**" \
         --ignore "**/flutter/generated_plugin_registrant.h" \
         --ignore "**/flutter/generated_plugin_registrant.cc" \
         .
