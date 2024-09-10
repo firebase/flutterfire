@@ -6,8 +6,9 @@ part of cloud_firestore;
 
 // ignore: do_not_use_environment
 const kIsWasm = bool.fromEnvironment('dart.library.js_interop') &&
+    // html package is not available in wasm
     // ignore: do_not_use_environment
-    bool.fromEnvironment('dart.library.ffi');
+    !bool.fromEnvironment('dart.library.html');
 
 class _CodecUtility {
   static Map<String, dynamic>? replaceValueWithDelegatesInMap(
