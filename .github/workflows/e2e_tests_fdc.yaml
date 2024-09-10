@@ -50,9 +50,6 @@ jobs:
           cache: true
       - name: Setup PostgreSQL for Linux/macOS/Windows
         uses: ikalnytskyi/action-setup-postgres@v6
-      - name: Unset PGSERVICEFILE
-        run: |
-          echo "PGSERVICEFILE=" >> $GITHUB_ENV
       - uses: bluefireteam/melos-action@6085791af7036f6366c9a4b9d55105c0ef9c6388
         with:
           run-bootstrap: false
@@ -65,6 +62,7 @@ jobs:
       - name: Start Firebase Emulator
         run: |
           cd ./packages/firebase_data_connect/firebase_data_connect/example 
+          unset PGSERVICEFILE
           firebase experiments:enable dataconnect
           firebase emulators:start || exit_code=$?
           cat dataconnect-debug.log
