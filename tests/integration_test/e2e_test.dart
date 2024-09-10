@@ -44,13 +44,8 @@ void main() {
       firebase_analytics.main();
       cloud_functions.main();
       if (kIsWeb) {
-        // ignore: avoid_print
-        print(
-            'APP_CHECK_E2E: ${const String.fromEnvironment('GITHUB_ACTIONS')}');
         // ignore: do_not_use_environment
-        if (const String.fromEnvironment('GITHUB_ACTIONS') != 'true' ||
-            // ignore: do_not_use_environment
-            const String.fromEnvironment('APP_CHECK_E2E') == 'true') {
+        if (const String.fromEnvironment('APP_CHECK_E2E') == 'true') {
           // Separate test for App Check on web
           firebase_app_check.main();
         }
