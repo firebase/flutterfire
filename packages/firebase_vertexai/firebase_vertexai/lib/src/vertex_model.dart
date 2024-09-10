@@ -33,10 +33,19 @@ const _apiVersion = 'v2beta';
 
 /// [Task] enum class for [GenerativeModel] to make request.
 enum Task {
+  /// Request type to generate content.
   generateContent,
+
+  /// Request type to stream content.
   streamGenerateContent,
+
+  /// Request type to count token.
   countTokens,
+
+  /// Request type to embed content.
   embedContent,
+
+  /// Request type to batch embed content.
   batchEmbedContents;
 }
 

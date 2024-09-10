@@ -20,10 +20,15 @@ import 'package:http/http.dart' as http;
 import 'vertex_error.dart';
 import 'vertex_version.dart';
 
+/// Client name to feed into the request.
 const clientName = 'vertexai-dart/$packageVersion';
 
+/// The interface for client
 abstract interface class ApiClient {
+  /// Function to make a request
   Future<Map<String, Object?>> makeRequest(Uri uri, Map<String, Object?> body);
+
+  /// Function to make a stream request.
   Stream<Map<String, Object?>> streamRequest(
       Uri uri, Map<String, Object?> body);
 }
@@ -32,12 +37,9 @@ abstract interface class ApiClient {
 // Decodes first by `utf8.decode`, then `json.decode`.
 final _utf8Json = json.fuse(utf8);
 
+/// The http implementation of ApiClient
 final class HttpApiClient implements ApiClient {
-  final String _apiKey;
-  final http.Client? _httpClient;
-
-  final FutureOr<Map<String, String>> Function()? _requestHeaders;
-
+  ///Constructor
   HttpApiClient(
       {required String apiKey,
       http.Client? httpClient,
@@ -45,6 +47,10 @@ final class HttpApiClient implements ApiClient {
       : _apiKey = apiKey,
         _httpClient = httpClient,
         _requestHeaders = requestHeaders;
+  final String _apiKey;
+  final http.Client? _httpClient;
+
+  final FutureOr<Map<String, String>> Function()? _requestHeaders;
 
   Future<Map<String, String>> _headers() async => {
         'x-goog-api-key': _apiKey,
@@ -67,20 +73,20 @@ final class HttpApiClient implements ApiClient {
           'Server Error [${response.statusCode}]: ${response.body}');
     }
 
-    return _utf8Json.decode(response.bodyBytes) as Map<String, Object?>;
+    return _utf8Json.decode(response.bodyBytes)! as Map<String, Object?>;
   }
 
   @override
   Stream<Map<String, Object?>> streamRequest(
       Uri uri, Map<String, Object?> body) async* {
-    uri = uri.replace(queryParameters: {'alt': 'sse'});
-    final request = http.Request('POST', uri)
+    Uri streamUri = uri.replace(queryParameters: {'alt': 'sse'});
+    final request = http.Request('POST', streamUri)
       ..bodyBytes = _utf8Json.encode(body)
       ..headers.addAll(await _headers());
     final response = await (_httpClient?.send(request) ?? request.send());
     if (response.statusCode != 200) {
       final body = await response.stream.bytesToString();
-      // Yeild a potential error object like a normal result for consistency
+      // Yield a potential error object like a normal result for consistency
       // with `makeRequest`.
       yield jsonDecode(body) as Map<String, Object?>;
       return;

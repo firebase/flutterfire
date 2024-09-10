@@ -16,9 +16,11 @@
 ///
 /// The [message] may explain the cause of the failure.
 final class VertexAIException implements Exception {
-  final String message;
-
+  /// Constructor
   VertexAIException(this.message);
+
+  /// Message of the exception
+  final String message;
 
   @override
   String toString() => 'VertexAIException: $message';
@@ -26,10 +28,10 @@ final class VertexAIException implements Exception {
 
 /// Exception thrown when the server rejects the API key.
 final class InvalidApiKey implements VertexAIException {
+  /// Constructor
+  InvalidApiKey(this.message);
   @override
   final String message;
-
-  InvalidApiKey(this.message);
 
   @override
   String toString() => message;
@@ -44,10 +46,10 @@ final class UnsupportedUserLocation implements VertexAIException {
 
 /// Exception thrown when the server failed to generate content.
 final class ServerException implements VertexAIException {
+  /// Constructor
+  ServerException(this.message);
   @override
   final String message;
-
-  ServerException(this.message);
 
   @override
   String toString() => message;
@@ -59,9 +61,11 @@ final class ServerException implements VertexAIException {
 /// as an inability to parse a new response format. Resolution paths may include
 /// updating to a new version of the SDK, or filing an issue.
 final class VertexAISdkException implements Exception {
-  final String message;
-
+  /// Constructor
   VertexAISdkException(this.message);
+
+  /// Message of the exception
+  final String message;
 
   @override
   String toString() => '$message\n'
@@ -72,6 +76,7 @@ final class VertexAISdkException implements Exception {
       'https://github.com/firebase/flutterfire/issuess.';
 }
 
+/// Parse the error json object.
 VertexAIException parseError(Object jsonObject) {
   return switch (jsonObject) {
     {
@@ -85,5 +90,6 @@ VertexAIException parseError(Object jsonObject) {
   };
 }
 
+/// Throw [VertexAISdkException] for unhandled format.
 Exception unhandledFormat(String name, Object? jsonObject) =>
     VertexAISdkException('Unhandled format for $name: $jsonObject');
