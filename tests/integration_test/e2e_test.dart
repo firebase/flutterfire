@@ -43,7 +43,15 @@ void main() {
       firebase_crashlytics.main();
       firebase_analytics.main();
       cloud_functions.main();
-      firebase_app_check.main();
+      if (kIsWeb) {
+        if (Platform.environment['APP_CHECK_E2E'] == 'true') {
+          // Separate test for App Check on web
+          firebase_app_check.main();
+        }
+      } else {
+        firebase_app_check.main();
+      }
+
       firebase_app_installations.main();
       firebase_dynamic_links.main();
       firebase_messaging.main();
