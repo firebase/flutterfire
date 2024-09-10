@@ -133,7 +133,7 @@ jobs:
         run: |
           sudo npm i -g firebase-tools
       - name: 'Build Application'
-        working-directory: ${{ matrix.working_directory }}
+        working-directory: 'packages/firebase_data_connect/firebase_data_connect/example'
         run: |
           export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
           export CCACHE_SLOPPINESS=clang_index_store,file_stat_matches,include_file_ctime,include_file_mtime,ivfsoverlay,pch_defines,modules,system_headers,time_macros
