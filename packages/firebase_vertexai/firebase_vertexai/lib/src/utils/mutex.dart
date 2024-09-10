@@ -27,7 +27,7 @@ class Mutex {
   /// Queue of pending lock acquisitions, and the current active lock.
   ///
   /// The already completed completer of the currently active lock
-  /// is reatined at the head of the queue, and is removed when the
+  /// is retained at the head of the queue, and is removed when the
   /// lock is released.
   final Queue<Completer<Lock>> _pending = Queue();
 
@@ -60,8 +60,8 @@ class Mutex {
 ///
 /// Can be released *once*.
 class Lock {
-  Mutex? _mutex;
   Lock._(this._mutex);
+  Mutex? _mutex;
 
   /// Release the lock on the mutex.
   ///

@@ -629,6 +629,7 @@ enum TaskType {
   Object toJson() => _jsonString;
 }
 
+/// Parse the json to [GenerateContentResponse]
 GenerateContentResponse parseGenerateContentResponse(Object jsonObject) {
   if (jsonObject case {'error': final Object error}) throw parseError(error);
   final candidates = switch (jsonObject) {
@@ -650,6 +651,7 @@ GenerateContentResponse parseGenerateContentResponse(Object jsonObject) {
       usageMetadata: usageMedata);
 }
 
+/// Parse the json to [CountTokensResponse]
 CountTokensResponse parseCountTokensResponse(Object jsonObject) {
   if (jsonObject case {'error': final Object error}) throw parseError(error);
   if (jsonObject case {'totalTokens': final int totalTokens}) {
@@ -662,6 +664,7 @@ CountTokensResponse parseCountTokensResponse(Object jsonObject) {
   throw unhandledFormat('CountTokensResponse', jsonObject);
 }
 
+/// Parse the json to [EmbedContentResponse]
 EmbedContentResponse parseEmbedContentResponse(Object jsonObject) {
   return switch (jsonObject) {
     {'embedding': final Object embedding} =>
@@ -671,6 +674,7 @@ EmbedContentResponse parseEmbedContentResponse(Object jsonObject) {
   };
 }
 
+/// Parse the json to [BatchEmbedContentsResponse]
 BatchEmbedContentsResponse parseBatchEmbedContentsResponse(Object jsonObject) {
   return switch (jsonObject) {
     {'embeddings': final List<Object?> embeddings} =>

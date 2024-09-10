@@ -14,9 +14,8 @@
 
 import 'dart:typed_data';
 
-import 'package:firebase_vertexai/firebase_vertexai.dart'; // Your library
+import 'package:firebase_vertexai/src/vertex_content.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:google_generative_ai/google_generative_ai.dart' as google_ai;
 
 // Mock google_ai classes (if needed)
 // ...
@@ -92,27 +91,12 @@ void main() {
       // ... verify json structure
     });
 
-    test('TextPart toPart', () {
-      final part = TextPart('Test');
-      final newPart = part.toPart();
-      expect(newPart, isA<google_ai.TextPart>());
-      expect((newPart as google_ai.TextPart).text, 'Test');
-    });
-
     test('DataPart toJson', () {
       final part = DataPart('image/png', Uint8List(0));
       final json = part.toJson();
       expect((json as Map)['inlineData']['mimeType'], 'image/png');
       expect(json['inlineData']['data'], '');
       // ... verify json structure
-    });
-
-    test('DataPart toPart', () {
-      final part = DataPart('image/png', Uint8List(0));
-      final newPart = part.toPart();
-      expect(newPart, isA<google_ai.DataPart>());
-      expect((newPart as google_ai.DataPart).mimeType, 'image/png');
-      expect(newPart.bytes.length, 0);
     });
 
     test('FunctionCall toJson', () {
@@ -127,20 +111,6 @@ void main() {
       expect(json['functionCall']['args']['arguments'].length, 1);
       expect(json['functionCall']['args']['arguments'][0]['text'], 'Test');
       // ... verify json structure
-    });
-
-    test('FunctionCall toPart', () {
-      final part = FunctionCall('myFunction', {
-        'arguments': [
-          {'text': 'Test'}
-        ]
-      });
-      final newPart = part.toPart();
-      expect(newPart, isA<google_ai.FunctionCall>());
-      expect((newPart as google_ai.FunctionCall).name, 'myFunction');
-      expect(newPart.args.length, 1);
-      expect((newPart.args['arguments']! as List).length, 1);
-      expect((newPart.args['arguments']! as List)[0]['text'], 'Test');
     });
 
     test('FunctionResponse toJson', () {
@@ -158,19 +128,6 @@ void main() {
           Uint8List(0));
 
       // ... verify json structure
-    });
-
-    test('FunctionResponse toPart', () {
-      final part = FunctionResponse('myFunction', {
-        'inlineData': {
-          'mimeType': 'application/octet-stream',
-          'data': Uint8List(0)
-        }
-      });
-      final newPart = part.toPart();
-      expect(newPart, isA<google_ai.FunctionResponse>());
-      expect((newPart as google_ai.FunctionResponse).name, 'myFunction');
-      expect(newPart.response?.length, 1);
     });
 
     test('FileData toJson', () {

@@ -27,6 +27,8 @@ import 'vertex_model.dart';
 /// response. The history is maintained and updated by the `google_generative_ai`
 /// package and reflects the most current state of the chat session.
 final class ChatSession {
+  ChatSession._(this._generateContent, this._generateContentStream,
+      this._history, this._safetySettings, this._generationConfig);
   final Future<GenerateContentResponse> Function(Iterable<Content> content,
       {List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig}) _generateContent;
@@ -39,9 +41,6 @@ final class ChatSession {
   final List<Content> _history;
   final List<SafetySetting>? _safetySettings;
   final GenerationConfig? _generationConfig;
-
-  ChatSession._(this._generateContent, this._generateContentStream,
-      this._history, this._safetySettings, this._generationConfig);
 
   /// The content that has been successfully sent to, or received from, the
   /// generative model.

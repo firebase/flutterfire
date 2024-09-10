@@ -26,6 +26,7 @@ dependencies:
   firebase_core_platform_interface: ^5.2.1
   flutter:
     sdk: flutter
+  http: ^1.1.0
 
 dev_dependencies:
   flutter_lints: ^4.0.0
