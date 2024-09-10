@@ -178,9 +178,12 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     if (firestoreSettings.webExperimentalLongPollingOptions != null) {
       // If this is null, it will throw an exception when initializing the Firestore instance via interop
       JSAny experimentalLongPollingOptions =
-        firestore_interop.ExperimentalLongPollingOptions(
-            timeoutSeconds: firestoreSettings.webExperimentalLongPollingOptions
-                ?.timeoutDuration?.inSeconds.toJS) as JSAny;
+          firestore_interop.ExperimentalLongPollingOptions(
+              timeoutSeconds: firestoreSettings
+                  .webExperimentalLongPollingOptions
+                  ?.timeoutDuration
+                  ?.inSeconds
+                  .toJS) as JSAny;
       _interopSettings?.experimentalLongPollingOptions =
           experimentalLongPollingOptions;
     }
