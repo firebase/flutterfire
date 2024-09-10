@@ -290,7 +290,7 @@ jobs:
         shell: bash
 
   web-app-check:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
@@ -321,7 +321,7 @@ jobs:
           key: firebase-emulators-v3-${{ github.run_id }}
           restore-keys: firebase-emulators-v3
       - name: Start Firebase Emulator
-        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
+        run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: 'E2E Tests'
         working-directory: tests
         # Web devices are not supported for the `flutter test` command yet. As a
