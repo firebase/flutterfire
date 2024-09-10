@@ -35,6 +35,10 @@ void main() {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
+      // Web by default doesn't have persistence enabled
+      FirebaseFirestore.instance.settings = const Settings(
+        persistenceEnabled: true,
+      );
 
       if (kUseFirestoreEmulator) {
         FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
