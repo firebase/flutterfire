@@ -37,7 +37,7 @@ jobs:
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
+      - uses: actions/setup-java@6a0805fcefea3d4657a47ac4c165951e33482018
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -51,7 +51,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@6085791af7036f6366c9a4b9d55105c0ef9c6388
+      - uses: bluefireteam/melos-action@7e70fbe34bbd91a75eb505eeb4174b0ac9a1df52
         with:
           run-bootstrap: false
           melos-version: '5.3.0'
@@ -68,7 +68,7 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
       - name: Gradle cache
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
       - name: AVD cache
         uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
         id: avd-cache
@@ -101,7 +101,7 @@ jobs:
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
+      - uses: actions/setup-java@6a0805fcefea3d4657a47ac4c165951e33482018
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -127,7 +127,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@6085791af7036f6366c9a4b9d55105c0ef9c6388
+      - uses: bluefireteam/melos-action@7e70fbe34bbd91a75eb505eeb4174b0ac9a1df52
         with:
           run-bootstrap: false
           melos-version: '5.3.0'
@@ -177,7 +177,7 @@ jobs:
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
+      - uses: actions/setup-java@6a0805fcefea3d4657a47ac4c165951e33482018
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -203,7 +203,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@6085791af7036f6366c9a4b9d55105c0ef9c6388
+      - uses: bluefireteam/melos-action@7e70fbe34bbd91a75eb505eeb4174b0ac9a1df52
         with:
           run-bootstrap: false
           melos-version: '5.3.0'
@@ -248,7 +248,7 @@ jobs:
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
+      - uses: actions/setup-java@6a0805fcefea3d4657a47ac4c165951e33482018
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -256,7 +256,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@6085791af7036f6366c9a4b9d55105c0ef9c6388
+      - uses: bluefireteam/melos-action@7e70fbe34bbd91a75eb505eeb4174b0ac9a1df52
         with:
           run-bootstrap: false
           melos-version: '5.3.0'
@@ -303,7 +303,7 @@ jobs:
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
+      - uses: actions/setup-java@6a0805fcefea3d4657a47ac4c165951e33482018
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -311,7 +311,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@6085791af7036f6366c9a4b9d55105c0ef9c6388
+      - uses: bluefireteam/melos-action@7e70fbe34bbd91a75eb505eeb4174b0ac9a1df52
         with:
           run-bootstrap: false
           melos-version: '5.3.0'
@@ -351,7 +351,7 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
-      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
+      - uses: actions/setup-java@6a0805fcefea3d4657a47ac4c165951e33482018
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -363,7 +363,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@6085791af7036f6366c9a4b9d55105c0ef9c6388
+      - uses: bluefireteam/melos-action@7e70fbe34bbd91a75eb505eeb4174b0ac9a1df52
         with:
           run-bootstrap: false
           melos-version: '3.0.0'
@@ -381,7 +381,7 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
-      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
+      - uses: actions/setup-java@6a0805fcefea3d4657a47ac4c165951e33482018
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -393,7 +393,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@6085791af7036f6366c9a4b9d55105c0ef9c6388
+      - uses: bluefireteam/melos-action@7e70fbe34bbd91a75eb505eeb4174b0ac9a1df52
         with:
           run-bootstrap: false
           melos-version: '3.0.0'

@@ -1,3 +1,8 @@
+## 15.1.0
+
+ - **FEAT**: bump iOS SDK to version 11.0.0 ([#13158](https://github.com/firebase/flutterfire/issues/13158)). ([c0e0c997](https://github.com/firebase/flutterfire/commit/c0e0c99703ea394d1bb873ac225c5fe3539b002d))
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
 ## 15.0.4
 
  - **DOCS**(messaging,android): update inline documentation on behavior ([#12948](https://github.com/firebase/flutterfire/issues/12948)). ([8d7e2217](https://github.com/firebase/flutterfire/commit/8d7e2217446618b93c064933ef0bf2506c219275))

@@ -1,3 +1,11 @@
+## 0.2.5+14
+
+ - **FIX**(database,web): fix an issue that would remove duplicate streams in Debug mode ([#13253](https://github.com/firebase/flutterfire/issues/13253)). ([2546971b](https://github.com/firebase/flutterfire/commit/2546971bb0d253b4c7bb6584f40064ab997bbb5f))
+
+## 0.2.5+13
+
+ - Update a dependency to the latest release.
+
 ## 0.2.5+12
 
  - Update a dependency to the latest release.

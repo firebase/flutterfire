@@ -1,3 +1,12 @@
+## 0.2.3+1
+
+ - Update a dependency to the latest release.
+
+## 0.2.3
+
+ - **FIX**(vertexai): update history getter to reflect google_generative_ai updates ([#13040](https://github.com/firebase/flutterfire/issues/13040)). ([cc542d76](https://github.com/firebase/flutterfire/commit/cc542d76b989d550f29a9b0a1adb761da64372a7))
+ - **FEAT**: bump iOS SDK to version 11.0.0 ([#13158](https://github.com/firebase/flutterfire/issues/13158)). ([c0e0c997](https://github.com/firebase/flutterfire/commit/c0e0c99703ea394d1bb873ac225c5fe3539b002d))
+
 ## 0.2.2+4
 
  - Update a dependency to the latest release.

@@ -33,6 +33,7 @@ export 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
         DocumentChangeType,
         PersistenceSettings,
         Settings,
+        WebExperimentalLongPollingOptions,
         IndexField,
         Index,
         FieldOverrides,

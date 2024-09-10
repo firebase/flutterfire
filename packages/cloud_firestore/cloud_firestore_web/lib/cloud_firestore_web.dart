@@ -151,22 +151,41 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
         cacheSizeBytes: firestoreSettings.cacheSizeBytes?.toJS,
       ));
     }
-
     if (firestoreSettings.host != null &&
         firestoreSettings.sslEnabled != null) {
       _interopSettings = firestore_interop.FirestoreSettings(
         localCache: localCache,
         host: firestoreSettings.host?.toJS,
         ssl: firestoreSettings.sslEnabled?.toJS,
+        experimentalForceLongPolling:
+            firestoreSettings.webExperimentalForceLongPolling?.toJS,
+        experimentalAutoDetectLongPolling:
+            firestoreSettings.webExperimentalAutoDetectLongPolling?.toJS,
         ignoreUndefinedProperties:
             firestoreSettings.ignoreUndefinedProperties.toJS,
       );
     } else {
       _interopSettings = firestore_interop.FirestoreSettings(
         localCache: localCache,
+        experimentalForceLongPolling:
+            firestoreSettings.webExperimentalForceLongPolling?.toJS,
+        experimentalAutoDetectLongPolling:
+            firestoreSettings.webExperimentalAutoDetectLongPolling?.toJS,
         ignoreUndefinedProperties:
             firestoreSettings.ignoreUndefinedProperties.toJS,
       );
+    }
+    if (firestoreSettings.webExperimentalLongPollingOptions != null) {
+      // If this is null, it will throw an exception when initializing the Firestore instance via interop
+      JSAny experimentalLongPollingOptions =
+          firestore_interop.ExperimentalLongPollingOptions(
+              timeoutSeconds: firestoreSettings
+                  .webExperimentalLongPollingOptions
+                  ?.timeoutDuration
+                  ?.inSeconds
+                  .toJS) as JSAny;
+      _interopSettings?.experimentalLongPollingOptions =
+          experimentalLongPollingOptions;
     }
   }
 
