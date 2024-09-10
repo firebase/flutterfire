@@ -27,7 +27,7 @@ void runInstanceTests() {
       });
 
       testWidgets('can access app', (WidgetTester tester) async {
-        expect(fdc.app = app, isTrue);
+        expect(fdc.app == app, isTrue);
       });
     },
   );

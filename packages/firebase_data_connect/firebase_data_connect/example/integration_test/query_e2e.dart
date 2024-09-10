@@ -45,6 +45,9 @@ void runQueryTests() {
       testWidgets('can add a person', (WidgetTester tester) async {
         MutationRef ref = MoviesConnector.instance.addPerson.ref(
           name: 'Keanu Reeves',
+          addPersonVariables: AddPersonVariables(
+            name: 'Keanu Reeves',
+          ),
         );
 
         await ref.execute();
