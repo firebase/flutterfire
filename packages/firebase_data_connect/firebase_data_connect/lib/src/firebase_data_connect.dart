@@ -7,23 +7,39 @@ part of firebase_data_connect;
 /// DataConnect class
 class FirebaseDataConnect extends FirebasePluginPlatform {
   /// Constructor for initializing Data Connect
+<<<<<<< HEAD
   @visibleForTesting
   FirebaseDataConnect({
+=======
+  FirebaseDataConnect._({
+>>>>>>> dataconnect
     required this.app,
     required this.connectorConfig,
     this.auth,
     this.appCheck,
+<<<<<<< HEAD
   })  : options = DataConnectOptions(
+=======
+  })  : _options = DataConnectOptions(
+>>>>>>> dataconnect
             app.options.projectId,
             connectorConfig.location,
             connectorConfig.connector,
             connectorConfig.serviceId),
         super(app.name, 'plugins.flutter.io/firebase_data_connect') {
+<<<<<<< HEAD
     _queryManager = QueryManager(this);
   }
 
   /// QueryManager manages ongoing queries, and their subscriptions.
   late QueryManager _queryManager;
+=======
+    _queryManager = _QueryManager(this);
+  }
+
+  /// QueryManager manages ongoing queries, and their subscriptions.
+  late _QueryManager _queryManager;
+>>>>>>> dataconnect
 
   /// FirebaseApp
   FirebaseApp app;
