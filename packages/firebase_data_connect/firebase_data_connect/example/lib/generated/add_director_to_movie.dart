@@ -124,8 +124,8 @@ class AddDirectorToMovieVariables {
   }
 
   AddDirectorToMovieVariables({
-    AddDirectorToMovieVariablesPersonId? personId,
-    String? movieId,
+    AddDirectorToMovieVariablesPersonId? this.personId,
+    String? this.movieId,
   }) {
     // TODO(mtewani): Only show this if there are optional fields.
   }

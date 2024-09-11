@@ -82,7 +82,7 @@ class AddPersonVariables {
   }
 
   AddPersonVariables({
-    String? name,
+    String? this.name,
   }) {
     // TODO(mtewani): Only show this if there are optional fields.
   }
