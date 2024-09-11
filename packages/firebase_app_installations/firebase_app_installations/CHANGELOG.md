@@ -1,3 +1,7 @@
+## 0.3.1+2
+
+ - Update a dependency to the latest release.
+
 ## 0.3.1+1
 
  - **FIX**(installations,apple): update the plugin to support parallels method calling ([#13256](https://github.com/firebase/flutterfire/issues/13256)). ([fe18362f](https://github.com/firebase/flutterfire/commit/fe18362f817d4bac33e98199e076a2c3d65656c5))

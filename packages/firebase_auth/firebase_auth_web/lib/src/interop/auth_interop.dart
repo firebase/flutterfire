@@ -84,8 +84,8 @@ external JSPromise deleteUser(
 );
 
 @JS()
-// Promise<List>
-external JSPromise fetchSignInMethodsForEmail(AuthJsImpl auth, JSString email);
+external JSPromise<JSArray<JSString>> fetchSignInMethodsForEmail(
+    AuthJsImpl auth, JSString email);
 
 @JS()
 external JSBoolean isSignInWithEmailLink(JSString emailLink);
