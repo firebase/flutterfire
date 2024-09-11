@@ -34,12 +34,12 @@ class Installations
 
   Future<String> getId() => (installations_interop.getId(jsObject))
       .toDart
-      .then((value) => value! as String);
+      .then((value) => value as String);
 
   Future<String> getToken([bool forceRefresh = false]) =>
       (installations_interop.getToken(jsObject, forceRefresh.toJS))
           .toDart
-          .then((value) => value! as String);
+          .then((value) => value as String);
 
   JSFunction? _onIdChangedUnsubscribe;
 
