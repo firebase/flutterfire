@@ -45,7 +45,7 @@ jobs:
         uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
         with:
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v3-${{ github.run_id }}
+          key: firebase-emulators-v3-${{ runner.os }}
           restore-keys: firebase-emulators-v3
       - uses: subosito/flutter-action@44ac965b96f18d999802d4b807e3256d5a3f9fa1
         with:
@@ -76,7 +76,7 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-ubuntu
+          key: avd-${{ runner.os }}
       - name: Start AVD then run E2E tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
