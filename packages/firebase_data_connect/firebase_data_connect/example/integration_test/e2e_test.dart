@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'package:firebase_data_connect_example/firebase_options.dart';
@@ -29,7 +30,11 @@ void main() {
       if (kUseFDCEmulator) {
         FirebaseDataConnect.instanceFor(connectorConfig: connector)
             .useDataConnectEmulator('localhost', 9399);
+        FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
       }
+
+      FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: 'test@mail.com', password: 'password');
     });
 
     runInstanceTests();
