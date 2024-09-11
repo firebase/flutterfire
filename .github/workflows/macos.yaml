@@ -63,6 +63,8 @@ jobs:
         with:
           channel: 'stable'
           cache: true
+          cache-key: flutter-${{ runner.os }}
+          pub-cache-key: pub-${{ runner.os }}
       - uses: bluefireteam/melos-action@7e70fbe34bbd91a75eb505eeb4174b0ac9a1df52
         with:
           run-bootstrap: false
