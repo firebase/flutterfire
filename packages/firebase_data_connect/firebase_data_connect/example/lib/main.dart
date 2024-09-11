@@ -3,13 +3,13 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:firebase_data_connect_example/login.dart';
-
-import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 // Uncomment this line after running flutterfire configure
 // import 'firebase_options.dart';
 import 'package:firebase_data_connect/firebase_data_connect.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_data_connect_example/firebase_options.dart';
+import 'package:firebase_data_connect_example/login.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import 'generated/movies.dart';
@@ -17,12 +17,9 @@ import 'generated/movies.dart';
 const appCheckEnabled = false;
 const configureEmulator = false;
 
-// Required for web. Set equal to `DefaultFirebaseOptions.currentPlatform`
-FirebaseOptions? options;
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: options);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   if (appCheckEnabled) {
     await FirebaseAppCheck.instance.activate(
       // You can also use a `ReCaptchaEnterpriseProvider` provider instance as an
