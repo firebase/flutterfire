@@ -12,6 +12,7 @@ import 'package:integration_test/integration_test.dart';
 
 import 'generation_e2e.dart';
 import 'instance_e2e.dart';
+import 'listen_e2e.dart';
 import 'query_e2e.dart';
 
 bool kUseFDCEmulator = true;
@@ -40,5 +41,6 @@ void main() {
     runInstanceTests();
     runQueryTests();
     runGenerationTest();
+    runListenTests();
   });
 }
