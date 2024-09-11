@@ -20,7 +20,7 @@ query ListMoviesByPartialTitle($input: String!) @auth(level: PUBLIC) {
 }
 
 query ListPersons @auth(level: USER) {
-  person {
+  people {
     id
     name
   }

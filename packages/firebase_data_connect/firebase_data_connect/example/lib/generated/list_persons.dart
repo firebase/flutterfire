@@ -19,14 +19,9 @@ class ListPersonsPeople {
 
   late String name;
 
-  late List<ListPersonsPeopleDirectedMovies> directed_movies;
-
   ListPersonsPeople.fromJson(Map<String, dynamic> json)
       : id = json['id'],
-        name = json['name'],
-        directed_movies = (json['directed_movies'] as List<dynamic>)
-            .map((e) => ListPersonsPeopleDirectedMovies.fromJson(e))
-            .toList() {}
+        name = json['name'] {}
 
   // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
@@ -36,37 +31,12 @@ class ListPersonsPeople {
 
     json['name'] = name;
 
-    json['directed_movies'] = directed_movies.map((e) => e.toJson()).toList();
-
     return json;
   }
 
   ListPersonsPeople({
     required this.id,
     required this.name,
-    required this.directed_movies,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
-  }
-}
-
-class ListPersonsPeopleDirectedMovies {
-  late String title;
-
-  ListPersonsPeopleDirectedMovies.fromJson(Map<String, dynamic> json)
-      : title = json['title'] {}
-
-  // TODO(mtewani): Fix up to create a map on the fly
-  Map<String, dynamic> toJson() {
-    Map<String, dynamic> json = {};
-
-    json['title'] = title;
-
-    return json;
-  }
-
-  ListPersonsPeopleDirectedMovies({
-    required this.title,
   }) {
     // TODO(mtewani): Only show this if there are optional fields.
   }
