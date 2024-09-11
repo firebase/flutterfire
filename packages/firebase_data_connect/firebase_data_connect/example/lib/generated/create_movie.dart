@@ -117,8 +117,8 @@ class CreateMovieVariables {
     required this.title,
     required this.releaseYear,
     required this.genre,
-    double? rating,
-    String? description,
+    double? this.rating,
+    String? this.description,
   }) {
     // TODO(mtewani): Only show this if there are optional fields.
   }

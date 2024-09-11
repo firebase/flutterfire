@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 // Uncomment this line after running flutterfire configure
 // import 'firebase_options.dart';
@@ -15,7 +16,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'generated/movies.dart';
 
 const appCheckEnabled = false;
-const configureEmulator = false;
+const configureEmulator = true;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,6 +41,15 @@ void main() async {
       appleProvider: AppleProvider.appAttest,
     );
   }
+  if (configureEmulator) {
+    MoviesConnector.instance.dataConnect
+        .useDataConnectEmulator('127.0.0.1', 9399);
+    FirebaseAuth.instance.useAuthEmulator(
+      'localhost',
+      9099,
+    );
+  }
+
   runApp(const MyApp());
 }
 
@@ -59,12 +69,22 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key, required this.title});
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(title),
+      ),
+      body: const Center(
+        child: DataConnectWidget(),
+      ),
+    );
+  }
 }
 
 class DataConnectWidget extends StatefulWidget {
@@ -88,11 +108,6 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
   @override
   void initState() {
     super.initState();
-    if (configureEmulator) {
-      int port = 9399;
-      MoviesConnector.instance.dataConnect
-          .useDataConnectEmulator('127.0.0.1', port);
-    }
 
     QueryRef<ListMoviesResponse, void> ref =
         MoviesConnector.instance.listMovies.ref();
@@ -170,10 +185,11 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
               }
 
               MutationRef ref = MoviesConnector.instance.createMovie.ref(
-                  title: title,
-                  releaseYear: _releaseYearDate.year,
-                  genre: genre,
-                  rating: _rating);
+                title: title,
+                releaseYear: _releaseYearDate.year,
+                genre: genre,
+                rating: _rating,
+              );
               try {
                 await ref.execute();
                 triggerReload();
@@ -237,21 +253,6 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
           ],
         );
       },
-    );
-  }
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: const Center(
-        child: DataConnectWidget(),
-      ),
     );
   }
 }
