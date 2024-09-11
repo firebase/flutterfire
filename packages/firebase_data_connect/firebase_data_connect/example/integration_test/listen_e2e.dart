@@ -24,13 +24,12 @@ void runListenTests() {
       setUp(() async {
         await deleteAllMovies();
       });
-
       testWidgets('should be able to listen to the list of movies',
           (WidgetTester tester) async {
-        final value = await MoviesConnector.instance.listMovies.ref().execute();
-
-        final result = value.data;
-        expect(result.movies.length, 0);
+        final initialValue =
+            await MoviesConnector.instance.listMovies.ref().execute();
+        expect(initialValue.data.movies.length, 0,
+            reason: 'Initial movie list should be empty');
 
         bool hasBeenListened = false;
         int count = 0;
@@ -39,35 +38,40 @@ void runListenTests() {
             .ref()
             .subscribe()
             .listen((value) {
+          final movies = value.data.movies;
+
           if (count == 0) {
-            final result = value.data;
-            expect(result.movies.length, 0);
+            expect(movies.length, 0,
+                reason: 'First emission should contain an empty list');
           } else {
-            final result = value.data;
-            expect(result.movies.length, 1);
-            expect(result.movies[0].title, 'The Matrix');
+            expect(movies.length, 1,
+                reason: 'Second emission should contain one movie');
+            expect(movies[0].title, 'The Matrix',
+                reason: 'The movie should be The Matrix');
             hasBeenListened = true;
           }
           count++;
         });
 
-        MutationRef ref = MoviesConnector.instance.createMovie.ref(
-          genre: 'Action',
-          title: 'The Matrix',
-          releaseYear: 1999,
-          rating: 4.5,
-        );
+        await Future.delayed(const Duration(seconds: 1));
 
-        await ref.execute();
+        await MoviesConnector.instance.createMovie
+            .ref(
+              genre: 'Action',
+              title: 'The Matrix',
+              releaseYear: 1999,
+              rating: 4.5,
+            )
+            .execute();
 
-        QueryRef ref2 = MoviesConnector.instance.listMovies.ref();
-        await ref2.execute();
+        await MoviesConnector.instance.listMovies.ref().execute();
 
         await Future.delayed(const Duration(seconds: 1));
 
-        listener.cancel();
+        await listener.cancel();
 
-        expect(hasBeenListened, true);
+        expect(hasBeenListened, isTrue,
+            reason: 'The stream should have emitted new data');
       });
     },
   );
