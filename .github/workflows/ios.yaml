@@ -91,8 +91,7 @@ jobs:
             /usr/local/lib/android \
             /usr/local/share/chromium \
             /usr/local/share/powershell \
-            /usr/share/dotnet \
-            /usr/share/swift
+            /usr/share/dotnet
           df -h /
       - name: 'Build Application'
         working-directory: ${{ matrix.working_directory }}
