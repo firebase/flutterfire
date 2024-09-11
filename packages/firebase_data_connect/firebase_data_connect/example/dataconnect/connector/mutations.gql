@@ -24,7 +24,7 @@ mutation createMovie(
 }
 
 # Delete a movie by its ID
-mutation deleteMovie($id: UUID!) {
+mutation deleteMovie($id: UUID!) @auth(level: PUBLIC) {
   movie_delete(id: $id)
 }
 
