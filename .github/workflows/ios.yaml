@@ -74,6 +74,12 @@ jobs:
       - name: 'Install Tools'
         run: |
           sudo npm i -g firebase-tools
+      - name: 'Free up space'
+        run: |
+          sudo rm -rf /usr/local/share/.cache
+          sudo rm -rf /Users/runner/Library/Caches
+          sudo rm -rf /Users/runner/Library/Developer/Xcode/DerivedData
+          sudo rm -rf /Users/runner/Library/Developer/CoreSimulator/Caches
       - name: 'Build Application'
         working-directory: ${{ matrix.working_directory }}
         run: |
