@@ -81,8 +81,6 @@ jobs:
             /Users/runner/Library/Caches \
             /Users/runner/Library/Developer/Xcode/DerivedData \
             /Users/runner/Library/Developer/CoreSimulator/Caches \
-            "$AGENT_TOOLSDIRECTORY" \
-            /opt/google/chrome \
             /opt/microsoft/msedge \
             /opt/microsoft/powershell \
             /opt/pipx \
