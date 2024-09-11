@@ -44,25 +44,27 @@ jobs:
       - uses: hendrikmuhs/ccache-action@c92f40bee50034e84c763e33b317c77adaa81c92
         name: Xcode Compile Cache
         with:
-          key: ${{ runner.os }}-macos-v2
+          key: xcode-cache-${{ runner.os }}
           max-size: 700M
       - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
         name: Pods Cache
         id: pods-cache
         with:
           path: tests/macos/Pods
-          key: ${{ runner.os }}-pods-v2-${{ hashFiles('tests/macos/Podfile.lock') }}
-          restore-keys: ${{ runner.os }}-macos-pods-v1
+          key: pods-v3-${{ runner.os }}-${{ hashFiles('tests/macos/Podfile.lock') }}
+          restore-keys: pods-v3-${{ runner.os }}
       - name: Cache Firebase Emulator
         uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
         with:
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v3-${{ github.run_id }}
+          key: firebase-emulators-v3-${{ runner.os }}
           restore-keys: firebase-emulators-v3
       - uses: subosito/flutter-action@44ac965b96f18d999802d4b807e3256d5a3f9fa1
         with:
           channel: 'stable'
           cache: true
+          cache-key: flutter-${{ runner.os }}
+          pub-cache-key: pub-${{ runner.os }}
       - uses: bluefireteam/melos-action@7e70fbe34bbd91a75eb505eeb4174b0ac9a1df52
         with:
           run-bootstrap: false

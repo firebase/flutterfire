@@ -45,6 +45,8 @@ jobs:
         with:
           channel: 'stable'
           cache: true
+          cache-key: flutter-${{ runner.os }}
+          pub-cache-key: pub-${{ runner.os }}
       - uses: bluefireteam/melos-action@7e70fbe34bbd91a75eb505eeb4174b0ac9a1df52
         with:
           run-bootstrap: false
@@ -57,7 +59,7 @@ jobs:
         uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
         with:
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v3-${{ github.run_id }}
+          key: firebase-emulators-v3-${{ runner.os }}
           restore-keys: firebase-emulators-v3
       - name: Start Firebase Emulator
         run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
@@ -95,6 +97,8 @@ jobs:
         with:
           channel: 'stable'
           cache: true
+          cache-key: flutter-${{ runner.os }}
+          pub-cache-key: pub-${{ runner.os }}
       - uses: bluefireteam/melos-action@7e70fbe34bbd91a75eb505eeb4174b0ac9a1df52
         with:
           run-bootstrap: false
@@ -107,7 +111,7 @@ jobs:
         uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
         with:
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v3-${{ github.run_id }}
+          key: firebase-emulators-v3-${{ runner.os }}
           restore-keys: firebase-emulators-v3
       - name: Start Firebase Emulator
         run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
@@ -150,6 +154,8 @@ jobs:
         with:
           channel: 'stable'
           cache: true
+          cache-key: flutter-${{ runner.os }}
+          pub-cache-key: pub-${{ runner.os }}
       - uses: bluefireteam/melos-action@7e70fbe34bbd91a75eb505eeb4174b0ac9a1df52
         with:
           run-bootstrap: false
@@ -162,7 +168,7 @@ jobs:
         uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
         with:
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v3-${{ github.run_id }}
+          key: firebase-emulators-v3-${{ runner.os }}
           restore-keys: firebase-emulators-v3
       - name: Start Firebase Emulator
         run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
