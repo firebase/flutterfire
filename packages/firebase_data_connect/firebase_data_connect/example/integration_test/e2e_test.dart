@@ -15,8 +15,6 @@ import 'instance_e2e.dart';
 import 'listen_e2e.dart';
 import 'query_e2e.dart';
 
-bool kUseFDCEmulator = true;
-
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -28,13 +26,11 @@ void main() {
 
       final connector = MoviesConnector.connectorConfig;
 
-      if (kUseFDCEmulator) {
-        FirebaseDataConnect.instanceFor(connectorConfig: connector)
-            .useDataConnectEmulator('localhost', 9399);
-        FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
-      }
+      FirebaseDataConnect.instanceFor(connectorConfig: connector)
+          .useDataConnectEmulator('localhost', 9399);
+      await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
 
-      FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: 'test@mail.com', password: 'password');
     });
 
