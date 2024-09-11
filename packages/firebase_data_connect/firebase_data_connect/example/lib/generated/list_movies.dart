@@ -8,8 +8,7 @@ class ListMovies {
       ListMoviesResponse.fromJson(jsonDecode(json) as Map<String, dynamic>);
 
   QueryRef<ListMoviesResponse, void> ref() {
-    return dataConnect.query(
-        this.name, dataDeserializer, emptySerializer, null);
+    return dataConnect.query(this.name, dataDeserializer, null, null);
   }
 
   FirebaseDataConnect dataConnect;
