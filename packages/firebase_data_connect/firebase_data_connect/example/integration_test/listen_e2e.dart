@@ -61,7 +61,7 @@ void runListenTests() {
         await ref.execute();
 
         QueryRef ref2 = MoviesConnector.instance.listMovies.ref();
-        ref2.execute();
+        await ref2.execute();
 
         await Future.delayed(const Duration(seconds: 1));
 
