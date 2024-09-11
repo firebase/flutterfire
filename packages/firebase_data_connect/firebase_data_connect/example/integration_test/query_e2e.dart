@@ -101,39 +101,6 @@ void runQueryTests() {
         expect(result3.movies[0].directed_by.length, 1);
       });
 
-      testWidgets('can add a director to a movie using id',
-          (WidgetTester tester) async {
-        MutationRef ref = MoviesConnector.instance.addPerson.ref(
-          name: 'Keanu Reeves',
-          addPersonVariables: AddPersonVariables(
-            name: 'Keanu Reeves',
-          ),
-        );
-
-        await ref.execute();
-
-        final value = await MoviesConnector.instance.listMovies.ref().execute();
-        final result = value.data;
-        expect(result.movies.length, 1);
-
-        final movieId = result.movies[0].id;
-
-        ref = MoviesConnector.instance.addDirectorToMovie.ref(
-          movieId: movieId,
-          addDirectorToMovieVariables: AddDirectorToMovieVariables(
-            personId: AddDirectorToMovieVariablesPersonId(id: 'personId'),
-          ),
-        );
-
-        await ref.execute();
-
-        final value2 =
-            await MoviesConnector.instance.listMovies.ref().execute();
-        final result2 = value2.data;
-        expect(result2.movies.length, 1);
-        expect(result2.movies[0].directed_by.length, 1);
-      });
-
       testWidgets('can delete a movie', (WidgetTester tester) async {
         MutationRef ref = MoviesConnector.instance.createMovie.ref(
           genre: 'Action',
