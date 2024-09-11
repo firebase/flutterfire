@@ -2,7 +2,8 @@
 mutation addPerson($name: String) @auth(level: PUBLIC) {
   person_insert(data: { name: $name })
 }
-mutation addDirectorToMovie($personId: Person_Key, $movieId: UUID) {
+mutation addDirectorToMovie($personId: Person_Key, $movieId: UUID)
+@auth(level: PUBLIC) {
   directedBy_insert(data: { directedby: $personId, movieId: $movieId })
 }
 mutation createMovie(
