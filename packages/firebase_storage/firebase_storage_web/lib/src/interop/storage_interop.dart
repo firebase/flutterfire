@@ -28,17 +28,17 @@ external JSPromise /* void */ deleteObject(ReferenceJsImpl ref);
 
 @JS()
 @staticInterop
-external JSPromise /* String */ getBlob(ReferenceJsImpl ref,
+external JSPromise<JSString> getBlob(ReferenceJsImpl ref,
     [JSNumber? maxDownloadSizeBytes]);
 
 @JS()
 @staticInterop
-external JSPromise /* List<String> */ getBytes(ReferenceJsImpl ref,
+external JSPromise<JSArray<JSString>> getBytes(ReferenceJsImpl ref,
     [JSNumber? maxDownloadSizeBytes]);
 
 @JS()
 @staticInterop
-external JSPromise /* String */ getDownloadURL(ReferenceJsImpl ref);
+external JSPromise<JSString> getDownloadURL(ReferenceJsImpl ref);
 
 @JS()
 @staticInterop

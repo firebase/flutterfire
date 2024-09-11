@@ -1,3 +1,7 @@
+## 15.1.1
+
+ - Update a dependency to the latest release.
+
 ## 15.1.0
 
  - **FEAT**: bump iOS SDK to version 11.0.0 ([#13158](https://github.com/firebase/flutterfire/issues/13158)). ([c0e0c997](https://github.com/firebase/flutterfire/commit/c0e0c99703ea394d1bb873ac225c5fe3539b002d))

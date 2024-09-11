@@ -1,3 +1,8 @@
+## 5.13.0
+
+ - **FIX**: (auth) TypeError when converting ActionCodeSettings to JS ([#13260](https://github.com/firebase/flutterfire/issues/13260)). ([6969e48a](https://github.com/firebase/flutterfire/commit/6969e48a632a69bb071b80102d3cc2cfc53736a6))
+ - **FEAT**(web): update to `web: ^1.0.0` ([#13200](https://github.com/firebase/flutterfire/issues/13200)). ([8fab04ae](https://github.com/firebase/flutterfire/commit/8fab04aec3b95789856d95639131bf09db29175b))
+
 ## 5.12.6
 
  - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))

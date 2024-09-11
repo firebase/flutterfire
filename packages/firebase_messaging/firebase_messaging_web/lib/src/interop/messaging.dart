@@ -31,10 +31,8 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
     return _expando[jsObject] ??= Messaging._fromJsObject(jsObject);
   }
 
-  static Future<bool> isSupported() => messaging_interop
-      .isSupported()
-      .toDart
-      .then((value) => (value! as JSBoolean).toDart);
+  static Future<bool> isSupported() =>
+      messaging_interop.isSupported().toDart.then((value) => value.toDart);
 
   Messaging._fromJsObject(messaging_interop.MessagingJsImpl jsObject)
       : super.fromJsObject(jsObject);
@@ -47,14 +45,14 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
   /// that can be used to send push messages to this user.
   Future<String> getToken({String? vapidKey}) async {
     try {
-      final token = ((await messaging_interop
+      final token = (await messaging_interop
               .getToken(
                   jsObject,
                   vapidKey == null
                       ? null
                       : messaging_interop.GetTokenOptions(
                           vapidKey: vapidKey.toJS))
-              .toDart)! as JSString)
+              .toDart)
           .toDart;
       return token;
     } catch (err) {
