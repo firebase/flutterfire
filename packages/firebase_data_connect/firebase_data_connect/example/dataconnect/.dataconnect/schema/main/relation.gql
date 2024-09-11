@@ -1,0 +1,20 @@
+extend type Movie {
+  """
+  ✨ List DirectedBy entries in a one-to-many relationship with this object (i.e. where `DirectedBy.movie` equals this object).
+  """
+  directedBies_on_movie(where: DirectedBy_Filter, orderBy: [DirectedBy_Order!], limit: Int = 100): [DirectedBy!]! @fdc_generated(from: "DirectedBy.movie", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  ✨ List related Person entries using DirectedBy as a join table (i.e. where an entry of DirectedBy exists whose `movie` == this and `directedby` == that).
+  """
+  people_via_DirectedBy(where: DirectedBy_Filter, orderBy: [DirectedBy_Order!], limit: Int = 100): [Person!]! @fdc_generated(from: "DirectedBy", purpose: QUERY_MULTIPLE_MANY_TO_MANY)
+}
+extend type Person {
+  """
+  ✨ List DirectedBy entries in a one-to-many relationship with this object (i.e. where `DirectedBy.directedby` equals this object).
+  """
+  directedBies_on_directedby(where: DirectedBy_Filter, orderBy: [DirectedBy_Order!], limit: Int = 100): [DirectedBy!]! @fdc_generated(from: "DirectedBy.directedby", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  ✨ List related Movie entries using DirectedBy as a join table (i.e. where an entry of DirectedBy exists whose `directedby` == this and `movie` == that).
+  """
+  movies_via_DirectedBy(where: DirectedBy_Filter, orderBy: [DirectedBy_Order!], limit: Int = 100): [Movie!]! @fdc_generated(from: "DirectedBy", purpose: QUERY_MULTIPLE_MANY_TO_MANY)
+}
