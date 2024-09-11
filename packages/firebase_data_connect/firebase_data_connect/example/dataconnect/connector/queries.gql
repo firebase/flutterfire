@@ -19,6 +19,13 @@ query ListMoviesByPartialTitle($input: String!) @auth(level: PUBLIC) {
   }
 }
 
+query ListPersons @auth(level: USER) {
+  person {
+    id
+    name
+  }
+}
+
 # List subset of fields for users
 # query ListUsers @auth(level: PUBLIC) {
 #   users {
