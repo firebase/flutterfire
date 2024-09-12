@@ -6,7 +6,7 @@
 
 #import <Firebase/Firebase.h>
 #import <Foundation/Foundation.h>
-#import "FirestoreMessages.g.h"
+#import "../../../../../../Classes/Private/FirestoreMessages.g.h"
 
 @interface FirestorePigeonParser : NSObject
 
