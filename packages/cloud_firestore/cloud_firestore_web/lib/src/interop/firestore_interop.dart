@@ -749,6 +749,8 @@ extension FirestoreSettingsExtension on FirestoreSettings {
   /// Union type MemoryLocalCache | PersistentLocalCache;
   //ignore: avoid_setters_without_getters
   external set localCache(JSObject u);
+
+  external set experimentalLongPollingOptions(JSAny v);
 }
 
 /// Options that configure the SDK’s underlying network transport (WebChannel) when long-polling is used

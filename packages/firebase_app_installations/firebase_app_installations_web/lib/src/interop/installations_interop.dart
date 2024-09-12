@@ -15,11 +15,11 @@ external InstallationsJsImpl getInstallations([AppJsImpl? app]);
 
 @JS()
 @staticInterop
-external JSPromise /* String */ getId(InstallationsJsImpl installations);
+external JSPromise<JSString> getId(InstallationsJsImpl installations);
 
 @JS()
 @staticInterop
-external JSPromise /* String */ getToken(InstallationsJsImpl installations,
+external JSPromise<JSString> getToken(InstallationsJsImpl installations,
     [JSBoolean? forceRefresh]);
 
 @JS()
