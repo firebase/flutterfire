@@ -122,7 +122,23 @@ jobs:
         run: |
           melos exec -c 1 --scope="*example*" --dir-exists="web" -- \
             "flutter build web"
-
+  swift-integration:
+    runs-on: macos-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+      - uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225
+        with:
+        # TODO - enabling swift is on `master` channel at the moment. Update when it's on `stable`
+          channel: 'master'
+      - uses: bluefireteam/melos-action@5a8367ec4b9942d712528c398ff3f996e03bc230
+        with:
+          melos-version: '5.3.0'
+      - name: 'Swift Integration Setup'
+        run: flutter config --enable-swift-package-manager 
+      - name: 'Build Apps with Swift Package Manager'
+        run: ./.github/workflows/scripts/swift-integration.sh
+            
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 30
