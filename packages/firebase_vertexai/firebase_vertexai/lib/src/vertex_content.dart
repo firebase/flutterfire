@@ -14,6 +14,7 @@
 
 import 'dart:convert';
 import 'dart:typed_data';
+import 'vertex_error.dart';
 
 /// The base structured datatype containing multi-part content of a message.
 final class Content {
@@ -73,7 +74,7 @@ Content parseContent(Object jsonObject) {
           _ => null,
         },
         parts.map(_parsePart).toList()),
-    _ => throw FormatException('Unhandled Content format', jsonObject),
+    _ => throw unhandledFormat('Content', jsonObject),
   };
 }
 
@@ -100,7 +101,7 @@ Part _parsePart(Object? jsonObject) {
       throw UnimplementedError('FunctionResponse part not yet supported'),
     {'inlineData': {'mimeType': String _, 'data': String _}} =>
       throw UnimplementedError('inlineData content part not yet supported'),
-    _ => throw FormatException('Unhandled Part format', jsonObject),
+    _ => throw unhandledFormat('Part', jsonObject),
   };
 }
 

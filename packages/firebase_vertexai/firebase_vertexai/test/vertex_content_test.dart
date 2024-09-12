@@ -62,7 +62,6 @@ void main() {
       expect(
           (json['parts']! as List)[1]['inlineData']['mimeType'], 'image/png');
       expect((json['parts']! as List)[1]['inlineData']['data'].length, 0);
-      // ... verify json structure
     });
 
     test('parseContent', () {
@@ -77,10 +76,7 @@ void main() {
       expect(content.parts.length, 1);
       expect(content.parts[0], isA<TextPart>());
       expect(reason: 'TextPart', (content.parts[0] as TextPart).text, 'Hello');
-      // ... verify content
     });
-
-    // ... additional tests for edge cases (e.g., null role, empty parts list)
   });
 
   group('Part tests', () {
@@ -88,7 +84,6 @@ void main() {
       final part = TextPart('Test');
       final json = part.toJson();
       expect((json as Map)['text'], 'Test');
-      // ... verify json structure
     });
 
     test('DataPart toJson', () {
@@ -96,7 +91,6 @@ void main() {
       final json = part.toJson();
       expect((json as Map)['inlineData']['mimeType'], 'image/png');
       expect(json['inlineData']['data'], '');
-      // ... verify json structure
     });
 
     test('FunctionCall toJson', () {
@@ -110,7 +104,6 @@ void main() {
       expect(json['functionCall']['args'].length, 1);
       expect(json['functionCall']['args']['arguments'].length, 1);
       expect(json['functionCall']['args']['arguments'][0]['text'], 'Test');
-      // ... verify json structure
     });
 
     test('FunctionResponse toJson', () {
@@ -126,8 +119,6 @@ void main() {
           'application/octet-stream');
       expect(json['functionResponse']['response']['inlineData']['data'],
           Uint8List(0));
-
-      // ... verify json structure
     });
 
     test('FileData toJson', () {
@@ -135,7 +126,6 @@ void main() {
       final json = part.toJson();
       expect((json as Map)['file_data']['mime_type'], 'image/png');
       expect(json['file_data']['file_uri'], 'gs://bucket-name/path');
-      // ... verify json structure
     });
   });
 }
