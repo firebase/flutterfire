@@ -10,7 +10,7 @@
 #endif
 
 #import <Firebase/Firebase.h>
-#import "../../../../../../Classes/Private/FirestoreMessages.g.h"
+#import "FirestoreMessages.g.h"
 
 #import <Foundation/Foundation.h>
 
