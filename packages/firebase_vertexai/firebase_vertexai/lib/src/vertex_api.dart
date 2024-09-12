@@ -226,6 +226,36 @@ final class Candidate {
 
   /// Message for finish reason.
   final String? finishMessage;
+
+  /// The concatenation of the text parts of [content], if any.
+  ///
+  /// If this candidate was finished for a reason of [FinishReason.recitation]
+  /// or [FinishReason.safety], accessing this text will throw a
+  /// [GenerativeAIException].
+  ///
+  /// If [content] contains any text parts, this value is the concatenation of
+  /// the text.
+  ///
+  /// If [content] does not contain any text parts, this value is `null`.
+  String? get text {
+    if (finishReason case FinishReason.recitation || FinishReason.safety) {
+      final String suffix;
+      if (finishMessage case final message? when message.isNotEmpty) {
+        suffix = ': $message';
+      } else {
+        suffix = '';
+      }
+      throw VertexAIException(
+          'Candidate was blocked due to $finishReason$suffix');
+    }
+    return switch (content.parts) {
+      // Special case for a single TextPart to avoid iterable chain.
+      [TextPart(:final text)] => text,
+      final parts when parts.any((p) => p is TextPart) =>
+        parts.whereType<TextPart>().map((p) => p.text).join(),
+      _ => null,
+    };
+  }
 }
 
 /// Safety rating for a piece of content.

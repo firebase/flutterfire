@@ -346,8 +346,8 @@ void main() {
                   ),
                 ],
                 CitationMetadata([
-                  CitationSource(574, 705, Uri.https('example.com', ''), ''),
-                  CitationSource(899, 1026, Uri.https('example.com', ''), ''),
+                  CitationSource(574, 705, Uri.https('example.com'), ''),
+                  CitationSource(899, 1026, Uri.https('example.com'), ''),
                 ]),
                 FinishReason.stop,
                 null,
@@ -480,8 +480,8 @@ void main() {
                   ),
                 ],
                 CitationMetadata([
-                  CitationSource(574, 705, Uri.https('example.com', ''), ''),
-                  CitationSource(899, 1026, Uri.https('example.com', ''), ''),
+                  CitationSource(574, 705, Uri.https('example.com'), ''),
+                  CitationSource(899, 1026, Uri.https('example.com'), ''),
                 ]),
                 FinishReason.stop,
                 null,
@@ -563,37 +563,37 @@ void main() {
       );
     });
 
-//     test('text getter joins content', () async {
-//       const response = '''
-// {
-//   "candidates": [
-//     {
-//       "content": {
-//         "parts": [
-//           {
-//             "text": "Initial text"
-//           },
-//           {
-//             "functionCall": {"name": "someFunction", "args": {}}
-//           },
-//           {
-//             "text": " And more text"
-//           }
-//         ],
-//         "role": "model"
-//       },
-//       "finishReason": "STOP",
-//       "index": 0
-//     }
-//   ]
-// }
-// ''';
-//       final decoded = jsonDecode(response) as Object;
-//       final generateContentResponse = parseGenerateContentResponse(decoded);
-//       expect(generateContentResponse.text, 'Initial text And more text');
-//       expect(generateContentResponse.candidates.single.text,
-//           'Initial text And more text');
-//     });
+    test('text getter joins content', () async {
+      const response = '''
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "Initial text"
+          },
+          {
+            "functionCall": {"name": "someFunction", "args": {}}
+          },
+          {
+            "text": " And more text"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ]
+}
+''';
+      final decoded = jsonDecode(response) as Object;
+      final generateContentResponse = parseGenerateContentResponse(decoded);
+      expect(generateContentResponse.text, 'Initial text And more text');
+      expect(generateContentResponse.candidates.single.text,
+          'Initial text And more text');
+    });
   });
 
   group('parses and throws error responses', () {
