@@ -5,9 +5,9 @@
 #import <Firebase/Firebase.h>
 #import <firebase_core/FLTFirebasePlugin.h>
 
-#import "Private/FLTFirebaseFirestoreUtils.h"
-#import "Private/FLTFirebaseFirestoreWriter.h"
-#import "Public/FLTFirebaseFirestorePlugin.h"
+#import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
+#import "include/cloud_firestore/Private/FLTFirebaseFirestoreWriter.h"
+#import "include/cloud_firestore/Public/FLTFirebaseFirestorePlugin.h"
 
 @implementation FLTFirebaseFirestoreWriter : FlutterStandardWriter
 - (void)writeValue:(id)value {

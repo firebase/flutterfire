@@ -4,10 +4,10 @@
 
 #import <Firebase/Firebase.h>
 
-#import "Private/FLTFirebaseFirestoreExtension.h"
-#import "Private/FLTFirebaseFirestoreReader.h"
-#import "Private/FLTFirebaseFirestoreUtils.h"
-#import "Private/FLTFirebaseFirestoreWriter.h"
+#import "include/cloud_firestore/Private/FLTFirebaseFirestoreExtension.h"
+#import "include/cloud_firestore/Private/FLTFirebaseFirestoreReader.h"
+#import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
+#import "include/cloud_firestore/Private/FLTFirebaseFirestoreWriter.h"
 
 @implementation FLTFirebaseFirestoreReaderWriter
 - (FlutterStandardWriter *_Nonnull)writerWithData:(NSMutableData *)data {

@@ -5,10 +5,10 @@
 #import <Firebase/Firebase.h>
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 
-#import "Private/FLTFirebaseFirestoreUtils.h"
-#import "Private/FLTQuerySnapshotStreamHandler.h"
-#import "Private/FirestorePigeonParser.h"
-#import "Public/CustomPigeonHeaderFirestore.h"
+#import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
+#import "include/cloud_firestore/Private/FLTQuerySnapshotStreamHandler.h"
+#import "include/cloud_firestore/Private/FirestorePigeonParser.h"
+#import "include/cloud_firestore/Public/CustomPigeonHeaderFirestore.h"
 
 @interface FLTQuerySnapshotStreamHandler ()
 @property(readwrite, strong) id<FIRListenerRegistration> listenerRegistration;

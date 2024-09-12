@@ -5,8 +5,8 @@
 #import <Firebase/Firebase.h>
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 
-#import "Private/FLTFirebaseFirestoreUtils.h"
-#import "Private/FLTSnapshotsInSyncStreamHandler.h"
+#import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
+#import "include/cloud_firestore/Private/FLTSnapshotsInSyncStreamHandler.h"
 
 @interface FLTSnapshotsInSyncStreamHandler ()
 @property(readwrite, strong) id<FIRListenerRegistration> listenerRegistration;

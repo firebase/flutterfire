@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 #import <Firebase/Firebase.h>
 
-#import "Private/FLTFirebaseFirestoreExtension.h"
+#import "include/cloud_firestore/Private/FLTFirebaseFirestoreExtension.h"
 
 @interface FLTFirebaseFirestoreExtension ()
 

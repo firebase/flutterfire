@@ -7,15 +7,15 @@
 
 #import <TargetConditionals.h>
 #import "FirebaseFirestoreInternal/FIRPersistentCacheIndexManager.h"
-#import "Private/FLTDocumentSnapshotStreamHandler.h"
-#import "Private/FLTFirebaseFirestoreReader.h"
-#import "Private/FLTFirebaseFirestoreUtils.h"
-#import "Private/FLTLoadBundleStreamHandler.h"
-#import "Private/FLTQuerySnapshotStreamHandler.h"
-#import "Private/FLTSnapshotsInSyncStreamHandler.h"
-#import "Private/FLTTransactionStreamHandler.h"
-#import "Private/FirestorePigeonParser.h"
-#import "Public/FLTFirebaseFirestorePlugin.h"
+#import "include/cloud_firestore/Private/FLTDocumentSnapshotStreamHandler.h"
+#import "include/cloud_firestore/Private/FLTFirebaseFirestoreReader.h"
+#import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
+#import "include/cloud_firestore/Private/FLTLoadBundleStreamHandler.h"
+#import "include/cloud_firestore/Private/FLTQuerySnapshotStreamHandler.h"
+#import "include/cloud_firestore/Private/FLTSnapshotsInSyncStreamHandler.h"
+#import "include/cloud_firestore/Private/FLTTransactionStreamHandler.h"
+#import "include/cloud_firestore/Private/FirestorePigeonParser.h"
+#import "include/cloud_firestore/Public/FLTFirebaseFirestorePlugin.h"
 
 NSString *const kFLTFirebaseFirestoreChannelName = @"plugins.flutter.io/firebase_firestore";
 NSString *const kFLTFirebaseFirestoreQuerySnapshotEventChannelName =

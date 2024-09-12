@@ -5,9 +5,9 @@
 #import <Firebase/Firebase.h>
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 
-#import "Private/FLTFirebaseFirestoreUtils.h"
-#import "Private/FLTTransactionStreamHandler.h"
-#import "Private/FirestorePigeonParser.h"
+#import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
+#import "include/cloud_firestore/Private/FLTTransactionStreamHandler.h"
+#import "include/cloud_firestore/Private/FirestorePigeonParser.h"
 
 @interface FLTTransactionStreamHandler ()
 @property(nonatomic, copy, nonnull) void (^started)(FIRTransaction *);

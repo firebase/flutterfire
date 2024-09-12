@@ -5,8 +5,8 @@
 #import <Firebase/Firebase.h>
 #import <firebase_core/FLTFirebasePlugin.h>
 
-#import "Private/FLTFirebaseFirestoreReader.h"
-#import "Private/FLTFirebaseFirestoreUtils.h"
+#import "include/cloud_firestore/Private/FLTFirebaseFirestoreReader.h"
+#import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
 
 @implementation FLTFirebaseFirestoreReader
 

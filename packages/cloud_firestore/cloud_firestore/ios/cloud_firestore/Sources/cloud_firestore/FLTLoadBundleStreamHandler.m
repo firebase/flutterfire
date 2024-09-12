@@ -12,8 +12,8 @@
 #import <Firebase/Firebase.h>
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 
-#import "Private/FLTFirebaseFirestoreUtils.h"
-#import "Private/FLTLoadBundleStreamHandler.h"
+#import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
+#import "include/cloud_firestore/Private/FLTLoadBundleStreamHandler.h"
 
 @interface FLTLoadBundleStreamHandler ()
 @property(readwrite, strong) FIRLoadBundleTask *task;
