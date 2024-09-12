@@ -74,6 +74,23 @@ jobs:
       - name: 'Install Tools'
         run: |
           sudo npm i -g firebase-tools
+      - name: 'Free up space'
+        run: |
+          sudo rm -rf \
+            /usr/local/share/.cache \
+            /Users/runner/Library/Caches \
+            /Users/runner/Library/Developer/Xcode/DerivedData \
+            /Users/runner/Library/Developer/CoreSimulator/Caches \
+            /opt/microsoft/msedge \
+            /opt/microsoft/powershell \
+            /opt/pipx \
+            /usr/lib/mono \
+            /usr/local/julia* \
+            /usr/local/lib/android \
+            /usr/local/share/chromium \
+            /usr/local/share/powershell \
+            /usr/share/dotnet
+          df -h /
       - name: 'Build Application'
         working-directory: ${{ matrix.working_directory }}
         run: |
