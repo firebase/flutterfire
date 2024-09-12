@@ -79,7 +79,7 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-ubuntu
+          key: avd-${{ runner.os }} 
       - name: Start AVD then run E2E tests
         uses: reactivecircus/android-emulator-runner@v2
         with:

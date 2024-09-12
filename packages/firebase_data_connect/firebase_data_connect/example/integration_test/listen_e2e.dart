@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
+
 import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'package:firebase_data_connect_example/generated/movies.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -12,18 +14,10 @@ void runListenTests() {
   group(
     '$FirebaseDataConnect.instance listen',
     () {
-      // ignore: unused_local_variable
-      late FirebaseDataConnect fdc;
-
-      setUpAll(() async {
-        fdc = FirebaseDataConnect.instanceFor(
-          connectorConfig: MoviesConnector.connectorConfig,
-        );
-      });
-
       setUp(() async {
         await deleteAllMovies();
       });
+
       testWidgets('should be able to listen to the list of movies',
           (WidgetTester tester) async {
         final initialValue =
@@ -31,7 +25,7 @@ void runListenTests() {
         expect(initialValue.data.movies.length, 0,
             reason: 'Initial movie list should be empty');
 
-        bool hasBeenListened = false;
+        final Completer<bool> hasBeenListened = Completer<bool>();
         int count = 0;
 
         final listener = MoviesConnector.instance.listMovies
@@ -48,13 +42,12 @@ void runListenTests() {
                 reason: 'Second emission should contain one movie');
             expect(movies[0].title, 'The Matrix',
                 reason: 'The movie should be The Matrix');
-            hasBeenListened = true;
+            hasBeenListened.complete(true);
           }
           count++;
         });
 
-        await Future.delayed(const Duration(seconds: 1));
-
+        // Create the movie
         await MoviesConnector.instance.createMovie
             .ref(
               genre: 'Action',
@@ -66,11 +59,13 @@ void runListenTests() {
 
         await MoviesConnector.instance.listMovies.ref().execute();
 
-        await Future.delayed(const Duration(seconds: 1));
+        // Wait for the listener to receive the movie update
+        final bool hasListenerReceived = await hasBeenListened.future;
 
+        // Cancel the listener and wait for it to finish
         await listener.cancel();
 
-        expect(hasBeenListened, isTrue,
+        expect(hasListenerReceived, isTrue,
             reason: 'The stream should have emitted new data');
       });
     },
