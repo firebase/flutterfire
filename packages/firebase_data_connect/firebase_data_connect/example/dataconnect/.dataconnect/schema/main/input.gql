@@ -25,6 +25,8 @@ input DirectedBy_ListFilter {
 input DirectedBy_Order {
   movieId: OrderDirection
   directedbyId: OrderDirection
+  directedby: Person_Order
+  movie: Movie_Order
 }
 input Movie_Data {
   id: UUID

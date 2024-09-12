@@ -46,22 +46,55 @@ directive @auth(
   """
   expr: Boolean_Expr @fdc_oneOf(required: true)
 ) on QUERY | MUTATION
-"Conditions on a string value"
+"Query filter criteria for `String` scalar fields."
 input String_Filter {
+  "When true, match if field `IS NULL`. When false, match if field is `NOT NULL`."
   isNull: Boolean
+  "Match if field is exactly equal to provided value."
   eq: String @fdc_oneOf(group: "eq")
+  """
+  Match if field is exactly equal to the result of the provided server value
+  expression. Currently only `auth.uid` is supported as an expression.
+  """
   eq_expr: String_Expr @fdc_oneOf(group: "eq")
+  "Match if field is not equal to provided value."
   ne: String @fdc_oneOf(group: "ne")
+  """
+  Match if field is not equal to the result of the provided server value
+  expression. Currently only `auth.uid` is supported as an expression.
+  """
   ne_expr: String_Expr @fdc_oneOf(group: "ne")
+  "Match if field value is among the provided list of values."
   in: [String!]
+  "Match if field value is not among the provided list of values."
   nin: [String!]
+  "Match if field value is greater than the provided value."
   gt: String
+  "Match if field value is greater than or equal to the provided value."
   ge: String
+  "Match if field value is less than the provided value."
   lt: String
+  "Match if field value is less than or equal to the provided value."
   le: String
+  """
+  Match if field value contains the provided value as a substring. Equivalent
+  to `LIKE '%value%'`
+  """
   contains: String
+  """
+  Match if field value starts with the provided value. Equivalent to
+  `LIKE 'value%'`
+  """
   startsWith: String
+  """
+  Match if field value ends with the provided value. Equivalent to
+  `LIKE '%value'`
+  """
   endsWith: String
+  """
+  Match if field value matches the provided pattern. See `String_Pattern` for
+  more details.
+  """
   pattern: String_Pattern
 }
 
@@ -70,135 +103,205 @@ The pattern match condition on a string. Specify either like or regex.
 https://www.postgresql.org/docs/current/functions-matching.html
 """
 input String_Pattern {
-  "the LIKE expression to use"
+  "Match using the provided `LIKE` expression."
   like: String
-  "the POSIX regular expression"
+  "Match using the provided POSIX regular expression."
   regex: String
-  "when true, it's case-insensitive. In Postgres: ILIKE, ~*"
+  "When true, ignore case when matching."
   ignoreCase: Boolean
-  "when true, invert the condition. In Postgres: NOT LIKE, !~"
+  "When true, invert the match result. Equivalent to `NOT LIKE` or `!~`."
   invert: Boolean
 }
 
-"Conditions on a string list"
+"Query filter criteris for `[String!]` scalar fields."
 input String_ListFilter {
+  "Match if list field contains the provided value as a member."
   includes: String
+  "Match if list field does not contain the provided value as a member."
   excludes: String
+  "Match if list field contains all of the provided values as members."
   includesAll: [String!]
+  "Match if list field does not contain any of the provided values as members."
   excludesAll: [String!]
 }
 
-"Conditions on a UUID value"
+"Query filter criteria for `UUID` scalar fields."
 input UUID_Filter {
+  "When true, match if field `IS NULL`. When false, match if field is `NOT NULL`."
   isNull: Boolean
+  "Match if field is exactly equal to provided value."
   eq: UUID
+  "Match if field is not equal to provided value."
   ne: UUID
+  "Match if field value is among the provided list of values."
   in: [UUID!]
+  "Match if field value is not among the provided list of values."
   nin: [UUID!]
 }
 
-"Conditions on a UUID list"
+"Query filter criteris for `[UUID!]` scalar fields."
 input UUID_ListFilter {
+  "Match if list field contains the provided value as a member."
   includes: UUID
+  "Match if list field does not contain the provided value as a member."
   excludes: UUID
+  "Match if list field contains all of the provided values as members."
   includesAll: [UUID!]
+  "Match if list field does not contain any of the provided values as members."
   excludesAll: [UUID!]
 }
 
-"Conditions on an Int value"
+"Query filter criteria for `Int` scalar fields."
 input Int_Filter {
+  "When true, match if field `IS NULL`. When false, match if field is `NOT NULL`."
   isNull: Boolean
+  "Match if field is exactly equal to provided value."
   eq: Int
+  "Match if field is not equal to provided value."
   ne: Int
+  "Match if field value is among the provided list of values."
   in: [Int!]
+  "Match if field value is not among the provided list of values."
   nin: [Int!]
+  "Match if field value is greater than the provided value."
   gt: Int
+  "Match if field value is greater than or equal to the provided value."
   ge: Int
+  "Match if field value is less than the provided value."
   lt: Int
+  "Match if field value is less than or equal to the provided value."
   le: Int
 }
 
-"Conditions on an Int list"
+"Query filter criteris for `[Int!]` scalar fields."
 input Int_ListFilter {
+  "Match if list field contains the provided value as a member."
   includes: Int
+  "Match if list field does not contain the provided value as a member."
   excludes: Int
+  "Match if list field contains all of the provided values as members."
   includesAll: [Int!]
+  "Match if list field does not contain any of the provided values as members."
   excludesAll: [Int!]
 }
 
-"Conditions on an Int64 value"
+"Query filter criteria for `Int64` scalar fields."
 input Int64_Filter {
+  "When true, match if field `IS NULL`. When false, match if field is `NOT NULL`."
   isNull: Boolean
+  "Match if field is exactly equal to provided value."
   eq: Int64
+  "Match if field is not equal to provided value."
   ne: Int64
+  "Match if field value is among the provided list of values."
   in: [Int64!]
+  "Match if field value is not among the provided list of values."
   nin: [Int64!]
+  "Match if field value is greater than the provided value."
   gt: Int64
+  "Match if field value is greater than or equal to the provided value."
   ge: Int64
+  "Match if field value is less than the provided value."
   lt: Int64
+  "Match if field value is less than or equal to the provided value."
   le: Int64
 }
 
-"Conditions on an Int64 list"
+"Query filter criteria for `[Int64!]` scalar fields."
 input Int64_ListFilter {
+  "Match if list field contains the provided value as a member."
   includes: Int64
+  "Match if list field does not contain the provided value as a member."
   excludes: Int64
+  "Match if list field contains all of the provided values as members."
   includesAll: [Int64!]
+  "Match if list field does not contain any of the provided values as members."
   excludesAll: [Int64!]
 }
 
-"Conditions on a Float value"
+"Query filter criteria for `Float` scalar fields."
 input Float_Filter {
+  "When true, match if field `IS NULL`. When false, match if field is `NOT NULL`."
   isNull: Boolean
+  "Match if field is exactly equal to provided value."
   eq: Float
+  "Match if field is not equal to provided value."
   ne: Float
+  "Match if field value is among the provided list of values."
   in: [Float!]
+  "Match if field value is not among the provided list of values."
   nin: [Float!]
+  "Match if field value is greater than the provided value."
   gt: Float
+  "Match if field value is greater than or equal to the provided value."
   ge: Float
+  "Match if field value is less than the provided value."
   lt: Float
+  "Match if field value is less than or equal to the provided value."
   le: Float
 }
 
-"Conditions on a Float list"
+"Query filter criteria for `[Float!]` scalar fields."
 input Float_ListFilter {
+  "Match if list field contains the provided value as a member."
   includes: Float
+  "Match if list field does not contain the provided value as a member."
   excludes: Float
+  "Match if list field contains all of the provided values as members."
   includesAll: [Float!]
+  "Match if list field does not contain any of the provided values as members."
   excludesAll: [Float!]
 }
 
-"Conditions on a Boolean value"
+"Query filter criteria for `Boolean` scalar fields."
 input Boolean_Filter {
+  "When true, match if field `IS NULL`. When false, match if field is `NOT NULL`."
   isNull: Boolean
+  "Match if field is exactly equal to provided value."
   eq: Boolean
+  "Match if field is not equal to provided value."
   ne: Boolean
+  "Match if field value is among the provided list of values."
   in: [Boolean!]
+  "Match if field value is not among the provided list of values."
   nin: [Boolean!]
 }
 
-"Conditions on a Boolean list"
+"Query filter criteria for `[Boolean!]` scalar fields."
 input Boolean_ListFilter {
+  "Match if list field contains the provided value as a member."
   includes: Boolean
+  "Match if list field does not contain the provided value as a member."
   excludes: Boolean
+  "Match if list field contains all of the provided values as members."
   includesAll: [Boolean!]
+  "Match if list field does not contain any of the provided values as members."
   excludesAll: [Boolean!]
 }
 
-"Conditions on an Any value"
+"Query filter criteria for `Any` scalar fields."
 input Any_Filter {
+  "When true, match if field `IS NULL`. When false, match if field is `NOT NULL`."
   isNull: Boolean
+  "Match if field is exactly equal to provided value."
   eq: Any
+  "Match if field is not equal to provided value."
   ne: Any
+  "Match if field value is among the provided list of values."
   in: [Any!]
+  "Match if field value is not among the provided list of values."
   nin: [Any!]
 }
 
-"Conditions on a Any list"
+"Query filter criteria for `[Any!]` scalar fields."
 input Any_ListFilter {
+  "Match if list field contains the provided value as a member."
   includes: Any
+  "Match if list field does not contain the provided value as a member."
   excludes: Any
+  "Match if list field contains all of the provided values as members."
   includesAll: [Any!]
+  "Match if list field does not contain any of the provided values as members."
   excludesAll: [Any!]
 }
 """
@@ -278,13 +381,30 @@ directive @index(
   """
   fields: [String!]
   """
-  Only allowed when used on OBJECT.
+  Only allowed when used on OBJECT and BTREE index.
   Index order of each column. Default to all ASC.
   """
   order: [IndexFieldOrder!]
+  """
+  For array field, default to `GIN`.
+  For Vector field, default to `HNSW`.
+  """
+  type: IndexType
+  """
+  Only allowed when used on vector field.
+  The vector similarity method. Default to `INNER_PRODUCT`.
+  """
+  vector_method: VectorSimilarityMethod
 ) repeatable on FIELD_DEFINITION | OBJECT
 
 enum IndexFieldOrder { ASC DESC }
+
+enum IndexType {
+  BTREE
+  GIN
+  HNSW
+  IVFFLAT
+}
 type Query {
   _service: _Service!
 }
@@ -860,6 +980,25 @@ enum Date_Interval @fdc_forbiddenAsFieldType {
   MONTH
   YEAR
 }
+"""
+Defines a unique constraint.
+
+Given `type TableName @table @unique(fields: [“fieldName”, “secondFieldName”])`,
+`table_name_field_name_second_field_name_uidx` is the SQL unique index id.
+Given `type TableName @table { fieldName: Int @unique } `
+`table_name_field_name_uidx` is the SQL unique index id.
+
+Override with `@unique(indexName)` in case of index name conflicts.
+"""
+directive @unique(
+  "The SQL database unique index name. Defaults to <table_name>_<field_name>_uidx."
+  indexName: String
+  """
+  Only allowed and required when used on OBJECT.
+  The fields to create a unique constraint on.
+  """
+  fields: [String!]
+) repeatable on FIELD_DEFINITION | OBJECT
 "Update input of a String value"
 input String_Update {
   set: String @fdc_oneOf(group: "set")
