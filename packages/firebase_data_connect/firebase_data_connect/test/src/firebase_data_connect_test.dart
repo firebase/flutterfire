@@ -29,15 +29,12 @@ void main() {
     late MockFirebaseAuth mockAuth;
     late MockFirebaseAppCheck mockAppCheck;
     late MockConnectorConfig mockConnectorConfig;
-    // ignore: unused_local_variable
-    late MockDataConnectTransport mockTransport;
 
     setUp(() {
       mockApp = MockFirebaseApp();
       mockAuth = MockFirebaseAuth();
       mockAppCheck = MockFirebaseAppCheck();
       mockConnectorConfig = MockConnectorConfig();
-      mockTransport = MockDataConnectTransport();
 
       when(mockApp.options).thenReturn(FirebaseOptions(
         apiKey: 'fake_api_key',

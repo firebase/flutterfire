@@ -19,7 +19,6 @@ on:
       - 'docs/**'
       - 'website/**'
       - '**/example/**'
-      - '**/flutterfire_ui/**'
       - '**.md'
 
 jobs:
@@ -110,7 +109,7 @@ jobs:
       - uses: hendrikmuhs/ccache-action@c92f40bee50034e84c763e33b317c77adaa81c92
         name: Xcode Compile Cache
         with:
-          key: ${{ runner.os }}-ios-fdc-v3
+          key: xcode-cache-${{ runner.os }}  
           max-size: 700M
       - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
         name: Pods Cache
