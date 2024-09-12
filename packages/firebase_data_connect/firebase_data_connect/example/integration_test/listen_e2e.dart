@@ -25,6 +25,7 @@ void runListenTests() {
         expect(initialValue.data.movies.length, 0,
             reason: 'Initial movie list should be empty');
 
+        final Completer<void> isReady = Completer<void>();
         final Completer<bool> hasBeenListened = Completer<bool>();
         int count = 0;
 
@@ -37,6 +38,7 @@ void runListenTests() {
           if (count == 0) {
             expect(movies.length, 0,
                 reason: 'First emission should contain an empty list');
+            isReady.complete();
           } else {
             expect(movies.length, 1,
                 reason: 'Second emission should contain one movie');
@@ -46,6 +48,9 @@ void runListenTests() {
           }
           count++;
         });
+
+        // Wait for the listener to be ready
+        await isReady.future;
 
         // Create the movie
         await MoviesConnector.instance.createMovie
