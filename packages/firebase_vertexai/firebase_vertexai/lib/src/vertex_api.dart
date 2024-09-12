@@ -659,6 +659,8 @@ CountTokensResponse parseCountTokensResponse(Object jsonObject) {
         case {'totalBillableCharacters': final int totalBillableCharacters}) {
       return CountTokensResponse(totalTokens,
           totalBillableCharacters: totalBillableCharacters);
+    } else {
+      return CountTokensResponse(totalTokens);
     }
   }
   throw unhandledFormat('CountTokensResponse', jsonObject);

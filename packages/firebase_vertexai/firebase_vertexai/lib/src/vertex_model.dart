@@ -90,6 +90,30 @@ final class GenerativeModel {
             httpClient: httpClient,
             requestHeaders: _firebaseTokens(appCheck, auth));
 
+  GenerativeModel._constructTestModel({
+    required String model,
+    required String location,
+    required FirebaseApp app,
+    FirebaseAppCheck? appCheck,
+    FirebaseAuth? auth,
+    List<SafetySetting>? safetySettings,
+    GenerationConfig? generationConfig,
+    List<Tool>? tools,
+    Content? systemInstruction,
+    ToolConfig? toolConfig,
+    ApiClient? apiClient,
+  })  : _model = _normalizeModelName(model),
+        _baseUri = _vertexUri(app, location),
+        _safetySettings = safetySettings ?? [],
+        _generationConfig = generationConfig,
+        _tools = tools,
+        _systemInstruction = systemInstruction,
+        _toolConfig = toolConfig,
+        _client = apiClient ??
+            HttpApiClient(
+                apiKey: app.options.apiKey,
+                requestHeaders: _firebaseTokens(appCheck, auth));
+
   final ({String prefix, String name}) _model;
   final List<SafetySetting> _safetySettings;
   final GenerationConfig? _generationConfig;
@@ -250,12 +274,8 @@ final class GenerativeModel {
   /// }
   /// ```
   Future<CountTokensResponse> countTokens(
-    Iterable<Content> contents, {
-    List<SafetySetting>? safetySettings,
-    GenerationConfig? generationConfig,
-    List<Tool>? tools,
-    ToolConfig? toolConfig,
-  }) async {
+    Iterable<Content> contents,
+  ) async {
     final parameters = <String, Object?>{
       'contents': contents.map((c) => c.toJson()).toList()
     };
@@ -337,3 +357,32 @@ GenerativeModel createGenerativeModel({
       tools: tools,
       toolConfig: toolConfig,
     );
+
+/// Creates a model with an overridden [ApiClient] for testing.
+///
+/// Package private test-only method.
+GenerativeModel createModelWithClient({
+  required FirebaseApp app,
+  required String location,
+  required String model,
+  required ApiClient client,
+  Content? systemInstruction,
+  FirebaseAppCheck? appCheck,
+  FirebaseAuth? auth,
+  GenerationConfig? generationConfig,
+  List<SafetySetting>? safetySettings,
+  List<Tool>? tools,
+  ToolConfig? toolConfig,
+}) =>
+    GenerativeModel._constructTestModel(
+        model: model,
+        app: app,
+        appCheck: appCheck,
+        auth: auth,
+        location: location,
+        safetySettings: safetySettings,
+        generationConfig: generationConfig,
+        systemInstruction: systemInstruction,
+        tools: tools,
+        toolConfig: toolConfig,
+        apiClient: client);
