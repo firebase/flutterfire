@@ -56,8 +56,7 @@ export 'src/vertex_function_calling.dart'
         FunctionCallingConfig,
         FunctionCallingMode,
         FunctionDeclaration,
-        Schema,
-        SchemaType,
         Tool,
         ToolConfig;
 export 'src/vertex_model.dart' show GenerativeModel;
+export 'src/vertex_schema.dart' show Schema, SchemaType;

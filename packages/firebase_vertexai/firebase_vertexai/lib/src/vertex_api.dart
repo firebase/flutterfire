@@ -14,6 +14,7 @@
 
 import 'vertex_content.dart';
 import 'vertex_error.dart';
+import 'vertex_schema.dart';
 
 /// Response for Count Tokens
 final class CountTokensResponse {
@@ -549,7 +550,8 @@ final class GenerationConfig {
       this.temperature,
       this.topP,
       this.topK,
-      this.responseMimeType});
+      this.responseMimeType,
+      this.responseSchema});
 
   /// Number of generated responses to return.
   ///
@@ -603,6 +605,12 @@ final class GenerationConfig {
   /// - `application/json`: JSON response in the candidates.
   final String? responseMimeType;
 
+  /// Output response schema of the generated candidate text.
+  ///
+  /// - Note: This only applies when the specified ``responseMIMEType`` supports
+  ///   a schema; currently this is limited to `application/json`.
+  final Schema? responseSchema;
+
   /// Convert to json format
   Map<String, Object?> toJson() => {
         if (candidateCount case final candidateCount?)
@@ -615,6 +623,8 @@ final class GenerationConfig {
         if (topK case final topK?) 'topK': topK,
         if (responseMimeType case final responseMimeType?)
           'responseMimeType': responseMimeType,
+        if (responseSchema case final responseSchema?)
+          'responseSchema': responseSchema,
       };
 }
 

@@ -274,6 +274,20 @@ class _ChatWidgetState extends State<ChatWidget> {
                         : Theme.of(context).colorScheme.primary,
                   ),
                 ),
+                IconButton(
+                  tooltip: 'schema prompt',
+                  onPressed: !_loading
+                      ? () async {
+                          await _promptSchemaTest(_textController.text);
+                        }
+                      : null,
+                  icon: Icon(
+                    Icons.schema,
+                    color: _loading
+                        ? Theme.of(context).colorScheme.secondary
+                        : Theme.of(context).colorScheme.primary,
+                  ),
+                ),
                 if (!_loading)
                   IconButton(
                     onPressed: () async {
@@ -302,6 +316,51 @@ class _ChatWidgetState extends State<ChatWidget> {
         ],
       ),
     );
+  }
+
+  Future<void> _promptSchemaTest(String subject) async {
+    setState(() {
+      _loading = true;
+    });
+    try {
+      final content = [Content.text('Create a list of 20 $subject.')];
+
+      final response = await _model.generateContent(
+        content,
+        generationConfig: GenerationConfig(
+          responseMimeType: 'application/json',
+          responseSchema: Schema.array(
+            items: Schema.string(
+              description: 'A single word that a player will need to guess.',
+            ),
+          ),
+        ),
+      );
+
+      var text = response.text;
+      _generatedContent.add((image: null, text: text, fromUser: false));
+
+      if (text == null) {
+        _showError('No response from API.');
+        return;
+      } else {
+        setState(() {
+          _loading = false;
+          _scrollDown();
+        });
+      }
+    } catch (e) {
+      _showError(e.toString());
+      setState(() {
+        _loading = false;
+      });
+    } finally {
+      _textController.clear();
+      setState(() {
+        _loading = false;
+      });
+      _textFieldFocus.requestFocus();
+    }
   }
 
   Future<void> _sendStorageUriPrompt(String message) async {
