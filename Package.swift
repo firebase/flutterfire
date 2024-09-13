@@ -8,76 +8,8 @@
 import Foundation
 import PackageDescription
 
-enum ConfigurationError: Error {
-  case fileNotFound(String)
-  case parsingError(String)
-  case invalidFormat(String)
-}
-
-let iosRootDirectory = String(URL(string: #file)!.deletingLastPathComponent().absoluteString
-  .dropLast())
-
-func loadPubspecVersion() throws -> String {
-  let pubspecPath = NSString.path(withComponents: [iosRootDirectory, "..", "..", "pubspec.yaml"])
-  do {
-    let yamlString = try String(contentsOfFile: pubspecPath, encoding: .utf8)
-    if let versionLine = yamlString.split(separator: "\n")
-      .first(where: { $0.starts(with: "version:") }) {
-      let version = versionLine.split(separator: ":")[1].trimmingCharacters(in: .whitespaces)
-      return version.replacingOccurrences(of: "+", with: "-")
-    } else {
-      throw ConfigurationError.invalidFormat("No version line found in pubspec.yaml")
-    }
-  } catch {
-    throw ConfigurationError.fileNotFound("Error loading or parsing pubspec.yaml: \(error)")
-  }
-}
-
-func loadFirebaseSDKVersion() throws -> String {
-  let firebaseCoreScriptPath = NSString.path(withComponents: [
-    iosRootDirectory,
-    "..",
-    "..",
-    "..",
-    "firebase_core",
-    "ios",
-    "firebase_sdk_version.rb",
-  ])
-  do {
-    let content = try String(contentsOfFile: firebaseCoreScriptPath, encoding: .utf8)
-    let pattern = #"def firebase_sdk_version!\(\)\n\s+'([^']+)'\nend"#
-    if let regex = try? NSRegularExpression(pattern: pattern, options: []),
-       let match = regex.firstMatch(
-         in: content,
-         range: NSRange(content.startIndex..., in: content)
-       ) {
-      if let versionRange = Range(match.range(at: 1), in: content) {
-        return String(content[versionRange])
-      } else {
-        throw ConfigurationError.invalidFormat("Invalid format in firebase_sdk_version.rb")
-      }
-    } else {
-      throw ConfigurationError.parsingError("No match found in firebase_sdk_version.rb")
-    }
-  } catch {
-    throw ConfigurationError
-      .fileNotFound("Error loading or parsing firebase_sdk_version.rb: \(error)")
-  }
-}
-
-let library_version: String
-let firebase_sdk_version_string: String
-
-do {
-  library_version = try loadPubspecVersion()
-  firebase_sdk_version_string = try loadFirebaseSDKVersion()
-} catch {
-  fatalError("Failed to load configuration: \(error)")
-}
-
-guard let firebase_sdk_version = Version(firebase_sdk_version_string) else {
-  fatalError("Invalid Firebase SDK version: \(firebase_sdk_version_string)")
-}
+let firebase_sdk_version = "11.0.0"
+let library_version = "3.4.1"
 
 let package = Package(
   name: "firebase_core",
@@ -88,7 +20,7 @@ let package = Package(
     .library(name: "firebase-core", targets: ["firebase_core"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version),
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: Version(firebase_sdk_version)!),
   ],
   targets: [
     .target(
@@ -97,6 +29,8 @@ let package = Package(
         // No product for firebase-core so we pull in the smallest one
         .product(name: "FirebaseInstallations", package: "firebase-ios-sdk"),
       ],
+      path: "packages/firebase_core/firebase_core/ios/firebase_core", // Specify the path to the source files
+
       resources: [
         .process("Resources"),
       ],
