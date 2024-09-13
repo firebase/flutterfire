@@ -34,7 +34,7 @@ let package = Package(
         .process("packages/firebase_core/firebase_core/ios/firebase_core/Sources/firebase_core/Resources"),
       ],
       cSettings: [
-        .headerSearchPath("packages/firebase_core/firebase_core/ios/firebase_core/Sources/firebase_core/include"),
+        .headerSearchPath("packages/firebase_core/firebase_core/ios/firebase_core/Sources/firebase_core/include/firebase_core"),
         .define("LIBRARY_VERSION", to: "\"\(library_version)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-core\""),
       ]
