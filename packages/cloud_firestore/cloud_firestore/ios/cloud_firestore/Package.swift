@@ -8,6 +8,7 @@
 import Foundation
 import PackageDescription
 
+let library_version = "5.4.1"
 
 let package = Package(
   name: "cloud_firestore",
@@ -15,7 +16,7 @@ let package = Package(
     .iOS("13.0"),
   ],
   products: [
-    .library(name: "cloud_firestore", targets: ["cloud_firestore"]),
+    .library(name: "cloud-firestore", targets: ["cloud_firestore"]),
   ],
   dependencies: [
     .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "11.0.0"),
