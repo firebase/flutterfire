@@ -81,4 +81,4 @@ firestore-debug.log
 database-debug.log
 ui-debug.log
 
-packages/**/.build/**/* 
+**/.build/**/*
