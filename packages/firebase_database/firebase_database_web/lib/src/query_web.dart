@@ -4,6 +4,8 @@
 
 part of '../firebase_database_web.dart';
 
+final Map<String, int> _streamHashCodeMap = {};
+
 /// An implementation of [QueryPlatform] which proxies calls to js objects
 class QueryWeb extends QueryPlatform {
   final DatabasePlatform _database;
@@ -63,8 +65,6 @@ class QueryWeb extends QueryPlatform {
 
     return instance;
   }
-
-  final Map<String, int> _streamHashCodeMap = {};
 
   @override
   String get path {

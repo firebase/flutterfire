@@ -136,7 +136,7 @@ enum class AggregateSource {
 
 // [PersistenceCacheIndexManagerRequest] represents the request types for the
 // persistence cache index manager.
-enum class PersistenceCacheIndexManagerRequest {
+enum class PersistenceCacheIndexManagerRequestEnum {
   enableIndexAutoCreation = 0,
   disableIndexAutoCreation = 1,
   deleteAllIndexes = 2
@@ -239,10 +239,11 @@ class PigeonSnapshotMetadata {
   bool is_from_cache() const;
   void set_is_from_cache(bool value_arg);
 
- private:
   static PigeonSnapshotMetadata FromEncodableList(
       const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
+
+ private:
   friend class PigeonDocumentSnapshot;
   friend class PigeonQuerySnapshot;
   friend class FirebaseFirestoreHostApi;
@@ -273,10 +274,11 @@ class PigeonDocumentSnapshot {
   const PigeonSnapshotMetadata& metadata() const;
   void set_metadata(const PigeonSnapshotMetadata& value_arg);
 
- private:
   static PigeonDocumentSnapshot FromEncodableList(
       const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
+
+ private:
   friend class PigeonDocumentChange;
   friend class FirebaseFirestoreHostApi;
   friend class FirebaseFirestoreHostApiCodecSerializer;
@@ -305,10 +307,11 @@ class PigeonDocumentChange {
   int64_t new_index() const;
   void set_new_index(int64_t value_arg);
 
- private:
   static PigeonDocumentChange FromEncodableList(
       const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
+
+ private:
   friend class FirebaseFirestoreHostApi;
   friend class FirebaseFirestoreHostApiCodecSerializer;
   DocumentChangeType type_;
@@ -721,7 +724,7 @@ class FirebaseFirestoreHostApi {
       std::function<void(ErrorOr<std::string> reply)> result) = 0;
   virtual void PersistenceCacheIndexManagerRequest(
       const FirestorePigeonFirebaseApp& app,
-      const PersistenceCacheIndexManagerRequest& request,
+      const PersistenceCacheIndexManagerRequestEnum& request,
       std::function<void(std::optional<FlutterError> reply)> result) = 0;
 
   // The codec used by FirebaseFirestoreHostApi.

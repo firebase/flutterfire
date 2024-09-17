@@ -17,7 +17,7 @@ external RemoteConfigJsImpl getRemoteConfig([AppJsImpl? app]);
 
 @JS()
 @staticInterop
-external JSPromise /* bool */ activate(RemoteConfigJsImpl remoteConfig);
+external JSPromise<JSBoolean> activate(RemoteConfigJsImpl remoteConfig);
 
 @JS()
 @staticInterop
@@ -25,7 +25,7 @@ external JSPromise ensureInitialized(RemoteConfigJsImpl remoteConfig);
 
 @JS()
 @staticInterop
-external JSPromise /* bool */ fetchAndActivate(RemoteConfigJsImpl remoteConfig);
+external JSPromise<JSBoolean> fetchAndActivate(RemoteConfigJsImpl remoteConfig);
 
 @JS()
 @staticInterop

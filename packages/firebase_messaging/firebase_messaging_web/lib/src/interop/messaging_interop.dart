@@ -18,16 +18,16 @@ external MessagingJsImpl getMessaging([AppJsImpl? app]);
 
 @JS()
 @staticInterop
-external JSPromise /* bool */ deleteToken(MessagingJsImpl messaging);
+external JSPromise<JSBoolean> deleteToken(MessagingJsImpl messaging);
 
 @JS()
 @staticInterop
-external JSPromise /* String */ getToken(
+external JSPromise<JSString> getToken(
     MessagingJsImpl messaging, GetTokenOptions? getTokenOptions);
 
 @JS('isSupported')
 @staticInterop
-external JSPromise /* bool */ isSupported();
+external JSPromise<JSBoolean> isSupported();
 
 @JS()
 @staticInterop

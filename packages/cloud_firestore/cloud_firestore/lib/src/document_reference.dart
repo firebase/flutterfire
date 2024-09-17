@@ -167,7 +167,10 @@ class _JsonDocumentReference
     }
 
     return _delegate
-        .snapshots(includeMetadataChanges: includeMetadataChanges)
+        .snapshots(
+          includeMetadataChanges: includeMetadataChanges,
+          listenSource: source,
+        )
         .map(
           (delegateSnapshot) =>
               _JsonDocumentSnapshot(firestore, delegateSnapshot),

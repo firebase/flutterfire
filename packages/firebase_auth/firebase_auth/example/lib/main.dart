@@ -15,7 +15,7 @@ import 'firebase_options.dart';
 import 'profile.dart';
 
 /// Requires that a Firebase local emulator is running locally.
-/// See https://firebase.flutter.dev/docs/auth/start/#optional-prototype-and-test-with-firebase-local-emulator-suite
+/// See https://firebase.google.com/docs/auth/flutter/start#optional_prototype_and_test_with_firebase_local_emulator_suite
 bool shouldUseFirebaseEmulator = false;
 
 late final FirebaseApp app;

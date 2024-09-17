@@ -9,4 +9,4 @@ The example app for this plugin only receives links on Android. Xcode has signin
 ## Getting Started
 
 For help getting started with Flutter, view our online
-[documentation](https://flutter.io/).
+[documentation](https://flutter.dev/).

@@ -135,7 +135,7 @@ abstract class QueryPlatform extends PlatformInterface {
   /// Notifies of query results at this location
   Stream<QuerySnapshotPlatform> snapshots({
     bool includeMetadataChanges = false,
-    ListenSource source = ListenSource.defaultSource,
+    required ListenSource listenSource,
   }) {
     throw UnimplementedError('snapshots() is not implemented');
   }

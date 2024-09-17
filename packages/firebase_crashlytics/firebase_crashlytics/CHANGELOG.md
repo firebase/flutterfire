@@ -1,3 +1,13 @@
+## 4.1.1
+
+ - Update a dependency to the latest release.
+
+## 4.1.0
+
+ - **FIX**(crashlytics): read firebase_crashlytics_collection_enabled from AndroidManifest.xml ([#13217](https://github.com/firebase/flutterfire/issues/13217)). ([fa8d3205](https://github.com/firebase/flutterfire/commit/fa8d3205ad5200a9e8c4c2a9ab3c8065d8d696ba))
+ - **FEAT**: bump iOS SDK to version 11.0.0 ([#13158](https://github.com/firebase/flutterfire/issues/13158)). ([c0e0c997](https://github.com/firebase/flutterfire/commit/c0e0c99703ea394d1bb873ac225c5fe3539b002d))
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
 ## 4.0.4
 
  - Update a dependency to the latest release.

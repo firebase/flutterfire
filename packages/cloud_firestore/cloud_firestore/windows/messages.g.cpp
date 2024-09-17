@@ -2290,8 +2290,8 @@ void FirebaseFirestoreHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("request_arg unexpectedly null."));
                 return;
               }
-              const PersistenceCacheIndexManagerRequest& request_arg =
-                  (PersistenceCacheIndexManagerRequest)
+              const PersistenceCacheIndexManagerRequestEnum& request_arg =
+                  (PersistenceCacheIndexManagerRequestEnum)
                       encodable_request_arg.LongValue();
               api->PersistenceCacheIndexManagerRequest(
                   app_arg, request_arg,

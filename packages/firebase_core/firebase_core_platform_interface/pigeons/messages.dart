@@ -15,8 +15,10 @@ import 'package:pigeon/pigeon.dart';
       package: 'io.flutter.plugins.firebase.core',
       className: 'GeneratedAndroidFirebaseCore',
     ),
-    objcHeaderOut: '../firebase_core/ios/Classes/messages.g.h',
-    objcSourceOut: '../firebase_core/ios/Classes/messages.g.m',
+    objcHeaderOut:
+        '../firebase_core/ios/firebase_core/Sources/firebase_core/include/firebase_core/messages.g.h',
+    objcSourceOut:
+        '../firebase_core/ios/firebase_core/Sources/firebase_core/messages.g.m',
     cppHeaderOut: '../firebase_core/windows/messages.g.h',
     cppSourceOut: '../firebase_core/windows/messages.g.cpp',
     cppOptions: CppOptions(namespace: 'firebase_core_windows'),

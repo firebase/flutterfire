@@ -1,3 +1,11 @@
+## 0.5.10
+
+ - **FEAT**(web): update to `web: ^1.0.0` ([#13200](https://github.com/firebase/flutterfire/issues/13200)). ([8fab04ae](https://github.com/firebase/flutterfire/commit/8fab04aec3b95789856d95639131bf09db29175b))
+
+## 0.5.9+2
+
+ - Update a dependency to the latest release.
+
 ## 0.5.9+1
 
  - **FIX**(analytics,web): Default to empty object for intializeAnalytics ([#13083](https://github.com/firebase/flutterfire/issues/13083)). ([8f1346e5](https://github.com/firebase/flutterfire/commit/8f1346e5dcb97daec47a57d9df45c5f89f032804))
