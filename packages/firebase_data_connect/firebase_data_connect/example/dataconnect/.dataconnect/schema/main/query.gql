@@ -1,0 +1,26 @@
+extend type Query {
+  """
+  Look up a single DirectedBy based on `id` or `key` and return selected fields (or `null` if not found).
+  """
+  directedBy(key: DirectedBy_Key): DirectedBy @fdc_generated(from: "DirectedBy", purpose: QUERY_SINGLE)
+  """
+  Look up a single Movie based on `id` or `key` and return selected fields (or `null` if not found).
+  """
+  movie(id: UUID, key: Movie_Key): Movie @fdc_generated(from: "Movie", purpose: QUERY_SINGLE)
+  """
+  Look up a single Person based on `id` or `key` and return selected fields (or `null` if not found).
+  """
+  person(id: UUID, key: Person_Key): Person @fdc_generated(from: "Person", purpose: QUERY_SINGLE)
+  """
+  List DirectedBy entries in the table, optionally filtered by `where` conditions.
+  """
+  directedBies(where: DirectedBy_Filter, orderBy: [DirectedBy_Order!], offset: Int, limit: Int = 100): [DirectedBy!]! @fdc_generated(from: "DirectedBy", purpose: QUERY_MULTIPLE)
+  """
+  List Movie entries in the table, optionally filtered by `where` conditions.
+  """
+  movies(where: Movie_Filter, orderBy: [Movie_Order!], offset: Int, limit: Int = 100): [Movie!]! @fdc_generated(from: "Movie", purpose: QUERY_MULTIPLE)
+  """
+  List Person entries in the table, optionally filtered by `where` conditions.
+  """
+  people(where: Person_Filter, orderBy: [Person_Order!], offset: Int, limit: Int = 100): [Person!]! @fdc_generated(from: "Person", purpose: QUERY_MULTIPLE)
+}
