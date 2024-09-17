@@ -1,7 +1,3 @@
-## 6.3.1
-
- - **FIX**(firestore): properly export pigeon message file from interface.
-
 ## 6.3.0
 
  - **FEAT**(firestore): support for `PersistentCacheIndexManager` for firestore instances for managing cache indexes. ([#13070](https://github.com/firebase/flutterfire/issues/13070)). ([806c15d7](https://github.com/firebase/flutterfire/commit/806c15d7eadaf48b8dfb22586bea4ed684672a86))
