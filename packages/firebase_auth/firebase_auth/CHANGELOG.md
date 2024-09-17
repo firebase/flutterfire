@@ -1,3 +1,7 @@
+## 5.3.0
+
+ - **FEAT**(fdc): Initial Release of Data Connect ([#13313](https://github.com/firebase/flutterfire/issues/13313)). ([603a6726](https://github.com/firebase/flutterfire/commit/603a67261a2f7cbdd6ef594bfaef480aeb820683))
+
 ## 5.2.1
 
  - Update a dependency to the latest release.
