@@ -8,6 +8,9 @@ set -e
 # firebase_core iOS example
 
 # Setup for SPM integration
+
+echo "Building firebase core iOS example app with swift (SPM)"
+
 cd packages/firebase_core/firebase_core/example/ios
 rm Podfile
 pod deintegrate
@@ -24,6 +27,7 @@ fi
 
 # Check the output for the specific string
 if [[ "$flutter_output" =~ "Running pod install" ]]; then
+  echo "Failed. Pods are being installed when they should not be."
   exit 1
 else
   echo "Successfully built iOS project using Swift Package Manager."
@@ -32,6 +36,9 @@ fi
 # firebase_core macOS example
 
 # Setup for SPM integration
+
+echo "Building firebase core macOS example app with swift (SPM)"
+
 cd ../macos
 rm Podfile
 pod deintegrate
@@ -48,6 +55,7 @@ fi
 
 # Check the output for the specific string
 if [[ "$flutter_output" =~ "Running pod install" ]]; then
+  echo "Failed. Pods are being installed when they should not be."
   exit 1
 else
   echo "Successfully built macOS project using Swift Package Manager."
