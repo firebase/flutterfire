@@ -87,10 +87,7 @@ class RestTransport implements DataConnectTransport {
     if (appCheckToken != null) {
       headers['X-Firebase-AppCheck'] = appCheckToken;
     }
-
-    if (appId != null) {
-      headers['x-firebase-gmpid'] = appId;
-    }
+    headers['x-firebase-gmpid'] = appId;
 
     Map<String, dynamic> body = {
       'name':

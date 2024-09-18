@@ -51,13 +51,13 @@ abstract class DataConnectTransport {
   Future<Data> invokeQuery<Data, Variables>(
       String queryName,
       Deserializer<Data> deserializer,
-      Serializer<Variables>? serializer,
+      Serializer<Variables> serializer,
       Variables? vars);
 
   /// Invokes corresponding mutation endpoint.
   Future<Data> invokeMutation<Data, Variables>(
       String queryName,
       Deserializer<Data> deserializer,
-      Serializer<Variables>? serializer,
+      Serializer<Variables> serializer,
       Variables? vars);
 }
