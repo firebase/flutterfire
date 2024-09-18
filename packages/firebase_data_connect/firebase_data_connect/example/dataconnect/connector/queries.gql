@@ -1,15 +1,30 @@
-
 # List subset of fields for movies
 query ListMovies @auth(level: USER) {
   movies {
     id
-    title,
+    title
     directed_by: people_via_DirectedBy {
-      name,
+      name
     }
-  },
+  }
 }
 
+# List movies by partial title match
+query ListMoviesByPartialTitle($input: String!) @auth(level: PUBLIC) {
+  movies(where: { title: { contains: $input } }) {
+    id
+    title
+    genre
+    rating
+  }
+}
+
+query ListPersons @auth(level: USER) {
+  people {
+    id
+    name
+  }
+}
 
 # List subset of fields for users
 # query ListUsers @auth(level: PUBLIC) {
@@ -212,17 +227,6 @@ query ListMovies @auth(level: USER) {
 #       title
 #       imageUrl
 #     }
-#   }
-# }
-
-# # List movies by partial title match
-# query ListMoviesByPartialTitle($input: String!) @auth(level: PUBLIC) {
-#   movies(where: { title: { contains: $input } }) {
-#     id
-#     title
-#     genre
-#     rating
-#     imageUrl
 #   }
 # }
 

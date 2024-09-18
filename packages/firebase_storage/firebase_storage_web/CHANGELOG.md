@@ -1,3 +1,11 @@
+## 3.10.1
+
+ - Update a dependency to the latest release.
+
+## 3.10.0
+
+ - **FEAT**(web): update to `web: ^1.0.0` ([#13200](https://github.com/firebase/flutterfire/issues/13200)). ([8fab04ae](https://github.com/firebase/flutterfire/commit/8fab04aec3b95789856d95639131bf09db29175b))
+
 ## 3.9.13
 
  - Update a dependency to the latest release.

@@ -12,6 +12,18 @@ extend type Mutation {
   """
   person_insert(data: Person_Data!): Person_Key! @fdc_generated(from: "Person", purpose: INSERT_SINGLE)
   """
+  Insert DirectedBy entries into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  directedBy_insertMany(data: [DirectedBy_Data!]!): [DirectedBy_Key!]! @fdc_generated(from: "DirectedBy", purpose: INSERT_MULTIPLE)
+  """
+  Insert Movie entries into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  movie_insertMany(data: [Movie_Data!]!): [Movie_Key!]! @fdc_generated(from: "Movie", purpose: INSERT_MULTIPLE)
+  """
+  Insert Person entries into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  person_insertMany(data: [Person_Data!]!): [Person_Key!]! @fdc_generated(from: "Person", purpose: INSERT_MULTIPLE)
+  """
   Insert or update a single DirectedBy into the table, based on the primary key. Returns the key of the newly inserted DirectedBy.
   """
   directedBy_upsert(data: DirectedBy_Data!): DirectedBy_Key! @fdc_generated(from: "DirectedBy", purpose: UPSERT_SINGLE)
@@ -23,6 +35,18 @@ extend type Mutation {
   Insert or update a single Person into the table, based on the primary key. Returns the key of the newly inserted Person.
   """
   person_upsert(data: Person_Data!): Person_Key! @fdc_generated(from: "Person", purpose: UPSERT_SINGLE)
+  """
+  Insert or update DirectedBy entries into the table, based on the primary key. Returns the key of the newly inserted DirectedBy.
+  """
+  directedBy_upsertMany(data: [DirectedBy_Data!]): [DirectedBy_Key!]! @fdc_generated(from: "DirectedBy", purpose: UPSERT_MULTIPLE)
+  """
+  Insert or update Movie entries into the table, based on the primary key. Returns the key of the newly inserted Movie.
+  """
+  movie_upsertMany(data: [Movie_Data!]): [Movie_Key!]! @fdc_generated(from: "Movie", purpose: UPSERT_MULTIPLE)
+  """
+  Insert or update Person entries into the table, based on the primary key. Returns the key of the newly inserted Person.
+  """
+  person_upsertMany(data: [Person_Data!]): [Person_Key!]! @fdc_generated(from: "Person", purpose: UPSERT_MULTIPLE)
   """
   Update a single DirectedBy based on `id` or `key`, setting columns specified in `data`. Returns `null` if not found.
   """

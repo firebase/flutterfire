@@ -1,7 +1,3 @@
-// Copyright 2024, the Chromium project authors.  Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
-
 library movies;
 
 import 'package:firebase_data_connect/firebase_data_connect.dart';
@@ -13,7 +9,13 @@ part 'add_director_to_movie.dart';
 
 part 'create_movie.dart';
 
+part 'delete_movie.dart';
+
 part 'list_movies.dart';
+
+part 'list_movies_by_partial_title.dart';
+
+part 'list_persons.dart';
 
 class MoviesConnector {
   AddPerson get addPerson {
@@ -28,8 +30,20 @@ class MoviesConnector {
     return CreateMovie(dataConnect: dataConnect);
   }
 
+  DeleteMovie get deleteMovie {
+    return DeleteMovie(dataConnect: dataConnect);
+  }
+
   ListMovies get listMovies {
     return ListMovies(dataConnect: dataConnect);
+  }
+
+  ListMoviesByPartialTitle get listMoviesByPartialTitle {
+    return ListMoviesByPartialTitle(dataConnect: dataConnect);
+  }
+
+  ListPersons get listPersons {
+    return ListPersons(dataConnect: dataConnect);
   }
 
   static ConnectorConfig connectorConfig = ConnectorConfig(

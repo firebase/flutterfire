@@ -239,14 +239,19 @@ auth_interop.ActionCodeSettings? convertPlatformActionCodeSettings(
 
   if (actionCodeSettingsMap['android'] != null) {
     webActionCodeSettings.android = auth_interop.AndroidSettings(
-        packageName: actionCodeSettingsMap['android']['packageName'],
-        minimumVersion: actionCodeSettingsMap['android']['minimumVersion'],
-        installApp: actionCodeSettingsMap['android']['installApp']);
+      packageName:
+          (actionCodeSettingsMap['android']['packageName'] as String?)?.toJS,
+      minimumVersion:
+          (actionCodeSettingsMap['android']['minimumVersion'] as String?)?.toJS,
+      installApp:
+          (actionCodeSettingsMap['android']['installApp'] as bool?)?.toJS,
+    );
   }
 
   if (actionCodeSettingsMap['iOS'] != null) {
     webActionCodeSettings.iOS = auth_interop.IosSettings(
-        bundleId: actionCodeSettingsMap['iOS']['bundleId']);
+      bundleId: (actionCodeSettingsMap['iOS']['bundleId'] as String?)?.toJS,
+    );
   }
 
   return webActionCodeSettings;

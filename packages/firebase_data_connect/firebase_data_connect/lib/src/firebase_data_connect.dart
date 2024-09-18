@@ -7,22 +7,23 @@ part of firebase_data_connect;
 /// DataConnect class
 class FirebaseDataConnect extends FirebasePluginPlatform {
   /// Constructor for initializing Data Connect
-  FirebaseDataConnect._({
+  @visibleForTesting
+  FirebaseDataConnect({
     required this.app,
     required this.connectorConfig,
     this.auth,
     this.appCheck,
-  })  : _options = DataConnectOptions(
+  })  : options = DataConnectOptions(
             app.options.projectId,
             connectorConfig.location,
             connectorConfig.connector,
             connectorConfig.serviceId),
         super(app.name, 'plugins.flutter.io/firebase_data_connect') {
-    _queryManager = _QueryManager(this);
+    _queryManager = QueryManager(this);
   }
 
   /// QueryManager manages ongoing queries, and their subscriptions.
-  late _QueryManager _queryManager;
+  late QueryManager _queryManager;
 
   /// FirebaseApp
   FirebaseApp app;
@@ -38,31 +39,40 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   FirebaseAuth? auth;
 
   /// ConnectorConfig + projectId
-  DataConnectOptions _options;
+  @visibleForTesting
+  DataConnectOptions options;
 
   /// Data Connect specific config information
   ConnectorConfig connectorConfig;
 
   /// Custom transport options for connecting to the Data Connect service.
-  TransportOptions? _transportOptions;
+  @visibleForTesting
+  TransportOptions? transportOptions;
 
   /// Checks whether the transport has been properly initialized.
-  void _checkTransport() {
-    _transportOptions ??=
+  @visibleForTesting
+  void checkTransport() {
+    transportOptions ??=
         TransportOptions('firebasedataconnect.googleapis.com', null, true);
     transport = getTransport(
-        _transportOptions!, _options, app.options.appId, auth, appCheck);
+        transportOptions!, options, app.options.appId, auth, appCheck);
   }
 
   /// Returns a [QueryRef] object.
   QueryRef<Data, Variables> query<Data, Variables>(
       String operationName,
       Deserializer<Data> dataDeserializer,
-      Serializer<Variables> varsSerializer,
+      Serializer<Variables>? varsSerializer,
       Variables? vars) {
-    _checkTransport();
-    return QueryRef<Data, Variables>(this, operationName, transport,
-        dataDeserializer, _queryManager, varsSerializer, vars);
+    checkTransport();
+    return QueryRef<Data, Variables>(
+        this,
+        operationName,
+        transport,
+        dataDeserializer,
+        _queryManager,
+        varsSerializer ?? emptySerializer,
+        vars);
   }
 
   /// Returns a [MutationRef] object.
@@ -71,7 +81,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
       Deserializer<Data> dataDeserializer,
       Serializer<Variables> varsSerializer,
       Variables? vars) {
-    _checkTransport();
+    checkTransport();
     return MutationRef<Data, Variables>(
         this, operationName, transport, dataDeserializer, varsSerializer, vars);
   }
@@ -80,11 +90,12 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   void useDataConnectEmulator(String host, int port,
       {bool automaticHostMapping = true, bool isSecure = false}) {
     String mappedHost = automaticHostMapping ? getMappedHost(host) : host;
-    _transportOptions = TransportOptions(mappedHost, port, isSecure);
+    transportOptions = TransportOptions(mappedHost, port, isSecure);
   }
 
   /// Currently cached DataConnect instances. Maps from app name to <ConnectorConfigStr, DataConnect>.
-  static final Map<String, Map<String, FirebaseDataConnect>> _cachedInstances =
+  @visibleForTesting
+  static final Map<String, Map<String, FirebaseDataConnect>> cachedInstances =
       {};
 
   /// Returns an instance using a specified [FirebaseApp].
@@ -101,20 +112,20 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     auth ??= FirebaseAuth.instanceFor(app: app);
     appCheck ??= FirebaseAppCheck.instanceFor(app: app);
 
-    if (_cachedInstances[app.name] != null &&
-        _cachedInstances[app.name]![connectorConfig.toJson()] != null) {
-      return _cachedInstances[app.name]![connectorConfig.toJson()]!;
+    if (cachedInstances[app.name] != null &&
+        cachedInstances[app.name]![connectorConfig.toJson()] != null) {
+      return cachedInstances[app.name]![connectorConfig.toJson()]!;
     }
 
-    FirebaseDataConnect newInstance = FirebaseDataConnect._(
+    FirebaseDataConnect newInstance = FirebaseDataConnect(
         app: app,
         auth: auth,
         appCheck: appCheck,
         connectorConfig: connectorConfig);
-    if (_cachedInstances[app.name] == null) {
-      _cachedInstances[app.name] = <String, FirebaseDataConnect>{};
+    if (cachedInstances[app.name] == null) {
+      cachedInstances[app.name] = <String, FirebaseDataConnect>{};
     }
-    _cachedInstances[app.name]![connectorConfig.toJson()] = newInstance;
+    cachedInstances[app.name]![connectorConfig.toJson()] = newInstance;
 
     return newInstance;
   }

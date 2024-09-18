@@ -576,7 +576,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   Future<List<String>> fetchSignInMethodsForEmail(String email) => auth_interop
       .fetchSignInMethodsForEmail(jsObject, email.toJS)
       .toDart
-      .then((value) => List<String>.from((value! as JSArray).toDart));
+      .then((value) => List<String>.from(value.toDart));
 
   /// Checks if an incoming link is a sign-in with email link.
   bool isSignInWithEmailLink(String emailLink) =>
@@ -1168,7 +1168,7 @@ class RecaptchaVerifier
   ///       }
   ///     });
   factory RecaptchaVerifier(
-      container, Map<String, dynamic> parameters, Auth auth) {
+      JSAny container, Map<String, dynamic> parameters, Auth auth) {
     return RecaptchaVerifier.fromJsObject(
       auth_interop.RecaptchaVerifierJsImpl(
         auth.jsObject,
