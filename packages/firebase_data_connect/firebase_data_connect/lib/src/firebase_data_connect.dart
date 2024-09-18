@@ -50,7 +50,8 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   void _checkTransport() {
     _transportOptions ??=
         TransportOptions('firebasedataconnect.googleapis.com', null, true);
-    transport = getTransport(_transportOptions!, _options, auth, appCheck);
+    transport = getTransport(
+        _transportOptions!, _options, app.options.appId, auth, appCheck);
   }
 
   /// Returns a [QueryRef] object.

@@ -30,7 +30,7 @@ class TransportOptions {
 /// Interface for transports connecting to the DataConnect backend.
 abstract class DataConnectTransport {
   /// Constructor.
-  DataConnectTransport(this.transportOptions, this.options);
+  DataConnectTransport(this.transportOptions, this.options, this.appId);
 
   /// Transport options.
   TransportOptions transportOptions;
@@ -43,6 +43,9 @@ abstract class DataConnectTransport {
 
   /// FirebaseAppCheck to use to get app check token.
   FirebaseAppCheck? appCheck;
+
+  /// Application ID
+  String appId;
 
   /// Invokes corresponding query endpoint.
   Future<Data> invokeQuery<Data, Variables>(
