@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export 'src/firebase_vertexai.dart' show FirebaseVertexAI, RequestOptions;
+export 'src/firebase_vertexai.dart' show FirebaseVertexAI;
 export 'src/vertex_api.dart'
     show
         BatchEmbedContentsResponse,

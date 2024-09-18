@@ -33,19 +33,18 @@ void main() {
 
     (ClientController, GenerativeModel) createModel({
       String modelName = defaultModelName,
-      RequestOptions? requestOptions,
-      Content? systemInstruction,
       List<Tool>? tools,
       ToolConfig? toolConfig,
+      Content? systemInstruction,
     }) {
       final client = ClientController();
       final model = createModelWithClient(
           app: app,
           model: modelName,
           client: client.client,
-          systemInstruction: systemInstruction,
           tools: tools,
           toolConfig: toolConfig,
+          systemInstruction: systemInstruction,
           location: 'us-central1');
       return (client, model);
     }
@@ -89,7 +88,7 @@ void main() {
             expect(
               uri,
               Uri.parse(
-                'https://firebaseml.googleapis.com/v2beta/projects/123/locations/us-central1/publishers/google/models/some-model:generateContent',
+                'https://firebasevertexai.googleapis.com/v1beta/projects/123/locations/us-central1/publishers/google/models/some-model:generateContent',
               ),
             );
             expect(request, {
@@ -301,7 +300,7 @@ void main() {
             expect(
               uri,
               Uri.parse(
-                'https://firebaseml.googleapis.com/v2beta/projects/123/locations/us-central1/publishers/google/models/some-model:streamGenerateContent',
+                'https://firebasevertexai.googleapis.com/v1beta/projects/123/locations/us-central1/publishers/google/models/some-model:streamGenerateContent',
               ),
             );
             expect(request, {
@@ -405,7 +404,7 @@ void main() {
             expect(
               uri,
               Uri.parse(
-                'https://firebaseml.googleapis.com/v2beta/projects/123/locations/us-central1/publishers/google/models/some-model:countTokens',
+                'https://firebasevertexai.googleapis.com/v1beta/projects/123/locations/us-central1/publishers/google/models/some-model:countTokens',
               ),
             );
             expect(request, {
@@ -435,7 +434,7 @@ void main() {
             expect(
               uri,
               Uri.parse(
-                'https://firebaseml.googleapis.com/v2beta/projects/123/locations/us-central1/publishers/google/models/some-model:embedContent',
+                'https://firebasevertexai.googleapis.com/v1beta/projects/123/locations/us-central1/publishers/google/models/some-model:embedContent',
               ),
             );
             expect(request, {
@@ -496,7 +495,7 @@ void main() {
             expect(
               uri,
               Uri.parse(
-                'https://firebaseml.googleapis.com/v2beta/projects/123/locations/us-central1/publishers/google/models/some-model:batchEmbedContents',
+                'https://firebasevertexai.googleapis.com/v1beta/projects/123/locations/us-central1/publishers/google/models/some-model:batchEmbedContents',
               ),
             );
             expect(request, {

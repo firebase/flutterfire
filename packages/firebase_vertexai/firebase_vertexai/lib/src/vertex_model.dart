@@ -28,8 +28,8 @@ import 'vertex_content.dart';
 import 'vertex_function_calling.dart';
 import 'vertex_version.dart';
 
-const _baseUrl = 'firebaseml.googleapis.com';
-const _apiVersion = 'v2beta';
+const _baseUrl = 'firebasevertexai.googleapis.com';
+const _apiVersion = 'v1beta';
 
 /// [Task] enum class for [GenerativeModel] to make request.
 enum Task {
@@ -75,16 +75,16 @@ final class GenerativeModel {
     List<SafetySetting>? safetySettings,
     GenerationConfig? generationConfig,
     List<Tool>? tools,
-    Content? systemInstruction,
     ToolConfig? toolConfig,
+    Content? systemInstruction,
     http.Client? httpClient,
   })  : _model = _normalizeModelName(model),
         _baseUri = _vertexUri(app, location),
         _safetySettings = safetySettings ?? [],
         _generationConfig = generationConfig,
         _tools = tools,
-        _systemInstruction = systemInstruction,
         _toolConfig = toolConfig,
+        _systemInstruction = systemInstruction,
         _client = HttpApiClient(
             apiKey: app.options.apiKey,
             httpClient: httpClient,
@@ -99,16 +99,16 @@ final class GenerativeModel {
     List<SafetySetting>? safetySettings,
     GenerationConfig? generationConfig,
     List<Tool>? tools,
-    Content? systemInstruction,
     ToolConfig? toolConfig,
+    Content? systemInstruction,
     ApiClient? apiClient,
   })  : _model = _normalizeModelName(model),
         _baseUri = _vertexUri(app, location),
         _safetySettings = safetySettings ?? [],
         _generationConfig = generationConfig,
         _tools = tools,
-        _systemInstruction = systemInstruction,
         _toolConfig = toolConfig,
+        _systemInstruction = systemInstruction,
         _client = apiClient ??
             HttpApiClient(
                 apiKey: app.options.apiKey,
@@ -120,8 +120,8 @@ final class GenerativeModel {
   final List<Tool>? _tools;
   final ApiClient _client;
   final Uri _baseUri;
-  final Content? _systemInstruction;
   final ToolConfig? _toolConfig;
+  final Content? _systemInstruction;
 
   //static const _modelsPrefix = 'models/';
 
@@ -337,13 +337,13 @@ GenerativeModel createGenerativeModel({
   required FirebaseApp app,
   required String location,
   required String model,
-  Content? systemInstruction,
   FirebaseAppCheck? appCheck,
   FirebaseAuth? auth,
   GenerationConfig? generationConfig,
   List<SafetySetting>? safetySettings,
   List<Tool>? tools,
   ToolConfig? toolConfig,
+  Content? systemInstruction,
 }) =>
     GenerativeModel._(
       model: model,
@@ -353,9 +353,9 @@ GenerativeModel createGenerativeModel({
       location: location,
       safetySettings: safetySettings,
       generationConfig: generationConfig,
-      systemInstruction: systemInstruction,
       tools: tools,
       toolConfig: toolConfig,
+      systemInstruction: systemInstruction,
     );
 
 /// Creates a model with an overridden [ApiClient] for testing.
