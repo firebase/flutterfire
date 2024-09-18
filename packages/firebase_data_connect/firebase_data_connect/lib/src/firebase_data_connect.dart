@@ -65,14 +65,8 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
       Serializer<Variables> varsSerializer,
       Variables? vars) {
     checkTransport();
-    return QueryRef<Data, Variables>(
-        this,
-        operationName,
-        transport,
-        dataDeserializer,
-        _queryManager,
-        varsSerializer ?? emptySerializer,
-        vars);
+    return QueryRef<Data, Variables>(this, operationName, transport,
+        dataDeserializer, _queryManager, varsSerializer, vars);
   }
 
   /// Returns a [MutationRef] object.
