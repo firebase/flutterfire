@@ -62,7 +62,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   QueryRef<Data, Variables> query<Data, Variables>(
       String operationName,
       Deserializer<Data> dataDeserializer,
-      Serializer<Variables>? varsSerializer,
+      Serializer<Variables> varsSerializer,
       Variables? vars) {
     checkTransport();
     return QueryRef<Data, Variables>(
