@@ -90,11 +90,11 @@ void main() {
       };
       final schema = Schema.object(
         properties: properties,
-        requiredProperties: ['name'],
+        optionalProperties: ['age'],
       );
       expect(schema.type, SchemaType.object);
       expect(schema.properties, properties);
-      expect(schema.requiredProperties, ['name']);
+      expect(schema.optionalProperties, ['age']);
       expect(schema.toJson(), {
         'type': 'OBJECT',
         'properties': {
@@ -102,6 +102,26 @@ void main() {
           'age': {'type': 'INTEGER'},
         },
         'required': ['name'],
+      });
+    });
+
+    test('Schema.object with empty optionalProperties', () {
+      final properties = {
+        'name': Schema.string(),
+        'age': Schema.integer(),
+      };
+      final schema = Schema.object(
+        properties: properties,
+      );
+      expect(schema.type, SchemaType.object);
+      expect(schema.properties, properties);
+      expect(schema.toJson(), {
+        'type': 'OBJECT',
+        'properties': {
+          'name': {'type': 'STRING'},
+          'age': {'type': 'INTEGER'},
+        },
+        'required': ['name', 'age'],
       });
     });
 

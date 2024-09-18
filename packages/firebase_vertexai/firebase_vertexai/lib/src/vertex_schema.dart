@@ -27,19 +27,20 @@ final class Schema {
     this.enumValues,
     this.items,
     this.properties,
-    this.requiredProperties,
+    //this.requiredProperties,
+    this.optionalProperties,
   });
 
   /// Construct a schema for an object with one or more properties.
   Schema.object({
     required Map<String, Schema> properties,
-    List<String>? requiredProperties,
+    List<String>? optionalProperties,
     String? description,
     bool? nullable,
   }) : this(
           SchemaType.object,
           properties: properties,
-          requiredProperties: requiredProperties,
+          optionalProperties: optionalProperties,
           description: description,
           nullable: nullable,
         );
@@ -148,9 +149,10 @@ final class Schema {
   /// Properties of this type if this is a [SchemaType.object].
   Map<String, Schema>? properties;
 
-  /// The keys from [properties] for properties that are required if this is a
-  /// [SchemaType.object].
-  List<String>? requiredProperties;
+  /// The keys from [properties] for properties that are optional if this is a
+  /// [SchemaType.object]. Any properties that's not listed in optional will be
+  /// treated as required properties
+  List<String>? optionalProperties;
 
   /// Convert to json object.
   Map<String, Object> toJson() => {
@@ -165,8 +167,13 @@ final class Schema {
             for (final MapEntry(:key, :value) in properties.entries)
               key: value.toJson()
           },
-        if (requiredProperties case final requiredProperties?)
-          'required': requiredProperties
+        // Calculate required properties based on optionalProperties
+        if (properties != null)
+          'required': optionalProperties != null
+              ? properties!.keys
+                  .where((key) => !optionalProperties!.contains(key))
+                  .toList()
+              : properties!.keys.toList(),
       };
 }
 
