@@ -4,25 +4,25 @@ class CreateMovie {
   String name = "createMovie";
   CreateMovie({required this.dataConnect});
 
-  Deserializer<CreateMovieResponse> dataDeserializer = (String json) =>
-      CreateMovieResponse.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  Deserializer<CreateMovieData> dataDeserializer = (String json) =>
+      CreateMovieData.fromJson(jsonDecode(json) as Map<String, dynamic>);
   Serializer<CreateMovieVariables> varsSerializer =
       (CreateMovieVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<CreateMovieResponse, CreateMovieVariables> ref(
-      {required String title,
-      required int releaseYear,
-      required String genre,
-      double? rating,
-      String? description,
-      CreateMovieVariables? createMovieVariables}) {
-    CreateMovieVariables vars1 = CreateMovieVariables(
+  MutationRef<CreateMovieData, CreateMovieVariables> ref({
+    required String title,
+    required int releaseYear,
+    required String genre,
+    double? rating,
+    String? description,
+  }) {
+    CreateMovieVariables vars = CreateMovieVariables(
       title: title,
       releaseYear: releaseYear,
       genre: genre,
       rating: rating,
       description: description,
     );
-    CreateMovieVariables vars = createMovieVariables ?? vars1;
+
     return dataConnect.mutation(
         this.name, dataDeserializer, varsSerializer, vars);
   }
@@ -52,10 +52,10 @@ class CreateMovieMovieInsert {
   }
 }
 
-class CreateMovieResponse {
+class CreateMovieData {
   late CreateMovieMovieInsert movie_insert;
 
-  CreateMovieResponse.fromJson(Map<String, dynamic> json)
+  CreateMovieData.fromJson(Map<String, dynamic> json)
       : movie_insert = CreateMovieMovieInsert.fromJson(json['movie_insert']) {}
 
   // TODO(mtewani): Fix up to create a map on the fly
@@ -67,7 +67,7 @@ class CreateMovieResponse {
     return json;
   }
 
-  CreateMovieResponse({
+  CreateMovieData({
     required this.movie_insert,
   }) {
     // TODO(mtewani): Only show this if there are optional fields.
@@ -117,8 +117,8 @@ class CreateMovieVariables {
     required this.title,
     required this.releaseYear,
     required this.genre,
-    double? this.rating,
-    String? this.description,
+    this.rating,
+    this.description,
   }) {
     // TODO(mtewani): Only show this if there are optional fields.
   }

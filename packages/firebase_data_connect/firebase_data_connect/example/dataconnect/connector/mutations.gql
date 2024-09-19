@@ -6,6 +6,17 @@ mutation addDirectorToMovie($personId: Person_Key, $movieId: UUID)
 @auth(level: PUBLIC) {
   directedBy_insert(data: { directedby: $personId, movieId: $movieId })
 }
+mutation seedData @auth(level: PUBLIC) {
+  movies1: movie_insert(
+    data: {
+      title: "The Matrix"
+      releaseYear: 1999
+      genre: "Action"
+      rating: 5.0
+      description: "When a beautiful stranger leads computer hacker Neo to a forbidding underworld, he discovers the shocking truth--the life he knows is the elaborate deception of an evil cyber-intelligence."
+    }
+  )
+}
 mutation createMovie(
   $title: String!
   $releaseYear: Int!

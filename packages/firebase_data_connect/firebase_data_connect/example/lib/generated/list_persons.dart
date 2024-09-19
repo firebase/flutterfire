@@ -4,10 +4,10 @@ class ListPersons {
   String name = "ListPersons";
   ListPersons({required this.dataConnect});
 
-  Deserializer<ListPersonsResponse> dataDeserializer = (String json) =>
-      ListPersonsResponse.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  Deserializer<ListPersonsData> dataDeserializer = (String json) =>
+      ListPersonsData.fromJson(jsonDecode(json) as Map<String, dynamic>);
 
-  QueryRef<ListPersonsResponse, void> ref() {
+  QueryRef<ListPersonsData, void> ref() {
     return dataConnect.query(
         this.name, dataDeserializer, emptySerializer, null);
   }
@@ -43,10 +43,10 @@ class ListPersonsPeople {
   }
 }
 
-class ListPersonsResponse {
+class ListPersonsData {
   late List<ListPersonsPeople> people;
 
-  ListPersonsResponse.fromJson(Map<String, dynamic> json)
+  ListPersonsData.fromJson(Map<String, dynamic> json)
       : people = (json['people'] as List<dynamic>)
             .map((e) => ListPersonsPeople.fromJson(e))
             .toList() {}
@@ -60,7 +60,7 @@ class ListPersonsResponse {
     return json;
   }
 
-  ListPersonsResponse({
+  ListPersonsData({
     required this.people,
   }) {
     // TODO(mtewani): Only show this if there are optional fields.

@@ -4,10 +4,10 @@ class ListMovies {
   String name = "ListMovies";
   ListMovies({required this.dataConnect});
 
-  Deserializer<ListMoviesResponse> dataDeserializer = (String json) =>
-      ListMoviesResponse.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  Deserializer<ListMoviesData> dataDeserializer = (String json) =>
+      ListMoviesData.fromJson(jsonDecode(json) as Map<String, dynamic>);
 
-  QueryRef<ListMoviesResponse, void> ref() {
+  QueryRef<ListMoviesData, void> ref() {
     return dataConnect.query(
         this.name, dataDeserializer, emptySerializer, null);
   }
@@ -73,10 +73,10 @@ class ListMoviesMoviesDirectedBy {
   }
 }
 
-class ListMoviesResponse {
+class ListMoviesData {
   late List<ListMoviesMovies> movies;
 
-  ListMoviesResponse.fromJson(Map<String, dynamic> json)
+  ListMoviesData.fromJson(Map<String, dynamic> json)
       : movies = (json['movies'] as List<dynamic>)
             .map((e) => ListMoviesMovies.fromJson(e))
             .toList() {}
@@ -90,7 +90,7 @@ class ListMoviesResponse {
     return json;
   }
 
-  ListMoviesResponse({
+  ListMoviesData({
     required this.movies,
   }) {
     // TODO(mtewani): Only show this if there are optional fields.

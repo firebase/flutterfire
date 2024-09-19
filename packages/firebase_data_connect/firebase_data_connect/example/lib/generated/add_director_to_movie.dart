@@ -4,20 +4,19 @@ class AddDirectorToMovie {
   String name = "addDirectorToMovie";
   AddDirectorToMovie({required this.dataConnect});
 
-  Deserializer<AddDirectorToMovieResponse> dataDeserializer = (String json) =>
-      AddDirectorToMovieResponse.fromJson(
-          jsonDecode(json) as Map<String, dynamic>);
+  Deserializer<AddDirectorToMovieData> dataDeserializer = (String json) =>
+      AddDirectorToMovieData.fromJson(jsonDecode(json) as Map<String, dynamic>);
   Serializer<AddDirectorToMovieVariables> varsSerializer =
       (AddDirectorToMovieVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<AddDirectorToMovieResponse, AddDirectorToMovieVariables> ref(
-      {AddDirectorToMovieVariablesPersonId? personId,
-      String? movieId,
-      AddDirectorToMovieVariables? addDirectorToMovieVariables}) {
-    AddDirectorToMovieVariables vars1 = AddDirectorToMovieVariables(
+  MutationRef<AddDirectorToMovieData, AddDirectorToMovieVariables> ref({
+    AddDirectorToMovieVariablesPersonId? personId,
+    String? movieId,
+  }) {
+    AddDirectorToMovieVariables vars = AddDirectorToMovieVariables(
       personId: personId,
       movieId: movieId,
     );
-    AddDirectorToMovieVariables vars = addDirectorToMovieVariables ?? vars1;
+
     return dataConnect.mutation(
         this.name, dataDeserializer, varsSerializer, vars);
   }
@@ -53,10 +52,10 @@ class AddDirectorToMovieDirectedByInsert {
   }
 }
 
-class AddDirectorToMovieResponse {
+class AddDirectorToMovieData {
   late AddDirectorToMovieDirectedByInsert directedBy_insert;
 
-  AddDirectorToMovieResponse.fromJson(Map<String, dynamic> json)
+  AddDirectorToMovieData.fromJson(Map<String, dynamic> json)
       : directedBy_insert = AddDirectorToMovieDirectedByInsert.fromJson(
             json['directedBy_insert']) {}
 
@@ -69,7 +68,7 @@ class AddDirectorToMovieResponse {
     return json;
   }
 
-  AddDirectorToMovieResponse({
+  AddDirectorToMovieData({
     required this.directedBy_insert,
   }) {
     // TODO(mtewani): Only show this if there are optional fields.
@@ -124,8 +123,8 @@ class AddDirectorToMovieVariables {
   }
 
   AddDirectorToMovieVariables({
-    AddDirectorToMovieVariablesPersonId? this.personId,
-    String? this.movieId,
+    this.personId,
+    this.movieId,
   }) {
     // TODO(mtewani): Only show this if there are optional fields.
   }
