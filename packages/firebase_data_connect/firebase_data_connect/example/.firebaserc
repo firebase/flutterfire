@@ -1,0 +1,12 @@
+{
+  "projects": {
+    "default": "flutterfire-e2e-tests"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {
+    "postgres": {
+      "localConnectionString": "postgresql://postgres:postgres@localhost:5432/postgres?sslmode=disable"
+    }
+  }
+}

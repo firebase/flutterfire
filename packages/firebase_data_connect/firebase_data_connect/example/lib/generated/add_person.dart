@@ -8,13 +8,12 @@ class AddPerson {
       AddPersonResponse.fromJson(jsonDecode(json) as Map<String, dynamic>);
   Serializer<AddPersonVariables> varsSerializer =
       (AddPersonVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<AddPersonResponse, AddPersonVariables> ref({
-    String? name,
-  }) {
-    AddPersonVariables vars = AddPersonVariables(
+  MutationRef<AddPersonResponse, AddPersonVariables> ref(
+      {String? name, AddPersonVariables? addPersonVariables}) {
+    AddPersonVariables vars1 = AddPersonVariables(
       name: name,
     );
-
+    AddPersonVariables vars = addPersonVariables ?? vars1;
     return dataConnect.mutation(
         this.name, dataDeserializer, varsSerializer, vars);
   }
@@ -83,7 +82,7 @@ class AddPersonVariables {
   }
 
   AddPersonVariables({
-    this.name,
+    String? this.name,
   }) {
     // TODO(mtewani): Only show this if there are optional fields.
   }

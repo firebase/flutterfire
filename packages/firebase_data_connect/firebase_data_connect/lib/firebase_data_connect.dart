@@ -10,6 +10,7 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:flutter/foundation.dart';
 
 import 'src/common/common_library.dart';
 import 'src/network/transport_library.dart'
@@ -18,6 +19,7 @@ import 'src/network/transport_library.dart'
 
 export 'src/common/common_library.dart';
 
+part 'src/core/empty_serializer.dart';
 part 'src/core/ref.dart';
 part 'src/firebase_data_connect.dart';
 part 'src/optional.dart';

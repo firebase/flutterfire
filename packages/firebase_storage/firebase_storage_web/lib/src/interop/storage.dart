@@ -134,7 +134,7 @@ class StorageReference
   /// Returns a long lived download URL for this reference.
   Future<Uri> getDownloadURL() async {
     final uriString = await storage_interop.getDownloadURL(jsObject).toDart;
-    final dartString = (uriString! as JSString).toDart;
+    final dartString = uriString.toDart;
     return Uri.parse(dartString);
   }
 

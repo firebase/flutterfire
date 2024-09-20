@@ -9,15 +9,15 @@ class AddDirectorToMovie {
           jsonDecode(json) as Map<String, dynamic>);
   Serializer<AddDirectorToMovieVariables> varsSerializer =
       (AddDirectorToMovieVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<AddDirectorToMovieResponse, AddDirectorToMovieVariables> ref({
-    AddDirectorToMovieVariablesPersonId? personId,
-    String? movieId,
-  }) {
-    AddDirectorToMovieVariables vars = AddDirectorToMovieVariables(
+  MutationRef<AddDirectorToMovieResponse, AddDirectorToMovieVariables> ref(
+      {AddDirectorToMovieVariablesPersonId? personId,
+      String? movieId,
+      AddDirectorToMovieVariables? addDirectorToMovieVariables}) {
+    AddDirectorToMovieVariables vars1 = AddDirectorToMovieVariables(
       personId: personId,
       movieId: movieId,
     );
-
+    AddDirectorToMovieVariables vars = addDirectorToMovieVariables ?? vars1;
     return dataConnect.mutation(
         this.name, dataDeserializer, varsSerializer, vars);
   }
@@ -124,8 +124,8 @@ class AddDirectorToMovieVariables {
   }
 
   AddDirectorToMovieVariables({
-    this.personId,
-    this.movieId,
+    AddDirectorToMovieVariablesPersonId? this.personId,
+    String? this.movieId,
   }) {
     // TODO(mtewani): Only show this if there are optional fields.
   }

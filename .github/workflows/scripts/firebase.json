@@ -12,16 +12,16 @@
   },
   "emulators": {
     "firestore": {
-      "port": "8080"
+      "port": 8080
     },
     "auth": {
-      "port": "9099"
+      "port": 9099
     },
     "storage": {
-      "port": "9199"
+      "port": 9199
     },
     "database": {
-      "port": "9000"
+      "port": 9000
     },
     "ui": {
       "enabled": true,

@@ -86,7 +86,7 @@ class RemoteConfig
   Future<bool> activate() async => remote_config_interop
       .activate(jsObject)
       .toDart
-      .then((value) => (value! as JSBoolean).toDart);
+      .then((value) => value.toDart);
 
   ///  Ensures the last activated config are available to the getters.
   Future<void> ensureInitialized() async =>
@@ -101,7 +101,7 @@ class RemoteConfig
   /// If the fetched configs were already activated, the promise will resolve to false.
   Future<bool> fetchAndActivate() async =>
       remote_config_interop.fetchAndActivate(jsObject).toDart.then(
-            (value) => (value! as JSBoolean).toDart,
+            (value) => value.toDart,
           );
 
   /// Returns all config values.

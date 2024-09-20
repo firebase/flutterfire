@@ -18,5 +18,6 @@ type Movie @table {
     name: String!
     genre: String!
     description: String
+    await: String
     release: Timestamp
 }

@@ -9,7 +9,6 @@ import 'src/internal/pointer.dart';
 
 export 'package:collection/collection.dart' show ListEquality;
 
-export '/src/pigeon/messages.pigeon.dart';
 export 'src/blob.dart';
 export 'src/field_path.dart';
 export 'src/field_path_type.dart';
@@ -18,6 +17,7 @@ export 'src/geo_point.dart';
 export 'src/get_options.dart';
 export 'src/load_bundle_task_state.dart';
 export 'src/persistence_settings.dart';
+export 'src/pigeon/messages.pigeon.dart';
 export 'src/platform_interface/platform_interface_aggregate_query.dart';
 export 'src/platform_interface/platform_interface_aggregate_query_snapshot.dart';
 export 'src/platform_interface/platform_interface_collection_reference.dart';

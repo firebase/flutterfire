@@ -2,23 +2,54 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:io';
-
 import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:firebase_data_connect_example/login.dart';
-import 'package:flutter/foundation.dart';
-
-import 'firebase_options.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_data_connect/firebase_data_connect.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+// Uncomment this line after running flutterfire configure
+// import 'firebase_options.dart';
+import 'package:firebase_data_connect/firebase_data_connect.dart';
+import 'package:firebase_data_connect_example/firebase_options.dart';
+import 'package:firebase_data_connect_example/login.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import 'generated/movies.dart';
 
+const appCheckEnabled = false;
+const configureEmulator = true;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  if (appCheckEnabled) {
+    await FirebaseAppCheck.instance.activate(
+      // You can also use a `ReCaptchaEnterpriseProvider` provider instance as an
+      // argument for `webProvider`
+      webProvider: ReCaptchaV3Provider('your-site-key'),
+      // Default provider for Android is the Play Integrity provider. You can use the "AndroidProvider" enum to choose
+      // your preferred provider. Choose from:
+      // 1. Debug provider
+      // 2. Safety Net provider
+      // 3. Play Integrity provider
+      androidProvider: AndroidProvider.debug,
+      // Default provider for iOS/macOS is the Device Check provider. You can use the "AppleProvider" enum to choose
+      // your preferred provider. Choose from:
+      // 1. Debug provider
+      // 2. Device Check provider
+      // 3. App Attest provider
+      // 4. App Attest provider with fallback to Device Check provider (App Attest provider is only available on iOS 14.0+, macOS 14.0+)
+      appleProvider: AppleProvider.appAttest,
+    );
+  }
+  if (configureEmulator) {
+    MoviesConnector.instance.dataConnect
+        .useDataConnectEmulator('127.0.0.1', 9399);
+    FirebaseAuth.instance.useAuthEmulator(
+      'localhost',
+      9099,
+    );
+  }
+
   runApp(const MyApp());
 }
 
@@ -38,12 +69,22 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key, required this.title});
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(title),
+      ),
+      body: const Center(
+        child: DataConnectWidget(),
+      ),
+    );
+  }
 }
 
 class DataConnectWidget extends StatefulWidget {
@@ -60,40 +101,23 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
   double _rating = 0;
 
   Future<void> triggerReload() async {
-    // await appcheck();
     QueryRef ref = MoviesConnector.instance.listMovies.ref();
-
-    ref.execute().ignore();
+    ref.execute();
   }
 
   @override
   void initState() {
     super.initState();
-    String host = 'localhost';
-    try {
-      if (Platform.isAndroid) {
-        host = '10.0.2.2';
-      }
-    } catch (_) {}
-    print('Test!');
-    int port = 1242;
-    FirebaseDataConnect.instanceFor(
-            app: Firebase.app(),
-            connectorConfig: MoviesConnector.connectorConfig)
-        .useDataConnectEmulator(host, port: port);
 
     QueryRef<ListMoviesResponse, void> ref =
         MoviesConnector.instance.listMovies.ref();
-    print('listening');
+
     ref.subscribe().listen((event) {
       setState(() {
         _movies = event.data.movies;
       });
     }).onError((e) {
-      print(e.toString());
-      if (kDebugMode) {
-        _showError("Got an error: $e");
-      }
+      _showError("Got an error: $e");
     });
   }
 
@@ -162,10 +186,11 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
               }
 
               MutationRef ref = MoviesConnector.instance.createMovie.ref(
-                  title: title,
-                  releaseYear: _releaseYearDate.year,
-                  genre: genre,
-                  rating: _rating);
+                title: title,
+                releaseYear: _releaseYearDate.year,
+                genre: genre,
+                rating: _rating,
+              );
               try {
                 await ref.execute();
                 triggerReload();
@@ -229,42 +254,6 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
           ],
         );
       },
-    );
-  }
-
-  appcheck() async {
-    await FirebaseAppCheck.instance.activate(
-      // You can also use a `ReCaptchaEnterpriseProvider` provider instance as an
-      // argument for `webProvider`
-      webProvider: ReCaptchaV3Provider('your site key'),
-      // Default provider for Android is the Play Integrity provider. You can use the "AndroidProvider" enum to choose
-      // your preferred provider. Choose from:
-      // 1. Debug provider
-      // 2. Safety Net provider
-      // 3. Play Integrity provider
-      androidProvider: AndroidProvider.debug,
-      // Default provider for iOS/macOS is the Device Check provider. You can use the "AppleProvider" enum to choose
-      // your preferred provider. Choose from:
-      // 1. Debug provider
-      // 2. Device Check provider
-      // 3. App Attest provider
-      // 4. App Attest provider with fallback to Device Check provider (App Attest provider is only available on iOS 14.0+, macOS 14.0+)
-      appleProvider: AppleProvider.appAttest,
-    );
-  }
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: const Center(
-        child: DataConnectWidget(),
-      ),
     );
   }
 }

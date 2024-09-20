@@ -21,17 +21,13 @@ class QueryResult<Data, Variables> extends OperationResult<Data, Variables> {
 /// Contains variables, transport to execute queries, and serialization/deserialization strategies.
 abstract class OperationRef<Data, Variables> {
   /// Constructor
-  OperationRef(this.dataConnect, this.operationName, this.variables,
-      this._transport, this.deserializer, this.serializer) {
-    if (this.variables != null && this.serializer == null) {
-      throw Exception('Serializer required for variables');
-    }
-  }
+  OperationRef(this.dataConnect, this.operationName, this._transport,
+      this.deserializer, this.serializer, this.variables);
   Variables? variables;
   String operationName;
   DataConnectTransport _transport;
   Deserializer<Data> deserializer;
-  Serializer<Variables>? serializer;
+  Serializer<Variables> serializer;
 
   FirebaseDataConnect dataConnect;
 
@@ -39,8 +35,9 @@ abstract class OperationRef<Data, Variables> {
 }
 
 /// Tracks currently active queries, and emits events when a new query is executed.
-class _QueryManager {
-  _QueryManager(this.dataConnect);
+@visibleForTesting
+class QueryManager {
+  QueryManager(this.dataConnect);
 
   /// FirebaseDataConnect instance;
   FirebaseDataConnect dataConnect;
@@ -67,19 +64,24 @@ class _QueryManager {
     return trackedQueries[queryName]![key]!.stream;
   }
 
-  void triggerCallback<Data, Variables>(String operationName, String varsAsStr,
-      QueryRef<Data, Variables> ref, Data? data, Exception? error) {
+  Future<void> triggerCallback<Data, Variables>(
+      String operationName,
+      String varsAsStr,
+      QueryRef<Data, Variables> ref,
+      Data? data,
+      Exception? error) async {
     String key = varsAsStr;
     if (trackedQueries[operationName] == null ||
         trackedQueries[operationName]![key] == null) {
       return;
     }
     StreamController stream = trackedQueries[operationName]![key]!;
+    // TODO(mtewani): Prevent this from getting called multiple times.
+    stream.onCancel = () => stream.close();
     if (error != null) {
       stream.addError(error);
     } else {
-      stream.add(OperationResult<Data, Variables>(
-          this.dataConnect, data as Data, ref));
+      stream.add(QueryResult<Data, Variables>(dataConnect, data as Data, ref));
     }
   }
 }
@@ -91,40 +93,31 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
       DataConnectTransport transport,
       Deserializer<Data> deserializer,
       this._queryManager,
-      Variables? variables,
-      Serializer<Variables>? serializer)
-      : super(dataConnect, operationName, variables, transport, deserializer,
-            serializer);
+      Serializer<Variables> serializer,
+      Variables? variables)
+      : super(dataConnect, operationName, transport, deserializer, serializer,
+            variables);
 
-  _QueryManager _queryManager;
+  QueryManager _queryManager;
   @override
   Future<QueryResult<Data, Variables>> execute() async {
     try {
       Data data = await _transport.invokeQuery<Data, Variables>(
           operationName, deserializer, serializer, variables);
       QueryResult<Data, Variables> res = QueryResult(dataConnect, data, this);
-      _queryManager.triggerCallback<Data, Variables>(
-          operationName,
-          serializer != null ? serializer!(variables as Variables) : '',
-          this,
-          res.data,
-          null);
+      await _queryManager.triggerCallback<Data, Variables>(operationName,
+          serializer(variables as Variables), this, res.data, null);
       return res;
     } on Exception catch (e) {
-      _queryManager.triggerCallback<Data, Variables>(
-          operationName,
-          serializer != null ? serializer!(variables as Variables) : '',
-          this,
-          null,
-          e);
+      print(e);
+      await _queryManager.triggerCallback<Data, Variables>(
+          operationName, serializer(variables as Variables), this, null, e);
       rethrow;
     }
   }
 
   Stream<QueryResult<Data, Variables>> subscribe() {
-    String varsSerialized =
-        serializer != null ? serializer!(variables as Variables) : '';
-
+    String varsSerialized = serializer(variables as Variables);
     Stream<QueryResult<Data, Variables>> res = _queryManager
         .addQuery(operationName, variables, varsSerialized)
         .cast<QueryResult<Data, Variables>>();
@@ -141,10 +134,10 @@ class MutationRef<Data, Variables> extends OperationRef<Data, Variables> {
     String operationName,
     DataConnectTransport transport,
     Deserializer<Data> deserializer,
+    Serializer<Variables> serializer,
     Variables? variables,
-    Serializer<Variables>? serializer,
-  ) : super(dataConnect, operationName, variables, transport, deserializer,
-            serializer);
+  ) : super(dataConnect, operationName, transport, deserializer, serializer,
+            variables);
   @override
   Future<OperationResult<Data, Variables>> execute() async {
     Data data = await _transport.invokeMutation<Data, Variables>(

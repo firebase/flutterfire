@@ -24,7 +24,7 @@ external AnalyticsJsImpl initializeAnalytics(
 
 @JS()
 @staticInterop
-external JSPromise /* bool */ isSupported();
+external JSPromise<JSBoolean> isSupported();
 
 @JS()
 @staticInterop

@@ -5,6 +5,7 @@
 library firebase_data_connect_grpc;
 
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';

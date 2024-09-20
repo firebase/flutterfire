@@ -6,10 +6,10 @@ environment:
   sdk: '>=3.2.0 <4.0.0'
 
 dependencies:
-  firebase_analytics: ^11.3.0
-  firebase_core: ^3.4.0
-  firebase_in_app_messaging: ^0.8.0+5
-  firebase_in_app_messaging_platform_interface: ^0.2.4+41
+  firebase_analytics: ^11.3.2
+  firebase_core: ^3.5.0
+  firebase_in_app_messaging: ^0.8.0+7
+  firebase_in_app_messaging_platform_interface: ^0.2.4+43
   flutter:
     sdk: flutter
 

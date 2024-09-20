@@ -1,19 +1,30 @@
-
 # List subset of fields for movies
-query ListMovies($orderByRating: OrderDirection) @auth(level: PUBLIC) {
-   movies(orderBy: [
-      { rating: $orderByRating }
-   ]
-  ) {
+query ListMovies @auth(level: USER) {
+  movies {
     id
-    title,
-    rating,
+    title
     directed_by: people_via_DirectedBy {
-      name,
+      name
     }
-  },
+  }
 }
 
+# List movies by partial title match
+query ListMoviesByPartialTitle($input: String!) @auth(level: PUBLIC) {
+  movies(where: { title: { contains: $input } }) {
+    id
+    title
+    genre
+    rating
+  }
+}
+
+query ListPersons @auth(level: USER) {
+  people {
+    id
+    name
+  }
+}
 
 # List subset of fields for users
 # query ListUsers @auth(level: PUBLIC) {
@@ -216,17 +227,6 @@ query ListMovies($orderByRating: OrderDirection) @auth(level: PUBLIC) {
 #       title
 #       imageUrl
 #     }
-#   }
-# }
-
-# # List movies by partial title match
-# query ListMoviesByPartialTitle($input: String!) @auth(level: PUBLIC) {
-#   movies(where: { title: { contains: $input } }) {
-#     id
-#     title
-#     genre
-#     rating
-#     imageUrl
 #   }
 # }
 

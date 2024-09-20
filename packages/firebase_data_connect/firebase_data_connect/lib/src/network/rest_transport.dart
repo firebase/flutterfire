@@ -19,7 +19,7 @@ class RestTransport implements DataConnectTransport {
     String location = options.location;
     String service = options.serviceId;
     String connector = options.connector;
-    _url =
+    url =
         '$protocol://$host:$port/v1alpha/projects/$project/locations/$location/services/$service/connectors/$connector';
   }
 
@@ -30,7 +30,15 @@ class RestTransport implements DataConnectTransport {
   FirebaseAppCheck? appCheck;
 
   /// Current endpoint URL.
-  late String _url;
+  @visibleForTesting
+  late String url;
+
+  @visibleForTesting
+  setHttp(http.Client client) {
+    _client = client;
+  }
+
+  http.Client _client = http.Client();
 
   /// Current host configuration.
   @override
@@ -60,13 +68,13 @@ class RestTransport implements DataConnectTransport {
     try {
       authToken = await auth?.currentUser?.getIdToken();
     } catch (e) {
-      print('Unable to get auth token: ' + e.toString());
+      log('Unable to get auth token: $e');
     }
     String? appCheckToken;
     try {
-      authToken = await appCheck?.getToken();
+      appCheckToken = await appCheck?.getToken();
     } catch (e) {
-      print('Unable to get app check token: ' + e.toString());
+      print('Unable to get app check token: $e');
     }
     if (authToken != null) {
       headers['X-Firebase-Auth-Token'] = authToken;
@@ -81,12 +89,10 @@ class RestTransport implements DataConnectTransport {
       'operationName': queryName,
     };
     if (vars != null && serializer != null) {
-      print('decoding');
       body['variables'] = json.decode(serializer(vars));
-      print('done decoding');
     }
     try {
-      http.Response r = await http.post(Uri.parse('$_url:$endpoint'),
+      http.Response r = await _client.post(Uri.parse('$url:$endpoint'),
           body: json.encode(body), headers: headers);
       if (r.statusCode != 200) {
         Map<String, dynamic> bodyJson =
