@@ -73,6 +73,42 @@ class FirebaseOptions {
         iosBundleId = options.iosBundleId,
         appGroupId = options.appGroupId;
 
+  /// Returns a copy of this FirebaseOptions with the given fields replaced with
+  /// the new values.
+  FirebaseOptions copyWith({
+    String? apiKey,
+    String? appId,
+    String? messagingSenderId,
+    String? projectId,
+    String? authDomain,
+    String? databaseURL,
+    String? storageBucket,
+    String? measurementId,
+    String? trackingId,
+    String? deepLinkURLScheme,
+    String? androidClientId,
+    String? iosClientId,
+    String? iosBundleId,
+    String? appGroupId,
+  }) {
+    return FirebaseOptions(
+      apiKey: apiKey ?? this.apiKey,
+      appId: appId ?? this.appId,
+      messagingSenderId: messagingSenderId ?? this.messagingSenderId,
+      projectId: projectId ?? this.projectId,
+      authDomain: authDomain ?? this.authDomain,
+      databaseURL: databaseURL ?? this.databaseURL,
+      storageBucket: storageBucket ?? this.storageBucket,
+      measurementId: measurementId ?? this.measurementId,
+      trackingId: trackingId ?? this.trackingId,
+      deepLinkURLScheme: deepLinkURLScheme ?? this.deepLinkURLScheme,
+      androidClientId: androidClientId ?? this.androidClientId,
+      iosClientId: iosClientId ?? this.iosClientId,
+      iosBundleId: iosBundleId ?? this.iosBundleId,
+      appGroupId: appGroupId ?? this.appGroupId,
+    );
+  }
+
   /// An API key used for authenticating requests from your app to Google
   /// servers.
   final String apiKey;

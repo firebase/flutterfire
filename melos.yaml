@@ -12,7 +12,7 @@ command:
     # Generate commit links in package changelogs.
     linkToCommits: true
     # # Only allow versioning to happen on main branch.
-    # branch: master
+    # branch: main
     # Additionally build a changelog at the root of the workspace.
     workspaceChangelog: true
     hooks:
@@ -229,7 +229,7 @@ scripts:
       melos exec -- "flutter pub run pigeon --input ./pigeons/messages.dart" && \
       melos run generate:pigeon:macos --no-select && \
       melos run generate:pigeon:android --no-select && \
-      melos run format --no-select
+      melos run format-ci --no-select
     packageFilters:
       fileExists: 'pigeons/messages.dart'
     description: Generate the pigeon messages for all the supported packages.

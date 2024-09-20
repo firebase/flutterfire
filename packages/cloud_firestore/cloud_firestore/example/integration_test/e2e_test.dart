@@ -18,10 +18,12 @@ import 'instance_e2e.dart';
 import 'load_bundle_e2e.dart';
 import 'query_e2e.dart';
 import 'second_database.dart';
+import 'settings_e2e.dart';
 import 'snapshot_metadata_e2e.dart';
 import 'timestamp_e2e.dart';
 import 'transaction_e2e.dart';
 import 'write_batch_e2e.dart';
+import 'web_snapshot_listeners.dart';
 
 bool kUseFirestoreEmulator = true;
 
@@ -52,8 +54,12 @@ void main() {
     runTransactionTests();
     runWriteBatchTests();
     runLoadBundleTests();
+    runWebSnapshotListenersTests();
     if (defaultTargetPlatform != TargetPlatform.windows) {
       runSecondDatabaseTests();
+    }
+    if (kIsWeb) {
+      runSettingsTest();
     }
   });
 }

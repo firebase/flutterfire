@@ -573,7 +573,7 @@ class _AuthGateState extends State<AuthGate> {
 
       // Login with token
       await auth.signInWithCredential(
-        FacebookAuthProvider.credential(accessToken.token),
+        FacebookAuthProvider.credential(accessToken.tokenString),
       );
     } else {
       print('Facebook login did not succeed');

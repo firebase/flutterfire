@@ -170,6 +170,13 @@ enum AggregateSource {
   server,
 }
 
+/// [PersistenceCacheIndexManagerRequest] represents the request types for the persistence cache index manager.
+enum PersistenceCacheIndexManagerRequest {
+  enableIndexAutoCreation,
+  disableIndexAutoCreation,
+  deleteAllIndexes
+}
+
 class PigeonGetOptions {
   const PigeonGetOptions({
     required this.source,
@@ -427,5 +434,11 @@ abstract class FirebaseFirestoreHostApi {
     DocumentReferenceRequest parameters,
     bool includeMetadataChanges,
     ListenSource source,
+  );
+
+  @async
+  void persistenceCacheIndexManagerRequest(
+    FirestorePigeonFirebaseApp app,
+    PersistenceCacheIndexManagerRequest request,
   );
 }

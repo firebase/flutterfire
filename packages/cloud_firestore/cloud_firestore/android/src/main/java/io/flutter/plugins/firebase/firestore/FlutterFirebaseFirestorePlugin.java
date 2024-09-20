@@ -9,6 +9,7 @@ import static com.google.firebase.firestore.AggregateField.count;
 import static com.google.firebase.firestore.AggregateField.sum;
 
 import android.app.Activity;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.Task;
@@ -24,6 +25,7 @@ import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.MemoryCacheSettings;
+import com.google.firebase.firestore.PersistentCacheIndexManager;
 import com.google.firebase.firestore.PersistentCacheSettings;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -64,7 +66,7 @@ public class FlutterFirebaseFirestorePlugin
         GeneratedAndroidFirebaseFirestore.FirebaseFirestoreHostApi {
   protected static final HashMap<FirebaseFirestore, FlutterFirebaseFirestoreExtension>
       firestoreInstanceCache = new HashMap<>();
-
+  public static final String TAG = "FlutterFirestorePlugin";
   public static final String DEFAULT_ERROR_CODE = "firebase_firestore";
 
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_firestore";
@@ -470,6 +472,35 @@ public class FlutterFirebaseFirestorePlugin
           } catch (Exception e) {
             ExceptionConverter.sendErrorToFlutter(result, e);
           }
+        });
+  }
+
+  @Override
+  public void persistenceCacheIndexManagerRequest(
+      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.PersistenceCacheIndexManagerRequest request,
+      @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
+    cachedThreadPool.execute(
+        () -> {
+          PersistentCacheIndexManager indexManager =
+              getFirestoreFromPigeon(app).getPersistentCacheIndexManager();
+          if (indexManager != null) {
+            switch (request) {
+              case ENABLE_INDEX_AUTO_CREATION:
+                indexManager.enableIndexAutoCreation();
+                break;
+              case DISABLE_INDEX_AUTO_CREATION:
+                indexManager.disableIndexAutoCreation();
+                break;
+              case DELETE_ALL_INDEXES:
+                indexManager.deleteAllIndexes();
+                break;
+            }
+          } else {
+            Log.d(TAG, "`PersistentCacheIndexManager` is not available.");
+          }
+
+          result.success(null);
         });
   }
 

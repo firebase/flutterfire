@@ -50,7 +50,7 @@ To initiate the authentication flow, present an interface that prompts the user 
 
 1.  Construct the ActionCodeSettings object, which provides Firebase with instructions on how to construct the email link. Set the following fields:
 
-    * `url`: The deep link to embed and any additional state to be passed along. The link's domain has to be whitelisted in the Firebase Console list of authorized domains, which can be found by going to the Sign-in method tab (Authentication -> Sign-in method). The link will redirect the user to this URL if the app is not installed on their device and the app was not able to be installed.
+    * `url`: The deep link to embed and any additional state to be passed along. The link's domain has to be whitelisted in the Firebase Console list of authorized domains, which can be found by going to the Settings tab (Authentication -> Settings -> Authorized Domains). The link will redirect the user to this URL if the app is not installed on their device and the app was not able to be installed.
 
     * `androidPackageName` and `IOSBundleId`: The apps to use when the sign-in link is opened on an Android or iOS device. Learn more on how to configure Firebase Dynamic Links to open email action links via mobile apps.
 

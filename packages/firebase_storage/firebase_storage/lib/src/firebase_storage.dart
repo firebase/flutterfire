@@ -174,6 +174,12 @@ class FirebaseStorage extends FirebasePluginPlatform {
       }
     }
 
+    if (defaultTargetPlatform == TargetPlatform.windows && !kIsWeb) {
+      // ignore: avoid_print
+      print('The Storage Emulator is not available on Windows.');
+      return;
+    }
+
     await _delegate.useStorageEmulator(mappedHost, port);
   }
 

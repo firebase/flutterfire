@@ -8,6 +8,7 @@ import 'dart:async';
 import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_load_bundle_task.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_persistent_cache_index_manager.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_query_snapshot.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
@@ -334,6 +335,16 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
+  }
+
+  @override
+  PersistentCacheIndexManagerPlatform? persistentCacheIndexManager() {
+    // Persistence is enabled by default, if the user has disabled it, return null.
+    if (settings.persistenceEnabled == false) return null;
+    return MethodChannelPersistentCacheIndexManager(
+      pigeonChannel,
+      pigeonApp,
+    );
   }
 
   @override

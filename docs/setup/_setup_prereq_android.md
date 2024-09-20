@@ -1,7 +1,7 @@
 {# This content gets published to the following location: #}
 {#   https://firebase.google.com/docs/flutter/setup       #}
 
-* Install your preferred [editor or IDE](//flutter.io/get-started/editor/).
+* Install your preferred [editor or IDE](//docs.flutter.dev/get-started/editor/).
 
 * Set up a device or emulator for running your app.
   [Emulators](https://developer.android.com/studio/run/managing-avds){: .external}
@@ -13,7 +13,7 @@
       or higher
     * Uses Android {{android_min_version}} or higher
 
-* [Install Flutter](//flutter.io/get-started/install/) for your specific
+* [Install Flutter](//docs.flutter.dev/get-started/install/) for your specific
   operating system, including the following:
 
     * Flutter SDK
@@ -24,5 +24,5 @@
   account.
 
 If you don't already have a Flutter app, you can complete the [Get
-Started: Test Drive](//flutter.io/get-started/test-drive/#androidstudio) to
+Started: Test Drive](//docs.flutter.dev/get-started/test-drive#androidstudio) to
 create a new Flutter app using your preferred editor or IDE.

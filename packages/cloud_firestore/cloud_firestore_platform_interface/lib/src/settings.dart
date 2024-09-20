@@ -16,6 +16,9 @@ class Settings {
     this.host,
     this.sslEnabled,
     this.cacheSizeBytes,
+    this.webExperimentalForceLongPolling,
+    this.webExperimentalAutoDetectLongPolling,
+    this.webExperimentalLongPollingOptions,
     this.ignoreUndefinedProperties = false,
   });
 
@@ -51,6 +54,27 @@ class Settings {
   /// Web only.
   final bool ignoreUndefinedProperties;
 
+  /// Forces the SDK’s underlying network transport (WebChannel) to use long-polling.
+  ///
+  /// Each response from the backend will be closed immediately after the backend sends data
+  /// (by default responses are kept open in case the backend has more data to send).
+  /// This avoids incompatibility issues with certain proxies, antivirus software, etc.
+  /// that incorrectly buffer traffic indefinitely.
+  /// Use of this option will cause some performance degradation though.
+  final bool? webExperimentalForceLongPolling;
+
+  ///	Configures the SDK's underlying transport (WebChannel) to automatically detect if long-polling should be used.
+  ///
+  ///This is very similar to [webExperimentalForceLongPolling], but only uses long-polling if required.
+  final bool? webExperimentalAutoDetectLongPolling;
+
+  /// Options that configure the SDK’s underlying network transport (WebChannel) when long-polling is used.
+  ///
+  /// These options are only used if experimentalForceLongPolling is true
+  /// or if [webExperimentalAutoDetectLongPolling] is true and the auto-detection determined that long-polling was needed.
+  /// Otherwise, these options have no effect.
+  final WebExperimentalLongPollingOptions? webExperimentalLongPollingOptions;
+
   /// Returns the settings as a [Map]
   Map<String, dynamic> get asMap {
     return {
@@ -58,6 +82,11 @@ class Settings {
       'host': host,
       'sslEnabled': sslEnabled,
       'cacheSizeBytes': cacheSizeBytes,
+      'webExperimentalForceLongPolling': webExperimentalForceLongPolling,
+      'webExperimentalAutoDetectLongPolling':
+          webExperimentalAutoDetectLongPolling,
+      'webExperimentalLongPollingOptions':
+          webExperimentalLongPollingOptions?.asMap,
       if (kIsWeb) 'ignoreUndefinedProperties': ignoreUndefinedProperties,
     };
   }
@@ -67,7 +96,10 @@ class Settings {
     String? host,
     bool? sslEnabled,
     int? cacheSizeBytes,
+    bool? webExperimentalForceLongPolling,
+    bool? webExperimentalAutoDetectLongPolling,
     bool? ignoreUndefinedProperties,
+    WebExperimentalLongPollingOptions? webExperimentalLongPollingOptions,
   }) {
     assert(
         cacheSizeBytes == null ||
@@ -81,6 +113,13 @@ class Settings {
       host: host ?? this.host,
       sslEnabled: sslEnabled ?? this.sslEnabled,
       cacheSizeBytes: cacheSizeBytes ?? this.cacheSizeBytes,
+      webExperimentalForceLongPolling: webExperimentalForceLongPolling ??
+          this.webExperimentalForceLongPolling,
+      webExperimentalAutoDetectLongPolling:
+          webExperimentalAutoDetectLongPolling ??
+              this.webExperimentalAutoDetectLongPolling,
+      webExperimentalLongPollingOptions: webExperimentalLongPollingOptions ??
+          this.webExperimentalLongPollingOptions,
       ignoreUndefinedProperties:
           ignoreUndefinedProperties ?? this.ignoreUndefinedProperties,
     );
@@ -94,6 +133,12 @@ class Settings {
       other.host == host &&
       other.sslEnabled == sslEnabled &&
       other.cacheSizeBytes == cacheSizeBytes &&
+      other.webExperimentalForceLongPolling ==
+          webExperimentalForceLongPolling &&
+      other.webExperimentalAutoDetectLongPolling ==
+          webExperimentalAutoDetectLongPolling &&
+      other.webExperimentalLongPollingOptions ==
+          webExperimentalLongPollingOptions &&
       other.ignoreUndefinedProperties == ignoreUndefinedProperties;
 
   @override
@@ -103,9 +148,46 @@ class Settings {
         host,
         sslEnabled,
         cacheSizeBytes,
+        webExperimentalForceLongPolling,
+        webExperimentalAutoDetectLongPolling,
+        webExperimentalLongPollingOptions,
         ignoreUndefinedProperties,
       );
 
   @override
   String toString() => 'Settings($asMap)';
+}
+
+/// Options that configure the SDK’s underlying network transport (WebChannel) when long-polling is used.
+@immutable
+class WebExperimentalLongPollingOptions {
+  /// The desired maximum timeout interval, in seconds, to complete a long-polling GET response
+  ///
+  /// Valid values are between 5 and 30, inclusive.
+  /// By default, when long-polling is used the "hanging GET" request sent by the client times out after 30 seconds.
+  /// To request a different timeout from the server, set this setting with the desired timeout.
+  /// Changing the default timeout may be useful, for example,
+  /// if the buffering proxy that necessitated enabling long-polling in the first place has a shorter timeout for hanging GET requests,
+  /// in which case setting the long-polling timeout to a shorter value,
+  /// such as 25 seconds, may fix prematurely-closed hanging GET requests.
+  final Duration? timeoutDuration;
+
+  const WebExperimentalLongPollingOptions({
+    this.timeoutDuration,
+  });
+
+  Map<String, dynamic> get asMap {
+    return {
+      'timeoutDuration': timeoutDuration?.inSeconds,
+    };
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      other is WebExperimentalLongPollingOptions &&
+      other.runtimeType == runtimeType &&
+      other.timeoutDuration == timeoutDuration;
+
+  @override
+  int get hashCode => Object.hash(runtimeType, timeoutDuration);
 }

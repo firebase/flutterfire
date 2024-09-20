@@ -33,6 +33,7 @@ export 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
         DocumentChangeType,
         PersistenceSettings,
         Settings,
+        WebExperimentalLongPollingOptions,
         IndexField,
         Index,
         FieldOverrides,
@@ -65,3 +66,4 @@ part 'src/snapshot_metadata.dart';
 part 'src/transaction.dart';
 part 'src/utils/codec_utility.dart';
 part 'src/write_batch.dart';
+part 'src/persistent_cache_index_manager.dart';

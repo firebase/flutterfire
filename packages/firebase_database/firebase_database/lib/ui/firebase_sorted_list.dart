@@ -13,7 +13,7 @@ import 'utils/stream_subscriber_mixin.dart';
 /// Sorts the results of `query` on the client side using to the `comparator`.
 // We can be smarter about how we handle insertion and keep the list always
 // sorted. See example here:
-// https://github.com/firebase/FirebaseUI-iOS/blob/master/FirebaseDatabaseUI/FUISortedArray.m
+// https://github.com/firebase/FirebaseUI-iOS/blob/main/FirebaseDatabaseUI/FUISortedArray.m
 class FirebaseSortedList extends ListBase<DataSnapshot>
     with
         // ignore: prefer_mixin, class_used_as_mixin

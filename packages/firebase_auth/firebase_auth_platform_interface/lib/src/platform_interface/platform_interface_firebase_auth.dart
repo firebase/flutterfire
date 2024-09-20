@@ -228,6 +228,19 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///    email/password accounts in the Firebase Console, under the Auth tab.
   /// - **weak-password**:
   ///  - Thrown if the password is not strong enough.
+  /// - **too-many-requests**:
+  ///  - Thrown if the user sent too many requests at the same time, for security
+  ///     the api will not allow too many attemps at the same time, user will have
+  ///     to wait for some time
+  /// - **user-token-expired**:
+  ///  - Thrown if the user is no longer authenticated since his refresh token
+  ///    has been expired
+  /// - **network-request-failed**:
+  ///  - Thrown if there was a network request error, for example the user don't
+  ///    don't have internet connection
+  /// - **operation-not-allowed**:
+  ///  - Thrown if email/password accounts are not enabled. Enable
+  ///    email/password accounts in the Firebase Console, under the Auth tab.
   Future<UserCredentialPlatform> createUserWithEmailAndPassword(
     String email,
     String password,
@@ -506,6 +519,24 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// - **wrong-password**:
   ///  - Thrown if the password is invalid for the given email, or the account
   ///    corresponding to the email does not have a password set.
+  /// - **too-many-requests**:
+  ///  - Thrown if the user sent too many requests at the same time, for security
+  ///     the api will not allow too many attemps at the same time, user will have
+  ///     to wait for some time
+  /// - **user-token-expired**:
+  ///  - Thrown if the user is no longer authenticated since his refresh token
+  ///    has been expired
+  /// - **network-request-failed**:
+  ///  - Thrown if there was a network request error, for example the user don't
+  ///    don't have internet connection
+  /// - **INVALID_LOGIN_CREDENTIALS** or **invalid-credential**:
+  ///  - Thrown if the password is invalid for the given email, or the account
+  ///    corresponding to the email does not have a password set.
+  ///    depending on if you are using firebase emulator or not the code is
+  ///    different
+  /// - **operation-not-allowed**:
+  ///  - Thrown if email/password accounts are not enabled. Enable
+  ///    email/password accounts in the Firebase Console, under the Auth tab.
   Future<UserCredentialPlatform> signInWithEmailAndPassword(
     String email,
     String password,

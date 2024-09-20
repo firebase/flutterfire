@@ -101,7 +101,7 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
   }
 
 // purely for debug mode and tracking listeners to clean up on "hot restart"
-  final Map<String, int> _snapshotInSyncListeners = {};
+  static final Map<String, int> _snapshotInSyncListeners = {};
   String _snapshotInSyncWindowsKey() {
     if (kDebugMode) {
       final key = 'flutterfire-${app.name}_snapshotInSync';
@@ -191,6 +191,30 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
       firestore_interop
           .setIndexConfiguration(jsObject, indexConfiguration.toJS)
           .toDart;
+
+  Future<void> persistenceCacheIndexManagerRequest(
+    PersistenceCacheIndexManagerRequest request,
+  ) async {
+    firestore_interop.PersistentCacheIndexManager? indexManager =
+        firestore_interop.getPersistentCacheIndexManager(jsObject);
+
+    if (indexManager != null) {
+      switch (request) {
+        case PersistenceCacheIndexManagerRequest.enableIndexAutoCreation:
+          return firestore_interop
+              .enablePersistentCacheIndexAutoCreation(indexManager);
+        case PersistenceCacheIndexManagerRequest.disableIndexAutoCreation:
+          return firestore_interop
+              .disablePersistentCacheIndexAutoCreation(indexManager);
+        case PersistenceCacheIndexManagerRequest.deleteAllIndexes:
+          return firestore_interop
+              .deleteAllPersistentCacheIndexes(indexManager);
+      }
+    } else {
+      // ignore: avoid_print
+      print('Firestore: `PersistentCacheIndexManager` is not available');
+    }
+  }
 
   Future<Query> namedQuery(String name) async {
     final future = firestore_interop.namedQuery(jsObject, name.toJS).toDart;
@@ -387,7 +411,7 @@ class DocumentReference
   }
 
   // purely for debug mode and tracking listeners to clean up on "hot restart"
-  final Map<String, int> _docListeners = {};
+  static final Map<String, int> _docListeners = {};
   String _documentSnapshotWindowsKey() {
     if (kDebugMode) {
       final key = 'flutterfire-${firestore.app.name}_${path}_documentSnapshot';
@@ -513,7 +537,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
       jsObject, firestore_interop.limitToLast(limit.toJS)));
 
   // purely for debug mode and tracking listeners to clean up on "hot restart"
-  final Map<String, int> _snapshotListeners = {};
+  static final Map<String, int> _snapshotListeners = {};
   String _querySnapshotWindowsKey(hashCode) {
     if (kDebugMode) {
       final key = 'flutterfire-${firestore.app.name}_${hashCode}_querySnapshot';
@@ -529,12 +553,12 @@ class Query<T extends firestore_interop.QueryJsImpl>
 
   Stream<QuerySnapshot> onSnapshot(
           {bool includeMetadataChanges = false,
-          ListenSource source = ListenSource.defaultSource,
+          required ListenSource listenSource,
           required int hashCode}) =>
       _createSnapshotStream(
         firestore_interop.DocumentListenOptions(
           includeMetadataChanges: includeMetadataChanges.toJS,
-          source: convertListenSource(source),
+          source: convertListenSource(listenSource),
         ),
         hashCode,
       ).stream;

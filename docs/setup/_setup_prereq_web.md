@@ -1,9 +1,9 @@
 {# This content gets published to the following location: #}
 {#   https://firebase.google.com/docs/flutter/setup       #}
 
-* Install your preferred [editor or IDE](//flutter.io/get-started/editor/).
+* Install your preferred [editor or IDE](//docs.flutter.dev/get-started/editor/).
 
-* [Install Flutter](//flutter.io/get-started/install/) for your specific
+* [Install Flutter](//docs.flutter.dev/get-started/install/) for your specific
   operating system, including the following:
 
     * Flutter SDK

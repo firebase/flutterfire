@@ -1,3 +1,11 @@
+## 2.17.5
+
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
+## 2.17.4
+
+ - Update a dependency to the latest release.
+
 ## 2.17.3
 
  - **FIX**(core,web): do not throw if `Firebase.apps` called before initialising app ([#13045](https://github.com/firebase/flutterfire/issues/13045)). ([86ae6fe5](https://github.com/firebase/flutterfire/commit/86ae6fe5b8a72bafab0418aff3d6a84715f33dc0))
