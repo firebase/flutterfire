@@ -18,7 +18,7 @@
 
 syntax = "proto3";
 
-package google.firebase.dataconnect.v1alpha;
+package google.firebase.dataconnect.v1beta;
 
 import "google/protobuf/struct.proto";
 
