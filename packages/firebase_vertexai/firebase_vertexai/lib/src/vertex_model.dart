@@ -281,55 +281,6 @@ final class GenerativeModel {
     };
     return makeRequest(Task.countTokens, parameters, parseCountTokensResponse);
   }
-
-  /// Creates an embedding (list of float values) representing [content].
-  ///
-  /// Sends a "embedContent" API request for the configured model,
-  /// and waits for the response.
-  ///
-  /// Example:
-  /// ```dart
-  /// final promptEmbedding =
-  ///     (await model.embedContent([Content.text(prompt)])).embedding.values;
-  /// ```
-  Future<EmbedContentResponse> embedContent(Content content,
-          {TaskType? taskType, String? title, int? outputDimensionality}) =>
-      makeRequest(
-          Task.embedContent,
-          {
-            'content': content.toJson(),
-            if (taskType != null) 'taskType': taskType.toJson(),
-            if (title != null) 'title': title,
-            if (outputDimensionality != null)
-              'outputDimensionality': outputDimensionality,
-          },
-          parseEmbedContentResponse);
-
-  /// Creates embeddings (list of float values) representing each content in
-  /// [requests].
-  ///
-  /// Sends a "batchEmbedContents" API request for the configured model.
-  ///
-  /// Example:
-  /// ```dart
-  /// final requests = [
-  ///   EmbedContentRequest(Content.text(first)),
-  ///   EmbedContentRequest(Content.text(second))
-  /// ];
-  /// final promptEmbeddings =
-  ///     (await model.embedContent(requests)).embedding.values;
-  /// ```
-  Future<BatchEmbedContentsResponse> batchEmbedContents(
-          Iterable<EmbedContentRequest> requests) =>
-      makeRequest(
-          Task.batchEmbedContents,
-          {
-            'requests': requests
-                .map((r) =>
-                    r.toJson(defaultModel: '${_model.prefix}/${_model.name}'))
-                .toList()
-          },
-          parseBatchEmbedContentsResponse);
 }
 
 /// Returns a [GenerativeModel] using it's private constructor.

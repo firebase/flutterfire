@@ -33,7 +33,8 @@ export 'src/vertex_api.dart'
         PromptFeedback,
         SafetyRating,
         SafetySetting,
-        TaskType;
+        TaskType,
+        UsageMetadata;
 export 'src/vertex_chat.dart' show ChatSession, StartChatExtension;
 export 'src/vertex_content.dart'
     show

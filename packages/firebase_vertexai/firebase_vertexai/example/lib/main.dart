@@ -91,10 +91,10 @@ class _ChatWidgetState extends State<ChatWidget> {
 
     initFirebase().then((value) {
       _model = FirebaseVertexAI.instance.generativeModel(
-        model: 'gemini-1.5-flash-preview-0514',
+        model: 'gemini-1.5-flash-001',
       );
       _functionCallModel = FirebaseVertexAI.instance.generativeModel(
-        model: 'gemini-1.5-flash-preview-0514',
+        model: 'gemini-1.5-flash-001',
         tools: [
           Tool(functionDeclarations: [exchangeRateTool]),
         ],
@@ -542,11 +542,19 @@ class _ChatWidgetState extends State<ChatWidget> {
     });
 
     const prompt = 'tell a short story';
-    var response = await _model.countTokens([Content.text(prompt)]);
-    print(
-      'token: ${response.totalTokens}, billable characters: ${response.totalBillableCharacters}',
-    );
+    var content = Content.text(prompt);
+    var tokenResponse = await _model.countTokens([content]);
+    final tokenResult =
+        'Count token: ${tokenResponse.totalTokens}, billable characters: ${tokenResponse.totalBillableCharacters}';
+    _generatedContent.add((image: null, text: tokenResult, fromUser: false));
 
+    var contentResponse = await _model.generateContent([content]);
+    final contentMetaData =
+        'result metadata, promptTokenCount:${contentResponse.usageMetadata!.promptTokenCount}, '
+        'candidatesTokenCount:${contentResponse.usageMetadata!.candidatesTokenCount}, '
+        'totalTokenCount:${contentResponse.usageMetadata!.totalTokenCount}';
+    _generatedContent
+        .add((image: null, text: contentMetaData, fromUser: false));
     setState(() {
       _loading = false;
     });
