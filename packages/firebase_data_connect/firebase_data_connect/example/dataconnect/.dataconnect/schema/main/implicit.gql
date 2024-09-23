@@ -8,3 +8,6 @@ extend type Movie {
 extend type Person {
   id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Person", purpose: IMPLICIT_KEY_FIELD)
 }
+extend type Thing {
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Thing", purpose: IMPLICIT_KEY_FIELD)
+}

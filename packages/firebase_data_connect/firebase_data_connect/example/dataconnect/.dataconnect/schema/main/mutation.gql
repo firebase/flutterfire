@@ -12,6 +12,10 @@ extend type Mutation {
   """
   person_insert(data: Person_Data!): Person_Key! @fdc_generated(from: "Person", purpose: INSERT_SINGLE)
   """
+  Insert a single Thing into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  thing_insert(data: Thing_Data!): Thing_Key! @fdc_generated(from: "Thing", purpose: INSERT_SINGLE)
+  """
   Insert DirectedBy entries into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
   """
   directedBy_insertMany(data: [DirectedBy_Data!]!): [DirectedBy_Key!]! @fdc_generated(from: "DirectedBy", purpose: INSERT_MULTIPLE)
@@ -23,6 +27,10 @@ extend type Mutation {
   Insert Person entries into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
   """
   person_insertMany(data: [Person_Data!]!): [Person_Key!]! @fdc_generated(from: "Person", purpose: INSERT_MULTIPLE)
+  """
+  Insert Thing entries into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  thing_insertMany(data: [Thing_Data!]!): [Thing_Key!]! @fdc_generated(from: "Thing", purpose: INSERT_MULTIPLE)
   """
   Insert or update a single DirectedBy into the table, based on the primary key. Returns the key of the newly inserted DirectedBy.
   """
@@ -36,6 +44,10 @@ extend type Mutation {
   """
   person_upsert(data: Person_Data!): Person_Key! @fdc_generated(from: "Person", purpose: UPSERT_SINGLE)
   """
+  Insert or update a single Thing into the table, based on the primary key. Returns the key of the newly inserted Thing.
+  """
+  thing_upsert(data: Thing_Data!): Thing_Key! @fdc_generated(from: "Thing", purpose: UPSERT_SINGLE)
+  """
   Insert or update DirectedBy entries into the table, based on the primary key. Returns the key of the newly inserted DirectedBy.
   """
   directedBy_upsertMany(data: [DirectedBy_Data!]): [DirectedBy_Key!]! @fdc_generated(from: "DirectedBy", purpose: UPSERT_MULTIPLE)
@@ -47,6 +59,10 @@ extend type Mutation {
   Insert or update Person entries into the table, based on the primary key. Returns the key of the newly inserted Person.
   """
   person_upsertMany(data: [Person_Data!]): [Person_Key!]! @fdc_generated(from: "Person", purpose: UPSERT_MULTIPLE)
+  """
+  Insert or update Thing entries into the table, based on the primary key. Returns the key of the newly inserted Thing.
+  """
+  thing_upsertMany(data: [Thing_Data!]): [Thing_Key!]! @fdc_generated(from: "Thing", purpose: UPSERT_MULTIPLE)
   """
   Update a single DirectedBy based on `id` or `key`, setting columns specified in `data`. Returns `null` if not found.
   """
@@ -60,6 +76,10 @@ extend type Mutation {
   """
   person_update(id: UUID, key: Person_Key, data: Person_Data!): Person_Key @fdc_generated(from: "Person", purpose: UPDATE_SINGLE)
   """
+  Update a single Thing based on `id` or `key`, setting columns specified in `data`. Returns `null` if not found.
+  """
+  thing_update(id: UUID, key: Thing_Key, data: Thing_Data!): Thing_Key @fdc_generated(from: "Thing", purpose: UPDATE_SINGLE)
+  """
   Update DirectedBy entries matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
   """
   directedBy_updateMany(where: DirectedBy_Filter, all: Boolean = false, data: DirectedBy_Data!): Int! @fdc_generated(from: "DirectedBy", purpose: UPDATE_MULTIPLE)
@@ -71,6 +91,10 @@ extend type Mutation {
   Update Person entries matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
   """
   person_updateMany(where: Person_Filter, all: Boolean = false, data: Person_Data!): Int! @fdc_generated(from: "Person", purpose: UPDATE_MULTIPLE)
+  """
+  Update Thing entries matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  thing_updateMany(where: Thing_Filter, all: Boolean = false, data: Thing_Data!): Int! @fdc_generated(from: "Thing", purpose: UPDATE_MULTIPLE)
   """
   Delete a single DirectedBy based on `id` or `key` and return its key (or `null` if not found).
   """
@@ -84,6 +108,10 @@ extend type Mutation {
   """
   person_delete(id: UUID, key: Person_Key): Person_Key @fdc_generated(from: "Person", purpose: DELETE_SINGLE)
   """
+  Delete a single Thing based on `id` or `key` and return its key (or `null` if not found).
+  """
+  thing_delete(id: UUID, key: Thing_Key): Thing_Key @fdc_generated(from: "Thing", purpose: DELETE_SINGLE)
+  """
   Delete DirectedBy entries matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
   """
   directedBy_deleteMany(where: DirectedBy_Filter, all: Boolean = false): Int! @fdc_generated(from: "DirectedBy", purpose: DELETE_MULTIPLE)
@@ -95,4 +123,8 @@ extend type Mutation {
   Delete Person entries matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
   """
   person_deleteMany(where: Person_Filter, all: Boolean = false): Int! @fdc_generated(from: "Person", purpose: DELETE_MULTIPLE)
+  """
+  Delete Thing entries matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  thing_deleteMany(where: Thing_Filter, all: Boolean = false): Int! @fdc_generated(from: "Thing", purpose: DELETE_MULTIPLE)
 }

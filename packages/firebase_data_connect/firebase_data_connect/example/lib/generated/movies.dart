@@ -11,11 +11,17 @@ part 'create_movie.dart';
 
 part 'delete_movie.dart';
 
+part 'thing.dart';
+
+part 'seed_data.dart';
+
 part 'list_movies.dart';
 
 part 'list_movies_by_partial_title.dart';
 
 part 'list_persons.dart';
+
+part 'list_thing.dart';
 
 class MoviesConnector {
   AddPerson get addPerson {
@@ -34,6 +40,14 @@ class MoviesConnector {
     return DeleteMovie(dataConnect: dataConnect);
   }
 
+  Thing get thing {
+    return Thing(dataConnect: dataConnect);
+  }
+
+  SeedData get seedData {
+    return SeedData(dataConnect: dataConnect);
+  }
+
   ListMovies get listMovies {
     return ListMovies(dataConnect: dataConnect);
   }
@@ -44,6 +58,10 @@ class MoviesConnector {
 
   ListPersons get listPersons {
     return ListPersons(dataConnect: dataConnect);
+  }
+
+  ListThing get listThing {
+    return ListThing(dataConnect: dataConnect);
   }
 
   static ConnectorConfig connectorConfig = ConnectorConfig(

@@ -12,7 +12,7 @@ enum OptionalState { unset, set }
 /// If it's unset, then the value is ignored when sending over the wire.
 class Optional<T> {
   /// Instantiates deserializer.
-  Optional(this.deserializer);
+  Optional(this.deserializer, this.serializer);
 
   /// Instantiates deserializer and serializer.
   Optional.optional(this.deserializer, this.serializer);
@@ -21,7 +21,7 @@ class Optional<T> {
   OptionalState state = OptionalState.unset;
 
   /// Serializer for value.
-  Serializer<T>? serializer;
+  Serializer<T> serializer;
 
   /// Deserializer for value.
   Deserializer<T> deserializer;
@@ -50,29 +50,27 @@ class Optional<T> {
   }
 
   /// Converts the value to String.
-  String toJson() {
+  dynamic toJson() {
     if (_value != null) {
-      if (serializer != null) {
-        if (_value is List) {
-          return (_value! as List).map((e) => serializer!(e)).toString();
-        }
-        return serializer!(_value as T);
-      } else {
-        return _value.toString();
+      if (_value is List) {
+        return (_value! as List).map((e) =>
+            serializer(e)); // TODO(mtewani): Check if this properly serializes
       }
+      return serializer(_value as T);
     }
     return '';
   }
 }
 
-String nativeToJson<T>(T type) {
-  if (type is bool || type is int || type is double || type is num) {
-    return type.toString();
-  } else if (type is String) {
+dynamic nativeToJson<T>(T type) {
+  if (type is bool ||
+      type is int ||
+      type is double ||
+      type is num ||
+      type is String) {
     return type;
-  } else {
-    throw UnimplementedError('This type is unimplemented: ${type.runtimeType}');
   }
+  throw UnimplementedError('This type is unimplemented: ${type.runtimeType}');
 }
 
 T nativeFromJson<T>(String json) {

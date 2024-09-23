@@ -25,6 +25,11 @@ query ListPersons @auth(level: USER) {
     name
   }
 }
+query ListThing @auth(level: USER) {
+  things {
+    title
+  }
+}
 
 # List subset of fields for users
 # query ListUsers @auth(level: PUBLIC) {

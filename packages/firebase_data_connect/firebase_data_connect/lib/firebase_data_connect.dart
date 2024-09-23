@@ -24,3 +24,4 @@ part 'src/core/ref.dart';
 part 'src/firebase_data_connect.dart';
 part 'src/optional.dart';
 part 'src/timestamp.dart';
+part 'src/any_value.dart';
