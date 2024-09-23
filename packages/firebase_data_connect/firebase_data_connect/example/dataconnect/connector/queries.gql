@@ -25,8 +25,12 @@ query ListPersons @auth(level: USER) {
     name
   }
 }
-query ListThing @auth(level: USER) {
-  things {
+query ListThing($data: Any) @auth(level: USER) {
+  things(where: {
+    title: {
+      eq: $data
+    }
+  }) {
     title
   }
 }

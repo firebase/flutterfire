@@ -1,130 +1,130 @@
 extend type Mutation {
   """
-  Insert a single DirectedBy into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  ✨ Insert a single DirectedBy into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
   """
-  directedBy_insert(data: DirectedBy_Data!): DirectedBy_Key! @fdc_generated(from: "DirectedBy", purpose: INSERT_SINGLE)
+  directedBy_insert(data: DirectedBy_Data!): DirectedBy_KeyOutput! @fdc_generated(from: "DirectedBy", purpose: INSERT_SINGLE)
   """
-  Insert a single Movie into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  ✨ Insert a single Movie into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
   """
-  movie_insert(data: Movie_Data!): Movie_Key! @fdc_generated(from: "Movie", purpose: INSERT_SINGLE)
+  movie_insert(data: Movie_Data!): Movie_KeyOutput! @fdc_generated(from: "Movie", purpose: INSERT_SINGLE)
   """
-  Insert a single Person into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  ✨ Insert a single Person into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
   """
-  person_insert(data: Person_Data!): Person_Key! @fdc_generated(from: "Person", purpose: INSERT_SINGLE)
+  person_insert(data: Person_Data!): Person_KeyOutput! @fdc_generated(from: "Person", purpose: INSERT_SINGLE)
   """
-  Insert a single Thing into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  ✨ Insert a single Thing into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
   """
-  thing_insert(data: Thing_Data!): Thing_Key! @fdc_generated(from: "Thing", purpose: INSERT_SINGLE)
+  thing_insert(data: Thing_Data!): Thing_KeyOutput! @fdc_generated(from: "Thing", purpose: INSERT_SINGLE)
   """
-  Insert DirectedBy entries into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  ✨ Insert DirectedBy entries into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
   """
-  directedBy_insertMany(data: [DirectedBy_Data!]!): [DirectedBy_Key!]! @fdc_generated(from: "DirectedBy", purpose: INSERT_MULTIPLE)
+  directedBy_insertMany(data: [DirectedBy_Data!]!): [DirectedBy_KeyOutput!]! @fdc_generated(from: "DirectedBy", purpose: INSERT_MULTIPLE)
   """
-  Insert Movie entries into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  ✨ Insert Movie entries into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
   """
-  movie_insertMany(data: [Movie_Data!]!): [Movie_Key!]! @fdc_generated(from: "Movie", purpose: INSERT_MULTIPLE)
+  movie_insertMany(data: [Movie_Data!]!): [Movie_KeyOutput!]! @fdc_generated(from: "Movie", purpose: INSERT_MULTIPLE)
   """
-  Insert Person entries into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  ✨ Insert Person entries into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
   """
-  person_insertMany(data: [Person_Data!]!): [Person_Key!]! @fdc_generated(from: "Person", purpose: INSERT_MULTIPLE)
+  person_insertMany(data: [Person_Data!]!): [Person_KeyOutput!]! @fdc_generated(from: "Person", purpose: INSERT_MULTIPLE)
   """
-  Insert Thing entries into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  ✨ Insert Thing entries into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
   """
-  thing_insertMany(data: [Thing_Data!]!): [Thing_Key!]! @fdc_generated(from: "Thing", purpose: INSERT_MULTIPLE)
+  thing_insertMany(data: [Thing_Data!]!): [Thing_KeyOutput!]! @fdc_generated(from: "Thing", purpose: INSERT_MULTIPLE)
   """
-  Insert or update a single DirectedBy into the table, based on the primary key. Returns the key of the newly inserted DirectedBy.
+  ✨ Insert or update a single DirectedBy into the table, based on the primary key. Returns the key of the newly inserted DirectedBy.
   """
-  directedBy_upsert(data: DirectedBy_Data!): DirectedBy_Key! @fdc_generated(from: "DirectedBy", purpose: UPSERT_SINGLE)
+  directedBy_upsert(data: DirectedBy_Data!): DirectedBy_KeyOutput! @fdc_generated(from: "DirectedBy", purpose: UPSERT_SINGLE)
   """
-  Insert or update a single Movie into the table, based on the primary key. Returns the key of the newly inserted Movie.
+  ✨ Insert or update a single Movie into the table, based on the primary key. Returns the key of the newly inserted Movie.
   """
-  movie_upsert(data: Movie_Data!): Movie_Key! @fdc_generated(from: "Movie", purpose: UPSERT_SINGLE)
+  movie_upsert(data: Movie_Data!): Movie_KeyOutput! @fdc_generated(from: "Movie", purpose: UPSERT_SINGLE)
   """
-  Insert or update a single Person into the table, based on the primary key. Returns the key of the newly inserted Person.
+  ✨ Insert or update a single Person into the table, based on the primary key. Returns the key of the newly inserted Person.
   """
-  person_upsert(data: Person_Data!): Person_Key! @fdc_generated(from: "Person", purpose: UPSERT_SINGLE)
+  person_upsert(data: Person_Data!): Person_KeyOutput! @fdc_generated(from: "Person", purpose: UPSERT_SINGLE)
   """
-  Insert or update a single Thing into the table, based on the primary key. Returns the key of the newly inserted Thing.
+  ✨ Insert or update a single Thing into the table, based on the primary key. Returns the key of the newly inserted Thing.
   """
-  thing_upsert(data: Thing_Data!): Thing_Key! @fdc_generated(from: "Thing", purpose: UPSERT_SINGLE)
+  thing_upsert(data: Thing_Data!): Thing_KeyOutput! @fdc_generated(from: "Thing", purpose: UPSERT_SINGLE)
   """
-  Insert or update DirectedBy entries into the table, based on the primary key. Returns the key of the newly inserted DirectedBy.
+  ✨ Insert or update DirectedBy entries into the table, based on the primary key. Returns the key of the newly inserted DirectedBy.
   """
-  directedBy_upsertMany(data: [DirectedBy_Data!]): [DirectedBy_Key!]! @fdc_generated(from: "DirectedBy", purpose: UPSERT_MULTIPLE)
+  directedBy_upsertMany(data: [DirectedBy_Data!]): [DirectedBy_KeyOutput!]! @fdc_generated(from: "DirectedBy", purpose: UPSERT_MULTIPLE)
   """
-  Insert or update Movie entries into the table, based on the primary key. Returns the key of the newly inserted Movie.
+  ✨ Insert or update Movie entries into the table, based on the primary key. Returns the key of the newly inserted Movie.
   """
-  movie_upsertMany(data: [Movie_Data!]): [Movie_Key!]! @fdc_generated(from: "Movie", purpose: UPSERT_MULTIPLE)
+  movie_upsertMany(data: [Movie_Data!]): [Movie_KeyOutput!]! @fdc_generated(from: "Movie", purpose: UPSERT_MULTIPLE)
   """
-  Insert or update Person entries into the table, based on the primary key. Returns the key of the newly inserted Person.
+  ✨ Insert or update Person entries into the table, based on the primary key. Returns the key of the newly inserted Person.
   """
-  person_upsertMany(data: [Person_Data!]): [Person_Key!]! @fdc_generated(from: "Person", purpose: UPSERT_MULTIPLE)
+  person_upsertMany(data: [Person_Data!]): [Person_KeyOutput!]! @fdc_generated(from: "Person", purpose: UPSERT_MULTIPLE)
   """
-  Insert or update Thing entries into the table, based on the primary key. Returns the key of the newly inserted Thing.
+  ✨ Insert or update Thing entries into the table, based on the primary key. Returns the key of the newly inserted Thing.
   """
-  thing_upsertMany(data: [Thing_Data!]): [Thing_Key!]! @fdc_generated(from: "Thing", purpose: UPSERT_MULTIPLE)
+  thing_upsertMany(data: [Thing_Data!]): [Thing_KeyOutput!]! @fdc_generated(from: "Thing", purpose: UPSERT_MULTIPLE)
   """
-  Update a single DirectedBy based on `id` or `key`, setting columns specified in `data`. Returns `null` if not found.
+  ✨ Update a single DirectedBy based on `id` or `key`, setting columns specified in `data`. Returns `null` if not found.
   """
-  directedBy_update(key: DirectedBy_Key, data: DirectedBy_Data!): DirectedBy_Key @fdc_generated(from: "DirectedBy", purpose: UPDATE_SINGLE)
+  directedBy_update(key: DirectedBy_Key, data: DirectedBy_Data!): DirectedBy_KeyOutput @fdc_generated(from: "DirectedBy", purpose: UPDATE_SINGLE)
   """
-  Update a single Movie based on `id` or `key`, setting columns specified in `data`. Returns `null` if not found.
+  ✨ Update a single Movie based on `id` or `key`, setting columns specified in `data`. Returns `null` if not found.
   """
-  movie_update(id: UUID, key: Movie_Key, data: Movie_Data!): Movie_Key @fdc_generated(from: "Movie", purpose: UPDATE_SINGLE)
+  movie_update(id: UUID, key: Movie_Key, data: Movie_Data!): Movie_KeyOutput @fdc_generated(from: "Movie", purpose: UPDATE_SINGLE)
   """
-  Update a single Person based on `id` or `key`, setting columns specified in `data`. Returns `null` if not found.
+  ✨ Update a single Person based on `id` or `key`, setting columns specified in `data`. Returns `null` if not found.
   """
-  person_update(id: UUID, key: Person_Key, data: Person_Data!): Person_Key @fdc_generated(from: "Person", purpose: UPDATE_SINGLE)
+  person_update(id: UUID, key: Person_Key, data: Person_Data!): Person_KeyOutput @fdc_generated(from: "Person", purpose: UPDATE_SINGLE)
   """
-  Update a single Thing based on `id` or `key`, setting columns specified in `data`. Returns `null` if not found.
+  ✨ Update a single Thing based on `id` or `key`, setting columns specified in `data`. Returns `null` if not found.
   """
-  thing_update(id: UUID, key: Thing_Key, data: Thing_Data!): Thing_Key @fdc_generated(from: "Thing", purpose: UPDATE_SINGLE)
+  thing_update(id: UUID, key: Thing_Key, data: Thing_Data!): Thing_KeyOutput @fdc_generated(from: "Thing", purpose: UPDATE_SINGLE)
   """
-  Update DirectedBy entries matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  ✨ Update DirectedBy entries matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
   """
   directedBy_updateMany(where: DirectedBy_Filter, all: Boolean = false, data: DirectedBy_Data!): Int! @fdc_generated(from: "DirectedBy", purpose: UPDATE_MULTIPLE)
   """
-  Update Movie entries matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  ✨ Update Movie entries matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
   """
   movie_updateMany(where: Movie_Filter, all: Boolean = false, data: Movie_Data!): Int! @fdc_generated(from: "Movie", purpose: UPDATE_MULTIPLE)
   """
-  Update Person entries matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  ✨ Update Person entries matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
   """
   person_updateMany(where: Person_Filter, all: Boolean = false, data: Person_Data!): Int! @fdc_generated(from: "Person", purpose: UPDATE_MULTIPLE)
   """
-  Update Thing entries matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  ✨ Update Thing entries matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
   """
   thing_updateMany(where: Thing_Filter, all: Boolean = false, data: Thing_Data!): Int! @fdc_generated(from: "Thing", purpose: UPDATE_MULTIPLE)
   """
-  Delete a single DirectedBy based on `id` or `key` and return its key (or `null` if not found).
+  ✨ Delete a single DirectedBy based on `id` or `key` and return its key (or `null` if not found).
   """
-  directedBy_delete(key: DirectedBy_Key): DirectedBy_Key @fdc_generated(from: "DirectedBy", purpose: DELETE_SINGLE)
+  directedBy_delete(key: DirectedBy_Key): DirectedBy_KeyOutput @fdc_generated(from: "DirectedBy", purpose: DELETE_SINGLE)
   """
-  Delete a single Movie based on `id` or `key` and return its key (or `null` if not found).
+  ✨ Delete a single Movie based on `id` or `key` and return its key (or `null` if not found).
   """
-  movie_delete(id: UUID, key: Movie_Key): Movie_Key @fdc_generated(from: "Movie", purpose: DELETE_SINGLE)
+  movie_delete(id: UUID, key: Movie_Key): Movie_KeyOutput @fdc_generated(from: "Movie", purpose: DELETE_SINGLE)
   """
-  Delete a single Person based on `id` or `key` and return its key (or `null` if not found).
+  ✨ Delete a single Person based on `id` or `key` and return its key (or `null` if not found).
   """
-  person_delete(id: UUID, key: Person_Key): Person_Key @fdc_generated(from: "Person", purpose: DELETE_SINGLE)
+  person_delete(id: UUID, key: Person_Key): Person_KeyOutput @fdc_generated(from: "Person", purpose: DELETE_SINGLE)
   """
-  Delete a single Thing based on `id` or `key` and return its key (or `null` if not found).
+  ✨ Delete a single Thing based on `id` or `key` and return its key (or `null` if not found).
   """
-  thing_delete(id: UUID, key: Thing_Key): Thing_Key @fdc_generated(from: "Thing", purpose: DELETE_SINGLE)
+  thing_delete(id: UUID, key: Thing_Key): Thing_KeyOutput @fdc_generated(from: "Thing", purpose: DELETE_SINGLE)
   """
-  Delete DirectedBy entries matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  ✨ Delete DirectedBy entries matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
   """
   directedBy_deleteMany(where: DirectedBy_Filter, all: Boolean = false): Int! @fdc_generated(from: "DirectedBy", purpose: DELETE_MULTIPLE)
   """
-  Delete Movie entries matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  ✨ Delete Movie entries matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
   """
   movie_deleteMany(where: Movie_Filter, all: Boolean = false): Int! @fdc_generated(from: "Movie", purpose: DELETE_MULTIPLE)
   """
-  Delete Person entries matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  ✨ Delete Person entries matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
   """
   person_deleteMany(where: Person_Filter, all: Boolean = false): Int! @fdc_generated(from: "Person", purpose: DELETE_MULTIPLE)
   """
-  Delete Thing entries matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  ✨ Delete Thing entries matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
   """
   thing_deleteMany(where: Thing_Filter, all: Boolean = false): Int! @fdc_generated(from: "Thing", purpose: DELETE_MULTIPLE)
 }

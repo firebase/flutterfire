@@ -21,7 +21,7 @@ class Optional<T> {
   OptionalState state = OptionalState.unset;
 
   /// Serializer for value.
-  Serializer<T> serializer;
+  DynamicSerializer<T> serializer;
 
   /// Deserializer for value.
   Deserializer<T> deserializer;

@@ -6,10 +6,16 @@ class ListThing {
 
   Deserializer<ListThingData> dataDeserializer = (String json) =>
       ListThingData.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  Serializer<ListThingVariables> varsSerializer =
+      (ListThingVariables vars) => jsonEncode(vars.toJson());
+  QueryRef<ListThingData, ListThingVariables> ref({
+    dynamic? data,
+  }) {
+    ListThingVariables vars = ListThingVariables(
+      data: AnyValue(data),
+    );
 
-  QueryRef<ListThingData, void> ref() {
-    return dataConnect.query(
-        this.name, dataDeserializer, emptySerializer, null);
+    return dataConnect.query(this.name, dataDeserializer, varsSerializer, vars);
   }
 
   FirebaseDataConnect dataConnect;
@@ -56,6 +62,30 @@ class ListThingData {
 
   ListThingData({
     required this.things,
+  }) {
+    // TODO(mtewani): Only show this if there are optional fields.
+  }
+}
+
+class ListThingVariables {
+  late AnyValue? data;
+
+  ListThingVariables.fromJson(Map<String, dynamic> json)
+      : data = AnyValue.fromJson(json['data']) {}
+
+  // TODO(mtewani): Fix up to create a map on the fly
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> json = {};
+
+    if (data != null) {
+      json['data'] = data!.toJson();
+    }
+
+    return json;
+  }
+
+  ListThingVariables({
+    this.data,
   }) {
     // TODO(mtewani): Only show this if there are optional fields.
   }

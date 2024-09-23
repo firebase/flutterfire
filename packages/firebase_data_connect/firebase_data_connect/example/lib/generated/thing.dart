@@ -67,7 +67,7 @@ class ThingData {
 
 class ThingVariables {
   late Optional<AnyValue> _title =
-      Optional.optional(AnyValue.fromJson, anySerializer);
+      Optional.optional(AnyValue.fromJson, defaultSerializer);
 
   set title(AnyValue t) {
     this._title.value = t;
@@ -97,7 +97,7 @@ class ThingVariables {
   }) {
     // TODO(mtewani): Only show this if there are optional fields.
 
-    this._title = Optional.optional(AnyValue.fromJson, anySerializer);
+    this._title = Optional.optional(AnyValue.fromJson, defaultSerializer);
     this._title.value = title;
   }
 }

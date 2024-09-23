@@ -17,5 +17,6 @@ class DataConnectError extends FirebaseException {
   final DataConnectErrorCode dataConnectErrorCode;
 }
 
-typedef Serializer<Variables> = dynamic Function(Variables vars);
+typedef Serializer<Variables> = String Function(Variables vars);
+typedef DynamicSerializer<Variables> = dynamic Function(Variables vars);
 typedef Deserializer<Data> = Data Function(String data);
