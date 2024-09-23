@@ -4,21 +4,19 @@ class ListMoviesByPartialTitle {
   String name = "ListMoviesByPartialTitle";
   ListMoviesByPartialTitle({required this.dataConnect});
 
-  Deserializer<ListMoviesByPartialTitleResponse> dataDeserializer =
-      (String json) => ListMoviesByPartialTitleResponse.fromJson(
+  Deserializer<ListMoviesByPartialTitleData> dataDeserializer = (String json) =>
+      ListMoviesByPartialTitleData.fromJson(
           jsonDecode(json) as Map<String, dynamic>);
   Serializer<ListMoviesByPartialTitleVariables> varsSerializer =
       (ListMoviesByPartialTitleVariables vars) => jsonEncode(vars.toJson());
-  QueryRef<ListMoviesByPartialTitleResponse, ListMoviesByPartialTitleVariables>
-      ref(
-          {required String input,
-          ListMoviesByPartialTitleVariables?
-              listMoviesByPartialTitleVariables}) {
-    ListMoviesByPartialTitleVariables vars1 = ListMoviesByPartialTitleVariables(
+  QueryRef<ListMoviesByPartialTitleData, ListMoviesByPartialTitleVariables>
+      ref({
+    required String input,
+  }) {
+    ListMoviesByPartialTitleVariables vars = ListMoviesByPartialTitleVariables(
       input: input,
     );
-    ListMoviesByPartialTitleVariables vars =
-        listMoviesByPartialTitleVariables ?? vars1;
+
     return dataConnect.query(this.name, dataDeserializer, varsSerializer, vars);
   }
 
@@ -61,16 +59,16 @@ class ListMoviesByPartialTitleMovies {
     required this.id,
     required this.title,
     required this.genre,
-    double? rating,
+    this.rating,
   }) {
     // TODO(mtewani): Only show this if there are optional fields.
   }
 }
 
-class ListMoviesByPartialTitleResponse {
+class ListMoviesByPartialTitleData {
   late List<ListMoviesByPartialTitleMovies> movies;
 
-  ListMoviesByPartialTitleResponse.fromJson(Map<String, dynamic> json)
+  ListMoviesByPartialTitleData.fromJson(Map<String, dynamic> json)
       : movies = (json['movies'] as List<dynamic>)
             .map((e) => ListMoviesByPartialTitleMovies.fromJson(e))
             .toList() {}
@@ -84,7 +82,7 @@ class ListMoviesByPartialTitleResponse {
     return json;
   }
 
-  ListMoviesByPartialTitleResponse({
+  ListMoviesByPartialTitleData({
     required this.movies,
   }) {
     // TODO(mtewani): Only show this if there are optional fields.
