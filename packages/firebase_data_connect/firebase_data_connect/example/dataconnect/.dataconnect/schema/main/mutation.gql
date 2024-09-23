@@ -12,6 +12,10 @@ extend type Mutation {
   """
   person_insert(data: Person_Data!): Person_Key! @fdc_generated(from: "Person", purpose: INSERT_SINGLE)
   """
+  Insert a single TimestampHolder into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  timestampHolder_insert(data: TimestampHolder_Data!): TimestampHolder_Key! @fdc_generated(from: "TimestampHolder", purpose: INSERT_SINGLE)
+  """
   Insert DirectedBy entries into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
   """
   directedBy_insertMany(data: [DirectedBy_Data!]!): [DirectedBy_Key!]! @fdc_generated(from: "DirectedBy", purpose: INSERT_MULTIPLE)
@@ -23,6 +27,10 @@ extend type Mutation {
   Insert Person entries into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
   """
   person_insertMany(data: [Person_Data!]!): [Person_Key!]! @fdc_generated(from: "Person", purpose: INSERT_MULTIPLE)
+  """
+  Insert TimestampHolder entries into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  timestampHolder_insertMany(data: [TimestampHolder_Data!]!): [TimestampHolder_Key!]! @fdc_generated(from: "TimestampHolder", purpose: INSERT_MULTIPLE)
   """
   Insert or update a single DirectedBy into the table, based on the primary key. Returns the key of the newly inserted DirectedBy.
   """
@@ -36,6 +44,10 @@ extend type Mutation {
   """
   person_upsert(data: Person_Data!): Person_Key! @fdc_generated(from: "Person", purpose: UPSERT_SINGLE)
   """
+  Insert or update a single TimestampHolder into the table, based on the primary key. Returns the key of the newly inserted TimestampHolder.
+  """
+  timestampHolder_upsert(data: TimestampHolder_Data!): TimestampHolder_Key! @fdc_generated(from: "TimestampHolder", purpose: UPSERT_SINGLE)
+  """
   Insert or update DirectedBy entries into the table, based on the primary key. Returns the key of the newly inserted DirectedBy.
   """
   directedBy_upsertMany(data: [DirectedBy_Data!]): [DirectedBy_Key!]! @fdc_generated(from: "DirectedBy", purpose: UPSERT_MULTIPLE)
@@ -47,6 +59,10 @@ extend type Mutation {
   Insert or update Person entries into the table, based on the primary key. Returns the key of the newly inserted Person.
   """
   person_upsertMany(data: [Person_Data!]): [Person_Key!]! @fdc_generated(from: "Person", purpose: UPSERT_MULTIPLE)
+  """
+  Insert or update TimestampHolder entries into the table, based on the primary key. Returns the key of the newly inserted TimestampHolder.
+  """
+  timestampHolder_upsertMany(data: [TimestampHolder_Data!]): [TimestampHolder_Key!]! @fdc_generated(from: "TimestampHolder", purpose: UPSERT_MULTIPLE)
   """
   Update a single DirectedBy based on `id` or `key`, setting columns specified in `data`. Returns `null` if not found.
   """
@@ -60,6 +76,10 @@ extend type Mutation {
   """
   person_update(id: UUID, key: Person_Key, data: Person_Data!): Person_Key @fdc_generated(from: "Person", purpose: UPDATE_SINGLE)
   """
+  Update a single TimestampHolder based on `id` or `key`, setting columns specified in `data`. Returns `null` if not found.
+  """
+  timestampHolder_update(id: UUID, key: TimestampHolder_Key, data: TimestampHolder_Data!): TimestampHolder_Key @fdc_generated(from: "TimestampHolder", purpose: UPDATE_SINGLE)
+  """
   Update DirectedBy entries matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
   """
   directedBy_updateMany(where: DirectedBy_Filter, all: Boolean = false, data: DirectedBy_Data!): Int! @fdc_generated(from: "DirectedBy", purpose: UPDATE_MULTIPLE)
@@ -71,6 +91,10 @@ extend type Mutation {
   Update Person entries matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
   """
   person_updateMany(where: Person_Filter, all: Boolean = false, data: Person_Data!): Int! @fdc_generated(from: "Person", purpose: UPDATE_MULTIPLE)
+  """
+  Update TimestampHolder entries matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  timestampHolder_updateMany(where: TimestampHolder_Filter, all: Boolean = false, data: TimestampHolder_Data!): Int! @fdc_generated(from: "TimestampHolder", purpose: UPDATE_MULTIPLE)
   """
   Delete a single DirectedBy based on `id` or `key` and return its key (or `null` if not found).
   """
@@ -84,6 +108,10 @@ extend type Mutation {
   """
   person_delete(id: UUID, key: Person_Key): Person_Key @fdc_generated(from: "Person", purpose: DELETE_SINGLE)
   """
+  Delete a single TimestampHolder based on `id` or `key` and return its key (or `null` if not found).
+  """
+  timestampHolder_delete(id: UUID, key: TimestampHolder_Key): TimestampHolder_Key @fdc_generated(from: "TimestampHolder", purpose: DELETE_SINGLE)
+  """
   Delete DirectedBy entries matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
   """
   directedBy_deleteMany(where: DirectedBy_Filter, all: Boolean = false): Int! @fdc_generated(from: "DirectedBy", purpose: DELETE_MULTIPLE)
@@ -95,4 +123,8 @@ extend type Mutation {
   Delete Person entries matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
   """
   person_deleteMany(where: Person_Filter, all: Boolean = false): Int! @fdc_generated(from: "Person", purpose: DELETE_MULTIPLE)
+  """
+  Delete TimestampHolder entries matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  timestampHolder_deleteMany(where: TimestampHolder_Filter, all: Boolean = false): Int! @fdc_generated(from: "TimestampHolder", purpose: DELETE_MULTIPLE)
 }

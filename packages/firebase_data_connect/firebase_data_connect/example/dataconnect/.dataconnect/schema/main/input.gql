@@ -1,6 +1,7 @@
 scalar DirectedBy_Key
 scalar Movie_Key
 scalar Person_Key
+scalar TimestampHolder_Key
 input DirectedBy_Data {
   movieId: UUID
   movieId_expr: UUID_Expr
@@ -87,4 +88,31 @@ input Person_ListFilter {
 input Person_Order {
   id: OrderDirection
   name: OrderDirection
+}
+input TimestampHolder_Data {
+  id: UUID
+  id_expr: UUID_Expr
+  date: Date
+  date_date: Date_Relative
+  date_expr: Date_Expr
+  timestamp: Timestamp
+  timestamp_expr: Timestamp_Expr
+  timestamp_time: Timestamp_Relative
+}
+input TimestampHolder_Filter {
+  _and: [TimestampHolder_Filter!]
+  _not: TimestampHolder_Filter
+  _or: [TimestampHolder_Filter!]
+  id: UUID_Filter
+  date: Date_Filter
+  timestamp: Timestamp_Filter
+}
+input TimestampHolder_ListFilter {
+  count: Int_Filter = {gt:0}
+  exist: TimestampHolder_Filter
+}
+input TimestampHolder_Order {
+  id: OrderDirection
+  date: OrderDirection
+  timestamp: OrderDirection
 }

@@ -12,6 +12,10 @@ extend type Query {
   """
   person(id: UUID, key: Person_Key): Person @fdc_generated(from: "Person", purpose: QUERY_SINGLE)
   """
+  Look up a single TimestampHolder based on `id` or `key` and return selected fields (or `null` if not found).
+  """
+  timestampHolder(id: UUID, key: TimestampHolder_Key): TimestampHolder @fdc_generated(from: "TimestampHolder", purpose: QUERY_SINGLE)
+  """
   List DirectedBy entries in the table, optionally filtered by `where` conditions.
   """
   directedBies(where: DirectedBy_Filter, orderBy: [DirectedBy_Order!], offset: Int, limit: Int = 100): [DirectedBy!]! @fdc_generated(from: "DirectedBy", purpose: QUERY_MULTIPLE)
@@ -23,4 +27,8 @@ extend type Query {
   List Person entries in the table, optionally filtered by `where` conditions.
   """
   people(where: Person_Filter, orderBy: [Person_Order!], offset: Int, limit: Int = 100): [Person!]! @fdc_generated(from: "Person", purpose: QUERY_MULTIPLE)
+  """
+  List TimestampHolder entries in the table, optionally filtered by `where` conditions.
+  """
+  timestampHolders(where: TimestampHolder_Filter, orderBy: [TimestampHolder_Order!], offset: Int, limit: Int = 100): [TimestampHolder!]! @fdc_generated(from: "TimestampHolder", purpose: QUERY_MULTIPLE)
 }

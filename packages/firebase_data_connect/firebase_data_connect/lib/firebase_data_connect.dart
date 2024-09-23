@@ -5,6 +5,7 @@
 library firebase_data_connect;
 
 import 'dart:async';
+import 'package:intl/intl.dart';
 
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';

@@ -1,114 +1,284 @@
 part of movies;
 
+
+
+
+
+
+
 class ListMoviesByPartialTitle {
   String name = "ListMoviesByPartialTitle";
   ListMoviesByPartialTitle({required this.dataConnect});
 
-  Deserializer<ListMoviesByPartialTitleResponse> dataDeserializer =
-      (String json) => ListMoviesByPartialTitleResponse.fromJson(
-          jsonDecode(json) as Map<String, dynamic>);
-  Serializer<ListMoviesByPartialTitleVariables> varsSerializer =
-      (ListMoviesByPartialTitleVariables vars) => jsonEncode(vars.toJson());
-  QueryRef<ListMoviesByPartialTitleResponse, ListMoviesByPartialTitleVariables>
-      ref(
-          {required String input,
-          ListMoviesByPartialTitleVariables?
-              listMoviesByPartialTitleVariables}) {
-    ListMoviesByPartialTitleVariables vars1 = ListMoviesByPartialTitleVariables(
-      input: input,
-    );
-    ListMoviesByPartialTitleVariables vars =
-        listMoviesByPartialTitleVariables ?? vars1;
+  Deserializer<ListMoviesByPartialTitleData> dataDeserializer = (String json)  => ListMoviesByPartialTitleData.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  Serializer<ListMoviesByPartialTitleVariables> varsSerializer = (ListMoviesByPartialTitleVariables vars) => jsonEncode(vars.toJson());
+  QueryRef<ListMoviesByPartialTitleData, ListMoviesByPartialTitleVariables> ref(
+      {required String input,}) {
+    ListMoviesByPartialTitleVariables vars=ListMoviesByPartialTitleVariables(input: input,);
+
     return dataConnect.query(this.name, dataDeserializer, varsSerializer, vars);
   }
-
   FirebaseDataConnect dataConnect;
 }
 
+
+  
+
+
 class ListMoviesByPartialTitleMovies {
-  late String id;
+  
+    
+    
+    
+   String id;
 
-  late String title;
+   
+  
+    
+    
+    
+   String title;
 
-  late String genre;
+   
+  
+    
+    
+    
+   String genre;
 
-  late double? rating;
+   
+  
+    
+    
+    
+   double? rating;
 
-  ListMoviesByPartialTitleMovies.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        title = json['title'],
-        genre = json['genre'],
-        rating = json['rating'] {}
+   
+  
+  
+    ListMoviesByPartialTitleMovies.fromJson(Map<String, dynamic> json):
+        id = 
+ 
+    nativeFromJson<String>(json['id'])
+  
+
+        ,
+      
+        title = 
+ 
+    nativeFromJson<String>(json['title'])
+  
+
+        ,
+      
+        genre = 
+ 
+    nativeFromJson<String>(json['genre'])
+  
+
+        
+       {
+      
+        
+      
+        
+      
+        
+      
+        
+          rating = json['rating'] == null ? null : 
+ 
+    nativeFromJson<double>(json['rating'])
+  
+;
+        
+      
+    }
+
 
   // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
-
-    json['id'] = id;
-
-    json['title'] = title;
-
-    json['genre'] = genre;
-
-    if (rating != null) {
-      json['rating'] = rating;
-    }
-
+    
+      
+      json['id'] = 
+  
+    nativeToJson<String>(id)
+    
+;
+      
+    
+      
+      json['title'] = 
+  
+    nativeToJson<String>(title)
+    
+;
+      
+    
+      
+      json['genre'] = 
+  
+    nativeToJson<String>(genre)
+    
+;
+      
+    
+      
+        if (rating != null) {
+          json['rating'] = 
+  
+    nativeToJson<double?>(rating)
+    
+;
+        }
+      
+    
     return json;
   }
 
   ListMoviesByPartialTitleMovies({
+    
     required this.id,
+  
     required this.title,
+  
     required this.genre,
-    double? rating,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+  
+     this.rating,
+  
+  }) { // TODO(mtewani): Only show this if there are optional fields.
+    
+      
+    
+      
+    
+      
+    
+      
+    
   }
 }
 
-class ListMoviesByPartialTitleResponse {
-  late List<ListMoviesByPartialTitleMovies> movies;
 
-  ListMoviesByPartialTitleResponse.fromJson(Map<String, dynamic> json)
-      : movies = (json['movies'] as List<dynamic>)
-            .map((e) => ListMoviesByPartialTitleMovies.fromJson(e))
-            .toList() {}
+
+  
+
+
+class ListMoviesByPartialTitleData {
+  
+    
+    
+    
+   List<ListMoviesByPartialTitleMovies> movies;
+
+   
+  
+  
+    ListMoviesByPartialTitleData.fromJson(Map<String, dynamic> json):
+        movies = 
+ 
+    
+      (json['movies'] as List<dynamic>)
+        .map((e) => ListMoviesByPartialTitleMovies.fromJson(e))
+        .toList()
+    
+  
+
+        
+       {
+      
+        
+      
+    }
+
 
   // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
-
-    json['movies'] = movies.map((e) => e.toJson()).toList();
-
+    
+      
+      json['movies'] = 
+  
+    
+      movies.map((e) => e.toJson()).toList()
+    
+  
+;
+      
+    
     return json;
   }
 
-  ListMoviesByPartialTitleResponse({
+  ListMoviesByPartialTitleData({
+    
     required this.movies,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+  
+  }) { // TODO(mtewani): Only show this if there are optional fields.
+    
+      
+    
   }
 }
 
-class ListMoviesByPartialTitleVariables {
-  late String input;
 
-  ListMoviesByPartialTitleVariables.fromJson(Map<String, dynamic> json)
-      : input = json['input'] {}
+
+  
+
+
+class ListMoviesByPartialTitleVariables {
+  
+    
+    
+    
+   String input;
+
+   
+  
+  
+    ListMoviesByPartialTitleVariables.fromJson(Map<String, dynamic> json):
+        input = 
+ 
+    nativeFromJson<String>(json['input'])
+  
+
+        
+       {
+      
+        
+      
+    }
+
 
   // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
-
-    json['input'] = input;
-
+    
+      
+      json['input'] = 
+  
+    nativeToJson<String>(input)
+    
+;
+      
+    
     return json;
   }
 
   ListMoviesByPartialTitleVariables({
+    
     required this.input,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+  
+  }) { // TODO(mtewani): Only show this if there are optional fields.
+    
+      
+    
   }
 }
+
+
+
+
+
+
+

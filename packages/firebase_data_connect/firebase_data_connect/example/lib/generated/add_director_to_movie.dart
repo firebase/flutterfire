@@ -1,132 +1,306 @@
 part of movies;
 
+
+
+
+
+
+
 class AddDirectorToMovie {
   String name = "addDirectorToMovie";
   AddDirectorToMovie({required this.dataConnect});
 
-  Deserializer<AddDirectorToMovieResponse> dataDeserializer = (String json) =>
-      AddDirectorToMovieResponse.fromJson(
-          jsonDecode(json) as Map<String, dynamic>);
-  Serializer<AddDirectorToMovieVariables> varsSerializer =
-      (AddDirectorToMovieVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<AddDirectorToMovieResponse, AddDirectorToMovieVariables> ref(
-      {AddDirectorToMovieVariablesPersonId? personId,
-      String? movieId,
-      AddDirectorToMovieVariables? addDirectorToMovieVariables}) {
-    AddDirectorToMovieVariables vars1 = AddDirectorToMovieVariables(
-      personId: personId,
-      movieId: movieId,
-    );
-    AddDirectorToMovieVariables vars = addDirectorToMovieVariables ?? vars1;
-    return dataConnect.mutation(
-        this.name, dataDeserializer, varsSerializer, vars);
-  }
+  Deserializer<AddDirectorToMovieData> dataDeserializer = (String json)  => AddDirectorToMovieData.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  Serializer<AddDirectorToMovieVariables> varsSerializer = (AddDirectorToMovieVariables vars) => jsonEncode(vars.toJson());
+  MutationRef<AddDirectorToMovieData, AddDirectorToMovieVariables> ref(
+      {AddDirectorToMovieVariablesPersonId? personId,String? movieId,}) {
+    AddDirectorToMovieVariables vars=AddDirectorToMovieVariables(personId: personId,movieId: movieId,);
 
+    return dataConnect.mutation(this.name, dataDeserializer, varsSerializer, vars);
+  }
   FirebaseDataConnect dataConnect;
 }
 
+
+  
+
+
 class AddDirectorToMovieDirectedByInsert {
-  late String directedbyId;
+  
+    
+    
+    
+   String directedbyId;
 
-  late String movieId;
+   
+  
+    
+    
+    
+   String movieId;
 
-  AddDirectorToMovieDirectedByInsert.fromJson(Map<String, dynamic> json)
-      : directedbyId = json['directedbyId'],
-        movieId = json['movieId'] {}
+   
+  
+  
+    AddDirectorToMovieDirectedByInsert.fromJson(Map<String, dynamic> json):
+        directedbyId = 
+ 
+    nativeFromJson<String>(json['directedbyId'])
+  
+
+        ,
+      
+        movieId = 
+ 
+    nativeFromJson<String>(json['movieId'])
+  
+
+        
+       {
+      
+        
+      
+        
+      
+    }
+
 
   // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
-
-    json['directedbyId'] = directedbyId;
-
-    json['movieId'] = movieId;
-
+    
+      
+      json['directedbyId'] = 
+  
+    nativeToJson<String>(directedbyId)
+    
+;
+      
+    
+      
+      json['movieId'] = 
+  
+    nativeToJson<String>(movieId)
+    
+;
+      
+    
     return json;
   }
 
   AddDirectorToMovieDirectedByInsert({
+    
     required this.directedbyId,
+  
     required this.movieId,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+  
+  }) { // TODO(mtewani): Only show this if there are optional fields.
+    
+      
+    
+      
+    
   }
 }
 
-class AddDirectorToMovieResponse {
-  late AddDirectorToMovieDirectedByInsert directedBy_insert;
 
-  AddDirectorToMovieResponse.fromJson(Map<String, dynamic> json)
-      : directedBy_insert = AddDirectorToMovieDirectedByInsert.fromJson(
-            json['directedBy_insert']) {}
+
+  
+
+
+class AddDirectorToMovieData {
+  
+    
+    
+    
+   AddDirectorToMovieDirectedByInsert directedBy_insert;
+
+   
+  
+  
+    AddDirectorToMovieData.fromJson(Map<String, dynamic> json):
+        directedBy_insert = 
+ 
+    AddDirectorToMovieDirectedByInsert.fromJson(json['directedBy_insert'])
+  
+
+        
+       {
+      
+        
+      
+    }
+
 
   // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
-
-    json['directedBy_insert'] = directedBy_insert.toJson();
-
+    
+      
+      json['directedBy_insert'] = 
+  
+      directedBy_insert.toJson()
+  
+;
+      
+    
     return json;
   }
 
-  AddDirectorToMovieResponse({
+  AddDirectorToMovieData({
+    
     required this.directedBy_insert,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+  
+  }) { // TODO(mtewani): Only show this if there are optional fields.
+    
+      
+    
   }
 }
 
-class AddDirectorToMovieVariablesPersonId {
-  late String id;
 
-  AddDirectorToMovieVariablesPersonId.fromJson(Map<String, dynamic> json)
-      : id = json['id'] {}
+
+  
+
+
+class AddDirectorToMovieVariablesPersonId {
+  
+    
+    
+    
+   String id;
+
+   
+  
+  
+    AddDirectorToMovieVariablesPersonId.fromJson(Map<String, dynamic> json):
+        id = 
+ 
+    nativeFromJson<String>(json['id'])
+  
+
+        
+       {
+      
+        
+      
+    }
+
 
   // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
-
-    json['id'] = id;
-
+    
+      
+      json['id'] = 
+  
+    nativeToJson<String>(id)
+    
+;
+      
+    
     return json;
   }
 
   AddDirectorToMovieVariablesPersonId({
+    
     required this.id,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+  
+  }) { // TODO(mtewani): Only show this if there are optional fields.
+    
+      
+    
   }
 }
 
+
+
+  
+
+
 class AddDirectorToMovieVariables {
-  late AddDirectorToMovieVariablesPersonId? personId;
+  
+    
+    
+    
+   AddDirectorToMovieVariablesPersonId? personId;
 
-  late String? movieId;
+   
+  
+    
+    
+    
+   String? movieId;
 
-  AddDirectorToMovieVariables.fromJson(Map<String, dynamic> json)
-      : personId =
-            AddDirectorToMovieVariablesPersonId.fromJson(json['personId']),
-        movieId = json['movieId'] {}
+   
+  
+  
+    AddDirectorToMovieVariables.fromJson(Map<String, dynamic> json) {
+      
+        
+          personId = json['personId'] == null ? null : 
+ 
+    AddDirectorToMovieVariablesPersonId.fromJson(json['personId'])
+  
+;
+        
+      
+        
+          movieId = json['movieId'] == null ? null : 
+ 
+    nativeFromJson<String>(json['movieId'])
+  
+;
+        
+      
+    }
+
 
   // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
-
-    if (personId != null) {
-      json['personId'] = personId!.toJson();
-    }
-
-    if (movieId != null) {
-      json['movieId'] = movieId;
-    }
-
+    
+      
+        if (personId != null) {
+          json['personId'] = 
+  
+      personId!.toJson()
+  
+;
+        }
+      
+    
+      
+        if (movieId != null) {
+          json['movieId'] = 
+  
+    nativeToJson<String?>(movieId)
+    
+;
+        }
+      
+    
     return json;
   }
 
   AddDirectorToMovieVariables({
-    AddDirectorToMovieVariablesPersonId? this.personId,
-    String? this.movieId,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    
+     this.personId,
+  
+     this.movieId,
+  
+  }) { // TODO(mtewani): Only show this if there are optional fields.
+    
+      
+    
+      
+    
   }
 }
+
+
+
+
+
+
+

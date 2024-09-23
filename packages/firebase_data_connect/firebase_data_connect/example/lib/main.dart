@@ -109,8 +109,14 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
   void initState() {
     super.initState();
 
-    QueryRef<ListMoviesResponse, void> ref =
+    QueryRef<ListMoviesData, void> ref =
         MoviesConnector.instance.listMovies.ref();
+    // MoviesConnector.instance.addDateAndTimestamp
+    //     .ref(date: DateTime.now(), timestamp: Timestamp(123456789, 864000))
+    //     .execute();
+    MoviesConnector.instance.listTimestamps.ref().execute().then((res) {
+      print(res.data.timestampHolders.first.toJson());
+    });
 
     ref.subscribe().listen((event) {
       setState(() {
