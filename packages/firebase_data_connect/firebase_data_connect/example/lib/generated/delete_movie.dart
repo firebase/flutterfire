@@ -28,7 +28,7 @@ class DeleteMovieMovieDelete {
   DeleteMovieMovieDelete.fromJson(Map<String, dynamic> json)
       : id = json['id'] {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
+  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -40,7 +40,7 @@ class DeleteMovieMovieDelete {
   DeleteMovieMovieDelete({
     required this.id,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -50,7 +50,7 @@ class DeleteMovieData {
   DeleteMovieData.fromJson(Map<String, dynamic> json)
       : movie_delete = DeleteMovieMovieDelete.fromJson(json['movie_delete']) {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
+  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -64,7 +64,7 @@ class DeleteMovieData {
   DeleteMovieData({
     this.movie_delete,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -73,7 +73,7 @@ class DeleteMovieVariables {
 
   DeleteMovieVariables.fromJson(Map<String, dynamic> json) : id = json['id'] {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
+  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -85,6 +85,6 @@ class DeleteMovieVariables {
   DeleteMovieVariables({
     required this.id,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }

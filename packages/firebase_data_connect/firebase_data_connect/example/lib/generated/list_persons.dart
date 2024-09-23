@@ -24,7 +24,7 @@ class ListPersonsPeople {
       : id = json['id'],
         name = json['name'] {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
+  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -39,7 +39,7 @@ class ListPersonsPeople {
     required this.id,
     required this.name,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -51,7 +51,7 @@ class ListPersonsData {
             .map((e) => ListPersonsPeople.fromJson(e))
             .toList() {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
+  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -63,6 +63,6 @@ class ListPersonsData {
   ListPersonsData({
     required this.people,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }

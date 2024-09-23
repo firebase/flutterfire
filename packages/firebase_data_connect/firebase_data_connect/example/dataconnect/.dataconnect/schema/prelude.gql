@@ -47,6 +47,17 @@ directive @auth(
   expr: Boolean_Expr @fdc_oneOf(required: true)
 ) on QUERY | MUTATION
 
+
+"""
+By default, a mutation operation executes each top-level field sequentially,
+continuing to the next statement even if an error occurs.
+
+To ensure all mutation operations are atomic, you can put `@transation` on the
+mutation. It will execute all top-level fields within a single database transaction
+and will roll back all statements if any errors.
+"""
+directive @transaction on MUTATION
+
 """
 Marks an element of a GraphQL operation as no longer supported on the client.
 The Firebase Data Connect backend will still support this element, but it will
