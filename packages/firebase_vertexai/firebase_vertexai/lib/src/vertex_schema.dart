@@ -112,11 +112,9 @@ final class Schema {
   Schema.string({
     String? description,
     bool? nullable,
-  }) : this(
-          SchemaType.string,
-          description: description,
-          nullable: nullable,
-        );
+    String? format,
+  }) : this(SchemaType.string,
+            description: description, nullable: nullable, format: format);
 
   /// The type of this value.
   SchemaType type;
