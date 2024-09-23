@@ -32,7 +32,7 @@ class ListTimestampsTimestampHolders {
     json['timestamp'] = timestamp.toJson();
 
     if (date != null) {
-      json['date'] = nativeToJson(date);
+      json['date'] = nativeToJson<DateTime?>(date);
     }
 
     return json;
