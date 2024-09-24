@@ -15,7 +15,7 @@ part 'dataconnect_options.dart';
 enum CallerSDKType { core, generated }
 
 String getGoogApiVal(CallerSDKType sdkType, String packageVersion) {
-  String apiClientValue = 'gl-dart/flutter fire/$packageVersion';
+  String apiClientValue = 'gl-dart/$packageVersion fire/$packageVersion';
   if (sdkType == CallerSDKType.generated) {
     apiClientValue += ' dart/gen';
   }
