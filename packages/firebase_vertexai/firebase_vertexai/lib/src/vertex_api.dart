@@ -14,6 +14,7 @@
 
 import 'vertex_content.dart';
 import 'vertex_error.dart';
+import 'vertex_schema.dart';
 
 /// Response for Count Tokens
 final class CountTokensResponse {
@@ -181,7 +182,7 @@ final class PromptFeedback {
 /// Metadata on the generation request's token usage.
 final class UsageMetadata {
   /// Constructor
-  UsageMetadata({
+  UsageMetadata._({
     this.promptTokenCount,
     this.candidatesTokenCount,
     this.totalTokenCount,
@@ -544,12 +545,13 @@ final class GenerationConfig {
   /// Constructor
   GenerationConfig(
       {this.candidateCount,
-      this.stopSequences = const [],
+      this.stopSequences,
       this.maxOutputTokens,
       this.temperature,
       this.topP,
       this.topK,
-      this.responseMimeType});
+      this.responseMimeType,
+      this.responseSchema});
 
   /// Number of generated responses to return.
   ///
@@ -561,7 +563,7 @@ final class GenerationConfig {
   ///
   /// If specified, the API will stop at the first appearance of a stop
   /// sequence. The stop sequence will not be included as part of the response.
-  final List<String> stopSequences;
+  final List<String>? stopSequences;
 
   /// The maximum number of tokens to include in a candidate.
   ///
@@ -603,11 +605,19 @@ final class GenerationConfig {
   /// - `application/json`: JSON response in the candidates.
   final String? responseMimeType;
 
+  /// Output response schema of the generated candidate text.
+  ///
+  /// - Note: This only applies when the [responseMimeType] supports
+  ///   a schema; currently this is limited to `application/json`.
+  final Schema? responseSchema;
+
   /// Convert to json format
   Map<String, Object?> toJson() => {
         if (candidateCount case final candidateCount?)
           'candidateCount': candidateCount,
-        if (stopSequences.isNotEmpty) 'stopSequences': stopSequences,
+        if (stopSequences case final stopSequences?
+            when stopSequences.isNotEmpty)
+          'stopSequences': stopSequences,
         if (maxOutputTokens case final maxOutputTokens?)
           'maxOutputTokens': maxOutputTokens,
         if (temperature case final temperature?) 'temperature': temperature,
@@ -615,6 +625,8 @@ final class GenerationConfig {
         if (topK case final topK?) 'topK': topK,
         if (responseMimeType case final responseMimeType?)
           'responseMimeType': responseMimeType,
+        if (responseSchema case final responseSchema?)
+          'responseSchema': responseSchema,
       };
 }
 
@@ -786,7 +798,7 @@ UsageMetadata _parseUsageMetadata(Object jsonObject) {
     {'totalTokenCount': final int totalTokenCount} => totalTokenCount,
     _ => null,
   };
-  return UsageMetadata(
+  return UsageMetadata._(
       promptTokenCount: promptTokenCount,
       candidatesTokenCount: candidatesTokenCount,
       totalTokenCount: totalTokenCount);

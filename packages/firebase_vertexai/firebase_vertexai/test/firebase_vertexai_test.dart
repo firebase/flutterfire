@@ -15,7 +15,6 @@
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
-import 'package:firebase_vertexai/src/firebase_vertexai.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'vertex_mock.dart';
@@ -53,7 +52,6 @@ void main() {
       final vertexAI = FirebaseVertexAI.instanceFor(app: app);
       expect(vertexAI.app, equals(app));
       expect(vertexAI.location, equals('us-central1'));
-      expect(vertexAI.options.timeout.inMilliseconds, equals(defaultTimeout));
     });
 
     test('Instance creation with custom', () {

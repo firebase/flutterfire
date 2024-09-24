@@ -33,19 +33,18 @@ void main() {
 
     (ClientController, GenerativeModel) createModel({
       String modelName = defaultModelName,
-      RequestOptions? requestOptions,
-      Content? systemInstruction,
       List<Tool>? tools,
       ToolConfig? toolConfig,
+      Content? systemInstruction,
     }) {
       final client = ClientController();
       final model = createModelWithClient(
           app: app,
           model: modelName,
           client: client.client,
-          systemInstruction: systemInstruction,
           tools: tools,
           toolConfig: toolConfig,
+          systemInstruction: systemInstruction,
           location: 'us-central1');
       return (client, model);
     }
@@ -89,7 +88,7 @@ void main() {
             expect(
               uri,
               Uri.parse(
-                'https://firebaseml.googleapis.com/v2beta/projects/123/locations/us-central1/publishers/google/models/some-model:generateContent',
+                'https://firebasevertexai.googleapis.com/v1beta/projects/123/locations/us-central1/publishers/google/models/some-model:generateContent',
               ),
             );
             expect(request, {
@@ -301,7 +300,7 @@ void main() {
             expect(
               uri,
               Uri.parse(
-                'https://firebaseml.googleapis.com/v2beta/projects/123/locations/us-central1/publishers/google/models/some-model:streamGenerateContent',
+                'https://firebasevertexai.googleapis.com/v1beta/projects/123/locations/us-central1/publishers/google/models/some-model:streamGenerateContent',
               ),
             );
             expect(request, {
@@ -405,7 +404,7 @@ void main() {
             expect(
               uri,
               Uri.parse(
-                'https://firebaseml.googleapis.com/v2beta/projects/123/locations/us-central1/publishers/google/models/some-model:countTokens',
+                'https://firebasevertexai.googleapis.com/v1beta/projects/123/locations/us-central1/publishers/google/models/some-model:countTokens',
               ),
             );
             expect(request, {
@@ -422,122 +421,6 @@ void main() {
           response: {'totalTokens': 2},
         );
         expect(response, matchesCountTokensResponse(CountTokensResponse(2)));
-      });
-    });
-
-    group('embed content', () {
-      test('can make successful request', () async {
-        final (client, model) = createModel();
-        const prompt = 'Some prompt';
-        final response = await client.checkRequest(
-          () => model.embedContent(Content.text(prompt)),
-          verifyRequest: (uri, request) {
-            expect(
-              uri,
-              Uri.parse(
-                'https://firebaseml.googleapis.com/v2beta/projects/123/locations/us-central1/publishers/google/models/some-model:embedContent',
-              ),
-            );
-            expect(request, {
-              'content': {
-                'role': 'user',
-                'parts': [
-                  {'text': prompt},
-                ],
-              },
-            });
-          },
-          response: {
-            'embedding': {
-              'values': [0.1, 0.2, 0.3],
-            },
-          },
-        );
-        expect(
-          response,
-          matchesEmbedContentResponse(
-            EmbedContentResponse(ContentEmbedding([0.1, 0.2, 0.3])),
-          ),
-        );
-      });
-    });
-
-    test('embed content with reduced output dimensionality', () async {
-      final (client, model) = createModel();
-      const content = 'Some content';
-      const outputDimensionality = 1;
-      final embeddingValues = [0.1];
-
-      await client.checkRequest(
-          () => model.embedContent(
-                Content.text(content),
-                outputDimensionality: outputDimensionality,
-              ), verifyRequest: (_, request) {
-        expect(request,
-            containsPair('outputDimensionality', outputDimensionality));
-      }, response: {
-        'embedding': {'values': embeddingValues},
-      });
-    });
-
-    group('batch embed contents', () {
-      test('can make successful request', () async {
-        final (client, model) = createModel();
-        const prompt1 = 'Some prompt';
-        const prompt2 = 'Another prompt';
-        final embedding1 = [0.1, 0.2, 0.3];
-        final embedding2 = [0.4, 0.5, 1.6];
-        final response = await client.checkRequest(
-          () => model.batchEmbedContents([
-            EmbedContentRequest(Content.text(prompt1)),
-            EmbedContentRequest(Content.text(prompt2)),
-          ]),
-          verifyRequest: (uri, request) {
-            expect(
-              uri,
-              Uri.parse(
-                'https://firebaseml.googleapis.com/v2beta/projects/123/locations/us-central1/publishers/google/models/some-model:batchEmbedContents',
-              ),
-            );
-            expect(request, {
-              'requests': [
-                {
-                  'content': {
-                    'role': 'user',
-                    'parts': [
-                      {'text': prompt1},
-                    ],
-                  },
-                  'model': 'models/$defaultModelName',
-                },
-                {
-                  'content': {
-                    'role': 'user',
-                    'parts': [
-                      {'text': prompt2},
-                    ],
-                  },
-                  'model': 'models/$defaultModelName',
-                },
-              ],
-            });
-          },
-          response: {
-            'embeddings': [
-              {'values': embedding1},
-              {'values': embedding2},
-            ],
-          },
-        );
-        expect(
-          response,
-          matchesBatchEmbedContentsResponse(
-            BatchEmbedContentsResponse([
-              ContentEmbedding(embedding1),
-              ContentEmbedding(embedding2),
-            ]),
-          ),
-        );
       });
     });
   });

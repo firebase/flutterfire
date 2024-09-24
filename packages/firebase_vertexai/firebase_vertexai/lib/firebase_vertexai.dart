@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export 'src/firebase_vertexai.dart' show FirebaseVertexAI, RequestOptions;
+export 'src/firebase_vertexai.dart' show FirebaseVertexAI;
 export 'src/vertex_api.dart'
     show
         BatchEmbedContentsResponse,
@@ -33,7 +33,8 @@ export 'src/vertex_api.dart'
         PromptFeedback,
         SafetyRating,
         SafetySetting,
-        TaskType;
+        TaskType,
+        UsageMetadata;
 export 'src/vertex_chat.dart' show ChatSession, StartChatExtension;
 export 'src/vertex_content.dart'
     show
@@ -56,8 +57,7 @@ export 'src/vertex_function_calling.dart'
         FunctionCallingConfig,
         FunctionCallingMode,
         FunctionDeclaration,
-        Schema,
-        SchemaType,
         Tool,
         ToolConfig;
 export 'src/vertex_model.dart' show GenerativeModel;
+export 'src/vertex_schema.dart' show Schema, SchemaType;

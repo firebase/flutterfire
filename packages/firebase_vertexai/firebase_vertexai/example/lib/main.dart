@@ -91,10 +91,10 @@ class _ChatWidgetState extends State<ChatWidget> {
 
     initFirebase().then((value) {
       _model = FirebaseVertexAI.instance.generativeModel(
-        model: 'gemini-1.5-flash-preview-0514',
+        model: 'gemini-1.5-flash-001',
       );
       _functionCallModel = FirebaseVertexAI.instance.generativeModel(
-        model: 'gemini-1.5-flash-preview-0514',
+        model: 'gemini-1.5-flash-001',
         tools: [
           Tool(functionDeclarations: [exchangeRateTool]),
         ],
@@ -274,6 +274,20 @@ class _ChatWidgetState extends State<ChatWidget> {
                         : Theme.of(context).colorScheme.primary,
                   ),
                 ),
+                IconButton(
+                  tooltip: 'schema prompt',
+                  onPressed: !_loading
+                      ? () async {
+                          await _promptSchemaTest(_textController.text);
+                        }
+                      : null,
+                  icon: Icon(
+                    Icons.schema,
+                    color: _loading
+                        ? Theme.of(context).colorScheme.secondary
+                        : Theme.of(context).colorScheme.primary,
+                  ),
+                ),
                 if (!_loading)
                   IconButton(
                     onPressed: () async {
@@ -302,6 +316,51 @@ class _ChatWidgetState extends State<ChatWidget> {
         ],
       ),
     );
+  }
+
+  Future<void> _promptSchemaTest(String subject) async {
+    setState(() {
+      _loading = true;
+    });
+    try {
+      final content = [Content.text('Create a list of 20 $subject.')];
+
+      final response = await _model.generateContent(
+        content,
+        generationConfig: GenerationConfig(
+          responseMimeType: 'application/json',
+          responseSchema: Schema.array(
+            items: Schema.string(
+              description: 'A single word that a player will need to guess.',
+            ),
+          ),
+        ),
+      );
+
+      var text = response.text;
+      _generatedContent.add((image: null, text: text, fromUser: false));
+
+      if (text == null) {
+        _showError('No response from API.');
+        return;
+      } else {
+        setState(() {
+          _loading = false;
+          _scrollDown();
+        });
+      }
+    } catch (e) {
+      _showError(e.toString());
+      setState(() {
+        _loading = false;
+      });
+    } finally {
+      _textController.clear();
+      setState(() {
+        _loading = false;
+      });
+      _textFieldFocus.requestFocus();
+    }
   }
 
   Future<void> _sendStorageUriPrompt(String message) async {
@@ -483,11 +542,19 @@ class _ChatWidgetState extends State<ChatWidget> {
     });
 
     const prompt = 'tell a short story';
-    var response = await _model.countTokens([Content.text(prompt)]);
-    print(
-      'token: ${response.totalTokens}, billable characters: ${response.totalBillableCharacters}',
-    );
+    var content = Content.text(prompt);
+    var tokenResponse = await _model.countTokens([content]);
+    final tokenResult =
+        'Count token: ${tokenResponse.totalTokens}, billable characters: ${tokenResponse.totalBillableCharacters}';
+    _generatedContent.add((image: null, text: tokenResult, fromUser: false));
 
+    var contentResponse = await _model.generateContent([content]);
+    final contentMetaData =
+        'result metadata, promptTokenCount:${contentResponse.usageMetadata!.promptTokenCount}, '
+        'candidatesTokenCount:${contentResponse.usageMetadata!.candidatesTokenCount}, '
+        'totalTokenCount:${contentResponse.usageMetadata!.totalTokenCount}';
+    _generatedContent
+        .add((image: null, text: contentMetaData, fromUser: false));
     setState(() {
       _loading = false;
     });
