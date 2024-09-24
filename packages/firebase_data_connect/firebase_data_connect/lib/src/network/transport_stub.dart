@@ -54,9 +54,10 @@ class TransportStub implements DataConnectTransport {
 }
 
 DataConnectTransport getTransport(
-        TransportOptions transportOptions,
-        DataConnectOptions options,
-        FirebaseAuth? auth,
-        FirebaseAppCheck? appCheck,
-        ClientSDKType sdkType) =>
+  TransportOptions transportOptions,
+  DataConnectOptions options,
+  ClientSDKType sdkType,
+  FirebaseAuth? auth,
+  FirebaseAppCheck? appCheck,
+) =>
     TransportStub(transportOptions, options, sdkType, auth, appCheck);
