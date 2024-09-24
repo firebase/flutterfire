@@ -96,44 +96,36 @@ class _ChatWidgetState extends State<ChatWidget> {
       _functionCallModel = FirebaseVertexAI.instance.generativeModel(
         model: 'gemini-1.5-flash-001',
         tools: [
-          Tool(functionDeclarations: [exchangeRateTool]),
+          Tool(functionDeclarations: [getWeatherTool]),
         ],
       );
       _chat = _model.startChat();
     });
   }
 
-  Future<Map<String, Object?>> findExchangeRate(
+  // This is a hypothetical API to return a fake weather data collection for certain location
+  Future<Map<String, Object?>> getWeatherByLocation(
     Map<String, Object?> arguments,
-  ) async =>
-      // This hypothetical API returns a JSON such as:
-      // {"base":"USD","date":"2024-04-17","rates":{"SEK": 0.091}}
-      {
-        'date': arguments['currencyDate'],
-        'base': arguments['currencyFrom'],
-        'rates': <String, Object?>{arguments['currencyTo']! as String: 0.091},
-      };
+  ) async {
+    final jsonResponse = {
+      'location': arguments['location'],
+      'temperature': 38,
+      'description': 'Partly Cloudy',
+      'icon': 'partly-cloudy',
+      'humidity': 65,
+      'wind': {'speed': 10, 'direction': 'NW'}
+    };
+    return jsonResponse;
+  }
 
-  final exchangeRateTool = FunctionDeclaration(
-    'findExchangeRate',
-    'Returns the exchange rate between currencies on given date.',
-    Schema(
-      SchemaType.object,
+  final getWeatherTool = FunctionDeclaration(
+    'getCurrentWeather',
+    'Get the current weather in a given location',
+    Schema.object(
       properties: {
-        'currencyDate': Schema(
-          SchemaType.string,
-          description: 'A date in YYYY-MM-DD format or '
-              'the exact value "latest" if a time period is not specified.',
-        ),
-        'currencyFrom': Schema(
-          SchemaType.string,
-          description: 'The currency code of the currency to convert from, '
-              'such as "USD".',
-        ),
-        'currencyTo': Schema(
-          SchemaType.string,
-          description: 'The currency code of the currency to convert to, '
-              'such as "USD".',
+        'location': Schema.string(
+          description:
+              'The city name of the location for which to get the weather.',
         ),
       },
     ),
@@ -504,7 +496,7 @@ class _ChatWidgetState extends State<ChatWidget> {
       _loading = true;
     });
     final chat = _functionCallModel.startChat();
-    const prompt = 'How much is 50 US dollars worth in Swedish krona?';
+    const prompt = 'What is the weather like in Boston?';
 
     // Send the message to the generative model.
     var response = await chat.sendMessage(Content.text(prompt));
@@ -515,7 +507,7 @@ class _ChatWidgetState extends State<ChatWidget> {
       final functionCall = functionCalls.first;
       final result = switch (functionCall.name) {
         // Forward arguments to the hypothetical API.
-        'findExchangeRate' => await findExchangeRate(functionCall.args),
+        'getCurrentWeather' => await getWeatherByLocation(functionCall.args),
         // Throw an exception if the model attempted to call a function that was
         // not declared.
         _ => throw UnimplementedError(
