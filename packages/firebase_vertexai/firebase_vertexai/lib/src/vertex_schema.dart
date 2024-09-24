@@ -27,7 +27,6 @@ final class Schema {
     this.enumValues,
     this.items,
     this.properties,
-    //this.requiredProperties,
     this.optionalProperties,
   });
 
@@ -147,6 +146,8 @@ final class Schema {
   /// Properties of this type if this is a [SchemaType.object].
   Map<String, Schema>? properties;
 
+  /// Optional Properties if this is a [SchemaType.object].
+  ///
   /// The keys from [properties] for properties that are optional if this is a
   /// [SchemaType.object]. Any properties that's not listed in optional will be
   /// treated as required properties
