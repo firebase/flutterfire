@@ -12,6 +12,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 part 'dataconnect_error.dart';
 part 'dataconnect_options.dart';
 
+enum ClientSDKType { core, generated }
+
 /// Transport Options for connecting to a specific host.
 class TransportOptions {
   /// Constructor
@@ -30,7 +32,7 @@ class TransportOptions {
 /// Interface for transports connecting to the DataConnect backend.
 abstract class DataConnectTransport {
   /// Constructor.
-  DataConnectTransport(this.transportOptions, this.options);
+  DataConnectTransport(this.transportOptions, this.options, this.sdkType);
 
   /// Transport options.
   TransportOptions transportOptions;
@@ -43,6 +45,9 @@ abstract class DataConnectTransport {
 
   /// FirebaseAppCheck to use to get app check token.
   FirebaseAppCheck? appCheck;
+
+  /// Core or generated SDK being used.
+  ClientSDKType sdkType;
 
   /// Invokes corresponding query endpoint.
   Future<Data> invokeQuery<Data, Variables>(

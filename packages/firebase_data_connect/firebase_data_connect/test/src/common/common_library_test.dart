@@ -65,6 +65,7 @@ void main() {
       transport = TestDataConnectTransport(
         transportOptions,
         dataConnectOptions,
+        ClientSDKType.core,
         auth: mockFirebaseAuth,
         appCheck: mockFirebaseAppCheck,
       );
@@ -98,10 +99,10 @@ void main() {
 
 // Test class extending DataConnectTransport for testing purposes
 class TestDataConnectTransport extends DataConnectTransport {
-  TestDataConnectTransport(
-      TransportOptions transportOptions, DataConnectOptions options,
+  TestDataConnectTransport(TransportOptions transportOptions,
+      DataConnectOptions options, ClientSDKType sdkType,
       {FirebaseAuth? auth, FirebaseAppCheck? appCheck})
-      : super(transportOptions, options) {
+      : super(transportOptions, options, sdkType) {
     this.auth = auth;
     this.appCheck = appCheck;
   }

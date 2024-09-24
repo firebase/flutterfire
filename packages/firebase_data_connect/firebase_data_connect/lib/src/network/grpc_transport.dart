@@ -7,7 +7,8 @@ part of firebase_data_connect_grpc;
 /// Transport used for Android/iOS. Uses a GRPC transport instead of REST.
 class GRPCTransport implements DataConnectTransport {
   /// GRPCTransport creates a new channel
-  GRPCTransport(this.transportOptions, this.options, this.auth, this.appCheck) {
+  GRPCTransport(this.transportOptions, this.options, this.sdkType, this.auth,
+      this.appCheck) {
     bool isSecure =
         transportOptions.isSecure == null || transportOptions.isSecure == true;
     channel = ClientChannel(transportOptions.host,
@@ -28,6 +29,9 @@ class GRPCTransport implements DataConnectTransport {
   /// FirebaseAppCheck
   @override
   FirebaseAppCheck? appCheck;
+
+  @override
+  ClientSDKType sdkType;
 
   /// Name of the endpoint.
   late String name;
@@ -59,9 +63,11 @@ class GRPCTransport implements DataConnectTransport {
     } catch (e) {
       log('Unable to get app check token: $e');
     }
+    String sdkTypeValue =
+        "flutter/${sdkType == ClientSDKType.core ? 'core' : 'gen'}";
     Map<String, String> metadata = {
       'x-goog-request-params': 'location=${options.location}&frontend=data',
-      'x-goog-api-client': 'gl-dart/flutter fire/$packageVersion'
+      'x-goog-api-client': 'gl-dart/flutter fire/$packageVersion $sdkTypeValue'
     };
 
     if (authToken != null) {
@@ -134,6 +140,7 @@ class GRPCTransport implements DataConnectTransport {
 DataConnectTransport getTransport(
         TransportOptions transportOptions,
         DataConnectOptions options,
+        ClientSDKType sdkType,
         FirebaseAuth? auth,
         FirebaseAppCheck? appCheck) =>
-    GRPCTransport(transportOptions, options, auth, appCheck);
+    GRPCTransport(transportOptions, options, sdkType, auth, appCheck);

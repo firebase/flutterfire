@@ -7,7 +7,13 @@ part of firebase_data_connect_rest;
 /// RestTransport makes requests out to the REST endpoints of the configured backend.
 class RestTransport implements DataConnectTransport {
   /// Initializes necessary protocol and port.
-  RestTransport(this.transportOptions, this.options, this.auth, this.appCheck) {
+  RestTransport(
+    this.transportOptions,
+    this.options,
+    this.sdkType,
+    this.auth,
+    this.appCheck,
+  ) {
     String protocol = 'http';
     if (transportOptions.isSecure == null ||
         transportOptions.isSecure == true) {
@@ -28,6 +34,8 @@ class RestTransport implements DataConnectTransport {
 
   @override
   FirebaseAppCheck? appCheck;
+
+  ClientSDKType sdkType;
 
   /// Current endpoint URL.
   @visibleForTesting
@@ -59,10 +67,12 @@ class RestTransport implements DataConnectTransport {
     String location = options.location;
     String service = options.serviceId;
     String connector = options.connector;
+    String sdkTypeValue =
+        "flutter/${sdkType == ClientSDKType.core ? 'core' : 'gen'}";
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'x-goog-api-client': 'gl-dart/flutter fire/$packageVersion'
+      'x-goog-api-client': 'gl-dart/flutter fire/$packageVersion $sdkTypeValue'
     };
     String? authToken;
     try {
@@ -148,6 +158,7 @@ class RestTransport implements DataConnectTransport {
 DataConnectTransport getTransport(
         TransportOptions transportOptions,
         DataConnectOptions options,
+        ClientSDKType sdkType,
         FirebaseAuth? auth,
         FirebaseAppCheck? appCheck) =>
-    RestTransport(transportOptions, options, auth, appCheck);
+    RestTransport(transportOptions, options, sdkType, auth, appCheck);

@@ -7,7 +7,8 @@ part of firebase_data_connect_transport;
 /// Default TransportStub to satisfy compilation of the library.
 class TransportStub implements DataConnectTransport {
   /// Constructor.
-  TransportStub(this.transportOptions, this.options, this.auth, this.appCheck);
+  TransportStub(this.transportOptions, this.options, this.sdkType, this.auth,
+      this.appCheck);
 
   /// FirebaseAuth
   @override
@@ -24,6 +25,10 @@ class TransportStub implements DataConnectTransport {
   /// Network configuration options.
   @override
   TransportOptions transportOptions;
+
+  /// Core or Generated SDK being used.
+  @override
+  ClientSDKType sdkType;
 
   /// Stub for invoking a mutation.
   @override
@@ -52,5 +57,6 @@ DataConnectTransport getTransport(
         TransportOptions transportOptions,
         DataConnectOptions options,
         FirebaseAuth? auth,
-        FirebaseAppCheck? appCheck) =>
-    TransportStub(transportOptions, options, auth, appCheck);
+        FirebaseAppCheck? appCheck,
+        ClientSDKType sdkType) =>
+    TransportStub(transportOptions, options, sdkType, auth, appCheck);
