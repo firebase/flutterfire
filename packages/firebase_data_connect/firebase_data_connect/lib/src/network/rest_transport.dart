@@ -67,13 +67,15 @@ class RestTransport implements DataConnectTransport {
     String location = options.location;
     String service = options.serviceId;
     String connector = options.connector;
-    String sdkTypeValue =
-        "flutter/${sdkType == ClientSDKType.core ? 'core' : 'gen'}";
+    String apiClientValue = 'gl-dart/flutter fire/$packageVersion';
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'x-goog-api-client': 'gl-dart/flutter fire/$packageVersion $sdkTypeValue'
     };
+    if (sdkType == ClientSDKType.generated) {
+      apiClientValue += 'dart/gen';
+    }
+    headers['x-goog-api-client'] = apiClientValue;
     String? authToken;
     try {
       authToken = await auth?.currentUser?.getIdToken();

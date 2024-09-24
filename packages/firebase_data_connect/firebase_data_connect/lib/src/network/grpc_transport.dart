@@ -70,6 +70,12 @@ class GRPCTransport implements DataConnectTransport {
       'x-goog-api-client': 'gl-dart/flutter fire/$packageVersion $sdkTypeValue'
     };
 
+    String apiClientValue = 'gl-dart/flutter fire/$packageVersion';
+    if (sdkType == ClientSDKType.generated) {
+      apiClientValue += 'dart/gen';
+    }
+    metadata['x-goog-api-client'] = apiClientValue;
+
     if (authToken != null) {
       metadata['x-firebase-auth-token'] = authToken;
     }
