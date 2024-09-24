@@ -14,6 +14,18 @@ class MockFirebaseAuth extends Mock implements FirebaseAuth {}
 class MockFirebaseAppCheck extends Mock implements FirebaseAppCheck {}
 
 void main() {
+  group('GoogApiClient', () {
+    test('should return no codegen suffix if using core sdk', () {
+      final packageVersion = "1.0.0";
+      expect(getGoogApiVal(CallerSDKType.core, packageVersion),
+          'gl-dart/flutter fire/$packageVersion');
+    });
+    test('should return codegen suffix if using gen sdk', () {
+      final packageVersion = "1.0.0";
+      expect(getGoogApiVal(CallerSDKType.generated, packageVersion),
+          'gl-dart/flutter fire/$packageVersion dart/gen');
+    });
+  });
   group('TransportOptions', () {
     test('should properly initialize with given parameters', () {
       final transportOptions = TransportOptions('localhost', 8080, true);
@@ -65,7 +77,7 @@ void main() {
       transport = TestDataConnectTransport(
         transportOptions,
         dataConnectOptions,
-        ClientSDKType.core,
+        CallerSDKType.core,
         auth: mockFirebaseAuth,
         appCheck: mockFirebaseAppCheck,
       );
@@ -100,7 +112,7 @@ void main() {
 // Test class extending DataConnectTransport for testing purposes
 class TestDataConnectTransport extends DataConnectTransport {
   TestDataConnectTransport(TransportOptions transportOptions,
-      DataConnectOptions options, ClientSDKType sdkType,
+      DataConnectOptions options, CallerSDKType sdkType,
       {FirebaseAuth? auth, FirebaseAppCheck? appCheck})
       : super(transportOptions, options, sdkType) {
     this.auth = auth;

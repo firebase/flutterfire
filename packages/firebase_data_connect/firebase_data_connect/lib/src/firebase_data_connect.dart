@@ -13,7 +13,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
       required this.connectorConfig,
       this.auth,
       this.appCheck,
-      ClientSDKType? sdkType})
+      CallerSDKType? sdkType})
       : options = DataConnectOptions(
             app.options.projectId,
             connectorConfig.location,
@@ -30,7 +30,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   late QueryManager _queryManager;
 
   /// Type of SDK the user is currently calling.
-  ClientSDKType _sdkType = ClientSDKType.core;
+  CallerSDKType _sdkType = CallerSDKType.core;
 
   /// FirebaseApp
   FirebaseApp app;
@@ -107,7 +107,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     FirebaseApp? app,
     FirebaseAuth? auth,
     FirebaseAppCheck? appCheck,
-    ClientSDKType? sdkType,
+    CallerSDKType? sdkType,
     required ConnectorConfig connectorConfig,
   }) {
     app ??= Firebase.app();

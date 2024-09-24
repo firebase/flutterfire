@@ -35,7 +35,7 @@ class RestTransport implements DataConnectTransport {
   @override
   FirebaseAppCheck? appCheck;
 
-  ClientSDKType sdkType;
+  CallerSDKType sdkType;
 
   /// Current endpoint URL.
   @visibleForTesting
@@ -67,15 +67,11 @@ class RestTransport implements DataConnectTransport {
     String location = options.location;
     String service = options.serviceId;
     String connector = options.connector;
-    String apiClientValue = 'gl-dart/flutter fire/$packageVersion';
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
+      'x-goog-api-client': getGoogApiVal(sdkType, packageVersion)
     };
-    if (sdkType == ClientSDKType.generated) {
-      apiClientValue += 'dart/gen';
-    }
-    headers['x-goog-api-client'] = apiClientValue;
     String? authToken;
     try {
       authToken = await auth?.currentUser?.getIdToken();
@@ -160,7 +156,7 @@ class RestTransport implements DataConnectTransport {
 DataConnectTransport getTransport(
         TransportOptions transportOptions,
         DataConnectOptions options,
-        ClientSDKType sdkType,
+        CallerSDKType sdkType,
         FirebaseAuth? auth,
         FirebaseAppCheck? appCheck) =>
     RestTransport(transportOptions, options, sdkType, auth, appCheck);

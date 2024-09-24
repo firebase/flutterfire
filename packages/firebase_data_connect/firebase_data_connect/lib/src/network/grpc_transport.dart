@@ -31,7 +31,7 @@ class GRPCTransport implements DataConnectTransport {
   FirebaseAppCheck? appCheck;
 
   @override
-  ClientSDKType sdkType;
+  CallerSDKType sdkType;
 
   /// Name of the endpoint.
   late String name;
@@ -63,18 +63,10 @@ class GRPCTransport implements DataConnectTransport {
     } catch (e) {
       log('Unable to get app check token: $e');
     }
-    String sdkTypeValue =
-        "flutter/${sdkType == ClientSDKType.core ? 'core' : 'gen'}";
     Map<String, String> metadata = {
       'x-goog-request-params': 'location=${options.location}&frontend=data',
-      'x-goog-api-client': 'gl-dart/flutter fire/$packageVersion $sdkTypeValue'
+      'x-goog-api-client': getGoogApiVal(sdkType, packageVersion)
     };
-
-    String apiClientValue = 'gl-dart/flutter fire/$packageVersion';
-    if (sdkType == ClientSDKType.generated) {
-      apiClientValue += 'dart/gen';
-    }
-    metadata['x-goog-api-client'] = apiClientValue;
 
     if (authToken != null) {
       metadata['x-firebase-auth-token'] = authToken;
@@ -146,7 +138,7 @@ class GRPCTransport implements DataConnectTransport {
 DataConnectTransport getTransport(
         TransportOptions transportOptions,
         DataConnectOptions options,
-        ClientSDKType sdkType,
+        CallerSDKType sdkType,
         FirebaseAuth? auth,
         FirebaseAppCheck? appCheck) =>
     GRPCTransport(transportOptions, options, sdkType, auth, appCheck);

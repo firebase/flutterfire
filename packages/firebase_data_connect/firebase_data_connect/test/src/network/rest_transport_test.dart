@@ -40,7 +40,7 @@ void main() {
         'testConnector',
         'testService',
       ),
-      ClientSDKType.core,
+      CallerSDKType.core,
       mockAuth,
       mockAppCheck,
     );
@@ -65,7 +65,7 @@ void main() {
           'testConnector',
           'testService',
         ),
-        ClientSDKType.core,
+        CallerSDKType.core,
         mockAuth,
         mockAppCheck,
       );

@@ -37,7 +37,7 @@ void main() {
       final transportStub = TransportStub(
         mockTransportOptions,
         mockDataConnectOptions,
-        ClientSDKType.core,
+        CallerSDKType.core,
         mockAuth,
         mockAppCheck,
       );
@@ -52,7 +52,7 @@ void main() {
       final transportStub = TransportStub(
         mockTransportOptions,
         mockDataConnectOptions,
-        ClientSDKType.core,
+        CallerSDKType.core,
         mockAuth,
         mockAppCheck,
       );
@@ -72,7 +72,7 @@ void main() {
       final transportStub = TransportStub(
         mockTransportOptions,
         mockDataConnectOptions,
-        ClientSDKType.core,
+        CallerSDKType.core,
         mockAuth,
         mockAppCheck,
       );

@@ -12,7 +12,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 part 'dataconnect_error.dart';
 part 'dataconnect_options.dart';
 
-enum ClientSDKType { core, generated }
+enum CallerSDKType { core, generated }
+
+String getGoogApiVal(CallerSDKType sdkType, String packageVersion) {
+  String apiClientValue = 'gl-dart/flutter fire/$packageVersion';
+  if (sdkType == CallerSDKType.generated) {
+    apiClientValue += ' dart/gen';
+  }
+  return apiClientValue;
+}
 
 /// Transport Options for connecting to a specific host.
 class TransportOptions {
@@ -47,7 +55,7 @@ abstract class DataConnectTransport {
   FirebaseAppCheck? appCheck;
 
   /// Core or generated SDK being used.
-  ClientSDKType sdkType;
+  CallerSDKType sdkType;
 
   /// Invokes corresponding query endpoint.
   Future<Data> invokeQuery<Data, Variables>(

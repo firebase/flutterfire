@@ -28,7 +28,7 @@ class TransportStub implements DataConnectTransport {
 
   /// Core or Generated SDK being used.
   @override
-  ClientSDKType sdkType;
+  CallerSDKType sdkType;
 
   /// Stub for invoking a mutation.
   @override
@@ -56,7 +56,7 @@ class TransportStub implements DataConnectTransport {
 DataConnectTransport getTransport(
   TransportOptions transportOptions,
   DataConnectOptions options,
-  ClientSDKType sdkType,
+  CallerSDKType sdkType,
   FirebaseAuth? auth,
   FirebaseAppCheck? appCheck,
 ) =>
