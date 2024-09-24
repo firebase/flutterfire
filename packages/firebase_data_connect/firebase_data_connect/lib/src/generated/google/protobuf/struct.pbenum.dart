@@ -1,3 +1,6 @@
+// Copyright 2024, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
 //
 //  Generated code. Do not modify.
 //  source: google/protobuf/struct.proto
@@ -18,17 +21,18 @@ import 'package:protobuf/protobuf.dart' as $pb;
 ///
 ///  The JSON representation for `NullValue` is JSON `null`.
 class NullValue extends $pb.ProtobufEnum {
-  static const NullValue NULL_VALUE = NullValue._(0, _omitEnumNames ? '' : 'NULL_VALUE');
+  static const NullValue NULL_VALUE =
+      NullValue._(0, _omitEnumNames ? '' : 'NULL_VALUE');
 
-  static const $core.List<NullValue> values = <NullValue> [
+  static const $core.List<NullValue> values = <NullValue>[
     NULL_VALUE,
   ];
 
-  static final $core.Map<$core.int, NullValue> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static final $core.Map<$core.int, NullValue> _byValue =
+      $pb.ProtobufEnum.initByValue(values);
   static NullValue? valueOf($core.int value) => _byValue[value];
 
   const NullValue._($core.int v, $core.String n) : super(v, n);
 }
-
 
 const _omitEnumNames = $core.bool.fromEnvironment('protobuf.omit_enum_names');
