@@ -4,11 +4,12 @@ class ListMovies {
   String name = "ListMovies";
   ListMovies({required this.dataConnect});
 
-  Deserializer<ListMoviesResponse> dataDeserializer = (String json) =>
-      ListMoviesResponse.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  Deserializer<ListMoviesData> dataDeserializer = (String json) =>
+      ListMoviesData.fromJson(jsonDecode(json) as Map<String, dynamic>);
 
-  QueryRef<ListMoviesResponse, void> ref() {
-    return dataConnect.query(this.name, dataDeserializer, null, null);
+  QueryRef<ListMoviesData, void> ref() {
+    return dataConnect.query(
+        this.name, dataDeserializer, emptySerializer, null);
   }
 
   FirebaseDataConnect dataConnect;
@@ -28,7 +29,7 @@ class ListMoviesMovies {
             .map((e) => ListMoviesMoviesDirectedBy.fromJson(e))
             .toList() {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
+  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -46,7 +47,7 @@ class ListMoviesMovies {
     required this.title,
     required this.directed_by,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -56,7 +57,7 @@ class ListMoviesMoviesDirectedBy {
   ListMoviesMoviesDirectedBy.fromJson(Map<String, dynamic> json)
       : name = json['name'] {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
+  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -68,19 +69,19 @@ class ListMoviesMoviesDirectedBy {
   ListMoviesMoviesDirectedBy({
     required this.name,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
-class ListMoviesResponse {
+class ListMoviesData {
   late List<ListMoviesMovies> movies;
 
-  ListMoviesResponse.fromJson(Map<String, dynamic> json)
+  ListMoviesData.fromJson(Map<String, dynamic> json)
       : movies = (json['movies'] as List<dynamic>)
             .map((e) => ListMoviesMovies.fromJson(e))
             .toList() {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
+  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -89,9 +90,9 @@ class ListMoviesResponse {
     return json;
   }
 
-  ListMoviesResponse({
+  ListMoviesData({
     required this.movies,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }

@@ -4,21 +4,19 @@ class ListMoviesByPartialTitle {
   String name = "ListMoviesByPartialTitle";
   ListMoviesByPartialTitle({required this.dataConnect});
 
-  Deserializer<ListMoviesByPartialTitleResponse> dataDeserializer =
-      (String json) => ListMoviesByPartialTitleResponse.fromJson(
+  Deserializer<ListMoviesByPartialTitleData> dataDeserializer = (String json) =>
+      ListMoviesByPartialTitleData.fromJson(
           jsonDecode(json) as Map<String, dynamic>);
   Serializer<ListMoviesByPartialTitleVariables> varsSerializer =
       (ListMoviesByPartialTitleVariables vars) => jsonEncode(vars.toJson());
-  QueryRef<ListMoviesByPartialTitleResponse, ListMoviesByPartialTitleVariables>
-      ref(
-          {required String input,
-          ListMoviesByPartialTitleVariables?
-              listMoviesByPartialTitleVariables}) {
-    ListMoviesByPartialTitleVariables vars1 = ListMoviesByPartialTitleVariables(
+  QueryRef<ListMoviesByPartialTitleData, ListMoviesByPartialTitleVariables>
+      ref({
+    required String input,
+  }) {
+    ListMoviesByPartialTitleVariables vars = ListMoviesByPartialTitleVariables(
       input: input,
     );
-    ListMoviesByPartialTitleVariables vars =
-        listMoviesByPartialTitleVariables ?? vars1;
+
     return dataConnect.query(this.name, dataDeserializer, varsSerializer, vars);
   }
 
@@ -40,7 +38,7 @@ class ListMoviesByPartialTitleMovies {
         genre = json['genre'],
         rating = json['rating'] {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
+  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -61,21 +59,21 @@ class ListMoviesByPartialTitleMovies {
     required this.id,
     required this.title,
     required this.genre,
-    double? rating,
+    this.rating,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
-class ListMoviesByPartialTitleResponse {
+class ListMoviesByPartialTitleData {
   late List<ListMoviesByPartialTitleMovies> movies;
 
-  ListMoviesByPartialTitleResponse.fromJson(Map<String, dynamic> json)
+  ListMoviesByPartialTitleData.fromJson(Map<String, dynamic> json)
       : movies = (json['movies'] as List<dynamic>)
             .map((e) => ListMoviesByPartialTitleMovies.fromJson(e))
             .toList() {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
+  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -84,10 +82,10 @@ class ListMoviesByPartialTitleResponse {
     return json;
   }
 
-  ListMoviesByPartialTitleResponse({
+  ListMoviesByPartialTitleData({
     required this.movies,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -97,7 +95,7 @@ class ListMoviesByPartialTitleVariables {
   ListMoviesByPartialTitleVariables.fromJson(Map<String, dynamic> json)
       : input = json['input'] {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
+  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -109,6 +107,6 @@ class ListMoviesByPartialTitleVariables {
   ListMoviesByPartialTitleVariables({
     required this.input,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }

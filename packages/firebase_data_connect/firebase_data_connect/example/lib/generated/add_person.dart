@@ -4,16 +4,17 @@ class AddPerson {
   String name = "addPerson";
   AddPerson({required this.dataConnect});
 
-  Deserializer<AddPersonResponse> dataDeserializer = (String json) =>
-      AddPersonResponse.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  Deserializer<AddPersonData> dataDeserializer = (String json) =>
+      AddPersonData.fromJson(jsonDecode(json) as Map<String, dynamic>);
   Serializer<AddPersonVariables> varsSerializer =
       (AddPersonVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<AddPersonResponse, AddPersonVariables> ref(
-      {String? name, AddPersonVariables? addPersonVariables}) {
-    AddPersonVariables vars1 = AddPersonVariables(
+  MutationRef<AddPersonData, AddPersonVariables> ref({
+    String? name,
+  }) {
+    AddPersonVariables vars = AddPersonVariables(
       name: name,
     );
-    AddPersonVariables vars = addPersonVariables ?? vars1;
+
     return dataConnect.mutation(
         this.name, dataDeserializer, varsSerializer, vars);
   }
@@ -26,7 +27,7 @@ class AddPersonPersonInsert {
 
   AddPersonPersonInsert.fromJson(Map<String, dynamic> json) : id = json['id'] {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
+  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -38,17 +39,17 @@ class AddPersonPersonInsert {
   AddPersonPersonInsert({
     required this.id,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
-class AddPersonResponse {
+class AddPersonData {
   late AddPersonPersonInsert person_insert;
 
-  AddPersonResponse.fromJson(Map<String, dynamic> json)
+  AddPersonData.fromJson(Map<String, dynamic> json)
       : person_insert = AddPersonPersonInsert.fromJson(json['person_insert']) {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
+  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -57,10 +58,10 @@ class AddPersonResponse {
     return json;
   }
 
-  AddPersonResponse({
+  AddPersonData({
     required this.person_insert,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -70,7 +71,7 @@ class AddPersonVariables {
   AddPersonVariables.fromJson(Map<String, dynamic> json)
       : name = json['name'] {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
+  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -82,8 +83,8 @@ class AddPersonVariables {
   }
 
   AddPersonVariables({
-    String? this.name,
+    this.name,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }

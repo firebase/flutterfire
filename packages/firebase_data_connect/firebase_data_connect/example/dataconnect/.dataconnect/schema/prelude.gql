@@ -46,6 +46,28 @@ directive @auth(
   """
   expr: Boolean_Expr @fdc_oneOf(required: true)
 ) on QUERY | MUTATION
+
+
+"""
+By default, a mutation operation executes each top-level field sequentially,
+continuing to the next statement even if an error occurs.
+
+To ensure all mutation operations are atomic, you can put `@transation` on the
+mutation. It will execute all top-level fields within a single database transaction
+and will roll back all statements if any errors.
+"""
+directive @transaction on MUTATION
+
+"""
+Marks an element of a GraphQL operation as no longer supported on the client.
+The Firebase Data Connect backend will still support this element, but it will
+no longer appear in generated SDKs.
+"""
+directive @retired(
+  "Explains why this element was retired."
+  reason: String
+) on QUERY | MUTATION | FIELD | VARIABLE_DEFINITION
+
 "Query filter criteria for `String` scalar fields."
 input String_Filter {
   "When true, match if field `IS NULL`. When false, match if field is `NOT NULL`."
@@ -304,6 +326,7 @@ input Any_ListFilter {
   "Match if list field does not contain any of the provided values as members."
   excludesAll: [Any!]
 }
+
 """
 (Internal) A string that uniquely identifies a type, field, and so on.
 
@@ -358,53 +381,7 @@ directive @fdc_generated(
   | ENUM_VALUE
   | INPUT_OBJECT
   | INPUT_FIELD_DEFINITION
-"""
-Defines a database index to optimize query performance.
 
-Given `type TableName @table @index(fields: [“fieldName”, “secondFieldName”])`,
-`table_name_field_name_second_field_name_aa_idx` is the SQL index id.
-`table_name_field_name_second_field_name_ad_idx` if `order: [ASC DESC]`.
-`table_name_field_name_second_field_name_dd_idx` if `order: [DESC DESC]`.
-
-Given `type TableName @table { fieldName: Int @index } `
-`table_name_field_name_idx` is the SQL index id.
-`order` matters less for single field indexes because they can be scanned in both ways.
-
-Override with `@index(name)` in case of index name conflicts.
-"""
-directive @index(
-  "The SQL database index id. Defaults to <table_name>_<field_name>_idx."
-  name: String
-  """
-  Only allowed and required when used on OBJECT.
-  The fields to create an index on.
-  """
-  fields: [String!]
-  """
-  Only allowed when used on OBJECT and BTREE index.
-  Index order of each column. Default to all ASC.
-  """
-  order: [IndexFieldOrder!]
-  """
-  For array field, default to `GIN`.
-  For Vector field, default to `HNSW`.
-  """
-  type: IndexType
-  """
-  Only allowed when used on vector field.
-  The vector similarity method. Default to `INNER_PRODUCT`.
-  """
-  vector_method: VectorSimilarityMethod
-) repeatable on FIELD_DEFINITION | OBJECT
-
-enum IndexFieldOrder { ASC DESC }
-
-enum IndexType {
-  BTREE
-  GIN
-  HNSW
-  IVFFLAT
-}
 type Query {
   _service: _Service!
 }
@@ -415,7 +392,10 @@ type Mutation {
 }
 
 type _Service {
+  "Full Service Definition Language of the Frebase Data Connect Schema, including normalized schema, predefined and generated types."
   sdl: String!
+  "Orignal Schema Sources in the service."
+  schema: String!
 }
 
 "(Internal) Added to things that may be removed from FDC and will soon be no longer usable in schema or operations."
@@ -465,6 +445,7 @@ directive @fdc_oneOf(
   "If true, exactly one field / argument in the group must be specified."
   required: Boolean! = false
 ) repeatable on FIELD_DEFINITION | ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
 """
 UUID is a string with hex digits representing an RFC4122 value.
 
@@ -490,16 +471,7 @@ scalar True
   @fdc_forbiddenAsFieldType
   @fdc_forbiddenAsVariableType
   @fdc_example(value: true, description: "The only allowed value.")
-"Define the intervals used in timestamps and dates (subset)"
-enum TimestampInterval @fdc_deprecated {
-  second
-  minute
-  hour
-  day
-  week
-  month
-  year
-}
+
 """
 A Common Expression Language (CEL) expression that returns a boolean at runtime.
 
@@ -566,6 +538,7 @@ scalar Any_SQL
   @fdc_sqlExpression
   @fdc_forbiddenAsVariableType
   @fdc_forbiddenAsFieldType
+
 """
 Defines a relational database table.
 
@@ -718,24 +691,6 @@ enum OrderDirection {
   DESC
 }
 
-enum ColDefault @fdc_deprecated {
-  """
-  Generates a random UUID (v4) as the default column value.
-  Compatible with String or UUID typed fields.
-  """
-  UUID
-  """
-  Generates an auto-incrementing sequence as the default column value.
-  Compatible with Int and Int64 typed fields.
-  """
-  SEQUENCE
-  """
-  Populates the default column value with the current date or timestamp.
-  Compatible with Date and Timestamp typed fields.
-  """
-  NOW
-}
-
 """
 Specify the default column value.
 
@@ -744,8 +699,6 @@ The supported arguments vary based on the field type.
 directive @default(
   "A constant value. Validated against the field GraphQL type at compile-time."
   value: Any @fdc_oneOf(required: true)
-  "(Deprecated) Built-in common ways to generate initial value."
-  generate: ColDefault @fdc_oneOf(required: true) @deprecated
   "A CEL expression, whose return value must match the field data type."
   expr: Any_Expr @fdc_oneOf(required: true)
   """
@@ -757,6 +710,75 @@ directive @default(
   """
   sql: Any_SQL @fdc_oneOf(required: true)
 ) on FIELD_DEFINITION
+
+"""
+Defines a database index to optimize query performance.
+
+Given `type TableName @table @index(fields: [“fieldName”, “secondFieldName”])`,
+`table_name_field_name_second_field_name_aa_idx` is the SQL index id.
+`table_name_field_name_second_field_name_ad_idx` if `order: [ASC DESC]`.
+`table_name_field_name_second_field_name_dd_idx` if `order: [DESC DESC]`.
+
+Given `type TableName @table { fieldName: Int @index } `
+`table_name_field_name_idx` is the SQL index id.
+`order` matters less for single field indexes because they can be scanned in both ways.
+
+Override with `@index(name)` in case of index name conflicts.
+"""
+directive @index(
+  "The SQL database index id. Defaults to <table_name>_<field_name>_idx."
+  name: String
+  """
+  Only allowed and required when used on OBJECT.
+  The fields to create an index on.
+  """
+  fields: [String!]
+  """
+  Only allowed when used on OBJECT and BTREE index.
+  Index order of each column. Default to all ASC.
+  """
+  order: [IndexFieldOrder!]
+  """
+  For array field, default to `GIN`.
+  For Vector field, default to `HNSW`.
+  """
+  type: IndexType
+  """
+  Only allowed when used on vector field.
+  The vector similarity method. Default to `INNER_PRODUCT`.
+  """
+  vector_method: VectorSimilarityMethod
+) repeatable on FIELD_DEFINITION | OBJECT
+
+enum IndexFieldOrder { ASC DESC }
+
+enum IndexType {
+  BTREE
+  GIN
+  HNSW
+  IVFFLAT
+}
+
+"""
+Defines a unique constraint.
+
+Given `type TableName @table @unique(fields: [“fieldName”, “secondFieldName”])`,
+`table_name_field_name_second_field_name_uidx` is the SQL unique index id.
+Given `type TableName @table { fieldName: Int @unique } `
+`table_name_field_name_uidx` is the SQL unique index id.
+
+Override with `@unique(indexName)` in case of index name conflicts.
+"""
+directive @unique(
+  "The SQL database unique index name. Defaults to <table_name>_<field_name>_uidx."
+  indexName: String
+  """
+  Only allowed and required when used on OBJECT.
+  The fields to create a unique constraint on.
+  """
+  fields: [String!]
+) repeatable on FIELD_DEFINITION | OBJECT
+
 """
 Date is a string in the YYYY-MM-DD format representing a local-only date.
 
@@ -980,25 +1002,7 @@ enum Date_Interval @fdc_forbiddenAsFieldType {
   MONTH
   YEAR
 }
-"""
-Defines a unique constraint.
 
-Given `type TableName @table @unique(fields: [“fieldName”, “secondFieldName”])`,
-`table_name_field_name_second_field_name_uidx` is the SQL unique index id.
-Given `type TableName @table { fieldName: Int @unique } `
-`table_name_field_name_uidx` is the SQL unique index id.
-
-Override with `@unique(indexName)` in case of index name conflicts.
-"""
-directive @unique(
-  "The SQL database unique index name. Defaults to <table_name>_<field_name>_uidx."
-  indexName: String
-  """
-  Only allowed and required when used on OBJECT.
-  The fields to create a unique constraint on.
-  """
-  fields: [String!]
-) repeatable on FIELD_DEFINITION | OBJECT
 "Update input of a String value"
 input String_Update {
   set: String @fdc_oneOf(group: "set")
@@ -1090,6 +1094,7 @@ input Any_ListUpdate {
   append: [Any!]
   prepend: [Any!]
 }
+
 """
 Vector is an array of single-precision floating-point numbers, serialized
 as a JSON array. All elements must be finite (no NaN, Infinity or -Infinity).
@@ -1168,3 +1173,4 @@ scalar Vector_Embed_Model
   @fdc_forbiddenAsVariableType
   @fdc_forbiddenAsFieldType
   @fdc_example(value: "textembedding-gecko@003", description: "A stable version of the textembedding-gecko model")
+
