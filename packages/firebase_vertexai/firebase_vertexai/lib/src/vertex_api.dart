@@ -106,60 +106,6 @@ final class GenerateContentResponse {
       const [];
 }
 
-/// Response for Embed Content.
-final class EmbedContentResponse {
-  /// Constructor
-  EmbedContentResponse(this.embedding);
-
-  /// The embedding generated from the input content.
-  final ContentEmbedding embedding;
-}
-
-/// Response for Embed Content in batch.
-final class BatchEmbedContentsResponse {
-  /// Constructor
-  BatchEmbedContentsResponse(this.embeddings);
-
-  /// The embeddings generated from the input content for each request, in the
-  /// same order as provided in the batch request.
-  final List<ContentEmbedding> embeddings;
-}
-
-/// Request for Embed Content.
-final class EmbedContentRequest {
-  /// Constructor
-  EmbedContentRequest(this.content, {this.taskType, this.title, this.model});
-
-  /// The content to embed.
-  final Content content;
-
-  /// The type of task to perform.
-  final TaskType? taskType;
-
-  /// The title of the content.
-  final String? title;
-
-  /// The model to use.
-  final String? model;
-
-  /// Converts this request to a json object.
-  Object toJson({String? defaultModel}) => {
-        'content': content.toJson(),
-        if (taskType case final taskType?) 'taskType': taskType.toJson(),
-        if (title != null) 'title': title,
-        if (model ?? defaultModel case final model?) 'model': model,
-      };
-}
-
-/// An embedding, as defined by a list of values.
-final class ContentEmbedding {
-  /// Constructor
-  ContentEmbedding(this.values);
-
-  /// The embedding values.
-  final List<double> values;
-}
-
 /// Feedback metadata of a prompt specified in a [GenerativeModel] request.
 final class PromptFeedback {
   /// Constructor
@@ -708,27 +654,6 @@ CountTokensResponse parseCountTokensResponse(Object jsonObject) {
   throw unhandledFormat('CountTokensResponse', jsonObject);
 }
 
-/// Parse the json to [EmbedContentResponse]
-EmbedContentResponse parseEmbedContentResponse(Object jsonObject) {
-  return switch (jsonObject) {
-    {'embedding': final Object embedding} =>
-      EmbedContentResponse(_parseContentEmbedding(embedding)),
-    {'error': final Object error} => throw parseError(error),
-    _ => throw unhandledFormat('EmbedContentResponse', jsonObject)
-  };
-}
-
-/// Parse the json to [BatchEmbedContentsResponse]
-BatchEmbedContentsResponse parseBatchEmbedContentsResponse(Object jsonObject) {
-  return switch (jsonObject) {
-    {'embeddings': final List<Object?> embeddings} =>
-      BatchEmbedContentsResponse(
-          embeddings.map(_parseContentEmbedding).toList()),
-    {'error': final Object error} => throw parseError(error),
-    _ => throw unhandledFormat('EmbedContentResponse', jsonObject)
-  };
-}
-
 Candidate _parseCandidate(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('Candidate', jsonObject);
@@ -813,15 +738,6 @@ SafetyRating _parseSafetyRating(Object? jsonObject) {
       SafetyRating(HarmCategory._parseValue(category),
           HarmProbability._parseValue(probability)),
     _ => throw unhandledFormat('SafetyRating', jsonObject),
-  };
-}
-
-ContentEmbedding _parseContentEmbedding(Object? jsonObject) {
-  return switch (jsonObject) {
-    {'values': final List<Object?> values} => ContentEmbedding(<double>[
-        ...values.cast<double>(),
-      ]),
-    _ => throw unhandledFormat('ContentEmbedding', jsonObject),
   };
 }
 
