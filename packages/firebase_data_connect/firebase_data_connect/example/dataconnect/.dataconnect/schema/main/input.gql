@@ -11,10 +11,6 @@ scalar Movie_KeyOutput
 """
 scalar Person_KeyOutput
 """
-✨ Thing_KeyOutput includes the primary key fields of Thing
-"""
-scalar Thing_KeyOutput
-"""
 ✨ Generated Data input type based on DirectedBy
 """
 input DirectedBy_Data {

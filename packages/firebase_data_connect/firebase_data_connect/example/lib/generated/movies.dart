@@ -3,6 +3,12 @@ library movies;
 import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'dart:convert';
 
+part 'list_movies.dart';
+
+part 'list_movies_by_partial_title.dart';
+
+part 'list_persons.dart';
+
 part 'add_person.dart';
 
 part 'add_director_to_movie.dart';
@@ -11,19 +17,19 @@ part 'create_movie.dart';
 
 part 'delete_movie.dart';
 
-part 'thing.dart';
-
-part 'seed_data.dart';
-
-part 'list_movies.dart';
-
-part 'list_movies_by_partial_title.dart';
-
-part 'list_persons.dart';
-
-part 'list_thing.dart';
-
 class MoviesConnector {
+  ListMovies get listMovies {
+    return ListMovies(dataConnect: dataConnect);
+  }
+
+  ListMoviesByPartialTitle get listMoviesByPartialTitle {
+    return ListMoviesByPartialTitle(dataConnect: dataConnect);
+  }
+
+  ListPersons get listPersons {
+    return ListPersons(dataConnect: dataConnect);
+  }
+
   AddPerson get addPerson {
     return AddPerson(dataConnect: dataConnect);
   }
@@ -38,30 +44,6 @@ class MoviesConnector {
 
   DeleteMovie get deleteMovie {
     return DeleteMovie(dataConnect: dataConnect);
-  }
-
-  Thing get thing {
-    return Thing(dataConnect: dataConnect);
-  }
-
-  SeedData get seedData {
-    return SeedData(dataConnect: dataConnect);
-  }
-
-  ListMovies get listMovies {
-    return ListMovies(dataConnect: dataConnect);
-  }
-
-  ListMoviesByPartialTitle get listMoviesByPartialTitle {
-    return ListMoviesByPartialTitle(dataConnect: dataConnect);
-  }
-
-  ListPersons get listPersons {
-    return ListPersons(dataConnect: dataConnect);
-  }
-
-  ListThing get listThing {
-    return ListThing(dataConnect: dataConnect);
   }
 
   static ConnectorConfig connectorConfig = ConnectorConfig(
