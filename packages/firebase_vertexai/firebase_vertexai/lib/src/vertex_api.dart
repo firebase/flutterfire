@@ -607,7 +607,7 @@ final class GenerationConfig {
 
   /// Output response schema of the generated candidate text.
   ///
-  /// - Note: This only applies when the specified ``responseMIMEType`` supports
+  /// - Note: This only applies when the [responseMimeType] supports
   ///   a schema; currently this is limited to `application/json`.
   final Schema? responseSchema;
 
