@@ -4,11 +4,12 @@ class ListPersons {
   String name = "ListPersons";
   ListPersons({required this.dataConnect});
 
-  Deserializer<ListPersonsResponse> dataDeserializer = (String json) =>
-      ListPersonsResponse.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  Deserializer<ListPersonsData> dataDeserializer = (String json) =>
+      ListPersonsData.fromJson(jsonDecode(json) as Map<String, dynamic>);
 
-  QueryRef<ListPersonsResponse, void> ref() {
-    return dataConnect.query(this.name, dataDeserializer, null, null);
+  QueryRef<ListPersonsData, void> ref() {
+    return dataConnect.query(
+        this.name, dataDeserializer, emptySerializer, null);
   }
 
   FirebaseDataConnect dataConnect;
@@ -23,7 +24,7 @@ class ListPersonsPeople {
       : id = json['id'],
         name = json['name'] {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
+  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -38,19 +39,19 @@ class ListPersonsPeople {
     required this.id,
     required this.name,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
-class ListPersonsResponse {
+class ListPersonsData {
   late List<ListPersonsPeople> people;
 
-  ListPersonsResponse.fromJson(Map<String, dynamic> json)
+  ListPersonsData.fromJson(Map<String, dynamic> json)
       : people = (json['people'] as List<dynamic>)
             .map((e) => ListPersonsPeople.fromJson(e))
             .toList() {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
+  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -59,9 +60,9 @@ class ListPersonsResponse {
     return json;
   }
 
-  ListPersonsResponse({
+  ListPersonsData({
     required this.people,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
