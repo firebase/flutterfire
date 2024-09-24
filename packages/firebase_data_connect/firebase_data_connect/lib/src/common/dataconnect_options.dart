@@ -21,9 +21,9 @@ class ConnectorConfig {
   /// String representation of connectorConfig
   String toJson() {
     return jsonEncode({
-      location: location,
-      connector: connector,
-      serviceId: serviceId,
+      'location': location,
+      'connector': connector,
+      'serviceId': serviceId,
     });
   }
 }
