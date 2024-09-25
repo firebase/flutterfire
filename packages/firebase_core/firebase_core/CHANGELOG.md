@@ -1,3 +1,8 @@
+## 3.5.0
+
+ - **FEAT**(fdc): Initial Release of Data Connect ([#13313](https://github.com/firebase/flutterfire/issues/13313)). ([603a6726](https://github.com/firebase/flutterfire/commit/603a67261a2f7cbdd6ef594bfaef480aeb820683))
+ - **FEAT**(core): support for using SPM (Swift Package Manager) ([#12786](https://github.com/firebase/flutterfire/issues/12786)). ([4e28103f](https://github.com/firebase/flutterfire/commit/4e28103fafd84c6613df647e7f0dbb6a068ca8ea))
+
 ## 3.4.1
 
  - Update a dependency to the latest release.
