@@ -96,7 +96,7 @@ class _ChatWidgetState extends State<ChatWidget> {
       _functionCallModel = FirebaseVertexAI.instance.generativeModel(
         model: 'gemini-1.5-flash-001',
         tools: [
-          Tool(functionDeclarations: [getWeatherTool]),
+          Tool.functionDeclarationsTool([getWeatherTool]),
         ],
       );
       _chat = _model.startChat();
@@ -121,14 +121,12 @@ class _ChatWidgetState extends State<ChatWidget> {
   final getWeatherTool = FunctionDeclaration(
     'getCurrentWeather',
     'Get the current weather in a given location',
-    Schema.object(
-      properties: {
-        'location': Schema.string(
-          description:
-              'The city name of the location for which to get the weather.',
-        ),
-      },
-    ),
+    parameters: {
+      'location': Schema.string(
+        description:
+            'The city name of the location for which to get the weather.',
+      ),
+    },
   );
 
   Future<void> initFirebase() async {
