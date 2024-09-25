@@ -91,12 +91,13 @@ class _ChatWidgetState extends State<ChatWidget> {
 
     initFirebase().then((value) {
       _model = FirebaseVertexAI.instance.generativeModel(
-        model: 'gemini-1.5-flash-001',
+        model: 'gemini-1.5-flash',
       );
       _functionCallModel = FirebaseVertexAI.instance.generativeModel(
-        model: 'gemini-1.5-flash-001',
+        model: 'gemini-1.5-flash',
         tools: [
-          Tool.functionDeclarationsTool([getWeatherTool]),
+          Tool.functionDeclarationsTool(
+              [getWeatherTool, extractSaleRecordsTool]),
         ],
       );
       _chat = _model.startChat();
@@ -104,16 +105,14 @@ class _ChatWidgetState extends State<ChatWidget> {
   }
 
   // This is a hypothetical API to return a fake weather data collection for certain location
-  Future<Map<String, Object?>> getWeatherByLocation(
+  Future<Map<String, Object?>> getWeather(
     Map<String, Object?> arguments,
   ) async {
     final jsonResponse = {
       'location': arguments['location'],
       'temperature': 38,
-      'description': 'Partly Cloudy',
-      'icon': 'partly-cloudy',
-      'humidity': 65,
-      'wind': {'speed': 10, 'direction': 'NW'}
+      'chancePrecipitation': '56%',
+      'cloudConditions': 'partly-cloudy',
     };
     return jsonResponse;
   }
@@ -125,6 +124,37 @@ class _ChatWidgetState extends State<ChatWidget> {
       'location': Schema.string(
         description:
             'The city name of the location for which to get the weather.',
+      ),
+    },
+  );
+
+  final extractSaleRecordsTool = FunctionDeclaration(
+    'extractSaleRecords',
+    'Extract sale records from a document.',
+    parameters: {
+      'records': Schema.array(
+        description: 'A list of sale records',
+        items: Schema.object(
+          description: 'Data for a sale record',
+          properties: {
+            'id': Schema.integer(description: 'The unique id of the sale.'),
+            'date': Schema.string(
+              description:
+                  'Date of the sale, in the format of MMDDYY, e.g., 031023',
+            ),
+            'totalAmount':
+                Schema.number(description: 'The total amount of the sale.'),
+            'customerName': Schema.string(
+              description:
+                  'The name of the customer, including first name and last name.',
+            ),
+            'customerContact': Schema.string(
+              description:
+                  'The phone number of the customer, e.g., 650-123-4567.',
+            ),
+          },
+          optionalProperties: ['customerName', 'customerContact'],
+        ),
       ),
     },
   );
@@ -497,15 +527,20 @@ class _ChatWidgetState extends State<ChatWidget> {
     const prompt = 'What is the weather like in Boston?';
 
     // Send the message to the generative model.
-    var response = await chat.sendMessage(Content.text(prompt));
+    var response = await _functionCallModel.generateContent(
+      [Content.text(prompt)],
+      toolConfig: ToolConfig(
+        functionCallingConfig: FunctionCallingConfig.any({'getWeatherTool'}),
+      ),
+    );
 
     final functionCalls = response.functionCalls.toList();
     // When the model response with a function call, invoke the function.
     if (functionCalls.isNotEmpty) {
       final functionCall = functionCalls.first;
-      final result = switch (functionCall.name) {
+      final functionResult = switch (functionCall.name) {
         // Forward arguments to the hypothetical API.
-        'getCurrentWeather' => await getWeatherByLocation(functionCall.args),
+        'getCurrentWeather' => await getWeather(functionCall.args),
         // Throw an exception if the model attempted to call a function that was
         // not declared.
         _ => throw UnimplementedError(
@@ -514,8 +549,8 @@ class _ChatWidgetState extends State<ChatWidget> {
       };
       // Send the response to the model so that it can use the result to generate
       // text for the user.
-      response = await chat
-          .sendMessage(Content.functionResponse(functionCall.name, result));
+      response = await chat.sendMessage(
+          Content.functionResponse(functionCall.name, functionResult));
     }
     // When the model responds with non-null text content, print it.
     if (response.text case final text?) {
