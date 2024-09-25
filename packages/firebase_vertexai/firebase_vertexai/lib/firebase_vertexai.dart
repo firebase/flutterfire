@@ -15,15 +15,11 @@
 export 'src/firebase_vertexai.dart' show FirebaseVertexAI;
 export 'src/vertex_api.dart'
     show
-        BatchEmbedContentsResponse,
         BlockReason,
         Candidate,
         CitationMetadata,
         CitationSource,
-        ContentEmbedding,
         CountTokensResponse,
-        EmbedContentRequest,
-        EmbedContentResponse,
         FinishReason,
         GenerateContentResponse,
         GenerationConfig,

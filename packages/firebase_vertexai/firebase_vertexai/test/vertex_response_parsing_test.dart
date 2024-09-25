@@ -631,7 +631,6 @@ void main() {
       );
       expect(() => parseGenerateContentResponse(decoded), expectedThrow);
       expect(() => parseCountTokensResponse(decoded), expectedThrow);
-      expect(() => parseEmbedContentResponse(decoded), expectedThrow);
     });
 
     test('for unsupported user location', () async {
@@ -660,7 +659,6 @@ void main() {
       );
       expect(() => parseGenerateContentResponse(decoded), expectedThrow);
       expect(() => parseCountTokensResponse(decoded), expectedThrow);
-      expect(() => parseEmbedContentResponse(decoded), expectedThrow);
     });
 
     test('for general server errors', () async {
@@ -692,7 +690,6 @@ void main() {
       );
       expect(() => parseGenerateContentResponse(decoded), expectedThrow);
       expect(() => parseCountTokensResponse(decoded), expectedThrow);
-      expect(() => parseEmbedContentResponse(decoded), expectedThrow);
     });
   });
 }
