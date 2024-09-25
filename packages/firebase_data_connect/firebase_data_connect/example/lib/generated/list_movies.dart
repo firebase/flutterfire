@@ -16,28 +16,37 @@ class ListMovies {
 }
 
 class ListMoviesMovies {
-  late String id;
+  String id;
 
-  late String title;
+  String title;
 
-  late List<ListMoviesMoviesDirectedBy> directed_by;
+  List<ListMoviesMoviesDirectedBy> directed_by;
+
+  double? rating;
 
   ListMoviesMovies.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        title = json['title'],
+      : id = nativeFromJson<String>(json['id']),
+        title = nativeFromJson<String>(json['title']),
         directed_by = (json['directed_by'] as List<dynamic>)
             .map((e) => ListMoviesMoviesDirectedBy.fromJson(e))
-            .toList() {}
+            .toList() {
+    rating =
+        json['rating'] == null ? null : nativeFromJson<double>(json['rating']);
+    print(rating);
+  }
 
-  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
-    json['id'] = id;
+    json['id'] = nativeToJson<String>(id);
 
-    json['title'] = title;
+    json['title'] = nativeToJson<String>(title);
 
     json['directed_by'] = directed_by.map((e) => e.toJson()).toList();
+
+    if (rating != null) {
+      json['rating'] = nativeToJson<double?>(rating);
+    }
 
     return json;
   }
@@ -46,22 +55,24 @@ class ListMoviesMovies {
     required this.id,
     required this.title,
     required this.directed_by,
+    this.rating,
   }) {
-    // TODO: Only show this if there are optional fields.
+    // TODO(mtewani): Only show this if there are optional fields.
   }
 }
 
 class ListMoviesMoviesDirectedBy {
-  late String name;
+  String name;
 
   ListMoviesMoviesDirectedBy.fromJson(Map<String, dynamic> json)
-      : name = json['name'] {}
+      : name = nativeFromJson<String>(json['name']) {
+    print(name);
+  }
 
-  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
-    json['name'] = name;
+    json['name'] = nativeToJson<String>(name);
 
     return json;
   }
@@ -69,19 +80,18 @@ class ListMoviesMoviesDirectedBy {
   ListMoviesMoviesDirectedBy({
     required this.name,
   }) {
-    // TODO: Only show this if there are optional fields.
+    // TODO(mtewani): Only show this if there are optional fields.
   }
 }
 
 class ListMoviesData {
-  late List<ListMoviesMovies> movies;
+  List<ListMoviesMovies> movies;
 
   ListMoviesData.fromJson(Map<String, dynamic> json)
       : movies = (json['movies'] as List<dynamic>)
             .map((e) => ListMoviesMovies.fromJson(e))
             .toList() {}
 
-  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -93,6 +103,6 @@ class ListMoviesData {
   ListMoviesData({
     required this.movies,
   }) {
-    // TODO: Only show this if there are optional fields.
+    // TODO(mtewani): Only show this if there are optional fields.
   }
 }

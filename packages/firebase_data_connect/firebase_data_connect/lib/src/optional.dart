@@ -65,22 +65,27 @@ class Optional<T> {
   }
 }
 
-String nativeToJson<T>(T type) {
-  if (type is bool || type is int || type is double || type is num) {
-    return type.toString();
-  } else if (type is String) {
+dynamic nativeToJson<T>(T type) {
+  if (type is bool ||
+      type is int ||
+      type is double ||
+      type is num ||
+      type is String) {
     return type;
   } else {
     throw UnimplementedError('This type is unimplemented: ${type.runtimeType}');
   }
 }
 
-T nativeFromJson<T>(String json) {
-  if (T == bool) return (json.toLowerCase() == 'true') as T;
-  if (T == int) return int.parse(json) as T;
-  if (T == double) return double.parse(json) as T;
-  if (T == num) return num.parse(json) as T;
-  if (T == String) return json as T;
-
+T nativeFromJson<T>(dynamic input) {
+  if (input is bool || input is int || input is double || input is num) {
+    return input;
+  } else if (input is String) {
+    if (T == DateTime) {
+      return DateTime.parse(input) as T;
+    } else if (T == String) {
+      return input as T;
+    }
+  }
   throw UnimplementedError('This type is unimplemented: ${T.runtimeType}');
 }

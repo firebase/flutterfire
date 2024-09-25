@@ -1,112 +1,282 @@
 part of movies;
 
+
+
+
+
+
+
+
 class ListMoviesByPartialTitle {
   String name = "ListMoviesByPartialTitle";
   ListMoviesByPartialTitle({required this.dataConnect});
 
-  Deserializer<ListMoviesByPartialTitleData> dataDeserializer = (String json) =>
-      ListMoviesByPartialTitleData.fromJson(
-          jsonDecode(json) as Map<String, dynamic>);
-  Serializer<ListMoviesByPartialTitleVariables> varsSerializer =
-      (ListMoviesByPartialTitleVariables vars) => jsonEncode(vars.toJson());
-  QueryRef<ListMoviesByPartialTitleData, ListMoviesByPartialTitleVariables>
-      ref({
-    required String input,
-  }) {
-    ListMoviesByPartialTitleVariables vars = ListMoviesByPartialTitleVariables(
-      input: input,
-    );
+  Deserializer<ListMoviesByPartialTitleData> dataDeserializer = (String json)  => ListMoviesByPartialTitleData.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  Serializer<ListMoviesByPartialTitleVariables> varsSerializer = (ListMoviesByPartialTitleVariables vars) => jsonEncode(vars.toJson());
+  QueryRef<ListMoviesByPartialTitleData, ListMoviesByPartialTitleVariables> ref(
+      {required String input,}) {
+    ListMoviesByPartialTitleVariables vars=ListMoviesByPartialTitleVariables(input: input,);
 
     return dataConnect.query(this.name, dataDeserializer, varsSerializer, vars);
   }
-
   FirebaseDataConnect dataConnect;
 }
 
+
+  
+
+
 class ListMoviesByPartialTitleMovies {
-  late String id;
+  
+    
+    
+    
+   String id;
 
-  late String title;
+   
+  
+    
+    
+    
+   String title;
 
-  late String genre;
+   
+  
+    
+    
+    
+   String genre;
 
-  late double? rating;
+   
+  
+    
+    
+    
+   double? rating;
 
-  ListMoviesByPartialTitleMovies.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        title = json['title'],
-        genre = json['genre'],
-        rating = json['rating'] {}
+   
+  
+  
+    ListMoviesByPartialTitleMovies.fromJson(Map<String, dynamic> json):
+        id = 
+ 
+    nativeFromJson<String>(json['id'])
+  
 
-  // TODO: Fix up to create a map on the fly
-  Map<String, dynamic> toJson() {
-    Map<String, dynamic> json = {};
+        ,
+      
+        title = 
+ 
+    nativeFromJson<String>(json['title'])
+  
 
-    json['id'] = id;
+        ,
+      
+        genre = 
+ 
+    nativeFromJson<String>(json['genre'])
+  
 
-    json['title'] = title;
-
-    json['genre'] = genre;
-
-    if (rating != null) {
-      json['rating'] = rating;
+        
+       {
+      
+        
+      
+        
+      
+        
+      
+        
+          rating = json['rating'] == null ? null : 
+ 
+    nativeFromJson<double>(json['rating'])
+  
+;
+        
+      
     }
 
+
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> json = {};
+    
+      
+      json['id'] = 
+  
+    nativeToJson<String>(id)
+    
+;
+      
+    
+      
+      json['title'] = 
+  
+    nativeToJson<String>(title)
+    
+;
+      
+    
+      
+      json['genre'] = 
+  
+    nativeToJson<String>(genre)
+    
+;
+      
+    
+      
+        if (rating != null) {
+          json['rating'] = 
+  
+    nativeToJson<double?>(rating)
+    
+;
+        }
+      
+    
     return json;
   }
 
   ListMoviesByPartialTitleMovies({
+    
     required this.id,
+  
     required this.title,
+  
     required this.genre,
-    this.rating,
-  }) {
-    // TODO: Only show this if there are optional fields.
+  
+     this.rating,
+  
+  }) { // TODO(mtewani): Only show this if there are optional fields.
+    
+      
+    
+      
+    
+      
+    
+      
+    
   }
 }
 
+
+
+  
+
+
 class ListMoviesByPartialTitleData {
-  late List<ListMoviesByPartialTitleMovies> movies;
+  
+    
+    
+    
+   List<ListMoviesByPartialTitleMovies> movies;
 
-  ListMoviesByPartialTitleData.fromJson(Map<String, dynamic> json)
-      : movies = (json['movies'] as List<dynamic>)
-            .map((e) => ListMoviesByPartialTitleMovies.fromJson(e))
-            .toList() {}
+   
+  
+  
+    ListMoviesByPartialTitleData.fromJson(Map<String, dynamic> json):
+        movies = 
+ 
+    
+      (json['movies'] as List<dynamic>)
+        .map((e) => ListMoviesByPartialTitleMovies.fromJson(e))
+        .toList()
+    
+  
 
-  // TODO: Fix up to create a map on the fly
+        
+       {
+      
+        
+      
+    }
+
+
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
-
-    json['movies'] = movies.map((e) => e.toJson()).toList();
-
+    
+      
+      json['movies'] = 
+  
+    
+      movies.map((e) => e.toJson()).toList()
+    
+  
+;
+      
+    
     return json;
   }
 
   ListMoviesByPartialTitleData({
+    
     required this.movies,
-  }) {
-    // TODO: Only show this if there are optional fields.
+  
+  }) { // TODO(mtewani): Only show this if there are optional fields.
+    
+      
+    
   }
 }
 
+
+
+  
+
+
 class ListMoviesByPartialTitleVariables {
-  late String input;
+  
+    
+    
+    
+   String input;
 
-  ListMoviesByPartialTitleVariables.fromJson(Map<String, dynamic> json)
-      : input = json['input'] {}
+   
+  
+  
+    ListMoviesByPartialTitleVariables.fromJson(Map<String, dynamic> json):
+        input = 
+ 
+    nativeFromJson<String>(json['input'])
+  
 
-  // TODO: Fix up to create a map on the fly
+        
+       {
+      
+        
+      
+    }
+
+
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
-
-    json['input'] = input;
-
+    
+      
+      json['input'] = 
+  
+    nativeToJson<String>(input)
+    
+;
+      
+    
     return json;
   }
 
   ListMoviesByPartialTitleVariables({
+    
     required this.input,
-  }) {
-    // TODO: Only show this if there are optional fields.
+  
+  }) { // TODO(mtewani): Only show this if there are optional fields.
+    
+      
+    
   }
 }
+
+
+
+
+
+
+
