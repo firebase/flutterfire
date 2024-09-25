@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:intl/intl.dart';
+
 import 'common/common_library.dart';
 
 /// Keeps track of whether the value has been set or not
@@ -65,11 +67,16 @@ class Optional<T> {
   }
 }
 
-String nativeToJson<T>(T type) {
-  if (type is bool || type is int || type is double || type is num) {
-    return type.toString();
-  } else if (type is String) {
+dynamic nativeToJson<T>(T type) {
+  if (type is bool ||
+      type is int ||
+      type is double ||
+      type is num ||
+      type is String) {
     return type;
+  } else if (type is DateTime) {
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    return formatter.format(type);
   } else {
     throw UnimplementedError('This type is unimplemented: ${type.runtimeType}');
   }
@@ -81,6 +88,7 @@ T nativeFromJson<T>(String json) {
   if (T == double) return double.parse(json) as T;
   if (T == num) return num.parse(json) as T;
   if (T == String) return json as T;
+  if (T == DateTime) return DateTime.parse(json) as T;
 
   throw UnimplementedError('This type is unimplemented: ${T.runtimeType}');
 }

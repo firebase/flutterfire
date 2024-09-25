@@ -21,8 +21,15 @@ query ListMoviesByPartialTitle($input: String!) @auth(level: PUBLIC) {
 
 query ListPersons @auth(level: USER) {
   people {
-    id
+  id
     name
+  }
+}
+
+query ListTimestamps @auth(level: USER) {
+  timestampHolders {
+    timestamp,
+    date
   }
 }
 
