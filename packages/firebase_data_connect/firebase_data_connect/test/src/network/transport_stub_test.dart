@@ -36,6 +36,7 @@ void main() {
       final transportStub = TransportStub(
         mockTransportOptions,
         mockDataConnectOptions,
+        'mockAppId',
         mockAuth,
         mockAppCheck,
       );
@@ -50,6 +51,7 @@ void main() {
       final transportStub = TransportStub(
         mockTransportOptions,
         mockDataConnectOptions,
+        'mockAppId',
         mockAuth,
         mockAppCheck,
       );
@@ -69,6 +71,7 @@ void main() {
       final transportStub = TransportStub(
         mockTransportOptions,
         mockDataConnectOptions,
+        'mockAppId',
         mockAuth,
         mockAppCheck,
       );

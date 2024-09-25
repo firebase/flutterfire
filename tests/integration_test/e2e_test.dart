@@ -30,6 +30,10 @@ import 'firebase_remote_config/firebase_remote_config_e2e_test.dart'
     as firebase_remote_config;
 import 'firebase_storage/firebase_storage_e2e_test.dart' as firebase_storage;
 
+// Github Actions environment variable
+// ignore: do_not_use_environment
+final isCI = const String.fromEnvironment('CI').isNotEmpty;
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 

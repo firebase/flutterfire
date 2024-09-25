@@ -1,7 +1,6 @@
 // Copyright 2024, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
-
 //
 //  Generated code. Do not modify.
 //  source: connector_service.proto
@@ -96,7 +95,7 @@ const ExecuteQueryResponse$json = {
       '3': 2,
       '4': 3,
       '5': 11,
-      '6': '.google.firebase.dataconnect.v1alpha.GraphqlError',
+      '6': '.google.firebase.dataconnect.v1beta.GraphqlError',
       '10': 'errors'
     },
   ],
@@ -105,8 +104,8 @@ const ExecuteQueryResponse$json = {
 /// Descriptor for `ExecuteQueryResponse`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List executeQueryResponseDescriptor = $convert.base64Decode(
     'ChRFeGVjdXRlUXVlcnlSZXNwb25zZRIrCgRkYXRhGAEgASgLMhcuZ29vZ2xlLnByb3RvYnVmLl'
-    'N0cnVjdFIEZGF0YRJJCgZlcnJvcnMYAiADKAsyMS5nb29nbGUuZmlyZWJhc2UuZGF0YWNvbm5l'
-    'Y3QudjFhbHBoYS5HcmFwaHFsRXJyb3JSBmVycm9ycw==');
+    'N0cnVjdFIEZGF0YRJICgZlcnJvcnMYAiADKAsyMC5nb29nbGUuZmlyZWJhc2UuZGF0YWNvbm5l'
+    'Y3QudjFiZXRhLkdyYXBocWxFcnJvclIGZXJyb3Jz');
 
 @$core.Deprecated('Use executeMutationResponseDescriptor instead')
 const ExecuteMutationResponse$json = {
@@ -125,7 +124,7 @@ const ExecuteMutationResponse$json = {
       '3': 2,
       '4': 3,
       '5': 11,
-      '6': '.google.firebase.dataconnect.v1alpha.GraphqlError',
+      '6': '.google.firebase.dataconnect.v1beta.GraphqlError',
       '10': 'errors'
     },
   ],
@@ -134,5 +133,5 @@ const ExecuteMutationResponse$json = {
 /// Descriptor for `ExecuteMutationResponse`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List executeMutationResponseDescriptor = $convert.base64Decode(
     'ChdFeGVjdXRlTXV0YXRpb25SZXNwb25zZRIrCgRkYXRhGAEgASgLMhcuZ29vZ2xlLnByb3RvYn'
-    'VmLlN0cnVjdFIEZGF0YRJJCgZlcnJvcnMYAiADKAsyMS5nb29nbGUuZmlyZWJhc2UuZGF0YWNv'
-    'bm5lY3QudjFhbHBoYS5HcmFwaHFsRXJyb3JSBmVycm9ycw==');
+    'VmLlN0cnVjdFIEZGF0YRJICgZlcnJvcnMYAiADKAsyMC5nb29nbGUuZmlyZWJhc2UuZGF0YWNv'
+    'bm5lY3QudjFiZXRhLkdyYXBocWxFcnJvclIGZXJyb3Jz');
