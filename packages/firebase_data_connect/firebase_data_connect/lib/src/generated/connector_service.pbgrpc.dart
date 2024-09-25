@@ -1,7 +1,6 @@
 // Copyright 2024, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
-
 //
 //  Generated code. Do not modify.
 //  source: connector_service.proto
@@ -23,24 +22,25 @@ import 'connector_service.pb.dart' as $0;
 
 export 'connector_service.pb.dart';
 
-@$pb.GrpcServiceName('google.firebase.dataconnect.v1alpha.ConnectorService')
+@$pb.GrpcServiceName('google.firebase.dataconnect.v1beta.ConnectorService')
 class ConnectorServiceClient extends $grpc.Client {
-  ConnectorServiceClient($grpc.ClientChannel channel,
-      {$grpc.CallOptions? options,
-      $core.Iterable<$grpc.ClientInterceptor>? interceptors})
-      : super(channel, options: options, interceptors: interceptors);
   static final _$executeQuery =
       $grpc.ClientMethod<$0.ExecuteQueryRequest, $0.ExecuteQueryResponse>(
-          '/google.firebase.dataconnect.v1alpha.ConnectorService/ExecuteQuery',
+          '/google.firebase.dataconnect.v1beta.ConnectorService/ExecuteQuery',
           ($0.ExecuteQueryRequest value) => value.writeToBuffer(),
           ($core.List<$core.int> value) =>
               $0.ExecuteQueryResponse.fromBuffer(value));
   static final _$executeMutation = $grpc.ClientMethod<$0.ExecuteMutationRequest,
           $0.ExecuteMutationResponse>(
-      '/google.firebase.dataconnect.v1alpha.ConnectorService/ExecuteMutation',
+      '/google.firebase.dataconnect.v1beta.ConnectorService/ExecuteMutation',
       ($0.ExecuteMutationRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) =>
           $0.ExecuteMutationResponse.fromBuffer(value));
+
+  ConnectorServiceClient($grpc.ClientChannel channel,
+      {$grpc.CallOptions? options,
+      $core.Iterable<$grpc.ClientInterceptor>? interceptors})
+      : super(channel, options: options, interceptors: interceptors);
 
   $grpc.ResponseFuture<$0.ExecuteQueryResponse> executeQuery(
       $0.ExecuteQueryRequest request,
@@ -55,8 +55,11 @@ class ConnectorServiceClient extends $grpc.Client {
   }
 }
 
-@$pb.GrpcServiceName('google.firebase.dataconnect.v1alpha.ConnectorService')
+@$pb.GrpcServiceName('google.firebase.dataconnect.v1beta.ConnectorService')
 abstract class ConnectorServiceBase extends $grpc.Service {
+  $core.String get $name =>
+      'google.firebase.dataconnect.v1beta.ConnectorService';
+
   ConnectorServiceBase() {
     $addMethod(
         $grpc.ServiceMethod<$0.ExecuteQueryRequest, $0.ExecuteQueryResponse>(
@@ -77,8 +80,6 @@ abstract class ConnectorServiceBase extends $grpc.Service {
             $0.ExecuteMutationRequest.fromBuffer(value),
         ($0.ExecuteMutationResponse value) => value.writeToBuffer()));
   }
-  $core.String get $name =>
-      'google.firebase.dataconnect.v1alpha.ConnectorService';
 
   $async.Future<$0.ExecuteQueryResponse> executeQuery_Pre(
       $grpc.ServiceCall call,

@@ -13,6 +13,8 @@ part 'add_person.dart';
 
 part 'add_director_to_movie.dart';
 
+part 'seed_movies.dart';
+
 part 'create_movie.dart';
 
 part 'delete_movie.dart';
@@ -36,6 +38,10 @@ class MoviesConnector {
 
   AddDirectorToMovie get addDirectorToMovie {
     return AddDirectorToMovie(dataConnect: dataConnect);
+  }
+
+  SeedMovies get seedMovies {
+    return SeedMovies(dataConnect: dataConnect);
   }
 
   CreateMovie get createMovie {

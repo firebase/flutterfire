@@ -1,7 +1,6 @@
 // Copyright 2024, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
-
 //
 //  Generated code. Do not modify.
 //  source: connector_service.proto
@@ -50,7 +49,7 @@ class ExecuteQueryRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ExecuteQueryRequest',
       package: const $pb.PackageName(
-          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1alpha'),
+          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1beta'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'name')
     ..aOS(2, _omitFieldNames ? '' : 'operationName')
@@ -161,7 +160,7 @@ class ExecuteMutationRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ExecuteMutationRequest',
       package: const $pb.PackageName(
-          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1alpha'),
+          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1beta'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'name')
     ..aOS(2, _omitFieldNames ? '' : 'operationName')
@@ -270,7 +269,7 @@ class ExecuteQueryResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ExecuteQueryResponse',
       package: const $pb.PackageName(
-          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1alpha'),
+          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1beta'),
       createEmptyInstance: create)
     ..aOM<$1.Struct>(1, _omitFieldNames ? '' : 'data',
         subBuilder: $1.Struct.create)
@@ -349,7 +348,7 @@ class ExecuteMutationResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ExecuteMutationResponse',
       package: const $pb.PackageName(
-          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1alpha'),
+          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1beta'),
       createEmptyInstance: create)
     ..aOM<$1.Struct>(1, _omitFieldNames ? '' : 'data',
         subBuilder: $1.Struct.create)

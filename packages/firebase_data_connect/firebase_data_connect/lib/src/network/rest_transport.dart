@@ -20,7 +20,7 @@ class RestTransport implements DataConnectTransport {
     String service = options.serviceId;
     String connector = options.connector;
     url =
-        '$protocol://$host:$port/v1alpha/projects/$project/locations/$location/services/$service/connectors/$connector';
+        '$protocol://$host:$port/v1beta/projects/$project/locations/$location/services/$service/connectors/$connector';
   }
 
   @override
