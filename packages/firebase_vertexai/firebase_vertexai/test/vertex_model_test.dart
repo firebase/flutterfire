@@ -196,7 +196,7 @@ void main() {
       test('can pass tools and function calling config', () async {
         final (client, model) = createModel(
           tools: [
-            Tool.functionDeclarationsTool([
+            Tool.functionDeclarations([
               FunctionDeclaration(
                 'someFunction',
                 'Some cool function.',
@@ -254,7 +254,7 @@ void main() {
           () => model.generateContent(
             [Content.text(prompt)],
             tools: [
-              Tool.functionDeclarationsTool([
+              Tool.functionDeclarations([
                 FunctionDeclaration(
                   'someFunction',
                   'Some cool function.',

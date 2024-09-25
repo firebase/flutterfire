@@ -21,12 +21,12 @@ import 'vertex_schema.dart';
 /// knowledge and scope of the model.
 final class Tool {
   /// Constructor
-  Tool._({this.functionDeclarations});
+  Tool._(this._functionDeclarations);
 
   /// Returns a [Tool] instance with list of [FunctionDeclaration].
-  static Tool functionDeclarationsTool(
+  static Tool functionDeclarations(
       List<FunctionDeclaration> functionDeclarations) {
-    return Tool._(functionDeclarations: functionDeclarations);
+    return Tool._(functionDeclarations);
   }
 
   /// A list of `FunctionDeclarations` available to the model that can be used
@@ -37,13 +37,13 @@ final class Tool {
   /// side for execution. The next conversation turn may contain a
   /// [FunctionResponse]
   /// with the role "function" generation context for the next model turn.
-  final List<FunctionDeclaration>? functionDeclarations;
+  final List<FunctionDeclaration>? _functionDeclarations;
 
   /// Convert to json object.
   Map<String, Object> toJson() => {
-        if (functionDeclarations case final functionDeclarations?)
+        if (_functionDeclarations case final _functionDeclarations?)
           'functionDeclarations':
-              functionDeclarations.map((f) => f.toJson()).toList(),
+              _functionDeclarations.map((f) => f.toJson()).toList(),
       };
 }
 
