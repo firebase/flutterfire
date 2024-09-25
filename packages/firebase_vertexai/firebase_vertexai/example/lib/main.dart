@@ -122,7 +122,7 @@ class _ChatWidgetState extends State<ChatWidget> {
 
   /// Actual function to demonstrate the function calling feature.
   final fetchWeatherTool = FunctionDeclaration(
-    'getCurrentWeather',
+    'fetchCurrentWeather',
     'Get the current weather in a given location',
     parameters: {
       'location': Schema.string(
@@ -543,7 +543,7 @@ class _ChatWidgetState extends State<ChatWidget> {
       final functionResult = switch (functionCall.name) {
         // Forward the structured input data prepared by the model
         // to the hypothetical external API.
-        'getCurrentWeather' => await fetchWeather(functionCall.args),
+        'fetchCurrentWeather' => await fetchWeather(functionCall.args),
         // Throw an exception if the model attempted to call a function that was
         // not declared.
         _ => throw UnimplementedError(
