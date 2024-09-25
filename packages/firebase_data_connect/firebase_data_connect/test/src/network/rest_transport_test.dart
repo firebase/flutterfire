@@ -40,6 +40,8 @@ void main() {
         'testConnector',
         'testService',
       ),
+      'testAppId',
+      CallerSDKType.core,
       mockAuth,
       mockAppCheck,
     );
@@ -51,7 +53,7 @@ void main() {
     test('should correctly initialize URL with secure protocol', () {
       expect(
         transport.url,
-        'https://testhost:443/v1alpha/projects/testProject/locations/testLocation/services/testService/connectors/testConnector',
+        'https://testhost:443/v1beta/projects/testProject/locations/testLocation/services/testService/connectors/testConnector',
       );
     });
 
@@ -64,13 +66,15 @@ void main() {
           'testConnector',
           'testService',
         ),
+        'testAppId',
+        CallerSDKType.core,
         mockAuth,
         mockAppCheck,
       );
 
       expect(
         insecureTransport.url,
-        'http://testhost:443/v1alpha/projects/testProject/locations/testLocation/services/testService/connectors/testConnector',
+        'http://testhost:443/v1beta/projects/testProject/locations/testLocation/services/testService/connectors/testConnector',
       );
     });
 

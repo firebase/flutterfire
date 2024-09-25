@@ -36,7 +36,6 @@ class CreateMovieMovieInsert {
   CreateMovieMovieInsert.fromJson(Map<String, dynamic> json)
       : id = nativeFromJson<String>(json['id']) {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -48,7 +47,7 @@ class CreateMovieMovieInsert {
   CreateMovieMovieInsert({
     required this.id,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -58,7 +57,6 @@ class CreateMovieData {
   CreateMovieData.fromJson(Map<String, dynamic> json)
       : movie_insert = CreateMovieMovieInsert.fromJson(json['movie_insert']) {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -70,7 +68,7 @@ class CreateMovieData {
   CreateMovieData({
     required this.movie_insert,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -97,7 +95,6 @@ class CreateMovieVariables {
         : nativeFromJson<String>(json['description']);
   }
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -125,6 +122,6 @@ class CreateMovieVariables {
     this.rating,
     this.description,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }

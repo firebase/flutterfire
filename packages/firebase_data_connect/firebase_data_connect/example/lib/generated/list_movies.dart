@@ -29,7 +29,6 @@ class ListMoviesMovies {
             .map((e) => ListMoviesMoviesDirectedBy.fromJson(e))
             .toList() {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -47,7 +46,7 @@ class ListMoviesMovies {
     required this.title,
     required this.directed_by,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -57,7 +56,6 @@ class ListMoviesMoviesDirectedBy {
   ListMoviesMoviesDirectedBy.fromJson(Map<String, dynamic> json)
       : name = nativeFromJson<String>(json['name']) {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -69,7 +67,7 @@ class ListMoviesMoviesDirectedBy {
   ListMoviesMoviesDirectedBy({
     required this.name,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -81,7 +79,6 @@ class ListMoviesData {
             .map((e) => ListMoviesMovies.fromJson(e))
             .toList() {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -93,6 +90,6 @@ class ListMoviesData {
   ListMoviesData({
     required this.movies,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }

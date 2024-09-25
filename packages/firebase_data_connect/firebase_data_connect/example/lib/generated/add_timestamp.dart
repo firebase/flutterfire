@@ -28,7 +28,6 @@ class AddTimestampTimestampHolderInsert {
   AddTimestampTimestampHolderInsert.fromJson(Map<String, dynamic> json)
       : id = nativeFromJson<String>(json['id']) {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -40,7 +39,7 @@ class AddTimestampTimestampHolderInsert {
   AddTimestampTimestampHolderInsert({
     required this.id,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -51,7 +50,6 @@ class AddTimestampData {
       : timestampHolder_insert = AddTimestampTimestampHolderInsert.fromJson(
             json['timestampHolder_insert']) {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -63,7 +61,7 @@ class AddTimestampData {
   AddTimestampData({
     required this.timestampHolder_insert,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -73,7 +71,6 @@ class AddTimestampVariables {
   AddTimestampVariables.fromJson(Map<String, dynamic> json)
       : timestamp = Timestamp.fromJson(json['timestamp']) {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -85,6 +82,6 @@ class AddTimestampVariables {
   AddTimestampVariables({
     required this.timestamp,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }

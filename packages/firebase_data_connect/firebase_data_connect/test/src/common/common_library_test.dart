@@ -14,6 +14,18 @@ class MockFirebaseAuth extends Mock implements FirebaseAuth {}
 class MockFirebaseAppCheck extends Mock implements FirebaseAppCheck {}
 
 void main() {
+  group('GoogApiClient', () {
+    test('should return no codegen suffix if using core sdk', () {
+      final packageVersion = "1.0.0";
+      expect(getGoogApiVal(CallerSDKType.core, packageVersion),
+          'gl-dart/$packageVersion fire/$packageVersion');
+    });
+    test('should return codegen suffix if using gen sdk', () {
+      final packageVersion = "1.0.0";
+      expect(getGoogApiVal(CallerSDKType.generated, packageVersion),
+          'gl-dart/$packageVersion fire/$packageVersion dart/gen');
+    });
+  });
   group('TransportOptions', () {
     test('should properly initialize with given parameters', () {
       final transportOptions = TransportOptions('localhost', 8080, true);
@@ -65,6 +77,8 @@ void main() {
       transport = TestDataConnectTransport(
         transportOptions,
         dataConnectOptions,
+        'testAppId',
+        CallerSDKType.core,
         auth: mockFirebaseAuth,
         appCheck: mockFirebaseAppCheck,
       );
@@ -79,8 +93,8 @@ void main() {
     test('should handle invokeQuery with proper deserializer', () async {
       final queryName = 'testQuery';
       final deserializer = (json) => json;
-      final result =
-          await transport.invokeQuery(queryName, deserializer, null, null);
+      final result = await transport.invokeQuery(
+          queryName, deserializer, emptySerializer, null);
 
       expect(result, isNotNull);
     });
@@ -88,8 +102,8 @@ void main() {
     test('should handle invokeMutation with proper deserializer', () async {
       final queryName = 'testMutation';
       final deserializer = (json) => json;
-      final result =
-          await transport.invokeMutation(queryName, deserializer, null, null);
+      final result = await transport.invokeMutation(
+          queryName, deserializer, emptySerializer, null);
 
       expect(result, isNotNull);
     });
@@ -98,10 +112,10 @@ void main() {
 
 // Test class extending DataConnectTransport for testing purposes
 class TestDataConnectTransport extends DataConnectTransport {
-  TestDataConnectTransport(
-      TransportOptions transportOptions, DataConnectOptions options,
+  TestDataConnectTransport(TransportOptions transportOptions,
+      DataConnectOptions options, String appId, CallerSDKType sdkType,
       {FirebaseAuth? auth, FirebaseAppCheck? appCheck})
-      : super(transportOptions, options) {
+      : super(transportOptions, options, appId, sdkType) {
     this.auth = auth;
     this.appCheck = appCheck;
   }

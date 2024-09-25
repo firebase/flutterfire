@@ -40,7 +40,6 @@ class ListMoviesByPartialTitleMovies {
         json['rating'] == null ? null : nativeFromJson<double>(json['rating']);
   }
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -63,7 +62,7 @@ class ListMoviesByPartialTitleMovies {
     required this.genre,
     this.rating,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -75,7 +74,6 @@ class ListMoviesByPartialTitleData {
             .map((e) => ListMoviesByPartialTitleMovies.fromJson(e))
             .toList() {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -87,7 +85,7 @@ class ListMoviesByPartialTitleData {
   ListMoviesByPartialTitleData({
     required this.movies,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -97,7 +95,6 @@ class ListMoviesByPartialTitleVariables {
   ListMoviesByPartialTitleVariables.fromJson(Map<String, dynamic> json)
       : input = nativeFromJson<String>(json['input']) {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -109,6 +106,6 @@ class ListMoviesByPartialTitleVariables {
   ListMoviesByPartialTitleVariables({
     required this.input,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }

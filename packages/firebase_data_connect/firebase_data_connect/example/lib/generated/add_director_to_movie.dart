@@ -33,7 +33,6 @@ class AddDirectorToMovieDirectedByInsert {
       : directedbyId = nativeFromJson<String>(json['directedbyId']),
         movieId = nativeFromJson<String>(json['movieId']) {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -48,7 +47,7 @@ class AddDirectorToMovieDirectedByInsert {
     required this.directedbyId,
     required this.movieId,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -59,7 +58,6 @@ class AddDirectorToMovieData {
       : directedBy_insert = AddDirectorToMovieDirectedByInsert.fromJson(
             json['directedBy_insert']) {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -71,7 +69,7 @@ class AddDirectorToMovieData {
   AddDirectorToMovieData({
     required this.directedBy_insert,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -81,7 +79,6 @@ class AddDirectorToMovieVariablesPersonId {
   AddDirectorToMovieVariablesPersonId.fromJson(Map<String, dynamic> json)
       : id = nativeFromJson<String>(json['id']) {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -93,7 +90,7 @@ class AddDirectorToMovieVariablesPersonId {
   AddDirectorToMovieVariablesPersonId({
     required this.id,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -112,7 +109,6 @@ class AddDirectorToMovieVariables {
         : nativeFromJson<String>(json['movieId']);
   }
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -131,6 +127,6 @@ class AddDirectorToMovieVariables {
     this.personId,
     this.movieId,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }

@@ -25,7 +25,6 @@ class ListTimestampsTimestampHolders {
     date = json['date'] == null ? null : nativeFromJson<DateTime>(json['date']);
   }
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -42,7 +41,7 @@ class ListTimestampsTimestampHolders {
     required this.timestamp,
     this.date,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -54,7 +53,6 @@ class ListTimestampsData {
             .map((e) => ListTimestampsTimestampHolders.fromJson(e))
             .toList() {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -66,6 +64,6 @@ class ListTimestampsData {
   ListTimestampsData({
     required this.timestampHolders,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
