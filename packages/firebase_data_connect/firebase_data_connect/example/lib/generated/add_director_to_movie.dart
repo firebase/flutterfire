@@ -25,21 +25,20 @@ class AddDirectorToMovie {
 }
 
 class AddDirectorToMovieDirectedByInsert {
-  late String directedbyId;
+  String directedbyId;
 
-  late String movieId;
+  String movieId;
 
   AddDirectorToMovieDirectedByInsert.fromJson(Map<String, dynamic> json)
-      : directedbyId = json['directedbyId'],
-        movieId = json['movieId'] {}
+      : directedbyId = nativeFromJson<String>(json['directedbyId']),
+        movieId = nativeFromJson<String>(json['movieId']) {}
 
-  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
-    json['directedbyId'] = directedbyId;
+    json['directedbyId'] = nativeToJson<String>(directedbyId);
 
-    json['movieId'] = movieId;
+    json['movieId'] = nativeToJson<String>(movieId);
 
     return json;
   }
@@ -48,18 +47,17 @@ class AddDirectorToMovieDirectedByInsert {
     required this.directedbyId,
     required this.movieId,
   }) {
-    // TODO: Only show this if there are optional fields.
+    // TODO(mtewani): Only show this if there are optional fields.
   }
 }
 
 class AddDirectorToMovieData {
-  late AddDirectorToMovieDirectedByInsert directedBy_insert;
+  AddDirectorToMovieDirectedByInsert directedBy_insert;
 
   AddDirectorToMovieData.fromJson(Map<String, dynamic> json)
       : directedBy_insert = AddDirectorToMovieDirectedByInsert.fromJson(
             json['directedBy_insert']) {}
 
-  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -71,21 +69,20 @@ class AddDirectorToMovieData {
   AddDirectorToMovieData({
     required this.directedBy_insert,
   }) {
-    // TODO: Only show this if there are optional fields.
+    // TODO(mtewani): Only show this if there are optional fields.
   }
 }
 
 class AddDirectorToMovieVariablesPersonId {
-  late String id;
+  String id;
 
   AddDirectorToMovieVariablesPersonId.fromJson(Map<String, dynamic> json)
-      : id = json['id'] {}
+      : id = nativeFromJson<String>(json['id']) {}
 
-  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
-    json['id'] = id;
+    json['id'] = nativeToJson<String>(id);
 
     return json;
   }
@@ -93,21 +90,25 @@ class AddDirectorToMovieVariablesPersonId {
   AddDirectorToMovieVariablesPersonId({
     required this.id,
   }) {
-    // TODO: Only show this if there are optional fields.
+    // TODO(mtewani): Only show this if there are optional fields.
   }
 }
 
 class AddDirectorToMovieVariables {
-  late AddDirectorToMovieVariablesPersonId? personId;
+  AddDirectorToMovieVariablesPersonId? personId;
 
-  late String? movieId;
+  String? movieId;
 
-  AddDirectorToMovieVariables.fromJson(Map<String, dynamic> json)
-      : personId =
-            AddDirectorToMovieVariablesPersonId.fromJson(json['personId']),
-        movieId = json['movieId'] {}
+  AddDirectorToMovieVariables.fromJson(Map<String, dynamic> json) {
+    personId = json['personId'] == null
+        ? null
+        : AddDirectorToMovieVariablesPersonId.fromJson(json['personId']);
 
-  // TODO: Fix up to create a map on the fly
+    movieId = json['movieId'] == null
+        ? null
+        : nativeFromJson<String>(json['movieId']);
+  }
+
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -116,7 +117,7 @@ class AddDirectorToMovieVariables {
     }
 
     if (movieId != null) {
-      json['movieId'] = movieId;
+      json['movieId'] = nativeToJson<String?>(movieId);
     }
 
     return json;
@@ -126,6 +127,6 @@ class AddDirectorToMovieVariables {
     this.personId,
     this.movieId,
   }) {
-    // TODO: Only show this if there are optional fields.
+    // TODO(mtewani): Only show this if there are optional fields.
   }
 }

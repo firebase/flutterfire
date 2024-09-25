@@ -8,22 +8,29 @@ part of firebase_data_connect;
 class FirebaseDataConnect extends FirebasePluginPlatform {
   /// Constructor for initializing Data Connect
   @visibleForTesting
-  FirebaseDataConnect({
-    required this.app,
-    required this.connectorConfig,
-    this.auth,
-    this.appCheck,
-  })  : options = DataConnectOptions(
+  FirebaseDataConnect(
+      {required this.app,
+      required this.connectorConfig,
+      this.auth,
+      this.appCheck,
+      CallerSDKType? sdkType})
+      : options = DataConnectOptions(
             app.options.projectId,
             connectorConfig.location,
             connectorConfig.connector,
             connectorConfig.serviceId),
         super(app.name, 'plugins.flutter.io/firebase_data_connect') {
     _queryManager = QueryManager(this);
+    if (sdkType != null) {
+      this._sdkType = sdkType;
+    }
   }
 
   /// QueryManager manages ongoing queries, and their subscriptions.
   late QueryManager _queryManager;
+
+  /// Type of SDK the user is currently calling.
+  CallerSDKType _sdkType = CallerSDKType.core;
 
   /// FirebaseApp
   FirebaseApp app;
@@ -54,8 +61,8 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   void checkTransport() {
     transportOptions ??=
         TransportOptions('firebasedataconnect.googleapis.com', null, true);
-    transport = getTransport(
-        transportOptions!, options, app.options.appId, auth, appCheck);
+    transport = getTransport(transportOptions!, options, app.options.appId,
+        _sdkType, auth, appCheck);
   }
 
   /// Returns a [QueryRef] object.
@@ -100,6 +107,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     FirebaseApp? app,
     FirebaseAuth? auth,
     FirebaseAppCheck? appCheck,
+    CallerSDKType? sdkType,
     required ConnectorConfig connectorConfig,
   }) {
     app ??= Firebase.app();
@@ -115,7 +123,8 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
         app: app,
         auth: auth,
         appCheck: appCheck,
-        connectorConfig: connectorConfig);
+        connectorConfig: connectorConfig,
+        sdkType: sdkType);
     if (cachedInstances[app.name] == null) {
       cachedInstances[app.name] = <String, FirebaseDataConnect>{};
     }

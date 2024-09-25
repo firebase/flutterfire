@@ -11,6 +11,7 @@ class TransportStub implements DataConnectTransport {
     this.transportOptions,
     this.options,
     this.appId,
+    this.sdkType,
     this.auth,
     this.appCheck,
   );
@@ -30,6 +31,10 @@ class TransportStub implements DataConnectTransport {
   /// Network configuration options.
   @override
   TransportOptions transportOptions;
+
+  /// Core or Generated SDK being used.
+  @override
+  CallerSDKType sdkType;
 
   @override
   String appId;
@@ -61,7 +66,8 @@ DataConnectTransport getTransport(
   TransportOptions transportOptions,
   DataConnectOptions options,
   String appId,
+  CallerSDKType sdkType,
   FirebaseAuth? auth,
   FirebaseAppCheck? appCheck,
 ) =>
-    TransportStub(transportOptions, options, appId, auth, appCheck);
+    TransportStub(transportOptions, options, appId, sdkType, auth, appCheck);

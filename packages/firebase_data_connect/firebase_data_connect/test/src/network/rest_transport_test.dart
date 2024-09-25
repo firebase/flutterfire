@@ -41,6 +41,7 @@ void main() {
         'testService',
       ),
       'testAppId',
+      CallerSDKType.core,
       mockAuth,
       mockAppCheck,
     );
@@ -66,6 +67,7 @@ void main() {
           'testService',
         ),
         'testAppId',
+        CallerSDKType.core,
         mockAuth,
         mockAppCheck,
       );
