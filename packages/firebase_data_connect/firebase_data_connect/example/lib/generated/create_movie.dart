@@ -31,16 +31,15 @@ class CreateMovie {
 }
 
 class CreateMovieMovieInsert {
-  late String id;
+  String id;
 
   CreateMovieMovieInsert.fromJson(Map<String, dynamic> json)
-      : id = json['id'] {}
+      : id = nativeFromJson<String>(json['id']) {}
 
-  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
-    json['id'] = id;
+    json['id'] = nativeToJson<String>(id);
 
     return json;
   }
@@ -48,17 +47,16 @@ class CreateMovieMovieInsert {
   CreateMovieMovieInsert({
     required this.id,
   }) {
-    // TODO: Only show this if there are optional fields.
+    // TODO(mtewani): Only show this if there are optional fields.
   }
 }
 
 class CreateMovieData {
-  late CreateMovieMovieInsert movie_insert;
+  CreateMovieMovieInsert movie_insert;
 
   CreateMovieData.fromJson(Map<String, dynamic> json)
       : movie_insert = CreateMovieMovieInsert.fromJson(json['movie_insert']) {}
 
-  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -70,44 +68,48 @@ class CreateMovieData {
   CreateMovieData({
     required this.movie_insert,
   }) {
-    // TODO: Only show this if there are optional fields.
+    // TODO(mtewani): Only show this if there are optional fields.
   }
 }
 
 class CreateMovieVariables {
-  late String title;
+  String title;
 
-  late int releaseYear;
+  int releaseYear;
 
-  late String genre;
+  String genre;
 
-  late double? rating;
+  double? rating;
 
-  late String? description;
+  String? description;
 
   CreateMovieVariables.fromJson(Map<String, dynamic> json)
-      : title = json['title'],
-        releaseYear = json['releaseYear'],
-        genre = json['genre'],
-        rating = json['rating'],
-        description = json['description'] {}
+      : title = nativeFromJson<String>(json['title']),
+        releaseYear = nativeFromJson<int>(json['releaseYear']),
+        genre = nativeFromJson<String>(json['genre']) {
+    rating =
+        json['rating'] == null ? null : nativeFromJson<double>(json['rating']);
 
-  // TODO: Fix up to create a map on the fly
+    description = json['description'] == null
+        ? null
+        : nativeFromJson<String>(json['description']);
+  }
+
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
-    json['title'] = title;
+    json['title'] = nativeToJson<String>(title);
 
-    json['releaseYear'] = releaseYear;
+    json['releaseYear'] = nativeToJson<int>(releaseYear);
 
-    json['genre'] = genre;
+    json['genre'] = nativeToJson<String>(genre);
 
     if (rating != null) {
-      json['rating'] = rating;
+      json['rating'] = nativeToJson<double?>(rating);
     }
 
     if (description != null) {
-      json['description'] = description;
+      json['description'] = nativeToJson<String?>(description);
     }
 
     return json;
@@ -120,6 +122,6 @@ class CreateMovieVariables {
     this.rating,
     this.description,
   }) {
-    // TODO: Only show this if there are optional fields.
+    // TODO(mtewani): Only show this if there are optional fields.
   }
 }

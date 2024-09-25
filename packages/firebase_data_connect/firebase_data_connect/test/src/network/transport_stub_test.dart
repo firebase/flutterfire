@@ -7,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'package:firebase_data_connect/src/network/transport_library.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:grpc/service_api.dart';
 import 'package:mockito/mockito.dart';
 
 // Create mock classes for FirebaseAuth, FirebaseAppCheck, and other dependencies.

@@ -23,15 +23,15 @@ class AddPerson {
 }
 
 class AddPersonPersonInsert {
-  late String id;
+  String id;
 
-  AddPersonPersonInsert.fromJson(Map<String, dynamic> json) : id = json['id'] {}
+  AddPersonPersonInsert.fromJson(Map<String, dynamic> json)
+      : id = nativeFromJson<String>(json['id']) {}
 
-  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
-    json['id'] = id;
+    json['id'] = nativeToJson<String>(id);
 
     return json;
   }
@@ -39,17 +39,16 @@ class AddPersonPersonInsert {
   AddPersonPersonInsert({
     required this.id,
   }) {
-    // TODO: Only show this if there are optional fields.
+    // TODO(mtewani): Only show this if there are optional fields.
   }
 }
 
 class AddPersonData {
-  late AddPersonPersonInsert person_insert;
+  AddPersonPersonInsert person_insert;
 
   AddPersonData.fromJson(Map<String, dynamic> json)
       : person_insert = AddPersonPersonInsert.fromJson(json['person_insert']) {}
 
-  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -61,22 +60,22 @@ class AddPersonData {
   AddPersonData({
     required this.person_insert,
   }) {
-    // TODO: Only show this if there are optional fields.
+    // TODO(mtewani): Only show this if there are optional fields.
   }
 }
 
 class AddPersonVariables {
-  late String? name;
+  String? name;
 
-  AddPersonVariables.fromJson(Map<String, dynamic> json)
-      : name = json['name'] {}
+  AddPersonVariables.fromJson(Map<String, dynamic> json) {
+    name = json['name'] == null ? null : nativeFromJson<String>(json['name']);
+  }
 
-  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
     if (name != null) {
-      json['name'] = name;
+      json['name'] = nativeToJson<String?>(name);
     }
 
     return json;
@@ -85,6 +84,6 @@ class AddPersonVariables {
   AddPersonVariables({
     this.name,
   }) {
-    // TODO: Only show this if there are optional fields.
+    // TODO(mtewani): Only show this if there are optional fields.
   }
 }

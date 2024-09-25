@@ -4,10 +4,10 @@ class SeedMovies {
   String name = "seedMovies";
   SeedMovies({required this.dataConnect});
 
-  Deserializer<SeedMoviesResponse> dataDeserializer = (String json) =>
-      SeedMoviesResponse.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  Deserializer<SeedMoviesData> dataDeserializer = (String json) =>
+      SeedMoviesData.fromJson(jsonDecode(json) as Map<String, dynamic>);
 
-  MutationRef<SeedMoviesResponse, void> ref() {
+  MutationRef<SeedMoviesData, void> ref() {
     return dataConnect.mutation(
         this.name, dataDeserializer, emptySerializer, null);
   }
@@ -16,15 +16,15 @@ class SeedMovies {
 }
 
 class SeedMoviesTheMatrix {
-  late String id;
+  String id;
 
-  SeedMoviesTheMatrix.fromJson(Map<String, dynamic> json) : id = json['id'] {}
+  SeedMoviesTheMatrix.fromJson(Map<String, dynamic> json)
+      : id = nativeFromJson<String>(json['id']) {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
-    json['id'] = id;
+    json['id'] = nativeToJson<String>(id);
 
     return json;
   }
@@ -37,16 +37,15 @@ class SeedMoviesTheMatrix {
 }
 
 class SeedMoviesJurassicPark {
-  late String id;
+  String id;
 
   SeedMoviesJurassicPark.fromJson(Map<String, dynamic> json)
-      : id = json['id'] {}
+      : id = nativeFromJson<String>(json['id']) {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
-    json['id'] = id;
+    json['id'] = nativeToJson<String>(id);
 
     return json;
   }
@@ -58,17 +57,16 @@ class SeedMoviesJurassicPark {
   }
 }
 
-class SeedMoviesResponse {
-  late SeedMoviesTheMatrix the_matrix;
+class SeedMoviesData {
+  SeedMoviesTheMatrix the_matrix;
 
-  late SeedMoviesJurassicPark jurassic_park;
+  SeedMoviesJurassicPark jurassic_park;
 
-  SeedMoviesResponse.fromJson(Map<String, dynamic> json)
+  SeedMoviesData.fromJson(Map<String, dynamic> json)
       : the_matrix = SeedMoviesTheMatrix.fromJson(json['the_matrix']),
         jurassic_park =
             SeedMoviesJurassicPark.fromJson(json['jurassic_park']) {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -79,7 +77,7 @@ class SeedMoviesResponse {
     return json;
   }
 
-  SeedMoviesResponse({
+  SeedMoviesData({
     required this.the_matrix,
     required this.jurassic_park,
   }) {

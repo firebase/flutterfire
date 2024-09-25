@@ -23,16 +23,15 @@ class DeleteMovie {
 }
 
 class DeleteMovieMovieDelete {
-  late String id;
+  String id;
 
   DeleteMovieMovieDelete.fromJson(Map<String, dynamic> json)
-      : id = json['id'] {}
+      : id = nativeFromJson<String>(json['id']) {}
 
-  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
-    json['id'] = id;
+    json['id'] = nativeToJson<String>(id);
 
     return json;
   }
@@ -40,17 +39,19 @@ class DeleteMovieMovieDelete {
   DeleteMovieMovieDelete({
     required this.id,
   }) {
-    // TODO: Only show this if there are optional fields.
+    // TODO(mtewani): Only show this if there are optional fields.
   }
 }
 
 class DeleteMovieData {
-  late DeleteMovieMovieDelete? movie_delete;
+  DeleteMovieMovieDelete? movie_delete;
 
-  DeleteMovieData.fromJson(Map<String, dynamic> json)
-      : movie_delete = DeleteMovieMovieDelete.fromJson(json['movie_delete']) {}
+  DeleteMovieData.fromJson(Map<String, dynamic> json) {
+    movie_delete = json['movie_delete'] == null
+        ? null
+        : DeleteMovieMovieDelete.fromJson(json['movie_delete']);
+  }
 
-  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -64,20 +65,20 @@ class DeleteMovieData {
   DeleteMovieData({
     this.movie_delete,
   }) {
-    // TODO: Only show this if there are optional fields.
+    // TODO(mtewani): Only show this if there are optional fields.
   }
 }
 
 class DeleteMovieVariables {
-  late String id;
+  String id;
 
-  DeleteMovieVariables.fromJson(Map<String, dynamic> json) : id = json['id'] {}
+  DeleteMovieVariables.fromJson(Map<String, dynamic> json)
+      : id = nativeFromJson<String>(json['id']) {}
 
-  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
-    json['id'] = id;
+    json['id'] = nativeToJson<String>(id);
 
     return json;
   }
@@ -85,6 +86,6 @@ class DeleteMovieVariables {
   DeleteMovieVariables({
     required this.id,
   }) {
-    // TODO: Only show this if there are optional fields.
+    // TODO(mtewani): Only show this if there are optional fields.
   }
 }

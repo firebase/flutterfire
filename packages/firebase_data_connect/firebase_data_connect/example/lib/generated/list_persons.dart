@@ -16,21 +16,20 @@ class ListPersons {
 }
 
 class ListPersonsPeople {
-  late String id;
+  String id;
 
-  late String name;
+  String name;
 
   ListPersonsPeople.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        name = json['name'] {}
+      : id = nativeFromJson<String>(json['id']),
+        name = nativeFromJson<String>(json['name']) {}
 
-  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
-    json['id'] = id;
+    json['id'] = nativeToJson<String>(id);
 
-    json['name'] = name;
+    json['name'] = nativeToJson<String>(name);
 
     return json;
   }
@@ -39,19 +38,18 @@ class ListPersonsPeople {
     required this.id,
     required this.name,
   }) {
-    // TODO: Only show this if there are optional fields.
+    // TODO(mtewani): Only show this if there are optional fields.
   }
 }
 
 class ListPersonsData {
-  late List<ListPersonsPeople> people;
+  List<ListPersonsPeople> people;
 
   ListPersonsData.fromJson(Map<String, dynamic> json)
       : people = (json['people'] as List<dynamic>)
             .map((e) => ListPersonsPeople.fromJson(e))
             .toList() {}
 
-  // TODO: Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -63,6 +61,6 @@ class ListPersonsData {
   ListPersonsData({
     required this.people,
   }) {
-    // TODO: Only show this if there are optional fields.
+    // TODO(mtewani): Only show this if there are optional fields.
   }
 }
