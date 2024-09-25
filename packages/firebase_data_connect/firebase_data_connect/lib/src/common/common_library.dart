@@ -12,6 +12,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 part 'dataconnect_error.dart';
 part 'dataconnect_options.dart';
 
+enum CallerSDKType { core, generated }
+
+String getGoogApiVal(CallerSDKType sdkType, String packageVersion) {
+  String apiClientValue = 'gl-dart/$packageVersion fire/$packageVersion';
+  if (sdkType == CallerSDKType.generated) {
+    apiClientValue += ' dart/gen';
+  }
+  return apiClientValue;
+}
+
 /// Transport Options for connecting to a specific host.
 class TransportOptions {
   /// Constructor
@@ -30,7 +40,8 @@ class TransportOptions {
 /// Interface for transports connecting to the DataConnect backend.
 abstract class DataConnectTransport {
   /// Constructor.
-  DataConnectTransport(this.transportOptions, this.options, this.appId);
+  DataConnectTransport(
+      this.transportOptions, this.options, this.appId, this.sdkType);
 
   /// Transport options.
   TransportOptions transportOptions;
@@ -43,6 +54,9 @@ abstract class DataConnectTransport {
 
   /// FirebaseAppCheck to use to get app check token.
   FirebaseAppCheck? appCheck;
+
+  /// Core or generated SDK being used.
+  CallerSDKType sdkType;
 
   /// Application ID
   String appId;
