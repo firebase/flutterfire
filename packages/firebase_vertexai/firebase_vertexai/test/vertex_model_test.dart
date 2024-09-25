@@ -196,18 +196,19 @@ void main() {
       test('can pass tools and function calling config', () async {
         final (client, model) = createModel(
           tools: [
-            Tool(functionDeclarations: [
+            Tool.functionDeclarationsTool([
               FunctionDeclaration(
                 'someFunction',
                 'Some cool function.',
-                Schema(SchemaType.string, description: 'Some parameter.'),
+                parameters: {
+                  'schema1': Schema.string(description: 'Some parameter.')
+                },
               ),
             ]),
           ],
           toolConfig: ToolConfig(
-            functionCallingConfig: FunctionCallingConfig(
-              mode: FunctionCallingMode.any,
-              allowedFunctionNames: {'someFunction'},
+            functionCallingConfig: FunctionCallingConfig.any(
+              {'someFunction'},
             ),
           ),
         );
@@ -222,9 +223,15 @@ void main() {
                     'name': 'someFunction',
                     'description': 'Some cool function.',
                     'parameters': {
-                      'type': 'STRING',
-                      'description': 'Some parameter.',
-                    },
+                      'type': 'OBJECT',
+                      'properties': {
+                        'schema1': {
+                          'type': 'STRING',
+                          'description': 'Some parameter.'
+                        }
+                      },
+                      'required': ['schema1']
+                    }
                   },
                 ],
               },
@@ -247,18 +254,19 @@ void main() {
           () => model.generateContent(
             [Content.text(prompt)],
             tools: [
-              Tool(functionDeclarations: [
+              Tool.functionDeclarationsTool([
                 FunctionDeclaration(
                   'someFunction',
                   'Some cool function.',
-                  Schema(SchemaType.string, description: 'Some parameter.'),
+                  parameters: {
+                    'schema1': Schema.string(description: 'Some parameter.')
+                  },
                 ),
               ]),
             ],
             toolConfig: ToolConfig(
-              functionCallingConfig: FunctionCallingConfig(
-                mode: FunctionCallingMode.any,
-                allowedFunctionNames: {'someFunction'},
+              functionCallingConfig: FunctionCallingConfig.any(
+                {'someFunction'},
               ),
             ),
           ),
@@ -270,9 +278,15 @@ void main() {
                     'name': 'someFunction',
                     'description': 'Some cool function.',
                     'parameters': {
-                      'type': 'STRING',
-                      'description': 'Some parameter.',
-                    },
+                      'type': 'OBJECT',
+                      'properties': {
+                        'schema1': {
+                          'type': 'STRING',
+                          'description': 'Some parameter.'
+                        }
+                      },
+                      'required': ['schema1']
+                    }
                   },
                 ],
               },

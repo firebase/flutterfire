@@ -46,8 +46,7 @@ final class Content {
   static Content model(Iterable<Part> parts) => Content('model', [...parts]);
 
   /// Return a [Content] with [FunctionResponse].
-  static Content functionResponse(
-          String name, Map<String, Object?>? response) =>
+  static Content functionResponse(String name, Map<String, Object?> response) =>
       Content('function', [FunctionResponse(name, response)]);
 
   /// Return a [Content] with multiple [FunctionResponse].
@@ -170,8 +169,8 @@ final class FunctionResponse implements Part {
   /// The function response.
   ///
   /// The values must be JSON compatible types; `String`, `num`, `bool`, `List`
-  /// of JSON compatibles types, or `Map` from String to JSON compatible types.
-  final Map<String, Object?>? response;
+  /// of JSON compatible types, or `Map` from String to JSON compatible types.
+  final Map<String, Object?> response;
 
   @override
   Object toJson() => {

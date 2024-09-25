@@ -21,7 +21,13 @@ import 'vertex_schema.dart';
 /// knowledge and scope of the model.
 final class Tool {
   /// Constructor
-  Tool({this.functionDeclarations});
+  Tool._({this.functionDeclarations});
+
+  /// Returns a [Tool] instance with list of [FunctionDeclaration].
+  static Tool functionDeclarationsTool(
+      List<FunctionDeclaration> functionDeclarations) {
+    return Tool._(functionDeclarations: functionDeclarations);
+  }
 
   /// A list of `FunctionDeclarations` available to the model that can be used
   /// for function calling.
@@ -49,7 +55,11 @@ final class Tool {
 /// as a `Tool` by the model and executed by the client.
 final class FunctionDeclaration {
   /// Constructor
-  FunctionDeclaration(this.name, this.description, this.parameters);
+  FunctionDeclaration(this.name, this.description,
+      {required Map<String, Schema> parameters,
+      List<String> optionalParameters = const []})
+      : _schemaObject = Schema.object(
+            properties: parameters, optionalProperties: optionalParameters);
 
   /// The name of the function.
   ///
@@ -60,14 +70,13 @@ final class FunctionDeclaration {
   /// A brief description of the function.
   final String description;
 
-  /// The definition of an input or output data types.
-  final Schema? parameters;
+  final Schema _schemaObject;
 
   /// Convert to json object.
   Map<String, Object?> toJson() => {
         'name': name,
         'description': description,
-        if (parameters case final parameters?) 'parameters': parameters.toJson()
+        'parameters': _schemaObject.toJson()
       };
 }
 
@@ -90,7 +99,7 @@ final class ToolConfig {
 /// tools.
 final class FunctionCallingConfig {
   /// Constructor
-  FunctionCallingConfig({this.mode, this.allowedFunctionNames});
+  FunctionCallingConfig._({this.mode, this.allowedFunctionNames});
 
   /// The mode in which function calling should execute.
   ///
@@ -105,6 +114,23 @@ final class FunctionCallingConfig {
   /// `any`, model will predict a function call from the set of function names
   /// provided.
   final Set<String>? allowedFunctionNames;
+
+  /// Returns a [FunctionCallingConfig] instance with mode of [FunctionCallingMode.auto].
+  static FunctionCallingConfig auto() {
+    return FunctionCallingConfig._(mode: FunctionCallingMode.auto);
+  }
+
+  /// Returns a [FunctionCallingConfig] instance with mode of [FunctionCallingMode.any].
+  static FunctionCallingConfig any(Set<String> allowedFunctionNames) {
+    return FunctionCallingConfig._(
+        mode: FunctionCallingMode.any,
+        allowedFunctionNames: allowedFunctionNames);
+  }
+
+  /// Returns a [FunctionCallingConfig] instance with mode of [FunctionCallingMode.none].
+  static FunctionCallingConfig none() {
+    return FunctionCallingConfig._(mode: FunctionCallingMode.none);
+  }
 
   /// Convert to json object.
   Object toJson() => {
