@@ -23,15 +23,15 @@ class DeleteMovie {
 }
 
 class DeleteMovieMovieDelete {
-  late String id;
+  String id;
 
   DeleteMovieMovieDelete.fromJson(Map<String, dynamic> json)
-      : id = json['id'] {}
+      : id = nativeFromJson<String>(json['id']) {}
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
-    json['id'] = id;
+    json['id'] = nativeToJson<String>(id);
 
     return json;
   }
@@ -70,14 +70,15 @@ class DeleteMovieData {
 }
 
 class DeleteMovieVariables {
-  late String id;
+  String id;
 
-  DeleteMovieVariables.fromJson(Map<String, dynamic> json) : id = json['id'] {}
+  DeleteMovieVariables.fromJson(Map<String, dynamic> json)
+      : id = nativeFromJson<String>(json['id']) {}
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
-    json['id'] = id;
+    json['id'] = nativeToJson<String>(id);
 
     return json;
   }

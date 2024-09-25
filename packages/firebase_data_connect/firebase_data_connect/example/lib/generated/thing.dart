@@ -23,15 +23,15 @@ class Thing {
 }
 
 class ThingThingInsert {
-  late String id;
+  String id;
 
-  ThingThingInsert.fromJson(Map<String, dynamic> json) : id = json['id'] {}
+  ThingThingInsert.fromJson(Map<String, dynamic> json)
+      : id = nativeFromJson<String>(json['id']) {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
-    json['id'] = id;
+    json['id'] = nativeToJson<String>(id);
 
     return json;
   }
@@ -44,12 +44,11 @@ class ThingThingInsert {
 }
 
 class ThingData {
-  late ThingThingInsert thing_insert;
+  ThingThingInsert thing_insert;
 
   ThingData.fromJson(Map<String, dynamic> json)
       : thing_insert = ThingThingInsert.fromJson(json['thing_insert']) {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -66,7 +65,7 @@ class ThingData {
 }
 
 class ThingVariables {
-  late Optional<AnyValue> _title =
+  Optional<AnyValue> _title =
       Optional.optional(AnyValue.fromJson, defaultSerializer);
 
   set title(AnyValue t) {
@@ -76,12 +75,10 @@ class ThingVariables {
   AnyValue get title => this._title.value!;
 
   ThingVariables.fromJson(Map<String, dynamic> json) {
-    _title.value = AnyValue.fromJson(
-            json['title']) // TODO(mtewani): What if json['title'] is null?
-        ;
+    _title.value =
+        json['title'] == null ? null : AnyValue.fromJson(json['title']);
   }
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 

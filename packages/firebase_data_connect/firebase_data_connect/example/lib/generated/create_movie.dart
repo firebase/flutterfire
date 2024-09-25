@@ -1,11 +1,5 @@
 part of movies;
 
-
-
-
-
-
-
 class CreateMovie {
   String name = "createMovie";
   CreateMovie({required this.dataConnect});
@@ -33,55 +27,28 @@ class CreateMovie {
         this.name, dataDeserializer, varsSerializer, vars);
   }
 
-    return dataConnect.mutation(this.name, dataDeserializer, varsSerializer, vars);
-  }
   FirebaseDataConnect dataConnect;
 }
 
-
-  
-
-
 class CreateMovieMovieInsert {
-  
-    
-    
-    
-   late  String id;
-   
-  
-  
-    CreateMovieMovieInsert.fromJson(Map<String, dynamic> json):
-          id = 
-            json['id']
-     {
-      
-        
-      
-    }
+  String id;
 
+  CreateMovieMovieInsert.fromJson(Map<String, dynamic> json)
+      : id = nativeFromJson<String>(json['id']) {}
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
-    
-      
-      json['id'] = 
-  
-    id
-  
-;
-      
-    
+
+    json['id'] = nativeToJson<String>(id);
+
     return json;
   }
 
   CreateMovieMovieInsert({
-    
     required this.id,
   }) {
     // TODO(mtewani): Only show this if there are optional fields.
   }
-
 }
 
 class CreateMovieData {
@@ -92,15 +59,9 @@ class CreateMovieData {
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
-    
-      
-      json['movie_insert'] = 
-  
-    movie_insert.toJson()
-  
-;
-      
-    
+
+    json['movie_insert'] = movie_insert.toJson();
+
     return json;
   }
 
@@ -109,145 +70,58 @@ class CreateMovieData {
   }) {
     // TODO(mtewani): Only show this if there are optional fields.
   }
-
 }
 
-
-
-
-  
-
-
 class CreateMovieVariables {
-  
-    
-    
-    
-   late  String title;
-   
-  
-    
-    
-    
-   late  int releaseYear;
-   
-  
-    
-    
-    
-   late  String genre;
-   
-  
-    
-    
-    
-   late  double? rating;
-   
-  
-    
-    
-    
-   late  String? description;
-   
-  
-  
-    CreateMovieVariables.fromJson(Map<String, dynamic> json):
-          title = 
-            json['title'],
-    
-          releaseYear = 
-            json['releaseYear'],
-    
-          genre = 
-            json['genre'],
-    
-          rating = 
-            json['rating'],
-    
-          description = 
-            json['description']
-     {
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    }
+  String title;
 
+  int releaseYear;
+
+  String genre;
+
+  double? rating;
+
+  String? description;
+
+  CreateMovieVariables.fromJson(Map<String, dynamic> json)
+      : title = nativeFromJson<String>(json['title']),
+        releaseYear = nativeFromJson<int>(json['releaseYear']),
+        genre = nativeFromJson<String>(json['genre']) {
+    rating =
+        json['rating'] == null ? null : nativeFromJson<double>(json['rating']);
+
+    description = json['description'] == null
+        ? null
+        : nativeFromJson<String>(json['description']);
+  }
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
-    
-      
-      json['title'] = 
-  
-    title
-  
-;
-      
-    
-      
-      json['releaseYear'] = 
-  
-    releaseYear
-  
-;
-      
-    
-      
-      json['genre'] = 
-  
-    genre
-  
-;
-      
-    
-      
-        if (rating != null) {
-          json['rating'] = 
-  
-    rating
-  
-;
-        }
-      
-    
-      
-        if (description != null) {
-          json['description'] = 
-  
-    description
-  
-;
-        }
-      
-    
+
+    json['title'] = nativeToJson<String>(title);
+
+    json['releaseYear'] = nativeToJson<int>(releaseYear);
+
+    json['genre'] = nativeToJson<String>(genre);
+
+    if (rating != null) {
+      json['rating'] = nativeToJson<double?>(rating);
+    }
+
+    if (description != null) {
+      json['description'] = nativeToJson<String?>(description);
+    }
+
     return json;
   }
 
   CreateMovieVariables({
-    
     required this.title,
-  
     required this.releaseYear,
-  
     required this.genre,
     this.rating,
     this.description,
   }) {
     // TODO(mtewani): Only show this if there are optional fields.
   }
-
 }
-
-
-
-
-
-

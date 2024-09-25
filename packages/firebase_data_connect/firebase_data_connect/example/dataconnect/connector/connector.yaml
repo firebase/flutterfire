@@ -1,7 +1,6 @@
 connectorId: movies
 authMode: PUBLIC
-# Uncomment when ready to publish
-# generate:
-#   dartSdk:
-#     outputDir: ../../lib/generated
-#     package: movies
+generate:
+  dartSdk:
+    outputDir: ../../lib/generated
+    package: movies

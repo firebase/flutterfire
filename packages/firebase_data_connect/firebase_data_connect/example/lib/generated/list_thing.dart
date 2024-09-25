@@ -22,12 +22,11 @@ class ListThing {
 }
 
 class ListThingThings {
-  late AnyValue title;
+  AnyValue title;
 
   ListThingThings.fromJson(Map<String, dynamic> json)
       : title = AnyValue.fromJson(json['title']) {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -44,14 +43,13 @@ class ListThingThings {
 }
 
 class ListThingData {
-  late List<ListThingThings> things;
+  List<ListThingThings> things;
 
   ListThingData.fromJson(Map<String, dynamic> json)
       : things = (json['things'] as List<dynamic>)
             .map((e) => ListThingThings.fromJson(e))
             .toList() {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -68,12 +66,12 @@ class ListThingData {
 }
 
 class ListThingVariables {
-  late AnyValue? data;
+  AnyValue? data;
 
-  ListThingVariables.fromJson(Map<String, dynamic> json)
-      : data = AnyValue.fromJson(json['data']) {}
+  ListThingVariables.fromJson(Map<String, dynamic> json) {
+    data = json['data'] == null ? null : AnyValue.fromJson(json['data']);
+  }
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 

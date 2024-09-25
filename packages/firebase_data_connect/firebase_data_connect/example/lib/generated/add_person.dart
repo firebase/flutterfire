@@ -18,17 +18,20 @@ class AddPerson {
     return dataConnect.mutation(
         this.name, dataDeserializer, varsSerializer, vars);
   }
+
+  FirebaseDataConnect dataConnect;
 }
 
 class AddPersonPersonInsert {
-  late String id;
+  String id;
 
-  AddPersonPersonInsert.fromJson(Map<String, dynamic> json) : id = json['id'] {}
+  AddPersonPersonInsert.fromJson(Map<String, dynamic> json)
+      : id = nativeFromJson<String>(json['id']) {}
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
-    json['id'] = id;
+    json['id'] = nativeToJson<String>(id);
 
     return json;
   }
@@ -62,16 +65,17 @@ class AddPersonData {
 }
 
 class AddPersonVariables {
-  late String? name;
+  String? name;
 
-  AddPersonVariables.fromJson(Map<String, dynamic> json)
-      : name = json['name'] {}
+  AddPersonVariables.fromJson(Map<String, dynamic> json) {
+    name = json['name'] == null ? null : nativeFromJson<String>(json['name']);
+  }
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
     if (name != null) {
-      json['name'] = name;
+      json['name'] = nativeToJson<String?>(name);
     }
 
     return json;
