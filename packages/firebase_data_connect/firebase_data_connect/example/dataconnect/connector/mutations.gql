@@ -6,6 +6,18 @@ mutation addDirectorToMovie($personId: Person_Key, $movieId: UUID)
 @auth(level: PUBLIC) {
   directedBy_insert(data: { directedby: $personId, movieId: $movieId })
 }
+mutation addTimestamp($timestamp: Timestamp!) @auth(level: PUBLIC) {
+  timestampHolder_insert(data: {
+    timestamp: $timestamp
+  })
+}
+mutation addDateAndTimestamp($date: Date!, $timestamp: Timestamp!) @auth(level: PUBLIC) {
+  timestampHolder_insert(data: {
+    date: $date,
+    timestamp: $timestamp
+  })
+}
+
 mutation seedMovies @auth(level: PUBLIC) {
   the_matrix: movie_insert(
     data: {

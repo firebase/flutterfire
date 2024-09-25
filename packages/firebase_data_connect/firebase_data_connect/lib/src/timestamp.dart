@@ -13,7 +13,6 @@ class Timestamp {
   /// Constructor
   Timestamp(this.nanoseconds, this.seconds);
 
-  // TODO(mtewani): Fix this so that it keeps track of positional arguments so you don't have to repeatedly search the string multiple times.
   Timestamp.fromJson(String date) {
     if (!regex.hasMatch(date)) {
       throw Exception('Invalid Date provided!');

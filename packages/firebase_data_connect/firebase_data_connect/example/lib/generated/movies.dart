@@ -7,6 +7,10 @@ part 'add_person.dart';
 
 part 'add_director_to_movie.dart';
 
+part 'add_timestamp.dart';
+
+part 'add_date_and_timestamp.dart';
+
 part 'seed_movies.dart';
 
 part 'create_movie.dart';
@@ -19,6 +23,8 @@ part 'list_movies_by_partial_title.dart';
 
 part 'list_persons.dart';
 
+part 'list_timestamps.dart';
+
 class MoviesConnector {
   AddPerson get addPerson {
     return AddPerson(dataConnect: dataConnect);
@@ -26,6 +32,14 @@ class MoviesConnector {
 
   AddDirectorToMovie get addDirectorToMovie {
     return AddDirectorToMovie(dataConnect: dataConnect);
+  }
+
+  AddTimestamp get addTimestamp {
+    return AddTimestamp(dataConnect: dataConnect);
+  }
+
+  AddDateAndTimestamp get addDateAndTimestamp {
+    return AddDateAndTimestamp(dataConnect: dataConnect);
   }
 
   SeedMovies get seedMovies {
@@ -50,6 +64,10 @@ class MoviesConnector {
 
   ListPersons get listPersons {
     return ListPersons(dataConnect: dataConnect);
+  }
+
+  ListTimestamps get listTimestamps {
+    return ListTimestamps(dataConnect: dataConnect);
   }
 
   static ConnectorConfig connectorConfig = ConnectorConfig(

@@ -39,7 +39,7 @@ class AddPersonPersonInsert {
   AddPersonPersonInsert({
     required this.id,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -60,7 +60,7 @@ class AddPersonData {
   AddPersonData({
     required this.person_insert,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -84,6 +84,6 @@ class AddPersonVariables {
   AddPersonVariables({
     this.name,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }

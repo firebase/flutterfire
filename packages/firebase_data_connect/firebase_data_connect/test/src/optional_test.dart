@@ -68,8 +68,8 @@ void main() {
     });
 
     test('nativeToJson correctly serializes primitive types', () {
-      expect(nativeToJson(42), equals('42'));
-      expect(nativeToJson(true), equals('true'));
+      expect(nativeToJson(42), equals(42));
+      expect(nativeToJson(true), equals(true));
       expect(nativeToJson('Test'), equals('Test'));
     });
 
@@ -80,12 +80,11 @@ void main() {
     });
 
     test('nativeToJson throws UnimplementedError for unsupported types', () {
-      expect(() => nativeToJson(DateTime.now()), throwsUnimplementedError);
+      expect(() => nativeToJson(Object()), throwsUnimplementedError);
     });
 
     test('nativeFromJson throws UnimplementedError for unsupported types', () {
-      expect(() => nativeFromJson<DateTime>('2024-01-01'),
-          throwsUnimplementedError);
+      expect(() => nativeFromJson<Object>('abc'), throwsUnimplementedError);
     });
   });
 }

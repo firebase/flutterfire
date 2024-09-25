@@ -46,7 +46,7 @@ class ListMoviesMovies {
     required this.title,
     required this.directed_by,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -67,7 +67,7 @@ class ListMoviesMoviesDirectedBy {
   ListMoviesMoviesDirectedBy({
     required this.name,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -90,6 +90,6 @@ class ListMoviesData {
   ListMoviesData({
     required this.movies,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }

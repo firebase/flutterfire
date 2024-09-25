@@ -38,7 +38,7 @@ class ListPersonsPeople {
     required this.id,
     required this.name,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -61,6 +61,6 @@ class ListPersonsData {
   ListPersonsData({
     required this.people,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }

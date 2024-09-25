@@ -47,7 +47,7 @@ class CreateMovieMovieInsert {
   CreateMovieMovieInsert({
     required this.id,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -68,7 +68,7 @@ class CreateMovieData {
   CreateMovieData({
     required this.movie_insert,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -122,6 +122,6 @@ class CreateMovieVariables {
     this.rating,
     this.description,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
