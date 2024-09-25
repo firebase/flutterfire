@@ -15,13 +15,7 @@ export 'src/common/common_library.dart'
         CallerSDKType;
 export 'src/core/empty_serializer.dart' show emptySerializer;
 export 'src/core/ref.dart'
-    show
-        MutationRef,
-        OperationRef,
-        OperationResult,
-        QueryManager,
-        QueryRef,
-        QueryResult;
+    show MutationRef, OperationRef, OperationResult, QueryRef, QueryResult;
 
 export 'src/optional.dart'
     show Optional, OptionalState, nativeFromJson, nativeToJson;
