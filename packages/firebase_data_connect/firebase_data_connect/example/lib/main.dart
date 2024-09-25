@@ -111,7 +111,6 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
 
     QueryRef<ListMoviesData, void> ref =
         MoviesConnector.instance.listMovies.ref();
-    MoviesConnector.instance.listThing.ref(data: 1).execute().then(print);
 
     ref.subscribe().listen((event) {
       setState(() {
