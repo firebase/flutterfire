@@ -108,13 +108,17 @@ class _ChatWidgetState extends State<ChatWidget> {
   Future<Map<String, Object?>> getWeather(
     Map<String, Object?> arguments,
   ) async {
-    final jsonResponse = {
+    /// Possible external api call
+    /// apiResponse = await requests.post(weather_api_url, data={'location': arguments['location']})
+
+    /// Mock up apiResponse
+    final apiResponse = {
       'location': arguments['location'],
       'temperature': 38,
       'chancePrecipitation': '56%',
       'cloudConditions': 'partly-cloudy',
     };
-    return jsonResponse;
+    return apiResponse;
   }
 
   final getWeatherTool = FunctionDeclaration(
@@ -539,12 +543,13 @@ class _ChatWidgetState extends State<ChatWidget> {
     if (functionCalls.isNotEmpty) {
       final functionCall = functionCalls.first;
       final functionResult = switch (functionCall.name) {
-        // Forward arguments to the hypothetical API.
+        // Forward the structured input data prepared by the model
+        // to the hypothetical external API.
         'getCurrentWeather' => await getWeather(functionCall.args),
         // Throw an exception if the model attempted to call a function that was
         // not declared.
         _ => throw UnimplementedError(
-            'Function not implemented: ${functionCall.name}',
+            'Function not declared to the model: ${functionCall.name}',
           )
       };
       // Send the response to the model so that it can use the result to generate
