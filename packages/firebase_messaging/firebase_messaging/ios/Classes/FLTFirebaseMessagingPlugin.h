@@ -10,7 +10,6 @@
 #endif
 
 @import FirebaseMessaging;
-@import FirebaseAuth;
 
 #import <Foundation/Foundation.h>
 #import <UserNotifications/UserNotifications.h>
