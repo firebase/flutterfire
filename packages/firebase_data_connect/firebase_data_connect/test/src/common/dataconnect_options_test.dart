@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import 'package:firebase_data_connect/firebase_data_connect.dart';
+import 'package:firebase_data_connect/src/common/common_library.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
