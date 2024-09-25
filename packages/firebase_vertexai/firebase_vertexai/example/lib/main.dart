@@ -107,10 +107,10 @@ class _ChatWidgetState extends State<ChatWidget> {
   Future<Map<String, Object?>> fetchWeather(
     Map<String, Object?> arguments,
   ) async {
-    /// Possible external api call
-    /// apiResponse = await requests.post(weather_api_url, data={'location': arguments['location']})
+    // Possible external api call
+    // apiResponse = await requests.post(weather_api_url, data={'location': arguments['location']})
 
-    /// Mock up apiResponse
+    // Mock up apiResponse
     final apiResponse = {
       'location': arguments['location'],
       'temperature': 38,
