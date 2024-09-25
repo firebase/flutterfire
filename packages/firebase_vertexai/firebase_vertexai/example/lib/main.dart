@@ -96,7 +96,7 @@ class _ChatWidgetState extends State<ChatWidget> {
       _functionCallModel = FirebaseVertexAI.instance.generativeModel(
         model: 'gemini-1.5-flash',
         tools: [
-          Tool.functionDeclarationsTool([getWeatherTool]),
+          Tool.functionDeclarationsTool([fetchWeatherTool]),
         ],
       );
       _chat = _model.startChat();
@@ -543,7 +543,7 @@ class _ChatWidgetState extends State<ChatWidget> {
       final functionResult = switch (functionCall.name) {
         // Forward the structured input data prepared by the model
         // to the hypothetical external API.
-        'getCurrentWeather' => await getWeather(functionCall.args),
+        'getCurrentWeather' => await fetchWeather(functionCall.args),
         // Throw an exception if the model attempted to call a function that was
         // not declared.
         _ => throw UnimplementedError(
