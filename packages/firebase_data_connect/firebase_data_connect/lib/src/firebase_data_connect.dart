@@ -7,11 +7,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_data_connect/src/common/common_library.dart';
+import 'package:firebase_data_connect/src/core/ref.dart';
 import 'package:flutter/foundation.dart';
-import '../firebase_data_connect.dart';
-import 'network/transport_library.dart'
-    if (dart.library.io) 'src/network/grpc_library.dart'
-    if (dart.library.html) 'src/network/rest_library.dart';
+import './network/transport_library.dart'
+    if (dart.library.io) './network/grpc_library.dart'
+    if (dart.library.html) './network/rest_library.dart';
 
 /// DataConnect class
 class FirebaseDataConnect extends FirebasePluginPlatform {

@@ -5,8 +5,24 @@
 library firebase_data_connect;
 
 export 'src/firebase_data_connect.dart';
+export 'src/common/common_library.dart'
+    show
+        ConnectorConfig,
+        DataConnectError,
+        DataConnectErrorCode,
+        Serializer,
+        Deserializer,
+        CallerSDKType;
+export 'src/core/empty_serializer.dart' show emptySerializer;
+export 'src/core/ref.dart'
+    show
+        MutationRef,
+        OperationRef,
+        OperationResult,
+        QueryManager,
+        QueryRef,
+        QueryResult;
 
-export 'src/core/empty_serializer.dart';
-export 'src/core/ref.dart';
-export 'src/optional.dart';
-export 'src/timestamp.dart';
+export 'src/optional.dart'
+    show Optional, OptionalState, nativeFromJson, nativeToJson;
+export 'src/timestamp.dart' show Timestamp;
