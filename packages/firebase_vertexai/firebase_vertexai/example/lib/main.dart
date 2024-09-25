@@ -104,7 +104,7 @@ class _ChatWidgetState extends State<ChatWidget> {
   }
 
   // This is a hypothetical API to return a fake weather data collection for certain location
-  Future<Map<String, Object?>> getWeather(
+  Future<Map<String, Object?>> fetchWeather(
     Map<String, Object?> arguments,
   ) async {
     /// Possible external api call
