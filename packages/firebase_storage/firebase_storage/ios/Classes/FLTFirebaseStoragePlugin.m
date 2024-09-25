@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 #import <TargetConditionals.h>
 
-#import <Firebase/Firebase.h>
+@import FirebaseStorage;
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 #import "FLTFirebaseStoragePlugin.h"
 #import "FLTTaskStateChannelStreamHandler.h"
