@@ -40,7 +40,8 @@ class TransportOptions {
 /// Interface for transports connecting to the DataConnect backend.
 abstract class DataConnectTransport {
   /// Constructor.
-  DataConnectTransport(this.transportOptions, this.options, this.sdkType);
+  DataConnectTransport(
+      this.transportOptions, this.options, this.appId, this.sdkType);
 
   /// Transport options.
   TransportOptions transportOptions;
@@ -57,17 +58,20 @@ abstract class DataConnectTransport {
   /// Core or generated SDK being used.
   CallerSDKType sdkType;
 
+  /// Application ID
+  String appId;
+
   /// Invokes corresponding query endpoint.
   Future<Data> invokeQuery<Data, Variables>(
       String queryName,
       Deserializer<Data> deserializer,
-      Serializer<Variables>? serializer,
+      Serializer<Variables> serializer,
       Variables? vars);
 
   /// Invokes corresponding mutation endpoint.
   Future<Data> invokeMutation<Data, Variables>(
       String queryName,
       Deserializer<Data> deserializer,
-      Serializer<Variables>? serializer,
+      Serializer<Variables> serializer,
       Variables? vars);
 }

@@ -7,8 +7,14 @@ part of firebase_data_connect_grpc;
 /// Transport used for Android/iOS. Uses a GRPC transport instead of REST.
 class GRPCTransport implements DataConnectTransport {
   /// GRPCTransport creates a new channel
-  GRPCTransport(this.transportOptions, this.options, this.sdkType, this.auth,
-      this.appCheck) {
+  GRPCTransport(
+    this.transportOptions,
+    this.options,
+    this.appId,
+    this.sdkType,
+    this.auth,
+    this.appCheck,
+  ) {
     bool isSecure =
         transportOptions.isSecure == null || transportOptions.isSecure == true;
     channel = ClientChannel(transportOptions.host,
@@ -50,6 +56,10 @@ class GRPCTransport implements DataConnectTransport {
   @override
   DataConnectOptions options;
 
+  /// Application ID
+  @override
+  String appId;
+
   Future<Map<String, String>> getMetadata() async {
     String? authToken;
     try {
@@ -74,6 +84,7 @@ class GRPCTransport implements DataConnectTransport {
     if (appCheckToken != null) {
       metadata['X-Firebase-AppCheck'] = appCheckToken;
     }
+    metadata['x-firebase-gmpid'] = appId;
     return metadata;
   }
 
@@ -138,7 +149,8 @@ class GRPCTransport implements DataConnectTransport {
 DataConnectTransport getTransport(
         TransportOptions transportOptions,
         DataConnectOptions options,
+        String appId,
         CallerSDKType sdkType,
         FirebaseAuth? auth,
         FirebaseAppCheck? appCheck) =>
-    GRPCTransport(transportOptions, options, sdkType, auth, appCheck);
+    GRPCTransport(transportOptions, options, appId, sdkType, auth, appCheck);

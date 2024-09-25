@@ -9,9 +9,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tests/firebase_options.dart';
 
+import '../e2e_test.dart';
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-
   group(
     'firebase_app_installations',
     () {
@@ -43,6 +44,7 @@ void main() {
           ]);
           expect(ids, isNotNull);
         },
+        skip: defaultTargetPlatform == TargetPlatform.macOS && isCI,
       );
 
       test(

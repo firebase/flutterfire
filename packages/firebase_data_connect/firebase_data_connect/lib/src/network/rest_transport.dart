@@ -7,13 +7,8 @@ part of firebase_data_connect_rest;
 /// RestTransport makes requests out to the REST endpoints of the configured backend.
 class RestTransport implements DataConnectTransport {
   /// Initializes necessary protocol and port.
-  RestTransport(
-    this.transportOptions,
-    this.options,
-    this.sdkType,
-    this.auth,
-    this.appCheck,
-  ) {
+  RestTransport(this.transportOptions, this.options, this.appId, this.sdkType,
+      this.auth, this.appCheck) {
     String protocol = 'http';
     if (transportOptions.isSecure == null ||
         transportOptions.isSecure == true) {
@@ -26,7 +21,7 @@ class RestTransport implements DataConnectTransport {
     String service = options.serviceId;
     String connector = options.connector;
     url =
-        '$protocol://$host:$port/v1alpha/projects/$project/locations/$location/services/$service/connectors/$connector';
+        '$protocol://$host:$port/v1beta/projects/$project/locations/$location/services/$service/connectors/$connector';
   }
 
   @override
@@ -55,6 +50,10 @@ class RestTransport implements DataConnectTransport {
   /// Data Connect backend configuration options.
   @override
   DataConnectOptions options;
+
+  /// Firebase application ID.
+  @override
+  String appId;
 
   /// Invokes the current operation, whether its a query or mutation.
   Future<Data> invokeOperation<Data, Variables>(
@@ -90,6 +89,7 @@ class RestTransport implements DataConnectTransport {
     if (appCheckToken != null) {
       headers['X-Firebase-AppCheck'] = appCheckToken;
     }
+    headers['x-firebase-gmpid'] = appId;
 
     Map<String, dynamic> body = {
       'name':
@@ -156,7 +156,8 @@ class RestTransport implements DataConnectTransport {
 DataConnectTransport getTransport(
         TransportOptions transportOptions,
         DataConnectOptions options,
+        String appId,
         CallerSDKType sdkType,
         FirebaseAuth? auth,
         FirebaseAppCheck? appCheck) =>
-    RestTransport(transportOptions, options, sdkType, auth, appCheck);
+    RestTransport(transportOptions, options, appId, sdkType, auth, appCheck);

@@ -77,6 +77,7 @@ void main() {
       transport = TestDataConnectTransport(
         transportOptions,
         dataConnectOptions,
+        'testAppId',
         CallerSDKType.core,
         auth: mockFirebaseAuth,
         appCheck: mockFirebaseAppCheck,
@@ -92,8 +93,8 @@ void main() {
     test('should handle invokeQuery with proper deserializer', () async {
       final queryName = 'testQuery';
       final deserializer = (json) => json;
-      final result =
-          await transport.invokeQuery(queryName, deserializer, null, null);
+      final result = await transport.invokeQuery(
+          queryName, deserializer, emptySerializer, null);
 
       expect(result, isNotNull);
     });
@@ -101,8 +102,8 @@ void main() {
     test('should handle invokeMutation with proper deserializer', () async {
       final queryName = 'testMutation';
       final deserializer = (json) => json;
-      final result =
-          await transport.invokeMutation(queryName, deserializer, null, null);
+      final result = await transport.invokeMutation(
+          queryName, deserializer, emptySerializer, null);
 
       expect(result, isNotNull);
     });
@@ -112,9 +113,9 @@ void main() {
 // Test class extending DataConnectTransport for testing purposes
 class TestDataConnectTransport extends DataConnectTransport {
   TestDataConnectTransport(TransportOptions transportOptions,
-      DataConnectOptions options, CallerSDKType sdkType,
+      DataConnectOptions options, String appId, CallerSDKType sdkType,
       {FirebaseAuth? auth, FirebaseAppCheck? appCheck})
-      : super(transportOptions, options, sdkType) {
+      : super(transportOptions, options, appId, sdkType) {
     this.auth = auth;
     this.appCheck = appCheck;
   }
