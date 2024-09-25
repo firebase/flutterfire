@@ -9,7 +9,9 @@
 #import <Flutter/Flutter.h>
 #endif
 
-#import <Firebase/Firebase.h>
+@import FirebaseMessaging;
+@import FirebaseAuth;
+
 #import <Foundation/Foundation.h>
 #import <UserNotifications/UserNotifications.h>
 #import <firebase_core/FLTFirebasePlugin.h>
