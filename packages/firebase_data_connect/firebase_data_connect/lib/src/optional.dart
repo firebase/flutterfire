@@ -78,7 +78,10 @@ dynamic nativeToJson<T>(T type) {
 }
 
 T nativeFromJson<T>(dynamic input) {
-  if (input is bool || input is int || input is double || input is num) {
+  if ((input is bool && T == bool) ||
+      (input is int && T == int) ||
+      (input is double && T == double) ||
+      (input is num && input == num)) {
     return input;
   } else if (input is String) {
     if (T == DateTime) {
