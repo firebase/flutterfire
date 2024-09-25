@@ -39,7 +39,7 @@ class DeleteMovieMovieDelete {
   DeleteMovieMovieDelete({
     required this.id,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -65,7 +65,7 @@ class DeleteMovieData {
   DeleteMovieData({
     this.movie_delete,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -86,6 +86,6 @@ class DeleteMovieVariables {
   DeleteMovieVariables({
     required this.id,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }

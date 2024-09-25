@@ -32,7 +32,7 @@ class SeedMoviesTheMatrix {
   SeedMoviesTheMatrix({
     required this.id,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -53,7 +53,7 @@ class SeedMoviesJurassicPark {
   SeedMoviesJurassicPark({
     required this.id,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -81,6 +81,6 @@ class SeedMoviesData {
     required this.the_matrix,
     required this.jurassic_park,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }

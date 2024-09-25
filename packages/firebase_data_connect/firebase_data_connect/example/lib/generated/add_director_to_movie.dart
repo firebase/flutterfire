@@ -47,7 +47,7 @@ class AddDirectorToMovieDirectedByInsert {
     required this.directedbyId,
     required this.movieId,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -69,7 +69,7 @@ class AddDirectorToMovieData {
   AddDirectorToMovieData({
     required this.directedBy_insert,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -90,7 +90,7 @@ class AddDirectorToMovieVariablesPersonId {
   AddDirectorToMovieVariablesPersonId({
     required this.id,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -127,6 +127,6 @@ class AddDirectorToMovieVariables {
     this.personId,
     this.movieId,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }

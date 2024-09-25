@@ -62,7 +62,7 @@ class ListMoviesByPartialTitleMovies {
     required this.genre,
     this.rating,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -85,7 +85,7 @@ class ListMoviesByPartialTitleData {
   ListMoviesByPartialTitleData({
     required this.movies,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
 
@@ -106,6 +106,6 @@ class ListMoviesByPartialTitleVariables {
   ListMoviesByPartialTitleVariables({
     required this.input,
   }) {
-    // TODO(mtewani): Only show this if there are optional fields.
+    // TODO: Only show this if there are optional fields.
   }
 }
