@@ -40,6 +40,7 @@ void main() {
         'testConnector',
         'testService',
       ),
+      'testAppId',
       mockAuth,
       mockAppCheck,
     );
@@ -64,6 +65,7 @@ void main() {
           'testConnector',
           'testService',
         ),
+        'testAppId',
         mockAuth,
         mockAppCheck,
       );
