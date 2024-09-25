@@ -121,7 +121,7 @@ class _ChatWidgetState extends State<ChatWidget> {
   }
 
   /// Actual function to demonstrate the function calling feature.
-  final getWeatherTool = FunctionDeclaration(
+  final fetchWeatherTool = FunctionDeclaration(
     'getCurrentWeather',
     'Get the current weather in a given location',
     parameters: {
