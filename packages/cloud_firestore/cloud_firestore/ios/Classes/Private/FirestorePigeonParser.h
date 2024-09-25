@@ -4,7 +4,7 @@
  * BSD-style license that can be found in the LICENSE file.
  */
 
-#import <Firebase/Firebase.h>
+@import FirebaseFirestore;
 #import <Foundation/Foundation.h>
 #import "FirestoreMessages.g.h"
 

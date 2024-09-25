@@ -9,7 +9,7 @@
 //  Created by Russell Wheatley on 05/05/2021.
 //
 
-#import <Firebase/Firebase.h>
+@import FirebaseFirestore;
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 
 #import "Private/FLTFirebaseFirestoreUtils.h"
