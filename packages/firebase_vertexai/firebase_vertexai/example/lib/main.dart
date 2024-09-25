@@ -96,8 +96,7 @@ class _ChatWidgetState extends State<ChatWidget> {
       _functionCallModel = FirebaseVertexAI.instance.generativeModel(
         model: 'gemini-1.5-flash',
         tools: [
-          Tool.functionDeclarationsTool(
-              [getWeatherTool, extractSaleRecordsTool]),
+          Tool.functionDeclarationsTool([getWeatherTool]),
         ],
       );
       _chat = _model.startChat();
@@ -121,6 +120,7 @@ class _ChatWidgetState extends State<ChatWidget> {
     return apiResponse;
   }
 
+  /// Actual function to demonstrate the function calling feature.
   final getWeatherTool = FunctionDeclaration(
     'getCurrentWeather',
     'Get the current weather in a given location',
@@ -132,6 +132,7 @@ class _ChatWidgetState extends State<ChatWidget> {
     },
   );
 
+  /// Sample function to show the usage of Schema, and demo the usage of ToolConfig.
   final extractSaleRecordsTool = FunctionDeclaration(
     'extractSaleRecords',
     'Extract sale records from a document.',
@@ -527,15 +528,12 @@ class _ChatWidgetState extends State<ChatWidget> {
     setState(() {
       _loading = true;
     });
-    final chat = _functionCallModel.startChat();
+    final functionCallChat = _functionCallModel.startChat();
     const prompt = 'What is the weather like in Boston?';
 
     // Send the message to the generative model.
-    var response = await _functionCallModel.generateContent(
-      [Content.text(prompt)],
-      toolConfig: ToolConfig(
-        functionCallingConfig: FunctionCallingConfig.any({'getWeatherTool'}),
-      ),
+    var response = await functionCallChat.sendMessage(
+      Content.text(prompt),
     );
 
     final functionCalls = response.functionCalls.toList();
@@ -554,8 +552,9 @@ class _ChatWidgetState extends State<ChatWidget> {
       };
       // Send the response to the model so that it can use the result to generate
       // text for the user.
-      response = await chat.sendMessage(
-          Content.functionResponse(functionCall.name, functionResult));
+      response = await functionCallChat.sendMessage(
+        Content.functionResponse(functionCall.name, functionResult),
+      );
     }
     // When the model responds with non-null text content, print it.
     if (response.text case final text?) {
