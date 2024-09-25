@@ -17,7 +17,7 @@ class AnyValue {
       if (value is List) {
         return (value as List).map((e) => e.toJson()).toList();
       } else if (value is Map) {
-        // TODO(mtewani): Check if value can be converted like this
+        // TODO(mtewani): Throw an error if this is the wrong type.
         return convertMap(value as Map<String, dynamic>);
       }
       try {
