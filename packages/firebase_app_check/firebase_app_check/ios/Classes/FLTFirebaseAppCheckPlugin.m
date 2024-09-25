@@ -5,7 +5,7 @@
 #import "FLTFirebaseAppCheckPlugin.h"
 #import "FLTTokenRefreshStreamHandler.h"
 
-#import <Firebase/Firebase.h>
+@import FirebaseAppCheck;
 
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 #import "FLTAppCheckProviderFactory.h"

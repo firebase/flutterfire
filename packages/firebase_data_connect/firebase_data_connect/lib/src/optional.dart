@@ -72,6 +72,9 @@ dynamic nativeToJson<T>(T type) {
       type is num ||
       type is String) {
     return type;
+  } else if (type is DateTime) {
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    return formatter.format(type);
   } else {
     throw UnimplementedError('This type is unimplemented: ${type.runtimeType}');
   }

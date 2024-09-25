@@ -6,6 +6,38 @@ mutation addDirectorToMovie($personId: Person_Key, $movieId: UUID)
 @auth(level: PUBLIC) {
   directedBy_insert(data: { directedby: $personId, movieId: $movieId })
 }
+mutation addTimestamp($timestamp: Timestamp!) @auth(level: PUBLIC) {
+  timestampHolder_insert(data: {
+    timestamp: $timestamp
+  })
+}
+mutation addDateAndTimestamp($date: Date!, $timestamp: Timestamp!) @auth(level: PUBLIC) {
+  timestampHolder_insert(data: {
+    date: $date,
+    timestamp: $timestamp
+  })
+}
+
+mutation seedMovies @auth(level: PUBLIC) {
+  the_matrix: movie_insert(
+    data: {
+      title: "The Matrix"
+      releaseYear: 1999
+      genre: "Sci-Fi"
+      rating: 5.0
+      description: "When a beautiful stranger leads computer hacker Neo to a forbidding underworld, he discovers the shocking truth--the life he knows is the elaborate deception of an evil cyber-intelligence."
+    }
+  )
+  jurassic_park: movie_insert(
+    data: {
+      title: "Jurassic Park"
+      releaseYear: 1993
+      genre: "Adventure"
+      rating: 5.0
+      description: "An industrialist invites some experts to visit his theme park of cloned dinosaurs. After a power failure, the creatures run loose, putting everyone's lives, including his grandchildren's, in danger."
+    }
+  )
+}
 mutation createMovie(
   $title: String!
   $releaseYear: Int!

@@ -84,7 +84,11 @@ void main() {
     });
 
     test('nativeToJson throws UnimplementedError for unsupported types', () {
-      expect(() => nativeToJson(DateTime.now()), throwsUnimplementedError);
+      expect(() => nativeToJson(Object()), throwsUnimplementedError);
+    });
+
+    test('nativeFromJson throws UnimplementedError for unsupported types', () {
+      expect(() => nativeFromJson<Object>('abc'), throwsUnimplementedError);
     });
   });
 }
