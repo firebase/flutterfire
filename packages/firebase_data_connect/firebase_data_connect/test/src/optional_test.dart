@@ -75,7 +75,7 @@ void main() {
 
     test('nativeFromJson correctly deserializes primitive types', () {
       expect(nativeFromJson<String>('42'), equals('42'));
-      expect(nativeFromJson<String>(42), equals(42));
+      expect(nativeFromJson<int>(42), equals(42));
       expect(nativeFromJson<bool>(true), equals(true));
       expect(nativeFromJson<String>('Test'), equals('Test'));
     });
