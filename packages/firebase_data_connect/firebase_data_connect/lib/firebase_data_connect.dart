@@ -20,3 +20,4 @@ export 'src/core/ref.dart'
 export 'src/optional.dart'
     show Optional, OptionalState, nativeFromJson, nativeToJson;
 export 'src/timestamp.dart' show Timestamp;
+export 'src/any_value.dart' show AnyValue, defaultSerializer;
