@@ -7,7 +7,7 @@
 import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-typedef Serializer<T> = String Function(T value);
+typedef Serializer<T> = dynamic Function(T value);
 typedef Deserializer<T> = T Function(String json);
 
 void main() {
@@ -21,11 +21,11 @@ void main() {
       stringDeserializer = (json) => json;
       stringSerializer = (value) => value.toString();
       intDeserializer = (json) => int.parse(json);
-      intSerializer = (value) => value.toString();
+      intSerializer = (value) => value;
     });
 
     test('constructor initializes with deserializer', () {
-      final optional = Optional<String>(stringDeserializer);
+      final optional = Optional<String>(stringDeserializer, stringSerializer);
       expect(optional.deserializer, equals(stringDeserializer));
       expect(optional.state, equals(OptionalState.unset));
       expect(optional.value, isNull);
@@ -38,7 +38,7 @@ void main() {
     });
 
     test('value setter updates value and sets state', () {
-      final optional = Optional<String>(stringDeserializer);
+      final optional = Optional<String>(stringDeserializer, stringSerializer);
 
       optional.value = 'Test';
       expect(optional.value, equals('Test'));
@@ -46,7 +46,7 @@ void main() {
     });
 
     test('fromJson correctly deserializes and sets value', () {
-      final optional = Optional<String>(stringDeserializer);
+      final optional = Optional<String>(stringDeserializer, stringSerializer);
 
       optional.fromJson('Test');
       expect(optional.value, equals('Test'));

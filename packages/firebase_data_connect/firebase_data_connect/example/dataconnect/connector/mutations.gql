@@ -61,6 +61,24 @@ mutation deleteMovie($id: UUID!) @auth(level: PUBLIC) {
   movie_delete(id: $id)
 }
 
+mutation thing($title: Any! = "ABC") @auth(level: PUBLIC) {
+  thing_insert(data: {
+    title: $title
+  })
+}
+
+mutation seedData @auth(level: PUBLIC) {
+  the_matrix: movie_insert(
+    data: {
+      title: "The Matrix"
+      releaseYear: 1999
+      genre: "Action"
+      rating: 5.0
+      description: "When a beautiful stranger leads computer hacker Neo to a forbidding underworld, he discovers the shocking truth--the life he knows is the elaborate deception of an evil cyber-intelligence."
+    }
+  )
+}
+
 # # Update movie information based on the provided ID
 # mutation updateMovie(
 #   $id: UUID!
