@@ -4,6 +4,7 @@
 
 // ignore_for_file: unused_local_variable
 
+import 'package:firebase_data_connect/src/any_value.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 typedef Serializer<T> = String Function(T value);
