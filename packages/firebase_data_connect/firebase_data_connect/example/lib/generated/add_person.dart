@@ -31,6 +31,7 @@ class AddPerson {
   }) {
     return AddPersonVariablesBuilder(
       dataConnect,
+      name: name,
     );
   }
 

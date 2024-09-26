@@ -35,6 +35,8 @@ class AddDirectorToMovie {
   }) {
     return AddDirectorToMovieVariablesBuilder(
       dataConnect,
+      personId: personId,
+      movieId: movieId,
     );
   }
 

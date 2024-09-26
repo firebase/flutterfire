@@ -50,6 +50,8 @@ class CreateMovie {
       title: title,
       releaseYear: releaseYear,
       genre: genre,
+      rating: rating,
+      description: description,
     );
   }
 
