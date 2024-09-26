@@ -136,8 +136,8 @@ with the Facebook App ID and Secret set.
 
   Future<UserCredential> signInWithFacebook() async {
     // Trigger the sign-in flow
-    final rawNonce = _generateRandomString();
-    final nonce = sha256ofString(rawNonce);
+    final rawNonce = _generateRandomString(); // You should implement this function
+    final nonce = _sha256ofString(rawNonce); // You should implement this function
     final LoginResult loginResult = await FacebookAuth.instance.login();
 
     // Create a credential from the access token
