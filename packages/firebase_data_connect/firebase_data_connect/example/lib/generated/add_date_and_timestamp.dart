@@ -1,25 +1,44 @@
 part of movies;
 
-class AddDateAndTimestamp {
-  String name = "addDateAndTimestamp";
-  AddDateAndTimestamp({required this.dataConnect});
+class AddDateAndTimestampVariablesBuilder {
+  DateTime date;
+  Timestamp timestamp;
 
+  FirebaseDataConnect dataConnect;
+
+  AddDateAndTimestampVariablesBuilder(
+    this.dataConnect, {
+    required DateTime this.date,
+    required Timestamp this.timestamp,
+  });
   Deserializer<AddDateAndTimestampData> dataDeserializer = (String json) =>
       AddDateAndTimestampData.fromJson(
           jsonDecode(json) as Map<String, dynamic>);
   Serializer<AddDateAndTimestampVariables> varsSerializer =
       (AddDateAndTimestampVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<AddDateAndTimestampData, AddDateAndTimestampVariables> ref({
-    required DateTime date,
-    required Timestamp timestamp,
-  }) {
+  MutationRef<AddDateAndTimestampData, AddDateAndTimestampVariables> build() {
     AddDateAndTimestampVariables vars = AddDateAndTimestampVariables(
       date: date,
       timestamp: timestamp,
     );
 
     return dataConnect.mutation(
-        this.name, dataDeserializer, varsSerializer, vars);
+        "addDateAndTimestamp", dataDeserializer, varsSerializer, vars);
+  }
+}
+
+class AddDateAndTimestamp {
+  String name = "addDateAndTimestamp";
+  AddDateAndTimestamp({required this.dataConnect});
+  AddDateAndTimestampVariablesBuilder ref({
+    required DateTime date,
+    required Timestamp timestamp,
+  }) {
+    return AddDateAndTimestampVariablesBuilder(
+      dataConnect,
+      date: date,
+      timestamp: timestamp,
+    );
   }
 
   FirebaseDataConnect dataConnect;
@@ -28,6 +47,7 @@ class AddDateAndTimestamp {
 class AddDateAndTimestampTimestampHolderInsert {
   String id;
 
+  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   AddDateAndTimestampTimestampHolderInsert.fromJson(Map<String, dynamic> json)
       : id = nativeFromJson<String>(json['id']) {}
 
@@ -41,14 +61,13 @@ class AddDateAndTimestampTimestampHolderInsert {
 
   AddDateAndTimestampTimestampHolderInsert({
     required this.id,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
-  }
+  });
 }
 
 class AddDateAndTimestampData {
   AddDateAndTimestampTimestampHolderInsert timestampHolder_insert;
 
+  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   AddDateAndTimestampData.fromJson(Map<String, dynamic> json)
       : timestampHolder_insert =
             AddDateAndTimestampTimestampHolderInsert.fromJson(
@@ -64,9 +83,7 @@ class AddDateAndTimestampData {
 
   AddDateAndTimestampData({
     required this.timestampHolder_insert,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
-  }
+  });
 }
 
 class AddDateAndTimestampVariables {
@@ -74,6 +91,7 @@ class AddDateAndTimestampVariables {
 
   Timestamp timestamp;
 
+  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   AddDateAndTimestampVariables.fromJson(Map<String, dynamic> json)
       : date = nativeFromJson<DateTime>(json['date']),
         timestamp = Timestamp.fromJson(json['timestamp']) {}
@@ -91,7 +109,5 @@ class AddDateAndTimestampVariables {
   AddDateAndTimestampVariables({
     required this.date,
     required this.timestamp,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
-  }
+  });
 }

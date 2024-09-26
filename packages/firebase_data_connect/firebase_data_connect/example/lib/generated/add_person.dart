@@ -1,22 +1,37 @@
 part of movies;
 
-class AddPerson {
-  String name = "addPerson";
-  AddPerson({required this.dataConnect});
+class AddPersonVariablesBuilder {
+  String? name;
 
+  FirebaseDataConnect dataConnect;
+
+  AddPersonVariablesBuilder(
+    this.dataConnect, {
+    String? this.name,
+  });
   Deserializer<AddPersonData> dataDeserializer = (String json) =>
       AddPersonData.fromJson(jsonDecode(json) as Map<String, dynamic>);
   Serializer<AddPersonVariables> varsSerializer =
       (AddPersonVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<AddPersonData, AddPersonVariables> ref({
-    String? name,
-  }) {
+  MutationRef<AddPersonData, AddPersonVariables> build() {
     AddPersonVariables vars = AddPersonVariables(
       name: name,
     );
 
     return dataConnect.mutation(
-        this.name, dataDeserializer, varsSerializer, vars);
+        "addPerson", dataDeserializer, varsSerializer, vars);
+  }
+}
+
+class AddPerson {
+  String name = "addPerson";
+  AddPerson({required this.dataConnect});
+  AddPersonVariablesBuilder ref({
+    String? name,
+  }) {
+    return AddPersonVariablesBuilder(
+      dataConnect,
+    );
   }
 
   FirebaseDataConnect dataConnect;
@@ -25,6 +40,7 @@ class AddPerson {
 class AddPersonPersonInsert {
   String id;
 
+  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   AddPersonPersonInsert.fromJson(Map<String, dynamic> json)
       : id = nativeFromJson<String>(json['id']) {}
 
@@ -38,14 +54,13 @@ class AddPersonPersonInsert {
 
   AddPersonPersonInsert({
     required this.id,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
-  }
+  });
 }
 
 class AddPersonData {
   AddPersonPersonInsert person_insert;
 
+  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   AddPersonData.fromJson(Map<String, dynamic> json)
       : person_insert = AddPersonPersonInsert.fromJson(json['person_insert']) {}
 
@@ -59,14 +74,13 @@ class AddPersonData {
 
   AddPersonData({
     required this.person_insert,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
-  }
+  });
 }
 
 class AddPersonVariables {
   String? name;
 
+  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   AddPersonVariables.fromJson(Map<String, dynamic> json) {
     name = json['name'] == null ? null : nativeFromJson<String>(json['name']);
   }
@@ -83,7 +97,5 @@ class AddPersonVariables {
 
   AddPersonVariables({
     this.name,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
-  }
+  });
 }

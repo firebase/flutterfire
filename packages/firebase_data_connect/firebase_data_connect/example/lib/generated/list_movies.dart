@@ -1,15 +1,27 @@
 part of movies;
 
-class ListMovies {
-  String name = "ListMovies";
-  ListMovies({required this.dataConnect});
+class ListMoviesVariablesBuilder {
+  FirebaseDataConnect dataConnect;
 
+  ListMoviesVariablesBuilder(
+    this.dataConnect,
+  );
   Deserializer<ListMoviesData> dataDeserializer = (String json) =>
       ListMoviesData.fromJson(jsonDecode(json) as Map<String, dynamic>);
 
-  QueryRef<ListMoviesData, void> ref() {
+  QueryRef<ListMoviesData, void> build() {
     return dataConnect.query(
-        this.name, dataDeserializer, emptySerializer, null);
+        "ListMovies", dataDeserializer, emptySerializer, null);
+  }
+}
+
+class ListMovies {
+  String name = "ListMovies";
+  ListMovies({required this.dataConnect});
+  ListMoviesVariablesBuilder ref() {
+    return ListMoviesVariablesBuilder(
+      dataConnect,
+    );
   }
 
   FirebaseDataConnect dataConnect;
@@ -22,17 +34,13 @@ class ListMoviesMovies {
 
   List<ListMoviesMoviesDirectedBy> directed_by;
 
-  double? rating;
-
+  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   ListMoviesMovies.fromJson(Map<String, dynamic> json)
       : id = nativeFromJson<String>(json['id']),
         title = nativeFromJson<String>(json['title']),
         directed_by = (json['directed_by'] as List<dynamic>)
             .map((e) => ListMoviesMoviesDirectedBy.fromJson(e))
-            .toList() {
-    rating =
-        json['rating'] == null ? null : nativeFromJson<double>(json['rating']);
-  }
+            .toList() {}
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -43,10 +51,6 @@ class ListMoviesMovies {
 
     json['directed_by'] = directed_by.map((e) => e.toJson()).toList();
 
-    if (rating != null) {
-      json['rating'] = nativeToJson<double?>(rating);
-    }
-
     return json;
   }
 
@@ -54,15 +58,13 @@ class ListMoviesMovies {
     required this.id,
     required this.title,
     required this.directed_by,
-    this.rating,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
-  }
+  });
 }
 
 class ListMoviesMoviesDirectedBy {
   String name;
 
+  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   ListMoviesMoviesDirectedBy.fromJson(Map<String, dynamic> json)
       : name = nativeFromJson<String>(json['name']) {}
 
@@ -76,14 +78,13 @@ class ListMoviesMoviesDirectedBy {
 
   ListMoviesMoviesDirectedBy({
     required this.name,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
-  }
+  });
 }
 
 class ListMoviesData {
   List<ListMoviesMovies> movies;
 
+  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   ListMoviesData.fromJson(Map<String, dynamic> json)
       : movies = (json['movies'] as List<dynamic>)
             .map((e) => ListMoviesMovies.fromJson(e))
@@ -99,7 +100,5 @@ class ListMoviesData {
 
   ListMoviesData({
     required this.movies,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
-  }
+  });
 }
