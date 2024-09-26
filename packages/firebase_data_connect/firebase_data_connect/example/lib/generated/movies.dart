@@ -1,4 +1,5 @@
 library movies;
+
 import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'dart:convert';
 
@@ -30,66 +31,62 @@ part 'list_thing.dart';
 
 part 'list_timestamps.dart';
 
-
-
 class MoviesConnector {
-  
   AddPerson get addPerson {
     return AddPerson(dataConnect: dataConnect);
   }
-  
+
   AddDirectorToMovie get addDirectorToMovie {
     return AddDirectorToMovie(dataConnect: dataConnect);
   }
-  
+
   AddTimestamp get addTimestamp {
     return AddTimestamp(dataConnect: dataConnect);
   }
-  
+
   AddDateAndTimestamp get addDateAndTimestamp {
     return AddDateAndTimestamp(dataConnect: dataConnect);
   }
-  
+
   SeedMovies get seedMovies {
     return SeedMovies(dataConnect: dataConnect);
   }
-  
+
   CreateMovie get createMovie {
     return CreateMovie(dataConnect: dataConnect);
   }
-  
+
   DeleteMovie get deleteMovie {
     return DeleteMovie(dataConnect: dataConnect);
   }
-  
+
   Thing get thing {
     return Thing(dataConnect: dataConnect);
   }
-  
+
   SeedData get seedData {
     return SeedData(dataConnect: dataConnect);
   }
-  
+
   ListMovies get listMovies {
     return ListMovies(dataConnect: dataConnect);
   }
-  
+
   ListMoviesByPartialTitle get listMoviesByPartialTitle {
     return ListMoviesByPartialTitle(dataConnect: dataConnect);
   }
-  
+
   ListPersons get listPersons {
     return ListPersons(dataConnect: dataConnect);
   }
-  
+
   ListThing get listThing {
     return ListThing(dataConnect: dataConnect);
   }
-  
+
   ListTimestamps get listTimestamps {
     return ListTimestamps(dataConnect: dataConnect);
   }
-  
 
   static ConnectorConfig connectorConfig = ConnectorConfig(
     'us-west2',
@@ -107,4 +104,3 @@ class MoviesConnector {
 
   FirebaseDataConnect dataConnect;
 }
-

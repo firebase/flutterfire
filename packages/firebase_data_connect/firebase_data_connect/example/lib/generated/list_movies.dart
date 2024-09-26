@@ -34,13 +34,18 @@ class ListMoviesMovies {
 
   List<ListMoviesMoviesDirectedBy> directed_by;
 
+  double? rating;
+
   // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   ListMoviesMovies.fromJson(Map<String, dynamic> json)
       : id = nativeFromJson<String>(json['id']),
         title = nativeFromJson<String>(json['title']),
         directed_by = (json['directed_by'] as List<dynamic>)
             .map((e) => ListMoviesMoviesDirectedBy.fromJson(e))
-            .toList() {}
+            .toList() {
+    rating =
+        json['rating'] == null ? null : nativeFromJson<double>(json['rating']);
+  }
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -51,6 +56,10 @@ class ListMoviesMovies {
 
     json['directed_by'] = directed_by.map((e) => e.toJson()).toList();
 
+    if (rating != null) {
+      json['rating'] = nativeToJson<double?>(rating);
+    }
+
     return json;
   }
 
@@ -58,6 +67,7 @@ class ListMoviesMovies {
     required this.id,
     required this.title,
     required this.directed_by,
+    this.rating,
   });
 }
 
