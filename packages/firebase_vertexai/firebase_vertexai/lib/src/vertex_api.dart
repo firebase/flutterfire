@@ -404,16 +404,16 @@ enum HarmSeverity {
 /// Source attributions for a piece of content.
 final class CitationMetadata {
   /// Constructor
-  CitationMetadata(this.citationSources);
+  CitationMetadata(this.citations);
 
   /// Citations to sources for a specific response.
-  final List<CitationSource> citationSources;
+  final List<Citation> citations;
 }
 
 /// Citation to a source for a portion of a specific response.
-final class CitationSource {
+final class Citation {
   /// Constructor
-  CitationSource(this.startIndex, this.endIndex, this.uri, this.license);
+  Citation(this.startIndex, this.endIndex, this.uri, this.license);
 
   /// Start of segment of the response that is attributed to this source.
   ///
@@ -437,7 +437,7 @@ enum FinishReason {
   /// Default value to use when a finish reason isn't set.
   ///
   /// Never used as the reason for finishing.
-  unspecified('UNSPECIFIED'),
+  unknown('UNKNOWN'),
 
   /// Natural stop point of the model or provided stop sequence.
   stop('STOP'),
@@ -464,7 +464,7 @@ enum FinishReason {
   // ignore: unused_element
   static FinishReason _parseValue(Object jsonObject) {
     return switch (jsonObject) {
-      'UNSPECIFIED' => FinishReason.unspecified,
+      'UNSPECIFIED' => FinishReason.unknown,
       'STOP' => FinishReason.stop,
       'MAX_TOKENS' => FinishReason.maxTokens,
       'SAFETY' => FinishReason.safety,
@@ -809,14 +809,14 @@ CitationMetadata _parseCitationMetadata(Object? jsonObject) {
   };
 }
 
-CitationSource _parseCitationSource(Object? jsonObject) {
+Citation _parseCitationSource(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('CitationSource', jsonObject);
   }
 
   final uriString = jsonObject['uri'] as String?;
 
-  return CitationSource(
+  return Citation(
     jsonObject['startIndex'] as int?,
     jsonObject['endIndex'] as int?,
     uriString != null ? Uri.parse(uriString) : null,

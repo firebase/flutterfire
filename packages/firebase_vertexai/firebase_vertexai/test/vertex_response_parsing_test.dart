@@ -346,8 +346,8 @@ void main() {
                   ),
                 ],
                 CitationMetadata([
-                  CitationSource(574, 705, Uri.https('example.com'), ''),
-                  CitationSource(899, 1026, Uri.https('example.com'), ''),
+                  Citation(574, 705, Uri.https('example.com'), ''),
+                  Citation(899, 1026, Uri.https('example.com'), ''),
                 ]),
                 FinishReason.stop,
                 null,
@@ -480,8 +480,8 @@ void main() {
                   ),
                 ],
                 CitationMetadata([
-                  CitationSource(574, 705, Uri.https('example.com'), ''),
-                  CitationSource(899, 1026, Uri.https('example.com'), ''),
+                  Citation(574, 705, Uri.https('example.com'), ''),
+                  Citation(899, 1026, Uri.https('example.com'), ''),
                 ]),
                 FinishReason.stop,
                 null,

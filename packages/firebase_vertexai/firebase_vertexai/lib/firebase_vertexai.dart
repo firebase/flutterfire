@@ -18,7 +18,7 @@ export 'src/vertex_api.dart'
         BlockReason,
         Candidate,
         CitationMetadata,
-        CitationSource,
+        Citation,
         CountTokensResponse,
         FinishReason,
         GenerateContentResponse,
