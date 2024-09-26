@@ -2,7 +2,16 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of firebase_data_connect;
+import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:firebase_data_connect/src/common/common_library.dart';
+import 'package:firebase_data_connect/src/core/ref.dart';
+import 'package:flutter/foundation.dart';
+import './network/transport_library.dart'
+    if (dart.library.io) './network/grpc_library.dart'
+    if (dart.library.html) './network/rest_library.dart';
 
 /// DataConnect class
 class FirebaseDataConnect extends FirebasePluginPlatform {

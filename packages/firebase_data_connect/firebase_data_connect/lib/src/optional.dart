@@ -2,7 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of firebase_data_connect;
+import 'package:intl/intl.dart';
+
+import 'common/common_library.dart';
 
 /// Keeps track of whether the value has been set or not
 enum OptionalState { unset, set }

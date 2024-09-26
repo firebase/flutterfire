@@ -2,7 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of firebase_data_connect;
+import 'dart:async';
+
+import '../../firebase_data_connect.dart';
+import '../common/common_library.dart';
 
 /// Result of an Operation Request (query/mutation).
 class OperationResult<Data, Variables> {
@@ -35,7 +38,6 @@ abstract class OperationRef<Data, Variables> {
 }
 
 /// Tracks currently active queries, and emits events when a new query is executed.
-@visibleForTesting
 class QueryManager {
   QueryManager(this.dataConnect);
 
