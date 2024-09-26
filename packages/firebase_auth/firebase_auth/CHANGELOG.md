@@ -1,3 +1,7 @@
+## 5.3.1
+
+ - **FIX**(all,apple): use modular headers to import ([#13400](https://github.com/firebase/flutterfire/issues/13400)). ([d7d2d4b9](https://github.com/firebase/flutterfire/commit/d7d2d4b93e7c00226027fffde46699f3d5388a41))
+
 ## 5.3.0
 
  - **FEAT**(fdc): Initial Release of Data Connect ([#13313](https://github.com/firebase/flutterfire/issues/13313)). ([603a6726](https://github.com/firebase/flutterfire/commit/603a67261a2f7cbdd6ef594bfaef480aeb820683))
