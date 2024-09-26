@@ -136,13 +136,25 @@ with the Facebook App ID and Secret set.
 
   Future<UserCredential> signInWithFacebook() async {
     // Trigger the sign-in flow
+    final rawNonce = _generateRandomString();
+    final nonce = sha256ofString(rawNonce);
     final LoginResult loginResult = await FacebookAuth.instance.login();
 
     // Create a credential from the access token
-    final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(loginResult.accessToken.token);
+    OAuthCredential? facebookAuthCredential;
+    if (loginResult.accessToken is LimitedToken) {
+      facebookAuthCredential = OAuthCredential(
+        providerId: 'facebook.com',
+        signInMethod: 'oauth',
+        idToken: loginResult.accessToken.tokenString,
+        rawNonce: rawNonce,
+      );
+    } else {
+      facebookAuthCredential = FacebookAuthProvider.credential(loginResult.accessToken.token);
+    }
 
     // Once signed in, return the UserCredential
-    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential!);
   }
   ```
 
