@@ -35,9 +35,9 @@ final class Content {
   /// Return a [Content] with [TextPart].
   static Content text(String text) => Content('user', [TextPart(text)]);
 
-  /// Return a [Content] with [DataPart].
-  static Content data(String mimeType, Uint8List bytes) =>
-      Content('user', [DataPart(mimeType, bytes)]);
+  /// Return a [Content] with [InlineDataPart].
+  static Content inlineData(String mimeType, Uint8List bytes) =>
+      Content('user', [InlineDataPart(mimeType, bytes)]);
 
   /// Return a [Content] with multiple [Part]s.
   static Content multi(Iterable<Part> parts) => Content('user', [...parts]);
@@ -122,11 +122,11 @@ final class TextPart implements Part {
 }
 
 /// A [Part] with the byte content of a file.
-final class DataPart implements Part {
+final class InlineDataPart implements Part {
   /// Constructor
-  DataPart(this.mimeType, this.bytes);
+  InlineDataPart(this.mimeType, this.bytes);
 
-  /// File type of the [DataPart].
+  /// File type of the [InlineDataPart].
   /// https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-multimodal-prompts#media_requirements
   final String mimeType;
 
@@ -183,7 +183,7 @@ final class FileData implements Part {
   /// Constructor
   FileData(this.mimeType, this.fileUri);
 
-  /// File type of the [DataPart].
+  /// File type of the [FileData].
   /// https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-multimodal-prompts#media_requirements
   final String mimeType;
 

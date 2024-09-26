@@ -18,9 +18,10 @@ import 'package:matcher/matcher.dart';
 Matcher matchesPart(Part part) => switch (part) {
       TextPart(text: final text) =>
         isA<TextPart>().having((p) => p.text, 'text', text),
-      DataPart(mimeType: final mimeType, bytes: final bytes) => isA<DataPart>()
-          .having((p) => p.mimeType, 'mimeType', mimeType)
-          .having((p) => p.bytes, 'bytes', bytes),
+      InlineDataPart(mimeType: final mimeType, bytes: final bytes) =>
+        isA<InlineDataPart>()
+            .having((p) => p.mimeType, 'mimeType', mimeType)
+            .having((p) => p.bytes, 'bytes', bytes),
       FileData(mimeType: final mimeType, fileUri: final fileUri) =>
         isA<FileData>()
             .having((p) => p.mimeType, 'mimeType', mimeType)

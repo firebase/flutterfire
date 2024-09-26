@@ -35,7 +35,7 @@ export 'src/vertex_chat.dart' show ChatSession, StartChatExtension;
 export 'src/vertex_content.dart'
     show
         Content,
-        DataPart,
+        InlineDataPart,
         FileData,
         FunctionCall,
         FunctionResponse,
