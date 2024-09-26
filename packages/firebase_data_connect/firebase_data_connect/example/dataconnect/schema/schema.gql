@@ -12,6 +12,9 @@ type Movie @table {
   releaseYear: Int
   rating: Float
 }
+type Thing @table {
+  title: Any!
+}
 type TimestampHolder @table {
   timestamp: Timestamp!
   date: Date

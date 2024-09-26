@@ -25,6 +25,15 @@ query ListPersons @auth(level: USER) {
     name
   }
 }
+query ListThing($data: Any) @auth(level: USER) {
+  things(where: {
+    title: {
+      eq: $data
+    }
+  }) {
+    title
+  }
+}
 
 query ListTimestamps @auth(level: USER) {
   timestampHolders {
