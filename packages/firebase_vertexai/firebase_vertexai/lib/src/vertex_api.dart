@@ -213,13 +213,26 @@ final class Candidate {
 /// classification is included here.
 final class SafetyRating {
   /// Constructor
-  SafetyRating(this.category, this.probability);
+  SafetyRating(this.category, this.probability,
+      {this.probabilityScore, this.blocked, this.severity, this.severityScore});
 
   /// The category for this rating.
   final HarmCategory category;
 
   /// The probability of harm for this content.
   final HarmProbability probability;
+
+  /// The score for harm probability
+  final double? probabilityScore;
+
+  /// Whether it's blocked
+  final bool? blocked;
+
+  /// The severity of harm for this content.
+  final HarmSeverity? severity;
+
+  /// The score for harm severity
+  final double? severityScore;
 }
 
 /// The reason why a prompt was blocked.
@@ -227,7 +240,7 @@ enum BlockReason {
   /// Default value to use when a blocking reason isn't set.
   ///
   /// Never used as the reason for blocking a prompt.
-  unspecified('BLOCK_REASON_UNSPECIFIED'),
+  unknown('UNKNOWN'),
 
   /// Prompt was blocked due to safety reasons.
   ///
@@ -242,7 +255,7 @@ enum BlockReason {
   // ignore: unused_element
   static BlockReason _parseValue(String jsonObject) {
     return switch (jsonObject) {
-      'BLOCK_REASON_UNSPECIFIED' => BlockReason.unspecified,
+      'BLOCK_REASON_UNSPECIFIED' => BlockReason.unknown,
       'SAFETY' => BlockReason.safety,
       'OTHER' => BlockReason.other,
       _ => throw FormatException('Unhandled BlockReason format', jsonObject),
@@ -264,7 +277,7 @@ enum BlockReason {
 /// adjust.
 enum HarmCategory {
   /// Harm category is not specified.
-  unspecified('HARM_CATEGORY_UNSPECIFIED'),
+  unknown('UNKNOWN'),
 
   /// Malicious, intimidating, bullying, or abusive comments targeting another
   /// individual.
@@ -284,7 +297,7 @@ enum HarmCategory {
   // ignore: unused_element
   static HarmCategory _parseValue(Object jsonObject) {
     return switch (jsonObject) {
-      'HARM_CATEGORY_UNSPECIFIED' => HarmCategory.unspecified,
+      'HARM_CATEGORY_UNSPECIFIED' => HarmCategory.unknown,
       'HARM_CATEGORY_HARASSMENT' => HarmCategory.harassment,
       'HARM_CATEGORY_HATE_SPEECH' => HarmCategory.hateSpeech,
       'HARM_CATEGORY_SEXUALLY_EXPLICIT' => HarmCategory.sexuallyExplicit,
@@ -307,8 +320,8 @@ enum HarmCategory {
 /// The classification system gives the probability of the content being unsafe.
 /// This does not indicate the severity of harm for a piece of content.
 enum HarmProbability {
-  /// Probability is unspecified.
-  unspecified('UNSPECIFIED'),
+  /// A new and not yet supported value.
+  unknown('UNKNOWN'),
 
   /// Content has a negligible probability of being unsafe.
   negligible('NEGLIGIBLE'),
@@ -327,13 +340,55 @@ enum HarmProbability {
   // ignore: unused_element
   static HarmProbability _parseValue(Object jsonObject) {
     return switch (jsonObject) {
-      'UNSPECIFIED' => HarmProbability.unspecified,
+      'UNSPECIFIED' => HarmProbability.unknown,
       'NEGLIGIBLE' => HarmProbability.negligible,
       'LOW' => HarmProbability.low,
       'MEDIUM' => HarmProbability.medium,
       'HIGH' => HarmProbability.high,
       _ =>
         throw FormatException('Unhandled HarmProbability format', jsonObject),
+    };
+  }
+
+  final String _jsonString;
+
+  /// Convert to json format.
+  String toJson() => _jsonString;
+
+  @override
+  String toString() => name;
+}
+
+/// The severity that a piece of content is harmful.
+///
+/// Represents the severity of a [HarmCategory] being applicable in a [SafetyRating].
+enum HarmSeverity {
+  /// A new and not yet supported value.
+  unknown('UNKNOWN'),
+
+  /// Severity for harm is negligible..
+  negligible('NEGLIGIBLE'),
+
+  /// Low level of harm severity..
+  low('LOW'),
+
+  /// Medium level of harm severity.
+  medium('MEDIUM'),
+
+  /// High level of harm severity.
+  high('HIGH');
+
+  const HarmSeverity(this._jsonString);
+
+  // ignore: unused_element
+  static HarmSeverity _parseValue(Object jsonObject) {
+    return switch (jsonObject) {
+      'HARM_SEVERITY_UNSPECIFIED ' => HarmSeverity.unknown,
+      'HARM_SEVERITY_NEGLIGIBLE' => HarmSeverity.negligible,
+      'HARM_SEVERITY_LOW' => HarmSeverity.low,
+      'HARM_SEVERITY_MEDIUM' => HarmSeverity.medium,
+      'HARM_SEVERITY_HIGH ' => HarmSeverity.high,
+      _ => throw FormatException('Unhandled HarmSeverity format', jsonObject),
     };
   }
 
@@ -447,9 +502,6 @@ final class SafetySetting {
 /// When provided in [SafetySetting.threshold], a predicted harm probability at
 /// or above this level will block content from being returned.
 enum HarmBlockThreshold {
-  /// Threshold is unspecified, block using default threshold.
-  unspecified('HARM_BLOCK_THRESHOLD_UNSPECIFIED'),
-
   /// Block when medium or high probability of unsafe content.
   low('BLOCK_LOW_AND_ABOVE'),
 
@@ -467,7 +519,6 @@ enum HarmBlockThreshold {
   // ignore: unused_element
   static HarmBlockThreshold _parseValue(Object jsonObject) {
     return switch (jsonObject) {
-      'HARM_BLOCK_THRESHOLD_UNSPECIFIED' => HarmBlockThreshold.unspecified,
       'BLOCK_LOW_AND_ABOVE' => HarmBlockThreshold.low,
       'BLOCK_MEDIUM_AND_ABOVE' => HarmBlockThreshold.medium,
       'BLOCK_ONLY_HIGH' => HarmBlockThreshold.high,
@@ -733,10 +784,16 @@ SafetyRating _parseSafetyRating(Object? jsonObject) {
   return switch (jsonObject) {
     {
       'category': final Object category,
-      'probability': final Object probability
+      'probability': final Object probability,
+      'probabilityScore': final double probabilityScore,
+      'severity': final Object severity,
+      'severityScore': final double severityScore,
     } =>
       SafetyRating(HarmCategory._parseValue(category),
-          HarmProbability._parseValue(probability)),
+          HarmProbability._parseValue(probability),
+          probabilityScore: probabilityScore,
+          severity: HarmSeverity._parseValue(severity),
+          severityScore: severityScore),
     _ => throw unhandledFormat('SafetyRating', jsonObject),
   };
 }
