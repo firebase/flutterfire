@@ -1,23 +1,40 @@
 part of movies;
 
-class ListMoviesByPartialTitle {
-  String name = "ListMoviesByPartialTitle";
-  ListMoviesByPartialTitle({required this.dataConnect});
+class ListMoviesByPartialTitleVariablesBuilder {
+  String input;
 
+  FirebaseDataConnect dataConnect;
+
+  ListMoviesByPartialTitleVariablesBuilder(
+    this.dataConnect, {
+    required String this.input,
+  });
   Deserializer<ListMoviesByPartialTitleData> dataDeserializer = (String json) =>
       ListMoviesByPartialTitleData.fromJson(
           jsonDecode(json) as Map<String, dynamic>);
   Serializer<ListMoviesByPartialTitleVariables> varsSerializer =
       (ListMoviesByPartialTitleVariables vars) => jsonEncode(vars.toJson());
   QueryRef<ListMoviesByPartialTitleData, ListMoviesByPartialTitleVariables>
-      ref({
-    required String input,
-  }) {
+      build() {
     ListMoviesByPartialTitleVariables vars = ListMoviesByPartialTitleVariables(
       input: input,
     );
 
-    return dataConnect.query(this.name, dataDeserializer, varsSerializer, vars);
+    return dataConnect.query(
+        "ListMoviesByPartialTitle", dataDeserializer, varsSerializer, vars);
+  }
+}
+
+class ListMoviesByPartialTitle {
+  String name = "ListMoviesByPartialTitle";
+  ListMoviesByPartialTitle({required this.dataConnect});
+  ListMoviesByPartialTitleVariablesBuilder ref({
+    required String input,
+  }) {
+    return ListMoviesByPartialTitleVariablesBuilder(
+      dataConnect,
+      input: input,
+    );
   }
 
   FirebaseDataConnect dataConnect;
@@ -32,6 +49,7 @@ class ListMoviesByPartialTitleMovies {
 
   double? rating;
 
+  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   ListMoviesByPartialTitleMovies.fromJson(Map<String, dynamic> json)
       : id = nativeFromJson<String>(json['id']),
         title = nativeFromJson<String>(json['title']),
@@ -61,14 +79,13 @@ class ListMoviesByPartialTitleMovies {
     required this.title,
     required this.genre,
     this.rating,
-  }) {
-    // TODO: Only show this if there are optional fields.
-  }
+  });
 }
 
 class ListMoviesByPartialTitleData {
   List<ListMoviesByPartialTitleMovies> movies;
 
+  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   ListMoviesByPartialTitleData.fromJson(Map<String, dynamic> json)
       : movies = (json['movies'] as List<dynamic>)
             .map((e) => ListMoviesByPartialTitleMovies.fromJson(e))
@@ -84,14 +101,13 @@ class ListMoviesByPartialTitleData {
 
   ListMoviesByPartialTitleData({
     required this.movies,
-  }) {
-    // TODO: Only show this if there are optional fields.
-  }
+  });
 }
 
 class ListMoviesByPartialTitleVariables {
   String input;
 
+  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   ListMoviesByPartialTitleVariables.fromJson(Map<String, dynamic> json)
       : input = nativeFromJson<String>(json['input']) {}
 
@@ -105,7 +121,5 @@ class ListMoviesByPartialTitleVariables {
 
   ListMoviesByPartialTitleVariables({
     required this.input,
-  }) {
-    // TODO: Only show this if there are optional fields.
-  }
+  });
 }

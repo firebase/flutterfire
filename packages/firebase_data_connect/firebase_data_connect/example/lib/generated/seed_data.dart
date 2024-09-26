@@ -1,15 +1,27 @@
 part of movies;
 
-class SeedData {
-  String name = "seedData";
-  SeedData({required this.dataConnect});
+class SeedDataVariablesBuilder {
+  FirebaseDataConnect dataConnect;
 
+  SeedDataVariablesBuilder(
+    this.dataConnect,
+  );
   Deserializer<SeedDataData> dataDeserializer = (String json) =>
       SeedDataData.fromJson(jsonDecode(json) as Map<String, dynamic>);
 
-  MutationRef<SeedDataData, void> ref() {
+  MutationRef<SeedDataData, void> build() {
     return dataConnect.mutation(
-        this.name, dataDeserializer, emptySerializer, null);
+        "seedData", dataDeserializer, emptySerializer, null);
+  }
+}
+
+class SeedData {
+  String name = "seedData";
+  SeedData({required this.dataConnect});
+  SeedDataVariablesBuilder ref() {
+    return SeedDataVariablesBuilder(
+      dataConnect,
+    );
   }
 
   FirebaseDataConnect dataConnect;
@@ -18,6 +30,7 @@ class SeedData {
 class SeedDataTheMatrix {
   String id;
 
+  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   SeedDataTheMatrix.fromJson(Map<String, dynamic> json)
       : id = nativeFromJson<String>(json['id']) {}
 
@@ -31,14 +44,13 @@ class SeedDataTheMatrix {
 
   SeedDataTheMatrix({
     required this.id,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
-  }
+  });
 }
 
 class SeedDataData {
   SeedDataTheMatrix the_matrix;
 
+  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   SeedDataData.fromJson(Map<String, dynamic> json)
       : the_matrix = SeedDataTheMatrix.fromJson(json['the_matrix']) {}
 
@@ -52,7 +64,5 @@ class SeedDataData {
 
   SeedDataData({
     required this.the_matrix,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
-  }
+  });
 }

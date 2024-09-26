@@ -101,7 +101,7 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
   double _rating = 0;
 
   Future<void> triggerReload() async {
-    QueryRef ref = MoviesConnector.instance.listMovies.ref();
+    QueryRef ref = MoviesConnector.instance.listMovies.ref().build();
     ref.execute();
   }
 
@@ -110,7 +110,7 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
     super.initState();
 
     QueryRef<ListMoviesData, void> ref =
-        MoviesConnector.instance.listMovies.ref();
+        MoviesConnector.instance.listMovies.ref().build();
 
     ref.subscribe().listen((event) {
       setState(() {
@@ -185,12 +185,14 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
                 return;
               }
 
-              MutationRef ref = MoviesConnector.instance.createMovie.ref(
-                title: title,
-                releaseYear: _releaseYearDate.year,
-                genre: genre,
-                rating: _rating,
-              );
+              MutationRef ref = MoviesConnector.instance.createMovie
+                  .ref(
+                    title: title,
+                    releaseYear: _releaseYearDate.year,
+                    genre: genre,
+                    rating: _rating,
+                  )
+                  .build();
               try {
                 await ref.execute();
                 triggerReload();

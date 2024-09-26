@@ -1,22 +1,38 @@
 part of movies;
 
-class DeleteMovie {
-  String name = "deleteMovie";
-  DeleteMovie({required this.dataConnect});
+class DeleteMovieVariablesBuilder {
+  String id;
 
+  FirebaseDataConnect dataConnect;
+
+  DeleteMovieVariablesBuilder(
+    this.dataConnect, {
+    required String this.id,
+  });
   Deserializer<DeleteMovieData> dataDeserializer = (String json) =>
       DeleteMovieData.fromJson(jsonDecode(json) as Map<String, dynamic>);
   Serializer<DeleteMovieVariables> varsSerializer =
       (DeleteMovieVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<DeleteMovieData, DeleteMovieVariables> ref({
-    required String id,
-  }) {
+  MutationRef<DeleteMovieData, DeleteMovieVariables> build() {
     DeleteMovieVariables vars = DeleteMovieVariables(
       id: id,
     );
 
     return dataConnect.mutation(
-        this.name, dataDeserializer, varsSerializer, vars);
+        "deleteMovie", dataDeserializer, varsSerializer, vars);
+  }
+}
+
+class DeleteMovie {
+  String name = "deleteMovie";
+  DeleteMovie({required this.dataConnect});
+  DeleteMovieVariablesBuilder ref({
+    required String id,
+  }) {
+    return DeleteMovieVariablesBuilder(
+      dataConnect,
+      id: id,
+    );
   }
 
   FirebaseDataConnect dataConnect;
@@ -25,6 +41,7 @@ class DeleteMovie {
 class DeleteMovieMovieDelete {
   String id;
 
+  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   DeleteMovieMovieDelete.fromJson(Map<String, dynamic> json)
       : id = nativeFromJson<String>(json['id']) {}
 
@@ -38,14 +55,13 @@ class DeleteMovieMovieDelete {
 
   DeleteMovieMovieDelete({
     required this.id,
-  }) {
-    // TODO: Only show this if there are optional fields.
-  }
+  });
 }
 
 class DeleteMovieData {
   DeleteMovieMovieDelete? movie_delete;
 
+  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   DeleteMovieData.fromJson(Map<String, dynamic> json) {
     movie_delete = json['movie_delete'] == null
         ? null
@@ -64,14 +80,13 @@ class DeleteMovieData {
 
   DeleteMovieData({
     this.movie_delete,
-  }) {
-    // TODO: Only show this if there are optional fields.
-  }
+  });
 }
 
 class DeleteMovieVariables {
   String id;
 
+  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   DeleteMovieVariables.fromJson(Map<String, dynamic> json)
       : id = nativeFromJson<String>(json['id']) {}
 
@@ -85,7 +100,5 @@ class DeleteMovieVariables {
 
   DeleteMovieVariables({
     required this.id,
-  }) {
-    // TODO: Only show this if there are optional fields.
-  }
+  });
 }

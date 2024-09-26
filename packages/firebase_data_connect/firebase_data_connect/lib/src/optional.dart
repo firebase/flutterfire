@@ -78,13 +78,18 @@ dynamic nativeToJson<T>(T type) {
   throw UnimplementedError('This type is unimplemented: ${type.runtimeType}');
 }
 
-T nativeFromJson<T>(String json) {
-  if (T == bool) return (json.toLowerCase() == 'true') as T;
-  if (T == int) return int.parse(json) as T;
-  if (T == double) return double.parse(json) as T;
-  if (T == num) return num.parse(json) as T;
-  if (T == String) return json as T;
-  if (T == DateTime) return DateTime.parse(json) as T;
-
+T nativeFromJson<T>(dynamic input) {
+  if ((input is bool && T == bool) ||
+      (input is int && T == int) ||
+      (input is double && T == double) ||
+      (input is num && input == num)) {
+    return input;
+  } else if (input is String) {
+    if (T == DateTime) {
+      return DateTime.parse(input) as T;
+    } else if (T == String) {
+      return input as T;
+    }
+  }
   throw UnimplementedError('This type is unimplemented: ${T.runtimeType}');
 }
