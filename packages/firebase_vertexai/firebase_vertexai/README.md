@@ -5,7 +5,7 @@ A Flutter plugin to use the [Vertex AI](https://firebase.google.com/docs/vertex-
 
 To learn more about Vertex AI, please visit the [website](https://cloud.google.com/vertex-ai)
 
-**Preview**: Vertex AI in Firebase is in Public Preview, which means that the product is not subject to any SLA or deprecation policy and could change in backwards-incompatible ways.
+**Generally Available**: Vertex AI in Firebase is now Generally Available (GA) and can be used in production apps
 
 ## Getting Started
 
