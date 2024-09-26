@@ -21,7 +21,7 @@ void runListenTests() {
       testWidgets('should be able to listen to the list of movies',
           (WidgetTester tester) async {
         final initialValue =
-            await MoviesConnector.instance.listMovies.ref().execute();
+            await MoviesConnector.instance.listMovies.ref().build().execute();
         expect(initialValue.data.movies.length, 0,
             reason: 'Initial movie list should be empty');
 
@@ -31,6 +31,7 @@ void runListenTests() {
 
         final listener = MoviesConnector.instance.listMovies
             .ref()
+            .build()
             .subscribe()
             .listen((value) {
           final movies = value.data.movies;
@@ -60,9 +61,10 @@ void runListenTests() {
               releaseYear: 1999,
               rating: 4.5,
             )
+            .build()
             .execute();
 
-        await MoviesConnector.instance.listMovies.ref().execute();
+        await MoviesConnector.instance.listMovies.ref().build().execute();
 
         // Wait for the listener to receive the movie update
         final bool hasListenerReceived = await hasBeenListened.future;

@@ -1,21 +1,38 @@
 part of movies;
 
-class ListThing {
-  String name = "ListThing";
-  ListThing({required this.dataConnect});
+class ListThingVariablesBuilder {
+  AnyValue? data;
 
+  FirebaseDataConnect dataConnect;
+
+  ListThingVariablesBuilder(
+    this.dataConnect, {
+    AnyValue? this.data,
+  });
   Deserializer<ListThingData> dataDeserializer = (String json) =>
       ListThingData.fromJson(jsonDecode(json) as Map<String, dynamic>);
   Serializer<ListThingVariables> varsSerializer =
       (ListThingVariables vars) => jsonEncode(vars.toJson());
-  QueryRef<ListThingData, ListThingVariables> ref({
-    dynamic? data,
-  }) {
+  QueryRef<ListThingData, ListThingVariables> build() {
     ListThingVariables vars = ListThingVariables(
-      data: AnyValue(data),
+      data: data,
     );
 
-    return dataConnect.query(this.name, dataDeserializer, varsSerializer, vars);
+    return dataConnect.query(
+        "ListThing", dataDeserializer, varsSerializer, vars);
+  }
+}
+
+class ListThing {
+  String name = "ListThing";
+  ListThing({required this.dataConnect});
+  ListThingVariablesBuilder ref({
+    dynamic? data,
+  }) {
+    return ListThingVariablesBuilder(
+      dataConnect,
+      data: data,
+    );
   }
 
   FirebaseDataConnect dataConnect;
@@ -24,6 +41,7 @@ class ListThing {
 class ListThingThings {
   AnyValue title;
 
+  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   ListThingThings.fromJson(Map<String, dynamic> json)
       : title = AnyValue.fromJson(json['title']) {}
 
@@ -37,14 +55,13 @@ class ListThingThings {
 
   ListThingThings({
     required this.title,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
-  }
+  });
 }
 
 class ListThingData {
   List<ListThingThings> things;
 
+  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   ListThingData.fromJson(Map<String, dynamic> json)
       : things = (json['things'] as List<dynamic>)
             .map((e) => ListThingThings.fromJson(e))
@@ -60,14 +77,13 @@ class ListThingData {
 
   ListThingData({
     required this.things,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
-  }
+  });
 }
 
 class ListThingVariables {
   AnyValue? data;
 
+  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   ListThingVariables.fromJson(Map<String, dynamic> json) {
     data = json['data'] == null ? null : AnyValue.fromJson(json['data']);
   }
@@ -84,7 +100,5 @@ class ListThingVariables {
 
   ListThingVariables({
     this.data,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
-  }
+  });
 }

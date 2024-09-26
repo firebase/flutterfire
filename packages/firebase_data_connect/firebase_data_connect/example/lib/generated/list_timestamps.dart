@@ -1,15 +1,27 @@
 part of movies;
 
-class ListTimestamps {
-  String name = "ListTimestamps";
-  ListTimestamps({required this.dataConnect});
+class ListTimestampsVariablesBuilder {
+  FirebaseDataConnect dataConnect;
 
+  ListTimestampsVariablesBuilder(
+    this.dataConnect,
+  );
   Deserializer<ListTimestampsData> dataDeserializer = (String json) =>
       ListTimestampsData.fromJson(jsonDecode(json) as Map<String, dynamic>);
 
-  QueryRef<ListTimestampsData, void> ref() {
+  QueryRef<ListTimestampsData, void> build() {
     return dataConnect.query(
-        this.name, dataDeserializer, emptySerializer, null);
+        "ListTimestamps", dataDeserializer, emptySerializer, null);
+  }
+}
+
+class ListTimestamps {
+  String name = "ListTimestamps";
+  ListTimestamps({required this.dataConnect});
+  ListTimestampsVariablesBuilder ref() {
+    return ListTimestampsVariablesBuilder(
+      dataConnect,
+    );
   }
 
   FirebaseDataConnect dataConnect;
@@ -20,6 +32,7 @@ class ListTimestampsTimestampHolders {
 
   DateTime? date;
 
+  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   ListTimestampsTimestampHolders.fromJson(Map<String, dynamic> json)
       : timestamp = Timestamp.fromJson(json['timestamp']) {
     date = json['date'] == null ? null : nativeFromJson<DateTime>(json['date']);
@@ -40,14 +53,13 @@ class ListTimestampsTimestampHolders {
   ListTimestampsTimestampHolders({
     required this.timestamp,
     this.date,
-  }) {
-    // TODO: Only show this if there are optional fields.
-  }
+  });
 }
 
 class ListTimestampsData {
   List<ListTimestampsTimestampHolders> timestampHolders;
 
+  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   ListTimestampsData.fromJson(Map<String, dynamic> json)
       : timestampHolders = (json['timestampHolders'] as List<dynamic>)
             .map((e) => ListTimestampsTimestampHolders.fromJson(e))
@@ -63,7 +75,5 @@ class ListTimestampsData {
 
   ListTimestampsData({
     required this.timestampHolders,
-  }) {
-    // TODO: Only show this if there are optional fields.
-  }
+  });
 }

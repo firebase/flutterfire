@@ -74,9 +74,13 @@ void main() {
     });
 
     test('nativeFromJson correctly deserializes primitive types', () {
-      expect(nativeFromJson<int>('42'), equals(42));
-      expect(nativeFromJson<bool>('true'), equals(true));
+      expect(nativeFromJson<String>('42'), equals('42'));
+      expect(nativeFromJson<bool>(true), equals(true));
       expect(nativeFromJson<String>('Test'), equals('Test'));
+    });
+    test('nativeFromJson correctly deserializes DateTime strings', () {
+      expect(nativeFromJson<DateTime>('2024-01-01'),
+          equals(DateTime.parse('2024-01-01')));
     });
 
     test('nativeToJson throws UnimplementedError for unsupported types', () {

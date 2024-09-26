@@ -3,14 +3,6 @@ library movies;
 import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'dart:convert';
 
-part 'list_movies.dart';
-
-part 'list_movies_by_partial_title.dart';
-
-part 'list_persons.dart';
-
-part 'list_thing.dart';
-
 part 'add_person.dart';
 
 part 'add_director_to_movie.dart';
@@ -29,25 +21,17 @@ part 'thing.dart';
 
 part 'seed_data.dart';
 
+part 'list_movies.dart';
+
+part 'list_movies_by_partial_title.dart';
+
+part 'list_persons.dart';
+
+part 'list_thing.dart';
+
 part 'list_timestamps.dart';
 
 class MoviesConnector {
-  ListMovies get listMovies {
-    return ListMovies(dataConnect: dataConnect);
-  }
-
-  ListMoviesByPartialTitle get listMoviesByPartialTitle {
-    return ListMoviesByPartialTitle(dataConnect: dataConnect);
-  }
-
-  ListPersons get listPersons {
-    return ListPersons(dataConnect: dataConnect);
-  }
-
-  ListThing get listThing {
-    return ListThing(dataConnect: dataConnect);
-  }
-
   AddPerson get addPerson {
     return AddPerson(dataConnect: dataConnect);
   }
@@ -84,6 +68,22 @@ class MoviesConnector {
     return SeedData(dataConnect: dataConnect);
   }
 
+  ListMovies get listMovies {
+    return ListMovies(dataConnect: dataConnect);
+  }
+
+  ListMoviesByPartialTitle get listMoviesByPartialTitle {
+    return ListMoviesByPartialTitle(dataConnect: dataConnect);
+  }
+
+  ListPersons get listPersons {
+    return ListPersons(dataConnect: dataConnect);
+  }
+
+  ListThing get listThing {
+    return ListThing(dataConnect: dataConnect);
+  }
+
   ListTimestamps get listTimestamps {
     return ListTimestamps(dataConnect: dataConnect);
   }
@@ -97,8 +97,9 @@ class MoviesConnector {
   MoviesConnector({required this.dataConnect});
   static MoviesConnector get instance {
     return MoviesConnector(
-        dataConnect:
-            FirebaseDataConnect.instanceFor(connectorConfig: connectorConfig));
+        dataConnect: FirebaseDataConnect.instanceFor(
+            connectorConfig: connectorConfig,
+            sdkType: CallerSDKType.generated));
   }
 
   FirebaseDataConnect dataConnect;

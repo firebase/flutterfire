@@ -1,20 +1,27 @@
 part of movies;
 
-class CreateMovie {
-  String name = "createMovie";
-  CreateMovie({required this.dataConnect});
+class CreateMovieVariablesBuilder {
+  String title;
+  int releaseYear;
+  String genre;
+  double? rating;
+  String? description;
 
+  FirebaseDataConnect dataConnect;
+
+  CreateMovieVariablesBuilder(
+    this.dataConnect, {
+    required String this.title,
+    required int this.releaseYear,
+    required String this.genre,
+    double? this.rating,
+    String? this.description,
+  });
   Deserializer<CreateMovieData> dataDeserializer = (String json) =>
       CreateMovieData.fromJson(jsonDecode(json) as Map<String, dynamic>);
   Serializer<CreateMovieVariables> varsSerializer =
       (CreateMovieVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<CreateMovieData, CreateMovieVariables> ref({
-    required String title,
-    required int releaseYear,
-    required String genre,
-    double? rating,
-    String? description,
-  }) {
+  MutationRef<CreateMovieData, CreateMovieVariables> build() {
     CreateMovieVariables vars = CreateMovieVariables(
       title: title,
       releaseYear: releaseYear,
@@ -24,7 +31,28 @@ class CreateMovie {
     );
 
     return dataConnect.mutation(
-        this.name, dataDeserializer, varsSerializer, vars);
+        "createMovie", dataDeserializer, varsSerializer, vars);
+  }
+}
+
+class CreateMovie {
+  String name = "createMovie";
+  CreateMovie({required this.dataConnect});
+  CreateMovieVariablesBuilder ref({
+    required String title,
+    required int releaseYear,
+    required String genre,
+    double? rating,
+    String? description,
+  }) {
+    return CreateMovieVariablesBuilder(
+      dataConnect,
+      title: title,
+      releaseYear: releaseYear,
+      genre: genre,
+      rating: rating,
+      description: description,
+    );
   }
 
   FirebaseDataConnect dataConnect;
@@ -33,6 +61,7 @@ class CreateMovie {
 class CreateMovieMovieInsert {
   String id;
 
+  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   CreateMovieMovieInsert.fromJson(Map<String, dynamic> json)
       : id = nativeFromJson<String>(json['id']) {}
 
@@ -46,14 +75,13 @@ class CreateMovieMovieInsert {
 
   CreateMovieMovieInsert({
     required this.id,
-  }) {
-    // TODO: Only show this if there are optional fields.
-  }
+  });
 }
 
 class CreateMovieData {
   CreateMovieMovieInsert movie_insert;
 
+  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   CreateMovieData.fromJson(Map<String, dynamic> json)
       : movie_insert = CreateMovieMovieInsert.fromJson(json['movie_insert']) {}
 
@@ -67,9 +95,7 @@ class CreateMovieData {
 
   CreateMovieData({
     required this.movie_insert,
-  }) {
-    // TODO: Only show this if there are optional fields.
-  }
+  });
 }
 
 class CreateMovieVariables {
@@ -83,6 +109,7 @@ class CreateMovieVariables {
 
   String? description;
 
+  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   CreateMovieVariables.fromJson(Map<String, dynamic> json)
       : title = nativeFromJson<String>(json['title']),
         releaseYear = nativeFromJson<int>(json['releaseYear']),
@@ -121,7 +148,5 @@ class CreateMovieVariables {
     required this.genre,
     this.rating,
     this.description,
-  }) {
-    // TODO: Only show this if there are optional fields.
-  }
+  });
 }
