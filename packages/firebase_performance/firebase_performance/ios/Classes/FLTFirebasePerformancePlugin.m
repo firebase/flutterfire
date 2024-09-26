@@ -4,8 +4,6 @@
 
 #import "FLTFirebasePerformancePlugin.h"
 
-#import <Firebase/Firebase.h>
-
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 
 NSString *const kFLTFirebasePerformanceChannelName = @"plugins.flutter.io/firebase_performance";

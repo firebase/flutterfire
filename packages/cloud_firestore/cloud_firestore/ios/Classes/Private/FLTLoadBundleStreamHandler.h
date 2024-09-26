@@ -18,7 +18,7 @@
 #import <Flutter/Flutter.h>
 #endif
 
-#import <Firebase/Firebase.h>
+@import FirebaseFirestore;
 
 #import <Foundation/Foundation.h>
 
