@@ -23,14 +23,14 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('Content tests', () {
     test('constructor', () {
-      final content = Content(
-          'user', [TextPart('Test'), DataPart('image/png', Uint8List(0))]);
+      final content = Content('user',
+          [TextPart('Test'), InlineDataPart('image/png', Uint8List(0))]);
       expect(content.role, 'user');
       expect(content.parts[0], isA<TextPart>());
       expect((content.parts[0] as TextPart).text, 'Test');
-      expect(content.parts[1], isA<DataPart>());
-      expect((content.parts[1] as DataPart).mimeType, 'image/png');
-      expect((content.parts[1] as DataPart).bytes.length, 0);
+      expect(content.parts[1], isA<InlineDataPart>());
+      expect((content.parts[1] as InlineDataPart).mimeType, 'image/png');
+      expect((content.parts[1] as InlineDataPart).bytes.length, 0);
     });
 
     test('text()', () {
@@ -40,21 +40,22 @@ void main() {
     });
 
     test('data()', () {
-      final content = Content('user', [DataPart('image/png', Uint8List(0))]);
-      expect(content.parts[0], isA<DataPart>());
+      final content =
+          Content('user', [InlineDataPart('image/png', Uint8List(0))]);
+      expect(content.parts[0], isA<InlineDataPart>());
     });
 
     test('multi()', () {
-      final content = Content(
-          'user', [TextPart('Test'), DataPart('image/png', Uint8List(0))]);
+      final content = Content('user',
+          [TextPart('Test'), InlineDataPart('image/png', Uint8List(0))]);
       expect(content.parts.length, 2);
       expect(content.parts[0], isA<TextPart>());
-      expect(content.parts[1], isA<DataPart>());
+      expect(content.parts[1], isA<InlineDataPart>());
     });
 
     test('toJson', () {
-      final content = Content(
-          'user', [TextPart('Test'), DataPart('image/png', Uint8List(0))]);
+      final content = Content('user',
+          [TextPart('Test'), InlineDataPart('image/png', Uint8List(0))]);
       final json = content.toJson();
       expect(json['role'], 'user');
       expect((json['parts']! as List).length, 2);
@@ -87,7 +88,7 @@ void main() {
     });
 
     test('DataPart toJson', () {
-      final part = DataPart('image/png', Uint8List(0));
+      final part = InlineDataPart('image/png', Uint8List(0));
       final json = part.toJson();
       expect((json as Map)['inlineData']['mimeType'], 'image/png');
       expect(json['inlineData']['data'], '');

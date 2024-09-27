@@ -442,8 +442,8 @@ class _ChatWidgetState extends State<ChatWidget> {
         Content.multi([
           TextPart(message),
           // The only accepted mime types are image/*.
-          DataPart('image/jpeg', catBytes.buffer.asUint8List()),
-          DataPart('image/jpeg', sconeBytes.buffer.asUint8List()),
+          InlineDataPart('image/jpeg', catBytes.buffer.asUint8List()),
+          InlineDataPart('image/jpeg', sconeBytes.buffer.asUint8List()),
         ]),
       ];
       _generatedContent.add(
