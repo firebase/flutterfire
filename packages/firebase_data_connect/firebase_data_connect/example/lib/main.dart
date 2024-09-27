@@ -190,8 +190,8 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
                     title: title,
                     releaseYear: _releaseYearDate.year,
                     genre: genre,
-                    rating: _rating,
                   )
+                  .rating(_rating)
                   .build();
               try {
                 await ref.execute();

@@ -1,21 +1,25 @@
 part of movies;
 
 class ListThingVariablesBuilder {
-  AnyValue? data;
+  Optional<AnyValue> _data =
+      Optional.optional(AnyValue.fromJson, defaultSerializer);
 
   FirebaseDataConnect dataConnect;
+  ListThingVariablesBuilder data(AnyValue? t) {
+    this._data.value = t;
+    return this;
+  }
 
   ListThingVariablesBuilder(
-    this.dataConnect, {
-    AnyValue? this.data,
-  });
-  Deserializer<ListThingData> dataDeserializer = (String json) =>
-      ListThingData.fromJson(jsonDecode(json) as Map<String, dynamic>);
+    this.dataConnect,
+  );
+  Deserializer<ListThingData> dataDeserializer =
+      (dynamic json) => ListThingData.fromJson(jsonDecode(json));
   Serializer<ListThingVariables> varsSerializer =
       (ListThingVariables vars) => jsonEncode(vars.toJson());
   QueryRef<ListThingData, ListThingVariables> build() {
     ListThingVariables vars = ListThingVariables(
-      data: data,
+      data: _data,
     );
 
     return dataConnect.query(
@@ -26,12 +30,9 @@ class ListThingVariablesBuilder {
 class ListThing {
   String name = "ListThing";
   ListThing({required this.dataConnect});
-  ListThingVariablesBuilder ref({
-    dynamic? data,
-  }) {
+  ListThingVariablesBuilder ref() {
     return ListThingVariablesBuilder(
       dataConnect,
-      data: data,
     );
   }
 
@@ -41,8 +42,7 @@ class ListThing {
 class ListThingThings {
   AnyValue title;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  ListThingThings.fromJson(Map<String, dynamic> json)
+  ListThingThings.fromJson(dynamic json)
       : title = AnyValue.fromJson(json['title']) {}
 
   Map<String, dynamic> toJson() {
@@ -61,8 +61,7 @@ class ListThingThings {
 class ListThingData {
   List<ListThingThings> things;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  ListThingData.fromJson(Map<String, dynamic> json)
+  ListThingData.fromJson(dynamic json)
       : things = (json['things'] as List<dynamic>)
             .map((e) => ListThingThings.fromJson(e))
             .toList() {}
@@ -81,24 +80,24 @@ class ListThingData {
 }
 
 class ListThingVariables {
-  AnyValue? data;
+  late Optional<AnyValue> data;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   ListThingVariables.fromJson(Map<String, dynamic> json) {
-    data = json['data'] == null ? null : AnyValue.fromJson(json['data']);
+    data = Optional.optional(AnyValue.fromJson, defaultSerializer);
+    data.value = json['data'] == null ? null : AnyValue.fromJson(json['data']);
   }
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
-    if (data != null) {
-      json['data'] = data!.toJson();
+    if (data.state == OptionalState.set) {
+      json['data'] = data.toJson();
     }
 
     return json;
   }
 
   ListThingVariables({
-    this.data,
+    required this.data,
   });
 }

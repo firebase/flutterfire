@@ -9,8 +9,8 @@ class DeleteMovieVariablesBuilder {
     this.dataConnect, {
     required String this.id,
   });
-  Deserializer<DeleteMovieData> dataDeserializer = (String json) =>
-      DeleteMovieData.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  Deserializer<DeleteMovieData> dataDeserializer =
+      (dynamic json) => DeleteMovieData.fromJson(jsonDecode(json));
   Serializer<DeleteMovieVariables> varsSerializer =
       (DeleteMovieVariables vars) => jsonEncode(vars.toJson());
   MutationRef<DeleteMovieData, DeleteMovieVariables> build() {
@@ -41,8 +41,7 @@ class DeleteMovie {
 class DeleteMovieMovieDelete {
   String id;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  DeleteMovieMovieDelete.fromJson(Map<String, dynamic> json)
+  DeleteMovieMovieDelete.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']) {}
 
   Map<String, dynamic> toJson() {
@@ -61,12 +60,8 @@ class DeleteMovieMovieDelete {
 class DeleteMovieData {
   DeleteMovieMovieDelete? movie_delete;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  DeleteMovieData.fromJson(Map<String, dynamic> json) {
-    movie_delete = json['movie_delete'] == null
-        ? null
-        : DeleteMovieMovieDelete.fromJson(json['movie_delete']);
-  }
+  DeleteMovieData.fromJson(dynamic json)
+      : movie_delete = DeleteMovieMovieDelete.fromJson(json['movie_delete']) {}
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -79,14 +74,13 @@ class DeleteMovieData {
   }
 
   DeleteMovieData({
-    this.movie_delete,
+    required this.movie_delete,
   });
 }
 
 class DeleteMovieVariables {
   String id;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   DeleteMovieVariables.fromJson(Map<String, dynamic> json)
       : id = nativeFromJson<String>(json['id']) {}
 

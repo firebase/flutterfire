@@ -13,8 +13,8 @@ class ThingVariablesBuilder {
   ThingVariablesBuilder(
     this.dataConnect,
   );
-  Deserializer<ThingData> dataDeserializer = (String json) =>
-      ThingData.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  Deserializer<ThingData> dataDeserializer =
+      (dynamic json) => ThingData.fromJson(jsonDecode(json));
   Serializer<ThingVariables> varsSerializer =
       (ThingVariables vars) => jsonEncode(vars.toJson());
   MutationRef<ThingData, ThingVariables> build() {
@@ -42,8 +42,7 @@ class Thing {
 class ThingThingInsert {
   String id;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  ThingThingInsert.fromJson(Map<String, dynamic> json)
+  ThingThingInsert.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']) {}
 
   Map<String, dynamic> toJson() {
@@ -62,8 +61,7 @@ class ThingThingInsert {
 class ThingData {
   ThingThingInsert thing_insert;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  ThingData.fromJson(Map<String, dynamic> json)
+  ThingData.fromJson(dynamic json)
       : thing_insert = ThingThingInsert.fromJson(json['thing_insert']) {}
 
   Map<String, dynamic> toJson() {
@@ -82,8 +80,8 @@ class ThingData {
 class ThingVariables {
   late Optional<AnyValue> title;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   ThingVariables.fromJson(Map<String, dynamic> json) {
+    title = Optional.optional(AnyValue.fromJson, defaultSerializer);
     title.value =
         json['title'] == null ? null : AnyValue.fromJson(json['title']);
   }

@@ -9,8 +9,8 @@ class AddTimestampVariablesBuilder {
     this.dataConnect, {
     required Timestamp this.timestamp,
   });
-  Deserializer<AddTimestampData> dataDeserializer = (String json) =>
-      AddTimestampData.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  Deserializer<AddTimestampData> dataDeserializer =
+      (dynamic json) => AddTimestampData.fromJson(jsonDecode(json));
   Serializer<AddTimestampVariables> varsSerializer =
       (AddTimestampVariables vars) => jsonEncode(vars.toJson());
   MutationRef<AddTimestampData, AddTimestampVariables> build() {
@@ -41,8 +41,7 @@ class AddTimestamp {
 class AddTimestampTimestampHolderInsert {
   String id;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  AddTimestampTimestampHolderInsert.fromJson(Map<String, dynamic> json)
+  AddTimestampTimestampHolderInsert.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']) {}
 
   Map<String, dynamic> toJson() {
@@ -61,8 +60,7 @@ class AddTimestampTimestampHolderInsert {
 class AddTimestampData {
   AddTimestampTimestampHolderInsert timestampHolder_insert;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  AddTimestampData.fromJson(Map<String, dynamic> json)
+  AddTimestampData.fromJson(dynamic json)
       : timestampHolder_insert = AddTimestampTimestampHolderInsert.fromJson(
             json['timestampHolder_insert']) {}
 
@@ -82,7 +80,6 @@ class AddTimestampData {
 class AddTimestampVariables {
   Timestamp timestamp;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   AddTimestampVariables.fromJson(Map<String, dynamic> json)
       : timestamp = Timestamp.fromJson(json['timestamp']) {}
 

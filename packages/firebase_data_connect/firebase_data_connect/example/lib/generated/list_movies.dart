@@ -6,8 +6,8 @@ class ListMoviesVariablesBuilder {
   ListMoviesVariablesBuilder(
     this.dataConnect,
   );
-  Deserializer<ListMoviesData> dataDeserializer = (String json) =>
-      ListMoviesData.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  Deserializer<ListMoviesData> dataDeserializer =
+      (dynamic json) => ListMoviesData.fromJson(jsonDecode(json));
 
   QueryRef<ListMoviesData, void> build() {
     return dataConnect.query(
@@ -36,16 +36,13 @@ class ListMoviesMovies {
 
   double? rating;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  ListMoviesMovies.fromJson(Map<String, dynamic> json)
+  ListMoviesMovies.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']),
         title = nativeFromJson<String>(json['title']),
         directed_by = (json['directed_by'] as List<dynamic>)
             .map((e) => ListMoviesMoviesDirectedBy.fromJson(e))
-            .toList() {
-    rating =
-        json['rating'] == null ? null : nativeFromJson<double>(json['rating']);
-  }
+            .toList(),
+        rating = nativeFromJson<double>(json['rating']) {}
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -67,15 +64,14 @@ class ListMoviesMovies {
     required this.id,
     required this.title,
     required this.directed_by,
-    this.rating,
+    required this.rating,
   });
 }
 
 class ListMoviesMoviesDirectedBy {
   String name;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  ListMoviesMoviesDirectedBy.fromJson(Map<String, dynamic> json)
+  ListMoviesMoviesDirectedBy.fromJson(dynamic json)
       : name = nativeFromJson<String>(json['name']) {}
 
   Map<String, dynamic> toJson() {
@@ -94,8 +90,7 @@ class ListMoviesMoviesDirectedBy {
 class ListMoviesData {
   List<ListMoviesMovies> movies;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  ListMoviesData.fromJson(Map<String, dynamic> json)
+  ListMoviesData.fromJson(dynamic json)
       : movies = (json['movies'] as List<dynamic>)
             .map((e) => ListMoviesMovies.fromJson(e))
             .toList() {}
