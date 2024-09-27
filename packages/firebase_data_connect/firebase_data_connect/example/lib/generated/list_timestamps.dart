@@ -1,16 +1,16 @@
 part of movies;
 
 class ListTimestampsVariablesBuilder {
-  FirebaseDataConnect dataConnect;
+  FirebaseDataConnect _dataConnect;
 
   ListTimestampsVariablesBuilder(
-    this.dataConnect,
+    this._dataConnect,
   );
   Deserializer<ListTimestampsData> dataDeserializer =
       (dynamic json) => ListTimestampsData.fromJson(jsonDecode(json));
 
   QueryRef<ListTimestampsData, void> build() {
-    return dataConnect.query(
+    return _dataConnect.query(
         "ListTimestamps", dataDeserializer, emptySerializer, null);
   }
 }

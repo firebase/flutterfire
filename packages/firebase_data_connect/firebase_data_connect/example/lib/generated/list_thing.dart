@@ -4,14 +4,14 @@ class ListThingVariablesBuilder {
   Optional<AnyValue> _data =
       Optional.optional(AnyValue.fromJson, defaultSerializer);
 
-  FirebaseDataConnect dataConnect;
+  FirebaseDataConnect _dataConnect;
   ListThingVariablesBuilder data(AnyValue? t) {
     this._data.value = t;
     return this;
   }
 
   ListThingVariablesBuilder(
-    this.dataConnect,
+    this._dataConnect,
   );
   Deserializer<ListThingData> dataDeserializer =
       (dynamic json) => ListThingData.fromJson(jsonDecode(json));
@@ -22,7 +22,7 @@ class ListThingVariablesBuilder {
       data: _data,
     );
 
-    return dataConnect.query(
+    return _dataConnect.query(
         "ListThing", dataDeserializer, varsSerializer, vars);
   }
 }

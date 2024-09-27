@@ -3,10 +3,10 @@ part of movies;
 class ListMoviesByPartialTitleVariablesBuilder {
   String input;
 
-  FirebaseDataConnect dataConnect;
+  FirebaseDataConnect _dataConnect;
 
   ListMoviesByPartialTitleVariablesBuilder(
-    this.dataConnect, {
+    this._dataConnect, {
     required String this.input,
   });
   Deserializer<ListMoviesByPartialTitleData> dataDeserializer =
@@ -19,7 +19,7 @@ class ListMoviesByPartialTitleVariablesBuilder {
       input: input,
     );
 
-    return dataConnect.query(
+    return _dataConnect.query(
         "ListMoviesByPartialTitle", dataDeserializer, varsSerializer, vars);
   }
 }

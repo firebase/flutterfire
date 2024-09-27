@@ -5,7 +5,7 @@ class AddDirectorToMovieVariablesBuilder {
       AddDirectorToMovieVariablesPersonId.fromJson, defaultSerializer);
   Optional<String> _movieId = Optional.optional(nativeFromJson, nativeToJson);
 
-  FirebaseDataConnect dataConnect;
+  FirebaseDataConnect _dataConnect;
   AddDirectorToMovieVariablesBuilder personId(
       AddDirectorToMovieVariablesPersonId? t) {
     this._personId.value = t;
@@ -18,7 +18,7 @@ class AddDirectorToMovieVariablesBuilder {
   }
 
   AddDirectorToMovieVariablesBuilder(
-    this.dataConnect,
+    this._dataConnect,
   );
   Deserializer<AddDirectorToMovieData> dataDeserializer =
       (dynamic json) => AddDirectorToMovieData.fromJson(jsonDecode(json));
@@ -30,7 +30,7 @@ class AddDirectorToMovieVariablesBuilder {
       movieId: _movieId,
     );
 
-    return dataConnect.mutation(
+    return _dataConnect.mutation(
         "addDirectorToMovie", dataDeserializer, varsSerializer, vars);
   }
 }

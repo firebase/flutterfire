@@ -1,16 +1,16 @@
 part of movies;
 
 class SeedMoviesVariablesBuilder {
-  FirebaseDataConnect dataConnect;
+  FirebaseDataConnect _dataConnect;
 
   SeedMoviesVariablesBuilder(
-    this.dataConnect,
+    this._dataConnect,
   );
   Deserializer<SeedMoviesData> dataDeserializer =
       (dynamic json) => SeedMoviesData.fromJson(jsonDecode(json));
 
   MutationRef<SeedMoviesData, void> build() {
-    return dataConnect.mutation(
+    return _dataConnect.mutation(
         "seedMovies", dataDeserializer, emptySerializer, null);
   }
 }

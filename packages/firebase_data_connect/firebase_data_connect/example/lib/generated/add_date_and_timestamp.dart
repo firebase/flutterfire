@@ -4,10 +4,10 @@ class AddDateAndTimestampVariablesBuilder {
   DateTime date;
   Timestamp timestamp;
 
-  FirebaseDataConnect dataConnect;
+  FirebaseDataConnect _dataConnect;
 
   AddDateAndTimestampVariablesBuilder(
-    this.dataConnect, {
+    this._dataConnect, {
     required DateTime this.date,
     required Timestamp this.timestamp,
   });
@@ -21,7 +21,7 @@ class AddDateAndTimestampVariablesBuilder {
       timestamp: timestamp,
     );
 
-    return dataConnect.mutation(
+    return _dataConnect.mutation(
         "addDateAndTimestamp", dataDeserializer, varsSerializer, vars);
   }
 }

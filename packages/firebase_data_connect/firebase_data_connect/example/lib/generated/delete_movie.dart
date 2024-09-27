@@ -3,10 +3,10 @@ part of movies;
 class DeleteMovieVariablesBuilder {
   String id;
 
-  FirebaseDataConnect dataConnect;
+  FirebaseDataConnect _dataConnect;
 
   DeleteMovieVariablesBuilder(
-    this.dataConnect, {
+    this._dataConnect, {
     required String this.id,
   });
   Deserializer<DeleteMovieData> dataDeserializer =
@@ -18,7 +18,7 @@ class DeleteMovieVariablesBuilder {
       id: id,
     );
 
-    return dataConnect.mutation(
+    return _dataConnect.mutation(
         "deleteMovie", dataDeserializer, varsSerializer, vars);
   }
 }

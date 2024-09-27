@@ -3,14 +3,14 @@ part of movies;
 class AddPersonVariablesBuilder {
   Optional<String> _name = Optional.optional(nativeFromJson, nativeToJson);
 
-  FirebaseDataConnect dataConnect;
+  FirebaseDataConnect _dataConnect;
   AddPersonVariablesBuilder name(String? t) {
     this._name.value = t;
     return this;
   }
 
   AddPersonVariablesBuilder(
-    this.dataConnect,
+    this._dataConnect,
   );
   Deserializer<AddPersonData> dataDeserializer =
       (dynamic json) => AddPersonData.fromJson(jsonDecode(json));
@@ -21,7 +21,7 @@ class AddPersonVariablesBuilder {
       name: _name,
     );
 
-    return dataConnect.mutation(
+    return _dataConnect.mutation(
         "addPerson", dataDeserializer, varsSerializer, vars);
   }
 }

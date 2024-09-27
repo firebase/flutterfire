@@ -4,14 +4,14 @@ class ThingVariablesBuilder {
   Optional<AnyValue> _title =
       Optional.optional(AnyValue.fromJson, defaultSerializer);
 
-  FirebaseDataConnect dataConnect;
+  FirebaseDataConnect _dataConnect;
   ThingVariablesBuilder title(AnyValue t) {
     this._title.value = t;
     return this;
   }
 
   ThingVariablesBuilder(
-    this.dataConnect,
+    this._dataConnect,
   );
   Deserializer<ThingData> dataDeserializer =
       (dynamic json) => ThingData.fromJson(jsonDecode(json));
@@ -22,7 +22,7 @@ class ThingVariablesBuilder {
       title: _title,
     );
 
-    return dataConnect.mutation(
+    return _dataConnect.mutation(
         "thing", dataDeserializer, varsSerializer, vars);
   }
 }

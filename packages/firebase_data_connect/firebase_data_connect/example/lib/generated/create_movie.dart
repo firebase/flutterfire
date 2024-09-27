@@ -8,7 +8,7 @@ class CreateMovieVariablesBuilder {
   Optional<String> _description =
       Optional.optional(nativeFromJson, nativeToJson);
 
-  FirebaseDataConnect dataConnect;
+  FirebaseDataConnect _dataConnect;
   CreateMovieVariablesBuilder rating(double? t) {
     this._rating.value = t;
     return this;
@@ -20,7 +20,7 @@ class CreateMovieVariablesBuilder {
   }
 
   CreateMovieVariablesBuilder(
-    this.dataConnect, {
+    this._dataConnect, {
     required String this.title,
     required int this.releaseYear,
     required String this.genre,
@@ -38,7 +38,7 @@ class CreateMovieVariablesBuilder {
       description: _description,
     );
 
-    return dataConnect.mutation(
+    return _dataConnect.mutation(
         "createMovie", dataDeserializer, varsSerializer, vars);
   }
 }

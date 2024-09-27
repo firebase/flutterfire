@@ -3,10 +3,10 @@ part of movies;
 class AddTimestampVariablesBuilder {
   Timestamp timestamp;
 
-  FirebaseDataConnect dataConnect;
+  FirebaseDataConnect _dataConnect;
 
   AddTimestampVariablesBuilder(
-    this.dataConnect, {
+    this._dataConnect, {
     required Timestamp this.timestamp,
   });
   Deserializer<AddTimestampData> dataDeserializer =
@@ -18,7 +18,7 @@ class AddTimestampVariablesBuilder {
       timestamp: timestamp,
     );
 
-    return dataConnect.mutation(
+    return _dataConnect.mutation(
         "addTimestamp", dataDeserializer, varsSerializer, vars);
   }
 }

@@ -1,16 +1,16 @@
 part of movies;
 
 class ListMoviesVariablesBuilder {
-  FirebaseDataConnect dataConnect;
+  FirebaseDataConnect _dataConnect;
 
   ListMoviesVariablesBuilder(
-    this.dataConnect,
+    this._dataConnect,
   );
   Deserializer<ListMoviesData> dataDeserializer =
       (dynamic json) => ListMoviesData.fromJson(jsonDecode(json));
 
   QueryRef<ListMoviesData, void> build() {
-    return dataConnect.query(
+    return _dataConnect.query(
         "ListMovies", dataDeserializer, emptySerializer, null);
   }
 }

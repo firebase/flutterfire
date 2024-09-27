@@ -26,7 +26,7 @@ class Optional<T> {
   DynamicSerializer<T> serializer;
 
   /// Deserializer for value.
-  Deserializer<T> deserializer;
+  DynamicDeserializer<T> deserializer;
 
   /// Current value.
   T? _value;
@@ -90,7 +90,8 @@ T nativeFromJson<T>(dynamic input) {
   throw UnimplementedError('This type is unimplemented: ${T.runtimeType}');
 }
 
-Deserializer<List<T>> listDeserializer<T>(Deserializer<T> deserializer) {
+DynamicDeserializer<List<T>> listDeserializer<T>(
+    DynamicDeserializer<T> deserializer) {
   return (dynamic data) =>
       (data as List<T>).map((e) => deserializer(e)).toList();
 }
