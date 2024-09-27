@@ -74,7 +74,7 @@ class DeleteMovieData {
   }
 
   DeleteMovieData({
-    required this.movie_delete,
+    this.movie_delete,
   });
 }
 

@@ -74,7 +74,7 @@ class ListMoviesByPartialTitleMovies {
     required this.id,
     required this.title,
     required this.genre,
-    required this.rating,
+    this.rating,
   });
 }
 

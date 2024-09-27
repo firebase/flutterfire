@@ -50,7 +50,7 @@ class ListTimestampsTimestampHolders {
 
   ListTimestampsTimestampHolders({
     required this.timestamp,
-    required this.date,
+    this.date,
   });
 }
 

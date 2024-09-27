@@ -64,7 +64,7 @@ class ListMoviesMovies {
     required this.id,
     required this.title,
     required this.directed_by,
-    required this.rating,
+    this.rating,
   });
 }
 
