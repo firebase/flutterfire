@@ -214,7 +214,10 @@ final class Candidate {
 final class SafetyRating {
   /// Constructor
   SafetyRating(this.category, this.probability,
-      {this.probabilityScore, this.blocked, this.severity, this.severityScore});
+      {this.probabilityScore,
+      this.isBlocked,
+      this.severity,
+      this.severityScore});
 
   /// The category for this rating.
   final HarmCategory category;
@@ -226,7 +229,7 @@ final class SafetyRating {
   final double? probabilityScore;
 
   /// Whether it's blocked
-  final bool? blocked;
+  final bool? isBlocked;
 
   /// The severity of harm for this content.
   final HarmSeverity? severity;
@@ -793,7 +796,7 @@ SafetyRating _parseSafetyRating(Object? jsonObject) {
       SafetyRating(HarmCategory._parseValue(category),
           HarmProbability._parseValue(probability),
           probabilityScore: probabilityScore,
-          blocked: blocked,
+          isBlocked: blocked,
           severity: HarmSeverity._parseValue(severity),
           severityScore: severityScore),
     _ => throw unhandledFormat('SafetyRating', jsonObject),
