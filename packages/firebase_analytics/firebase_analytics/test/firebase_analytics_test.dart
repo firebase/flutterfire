@@ -136,10 +136,74 @@ void main() {
         expect(analytics!.logEvent(name: 'firebase_foo'), throwsArgumentError);
       });
 
+      test('reject events with wrong param value', () async {
+        expect(
+          () => analytics!.logEvent(
+            name: 'test_event',
+            parameters: {
+              'a': true,
+            },
+          ),
+          throwsAssertionError,
+        );
+      });
+
+      test('reject events with wrong param items', () async {
+        expect(
+          () => analytics!.logEvent(
+            name: 'test_event',
+            parameters: {
+              'items': true,
+            },
+          ),
+          throwsAssertionError,
+        );
+      });
+
+      test('reject events with wrong param items values', () async {
+        expect(
+          () => analytics!.logEvent(
+            name: 'test_event',
+            parameters: {
+              'items': [
+                {
+                  'a': 123,
+                },
+                true,
+              ],
+            },
+          ),
+          throwsAssertionError,
+        );
+      });
+
+      test('reject events with wrong param items items', () async {
+        expect(
+          () => analytics!.logEvent(
+            name: 'test_event',
+            parameters: {
+              'items': [
+                {
+                  'items': [],
+                },
+              ],
+            },
+          ),
+          throwsAssertionError,
+        );
+      });
+
       test('custom event with correct parameters', () async {
         await analytics!.logEvent(
           name: 'test-event',
-          parameters: {'a': 'b'},
+          parameters: {
+            'a': 'b',
+            'items': [
+              {
+                'c': 'd',
+              },
+            ],
+          },
         );
         expect(
           methodCallLog,
@@ -148,7 +212,14 @@ void main() {
               'Analytics#logEvent',
               arguments: {
                 'eventName': 'test-event',
-                'parameters': {'a': 'b'},
+                'parameters': {
+                  'a': 'b',
+                  'items': [
+                    {
+                      'c': 'd',
+                    },
+                  ],
+                },
               },
             ),
           ],

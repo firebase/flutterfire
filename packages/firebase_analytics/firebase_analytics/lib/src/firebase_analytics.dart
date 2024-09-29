@@ -104,7 +104,10 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   }) async {
     _logEventNameValidation(name);
 
-    _assertParameterTypesAreCorrect(parameters);
+    _assertParameterTypesAreCorrect(
+      parameters,
+      allowItems: true,
+    );
 
     await _delegate.logEvent(
       name: name,
@@ -1385,14 +1388,37 @@ List<Map<String, dynamic>>? _marshalItems(List<AnalyticsEventItem>? items) {
 }
 
 void _assertParameterTypesAreCorrect(
-  Map<String, Object>? parameters,
-) =>
-    parameters?.forEach((key, value) {
+  Map<String, Object>? parameters, {
+  bool allowItems = false,
+}) {
+  if (parameters == null) {
+    return;
+  }
+
+  for (final MapEntry(:key, :value) in parameters.entries) {
+    if (allowItems && key == _ITEMS) {
+      assert(value is List, "$_ITEMS must be a 'List'");
+
+      if (value is List) {
+        for (final item in value) {
+          assert(
+            item is Map<String, Object>,
+            "item in $_ITEMS must be a 'Map<String, Object>'",
+          );
+
+          if (item is Map<String, Object>) {
+            _assertParameterTypesAreCorrect(item);
+          }
+        }
+      }
+    } else {
       assert(
         value is String || value is num,
         "'string' OR 'number' must be set as the value of the parameter: $key. $value found instead",
       );
-    });
+    }
+  }
+}
 
 void _assertItemsParameterTypesAreCorrect(List<AnalyticsEventItem>? items) =>
     items?.forEach((item) {
