@@ -169,6 +169,53 @@ void main() {
         ),
       );
     });
+
+    test('with quota exceed', () {
+      const response = '''
+{
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Generate Content API requests per minute' and limit 'GenerateContent request limit per minute for a region' of service 'generativelanguage.googleapis.com' for consumer 'project_number:348715329010'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "generativelanguage.googleapis.com",
+          "consumer": "projects/348715329010",
+          "quota_limit_value": "0",
+          "quota_limit": "GenerateContentRequestsPerMinutePerProjectPerRegion",
+          "quota_location": "us-east2",
+          "quota_metric": "generativelanguage.googleapis.com/generate_content_requests"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quota#requesting_higher_quota"
+          }
+        ]
+      }
+    ]
+  }
+}
+''';
+      final decoded = jsonDecode(response) as Object;
+      expect(
+        () => parseGenerateContentResponse(decoded),
+        throwsA(
+          isA<QuotaExceeded>().having(
+            (e) => e.message,
+            'message',
+            startsWith('Quota exceeded for quota metric'),
+          ),
+        ),
+      );
+    });
   });
 
   group('parses successful GenerateContentResponse', () {
