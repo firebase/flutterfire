@@ -765,7 +765,6 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       }
 
       if (operator == 'in') {
-        assert(!hasIn, "You cannot use 'whereIn' filters more than once.");
         assert(
           !hasNotIn,
           "You cannot use 'in' filters with 'not-in' filters.",
