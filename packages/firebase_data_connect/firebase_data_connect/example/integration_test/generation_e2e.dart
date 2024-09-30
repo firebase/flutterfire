@@ -30,12 +30,13 @@ void runGenerationTest() {
 
       testWidgets('should have generated correct MutationRef',
           (WidgetTester tester) async {
-        final ref = MoviesConnector.instance.createMovie.ref(
-          genre: 'Action',
-          title: 'The Matrix',
-          releaseYear: 1999,
-          rating: 4.5,
-        );
+        final ref = MoviesConnector.instance.createMovie
+            .ref(
+              genre: 'Action',
+              title: 'The Matrix',
+              releaseYear: 1999,
+            )
+            .rating(4.5);
         expect(ref, isNotNull);
         expect(ref.build().execute, isNotNull);
       });
@@ -49,19 +50,18 @@ void runGenerationTest() {
 
       testWidgets('should have generated correct MutationRef using name',
           (WidgetTester tester) async {
-        final ref = MoviesConnector.instance.addPerson.ref(
-          name: 'Keanu Reeves',
-        );
+        final ref =
+            MoviesConnector.instance.addPerson.ref().name('Keanu Reeves');
         expect(ref, isNotNull);
         expect(ref.build().execute, isNotNull);
       });
 
       testWidgets('should have generated correct MutationRef using nested id',
           (WidgetTester tester) async {
-        final ref = MoviesConnector.instance.addDirectorToMovie.ref(
-          movieId: 'movieId',
-          personId: AddDirectorToMovieVariablesPersonId(id: 'personId'),
-        );
+        final ref = MoviesConnector.instance.addDirectorToMovie
+            .ref()
+            .movieId('movieId')
+            .personId(AddDirectorToMovieVariablesPersonId(id: 'personId'));
         expect(ref, isNotNull);
         expect(ref.build().execute, isNotNull);
       });

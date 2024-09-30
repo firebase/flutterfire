@@ -31,7 +31,7 @@ void main() {
       await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
 
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: 'test@mail.com', password: 'password');
+          email: 'test2451@mail.com', password: 'password');
     });
 
     runInstanceTests();
