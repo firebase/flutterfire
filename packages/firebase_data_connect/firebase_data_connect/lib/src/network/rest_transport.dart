@@ -112,6 +112,13 @@ class RestTransport implements DataConnectTransport {
                 ? DataConnectErrorCode.unauthorized
                 : DataConnectErrorCode.other,
             "Received a status code of ${r.statusCode} with a message '${message}'");
+      } else {
+        Map<String, dynamic> bodyJson =
+            jsonDecode(r.body) as Map<String, dynamic>;
+        if (bodyJson.containsKey("errors")) {
+          throw DataConnectError(
+              DataConnectErrorCode.other, bodyJson['errors'].toString());
+        }
       }
 
       /// The response we get is in the data field of the response

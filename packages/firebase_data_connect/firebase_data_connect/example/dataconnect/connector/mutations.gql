@@ -21,6 +21,7 @@ mutation addDateAndTimestamp($date: Date!, $timestamp: Timestamp!) @auth(level: 
 mutation seedMovies @auth(level: PUBLIC) {
   the_matrix: movie_insert(
     data: {
+      id: "09d5f835656c467787347668bbb44522"
       title: "The Matrix"
       releaseYear: 1999
       genre: "Sci-Fi"
@@ -70,6 +71,7 @@ mutation thing($title: Any! = "ABC") @auth(level: PUBLIC) {
 mutation seedData @auth(level: PUBLIC) {
   the_matrix: movie_insert(
     data: {
+      id: "09d5f835656c467787347668bbb44522"
       title: "The Matrix"
       releaseYear: 1999
       genre: "Action"
