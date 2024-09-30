@@ -220,7 +220,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     // If remoteNotification exists, it is the notification that opened the app.
     _initialNotification =
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
-      _initialNotificationID = remoteNotification[@"gcm.message_id"];
+    _initialNotificationID = remoteNotification[@"gcm.message_id"];
   }
   _initialNotificationGathered = YES;
   [self initialNotificationCallback];
