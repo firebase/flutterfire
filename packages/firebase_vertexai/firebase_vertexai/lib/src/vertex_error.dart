@@ -44,29 +44,24 @@ final class UnsupportedUserLocation implements VertexAIException {
   String get message => _message;
 }
 
-/// Exception thrown when the service api is not enabled.
+/// Exception thrown when the service API is not enabled.
 final class ServiceApiNotEnabled implements VertexAIException {
-  /// Constructor
-  ServiceApiNotEnabled(String projectId)
-      : _message = _messageWithProjectId(projectId);
+  ServiceApiNotEnabled(this._projectId);
 
-  final String _message;
+  final String _projectId;
 
-  static String _messageWithProjectId(String projectId) =>
+  @override
+  String get message =>
       'The Vertex AI in Firebase SDK requires the Vertex AI in Firebase API '
       '(`firebasevertexai.googleapis.com`) to be enabled in your Firebase project. Enable this API '
       'by visiting the Firebase Console at '
-      'https://console.firebase.google.com/$projectId/genai '
+      'https://console.firebase.google.com/$_projectId/genai '
       'and clicking "Get started". If you enabled this API recently, wait a few minutes for the '
       'action to propagate to our systems and then retry.';
-
-  @override
-  String get message => _message;
 }
 
-/// Exception thrown when the quota exceeded.
+/// Exception thrown when the quota is exceeded.
 final class QuotaExceeded implements VertexAIException {
-  /// Constructor
   QuotaExceeded(this.message);
   @override
   final String message;
