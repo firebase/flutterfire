@@ -44,6 +44,37 @@ final class UnsupportedUserLocation implements VertexAIException {
   String get message => _message;
 }
 
+/// Exception thrown when the service API is not enabled.
+final class ServiceApiNotEnabled implements VertexAIException {
+  // ignore: public_member_api_docs
+  ServiceApiNotEnabled(this._projectId);
+
+  final String _projectId;
+
+  @override
+  String get message =>
+      'The Vertex AI in Firebase SDK requires the Vertex AI in Firebase API '
+      '(`firebasevertexai.googleapis.com`) to be enabled in your Firebase project. Enable this API '
+      'by visiting the Firebase Console at '
+      'https://console.firebase.google.com/$_projectId/genai '
+      'and clicking "Get started". If you enabled this API recently, wait a few minutes for the '
+      'action to propagate to our systems and then retry.';
+
+  @override
+  String toString() => message;
+}
+
+/// Exception thrown when the quota is exceeded.
+final class QuotaExceeded implements VertexAIException {
+  // ignore: public_member_api_docs
+  QuotaExceeded(this.message);
+  @override
+  final String message;
+
+  @override
+  String toString() => message;
+}
+
 /// Exception thrown when the server failed to generate content.
 final class ServerException implements VertexAIException {
   /// Constructor
@@ -85,6 +116,22 @@ VertexAIException parseError(Object jsonObject) {
     } =>
       InvalidApiKey(message),
     {'message': UnsupportedUserLocation._message} => UnsupportedUserLocation(),
+    {'message': final String message} when message.contains('quota') =>
+      QuotaExceeded(message),
+    {
+      'message': final String _,
+      'status': 'PERMISSION_DENIED',
+      'details': [
+        ...,
+        {
+          'metadata': {
+            'service': 'firebasevertexai.googleapis.com',
+            'consumer': final String projectId,
+          }
+        },
+      ]
+    } =>
+      ServiceApiNotEnabled(projectId),
     {'message': final String message} => ServerException(message),
     _ => throw unhandledFormat('server error', jsonObject)
   };

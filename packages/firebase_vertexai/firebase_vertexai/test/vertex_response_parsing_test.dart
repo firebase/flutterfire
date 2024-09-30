@@ -16,6 +16,7 @@ import 'dart:convert';
 
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:firebase_vertexai/src/vertex_api.dart';
+import 'package:firebase_vertexai/src/vertex_error.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'utils/matchers.dart';
@@ -121,6 +122,96 @@ void main() {
             (e) => e.message,
             'message',
             startsWith('Response was blocked due to safety'),
+          ),
+        ),
+      );
+    });
+    test('with service api not enabled', () {
+      const response = '''
+{
+  "error": {
+    "code": 403,
+    "message": "Vertex AI in Firebase API has not been used in project test-project-id-1234 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/firebasevertexai.googleapis.com/overview?project=test-project-id-1234 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.",
+    "status": "PERMISSION_DENIED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Google developers console API activation",
+            "url": "https://console.developers.google.com/apis/api/firebasevertexai.googleapis.com/overview?project=test-project-id-1234"
+          }
+        ]
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "SERVICE_DISABLED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "firebasevertexai.googleapis.com",
+          "consumer": "projects/test-project-id-1234"
+        }
+      }
+    ]
+  }
+}
+''';
+      final decoded = jsonDecode(response) as Object;
+      expect(
+        () => parseGenerateContentResponse(decoded),
+        throwsA(
+          isA<ServiceApiNotEnabled>().having(
+            (e) => e.message,
+            'message',
+            startsWith(
+                'The Vertex AI in Firebase SDK requires the Vertex AI in Firebase API'),
+          ),
+        ),
+      );
+    });
+
+    test('with quota exceed', () {
+      const response = '''
+{
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Generate Content API requests per minute' and limit 'GenerateContent request limit per minute for a region' of service 'generativelanguage.googleapis.com' for consumer 'project_number:348715329010'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "generativelanguage.googleapis.com",
+          "consumer": "projects/348715329010",
+          "quota_limit_value": "0",
+          "quota_limit": "GenerateContentRequestsPerMinutePerProjectPerRegion",
+          "quota_location": "us-east2",
+          "quota_metric": "generativelanguage.googleapis.com/generate_content_requests"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quota#requesting_higher_quota"
+          }
+        ]
+      }
+    ]
+  }
+}
+''';
+      final decoded = jsonDecode(response) as Object;
+      expect(
+        () => parseGenerateContentResponse(decoded),
+        throwsA(
+          isA<QuotaExceeded>().having(
+            (e) => e.message,
+            'message',
+            startsWith('Quota exceeded for quota metric'),
           ),
         ),
       );
