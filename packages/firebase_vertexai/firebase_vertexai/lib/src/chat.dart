@@ -14,10 +14,10 @@
 
 import 'dart:async';
 
-import 'utils/mutex.dart';
 import 'api.dart';
 import 'content.dart';
 import 'model.dart';
+import 'utils/mutex.dart';
 
 /// A back-and-forth chat with a generative model.
 ///

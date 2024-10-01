@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export 'src/firebase_vertexai.dart' show FirebaseVertexAI;
 export 'src/api.dart'
     show
         BlockReason,
@@ -48,6 +47,7 @@ export 'src/error.dart'
         InvalidApiKey,
         ServerException,
         UnsupportedUserLocation;
+export 'src/firebase_vertexai.dart' show FirebaseVertexAI;
 export 'src/function_calling.dart'
     show
         FunctionCallingConfig,
