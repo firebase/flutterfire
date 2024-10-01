@@ -108,11 +108,12 @@ class _ChatWidgetState extends State<ChatWidget> {
     Map<String, Object?> arguments,
   ) async {
     // Possible external api call
-    // apiResponse = await requests.post(weather_api_url, data={'location': arguments['location']})
+    // apiResponse = await requests.post(weather_api_url, data={'location': arguments['location'], 'date': arguments['date']});
 
     // Mock up apiResponse
     final apiResponse = {
       'location': arguments['location'],
+      'date': arguments['date'],
       'temperature': 38,
       'chancePrecipitation': '56%',
       'cloudConditions': 'partly-cloudy',
@@ -129,6 +130,8 @@ class _ChatWidgetState extends State<ChatWidget> {
         description:
             'The city name of the location for which to get the weather.',
       ),
+      'date':
+          Schema.string(description: 'The date for which to get the weather.'),
     },
   );
 
@@ -529,7 +532,7 @@ class _ChatWidgetState extends State<ChatWidget> {
       _loading = true;
     });
     final functionCallChat = _functionCallModel.startChat();
-    const prompt = 'What is the weather like in Boston?';
+    const prompt = 'What is the weather like in Boston on 10/2 2024?';
 
     // Send the message to the generative model.
     var response = await functionCallChat.sendMessage(
