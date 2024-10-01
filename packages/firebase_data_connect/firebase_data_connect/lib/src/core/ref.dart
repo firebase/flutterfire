@@ -111,7 +111,6 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
           serializer(variables as Variables), this, res.data, null);
       return res;
     } on Exception catch (e) {
-      print(e);
       await _queryManager.triggerCallback<Data, Variables>(
           operationName, serializer(variables as Variables), this, null, e);
       rethrow;
@@ -124,7 +123,11 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
         .addQuery(operationName, variables, varsSerialized)
         .cast<QueryResult<Data, Variables>>();
     if (_queryManager.containsQuery(operationName, variables, varsSerialized)) {
-      this.execute().ignore();
+      try {
+        this.execute();
+      } catch (_) {
+        // Call to `execute` should properly pass the error to the Stream.
+      }
     }
     return res;
   }

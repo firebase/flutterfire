@@ -79,6 +79,15 @@ void main() {
       expect(nativeFromJson<bool>(true), equals(true));
       expect(nativeFromJson<String>('Test'), equals('Test'));
     });
+
+    // Since protobuf doesn't distinguish between int and double, we need to do the parsing outselves
+    test('nativeFromJson correctly matches int to int and double to double',
+        () {
+      double expectedDouble = 42;
+      int expectedInt = 42;
+      expect(nativeFromJson<double>(42), equals(expectedDouble));
+      expect(nativeFromJson<int>(expectedDouble), equals(expectedInt));
+    });
     test('nativeFromJson correctly deserializes DateTime strings', () {
       expect(nativeFromJson<DateTime>('2024-01-01'),
           equals(DateTime.parse('2024-01-01')));
