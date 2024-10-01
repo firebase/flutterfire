@@ -1,3 +1,11 @@
+## 6.0.8
+
+ - **FIX**(all,apple): use modular headers to import ([#13400](https://github.com/firebase/flutterfire/issues/13400)). ([d7d2d4b9](https://github.com/firebase/flutterfire/commit/d7d2d4b93e7c00226027fffde46699f3d5388a41))
+
+## 6.0.7
+
+ - Update a dependency to the latest release.
+
 ## 6.0.6
 
  - Update a dependency to the latest release.

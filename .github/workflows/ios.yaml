@@ -78,9 +78,6 @@ jobs:
         run: |
           sudo rm -rf \
             /usr/local/share/.cache \
-            /Users/runner/Library/Caches \
-            /Users/runner/Library/Developer/Xcode/DerivedData \
-            /Users/runner/Library/Developer/CoreSimulator/Caches \
             /opt/microsoft/msedge \
             /opt/microsoft/powershell \
             /opt/pipx \

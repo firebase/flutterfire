@@ -1,3 +1,11 @@
+## 5.13.2
+
+ - Update a dependency to the latest release.
+
+## 5.13.1
+
+ - Update a dependency to the latest release.
+
 ## 5.13.0
 
  - **FIX**: (auth) TypeError when converting ActionCodeSettings to JS ([#13260](https://github.com/firebase/flutterfire/issues/13260)). ([6969e48a](https://github.com/firebase/flutterfire/commit/6969e48a632a69bb071b80102d3cc2cfc53736a6))

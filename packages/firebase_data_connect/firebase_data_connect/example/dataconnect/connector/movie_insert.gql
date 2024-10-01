@@ -1,0 +1,210 @@
+# mutation {
+#   movie1: movie_insert(data: {
+#     id: "550e8400-e29b-41d4-a716-446655440000",
+#     title: "Inception",
+#     imageUrl: "https://firebasestorage.googleapis.com/v0/b/fdc-quickstart-web.appspot.com/o/movies%2Finception.jpg?alt=media&token=07b09781-b302-4623-a5c3-1956d0143168",
+#     releaseYear: 2010,
+#     genre: "sci-fi",
+#     rating: 8.8,
+#     description: "Dom Cobb (Leonardo DiCaprio) is a thief with the rare ability to enter people's dreams and steal their secrets from their subconscious. His skill has made him a valuable player in the world of corporate espionage but has also cost him everything he loves. Cobb gets a chance at redemption when he is offered a seemingly impossible task: plant an idea in someone's mind. If he succeeds, it will be the perfect crime, but a dangerous enemy anticipates Cobb's every move.",
+#     tags: ["thriller", "action"],
+#   })
+
+#   movie2: movie_insert(data: {
+#     id: "550e8400-e29b-41d4-a716-446655440001",
+#     title: "The Matrix",
+#     imageUrl: "https://firebasestorage.googleapis.com/v0/b/fdc-quickstart-web.appspot.com/o/movies%2Fthe_matrix.jpg?alt=media&token=4975645d-fef8-409e-84a5-bcc1046e2059",
+#     releaseYear: 1999,
+#     genre: "action",
+#     rating: 8.7,
+#     description: "Thomas Anderson, a computer programmer, discovers that the world is actually a simulation controlled by malevolent machines in a dystopian future. Known as Neo, he joins a group of underground rebels led by Morpheus to fight the machines and free humanity. Along the way, Neo learns to manipulate the simulated reality, uncovering his true destiny.",
+#     tags: ["sci-fi", "adventure"],
+#   })
+
+#   movie3: movie_insert(data: {
+#     id: "550e8400-e29b-41d4-a716-446655440002",
+#     title: "John Wick 4",
+#     imageUrl: "https://firebasestorage.googleapis.com/v0/b/fdc-quickstart-web.appspot.com/o/movies%2Fjohn_wick_4.jpg?alt=media&token=463ed467-9daa-4281-965d-44e7cc4172d5",
+#     releaseYear: 2023,
+#     genre: "action",
+#     rating: 8.1,
+#     description: "John Wick (Keanu Reeves) uncovers a path to defeating The High Table, but before he can earn his freedom, he must face off against a new enemy with powerful alliances across the globe. The film follows Wick as he battles through various international locations, facing relentless adversaries and forming new alliances.",
+#     tags: ["action", "thriller"],
+#   })
+
+#   movie4: movie_insert(data: {
+#     id: "550e8400-e29b-41d4-a716-446655440003",
+#     title: "The Dark Knight",
+#     imageUrl: "https://firebasestorage.googleapis.com/v0/b/fdc-quickstart-web.appspot.com/o/movies%2Fthe_dark_knight.jpg?alt=media&token=a9803c59-40d5-4758-a6f4-9a7c274a1218",
+#     releaseYear: 2008,
+#     genre: "action",
+#     rating: 9.0,
+#     description: "When the menace known as the Joker (Heath Ledger) emerges from his mysterious past, he wreaks havoc and chaos on the people of Gotham. The Dark Knight (Christian Bale) must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
+#     tags: ["action", "drama"],
+#   })
+
+#   movie5: movie_insert(data: {
+#     id: "550e8400-e29b-41d4-a716-446655440004",
+#     title: "Fight Club",
+#     imageUrl: "https://firebasestorage.googleapis.com/v0/b/fdc-quickstart-web.appspot.com/o/movies%2Ffight_club.jpg?alt=media&token=a4bc1933-2607-42cd-a860-e44c4587fd9c",
+#     releaseYear: 1999,
+#     genre: "drama",
+#     rating: 8.8,
+#     description: "An insomniac office worker (Edward Norton) and a devil-may-care soapmaker (Brad Pitt) form an underground fight club that evolves into something much more. The story explores themes of consumerism, masculinity, and the search for identity.",
+#     tags: ["drama", "thriller"],
+#   })
+
+#   movie6: movie_insert(data: {
+#     id: "550e8400-e29b-41d4-a716-446655440005",
+#     title: "Pulp Fiction",
+#     imageUrl: "https://firebasestorage.googleapis.com/v0/b/fdc-quickstart-web.appspot.com/o/movies%2Fpulp_fiction.jpg?alt=media&token=0df86e18-5cb1-45b3-a6d9-3f41563c3465",
+#     releaseYear: 1994,
+#     genre: "crime",
+#     rating: 8.9,
+#     description: "The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption. The film is known for its eclectic dialogue, ironic mix of humor and violence, and a host of cinematic allusions and pop culture references.",
+#     tags: ["crime", "drama"],
+#   })
+
+#   movie7: movie_insert(data: {
+#     id: "550e8400-e29b-41d4-a716-446655440006",
+#     title: "The Lord of the Rings: The Fellowship of the Ring",
+#     imageUrl: "https://firebasestorage.googleapis.com/v0/b/fdc-quickstart-web.appspot.com/o/movies%2Flotr_fellowship.jpg?alt=media&token=92641d2d-6c52-4172-bd66-95fb86b4b96b",
+#     releaseYear: 2001,
+#     genre: "fantasy",
+#     rating: 8.8,
+#     description: "A meek Hobbit from the Shire, Frodo Baggins, and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron. The epic adventure begins the quest that will test their courage and bond.",
+#     tags: ["fantasy", "adventure"],
+#   })
+
+#   movie8: movie_insert(data: {
+#     id: "550e8400-e29b-41d4-a716-446655440007",
+#     title: "The Shawshank Redemption",
+#     imageUrl: "https://firebasestorage.googleapis.com/v0/b/fdc-quickstart-web.appspot.com/o/movies%2Fthe_shawshanks_redemption.jpg?alt=media&token=f67b5ab2-a435-48b2-8251-5bf866b183e9",
+#     releaseYear: 1994,
+#     genre: "drama",
+#     rating: 9.3,
+#     description: "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency. The film follows Andy Dufresne (Tim Robbins), a banker sentenced to life in Shawshank State Penitentiary, and his friendship with Red (Morgan Freeman).",
+#     tags: ["drama", "crime"],
+#   })
+
+#   movie10: movie_insert(data: {
+#     id: "550e8400-e29b-41d4-a716-446655440009",
+#     title: "The Godfather",
+#     imageUrl: "https://firebasestorage.googleapis.com/v0/b/fdc-quickstart-web.appspot.com/o/movies%2Fthe_godfather.jpg?alt=media&token=5297fd94-ae87-4995-9de5-3755232bad52",
+#     releaseYear: 1972,
+#     genre: "crime",
+#     rating: 9.2,
+#     description: "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son. The story follows the powerful Corleone family as they navigate power, loyalty, and betrayal.",
+#     tags: ["crime", "drama"],
+#   })
+
+#   movie11: movie_insert(data: {
+#     id: "550e8400-e29b-41d4-a716-446655440010",
+#     title: "The Silence of the Lambs",
+#     imageUrl: "https://firebasestorage.googleapis.com/v0/b/fdc-quickstart-web.appspot.com/o/movies%2Fthe_silence_of_the_lambs.jpg?alt=media&token=7ca6abeb-b15c-4f5e-9280-5a590e89fe54",
+#     releaseYear: 1991,
+#     genre: "thriller",
+#     rating: 8.6,
+#     description: "A young F.B.I. cadet must receive the help of an incarcerated and manipulative cannibal killer to help catch another serial killer. Clarice Starling (Jodie Foster) seeks the assistance of Hannibal Lecter (Anthony Hopkins) to understand the mind of a killer.",
+#     tags: ["thriller", "crime"],
+#   })
+
+#   movie12: movie_insert(data: {
+#     id: "550e8400-e29b-41d4-a716-446655440011",
+#     title: "Saving Private Ryan",
+#     imageUrl: "https://firebasestorage.googleapis.com/v0/b/fdc-quickstart-web.appspot.com/o/movies%2Fsaving_private_ryan.jpg?alt=media&token=58ed877e-7ae0-4e30-9aee-d45c2deb7a00",
+#     releaseYear: 1998,
+#     genre: "war",
+#     rating: 8.6,
+#     description: "Following the Normandy Landings, a group of U.S. soldiers go behind enemy lines to retrieve a paratrooper whose brothers have been killed in action. The harrowing journey of Captain John H. Miller (Tom Hanks) and his men highlights the brutal reality of war.",
+#     tags: ["war", "drama"],
+#   })
+
+#   movie13: movie_insert(data: {
+#     id: "550e8400-e29b-41d4-a716-446655440012",
+#     title: "The Avengers",
+#     imageUrl: "https://firebasestorage.googleapis.com/v0/b/fdc-quickstart-web.appspot.com/o/movies%2Fthe_avengers.jpg?alt=media&token=3d68ccad-2fa1-48da-a83e-7941e246c9f9",
+#     releaseYear: 2012,
+#     genre: "action",
+#     rating: 8.0,
+#     description: "Earth's mightiest heroes, including Iron Man, Captain America, Thor, Hulk, Black Widow, and Hawkeye, must come together to stop Loki and his alien army from enslaving humanity. Directed by Joss Whedon, the film is known for its witty dialogue, intense action sequences, and the chemistry among its ensemble cast.",
+#     tags: ["action", "sci-fi"],
+#   })
+
+#   movie14: movie_insert(data: {
+#     id: "550e8400-e29b-41d4-a716-446655440013",
+#     title: "Gladiator",
+#     imageUrl: "https://firebasestorage.googleapis.com/v0/b/fdc-quickstart-web.appspot.com/o/movies%2Fgladiator.jpg?alt=media&token=61d75825-b79f-4add-afdb-7da5eed53407",
+#     releaseYear: 2000,
+#     genre: "action",
+#     rating: 8.5,
+#     description: "A former Roman General, Maximus Decimus Meridius, seeks vengeance against the corrupt emperor Commodus who murdered his family and sent him into slavery. Directed by Ridley Scott, the film is known for its epic scale, intense battle scenes, and Russell Crowe's powerful performance.",
+#     tags: ["action", "drama"],
+#   })
+
+#   movie15: movie_insert(data: {
+#     id: "550e8400-e29b-41d4-a716-446655440014",
+#     title: "Titanic",
+#     imageUrl: "https://firebasestorage.googleapis.com/v0/b/fdc-quickstart-web.appspot.com/o/movies%2Ftitanic.png?alt=media&token=dd03dc83-486e-4b03-9b03-2f9ed83fd9d0",
+#     releaseYear: 1997,
+#     genre: "romance",
+#     rating: 7.8,
+#     description: "A romantic drama recounting the ill-fated voyage of the R.M.S. Titanic through the eyes of Jack Dawson, a poor artist, and Rose DeWitt Bukater, a wealthy aristocrat. Their forbidden romance unfolds aboard the luxurious ship, which tragically sinks after striking an iceberg. Directed by James Cameron, the film is known for its epic scale, emotional depth, and stunning visuals.",
+#     tags: ["romance", "drama"],
+#   })
+
+#   movie16: movie_insert(data: {
+#     id: "550e8400-e29b-41d4-a716-446655440015",
+#     title: "Avatar",
+#     imageUrl: "https://firebasestorage.googleapis.com/v0/b/fdc-quickstart-web.appspot.com/o/movies%2Favatar.jpg?alt=media&token=1c75b09d-7c7a-44bf-b7ad-e7da4d0b7193",
+#     releaseYear: 2009,
+#     genre: "sci-fi",
+#     rating: 7.8,
+#     description: "A paraplegic Marine named Jake Sully is sent on a unique mission to Pandora, an alien world, to bridge relations with the native Na'vi people. Torn between following his orders and protecting the world he feels is his home, Jake's journey becomes a battle for survival. Directed by James Cameron, 'Avatar' is renowned for its groundbreaking special effects and immersive 3D experience.",
+#     tags: ["sci-fi", "adventure"],
+#   })
+
+#   movie17: movie_insert(data: {
+#     id: "550e8400-e29b-41d4-a716-446655440016",
+#     title: "Jurassic Park",
+#     imageUrl: "https://firebasestorage.googleapis.com/v0/b/fdc-quickstart-web.appspot.com/o/movies%2Fjurassic_park.jpg?alt=media&token=1731ce71-3384-4435-8a5b-821d4fd286d3",
+#     releaseYear: 1993,
+#     genre: "adventure",
+#     rating: 8.1,
+#     description: "During a preview tour, a theme park suffers a major power breakdown that allows its cloned dinosaur exhibits to run amok. Directed by Steven Spielberg, 'Jurassic Park' is known for its groundbreaking special effects, thrilling storyline, and the suspenseful chaos unleashed by its prehistoric creatures.",
+#     tags: ["adventure", "sci-fi"],
+#   })
+
+#   movie18: movie_insert(data: {
+#     id: "550e8400-e29b-41d4-a716-446655440017",
+#     title: "The Lion King",
+#     imageUrl: "https://firebasestorage.googleapis.com/v0/b/fdc-quickstart-web.appspot.com/o/movies%2Fthe_lion_king.jpg?alt=media&token=3e4e4265-6ae7-47d6-a5ba-584de126ef00",
+#     releaseYear: 1994,
+#     genre: "animation",
+#     rating: 8.5,
+#     description: "A young lion prince, Simba, must overcome betrayal and tragedy to reclaim his rightful place as king. 'The Lion King' is a beloved animated musical known for its memorable songs, stunning animation, and a timeless tale of courage, loyalty, and redemption.",
+#     tags: ["animation", "drama"],
+#   })
+
+#   movie19: movie_insert(data: {
+#     id: "550e8400-e29b-41d4-a716-446655440018",
+#     title: "Star Wars: Episode IV - A New Hope",
+#     imageUrl: "https://firebasestorage.googleapis.com/v0/b/fdc-quickstart-web.appspot.com/o/movies%2Fstar_wars_4.jpg?alt=media&token=b4ea7e0c-707f-43dd-8633-9d962e77b5a4",
+#     releaseYear: 1977,
+#     genre: "sci-fi",
+#     rating: 8.6,
+#     description: "Luke Skywalker joins forces with a Jedi Knight, a cocky pilot, a Wookiee, and two droids to save the galaxy from the Empire's world-destroying battle station, the Death Star. Directed by George Lucas, 'A New Hope' revolutionized the sci-fi genre with its groundbreaking special effects and unforgettable characters.",
+#     tags: ["sci-fi", "adventure"],
+#   })
+
+#   movie20: movie_insert(data: {
+#     id: "550e8400-e29b-41d4-a716-446655440019",
+#     title: "Blade Runner",
+#     imageUrl: "https://firebasestorage.googleapis.com/v0/b/fdc-quickstart-web.appspot.com/o/movies%2Fblade_runner.jpg?alt=media&token=d8e94bdd-1477-49f3-b244-dd7a9c059fc1",
+#     releaseYear: 1982,
+#     genre: "sci-fi",
+#     rating: 8.1,
+#     description: "In a dystopian future, synthetic humans known as replicants are created by powerful corporations. A blade runner named Rick Deckard is tasked with hunting down and 'retiring' four replicants who have escaped to Earth. Directed by Ridley Scott, 'Blade Runner' is a seminal sci-fi thriller that explores themes of humanity and identity.",
+#     tags: ["sci-fi", "thriller"],
+#   })
+# 
