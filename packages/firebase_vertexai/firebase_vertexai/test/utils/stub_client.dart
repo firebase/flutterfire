@@ -14,7 +14,7 @@
 
 import 'dart:collection';
 
-import 'package:firebase_vertexai/src/vertex_client.dart';
+import 'package:firebase_vertexai/src/client.dart';
 
 class ClientController {
   final _client = _ControlledClient();

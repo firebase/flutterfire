@@ -22,10 +22,10 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'package:http/http.dart' as http;
 
-import 'vertex_api.dart';
-import 'vertex_client.dart';
-import 'vertex_content.dart';
-import 'vertex_function_calling.dart';
+import 'api.dart';
+import 'client.dart';
+import 'content.dart';
+import 'function_calling.dart';
 import 'vertex_version.dart';
 
 const _baseUrl = 'firebasevertexai.googleapis.com';

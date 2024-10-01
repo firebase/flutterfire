@@ -17,7 +17,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import 'vertex_error.dart';
+import 'error.dart';
 import 'vertex_version.dart';
 
 /// Client name to feed into the request.

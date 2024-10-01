@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'vertex_content.dart';
-import 'vertex_error.dart';
-import 'vertex_schema.dart';
+import 'content.dart';
+import 'error.dart';
+import 'schema.dart';
 
 /// Response for Count Tokens
 final class CountTokensResponse {
@@ -791,7 +791,7 @@ SafetyRating _parseSafetyRating(Object? jsonObject) {
       'probabilityScore': final double probabilityScore,
       'blocked': final bool blocked,
       'severity': final Object severity,
-      'severityScore': final double severityScore,
+      'severityScore': final double severityScore?,
     } =>
       SafetyRating(HarmCategory._parseValue(category),
           HarmProbability._parseValue(probability),

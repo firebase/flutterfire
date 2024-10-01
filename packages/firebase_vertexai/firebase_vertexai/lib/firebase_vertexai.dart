@@ -13,7 +13,7 @@
 // limitations under the License.
 
 export 'src/firebase_vertexai.dart' show FirebaseVertexAI;
-export 'src/vertex_api.dart'
+export 'src/api.dart'
     show
         BlockReason,
         Candidate,
@@ -31,8 +31,8 @@ export 'src/vertex_api.dart'
         SafetySetting,
         TaskType,
         UsageMetadata;
-export 'src/vertex_chat.dart' show ChatSession, StartChatExtension;
-export 'src/vertex_content.dart'
+export 'src/chat.dart' show ChatSession, StartChatExtension;
+export 'src/content.dart'
     show
         Content,
         InlineDataPart,
@@ -41,19 +41,19 @@ export 'src/vertex_content.dart'
         FunctionResponse,
         Part,
         TextPart;
-export 'src/vertex_error.dart'
+export 'src/error.dart'
     show
         VertexAIException,
         VertexAISdkException,
         InvalidApiKey,
         ServerException,
         UnsupportedUserLocation;
-export 'src/vertex_function_calling.dart'
+export 'src/function_calling.dart'
     show
         FunctionCallingConfig,
         FunctionCallingMode,
         FunctionDeclaration,
         Tool,
         ToolConfig;
-export 'src/vertex_model.dart' show GenerativeModel;
-export 'src/vertex_schema.dart' show Schema, SchemaType;
+export 'src/model.dart' show GenerativeModel;
+export 'src/schema.dart' show Schema, SchemaType;

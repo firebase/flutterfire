@@ -14,7 +14,7 @@
 
 import 'dart:convert';
 import 'dart:typed_data';
-import 'vertex_error.dart';
+import 'error.dart';
 
 /// The base structured datatype containing multi-part content of a message.
 final class Content {
