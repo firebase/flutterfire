@@ -32,7 +32,7 @@ jobs:
         working_directory:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
       - uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b
         name: Install Node.js 20
         with:
@@ -84,7 +84,7 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
       - uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b
         name: Install Node.js 20
         with:
@@ -141,7 +141,7 @@ jobs:
         working_directory:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
       - uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b
         name: Install Node.js 20
         with:
