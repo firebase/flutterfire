@@ -127,7 +127,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
-      - uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225
+      - uses: subosito/flutter-action@44ac965b96f18d999802d4b807e3256d5a3f9fa1
         with:
         # TODO - enabling swift is on `master` channel at the moment. Update when it's on `stable`
           channel: 'master'
