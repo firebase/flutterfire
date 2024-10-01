@@ -47,7 +47,7 @@ jobs:
           cache: true
           cache-key: flutter-${{ runner.os }}
           pub-cache-key: pub-${{ runner.os }}
-      - uses: bluefireteam/melos-action@7e70fbe34bbd91a75eb505eeb4174b0ac9a1df52
+      - uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa
         with:
           run-bootstrap: false
           melos-version: '5.3.0'
@@ -99,7 +99,7 @@ jobs:
           cache: true
           cache-key: flutter-${{ runner.os }}
           pub-cache-key: pub-${{ runner.os }}
-      - uses: bluefireteam/melos-action@7e70fbe34bbd91a75eb505eeb4174b0ac9a1df52
+      - uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa
         with:
           run-bootstrap: false
           melos-version: '5.3.0'
@@ -156,7 +156,7 @@ jobs:
           cache: true
           cache-key: flutter-${{ runner.os }}
           pub-cache-key: pub-${{ runner.os }}
-      - uses: bluefireteam/melos-action@7e70fbe34bbd91a75eb505eeb4174b0ac9a1df52
+      - uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa
         with:
           run-bootstrap: false
           melos-version: '5.3.0'
