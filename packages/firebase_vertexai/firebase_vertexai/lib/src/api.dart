@@ -784,23 +784,17 @@ UsageMetadata _parseUsageMetadata(Object jsonObject) {
 }
 
 SafetyRating _parseSafetyRating(Object? jsonObject) {
-  return switch (jsonObject) {
-    {
-      'category': final Object category,
-      'probability': final Object probability,
-      'probabilityScore': final double probabilityScore,
-      'blocked': final bool blocked,
-      'severity': final Object severity,
-      'severityScore': final double severityScore?,
-    } =>
-      SafetyRating(HarmCategory._parseValue(category),
-          HarmProbability._parseValue(probability),
-          probabilityScore: probabilityScore,
-          isBlocked: blocked,
-          severity: HarmSeverity._parseValue(severity),
-          severityScore: severityScore),
-    _ => throw unhandledFormat('SafetyRating', jsonObject),
-  };
+  if (jsonObject is! Map) {
+    throw unhandledFormat('SafetyRating', jsonObject);
+  }
+  return SafetyRating(HarmCategory._parseValue(jsonObject['category']),
+      HarmProbability._parseValue(jsonObject['probability']),
+      probabilityScore: jsonObject['probabilityScore'] as double?,
+      isBlocked: jsonObject['blocked'] as bool?,
+      severity: jsonObject['severity'] != null
+          ? HarmSeverity._parseValue(jsonObject['severity'])
+          : null,
+      severityScore: jsonObject['severityScore'] as double?);
 }
 
 CitationMetadata _parseCitationMetadata(Object? jsonObject) {
