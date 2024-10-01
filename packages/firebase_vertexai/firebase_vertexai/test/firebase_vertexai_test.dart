@@ -17,7 +17,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'vertex_mock.dart';
+import 'mock.dart';
 
 void main() {
   setupFirebaseVertexAIMocks();

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:firebase_vertexai/src/vertex_schema.dart';
+import 'package:firebase_vertexai/src/schema.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

@@ -14,7 +14,7 @@
 
 import 'dart:typed_data';
 
-import 'package:firebase_vertexai/src/vertex_content.dart';
+import 'package:firebase_vertexai/src/content.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // Mock google_ai classes (if needed)

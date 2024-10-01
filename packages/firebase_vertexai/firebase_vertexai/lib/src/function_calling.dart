@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'vertex_schema.dart';
+import 'schema.dart';
 
 /// Tool details that the model may use to generate a response.
 ///

@@ -18,10 +18,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebasePluginPlatform;
 
-import 'vertex_api.dart';
-import 'vertex_content.dart';
-import 'vertex_function_calling.dart';
-import 'vertex_model.dart';
+import 'api.dart';
+import 'content.dart';
+import 'function_calling.dart';
+import 'model.dart';
 
 const _defaultLocation = 'us-central1';
 
