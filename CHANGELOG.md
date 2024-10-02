@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-10-02 - [BoM 2.9.1](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-291-2024-10-02)
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v5.4.4`](#cloud_firestore---v544)
+ - [`firebase_data_connect` - `v0.1.1+1`](#firebase_data_connect---v0111)
+
+---
+
+#### `cloud_firestore` - `v5.4.4`
+
+ - **FIX**(cloud_firestore): remove single whereIn filter assertion ([#13436](https://github.com/firebase/flutterfire/issues/13436)). ([d770aa6a](https://github.com/firebase/flutterfire/commit/d770aa6a2616ed0535bbc2fbd2e9645da9ad18cd))
+
+#### `firebase_data_connect` - `v0.1.1+1`
+
+ - **FIX**(fdc): errors are now properly propagated to the user ([#13433](https://github.com/firebase/flutterfire/issues/13433)). ([973a02f1](https://github.com/firebase/flutterfire/commit/973a02f1daf62f5ba4f65c33d09c8872164f9f6b))
+
+
 ## 2024-09-26
 
 ### Changes
