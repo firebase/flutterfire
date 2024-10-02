@@ -223,5 +223,33 @@ void main() {
         body: anyNamed('body'),
       )).called(1);
     });
+    test('invokeOperation should throw an error if the server throws one',
+        () async {
+      final mockResponse = http.Response("""
+{
+    "data": {},
+    "errors": [
+        {
+            "message": "SQL query error: pq: duplicate key value violates unique constraint movie_pkey",
+            "locations": [],
+            "path": [
+                "the_matrix"
+            ],
+            "extensions": null
+        }
+    ]
+}""", 200);
+      when(mockHttpClient.post(any,
+              headers: anyNamed('headers'), body: anyNamed('body')))
+          .thenAnswer((_) async => mockResponse);
+
+      final deserializer = (String data) => 'Deserialized Data';
+
+      expect(
+        () => transport.invokeOperation(
+            'testQuery', deserializer, null, null, 'executeQuery'),
+        throwsA(isA<DataConnectError>()),
+      );
+    });
   });
 }

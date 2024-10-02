@@ -137,6 +137,9 @@ class GRPCTransport implements DataConnectTransport {
     try {
       response = await stub.executeMutation(request,
           options: CallOptions(metadata: await getMetadata()));
+      if (response.errors.isNotEmpty) {
+        throw Exception(response.errors);
+      }
       return deserializer(jsonEncode(response.data.toProto3Json()));
     } on Exception catch (e) {
       throw DataConnectError(DataConnectErrorCode.other,
