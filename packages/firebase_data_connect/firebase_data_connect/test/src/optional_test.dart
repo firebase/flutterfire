@@ -5,6 +5,7 @@
 // ignore_for_file: unused_local_variable
 
 import 'package:firebase_data_connect/firebase_data_connect.dart';
+import 'package:firebase_data_connect/src/common/common_library.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 typedef Serializer<T> = dynamic Function(T value);
@@ -12,7 +13,7 @@ typedef Deserializer<T> = T Function(String json);
 
 void main() {
   group('Optional', () {
-    late Deserializer<String> stringDeserializer;
+    late DynamicDeserializer<String> stringDeserializer;
     late Serializer<String> stringSerializer;
     late Deserializer<int> intDeserializer;
     late Serializer<int> intSerializer;

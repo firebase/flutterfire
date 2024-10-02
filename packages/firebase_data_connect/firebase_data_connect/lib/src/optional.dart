@@ -26,7 +26,7 @@ class Optional<T> {
   DynamicSerializer<T> serializer;
 
   /// Deserializer for value.
-  Deserializer<T> deserializer;
+  DynamicDeserializer<T> deserializer;
 
   /// Current value.
   T? _value;
@@ -54,10 +54,6 @@ class Optional<T> {
   /// Converts the value to String.
   dynamic toJson() {
     if (_value != null) {
-      if (_value is List) {
-        return (_value! as List).map((e) =>
-            serializer(e)); // TODO(mtewani): Check if this properly serializes
-      }
       return serializer(_value as T);
     }
     return '';
@@ -92,4 +88,14 @@ T nativeFromJson<T>(dynamic input) {
     }
   }
   throw UnimplementedError('This type is unimplemented: ${T.runtimeType}');
+}
+
+DynamicDeserializer<List<T>> listDeserializer<T>(
+    DynamicDeserializer<T> deserializer) {
+  return (dynamic data) =>
+      (data as List<T>).map((e) => deserializer(e)).toList();
+}
+
+DynamicSerializer<List<T>> listSerializer<T>(DynamicSerializer<T> serializer) {
+  return (dynamic data) => (data as List<T>).map((e) => serializer(e)).toList();
 }

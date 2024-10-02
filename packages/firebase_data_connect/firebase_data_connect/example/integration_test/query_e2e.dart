@@ -40,8 +40,8 @@ void runQueryTests() {
               genre: 'Action',
               title: 'The Matrix',
               releaseYear: 1999,
-              rating: 4.5,
             )
+            .rating(4.5)
             .build();
 
         await ref.execute();
@@ -55,9 +55,8 @@ void runQueryTests() {
 
       testWidgets('can add a director to a movie', (WidgetTester tester) async {
         MutationRef ref = MoviesConnector.instance.addPerson
-            .ref(
-              name: 'Keanu Reeves',
-            )
+            .ref()
+            .name('Keanu Reeves')
             .build();
 
         await ref.execute();
@@ -78,8 +77,8 @@ void runQueryTests() {
               genre: 'Action',
               title: 'The Matrix',
               releaseYear: 1999,
-              rating: 4.5,
             )
+            .rating(4.5)
             .build();
 
         await ref.execute();
@@ -92,10 +91,9 @@ void runQueryTests() {
         final movieId = result2.movies[0].id;
 
         ref = MoviesConnector.instance.addDirectorToMovie
-            .ref(
-              movieId: movieId,
-              personId: AddDirectorToMovieVariablesPersonId(id: personId),
-            )
+            .ref()
+            .movieId(movieId)
+            .personId(AddDirectorToMovieVariablesPersonId(id: personId))
             .build();
 
         await ref.execute();
@@ -114,8 +112,8 @@ void runQueryTests() {
               genre: 'Action',
               title: 'The Matrix',
               releaseYear: 1999,
-              rating: 4.5,
             )
+            .rating(4.5)
             .build();
 
         await ref.execute();

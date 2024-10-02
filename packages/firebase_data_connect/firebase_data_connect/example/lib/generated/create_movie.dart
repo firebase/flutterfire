@@ -4,21 +4,29 @@ class CreateMovieVariablesBuilder {
   String title;
   int releaseYear;
   String genre;
-  double? rating;
-  String? description;
+  Optional<double> _rating = Optional.optional(nativeFromJson, nativeToJson);
+  Optional<String> _description =
+      Optional.optional(nativeFromJson, nativeToJson);
 
-  FirebaseDataConnect dataConnect;
+  FirebaseDataConnect _dataConnect;
+  CreateMovieVariablesBuilder rating(double? t) {
+    this._rating.value = t;
+    return this;
+  }
+
+  CreateMovieVariablesBuilder description(String? t) {
+    this._description.value = t;
+    return this;
+  }
 
   CreateMovieVariablesBuilder(
-    this.dataConnect, {
+    this._dataConnect, {
     required String this.title,
     required int this.releaseYear,
     required String this.genre,
-    double? this.rating,
-    String? this.description,
   });
-  Deserializer<CreateMovieData> dataDeserializer = (String json) =>
-      CreateMovieData.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  Deserializer<CreateMovieData> dataDeserializer =
+      (dynamic json) => CreateMovieData.fromJson(jsonDecode(json));
   Serializer<CreateMovieVariables> varsSerializer =
       (CreateMovieVariables vars) => jsonEncode(vars.toJson());
   MutationRef<CreateMovieData, CreateMovieVariables> build() {
@@ -26,11 +34,11 @@ class CreateMovieVariablesBuilder {
       title: title,
       releaseYear: releaseYear,
       genre: genre,
-      rating: rating,
-      description: description,
+      rating: _rating,
+      description: _description,
     );
 
-    return dataConnect.mutation(
+    return _dataConnect.mutation(
         "createMovie", dataDeserializer, varsSerializer, vars);
   }
 }
@@ -42,16 +50,12 @@ class CreateMovie {
     required String title,
     required int releaseYear,
     required String genre,
-    double? rating,
-    String? description,
   }) {
     return CreateMovieVariablesBuilder(
       dataConnect,
       title: title,
       releaseYear: releaseYear,
       genre: genre,
-      rating: rating,
-      description: description,
     );
   }
 
@@ -61,8 +65,7 @@ class CreateMovie {
 class CreateMovieMovieInsert {
   String id;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  CreateMovieMovieInsert.fromJson(Map<String, dynamic> json)
+  CreateMovieMovieInsert.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']) {}
 
   Map<String, dynamic> toJson() {
@@ -81,8 +84,7 @@ class CreateMovieMovieInsert {
 class CreateMovieData {
   CreateMovieMovieInsert movie_insert;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  CreateMovieData.fromJson(Map<String, dynamic> json)
+  CreateMovieData.fromJson(dynamic json)
       : movie_insert = CreateMovieMovieInsert.fromJson(json['movie_insert']) {}
 
   Map<String, dynamic> toJson() {
@@ -105,19 +107,20 @@ class CreateMovieVariables {
 
   String genre;
 
-  double? rating;
+  late Optional<double> rating;
 
-  String? description;
+  late Optional<String> description;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   CreateMovieVariables.fromJson(Map<String, dynamic> json)
       : title = nativeFromJson<String>(json['title']),
         releaseYear = nativeFromJson<int>(json['releaseYear']),
         genre = nativeFromJson<String>(json['genre']) {
-    rating =
+    rating = Optional.optional(nativeFromJson, nativeToJson);
+    rating.value =
         json['rating'] == null ? null : nativeFromJson<double>(json['rating']);
 
-    description = json['description'] == null
+    description = Optional.optional(nativeFromJson, nativeToJson);
+    description.value = json['description'] == null
         ? null
         : nativeFromJson<String>(json['description']);
   }
@@ -131,12 +134,12 @@ class CreateMovieVariables {
 
     json['genre'] = nativeToJson<String>(genre);
 
-    if (rating != null) {
-      json['rating'] = nativeToJson<double?>(rating);
+    if (rating.state == OptionalState.set) {
+      json['rating'] = rating.toJson();
     }
 
-    if (description != null) {
-      json['description'] = nativeToJson<String?>(description);
+    if (description.state == OptionalState.set) {
+      json['description'] = description.toJson();
     }
 
     return json;
@@ -146,7 +149,7 @@ class CreateMovieVariables {
     required this.title,
     required this.releaseYear,
     required this.genre,
-    this.rating,
-    this.description,
+    required this.rating,
+    required this.description,
   });
 }

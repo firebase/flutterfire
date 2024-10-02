@@ -3,15 +3,14 @@ part of movies;
 class ListMoviesByPartialTitleVariablesBuilder {
   String input;
 
-  FirebaseDataConnect dataConnect;
+  FirebaseDataConnect _dataConnect;
 
   ListMoviesByPartialTitleVariablesBuilder(
-    this.dataConnect, {
+    this._dataConnect, {
     required String this.input,
   });
-  Deserializer<ListMoviesByPartialTitleData> dataDeserializer = (String json) =>
-      ListMoviesByPartialTitleData.fromJson(
-          jsonDecode(json) as Map<String, dynamic>);
+  Deserializer<ListMoviesByPartialTitleData> dataDeserializer =
+      (dynamic json) => ListMoviesByPartialTitleData.fromJson(jsonDecode(json));
   Serializer<ListMoviesByPartialTitleVariables> varsSerializer =
       (ListMoviesByPartialTitleVariables vars) => jsonEncode(vars.toJson());
   QueryRef<ListMoviesByPartialTitleData, ListMoviesByPartialTitleVariables>
@@ -20,7 +19,7 @@ class ListMoviesByPartialTitleVariablesBuilder {
       input: input,
     );
 
-    return dataConnect.query(
+    return _dataConnect.query(
         "ListMoviesByPartialTitle", dataDeserializer, varsSerializer, vars);
   }
 }
@@ -49,14 +48,11 @@ class ListMoviesByPartialTitleMovies {
 
   double? rating;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  ListMoviesByPartialTitleMovies.fromJson(Map<String, dynamic> json)
+  ListMoviesByPartialTitleMovies.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']),
         title = nativeFromJson<String>(json['title']),
-        genre = nativeFromJson<String>(json['genre']) {
-    rating =
-        json['rating'] == null ? null : nativeFromJson<double>(json['rating']);
-  }
+        genre = nativeFromJson<String>(json['genre']),
+        rating = nativeFromJson<double>(json['rating']) {}
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -85,8 +81,7 @@ class ListMoviesByPartialTitleMovies {
 class ListMoviesByPartialTitleData {
   List<ListMoviesByPartialTitleMovies> movies;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  ListMoviesByPartialTitleData.fromJson(Map<String, dynamic> json)
+  ListMoviesByPartialTitleData.fromJson(dynamic json)
       : movies = (json['movies'] as List<dynamic>)
             .map((e) => ListMoviesByPartialTitleMovies.fromJson(e))
             .toList() {}
@@ -107,7 +102,6 @@ class ListMoviesByPartialTitleData {
 class ListMoviesByPartialTitleVariables {
   String input;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   ListMoviesByPartialTitleVariables.fromJson(Map<String, dynamic> json)
       : input = nativeFromJson<String>(json['input']) {}
 

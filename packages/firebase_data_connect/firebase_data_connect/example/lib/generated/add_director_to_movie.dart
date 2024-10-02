@@ -1,27 +1,36 @@
 part of movies;
 
 class AddDirectorToMovieVariablesBuilder {
-  AddDirectorToMovieVariablesPersonId? personId;
-  String? movieId;
+  Optional<AddDirectorToMovieVariablesPersonId> _personId = Optional.optional(
+      AddDirectorToMovieVariablesPersonId.fromJson, defaultSerializer);
+  Optional<String> _movieId = Optional.optional(nativeFromJson, nativeToJson);
 
-  FirebaseDataConnect dataConnect;
+  FirebaseDataConnect _dataConnect;
+  AddDirectorToMovieVariablesBuilder personId(
+      AddDirectorToMovieVariablesPersonId? t) {
+    this._personId.value = t;
+    return this;
+  }
+
+  AddDirectorToMovieVariablesBuilder movieId(String? t) {
+    this._movieId.value = t;
+    return this;
+  }
 
   AddDirectorToMovieVariablesBuilder(
-    this.dataConnect, {
-    AddDirectorToMovieVariablesPersonId? this.personId,
-    String? this.movieId,
-  });
-  Deserializer<AddDirectorToMovieData> dataDeserializer = (String json) =>
-      AddDirectorToMovieData.fromJson(jsonDecode(json) as Map<String, dynamic>);
+    this._dataConnect,
+  );
+  Deserializer<AddDirectorToMovieData> dataDeserializer =
+      (dynamic json) => AddDirectorToMovieData.fromJson(jsonDecode(json));
   Serializer<AddDirectorToMovieVariables> varsSerializer =
       (AddDirectorToMovieVariables vars) => jsonEncode(vars.toJson());
   MutationRef<AddDirectorToMovieData, AddDirectorToMovieVariables> build() {
     AddDirectorToMovieVariables vars = AddDirectorToMovieVariables(
-      personId: personId,
-      movieId: movieId,
+      personId: _personId,
+      movieId: _movieId,
     );
 
-    return dataConnect.mutation(
+    return _dataConnect.mutation(
         "addDirectorToMovie", dataDeserializer, varsSerializer, vars);
   }
 }
@@ -29,14 +38,9 @@ class AddDirectorToMovieVariablesBuilder {
 class AddDirectorToMovie {
   String name = "addDirectorToMovie";
   AddDirectorToMovie({required this.dataConnect});
-  AddDirectorToMovieVariablesBuilder ref({
-    AddDirectorToMovieVariablesPersonId? personId,
-    String? movieId,
-  }) {
+  AddDirectorToMovieVariablesBuilder ref() {
     return AddDirectorToMovieVariablesBuilder(
       dataConnect,
-      personId: personId,
-      movieId: movieId,
     );
   }
 
@@ -48,8 +52,7 @@ class AddDirectorToMovieDirectedByInsert {
 
   String movieId;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  AddDirectorToMovieDirectedByInsert.fromJson(Map<String, dynamic> json)
+  AddDirectorToMovieDirectedByInsert.fromJson(dynamic json)
       : directedbyId = nativeFromJson<String>(json['directedbyId']),
         movieId = nativeFromJson<String>(json['movieId']) {}
 
@@ -72,8 +75,7 @@ class AddDirectorToMovieDirectedByInsert {
 class AddDirectorToMovieData {
   AddDirectorToMovieDirectedByInsert directedBy_insert;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  AddDirectorToMovieData.fromJson(Map<String, dynamic> json)
+  AddDirectorToMovieData.fromJson(dynamic json)
       : directedBy_insert = AddDirectorToMovieDirectedByInsert.fromJson(
             json['directedBy_insert']) {}
 
@@ -93,8 +95,7 @@ class AddDirectorToMovieData {
 class AddDirectorToMovieVariablesPersonId {
   String id;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  AddDirectorToMovieVariablesPersonId.fromJson(Map<String, dynamic> json)
+  AddDirectorToMovieVariablesPersonId.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']) {}
 
   Map<String, dynamic> toJson() {
@@ -111,17 +112,19 @@ class AddDirectorToMovieVariablesPersonId {
 }
 
 class AddDirectorToMovieVariables {
-  AddDirectorToMovieVariablesPersonId? personId;
+  late Optional<AddDirectorToMovieVariablesPersonId> personId;
 
-  String? movieId;
+  late Optional<String> movieId;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   AddDirectorToMovieVariables.fromJson(Map<String, dynamic> json) {
-    personId = json['personId'] == null
+    personId = Optional.optional(
+        AddDirectorToMovieVariablesPersonId.fromJson, defaultSerializer);
+    personId.value = json['personId'] == null
         ? null
         : AddDirectorToMovieVariablesPersonId.fromJson(json['personId']);
 
-    movieId = json['movieId'] == null
+    movieId = Optional.optional(nativeFromJson, nativeToJson);
+    movieId.value = json['movieId'] == null
         ? null
         : nativeFromJson<String>(json['movieId']);
   }
@@ -129,19 +132,19 @@ class AddDirectorToMovieVariables {
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
-    if (personId != null) {
-      json['personId'] = personId!.toJson();
+    if (personId.state == OptionalState.set) {
+      json['personId'] = personId.toJson();
     }
 
-    if (movieId != null) {
-      json['movieId'] = nativeToJson<String?>(movieId);
+    if (movieId.state == OptionalState.set) {
+      json['movieId'] = movieId.toJson();
     }
 
     return json;
   }
 
   AddDirectorToMovieVariables({
-    this.personId,
-    this.movieId,
+    required this.personId,
+    required this.movieId,
   });
 }

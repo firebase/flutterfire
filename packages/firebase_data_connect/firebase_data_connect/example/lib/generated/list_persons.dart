@@ -1,16 +1,16 @@
 part of movies;
 
 class ListPersonsVariablesBuilder {
-  FirebaseDataConnect dataConnect;
+  FirebaseDataConnect _dataConnect;
 
   ListPersonsVariablesBuilder(
-    this.dataConnect,
+    this._dataConnect,
   );
-  Deserializer<ListPersonsData> dataDeserializer = (String json) =>
-      ListPersonsData.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  Deserializer<ListPersonsData> dataDeserializer =
+      (dynamic json) => ListPersonsData.fromJson(jsonDecode(json));
 
   QueryRef<ListPersonsData, void> build() {
-    return dataConnect.query(
+    return _dataConnect.query(
         "ListPersons", dataDeserializer, emptySerializer, null);
   }
 }
@@ -32,8 +32,7 @@ class ListPersonsPeople {
 
   String name;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  ListPersonsPeople.fromJson(Map<String, dynamic> json)
+  ListPersonsPeople.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']),
         name = nativeFromJson<String>(json['name']) {}
 
@@ -56,8 +55,7 @@ class ListPersonsPeople {
 class ListPersonsData {
   List<ListPersonsPeople> people;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  ListPersonsData.fromJson(Map<String, dynamic> json)
+  ListPersonsData.fromJson(dynamic json)
       : people = (json['people'] as List<dynamic>)
             .map((e) => ListPersonsPeople.fromJson(e))
             .toList() {}

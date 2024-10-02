@@ -59,8 +59,8 @@ void runListenTests() {
               genre: 'Action',
               title: 'The Matrix',
               releaseYear: 1999,
-              rating: 4.5,
             )
+            .rating(4.5)
             .build()
             .execute();
 

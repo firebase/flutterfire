@@ -1,16 +1,16 @@
 part of movies;
 
 class SeedDataVariablesBuilder {
-  FirebaseDataConnect dataConnect;
+  FirebaseDataConnect _dataConnect;
 
   SeedDataVariablesBuilder(
-    this.dataConnect,
+    this._dataConnect,
   );
-  Deserializer<SeedDataData> dataDeserializer = (String json) =>
-      SeedDataData.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  Deserializer<SeedDataData> dataDeserializer =
+      (dynamic json) => SeedDataData.fromJson(jsonDecode(json));
 
   MutationRef<SeedDataData, void> build() {
-    return dataConnect.mutation(
+    return _dataConnect.mutation(
         "seedData", dataDeserializer, emptySerializer, null);
   }
 }
@@ -30,8 +30,7 @@ class SeedData {
 class SeedDataTheMatrix {
   String id;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  SeedDataTheMatrix.fromJson(Map<String, dynamic> json)
+  SeedDataTheMatrix.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']) {}
 
   Map<String, dynamic> toJson() {
@@ -50,8 +49,7 @@ class SeedDataTheMatrix {
 class SeedDataData {
   SeedDataTheMatrix the_matrix;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  SeedDataData.fromJson(Map<String, dynamic> json)
+  SeedDataData.fromJson(dynamic json)
       : the_matrix = SeedDataTheMatrix.fromJson(json['the_matrix']) {}
 
   Map<String, dynamic> toJson() {

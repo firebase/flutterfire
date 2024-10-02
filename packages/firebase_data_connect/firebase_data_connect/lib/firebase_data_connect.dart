@@ -18,6 +18,12 @@ export 'src/core/ref.dart'
     show MutationRef, OperationRef, OperationResult, QueryRef, QueryResult;
 
 export 'src/optional.dart'
-    show Optional, OptionalState, nativeFromJson, nativeToJson;
+    show
+        Optional,
+        OptionalState,
+        nativeFromJson,
+        nativeToJson,
+        listDeserializer,
+        listSerializer;
 export 'src/timestamp.dart' show Timestamp;
 export 'src/any_value.dart' show AnyValue, defaultSerializer;
