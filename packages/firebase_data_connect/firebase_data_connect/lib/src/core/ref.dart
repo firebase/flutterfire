@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:developer';
 
 import '../../firebase_data_connect.dart';
 import '../common/common_library.dart';
@@ -127,6 +128,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
         this.execute();
       } catch (_) {
         // Call to `execute` should properly pass the error to the Stream.
+        log("Error thrown by execute. The error will propagate via onError.");
       }
     }
     return res;
