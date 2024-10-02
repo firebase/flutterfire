@@ -70,7 +70,7 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
       - name: Gradle cache
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
       - name: AVD cache
         uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
         id: avd-cache
