@@ -86,6 +86,12 @@ T nativeFromJson<T>(dynamic input) {
     } else if (T == String) {
       return input as T;
     }
+  } else if (input is num) {
+    if (input is double && T == int) {
+      return input.toInt() as T;
+    } else if (input is int && T == double) {
+      return input.toDouble() as T;
+    }
   }
   throw UnimplementedError('This type is unimplemented: ${T.runtimeType}');
 }
