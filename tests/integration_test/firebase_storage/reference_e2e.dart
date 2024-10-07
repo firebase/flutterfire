@@ -240,33 +240,36 @@ void setupReferenceTests() {
     group(
       'putData',
       () {
-        test('uploads a file with buffer and download to check content matches',
-            () async {
-          const text = 'put data text to compare with uploaded and downloaded';
-          List<int> list = utf8.encode(text);
+        test(
+          'uploads a file with buffer and download to check content matches',
+          () async {
+            const text =
+                'put data text to compare with uploaded and downloaded';
+            List<int> list = utf8.encode(text);
 
-          Uint8List data = Uint8List.fromList(list);
+            Uint8List data = Uint8List.fromList(list);
 
-          final Reference ref =
-              storage.ref('flutter-tests').child('flt-ok.txt');
+            final Reference ref =
+                storage.ref('flutter-tests').child('flt-ok.txt');
 
-          final TaskSnapshot complete = await ref.putData(
-            data,
-            SettableMetadata(
-              contentLanguage: 'en',
-            ),
-          );
+            final TaskSnapshot complete = await ref.putData(
+              data,
+              SettableMetadata(
+                contentLanguage: 'en',
+              ),
+            );
 
-          expect(complete.metadata?.size, text.length);
-          expect(complete.metadata?.contentLanguage, 'en');
+            expect(complete.metadata?.size, text.length);
+            expect(complete.metadata?.contentLanguage, 'en');
 
-          // Download the file from Firebase Storage
-          final downloadedData = await ref.getData();
-          final downloadedContent = String.fromCharCodes(downloadedData!);
+            // Download the file from Firebase Storage
+            final downloadedData = await ref.getData();
+            final downloadedContent = String.fromCharCodes(downloadedData!);
 
-          // Verify that the downloaded content matches the original content
-          expect(downloadedContent, equals(text));
-        });
+            // Verify that the downloaded content matches the original content
+            expect(downloadedContent, equals(text));
+          },
+        );
 
         //TODO(pr-mais): causes the emulator to crash
         // test('errors if permission denied', () async {
@@ -282,8 +285,27 @@ void setupReferenceTests() {
         //           .having((e) => e.message, 'message',
         //               'User is not authorized to perform the desired action.')));
         // });
+
+        test(
+          'upload a json file',
+          () async {
+            final Map<String, dynamic> data = <String, dynamic>{
+              'name': 'John Doe',
+              'age': 30,
+            };
+            final Uint8List jsonData = utf8.encode(jsonEncode(data));
+            final Reference ref =
+                storage.ref('flutter-tests').child('flt-web-ok.json');
+            final TaskSnapshot complete = await ref.putData(
+              jsonData,
+              SettableMetadata(
+                contentType: 'application/json',
+              ),
+            );
+            expect(complete.metadata?.contentType, 'application/json');
+          },
+        );
       },
-      skip: kIsWeb,
     );
 
     group('putBlob', () {
