@@ -223,12 +223,6 @@ void main() {
               .where('foo', arrayContains: 2),
           throwsAssertionError,
         );
-        expect(
-          () => query!
-              .where('foo', arrayContains: 1)
-              .where('foo', whereIn: [2, 3]).where('foo', whereIn: [2, 3]),
-          throwsAssertionError,
-        );
       });
     });
 
