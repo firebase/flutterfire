@@ -9,22 +9,14 @@ class SeedMoviesVariablesBuilder {
   Deserializer<SeedMoviesData> dataDeserializer =
       (dynamic json) => SeedMoviesData.fromJson(jsonDecode(json));
 
-  MutationRef<SeedMoviesData, void> build() {
+  Future<OperationResult<SeedMoviesData, void>> execute() {
+    return this.ref().execute();
+  }
+
+  MutationRef<SeedMoviesData, void> ref() {
     return _dataConnect.mutation(
         "seedMovies", dataDeserializer, emptySerializer, null);
   }
-}
-
-class SeedMovies {
-  String name = "seedMovies";
-  SeedMovies({required this.dataConnect});
-  SeedMoviesVariablesBuilder ref() {
-    return SeedMoviesVariablesBuilder(
-      dataConnect,
-    );
-  }
-
-  FirebaseDataConnect dataConnect;
 }
 
 class SeedMoviesTheMatrix {

@@ -13,7 +13,11 @@ class AddTimestampVariablesBuilder {
       (dynamic json) => AddTimestampData.fromJson(jsonDecode(json));
   Serializer<AddTimestampVariables> varsSerializer =
       (AddTimestampVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<AddTimestampData, AddTimestampVariables> build() {
+  Future<OperationResult<AddTimestampData, AddTimestampVariables>> execute() {
+    return this.ref().execute();
+  }
+
+  MutationRef<AddTimestampData, AddTimestampVariables> ref() {
     AddTimestampVariables vars = AddTimestampVariables(
       timestamp: timestamp,
     );
@@ -21,21 +25,6 @@ class AddTimestampVariablesBuilder {
     return _dataConnect.mutation(
         "addTimestamp", dataDeserializer, varsSerializer, vars);
   }
-}
-
-class AddTimestamp {
-  String name = "addTimestamp";
-  AddTimestamp({required this.dataConnect});
-  AddTimestampVariablesBuilder ref({
-    required Timestamp timestamp,
-  }) {
-    return AddTimestampVariablesBuilder(
-      dataConnect,
-      timestamp: timestamp,
-    );
-  }
-
-  FirebaseDataConnect dataConnect;
 }
 
 class AddTimestampTimestampHolderInsert {
