@@ -196,7 +196,7 @@ void runQueryTests() {
         (WidgetTester tester) async {
       await deleteAllTimestamps();
       final timestamp = Timestamp.fromJson('1970-01-11T00:00:00Z');
-      final date = DateTime.parse('1970-01-11T00:00:00Z');
+      final date = timestamp.toDateTime();
       MutationRef ref = MoviesConnector.instance
           .addDateAndTimestamp(date: date, timestamp: timestamp)
           .ref();
