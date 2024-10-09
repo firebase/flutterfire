@@ -525,13 +525,17 @@ input Thing_Order {
 """
 input TimestampHolder_Data {
   """
-  ✨ Generated from Field `TimestampHolder`.`id` of type `UUID!`
+  ✨ Generated from Field `TimestampHolder`.`timestamp` of type `Timestamp!`
   """
-  id: UUID
+  timestamp: Timestamp
   """
-  ✨ `_expr` server value variant of `id` (✨ Generated from Field `TimestampHolder`.`id` of type `UUID!`)
+  ✨ `_expr` server value variant of `timestamp` (✨ Generated from Field `TimestampHolder`.`timestamp` of type `Timestamp!`)
   """
-  id_expr: UUID_Expr
+  timestamp_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `timestamp` (✨ Generated from Field `TimestampHolder`.`timestamp` of type `Timestamp!`)
+  """
+  timestamp_time: Timestamp_Relative
   """
   ✨ Generated from Field `TimestampHolder`.`date` of type `Date`
   """
@@ -544,18 +548,6 @@ input TimestampHolder_Data {
   ✨ `_expr` server value variant of `date` (✨ Generated from Field `TimestampHolder`.`date` of type `Date`)
   """
   date_expr: Date_Expr
-  """
-  ✨ Generated from Field `TimestampHolder`.`timestamp` of type `Timestamp!`
-  """
-  timestamp: Timestamp
-  """
-  ✨ `_expr` server value variant of `timestamp` (✨ Generated from Field `TimestampHolder`.`timestamp` of type `Timestamp!`)
-  """
-  timestamp_expr: Timestamp_Expr
-  """
-  ✨ `_time` server value variant of `timestamp` (✨ Generated from Field `TimestampHolder`.`timestamp` of type `Timestamp!`)
-  """
-  timestamp_time: Timestamp_Relative
 }
 """
 ✨ Generated filter input type for table 'TimestampHolder'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
@@ -574,17 +566,13 @@ input TimestampHolder_Filter {
   """
   _or: [TimestampHolder_Filter!]
   """
-  ✨ Generated from Field `TimestampHolder`.`id` of type `UUID!`
+  ✨ Generated from Field `TimestampHolder`.`timestamp` of type `Timestamp!`
   """
-  id: UUID_Filter
+  timestamp: Timestamp_Filter
   """
   ✨ Generated from Field `TimestampHolder`.`date` of type `Date`
   """
   date: Date_Filter
-  """
-  ✨ Generated from Field `TimestampHolder`.`timestamp` of type `Timestamp!`
-  """
-  timestamp: Timestamp_Filter
 }
 """
 ✨ Generated first-row input type for table 'TimestampHolder'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
@@ -604,13 +592,17 @@ input TimestampHolder_FirstRow {
 """
 input TimestampHolder_Key {
   """
-  ✨ Generated from Field `TimestampHolder`.`id` of type `UUID!`
+  ✨ Generated from Field `TimestampHolder`.`timestamp` of type `Timestamp!`
   """
-  id: UUID
+  timestamp: Timestamp
   """
-  ✨ `_expr` server value variant of `id` (✨ Generated from Field `TimestampHolder`.`id` of type `UUID!`)
+  ✨ `_expr` server value variant of `timestamp` (✨ Generated from Field `TimestampHolder`.`timestamp` of type `Timestamp!`)
   """
-  id_expr: UUID_Expr
+  timestamp_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `timestamp` (✨ Generated from Field `TimestampHolder`.`timestamp` of type `Timestamp!`)
+  """
+  timestamp_time: Timestamp_Relative
 }
 """
 ✨ Generated list filter input type for table 'TimestampHolder'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
@@ -630,15 +622,11 @@ input TimestampHolder_ListFilter {
 """
 input TimestampHolder_Order {
   """
-  ✨ Generated from Field `TimestampHolder`.`id` of type `UUID!`
+  ✨ Generated from Field `TimestampHolder`.`timestamp` of type `Timestamp!`
   """
-  id: OrderDirection
+  timestamp: OrderDirection
   """
   ✨ Generated from Field `TimestampHolder`.`date` of type `Date`
   """
   date: OrderDirection
-  """
-  ✨ Generated from Field `TimestampHolder`.`timestamp` of type `Timestamp!`
-  """
-  timestamp: OrderDirection
 }

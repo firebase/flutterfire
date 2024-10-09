@@ -11,6 +11,8 @@ part 'add_timestamp.dart';
 
 part 'add_date_and_timestamp.dart';
 
+part 'delete_all_timestamps.dart';
+
 part 'seed_movies.dart';
 
 part 'create_movie.dart';
@@ -63,6 +65,12 @@ class MoviesConnector {
       dataConnect,
       date: date,
       timestamp: timestamp,
+    );
+  }
+
+  DeleteAllTimestampsVariablesBuilder deleteAllTimestamps() {
+    return DeleteAllTimestampsVariablesBuilder(
+      dataConnect,
     );
   }
 

@@ -28,21 +28,21 @@ class AddTimestampVariablesBuilder {
 }
 
 class AddTimestampTimestampHolderInsert {
-  String id;
+  Timestamp timestamp;
 
   AddTimestampTimestampHolderInsert.fromJson(dynamic json)
-      : id = nativeFromJson<String>(json['id']) {}
+      : timestamp = Timestamp.fromJson(json['timestamp']) {}
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
-    json['id'] = nativeToJson<String>(id);
+    json['timestamp'] = timestamp.toJson();
 
     return json;
   }
 
   AddTimestampTimestampHolderInsert({
-    required this.id,
+    required this.timestamp,
   });
 }
 

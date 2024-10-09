@@ -230,11 +230,6 @@ extend type Mutation {
   """
   timestampHolder_update(
     """
-    The unique ID of the object.
-    """
-    id: UUID
-
-    """
     The key used to identify the object.
     """
     key: TimestampHolder_Key
@@ -419,11 +414,6 @@ extend type Mutation {
   ✨ Delete a single `TimestampHolder` based on `id`, `key` or `first` and return its key (or `null` if not found).
   """
   timestampHolder_delete(
-    """
-    The unique ID of the object.
-    """
-    id: UUID
-
     """
     The key used to identify the object.
     """
