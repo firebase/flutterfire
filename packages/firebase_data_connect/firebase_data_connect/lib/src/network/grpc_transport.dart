@@ -106,6 +106,7 @@ class GRPCTransport implements DataConnectTransport {
     try {
       response = await stub.executeQuery(request,
           options: CallOptions(metadata: await getMetadata()));
+      print("coucou response $response");
       return deserializer(jsonEncode(response.data.toProto3Json()));
     } on Exception catch (e) {
       throw DataConnectError(DataConnectErrorCode.other,
