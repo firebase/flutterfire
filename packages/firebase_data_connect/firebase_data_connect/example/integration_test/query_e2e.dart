@@ -195,8 +195,8 @@ void runQueryTests() {
     testWidgets('should be able to add a date and a timestamp',
         (WidgetTester tester) async {
       await deleteAllTimestamps();
-      final timestamp = Timestamp.fromJson('1970-01-11T00:00:00');
-      final date = DateTime.parse('1970-01-11T00:00:00');
+      final timestamp = Timestamp.fromJson('1970-01-11T00:00:00Z');
+      final date = DateTime.parse('1970-01-11T00:00:00Z');
       MutationRef ref = MoviesConnector.instance
           .addDateAndTimestamp(date: date, timestamp: timestamp)
           .ref();
