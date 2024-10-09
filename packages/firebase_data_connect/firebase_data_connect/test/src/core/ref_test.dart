@@ -184,6 +184,36 @@ void main() {
         });
       },
     );
+
+    test(
+      'execute should propagate error as string when server responds with error',
+      () async {
+        final mockTransport = MockDataConnectTransport();
+        final queryManager = QueryManager(mockDataConnect);
+
+        // Simulate server throwing an exception
+        when(mockTransport.invokeQuery(any, any, any, any))
+            .thenThrow(Exception('Server Error'));
+
+        final queryRef = QueryRef<String, String>(
+          mockDataConnect,
+          'testQuery',
+          mockTransport,
+          emptySerializer,
+          queryManager,
+          emptySerializer,
+          'variables',
+        );
+
+        try {
+          await queryRef.execute();
+          fail('Expected execute to throw an exception.');
+        } catch (error) {
+          expect(error, isA<Exception>());
+          expect(error.toString(), contains('Server Error'));
+        }
+      },
+    );
   });
 
   group('MutationRef', () {
