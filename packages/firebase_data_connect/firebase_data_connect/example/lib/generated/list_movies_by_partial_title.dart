@@ -13,8 +13,14 @@ class ListMoviesByPartialTitleVariablesBuilder {
       (dynamic json) => ListMoviesByPartialTitleData.fromJson(jsonDecode(json));
   Serializer<ListMoviesByPartialTitleVariables> varsSerializer =
       (ListMoviesByPartialTitleVariables vars) => jsonEncode(vars.toJson());
+  Future<
+      QueryResult<ListMoviesByPartialTitleData,
+          ListMoviesByPartialTitleVariables>> execute() {
+    return this.ref().execute();
+  }
+
   QueryRef<ListMoviesByPartialTitleData, ListMoviesByPartialTitleVariables>
-      build() {
+      ref() {
     ListMoviesByPartialTitleVariables vars = ListMoviesByPartialTitleVariables(
       input: input,
     );
@@ -22,21 +28,6 @@ class ListMoviesByPartialTitleVariablesBuilder {
     return _dataConnect.query(
         "ListMoviesByPartialTitle", dataDeserializer, varsSerializer, vars);
   }
-}
-
-class ListMoviesByPartialTitle {
-  String name = "ListMoviesByPartialTitle";
-  ListMoviesByPartialTitle({required this.dataConnect});
-  ListMoviesByPartialTitleVariablesBuilder ref({
-    required String input,
-  }) {
-    return ListMoviesByPartialTitleVariablesBuilder(
-      dataConnect,
-      input: input,
-    );
-  }
-
-  FirebaseDataConnect dataConnect;
 }
 
 class ListMoviesByPartialTitleMovies {
@@ -52,7 +43,9 @@ class ListMoviesByPartialTitleMovies {
       : id = nativeFromJson<String>(json['id']),
         title = nativeFromJson<String>(json['title']),
         genre = nativeFromJson<String>(json['genre']),
-        rating = nativeFromJson<double>(json['rating']) {}
+        rating = json['rating'] == null
+            ? null
+            : nativeFromJson<double>(json['rating']) {}
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};

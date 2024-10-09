@@ -13,7 +13,11 @@ class AddTimestampVariablesBuilder {
       (dynamic json) => AddTimestampData.fromJson(jsonDecode(json));
   Serializer<AddTimestampVariables> varsSerializer =
       (AddTimestampVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<AddTimestampData, AddTimestampVariables> build() {
+  Future<OperationResult<AddTimestampData, AddTimestampVariables>> execute() {
+    return this.ref().execute();
+  }
+
+  MutationRef<AddTimestampData, AddTimestampVariables> ref() {
     AddTimestampVariables vars = AddTimestampVariables(
       timestamp: timestamp,
     );
@@ -23,37 +27,22 @@ class AddTimestampVariablesBuilder {
   }
 }
 
-class AddTimestamp {
-  String name = "addTimestamp";
-  AddTimestamp({required this.dataConnect});
-  AddTimestampVariablesBuilder ref({
-    required Timestamp timestamp,
-  }) {
-    return AddTimestampVariablesBuilder(
-      dataConnect,
-      timestamp: timestamp,
-    );
-  }
-
-  FirebaseDataConnect dataConnect;
-}
-
 class AddTimestampTimestampHolderInsert {
-  String id;
+  Timestamp timestamp;
 
   AddTimestampTimestampHolderInsert.fromJson(dynamic json)
-      : id = nativeFromJson<String>(json['id']) {}
+      : timestamp = Timestamp.fromJson(json['timestamp']) {}
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
-    json['id'] = nativeToJson<String>(id);
+    json['timestamp'] = timestamp.toJson();
 
     return json;
   }
 
   AddTimestampTimestampHolderInsert({
-    required this.id,
+    required this.timestamp,
   });
 }
 

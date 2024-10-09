@@ -9,22 +9,14 @@ class ListTimestampsVariablesBuilder {
   Deserializer<ListTimestampsData> dataDeserializer =
       (dynamic json) => ListTimestampsData.fromJson(jsonDecode(json));
 
-  QueryRef<ListTimestampsData, void> build() {
+  Future<QueryResult<ListTimestampsData, void>> execute() {
+    return this.ref().execute();
+  }
+
+  QueryRef<ListTimestampsData, void> ref() {
     return _dataConnect.query(
         "ListTimestamps", dataDeserializer, emptySerializer, null);
   }
-}
-
-class ListTimestamps {
-  String name = "ListTimestamps";
-  ListTimestamps({required this.dataConnect});
-  ListTimestampsVariablesBuilder ref() {
-    return ListTimestampsVariablesBuilder(
-      dataConnect,
-    );
-  }
-
-  FirebaseDataConnect dataConnect;
 }
 
 class ListTimestampsTimestampHolders {
@@ -34,7 +26,9 @@ class ListTimestampsTimestampHolders {
 
   ListTimestampsTimestampHolders.fromJson(dynamic json)
       : timestamp = Timestamp.fromJson(json['timestamp']),
-        date = nativeFromJson<DateTime>(json['date']) {}
+        date = json['date'] == null
+            ? null
+            : nativeFromJson<DateTime>(json['date']) {}
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};

@@ -9,22 +9,14 @@ class ListPersonsVariablesBuilder {
   Deserializer<ListPersonsData> dataDeserializer =
       (dynamic json) => ListPersonsData.fromJson(jsonDecode(json));
 
-  QueryRef<ListPersonsData, void> build() {
+  Future<QueryResult<ListPersonsData, void>> execute() {
+    return this.ref().execute();
+  }
+
+  QueryRef<ListPersonsData, void> ref() {
     return _dataConnect.query(
         "ListPersons", dataDeserializer, emptySerializer, null);
   }
-}
-
-class ListPersons {
-  String name = "ListPersons";
-  ListPersons({required this.dataConnect});
-  ListPersonsVariablesBuilder ref() {
-    return ListPersonsVariablesBuilder(
-      dataConnect,
-    );
-  }
-
-  FirebaseDataConnect dataConnect;
 }
 
 class ListPersonsPeople {

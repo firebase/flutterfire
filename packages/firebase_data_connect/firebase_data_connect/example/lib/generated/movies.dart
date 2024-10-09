@@ -11,6 +11,8 @@ part 'add_timestamp.dart';
 
 part 'add_date_and_timestamp.dart';
 
+part 'delete_all_timestamps.dart';
+
 part 'seed_movies.dart';
 
 part 'create_movie.dart';
@@ -31,61 +33,124 @@ part 'list_thing.dart';
 
 part 'list_timestamps.dart';
 
+part 'list_movies_by_genre.dart';
+
 class MoviesConnector {
-  AddPerson get addPerson {
-    return AddPerson(dataConnect: dataConnect);
+  AddPersonVariablesBuilder addPerson() {
+    return AddPersonVariablesBuilder(
+      dataConnect,
+    );
   }
 
-  AddDirectorToMovie get addDirectorToMovie {
-    return AddDirectorToMovie(dataConnect: dataConnect);
+  AddDirectorToMovieVariablesBuilder addDirectorToMovie() {
+    return AddDirectorToMovieVariablesBuilder(
+      dataConnect,
+    );
   }
 
-  AddTimestamp get addTimestamp {
-    return AddTimestamp(dataConnect: dataConnect);
+  AddTimestampVariablesBuilder addTimestamp({
+    required Timestamp timestamp,
+  }) {
+    return AddTimestampVariablesBuilder(
+      dataConnect,
+      timestamp: timestamp,
+    );
   }
 
-  AddDateAndTimestamp get addDateAndTimestamp {
-    return AddDateAndTimestamp(dataConnect: dataConnect);
+  AddDateAndTimestampVariablesBuilder addDateAndTimestamp({
+    required DateTime date,
+    required Timestamp timestamp,
+  }) {
+    return AddDateAndTimestampVariablesBuilder(
+      dataConnect,
+      date: date,
+      timestamp: timestamp,
+    );
   }
 
-  SeedMovies get seedMovies {
-    return SeedMovies(dataConnect: dataConnect);
+  DeleteAllTimestampsVariablesBuilder deleteAllTimestamps() {
+    return DeleteAllTimestampsVariablesBuilder(
+      dataConnect,
+    );
   }
 
-  CreateMovie get createMovie {
-    return CreateMovie(dataConnect: dataConnect);
+  SeedMoviesVariablesBuilder seedMovies() {
+    return SeedMoviesVariablesBuilder(
+      dataConnect,
+    );
   }
 
-  DeleteMovie get deleteMovie {
-    return DeleteMovie(dataConnect: dataConnect);
+  CreateMovieVariablesBuilder createMovie({
+    required String title,
+    required int releaseYear,
+    required String genre,
+  }) {
+    return CreateMovieVariablesBuilder(
+      dataConnect,
+      title: title,
+      releaseYear: releaseYear,
+      genre: genre,
+    );
   }
 
-  Thing get thing {
-    return Thing(dataConnect: dataConnect);
+  DeleteMovieVariablesBuilder deleteMovie({
+    required String id,
+  }) {
+    return DeleteMovieVariablesBuilder(
+      dataConnect,
+      id: id,
+    );
   }
 
-  SeedData get seedData {
-    return SeedData(dataConnect: dataConnect);
+  ThingVariablesBuilder thing() {
+    return ThingVariablesBuilder(
+      dataConnect,
+    );
   }
 
-  ListMovies get listMovies {
-    return ListMovies(dataConnect: dataConnect);
+  SeedDataVariablesBuilder seedData() {
+    return SeedDataVariablesBuilder(
+      dataConnect,
+    );
   }
 
-  ListMoviesByPartialTitle get listMoviesByPartialTitle {
-    return ListMoviesByPartialTitle(dataConnect: dataConnect);
+  ListMoviesVariablesBuilder listMovies() {
+    return ListMoviesVariablesBuilder(
+      dataConnect,
+    );
   }
 
-  ListPersons get listPersons {
-    return ListPersons(dataConnect: dataConnect);
+  ListMoviesByPartialTitleVariablesBuilder listMoviesByPartialTitle({
+    required String input,
+  }) {
+    return ListMoviesByPartialTitleVariablesBuilder(
+      dataConnect,
+      input: input,
+    );
   }
 
-  ListThing get listThing {
-    return ListThing(dataConnect: dataConnect);
+  ListPersonsVariablesBuilder listPersons() {
+    return ListPersonsVariablesBuilder(
+      dataConnect,
+    );
   }
 
-  ListTimestamps get listTimestamps {
-    return ListTimestamps(dataConnect: dataConnect);
+  ListThingVariablesBuilder listThing() {
+    return ListThingVariablesBuilder(
+      dataConnect,
+    );
+  }
+
+  ListTimestampsVariablesBuilder listTimestamps() {
+    return ListTimestampsVariablesBuilder(
+      dataConnect,
+    );
+  }
+
+  ListMoviesByGenreVariablesBuilder listMoviesByGenre() {
+    return ListMoviesByGenreVariablesBuilder(
+      dataConnect,
+    );
   }
 
   static ConnectorConfig connectorConfig = ConnectorConfig(
