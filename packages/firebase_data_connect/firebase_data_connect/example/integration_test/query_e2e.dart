@@ -212,5 +212,26 @@ void runQueryTests() {
           timestamp.nanoseconds);
       expect(result.timestampHolders[0].date, date);
     });
+
+    testWidgets('should only send fields set in the builder pattern',
+        (WidgetTester tester) async {
+      await deleteAllMovies();
+      final movieBuilder = MoviesConnector.instance.createMovie(
+        genre: 'Action', // Required field
+        title: 'Inception', // Required field
+        releaseYear: 2010, // Required field
+      );
+
+      await movieBuilder.ref().execute();
+
+      final value = await MoviesConnector.instance.listMovies().ref().execute();
+
+      final result = value.data;
+      expect(result.movies.length, 1);
+      expect(result.movies[0].title, 'Inception');
+      expect(result.movies[0].genre, 'Action');
+      expect(result.movies[0].releaseYear, 2010);
+      expect(result.movies[0].rating, null);
+    });
   });
 }

@@ -3,6 +3,8 @@ query ListMovies @auth(level: USER) {
   movies {
     id
     title
+    genre
+    releaseYear
     directed_by: people_via_DirectedBy {
       name
     }
