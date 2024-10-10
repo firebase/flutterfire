@@ -1,6 +1,6 @@
 # firebase_vertexai_example
 
-Sample app to show how to use Vertex AI for Firebase.
+Sample app to show how to use Vertex AI in Firebase.
 
 ## Getting Started
 
