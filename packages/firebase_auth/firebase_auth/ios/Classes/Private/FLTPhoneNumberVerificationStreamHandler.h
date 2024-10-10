@@ -10,7 +10,7 @@
 #import <Flutter/Flutter.h>
 #endif
 
-#import <Firebase/Firebase.h>
+@import FirebaseAuth;
 #import "firebase_auth_messages.g.h"
 
 #import <Foundation/Foundation.h>

@@ -10,7 +10,7 @@
 #import <Flutter/Flutter.h>
 #endif
 
-#import <Firebase/Firebase.h>
+@import FirebaseAuth;
 
 #import <Foundation/Foundation.h>
 #import "CustomPigeonHeader.h"

@@ -1,3 +1,15 @@
+## 3.10.3
+
+ - **FIX**(storage,web): fix putData when using UInt8List ([#13466](https://github.com/firebase/flutterfire/issues/13466)). ([2bfb549e](https://github.com/firebase/flutterfire/commit/2bfb549ee6706648a0bf661781195171cfb05cb5))
+
+## 3.10.2
+
+ - Update a dependency to the latest release.
+
+## 3.10.1
+
+ - Update a dependency to the latest release.
+
 ## 3.10.0
 
  - **FEAT**(web): update to `web: ^1.0.0` ([#13200](https://github.com/firebase/flutterfire/issues/13200)). ([8fab04ae](https://github.com/firebase/flutterfire/commit/8fab04aec3b95789856d95639131bf09db29175b))
