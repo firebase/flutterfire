@@ -143,6 +143,7 @@ NotificationSettings convertToNotificationSettings(Map<String, int> map) {
         convertToAppleNotificationSetting(map['notificationCenter']),
     showPreviews: convertToAppleShowPreviewSetting(map['showPreviews']),
     sound: convertToAppleNotificationSetting(map['sound']),
+    providesAppNotificationSettings: convertToAppleNotificationSetting(map['providesAppNotificationSettings']),
   );
 }
 
@@ -159,4 +160,5 @@ const NotificationSettings defaultNotificationSettings = NotificationSettings(
   sound: AppleNotificationSetting.notSupported,
   timeSensitive: AppleNotificationSetting.notSupported,
   criticalAlert: AppleNotificationSetting.notSupported,
+  providesAppNotificationSettings: AppleNotificationSetting.notSupported,
 );

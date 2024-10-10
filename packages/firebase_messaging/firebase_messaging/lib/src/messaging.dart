@@ -193,6 +193,12 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     ///
     /// iOS/macOS only.
     bool sound = true,
+
+    /// Request permission for an option indicating the system should display a button for in-app notification settings.
+    /// Defaults to `false`.
+    ///
+    /// iOS/macOS only.
+    bool providesAppNotificationSettings = false,
   }) {
     return _delegate.requestPermission(
       alert: alert,
@@ -202,6 +208,7 @@ class FirebaseMessaging extends FirebasePluginPlatform {
       criticalAlert: criticalAlert,
       provisional: provisional,
       sound: sound,
+      providesAppNotificationSettings: providesAppNotificationSettings,
     );
   }
 
