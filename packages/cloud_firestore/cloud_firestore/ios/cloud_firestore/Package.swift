@@ -20,14 +20,14 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "11.0.0"),
-    .package(url: "https://github.com/firebase/flutterfire", .branch("spm-firestore"))
+    .package(name: "firebase_core", path: "../../../../firebase_core/firebase_core/ios/firebase_core")
   ],
   targets: [
     .target(
       name: "cloud_firestore",
       dependencies: [
         .product(name: "FirebaseFirestore", package: "firebase-ios-sdk"),
-        .product(name: "firebase_core", package: "flutterfire"), // Add firebase_core to target dependencies
+        .product(name: "firebase-core", package: "firebase_core") // Add firebase_core to target dependencies
       ],
       resources: [
         .process("Resources"),
