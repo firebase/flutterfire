@@ -142,6 +142,7 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
     bool criticalAlert = false,
     bool provisional = false,
     bool sound = true,
+    bool providesAppNotificationSettings = false,
   }) {
     return convertWebExceptions(() async {
       String status =

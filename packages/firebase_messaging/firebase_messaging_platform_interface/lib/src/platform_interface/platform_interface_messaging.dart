@@ -252,6 +252,12 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     ///
     /// iOS only.
     bool sound = true,
+
+    /// Request permission for an option indicating the system should display a button for in-app notification settings.
+    /// Defaults to `false`.
+    ///
+    /// iOS/macOS only.
+    bool providesAppNotificationSettings = false,
   }) {
     throw UnimplementedError('requestPermission() is not implemented');
   }
