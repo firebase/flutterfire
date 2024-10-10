@@ -9,6 +9,7 @@
 #import <Flutter/Flutter.h>
 #endif
 
+@import FirebaseFirestore;
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN

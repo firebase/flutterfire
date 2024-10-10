@@ -9,8 +9,8 @@
 #import <Flutter/Flutter.h>
 #endif
 
-#import <Firebase/Firebase.h>
-#import "FirestoreMessages.g.h"
+@import FirebaseFirestore;
+#import "../Public/FirestoreMessages.g.h"
 
 #import <Foundation/Foundation.h>
 
