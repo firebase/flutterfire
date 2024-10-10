@@ -96,7 +96,7 @@ class _ChatWidgetState extends State<ChatWidget> {
       _functionCallModel = FirebaseVertexAI.instance.generativeModel(
         model: 'gemini-1.5-flash',
         tools: [
-          Tool.functionDeclarations([getWeatherTool]),
+          Tool.functionDeclarations([fetchWeatherTool]),
         ],
       );
       _chat = _model.startChat();
@@ -104,16 +104,18 @@ class _ChatWidgetState extends State<ChatWidget> {
   }
 
   // This is a hypothetical API to return a fake weather data collection for certain location
-  Future<Map<String, Object?>> getWeather(
-    Map<String, Object?> arguments,
+  Future<Map<String, Object?>> fetchWeather(
+    double latitude,
+    double longitude,
+    String date,
   ) async {
     // Possible external api call
     // apiResponse = await requests.post(weather_api_url, data={'location': arguments['location'], 'date': arguments['date']});
 
     // Mock up apiResponse
     final apiResponse = {
-      'location': arguments['location'],
-      'date': arguments['date'],
+      'location': '$latitude, $longitude',
+      'date': date,
       'temperature': 38,
       'chancePrecipitation': '56%',
       'cloudConditions': 'partly-cloudy',
@@ -122,47 +124,29 @@ class _ChatWidgetState extends State<ChatWidget> {
   }
 
   /// Actual function to demonstrate the function calling feature.
-  final getWeatherTool = FunctionDeclaration(
-    'fetchCurrentWeather',
+  final fetchWeatherTool = FunctionDeclaration(
+    'fetchWeather',
     'Get the weather conditions for a specific city on a specific date.',
     parameters: {
-      'location': Schema.string(
+      'location': Schema.object(
         description:
-            'The city name of the location for which to get the weather.',
+            'The longitude and latitude of the city for which to get the weather. Must always be a nested object of `longitude` and `latitude`. The values must be floats.',
+        properties: {
+          'latitude': Schema.number(
+            format: 'float',
+            description:
+                'A numeric value indicating the latitude of the desired location between -90 and 90',
+          ),
+          'longitude': Schema.number(
+            format: 'float',
+            description:
+                'A numeric value indicating the longitude of the desired location between -180 and 180',
+          ),
+        },
       ),
-      'date':
-          Schema.string(description: 'The date for which to get the weather.'),
-    },
-  );
-
-  /// Sample function to show the usage of Schema, and demo the usage of ToolConfig.
-  final extractSaleRecordsTool = FunctionDeclaration(
-    'extractSaleRecords',
-    'Extract sale records from a document.',
-    parameters: {
-      'records': Schema.array(
-        description: 'A list of sale records',
-        items: Schema.object(
-          description: 'Data for a sale record',
-          properties: {
-            'id': Schema.integer(description: 'The unique id of the sale.'),
-            'date': Schema.string(
-              description:
-                  'Date of the sale, in the format of MMDDYY, e.g., 031023',
-            ),
-            'totalAmount':
-                Schema.number(description: 'The total amount of the sale.'),
-            'customerName': Schema.string(
-              description:
-                  'The name of the customer, including first name and last name.',
-            ),
-            'customerContact': Schema.string(
-              description:
-                  'The phone number of the customer, e.g., 650-123-4567.',
-            ),
-          },
-          optionalProperties: ['customerName', 'customerContact'],
-        ),
+      'date': Schema.string(
+        description:
+            'The date for which to get the weather. Date must be in the format: YYYY-MM-DD.',
       ),
     },
   );
@@ -532,7 +516,7 @@ class _ChatWidgetState extends State<ChatWidget> {
       _loading = true;
     });
     final functionCallChat = _functionCallModel.startChat();
-    const prompt = 'What is the weather like in Boston on 10/2 2024?';
+    const prompt = 'What is the weather like in Boston on 10/02 this year?';
 
     // Send the message to the generative model.
     var response = await functionCallChat.sendMessage(
@@ -543,21 +527,23 @@ class _ChatWidgetState extends State<ChatWidget> {
     // When the model response with a function call, invoke the function.
     if (functionCalls.isNotEmpty) {
       final functionCall = functionCalls.first;
-      final functionResult = switch (functionCall.name) {
-        // Forward the structured input data prepared by the model
-        // to the hypothetical external API.
-        'fetchCurrentWeather' => await getWeather(functionCall.args),
-        // Throw an exception if the model attempted to call a function that was
-        // not declared.
-        _ => throw UnimplementedError(
-            'Function not declared to the model: ${functionCall.name}',
-          )
-      };
-      // Send the response to the model so that it can use the result to generate
-      // text for the user.
-      response = await functionCallChat.sendMessage(
-        Content.functionResponse(functionCall.name, functionResult),
-      );
+      if (functionCall.name == 'fetchWeather') {
+        Map<String, dynamic> location =
+            functionCall.args['location']! as Map<String, dynamic>;
+        var date = functionCall.args['date']! as String;
+        var latitude = location['latitude']! as double;
+        var longitude = location['longitude']! as double;
+        final functionResult = await fetchWeather(latitude, longitude, date);
+        // Send the response to the model so that it can use the result to generate
+        // text for the user.
+        response = await functionCallChat.sendMessage(
+          Content.functionResponse(functionCall.name, functionResult),
+        );
+      } else {
+        throw UnimplementedError(
+          'Function not declared to the model: ${functionCall.name}',
+        );
+      }
     }
     // When the model responds with non-null text content, print it.
     if (response.text case final text?) {
