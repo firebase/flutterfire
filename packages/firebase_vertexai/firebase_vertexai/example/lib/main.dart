@@ -109,10 +109,8 @@ class _ChatWidgetState extends State<ChatWidget> {
     double longitude,
     String date,
   ) async {
-    // Possible external api call
-    // apiResponse = await requests.post(weather_api_url, data={'location': arguments['location'], 'date': arguments['date']});
-
-    // Mock up apiResponse
+    // TODO(developer): Call a real weather API.
+    // Mock response from the API. In developer live code this would call the external API and return what that API returns.
     final apiResponse = {
       'location': '$latitude, $longitude',
       'date': date,
