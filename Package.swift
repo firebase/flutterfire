@@ -29,11 +29,10 @@ let package = Package(
         // No product for firebase-core so we pull in the smallest one
         .product(name: "FirebaseInstallations", package: "firebase-ios-sdk"),
       ],
-      path: "packages/firebase_core/firebase_core/ios/firebase_core/Sources", // Specify the path to the source files
-      publicHeadersPath: "packages/firebase_core/firebase_core/ios/firebase_core/Sources/firebase_core/include/firebase_core",
-      // resources: [
-      //   .process("packages/firebase_core/firebase_core/ios/firebase_core/Sources/firebase_core/Resources"),
-      // ],
+      // path: "packages/firebase_core/firebase_core/ios/firebase_core/Sources", // Specify the path to the source files
+      resources: [
+        .process("packages/firebase_core/firebase_core/ios/firebase_core/Sources/firebase_core/Resources"),
+      ],
       cSettings: [
         .headerSearchPath("packages/firebase_core/firebase_core/ios/firebase_core/Sources/firebase_core/include/firebase_core"),
         .define("LIBRARY_VERSION", to: "\"\(library_version)\""),
