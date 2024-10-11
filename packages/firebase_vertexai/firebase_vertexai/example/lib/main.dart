@@ -103,14 +103,16 @@ class _ChatWidgetState extends State<ChatWidget> {
     });
   }
 
-  // This is a hypothetical API to return a fake weather data collection for certain location
+  // This is a hypothetical API to return a fake weather data collection for
+  // certain location
   Future<Map<String, Object?>> fetchWeather(
     double latitude,
     double longitude,
     String date,
   ) async {
     // TODO(developer): Call a real weather API.
-    // Mock response from the API. In developer live code this would call the external API and return what that API returns.
+    // Mock response from the API. In developer live code this would call the
+    // external API and return what that API returns.
     final apiResponse = {
       'location': '$latitude, $longitude',
       'date': date,
@@ -127,24 +129,26 @@ class _ChatWidgetState extends State<ChatWidget> {
     'Get the weather conditions for a specific city on a specific date.',
     parameters: {
       'location': Schema.object(
-        description:
-            'The longitude and latitude of the city for which to get the weather. Must always be a nested object of `longitude` and `latitude`. The values must be floats.',
+        description: 'The longitude and latitude of the city for which to get '
+            'the weather. Must always be a nested object of '
+            '`longitude` and `latitude`. The values must be floats.',
         properties: {
           'latitude': Schema.number(
             format: 'float',
-            description:
-                'A numeric value indicating the latitude of the desired location between -90 and 90',
+            description: 'A numeric value indicating the latitude of the '
+                'desired location between -90 and 90',
           ),
           'longitude': Schema.number(
             format: 'float',
             description:
-                'A numeric value indicating the longitude of the desired location between -180 and 180',
+                'A numeric value indicating the longitude of the desired '
+                'location between -180 and 180',
           ),
         },
       ),
       'date': Schema.string(
-        description:
-            'The date for which to get the weather. Date must be in the format: YYYY-MM-DD.',
+        description: 'The date for which to get the weather. '
+            'Date must be in the format: YYYY-MM-DD.',
       ),
     },
   );
@@ -532,8 +536,8 @@ class _ChatWidgetState extends State<ChatWidget> {
         var latitude = location['latitude']! as double;
         var longitude = location['longitude']! as double;
         final functionResult = await fetchWeather(latitude, longitude, date);
-        // Send the response to the model so that it can use the result to generate
-        // text for the user.
+        // Send the response to the model so that it can use the result to
+        // generate text for the user.
         response = await functionCallChat.sendMessage(
           Content.functionResponse(functionCall.name, functionResult),
         );
@@ -560,15 +564,17 @@ class _ChatWidgetState extends State<ChatWidget> {
     const prompt = 'tell a short story';
     var content = Content.text(prompt);
     var tokenResponse = await _model.countTokens([content]);
-    final tokenResult =
-        'Count token: ${tokenResponse.totalTokens}, billable characters: ${tokenResponse.totalBillableCharacters}';
+    final tokenResult = 'Count token: ${tokenResponse.totalTokens}, billable '
+        'characters: ${tokenResponse.totalBillableCharacters}';
     _generatedContent.add((image: null, text: tokenResult, fromUser: false));
 
     var contentResponse = await _model.generateContent([content]);
-    final contentMetaData =
-        'result metadata, promptTokenCount:${contentResponse.usageMetadata!.promptTokenCount}, '
-        'candidatesTokenCount:${contentResponse.usageMetadata!.candidatesTokenCount}, '
-        'totalTokenCount:${contentResponse.usageMetadata!.totalTokenCount}';
+    final contentMetaData = 'result metadata, promptTokenCount:'
+        '${contentResponse.usageMetadata!.promptTokenCount}, '
+        'candidatesTokenCount:'
+        '${contentResponse.usageMetadata!.candidatesTokenCount}, '
+        'totalTokenCount:'
+        '${contentResponse.usageMetadata!.totalTokenCount}';
     _generatedContent
         .add((image: null, text: contentMetaData, fromUser: false));
     setState(() {
