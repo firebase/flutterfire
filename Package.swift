@@ -8,35 +8,25 @@
 import Foundation
 import PackageDescription
 
-let firebase_sdk_version = "11.0.0"
-let library_version = "3.4.1"
-
+// Using this as a wrapper around firebase core, this allows retrieval of it via remote package
+// whilst also preserving firebase core's Package.swift file needed by Flutter
 let package = Package(
-  name: "firebase_core",
+  name: "remote_firebase_core",
   platforms: [
     .iOS("13.0"),
   ],
   products: [
-    .library(name: "firebase-core", targets: ["firebase_core"]),
+    .library(name: "remote-firebase-core", targets: ["remote_firebase_core"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: Version(firebase_sdk_version)!),
+    .package(path: "packages/firebase_core/firebase_core/ios/firebase_core"),
   ],
   targets: [
     .target(
-      name: "firebase_core",
+      name: "remote_firebase_core",
       dependencies: [
-        // No product for firebase-core so we pull in the smallest one
-        .product(name: "FirebaseInstallations", package: "firebase-ios-sdk"),
-      ],
-      // path: "packages/firebase_core/firebase_core/ios/firebase_core/Sources", // Specify the path to the source files
-      resources: [
-        .process("packages/firebase_core/firebase_core/ios/firebase_core/Sources/firebase_core/Resources"),
-      ],
-      cSettings: [
-        .headerSearchPath("packages/firebase_core/firebase_core/ios/firebase_core/Sources/firebase_core/include/firebase_core"),
-        .define("LIBRARY_VERSION", to: "\"\(library_version)\""),
-        .define("LIBRARY_NAME", to: "\"flutter-fire-core\""),
+        // Add the firebase_core package as a dependency
+        .product(name: "firebase-core", package: "firebase_core"),
       ]
     ),
   ]

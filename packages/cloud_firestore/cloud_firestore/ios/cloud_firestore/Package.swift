@@ -8,7 +8,58 @@
 import Foundation
 import PackageDescription
 
-let library_version = "5.4.1"
+
+enum ConfigurationError: Error {
+  case fileNotFound(String)
+  case parsingError(String)
+  case invalidFormat(String)
+}
+
+let iosRootDirectory = String(URL(string: #file)!.deletingLastPathComponent().absoluteString
+  .dropLast())
+
+func loadPubspecVersion() throws -> (libraryVersion: String, iosSdkVersion: String) {
+  let pubspecPath = NSString.path(withComponents: [iosRootDirectory, "..", "..", "pubspec.yaml"])
+  do {
+    let yamlString = try String(contentsOfFile: pubspecPath, encoding: .utf8)
+    let lines = yamlString.split(separator: "\n")
+
+    guard let versionLine = lines.first(where: { $0.starts(with: "version:") }) else {
+      throw ConfigurationError.invalidFormat("No version line found in pubspec.yaml")
+    }
+    let libraryVersion = versionLine.split(separator: ":")[1].trimmingCharacters(in: .whitespaces)
+      .replacingOccurrences(of: "+", with: "-")
+
+    // Adjusted to find ios_sdk under the firebase key
+    guard let firebaseIndex = lines.firstIndex(where: { $0.starts(with: "firebase:") }) else {
+      throw ConfigurationError.invalidFormat("No firebase section found in pubspec.yaml")
+    }
+    let iosSdkLine = lines.dropFirst(firebaseIndex + 1).first(where: { $0.trimmingCharacters(in: .whitespaces).starts(with: "ios_sdk:") })
+    guard let iosSdkLine = iosSdkLine else {
+      throw ConfigurationError.invalidFormat("No ios_sdk line found in pubspec.yaml")
+    }
+    let iosSdkVersion = iosSdkLine.split(separator: ":")[1].trimmingCharacters(in: .whitespaces)
+
+    return (libraryVersion, iosSdkVersion)
+  } catch {
+    throw ConfigurationError.fileNotFound("Error loading or parsing pubspec.yaml: \(error)")
+  }
+}
+
+let library_version: String
+let firebase_sdk_version_string: String
+
+do {
+  let versions = try loadPubspecVersion()
+  library_version = versions.libraryVersion
+  firebase_sdk_version_string = versions.iosSdkVersion
+} catch {
+  fatalError("Failed to load configuration: \(error)")
+}
+
+guard let firebase_sdk_version = Version(firebase_sdk_version_string) else {
+  fatalError("Invalid Firebase SDK version: \(firebase_sdk_version_string)")
+}
 
 let package = Package(
   name: "cloud_firestore",
@@ -19,16 +70,17 @@ let package = Package(
     .library(name: "cloud-firestore", targets: ["cloud_firestore"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "11.0.0"),
-    .package( url: "https://github.com/firebase/flutterfire", branch: "spm-firestore")
-    // .package(name: "firebase_core", path: "../../../../firebase_core/firebase_core/ios/firebase_core")
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version),
+    // TODO - this needs a version instead
+    .package(url:"https://github.com/firebase/flutterfire", branch: "spm-firestore"),
   ],
   targets: [
     .target(
       name: "cloud_firestore",
       dependencies: [
         .product(name: "FirebaseFirestore", package: "firebase-ios-sdk"),
-        .product(name: "firebase-core", package: "flutterfire") // Add firebase_core to target dependencies
+        // Wrapper dependency
+        .product(name: "remote-firebase-core", package: "flutterfire")
       ],
       resources: [
         .process("Resources"),
