@@ -1,7 +1,16 @@
-// Copyright 2024, the Chromium project authors.  Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
-
+// Copyright 2024 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 //  Generated code. Do not modify.
 //  source: graphql_error.proto
@@ -27,7 +36,7 @@ const GraphqlError$json = {
       '3': 2,
       '4': 3,
       '5': 11,
-      '6': '.google.firebase.dataconnect.v1alpha.SourceLocation',
+      '6': '.google.firebase.dataconnect.v1beta.SourceLocation',
       '10': 'locations'
     },
     {
@@ -43,7 +52,7 @@ const GraphqlError$json = {
       '3': 4,
       '4': 1,
       '5': 11,
-      '6': '.google.firebase.dataconnect.v1alpha.GraphqlErrorExtensions',
+      '6': '.google.firebase.dataconnect.v1beta.GraphqlErrorExtensions',
       '10': 'extensions'
     },
   ],
@@ -51,11 +60,11 @@ const GraphqlError$json = {
 
 /// Descriptor for `GraphqlError`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List graphqlErrorDescriptor = $convert.base64Decode(
-    'CgxHcmFwaHFsRXJyb3ISGAoHbWVzc2FnZRgBIAEoCVIHbWVzc2FnZRJRCglsb2NhdGlvbnMYAi'
-    'ADKAsyMy5nb29nbGUuZmlyZWJhc2UuZGF0YWNvbm5lY3QudjFhbHBoYS5Tb3VyY2VMb2NhdGlv'
-    'blIJbG9jYXRpb25zEi4KBHBhdGgYAyABKAsyGi5nb29nbGUucHJvdG9idWYuTGlzdFZhbHVlUg'
-    'RwYXRoElsKCmV4dGVuc2lvbnMYBCABKAsyOy5nb29nbGUuZmlyZWJhc2UuZGF0YWNvbm5lY3Qu'
-    'djFhbHBoYS5HcmFwaHFsRXJyb3JFeHRlbnNpb25zUgpleHRlbnNpb25z');
+    'CgxHcmFwaHFsRXJyb3ISGAoHbWVzc2FnZRgBIAEoCVIHbWVzc2FnZRJQCglsb2NhdGlvbnMYAi'
+    'ADKAsyMi5nb29nbGUuZmlyZWJhc2UuZGF0YWNvbm5lY3QudjFiZXRhLlNvdXJjZUxvY2F0aW9u'
+    'Uglsb2NhdGlvbnMSLgoEcGF0aBgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5MaXN0VmFsdWVSBH'
+    'BhdGgSWgoKZXh0ZW5zaW9ucxgEIAEoCzI6Lmdvb2dsZS5maXJlYmFzZS5kYXRhY29ubmVjdC52'
+    'MWJldGEuR3JhcGhxbEVycm9yRXh0ZW5zaW9uc1IKZXh0ZW5zaW9ucw==');
 
 @$core.Deprecated('Use sourceLocationDescriptor instead')
 const SourceLocation$json = {

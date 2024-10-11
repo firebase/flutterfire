@@ -6,6 +6,7 @@ query ListMovies @auth(level: USER) {
     directed_by: people_via_DirectedBy {
       name
     }
+    rating
   }
 }
 
@@ -21,8 +22,24 @@ query ListMoviesByPartialTitle($input: String!) @auth(level: PUBLIC) {
 
 query ListPersons @auth(level: USER) {
   people {
-    id
+  id
     name
+  }
+}
+query ListThing($data: Any) @auth(level: USER) {
+  things(where: {
+    title: {
+      eq: $data
+    }
+  }) {
+    title
+  }
+}
+
+query ListTimestamps @auth(level: USER) {
+  timestampHolders {
+    timestamp,
+    date
   }
 }
 

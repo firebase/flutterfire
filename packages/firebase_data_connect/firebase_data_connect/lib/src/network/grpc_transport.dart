@@ -1,13 +1,30 @@
-// Copyright 2024, the Chromium project authors.  Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
+// Copyright 2024 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 part of firebase_data_connect_grpc;
 
 /// Transport used for Android/iOS. Uses a GRPC transport instead of REST.
 class GRPCTransport implements DataConnectTransport {
   /// GRPCTransport creates a new channel
-  GRPCTransport(this.transportOptions, this.options, this.auth, this.appCheck) {
+  GRPCTransport(
+    this.transportOptions,
+    this.options,
+    this.appId,
+    this.sdkType,
+    this.auth,
+    this.appCheck,
+  ) {
     bool isSecure =
         transportOptions.isSecure == null || transportOptions.isSecure == true;
     channel = ClientChannel(transportOptions.host,
@@ -29,6 +46,9 @@ class GRPCTransport implements DataConnectTransport {
   @override
   FirebaseAppCheck? appCheck;
 
+  @override
+  CallerSDKType sdkType;
+
   /// Name of the endpoint.
   late String name;
 
@@ -46,6 +66,10 @@ class GRPCTransport implements DataConnectTransport {
   @override
   DataConnectOptions options;
 
+  /// Application ID
+  @override
+  String appId;
+
   Future<Map<String, String>> getMetadata() async {
     String? authToken;
     try {
@@ -61,7 +85,7 @@ class GRPCTransport implements DataConnectTransport {
     }
     Map<String, String> metadata = {
       'x-goog-request-params': 'location=${options.location}&frontend=data',
-      'x-goog-api-client': 'gl-dart/flutter fire/$packageVersion'
+      'x-goog-api-client': getGoogApiVal(sdkType, packageVersion)
     };
 
     if (authToken != null) {
@@ -70,6 +94,7 @@ class GRPCTransport implements DataConnectTransport {
     if (appCheckToken != null) {
       metadata['X-Firebase-AppCheck'] = appCheckToken;
     }
+    metadata['x-firebase-gmpid'] = appId;
     return metadata;
   }
 
@@ -122,6 +147,9 @@ class GRPCTransport implements DataConnectTransport {
     try {
       response = await stub.executeMutation(request,
           options: CallOptions(metadata: await getMetadata()));
+      if (response.errors.isNotEmpty) {
+        throw Exception(response.errors);
+      }
       return deserializer(jsonEncode(response.data.toProto3Json()));
     } on Exception catch (e) {
       throw DataConnectError(DataConnectErrorCode.other,
@@ -134,6 +162,8 @@ class GRPCTransport implements DataConnectTransport {
 DataConnectTransport getTransport(
         TransportOptions transportOptions,
         DataConnectOptions options,
+        String appId,
+        CallerSDKType sdkType,
         FirebaseAuth? auth,
         FirebaseAppCheck? appCheck) =>
-    GRPCTransport(transportOptions, options, auth, appCheck);
+    GRPCTransport(transportOptions, options, appId, sdkType, auth, appCheck);

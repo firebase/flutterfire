@@ -9,6 +9,10 @@
 
 #import "FLTFirebaseMessagingPlugin.h"
 
+#if __has_include(<FirebaseAuth/FirebaseAuth.h>)
+@import FirebaseAuth;
+#endif
+
 NSString *const kFLTFirebaseMessagingChannelName = @"plugins.flutter.io/firebase_messaging";
 
 NSString *const kMessagingArgumentCode = @"code";
@@ -29,7 +33,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   BOOL _initialNotificationGathered;
   FLTFirebaseMethodCallResult *_initialNotificationResult;
 
-  NSString *_initialNoticationID;
+  NSString *_initialNotificationID;
   NSString *_notificationOpenedAppID;
 
 #ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
@@ -216,7 +220,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     // If remoteNotification exists, it is the notification that opened the app.
     _initialNotification =
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
-    _initialNoticationID = remoteNotification[@"gcm.message_id"];
+    _initialNotificationID = remoteNotification[@"gcm.message_id"];
   }
   _initialNotificationGathered = YES;
   [self initialNotificationCallback];
@@ -353,7 +357,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   // We only want to handle FCM notifications and stop firing `onMessageOpenedApp()` when app is
   // coming from a terminated state.
   if (_notificationOpenedAppID != nil &&
-      ![_initialNoticationID isEqualToString:_notificationOpenedAppID]) {
+      ![_initialNotificationID isEqualToString:_notificationOpenedAppID]) {
     NSDictionary *notificationDict =
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
     [_channel invokeMethod:@"Messaging#onMessageOpenedApp" arguments:notificationDict];
@@ -1032,7 +1036,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     // Only return if initial notification was sent when app is terminated. Also ensure that
     // it was the initial notification that was tapped to open the app.
     if (_initialNotification != nil &&
-        [_initialNoticationID isEqualToString:_notificationOpenedAppID]) {
+        [_initialNotificationID isEqualToString:_notificationOpenedAppID]) {
       NSDictionary *initialNotificationCopy = [_initialNotification copy];
       _initialNotification = nil;
       return initialNotificationCopy;

@@ -1,54 +1,68 @@
 part of movies;
 
+class AddPersonVariablesBuilder {
+  Optional<String> _name = Optional.optional(nativeFromJson, nativeToJson);
+
+  FirebaseDataConnect _dataConnect;
+  AddPersonVariablesBuilder name(String? t) {
+    this._name.value = t;
+    return this;
+  }
+
+  AddPersonVariablesBuilder(
+    this._dataConnect,
+  );
+  Deserializer<AddPersonData> dataDeserializer =
+      (dynamic json) => AddPersonData.fromJson(jsonDecode(json));
+  Serializer<AddPersonVariables> varsSerializer =
+      (AddPersonVariables vars) => jsonEncode(vars.toJson());
+  MutationRef<AddPersonData, AddPersonVariables> build() {
+    AddPersonVariables vars = AddPersonVariables(
+      name: _name,
+    );
+
+    return _dataConnect.mutation(
+        "addPerson", dataDeserializer, varsSerializer, vars);
+  }
+}
+
 class AddPerson {
   String name = "addPerson";
   AddPerson({required this.dataConnect});
-
-  Deserializer<AddPersonResponse> dataDeserializer = (String json) =>
-      AddPersonResponse.fromJson(jsonDecode(json) as Map<String, dynamic>);
-  Serializer<AddPersonVariables> varsSerializer =
-      (AddPersonVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<AddPersonResponse, AddPersonVariables> ref(
-      {String? name, AddPersonVariables? addPersonVariables}) {
-    AddPersonVariables vars1 = AddPersonVariables(
-      name: name,
+  AddPersonVariablesBuilder ref() {
+    return AddPersonVariablesBuilder(
+      dataConnect,
     );
-    AddPersonVariables vars = addPersonVariables ?? vars1;
-    return dataConnect.mutation(
-        this.name, dataDeserializer, varsSerializer, vars);
   }
 
   FirebaseDataConnect dataConnect;
 }
 
 class AddPersonPersonInsert {
-  late String id;
+  String id;
 
-  AddPersonPersonInsert.fromJson(Map<String, dynamic> json) : id = json['id'] {}
+  AddPersonPersonInsert.fromJson(dynamic json)
+      : id = nativeFromJson<String>(json['id']) {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
-    json['id'] = id;
+    json['id'] = nativeToJson<String>(id);
 
     return json;
   }
 
   AddPersonPersonInsert({
     required this.id,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
-  }
+  });
 }
 
-class AddPersonResponse {
-  late AddPersonPersonInsert person_insert;
+class AddPersonData {
+  AddPersonPersonInsert person_insert;
 
-  AddPersonResponse.fromJson(Map<String, dynamic> json)
+  AddPersonData.fromJson(dynamic json)
       : person_insert = AddPersonPersonInsert.fromJson(json['person_insert']) {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -57,33 +71,31 @@ class AddPersonResponse {
     return json;
   }
 
-  AddPersonResponse({
+  AddPersonData({
     required this.person_insert,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
-  }
+  });
 }
 
 class AddPersonVariables {
-  late String? name;
+  late Optional<String> name;
 
-  AddPersonVariables.fromJson(Map<String, dynamic> json)
-      : name = json['name'] {}
+  AddPersonVariables.fromJson(Map<String, dynamic> json) {
+    name = Optional.optional(nativeFromJson, nativeToJson);
+    name.value =
+        json['name'] == null ? null : nativeFromJson<String>(json['name']);
+  }
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
-    if (name != null) {
-      json['name'] = name;
+    if (name.state == OptionalState.set) {
+      json['name'] = name.toJson();
     }
 
     return json;
   }
 
   AddPersonVariables({
-    String? this.name,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
-  }
+    required this.name,
+  });
 }

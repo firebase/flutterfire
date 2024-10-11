@@ -1,13 +1,24 @@
-// Copyright 2024, the Chromium project authors.  Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
+// Copyright 2024 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 part of firebase_data_connect_rest;
 
 /// RestTransport makes requests out to the REST endpoints of the configured backend.
 class RestTransport implements DataConnectTransport {
   /// Initializes necessary protocol and port.
-  RestTransport(this.transportOptions, this.options, this.auth, this.appCheck) {
+  RestTransport(this.transportOptions, this.options, this.appId, this.sdkType,
+      this.auth, this.appCheck) {
     String protocol = 'http';
     if (transportOptions.isSecure == null ||
         transportOptions.isSecure == true) {
@@ -20,7 +31,7 @@ class RestTransport implements DataConnectTransport {
     String service = options.serviceId;
     String connector = options.connector;
     url =
-        '$protocol://$host:$port/v1alpha/projects/$project/locations/$location/services/$service/connectors/$connector';
+        '$protocol://$host:$port/v1beta/projects/$project/locations/$location/services/$service/connectors/$connector';
   }
 
   @override
@@ -28,6 +39,8 @@ class RestTransport implements DataConnectTransport {
 
   @override
   FirebaseAppCheck? appCheck;
+
+  CallerSDKType sdkType;
 
   /// Current endpoint URL.
   @visibleForTesting
@@ -48,6 +61,10 @@ class RestTransport implements DataConnectTransport {
   @override
   DataConnectOptions options;
 
+  /// Firebase application ID.
+  @override
+  String appId;
+
   /// Invokes the current operation, whether its a query or mutation.
   Future<Data> invokeOperation<Data, Variables>(
       String queryName,
@@ -62,7 +79,7 @@ class RestTransport implements DataConnectTransport {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'x-goog-api-client': 'gl-dart/flutter fire/$packageVersion'
+      'x-goog-api-client': getGoogApiVal(sdkType, packageVersion)
     };
     String? authToken;
     try {
@@ -74,7 +91,7 @@ class RestTransport implements DataConnectTransport {
     try {
       appCheckToken = await appCheck?.getToken();
     } catch (e) {
-      print('Unable to get app check token: $e');
+      log('Unable to get app check token: $e');
     }
     if (authToken != null) {
       headers['X-Firebase-Auth-Token'] = authToken;
@@ -82,6 +99,7 @@ class RestTransport implements DataConnectTransport {
     if (appCheckToken != null) {
       headers['X-Firebase-AppCheck'] = appCheckToken;
     }
+    headers['x-firebase-gmpid'] = appId;
 
     Map<String, dynamic> body = {
       'name':
@@ -104,6 +122,14 @@ class RestTransport implements DataConnectTransport {
                 ? DataConnectErrorCode.unauthorized
                 : DataConnectErrorCode.other,
             "Received a status code of ${r.statusCode} with a message '${message}'");
+      } else {
+        Map<String, dynamic> bodyJson =
+            jsonDecode(r.body) as Map<String, dynamic>;
+        if (bodyJson.containsKey("errors") &&
+            (bodyJson['errors'] as List).isNotEmpty) {
+          throw DataConnectError(
+              DataConnectErrorCode.other, bodyJson['errors'].toString());
+        }
       }
 
       /// The response we get is in the data field of the response
@@ -148,6 +174,8 @@ class RestTransport implements DataConnectTransport {
 DataConnectTransport getTransport(
         TransportOptions transportOptions,
         DataConnectOptions options,
+        String appId,
+        CallerSDKType sdkType,
         FirebaseAuth? auth,
         FirebaseAppCheck? appCheck) =>
-    RestTransport(transportOptions, options, auth, appCheck);
+    RestTransport(transportOptions, options, appId, sdkType, auth, appCheck);

@@ -1,35 +1,47 @@
 part of movies;
 
+class ListPersonsVariablesBuilder {
+  FirebaseDataConnect _dataConnect;
+
+  ListPersonsVariablesBuilder(
+    this._dataConnect,
+  );
+  Deserializer<ListPersonsData> dataDeserializer =
+      (dynamic json) => ListPersonsData.fromJson(jsonDecode(json));
+
+  QueryRef<ListPersonsData, void> build() {
+    return _dataConnect.query(
+        "ListPersons", dataDeserializer, emptySerializer, null);
+  }
+}
+
 class ListPersons {
   String name = "ListPersons";
   ListPersons({required this.dataConnect});
-
-  Deserializer<ListPersonsResponse> dataDeserializer = (String json) =>
-      ListPersonsResponse.fromJson(jsonDecode(json) as Map<String, dynamic>);
-
-  QueryRef<ListPersonsResponse, void> ref() {
-    return dataConnect.query(this.name, dataDeserializer, null, null);
+  ListPersonsVariablesBuilder ref() {
+    return ListPersonsVariablesBuilder(
+      dataConnect,
+    );
   }
 
   FirebaseDataConnect dataConnect;
 }
 
 class ListPersonsPeople {
-  late String id;
+  String id;
 
-  late String name;
+  String name;
 
-  ListPersonsPeople.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        name = json['name'] {}
+  ListPersonsPeople.fromJson(dynamic json)
+      : id = nativeFromJson<String>(json['id']),
+        name = nativeFromJson<String>(json['name']) {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
-    json['id'] = id;
+    json['id'] = nativeToJson<String>(id);
 
-    json['name'] = name;
+    json['name'] = nativeToJson<String>(name);
 
     return json;
   }
@@ -37,20 +49,17 @@ class ListPersonsPeople {
   ListPersonsPeople({
     required this.id,
     required this.name,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
-  }
+  });
 }
 
-class ListPersonsResponse {
-  late List<ListPersonsPeople> people;
+class ListPersonsData {
+  List<ListPersonsPeople> people;
 
-  ListPersonsResponse.fromJson(Map<String, dynamic> json)
+  ListPersonsData.fromJson(dynamic json)
       : people = (json['people'] as List<dynamic>)
             .map((e) => ListPersonsPeople.fromJson(e))
             .toList() {}
 
-  // TODO(mtewani): Fix up to create a map on the fly
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
@@ -59,9 +68,7 @@ class ListPersonsResponse {
     return json;
   }
 
-  ListPersonsResponse({
+  ListPersonsData({
     required this.people,
-  }) {
-    // TODO(mtewani): Only show this if there are optional fields.
-  }
+  });
 }

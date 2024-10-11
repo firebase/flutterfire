@@ -1,3 +1,8 @@
+## 3.6.0
+
+ - **FEAT**: bump iOS SDK to version 11.2.0 ([#13338](https://github.com/firebase/flutterfire/issues/13338)). ([ff1e5f67](https://github.com/firebase/flutterfire/commit/ff1e5f672cee29731dc4d21251611030add9e605))
+ - **FEAT**: bump Firebase android BOM to `33.3.0` ([#13390](https://github.com/firebase/flutterfire/issues/13390)). ([15c0284e](https://github.com/firebase/flutterfire/commit/15c0284e3f3555ff888e7817e0811b64b3d3164e))
+
 ## 3.5.0
 
  - **FEAT**(fdc): Initial Release of Data Connect ([#13313](https://github.com/firebase/flutterfire/issues/13313)). ([603a6726](https://github.com/firebase/flutterfire/commit/603a67261a2f7cbdd6ef594bfaef480aeb820683))

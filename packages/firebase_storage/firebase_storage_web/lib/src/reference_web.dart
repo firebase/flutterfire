@@ -4,6 +4,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:convert';
+import 'dart:js_interop';
 import 'dart:typed_data';
 
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
@@ -143,7 +144,7 @@ class ReferenceWeb extends ReferencePlatform {
     return TaskWeb(
       this,
       _ref.put(
-        data,
+        data.toJS,
         settableMetadataToFbUploadMetadata(
           _cache.store(metadata),
         ),
@@ -186,18 +187,24 @@ class ReferenceWeb extends ReferencePlatform {
     PutStringFormat format, [
     SettableMetadata? metadata,
   ]) {
-    dynamic _data = data;
+    late Uint8List _data;
 
     // The universal package is converting raw to base64, so we need to convert
     // Any base64 string values into a Uint8List.
     if (format == PutStringFormat.base64) {
       _data = base64Decode(data);
+    } else if (format == PutStringFormat.base64Url) {
+      _data = base64Url.decode(data);
+    } else {
+      // If the format is not base64 or base64Url, we need to encode the data
+      // as a base64 string.
+      _data = Uint8List.fromList(base64Encode(utf8.encode(data)).codeUnits);
     }
 
     return TaskWeb(
       this,
       _ref.put(
-        _data,
+        _data.toJS,
         settableMetadataToFbUploadMetadata(
           _cache.store(metadata),
           // md5 is computed server-side, so we don't have to unpack a potentially huge Blob.

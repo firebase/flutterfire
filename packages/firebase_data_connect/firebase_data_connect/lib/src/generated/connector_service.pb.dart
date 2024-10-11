@@ -1,7 +1,16 @@
-// Copyright 2024, the Chromium project authors.  Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
-
+// Copyright 2024 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 //  Generated code. Do not modify.
 //  source: connector_service.proto
@@ -50,7 +59,7 @@ class ExecuteQueryRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ExecuteQueryRequest',
       package: const $pb.PackageName(
-          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1alpha'),
+          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1beta'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'name')
     ..aOS(2, _omitFieldNames ? '' : 'operationName')
@@ -161,7 +170,7 @@ class ExecuteMutationRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ExecuteMutationRequest',
       package: const $pb.PackageName(
-          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1alpha'),
+          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1beta'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'name')
     ..aOS(2, _omitFieldNames ? '' : 'operationName')
@@ -270,7 +279,7 @@ class ExecuteQueryResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ExecuteQueryResponse',
       package: const $pb.PackageName(
-          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1alpha'),
+          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1beta'),
       createEmptyInstance: create)
     ..aOM<$1.Struct>(1, _omitFieldNames ? '' : 'data',
         subBuilder: $1.Struct.create)
@@ -349,7 +358,7 @@ class ExecuteMutationResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ExecuteMutationResponse',
       package: const $pb.PackageName(
-          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1alpha'),
+          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1beta'),
       createEmptyInstance: create)
     ..aOM<$1.Struct>(1, _omitFieldNames ? '' : 'data',
         subBuilder: $1.Struct.create)
