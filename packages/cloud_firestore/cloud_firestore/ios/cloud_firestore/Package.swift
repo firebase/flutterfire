@@ -71,8 +71,11 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version),
+    // This works
+    // .package(name:"flutterfire", path: "../../../../.."),
     // TODO - this needs a version instead
-    .package(url:"https://github.com/firebase/flutterfire", branch: "spm-firestore"),
+    // This isn't working
+    .package(url:"https://github.com/russellwheatley/test-flutterfire", exact: "0.0.19"),
   ],
   targets: [
     .target(
@@ -80,7 +83,7 @@ let package = Package(
       dependencies: [
         .product(name: "FirebaseFirestore", package: "firebase-ios-sdk"),
         // Wrapper dependency
-        .product(name: "remote-firebase-core", package: "flutterfire")
+        .product(name: "firebase-core-wrapper", package: "test-flutterfire")
       ],
       resources: [
         .process("Resources"),
