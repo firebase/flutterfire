@@ -24,7 +24,12 @@ class AddDirectorToMovieVariablesBuilder {
       (dynamic json) => AddDirectorToMovieData.fromJson(jsonDecode(json));
   Serializer<AddDirectorToMovieVariables> varsSerializer =
       (AddDirectorToMovieVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<AddDirectorToMovieData, AddDirectorToMovieVariables> build() {
+  Future<OperationResult<AddDirectorToMovieData, AddDirectorToMovieVariables>>
+      execute() {
+    return this.ref().execute();
+  }
+
+  MutationRef<AddDirectorToMovieData, AddDirectorToMovieVariables> ref() {
     AddDirectorToMovieVariables vars = AddDirectorToMovieVariables(
       personId: _personId,
       movieId: _movieId,
@@ -33,18 +38,6 @@ class AddDirectorToMovieVariablesBuilder {
     return _dataConnect.mutation(
         "addDirectorToMovie", dataDeserializer, varsSerializer, vars);
   }
-}
-
-class AddDirectorToMovie {
-  String name = "addDirectorToMovie";
-  AddDirectorToMovie({required this.dataConnect});
-  AddDirectorToMovieVariablesBuilder ref() {
-    return AddDirectorToMovieVariablesBuilder(
-      dataConnect,
-    );
-  }
-
-  FirebaseDataConnect dataConnect;
 }
 
 class AddDirectorToMovieDirectedByInsert {

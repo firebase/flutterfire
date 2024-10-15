@@ -17,7 +17,11 @@ class ListThingVariablesBuilder {
       (dynamic json) => ListThingData.fromJson(jsonDecode(json));
   Serializer<ListThingVariables> varsSerializer =
       (ListThingVariables vars) => jsonEncode(vars.toJson());
-  QueryRef<ListThingData, ListThingVariables> build() {
+  Future<QueryResult<ListThingData, ListThingVariables>> execute() {
+    return this.ref().execute();
+  }
+
+  QueryRef<ListThingData, ListThingVariables> ref() {
     ListThingVariables vars = ListThingVariables(
       data: _data,
     );
@@ -25,18 +29,6 @@ class ListThingVariablesBuilder {
     return _dataConnect.query(
         "ListThing", dataDeserializer, varsSerializer, vars);
   }
-}
-
-class ListThing {
-  String name = "ListThing";
-  ListThing({required this.dataConnect});
-  ListThingVariablesBuilder ref() {
-    return ListThingVariablesBuilder(
-      dataConnect,
-    );
-  }
-
-  FirebaseDataConnect dataConnect;
 }
 
 class ListThingThings {

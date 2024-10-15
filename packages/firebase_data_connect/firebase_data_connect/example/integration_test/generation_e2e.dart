@@ -30,40 +30,55 @@ void runGenerationTest() {
 
       testWidgets('should have generated correct MutationRef',
           (WidgetTester tester) async {
-        final ref = MoviesConnector.instance.createMovie
-            .ref(
+        final ref = MoviesConnector.instance
+            .createMovie(
               genre: 'Action',
               title: 'The Matrix',
               releaseYear: 1999,
             )
             .rating(4.5);
         expect(ref, isNotNull);
-        expect(ref.build().execute, isNotNull);
+        expect(ref.ref().execute, isNotNull);
       });
 
       testWidgets('should have generated correct QueryRef',
           (WidgetTester tester) async {
-        final ref = MoviesConnector.instance.listMovies.ref();
+        final ref = MoviesConnector.instance.listMovies();
         expect(ref, isNotNull);
-        expect(ref.build().execute, isNotNull);
+        expect(ref.ref().execute, isNotNull);
       });
 
       testWidgets('should have generated correct MutationRef using name',
           (WidgetTester tester) async {
-        final ref =
-            MoviesConnector.instance.addPerson.ref().name('Keanu Reeves');
+        final ref = MoviesConnector.instance.addPerson().name('Keanu Reeves');
         expect(ref, isNotNull);
-        expect(ref.build().execute, isNotNull);
+        expect(ref.ref().execute, isNotNull);
       });
 
       testWidgets('should have generated correct MutationRef using nested id',
           (WidgetTester tester) async {
-        final ref = MoviesConnector.instance.addDirectorToMovie
-            .ref()
+        final ref = MoviesConnector.instance
+            .addDirectorToMovie()
             .movieId('movieId')
             .personId(AddDirectorToMovieVariablesPersonId(id: 'personId'));
         expect(ref, isNotNull);
-        expect(ref.build().execute, isNotNull);
+        expect(ref.ref().execute, isNotNull);
+      });
+
+      testWidgets(
+          'should populate only non-required fields with builder pattern',
+          (WidgetTester tester) async {
+        final movieBuilder = MoviesConnector.instance.createMovie(
+          genre: 'Action',
+          title: 'Inception',
+          releaseYear: 2010,
+        );
+
+        movieBuilder.rating(4.8);
+
+        final mutationRef = movieBuilder.ref();
+        expect(mutationRef, isNotNull);
+        expect(mutationRef.execute, isNotNull);
       });
     },
   );
