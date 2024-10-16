@@ -45,7 +45,26 @@ abstract class OperationRef<Data, Variables> {
 
   FirebaseDataConnect dataConnect;
 
-  Future<OperationResult<Data, Variables>> execute();
+  Future<OperationResult<Data, Variables>> execute() {
+    return this._executeWithRetry(true);
+  }
+
+  Future<OperationResult<Data, Variables>> _executeOperation(bool forceRefresh);
+
+  Future<OperationResult<Data, Variables>> _executeWithRetry(bool retry) async {
+    try {
+      OperationResult<Data, Variables> r = await this._executeOperation(!retry);
+      return r;
+    } on DataConnectError catch (e) {
+      if (retry && e.code == DataConnectErrorCode.unauthorized.toString()) {
+        return this._executeWithRetry(false);
+      } else {
+        throw e;
+      }
+    } catch (e) {
+      throw e;
+    }
+  }
 }
 
 /// Tracks currently active queries, and emits events when a new query is executed.
@@ -112,11 +131,14 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
             variables);
 
   QueryManager _queryManager;
-  @override
-  Future<QueryResult<Data, Variables>> execute() async {
+
+  Future<QueryResult<Data, Variables>> _executeOperation(
+      bool forceRefresh) async {
+    String? token =
+        await this.dataConnect.auth?.currentUser?.getIdToken(forceRefresh);
     try {
       Data data = await _transport.invokeQuery<Data, Variables>(
-          operationName, deserializer, serializer, variables);
+          operationName, deserializer, serializer, variables, token);
       QueryResult<Data, Variables> res = QueryResult(dataConnect, data, this);
       await _queryManager.triggerCallback<Data, Variables>(operationName,
           serializer(variables as Variables), this, res.data, null);
@@ -135,7 +157,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
         .cast<QueryResult<Data, Variables>>();
     if (_queryManager.containsQuery(operationName, variables, varsSerialized)) {
       try {
-        this.execute();
+        this._executeWithRetry(true);
       } catch (_) {
         // Call to `execute` should properly pass the error to the Stream.
         log("Error thrown by execute. The error will propagate via onError.");
@@ -156,9 +178,12 @@ class MutationRef<Data, Variables> extends OperationRef<Data, Variables> {
   ) : super(dataConnect, operationName, transport, deserializer, serializer,
             variables);
   @override
-  Future<OperationResult<Data, Variables>> execute() async {
+  Future<OperationResult<Data, Variables>> _executeOperation(
+      bool forceRefresh) async {
+    String? token =
+        await this.dataConnect.auth?.currentUser?.getIdToken(forceRefresh);
     Data data = await _transport.invokeMutation<Data, Variables>(
-        operationName, deserializer, serializer, variables);
+        operationName, deserializer, serializer, variables, token);
     return OperationResult(dataConnect, data, this);
   }
 }

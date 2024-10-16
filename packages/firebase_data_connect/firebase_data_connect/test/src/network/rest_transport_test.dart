@@ -52,7 +52,6 @@ void main() {
       ),
       'testAppId',
       CallerSDKType.core,
-      mockAuth,
       mockAppCheck,
     );
 
@@ -78,7 +77,6 @@ void main() {
         ),
         'testAppId',
         CallerSDKType.core,
-        mockAuth,
         mockAppCheck,
       );
 
@@ -101,6 +99,7 @@ void main() {
         deserializer,
         null,
         null,
+        null,
         'executeQuery',
       );
 
@@ -118,7 +117,7 @@ void main() {
 
       expect(
         () => transport.invokeOperation(
-            'testQuery', deserializer, null, null, 'executeQuery'),
+            'testQuery', deserializer, null, null, null, 'executeQuery'),
         throwsA(isA<DataConnectError>()),
       );
     });
@@ -134,7 +133,7 @@ void main() {
 
       expect(
         () => transport.invokeOperation(
-            'testQuery', deserializer, null, null, 'executeQuery'),
+            'testQuery', deserializer, null, null, null, 'executeQuery'),
         throwsA(isA<DataConnectError>()),
       );
     });
@@ -148,7 +147,7 @@ void main() {
 
       final deserializer = (String data) => 'Deserialized Data';
 
-      await transport.invokeQuery('testQuery', deserializer, null, null);
+      await transport.invokeQuery('testQuery', deserializer, null, null, null);
 
       verify(mockHttpClient.post(
         any,
@@ -170,7 +169,8 @@ void main() {
 
       final deserializer = (String data) => 'Deserialized Mutation Data';
 
-      await transport.invokeMutation('testMutation', deserializer, null, null);
+      await transport.invokeMutation(
+          'testMutation', deserializer, null, null, null);
 
       verify(mockHttpClient.post(
         any,
@@ -195,8 +195,8 @@ void main() {
 
       final deserializer = (String data) => 'Deserialized Data';
 
-      await transport.invokeOperation(
-          'testQuery', deserializer, null, null, 'executeQuery');
+      await transport.invokeOperation('testQuery', deserializer, null, null,
+          'authToken123', 'executeQuery');
 
       verify(mockHttpClient.post(
         any,
@@ -222,7 +222,7 @@ void main() {
       final deserializer = (String data) => 'Deserialized Data';
 
       await transport.invokeOperation(
-          'testQuery', deserializer, null, null, 'executeQuery');
+          'testQuery', deserializer, null, null, null, 'executeQuery');
 
       verify(mockHttpClient.post(
         any,
@@ -257,7 +257,7 @@ void main() {
 
       expect(
         () => transport.invokeOperation(
-            'testQuery', deserializer, null, null, 'executeQuery'),
+            'testQuery', deserializer, null, null, null, 'executeQuery'),
         throwsA(isA<DataConnectError>()),
       );
     });

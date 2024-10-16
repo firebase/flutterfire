@@ -59,9 +59,6 @@ abstract class DataConnectTransport {
   /// DataConnect backend configuration.
   DataConnectOptions options;
 
-  /// FirebaseAuth to use to get auth token.
-  FirebaseAuth? auth;
-
   /// FirebaseAppCheck to use to get app check token.
   FirebaseAppCheck? appCheck;
 
@@ -76,12 +73,14 @@ abstract class DataConnectTransport {
       String queryName,
       Deserializer<Data> deserializer,
       Serializer<Variables> serializer,
-      Variables? vars);
+      Variables? vars,
+      String? token);
 
   /// Invokes corresponding mutation endpoint.
   Future<Data> invokeMutation<Data, Variables>(
       String queryName,
       Deserializer<Data> deserializer,
       Serializer<Variables> serializer,
-      Variables? vars);
+      Variables? vars,
+      String? token);
 }
