@@ -155,7 +155,7 @@ class FlutterFirebaseStorageTask {
     }
   }
 
-  TaskStateChannelStreamHandler startTaskWithMethodChannel(@NonNull MethodChannel channel)
+  TaskStateChannelStreamHandler startTaskWithMethodChannel(@NonNull MethodChannel channel, @NonNull String identifier)
       throws Exception {
     if (type == FlutterFirebaseStorageTaskType.BYTES && bytes != null) {
       if (metadata == null) {
@@ -175,7 +175,7 @@ class FlutterFirebaseStorageTask {
       throw new Exception("Unable to start task. Some arguments have no been initialized.");
     }
 
-    return new TaskStateChannelStreamHandler(this, reference.getStorage(), storageTask);
+    return new TaskStateChannelStreamHandler(this, reference.getStorage(), storageTask, identifier);
   }
 
   public Object getSnapshot() {

@@ -9,6 +9,8 @@ import androidx.annotation.Nullable;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageTask;
+
+import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.EventChannel.EventSink;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
 import java.util.HashMap;
@@ -18,6 +20,7 @@ public class TaskStateChannelStreamHandler implements StreamHandler {
   private final FlutterFirebaseStorageTask flutterTask;
   private final FirebaseStorage androidStorage;
   private final StorageTask<?> androidTask;
+  private final String identifier;
 
   private final String TASK_STATE_NAME = "taskState";
   private final String TASK_APP_NAME = "appName";
@@ -27,10 +30,11 @@ public class TaskStateChannelStreamHandler implements StreamHandler {
   public TaskStateChannelStreamHandler(
       FlutterFirebaseStorageTask flutterTask,
       FirebaseStorage androidStorage,
-      StorageTask androidTask) {
+      StorageTask androidTask, String identifier) {
     this.flutterTask = flutterTask;
     this.androidStorage = androidStorage;
     this.androidTask = androidTask;
+    this.identifier = identifier;
   }
 
   @Override
@@ -104,6 +108,17 @@ public class TaskStateChannelStreamHandler implements StreamHandler {
   public void onCancel(Object arguments) {
     if (!androidTask.isCanceled()) androidTask.cancel();
     if (!flutterTask.isDestroyed()) flutterTask.destroy();
+    EventChannel eventChannel = FlutterFirebaseStoragePlugin.eventChannels.get(identifier);
+
+    // Remove stream handler and clear the event channel
+    if (eventChannel != null) {
+      eventChannel.setStreamHandler(null);
+      FlutterFirebaseStoragePlugin.eventChannels.remove(identifier);
+    }
+
+    if (FlutterFirebaseStoragePlugin.streamHandlers.get(identifier) != null) {
+      FlutterFirebaseStoragePlugin.streamHandlers.remove(identifier);
+    }
   }
 
   private Map<String, Object> getTaskEventMap(
