@@ -139,6 +139,11 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 
   QueryManager _queryManager;
 
+  @override
+  Future<QueryResult<Data, Variables>> execute() {
+    return _executeWithRetry() as Future<QueryResult<Data, Variables>>;
+  }
+
   Future<QueryResult<Data, Variables>> _executeOperation(String? token) async {
     try {
       Data data = await _transport.invokeQuery<Data, Variables>(
