@@ -32,7 +32,20 @@ class MockDataConnectTransport extends Mock implements DataConnectTransport {}
 
 class MockFirebaseDataConnect extends Mock implements FirebaseDataConnect {}
 
-class MockFirebaseAuth extends Mock implements FirebaseAuth {}
+class DCMockUser extends Mock implements User {
+  int count = 0;
+  List<String?> tokens = ['invalid-token', 'valid-token'];
+  @override
+  Future<String?> getIdToken([bool forceRefresh = false]) {
+    // First return an invalid token, then return a valid token
+    return Future.value(tokens[count++]);
+  }
+}
+
+class MockFirebaseAuth extends Mock implements FirebaseAuth {
+  @override
+  User? get currentUser => DCMockUser();
+}
 
 class MockQueryManager extends Mock implements QueryManager {}
 
@@ -111,7 +124,9 @@ void main() {
     late Deserializer<String> deserializer;
 
     setUp(() {
+      print('setting up');
       mockDataConnect = MockFirebaseDataConnect();
+      when(mockDataConnect.auth).thenReturn(MockFirebaseAuth());
       mockHttpClient = MockClient();
       transport = RestTransport(
         TransportOptions('testhost', 443, true),
@@ -127,15 +142,14 @@ void main() {
       );
       transport.setHttp(mockHttpClient);
       mockDataConnect.transport = transport;
-      mockDataConnect.auth = MockFirebaseAuth();
     });
     test(
         'query should forceRefresh on ID token if the first request is unauthorized',
         () async {
       final mockResponse = http.Response('{"error": "Unauthorized"}', 401);
       final mockResponseSuccess = http.Response('{"success": true}', 200);
-      int count = 0;
       final deserializer = (String data) => 'Deserialized Data';
+      int count = 0;
       QueryRef ref = QueryRef(mockDataConnect, 'operation', transport,
           deserializer, QueryManager(mockDataConnect), emptySerializer, null);
 

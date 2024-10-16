@@ -64,12 +64,13 @@ class RestTransport implements DataConnectTransport {
 
   /// Invokes the current operation, whether its a query or mutation.
   Future<Data> invokeOperation<Data, Variables>(
-      String queryName,
-      Deserializer<Data> deserializer,
-      Serializer<Variables>? serializer,
-      Variables? vars,
-      String? authToken,
-      String endpoint) async {
+    String queryName,
+    String endpoint,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+    String? authToken,
+  ) async {
     String project = options.projectId;
     String location = options.location;
     String service = options.serviceId;
@@ -146,7 +147,7 @@ class RestTransport implements DataConnectTransport {
       Variables? vars,
       String? token) async {
     return invokeOperation(
-        queryName, deserializer, serializer, vars, token, 'executeQuery');
+        queryName, 'executeQuery', deserializer, serializer, vars, token);
   }
 
   /// Invokes mutation REST endpoint.
@@ -158,7 +159,7 @@ class RestTransport implements DataConnectTransport {
       Variables? vars,
       String? token) async {
     return invokeOperation(
-        queryName, deserializer, serializer, vars, token, 'executeMutation');
+        queryName, 'executeMutation', deserializer, serializer, vars, token);
   }
 }
 
