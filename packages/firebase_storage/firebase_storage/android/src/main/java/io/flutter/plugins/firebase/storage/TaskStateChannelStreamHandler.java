@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageTask;
-
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.EventChannel.EventSink;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
@@ -30,7 +29,8 @@ public class TaskStateChannelStreamHandler implements StreamHandler {
   public TaskStateChannelStreamHandler(
       FlutterFirebaseStorageTask flutterTask,
       FirebaseStorage androidStorage,
-      StorageTask androidTask, String identifier) {
+      StorageTask androidTask,
+      String identifier) {
     this.flutterTask = flutterTask;
     this.androidStorage = androidStorage;
     this.androidTask = androidTask;

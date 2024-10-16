@@ -155,8 +155,8 @@ class FlutterFirebaseStorageTask {
     }
   }
 
-  TaskStateChannelStreamHandler startTaskWithMethodChannel(@NonNull MethodChannel channel, @NonNull String identifier)
-      throws Exception {
+  TaskStateChannelStreamHandler startTaskWithMethodChannel(
+      @NonNull MethodChannel channel, @NonNull String identifier) throws Exception {
     if (type == FlutterFirebaseStorageTaskType.BYTES && bytes != null) {
       if (metadata == null) {
         storageTask = reference.putBytes(bytes);

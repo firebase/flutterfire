@@ -455,9 +455,11 @@ public class FlutterFirebaseStoragePlugin
             handle.intValue(), androidReference, data, androidMetaData);
     try {
       String identifier = UUID.randomUUID().toString().toLowerCase(Locale.US);
-      TaskStateChannelStreamHandler handler = storageTask.startTaskWithMethodChannel(channel, identifier);
-      result.success(registerEventChannel(
-        STORAGE_METHOD_CHANNEL_NAME + "/" + STORAGE_TASK_EVENT_NAME, identifier, handler));
+      TaskStateChannelStreamHandler handler =
+          storageTask.startTaskWithMethodChannel(channel, identifier);
+      result.success(
+          registerEventChannel(
+              STORAGE_METHOD_CHANNEL_NAME + "/" + STORAGE_TASK_EVENT_NAME, identifier, handler));
     } catch (Exception e) {
       result.error(FlutterFirebaseStorageException.parserExceptionToFlutter(e));
     }
@@ -485,7 +487,8 @@ public class FlutterFirebaseStoragePlugin
 
     try {
       String identifier = UUID.randomUUID().toString().toLowerCase(Locale.US);
-      TaskStateChannelStreamHandler handler = storageTask.startTaskWithMethodChannel(channel, identifier);
+      TaskStateChannelStreamHandler handler =
+          storageTask.startTaskWithMethodChannel(channel, identifier);
       result.success(
           registerEventChannel(
               STORAGE_METHOD_CHANNEL_NAME + "/" + STORAGE_TASK_EVENT_NAME, identifier, handler));
@@ -514,7 +517,8 @@ public class FlutterFirebaseStoragePlugin
 
     try {
       String identifier = UUID.randomUUID().toString().toLowerCase(Locale.US);
-      TaskStateChannelStreamHandler handler = storageTask.startTaskWithMethodChannel(channel, identifier);
+      TaskStateChannelStreamHandler handler =
+          storageTask.startTaskWithMethodChannel(channel, identifier);
       result.success(
           registerEventChannel(
               STORAGE_METHOD_CHANNEL_NAME + "/" + STORAGE_TASK_EVENT_NAME, identifier, handler));
@@ -538,7 +542,8 @@ public class FlutterFirebaseStoragePlugin
 
     try {
       String identifier = UUID.randomUUID().toString().toLowerCase(Locale.US);
-      TaskStateChannelStreamHandler handler = storageTask.startTaskWithMethodChannel(channel, identifier);
+      TaskStateChannelStreamHandler handler =
+          storageTask.startTaskWithMethodChannel(channel, identifier);
       result.success(
           registerEventChannel(
               STORAGE_METHOD_CHANNEL_NAME + "/" + STORAGE_TASK_EVENT_NAME, identifier, handler));
