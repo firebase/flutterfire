@@ -42,8 +42,8 @@ public class FlutterFirebaseStoragePlugin
   static final String STORAGE_TASK_EVENT_NAME = "taskEvent";
   static final String DEFAULT_ERROR_CODE = "firebase_storage";
 
-  private final Map<String, EventChannel> eventChannels = new HashMap<>();
-  private final Map<String, StreamHandler> streamHandlers = new HashMap<>();
+  static final Map<String, EventChannel> eventChannels = new HashMap<>();
+  static final Map<String, StreamHandler> streamHandlers = new HashMap<>();
 
   static Map<String, String> getExceptionDetails(Exception exception) {
     Map<String, String> details = new HashMap<>();
@@ -143,11 +143,6 @@ public class FlutterFirebaseStoragePlugin
     channel = new MethodChannel(messenger, STORAGE_METHOD_CHANNEL_NAME);
     GeneratedAndroidFirebaseStorage.FirebaseStorageHostApi.setup(messenger, this);
     this.messenger = messenger;
-  }
-
-  private String registerEventChannel(String prefix, StreamHandler handler) {
-    String identifier = UUID.randomUUID().toString().toLowerCase(Locale.US);
-    return registerEventChannel(prefix, identifier, handler);
   }
 
   private String registerEventChannel(String prefix, String identifier, StreamHandler handler) {
@@ -459,10 +454,12 @@ public class FlutterFirebaseStoragePlugin
         FlutterFirebaseStorageTask.uploadBytes(
             handle.intValue(), androidReference, data, androidMetaData);
     try {
-      TaskStateChannelStreamHandler handler = storageTask.startTaskWithMethodChannel(channel);
+      String identifier = UUID.randomUUID().toString().toLowerCase(Locale.US);
+      TaskStateChannelStreamHandler handler =
+          storageTask.startTaskWithMethodChannel(channel, identifier);
       result.success(
           registerEventChannel(
-              STORAGE_METHOD_CHANNEL_NAME + "/" + STORAGE_TASK_EVENT_NAME, handler));
+              STORAGE_METHOD_CHANNEL_NAME + "/" + STORAGE_TASK_EVENT_NAME, identifier, handler));
     } catch (Exception e) {
       result.error(FlutterFirebaseStorageException.parserExceptionToFlutter(e));
     }
@@ -489,10 +486,12 @@ public class FlutterFirebaseStoragePlugin
             androidMetaData);
 
     try {
-      TaskStateChannelStreamHandler handler = storageTask.startTaskWithMethodChannel(channel);
+      String identifier = UUID.randomUUID().toString().toLowerCase(Locale.US);
+      TaskStateChannelStreamHandler handler =
+          storageTask.startTaskWithMethodChannel(channel, identifier);
       result.success(
           registerEventChannel(
-              STORAGE_METHOD_CHANNEL_NAME + "/" + STORAGE_TASK_EVENT_NAME, handler));
+              STORAGE_METHOD_CHANNEL_NAME + "/" + STORAGE_TASK_EVENT_NAME, identifier, handler));
     } catch (Exception e) {
       result.error(FlutterFirebaseStorageException.parserExceptionToFlutter(e));
     }
@@ -517,10 +516,12 @@ public class FlutterFirebaseStoragePlugin
             settableMetaData == null ? null : getMetaDataFromPigeon(settableMetaData));
 
     try {
-      TaskStateChannelStreamHandler handler = storageTask.startTaskWithMethodChannel(channel);
+      String identifier = UUID.randomUUID().toString().toLowerCase(Locale.US);
+      TaskStateChannelStreamHandler handler =
+          storageTask.startTaskWithMethodChannel(channel, identifier);
       result.success(
           registerEventChannel(
-              STORAGE_METHOD_CHANNEL_NAME + "/" + STORAGE_TASK_EVENT_NAME, handler));
+              STORAGE_METHOD_CHANNEL_NAME + "/" + STORAGE_TASK_EVENT_NAME, identifier, handler));
     } catch (Exception e) {
       result.error(FlutterFirebaseStorageException.parserExceptionToFlutter(e));
     }
@@ -540,10 +541,12 @@ public class FlutterFirebaseStoragePlugin
             handle.intValue(), androidReference, new File(filePath));
 
     try {
-      TaskStateChannelStreamHandler handler = storageTask.startTaskWithMethodChannel(channel);
+      String identifier = UUID.randomUUID().toString().toLowerCase(Locale.US);
+      TaskStateChannelStreamHandler handler =
+          storageTask.startTaskWithMethodChannel(channel, identifier);
       result.success(
           registerEventChannel(
-              STORAGE_METHOD_CHANNEL_NAME + "/" + STORAGE_TASK_EVENT_NAME, handler));
+              STORAGE_METHOD_CHANNEL_NAME + "/" + STORAGE_TASK_EVENT_NAME, identifier, handler));
     } catch (Exception e) {
       result.error(FlutterFirebaseStorageException.parserExceptionToFlutter(e));
     }
