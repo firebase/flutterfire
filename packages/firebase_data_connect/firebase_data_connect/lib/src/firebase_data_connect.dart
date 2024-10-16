@@ -43,7 +43,6 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     if (sdkType != null) {
       this._sdkType = sdkType;
     }
-    QueryRef qf;
   }
 
   /// QueryManager manages ongoing queries, and their subscriptions.
