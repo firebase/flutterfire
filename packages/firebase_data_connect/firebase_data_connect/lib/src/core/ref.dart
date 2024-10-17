@@ -186,6 +186,8 @@ class MutationRef<Data, Variables> extends OperationRef<Data, Variables> {
   Future<OperationResult<Data, Variables>> execute() async {
     bool shouldRetry = await _shouldRetry();
     try {
+      // Logic below is duplicated due to the fact that `executeOperation` returns
+      // an `OperationResult` here, and `QueryRef` expects a `QueryResult`.
       OperationResult<Data, Variables> r =
           await this._executeOperation(_lastToken);
       return r;
