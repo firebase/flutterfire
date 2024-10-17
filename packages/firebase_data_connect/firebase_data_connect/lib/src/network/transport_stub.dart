@@ -77,7 +77,6 @@ DataConnectTransport getTransport(
   DataConnectOptions options,
   String appId,
   CallerSDKType sdkType,
-  FirebaseAuth? auth,
   FirebaseAppCheck? appCheck,
 ) =>
     TransportStub(transportOptions, options, appId, sdkType, appCheck);
