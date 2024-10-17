@@ -124,7 +124,6 @@ void main() {
     late Deserializer<String> deserializer;
 
     setUp(() {
-      print('setting up');
       mockDataConnect = MockFirebaseDataConnect();
       when(mockDataConnect.auth).thenReturn(MockFirebaseAuth());
       mockHttpClient = MockClient();

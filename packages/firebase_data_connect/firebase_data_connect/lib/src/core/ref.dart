@@ -46,31 +46,13 @@ abstract class OperationRef<Data, Variables> {
 
   FirebaseDataConnect dataConnect;
 
-  Future<OperationResult<Data, Variables>> execute() {
-    return this._executeWithRetry();
-  }
-
-  Future<OperationResult<Data, Variables>> _executeOperation(String? token);
-
-  Future<OperationResult<Data, Variables>> _executeWithRetry() async {
+  Future<OperationResult<Data, Variables>> execute();
+  Future<bool> _shouldRetry() async {
     String? newToken =
         await this.dataConnect.auth?.currentUser?.getIdToken(false);
     bool shouldRetry = newToken != null && _lastToken != newToken;
     _lastToken = newToken;
-    try {
-      OperationResult<Data, Variables> r =
-          await this._executeOperation(newToken);
-      return r;
-    } on DataConnectError catch (e) {
-      if (shouldRetry &&
-          e.code == DataConnectErrorCode.unauthorized.toString()) {
-        return this._executeWithRetry();
-      } else {
-        throw e;
-      }
-    } catch (e) {
-      throw e;
-    }
+    return shouldRetry;
   }
 }
 
@@ -140,8 +122,21 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
   QueryManager _queryManager;
 
   @override
-  Future<QueryResult<Data, Variables>> execute() {
-    return _executeWithRetry() as Future<QueryResult<Data, Variables>>;
+  Future<QueryResult<Data, Variables>> execute() async {
+    bool shouldRetry = await _shouldRetry();
+    try {
+      QueryResult<Data, Variables> r = await this._executeOperation(_lastToken);
+      return r;
+    } on DataConnectError catch (e) {
+      if (shouldRetry &&
+          e.code == DataConnectErrorCode.unauthorized.toString()) {
+        return this.execute();
+      } else {
+        throw e;
+      }
+    } catch (e) {
+      throw e;
+    }
   }
 
   Future<QueryResult<Data, Variables>> _executeOperation(String? token) async {
@@ -166,7 +161,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
         .cast<QueryResult<Data, Variables>>();
     if (_queryManager.containsQuery(operationName, variables, varsSerialized)) {
       try {
-        this._executeWithRetry();
+        this.execute();
       } catch (_) {
         // Call to `execute` should properly pass the error to the Stream.
         log("Error thrown by execute. The error will propagate via onError.");
@@ -186,7 +181,26 @@ class MutationRef<Data, Variables> extends OperationRef<Data, Variables> {
     Variables? variables,
   ) : super(dataConnect, operationName, transport, deserializer, serializer,
             variables);
+
   @override
+  Future<OperationResult<Data, Variables>> execute() async {
+    bool shouldRetry = await _shouldRetry();
+    try {
+      OperationResult<Data, Variables> r =
+          await this._executeOperation(_lastToken);
+      return r;
+    } on DataConnectError catch (e) {
+      if (shouldRetry &&
+          e.code == DataConnectErrorCode.unauthorized.toString()) {
+        return this.execute();
+      } else {
+        throw e;
+      }
+    } catch (e) {
+      throw e;
+    }
+  }
+
   Future<OperationResult<Data, Variables>> _executeOperation(
       String? token) async {
     Data data = await _transport.invokeMutation<Data, Variables>(
