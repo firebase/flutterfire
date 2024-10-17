@@ -22,7 +22,6 @@ class GRPCTransport implements DataConnectTransport {
     this.options,
     this.appId,
     this.sdkType,
-    this.auth,
     this.appCheck,
   ) {
     bool isSecure =
@@ -37,10 +36,6 @@ class GRPCTransport implements DataConnectTransport {
     name =
         'projects/${options.projectId}/locations/${options.location}/services/${options.serviceId}/connectors/${options.connector}';
   }
-
-  /// FirebaseAuth
-  @override
-  FirebaseAuth? auth;
 
   /// FirebaseAppCheck
   @override
@@ -70,13 +65,7 @@ class GRPCTransport implements DataConnectTransport {
   @override
   String appId;
 
-  Future<Map<String, String>> getMetadata() async {
-    String? authToken;
-    try {
-      authToken = await auth?.currentUser?.getIdToken();
-    } catch (e) {
-      log('Unable to get auth token: $e');
-    }
+  Future<Map<String, String>> getMetadata(String? authToken) async {
     String? appCheckToken;
     try {
       appCheckToken = await appCheck?.getToken();
@@ -101,11 +90,11 @@ class GRPCTransport implements DataConnectTransport {
   /// Invokes GPRC query endpoint.
   @override
   Future<Data> invokeQuery<Data, Variables>(
-    String queryName,
-    Deserializer<Data> deserializer,
-    Serializer<Variables>? serializer,
-    Variables? vars,
-  ) async {
+      String queryName,
+      Deserializer<Data> deserializer,
+      Serializer<Variables>? serializer,
+      Variables? vars,
+      String? authToken) async {
     ExecuteQueryResponse response;
 
     ExecuteQueryRequest request =
@@ -115,9 +104,13 @@ class GRPCTransport implements DataConnectTransport {
     }
     try {
       response = await stub.executeQuery(request,
-          options: CallOptions(metadata: await getMetadata()));
+          options: CallOptions(metadata: await getMetadata(authToken)));
       return deserializer(jsonEncode(response.data.toProto3Json()));
     } on Exception catch (e) {
+      if (e.toString().contains("invalid Firebase Auth Credentials")) {
+        throw DataConnectError(DataConnectErrorCode.unauthorized,
+            'Failed to invoke operation: ${e.toString()}');
+      }
       throw DataConnectError(DataConnectErrorCode.other,
           'Failed to invoke operation: ${e.toString()}');
     }
@@ -137,7 +130,8 @@ class GRPCTransport implements DataConnectTransport {
       String queryName,
       Deserializer<Data> deserializer,
       Serializer<Variables>? serializer,
-      Variables? vars) async {
+      Variables? vars,
+      String? authToken) async {
     ExecuteMutationResponse response;
     ExecuteMutationRequest request =
         ExecuteMutationRequest(name: name, operationName: queryName);
@@ -146,7 +140,7 @@ class GRPCTransport implements DataConnectTransport {
     }
     try {
       response = await stub.executeMutation(request,
-          options: CallOptions(metadata: await getMetadata()));
+          options: CallOptions(metadata: await getMetadata(authToken)));
       if (response.errors.isNotEmpty) {
         throw Exception(response.errors);
       }
@@ -164,6 +158,5 @@ DataConnectTransport getTransport(
         DataConnectOptions options,
         String appId,
         CallerSDKType sdkType,
-        FirebaseAuth? auth,
         FirebaseAppCheck? appCheck) =>
-    GRPCTransport(transportOptions, options, appId, sdkType, auth, appCheck);
+    GRPCTransport(transportOptions, options, appId, sdkType, appCheck);
