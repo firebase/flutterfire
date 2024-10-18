@@ -17,8 +17,8 @@ import 'package:pigeon/pigeon.dart';
       className: 'GeneratedAndroidFirebaseFirestore',
     ),
     objcHeaderOut:
-        '../cloud_firestore/ios/Classes/Public/FirestoreMessages.g.h',
-    objcSourceOut: '../cloud_firestore/ios/Classes/FirestoreMessages.g.m',
+        '../cloud_firestore/ios/cloud_firestore/Sources/cloud_firestore/include/cloud_firestore/Public/FirestoreMessages.g.h',
+    objcSourceOut: '../cloud_firestore/ios/cloud_firestore/Sources/cloud_firestore/FirestoreMessages.g.m',
     cppHeaderOut: '../cloud_firestore/windows/messages.g.h',
     cppSourceOut: '../cloud_firestore/windows/messages.g.cpp',
     cppOptions: CppOptions(namespace: 'cloud_firestore_windows'),
