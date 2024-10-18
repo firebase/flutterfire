@@ -29,7 +29,11 @@ class CreateMovieVariablesBuilder {
       (dynamic json) => CreateMovieData.fromJson(jsonDecode(json));
   Serializer<CreateMovieVariables> varsSerializer =
       (CreateMovieVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<CreateMovieData, CreateMovieVariables> build() {
+  Future<OperationResult<CreateMovieData, CreateMovieVariables>> execute() {
+    return this.ref().execute();
+  }
+
+  MutationRef<CreateMovieData, CreateMovieVariables> ref() {
     CreateMovieVariables vars = CreateMovieVariables(
       title: title,
       releaseYear: releaseYear,
@@ -41,25 +45,6 @@ class CreateMovieVariablesBuilder {
     return _dataConnect.mutation(
         "createMovie", dataDeserializer, varsSerializer, vars);
   }
-}
-
-class CreateMovie {
-  String name = "createMovie";
-  CreateMovie({required this.dataConnect});
-  CreateMovieVariablesBuilder ref({
-    required String title,
-    required int releaseYear,
-    required String genre,
-  }) {
-    return CreateMovieVariablesBuilder(
-      dataConnect,
-      title: title,
-      releaseYear: releaseYear,
-      genre: genre,
-    );
-  }
-
-  FirebaseDataConnect dataConnect;
 }
 
 class CreateMovieMovieInsert {

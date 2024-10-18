@@ -13,7 +13,11 @@ class DeleteMovieVariablesBuilder {
       (dynamic json) => DeleteMovieData.fromJson(jsonDecode(json));
   Serializer<DeleteMovieVariables> varsSerializer =
       (DeleteMovieVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<DeleteMovieData, DeleteMovieVariables> build() {
+  Future<OperationResult<DeleteMovieData, DeleteMovieVariables>> execute() {
+    return this.ref().execute();
+  }
+
+  MutationRef<DeleteMovieData, DeleteMovieVariables> ref() {
     DeleteMovieVariables vars = DeleteMovieVariables(
       id: id,
     );
@@ -21,21 +25,6 @@ class DeleteMovieVariablesBuilder {
     return _dataConnect.mutation(
         "deleteMovie", dataDeserializer, varsSerializer, vars);
   }
-}
-
-class DeleteMovie {
-  String name = "deleteMovie";
-  DeleteMovie({required this.dataConnect});
-  DeleteMovieVariablesBuilder ref({
-    required String id,
-  }) {
-    return DeleteMovieVariablesBuilder(
-      dataConnect,
-      id: id,
-    );
-  }
-
-  FirebaseDataConnect dataConnect;
 }
 
 class DeleteMovieMovieDelete {
@@ -61,7 +50,9 @@ class DeleteMovieData {
   DeleteMovieMovieDelete? movie_delete;
 
   DeleteMovieData.fromJson(dynamic json)
-      : movie_delete = DeleteMovieMovieDelete.fromJson(json['movie_delete']) {}
+      : movie_delete = json['movie_delete'] == null
+            ? null
+            : DeleteMovieMovieDelete.fromJson(json['movie_delete']) {}
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};

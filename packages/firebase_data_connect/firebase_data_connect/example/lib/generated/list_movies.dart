@@ -9,22 +9,14 @@ class ListMoviesVariablesBuilder {
   Deserializer<ListMoviesData> dataDeserializer =
       (dynamic json) => ListMoviesData.fromJson(jsonDecode(json));
 
-  QueryRef<ListMoviesData, void> build() {
+  Future<QueryResult<ListMoviesData, void>> execute() {
+    return this.ref().execute();
+  }
+
+  QueryRef<ListMoviesData, void> ref() {
     return _dataConnect.query(
         "ListMovies", dataDeserializer, emptySerializer, null);
   }
-}
-
-class ListMovies {
-  String name = "ListMovies";
-  ListMovies({required this.dataConnect});
-  ListMoviesVariablesBuilder ref() {
-    return ListMoviesVariablesBuilder(
-      dataConnect,
-    );
-  }
-
-  FirebaseDataConnect dataConnect;
 }
 
 class ListMoviesMovies {
@@ -42,7 +34,9 @@ class ListMoviesMovies {
         directed_by = (json['directed_by'] as List<dynamic>)
             .map((e) => ListMoviesMoviesDirectedBy.fromJson(e))
             .toList(),
-        rating = nativeFromJson<double>(json['rating']) {}
+        rating = json['rating'] == null
+            ? null
+            : nativeFromJson<double>(json['rating']) {}
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
