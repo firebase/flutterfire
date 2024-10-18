@@ -3,46 +3,34 @@ part of movies;
 class AddTimestampVariablesBuilder {
   Timestamp timestamp;
 
-  FirebaseDataConnect dataConnect;
+  FirebaseDataConnect _dataConnect;
 
   AddTimestampVariablesBuilder(
-    this.dataConnect, {
+    this._dataConnect, {
     required Timestamp this.timestamp,
   });
-  Deserializer<AddTimestampData> dataDeserializer = (String json) =>
-      AddTimestampData.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  Deserializer<AddTimestampData> dataDeserializer =
+      (dynamic json) => AddTimestampData.fromJson(jsonDecode(json));
   Serializer<AddTimestampVariables> varsSerializer =
       (AddTimestampVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<AddTimestampData, AddTimestampVariables> build() {
+  Future<OperationResult<AddTimestampData, AddTimestampVariables>> execute() {
+    return this.ref().execute();
+  }
+
+  MutationRef<AddTimestampData, AddTimestampVariables> ref() {
     AddTimestampVariables vars = AddTimestampVariables(
       timestamp: timestamp,
     );
 
-    return dataConnect.mutation(
+    return _dataConnect.mutation(
         "addTimestamp", dataDeserializer, varsSerializer, vars);
   }
-}
-
-class AddTimestamp {
-  String name = "addTimestamp";
-  AddTimestamp({required this.dataConnect});
-  AddTimestampVariablesBuilder ref({
-    required Timestamp timestamp,
-  }) {
-    return AddTimestampVariablesBuilder(
-      dataConnect,
-      timestamp: timestamp,
-    );
-  }
-
-  FirebaseDataConnect dataConnect;
 }
 
 class AddTimestampTimestampHolderInsert {
   String id;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  AddTimestampTimestampHolderInsert.fromJson(Map<String, dynamic> json)
+  AddTimestampTimestampHolderInsert.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']) {}
 
   Map<String, dynamic> toJson() {
@@ -61,8 +49,7 @@ class AddTimestampTimestampHolderInsert {
 class AddTimestampData {
   AddTimestampTimestampHolderInsert timestampHolder_insert;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  AddTimestampData.fromJson(Map<String, dynamic> json)
+  AddTimestampData.fromJson(dynamic json)
       : timestampHolder_insert = AddTimestampTimestampHolderInsert.fromJson(
             json['timestampHolder_insert']) {}
 
@@ -82,7 +69,6 @@ class AddTimestampData {
 class AddTimestampVariables {
   Timestamp timestamp;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   AddTimestampVariables.fromJson(Map<String, dynamic> json)
       : timestamp = Timestamp.fromJson(json['timestamp']) {}
 

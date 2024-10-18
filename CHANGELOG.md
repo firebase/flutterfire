@@ -3,6 +3,80 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-10-08 - [BoM 2.9.3](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-293-2024-10-08)
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_storage` - `v12.3.3`](#firebase_storage---v1233)
+ - [`firebase_storage_web` - `v3.10.3`](#firebase_storage_web---v3103)
+
+---
+
+#### `firebase_storage` - `v12.3.3`
+
+ - **FIX**(storage,web): fix putData when using UInt8List ([#13466](https://github.com/firebase/flutterfire/issues/13466)). ([2bfb549e](https://github.com/firebase/flutterfire/commit/2bfb549ee6706648a0bf661781195171cfb05cb5))
+
+#### `firebase_storage_web` - `v3.10.3`
+
+ - **FIX**(storage,web): fix putData when using UInt8List ([#13466](https://github.com/firebase/flutterfire/issues/13466)). ([2bfb549e](https://github.com/firebase/flutterfire/commit/2bfb549ee6706648a0bf661781195171cfb05cb5))
+
+
+## 2024-10-03 - [BoM 2.9.2](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-292-2024-10-03)
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_data_connect` - `v0.1.2`](#firebase_data_connect---v012)
+
+---
+
+#### `firebase_data_connect` - `v0.1.2`
+
+ - **FIX**(fdc): Fix serializing errors ([#13450](https://github.com/firebase/flutterfire/issues/13450)). ([9a5aba2a](https://github.com/firebase/flutterfire/commit/9a5aba2aedb2e1ab4f9a979f07392113630c1672))
+ - **FEAT**(fdc): Update with builder notation ([#13434](https://github.com/firebase/flutterfire/issues/13434)). ([2c865056](https://github.com/firebase/flutterfire/commit/2c865056f4aba7afa4945b85e687afffccd66981))
+
+
+## 2024-10-02 - [BoM 2.9.1](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-291-2024-10-02)
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v5.4.4`](#cloud_firestore---v544)
+ - [`firebase_data_connect` - `v0.1.1+1`](#firebase_data_connect---v0111)
+
+---
+
+#### `cloud_firestore` - `v5.4.4`
+
+ - **FIX**(cloud_firestore): remove single whereIn filter assertion ([#13436](https://github.com/firebase/flutterfire/issues/13436)). ([d770aa6a](https://github.com/firebase/flutterfire/commit/d770aa6a2616ed0535bbc2fbd2e9645da9ad18cd))
+
+#### `firebase_data_connect` - `v0.1.1+1`
+
+ - **FIX**(fdc): errors are now properly propagated to the user ([#13433](https://github.com/firebase/flutterfire/issues/13433)). ([973a02f1](https://github.com/firebase/flutterfire/commit/973a02f1daf62f5ba4f65c33d09c8872164f9f6b))
+
+
 ## 2024-09-26
 
 ### Changes

@@ -1,48 +1,39 @@
 part of movies;
 
 class AddPersonVariablesBuilder {
-  String? name;
+  Optional<String> _name = Optional.optional(nativeFromJson, nativeToJson);
 
-  FirebaseDataConnect dataConnect;
+  FirebaseDataConnect _dataConnect;
+  AddPersonVariablesBuilder name(String? t) {
+    this._name.value = t;
+    return this;
+  }
 
   AddPersonVariablesBuilder(
-    this.dataConnect, {
-    String? this.name,
-  });
-  Deserializer<AddPersonData> dataDeserializer = (String json) =>
-      AddPersonData.fromJson(jsonDecode(json) as Map<String, dynamic>);
+    this._dataConnect,
+  );
+  Deserializer<AddPersonData> dataDeserializer =
+      (dynamic json) => AddPersonData.fromJson(jsonDecode(json));
   Serializer<AddPersonVariables> varsSerializer =
       (AddPersonVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<AddPersonData, AddPersonVariables> build() {
+  Future<OperationResult<AddPersonData, AddPersonVariables>> execute() {
+    return this.ref().execute();
+  }
+
+  MutationRef<AddPersonData, AddPersonVariables> ref() {
     AddPersonVariables vars = AddPersonVariables(
-      name: name,
+      name: _name,
     );
 
-    return dataConnect.mutation(
+    return _dataConnect.mutation(
         "addPerson", dataDeserializer, varsSerializer, vars);
   }
-}
-
-class AddPerson {
-  String name = "addPerson";
-  AddPerson({required this.dataConnect});
-  AddPersonVariablesBuilder ref({
-    String? name,
-  }) {
-    return AddPersonVariablesBuilder(
-      dataConnect,
-      name: name,
-    );
-  }
-
-  FirebaseDataConnect dataConnect;
 }
 
 class AddPersonPersonInsert {
   String id;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  AddPersonPersonInsert.fromJson(Map<String, dynamic> json)
+  AddPersonPersonInsert.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']) {}
 
   Map<String, dynamic> toJson() {
@@ -61,8 +52,7 @@ class AddPersonPersonInsert {
 class AddPersonData {
   AddPersonPersonInsert person_insert;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  AddPersonData.fromJson(Map<String, dynamic> json)
+  AddPersonData.fromJson(dynamic json)
       : person_insert = AddPersonPersonInsert.fromJson(json['person_insert']) {}
 
   Map<String, dynamic> toJson() {
@@ -79,24 +69,25 @@ class AddPersonData {
 }
 
 class AddPersonVariables {
-  String? name;
+  late Optional<String> name;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
   AddPersonVariables.fromJson(Map<String, dynamic> json) {
-    name = json['name'] == null ? null : nativeFromJson<String>(json['name']);
+    name = Optional.optional(nativeFromJson, nativeToJson);
+    name.value =
+        json['name'] == null ? null : nativeFromJson<String>(json['name']);
   }
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
-    if (name != null) {
-      json['name'] = nativeToJson<String?>(name);
+    if (name.state == OptionalState.set) {
+      json['name'] = name.toJson();
     }
 
     return json;
   }
 
   AddPersonVariables({
-    this.name,
+    required this.name,
   });
 }

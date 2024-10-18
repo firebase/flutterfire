@@ -1,3 +1,12 @@
+## 0.1.2
+
+ - **FIX**(fdc): Fix serializing errors ([#13450](https://github.com/firebase/flutterfire/issues/13450)). ([9a5aba2a](https://github.com/firebase/flutterfire/commit/9a5aba2aedb2e1ab4f9a979f07392113630c1672))
+ - **FEAT**(fdc): Update with builder notation ([#13434](https://github.com/firebase/flutterfire/issues/13434)). ([2c865056](https://github.com/firebase/flutterfire/commit/2c865056f4aba7afa4945b85e687afffccd66981))
+
+## 0.1.1+1
+
+ - **FIX**(fdc): errors are now properly propagated to the user ([#13433](https://github.com/firebase/flutterfire/issues/13433)). ([973a02f1](https://github.com/firebase/flutterfire/commit/973a02f1daf62f5ba4f65c33d09c8872164f9f6b))
+
 ## 0.1.1
 
  - **FEAT**(fdc): Restrict exports of firebase_data_connect ([#13403](https://github.com/firebase/flutterfire/issues/13403)). ([4bdd9472](https://github.com/firebase/flutterfire/commit/4bdd947269bd07ac4f47132b61559eda72aa597c))

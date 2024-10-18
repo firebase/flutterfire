@@ -5,7 +5,6 @@
 include: all_lint_rules.yaml
 analyzer:
   exclude:
-    - firebase_data_connect/lib/src/generated/**
   # TODO(rrousselGit): disable implicit-cast/implicit-dynamic
   errors:
     # Otherwise cause the import of all_lint_rules to warn because of some rules conflicts.
