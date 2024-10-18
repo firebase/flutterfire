@@ -294,7 +294,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
       EventChannel('plugins.flutter.io/firebase_remote_config_updated');
 
   Stream<RemoteConfigUpdate>? _onConfigUpdatedStream;
-  
+
   @override
   Stream<RemoteConfigUpdate> get onConfigUpdated {
     _onConfigUpdatedStream ??=
