@@ -15,7 +15,7 @@ void runLoadBundleTests() {
       // endpoint serves a bundle with 3 documents each containing
       // a 'number' property that increments in value 1-3.
       final url =
-          Uri.https('api.rnfirebase.io', '/firestore/e2e-tests/bundle-$number');
+          Uri.https('react-native-firebase-tests-api-424825577285.europe-west2.run.app', '/firestore/e2e-tests/bundle-$number');
       final response = await http.get(url);
       String string = response.body;
       return Uint8List.fromList(string.codeUnits);
