@@ -1,3 +1,9 @@
+## 1.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**(vertexai): Vertex AI in Firebase is now Generally Available (GA) and can be used in production apps. ([#13453](https://github.com/firebase/flutterfire/issues/13453)). ([77b48800](https://github.com/firebase/flutterfire/commit/77b488001a2b68b46ccff4fc96d143ef891d3e5a))
+
 ## 0.2.3+4
 
  - Update a dependency to the latest release.

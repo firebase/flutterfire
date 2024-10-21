@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-10-21
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - [`firebase_app_check_web` - `v0.2.0`](#firebase_app_check_web---v020)
+ - [`firebase_vertexai` - `v1.0.0`](#firebase_vertexai---v100)
+
+Packages with other changes:
+
+ - [`firebase_data_connect` - `v0.1.2+1`](#firebase_data_connect---v0121)
+ - [`firebase_storage` - `v12.3.4`](#firebase_storage---v1234)
+ - [`firebase_app_check` - `v0.3.1+4`](#firebase_app_check---v0314)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_app_check` - `v0.3.1+4`
+
+---
+
+#### `firebase_app_check_web` - `v0.2.0`
+
+ - **BREAKING** **FEAT**(vertexai): Vertex AI in Firebase is now Generally Available (GA) and can be used in production apps. ([#13453](https://github.com/firebase/flutterfire/issues/13453)). ([77b48800](https://github.com/firebase/flutterfire/commit/77b488001a2b68b46ccff4fc96d143ef891d3e5a))
+
+#### `firebase_vertexai` - `v1.0.0`
+
+ - **BREAKING** **FEAT**(vertexai): Vertex AI in Firebase is now Generally Available (GA) and can be used in production apps. ([#13453](https://github.com/firebase/flutterfire/issues/13453)). ([77b48800](https://github.com/firebase/flutterfire/commit/77b488001a2b68b46ccff4fc96d143ef891d3e5a))
+
+#### `firebase_data_connect` - `v0.1.2+1`
+
+ - **FIX**(fdc): Fix issue where auth wasn't properly refreshing id token ([#13509](https://github.com/firebase/flutterfire/issues/13509)). ([0158ad20](https://github.com/firebase/flutterfire/commit/0158ad20925646e8a21c17adc8793e870f3a65d6))
+ - **FIX**(fdc): Updated licenses ([#13470](https://github.com/firebase/flutterfire/issues/13470)). ([a1de14fd](https://github.com/firebase/flutterfire/commit/a1de14fde34e6b352f0d4a098d88ee9df542cf27))
+
+#### `firebase_storage` - `v12.3.4`
+
+ - **FIX**(storage,android): stream handler & event channel clean up on completion ([#13508](https://github.com/firebase/flutterfire/issues/13508)). ([f010b468](https://github.com/firebase/flutterfire/commit/f010b4684e38f47ad9b38d34c3a84a4eb4518fac))
+
+
 ## 2024-10-08 - [BoM 2.9.3](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-293-2024-10-08)
 
 ### Changes
