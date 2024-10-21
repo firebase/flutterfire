@@ -1,3 +1,14 @@
+## 1.0.0
+
+Use the Vertex AI in Firebase SDK to call the Vertex AI Gemini API directly from your app. This client SDK is built specifically for use with Flutter apps, offering security options against unauthorized clients as well as integrations with other Firebase services.
+
+  * If you're new to this SDK, visit the getting started guide.
+  * If you used the preview version of the library, visit the migration guide to learn about some important updates.
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**(vertexai): Vertex AI in Firebase is now Generally Available (GA) and can be used in production apps. ([#13453](https://github.com/firebase/flutterfire/issues/13453)). ([77b48800](https://github.com/firebase/flutterfire/commit/77b488001a2b68b46ccff4fc96d143ef891d3e5a))
+
 ## 0.2.3+4
 
  - Update a dependency to the latest release.
