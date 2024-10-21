@@ -16,7 +16,11 @@ class AddPersonVariablesBuilder {
       (dynamic json) => AddPersonData.fromJson(jsonDecode(json));
   Serializer<AddPersonVariables> varsSerializer =
       (AddPersonVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<AddPersonData, AddPersonVariables> build() {
+  Future<OperationResult<AddPersonData, AddPersonVariables>> execute() {
+    return this.ref().execute();
+  }
+
+  MutationRef<AddPersonData, AddPersonVariables> ref() {
     AddPersonVariables vars = AddPersonVariables(
       name: _name,
     );
@@ -24,18 +28,6 @@ class AddPersonVariablesBuilder {
     return _dataConnect.mutation(
         "addPerson", dataDeserializer, varsSerializer, vars);
   }
-}
-
-class AddPerson {
-  String name = "addPerson";
-  AddPerson({required this.dataConnect});
-  AddPersonVariablesBuilder ref() {
-    return AddPersonVariablesBuilder(
-      dataConnect,
-    );
-  }
-
-  FirebaseDataConnect dataConnect;
 }
 
 class AddPersonPersonInsert {
