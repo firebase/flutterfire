@@ -5,7 +5,11 @@
 @import FirebaseFirestore;
 @import FirebaseCore;
 
+#if __has_include(<firebase_core/FLTFirebasePlugin.h>)
+#import <firebase_core/FLTFirebasePlugin.h>
+#else
 #import <FLTFirebasePlugin.h>
+#endif
 #import "include/cloud_firestore/Private/FLTFirebaseFirestoreReader.h"
 #import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
 
