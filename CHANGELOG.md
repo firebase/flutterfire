@@ -11,11 +11,11 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 Packages with breaking changes:
 
- - [`firebase_app_check_web` - `v0.2.0`](#firebase_app_check_web---v020)
  - [`firebase_vertexai` - `v1.0.0`](#firebase_vertexai---v100)
 
 Packages with other changes:
 
+ - [`firebase_app_check_web` - `v0.2.0`](#firebase_app_check_web---v020)
  - [`firebase_data_connect` - `v0.1.2+1`](#firebase_data_connect---v0121)
  - [`firebase_storage` - `v12.3.4`](#firebase_storage---v1234)
  - [`firebase_app_check` - `v0.3.1+4`](#firebase_app_check---v0314)
@@ -28,9 +28,9 @@ Packages with dependency updates only:
 
 ---
 
-#### `firebase_app_check_web` - `v0.2.0`
+#### `firebase_app_check_web` - `v0.2.0
 
- - **BREAKING** **FEAT**(vertexai): Vertex AI in Firebase is now Generally Available (GA) and can be used in production apps. ([#13453](https://github.com/firebase/flutterfire/issues/13453)). ([77b48800](https://github.com/firebase/flutterfire/commit/77b488001a2b68b46ccff4fc96d143ef891d3e5a))
+ fix(app-check, web): update pubspec.yaml description. ([#13453](https://github.com/firebase/flutterfire/issues/13453)). ([77b48800](https://github.com/firebase/flutterfire/commit/77b488001a2b68b46ccff4fc96d143ef891d3e5a))
 
 #### `firebase_vertexai` - `v1.0.0`
 
