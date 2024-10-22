@@ -75,7 +75,7 @@ let package = Package(
     // .package(name:"flutterfire", path: "../../../../.."),
     // TODO - this needs a version instead
     // This isn't working
-    .package(url:"https://github.com/russellwheatley/test-flutterfire", exact: "0.0.24"),
+    .package(url:"https://github.com/firebase/flutterfire", exact: "3.6.0-firebase-core-swift"),
   ],
   targets: [
     .target(
@@ -83,7 +83,7 @@ let package = Package(
       dependencies: [
         .product(name: "FirebaseFirestore", package: "firebase-ios-sdk"),
         // Wrapper dependency
-        .product(name: "firebase-core-shared", package: "test-flutterfire")
+        .product(name: "firebase-core-shared", package: "flutterfire")
       ],
       resources: [
         .process("Resources"),
