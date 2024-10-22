@@ -295,7 +295,6 @@ GenerativeModel createGenerativeModel({
   List<Tool>? tools,
   ToolConfig? toolConfig,
   Content? systemInstruction,
-  String? accessToken,
 }) =>
     GenerativeModel._(
       model: model,
