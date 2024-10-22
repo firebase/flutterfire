@@ -10,8 +10,11 @@
 #endif
 
 @import FirebaseFirestore;
+#if __has_include(<cloud_firestore/FirestoreMessages.g.h>)
 #import <cloud_firestore/FirestoreMessages.g.h>
-
+#else
+#import "../Public/FirestoreMessages.g.h"
+#endif
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN

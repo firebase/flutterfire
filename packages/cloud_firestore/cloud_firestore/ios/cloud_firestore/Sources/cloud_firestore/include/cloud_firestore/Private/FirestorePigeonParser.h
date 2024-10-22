@@ -6,8 +6,11 @@
 
 @import FirebaseFirestore;
 #import <Foundation/Foundation.h>
+#if __has_include(<cloud_firestore/FirestoreMessages.g.h>)
 #import <cloud_firestore/FirestoreMessages.g.h>
-
+#else
+#import "../Public/FirestoreMessages.g.h"
+#endif
 @interface FirestorePigeonParser : NSObject
 
 + (FIRFilter *_Nonnull)filterFromJson:(NSDictionary<NSString *, id> *_Nullable)map;
