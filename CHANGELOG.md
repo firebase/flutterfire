@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-10-22
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_vertexai` - `v1.0.1`](#firebase_vertexai---v101)
+
+---
+
+#### `firebase_vertexai` - `v1.0.1`
+
+ - **FIX**(vertexai): hotfix for vertexai auth access to storage ([#13534](https://github.com/firebase/flutterfire/issues/13534)). ([9f693094](https://github.com/firebase/flutterfire/commit/9f6930947dbd35a61c583c17bb128f1af4702a5d))
+
+
 ## 2024-10-21 - [BoM 3.0.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-300-2024-10-21)
 
 ### Changes
