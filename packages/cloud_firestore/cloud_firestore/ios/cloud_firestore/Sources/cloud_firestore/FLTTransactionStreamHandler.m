@@ -3,7 +3,11 @@
 // found in the LICENSE file.
 
 @import FirebaseFirestore;
+#if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
+#import <firebase_core/FLTFirebasePluginRegistry.h>
+#else
 #import <FLTFirebasePluginRegistry.h>
+#endif
 
 #import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
 #import "include/cloud_firestore/Private/FLTTransactionStreamHandler.h"

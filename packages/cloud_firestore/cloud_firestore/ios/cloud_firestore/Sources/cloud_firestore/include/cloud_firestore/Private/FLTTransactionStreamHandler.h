@@ -10,7 +10,7 @@
 #endif
 
 @import FirebaseFirestore;
-#import "../Public/FirestoreMessages.g.h"
+#import <cloud_firestore/FirestoreMessages.g.h>
 
 #import <Foundation/Foundation.h>
 
