@@ -8,29 +8,26 @@
 import Foundation
 import PackageDescription
 
-// Using this as a wrapper around firebase core, this allows retrieval of it via remote package
-// whilst also preserving firebase core's Package.swift file needed by Flutter
+// Shared Swift package manager code for firebase core
 let package = Package(
   name: "remote_firebase_core",
   platforms: [
-    .iOS("13.0"),
+    .iOS("13.0")
   ],
   products: [
-    .library(name: "firebase-core-target", targets: ["firebase_core_target"]),
+    .library(name: "firebase-core-shared", targets: ["firebase_core_shared"])
+  ],
+  dependencies: [
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "11.0.0")
   ],
   targets: [
     .target(
-      name: "firebase_core_target",
-      dependencies:[
-        .target(name: "firebase_core")
+      name: "firebase_core_shared",
+      dependencies: [
+        .product(name: "FirebaseInstallations", package: "firebase-ios-sdk")
       ],
-      path: "Sources/firebase_core_target"
-    ),
-    .target(
-      name: "firebase_core",
-      path: "packages/firebase_core/firebase_core/ios/firebase_core",
-      exclude: ["Package.swift"],
-      publicHeadersPath: "Sources/firebase_core/include"
+      path: "Sources/firebase_core_shared",
+      publicHeadersPath: "include"
     ),
   ]
 )
