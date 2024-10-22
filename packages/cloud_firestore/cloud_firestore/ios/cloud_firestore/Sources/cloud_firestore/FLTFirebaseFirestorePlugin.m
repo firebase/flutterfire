@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 @import FirebaseFirestore;
-#import <firebase_core/FLTFirebasePluginRegistry.h>
+#import <FLTFirebasePluginRegistry.h>
 
 #import <TargetConditionals.h>
 #import "FirebaseFirestoreInternal/FIRPersistentCacheIndexManager.h"

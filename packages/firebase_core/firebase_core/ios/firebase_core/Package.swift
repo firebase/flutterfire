@@ -89,6 +89,7 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version),
+    .package(url:"https://github.com/russellwheatley/test-flutterfire", exact: "0.0.24"),
   ],
   targets: [
     .target(
@@ -96,6 +97,14 @@ let package = Package(
       dependencies: [
         // No product for firebase-core so we pull in the smallest one
         .product(name: "FirebaseInstallations", package: "firebase-ios-sdk"),
+        .product(name: "firebase-core-shared", package: "test-flutterfire")
+      ],
+      exclude: [
+        // These are now pulled in as a remote dependency from FlutterFire repo
+        "FLTFirebasePlugin.m",
+        "FLTFirebasePluginRegistry.m",
+        "include/firebase_core/FLTFirebasePlugin.h",
+        "include/firebase_core/FLTFirebasePluginRegistry.h"
       ],
       resources: [
         .process("Resources"),

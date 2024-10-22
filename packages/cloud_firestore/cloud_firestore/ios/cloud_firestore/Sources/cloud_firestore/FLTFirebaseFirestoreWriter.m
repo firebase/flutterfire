@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 @import FirebaseFirestore;
-#import <firebase_core/FLTFirebasePlugin.h>
+@import FirebaseCore;
 
 #import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
 #import "include/cloud_firestore/Private/FLTFirebaseFirestoreWriter.h"
