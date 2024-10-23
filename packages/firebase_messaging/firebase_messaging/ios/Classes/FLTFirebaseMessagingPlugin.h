@@ -43,6 +43,7 @@ API_AVAILABLE(ios(10.0))
 @interface FLTFirebaseMessagingPlugin : FLTFirebasePlugin <FlutterPlugin,
                                                            FLTFirebasePlugin,
                                                            FIRMessagingDelegate,
+                                                           UIApplicationDelegate,
                                                            UNUserNotificationCenterDelegate>
 #else
 @interface FLTFirebaseMessagingPlugin
