@@ -553,8 +553,8 @@ class _ChatWidgetState extends State<ChatWidget> {
         Map<String, dynamic> location =
             functionCall.args['location']! as Map<String, dynamic>;
         var date = functionCall.args['date']! as String;
-        var city = location['city']! as String;
-        var state = location['state']! as String;
+        var city = location['city'] as String;
+        var state = location['state'] as String;
         final functionResult = await fetchWeather(Location(city, state), date);
         // Send the response to the model so that it can use the result to
         // generate text for the user.
