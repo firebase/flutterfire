@@ -1,3 +1,23 @@
+## 0.2.0
+
+ - fix(app-check, web): update pubspec.yaml description. ([#13453](https://github.com/firebase/flutterfire/issues/13453)). ([77b48800](https://github.com/firebase/flutterfire/commit/77b488001a2b68b46ccff4fc96d143ef891d3e5a))
+
+## 0.1.3+2
+
+ - Update a dependency to the latest release.
+
+## 0.1.3+1
+
+ - Update a dependency to the latest release.
+
+## 0.1.3
+
+ - **FEAT**(web): update to `web: ^1.0.0` ([#13200](https://github.com/firebase/flutterfire/issues/13200)). ([8fab04ae](https://github.com/firebase/flutterfire/commit/8fab04aec3b95789856d95639131bf09db29175b))
+
+## 0.1.2+13
+
+ - Update a dependency to the latest release.
+
 ## 0.1.2+12
 
  - Update a dependency to the latest release.

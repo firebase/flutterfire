@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -32,18 +30,27 @@ import 'firebase_remote_config/firebase_remote_config_e2e_test.dart'
     as firebase_remote_config;
 import 'firebase_storage/firebase_storage_e2e_test.dart' as firebase_storage;
 
+// Github Actions environment variable
+// ignore: do_not_use_environment
+final isCI = const String.fromEnvironment('CI').isNotEmpty;
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('FlutterFire', () {
-    if (kIsWeb || !Platform.isWindows) {
+    // ignore: do_not_use_environment
+    if (const String.fromEnvironment('APP_CHECK_E2E') == 'true') {
+      // app check has been separated out for web due to throttling issues
+      firebase_app_check.main();
+      return;
+    }
+    if (kIsWeb) {
       firebase_core.main();
       firebase_auth.main();
       firebase_database.main();
       firebase_crashlytics.main();
       firebase_analytics.main();
       cloud_functions.main();
-      firebase_app_check.main();
       firebase_app_installations.main();
       firebase_dynamic_links.main();
       firebase_messaging.main();
@@ -51,11 +58,41 @@ void main() {
       firebase_performance.main();
       firebase_remote_config.main();
       firebase_storage.main();
-    } else {
-      // Only tests available on Windows
-      firebase_core.main();
-      firebase_auth.main();
-      firebase_storage.main();
+      return;
+    }
+
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.android:
+      case TargetPlatform.iOS:
+      case TargetPlatform.macOS:
+        runAllTests();
+        break;
+      case TargetPlatform.windows:
+        firebase_core.main();
+        firebase_auth.main();
+        firebase_storage.main();
+        break;
+      default:
+        throw UnsupportedError(
+          '$defaultTargetPlatform is not supported on FlutterFire E2E tests',
+        );
     }
   });
+}
+
+void runAllTests() {
+  firebase_core.main();
+  firebase_auth.main();
+  firebase_database.main();
+  firebase_crashlytics.main();
+  firebase_analytics.main();
+  cloud_functions.main();
+  firebase_app_installations.main();
+  firebase_dynamic_links.main();
+  firebase_messaging.main();
+  firebase_ml_model_downloader.main();
+  firebase_performance.main();
+  firebase_remote_config.main();
+  firebase_storage.main();
+  firebase_app_check.main();
 }

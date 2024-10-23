@@ -4,7 +4,7 @@
 
 #import "FLTFirebaseAnalyticsPlugin.h"
 
-#import <Firebase/Firebase.h>
+@import FirebaseAnalytics;
 
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 

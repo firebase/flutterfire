@@ -1,3 +1,21 @@
+## 3.6.0
+
+ - **FEAT**: bump iOS SDK to version 11.2.0 ([#13338](https://github.com/firebase/flutterfire/issues/13338)). ([ff1e5f67](https://github.com/firebase/flutterfire/commit/ff1e5f672cee29731dc4d21251611030add9e605))
+ - **FEAT**: bump Firebase android BOM to `33.3.0` ([#13390](https://github.com/firebase/flutterfire/issues/13390)). ([15c0284e](https://github.com/firebase/flutterfire/commit/15c0284e3f3555ff888e7817e0811b64b3d3164e))
+
+## 3.5.0
+
+ - **FEAT**(fdc): Initial Release of Data Connect ([#13313](https://github.com/firebase/flutterfire/issues/13313)). ([603a6726](https://github.com/firebase/flutterfire/commit/603a67261a2f7cbdd6ef594bfaef480aeb820683))
+ - **FEAT**(core): support for using SPM (Swift Package Manager) ([#12786](https://github.com/firebase/flutterfire/issues/12786)). ([4e28103f](https://github.com/firebase/flutterfire/commit/4e28103fafd84c6613df647e7f0dbb6a068ca8ea))
+
+## 3.4.1
+
+ - Update a dependency to the latest release.
+
+## 3.4.0
+
+ - **FEAT**: bump iOS SDK to version 11.0.0 ([#13158](https://github.com/firebase/flutterfire/issues/13158)). ([c0e0c997](https://github.com/firebase/flutterfire/commit/c0e0c99703ea394d1bb873ac225c5fe3539b002d))
+
 ## 3.3.0
 
  - **FEAT**: bump iOS SDK to version 10.29.0 ([#13113](https://github.com/firebase/flutterfire/issues/13113)). ([45fa2f58](https://github.com/firebase/flutterfire/commit/45fa2f589abe60a4bf06ac5fd64895c7df94c19c))

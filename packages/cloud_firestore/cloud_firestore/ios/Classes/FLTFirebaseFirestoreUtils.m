@@ -2,11 +2,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#import <Firebase/Firebase.h>
+@import FirebaseFirestore;
+@import FirebaseCore;
 
+#import "Private/FLTFirebaseFirestoreUtils.h"
 #import "Private/FLTFirebaseFirestoreExtension.h"
 #import "Private/FLTFirebaseFirestoreReader.h"
-#import "Private/FLTFirebaseFirestoreUtils.h"
 #import "Private/FLTFirebaseFirestoreWriter.h"
 
 @implementation FLTFirebaseFirestoreReaderWriter

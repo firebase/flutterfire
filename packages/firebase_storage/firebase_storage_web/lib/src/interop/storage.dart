@@ -134,7 +134,7 @@ class StorageReference
   /// Returns a long lived download URL for this reference.
   Future<Uri> getDownloadURL() async {
     final uriString = await storage_interop.getDownloadURL(jsObject).toDart;
-    final dartString = (uriString! as JSString).toDart;
+    final dartString = uriString.toDart;
     return Uri.parse(dartString);
   }
 
@@ -179,7 +179,9 @@ class StorageReference
   /// Uploads data [blob] to the actual location with optional [metadata].
   /// Returns the [UploadTask] which can be used to monitor and manage
   /// the upload.
-  UploadTask put(dynamic blob, [UploadMetadata? metadata]) {
+  ///
+  /// `blob` can be a [Uint8List] or [Blob].
+  UploadTask put(JSAny blob, [UploadMetadata? metadata]) {
     storage_interop.UploadTaskJsImpl taskImpl;
     if (metadata != null) {
       taskImpl = storage_interop.uploadBytesResumable(

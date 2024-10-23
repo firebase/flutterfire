@@ -1,3 +1,11 @@
+## 5.3.0
+
+ - **FEAT**(core): support for using SPM (Swift Package Manager) ([#12786](https://github.com/firebase/flutterfire/issues/12786)). ([4e28103f](https://github.com/firebase/flutterfire/commit/4e28103fafd84c6613df647e7f0dbb6a068ca8ea))
+
+## 5.2.1
+
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
 ## 5.2.0
 
  - **FEAT**(firebase_core_platform_interface): Add copyWith to FirebaseOptions ([#13084](https://github.com/firebase/flutterfire/issues/13084)). ([c7963d63](https://github.com/firebase/flutterfire/commit/c7963d63b1cd8cf6471959f0ee7fbf45b5f51edc))

@@ -1,3 +1,19 @@
+## 7.4.7
+
+ - Update a dependency to the latest release.
+
+## 7.4.6
+
+ - Update a dependency to the latest release.
+
+## 7.4.5
+
+ - Update a dependency to the latest release.
+
+## 7.4.4
+
+ - Update a dependency to the latest release.
+
 ## 7.4.3
 
  - **DOCS**(auth): add information about error codes for email/password functions ([#13100](https://github.com/firebase/flutterfire/issues/13100)). ([aeafc356](https://github.com/firebase/flutterfire/commit/aeafc356953a0531003f765e766ffcff2387401d))

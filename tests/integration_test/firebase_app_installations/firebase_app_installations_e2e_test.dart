@@ -9,9 +9,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tests/firebase_options.dart';
 
+import '../e2e_test.dart';
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-
   group(
     'firebase_app_installations',
     () {
@@ -29,6 +30,21 @@ void main() {
           // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
         },
         skip: defaultTargetPlatform == TargetPlatform.macOS,
+      );
+
+      test(
+        'running get id in parallel',
+        () async {
+          final ids = await Future.wait([
+            FirebaseInstallations.instance.getId(),
+            FirebaseInstallations.instance.getId(),
+            FirebaseInstallations.instance.getId(),
+            FirebaseInstallations.instance.getId(),
+            FirebaseInstallations.instance.getId(),
+          ]);
+          expect(ids, isNotNull);
+        },
+        skip: defaultTargetPlatform == TargetPlatform.macOS && isCI,
       );
 
       test(

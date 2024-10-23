@@ -1,3 +1,43 @@
+## 1.0.1
+
+ - **FIX**(vertexai): hotfix for vertexai auth access to storage ([#13534](https://github.com/firebase/flutterfire/issues/13534)). ([9f693094](https://github.com/firebase/flutterfire/commit/9f6930947dbd35a61c583c17bb128f1af4702a5d))
+
+## 1.0.0
+
+Use the Vertex AI in Firebase SDK to call the Vertex AI Gemini API directly from your app. This client SDK is built specifically for use with Flutter apps, offering security options against unauthorized clients as well as integrations with other Firebase services.
+
+  * If you're new to this SDK, visit the getting started guide.
+  * If you used the preview version of the library, visit the migration guide to learn about some important updates.
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**(vertexai): Vertex AI in Firebase is now Generally Available (GA) and can be used in production apps. ([#13453](https://github.com/firebase/flutterfire/issues/13453)). ([77b48800](https://github.com/firebase/flutterfire/commit/77b488001a2b68b46ccff4fc96d143ef891d3e5a))
+
+## 0.2.3+4
+
+ - Update a dependency to the latest release.
+
+## 0.2.3+3
+
+ - Update a dependency to the latest release.
+
+## 0.2.3+2
+
+ - Update a dependency to the latest release.
+
+## 0.2.3+1
+
+ - Update a dependency to the latest release.
+
+## 0.2.3
+
+ - **FIX**(vertexai): update history getter to reflect google_generative_ai updates ([#13040](https://github.com/firebase/flutterfire/issues/13040)). ([cc542d76](https://github.com/firebase/flutterfire/commit/cc542d76b989d550f29a9b0a1adb761da64372a7))
+ - **FEAT**: bump iOS SDK to version 11.0.0 ([#13158](https://github.com/firebase/flutterfire/issues/13158)). ([c0e0c997](https://github.com/firebase/flutterfire/commit/c0e0c99703ea394d1bb873ac225c5fe3539b002d))
+
+## 0.2.2+4
+
+ - Update a dependency to the latest release.
+
 ## 0.2.2+3
 
  - Update a dependency to the latest release.
@@ -37,4 +77,4 @@
 
 ## 0.1.0
 
-- Initial release of the Vertex AI for Firebase SDK (public preview). Learn how to [get started](https://firebase.google.com/docs/vertex-ai/get-started) with the SDK in your app.
+- Initial release of the Vertex AI in Firebase SDK (public preview). Learn how to [get started](https://firebase.google.com/docs/vertex-ai/get-started) with the SDK in your app.

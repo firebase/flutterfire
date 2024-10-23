@@ -132,6 +132,10 @@ class CloudFirestorePlugin : public flutter::Plugin,
       const DocumentReferenceRequest& parameters, bool include_metadata_changes,
       const ListenSource& source,
       std::function<void(ErrorOr<std::string> reply)> result) override;
+  virtual void PersistenceCacheIndexManagerRequest(
+      const FirestorePigeonFirebaseApp& app,
+      const PersistenceCacheIndexManagerRequestEnum& request,
+      std::function<void(std::optional<FlutterError> reply)> result) override;
 
   static flutter::BinaryMessenger* messenger_;
   static std::map<

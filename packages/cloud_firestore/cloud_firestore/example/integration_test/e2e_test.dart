@@ -18,6 +18,7 @@ import 'instance_e2e.dart';
 import 'load_bundle_e2e.dart';
 import 'query_e2e.dart';
 import 'second_database.dart';
+import 'settings_e2e.dart';
 import 'snapshot_metadata_e2e.dart';
 import 'timestamp_e2e.dart';
 import 'transaction_e2e.dart';
@@ -33,6 +34,10 @@ void main() {
     setUpAll(() async {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
+      );
+      // Web by default doesn't have persistence enabled
+      FirebaseFirestore.instance.settings = const Settings(
+        persistenceEnabled: true,
       );
 
       if (kUseFirestoreEmulator) {
@@ -56,6 +61,9 @@ void main() {
     runWebSnapshotListenersTests();
     if (defaultTargetPlatform != TargetPlatform.windows) {
       runSecondDatabaseTests();
+    }
+    if (kIsWeb) {
+      runSettingsTest();
     }
   });
 }

@@ -153,7 +153,7 @@ class MethodChannelQuery extends QueryPlatform {
     bool includeMetadataChanges = false,
     ServerTimestampBehavior serverTimestampBehavior =
         ServerTimestampBehavior.none,
-    ListenSource source = ListenSource.defaultSource,
+    required ListenSource listenSource,
   }) {
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
@@ -175,7 +175,7 @@ class MethodChannelQuery extends QueryPlatform {
             serverTimestampBehavior: serverTimestampBehavior,
           ),
           includeMetadataChanges,
-          source,
+          listenSource,
         );
 
         snapshotStreamSubscription =

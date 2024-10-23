@@ -18,7 +18,9 @@ command:
     hooks:
       preCommit: |
         dart run scripts/generate_vertexai_version.dart && \
-        git add packages/firebase_vertexai/firebase_vertexai/lib/src/vertex_version.dart
+        dart run scripts/generate_dataconnect_version.dart && \
+        git add packages/firebase_vertexai/firebase_vertexai/lib/src/vertex_version.dart && \
+        git add packages/firebase_data_connect/firebase_data_connect/lib/src/dataconnect_version.dart
 
   bootstrap:
     # It seems so that running "pub get" in parallel has some issues (like
@@ -177,7 +179,7 @@ scripts:
   test:e2e:web:
     run: |
       melos exec -c 1 --fail-fast -- \
-        "flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome"
+        "flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=APP_CHECK_E2E=true"
     description: |
       Run all e2e tests on web platform. Please ensure you have "chromedriver" installed and running.
     packageFilters:
@@ -282,6 +284,7 @@ scripts:
         --ignore "**/FlutterMultiDexApplication.java" \
         --ignore "**/GeneratedPluginRegistrant.swift" \
         --ignore "**/Pods/**" \
+        --ignore "**/generated/**" \
         --ignore "**/flutter/generated_plugin_registrant.h" \
         --ignore "**/flutter/generated_plugin_registrant.cc" \
         .
@@ -317,6 +320,7 @@ scripts:
         --ignore "**/FlutterMultiDexApplication.java" \
         --ignore "**/GeneratedPluginRegistrant.swift" \
         --ignore "**/Pods/**" \
+        --ignore "**/generated/**" \
         --ignore "**/flutter/generated_plugin_registrant.h" \
         --ignore "**/flutter/generated_plugin_registrant.cc" \
         .
