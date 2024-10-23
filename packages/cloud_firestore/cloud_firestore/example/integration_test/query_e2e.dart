@@ -3891,5 +3891,67 @@ void runQueryTests() {
         expect(res.docs.map((e) => e.reference), [doc2, doc3]);
       });
     });
+
+    group('WhereIn Filter', () {
+      testWidgets('Multiple whereIn filters should not trigger an assertion',
+          (_) async {
+        try {
+          final collection = await initializeTest('multipe-whereIn-clause');
+
+          Map<String, String> data = {};
+
+          for (int i = 1; i <= 10; i++) {
+            data['field$i'] = 'value$i';
+          }
+
+          await collection.doc().set(data);
+
+          Query<Map<String, dynamic>> query = collection;
+          data.forEach((field, values) {
+            query = query.where(field, whereIn: [values]);
+          });
+
+          await query.get();
+        } on AssertionError catch (e) {
+          fail('Test failed due to AssertionError: $e');
+        }
+      });
+
+      testWidgets(
+          'Multiple whereIn filters exceeding DNF 30 clause limit should trigger an assertion',
+          (_) async {
+        try {
+          final collection = await initializeTest('multipe-whereIn-clause');
+
+          await collection.doc().set({'genre': 'fiction'});
+          await collection.doc().set({'author': 'Author A'});
+
+          // DNF for this query = 36 (6 genres * 6 authors) exceeding the 30 clause limit
+          await collection.where(
+            'genre',
+            whereIn: [
+              'fiction',
+              'non-fiction',
+              'fantasy',
+              'science-fiction',
+              'mystery',
+              'thriller',
+            ],
+          ).where(
+            'author',
+            whereIn: [
+              'Author A',
+              'Author B',
+              'Author C',
+              'Author D',
+              'Author E',
+              'Author F',
+            ],
+          ).get();
+        } catch (error) {
+          expect(error, isA<FirebaseException>());
+        }
+      });
+    });
   });
 }

@@ -159,7 +159,7 @@ final class GenerativeModel {
       if (auth != null) {
         final idToken = await auth.currentUser?.getIdToken();
         if (idToken != null) {
-          headers['Authorization'] = idToken;
+          headers['Authorization'] = 'Firebase $idToken';
         }
       }
       return headers;

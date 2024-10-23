@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -97,10 +98,12 @@ class _ChatWidgetState extends State<ChatWidget> {
     super.initState();
 
     initFirebase().then((value) {
-      _model = FirebaseVertexAI.instance.generativeModel(
+      var vertex_instance =
+          FirebaseVertexAI.instanceFor(auth: FirebaseAuth.instance);
+      _model = vertex_instance.generativeModel(
         model: 'gemini-1.5-flash',
       );
-      _functionCallModel = FirebaseVertexAI.instance.generativeModel(
+      _functionCallModel = vertex_instance.generativeModel(
         model: 'gemini-1.5-flash',
         tools: [
           Tool.functionDeclarations([fetchWeatherTool]),
@@ -152,6 +155,7 @@ class _ChatWidgetState extends State<ChatWidget> {
   Future<void> initFirebase() async {
     // ignore: avoid_redundant_argument_values
     await Firebase.initializeApp(options: options);
+    await FirebaseAuth.instance.signInAnonymously();
   }
 
   void _scrollDown() {

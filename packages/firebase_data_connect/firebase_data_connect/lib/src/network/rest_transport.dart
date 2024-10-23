@@ -1,6 +1,16 @@
-// Copyright 2024, the Chromium project authors.  Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
+// Copyright 2024 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 part of firebase_data_connect_rest;
 
@@ -8,7 +18,7 @@ part of firebase_data_connect_rest;
 class RestTransport implements DataConnectTransport {
   /// Initializes necessary protocol and port.
   RestTransport(this.transportOptions, this.options, this.appId, this.sdkType,
-      this.auth, this.appCheck) {
+      this.appCheck) {
     String protocol = 'http';
     if (transportOptions.isSecure == null ||
         transportOptions.isSecure == true) {
@@ -23,9 +33,6 @@ class RestTransport implements DataConnectTransport {
     url =
         '$protocol://$host:$port/v1beta/projects/$project/locations/$location/services/$service/connectors/$connector';
   }
-
-  @override
-  FirebaseAuth? auth;
 
   @override
   FirebaseAppCheck? appCheck;
@@ -57,11 +64,13 @@ class RestTransport implements DataConnectTransport {
 
   /// Invokes the current operation, whether its a query or mutation.
   Future<Data> invokeOperation<Data, Variables>(
-      String queryName,
-      Deserializer<Data> deserializer,
-      Serializer<Variables>? serializer,
-      Variables? vars,
-      String endpoint) async {
+    String queryName,
+    String endpoint,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+    String? authToken,
+  ) async {
     String project = options.projectId;
     String location = options.location;
     String service = options.serviceId;
@@ -71,12 +80,6 @@ class RestTransport implements DataConnectTransport {
       'Accept': 'application/json',
       'x-goog-api-client': getGoogApiVal(sdkType, packageVersion)
     };
-    String? authToken;
-    try {
-      authToken = await auth?.currentUser?.getIdToken();
-    } catch (e) {
-      log('Unable to get auth token: $e');
-    }
     String? appCheckToken;
     try {
       appCheckToken = await appCheck?.getToken();
@@ -112,6 +115,14 @@ class RestTransport implements DataConnectTransport {
                 ? DataConnectErrorCode.unauthorized
                 : DataConnectErrorCode.other,
             "Received a status code of ${r.statusCode} with a message '${message}'");
+      } else {
+        Map<String, dynamic> bodyJson =
+            jsonDecode(r.body) as Map<String, dynamic>;
+        if (bodyJson.containsKey("errors") &&
+            (bodyJson['errors'] as List).isNotEmpty) {
+          throw DataConnectError(
+              DataConnectErrorCode.other, bodyJson['errors'].toString());
+        }
       }
 
       /// The response we get is in the data field of the response
@@ -130,25 +141,25 @@ class RestTransport implements DataConnectTransport {
   /// Invokes query REST endpoint.
   @override
   Future<Data> invokeQuery<Data, Variables>(
-    String queryName,
-    Deserializer<Data> deserializer,
-    Serializer<Variables>? serializer,
-    Variables? vars,
-  ) async {
+      String queryName,
+      Deserializer<Data> deserializer,
+      Serializer<Variables>? serializer,
+      Variables? vars,
+      String? token) async {
     return invokeOperation(
-        queryName, deserializer, serializer, vars, 'executeQuery');
+        queryName, 'executeQuery', deserializer, serializer, vars, token);
   }
 
   /// Invokes mutation REST endpoint.
   @override
   Future<Data> invokeMutation<Data, Variables>(
-    String queryName,
-    Deserializer<Data> deserializer,
-    Serializer<Variables>? serializer,
-    Variables? vars,
-  ) async {
+      String queryName,
+      Deserializer<Data> deserializer,
+      Serializer<Variables>? serializer,
+      Variables? vars,
+      String? token) async {
     return invokeOperation(
-        queryName, deserializer, serializer, vars, 'executeMutation');
+        queryName, 'executeMutation', deserializer, serializer, vars, token);
   }
 }
 
@@ -158,6 +169,5 @@ DataConnectTransport getTransport(
         DataConnectOptions options,
         String appId,
         CallerSDKType sdkType,
-        FirebaseAuth? auth,
         FirebaseAppCheck? appCheck) =>
-    RestTransport(transportOptions, options, appId, sdkType, auth, appCheck);
+    RestTransport(transportOptions, options, appId, sdkType, appCheck);

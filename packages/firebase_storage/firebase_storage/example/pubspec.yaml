@@ -6,11 +6,11 @@ environment:
 
 dependencies:
   firebase_core: ^3.6.0
-  firebase_storage: ^12.3.2
+  firebase_storage: ^12.3.4
   flutter:
     sdk: flutter
-  image_picker: ^1.0.2
-  image_picker_for_web: ^2.1.12
+  image_picker: ^1.1.2
+  image_picker_for_web: ^3.0.5
   web: ^1.0.0
 
 flutter:

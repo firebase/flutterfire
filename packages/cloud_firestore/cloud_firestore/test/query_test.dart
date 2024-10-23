@@ -158,11 +158,6 @@ void main() {
 
       test('throws if multiple disjunctive filters in query', () {
         expect(
-          () => query!
-              .where('foo', whereIn: [1, 2]).where('foo', whereIn: [2, 3]),
-          throwsAssertionError,
-        );
-        expect(
           () => query!.where('foo', arrayContainsAny: [1]).where(
             'foo',
             arrayContainsAny: [2, 3],
@@ -221,12 +216,6 @@ void main() {
               .where('foo', whereIn: [2, 3])
               .where('foo', arrayContains: 1)
               .where('foo', arrayContains: 2),
-          throwsAssertionError,
-        );
-        expect(
-          () => query!
-              .where('foo', arrayContains: 1)
-              .where('foo', whereIn: [2, 3]).where('foo', whereIn: [2, 3]),
           throwsAssertionError,
         );
       });

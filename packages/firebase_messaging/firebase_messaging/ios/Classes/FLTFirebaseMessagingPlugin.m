@@ -33,7 +33,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   BOOL _initialNotificationGathered;
   FLTFirebaseMethodCallResult *_initialNotificationResult;
 
-  NSString *_initialNoticationID;
+  NSString *_initialNotificationID;
   NSString *_notificationOpenedAppID;
 
 #ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
@@ -220,14 +220,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     // If remoteNotification exists, it is the notification that opened the app.
     _initialNotification =
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
-    _initialNoticationID = remoteNotification[@"gcm.message_id"];
+    _initialNotificationID = remoteNotification[@"gcm.message_id"];
   }
   _initialNotificationGathered = YES;
   [self initialNotificationCallback];
 
-#if TARGET_OS_OSX
-  // For macOS we use swizzling to intercept as addApplicationDelegate does not exist on the macOS
-  // registrar Flutter implementation.
   [GULAppDelegateSwizzler registerAppDelegateInterceptor:self];
   [GULAppDelegateSwizzler proxyOriginalDelegateIncludingAPNSMethods];
 
@@ -246,7 +243,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
                     didReceiveRemoteNotificationWithCompletionSEL,
                     method_getImplementation(donorMethod), method_getTypeEncoding(donorMethod));
   }
-#else
+#if !TARGET_OS_OSX
+  // `[_registrar addApplicationDelegate:self];` alone doesn't work for notifications to be received
+  // without the above swizzling This commit:
+  // https://github.com/google/GoogleUtilities/pull/162/files#diff-6bb6d1c46632fc66405a524071cc4baca5fc6a1a6c0eefef81d8c3e2c89cbc13L520-L533
+  // broke notifications which was released with firebase-ios-sdk v11.0.0
   [_registrar addApplicationDelegate:self];
 #endif
 
@@ -357,7 +358,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   // We only want to handle FCM notifications and stop firing `onMessageOpenedApp()` when app is
   // coming from a terminated state.
   if (_notificationOpenedAppID != nil &&
-      ![_initialNoticationID isEqualToString:_notificationOpenedAppID]) {
+      ![_initialNotificationID isEqualToString:_notificationOpenedAppID]) {
     NSDictionary *notificationDict =
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
     [_channel invokeMethod:@"Messaging#onMessageOpenedApp" arguments:notificationDict];
@@ -1036,7 +1037,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     // Only return if initial notification was sent when app is terminated. Also ensure that
     // it was the initial notification that was tapped to open the app.
     if (_initialNotification != nil &&
-        [_initialNoticationID isEqualToString:_notificationOpenedAppID]) {
+        [_initialNotificationID isEqualToString:_notificationOpenedAppID]) {
       NSDictionary *initialNotificationCopy = [_initialNotification copy];
       _initialNotification = nil;
       return initialNotificationCopy;

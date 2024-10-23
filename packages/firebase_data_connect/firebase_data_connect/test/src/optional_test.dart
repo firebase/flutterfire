@@ -1,10 +1,21 @@
-// Copyright 2024, the Chromium project authors.  Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
+// Copyright 2024 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 // ignore_for_file: unused_local_variable
 
 import 'package:firebase_data_connect/firebase_data_connect.dart';
+import 'package:firebase_data_connect/src/common/common_library.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 typedef Serializer<T> = dynamic Function(T value);
@@ -12,7 +23,7 @@ typedef Deserializer<T> = T Function(String json);
 
 void main() {
   group('Optional', () {
-    late Deserializer<String> stringDeserializer;
+    late DynamicDeserializer<String> stringDeserializer;
     late Serializer<String> stringSerializer;
     late Deserializer<int> intDeserializer;
     late Serializer<int> intSerializer;
@@ -78,6 +89,15 @@ void main() {
       expect(nativeFromJson<int>(42), equals(42));
       expect(nativeFromJson<bool>(true), equals(true));
       expect(nativeFromJson<String>('Test'), equals('Test'));
+    });
+
+    // Since protobuf doesn't distinguish between int and double, we need to do the parsing outselves
+    test('nativeFromJson correctly matches int to int and double to double',
+        () {
+      double expectedDouble = 42;
+      int expectedInt = 42;
+      expect(nativeFromJson<double>(42), equals(expectedDouble));
+      expect(nativeFromJson<int>(expectedDouble), equals(expectedInt));
     });
     test('nativeFromJson correctly deserializes DateTime strings', () {
       expect(nativeFromJson<DateTime>('2024-01-01'),

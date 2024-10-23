@@ -1,37 +1,28 @@
 part of movies;
 
 class SeedMoviesVariablesBuilder {
-  FirebaseDataConnect dataConnect;
+  FirebaseDataConnect _dataConnect;
 
   SeedMoviesVariablesBuilder(
-    this.dataConnect,
+    this._dataConnect,
   );
-  Deserializer<SeedMoviesData> dataDeserializer = (String json) =>
-      SeedMoviesData.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  Deserializer<SeedMoviesData> dataDeserializer =
+      (dynamic json) => SeedMoviesData.fromJson(jsonDecode(json));
 
-  MutationRef<SeedMoviesData, void> build() {
-    return dataConnect.mutation(
+  Future<OperationResult<SeedMoviesData, void>> execute() {
+    return this.ref().execute();
+  }
+
+  MutationRef<SeedMoviesData, void> ref() {
+    return _dataConnect.mutation(
         "seedMovies", dataDeserializer, emptySerializer, null);
   }
-}
-
-class SeedMovies {
-  String name = "seedMovies";
-  SeedMovies({required this.dataConnect});
-  SeedMoviesVariablesBuilder ref() {
-    return SeedMoviesVariablesBuilder(
-      dataConnect,
-    );
-  }
-
-  FirebaseDataConnect dataConnect;
 }
 
 class SeedMoviesTheMatrix {
   String id;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  SeedMoviesTheMatrix.fromJson(Map<String, dynamic> json)
+  SeedMoviesTheMatrix.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']) {}
 
   Map<String, dynamic> toJson() {
@@ -50,8 +41,7 @@ class SeedMoviesTheMatrix {
 class SeedMoviesJurassicPark {
   String id;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  SeedMoviesJurassicPark.fromJson(Map<String, dynamic> json)
+  SeedMoviesJurassicPark.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']) {}
 
   Map<String, dynamic> toJson() {
@@ -72,8 +62,7 @@ class SeedMoviesData {
 
   SeedMoviesJurassicPark jurassic_park;
 
-  // TODO(mtewani): Check what happens when an optional field is retrieved from json.
-  SeedMoviesData.fromJson(Map<String, dynamic> json)
+  SeedMoviesData.fromJson(dynamic json)
       : the_matrix = SeedMoviesTheMatrix.fromJson(json['the_matrix']),
         jurassic_park =
             SeedMoviesJurassicPark.fromJson(json['jurassic_park']) {}
