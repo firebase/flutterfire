@@ -62,19 +62,19 @@ let package = Package(
   name: "remote_firebase_core",
   platforms: [
     .iOS("13.0"),
-    .macOS("10.15")
+    .macOS("10.15"),
   ],
   products: [
-    .library(name: "firebase-core-shared", targets: ["firebase_core_shared"])
+    .library(name: "firebase-core-shared", targets: ["firebase_core_shared"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebase_sdk_version)
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebase_sdk_version),
   ],
   targets: [
     .target(
       name: "firebase_core_shared",
       dependencies: [
-        .product(name: "FirebaseInstallations", package: "firebase-ios-sdk")
+        .product(name: "FirebaseInstallations", package: "firebase-ios-sdk"),
       ],
       path: "Sources/firebase_core_shared",
       publicHeadersPath: "include"
