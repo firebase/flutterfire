@@ -30,13 +30,11 @@ class MockDataConnectOptions extends Mock implements DataConnectOptions {}
 
 void main() {
   group('TransportStub', () {
-    late MockFirebaseAuth mockAuth;
     late MockFirebaseAppCheck mockAppCheck;
     late MockTransportOptions mockTransportOptions;
     late MockDataConnectOptions mockDataConnectOptions;
 
     setUp(() {
-      mockAuth = MockFirebaseAuth();
       mockAppCheck = MockFirebaseAppCheck();
       mockTransportOptions = MockTransportOptions();
       mockDataConnectOptions = MockDataConnectOptions();
@@ -48,11 +46,9 @@ void main() {
         mockDataConnectOptions,
         'mockAppId',
         CallerSDKType.core,
-        mockAuth,
         mockAppCheck,
       );
 
-      expect(transportStub.auth, equals(mockAuth));
       expect(transportStub.appCheck, equals(mockAppCheck));
       expect(transportStub.transportOptions, equals(mockTransportOptions));
       expect(transportStub.options, equals(mockDataConnectOptions));
@@ -64,7 +60,6 @@ void main() {
         mockDataConnectOptions,
         'mockAppId',
         CallerSDKType.core,
-        mockAuth,
         mockAppCheck,
       );
 
@@ -72,6 +67,7 @@ void main() {
         () async => await transportStub.invokeMutation(
           'queryName',
           (json) => json,
+          null,
           null,
           null,
         ),
@@ -85,17 +81,12 @@ void main() {
         mockDataConnectOptions,
         'mockAppId',
         CallerSDKType.core,
-        mockAuth,
         mockAppCheck,
       );
 
       expect(
         () async => await transportStub.invokeQuery(
-          'queryName',
-          (json) => json,
-          null,
-          null,
-        ),
+            'queryName', (json) => json, null, null, null),
         throwsA(isA<UnimplementedError>()),
       );
     });

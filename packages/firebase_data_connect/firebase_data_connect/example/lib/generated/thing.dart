@@ -17,7 +17,11 @@ class ThingVariablesBuilder {
       (dynamic json) => ThingData.fromJson(jsonDecode(json));
   Serializer<ThingVariables> varsSerializer =
       (ThingVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<ThingData, ThingVariables> build() {
+  Future<OperationResult<ThingData, ThingVariables>> execute() {
+    return this.ref().execute();
+  }
+
+  MutationRef<ThingData, ThingVariables> ref() {
     ThingVariables vars = ThingVariables(
       title: _title,
     );
@@ -25,18 +29,6 @@ class ThingVariablesBuilder {
     return _dataConnect.mutation(
         "thing", dataDeserializer, varsSerializer, vars);
   }
-}
-
-class Thing {
-  String name = "thing";
-  Thing({required this.dataConnect});
-  ThingVariablesBuilder ref() {
-    return ThingVariablesBuilder(
-      dataConnect,
-    );
-  }
-
-  FirebaseDataConnect dataConnect;
 }
 
 class ThingThingInsert {
