@@ -13,6 +13,12 @@ else
     firebase_sdk_version = firebase_sdk_version!
     Pod::UI.puts "#{pubspec['name']}: Using Firebase SDK version '#{firebase_sdk_version}' defined in 'firebase_core'"
   end
+
+  if firebase_sdk_version == '11.4.0'
+    # temporary measure for hot fix, https://github.com/CocoaPods/Specs/blob/master/Specs/0/3/5/Firebase/11.4.1/Firebase.podspec.json
+    # only FirebasCore has changed to 11.4.1
+    firebase_sdk_version = '11.4.1'
+  end
 end
 
 begin
