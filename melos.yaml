@@ -21,8 +21,6 @@ command:
         dart run scripts/generate_dataconnect_version.dart && \
         git add packages/firebase_vertexai/firebase_vertexai/lib/src/vertex_version.dart && \
         git add packages/firebase_data_connect/firebase_data_connect/lib/src/dataconnect_version.dart
-      post: |
-        dart run scripts/generate_tag_spm_firebase_core.dart
 
   bootstrap:
     # It seems so that running "pub get" in parallel has some issues (like
