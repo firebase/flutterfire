@@ -57,7 +57,9 @@ Pod::Spec.new do |s|
   s.dependency 'FlutterMacOS'
 
   # Firebase dependencies
-  s.dependency 'Firebase/CoreOnly', "~> #{firebase_sdk_version}"
+  s.dependency 'FirebaseCore', "~> #{firebase_sdk_version}"
+  # TODO - needs reinstating once we move to 11.5.0, and the above removing
+  # s.dependency 'Firebase/CoreOnly', "~> #{firebase_sdk_version}"
 
   s.static_framework = true
   s.pod_target_xcconfig = {
