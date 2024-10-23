@@ -113,13 +113,15 @@ class _ChatWidgetState extends State<ChatWidget> {
     });
   }
 
-  // This is a hypothetical API to return a fake weather data collection for certain location
+  // This is a hypothetical API to return a fake weather data collection for
+  // certain location
   Future<Map<String, Object?>> fetchWeather(
     Location location,
     String date,
   ) async {
     // TODO(developer): Call a real weather API.
-    // Mock response from the API. In developer live code this would call the external API and return what that API returns.
+    // Mock response from the API. In developer live code this would call the
+    // external API and return what that API returns.
     final apiResponse = {
       'temperature': 38,
       'chancePrecipitation': '56%',
@@ -146,8 +148,8 @@ class _ChatWidgetState extends State<ChatWidget> {
         },
       ),
       'date': Schema.string(
-        description:
-            'The date for which to get the weather. Date must be in the format: YYYY-MM-DD.',
+        description: 'The date for which to get the weather. '
+            'Date must be in the format: YYYY-MM-DD.',
       ),
     },
   );
@@ -339,7 +341,8 @@ class _ChatWidgetState extends State<ChatWidget> {
     try {
       final content = [
         Content.text(
-          "For use in a children's card game, generate 10 animal-based characters.",
+          "For use in a children's card game, generate 10 animal-based "
+          'characters.',
         ),
       ];
 
@@ -553,8 +556,8 @@ class _ChatWidgetState extends State<ChatWidget> {
         var city = location['city']! as String;
         var state = location['state']! as String;
         final functionResult = await fetchWeather(Location(city, state), date);
-        // Send the response to the model so that it can use the result to generate
-        // text for the user.
+        // Send the response to the model so that it can use the result to
+        // generate text for the user.
         response = await functionCallChat.sendMessage(
           Content.functionResponse(functionCall.name, functionResult),
         );
