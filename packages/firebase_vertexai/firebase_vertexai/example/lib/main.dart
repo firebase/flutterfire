@@ -581,15 +581,17 @@ class _ChatWidgetState extends State<ChatWidget> {
     const prompt = 'tell a short story';
     var content = Content.text(prompt);
     var tokenResponse = await _model.countTokens([content]);
-    final tokenResult =
-        'Count token: ${tokenResponse.totalTokens}, billable characters: ${tokenResponse.totalBillableCharacters}';
+    final tokenResult = 'Count token: ${tokenResponse.totalTokens}, billable '
+        'characters: ${tokenResponse.totalBillableCharacters}';
     _generatedContent.add((image: null, text: tokenResult, fromUser: false));
 
     var contentResponse = await _model.generateContent([content]);
-    final contentMetaData =
-        'result metadata, promptTokenCount:${contentResponse.usageMetadata!.promptTokenCount}, '
-        'candidatesTokenCount:${contentResponse.usageMetadata!.candidatesTokenCount}, '
-        'totalTokenCount:${contentResponse.usageMetadata!.totalTokenCount}';
+    final contentMetaData = 'result metadata, promptTokenCount:'
+        '${contentResponse.usageMetadata!.promptTokenCount}, '
+        'candidatesTokenCount:'
+        '${contentResponse.usageMetadata!.candidatesTokenCount}, '
+        'totalTokenCount:'
+        '${contentResponse.usageMetadata!.totalTokenCount}';
     _generatedContent
         .add((image: null, text: contentMetaData, fromUser: false));
     setState(() {
