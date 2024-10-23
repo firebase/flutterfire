@@ -50,6 +50,11 @@ target 'Runner' do
     end
   end
 
+  # temporary measure for hot fix
+  if firebase_sdk_version == '11.4.1'
+    firebase_sdk_version = '11.4.0'
+  end
+
   pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => "#{firebase_sdk_version}"
 end
 
