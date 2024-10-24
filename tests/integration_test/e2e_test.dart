@@ -39,6 +39,13 @@ void main() {
 
   group('FlutterFire', () {
     // ignore: do_not_use_environment
+    if (const String.fromEnvironment('LOCAL_WEB_E2E') == 'true') {
+      // for running web e2e locally which doesn't suffer throttling issues
+      runAllTests();
+      return;
+    }
+
+    // ignore: do_not_use_environment
     if (const String.fromEnvironment('APP_CHECK_E2E') == 'true') {
       // app check has been separated out for web due to throttling issues
       firebase_app_check.main();
