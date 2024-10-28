@@ -9,7 +9,6 @@
 #import <FLTFirebasePluginRegistry.h>
 #endif
 
-
 #import "include/cloud_firestore/Private/FLTDocumentSnapshotStreamHandler.h"
 #import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
 #import "include/cloud_firestore/Private/FirestorePigeonParser.h"

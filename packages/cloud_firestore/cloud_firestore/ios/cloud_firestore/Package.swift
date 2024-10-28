@@ -8,7 +8,6 @@
 import Foundation
 import PackageDescription
 
-
 enum ConfigurationError: Error {
   case fileNotFound(String)
   case parsingError(String)
@@ -53,7 +52,7 @@ func loadFirebaseSDKVersion() throws -> String {
 }
 
 func loadFirebaseCoreVersion() throws -> String {
-let firebaseCorePubspecPath = NSString.path(withComponents: [
+  let firebaseCorePubspecPath = NSString.path(withComponents: [
     firestoreDirectory,
     "..",
     "..",
@@ -73,10 +72,10 @@ let firebaseCorePubspecPath = NSString.path(withComponents: [
     let libraryVersion = versionLine.split(separator: ":")[1].trimmingCharacters(in: .whitespaces)
       .replacingOccurrences(of: "+", with: "-")
 
-
     return libraryVersion
   } catch {
-    throw ConfigurationError.fileNotFound("Error loading or parsing firebase_core pubspec.yaml: \(error)")
+    throw ConfigurationError
+      .fileNotFound("Error loading or parsing firebase_core pubspec.yaml: \(error)")
   }
 }
 
@@ -91,7 +90,6 @@ func loadPubspecVersion() throws -> String {
     }
     let libraryVersion = versionLine.split(separator: ":")[1].trimmingCharacters(in: .whitespaces)
       .replacingOccurrences(of: "+", with: "-")
-
 
     return libraryVersion
   } catch {
@@ -116,7 +114,7 @@ guard let firebase_sdk_version = Version(firebase_sdk_version_string) else {
   fatalError("Invalid Firebase SDK version: \(firebase_sdk_version_string)")
 }
 
-// TODO - we can try using existing firebase_core tag once flutterfire/Package.swift is part of release cycle
+// TODO: - we can try using existing firebase_core tag once flutterfire/Package.swift is part of release cycle
 // but I don't think it'll work as Swift versioning requires version-[tag name]
 guard let shared_spm_version = Version("\(firebase_core_version_string)\(shared_spm_tag)") else {
   fatalError("Invalid firebase_core version: \(firebase_core_version_string)\(shared_spm_tag)")
@@ -132,7 +130,7 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version),
-    .package(url:"https://github.com/firebase/flutterfire", exact: shared_spm_version),
+    .package(url: "https://github.com/firebase/flutterfire", exact: shared_spm_version),
   ],
   targets: [
     .target(
@@ -140,7 +138,7 @@ let package = Package(
       dependencies: [
         .product(name: "FirebaseFirestore", package: "firebase-ios-sdk"),
         // Wrapper dependency
-        .product(name: "firebase-core-shared", package: "flutterfire")
+        .product(name: "firebase-core-shared", package: "flutterfire"),
       ],
       resources: [
         .process("Resources"),

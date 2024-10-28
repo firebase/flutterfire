@@ -5,8 +5,8 @@
 @import FirebaseFirestore;
 @import FirebaseCore;
 
-#import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
 #import "include/cloud_firestore/Private/FLTFirebaseFirestoreWriter.h"
+#import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
 #import "include/cloud_firestore/Public/FLTFirebaseFirestorePlugin.h"
 
 @implementation FLTFirebaseFirestoreWriter : FlutterStandardWriter

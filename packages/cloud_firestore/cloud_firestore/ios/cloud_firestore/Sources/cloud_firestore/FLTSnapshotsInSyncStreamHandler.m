@@ -4,9 +4,8 @@
 
 @import FirebaseFirestore;
 
-
-#import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
 #import "include/cloud_firestore/Private/FLTSnapshotsInSyncStreamHandler.h"
+#import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
 
 @interface FLTSnapshotsInSyncStreamHandler ()
 @property(readwrite, strong) id<FIRListenerRegistration> listenerRegistration;
