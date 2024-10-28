@@ -194,8 +194,9 @@ abstract class TestFirebaseFirestoreHostApi {
     String path,
     bool isCollectionGroup,
     PigeonQueryParameters parameters,
-    PigeonGetOptions options,
+    List<double?> queryVector,
     VectorSource source,
+    int limit,
     VectorQueryOptions queryOptions,
     DistanceMeasure distanceMeasure,
   );
@@ -966,10 +967,11 @@ abstract class TestFirebaseFirestoreHostApi {
             arg_parameters != null,
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.findNearest was null, expected non-null PigeonQueryParameters.',
           );
-          final PigeonGetOptions? arg_options = (args[4] as PigeonGetOptions?);
+          final List<double?>? arg_queryVector =
+              (args[4] as List<Object?>?)?.cast<double?>();
           assert(
-            arg_options != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.findNearest was null, expected non-null PigeonGetOptions.',
+            arg_queryVector != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.findNearest was null, expected non-null List<double?>.',
           );
           final VectorSource? arg_source =
               args[5] == null ? null : VectorSource.values[args[5]! as int];
@@ -977,14 +979,19 @@ abstract class TestFirebaseFirestoreHostApi {
             arg_source != null,
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.findNearest was null, expected non-null VectorSource.',
           );
+          final int? arg_limit = (args[6] as int?);
+          assert(
+            arg_limit != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.findNearest was null, expected non-null int.',
+          );
           final VectorQueryOptions? arg_queryOptions =
-              (args[6] as VectorQueryOptions?);
+              (args[7] as VectorQueryOptions?);
           assert(
             arg_queryOptions != null,
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.findNearest was null, expected non-null VectorQueryOptions.',
           );
           final DistanceMeasure? arg_distanceMeasure =
-              args[7] == null ? null : DistanceMeasure.values[args[7]! as int];
+              args[8] == null ? null : DistanceMeasure.values[args[8]! as int];
           assert(
             arg_distanceMeasure != null,
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.findNearest was null, expected non-null DistanceMeasure.',
@@ -994,8 +1001,9 @@ abstract class TestFirebaseFirestoreHostApi {
             arg_path!,
             arg_isCollectionGroup!,
             arg_parameters!,
-            arg_options!,
+            arg_queryVector!,
             arg_source!,
+            arg_limit!,
             arg_queryOptions!,
             arg_distanceMeasure!,
           );

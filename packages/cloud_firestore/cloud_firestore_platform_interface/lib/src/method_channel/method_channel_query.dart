@@ -8,6 +8,7 @@ import 'dart:async';
 import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_vector_query.dart';
 import 'package:cloud_firestore_platform_interface/src/platform_interface/platform_interface_query.dart'
     as query;
 import 'package:collection/collection.dart';
@@ -413,6 +414,31 @@ class MethodChannelQuery extends QueryPlatform {
           field: field,
         )
       ],
+      isCollectionGroupQuery,
+    );
+  }
+
+  @override
+  VectorQueryPlatform findNearest(
+    String field, {
+    /// List<double> or VectorValue
+    required Object queryVector,
+    required int limit,
+    required DistanceMeasure distanceMeasure,
+    required VectorQueryOptions options,
+  }) {
+    return MethodChannelVectorQuery(
+      firestore,
+      this,
+      _pigeonParameters,
+      _pointer.path,
+      pigeonApp,
+      queryVector is List<double>
+          ? queryVector
+          : (queryVector as VectorValue).toList(),
+      limit,
+      distanceMeasure,
+      options,
       isCollectionGroupQuery,
     );
   }

@@ -447,8 +447,9 @@ abstract class FirebaseFirestoreHostApi {
     String path,
     bool isCollectionGroup,
     PigeonQueryParameters parameters,
-    PigeonGetOptions options,
+    List<double> queryVector,
     VectorSource source,
+    int limit,
     VectorQueryOptions queryOptions,
     DistanceMeasure distanceMeasure,
   );

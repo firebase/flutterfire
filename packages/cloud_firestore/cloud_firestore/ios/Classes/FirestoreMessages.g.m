@@ -1323,11 +1323,11 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
     if (api) {
       NSCAssert([api respondsToSelector:@selector
                      (findNearestApp:
-                                path:isCollectionGroup:parameters:options:source:queryOptions
-                                    :distanceMeasure:completion:)],
+                                path:isCollectionGroup:parameters:queryVector:source:limit
+                                    :queryOptions:distanceMeasure:completion:)],
                 @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
-                @"@selector(findNearestApp:path:isCollectionGroup:parameters:options:source:"
-                @"queryOptions:distanceMeasure:completion:)",
+                @"@selector(findNearestApp:path:isCollectionGroup:parameters:queryVector:source:"
+                @"limit:queryOptions:distanceMeasure:completion:)",
                 api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
@@ -1335,16 +1335,18 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
         NSString *arg_path = GetNullableObjectAtIndex(args, 1);
         NSNumber *arg_isCollectionGroup = GetNullableObjectAtIndex(args, 2);
         PigeonQueryParameters *arg_parameters = GetNullableObjectAtIndex(args, 3);
-        PigeonGetOptions *arg_options = GetNullableObjectAtIndex(args, 4);
+        NSArray<NSNumber *> *arg_queryVector = GetNullableObjectAtIndex(args, 4);
         VectorSource arg_source = [GetNullableObjectAtIndex(args, 5) integerValue];
-        VectorQueryOptions *arg_queryOptions = GetNullableObjectAtIndex(args, 6);
-        DistanceMeasure arg_distanceMeasure = [GetNullableObjectAtIndex(args, 7) integerValue];
+        NSNumber *arg_limit = GetNullableObjectAtIndex(args, 6);
+        VectorQueryOptions *arg_queryOptions = GetNullableObjectAtIndex(args, 7);
+        DistanceMeasure arg_distanceMeasure = [GetNullableObjectAtIndex(args, 8) integerValue];
         [api findNearestApp:arg_app
                          path:arg_path
             isCollectionGroup:arg_isCollectionGroup
                    parameters:arg_parameters
-                      options:arg_options
+                  queryVector:arg_queryVector
                        source:arg_source
+                        limit:arg_limit
                  queryOptions:arg_queryOptions
               distanceMeasure:arg_distanceMeasure
                    completion:^(PigeonQuerySnapshot *_Nullable output,

@@ -234,10 +234,6 @@ abstract class QueryPlatform extends PlatformInterface {
     throw UnimplementedError('whereFilter() is not implemented');
   }
 
-  QueryPlatform findNearest(FilterPlatformInterface filter) {
-    throw UnimplementedError('whereFilter() is not implemented');
-  }
-
   /// Returns an [AggregateQueryPlatform] which uses the [QueryPlatform] to query for
   /// metadata
   AggregateQueryPlatform count() {
@@ -279,6 +275,17 @@ abstract class QueryPlatform extends PlatformInterface {
     throw UnimplementedError('aggregate() is not implemented');
   }
 
+  VectorQueryPlatform findNearest(
+    String field, {
+    /// List<double> or VectorValue
+    required Object queryVector,
+    required int limit,
+    required DistanceMeasure distanceMeasure,
+    required VectorQueryOptions options,
+  }) {
+    throw UnimplementedError('findNearest() is not implemented');
+  }
+
   /// Returns an [AggregateQueryPlatform] which uses the [QueryPlatform] to query for
   /// metadata
   ///
@@ -296,7 +303,7 @@ abstract class QueryPlatform extends PlatformInterface {
   }
 }
 
-abstract class AggregateField {}
+class AggregateField {}
 
 /// Create a CountAggregateField object that can be used to compute
 /// the count of documents in the result set of a query.

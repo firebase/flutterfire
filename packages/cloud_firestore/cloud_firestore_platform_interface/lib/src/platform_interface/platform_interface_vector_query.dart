@@ -34,3 +34,12 @@ abstract class VectorQueryPlatform extends PlatformInterface {
     throw UnimplementedError('get() is not implemented');
   }
 }
+
+class VectorValue {
+  final List<double> value;
+  VectorValue(this.value);
+
+  List<double> toList() {
+    return value;
+  }
+}

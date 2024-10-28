@@ -1263,8 +1263,9 @@ class FirebaseFirestoreHostApi {
     String arg_path,
     bool arg_isCollectionGroup,
     PigeonQueryParameters arg_parameters,
-    PigeonGetOptions arg_options,
+    List<double?> arg_queryVector,
     VectorSource arg_source,
+    int arg_limit,
     VectorQueryOptions arg_queryOptions,
     DistanceMeasure arg_distanceMeasure,
   ) async {
@@ -1278,8 +1279,9 @@ class FirebaseFirestoreHostApi {
       arg_path,
       arg_isCollectionGroup,
       arg_parameters,
-      arg_options,
+      arg_queryVector,
       arg_source.index,
+      arg_limit,
       arg_queryOptions,
       arg_distanceMeasure.index,
     ]) as List<Object?>?;

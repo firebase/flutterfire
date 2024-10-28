@@ -441,8 +441,9 @@ NSObject<FlutterMessageCodec> *FirebaseFirestoreHostApiGetCodec(void);
                   path:(NSString *)path
      isCollectionGroup:(NSNumber *)isCollectionGroup
             parameters:(PigeonQueryParameters *)parameters
-               options:(PigeonGetOptions *)options
+           queryVector:(NSArray<NSNumber *> *)queryVector
                 source:(VectorSource)source
+                 limit:(NSNumber *)limit
           queryOptions:(VectorQueryOptions *)queryOptions
        distanceMeasure:(DistanceMeasure)distanceMeasure
             completion:

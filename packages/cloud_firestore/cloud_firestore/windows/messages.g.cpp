@@ -2161,13 +2161,13 @@ void FirebaseFirestoreHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
               const auto& parameters_arg =
                   std::any_cast<const PigeonQueryParameters&>(
                       std::get<CustomEncodableValue>(encodable_parameters_arg));
-              const auto& encodable_options_arg = args.at(4);
-              if (encodable_options_arg.IsNull()) {
-                reply(WrapError("options_arg unexpectedly null."));
+              const auto& encodable_query_vector_arg = args.at(4);
+              if (encodable_query_vector_arg.IsNull()) {
+                reply(WrapError("query_vector_arg unexpectedly null."));
                 return;
               }
-              const auto& options_arg = std::any_cast<const PigeonGetOptions&>(
-                  std::get<CustomEncodableValue>(encodable_options_arg));
+              const auto& query_vector_arg =
+                  std::get<EncodableList>(encodable_query_vector_arg);
               const auto& encodable_source_arg = args.at(5);
               if (encodable_source_arg.IsNull()) {
                 reply(WrapError("source_arg unexpectedly null."));
@@ -2175,7 +2175,13 @@ void FirebaseFirestoreHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
               }
               const VectorSource& source_arg =
                   (VectorSource)encodable_source_arg.LongValue();
-              const auto& encodable_query_options_arg = args.at(6);
+              const auto& encodable_limit_arg = args.at(6);
+              if (encodable_limit_arg.IsNull()) {
+                reply(WrapError("limit_arg unexpectedly null."));
+                return;
+              }
+              const int64_t limit_arg = encodable_limit_arg.LongValue();
+              const auto& encodable_query_options_arg = args.at(7);
               if (encodable_query_options_arg.IsNull()) {
                 reply(WrapError("query_options_arg unexpectedly null."));
                 return;
@@ -2184,26 +2190,27 @@ void FirebaseFirestoreHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                   std::any_cast<const VectorQueryOptions&>(
                       std::get<CustomEncodableValue>(
                           encodable_query_options_arg));
-              const auto& encodable_distance_measure_arg = args.at(7);
+              const auto& encodable_distance_measure_arg = args.at(8);
               if (encodable_distance_measure_arg.IsNull()) {
                 reply(WrapError("distance_measure_arg unexpectedly null."));
                 return;
               }
               const DistanceMeasure& distance_measure_arg =
                   (DistanceMeasure)encodable_distance_measure_arg.LongValue();
-              api->FindNearest(app_arg, path_arg, is_collection_group_arg,
-                               parameters_arg, options_arg, source_arg,
-                               query_options_arg, distance_measure_arg,
-                               [reply](ErrorOr<PigeonQuerySnapshot>&& output) {
-                                 if (output.has_error()) {
-                                   reply(WrapError(output.error()));
-                                   return;
-                                 }
-                                 EncodableList wrapped;
-                                 wrapped.push_back(CustomEncodableValue(
-                                     std::move(output).TakeValue()));
-                                 reply(EncodableValue(std::move(wrapped)));
-                               });
+              api->FindNearest(
+                  app_arg, path_arg, is_collection_group_arg, parameters_arg,
+                  query_vector_arg, source_arg, limit_arg, query_options_arg,
+                  distance_measure_arg,
+                  [reply](ErrorOr<PigeonQuerySnapshot>&& output) {
+                    if (output.has_error()) {
+                      reply(WrapError(output.error()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(
+                        CustomEncodableValue(std::move(output).TakeValue()));
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
             } catch (const std::exception& exception) {
               reply(WrapError(exception.what()));
             }

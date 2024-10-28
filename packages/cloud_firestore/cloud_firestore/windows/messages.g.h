@@ -754,8 +754,8 @@ class FirebaseFirestoreHostApi {
   virtual void FindNearest(
       const FirestorePigeonFirebaseApp& app, const std::string& path,
       bool is_collection_group, const PigeonQueryParameters& parameters,
-      const PigeonGetOptions& options, const VectorSource& source,
-      const VectorQueryOptions& query_options,
+      const flutter::EncodableList& query_vector, const VectorSource& source,
+      int64_t limit, const VectorQueryOptions& query_options,
       const DistanceMeasure& distance_measure,
       std::function<void(ErrorOr<PigeonQuerySnapshot> reply)> result) = 0;
   virtual void WriteBatchCommit(

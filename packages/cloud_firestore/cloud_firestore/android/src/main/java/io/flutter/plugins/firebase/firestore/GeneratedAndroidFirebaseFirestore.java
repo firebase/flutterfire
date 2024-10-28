@@ -1924,8 +1924,9 @@ public class GeneratedAndroidFirebaseFirestore {
         @NonNull String path,
         @NonNull Boolean isCollectionGroup,
         @NonNull PigeonQueryParameters parameters,
-        @NonNull PigeonGetOptions options,
+        @NonNull List<Double> queryVector,
         @NonNull VectorSource source,
+        @NonNull Long limit,
         @NonNull VectorQueryOptions queryOptions,
         @NonNull DistanceMeasure distanceMeasure,
         @NonNull Result<PigeonQuerySnapshot> result);
@@ -2614,10 +2615,11 @@ public class GeneratedAndroidFirebaseFirestore {
                 String pathArg = (String) args.get(1);
                 Boolean isCollectionGroupArg = (Boolean) args.get(2);
                 PigeonQueryParameters parametersArg = (PigeonQueryParameters) args.get(3);
-                PigeonGetOptions optionsArg = (PigeonGetOptions) args.get(4);
+                List<Double> queryVectorArg = (List<Double>) args.get(4);
                 VectorSource sourceArg = VectorSource.values()[(int) args.get(5)];
-                VectorQueryOptions queryOptionsArg = (VectorQueryOptions) args.get(6);
-                DistanceMeasure distanceMeasureArg = DistanceMeasure.values()[(int) args.get(7)];
+                Number limitArg = (Number) args.get(6);
+                VectorQueryOptions queryOptionsArg = (VectorQueryOptions) args.get(7);
+                DistanceMeasure distanceMeasureArg = DistanceMeasure.values()[(int) args.get(8)];
                 Result<PigeonQuerySnapshot> resultCallback =
                     new Result<PigeonQuerySnapshot>() {
                       public void success(PigeonQuerySnapshot result) {
@@ -2636,8 +2638,9 @@ public class GeneratedAndroidFirebaseFirestore {
                     pathArg,
                     isCollectionGroupArg,
                     parametersArg,
-                    optionsArg,
+                    queryVectorArg,
                     sourceArg,
+                    (limitArg == null) ? null : limitArg.longValue(),
                     queryOptionsArg,
                     distanceMeasureArg,
                     resultCallback);

@@ -19,7 +19,7 @@ class VectorQuery {
 
   /// Returns an [VectorQuerySnapshot] with the count of the documents that match the query.
   Future<VectorQuerySnapshot> get({
-    AggregateSource source = AggregateSource.server,
+    VectorSource source = VectorSource.server,
   }) async {
     return VectorQuerySnapshot._(await _delegate.get(source: source), query);
   }
