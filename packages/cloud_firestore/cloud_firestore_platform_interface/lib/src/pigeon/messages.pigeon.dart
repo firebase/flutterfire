@@ -46,6 +46,26 @@ enum Source {
   cache,
 }
 
+/// An enumeration of firestore source types.
+enum VectorSource {
+  /// Causes Firestore to avoid the cache, generating an error if the server cannot be reached. Note
+  /// that the cache will still be updated if the server request succeeds. Also note that
+  /// latency-compensation still takes effect, so any pending write operations will be visible in the
+  /// returned data (merged into the server-provided data).
+  server,
+}
+
+enum DistanceMeasure {
+  /// The cosine similarity measure.
+  cosine,
+
+  /// The euclidean distance measure.
+  euclidean,
+
+  /// The dot product distance measure.
+  dotProduct,
+}
+
 /// The listener retrieves data and listens to updates from the local Firestore cache only.
 /// If the cache is empty, an empty snapshot will be returned.
 /// Snapshot events will be triggered on cache updates, like local mutations or load bundles.
@@ -297,6 +317,32 @@ class PigeonQuerySnapshot {
       documentChanges:
           (result[1] as List<Object?>?)!.cast<PigeonDocumentChange?>(),
       metadata: PigeonSnapshotMetadata.decode(result[2]! as List<Object?>),
+    );
+  }
+}
+
+class VectorQueryOptions {
+  VectorQueryOptions({
+    required this.distanceResultField,
+    required this.distanceThreshold,
+  });
+
+  String distanceResultField;
+
+  double distanceThreshold;
+
+  Object encode() {
+    return <Object?>[
+      distanceResultField,
+      distanceThreshold,
+    ];
+  }
+
+  static VectorQueryOptions decode(Object result) {
+    result as List<Object?>;
+    return VectorQueryOptions(
+      distanceResultField: result[0]! as String,
+      distanceThreshold: result[1]! as double,
     );
   }
 }
@@ -598,6 +644,9 @@ class _FirebaseFirestoreHostApiCodec extends FirestoreMessageCodec {
     } else if (value is PigeonTransactionCommand) {
       buffer.putUint8(140);
       writeValue(buffer, value.encode());
+    } else if (value is VectorQueryOptions) {
+      buffer.putUint8(141);
+      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -632,6 +681,8 @@ class _FirebaseFirestoreHostApiCodec extends FirestoreMessageCodec {
         return PigeonSnapshotMetadata.decode(readValue(buffer)!);
       case 140:
         return PigeonTransactionCommand.decode(readValue(buffer)!);
+      case 141:
+        return VectorQueryOptions.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -1204,6 +1255,52 @@ class FirebaseFirestoreHostApi {
       );
     } else {
       return (replyList[0] as List<Object?>?)!.cast<AggregateQueryResponse?>();
+    }
+  }
+
+  Future<PigeonQuerySnapshot> findNearest(
+    FirestorePigeonFirebaseApp arg_app,
+    String arg_path,
+    bool arg_isCollectionGroup,
+    PigeonQueryParameters arg_parameters,
+    PigeonGetOptions arg_options,
+    VectorSource arg_source,
+    VectorQueryOptions arg_queryOptions,
+    DistanceMeasure arg_distanceMeasure,
+  ) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+      'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.findNearest',
+      codec,
+      binaryMessenger: _binaryMessenger,
+    );
+    final List<Object?>? replyList = await channel.send(<Object?>[
+      arg_app,
+      arg_path,
+      arg_isCollectionGroup,
+      arg_parameters,
+      arg_options,
+      arg_source.index,
+      arg_queryOptions,
+      arg_distanceMeasure.index,
+    ]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as PigeonQuerySnapshot?)!;
     }
   }
 

@@ -137,6 +137,36 @@ enum Source {
   cache,
 }
 
+/// An enumeration of firestore source types.
+enum VectorSource {
+  /// Causes Firestore to avoid the cache, generating an error if the server cannot be reached. Note
+  /// that the cache will still be updated if the server request succeeds. Also note that
+  /// latency-compensation still takes effect, so any pending write operations will be visible in the
+  /// returned data (merged into the server-provided data).
+  server,
+}
+
+enum DistanceMeasure {
+  /// The cosine similarity measure.
+  cosine,
+
+  /// The euclidean distance measure.
+  euclidean,
+
+  /// The dot product distance measure.
+  dotProduct,
+}
+
+class VectorQueryOptions {
+  final String distanceResultField;
+  final double distanceThreshold;
+
+  VectorQueryOptions({
+    required this.distanceResultField,
+    required this.distanceThreshold,
+  });
+}
+
 /// The listener retrieves data and listens to updates from the local Firestore cache only.
 /// If the cache is empty, an empty snapshot will be returned.
 /// Snapshot events will be triggered on cache updates, like local mutations or load bundles.
@@ -409,6 +439,18 @@ abstract class FirebaseFirestoreHostApi {
     AggregateSource source,
     List<AggregateQuery?> queries,
     bool isCollectionGroup,
+  );
+
+  @async
+  PigeonQuerySnapshot findNearest(
+    FirestorePigeonFirebaseApp app,
+    String path,
+    bool isCollectionGroup,
+    PigeonQueryParameters parameters,
+    PigeonGetOptions options,
+    VectorSource source,
+    VectorQueryOptions queryOptions,
+    DistanceMeasure distanceMeasure,
   );
 
   @async

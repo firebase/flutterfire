@@ -96,6 +96,27 @@ enum class Source {
   cache = 2
 };
 
+// An enumeration of firestore source types.
+enum class VectorSource {
+  // Causes Firestore to avoid the cache, generating an error if the server
+  // cannot be reached. Note
+  // that the cache will still be updated if the server request succeeds. Also
+  // note that
+  // latency-compensation still takes effect, so any pending write operations
+  // will be visible in the
+  // returned data (merged into the server-provided data).
+  server = 0
+};
+
+enum class DistanceMeasure {
+  // The cosine similarity measure.
+  cosine = 0,
+  // The euclidean distance measure.
+  euclidean = 1,
+  // The dot product distance measure.
+  dotProduct = 2
+};
+
 // The listener retrieves data and listens to updates from the local Firestore
 // cache only. If the cache is empty, an empty snapshot will be returned.
 // Snapshot events will be triggered on cache updates, like local mutations or
@@ -136,7 +157,7 @@ enum class AggregateSource {
 
 // [PersistenceCacheIndexManagerRequest] represents the request types for the
 // persistence cache index manager.
-enum class PersistenceCacheIndexManagerRequestEnum {
+enum class PersistenceCacheIndexManagerRequest {
   enableIndexAutoCreation = 0,
   disableIndexAutoCreation = 1,
   deleteAllIndexes = 2
@@ -346,6 +367,29 @@ class PigeonQuerySnapshot {
   flutter::EncodableList documents_;
   flutter::EncodableList document_changes_;
   PigeonSnapshotMetadata metadata_;
+};
+
+// Generated class from Pigeon that represents data sent in messages.
+class VectorQueryOptions {
+ public:
+  // Constructs an object setting all fields.
+  explicit VectorQueryOptions(const std::string& distance_result_field,
+                              double distance_threshold);
+
+  const std::string& distance_result_field() const;
+  void set_distance_result_field(std::string_view value_arg);
+
+  double distance_threshold() const;
+  void set_distance_threshold(double value_arg);
+
+ private:
+  static VectorQueryOptions FromEncodableList(
+      const flutter::EncodableList& list);
+  flutter::EncodableList ToEncodableList() const;
+  friend class FirebaseFirestoreHostApi;
+  friend class FirebaseFirestoreHostApiCodecSerializer;
+  std::string distance_result_field_;
+  double distance_threshold_;
 };
 
 // Generated class from Pigeon that represents data sent in messages.
@@ -707,6 +751,13 @@ class FirebaseFirestoreHostApi {
       const PigeonQueryParameters& parameters, const AggregateSource& source,
       const flutter::EncodableList& queries, bool is_collection_group,
       std::function<void(ErrorOr<flutter::EncodableList> reply)> result) = 0;
+  virtual void FindNearest(
+      const FirestorePigeonFirebaseApp& app, const std::string& path,
+      bool is_collection_group, const PigeonQueryParameters& parameters,
+      const PigeonGetOptions& options, const VectorSource& source,
+      const VectorQueryOptions& query_options,
+      const DistanceMeasure& distance_measure,
+      std::function<void(ErrorOr<PigeonQuerySnapshot> reply)> result) = 0;
   virtual void WriteBatchCommit(
       const FirestorePigeonFirebaseApp& app,
       const flutter::EncodableList& writes,
@@ -724,7 +775,7 @@ class FirebaseFirestoreHostApi {
       std::function<void(ErrorOr<std::string> reply)> result) = 0;
   virtual void PersistenceCacheIndexManagerRequest(
       const FirestorePigeonFirebaseApp& app,
-      const PersistenceCacheIndexManagerRequestEnum& request,
+      const PersistenceCacheIndexManagerRequest& request,
       std::function<void(std::optional<FlutterError> reply)> result) = 0;
 
   // The codec used by FirebaseFirestoreHostApi.

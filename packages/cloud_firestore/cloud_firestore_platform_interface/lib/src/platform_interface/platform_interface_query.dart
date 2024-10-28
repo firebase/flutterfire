@@ -234,6 +234,10 @@ abstract class QueryPlatform extends PlatformInterface {
     throw UnimplementedError('whereFilter() is not implemented');
   }
 
+  QueryPlatform findNearest(FilterPlatformInterface filter) {
+    throw UnimplementedError('whereFilter() is not implemented');
+  }
+
   /// Returns an [AggregateQueryPlatform] which uses the [QueryPlatform] to query for
   /// metadata
   AggregateQueryPlatform count() {

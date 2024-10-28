@@ -397,6 +397,44 @@ PigeonQuerySnapshot PigeonQuerySnapshot::FromEncodableList(
   return decoded;
 }
 
+// VectorQueryOptions
+
+VectorQueryOptions::VectorQueryOptions(const std::string& distance_result_field,
+                                       double distance_threshold)
+    : distance_result_field_(distance_result_field),
+      distance_threshold_(distance_threshold) {}
+
+const std::string& VectorQueryOptions::distance_result_field() const {
+  return distance_result_field_;
+}
+
+void VectorQueryOptions::set_distance_result_field(std::string_view value_arg) {
+  distance_result_field_ = value_arg;
+}
+
+double VectorQueryOptions::distance_threshold() const {
+  return distance_threshold_;
+}
+
+void VectorQueryOptions::set_distance_threshold(double value_arg) {
+  distance_threshold_ = value_arg;
+}
+
+EncodableList VectorQueryOptions::ToEncodableList() const {
+  EncodableList list;
+  list.reserve(2);
+  list.push_back(EncodableValue(distance_result_field_));
+  list.push_back(EncodableValue(distance_threshold_));
+  return list;
+}
+
+VectorQueryOptions VectorQueryOptions::FromEncodableList(
+    const EncodableList& list) {
+  VectorQueryOptions decoded(std::get<std::string>(list[0]),
+                             std::get<double>(list[1]));
+  return decoded;
+}
+
 // PigeonGetOptions
 
 PigeonGetOptions::PigeonGetOptions(
@@ -1045,6 +1083,9 @@ EncodableValue FirebaseFirestoreHostApiCodecSerializer::ReadValueOfType(
     case 140:
       return CustomEncodableValue(PigeonTransactionCommand::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
+    case 141:
+      return CustomEncodableValue(VectorQueryOptions::FromEncodableList(
+          std::get<EncodableList>(ReadValue(stream))));
     default:
       return cloud_firestore_windows::FirestoreCodec::ReadValueOfType(type,
                                                                       stream);
@@ -1157,6 +1198,13 @@ void FirebaseFirestoreHostApiCodecSerializer::WriteValue(
           EncodableValue(std::any_cast<PigeonTransactionCommand>(*custom_value)
                              .ToEncodableList()),
           stream);
+      return;
+    }
+    if (custom_value->type() == typeid(VectorQueryOptions)) {
+      stream->WriteByte(141);
+      WriteValue(EncodableValue(std::any_cast<VectorQueryOptions>(*custom_value)
+                                    .ToEncodableList()),
+                 stream);
       return;
     }
   }
@@ -2076,6 +2124,98 @@ void FirebaseFirestoreHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
         "dev.flutter.pigeon.cloud_firestore_platform_interface."
+        "FirebaseFirestoreHostApi.findNearest",
+        &GetCodec());
+    if (api != nullptr) {
+      channel->SetMessageHandler(
+          [api](const EncodableValue& message,
+                const flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_arg =
+                  std::any_cast<const FirestorePigeonFirebaseApp&>(
+                      std::get<CustomEncodableValue>(encodable_app_arg));
+              const auto& encodable_path_arg = args.at(1);
+              if (encodable_path_arg.IsNull()) {
+                reply(WrapError("path_arg unexpectedly null."));
+                return;
+              }
+              const auto& path_arg = std::get<std::string>(encodable_path_arg);
+              const auto& encodable_is_collection_group_arg = args.at(2);
+              if (encodable_is_collection_group_arg.IsNull()) {
+                reply(WrapError("is_collection_group_arg unexpectedly null."));
+                return;
+              }
+              const auto& is_collection_group_arg =
+                  std::get<bool>(encodable_is_collection_group_arg);
+              const auto& encodable_parameters_arg = args.at(3);
+              if (encodable_parameters_arg.IsNull()) {
+                reply(WrapError("parameters_arg unexpectedly null."));
+                return;
+              }
+              const auto& parameters_arg =
+                  std::any_cast<const PigeonQueryParameters&>(
+                      std::get<CustomEncodableValue>(encodable_parameters_arg));
+              const auto& encodable_options_arg = args.at(4);
+              if (encodable_options_arg.IsNull()) {
+                reply(WrapError("options_arg unexpectedly null."));
+                return;
+              }
+              const auto& options_arg = std::any_cast<const PigeonGetOptions&>(
+                  std::get<CustomEncodableValue>(encodable_options_arg));
+              const auto& encodable_source_arg = args.at(5);
+              if (encodable_source_arg.IsNull()) {
+                reply(WrapError("source_arg unexpectedly null."));
+                return;
+              }
+              const VectorSource& source_arg =
+                  (VectorSource)encodable_source_arg.LongValue();
+              const auto& encodable_query_options_arg = args.at(6);
+              if (encodable_query_options_arg.IsNull()) {
+                reply(WrapError("query_options_arg unexpectedly null."));
+                return;
+              }
+              const auto& query_options_arg =
+                  std::any_cast<const VectorQueryOptions&>(
+                      std::get<CustomEncodableValue>(
+                          encodable_query_options_arg));
+              const auto& encodable_distance_measure_arg = args.at(7);
+              if (encodable_distance_measure_arg.IsNull()) {
+                reply(WrapError("distance_measure_arg unexpectedly null."));
+                return;
+              }
+              const DistanceMeasure& distance_measure_arg =
+                  (DistanceMeasure)encodable_distance_measure_arg.LongValue();
+              api->FindNearest(app_arg, path_arg, is_collection_group_arg,
+                               parameters_arg, options_arg, source_arg,
+                               query_options_arg, distance_measure_arg,
+                               [reply](ErrorOr<PigeonQuerySnapshot>&& output) {
+                                 if (output.has_error()) {
+                                   reply(WrapError(output.error()));
+                                   return;
+                                 }
+                                 EncodableList wrapped;
+                                 wrapped.push_back(CustomEncodableValue(
+                                     std::move(output).TakeValue()));
+                                 reply(EncodableValue(std::move(wrapped)));
+                               });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
+            }
+          });
+    } else {
+      channel->SetMessageHandler(nullptr);
+    }
+  }
+  {
+    auto channel = std::make_unique<BasicMessageChannel<>>(
+        binary_messenger,
+        "dev.flutter.pigeon.cloud_firestore_platform_interface."
         "FirebaseFirestoreHostApi.writeBatchCommit",
         &GetCodec());
     if (api != nullptr) {
@@ -2290,8 +2430,8 @@ void FirebaseFirestoreHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("request_arg unexpectedly null."));
                 return;
               }
-              const PersistenceCacheIndexManagerRequestEnum& request_arg =
-                  (PersistenceCacheIndexManagerRequestEnum)
+              const PersistenceCacheIndexManagerRequest& request_arg =
+                  (PersistenceCacheIndexManagerRequest)
                       encodable_request_arg.LongValue();
               api->PersistenceCacheIndexManagerRequest(
                   app_arg, request_arg,

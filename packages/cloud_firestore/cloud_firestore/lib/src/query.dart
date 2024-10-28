@@ -226,6 +226,14 @@ abstract class Query<T extends Object?> {
     AggregateField? aggregateField29,
     AggregateField? aggregateField30,
   ]);
+
+  VectorQuery findNearest(
+    String field, {
+    required Object queryVector, // List<double> or VectorValue
+    required int limit,
+    required DistanceMeasure distanceMeasure,
+    required VectorQueryOptions options,
+  });
 }
 
 /// Represents a [Query] over the data at a particular location.

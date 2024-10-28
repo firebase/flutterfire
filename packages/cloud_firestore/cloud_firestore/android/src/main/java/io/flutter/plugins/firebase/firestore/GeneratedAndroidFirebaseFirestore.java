@@ -104,6 +104,38 @@ public class GeneratedAndroidFirebaseFirestore {
     }
   }
 
+  /** An enumeration of firestore source types. */
+  public enum VectorSource {
+    /**
+     * Causes Firestore to avoid the cache, generating an error if the server cannot be reached.
+     * Note that the cache will still be updated if the server request succeeds. Also note that
+     * latency-compensation still takes effect, so any pending write operations will be visible in
+     * the returned data (merged into the server-provided data).
+     */
+    SERVER(0);
+
+    final int index;
+
+    private VectorSource(final int index) {
+      this.index = index;
+    }
+  }
+
+  public enum DistanceMeasure {
+    /** The cosine similarity measure. */
+    COSINE(0),
+    /** The euclidean distance measure. */
+    EUCLIDEAN(1),
+    /** The dot product distance measure. */
+    DOT_PRODUCT(2);
+
+    final int index;
+
+    private DistanceMeasure(final int index) {
+      this.index = index;
+    }
+  }
+
   /**
    * The listener retrieves data and listens to updates from the local Firestore cache only. If the
    * cache is empty, an empty snapshot will be returned. Snapshot events will be triggered on cache
@@ -852,6 +884,79 @@ public class GeneratedAndroidFirebaseFirestore {
           (metadata == null)
               ? null
               : PigeonSnapshotMetadata.fromList((ArrayList<Object>) metadata));
+      return pigeonResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class VectorQueryOptions {
+    private @NonNull String distanceResultField;
+
+    public @NonNull String getDistanceResultField() {
+      return distanceResultField;
+    }
+
+    public void setDistanceResultField(@NonNull String setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"distanceResultField\" is null.");
+      }
+      this.distanceResultField = setterArg;
+    }
+
+    private @NonNull Double distanceThreshold;
+
+    public @NonNull Double getDistanceThreshold() {
+      return distanceThreshold;
+    }
+
+    public void setDistanceThreshold(@NonNull Double setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"distanceThreshold\" is null.");
+      }
+      this.distanceThreshold = setterArg;
+    }
+
+    /** Constructor is non-public to enforce null safety; use Builder. */
+    VectorQueryOptions() {}
+
+    public static final class Builder {
+
+      private @Nullable String distanceResultField;
+
+      public @NonNull Builder setDistanceResultField(@NonNull String setterArg) {
+        this.distanceResultField = setterArg;
+        return this;
+      }
+
+      private @Nullable Double distanceThreshold;
+
+      public @NonNull Builder setDistanceThreshold(@NonNull Double setterArg) {
+        this.distanceThreshold = setterArg;
+        return this;
+      }
+
+      public @NonNull VectorQueryOptions build() {
+        VectorQueryOptions pigeonReturn = new VectorQueryOptions();
+        pigeonReturn.setDistanceResultField(distanceResultField);
+        pigeonReturn.setDistanceThreshold(distanceThreshold);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    public ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(2);
+      toListResult.add(distanceResultField);
+      toListResult.add(distanceThreshold);
+      return toListResult;
+    }
+
+    static @NonNull VectorQueryOptions fromList(@NonNull ArrayList<Object> list) {
+      VectorQueryOptions pigeonResult = new VectorQueryOptions();
+      Object distanceResultField = list.get(0);
+      pigeonResult.setDistanceResultField((String) distanceResultField);
+      Object distanceThreshold = list.get(1);
+      pigeonResult.setDistanceThreshold((Double) distanceThreshold);
       return pigeonResult;
     }
   }
@@ -1667,6 +1772,8 @@ public class GeneratedAndroidFirebaseFirestore {
           return PigeonSnapshotMetadata.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 140:
           return PigeonTransactionCommand.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 141:
+          return VectorQueryOptions.fromList((ArrayList<Object>) readValue(buffer));
         default:
           return super.readValueOfType(type, buffer);
       }
@@ -1713,6 +1820,9 @@ public class GeneratedAndroidFirebaseFirestore {
       } else if (value instanceof PigeonTransactionCommand) {
         stream.write(140);
         writeValue(stream, ((PigeonTransactionCommand) value).toList());
+      } else if (value instanceof VectorQueryOptions) {
+        stream.write(141);
+        writeValue(stream, ((VectorQueryOptions) value).toList());
       } else {
         super.writeValue(stream, value);
       }
@@ -1808,6 +1918,17 @@ public class GeneratedAndroidFirebaseFirestore {
         @NonNull List<AggregateQuery> queries,
         @NonNull Boolean isCollectionGroup,
         @NonNull Result<List<AggregateQueryResponse>> result);
+
+    void findNearest(
+        @NonNull FirestorePigeonFirebaseApp app,
+        @NonNull String path,
+        @NonNull Boolean isCollectionGroup,
+        @NonNull PigeonQueryParameters parameters,
+        @NonNull PigeonGetOptions options,
+        @NonNull VectorSource source,
+        @NonNull VectorQueryOptions queryOptions,
+        @NonNull DistanceMeasure distanceMeasure,
+        @NonNull Result<PigeonQuerySnapshot> result);
 
     void writeBatchCommit(
         @NonNull FirestorePigeonFirebaseApp app,
@@ -2472,6 +2593,53 @@ public class GeneratedAndroidFirebaseFirestore {
                     sourceArg,
                     queriesArg,
                     isCollectionGroupArg,
+                    resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.findNearest",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
+                String pathArg = (String) args.get(1);
+                Boolean isCollectionGroupArg = (Boolean) args.get(2);
+                PigeonQueryParameters parametersArg = (PigeonQueryParameters) args.get(3);
+                PigeonGetOptions optionsArg = (PigeonGetOptions) args.get(4);
+                VectorSource sourceArg = VectorSource.values()[(int) args.get(5)];
+                VectorQueryOptions queryOptionsArg = (VectorQueryOptions) args.get(6);
+                DistanceMeasure distanceMeasureArg = DistanceMeasure.values()[(int) args.get(7)];
+                Result<PigeonQuerySnapshot> resultCallback =
+                    new Result<PigeonQuerySnapshot>() {
+                      public void success(PigeonQuerySnapshot result) {
+                        wrapped.add(0, result);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.findNearest(
+                    appArg,
+                    pathArg,
+                    isCollectionGroupArg,
+                    parametersArg,
+                    optionsArg,
+                    sourceArg,
+                    queryOptionsArg,
+                    distanceMeasureArg,
                     resultCallback);
               });
         } else {

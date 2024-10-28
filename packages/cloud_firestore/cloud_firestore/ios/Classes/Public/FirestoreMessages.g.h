@@ -57,6 +57,37 @@ typedef NS_ENUM(NSUInteger, Source) {
 - (instancetype)initWithValue:(Source)value;
 @end
 
+/// An enumeration of firestore source types.
+typedef NS_ENUM(NSUInteger, VectorSource) {
+  /// Causes Firestore to avoid the cache, generating an error if the server cannot be reached. Note
+  /// that the cache will still be updated if the server request succeeds. Also note that
+  /// latency-compensation still takes effect, so any pending write operations will be visible in
+  /// the
+  /// returned data (merged into the server-provided data).
+  VectorSourceServer = 0,
+};
+
+/// Wrapper for VectorSource to allow for nullability.
+@interface VectorSourceBox : NSObject
+@property(nonatomic, assign) VectorSource value;
+- (instancetype)initWithValue:(VectorSource)value;
+@end
+
+typedef NS_ENUM(NSUInteger, DistanceMeasure) {
+  /// The cosine similarity measure.
+  DistanceMeasureCosine = 0,
+  /// The euclidean distance measure.
+  DistanceMeasureEuclidean = 1,
+  /// The dot product distance measure.
+  DistanceMeasureDotProduct = 2,
+};
+
+/// Wrapper for DistanceMeasure to allow for nullability.
+@interface DistanceMeasureBox : NSObject
+@property(nonatomic, assign) DistanceMeasure value;
+- (instancetype)initWithValue:(DistanceMeasure)value;
+@end
+
 /// The listener retrieves data and listens to updates from the local Firestore cache only.
 /// If the cache is empty, an empty snapshot will be returned.
 /// Snapshot events will be triggered on cache updates, like local mutations or load bundles.
@@ -165,6 +196,7 @@ typedef NS_ENUM(NSUInteger, AggregateType) {
 @class PigeonDocumentSnapshot;
 @class PigeonDocumentChange;
 @class PigeonQuerySnapshot;
+@class VectorQueryOptions;
 @class PigeonGetOptions;
 @class PigeonDocumentOption;
 @class PigeonTransactionCommand;
@@ -241,6 +273,15 @@ typedef NS_ENUM(NSUInteger, AggregateType) {
 @property(nonatomic, strong) NSArray<PigeonDocumentSnapshot *> *documents;
 @property(nonatomic, strong) NSArray<PigeonDocumentChange *> *documentChanges;
 @property(nonatomic, strong) PigeonSnapshotMetadata *metadata;
+@end
+
+@interface VectorQueryOptions : NSObject
+/// `init` unavailable to enforce nonnull fields, see the `make` class method.
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)makeWithDistanceResultField:(NSString *)distanceResultField
+                          distanceThreshold:(NSNumber *)distanceThreshold;
+@property(nonatomic, copy) NSString *distanceResultField;
+@property(nonatomic, strong) NSNumber *distanceThreshold;
 @end
 
 @interface PigeonGetOptions : NSObject
@@ -396,6 +437,16 @@ NSObject<FlutterMessageCodec> *FirebaseFirestoreHostApiGetCodec(void);
         isCollectionGroup:(NSNumber *)isCollectionGroup
                completion:(void (^)(NSArray<AggregateQueryResponse *> *_Nullable,
                                     FlutterError *_Nullable))completion;
+- (void)findNearestApp:(FirestorePigeonFirebaseApp *)app
+                  path:(NSString *)path
+     isCollectionGroup:(NSNumber *)isCollectionGroup
+            parameters:(PigeonQueryParameters *)parameters
+               options:(PigeonGetOptions *)options
+                source:(VectorSource)source
+          queryOptions:(VectorQueryOptions *)queryOptions
+       distanceMeasure:(DistanceMeasure)distanceMeasure
+            completion:
+                (void (^)(PigeonQuerySnapshot *_Nullable, FlutterError *_Nullable))completion;
 - (void)writeBatchCommitApp:(FirestorePigeonFirebaseApp *)app
                      writes:(NSArray<PigeonTransactionCommand *> *)writes
                  completion:(void (^)(FlutterError *_Nullable))completion;

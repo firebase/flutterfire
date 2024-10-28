@@ -56,6 +56,9 @@ class _TestFirebaseFirestoreHostApiCodec extends StandardMessageCodec {
     } else if (value is PigeonTransactionCommand) {
       buffer.putUint8(140);
       writeValue(buffer, value.encode());
+    } else if (value is VectorQueryOptions) {
+      buffer.putUint8(141);
+      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -90,6 +93,8 @@ class _TestFirebaseFirestoreHostApiCodec extends StandardMessageCodec {
         return PigeonSnapshotMetadata.decode(readValue(buffer)!);
       case 140:
         return PigeonTransactionCommand.decode(readValue(buffer)!);
+      case 141:
+        return VectorQueryOptions.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -182,6 +187,17 @@ abstract class TestFirebaseFirestoreHostApi {
     AggregateSource source,
     List<AggregateQuery?> queries,
     bool isCollectionGroup,
+  );
+
+  Future<PigeonQuerySnapshot> findNearest(
+    FirestorePigeonFirebaseApp app,
+    String path,
+    bool isCollectionGroup,
+    PigeonQueryParameters parameters,
+    PigeonGetOptions options,
+    VectorSource source,
+    VectorQueryOptions queryOptions,
+    DistanceMeasure distanceMeasure,
   );
 
   Future<void> writeBatchCommit(
@@ -905,6 +921,83 @@ abstract class TestFirebaseFirestoreHostApi {
             arg_source!,
             arg_queries!,
             arg_isCollectionGroup!,
+          );
+          return <Object?>[output];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.findNearest',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.findNearest was null.',
+          );
+          final List<Object?> args = (message as List<Object?>?)!;
+          final FirestorePigeonFirebaseApp? arg_app =
+              (args[0] as FirestorePigeonFirebaseApp?);
+          assert(
+            arg_app != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.findNearest was null, expected non-null FirestorePigeonFirebaseApp.',
+          );
+          final String? arg_path = (args[1] as String?);
+          assert(
+            arg_path != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.findNearest was null, expected non-null String.',
+          );
+          final bool? arg_isCollectionGroup = (args[2] as bool?);
+          assert(
+            arg_isCollectionGroup != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.findNearest was null, expected non-null bool.',
+          );
+          final PigeonQueryParameters? arg_parameters =
+              (args[3] as PigeonQueryParameters?);
+          assert(
+            arg_parameters != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.findNearest was null, expected non-null PigeonQueryParameters.',
+          );
+          final PigeonGetOptions? arg_options = (args[4] as PigeonGetOptions?);
+          assert(
+            arg_options != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.findNearest was null, expected non-null PigeonGetOptions.',
+          );
+          final VectorSource? arg_source =
+              args[5] == null ? null : VectorSource.values[args[5]! as int];
+          assert(
+            arg_source != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.findNearest was null, expected non-null VectorSource.',
+          );
+          final VectorQueryOptions? arg_queryOptions =
+              (args[6] as VectorQueryOptions?);
+          assert(
+            arg_queryOptions != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.findNearest was null, expected non-null VectorQueryOptions.',
+          );
+          final DistanceMeasure? arg_distanceMeasure =
+              args[7] == null ? null : DistanceMeasure.values[args[7]! as int];
+          assert(
+            arg_distanceMeasure != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.findNearest was null, expected non-null DistanceMeasure.',
+          );
+          final PigeonQuerySnapshot output = await api.findNearest(
+            arg_app!,
+            arg_path!,
+            arg_isCollectionGroup!,
+            arg_parameters!,
+            arg_options!,
+            arg_source!,
+            arg_queryOptions!,
+            arg_distanceMeasure!,
           );
           return <Object?>[output];
         });

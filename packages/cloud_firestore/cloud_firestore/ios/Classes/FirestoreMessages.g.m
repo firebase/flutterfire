@@ -40,6 +40,27 @@
 }
 @end
 
+/// An enumeration of firestore source types.
+@implementation VectorSourceBox
+- (instancetype)initWithValue:(VectorSource)value {
+  self = [super init];
+  if (self) {
+    _value = value;
+  }
+  return self;
+}
+@end
+
+@implementation DistanceMeasureBox
+- (instancetype)initWithValue:(DistanceMeasure)value {
+  self = [super init];
+  if (self) {
+    _value = value;
+  }
+  return self;
+}
+@end
+
 /// The listener retrieves data and listens to updates from the local Firestore cache only.
 /// If the cache is empty, an empty snapshot will be returned.
 /// Snapshot events will be triggered on cache updates, like local mutations or load bundles.
@@ -165,6 +186,12 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 @interface PigeonQuerySnapshot ()
 + (PigeonQuerySnapshot *)fromList:(NSArray *)list;
 + (nullable PigeonQuerySnapshot *)nullableFromList:(NSArray *)list;
+- (NSArray *)toList;
+@end
+
+@interface VectorQueryOptions ()
++ (VectorQueryOptions *)fromList:(NSArray *)list;
++ (nullable VectorQueryOptions *)nullableFromList:(NSArray *)list;
 - (NSArray *)toList;
 @end
 
@@ -406,6 +433,33 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
     (self.documents ?: [NSNull null]),
     (self.documentChanges ?: [NSNull null]),
     (self.metadata ? [self.metadata toList] : [NSNull null]),
+  ];
+}
+@end
+
+@implementation VectorQueryOptions
++ (instancetype)makeWithDistanceResultField:(NSString *)distanceResultField
+                          distanceThreshold:(NSNumber *)distanceThreshold {
+  VectorQueryOptions *pigeonResult = [[VectorQueryOptions alloc] init];
+  pigeonResult.distanceResultField = distanceResultField;
+  pigeonResult.distanceThreshold = distanceThreshold;
+  return pigeonResult;
+}
++ (VectorQueryOptions *)fromList:(NSArray *)list {
+  VectorQueryOptions *pigeonResult = [[VectorQueryOptions alloc] init];
+  pigeonResult.distanceResultField = GetNullableObjectAtIndex(list, 0);
+  NSAssert(pigeonResult.distanceResultField != nil, @"");
+  pigeonResult.distanceThreshold = GetNullableObjectAtIndex(list, 1);
+  NSAssert(pigeonResult.distanceThreshold != nil, @"");
+  return pigeonResult;
+}
++ (nullable VectorQueryOptions *)nullableFromList:(NSArray *)list {
+  return (list) ? [VectorQueryOptions fromList:list] : nil;
+}
+- (NSArray *)toList {
+  return @[
+    (self.distanceResultField ?: [NSNull null]),
+    (self.distanceThreshold ?: [NSNull null]),
   ];
 }
 @end
@@ -680,6 +734,8 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
       return [PigeonSnapshotMetadata fromList:[self readValue]];
     case 140:
       return [PigeonTransactionCommand fromList:[self readValue]];
+    case 141:
+      return [VectorQueryOptions fromList:[self readValue]];
     default:
       return [super readValueOfType:type];
   }
@@ -728,6 +784,9 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
     [self writeValue:[value toList]];
   } else if ([value isKindOfClass:[PigeonTransactionCommand class]]) {
     [self writeByte:140];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[VectorQueryOptions class]]) {
+    [self writeByte:141];
     [self writeValue:[value toList]];
   } else {
     [super writeValue:value];
@@ -1250,6 +1309,48 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
                                  FlutterError *_Nullable error) {
                       callback(wrapResult(output, error));
                     }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.cloud_firestore_platform_interface."
+                        @"FirebaseFirestoreHostApi.findNearest"
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseFirestoreHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector
+                     (findNearestApp:
+                                path:isCollectionGroup:parameters:options:source:queryOptions
+                                    :distanceMeasure:completion:)],
+                @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
+                @"@selector(findNearestApp:path:isCollectionGroup:parameters:options:source:"
+                @"queryOptions:distanceMeasure:completion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        NSString *arg_path = GetNullableObjectAtIndex(args, 1);
+        NSNumber *arg_isCollectionGroup = GetNullableObjectAtIndex(args, 2);
+        PigeonQueryParameters *arg_parameters = GetNullableObjectAtIndex(args, 3);
+        PigeonGetOptions *arg_options = GetNullableObjectAtIndex(args, 4);
+        VectorSource arg_source = [GetNullableObjectAtIndex(args, 5) integerValue];
+        VectorQueryOptions *arg_queryOptions = GetNullableObjectAtIndex(args, 6);
+        DistanceMeasure arg_distanceMeasure = [GetNullableObjectAtIndex(args, 7) integerValue];
+        [api findNearestApp:arg_app
+                         path:arg_path
+            isCollectionGroup:arg_isCollectionGroup
+                   parameters:arg_parameters
+                      options:arg_options
+                       source:arg_source
+                 queryOptions:arg_queryOptions
+              distanceMeasure:arg_distanceMeasure
+                   completion:^(PigeonQuerySnapshot *_Nullable output,
+                                FlutterError *_Nullable error) {
+                     callback(wrapResult(output, error));
+                   }];
       }];
     } else {
       [channel setMessageHandler:nil];
