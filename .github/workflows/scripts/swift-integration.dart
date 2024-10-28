@@ -1,10 +1,10 @@
 import 'dart:io';
 
 void main() async {
-  await buildFirebaseCoreExample('ios', 'firebase_core');
-  await buildFirebaseCoreExample('macos', 'firebase_core');
-  await buildFirebaseCoreExample('ios', 'cloud_firestore');
-  await buildFirebaseCoreExample('macos', 'cloud_firestore');
+  await buildSwiftExampleApp('ios', 'firebase_core');
+  await buildSwiftExampleApp('macos', 'firebase_core');
+  await buildSwiftExampleApp('ios', 'cloud_firestore');
+  await buildSwiftExampleApp('macos', 'cloud_firestore');
 }
 
 Future<void> buildSwiftExampleApp(String platform, String plugin) async {
