@@ -71,10 +71,6 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version),
-    // This works
-    // .package(name:"flutterfire", path: "../../../../.."),
-    // TODO - this needs a version instead
-    // This isn't working
     .package(url:"https://github.com/firebase/flutterfire", exact: "3.6.0-firebase-core-swift"),
   ],
   targets: [
