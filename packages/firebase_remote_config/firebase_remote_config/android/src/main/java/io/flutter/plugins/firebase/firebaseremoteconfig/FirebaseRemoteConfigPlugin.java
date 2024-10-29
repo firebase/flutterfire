@@ -128,10 +128,7 @@ public class FirebaseRemoteConfigPlugin
     channel = null;
     eventChannel.setStreamHandler(null);
     eventChannel = null;
-    for (ConfigUpdateListenerRegistration listener : listenersMap.values()) {
-      listener.remove();
-      listenersMap.remove(listener);
-    }
+    removeEventListeners();
   }
 
   private FirebaseRemoteConfig getRemoteConfig(Map<String, Object> arguments) {
