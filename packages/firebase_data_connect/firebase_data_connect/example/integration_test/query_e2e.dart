@@ -133,7 +133,7 @@ void runQueryTests() {
         expect(result2.movies.length, 0);
       });
 
-      testWidgets('should be able to ignore optionnal values',
+      testWidgets('should be able to ignore optional values',
           (WidgetTester tester) async {
         MutationRef ref = MoviesConnector.instance
             .createMovie(
