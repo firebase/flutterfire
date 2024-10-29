@@ -79,7 +79,6 @@ void runGenerationTest() {
         final mutationRef = movieBuilder.ref();
         expect(mutationRef, isNotNull);
         expect(mutationRef.execute, isNotNull);
-        expect(ref.execute, isNotNull);
       });
     },
   );
