@@ -12,6 +12,24 @@ void main() async {
   await buildSwiftExampleApp('macos', 'cloud_firestore');
 }
 
+Future<void> deleteFirstLine(String filePath) async {
+  final file = File(filePath);
+
+  if (!file.existsSync()) {
+    print('File does not exist: $filePath');
+    return;
+  }
+
+  final lines = await file.readAsLines();
+  if (lines.isNotEmpty) {
+    final updatedContent = lines.skip(1).join('\n');
+    await file.writeAsString(updatedContent);
+    print('First line deleted from $filePath');
+  } else {
+    print('File is empty: $filePath');
+  }
+}
+
 Future<void> buildSwiftExampleApp(String platform, String plugin) async {
   final initialDirectory = Directory.current;
   final platformName = platform == 'ios' ? 'iOS' : 'macOS';
@@ -24,6 +42,10 @@ Future<void> buildSwiftExampleApp(String platform, String plugin) async {
     exit(1);
   }
 
+  if (platform == 'macos') {
+    await deleteFirstLine(
+        'packages/$plugin/$plugin/example/macos/Flutter/Flutter-Debug.xcconfig');
+  }
   // Change to the appropriate directory
   Directory.current = directory;
 
@@ -69,11 +91,12 @@ Future<ProcessResult> _runCommand(
 
   // Listen to stderr
   process.stderr.transform(utf8.decoder).listen((data) {
-    print('Error: $data');
+    print('stderr output: $data');
   });
 
   // Wait for the process to complete
   final exitCode = await process.exitCode;
+
   if (exitCode != 0) {
     print('Command failed: $command ${arguments.join(' ')}');
   }
