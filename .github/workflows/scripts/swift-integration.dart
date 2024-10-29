@@ -8,9 +8,7 @@ import 'dart:convert';
 void main() async {
   await buildSwiftExampleApp('ios', 'firebase_core');
   await buildSwiftExampleApp('ios', 'cloud_firestore');
-  // won't build on CI with logs giving no indication why
-  // https://github.com/firebase/flutterfire/actions/runs/11575223412/job/32221294182?pr=13329#step:6:138
-  // await buildSwiftExampleApp('macos', 'firebase_core');
+  await buildSwiftExampleApp('macos', 'firebase_core');
   await buildSwiftExampleApp('macos', 'cloud_firestore');
 }
 
