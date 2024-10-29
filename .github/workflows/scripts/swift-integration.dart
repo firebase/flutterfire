@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:io';
+import 'dart:convert';
 
 void main() async {
   await buildSwiftExampleApp('ios', 'firebase_core');
@@ -15,7 +16,7 @@ Future<void> buildSwiftExampleApp(String platform, String plugin) async {
   final initialDirectory = Directory.current;
   final platformName = platform == 'ios' ? 'iOS' : 'macOS';
 
-  print('Building firebase core $platformName example app with swift (SPM)');
+  print('Building $plugin $platformName example app with swift (SPM)');
 
   final directory = Directory('packages/$plugin/$plugin/example/$platform');
   if (!directory.existsSync()) {
@@ -59,10 +60,23 @@ Future<void> buildSwiftExampleApp(String platform, String plugin) async {
 
 Future<ProcessResult> _runCommand(
     String command, List<String> arguments) async {
-  final result = await Process.run(command, arguments);
-  if (result.exitCode != 0) {
+  final process = await Process.start(command, arguments);
+
+  // Listen to stdout
+  process.stdout.transform(utf8.decoder).listen((data) {
+    print(data);
+  });
+
+  // Listen to stderr
+  process.stderr.transform(utf8.decoder).listen((data) {
+    print('Error: $data');
+  });
+
+  // Wait for the process to complete
+  final exitCode = await process.exitCode;
+  if (exitCode != 0) {
     print('Command failed: $command ${arguments.join(' ')}');
-    print('Error: ${result.stderr}');
   }
-  return result;
+
+  return ProcessResult(process.pid, exitCode, '', '');
 }
