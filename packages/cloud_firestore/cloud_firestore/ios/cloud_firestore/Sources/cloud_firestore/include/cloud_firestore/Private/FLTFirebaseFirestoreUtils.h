@@ -10,7 +10,11 @@
 #import <Flutter/Flutter.h>
 #endif
 
+#if TARGET_OS_OSX
+#import <FirebaseFirestore/FirebaseFirestore.h>
+#else
 @import FirebaseFirestore;
+#endif
 #import <Foundation/Foundation.h>
 #import "FLTFirebaseFirestoreExtension.h"
 

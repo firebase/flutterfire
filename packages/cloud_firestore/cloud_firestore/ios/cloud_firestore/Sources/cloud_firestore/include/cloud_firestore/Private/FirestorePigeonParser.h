@@ -4,7 +4,11 @@
  * BSD-style license that can be found in the LICENSE file.
  */
 
+#if TARGET_OS_OSX
+#import <FirebaseFirestore/FirebaseFirestore.h>
+#else
 @import FirebaseFirestore;
+#endif
 #import <Foundation/Foundation.h>
 #if __has_include(<cloud_firestore/FirestoreMessages.g.h>)
 #import <cloud_firestore/FirestoreMessages.g.h>
