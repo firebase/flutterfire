@@ -57,7 +57,6 @@ void main() {
       ),
       'testAppId',
       CallerSDKType.core,
-      mockAuth,
       mockAppCheck,
     );
 

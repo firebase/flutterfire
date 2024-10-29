@@ -28,9 +28,6 @@ import 'package:mockito/mockito.dart';
 
 import '../network/rest_transport_test.mocks.dart';
 
-// Mock classes
-class MockDataConnectTransport extends Mock implements DataConnectTransport {}
-
 class MockFirebaseDataConnect extends Mock implements FirebaseDataConnect {}
 
 class DCMockUser extends Mock implements User {
