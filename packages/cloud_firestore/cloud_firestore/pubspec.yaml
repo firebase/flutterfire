@@ -49,5 +49,3 @@ flutter:
       windows:
         pluginClass: CloudFirestorePluginCApi
 
-firebase:
-  ios_sdk: 11.2.0
