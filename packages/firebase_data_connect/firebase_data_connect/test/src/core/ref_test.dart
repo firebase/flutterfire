@@ -108,9 +108,6 @@ void main() {
         final mockStreamController = MockStreamController<QueryResult>();
         final completer = Completer<void>();
 
-        when(mockTransport.invokeQuery('testQuery', any, any, null))
-            .thenThrow(Exception('Test Error'));
-
         final streamController = StreamController<QueryResult>.broadcast();
 
         queryManager.trackedQueries['testQuery'] = {'': streamController};
