@@ -12,12 +12,11 @@ void main() async {
 }
 
 Future<void> buildSwiftExampleApp(String platform, String plugin) async {
+  final initialDirectory = Directory.current;
   final platformName = platform == 'ios' ? 'iOS' : 'macOS';
 
   print('Building firebase core $platformName example app with swift (SPM)');
 
-  print('CURRENT DIRECTORY');
-  await _runCommand('pwd', []);
   final directory = Directory('packages/$plugin/$plugin/example/$platform');
   if (!directory.existsSync()) {
     print('Directory does not exist: ${directory.path}');
@@ -47,6 +46,8 @@ Future<void> buildSwiftExampleApp(String platform, String plugin) async {
   } else {
     print('Successfully built $platformName project using Swift Package Manager.');
   }
+
+  Directory.current = initialDirectory;
 }
 
 Future<ProcessResult> _runCommand(String command, List<String> arguments) async {
