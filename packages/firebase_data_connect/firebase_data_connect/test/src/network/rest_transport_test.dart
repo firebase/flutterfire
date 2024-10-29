@@ -218,8 +218,8 @@ void main() {
 
       final deserializer = (String data) => 'Deserialized Data';
 
-      await transport.invokeOperation(
-          'testQuery', deserializer, null, null, 'executeQuery');
+      await transport.invokeOperation('testQuery', 'testEndpoint', deserializer,
+          null, null, 'executeQuery');
 
       verify(mockHttpClient.post(
         any,

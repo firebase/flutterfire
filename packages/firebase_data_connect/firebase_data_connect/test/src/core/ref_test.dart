@@ -27,6 +27,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
 import '../network/rest_transport_test.mocks.dart';
+import 'ref_test.mocks.dart';
 
 class MockFirebaseDataConnect extends Mock implements FirebaseDataConnect {}
 
@@ -217,7 +218,7 @@ void main() {
         final queryManager = QueryManager(mockDataConnect);
 
         // Simulate server throwing an exception
-        when(mockTransport.invokeQuery(any, any, any, any))
+        when(mockTransport.invokeQuery(any, any, any, any, null))
             .thenThrow(Exception('Server Error'));
 
         final queryRef = QueryRef<String, String>(

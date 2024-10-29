@@ -82,7 +82,6 @@ void main() {
         ),
         'testAppId',
         CallerSDKType.core,
-        mockAuth,
         mockAppCheck,
       );
 
@@ -100,7 +99,8 @@ void main() {
       final deserializer = (String data) => 'Deserialized Data';
 
       expect(
-        () => transport.invokeQuery('testQuery', deserializer, null, null),
+        () =>
+            transport.invokeQuery('testQuery', deserializer, null, null, null),
         throwsA(isA<DataConnectError>()),
       );
     });
@@ -113,8 +113,8 @@ void main() {
       final deserializer = (String data) => 'Deserialized Data';
 
       expect(
-        () =>
-            transport.invokeMutation('testMutation', deserializer, null, null),
+        () => transport.invokeMutation(
+            'testMutation', deserializer, null, null, null),
         throwsA(isA<DataConnectError>()),
       );
     });
@@ -124,7 +124,7 @@ void main() {
       when(mockUser.getIdToken()).thenAnswer((_) async => 'authToken123');
       when(mockAppCheck.getToken()).thenAnswer((_) async => 'appCheckToken123');
 
-      final metadata = await transport.getMetadata();
+      final metadata = await transport.getMetadata('authToken123');
 
       expect(metadata['x-firebase-auth-token'], 'authToken123');
       expect(metadata['X-Firebase-AppCheck'], 'appCheckToken123');
@@ -136,7 +136,7 @@ void main() {
       when(mockUser.getIdToken()).thenThrow(Exception('Auth error'));
       when(mockAppCheck.getToken()).thenThrow(Exception('AppCheck error'));
 
-      final metadata = await transport.getMetadata();
+      final metadata = await transport.getMetadata(null);
 
       expect(metadata.containsKey('x-firebase-auth-token'), isFalse);
       expect(metadata.containsKey('X-Firebase-AppCheck'), isFalse);
