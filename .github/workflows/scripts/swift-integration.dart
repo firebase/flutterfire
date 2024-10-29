@@ -30,8 +30,14 @@ Future<void> buildSwiftExampleApp(String platform, String plugin) async {
   await _runCommand('rm', ['Podfile']);
   await _runCommand('pod', ['deintegrate']);
 
+  // Determine the arguments for the flutter build command
+  final flutterArgs = ['build', platform];
+  if (platform == 'ios') {
+    flutterArgs.add('--no-codesign');
+  }
+
   // Run the flutter build command
-  final flutterResult = await _runCommand('flutter', ['build', platform, '--no-codesign']);
+  final flutterResult = await _runCommand('flutter', flutterArgs);
 
   // Check if the flutter build command was successful
   if (flutterResult.exitCode != 0) {
@@ -44,13 +50,15 @@ Future<void> buildSwiftExampleApp(String platform, String plugin) async {
     print('Failed. Pods are being installed when they should not be.');
     exit(1);
   } else {
-    print('Successfully built $platformName project using Swift Package Manager.');
+    print(
+        'Successfully built $platformName project using Swift Package Manager.');
   }
 
   Directory.current = initialDirectory;
 }
 
-Future<ProcessResult> _runCommand(String command, List<String> arguments) async {
+Future<ProcessResult> _runCommand(
+    String command, List<String> arguments) async {
   final result = await Process.run(command, arguments);
   if (result.exitCode != 0) {
     print('Command failed: $command ${arguments.join(' ')}');
