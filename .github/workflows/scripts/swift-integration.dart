@@ -11,7 +11,7 @@ void main() async {
   // won't build on CI with logs giving no indication why
   // https://github.com/firebase/flutterfire/actions/runs/11575223412/job/32221294182?pr=13329#step:6:138
   // await buildSwiftExampleApp('macos', 'firebase_core');
-  // await buildSwiftExampleApp('macos', 'cloud_firestore');
+  await buildSwiftExampleApp('macos', 'cloud_firestore');
 }
 
 Future<void> deleteFirstLine(String filePath) async {
@@ -76,7 +76,7 @@ Future<void> buildSwiftExampleApp(String platform, String plugin) async {
     exit(1);
   } else {
     print(
-        'Successfully built $platformName project using Swift Package Manager.');
+        'Successfully built $plugin $platformName project using Swift Package Manager.');
   }
 
   Directory.current = initialDirectory;
