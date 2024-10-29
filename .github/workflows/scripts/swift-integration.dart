@@ -16,6 +16,8 @@ Future<void> buildSwiftExampleApp(String platform, String plugin) async {
 
   print('Building firebase core $platformName example app with swift (SPM)');
 
+  print('CURRENT DIRECTORY')
+  await _runCommand('pwd', []);
   final directory = Directory('packages/$plugin/$plugin/example/$platform');
   if (!directory.existsSync()) {
     print('Directory does not exist: ${directory.path}');
