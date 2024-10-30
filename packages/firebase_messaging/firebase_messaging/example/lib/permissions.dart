@@ -57,7 +57,6 @@ class _Permissions extends State<Permissions> {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       child: Row(
-        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(child: Text('$title:', style: const TextStyle(fontWeight: FontWeight.bold))),
           Text(value),
