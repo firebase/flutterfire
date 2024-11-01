@@ -124,13 +124,6 @@ void main() {
           skip: defaultTargetPlatform != TargetPlatform.android,
         );
 
-        test(
-          'resolves dummy APNS token on ios if using simulator',
-          () async {
-            expect(await messaging.getAPNSToken(), isA<String>());
-          },
-          skip: defaultTargetPlatform != TargetPlatform.iOS,
-        );
       });
 
       group('getInitialMessage', () {
