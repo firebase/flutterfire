@@ -178,9 +178,8 @@ void main() {
           },
           // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
           // android skipped due to consistently failing, works locally: https://github.com/firebase/flutterfire/pull/11260
-          skip: kIsWeb ||
-              defaultTargetPlatform == TargetPlatform.macOS ||
-              defaultTargetPlatform == TargetPlatform.android,
+          // iOS fails because APNS token handler doesn't have a chance to receive token before calling this method
+          skip: kIsWeb || skipTestsOnCI,
         );
       });
 
@@ -193,9 +192,8 @@ void main() {
           },
           // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
           // android skipped due to consistently failing, works locally: https://github.com/firebase/flutterfire/pull/11260
-          skip: kIsWeb ||
-              defaultTargetPlatform == TargetPlatform.macOS ||
-              defaultTargetPlatform == TargetPlatform.android,
+          // iOS fails because APNS token handler doesn't have a chance to receive token before calling this method
+          skip: kIsWeb || skipTestsOnCI,
         );
       });
 
