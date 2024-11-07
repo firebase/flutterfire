@@ -1,3 +1,9 @@
+## 15.1.4
+
+ - **FIX**(messaging,ios): foreground notification appears twice on iOS 18 ([#13572](https://github.com/firebase/flutterfire/issues/13572)). ([ae0197f6](https://github.com/firebase/flutterfire/commit/ae0197f6dbb5a84ce004080953b5ab4d4e485b53))
+ - **FIX**(messaging,ios): remove dummy APNS token for simulator ([#13570](https://github.com/firebase/flutterfire/issues/13570)). ([17dfff1e](https://github.com/firebase/flutterfire/commit/17dfff1ed45eec57eb13c811a3a134f4dbf793df))
+ - **FIX**(messaging,ios): register app delegate with google utilities for swizzling ([#13525](https://github.com/firebase/flutterfire/issues/13525)). ([8ff0f88c](https://github.com/firebase/flutterfire/commit/8ff0f88c512a0dde16f5906c36259b911e0d5de7))
+
 ## 15.1.3
 
  - **FIX**(all,apple): use modular headers to import ([#13400](https://github.com/firebase/flutterfire/issues/13400)). ([d7d2d4b9](https://github.com/firebase/flutterfire/commit/d7d2d4b93e7c00226027fffde46699f3d5388a41))
