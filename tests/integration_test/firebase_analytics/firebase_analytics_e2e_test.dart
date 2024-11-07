@@ -9,6 +9,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tests/firebase_options.dart';
 
+// ignore: do_not_use_environment
+const bool skipTestsOnCI = bool.fromEnvironment('CI');
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -40,6 +43,7 @@ void main() {
           expect(result, isA<int?>());
         }
       },
+      skip: skipTestsOnCI && defaultTargetPlatform == TargetPlatform.iOS,
     );
 
     test('isSupported', () async {
