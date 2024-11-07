@@ -3,12 +3,43 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-/// [VectorQuerySnapshotPlatform] represents a response to an [VectorQueryPlatform] request.
-class VectorQuerySnapshotPlatform extends QuerySnapshotPlatform {
+/// A interface that contains zero or more [DocumentSnapshotPlatform] objects
+/// representing the results of a query.
+///
+/// The documents can be accessed as a list by calling [docs()] and the number of documents
+/// can be determined by calling [size()].
+class VectorQuerySnapshotPlatform extends PlatformInterface {
+  /// Create a [VectorQuerySnapshotPlatform]
   VectorQuerySnapshotPlatform(
-    super.docs,
-    super.docChanges,
-    super.metadata,
-  ) : super();
+    this.docs,
+    this.docChanges,
+    this.metadata,
+  ) : super(token: _token);
+
+  static final Object _token = Object();
+
+  /// Throws an [AssertionError] if [instance] does not extend
+  /// [VectorQuerySnapshotPlatform].
+  ///
+  /// This is used by the app-facing [QuerySnapshot] to ensure that
+  /// the object in which it's going to delegate calls has been
+  /// constructed properly.
+  static void verify(VectorQuerySnapshotPlatform instance) {
+    PlatformInterface.verify(instance, _token);
+  }
+
+  /// Gets a list of all the documents included in this [VectorQuerySnapshotPlatform]
+  final List<DocumentSnapshotPlatform> docs;
+
+  /// An array of the documents that changed since the last snapshot. If this
+  /// is the first snapshot, all documents will be in the list as Added changes.
+  final List<DocumentChangePlatform> docChanges;
+
+  /// Metadata for the document
+  final SnapshotMetadataPlatform metadata;
+
+  /// The number of documents in this [VectorQuerySnapshotPlatform].
+  int get size => docs.length;
 }
