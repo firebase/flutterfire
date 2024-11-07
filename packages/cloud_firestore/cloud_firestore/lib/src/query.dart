@@ -920,6 +920,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     required VectorQueryOptions options,
   }) {
     return VectorQuery._(
+      firestore,
       _delegate.findNearest(
         field,
         queryVector: queryVector,

@@ -7,9 +7,11 @@ part of cloud_firestore;
 /// [VectorQuery] represents the data at a particular location for retrieving metadata
 /// without retrieving the actual documents.
 class VectorQuery {
-  VectorQuery._(this._delegate, this.query) {
+  VectorQuery._(this._firestore, this._delegate, this.query) {
     VectorQueryPlatform.verify(_delegate);
   }
+
+  final FirebaseFirestore _firestore;
 
   /// [Query] represents the query over the data at a particular location used by the [VectorQuery] to
   /// retrieve the metadata.
@@ -21,12 +23,9 @@ class VectorQuery {
   Future<VectorQuerySnapshot> get({
     VectorSource source = VectorSource.server,
   }) async {
-    return VectorQuerySnapshot._(await _delegate.get(source: source), query);
-  }
-
-  /// Represents an [VectorQuery] over the data at a particular location for retrieving metadata
-  /// without retrieving the actual documents.
-  VectorQuery count() {
-    return VectorQuery._(_delegate.count(), query);
+    return VectorQuerySnapshot._(
+      _firestore,
+      await _delegate.get(source: source),
+    );
   }
 }

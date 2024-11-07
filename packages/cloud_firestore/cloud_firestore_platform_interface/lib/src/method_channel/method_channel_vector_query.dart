@@ -2,9 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_vector_query_snapshot.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_query_snapshot.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/utils/exception.dart';
-import 'package:cloud_firestore_platform_interface/src/platform_interface/platform_interface_vector_query_snapshot.dart';
 
 import '../../cloud_firestore_platform_interface.dart';
 import 'method_channel_firestore.dart';
@@ -36,7 +35,7 @@ class MethodChannelVectorQuery extends VectorQueryPlatform {
   final VectorQueryOptions _options;
 
   @override
-  Future<VectorQuerySnapshotPlatform> get({
+  Future<QuerySnapshotPlatform> get({
     required VectorSource source,
   }) async {
     try {
@@ -53,7 +52,7 @@ class MethodChannelVectorQuery extends VectorQueryPlatform {
         _distanceMeasure,
       );
 
-      return MethodChannelVectorQuerySnapshot(firestore, result);
+      return MethodChannelQuerySnapshot(firestore, result);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }

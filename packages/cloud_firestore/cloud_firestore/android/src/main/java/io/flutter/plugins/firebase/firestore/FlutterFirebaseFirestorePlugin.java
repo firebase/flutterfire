@@ -860,6 +860,34 @@ public class FlutterFirebaseFirestorePlugin
   }
 
   @Override
+  public void findNearest(@NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app, @NonNull String path, @NonNull Boolean isCollectionGroup, @NonNull GeneratedAndroidFirebaseFirestore.PigeonQueryParameters parameters, @NonNull List<Double> queryVector, @NonNull GeneratedAndroidFirebaseFirestore.VectorSource source, @NonNull Long limit, @NonNull GeneratedAndroidFirebaseFirestore.VectorQueryOptions queryOptions, @NonNull GeneratedAndroidFirebaseFirestore.DistanceMeasure distanceMeasure, @NonNull GeneratedAndroidFirebaseFirestore.Result<GeneratedAndroidFirebaseFirestore.PigeonQuerySnapshot> result) {
+    Query query = PigeonParser.parseQuery(getFirestoreFromPigeon(app), path, isCollectionGroup, parameters);
+    
+    if (query == null) {
+      result.error(
+          new GeneratedAndroidFirebaseFirestore.FlutterError(
+              "invalid_query",
+              "An error occurred while parsing query arguments, see native logs for more information. Please report this issue.",
+              null));
+      return;
+    }
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            QuerySnapshot querySnapshot = Tasks.await(query.findNearest(queryVector, PigeonParser.parseVectorSource(source), limit, PigeonParser.parseVectorQueryOptions(queryOptions), PigeonParser.parseDistanceMeasure(distanceMeasure)));
+
+            result.success(
+                PigeonParser.toPigeonQuerySnapshot(
+                    querySnapshot,
+                    DocumentSnapshot.ServerTimestampBehavior.NONE));
+          } catch (Exception e) {
+            ExceptionConverter.sendErrorToFlutter(result, e);
+          }
+        });
+  }
+
+  @Override
   public void writeBatchCommit(
       @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull List<GeneratedAndroidFirebaseFirestore.PigeonTransactionCommand> writes,

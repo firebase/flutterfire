@@ -2,7 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:cloud_firestore_platform_interface/src/platform_interface/platform_interface_vector_query_snapshot.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../../cloud_firestore_platform_interface.dart';
@@ -27,8 +26,8 @@ abstract class VectorQueryPlatform extends PlatformInterface {
   /// The [QueryPlatform] instance to which this [VectorQueryPlatform] queries against to retrieve the metadata.
   final QueryPlatform query;
 
-  /// Returns an [VectorQuerySnapshotPlatform] with the count of the documents that match the query.
-  Future<VectorQuerySnapshotPlatform> get({
+  /// Returns an [VectorQuerySnapshotPlatform] .
+  Future<QuerySnapshotPlatform> get({
     required VectorSource source,
   }) async {
     throw UnimplementedError('get() is not implemented');
