@@ -1,3 +1,7 @@
+## 0.2.0+1
+
+ - Update a dependency to the latest release.
+
 ## 0.2.0
 
  - fix(app-check, web): update pubspec.yaml description. ([#13453](https://github.com/firebase/flutterfire/issues/13453)). ([77b48800](https://github.com/firebase/flutterfire/commit/77b488001a2b68b46ccff4fc96d143ef891d3e5a))

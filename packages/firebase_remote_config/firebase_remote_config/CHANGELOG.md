@@ -1,3 +1,7 @@
+## 5.1.4
+
+ - **FIX**(remote_config,android): remove invalid map key from Remote Config teardown ([#13514](https://github.com/firebase/flutterfire/issues/13514)). ([d958f2a6](https://github.com/firebase/flutterfire/commit/d958f2a66a3a824b44974193e8d54a597a122fcc))
+
 ## 5.1.3
 
  - **FIX**(all,apple): use modular headers to import ([#13400](https://github.com/firebase/flutterfire/issues/13400)). ([d7d2d4b9](https://github.com/firebase/flutterfire/commit/d7d2d4b93e7c00226027fffde46699f3d5388a41))
