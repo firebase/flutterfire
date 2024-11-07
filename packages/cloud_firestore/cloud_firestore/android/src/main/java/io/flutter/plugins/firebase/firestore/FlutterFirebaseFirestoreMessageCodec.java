@@ -290,11 +290,11 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
     String databaseURL = (String) readValue(buffer);
     FirebaseFirestoreSettings settings = (FirebaseFirestoreSettings) readValue(buffer);
     synchronized (FlutterFirebaseFirestorePlugin.firestoreInstanceCache) {
-      if (FlutterFirebaseFirestorePlugin.getFirestoreInstanceByNameAndDatabaseUrl(
-              appName, databaseURL)
-          != null) {
-        return FlutterFirebaseFirestorePlugin.getFirestoreInstanceByNameAndDatabaseUrl(
-            appName, databaseURL);
+      FirebaseFirestore cachedFirestoreInstance =
+          FlutterFirebaseFirestorePlugin.getFirestoreInstanceByNameAndDatabaseUrl(
+              appName, databaseURL);
+      if (cachedFirestoreInstance != null) {
+        return cachedFirestoreInstance;
       }
 
       FirebaseApp app = FirebaseApp.getInstance(appName);
