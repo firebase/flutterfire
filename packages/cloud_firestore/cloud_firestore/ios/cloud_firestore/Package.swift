@@ -41,13 +41,15 @@ func loadPubspecVersions() throws -> (packageVersion: String, firebaseCoreVersio
     guard let packageVersionLine = lines.first(where: { $0.starts(with: "version:") }) else {
       throw ConfigurationError.invalidFormat("No package version line found in pubspec.yaml")
     }
-    let packageVersion = packageVersionLine.split(separator: ":")[1].trimmingCharacters(in: .whitespaces)
+    var packageVersion = packageVersionLine.split(separator: ":")[1].trimmingCharacters(in: .whitespaces)
       .replacingOccurrences(of: "+", with: "-")
+    packageVersion = packageVersion.replacingOccurrences(of: "^", with: "")
 
     guard let firebaseCoreVersionLine = lines.first(where: { $0.contains("firebase_core:") }) else {
       throw ConfigurationError.invalidFormat("No firebase_core dependency version line found in pubspec.yaml")
     }
-    let firebaseCoreVersion = firebaseCoreVersionLine.split(separator: ":")[1].trimmingCharacters(in: .whitespaces)
+    var firebaseCoreVersion = firebaseCoreVersionLine.split(separator: ":")[1].trimmingCharacters(in: .whitespaces)
+    firebaseCoreVersion = firebaseCoreVersion.replacingOccurrences(of: "^", with: "")
 
     return (packageVersion, firebaseCoreVersion)
   } catch {
