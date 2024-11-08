@@ -83,7 +83,7 @@ guard let firebase_sdk_version = Version(firebase_sdk_version_string) else {
 
 // TODO: - we can try using existing firebase_core tag once flutterfire/Package.swift is part of release cycle
 // but I don't think it'll work as Swift versioning requires version-[tag name]
-guard let shared_spm_version = Version("\(library_version_string)\(shared_spm_tag)") else {
+guard let shared_spm_version = Version("3.7.0-firebase-core-swift") else {
   fatalError("Invalid firebase_core version: \(library_version_string)\(shared_spm_tag)")
 }
 
