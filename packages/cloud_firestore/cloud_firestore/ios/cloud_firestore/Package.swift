@@ -23,8 +23,9 @@ func loadFirebaseSDKVersion() throws -> String {
     "..",
     "generated_firebase_sdk_version.txt",
   ])
-    do {
-    let version = try String(contentsOfFile: firebaseCoreScriptPath, encoding: .utf8).trimmingCharacters(in: .whitespacesAndNewlines)
+  do {
+    let version = try String(contentsOfFile: firebaseCoreScriptPath, encoding: .utf8)
+      .trimmingCharacters(in: .whitespacesAndNewlines)
     return version
   } catch {
     throw ConfigurationError
@@ -41,14 +42,17 @@ func loadPubspecVersions() throws -> (packageVersion: String, firebaseCoreVersio
     guard let packageVersionLine = lines.first(where: { $0.starts(with: "version:") }) else {
       throw ConfigurationError.invalidFormat("No package version line found in pubspec.yaml")
     }
-    var packageVersion = packageVersionLine.split(separator: ":")[1].trimmingCharacters(in: .whitespaces)
+    var packageVersion = packageVersionLine.split(separator: ":")[1]
+      .trimmingCharacters(in: .whitespaces)
       .replacingOccurrences(of: "+", with: "-")
     packageVersion = packageVersion.replacingOccurrences(of: "^", with: "")
 
     guard let firebaseCoreVersionLine = lines.first(where: { $0.contains("firebase_core:") }) else {
-      throw ConfigurationError.invalidFormat("No firebase_core dependency version line found in pubspec.yaml")
+      throw ConfigurationError
+        .invalidFormat("No firebase_core dependency version line found in pubspec.yaml")
     }
-    var firebaseCoreVersion = firebaseCoreVersionLine.split(separator: ":")[1].trimmingCharacters(in: .whitespaces)
+    var firebaseCoreVersion = firebaseCoreVersionLine.split(separator: ":")[1]
+      .trimmingCharacters(in: .whitespaces)
     firebaseCoreVersion = firebaseCoreVersion.replacingOccurrences(of: "^", with: "")
 
     return (packageVersion, firebaseCoreVersion)
