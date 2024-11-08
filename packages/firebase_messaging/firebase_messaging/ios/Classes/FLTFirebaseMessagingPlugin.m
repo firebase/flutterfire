@@ -34,6 +34,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
   NSString *_initialNotificationID;
   NSString *_notificationOpenedAppID;
+  NSString *_foregroundUniqueIdentifier;
 
 #ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
   API_AVAILABLE(ios(10), macosx(10.14))
@@ -314,10 +315,17 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
              (void (^)(UNNotificationPresentationOptions options))completionHandler
     API_AVAILABLE(macos(10.14), ios(10.0)) {
   // We only want to handle FCM notifications.
-  if (notification.request.content.userInfo[@"gcm.message_id"]) {
+
+  // FIX - bug on iOS 18 which results in duplicate foreground notifications posted
+  // See this Apple issue: https://forums.developer.apple.com/forums/thread/761597
+  // when it has been resolved, "_foregroundUniqueIdentifier" can be removed (i.e. the commit for
+  // this fix)
+  NSString *notificationIdentifier = notification.request.identifier;
+
+  if (notification.request.content.userInfo[@"gcm.message_id"] &&
+      ![notificationIdentifier isEqualToString:_foregroundUniqueIdentifier]) {
     NSDictionary *notificationDict =
         [FLTFirebaseMessagingPlugin NSDictionaryFromUNNotification:notification];
-
     [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
   }
 
@@ -344,6 +352,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     }
     completionHandler(presentationOptions);
   }
+  _foregroundUniqueIdentifier = notificationIdentifier;
 }
 
 // Called when a user interacts with a notification.

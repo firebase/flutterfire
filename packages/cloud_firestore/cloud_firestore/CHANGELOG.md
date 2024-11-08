@@ -1,3 +1,7 @@
+## 5.4.5
+
+ - Update a dependency to the latest release.
+
 ## 5.4.4
 
  - **FIX**(cloud_firestore): remove single whereIn filter assertion ([#13436](https://github.com/firebase/flutterfire/issues/13436)). ([d770aa6a](https://github.com/firebase/flutterfire/commit/d770aa6a2616ed0535bbc2fbd2e9645da9ad18cd))
