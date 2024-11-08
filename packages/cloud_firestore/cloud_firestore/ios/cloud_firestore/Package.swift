@@ -21,77 +21,35 @@ func loadFirebaseSDKVersion() throws -> String {
   let firebaseCoreScriptPath = NSString.path(withComponents: [
     firestoreDirectory,
     "..",
-    "..",
-    "..",
-    "..",
-    "firebase_core",
-    "firebase_core",
-    "ios",
-    "firebase_sdk_version.rb",
+    "generated_firebase_sdk_version.txt",
   ])
-  do {
-    let content = try String(contentsOfFile: firebaseCoreScriptPath, encoding: .utf8)
-    let pattern = #"def firebase_sdk_version!\(\)\n\s+'([^']+)'\nend"#
-    if let regex = try? NSRegularExpression(pattern: pattern, options: []),
-       let match = regex.firstMatch(
-         in: content,
-         range: NSRange(content.startIndex..., in: content)
-       ) {
-      if let versionRange = Range(match.range(at: 1), in: content) {
-        return String(content[versionRange])
-      } else {
-        throw ConfigurationError.invalidFormat("Invalid format in firebase_sdk_version.rb")
-      }
-    } else {
-      throw ConfigurationError.parsingError("No match found in firebase_sdk_version.rb")
-    }
+    do {
+    let version = try String(contentsOfFile: firebaseCoreScriptPath, encoding: .utf8).trimmingCharacters(in: .whitespacesAndNewlines)
+    return version
   } catch {
     throw ConfigurationError
-      .fileNotFound("Error loading or parsing firebase_sdk_version.rb: \(error)")
+      .fileNotFound("Error loading or parsing generated_firebase_sdk_version.txt: \(error)")
   }
 }
 
-func loadFirebaseCoreVersion() throws -> String {
-  let firebaseCorePubspecPath = NSString.path(withComponents: [
-    firestoreDirectory,
-    "..",
-    "..",
-    "..",
-    "..",
-    "firebase_core",
-    "firebase_core",
-    "pubspec.yaml",
-  ])
-  do {
-    let yamlString = try String(contentsOfFile: firebaseCorePubspecPath, encoding: .utf8)
-    let lines = yamlString.split(separator: "\n")
-
-    guard let versionLine = lines.first(where: { $0.starts(with: "version:") }) else {
-      throw ConfigurationError.invalidFormat("No version line found in pubspec.yaml")
-    }
-    let libraryVersion = versionLine.split(separator: ":")[1].trimmingCharacters(in: .whitespaces)
-      .replacingOccurrences(of: "+", with: "-")
-
-    return libraryVersion
-  } catch {
-    throw ConfigurationError
-      .fileNotFound("Error loading or parsing firebase_core pubspec.yaml: \(error)")
-  }
-}
-
-func loadPubspecVersion() throws -> String {
+func loadPubspecVersions() throws -> (packageVersion: String, firebaseCoreVersion: String) {
   let pubspecPath = NSString.path(withComponents: [firestoreDirectory, "..", "..", "pubspec.yaml"])
   do {
     let yamlString = try String(contentsOfFile: pubspecPath, encoding: .utf8)
     let lines = yamlString.split(separator: "\n")
 
-    guard let versionLine = lines.first(where: { $0.starts(with: "version:") }) else {
-      throw ConfigurationError.invalidFormat("No version line found in pubspec.yaml")
+    guard let packageVersionLine = lines.first(where: { $0.starts(with: "version:") }) else {
+      throw ConfigurationError.invalidFormat("No package version line found in pubspec.yaml")
     }
-    let libraryVersion = versionLine.split(separator: ":")[1].trimmingCharacters(in: .whitespaces)
+    let packageVersion = packageVersionLine.split(separator: ":")[1].trimmingCharacters(in: .whitespaces)
       .replacingOccurrences(of: "+", with: "-")
 
-    return libraryVersion
+    guard let firebaseCoreVersionLine = lines.first(where: { $0.contains("firebase_core:") }) else {
+      throw ConfigurationError.invalidFormat("No firebase_core dependency version line found in pubspec.yaml")
+    }
+    let firebaseCoreVersion = firebaseCoreVersionLine.split(separator: ":")[1].trimmingCharacters(in: .whitespaces)
+
+    return (packageVersion, firebaseCoreVersion)
   } catch {
     throw ConfigurationError.fileNotFound("Error loading or parsing pubspec.yaml: \(error)")
   }
@@ -103,9 +61,9 @@ let firebase_core_version_string: String
 let shared_spm_tag = "-firebase-core-swift"
 
 do {
-  library_version = try loadPubspecVersion()
+  library_version = try loadPubspecVersions().packageVersion
   firebase_sdk_version_string = try loadFirebaseSDKVersion()
-  firebase_core_version_string = try loadFirebaseCoreVersion()
+  firebase_core_version_string = try loadPubspecVersions().firebaseCoreVersion
 } catch {
   fatalError("Failed to load configuration: \(error)")
 }
@@ -114,8 +72,6 @@ guard let firebase_sdk_version = Version(firebase_sdk_version_string) else {
   fatalError("Invalid Firebase SDK version: \(firebase_sdk_version_string)")
 }
 
-// TODO: - we can try using existing firebase_core tag once flutterfire/Package.swift is part of release cycle
-// but I don't think it'll work as Swift versioning requires version-[tag name]
 guard let shared_spm_version = Version("\(firebase_core_version_string)\(shared_spm_tag)") else {
   fatalError("Invalid firebase_core version: \(firebase_core_version_string)\(shared_spm_tag)")
 }
