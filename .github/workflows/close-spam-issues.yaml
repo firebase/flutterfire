@@ -14,7 +14,7 @@ jobs:
         with:
           script: |
             // ADD SPAM USERS TO THIS LIST
-            const spamUsers = ['Krakensu'];
+            const spamUsers = ['Krakensu', 'Botakjelek', 'pemainlama', 'imyourmanposs', 'clav-code', 'sarahagus', 'teisanilan', 'jagat3131', 'sorenmoren6', 'SDGTAL', 'jedaymc', 'eztillieiium', 'danasatria89', 'puput212306'];
             const issueCreator = context.payload.issue ? context.payload.issue.user.login : null;
             async function closeSpamIssues() {
               const issues = await github.paginate(github.rest.issues.listForRepo, {
@@ -26,21 +26,20 @@ jobs:
               for (const issue of issues) {
                 const issueCreator = issue.user.login;
                 if (spamUsers.includes(issueCreator)) {
-                  console.log('issue creator:', issueCreator);
-                  // TEST THIS LOGIC WORKS FIRST
-                  // await github.rest.issues.update({
-                  //   owner: context.repo.owner,
-                  //   repo: context.repo.repo,
-                  //   issue_number: issue.number,
-                  //   state: 'closed'
-                  // });
 
-                  // await github.rest.issues.addLabels({
-                  //   owner: context.repo.owner,
-                  //   repo: context.repo.repo,
-                  //   issue_number: issue.number,
-                  //   labels: ['resolution: invalid', 'platform: all']
-                  // });
+                  await github.rest.issues.update({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: issue.number,
+                    state: 'closed'
+                  });
+
+                  await github.rest.issues.addLabels({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: issue.number,
+                    labels: ['resolution: invalid', 'platform: all']
+                  });
 
                   console.log(`Closed issue #${issue.number} created by spam user: ${issueCreator} and added labels.`);
                 }
