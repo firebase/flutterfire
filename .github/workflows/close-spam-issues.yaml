@@ -1,0 +1,50 @@
+name: Close Spam Issues
+
+on:
+  schedule:
+    - cron: '*/20 * * * *'  # Runs every 20 minutes
+  workflow_dispatch: 
+
+jobs:
+  close_spam_issues:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check and Close Spam Issues
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // ADD SPAM USERS TO THIS LIST
+            const spamUsers = ['Krakensu'];
+            const issueCreator = context.payload.issue.user.login;
+            async function closeSpamIssues() {
+              const issues = await github.paginate(github.rest.issues.listForRepo, {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open'
+              });
+
+              for (const issue of issues) {
+                const issueCreator = issue.user.login;
+                if (spamUsers.includes(issueCreator)) {
+                  console.log('issue creator:', issueCreator);
+                  // TEST THIS LOGIC WORKS FIRST
+                  // await github.rest.issues.update({
+                  //   owner: context.repo.owner,
+                  //   repo: context.repo.repo,
+                  //   issue_number: issue.number,
+                  //   state: 'closed'
+                  // });
+
+                  // await github.rest.issues.addLabels({
+                  //   owner: context.repo.owner,
+                  //   repo: context.repo.repo,
+                  //   issue_number: issue.number,
+                  //   labels: ['resolution: invalid', 'platform: all']
+                  // });
+
+                  console.log(`Closed issue #${issue.number} created by spam user: ${issueCreator} and added labels.`);
+                }
+              }
+            }
+
+            closeSpamIssues();
