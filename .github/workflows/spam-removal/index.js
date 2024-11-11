@@ -1,6 +1,6 @@
-import { Octokit } from "@octokit/rest";
-import { context } from "@actions/github";
-import {franc} from "franc-min";
+import { Octokit } from '@octokit/rest';
+import { context } from '@actions/github';
+import { franc } from 'franc-min';
 
 const spamWords = ['pemain'];
 
@@ -10,7 +10,7 @@ async function closeSpamIssues() {
   const issues = await octokit.paginate(octokit.rest.issues.listForRepo, {
     owner: context.repo.owner,
     repo: context.repo.repo,
-    state: 'open'
+    state: 'open',
   });
 
   for (const issue of issues) {
@@ -18,34 +18,36 @@ async function closeSpamIssues() {
     const issueContent = `${issue.title} ${issue.body || ''}`;
     const detectedLanguage = franc(issueContent);
 
-    const spam = spamWords.find((word)=> {
+    const spam = spamWords.find((word) => {
       const wordWithSpace = ` ${word} `;
 
-      if(issueContent.includes(wordWithSpace)) return true;
+      if (issueContent.includes(wordWithSpace)) return true;
 
       return false;
-    })
+    });
 
     if (spam || detectedLanguage === 'ind') {
       await octokit.rest.issues.update({
         owner: context.repo.owner,
         repo: context.repo.repo,
         issue_number: issue.number,
-        state: 'closed'
+        state: 'closed',
       });
 
       await octokit.rest.issues.addLabels({
         owner: context.repo.owner,
         repo: context.repo.repo,
         issue_number: issue.number,
-        labels: ['resolution: invalid', 'platform: all']
+        labels: ['resolution: invalid', 'platform: all'],
       });
 
-      console.log(`Closed issue #${issue.number} created by spam user: ${issueCreator} or detected as Indonesian language and added labels.`);
+      console.log(
+        `Closed issue #${issue.number} created by spam user: ${issueCreator} or detected as Indonesian language and added labels.`
+      );
     }
   }
 }
 
-closeSpamIssues().then(()=> {
-  console.log('Successfully ran spam issue clean up')
-})
+closeSpamIssues().then(() => {
+  console.log('Successfully ran spam issue clean up');
+});
