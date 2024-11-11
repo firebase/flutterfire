@@ -12,6 +12,7 @@ jobs:
       - name: Check and Close Spam Issues
         uses: actions/github-script@v7
         with:
+          github-token: ${{ secrets.GH_TOKEN }}
           script: |
             // ADD SPAM USERS TO THIS LIST
             const spamUsers = ['Krakensu', 'Botakjelek', 'pemainlama', 'imyourmanposs', 'clav-code', 'sarahagus', 'teisanilan', 'jagat3131', 'sorenmoren6', 'SDGTAL', 'jedaymc', 'eztillieiium', 'danasatria89', 'puput212306'];
