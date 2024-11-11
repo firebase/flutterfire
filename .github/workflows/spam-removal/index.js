@@ -1,6 +1,6 @@
 import { Octokit } from "@octokit/rest";
 import { context } from "@actions/github";
-import franc from "franc-min";
+import {franc} from "franc-min";
 
 const spamUsers = ['Krakensu', 'Botakjelek', 'pemainlama', 'imyourmanposs', 'clav-code', 'sarahagus', 'teisanilan', 'jagat3131', 'sorenmoren6', 'SDGTAL', 'jedaymc', 'eztillieiium', 'danasatria89', 'puput212306'];
 
