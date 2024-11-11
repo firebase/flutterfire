@@ -18,6 +18,10 @@ async function closeSpamIssues() {
     const issueContent = `${issue.title} ${issue.body || ''}`;
     const detectedLanguage = franc(issueContent);
 
+    if(issue.number === 15818){
+      console.log('IIIIIIII: ', issueContent);
+    }
+
     if (spamWords.includes(issueContent) || detectedLanguage === 'ind') {
       // await octokit.rest.issues.update({
       //   owner: context.repo.owner,
