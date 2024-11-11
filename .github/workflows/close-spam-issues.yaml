@@ -11,6 +11,8 @@ jobs:
     defaults:
       run:
         working-directory: .github/workflows/spam-removal
+    permissions:
+      issues: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2

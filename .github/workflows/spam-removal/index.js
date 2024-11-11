@@ -38,4 +38,6 @@ async function closeSpamIssues() {
   }
 }
 
-closeSpamIssues().catch(error => console.error(error));
+closeSpamIssues().then(()=> {
+  console.log('Successfully ran spam issue clean up')
+})
