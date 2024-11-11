@@ -3,7 +3,7 @@ name: Close Spam Issues
 on:
   schedule:
     - cron: '*/20 * * * *'  # Runs every 20 minutes
-  workflow_dispatch: 
+  workflow_dispatch:
 
 jobs:
   close_spam_issues:
@@ -15,7 +15,7 @@ jobs:
           script: |
             // ADD SPAM USERS TO THIS LIST
             const spamUsers = ['Krakensu'];
-            const issueCreator = context.payload.issue.user.login;
+            const issueCreator = context.payload.issue ? context.payload.issue.user.login : null;
             async function closeSpamIssues() {
               const issues = await github.paginate(github.rest.issues.listForRepo, {
                 owner: context.repo.owner,
