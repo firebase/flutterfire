@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@actions/github": "^6.0.0",
+    "@octokit/rest": "^21.0.2",
+    "franc-min": "^6.2.0"
+  }
+}
