@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "dependencies": {
     "@actions/github": "^6.0.0",
     "@octokit/rest": "^21.0.2",
