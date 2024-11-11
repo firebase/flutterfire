@@ -1,7 +1,6 @@
-// close-spam-issues.js
-const { Octokit } = require("@octokit/rest");
-const { context } = require("@actions/github");
-const franc = require("franc-min");
+import { Octokit } from "@octokit/rest";
+import { context } from "@actions/github";
+import franc from "franc-min";
 
 const spamUsers = ['Krakensu', 'Botakjelek', 'pemainlama', 'imyourmanposs', 'clav-code', 'sarahagus', 'teisanilan', 'jagat3131', 'sorenmoren6', 'SDGTAL', 'jedaymc', 'eztillieiium', 'danasatria89', 'puput212306'];
 
