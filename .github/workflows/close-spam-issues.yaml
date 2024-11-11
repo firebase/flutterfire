@@ -8,43 +8,19 @@ on:
 jobs:
   close_spam_issues:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .github/workflows/spam-removal
+    permissions:
+      issues: write
     steps:
-      - name: Check and Close Spam Issues
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.GH_TOKEN }}
-          script: |
-            // ADD SPAM USERS TO THIS LIST
-            const spamUsers = ['Krakensu', 'Botakjelek', 'pemainlama', 'imyourmanposs', 'clav-code', 'sarahagus', 'teisanilan', 'jagat3131', 'sorenmoren6', 'SDGTAL', 'jedaymc', 'eztillieiium', 'danasatria89', 'puput212306'];
-            const issueCreator = context.payload.issue ? context.payload.issue.user.login : null;
-            async function closeSpamIssues() {
-              const issues = await github.paginate(github.rest.issues.listForRepo, {
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                state: 'open'
-              });
-
-              for (const issue of issues) {
-                const issueCreator = issue.user.login;
-                if (spamUsers.includes(issueCreator)) {
-
-                  await github.rest.issues.update({
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    issue_number: issue.number,
-                    state: 'closed'
-                  });
-
-                  await github.rest.issues.addLabels({
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    issue_number: issue.number,
-                    labels: ['resolution: invalid', 'platform: all']
-                  });
-
-                  console.log(`Closed issue #${issue.number} created by spam user: ${issueCreator} and added labels.`);
-                }
-              }
-            }
-
-            closeSpamIssues();
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+      - name: Install dependencies
+        run: npm install
+      - name: Run close spam issues script
+        run: node index.js
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
