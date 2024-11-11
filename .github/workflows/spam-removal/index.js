@@ -22,7 +22,15 @@ async function closeSpamIssues() {
       console.log('IIIIIIII: ', issueContent);
     }
 
-    if (spamWords.includes(issueContent) || detectedLanguage === 'ind') {
+    const spam = spamWords.find((word)=> {
+      const wordWithSpace = ` ${word} `;
+
+      if(issueContent.includes(wordWithSpace)) return true;
+
+      return false;
+    })
+
+    if (spam || detectedLanguage === 'ind') {
       // await octokit.rest.issues.update({
       //   owner: context.repo.owner,
       //   repo: context.repo.repo,
