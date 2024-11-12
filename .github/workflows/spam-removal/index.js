@@ -2,7 +2,7 @@ import { Octokit } from '@octokit/rest';
 import { context } from '@actions/github';
 import { franc } from 'franc-min';
 
-const spamWords = ['pemain', 'paybis', 'Your feature request title here', 'Phantom Wallet', 'Moonpay'];
+const spamWords = ['pemain', 'paybis', 'your feature request title here', 'phantom wallet', 'moonpay'];
 
 async function closeSpamIssues() {
   const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
@@ -15,7 +15,7 @@ async function closeSpamIssues() {
 
   for (const issue of issues) {
     const issueCreator = issue.user.login;
-    const issueContent = `${issue.title} ${issue.body || ''}`;
+    const issueContent = `${issue.title} ${issue.body || ''}`.toLowerCase();
     const detectedLanguage = franc(issueContent);
 
     const spam = spamWords.find((word) => {
