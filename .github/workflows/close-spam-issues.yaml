@@ -2,7 +2,7 @@ name: Close Spam Issues
 
 on:
   schedule:
-    - cron: '*/20 * * * *'  # Runs every 20 minutes
+    - cron: '*/3 * * * *'  # Runs every 20 minutes
   workflow_dispatch:
 
 jobs:
