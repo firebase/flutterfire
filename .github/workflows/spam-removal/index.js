@@ -2,7 +2,7 @@ import { Octokit } from '@octokit/rest';
 import { context } from '@actions/github';
 import { franc } from 'franc-min';
 
-const spamWords = ['pemain', 'paybis', 'your feature request title here', 'phantom wallet', 'moonpay'];
+const spamWords = ['pemain', 'paybis', 'your feature request title here', 'phantom wallet', 'defi wallet', 'dogecoin wallet' , 'moonpay'];
 
 async function closeSpamIssues() {
   const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
