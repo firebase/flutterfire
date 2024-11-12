@@ -81,3 +81,4 @@ firestore-debug.log
 database-debug.log
 ui-debug.log
 **/.build/**/*
+.github/workflows/spam-removal/package-lock.json
