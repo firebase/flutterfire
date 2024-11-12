@@ -4,6 +4,8 @@ import { franc } from 'franc-min';
 
 const spamWords = [
   'pemain',
+  'dan', // "and" in indonesian
+  'wallet wallet',
   'paybis',
   'blockchain',
   'your feature request title here',
