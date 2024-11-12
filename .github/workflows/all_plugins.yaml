@@ -137,7 +137,7 @@ jobs:
       - name: 'Swift Integration Setup'
         run: flutter config --enable-swift-package-manager
       - name: 'Build Apps with Swift Package Manager'
-        run: ./.github/workflows/scripts/swift-integration.sh
+        run: dart ./.github/workflows/scripts/swift-integration.dart
 
   test:
     runs-on: ubuntu-latest

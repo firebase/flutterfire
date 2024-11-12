@@ -14,31 +14,17 @@ enum ConfigurationError: Error {
   case invalidFormat(String)
 }
 
-let macosRootDirectory = String(URL(string: #file)!.deletingLastPathComponent().absoluteString
+let firestoreDirectory = String(URL(string: #file)!.deletingLastPathComponent().absoluteString
   .dropLast())
-
-func loadPubspecVersion() throws -> String {
-  let pubspecPath = NSString.path(withComponents: [macosRootDirectory, "..", "..", "pubspec.yaml"])
-  do {
-    let yamlString = try String(contentsOfFile: pubspecPath, encoding: .utf8)
-    if let versionLine = yamlString.split(separator: "\n")
-      .first(where: { $0.starts(with: "version:") }) {
-      let version = versionLine.split(separator: ":")[1].trimmingCharacters(in: .whitespaces)
-      return version.replacingOccurrences(of: "+", with: "-")
-    } else {
-      throw ConfigurationError.invalidFormat("No version line found in pubspec.yaml")
-    }
-  } catch {
-    throw ConfigurationError.fileNotFound("Error loading or parsing pubspec.yaml: \(error)")
-  }
-}
 
 func loadFirebaseSDKVersion() throws -> String {
   let firebaseCoreScriptPath = NSString.path(withComponents: [
-    macosRootDirectory,
+    firestoreDirectory,
     "..",
     "..",
     "..",
+    "..",
+    "firebase_core",
     "firebase_core",
     "ios",
     "firebase_sdk_version.rb",
@@ -65,13 +51,61 @@ func loadFirebaseSDKVersion() throws -> String {
   }
 }
 
-let library_version_string: String
+func loadFirebaseCoreVersion() throws -> String {
+  let firebaseCorePubspecPath = NSString.path(withComponents: [
+    firestoreDirectory,
+    "..",
+    "..",
+    "..",
+    "..",
+    "firebase_core",
+    "firebase_core",
+    "pubspec.yaml",
+  ])
+  do {
+    let yamlString = try String(contentsOfFile: firebaseCorePubspecPath, encoding: .utf8)
+    let lines = yamlString.split(separator: "\n")
+
+    guard let versionLine = lines.first(where: { $0.starts(with: "version:") }) else {
+      throw ConfigurationError.invalidFormat("No version line found in pubspec.yaml")
+    }
+    let libraryVersion = versionLine.split(separator: ":")[1].trimmingCharacters(in: .whitespaces)
+      .replacingOccurrences(of: "+", with: "-")
+
+    return libraryVersion
+  } catch {
+    throw ConfigurationError
+      .fileNotFound("Error loading or parsing firebase_core pubspec.yaml: \(error)")
+  }
+}
+
+func loadPubspecVersion() throws -> String {
+  let pubspecPath = NSString.path(withComponents: [firestoreDirectory, "..", "..", "pubspec.yaml"])
+  do {
+    let yamlString = try String(contentsOfFile: pubspecPath, encoding: .utf8)
+    let lines = yamlString.split(separator: "\n")
+
+    guard let versionLine = lines.first(where: { $0.starts(with: "version:") }) else {
+      throw ConfigurationError.invalidFormat("No version line found in pubspec.yaml")
+    }
+    let libraryVersion = versionLine.split(separator: ":")[1].trimmingCharacters(in: .whitespaces)
+      .replacingOccurrences(of: "+", with: "-")
+
+    return libraryVersion
+  } catch {
+    throw ConfigurationError.fileNotFound("Error loading or parsing pubspec.yaml: \(error)")
+  }
+}
+
+let library_version: String
 let firebase_sdk_version_string: String
+let firebase_core_version_string: String
 let shared_spm_tag = "-firebase-core-swift"
 
 do {
-  library_version_string = try loadPubspecVersion()
+  library_version = try loadPubspecVersion()
   firebase_sdk_version_string = try loadFirebaseSDKVersion()
+  firebase_core_version_string = try loadFirebaseCoreVersion()
 } catch {
   fatalError("Failed to load configuration: \(error)")
 }
@@ -82,17 +116,17 @@ guard let firebase_sdk_version = Version(firebase_sdk_version_string) else {
 
 // TODO: - we can try using existing firebase_core tag once flutterfire/Package.swift is part of release cycle
 // but I don't think it'll work as Swift versioning requires version-[tag name]
-guard let shared_spm_version = Version("\(library_version_string)\(shared_spm_tag)") else {
-  fatalError("Invalid firebase_core version: \(library_version_string)\(shared_spm_tag)")
+guard let shared_spm_version = Version("\(firebase_core_version_string)\(shared_spm_tag)") else {
+  fatalError("Invalid firebase_core version: \(firebase_core_version_string)\(shared_spm_tag)")
 }
 
 let package = Package(
-  name: "firebase_core",
+  name: "cloud_firestore",
   platforms: [
     .macOS("10.15"),
   ],
   products: [
-    .library(name: "firebase-core", targets: ["firebase_core"]),
+    .library(name: "cloud-firestore", targets: ["cloud_firestore"]),
   ],
   dependencies: [
     .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version),
@@ -100,26 +134,20 @@ let package = Package(
   ],
   targets: [
     .target(
-      name: "firebase_core",
+      name: "cloud_firestore",
       dependencies: [
-        // No product for firebase-core so we pull in the smallest one
-        .product(name: "FirebaseInstallations", package: "firebase-ios-sdk"),
+        .product(name: "FirebaseFirestore", package: "firebase-ios-sdk"),
+        // Wrapper dependency
         .product(name: "firebase-core-shared", package: "flutterfire"),
-      ],
-      exclude: [
-        // These are now pulled in as a remote dependency from FlutterFire repo
-        "FLTFirebasePlugin.m",
-        "FLTFirebasePluginRegistry.m",
-        "include/firebase_core/FLTFirebasePlugin.h",
-        "include/firebase_core/FLTFirebasePluginRegistry.h",
       ],
       resources: [
         .process("Resources"),
       ],
       cSettings: [
-        .headerSearchPath("include/firebase_core"),
-        .define("LIBRARY_VERSION", to: "\"\(library_version_string)\""),
-        .define("LIBRARY_NAME", to: "\"flutter-fire-core\""),
+        .headerSearchPath("include/cloud_firestore/Private"),
+        .headerSearchPath("include/cloud_firestore/Public"),
+        .define("LIBRARY_VERSION", to: "\"\(library_version)\""),
+        .define("LIBRARY_NAME", to: "\"flutter-fire-fst\""),
       ]
     ),
   ]

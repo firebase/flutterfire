@@ -19,6 +19,7 @@ command:
       preCommit: |
         dart run scripts/generate_vertexai_version.dart && \
         dart run scripts/generate_dataconnect_version.dart && \
+        dart run scripts/generate_ios_sdk_version_txt_spm && \
         git add packages/firebase_vertexai/firebase_vertexai/lib/src/vertex_version.dart && \
         git add packages/firebase_data_connect/firebase_data_connect/lib/src/dataconnect_version.dart
       post: |
