@@ -10,6 +10,8 @@ const spamWords = [
   'paybis',
   'blockchain',
   'your feature request title here',
+  'documentation feedback title',
+  'official contact number',
   'phantom wallet',
   'defi wallet',
   'dogecoin',
