@@ -74,7 +74,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
       writeDouble(stream, ((GeoPoint) value).getLongitude());
     } else if (value instanceof VectorValue) {
       stream.write(DATA_TYPE_VECTOR_VALUE);
-      writeValue(stream, ((VectorValue) value).getInternalValue());
+      writeValue(stream, ((VectorValue) value).toArray());
     } else if (value instanceof DocumentReference) {
       stream.write(DATA_TYPE_DOCUMENT_REFERENCE);
       FirebaseFirestore firestore = ((DocumentReference) value).getFirestore();
