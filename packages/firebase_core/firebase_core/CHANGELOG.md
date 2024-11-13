@@ -1,3 +1,7 @@
+## 3.8.0
+
+ - **FEAT**(firestore): Swift Package Manager support ([#13329](https://github.com/firebase/flutterfire/issues/13329)). ([0420eabb](https://github.com/firebase/flutterfire/commit/0420eabb3ab247e0e3998bedcb9779fe35c46920))
+
 ## 3.7.0
 
  - **FIX**(core,ios): ensure iOS SDK version can be found from Package.swift ([#13804](https://github.com/firebase/flutterfire/issues/13804)). ([83f4dad6](https://github.com/firebase/flutterfire/commit/83f4dad65aae08e2979d009b03e9adb4ca907df7))
