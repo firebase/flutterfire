@@ -1,3 +1,7 @@
+## 15.1.5
+
+ - Update a dependency to the latest release.
+
 ## 15.1.4
 
  - **FIX**(messaging,ios): foreground notification appears twice on iOS 18 ([#13572](https://github.com/firebase/flutterfire/issues/13572)). ([ae0197f6](https://github.com/firebase/flutterfire/commit/ae0197f6dbb5a84ce004080953b5ab4d4e485b53))

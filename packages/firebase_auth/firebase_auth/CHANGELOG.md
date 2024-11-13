@@ -1,3 +1,7 @@
+## 5.3.3
+
+ - Update a dependency to the latest release.
+
 ## 5.3.2
 
  - **FIX**(auth,apple): set nullability on pigeon parser method ([#13571](https://github.com/firebase/flutterfire/issues/13571)). ([7e8a1b2e](https://github.com/firebase/flutterfire/commit/7e8a1b2e5be454b168d942056c4abb7f8e92a9a8))

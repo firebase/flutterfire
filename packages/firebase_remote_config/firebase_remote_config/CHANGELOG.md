@@ -1,3 +1,7 @@
+## 5.1.5
+
+ - Update a dependency to the latest release.
+
 ## 5.1.4
 
  - **FIX**(remote_config,android): remove invalid map key from Remote Config teardown ([#13514](https://github.com/firebase/flutterfire/issues/13514)). ([d958f2a6](https://github.com/firebase/flutterfire/commit/d958f2a66a3a824b44974193e8d54a597a122fcc))
