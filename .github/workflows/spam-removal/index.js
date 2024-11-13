@@ -39,7 +39,7 @@ async function closeSpamIssues() {
       if (Array.isArray(wordOrArray)) {
         return wordOrArray.every((word) => issueContent.includes(word));
       } else {
-        const wordWithSpace = ` ${word} `;
+        const wordWithSpace = ` ${wordOrArray} `;
 
         return issueContent.includes(wordWithSpace);
       }
