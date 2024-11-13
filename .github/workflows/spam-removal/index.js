@@ -18,6 +18,7 @@ const spamWords = [
   'crypto.com',
   'moonpay',
   'coinmama',
+  ['wallet', 'support'],
 ];
 
 async function closeSpamIssues() {
@@ -34,28 +35,30 @@ async function closeSpamIssues() {
     const issueContent = `${issue.title} ${issue.body || ''}`.toLowerCase();
     const detectedLanguage = franc(issueContent);
 
-    const spam = spamWords.find((word) => {
-      const wordWithSpace = ` ${word} `;
+    const spam = spamWords.find((wordOrArray) => {
+      if (Array.isArray(wordOrArray)) {
+        return wordOrArray.every((word) => issueContent.includes(word));
+      } else {
+        const wordWithSpace = ` ${word} `;
 
-      if (issueContent.includes(wordWithSpace)) return true;
-
-      return false;
+        return issueContent.includes(wordWithSpace);
+      }
     });
 
     if (spam || detectedLanguage === 'ind') {
-      await octokit.rest.issues.update({
-        owner: context.repo.owner,
-        repo: context.repo.repo,
-        issue_number: issue.number,
-        state: 'closed',
-      });
+      // await octokit.rest.issues.update({
+      //   owner: context.repo.owner,
+      //   repo: context.repo.repo,
+      //   issue_number: issue.number,
+      //   state: 'closed',
+      // });
 
-      await octokit.rest.issues.addLabels({
-        owner: context.repo.owner,
-        repo: context.repo.repo,
-        issue_number: issue.number,
-        labels: ['resolution: invalid', 'platform: all'],
-      });
+      // await octokit.rest.issues.addLabels({
+      //   owner: context.repo.owner,
+      //   repo: context.repo.repo,
+      //   issue_number: issue.number,
+      //   labels: ['resolution: invalid', 'platform: all'],
+      // });
 
       console.log(
         `Closed issue #${issue.number} created by spam user: ${issueCreator} or detected as Indonesian language and added labels.`
