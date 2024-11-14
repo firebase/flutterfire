@@ -156,10 +156,12 @@ void setupDatabaseReferenceTests() {
         final FirebaseDatabase database = FirebaseDatabase.instance;
         final DatabaseReference ref = database.ref('permission-denied');
         final Completer<FirebaseException> errorReceived =
-        Completer<FirebaseException>();
-        await ref.runTransaction((value) => Transaction.success(1)).then((result) {
+            Completer<FirebaseException>();
+        await ref
+            .runTransaction((value) => Transaction.success(1))
+            .then((result) {
           // No-op
-        }).catchError((e){
+        }).catchError((e) {
           errorReceived.complete(e as FirebaseException);
         });
 

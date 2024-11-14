@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library firebase_dynamic_links_platform_interface;
-
 export 'src/platform_interface/platform_interface_firebase_dynamic_links.dart';
 export 'src/pending_dynamic_link_data.dart';
 export 'src/pending_dynamic_link_data_android.dart';

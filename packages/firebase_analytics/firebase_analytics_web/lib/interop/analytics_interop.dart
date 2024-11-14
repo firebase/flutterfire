@@ -5,7 +5,7 @@
 // ignore_for_file: avoid_unused_constructor_parameters, non_constant_identifier_names, public_member_api_docs
 
 @JS('firebase_analytics')
-library firebase_interop.analytics;
+library;
 
 import 'dart:js_interop';
 

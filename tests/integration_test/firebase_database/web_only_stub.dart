@@ -3,5 +3,4 @@
 // found in the LICENSE file.
 
 /// Used for non web platforms
-void setupWebOnlyTests() {
-}
+void setupWebOnlyTests() {}

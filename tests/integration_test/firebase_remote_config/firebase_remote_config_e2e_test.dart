@@ -148,7 +148,8 @@ void main() {
         // We test this to be sure that the behaviour is consistent across
         // platforms.
         expect(FirebaseRemoteConfig.instance.getString('does-not-exist'), '');
-        expect(FirebaseRemoteConfig.instance.getBool('does-not-exist'), isFalse);
+        expect(
+            FirebaseRemoteConfig.instance.getBool('does-not-exist'), isFalse);
         expect(FirebaseRemoteConfig.instance.getInt('does-not-exist'), 0);
         expect(FirebaseRemoteConfig.instance.getDouble('does-not-exist'), 0.0);
       });
