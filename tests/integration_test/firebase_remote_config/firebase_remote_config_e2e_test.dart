@@ -149,7 +149,9 @@ void main() {
         // platforms.
         expect(FirebaseRemoteConfig.instance.getString('does-not-exist'), '');
         expect(
-            FirebaseRemoteConfig.instance.getBool('does-not-exist'), isFalse);
+          FirebaseRemoteConfig.instance.getBool('does-not-exist'),
+          isFalse,
+        );
         expect(FirebaseRemoteConfig.instance.getInt('does-not-exist'), 0);
         expect(FirebaseRemoteConfig.instance.getDouble('does-not-exist'), 0.0);
       });
