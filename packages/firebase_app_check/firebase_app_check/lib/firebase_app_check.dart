@@ -3,8 +3,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-library;
-
 import 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
