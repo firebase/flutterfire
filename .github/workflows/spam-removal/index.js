@@ -19,6 +19,7 @@ const spamWords = [
   'moonpay',
   'coinmama',
   ['wallet', 'support'],
+  ['contact', 'support', 'number'],
 ];
 
 async function closeSpamIssues() {
@@ -51,6 +52,8 @@ async function closeSpamIssues() {
         repo: context.repo.repo,
         issue_number: issue.number,
         state: 'closed',
+        title: 'Spam',
+        body: 'This issue was filtered as spam.',
       });
 
       await octokit.rest.issues.addLabels({
