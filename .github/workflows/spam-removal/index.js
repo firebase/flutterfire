@@ -47,21 +47,21 @@ async function closeSpamIssues() {
     });
 
     if (spam || detectedLanguage === 'ind') {
-      // await octokit.rest.issues.update({
-      //   owner: context.repo.owner,
-      //   repo: context.repo.repo,
-      //   issue_number: issue.number,
-      //   state: 'closed',
-      //   title: 'Spam',
-      //   body: 'This issue was filtered as spam.',
-      // });
+      await octokit.rest.issues.update({
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        issue_number: issue.number,
+        state: 'closed',
+        title: 'Spam',
+        body: 'This issue was filtered as spam.',
+      });
 
-      // await octokit.rest.issues.addLabels({
-      //   owner: context.repo.owner,
-      //   repo: context.repo.repo,
-      //   issue_number: issue.number,
-      //   labels: ['resolution: invalid', 'platform: all'],
-      // });
+      await octokit.rest.issues.addLabels({
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        issue_number: issue.number,
+        labels: ['resolution: invalid', 'platform: all'],
+      });
 
       console.log(
         `Closed issue #${issue.number} created by spam user: ${issueCreator} or detected as Indonesian language and added labels.`
