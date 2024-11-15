@@ -19,6 +19,7 @@ import 'package:firebase_core_platform_interface/firebase_core_platform_interfac
 import 'package:firebase_data_connect/src/common/common_library.dart';
 import 'package:firebase_data_connect/src/core/ref.dart';
 import 'package:flutter/foundation.dart';
+
 import './network/transport_library.dart'
     if (dart.library.io) './network/grpc_library.dart'
     if (dart.library.html) './network/rest_library.dart';
@@ -41,7 +42,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
         super(app.name, 'plugins.flutter.io/firebase_data_connect') {
     _queryManager = QueryManager(this);
     if (sdkType != null) {
-      this._sdkType = sdkType;
+      _sdkType = sdkType;
     }
   }
 

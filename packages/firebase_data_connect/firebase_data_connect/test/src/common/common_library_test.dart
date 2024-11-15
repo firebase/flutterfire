@@ -27,12 +27,12 @@ class MockFirebaseAppCheck extends Mock implements FirebaseAppCheck {}
 void main() {
   group('GoogApiClient', () {
     test('should return no codegen suffix if using core sdk', () {
-      final packageVersion = "1.0.0";
+      final packageVersion = '1.0.0';
       expect(getGoogApiVal(CallerSDKType.core, packageVersion),
           'gl-dart/$packageVersion fire/$packageVersion');
     });
     test('should return codegen suffix if using gen sdk', () {
-      final packageVersion = "1.0.0";
+      final packageVersion = '1.0.0';
       expect(getGoogApiVal(CallerSDKType.generated, packageVersion),
           'gl-dart/$packageVersion fire/$packageVersion dart/gen');
     });

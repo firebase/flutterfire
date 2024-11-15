@@ -71,7 +71,7 @@ void main() {
       final inputVars = {'key1': 'value1', 'key2': 123};
       final serializedString = serializer(inputVars);
 
-      expect(serializedString, "{key1: value1, key2: 123}");
+      expect(serializedString, '{key1: value1, key2: 123}');
     });
 
     test('should deserialize string data into expected format', () {

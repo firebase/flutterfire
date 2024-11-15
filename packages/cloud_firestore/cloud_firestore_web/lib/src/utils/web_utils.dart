@@ -131,9 +131,6 @@ firestore_interop.GetOptions? convertGetOptions(GetOptions? options) {
     case Source.server:
       source = 'server';
       break;
-    default:
-      source = 'default';
-      break;
   }
 
   return firestore_interop.GetOptions(source: source.toJS);

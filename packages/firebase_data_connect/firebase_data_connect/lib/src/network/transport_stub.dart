@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of firebase_data_connect_transport;
+part of 'transport_library.dart';
 
 /// Default TransportStub to satisfy compilation of the library.
 class TransportStub implements DataConnectTransport {

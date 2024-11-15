@@ -235,7 +235,7 @@ void main() {
     });
     test('invokeOperation should throw an error if the server throws one',
         () async {
-      final mockResponse = http.Response("""
+      final mockResponse = http.Response('''
 {
     "data": {},
     "errors": [
@@ -248,7 +248,7 @@ void main() {
             "extensions": null
         }
     ]
-}""", 200);
+}''', 200);
       when(mockHttpClient.post(any,
               headers: anyNamed('headers'), body: anyNamed('body')))
           .thenAnswer((_) async => mockResponse);

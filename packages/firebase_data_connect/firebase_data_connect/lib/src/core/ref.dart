@@ -132,10 +132,8 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
           e.code == DataConnectErrorCode.unauthorized.toString()) {
         return this.execute();
       } else {
-        throw e;
+        rethrow;
       }
-    } catch (e) {
-      throw e;
     }
   }
 
@@ -164,7 +162,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
         this.execute();
       } catch (_) {
         // Call to `execute` should properly pass the error to the Stream.
-        log("Error thrown by execute. The error will propagate via onError.");
+        log('Error thrown by execute. The error will propagate via onError.');
       }
     }
     return res;
@@ -196,10 +194,8 @@ class MutationRef<Data, Variables> extends OperationRef<Data, Variables> {
           e.code == DataConnectErrorCode.unauthorized.toString()) {
         return this.execute();
       } else {
-        throw e;
+        rethrow;
       }
-    } catch (e) {
-      throw e;
     }
   }
 

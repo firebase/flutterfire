@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-library firebase_data_connect_common;
-
 import 'dart:convert';
 
 import 'package:firebase_app_check/firebase_app_check.dart';

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of firebase_data_connect_grpc;
+part of 'grpc_library.dart';
 
 /// Transport used for Android/iOS. Uses a GRPC transport instead of REST.
 class GRPCTransport implements DataConnectTransport {
@@ -107,7 +107,7 @@ class GRPCTransport implements DataConnectTransport {
           options: CallOptions(metadata: await getMetadata(authToken)));
       return deserializer(jsonEncode(response.data.toProto3Json()));
     } on Exception catch (e) {
-      if (e.toString().contains("invalid Firebase Auth Credentials")) {
+      if (e.toString().contains('invalid Firebase Auth Credentials')) {
         throw DataConnectError(DataConnectErrorCode.unauthorized,
             'Failed to invoke operation: ${e.toString()}');
       }

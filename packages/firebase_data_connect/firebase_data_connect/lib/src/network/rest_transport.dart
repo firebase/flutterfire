@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of firebase_data_connect_rest;
+part of 'rest_library.dart';
 
 /// RestTransport makes requests out to the REST endpoints of the configured backend.
 class RestTransport implements DataConnectTransport {
@@ -37,6 +37,7 @@ class RestTransport implements DataConnectTransport {
   @override
   FirebaseAppCheck? appCheck;
 
+  @override
   CallerSDKType sdkType;
 
   /// Current endpoint URL.
@@ -44,7 +45,7 @@ class RestTransport implements DataConnectTransport {
   late String url;
 
   @visibleForTesting
-  setHttp(http.Client client) {
+  void setHttp(http.Client client) {
     _client = client;
   }
 
@@ -114,11 +115,11 @@ class RestTransport implements DataConnectTransport {
             r.statusCode == 401
                 ? DataConnectErrorCode.unauthorized
                 : DataConnectErrorCode.other,
-            "Received a status code of ${r.statusCode} with a message '${message}'");
+            "Received a status code of ${r.statusCode} with a message '$message'");
       } else {
         Map<String, dynamic> bodyJson =
             jsonDecode(r.body) as Map<String, dynamic>;
-        if (bodyJson.containsKey("errors") &&
+        if (bodyJson.containsKey('errors') &&
             (bodyJson['errors'] as List).isNotEmpty) {
           throw DataConnectError(
               DataConnectErrorCode.other, bodyJson['errors'].toString());

@@ -31,7 +31,7 @@ void main() {
     setUp(() {
       stringDeserializer = (json) => json;
       stringSerializer = (value) => value.toString();
-      intDeserializer = (json) => int.parse(json);
+      intDeserializer = int.parse;
       intSerializer = (value) => value;
     });
 
