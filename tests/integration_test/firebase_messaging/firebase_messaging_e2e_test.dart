@@ -123,7 +123,6 @@ void main() {
           },
           skip: defaultTargetPlatform != TargetPlatform.android,
         );
-
       });
 
       group('getInitialMessage', () {

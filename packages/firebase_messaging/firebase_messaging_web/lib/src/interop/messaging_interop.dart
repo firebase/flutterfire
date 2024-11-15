@@ -6,7 +6,7 @@
 // ignore_for_file: public_member_api_docs
 
 @JS('firebase_messaging')
-library firebase_interop.messaging;
+library;
 
 import 'dart:js_interop';
 

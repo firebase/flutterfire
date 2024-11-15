@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 
 /// The platform interface for Firebase Core.
-library firebase_core_platform_interface;
+library;
 
 import 'dart:async';
 

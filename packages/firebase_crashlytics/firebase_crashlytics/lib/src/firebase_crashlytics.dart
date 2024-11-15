@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_crashlytics;
+part of '../firebase_crashlytics.dart';
 
 /// The entry point for accessing a [FirebaseCrashlytics].
 ///
