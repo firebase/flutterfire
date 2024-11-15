@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:firebase_core_platform_interface/test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
