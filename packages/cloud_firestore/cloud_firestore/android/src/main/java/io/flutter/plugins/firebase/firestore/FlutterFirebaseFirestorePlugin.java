@@ -110,9 +110,9 @@ public class FlutterFirebaseFirestorePlugin
       String appName, String databaseURL) {
     synchronized (firestoreInstanceCache) {
       for (Map.Entry<FirebaseFirestore, FlutterFirebaseFirestoreExtension> entry :
-        firestoreInstanceCache.entrySet()) {
+          firestoreInstanceCache.entrySet()) {
         if (entry.getValue().getInstance().getApp().getName().equals(appName)
-          && entry.getValue().getDatabaseURL().equals(databaseURL)) {
+            && entry.getValue().getDatabaseURL().equals(databaseURL)) {
           return entry.getKey();
         }
       }
@@ -204,11 +204,11 @@ public class FlutterFirebaseFirestorePlugin
             // Context is ignored by API so we don't send it over even though annotated non-null.
             synchronized (firestoreInstanceCache) {
               for (Map.Entry<FirebaseFirestore, FlutterFirebaseFirestoreExtension> entry :
-                firestoreInstanceCache.entrySet()) {
+                  firestoreInstanceCache.entrySet()) {
                 FirebaseFirestore firestore = entry.getKey();
                 Tasks.await(firestore.terminate());
                 FlutterFirebaseFirestorePlugin.destroyCachedFirebaseFirestoreInstanceForKey(
-                  firestore);
+                    firestore);
               }
             }
             removeEventListeners();
