@@ -1,31 +1,36 @@
 part of movies;
 
-class DeleteMovie {
-  String name = "deleteMovie";
-  DeleteMovie({required this.dataConnect});
+class DeleteMovieVariablesBuilder {
+  String id;
 
-  Deserializer<DeleteMovieData> dataDeserializer = (String json) =>
-      DeleteMovieData.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  FirebaseDataConnect _dataConnect;
+
+  DeleteMovieVariablesBuilder(
+    this._dataConnect, {
+    required String this.id,
+  });
+  Deserializer<DeleteMovieData> dataDeserializer =
+      (dynamic json) => DeleteMovieData.fromJson(jsonDecode(json));
   Serializer<DeleteMovieVariables> varsSerializer =
       (DeleteMovieVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<DeleteMovieData, DeleteMovieVariables> ref({
-    required String id,
-  }) {
+  Future<OperationResult<DeleteMovieData, DeleteMovieVariables>> execute() {
+    return this.ref().execute();
+  }
+
+  MutationRef<DeleteMovieData, DeleteMovieVariables> ref() {
     DeleteMovieVariables vars = DeleteMovieVariables(
       id: id,
     );
 
-    return dataConnect.mutation(
-        this.name, dataDeserializer, varsSerializer, vars);
+    return _dataConnect.mutation(
+        "deleteMovie", dataDeserializer, varsSerializer, vars);
   }
-
-  FirebaseDataConnect dataConnect;
 }
 
 class DeleteMovieMovieDelete {
   String id;
 
-  DeleteMovieMovieDelete.fromJson(Map<String, dynamic> json)
+  DeleteMovieMovieDelete.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']) {}
 
   Map<String, dynamic> toJson() {
@@ -38,19 +43,16 @@ class DeleteMovieMovieDelete {
 
   DeleteMovieMovieDelete({
     required this.id,
-  }) {
-    // TODO: Only show this if there are optional fields.
-  }
+  });
 }
 
 class DeleteMovieData {
   DeleteMovieMovieDelete? movie_delete;
 
-  DeleteMovieData.fromJson(Map<String, dynamic> json) {
-    movie_delete = json['movie_delete'] == null
-        ? null
-        : DeleteMovieMovieDelete.fromJson(json['movie_delete']);
-  }
+  DeleteMovieData.fromJson(dynamic json)
+      : movie_delete = json['movie_delete'] == null
+            ? null
+            : DeleteMovieMovieDelete.fromJson(json['movie_delete']) {}
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -64,9 +66,7 @@ class DeleteMovieData {
 
   DeleteMovieData({
     this.movie_delete,
-  }) {
-    // TODO: Only show this if there are optional fields.
-  }
+  });
 }
 
 class DeleteMovieVariables {
@@ -85,7 +85,5 @@ class DeleteMovieVariables {
 
   DeleteMovieVariables({
     required this.id,
-  }) {
-    // TODO: Only show this if there are optional fields.
-  }
+  });
 }

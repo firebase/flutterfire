@@ -1,24 +1,28 @@
 part of movies;
 
-class SeedMovies {
-  String name = "seedMovies";
-  SeedMovies({required this.dataConnect});
+class SeedMoviesVariablesBuilder {
+  FirebaseDataConnect _dataConnect;
 
-  Deserializer<SeedMoviesData> dataDeserializer = (String json) =>
-      SeedMoviesData.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  SeedMoviesVariablesBuilder(
+    this._dataConnect,
+  );
+  Deserializer<SeedMoviesData> dataDeserializer =
+      (dynamic json) => SeedMoviesData.fromJson(jsonDecode(json));
 
-  MutationRef<SeedMoviesData, void> ref() {
-    return dataConnect.mutation(
-        this.name, dataDeserializer, emptySerializer, null);
+  Future<OperationResult<SeedMoviesData, void>> execute() {
+    return this.ref().execute();
   }
 
-  FirebaseDataConnect dataConnect;
+  MutationRef<SeedMoviesData, void> ref() {
+    return _dataConnect.mutation(
+        "seedMovies", dataDeserializer, emptySerializer, null);
+  }
 }
 
 class SeedMoviesTheMatrix {
   String id;
 
-  SeedMoviesTheMatrix.fromJson(Map<String, dynamic> json)
+  SeedMoviesTheMatrix.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']) {}
 
   Map<String, dynamic> toJson() {
@@ -31,15 +35,13 @@ class SeedMoviesTheMatrix {
 
   SeedMoviesTheMatrix({
     required this.id,
-  }) {
-    // TODO: Only show this if there are optional fields.
-  }
+  });
 }
 
 class SeedMoviesJurassicPark {
   String id;
 
-  SeedMoviesJurassicPark.fromJson(Map<String, dynamic> json)
+  SeedMoviesJurassicPark.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']) {}
 
   Map<String, dynamic> toJson() {
@@ -52,9 +54,7 @@ class SeedMoviesJurassicPark {
 
   SeedMoviesJurassicPark({
     required this.id,
-  }) {
-    // TODO: Only show this if there are optional fields.
-  }
+  });
 }
 
 class SeedMoviesData {
@@ -62,7 +62,7 @@ class SeedMoviesData {
 
   SeedMoviesJurassicPark jurassic_park;
 
-  SeedMoviesData.fromJson(Map<String, dynamic> json)
+  SeedMoviesData.fromJson(dynamic json)
       : the_matrix = SeedMoviesTheMatrix.fromJson(json['the_matrix']),
         jurassic_park =
             SeedMoviesJurassicPark.fromJson(json['jurassic_park']) {}
@@ -80,7 +80,5 @@ class SeedMoviesData {
   SeedMoviesData({
     required this.the_matrix,
     required this.jurassic_park,
-  }) {
-    // TODO: Only show this if there are optional fields.
-  }
+  });
 }

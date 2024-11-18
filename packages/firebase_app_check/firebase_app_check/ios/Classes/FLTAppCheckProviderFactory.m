@@ -4,8 +4,9 @@
 
 #import <FirebaseAppCheck/FIRAppCheck.h>
 
-#import <Firebase/Firebase.h>
-#import <FirebaseAppCheck/FIRAppCheck.h>
+@import FirebaseAppCheck;
+@import FirebaseCore;
+
 #import "FLTAppCheckProviderFactory.h"
 
 #import "FLTAppCheckProvider.h"

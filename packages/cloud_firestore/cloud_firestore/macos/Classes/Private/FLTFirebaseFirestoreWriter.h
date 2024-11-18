@@ -1,1 +1,0 @@
-../../../ios/Classes/Private/FLTFirebaseFirestoreWriter.h

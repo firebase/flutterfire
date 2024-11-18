@@ -1,31 +1,36 @@
 part of movies;
 
-class AddTimestamp {
-  String name = "addTimestamp";
-  AddTimestamp({required this.dataConnect});
+class AddTimestampVariablesBuilder {
+  Timestamp timestamp;
 
-  Deserializer<AddTimestampData> dataDeserializer = (String json) =>
-      AddTimestampData.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  FirebaseDataConnect _dataConnect;
+
+  AddTimestampVariablesBuilder(
+    this._dataConnect, {
+    required Timestamp this.timestamp,
+  });
+  Deserializer<AddTimestampData> dataDeserializer =
+      (dynamic json) => AddTimestampData.fromJson(jsonDecode(json));
   Serializer<AddTimestampVariables> varsSerializer =
       (AddTimestampVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<AddTimestampData, AddTimestampVariables> ref({
-    required Timestamp timestamp,
-  }) {
+  Future<OperationResult<AddTimestampData, AddTimestampVariables>> execute() {
+    return this.ref().execute();
+  }
+
+  MutationRef<AddTimestampData, AddTimestampVariables> ref() {
     AddTimestampVariables vars = AddTimestampVariables(
       timestamp: timestamp,
     );
 
-    return dataConnect.mutation(
-        this.name, dataDeserializer, varsSerializer, vars);
+    return _dataConnect.mutation(
+        "addTimestamp", dataDeserializer, varsSerializer, vars);
   }
-
-  FirebaseDataConnect dataConnect;
 }
 
 class AddTimestampTimestampHolderInsert {
   String id;
 
-  AddTimestampTimestampHolderInsert.fromJson(Map<String, dynamic> json)
+  AddTimestampTimestampHolderInsert.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']) {}
 
   Map<String, dynamic> toJson() {
@@ -38,15 +43,13 @@ class AddTimestampTimestampHolderInsert {
 
   AddTimestampTimestampHolderInsert({
     required this.id,
-  }) {
-    // TODO: Only show this if there are optional fields.
-  }
+  });
 }
 
 class AddTimestampData {
   AddTimestampTimestampHolderInsert timestampHolder_insert;
 
-  AddTimestampData.fromJson(Map<String, dynamic> json)
+  AddTimestampData.fromJson(dynamic json)
       : timestampHolder_insert = AddTimestampTimestampHolderInsert.fromJson(
             json['timestampHolder_insert']) {}
 
@@ -60,9 +63,7 @@ class AddTimestampData {
 
   AddTimestampData({
     required this.timestampHolder_insert,
-  }) {
-    // TODO: Only show this if there are optional fields.
-  }
+  });
 }
 
 class AddTimestampVariables {
@@ -81,7 +82,5 @@ class AddTimestampVariables {
 
   AddTimestampVariables({
     required this.timestamp,
-  }) {
-    // TODO: Only show this if there are optional fields.
-  }
+  });
 }

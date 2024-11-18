@@ -1,31 +1,39 @@
 part of movies;
 
-class AddPerson {
-  String name = "addPerson";
-  AddPerson({required this.dataConnect});
+class AddPersonVariablesBuilder {
+  Optional<String> _name = Optional.optional(nativeFromJson, nativeToJson);
 
-  Deserializer<AddPersonData> dataDeserializer = (String json) =>
-      AddPersonData.fromJson(jsonDecode(json) as Map<String, dynamic>);
-  Serializer<AddPersonVariables> varsSerializer =
-      (AddPersonVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<AddPersonData, AddPersonVariables> ref({
-    String? name,
-  }) {
-    AddPersonVariables vars = AddPersonVariables(
-      name: name,
-    );
-
-    return dataConnect.mutation(
-        this.name, dataDeserializer, varsSerializer, vars);
+  FirebaseDataConnect _dataConnect;
+  AddPersonVariablesBuilder name(String? t) {
+    this._name.value = t;
+    return this;
   }
 
-  FirebaseDataConnect dataConnect;
+  AddPersonVariablesBuilder(
+    this._dataConnect,
+  );
+  Deserializer<AddPersonData> dataDeserializer =
+      (dynamic json) => AddPersonData.fromJson(jsonDecode(json));
+  Serializer<AddPersonVariables> varsSerializer =
+      (AddPersonVariables vars) => jsonEncode(vars.toJson());
+  Future<OperationResult<AddPersonData, AddPersonVariables>> execute() {
+    return this.ref().execute();
+  }
+
+  MutationRef<AddPersonData, AddPersonVariables> ref() {
+    AddPersonVariables vars = AddPersonVariables(
+      name: _name,
+    );
+
+    return _dataConnect.mutation(
+        "addPerson", dataDeserializer, varsSerializer, vars);
+  }
 }
 
 class AddPersonPersonInsert {
   String id;
 
-  AddPersonPersonInsert.fromJson(Map<String, dynamic> json)
+  AddPersonPersonInsert.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']) {}
 
   Map<String, dynamic> toJson() {
@@ -38,15 +46,13 @@ class AddPersonPersonInsert {
 
   AddPersonPersonInsert({
     required this.id,
-  }) {
-    // TODO: Only show this if there are optional fields.
-  }
+  });
 }
 
 class AddPersonData {
   AddPersonPersonInsert person_insert;
 
-  AddPersonData.fromJson(Map<String, dynamic> json)
+  AddPersonData.fromJson(dynamic json)
       : person_insert = AddPersonPersonInsert.fromJson(json['person_insert']) {}
 
   Map<String, dynamic> toJson() {
@@ -59,31 +65,29 @@ class AddPersonData {
 
   AddPersonData({
     required this.person_insert,
-  }) {
-    // TODO: Only show this if there are optional fields.
-  }
+  });
 }
 
 class AddPersonVariables {
-  String? name;
+  late Optional<String> name;
 
   AddPersonVariables.fromJson(Map<String, dynamic> json) {
-    name = json['name'] == null ? null : nativeFromJson<String>(json['name']);
+    name = Optional.optional(nativeFromJson, nativeToJson);
+    name.value =
+        json['name'] == null ? null : nativeFromJson<String>(json['name']);
   }
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
-    if (name != null) {
-      json['name'] = nativeToJson<String?>(name);
+    if (name.state == OptionalState.set) {
+      json['name'] = name.toJson();
     }
 
     return json;
   }
 
   AddPersonVariables({
-    this.name,
-  }) {
-    // TODO: Only show this if there are optional fields.
-  }
+    required this.name,
+  });
 }

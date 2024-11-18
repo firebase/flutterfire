@@ -21,6 +21,7 @@ mutation addDateAndTimestamp($date: Date!, $timestamp: Timestamp!) @auth(level: 
 mutation seedMovies @auth(level: PUBLIC) {
   the_matrix: movie_insert(
     data: {
+      id: "09d5f835656c467787347668bbb44522"
       title: "The Matrix"
       releaseYear: 1999
       genre: "Sci-Fi"
@@ -59,6 +60,25 @@ mutation createMovie(
 # Delete a movie by its ID
 mutation deleteMovie($id: UUID!) @auth(level: PUBLIC) {
   movie_delete(id: $id)
+}
+
+mutation thing($title: Any! = "ABC") @auth(level: PUBLIC) {
+  thing_insert(data: {
+    title: $title
+  })
+}
+
+mutation seedData @auth(level: PUBLIC) {
+  the_matrix: movie_insert(
+    data: {
+      id: "09d5f835656c467787347668bbb44522"
+      title: "The Matrix"
+      releaseYear: 1999
+      genre: "Action"
+      rating: 5.0
+      description: "When a beautiful stranger leads computer hacker Neo to a forbidding underworld, he discovers the shocking truth--the life he knows is the elaborate deception of an evil cyber-intelligence."
+    }
+  )
 }
 
 # # Update movie information based on the provided ID

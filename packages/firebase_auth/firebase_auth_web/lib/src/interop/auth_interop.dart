@@ -7,7 +7,7 @@
 // ignore_for_file: public_member_api_docs
 
 @JS('firebase_auth')
-library firebase_interop.auth;
+library;
 
 import 'dart:js_interop';
 

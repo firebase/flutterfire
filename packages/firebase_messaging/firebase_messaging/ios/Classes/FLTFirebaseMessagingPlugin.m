@@ -9,6 +9,10 @@
 
 #import "FLTFirebaseMessagingPlugin.h"
 
+#if __has_include(<FirebaseAuth/FirebaseAuth.h>)
+@import FirebaseAuth;
+#endif
+
 NSString *const kFLTFirebaseMessagingChannelName = @"plugins.flutter.io/firebase_messaging";
 
 NSString *const kMessagingArgumentCode = @"code";
@@ -22,15 +26,15 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   NSObject<FlutterPluginRegistrar> *_registrar;
   NSData *_apnsToken;
   NSDictionary *_initialNotification;
-  bool simulatorToken;
 
   // Used to track if everything as been initialized before answering
   // to the initialNotification request
   BOOL _initialNotificationGathered;
   FLTFirebaseMethodCallResult *_initialNotificationResult;
 
-  NSString *_initialNoticationID;
+  NSString *_initialNotificationID;
   NSString *_notificationOpenedAppID;
+  NSString *_foregroundUniqueIdentifier;
 
 #ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
   API_AVAILABLE(ios(10), macosx(10.14))
@@ -53,7 +57,6 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     _initialNotificationGathered = NO;
     _channel = channel;
     _registrar = registrar;
-    simulatorToken = false;
     // Application
     // Dart -> `getInitialNotification`
     // ObjC -> Initialize other delegates & observers
@@ -216,14 +219,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     // If remoteNotification exists, it is the notification that opened the app.
     _initialNotification =
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
-    _initialNoticationID = remoteNotification[@"gcm.message_id"];
+    _initialNotificationID = remoteNotification[@"gcm.message_id"];
   }
   _initialNotificationGathered = YES;
   [self initialNotificationCallback];
 
-#if TARGET_OS_OSX
-  // For macOS we use swizzling to intercept as addApplicationDelegate does not exist on the macOS
-  // registrar Flutter implementation.
   [GULAppDelegateSwizzler registerAppDelegateInterceptor:self];
   [GULAppDelegateSwizzler proxyOriginalDelegateIncludingAPNSMethods];
 
@@ -242,7 +242,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
                     didReceiveRemoteNotificationWithCompletionSEL,
                     method_getImplementation(donorMethod), method_getTypeEncoding(donorMethod));
   }
-#else
+#if !TARGET_OS_OSX
+  // `[_registrar addApplicationDelegate:self];` alone doesn't work for notifications to be received
+  // without the above swizzling This commit:
+  // https://github.com/google/GoogleUtilities/pull/162/files#diff-6bb6d1c46632fc66405a524071cc4baca5fc6a1a6c0eefef81d8c3e2c89cbc13L520-L533
+  // broke notifications which was released with firebase-ios-sdk v11.0.0
   [_registrar addApplicationDelegate:self];
 #endif
 
@@ -311,10 +315,17 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
              (void (^)(UNNotificationPresentationOptions options))completionHandler
     API_AVAILABLE(macos(10.14), ios(10.0)) {
   // We only want to handle FCM notifications.
-  if (notification.request.content.userInfo[@"gcm.message_id"]) {
+
+  // FIX - bug on iOS 18 which results in duplicate foreground notifications posted
+  // See this Apple issue: https://forums.developer.apple.com/forums/thread/761597
+  // when it has been resolved, "_foregroundUniqueIdentifier" can be removed (i.e. the commit for
+  // this fix)
+  NSString *notificationIdentifier = notification.request.identifier;
+
+  if (notification.request.content.userInfo[@"gcm.message_id"] &&
+      ![notificationIdentifier isEqualToString:_foregroundUniqueIdentifier]) {
     NSDictionary *notificationDict =
         [FLTFirebaseMessagingPlugin NSDictionaryFromUNNotification:notification];
-
     [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
   }
 
@@ -341,6 +352,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     }
     completionHandler(presentationOptions);
   }
+  _foregroundUniqueIdentifier = notificationIdentifier;
 }
 
 // Called when a user interacts with a notification.
@@ -353,7 +365,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   // We only want to handle FCM notifications and stop firing `onMessageOpenedApp()` when app is
   // coming from a terminated state.
   if (_notificationOpenedAppID != nil &&
-      ![_initialNoticationID isEqualToString:_notificationOpenedAppID]) {
+      ![_initialNotificationID isEqualToString:_notificationOpenedAppID]) {
     NSDictionary *notificationDict =
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
     [_channel invokeMethod:@"Messaging#onMessageOpenedApp" arguments:notificationDict];
@@ -1000,29 +1012,12 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 - (void)ensureAPNSTokenSetting {
   FIRMessaging *messaging = [FIRMessaging messaging];
 
-  // With iOS SDK >= 10.4, an APNS token is required for getting/deleting token. We set a dummy
-  // token for the simulator for test environments. Historically, a simulator will not work for
-  // messaging. It will work if environment: iOS 16, running on macOS 13+ & silicon chip. We check
-  // the `_apnsToken` is nil. If it is, then the environment does not support and we set dummy
-  // token.
-#if TARGET_IPHONE_SIMULATOR
-  if (simulatorToken == false && _apnsToken == nil) {
-    NSString *str = @"fake-apns-token-for-simulator";
-    NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding];
-    [[FIRMessaging messaging] setAPNSToken:data type:FIRMessagingAPNSTokenTypeSandbox];
-  }
-  // We set this either way. We set dummy token once as `_apnsToken` could be nil next time
-  // which could possibly set dummy token unnecessarily
-  simulatorToken = true;
-#endif
-
   if (messaging.APNSToken == nil && _apnsToken != nil) {
 #ifdef DEBUG
     [[FIRMessaging messaging] setAPNSToken:_apnsToken type:FIRMessagingAPNSTokenTypeSandbox];
 #else
     [[FIRMessaging messaging] setAPNSToken:_apnsToken type:FIRMessagingAPNSTokenTypeProd];
 #endif
-
     _apnsToken = nil;
   }
 }
@@ -1032,7 +1027,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     // Only return if initial notification was sent when app is terminated. Also ensure that
     // it was the initial notification that was tapped to open the app.
     if (_initialNotification != nil &&
-        [_initialNoticationID isEqualToString:_notificationOpenedAppID]) {
+        [_initialNotificationID isEqualToString:_notificationOpenedAppID]) {
       NSDictionary *initialNotificationCopy = [_initialNotification copy];
       _initialNotification = nil;
       return initialNotificationCopy;

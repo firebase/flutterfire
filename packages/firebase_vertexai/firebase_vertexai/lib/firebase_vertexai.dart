@@ -12,25 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export 'src/firebase_vertexai.dart'
+export 'src/api.dart'
     show
-        // TODO(next breaking): Remove defaultTimeout
-        defaultTimeout,
-        FirebaseVertexAI,
-        RequestOptions;
-export 'src/vertex_api.dart'
-    show
-        BatchEmbedContentsResponse,
         BlockReason,
         Candidate,
         CitationMetadata,
-        CitationSource,
-        ContentEmbedding,
+        Citation,
         CountTokensResponse,
-        // TODO(next breaking): Remove CountTokensResponseFields
-        CountTokensResponseFields,
-        EmbedContentRequest,
-        EmbedContentResponse,
         FinishReason,
         GenerateContentResponse,
         GenerationConfig,
@@ -41,29 +29,31 @@ export 'src/vertex_api.dart'
         SafetyRating,
         SafetySetting,
         TaskType,
-        // TODO(next breaking): Remove parse* methods
-        parseCountTokensResponse,
-        parseEmbedContentResponse,
-        parseGenerateContentResponse;
-export 'src/vertex_chat.dart' show ChatSession, StartChatExtension;
-export 'src/vertex_content.dart'
+        UsageMetadata;
+export 'src/chat.dart' show ChatSession, StartChatExtension;
+export 'src/content.dart'
     show
         Content,
-        DataPart,
+        InlineDataPart,
         FileData,
         FunctionCall,
         FunctionResponse,
         Part,
-        TextPart,
-        // TODO(next breaking): Remove parseContent
-        parseContent;
-export 'src/vertex_function_calling.dart'
+        TextPart;
+export 'src/error.dart'
+    show
+        VertexAIException,
+        VertexAISdkException,
+        InvalidApiKey,
+        ServerException,
+        UnsupportedUserLocation;
+export 'src/firebase_vertexai.dart' show FirebaseVertexAI;
+export 'src/function_calling.dart'
     show
         FunctionCallingConfig,
         FunctionCallingMode,
         FunctionDeclaration,
-        Schema,
-        SchemaType,
         Tool,
         ToolConfig;
-export 'src/vertex_model.dart' show GenerativeModel;
+export 'src/model.dart' show GenerativeModel;
+export 'src/schema.dart' show Schema, SchemaType;

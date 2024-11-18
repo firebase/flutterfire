@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of cloud_firestore;
+part of '../cloud_firestore.dart';
 
 /// Represents a [Query] over the data at a particular location.
 ///
@@ -765,7 +765,6 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       }
 
       if (operator == 'in') {
-        assert(!hasIn, "You cannot use 'whereIn' filters more than once.");
         assert(
           !hasNotIn,
           "You cannot use 'in' filters with 'not-in' filters.",

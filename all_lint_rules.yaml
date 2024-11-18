@@ -164,6 +164,8 @@ linter:
     - unnecessary_final
     - unnecessary_getters_setters
     - unnecessary_lambdas
+    - unnecessary_library_directive
+    - unnecessary_library_name
     - unnecessary_new
     - unnecessary_null_aware_assignments
     - unnecessary_null_checks

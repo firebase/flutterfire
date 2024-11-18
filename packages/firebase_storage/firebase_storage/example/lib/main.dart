@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io' as io;
 
 import 'package:firebase_core/firebase_core.dart';
@@ -41,6 +42,9 @@ enum UploadType {
 
   /// Uploads a file from the device.
   file,
+
+  /// Uploads a Uint8List to Storage.
+  uint8List,
 
   /// Clears any tasks from the list.
   clear,
@@ -135,6 +139,23 @@ class _TaskManager extends State<TaskManager> {
     );
   }
 
+  Future<UploadTask> uploadUint8List() async {
+    UploadTask uploadTask;
+
+    // Create a Reference to the file
+    Reference ref = FirebaseStorage.instance
+        .ref()
+        .child('flutter-tests')
+        .child('/some-json.json');
+
+    const response = '{"key": "value", "number": 42}';
+    final data = jsonDecode(response);
+
+    uploadTask = ref.putData(Uint8List.fromList(utf8.encode(jsonEncode(data))));
+
+    return Future.value(uploadTask);
+  }
+
   /// Handles the user pressing the PopupMenuItem item.
   Future<void> handleUploadType(UploadType type) async {
     switch (type) {
@@ -152,6 +173,12 @@ class _TaskManager extends State<TaskManager> {
             _uploadTasks = [..._uploadTasks, task];
           });
         }
+        break;
+      case UploadType.uint8List:
+        final task = await uploadUint8List();
+        setState(() {
+          _uploadTasks = [..._uploadTasks, task];
+        });
         break;
       case UploadType.clear:
         setState(() {
@@ -240,6 +267,11 @@ class _TaskManager extends State<TaskManager> {
                 // ignore: sort_child_properties_last
                 child: Text('Upload local file'),
                 value: UploadType.file,
+              ),
+              const PopupMenuItem(
+                // ignore: sort_child_properties_last
+                child: Text('Upload Uint8List'),
+                value: UploadType.uint8List,
               ),
               if (_uploadTasks.isNotEmpty)
                 const PopupMenuItem(

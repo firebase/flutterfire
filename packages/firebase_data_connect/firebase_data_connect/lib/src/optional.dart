@@ -1,8 +1,20 @@
-// Copyright 2024, the Chromium project authors.  Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
+// Copyright 2024 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-part of firebase_data_connect;
+import 'package:intl/intl.dart';
+
+import 'common/common_library.dart';
 
 /// Keeps track of whether the value has been set or not
 enum OptionalState { unset, set }
@@ -12,7 +24,7 @@ enum OptionalState { unset, set }
 /// If it's unset, then the value is ignored when sending over the wire.
 class Optional<T> {
   /// Instantiates deserializer.
-  Optional(this.deserializer);
+  Optional(this.deserializer, this.serializer);
 
   /// Instantiates deserializer and serializer.
   Optional.optional(this.deserializer, this.serializer);
@@ -21,10 +33,10 @@ class Optional<T> {
   OptionalState state = OptionalState.unset;
 
   /// Serializer for value.
-  Serializer<T>? serializer;
+  DynamicSerializer<T> serializer;
 
   /// Deserializer for value.
-  Deserializer<T> deserializer;
+  DynamicDeserializer<T> deserializer;
 
   /// Current value.
   T? _value;
@@ -50,16 +62,9 @@ class Optional<T> {
   }
 
   /// Converts the value to String.
-  String toJson() {
+  dynamic toJson() {
     if (_value != null) {
-      if (serializer != null) {
-        if (_value is List) {
-          return (_value! as List).map((e) => serializer!(e)).toString();
-        }
-        return serializer!(_value as T);
-      } else {
-        return _value.toString();
-      }
+      return serializer(_value as T);
     }
     return '';
   }
@@ -75,18 +80,38 @@ dynamic nativeToJson<T>(T type) {
   } else if (type is DateTime) {
     final DateFormat formatter = DateFormat('yyyy-MM-dd');
     return formatter.format(type);
-  } else {
-    throw UnimplementedError('This type is unimplemented: ${type.runtimeType}');
   }
+  throw UnimplementedError('This type is unimplemented: ${type.runtimeType}');
 }
 
-T nativeFromJson<T>(String json) {
-  if (T == bool) return (json.toLowerCase() == 'true') as T;
-  if (T == int) return int.parse(json) as T;
-  if (T == double) return double.parse(json) as T;
-  if (T == num) return num.parse(json) as T;
-  if (T == String) return json as T;
-  if (T == DateTime) return DateTime.parse(json) as T;
-
+T nativeFromJson<T>(dynamic input) {
+  if ((input is bool && T == bool) ||
+      (input is int && T == int) ||
+      (input is double && T == double) ||
+      (input is num && input == num)) {
+    return input;
+  } else if (input is String) {
+    if (T == DateTime) {
+      return DateTime.parse(input) as T;
+    } else if (T == String) {
+      return input as T;
+    }
+  } else if (input is num) {
+    if (input is double && T == int) {
+      return input.toInt() as T;
+    } else if (input is int && T == double) {
+      return input.toDouble() as T;
+    }
+  }
   throw UnimplementedError('This type is unimplemented: ${T.runtimeType}');
+}
+
+DynamicDeserializer<List<T>> listDeserializer<T>(
+    DynamicDeserializer<T> deserializer) {
+  return (dynamic data) =>
+      (data as List<T>).map((e) => deserializer(e)).toList();
+}
+
+DynamicSerializer<List<T>> listSerializer<T>(DynamicSerializer<T> serializer) {
+  return (dynamic data) => (data as List<T>).map((e) => serializer(e)).toList();
 }

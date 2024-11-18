@@ -1,18 +1,22 @@
 part of movies;
 
-class ListPersons {
-  String name = "ListPersons";
-  ListPersons({required this.dataConnect});
+class ListPersonsVariablesBuilder {
+  FirebaseDataConnect _dataConnect;
 
-  Deserializer<ListPersonsData> dataDeserializer = (String json) =>
-      ListPersonsData.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  ListPersonsVariablesBuilder(
+    this._dataConnect,
+  );
+  Deserializer<ListPersonsData> dataDeserializer =
+      (dynamic json) => ListPersonsData.fromJson(jsonDecode(json));
 
-  QueryRef<ListPersonsData, void> ref() {
-    return dataConnect.query(
-        this.name, dataDeserializer, emptySerializer, null);
+  Future<QueryResult<ListPersonsData, void>> execute() {
+    return this.ref().execute();
   }
 
-  FirebaseDataConnect dataConnect;
+  QueryRef<ListPersonsData, void> ref() {
+    return _dataConnect.query(
+        "ListPersons", dataDeserializer, emptySerializer, null);
+  }
 }
 
 class ListPersonsPeople {
@@ -20,7 +24,7 @@ class ListPersonsPeople {
 
   String name;
 
-  ListPersonsPeople.fromJson(Map<String, dynamic> json)
+  ListPersonsPeople.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']),
         name = nativeFromJson<String>(json['name']) {}
 
@@ -37,15 +41,13 @@ class ListPersonsPeople {
   ListPersonsPeople({
     required this.id,
     required this.name,
-  }) {
-    // TODO: Only show this if there are optional fields.
-  }
+  });
 }
 
 class ListPersonsData {
   List<ListPersonsPeople> people;
 
-  ListPersonsData.fromJson(Map<String, dynamic> json)
+  ListPersonsData.fromJson(dynamic json)
       : people = (json['people'] as List<dynamic>)
             .map((e) => ListPersonsPeople.fromJson(e))
             .toList() {}
@@ -60,7 +62,5 @@ class ListPersonsData {
 
   ListPersonsData({
     required this.people,
-  }) {
-    // TODO: Only show this if there are optional fields.
-  }
+  });
 }
