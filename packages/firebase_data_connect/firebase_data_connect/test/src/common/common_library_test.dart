@@ -105,7 +105,7 @@ void main() {
       final queryName = 'testQuery';
       final deserializer = (json) => json;
       final result = await transport.invokeQuery(
-          queryName, deserializer, emptySerializer, null);
+          queryName, deserializer, emptySerializer, null, null);
 
       expect(result, isNotNull);
     });
@@ -114,7 +114,7 @@ void main() {
       final queryName = 'testMutation';
       final deserializer = (json) => json;
       final result = await transport.invokeMutation(
-          queryName, deserializer, emptySerializer, null);
+          queryName, deserializer, emptySerializer, null, null);
 
       expect(result, isNotNull);
     });
@@ -127,28 +127,27 @@ class TestDataConnectTransport extends DataConnectTransport {
       DataConnectOptions options, String appId, CallerSDKType sdkType,
       {FirebaseAuth? auth, FirebaseAppCheck? appCheck})
       : super(transportOptions, options, appId, sdkType) {
-    this.auth = auth;
     this.appCheck = appCheck;
   }
 
   @override
   Future<Data> invokeQuery<Data, Variables>(
-    String queryName,
-    Deserializer<Data> deserializer,
-    Serializer<Variables>? serializer,
-    Variables? vars,
-  ) async {
+      String queryName,
+      Deserializer<Data> deserializer,
+      Serializer<Variables>? serializer,
+      Variables? vars,
+      String? authToken) async {
     // Simulate query invocation logic here
     return deserializer('{}');
   }
 
   @override
   Future<Data> invokeMutation<Data, Variables>(
-    String queryName,
-    Deserializer<Data> deserializer,
-    Serializer<Variables>? serializer,
-    Variables? vars,
-  ) async {
+      String queryName,
+      Deserializer<Data> deserializer,
+      Serializer<Variables>? serializer,
+      Variables? vars,
+      String? authToken) async {
     // Simulate mutation invocation logic here
     return deserializer('{}');
   }

@@ -1,3 +1,11 @@
+## 6.5.0
+
+ - **FEAT**(firestore): Swift Package Manager support ([#13329](https://github.com/firebase/flutterfire/issues/13329)). ([0420eabb](https://github.com/firebase/flutterfire/commit/0420eabb3ab247e0e3998bedcb9779fe35c46920))
+
+## 6.4.4
+
+ - Update a dependency to the latest release.
+
 ## 6.4.3
 
  - Update a dependency to the latest release.

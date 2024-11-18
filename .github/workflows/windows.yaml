@@ -32,7 +32,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af
         name: Install Node.js 20
         with:
           node-version: "20"
@@ -64,7 +64,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af
         name: Install Node.js 20
         with:
           node-version: "20"

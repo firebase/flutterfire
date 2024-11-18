@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_core_web;
+part of '../firebase_core_web.dart';
 
 /// The currently supported Firebase JS SDK version.
 const String supportedFirebaseJsSdkVersion = '10.11.1';

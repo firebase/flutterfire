@@ -15,7 +15,6 @@
 library firebase_data_connect_transport;
 
 import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import '../common/common_library.dart';
 
 part 'transport_stub.dart';

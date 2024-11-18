@@ -179,7 +179,7 @@
                          signInSecondFactor:tokenResult.signInSecondFactor];
 }
 
-+ (NSArray *)getManualList:(nonnull PigeonUserDetails *)userDetails {
++ (NSArray *_Nonnull)getManualList:(nonnull PigeonUserDetails *)userDetails {
   NSMutableArray *output = [NSMutableArray array];
 
   id userInfoList = [[userDetails userInfo] toList];

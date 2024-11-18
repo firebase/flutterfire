@@ -1,3 +1,16 @@
+## 0.1.2+3
+
+ - Update a dependency to the latest release.
+
+## 0.1.2+2
+
+ - Update a dependency to the latest release.
+
+## 0.1.2+1
+
+ - **FIX**(fdc): Fix issue where auth wasn't properly refreshing id token ([#13509](https://github.com/firebase/flutterfire/issues/13509)). ([0158ad20](https://github.com/firebase/flutterfire/commit/0158ad20925646e8a21c17adc8793e870f3a65d6))
+ - **FIX**(fdc): Updated licenses ([#13470](https://github.com/firebase/flutterfire/issues/13470)). ([a1de14fd](https://github.com/firebase/flutterfire/commit/a1de14fde34e6b352f0d4a098d88ee9df542cf27))
+
 ## 0.1.2
 
  - **FIX**(fdc): Fix serializing errors ([#13450](https://github.com/firebase/flutterfire/issues/13450)). ([9a5aba2a](https://github.com/firebase/flutterfire/commit/9a5aba2aedb2e1ab4f9a979f07392113630c1672))

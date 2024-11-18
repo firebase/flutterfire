@@ -18,24 +18,17 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebasePluginPlatform;
 
-import 'vertex_api.dart';
-import 'vertex_content.dart';
-import 'vertex_function_calling.dart';
-import 'vertex_model.dart';
+import 'api.dart';
+import 'content.dart';
+import 'function_calling.dart';
+import 'model.dart';
 
 const _defaultLocation = 'us-central1';
-
-/// Default timeout duration, 30 minutes in millisecond
-const int defaultTimeout = 1800000;
 
 /// The entrypoint for [FirebaseVertexAI].
 class FirebaseVertexAI extends FirebasePluginPlatform {
   FirebaseVertexAI._(
-      {required this.app,
-      required this.options,
-      required this.location,
-      this.appCheck,
-      this.auth})
+      {required this.app, required this.location, this.appCheck, this.auth})
       : super(app.name, 'plugins.flutter.io/firebase_vertexai');
 
   /// The [FirebaseApp] for this current [FirebaseVertexAI] instance.
@@ -47,9 +40,6 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
 
   /// The optional [FirebaseAuth] for this current [FirebaseVertexAI] instance.
   FirebaseAuth? auth;
-
-  /// Configuration parameters for sending requests to the backend.
-  RequestOptions options;
 
   /// The service location for this [FirebaseVertexAI] instance.
   String location;
@@ -71,7 +61,6 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
     FirebaseApp? app,
     FirebaseAppCheck? appCheck,
     FirebaseAuth? auth,
-    RequestOptions? options,
     String? location,
   }) {
     app ??= Firebase.app();
@@ -80,17 +69,10 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
       return _cachedInstances[app.name]!;
     }
 
-    options ??=
-        RequestOptions(timeout: const Duration(milliseconds: defaultTimeout));
-
     location ??= _defaultLocation;
 
     FirebaseVertexAI newInstance = FirebaseVertexAI._(
-        app: app,
-        options: options,
-        location: location,
-        appCheck: appCheck,
-        auth: auth);
+        app: app, location: location, appCheck: appCheck, auth: auth);
     _cachedInstances[app.name] = newInstance;
 
     return newInstance;
@@ -107,34 +89,25 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
   /// The optional [safetySettings] and [generationConfig] can be used to
   /// control and guide the generation. See [SafetySetting] and
   /// [GenerationConfig] for details.
-  GenerativeModel generativeModel(
-      {required String model,
-      List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig,
-      Content? systemInstruction,
-      List<Tool>? tools,
-      ToolConfig? toolConfig}) {
+  GenerativeModel generativeModel({
+    required String model,
+    List<SafetySetting>? safetySettings,
+    GenerationConfig? generationConfig,
+    List<Tool>? tools,
+    ToolConfig? toolConfig,
+    Content? systemInstruction,
+  }) {
     return createGenerativeModel(
-        model: model,
-        app: app,
-        appCheck: appCheck,
-        auth: auth,
-        location: location,
-        safetySettings: safetySettings,
-        generationConfig: generationConfig,
-        systemInstruction: systemInstruction,
-        tools: tools,
-        toolConfig: toolConfig);
+      model: model,
+      app: app,
+      appCheck: appCheck,
+      auth: auth,
+      location: location,
+      safetySettings: safetySettings,
+      generationConfig: generationConfig,
+      tools: tools,
+      toolConfig: toolConfig,
+      systemInstruction: systemInstruction,
+    );
   }
-}
-
-/// Options for request to backend.
-class RequestOptions {
-  /// [timeout] duration for the request.
-  RequestOptions({
-    required this.timeout,
-  });
-
-  /// Timeout for the request, default to 30 minutes, in milliseconds.
-  final Duration timeout;
 }

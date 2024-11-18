@@ -22,13 +22,11 @@ class TransportStub implements DataConnectTransport {
     this.options,
     this.appId,
     this.sdkType,
-    this.auth,
     this.appCheck,
   );
 
   /// FirebaseAuth
   @override
-  FirebaseAuth? auth;
 
   /// FirebaseAppCheck
   @override
@@ -55,7 +53,8 @@ class TransportStub implements DataConnectTransport {
       String queryName,
       Deserializer<Data> deserializer,
       Serializer<Variables>? serializer,
-      Variables? vars) async {
+      Variables? vars,
+      String? token) async {
     // TODO: implement invokeMutation
     throw UnimplementedError();
   }
@@ -66,7 +65,8 @@ class TransportStub implements DataConnectTransport {
       String queryName,
       Deserializer<Data> deserializer,
       Serializer<Variables>? serialize,
-      Variables? vars) async {
+      Variables? vars,
+      String? token) async {
     // TODO: implement invokeQuery
     throw UnimplementedError();
   }
@@ -77,7 +77,6 @@ DataConnectTransport getTransport(
   DataConnectOptions options,
   String appId,
   CallerSDKType sdkType,
-  FirebaseAuth? auth,
   FirebaseAppCheck? appCheck,
 ) =>
-    TransportStub(transportOptions, options, appId, sdkType, auth, appCheck);
+    TransportStub(transportOptions, options, appId, sdkType, appCheck);

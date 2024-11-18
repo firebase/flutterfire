@@ -1,3 +1,15 @@
+## 3.8.0
+
+ - **FEAT**(firestore): Swift Package Manager support ([#13329](https://github.com/firebase/flutterfire/issues/13329)). ([0420eabb](https://github.com/firebase/flutterfire/commit/0420eabb3ab247e0e3998bedcb9779fe35c46920))
+
+## 3.7.0
+
+ - **FIX**(core,ios): ensure iOS SDK version can be found from Package.swift ([#13804](https://github.com/firebase/flutterfire/issues/13804)). ([83f4dad6](https://github.com/firebase/flutterfire/commit/83f4dad65aae08e2979d009b03e9adb4ca907df7))
+ - **FIX**(core,ios): update Package.swift and header imports for backwards compatibility ([#13545](https://github.com/firebase/flutterfire/issues/13545)). ([07eb25fa](https://github.com/firebase/flutterfire/commit/07eb25fa67a8c7c3e21275bacd234641721de8fc))
+ - **FEAT**: update Android SDK to version 33.5.1 ([#13803](https://github.com/firebase/flutterfire/issues/13803)). ([66394540](https://github.com/firebase/flutterfire/commit/6639454043c09a47d444046c08a398c9aef5315f))
+ - **FEAT**: bump firebase iOS SDK to `v11.4.0` ([#13552](https://github.com/firebase/flutterfire/issues/13552)). ([a4be6973](https://github.com/firebase/flutterfire/commit/a4be69731d41aade5dfcfb154af3292551633874))
+ - **FEAT**: bump Firebase android BOM to `v33.5.0` ([#13538](https://github.com/firebase/flutterfire/issues/13538)). ([d3cfc0e7](https://github.com/firebase/flutterfire/commit/d3cfc0e778b8173a370f645448569db380bb6cef))
+
 ## 3.6.0
 
  - **FEAT**: bump iOS SDK to version 11.2.0 ([#13338](https://github.com/firebase/flutterfire/issues/13338)). ([ff1e5f67](https://github.com/firebase/flutterfire/commit/ff1e5f672cee29731dc4d21251611030add9e605))
