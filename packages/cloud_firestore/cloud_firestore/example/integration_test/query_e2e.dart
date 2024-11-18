@@ -1074,7 +1074,8 @@ void runQueryTests() {
           (_) async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest(
-                'startAfterDocument-wrong-inequality-field-throw');
+          'startAfterDocument-wrong-inequality-field-throw',
+        );
         await Future.wait([
           collection.doc('doc1').set({
             'bar': {'value': 2},
