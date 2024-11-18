@@ -441,7 +441,6 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 - (void)cleanUpTask:(NSString *)channelName handle:(NSNumber *)handle {
   NSObject<FlutterStreamHandler> *handler = [_streamHandlers objectForKey:channelName];
   if (handler) {
-    [handler onCancelWithArguments:nil];
     [_streamHandlers removeObjectForKey:channelName];
   }
 
