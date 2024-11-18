@@ -1031,6 +1031,125 @@ void runQueryTests() {
         expect(snapshot.docs[0].id, equals('doc3'));
         expect(snapshot.docs[1].id, equals('doc4'));
       });
+
+      testWidgets(
+          'throws exception without orderBy() on field used for inequality query',
+          (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('startAfterDocument-inequality-field-throw');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'bar': {'value': 2},
+          }),
+          collection.doc('doc2').set({
+            'bar': {'value': 10},
+          }),
+          collection.doc('doc3').set({
+            'bar': {'value': 10},
+          }),
+          collection.doc('doc4').set({
+            'bar': {'value': 10},
+          }),
+        ]);
+
+        DocumentSnapshot startAtSnapshot = await collection.doc('doc2').get();
+        Query inequalityQuery = collection.where('bar.value', isGreaterThan: 5);
+
+        await expectLater(
+          inequalityQuery.startAfterDocument(startAtSnapshot).get(),
+          throwsA(
+            isA<FirebaseException>().having(
+              (e) => e.message,
+              'message',
+              contains(
+                'Client specified an invalid argument',
+              ),
+            ),
+          ),
+        );
+      });
+
+      testWidgets(
+          'throws exception without correct orderBy("wrong-field") field used for inequality query',
+          (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest(
+                'startAfterDocument-wrong-inequality-field-throw');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'bar': {'value': 2},
+          }),
+          collection.doc('doc2').set(
+            {
+              'bar': {'value': 10},
+              'wrong-field': 2,
+            },
+          ),
+          collection.doc('doc3').set(
+            {
+              'bar': {'value': 10},
+              'wrong-field': 2,
+            },
+          ),
+          collection.doc('doc4').set(
+            {
+              'bar': {'value': 10},
+              'wrong-field': 2,
+            },
+          ),
+        ]);
+
+        DocumentSnapshot startAtSnapshot = await collection.doc('doc2').get();
+        Query inequalityQuery = collection.where('bar.value', isGreaterThan: 5);
+        await expectLater(
+          inequalityQuery
+              .orderBy('wrong-field')
+              .startAfterDocument(startAtSnapshot)
+              .get(),
+          throwsA(
+            isA<FirebaseException>().having(
+              (e) => e.message,
+              'message',
+              contains(
+                'Client specified an invalid argument',
+              ),
+            ),
+          ),
+        );
+      });
+
+      testWidgets(
+          'Successful request when using orderBy() with same field used on inequality query',
+          (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('startAfterDocument-correct-inequality-field');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'bar': 2,
+          }),
+          collection.doc('doc2').set({
+            'bar': 10,
+          }),
+          collection.doc('doc3').set({
+            'bar': 11,
+          }),
+          collection.doc('doc4').set({
+            'bar': 12,
+          }),
+        ]);
+
+        DocumentSnapshot startAtSnapshot = await collection.doc('doc2').get();
+        Query inequalityQuery = collection.where('bar', isGreaterThan: 5);
+
+        final result = await inequalityQuery
+            .orderBy('bar')
+            .startAfterDocument(startAtSnapshot)
+            .get();
+
+        expect(result.size, equals(2));
+        expect(result.docs[0].id, equals('doc3'));
+        expect(result.docs[1].id, equals('doc4'));
+      });
     });
 
     /**
