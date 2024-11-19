@@ -293,13 +293,17 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   static const EventChannel _eventChannelConfigUpdated =
       EventChannel('plugins.flutter.io/firebase_remote_config_updated');
 
+  Stream<RemoteConfigUpdate>? _onConfigUpdatedStream;
+
   @override
   Stream<RemoteConfigUpdate> get onConfigUpdated {
-    return _eventChannelConfigUpdated.receiveBroadcastStream(<String, dynamic>{
+    _onConfigUpdatedStream ??=
+        _eventChannelConfigUpdated.receiveBroadcastStream(<String, dynamic>{
       'appName': app.name,
     }).map((event) {
       final updatedKeys = Set<String>.from(event);
       return RemoteConfigUpdate(updatedKeys);
     });
+    return _onConfigUpdatedStream!;
   }
 }

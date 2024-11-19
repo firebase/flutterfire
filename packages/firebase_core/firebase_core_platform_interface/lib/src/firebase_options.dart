@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 
 // ignore_for_file: deprecated_member_use_from_same_package
-part of firebase_core_platform_interface;
+part of '../firebase_core_platform_interface.dart';
 
 /// The options used to configure a Firebase app.
 ///

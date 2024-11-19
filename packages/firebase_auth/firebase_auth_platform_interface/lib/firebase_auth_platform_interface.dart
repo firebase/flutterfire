@@ -3,8 +3,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-library firebase_auth_platform_interface;
-
 export 'src/action_code_info.dart';
 export 'src/action_code_settings.dart';
 export 'src/additional_user_info.dart';

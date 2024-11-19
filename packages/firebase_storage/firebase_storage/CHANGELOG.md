@@ -1,3 +1,11 @@
+## 12.3.6
+
+ - Update a dependency to the latest release.
+
+## 12.3.5
+
+ - Update a dependency to the latest release.
+
 ## 12.3.4
 
  - **FIX**(storage,android): stream handler & event channel clean up on completion ([#13508](https://github.com/firebase/flutterfire/issues/13508)). ([f010b468](https://github.com/firebase/flutterfire/commit/f010b4684e38f47ad9b38d34c3a84a4eb4518fac))

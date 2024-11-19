@@ -75,6 +75,13 @@ class ChatWidget extends StatefulWidget {
   State<ChatWidget> createState() => _ChatWidgetState();
 }
 
+final class Location {
+  final String city;
+  final String state;
+
+  Location(this.city, this.state);
+}
+
 class _ChatWidgetState extends State<ChatWidget> {
   late final GenerativeModel _model;
   late final GenerativeModel _functionCallModel;
@@ -109,16 +116,13 @@ class _ChatWidgetState extends State<ChatWidget> {
   // This is a hypothetical API to return a fake weather data collection for
   // certain location
   Future<Map<String, Object?>> fetchWeather(
-    double latitude,
-    double longitude,
+    Location location,
     String date,
   ) async {
     // TODO(developer): Call a real weather API.
     // Mock response from the API. In developer live code this would call the
     // external API and return what that API returns.
     final apiResponse = {
-      'location': '$latitude, $longitude',
-      'date': date,
       'temperature': 38,
       'chancePrecipitation': '56%',
       'cloudConditions': 'partly-cloudy',
@@ -132,20 +136,14 @@ class _ChatWidgetState extends State<ChatWidget> {
     'Get the weather conditions for a specific city on a specific date.',
     parameters: {
       'location': Schema.object(
-        description: 'The longitude and latitude of the city for which to get '
-            'the weather. Must always be a nested object of '
-            '`longitude` and `latitude`. The values must be floats.',
+        description: 'The name of the city and its state for which to get '
+            'the weather. Only cities in the USA are supported.',
         properties: {
-          'latitude': Schema.number(
-            format: 'float',
-            description: 'A numeric value indicating the latitude of the '
-                'desired location between -90 and 90',
+          'city': Schema.string(
+            description: 'The city of the location.',
           ),
-          'longitude': Schema.number(
-            format: 'float',
-            description:
-                'A numeric value indicating the longitude of the desired '
-                'location between -180 and 180',
+          'state': Schema.string(
+            description: 'The state of the location.',
           ),
         },
       ),
@@ -341,17 +339,35 @@ class _ChatWidgetState extends State<ChatWidget> {
       _loading = true;
     });
     try {
-      final content = [Content.text('Create a list of 20 $subject.')];
+      final content = [
+        Content.text(
+          "For use in a children's card game, generate 10 animal-based "
+          'characters.',
+        ),
+      ];
+
+      final jsonSchema = Schema.object(
+        properties: {
+          'characters': Schema.array(
+            items: Schema.object(
+              properties: {
+                'name': Schema.string(),
+                'age': Schema.integer(),
+                'species': Schema.string(),
+                'accessory':
+                    Schema.enumString(enumValues: ['hat', 'belt', 'shoes']),
+              },
+            ),
+          ),
+        },
+        optionalProperties: ['accessory'],
+      );
 
       final response = await _model.generateContent(
         content,
         generationConfig: GenerationConfig(
           responseMimeType: 'application/json',
-          responseSchema: Schema.array(
-            items: Schema.string(
-              description: 'A single word that a player will need to guess.',
-            ),
-          ),
+          responseSchema: jsonSchema,
         ),
       );
 
@@ -537,9 +553,9 @@ class _ChatWidgetState extends State<ChatWidget> {
         Map<String, dynamic> location =
             functionCall.args['location']! as Map<String, dynamic>;
         var date = functionCall.args['date']! as String;
-        var latitude = location['latitude']! as double;
-        var longitude = location['longitude']! as double;
-        final functionResult = await fetchWeather(latitude, longitude, date);
+        var city = location['city'] as String;
+        var state = location['state'] as String;
+        final functionResult = await fetchWeather(Location(city, state), date);
         // Send the response to the model so that it can use the result to
         // generate text for the user.
         response = await functionCallChat.sendMessage(

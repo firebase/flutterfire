@@ -1,3 +1,11 @@
+## 0.1.2+3
+
+ - Update a dependency to the latest release.
+
+## 0.1.2+2
+
+ - Update a dependency to the latest release.
+
 ## 0.1.2+1
 
  - **FIX**(fdc): Fix issue where auth wasn't properly refreshing id token ([#13509](https://github.com/firebase/flutterfire/issues/13509)). ([0158ad20](https://github.com/firebase/flutterfire/commit/0158ad20925646e8a21c17adc8793e870f3a65d6))

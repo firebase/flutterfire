@@ -29,7 +29,7 @@ jobs:
       fail-fast: false
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
-      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af
         name: Install Node.js 20
         with:
           node-version: '20'
@@ -48,7 +48,7 @@ jobs:
           channel: 'stable'
           cache: true
       - name: Setup PostgreSQL for Linux/macOS/Windows
-        uses: ikalnytskyi/action-setup-postgres@v6
+        uses: ikalnytskyi/action-setup-postgres@v7
       - uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa
         with:
           run-bootstrap: false
@@ -96,7 +96,7 @@ jobs:
       fail-fast: false
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
-      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af
         name: Install Node.js 20
         with:
           node-version: '20'
@@ -105,7 +105,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Setup PostgreSQL for Linux/macOS/Windows
-        uses: ikalnytskyi/action-setup-postgres@v6  
+        uses: ikalnytskyi/action-setup-postgres@v7  
       - uses: hendrikmuhs/ccache-action@c92f40bee50034e84c763e33b317c77adaa81c92
         name: Xcode Compile Cache
         with:
@@ -176,7 +176,7 @@ jobs:
       fail-fast: false
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
-      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af
         name: Install Node.js 20
         with:
           node-version: '20'
@@ -185,7 +185,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Setup PostgreSQL for Linux/macOS/Windows
-        uses: ikalnytskyi/action-setup-postgres@v6
+        uses: ikalnytskyi/action-setup-postgres@v7
       - uses: subosito/flutter-action@44ac965b96f18d999802d4b807e3256d5a3f9fa1
         with:
           channel: 'stable'

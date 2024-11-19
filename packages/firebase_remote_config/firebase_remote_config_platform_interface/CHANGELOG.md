@@ -1,3 +1,11 @@
+## 1.4.46
+
+ - Update a dependency to the latest release.
+
+## 1.4.45
+
+ - **FIX**(remote_config): ensure all listeners fire on onConfigUpdated ([#13512](https://github.com/firebase/flutterfire/issues/13512)). ([170cc96d](https://github.com/firebase/flutterfire/commit/170cc96d33f68ea3352d45fdd0f071b65fb5596c))
+
 ## 1.4.44
 
  - Update a dependency to the latest release.

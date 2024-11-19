@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_app_check;
+part of '../firebase_app_check.dart';
 
 class FirebaseAppCheck extends FirebasePluginPlatform {
   static Map<String, FirebaseAppCheck> _firebaseAppCheckInstances = {};

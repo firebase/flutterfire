@@ -6,7 +6,7 @@
 // ignore_for_file: public_member_api_docs, non_constant_identifier_names
 
 @JS('firebase_core')
-library firebase_interop.core;
+library;
 
 import 'dart:js_interop';
 

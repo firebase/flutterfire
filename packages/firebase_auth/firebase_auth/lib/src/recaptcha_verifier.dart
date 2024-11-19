@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_auth;
+part of '../firebase_auth.dart';
 
 /// An [reCAPTCHA](https://www.google.com/recaptcha/?authuser=0)-based
 /// application verifier.
