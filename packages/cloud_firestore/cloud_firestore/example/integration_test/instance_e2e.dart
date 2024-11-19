@@ -20,9 +20,9 @@ void runInstanceTests() {
         firestore = FirebaseFirestore.instance;
       });
 
-      testWidgets(
+      test(
         'snapshotsInSync()',
-        (_) async {
+        () async {
           DocumentReference<Map<String, dynamic>> documentReference =
               firestore.doc('flutter-tests/insync');
 
@@ -35,7 +35,7 @@ void runInstanceTests() {
 
           int inSyncCount = 0;
 
-          insync = firestore.snapshotsInSync().listen((_) {
+          insync = firestore.snapshotsInSync().listen(() {
             controller.add('insync=$inSyncCount');
             inSyncCount++;
           });
@@ -67,9 +67,9 @@ void runInstanceTests() {
         skip: kIsWeb,
       );
 
-      testWidgets(
+      test(
         'enableNetwork()',
-        (_) async {
+        () async {
           // Write some data while online
           await firestore.enableNetwork();
           DocumentReference<Map<String, dynamic>> documentReference =
@@ -83,7 +83,7 @@ void runInstanceTests() {
 
           // Set some data while offline
           // ignore: unawaited_futures
-          documentReference.set({'foo': 'baz'}).then((_) async {
+          documentReference.set({'foo': 'baz'}).then(() async {
             // Only when back online will this trigger
             controller.add(true);
           });
@@ -97,9 +97,9 @@ void runInstanceTests() {
         skip: kIsWeb,
       );
 
-      testWidgets(
+      test(
         'disableNetwork()',
-        (_) async {
+        () async {
           // Write some data while online
           await firestore.enableNetwork();
           DocumentReference<Map<String, dynamic>> documentReference =
@@ -121,17 +121,17 @@ void runInstanceTests() {
         skip: kIsWeb,
       );
 
-      testWidgets(
+      test(
         'waitForPendingWrites()',
-        (_) async {
+        () async {
           await firestore.waitForPendingWrites();
         },
         skip: kIsWeb,
       );
 
-      testWidgets(
+      test(
         'terminate() / clearPersistence()',
-        (_) async {
+        () async {
           // Since the firestore instance has already been used,
           // calling `clearPersistence` will throw a native error.
           // We first check it does throw as expected, then terminate
@@ -151,9 +151,9 @@ void runInstanceTests() {
         skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
       );
 
-      testWidgets(
+      test(
         'setIndexConfiguration()',
-        (_) async {
+        () async {
           Index index1 = Index(
             collectionGroup: 'bar',
             queryScope: QueryScope.collectionGroup,
@@ -236,9 +236,9 @@ void runInstanceTests() {
         skip: defaultTargetPlatform == TargetPlatform.windows,
       );
 
-      testWidgets(
+      test(
         'setIndexConfigurationFromJSON()',
-        (_) async {
+        () async {
           final json = jsonEncode({
             'indexes': [
               {
@@ -264,13 +264,13 @@ void runInstanceTests() {
         skip: defaultTargetPlatform == TargetPlatform.windows,
       );
 
-      testWidgets('setLoggingEnabled should resolve without issue',
+      test('setLoggingEnabled should resolve without issue',
           (widgetTester) async {
         await FirebaseFirestore.setLoggingEnabled(true);
         await FirebaseFirestore.setLoggingEnabled(false);
       });
 
-      testWidgets(
+      test(
           'Settings() - `persistenceEnabled` & `cacheSizeBytes` with acceptable number',
           (widgetTester) async {
         FirebaseFirestore.instance.settings =
@@ -284,7 +284,7 @@ void runInstanceTests() {
         );
       });
 
-      testWidgets(
+      test(
           'Settings() - `persistenceEnabled` & `cacheSizeBytes` with `Settings.CACHE_SIZE_UNLIMITED`',
           (widgetTester) async {
         FirebaseFirestore.instance.settings = const Settings(
@@ -300,8 +300,7 @@ void runInstanceTests() {
         );
       });
 
-      testWidgets(
-          'Settings() - `persistenceEnabled` & without `cacheSizeBytes`',
+      test('Settings() - `persistenceEnabled` & without `cacheSizeBytes`',
           (widgetTester) async {
         FirebaseFirestore.instance.settings =
             const Settings(persistenceEnabled: true);
@@ -313,7 +312,7 @@ void runInstanceTests() {
           {'some': 'data'},
         );
       });
-      testWidgets(
+      test(
         '`PersistenceCacheIndexManager` with default persistence settings for each platform',
         (widgetTester) async {
           if (defaultTargetPlatform == TargetPlatform.windows) {
@@ -351,7 +350,7 @@ void runInstanceTests() {
         },
       );
 
-      testWidgets(
+      test(
         '`PersistenceCacheIndexManager` with persistence enabled for each platform',
         (widgetTester) async {
           if (kIsWeb) {
@@ -399,7 +398,7 @@ void runInstanceTests() {
         skip: defaultTargetPlatform == TargetPlatform.windows,
       );
 
-      testWidgets(
+      test(
         '`PersistenceCacheIndexManager` with persistence disabled for each platform',
         (widgetTester) async {
           if (kIsWeb) {

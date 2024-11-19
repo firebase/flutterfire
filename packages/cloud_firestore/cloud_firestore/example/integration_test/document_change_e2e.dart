@@ -31,9 +31,9 @@ void runDocumentChangeTests() {
       return collection;
     }
 
-    testWidgets(
+    test(
       'can add/update values to null in the document',
-      (_) async {
+      () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('null-test');
         DocumentReference<Map<String, dynamic>> doc1 = collection.doc('doc1');
@@ -84,9 +84,9 @@ void runDocumentChangeTests() {
       skip: defaultTargetPlatform == TargetPlatform.windows,
     );
 
-    testWidgets(
+    test(
       'returns the correct metadata when adding and removing',
-      (_) async {
+      () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('add-remove-document');
         DocumentReference<Map<String, dynamic>> doc1 = collection.doc('doc1');
@@ -141,9 +141,9 @@ void runDocumentChangeTests() {
       skip: defaultTargetPlatform == TargetPlatform.windows,
     );
 
-    testWidgets(
+    test(
       'returns the correct metadata when modifying',
-      (_) async {
+      () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('add-modify-document');
         DocumentReference<Map<String, dynamic>> doc1 = collection.doc('doc1');

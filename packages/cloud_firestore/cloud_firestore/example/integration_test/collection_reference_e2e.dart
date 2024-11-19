@@ -30,7 +30,7 @@ void runCollectionReferenceTests() {
       return collection;
     }
 
-    testWidgets('add() adds a document', (_) async {
+    test('add() adds a document', () async {
       CollectionReference<Map<String, dynamic>> collection =
           await initializeTest('collection-reference-add');
       var rand = Random();
@@ -42,9 +42,9 @@ void runCollectionReferenceTests() {
       expect(randNum, equals(snapshot.data()!['value']));
     });
 
-    testWidgets(
+    test(
       'snapshots() can be reused',
-      (_) async {
+      () async {
         final foo = await initializeTest('foo');
 
         final snapshot = foo.snapshots();
@@ -86,9 +86,9 @@ void runCollectionReferenceTests() {
     group(
       'withConverter',
       () {
-        testWidgets(
+        test(
           'add/snapshot',
-          (_) async {
+          () async {
             final foo = await initializeTest('foo');
             final fooConverter = foo.withConverter<int>(
               fromFirestore: (snapshots, _) =>
@@ -179,9 +179,9 @@ void runCollectionReferenceTests() {
           timeout: const Timeout.factor(3),
         );
 
-        testWidgets(
+        test(
           'returning null from `fromFirestore` should not throw a null check error',
-          (_) async {
+          () async {
             final foo = await initializeTest('foo');
             await foo.add({'value': 42});
             final fooConverter = foo.withConverter(

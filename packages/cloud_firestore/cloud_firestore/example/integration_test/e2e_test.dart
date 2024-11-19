@@ -28,7 +28,7 @@ import 'web_snapshot_listeners.dart';
 bool kUseFirestoreEmulator = true;
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  IntegrationtestFlutterBinding.ensureInitialized();
 
   group('cloud_firestore', () {
     setUpAll(() async {
