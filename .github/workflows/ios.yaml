@@ -21,9 +21,6 @@ on:
       - '**/example/**'
       - '**/flutterfire_ui/**'
       - '**.md'
-  schedule:
-    - cron: '0 * * * *'  # Runs every hour
-  workflow_dispatch:
 
 jobs:
   ios:
@@ -116,8 +113,4 @@ jobs:
           sleep 15
           # Uncomment following line to have simulator logs printed out for debugging purposes.
           # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
-          flutter drive \
-          --driver=test_driver/integration_test.dart \
-          --target=integration_test/e2e_test.dart \
-          -d "$SIMULATOR" \
-          --dart-define=CI=true
+          flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true
