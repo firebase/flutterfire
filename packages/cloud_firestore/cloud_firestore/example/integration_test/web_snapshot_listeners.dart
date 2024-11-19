@@ -30,9 +30,9 @@ void runWebSnapshotListenersTests() {
       ]);
     });
 
-    testWidgets(
+    test(
       'document snapshot listeners in debug',
-      (_) async {
+      () async {
         Completer<bool> completer = Completer<bool>();
         Completer<bool> completer2 = Completer<bool>();
         Completer<bool> completer3 = Completer<bool>();
@@ -68,9 +68,9 @@ void runWebSnapshotListenersTests() {
       skip: !kIsWeb,
     );
 
-    testWidgets(
+    test(
       'document snapshot listeners with different doc refs in debug',
-      (_) async {
+      () async {
         Completer<bool> completer = Completer<bool>();
         Completer<bool> completer2 = Completer<bool>();
         Completer<bool> completer3 = Completer<bool>();
@@ -116,9 +116,9 @@ void runWebSnapshotListenersTests() {
       skip: !kIsWeb,
     );
 
-    testWidgets(
+    test(
       'query snapshot listeners in debug',
-      (_) async {
+      () async {
         Completer<bool> completer = Completer<bool>();
         Completer<bool> completer2 = Completer<bool>();
         Completer<bool> completer3 = Completer<bool>();
@@ -153,9 +153,9 @@ void runWebSnapshotListenersTests() {
       skip: !kIsWeb,
     );
 
-    testWidgets(
+    test(
       'snapshot in sync listeners in debug',
-      (_) async {
+      () async {
         Completer<bool> completer = Completer<bool>();
         Completer<bool> completer2 = Completer<bool>();
         Completer<bool> completer3 = Completer<bool>();
