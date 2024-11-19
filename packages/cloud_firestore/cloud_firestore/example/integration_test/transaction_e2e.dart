@@ -26,7 +26,7 @@ void runTransactionTests() {
         return firestore.doc(prefixedPath);
       }
 
-      testWidgets('works with withConverter', (_) async {
+      test('works with withConverter', () async {
         DocumentReference<Map<String, dynamic>> rawDoc =
             await initializeTest('with-converter-batch');
 
@@ -60,7 +60,7 @@ void runTransactionTests() {
         expect(await doc.get().then((s) => s.data()), 0);
       });
 
-      testWidgets('should resolve with user value', (_) async {
+      test('should resolve with user value', () async {
         int randomValue = Random().nextInt(9999);
         int response = await firestore
             .runTransaction<int>((Transaction transaction) async {
@@ -69,7 +69,7 @@ void runTransactionTests() {
         expect(response, equals(randomValue));
       });
 
-      testWidgets('should abort if thrown and not continue', (_) async {
+      test('should abort if thrown and not continue', () async {
         DocumentReference<Map<String, dynamic>> documentReference =
             await initializeTest('transaction-abort');
 
@@ -91,9 +91,9 @@ void runTransactionTests() {
         }
       });
 
-      testWidgets(
+      test(
         'should not collide if number of maxAttempts is enough',
-        (_) async {
+        () async {
           DocumentReference<Map<String, dynamic>> doc1 =
               await initializeTest('transaction-maxAttempts-1');
 
@@ -126,8 +126,7 @@ void runTransactionTests() {
         retry: 2,
       );
 
-      testWidgets('should collide if number of maxAttempts is too low',
-          (_) async {
+      test('should collide if number of maxAttempts is too low', () async {
         DocumentReference<Map<String, dynamic>> doc1 =
             await initializeTest('transaction-maxAttempts-2');
 
@@ -161,7 +160,7 @@ void runTransactionTests() {
         );
       });
 
-      testWidgets('runs multiple transactions in parallel', (_) async {
+      test('runs multiple transactions in parallel', () async {
         DocumentReference<Map<String, dynamic>> doc1 =
             await initializeTest('transaction-multi-1');
         DocumentReference<Map<String, dynamic>> doc2 =
@@ -189,7 +188,7 @@ void runTransactionTests() {
         expect(snapshot2.data()!['test'], equals('value4'));
       });
 
-      testWidgets('should abort if timeout is exceeded', (_) async {
+      test('should abort if timeout is exceeded', () async {
         await expectLater(
           firestore.runTransaction(
             (Transaction transaction) =>
@@ -203,7 +202,7 @@ void runTransactionTests() {
         );
       });
 
-      testWidgets('should throw with exception', (_) async {
+      test('should throw with exception', () async {
         try {
           await firestore.runTransaction((Transaction transaction) async {
             throw StateError('foo');
@@ -218,9 +217,8 @@ void runTransactionTests() {
         }
       });
 
-      testWidgets(
-          'should throw a native error, and convert to a [FirebaseException]',
-          (_) async {
+      test('should throw a native error, and convert to a [FirebaseException]',
+          () async {
         DocumentReference<Map<String, dynamic>> documentReference =
             firestore.doc('not-allowed/document');
 
@@ -238,7 +236,7 @@ void runTransactionTests() {
       });
 
       group('Transaction.get()', () {
-        testWidgets('should throw if get is called after a command', (_) async {
+        test('should throw if get is called after a command', () async {
           DocumentReference<Map<String, dynamic>> documentReference =
               firestore.doc('flutter-tests/foo');
 
@@ -252,9 +250,9 @@ void runTransactionTests() {
           );
         });
 
-        testWidgets(
+        test(
             'should throw a native error, and convert to a [FirebaseException]',
-            (_) async {
+            () async {
           DocumentReference<Map<String, dynamic>> documentReference =
               firestore.doc('not-allowed/document');
 
@@ -273,7 +271,7 @@ void runTransactionTests() {
 
         // ignore: todo
         // TODO(Salakar): Test seems to fail sometimes. Will look at in a future PR.
-        // testWidgets('support returning any value, e.g. a [DocumentSnapshot]', (_) async {
+        // test('support returning any value, e.g. a [DocumentSnapshot]', () async {
         //   DocumentReference<Map<String, dynamic>> documentReference =
         //       await initializeTest('transaction-get');
 
@@ -291,7 +289,7 @@ void runTransactionTests() {
       });
 
       group('Transaction.delete()', () {
-        testWidgets('should delete a document', (_) async {
+        test('should delete a document', () async {
           DocumentReference<Map<String, dynamic>> documentReference =
               await initializeTest('transaction-delete');
 
@@ -308,7 +306,7 @@ void runTransactionTests() {
       });
 
       group('Transaction.update()', () {
-        testWidgets('should update a document', (_) async {
+        test('should update a document', () async {
           DocumentReference<Map<String, dynamic>> documentReference =
               await initializeTest('transaction-update');
 
@@ -331,7 +329,7 @@ void runTransactionTests() {
       });
 
       group('Transaction.set()', () {
-        testWidgets('sets a document', (_) async {
+        test('sets a document', () async {
           DocumentReference<Map<String, dynamic>> documentReference =
               await initializeTest('transaction-set');
 
@@ -354,7 +352,7 @@ void runTransactionTests() {
           );
         });
 
-        testWidgets('merges a document with set', (_) async {
+        test('merges a document with set', () async {
           DocumentReference<Map<String, dynamic>> documentReference =
               await initializeTest('transaction-set-merge');
 
@@ -377,7 +375,7 @@ void runTransactionTests() {
           expect(snapshot.data()!['foo'], equals('bar'));
         });
 
-        testWidgets('merges fields a document with set', (_) async {
+        test('merges fields a document with set', () async {
           DocumentReference<Map<String, dynamic>> documentReference =
               await initializeTest('transaction-set-merge-fields');
 
@@ -406,7 +404,7 @@ void runTransactionTests() {
         });
       });
 
-      testWidgets('runs all commands in a single transaction', (_) async {
+      test('runs all commands in a single transaction', () async {
         DocumentReference<Map<String, dynamic>> documentReference =
             await initializeTest('transaction-all');
 
@@ -448,9 +446,9 @@ void runTransactionTests() {
       });
 
       // TODO(Lyokone): adding auth make some tests fails in macOS
-      // testWidgets(
+      // test(
       //     'should not fail to complete transaction if user is authenticated',
-      //     (_) async {
+      //     () async {
       //   DocumentReference<Map<String, dynamic>> doc1 =
       //       await initializeTest('transaction-authentified-1');
 

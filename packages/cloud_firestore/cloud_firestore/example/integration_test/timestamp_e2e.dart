@@ -21,7 +21,7 @@ void runTimestampTests() {
       return firestore.doc(prefixedPath);
     }
 
-    testWidgets('sets a $Timestamp & returns one', (_) async {
+    test('sets a $Timestamp & returns one', () async {
       DocumentReference<Map<String, dynamic>> doc =
           await initializeTest('timestamp');
       DateTime date = DateTime.utc(3000);
@@ -37,7 +37,7 @@ void runTimestampTests() {
       );
     });
 
-    testWidgets('updates a $Timestamp & returns', (_) async {
+    test('updates a $Timestamp & returns', () async {
       DocumentReference<Map<String, dynamic>> doc =
           await initializeTest('geo-point-update');
       DateTime date = DateTime.utc(3000, 01, 02);
