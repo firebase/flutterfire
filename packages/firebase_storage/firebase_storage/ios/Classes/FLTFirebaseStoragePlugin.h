@@ -19,4 +19,5 @@
 
 + (NSDictionary *)parseTaskSnapshot:(FIRStorageTaskSnapshot *)snapshot;
 + (NSDictionary *)NSDictionaryFromNSError:(NSError *)error;
+- (void)cleanUpTask:(NSString *)channelName handle:(NSNumber *)handle;
 @end

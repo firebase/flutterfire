@@ -17,8 +17,10 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FLTTaskStateChannelStreamHandler : NSObject <FlutterStreamHandler>
-
-- (instancetype)initWithTask:(FIRStorageObservableTask *)task;
+- (instancetype)initWithTask:(FIRStorageObservableTask *)task
+               storagePlugin:(FLTFirebaseStoragePlugin *)storagePlugin
+                 channelName:(NSString *)channelName
+                      handle:(NSNumber *)handle;
 
 @end
 
