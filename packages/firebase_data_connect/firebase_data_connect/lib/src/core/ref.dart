@@ -51,8 +51,9 @@ abstract class OperationRef<Data, Variables> {
     String? newToken;
     try {
       newToken = await this.dataConnect.auth?.currentUser?.getIdToken(false);
-    } catch (_) {
+    } catch (e) {
       // Don't retry if there was an issue getting the ID Token.
+      log("There was an error attempting to retrieve the ID Token: ${e.toString()}");
     }
     bool shouldRetry = newToken != null && _lastToken != newToken;
     _lastToken = newToken;
