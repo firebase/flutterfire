@@ -2548,8 +2548,7 @@ void runQueryTests() {
         expect(results.docs[1].id, equals('doc3'));
       });
 
-      test('"whereIn" query combined with "arrayContainsAny"',
-          (widgetTester) async {
+      test('"whereIn" query combined with "arrayContainsAny"', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-filter-arraycontainsany-in-combined');
         await Future.wait([
@@ -3844,8 +3843,7 @@ void runQueryTests() {
         },
       );
 
-      test('count(), average() & sum() on empty collection',
-          (widgetTester) async {
+      test('count(), average() & sum() on empty collection', () async {
         final collection = await initializeTest('empty-collection');
 
         final snapshot = await collection

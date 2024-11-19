@@ -35,7 +35,7 @@ void runInstanceTests() {
 
           int inSyncCount = 0;
 
-          insync = firestore.snapshotsInSync().listen(() {
+          insync = firestore.snapshotsInSync().listen((_) {
             controller.add('insync=$inSyncCount');
             inSyncCount++;
           });
@@ -83,7 +83,7 @@ void runInstanceTests() {
 
           // Set some data while offline
           // ignore: unawaited_futures
-          documentReference.set({'foo': 'baz'}).then(() async {
+          documentReference.set({'foo': 'baz'}).then((_) async {
             // Only when back online will this trigger
             controller.add(true);
           });
@@ -264,15 +264,14 @@ void runInstanceTests() {
         skip: defaultTargetPlatform == TargetPlatform.windows,
       );
 
-      test('setLoggingEnabled should resolve without issue',
-          (widgetTester) async {
+      test('setLoggingEnabled should resolve without issue', () async {
         await FirebaseFirestore.setLoggingEnabled(true);
         await FirebaseFirestore.setLoggingEnabled(false);
       });
 
       test(
           'Settings() - `persistenceEnabled` & `cacheSizeBytes` with acceptable number',
-          (widgetTester) async {
+          () async {
         FirebaseFirestore.instance.settings =
             const Settings(persistenceEnabled: true, cacheSizeBytes: 10000000);
         // Used to trigger settings
@@ -286,7 +285,7 @@ void runInstanceTests() {
 
       test(
           'Settings() - `persistenceEnabled` & `cacheSizeBytes` with `Settings.CACHE_SIZE_UNLIMITED`',
-          (widgetTester) async {
+          () async {
         FirebaseFirestore.instance.settings = const Settings(
           persistenceEnabled: true,
           cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
@@ -301,7 +300,7 @@ void runInstanceTests() {
       });
 
       test('Settings() - `persistenceEnabled` & without `cacheSizeBytes`',
-          (widgetTester) async {
+          () async {
         FirebaseFirestore.instance.settings =
             const Settings(persistenceEnabled: true);
         // Used to trigger settings
@@ -314,7 +313,7 @@ void runInstanceTests() {
       });
       test(
         '`PersistenceCacheIndexManager` with default persistence settings for each platform',
-        (widgetTester) async {
+        () async {
           if (defaultTargetPlatform == TargetPlatform.windows) {
             try {
               // Windows does not have `PersistenceCacheIndexManager` support
@@ -352,7 +351,7 @@ void runInstanceTests() {
 
       test(
         '`PersistenceCacheIndexManager` with persistence enabled for each platform',
-        (widgetTester) async {
+        () async {
           if (kIsWeb) {
             final firestore = FirebaseFirestore.instanceFor(
               app: Firebase.app(),
@@ -400,7 +399,7 @@ void runInstanceTests() {
 
       test(
         '`PersistenceCacheIndexManager` with persistence disabled for each platform',
-        (widgetTester) async {
+        () async {
           if (kIsWeb) {
             final firestore = FirebaseFirestore.instanceFor(
               app: Firebase.app(),
