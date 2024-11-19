@@ -419,7 +419,8 @@ public class FlutterFirebaseAuthPlugin
               result) {
     FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
 
-    OAuthProvider.Builder provider = OAuthProvider.newBuilder(signInProvider.getProviderId());
+    OAuthProvider.Builder provider =
+        OAuthProvider.newBuilder(signInProvider.getProviderId(), firebaseAuth);
     if (signInProvider.getScopes() != null) {
       provider.setScopes(signInProvider.getScopes());
     }
