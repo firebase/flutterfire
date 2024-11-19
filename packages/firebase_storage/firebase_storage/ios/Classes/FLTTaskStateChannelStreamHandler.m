@@ -9,17 +9,25 @@
 
 @implementation FLTTaskStateChannelStreamHandler {
   FIRStorageObservableTask *_task;
-
+  FLTFirebaseStoragePlugin *_storagePlugin;
+  NSString *_channelName;
+  NSNumber *_handle;
   FIRStorageHandle successHandle;
   FIRStorageHandle failureHandle;
   FIRStorageHandle pausedHandle;
   FIRStorageHandle progressHandle;
 }
 
-- (instancetype)initWithTask:(FIRStorageObservableTask *)task {
+- (instancetype)initWithTask:(FIRStorageObservableTask *)task
+               storagePlugin:(FLTFirebaseStoragePlugin *)storagePlugin
+                 channelName:(NSString *)channelName
+                      handle:(NSNumber *)handle {
   self = [super init];
   if (self) {
     _task = task;
+    _storagePlugin = storagePlugin;
+    _channelName = channelName;
+    _handle = handle;
   }
   return self;
 }
@@ -97,6 +105,10 @@
     [_task removeObserverWithHandle:progressHandle];
   }
   progressHandle = nil;
+
+  if (_storagePlugin) {
+    [_storagePlugin cleanUpTask:_channelName handle:_handle];
+  }
 
   return nil;
 }
