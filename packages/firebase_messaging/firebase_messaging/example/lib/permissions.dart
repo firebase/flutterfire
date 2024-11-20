@@ -58,7 +58,12 @@ class _Permissions extends State<Permissions> {
       margin: const EdgeInsets.only(bottom: 8),
       child: Row(
         children: [
-          Expanded(child: Text('$title:', style: const TextStyle(fontWeight: FontWeight.bold))),
+          Expanded(
+            child: Text(
+              '$title:',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
           Text(value),
         ],
       ),
@@ -88,7 +93,8 @@ class _Permissions extends State<Permissions> {
         row('Notification Center', settingsMap[_settings.notificationCenter]!),
         row('Show Previews', previewMap[_settings.showPreviews]!),
         row('Sound', settingsMap[_settings.sound]!),
-        row('Provides App Notification Settings', settingsMap[_settings.providesAppNotificationSettings]!),
+        row('Provides App Notification Settings',
+            settingsMap[_settings.providesAppNotificationSettings]!),
       ],
       ElevatedButton(
           onPressed: checkPermissions, child: const Text('Reload Permissions')),

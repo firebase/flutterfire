@@ -132,7 +132,8 @@ void main() {
           criticalAlert: anyNamed('criticalAlert'),
           provisional: anyNamed('provisional'),
           sound: anyNamed('sound'),
-          providesAppNotificationSettings: anyNamed('providesAppNotificationSettings'),
+          providesAppNotificationSettings:
+              anyNamed('providesAppNotificationSettings'),
         )).thenAnswer((_) => Future.value(defaultNotificationSettings));
 
         // true values
