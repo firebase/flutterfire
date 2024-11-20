@@ -28,7 +28,7 @@ void runWriteBatchTests() {
       return collection;
     }
 
-    testWidgets('works with withConverter', (_) async {
+    test('works with withConverter', () async {
       CollectionReference<Map<String, dynamic>> collection =
           await initializeTest('with-converter-batch');
       WriteBatch batch = firestore.batch();
@@ -70,7 +70,7 @@ void runWriteBatchTests() {
       expect(snapshot.exists, false);
     });
 
-    testWidgets('performs batch operations', (_) async {
+    test('performs batch operations', () async {
       CollectionReference<Map<String, dynamic>> collection =
           await initializeTest('write-batch-ops');
       WriteBatch batch = firestore.batch();

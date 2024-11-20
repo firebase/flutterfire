@@ -412,10 +412,10 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
     self->_tasks[handle] = task;
   }
 
-  completion([self setupTaskListeners:task], nil);
+  completion([self setupTaskListeners:task handle:handle], nil);
 }
 
-- (NSString *)setupTaskListeners:(FIRStorageObservableTask *)task {
+- (NSString *)setupTaskListeners:(FIRStorageObservableTask *)task handle:(NSNumber *)handle {
   // Generate a random UUID to register with
   NSString *uuid = [[NSUUID UUID] UUIDString];
 
@@ -426,13 +426,33 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   FlutterEventChannel *channel = [FlutterEventChannel eventChannelWithName:channelName
                                                            binaryMessenger:_binaryMessenger];
   FLTTaskStateChannelStreamHandler *handler =
-      [[FLTTaskStateChannelStreamHandler alloc] initWithTask:task];
+      [[FLTTaskStateChannelStreamHandler alloc] initWithTask:task
+                                               storagePlugin:self
+                                                 channelName:channelName
+                                                      handle:handle];
   [channel setStreamHandler:handler];
 
   [_eventChannels setObject:channel forKey:channelName];
   [_streamHandlers setObject:handler forKey:channelName];
 
   return uuid;
+}
+
+- (void)cleanUpTask:(NSString *)channelName handle:(NSNumber *)handle {
+  NSObject<FlutterStreamHandler> *handler = [_streamHandlers objectForKey:channelName];
+  if (handler) {
+    [_streamHandlers removeObjectForKey:channelName];
+  }
+
+  FlutterEventChannel *channel = [_eventChannels objectForKey:channelName];
+  if (channel) {
+    [channel setStreamHandler:nil];
+    [_eventChannels removeObjectForKey:channelName];
+  }
+
+  @synchronized(self->_tasks) {
+    [self->_tasks removeObjectForKey:handle];
+  }
 }
 
 - (void)referencePutStringApp:(PigeonStorageFirebaseApp *)app
@@ -456,7 +476,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
     self->_tasks[handle] = task;
   }
 
-  completion([self setupTaskListeners:task], nil);
+  completion([self setupTaskListeners:task handle:handle], nil);
 }
 
 - (void)referencePutFileApp:(PigeonStorageFirebaseApp *)app
@@ -481,7 +501,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
     self->_tasks[handle] = task;
   }
 
-  completion([self setupTaskListeners:task], nil);
+  completion([self setupTaskListeners:task handle:handle], nil);
 }
 
 - (void)referenceDownloadFileApp:(PigeonStorageFirebaseApp *)app
@@ -501,7 +521,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
     self->_tasks[handle] = task;
   }
 
-  completion([self setupTaskListeners:task], nil);
+  completion([self setupTaskListeners:task handle:handle], nil);
 }
 
 - (void)referenceUpdateMetadataApp:(PigeonStorageFirebaseApp *)app

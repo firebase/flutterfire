@@ -48,8 +48,13 @@ abstract class OperationRef<Data, Variables> {
 
   Future<OperationResult<Data, Variables>> execute();
   Future<bool> _shouldRetry() async {
-    String? newToken =
-        await this.dataConnect.auth?.currentUser?.getIdToken(false);
+    String? newToken;
+    try {
+      newToken = await this.dataConnect.auth?.currentUser?.getIdToken(false);
+    } catch (e) {
+      // Don't retry if there was an issue getting the ID Token.
+      log("There was an error attempting to retrieve the ID Token: ${e.toString()}");
+    }
     bool shouldRetry = newToken != null && _lastToken != newToken;
     _lastToken = newToken;
     return shouldRetry;
@@ -97,12 +102,14 @@ class QueryManager {
       return;
     }
     StreamController stream = trackedQueries[operationName]![key]!;
-    // TODO(mtewani): Prevent this from getting called multiple times.
-    stream.onCancel = () => stream.close();
-    if (error != null) {
-      stream.addError(error);
-    } else {
-      stream.add(QueryResult<Data, Variables>(dataConnect, data as Data, ref));
+
+    if (!stream.isClosed) {
+      if (error != null) {
+        stream.addError(error);
+      } else {
+        stream
+            .add(QueryResult<Data, Variables>(dataConnect, data as Data, ref));
+      }
     }
   }
 }
