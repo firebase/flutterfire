@@ -193,7 +193,7 @@ void main() {
           criticalAlert: false,
           provisional: false,
           sound: true,
-          providesAppNotificationSettings: true,
+          providesAppNotificationSettings: false,
         ));
       });
     });
