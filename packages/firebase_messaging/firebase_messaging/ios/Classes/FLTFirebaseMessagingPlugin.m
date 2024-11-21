@@ -607,7 +607,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
       options |= UNAuthorizationOptionCriticalAlert;
     }
   }
-        
+
   if ([permissions[@"providesAppNotificationSettings"] isEqual:@(YES)]) {
     if (@available(iOS 12.0, *)) {
       options |= UNAuthorizationOptionProvidesAppNotificationSettings;
@@ -785,7 +785,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   settingsDictionary[@"notificationCenter"] = [FLTFirebaseMessagingPlugin
       NSNumberForUNNotificationSetting:settings.notificationCenterSetting];
   settingsDictionary[@"timeSensitive"] = timeSensitive;
-        
+
   if (@available(iOS 12.0, *)) {
     if (settings.providesAppNotificationSettings) {
       settingsDictionary[@"providesAppNotificationSettings"] = @1;
