@@ -1,3 +1,10 @@
+## 6.0.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**(auth,android): `signInWithProvider()` for non-default instances ([#13522](https://github.com/firebase/flutterfire/issues/13522)). ([f25e21ce](https://github.com/firebase/flutterfire/commit/f25e21cedc256f4f1529a293eb34074b3025c130))
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
 ## 5.3.3
 
  - Update a dependency to the latest release.

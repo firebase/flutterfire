@@ -3,6 +3,213 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-11-22
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - [`cloud_firestore` - `v6.0.0`](#cloud_firestore---v600)
+ - [`cloud_functions` - `v6.0.0`](#cloud_functions---v600)
+ - [`cloud_functions_platform_interface` - `v6.0.0`](#cloud_functions_platform_interface---v600)
+ - [`firebase_analytics` - `v12.0.0`](#firebase_analytics---v1200)
+ - [`firebase_analytics_platform_interface` - `v5.0.0`](#firebase_analytics_platform_interface---v500)
+ - [`firebase_app_check` - `v0.4.0`](#firebase_app_check---v040)
+ - [`firebase_app_check_platform_interface` - `v0.2.0`](#firebase_app_check_platform_interface---v020)
+ - [`firebase_app_installations` - `v0.4.0`](#firebase_app_installations---v040)
+ - [`firebase_auth` - `v6.0.0`](#firebase_auth---v600)
+ - [`firebase_auth_platform_interface` - `v8.0.0`](#firebase_auth_platform_interface---v800)
+ - [`firebase_core_platform_interface` - `v6.0.0`](#firebase_core_platform_interface---v600)
+ - [`firebase_crashlytics` - `v5.0.0`](#firebase_crashlytics---v500)
+ - [`firebase_crashlytics_platform_interface` - `v4.0.0`](#firebase_crashlytics_platform_interface---v400)
+ - [`firebase_database` - `v12.0.0`](#firebase_database---v1200)
+ - [`firebase_database_platform_interface` - `v0.3.0`](#firebase_database_platform_interface---v030)
+ - [`firebase_dynamic_links` - `v7.0.0`](#firebase_dynamic_links---v700)
+ - [`firebase_dynamic_links_platform_interface` - `v0.3.0`](#firebase_dynamic_links_platform_interface---v030)
+ - [`firebase_in_app_messaging` - `v0.9.0`](#firebase_in_app_messaging---v090)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.3.0`](#firebase_in_app_messaging_platform_interface---v030)
+ - [`firebase_messaging` - `v16.0.0`](#firebase_messaging---v1600)
+ - [`firebase_messaging_platform_interface` - `v5.0.0`](#firebase_messaging_platform_interface---v500)
+ - [`firebase_ml_model_downloader` - `v0.4.0`](#firebase_ml_model_downloader---v040)
+ - [`firebase_ml_model_downloader_platform_interface` - `v0.2.0`](#firebase_ml_model_downloader_platform_interface---v020)
+ - [`firebase_performance` - `v0.11.0`](#firebase_performance---v0110)
+ - [`firebase_performance_platform_interface` - `v0.2.0`](#firebase_performance_platform_interface---v020)
+ - [`firebase_remote_config` - `v6.0.0`](#firebase_remote_config---v600)
+ - [`firebase_storage` - `v13.0.0`](#firebase_storage---v1300)
+ - [`firebase_storage_platform_interface` - `v6.0.0`](#firebase_storage_platform_interface---v600)
+ - [`firebase_vertexai` - `v2.0.0`](#firebase_vertexai---v200)
+
+Packages with other changes:
+
+ - [`firebase_data_connect` - `v0.1.2+4`](#firebase_data_connect---v0124)
+ - [`cloud_functions_web` - `v4.10.5`](#cloud_functions_web---v4105)
+ - [`firebase_analytics_web` - `v0.5.10+5`](#firebase_analytics_web---v05105)
+ - [`firebase_app_check_web` - `v0.2.0+3`](#firebase_app_check_web---v0203)
+ - [`firebase_auth_web` - `v5.13.5`](#firebase_auth_web---v5135)
+ - [`_flutterfire_internals` - `v1.3.47`](#_flutterfire_internals---v1347)
+ - [`firebase_core` - `v3.8.1`](#firebase_core---v381)
+ - [`firebase_core_web` - `v2.18.2`](#firebase_core_web---v2182)
+ - [`firebase_app_installations_platform_interface` - `v0.1.4+47`](#firebase_app_installations_platform_interface---v01447)
+ - [`cloud_firestore_web` - `v4.3.5`](#cloud_firestore_web---v435)
+ - [`firebase_remote_config_platform_interface` - `v1.4.47`](#firebase_remote_config_platform_interface---v1447)
+ - [`firebase_messaging_web` - `v3.9.5`](#firebase_messaging_web---v395)
+ - [`firebase_app_installations_web` - `v0.1.6+5`](#firebase_app_installations_web---v0165)
+ - [`cloud_firestore_platform_interface` - `v6.5.1`](#cloud_firestore_platform_interface---v651)
+ - [`firebase_performance_web` - `v0.1.7+5`](#firebase_performance_web---v0175)
+ - [`firebase_storage_web` - `v3.10.6`](#firebase_storage_web---v3106)
+ - [`firebase_database_web` - `v0.2.6+5`](#firebase_database_web---v0265)
+ - [`firebase_remote_config_web` - `v1.7.5`](#firebase_remote_config_web---v175)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `cloud_functions_web` - `v4.10.5`
+ - `firebase_analytics_web` - `v0.5.10+5`
+ - `firebase_app_check_web` - `v0.2.0+3`
+ - `firebase_auth_web` - `v5.13.5`
+ - `_flutterfire_internals` - `v1.3.47`
+ - `firebase_core` - `v3.8.1`
+ - `firebase_core_web` - `v2.18.2`
+ - `firebase_app_installations_platform_interface` - `v0.1.4+47`
+ - `cloud_firestore_web` - `v4.3.5`
+ - `firebase_remote_config_platform_interface` - `v1.4.47`
+ - `firebase_messaging_web` - `v3.9.5`
+ - `firebase_app_installations_web` - `v0.1.6+5`
+ - `cloud_firestore_platform_interface` - `v6.5.1`
+ - `firebase_performance_web` - `v0.1.7+5`
+ - `firebase_storage_web` - `v3.10.6`
+ - `firebase_database_web` - `v0.2.6+5`
+ - `firebase_remote_config_web` - `v1.7.5`
+
+---
+
+#### `cloud_firestore` - `v6.0.0`
+
+ - **FIX**(firestore,android): synchronize access to firestore instances ([#16675](https://github.com/firebase/flutterfire/issues/16675)). ([0e992b82](https://github.com/firebase/flutterfire/commit/0e992b827dfc7525b497540ebaf9d173445cdb13))
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `cloud_functions` - `v6.0.0`
+
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `cloud_functions_platform_interface` - `v6.0.0`
+
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_analytics` - `v12.0.0`
+
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_analytics_platform_interface` - `v5.0.0`
+
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_app_check` - `v0.4.0`
+
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_app_check_platform_interface` - `v0.2.0`
+
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_app_installations` - `v0.4.0`
+
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_auth` - `v6.0.0`
+
+ - **FIX**(auth,android): `signInWithProvider()` for non-default instances ([#13522](https://github.com/firebase/flutterfire/issues/13522)). ([f25e21ce](https://github.com/firebase/flutterfire/commit/f25e21cedc256f4f1529a293eb34074b3025c130))
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_auth_platform_interface` - `v8.0.0`
+
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_core_platform_interface` - `v6.0.0`
+
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_crashlytics` - `v5.0.0`
+
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_crashlytics_platform_interface` - `v4.0.0`
+
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_database` - `v12.0.0`
+
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_database_platform_interface` - `v0.3.0`
+
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_dynamic_links` - `v7.0.0`
+
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_dynamic_links_platform_interface` - `v0.3.0`
+
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_in_app_messaging` - `v0.9.0`
+
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_in_app_messaging_platform_interface` - `v0.3.0`
+
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_messaging` - `v16.0.0`
+
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_messaging_platform_interface` - `v5.0.0`
+
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_ml_model_downloader` - `v0.4.0`
+
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_ml_model_downloader_platform_interface` - `v0.2.0`
+
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_performance` - `v0.11.0`
+
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_performance_platform_interface` - `v0.2.0`
+
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_remote_config` - `v6.0.0`
+
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_storage` - `v13.0.0`
+
+ - **FIX**(storage,apple): clean up event channel, stream handler and task on completion ([#16708](https://github.com/firebase/flutterfire/issues/16708)). ([95a99351](https://github.com/firebase/flutterfire/commit/95a99351fc6f56516ce4a8d6ba4410a95e21afd3))
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_storage_platform_interface` - `v6.0.0`
+
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_vertexai` - `v2.0.0`
+
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
+#### `firebase_data_connect` - `v0.1.2+4`
+
+ - **FIX**(fdc): Don't throw when FirebaseAuth is unable to get an ID Token ([#16711](https://github.com/firebase/flutterfire/issues/16711)). ([1ef2044a](https://github.com/firebase/flutterfire/commit/1ef2044a7a9f2004f933147a8494fb82fa4c3c26))
+
+
 ## 2024-11-13 - [BoM 3.2.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-320-2024-11-13)
 
 ### Changes

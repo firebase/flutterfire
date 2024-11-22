@@ -1,3 +1,7 @@
+## 3.8.1
+
+ - Update a dependency to the latest release.
+
 ## 3.8.0
 
  - **FEAT**(firestore): Swift Package Manager support ([#13329](https://github.com/firebase/flutterfire/issues/13329)). ([0420eabb](https://github.com/firebase/flutterfire/commit/0420eabb3ab247e0e3998bedcb9779fe35c46920))
