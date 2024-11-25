@@ -4,7 +4,6 @@
 
 #import "include/FLTFirebaseFunctionsPlugin.h"
 
-
 @import FirebaseFunctions;
 #if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
 #import <firebase_core/FLTFirebasePluginRegistry.h>
