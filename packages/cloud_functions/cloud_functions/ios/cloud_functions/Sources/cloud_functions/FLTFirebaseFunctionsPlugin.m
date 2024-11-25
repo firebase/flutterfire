@@ -5,7 +5,11 @@
 #import "FLTFirebaseFunctionsPlugin.h"
 
 @import FirebaseFunctions;
-#import <firebase_core/FLTFirebasePluginRegistry.h>
+#if __has_include(<firebase_core/FLTFirebasePlugin.h>)
+#import <firebase_core/FLTFirebasePlugin.h>
+#else
+#import <FLTFirebasePlugin.h>
+#endif
 
 NSString *const kFLTFirebaseFunctionsChannelName = @"plugins.flutter.io/firebase_functions";
 
