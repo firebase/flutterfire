@@ -4,17 +4,22 @@
 
 @import FirebaseAuth;
 #import <TargetConditionals.h>
+#if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
 #import <firebase_core/FLTFirebasePluginRegistry.h>
+#else
+#import <FLTFirebasePluginRegistry.h>
+#endif
 
-#import "Private/FLTAuthStateChannelStreamHandler.h"
-#import "Private/FLTIdTokenChannelStreamHandler.h"
-#import "Private/FLTPhoneNumberVerificationStreamHandler.h"
-#import "Private/PigeonParser.h"
+#import "include/Private/FLTAuthStateChannelStreamHandler.h"
+#import "include/Private/FLTIdTokenChannelStreamHandler.h"
+#import "include/Private/FLTPhoneNumberVerificationStreamHandler.h"
+#import "include/Private/PigeonParser.h"
 
-#import "Public/CustomPigeonHeader.h"
-#import "Public/FLTFirebaseAuthPlugin.h"
+#import "include/Public/CustomPigeonHeader.h"
+#import "include/Public/FLTFirebaseAuthPlugin.h"
 @import CommonCrypto;
 #import <AuthenticationServices/AuthenticationServices.h>
+
 #import <firebase_core/FLTFirebaseCorePlugin.h>
 
 NSString *const kFLTFirebaseAuthChannelName = @"plugins.flutter.io/firebase_auth";

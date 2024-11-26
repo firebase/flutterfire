@@ -6,7 +6,7 @@
 
 @import FirebaseAuth;
 #import <Foundation/Foundation.h>
-#import "firebase_auth_messages.g.h"
+#import "../Public/firebase_auth_messages.g.h"
 
 @interface PigeonParser : NSObject
 

@@ -11,7 +11,7 @@
 #endif
 
 @import FirebaseAuth;
-#import "CustomPigeonHeader.h"
+#import "../Public/CustomPigeonHeader.h"
 #import "PigeonParser.h"
 
 #import <Foundation/Foundation.h>

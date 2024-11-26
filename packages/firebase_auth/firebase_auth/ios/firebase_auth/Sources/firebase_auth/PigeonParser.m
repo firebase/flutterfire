@@ -2,9 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-#import "Private/PigeonParser.h"
+#import "include/Private/PigeonParser.h"
 #import <Foundation/Foundation.h>
-#import "Public/CustomPigeonHeader.h"
+#import "include/Public/CustomPigeonHeader.h"
 
 @implementation PigeonParser
 
