@@ -36,7 +36,12 @@ func loadFirebaseSDKVersion() throws -> String {
 }
 
 func loadPubspecVersions() throws -> (packageVersion: String, firebaseCoreVersion: String) {
-  let pubspecPath = NSString.path(withComponents: [remoteConfigDirectory, "..", "..", "pubspec.yaml"])
+  let pubspecPath = NSString.path(withComponents: [
+    remoteConfigDirectory,
+    "..",
+    "..",
+    "pubspec.yaml",
+  ])
   do {
     let yamlString = try String(contentsOfFile: pubspecPath, encoding: .utf8)
     let lines = yamlString.split(separator: "\n")
