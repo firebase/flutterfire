@@ -20,7 +20,11 @@
 @import CommonCrypto;
 #import <AuthenticationServices/AuthenticationServices.h>
 
+#if __has_include(<firebase_core/FLTFirebaseCorePlugin.h>)
 #import <firebase_core/FLTFirebaseCorePlugin.h>
+#else
+#import <FLTFirebaseCorePlugin.h>
+#endif
 
 NSString *const kFLTFirebaseAuthChannelName = @"plugins.flutter.io/firebase_auth";
 
