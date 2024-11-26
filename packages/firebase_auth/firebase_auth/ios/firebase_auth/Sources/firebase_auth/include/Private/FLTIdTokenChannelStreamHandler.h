@@ -11,14 +11,14 @@
 #endif
 
 @import FirebaseAuth;
+#import "../../../../../Classes/Private/CustomPigeonHeader.h"
+#import "PigeonParser.h"
 
 #import <Foundation/Foundation.h>
-#import "CustomPigeonHeader.h"
-#import "PigeonParser.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FLTAuthStateChannelStreamHandler : NSObject <FlutterStreamHandler>
+@interface FLTIdTokenChannelStreamHandler : NSObject <FlutterStreamHandler>
 
 - (instancetype)initWithAuth:(FIRAuth *)auth;
 
