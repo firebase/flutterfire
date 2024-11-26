@@ -109,8 +109,10 @@ let package = Package(
       ],
       exclude: [
         // These are now pulled in as a remote dependency from FlutterFire repo
+        "FLTFirebaseCorePlugin.m",
         "FLTFirebasePlugin.m",
         "FLTFirebasePluginRegistry.m",
+        "include/firebase_core/FLTFirebaseCorePlugin.h",
         "include/firebase_core/FLTFirebasePlugin.h",
         "include/firebase_core/FLTFirebasePluginRegistry.h",
       ],
