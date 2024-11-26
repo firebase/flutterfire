@@ -8,7 +8,7 @@
 
 @implementation FLTAuthStateChannelStreamHandler {
   FIRAuth *_auth;
-  FIRAuthStateDidChangeListenerHandle *_listener;
+  FIRAuthStateDidChangeListenerHandle _listener;
 }
 
 - (instancetype)initWithAuth:(FIRAuth *)auth {
