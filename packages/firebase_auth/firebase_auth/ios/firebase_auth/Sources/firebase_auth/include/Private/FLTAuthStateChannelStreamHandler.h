@@ -13,7 +13,7 @@
 @import FirebaseAuth;
 
 #import <Foundation/Foundation.h>
-#import "../../../../../Classes/Private/CustomPigeonHeader.h"
+#import "CustomPigeonHeader.h"
 #import "PigeonParser.h"
 
 NS_ASSUME_NONNULL_BEGIN
