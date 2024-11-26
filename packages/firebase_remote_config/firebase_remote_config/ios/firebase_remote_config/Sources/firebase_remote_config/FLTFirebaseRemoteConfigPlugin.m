@@ -61,7 +61,7 @@ BOOL _fetchAndActivateRetry;
 
   SEL sel = NSSelectorFromString(@"registerLibrary:withVersion:");
   if ([FIRApp respondsToSelector:sel]) {
-    [FIRApp performSelector:sel withObject:LIBRARY_NAME withObject:LIBRARY_VERSION];
+    [FIRApp performSelector:sel withObject:@LIBRARY_NAME withObject:@LIBRARY_VERSION];
   }
 }
 
