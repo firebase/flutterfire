@@ -46,7 +46,7 @@ Future<void> buildSwiftExampleApp(String platform, String plugin) async {
 
   if (platform == 'macos') {
     await deleteFirstLine(
-        'packages/$plugin/$plugin/example/macos/Flutter/Flutter-Debug.xcconfig');
+        'packages/$plugin/$plugin/example/macos/Flutter/Flutter-Release.xcconfig');
   }
   // Change to the appropriate directory
   Directory.current = directory;
