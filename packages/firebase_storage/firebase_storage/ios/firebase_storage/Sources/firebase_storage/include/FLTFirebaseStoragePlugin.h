@@ -4,12 +4,13 @@
 #import <TargetConditionals.h>
 
 #if TARGET_OS_OSX
+#import <FirebaseStorage/FirebaseStorage.h>
 #import <FlutterMacOS/FlutterMacOS.h>
 #else
 #import <Flutter/Flutter.h>
+@import FirebaseStorage;
 #endif
 
-@import FirebaseStorage;
 #import <Foundation/Foundation.h>
 #if __has_include(<firebase_core/FLTFirebasePlugin.h>)
 #import <firebase_core/FLTFirebasePlugin.h>
