@@ -1,3 +1,7 @@
+## 0.1.2+4
+
+ - **FIX**(fdc): Don't throw when FirebaseAuth is unable to get an ID Token ([#16711](https://github.com/firebase/flutterfire/issues/16711)). ([1ef2044a](https://github.com/firebase/flutterfire/commit/1ef2044a7a9f2004f933147a8494fb82fa4c3c26))
+
 ## 0.1.2+3
 
  - Update a dependency to the latest release.
