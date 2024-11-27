@@ -3,8 +3,8 @@
 // found in the LICENSE file.
 @import FirebaseStorage;
 
-#import "FLTFirebaseStoragePlugin.h"
 #import "FLTTaskStateChannelStreamHandler.h"
+#import "FLTFirebaseStoragePlugin.h"
 
 @implementation FLTTaskStateChannelStreamHandler {
   FIRStorageObservableTask *_task;
