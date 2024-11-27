@@ -2,10 +2,14 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#import "FLTFirebaseFunctionsPlugin.h"
+#import "include/FLTFirebaseFunctionsPlugin.h"
 
 @import FirebaseFunctions;
+#if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
 #import <firebase_core/FLTFirebasePluginRegistry.h>
+#else
+#import <FLTFirebasePluginRegistry.h>
+#endif
 
 NSString *const kFLTFirebaseFunctionsChannelName = @"plugins.flutter.io/firebase_functions";
 
@@ -175,11 +179,11 @@ NSString *const kFLTFirebaseFunctionsChannelName = @"plugins.flutter.io/firebase
 }
 
 - (NSString *_Nonnull)firebaseLibraryName {
-  return LIBRARY_NAME;
+  return @LIBRARY_NAME;
 }
 
 - (NSString *_Nonnull)firebaseLibraryVersion {
-  return LIBRARY_VERSION;
+  return @LIBRARY_VERSION;
 }
 
 - (NSString *_Nonnull)flutterChannelName {

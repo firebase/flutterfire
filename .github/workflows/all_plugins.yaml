@@ -124,7 +124,7 @@ jobs:
             "flutter build web"
   swift-integration:
     runs-on: macos-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
       - uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225
