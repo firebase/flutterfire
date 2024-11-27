@@ -4,7 +4,11 @@
 #import <TargetConditionals.h>
 
 @import FirebaseStorage;
+#if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
 #import <firebase_core/FLTFirebasePluginRegistry.h>
+#else
+#import <FLTFirebasePluginRegistry.h>
+#endif
 #import "FLTFirebaseStoragePlugin.h"
 #import "FLTTaskStateChannelStreamHandler.h"
 
@@ -635,9 +639,9 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
     if (task.snapshot.status == FIRStorageTaskStatusResume ||
         task.snapshot.status == FIRStorageTaskStatusProgress ||
         task.snapshot.status == FIRStorageTaskStatusUnknown) {
-      __block FIRStorageHandle pauseHandle;
-      __block FIRStorageHandle successHandle;
-      __block FIRStorageHandle failureHandle;
+      __block FIRStorageTask *pauseHandle;
+      __block FIRStorageTask *successHandle;
+      __block FIRStorageTask *failureHandle;
       pauseHandle =
           [task observeStatus:FIRStorageTaskStatusPause
                       handler:^(FIRStorageTaskSnapshot *snapshot) {
@@ -671,10 +675,10 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   // Resume
   if (state == FLTFirebaseStorageTaskStateResume) {
     if (task.snapshot.status == FIRStorageTaskStatusPause) {
-      __block FIRStorageHandle resumeHandle;
-      __block FIRStorageHandle progressHandle;
-      __block FIRStorageHandle successHandle;
-      __block FIRStorageHandle failureHandle;
+      __block FIRStorageTask *resumeHandle;
+      __block FIRStorageTask *progressHandle;
+      __block FIRStorageTask *successHandle;
+      __block FIRStorageTask *failureHandle;
       resumeHandle =
           [task observeStatus:FIRStorageTaskStatusResume
                       handler:^(FIRStorageTaskSnapshot *snapshot) {
@@ -722,8 +726,8 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
         task.snapshot.status == FIRStorageTaskStatusResume ||
         task.snapshot.status == FIRStorageTaskStatusProgress ||
         task.snapshot.status == FIRStorageTaskStatusUnknown) {
-      __block FIRStorageHandle successHandle;
-      __block FIRStorageHandle failureHandle;
+      __block FIRStorageTask *successHandle;
+      __block FIRStorageTask *failureHandle;
       successHandle = [task observeStatus:FIRStorageTaskStatusSuccess
                                   handler:^(FIRStorageTaskSnapshot *snapshot) {
                                     [task removeObserverWithHandle:successHandle];
@@ -968,11 +972,11 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 }
 
 - (NSString *_Nonnull)firebaseLibraryName {
-  return LIBRARY_NAME;
+  return @LIBRARY_NAME;
 }
 
 - (NSString *_Nonnull)firebaseLibraryVersion {
-  return LIBRARY_VERSION;
+  return @LIBRARY_VERSION;
 }
 
 - (NSString *_Nonnull)flutterChannelName {
