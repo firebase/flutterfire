@@ -79,6 +79,7 @@ void main() {
             'fatal': false,
             'stackTraceElements': getStackTraceElements(stack),
             'buildId': '',
+            'loadingUnits': [],
           })
         ]);
         // Confirm that the stack trace contains current stack.
@@ -141,6 +142,7 @@ void main() {
             'information': '$exceptionFirstMessage\n$exceptionSecondMessage',
             'stackTraceElements': getStackTraceElements(stack),
             'buildId': '',
+            'loadingUnits': [],
           })
         ]);
       } finally {
