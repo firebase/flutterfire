@@ -13,7 +13,7 @@ import java.util.List;
 /** @hide */
 public final class FlutterFirebaseCrashlyticsInternal {
   private static final String LOADING_UNIT_KEY = "com.crashlytics.flutter.build-id.";
-  private static final String FLUTTER_BUILD_ID_KEY = LOADING_UNIT_KEY + 0;
+  private static final String FLUTTER_BUILD_ID_DEFAULT_KEY = LOADING_UNIT_KEY + 0;
 
   @SuppressLint("VisibleForTests")
   public static void recordFatalException(Throwable throwable) {
@@ -26,7 +26,7 @@ public final class FlutterFirebaseCrashlyticsInternal {
 
   @SuppressLint("VisibleForTests")
   public static void setFlutterBuildId(String buildId) {
-    FirebaseCrashlytics.getInstance().core.setInternalKey(FLUTTER_BUILD_ID_KEY, buildId);
+    FirebaseCrashlytics.getInstance().core.setInternalKey(FLUTTER_BUILD_ID_DEFAULT_KEY, buildId);
   }
 
   @SuppressLint("VisibleForTests")
