@@ -3,7 +3,11 @@
 // found in the LICENSE file.
 
 @import FirebaseRemoteConfig;
+#if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
 #import <firebase_core/FLTFirebasePluginRegistry.h>
+#else
+#import <FLTFirebasePluginRegistry.h>
+#endif
 
 #import "FLTFirebaseRemoteConfigPlugin.h"
 #import "FLTFirebaseRemoteConfigUtils.h"
@@ -57,7 +61,7 @@ BOOL _fetchAndActivateRetry;
 
   SEL sel = NSSelectorFromString(@"registerLibrary:withVersion:");
   if ([FIRApp respondsToSelector:sel]) {
-    [FIRApp performSelector:sel withObject:LIBRARY_NAME withObject:LIBRARY_VERSION];
+    [FIRApp performSelector:sel withObject:@LIBRARY_NAME withObject:@LIBRARY_VERSION];
   }
 }
 
@@ -289,11 +293,11 @@ BOOL _fetchAndActivateRetry;
 }
 
 - (NSString *_Nonnull)firebaseLibraryName {
-  return LIBRARY_NAME;
+  return @LIBRARY_NAME;
 }
 
 - (NSString *_Nonnull)firebaseLibraryVersion {
-  return LIBRARY_VERSION;
+  return @LIBRARY_VERSION;
 }
 
 - (NSString *_Nonnull)flutterChannelName {
