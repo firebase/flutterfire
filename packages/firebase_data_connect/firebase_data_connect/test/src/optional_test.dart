@@ -30,7 +30,7 @@ void main() {
 
     setUp(() {
       stringDeserializer = (json) => json;
-      stringSerializer = (value) => value.toString();
+      stringSerializer = (value) => value;
       intDeserializer = int.parse;
       intSerializer = (value) => value;
     });
@@ -100,8 +100,10 @@ void main() {
       expect(nativeFromJson<int>(expectedDouble), equals(expectedInt));
     });
     test('nativeFromJson correctly deserializes DateTime strings', () {
-      expect(nativeFromJson<DateTime>('2024-01-01'),
-          equals(DateTime.parse('2024-01-01')));
+      expect(
+        nativeFromJson<DateTime>('2024-01-01'),
+        equals(DateTime.parse('2024-01-01')),
+      );
     });
 
     test('nativeToJson throws UnimplementedError for unsupported types', () {

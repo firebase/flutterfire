@@ -107,7 +107,8 @@ T nativeFromJson<T>(dynamic input) {
 }
 
 DynamicDeserializer<List<T>> listDeserializer<T>(
-    DynamicDeserializer<T> deserializer) {
+  DynamicDeserializer<T> deserializer,
+) {
   return (dynamic data) =>
       (data as List<T>).map((e) => deserializer(e)).toList();
 }

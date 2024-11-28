@@ -48,7 +48,11 @@ class TransportOptions {
 abstract class DataConnectTransport {
   /// Constructor.
   DataConnectTransport(
-      this.transportOptions, this.options, this.appId, this.sdkType);
+    this.transportOptions,
+    this.options,
+    this.appId,
+    this.sdkType,
+  );
 
   /// Transport options.
   TransportOptions transportOptions;
@@ -67,17 +71,19 @@ abstract class DataConnectTransport {
 
   /// Invokes corresponding query endpoint.
   Future<Data> invokeQuery<Data, Variables>(
-      String queryName,
-      Deserializer<Data> deserializer,
-      Serializer<Variables> serializer,
-      Variables? vars,
-      String? token);
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables> serializer,
+    Variables? vars,
+    String? token,
+  );
 
   /// Invokes corresponding mutation endpoint.
   Future<Data> invokeMutation<Data, Variables>(
-      String queryName,
-      Deserializer<Data> deserializer,
-      Serializer<Variables> serializer,
-      Variables? vars,
-      String? token);
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables> serializer,
+    Variables? vars,
+    String? token,
+  );
 }

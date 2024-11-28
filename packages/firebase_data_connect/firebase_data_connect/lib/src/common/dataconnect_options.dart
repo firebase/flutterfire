@@ -42,8 +42,11 @@ class ConnectorConfig {
 class DataConnectOptions extends ConnectorConfig {
   /// Constructor
   DataConnectOptions(
-      this.projectId, String location, String connector, String serviceId)
-      : super(location, connector, serviceId);
+    this.projectId,
+    String location,
+    String connector,
+    String serviceId,
+  ) : super(location, connector, serviceId);
 
   /// projectId for Firebase App
   String projectId;

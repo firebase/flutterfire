@@ -27,14 +27,18 @@ class MockFirebaseAppCheck extends Mock implements FirebaseAppCheck {}
 void main() {
   group('GoogApiClient', () {
     test('should return no codegen suffix if using core sdk', () {
-      final packageVersion = '1.0.0';
-      expect(getGoogApiVal(CallerSDKType.core, packageVersion),
-          'gl-dart/$packageVersion fire/$packageVersion');
+      const packageVersion = '1.0.0';
+      expect(
+        getGoogApiVal(CallerSDKType.core, packageVersion),
+        'gl-dart/$packageVersion fire/$packageVersion',
+      );
     });
     test('should return codegen suffix if using gen sdk', () {
-      final packageVersion = '1.0.0';
-      expect(getGoogApiVal(CallerSDKType.generated, packageVersion),
-          'gl-dart/$packageVersion fire/$packageVersion dart/gen');
+      const packageVersion = '1.0.0';
+      expect(
+        getGoogApiVal(CallerSDKType.generated, packageVersion),
+        'gl-dart/$packageVersion fire/$packageVersion dart/gen',
+      );
     });
   });
   group('TransportOptions', () {
@@ -102,19 +106,29 @@ void main() {
     });
 
     test('should handle invokeQuery with proper deserializer', () async {
-      final queryName = 'testQuery';
+      const queryName = 'testQuery';
       final deserializer = (json) => json;
       final result = await transport.invokeQuery(
-          queryName, deserializer, emptySerializer, null, null);
+        queryName,
+        deserializer,
+        emptySerializer,
+        null,
+        null,
+      );
 
       expect(result, isNotNull);
     });
 
     test('should handle invokeMutation with proper deserializer', () async {
-      final queryName = 'testMutation';
+      const queryName = 'testMutation';
       final deserializer = (json) => json;
       final result = await transport.invokeMutation(
-          queryName, deserializer, emptySerializer, null, null);
+        queryName,
+        deserializer,
+        emptySerializer,
+        null,
+        null,
+      );
 
       expect(result, isNotNull);
     });
@@ -123,31 +137,36 @@ void main() {
 
 // Test class extending DataConnectTransport for testing purposes
 class TestDataConnectTransport extends DataConnectTransport {
-  TestDataConnectTransport(TransportOptions transportOptions,
-      DataConnectOptions options, String appId, CallerSDKType sdkType,
-      {FirebaseAuth? auth, FirebaseAppCheck? appCheck})
-      : super(transportOptions, options, appId, sdkType) {
+  TestDataConnectTransport(
+    TransportOptions transportOptions,
+    DataConnectOptions options,
+    String appId,
+    CallerSDKType sdkType, {
+    FirebaseAppCheck? appCheck,
+  }) : super(transportOptions, options, appId, sdkType) {
     this.appCheck = appCheck;
   }
 
   @override
   Future<Data> invokeQuery<Data, Variables>(
-      String queryName,
-      Deserializer<Data> deserializer,
-      Serializer<Variables>? serializer,
-      Variables? vars,
-      String? authToken) async {
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+    String? authToken,
+  ) async {
     // Simulate query invocation logic here
     return deserializer('{}');
   }
 
   @override
   Future<Data> invokeMutation<Data, Variables>(
-      String queryName,
-      Deserializer<Data> deserializer,
-      Serializer<Variables>? serializer,
-      Variables? vars,
-      String? authToken) async {
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+    String? authToken,
+  ) async {
     // Simulate mutation invocation logic here
     return deserializer('{}');
   }

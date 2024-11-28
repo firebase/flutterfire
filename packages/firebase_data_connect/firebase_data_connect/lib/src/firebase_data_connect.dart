@@ -28,17 +28,18 @@ import './network/transport_library.dart'
 class FirebaseDataConnect extends FirebasePluginPlatform {
   /// Constructor for initializing Data Connect
   @visibleForTesting
-  FirebaseDataConnect(
-      {required this.app,
-      required this.connectorConfig,
-      this.auth,
-      this.appCheck,
-      CallerSDKType? sdkType})
-      : options = DataConnectOptions(
-            app.options.projectId,
-            connectorConfig.location,
-            connectorConfig.connector,
-            connectorConfig.serviceId),
+  FirebaseDataConnect({
+    required this.app,
+    required this.connectorConfig,
+    this.auth,
+    this.appCheck,
+    CallerSDKType? sdkType,
+  })  : options = DataConnectOptions(
+          app.options.projectId,
+          connectorConfig.location,
+          connectorConfig.connector,
+          connectorConfig.serviceId,
+        ),
         super(app.name, 'plugins.flutter.io/firebase_data_connect') {
     _queryManager = QueryManager(this);
     if (sdkType != null) {
@@ -82,34 +83,58 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     transportOptions ??=
         TransportOptions('firebasedataconnect.googleapis.com', null, true);
     transport = getTransport(
-        transportOptions!, options, app.options.appId, _sdkType, appCheck);
+      transportOptions!,
+      options,
+      app.options.appId,
+      _sdkType,
+      appCheck,
+    );
   }
 
   /// Returns a [QueryRef] object.
   QueryRef<Data, Variables> query<Data, Variables>(
-      String operationName,
-      Deserializer<Data> dataDeserializer,
-      Serializer<Variables> varsSerializer,
-      Variables? vars) {
+    String operationName,
+    Deserializer<Data> dataDeserializer,
+    Serializer<Variables> varsSerializer,
+    Variables? vars,
+  ) {
     checkTransport();
-    return QueryRef<Data, Variables>(this, operationName, transport,
-        dataDeserializer, _queryManager, varsSerializer, vars);
+    return QueryRef<Data, Variables>(
+      this,
+      operationName,
+      transport,
+      dataDeserializer,
+      _queryManager,
+      varsSerializer,
+      vars,
+    );
   }
 
   /// Returns a [MutationRef] object.
   MutationRef<Data, Variables> mutation<Data, Variables>(
-      String operationName,
-      Deserializer<Data> dataDeserializer,
-      Serializer<Variables> varsSerializer,
-      Variables? vars) {
+    String operationName,
+    Deserializer<Data> dataDeserializer,
+    Serializer<Variables> varsSerializer,
+    Variables? vars,
+  ) {
     checkTransport();
     return MutationRef<Data, Variables>(
-        this, operationName, transport, dataDeserializer, varsSerializer, vars);
+      this,
+      operationName,
+      transport,
+      dataDeserializer,
+      varsSerializer,
+      vars,
+    );
   }
 
   /// useDataConnectEmulator connects to the DataConnect emulator.
-  void useDataConnectEmulator(String host, int port,
-      {bool automaticHostMapping = true, bool isSecure = false}) {
+  void useDataConnectEmulator(
+    String host,
+    int port, {
+    bool automaticHostMapping = true,
+    bool isSecure = false,
+  }) {
     String mappedHost = automaticHostMapping ? getMappedHost(host) : host;
     transportOptions = TransportOptions(mappedHost, port, isSecure);
   }
@@ -140,11 +165,12 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     }
 
     FirebaseDataConnect newInstance = FirebaseDataConnect(
-        app: app,
-        auth: auth,
-        appCheck: appCheck,
-        connectorConfig: connectorConfig,
-        sdkType: sdkType);
+      app: app,
+      auth: auth,
+      appCheck: appCheck,
+      connectorConfig: connectorConfig,
+      sdkType: sdkType,
+    );
     if (cachedInstances[app.name] == null) {
       cachedInstances[app.name] = <String, FirebaseDataConnect>{};
     }
