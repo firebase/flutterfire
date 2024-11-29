@@ -13,14 +13,12 @@
 // limitations under the License.
 
 import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'package:firebase_data_connect/src/common/common_library.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 // Mock classes for Firebase dependencies
-class MockFirebaseAuth extends Mock implements FirebaseAuth {}
 
 class MockFirebaseAppCheck extends Mock implements FirebaseAppCheck {}
 
@@ -75,7 +73,6 @@ void main() {
     late DataConnectTransport transport;
     late TransportOptions transportOptions;
     late DataConnectOptions dataConnectOptions;
-    late MockFirebaseAuth mockFirebaseAuth;
     late MockFirebaseAppCheck mockFirebaseAppCheck;
 
     setUp(() {
@@ -86,7 +83,6 @@ void main() {
         'connector',
         'serviceId',
       );
-      mockFirebaseAuth = MockFirebaseAuth();
       mockFirebaseAppCheck = MockFirebaseAppCheck();
 
       transport = TestDataConnectTransport(
@@ -94,7 +90,6 @@ void main() {
         dataConnectOptions,
         'testAppId',
         CallerSDKType.core,
-        auth: mockFirebaseAuth,
         appCheck: mockFirebaseAppCheck,
       );
     });
