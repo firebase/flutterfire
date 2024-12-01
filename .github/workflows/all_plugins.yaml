@@ -168,7 +168,7 @@ jobs:
       # check-license-header)
       - run: go install github.com/google/addlicense@latest
       - name: Install Dart
-        uses: dart-lang/setup-dart@0a8a0fc875eb934c15d08629302413c671d3f672
+        uses: dart-lang/setup-dart@e630b99d28a3b71860378cafdc2a067c71107f94
       - name: Install Melos
         uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa
         with:
