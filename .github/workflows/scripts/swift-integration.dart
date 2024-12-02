@@ -10,10 +10,14 @@ void main() async {
   await buildSwiftExampleApp('ios', 'cloud_firestore');
   await buildSwiftExampleApp('macos', 'firebase_core');
   await buildSwiftExampleApp('macos', 'cloud_firestore');
+  await buildSwiftExampleApp('ios', 'firebase_remote_config');
+  await buildSwiftExampleApp('macos', 'firebase_remote_config');
   await buildSwiftExampleApp('ios', 'cloud_functions');
   await buildSwiftExampleApp('macos', 'cloud_functions');
   await buildSwiftExampleApp('ios', 'firebase_analytics');
   await buildSwiftExampleApp('macos', 'firebase_analytics');
+  await buildSwiftExampleApp('ios', 'firebase_database');
+  await buildSwiftExampleApp('macos', 'firebase_database');
 }
 
 Future<void> deleteFirstLine(String filePath) async {
@@ -48,7 +52,7 @@ Future<void> buildSwiftExampleApp(String platform, String plugin) async {
 
   if (platform == 'macos') {
     await deleteFirstLine(
-        'packages/$plugin/$plugin/example/macos/Flutter/Flutter-Debug.xcconfig');
+        'packages/$plugin/$plugin/example/macos/Flutter/Flutter-Release.xcconfig');
   }
   // Change to the appropriate directory
   Directory.current = directory;
