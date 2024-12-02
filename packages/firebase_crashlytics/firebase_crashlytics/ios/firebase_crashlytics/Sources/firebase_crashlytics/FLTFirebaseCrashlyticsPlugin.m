@@ -20,7 +20,11 @@
 #endif
 #endif
 
+#if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
 #import <firebase_core/FLTFirebasePluginRegistry.h>
+#else
+#import <FLTFirebasePluginRegistry.h>
+#endif
 
 NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/firebase_crashlytics";
 
