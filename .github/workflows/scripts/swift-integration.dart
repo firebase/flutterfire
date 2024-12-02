@@ -53,9 +53,13 @@ Future<void> buildSwiftExampleApp(String platform, String plugin) async {
   // Change to the appropriate directory
   Directory.current = directory;
 
-  // Remove Podfile and deintegrate pods
-  await _runCommand('rm', ['Podfile']);
-  await _runCommand('pod', ['deintegrate']);
+  // TODO(gustl22): Remove 'firebase_messaging' check, when 'flutter_local_notifications' does support SPM,
+  //  see: https://github.com/MaikuB/flutter_local_notifications/issues/2448
+  if ('firebase_messaging' != plugin) {
+    // Remove Podfile and deintegrate pods
+    await _runCommand('rm', ['Podfile']);
+    await _runCommand('pod', ['deintegrate']);
+  }
 
   // Determine the arguments for the flutter build command
   final flutterArgs = ['build', platform];
