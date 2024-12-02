@@ -14,6 +14,8 @@ void main() async {
   await buildSwiftExampleApp('macos', 'firebase_remote_config');
   await buildSwiftExampleApp('ios', 'cloud_functions');
   await buildSwiftExampleApp('macos', 'cloud_functions');
+  await buildSwiftExampleApp('ios', 'firebase_database');
+  await buildSwiftExampleApp('macos', 'firebase_database');
 }
 
 Future<void> deleteFirstLine(String filePath) async {
