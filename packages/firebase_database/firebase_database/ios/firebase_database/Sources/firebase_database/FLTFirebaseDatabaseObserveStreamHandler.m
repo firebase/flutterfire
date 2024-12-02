@@ -3,7 +3,11 @@
 // found in the LICENSE file.
 
 @import FirebaseDatabase;
+#if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
 #import <firebase_core/FLTFirebasePluginRegistry.h>
+#else
+#import <FLTFirebasePluginRegistry.h>
+#endif
 
 #import "FLTFirebaseDatabaseObserveStreamHandler.h"
 #import "FLTFirebaseDatabaseUtils.h"
