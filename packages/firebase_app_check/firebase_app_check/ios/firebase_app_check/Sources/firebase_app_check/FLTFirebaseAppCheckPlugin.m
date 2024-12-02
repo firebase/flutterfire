@@ -7,7 +7,12 @@
 
 @import FirebaseAppCheck;
 
+#if __has_include(<firebase_core/FLTFirebasePlugin.h>)
 #import <firebase_core/FLTFirebasePluginRegistry.h>
+#else
+#import <FLTFirebasePluginRegistry.h>
+#endif
+
 #import "FLTAppCheckProviderFactory.h"
 
 NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_app_check";
@@ -187,11 +192,11 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
 }
 
 - (NSString *_Nonnull)firebaseLibraryName {
-  return LIBRARY_NAME;
+  return @LIBRARY_NAME;
 }
 
 - (NSString *_Nonnull)firebaseLibraryVersion {
-  return LIBRARY_VERSION;
+  return @LIBRARY_VERSION;
 }
 
 - (NSString *_Nonnull)flutterChannelName {
