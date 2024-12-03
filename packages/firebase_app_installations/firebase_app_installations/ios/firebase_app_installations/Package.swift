@@ -88,7 +88,7 @@ let package = Package(
     .iOS("13.0"),
   ],
   products: [
-    .library(name: "firebase-app-installations", targets: ["firebase_app_installations"]),
+    .library(name: "firebase-app-installations", targets: ["firebase_app_installations", "firebase_app_installations_swift"]),
   ],
   dependencies: [
     .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version),
@@ -98,18 +98,27 @@ let package = Package(
     .target(
       name: "firebase_app_installations",
       dependencies: [
-        .product(name: "FirebaseAppInstallations", package: "firebase-ios-sdk"),
+        .product(name: "FirebaseInstallations", package: "firebase-ios-sdk"),
         // Wrapper dependency
         .product(name: "firebase-core-shared", package: "flutterfire"),
       ],
+      path: "Sources/firebase_app_installations/objcsrc",
       resources: [
-        .process("Resources"),
+        .process("objcsrc/Resources"),
       ],
       cSettings: [
-        .headerSearchPath("include"),
+        .headerSearchPath("objcsrc/include"),
         .define("LIBRARY_VERSION", to: "\"\(library_version)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-installations\""),
       ]
     ),
+    .target(
+      name: "firebase_app_installations_swift",
+      dependencies: [
+        // Wrapper dependency
+        .product(name: "firebase-core-shared", package: "flutterfire"),
+      ],
+      path: "Sources/firebase_app_installations/swiftsrc"
+    )
   ]
 )

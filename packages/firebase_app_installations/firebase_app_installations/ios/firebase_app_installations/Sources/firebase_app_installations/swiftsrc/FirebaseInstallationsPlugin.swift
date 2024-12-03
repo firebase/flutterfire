@@ -8,7 +8,7 @@
   import Flutter
 #endif
 
-import firebase_core
+import firebase_core_shared
 import FirebaseInstallations
 
 let kFLTFirebaseInstallationsChannelName = "plugins.flutter.io/firebase_app_installations"
