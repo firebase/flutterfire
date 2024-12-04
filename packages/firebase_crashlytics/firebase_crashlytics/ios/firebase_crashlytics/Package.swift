@@ -34,7 +34,12 @@ func loadFirebaseSDKVersion() throws -> String {
 }
 
 func loadPubspecVersions() throws -> (packageVersion: String, firebaseCoreVersion: String) {
-  let pubspecPath = NSString.path(withComponents: [crashlyticsDirectory, "..", "..", "pubspec.yaml"])
+  let pubspecPath = NSString.path(withComponents: [
+    crashlyticsDirectory,
+    "..",
+    "..",
+    "pubspec.yaml",
+  ])
   do {
     let yamlString = try String(contentsOfFile: pubspecPath, encoding: .utf8)
     let lines = yamlString.split(separator: "\n")
