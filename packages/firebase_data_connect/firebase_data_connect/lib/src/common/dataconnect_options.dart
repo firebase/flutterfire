@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of firebase_data_connect_common;
+part of 'common_library.dart';
 
 /// ConnectorConfig options required for connecting to a Data Connect instance.
 class ConnectorConfig {
@@ -42,8 +42,11 @@ class ConnectorConfig {
 class DataConnectOptions extends ConnectorConfig {
   /// Constructor
   DataConnectOptions(
-      this.projectId, String location, String connector, String serviceId)
-      : super(location, connector, serviceId);
+    this.projectId,
+    String location,
+    String connector,
+    String serviceId,
+  ) : super(location, connector, serviceId);
 
   /// projectId for Firebase App
   String projectId;

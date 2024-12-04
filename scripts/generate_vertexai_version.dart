@@ -35,7 +35,7 @@ Future<void> main() async {
       'packages',
       'firebase_vertexai',
       'firebase_vertexai',
-      'pubspec.yaml'
+      'pubspec.yaml',
     ],
   );
   final yamlMap = loadYaml(File(pubspecPath).readAsStringSync()) as YamlMap;

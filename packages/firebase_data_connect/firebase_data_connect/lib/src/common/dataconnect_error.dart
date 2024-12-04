@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of firebase_data_connect_common;
+part of 'common_library.dart';
 
 /// Types of DataConnect errors that can occur.
 enum DataConnectErrorCode { unavailable, unauthorized, other }
@@ -21,9 +21,10 @@ enum DataConnectErrorCode { unavailable, unauthorized, other }
 class DataConnectError extends FirebaseException {
   DataConnectError(this.dataConnectErrorCode, message)
       : super(
-            plugin: 'Data Connect',
-            code: dataConnectErrorCode.toString(),
-            message: message);
+          plugin: 'Data Connect',
+          code: dataConnectErrorCode.toString(),
+          message: message,
+        );
   final DataConnectErrorCode dataConnectErrorCode;
 }
 

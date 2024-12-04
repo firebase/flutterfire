@@ -18,19 +18,27 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('DataConnectErrorCode', () {
     test('should have the correct enum values', () {
-      expect(DataConnectErrorCode.unavailable.toString(),
-          'DataConnectErrorCode.unavailable');
-      expect(DataConnectErrorCode.unauthorized.toString(),
-          'DataConnectErrorCode.unauthorized');
       expect(
-          DataConnectErrorCode.other.toString(), 'DataConnectErrorCode.other');
+        DataConnectErrorCode.unavailable.toString(),
+        'DataConnectErrorCode.unavailable',
+      );
+      expect(
+        DataConnectErrorCode.unauthorized.toString(),
+        'DataConnectErrorCode.unauthorized',
+      );
+      expect(
+        DataConnectErrorCode.other.toString(),
+        'DataConnectErrorCode.other',
+      );
     });
   });
 
   group('DataConnectError', () {
     test('should initialize with correct error code and message', () {
       final error = DataConnectError(
-          DataConnectErrorCode.unavailable, 'Service is unavailable');
+        DataConnectErrorCode.unavailable,
+        'Service is unavailable',
+      );
 
       expect(error.dataConnectErrorCode, DataConnectErrorCode.unavailable);
       expect(error.plugin, 'Data Connect');
@@ -40,12 +48,18 @@ void main() {
 
     test('should handle different error codes properly', () {
       final unauthorizedError = DataConnectError(
-          DataConnectErrorCode.unauthorized, 'Unauthorized access');
+        DataConnectErrorCode.unauthorized,
+        'Unauthorized access',
+      );
       final otherError = DataConnectError(
-          DataConnectErrorCode.other, 'Unknown error occurred');
+        DataConnectErrorCode.other,
+        'Unknown error occurred',
+      );
 
-      expect(unauthorizedError.dataConnectErrorCode,
-          DataConnectErrorCode.unauthorized);
+      expect(
+        unauthorizedError.dataConnectErrorCode,
+        DataConnectErrorCode.unauthorized,
+      );
       expect(unauthorizedError.plugin, 'Data Connect');
       expect(unauthorizedError.code, 'DataConnectErrorCode.unauthorized');
       expect(unauthorizedError.message, 'Unauthorized access');
@@ -71,14 +85,14 @@ void main() {
       final inputVars = {'key1': 'value1', 'key2': 123};
       final serializedString = serializer(inputVars);
 
-      expect(serializedString, "{key1: value1, key2: 123}");
+      expect(serializedString, '{key1: value1, key2: 123}');
     });
 
     test('should deserialize string data into expected format', () {
       Deserializer<Map<String, dynamic>> deserializer =
           (String data) => {'data': data};
 
-      final inputData = '{"message": "Hello World"}';
+      const inputData = '{"message": "Hello World"}';
       final deserializedData = deserializer(inputData);
 
       expect(deserializedData, {'data': '{"message": "Hello World"}'});

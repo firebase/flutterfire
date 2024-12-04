@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of firebase_data_connect_transport;
+part of 'transport_library.dart';
 
 /// Default TransportStub to satisfy compilation of the library.
 class TransportStub implements DataConnectTransport {
@@ -50,11 +50,12 @@ class TransportStub implements DataConnectTransport {
   /// Stub for invoking a mutation.
   @override
   Future<Data> invokeMutation<Data, Variables>(
-      String queryName,
-      Deserializer<Data> deserializer,
-      Serializer<Variables>? serializer,
-      Variables? vars,
-      String? token) async {
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+    String? token,
+  ) async {
     // TODO: implement invokeMutation
     throw UnimplementedError();
   }
@@ -62,11 +63,12 @@ class TransportStub implements DataConnectTransport {
   /// Stub for invoking a query.
   @override
   Future<Data> invokeQuery<Data, Variables>(
-      String queryName,
-      Deserializer<Data> deserializer,
-      Serializer<Variables>? serialize,
-      Variables? vars,
-      String? token) async {
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serialize,
+    Variables? vars,
+    String? token,
+  ) async {
     // TODO: implement invokeQuery
     throw UnimplementedError();
   }
