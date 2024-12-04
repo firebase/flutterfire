@@ -35,7 +35,7 @@ void main(List<String> args) async {
     }
   }
   // Update the versions in root Package.swift
-  updateSharedCoreVersion(firebaseiOSVersion);
+  updateVersionsPackageSwift(firebaseiOSVersion);
 }
 
 Future<melos.MelosWorkspace> getMelosWorkspace() async {
@@ -73,7 +73,7 @@ String getFirebaseiOSVersion(File firebaseCoreIosSdkVersion) {
   }
 }
 
-void updateSharedCoreVersion(String firebaseiOSVersion) {
+void updateVersionsPackageSwift(String firebaseiOSVersion) {
   // Define the path to the pubspec.yaml file
   const pubspecPath = 'packages/firebase_core/firebase_core/pubspec.yaml';
 
