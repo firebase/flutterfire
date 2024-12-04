@@ -25,7 +25,10 @@ let package = Package(
   dependencies: [
     // TODO: this is fine for now, but will require a way of retrieving the firebase-ios-sdk
     // likely create a script that runs in preCommit hook of melos
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: Version(firebase_ios_sdk_version)!),
+    .package(
+      url: "https://github.com/firebase/firebase-ios-sdk",
+      from: Version(firebase_ios_sdk_version)!
+    ),
   ],
   targets: [
     .target(
@@ -38,7 +41,7 @@ let package = Package(
       cSettings: [
         .headerSearchPath("include/firebase_core"),
         .define("LIBRARY_VERSION", to: "\"\(firebase_core_version)\""),
-        .define("LIBRARY_NAME", to: "\"flutter-fire-core\"")
+        .define("LIBRARY_NAME", to: "\"flutter-fire-core\""),
       ]
     ),
   ]
