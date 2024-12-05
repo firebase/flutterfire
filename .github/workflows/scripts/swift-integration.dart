@@ -6,7 +6,7 @@ import 'dart:io';
 import 'dart:convert';
 
 void main(List<String> arguments) async {
-  if (arguments.isNotEmpty) {
+  if (arguments.isEmpty) {
     throw Exception('No FlutterFire dependency arguments provided.');
   }
   final plugins = arguments[0];
