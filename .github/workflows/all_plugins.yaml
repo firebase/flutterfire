@@ -130,15 +130,15 @@ jobs:
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
       - uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225
+        with:
+        # TODO - enabling swift is on `master` channel at the moment. Update when it's on `stable`
+          channel: 'master'
       - name: Setup firebase_core example app to test Swift integration
         # run this before running melos boostrap to ensure the example app is set up
         run: |
           cd packages/firebase_core/example
           flutter pub get $FLUTTER_DEPENDENCIES
           cd ../../..
-        with:
-        # TODO - enabling swift is on `master` channel at the moment. Update when it's on `stable`
-          channel: 'master'
       - uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa
         with:
           melos-version: '5.3.0'
