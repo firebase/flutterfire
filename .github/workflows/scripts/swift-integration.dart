@@ -5,7 +5,7 @@
 import 'dart:io';
 import 'dart:convert';
 
-void main() async {
+void main(List<String> arguments) async {
   if (arguments.isNotEmpty) {
     throw Exception('No FlutterFire dependency arguments provided.');
   }
