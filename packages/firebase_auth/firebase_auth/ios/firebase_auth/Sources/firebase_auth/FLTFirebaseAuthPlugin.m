@@ -1096,9 +1096,34 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
                if (error != nil) {
                  completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
                } else {
-                 completion([PigeonParser parseActionCode:info], nil);
+                 completion([self parseActionCode:info], nil);
                }
              }];
+}
+
+- (PigeonActionCodeInfo *_Nullable)parseActionCode:(nonnull FIRActionCodeInfo *)info {
+  PigeonActionCodeInfoData *data = [PigeonActionCodeInfoData makeWithEmail:info.email
+                                                             previousEmail:info.previousEmail];
+
+  ActionCodeInfoOperation operation;
+
+  if (info.operation == FIRActionCodeOperationPasswordReset) {
+    operation = ActionCodeInfoOperationPasswordReset;
+  } else if (info.operation == FIRActionCodeOperationVerifyEmail) {
+    operation = ActionCodeInfoOperationVerifyEmail;
+  } else if (info.operation == FIRActionCodeOperationRecoverEmail) {
+    operation = ActionCodeInfoOperationRecoverEmail;
+  } else if (info.operation == FIRActionCodeOperationEmailLink) {
+    operation = ActionCodeInfoOperationEmailSignIn;
+  } else if (info.operation == FIRActionCodeOperationVerifyAndChangeEmail) {
+    operation = ActionCodeInfoOperationVerifyAndChangeEmail;
+  } else if (info.operation == FIRActionCodeOperationRevertSecondFactorAddition) {
+    operation = ActionCodeInfoOperationRevertSecondFactorAddition;
+  } else {
+    operation = ActionCodeInfoOperationUnknown;
+  }
+
+  return [PigeonActionCodeInfo makeWithOperation:operation data:data];
 }
 
 - (void)confirmPasswordResetApp:(nonnull AuthPigeonFirebaseApp *)app

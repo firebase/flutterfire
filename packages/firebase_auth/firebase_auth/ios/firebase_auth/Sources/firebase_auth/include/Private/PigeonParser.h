@@ -21,7 +21,6 @@
                         authorizationCode:(nullable NSString *)authorizationCode;
 + (PigeonUserDetails *_Nullable)getPigeonDetails:(nonnull FIRUser *)user;
 + (PigeonUserInfo *_Nullable)getPigeonUserInfo:(nonnull FIRUser *)user;
-+ (PigeonActionCodeInfo *_Nullable)parseActionCode:(nonnull FIRActionCodeInfo *)info;
 + (FIRActionCodeSettings *_Nullable)parseActionCodeSettings:
     (nullable PigeonActionCodeSettings *)settings;
 + (PigeonUserCredential *_Nullable)getPigeonUserCredentialFromFIRUser:(nonnull FIRUser *)user;

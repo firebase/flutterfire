@@ -5,6 +5,7 @@
 #import "include/Private/FLTAuthStateChannelStreamHandler.h"
 #import <FirebaseAuth/FirebaseAuth.h>
 #import "include/Public/FLTFirebaseAuthPlugin.h"
+#import "include/Private/PigeonParser.h"
 
 @implementation FLTAuthStateChannelStreamHandler {
   FIRAuth *_auth;

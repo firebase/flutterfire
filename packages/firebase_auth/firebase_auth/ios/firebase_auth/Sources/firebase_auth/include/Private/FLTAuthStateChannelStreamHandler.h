@@ -14,7 +14,6 @@
 
 #import <Foundation/Foundation.h>
 #import "../Public/CustomPigeonHeader.h"
-#import "PigeonParser.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
