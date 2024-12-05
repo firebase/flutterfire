@@ -30,6 +30,7 @@ void main() {
     'fatal': false,
     'information': 'This is a test exception',
     'buildId': '',
+    'loadingUnits': [],
     'stackTraceElements': <Map<String, String>>[
       <String, String>{
         'declaringClass': 'MethodChannelCrashlyticsTest',
@@ -219,6 +220,7 @@ void main() {
               'information': kMockError['information'],
               'stackTraceElements': kMockError['stackTraceElements'],
               'buildId': '',
+              'loadingUnits': [],
             },
           ),
         ]);
