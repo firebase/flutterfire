@@ -9,7 +9,11 @@
 #endif
 
 #import <Foundation/Foundation.h>
+#if __has_include(<firebase_core/FLTFirebasePlugin.h>)
 #import <firebase_core/FLTFirebasePlugin.h>
+#else
+#import <FLTFirebasePlugin.h>
+#endif
 #import "FLTAppCheckProviderFactory.h"
 
 @interface FLTFirebaseAppCheckPlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin>
