@@ -20,24 +20,6 @@ void main() async {
   await buildSwiftExampleApp('macos', 'firebase_messaging');
 }
 
-Future<void> deleteFirstLine(String filePath) async {
-  final file = File(filePath);
-
-  if (!file.existsSync()) {
-    print('File does not exist: $filePath');
-    return;
-  }
-
-  final lines = await file.readAsLines();
-  if (lines.isNotEmpty) {
-    final updatedContent = lines.skip(1).join('\n');
-    await file.writeAsString(updatedContent);
-    print('First line deleted from $filePath');
-  } else {
-    print('File is empty: $filePath');
-  }
-}
-
 Future<void> buildSwiftExampleApp(String platform, String plugin) async {
   final initialDirectory = Directory.current;
   final platformName = platform == 'ios' ? 'iOS' : 'macOS';
@@ -50,13 +32,13 @@ Future<void> buildSwiftExampleApp(String platform, String plugin) async {
     exit(1);
   }
 
-  if (platform == 'macos') {
-    await deleteFirstLine(
-        'packages/$plugin/$plugin/example/macos/Flutter/Flutter-Release.xcconfig');
-  }
   // Change to the appropriate directory
   Directory.current = directory;
 
+  if (plugin == 'cloud_firestore') {
+    // Need to remove Podfile for Firestore as it pulls in https://github.com/invertase/firestore-ios-sdk-frameworks.git
+    await _runCommand('rm', ['Podfile']);
+  }
   // Determine the arguments for the flutter build command
   final flutterArgs = ['build', platform];
   if (platform == 'ios') {
