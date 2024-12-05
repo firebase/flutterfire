@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 @import FirebaseAuth;
+#import <FirebaseAuth/FirebaseAuth.h>
 #import <TargetConditionals.h>
 #if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
 #import <firebase_core/FLTFirebasePluginRegistry.h>
