@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 #import <TargetConditionals.h>
 
-
 #if TARGET_OS_OSX
 // Forward declarations of Firebase Storage type
 @class FIRStorageTaskSnapshot;
