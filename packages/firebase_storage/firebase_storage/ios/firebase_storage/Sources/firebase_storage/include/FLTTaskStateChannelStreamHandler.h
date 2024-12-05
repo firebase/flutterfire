@@ -5,7 +5,8 @@
 #import <TargetConditionals.h>
 
 #if TARGET_OS_OSX
-#import <FirebaseStorage/FirebaseStorage.h>
+// Forward declarations of Firebase Storage type
+@class FIRStorageObservableTask;
 #import <FlutterMacOS/FlutterMacOS.h>
 #else
 #import <Flutter/Flutter.h>

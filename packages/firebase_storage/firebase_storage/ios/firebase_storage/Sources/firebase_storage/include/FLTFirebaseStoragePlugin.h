@@ -3,8 +3,10 @@
 // found in the LICENSE file.
 #import <TargetConditionals.h>
 
+
 #if TARGET_OS_OSX
-#import <FirebaseStorage/FirebaseStorage.h>
+// Forward declarations of Firebase Storage type
+@class FIRStorageTaskSnapshot;
 #import <FlutterMacOS/FlutterMacOS.h>
 #else
 #import <Flutter/Flutter.h>
