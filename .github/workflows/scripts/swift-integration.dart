@@ -38,6 +38,7 @@ Future<void> buildSwiftExampleApp(String platform, String plugin) async {
   if (plugin == 'cloud_firestore') {
     // Need to remove Podfile for Firestore as it pulls in https://github.com/invertase/firestore-ios-sdk-frameworks.git
     await _runCommand('rm', ['Podfile']);
+    await _runCommand('pod', ['deintegrate']);
   }
   // Determine the arguments for the flutter build command
   final flutterArgs = ['build', platform];
