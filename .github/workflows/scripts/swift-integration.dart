@@ -54,6 +54,10 @@ Future<void> buildSwiftExampleApp(String platform, String plugins) async {
   } else {
     print(
         'Successfully built $plugins for $platformName project using Swift Package Manager.');
+
+    Directory.current = Directory('..');
+    print('See contents of pubspec.yaml:');
+    await _runCommand('cat', ['pubspec.yaml']);
   }
 
   Directory.current = initialDirectory;
