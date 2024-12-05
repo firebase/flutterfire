@@ -4,8 +4,8 @@
 @import FirebaseAuth;
 #import "include/Private/FLTIdTokenChannelStreamHandler.h"
 #import <FirebaseAuth/FirebaseAuth.h>
-#import "include/Public/FLTFirebaseAuthPlugin.h"
 #import "include/Private/PigeonParser.h"
+#import "include/Public/FLTFirebaseAuthPlugin.h"
 
 @implementation FLTIdTokenChannelStreamHandler {
   FIRAuth *_auth;
