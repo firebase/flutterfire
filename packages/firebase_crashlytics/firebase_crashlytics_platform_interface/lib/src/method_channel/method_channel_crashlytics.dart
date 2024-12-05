@@ -95,6 +95,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
     required String? reason,
     bool fatal = false,
     String? buildId,
+    List<String> loadingUnits = const [],
     List<Map<String, String>>? stackTraceElements,
   }) async {
     try {
@@ -105,6 +106,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
         'reason': reason,
         'fatal': fatal,
         'buildId': buildId ?? '',
+        'loadingUnits': loadingUnits,
         'stackTraceElements': stackTraceElements ?? [],
       });
     } on PlatformException catch (e, s) {
