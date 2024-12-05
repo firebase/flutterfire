@@ -53,7 +53,7 @@ Future<void> buildSwiftExampleApp(String platform, String plugins) async {
     exit(1);
   } else {
     print(
-        'Successfully built $plugin $platformName project using Swift Package Manager.');
+        'Successfully built $plugins for $platformName project using Swift Package Manager.');
   }
 
   Directory.current = initialDirectory;
