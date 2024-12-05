@@ -639,9 +639,9 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
     if (task.snapshot.status == FIRStorageTaskStatusResume ||
         task.snapshot.status == FIRStorageTaskStatusProgress ||
         task.snapshot.status == FIRStorageTaskStatusUnknown) {
-      __block FIRStorageTask *pauseHandle;
-      __block FIRStorageTask *successHandle;
-      __block FIRStorageTask *failureHandle;
+      __block NSString *pauseHandle;
+      __block NSString *successHandle;
+      __block NSString *failureHandle;
       pauseHandle =
           [task observeStatus:FIRStorageTaskStatusPause
                       handler:^(FIRStorageTaskSnapshot *snapshot) {
@@ -675,10 +675,10 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   // Resume
   if (state == FLTFirebaseStorageTaskStateResume) {
     if (task.snapshot.status == FIRStorageTaskStatusPause) {
-      __block FIRStorageTask *resumeHandle;
-      __block FIRStorageTask *progressHandle;
-      __block FIRStorageTask *successHandle;
-      __block FIRStorageTask *failureHandle;
+      __block NSString *resumeHandle;
+      __block NSString *progressHandle;
+      __block NSString *successHandle;
+      __block NSString *failureHandle;
       resumeHandle =
           [task observeStatus:FIRStorageTaskStatusResume
                       handler:^(FIRStorageTaskSnapshot *snapshot) {
@@ -726,8 +726,8 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
         task.snapshot.status == FIRStorageTaskStatusResume ||
         task.snapshot.status == FIRStorageTaskStatusProgress ||
         task.snapshot.status == FIRStorageTaskStatusUnknown) {
-      __block FIRStorageTask *successHandle;
-      __block FIRStorageTask *failureHandle;
+      __block NSString *successHandle;
+      __block NSString *failureHandle;
       successHandle = [task observeStatus:FIRStorageTaskStatusSuccess
                                   handler:^(FIRStorageTaskSnapshot *snapshot) {
                                     [task removeObserverWithHandle:successHandle];

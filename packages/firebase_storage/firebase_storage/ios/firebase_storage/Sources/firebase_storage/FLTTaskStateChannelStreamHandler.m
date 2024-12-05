@@ -11,10 +11,10 @@
   FLTFirebaseStoragePlugin *_storagePlugin;
   NSString *_channelName;
   NSNumber *_handle;
-  FIRStorageTask *successHandle;
-  FIRStorageTask *failureHandle;
-  FIRStorageTask *pausedHandle;
-  FIRStorageTask *progressHandle;
+  NSString *successHandle;
+  NSString *failureHandle;
+  NSString *pausedHandle;
+  NSString *progressHandle;
 }
 
 - (instancetype)initWithTask:(FIRStorageObservableTask *)task
