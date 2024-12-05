@@ -6,28 +6,21 @@ import 'dart:io';
 import 'dart:convert';
 
 void main() async {
-  await buildSwiftExampleApp('ios', 'firebase_core');
-  await buildSwiftExampleApp('ios', 'cloud_firestore');
-  await buildSwiftExampleApp('macos', 'firebase_core');
-  await buildSwiftExampleApp('macos', 'cloud_firestore');
-  await buildSwiftExampleApp('macos', 'firebase_auth');
-  await buildSwiftExampleApp('ios', 'firebase_auth');
-  await buildSwiftExampleApp('ios', 'firebase_remote_config');
-  await buildSwiftExampleApp('macos', 'firebase_remote_config');
-  await buildSwiftExampleApp('ios', 'cloud_functions');
-  await buildSwiftExampleApp('macos', 'cloud_functions');
-  await buildSwiftExampleApp('ios', 'firebase_database');
-  await buildSwiftExampleApp('macos', 'firebase_database');
+  if (arguments.isNotEmpty) {
+    throw Exception('No FlutterFire dependency arguments provided.');
+  }
+  final plugins = arguments[0];
+  await buildSwiftExampleApp('ios', plugins);
+  await buildSwiftExampleApp('macos', plugins);
 }
 
-
-Future<void> buildSwiftExampleApp(String platform, String plugin) async {
+Future<void> buildSwiftExampleApp(String platform, String plugins) async {
   final initialDirectory = Directory.current;
   final platformName = platform == 'ios' ? 'iOS' : 'macOS';
 
-  print('Building $plugin $platformName example app with swift (SPM)');
+  print('Building example app with swift (SPM) integration for $plugins');
 
-  final directory = Directory('packages/$plugin/$plugin/example/$platform');
+  final directory = Directory('packages/firebase_core/firebase_core/example');
   if (!directory.existsSync()) {
     print('Directory does not exist: ${directory.path}');
     exit(1);
@@ -36,11 +29,8 @@ Future<void> buildSwiftExampleApp(String platform, String plugin) async {
   // Change to the appropriate directory
   Directory.current = directory;
 
-  if (plugin != 'firebase_messaging' || plugin == 'firebase_auth') {
-    // Firebase messaging & auth have FlutterFire plugin without SPM support so this will cause failure
-    await _runCommand('rm', ['Podfile']);
-    await _runCommand('pod', ['deintegrate']);
-  }
+  await _runCommand('rm', ['Podfile']);
+  await _runCommand('pod', ['deintegrate']);
 
   // Determine the arguments for the flutter build command
   final flutterArgs = ['build', platform];

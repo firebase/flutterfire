@@ -124,10 +124,18 @@ jobs:
             "flutter build web"
   swift-integration:
     runs-on: macos-latest
-    timeout-minutes: 60
+    timeout-minutes: 30
+    env:
+      FLUTTER_DEPENDENCIES: "cloud_firestore firebase_remote_config cloud_functions firebase_database firebase_auth"
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
       - uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225
+      - name: Setup firebase_core example app to test Swift integration
+        # run this before running melos boostrap to ensure the example app is set up
+        run: |
+          cd packages/firebase_core/example
+          flutter pub get $FLUTTER_DEPENDENCIES
+          cd ../../..
         with:
         # TODO - enabling swift is on `master` channel at the moment. Update when it's on `stable`
           channel: 'master'
@@ -137,7 +145,7 @@ jobs:
       - name: 'Swift Integration Setup'
         run: flutter config --enable-swift-package-manager
       - name: 'Build Apps with Swift Package Manager'
-        run: dart ./.github/workflows/scripts/swift-integration.dart
+        run: dart ./.github/workflows/scripts/swift-integration.dart $FLUTTER_DEPENDENCIES
 
   test:
     runs-on: ubuntu-latest
