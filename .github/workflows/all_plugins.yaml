@@ -137,7 +137,7 @@ jobs:
         # run this before running melos boostrap to ensure the example app is set up
         run: |
           cd packages/firebase_core/firebase_core/example
-          flutter pub get $FLUTTER_DEPENDENCIES
+          flutter pub add $FLUTTER_DEPENDENCIES
           cd ../../../..
       - uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa
         with:
