@@ -20,23 +20,6 @@ void main() async {
   await buildSwiftExampleApp('macos', 'firebase_database');
 }
 
-Future<void> deleteFirstLine(String filePath) async {
-  final file = File(filePath);
-
-  if (!file.existsSync()) {
-    print('File does not exist: $filePath');
-    return;
-  }
-
-  final lines = await file.readAsLines();
-  if (lines.isNotEmpty) {
-    final updatedContent = lines.skip(1).join('\n');
-    await file.writeAsString(updatedContent);
-    print('First line deleted from $filePath');
-  } else {
-    print('File is empty: $filePath');
-  }
-}
 
 Future<void> buildSwiftExampleApp(String platform, String plugin) async {
   final initialDirectory = Directory.current;
@@ -50,16 +33,14 @@ Future<void> buildSwiftExampleApp(String platform, String plugin) async {
     exit(1);
   }
 
-  if (platform == 'macos') {
-    await deleteFirstLine(
-        'packages/$plugin/$plugin/example/macos/Flutter/Flutter-Release.xcconfig');
-  }
   // Change to the appropriate directory
   Directory.current = directory;
 
-  // Remove Podfile and deintegrate pods
-  await _runCommand('rm', ['Podfile']);
-  await _runCommand('pod', ['deintegrate']);
+  if (plugin != 'firebase_messaging' || plugin == 'firebase_auth') {
+    // Firebase messaging & auth have FlutterFire plugin without SPM support so this will cause failure
+    await _runCommand('rm', ['Podfile']);
+    await _runCommand('pod', ['deintegrate']);
+  }
 
   // Determine the arguments for the flutter build command
   final flutterArgs = ['build', platform];
