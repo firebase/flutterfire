@@ -35,8 +35,8 @@ Future<void> buildSwiftExampleApp(String platform, String plugin) async {
   // Change to the appropriate directory
   Directory.current = directory;
 
-  if (plugin == 'cloud_firestore') {
-    // Need to remove Podfile for Firestore as it pulls in https://github.com/invertase/firestore-ios-sdk-frameworks.git
+  if (plugin != 'firebase_messaging') {
+    // Firebase messaging has FlutterFire plugin without SPM support so this will cause failure
     await _runCommand('rm', ['Podfile']);
     await _runCommand('pod', ['deintegrate']);
   }
