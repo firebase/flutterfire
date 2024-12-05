@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 @import FirebaseAuth;
-#import <FirebaseAuth/FirebaseAuth.h>
 #import "include/Private/FLTAuthStateChannelStreamHandler.h"
+#import <FirebaseAuth/FirebaseAuth.h>
 #import "include/Public/FLTFirebaseAuthPlugin.h"
 
 @implementation FLTAuthStateChannelStreamHandler {
