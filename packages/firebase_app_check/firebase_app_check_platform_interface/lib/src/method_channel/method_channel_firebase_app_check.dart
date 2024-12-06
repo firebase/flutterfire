@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -84,9 +83,11 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
       await channel.invokeMethod<void>('FirebaseAppCheck#activate', {
         'appName': app.name,
         // Allow value to pass for debug mode for unit testing
-        if (Platform.isAndroid || kDebugMode)
+        if (defaultTargetPlatform == TargetPlatform.android || kDebugMode)
           'androidProvider': getAndroidProviderString(androidProvider),
-        if (Platform.isIOS || Platform.isMacOS || kDebugMode)
+        if (defaultTargetPlatform == TargetPlatform.iOS ||
+            defaultTargetPlatform == TargetPlatform.macOS ||
+            kDebugMode)
           'appleProvider': getAppleProviderString(appleProvider),
       });
     } on PlatformException catch (e, s) {
