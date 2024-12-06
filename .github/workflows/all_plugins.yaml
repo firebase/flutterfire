@@ -126,7 +126,7 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 30
     env:
-      FLUTTER_DEPENDENCIES: "cloud_firestore firebase_remote_config cloud_functions firebase_database firebase_auth"
+      FLUTTER_DEPENDENCIES: "cloud_firestore firebase_remote_config cloud_functions firebase_database firebase_auth firebase_storage firebase_analytics firebase_messaging"
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
       - uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225
