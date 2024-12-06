@@ -2,9 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#import "FLTFirebaseCrashlyticsPlugin.h"
-#import "Crashlytics_Platform.h"
-#import "ExceptionModel_Platform.h"
+#import "include/FLTFirebaseCrashlyticsPlugin.h"
+#import "include/Crashlytics_Platform.h"
+#import "include/ExceptionModel_Platform.h"
 
 @import FirebaseCrashlytics;
 
