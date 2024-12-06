@@ -4,7 +4,11 @@
 #import <TargetConditionals.h>
 
 #import <GoogleUtilities/GULAppDelegateSwizzler.h>
+#if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
 #import <firebase_core/FLTFirebasePluginRegistry.h>
+#else
+#import <FLTFirebasePluginRegistry.h>
+#endif
 #import <objc/message.h>
 
 #import "FLTFirebaseMessagingPlugin.h"
@@ -687,11 +691,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 }
 
 - (NSString *_Nonnull)firebaseLibraryName {
-  return LIBRARY_NAME;
+  return @LIBRARY_NAME;
 }
 
 - (NSString *_Nonnull)firebaseLibraryVersion {
-  return LIBRARY_VERSION;
+  return @LIBRARY_VERSION;
 }
 
 - (NSString *_Nonnull)flutterChannelName {
