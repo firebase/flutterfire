@@ -5,28 +5,22 @@
 import 'dart:io';
 import 'dart:convert';
 
-void main() async {
-  await buildSwiftExampleApp('ios', 'firebase_core');
-  await buildSwiftExampleApp('ios', 'cloud_firestore');
-  await buildSwiftExampleApp('macos', 'firebase_core');
-  await buildSwiftExampleApp('macos', 'cloud_firestore');
-  await buildSwiftExampleApp('ios', 'firebase_remote_config');
-  await buildSwiftExampleApp('macos', 'firebase_remote_config');
-  await buildSwiftExampleApp('ios', 'cloud_functions');
-  await buildSwiftExampleApp('macos', 'cloud_functions');
-  await buildSwiftExampleApp('ios', 'firebase_database');
-  await buildSwiftExampleApp('macos', 'firebase_database');
-  await buildSwiftExampleApp('ios', 'firebase_messaging');
-  await buildSwiftExampleApp('macos', 'firebase_messaging');
+void main(List<String> arguments) async {
+  if (arguments.isEmpty) {
+    throw Exception('No FlutterFire dependency arguments provided.');
+  }
+  final plugins = arguments.join(',');
+  await buildSwiftExampleApp('ios', plugins);
+  await buildSwiftExampleApp('macos', plugins);
 }
 
-Future<void> buildSwiftExampleApp(String platform, String plugin) async {
+Future<void> buildSwiftExampleApp(String platform, String plugins) async {
   final initialDirectory = Directory.current;
   final platformName = platform == 'ios' ? 'iOS' : 'macOS';
 
-  print('Building $plugin $platformName example app with swift (SPM)');
+  print('Building example app with swift (SPM) integration for $plugins');
 
-  final directory = Directory('packages/$plugin/$plugin/example/$platform');
+  final directory = Directory('packages/firebase_core/firebase_core/example/$platform');
   if (!directory.existsSync()) {
     print('Directory does not exist: ${directory.path}');
     exit(1);
@@ -35,11 +29,9 @@ Future<void> buildSwiftExampleApp(String platform, String plugin) async {
   // Change to the appropriate directory
   Directory.current = directory;
 
-  if (plugin != 'firebase_messaging') {
-    // Firebase messaging has FlutterFire plugin without SPM support so this will cause failure
-    await _runCommand('rm', ['Podfile']);
-    await _runCommand('pod', ['deintegrate']);
-  }
+  await _runCommand('rm', ['Podfile']);
+  await _runCommand('pod', ['deintegrate']);
+
   // Determine the arguments for the flutter build command
   final flutterArgs = ['build', platform];
   if (platform == 'ios') {
@@ -61,7 +53,11 @@ Future<void> buildSwiftExampleApp(String platform, String plugin) async {
     exit(1);
   } else {
     print(
-        'Successfully built $plugin $platformName project using Swift Package Manager.');
+        'Successfully built $plugins for $platformName project using Swift Package Manager.');
+
+    Directory.current = Directory('..');
+    print('See contents of pubspec.yaml:');
+    await _runCommand('cat', ['pubspec.yaml']);
   }
 
   Directory.current = initialDirectory;
