@@ -1,21 +1,20 @@
 // Copyright 2023 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+@import FirebaseStorage;
 
-#import <FirebaseStorage/FIRStorageTypedefs.h>
-
-#import "FLTFirebaseStoragePlugin.h"
 #import "FLTTaskStateChannelStreamHandler.h"
+#import "FLTFirebaseStoragePlugin.h"
 
 @implementation FLTTaskStateChannelStreamHandler {
   FIRStorageObservableTask *_task;
   FLTFirebaseStoragePlugin *_storagePlugin;
   NSString *_channelName;
   NSNumber *_handle;
-  FIRStorageHandle successHandle;
-  FIRStorageHandle failureHandle;
-  FIRStorageHandle pausedHandle;
-  FIRStorageHandle progressHandle;
+  NSString *successHandle;
+  NSString *failureHandle;
+  NSString *pausedHandle;
+  NSString *progressHandle;
 }
 
 - (instancetype)initWithTask:(FIRStorageObservableTask *)task
