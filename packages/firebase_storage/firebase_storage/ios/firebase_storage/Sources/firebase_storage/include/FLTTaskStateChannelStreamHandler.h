@@ -5,14 +5,16 @@
 #import <TargetConditionals.h>
 
 #if TARGET_OS_OSX
+// Forward declarations of Firebase Storage type
+@class FIRStorageObservableTask;
 #import <FlutterMacOS/FlutterMacOS.h>
 #else
 #import <Flutter/Flutter.h>
+@import FirebaseStorage;
 #endif
 
-@import FirebaseStorage;
-
 #import <Foundation/Foundation.h>
+#import "FLTFirebaseStoragePlugin.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

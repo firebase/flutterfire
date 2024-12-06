@@ -11,7 +11,12 @@
 #endif
 
 #import <Foundation/Foundation.h>
-#import <firebase_core/FLTFirebasePlugin.h>
+
+#if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
+#import <firebase_core/FLTFirebasePluginRegistry.h>
+#else
+#import <FLTFirebasePluginRegistry.h>
+#endif
 
 @interface FLTFirebaseAnalyticsPlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin>
 @end

@@ -18,9 +18,9 @@ import 'package:pigeon/pigeon.dart';
       className: 'GeneratedAndroidFirebaseStorage',
     ),
     objcHeaderOut:
-        '../firebase_storage/ios/Classes/firebase_storage_messages.g.h',
+        '../firebase_storage/ios/firebase_storage/Sources/firebase_storage/include/firebase_storage_messages.g.h',
     objcSourceOut:
-        '../firebase_storage/ios/Classes/firebase_storage_messages.g.m',
+        '../firebase_storage/ios/firebase_storage/Sources/firebase_storage/firebase_storage_messages.g.m',
     cppHeaderOut: '../firebase_storage/windows/messages.g.h',
     cppSourceOut: '../firebase_storage/windows/messages.g.cpp',
     cppOptions: CppOptions(namespace: 'firebase_storage_windows'),
