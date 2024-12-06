@@ -6,19 +6,7 @@
 #import "Crashlytics_Platform.h"
 #import "ExceptionModel_Platform.h"
 
-#import <Firebase/Firebase.h>
-
-#if TARGET_OS_OSX
-// macOS platform does not support analytics
-#else
-#if __has_include(<FirebaseCrashlytics/FIRAnalyticsInterop.h>)
-#import <FirebaseCrashlytics/FIRAnalyticsInterop.h>
-#import <FirebaseCrashlytics/FIRCLSAnalyticsManager.h>
-#else
-#import "FIRAnalyticsInterop.h"
-#import "FIRCLSAnalyticsManager.h"
-#endif
-#endif
+@import FirebaseCrashlytics;
 
 #if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
 #import <firebase_core/FLTFirebasePluginRegistry.h>
@@ -45,21 +33,6 @@ NSString *const kCrashlyticsArgumentMethod = @"method";
 NSString *const kCrashlyticsArgumentEnabled = @"enabled";
 NSString *const kCrashlyticsArgumentUnsentReports = @"unsentReports";
 NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPreviousExecution";
-
-#if TARGET_OS_OSX
-// macOS platform does not support analytics
-#else
-@interface FIRCLSAnalyticsManager ()
-@property(nonatomic, strong) id<FIRAnalyticsInterop> analytics;
-@end
-
-@interface FIRCrashlytics ()
-@property(nonatomic, strong) FIRCLSAnalyticsManager *analyticsManager;
-@end
-#endif
-
-@interface FLTFirebaseCrashlyticsPlugin ()
-@end
 
 @implementation FLTFirebaseCrashlyticsPlugin
 
