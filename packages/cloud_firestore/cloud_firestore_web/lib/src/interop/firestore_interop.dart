@@ -436,6 +436,20 @@ extension GeoPointJsImplExtension on GeoPointJsImpl {
   external JSBoolean isEqual(JSObject other);
 }
 
+@JS('VectorValue')
+@staticInterop
+external VectorValueJsImpl get VectorValueConstructor;
+
+@JS('VectorValue')
+@staticInterop
+class VectorValueJsImpl {
+  external factory VectorValueJsImpl(JSArray array);
+}
+
+extension VectorValueJsImplExtension on VectorValueJsImpl {
+  external JSArray toArray();
+}
+
 @JS('Bytes')
 @staticInterop
 external BytesJsImpl get BytesConstructor;
