@@ -608,6 +608,12 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     }
   }
 
+  if ([permissions[@"providesAppNotificationSettings"] isEqual:@(YES)]) {
+    if (@available(iOS 12.0, *)) {
+      options |= UNAuthorizationOptionProvidesAppNotificationSettings;
+    }
+  }
+
   id handler = ^(BOOL granted, NSError *_Nullable error) {
     if (error != nil) {
       result.error(nil, nil, nil, error);
@@ -780,6 +786,15 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
       NSNumberForUNNotificationSetting:settings.notificationCenterSetting];
   settingsDictionary[@"timeSensitive"] = timeSensitive;
 
+  if (@available(iOS 12.0, *)) {
+    if (settings.providesAppNotificationSettings) {
+      settingsDictionary[@"providesAppNotificationSettings"] = @1;
+    } else {
+      settingsDictionary[@"providesAppNotificationSettings"] = @0;
+    }
+  } else {
+    settingsDictionary[@"providesAppNotificationSettings"] = @-1;
+  }
   return settingsDictionary;
 }
 
