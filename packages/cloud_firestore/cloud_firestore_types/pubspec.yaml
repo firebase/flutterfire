@@ -1,0 +1,15 @@
+name: cloud_firestore_types
+description: Firestore types for use in the cloud_firestore plugin and Flutterless contexts.
+version: 1.0.0
+homepage: https://github.com/firebase/flutterfire/tree/main/packages/cloud_firestore/cloud_firestore_types
+repository: https://github.com/firebase/flutterfire/tree/main/packages/cloud_firestore/cloud_firestore_types
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  collection: ^1.19.0
+  meta: ^1.8.0
+
+dev_dependencies:
+  test: ^1.24.0
