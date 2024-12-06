@@ -1,0 +1,1865 @@
+"AccessLevel specifies coarse access policies for common situations."
+enum AccessLevel {
+  """
+  This operation is accessible to anyone, with or without authentication.
+  Equivalent to: @auth(expr: "true")
+  """
+  PUBLIC
+
+  """
+  This operation can be executed only with  a valid Firebase Auth ID token.
+  **Note:** This access level allows anonymous and unverified accounts,
+  which may present security and abuse risks.
+  Equivalent to: `@auth(expr: "auth.uid != nil")`
+  """
+  USER_ANON
+
+  """
+  This operation is restricted to non-anonymous Firebase Auth accounts.
+  Equivalent to: `@auth(expr: "auth.uid != nil && auth.token.firebase.sign_in_provider != 'anonymous'")`
+  """
+  USER
+
+  """
+  This operation is restricted to Firebase Auth accounts with verified email addresses.
+  Equivalent to: `@auth(expr: "auth.uid != nil && auth.token.email_verified")`
+  """
+  USER_EMAIL_VERIFIED
+
+  """
+  This operation cannot be executed by anyone. The operation can only be performed
+  by using the Admin SDK from a privileged environment.
+  Equivalent to: `@auth(expr: "false")`
+  """
+  NO_ACCESS
+}
+
+"""
+The `@auth` directive defines the authentication policy for a query or mutation.
+
+It must be added to any operation that you wish to be accessible from a client
+application. If not specified, the operation defaults to `@auth(level: NO_ACCESS)`.
+
+Refer to [Data Connect Auth Guide](https://firebase.google.com/docs/data-connect/authorization-and-security) for the best practices.
+"""
+directive @auth(
+  """
+  The minimal level of access required to perform this operation.
+  Exactly one of `level` and `expr` should be specified.
+  """
+  level: AccessLevel @fdc_oneOf(required: true)
+  """
+  A CEL expression that grants access to this operation if the expression
+  evaluates to `true`.
+  Exactly one of `level` and `expr` should be specified.
+  """
+  expr: Boolean_Expr @fdc_oneOf(required: true)
+) on QUERY | MUTATION
+
+
+"""
+Require that this mutation always run in a DB transaction.
+
+Mutations with `@transaction` are guaranteed to either fully succeed or fully
+fail. If any of the fields within the transaction fails, the entire transaction
+is rolled back. From a client standpoint, any failure behaves as if the entire
+request had failed with a request error and execution had not begun.
+
+Mutations without `@transaction` would execute each root field one after
+another in sequence. It surfaces any errors as partial [field errors](https://spec.graphql.org/October2021/#sec-Errors.Field-errors),
+but not impacts the subsequent executions.
+
+The `@transaction` directive cannot be added to queries for now.
+Currently, queries cannot fail partially, the response data is not guaranteed
+to be a consistent snapshot.
+"""
+directive @transaction on MUTATION
+
+"Query filter criteria for `String` scalar fields."
+input String_Filter {
+  "When true, match if field `IS NULL`. When false, match if field is `NOT NULL`."
+  isNull: Boolean
+  "Match if field is exactly equal to provided value."
+  eq: String @fdc_oneOf(group: "eq")
+  """
+  Match if field is exactly equal to the result of the provided server value
+  expression. Currently only `auth.uid` is supported as an expression.
+  """
+  eq_expr: String_Expr @fdc_oneOf(group: "eq")
+  "Match if field is not equal to provided value."
+  ne: String @fdc_oneOf(group: "ne")
+  """
+  Match if field is not equal to the result of the provided server value
+  expression. Currently only `auth.uid` is supported as an expression.
+  """
+  ne_expr: String_Expr @fdc_oneOf(group: "ne")
+  "Match if field value is among the provided list of values."
+  in: [String!]
+  "Match if field value is not among the provided list of values."
+  nin: [String!]
+  "Match if field value is greater than the provided value."
+  gt: String
+  "Match if field value is greater than or equal to the provided value."
+  ge: String
+  "Match if field value is less than the provided value."
+  lt: String
+  "Match if field value is less than or equal to the provided value."
+  le: String
+  """
+  Match if field value contains the provided value as a substring. Equivalent
+  to `LIKE '%value%'`
+  """
+  contains: String
+  """
+  Match if field value starts with the provided value. Equivalent to
+  `LIKE 'value%'`
+  """
+  startsWith: String
+  """
+  Match if field value ends with the provided value. Equivalent to
+  `LIKE '%value'`
+  """
+  endsWith: String
+  """
+  Match if field value matches the provided pattern. See `String_Pattern` for
+  more details.
+  """
+  pattern: String_Pattern
+}
+
+"""
+The pattern match condition on a string. Specify either like or regex.
+https://www.postgresql.org/docs/current/functions-matching.html
+"""
+input String_Pattern {
+  "Match using the provided `LIKE` expression."
+  like: String
+  "Match using the provided POSIX regular expression."
+  regex: String
+  "When true, ignore case when matching."
+  ignoreCase: Boolean
+  "When true, invert the match result. Equivalent to `NOT LIKE` or `!~`."
+  invert: Boolean
+}
+
+"Query filter criteris for `[String!]` scalar fields."
+input String_ListFilter {
+  "Match if list field contains the provided value as a member."
+  includes: String
+  "Match if list field does not contain the provided value as a member."
+  excludes: String
+  "Match if list field contains all of the provided values as members."
+  includesAll: [String!]
+  "Match if list field does not contain any of the provided values as members."
+  excludesAll: [String!]
+}
+
+"Query filter criteria for `UUID` scalar fields."
+input UUID_Filter {
+  "When true, match if field `IS NULL`. When false, match if field is `NOT NULL`."
+  isNull: Boolean
+  "Match if field is exactly equal to provided value."
+  eq: UUID
+  "Match if field is not equal to provided value."
+  ne: UUID
+  "Match if field value is among the provided list of values."
+  in: [UUID!]
+  "Match if field value is not among the provided list of values."
+  nin: [UUID!]
+}
+
+"Query filter criteris for `[UUID!]` scalar fields."
+input UUID_ListFilter {
+  "Match if list field contains the provided value as a member."
+  includes: UUID
+  "Match if list field does not contain the provided value as a member."
+  excludes: UUID
+  "Match if list field contains all of the provided values as members."
+  includesAll: [UUID!]
+  "Match if list field does not contain any of the provided values as members."
+  excludesAll: [UUID!]
+}
+
+"Query filter criteria for `Int` scalar fields."
+input Int_Filter {
+  "When true, match if field `IS NULL`. When false, match if field is `NOT NULL`."
+  isNull: Boolean
+  "Match if field is exactly equal to provided value."
+  eq: Int
+  "Match if field is not equal to provided value."
+  ne: Int
+  "Match if field value is among the provided list of values."
+  in: [Int!]
+  "Match if field value is not among the provided list of values."
+  nin: [Int!]
+  "Match if field value is greater than the provided value."
+  gt: Int
+  "Match if field value is greater than or equal to the provided value."
+  ge: Int
+  "Match if field value is less than the provided value."
+  lt: Int
+  "Match if field value is less than or equal to the provided value."
+  le: Int
+}
+
+"Query filter criteris for `[Int!]` scalar fields."
+input Int_ListFilter {
+  "Match if list field contains the provided value as a member."
+  includes: Int
+  "Match if list field does not contain the provided value as a member."
+  excludes: Int
+  "Match if list field contains all of the provided values as members."
+  includesAll: [Int!]
+  "Match if list field does not contain any of the provided values as members."
+  excludesAll: [Int!]
+}
+
+"Query filter criteria for `Int64` scalar fields."
+input Int64_Filter {
+  "When true, match if field `IS NULL`. When false, match if field is `NOT NULL`."
+  isNull: Boolean
+  "Match if field is exactly equal to provided value."
+  eq: Int64
+  "Match if field is not equal to provided value."
+  ne: Int64
+  "Match if field value is among the provided list of values."
+  in: [Int64!]
+  "Match if field value is not among the provided list of values."
+  nin: [Int64!]
+  "Match if field value is greater than the provided value."
+  gt: Int64
+  "Match if field value is greater than or equal to the provided value."
+  ge: Int64
+  "Match if field value is less than the provided value."
+  lt: Int64
+  "Match if field value is less than or equal to the provided value."
+  le: Int64
+}
+
+"Query filter criteria for `[Int64!]` scalar fields."
+input Int64_ListFilter {
+  "Match if list field contains the provided value as a member."
+  includes: Int64
+  "Match if list field does not contain the provided value as a member."
+  excludes: Int64
+  "Match if list field contains all of the provided values as members."
+  includesAll: [Int64!]
+  "Match if list field does not contain any of the provided values as members."
+  excludesAll: [Int64!]
+}
+
+"Query filter criteria for `Float` scalar fields."
+input Float_Filter {
+  "When true, match if field `IS NULL`. When false, match if field is `NOT NULL`."
+  isNull: Boolean
+  "Match if field is exactly equal to provided value."
+  eq: Float
+  "Match if field is not equal to provided value."
+  ne: Float
+  "Match if field value is among the provided list of values."
+  in: [Float!]
+  "Match if field value is not among the provided list of values."
+  nin: [Float!]
+  "Match if field value is greater than the provided value."
+  gt: Float
+  "Match if field value is greater than or equal to the provided value."
+  ge: Float
+  "Match if field value is less than the provided value."
+  lt: Float
+  "Match if field value is less than or equal to the provided value."
+  le: Float
+}
+
+"Query filter criteria for `[Float!]` scalar fields."
+input Float_ListFilter {
+  "Match if list field contains the provided value as a member."
+  includes: Float
+  "Match if list field does not contain the provided value as a member."
+  excludes: Float
+  "Match if list field contains all of the provided values as members."
+  includesAll: [Float!]
+  "Match if list field does not contain any of the provided values as members."
+  excludesAll: [Float!]
+}
+
+"Query filter criteria for `Boolean` scalar fields."
+input Boolean_Filter {
+  "When true, match if field `IS NULL`. When false, match if field is `NOT NULL`."
+  isNull: Boolean
+  "Match if field is exactly equal to provided value."
+  eq: Boolean
+  "Match if field is not equal to provided value."
+  ne: Boolean
+  "Match if field value is among the provided list of values."
+  in: [Boolean!]
+  "Match if field value is not among the provided list of values."
+  nin: [Boolean!]
+}
+
+"Query filter criteria for `[Boolean!]` scalar fields."
+input Boolean_ListFilter {
+  "Match if list field contains the provided value as a member."
+  includes: Boolean
+  "Match if list field does not contain the provided value as a member."
+  excludes: Boolean
+  "Match if list field contains all of the provided values as members."
+  includesAll: [Boolean!]
+  "Match if list field does not contain any of the provided values as members."
+  excludesAll: [Boolean!]
+}
+
+"Query filter criteria for `Any` scalar fields."
+input Any_Filter {
+  "When true, match if field `IS NULL`. When false, match if field is `NOT NULL`."
+  isNull: Boolean
+  "Match if field is exactly equal to provided value."
+  eq: Any
+  "Match if field is not equal to provided value."
+  ne: Any
+  "Match if field value is among the provided list of values."
+  in: [Any!]
+  "Match if field value is not among the provided list of values."
+  nin: [Any!]
+}
+
+"Query filter criteria for `[Any!]` scalar fields."
+input Any_ListFilter {
+  "Match if list field contains the provided value as a member."
+  includes: Any
+  "Match if list field does not contain the provided value as a member."
+  excludes: Any
+  "Match if list field contains all of the provided values as members."
+  includesAll: [Any!]
+  "Match if list field does not contain any of the provided values as members."
+  excludesAll: [Any!]
+}
+
+"""
+(Internal) A string that uniquely identifies a type, field, and so on.
+
+The most common usage in FDC is `SomeType` or `SomeType.someField`. See the
+linked page in the @specifiedBy directive for the GraphQL RFC with more details.
+"""
+scalar SchemaCoordinate
+  @specifiedBy(url: "https://github.com/graphql/graphql-wg/blob/6d02705dea034fb65ebc6799632adb7bd550d0aa/rfcs/SchemaCoordinates.md")
+  @fdc_forbiddenAsFieldType
+  @fdc_forbiddenAsVariableType
+
+"(Internal) The purpose of a generated type or field."
+enum GeneratedPurpose {
+  # Implicit fields added to the table types as columns.
+  IMPLICIT_KEY_FIELD
+  IMPLICIT_REF_FIELD
+
+  # Relational non-column fields extended to table types.
+  QUERY_MULTIPLE_ONE_TO_MANY
+  QUERY_MULTIPLE_MANY_TO_MANY
+
+  # Top-level Query fields.
+  QUERY_SINGLE
+  QUERY_MULTIPLE
+  QUERY_MULTIPLE_BY_SIMILARITY
+
+  # Top-level Mutation fields.
+  INSERT_SINGLE
+  INSERT_MULTIPLE
+  UPSERT_SINGLE
+  UPSERT_MULTIPLE
+  UPDATE_SINGLE
+  UPDATE_MULTIPLE
+  DELETE_SINGLE
+  DELETE_MULTIPLE
+}
+
+"(Internal) Added to definitions generated by FDC."
+directive @fdc_generated(
+  "The source type or field that causes this definition to be generated."
+  from: SchemaCoordinate!
+  "The reason why this definition is generated, such as the intended use case."
+  purpose: GeneratedPurpose!
+) on
+  | SCALAR
+  | OBJECT
+  | FIELD_DEFINITION
+  | ARGUMENT_DEFINITION
+  | INTERFACE
+  | UNION
+  | ENUM
+  | ENUM_VALUE
+  | INPUT_OBJECT
+  | INPUT_FIELD_DEFINITION
+
+type _Service {
+  "Full Service Definition Language of the Frebase Data Connect Schema, including normalized schema, predefined and generated types."
+  sdl: String!
+  "Orignal Schema Sources in the service."
+  schema: String!
+  "Generated documentation from the schema of the Firebase Data Connect Service."
+  docs: [_Doc!]!
+}
+
+type _Doc {
+  "Name of the Doc Page."
+  page: String!
+  "The markdown content of the doc page."
+  markdown: String!
+}
+
+"(Internal) Added to things that may be removed from FDC and will soon be no longer usable in schema or operations."
+directive @fdc_deprecated(reason: String = "No longer supported") on
+  | SCHEMA
+  | SCALAR
+  | OBJECT
+  | FIELD_DEFINITION
+  | ARGUMENT_DEFINITION
+  | INTERFACE
+  | UNION
+  | ENUM
+  | ENUM_VALUE
+  | INPUT_OBJECT
+  | INPUT_FIELD_DEFINITION
+
+"(Internal) Added to scalars representing quoted CEL expressions."
+directive @fdc_celExpression(
+  "The expected CEL type that the expression should evaluate to."
+  returnType: String
+) on SCALAR
+
+"(Internal) Added to scalars representing quoted SQL expressions."
+directive @fdc_sqlExpression(
+  "The expected SQL type that the expression should evaluate to."
+  dataType: String
+) on SCALAR
+
+"(Internal) Added to types that may not be used as variables."
+directive @fdc_forbiddenAsVariableType on SCALAR | OBJECT | INTERFACE | UNION | ENUM | INPUT_OBJECT
+
+"(Internal) Added to types that may not be used as fields in schema."
+directive @fdc_forbiddenAsFieldType on SCALAR | OBJECT | INTERFACE | UNION | ENUM | INPUT_OBJECT
+
+"Provides a frequently used example for this type / field / argument."
+directive @fdc_example(
+  "A GraphQL literal value (verbatim) whose type matches the target."
+  value: Any
+  "A human-readable text description of what `value` means in this context."
+  description: String
+) repeatable on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | INTERFACE | UNION | ENUM | INPUT_OBJECT | INPUT_FIELD_DEFINITION
+
+"(Internal) Marks this field / argument as conflicting with others in the same group."
+directive @fdc_oneOf(
+  "The group name where fields / arguments conflict with each other."
+  group: String! = ""
+  "If true, exactly one field / argument in the group must be specified."
+  required: Boolean! = false
+) repeatable on FIELD_DEFINITION | ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+type Mutation {
+  # This is just a dummy field so that Mutation is always non-empty.
+  _firebase: Void @fdc_deprecated(reason: "dummy field -- does nothing useful")
+}
+
+"""
+`UUID` is a string of hexadecimal digits representing an RFC4122-compliant UUID.
+
+UUIDs are always output as 32 lowercase hexadecimal digits without delimiters or
+curly braces.
+Inputs in the following formats are also accepted (case insensitive):
+
+- `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
+- `urn:uuid:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
+- `{xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}`
+
+In the PostgreSQL table, it's stored as [`uuid`](https://www.postgresql.org/docs/current/datatype-uuid.html).
+"""
+scalar UUID @specifiedBy(url: "https://tools.ietf.org/html/rfc4122")
+
+"""
+`Int64` is a scalar that represents a 64-bit signed integer.
+
+In the PostgreSQL table, it's stored as [`bigint`](https://www.postgresql.org/docs/current/datatype-numeric.html).
+
+On the wire, it's encoded as string because 64-bit integer exceeds the range of JSON number.
+"""
+scalar Int64
+
+"""
+The `Any` scalar represents any valid [JSON value](https://www.json.org/json-en.html).
+It can be an object, array, string, number, or boolean.
+
+Caution: JSON doesn't distinguish Int and Float.
+
+In the PostgreSQL table, it's stored as [`jsonb`](https://www.postgresql.org/docs/current/datatype-json.html).
+"""
+scalar Any @specifiedBy(url: "https://www.json.org/json-en.html")
+
+"""
+The `Void` scalar type represents the absence of any value. It is typically used
+in operations where no value is expected in return.
+"""
+scalar Void
+
+"""
+The `True` scalar type only accepts the boolean value `true`.
+
+An optional field/argument typed as `True` may either be set
+to `true` or omitted (not provided at all). The values `false` or `null` are not
+accepted.
+"""
+scalar True
+  @fdc_forbiddenAsFieldType
+  @fdc_forbiddenAsVariableType
+  @fdc_example(value: true, description: "The only allowed value.")
+
+"""
+A Common Expression Language (CEL) expression that returns a boolean at runtime.
+
+This expression can reference the `auth` variable, which is null when Firebase
+Auth is not used. When Firebase Auth is used, the following fields are available:
+
+  - `auth.uid`: The current user ID.
+  - `auth.token`: A map containing all token fields (e.g., claims).
+
+"""
+scalar Boolean_Expr
+  @specifiedBy(url: "https://github.com/google/cel-spec")
+  @fdc_celExpression(returnType: "bool")
+  @fdc_forbiddenAsVariableType
+  @fdc_forbiddenAsFieldType
+  @fdc_example(value: "auth != null", description: "Allow only if a Firebase Auth user is present.")
+
+"""
+A Common Expression Language (CEL) expression that returns a string at runtime.
+
+**Limitation**: Currently, only a limited set of expressions are supported.
+"""
+scalar String_Expr
+  @specifiedBy(url: "https://github.com/google/cel-spec")
+  @fdc_celExpression(returnType: "string")
+  @fdc_forbiddenAsVariableType
+  @fdc_forbiddenAsFieldType
+  @fdc_example(value: "auth.uid", description: "The ID of the currently logged in user in Firebase Auth. (Errors if not logged in.)")
+  @fdc_example(value: "uuidV4()", description: "Generates a new random UUID (version 4) string, formatted as 32 lower-case hex digits without delimiters.")
+
+"""
+A Common Expression Language (CEL) expression that returns a UUID string at runtime.
+
+**Limitation**: Currently, only a limited set of expressions are supported.
+"""
+scalar UUID_Expr
+  @specifiedBy(url: "https://github.com/google/cel-spec")
+  @fdc_celExpression(returnType: "string")
+  @fdc_forbiddenAsVariableType
+  @fdc_forbiddenAsFieldType
+  @fdc_example(value: "uuidV4()", description: "Generates a new random UUID (version 4) every time.")
+
+"""
+A Common Expression Language (CEL) expression whose return type is unspecified.
+
+**Limitation**: Only a limited set of expressions are currently supported for each
+type.
+"""
+scalar Any_Expr
+  @specifiedBy(url: "https://github.com/google/cel-spec")
+  @fdc_celExpression
+  @fdc_forbiddenAsVariableType
+  @fdc_forbiddenAsFieldType
+  @fdc_example(value: "auth.uid", description: "The ID of the currently logged in user in Firebase Auth. (Errors if not logged in.)")
+  @fdc_example(value: "uuidV4()", description: "Generates a new random UUID version 4 (formatted as 32 lower-case hex digits without delimiters if result type is String).")
+  @fdc_example(value: "request.time", description: "The timestamp when the request is received (with microseconds precision).")
+
+"""
+A PostgreSQL value expression whose return type is unspecified.
+"""
+scalar Any_SQL
+  @specifiedBy(url: "https://www.postgresql.org/docs/current/sql-expressions.html")
+  @fdc_sqlExpression
+  @fdc_forbiddenAsVariableType
+  @fdc_forbiddenAsFieldType
+
+"""
+Defines a relational database table.
+
+In this example, we defined one table with a field named `myField`.
+
+```graphql
+type TableName @table {
+  myField: String
+}
+```
+Data Connect adds an implicit `id` primary key column. So the above schema is equivalent to:
+
+```graphql
+type TableName @table(key: "id") {
+  id: String @default(expr: "uuidV4()")
+  myField: String
+}
+```
+
+Data Connect generates the following SQL table and CRUD operations to use it.
+
+```sql
+CREATE TABLE "public"."table_name" (
+  "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
+  "my_field" text NULL,
+  PRIMARY KEY ("id")
+)
+```
+
+ * You can lookup a row: `query ($id: UUID!) { tableName(id: $id) { myField } } `
+ * You can find rows using: `query tableNames(limit: 20) { myField }`
+ * You can insert a row: `mutation { tableName_insert(data: {myField: "foo"}) }`
+ * You can update a row: `mutation ($id: UUID!) { tableName_update(id: $id, data: {myField: "bar"}) }`
+ * You can delete a row: `mutation ($id: UUID!) { tableName_delete(id: $id) }`
+
+##### Customizations
+
+- `@table(singular)` and `@table(plural)` can customize the singular and plural name.
+- `@table(name)` can customize the Postgres table name.
+- `@table(key)` can customize the primary key field name and type.
+
+For example, the `User` table often has a `uid` as its primary key.
+
+```graphql
+type User @table(key: "uid") {
+  uid: String!
+  name: String
+}
+```
+
+ * You can securely lookup a row: `query { user(key: {uid_expr: "auth.uid"}) { name } } `
+ * You can securely insert a row: `mutation { user_insert(data: {uid_expr: "auth.uid" name: "Fred"}) }`
+ * You can securely update a row: `mutation { user_update(key: {uid_expr: "auth.uid"}, data: {name: "New Name"}) }`
+ * You can securely delete a row: `mutation { user_delete(key: {uid_expr: "auth.uid"}) }`
+
+`@table` type can be configured further with:
+
+ - Custom SQL data types for columns. See `@col`.
+ - Add SQL indexes. See `@index`.
+ - Add SQL unique constraints. See `@unique`.
+ - Add foreign key constraints to define relations. See `@ref`.
+
+"""
+directive @table(
+  """
+  Configures the SQL database table name. Defaults to snake_case like `table_name`.
+  """
+  name: String
+  """
+  Configures the singular name. Defaults to the camelCase like `tableName`.
+  """
+  singular: String
+  """
+  Configures the plural name. Defaults to infer based on English plural pattern like `tableNames`.
+  """
+  plural: String
+  """
+  Defines the primary key of the table. Defaults to a single field named `id`.
+  If not present already, Data Connect adds an implicit field `id: UUID! @default(expr: "uuidV4()")`.
+  """
+  key: [String!]
+) on OBJECT
+
+"""
+Defines a relational database Raw SQLview.
+
+Data Connect generates GraphQL queries with WHERE and ORDER BY clauses.
+However, not all SQL features has native GraphQL equivalent.
+
+You can write **an arbitrary SQL SELECT statement**. Data Connect
+would map Graphql fields on `@view` type to columns in your SELECT statement.
+
+* Scalar GQL fields (camelCase) should match a SQL column (snake_case)
+  in the SQL SELECT statement.
+* Reference GQL field can point to another `@table` type. Similar to foreign key
+  defined with `@ref` on a `@table` type, a `@view` type establishes a relation
+  when `@ref(fields)` match `@ref(references)` on the target table.
+
+In this example, you can use `@view(sql)` to define an aggregation view on existing
+table.
+
+```graphql
+type User @table {
+  name: String
+  score: Int
+}
+type UserAggregation @view(sql: '''
+  SELECT
+    COUNT(*) as count,
+    SUM(score) as sum,
+    AVG(score) as average,
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY score) AS median,
+    (SELECT id FROM "user" LIMIT 1) as example_id
+  FROM "user"
+''') {
+  count: Int
+  sum: Int
+  average: Float
+  median: Float
+  example: User
+  exampleId: UUID
+}
+```
+
+###### Example: Query Raw SQL View
+
+```graphql
+query {
+  userAggregations {
+    count sum average median
+    exampleId example { id }
+  }
+}
+```
+
+##### One-to-One View
+
+An one-to-one companion `@view` can be handy if you want to argument a `@table`
+with additional implied content.
+
+```graphql
+type Restaurant @table {
+  name: String!
+}
+type Review @table {
+  restaurant: Restaurant!
+  rating: Int!
+}
+type RestaurantStats @view(sql: '''
+  SELECT
+    restaurant_id,
+    COUNT(*) AS review_count,
+    AVG(rating) AS average_rating
+  FROM review
+  GROUP BY restaurant_id
+''') {
+  restaurant: Restaurant @unique
+  reviewCount: Int
+  averageRating: Float
+}
+```
+
+In this example, `@unique` convey the assumption that each `Restaurant` should
+have only one `RestaurantStats` object.
+
+###### Example: Query One-to-One View
+
+```graphql
+query ListRestaurants {
+  restaurants {
+    name
+    stats: restaurantStats_on_restaurant {
+      reviewCount
+      averageRating
+    }
+  }
+}
+```
+
+###### Example: Filter based on One-to-One View
+
+```graphql
+query BestRestaurants($minAvgRating: Float, $minReviewCount: Int) {
+  restaurants(where: {
+    restaurantStats_on_restaurant: {
+      averageRating: {ge: $minAvgRating}
+      reviewCount: {ge: $minReviewCount}
+    }
+  }) { name }
+}
+```
+
+##### Customizations
+
+- One of `@view(sql)` or `@view(name)` should be defined.
+  `@view(name)` can refer to a persisted SQL view in the Postgres schema.
+- `@view(singular)` and `@view(plural)` can customize the singular and plural name.
+
+`@view` type can be configured further:
+
+ - `@unique` lets you define one-to-one relation.
+ - `@col` lets you customize SQL column mapping. For example, `@col(name: "column_in_select")`.
+
+##### Limitations
+
+Raw SQL view doesn't have a primary key, so it doesn't support lookup. Other
+`@table` or `@view` cannot have `@ref` to a view either.
+
+View cannot be mutated. You can perform CRUD operations on the underlying
+table to alter its content.
+
+**Important: Data Connect doesn't parse and validate SQL**
+
+- If the SQL view is invalid or undefined, related requests may fail.
+- If the SQL view return incompatible types. Firebase Data Connect may surface
+  errors.
+- If a field doesn't have a corresponding column in the SQL SELECT statement,
+  it will always be `null`.
+- There is no way to ensure VIEW to TABLE `@ref` constraint.
+- All fields must be nullable in case they aren't found in the SELECT statement
+  or in the referenced table.
+
+**Important: You should always test `@view`!**
+
+"""
+directive @view(
+  """
+  The SQL view name. If neither `name` nor `sql` are provided, defaults to the
+  snake_case of the singular type name.
+  `name` and `sql` cannot be specified at the same time.
+  """
+  name: String @fdc_oneOf
+  """
+  SQL `SELECT` statement used as the basis for this type.
+  SQL SELECT columns should use snake_case. GraphQL fields should use camelCase.
+  `name` and `sql` cannot be specified at the same time.
+  """
+  sql: String @fdc_oneOf
+  """
+  Configures the singular name. Defaults to the camelCase like `viewName`.
+  """
+  singular: String
+  """
+  Configures the plural name. Defaults to infer based on English plural pattern like `viewNames`.
+  """
+  plural: String
+) on OBJECT
+
+"""
+Customizes a field that represents a SQL database table column.
+
+Data Connect maps scalar Fields on `@table` type to a SQL column of
+corresponding data type.
+
+- scalar `UUID`: [`uuid`](https://www.postgresql.org/docs/current/datatype-uuid.html).
+- scalar `String`: [`text`](https://www.postgresql.org/docs/current/datatype-character.html)
+- scalar `Int`: [`int`](https://www.postgresql.org/docs/current/datatype-numeric.html)
+- scalar `Int64`: [`bigint`](https://www.postgresql.org/docs/current/datatype-numeric.html)
+- scalar `Float`: [`double precision`](https://www.postgresql.org/docs/current/datatype-numeric.html)
+- scalar `Boolean`: [`boolean`](https://www.postgresql.org/docs/current/datatype-boolean.html)
+- scalar `Date`: [`date`](https://www.postgresql.org/docs/current/datatype-datetime.html)
+- scalar `Timestamp`: [`timestamptz`](https://www.postgresql.org/docs/current/datatype-datetime.html)
+- scalar `Any`: [`jsonb`](https://www.postgresql.org/docs/current/datatype-json.html)
+- scalar `Vector`: [`pgvector`](https://github.com/pgvector/pgvector)
+
+Array scalar fields are mapped to [Postgres arrays](https://www.postgresql.org/docs/current/arrays.html).
+
+###### Example: Serial Primary Key
+
+For example, you can define auto-increment primary key.
+
+```graphql
+type Post @table {
+  id: Int! @col(name: "post_id", dataType: "serial")
+}
+```
+
+Data Connect converts it to the following SQL table schema.
+
+```sql
+CREATE TABLE "public"."post" (
+  "post_id" serial NOT NULL,
+  PRIMARY KEY ("id")
+)
+```
+
+###### Example: Vector
+
+```graphql
+type Post @table {
+  content: String! @col(name: "post_content")
+  contentEmbedding: Vector! @col(size:768)
+}
+```
+
+"""
+directive @col(
+  """
+  The SQL database column name. Defaults to snake_case of the field name.
+  """
+  name: String
+  """
+  Configures the custom SQL data type.
+
+  Each GraphQL type can map to multiple SQL data types.
+  Refer to [Postgres supported data types](https://www.postgresql.org/docs/current/datatype.html).
+  """
+  dataType: String
+  """
+  Required on `Vector` columns. It specifies the length of the Vector.
+  `textembedding-gecko@003` model generates `Vector` of `@col(size:768)`.
+  """
+  size: Int
+) on FIELD_DEFINITION
+
+
+"""
+Defines a foreign key reference to another table.
+
+For example, we can define a many-to-one relation.
+
+```graphql
+type ManyTable @table {
+  refField: OneTable!
+}
+type OneTable @table {
+  someField: String!
+}
+```
+Data Connect adds implicit foreign key column and relation query field. So the
+above schema is equivalent to the following schema.
+
+```graphql
+type ManyTable @table {
+  id: UUID! @default(expr: "uuidV4()")
+  refField: OneTable! @ref(fields: "refFieldId", references: "id")
+  refFieldId: UUID!
+}
+type OneTable @table {
+  id: UUID! @default(expr: "uuidV4()")
+  someField: UUID!
+  manyTables_on_refField: [ManyTable!]!
+}
+```
+Data Connect generates the necessary foreign key constraint.
+
+```graphql
+CREATE TABLE "public"."many_table" (
+  "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
+  "ref_field_id" uuid NOT NULL,
+  PRIMARY KEY ("id"),
+  CONSTRAINT "many_table_ref_field_id_fkey" FOREIGN KEY ("ref_field_id") REFERENCES "public"."one_table" ("id") ON DELETE CASCADE
+)
+```
+
+###### Example: Traverse the Reference Field
+
+```graphql
+query ($id: UUID!) {
+  manyTable(id: $id) {
+    refField { id }
+  }
+}
+```
+
+###### Example: Reverse Traverse the Reference field
+
+```graphql
+query ($id: UUID!) {
+  oneTable(id: $id) {
+    manyTables_on_refField { id }
+  }
+}
+```
+
+##### Optional Many-to-One Relation
+
+An optional foreign key reference will be set to null if the referenced row is deleted.
+
+In this example, if a `User` is deleted, the `assignee` and `reporter`
+references will be set to null.
+
+```graphql
+type Bug @table {
+  title: String!
+  assignee: User
+  reproter: User
+}
+```
+
+##### Required Many-to-One Relation
+
+A required foreign key reference will cascade delete if the referenced row is
+deleted.
+
+In this example, if a `Post` is deleted, associated comments will also be
+deleted.
+
+```graphql
+type Comment @table {
+  post: Post!
+  content: String!
+}
+```
+
+##### Many To Many Relation
+
+You can define a many-to-many relation with a join table.
+
+```graphql
+type Membership @table(key: ["group", "user"]) {
+  group: Group!
+  user: User!
+  role: String! @default(value: "member")
+}
+
+type Group @table { name: String! }
+type User @table { name: String! }
+```
+
+When Data Connect sees a table with two reference field as its primary key, it
+knows this is a join table, so expands the many-to-many query field.
+
+```graphql
+type Group @table {
+  name: String!
+  users_via_Membership: [User!]!
+  memberships_on_group: [Membership!]!
+}
+type User @table {
+  name: String!
+  groups_via_Membership: [Group!]!
+  memberships_on_user: [Membership!]!
+}
+```
+
+###### Example: Transerse the Many-To-Many Relation
+
+```graphql
+query ($id: UUID!) {
+  group(id: $id) {
+    users: users_via_Membership {
+      name
+    }
+  }
+}
+```
+
+###### Example: Transerse to the Join Table
+
+```graphql
+query ($id: UUID!) {
+  group(id: $id) {
+    memberships: memberships_on_group {
+      user { name }
+      role
+    }
+  }
+}
+```
+
+##### One To One Relation
+
+You can even define a one-to-one relation with the help of `@unique` or `@table(key)`.
+
+```graphql
+type User @table {
+  name: String
+}
+type Account @table {
+  user: User! @unique
+}
+# Alternatively, use primary key constraint.
+type Account @table(key: "user") {
+  user: User!
+}
+```
+
+###### Example: Transerse the Reference Field
+
+```graphql
+query ($id: UUID!) {
+  account(id: $id) {
+    user { id }
+  }
+}
+```
+
+###### Example: Reverse Tranverse the Reference field
+
+```graphql
+query ($id: UUID!) {
+  user(id: $id) {
+    account_on_user { id }
+  }
+}
+```
+
+##### Customizations
+
+- `@ref(constraintName)` can customize the SQL foreign key constraint name (`table_name_ref_field_fkey` above).
+- `@ref(fields)` can customize the foreign key field names.
+- `@ref(references)` can customize the constraint to reference other columns.
+   By default, `@ref(references)` is the primary key of the `@ref` table.
+   Other fields with `@unique` may also be referred in the foreign key constraint.
+
+"""
+directive @ref(
+  "The SQL database foreign key constraint name. Defaults to {table_name}_{field_name}_fkey."
+  constraintName: String
+  """
+  Foreign key fields. Defaults to {tableName}{PrimaryIdName}.
+  """
+  fields: [String!]
+  "The fields that the foreign key references in the other table. Defaults to its primary key."
+  references: [String!]
+) on FIELD_DEFINITION
+
+"Defines the direction of an orderby query"
+enum OrderDirection {
+"Results are ordered in ascending order."
+  ASC
+"Results are ordered in descending order."
+  DESC
+}
+
+"""
+Specifies the default value for a column field.
+
+For example:
+
+```graphql
+type User @table(key: "uid") {
+  uid: String! @default(expr: "auth.uid")
+  number: Int! @col(dataType: "serial")
+  createdAt: Date! @default(expr: "request.time")
+  role: String! @default(value: "Member")
+  credit: Int! @default(value: 100)
+}
+```
+
+The supported arguments vary based on the field type.
+"""
+directive @default(
+  "A constant value validated against the field's GraphQL type during compilation."
+  value: Any @fdc_oneOf(required: true)
+  "A CEL expression whose return value must match the field's data type."
+  expr: Any_Expr @fdc_oneOf(required: true)
+  """
+  A raw SQL expression, whose SQL data type must match the underlying column.
+
+  The value is any variable-free expression (in particular, cross-references to
+  other columns in the current table are not allowed). Subqueries are not allowed either.
+  See [PostgreSQL defaults](https://www.postgresql.org/docs/current/sql-createtable.html#SQL-CREATETABLE-PARMS-DEFAULT)
+  for more details.
+  """
+  sql: Any_SQL @fdc_oneOf(required: true)
+) on FIELD_DEFINITION
+
+"""
+Defines a database index to optimize query performance.
+
+```graphql
+type User @table @index(fields: ["name", "phoneNumber"], order: [ASC, DESC]) {
+    name: String @index
+    phoneNumber: Int64 @index
+    tags: [String] @index # GIN Index
+}
+```
+
+##### Single Field Index
+
+You can put `@index` on a `@col` field to create a SQL index.
+
+`@index(order)` matters little for single field indexes, as they can be scanned
+in both directions.
+
+##### Composite Index
+
+You can put `@index(fields: [...])` on `@table` type to define composite indexes.
+
+`@index(order: [...])` can customize the index order to satisfy particular
+filter and order requirement.
+
+"""
+directive @index(
+  """
+  Configure the SQL database index id.
+
+  If not overridden, Data Connect generates the index name:
+  - `table_name_first_field_second_field_aa_idx`
+  - `table_name_only_field_name_idx`
+  """
+  name: String
+  """
+  Only allowed and required when used on a `@table` type.
+  Specifies the fields to create the index on.
+  """
+  fields: [String!]
+  """
+  Only allowed for `BTREE` `@index` on `@table` type.
+  Specifies the order for each indexed column. Defaults to all `ASC`.
+  """
+  order: [IndexFieldOrder!]
+  """
+  Customize the index type.
+
+  For most index, it defaults to `BTREE`.
+  For array fields, only allowed `IndexType` is `GIN`.
+  For `Vector` fields, defaults to `HNSW`, may configure to `IVFFLAT`.
+  """
+  type: IndexType
+  """
+  Only allowed when used on vector field.
+  Defines the vector similarity method. Defaults to `INNER_PRODUCT`.
+  """
+  vector_method: VectorSimilarityMethod
+) repeatable on FIELD_DEFINITION | OBJECT
+
+"Specifies the sorting order for database indexes."
+enum IndexFieldOrder {
+  "Sorts the field in ascending order (from lowest to highest)."
+  ASC
+  "Sorts the field in descending order (from highest to lowest)."
+  DESC
+}
+
+"Defines the type of index to be used in the database."
+enum IndexType {
+  "A general-purpose index type commonly used for sorting and searching."
+  BTREE
+  "Generalized Inverted Index, optimized for indexing composite values such as arrays."
+  GIN
+  "Hierarchical Navigable Small World graph, used for nearest-neighbor searches on vector fields."
+  HNSW
+  "Inverted File Index, optimized for approximate nearest-neighbor searches in vector databases."
+  IVFFLAT
+}
+
+"""
+Defines unique constraints on `@table`.
+
+For example,
+
+```graphql
+type User @table {
+    phoneNumber: Int64 @unique
+}
+type UserProfile @table {
+    user: User! @unique
+    address: String @unique
+}
+```
+
+- `@unique` on a `@col` field adds a single-column unique constraint.
+- `@unique` on a `@table` type adds a composite unique constraint.
+- `@unique` on a `@ref` defines a one-to-one relation. It adds unique constraint
+   on `@ref(fields)`.
+
+`@unique` ensures those fields can uniquely identify a row, so other `@table`
+type may define `@ref(references)` to refer to fields that has a unique constraint.
+
+"""
+directive @unique(
+  """
+  Configures the SQL database unique constraint name.
+
+  If not overridden, Data Connect generates the unique constraint name:
+  - `table_name_first_field_second_field_uidx`
+  - `table_name_only_field_name_uidx`
+  """
+  indexName: String
+  """
+  Only allowed and required when used on OBJECT,
+  this specifies the fields to create a unique constraint on.
+  """
+  fields: [String!]
+) repeatable on FIELD_DEFINITION | OBJECT
+
+"""
+Date is a string in the YYYY-MM-DD format representing a local-only date.
+
+See the description for Timestamp for range and limitations.
+
+As a FDC-specific extension, inputs that includes time portions (as specified by
+the Timestamp scalar) are accepted but only the date portion is used. In other
+words, only the part before "T" is used and the rest discarded. This effectively
+truncates it to the local date in the specified time-zone.
+
+Outputs will always be in the canonical YYYY-MM-DD format.
+
+In the PostgreSQL table, it's stored as [`date`](https://www.postgresql.org/docs/current/datatype-datetime.html).
+"""
+scalar Date @specifiedBy(url: "https://scalars.graphql.org/andimarek/local-date.html")
+
+"""
+Timestamp is a RFC 3339 string that represents an exact point in time.
+
+The serialization format follows https://scalars.graphql.org/andimarek/date-time
+except the "Non-optional exact milliseconds" Section. As a FDC-specific
+extension, inputs and outputs may contain 0, 3, 6, or 9 fractional digits.
+
+Specifically, output precision varies by server-side factors such as data source
+support and clients must not rely on an exact number of digits. Clients may
+truncate extra digits as fit, with the caveat that there may be information loss
+if the truncated value is subsequently sent back to the server.
+
+FDC only supports year 1583 to 9999 (inclusive) and uses the ISO-8601 calendar
+system for all date-time calculations. Notably, the expanded year representation
+(+/-YYYYY) is rejected and Year 1582 and before may either be rejected or cause
+undefined behavior.
+
+In the PostgreSQL table, it's stored as [`timestamptz`](https://www.postgresql.org/docs/current/datatype-datetime.html).
+"""
+scalar Timestamp @specifiedBy(url: "https://scalars.graphql.org/andimarek/date-time")
+
+"""
+A Common Expression Language (CEL) expression that returns a Timestamp at runtime.
+
+Limitation: Right now, only a few expressions are supported.
+"""
+scalar Timestamp_Expr
+  @specifiedBy(url: "https://github.com/google/cel-spec")
+  @fdc_celExpression(returnType: "google.protobuf.Timestamp")
+  @fdc_forbiddenAsVariableType
+  @fdc_forbiddenAsFieldType
+  @fdc_example(value: "request.time", description: "The timestamp when the request is received (with microseconds precision).")
+
+"""
+A Common Expression Language (CEL) expression that returns a Timestamp at runtime,
+which is then truncated to UTC date only. The time-of-day parts are discarded.
+
+Limitation: Right now, only a few expressions are supported.
+"""
+scalar Date_Expr
+  @specifiedBy(url: "https://github.com/google/cel-spec")
+  @fdc_celExpression(returnType: "google.protobuf.Timestamp")
+  @fdc_forbiddenAsVariableType
+  @fdc_forbiddenAsFieldType
+  @fdc_example(value: "request.time", description: "The UTC date on which the request is received.")
+
+"Conditions on a `Date` value."
+input Date_Filter {
+  "Match if the field `IS NULL`."
+  isNull: Boolean
+  "Match if the field is exactly equal to the provided value."
+  eq: Date @fdc_oneOf(group: "eq")
+  "Match if the field equals the provided CEL expression."
+  eq_expr: Date_Expr @fdc_oneOf(group: "eq")
+  "Match if the field equals the provided relative date."
+  eq_date: Date_Relative @fdc_oneOf(group: "eq")
+  "Match if the field is not equal to the provided value."
+  ne: Date @fdc_oneOf(group: "ne")
+  "Match if the field is not equal to the provided CEL expression."
+  ne_expr: Date_Expr @fdc_oneOf(group: "ne")
+  "Match if the field is not equal to the provided relative date."
+  ne_date: Date_Relative @fdc_oneOf(group: "ne")
+  "Match if the field value is among the provided list of values."
+  in: [Date!]
+  "Match if the field value is not among the provided list of values."
+  nin: [Date!]
+  "Match if the field value is greater than the provided value."
+  gt: Date @fdc_oneOf(group: "gt")
+  "Match if the field value is greater than the provided CEL expression."
+  gt_expr: Date_Expr @fdc_oneOf(group: "gt")
+  "Match if the field value is greater than the provided relative date."
+  gt_date: Date_Relative @fdc_oneOf(group: "gt")
+  "Match if the field value is greater than or equal to the provided value."
+  ge: Date @fdc_oneOf(group: "ge")
+  "Match if the field value is greater than or equal to the provided CEL expression."
+  ge_expr: Date_Expr @fdc_oneOf(group: "ge")
+  "Match if the field value is greater than or equal to the provided relative date."
+  ge_date: Date_Relative @fdc_oneOf(group: "ge")
+  "Match if the field value is less than the provided value."
+  lt: Date @fdc_oneOf(group: "lt")
+  "Match if the field value is less than the provided CEL expression."
+  lt_expr: Date_Expr @fdc_oneOf(group: "lt")
+  "Match if the field value is less than the provided relative date."
+  lt_date: Date_Relative @fdc_oneOf(group: "lt")
+  "Match if the field value is less than or equal to the provided value."
+  le: Date @fdc_oneOf(group: "le")
+  "Match if the field value is less than or equal to the provided CEL expression."
+  le_expr: Date_Expr @fdc_oneOf(group: "le")
+  "Match if the field value is less than or equal to the provided relative date."
+  le_date: Date_Relative @fdc_oneOf(group: "le")
+}
+
+"Conditions on a`Date` list."
+input Date_ListFilter {
+  "Match if the list contains the provided date."
+  includes: Date @fdc_oneOf(group: "includes")
+  "Match if the list contains the provided date CEL expression."
+  includes_expr: Date_Expr @fdc_oneOf(group: "includes")
+  "Match if the list contains the provided relative date."
+  includes_date: Date_Relative @fdc_oneOf(group: "includes")
+  "Match if the list does not contain the provided date."
+  excludes: Date @fdc_oneOf(group: "excludes")
+  "Match if the list does not contain the provided date CEL expression."
+  excludes_expr: Date_Expr @fdc_oneOf(group: "excludes")
+  "Match if the list does not contain the provided relative date."
+  excludes_date: Date_Relative @fdc_oneOf(group: "excludes")
+  "Match if the list contains all the provided dates."
+  includesAll: [Date!]
+  "Match if the list contains none of the provided dates."
+  excludesAll: [Date!]
+}
+
+"Conditions on a `Timestamp` value."
+input Timestamp_Filter {
+  "Match if the field `IS NULL`."
+  isNull: Boolean
+  "Match if the field is exactly equal to the provided value."
+  eq: Timestamp @fdc_oneOf(group: "eq")
+  "Match if the field equals the provided CEL expression."
+  eq_expr: Timestamp_Expr @fdc_oneOf(group: "eq")
+  "Match if the field equals the provided relative time."
+  eq_time: Timestamp_Relative @fdc_oneOf(group: "eq")
+  "Match if the field is not equal to the provided value."
+  ne: Timestamp @fdc_oneOf(group: "ne")
+  "Match if the field is not equal to the provided CEL expression."
+  ne_expr: Timestamp_Expr @fdc_oneOf(group: "ne")
+  "Match if the field is not equal to the provided relative time."
+  ne_time: Timestamp_Relative @fdc_oneOf(group: "ne")
+  "Match if the field value is among the provided list of values."
+  in: [Timestamp!]
+  "Match if the field value is not among the provided list of values."
+  nin: [Timestamp!]
+  "Match if the field value is greater than the provided value."
+  gt: Timestamp @fdc_oneOf(group: "gt")
+  "Match if the field value is greater than the provided CEL expression."
+  gt_expr: Timestamp_Expr @fdc_oneOf(group: "gt")
+  "Match if the field value is greater than the provided relative time."
+  gt_time: Timestamp_Relative @fdc_oneOf(group: "gt")
+  "Match if the field value is greater than or equal to the provided value."
+  ge: Timestamp @fdc_oneOf(group: "ge")
+  "Match if the field value is greater than or equal to the provided CEL expression."
+  ge_expr: Timestamp_Expr @fdc_oneOf(group: "ge")
+  "Match if the field value is greater than or equal to the provided relative time."
+  ge_time: Timestamp_Relative @fdc_oneOf(group: "ge")
+  "Match if the field value is less than the provided value."
+  lt: Timestamp @fdc_oneOf(group: "lt")
+  "Match if the field value is less than the provided CEL expression."
+  lt_expr: Timestamp_Expr @fdc_oneOf(group: "lt")
+  "Match if the field value is less than the provided relative time."
+  lt_time: Timestamp_Relative @fdc_oneOf(group: "lt")
+  "Match if the field value is less than or equal to the provided value."
+  le: Timestamp @fdc_oneOf(group: "le")
+  "Match if the field value is less than or equal to the provided CEL expression."
+  le_expr: Timestamp_Expr @fdc_oneOf(group: "le")
+  "Match if the field value is less than or equal to the provided relative time."
+  le_time: Timestamp_Relative @fdc_oneOf(group: "le")
+}
+
+"Conditions on a `Timestamp` list."
+input Timestamp_ListFilter {
+  "Match if the list contains the provided timestamp."
+  includes: Timestamp @fdc_oneOf(group: "includes")
+  "Match if the list contains the provided timestamp CEL expression."
+  includes_expr: Timestamp_Expr @fdc_oneOf(group: "includes")
+  "Match if the list contains the provided relative timestamp."
+  includes_time: Timestamp_Relative @fdc_oneOf(group: "includes")
+  "Match if the list does not contain the provided timestamp."
+  excludes: Timestamp @fdc_oneOf(group: "excludes")
+  "Match if the list does not contain the provided timestamp CEL expression."
+  excludes_expr: Timestamp_Expr @fdc_oneOf(group: "excludes")
+  "Match if the list does not contain the provided relative timestamp."
+  excludes_time: Timestamp_Relative @fdc_oneOf(group: "excludes")
+  "Match if the list contains all the provided timestamps."
+  includesAll: [Timestamp!]
+  "Match if the list contains none of the provided timestamps."
+  excludesAll: [Timestamp!]
+}
+
+"Update input of a `Date` value."
+input Date_Update {
+  "Set the field to the provided date."
+  set: Date @fdc_oneOf(group: "set")
+  "Set the field to the provided date CEL expression."
+  set_expr: Date_Expr @fdc_oneOf(group: "set")
+  "Set the field to the provided relative date."
+  set_date: Date_Relative @fdc_oneOf(group: "set")
+}
+
+"Update input of a `Date` list value."
+input Date_ListUpdate {
+  "Replace the current list with the provided list of `Date` values."
+  set: [Date!]
+  "Append the provided `Date` values to the existing list."
+  append: [Date!]
+  "Prepend the provided `Date` values to the existing list."
+  prepend: [Date!]
+  "Remove the date value at the specified index."
+  delete: Int
+  "The index of the list to perform updates."
+  i: Int
+  "Update the date value at the specified index."
+  update: Date
+}
+
+"Update input of a `Timestamp` value."
+input Timestamp_Update {
+  "Set the field to the provided timestamp."
+  set: Timestamp @fdc_oneOf(group: "set")
+  "Set the field to the provided timestamp CEL expression."
+  set_expr: Timestamp_Expr @fdc_oneOf(group: "set")
+  "Set the field to the provided relative timestamp."
+  set_time: Timestamp_Relative @fdc_oneOf(group: "set")
+}
+
+"Update input of an `Timestamp` list value."
+input Timestamp_ListUpdate {
+  "Replace the current list with the provided list of `Timestamp` values."
+  set: [Timestamp!]
+  "Append the provided `Timestamp` values to the existing list."
+  append: [Timestamp!]
+  "Prepend the provided `Timestamp` values to the existing list."
+  prepend: [Timestamp!]
+  "Remove the timestamp value at the specified index."
+  delete: Int
+  "The index of the list to perform updates."
+  i: Int
+  "Update the timestamp value at the specified index."
+  update: Timestamp
+}
+
+
+"A runtime-calculated `Timestamp` value relative to `now` or `at`."
+input Timestamp_Relative @fdc_forbiddenAsVariableType @fdc_forbiddenAsFieldType {
+  "Match for the current time."
+  now: True @fdc_oneOf(group: "from", required: true)
+  "A specific timestamp for matching."
+  at: Timestamp @fdc_oneOf(group: "from", required: true)
+  "Add the provided duration to the base timestamp."
+  add: Timestamp_Duration
+  "Subtract the provided duration from the base timestamp."
+  sub: Timestamp_Duration
+  "Truncate the timestamp to the provided interval."
+  truncateTo: Timestamp_Interval
+}
+
+input Timestamp_Duration @fdc_forbiddenAsVariableType @fdc_forbiddenAsFieldType {
+  "The number of milliseconds for the duration."
+  milliseconds: Int! = 0
+  "The number of seconds for the duration."
+  seconds: Int! = 0
+  "The number of minutes for the duration."
+  minutes: Int! = 0
+  "The number of hours for the duration."
+  hours: Int! = 0
+  "The number of days for the duration."
+  days: Int! = 0
+  "The number of weeks for the duration."
+  weeks: Int! = 0
+  "The number of months for the duration."
+  months: Int! = 0
+  "The number of years for the duration."
+  years: Int! = 0
+}
+
+enum Timestamp_Interval @fdc_forbiddenAsFieldType {
+  "Represents a time interval of one second."
+  SECOND
+  "Represents a time interval of one minute."
+  MINUTE
+  "Represents a time interval of one hour."
+  HOUR
+  "Represents a time interval of one day."
+  DAY
+  "Represents a time interval of one week."
+  WEEK
+  "Represents a time interval of one month."
+  MONTH
+  "Represents a time interval of one year."
+  YEAR
+}
+
+"A runtime-calculated Date value relative to `today` or `on`."
+input Date_Relative @fdc_forbiddenAsVariableType @fdc_forbiddenAsFieldType {
+  "Match for today’s date."
+  today: True @fdc_oneOf(group: "from", required: true)
+  "A specific date for matching."
+  on: Date @fdc_oneOf(group: "from", required: true)
+  "Add the provided duration to the base date."
+  add: Date_Duration
+  "Subtract the provided duration from the base date."
+  sub: Date_Duration
+  "Truncate the date to the provided interval."
+  truncateTo: Date_Interval
+}
+
+input Date_Duration @fdc_forbiddenAsVariableType @fdc_forbiddenAsFieldType {
+  "The number of days for the duration."
+  days: Int! = 0
+  "The number of weeks for the duration."
+  weeks: Int! = 0
+  "The number of months for the duration."
+  months: Int! = 0
+  "The number of years for the duration."
+  years: Int! = 0
+}
+
+enum Date_Interval @fdc_forbiddenAsFieldType {
+  "Represents a time interval of one week."
+  WEEK
+  "Represents a time interval of one month."
+  MONTH
+  "Represents a time interval of one year."
+  YEAR
+}
+
+"Update input of a `String` value."
+input String_Update {
+  "Set the field to a provided value."
+  set: String @fdc_oneOf(group: "set")
+  "Set the field to a provided server value expression."
+  set_expr: String_Expr @fdc_oneOf(group: "set")
+}
+
+"Update input of a `String` list value."
+input String_ListUpdate {
+  "Set the list with the provided values."
+  set: [String!]
+  "Append the provided values to the existing list."
+  append: [String!]
+  "Prepend the provided values to the existing list."
+  prepend: [String!]
+}
+
+"Update input of a `UUID` value."
+input UUID_Update {
+  "Set the field to a provided UUID."
+  set: UUID @fdc_oneOf(group: "set")
+  "Set the field to a provided UUID expression."
+  set_expr: UUID_Expr @fdc_oneOf(group: "set")
+}
+
+"Update input of an `ID` list value."
+input UUID_ListUpdate {
+  "Set the list with the provided list of UUIDs."
+  set: [UUID!]
+  "Append the provided UUIDs to the existing list."
+  append: [UUID!]
+  "Prepend the provided UUIDs to the existing list."
+  prepend: [UUID!]
+}
+
+"Update input of an `Int` value."
+input Int_Update {
+  "Set the field to a provided value."
+  set: Int
+  "Increment the field by a provided value."
+  inc: Int
+  "Decrement the field by a provided value."
+  dec: Int
+}
+
+"Update input of an `Int` list value."
+input Int_ListUpdate {
+  "Set the list with the provided values."
+  set: [Int!]
+  "Append the provided list of values to the existing list."
+  append: [Int!]
+  "Prepend the provided list of values to the existing list."
+  prepend: [Int!]
+}
+
+"Update input of an `Int64` value."
+input Int64_Update {
+  "Set the field to a provided value."
+  set: Int64
+  "Increment the field by a provided value."
+  inc: Int64
+  "Decrement the field by a provided value."
+  dec: Int64
+}
+
+"Update input of an `Int64` list value."
+input Int64_ListUpdate {
+  "Replace the list with the provided values."
+  set: [Int64!]
+  "Append the provided list of values to the existing list."
+  append: [Int64!]
+  "Prepend the provided list of values to the existing list."
+  prepend: [Int64!]
+}
+
+"Update input of a `Float` value."
+input Float_Update {
+  "Set the field to a provided value."
+  set: Float
+  "Increment the field by a provided value."
+  inc: Float
+  "Decrement the field by a provided value."
+  dec: Float
+}
+
+"Update input of a `Float` list value."
+input Float_ListUpdate {
+  "Set the list with the provided values."
+  set: [Float!]
+  "Append the provided list of values to the existing list."
+  append: [Float!]
+  "Prepend the provided list of values to the existing list."
+  prepend: [Float!]
+}
+
+"Update input of a `Boolean` value."
+input Boolean_Update {
+  "Set the field to a provided value."
+  set: Boolean
+}
+
+"Update input of a `Boolean` list value."
+input Boolean_ListUpdate {
+  "Set the list with the provided values."
+  set: [Boolean!]
+  "Append the provided list of values to the existing list."
+  append: [Boolean!]
+  "Prepend the provided list of values to the existing list."
+  prepend: [Boolean!]
+}
+
+"Update input of an `Any` value."
+input Any_Update {
+  "Set the field to a provided value."
+  set: Any
+}
+
+"Update input of an `Any` list value."
+input Any_ListUpdate {
+  "Set the list with the provided values."
+  set: [Any!]
+  "Append the provided list of values to the existing list."
+  append: [Any!]
+  "Prepend the provided list of values to the existing list."
+  prepend: [Any!]
+}
+
+type Query {
+  """
+  _service provides customized introspection on Firebase Data Connect Sevice.
+  """
+  _service: _Service!
+}
+
+"""
+Vector is an array of single-precision floating-point numbers, serialized
+as a JSON array. All elements must be finite (no NaN, Infinity or -Infinity).
+
+Example: [1.1, 2, 3.3]
+
+In the PostgreSQL table, it's stored as [`pgvector`](https://github.com/pgvector/pgvector).
+"""
+scalar Vector
+
+"""
+Defines the similarity function to use when comparing vectors in queries.
+
+Defaults to `INNER_PRODUCT`.
+
+View [all vector functions](https://github.com/pgvector/pgvector?tab=readme-ov-file#vector-functions).
+"""
+enum VectorSimilarityMethod {
+  "Measures the Euclidean (L2) distance between two vectors."
+  L2
+  "Measures the cosine similarity between two vectors."
+  COSINE
+  "Measures the inner product(dot product) between two vectors."
+  INNER_PRODUCT
+}
+
+"Conditions on a Vector value."
+input Vector_Filter {
+  "Match if the field is exactly equal to the provided vector."
+  eq: Vector
+  "Match if the field is not equal to the provided vector."
+  ne: Vector
+  "Match if the field value is among the provided list of vectors."
+  in: [Vector!]
+  "Match if the field value is not among the provided list of vectors."
+  nin: [Vector!]
+  "Match if the field is `NULL`."
+  isNull: Boolean
+}
+
+input Vector_ListFilter {
+  "Match if the list includes the supplied vector."
+  includes: Vector
+  "Match if the list does not include the supplied vector."
+  excludes: Vector
+  "Match if the list contains all the provided vectors."
+  includesAll: [Vector!]
+  "Match if the list contains none of the provided vectors."
+  excludesAll: [Vector!]
+}
+
+"Update input of a Vector value."
+input Vector_Update {
+  "Set the field to the provided vector value."
+  set: Vector @fdc_oneOf(group: "set")
+  "Set the field to the vector embedding result from a text input."
+  set_embed: Vector_Embed @fdc_oneOf(group: "set")
+}
+
+
+"Update input of a Vector list value."
+input Vector_ListUpdate {
+  "Replace the current list with the provided list of Vector values."
+  set: [Vector]
+  "Append the provided Vector values to the existing list."
+  append: [Vector]
+  "Prepend the provided Vector values to the existing list."
+  prepend: [Vector]
+  "Delete the vector at the specified index."
+  delete: Int
+  "The index of the vector to be updated."
+  i: Int
+  "Update the vector at the specified index."
+  update: Vector
+}
+
+"""
+Create a vector embedding of text using the given model on Vertex AI.
+
+Cloud SQL for Postgresql natively integrates with [Vertex AI Text embeddings API](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/text-embeddings-api)
+to effectively generate text embeddings.
+
+If you uses [`Vector`](scalar.md#Vector) in your schema, Firebase Data Connect automatically installs
+[`pgvector`](https://github.com/pgvector/pgvector) and [`google_ml_integration`](https://cloud.google.com/sql/docs/postgres/integrate-cloud-sql-with-vertex-ai)
+Postgres extensions in your Cloud SQL database.
+
+Given a Post table with a `Vector` embedding field.
+
+```graphql
+type Post @table {
+  content: String!
+  contentEmbedding: Vector @col(size:768)
+}
+```
+
+###### Example: Insert embedding
+
+```graphql
+mutation CreatePost($content: String!) {
+  post_insert(data: {
+    content: $content,
+    contentEmbedding_embed: {model: "textembedding-gecko@003", text: $content},
+  })
+}
+```
+
+###### Example: Vector similarity Search
+
+```graphql
+query SearchPost($query: String!) {
+  posts_contentEmbedding_similarity(compare_embed: {model: "textembedding-gecko@003", text: $query}) {
+    id
+    content
+  }
+}
+```
+"""
+input Vector_Embed @fdc_forbiddenAsVariableType {
+  """
+  The model to use for vector embedding.
+  Recommend the latest stable model: `textembedding-gecko@003`.
+  """
+  model: Vector_Embed_Model!
+  "The text to generate the vector embedding from."
+  text: String!
+}
+
+"""
+The Vertex AI model version that is required in input `Vector_Embed`.
+
+It is recommended to use the latest stable model version: `textembedding-gecko@003`.
+
+View all supported [Vertex AI Text embeddings APIs](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/text-embeddings-api).
+"""
+scalar Vector_Embed_Model
+  @specifiedBy(url: "https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versioning")
+  @fdc_forbiddenAsVariableType
+  @fdc_forbiddenAsFieldType
+  @fdc_example(value: "textembedding-gecko@003", description: "A stable version of the textembedding-gecko model")
+  @fdc_example(value: "textembedding-gecko@001", description: "An older version of the textembedding-gecko model")
+  @fdc_example(value: "text-embedding-004", description: "Annother textembedding model")
+

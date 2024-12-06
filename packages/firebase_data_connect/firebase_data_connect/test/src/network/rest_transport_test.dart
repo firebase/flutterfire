@@ -183,8 +183,7 @@ void main() {
       )).called(1);
     });
 
-    test('invokeOperation should include auth and appCheck tokens in headers',
-        () async {
+    test('invokeOperation should include auth tokens in headers', () async {
       final mockResponse = http.Response('{"data": {"key": "value"}}', 200);
       when(mockHttpClient.post(any,
               headers: anyNamed('headers'), body: anyNamed('body')))
@@ -202,6 +201,30 @@ void main() {
         any,
         headers: argThat(
           containsPair('X-Firebase-Auth-Token', 'authToken123'),
+          named: 'headers',
+        ),
+        body: anyNamed('body'),
+      )).called(1);
+    });
+
+    test('invokeOperation should include appcheck tokens in headers', () async {
+      final mockResponse = http.Response('{"data": {"key": "value"}}', 200);
+      when(mockHttpClient.post(any,
+              headers: anyNamed('headers'), body: anyNamed('body')))
+          .thenAnswer((_) async => mockResponse);
+
+      when(mockUser.getIdToken()).thenAnswer((_) async => 'authToken123');
+      when(mockAppCheck.getToken()).thenAnswer((_) async => 'appCheckToken123');
+
+      final deserializer = (String data) => 'Deserialized Data';
+
+      await transport.invokeOperation('testQuery', 'testEndpoint', deserializer,
+          null, null, 'executeQuery');
+
+      verify(mockHttpClient.post(
+        any,
+        headers: argThat(
+          containsPair('X-Firebase-AppCheck', 'appCheckToken123'),
           named: 'headers',
         ),
         body: anyNamed('body'),
@@ -233,6 +256,7 @@ void main() {
         body: anyNamed('body'),
       )).called(1);
     });
+
     test('invokeOperation should throw an error if the server throws one',
         () async {
       final mockResponse = http.Response("""
