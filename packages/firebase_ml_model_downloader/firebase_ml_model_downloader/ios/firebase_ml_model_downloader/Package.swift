@@ -102,6 +102,7 @@ let package = Package(
         // Wrapper dependency
         .product(name: "firebase-core-shared", package: "flutterfire"),
       ],
+      sources: ["Swift", "ObjectiveC"],
       resources: [
         .process("Resources"),
       ],
