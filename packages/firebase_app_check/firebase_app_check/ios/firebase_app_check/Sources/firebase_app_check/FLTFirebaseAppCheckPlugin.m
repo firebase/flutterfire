@@ -7,7 +7,7 @@
 
 @import FirebaseAppCheck;
 
-#if __has_include(<firebase_core/FLTFirebasePlugin.h>)
+#if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 #else
 #import <FLTFirebasePluginRegistry.h>
