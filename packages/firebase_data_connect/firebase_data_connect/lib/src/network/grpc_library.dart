@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-library firebase_data_connect_grpc;
-
 import 'dart:convert';
 import 'dart:developer';
 

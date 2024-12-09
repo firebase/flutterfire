@@ -48,12 +48,14 @@ void main() {
       mockAppCheck = MockFirebaseAppCheck();
       mockConnectorConfig = MockConnectorConfig();
 
-      when(mockApp.options).thenReturn(FirebaseOptions(
-        apiKey: 'fake_api_key',
-        appId: 'fake_app_id',
-        messagingSenderId: 'fake_messaging_sender_id',
-        projectId: 'fake_project_id',
-      ));
+      when(mockApp.options).thenReturn(
+        const FirebaseOptions(
+          apiKey: 'fake_api_key',
+          appId: 'fake_app_id',
+          messagingSenderId: 'fake_messaging_sender_id',
+          projectId: 'fake_project_id',
+        ),
+      );
       when(mockConnectorConfig.location).thenReturn('us-central1');
       when(mockConnectorConfig.connector).thenReturn('connector');
       when(mockConnectorConfig.serviceId).thenReturn('serviceId');
@@ -152,7 +154,7 @@ void main() {
       );
 
       FirebaseDataConnect.cachedInstances['appName'] = {
-        'connectorConfigStr': dataConnect
+        'connectorConfigStr': dataConnect,
       };
 
       final instance = FirebaseDataConnect.instanceFor(
@@ -180,8 +182,9 @@ void main() {
 
       expect(instance, isA<FirebaseDataConnect>());
       expect(
-          FirebaseDataConnect.cachedInstances['appName']!['connectorConfigStr'],
-          equals(instance));
+        FirebaseDataConnect.cachedInstances['appName']!['connectorConfigStr'],
+        equals(instance),
+      );
     });
   });
 }

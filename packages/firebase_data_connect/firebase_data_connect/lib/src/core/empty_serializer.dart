@@ -13,6 +13,6 @@
 // limitations under the License.
 
 // Empty serializer to be used when a null variable is passed.
-String emptySerializer(void _) {
+String emptySerializer(Object? _) {
   return '';
 }

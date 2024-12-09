@@ -451,7 +451,6 @@ String convertRecaptchaVerifierSize(RecaptchaVerifierSize size) {
     case RecaptchaVerifierSize.compact:
       return 'compact';
     case RecaptchaVerifierSize.normal:
-    default:
       return 'normal';
   }
 }
@@ -462,7 +461,6 @@ String convertRecaptchaVerifierTheme(RecaptchaVerifierTheme theme) {
     case RecaptchaVerifierTheme.dark:
       return 'dark';
     case RecaptchaVerifierTheme.light:
-    default:
       return 'light';
   }
 }
