@@ -24,8 +24,7 @@ class GRPCTransport implements DataConnectTransport {
     this.sdkType,
     this.appCheck,
   ) {
-    bool isSecure =
-        transportOptions.isSecure == null || transportOptions.isSecure == true;
+    bool isSecure = transportOptions.isSecure ?? true;
     channel = ClientChannel(
       transportOptions.host,
       port: transportOptions.port ?? 443,

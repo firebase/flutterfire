@@ -25,8 +25,7 @@ class RestTransport implements DataConnectTransport {
     this.appCheck,
   ) {
     String protocol = 'http';
-    if (transportOptions.isSecure == null ||
-        transportOptions.isSecure == true) {
+    if (transportOptions.isSecure ?? true) {
       protocol += 's';
     }
     String host = transportOptions.host;
@@ -50,6 +49,7 @@ class RestTransport implements DataConnectTransport {
   late String url;
 
   @visibleForTesting
+  // ignore: use_setters_to_change_properties
   void setHttp(http.Client client) {
     _client = client;
   }

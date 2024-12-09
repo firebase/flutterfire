@@ -114,6 +114,7 @@ class QueryManager {
         trackedQueries[operationName]![key] == null) {
       return;
     }
+    // ignore: close_sinks
     StreamController stream = trackedQueries[operationName]![key]!;
 
     if (!stream.isClosed) {
