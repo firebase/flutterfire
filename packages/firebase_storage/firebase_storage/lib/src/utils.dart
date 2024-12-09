@@ -27,8 +27,9 @@ const String _cloudStorageHost =
 const String _bucketDomain = r'([A-Za-z0-9.\-_]+)';
 const String _version = 'v[A-Za-z0-9_]+';
 const String _firebaseStoragePath = r'(/([^?#]*).*)?$';
-const String _cloudStoragePath =
-    '([^?#]*)'; // Matches the implementation in the Web SDK: https://github.com/firebase/firebase-js-sdk/blob/main/packages/storage/src/implementation/location.ts#L101
+// Matches the implementation in the Web SDK:
+// https://github.com/firebase/firebase-js-sdk/blob/main/packages/storage/src/implementation/location.ts#L101
+const String _cloudStoragePath = '([^?#]*)';
 const String _optionalPort = r'(?::\d+)?';
 
 /// Returns a path from a given `http://` or `https://` URL.
