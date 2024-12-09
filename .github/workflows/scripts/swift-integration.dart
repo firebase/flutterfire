@@ -11,7 +11,9 @@ void main(List<String> arguments) async {
   }
   final plugins = arguments.join(',');
   await buildSwiftExampleApp('ios', plugins);
-  await buildSwiftExampleApp('macos', plugins);
+  // Remove firebase_performance as it doesn't have macOS support
+  await _runCommand('flutter', ['pub', 'remove', 'firebase_performance']);
+  await buildSwiftExampleApp('macos', plugins.replaceFirst('firebase_performance', ''));
 }
 
 Future<void> buildSwiftExampleApp(String platform, String plugins) async {
