@@ -14,7 +14,8 @@ enum ConfigurationError: Error {
   case invalidFormat(String)
 }
 
-let firebaseInAppMessagingDirectory = String(URL(string: #file)!.deletingLastPathComponent().absoluteString
+let firebaseInAppMessagingDirectory = String(URL(string: #file)!.deletingLastPathComponent()
+  .absoluteString
   .dropLast())
 
 func loadFirebaseSDKVersion() throws -> String {
@@ -34,7 +35,12 @@ func loadFirebaseSDKVersion() throws -> String {
 }
 
 func loadPubspecVersions() throws -> (packageVersion: String, firebaseCoreVersion: String) {
-  let pubspecPath = NSString.path(withComponents: [firebaseInAppMessagingDirectory, "..", "..", "pubspec.yaml"])
+  let pubspecPath = NSString.path(withComponents: [
+    firebaseInAppMessagingDirectory,
+    "..",
+    "..",
+    "pubspec.yaml",
+  ])
   do {
     let yamlString = try String(contentsOfFile: pubspecPath, encoding: .utf8)
     let lines = yamlString.split(separator: "\n")
@@ -98,7 +104,7 @@ let package = Package(
     .target(
       name: "firebase_in_app_messaging",
       dependencies: [
-        .product(name: "FirebaseInAppMessaging", package: "firebase-ios-sdk"),
+        .product(name: "FirebaseInAppMessaging-Beta", package: "firebase-ios-sdk"),
         // Wrapper dependency
         .product(name: "firebase-core-shared", package: "flutterfire"),
       ],
