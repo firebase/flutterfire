@@ -673,7 +673,9 @@ class User {
   }
 
   MultiFactor get multiFactor {
-    if (!kIsWeb && (Platform.isMacOS || Platform.isWindows)) {
+    if (!kIsWeb &&
+        (defaultTargetPlatform == TargetPlatform.macOS ||
+            defaultTargetPlatform == TargetPlatform.windows)) {
       throw UnimplementedError(
         'MultiFactor Authentication is only supported on web, Android and iOS.',
       );
