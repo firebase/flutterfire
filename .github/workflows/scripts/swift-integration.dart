@@ -5,55 +5,30 @@
 import 'dart:io';
 import 'dart:convert';
 
-void main() async {
-  await buildSwiftExampleApp('ios', 'firebase_core');
-  await buildSwiftExampleApp('ios', 'cloud_firestore');
-  await buildSwiftExampleApp('macos', 'firebase_core');
-  await buildSwiftExampleApp('macos', 'cloud_firestore');
-  await buildSwiftExampleApp('ios', 'firebase_remote_config');
-  await buildSwiftExampleApp('macos', 'firebase_remote_config');
-  await buildSwiftExampleApp('ios', 'cloud_functions');
-  await buildSwiftExampleApp('macos', 'cloud_functions');
+void main(List<String> arguments) async {
+  if (arguments.isEmpty) {
+    throw Exception('No FlutterFire dependency arguments provided.');
+  }
+  final plugins = arguments.join(',');
+  await buildSwiftExampleApp('ios', plugins);
+  await buildSwiftExampleApp('macos', plugins);
 }
 
-Future<void> deleteFirstLine(String filePath) async {
-  final file = File(filePath);
-
-  if (!file.existsSync()) {
-    print('File does not exist: $filePath');
-    return;
-  }
-
-  final lines = await file.readAsLines();
-  if (lines.isNotEmpty) {
-    final updatedContent = lines.skip(1).join('\n');
-    await file.writeAsString(updatedContent);
-    print('First line deleted from $filePath');
-  } else {
-    print('File is empty: $filePath');
-  }
-}
-
-Future<void> buildSwiftExampleApp(String platform, String plugin) async {
+Future<void> buildSwiftExampleApp(String platform, String plugins) async {
   final initialDirectory = Directory.current;
   final platformName = platform == 'ios' ? 'iOS' : 'macOS';
 
-  print('Building $plugin $platformName example app with swift (SPM)');
+  print('Building example app with swift (SPM) integration for $plugins');
 
-  final directory = Directory('packages/$plugin/$plugin/example/$platform');
+  final directory = Directory('packages/firebase_core/firebase_core/example/$platform');
   if (!directory.existsSync()) {
     print('Directory does not exist: ${directory.path}');
     exit(1);
   }
 
-  if (platform == 'macos') {
-    await deleteFirstLine(
-        'packages/$plugin/$plugin/example/macos/Flutter/Flutter-Release.xcconfig');
-  }
   // Change to the appropriate directory
   Directory.current = directory;
 
-  // Remove Podfile and deintegrate pods
   await _runCommand('rm', ['Podfile']);
   await _runCommand('pod', ['deintegrate']);
 
@@ -78,7 +53,11 @@ Future<void> buildSwiftExampleApp(String platform, String plugin) async {
     exit(1);
   } else {
     print(
-        'Successfully built $plugin $platformName project using Swift Package Manager.');
+        'Successfully built $plugins for $platformName project using Swift Package Manager.');
+
+    Directory.current = Directory('..');
+    print('See contents of pubspec.yaml:');
+    await _runCommand('cat', ['pubspec.yaml']);
   }
 
   Directory.current = initialDirectory;
