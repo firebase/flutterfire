@@ -22,6 +22,7 @@ export 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
         FieldPath,
         Blob,
         GeoPoint,
+        VectorValue,
         Timestamp,
         Source,
         GetOptions,
@@ -57,6 +58,7 @@ part 'src/filters.dart';
 part 'src/firestore.dart';
 part 'src/load_bundle_task.dart';
 part 'src/load_bundle_task_snapshot.dart';
+part 'src/persistent_cache_index_manager.dart';
 part 'src/query.dart';
 part 'src/query_document_snapshot.dart';
 part 'src/query_snapshot.dart';
@@ -64,4 +66,3 @@ part 'src/snapshot_metadata.dart';
 part 'src/transaction.dart';
 part 'src/utils/codec_utility.dart';
 part 'src/write_batch.dart';
-part 'src/persistent_cache_index_manager.dart';
