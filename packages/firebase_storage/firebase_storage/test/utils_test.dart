@@ -94,6 +94,16 @@ void main() {
       expect(result?['path'], 'foo+bar/file with  spaces .png');
     });
 
+    test('parses a https url with query param', () {
+      String url =
+          'https://storage.cloud.google.com/valid-url.appspot.com/path/to/foo_bar.jpg?foo=bar';
+
+      final result = partsFromHttpUrl(url);
+
+      expect(result?['bucket'], 'valid-url.appspot.com');
+      expect(result?['path'], 'path/to/foo_bar.jpg');
+    });
+
     // TODO(helenaford): regexp can't handle no paths
     // test('sets path to default if null', () {
     //   String url =
