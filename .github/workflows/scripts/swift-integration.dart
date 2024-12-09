@@ -11,9 +11,7 @@ void main(List<String> arguments) async {
   }
   final plugins = arguments.join(',');
   await buildSwiftExampleApp('ios', plugins);
-  // Remove firebase_performance as it doesn't have macOS support
-  await _runCommand('flutter', ['pub', 'remove', 'firebase_performance']);
-  await buildSwiftExampleApp('macos', plugins.replaceFirst('firebase_performance', ''));
+  await buildSwiftExampleApp('macos', plugins);
 }
 
 Future<void> buildSwiftExampleApp(String platform, String plugins) async {
@@ -22,7 +20,8 @@ Future<void> buildSwiftExampleApp(String platform, String plugins) async {
 
   print('Building example app with swift (SPM) integration for $plugins');
 
-  final directory = Directory('packages/firebase_core/firebase_core/example/$platform');
+  final directory =
+      Directory('packages/firebase_core/firebase_core/example/$platform');
   if (!directory.existsSync()) {
     print('Directory does not exist: ${directory.path}');
     exit(1);
