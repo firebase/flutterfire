@@ -2,25 +2,17 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#import "FLTFirebaseCrashlyticsPlugin.h"
-#import "Crashlytics_Platform.h"
-#import "ExceptionModel_Platform.h"
+#import "include/FLTFirebaseCrashlyticsPlugin.h"
+#import "include/Crashlytics_Platform.h"
+#import "include/ExceptionModel_Platform.h"
 
-#import <Firebase/Firebase.h>
+@import FirebaseCrashlytics;
 
-#if TARGET_OS_OSX
-// macOS platform does not support analytics
-#else
-#if __has_include(<FirebaseCrashlytics/FIRAnalyticsInterop.h>)
-#import <FirebaseCrashlytics/FIRAnalyticsInterop.h>
-#import <FirebaseCrashlytics/FIRCLSAnalyticsManager.h>
-#else
-#import "FIRAnalyticsInterop.h"
-#import "FIRCLSAnalyticsManager.h"
-#endif
-#endif
-
+#if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
 #import <firebase_core/FLTFirebasePluginRegistry.h>
+#else
+#import <FLTFirebasePluginRegistry.h>
+#endif
 
 NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/firebase_crashlytics";
 
@@ -41,21 +33,6 @@ NSString *const kCrashlyticsArgumentMethod = @"method";
 NSString *const kCrashlyticsArgumentEnabled = @"enabled";
 NSString *const kCrashlyticsArgumentUnsentReports = @"unsentReports";
 NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPreviousExecution";
-
-#if TARGET_OS_OSX
-// macOS platform does not support analytics
-#else
-@interface FIRCLSAnalyticsManager ()
-@property(nonatomic, strong) id<FIRAnalyticsInterop> analytics;
-@end
-
-@interface FIRCrashlytics ()
-@property(nonatomic, strong) FIRCLSAnalyticsManager *analyticsManager;
-@end
-#endif
-
-@interface FLTFirebaseCrashlyticsPlugin ()
-@end
 
 @implementation FLTFirebaseCrashlyticsPlugin
 
@@ -259,11 +236,11 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
 }
 
 - (NSString *_Nonnull)firebaseLibraryName {
-  return LIBRARY_NAME;
+  return @LIBRARY_NAME;
 }
 
 - (NSString *_Nonnull)firebaseLibraryVersion {
-  return LIBRARY_VERSION;
+  return @LIBRARY_VERSION;
 }
 
 - (NSString *_Nonnull)flutterChannelName {
