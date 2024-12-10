@@ -102,14 +102,17 @@ let package = Package(
         // Wrapper dependency
         .product(name: "firebase-core-shared", package: "flutterfire"),
       ],
-      sources: ["Swift", "ObjectiveC"],
       resources: [
         .process("Resources"),
       ],
       cSettings: [
-        .headerSearchPath("include"),
+        // TODO - need to figure out what to do with this
         .define("LIBRARY_VERSION", to: "\"\(library_version)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-ml-downloader\""),
+      ],
+      swiftSettings: [
+        .define("LIBRARY_VERSION=\"\(library_version)\""),
+        // .define("LIBRARY_NAME", to: "\"flutter-fire-ml-downloader\""),
       ]
     ),
   ]
