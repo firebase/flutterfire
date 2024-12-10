@@ -34,7 +34,12 @@ func loadFirebaseSDKVersion() throws -> String {
 }
 
 func loadPubspecVersion() throws -> String {
-  let pubspecPath = NSString.path(withComponents: [modelDownloaderDirectory, "..", "..", "pubspec.yaml"])
+  let pubspecPath = NSString.path(withComponents: [
+    modelDownloaderDirectory,
+    "..",
+    "..",
+    "pubspec.yaml",
+  ])
   do {
     let yamlString = try String(contentsOfFile: pubspecPath, encoding: .utf8)
     let lines = yamlString.split(separator: "\n")
