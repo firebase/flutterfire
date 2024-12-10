@@ -43,7 +43,7 @@ public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePluginProtocol,
   }
 
   public func firebaseLibraryVersion() -> String {
-    return "0.3.1+6"
+    return versionNumber
   }
 
   public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
