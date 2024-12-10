@@ -20,7 +20,7 @@ import FirebaseMLModelDownloader
 
 let kFLTFirebaseModelDownloaderChannelName = "plugins.flutter.io/firebase_ml_model_downloader"
 
-public class FirebaseModelDownloaderPlugin: FLTFirebasePlugin, FlutterPlugin {
+public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin  {
   public static func register(with registrar: FlutterPluginRegistrar) {
     let binaryMessenger: FlutterBinaryMessenger
 
@@ -35,31 +35,31 @@ public class FirebaseModelDownloaderPlugin: FLTFirebasePlugin, FlutterPlugin {
       binaryMessenger: binaryMessenger
     )
     let instance = FirebaseModelDownloaderPlugin()
+    FLTFirebasePluginRegistry.sharedInstance().register(instance)
     registrar.addMethodCallDelegate(instance, channel: channel)
     #if os(iOS)
-      registrar.publish(instance)
+    registrar.publish(instance)
     #endif
   }
 
-  func didReinitializeFirebaseCore(completion: @escaping () -> Void) {
-        completion()
-    }
-
-  var firebaseLibraryName: String {
-      return "flutter-fire-ml-downloader"
+  public func firebaseLibraryVersion() -> String {
+    return "0.3.1+6"
   }
 
-  var firebaseLibraryVersion: String {
-    // TODO - need to pull this out of pubspec.yaml
-      return "0.3.1+6"
+  public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
+    completion()
   }
 
-  var flutterChannelName: String {
-      return "plugins.flutter.io/firebase_ml_model_downloader"
+  public func pluginConstants(for firebaseApp: FirebaseApp) -> [AnyHashable : Any] {
+    return [:]
   }
 
-  func pluginConstantsForFIRApp(firebaseApp: FirebaseApp) -> [String: Any] {
-      return [:]
+  @objc public func firebaseLibraryName() -> String {
+    return "flutter-fire-ml-downloader"
+  }
+
+  @objc public func flutterChannelName() -> String {
+    return "plugins.flutter.io/firebase_ml_model_downloader"
   }
 
   func mapErrorCodes(error: Error) -> NSString {
