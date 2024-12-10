@@ -35,19 +35,11 @@ func loadFirebaseSDKVersion() throws -> String {
   }
 }
 
-func loadPubspecVersions() throws -> (packageVersion: String, firebaseCoreVersion: String) {
+func loadPubspecVersion() throws -> String {
   let pubspecPath = NSString.path(withComponents: [modelDownloaderDirectory, "..", "..", "pubspec.yaml"])
   do {
     let yamlString = try String(contentsOfFile: pubspecPath, encoding: .utf8)
     let lines = yamlString.split(separator: "\n")
-
-    guard let packageVersionLine = lines.first(where: { $0.starts(with: "version:") }) else {
-      throw ConfigurationError.invalidFormat("No package version line found in pubspec.yaml")
-    }
-    var packageVersion = packageVersionLine.split(separator: ":")[1]
-      .trimmingCharacters(in: .whitespaces)
-      .replacingOccurrences(of: "+", with: "-")
-    packageVersion = packageVersion.replacingOccurrences(of: "^", with: "")
 
     guard let firebaseCoreVersionLine = lines.first(where: { $0.contains("firebase_core:") }) else {
       throw ConfigurationError
@@ -57,21 +49,19 @@ func loadPubspecVersions() throws -> (packageVersion: String, firebaseCoreVersio
       .trimmingCharacters(in: .whitespaces)
     firebaseCoreVersion = firebaseCoreVersion.replacingOccurrences(of: "^", with: "")
 
-    return (packageVersion, firebaseCoreVersion)
+    return firebaseCoreVersion
   } catch {
     throw ConfigurationError.fileNotFound("Error loading or parsing pubspec.yaml: \(error)")
   }
 }
 
-let library_version: String
 let firebase_sdk_version_string: String
 let firebase_core_version_string: String
 let shared_spm_tag = "-firebase-core-swift"
 
 do {
-  library_version = try loadPubspecVersions().packageVersion
   firebase_sdk_version_string = try loadFirebaseSDKVersion()
-  firebase_core_version_string = try loadPubspecVersions().firebaseCoreVersion
+  firebase_core_version_string = try loadPubspecVersion()
 } catch {
   fatalError("Failed to load configuration: \(error)")
 }
@@ -104,14 +94,8 @@ let package = Package(
         // Wrapper dependency
         .product(name: "firebase-core-shared", package: "flutterfire"),
       ],
-      sources: ["Swift", "ObjectiveC"],
       resources: [
         .process("Resources"),
-      ],
-      cSettings: [
-        .headerSearchPath("include"),
-        .define("LIBRARY_VERSION", to: "\"\(library_version)\""),
-        .define("LIBRARY_NAME", to: "\"flutter-fire-ml-downloader\""),
       ]
     ),
   ]
