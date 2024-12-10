@@ -3,7 +3,11 @@
 // found in the LICENSE file.
 @import FirebaseDynamicLinks;
 #import <TargetConditionals.h>
+#if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
 #import <firebase_core/FLTFirebasePluginRegistry.h>
+#else
+#import <FLTFirebasePluginRegistry.h>
+#endif
 
 #import "FLTFirebaseDynamicLinksPlugin.h"
 
@@ -536,11 +540,11 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
 }
 
 - (NSString *_Nonnull)firebaseLibraryName {
-  return LIBRARY_NAME;
+  return @LIBRARY_NAME;
 }
 
 - (NSString *_Nonnull)firebaseLibraryVersion {
-  return LIBRARY_VERSION;
+  return @LIBRARY_VERSION;
 }
 
 - (NSString *_Nonnull)flutterChannelName {
