@@ -1,3 +1,8 @@
+## 5.2.0
+
+ - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
+ - **FEAT**(functions): Swift Package Manager support ([#16770](https://github.com/firebase/flutterfire/issues/16770)). ([dc0dee22](https://github.com/firebase/flutterfire/commit/dc0dee221061b8ea7083e9dc1698aeeba8235518))
+
 ## 5.1.5
 
  - Update a dependency to the latest release.

@@ -3,7 +3,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:collection/collection.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_multi_factor.dart';
@@ -179,7 +178,7 @@ FirebaseAuthMultiFactorExceptionPlatform parseMultiFactorError(
 
   final pigeonMultiFactorInfo =
       (additionalData['multiFactorHints'] as List<Object?>? ?? [])
-          .whereNotNull()
+          .nonNulls
           .map(
             PigeonMultiFactorInfo.decode,
           )
