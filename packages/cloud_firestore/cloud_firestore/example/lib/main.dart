@@ -62,23 +62,15 @@ enum MovieQuery {
 extension on Query<Movie> {
   /// Create a firebase query from a [MovieQuery]
   Query<Movie> queryBy(MovieQuery query) {
-    switch (query) {
-      case MovieQuery.fantasy:
-        return where('genre', arrayContainsAny: ['fantasy']);
-
-      case MovieQuery.sciFi:
-        return where('genre', arrayContainsAny: ['sci-fi']);
-
-      case MovieQuery.likesAsc:
-      case MovieQuery.likesDesc:
-        return orderBy('likes', descending: query == MovieQuery.likesDesc);
-
-      case MovieQuery.year:
-        return orderBy('year', descending: true);
-
-      case MovieQuery.rated:
-        return orderBy('rated', descending: true);
-    }
+    return switch (query) {
+      MovieQuery.fantasy => where('genre', arrayContainsAny: ['fantasy']),
+      MovieQuery.sciFi => where('genre', arrayContainsAny: ['sci-fi']),
+      MovieQuery.likesAsc ||
+      MovieQuery.likesDesc =>
+        orderBy('likes', descending: query == MovieQuery.likesDesc),
+      MovieQuery.year => orderBy('year', descending: true),
+      MovieQuery.rated => orderBy('rated', descending: true)
+    };
   }
 }
 
