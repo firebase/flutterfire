@@ -2,14 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:collection/collection.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
 
 List<MultiFactorInfo> multiFactorInfoPigeonToObject(
   List<PigeonMultiFactorInfo?> pigeonMultiFactorInfo,
 ) {
-  return pigeonMultiFactorInfo.whereNotNull().map((e) {
+  return pigeonMultiFactorInfo.nonNulls.map((e) {
     if (e.phoneNumber != null) {
       return PhoneMultiFactorInfo(
         displayName: e.displayName,

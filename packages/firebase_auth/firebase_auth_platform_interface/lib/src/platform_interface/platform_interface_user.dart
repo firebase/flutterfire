@@ -5,7 +5,6 @@
 
 import 'dart:async';
 
-import 'package:collection/collection.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
@@ -85,7 +84,7 @@ abstract class UserPlatform extends PlatformInterface {
 
   /// Returns a list of user information for each linked provider.
   List<UserInfo> get providerData {
-    final inputData = _user.providerData.whereNotNull();
+    final inputData = _user.providerData.nonNulls;
     final List<UserInfo> providerData = [];
     for (final Map<Object?, Object?> info in inputData) {
       providerData.add(UserInfo.fromJson(info));

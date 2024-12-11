@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of firebase_data_connect_grpc;
+part of 'grpc_library.dart';
 
 /// Transport used for Android/iOS. Uses a GRPC transport instead of REST.
 class GRPCTransport implements DataConnectTransport {
@@ -24,14 +24,16 @@ class GRPCTransport implements DataConnectTransport {
     this.sdkType,
     this.appCheck,
   ) {
-    bool isSecure =
-        transportOptions.isSecure == null || transportOptions.isSecure == true;
-    channel = ClientChannel(transportOptions.host,
-        port: transportOptions.port ?? 443,
-        options: ChannelOptions(
-            credentials: (isSecure
-                ? const ChannelCredentials.secure()
-                : const ChannelCredentials.insecure())));
+    bool isSecure = transportOptions.isSecure ?? true;
+    channel = ClientChannel(
+      transportOptions.host,
+      port: transportOptions.port ?? 443,
+      options: ChannelOptions(
+        credentials: (isSecure
+            ? const ChannelCredentials.secure()
+            : const ChannelCredentials.insecure()),
+      ),
+    );
     stub = ConnectorServiceClient(channel);
     name =
         'projects/${options.projectId}/locations/${options.location}/services/${options.serviceId}/connectors/${options.connector}';
@@ -74,7 +76,7 @@ class GRPCTransport implements DataConnectTransport {
     }
     Map<String, String> metadata = {
       'x-goog-request-params': 'location=${options.location}&frontend=data',
-      'x-goog-api-client': getGoogApiVal(sdkType, packageVersion)
+      'x-goog-api-client': getGoogApiVal(sdkType, packageVersion),
     };
 
     if (authToken != null) {
@@ -90,11 +92,12 @@ class GRPCTransport implements DataConnectTransport {
   /// Invokes GPRC query endpoint.
   @override
   Future<Data> invokeQuery<Data, Variables>(
-      String queryName,
-      Deserializer<Data> deserializer,
-      Serializer<Variables>? serializer,
-      Variables? vars,
-      String? authToken) async {
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+    String? authToken,
+  ) async {
     ExecuteQueryResponse response;
 
     ExecuteQueryRequest request =
@@ -103,22 +106,30 @@ class GRPCTransport implements DataConnectTransport {
       request.variables = getStruct(vars, serializer);
     }
     try {
-      response = await stub.executeQuery(request,
-          options: CallOptions(metadata: await getMetadata(authToken)));
+      response = await stub.executeQuery(
+        request,
+        options: CallOptions(metadata: await getMetadata(authToken)),
+      );
       return deserializer(jsonEncode(response.data.toProto3Json()));
     } on Exception catch (e) {
-      if (e.toString().contains("invalid Firebase Auth Credentials")) {
-        throw DataConnectError(DataConnectErrorCode.unauthorized,
-            'Failed to invoke operation: ${e.toString()}');
+      if (e.toString().contains('invalid Firebase Auth Credentials')) {
+        throw DataConnectError(
+          DataConnectErrorCode.unauthorized,
+          'Failed to invoke operation: $e',
+        );
       }
-      throw DataConnectError(DataConnectErrorCode.other,
-          'Failed to invoke operation: ${e.toString()}');
+      throw DataConnectError(
+        DataConnectErrorCode.other,
+        'Failed to invoke operation: $e',
+      );
     }
   }
 
   /// Converts the variables into a proto Struct.
   Struct getStruct<Variables>(
-      Variables vars, Serializer<Variables> serializer) {
+    Variables vars,
+    Serializer<Variables> serializer,
+  ) {
     Struct struct = Struct.create();
     struct.mergeFromProto3Json(jsonDecode(serializer(vars)));
     return struct;
@@ -127,11 +138,12 @@ class GRPCTransport implements DataConnectTransport {
   /// Invokes GPRC mutation endpoint.
   @override
   Future<Data> invokeMutation<Data, Variables>(
-      String queryName,
-      Deserializer<Data> deserializer,
-      Serializer<Variables>? serializer,
-      Variables? vars,
-      String? authToken) async {
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+    String? authToken,
+  ) async {
     ExecuteMutationResponse response;
     ExecuteMutationRequest request =
         ExecuteMutationRequest(name: name, operationName: queryName);
@@ -139,24 +151,29 @@ class GRPCTransport implements DataConnectTransport {
       request.variables = getStruct(vars, serializer);
     }
     try {
-      response = await stub.executeMutation(request,
-          options: CallOptions(metadata: await getMetadata(authToken)));
+      response = await stub.executeMutation(
+        request,
+        options: CallOptions(metadata: await getMetadata(authToken)),
+      );
       if (response.errors.isNotEmpty) {
         throw Exception(response.errors);
       }
       return deserializer(jsonEncode(response.data.toProto3Json()));
     } on Exception catch (e) {
-      throw DataConnectError(DataConnectErrorCode.other,
-          'Failed to invoke operation: ${e.toString()}');
+      throw DataConnectError(
+        DataConnectErrorCode.other,
+        'Failed to invoke operation: $e',
+      );
     }
   }
 }
 
 /// Initializes GRPC transport for Data Connect.
 DataConnectTransport getTransport(
-        TransportOptions transportOptions,
-        DataConnectOptions options,
-        String appId,
-        CallerSDKType sdkType,
-        FirebaseAppCheck? appCheck) =>
+  TransportOptions transportOptions,
+  DataConnectOptions options,
+  String appId,
+  CallerSDKType sdkType,
+  FirebaseAppCheck? appCheck,
+) =>
     GRPCTransport(transportOptions, options, appId, sdkType, appCheck);

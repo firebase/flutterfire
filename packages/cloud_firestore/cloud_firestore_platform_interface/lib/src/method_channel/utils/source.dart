@@ -6,20 +6,16 @@ import '../../pigeon/messages.pigeon.dart';
 
 /// Converts [Source] to [String]
 String getSourceString(Source source) {
-  switch (source) {
-    case Source.server:
-      return 'server';
-    case Source.cache:
-      return 'cache';
-    default:
-      return 'default';
-  }
+  return switch (source) {
+    Source.server => 'server',
+    Source.cache => 'cache',
+    _ => 'default'
+  };
 }
 
 /// Converts [AggregateSource] to [String]
 String getAggregateSourceString(AggregateSource source) {
-  switch (source) {
-    case AggregateSource.server:
-      return 'server';
-  }
+  return switch (source) {
+    AggregateSource.server => 'server',
+  };
 }
