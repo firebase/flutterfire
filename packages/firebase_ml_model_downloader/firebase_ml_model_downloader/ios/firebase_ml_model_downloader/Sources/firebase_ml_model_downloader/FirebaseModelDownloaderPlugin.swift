@@ -11,11 +11,15 @@
 import FirebaseCore
 import FirebaseMLModelDownloader
 
-import firebase_core
+#if canImport(firebase_core)
+  import firebase_core
+#else
+  import firebase_core_shared
+#endif
 
 let kFLTFirebaseModelDownloaderChannelName = "plugins.flutter.io/firebase_ml_model_downloader"
 
-public class FirebaseModelDownloaderPluginSwift: FLTFirebasePlugin, FlutterPlugin {
+public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
     let binaryMessenger: FlutterBinaryMessenger
 
@@ -29,11 +33,32 @@ public class FirebaseModelDownloaderPluginSwift: FLTFirebasePlugin, FlutterPlugi
       name: kFLTFirebaseModelDownloaderChannelName,
       binaryMessenger: binaryMessenger
     )
-    let instance = FirebaseModelDownloaderPluginSwift()
+    let instance = FirebaseModelDownloaderPlugin()
+    FLTFirebasePluginRegistry.sharedInstance().register(instance)
     registrar.addMethodCallDelegate(instance, channel: channel)
     #if os(iOS)
       registrar.publish(instance)
     #endif
+  }
+
+  public func firebaseLibraryVersion() -> String {
+    versionNumber
+  }
+
+  public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
+    completion()
+  }
+
+  public func pluginConstants(for firebaseApp: FirebaseApp) -> [AnyHashable: Any] {
+    [:]
+  }
+
+  @objc public func firebaseLibraryName() -> String {
+    "flutter-fire-ml-downloader"
+  }
+
+  @objc public func flutterChannelName() -> String {
+    "plugins.flutter.io/firebase_ml_model_downloader"
   }
 
   func mapErrorCodes(error: Error) -> NSString {
