@@ -14,7 +14,8 @@ enum ConfigurationError: Error {
   case invalidFormat(String)
 }
 
-let appInstallationsDirectory = String(URL(string: #file)!.deletingLastPathComponent().absoluteString
+let appInstallationsDirectory = String(URL(string: #file)!.deletingLastPathComponent()
+  .absoluteString
   .dropLast())
 
 func loadFirebaseSDKVersion() throws -> String {
