@@ -6,7 +6,6 @@
 import 'dart:async';
 
 import 'package:_flutterfire_internals/_flutterfire_internals.dart';
-import 'package:collection/collection.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_multi_factor.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/utils/convert_auth_provider.dart';
 import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
@@ -437,7 +436,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     try {
       final data = await _api.fetchSignInMethodsForEmail(pigeonDefault, email);
 
-      return data.whereNotNull().toList();
+      return data.nonNulls.toList();
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }

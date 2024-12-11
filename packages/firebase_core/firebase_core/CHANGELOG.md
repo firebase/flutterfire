@@ -1,3 +1,7 @@
+## 3.8.1
+
+ - **FIX**(core): auth Swift support requires `FLTFirebaseCorePlugin` & `messages` to be shared ([#16774](https://github.com/firebase/flutterfire/issues/16774)). ([f89483cd](https://github.com/firebase/flutterfire/commit/f89483cd9a3b4900d9b79151bb383ae35aa3dd4f))
+
 ## 3.8.0
 
  - **FEAT**(firestore): Swift Package Manager support ([#13329](https://github.com/firebase/flutterfire/issues/13329)). ([0420eabb](https://github.com/firebase/flutterfire/commit/0420eabb3ab247e0e3998bedcb9779fe35c46920))

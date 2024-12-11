@@ -88,9 +88,13 @@ void main() {
 
     test('invokeOperation should return deserialized data', () async {
       final mockResponse = http.Response('{"data": {"key": "value"}}', 200);
-      when(mockHttpClient.post(any,
-              headers: anyNamed('headers'), body: anyNamed('body')))
-          .thenAnswer((_) async => mockResponse);
+      when(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).thenAnswer((_) async => mockResponse);
 
       final deserializer = (String data) => 'Deserialized Data';
 
@@ -109,15 +113,25 @@ void main() {
     test('invokeOperation should throw unauthorized error on 401 response',
         () async {
       final mockResponse = http.Response('Unauthorized', 401);
-      when(mockHttpClient.post(any,
-              headers: anyNamed('headers'), body: anyNamed('body')))
-          .thenAnswer((_) async => mockResponse);
+      when(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).thenAnswer((_) async => mockResponse);
 
       final deserializer = (String data) => 'Deserialized Data';
 
       expect(
         () => transport.invokeOperation(
-            'testQuery', 'executeQuery', deserializer, null, null, null),
+          'testQuery',
+          'executeQuery',
+          deserializer,
+          null,
+          null,
+          null,
+        ),
         throwsA(isA<DataConnectError>()),
       );
     });
@@ -125,15 +139,25 @@ void main() {
     test('invokeOperation should throw other errors on non-200 responses',
         () async {
       final mockResponse = http.Response('{"message": "Some error"}', 500);
-      when(mockHttpClient.post(any,
-              headers: anyNamed('headers'), body: anyNamed('body')))
-          .thenAnswer((_) async => mockResponse);
+      when(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).thenAnswer((_) async => mockResponse);
 
       final deserializer = (String data) => 'Deserialized Data';
 
       expect(
         () => transport.invokeOperation(
-            'testQuery', 'executeQuery', deserializer, null, null, null),
+          'testQuery',
+          'executeQuery',
+          deserializer,
+          null,
+          null,
+          null,
+        ),
         throwsA(isA<DataConnectError>()),
       );
     });
@@ -141,80 +165,113 @@ void main() {
     test('invokeQuery should call invokeOperation with correct endpoint',
         () async {
       final mockResponse = http.Response('{"data": {"key": "value"}}', 200);
-      when(mockHttpClient.post(any,
-              headers: anyNamed('headers'), body: anyNamed('body')))
-          .thenAnswer((_) async => mockResponse);
+      when(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).thenAnswer((_) async => mockResponse);
 
       final deserializer = (String data) => 'Deserialized Data';
 
       await transport.invokeQuery('testQuery', deserializer, null, null, null);
 
-      verify(mockHttpClient.post(
-        any,
-        headers: anyNamed('headers'),
-        body: json.encode({
-          'name':
-              'projects/testProject/locations/testLocation/services/testService/connectors/testConnector',
-          'operationName': 'testQuery'
-        }),
-      )).called(1);
+      verify(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: json.encode({
+            'name':
+                'projects/testProject/locations/testLocation/services/testService/connectors/testConnector',
+            'operationName': 'testQuery',
+          }),
+        ),
+      ).called(1);
     });
 
     test('invokeMutation should call invokeOperation with correct endpoint',
         () async {
       final mockResponse = http.Response('{"data": {"key": "value"}}', 200);
-      when(mockHttpClient.post(any,
-              headers: anyNamed('headers'), body: anyNamed('body')))
-          .thenAnswer((_) async => mockResponse);
+      when(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).thenAnswer((_) async => mockResponse);
 
       final deserializer = (String data) => 'Deserialized Mutation Data';
 
       await transport.invokeMutation(
-          'testMutation', deserializer, null, null, null);
+        'testMutation',
+        deserializer,
+        null,
+        null,
+        null,
+      );
 
-      verify(mockHttpClient.post(
-        any,
-        headers: anyNamed('headers'),
-        body: json.encode({
-          'name':
-              'projects/testProject/locations/testLocation/services/testService/connectors/testConnector',
-          'operationName': 'testMutation'
-        }),
-      )).called(1);
+      verify(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: json.encode({
+            'name':
+                'projects/testProject/locations/testLocation/services/testService/connectors/testConnector',
+            'operationName': 'testMutation',
+          }),
+        ),
+      ).called(1);
     });
 
     test('invokeOperation should include auth and appCheck tokens in headers',
         () async {
       final mockResponse = http.Response('{"data": {"key": "value"}}', 200);
-      when(mockHttpClient.post(any,
-              headers: anyNamed('headers'), body: anyNamed('body')))
-          .thenAnswer((_) async => mockResponse);
+      when(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).thenAnswer((_) async => mockResponse);
 
       when(mockUser.getIdToken()).thenAnswer((_) async => 'authToken123');
       when(mockAppCheck.getToken()).thenAnswer((_) async => 'appCheckToken123');
 
       final deserializer = (String data) => 'Deserialized Data';
 
-      await transport.invokeOperation('testQuery', 'executeQuery', deserializer,
-          null, null, 'authToken123');
+      await transport.invokeOperation(
+        'testQuery',
+        'executeQuery',
+        deserializer,
+        null,
+        null,
+        'authToken123',
+      );
 
-      verify(mockHttpClient.post(
-        any,
-        headers: argThat(
-          containsPair('X-Firebase-Auth-Token', 'authToken123'),
-          named: 'headers',
+      verify(
+        mockHttpClient.post(
+          any,
+          headers: argThat(
+            containsPair('X-Firebase-Auth-Token', 'authToken123'),
+            named: 'headers',
+          ),
+          body: anyNamed('body'),
         ),
-        body: anyNamed('body'),
-      )).called(1);
+      ).called(1);
     });
 
     test(
         'invokeOperation should handle missing auth and appCheck tokens gracefully',
         () async {
       final mockResponse = http.Response('{"data": {"key": "value"}}', 200);
-      when(mockHttpClient.post(any,
-              headers: anyNamed('headers'), body: anyNamed('body')))
-          .thenAnswer((_) async => mockResponse);
+      when(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).thenAnswer((_) async => mockResponse);
 
       when(mockUser.getIdToken()).thenThrow(Exception('Auth error'));
       when(mockAppCheck.getToken()).thenThrow(Exception('AppCheck error'));
@@ -222,20 +279,29 @@ void main() {
       final deserializer = (String data) => 'Deserialized Data';
 
       await transport.invokeOperation(
-          'testQuery', 'executeQuery', deserializer, null, null, null);
+        'testQuery',
+        'executeQuery',
+        deserializer,
+        null,
+        null,
+        null,
+      );
 
-      verify(mockHttpClient.post(
-        any,
-        headers: argThat(
-          isNot(contains('X-Firebase-Auth-Token')),
-          named: 'headers',
+      verify(
+        mockHttpClient.post(
+          any,
+          headers: argThat(
+            isNot(contains('X-Firebase-Auth-Token')),
+            named: 'headers',
+          ),
+          body: anyNamed('body'),
         ),
-        body: anyNamed('body'),
-      )).called(1);
+      ).called(1);
     });
     test('invokeOperation should throw an error if the server throws one',
         () async {
-      final mockResponse = http.Response("""
+      final mockResponse = http.Response(
+        '''
 {
     "data": {},
     "errors": [
@@ -248,16 +314,28 @@ void main() {
             "extensions": null
         }
     ]
-}""", 200);
-      when(mockHttpClient.post(any,
-              headers: anyNamed('headers'), body: anyNamed('body')))
-          .thenAnswer((_) async => mockResponse);
+}''',
+        200,
+      );
+      when(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).thenAnswer((_) async => mockResponse);
 
       final deserializer = (String data) => 'Deserialized Data';
 
       expect(
         () => transport.invokeOperation(
-            'testQuery', 'executeQuery', deserializer, null, null, null),
+          'testQuery',
+          'executeQuery',
+          deserializer,
+          null,
+          null,
+          null,
+        ),
         throwsA(isA<DataConnectError>()),
       );
     });

@@ -64,7 +64,7 @@ void main() {
       );
 
       expect(
-        () async => await transportStub.invokeMutation(
+        () async => transportStub.invokeMutation(
           'queryName',
           (json) => json,
           null,
@@ -85,8 +85,13 @@ void main() {
       );
 
       expect(
-        () async => await transportStub.invokeQuery(
-            'queryName', (json) => json, null, null, null),
+        () async => transportStub.invokeQuery(
+          'queryName',
+          (json) => json,
+          null,
+          null,
+          null,
+        ),
         throwsA(isA<UnimplementedError>()),
       );
     });
