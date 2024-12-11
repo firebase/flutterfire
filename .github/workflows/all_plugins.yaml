@@ -126,7 +126,7 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 30
     env:
-      FLUTTER_DEPENDENCIES: "cloud_firestore firebase_remote_config cloud_functions firebase_database firebase_auth firebase_storage firebase_analytics firebase_messaging firebase_app_check firebase_in_app_messaging firebase_performance firebase_dynamic_links firebase_crashlytics firebase_ml_model_downloader"
+      FLUTTER_DEPENDENCIES: "cloud_firestore firebase_remote_config cloud_functions firebase_database firebase_auth firebase_storage firebase_analytics firebase_messaging firebase_app_check firebase_in_app_messaging firebase_performance firebase_dynamic_links firebase_crashlytics firebase_ml_model_downloader firebase_app_installations"
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
       - uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225
@@ -176,7 +176,7 @@ jobs:
       # check-license-header)
       - run: go install github.com/google/addlicense@latest
       - name: Install Dart
-        uses: dart-lang/setup-dart@0a8a0fc875eb934c15d08629302413c671d3f672
+        uses: dart-lang/setup-dart@e630b99d28a3b71860378cafdc2a067c71107f94
       - name: Install Melos
         uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa
         with:

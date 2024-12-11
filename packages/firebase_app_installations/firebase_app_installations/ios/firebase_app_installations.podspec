@@ -24,8 +24,7 @@ Pod::Spec.new do |s|
   s.license          = { :file => '../LICENSE' }
   s.authors          = 'The Chromium Authors'
   s.source           = { :path => '.' }
-  s.source_files     = 'Classes/**/*'
-  s.public_header_files = 'Classes/**/*.h'
+  s.source_files = 'firebase_app_installations/Sources/**/*.swift'
 
   s.ios.deployment_target = '13.0'
 
@@ -37,7 +36,6 @@ Pod::Spec.new do |s|
 
   s.static_framework = true
   s.pod_target_xcconfig = {
-    'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{library_version}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-installations\\\"",
     'DEFINES_MODULE' => 'YES'
   }
 end

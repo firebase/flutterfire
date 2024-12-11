@@ -8,12 +8,16 @@
   import Flutter
 #endif
 
-import firebase_core
+#if canImport(firebase_core)
+  import firebase_core
+#else
+  import firebase_core_shared
+#endif
 import FirebaseInstallations
 
 let kFLTFirebaseInstallationsChannelName = "plugins.flutter.io/firebase_app_installations"
 
-public class FirebaseInstallationsPluginSwift: FLTFirebasePlugin, FlutterPlugin {
+public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin {
   private var eventSink: FlutterEventSink?
   private var messenger: FlutterBinaryMessenger
   private var streamHandler = [String: IdChangedStreamHandler?]()
@@ -35,8 +39,29 @@ public class FirebaseInstallationsPluginSwift: FLTFirebasePlugin, FlutterPlugin 
       name: kFLTFirebaseInstallationsChannelName,
       binaryMessenger: binaryMessenger
     )
-    let instance = FirebaseInstallationsPluginSwift(messenger: binaryMessenger)
+    let instance = FirebaseInstallationsPlugin(messenger: binaryMessenger)
+    FLTFirebasePluginRegistry.sharedInstance().register(instance)
     registrar.addMethodCallDelegate(instance, channel: channel)
+  }
+
+  public func firebaseLibraryVersion() -> String {
+    versionNumber
+  }
+
+  public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
+    completion()
+  }
+
+  public func pluginConstants(for firebaseApp: FirebaseApp) -> [AnyHashable: Any] {
+    [:]
+  }
+
+  @objc public func firebaseLibraryName() -> String {
+    "flutter-fire-installations"
+  }
+
+  @objc public func flutterChannelName() -> String {
+    kFLTFirebaseInstallationsChannelName
   }
 
   /// Gets Installations instance for a Firebase App.
