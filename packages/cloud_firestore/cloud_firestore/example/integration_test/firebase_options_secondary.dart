@@ -23,20 +23,15 @@ class DefaultFirebaseOptions {
     if (kIsWeb) {
       return web;
     }
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.android:
-        return android;
-      case TargetPlatform.iOS:
-        return ios;
-      case TargetPlatform.macOS:
-        return macos;
-      case TargetPlatform.windows:
-        return android;
-      default:
-        throw UnsupportedError(
+    return switch (defaultTargetPlatform) {
+      TargetPlatform.android => android,
+      TargetPlatform.iOS => ios,
+      TargetPlatform.macOS => macos,
+      TargetPlatform.windows => android,
+      _ => throw UnsupportedError(
           'DefaultFirebaseOptions are not supported for this platform.',
-        );
-    }
+        )
+    };
   }
 
   static const FirebaseOptions web = FirebaseOptions(
