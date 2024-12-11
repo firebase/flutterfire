@@ -20,7 +20,8 @@ Future<void> buildSwiftExampleApp(String platform, String plugins) async {
 
   print('Building example app with swift (SPM) integration for $plugins');
 
-  final directory = Directory('packages/firebase_core/firebase_core/example/$platform');
+  final directory =
+      Directory('packages/firebase_core/firebase_core/example/$platform');
   if (!directory.existsSync()) {
     print('Directory does not exist: ${directory.path}');
     exit(1);
