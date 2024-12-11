@@ -1,0 +1,26 @@
+name: Close Spam Issues
+
+on:
+  schedule:
+    - cron: '*/3 * * * *'  # Runs every 3 minutes
+  workflow_dispatch:
+
+jobs:
+  close_spam_issues:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .github/workflows/spam-removal
+    permissions:
+      issues: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+      - name: Install dependencies
+        run: npm install
+      - name: Run close spam issues script
+        run: node index.js
+        env:
+          GITHUB_TOKEN: ${{ github.token }}

@@ -1,3 +1,15 @@
+## 0.10.0+11
+
+ - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
+
+## 0.10.0+10
+
+ - Update a dependency to the latest release.
+
+## 0.10.0+9
+
+ - Update a dependency to the latest release.
+
 ## 0.10.0+8
 
  - **FIX**(all,apple): use modular headers to import ([#13400](https://github.com/firebase/flutterfire/issues/13400)). ([d7d2d4b9](https://github.com/firebase/flutterfire/commit/d7d2d4b93e7c00226027fffde46699f3d5388a41))

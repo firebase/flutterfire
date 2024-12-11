@@ -35,7 +35,7 @@ Future<void> main() async {
       'packages',
       'firebase_data_connect',
       'firebase_data_connect',
-      'pubspec.yaml'
+      'pubspec.yaml',
     ],
   );
   final yamlMap = loadYaml(File(pubspecPath).readAsStringSync()) as YamlMap;

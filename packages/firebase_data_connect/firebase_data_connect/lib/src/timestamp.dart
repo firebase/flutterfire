@@ -16,7 +16,8 @@
 class Timestamp {
   // ignore: use_raw_strings
   final regex = RegExp(
-      r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{0,9})?(Z|[+-]\d{2}:\d{2})$');
+    r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{0,9})?(Z|[+-]\d{2}:\d{2})$',
+  );
 
   /// Constructor
   Timestamp(this.nanoseconds, this.seconds);

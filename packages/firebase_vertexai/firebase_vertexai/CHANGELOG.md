@@ -1,3 +1,15 @@
+## 1.0.4
+
+ - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
+
+## 1.0.3
+
+ - Update a dependency to the latest release.
+
+## 1.0.2
+
+ - **FIX**(vertexai): fix the url in the service not available error ([#13547](https://github.com/firebase/flutterfire/issues/13547)). ([a8bfebd7](https://github.com/firebase/flutterfire/commit/a8bfebd7295f26f7ef16e2ed51a8ccaa35755c46))
+
 ## 1.0.1
 
  - **FIX**(vertexai): hotfix for vertexai auth access to storage ([#13534](https://github.com/firebase/flutterfire/issues/13534)). ([9f693094](https://github.com/firebase/flutterfire/commit/9f6930947dbd35a61c583c17bb128f1af4702a5d))

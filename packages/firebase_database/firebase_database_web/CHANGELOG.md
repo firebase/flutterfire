@@ -1,3 +1,15 @@
+## 0.2.6+5
+
+ - Update a dependency to the latest release.
+
+## 0.2.6+4
+
+ - Update a dependency to the latest release.
+
+## 0.2.6+3
+
+ - **FIX**(database): remove sync on stream broadcast ([#13503](https://github.com/firebase/flutterfire/issues/13503)). ([9e80c1d9](https://github.com/firebase/flutterfire/commit/9e80c1d98e3eae3b8ab490bf1a94a662b848db79))
+
 ## 0.2.6+2
 
  - Update a dependency to the latest release.

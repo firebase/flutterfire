@@ -30,9 +30,8 @@ Pod::Spec.new do |s|
   s.authors          = 'The Chromium Authors'
   s.source           = { :path => '.' }
 
-  s.source_files     = 'Classes/**/*.{h,m}'
-  s.public_header_files = 'Classes/Public/*.h'
-  s.private_header_files = 'Classes/Private/*.h'
+  s.source_files     = 'firebase_analytics/Sources/firebase_analytics/**/*.{h,m}'
+  s.public_header_files = 'firebase_analytics/Sources/firebase_analytics/include/*.h'
 
   s.ios.deployment_target = '13.0'
   s.dependency 'Flutter'
@@ -42,7 +41,7 @@ Pod::Spec.new do |s|
 
   s.static_framework = true
   s.pod_target_xcconfig = {
-    'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{library_version}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-analytics\\\"",
+    'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\\"#{library_version}\\\" LIBRARY_NAME=\\\"flutter-fire-analytics\\\"",
     'DEFINES_MODULE' => 'YES'
   }
 end

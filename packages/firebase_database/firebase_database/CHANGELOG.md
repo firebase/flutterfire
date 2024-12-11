@@ -1,3 +1,16 @@
+## 11.2.0
+
+ - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
+ - **FEAT**(database): Swift Package Manager support ([#16783](https://github.com/firebase/flutterfire/issues/16783)). ([1509c33e](https://github.com/firebase/flutterfire/commit/1509c33e0154df52e2d998a82f1eb832e4d13c84))
+
+## 11.1.6
+
+ - Update a dependency to the latest release.
+
+## 11.1.5
+
+ - Update a dependency to the latest release.
+
 ## 11.1.4
 
  - **FIX**(all,apple): use modular headers to import ([#13400](https://github.com/firebase/flutterfire/issues/13400)). ([d7d2d4b9](https://github.com/firebase/flutterfire/commit/d7d2d4b93e7c00226027fffde46699f3d5388a41))
