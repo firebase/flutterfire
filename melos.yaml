@@ -19,7 +19,7 @@ command:
       preCommit: |
         dart run scripts/generate_vertexai_version.dart && \
         dart run scripts/generate_dataconnect_version.dart && \
-        dart run scripts/generate_ios_sdk_version_txt_spm.dart && \
+        dart run scripts/generate_versions_spm.dart && \
         git add packages/firebase_vertexai/firebase_vertexai/lib/src/vertex_version.dart && \
         git add packages/firebase_data_connect/firebase_data_connect/lib/src/dataconnect_version.dart
       post: |
@@ -182,7 +182,7 @@ scripts:
   test:e2e:web:
     run: |
       melos exec -c 1 --fail-fast -- \
-        "flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=APP_CHECK_E2E=true"
+        "flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=LOCAL_WEB_E2E=true"
     description: |
       Run all e2e tests on web platform. Please ensure you have "chromedriver" installed and running.
     packageFilters:

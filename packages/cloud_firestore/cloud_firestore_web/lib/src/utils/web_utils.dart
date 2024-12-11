@@ -19,14 +19,11 @@ const _kChangeTypeRemoved = 'removed';
 String getServerTimestampBehaviorString(
   ServerTimestampBehavior serverTimestampBehavior,
 ) {
-  switch (serverTimestampBehavior) {
-    case ServerTimestampBehavior.none:
-      return 'none';
-    case ServerTimestampBehavior.estimate:
-      return 'estimate';
-    case ServerTimestampBehavior.previous:
-      return 'previous';
-  }
+  return switch (serverTimestampBehavior) {
+    ServerTimestampBehavior.none => 'none',
+    ServerTimestampBehavior.estimate => 'estimate',
+    ServerTimestampBehavior.previous => 'previous'
+  };
 }
 
 /// Converts a [web.QuerySnapshot] to a [QuerySnapshotPlatform].
@@ -96,16 +93,12 @@ DocumentChangePlatform convertWebDocumentChange(
 
 /// Converts a [web.DocumentChange] type into a [DocumentChangeType].
 DocumentChangeType convertWebDocumentChangeType(String changeType) {
-  switch (changeType.toLowerCase()) {
-    case _kChangeTypeAdded:
-      return DocumentChangeType.added;
-    case _kChangeTypeModified:
-      return DocumentChangeType.modified;
-    case _kChangeTypeRemoved:
-      return DocumentChangeType.removed;
-    default:
-      throw UnsupportedError('Unknown DocumentChangeType: $changeType.');
-  }
+  return switch (changeType.toLowerCase()) {
+    _kChangeTypeAdded => DocumentChangeType.added,
+    _kChangeTypeModified => DocumentChangeType.modified,
+    _kChangeTypeRemoved => DocumentChangeType.removed,
+    _ => throw UnsupportedError('Unknown DocumentChangeType: $changeType.')
+  };
 }
 
 /// Converts a [web.SnapshotMetadata] to a [SnapshotMetadataPlatform].
@@ -119,22 +112,11 @@ SnapshotMetadataPlatform convertWebSnapshotMetadata(
 firestore_interop.GetOptions? convertGetOptions(GetOptions? options) {
   if (options == null) return null;
 
-  String? source;
-
-  switch (options.source) {
-    case Source.serverAndCache:
-      source = 'default';
-      break;
-    case Source.cache:
-      source = 'cache';
-      break;
-    case Source.server:
-      source = 'server';
-      break;
-    default:
-      source = 'default';
-      break;
-  }
+  final source = switch (options.source) {
+    Source.serverAndCache => 'default',
+    Source.cache => 'cache',
+    Source.server => 'server'
+  };
 
   return firestore_interop.GetOptions(source: source.toJS);
 }

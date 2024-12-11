@@ -1,1 +1,0 @@
-../../../ios/Classes/Public/FLTFirebaseAuthPlugin.h

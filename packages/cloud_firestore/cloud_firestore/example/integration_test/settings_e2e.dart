@@ -28,7 +28,7 @@ void runSettingsTest() {
         return firestore.settings = firestoreSettings;
       }
 
-      testWidgets('checks if long polling settings were applied', (_) async {
+      test('checks if long polling settings were applied', () async {
         Settings settings = await initializeTest();
 
         expect(settings.webExperimentalForceLongPolling, true);

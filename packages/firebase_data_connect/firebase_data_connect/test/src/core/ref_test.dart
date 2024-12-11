@@ -32,20 +32,7 @@ class MockDataConnectTransport extends Mock implements DataConnectTransport {}
 
 class MockFirebaseDataConnect extends Mock implements FirebaseDataConnect {}
 
-class DCMockUser extends Mock implements User {
-  int count = 0;
-  List<String?> tokens = ['invalid-token', 'valid-token'];
-  @override
-  Future<String?> getIdToken([bool forceRefresh = false]) {
-    // First return an invalid token, then return a valid token
-    return Future.value(tokens[count++]);
-  }
-}
-
-class MockFirebaseAuth extends Mock implements FirebaseAuth {
-  @override
-  User? get currentUser => DCMockUser();
-}
+class MockFirebaseAuth extends Mock implements FirebaseAuth {}
 
 class MockQueryManager extends Mock implements QueryManager {}
 
@@ -54,7 +41,7 @@ class MockOperationRef extends Mock implements OperationRef {}
 void main() {
   group('OperationResult', () {
     test('should initialize correctly with provided data and ref', () {
-      final mockData = 'sampleData';
+      const mockData = 'sampleData';
       final mockRef = MockOperationRef();
       final mockFirebaseDataConnect = MockFirebaseDataConnect();
 
@@ -69,7 +56,7 @@ void main() {
 
   group('QueryResult', () {
     test('should initialize correctly and inherit from OperationResult', () {
-      final mockData = 'sampleData';
+      const mockData = 'sampleData';
       final mockRef = MockOperationRef();
       final mockFirebaseDataConnect = MockFirebaseDataConnect();
 
@@ -122,10 +109,15 @@ void main() {
     late Serializer<String> serializer;
     late MockClient mockHttpClient;
     late Deserializer<String> deserializer;
+    late MockFirebaseAuth auth;
+    late MockUser mockUser;
 
     setUp(() {
       mockDataConnect = MockFirebaseDataConnect();
-      when(mockDataConnect.auth).thenReturn(MockFirebaseAuth());
+      auth = MockFirebaseAuth();
+      mockUser = MockUser();
+      when(mockDataConnect.auth).thenReturn(auth);
+      when(auth.currentUser).thenReturn(mockUser);
       mockHttpClient = MockClient();
       transport = RestTransport(
         TransportOptions('testhost', 443, true),
@@ -142,6 +134,28 @@ void main() {
       transport.setHttp(mockHttpClient);
       mockDataConnect.transport = transport;
     });
+    test('executeQuery should gracefully handle getIdToken failures', () async {
+      final deserializer = (String data) => 'Deserialized Data';
+      final mockResponseSuccess = http.Response('{"success": true}', 200);
+      when(mockUser.getIdToken()).thenThrow(Exception('Auth error'));
+      QueryRef ref = QueryRef(
+        mockDataConnect,
+        'operation',
+        transport,
+        deserializer,
+        QueryManager(mockDataConnect),
+        emptySerializer,
+        null,
+      );
+      when(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).thenAnswer((_) async => mockResponseSuccess);
+      await ref.execute();
+    });
     test(
         'query should forceRefresh on ID token if the first request is unauthorized',
         () async {
@@ -149,21 +163,45 @@ void main() {
       final mockResponseSuccess = http.Response('{"success": true}', 200);
       final deserializer = (String data) => 'Deserialized Data';
       int count = 0;
-      QueryRef ref = QueryRef(mockDataConnect, 'operation', transport,
-          deserializer, QueryManager(mockDataConnect), emptySerializer, null);
+      int idTokenCount = 0;
+      QueryRef ref = QueryRef(
+        mockDataConnect,
+        'operation',
+        transport,
+        deserializer,
+        QueryManager(mockDataConnect),
+        emptySerializer,
+        null,
+      );
+      when(mockUser.getIdToken()).thenAnswer(
+        (invocation) => [
+          Future.value('invalid-token'),
+          Future.value('valid-token'),
+        ][idTokenCount++],
+      );
 
-      when(mockHttpClient.post(any,
-              headers: anyNamed('headers'), body: anyNamed('body')))
-          .thenAnswer((invocation) => [
-                Future.value(mockResponse),
-                Future.value(mockResponseSuccess),
-              ][count++]);
+      when(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).thenAnswer(
+        (invocation) => [
+          Future.value(mockResponse),
+          Future.value(mockResponseSuccess),
+        ][count++],
+      );
       final result = await ref.execute();
 
       expect(result.data, 'Deserialized Data');
-      verify(mockHttpClient.post(any,
-              headers: anyNamed('headers'), body: anyNamed('body')))
-          .called(2);
+      verify(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).called(2);
     });
   });
 }

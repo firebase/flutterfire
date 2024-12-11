@@ -10,6 +10,7 @@ on:
       - 'docs/**'
       - 'website/**'
       - '**/example/**'
+      - '!**/example/integration_test/**'
       - '**/flutterfire_ui/**'
       - '**.md'
   push:
@@ -19,6 +20,7 @@ on:
       - 'docs/**'
       - 'website/**'
       - '**/example/**'
+      - '!**/example/integration_test/**'
       - '**/flutterfire_ui/**'
       - '**.md'
 
@@ -37,7 +39,7 @@ jobs:
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: actions/setup-java@6a0805fcefea3d4657a47ac4c165951e33482018
+      - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -101,16 +103,16 @@ jobs:
           ccache -s
       - name: Start Firebase Emulator
         run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
+      - uses: futureware-tech/simulator-action@bde6805eedaeaba7775a9959970edc7d8bf10c4d
+        id: simulator
+        with:
+          # List of available simulators: https://github.com/actions/runner-images/blob/main/images/macos/macos-14-Readme.md#installed-simulators
+          model: "iPhone 15"
       - name: 'E2E Tests'
         working-directory: ${{ matrix.working_directory }}
+        env:
+          SIMULATOR: ${{ steps.simulator.outputs.udid }}
         run: |
-          # Boot simulator and wait for System app to be ready.
-          # List of available simulators: https://github.com/actions/runner-images/blob/main/images/macos/macos-14-Readme.md#installed-simulators
-          SIMULATOR="iPhone 15"
-          xcrun simctl bootstatus "$SIMULATOR" -b
-          xcrun simctl logverbose "$SIMULATOR" enable
-          # Sleep to allow simulator to settle.
-          sleep 15
           # Uncomment following line to have simulator logs printed out for debugging purposes.
           # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
           flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true

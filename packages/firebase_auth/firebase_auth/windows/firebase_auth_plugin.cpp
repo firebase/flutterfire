@@ -121,9 +121,10 @@ firebase_auth_windows::FirebaseAuthPlugin::ConvertToEncodableValue(
     case firebase::Variant::kTypeMap:
       return FirebaseAuthPlugin::ConvertToEncodableMap(variant.map());
     case firebase::Variant::kTypeStaticBlob:
-      return EncodableValue(variant.blob_data());
+      return EncodableValue(flutter::CustomEncodableValue(variant.blob_data()));
     case firebase::Variant::kTypeMutableBlob:
-      return EncodableValue(variant.mutable_blob_data());
+      return EncodableValue(
+          flutter::CustomEncodableValue(variant.mutable_blob_data()));
     default:
       return EncodableValue();
   }
