@@ -4,7 +4,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:collection/collection.dart';
 
 import 'method_channel_document_change.dart';
 
@@ -27,7 +26,7 @@ class MethodChannelQuerySnapshot extends QuerySnapshotPlatform {
                     document.metadata,
                   );
                 })
-                .whereNotNull()
+                .nonNulls
                 .toList(),
             data.documentChanges
                 .map((documentChange) {
@@ -39,7 +38,7 @@ class MethodChannelQuerySnapshot extends QuerySnapshotPlatform {
                     documentChange,
                   );
                 })
-                .whereNotNull()
+                .nonNulls
                 .toList(),
             SnapshotMetadataPlatform(
               data.metadata.hasPendingWrites,
