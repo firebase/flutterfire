@@ -408,6 +408,7 @@ void runDocumentReferenceTests() {
           'null': null,
           'timestamp': Timestamp.now(),
           'geopoint': const GeoPoint(1, 2),
+          'vectorValue': const VectorValue([1, 2, 3]),
           'reference': firestore.doc('foo/bar'),
           'nan': double.nan,
           'infinity': double.infinity,
@@ -444,6 +445,9 @@ void runDocumentReferenceTests() {
         expect(data['geopoint'], isA<GeoPoint>());
         expect((data['geopoint'] as GeoPoint).latitude, equals(1));
         expect((data['geopoint'] as GeoPoint).longitude, equals(2));
+        expect(data['vectorValue'], isA<VectorValue>());
+        expect(
+            (data['vectorValue'] as VectorValue).toArray(), equals([1, 2, 3]));
         expect(data['reference'], isA<DocumentReference>());
         expect((data['reference'] as DocumentReference).id, equals('bar'));
         expect(data['nan'].isNaN, equals(true));

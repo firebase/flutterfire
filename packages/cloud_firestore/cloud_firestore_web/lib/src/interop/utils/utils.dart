@@ -26,6 +26,9 @@ dynamic dartify(dynamic object) {
   if (jsObject.instanceof(GeoPointConstructor as JSFunction)) {
     return jsObject;
   }
+  if (jsObject.instanceof(VectorValueConstructor as JSFunction)) {
+    return jsObject;
+  }
   if (jsObject.instanceof(TimestampJsConstructor as JSFunction)) {
     final castedJSObject = jsObject as TimestampJsImpl;
     return Timestamp(
@@ -96,6 +99,12 @@ JSAny? jsify(Object? dartObject) {
   // Cannot be done with Dart 3.2 constraints
   // ignore: invalid_runtime_check_with_js_interop_types
   if (dartObject is GeoPointJsImpl) {
+    return dartObject as JSAny;
+  }
+
+  // Cannot be done with Dart 3.2 constraints
+  // ignore: invalid_runtime_check_with_js_interop_types
+  if (dartObject is VectorValueJsImpl) {
     return dartObject as JSAny;
   }
 
