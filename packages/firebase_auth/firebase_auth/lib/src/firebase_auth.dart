@@ -221,7 +221,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///    has been expired
   /// - **network-request-failed**:
   ///  - Thrown if there was a network request error, for example the user don't
-  ///    don't have internet connection
+  ///    have internet connection
   /// - **operation-not-allowed**:
   ///  - Thrown if email/password accounts are not enabled. Enable
   ///    email/password accounts in the Firebase Console, under the Auth tab.
