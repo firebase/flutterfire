@@ -50,12 +50,10 @@ Firestore getFirestoreInstance([
 }
 
 JSString convertListenSource(ListenSource source) {
-  switch (source) {
-    case ListenSource.defaultSource:
-      return 'default'.toJS;
-    case ListenSource.cache:
-      return 'cache'.toJS;
-  }
+  return switch (source) {
+    ListenSource.defaultSource => 'default'.toJS,
+    ListenSource.cache => 'cache'.toJS
+  };
 }
 
 /// The Cloud Firestore service interface.
@@ -199,17 +197,16 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
         firestore_interop.getPersistentCacheIndexManager(jsObject);
 
     if (indexManager != null) {
-      switch (request) {
-        case PersistenceCacheIndexManagerRequest.enableIndexAutoCreation:
-          return firestore_interop
-              .enablePersistentCacheIndexAutoCreation(indexManager);
-        case PersistenceCacheIndexManagerRequest.disableIndexAutoCreation:
-          return firestore_interop
-              .disablePersistentCacheIndexAutoCreation(indexManager);
-        case PersistenceCacheIndexManagerRequest.deleteAllIndexes:
-          return firestore_interop
-              .deleteAllPersistentCacheIndexes(indexManager);
-      }
+      return switch (request) {
+        PersistenceCacheIndexManagerRequest.enableIndexAutoCreation =>
+          firestore_interop
+              .enablePersistentCacheIndexAutoCreation(indexManager),
+        PersistenceCacheIndexManagerRequest.disableIndexAutoCreation =>
+          firestore_interop
+              .disablePersistentCacheIndexAutoCreation(indexManager),
+        PersistenceCacheIndexManagerRequest.deleteAllIndexes =>
+          firestore_interop.deleteAllPersistentCacheIndexes(indexManager)
+      };
     } else {
       // ignore: avoid_print
       print('Firestore: `PersistentCacheIndexManager` is not available');

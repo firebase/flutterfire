@@ -23,25 +23,19 @@ class DefaultFirebaseOptions {
     if (kIsWeb) {
       return web;
     }
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.android:
-        return android;
-      case TargetPlatform.iOS:
-        return ios;
-      case TargetPlatform.macOS:
-        return macos;
-      case TargetPlatform.windows:
-        return android;
-      case TargetPlatform.linux:
-        throw UnsupportedError(
+    return switch (defaultTargetPlatform) {
+      TargetPlatform.android => android,
+      TargetPlatform.iOS => ios,
+      TargetPlatform.macOS => macos,
+      TargetPlatform.windows => android,
+      TargetPlatform.linux => throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
           'you can reconfigure this by running the FlutterFire CLI again.',
-        );
-      default:
-        throw UnsupportedError(
+        ),
+      _ => throw UnsupportedError(
           'DefaultFirebaseOptions are not supported for this platform.',
-        );
-    }
+        )
+    };
   }
 
   static const FirebaseOptions web = FirebaseOptions(

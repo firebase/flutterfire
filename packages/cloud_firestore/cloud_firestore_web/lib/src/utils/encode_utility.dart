@@ -55,79 +55,64 @@ class EncodeUtility {
       // The [web.FieldPath] class accepts optional args, which cannot be null/empty-string
       // values. This code below works around that, however limits users to 10 level
       // deep FieldPaths which the web counterpart supports
-      switch (length) {
-        case 1:
-          return firestore_interop.FieldPath(components[0].toJS);
-        case 2:
-          return firestore_interop.FieldPath(
-              components[0].toJS, components[1].toJS);
-        case 3:
-          return firestore_interop.FieldPath(
-              components[0].toJS, components[1].toJS, components[2].toJS);
-        case 4:
-          return firestore_interop.FieldPath(components[0].toJS,
-              components[1].toJS, components[2].toJS, components[3].toJS);
-        case 5:
-          return firestore_interop.FieldPath(
-              components[0].toJS,
-              components[1].toJS,
-              components[2].toJS,
-              components[3].toJS,
-              components[4].toJS);
-        case 6:
-          return firestore_interop.FieldPath(
-              components[0].toJS,
-              components[1].toJS,
-              components[2].toJS,
-              components[3].toJS,
-              components[4].toJS,
-              components[5].toJS);
-        case 7:
-          return firestore_interop.FieldPath(
-              components[0].toJS,
-              components[1].toJS,
-              components[2].toJS,
-              components[3].toJS,
-              components[4].toJS,
-              components[5].toJS,
-              components[6].toJS);
-        case 8:
-          return firestore_interop.FieldPath(
-              components[0].toJS,
-              components[1].toJS,
-              components[2].toJS,
-              components[3].toJS,
-              components[4].toJS,
-              components[5].toJS,
-              components[6].toJS,
-              components[7].toJS);
-        case 9:
-          return firestore_interop.FieldPath(
-              components[0].toJS,
-              components[1].toJS,
-              components[2].toJS,
-              components[3].toJS,
-              components[4].toJS,
-              components[5].toJS,
-              components[6].toJS,
-              components[7].toJS,
-              components[8].toJS);
-        case 10:
-          return firestore_interop.FieldPath(
-              components[0].toJS,
-              components[1].toJS,
-              components[2].toJS,
-              components[3].toJS,
-              components[4].toJS,
-              components[5].toJS,
-              components[6].toJS,
-              components[7].toJS,
-              components[8].toJS,
-              components[9].toJS);
-        default:
-          throw Exception(
-              'Firestore web FieldPath only supports 10 levels deep field paths');
-      }
+      return switch (length) {
+        1 => firestore_interop.FieldPath(components[0].toJS),
+        2 =>
+          firestore_interop.FieldPath(components[0].toJS, components[1].toJS),
+        3 => firestore_interop.FieldPath(
+            components[0].toJS, components[1].toJS, components[2].toJS),
+        4 => firestore_interop.FieldPath(components[0].toJS, components[1].toJS,
+            components[2].toJS, components[3].toJS),
+        5 => firestore_interop.FieldPath(components[0].toJS, components[1].toJS,
+            components[2].toJS, components[3].toJS, components[4].toJS),
+        6 => firestore_interop.FieldPath(
+            components[0].toJS,
+            components[1].toJS,
+            components[2].toJS,
+            components[3].toJS,
+            components[4].toJS,
+            components[5].toJS),
+        7 => firestore_interop.FieldPath(
+            components[0].toJS,
+            components[1].toJS,
+            components[2].toJS,
+            components[3].toJS,
+            components[4].toJS,
+            components[5].toJS,
+            components[6].toJS),
+        8 => firestore_interop.FieldPath(
+            components[0].toJS,
+            components[1].toJS,
+            components[2].toJS,
+            components[3].toJS,
+            components[4].toJS,
+            components[5].toJS,
+            components[6].toJS,
+            components[7].toJS),
+        9 => firestore_interop.FieldPath(
+            components[0].toJS,
+            components[1].toJS,
+            components[2].toJS,
+            components[3].toJS,
+            components[4].toJS,
+            components[5].toJS,
+            components[6].toJS,
+            components[7].toJS,
+            components[8].toJS),
+        10 => firestore_interop.FieldPath(
+            components[0].toJS,
+            components[1].toJS,
+            components[2].toJS,
+            components[3].toJS,
+            components[4].toJS,
+            components[5].toJS,
+            components[6].toJS,
+            components[7].toJS,
+            components[8].toJS,
+            components[9].toJS),
+        _ => throw Exception(
+            'Firestore web FieldPath only supports 10 levels deep field paths')
+      };
     } else if (value == FieldPath.documentId) {
       return firestore_interop.documentId();
     } else if (value is Timestamp) {

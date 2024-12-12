@@ -59,7 +59,11 @@ void main() {
         'should initialize with correct parameters and inherit from ConnectorConfig',
         () {
       final options = DataConnectOptions(
-          'project-abc', 'us-central1', 'cloud-sql', 'service-123');
+        'project-abc',
+        'us-central1',
+        'cloud-sql',
+        'service-123',
+      );
 
       // Test inherited fields from ConnectorConfig
       expect(options.location, 'us-central1');
@@ -74,7 +78,11 @@ void main() {
         'should return correct JSON representation for DataConnectOptions via ConnectorConfig toJson',
         () {
       final options = DataConnectOptions(
-          'project-abc', 'us-central1', 'cloud-sql', 'service-123');
+        'project-abc',
+        'us-central1',
+        'cloud-sql',
+        'service-123',
+      );
 
       final jsonResult = options.toJson();
       final expectedJson = jsonEncode({
