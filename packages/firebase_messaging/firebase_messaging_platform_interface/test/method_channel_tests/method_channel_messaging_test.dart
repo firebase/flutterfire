@@ -49,6 +49,7 @@ void main() {
               'criticalAlert': 0,
               'provisional': 0,
               'sound': 1,
+              'providesAppNotificationSettings': 0,
             };
           case 'Messaging#setAutoInitEnabled':
             return {
@@ -197,6 +198,7 @@ void main() {
               'criticalAlert': false,
               'provisional': false,
               'sound': true,
+              'providesAppNotificationSettings': false,
             }
           },
         ),
