@@ -24,6 +24,7 @@ void main() {
 
       await FirebaseAuth.instance
           .useAuthEmulator(testEmulatorHost, testEmulatorPort);
+      await FirebaseAuth.instance.setSettings(appVerificationDisabledForTesting: true);
     });
 
     setUp(() async {
