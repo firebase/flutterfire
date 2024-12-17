@@ -148,6 +148,7 @@ public class FlutterFirebaseCrashlyticsPlugin
             final boolean fatal = (boolean) Objects.requireNonNull(arguments.get(Constants.FATAL));
             final String buildId =
                 (String) Objects.requireNonNull(arguments.get(Constants.BUILD_ID));
+            @SuppressWarnings("unchecked")
             final List<String> loadingUnits =
                 (List<String>) Objects.requireNonNull(arguments.get(Constants.LOADING_UNITS));
 
