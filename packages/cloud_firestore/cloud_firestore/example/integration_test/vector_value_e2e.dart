@@ -26,7 +26,7 @@ void runVectorValueTests() {
           await initializeTest('vector-value');
 
       await doc.set({
-        'foo': const VectorValue([10.0, -10.0])
+        'foo': const VectorValue([10.0, -10.0]),
       });
 
       DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
@@ -41,11 +41,11 @@ void runVectorValueTests() {
           await initializeTest('vector-value-update');
 
       await doc.set({
-        'foo': const VectorValue([10.0, -10.0])
+        'foo': const VectorValue([10.0, -10.0]),
       });
 
       await doc.update({
-        'foo': const VectorValue([-10.0, 10.0])
+        'foo': const VectorValue([-10.0, 10.0]),
       });
 
       DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();

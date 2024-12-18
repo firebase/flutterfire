@@ -447,7 +447,9 @@ void runDocumentReferenceTests() {
         expect((data['geopoint'] as GeoPoint).longitude, equals(2));
         expect(data['vectorValue'], isA<VectorValue>());
         expect(
-            (data['vectorValue'] as VectorValue).toArray(), equals([1, 2, 3]));
+          (data['vectorValue'] as VectorValue).toArray(),
+          equals([1, 2, 3]),
+        );
         expect(data['reference'], isA<DocumentReference>());
         expect((data['reference'] as DocumentReference).id, equals('bar'));
         expect(data['nan'].isNaN, equals(true));
