@@ -38,7 +38,7 @@
       return [[FIRGeoPoint alloc] initWithLatitude:latitude longitude:longitude];
     }
     case FirestoreDataTypeVectorValue: {
-      return [[FIRVectorValue alloc] initWithArrayValue:[self readValue]];
+      return [[FIRVectorValue alloc] initWithArray:[self readValue]];
     }
     case FirestoreDataTypeDocumentReference: {
       FIRFirestore *firestore = [self readValue];
