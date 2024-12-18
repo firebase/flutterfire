@@ -18,8 +18,6 @@ const spamWords = [
   'crypto.com',
   'moonpay',
   'coinmama',
-  ['wallet', 'support'],
-  ['contact', 'support', 'number'],
 ];
 
 async function closeSpamIssues() {
