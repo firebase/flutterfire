@@ -32,6 +32,10 @@
     [self writeAlignment:8];
     [self writeBytes:(UInt8 *)&latitude length:8];
     [self writeBytes:(UInt8 *)&longitude length:8];
+  } else if ([value isKindOfClass:[FIRVectorValue class]]) {
+    FIRVectorValue *vector = value;
+    [self writeByte:FirestoreDataTypeVectorValue];
+    [self writeValue:vector.array];
   } else if ([value isKindOfClass:[FIRDocumentReference class]]) {
     FIRDocumentReference *document = value;
     NSString *documentPath = [document path];

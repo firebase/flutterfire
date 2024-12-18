@@ -28,16 +28,17 @@ export 'src/platform_interface/platform_interface_firestore.dart';
 export 'src/platform_interface/platform_interface_index_definitions.dart';
 export 'src/platform_interface/platform_interface_load_bundle_task.dart';
 export 'src/platform_interface/platform_interface_load_bundle_task_snapshot.dart';
+export 'src/platform_interface/platform_interface_persistent_cache_index_manager.dart';
 export 'src/platform_interface/platform_interface_query.dart';
 export 'src/platform_interface/platform_interface_query_snapshot.dart';
 export 'src/platform_interface/platform_interface_transaction.dart';
 export 'src/platform_interface/platform_interface_write_batch.dart';
-export 'src/platform_interface/platform_interface_persistent_cache_index_manager.dart';
 export 'src/platform_interface/utils/load_bundle_task_state.dart';
 export 'src/set_options.dart';
 export 'src/settings.dart';
 export 'src/snapshot_metadata.dart';
 export 'src/timestamp.dart';
+export 'src/vector_value.dart';
 
 /// Helper method exposed to determine whether a given [collectionPath] points to
 /// a valid Firestore collection.
