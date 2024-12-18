@@ -121,8 +121,7 @@ class EncodeUtility {
       return firestore_interop.GeoPointJsImpl(
           value.latitude.toJS, value.longitude.toJS);
     } else if (value is VectorValue) {
-      return firestore_interop.VectorValueJsImpl(
-          value.toArray().jsify()! as JSArray);
+      return firestore_interop.vector(value.toArray().jsify()! as JSArray);
     } else if (value is Blob) {
       return firestore_interop.BytesJsImpl.fromUint8Array(value.bytes.toJS);
     } else if (value is DocumentReferenceWeb) {

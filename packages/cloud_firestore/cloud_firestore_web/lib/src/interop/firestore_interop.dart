@@ -442,13 +442,15 @@ external VectorValueJsImpl get VectorValueConstructor;
 
 @JS('VectorValue')
 @staticInterop
-class VectorValueJsImpl {
-  external factory VectorValueJsImpl(JSArray array);
-}
+class VectorValueJsImpl {}
 
 extension VectorValueJsImplExtension on VectorValueJsImpl {
   external JSArray toArray();
 }
+
+@JS()
+@staticInterop
+external VectorValueJsImpl vector(JSArray values);
 
 @JS('Bytes')
 @staticInterop
