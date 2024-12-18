@@ -59,15 +59,18 @@ void runVectorValueTests() {
       DocumentReference<Map<String, dynamic>> doc =
           await initializeTest('vector-value-empty');
 
-      await doc.set({
-        'foo': const VectorValue([]),
-      });
-
-      DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
-
-      VectorValue vectorValue = snapshot.data()!['foo'];
-      expect(vectorValue, isA<VectorValue>());
-      expect(vectorValue.toArray(), equals([]));
+      try {
+        await doc.set({
+          'foo': const VectorValue([]),
+        });
+        fail('Should have thrown an exception');
+      } catch (e) {
+        expect(e, isA<FirebaseException>());
+        expect(
+          (e as FirebaseException).code.contains('invalid-argument'),
+          isTrue,
+        );
+      }
     });
 
     testWidgets('handles single dimension vector', (_) async {
@@ -106,15 +109,19 @@ void runVectorValueTests() {
       DocumentReference<Map<String, dynamic>> doc =
           await initializeTest('vector-value-max-plus-one');
 
-      await doc.set({
-        'foo': VectorValue(maxPlusOneDimensions),
-      });
+      try {
+        await doc.set({
+          'foo': VectorValue(maxPlusOneDimensions),
+        });
 
-      DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
-
-      VectorValue vectorValue = snapshot.data()!['foo'];
-      expect(vectorValue, isA<VectorValue>());
-      expect(vectorValue.toArray(), equals(maxPlusOneDimensions));
+        fail('Should have thrown an exception');
+      } catch (e) {
+        expect(e, isA<FirebaseException>());
+        expect(
+          (e as FirebaseException).code.contains('invalid-argument'),
+          isTrue,
+        );
+      }
     });
 
     testWidgets('handles very large values in vector', (_) async {
