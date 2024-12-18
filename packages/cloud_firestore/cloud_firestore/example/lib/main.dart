@@ -232,6 +232,15 @@ class _FilmListState extends State<FilmList> {
                     list.map((e) => e.taskState),
                   );
                   return;
+                case 'vectorValue':
+                  const vectorValue = VectorValue([1.0, 2.0, 3.0]);
+                  final vectorValueDoc = await FirebaseFirestore.instance
+                      .collection('firestore-example-app')
+                      .add({'vectorValue': vectorValue});
+
+                  final snapshot = await vectorValueDoc.get();
+                  print(snapshot.data());
+                  return;
                 default:
                   return;
               }
@@ -249,6 +258,10 @@ class _FilmListState extends State<FilmList> {
                 const PopupMenuItem(
                   value: 'load_bundle',
                   child: Text('Load bundle'),
+                ),
+                const PopupMenuItem(
+                  value: 'vectorValue',
+                  child: Text('Test Vector Value'),
                 ),
               ];
             },
