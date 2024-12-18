@@ -244,7 +244,12 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
         readAlignment(buffer, 8);
         return new GeoPoint(buffer.getDouble(), buffer.getDouble());
       case DATA_TYPE_VECTOR_VALUE:
-        return FieldValue.vector((double[]) Objects.requireNonNull(readValue(buffer)));
+        final ArrayList<Double> arrayList = (ArrayList<Double>) readValue(buffer);
+        double[] doubleArray = new double[arrayList.size()];
+        for (int i = 0; i < arrayList.size(); i++) {
+          doubleArray[i] = Objects.requireNonNull(arrayList.get(i), "Null value at index " + i);
+        }
+        return FieldValue.vector(doubleArray);
       case DATA_TYPE_DOCUMENT_REFERENCE:
         FirebaseFirestore firestore = (FirebaseFirestore) readValue(buffer);
         final String path = (String) readValue(buffer);

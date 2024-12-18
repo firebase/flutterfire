@@ -5,7 +5,7 @@
 
 // TODO(Lyokone): remove once we bump Flutter SDK min version to 3.3
 // ignore: unnecessary_import
-import 'dart:typed_data';
+import 'dart:core';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value.dart';
@@ -153,7 +153,9 @@ class FirestoreMessageCodec extends StandardMessageCodec {
                 app: app, databaseId: databaseId);
         return firestore.doc(path);
       case _kVectorValue:
-        return VectorValue(readValue(buffer)! as List<double>);
+        final List<Object?> vector = (readValue(buffer)!) as List<Object?>;
+        final List<double> doubles = vector.map((e) => e! as double).toList();
+        return VectorValue(doubles);
       case _kBlob:
         final int length = readSize(buffer);
         final List<int> bytes = buffer.getUint8List(length);
