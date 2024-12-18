@@ -21,7 +21,7 @@ void runVectorValueTests() {
       return firestore.doc(prefixedPath);
     }
 
-    testWidgets('sets a $VectorValue & returns one', (_) async {
+    test('sets a $VectorValue & returns one', () async {
       DocumentReference<Map<String, dynamic>> doc =
           await initializeTest('vector-value');
 
@@ -36,7 +36,7 @@ void runVectorValueTests() {
       expect(vectorValue.toArray(), equals([10.0, -10.0]));
     });
 
-    testWidgets('updates a $VectorValue & returns', (_) async {
+    test('updates a $VectorValue & returns', () async {
       DocumentReference<Map<String, dynamic>> doc =
           await initializeTest('vector-value-update');
 
@@ -55,7 +55,7 @@ void runVectorValueTests() {
       expect(vectorValue.toArray(), equals([-10.0, 10.0]));
     });
 
-    testWidgets('handles empty vector', (_) async {
+    test('handles empty vector', () async {
       DocumentReference<Map<String, dynamic>> doc =
           await initializeTest('vector-value-empty');
 
@@ -73,7 +73,7 @@ void runVectorValueTests() {
       }
     });
 
-    testWidgets('handles single dimension vector', (_) async {
+    test('handles single dimension vector', () async {
       DocumentReference<Map<String, dynamic>> doc =
           await initializeTest('vector-value-single');
 
@@ -88,7 +88,7 @@ void runVectorValueTests() {
       expect(vectorValue.toArray(), equals([42.0]));
     });
 
-    testWidgets('handles maximum dimensions vector', (_) async {
+    test('handles maximum dimensions vector', () async {
       List<double> maxDimensions = List.filled(2048, 1);
       DocumentReference<Map<String, dynamic>> doc =
           await initializeTest('vector-value-max-dimensions');
@@ -104,7 +104,7 @@ void runVectorValueTests() {
       expect(vectorValue.toArray(), equals(maxDimensions));
     });
 
-    testWidgets('handles maximum dimensions + 1 vector', (_) async {
+    test('handles maximum dimensions + 1 vector', () async {
       List<double> maxPlusOneDimensions = List.filled(2049, 1);
       DocumentReference<Map<String, dynamic>> doc =
           await initializeTest('vector-value-max-plus-one');
@@ -124,7 +124,7 @@ void runVectorValueTests() {
       }
     });
 
-    testWidgets('handles very large values in vector', (_) async {
+    test('handles very large values in vector', () async {
       DocumentReference<Map<String, dynamic>> doc =
           await initializeTest('vector-value-large-values');
 
@@ -139,7 +139,7 @@ void runVectorValueTests() {
       expect(vectorValue.toArray(), equals([1e10, -1e10]));
     });
 
-    testWidgets('handles floats in vector', (_) async {
+    test('handles floats in vector', () async {
       DocumentReference<Map<String, dynamic>> doc =
           await initializeTest('vector-value-floats');
 
@@ -154,7 +154,7 @@ void runVectorValueTests() {
       expect(vectorValue.toArray(), equals([3.14, 2.718]));
     });
 
-    testWidgets('handles negative values in vector', (_) async {
+    test('handles negative values in vector', () async {
       DocumentReference<Map<String, dynamic>> doc =
           await initializeTest('vector-value-negative');
 
