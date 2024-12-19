@@ -1,3 +1,7 @@
+## 3.9.0
+
+ - Bump "firebase_core" to `3.9.0`.
+
 ## 3.8.1
 
  - **FIX**(core): auth Swift support requires `FLTFirebaseCorePlugin` & `messages` to be shared ([#16774](https://github.com/firebase/flutterfire/issues/16774)). ([f89483cd](https://github.com/firebase/flutterfire/commit/f89483cd9a3b4900d9b79151bb383ae35aa3dd4f))

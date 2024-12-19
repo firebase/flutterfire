@@ -1,3 +1,7 @@
+## 6.6.0
+
+ - Bump "cloud_firestore_platform_interface" to `6.6.0`.
+
 ## 6.5.1
 
  - Update a dependency to the latest release.

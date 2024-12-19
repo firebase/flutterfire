@@ -1,3 +1,7 @@
+## 4.4.0
+
+ - Bump "cloud_firestore_web" to `4.4.0`.
+
 ## 4.3.5
 
  - Update a dependency to the latest release.

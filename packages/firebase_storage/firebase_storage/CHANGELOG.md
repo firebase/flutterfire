@@ -1,3 +1,7 @@
+## 12.3.8
+
+ - Update a dependency to the latest release.
+
 ## 12.3.7
 
  - **FIX**(storage,apple): clean up event channel, stream handler and task on completion ([#16708](https://github.com/firebase/flutterfire/issues/16708)). ([14b4a552](https://github.com/firebase/flutterfire/commit/14b4a552f90ea03b297938ee30423c0e1e7d888e))

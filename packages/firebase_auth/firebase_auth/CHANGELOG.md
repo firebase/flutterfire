@@ -1,3 +1,7 @@
+## 5.3.5
+
+ - Update a dependency to the latest release.
+
 ## 5.3.4
 
  - **FIX**(auth,android): `signInWithProvider()` for non-default instances ([#13522](https://github.com/firebase/flutterfire/issues/13522)). ([fe016a44](https://github.com/firebase/flutterfire/commit/fe016a4487993c8aa444e15c9881fe355b5f6624))

@@ -1,3 +1,7 @@
+## 2.19.0
+
+ - Bump "firebase_core_web" to `2.19.0`.
+
 ## 2.18.2
 
  - Update a dependency to the latest release.
