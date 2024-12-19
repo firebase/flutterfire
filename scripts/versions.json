@@ -14,7 +14,7 @@
       "firebase_app_check": "0.3.1+7",
       "firebase_app_installations": "0.3.1+7",
       "firebase_auth": "5.3.4",
-      "firebase_core": "3.8.1",
+      "firebase_core": "3.9.0",
       "firebase_crashlytics": "4.2.0",
       "firebase_data_connect": "0.1.2+5",
       "firebase_database": "11.2.0",
