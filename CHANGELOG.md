@@ -40,15 +40,15 @@ Packages with other changes:
 
 #### `firebase_core` - `v3.9.0`
 
- - Bump "firebase_core" to `3.9.0`.
-
-#### `firebase_core_platform_interface` - `v5.4.0`
-
- - Bump "firebase_core_platform_interface" to `5.4.0`.
+ - **FIX**(core,macos): update path to firebase sdk version for SPM ([#16890](https://github.com/firebase/flutterfire/issues/16890)). ([4a190da0](https://github.com/firebase/flutterfire/commit/4a190da0c353d295ff7fb9fea73119218a365687))
+ - **FIX**(core,macos): exclude files pulled in from remote dependency. SPM integration ([#16834](https://github.com/firebase/flutterfire/issues/16834)). ([a8a22b17](https://github.com/firebase/flutterfire/commit/a8a22b172657ba2568d2cce5a54db4da3189efa0))
+ - **FIX**(core): auth Swift support requires `FLTFirebaseCorePlugin` & `messages` to be shared ([#16774](https://github.com/firebase/flutterfire/issues/16774)). ([f89483cd](https://github.com/firebase/flutterfire/commit/f89483cd9a3b4900d9b79151bb383ae35aa3dd4f))
+ - **FIX**(core): auth Swift support requires `FLTFirebaseCorePlugin` & `messages` to be shared ([#16774](https://github.com/firebase/flutterfire/issues/16774)). ([ba5f2414](https://github.com/firebase/flutterfire/commit/ba5f2414c86f3fe200df07671f6ad84087646c86))
+ - **FEAT**: bump Firebase android BOM to `v33.7.0` ([#16857](https://github.com/firebase/flutterfire/issues/16857)). ([0048bd13](https://github.com/firebase/flutterfire/commit/0048bd138f67102ff7cfa0539c244819b4ce8c7d))
 
 #### `firebase_core_web` - `v2.19.0`
 
- - Bump "firebase_core_web" to `2.19.0`.
+ - **FEAT**: bump JS SDK to version 11.1.0 ([#16895](https://github.com/firebase/flutterfire/issues/16895)). ([71e1f21e](https://github.com/firebase/flutterfire/commit/71e1f21e9ad1559df67dcb78392f3adb0e6838c0))
 
 
 ## 2024-12-04 - [BoM 3.3.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-330-2024-12-04)
