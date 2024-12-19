@@ -29,7 +29,7 @@ flutterfire install 3.4.0
 | [firebase_app_check](https://pub.dev/packages/firebase_app_check/versions/0.3.1+7) | 0.3.1+7 | >=3.2.0 <4.0.0 | >=3.3.0 |
 | [firebase_app_installations](https://pub.dev/packages/firebase_app_installations/versions/0.3.1+7) | 0.3.1+7 | >=3.2.0 <4.0.0 | >=3.3.0 |
 | [firebase_auth](https://pub.dev/packages/firebase_auth/versions/5.3.4) | 5.3.4 | >=3.2.0 <4.0.0 | >=3.16.0 |
-| [firebase_core](https://pub.dev/packages/firebase_core/versions/3.8.1) | 3.8.1 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_core](https://pub.dev/packages/firebase_core/versions/3.9.0) | 3.9.0 | >=3.2.0 <4.0.0 | >=3.3.0 |
 | [firebase_crashlytics](https://pub.dev/packages/firebase_crashlytics/versions/4.2.0) | 4.2.0 | >=3.2.0 <4.0.0 | >=3.3.0 |
 | [firebase_data_connect](https://pub.dev/packages/firebase_data_connect/versions/0.1.2+5) | 0.1.2+5 | >=3.2.0 <4.0.0 | >=3.3.0 |
 | [firebase_database](https://pub.dev/packages/firebase_database/versions/11.2.0) | 11.2.0 | >=3.2.0 <4.0.0 | >=3.3.0 |
