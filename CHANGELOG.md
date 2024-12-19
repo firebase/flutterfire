@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-12-19
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v5.6.0`](#cloud_firestore---v560)
+ - [`cloud_firestore_web` - `v4.4.0`](#cloud_firestore_web---v440)
+ - [`cloud_firestore_platform_interface` - `v6.6.0`](#cloud_firestore_platform_interface---v660)
+ - [`firebase_core` - `v3.9.0`](#firebase_core---v390)
+ - [`firebase_core_platform_interface` - `v5.4.0`](#firebase_core_platform_interface---v540)
+ - [`firebase_core_web` - `v2.19.0`](#firebase_core_web---v2190)
+ - [`_flutterfire_internals` - `v1.3.48`](#_flutterfire_internals---v1348)
+
+---
+
+#### `cloud_firestore` - `v5.6.0`
+
+ - **FEAT**(firestore): add support for VectorValue ([#16476](https://github.com/firebase/flutterfire/issues/16476)). ([cc23f179](https://github.com/firebase/flutterfire/commit/cc23f179082256fe9700f17e3856821b4a6d4240))
+
+#### `cloud_firestore_web` - `v4.4.0`
+
+ - **FEAT**(firestore): add support for VectorValue ([#16476](https://github.com/firebase/flutterfire/issues/16476)). ([cc23f179](https://github.com/firebase/flutterfire/commit/cc23f179082256fe9700f17e3856821b4a6d4240))
+
+#### `cloud_firestore_platform_interface` - `v6.6.0`
+
+ - **FEAT**(firestore): add support for VectorValue ([#16476](https://github.com/firebase/flutterfire/issues/16476)). ([cc23f179](https://github.com/firebase/flutterfire/commit/cc23f179082256fe9700f17e3856821b4a6d4240))
+
+#### `firebase_core` - `v3.9.0`
+
+ - Bump "firebase_core" to `3.9.0`.
+
+#### `firebase_core_platform_interface` - `v5.4.0`
+
+ - Bump "firebase_core_platform_interface" to `5.4.0`.
+
+#### `firebase_core_web` - `v2.19.0`
+
+ - Bump "firebase_core_web" to `2.19.0`.
+
+
 ## 2024-12-04 - [BoM 3.3.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-330-2024-12-04)
 
 ### Changes
