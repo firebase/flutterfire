@@ -386,11 +386,11 @@ enum HarmSeverity {
   // ignore: unused_element
   static HarmSeverity _parseValue(Object jsonObject) {
     return switch (jsonObject) {
-      'HARM_SEVERITY_UNSPECIFIED ' => HarmSeverity.unknown,
+      'HARM_SEVERITY_UNSPECIFIED' => HarmSeverity.unknown,
       'HARM_SEVERITY_NEGLIGIBLE' => HarmSeverity.negligible,
       'HARM_SEVERITY_LOW' => HarmSeverity.low,
       'HARM_SEVERITY_MEDIUM' => HarmSeverity.medium,
-      'HARM_SEVERITY_HIGH ' => HarmSeverity.high,
+      'HARM_SEVERITY_HIGH' => HarmSeverity.high,
       _ => throw FormatException('Unhandled HarmSeverity format', jsonObject),
     };
   }
