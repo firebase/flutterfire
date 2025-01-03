@@ -1,0 +1,100 @@
+extend type Movie {
+  """
+  ✨ List `DirectedBy` objects in a one-to-many relationship (where `DirectedBy`.`movie` is this object).
+  """
+  directedBies_on_movie(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: DirectedBy_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [DirectedBy_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+  ): [DirectedBy!]! @fdc_generated(from: "DirectedBy.movie", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  ✨ List `Person` objects using `DirectedBy` as the join table (a `DirectedBy` object exists where its `movie` is this and its `directedby` is that).
+  """
+  people_via_DirectedBy(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: DirectedBy_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [DirectedBy_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+  ): [Person!]! @fdc_generated(from: "DirectedBy", purpose: QUERY_MULTIPLE_MANY_TO_MANY)
+}
+extend type Person {
+  """
+  ✨ List `DirectedBy` objects in a one-to-many relationship (where `DirectedBy`.`directedby` is this object).
+  """
+  directedBies_on_directedby(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: DirectedBy_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [DirectedBy_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+  ): [DirectedBy!]! @fdc_generated(from: "DirectedBy.directedby", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  ✨ List `Movie` objects using `DirectedBy` as the join table (a `DirectedBy` object exists where its `directedby` is this and its `movie` is that).
+  """
+  movies_via_DirectedBy(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: DirectedBy_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [DirectedBy_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+  ): [Movie!]! @fdc_generated(from: "DirectedBy", purpose: QUERY_MULTIPLE_MANY_TO_MANY)
+}
