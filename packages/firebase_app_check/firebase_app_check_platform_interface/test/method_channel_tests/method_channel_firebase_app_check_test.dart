@@ -69,6 +69,8 @@ void main() {
     test('activate', () async {
       await appCheck.activate(
         webProvider: ReCaptchaV3Provider('test-key'),
+        androidDebugToken: 'androidDebug',
+        appleDebugToken: 'appleDebug',
       );
       expect(
         methodCallLogger,
@@ -79,6 +81,8 @@ void main() {
               'appName': defaultFirebaseAppName,
               'androidProvider': 'playIntegrity',
               'appleProvider': 'deviceCheck',
+              'androidDebugToken': 'androidDebug',
+              'appleDebugToken': 'appleDebug',
             },
           ),
         ],

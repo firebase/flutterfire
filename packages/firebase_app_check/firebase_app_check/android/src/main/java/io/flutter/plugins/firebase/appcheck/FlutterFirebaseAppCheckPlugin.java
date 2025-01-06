@@ -102,6 +102,8 @@ public class FlutterFirebaseAppCheckPlugin
               case debugProvider:
                 {
                   FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
+                  FlutterFirebaseAppRegistrar.debugToken =
+                      (String) arguments.get("androidDebugToken");
                   firebaseAppCheck.installAppCheckProviderFactory(
                       DebugAppCheckProviderFactory.getInstance());
                   break;

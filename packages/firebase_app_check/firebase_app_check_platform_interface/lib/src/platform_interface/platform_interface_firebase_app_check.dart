@@ -61,11 +61,16 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
   /// On iOS or macOS, the default provider is "device check". If you wish to set the provider to "app attest", "debug" or "app attest with fallback to device check"
   /// ("app attest" is only available on iOS 14.0+, macOS 14.0+), you may set the `appleProvider` property using the `AppleProvider` enum
   ///
+  /// `androidDebugToken` and `appleDebugToken` allow you to set a debug token for the "debug" provider on Android and iOS respectively.
+  /// On iOS you have to re-run app after changing `appleDebugToken`.
+  ///
   /// For more information, see [the Firebase Documentation](https://firebase.google.com/docs/app-check)
   Future<void> activate({
     WebProvider? webProvider,
     AndroidProvider? androidProvider,
     AppleProvider? appleProvider,
+    String? androidDebugToken,
+    String? appleDebugToken,
   }) {
     throw UnimplementedError('activate() is not implemented');
   }

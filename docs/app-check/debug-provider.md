@@ -146,3 +146,48 @@ Because this token allows access to your Firebase resources without a
 valid device, it is crucial that you keep it private. Don't commit it to a
 public repository, and if a registered token is ever compromised, revoke it
 immediately in the Firebase console.
+
+## Manually setting up the App Check Debug Token for CI environment or development
+
+If you want to use the debug provider in a testing environment or CI, you can
+manually set the debug token in your app. This is useful when you want to run
+your app in an environment where the debug token is not automatically generated.
+
+To manually set the debug token, use the `androidDebugToken` and `appleDebugToken`
+parameters when activating App Check. For example:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+// Import the firebase_app_check plugin
+import 'package:firebase_app_check/firebase_app_check.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await FirebaseAppCheck.instance.activate(
+    webRecaptchaSiteKey: 'recaptcha-v3-site-key',
+    // Set androidProvider to `AndroidProvider.debug`
+    androidProvider: AndroidProvider.debug,
+    // Set appleProvider to `AppleProvider.debug`
+    appleProvider: AppleProvider.debug,
+    // Set the androidDebugToken for Android
+    androidDebugToken: '123a4567-b89c-12d3-e456-789012345678',
+    // Set the appleDebugToken for Apple platforms
+    appleDebugToken: '123a4567-b89c-12d3-e456-789012345678',
+  );
+  runApp(App());
+}
+
+```
+
+{# Google-internal common file: #}
+<<../_includes/manage-debug-tokens.md>>
+
+After you register the token, Firebase backend services will accept it as valid.
+
+Because this token allows access to your Firebase resources without a
+valid device, it is crucial that you keep it private. Don't commit it to a
+public repository, and if a registered token is ever compromised, revoke it
+immediately in the Firebase console.
