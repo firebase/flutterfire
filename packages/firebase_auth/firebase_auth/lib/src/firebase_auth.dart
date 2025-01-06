@@ -61,7 +61,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// [idTokenChanges] or [userChanges] to subscribe to updates.
   User? get currentUser {
     if (_delegate.currentUser != null) {
-      return User._(this, _delegate.currentUser);
+      return User._(this, _delegate.currentUser!);
     }
 
     return null;
