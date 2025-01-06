@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "firebase": "9"
+    "firebase": "10"
   },
   "devDependencies": {
     "esbuild": "^0.15.10"

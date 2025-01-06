@@ -50,7 +50,7 @@ final httpsReference = FirebaseStorage.instance.refFromURL(
 ## Download Files
 
 Once you have a reference, you can download files from Cloud Storage
-by calling the `getData()` or `getStream()`. If you prefer to download the file
+by calling the `getData()` function. If you prefer to download the file
 with another library, you can get a download URL with `getDownloadUrl()`.
 
 ### Download in memory

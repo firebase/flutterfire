@@ -42,14 +42,18 @@ void main() {
 
     test('fromJson correctly handles timezones with positive offset', () {
       final timestamp = Timestamp.fromJson('1970-01-11T00:00:00+02:00');
-      expect(timestamp.seconds,
-          864000 - (2 * 3600)); // Adjusts by the positive timezone offset
+      expect(
+        timestamp.seconds,
+        864000 - (2 * 3600),
+      ); // Adjusts by the positive timezone offset
     });
 
     test('fromJson correctly handles timezones with negative offset', () {
       final timestamp = Timestamp.fromJson('1970-01-11T00:00:00-05:00');
-      expect(timestamp.seconds,
-          864000 + (5 * 3600)); // Adjusts by the negative timezone offset
+      expect(
+        timestamp.seconds,
+        864000 + (5 * 3600),
+      ); // Adjusts by the negative timezone offset
     });
 
     test('toJson correctly serializes to ISO8601 string with nanoseconds', () {
@@ -68,7 +72,7 @@ void main() {
     test('toDateTime correctly converts to DateTime object', () {
       final timestamp = Timestamp(0, 864000); // Example timestamp
       final dateTime = timestamp.toDateTime();
-      expect(dateTime, DateTime.utc(1970, 1, 11, 0, 0, 0, 0));
+      expect(dateTime, DateTime.utc(1970, 1, 11));
     });
   });
 }
