@@ -1,3 +1,11 @@
+## 6.1.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
+ - **FEAT**(dynamic-links): Swift Package Manager support ([#16852](https://github.com/firebase/flutterfire/issues/16852)). ([4d91fd80](https://github.com/firebase/flutterfire/commit/4d91fd80f772d0c0e11eda36573de8f816cdcd8d))
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
 ## 6.0.11
 
  - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))

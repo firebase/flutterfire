@@ -1,3 +1,11 @@
+## 4.6.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
+ - **FEAT**(messaging,apple): allow system to display button for in-app notification settings ([#13484](https://github.com/firebase/flutterfire/issues/13484)). ([b36f924e](https://github.com/firebase/flutterfire/commit/b36f924e018f4d88ea5eaf17a779b2c3cf03583d))
+ - **BREAKING** **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([a80a2ef9](https://github.com/firebase/flutterfire/commit/a80a2ef9d5da94a9a1f9e3d311a1a651b9cafab4))
+
 ## 4.5.49
 
  - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
