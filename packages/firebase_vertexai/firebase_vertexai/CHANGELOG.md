@@ -2,11 +2,9 @@
 
 
  - **FIX**(firebase_vertexai): Remove unnecessary trailing whitespace ([#16926](https://github.com/firebase/flutterfire/issues/16926)). ([d9c98c40](https://github.com/firebase/flutterfire/commit/d9c98c403b4652c2a962c015e0f05d21ae580a71))
- - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
 
 ## 1.0.4
 
- - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
 
 ## 1.0.3
 

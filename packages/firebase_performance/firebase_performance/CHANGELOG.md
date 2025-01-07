@@ -1,12 +1,10 @@
 ## 0.10.1
 
 
- - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
  - **FEAT**(perf): Swift Package Manager support ([#16849](https://github.com/firebase/flutterfire/issues/16849)). ([9231dd0c](https://github.com/firebase/flutterfire/commit/9231dd0c99d3745ce4174b8c91acbbe93bfcdeb1))
 
 ## 0.10.0+11
 
- - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
 
 ## 0.10.0+10
 
