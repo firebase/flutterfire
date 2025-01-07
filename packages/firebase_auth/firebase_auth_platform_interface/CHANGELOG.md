@@ -1,10 +1,10 @@
 ## 7.5.0
 
-
  - **FEAT**(auth): Swift Package Manager support ([#16773](https://github.com/firebase/flutterfire/issues/16773)). ([69abbe19](https://github.com/firebase/flutterfire/commit/69abbe19bb37e6eb450b0b5123a74c2d68a761c7))
 
 ## 7.4.10
 
+ - Update a dependency to the latest release.
 
 ## 7.4.9
 

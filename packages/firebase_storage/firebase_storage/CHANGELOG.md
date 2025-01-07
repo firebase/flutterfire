@@ -1,6 +1,5 @@
 ## 12.4.0
 
-
  - **FIX**(storage): update regex for cloudStoragePath ([#16847](https://github.com/firebase/flutterfire/issues/16847)). ([b0832175](https://github.com/firebase/flutterfire/commit/b08321754c1fc8b773c9ea61c2e09fe866cefacc))
  - **FIX**(storage,apple): clean up event channel, stream handler and task on completion ([#16708](https://github.com/firebase/flutterfire/issues/16708)). ([14b4a552](https://github.com/firebase/flutterfire/commit/14b4a552f90ea03b297938ee30423c0e1e7d888e))
  - **FEAT**(storage): Swift Package Manager support ([#16782](https://github.com/firebase/flutterfire/issues/16782)). ([b5993aef](https://github.com/firebase/flutterfire/commit/b5993aef0bf12d056a366bea9c7ce51c9781e290))

@@ -1,11 +1,11 @@
 ## 15.2.0
 
-
  - **FEAT**(messaging,apple): allow system to display button for in-app notification settings ([#13484](https://github.com/firebase/flutterfire/issues/13484)). ([b36f924e](https://github.com/firebase/flutterfire/commit/b36f924e018f4d88ea5eaf17a779b2c3cf03583d))
  - **FEAT**(messaging): Swift Package Manager support ([#13205](https://github.com/firebase/flutterfire/issues/13205)) ([#16786](https://github.com/firebase/flutterfire/issues/16786)). ([165d2ab6](https://github.com/firebase/flutterfire/commit/165d2ab6f9a25d4209ada837b13add584fdd225d))
 
 ## 15.1.6
 
+ - Update a dependency to the latest release.
 
 ## 15.1.5
 

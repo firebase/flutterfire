@@ -1,6 +1,5 @@
 ## 3.8.0
 
-
  - **FEAT**(crashlytics,android): Support deferred component crash stack trace ([#16789](https://github.com/firebase/flutterfire/issues/16789)). ([d5778f89](https://github.com/firebase/flutterfire/commit/d5778f89700a910f4b96b834975f7e21e43080fc))
 
 ## 3.7.0

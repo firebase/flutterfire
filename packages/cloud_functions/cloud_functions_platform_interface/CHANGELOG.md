@@ -1,9 +1,10 @@
 ## 5.6.0
 
-
+ - Update a dependency to the latest release.
 
 ## 5.5.40
 
+ - Update a dependency to the latest release.
 
 ## 5.5.39
 

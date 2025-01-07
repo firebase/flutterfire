@@ -1,6 +1,5 @@
 ## 5.3.0
 
-
  - **FEAT**(remote_config): Swift Package Manager support ([#16772](https://github.com/firebase/flutterfire/issues/16772)). ([164421ec](https://github.com/firebase/flutterfire/commit/164421ec8d3d67ca0349bce60d2b7731ad704639))
 
 ## 5.2.0
