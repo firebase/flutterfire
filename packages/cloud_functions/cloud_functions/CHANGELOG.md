@@ -1,7 +1,6 @@
 ## 5.3.0
 
-
- - **FEAT**(functions): Swift Package Manager support ([#16770](https://github.com/firebase/flutterfire/issues/16770)). ([dc0dee22](https://github.com/firebase/flutterfire/commit/dc0dee221061b8ea7083e9dc1698aeeba8235518))
+- Update a dependency to the latest release.
 
 ## 5.2.0
 

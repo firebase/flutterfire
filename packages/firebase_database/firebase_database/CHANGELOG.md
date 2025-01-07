@@ -1,6 +1,6 @@
 ## 11.3.0
 
- - **FEAT**(database): Swift Package Manager support ([#16783](https://github.com/firebase/flutterfire/issues/16783)). ([1509c33e](https://github.com/firebase/flutterfire/commit/1509c33e0154df52e2d998a82f1eb832e4d13c84))
+ - Update a dependency to the latest release.
 
 ## 11.2.0
 
