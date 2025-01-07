@@ -1,10 +1,10 @@
 ## 1.1.0
 
-
  - **FIX**(firebase_vertexai): Remove unnecessary trailing whitespace ([#16926](https://github.com/firebase/flutterfire/issues/16926)). ([d9c98c40](https://github.com/firebase/flutterfire/commit/d9c98c403b4652c2a962c015e0f05d21ae580a71))
 
 ## 1.0.4
 
+ - Update a dependency to the latest release.
 
 ## 1.0.3
 
