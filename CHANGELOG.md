@@ -69,6 +69,7 @@ Packages with other changes:
 
 #### `cloud_functions_platform_interface` - `v5.6.0`
 
+ - Update a dependency to the latest release.
 
 #### `firebase_analytics` - `v11.4.0`
 
