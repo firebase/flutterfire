@@ -48,27 +48,42 @@ final class ImagenModel extends BaseModel {
     ImagenGenerationConfig? generationConfig,
     String? gcsUri,
   }) {
+    final parameters = <String, Object?>{};
+
+    if (gcsUri != null) parameters['storageUri'] = gcsUri;
+
+    if (generationConfig != null) {
+      if (generationConfig.numberOfImages != null) {
+        parameters['sampleCount'] = generationConfig.numberOfImages;
+      }
+      if (generationConfig.aspectRatio != null) {
+        parameters['aspectRatio'] = generationConfig.aspectRatio!.toJson();
+      }
+      if (generationConfig.negativePrompt != null) {
+        parameters['negativePrompt'] = generationConfig.negativePrompt;
+      }
+    }
+
+    if (_safetySettings != null) {
+      if (_safetySettings.personFilterLevel != null) {
+        parameters['personGeneration'] =
+            _safetySettings.personFilterLevel!.toJson();
+      }
+      if (_safetySettings.safetyFilterLevel != null) {
+        parameters['safetySetting'] =
+            _safetySettings.safetyFilterLevel!.toJson();
+      }
+    }
+
+    if (_modelConfig != null && _modelConfig.addWatermark != null) {
+      parameters['addWatermark'] = _modelConfig.addWatermark;
+    }
+
     return {
       'instances': [
         {'prompt': prompt}
       ],
-      'parameters': {
-        if (gcsUri != null) 'storageUri': gcsUri,
-        if (generationConfig != null && generationConfig.numberOfImages != null)
-          'sampleCount': generationConfig.numberOfImages,
-        if (generationConfig != null && generationConfig.aspectRatio != null)
-          'aspectRatio': generationConfig.aspectRatio,
-        if (generationConfig != null && generationConfig.negativePrompt != null)
-          'negativePrompt': generationConfig.negativePrompt,
-        if (_safetySettings != null &&
-            _safetySettings.personFilterLevel != null)
-          'personGeneration': _safetySettings.personFilterLevel,
-        if (_safetySettings != null &&
-            _safetySettings.safetyFilterLevel != null)
-          'safetySetting': _safetySettings.safetyFilterLevel,
-        if (_modelConfig != null && _modelConfig.addWatermark != null)
-          'addWatermark': _modelConfig.addWatermark,
-      }
+      'parameters': parameters,
     };
   }
 
@@ -78,13 +93,16 @@ final class ImagenModel extends BaseModel {
     String? gcsUri,
   }) =>
       makeRequest(
-          Task.predict,
-          _generateImagenRequest(
-            prompt,
-            generationConfig: generationConfig,
-            gcsUri: gcsUri,
-          ),
-          parseImagenGenerationResponse);
+        Task.predict,
+        _generateImagenRequest(
+          prompt,
+          generationConfig: generationConfig,
+          gcsUri: gcsUri,
+        ),
+        (jsonObject) => gcsUri != null
+            ? parseImagenGenerationResponse<ImagenGCSImage>(jsonObject)
+            : parseImagenGenerationResponse<ImagenInlineImage>(jsonObject),
+      );
 }
 
 /// Returns a [ImagenModel] using it's private constructor.

@@ -65,5 +65,6 @@ export 'src/imagen_api.dart'
         ImagenPersonFilterLevel,
         ImagenGenerationConfig,
         ImagenAspectRatio;
+export 'src/imagen_content.dart' show ImagenInlineImage, ImagenGCSImage;
 export 'src/model.dart' show GenerativeModel;
 export 'src/schema.dart' show Schema, SchemaType;

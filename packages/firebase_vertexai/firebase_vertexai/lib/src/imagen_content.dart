@@ -73,7 +73,7 @@ final class ImagenGenerationResponse<T extends ImagenImage> {
 
   factory ImagenGenerationResponse.fromJson(Map<String, dynamic> json) {
     final filteredReason = json['filteredReason'] as String?;
-    final imagesJson = json['images'] as List<dynamic>;
+    final imagesJson = json['predictions'] as List<dynamic>;
 
     if (T == ImagenInlineImage) {
       final images = imagesJson.map((imageJson) {
@@ -105,8 +105,9 @@ final class ImagenGenerationResponse<T extends ImagenImage> {
 }
 
 /// Parse the json to [ImagenGenerationResponse]
-ImagenGenerationResponse parseImagenGenerationResponse(Object jsonObject) {
+ImagenGenerationResponse parseImagenGenerationResponse<T extends ImagenImage>(
+    Object jsonObject) {
   if (jsonObject case {'error': final Object error}) throw parseError(error);
   Map<String, dynamic> json = jsonObject as Map<String, dynamic>;
-  return ImagenGenerationResponse.fromJson(json);
+  return ImagenGenerationResponse<T>.fromJson(json);
 }
