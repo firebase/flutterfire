@@ -28,6 +28,7 @@ export 'src/api.dart'
         PromptFeedback,
         SafetyRating,
         SafetySetting,
+        // TODO(cynthiajiang) remove in next breaking change.
         TaskType,
         UsageMetadata;
 export 'src/chat.dart' show ChatSession, StartChatExtension;
@@ -55,5 +56,14 @@ export 'src/function_calling.dart'
         FunctionDeclaration,
         Tool,
         ToolConfig;
+export 'src/imagen_api.dart'
+    show
+        ImagenModelConfig,
+        ImagenSafetySettings,
+        ImagenFormat,
+        ImagenSafetyFilterLevel,
+        ImagenPersonFilterLevel,
+        ImagenGenerationConfig,
+        ImagenAspectRatio;
 export 'src/model.dart' show GenerativeModel;
 export 'src/schema.dart' show Schema, SchemaType;

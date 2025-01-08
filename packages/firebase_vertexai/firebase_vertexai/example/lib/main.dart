@@ -266,7 +266,8 @@ class _ChatWidgetState extends State<ChatWidget> {
                   tooltip: 'image prompt',
                   onPressed: !_loading
                       ? () async {
-                          await _sendImagePrompt(_textController.text);
+                          //await _sendImagePrompt(_textController.text);
+                          await _testImagen();
                         }
                       : null,
                   icon: Icon(
@@ -600,6 +601,33 @@ class _ChatWidgetState extends State<ChatWidget> {
     setState(() {
       _loading = false;
     });
+  }
+
+  Future<void> _testImagen() async {
+    var model = FirebaseVertexAI.instance.imageModel(
+      modelName: 'imagen-3.0-generate-001',
+      safetySettings: ImagenSafetySettings(
+        ImagenSafetyFilterLevel.blockLowAndAbove,
+        ImagenPersonFilterLevel.allowAdult,
+      ),
+    );
+
+    var prompt = 'An astronaut riding a horse.';
+    var generationConfig =
+        ImagenGenerationConfig('frog', 1, ImagenAspectRatio.square1x1);
+
+    var response = await model.generateImages(
+      prompt,
+      generationConfig: generationConfig,
+    );
+
+    if (response.images.isNotEmpty) {
+      var image = response.images[0];
+      // Process the image
+    } else {
+      // Handle the case where no images were generated
+      print('Error: No images were generated.');
+    }
   }
 
   void _showError(String message) {

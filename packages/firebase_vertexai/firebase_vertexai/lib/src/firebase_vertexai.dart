@@ -21,6 +21,9 @@ import 'package:firebase_core_platform_interface/firebase_core_platform_interfac
 import 'api.dart';
 import 'content.dart';
 import 'function_calling.dart';
+import 'imagen_model.dart';
+import 'imagen_api.dart';
+import 'imagen_content.dart';
 import 'model.dart';
 
 const _defaultLocation = 'us-central1';
@@ -109,5 +112,19 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
       toolConfig: toolConfig,
       systemInstruction: systemInstruction,
     );
+  }
+
+  ImagenModel imageModel(
+      {required String modelName,
+      ImagenModelConfig? modelConfig,
+      ImagenSafetySettings? safetySettings}) {
+    return createImagenModel(
+        app: app,
+        location: location,
+        modelName: modelName,
+        modelConfig: modelConfig,
+        safetySettings: safetySettings,
+        appCheck: appCheck,
+        auth: auth);
   }
 }
