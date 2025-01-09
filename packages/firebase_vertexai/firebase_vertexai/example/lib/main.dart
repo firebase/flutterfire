@@ -624,7 +624,7 @@ class _ChatWidgetState extends State<ChatWidget> {
     );
 
     if (response.images.isNotEmpty) {
-      var imagenImage = response.images[0] as ImagenInlineImage;
+      var imagenImage = response.images[0];
       // Process the image
       _generatedContent.add(
         (

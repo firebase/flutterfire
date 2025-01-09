@@ -87,10 +87,24 @@ final class ImagenModel extends BaseModel {
     };
   }
 
-  Future<ImagenGenerationResponse> generateImages(
+  Future<ImagenGenerationResponse<ImagenInlineImage>> generateImages(
     String prompt, {
     ImagenGenerationConfig? generationConfig,
-    String? gcsUri,
+  }) =>
+      makeRequest(
+        Task.predict,
+        _generateImagenRequest(
+          prompt,
+          generationConfig: generationConfig,
+        ),
+        (jsonObject) =>
+            parseImagenGenerationResponse<ImagenInlineImage>(jsonObject),
+      );
+
+  Future<ImagenGenerationResponse<ImagenGCSImage>> generateImagesGCS(
+    String prompt,
+    String gcsUri, {
+    ImagenGenerationConfig? generationConfig,
   }) =>
       makeRequest(
         Task.predict,
@@ -99,9 +113,8 @@ final class ImagenModel extends BaseModel {
           generationConfig: generationConfig,
           gcsUri: gcsUri,
         ),
-        (jsonObject) => gcsUri != null
-            ? parseImagenGenerationResponse<ImagenGCSImage>(jsonObject)
-            : parseImagenGenerationResponse<ImagenInlineImage>(jsonObject),
+        (jsonObject) =>
+            parseImagenGenerationResponse<ImagenGCSImage>(jsonObject),
       );
 }
 

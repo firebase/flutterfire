@@ -105,8 +105,8 @@ final class ImagenGenerationResponse<T extends ImagenImage> {
 }
 
 /// Parse the json to [ImagenGenerationResponse]
-ImagenGenerationResponse parseImagenGenerationResponse<T extends ImagenImage>(
-    Object jsonObject) {
+ImagenGenerationResponse<T>
+    parseImagenGenerationResponse<T extends ImagenImage>(Object jsonObject) {
   if (jsonObject case {'error': final Object error}) throw parseError(error);
   Map<String, dynamic> json = jsonObject as Map<String, dynamic>;
   return ImagenGenerationResponse<T>.fromJson(json);
