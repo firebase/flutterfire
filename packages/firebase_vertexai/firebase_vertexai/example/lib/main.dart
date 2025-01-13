@@ -157,7 +157,7 @@ class _ChatWidgetState extends State<ChatWidget> {
   Future<void> initFirebase() async {
     // ignore: avoid_redundant_argument_values
     await Firebase.initializeApp(options: options);
-    await FirebaseAuth.instance.signInAnonymously();
+    //await FirebaseAuth.instance.signInAnonymously();
   }
 
   void _scrollDown() {
