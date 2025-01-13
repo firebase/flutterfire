@@ -145,10 +145,25 @@ enum ImagenAspectRatio {
 
 final class ImagenGenerationConfig {
   ImagenGenerationConfig(
-      this.negativePrompt, this.numberOfImages, this.aspectRatio);
+      {this.negativePrompt,
+      this.numberOfImages,
+      this.aspectRatio,
+      this.imageFormat,
+      this.addWatermark});
   final String? negativePrompt;
   final int? numberOfImages;
   final ImagenAspectRatio? aspectRatio;
+  final ImagenFormat? imageFormat;
+  final bool? addWatermark;
+
+  /// Convert to json format.
+  Map<String, dynamic> toJson() => {
+        if (negativePrompt != null) 'negativePrompt': negativePrompt,
+        if (numberOfImages != null) 'numberOfImages': numberOfImages,
+        if (aspectRatio != null) 'aspectRatio': aspectRatio!.toJson(),
+        if (addWatermark != null) 'addWatermark': addWatermark,
+        if (imageFormat != null) 'outputOption': imageFormat!.toJson(),
+      };
 }
 
 final class ImagenFormat {
@@ -159,10 +174,10 @@ final class ImagenFormat {
       : this("image/jpeg", compressionQuality);
   final String mimeType;
   final int? compressionQuality;
-}
 
-final class ImagenModelConfig {
-  ImagenModelConfig(this.imagenFormat, this.addWatermark);
-  final ImagenFormat imagenFormat;
-  final bool? addWatermark;
+  Map<String, dynamic> toJson() => {
+        'mimeType': mimeType,
+        if (compressionQuality != null)
+          'compressionQuality': compressionQuality,
+      };
 }

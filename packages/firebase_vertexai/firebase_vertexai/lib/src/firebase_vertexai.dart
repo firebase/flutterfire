@@ -116,13 +116,13 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
 
   ImagenModel imageModel(
       {required String modelName,
-      ImagenModelConfig? modelConfig,
+      ImagenGenerationConfig? generationConfig,
       ImagenSafetySettings? safetySettings}) {
     return createImagenModel(
         app: app,
         location: location,
         modelName: modelName,
-        modelConfig: modelConfig,
+        generationConfig: generationConfig,
         safetySettings: safetySettings,
         appCheck: appCheck,
         auth: auth);

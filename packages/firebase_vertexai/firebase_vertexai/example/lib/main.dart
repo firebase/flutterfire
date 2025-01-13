@@ -157,7 +157,7 @@ class _ChatWidgetState extends State<ChatWidget> {
   Future<void> initFirebase() async {
     // ignore: avoid_redundant_argument_values
     await Firebase.initializeApp(options: options);
-    await FirebaseAuth.instance.signInAnonymously();
+    // await FirebaseAuth.instance.signInAnonymously();
   }
 
   void _scrollDown() {
@@ -609,14 +609,18 @@ class _ChatWidgetState extends State<ChatWidget> {
     });
     var model = FirebaseVertexAI.instance.imageModel(
       modelName: 'imagen-3.0-generate-001',
+      generationConfig: ImagenGenerationConfig(
+          imageFormat: ImagenFormat.jpeg(compressionQuality: 75)),
       safetySettings: ImagenSafetySettings(
         ImagenSafetyFilterLevel.blockLowAndAbove,
         ImagenPersonFilterLevel.allowAdult,
       ),
     );
 
-    var generationConfig =
-        ImagenGenerationConfig('frog', 1, ImagenAspectRatio.square1x1);
+    var generationConfig = ImagenGenerationConfig(
+        negativePrompt: 'frog',
+        numberOfImages: 1,
+        aspectRatio: ImagenAspectRatio.square1x1);
 
     var response = await model.generateImages(
       prompt,

@@ -28,9 +28,9 @@ final class ImagenModel extends BaseModel {
       required String location,
       FirebaseAppCheck? appCheck,
       FirebaseAuth? auth,
-      ImagenModelConfig? modelConfig,
+      ImagenGenerationConfig? generationConfig,
       ImagenSafetySettings? safetySettings})
-      : _modelConfig = modelConfig,
+      : _generationConfig = generationConfig,
         _safetySettings = safetySettings,
         super(
             model: modelName,
@@ -40,7 +40,7 @@ final class ImagenModel extends BaseModel {
                 apiKey: app.options.apiKey,
                 requestHeaders: BaseModel.firebaseTokens(appCheck, auth)));
 
-  final ImagenModelConfig? _modelConfig;
+  final ImagenGenerationConfig? _generationConfig;
   final ImagenSafetySettings? _safetySettings;
 
   Map<String, Object?> _generateImagenRequest(
@@ -52,16 +52,24 @@ final class ImagenModel extends BaseModel {
 
     if (gcsUri != null) parameters['storageUri'] = gcsUri;
 
-    if (generationConfig != null) {
-      if (generationConfig.numberOfImages != null) {
-        parameters['sampleCount'] = generationConfig.numberOfImages;
-      }
-      if (generationConfig.aspectRatio != null) {
-        parameters['aspectRatio'] = generationConfig.aspectRatio!.toJson();
-      }
-      if (generationConfig.negativePrompt != null) {
-        parameters['negativePrompt'] = generationConfig.negativePrompt;
-      }
+    // Merge generation configurations
+    final mergedConfig = {
+      ...(_generationConfig?.toJson() ?? {}),
+      ...(generationConfig?.toJson() ?? {}),
+    };
+
+    parameters['sampleCount'] = mergedConfig['numberOfImages'] ?? 1;
+    if (mergedConfig['aspectRatio'] != null) {
+      parameters['aspectRatio'] = mergedConfig['aspectRatio'];
+    }
+    if (mergedConfig['negativePrompt'] != null) {
+      parameters['negativePrompt'] = mergedConfig['negativePrompt'];
+    }
+    if (mergedConfig['addWatermark'] != null) {
+      parameters['addWatermark'] = mergedConfig['addWatermark'];
+    }
+    if (mergedConfig['outputOption'] != null) {
+      parameters['outputOption'] = mergedConfig['outputOption'];
     }
 
     if (_safetySettings != null) {
@@ -73,10 +81,6 @@ final class ImagenModel extends BaseModel {
         parameters['safetySetting'] =
             _safetySettings.safetyFilterLevel!.toJson();
       }
-    }
-
-    if (_modelConfig != null && _modelConfig.addWatermark != null) {
-      parameters['addWatermark'] = _modelConfig.addWatermark;
     }
 
     return {
@@ -125,7 +129,7 @@ ImagenModel createImagenModel({
   required String modelName,
   FirebaseAppCheck? appCheck,
   FirebaseAuth? auth,
-  ImagenModelConfig? modelConfig,
+  ImagenGenerationConfig? generationConfig,
   ImagenSafetySettings? safetySettings,
 }) =>
     ImagenModel._(
@@ -135,5 +139,5 @@ ImagenModel createImagenModel({
       auth: auth,
       location: location,
       safetySettings: safetySettings,
-      modelConfig: modelConfig,
+      generationConfig: generationConfig,
     );
