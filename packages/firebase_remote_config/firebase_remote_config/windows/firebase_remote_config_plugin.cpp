@@ -217,53 +217,6 @@ void FirebaseRemoteConfigPlugin::HandleMethodCall(
   } catch (const std::exception& e) {
     result->Error(kSetConfigSettingsMethodName, e.what());
   }
-
-  // if (method_call.method_name().compare("getPlatformVersion") == 0)
-  // {
-  //     std::ostringstream version_stream;
-  //     version_stream << "Windows ";
-  //     if (IsWindows10OrGreater())
-  //     {
-  //         version_stream << "10+";
-  //     }
-  //     else if (IsWindows8OrGreater())
-  //     {
-  //         version_stream << "8";
-  //     }
-  //     else if (IsWindows7OrGreater())
-  //     {
-  //         version_stream << "7";
-  //     }
-  //     result->Success(flutter::EncodableValue(version_stream.str()));
-  // }
-  // else if
-  // (method_call.method_name().compare("RemoteConfig#ensureInitialized"))
-  // {
-  //     int ii = 0;
-  //     // const auto app_name =
-  //     std::get<flutter::EncodableList>(method_call.arguments());
-  //     // const auto firebaseApp =
-  //     ::firebase::App::GetInstance(app_name.c_str());
-  //     // const auto remoteConfig =
-  //     ::firebase::remote_config::RemoteConfig::GetInstance(firebaseApp);
-  //     // auto registration = remoteConfig->AddOnConfigUpdateListener([&sink_,
-  //     this](ConfigUpdate&& config_update, RemoteConfigError error)
-  //     // {
-  //     //                        const auto updatedKeys =
-  //     config_update.updated_keys;
-  //     //         flutter::EncodableList keys{};
-  //     //
-  //     //         for (const auto& key : updatedKeys)
-  //     //         {
-  //     // keys.push_back(flutter::EncodableValue(key));
-  //     //         }
-  //     //         sink_->Success(flutter::EncodableValue(keys));
-  //     //     });
-  // }
-  // else
-  // {
-  //     result->NotImplemented();
-  // }
 }
 
 void FirebaseRemoteConfigPlugin::get_method_channel_arguments_(
@@ -561,7 +514,8 @@ void FirebaseRemoteConfigPlugin::activate_(
 
   future.OnCompletion([completion](const Future<bool>& futureResult) {
     if (futureResult.status() == kFutureStatusComplete) {
-      completion(futureResult.result());
+      auto result = *futureResult.result();
+      completion(std::variant<bool, FirebaseRemoteConfigException>(result));
     } else {
       completion(
           FirebaseRemoteConfigException("Cannot activate remote config"));
@@ -613,7 +567,8 @@ void FirebaseRemoteConfigPlugin::fetch_and_activate_(
 
   future.OnCompletion([completion](const Future<bool>& futureResult) {
     if (futureResult.status() == kFutureStatusComplete) {
-      completion(futureResult.result());
+      auto result = *futureResult.result();
+      completion(std::variant<bool, FirebaseRemoteConfigException>(result));
     } else {
       completion(
           FirebaseRemoteConfigException("Cannot activate remote config"));

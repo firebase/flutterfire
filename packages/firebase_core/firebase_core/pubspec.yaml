@@ -7,6 +7,7 @@ version: 3.6.0
 topics:
   - firebase
   - core
+publish_to: https://onepub.dev/api/xhvssdavuh
 
 false_secrets:
   - example/**

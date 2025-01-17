@@ -4,12 +4,13 @@ description:
   re-releasing.
 homepage: https://firebase.google.com/docs/remote-config
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_remote_config/firebase_remote_config
-version: 5.1.3
+version: 5.1.3+1
 topics:
   - firebase
   - remote
   - config
   - management
+publish_to: https://onepub.dev/api/xhvssdavuh
 
 false_secrets:
   - example/**
