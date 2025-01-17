@@ -27,7 +27,7 @@ void runDocumentReferenceTests() {
     group(
       'DocumentReference.snapshots()',
       () {
-        testWidgets('returns a [Stream]', (_) async {
+        test('returns a [Stream]', () async {
           DocumentReference<Map<String, dynamic>> document =
               await initializeTest('document-snapshot');
           Stream<DocumentSnapshot<Map<String, dynamic>>> stream =
@@ -35,7 +35,7 @@ void runDocumentReferenceTests() {
           expect(stream, isA<Stream<DocumentSnapshot<Map<String, dynamic>>>>());
         });
 
-        testWidgets('can be reused', (_) async {
+        test('can be reused', () async {
           final foo = await initializeTest('foo');
 
           final snapshot = foo.snapshots();
@@ -66,7 +66,7 @@ void runDocumentReferenceTests() {
           );
         });
 
-        testWidgets('listens to a single response', (_) async {
+        test('listens to a single response', () async {
           DocumentReference<Map<String, dynamic>> document =
               await initializeTest('document-snapshot');
           Stream<DocumentSnapshot<Map<String, dynamic>>> stream =
@@ -88,7 +88,7 @@ void runDocumentReferenceTests() {
           });
         });
 
-        testWidgets('listens to a single response from cache', (_) async {
+        test('listens to a single response from cache', () async {
           DocumentReference<Map<String, dynamic>> document =
               await initializeTest('document-snapshot');
           Stream<DocumentSnapshot<Map<String, dynamic>>> stream =
@@ -110,7 +110,7 @@ void runDocumentReferenceTests() {
           });
         });
 
-        testWidgets('listens to a document from cache', (_) async {
+        test('listens to a document from cache', () async {
           DocumentReference<Map<String, dynamic>> document =
               await initializeTest('document-snapshot-cache');
           await document.set({'foo': 'bar'});
@@ -134,7 +134,7 @@ void runDocumentReferenceTests() {
           });
         });
 
-        testWidgets('listens to multiple documents', (_) async {
+        test('listens to multiple documents', () async {
           DocumentReference<Map<String, dynamic>> doc1 =
               await initializeTest('document-snapshot-1');
           DocumentReference<Map<String, dynamic>> doc2 =
@@ -150,7 +150,7 @@ void runDocumentReferenceTests() {
           await expectLater(value2, completion('value2'));
         });
 
-        testWidgets('listens to a multiple changes response', (_) async {
+        test('listens to a multiple changes response', () async {
           DocumentReference<Map<String, dynamic>> document =
               await initializeTest('document-snapshot-multiple');
           Stream<DocumentSnapshot<Map<String, dynamic>>> stream =
@@ -197,7 +197,7 @@ void runDocumentReferenceTests() {
           );
         });
 
-        testWidgets('listeners throws a [FirebaseException]', (_) async {
+        test('listeners throws a [FirebaseException]', () async {
           DocumentReference<Map<String, dynamic>> document =
               firestore.doc('not-allowed/document');
           Stream<DocumentSnapshot<Map<String, dynamic>>> stream =
@@ -220,7 +220,7 @@ void runDocumentReferenceTests() {
     );
 
     group('DocumentReference.delete()', () {
-      testWidgets('delete() deletes a document', (_) async {
+      test('delete() deletes a document', () async {
         DocumentReference<Map<String, dynamic>> document =
             await initializeTest('document-delete');
         await document.set({
@@ -233,9 +233,9 @@ void runDocumentReferenceTests() {
         expect(snapshot2.exists, isFalse);
       });
 
-      testWidgets(
+      test(
         'throws a [FirebaseException] on error',
-        (_) async {
+        () async {
           DocumentReference<Map<String, dynamic>> document =
               firestore.doc('not-allowed/document');
 
@@ -257,7 +257,7 @@ void runDocumentReferenceTests() {
     });
 
     group('DocumentReference.get()', () {
-      testWidgets('gets a document from server', (_) async {
+      test('gets a document from server', () async {
         DocumentReference<Map<String, dynamic>> document =
             await initializeTest('document-get-server');
         await document.set({'foo': 'bar'});
@@ -267,9 +267,9 @@ void runDocumentReferenceTests() {
         expect(snapshot.metadata.isFromCache, isFalse);
       });
 
-      testWidgets(
+      test(
         'gets a document from cache',
-        (_) async {
+        () async {
           DocumentReference<Map<String, dynamic>> document =
               await initializeTest('document-get-cache');
           await document.set({'foo': 'bar'});
@@ -281,9 +281,9 @@ void runDocumentReferenceTests() {
         skip: kIsWeb,
       );
 
-      testWidgets(
+      test(
         'throws a [FirebaseException] on error',
-        (_) async {
+        () async {
           DocumentReference<Map<String, dynamic>> document =
               firestore.doc('not-allowed/document');
 
@@ -303,7 +303,7 @@ void runDocumentReferenceTests() {
     });
 
     group('DocumentReference.set()', () {
-      testWidgets('sets data', (_) async {
+      test('sets data', () async {
         DocumentReference<Map<String, dynamic>> document =
             await initializeTest('document-set');
         await document.set({'foo': 'bar'});
@@ -314,7 +314,7 @@ void runDocumentReferenceTests() {
         expect(snapshot2.data(), equals({'bar': 'baz'}));
       });
 
-      testWidgets('set() merges data', (_) async {
+      test('set() merges data', () async {
         DocumentReference<Map<String, dynamic>> document =
             await initializeTest('document-set-merge');
         await document.set({'foo': 'bar'});
@@ -326,9 +326,9 @@ void runDocumentReferenceTests() {
         expect(snapshot2.data(), equals({'foo': 'ben', 'bar': 'baz'}));
       });
 
-      testWidgets(
+      test(
         'set() merges fields',
-        (_) async {
+        () async {
           DocumentReference<Map<String, dynamic>> document =
               await initializeTest('document-set-merge-fields');
           Map<String, dynamic> initialData = {
@@ -363,9 +363,9 @@ void runDocumentReferenceTests() {
         },
       );
 
-      testWidgets(
+      test(
         'throws a [FirebaseException] on error',
-        (_) async {
+        () async {
           DocumentReference<Map<String, dynamic>> document =
               firestore.doc('not-allowed/document');
 
@@ -383,7 +383,7 @@ void runDocumentReferenceTests() {
         },
       );
 
-      testWidgets('set and return all possible datatypes', (_) async {
+      test('set and return all possible datatypes', () async {
         DocumentReference<Map<String, dynamic>> document =
             await initializeTest('document-types');
 
@@ -408,6 +408,7 @@ void runDocumentReferenceTests() {
           'null': null,
           'timestamp': Timestamp.now(),
           'geopoint': const GeoPoint(1, 2),
+          'vectorValue': const VectorValue([1, 2, 3]),
           'reference': firestore.doc('foo/bar'),
           'nan': double.nan,
           'infinity': double.infinity,
@@ -444,6 +445,11 @@ void runDocumentReferenceTests() {
         expect(data['geopoint'], isA<GeoPoint>());
         expect((data['geopoint'] as GeoPoint).latitude, equals(1));
         expect((data['geopoint'] as GeoPoint).longitude, equals(2));
+        expect(data['vectorValue'], isA<VectorValue>());
+        expect(
+          (data['vectorValue'] as VectorValue).toArray(),
+          equals([1, 2, 3]),
+        );
         expect(data['reference'], isA<DocumentReference>());
         expect((data['reference'] as DocumentReference).id, equals('bar'));
         expect(data['nan'].isNaN, equals(true));
@@ -453,7 +459,7 @@ void runDocumentReferenceTests() {
     });
 
     group('DocumentReference.update()', () {
-      testWidgets('updates data', (_) async {
+      test('updates data', () async {
         DocumentReference<Map<String, dynamic>> document =
             await initializeTest('document-update');
         await document.set({'foo': 'bar'});
@@ -464,7 +470,7 @@ void runDocumentReferenceTests() {
         expect(snapshot2.data(), equals({'foo': 'bar', 'bar': 'baz'}));
       });
 
-      testWidgets('updates nested data using dots', (_) async {
+      test('updates nested data using dots', () async {
         DocumentReference<Map<String, dynamic>> document =
             await initializeTest('document-update-field-path');
         await document.set({
@@ -488,7 +494,7 @@ void runDocumentReferenceTests() {
         );
       });
 
-      testWidgets('updates nested data using FieldPath', (_) async {
+      test('updates nested data using FieldPath', () async {
         DocumentReference<Map<String, dynamic>> document =
             await initializeTest('document-update-field-path');
         await document.set({
@@ -514,8 +520,7 @@ void runDocumentReferenceTests() {
         );
       });
 
-      testWidgets('updates nested data containing a dot using FieldPath',
-          (_) async {
+      test('updates nested data containing a dot using FieldPath', () async {
         DocumentReference<Map<String, dynamic>> document =
             await initializeTest('document-update-field-path');
         await document.set({'foo.bar': 'baz'});
@@ -535,9 +540,9 @@ void runDocumentReferenceTests() {
         );
       });
 
-      testWidgets(
+      test(
         'throws if document does not exist',
-        (_) async {
+        () async {
           DocumentReference<Map<String, dynamic>> document =
               await initializeTest('document-update-not-exists');
           try {
@@ -555,9 +560,9 @@ void runDocumentReferenceTests() {
     });
 
     group('withConverter', () {
-      testWidgets(
+      test(
         'set/snapshot/get',
-        (_) async {
+        () async {
           final foo = await initializeTest('foo');
           final fooConverter = foo.withConverter<int>(
             fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,

@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:firebase_core_platform_interface/test.dart';
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -120,14 +120,16 @@ class MockFirebaseMessaging extends Mock
   }
 
   @override
-  Future<NotificationSettings> requestPermission(
-      {bool? alert = true,
-      bool? announcement = false,
-      bool? badge = true,
-      bool? carPlay = false,
-      bool? criticalAlert = false,
-      bool? provisional = false,
-      bool? sound = true}) {
+  Future<NotificationSettings> requestPermission({
+    bool? alert = true,
+    bool? announcement = false,
+    bool? badge = true,
+    bool? carPlay = false,
+    bool? criticalAlert = false,
+    bool? provisional = false,
+    bool? sound = true,
+    bool? providesAppNotificationSettings = false,
+  }) {
     return super.noSuchMethod(
         Invocation.method(#requestPermission, [], {
           #alert: alert,
@@ -136,7 +138,8 @@ class MockFirebaseMessaging extends Mock
           #carPlay: carPlay,
           #criticalAlert: criticalAlert,
           #provisional: provisional,
-          #sound: sound
+          #sound: sound,
+          #providesAppNotificationSettings: providesAppNotificationSettings,
         }),
         returnValue: neverEndingFuture<NotificationSettings>(),
         returnValueForMissingStub: neverEndingFuture<NotificationSettings>());

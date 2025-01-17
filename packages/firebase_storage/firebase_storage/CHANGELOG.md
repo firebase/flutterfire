@@ -1,3 +1,24 @@
+## 12.4.0
+
+ - **FIX**(storage): update regex for cloudStoragePath ([#16847](https://github.com/firebase/flutterfire/issues/16847)). ([b0832175](https://github.com/firebase/flutterfire/commit/b08321754c1fc8b773c9ea61c2e09fe866cefacc))
+ - **FEAT**(storage): Swift Package Manager support ([#16782](https://github.com/firebase/flutterfire/issues/16782)). ([b5993aef](https://github.com/firebase/flutterfire/commit/b5993aef0bf12d056a366bea9c7ce51c9781e290))
+
+## 12.3.7
+
+ - **FIX**(storage,apple): clean up event channel, stream handler and task on completion ([#16708](https://github.com/firebase/flutterfire/issues/16708)). ([14b4a552](https://github.com/firebase/flutterfire/commit/14b4a552f90ea03b297938ee30423c0e1e7d888e))
+
+## 12.3.6
+
+ - Update a dependency to the latest release.
+
+## 12.3.5
+
+ - Update a dependency to the latest release.
+
+## 12.3.4
+
+ - **FIX**(storage,android): stream handler & event channel clean up on completion ([#13508](https://github.com/firebase/flutterfire/issues/13508)). ([f010b468](https://github.com/firebase/flutterfire/commit/f010b4684e38f47ad9b38d34c3a84a4eb4518fac))
+
 ## 12.3.3
 
  - **FIX**(storage,web): fix putData when using UInt8List ([#13466](https://github.com/firebase/flutterfire/issues/13466)). ([2bfb549e](https://github.com/firebase/flutterfire/commit/2bfb549ee6706648a0bf661781195171cfb05cb5))

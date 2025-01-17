@@ -1,8 +1,18 @@
-// Copyright 2024, the Chromium project authors.  Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
+// Copyright 2024 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-part of firebase_data_connect_grpc;
+part of 'grpc_library.dart';
 
 /// Transport used for Android/iOS. Uses a GRPC transport instead of REST.
 class GRPCTransport implements DataConnectTransport {
@@ -12,25 +22,22 @@ class GRPCTransport implements DataConnectTransport {
     this.options,
     this.appId,
     this.sdkType,
-    this.auth,
     this.appCheck,
   ) {
-    bool isSecure =
-        transportOptions.isSecure == null || transportOptions.isSecure == true;
-    channel = ClientChannel(transportOptions.host,
-        port: transportOptions.port ?? 443,
-        options: ChannelOptions(
-            credentials: (isSecure
-                ? const ChannelCredentials.secure()
-                : const ChannelCredentials.insecure())));
+    bool isSecure = transportOptions.isSecure ?? true;
+    channel = ClientChannel(
+      transportOptions.host,
+      port: transportOptions.port ?? 443,
+      options: ChannelOptions(
+        credentials: (isSecure
+            ? const ChannelCredentials.secure()
+            : const ChannelCredentials.insecure()),
+      ),
+    );
     stub = ConnectorServiceClient(channel);
     name =
         'projects/${options.projectId}/locations/${options.location}/services/${options.serviceId}/connectors/${options.connector}';
   }
-
-  /// FirebaseAuth
-  @override
-  FirebaseAuth? auth;
 
   /// FirebaseAppCheck
   @override
@@ -60,13 +67,7 @@ class GRPCTransport implements DataConnectTransport {
   @override
   String appId;
 
-  Future<Map<String, String>> getMetadata() async {
-    String? authToken;
-    try {
-      authToken = await auth?.currentUser?.getIdToken();
-    } catch (e) {
-      log('Unable to get auth token: $e');
-    }
+  Future<Map<String, String>> getMetadata(String? authToken) async {
     String? appCheckToken;
     try {
       appCheckToken = await appCheck?.getToken();
@@ -75,7 +76,7 @@ class GRPCTransport implements DataConnectTransport {
     }
     Map<String, String> metadata = {
       'x-goog-request-params': 'location=${options.location}&frontend=data',
-      'x-goog-api-client': getGoogApiVal(sdkType, packageVersion)
+      'x-goog-api-client': getGoogApiVal(sdkType, packageVersion),
     };
 
     if (authToken != null) {
@@ -95,6 +96,7 @@ class GRPCTransport implements DataConnectTransport {
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
     Variables? vars,
+    String? authToken,
   ) async {
     ExecuteQueryResponse response;
 
@@ -104,18 +106,30 @@ class GRPCTransport implements DataConnectTransport {
       request.variables = getStruct(vars, serializer);
     }
     try {
-      response = await stub.executeQuery(request,
-          options: CallOptions(metadata: await getMetadata()));
+      response = await stub.executeQuery(
+        request,
+        options: CallOptions(metadata: await getMetadata(authToken)),
+      );
       return deserializer(jsonEncode(response.data.toProto3Json()));
     } on Exception catch (e) {
-      throw DataConnectError(DataConnectErrorCode.other,
-          'Failed to invoke operation: ${e.toString()}');
+      if (e.toString().contains('invalid Firebase Auth Credentials')) {
+        throw DataConnectError(
+          DataConnectErrorCode.unauthorized,
+          'Failed to invoke operation: $e',
+        );
+      }
+      throw DataConnectError(
+        DataConnectErrorCode.other,
+        'Failed to invoke operation: $e',
+      );
     }
   }
 
   /// Converts the variables into a proto Struct.
   Struct getStruct<Variables>(
-      Variables vars, Serializer<Variables> serializer) {
+    Variables vars,
+    Serializer<Variables> serializer,
+  ) {
     Struct struct = Struct.create();
     struct.mergeFromProto3Json(jsonDecode(serializer(vars)));
     return struct;
@@ -124,10 +138,12 @@ class GRPCTransport implements DataConnectTransport {
   /// Invokes GPRC mutation endpoint.
   @override
   Future<Data> invokeMutation<Data, Variables>(
-      String queryName,
-      Deserializer<Data> deserializer,
-      Serializer<Variables>? serializer,
-      Variables? vars) async {
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+    String? authToken,
+  ) async {
     ExecuteMutationResponse response;
     ExecuteMutationRequest request =
         ExecuteMutationRequest(name: name, operationName: queryName);
@@ -135,25 +151,29 @@ class GRPCTransport implements DataConnectTransport {
       request.variables = getStruct(vars, serializer);
     }
     try {
-      response = await stub.executeMutation(request,
-          options: CallOptions(metadata: await getMetadata()));
+      response = await stub.executeMutation(
+        request,
+        options: CallOptions(metadata: await getMetadata(authToken)),
+      );
       if (response.errors.isNotEmpty) {
         throw Exception(response.errors);
       }
       return deserializer(jsonEncode(response.data.toProto3Json()));
     } on Exception catch (e) {
-      throw DataConnectError(DataConnectErrorCode.other,
-          'Failed to invoke operation: ${e.toString()}');
+      throw DataConnectError(
+        DataConnectErrorCode.other,
+        'Failed to invoke operation: $e',
+      );
     }
   }
 }
 
 /// Initializes GRPC transport for Data Connect.
 DataConnectTransport getTransport(
-        TransportOptions transportOptions,
-        DataConnectOptions options,
-        String appId,
-        CallerSDKType sdkType,
-        FirebaseAuth? auth,
-        FirebaseAppCheck? appCheck) =>
-    GRPCTransport(transportOptions, options, appId, sdkType, auth, appCheck);
+  TransportOptions transportOptions,
+  DataConnectOptions options,
+  String appId,
+  CallerSDKType sdkType,
+  FirebaseAppCheck? appCheck,
+) =>
+    GRPCTransport(transportOptions, options, appId, sdkType, appCheck);

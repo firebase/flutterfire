@@ -1,3 +1,19 @@
+## 6.1.0
+
+ - **FEAT**(dynamic-links): Swift Package Manager support ([#16852](https://github.com/firebase/flutterfire/issues/16852)). ([4d91fd80](https://github.com/firebase/flutterfire/commit/4d91fd80f772d0c0e11eda36573de8f816cdcd8d))
+
+## 6.0.11
+
+ - Update a dependency to the latest release.
+
+## 6.0.10
+
+ - Update a dependency to the latest release.
+
+## 6.0.9
+
+ - Update a dependency to the latest release.
+
 ## 6.0.8
 
  - **FIX**(all,apple): use modular headers to import ([#13400](https://github.com/firebase/flutterfire/issues/13400)). ([d7d2d4b9](https://github.com/firebase/flutterfire/commit/d7d2d4b93e7c00226027fffde46699f3d5388a41))

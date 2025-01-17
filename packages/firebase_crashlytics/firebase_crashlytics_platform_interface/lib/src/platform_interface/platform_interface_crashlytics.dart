@@ -114,6 +114,7 @@ abstract class FirebaseCrashlyticsPlatform extends PlatformInterface {
     required String? reason,
     bool fatal = false,
     String? buildId,
+    List<String> loadingUnits = const [],
     List<Map<String, String>>? stackTraceElements,
   }) {
     throw UnimplementedError('recordError() is not implemented');

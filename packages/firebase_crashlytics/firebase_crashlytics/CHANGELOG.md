@@ -1,3 +1,20 @@
+## 4.3.0
+
+ - **FIX**(crashlytics,android): suppress unchecked cast warning ([#16864](https://github.com/firebase/flutterfire/issues/16864)). ([6bd51017](https://github.com/firebase/flutterfire/commit/6bd51017718353d8d07f9ca8283ce8d7c209df2e))
+ - **FEAT**(crashlytics): Swift Package Manager support ([#16811](https://github.com/firebase/flutterfire/issues/16811)). ([f7cd1abe](https://github.com/firebase/flutterfire/commit/f7cd1abe7ea5fdb75891c005b1914e0c05b32131))
+
+## 4.2.0
+
+ - **FEAT**(crashlytics,android): Support deferred component crash stack trace ([#16789](https://github.com/firebase/flutterfire/issues/16789)). ([d5778f89](https://github.com/firebase/flutterfire/commit/d5778f89700a910f4b96b834975f7e21e43080fc))
+
+## 4.1.5
+
+ - Update a dependency to the latest release.
+
+## 4.1.4
+
+ - Update a dependency to the latest release.
+
 ## 4.1.3
 
  - **FIX**(all,apple): use modular headers to import ([#13400](https://github.com/firebase/flutterfire/issues/13400)). ([d7d2d4b9](https://github.com/firebase/flutterfire/commit/d7d2d4b93e7c00226027fffde46699f3d5388a41))

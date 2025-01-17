@@ -1,6 +1,16 @@
-// Copyright 2024, the Chromium project authors.  Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
+// Copyright 2024 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -32,14 +42,18 @@ void main() {
 
     test('fromJson correctly handles timezones with positive offset', () {
       final timestamp = Timestamp.fromJson('1970-01-11T00:00:00+02:00');
-      expect(timestamp.seconds,
-          864000 - (2 * 3600)); // Adjusts by the positive timezone offset
+      expect(
+        timestamp.seconds,
+        864000 - (2 * 3600),
+      ); // Adjusts by the positive timezone offset
     });
 
     test('fromJson correctly handles timezones with negative offset', () {
       final timestamp = Timestamp.fromJson('1970-01-11T00:00:00-05:00');
-      expect(timestamp.seconds,
-          864000 + (5 * 3600)); // Adjusts by the negative timezone offset
+      expect(
+        timestamp.seconds,
+        864000 + (5 * 3600),
+      ); // Adjusts by the negative timezone offset
     });
 
     test('toJson correctly serializes to ISO8601 string with nanoseconds', () {
@@ -58,7 +72,7 @@ void main() {
     test('toDateTime correctly converts to DateTime object', () {
       final timestamp = Timestamp(0, 864000); // Example timestamp
       final dateTime = timestamp.toDateTime();
-      expect(dateTime, DateTime.utc(1970, 1, 11, 0, 0, 0, 0));
+      expect(dateTime, DateTime.utc(1970, 1, 11));
     });
   });
 }

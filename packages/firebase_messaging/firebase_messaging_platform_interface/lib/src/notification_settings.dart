@@ -8,18 +8,20 @@ import 'package:firebase_messaging_platform_interface/firebase_messaging_platfor
 /// Represents the devices notification settings.
 class NotificationSettings {
   // ignore: public_member_api_docs
-  const NotificationSettings(
-      {required this.alert,
-      required this.announcement,
-      required this.authorizationStatus,
-      required this.badge,
-      required this.carPlay,
-      required this.lockScreen,
-      required this.notificationCenter,
-      required this.showPreviews,
-      required this.timeSensitive,
-      required this.criticalAlert,
-      required this.sound});
+  const NotificationSettings({
+    required this.alert,
+    required this.announcement,
+    required this.authorizationStatus,
+    required this.badge,
+    required this.carPlay,
+    required this.lockScreen,
+    required this.notificationCenter,
+    required this.showPreviews,
+    required this.timeSensitive,
+    required this.criticalAlert,
+    required this.sound,
+    required this.providesAppNotificationSettings,
+  });
 
   /// Whether or not messages containing a notification will alert the user.
   ///
@@ -79,4 +81,9 @@ class NotificationSettings {
   ///
   /// Apple devices only.
   final AppleNotificationSetting sound;
+
+  /// Whether or not system displays an application notification settings button
+  ///
+  /// Apple devices only.
+  final AppleNotificationSetting providesAppNotificationSettings;
 }

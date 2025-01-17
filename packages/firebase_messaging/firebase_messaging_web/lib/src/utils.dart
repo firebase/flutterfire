@@ -38,6 +38,7 @@ NotificationSettings getNotificationSettings(String? status) {
     sound: AppleNotificationSetting.notSupported,
     timeSensitive: AppleNotificationSetting.notSupported,
     criticalAlert: AppleNotificationSetting.notSupported,
+    providesAppNotificationSettings: AppleNotificationSetting.notSupported,
   );
 }
 

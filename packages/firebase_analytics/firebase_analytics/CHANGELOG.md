@@ -1,3 +1,20 @@
+## 11.4.0
+
+
+ - **FEAT**(analytics): Swift Package Manager support ([#13205](https://github.com/firebase/flutterfire/issues/13205)) ([#16790](https://github.com/firebase/flutterfire/issues/16790)). ([56051cf8](https://github.com/firebase/flutterfire/commit/56051cf8570a4b7d3ebc86d4d1cae484f4b116a5))
+
+## 11.3.6
+
+ - Update a dependency to the latest release.
+
+## 11.3.5
+
+ - Update a dependency to the latest release.
+
+## 11.3.4
+
+ - Update a dependency to the latest release.
+
 ## 11.3.3
 
  - **FIX**(all,apple): use modular headers to import ([#13400](https://github.com/firebase/flutterfire/issues/13400)). ([d7d2d4b9](https://github.com/firebase/flutterfire/commit/d7d2d4b93e7c00226027fffde46699f3d5388a41))

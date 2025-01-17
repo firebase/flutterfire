@@ -1,17 +1,31 @@
-// Copyright 2024, the Chromium project authors.  Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
+// Copyright 2024 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-part of firebase_data_connect_rest;
+part of 'rest_library.dart';
 
 /// RestTransport makes requests out to the REST endpoints of the configured backend.
 class RestTransport implements DataConnectTransport {
   /// Initializes necessary protocol and port.
-  RestTransport(this.transportOptions, this.options, this.appId, this.sdkType,
-      this.auth, this.appCheck) {
+  RestTransport(
+    this.transportOptions,
+    this.options,
+    this.appId,
+    this.sdkType,
+    this.appCheck,
+  ) {
     String protocol = 'http';
-    if (transportOptions.isSecure == null ||
-        transportOptions.isSecure == true) {
+    if (transportOptions.isSecure ?? true) {
       protocol += 's';
     }
     String host = transportOptions.host;
@@ -25,11 +39,9 @@ class RestTransport implements DataConnectTransport {
   }
 
   @override
-  FirebaseAuth? auth;
-
-  @override
   FirebaseAppCheck? appCheck;
 
+  @override
   CallerSDKType sdkType;
 
   /// Current endpoint URL.
@@ -37,7 +49,8 @@ class RestTransport implements DataConnectTransport {
   late String url;
 
   @visibleForTesting
-  setHttp(http.Client client) {
+  // ignore: use_setters_to_change_properties
+  void setHttp(http.Client client) {
     _client = client;
   }
 
@@ -57,11 +70,13 @@ class RestTransport implements DataConnectTransport {
 
   /// Invokes the current operation, whether its a query or mutation.
   Future<Data> invokeOperation<Data, Variables>(
-      String queryName,
-      Deserializer<Data> deserializer,
-      Serializer<Variables>? serializer,
-      Variables? vars,
-      String endpoint) async {
+    String queryName,
+    String endpoint,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+    String? authToken,
+  ) async {
     String project = options.projectId;
     String location = options.location;
     String service = options.serviceId;
@@ -69,14 +84,8 @@ class RestTransport implements DataConnectTransport {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'x-goog-api-client': getGoogApiVal(sdkType, packageVersion)
+      'x-goog-api-client': getGoogApiVal(sdkType, packageVersion),
     };
-    String? authToken;
-    try {
-      authToken = await auth?.currentUser?.getIdToken();
-    } catch (e) {
-      log('Unable to get auth token: $e');
-    }
     String? appCheckToken;
     try {
       appCheckToken = await appCheck?.getToken();
@@ -100,25 +109,31 @@ class RestTransport implements DataConnectTransport {
       body['variables'] = json.decode(serializer(vars));
     }
     try {
-      http.Response r = await _client.post(Uri.parse('$url:$endpoint'),
-          body: json.encode(body), headers: headers);
+      http.Response r = await _client.post(
+        Uri.parse('$url:$endpoint'),
+        body: json.encode(body),
+        headers: headers,
+      );
       if (r.statusCode != 200) {
         Map<String, dynamic> bodyJson =
             jsonDecode(r.body) as Map<String, dynamic>;
         String message =
             bodyJson.containsKey('message') ? bodyJson['message']! : r.body;
         throw DataConnectError(
-            r.statusCode == 401
-                ? DataConnectErrorCode.unauthorized
-                : DataConnectErrorCode.other,
-            "Received a status code of ${r.statusCode} with a message '${message}'");
+          r.statusCode == 401
+              ? DataConnectErrorCode.unauthorized
+              : DataConnectErrorCode.other,
+          "Received a status code of ${r.statusCode} with a message '$message'",
+        );
       } else {
         Map<String, dynamic> bodyJson =
             jsonDecode(r.body) as Map<String, dynamic>;
-        if (bodyJson.containsKey("errors") &&
+        if (bodyJson.containsKey('errors') &&
             (bodyJson['errors'] as List).isNotEmpty) {
           throw DataConnectError(
-              DataConnectErrorCode.other, bodyJson['errors'].toString());
+            DataConnectErrorCode.other,
+            bodyJson['errors'].toString(),
+          );
         }
       }
 
@@ -130,8 +145,10 @@ class RestTransport implements DataConnectTransport {
       if (e is DataConnectError) {
         rethrow;
       }
-      throw DataConnectError(DataConnectErrorCode.other,
-          'Failed to invoke operation: ${e.toString()}');
+      throw DataConnectError(
+        DataConnectErrorCode.other,
+        'Failed to invoke operation: $e',
+      );
     }
   }
 
@@ -142,9 +159,16 @@ class RestTransport implements DataConnectTransport {
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
     Variables? vars,
+    String? token,
   ) async {
     return invokeOperation(
-        queryName, deserializer, serializer, vars, 'executeQuery');
+      queryName,
+      'executeQuery',
+      deserializer,
+      serializer,
+      vars,
+      token,
+    );
   }
 
   /// Invokes mutation REST endpoint.
@@ -154,18 +178,25 @@ class RestTransport implements DataConnectTransport {
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
     Variables? vars,
+    String? token,
   ) async {
     return invokeOperation(
-        queryName, deserializer, serializer, vars, 'executeMutation');
+      queryName,
+      'executeMutation',
+      deserializer,
+      serializer,
+      vars,
+      token,
+    );
   }
 }
 
 /// Initializes Rest transport for Data Connect.
 DataConnectTransport getTransport(
-        TransportOptions transportOptions,
-        DataConnectOptions options,
-        String appId,
-        CallerSDKType sdkType,
-        FirebaseAuth? auth,
-        FirebaseAppCheck? appCheck) =>
-    RestTransport(transportOptions, options, appId, sdkType, auth, appCheck);
+  TransportOptions transportOptions,
+  DataConnectOptions options,
+  String appId,
+  CallerSDKType sdkType,
+  FirebaseAppCheck? appCheck,
+) =>
+    RestTransport(transportOptions, options, appId, sdkType, appCheck);

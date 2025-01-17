@@ -6,7 +6,7 @@
 // ignore_for_file: public_member_api_docs
 
 @JS('firebase_firestore')
-library firebase_interop.firestore;
+library;
 
 import 'dart:js_interop';
 
@@ -435,6 +435,22 @@ extension GeoPointJsImplExtension on GeoPointJsImpl {
   /// Returns `true` if this [GeoPoint] is equal to the provided [other].
   external JSBoolean isEqual(JSObject other);
 }
+
+@JS('VectorValue')
+@staticInterop
+external VectorValueJsImpl get VectorValueConstructor;
+
+@JS('VectorValue')
+@staticInterop
+class VectorValueJsImpl {}
+
+extension VectorValueJsImplExtension on VectorValueJsImpl {
+  external JSArray toArray();
+}
+
+@JS()
+@staticInterop
+external VectorValueJsImpl vector(JSArray values);
 
 @JS('Bytes')
 @staticInterop

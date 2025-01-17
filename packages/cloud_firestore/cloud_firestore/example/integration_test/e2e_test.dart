@@ -22,8 +22,9 @@ import 'settings_e2e.dart';
 import 'snapshot_metadata_e2e.dart';
 import 'timestamp_e2e.dart';
 import 'transaction_e2e.dart';
-import 'write_batch_e2e.dart';
+import 'vector_value_e2e.dart';
 import 'web_snapshot_listeners.dart';
+import 'write_batch_e2e.dart';
 
 bool kUseFirestoreEmulator = true;
 
@@ -52,6 +53,7 @@ void main() {
     runDocumentReferenceTests();
     runFieldValueTests();
     runGeoPointTests();
+    runVectorValueTests();
     runQueryTests();
     runSnapshotMetadataTests();
     runTimestampTests();

@@ -1,3 +1,20 @@
+## 0.1.1
+
+
+ - **FIX**: Remove dart:io imports for analytics, auth and app check ([#16827](https://github.com/firebase/flutterfire/issues/16827)). ([8c7f57c4](https://github.com/firebase/flutterfire/commit/8c7f57c4a181b8cae3b0d2ba564682ad7d68f484))
+
+## 0.1.0+41
+
+ - Update a dependency to the latest release.
+
+## 0.1.0+40
+
+ - Update a dependency to the latest release.
+
+## 0.1.0+39
+
+ - Update a dependency to the latest release.
+
 ## 0.1.0+38
 
  - Update a dependency to the latest release.

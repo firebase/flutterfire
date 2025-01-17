@@ -1,30 +1,42 @@
-// Copyright 2024, the Chromium project authors.  Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
+// Copyright 2024 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'package:firebase_data_connect/src/common/common_library.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 // Mock classes for Firebase dependencies
-class MockFirebaseAuth extends Mock implements FirebaseAuth {}
 
 class MockFirebaseAppCheck extends Mock implements FirebaseAppCheck {}
 
 void main() {
   group('GoogApiClient', () {
     test('should return no codegen suffix if using core sdk', () {
-      final packageVersion = "1.0.0";
-      expect(getGoogApiVal(CallerSDKType.core, packageVersion),
-          'gl-dart/$packageVersion fire/$packageVersion');
+      const packageVersion = '1.0.0';
+      expect(
+        getGoogApiVal(CallerSDKType.core, packageVersion),
+        'gl-dart/$packageVersion fire/$packageVersion',
+      );
     });
     test('should return codegen suffix if using gen sdk', () {
-      final packageVersion = "1.0.0";
-      expect(getGoogApiVal(CallerSDKType.generated, packageVersion),
-          'gl-dart/$packageVersion fire/$packageVersion dart/gen');
+      const packageVersion = '1.0.0';
+      expect(
+        getGoogApiVal(CallerSDKType.generated, packageVersion),
+        'gl-dart/$packageVersion fire/$packageVersion dart/gen',
+      );
     });
   });
   group('TransportOptions', () {
@@ -61,7 +73,6 @@ void main() {
     late DataConnectTransport transport;
     late TransportOptions transportOptions;
     late DataConnectOptions dataConnectOptions;
-    late MockFirebaseAuth mockFirebaseAuth;
     late MockFirebaseAppCheck mockFirebaseAppCheck;
 
     setUp(() {
@@ -72,7 +83,6 @@ void main() {
         'connector',
         'serviceId',
       );
-      mockFirebaseAuth = MockFirebaseAuth();
       mockFirebaseAppCheck = MockFirebaseAppCheck();
 
       transport = TestDataConnectTransport(
@@ -80,7 +90,6 @@ void main() {
         dataConnectOptions,
         'testAppId',
         CallerSDKType.core,
-        auth: mockFirebaseAuth,
         appCheck: mockFirebaseAppCheck,
       );
     });
@@ -92,19 +101,29 @@ void main() {
     });
 
     test('should handle invokeQuery with proper deserializer', () async {
-      final queryName = 'testQuery';
+      const queryName = 'testQuery';
       final deserializer = (json) => json;
       final result = await transport.invokeQuery(
-          queryName, deserializer, emptySerializer, null);
+        queryName,
+        deserializer,
+        emptySerializer,
+        null,
+        null,
+      );
 
       expect(result, isNotNull);
     });
 
     test('should handle invokeMutation with proper deserializer', () async {
-      final queryName = 'testMutation';
+      const queryName = 'testMutation';
       final deserializer = (json) => json;
       final result = await transport.invokeMutation(
-          queryName, deserializer, emptySerializer, null);
+        queryName,
+        deserializer,
+        emptySerializer,
+        null,
+        null,
+      );
 
       expect(result, isNotNull);
     });
@@ -113,11 +132,13 @@ void main() {
 
 // Test class extending DataConnectTransport for testing purposes
 class TestDataConnectTransport extends DataConnectTransport {
-  TestDataConnectTransport(TransportOptions transportOptions,
-      DataConnectOptions options, String appId, CallerSDKType sdkType,
-      {FirebaseAuth? auth, FirebaseAppCheck? appCheck})
-      : super(transportOptions, options, appId, sdkType) {
-    this.auth = auth;
+  TestDataConnectTransport(
+    TransportOptions transportOptions,
+    DataConnectOptions options,
+    String appId,
+    CallerSDKType sdkType, {
+    FirebaseAppCheck? appCheck,
+  }) : super(transportOptions, options, appId, sdkType) {
     this.appCheck = appCheck;
   }
 
@@ -127,6 +148,7 @@ class TestDataConnectTransport extends DataConnectTransport {
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
     Variables? vars,
+    String? authToken,
   ) async {
     // Simulate query invocation logic here
     return deserializer('{}');
@@ -138,6 +160,7 @@ class TestDataConnectTransport extends DataConnectTransport {
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
     Variables? vars,
+    String? authToken,
   ) async {
     // Simulate mutation invocation logic here
     return deserializer('{}');

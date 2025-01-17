@@ -1,3 +1,19 @@
+## 5.3.0
+
+- Update a dependency to the latest release.
+
+## 5.2.0
+
+ - **FEAT**(functions): Swift Package Manager support ([#16770](https://github.com/firebase/flutterfire/issues/16770)). ([dc0dee22](https://github.com/firebase/flutterfire/commit/dc0dee221061b8ea7083e9dc1698aeeba8235518))
+
+## 5.1.5
+
+ - Update a dependency to the latest release.
+
+## 5.1.4
+
+ - Update a dependency to the latest release.
+
 ## 5.1.3
 
  - **FIX**(all,apple): use modular headers to import ([#13400](https://github.com/firebase/flutterfire/issues/13400)). ([d7d2d4b9](https://github.com/firebase/flutterfire/commit/d7d2d4b93e7c00226027fffde46699f3d5388a41))

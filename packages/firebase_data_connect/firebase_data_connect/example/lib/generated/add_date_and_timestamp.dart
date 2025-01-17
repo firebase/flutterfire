@@ -15,7 +15,12 @@ class AddDateAndTimestampVariablesBuilder {
       (dynamic json) => AddDateAndTimestampData.fromJson(jsonDecode(json));
   Serializer<AddDateAndTimestampVariables> varsSerializer =
       (AddDateAndTimestampVariables vars) => jsonEncode(vars.toJson());
-  MutationRef<AddDateAndTimestampData, AddDateAndTimestampVariables> build() {
+  Future<OperationResult<AddDateAndTimestampData, AddDateAndTimestampVariables>>
+      execute() {
+    return this.ref().execute();
+  }
+
+  MutationRef<AddDateAndTimestampData, AddDateAndTimestampVariables> ref() {
     AddDateAndTimestampVariables vars = AddDateAndTimestampVariables(
       date: date,
       timestamp: timestamp,
@@ -24,23 +29,6 @@ class AddDateAndTimestampVariablesBuilder {
     return _dataConnect.mutation(
         "addDateAndTimestamp", dataDeserializer, varsSerializer, vars);
   }
-}
-
-class AddDateAndTimestamp {
-  String name = "addDateAndTimestamp";
-  AddDateAndTimestamp({required this.dataConnect});
-  AddDateAndTimestampVariablesBuilder ref({
-    required DateTime date,
-    required Timestamp timestamp,
-  }) {
-    return AddDateAndTimestampVariablesBuilder(
-      dataConnect,
-      date: date,
-      timestamp: timestamp,
-    );
-  }
-
-  FirebaseDataConnect dataConnect;
 }
 
 class AddDateAndTimestampTimestampHolderInsert {

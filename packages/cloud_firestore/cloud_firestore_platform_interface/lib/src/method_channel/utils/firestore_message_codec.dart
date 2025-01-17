@@ -5,7 +5,7 @@
 
 // TODO(Lyokone): remove once we bump Flutter SDK min version to 3.3
 // ignore: unnecessary_import
-import 'dart:typed_data';
+import 'dart:core';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value.dart';
@@ -43,6 +43,7 @@ class FirestoreMessageCodec extends StandardMessageCodec {
   static const int _kFirestoreInstance = 196;
   static const int _kFirestoreQuery = 197;
   static const int _kFirestoreSettings = 198;
+  static const int _kVectorValue = 199;
 
   static const Map<FieldValueType, int> _kFieldValueCodes =
       <FieldValueType, int>{
@@ -124,6 +125,9 @@ class FirestoreMessageCodec extends StandardMessageCodec {
       buffer.putUint8(_kInfinity);
     } else if (value == double.negativeInfinity) {
       buffer.putUint8(_kNegativeInfinity);
+    } else if (value is VectorValue) {
+      buffer.putUint8(_kVectorValue);
+      writeValue(buffer, value.toArray());
     } else {
       super.writeValue(buffer, value);
     }
@@ -148,6 +152,10 @@ class FirestoreMessageCodec extends StandardMessageCodec {
             FirebaseFirestorePlatform.instanceFor(
                 app: app, databaseId: databaseId);
         return firestore.doc(path);
+      case _kVectorValue:
+        final List<Object?> vector = (readValue(buffer)!) as List<Object?>;
+        final List<double> doubles = vector.map((e) => e! as double).toList();
+        return VectorValue(doubles);
       case _kBlob:
         final int length = readSize(buffer);
         final List<int> bytes = buffer.getUint8List(length);

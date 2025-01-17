@@ -1,6 +1,16 @@
-// Copyright 2024, the Chromium project authors.  Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
+// Copyright 2024 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 import 'package:intl/intl.dart';
 
@@ -78,7 +88,7 @@ T nativeFromJson<T>(dynamic input) {
   if ((input is bool && T == bool) ||
       (input is int && T == int) ||
       (input is double && T == double) ||
-      (input is num && input == num)) {
+      (input is num && T == num)) {
     return input;
   } else if (input is String) {
     if (T == DateTime) {
@@ -97,7 +107,8 @@ T nativeFromJson<T>(dynamic input) {
 }
 
 DynamicDeserializer<List<T>> listDeserializer<T>(
-    DynamicDeserializer<T> deserializer) {
+  DynamicDeserializer<T> deserializer,
+) {
   return (dynamic data) =>
       (data as List<T>).map((e) => deserializer(e)).toList();
 }

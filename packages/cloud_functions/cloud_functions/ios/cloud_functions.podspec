@@ -24,8 +24,8 @@ Pod::Spec.new do |s|
   s.license          = { :file => '../LICENSE' }
   s.authors           = 'The Chromium Authors'
   s.source           = { :path => '.' }
-  s.source_files     = 'Classes/**/*.{h,m}'
-  s.public_header_files = 'Classes/*.h'
+  s.source_files     = 'cloud_functions/Sources/cloud_functions/**/*.{h,m}'
+  s.public_header_files = 'cloud_functions/Sources/cloud_functions/include/*.h'
   s.ios.deployment_target = '13.0'
 
   # Flutter dependencies
@@ -37,7 +37,7 @@ Pod::Spec.new do |s|
 
   s.static_framework = true
   s.pod_target_xcconfig = {
-    'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{library_version}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-fn\\\"",
+    'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\\"#{library_version}\\\" LIBRARY_NAME=\\\"flutter-fire-fn\\\"",
     'DEFINES_MODULE' => 'YES'
   }
 end
