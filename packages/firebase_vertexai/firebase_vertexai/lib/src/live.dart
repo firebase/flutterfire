@@ -14,49 +14,48 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:googleapis_auth/auth_io.dart' as auth;
-import 'package:http/http.dart' as http;
+import 'package:web_socket_channel/io.dart';
+
 import 'package:firebase_vertexai/firebase_vertexai.dart';
+import 'live_client.dart';
+import 'live_content.dart';
+import 'content.dart';
 
 // import 'package:genai/genai.dart';
 // import 'package:genai/src/common.dart';
-
-class ApiClient {
-  ApiClient(this.baseUrl, this.apiVersion, this.apiKey);
-  String baseUrl;
-  String apiVersion;
-  String apiKey;
-}
 
 const _FUNCTION_RESPONSE_REQUIRES_ID =
     'FunctionResponse request must have an `id` field from the'
     ' response of a ToolCall.FunctionalCalls in Google AI.';
 
 class AsyncSession {
-  final ApiClient _apiClient;
   final WebSocketChannel _ws;
 
-  AsyncSession({required ApiClient apiClient, required WebSocketChannel ws})
-      : _apiClient = apiClient,
-        _ws = ws;
+  AsyncSession({required WebSocketChannel ws}) : _ws = ws;
 
   Future<void> send({
-    required input,
-    bool endOfTurn = false,
+    required Content input,
+    bool turnComplete = false,
   }) async {
-    var clientMessage = _parseClientMessage(input, endOfTurn);
-    _ws.sink.add(json.encode(clientMessage));
+    // var clientMessage = _parseClientMessage(input, endOfTurn);
+    var clientMessage =
+        LiveClientContent(turns: [input], turnComplete: turnComplete);
+    print(clientMessage.toJson());
+    _ws.sink.add(jsonEncode(clientMessage.toJson()));
   }
 
   Stream<LiveServerMessage> receive() async* {
     await for (var message in _ws.stream) {
-      var response = json.decode(message);
+      var jsonString = utf8.decode(message);
+      print(jsonString);
+      var response = json.decode(jsonString);
       Map<String, dynamic> responseDict;
 
       responseDict = _LiveServerMessageFromVertex(response);
 
-      var result = LiveServerMessage.fromJson(responseDict);
+      var result = parseServerMessage(responseDict);
 
       if (result.serverContent?.turnComplete ?? false) {
         yield result;
@@ -90,10 +89,8 @@ class AsyncSession {
   ) async {
     try {
       await for (var data in dataStream) {
-        var input = {
-          'data': base64Encode(data),
-          'mimeType': mimeType,
-        };
+        var input = Content.inlineData(mimeType, Uint8List.fromList(data));
+
         await send(input: input);
         // Give a chance for the receive loop to process responses.
         await Future.delayed(Duration.zero);
@@ -141,7 +138,7 @@ class AsyncSession {
   Map<String, dynamic> _LiveServerContentFromVertex(dynamic fromObject) {
     var toObject = <String, dynamic>{};
     if (fromObject is Map && fromObject.containsKey('modelTurn')) {
-      toObject['model_turn'] = Content.fromJson(fromObject['modelTurn']);
+      toObject['model_turn'] = parseContent(fromObject['modelTurn']);
     }
     if (fromObject is Map && fromObject.containsKey('turnComplete')) {
       toObject['turn_complete'] = fromObject['turnComplete'];
@@ -181,15 +178,11 @@ class AsyncSession {
         input['data'] = decodedData;
       }
       input = [input];
-    } else if (input is Blob) {
-      input.data = base64Encode(input.data);
+    } else if (input is InlineDataPart) {
       input = [input];
     } else if (input is Map &&
         input.containsKey('name') &&
         input.containsKey('response')) {
-      if (!_apiClient.vertexai && !input.containsKey('id')) {
-        throw ArgumentError(_FUNCTION_RESPONSE_REQUIRES_ID);
-      }
       input = [input];
     }
 
@@ -201,15 +194,15 @@ class AsyncSession {
         'tool_response': {'function_responses': input}
       };
     } else if (input is List && input.any((e) => e is String)) {
-      var contents = input.map((e) => Content(text: e)).toList();
+      var contents = input.map((e) => Content.text(e)).toList();
       return {
         'client_content': {'turns': contents, 'turn_complete': endOfTurn}
       };
     } else if (input is List) {
       if (input.any((e) => e is Map && e.containsKey('data'))) {
         // Do nothing
-      } else if (input.any((e) => e is Blob)) {
-        input = input.map((e) => (e as Blob).toJson()).toList();
+      } else if (input.any((e) => e is InlineDataPart)) {
+        input = input.map((e) => (e as InlineDataPart).toJson()).toList();
       } else {
         throw ArgumentError(
             'Unsupported input type "${input.runtimeType}" or input content "$input"');
@@ -235,23 +228,14 @@ class AsyncSession {
     } else if (input is LiveClientContent) {
       return {'client_content': input.toJson()};
     } else if (input is LiveClientToolResponse) {
-      if (!_apiClient.vertexai && !(input.functionResponses[0].id != null)) {
-        throw ArgumentError(_FUNCTION_RESPONSE_REQUIRES_ID);
-      }
       return {'tool_response': input.toJson()};
     } else if (input is FunctionResponse) {
-      if (!_apiClient.vertexai && !(input.id != null)) {
-        throw ArgumentError(_FUNCTION_RESPONSE_REQUIRES_ID);
-      }
       return {
         'tool_response': {
           'function_responses': [input.toJson()]
         }
       };
     } else if (input is List && input[0] is FunctionResponse) {
-      if (!_apiClient.vertexai && !(input[0].id != null)) {
-        throw ArgumentError(_FUNCTION_RESPONSE_REQUIRES_ID);
-      }
       return {
         'tool_response': {
           'function_responses': input.map((e) => e.toJson()).toList()
@@ -269,57 +253,60 @@ class AsyncSession {
 }
 
 class AsyncLive {
-  AsyncLive(this.apiClient);
-  final ApiClient apiClient;
+  AsyncLive(this._baseUrl, this._apiKey, this._apiVersion, this._location);
+
+  final String _baseUrl;
+  final String _apiKey;
+  final String _apiVersion;
+  final String _location;
 
   Map<String, dynamic> _liveSetupToMldev(
       {String? model, Map<String, dynamic>? config}) {
     var toObject = <String, dynamic>{};
+    var returnValue = <String, dynamic>{};
+    // if (config != null) {
+    //   if (config.containsKey('generation_config')) {
+    //     toObject['generationConfig'] = config['generation_config'];
+    //   }
+    //   if (config.containsKey('response_modalities')) {
+    //     if (toObject.containsKey('generationConfig')) {
+    //       toObject['generationConfig']['responseModalities'] =
+    //           config['response_modalities'];
+    //     } else {
+    //       toObject['generationConfig'] = {
+    //         'responseModalities': config['response_modalities']
+    //       };
+    //     }
+    //   }
+    //   if (config.containsKey('speech_config')) {
+    //     if (toObject.containsKey('generationConfig')) {
+    //       toObject['generationConfig']['speechConfig'] =
+    //           config['speech_config'];
+    //     } else {
+    //       toObject['generationConfig'] = {
+    //         'speechConfig': config['speech_config']
+    //       };
+    //     }
+    //   }
+    //   if (config.containsKey('system_instruction')) {
+    //     toObject['systemInstruction'] =
+    //         parseContent(config['system_instruction']).toJson();
+    //   }
+    //   if (config.containsKey('tools')) {
+    //     toObject['tools'] = config['tools'];
+    //   }
+    // }
 
-    if (config != null) {
-      if (config.containsKey('generation_config')) {
-        toObject['generationConfig'] = config['generation_config'];
-      }
-      if (config.containsKey('response_modalities')) {
-        if (toObject.containsKey('generationConfig')) {
-          toObject['generationConfig']['responseModalities'] =
-              config['response_modalities'];
-        } else {
-          toObject['generationConfig'] = {
-            'responseModalities': config['response_modalities']
-          };
-        }
-      }
-      if (config.containsKey('speech_config')) {
-        if (toObject.containsKey('generationConfig')) {
-          toObject['generationConfig']['speechConfig'] =
-              config['speech_config'];
-        } else {
-          toObject['generationConfig'] = {
-            'speechConfig': config['speech_config']
-          };
-        }
-      }
-      if (config.containsKey('system_instruction')) {
-        toObject['systemInstruction'] =
-            Content.fromJson(config['system_instruction']).toJson();
-      }
-      if (config.containsKey('tools')) {
-        toObject['tools'] = config['tools'];
-      }
-    }
-
-    var returnValue = {
-      'setup': {'model': model}
-    };
-    returnValue['setup'].addAll(toObject);
+    returnValue['setup'] = <String, dynamic>{};
+    returnValue['setup']['model'] = 'models/$model';
+    returnValue['setup'].addAll(config);
     return returnValue;
   }
 
   Map<String, dynamic> _liveSetupToVertex(
       String model, Map<String, dynamic>? config) {
     var toObject = <String, dynamic>{};
-
+    var returnValue = <String, dynamic>{};
     if (config != null) {
       if (config.containsKey('generation_config')) {
         toObject['generationConfig'] = config['generation_config'];
@@ -355,16 +342,15 @@ class AsyncLive {
       }
       if (config.containsKey('system_instruction')) {
         toObject['systemInstruction'] =
-            Content.fromJson(config['system_instruction']).toJson();
+            parseContent(config['system_instruction']).toJson();
       }
       if (config.containsKey('tools')) {
         toObject['tools'] = config['tools'];
       }
     }
 
-    var returnValue = {
-      'setup': {'model': model}
-    };
+    returnValue['setup'] = <String, dynamic>{};
+    returnValue['setup']['model'] = model;
     returnValue['setup'].addAll(toObject);
     return returnValue;
   }
@@ -373,21 +359,34 @@ class AsyncLive {
     required String model,
     Map<String, dynamic>? config,
   }) async {
-    var baseUrl = apiClient.baseUrl;
     late String uri;
     late Map<String, String> headers;
     late String request;
 
-    var apiKey = apiClient.apiKey!;
-    var version = apiClient.apiVersion;
     uri =
-        '$baseUrl/ws/google.ai.generativelanguage.$version.GenerativeService.BidiGenerateContent?key=$apiKey';
+        'wss://$_baseUrl/ws/google.ai.generativelanguage.$_apiVersion.GenerativeService.BidiGenerateContent?key=$_apiKey';
     //headers = apiClient._httpOptions['headers'];
-    request =
-        json.encode(_liveSetupToMldev(model: model, config: config ?? {}));
+    request = jsonEncode(_liveSetupToMldev(model: model, config: config ?? {}));
 
-    var ws = WebSocketChannel.connect(Uri.parse(uri), protocols: ['http']);
+    var ws = WebSocketChannel.connect(Uri.parse(uri));
+    await ws.ready;
+
+    print(ws.closeCode);
+    print(request);
+
     ws.sink.add(request);
-    return AsyncSession(apiClient: apiClient, ws: ws);
+
+    // Listen for incoming messages
+    // ws.stream.listen(
+    //   (message) {
+    //     print('Received: $message');
+    //   },
+    //   onError: (error) {
+    //     print('WebSocket error: $error');
+    //     // Handle the error, potentially resending the message
+    //   },
+    // );
+
+    return AsyncSession(ws: ws);
   }
 }

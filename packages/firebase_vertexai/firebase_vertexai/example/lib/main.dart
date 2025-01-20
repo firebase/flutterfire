@@ -11,13 +11,19 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:flutter_markdown/flutter_markdown.dart';
+//import 'package:flutter_sound/flutter_sound.dart';
+import 'package:just_audio/just_audio.dart';
 
 // REQUIRED if you want to run on Web
 const FirebaseOptions? options = null;
@@ -82,6 +88,25 @@ final class Location {
   Location(this.city, this.state);
 }
 
+class ByteStreamAudioSource extends StreamAudioSource {
+  ByteStreamAudioSource(this.bytes) : super(tag: 'Byte Stream Audio');
+
+  final Uint8List bytes;
+
+  @override
+  Future<StreamAudioResponse> request([int? start, int? end]) async {
+    start ??= 0;
+    end ??= bytes.length;
+    return StreamAudioResponse(
+      sourceLength: bytes.length,
+      contentLength: end - start,
+      offset: start,
+      stream: Stream.fromIterable([bytes.sublist(start, end)]),
+      contentType: 'audio/pcm', // Or the appropriate content type
+    );
+  }
+}
+
 class _ChatWidgetState extends State<ChatWidget> {
   late final GenerativeModel _model;
   late final GenerativeModel _functionCallModel;
@@ -92,6 +117,10 @@ class _ChatWidgetState extends State<ChatWidget> {
   final List<({Image? image, String? text, bool fromUser})> _generatedContent =
       <({Image? image, String? text, bool fromUser})>[];
   bool _loading = false;
+  AsyncSession? _session;
+  bool _session_openning = false;
+  final _player = AudioPlayer();
+  //final _flutterSound = FlutterSoundPlayer();
 
   @override
   void initState() {
@@ -235,75 +264,104 @@ class _ChatWidgetState extends State<ChatWidget> {
                   dimension: 15,
                 ),
                 IconButton(
-                  tooltip: 'tokenCount Test',
+                  tooltip: 'Start Streaming',
                   onPressed: !_loading
                       ? () async {
-                          await _testCountToken();
+                          await _setupSession();
                         }
                       : null,
                   icon: Icon(
-                    Icons.numbers,
-                    color: _loading
+                    Icons.mic,
+                    color: _session_openning
                         ? Theme.of(context).colorScheme.secondary
                         : Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 IconButton(
-                  tooltip: 'function calling Test',
+                  tooltip: 'Send Stream Message',
                   onPressed: !_loading
                       ? () async {
-                          await _testFunctionCalling();
+                          await _startRecordingStreaming();
                         }
                       : null,
                   icon: Icon(
-                    Icons.functions,
+                    Icons.abc,
                     color: _loading
                         ? Theme.of(context).colorScheme.secondary
                         : Theme.of(context).colorScheme.primary,
                   ),
                 ),
-                IconButton(
-                  tooltip: 'image prompt',
-                  onPressed: !_loading
-                      ? () async {
-                          await _sendImagePrompt(_textController.text);
-                        }
-                      : null,
-                  icon: Icon(
-                    Icons.image,
-                    color: _loading
-                        ? Theme.of(context).colorScheme.secondary
-                        : Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                IconButton(
-                  tooltip: 'storage prompt',
-                  onPressed: !_loading
-                      ? () async {
-                          await _sendStorageUriPrompt(_textController.text);
-                        }
-                      : null,
-                  icon: Icon(
-                    Icons.folder,
-                    color: _loading
-                        ? Theme.of(context).colorScheme.secondary
-                        : Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                IconButton(
-                  tooltip: 'schema prompt',
-                  onPressed: !_loading
-                      ? () async {
-                          await _promptSchemaTest(_textController.text);
-                        }
-                      : null,
-                  icon: Icon(
-                    Icons.schema,
-                    color: _loading
-                        ? Theme.of(context).colorScheme.secondary
-                        : Theme.of(context).colorScheme.primary,
-                  ),
-                ),
+                // IconButton(
+                //   tooltip: 'tokenCount Test',
+                //   onPressed: !_loading
+                //       ? () async {
+                //           await _testCountToken();
+                //         }
+                //       : null,
+                //   icon: Icon(
+                //     Icons.numbers,
+                //     color: _loading
+                //         ? Theme.of(context).colorScheme.secondary
+                //         : Theme.of(context).colorScheme.primary,
+                //   ),
+                // ),
+                // IconButton(
+                //   tooltip: 'function calling Test',
+                //   onPressed: !_loading
+                //       ? () async {
+                //           await _testFunctionCalling();
+                //         }
+                //       : null,
+                //   icon: Icon(
+                //     Icons.functions,
+                //     color: _loading
+                //         ? Theme.of(context).colorScheme.secondary
+                //         : Theme.of(context).colorScheme.primary,
+                //   ),
+                // ),
+                // IconButton(
+                //   tooltip: 'image prompt',
+                //   onPressed: !_loading
+                //       ? () async {
+                //           await _sendImagePrompt(_textController.text);
+                //         }
+                //       : null,
+                //   icon: Icon(
+                //     Icons.image,
+                //     color: _loading
+                //         ? Theme.of(context).colorScheme.secondary
+                //         : Theme.of(context).colorScheme.primary,
+                //   ),
+                // ),
+                // IconButton(
+                //   tooltip: 'storage prompt',
+                //   onPressed: !_loading
+                //       ? () async {
+                //           await _sendStorageUriPrompt(_textController.text);
+                //         }
+                //       : null,
+                //   icon: Icon(
+                //     Icons.folder,
+                //     color: _loading
+                //         ? Theme.of(context).colorScheme.secondary
+                //         : Theme.of(context).colorScheme.primary,
+                //   ),
+                // ),
+                // IconButton(
+                //   tooltip: 'schema prompt',
+                //   onPressed: !_loading
+                //       ? () async {
+                //           await _promptSchemaTest(_textController.text);
+                //         }
+                //       : null,
+                //   icon: Icon(
+                //     Icons.schema,
+                //     color: _loading
+                //         ? Theme.of(context).colorScheme.secondary
+                //         : Theme.of(context).colorScheme.primary,
+                //   ),
+                // ),
+
                 if (!_loading)
                   IconButton(
                     onPressed: () async {
@@ -597,6 +655,257 @@ class _ChatWidgetState extends State<ChatWidget> {
         '${contentResponse.usageMetadata!.totalTokenCount}';
     _generatedContent
         .add((image: null, text: contentMetaData, fromUser: false));
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  Future<void> _setupSession() async {
+    setState(() {
+      _loading = true;
+    });
+    const location = 'us-central1';
+    const baseUrl = 'generativelanguage.googleapis.com/';
+    const apiVersion = 'v1alpha';
+    const apiKey = 'AIzaSyAxCw0N0Bv2Z3eKNe1Fn0J25ab8rypHthc';
+    const model = 'gemini-2.0-flash-exp';
+    const config = {
+      'generation_config': {
+        'response_modalities': ['AUDIO'],
+        'speech_config': {
+          'voice_config': {
+            'prebuilt_voice_config': {'voice_name': 'Aoede'}
+          }
+        }
+      },
+    };
+    var live = AsyncLive(baseUrl, apiKey, apiVersion, location);
+    if (!_session_openning) {
+      _session = await live.connect(model: model, config: config);
+      _session_openning = true;
+    } else {
+      await _session!.close();
+      _session_openning = false;
+    }
+
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  Future<void> _testAudioPlayer() async {
+    var mp3url =
+        'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3';
+    var _audioPlayer = AudioPlayer();
+    await _audioPlayer.setUrl(mp3url);
+    await _audioPlayer.play();
+  }
+
+  Future<void> writeAudioFile(
+      List<Uint8List> audioChunks, String filePath, int sampleRate) async {
+    final file = File(filePath);
+    final sink = file.openWrite();
+
+    // Write the WAV header
+    final channels = 1; // Mono
+    final bitsPerSample = 16;
+    final bytesPerSample = bitsPerSample ~/ 8;
+    final blockAlign = channels * bytesPerSample;
+    final byteRate = sampleRate * blockAlign;
+    final subChunk2Size =
+        audioChunks.fold<int>(0, (sum, chunk) => sum + chunk.lengthInBytes);
+    final chunkSize = 36 + subChunk2Size;
+
+    final header = Uint8List.fromList([
+      ...ascii.encode('RIFF'), // ChunkID
+      chunkSize, 0, 0, 0, // ChunkSize
+      ...ascii.encode('WAVE'), // Format
+      ...ascii.encode('fmt '), // Subchunk1ID
+      16, 0, 0, 0, // Subchunk1Size
+      1, 0, // AudioFormat
+      channels, 0, // NumChannels
+      sampleRate, 0, 0, 0, // SampleRate
+      byteRate, 0, 0, 0, // ByteRate
+      blockAlign, 0, // BlockAlign
+      bitsPerSample, 0, // BitsPerSample
+      ...ascii.encode('data'), // Subchunk2ID
+      subChunk2Size, 0, 0, 0, // Subchunk2Size
+    ]);
+
+    sink.add(header);
+
+    // Write the audio data
+    for (final chunk in audioChunks) {
+      sink.add(chunk);
+    }
+
+    await sink.close();
+  }
+
+  Uint8List audioChunkWithHeader(Uint8List audioChunk, int sampleRate) {
+    final channels = 1; // Mono
+    final bitsPerSample = 16;
+    final bytesPerSample = bitsPerSample ~/ 8;
+    final blockAlign = channels * bytesPerSample;
+    final byteRate = sampleRate * blockAlign;
+    final subChunk2Size = audioChunk.lengthInBytes;
+    final chunkSize = 36 + subChunk2Size;
+
+    final header = Uint8List.fromList([
+      ...ascii.encode('RIFF'), // ChunkID
+      chunkSize, 0, 0, 0, // ChunkSize
+      ...ascii.encode('WAVE'), // Format
+      ...ascii.encode('fmt '), // Subchunk1ID
+      16, 0, 0, 0, // Subchunk1Size
+      1, 0, // AudioFormat
+      channels, 0, // NumChannels
+      sampleRate, 0, 0, 0, // SampleRate
+      byteRate, 0, 0, 0, // ByteRate
+      blockAlign, 0, // BlockAlign
+      bitsPerSample, 0, // BitsPerSample
+      ...ascii.encode('data'), // Subchunk2ID
+      subChunk2Size, 0, 0, 0, // Subchunk2Size
+    ]);
+
+    final builder = BytesBuilder();
+    builder.add(header);
+    builder.add(audioChunk);
+
+    return builder.toBytes();
+  }
+
+  Future<void> playAudioStreamJustAudio(Stream<Uint8List> audioStream) async {
+    try {
+      final concatenatingAudioSource = ConcatenatingAudioSource(children: []);
+
+      final subscription = audioStream.listen((audioChunk) {
+        //var dataUri = 'data:audio/pcm;base64,${base64Decode(audioChunk)}';
+        var dataUri = 'data:audio/pcm;base64,${base64Encode(audioChunk)}';
+        print('AudioStream Add audio chunk $dataUri');
+        concatenatingAudioSource.add(ByteStreamAudioSource(audioChunk));
+        // concatenatingAudioSource.add(
+        //   AudioSource.uri(
+        //     Uri.parse(dataUri),
+        //   ),
+        // );
+      });
+      print('Player start play');
+      await _player.setAudioSource(concatenatingAudioSource);
+      await _player.setVolume(1);
+      await _player.play();
+      await subscription.cancel();
+    } catch (e) {
+      print("Error playing audio: $e");
+    }
+  }
+
+  // Future<void> playAudioStreamFlutterSound(
+  //     Stream<Uint8List> audioStream) async {
+  //   try {
+  //     // Initialize the player
+  //     await _flutterSound.openPlayer();
+  //     await _flutterSound.startPlayerFromStream(
+  //         codec: Codec.pcm16, numChannels: 1, sampleRate: 24000);
+
+  //     // Subscribe to the audio stream
+  //     final subscription = audioStream.listen((audioChunk) async {
+  //       // Feed each chunk to the player
+  //       print('flutter sound feed in audio');
+  //       _flutterSound.foodSink!.add(FoodData(audioChunk));
+  //     });
+
+  //     // Keep the subscription active until the stream is done
+  //     await subscription.asFuture();
+  //     await subscription.cancel();
+
+  //     // Close the player when finished
+  //     await _flutterSound.closePlayer();
+  //   } catch (e) {
+  //     print("Error playing audio: $e");
+  //   }
+  // }
+
+  Future<void> _startRecordingStreaming() async {
+    setState(() {
+      _loading = true;
+    });
+    if (_session != null) {
+      await _session!
+          .send(input: Content.text('tell a short story'), turnComplete: true);
+
+      //final audioChunkController = StreamController<Uint8List>.broadcast();
+      final audioChunks = <Uint8List>[];
+
+      // Start playing the audio stream
+      //await playAudioStreamFlutterSound(audioChunkController.stream);
+
+      // await _flutterSound.openPlayer();
+      // await _flutterSound.startPlayerFromStream(
+      //     codec: Codec.pcm16, numChannels: 1, sampleRate: 24000);
+
+      final responseStream = _session!.receive();
+      await for (var response in responseStream) {
+        if (response.serverContent?.modelTurn != null) {
+          final partList = response.serverContent?.modelTurn?.parts;
+          if (partList != null) {
+            for (var part in partList) {
+              if (part is TextPart) {
+                if (!_loading) {
+                  setState(() {
+                    _loading = true;
+                  });
+                }
+                _generatedContent
+                    .add((image: null, text: part.text, fromUser: false));
+                setState(() {
+                  _loading = false;
+                });
+              } else if (part is InlineDataPart) {
+                print('receive data part: mimeType: ${part.mimeType}');
+                if (part.mimeType.startsWith('audio')) {
+                  print('Audio chunk length: ${part.bytes.length}');
+                  // var processAudio = audioChunkWithHeader(part.bytes, 24000);
+                  // // print(part.bytes);
+                  // var dataUri =
+                  //     'data:audio/pcm;base64,${base64Encode(processAudio)}';
+                  // await _player.setAudioSource(
+                  //   ByteStreamAudioSource(
+                  //     processAudio,
+                  //   ),
+                  // );
+                  // await _player.setAudioSource(
+                  //   AudioSource.uri(
+                  //     Uri.parse(dataUri),
+                  //   ),
+                  // );
+                  //await _player.play();
+                  //audioChunkController.sink.add(part.bytes);
+                  //await _flutterSound.feedFromStream(part.bytes);
+                  audioChunks.add(part.bytes);
+                }
+
+                print('played received data part');
+              } else {
+                print('receive part with type ${part.runtimeType}');
+              }
+            }
+          }
+        }
+
+        // Check if the turn is complete
+        if (response.serverContent?.turnComplete ?? false) {
+          print('Turn complete!');
+          //await _flutterSound.closePlayer();
+          String filePath = '/Users/cynthiajiang/Downloads/a_sample.pcm';
+          await writeAudioFile(audioChunks, filePath, 24000);
+          String wavFilePath = '/Users/cynthiajiang/Downloads/a_sample.wav';
+          await _player.setAudioSource(AudioSource.file(wavFilePath));
+          await _player.play();
+          break; // Exit the loop if the turn is complete
+        }
+      }
+    }
+
     setState(() {
       _loading = false;
     });

@@ -57,3 +57,4 @@ export 'src/function_calling.dart'
         ToolConfig;
 export 'src/model.dart' show GenerativeModel;
 export 'src/schema.dart' show Schema, SchemaType;
+export 'src/live.dart' show AsyncLive, AsyncSession;
