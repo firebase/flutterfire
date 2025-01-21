@@ -1,3 +1,7 @@
+## 0.10.1+1
+
+ - Update a dependency to the latest release.
+
 ## 0.10.1
 
  - **FEAT**(perf): Swift Package Manager support ([#16849](https://github.com/firebase/flutterfire/issues/16849)). ([9231dd0c](https://github.com/firebase/flutterfire/commit/9231dd0c99d3745ce4174b8c91acbbe93bfcdeb1))

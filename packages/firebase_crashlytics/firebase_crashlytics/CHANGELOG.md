@@ -1,3 +1,7 @@
+## 4.3.1
+
+ - Update a dependency to the latest release.
+
 ## 4.3.0
 
  - **FIX**(crashlytics,android): suppress unchecked cast warning ([#16864](https://github.com/firebase/flutterfire/issues/16864)). ([6bd51017](https://github.com/firebase/flutterfire/commit/6bd51017718353d8d07f9ca8283ce8d7c209df2e))
