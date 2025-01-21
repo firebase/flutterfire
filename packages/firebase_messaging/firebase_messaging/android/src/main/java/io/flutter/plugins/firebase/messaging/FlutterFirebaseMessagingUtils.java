@@ -35,6 +35,9 @@ class FlutterFirebaseMessagingUtils {
   private static final String KEY_TO = "to";
   private static final String KEY_TTL = "ttl";
 
+  // We are using a deprecated method 'getTo' which is not being replaced by any other method.
+  // Keeping this method for backward compatibility.
+  @SuppressWarnings("deprecation")
   static Map<String, Object> remoteMessageToMap(RemoteMessage remoteMessage) {
     Map<String, Object> messageMap = new HashMap<>();
     Map<String, Object> dataMap = new HashMap<>();
@@ -59,7 +62,7 @@ class FlutterFirebaseMessagingUtils {
       messageMap.put(KEY_MESSAGE_TYPE, remoteMessage.getMessageType());
     }
 
-    if (remoteMessage.getData().size() > 0) {
+    if (!remoteMessage.getData().isEmpty()) {
       Set<Map.Entry<String, String>> entries = remoteMessage.getData().entrySet();
       for (Map.Entry<String, String> entry : entries) {
         dataMap.put(entry.getKey(), entry.getValue());
