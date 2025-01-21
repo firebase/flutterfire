@@ -26,10 +26,11 @@ import 'api.dart';
 import 'client.dart';
 import 'content.dart';
 import 'function_calling.dart';
+import 'request_options.dart';
 import 'vertex_version.dart';
 
 const _baseUrl = 'firebasevertexai.googleapis.com';
-const _apiVersion = 'v1beta';
+const _defaultApiVersion = 'v1beta';
 
 /// [Task] enum class for [GenerativeModel] to make request.
 enum Task {
@@ -77,9 +78,10 @@ final class GenerativeModel {
     List<Tool>? tools,
     ToolConfig? toolConfig,
     Content? systemInstruction,
+    RequestOptions? requestOptions,
     http.Client? httpClient,
   })  : _model = _normalizeModelName(model),
-        _baseUri = _vertexUri(app, location),
+        _baseUri = _vertexUri(app, location, requestOptions),
         _safetySettings = safetySettings ?? [],
         _generationConfig = generationConfig,
         _tools = tools,
@@ -101,9 +103,10 @@ final class GenerativeModel {
     List<Tool>? tools,
     ToolConfig? toolConfig,
     Content? systemInstruction,
+    RequestOptions? requestOptions,
     ApiClient? apiClient,
   })  : _model = _normalizeModelName(model),
-        _baseUri = _vertexUri(app, location),
+        _baseUri = _vertexUri(app, location, requestOptions),
         _safetySettings = safetySettings ?? [],
         _generationConfig = generationConfig,
         _tools = tools,
@@ -135,11 +138,14 @@ final class GenerativeModel {
     return (prefix: parts.first, name: parts.skip(1).join('/'));
   }
 
-  static Uri _vertexUri(FirebaseApp app, String location) {
-    var projectId = app.options.projectId;
+  static Uri _vertexUri(
+      FirebaseApp app, String location, RequestOptions? requestOptions) {
+    final projectId = app.options.projectId;
+    final apiVersion =
+        requestOptions?.apiVersion?.versionIdentifier ?? _defaultApiVersion;
     return Uri.https(
       _baseUrl,
-      '/$_apiVersion/projects/$projectId/locations/$location/publishers/google',
+      '/$apiVersion/projects/$projectId/locations/$location/publishers/google',
     );
   }
 
@@ -295,6 +301,7 @@ GenerativeModel createGenerativeModel({
   List<Tool>? tools,
   ToolConfig? toolConfig,
   Content? systemInstruction,
+  RequestOptions? requestOptions,
 }) =>
     GenerativeModel._(
       model: model,

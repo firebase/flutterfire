@@ -22,6 +22,7 @@ import 'api.dart';
 import 'content.dart';
 import 'function_calling.dart';
 import 'model.dart';
+import 'request_options.dart';
 
 const _defaultLocation = 'us-central1';
 
@@ -96,6 +97,7 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
     List<Tool>? tools,
     ToolConfig? toolConfig,
     Content? systemInstruction,
+    RequestOptions? requestOptions,
   }) {
     return createGenerativeModel(
       model: model,

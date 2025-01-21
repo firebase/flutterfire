@@ -56,4 +56,5 @@ export 'src/function_calling.dart'
         Tool,
         ToolConfig;
 export 'src/model.dart' show GenerativeModel;
+export 'src/request_options.dart' show ApiVersion, RequestOptions;
 export 'src/schema.dart' show Schema, SchemaType;

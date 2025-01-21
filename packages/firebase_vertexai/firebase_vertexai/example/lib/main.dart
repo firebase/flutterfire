@@ -102,12 +102,14 @@ class _ChatWidgetState extends State<ChatWidget> {
           FirebaseVertexAI.instanceFor(auth: FirebaseAuth.instance);
       _model = vertex_instance.generativeModel(
         model: 'gemini-1.5-flash',
+        requestOptions: RequestOptions(apiVersion: ApiVersion.v1beta),
       );
       _functionCallModel = vertex_instance.generativeModel(
         model: 'gemini-1.5-flash',
         tools: [
           Tool.functionDeclarations([fetchWeatherTool]),
         ],
+        requestOptions: RequestOptions(apiVersion: ApiVersion.v1beta),
       );
       _chat = _model.startChat();
     });
