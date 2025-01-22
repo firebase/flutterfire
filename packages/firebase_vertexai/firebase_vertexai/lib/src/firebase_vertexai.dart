@@ -110,6 +110,7 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
       tools: tools,
       toolConfig: toolConfig,
       systemInstruction: systemInstruction,
+      requestOptions: requestOptions,
     );
   }
 }

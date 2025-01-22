@@ -313,6 +313,7 @@ GenerativeModel createGenerativeModel({
       tools: tools,
       toolConfig: toolConfig,
       systemInstruction: systemInstruction,
+      requestOptions: requestOptions,
     );
 
 /// Creates a model with an overridden [ApiClient] for testing.
@@ -330,6 +331,7 @@ GenerativeModel createModelWithClient({
   List<SafetySetting>? safetySettings,
   List<Tool>? tools,
   ToolConfig? toolConfig,
+  RequestOptions? requestOptions,
 }) =>
     GenerativeModel._constructTestModel(
         model: model,
@@ -342,4 +344,5 @@ GenerativeModel createModelWithClient({
         systemInstruction: systemInstruction,
         tools: tools,
         toolConfig: toolConfig,
+        requestOptions: requestOptions,
         apiClient: client);
