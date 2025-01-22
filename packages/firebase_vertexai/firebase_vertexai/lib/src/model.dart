@@ -30,7 +30,7 @@ import 'request_options.dart';
 import 'vertex_version.dart';
 
 const _baseUrl = 'firebasevertexai.googleapis.com';
-const _defaultApiVersion = 'v1beta';
+const _defaultApiVersion = ApiVersion.v1beta;
 
 /// [Task] enum class for [GenerativeModel] to make request.
 enum Task {
@@ -141,11 +141,10 @@ final class GenerativeModel {
   static Uri _vertexUri(
       FirebaseApp app, String location, RequestOptions? requestOptions) {
     final projectId = app.options.projectId;
-    final apiVersion =
-        requestOptions?.apiVersion?.versionIdentifier ?? _defaultApiVersion;
+    final apiVersion = requestOptions?.apiVersion ?? _defaultApiVersion;
     return Uri.https(
       _baseUrl,
-      '/$apiVersion/projects/$projectId/locations/$location/publishers/google',
+      '/${apiVersion.versionIdentifier}/projects/$projectId/locations/$location/publishers/google',
     );
   }
 
