@@ -123,13 +123,16 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
       ];
       _generatedContent.add(
         MessageData(
-            image: Image.asset('assets/images/cat.jpg'),
-            text: message,
-            fromUser: true),
+          image: Image.asset('assets/images/cat.jpg'),
+          text: message,
+          fromUser: true,
+        ),
       );
       _generatedContent.add(
         MessageData(
-            image: Image.asset('assets/images/scones.jpg'), fromUser: true),
+          image: Image.asset('assets/images/scones.jpg'),
+          fromUser: true,
+        ),
       );
 
       var response = await widget.model.generateContent(content);

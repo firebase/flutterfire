@@ -17,8 +17,11 @@ import 'package:firebase_vertexai/firebase_vertexai.dart';
 import '../widgets/message_widget.dart';
 
 class StorageUriPromptPage extends StatefulWidget {
-  const StorageUriPromptPage(
-      {super.key, required this.title, required this.model});
+  const StorageUriPromptPage({
+    super.key,
+    required this.title,
+    required this.model,
+  });
 
   final String title;
   final GenerativeModel model;
