@@ -904,13 +904,8 @@ void main() {
 
             Exception e = await getError();
             expect(e, isA<FirebaseAuthException>());
-            // Exception code is returning internal-error but the underlying error is "identitytoolkit.getRecaptchaConfig is not implemented in the Auth Emulator."
-            // This issue on firebase-ios-sdk: https://github.com/firebase/firebase-ios-sdk/issues/14242. Once this is resolved, we ought to reinstate the below.
-            // It works fine on live project but returns internal-error on emulator.
-            if (defaultTargetPlatform != TargetPlatform.iOS) {
-              FirebaseAuthException exception = e as FirebaseAuthException;
-              expect(exception.code, equals('invalid-phone-number'));
-            }
+            FirebaseAuthException exception = e as FirebaseAuthException;
+            expect(exception.code, equals('invalid-phone-number'));
           });
 
           test(
