@@ -244,6 +244,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
         readAlignment(buffer, 8);
         return new GeoPoint(buffer.getDouble(), buffer.getDouble());
       case DATA_TYPE_VECTOR_VALUE:
+        @SuppressWarnings("unchecked")
         final ArrayList<Double> arrayList = (ArrayList<Double>) readValue(buffer);
         double[] doubleArray = new double[arrayList.size()];
         for (int i = 0; i < arrayList.size(); i++) {

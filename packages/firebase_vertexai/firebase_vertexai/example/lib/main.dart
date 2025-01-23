@@ -19,21 +19,33 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-import 'package:flutter_markdown/flutter_markdown.dart';
-//import 'package:flutter_sound/flutter_sound.dart';
-import 'package:just_audio/just_audio.dart';
+import 'pages/chat_page.dart';
+import 'pages/function_calling_page.dart';
+import 'pages/image_prompt_page.dart';
+import 'pages/token_count_page.dart';
+import 'pages/schema_page.dart';
+import 'pages/storage_uri_page.dart';
 
 // REQUIRED if you want to run on Web
 const FirebaseOptions? options = null;
 
-void main() {
-  runApp(const GenerativeAISample());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: options);
+  await FirebaseAuth.instance.signInAnonymously();
+
+  var vertex_instance =
+      FirebaseVertexAI.instanceFor(auth: FirebaseAuth.instance);
+  final model = vertex_instance.generativeModel(model: 'gemini-1.5-flash');
+
+  runApp(GenerativeAISample(model: model));
 }
 
 class GenerativeAISample extends StatelessWidget {
-  const GenerativeAISample({super.key});
+  final GenerativeModel model;
+
+  const GenerativeAISample({super.key, required this.model});
 
   @override
   Widget build(BuildContext context) {
@@ -46,348 +58,102 @@ class GenerativeAISample extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const ChatScreen(title: 'Flutter + Vertex AI'),
+      home: HomeScreen(model: model),
     );
   }
 }
 
-class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key, required this.title});
-
-  final String title;
+class HomeScreen extends StatefulWidget {
+  final GenerativeModel model;
+  const HomeScreen({super.key, required this.model});
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
+
+  List<Widget> get _pages => <Widget>[
+        // Build _pages dynamically
+        ChatPage(title: 'Chat', model: widget.model),
+        TokenCountPage(title: 'Token Count', model: widget.model),
+        const FunctionCallingPage(
+          title: 'Function Calling',
+        ), // function calling will initial its own model
+        ImagePromptPage(title: 'Image Prompt', model: widget.model),
+        StorageUriPromptPage(title: 'Storage URI Prompt', model: widget.model),
+        SchemaPromptPage(title: 'Schema Prompt', model: widget.model),
+      ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: const Text('Flutter + Vertex AI'),
       ),
-      body: const ChatWidget(),
-    );
-  }
-}
-
-class ChatWidget extends StatefulWidget {
-  const ChatWidget({
-    super.key,
-  });
-
-  @override
-  State<ChatWidget> createState() => _ChatWidgetState();
-}
-
-final class Location {
-  final String city;
-  final String state;
-
-  Location(this.city, this.state);
-}
-
-class ByteStreamAudioSource extends StreamAudioSource {
-  ByteStreamAudioSource(this.bytes) : super(tag: 'Byte Stream Audio');
-
-  final Uint8List bytes;
-
-  @override
-  Future<StreamAudioResponse> request([int? start, int? end]) async {
-    start ??= 0;
-    end ??= bytes.length;
-    return StreamAudioResponse(
-      sourceLength: bytes.length,
-      contentLength: end - start,
-      offset: start,
-      stream: Stream.fromIterable([bytes.sublist(start, end)]),
-      contentType: 'audio/pcm', // Or the appropriate content type
-    );
-  }
-}
-
-class _ChatWidgetState extends State<ChatWidget> {
-  late final GenerativeModel _model;
-  late final GenerativeModel _functionCallModel;
-  ChatSession? _chat;
-  final ScrollController _scrollController = ScrollController();
-  final TextEditingController _textController = TextEditingController();
-  final FocusNode _textFieldFocus = FocusNode();
-  final List<({Image? image, String? text, bool fromUser})> _generatedContent =
-      <({Image? image, String? text, bool fromUser})>[];
-  bool _loading = false;
-  AsyncSession? _session;
-  bool _session_openning = false;
-  final _player = AudioPlayer();
-  //final _flutterSound = FlutterSoundPlayer();
-
-  @override
-  void initState() {
-    super.initState();
-
-    initFirebase().then((value) {
-      var vertex_instance =
-          FirebaseVertexAI.instanceFor(auth: FirebaseAuth.instance);
-      _model = vertex_instance.generativeModel(
-        model: 'gemini-1.5-flash',
-      );
-      _functionCallModel = vertex_instance.generativeModel(
-        model: 'gemini-1.5-flash',
-        tools: [
-          Tool.functionDeclarations([fetchWeatherTool]),
-        ],
-      );
-      _chat = _model.startChat();
-    });
-  }
-
-  // This is a hypothetical API to return a fake weather data collection for
-  // certain location
-  Future<Map<String, Object?>> fetchWeather(
-    Location location,
-    String date,
-  ) async {
-    // TODO(developer): Call a real weather API.
-    // Mock response from the API. In developer live code this would call the
-    // external API and return what that API returns.
-    final apiResponse = {
-      'temperature': 38,
-      'chancePrecipitation': '56%',
-      'cloudConditions': 'partly-cloudy',
-    };
-    return apiResponse;
-  }
-
-  /// Actual function to demonstrate the function calling feature.
-  final fetchWeatherTool = FunctionDeclaration(
-    'fetchWeather',
-    'Get the weather conditions for a specific city on a specific date.',
-    parameters: {
-      'location': Schema.object(
-        description: 'The name of the city and its state for which to get '
-            'the weather. Only cities in the USA are supported.',
-        properties: {
-          'city': Schema.string(
-            description: 'The city of the location.',
+      body: Center(
+        child: _pages.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.chat,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            label: 'Chat',
+            tooltip: 'Chat',
           ),
-          'state': Schema.string(
-            description: 'The state of the location.',
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.numbers,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            label: 'Token Count',
+            tooltip: 'Token Count',
           ),
-        },
-      ),
-      'date': Schema.string(
-        description: 'The date for which to get the weather. '
-            'Date must be in the format: YYYY-MM-DD.',
-      ),
-    },
-  );
-
-  Future<void> initFirebase() async {
-    // ignore: avoid_redundant_argument_values
-    await Firebase.initializeApp(options: options);
-    //await FirebaseAuth.instance.signInAnonymously();
-  }
-
-  void _scrollDown() {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(
-          milliseconds: 750,
-        ),
-        curve: Curves.easeOutCirc,
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final textFieldDecoration = InputDecoration(
-      contentPadding: const EdgeInsets.all(15),
-      hintText: 'Enter a prompt...',
-      border: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(14),
-        ),
-        borderSide: BorderSide(
-          color: Theme.of(context).colorScheme.secondary,
-        ),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(14),
-        ),
-        borderSide: BorderSide(
-          color: Theme.of(context).colorScheme.secondary,
-        ),
-      ),
-    );
-
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              itemBuilder: (context, idx) {
-                var content = _generatedContent[idx];
-                return MessageWidget(
-                  text: content.text,
-                  image: content.image,
-                  isFromUser: content.fromUser,
-                );
-              },
-              itemCount: _generatedContent.length,
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.functions,
+              color: Theme.of(context).colorScheme.primary,
             ),
+            label: 'Function Calling',
+            tooltip: 'Function Calling',
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 25,
-              horizontal: 15,
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.image,
+              color: Theme.of(context).colorScheme.primary,
             ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    autofocus: true,
-                    focusNode: _textFieldFocus,
-                    decoration: textFieldDecoration,
-                    controller: _textController,
-                    onSubmitted: _sendChatMessage,
-                  ),
-                ),
-                const SizedBox.square(
-                  dimension: 15,
-                ),
-                IconButton(
-                  tooltip: 'Start Streaming',
-                  onPressed: !_loading
-                      ? () async {
-                          await _setupSession();
-                        }
-                      : null,
-                  icon: Icon(
-                    Icons.mic,
-                    color: _session_openning
-                        ? Theme.of(context).colorScheme.secondary
-                        : Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                IconButton(
-                  tooltip: 'Send Stream Message',
-                  onPressed: !_loading
-                      ? () async {
-                          await _startRecordingStreaming();
-                        }
-                      : null,
-                  icon: Icon(
-                    Icons.abc,
-                    color: _loading
-                        ? Theme.of(context).colorScheme.secondary
-                        : Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                // IconButton(
-                //   tooltip: 'tokenCount Test',
-                //   onPressed: !_loading
-                //       ? () async {
-                //           await _testCountToken();
-                //         }
-                //       : null,
-                //   icon: Icon(
-                //     Icons.numbers,
-                //     color: _loading
-                //         ? Theme.of(context).colorScheme.secondary
-                //         : Theme.of(context).colorScheme.primary,
-                //   ),
-                // ),
-                // IconButton(
-                //   tooltip: 'function calling Test',
-                //   onPressed: !_loading
-                //       ? () async {
-                //           await _testFunctionCalling();
-                //         }
-                //       : null,
-                //   icon: Icon(
-                //     Icons.functions,
-                //     color: _loading
-                //         ? Theme.of(context).colorScheme.secondary
-                //         : Theme.of(context).colorScheme.primary,
-                //   ),
-                // ),
-                // IconButton(
-                //   tooltip: 'image prompt',
-                //   onPressed: !_loading
-                //       ? () async {
-                //           await _sendImagePrompt(_textController.text);
-                //         }
-                //       : null,
-                //   icon: Icon(
-                //     Icons.image,
-                //     color: _loading
-                //         ? Theme.of(context).colorScheme.secondary
-                //         : Theme.of(context).colorScheme.primary,
-                //   ),
-                // ),
-                // IconButton(
-                //   tooltip: 'storage prompt',
-                //   onPressed: !_loading
-                //       ? () async {
-                //           await _sendStorageUriPrompt(_textController.text);
-                //         }
-                //       : null,
-                //   icon: Icon(
-                //     Icons.folder,
-                //     color: _loading
-                //         ? Theme.of(context).colorScheme.secondary
-                //         : Theme.of(context).colorScheme.primary,
-                //   ),
-                // ),
-                // IconButton(
-                //   tooltip: 'schema prompt',
-                //   onPressed: !_loading
-                //       ? () async {
-                //           await _promptSchemaTest(_textController.text);
-                //         }
-                //       : null,
-                //   icon: Icon(
-                //     Icons.schema,
-                //     color: _loading
-                //         ? Theme.of(context).colorScheme.secondary
-                //         : Theme.of(context).colorScheme.primary,
-                //   ),
-                // ),
-
-                if (!_loading)
-                  IconButton(
-                    onPressed: () async {
-                      await _sendChatMessage(_textController.text);
-                    },
-                    icon: Icon(
-                      Icons.send,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  )
-                else
-                  const CircularProgressIndicator(),
-              ],
-            ),
+            label: 'Image Prompt',
+            tooltip: 'Image Prompt',
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 15,
-              right: 15,
-              bottom: 25,
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.folder,
+              color: Theme.of(context).colorScheme.primary,
             ),
-            child: Text(
-              'Total message count: ${_chat?.history.length ?? 0}',
+            label: 'Storage URI Prompt',
+            tooltip: 'Storage URI Prompt',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.schema,
+              color: Theme.of(context).colorScheme.primary,
             ),
+            label: 'Schema Prompt',
+            tooltip: 'Schema Prompt',
           ),
         ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
       ),
     );
   }
@@ -655,257 +421,6 @@ class _ChatWidgetState extends State<ChatWidget> {
         '${contentResponse.usageMetadata!.totalTokenCount}';
     _generatedContent
         .add((image: null, text: contentMetaData, fromUser: false));
-    setState(() {
-      _loading = false;
-    });
-  }
-
-  Future<void> _setupSession() async {
-    setState(() {
-      _loading = true;
-    });
-    const location = 'us-central1';
-    const baseUrl = 'generativelanguage.googleapis.com/';
-    const apiVersion = 'v1alpha';
-    const apiKey = 'AIzaSyAxCw0N0Bv2Z3eKNe1Fn0J25ab8rypHthc';
-    const model = 'gemini-2.0-flash-exp';
-    const config = {
-      'generation_config': {
-        'response_modalities': ['AUDIO'],
-        'speech_config': {
-          'voice_config': {
-            'prebuilt_voice_config': {'voice_name': 'Aoede'}
-          }
-        }
-      },
-    };
-    var live = AsyncLive(baseUrl, apiKey, apiVersion, location);
-    if (!_session_openning) {
-      _session = await live.connect(model: model, config: config);
-      _session_openning = true;
-    } else {
-      await _session!.close();
-      _session_openning = false;
-    }
-
-    setState(() {
-      _loading = false;
-    });
-  }
-
-  Future<void> _testAudioPlayer() async {
-    var mp3url =
-        'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3';
-    var _audioPlayer = AudioPlayer();
-    await _audioPlayer.setUrl(mp3url);
-    await _audioPlayer.play();
-  }
-
-  Future<void> writeAudioFile(
-      List<Uint8List> audioChunks, String filePath, int sampleRate) async {
-    final file = File(filePath);
-    final sink = file.openWrite();
-
-    // Write the WAV header
-    final channels = 1; // Mono
-    final bitsPerSample = 16;
-    final bytesPerSample = bitsPerSample ~/ 8;
-    final blockAlign = channels * bytesPerSample;
-    final byteRate = sampleRate * blockAlign;
-    final subChunk2Size =
-        audioChunks.fold<int>(0, (sum, chunk) => sum + chunk.lengthInBytes);
-    final chunkSize = 36 + subChunk2Size;
-
-    final header = Uint8List.fromList([
-      ...ascii.encode('RIFF'), // ChunkID
-      chunkSize, 0, 0, 0, // ChunkSize
-      ...ascii.encode('WAVE'), // Format
-      ...ascii.encode('fmt '), // Subchunk1ID
-      16, 0, 0, 0, // Subchunk1Size
-      1, 0, // AudioFormat
-      channels, 0, // NumChannels
-      sampleRate, 0, 0, 0, // SampleRate
-      byteRate, 0, 0, 0, // ByteRate
-      blockAlign, 0, // BlockAlign
-      bitsPerSample, 0, // BitsPerSample
-      ...ascii.encode('data'), // Subchunk2ID
-      subChunk2Size, 0, 0, 0, // Subchunk2Size
-    ]);
-
-    sink.add(header);
-
-    // Write the audio data
-    for (final chunk in audioChunks) {
-      sink.add(chunk);
-    }
-
-    await sink.close();
-  }
-
-  Uint8List audioChunkWithHeader(Uint8List audioChunk, int sampleRate) {
-    final channels = 1; // Mono
-    final bitsPerSample = 16;
-    final bytesPerSample = bitsPerSample ~/ 8;
-    final blockAlign = channels * bytesPerSample;
-    final byteRate = sampleRate * blockAlign;
-    final subChunk2Size = audioChunk.lengthInBytes;
-    final chunkSize = 36 + subChunk2Size;
-
-    final header = Uint8List.fromList([
-      ...ascii.encode('RIFF'), // ChunkID
-      chunkSize, 0, 0, 0, // ChunkSize
-      ...ascii.encode('WAVE'), // Format
-      ...ascii.encode('fmt '), // Subchunk1ID
-      16, 0, 0, 0, // Subchunk1Size
-      1, 0, // AudioFormat
-      channels, 0, // NumChannels
-      sampleRate, 0, 0, 0, // SampleRate
-      byteRate, 0, 0, 0, // ByteRate
-      blockAlign, 0, // BlockAlign
-      bitsPerSample, 0, // BitsPerSample
-      ...ascii.encode('data'), // Subchunk2ID
-      subChunk2Size, 0, 0, 0, // Subchunk2Size
-    ]);
-
-    final builder = BytesBuilder();
-    builder.add(header);
-    builder.add(audioChunk);
-
-    return builder.toBytes();
-  }
-
-  Future<void> playAudioStreamJustAudio(Stream<Uint8List> audioStream) async {
-    try {
-      final concatenatingAudioSource = ConcatenatingAudioSource(children: []);
-
-      final subscription = audioStream.listen((audioChunk) {
-        //var dataUri = 'data:audio/pcm;base64,${base64Decode(audioChunk)}';
-        var dataUri = 'data:audio/pcm;base64,${base64Encode(audioChunk)}';
-        print('AudioStream Add audio chunk $dataUri');
-        concatenatingAudioSource.add(ByteStreamAudioSource(audioChunk));
-        // concatenatingAudioSource.add(
-        //   AudioSource.uri(
-        //     Uri.parse(dataUri),
-        //   ),
-        // );
-      });
-      print('Player start play');
-      await _player.setAudioSource(concatenatingAudioSource);
-      await _player.setVolume(1);
-      await _player.play();
-      await subscription.cancel();
-    } catch (e) {
-      print("Error playing audio: $e");
-    }
-  }
-
-  // Future<void> playAudioStreamFlutterSound(
-  //     Stream<Uint8List> audioStream) async {
-  //   try {
-  //     // Initialize the player
-  //     await _flutterSound.openPlayer();
-  //     await _flutterSound.startPlayerFromStream(
-  //         codec: Codec.pcm16, numChannels: 1, sampleRate: 24000);
-
-  //     // Subscribe to the audio stream
-  //     final subscription = audioStream.listen((audioChunk) async {
-  //       // Feed each chunk to the player
-  //       print('flutter sound feed in audio');
-  //       _flutterSound.foodSink!.add(FoodData(audioChunk));
-  //     });
-
-  //     // Keep the subscription active until the stream is done
-  //     await subscription.asFuture();
-  //     await subscription.cancel();
-
-  //     // Close the player when finished
-  //     await _flutterSound.closePlayer();
-  //   } catch (e) {
-  //     print("Error playing audio: $e");
-  //   }
-  // }
-
-  Future<void> _startRecordingStreaming() async {
-    setState(() {
-      _loading = true;
-    });
-    if (_session != null) {
-      await _session!
-          .send(input: Content.text('tell a short story'), turnComplete: true);
-
-      //final audioChunkController = StreamController<Uint8List>.broadcast();
-      final audioChunks = <Uint8List>[];
-
-      // Start playing the audio stream
-      //await playAudioStreamFlutterSound(audioChunkController.stream);
-
-      // await _flutterSound.openPlayer();
-      // await _flutterSound.startPlayerFromStream(
-      //     codec: Codec.pcm16, numChannels: 1, sampleRate: 24000);
-
-      final responseStream = _session!.receive();
-      await for (var response in responseStream) {
-        if (response.serverContent?.modelTurn != null) {
-          final partList = response.serverContent?.modelTurn?.parts;
-          if (partList != null) {
-            for (var part in partList) {
-              if (part is TextPart) {
-                if (!_loading) {
-                  setState(() {
-                    _loading = true;
-                  });
-                }
-                _generatedContent
-                    .add((image: null, text: part.text, fromUser: false));
-                setState(() {
-                  _loading = false;
-                });
-              } else if (part is InlineDataPart) {
-                print('receive data part: mimeType: ${part.mimeType}');
-                if (part.mimeType.startsWith('audio')) {
-                  print('Audio chunk length: ${part.bytes.length}');
-                  // var processAudio = audioChunkWithHeader(part.bytes, 24000);
-                  // // print(part.bytes);
-                  // var dataUri =
-                  //     'data:audio/pcm;base64,${base64Encode(processAudio)}';
-                  // await _player.setAudioSource(
-                  //   ByteStreamAudioSource(
-                  //     processAudio,
-                  //   ),
-                  // );
-                  // await _player.setAudioSource(
-                  //   AudioSource.uri(
-                  //     Uri.parse(dataUri),
-                  //   ),
-                  // );
-                  //await _player.play();
-                  //audioChunkController.sink.add(part.bytes);
-                  //await _flutterSound.feedFromStream(part.bytes);
-                  audioChunks.add(part.bytes);
-                }
-
-                print('played received data part');
-              } else {
-                print('receive part with type ${part.runtimeType}');
-              }
-            }
-          }
-        }
-
-        // Check if the turn is complete
-        if (response.serverContent?.turnComplete ?? false) {
-          print('Turn complete!');
-          //await _flutterSound.closePlayer();
-          String filePath = '/Users/cynthiajiang/Downloads/a_sample.pcm';
-          await writeAudioFile(audioChunks, filePath, 24000);
-          String wavFilePath = '/Users/cynthiajiang/Downloads/a_sample.wav';
-          await _player.setAudioSource(AudioSource.file(wavFilePath));
-          await _player.play();
-          break; // Exit the loop if the turn is complete
-        }
-      }
-    }
-
     setState(() {
       _loading = false;
     });
