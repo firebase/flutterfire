@@ -1,3 +1,18 @@
+## 5.4.1
+
+ - Update a dependency to the latest release.
+
+## 5.4.0
+
+
+ - **FIX**: Remove dart:io imports for analytics, auth and app check ([#16827](https://github.com/firebase/flutterfire/issues/16827)). ([8c7f57c4](https://github.com/firebase/flutterfire/commit/8c7f57c4a181b8cae3b0d2ba564682ad7d68f484))
+ - **FIX**(firebase_auth): Fix `std::variant` compiler errors with VS 2022 17.12 ([#16840](https://github.com/firebase/flutterfire/issues/16840)). ([b88b71f4](https://github.com/firebase/flutterfire/commit/b88b71f45c856eb0ff2d2caefb8b6aa367e91418))
+ - **FEAT**(auth): Swift Package Manager support ([#16773](https://github.com/firebase/flutterfire/issues/16773)). ([69abbe19](https://github.com/firebase/flutterfire/commit/69abbe19bb37e6eb450b0b5123a74c2d68a761c7))
+
+## 5.3.4
+
+ - **FIX**(auth,android): `signInWithProvider()` for non-default instances ([#13522](https://github.com/firebase/flutterfire/issues/13522)). ([fe016a44](https://github.com/firebase/flutterfire/commit/fe016a4487993c8aa444e15c9881fe355b5f6624))
+
 ## 5.3.3
 
  - Update a dependency to the latest release.

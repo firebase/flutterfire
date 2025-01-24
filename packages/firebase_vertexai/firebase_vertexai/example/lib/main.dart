@@ -16,18 +16,33 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
+
+import 'pages/chat_page.dart';
+import 'pages/function_calling_page.dart';
+import 'pages/image_prompt_page.dart';
+import 'pages/token_count_page.dart';
+import 'pages/schema_page.dart';
+import 'pages/storage_uri_page.dart';
 
 // REQUIRED if you want to run on Web
 const FirebaseOptions? options = null;
 
-void main() {
-  runApp(const GenerativeAISample());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await FirebaseAuth.instance.signInAnonymously();
+
+  var vertex_instance =
+      FirebaseVertexAI.instanceFor(auth: FirebaseAuth.instance);
+  final model = vertex_instance.generativeModel(model: 'gemini-1.5-flash');
+
+  runApp(GenerativeAISample(model: model));
 }
 
 class GenerativeAISample extends StatelessWidget {
-  const GenerativeAISample({super.key});
+  final GenerativeModel model;
+
+  const GenerativeAISample({super.key, required this.model});
 
   @override
   Widget build(BuildContext context) {
@@ -40,297 +55,102 @@ class GenerativeAISample extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const ChatScreen(title: 'Flutter + Vertex AI'),
+      home: HomeScreen(model: model),
     );
   }
 }
 
-class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key, required this.title});
-
-  final String title;
+class HomeScreen extends StatefulWidget {
+  final GenerativeModel model;
+  const HomeScreen({super.key, required this.model});
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
+
+  List<Widget> get _pages => <Widget>[
+        // Build _pages dynamically
+        ChatPage(title: 'Chat', model: widget.model),
+        TokenCountPage(title: 'Token Count', model: widget.model),
+        const FunctionCallingPage(
+          title: 'Function Calling',
+        ), // function calling will initial its own model
+        ImagePromptPage(title: 'Image Prompt', model: widget.model),
+        StorageUriPromptPage(title: 'Storage URI Prompt', model: widget.model),
+        SchemaPromptPage(title: 'Schema Prompt', model: widget.model),
+      ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: const Text('Flutter + Vertex AI'),
       ),
-      body: const ChatWidget(),
-    );
-  }
-}
-
-class ChatWidget extends StatefulWidget {
-  const ChatWidget({
-    super.key,
-  });
-
-  @override
-  State<ChatWidget> createState() => _ChatWidgetState();
-}
-
-final class Location {
-  final String city;
-  final String state;
-
-  Location(this.city, this.state);
-}
-
-class _ChatWidgetState extends State<ChatWidget> {
-  late final GenerativeModel _model;
-  late final GenerativeModel _functionCallModel;
-  ChatSession? _chat;
-  final ScrollController _scrollController = ScrollController();
-  final TextEditingController _textController = TextEditingController();
-  final FocusNode _textFieldFocus = FocusNode();
-  final List<({Image? image, String? text, bool fromUser})> _generatedContent =
-      <({Image? image, String? text, bool fromUser})>[];
-  bool _loading = false;
-
-  @override
-  void initState() {
-    super.initState();
-
-    initFirebase().then((value) {
-      var vertex_instance =
-          FirebaseVertexAI.instanceFor(auth: FirebaseAuth.instance);
-      _model = vertex_instance.generativeModel(
-        model: 'gemini-1.5-flash',
-      );
-      _functionCallModel = vertex_instance.generativeModel(
-        model: 'gemini-1.5-flash',
-        tools: [
-          Tool.functionDeclarations([fetchWeatherTool]),
-        ],
-      );
-      _chat = _model.startChat();
-    });
-  }
-
-  // This is a hypothetical API to return a fake weather data collection for
-  // certain location
-  Future<Map<String, Object?>> fetchWeather(
-    Location location,
-    String date,
-  ) async {
-    // TODO(developer): Call a real weather API.
-    // Mock response from the API. In developer live code this would call the
-    // external API and return what that API returns.
-    final apiResponse = {
-      'temperature': 38,
-      'chancePrecipitation': '56%',
-      'cloudConditions': 'partly-cloudy',
-    };
-    return apiResponse;
-  }
-
-  /// Actual function to demonstrate the function calling feature.
-  final fetchWeatherTool = FunctionDeclaration(
-    'fetchWeather',
-    'Get the weather conditions for a specific city on a specific date.',
-    parameters: {
-      'location': Schema.object(
-        description: 'The name of the city and its state for which to get '
-            'the weather. Only cities in the USA are supported.',
-        properties: {
-          'city': Schema.string(
-            description: 'The city of the location.',
+      body: Center(
+        child: _pages.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.chat,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            label: 'Chat',
+            tooltip: 'Chat',
           ),
-          'state': Schema.string(
-            description: 'The state of the location.',
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.numbers,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            label: 'Token Count',
+            tooltip: 'Token Count',
           ),
-        },
-      ),
-      'date': Schema.string(
-        description: 'The date for which to get the weather. '
-            'Date must be in the format: YYYY-MM-DD.',
-      ),
-    },
-  );
-
-  Future<void> initFirebase() async {
-    // ignore: avoid_redundant_argument_values
-    await Firebase.initializeApp(options: options);
-    // await FirebaseAuth.instance.signInAnonymously();
-  }
-
-  void _scrollDown() {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(
-          milliseconds: 750,
-        ),
-        curve: Curves.easeOutCirc,
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final textFieldDecoration = InputDecoration(
-      contentPadding: const EdgeInsets.all(15),
-      hintText: 'Enter a prompt...',
-      border: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(14),
-        ),
-        borderSide: BorderSide(
-          color: Theme.of(context).colorScheme.secondary,
-        ),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(14),
-        ),
-        borderSide: BorderSide(
-          color: Theme.of(context).colorScheme.secondary,
-        ),
-      ),
-    );
-
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              itemBuilder: (context, idx) {
-                var content = _generatedContent[idx];
-                return MessageWidget(
-                  text: content.text,
-                  image: content.image,
-                  isFromUser: content.fromUser,
-                );
-              },
-              itemCount: _generatedContent.length,
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.functions,
+              color: Theme.of(context).colorScheme.primary,
             ),
+            label: 'Function Calling',
+            tooltip: 'Function Calling',
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 25,
-              horizontal: 15,
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.image,
+              color: Theme.of(context).colorScheme.primary,
             ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    autofocus: true,
-                    focusNode: _textFieldFocus,
-                    decoration: textFieldDecoration,
-                    controller: _textController,
-                    onSubmitted: _sendChatMessage,
-                  ),
-                ),
-                const SizedBox.square(
-                  dimension: 15,
-                ),
-                IconButton(
-                  tooltip: 'tokenCount Test',
-                  onPressed: !_loading
-                      ? () async {
-                          await _testCountToken();
-                        }
-                      : null,
-                  icon: Icon(
-                    Icons.numbers,
-                    color: _loading
-                        ? Theme.of(context).colorScheme.secondary
-                        : Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                IconButton(
-                  tooltip: 'function calling Test',
-                  onPressed: !_loading
-                      ? () async {
-                          await _testFunctionCalling();
-                        }
-                      : null,
-                  icon: Icon(
-                    Icons.functions,
-                    color: _loading
-                        ? Theme.of(context).colorScheme.secondary
-                        : Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                IconButton(
-                  tooltip: 'image prompt',
-                  onPressed: !_loading
-                      ? () async {
-                          //await _sendImagePrompt(_textController.text);
-                          await _testImagen(_textController.text);
-                        }
-                      : null,
-                  icon: Icon(
-                    Icons.image,
-                    color: _loading
-                        ? Theme.of(context).colorScheme.secondary
-                        : Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                IconButton(
-                  tooltip: 'storage prompt',
-                  onPressed: !_loading
-                      ? () async {
-                          await _sendStorageUriPrompt(_textController.text);
-                        }
-                      : null,
-                  icon: Icon(
-                    Icons.folder,
-                    color: _loading
-                        ? Theme.of(context).colorScheme.secondary
-                        : Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                IconButton(
-                  tooltip: 'schema prompt',
-                  onPressed: !_loading
-                      ? () async {
-                          await _promptSchemaTest(_textController.text);
-                        }
-                      : null,
-                  icon: Icon(
-                    Icons.schema,
-                    color: _loading
-                        ? Theme.of(context).colorScheme.secondary
-                        : Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                if (!_loading)
-                  IconButton(
-                    onPressed: () async {
-                      await _sendChatMessage(_textController.text);
-                    },
-                    icon: Icon(
-                      Icons.send,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  )
-                else
-                  const CircularProgressIndicator(),
-              ],
-            ),
+            label: 'Image Prompt',
+            tooltip: 'Image Prompt',
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 15,
-              right: 15,
-              bottom: 25,
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.folder,
+              color: Theme.of(context).colorScheme.primary,
             ),
-            child: Text(
-              'Total message count: ${_chat?.history.length ?? 0}',
+            label: 'Storage URI Prompt',
+            tooltip: 'Storage URI Prompt',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.schema,
+              color: Theme.of(context).colorScheme.primary,
             ),
+            label: 'Schema Prompt',
+            tooltip: 'Schema Prompt',
           ),
         ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
       ),
     );
   }

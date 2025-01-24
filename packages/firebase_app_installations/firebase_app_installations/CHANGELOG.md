@@ -1,3 +1,15 @@
+## 0.3.2+1
+
+ - Update a dependency to the latest release.
+
+## 0.3.2
+
+ - **FEAT**(app-installations): Swift Package Manager support ([#16856](https://github.com/firebase/flutterfire/issues/16856)). ([547c6d71](https://github.com/firebase/flutterfire/commit/547c6d713ddb6ff339e6d873dae75a29aa3e75eb))
+
+## 0.3.1+7
+
+ - Update a dependency to the latest release.
+
 ## 0.3.1+6
 
  - Update a dependency to the latest release.

@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-library firebase_data_connect_transport;
-
 import 'package:firebase_app_check/firebase_app_check.dart';
+
 import '../common/common_library.dart';
 
 part 'transport_stub.dart';

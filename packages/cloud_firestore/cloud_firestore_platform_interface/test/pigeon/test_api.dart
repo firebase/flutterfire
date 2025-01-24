@@ -7,11 +7,11 @@
 // ignore_for_file: avoid_relative_lib_imports
 import 'dart:async';
 import 'dart:typed_data' show Uint8List;
+
+import 'package:cloud_firestore_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:flutter/foundation.dart' show ReadBuffer, WriteBuffer;
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:cloud_firestore_platform_interface/src/pigeon/messages.pigeon.dart';
 
 class _TestFirebaseFirestoreHostApiCodec extends StandardMessageCodec {
   const _TestFirebaseFirestoreHostApiCodec();
@@ -63,36 +63,22 @@ class _TestFirebaseFirestoreHostApiCodec extends StandardMessageCodec {
 
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
-    switch (type) {
-      case 128:
-        return AggregateQuery.decode(readValue(buffer)!);
-      case 129:
-        return AggregateQueryResponse.decode(readValue(buffer)!);
-      case 130:
-        return DocumentReferenceRequest.decode(readValue(buffer)!);
-      case 131:
-        return FirestorePigeonFirebaseApp.decode(readValue(buffer)!);
-      case 132:
-        return PigeonDocumentChange.decode(readValue(buffer)!);
-      case 133:
-        return PigeonDocumentOption.decode(readValue(buffer)!);
-      case 134:
-        return PigeonDocumentSnapshot.decode(readValue(buffer)!);
-      case 135:
-        return PigeonFirebaseSettings.decode(readValue(buffer)!);
-      case 136:
-        return PigeonGetOptions.decode(readValue(buffer)!);
-      case 137:
-        return PigeonQueryParameters.decode(readValue(buffer)!);
-      case 138:
-        return PigeonQuerySnapshot.decode(readValue(buffer)!);
-      case 139:
-        return PigeonSnapshotMetadata.decode(readValue(buffer)!);
-      case 140:
-        return PigeonTransactionCommand.decode(readValue(buffer)!);
-      default:
-        return super.readValueOfType(type, buffer);
-    }
+    return switch (type) {
+      128 => AggregateQuery.decode(readValue(buffer)!),
+      129 => AggregateQueryResponse.decode(readValue(buffer)!),
+      130 => DocumentReferenceRequest.decode(readValue(buffer)!),
+      131 => FirestorePigeonFirebaseApp.decode(readValue(buffer)!),
+      132 => PigeonDocumentChange.decode(readValue(buffer)!),
+      133 => PigeonDocumentOption.decode(readValue(buffer)!),
+      134 => PigeonDocumentSnapshot.decode(readValue(buffer)!),
+      135 => PigeonFirebaseSettings.decode(readValue(buffer)!),
+      136 => PigeonGetOptions.decode(readValue(buffer)!),
+      137 => PigeonQueryParameters.decode(readValue(buffer)!),
+      138 => PigeonQuerySnapshot.decode(readValue(buffer)!),
+      139 => PigeonSnapshotMetadata.decode(readValue(buffer)!),
+      140 => PigeonTransactionCommand.decode(readValue(buffer)!),
+      _ => super.readValueOfType(type, buffer)
+    };
   }
 }
 

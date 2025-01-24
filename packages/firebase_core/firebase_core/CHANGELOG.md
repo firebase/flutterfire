@@ -1,3 +1,23 @@
+## 3.10.1
+
+ - **FIX**(firebase_core): Update google_services_gradle_plugin_version in pubspec ([#16944](https://github.com/firebase/flutterfire/issues/16944)). ([9911deb6](https://github.com/firebase/flutterfire/commit/9911deb61b5a658981a11067154ccf3befce636c))
+
+## 3.10.0
+
+ - **FEAT**: bump firebase iOS SDK to `v11.6.0` ([#16858](https://github.com/firebase/flutterfire/issues/16858)). ([6a42a2d8](https://github.com/firebase/flutterfire/commit/6a42a2d801f7674992de1c1d9557cb800ead9963))
+
+## 3.9.0
+
+ - **FIX**(core,macos): update path to firebase sdk version for SPM ([#16890](https://github.com/firebase/flutterfire/issues/16890)). ([4a190da0](https://github.com/firebase/flutterfire/commit/4a190da0c353d295ff7fb9fea73119218a365687))
+ - **FIX**(core,macos): exclude files pulled in from remote dependency. SPM integration ([#16834](https://github.com/firebase/flutterfire/issues/16834)). ([a8a22b17](https://github.com/firebase/flutterfire/commit/a8a22b172657ba2568d2cce5a54db4da3189efa0))
+ - **FIX**(core): auth Swift support requires `FLTFirebaseCorePlugin` & `messages` to be shared ([#16774](https://github.com/firebase/flutterfire/issues/16774)). ([f89483cd](https://github.com/firebase/flutterfire/commit/f89483cd9a3b4900d9b79151bb383ae35aa3dd4f))
+ - **FIX**(core): auth Swift support requires `FLTFirebaseCorePlugin` & `messages` to be shared ([#16774](https://github.com/firebase/flutterfire/issues/16774)). ([ba5f2414](https://github.com/firebase/flutterfire/commit/ba5f2414c86f3fe200df07671f6ad84087646c86))
+ - **FEAT**: bump Firebase android BOM to `v33.7.0` ([#16857](https://github.com/firebase/flutterfire/issues/16857)). ([0048bd13](https://github.com/firebase/flutterfire/commit/0048bd138f67102ff7cfa0539c244819b4ce8c7d))
+
+## 3.8.1
+
+ - **FIX**(core): auth Swift support requires `FLTFirebaseCorePlugin` & `messages` to be shared ([#16774](https://github.com/firebase/flutterfire/issues/16774)). ([f89483cd](https://github.com/firebase/flutterfire/commit/f89483cd9a3b4900d9b79151bb383ae35aa3dd4f))
+
 ## 3.8.0
 
  - **FEAT**(firestore): Swift Package Manager support ([#13329](https://github.com/firebase/flutterfire/issues/13329)). ([0420eabb](https://github.com/firebase/flutterfire/commit/0420eabb3ab247e0e3998bedcb9779fe35c46920))

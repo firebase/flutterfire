@@ -251,7 +251,10 @@ void main() {
             },
             skip: kIsWeb ||
                 defaultTargetPlatform == TargetPlatform.macOS ||
-                defaultTargetPlatform == TargetPlatform.windows,
+                defaultTargetPlatform == TargetPlatform.windows
+                // on iOS, returning an exception but underlying exception is: "identitytoolkit.getRecaptchaConfig is not implemented in the Auth Emulator."
+                // which might be a result of this issue: https://github.com/firebase/firebase-ios-sdk/issues/14242. Once resolved, try to reinstate.
+                || defaultTargetPlatform == TargetPlatform.iOS,
           ); // verifyPhoneNumber not supported on web.
 
           test(

@@ -1,3 +1,19 @@
+## 6.6.2
+
+ - Update a dependency to the latest release.
+
+## 6.6.1
+
+ - Update a dependency to the latest release.
+
+## 6.6.0
+
+ - **FEAT**(firestore): add support for VectorValue ([#16476](https://github.com/firebase/flutterfire/issues/16476)). ([cc23f179](https://github.com/firebase/flutterfire/commit/cc23f179082256fe9700f17e3856821b4a6d4240))
+
+## 6.5.1
+
+ - Update a dependency to the latest release.
+
 ## 6.5.0
 
  - **FEAT**(firestore): Swift Package Manager support ([#13329](https://github.com/firebase/flutterfire/issues/13329)). ([0420eabb](https://github.com/firebase/flutterfire/commit/0420eabb3ab247e0e3998bedcb9779fe35c46920))
