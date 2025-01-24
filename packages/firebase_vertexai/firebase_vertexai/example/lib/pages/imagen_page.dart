@@ -16,8 +16,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import '../widgets/message_widget.dart';
 
-class StorageUriPromptPage extends StatefulWidget {
-  const StorageUriPromptPage({
+class ImagenPage extends StatefulWidget {
+  const ImagenPage({
     super.key,
     required this.title,
     required this.model,
@@ -27,15 +27,31 @@ class StorageUriPromptPage extends StatefulWidget {
   final GenerativeModel model;
 
   @override
-  State<StorageUriPromptPage> createState() => _StorageUriPromptPageState();
+  State<ImagenPage> createState() => _ImagenPageState();
 }
 
-class _StorageUriPromptPageState extends State<StorageUriPromptPage> {
+class _ImagenPageState extends State<ImagenPage> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
   final FocusNode _textFieldFocus = FocusNode();
-  final List<MessageData> _messages = <MessageData>[];
+  final List<MessageData> _generatedContent = <MessageData>[];
   bool _loading = false;
+  late final ImagenModel _imagenModel;
+
+  @override
+  void initState() {
+    super.initState();
+    _imagenModel = FirebaseVertexAI.instance.imageModel(
+      modelName: 'imagen-3.0-generate-001',
+      generationConfig: ImagenGenerationConfig(
+        imageFormat: ImagenFormat.jpeg(compressionQuality: 75),
+      ),
+      safetySettings: ImagenSafetySettings(
+        ImagenSafetyFilterLevel.blockLowAndAbove,
+        ImagenPersonFilterLevel.allowAdult,
+      ),
+    );
+  }
 
   void _scrollDown() {
     WidgetsBinding.instance.addPostFrameCallback(
@@ -66,11 +82,12 @@ class _StorageUriPromptPageState extends State<StorageUriPromptPage> {
                 controller: _scrollController,
                 itemBuilder: (context, idx) {
                   return MessageWidget(
-                    text: _messages[idx].text,
-                    isFromUser: _messages[idx].fromUser ?? false,
+                    text: _generatedContent[idx].text,
+                    image: _generatedContent[idx].image,
+                    isFromUser: _generatedContent[idx].fromUser ?? false,
                   );
                 },
-                itemCount: _messages.length,
+                itemCount: _generatedContent.length,
               ),
             ),
             Padding(
@@ -90,14 +107,18 @@ class _StorageUriPromptPageState extends State<StorageUriPromptPage> {
                   const SizedBox.square(
                     dimension: 15,
                   ),
-                  ElevatedButton(
-                    onPressed: !_loading
-                        ? () async {
-                            await _sendStorageUriPrompt(_textController.text);
-                          }
-                        : null,
-                    child: const Text('Send Storage URI Prompt'),
-                  ),
+                  if (!_loading)
+                    IconButton(
+                      onPressed: () async {
+                        await _testImagen(_textController.text);
+                      },
+                      icon: Icon(
+                        Icons.image_search,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    )
+                  else
+                    const CircularProgressIndicator(),
                 ],
               ),
             ),
@@ -107,47 +128,38 @@ class _StorageUriPromptPageState extends State<StorageUriPromptPage> {
     );
   }
 
-  Future<void> _sendStorageUriPrompt(String message) async {
+  Future<void> _testImagen(String prompt) async {
     setState(() {
       _loading = true;
     });
-    try {
-      final content = [
-        Content.multi([
-          TextPart(message),
-          FileData(
-            'image/jpeg',
-            'gs://vertex-ai-example-ef5a2.appspot.com/foodpic.jpg',
-          ),
-        ]),
-      ];
-      _messages.add(MessageData(text: message, fromUser: true));
 
-      var response = await widget.model.generateContent(content);
-      var text = response.text;
-      _messages.add(MessageData(text: text, fromUser: false));
+    var generationConfig = ImagenGenerationConfig(
+        negativePrompt: 'frog',
+        numberOfImages: 1,
+        aspectRatio: ImagenAspectRatio.square1x1);
 
-      if (text == null) {
-        _showError('No response from API.');
-        return;
-      } else {
-        setState(() {
-          _loading = false;
-          _scrollDown();
-        });
-      }
-    } catch (e) {
-      _showError(e.toString());
-      setState(() {
-        _loading = false;
-      });
-    } finally {
-      _textController.clear();
-      setState(() {
-        _loading = false;
-      });
-      _textFieldFocus.requestFocus();
+    var response = await _imagenModel.generateImages(
+      prompt,
+      generationConfig: generationConfig,
+    );
+
+    if (response.images.isNotEmpty) {
+      var imagenImage = response.images[0];
+      // Process the image
+      _generatedContent.add(
+        MessageData(
+          image: Image.memory(imagenImage.bytesBase64Encoded),
+          text: prompt,
+          fromUser: false,
+        ),
+      );
+    } else {
+      // Handle the case where no images were generated
+      _showError('Error: No images were generated.');
     }
+    setState(() {
+      _loading = false;
+    });
   }
 
   void _showError(String message) {

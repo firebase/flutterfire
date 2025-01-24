@@ -89,13 +89,23 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
                   const SizedBox.square(
                     dimension: 15,
                   ),
-                  ElevatedButton(
-                    onPressed: !_loading
-                        ? () async {
-                            await _sendImagePrompt(_textController.text);
-                          }
-                        : null,
-                    child: const Text('Send Image Prompt'),
+                  IconButton(
+                    onPressed: () async {
+                      await _sendImagePrompt(_textController.text);
+                    },
+                    icon: Icon(
+                      Icons.image,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () async {
+                      await _sendStorageUriPrompt(_textController.text);
+                    },
+                    icon: Icon(
+                      Icons.storage,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   ),
                 ],
               ),
@@ -134,6 +144,49 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
           fromUser: true,
         ),
       );
+
+      var response = await widget.model.generateContent(content);
+      var text = response.text;
+      _generatedContent.add(MessageData(text: text, fromUser: false));
+
+      if (text == null) {
+        _showError('No response from API.');
+        return;
+      } else {
+        setState(() {
+          _loading = false;
+          _scrollDown();
+        });
+      }
+    } catch (e) {
+      _showError(e.toString());
+      setState(() {
+        _loading = false;
+      });
+    } finally {
+      _textController.clear();
+      setState(() {
+        _loading = false;
+      });
+      _textFieldFocus.requestFocus();
+    }
+  }
+
+  Future<void> _sendStorageUriPrompt(String message) async {
+    setState(() {
+      _loading = true;
+    });
+    try {
+      final content = [
+        Content.multi([
+          TextPart(message),
+          FileData(
+            'image/jpeg',
+            'gs://vertex-ai-example-ef5a2.appspot.com/foodpic.jpg',
+          ),
+        ]),
+      ];
+      _generatedContent.add(MessageData(text: message, fromUser: true));
 
       var response = await widget.model.generateContent(content);
       var text = response.text;
