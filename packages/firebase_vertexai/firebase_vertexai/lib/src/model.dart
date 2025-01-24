@@ -19,15 +19,13 @@ import 'dart:async';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-
 import 'package:http/http.dart' as http;
 
 import 'api.dart';
+import 'base_model.dart';
 import 'client.dart';
 import 'content.dart';
 import 'function_calling.dart';
-import 'vertex_version.dart';
-import 'base_model.dart';
 
 /// A multimodel generative model (like Gemini).
 ///

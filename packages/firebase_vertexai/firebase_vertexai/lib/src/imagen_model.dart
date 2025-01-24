@@ -11,14 +11,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import 'imagen_api.dart';
-import 'imagen_content.dart';
-import 'base_model.dart';
-import 'client.dart';
-
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+
+import 'base_model.dart';
+import 'client.dart';
+import 'imagen_api.dart';
+import 'imagen_content.dart';
 
 ///
 final class ImagenModel extends BaseModel {
@@ -45,31 +45,26 @@ final class ImagenModel extends BaseModel {
 
   Map<String, Object?> _generateImagenRequest(
     String prompt, {
-    ImagenGenerationConfig? generationConfig,
     String? gcsUri,
   }) {
     final parameters = <String, Object?>{};
 
     if (gcsUri != null) parameters['storageUri'] = gcsUri;
 
-    // Merge generation configurations
-    final mergedConfig = {
-      ...(_generationConfig?.toJson() ?? {}),
-      ...(generationConfig?.toJson() ?? {}),
-    };
-
-    parameters['sampleCount'] = mergedConfig['numberOfImages'] ?? 1;
-    if (mergedConfig['aspectRatio'] != null) {
-      parameters['aspectRatio'] = mergedConfig['aspectRatio'];
-    }
-    if (mergedConfig['negativePrompt'] != null) {
-      parameters['negativePrompt'] = mergedConfig['negativePrompt'];
-    }
-    if (mergedConfig['addWatermark'] != null) {
-      parameters['addWatermark'] = mergedConfig['addWatermark'];
-    }
-    if (mergedConfig['outputOption'] != null) {
-      parameters['outputOption'] = mergedConfig['outputOption'];
+    parameters['sampleCount'] = _generationConfig?.numberOfImages ?? 1;
+    if (_generationConfig != null) {
+      if (_generationConfig.aspectRatio != null) {
+        parameters['aspectRatio'] = _generationConfig.aspectRatio;
+      }
+      if (_generationConfig.negativePrompt != null) {
+        parameters['negativePrompt'] = _generationConfig.negativePrompt;
+      }
+      if (_generationConfig.addWatermark != null) {
+        parameters['addWatermark'] = _generationConfig.addWatermark;
+      }
+      if (_generationConfig.imageFormat != null) {
+        parameters['outputOption'] = _generationConfig.imageFormat!.toJson();
+      }
     }
 
     if (_safetySettings != null) {
@@ -91,30 +86,30 @@ final class ImagenModel extends BaseModel {
     };
   }
 
+  /// Generates images with format of [ImagenInlineImage] based on the given
+  /// prompt.
   Future<ImagenGenerationResponse<ImagenInlineImage>> generateImages(
-    String prompt, {
-    ImagenGenerationConfig? generationConfig,
-  }) =>
+    String prompt,
+  ) =>
       makeRequest(
         Task.predict,
         _generateImagenRequest(
           prompt,
-          generationConfig: generationConfig,
         ),
         (jsonObject) =>
             parseImagenGenerationResponse<ImagenInlineImage>(jsonObject),
       );
 
+  /// Generates images with format of [ImagenGCSImage] based on the given
+  /// prompt.
   Future<ImagenGenerationResponse<ImagenGCSImage>> generateImagesGCS(
     String prompt,
-    String gcsUri, {
-    ImagenGenerationConfig? generationConfig,
-  }) =>
+    String gcsUri,
+  ) =>
       makeRequest(
         Task.predict,
         _generateImagenRequest(
           prompt,
-          generationConfig: generationConfig,
           gcsUri: gcsUri,
         ),
         (jsonObject) =>

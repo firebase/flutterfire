@@ -41,11 +41,15 @@ class _ImagenPageState extends State<ImagenPage> {
   @override
   void initState() {
     super.initState();
+    var generationConfig = ImagenGenerationConfig(
+      negativePrompt: 'frog',
+      numberOfImages: 1,
+      aspectRatio: ImagenAspectRatio.square1x1,
+      imageFormat: ImagenFormat.jpeg(compressionQuality: 75),
+    );
     _imagenModel = FirebaseVertexAI.instance.imageModel(
       modelName: 'imagen-3.0-generate-001',
-      generationConfig: ImagenGenerationConfig(
-        imageFormat: ImagenFormat.jpeg(compressionQuality: 75),
-      ),
+      generationConfig: generationConfig,
       safetySettings: ImagenSafetySettings(
         ImagenSafetyFilterLevel.blockLowAndAbove,
         ImagenPersonFilterLevel.allowAdult,
@@ -133,15 +137,7 @@ class _ImagenPageState extends State<ImagenPage> {
       _loading = true;
     });
 
-    var generationConfig = ImagenGenerationConfig(
-        negativePrompt: 'frog',
-        numberOfImages: 1,
-        aspectRatio: ImagenAspectRatio.square1x1);
-
-    var response = await _imagenModel.generateImages(
-      prompt,
-      generationConfig: generationConfig,
-    );
+    var response = await _imagenModel.generateImages(prompt);
 
     if (response.images.isNotEmpty) {
       var imagenImage = response.images[0];

@@ -15,27 +15,31 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'error.dart';
 
-///
+/// Base type of Imagen Image.
 sealed class ImagenImage {
+  /// Constructor
+  ImagenImage({required this.mimeType});
+
+  /// The MIME type of the image format.
   final String mimeType;
 
   /// Convert the [ImagenImage] content to json format.
   Object toJson();
-
-  ImagenImage({required this.mimeType});
 }
 
+/// Represents an image stored as a base64-encoded string.
 final class ImagenInlineImage implements ImagenImage {
-  /// Data contents in bytes.
-  final Uint8List bytesBase64Encoded;
-
-  @override
-  final String mimeType;
-
+  /// Constructor
   ImagenInlineImage({
     required this.bytesBase64Encoded,
     required this.mimeType,
   });
+
+  /// The data contents in bytes, encoded as base64.
+  final Uint8List bytesBase64Encoded;
+
+  @override
+  final String mimeType;
 
   @override
   Object toJson() => {
@@ -44,16 +48,19 @@ final class ImagenInlineImage implements ImagenImage {
       };
 }
 
+/// Represents an image stored in Google Cloud Storage.
 final class ImagenGCSImage implements ImagenImage {
-  @override
-  final String mimeType;
-
-  final String gcsUri;
-
+  /// Constructor
   ImagenGCSImage({
     required this.gcsUri,
     required this.mimeType,
   });
+
+  /// The storage URI of the image.
+  final String gcsUri;
+
+  @override
+  final String mimeType;
 
   @override
   Object toJson() => {
@@ -62,15 +69,15 @@ final class ImagenGCSImage implements ImagenImage {
       };
 }
 
+/// Represents the response from an image generation request.
 final class ImagenGenerationResponse<T extends ImagenImage> {
+  /// Constructor
   ImagenGenerationResponse({
     required this.images,
     this.filteredReason,
   });
 
-  final List<T> images;
-  final String? filteredReason;
-
+  /// Factory method to create an ImagenGenerationResponse from a JSON object.
   factory ImagenGenerationResponse.fromJson(Map<String, dynamic> json) {
     final filteredReason = json['filteredReason'] as String?;
     final imagesJson = json['predictions'] as List<dynamic>;
@@ -102,6 +109,12 @@ final class ImagenGenerationResponse<T extends ImagenImage> {
       throw ArgumentError('Unsupported ImagenImage type: $T');
     }
   }
+
+  /// A list of generated images. The type of the images depends on the T parameter.
+  final List<T> images;
+
+  /// If the generation was filtered due to safety reasons, a message explaining the reason.
+  final String? filteredReason;
 }
 
 /// Parse the json to [ImagenGenerationResponse]

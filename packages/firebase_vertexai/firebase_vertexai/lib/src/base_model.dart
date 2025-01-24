@@ -42,8 +42,6 @@ abstract class BaseModel {
     required FirebaseApp app,
     required ApiClient client,
   })  : _model = normalizeModelName(model),
-        _app = app,
-        _location = location,
         _projectUri = _vertexUri(app, location),
         _client = client;
 
@@ -51,8 +49,7 @@ abstract class BaseModel {
   static const _apiVersion = 'v1beta';
 
   final ({String prefix, String name}) _model;
-  final FirebaseApp _app;
-  final String _location;
+
   final Uri _projectUri;
   final ApiClient _client;
 

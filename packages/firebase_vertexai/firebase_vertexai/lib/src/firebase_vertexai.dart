@@ -114,6 +114,10 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
     );
   }
 
+  /// Create a [ImagenModel].
+  ///
+  /// The optional [safetySettings] can be used to control and guide the
+  /// generation. See [ImagenSafetySettings] for details.
   ImagenModel imageModel(
       {required String modelName,
       ImagenGenerationConfig? generationConfig,
