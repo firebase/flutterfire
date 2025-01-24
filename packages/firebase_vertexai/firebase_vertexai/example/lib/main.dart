@@ -30,7 +30,7 @@ const FirebaseOptions? options = null;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  //await FirebaseAuth.instance.signInAnonymously();
+  await FirebaseAuth.instance.signInAnonymously();
 
   var vertex_instance =
       FirebaseVertexAI.instanceFor(auth: FirebaseAuth.instance);
