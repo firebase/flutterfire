@@ -21,6 +21,9 @@ import 'package:firebase_core_platform_interface/firebase_core_platform_interfac
 import 'api.dart';
 import 'content.dart';
 import 'function_calling.dart';
+import 'imagen_model.dart';
+import 'imagen_api.dart';
+import 'imagen_content.dart';
 import 'model.dart';
 
 const _defaultLocation = 'us-central1';
@@ -109,5 +112,23 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
       toolConfig: toolConfig,
       systemInstruction: systemInstruction,
     );
+  }
+
+  /// Create a [ImagenModel].
+  ///
+  /// The optional [safetySettings] can be used to control and guide the
+  /// generation. See [ImagenSafetySettings] for details.
+  ImagenModel imageModel(
+      {required String modelName,
+      ImagenGenerationConfig? generationConfig,
+      ImagenSafetySettings? safetySettings}) {
+    return createImagenModel(
+        app: app,
+        location: location,
+        modelName: modelName,
+        generationConfig: generationConfig,
+        safetySettings: safetySettings,
+        appCheck: appCheck,
+        auth: auth);
   }
 }
