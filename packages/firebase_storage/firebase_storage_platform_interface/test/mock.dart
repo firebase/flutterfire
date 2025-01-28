@@ -9,7 +9,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import '../../../firebase_core/firebase_core_platform_interface/test/test.dart';
 
-
 typedef MethodCallCallback = dynamic Function(MethodCall methodCall);
 typedef Callback = Function(MethodCall call);
 
