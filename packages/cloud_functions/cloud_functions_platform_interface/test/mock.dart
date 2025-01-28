@@ -5,7 +5,7 @@
 
 import 'package:cloud_functions_platform_interface/src/firebase_functions_exception.dart';
 import 'package:cloud_functions_platform_interface/src/method_channel/method_channel_firebase_functions.dart';
-import 'package:firebase_core_platform_interface/test.dart';
+import '../../../firebase_core/firebase_core_platform_interface/test/test.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 

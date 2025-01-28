@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
-import 'package:firebase_core_platform_interface/test.dart';
+import '../test.dart';
 
 class MockFirebaseApp implements TestFirebaseCoreHostApi {
   @override
