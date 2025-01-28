@@ -25,6 +25,8 @@ dependencies:
   firebase_storage_web: ^3.10.8
   flutter:
     sdk: flutter
+  # Used to expose File even when web isn't supported
+  universal_io: ^2.2.2
 
 dev_dependencies:
   flutter_test:
