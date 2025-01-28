@@ -77,6 +77,7 @@ class GRPCTransport implements DataConnectTransport {
     Map<String, String> metadata = {
       'x-goog-request-params': 'location=${options.location}&frontend=data',
       'x-goog-api-client': getGoogApiVal(sdkType, packageVersion),
+      'x-firebase-client': getFirebaseClientVal(packageVersion)
     };
 
     if (authToken != null) {

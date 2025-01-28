@@ -29,6 +29,10 @@ String getGoogApiVal(CallerSDKType sdkType, String packageVersion) {
   return apiClientValue;
 }
 
+String getFirebaseClientVal(String packageVersion) {
+  return 'flutter-fire-dc/$packageVersion';
+}
+
 /// Transport Options for connecting to a specific host.
 class TransportOptions {
   /// Constructor
