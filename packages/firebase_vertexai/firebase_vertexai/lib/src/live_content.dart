@@ -64,7 +64,7 @@ LiveServerMessage parseServerMessage(Object jsonObject) {
   if (jsonObject case {'error': final Object error}) {
     throw parseError(error);
   }
-  print(jsonObject);
+
   Map<String, dynamic> json = jsonObject as Map<String, dynamic>;
   LiveServerContent? serverContent;
   if (json.containsKey('server_content')) {

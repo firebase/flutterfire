@@ -42,14 +42,12 @@ class AsyncSession {
     // var clientMessage = _parseClientMessage(input, endOfTurn);
     var clientMessage =
         LiveClientContent(turns: [input], turnComplete: turnComplete);
-    print(clientMessage.toJson());
     _ws.sink.add(jsonEncode(clientMessage.toJson()));
   }
 
   Stream<LiveServerMessage> receive() async* {
     await for (var message in _ws.stream) {
       var jsonString = utf8.decode(message);
-      print(jsonString);
       var response = json.decode(jsonString);
       Map<String, dynamic> responseDict;
 
@@ -371,7 +369,6 @@ class AsyncLive {
     var ws = WebSocketChannel.connect(Uri.parse(uri));
     await ws.ready;
 
-    print(ws.closeCode);
     print(request);
 
     ws.sink.add(request);

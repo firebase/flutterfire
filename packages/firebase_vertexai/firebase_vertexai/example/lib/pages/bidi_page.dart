@@ -16,16 +16,70 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:async';
 import 'package:just_audio/just_audio.dart';
+// import 'package:audioplayers/audioplayers.dart';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import '../widgets/message_widget.dart';
 
 class AudioUtil {
+  static final Uint8List wavHeaderBase = Uint8List.fromList([
+    // "RIFF" (Size will be updated later)
+    82, 73, 70, 70, 0, 0, 0, 0,
+    // WAVE
+    87, 65, 86, 69,
+    // fmt
+    102, 109, 116, 32,
+    // fmt chunk size 16
+    16, 0, 0, 0,
+    // Type of format
+    1, 0,
+    // One channel (Adjust if needed)
+    1, 0,
+    // Sample rate (Will be updated)
+    0, 0, 0, 0,
+    // Byte rate (Will be updated)
+    0, 0, 0, 0,
+    // Block align
+    2, 0, // For 16-bit mono
+    // bitsize
+    16, 0,
+    // "data" (Size will be updated later)
+    100, 97, 116, 97, 0, 0, 0, 0,
+  ]);
+
   static Future<Uint8List> audioChunkWithHeader(
     List<int> data,
     int sampleRate,
   ) async {
+    // var channels = 1;
+    // int byteRate = ((16 * sampleRate * channels) / 8).round();
+    // var size = data.length;
+    // var fileSize = size + 36;
+
+    // // 1. *Copy* the header base:
+    // final header = Uint8List.fromList(
+    //   wavHeaderBase,
+    // ); // Create a *new* Uint8List by copying
+
+    // // 2. Update the *copy* (using byteData view for efficient manipulation)
+    // final byteData = ByteData.view(header.buffer);
+
+    // // RIFF size
+    // byteData.setUint32(4, fileSize, Endian.little);
+    // // Sample rate
+    // byteData.setUint32(20, sampleRate, Endian.little);
+    // // Byte rate
+    // byteData.setUint32(24, byteRate, Endian.little);
+    // // Data size
+    // byteData.setUint32(40, size, Endian.little);
+
+    // // 3. Append the data *after* the header
+    // final combined = Uint8List(36 + size);
+    // combined.setAll(0, header);
+    // combined.setRange(36, 36 + size, data);
+
+    // return combined;
     var channels = 1;
 
     int byteRate = ((16 * sampleRate * channels) / 8).round();
@@ -90,7 +144,7 @@ class ByteStreamAudioSource extends StreamAudioSource {
       sourceLength: bytes.length,
       contentLength: end - start,
       offset: start,
-      stream: Stream.fromIterable([bytes.sublist(start, end)]),
+      stream: Stream.value(bytes.sublist(start, end)),
       contentType: 'audio/wav', // Or the appropriate content type
     );
   }
@@ -100,6 +154,7 @@ class AudioStreamManager {
   final AudioPlayer _audioPlayer = AudioPlayer();
   final StreamController<Uint8List> _audioChunkController =
       StreamController<Uint8List>();
+  var _chunkIndex = 0;
 
   AudioStreamManager() {
     _initAudioPlayer();
@@ -135,6 +190,9 @@ class AudioStreamManager {
 
     // The crucial change: use add instead of insert
     await currentSource.add(buffer);
+
+    _chunkIndex++;
+    print('play audio chunk $_chunkIndex');
   }
 
   void addAudio(Uint8List chunk) {
@@ -142,6 +200,7 @@ class AudioStreamManager {
   }
 
   Future<void> stop() async {
+    print('total audio chunks are $_chunkIndex');
     await _audioPlayer.stop();
   }
 
@@ -245,7 +304,8 @@ class _BidiPageState extends State<BidiPage> {
                     tooltip: 'Send Stream Message',
                     onPressed: !_loading
                         ? () async {
-                            await _startRecordingStreaming();
+                            await _startRecordingStreaming(
+                                _textController.text);
                           }
                         : null,
                     icon: Icon(
@@ -311,6 +371,8 @@ class _BidiPageState extends State<BidiPage> {
       _session_opening = true;
     } else {
       await _session!.close();
+      await _audioManager.stop();
+      await _audioManager.dispose();
       _session_opening = false;
     }
 
@@ -341,107 +403,29 @@ class _BidiPageState extends State<BidiPage> {
     await sink.close();
   }
 
-  Uint8List audioChunkWithHeader(Uint8List audioChunk, int sampleRate) {
-    final channels = 1; // Mono
-    final bitsPerSample = 16;
-    final bytesPerSample = bitsPerSample ~/ 8;
-    final blockAlign = channels * bytesPerSample;
-    final byteRate = sampleRate * blockAlign;
-    final subChunk2Size = audioChunk.lengthInBytes;
-    final chunkSize = 36 + subChunk2Size;
-
-    final header = Uint8List.fromList([
-      ...ascii.encode('RIFF'), // ChunkID
-      chunkSize, 0, 0, 0, // ChunkSize
-      ...ascii.encode('WAVE'), // Format
-      ...ascii.encode('fmt '), // Subchunk1ID
-      16, 0, 0, 0, // Subchunk1Size
-      1, 0, // AudioFormat
-      channels, 0, // NumChannels
-      sampleRate, 0, 0, 0, // SampleRate
-      byteRate, 0, 0, 0, // ByteRate
-      blockAlign, 0, // BlockAlign
-      bitsPerSample, 0, // BitsPerSample
-      ...ascii.encode('data'), // Subchunk2ID
-      subChunk2Size, 0, 0, 0, // Subchunk2Size
-    ]);
-
-    final builder = BytesBuilder();
-    builder.add(header);
-    builder.add(audioChunk);
-
-    return builder.toBytes();
-  }
-
-  Future<void> playAudioStreamJustAudio(Stream<Uint8List> audioStream) async {
-    try {
-      final concatenatingAudioSource = ConcatenatingAudioSource(
-        children: [],
-      );
-
-      final subscription = audioStream.listen((audioChunk) {
-        //var dataUri = 'data:audio/pcm;base64,${base64Decode(audioChunk)}';
-        // var dataUri = 'data:audio/pcm;base64,${base64Encode(audioChunk)}';
-        // print('AudioStream Add audio chunk $dataUri');
-        concatenatingAudioSource.add(ByteStreamAudioSource(audioChunk));
-        print('audio source children ${concatenatingAudioSource.length}');
-        // concatenatingAudioSource.add(
-        //   AudioSource.uri(
-        //     Uri.parse(dataUri),
-        //   ),
-        // );
-      });
-      print('Player start play');
-      // await _player.setAudioSource(concatenatingAudioSource);
-      // await _player.setVolume(1);
-      // await _player.play();
-      await subscription.cancel();
-    } catch (e) {
-      _showError(e.toString());
-      print('Error playing audio: $e');
-    }
-  }
-
-  // Future<void> playAudioStreamFlutterSound(
-  //     Stream<Uint8List> audioStream) async {
-  //   try {
-  //     // Initialize the player
-  //     await _flutterSound.openPlayer();
-  //     await _flutterSound.startPlayerFromStream(
-  //         codec: Codec.pcm16, numChannels: 1, sampleRate: 24000);
-
-  //     // Subscribe to the audio stream
-  //     final subscription = audioStream.listen((audioChunk) async {
-  //       // Feed each chunk to the player
-  //       print('flutter sound feed in audio');
-  //       _flutterSound.foodSink!.add(FoodData(audioChunk));
-  //     });
-
-  //     // Keep the subscription active until the stream is done
-  //     await subscription.asFuture();
-  //     await subscription.cancel();
-
-  //     // Close the player when finished
-  //     await _flutterSound.closePlayer();
-  //   } catch (e) {
-  //     print("Error playing audio: $e");
+  // Future<void> waitForAudioToStop() async {
+  //   await for (final playerState in _player.playerStateStream) {
+  //     if (playerState.playing) {
+  //       print('Audio is still playing');
+  //     } else {
+  //       print('Audio has stopped');
+  //       break;
+  //     }
   //   }
   // }
 
-  Future<void> _startRecordingStreaming() async {
+  Future<void> _startRecordingStreaming(String prompt) async {
     setState(() {
       _loading = true;
     });
     if (_session != null) {
-      await _session!
-          .send(input: Content.text('tell a short story'), turnComplete: true);
+      await _session!.send(input: Content.text(prompt), turnComplete: true);
 
       final audioChunks = <Uint8List>[];
 
-      // Start playing the audio stream
-      //await playAudioStreamJustAudio(audioChunkController.stream);
-
       final responseStream = _session!.receive();
+      var chunkBuilder = BytesBuilder();
+      var audioIndex = 0;
       await for (var response in responseStream) {
         if (response.serverContent?.modelTurn != null) {
           final partList = response.serverContent?.modelTurn?.parts;
@@ -462,32 +446,19 @@ class _BidiPageState extends State<BidiPage> {
                 print('receive data part: mimeType: ${part.mimeType}');
                 if (part.mimeType.startsWith('audio')) {
                   print('Audio chunk length: ${part.bytes.length}');
-                  // var processAudio = audioChunkWithHeader(part.bytes, 24000);
-                  // // print(part.bytes);
-                  // var dataUri =
-                  //     'data:audio/pcm;base64,${base64Encode(processAudio)}';
-                  // await _player.setAudioSource(
-                  //   ByteStreamAudioSource(
-                  //     processAudio,
-                  //   ),
-                  // );
-                  // await _player.setAudioSource(
-                  //   AudioSource.uri(
-                  //     Uri.parse(dataUri),
-                  //   ),
-                  // );
-                  //await _player.play();
-                  Uint8List chunk =
-                      await AudioUtil.audioChunkWithHeader(part.bytes, 24000);
-                  _audioManager.addAudio(chunk);
-                  //audioChunkController.sink.add(uint8list);
 
-                  // var audioSource = ByteStreamAudioSource(uint8list);
-                  // await _player.setAudioSource(audioSource);
-                  // await _player.play();
-                  // await waitForAudioToStop();
+                  chunkBuilder.add(part.bytes);
+                  audioIndex++;
 
-                  audioChunks.add(part.bytes);
+                  if (audioIndex == 15) {
+                    Uint8List chunk = await AudioUtil.audioChunkWithHeader(
+                      chunkBuilder.toBytes(),
+                      24000,
+                    );
+                    _audioManager.addAudio(chunk);
+                    chunkBuilder.clear();
+                    audioIndex = 0;
+                  }
                 }
 
                 print('played received data part');
@@ -501,6 +472,13 @@ class _BidiPageState extends State<BidiPage> {
         // Check if the turn is complete
         if (response.serverContent?.turnComplete ?? false) {
           print('Turn complete!');
+          if (chunkBuilder.isNotEmpty) {
+            Uint8List chunk = await AudioUtil.audioChunkWithHeader(
+              chunkBuilder.toBytes(),
+              24000,
+            );
+            _audioManager.addAudio(chunk);
+          }
 
           //await audioChunkController.close();
           //await _flutterSound.closePlayer();
@@ -510,8 +488,6 @@ class _BidiPageState extends State<BidiPage> {
           // await _player.setAudioSource(AudioSource.file(filePath));
           // await _player.play();
 
-          await _audioManager.stop();
-          await _audioManager.dispose();
           break; // Exit the loop if the turn is complete
         }
       }
