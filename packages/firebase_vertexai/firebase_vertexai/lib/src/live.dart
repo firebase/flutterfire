@@ -15,16 +15,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
+
 import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:web_socket_channel/io.dart';
 
-import 'package:firebase_vertexai/firebase_vertexai.dart';
-import 'live_client.dart';
-import 'live_content.dart';
 import 'content.dart';
-
-// import 'package:genai/genai.dart';
-// import 'package:genai/src/common.dart';
+import 'live_api.dart';
 
 const _FUNCTION_RESPONSE_REQUIRES_ID =
     'FunctionResponse request must have an `id` field from the'
@@ -42,13 +37,16 @@ class AsyncSession {
     // var clientMessage = _parseClientMessage(input, endOfTurn);
     var clientMessage =
         LiveClientContent(turns: [input], turnComplete: turnComplete);
-    _ws.sink.add(jsonEncode(clientMessage.toJson()));
+    var clientJson = jsonEncode(clientMessage.toJson());
+    //print(clientJson);
+    _ws.sink.add(clientJson);
   }
 
   Stream<LiveServerMessage> receive() async* {
     await for (var message in _ws.stream) {
       var jsonString = utf8.decode(message);
       var response = json.decode(jsonString);
+      //print(response);
       Map<String, dynamic> responseDict;
 
       responseDict = _LiveServerMessageFromVertex(response);
@@ -247,143 +245,5 @@ class AsyncSession {
 
   Future<void> close() async {
     await _ws.sink.close();
-  }
-}
-
-class AsyncLive {
-  AsyncLive(this._baseUrl, this._apiKey, this._apiVersion, this._location);
-
-  final String _baseUrl;
-  final String _apiKey;
-  final String _apiVersion;
-  final String _location;
-
-  Map<String, dynamic> _liveSetupToMldev(
-      {String? model, Map<String, dynamic>? config}) {
-    var toObject = <String, dynamic>{};
-    var returnValue = <String, dynamic>{};
-    // if (config != null) {
-    //   if (config.containsKey('generation_config')) {
-    //     toObject['generationConfig'] = config['generation_config'];
-    //   }
-    //   if (config.containsKey('response_modalities')) {
-    //     if (toObject.containsKey('generationConfig')) {
-    //       toObject['generationConfig']['responseModalities'] =
-    //           config['response_modalities'];
-    //     } else {
-    //       toObject['generationConfig'] = {
-    //         'responseModalities': config['response_modalities']
-    //       };
-    //     }
-    //   }
-    //   if (config.containsKey('speech_config')) {
-    //     if (toObject.containsKey('generationConfig')) {
-    //       toObject['generationConfig']['speechConfig'] =
-    //           config['speech_config'];
-    //     } else {
-    //       toObject['generationConfig'] = {
-    //         'speechConfig': config['speech_config']
-    //       };
-    //     }
-    //   }
-    //   if (config.containsKey('system_instruction')) {
-    //     toObject['systemInstruction'] =
-    //         parseContent(config['system_instruction']).toJson();
-    //   }
-    //   if (config.containsKey('tools')) {
-    //     toObject['tools'] = config['tools'];
-    //   }
-    // }
-
-    returnValue['setup'] = <String, dynamic>{};
-    returnValue['setup']['model'] = 'models/$model';
-    returnValue['setup'].addAll(config);
-    return returnValue;
-  }
-
-  Map<String, dynamic> _liveSetupToVertex(
-      String model, Map<String, dynamic>? config) {
-    var toObject = <String, dynamic>{};
-    var returnValue = <String, dynamic>{};
-    if (config != null) {
-      if (config.containsKey('generation_config')) {
-        toObject['generationConfig'] = config['generation_config'];
-      }
-      if (config.containsKey('response_modalities')) {
-        if (toObject.containsKey('generationConfig')) {
-          toObject['generationConfig']['responseModalities'] =
-              config['response_modalities'];
-        } else {
-          toObject['generationConfig'] = {
-            'responseModalities': config['response_modalities']
-          };
-        }
-      } else {
-        // Set default to AUDIO to align with MLDev API.
-        if (toObject.containsKey('generationConfig')) {
-          toObject['generationConfig']['responseModalities'] = ['AUDIO'];
-        } else {
-          toObject['generationConfig'] = {
-            'responseModalities': ['AUDIO']
-          };
-        }
-      }
-      if (config.containsKey('speech_config')) {
-        if (toObject.containsKey('generationConfig')) {
-          toObject['generationConfig']['speechConfig'] =
-              config['speech_config'];
-        } else {
-          toObject['generationConfig'] = {
-            'speechConfig': config['speech_config']
-          };
-        }
-      }
-      if (config.containsKey('system_instruction')) {
-        toObject['systemInstruction'] =
-            parseContent(config['system_instruction']).toJson();
-      }
-      if (config.containsKey('tools')) {
-        toObject['tools'] = config['tools'];
-      }
-    }
-
-    returnValue['setup'] = <String, dynamic>{};
-    returnValue['setup']['model'] = model;
-    returnValue['setup'].addAll(toObject);
-    return returnValue;
-  }
-
-  Future<AsyncSession> connect({
-    required String model,
-    Map<String, dynamic>? config,
-  }) async {
-    late String uri;
-    late Map<String, String> headers;
-    late String request;
-
-    uri =
-        'wss://$_baseUrl/ws/google.ai.generativelanguage.$_apiVersion.GenerativeService.BidiGenerateContent?key=$_apiKey';
-    //headers = apiClient._httpOptions['headers'];
-    request = jsonEncode(_liveSetupToMldev(model: model, config: config ?? {}));
-
-    var ws = WebSocketChannel.connect(Uri.parse(uri));
-    await ws.ready;
-
-    print(request);
-
-    ws.sink.add(request);
-
-    // Listen for incoming messages
-    // ws.stream.listen(
-    //   (message) {
-    //     print('Received: $message');
-    //   },
-    //   onError: (error) {
-    //     print('WebSocket error: $error');
-    //     // Handle the error, potentially resending the message
-    //   },
-    // );
-
-    return AsyncSession(ws: ws);
   }
 }

@@ -350,24 +350,28 @@ class _BidiPageState extends State<BidiPage> {
     setState(() {
       _loading = true;
     });
-    const location = 'us-central1';
-    const baseUrl = 'generativelanguage.googleapis.com/';
-    const apiVersion = 'v1alpha';
-    const apiKey = '';
-    const model = 'gemini-2.0-flash-exp';
-    const config = {
-      'generation_config': {
-        'response_modalities': ['AUDIO'],
-        'speech_config': {
-          'voice_config': {
-            'prebuilt_voice_config': {'voice_name': 'Aoede'}
-          }
-        }
-      },
-    };
-    var live = AsyncLive(baseUrl, apiKey, apiVersion, location);
+    // const location = 'us-central1';
+    // const baseUrl = 'generativelanguage.googleapis.com/';
+    // const apiVersion = 'v1alpha';
+    // const apiKey = 'AIzaSyCVF_c-cFSmHdC4-xbmmCUH3u8YdIBPgjA';
+    const modelName = 'gemini-2.0-flash-exp';
+    // const config = {
+    //   'generation_config': {
+    //     'response_modalities': ['AUDIO'],
+    //     'speech_config': {
+    //       'voice_config': {
+    //         'prebuilt_voice_config': {'voice_name': 'Aoede'}
+    //       }
+    //     }
+    //   },
+    // };
+    final config = LiveGenerationConfig(
+      speechConfig: SpeechConfig(voice: Voices.Charon),
+      responseModalities: [ResponseModalities.Audio],
+    );
+    //var live = AsyncLive(baseUrl, apiKey, apiVersion, location);
     if (!_session_opening) {
-      _session = await live.connect(model: model, config: config);
+      _session = await widget.model.connect(model: modelName, config: config);
       _session_opening = true;
     } else {
       await _session!.close();
