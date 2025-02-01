@@ -67,7 +67,7 @@ jobs:
           cache: true
           cache-key: flutter-${{ runner.os }}
           pub-cache-key: pub-${{ runner.os }}
-      - uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa
+      - uses: bluefireteam/melos-action@ec2c512a52c2f359186ca19bac0be977c44913e6
         with:
           run-bootstrap: false
           melos-version: '5.3.0'
