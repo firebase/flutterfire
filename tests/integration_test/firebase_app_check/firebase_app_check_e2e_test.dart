@@ -99,7 +99,7 @@ void main() {
             () async {
           await expectLater(
             FirebaseAppCheck.instance.activate(
-              iosDebugToken: 'debug_token',
+              appleDebugToken: 'debug_token',
               appleProvider: AppleProvider.debug,
             ),
             completes,

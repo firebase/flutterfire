@@ -79,7 +79,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
     AndroidProvider? androidProvider,
     AppleProvider? appleProvider,
     String? androidDebugToken,
-    String? iosDebugToken,
+    String? appleDebugToken,
   }) async {
     try {
       await channel.invokeMethod<void>('FirebaseAppCheck#activate', {
@@ -93,8 +93,8 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
             defaultTargetPlatform == TargetPlatform.macOS ||
             kDebugMode)
           'appleProvider': getAppleProviderString(appleProvider),
-        if(iosDebugToken != null)
-          'iosDebugToken': iosDebugToken,
+        if(appleDebugToken != null)
+          'appleDebugToken': appleDebugToken,
       });
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);

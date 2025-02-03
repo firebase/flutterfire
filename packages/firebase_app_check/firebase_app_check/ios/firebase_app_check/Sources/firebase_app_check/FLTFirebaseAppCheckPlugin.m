@@ -123,7 +123,7 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
 - (void)activate:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   NSString *appNameDart = arguments[@"appName"];
   NSString *providerName = arguments[@"appleProvider"];
-  NSString *debugToken = arguments[@"iosDebugToken"];
+  NSString *debugToken = arguments[@"appleDebugToken"];
 
   FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appNameDart];
   [self->providerFactory configure:app providerName:providerName debugToken:debugToken];
