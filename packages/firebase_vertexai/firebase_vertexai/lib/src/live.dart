@@ -39,7 +39,7 @@ class AsyncSession {
         ? LiveClientContent(turns: [input], turnComplete: turnComplete)
         : LiveClientContent(turnComplete: turnComplete);
     var clientJson = jsonEncode(clientMessage.toJson());
-    //print(clientJson);
+    print(clientJson);
     _ws.sink.add(clientJson);
   }
 
@@ -71,8 +71,26 @@ class AsyncSession {
     // Start the send loop. When stream is complete, complete the completer.
     unawaited(_sendLoop(stream, mimeType, completer));
 
+    // Listen for messages from the WebSocket.
+    // await for (final message in _ws.stream) {
+    //   var jsonString = utf8.decode(message);
+    //   var response = json.decode(jsonString);
+    //   print(response);
+    //   Map<String, dynamic> responseDict;
+
+    //   responseDict = _LiveServerMessageFromVertex(response);
+
+    //   var result = parseServerMessage(responseDict);
+
+    //   if (result.serverContent?.turnComplete ?? false) {
+    //     yield result;
+    //     break;
+    //   }
+    //   yield result;
+    // }
+
     // Wait for the send loop to complete or the websocket to close.
-    await Future.any([completer.future, _ws.stream.isEmpty]);
+    // await Future.any([completer.future, _ws.stream.isEmpty]);
 
     // Close the websocket if it's not already closed.
     // if (_ws.closeCode == null) {
@@ -99,7 +117,7 @@ class AsyncSession {
       }
     } finally {
       print('client audio sent complete');
-      await send(turnComplete: true);
+      // await send(turnComplete: true);
       // Complete the completer to signal the end of the stream.
       completer.complete();
     }

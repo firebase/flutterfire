@@ -220,13 +220,11 @@ class _BidiPageState extends State<BidiPage> {
   Future<void> _stopRecording() async {
     await _audioRecorder.stopRecording();
     var audioPrompt = await _audioRecorder.getAudioBytes(fromFile: true);
-    await _sendAudioChunks(audioPrompt, 'audio/pcm');
+    //await _streamAudioChunks(audioPrompt, 'audio/pcm');
+    await _sendAudioPrompt(audioPrompt);
   }
 
-  Future<void> _sendAudioChunks(Uint8List audioData, String mimeType) async {
-    setState(() {
-      _loading = true;
-    });
+  List<Uint8List> _splitIntoChunks(Uint8List audioData, int chunkSize) {
     final chunks = <Uint8List>[];
     const chunkSize = 1024;
 
@@ -235,6 +233,14 @@ class _BidiPageState extends State<BidiPage> {
           (i + chunkSize < audioData.length) ? i + chunkSize : audioData.length;
       chunks.add(audioData.sublist(i, end));
     }
+    return chunks;
+  }
+
+  Future<void> _streamAudioChunks(Uint8List audioData, String mimeType) async {
+    setState(() {
+      _loading = true;
+    });
+    final chunks = _splitIntoChunks(audioData, 1024);
 
     final streamController = StreamController<Uint8List>();
     for (var chunk in chunks) {
@@ -247,8 +253,24 @@ class _BidiPageState extends State<BidiPage> {
         .startStream(stream: streamController.stream, mimeType: mimeType)) {
       // Process the message received from the server
       print('Received message: $message');
-      await _handle_response_audio();
     }
+    print('Stream all audio chunk to server');
+    await _handle_response_audio();
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  Future<void> _sendAudioPrompt(Uint8List audio) async {
+    setState(() {
+      _loading = true;
+    });
+    final prompt = Content.inlineData('audio/pcm', audio);
+    await _session!.send(input: prompt, turnComplete: true);
+
+    print('Sent audio chunk to server');
+
+    await _handle_response_audio();
     setState(() {
       _loading = false;
     });
