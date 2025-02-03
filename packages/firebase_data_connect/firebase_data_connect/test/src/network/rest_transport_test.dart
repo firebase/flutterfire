@@ -17,6 +17,7 @@ import 'dart:convert';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_data_connect/src/common/common_library.dart';
+import 'package:firebase_data_connect/src/dataconnect_version.dart';
 import 'package:firebase_data_connect/src/network/rest_library.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -254,6 +255,42 @@ void main() {
           any,
           headers: argThat(
             containsPair('X-Firebase-Auth-Token', 'authToken123'),
+            named: 'headers',
+          ),
+          body: anyNamed('body'),
+        ),
+      ).called(1);
+    });
+    test('invokeOperation should include x-firebase-client headers', () async {
+      final mockResponse = http.Response('{"data": {"key": "value"}}', 200);
+      when(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).thenAnswer((_) async => mockResponse);
+
+      when(mockUser.getIdToken()).thenAnswer((_) async => 'authToken123');
+      when(mockAppCheck.getToken()).thenAnswer((_) async => 'appCheckToken123');
+
+      final deserializer = (String data) => 'Deserialized Data';
+
+      await transport.invokeOperation(
+        'testQuery',
+        'executeQuery',
+        deserializer,
+        null,
+        null,
+        'authToken123',
+      );
+
+      verify(
+        mockHttpClient.post(
+          any,
+          headers: argThat(
+            containsPair(
+                'x-firebase-client', getFirebaseClientVal(packageVersion)),
             named: 'headers',
           ),
           body: anyNamed('body'),

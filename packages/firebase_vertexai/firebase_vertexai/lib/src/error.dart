@@ -108,7 +108,7 @@ final class VertexAISdkException implements Exception {
       'Try updating to the latest version '
       '(https://pub.dev/packages/firebase_vertexai/versions), '
       'or file an issue at '
-      'https://github.com/firebase/flutterfire/issuess.';
+      'https://github.com/firebase/flutterfire/issues.';
 }
 
 /// Parse the error json object.
