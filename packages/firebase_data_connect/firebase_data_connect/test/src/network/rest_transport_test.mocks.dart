@@ -781,6 +781,8 @@ class MockFirebaseAppCheck extends _i1.Mock implements _i10.FirebaseAppCheck {
     _i11.WebProvider? webProvider,
     _i11.AndroidProvider? androidProvider = _i11.AndroidProvider.playIntegrity,
     _i11.AppleProvider? appleProvider = _i11.AppleProvider.deviceCheck,
+    String? androidDebugToken,
+    String? appleDebugToken,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -790,6 +792,8 @@ class MockFirebaseAppCheck extends _i1.Mock implements _i10.FirebaseAppCheck {
             #webProvider: webProvider,
             #androidProvider: androidProvider,
             #appleProvider: appleProvider,
+            #androidDebugToken: androidDebugToken,
+            #appleDebugToken: appleDebugToken,
           },
         ),
         returnValue: _i6.Future<void>.value(),

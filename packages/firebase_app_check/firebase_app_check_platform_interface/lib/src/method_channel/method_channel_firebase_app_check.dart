@@ -87,14 +87,12 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
         // Allow value to pass for debug mode for unit testing
         if (defaultTargetPlatform == TargetPlatform.android || kDebugMode)
           'androidProvider': getAndroidProviderString(androidProvider),
-        if(androidDebugToken != null)
-          'androidDebugToken': androidDebugToken,
+        if (androidDebugToken != null) 'androidDebugToken': androidDebugToken,
         if (defaultTargetPlatform == TargetPlatform.iOS ||
             defaultTargetPlatform == TargetPlatform.macOS ||
             kDebugMode)
           'appleProvider': getAppleProviderString(appleProvider),
-        if(appleDebugToken != null)
-          'appleDebugToken': appleDebugToken,
+        if (appleDebugToken != null) 'appleDebugToken': appleDebugToken,
       });
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
