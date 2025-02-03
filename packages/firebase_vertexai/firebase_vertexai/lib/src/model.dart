@@ -20,7 +20,6 @@ import 'dart:convert';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -28,9 +27,9 @@ import 'api.dart';
 import 'client.dart';
 import 'content.dart';
 import 'function_calling.dart';
-import 'vertex_version.dart';
 import 'live.dart';
 import 'live_api.dart';
+import 'vertex_version.dart';
 
 const _baseUrl = 'firebasevertexai.googleapis.com';
 const _apiVersion = 'v1beta';
@@ -42,7 +41,7 @@ const _baseGAIUrl = 'generativelanguage.googleapis.com';
 const _apiGAIUrl =
     'ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=';
 
-const _bidiGoogleAI = true;
+const _bidiGoogleAI = false;
 
 /// [Task] enum class for [GenerativeModel] to make request.
 enum Task {

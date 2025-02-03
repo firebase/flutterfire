@@ -31,12 +31,13 @@ class AsyncSession {
   AsyncSession({required WebSocketChannel ws}) : _ws = ws;
 
   Future<void> send({
-    required Content input,
+    Content? input,
     bool turnComplete = false,
   }) async {
     // var clientMessage = _parseClientMessage(input, endOfTurn);
-    var clientMessage =
-        LiveClientContent(turns: [input], turnComplete: turnComplete);
+    var clientMessage = input != null
+        ? LiveClientContent(turns: [input], turnComplete: turnComplete)
+        : LiveClientContent(turnComplete: turnComplete);
     var clientJson = jsonEncode(clientMessage.toJson());
     //print(clientJson);
     _ws.sink.add(clientJson);
@@ -62,9 +63,10 @@ class AsyncSession {
   }
 
   Stream<LiveServerMessage> startStream({
-    required Stream<List<int>> stream,
+    required Stream<Uint8List> stream,
     required String mimeType,
   }) async* {
+    print('beginning of startStream');
     var completer = Completer();
     // Start the send loop. When stream is complete, complete the completer.
     unawaited(_sendLoop(stream, mimeType, completer));
@@ -73,25 +75,31 @@ class AsyncSession {
     await Future.any([completer.future, _ws.stream.isEmpty]);
 
     // Close the websocket if it's not already closed.
-    if (_ws.closeCode == null) {
-      await _ws.sink.close();
-    }
+    // if (_ws.closeCode == null) {
+    //   await _ws.sink.close();
+    // }
   }
 
   Future<void> _sendLoop(
-    Stream<List<int>> dataStream,
+    Stream<Uint8List> dataStream,
     String mimeType,
     Completer completer,
   ) async {
     try {
-      await for (var data in dataStream) {
-        var input = Content.inlineData(mimeType, Uint8List.fromList(data));
+      print('start _sendLoop');
+      await for (final data in dataStream) {
+        var input = Content.inlineData(
+            mimeType, data); // No need to convert to Uint8List
+
+        print('send audio data with size ${data.length}');
 
         await send(input: input);
         // Give a chance for the receive loop to process responses.
         await Future.delayed(Duration.zero);
       }
     } finally {
+      print('client audio sent complete');
+      await send(turnComplete: true);
       // Complete the completer to signal the end of the stream.
       completer.complete();
     }
