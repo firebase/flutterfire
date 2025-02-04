@@ -58,7 +58,9 @@ external JSPromise isSupported();
 @JS()
 @staticInterop
 external JSPromise setCustomSignals(
-    RemoteConfigJsImpl remoteConfig, JSObject customSignals);
+  RemoteConfigJsImpl remoteConfig,
+  JSObject customSignals,
+);
 
 @JS()
 @staticInterop
