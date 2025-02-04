@@ -155,6 +155,18 @@ void main() {
         expect(FirebaseRemoteConfig.instance.getInt('does-not-exist'), 0);
         expect(FirebaseRemoteConfig.instance.getDouble('does-not-exist'), 0.0);
       });
+
+      group('setCustomSignals()', () {
+        test('correct signals', () async {
+          const signals = <String, Object?>{
+            'signal1': 'value1',
+            'signal2': 204953,
+            'signal3': 3.24,
+          };
+
+          await FirebaseRemoteConfig.instance.setCustomSignals(signals);
+        });
+      });
     },
   );
 }
