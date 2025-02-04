@@ -51,10 +51,13 @@ external JSString getString(RemoteConfigJsImpl remoteConfig, JSString key);
 @staticInterop
 external ValueJsImpl getValue(RemoteConfigJsImpl remoteConfig, JSString key);
 
-// TODO - api to be implemented
 @JS()
 @staticInterop
 external JSPromise isSupported();
+
+@JS()
+@staticInterop
+external JSPromise setCustomSignals(RemoteConfigJsImpl remoteConfig, JSObject customSignals);
 
 @JS()
 @staticInterop
