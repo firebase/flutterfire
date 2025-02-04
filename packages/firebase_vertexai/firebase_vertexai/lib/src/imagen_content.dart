@@ -35,6 +35,17 @@ final class ImagenInlineImage implements ImagenImage {
     required this.mimeType,
   });
 
+  /// Factory method to create an [ImagenInlineImage] from a JSON object.
+  factory ImagenInlineImage.fromJson(Map<String, dynamic> json) {
+    final mimeType = json['mimeType'] as String;
+    final bytes = json['bytesBase64Encoded'] as String;
+    final decodedBytes = base64Decode(bytes);
+    return ImagenInlineImage(
+      mimeType: mimeType,
+      bytesBase64Encoded: Uint8List.fromList(decodedBytes),
+    );
+  }
+
   /// The data contents in bytes, encoded as base64.
   final Uint8List bytesBase64Encoded;
 
@@ -55,6 +66,17 @@ final class ImagenGCSImage implements ImagenImage {
     required this.gcsUri,
     required this.mimeType,
   });
+
+  /// Factory method to create an [ImagenGCSImage] from a JSON object.
+  factory ImagenGCSImage.fromJson(Map<String, dynamic> json) {
+    final mimeType = json['mimeType'] as String;
+    final uri = json['gcsUri'] as String;
+
+    return ImagenGCSImage(
+      mimeType: mimeType,
+      gcsUri: uri,
+    );
+  }
 
   /// The storage URI of the image.
   final String gcsUri;
@@ -77,37 +99,40 @@ final class ImagenGenerationResponse<T extends ImagenImage> {
     this.filteredReason,
   });
 
-  /// Factory method to create an ImagenGenerationResponse from a JSON object.
+  /// Factory method to create an [ImagenGenerationResponse] from a JSON object.
   factory ImagenGenerationResponse.fromJson(Map<String, dynamic> json) {
-    final filteredReason = json['filteredReason'] as String?;
-    final imagesJson = json['predictions'] as List<dynamic>;
+    final predictions = json['predictions'] as List<Map<String, dynamic>>;
+    List<T> images = [];
+    String? filteredReason;
 
     if (T == ImagenInlineImage) {
-      final images = imagesJson.map((imageJson) {
-        final mimeType = imageJson['mimeType'] as String;
-        final bytes = imageJson['bytesBase64Encoded'] as String;
-        final decodedBytes = base64Decode(bytes);
-        return ImagenInlineImage(
-          mimeType: mimeType,
-          bytesBase64Encoded: Uint8List.fromList(decodedBytes),
-        ) as T;
-      }).toList();
-      return ImagenGenerationResponse<T>(
-          images: images, filteredReason: filteredReason);
+      for (final prediction in predictions) {
+        if (prediction.containsKey('bytesBase64Encoded')) {
+          final image = ImagenInlineImage.fromJson(prediction) as T;
+          images.add(image);
+        } else if (prediction.containsKey('raiFilteredReason')) {
+          filteredReason = prediction['raiFilteredReason'] as String;
+        }
+      }
     } else if (T == ImagenGCSImage) {
-      final images = imagesJson.map((imageJson) {
-        final mimeType = imageJson['mimeType'] as String;
-        final gcsUri = imageJson['gcsUri'] as String;
-        return ImagenGCSImage(
-          mimeType: mimeType,
-          gcsUri: gcsUri,
-        ) as T;
-      }).toList();
-      return ImagenGenerationResponse<T>(
-          images: images, filteredReason: filteredReason);
+      for (final prediction in predictions) {
+        if (prediction.containsKey('gcsUri')) {
+          final image = ImagenGCSImage.fromJson(prediction) as T;
+          images.add(image);
+        } else if (prediction.containsKey('raiFilteredReason')) {
+          filteredReason = prediction['raiFilteredReason'] as String;
+        }
+      }
     } else {
       throw ArgumentError('Unsupported ImagenImage type: $T');
     }
+
+    if (images.isEmpty && filteredReason != null) {
+      throw ImagenImagesBlockedException(filteredReason);
+    }
+
+    return ImagenGenerationResponse<T>(
+        images: images, filteredReason: filteredReason);
   }
 
   /// A list of generated images. The type of the images depends on the T parameter.
