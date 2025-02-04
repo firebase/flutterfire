@@ -55,7 +55,7 @@ final class ImagenInlineImage implements ImagenImage {
   @override
   Object toJson() => {
         'mimeType': mimeType,
-        'bytesBase64Encoded': bytesBase64Encoded,
+        'bytesBase64Encoded': base64Encode(bytesBase64Encoded),
       };
 }
 
@@ -101,7 +101,11 @@ final class ImagenGenerationResponse<T extends ImagenImage> {
 
   /// Factory method to create an [ImagenGenerationResponse] from a JSON object.
   factory ImagenGenerationResponse.fromJson(Map<String, dynamic> json) {
-    final predictions = json['predictions'] as List<Map<String, dynamic>>;
+    final predictions = json['predictions'];
+    if (predictions.isEmpty) {
+      throw ServerException('Got empty prediction with no reason');
+    }
+
     List<T> images = [];
     String? filteredReason;
 
