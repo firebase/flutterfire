@@ -306,4 +306,19 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
     });
     return _onConfigUpdatedStream!;
   }
+
+  @override
+  Future<void> setCustomSignals(Map<String, Object?> customSignals) {
+    try {
+      return channel.invokeMethod<void>(
+        'RemoteConfig#setCustomSignals',
+        <String, dynamic>{
+          'appName': app.name,
+          'customSignals': customSignals,
+        },
+      );
+    } catch (exception, stackTrace) {
+      convertPlatformException(exception, stackTrace);
+    }
+  }
 }

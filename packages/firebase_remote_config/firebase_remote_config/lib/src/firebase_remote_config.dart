@@ -168,4 +168,13 @@ class FirebaseRemoteConfig extends FirebasePluginPlatform {
   Stream<RemoteConfigUpdate> get onConfigUpdated {
     return _delegate.onConfigUpdated;
   }
+
+  /// Changes the custom signals for this FirebaseRemoteConfig instance
+  /// Custom signals are subject to limits on the size of key/value pairs and the total number of signals.
+  /// Any calls that exceed these limits will be discarded.
+  /// If a key already exists, the value is overwritten. Setting the value of a custom signal to null un-sets the signal.
+  /// The signals will be persisted locally on the client.
+  Future<void> setCustomSignals(Map<String, Object?> customSignals) {
+    return _delegate.setCustomSignals(customSignals);
+  }
 }
