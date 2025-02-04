@@ -190,6 +190,7 @@ class FirebaseRemoteConfigWeb extends FirebaseRemoteConfigPlatform {
   @override
   Future<void> setCustomSignals(Map<String, Object?> customSignals) {
     return convertWebExceptions(
-          () => _delegate.setCustomSignals(customSignals),);
+      () => _delegate.setCustomSignals(customSignals),
+    );
   }
 }
