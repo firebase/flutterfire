@@ -14,6 +14,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import '../widgets/message_widget.dart';
 
 class ImagenPage extends StatefulWidget {
@@ -120,6 +121,20 @@ class _ImagenPageState extends State<ImagenPage> {
                         Icons.image_search,
                         color: Theme.of(context).colorScheme.primary,
                       ),
+                      tooltip: 'Imagen raw data',
+                    )
+                  else
+                    const CircularProgressIndicator(),
+                  if (!_loading)
+                    IconButton(
+                      onPressed: () async {
+                        await _testImagenGCS(_textController.text);
+                      },
+                      icon: Icon(
+                        Icons.imagesearch_roller,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      tooltip: 'Imagen GCS',
                     )
                   else
                     const CircularProgressIndicator(),
@@ -145,6 +160,36 @@ class _ImagenPageState extends State<ImagenPage> {
       _generatedContent.add(
         MessageData(
           image: Image.memory(imagenImage.bytesBase64Encoded),
+          text: prompt,
+          fromUser: false,
+        ),
+      );
+    } else {
+      // Handle the case where no images were generated
+      _showError('Error: No images were generated.');
+    }
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  Future<void> _testImagenGCS(String prompt) async {
+    setState(() {
+      _loading = true;
+    });
+    var gcsUrl = 'gs://vertex-ai-example-ef5a2.appspot.com/imagen';
+
+    var response = await _imagenModel.generateImagesGCS(prompt, gcsUrl);
+
+    if (response.images.isNotEmpty) {
+      var imagenImage = response.images[0];
+      final returnImageUri = imagenImage.gcsUri;
+      final reference = FirebaseStorage.instance.refFromURL(returnImageUri);
+      final downloadUrl = await reference.getDownloadURL();
+      // Process the image
+      _generatedContent.add(
+        MessageData(
+          image: Image(image: NetworkImage(downloadUrl)),
           text: prompt,
           fromUser: false,
         ),
