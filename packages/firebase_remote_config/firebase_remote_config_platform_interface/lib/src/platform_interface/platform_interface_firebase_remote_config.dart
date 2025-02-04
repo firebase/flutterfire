@@ -181,6 +181,7 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   Stream<RemoteConfigUpdate> get onConfigUpdated {
     throw UnimplementedError('onConfigUpdated getter not implemented');
   }
+
   /// Changes the custom signals for this FirebaseRemoteConfig instance
   /// Custom signals are subject to limits on the size of key/value pairs and the total number of signals.
   /// Any calls that exceed these limits will be discarded.
