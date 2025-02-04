@@ -16,6 +16,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.remoteconfig.ConfigUpdate;
 import com.google.firebase.remoteconfig.ConfigUpdateListener;
 import com.google.firebase.remoteconfig.ConfigUpdateListenerRegistration;
+import com.google.firebase.remoteconfig.CustomSignals;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigClientException;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigException;
@@ -137,6 +138,37 @@ public class FirebaseRemoteConfigPlugin
     return FirebaseRemoteConfig.getInstance(app);
   }
 
+  private Task<Void> setCustomSignals(
+      FirebaseRemoteConfig remoteConfig, Map<String, Object> customSignalsArguments) {
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            CustomSignals.Builder customSignals = new CustomSignals.Builder();
+            for (Map.Entry<String, Object> entry : customSignalsArguments.entrySet()) {
+              Object value = entry.getValue();
+              if (value instanceof String) {
+                customSignals.put(entry.getKey(), (String) value);
+              }
+              if (value instanceof Long) {
+                customSignals.put(entry.getKey(), (Long) value);
+              }
+              if (value instanceof Double) {
+                customSignals.put(entry.getKey(), (Double) value);
+              }
+              if (value == null) {
+                customSignals.put(entry.getKey(), null);
+              }
+            }
+            Tasks.await(remoteConfig.setCustomSignals(customSignals.build()));
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+    return taskCompletionSource.getTask();
+  }
+
   @Override
   public void onMethodCall(MethodCall call, @NonNull final MethodChannel.Result result) {
     Task<?> methodCallTask;
@@ -190,6 +222,13 @@ public class FirebaseRemoteConfigPlugin
         {
           Map<String, Object> configProperties = getConfigProperties(remoteConfig);
           methodCallTask = Tasks.forResult(configProperties);
+          break;
+        }
+      case "RemoteConfig#setCustomSignals":
+        {
+          Map<String, Object> customSignals =
+              Objects.requireNonNull(call.argument("customSignals"));
+          methodCallTask = setCustomSignals(remoteConfig, customSignals);
           break;
         }
       default:
