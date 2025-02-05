@@ -13,4 +13,4 @@
 // limitations under the License.
 
 /// version number for the package, should be align with pubspec.yaml.
-const packageVersion = '0.1.2+7';
+const packageVersion = '0.1.3';

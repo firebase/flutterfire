@@ -1,3 +1,7 @@
+## 1.8.0
+
+ - **FEAT**(remote-config): custom signals support ([#17053](https://github.com/firebase/flutterfire/issues/17053)). ([7cf248a8](https://github.com/firebase/flutterfire/commit/7cf248a8808e3d8f7fed29f18ddaf1fadf329ca3))
+
 ## 1.7.7
 
  - Update a dependency to the latest release.
