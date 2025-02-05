@@ -111,6 +111,21 @@ final class VertexAISdkException implements Exception {
       'https://github.com/firebase/flutterfire/issues.';
 }
 
+/// Exception indicating all images filtered out.
+///
+/// This exception indicates all images were filtered out because they violated
+/// Vertex AI's usage guidelines.
+final class ImagenImagesBlockedException implements Exception {
+  /// Constructor
+  ImagenImagesBlockedException(this.message);
+
+  /// Message of the exception
+  final String message;
+
+  @override
+  String toString() => message;
+}
+
 /// Parse the error json object.
 VertexAIException parseError(Object jsonObject) {
   return switch (jsonObject) {
