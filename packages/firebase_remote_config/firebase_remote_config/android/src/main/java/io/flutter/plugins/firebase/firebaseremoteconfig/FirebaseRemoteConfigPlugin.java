@@ -149,14 +149,13 @@ public class FirebaseRemoteConfigPlugin
               Object value = entry.getValue();
               if (value instanceof String) {
                 customSignals.put(entry.getKey(), (String) value);
-              }
-              if (value instanceof Long) {
+              } else if (value instanceof Long) {
                 customSignals.put(entry.getKey(), (Long) value);
-              }
-              if (value instanceof Double) {
+              } else if(value instanceof Integer){
+                customSignals.put(entry.getKey(), ((Integer) value).longValue());
+              } else if (value instanceof Double) {
                 customSignals.put(entry.getKey(), (Double) value);
-              }
-              if (value == null) {
+              } else if (value == null) {
                 customSignals.put(entry.getKey(), null);
               }
             }
