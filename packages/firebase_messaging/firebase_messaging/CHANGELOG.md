@@ -1,3 +1,7 @@
+## 15.2.2
+
+ - Update a dependency to the latest release.
+
 ## 15.2.1
 
  - **FIX**(messaging,android): remove a deprecation message ([#16995](https://github.com/firebase/flutterfire/issues/16995)). ([b4e46db6](https://github.com/firebase/flutterfire/commit/b4e46db6fcc9080673108599a24bb4c1fe79f0f3))

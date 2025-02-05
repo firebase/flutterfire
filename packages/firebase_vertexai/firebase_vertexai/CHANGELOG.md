@@ -1,3 +1,8 @@
+## 1.2.0
+
+ - **FIX**(firebase_vertexai): Corrected minor typo in VertexAISDKException ([#17033](https://github.com/firebase/flutterfire/issues/17033)). ([ba543d08](https://github.com/firebase/flutterfire/commit/ba543d08a68f60476ce2b2260506fe035c503aaa))
+ - **FEAT**(vertexai): organize example page and functions ([#17008](https://github.com/firebase/flutterfire/issues/17008)). ([6b76260d](https://github.com/firebase/flutterfire/commit/6b76260de7bc03aa6e1cd68bed2e224d53437239))
+
 ## 1.1.1
 
  - Update a dependency to the latest release.
