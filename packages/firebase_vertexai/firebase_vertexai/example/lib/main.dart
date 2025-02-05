@@ -23,14 +23,15 @@ import 'pages/image_prompt_page.dart';
 import 'pages/token_count_page.dart';
 import 'pages/schema_page.dart';
 import 'pages/storage_uri_page.dart';
+import 'pages/bidi_page.dart';
 
 // REQUIRED if you want to run on Web
 const FirebaseOptions? options = null;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  await FirebaseAuth.instance.signInAnonymously();
+  await Firebase.initializeApp(options: options);
+  // await FirebaseAuth.instance.signInAnonymously();
 
   var vertex_instance =
       FirebaseVertexAI.instanceFor(auth: FirebaseAuth.instance);
@@ -81,6 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ImagePromptPage(title: 'Image Prompt', model: widget.model),
         StorageUriPromptPage(title: 'Storage URI Prompt', model: widget.model),
         SchemaPromptPage(title: 'Schema Prompt', model: widget.model),
+        BidiPage(title: 'Bidi Stream', model: widget.model),
       ];
 
   void _onItemTapped(int index) {
@@ -147,6 +149,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             label: 'Schema Prompt',
             tooltip: 'Schema Prompt',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.stream,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            label: 'Bidi Stream',
+            tooltip: 'Bidi Stream',
           ),
         ],
         currentIndex: _selectedIndex,

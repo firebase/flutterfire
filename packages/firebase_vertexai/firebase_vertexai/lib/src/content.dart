@@ -98,8 +98,8 @@ Part _parsePart(Object? jsonObject) {
       'functionResponse': {'name': String _, 'response': Map<String, Object?> _}
     } =>
       throw UnimplementedError('FunctionResponse part not yet supported'),
-    {'inlineData': {'mimeType': String _, 'data': String _}} =>
-      throw UnimplementedError('inlineData content part not yet supported'),
+    {'inlineData': {'mimeType': String mimeType, 'data': String bytes}} =>
+      InlineDataPart(mimeType, base64Decode(bytes)),
     _ => throw unhandledFormat('Part', jsonObject),
   };
 }
