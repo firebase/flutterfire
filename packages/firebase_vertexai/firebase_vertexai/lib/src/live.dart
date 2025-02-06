@@ -39,7 +39,17 @@ class AsyncSession {
         ? LiveClientContent(turns: [input], turnComplete: turnComplete)
         : LiveClientContent(turnComplete: turnComplete);
     var clientJson = jsonEncode(clientMessage.toJson());
-    print(clientJson);
+    print('Sending $clientJson');
+    _ws.sink.add(clientJson);
+  }
+
+  Future<void> stream({
+    required List<InlineDataPart> mediaChunks,
+  }) async {
+    // var clientMessage = _parseClientMessage(input, endOfTurn);
+    var clientMessage = LiveClientRealtimeInput(mediaChunks: mediaChunks);
+    var clientJson = jsonEncode(clientMessage.toJson());
+    print('Streaming $clientJson');
     _ws.sink.add(clientJson);
   }
 
@@ -47,7 +57,7 @@ class AsyncSession {
     await for (var message in _ws.stream) {
       var jsonString = utf8.decode(message);
       var response = json.decode(jsonString);
-      //print(response);
+      print(response);
       Map<String, dynamic> responseDict;
 
       responseDict = _LiveServerMessageFromVertex(response);
@@ -63,7 +73,7 @@ class AsyncSession {
   }
 
   Stream<LiveServerMessage> startStream({
-    required Stream<Uint8List> stream,
+    required Stream<InlineDataPart> stream,
     required String mimeType,
   }) async* {
     print('beginning of startStream');
@@ -90,7 +100,7 @@ class AsyncSession {
     // }
 
     // Wait for the send loop to complete or the websocket to close.
-    // await Future.any([completer.future, _ws.stream.isEmpty]);
+    await Future.any([completer.future]);
 
     // Close the websocket if it's not already closed.
     // if (_ws.closeCode == null) {
@@ -99,19 +109,16 @@ class AsyncSession {
   }
 
   Future<void> _sendLoop(
-    Stream<Uint8List> dataStream,
+    Stream<InlineDataPart> dataStream,
     String mimeType,
     Completer completer,
   ) async {
     try {
       print('start _sendLoop');
       await for (final data in dataStream) {
-        var input = Content.inlineData(
-            mimeType, data); // No need to convert to Uint8List
+        print('send audio data with size ${data.bytes.length}');
 
-        print('send audio data with size ${data.length}');
-
-        await send(input: input);
+        await stream(mediaChunks: [data]);
         // Give a chance for the receive loop to process responses.
         await Future.delayed(Duration.zero);
       }

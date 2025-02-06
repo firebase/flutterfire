@@ -124,7 +124,7 @@ final class TextPart implements Part {
 /// A [Part] with the byte content of a file.
 final class InlineDataPart implements Part {
   /// Constructor
-  InlineDataPart(this.mimeType, this.bytes);
+  InlineDataPart(this.mimeType, this.bytes, {this.willContinue});
 
   /// File type of the [InlineDataPart].
   /// https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-multimodal-prompts#media_requirements
@@ -132,9 +132,15 @@ final class InlineDataPart implements Part {
 
   /// Data contents in bytes.
   final Uint8List bytes;
+
+  final bool? willContinue;
   @override
   Object toJson() => {
-        'inlineData': {'data': base64Encode(bytes), 'mimeType': mimeType}
+        'inlineData': {
+          'data': base64Encode(bytes),
+          'mimeType': mimeType,
+          if (willContinue != null) 'willContinue': willContinue,
+        }
       };
 }
 

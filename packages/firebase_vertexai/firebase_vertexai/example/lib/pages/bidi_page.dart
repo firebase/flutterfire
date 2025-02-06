@@ -221,7 +221,8 @@ class _BidiPageState extends State<BidiPage> {
     await _audioRecorder.stopRecording();
     var audioPrompt = await _audioRecorder.getAudioBytes(fromFile: true);
     //await _streamAudioChunks(audioPrompt, 'audio/pcm');
-    await _sendAudioPrompt(audioPrompt);
+    //await _sendAudioPrompt(audioPrompt);
+    await _sendAudioRealtime(audioPrompt);
   }
 
   List<Uint8List> _splitIntoChunks(Uint8List audioData, int chunkSize) {
@@ -242,9 +243,16 @@ class _BidiPageState extends State<BidiPage> {
     });
     final chunks = _splitIntoChunks(audioData, 1024);
 
-    final streamController = StreamController<Uint8List>();
+    final streamController = StreamController<InlineDataPart>();
     for (var chunk in chunks) {
-      streamController.add(chunk);
+      if (identical(chunk, chunks.last)) {
+        final lastData =
+            InlineDataPart('audio/pcm', chunk, willContinue: false);
+        streamController.add(lastData);
+      } else {
+        final data = InlineDataPart('audio/pcm', chunk, willContinue: true);
+        streamController.add(data);
+      }
     }
     streamController.close();
     print('streamController has stream closed');
@@ -255,6 +263,32 @@ class _BidiPageState extends State<BidiPage> {
       print('Received message: $message');
     }
     print('Stream all audio chunk to server');
+    await _handle_response_audio();
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  Future<void> _sendAudioRealtime(Uint8List audio) async {
+    setState(() {
+      _loading = true;
+    });
+    final chunks = _splitIntoChunks(audio, 1024);
+
+    final media_chunks = <InlineDataPart>[];
+    for (var chunk in chunks) {
+      if (identical(chunk, chunks.last)) {
+        final lastData =
+            InlineDataPart('audio/pcm', chunk, willContinue: false);
+        media_chunks.add(lastData);
+      } else {
+        final data = InlineDataPart('audio/pcm', chunk, willContinue: true);
+        media_chunks.add(data);
+      }
+    }
+    await _session!.stream(mediaChunks: media_chunks);
+    print('Stream realtime audio chunk to server in one request');
+
     await _handle_response_audio();
     setState(() {
       _loading = false;
