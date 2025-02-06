@@ -603,7 +603,7 @@ final class GenerationConfig {
   /// Controls the likelihood of repeating the same words or phrases already generated in the text.
   final double? presencePenalty;
 
-    /// Controls the likelihood of repeating words, with the penalty increasing for each repetition.
+  /// Controls the likelihood of repeating words, with the penalty increasing for each repetition.
   final double? frequencyPenalty;
 
   /// Output response mimetype of the generated candidate text.
