@@ -598,7 +598,7 @@ final class GenerationConfig {
   /// considers the set of `top_k` most probable tokens. Defaults to 40.
   ///
   /// Note: The default value varies by model.
-    final int? topK;
+  final int? topK;
 
   /// Controls the likelihood of repeating the same words or phrases already generated in the text.
   final double? presencePenalty;
@@ -635,10 +635,10 @@ final class GenerationConfig {
           'responseMimeType': responseMimeType,
         if (responseSchema case final responseSchema?)
           'responseSchema': responseSchema,
-      if(presencePenalty case final presencePenalty?)
-        'presencePenalty': presencePenalty,
+        if (presencePenalty case final presencePenalty?)
+          'presencePenalty': presencePenalty,
         if (frequencyPenalty case final frequencyPenalty?)
-            'frequencyPenalty': frequencyPenalty,
+          'frequencyPenalty': frequencyPenalty,
       };
 }
 
