@@ -551,7 +551,9 @@ final class GenerationConfig {
       this.topP,
       this.topK,
       this.responseMimeType,
-      this.responseSchema});
+      this.responseSchema,
+      this.presencePenalty,
+      this.frequencyPenalty});
 
   /// Number of generated responses to return.
   ///
@@ -596,9 +598,15 @@ final class GenerationConfig {
   /// considers the set of `top_k` most probable tokens. Defaults to 40.
   ///
   /// Note: The default value varies by model.
-  final int? topK;
+    final int? topK;
 
-  /// Output response mimetype of the generated candidate text.
+  /// Controls the likelihood of repeating the same words or phrases already generated in the text.
+  final double? presencePenalty;
+
+    /// Controls the likelihood of repeating words, with the penalty increasing for each repetition.
+  final double? frequencyPenalty;
+
+    /// Output response mimetype of the generated candidate text.
   ///
   /// Supported mimetype:
   /// - `text/plain`: (default) Text output.
@@ -627,6 +635,10 @@ final class GenerationConfig {
           'responseMimeType': responseMimeType,
         if (responseSchema case final responseSchema?)
           'responseSchema': responseSchema,
+      if(presencePenalty case final presencePenalty?)
+        'presencePenalty': presencePenalty,
+        if (frequencyPenalty case final frequencyPenalty?)
+            'frequencyPenalty': frequencyPenalty,
       };
 }
 
