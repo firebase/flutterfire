@@ -48,8 +48,8 @@ class _ImagenPageState extends State<ImagenPage> {
       aspectRatio: ImagenAspectRatio.square1x1,
       imageFormat: ImagenFormat.jpeg(compressionQuality: 75),
     );
-    _imagenModel = FirebaseVertexAI.instance.imageModel(
-      modelName: 'imagen-3.0-generate-001',
+    _imagenModel = FirebaseVertexAI.instance.imagenModel(
+      model: 'imagen-3.0-generate-001',
       generationConfig: generationConfig,
       safetySettings: ImagenSafetySettings(
         ImagenSafetyFilterLevel.blockLowAndAbove,

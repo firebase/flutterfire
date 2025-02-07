@@ -24,7 +24,7 @@ import 'imagen_content.dart';
 final class ImagenModel extends BaseModel {
   ImagenModel._(
       {required FirebaseApp app,
-      required String modelName,
+      required String model,
       required String location,
       FirebaseAppCheck? appCheck,
       FirebaseAuth? auth,
@@ -33,7 +33,7 @@ final class ImagenModel extends BaseModel {
       : _generationConfig = generationConfig,
         _safetySettings = safetySettings,
         super(
-            model: modelName,
+            model: model,
             app: app,
             location: location,
             client: HttpApiClient(
@@ -121,14 +121,14 @@ final class ImagenModel extends BaseModel {
 ImagenModel createImagenModel({
   required FirebaseApp app,
   required String location,
-  required String modelName,
+  required String model,
   FirebaseAppCheck? appCheck,
   FirebaseAuth? auth,
   ImagenGenerationConfig? generationConfig,
   ImagenSafetySettings? safetySettings,
 }) =>
     ImagenModel._(
-      modelName: modelName,
+      model: model,
       app: app,
       appCheck: appCheck,
       auth: auth,
