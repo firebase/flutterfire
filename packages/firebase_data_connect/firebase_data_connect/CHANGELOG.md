@@ -1,3 +1,7 @@
+## 0.1.3
+
+ - **FEAT**(fdc): Added x-firebase-client header ([#17015](https://github.com/firebase/flutterfire/issues/17015)). ([c67075e5](https://github.com/firebase/flutterfire/commit/c67075e537eda46774884d2e40b6e265e64f73b2))
+
 ## 0.1.2+7
 
  - Update a dependency to the latest release.
