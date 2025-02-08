@@ -654,6 +654,67 @@ void main() {
       );
     });
 
+    test('response including usage metadata', () async {
+        const response = '''
+{
+  "candidates": [{
+    "content": {
+      "role": "model",
+      "parts": [{
+        "text": "Here is a description of the image:"
+      }]
+    },
+    "finishReason": "STOP"
+  }],
+  "usageMetadata": {
+    "promptTokenCount": 1837,
+    "candidatesTokenCount": 76,
+    "totalTokenCount": 1913,
+    "promptTokensDetails": [{
+      "modality": "TEXT",
+      "tokenCount": 76
+    }, {
+      "modality": "IMAGE",
+      "tokenCount": 1806
+    }],
+    "candidatesTokensDetails": [{
+      "modality": "TEXT",
+      "tokenCount": 76
+    }]
+  }
+}
+        ''';
+        final decoded = jsonDecode(response) as Object;
+      final generateContentResponse = parseGenerateContentResponse(decoded);
+      expect(generateContentResponse.text, 'Here is a description of the image:');
+      expect(generateContentResponse.usageMetadata?.totalTokenCount, 1913);
+      expect(generateContentResponse.usageMetadata?.promptTokensDetails?[1].modality, ContentModality.image);
+      expect(generateContentResponse.usageMetadata?.promptTokensDetails?[1].tokenCount, 1806);
+      expect(generateContentResponse.usageMetadata?.candidatesTokensDetails?.first.modality, ContentModality.text);
+      expect(generateContentResponse.usageMetadata?.candidatesTokensDetails?.first.tokenCount, 76);
+    });
+
+    test('countTokens with modality fields returned', () async {
+        const response = '''
+{
+  "totalTokens": 1837,
+  "totalBillableCharacters": 117,
+  "promptTokensDetails": [{
+    "modality": "IMAGE",
+    "tokenCount": 1806
+  }, {
+    "modality": "TEXT",
+    "tokenCount": 31
+  }]
+}
+        ''';
+        final decoded = jsonDecode(response) as Object;
+      final countTokensResponse = parseCountTokensResponse(decoded);
+      expect(countTokensResponse.totalTokens, 1837);
+      expect(countTokensResponse.promptTokensDetails?.first.modality, ContentModality.image);
+      expect(countTokensResponse.promptTokensDetails?.first.tokenCount, 1806);
+    });
+
     test('text getter joins content', () async {
       const response = '''
 {

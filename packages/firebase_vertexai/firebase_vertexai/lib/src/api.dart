@@ -19,7 +19,7 @@ import 'schema.dart';
 /// Response for Count Tokens
 final class CountTokensResponse {
   /// Constructor
-  CountTokensResponse(this.totalTokens, {this.totalBillableCharacters});
+  CountTokensResponse(this.totalTokens, {this.totalBillableCharacters, this.promptTokensDetails});
 
   /// The number of tokens that the `model` tokenizes the `prompt` into.
   ///
@@ -30,6 +30,9 @@ final class CountTokensResponse {
   ///
   /// Always non-negative.
   final int? totalBillableCharacters;
+
+  /// List of modalities that were processed in the request input.
+  final List<ModalityTokenCount>? promptTokensDetails;
 }
 
 /// Response from the model; supports multiple candidates.
@@ -132,6 +135,8 @@ final class UsageMetadata {
     this.promptTokenCount,
     this.candidatesTokenCount,
     this.totalTokenCount,
+    this.promptTokensDetails,
+    this.candidatesTokensDetails
   });
 
   /// Number of tokens in the prompt.
@@ -142,6 +147,12 @@ final class UsageMetadata {
 
   /// Total token count for the generation request (prompt + candidates).
   final int? totalTokenCount;
+
+  /// List of modalities that were processed in the request input.
+  final List<ModalityTokenCount>? promptTokensDetails;
+
+  /// List of modalities that were returned in the response.
+  final List<ModalityTokenCount>? candidatesTokensDetails;
 }
 
 /// Response candidate generated from a [GenerativeModel].
@@ -481,6 +492,62 @@ enum FinishReason {
   String toString() => name;
 }
 
+/// Represents token counting info for a single modality.
+final class ModalityTokenCount {
+  /// Constructor
+  ModalityTokenCount(this.modality, this.tokenCount);
+
+  /// The modality associated with this token count.
+  final ContentModality modality;
+
+  /// The number of tokens counted.
+  final int tokenCount;
+}
+
+/// Content part modality.
+enum ContentModality {
+  /// Unspecified modality.
+  unspecified('MODALITY_UNSPECIFIED'),
+
+  /// Plain text.
+  text('TEXT'),
+
+  /// Image.
+  image('IMAGE'),
+
+  /// Video.
+  video('VIDEO'),
+
+  /// Audio.
+  audio('AUDIO'),
+
+  /// Document, e.g. PDF.
+  document('DOCUMENT');
+
+  const ContentModality(this._jsonString);
+
+  static ContentModality _parseValue(Object jsonObject) {
+    return switch (jsonObject) {
+      'MODALITY_UNSPECIFIED' => ContentModality.unspecified,
+      'TEXT' => ContentModality.text,
+      'IMAGE' => ContentModality.image,
+      'video' => ContentModality.video,
+      'audio' => ContentModality.audio,
+      'document' => ContentModality.document,
+      _ => throw FormatException(
+          'Unhandled ContentModality format', jsonObject),
+    };
+  }
+
+  final String _jsonString;
+
+  @override
+  String toString() => name;
+
+  /// Convert to json format.
+  Object toJson() => _jsonString;
+}
+
 /// Safety setting, affecting the safety-blocking behavior.
 ///
 /// Passing a safety setting for a category changes the allowed probability that
@@ -696,16 +763,27 @@ GenerateContentResponse parseGenerateContentResponse(Object jsonObject) {
 /// Parse the json to [CountTokensResponse]
 CountTokensResponse parseCountTokensResponse(Object jsonObject) {
   if (jsonObject case {'error': final Object error}) throw parseError(error);
-  if (jsonObject case {'totalTokens': final int totalTokens}) {
-    if (jsonObject
-        case {'totalBillableCharacters': final int totalBillableCharacters}) {
-      return CountTokensResponse(totalTokens,
-          totalBillableCharacters: totalBillableCharacters);
-    } else {
-      return CountTokensResponse(totalTokens);
-    }
+
+  if (jsonObject is! Map) {
+    throw unhandledFormat('CountTokensResponse', jsonObject);
   }
-  throw unhandledFormat('CountTokensResponse', jsonObject);
+
+  final totalTokens = jsonObject['totalTokens'] as int;
+  final totalBillableCharacters = switch (jsonObject) {
+    {'totalBillableCharacters': final int totalBillableCharacters} => totalBillableCharacters,
+    _ => null,
+  };
+  final promptTokensDetails = switch (jsonObject) {
+    {'promptTokensDetails': final List<Object?> promptTokensDetails} =>
+    promptTokensDetails.map(_parseModalityTokenCount).toList(),
+    _ => null,
+  };
+
+  return CountTokensResponse(
+    totalTokens,
+    totalBillableCharacters: totalBillableCharacters,
+    promptTokensDetails: promptTokensDetails,
+  );
 }
 
 Candidate _parseCandidate(Object? jsonObject) {
@@ -777,10 +855,32 @@ UsageMetadata _parseUsageMetadata(Object jsonObject) {
     {'totalTokenCount': final int totalTokenCount} => totalTokenCount,
     _ => null,
   };
+  final promptTokensDetails = switch (jsonObject) {
+    {'promptTokensDetails': final List<Object?> promptTokensDetails} =>
+    promptTokensDetails.map(_parseModalityTokenCount).toList(),
+    _ => null,
+  };
+  final candidatesTokensDetails = switch (jsonObject) {
+    {'candidatesTokensDetails': final List<Object?> candidatesTokensDetails} =>
+    candidatesTokensDetails.map(_parseModalityTokenCount).toList(),
+    _ => null,
+  };
   return UsageMetadata._(
       promptTokenCount: promptTokenCount,
       candidatesTokenCount: candidatesTokenCount,
-      totalTokenCount: totalTokenCount);
+      totalTokenCount: totalTokenCount,
+      promptTokensDetails: promptTokensDetails,
+      candidatesTokensDetails: candidatesTokensDetails);
+}
+
+ModalityTokenCount _parseModalityTokenCount(Object? jsonObject) {
+  if (jsonObject is! Map) {
+    throw unhandledFormat('ModalityTokenCount', jsonObject);
+  }
+  return ModalityTokenCount(
+    ContentModality._parseValue(jsonObject['modality']),
+    jsonObject['tokenCount'] as int
+  );
 }
 
 SafetyRating _parseSafetyRating(Object? jsonObject) {
