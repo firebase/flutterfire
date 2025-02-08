@@ -655,7 +655,7 @@ void main() {
     });
 
     test('response including usage metadata', () async {
-        const response = '''
+      const response = '''
 {
   "candidates": [{
     "content": {
@@ -684,18 +684,31 @@ void main() {
   }
 }
         ''';
-        final decoded = jsonDecode(response) as Object;
+      final decoded = jsonDecode(response) as Object;
       final generateContentResponse = parseGenerateContentResponse(decoded);
-      expect(generateContentResponse.text, 'Here is a description of the image:');
+      expect(
+          generateContentResponse.text, 'Here is a description of the image:');
       expect(generateContentResponse.usageMetadata?.totalTokenCount, 1913);
-      expect(generateContentResponse.usageMetadata?.promptTokensDetails?[1].modality, ContentModality.image);
-      expect(generateContentResponse.usageMetadata?.promptTokensDetails?[1].tokenCount, 1806);
-      expect(generateContentResponse.usageMetadata?.candidatesTokensDetails?.first.modality, ContentModality.text);
-      expect(generateContentResponse.usageMetadata?.candidatesTokensDetails?.first.tokenCount, 76);
+      expect(
+          generateContentResponse
+              .usageMetadata?.promptTokensDetails?[1].modality,
+          ContentModality.image);
+      expect(
+          generateContentResponse
+              .usageMetadata?.promptTokensDetails?[1].tokenCount,
+          1806);
+      expect(
+          generateContentResponse
+              .usageMetadata?.candidatesTokensDetails?.first.modality,
+          ContentModality.text);
+      expect(
+          generateContentResponse
+              .usageMetadata?.candidatesTokensDetails?.first.tokenCount,
+          76);
     });
 
     test('countTokens with modality fields returned', () async {
-        const response = '''
+      const response = '''
 {
   "totalTokens": 1837,
   "totalBillableCharacters": 117,
@@ -708,10 +721,11 @@ void main() {
   }]
 }
         ''';
-        final decoded = jsonDecode(response) as Object;
+      final decoded = jsonDecode(response) as Object;
       final countTokensResponse = parseCountTokensResponse(decoded);
       expect(countTokensResponse.totalTokens, 1837);
-      expect(countTokensResponse.promptTokensDetails?.first.modality, ContentModality.image);
+      expect(countTokensResponse.promptTokensDetails?.first.modality,
+          ContentModality.image);
       expect(countTokensResponse.promptTokensDetails?.first.tokenCount, 1806);
     });
 
