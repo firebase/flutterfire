@@ -13,6 +13,7 @@
 // limitations under the License.
 
 /// Specifies the level of safety filtering for image generation.
+///
 /// If not specified, default will be "block_medium_and_above".
 enum ImagenSafetyFilterLevel {
   /// Strongest filtering level, most strict blocking.
@@ -53,6 +54,7 @@ enum ImagenSafetyFilterLevel {
 }
 
 /// Allow generation of people by the model.
+///
 /// If not specified, the default value is "allow_adult".
 enum ImagenPersonFilterLevel {
   /// Disallow the inclusion of people or faces in images.
@@ -99,7 +101,7 @@ final class ImagenSafetySettings {
   /// The person filter level
   final ImagenPersonFilterLevel? personFilterLevel;
 
-  /// Convert to json format.
+  // ignore: public_member_api_docs
   Object toJson() => {
         if (safetyFilterLevel != null)
           'safetySetting': safetyFilterLevel!.toJson(),
@@ -108,7 +110,9 @@ final class ImagenSafetySettings {
       };
 }
 
-/// The aspect ratio for the image. The default value is "1:1".
+/// The aspect ratio for the image.
+///
+/// The default value is "1:1".
 enum ImagenAspectRatio {
   /// Square (1:1).
   square1x1('1:1'),
@@ -129,7 +133,7 @@ enum ImagenAspectRatio {
 
   final String _jsonString;
 
-  /// Convert to json format
+  // ignore: public_member_api_docs
   String toJson() => _jsonString;
 
   // ignore: unused_element
@@ -208,7 +212,7 @@ final class ImagenFormat {
   /// Accepted values are 0 through 100. The default value is 75.
   final int? compressionQuality;
 
-  /// Convert to json format.
+  // ignore: public_member_api_docs
   Map<String, dynamic> toJson() => {
         'mimeType': mimeType,
         if (compressionQuality != null)

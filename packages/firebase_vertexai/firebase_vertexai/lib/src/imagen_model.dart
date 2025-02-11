@@ -20,7 +20,16 @@ import 'client.dart';
 import 'imagen_api.dart';
 import 'imagen_content.dart';
 
+/// Represents a remote Imagen model with the ability to generate images using
+/// text prompts.
 ///
+/// See the [Cloud
+/// documentation](https://cloud.google.com/vertex-ai/generative-ai/docs/image/generate-images)
+/// for more details about the image generation capabilities offered by the Imagen model.
+///
+/// > Warning: For Vertex AI in Firebase, image generation using Imagen 3 models
+/// is in Public Preview, which means that the feature is not subject to any SLA
+/// or deprecation policy and could change in backwards-incompatible ways.
 final class ImagenModel extends BaseModel {
   ImagenModel._(
       {required FirebaseApp app,
@@ -56,7 +65,7 @@ final class ImagenModel extends BaseModel {
         'negativePrompt': negativePrompt,
       if (_generationConfig?.addWatermark case final addWatermark?)
         'addWatermark': addWatermark,
-      if (_generationConfig.imageFormat case final imageFormat?)
+      if (_generationConfig?.imageFormat case final imageFormat?)
         'outputOption': imageFormat.toJson(),
       if (_safetySettings?.personFilterLevel case final personFilterLevel?)
         'personGeneration': personFilterLevel.toJson(),
