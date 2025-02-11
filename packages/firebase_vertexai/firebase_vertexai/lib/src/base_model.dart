@@ -31,7 +31,7 @@ enum Task {
   /// Request type to count token.
   countTokens,
 
-  /// Imagen 3 task
+  /// Request type to talk to Prediction Services like Imagen.
   predict,
 }
 

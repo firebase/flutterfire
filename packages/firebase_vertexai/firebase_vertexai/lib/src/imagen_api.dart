@@ -33,7 +33,7 @@ enum ImagenSafetyFilterLevel {
 
   final String _jsonString;
 
-  /// Convert to json format
+  // ignore: public_member_api_docs
   String toJson() => _jsonString;
 
   // ignore: unused_element
@@ -68,7 +68,7 @@ enum ImagenPersonFilterLevel {
 
   final String _jsonString;
 
-  /// Convert to json format
+  // ignore: public_member_api_docs
   String toJson() => _jsonString;
 
   // ignore: unused_element
@@ -90,7 +90,7 @@ enum ImagenPersonFilterLevel {
 ///
 /// It includes a safety filter level and a person filter level.
 final class ImagenSafetySettings {
-  /// Constructor
+  // ignore: public_member_api_docs
   ImagenSafetySettings(this.safetyFilterLevel, this.personFilterLevel);
 
   /// The safety filter level
@@ -151,7 +151,7 @@ enum ImagenAspectRatio {
 
 /// Configuration options for image generation.
 final class ImagenGenerationConfig {
-  /// Constructor
+  // ignore: public_member_api_docs
   ImagenGenerationConfig(
       {this.numberOfImages,
       this.negativePrompt,
@@ -159,7 +159,9 @@ final class ImagenGenerationConfig {
       this.imageFormat,
       this.addWatermark});
 
-  /// The number of images to generate. Default is 1.
+  /// The number of images to generate.
+  ///
+  /// Default value is 1.
   final int? numberOfImages;
 
   /// A description of what to discourage in the generated images.
@@ -176,7 +178,7 @@ final class ImagenGenerationConfig {
   /// https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/imagen-api#generate_images
   final bool? addWatermark;
 
-  /// Convert to json format.
+  // ignore: public_member_api_docs
   Map<String, dynamic> toJson() => {
         if (negativePrompt != null) 'negativePrompt': negativePrompt,
         if (numberOfImages != null) 'numberOfImages': numberOfImages,
@@ -188,13 +190,13 @@ final class ImagenGenerationConfig {
 
 /// Represents the image format and compression quality.
 final class ImagenFormat {
-  /// Constructor
+  // ignore: public_member_api_docs
   ImagenFormat(this.mimeType, this.compressionQuality);
 
-  /// Constructor for png
+  // ignore: public_member_api_docs
   ImagenFormat.png() : this('image/png', null);
 
-  /// Constructor for jpeg
+  // ignore: public_member_api_docs
   ImagenFormat.jpeg({int? compressionQuality})
       : this('image/jpeg', compressionQuality);
 

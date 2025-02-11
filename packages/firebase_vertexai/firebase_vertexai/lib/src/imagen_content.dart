@@ -17,7 +17,7 @@ import 'error.dart';
 
 /// Base type of Imagen Image.
 sealed class ImagenImage {
-  /// Constructor
+  // ignore: public_member_api_docs
   ImagenImage({required this.mimeType});
 
   /// The MIME type of the image format.
@@ -29,7 +29,7 @@ sealed class ImagenImage {
 
 /// Represents an image stored as a base64-encoded string.
 final class ImagenInlineImage implements ImagenImage {
-  /// Constructor
+  // ignore: public_member_api_docs
   ImagenInlineImage({
     required this.bytesBase64Encoded,
     required this.mimeType,
@@ -61,7 +61,7 @@ final class ImagenInlineImage implements ImagenImage {
 
 /// Represents an image stored in Google Cloud Storage.
 final class ImagenGCSImage implements ImagenImage {
-  /// Constructor
+  // ignore: public_member_api_docs
   ImagenGCSImage({
     required this.gcsUri,
     required this.mimeType,
@@ -93,7 +93,7 @@ final class ImagenGCSImage implements ImagenImage {
 
 /// Represents the response from an image generation request.
 final class ImagenGenerationResponse<T extends ImagenImage> {
-  /// Constructor
+  // ignore: public_member_api_docs
   ImagenGenerationResponse({
     required this.images,
     this.filteredReason,
