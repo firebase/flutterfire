@@ -769,9 +769,9 @@ void main() {
       final decoded = jsonDecode(response) as Object;
       final countTokensResponse = parseCountTokensResponse(decoded);
       expect(countTokensResponse.totalTokens, 1837);
-      expect(countTokensResponse.promptTokensDetails?.first.modality,
+      expect(countTokensResponse.promptTokensDetails.first.modality,
           ContentModality.image);
-      expect(countTokensResponse.promptTokensDetails?.first.tokenCount, 1806);
+      expect(countTokensResponse.promptTokensDetails.first.tokenCount, 1806);
     });
 
     test('text getter joins content', () async {
