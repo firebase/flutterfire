@@ -19,8 +19,8 @@ import 'schema.dart';
 /// Response for Count Tokens
 final class CountTokensResponse {
   /// Constructor
-  CountTokensResponse(this.totalTokens,
-      {this.totalBillableCharacters, this.promptTokensDetails});
+  CountTokensResponse(
+      this.totalTokens, this.totalBillableCharacters, this.promptTokensDetails);
 
   /// The number of tokens that the `model` tokenizes the `prompt` into.
   ///
@@ -33,7 +33,7 @@ final class CountTokensResponse {
   final int? totalBillableCharacters;
 
   /// List of modalities that were processed in the request input.
-  final List<ModalityTokenCount>? promptTokensDetails;
+  final List<ModalityTokenCount> promptTokensDetails;
 }
 
 /// Response from the model; supports multiple candidates.
@@ -133,11 +133,11 @@ final class PromptFeedback {
 final class UsageMetadata {
   /// Constructor
   UsageMetadata._(
-      {this.promptTokenCount,
+      this.promptTokenCount,
       this.candidatesTokenCount,
       this.totalTokenCount,
       this.promptTokensDetails,
-      this.candidatesTokensDetails});
+      this.candidatesTokensDetails);
 
   /// Number of tokens in the prompt.
   final int? promptTokenCount;
@@ -149,10 +149,10 @@ final class UsageMetadata {
   final int? totalTokenCount;
 
   /// List of modalities that were processed in the request input.
-  final List<ModalityTokenCount>? promptTokensDetails;
+  final List<ModalityTokenCount> promptTokensDetails;
 
   /// List of modalities that were returned in the response.
-  final List<ModalityTokenCount>? candidatesTokensDetails;
+  final List<ModalityTokenCount> candidatesTokensDetails;
 }
 
 /// Response candidate generated from a [GenerativeModel].
@@ -777,13 +777,13 @@ CountTokensResponse parseCountTokensResponse(Object jsonObject) {
   final promptTokensDetails = switch (jsonObject) {
     {'promptTokensDetails': final List<Object?> promptTokensDetails} =>
       promptTokensDetails.map(_parseModalityTokenCount).toList(),
-    _ => null,
+    _ => <ModalityTokenCount>[],
   };
 
   return CountTokensResponse(
     totalTokens,
-    totalBillableCharacters: totalBillableCharacters,
-    promptTokensDetails: promptTokensDetails,
+    totalBillableCharacters,
+    promptTokensDetails,
   );
 }
 
@@ -859,19 +859,15 @@ UsageMetadata _parseUsageMetadata(Object jsonObject) {
   final promptTokensDetails = switch (jsonObject) {
     {'promptTokensDetails': final List<Object?> promptTokensDetails} =>
       promptTokensDetails.map(_parseModalityTokenCount).toList(),
-    _ => null,
+    _ => <ModalityTokenCount>[],
   };
   final candidatesTokensDetails = switch (jsonObject) {
     {'candidatesTokensDetails': final List<Object?> candidatesTokensDetails} =>
       candidatesTokensDetails.map(_parseModalityTokenCount).toList(),
-    _ => null,
+    _ => <ModalityTokenCount>[],
   };
-  return UsageMetadata._(
-      promptTokenCount: promptTokenCount,
-      candidatesTokenCount: candidatesTokenCount,
-      totalTokenCount: totalTokenCount,
-      promptTokensDetails: promptTokensDetails,
-      candidatesTokensDetails: candidatesTokensDetails);
+  return UsageMetadata._(promptTokenCount, candidatesTokenCount,
+      totalTokenCount, promptTokensDetails, candidatesTokensDetails);
 }
 
 ModalityTokenCount _parseModalityTokenCount(Object? jsonObject) {

@@ -669,6 +669,38 @@ void main() {
   "usageMetadata": {
     "promptTokenCount": 1837,
     "candidatesTokenCount": 76,
+    "totalTokenCount": 1913
+  }
+}
+        ''';
+      final decoded = jsonDecode(response) as Object;
+      final generateContentResponse = parseGenerateContentResponse(decoded);
+      expect(
+          generateContentResponse.text, 'Here is a description of the image:');
+      expect(generateContentResponse.usageMetadata?.totalTokenCount, 1913);
+      expect(generateContentResponse.usageMetadata?.promptTokensDetails.isEmpty,
+          true);
+      expect(
+          generateContentResponse
+              .usageMetadata?.candidatesTokensDetails.isEmpty,
+          true);
+    });
+
+    test('response including usage metadata with token details', () async {
+      const response = '''
+{
+  "candidates": [{
+    "content": {
+      "role": "model",
+      "parts": [{
+        "text": "Here is a description of the image:"
+      }]
+    },
+    "finishReason": "STOP"
+  }],
+  "usageMetadata": {
+    "promptTokenCount": 1837,
+    "candidatesTokenCount": 76,
     "totalTokenCount": 1913,
     "promptTokensDetails": [{
       "modality": "TEXT",
@@ -691,20 +723,33 @@ void main() {
       expect(generateContentResponse.usageMetadata?.totalTokenCount, 1913);
       expect(
           generateContentResponse
-              .usageMetadata?.promptTokensDetails?[1].modality,
+              .usageMetadata?.promptTokensDetails[1].modality,
           ContentModality.image);
       expect(
           generateContentResponse
-              .usageMetadata?.promptTokensDetails?[1].tokenCount,
+              .usageMetadata?.promptTokensDetails[1].tokenCount,
           1806);
       expect(
           generateContentResponse
-              .usageMetadata?.candidatesTokensDetails?.first.modality,
+              .usageMetadata?.candidatesTokensDetails.first.modality,
           ContentModality.text);
       expect(
           generateContentResponse
-              .usageMetadata?.candidatesTokensDetails?.first.tokenCount,
+              .usageMetadata?.candidatesTokensDetails.first.tokenCount,
           76);
+    });
+
+    test('countTokens simple response', () async {
+      const response = '''
+{
+  "totalTokens": 1837,
+  "totalBillableCharacters": 117
+}
+        ''';
+      final decoded = jsonDecode(response) as Object;
+      final countTokensResponse = parseCountTokensResponse(decoded);
+      expect(countTokensResponse.totalTokens, 1837);
+      expect(countTokensResponse.promptTokensDetails.isEmpty, true);
     });
 
     test('countTokens with modality fields returned', () async {
