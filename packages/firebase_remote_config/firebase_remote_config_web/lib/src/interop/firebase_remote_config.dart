@@ -152,6 +152,12 @@ class RemoteConfig
           .toJS,
     );
   }
+
+  Future<void> setCustomSignals(Map<String, Object?> customSignals) {
+    return remote_config_interop
+        .setCustomSignals(jsObject, customSignals.jsify()! as JSObject)
+        .toDart;
+  }
 }
 
 ValueSource getSource(String source) {

@@ -10,8 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  firebase_core: ^3.10.1
-  firebase_ml_model_downloader: ^0.3.2+1
+  firebase_core: ^3.11.0
+  firebase_ml_model_downloader: ^0.3.3
 
 dev_dependencies:
   flutter_lints: ^4.0.0

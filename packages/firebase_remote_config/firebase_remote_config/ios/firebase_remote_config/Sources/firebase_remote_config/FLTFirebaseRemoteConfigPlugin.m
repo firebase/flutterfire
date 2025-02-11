@@ -106,12 +106,28 @@ BOOL _fetchAndActivateRetry;
     [self setDefaults:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"RemoteConfig#getProperties" isEqualToString:call.method]) {
     [self getProperties:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"RemoteConfig#setCustomSignals" isEqualToString:call.method]) {
+    [self setCustomSignals:call.arguments withMethodCallResult:methodCallResult];
   } else {
     methodCallResult.success(FlutterMethodNotImplemented);
   }
 }
 
 #pragma mark - Remote Config API
+- (void)setCustomSignals:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigFromArguments:arguments];
+  NSDictionary *customSignals = arguments[@"customSignals"];
+
+  [remoteConfig setCustomSignals:customSignals
+                  withCompletion:^(NSError *_Nullable error) {
+                    if (error != nil) {
+                      result.error(nil, nil, nil, error);
+                    } else {
+                      result.success(nil);
+                    }
+                  }];
+}
+
 - (void)ensureInitialized:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigFromArguments:arguments];
   [remoteConfig ensureInitializedWithCompletionHandler:^(NSError *initializationError) {
