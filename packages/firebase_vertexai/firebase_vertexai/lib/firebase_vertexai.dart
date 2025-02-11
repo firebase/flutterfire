@@ -56,6 +56,7 @@ export 'src/function_calling.dart'
         FunctionDeclaration,
         Tool,
         ToolConfig;
+export 'src/generative_model.dart' show GenerativeModel;
 export 'src/imagen_api.dart'
     show
         ImagenSafetySettings,
@@ -64,8 +65,6 @@ export 'src/imagen_api.dart'
         ImagenPersonFilterLevel,
         ImagenGenerationConfig,
         ImagenAspectRatio;
-export 'src/imagen_content.dart'
-    show ImagenInlineImage, ImagenGCSImage, ImagenImage;
+export 'src/imagen_content.dart' show ImagenInlineImage;
 export 'src/imagen_model.dart' show ImagenModel;
-export 'src/model.dart' show GenerativeModel;
 export 'src/schema.dart' show Schema, SchemaType;

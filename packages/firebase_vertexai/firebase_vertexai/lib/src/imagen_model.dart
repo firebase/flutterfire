@@ -102,7 +102,8 @@ final class ImagenModel extends BaseModel {
 
   /// Generates images with format of [ImagenGCSImage] based on the given
   /// prompt.
-  Future<ImagenGenerationResponse<ImagenGCSImage>> generateImagesGCS(
+  /// Note: Keep this API private until future release.
+  Future<ImagenGenerationResponse<ImagenGCSImage>> _generateImagesGCS(
     String prompt,
     String gcsUri,
   ) =>

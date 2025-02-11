@@ -125,19 +125,20 @@ class _ImagenPageState extends State<ImagenPage> {
                     )
                   else
                     const CircularProgressIndicator(),
-                  if (!_loading)
-                    IconButton(
-                      onPressed: () async {
-                        await _testImagenGCS(_textController.text);
-                      },
-                      icon: Icon(
-                        Icons.imagesearch_roller,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      tooltip: 'Imagen GCS',
-                    )
-                  else
-                    const CircularProgressIndicator(),
+                  // NOTE: Keep this API private until future release.
+                  // if (!_loading)
+                  //   IconButton(
+                  //     onPressed: () async {
+                  //       await _testImagenGCS(_textController.text);
+                  //     },
+                  //     icon: Icon(
+                  //       Icons.imagesearch_roller,
+                  //       color: Theme.of(context).colorScheme.primary,
+                  //     ),
+                  //     tooltip: 'Imagen GCS',
+                  //   )
+                  // else
+                  //   const CircularProgressIndicator(),
                 ],
               ),
             ),
@@ -172,36 +173,36 @@ class _ImagenPageState extends State<ImagenPage> {
       _loading = false;
     });
   }
+  // NOTE: Keep this API private until future release.
+  // Future<void> _testImagenGCS(String prompt) async {
+  //   setState(() {
+  //     _loading = true;
+  //   });
+  //   var gcsUrl = 'gs://vertex-ai-example-ef5a2.appspot.com/imagen';
 
-  Future<void> _testImagenGCS(String prompt) async {
-    setState(() {
-      _loading = true;
-    });
-    var gcsUrl = 'gs://vertex-ai-example-ef5a2.appspot.com/imagen';
+  //   var response = await _imagenModel.generateImagesGCS(prompt, gcsUrl);
 
-    var response = await _imagenModel.generateImagesGCS(prompt, gcsUrl);
-
-    if (response.images.isNotEmpty) {
-      var imagenImage = response.images[0];
-      final returnImageUri = imagenImage.gcsUri;
-      final reference = FirebaseStorage.instance.refFromURL(returnImageUri);
-      final downloadUrl = await reference.getDownloadURL();
-      // Process the image
-      _generatedContent.add(
-        MessageData(
-          image: Image(image: NetworkImage(downloadUrl)),
-          text: prompt,
-          fromUser: false,
-        ),
-      );
-    } else {
-      // Handle the case where no images were generated
-      _showError('Error: No images were generated.');
-    }
-    setState(() {
-      _loading = false;
-    });
-  }
+  //   if (response.images.isNotEmpty) {
+  //     var imagenImage = response.images[0];
+  //     final returnImageUri = imagenImage.gcsUri;
+  //     final reference = FirebaseStorage.instance.refFromURL(returnImageUri);
+  //     final downloadUrl = await reference.getDownloadURL();
+  //     // Process the image
+  //     _generatedContent.add(
+  //       MessageData(
+  //         image: Image(image: NetworkImage(downloadUrl)),
+  //         text: prompt,
+  //         fromUser: false,
+  //       ),
+  //     );
+  //   } else {
+  //     // Handle the case where no images were generated
+  //     _showError('Error: No images were generated.');
+  //   }
+  //   setState(() {
+  //     _loading = false;
+  //   });
+  // }
 
   void _showError(String message) {
     showDialog<void>(

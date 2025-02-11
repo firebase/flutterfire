@@ -21,10 +21,9 @@ import 'package:firebase_core_platform_interface/firebase_core_platform_interfac
 import 'api.dart';
 import 'content.dart';
 import 'function_calling.dart';
-import 'imagen_model.dart';
+import 'generative_model.dart';
 import 'imagen_api.dart';
-import 'imagen_content.dart';
-import 'model.dart';
+import 'imagen_model.dart';
 
 const _defaultLocation = 'us-central1';
 
