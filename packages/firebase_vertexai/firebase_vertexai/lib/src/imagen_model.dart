@@ -47,36 +47,22 @@ final class ImagenModel extends BaseModel {
     String prompt, {
     String? gcsUri,
   }) {
-    final parameters = <String, Object?>{};
-
-    if (gcsUri != null) parameters['storageUri'] = gcsUri;
-
-    parameters['sampleCount'] = _generationConfig?.numberOfImages ?? 1;
-    if (_generationConfig != null) {
-      if (_generationConfig.aspectRatio != null) {
-        parameters['aspectRatio'] = _generationConfig.aspectRatio;
-      }
-      if (_generationConfig.negativePrompt != null) {
-        parameters['negativePrompt'] = _generationConfig.negativePrompt;
-      }
-      if (_generationConfig.addWatermark != null) {
-        parameters['addWatermark'] = _generationConfig.addWatermark;
-      }
-      if (_generationConfig.imageFormat != null) {
-        parameters['outputOption'] = _generationConfig.imageFormat!.toJson();
-      }
-    }
-
-    if (_safetySettings != null) {
-      if (_safetySettings.personFilterLevel != null) {
-        parameters['personGeneration'] =
-            _safetySettings.personFilterLevel!.toJson();
-      }
-      if (_safetySettings.safetyFilterLevel != null) {
-        parameters['safetySetting'] =
-            _safetySettings.safetyFilterLevel!.toJson();
-      }
-    }
+    final parameters = <String, Object?>{
+      if (gcsUri != null) 'storageUri': gcsUri,
+      'sampleCount': _generationConfig?.numberOfImages ?? 1,
+      if (_generationConfig?.aspectRatio case final aspectRatio?)
+        'aspectRatio': aspectRatio,
+      if (_generationConfig?.negativePrompt case final negativePrompt?)
+        'negativePrompt': negativePrompt,
+      if (_generationConfig?.addWatermark case final addWatermark?)
+        'addWatermark': addWatermark,
+      if (_generationConfig.imageFormat case final imageFormat?)
+        'outputOption': imageFormat.toJson(),
+      if (_safetySettings?.personFilterLevel case final personFilterLevel?)
+        'personGeneration': personFilterLevel.toJson(),
+      if (_safetySettings?.safetyFilterLevel case final safetyFilterLevel?)
+        'safetySetting': safetyFilterLevel.toJson(),
+    };
 
     return {
       'instances': [
