@@ -1,3 +1,7 @@
+## 5.6.3
+
+ - Update a dependency to the latest release.
+
 ## 5.6.2
 
  - **FIX**(cloud_firestore,android): suppress unchecked warning ([#16979](https://github.com/firebase/flutterfire/issues/16979)). ([684508da](https://github.com/firebase/flutterfire/commit/684508daf096acb50deb4c1d14c76f72fb52b8c5))

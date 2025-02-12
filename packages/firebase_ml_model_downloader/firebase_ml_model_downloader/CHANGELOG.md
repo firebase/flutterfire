@@ -1,3 +1,7 @@
+## 0.3.3
+
+ - **FEAT**: bump Firebase android SDK to `33.8.0` ([#17048](https://github.com/firebase/flutterfire/issues/17048)). ([0befa109](https://github.com/firebase/flutterfire/commit/0befa109970893f79fb50d2b809b95d797fdc416))
+
 ## 0.3.2+1
 
  - Update a dependency to the latest release.
