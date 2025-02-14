@@ -503,10 +503,9 @@ class PigeonUserInfo {
   void set_last_sign_in_timestamp(const int64_t* value_arg);
   void set_last_sign_in_timestamp(int64_t value_arg);
 
-  flutter::EncodableList ToEncodableList() const;
-
  private:
   static PigeonUserInfo FromEncodableList(const flutter::EncodableList& list);
+  flutter::EncodableList ToEncodableList() const;
   friend class PigeonUserDetails;
   friend class FirebaseAuthHostApi;
   friend class FirebaseAuthHostApiCodecSerializer;
@@ -554,11 +553,10 @@ class PigeonUserDetails {
   const flutter::EncodableList& provider_data() const;
   void set_provider_data(const flutter::EncodableList& value_arg);
 
+ private:
   static PigeonUserDetails FromEncodableList(
       const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
-
- private:
   friend class PigeonUserCredential;
   friend class FirebaseAuthHostApi;
   friend class FirebaseAuthHostApiCodecSerializer;
@@ -646,7 +644,8 @@ class PigeonActionCodeSettings {
                                     const std::string* i_o_s_bundle_id,
                                     const std::string* android_package_name,
                                     bool android_install_app,
-                                    const std::string* android_minimum_version);
+                                    const std::string* android_minimum_version,
+                                    const std::string* link_domain);
 
   const std::string& url() const;
   void set_url(std::string_view value_arg);
@@ -673,6 +672,10 @@ class PigeonActionCodeSettings {
   void set_android_minimum_version(const std::string_view* value_arg);
   void set_android_minimum_version(std::string_view value_arg);
 
+  const std::string* link_domain() const;
+  void set_link_domain(const std::string_view* value_arg);
+  void set_link_domain(std::string_view value_arg);
+
  private:
   static PigeonActionCodeSettings FromEncodableList(
       const flutter::EncodableList& list);
@@ -698,6 +701,7 @@ class PigeonActionCodeSettings {
   std::optional<std::string> android_package_name_;
   bool android_install_app_;
   std::optional<std::string> android_minimum_version_;
+  std::optional<std::string> link_domain_;
 };
 
 // Generated class from Pigeon that represents data sent in messages.

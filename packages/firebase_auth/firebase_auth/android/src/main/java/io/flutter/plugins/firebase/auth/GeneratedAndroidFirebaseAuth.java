@@ -1406,6 +1406,16 @@ public class GeneratedAndroidFirebaseAuth {
       this.androidMinimumVersion = setterArg;
     }
 
+    private @Nullable String linkDomain;
+
+    public @Nullable String getLinkDomain() {
+      return linkDomain;
+    }
+
+    public void setLinkDomain(@Nullable String setterArg) {
+      this.linkDomain = setterArg;
+    }
+
     /** Constructor is non-public to enforce null safety; use Builder. */
     PigeonActionCodeSettings() {}
 
@@ -1467,6 +1477,14 @@ public class GeneratedAndroidFirebaseAuth {
         return this;
       }
 
+      private @Nullable String linkDomain;
+
+      @CanIgnoreReturnValue
+      public @NonNull Builder setLinkDomain(@Nullable String setterArg) {
+        this.linkDomain = setterArg;
+        return this;
+      }
+
       public @NonNull PigeonActionCodeSettings build() {
         PigeonActionCodeSettings pigeonReturn = new PigeonActionCodeSettings();
         pigeonReturn.setUrl(url);
@@ -1476,13 +1494,14 @@ public class GeneratedAndroidFirebaseAuth {
         pigeonReturn.setAndroidPackageName(androidPackageName);
         pigeonReturn.setAndroidInstallApp(androidInstallApp);
         pigeonReturn.setAndroidMinimumVersion(androidMinimumVersion);
+        pigeonReturn.setLinkDomain(linkDomain);
         return pigeonReturn;
       }
     }
 
     @NonNull
     ArrayList<Object> toList() {
-      ArrayList<Object> toListResult = new ArrayList<Object>(7);
+      ArrayList<Object> toListResult = new ArrayList<Object>(8);
       toListResult.add(url);
       toListResult.add(dynamicLinkDomain);
       toListResult.add(handleCodeInApp);
@@ -1490,6 +1509,7 @@ public class GeneratedAndroidFirebaseAuth {
       toListResult.add(androidPackageName);
       toListResult.add(androidInstallApp);
       toListResult.add(androidMinimumVersion);
+      toListResult.add(linkDomain);
       return toListResult;
     }
 
@@ -1509,6 +1529,8 @@ public class GeneratedAndroidFirebaseAuth {
       pigeonResult.setAndroidInstallApp((Boolean) androidInstallApp);
       Object androidMinimumVersion = __pigeon_list.get(6);
       pigeonResult.setAndroidMinimumVersion((String) androidMinimumVersion);
+      Object linkDomain = __pigeon_list.get(7);
+      pigeonResult.setLinkDomain((String) linkDomain);
       return pigeonResult;
     }
   }

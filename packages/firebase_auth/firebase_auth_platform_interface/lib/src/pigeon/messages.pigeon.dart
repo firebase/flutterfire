@@ -445,6 +445,7 @@ class PigeonActionCodeSettings {
     this.androidPackageName,
     required this.androidInstallApp,
     this.androidMinimumVersion,
+    this.linkDomain,
   });
 
   String url;
@@ -461,6 +462,8 @@ class PigeonActionCodeSettings {
 
   String? androidMinimumVersion;
 
+  String? linkDomain;
+
   Object encode() {
     return <Object?>[
       url,
@@ -470,6 +473,7 @@ class PigeonActionCodeSettings {
       androidPackageName,
       androidInstallApp,
       androidMinimumVersion,
+      linkDomain,
     ];
   }
 
@@ -483,6 +487,7 @@ class PigeonActionCodeSettings {
       androidPackageName: result[4] as String?,
       androidInstallApp: result[5]! as bool,
       androidMinimumVersion: result[6] as String?,
+      linkDomain: result[7] as String?,
     );
   }
 }

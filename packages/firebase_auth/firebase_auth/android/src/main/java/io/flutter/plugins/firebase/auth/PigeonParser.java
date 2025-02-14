@@ -258,6 +258,10 @@ public class PigeonParser {
       builder.setDynamicLinkDomain(pigeonActionCodeSettings.getDynamicLinkDomain());
     }
 
+    if (pigeonActionCodeSettings.getLinkDomain() != null) {
+      builder.setLinkDomain(pigeonActionCodeSettings.getLinkDomain());
+    }
+
     builder.setHandleCodeInApp(pigeonActionCodeSettings.getHandleCodeInApp());
 
     if (pigeonActionCodeSettings.getAndroidPackageName() != null) {
