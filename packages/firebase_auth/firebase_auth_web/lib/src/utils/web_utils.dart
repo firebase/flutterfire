@@ -237,6 +237,10 @@ auth_interop.ActionCodeSettings? convertPlatformActionCodeSettings(
     );
   }
 
+  if (actionCodeSettings.linkDomain != null) {
+    webActionCodeSettings.linkDomain = actionCodeSettings.linkDomain!.toJS;
+  }
+
   if (actionCodeSettingsMap['android'] != null) {
     webActionCodeSettings.android = auth_interop.AndroidSettings(
       packageName:

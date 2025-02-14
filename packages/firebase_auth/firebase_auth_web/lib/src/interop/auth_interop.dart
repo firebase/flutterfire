@@ -727,6 +727,7 @@ class ActionCodeSettings {
     AndroidSettings? android,
     JSBoolean? handleCodeInApp,
     JSString? dynamicLinkDomain,
+    JSString? linkDomain,
   });
 }
 
@@ -741,6 +742,8 @@ extension ActionCodeSettingsExtension on ActionCodeSettings {
   external set handleCodeInApp(JSBoolean b);
   external JSString get dynamicLinkDomain;
   external set dynamicLinkDomain(JSString d);
+  external JSString get linkDomain;
+  external set linkDomain(JSString d);
 }
 
 /// The iOS settings.
