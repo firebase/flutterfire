@@ -434,7 +434,8 @@ void main() {
           },
           response: {'totalTokens': 2},
         );
-        expect(response, matchesCountTokensResponse(CountTokensResponse(2)));
+        expect(response,
+            matchesCountTokensResponse(CountTokensResponse(2, null, [])));
       });
     });
   });
