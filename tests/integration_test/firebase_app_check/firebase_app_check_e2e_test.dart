@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -76,6 +78,34 @@ void main() {
           // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
         },
         skip: kIsWeb,
+      );
+
+      test(
+        'debugToken on Android',
+            () async {
+          await expectLater(
+            FirebaseAppCheck.instance.activate(
+              androidProvider: AndroidProvider.debug,
+              androidDebugToken: 'debug_token',
+            ),
+            completes,
+          );
+        },
+        skip: !Platform.isAndroid,
+      );
+
+      test(
+        'debugToken on iOS',
+            () async {
+          await expectLater(
+            FirebaseAppCheck.instance.activate(
+              appleDebugToken: 'debug_token',
+              appleProvider: AppleProvider.debug,
+            ),
+            completes,
+          );
+        },
+        skip: !Platform.isIOS,
       );
     },
   );
