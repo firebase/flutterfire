@@ -14,7 +14,12 @@ class ActionCodeSettings {
     this.androidPackageName,
     this.androidMinimumVersion,
     this.androidInstallApp = false,
+    @Deprecated(
+        'Firebase Dynamic Links is deprecated and will be shut down as early as August * 2025. '
+        'Instead, use ActionCodeSettings.linkDomain to set a a custom domain. '
+        'Learn more at: https://firebase.google.com/support/dynamic-links-faq')
     this.dynamicLinkDomain,
+    this.linkDomain,
     this.handleCodeInApp = false,
     this.iOSBundleId,
     required this.url,
@@ -48,11 +53,16 @@ class ActionCodeSettings {
   /// Sets the link continue/state URL
   final String url;
 
+  /// The optional custom Firebase Hosting domain to use when the link is to be opened via a specified mobile app.
+  /// The domain must be configured in Firebase Hosting and owned by the project. This cannot be a default Hosting domain (web.app or firebaseapp.com).
+  final String? linkDomain;
+
   /// Returns the current instance as a [Map].
   Map<String, dynamic> asMap() {
     return <String, dynamic>{
       'url': url,
       'dynamicLinkDomain': dynamicLinkDomain,
+      'linkDomain': linkDomain,
       'handleCodeInApp': handleCodeInApp,
       if (iOSBundleId != null)
         'iOS': {
