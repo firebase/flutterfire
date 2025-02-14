@@ -5,7 +5,7 @@
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
-import 'package:firebase_core_platform_interface/test.dart';
+import '../../../firebase_core/firebase_core_platform_interface/test/test.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
