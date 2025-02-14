@@ -103,7 +103,7 @@ jobs:
           ccache -s
       - name: Start Firebase Emulator
         run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
-      - uses: futureware-tech/simulator-action@bde6805eedaeaba7775a9959970edc7d8bf10c4d
+      - uses: futureware-tech/simulator-action@9150831bad21ed25e472017a746f49ccbd0e674a
         id: simulator
         with:
           # List of available simulators: https://github.com/actions/runner-images/blob/main/images/macos/macos-14-Readme.md#installed-simulators
