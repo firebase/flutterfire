@@ -22,7 +22,7 @@ import 'pages/function_calling_page.dart';
 import 'pages/image_prompt_page.dart';
 import 'pages/token_count_page.dart';
 import 'pages/schema_page.dart';
-import 'pages/storage_uri_page.dart';
+import 'pages/imagen_page.dart';
 
 // REQUIRED if you want to run on Web
 const FirebaseOptions? options = null;
@@ -79,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
           title: 'Function Calling',
         ), // function calling will initial its own model
         ImagePromptPage(title: 'Image Prompt', model: widget.model),
-        StorageUriPromptPage(title: 'Storage URI Prompt', model: widget.model),
+        ImagenPage(title: 'Imagen Model', model: widget.model),
         SchemaPromptPage(title: 'Schema Prompt', model: widget.model),
       ];
 
@@ -134,11 +134,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.folder,
+              Icons.image_search,
               color: Theme.of(context).colorScheme.primary,
             ),
-            label: 'Storage URI Prompt',
-            tooltip: 'Storage URI Prompt',
+            label: 'Imagen Model',
+            tooltip: 'Imagen Model',
           ),
           BottomNavigationBarItem(
             icon: Icon(

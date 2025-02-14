@@ -18,7 +18,7 @@
 /// Represents a select subset of an
 /// [OpenAPI 3.0 schema object](https://spec.openapis.org/oas/v3.0.3#schema).
 final class Schema {
-  /// Constructor
+  // ignore: public_member_api_docs
   Schema(
     this.type, {
     this.format,

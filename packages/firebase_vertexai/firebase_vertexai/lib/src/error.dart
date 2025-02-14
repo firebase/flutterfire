@@ -16,7 +16,7 @@
 ///
 /// The [message] may explain the cause of the failure.
 final class VertexAIException implements Exception {
-  /// Constructor
+  // ignore: public_member_api_docs
   VertexAIException(this.message);
 
   /// Message of the exception
@@ -28,7 +28,7 @@ final class VertexAIException implements Exception {
 
 /// Exception thrown when the server rejects the API key.
 final class InvalidApiKey implements VertexAIException {
-  /// Constructor
+  // ignore: public_member_api_docs
   InvalidApiKey(this.message);
   @override
   final String message;
@@ -81,7 +81,7 @@ final class QuotaExceeded implements VertexAIException {
 
 /// Exception thrown when the server failed to generate content.
 final class ServerException implements VertexAIException {
-  /// Constructor
+  // ignore: public_member_api_docs
   ServerException(this.message);
   @override
   final String message;
@@ -96,7 +96,7 @@ final class ServerException implements VertexAIException {
 /// as an inability to parse a new response format. Resolution paths may include
 /// updating to a new version of the SDK, or filing an issue.
 final class VertexAISdkException implements Exception {
-  /// Constructor
+  // ignore: public_member_api_docs
   VertexAISdkException(this.message);
 
   /// Message of the exception
@@ -109,6 +109,21 @@ final class VertexAISdkException implements Exception {
       '(https://pub.dev/packages/firebase_vertexai/versions), '
       'or file an issue at '
       'https://github.com/firebase/flutterfire/issues.';
+}
+
+/// Exception indicating all images filtered out.
+///
+/// This exception indicates all images were filtered out because they violated
+/// Vertex AI's usage guidelines.
+final class ImagenImagesBlockedException implements Exception {
+  // ignore: public_member_api_docs
+  ImagenImagesBlockedException(this.message);
+
+  /// Message of the exception
+  final String message;
+
+  @override
+  String toString() => message;
 }
 
 /// Parse the error json object.
