@@ -38,8 +38,8 @@ class MicrosoftAuthProvider extends AuthProvider {
 
   /// Create a new [MicrosoftAuthCredential] from a provided [accessToken];
   @Deprecated(
-      '`credential()` has been deprecated. Sign-in cannot be directly achieved with OAuth access token based credentials for Microsoft',
-    )
+    '`credential()` has been deprecated. Sign-in cannot be directly achieved with OAuth access token based credentials for Microsoft. Please use `signInWithProvider(MicrosoftAuthProvider)` instead.',
+  )
   static OAuthCredential credential(String accessToken) {
     return MicrosoftAuthCredential._credential(
       accessToken,
@@ -85,8 +85,8 @@ class MicrosoftAuthProvider extends AuthProvider {
   }
 }
 
-/// The auth credential returned from calling
-/// [MicrosoftAuthProvider.credential].
+// ignore: deprecated_member_use_from_same_package
+/// [MicrosoftAuthProvider.credential] returns a [MicrosoftAuthCredential] instance.
 class MicrosoftAuthCredential extends OAuthCredential {
   MicrosoftAuthCredential._({
     required String accessToken,
@@ -94,7 +94,6 @@ class MicrosoftAuthCredential extends OAuthCredential {
             providerId: _kProviderId,
             signInMethod: _kProviderId,
             accessToken: accessToken);
-
   factory MicrosoftAuthCredential._credential(String accessToken) {
     return MicrosoftAuthCredential._(accessToken: accessToken);
   }
