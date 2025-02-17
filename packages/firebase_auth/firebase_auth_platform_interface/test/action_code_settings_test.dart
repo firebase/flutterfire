@@ -11,6 +11,7 @@ void main() {
   const String kMockPackageName = 'com.test.package';
 
   const String kMockDynamicLinkDomain = 'domain.com';
+  const String kMockLinkDomain = 'new.domain.com';
   const bool kMockHandleCodeInApp = true;
   const String kMockUrl = 'https://test.url';
   const String kMockMinimumVersion = '8.0';
@@ -21,7 +22,9 @@ void main() {
         androidPackageName: kMockPackageName,
         androidMinimumVersion: kMockMinimumVersion,
         androidInstallApp: kMockInstallApp,
+        // ignore: deprecated_member_use_from_same_package
         dynamicLinkDomain: kMockDynamicLinkDomain,
+        linkDomain: kMockLinkDomain,
         handleCodeInApp: kMockHandleCodeInApp,
         iOSBundleId: kMockBundleId,
         url: kMockUrl);
@@ -30,8 +33,11 @@ void main() {
       test('returns an instance of [ActionCodeInfo]', () {
         expect(actionCodeSettings, isA<ActionCodeSettings>());
         expect(actionCodeSettings.url, equals(kMockUrl));
+        // ignore: deprecated_member_use_from_same_package
         expect(actionCodeSettings.dynamicLinkDomain,
             equals(kMockDynamicLinkDomain));
+            expect(actionCodeSettings.linkDomain,
+            equals(kMockLinkDomain));
         expect(
             actionCodeSettings.handleCodeInApp, equals(kMockHandleCodeInApp));
         expect(actionCodeSettings.androidPackageName, equals(kMockPackageName));
@@ -49,6 +55,7 @@ void main() {
 
           expect(result['url'], equals(kMockUrl));
           expect(result['dynamicLinkDomain'], equals(kMockDynamicLinkDomain));
+          expect(result['linkDomain'], equals(kMockLinkDomain));
           expect(result['handleCodeInApp'], equals(kMockHandleCodeInApp));
           expect(result['android']['packageName'], equals(kMockPackageName));
           expect(result['android']['installApp'], equals(kMockInstallApp));
