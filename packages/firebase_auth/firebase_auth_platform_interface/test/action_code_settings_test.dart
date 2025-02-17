@@ -36,8 +36,7 @@ void main() {
         // ignore: deprecated_member_use_from_same_package
         expect(actionCodeSettings.dynamicLinkDomain,
             equals(kMockDynamicLinkDomain));
-            expect(actionCodeSettings.linkDomain,
-            equals(kMockLinkDomain));
+        expect(actionCodeSettings.linkDomain, equals(kMockLinkDomain));
         expect(
             actionCodeSettings.handleCodeInApp, equals(kMockHandleCodeInApp));
         expect(actionCodeSettings.androidPackageName, equals(kMockPackageName));

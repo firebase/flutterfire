@@ -223,11 +223,12 @@ auth_interop.ActionCodeSettings? convertPlatformActionCodeSettings(
   Map<String, dynamic> actionCodeSettingsMap = actionCodeSettings.asMap();
 
   auth_interop.ActionCodeSettings webActionCodeSettings;
-
+  // ignore: deprecated_member_use
   if (actionCodeSettings.dynamicLinkDomain != null) {
     webActionCodeSettings = auth_interop.ActionCodeSettings(
       url: actionCodeSettings.url.toJS,
       handleCodeInApp: actionCodeSettings.handleCodeInApp.toJS,
+      // ignore: deprecated_member_use
       dynamicLinkDomain: actionCodeSettings.dynamicLinkDomain?.toJS,
     );
   } else {

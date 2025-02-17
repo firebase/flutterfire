@@ -44,9 +44,9 @@ class ActionCodeSettings {
 
   /// Sets an optional Dynamic Link domain.
   @Deprecated(
-        'Firebase Dynamic Links is deprecated and will be shut down as early as August * 2025. '
-        'Instead, use ActionCodeSettings.linkDomain to set a a custom domain. '
-        'Learn more at: https://firebase.google.com/support/dynamic-links-faq')
+      'Firebase Dynamic Links is deprecated and will be shut down as early as August * 2025. '
+      'Instead, use ActionCodeSettings.linkDomain to set a a custom domain. '
+      'Learn more at: https://firebase.google.com/support/dynamic-links-faq')
   final String? dynamicLinkDomain;
 
   /// The default is false. When true, the action code link will be sent
