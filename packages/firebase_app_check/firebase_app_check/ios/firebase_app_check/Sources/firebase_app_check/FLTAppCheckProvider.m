@@ -14,10 +14,19 @@
   return self;
 }
 
-- (void)configure:(FIRApp *)app providerName:(NSString *)providerName {
+- (void)configure:(FIRApp *)app
+     providerName:(NSString *)providerName
+       debugToken:(NSString *)debugToken {
   if ([providerName isEqualToString:@"debug"]) {
+    if (debugToken != nil) {
+      // We have a debug token, so just need to stuff it in the environment and it will hook up
+      char *key = "FIRAAppCheckDebugToken", *value = (char *)[debugToken UTF8String];
+      int overwrite = 1;
+      setenv(key, value, overwrite);
+    }
+
     FIRAppCheckDebugProvider *provider = [[FIRAppCheckDebugProvider alloc] initWithApp:app];
-    NSLog(@"Firebase App Check Debug Token: %@", [provider localDebugToken]);
+    if (debugToken == nil) NSLog(@"Firebase App Check Debug Token: %@", [provider localDebugToken]);
     self.delegateProvider = provider;
   }
 
