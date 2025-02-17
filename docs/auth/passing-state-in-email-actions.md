@@ -105,11 +105,14 @@ following parameters:
   <tr>
     <td><code>dynamicLinkDomain</code></td>
     <td>String</td>
-    <td>Sets the dynamic link domain (or subdomain) to use for the current link
+    <td>(Deprecated, use `linkDomain`) Sets the dynamic link domain (or subdomain) to use for the current link
       if it is to be opened using Firebase Dynamic Links. As multiple dynamic
       link domains can be configured per project, this field provides the
       ability to explicitly choose one. If none is provided, the first domain
       is used by default.</td>
+    <td><code>linkDomain</code></td>
+    <td>String</td>
+    <td>The optional custom Firebase Hosting domain to use when the link is to be opened via a specified mobile app. The domain must be configured in Firebase Hosting and owned by the project. This cannot be a default Hosting domain (`web.app` or `firebaseapp.com`). This replaces the deprecated `dynamicLinkDomain` setting.</td>
   </tr>
 </table>
 

@@ -482,7 +482,9 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
                 androidPackageName: actionCodeSettings.androidPackageName,
                 androidInstallApp: actionCodeSettings.androidInstallApp,
                 androidMinimumVersion: actionCodeSettings.androidMinimumVersion,
+                // ignore: deprecated_member_use_from_same_package
                 dynamicLinkDomain: actionCodeSettings.dynamicLinkDomain,
+                linkDomain: actionCodeSettings.linkDomain,
               ),
       );
     } catch (e, stack) {
@@ -503,9 +505,11 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
           url: actionCodeSettings.url,
           handleCodeInApp: actionCodeSettings.handleCodeInApp,
           iOSBundleId: actionCodeSettings.iOSBundleId,
+          linkDomain: actionCodeSettings.linkDomain,
           androidPackageName: actionCodeSettings.androidPackageName,
           androidInstallApp: actionCodeSettings.androidInstallApp,
           androidMinimumVersion: actionCodeSettings.androidMinimumVersion,
+          // ignore: deprecated_member_use_from_same_package
           dynamicLinkDomain: actionCodeSettings.dynamicLinkDomain,
         ),
       );

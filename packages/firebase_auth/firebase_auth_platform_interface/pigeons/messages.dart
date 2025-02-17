@@ -220,6 +220,7 @@ class PigeonActionCodeSettings {
   const PigeonActionCodeSettings({
     required this.url,
     required this.dynamicLinkDomain,
+    required this.linkDomain,
     required this.handleCodeInApp,
     required this.iOSBundleId,
     required this.androidPackageName,
@@ -234,6 +235,7 @@ class PigeonActionCodeSettings {
   final String? androidPackageName;
   final bool androidInstallApp;
   final String? androidMinimumVersion;
+  final String? linkDomain;
 }
 
 class PigeonFirebaseAuthSettings {
