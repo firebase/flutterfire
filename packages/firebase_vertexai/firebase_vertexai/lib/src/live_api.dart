@@ -171,7 +171,8 @@ class LiveClientRealtimeInput {
 
   Map<String, dynamic> toJson() => {
         'realtime_input': {
-          'media_chunks': mediaChunks?.map((e) => e.toJson()).toList(),
+          'media_chunks':
+              mediaChunks?.map((e) => e.toMediaChunkJson()).toList(),
         },
       };
 }

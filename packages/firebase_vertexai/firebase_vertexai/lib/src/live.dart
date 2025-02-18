@@ -46,8 +46,8 @@ class AsyncSession {
   Future<void> stream({
     required List<InlineDataPart> mediaChunks,
   }) async {
-    // var clientMessage = _parseClientMessage(input, endOfTurn);
     var clientMessage = LiveClientRealtimeInput(mediaChunks: mediaChunks);
+
     var clientJson = jsonEncode(clientMessage.toJson());
     print('Streaming $clientJson');
     _ws.sink.add(clientJson);
@@ -119,15 +119,24 @@ class AsyncSession {
         print('send audio data with size ${data.bytes.length}');
 
         await stream(mediaChunks: [data]);
+
+        // await send(input: Content.inlineData(mimeType, data.bytes));
         // Give a chance for the receive loop to process responses.
-        await Future.delayed(Duration.zero);
+        await Future.delayed(const Duration(milliseconds: 1));
+        printWsStatus();
       }
     } finally {
       print('client audio sent complete');
-      // await send(turnComplete: true);
+      await send(turnComplete: true);
       // Complete the completer to signal the end of the stream.
       completer.complete();
     }
+  }
+
+  Future<void> dumpData(String data) async {
+    print('dump data $data');
+    _ws.sink.add(data);
+    printWsStatus();
   }
 
   Map<String, dynamic> _LiveServerContentFromMldev(dynamic fromObject) {
@@ -278,5 +287,14 @@ class AsyncSession {
 
   Future<void> close() async {
     await _ws.sink.close();
+  }
+
+  void printWsStatus() {
+    if (_ws.closeCode != null) {
+      print('WebSocket status: Closed, close code ${_ws.closeCode}');
+      print('Closed reason ${_ws.closeReason}');
+    } else {
+      print('WebSocket status: Open');
+    }
   }
 }

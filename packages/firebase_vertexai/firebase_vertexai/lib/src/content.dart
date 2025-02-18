@@ -60,7 +60,13 @@ final class Content {
   /// Convert the [Content] to json format.
   Map<String, Object?> toJson() => {
         if (role case final role?) 'role': role,
-        'parts': parts.map((p) => p.toJson()).toList()
+        'parts': parts?.map((p) {
+          if (p is InlineDataPart && p.mimeType.startsWith('audio/')) {
+            return p.toJson();
+          } else {
+            return p.toJson();
+          }
+        }).toList(),
       };
 }
 
@@ -138,6 +144,20 @@ final class InlineDataPart implements Part {
   Object toJson() => {
         'inlineData': {
           'data': base64Encode(bytes),
+          'mimeType': mimeType,
+          if (willContinue != null) 'willContinue': willContinue,
+        }
+      };
+
+  Object toMediaChunkJson() => {
+        'mimeType': mimeType,
+        'data': base64Encode(bytes),
+        if (willContinue != null) 'willContinue': willContinue,
+      };
+
+  Object toAudioJson() => {
+        'inlineData': {
+          'data': bytes.toString(),
           'mimeType': mimeType,
           if (willContinue != null) 'willContinue': willContinue,
         }

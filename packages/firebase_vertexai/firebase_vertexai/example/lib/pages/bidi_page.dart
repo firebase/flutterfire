@@ -14,7 +14,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:async';
-
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import '../widgets/message_widget.dart';
@@ -53,6 +53,14 @@ class _BidiPageState extends State<BidiPage> {
         curve: Curves.easeOutCirc,
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    if (_session_opening) {
+      _session.close();
+    }
+    super.dispose();
   }
 
   @override
@@ -135,7 +143,8 @@ class _BidiPageState extends State<BidiPage> {
                   if (!_loading)
                     IconButton(
                       onPressed: () async {
-                        await _sendTextPrompt(textPrompt: _textController.text);
+                        await _sendPremadeAudioPayload();
+                        // await _sendTextPrompt(textPrompt: _textController.text);
                       },
                       icon: Icon(
                         Icons.send,
@@ -144,6 +153,15 @@ class _BidiPageState extends State<BidiPage> {
                     )
                   else
                     const CircularProgressIndicator(),
+                  IconButton(
+                    onPressed: () async {
+                      await _checkWsStatus();
+                    },
+                    icon: Icon(
+                      Icons.check,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  )
                 ],
               ),
             ),
@@ -178,6 +196,7 @@ class _BidiPageState extends State<BidiPage> {
     if (!_session_opening) {
       _session = await widget.model.connect(model: modelName, config: config);
       _session_opening = true;
+      unawaited(_handle_response());
     } else {
       await _session!.close();
       await _audioManager.stop();
@@ -219,15 +238,14 @@ class _BidiPageState extends State<BidiPage> {
 
   Future<void> _stopRecording() async {
     await _audioRecorder.stopRecording();
-    var audioPrompt = await _audioRecorder.getAudioBytes(fromFile: true);
-    //await _streamAudioChunks(audioPrompt, 'audio/pcm');
-    //await _sendAudioPrompt(audioPrompt);
-    await _sendAudioRealtime(audioPrompt);
+    var audioPrompt = await _audioRecorder.getAudioBytes();
+    await _streamAudioChunks(audioPrompt, 'audio/pcm');
+    // await _sendAudioPrompt(audioPrompt);
+    // await _sendAudioRealtime(audioPrompt);
   }
 
   List<Uint8List> _splitIntoChunks(Uint8List audioData, int chunkSize) {
     final chunks = <Uint8List>[];
-    const chunkSize = 1024;
 
     for (var i = 0; i < audioData.length; i += chunkSize) {
       final end =
@@ -246,8 +264,7 @@ class _BidiPageState extends State<BidiPage> {
     final streamController = StreamController<InlineDataPart>();
     for (var chunk in chunks) {
       if (identical(chunk, chunks.last)) {
-        final lastData =
-            InlineDataPart('audio/pcm', chunk, willContinue: false);
+        final lastData = InlineDataPart('audio/pcm', chunk, willContinue: true);
         streamController.add(lastData);
       } else {
         final data = InlineDataPart('audio/pcm', chunk, willContinue: true);
@@ -262,8 +279,8 @@ class _BidiPageState extends State<BidiPage> {
       // Process the message received from the server
       print('Received message: $message');
     }
-    print('Stream all audio chunk to server');
-    await _handle_response_audio();
+    print('Send all audio chunk to server');
+    _session.printWsStatus();
     setState(() {
       _loading = false;
     });
@@ -273,7 +290,7 @@ class _BidiPageState extends State<BidiPage> {
     setState(() {
       _loading = true;
     });
-    final chunks = _splitIntoChunks(audio, 1024);
+    final chunks = _splitIntoChunks(audio, 512);
 
     final media_chunks = <InlineDataPart>[];
     for (var chunk in chunks) {
@@ -288,8 +305,7 @@ class _BidiPageState extends State<BidiPage> {
     }
     await _session!.stream(mediaChunks: media_chunks);
     print('Stream realtime audio chunk to server in one request');
-
-    await _handle_response_audio();
+    _session.printWsStatus();
     setState(() {
       _loading = false;
     });
@@ -300,14 +316,34 @@ class _BidiPageState extends State<BidiPage> {
       _loading = true;
     });
     final prompt = Content.inlineData('audio/pcm', audio);
-    await _session!.send(input: prompt, turnComplete: true);
+    await _session!.send(input: prompt);
 
     print('Sent audio chunk to server');
-
-    await _handle_response_audio();
+    _session.printWsStatus();
     setState(() {
       _loading = false;
     });
+  }
+
+  Future<void> _sendPremadeAudioPayload() async {
+    setState(() {
+      _loading = true;
+    });
+    final dir = await getDownloadsDirectory();
+    final path = '${dir!.path}/audio_payload.json';
+
+    final file = File(path!);
+    final dataDump = await file.readAsString();
+
+    _session!.dumpData(dataDump);
+
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  Future<void> _checkWsStatus() async {
+    _session!.printWsStatus();
   }
 
   Future<void> _sendTextPrompt({String? textPrompt}) async {
@@ -330,7 +366,8 @@ class _BidiPageState extends State<BidiPage> {
 
       await _session!.send(input: prompt, turnComplete: true);
       print('Prompt sent to server');
-      await _handle_response_audio();
+      _session.printWsStatus();
+      // await _handle_response();
     }
 
     setState(() {
@@ -338,7 +375,7 @@ class _BidiPageState extends State<BidiPage> {
     });
   }
 
-  Future<void> _handle_response_audio() async {
+  Future<void> _handle_response() async {
     final responseStream = _session!.receive();
     var chunkBuilder = BytesBuilder();
     var audioIndex = 0;
@@ -394,9 +431,11 @@ class _BidiPageState extends State<BidiPage> {
             24000,
           );
           _audioManager.addAudio(chunk);
+          audioIndex = 0;
+          chunkBuilder.clear();
         }
 
-        break; // Exit the loop if the turn is complete
+        //break; // Exit the loop if the turn is complete
       }
     }
   }

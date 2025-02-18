@@ -86,23 +86,26 @@ class InMemoryAudioRecorder {
 
     _lastAudioPath = await _getPath();
 
-    await _recorder.start(recordConfig, path: _lastAudioPath!);
+    //await _recorder.start(recordConfig, path: _lastAudioPath!);
 
-    // final stream = await _recorder.startStream(recordConfig);
-    // _recordSubscription = stream.listen((data) {
-    //   _audioChunks.add(data);
-    //   print('captured data $data');
-    // });
+    final stream = await _recorder.startStream(recordConfig);
+    _recordSubscription = stream.listen((data) {
+      _audioChunks.add(data);
+      //print('captured data $data');
+    });
   }
 
   Future<void> stopRecording() async {
-    // await _recordSubscription?.cancel();
-    // _recordSubscription = null;
+    await _recordSubscription?.cancel();
+    _recordSubscription = null;
 
     await _recorder.stop();
   }
 
-  Future<Uint8List> getAudioBytes({bool fromFile = false}) async {
+  Future<Uint8List> getAudioBytes({
+    bool fromFile = false,
+    bool removeHeader = false,
+  }) async {
     if (fromFile) {
       return _getAudioBytesFromFile(_lastAudioPath!);
     } else {
@@ -114,14 +117,27 @@ class InMemoryAudioRecorder {
     }
   }
 
-  Future<Uint8List> _getAudioBytesFromFile(String filePath) async {
+  Future<Uint8List> _removeWavHeader(Uint8List audio) async {
+    // Assuming a standard WAV header size of 44 bytes
+    const wavHeaderSize = 44;
+    final audioData = audio.sublist(wavHeaderSize);
+    return audioData;
+  }
+
+  Future<Uint8List> _getAudioBytesFromFile(
+    String filePath, {
+    bool removeHeader = false,
+  }) async {
     final file = File(_lastAudioPath!);
     if (!await file.exists()) {
       throw Exception('Audio file not found: ${file.path}');
     }
 
-    final pcmBytes = await file.readAsBytes();
+    var pcmBytes = await file.readAsBytes();
     print('pcm file ${file.path} has byte size of ${pcmBytes.length}');
+    if (removeHeader) {
+      pcmBytes = await _removeWavHeader(pcmBytes);
+    }
     return pcmBytes;
   }
 }
