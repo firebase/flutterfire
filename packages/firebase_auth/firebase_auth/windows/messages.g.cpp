@@ -2878,10 +2878,16 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
               const auto& email_arg =
                   std::get<std::string>(encodable_email_arg);
               const auto& encodable_action_code_settings_arg = args.at(2);
-              const auto* action_code_settings_arg =
-                  &(std::any_cast<const PigeonActionCodeSettings&>(
-                      std::get<CustomEncodableValue>(
-                          encodable_action_code_settings_arg)));
+              // IF CODE REGENERATED, PLEASE REINSERT THIS. IF ARG IS NULL, APP
+              // CRASHES
+              const PigeonActionCodeSettings* action_code_settings_arg =
+                  nullptr;
+              if (!encodable_action_code_settings_arg.IsNull()) {
+                action_code_settings_arg =
+                    &(std::any_cast<const PigeonActionCodeSettings&>(
+                        std::get<CustomEncodableValue>(
+                            encodable_action_code_settings_arg)));
+              }
               api->SendPasswordResetEmail(
                   app_arg, email_arg, action_code_settings_arg,
                   [reply](std::optional<FlutterError>&& output) {
@@ -3766,10 +3772,16 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
               const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_action_code_settings_arg = args.at(1);
-              const auto* action_code_settings_arg =
-                  &(std::any_cast<const PigeonActionCodeSettings&>(
-                      std::get<CustomEncodableValue>(
-                          encodable_action_code_settings_arg)));
+              // IF CODE REGENERATED, PLEASE REINSERT THIS. IF ARG IS NULL, APP
+              // CRASHES
+              const PigeonActionCodeSettings* action_code_settings_arg =
+                  nullptr;
+              if (!encodable_action_code_settings_arg.IsNull()) {
+                action_code_settings_arg =
+                    &(std::any_cast<const PigeonActionCodeSettings&>(
+                        std::get<CustomEncodableValue>(
+                            encodable_action_code_settings_arg)));
+              }
               api->SendEmailVerification(
                   app_arg, action_code_settings_arg,
                   [reply](std::optional<FlutterError>&& output) {
@@ -4047,10 +4059,16 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
               const auto& new_email_arg =
                   std::get<std::string>(encodable_new_email_arg);
               const auto& encodable_action_code_settings_arg = args.at(2);
-              const auto* action_code_settings_arg =
-                  &(std::any_cast<const PigeonActionCodeSettings&>(
-                      std::get<CustomEncodableValue>(
-                          encodable_action_code_settings_arg)));
+              // IF CODE REGENERATED, PLEASE REINSERT THIS. IF ARG IS NULL, APP
+              // CRASHES
+              const PigeonActionCodeSettings* action_code_settings_arg =
+                  nullptr;
+              if (!encodable_action_code_settings_arg.IsNull()) {
+                action_code_settings_arg =
+                    &(std::any_cast<const PigeonActionCodeSettings&>(
+                        std::get<CustomEncodableValue>(
+                            encodable_action_code_settings_arg)));
+              }
               api->VerifyBeforeUpdateEmail(
                   app_arg, new_email_arg, action_code_settings_arg,
                   [reply](std::optional<FlutterError>&& output) {
