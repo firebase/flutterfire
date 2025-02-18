@@ -141,3 +141,8 @@ environment, you can create a debug build of your app that uses the
 App Check debug provider instead of a real attestation provider.
 
 See [Use App Check with the debug provider in Flutter apps](/docs/app-check/flutter/debug-provider).
+
+### Additional Steps to Enable App Check on Specific Devices (e.g. Xiaomi)
+For certain devices like Xiaomi, you need to enable "Meets basic device integrity" in the 
+Play Integrity API settings, as mentioned in [this issue comment](https://github.com/firebase/flutterfire/issues/17106#issuecomment-2663422877), 
+to ensure App Check functions properly.
