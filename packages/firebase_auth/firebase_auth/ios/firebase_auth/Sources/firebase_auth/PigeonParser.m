@@ -133,6 +133,10 @@
     codeSettings.dynamicLinkDomain = settings.dynamicLinkDomain;
   }
 
+  if (settings.linkDomain != nil) {
+    codeSettings.linkDomain = settings.linkDomain;
+  }
+
   codeSettings.handleCodeInApp = settings.handleCodeInApp;
 
   if (settings.iOSBundleId != nil) {

@@ -199,7 +199,8 @@ typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
                 iOSBundleId:(nullable NSString *)iOSBundleId
          androidPackageName:(nullable NSString *)androidPackageName
           androidInstallApp:(BOOL)androidInstallApp
-      androidMinimumVersion:(nullable NSString *)androidMinimumVersion;
+      androidMinimumVersion:(nullable NSString *)androidMinimumVersion
+                 linkDomain:(nullable NSString *)linkDomain;
 @property(nonatomic, copy) NSString *url;
 @property(nonatomic, copy, nullable) NSString *dynamicLinkDomain;
 @property(nonatomic, assign) BOOL handleCodeInApp;
@@ -207,6 +208,7 @@ typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
 @property(nonatomic, copy, nullable) NSString *androidPackageName;
 @property(nonatomic, assign) BOOL androidInstallApp;
 @property(nonatomic, copy, nullable) NSString *androidMinimumVersion;
+@property(nonatomic, copy, nullable) NSString *linkDomain;
 @end
 
 @interface PigeonFirebaseAuthSettings : NSObject
