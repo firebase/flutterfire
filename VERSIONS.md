@@ -4,6 +4,45 @@ This document is listing all the compatible versions of the FlutterFire plugins.
 
 # Versions
 
+## [Flutter BoM 3.7.0 (2025-02-18)](https://github.com/firebase/flutterfire/blob/main/CHANGELOG.md#2025-02-18)
+
+Install this version using FlutterFire CLI
+
+```bash
+flutterfire install 3.7.0
+```
+
+### Included Native Firebase SDK Versions
+| Firebase SDK | Version | Link |
+|--------------|---------|------|
+| Android SDK | 33.9.0 | [Release Notes](https://firebase.google.com/support/release-notes/android) |
+| iOS SDK | 11.8.0 | [Release Notes](https://firebase.google.com/support/release-notes/ios) |
+| Web SDK | 11.3.1 | [Release Notes](https://firebase.google.com/support/release-notes/js) |
+| Windows SDK | 12.0.0 | [Release Notes](https://firebase.google.com/support/release-notes/cpp-relnotes) |
+
+### FlutterFire Plugin Versions
+| Plugin | Version | Dart Version | Flutter Version |
+|--------|---------|--------------|-----------------|
+| [cloud_firestore](https://pub.dev/packages/cloud_firestore/versions/5.6.4) | 5.6.4 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [cloud_functions](https://pub.dev/packages/cloud_functions/versions/5.3.3) | 5.3.3 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_analytics](https://pub.dev/packages/firebase_analytics/versions/11.4.3) | 11.4.3 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_app_check](https://pub.dev/packages/firebase_app_check/versions/0.3.2+3) | 0.3.2+3 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_app_installations](https://pub.dev/packages/firebase_app_installations/versions/0.3.2+3) | 0.3.2+3 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_auth](https://pub.dev/packages/firebase_auth/versions/5.5.0) | 5.5.0 | >=3.2.0 <4.0.0 | >=3.16.0 |
+| [firebase_core](https://pub.dev/packages/firebase_core/versions/3.12.0) | 3.12.0 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_crashlytics](https://pub.dev/packages/firebase_crashlytics/versions/4.3.3) | 4.3.3 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_data_connect](https://pub.dev/packages/firebase_data_connect/versions/0.1.3+1) | 0.1.3+1 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_database](https://pub.dev/packages/firebase_database/versions/11.3.3) | 11.3.3 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_dynamic_links](https://pub.dev/packages/firebase_dynamic_links/versions/6.1.3) | 6.1.3 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_in_app_messaging](https://pub.dev/packages/firebase_in_app_messaging/versions/0.8.1+3) | 0.8.1+3 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_messaging](https://pub.dev/packages/firebase_messaging/versions/15.2.3) | 15.2.3 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_ml_model_downloader](https://pub.dev/packages/firebase_ml_model_downloader/versions/0.3.3+1) | 0.3.3+1 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_performance](https://pub.dev/packages/firebase_performance/versions/0.10.1+3) | 0.10.1+3 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_remote_config](https://pub.dev/packages/firebase_remote_config/versions/5.4.1) | 5.4.1 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_storage](https://pub.dev/packages/firebase_storage/versions/12.4.3) | 12.4.3 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_vertexai](https://pub.dev/packages/firebase_vertexai/versions/1.3.0) | 1.3.0 | >=3.2.0 <4.0.0 | >=3.16.0 |
+
+
 ## [Flutter BoM 3.6.0 (2025-02-05)](https://github.com/firebase/flutterfire/blob/main/CHANGELOG.md#2025-02-05)
 
 Install this version using FlutterFire CLI

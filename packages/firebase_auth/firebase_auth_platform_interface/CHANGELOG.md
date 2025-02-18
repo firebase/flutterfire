@@ -1,3 +1,8 @@
+## 7.6.0
+
+ - **FIX**(auth): deprecate Microsoft provider method not used for authentication ([#17094](https://github.com/firebase/flutterfire/issues/17094)). ([2371d2d8](https://github.com/firebase/flutterfire/commit/2371d2d81a89a87ace898b73329e5189d7413107))
+ - **FEAT**(auth): support for `linkDomain` in `ActionCodeSettings` ([#17099](https://github.com/firebase/flutterfire/issues/17099)). ([090cdb20](https://github.com/firebase/flutterfire/commit/090cdb2078dc66e58aa4b1a3ef9a48101467b6ac))
+
 ## 7.5.2
 
  - Update a dependency to the latest release.

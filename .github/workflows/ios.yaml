@@ -48,7 +48,7 @@ jobs:
         with:
           key: xcode-cache-${{ runner.os }}
           max-size: 700M
-      - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+      - uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
         name: Pods Cache
         id: pods-cache
         with:
@@ -56,7 +56,7 @@ jobs:
           key: pods-v3-${{ runner.os }}-${{ hashFiles('tests/ios/Podfile.lock') }}
           restore-keys: pods-v3-${{ runner.os }}
       - name: Firebase Emulator Cache
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-${{ runner.os }}

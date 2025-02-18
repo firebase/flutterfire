@@ -1,3 +1,7 @@
+## 5.14.0
+
+ - **FEAT**(auth): support for `linkDomain` in `ActionCodeSettings` ([#17099](https://github.com/firebase/flutterfire/issues/17099)). ([090cdb20](https://github.com/firebase/flutterfire/commit/090cdb2078dc66e58aa4b1a3ef9a48101467b6ac))
+
 ## 5.13.8
 
  - Update a dependency to the latest release.
