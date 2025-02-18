@@ -175,7 +175,7 @@ void main() {
         'predictions': [
           {
             'raiFilteredReason':
-                'Unable to show generated images. All images were filtered out because they violated Vertex AI\'s usage guidelines. You will not be charged for blocked images. Try rephrasing the prompt. If you think this was an error, send feedback. Support codes: 39322892, 29310472'
+                "Unable to show generated images. All images were filtered out because they violated Vertex AI's usage guidelines. You will not be charged for blocked images. Try rephrasing the prompt. If you think this was an error, send feedback. Support codes: 39322892, 29310472"
           }
         ]
       };
@@ -229,7 +229,7 @@ void main() {
         'error': {
           'code': 400,
           'message':
-              'Image generation failed with the following error: The prompt could not be submitted. This prompt contains sensitive words that violate Google\'s Responsible AI practices. Try rephrasing the prompt. If you think this was an error, send feedback. Support codes: 42876398',
+              "Image generation failed with the following error: The prompt could not be submitted. This prompt contains sensitive words that violate Google's Responsible AI practices. Try rephrasing the prompt. If you think this was an error, send feedback. Support codes: 42876398",
           'status': 'INVALID_ARGUMENT'
         }
       };

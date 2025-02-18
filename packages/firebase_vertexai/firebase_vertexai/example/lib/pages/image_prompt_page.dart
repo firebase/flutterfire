@@ -89,24 +89,28 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
                   const SizedBox.square(
                     dimension: 15,
                   ),
-                  IconButton(
-                    onPressed: () async {
-                      await _sendImagePrompt(_textController.text);
-                    },
-                    icon: Icon(
-                      Icons.image,
-                      color: Theme.of(context).colorScheme.primary,
+                  if (!_loading)
+                    IconButton(
+                      onPressed: () async {
+                        await _sendImagePrompt(_textController.text);
+                      },
+                      icon: Icon(
+                        Icons.image,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    onPressed: () async {
-                      await _sendStorageUriPrompt(_textController.text);
-                    },
-                    icon: Icon(
-                      Icons.storage,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
+                  if (!_loading)
+                    IconButton(
+                      onPressed: () async {
+                        await _sendStorageUriPrompt(_textController.text);
+                      },
+                      icon: Icon(
+                        Icons.storage,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    )
+                  else
+                    const CircularProgressIndicator(),
                 ],
               ),
             ),

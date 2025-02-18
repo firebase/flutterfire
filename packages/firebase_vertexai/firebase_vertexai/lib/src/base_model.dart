@@ -35,7 +35,11 @@ enum Task {
   predict,
 }
 
+/// Base class for models.
+///
+/// Do not instantiate directly.
 abstract class BaseModel {
+  // ignore: public_member_api_docs
   BaseModel({
     required String model,
     required String location,
@@ -53,7 +57,10 @@ abstract class BaseModel {
   final Uri _projectUri;
   final ApiClient _client;
 
+  /// The normalized model name.
   ({String prefix, String name}) get model => _model;
+
+  /// The API client.
   ApiClient get client => _client;
 
   /// Returns the model code for a user friendly model name.
@@ -74,6 +81,7 @@ abstract class BaseModel {
     );
   }
 
+  /// Returns a function that generates Firebase auth tokens.
   static FutureOr<Map<String, String>> Function() firebaseTokens(
       FirebaseAppCheck? appCheck, FirebaseAuth? auth) {
     return () async {
@@ -97,6 +105,7 @@ abstract class BaseModel {
     };
   }
 
+  /// Returns a URI for the given [task].
   Uri taskUri(Task task) => _projectUri.replace(
       pathSegments: _projectUri.pathSegments
           .followedBy([_model.prefix, '${_model.name}:${task.name}']));

@@ -14,7 +14,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+//import 'package:firebase_storage/firebase_storage.dart';
 import '../widgets/message_widget.dart';
 
 class ImagenPage extends StatefulWidget {
@@ -171,6 +171,7 @@ class _ImagenPageState extends State<ImagenPage> {
     }
     setState(() {
       _loading = false;
+      _scrollDown();
     });
   }
   // NOTE: Keep this API private until future release.
