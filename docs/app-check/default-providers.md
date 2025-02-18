@@ -143,4 +143,4 @@ App Check debug provider instead of a real attestation provider.
 See [Use App Check with the debug provider in Flutter apps](/docs/app-check/flutter/debug-provider).
 
 Note: For certain Android devices, you need to enable "Meets basic device integrity" in the 
-Play console.
+Google Play console.
