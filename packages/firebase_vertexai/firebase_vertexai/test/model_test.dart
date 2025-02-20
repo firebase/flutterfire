@@ -13,7 +13,7 @@
 // limitations under the License.
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
-import 'package:firebase_vertexai/src/model.dart';
+import 'package:firebase_vertexai/src/generative_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'mock.dart';

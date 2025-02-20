@@ -14,25 +14,49 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
-import 'package:flutter/services.dart';
+//import 'package:firebase_storage/firebase_storage.dart';
 import '../widgets/message_widget.dart';
 
-class ImagePromptPage extends StatefulWidget {
-  const ImagePromptPage({super.key, required this.title, required this.model});
+class ImagenPage extends StatefulWidget {
+  const ImagenPage({
+    super.key,
+    required this.title,
+    required this.model,
+  });
 
   final String title;
   final GenerativeModel model;
 
   @override
-  State<ImagePromptPage> createState() => _ImagePromptPageState();
+  State<ImagenPage> createState() => _ImagenPageState();
 }
 
-class _ImagePromptPageState extends State<ImagePromptPage> {
+class _ImagenPageState extends State<ImagenPage> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
   final FocusNode _textFieldFocus = FocusNode();
   final List<MessageData> _generatedContent = <MessageData>[];
   bool _loading = false;
+  late final ImagenModel _imagenModel;
+
+  @override
+  void initState() {
+    super.initState();
+    var generationConfig = ImagenGenerationConfig(
+      negativePrompt: 'frog',
+      numberOfImages: 1,
+      aspectRatio: ImagenAspectRatio.square1x1,
+      imageFormat: ImagenFormat.jpeg(compressionQuality: 75),
+    );
+    _imagenModel = FirebaseVertexAI.instance.imagenModel(
+      model: 'imagen-3.0-generate-001',
+      generationConfig: generationConfig,
+      safetySettings: ImagenSafetySettings(
+        ImagenSafetyFilterLevel.blockLowAndAbove,
+        ImagenPersonFilterLevel.allowAdult,
+      ),
+    );
+  }
 
   void _scrollDown() {
     WidgetsBinding.instance.addPostFrameCallback(
@@ -62,11 +86,10 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
               child: ListView.builder(
                 controller: _scrollController,
                 itemBuilder: (context, idx) {
-                  var content = _generatedContent[idx];
                   return MessageWidget(
-                    text: content.text,
-                    image: content.image,
-                    isFromUser: content.fromUser ?? false,
+                    text: _generatedContent[idx].text,
+                    image: _generatedContent[idx].image,
+                    isFromUser: _generatedContent[idx].fromUser ?? false,
                   );
                 },
                 itemCount: _generatedContent.length,
@@ -92,25 +115,30 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
                   if (!_loading)
                     IconButton(
                       onPressed: () async {
-                        await _sendImagePrompt(_textController.text);
+                        await _testImagen(_textController.text);
                       },
                       icon: Icon(
-                        Icons.image,
+                        Icons.image_search,
                         color: Theme.of(context).colorScheme.primary,
                       ),
-                    ),
-                  if (!_loading)
-                    IconButton(
-                      onPressed: () async {
-                        await _sendStorageUriPrompt(_textController.text);
-                      },
-                      icon: Icon(
-                        Icons.storage,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+                      tooltip: 'Imagen raw data',
                     )
                   else
                     const CircularProgressIndicator(),
+                  // NOTE: Keep this API private until future release.
+                  // if (!_loading)
+                  //   IconButton(
+                  //     onPressed: () async {
+                  //       await _testImagenGCS(_textController.text);
+                  //     },
+                  //     icon: Icon(
+                  //       Icons.imagesearch_roller,
+                  //       color: Theme.of(context).colorScheme.primary,
+                  //     ),
+                  //     tooltip: 'Imagen GCS',
+                  //   )
+                  // else
+                  //   const CircularProgressIndicator(),
                 ],
               ),
             ),
@@ -120,104 +148,62 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
     );
   }
 
-  Future<void> _sendImagePrompt(String message) async {
+  Future<void> _testImagen(String prompt) async {
     setState(() {
       _loading = true;
     });
-    try {
-      ByteData catBytes = await rootBundle.load('assets/images/cat.jpg');
-      ByteData sconeBytes = await rootBundle.load('assets/images/scones.jpg');
-      final content = [
-        Content.multi([
-          TextPart(message),
-          // The only accepted mime types are image/*.
-          InlineDataPart('image/jpeg', catBytes.buffer.asUint8List()),
-          InlineDataPart('image/jpeg', sconeBytes.buffer.asUint8List()),
-        ]),
-      ];
+
+    var response = await _imagenModel.generateImages(prompt);
+
+    if (response.images.isNotEmpty) {
+      var imagenImage = response.images[0];
+      // Process the image
       _generatedContent.add(
         MessageData(
-          image: Image.asset('assets/images/cat.jpg'),
-          text: message,
-          fromUser: true,
+          image: Image.memory(imagenImage.bytesBase64Encoded),
+          text: prompt,
+          fromUser: false,
         ),
       );
-      _generatedContent.add(
-        MessageData(
-          image: Image.asset('assets/images/scones.jpg'),
-          fromUser: true,
-        ),
-      );
-
-      var response = await widget.model.generateContent(content);
-      var text = response.text;
-      _generatedContent.add(MessageData(text: text, fromUser: false));
-
-      if (text == null) {
-        _showError('No response from API.');
-        return;
-      } else {
-        setState(() {
-          _loading = false;
-          _scrollDown();
-        });
-      }
-    } catch (e) {
-      _showError(e.toString());
-      setState(() {
-        _loading = false;
-      });
-    } finally {
-      _textController.clear();
-      setState(() {
-        _loading = false;
-      });
-      _textFieldFocus.requestFocus();
+    } else {
+      // Handle the case where no images were generated
+      _showError('Error: No images were generated.');
     }
-  }
-
-  Future<void> _sendStorageUriPrompt(String message) async {
     setState(() {
-      _loading = true;
+      _loading = false;
+      _scrollDown();
     });
-    try {
-      final content = [
-        Content.multi([
-          TextPart(message),
-          FileData(
-            'image/jpeg',
-            'gs://vertex-ai-example-ef5a2.appspot.com/foodpic.jpg',
-          ),
-        ]),
-      ];
-      _generatedContent.add(MessageData(text: message, fromUser: true));
-
-      var response = await widget.model.generateContent(content);
-      var text = response.text;
-      _generatedContent.add(MessageData(text: text, fromUser: false));
-
-      if (text == null) {
-        _showError('No response from API.');
-        return;
-      } else {
-        setState(() {
-          _loading = false;
-          _scrollDown();
-        });
-      }
-    } catch (e) {
-      _showError(e.toString());
-      setState(() {
-        _loading = false;
-      });
-    } finally {
-      _textController.clear();
-      setState(() {
-        _loading = false;
-      });
-      _textFieldFocus.requestFocus();
-    }
   }
+  // NOTE: Keep this API private until future release.
+  // Future<void> _testImagenGCS(String prompt) async {
+  //   setState(() {
+  //     _loading = true;
+  //   });
+  //   var gcsUrl = 'gs://vertex-ai-example-ef5a2.appspot.com/imagen';
+
+  //   var response = await _imagenModel.generateImagesGCS(prompt, gcsUrl);
+
+  //   if (response.images.isNotEmpty) {
+  //     var imagenImage = response.images[0];
+  //     final returnImageUri = imagenImage.gcsUri;
+  //     final reference = FirebaseStorage.instance.refFromURL(returnImageUri);
+  //     final downloadUrl = await reference.getDownloadURL();
+  //     // Process the image
+  //     _generatedContent.add(
+  //       MessageData(
+  //         image: Image(image: NetworkImage(downloadUrl)),
+  //         text: prompt,
+  //         fromUser: false,
+  //       ),
+  //     );
+  //   } else {
+  //     // Handle the case where no images were generated
+  //     _showError('Error: No images were generated.');
+  //   }
+  //   setState(() {
+  //     _loading = false;
+  //   });
+  // }
 
   void _showError(String message) {
     showDialog<void>(
