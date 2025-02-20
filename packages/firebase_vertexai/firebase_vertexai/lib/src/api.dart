@@ -64,39 +64,38 @@ final class GenerateContentResponse {
   /// text parts, this value is `null`.
   String? get text {
     return switch (candidates) {
-      [] =>
-      switch (promptFeedback) {
-        PromptFeedback(
+      [] => switch (promptFeedback) {
+          PromptFeedback(
             :final blockReason,
             :final blockReasonMessage,
-        ) =>
-        // TODO: Add a specific subtype for this exception?
-        throw VertexAIException('Response was blocked'
-            '${blockReason != null ? ' due to $blockReason' : ''}'
-            '${blockReasonMessage != null ? ': $blockReasonMessage' : ''}'),
-        _ => null,
-      },
+          ) =>
+            // TODO: Add a specific subtype for this exception?
+            throw VertexAIException('Response was blocked'
+                '${blockReason != null ? ' due to $blockReason' : ''}'
+                '${blockReasonMessage != null ? ': $blockReasonMessage' : ''}'),
+          _ => null,
+        },
       [
-      Candidate(
-      finishReason: (FinishReason.recitation || FinishReason.safety) &&
-      final finishReason,
+        Candidate(
+          finishReason: (FinishReason.recitation || FinishReason.safety) &&
+              final finishReason,
           :final finishMessage,
-      ),
-      ...
+        ),
+        ...
       ] =>
-      throw VertexAIException(
-        // ignore: prefer_interpolation_to_compose_strings
-        'Candidate was blocked due to $finishReason' +
-            (finishMessage != null && finishMessage.isNotEmpty
-                ? ': $finishMessage'
-                : ''),
-      ),
-    // Special case for a single TextPart to avoid iterable chain.
+        throw VertexAIException(
+          // ignore: prefer_interpolation_to_compose_strings
+          'Candidate was blocked due to $finishReason' +
+              (finishMessage != null && finishMessage.isNotEmpty
+                  ? ': $finishMessage'
+                  : ''),
+        ),
+      // Special case for a single TextPart to avoid iterable chain.
       [Candidate(content: Content(parts: [TextPart(:final text)])), ...] =>
-      text,
+        text,
       [Candidate(content: Content(:final parts)), ...]
-      when parts.any((p) => p is TextPart) =>
-          parts.whereType<TextPart>().map((p) => p.text).join(),
+          when parts.any((p) => p is TextPart) =>
+        parts.whereType<TextPart>().map((p) => p.text).join(),
       [Candidate(), ...] => null,
     };
   }
@@ -108,7 +107,7 @@ final class GenerateContentResponse {
   /// prompt or response were blocked.
   Iterable<FunctionCall> get functionCalls =>
       candidates.firstOrNull?.content.parts.whereType<FunctionCall>() ??
-          const [];
+      const [];
 }
 
 /// Feedback metadata of a prompt specified in a [GenerativeModel] request.
@@ -133,11 +132,12 @@ final class PromptFeedback {
 /// Metadata on the generation request's token usage.
 final class UsageMetadata {
   /// Constructor
-  UsageMetadata._({this.promptTokenCount,
-    this.candidatesTokenCount,
-    this.totalTokenCount,
-    this.promptTokensDetails,
-    this.candidatesTokensDetails});
+  UsageMetadata._(
+      {this.promptTokenCount,
+      this.candidatesTokenCount,
+      this.totalTokenCount,
+      this.promptTokensDetails,
+      this.candidatesTokensDetails});
 
   /// Number of tokens in the prompt.
   final int? promptTokenCount;
@@ -207,10 +207,10 @@ final class Candidate {
           'Candidate was blocked due to $finishReason$suffix');
     }
     return switch (content.parts) {
-    // Special case for a single TextPart to avoid iterable chain.
+      // Special case for a single TextPart to avoid iterable chain.
       [TextPart(:final text)] => text,
       final parts when parts.any((p) => p is TextPart) =>
-          parts.whereType<TextPart>().map((p) => p.text).join(),
+        parts.whereType<TextPart>().map((p) => p.text).join(),
       _ => null,
     };
   }
@@ -226,9 +226,9 @@ final class SafetyRating {
   /// Constructor
   SafetyRating(this.category, this.probability,
       {this.probabilityScore,
-        this.isBlocked,
-        this.severity,
-        this.severityScore});
+      this.isBlocked,
+      this.severity,
+      this.severityScore});
 
   /// The category for this rating.
   final HarmCategory category;
@@ -362,7 +362,7 @@ enum HarmProbability {
       'MEDIUM' => HarmProbability.medium,
       'HIGH' => HarmProbability.high,
       _ =>
-      throw FormatException('Unhandled HarmProbability format', jsonObject),
+        throw FormatException('Unhandled HarmProbability format', jsonObject),
     };
   }
 
@@ -537,7 +537,7 @@ enum ContentModality {
       'audio' => ContentModality.audio,
       'document' => ContentModality.document,
       _ =>
-      throw FormatException('Unhandled ContentModality format', jsonObject),
+        throw FormatException('Unhandled ContentModality format', jsonObject),
     };
   }
 
@@ -566,15 +566,13 @@ final class SafetySetting {
 
   /// Specify if the threshold is used for probability or severity score, if
   /// not specified it will default to [HarmBlockMethod.probability].
-  final HarmBlockMethod? method
+  final HarmBlockMethod? method;
 
   /// Convert to json format.
-  Object toJson() =>
-      {
+  Object toJson() => {
         'category': category.toJson(),
         'threshold': threshold.toJson(),
-        if (method case final method?)
-          'method': method.toJson(),
+        if (method case final method?) 'method': method.toJson(),
       };
 }
 
@@ -604,8 +602,7 @@ enum HarmBlockThreshold {
       'BLOCK_MEDIUM_AND_ABOVE' => HarmBlockThreshold.medium,
       'BLOCK_ONLY_HIGH' => HarmBlockThreshold.high,
       'BLOCK_NONE' => HarmBlockThreshold.none,
-      _ =>
-      throw FormatException(
+      _ => throw FormatException(
           'Unhandled HarmBlockThreshold format', jsonObject),
     };
   }
@@ -640,8 +637,7 @@ enum HarmBlockMethod {
       'PROBABILITY' => HarmBlockMethod.probability,
       'HARM_BLOCK_METHOD_UNSPECIFIED' => HarmBlockMethod.unspecified,
       _ =>
-      throw FormatException(
-          'Unhandled HarmBlockMethod format', jsonObject),
+        throw FormatException('Unhandled HarmBlockMethod format', jsonObject),
     };
   }
 
@@ -657,14 +653,15 @@ enum HarmBlockMethod {
 /// Configuration options for model generation and outputs.
 final class GenerationConfig {
   /// Constructor
-  GenerationConfig({this.candidateCount,
-    this.stopSequences,
-    this.maxOutputTokens,
-    this.temperature,
-    this.topP,
-    this.topK,
-    this.responseMimeType,
-    this.responseSchema});
+  GenerationConfig(
+      {this.candidateCount,
+      this.stopSequences,
+      this.maxOutputTokens,
+      this.temperature,
+      this.topP,
+      this.topK,
+      this.responseMimeType,
+      this.responseSchema});
 
   /// Number of generated responses to return.
   ///
@@ -725,12 +722,11 @@ final class GenerationConfig {
   final Schema? responseSchema;
 
   /// Convert to json format
-  Map<String, Object?> toJson() =>
-      {
+  Map<String, Object?> toJson() => {
         if (candidateCount case final candidateCount?)
           'candidateCount': candidateCount,
         if (stopSequences case final stopSequences?
-        when stopSequences.isNotEmpty)
+            when stopSequences.isNotEmpty)
           'stopSequences': stopSequences,
         if (maxOutputTokens case final maxOutputTokens?)
           'maxOutputTokens': maxOutputTokens,
@@ -790,17 +786,17 @@ GenerateContentResponse parseGenerateContentResponse(Object jsonObject) {
   if (jsonObject case {'error': final Object error}) throw parseError(error);
   final candidates = switch (jsonObject) {
     {'candidates': final List<Object?> candidates} =>
-        candidates.map(_parseCandidate).toList(),
+      candidates.map(_parseCandidate).toList(),
     _ => <Candidate>[]
   };
   final promptFeedback = switch (jsonObject) {
     {'promptFeedback': final promptFeedback?} =>
-        _parsePromptFeedback(promptFeedback),
+      _parsePromptFeedback(promptFeedback),
     _ => null,
   };
   final usageMedata = switch (jsonObject) {
     {'usageMetadata': final usageMetadata?} =>
-        _parseUsageMetadata(usageMetadata),
+      _parseUsageMetadata(usageMetadata),
     _ => null,
   };
   return GenerateContentResponse(candidates, promptFeedback,
@@ -818,12 +814,12 @@ CountTokensResponse parseCountTokensResponse(Object jsonObject) {
   final totalTokens = jsonObject['totalTokens'] as int;
   final totalBillableCharacters = switch (jsonObject) {
     {'totalBillableCharacters': final int totalBillableCharacters} =>
-    totalBillableCharacters,
+      totalBillableCharacters,
     _ => null,
   };
   final promptTokensDetails = switch (jsonObject) {
     {'promptTokensDetails': final List<Object?> promptTokensDetails} =>
-        promptTokensDetails.map(_parseModalityTokenCount).toList(),
+      promptTokensDetails.map(_parseModalityTokenCount).toList(),
     _ => null,
   };
 
@@ -845,17 +841,17 @@ Candidate _parseCandidate(Object? jsonObject) {
         : Content(null, []),
     switch (jsonObject) {
       {'safetyRatings': final List<Object?> safetyRatings} =>
-          safetyRatings.map(_parseSafetyRating).toList(),
+        safetyRatings.map(_parseSafetyRating).toList(),
       _ => null
     },
     switch (jsonObject) {
       {'citationMetadata': final Object citationMetadata} =>
-          _parseCitationMetadata(citationMetadata),
+        _parseCitationMetadata(citationMetadata),
       _ => null
     },
     switch (jsonObject) {
       {'finishReason': final Object finishReason} =>
-          FinishReason._parseValue(finishReason),
+        FinishReason._parseValue(finishReason),
       _ => null
     },
     switch (jsonObject) {
@@ -868,20 +864,20 @@ Candidate _parseCandidate(Object? jsonObject) {
 PromptFeedback _parsePromptFeedback(Object jsonObject) {
   return switch (jsonObject) {
     {
-    'safetyRatings': final List<Object?> safetyRatings,
+      'safetyRatings': final List<Object?> safetyRatings,
     } =>
-        PromptFeedback(
-            switch (jsonObject) {
-              {'blockReason': final String blockReason} =>
-                  BlockReason._parseValue(blockReason),
-              _ => null,
-            },
-            switch (jsonObject) {
-              {'blockReasonMessage': final String blockReasonMessage} =>
+      PromptFeedback(
+          switch (jsonObject) {
+            {'blockReason': final String blockReason} =>
+              BlockReason._parseValue(blockReason),
+            _ => null,
+          },
+          switch (jsonObject) {
+            {'blockReasonMessage': final String blockReasonMessage} =>
               blockReasonMessage,
-              _ => null,
-            },
-            safetyRatings.map(_parseSafetyRating).toList()),
+            _ => null,
+          },
+          safetyRatings.map(_parseSafetyRating).toList()),
     _ => throw unhandledFormat('PromptFeedback', jsonObject),
   };
 }
@@ -896,7 +892,7 @@ UsageMetadata _parseUsageMetadata(Object jsonObject) {
   };
   final candidatesTokenCount = switch (jsonObject) {
     {'candidatesTokenCount': final int candidatesTokenCount} =>
-    candidatesTokenCount,
+      candidatesTokenCount,
     _ => null,
   };
   final totalTokenCount = switch (jsonObject) {
@@ -905,12 +901,12 @@ UsageMetadata _parseUsageMetadata(Object jsonObject) {
   };
   final promptTokensDetails = switch (jsonObject) {
     {'promptTokensDetails': final List<Object?> promptTokensDetails} =>
-        promptTokensDetails.map(_parseModalityTokenCount).toList(),
+      promptTokensDetails.map(_parseModalityTokenCount).toList(),
     _ => null,
   };
   final candidatesTokensDetails = switch (jsonObject) {
     {'candidatesTokensDetails': final List<Object?> candidatesTokensDetails} =>
-        candidatesTokensDetails.map(_parseModalityTokenCount).toList(),
+      candidatesTokensDetails.map(_parseModalityTokenCount).toList(),
     _ => null,
   };
   return UsageMetadata._(
@@ -946,10 +942,10 @@ SafetyRating _parseSafetyRating(Object? jsonObject) {
 CitationMetadata _parseCitationMetadata(Object? jsonObject) {
   return switch (jsonObject) {
     {'citationSources': final List<Object?> citationSources} =>
-        CitationMetadata(citationSources.map(_parseCitationSource).toList()),
-  // Vertex SDK format uses `citations`
+      CitationMetadata(citationSources.map(_parseCitationSource).toList()),
+    // Vertex SDK format uses `citations`
     {'citations': final List<Object?> citationSources} =>
-        CitationMetadata(citationSources.map(_parseCitationSource).toList()),
+      CitationMetadata(citationSources.map(_parseCitationSource).toList()),
     _ => throw unhandledFormat('CitationMetadata', jsonObject),
   };
 }
