@@ -18,7 +18,7 @@ import 'schema.dart';
 
 /// Response for Count Tokens
 final class CountTokensResponse {
-  /// Constructor
+  // ignore: public_member_api_docs
   CountTokensResponse(this.totalTokens,
       {this.totalBillableCharacters, this.promptTokensDetails});
 
@@ -38,7 +38,7 @@ final class CountTokensResponse {
 
 /// Response from the model; supports multiple candidates.
 final class GenerateContentResponse {
-  /// Constructor
+  // ignore: public_member_api_docs
   GenerateContentResponse(this.candidates, this.promptFeedback,
       {this.usageMetadata});
 
@@ -112,7 +112,7 @@ final class GenerateContentResponse {
 
 /// Feedback metadata of a prompt specified in a [GenerativeModel] request.
 final class PromptFeedback {
-  /// Constructor
+  // ignore: public_member_api_docs
   PromptFeedback(this.blockReason, this.blockReasonMessage, this.safetyRatings);
 
   /// If set, the prompt was blocked and no candidates are returned.
@@ -131,7 +131,7 @@ final class PromptFeedback {
 
 /// Metadata on the generation request's token usage.
 final class UsageMetadata {
-  /// Constructor
+  // ignore: public_member_api_docs
   UsageMetadata._(
       {this.promptTokenCount,
       this.candidatesTokenCount,
@@ -158,7 +158,7 @@ final class UsageMetadata {
 /// Response candidate generated from a [GenerativeModel].
 final class Candidate {
   // TODO: token count?
-  /// Constructor
+  // ignore: public_member_api_docs
   Candidate(this.content, this.safetyRatings, this.citationMetadata,
       this.finishReason, this.finishMessage);
 
@@ -223,7 +223,7 @@ final class Candidate {
 /// safety across a number of harm categories and the probability of the harm
 /// classification is included here.
 final class SafetyRating {
-  /// Constructor
+  // ignore: public_member_api_docs
   SafetyRating(this.category, this.probability,
       {this.probabilityScore,
       this.isBlocked,
@@ -417,7 +417,7 @@ enum HarmSeverity {
 
 /// Source attributions for a piece of content.
 final class CitationMetadata {
-  /// Constructor
+  // ignore: public_member_api_docs
   CitationMetadata(this.citations);
 
   /// Citations to sources for a specific response.
@@ -426,7 +426,7 @@ final class CitationMetadata {
 
 /// Citation to a source for a portion of a specific response.
 final class Citation {
-  /// Constructor
+  // ignore: public_member_api_docs
   Citation(this.startIndex, this.endIndex, this.uri, this.license);
 
   /// Start of segment of the response that is attributed to this source.
@@ -553,7 +553,7 @@ enum ContentModality {
 /// Passing a safety setting for a category changes the allowed probability that
 /// content is blocked.
 final class SafetySetting {
-  /// Constructor
+  // ignore: public_member_api_docs
   SafetySetting(this.category, this.threshold);
 
   /// The category for this setting.
@@ -609,7 +609,7 @@ enum HarmBlockThreshold {
 
 /// Configuration options for model generation and outputs.
 final class GenerationConfig {
-  /// Constructor
+  // ignore: public_member_api_docs
   GenerationConfig(
       {this.candidateCount,
       this.stopSequences,

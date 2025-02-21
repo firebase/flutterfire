@@ -18,7 +18,7 @@ import 'error.dart';
 
 /// The base structured datatype containing multi-part content of a message.
 final class Content {
-  /// Constructor
+  // ignore: public_member_api_docs
   Content(this.role, this.parts);
 
   /// The producer of the content.
@@ -118,7 +118,7 @@ sealed class Part {
 
 /// A [Part] with the text content.
 final class TextPart implements Part {
-  /// Constructor
+  // ignore: public_member_api_docs
   TextPart(this.text);
 
   /// The text content of the [Part]
@@ -129,7 +129,7 @@ final class TextPart implements Part {
 
 /// A [Part] with the byte content of a file.
 final class InlineDataPart implements Part {
-  /// Constructor
+  // ignore: public_member_api_docs
   InlineDataPart(this.mimeType, this.bytes, {this.willContinue});
 
   /// File type of the [InlineDataPart].
@@ -168,7 +168,7 @@ final class InlineDataPart implements Part {
 /// a string representing the `FunctionDeclaration.name` with the
 /// arguments and their values.
 final class FunctionCall implements Part {
-  /// Constructor
+  // ignore: public_member_api_docs
   FunctionCall(this.name, this.args);
 
   /// The name of the function to call.
@@ -186,7 +186,7 @@ final class FunctionCall implements Part {
 
 /// The response class for [FunctionCall]
 final class FunctionResponse implements Part {
-  /// Constructor
+  // ignore: public_member_api_docs
   FunctionResponse(this.name, this.response);
 
   /// The name of the function that was called.
@@ -206,7 +206,7 @@ final class FunctionResponse implements Part {
 
 /// A [Part] with Firebase Storage uri as prompt content
 final class FileData implements Part {
-  /// Constructor
+  // ignore: public_member_api_docs
   FileData(this.mimeType, this.fileUri);
 
   /// File type of the [FileData].
