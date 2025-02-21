@@ -58,6 +58,7 @@ class _BidiPageState extends State<BidiPage> {
   @override
   void dispose() {
     if (_session_opening) {
+      print('close the websocket session.');
       _session.close();
     }
     super.dispose();
@@ -199,8 +200,8 @@ class _BidiPageState extends State<BidiPage> {
       unawaited(_handle_response());
     } else {
       await _session!.close();
-      await _audioManager.stop();
-      await _audioManager.dispose();
+      await _audioManager.stopAudioPlayer();
+      await _audioManager.disposeAudioPlayer();
       _session_opening = false;
     }
 
@@ -233,13 +234,15 @@ class _BidiPageState extends State<BidiPage> {
 
   Future<void> _startRecording() async {
     await _audioRecorder.checkPermission();
-    await _audioRecorder.startRecording();
+    // await _audioRecorder.startRecordingFile();
+    await _audioRecorder.startRecordingStream(_sendAudioRealtimeWithNoSplit);
   }
 
   Future<void> _stopRecording() async {
     await _audioRecorder.stopRecording();
-    var audioPrompt = await _audioRecorder.getAudioBytes();
-    await _streamAudioChunks(audioPrompt, 'audio/pcm');
+    // var audioPrompt = await _audioRecorder.getAudioBytes(fromFile: true);
+    // await _sendAudioRealtimeWithNoSplit(audioPrompt);
+    // await _streamAudioChunks(audioPrompt, 'audio/pcm');
     // await _sendAudioPrompt(audioPrompt);
     // await _sendAudioRealtime(audioPrompt);
   }
@@ -255,75 +258,91 @@ class _BidiPageState extends State<BidiPage> {
     return chunks;
   }
 
-  Future<void> _streamAudioChunks(Uint8List audioData, String mimeType) async {
+  // Future<void> _streamAudioChunks(Uint8List audioData, String mimeType) async {
+  //   setState(() {
+  //     _loading = true;
+  //   });
+  //   final chunks = _splitIntoChunks(audioData, 1024);
+
+  //   final streamController = StreamController<InlineDataPart>();
+  //   for (var chunk in chunks) {
+  //     if (identical(chunk, chunks.last)) {
+  //       final lastData = InlineDataPart('audio/pcm', chunk, willContinue: true);
+  //       streamController.add(lastData);
+  //     } else {
+  //       final data = InlineDataPart('audio/pcm', chunk, willContinue: true);
+  //       streamController.add(data);
+  //     }
+  //   }
+  //   streamController.close();
+  //   print('streamController has stream closed');
+  //   // Use startStream with the stream of chunks
+  //   await for (final message in _session!
+  //       .startStream(stream: streamController.stream, mimeType: mimeType)) {
+  //     // Process the message received from the server
+  //     print('Received message: $message');
+  //   }
+  //   print('Send all audio chunk to server');
+  //   _session.printWsStatus();
+  //   setState(() {
+  //     _loading = false;
+  //   });
+  // }
+
+  // Future<void> _sendAudioRealtime(Uint8List audio) async {
+  //   setState(() {
+  //     _loading = true;
+  //   });
+  //   final chunks = _splitIntoChunks(audio, 512);
+
+  //   final media_chunks = <InlineDataPart>[];
+  //   for (var chunk in chunks) {
+  //     if (identical(chunk, chunks.last)) {
+  //       final lastData = InlineDataPart('audio/pcm', chunk, willContinue: true);
+  //       media_chunks.add(lastData);
+  //     } else {
+  //       final data = InlineDataPart('audio/pcm', chunk, willContinue: true);
+  //       media_chunks.add(data);
+  //     }
+  //   }
+  //   await _session!.stream(mediaChunks: media_chunks);
+  //   print('Stream realtime audio chunks to server in one request');
+  //   _session.printWsStatus();
+  //   setState(() {
+  //     _loading = false;
+  //   });
+  // }
+
+  Future<void> _sendAudioRealtimeWithNoSplit(Uint8List audio) async {
     setState(() {
       _loading = true;
     });
-    final chunks = _splitIntoChunks(audioData, 1024);
-
-    final streamController = StreamController<InlineDataPart>();
-    for (var chunk in chunks) {
-      if (identical(chunk, chunks.last)) {
-        final lastData = InlineDataPart('audio/pcm', chunk, willContinue: true);
-        streamController.add(lastData);
-      } else {
-        final data = InlineDataPart('audio/pcm', chunk, willContinue: true);
-        streamController.add(data);
-      }
-    }
-    streamController.close();
-    print('streamController has stream closed');
-    // Use startStream with the stream of chunks
-    await for (final message in _session!
-        .startStream(stream: streamController.stream, mimeType: mimeType)) {
-      // Process the message received from the server
-      print('Received message: $message');
-    }
-    print('Send all audio chunk to server');
-    _session.printWsStatus();
-    setState(() {
-      _loading = false;
-    });
-  }
-
-  Future<void> _sendAudioRealtime(Uint8List audio) async {
-    setState(() {
-      _loading = true;
-    });
-    final chunks = _splitIntoChunks(audio, 512);
 
     final media_chunks = <InlineDataPart>[];
-    for (var chunk in chunks) {
-      if (identical(chunk, chunks.last)) {
-        final lastData =
-            InlineDataPart('audio/pcm', chunk, willContinue: false);
-        media_chunks.add(lastData);
-      } else {
-        final data = InlineDataPart('audio/pcm', chunk, willContinue: true);
-        media_chunks.add(data);
-      }
-    }
+    final data = InlineDataPart('audio/pcm', audio, willContinue: true);
+    media_chunks.add(data);
+
     await _session!.stream(mediaChunks: media_chunks);
-    print('Stream realtime audio chunk to server in one request');
-    _session.printWsStatus();
+    // print('Stream realtime audio in one chunk to server in one request');
+    //_session.printWsStatus();
     setState(() {
       _loading = false;
     });
   }
 
-  Future<void> _sendAudioPrompt(Uint8List audio) async {
-    setState(() {
-      _loading = true;
-    });
-    final prompt = Content.inlineData('audio/pcm', audio);
-    await _session!.send(input: prompt);
+  // Future<void> _sendAudioPrompt(Uint8List audio) async {
+  //   setState(() {
+  //     _loading = true;
+  //   });
+  //   final prompt = Content.inlineData('audio/pcm', audio);
+  //   await _session!.send(input: prompt);
 
-    print('Sent audio chunk to server');
-    _session.printWsStatus();
-    setState(() {
-      _loading = false;
-    });
-  }
+  //   print('Sent audio chunk to server');
+  //   _session.printWsStatus();
+  //   setState(() {
+  //     _loading = false;
+  //   });
+  // }
 
   Future<void> _sendPremadeAudioPayload() async {
     setState(() {
@@ -413,8 +432,6 @@ class _BidiPageState extends State<BidiPage> {
                   audioIndex = 0;
                 }
               }
-
-              print('played received data part');
             } else {
               print('receive part with type ${part.runtimeType}');
             }
@@ -433,9 +450,8 @@ class _BidiPageState extends State<BidiPage> {
           _audioManager.addAudio(chunk);
           audioIndex = 0;
           chunkBuilder.clear();
+          await _audioManager.refreshAudioSource();
         }
-
-        //break; // Exit the loop if the turn is complete
       }
     }
   }

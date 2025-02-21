@@ -49,7 +49,7 @@ class AsyncSession {
     var clientMessage = LiveClientRealtimeInput(mediaChunks: mediaChunks);
 
     var clientJson = jsonEncode(clientMessage.toJson());
-    print('Streaming $clientJson');
+    // print('Streaming $clientJson');
     _ws.sink.add(clientJson);
   }
 
@@ -57,17 +57,17 @@ class AsyncSession {
     await for (var message in _ws.stream) {
       var jsonString = utf8.decode(message);
       var response = json.decode(jsonString);
-      print(response);
+      // print(response);
       Map<String, dynamic> responseDict;
 
       responseDict = _LiveServerMessageFromVertex(response);
 
       var result = parseServerMessage(responseDict);
 
-      if (result.serverContent?.turnComplete ?? false) {
-        yield result;
-        break;
-      }
+      // if (result.serverContent?.turnComplete ?? false) {
+      //   yield result;
+      //   break;
+      // }
       yield result;
     }
   }

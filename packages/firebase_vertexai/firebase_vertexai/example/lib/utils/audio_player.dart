@@ -184,12 +184,22 @@ class AudioStreamManager {
     _audioChunkController.add(chunk);
   }
 
-  Future<void> stop() async {
-    print('total audio chunks are $_chunkIndex');
+  Future<void> refreshAudioSource() async {
+    // 1. Reset a new audio source
+    await _audioPlayer.setAudioSource(
+      ConcatenatingAudioSource(
+        children: [],
+      ),
+    );
+  }
+
+  Future<void> stopAudioPlayer() async {
+    print('Stopped and total audio chunks are $_chunkIndex');
     await _audioPlayer.stop();
   }
 
-  Future<void> dispose() async {
+  Future<void> disposeAudioPlayer() async {
+    print('Disposed and total audio chunks are $_chunkIndex');
     await _audioPlayer.dispose();
     await _audioChunkController.close();
   }
