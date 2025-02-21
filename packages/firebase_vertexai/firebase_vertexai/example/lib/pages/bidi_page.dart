@@ -58,6 +58,12 @@ class _BidiPageState extends State<BidiPage> {
   @override
   void dispose() {
     if (_session_opening) {
+      _audioManager.stopAudioPlayer();
+      _audioManager.disposeAudioPlayer();
+
+      _audioRecorder.stopRecording();
+
+      _session_opening = false;
       print('close the websocket session.');
       _session.close();
     }
@@ -450,7 +456,6 @@ class _BidiPageState extends State<BidiPage> {
           _audioManager.addAudio(chunk);
           audioIndex = 0;
           chunkBuilder.clear();
-          await _audioManager.refreshAudioSource();
         }
       }
     }

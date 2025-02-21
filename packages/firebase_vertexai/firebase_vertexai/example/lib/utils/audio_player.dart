@@ -149,6 +149,9 @@ class AudioStreamManager {
   final StreamController<Uint8List> _audioChunkController =
       StreamController<Uint8List>();
   var _chunkIndex = 0;
+  ConcatenatingAudioSource _audioSource = ConcatenatingAudioSource(
+    children: [],
+  );
 
   AudioStreamManager() {
     _initAudioPlayer();
@@ -156,25 +159,31 @@ class AudioStreamManager {
 
   Future<void> _initAudioPlayer() async {
     // 1. Create a ConcatenatingAudioSource to handle the stream
-    await _audioPlayer.setAudioSource(
-      ConcatenatingAudioSource(
-        children: [],
-      ),
-    );
+    await _audioPlayer.setAudioSource(_audioSource);
 
     // 2. Listen to the stream of audio chunks
     _audioChunkController.stream.listen(_addAudioChunk);
 
     await _audioPlayer.play(); // Start playing (even if initially empty)
+
+    _audioPlayer.processingStateStream.listen((state) async {
+      if (state == ProcessingState.completed) {
+        await _audioPlayer
+            .pause(); // Or player.stop() if you want to release resources
+        await _audioPlayer.seek(Duration.zero, index: 0);
+        await _audioSource.clear();
+        await _audioPlayer.play();
+      }
+    });
   }
 
   Future<void> _addAudioChunk(Uint8List chunk) async {
     var buffer = ByteStreamAudioSource(chunk);
-    final currentSource = _audioPlayer.audioSource! as ConcatenatingAudioSource;
+
     print('Add new Audio Chunk to player');
 
     // The crucial change: use add instead of insert
-    await currentSource.add(buffer);
+    await _audioSource.add(buffer);
 
     _chunkIndex++;
     print('play audio chunk $_chunkIndex');
@@ -182,15 +191,6 @@ class AudioStreamManager {
 
   void addAudio(Uint8List chunk) {
     _audioChunkController.add(chunk);
-  }
-
-  Future<void> refreshAudioSource() async {
-    // 1. Reset a new audio source
-    await _audioPlayer.setAudioSource(
-      ConcatenatingAudioSource(
-        children: [],
-      ),
-    );
   }
 
   Future<void> stopAudioPlayer() async {
