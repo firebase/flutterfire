@@ -1,3 +1,7 @@
+## 7.6.1
+
+ - Update a dependency to the latest release.
+
 ## 7.6.0
 
  - **FIX**(auth): deprecate Microsoft provider method not used for authentication ([#17094](https://github.com/firebase/flutterfire/issues/17094)). ([2371d2d8](https://github.com/firebase/flutterfire/commit/2371d2d81a89a87ace898b73329e5189d7413107))

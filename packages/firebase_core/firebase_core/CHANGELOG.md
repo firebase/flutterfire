@@ -1,3 +1,7 @@
+## 3.12.1
+
+ - Update a dependency to the latest release.
+
 ## 3.12.0
 
  - **FEAT**: bump Firebase iOS SDK to `11.8.0` ([#17093](https://github.com/firebase/flutterfire/issues/17093)). ([52557617](https://github.com/firebase/flutterfire/commit/52557617ccdc7dc6d057fff6cea65baa338057c2))
