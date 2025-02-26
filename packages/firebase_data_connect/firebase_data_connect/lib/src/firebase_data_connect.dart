@@ -139,7 +139,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     transportOptions = TransportOptions(mappedHost, port, isSecure);
   }
 
-  /// Currently cached DataConnect instances. Maps from app name to <ConnectorConfigStr, DataConnect>.
+  /// Currently cached DataConnect instances. Maps from app name to ConnectorConfigStr, DataConnect.
   @visibleForTesting
   static final Map<String, Map<String, FirebaseDataConnect>> cachedInstances =
       {};
