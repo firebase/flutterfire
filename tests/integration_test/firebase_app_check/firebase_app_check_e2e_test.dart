@@ -77,6 +77,34 @@ void main() {
         },
         skip: kIsWeb,
       );
+
+      test(
+        'debugToken on Android',
+            () async {
+          await expectLater(
+            FirebaseAppCheck.instance.activate(
+              androidProvider: AndroidProvider.debug,
+              androidDebugToken: 'debug_token',
+            ),
+            completes,
+          );
+        },
+        skip: defaultTargetPlatform != TargetPlatform.android,
+      );
+
+      test(
+        'debugToken on iOS',
+            () async {
+          await expectLater(
+            FirebaseAppCheck.instance.activate(
+              appleProvider: AppleProvider.debug,
+              appleDebugToken: 'debug_token',
+            ),
+            completes,
+          );
+        },
+        skip: defaultTargetPlatform != TargetPlatform.iOS,
+      );
     },
   );
 }
