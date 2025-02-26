@@ -27,6 +27,7 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^1.1.0
+  web_socket_channel: ^3.0.1
 
 dev_dependencies:
   flutter_lints: ^4.0.0

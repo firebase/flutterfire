@@ -56,6 +56,9 @@ export 'src/function_calling.dart'
         FunctionDeclaration,
         Tool,
         ToolConfig;
+export 'src/live.dart' show AsyncLive, AsyncSession;
+export 'src/live_api.dart'
+    show LiveGenerationConfig, SpeechConfig, Voices, ResponseModalities;
 export 'src/generative_model.dart' show GenerativeModel;
 export 'src/imagen_api.dart'
     show
