@@ -239,6 +239,8 @@ final class GenerativeModel extends BaseModel {
   Future<AsyncSession> connect({
     required String model,
     LiveGenerationConfig? config,
+    Content? systemInstruction,
+    List<Tool>? tools,
   }) async {
     late String uri;
     late String modelString;
@@ -254,7 +256,10 @@ final class GenerativeModel extends BaseModel {
     final requestJson = {
       'setup': {
         'model': modelString,
-        if (config != null) 'generation_config': config.toJson()
+        if (config != null) 'generation_config': config.toJson(),
+        if (systemInstruction != null)
+          'system_instruction': systemInstruction.toJson(),
+        if (tools != null) 'tools': tools.map((t) => t.toJson()).toList(),
       }
     };
 

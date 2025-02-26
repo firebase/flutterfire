@@ -78,12 +78,13 @@ Content parseContent(Object jsonObject) {
           {'role': final String role} => role,
           _ => null,
         },
-        parts.map(_parsePart).toList()),
+        parts.map(parsePart).toList()),
     _ => throw unhandledFormat('Content', jsonObject),
   };
 }
 
-Part _parsePart(Object? jsonObject) {
+/// Parse the [Part] from json object.
+Part parsePart(Object? jsonObject) {
   return switch (jsonObject) {
     {'text': final String text} => TextPart(text),
     {

@@ -64,10 +64,6 @@ class AsyncSession {
 
       var result = parseServerMessage(responseDict);
 
-      // if (result.serverContent?.turnComplete ?? false) {
-      //   yield result;
-      //   break;
-      // }
       yield result;
     }
   }

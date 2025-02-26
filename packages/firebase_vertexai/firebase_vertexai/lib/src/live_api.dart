@@ -158,10 +158,22 @@ class LiveServerContent {
   final bool? interrupted;
 }
 
+class LiveServerToolCall {
+  LiveServerToolCall({this.functionCalls});
+  final List<FunctionCall>? functionCalls;
+}
+
+class LiveServerToolCallCancellation {
+  LiveServerToolCallCancellation({this.functionIds});
+  final List<String>? functionIds;
+}
+
 class LiveServerMessage {
-  LiveServerMessage({this.serverContent});
+  LiveServerMessage({this.serverContent, this.toolCall, this.toolCancellation});
 
   final LiveServerContent? serverContent;
+  final LiveServerToolCall? toolCall;
+  final LiveServerToolCallCancellation? toolCancellation;
   // toolCall and toolCallCancellation
 }
 
@@ -205,6 +217,8 @@ LiveServerMessage parseServerMessage(Object jsonObject) {
 
   Map<String, dynamic> json = jsonObject as Map<String, dynamic>;
   LiveServerContent? serverContent;
+  LiveServerToolCall? serverToolCall;
+  LiveServerToolCallCancellation? serverToolCallCancellation;
   if (json.containsKey('server_content')) {
     final serverContentJson = json['server_content'] as Map<String, dynamic>;
     Content? modelTurn;
@@ -217,6 +231,28 @@ LiveServerMessage parseServerMessage(Object jsonObject) {
     }
     serverContent =
         LiveServerContent(modelTurn: modelTurn, turnComplete: turnComplete);
+  } else if (json.containsKey('tool_call')) {
+    final toolContentJson = json['tool_call'] as Map<String, dynamic>;
+    List<FunctionCall> functionCalls = [];
+    if (toolContentJson.containsKey('function_calls')) {
+      final functionCallJsons =
+          toolContentJson['function_calls']! as List<dynamic>;
+      for (var functionCallJson in functionCallJsons) {
+        var functionCall = parsePart(functionCallJson) as FunctionCall;
+        functionCalls.add(functionCall);
+      }
+    }
+
+    serverToolCall = LiveServerToolCall(functionCalls: functionCalls);
+  } else if (json.containsKey('tool_call_cancellation')) {
+    final toolCancelJson =
+        json['tool_call_cancellation'] as Map<String, List<String>>;
+    serverToolCallCancellation =
+        LiveServerToolCallCancellation(functionIds: toolCancelJson['ids']);
   }
-  return LiveServerMessage(serverContent: serverContent);
+  return LiveServerMessage(
+    serverContent: serverContent,
+    toolCall: serverToolCall,
+    toolCancellation: serverToolCallCancellation,
+  );
 }

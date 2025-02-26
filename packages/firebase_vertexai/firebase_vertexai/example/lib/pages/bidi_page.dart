@@ -31,6 +31,13 @@ class BidiPage extends StatefulWidget {
   State<BidiPage> createState() => _BidiPageState();
 }
 
+class LightControl {
+  final int? brightness;
+  final String? colorTemperature;
+
+  LightControl({this.brightness, this.colorTemperature});
+}
+
 class _BidiPageState extends State<BidiPage> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
@@ -150,8 +157,7 @@ class _BidiPageState extends State<BidiPage> {
                   if (!_loading)
                     IconButton(
                       onPressed: () async {
-                        await _sendPremadeAudioPayload();
-                        // await _sendTextPrompt(textPrompt: _textController.text);
+                        await _sendTextPrompt(textPrompt: _textController.text);
                       },
                       icon: Icon(
                         Icons.send,
@@ -178,6 +184,31 @@ class _BidiPageState extends State<BidiPage> {
     );
   }
 
+  final lightControlTool = FunctionDeclaration(
+    'setLightValues',
+    'Set the brightness and color temperature of a room light.',
+    parameters: {
+      'brightness': Schema.integer(
+        description: 'Light level from 0 to 100. '
+            'Zero is off and 100 is full brightness.',
+      ),
+      'colorTemperature': Schema.string(
+        description: 'Color temperature of the light fixture, '
+            'which can be `daylight`, `cool` or `warm`.',
+      ),
+    },
+  );
+
+  Future<Map<String, Object?>> _setLightValues(
+      {int? brightness, String? colorTemprature}) async {
+    print('Set brightness: $brightness, colorTemprature: $colorTemprature');
+    final apiResponse = {
+      'colorTemprature': 'warm',
+      'brightness': brightness,
+    };
+    return apiResponse;
+  }
+
   Future<void> _sendChatMessage(String message) async {
     setState(() {
       _loading = true;
@@ -201,7 +232,13 @@ class _BidiPageState extends State<BidiPage> {
     );
 
     if (!_session_opening) {
-      _session = await widget.model.connect(model: modelName, config: config);
+      _session = await widget.model.connect(
+        model: modelName,
+        config: config,
+        tools: [
+          Tool.functionDeclarations([lightControlTool]),
+        ],
+      );
       _session_opening = true;
       unawaited(_handle_response());
     } else {
@@ -456,6 +493,31 @@ class _BidiPageState extends State<BidiPage> {
           _audioManager.addAudio(chunk);
           audioIndex = 0;
           chunkBuilder.clear();
+        }
+      }
+
+      if (response.toolCall != null &&
+          response.toolCall!.functionCalls != null) {
+        final functionCalls = response.toolCall!.functionCalls!.toList();
+        // When the model response with a function call, invoke the function.
+        if (functionCalls.isNotEmpty) {
+          final functionCall = functionCalls.first;
+          if (functionCall.name == 'setLightValues') {
+            var color = functionCall.args['colorTemperature']! as String;
+            var brightness = functionCall.args['brightness']! as int;
+            final functionResult = await _setLightValues(
+                brightness: brightness, colorTemprature: color);
+            // Send the response to the model so that it can use the result to
+            // generate text for the user.
+            await _session!.send(
+              input:
+                  Content.functionResponse(functionCall.name, functionResult),
+            );
+          } else {
+            throw UnimplementedError(
+              'Function not declared to the model: ${functionCall.name}',
+            );
+          }
         }
       }
     }

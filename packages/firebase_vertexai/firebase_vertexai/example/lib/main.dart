@@ -33,9 +33,9 @@ void main() async {
   await Firebase.initializeApp(options: options);
   // await FirebaseAuth.instance.signInAnonymously();
 
-  var vertex_instance =
+  var vertexInstance =
       FirebaseVertexAI.instanceFor(auth: FirebaseAuth.instance);
-  final model = vertex_instance.generativeModel(model: 'gemini-1.5-flash');
+  final model = vertexInstance.generativeModel(model: 'gemini-1.5-flash');
 
   runApp(GenerativeAISample(model: model));
 }
