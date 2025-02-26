@@ -38,7 +38,7 @@ jobs:
         name: Install Node.js 20
         with:
           node-version: "20"
-      - uses: subosito/flutter-action@44ac965b96f18d999802d4b807e3256d5a3f9fa1
+      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
         with:
           channel: 'stable'
           cache: true
@@ -70,7 +70,7 @@ jobs:
         name: Install Node.js 20
         with:
           node-version: "20"
-      - uses: subosito/flutter-action@44ac965b96f18d999802d4b807e3256d5a3f9fa1
+      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
         with:
           channel: 'stable'
           cache: true
