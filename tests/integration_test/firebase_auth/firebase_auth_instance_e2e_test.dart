@@ -844,8 +844,10 @@ void main() {
             'should not throw error when app is deleted and reinit with same app name',
             () async {
           try {
+            const appName = 'SecondaryApp';
+
             final app = await Firebase.initializeApp(
-              name: 'SecondaryApp',
+              name: appName,
               options: DefaultFirebaseOptions.currentPlatform,
             );
 
@@ -859,7 +861,7 @@ void main() {
             await app.delete();
 
             final app2 = await Firebase.initializeApp(
-              name: 'SecondaryApp',
+              name: appName,
               options: DefaultFirebaseOptions.currentPlatform,
             );
 
