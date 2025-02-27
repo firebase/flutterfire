@@ -38,6 +38,11 @@ const _apiVersion = 'v1beta';
 const _baseDailyUrl = 'daily-firebaseml.sandbox.googleapis.com';
 const _apiUrl =
     'ws/google.firebase.machinelearning.v2beta.LlmBidiService/BidiGenerateContent?key=';
+
+const _baseAutopushUrl = 'autopush-firebasevertexai.sandbox.googleapis.com';
+const _apiAutopushUrl =
+    'ws/google.firebase.vertexai.v1beta.LlmBidiService/BidiGenerateContent/locations';
+
 const _baseGAIUrl = 'generativelanguage.googleapis.com';
 const _apiGAIUrl =
     'ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=';
@@ -248,7 +253,9 @@ final class GenerativeModel extends BaseModel {
       uri = 'wss://$_baseGAIUrl/$_apiGAIUrl${_app.options.apiKey}';
       modelString = 'models/$model';
     } else {
-      uri = 'wss://$_baseDailyUrl/$_apiUrl${_app.options.apiKey}';
+      // uri = 'wss://$_baseDailyUrl/$_apiUrl${_app.options.apiKey}';
+      uri =
+          'wss://$_baseAutopushUrl/$_apiAutopushUrl/$_location?key=${_app.options.apiKey}';
       modelString =
           'projects/${_app.options.projectId}/locations/$_location/publishers/google/models/$model';
     }
