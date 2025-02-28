@@ -111,7 +111,8 @@ class GRPCTransport implements DataConnectTransport {
         request,
         options: CallOptions(metadata: await getMetadata(authToken)),
       );
-      return deserializer(jsonEncode(response.data.toProto3Json()));
+      return handleResponse(
+          CommonResponse.fromExecuteQuery(deserializer, response));
     } on Exception catch (e) {
       if (e.toString().contains('invalid Firebase Auth Credentials')) {
         throw DataConnectError(
@@ -119,10 +120,7 @@ class GRPCTransport implements DataConnectTransport {
           'Failed to invoke operation: $e',
         );
       }
-      throw DataConnectError(
-        DataConnectErrorCode.other,
-        'Failed to invoke operation: $e',
-      );
+      rethrow;
     }
   }
 
@@ -151,22 +149,44 @@ class GRPCTransport implements DataConnectTransport {
     if (vars != null && serializer != null) {
       request.variables = getStruct(vars, serializer);
     }
+
     try {
       response = await stub.executeMutation(
         request,
         options: CallOptions(metadata: await getMetadata(authToken)),
       );
-      if (response.errors.isNotEmpty) {
-        throw Exception(response.errors);
-      }
-      return deserializer(jsonEncode(response.data.toProto3Json()));
+      return handleResponse(
+          CommonResponse.fromExecuteMutation(deserializer, response));
     } on Exception catch (e) {
-      throw DataConnectError(
-        DataConnectErrorCode.other,
-        'Failed to invoke operation: $e',
-      );
+      if (e.toString().contains('invalid Firebase Auth Credentials')) {
+        throw DataConnectError(
+          DataConnectErrorCode.unauthorized,
+          'Failed to invoke operation: $e',
+        );
+      }
+      rethrow;
     }
   }
+}
+
+Data handleResponse<Data>(CommonResponse<Data> response) {
+  String jsonEncoded = jsonEncode(response.data);
+  // TODO(mtewani): Check what gets thrown if unauthorized
+  if (response.errors.isNotEmpty) {
+    Map<String, dynamic>? data =
+        jsonDecode(jsonEncoded) as Map<String, dynamic>?;
+    Data? decodedData;
+    if (data != null) {
+      try {
+        decodedData = response.deserializer(jsonEncoded);
+      } catch (e) {
+        // nothing required
+      }
+    }
+    throw DataConnectError(DataConnectErrorCode.other,
+        'failed to invoke operation: ${response.errors}', data, decodedData);
+  }
+  return response.deserializer(jsonEncoded);
 }
 
 /// Initializes GRPC transport for Data Connect.
@@ -178,3 +198,22 @@ DataConnectTransport getTransport(
   FirebaseAppCheck? appCheck,
 ) =>
     GRPCTransport(transportOptions, options, appId, sdkType, appCheck);
+
+class CommonResponse<Data> {
+  CommonResponse(this.deserializer, this.data, this.errors);
+  static CommonResponse<Data> fromExecuteMutation<Data>(
+      Deserializer<Data> deserializer, ExecuteMutationResponse response) {
+    return CommonResponse(
+        deserializer, response.data.toProto3Json(), response.errors);
+  }
+
+  static CommonResponse<Data> fromExecuteQuery<Data>(
+      Deserializer<Data> deserializer, ExecuteQueryResponse response) {
+    return CommonResponse(
+        deserializer, response.data.toProto3Json(), response.errors);
+  }
+
+  final Deserializer<Data> deserializer;
+  final Object? data;
+  final List<GraphqlError> errors;
+}

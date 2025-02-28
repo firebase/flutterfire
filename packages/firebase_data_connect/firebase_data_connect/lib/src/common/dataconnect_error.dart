@@ -18,14 +18,17 @@ part of 'common_library.dart';
 enum DataConnectErrorCode { unavailable, unauthorized, other }
 
 /// Error thrown when DataConnect encounters an error.
-class DataConnectError extends FirebaseException {
-  DataConnectError(this.dataConnectErrorCode, message)
+class DataConnectError<T> extends FirebaseException {
+  DataConnectError(this.dataConnectErrorCode, String message,
+      [this.data, this.decodedData])
       : super(
           plugin: 'Data Connect',
           code: dataConnectErrorCode.toString(),
           message: message,
         );
   final DataConnectErrorCode dataConnectErrorCode;
+  final Map<String, dynamic>? data;
+  final T? decodedData;
 }
 
 typedef Serializer<Variables> = String Function(Variables vars);
