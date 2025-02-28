@@ -116,9 +116,11 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   /// On web, a [vapidKey] is required.
   Future<String?> getToken({
     String? vapidKey,
+    Object? serviceWorkerRegistration,
   }) {
     return _delegate.getToken(
       vapidKey: vapidKey,
+      serviceWorkerRegistration: serviceWorkerRegistration,
     );
   }
 
