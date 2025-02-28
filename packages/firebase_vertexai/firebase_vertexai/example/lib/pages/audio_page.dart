@@ -69,11 +69,11 @@ class _AudioPageState extends State<AudioPage> {
       }
 
       String filePath =
-          '${dir.path}/recording_${DateTime.now().millisecondsSinceEpoch}.m4a';
+          '${dir.path}/recording_${DateTime.now().millisecondsSinceEpoch}.wav';
 
       await record.start(
         const RecordConfig(
-          encoder: AudioEncoder.aacLc,
+          encoder: AudioEncoder.wav,
         ),
         path: filePath,
       );
@@ -89,8 +89,9 @@ class _AudioPageState extends State<AudioPage> {
       try {
         File file = File(path);
         final audio = await file.readAsBytes();
+        debugPrint('Audio file size: ${audio.length} bytes');
 
-        final audioPart = InlineDataPart('audio/m4a', audio);
+        final audioPart = InlineDataPart('audio/wav', audio);
 
         await _submitAudioToModel(audioPart);
 
@@ -107,6 +108,7 @@ class _AudioPageState extends State<AudioPage> {
   Future<void> _submitAudioToModel(audioPart) async {
     try {
       final prompt = TextPart("What is in the audio recording?");
+      
       final response = await widget.model.generateContent([
         Content.multi([prompt, audioPart]),
       ]);
