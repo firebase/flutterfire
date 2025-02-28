@@ -14,6 +14,7 @@
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:meta/meta.dart';
 
 import 'base_model.dart';
 import 'client.dart';
@@ -30,6 +31,7 @@ import 'imagen_content.dart';
 /// > Warning: For Vertex AI in Firebase, image generation using Imagen 3 models
 /// is in Public Preview, which means that the feature is not subject to any SLA
 /// or deprecation policy and could change in backwards-incompatible ways.
+@experimental
 final class ImagenModel extends BaseModel {
   ImagenModel._(
       {required FirebaseApp app,
@@ -83,6 +85,7 @@ final class ImagenModel extends BaseModel {
 
   /// Generates images with format of [ImagenInlineImage] based on the given
   /// prompt.
+  @experimental
   Future<ImagenGenerationResponse<ImagenInlineImage>> generateImages(
     String prompt,
   ) =>
@@ -115,6 +118,7 @@ final class ImagenModel extends BaseModel {
 }
 
 /// Returns a [ImagenModel] using it's private constructor.
+@experimental
 ImagenModel createImagenModel({
   required FirebaseApp app,
   required String location,
