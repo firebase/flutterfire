@@ -108,7 +108,7 @@ class _AudioPageState extends State<AudioPage> {
   Future<void> _submitAudioToModel(audioPart) async {
     try {
       final prompt = TextPart("What is in the audio recording?");
-      
+
       final response = await widget.model.generateContent([
         Content.multi([prompt, audioPart]),
       ]);
@@ -152,14 +152,6 @@ class _AudioPageState extends State<AudioPage> {
               ),
               child: Row(
                 children: [
-                  Expanded(
-                    child: TextField(
-                      autofocus: true,
-                      focusNode: _textFieldFocus,
-                      controller: _textController,
-                      onSubmitted: _sendChatMessage,
-                    ),
-                  ),
                   IconButton(
                     onPressed: () async {
                       setState(() {
@@ -181,18 +173,7 @@ class _AudioPageState extends State<AudioPage> {
                   const SizedBox.square(
                     dimension: 15,
                   ),
-                  if (!_loading)
-                    IconButton(
-                      onPressed: () async {
-                        await _sendChatMessage(_textController.text);
-                      },
-                      icon: Icon(
-                        Icons.send,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    )
-                  else
-                    const CircularProgressIndicator(),
+                  const Text('Tap the mic to record, tap again to submit')
                 ],
               ),
             ),
