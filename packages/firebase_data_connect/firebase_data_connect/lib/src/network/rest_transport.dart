@@ -141,9 +141,24 @@ class RestTransport implements DataConnectTransport {
             // nothing required
           }
         }
-
-        throw DataConnectError(DataConnectErrorCode.other,
-            bodyJson['errors'].toString(), data, decodedData);
+        List<dynamic> errors =
+            jsonDecode(jsonEncode(bodyJson['errors'])) as List<dynamic>;
+        List<SubError> suberrors = errors
+            .map((e) {
+              return jsonDecode(jsonEncode(e)) as Map<String, dynamic>;
+            })
+            .map((e) => SubError(
+                (e['path'] as List)
+                    .map((val) => val.runtimeType == String
+                        ? PathSegment(field: val)
+                        : PathSegment(listIndex: val))
+                    .toList(),
+                e['message']))
+            .toList();
+        final response =
+            DataConnectOperationResponse(suberrors, data, decodedData);
+        throw DataConnectOperationError(DataConnectErrorCode.other,
+            'Failed to invoke operation: ', response);
       }
 
       /// The response we get is in the data field of the response

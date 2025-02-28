@@ -1,6 +1,17 @@
 library movies;
+
 import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'dart:convert';
+
+part 'list_movies.dart';
+
+part 'list_movies_by_partial_title.dart';
+
+part 'list_persons.dart';
+
+part 'list_thing.dart';
+
+part 'list_timestamps.dart';
 
 part 'add_person.dart';
 
@@ -20,94 +31,111 @@ part 'thing.dart';
 
 part 'seed_data.dart';
 
-part 'list_movies.dart';
-
-part 'list_movies_by_partial_title.dart';
-
-part 'list_persons.dart';
-
-part 'list_thing.dart';
-
-part 'list_timestamps.dart';
-
-
-
-
-
-
-
 class MoviesConnector {
-  
-  
-  AddPersonVariablesBuilder addPerson () {
-    return AddPersonVariablesBuilder(dataConnect, );
+  ListMoviesVariablesBuilder listMovies() {
+    return ListMoviesVariablesBuilder(
+      dataConnect,
+    );
   }
-  
-  
-  AddDirectorToMovieVariablesBuilder addDirectorToMovie () {
-    return AddDirectorToMovieVariablesBuilder(dataConnect, );
+
+  ListMoviesByPartialTitleVariablesBuilder listMoviesByPartialTitle({
+    required String input,
+  }) {
+    return ListMoviesByPartialTitleVariablesBuilder(
+      dataConnect,
+      input: input,
+    );
   }
-  
-  
-  AddTimestampVariablesBuilder addTimestamp ({required Timestamp timestamp, }) {
-    return AddTimestampVariablesBuilder(dataConnect, timestamp: timestamp,);
+
+  ListPersonsVariablesBuilder listPersons() {
+    return ListPersonsVariablesBuilder(
+      dataConnect,
+    );
   }
-  
-  
-  AddDateAndTimestampVariablesBuilder addDateAndTimestamp ({required DateTime date, required Timestamp timestamp, }) {
-    return AddDateAndTimestampVariablesBuilder(dataConnect, date: date,timestamp: timestamp,);
+
+  ListThingVariablesBuilder listThing() {
+    return ListThingVariablesBuilder(
+      dataConnect,
+    );
   }
-  
-  
-  SeedMoviesVariablesBuilder seedMovies () {
-    return SeedMoviesVariablesBuilder(dataConnect, );
+
+  ListTimestampsVariablesBuilder listTimestamps() {
+    return ListTimestampsVariablesBuilder(
+      dataConnect,
+    );
   }
-  
-  
-  CreateMovieVariablesBuilder createMovie ({required String title, required int releaseYear, required String genre, }) {
-    return CreateMovieVariablesBuilder(dataConnect, title: title,releaseYear: releaseYear,genre: genre,);
+
+  AddPersonVariablesBuilder addPerson() {
+    return AddPersonVariablesBuilder(
+      dataConnect,
+    );
   }
-  
-  
-  DeleteMovieVariablesBuilder deleteMovie ({required String id, }) {
-    return DeleteMovieVariablesBuilder(dataConnect, id: id,);
+
+  AddDirectorToMovieVariablesBuilder addDirectorToMovie() {
+    return AddDirectorToMovieVariablesBuilder(
+      dataConnect,
+    );
   }
-  
-  
-  ThingVariablesBuilder thing () {
-    return ThingVariablesBuilder(dataConnect, );
+
+  AddTimestampVariablesBuilder addTimestamp({
+    required Timestamp timestamp,
+  }) {
+    return AddTimestampVariablesBuilder(
+      dataConnect,
+      timestamp: timestamp,
+    );
   }
-  
-  
-  SeedDataVariablesBuilder seedData () {
-    return SeedDataVariablesBuilder(dataConnect, );
+
+  AddDateAndTimestampVariablesBuilder addDateAndTimestamp({
+    required DateTime date,
+    required Timestamp timestamp,
+  }) {
+    return AddDateAndTimestampVariablesBuilder(
+      dataConnect,
+      date: date,
+      timestamp: timestamp,
+    );
   }
-  
-  
-  ListMoviesVariablesBuilder listMovies () {
-    return ListMoviesVariablesBuilder(dataConnect, );
+
+  SeedMoviesVariablesBuilder seedMovies() {
+    return SeedMoviesVariablesBuilder(
+      dataConnect,
+    );
   }
-  
-  
-  ListMoviesByPartialTitleVariablesBuilder listMoviesByPartialTitle ({required String input, }) {
-    return ListMoviesByPartialTitleVariablesBuilder(dataConnect, input: input,);
+
+  CreateMovieVariablesBuilder createMovie({
+    required String title,
+    required int releaseYear,
+    required String genre,
+  }) {
+    return CreateMovieVariablesBuilder(
+      dataConnect,
+      title: title,
+      releaseYear: releaseYear,
+      genre: genre,
+    );
   }
-  
-  
-  ListPersonsVariablesBuilder listPersons () {
-    return ListPersonsVariablesBuilder(dataConnect, );
+
+  DeleteMovieVariablesBuilder deleteMovie({
+    required String id,
+  }) {
+    return DeleteMovieVariablesBuilder(
+      dataConnect,
+      id: id,
+    );
   }
-  
-  
-  ListThingVariablesBuilder listThing () {
-    return ListThingVariablesBuilder(dataConnect, );
+
+  ThingVariablesBuilder thing() {
+    return ThingVariablesBuilder(
+      dataConnect,
+    );
   }
-  
-  
-  ListTimestampsVariablesBuilder listTimestamps () {
-    return ListTimestampsVariablesBuilder(dataConnect, );
+
+  SeedDataVariablesBuilder seedData() {
+    return SeedDataVariablesBuilder(
+      dataConnect,
+    );
   }
-  
 
   static ConnectorConfig connectorConfig = ConnectorConfig(
     'us-west2',
@@ -125,4 +153,3 @@ class MoviesConnector {
 
   FirebaseDataConnect dataConnect;
 }
-

@@ -62,7 +62,7 @@ mutation deleteMovie($id: UUID!) @auth(level: PUBLIC) {
   movie_delete(id: $id)
 }
 
-mutation thing($title: Any! = "ABC") {
+mutation thing($title: Any! = "ABC") @auth(level: PUBLIC) {
   abc: thing_insert(data: {
     id: "a231d1ff-1825-447d-8b12-de092fb3a0f1"
     title: $title

@@ -418,10 +418,13 @@ void main() {
           null,
         ),
         throwsA(predicate((e) =>
-            e is DataConnectError &&
-            e.data!['abc'] == 'def' &&
-            e.decodedData is AbcHolder &&
-            (e.decodedData as AbcHolder).abc == 'def')),
+            e is DataConnectOperationError &&
+            e.response.data!['abc'] == 'def' &&
+            e.response.errors.first.message ==
+                'SQL query error: pq: duplicate key value violates unique constraint movie_pkey' &&
+            e.response.errors.first.path[0].field == 'the_matrix' &&
+            e.response.decodedData is AbcHolder &&
+            (e.response.decodedData as AbcHolder).abc == 'def')),
       );
     });
   });

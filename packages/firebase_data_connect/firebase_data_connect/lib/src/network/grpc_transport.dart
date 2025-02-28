@@ -169,24 +169,33 @@ class GRPCTransport implements DataConnectTransport {
   }
 }
 
-Data handleResponse<Data>(CommonResponse<Data> response) {
-  String jsonEncoded = jsonEncode(response.data);
-  // TODO(mtewani): Check what gets thrown if unauthorized
-  if (response.errors.isNotEmpty) {
+Data handleResponse<Data>(CommonResponse<Data> commonResponse) {
+  String jsonEncoded = jsonEncode(commonResponse.data);
+  if (commonResponse.errors.isNotEmpty) {
     Map<String, dynamic>? data =
         jsonDecode(jsonEncoded) as Map<String, dynamic>?;
     Data? decodedData;
+    List<SubError> errors = commonResponse.errors
+        .map((e) => SubError(
+            e.path.values
+                .map((val) => val.hasStringValue()
+                    ? PathSegment(field: val.stringValue)
+                    : PathSegment(listIndex: val.numberValue.toInt()))
+                .toList(),
+            e.message))
+        .toList();
     if (data != null) {
       try {
-        decodedData = response.deserializer(jsonEncoded);
+        decodedData = commonResponse.deserializer(jsonEncoded);
       } catch (e) {
         // nothing required
       }
     }
-    throw DataConnectError(DataConnectErrorCode.other,
-        'failed to invoke operation: ${response.errors}', data, decodedData);
+    final response = DataConnectOperationResponse(errors, data, decodedData);
+    throw DataConnectOperationError(DataConnectErrorCode.other,
+        'failed to invoke operation: ${response.errors}', response);
   }
-  return response.deserializer(jsonEncoded);
+  return commonResponse.deserializer(jsonEncoded);
 }
 
 /// Initializes GRPC transport for Data Connect.
