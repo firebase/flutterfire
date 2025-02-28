@@ -32,19 +32,18 @@ class AudioPage extends StatefulWidget {
   State<AudioPage> createState() => _AudioPageState();
 }
 
+
+
 class _AudioPageState extends State<AudioPage> {
-  ChatSession? _chat;
+  ChatSession? chat;
   final ScrollController _scrollController = ScrollController();
-  final TextEditingController _textController = TextEditingController();
-  final FocusNode _textFieldFocus = FocusNode();
   final List<MessageData> _messages = <MessageData>[];
-  bool _loading = false;
   bool _recording = false;
 
-  @override
+    @override
   void initState() {
     super.initState();
-    _chat = widget.model.startChat();
+    chat = widget.model.startChat();
   }
 
   void _scrollDown() {
@@ -107,11 +106,18 @@ class _AudioPageState extends State<AudioPage> {
 
   Future<void> _submitAudioToModel(audioPart) async {
     try {
+      widget.model.startChat();
+
+      String textPrompt = 'What is in the audio recording?';
       final prompt = TextPart("What is in the audio recording?");
 
       final response = await widget.model.generateContent([
         Content.multi([prompt, audioPart]),
       ]);
+
+      _messages.add(MessageData(text: textPrompt, fromUser: true));
+      _messages.add(MessageData(text: response.text, fromUser: false));
+
 
       print(response.text);
       debugPrint(response.text);
@@ -182,5 +188,5 @@ class _AudioPageState extends State<AudioPage> {
       ),
     );
   }
-  
+
 }
