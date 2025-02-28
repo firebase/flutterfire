@@ -143,11 +143,11 @@ class RestTransport implements DataConnectTransport {
         }
         List<dynamic> errors =
             jsonDecode(jsonEncode(bodyJson['errors'])) as List<dynamic>;
-        List<SubError> suberrors = errors
+        List<ResponseError> suberrors = errors
             .map((e) {
               return jsonDecode(jsonEncode(e)) as Map<String, dynamic>;
             })
-            .map((e) => SubError(
+            .map((e) => ResponseError(
                 (e['path'] as List)
                     .map((val) => val.runtimeType == String
                         ? PathSegment(field: val)

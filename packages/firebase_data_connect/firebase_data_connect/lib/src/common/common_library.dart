@@ -15,7 +15,6 @@
 import 'dart:convert';
 
 import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:firebase_data_connect/src/generated/graphql_error.pb.dart';
 
 part 'dataconnect_error.dart';
 part 'dataconnect_options.dart';

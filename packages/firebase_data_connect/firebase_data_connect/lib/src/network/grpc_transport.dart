@@ -175,8 +175,8 @@ Data handleResponse<Data>(CommonResponse<Data> commonResponse) {
     Map<String, dynamic>? data =
         jsonDecode(jsonEncoded) as Map<String, dynamic>?;
     Data? decodedData;
-    List<SubError> errors = commonResponse.errors
-        .map((e) => SubError(
+    List<ResponseError> errors = commonResponse.errors
+        .map((e) => ResponseError(
             e.path.values
                 .map((val) => val.hasStringValue()
                     ? PathSegment(field: val.stringValue)

@@ -28,30 +28,34 @@ class DataConnectError<T> extends FirebaseException {
   final DataConnectErrorCode dataConnectErrorCode;
 }
 
-class SubError {
-  SubError(this.path, this.message);
-  String message;
-  List<PathSegment> path;
-}
-
-class PathSegment {
-  PathSegment({this.field, this.listIndex});
-  String? field;
-  int? listIndex;
-}
-
-class DataConnectOperationResponse<T> {
-  DataConnectOperationResponse(this.errors, this.data, this.decodedData);
-  final Map<String, dynamic>? data;
-  final List<SubError> errors;
-  final T? decodedData;
-}
-
+/// Error thrown when an operation is partially successful.
 class DataConnectOperationError extends DataConnectError {
   DataConnectOperationError(
       DataConnectErrorCode code, String message, this.response)
       : super(code, message);
   final DataConnectOperationResponse response;
+}
+
+/// Nested class containing errors and decoded data.
+class DataConnectOperationResponse<T> {
+  DataConnectOperationResponse(this.errors, this.data, this.decodedData);
+  final Map<String, dynamic>? data;
+  final List<ResponseError> errors;
+  final T? decodedData;
+}
+
+/// Error information per error.
+class ResponseError {
+  ResponseError(this.path, this.message);
+  String message;
+  List<PathSegment> path;
+}
+
+/// Path where error occurred.
+class PathSegment {
+  PathSegment({this.field, this.listIndex});
+  String? field;
+  int? listIndex;
 }
 
 typedef Serializer<Variables> = String Function(Variables vars);
