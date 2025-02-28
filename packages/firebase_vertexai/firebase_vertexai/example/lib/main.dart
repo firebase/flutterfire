@@ -18,6 +18,7 @@ import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';
 
 import 'pages/chat_page.dart';
+import 'pages/audio_page.dart';
 import 'pages/function_calling_page.dart';
 import 'pages/image_prompt_page.dart';
 import 'pages/token_count_page.dart';
@@ -74,6 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Widget> get _pages => <Widget>[
         // Build _pages dynamically
         ChatPage(title: 'Chat', model: widget.model),
+        AudioPage(title: 'Audio', model: widget.model),
         TokenCountPage(title: 'Token Count', model: widget.model),
         const FunctionCallingPage(
           title: 'Function Calling',
@@ -107,6 +109,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             label: 'Chat',
             tooltip: 'Chat',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.mic,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            label: 'Audio',
+            tooltip: 'Audio',
           ),
           BottomNavigationBarItem(
             icon: Icon(
