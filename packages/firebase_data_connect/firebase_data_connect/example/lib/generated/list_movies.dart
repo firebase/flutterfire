@@ -1,20 +1,18 @@
 part of 'movies.dart';
 
 class ListMoviesVariablesBuilder {
+  
   final FirebaseDataConnect _dataConnect;
-  ListMoviesVariablesBuilder(
-    this._dataConnect,
-  );
-  Deserializer<ListMoviesData> dataDeserializer =
-      (dynamic json) => ListMoviesData.fromJson(jsonDecode(json));
-
+  ListMoviesVariablesBuilder(this._dataConnect, );
+  Deserializer<ListMoviesData> dataDeserializer = (dynamic json)  => ListMoviesData.fromJson(jsonDecode(json));
+  
   Future<QueryResult<ListMoviesData, void>> execute() {
     return ref().execute();
   }
 
   QueryRef<ListMoviesData, void> ref() {
-    return _dataConnect.query(
-        "ListMovies", dataDeserializer, emptySerializer, null);
+    
+    return _dataConnect.query("ListMovies", dataDeserializer, emptySerializer, null);
   }
 }
 
@@ -23,15 +21,10 @@ class ListMoviesMovies {
   String title;
   List<ListMoviesMoviesDirectedBy> directed_by;
   double? rating;
-  ListMoviesMovies.fromJson(dynamic json)
-      : id = nativeFromJson<String>(json['id']),
-        title = nativeFromJson<String>(json['title']),
-        directed_by = (json['directed_by'] as List<dynamic>)
-            .map((e) => ListMoviesMoviesDirectedBy.fromJson(e))
-            .toList(),
-        rating = json['rating'] == null
-            ? null
-            : nativeFromJson<double>(json['rating']);
+  ListMoviesMovies.fromJson(dynamic json):
+  id = nativeFromJson<String>(json['id']),title = nativeFromJson<String>(json['title']),directed_by = (json['directed_by'] as List<dynamic>)
+        .map((e) => ListMoviesMoviesDirectedBy.fromJson(e))
+        .toList(),rating = json['rating'] == null ? null : nativeFromJson<double>(json['rating']);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -54,8 +47,8 @@ class ListMoviesMovies {
 
 class ListMoviesMoviesDirectedBy {
   String name;
-  ListMoviesMoviesDirectedBy.fromJson(dynamic json)
-      : name = nativeFromJson<String>(json['name']);
+  ListMoviesMoviesDirectedBy.fromJson(dynamic json):
+  name = nativeFromJson<String>(json['name']);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -70,10 +63,10 @@ class ListMoviesMoviesDirectedBy {
 
 class ListMoviesData {
   List<ListMoviesMovies> movies;
-  ListMoviesData.fromJson(dynamic json)
-      : movies = (json['movies'] as List<dynamic>)
-            .map((e) => ListMoviesMovies.fromJson(e))
-            .toList();
+  ListMoviesData.fromJson(dynamic json):
+  movies = (json['movies'] as List<dynamic>)
+        .map((e) => ListMoviesMovies.fromJson(e))
+        .toList();
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -85,3 +78,4 @@ class ListMoviesData {
     required this.movies,
   });
 }
+

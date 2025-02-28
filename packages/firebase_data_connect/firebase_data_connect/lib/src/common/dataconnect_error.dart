@@ -19,7 +19,7 @@ enum DataConnectErrorCode { unavailable, unauthorized, other }
 
 /// Error thrown when DataConnect encounters an error.
 class DataConnectError<T> extends FirebaseException {
-  DataConnectError(this.dataConnectErrorCode, String message,
+  DataConnectError(this.dataConnectErrorCode, String? message,
       [this.data, this.decodedData])
       : super(
           plugin: 'Data Connect',
