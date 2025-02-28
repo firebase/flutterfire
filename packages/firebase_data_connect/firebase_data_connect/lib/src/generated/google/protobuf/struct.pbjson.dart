@@ -22,14 +22,21 @@ const NullValue$json = {
 };
 
 /// Descriptor for `NullValue`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List nullValueDescriptor = $convert.base64Decode(
-    'CglOdWxsVmFsdWUSDgoKTlVMTF9WQUxVRRAA');
+final $typed_data.Uint8List nullValueDescriptor =
+    $convert.base64Decode('CglOdWxsVmFsdWUSDgoKTlVMTF9WQUxVRRAA');
 
 @$core.Deprecated('Use structDescriptor instead')
 const Struct$json = {
   '1': 'Struct',
   '2': [
-    {'1': 'fields', '3': 1, '4': 3, '5': 11, '6': '.google.protobuf.Struct.FieldsEntry', '10': 'fields'},
+    {
+      '1': 'fields',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.google.protobuf.Struct.FieldsEntry',
+      '10': 'fields'
+    },
   ],
   '3': [Struct_FieldsEntry$json],
 };
@@ -39,7 +46,14 @@ const Struct_FieldsEntry$json = {
   '1': 'FieldsEntry',
   '2': [
     {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
-    {'1': 'value', '3': 2, '4': 1, '5': 11, '6': '.google.protobuf.Value', '10': 'value'},
+    {
+      '1': 'value',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Value',
+      '10': 'value'
+    },
   ],
   '7': {'7': true},
 };
@@ -54,12 +68,36 @@ final $typed_data.Uint8List structDescriptor = $convert.base64Decode(
 const Value$json = {
   '1': 'Value',
   '2': [
-    {'1': 'null_value', '3': 1, '4': 1, '5': 14, '6': '.google.protobuf.NullValue', '9': 0, '10': 'nullValue'},
+    {
+      '1': 'null_value',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.google.protobuf.NullValue',
+      '9': 0,
+      '10': 'nullValue'
+    },
     {'1': 'number_value', '3': 2, '4': 1, '5': 1, '9': 0, '10': 'numberValue'},
     {'1': 'string_value', '3': 3, '4': 1, '5': 9, '9': 0, '10': 'stringValue'},
     {'1': 'bool_value', '3': 4, '4': 1, '5': 8, '9': 0, '10': 'boolValue'},
-    {'1': 'struct_value', '3': 5, '4': 1, '5': 11, '6': '.google.protobuf.Struct', '9': 0, '10': 'structValue'},
-    {'1': 'list_value', '3': 6, '4': 1, '5': 11, '6': '.google.protobuf.ListValue', '9': 0, '10': 'listValue'},
+    {
+      '1': 'struct_value',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Struct',
+      '9': 0,
+      '10': 'structValue'
+    },
+    {
+      '1': 'list_value',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.ListValue',
+      '9': 0,
+      '10': 'listValue'
+    },
   ],
   '8': [
     {'1': 'kind'},
@@ -79,7 +117,14 @@ final $typed_data.Uint8List valueDescriptor = $convert.base64Decode(
 const ListValue$json = {
   '1': 'ListValue',
   '2': [
-    {'1': 'values', '3': 1, '4': 3, '5': 11, '6': '.google.protobuf.Value', '10': 'values'},
+    {
+      '1': 'values',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.google.protobuf.Value',
+      '10': 'values'
+    },
   ],
 };
 
@@ -87,4 +132,3 @@ const ListValue$json = {
 final $typed_data.Uint8List listValueDescriptor = $convert.base64Decode(
     'CglMaXN0VmFsdWUSLgoGdmFsdWVzGAEgAygLMhYuZ29vZ2xlLnByb3RvYnVmLlZhbHVlUgZ2YW'
     'x1ZXM=');
-

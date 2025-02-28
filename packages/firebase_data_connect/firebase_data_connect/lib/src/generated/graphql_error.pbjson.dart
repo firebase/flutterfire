@@ -18,9 +18,30 @@ const GraphqlError$json = {
   '1': 'GraphqlError',
   '2': [
     {'1': 'message', '3': 1, '4': 1, '5': 9, '10': 'message'},
-    {'1': 'locations', '3': 2, '4': 3, '5': 11, '6': '.google.firebase.dataconnect.v1.SourceLocation', '10': 'locations'},
-    {'1': 'path', '3': 3, '4': 1, '5': 11, '6': '.google.protobuf.ListValue', '10': 'path'},
-    {'1': 'extensions', '3': 4, '4': 1, '5': 11, '6': '.google.firebase.dataconnect.v1.GraphqlErrorExtensions', '10': 'extensions'},
+    {
+      '1': 'locations',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.google.firebase.dataconnect.v1.SourceLocation',
+      '10': 'locations'
+    },
+    {
+      '1': 'path',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.ListValue',
+      '10': 'path'
+    },
+    {
+      '1': 'extensions',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.google.firebase.dataconnect.v1.GraphqlErrorExtensions',
+      '10': 'extensions'
+    },
   ],
 };
 
@@ -55,6 +76,6 @@ const GraphqlErrorExtensions$json = {
 };
 
 /// Descriptor for `GraphqlErrorExtensions`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List graphqlErrorExtensionsDescriptor = $convert.base64Decode(
-    'ChZHcmFwaHFsRXJyb3JFeHRlbnNpb25zEhIKBGZpbGUYASABKAlSBGZpbGU=');
-
+final $typed_data.Uint8List graphqlErrorExtensionsDescriptor =
+    $convert.base64Decode(
+        'ChZHcmFwaHFsRXJyb3JFeHRlbnNpb25zEhIKBGZpbGUYASABKAlSBGZpbGU=');

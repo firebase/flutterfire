@@ -18,8 +18,23 @@ const ExecuteQueryRequest$json = {
   '1': 'ExecuteQueryRequest',
   '2': [
     {'1': 'name', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'name'},
-    {'1': 'operation_name', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'operationName'},
-    {'1': 'variables', '3': 3, '4': 1, '5': 11, '6': '.google.protobuf.Struct', '8': {}, '10': 'variables'},
+    {
+      '1': 'operation_name',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '10': 'operationName'
+    },
+    {
+      '1': 'variables',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Struct',
+      '8': {},
+      '10': 'variables'
+    },
   ],
 };
 
@@ -34,8 +49,23 @@ const ExecuteMutationRequest$json = {
   '1': 'ExecuteMutationRequest',
   '2': [
     {'1': 'name', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'name'},
-    {'1': 'operation_name', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'operationName'},
-    {'1': 'variables', '3': 3, '4': 1, '5': 11, '6': '.google.protobuf.Struct', '8': {}, '10': 'variables'},
+    {
+      '1': 'operation_name',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '10': 'operationName'
+    },
+    {
+      '1': 'variables',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Struct',
+      '8': {},
+      '10': 'variables'
+    },
   ],
 };
 
@@ -49,8 +79,22 @@ final $typed_data.Uint8List executeMutationRequestDescriptor = $convert.base64De
 const ExecuteQueryResponse$json = {
   '1': 'ExecuteQueryResponse',
   '2': [
-    {'1': 'data', '3': 1, '4': 1, '5': 11, '6': '.google.protobuf.Struct', '10': 'data'},
-    {'1': 'errors', '3': 2, '4': 3, '5': 11, '6': '.google.firebase.dataconnect.v1.GraphqlError', '10': 'errors'},
+    {
+      '1': 'data',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Struct',
+      '10': 'data'
+    },
+    {
+      '1': 'errors',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.google.firebase.dataconnect.v1.GraphqlError',
+      '10': 'errors'
+    },
   ],
 };
 
@@ -64,8 +108,22 @@ final $typed_data.Uint8List executeQueryResponseDescriptor = $convert.base64Deco
 const ExecuteMutationResponse$json = {
   '1': 'ExecuteMutationResponse',
   '2': [
-    {'1': 'data', '3': 1, '4': 1, '5': 11, '6': '.google.protobuf.Struct', '10': 'data'},
-    {'1': 'errors', '3': 2, '4': 3, '5': 11, '6': '.google.firebase.dataconnect.v1.GraphqlError', '10': 'errors'},
+    {
+      '1': 'data',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Struct',
+      '10': 'data'
+    },
+    {
+      '1': 'errors',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.google.firebase.dataconnect.v1.GraphqlError',
+      '10': 'errors'
+    },
   ],
 };
 
@@ -74,4 +132,3 @@ final $typed_data.Uint8List executeMutationResponseDescriptor = $convert.base64D
     'ChdFeGVjdXRlTXV0YXRpb25SZXNwb25zZRIrCgRkYXRhGAEgASgLMhcuZ29vZ2xlLnByb3RvYn'
     'VmLlN0cnVjdFIEZGF0YRJECgZlcnJvcnMYAiADKAsyLC5nb29nbGUuZmlyZWJhc2UuZGF0YWNv'
     'bm5lY3QudjEuR3JhcGhxbEVycm9yUgZlcnJvcnM=');
-
