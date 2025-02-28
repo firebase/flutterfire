@@ -74,7 +74,7 @@ class _AudioPageState extends State<AudioPage> {
       await record.start(
         const RecordConfig(
           encoder: AudioEncoder.aacLc,
-        ), // Use MP3 encoding // Standard sample rate), // AAC-LC for better compatibility
+        ),
         path: filePath,
       );
     }
@@ -88,11 +88,8 @@ class _AudioPageState extends State<AudioPage> {
 
       try {
         File file = File(path);
-        // Prepare video for input
         final audio = await file.readAsBytes();
 
-        // Provide the video as `Data` with the appropriate mimetype
-        //final audioPart = InlineDataPart('audio/m4a', audio);
         final audioPart = InlineDataPart('audio/m4a', audio);
 
         await _submitAudioToModel(audioPart);
@@ -115,12 +112,7 @@ class _AudioPageState extends State<AudioPage> {
       ]);
 
       print(response.text);
-
-      if (response != null) {
-        debugPrint(response.text);
-      } else {
-        debugPrint('No text response from model.');
-      }
+      debugPrint(response.text);
     } catch (e) {
       debugPrint('Error sending audio to model: $e');
     }
