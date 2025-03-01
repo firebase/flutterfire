@@ -38,7 +38,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Firebase Emulator Cache
-        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-fdc-${{ runner.os }}
@@ -72,7 +72,7 @@ jobs:
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@v4
       - name: AVD cache
-        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf
         id: avd-cache
         with:
           path: |
@@ -111,7 +111,7 @@ jobs:
         with:
           key: xcode-cache-${{ runner.os }}
           max-size: 700M
-      - uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
+      - uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf
         name: Pods Cache
         id: pods-cache
         with:
@@ -119,7 +119,7 @@ jobs:
           key: ${{ runner.os }}-fdc-pods-v3-${{ hashFiles('tests/ios/Podfile.lock') }}
           restore-keys: ${{ runner.os }}-ios-pods-v2
       - name: Firebase Emulator Cache
-        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-fdc-${{ runner.os }}
@@ -199,7 +199,7 @@ jobs:
       - name: 'Install Tools'
         run: sudo npm i -g firebase-tools
       - name: Cache Firebase Emulator
-        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-fdc-${{ runner.os }}
