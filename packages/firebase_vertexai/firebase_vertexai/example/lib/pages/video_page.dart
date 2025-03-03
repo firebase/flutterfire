@@ -52,7 +52,7 @@ class _VideoPageState extends State<VideoPage> {
         _messages.add(MessageData(text: _prompt, fromUser: true));
       });
 
-      final videoPart = 
+      final videoPart =
           InlineDataPart('video/mp4', videoBytes.buffer.asUint8List());
 
       final response = await widget.model.generateContent([
@@ -101,7 +101,7 @@ class _VideoPageState extends State<VideoPage> {
                   child: ElevatedButton(
                     onPressed: !_loading
                       ? () async {
-                          await _testVideo(widget.model);
+                            await _testVideo(widget.model);
                         }
                       : null,
                     child: const Text('Test Video Prompt'),

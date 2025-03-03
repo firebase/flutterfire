@@ -50,7 +50,8 @@ class _AudioPageState extends State<AudioPage> {
       return;
     }
 
-    final dir = Directory('${(await getApplicationDocumentsDirectory()).path}/libs/recordings');
+    final dir = Directory(
+        '${(await getApplicationDocumentsDirectory()).path}/libs/recordings');
 
     // ignore: avoid_slow_async_io
     if (!await dir.exists()) {

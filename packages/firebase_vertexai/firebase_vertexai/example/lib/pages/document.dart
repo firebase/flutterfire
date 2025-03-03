@@ -41,10 +41,10 @@ class _DocumentPageState extends State<DocumentPage> {
 
   Future<void> _testDocumentReading(model) async {
     try {
-      ByteData docBytes = 
+      ByteData docBytes =
           await rootBundle.load('assets/documents/gemini_summary.pdf');
 
-      const _prompt = 
+      const _prompt =
           'Write me a summary in one sentence what this document is about.';
 
       final prompt = TextPart(_prompt);
