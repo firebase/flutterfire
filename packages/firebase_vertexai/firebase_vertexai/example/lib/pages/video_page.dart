@@ -46,8 +46,7 @@ class _VideoPageState extends State<VideoPage> {
       ByteData videoBytes =
           await rootBundle.load('assets/videos/landscape.mp4');
 
-      const _prompt =
-          'Can you tell me what is in the video?';
+      const _prompt = 'Can you tell me what is in the video?';
 
       final prompt = TextPart(_prompt);
 
@@ -61,7 +60,7 @@ class _VideoPageState extends State<VideoPage> {
         Content.multi([prompt, videoPart]),
       ]);
 
-      setState((){
+      setState(() {
         _messages.add(MessageData(text: response.text, fromUser: false));
       });
       
@@ -103,8 +102,8 @@ class _VideoPageState extends State<VideoPage> {
                   child: ElevatedButton(
                     onPressed: !_loading
                       ? () async {
-                          await _testVideo(widget.model);
-                        }
+                        await _testVideo(widget.model);
+                      }
                       : null,
                     child: const Text('Test Video Prompt'),
                   ),

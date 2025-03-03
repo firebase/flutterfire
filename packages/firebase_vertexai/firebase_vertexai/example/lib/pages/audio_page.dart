@@ -32,15 +32,13 @@ class AudioPage extends StatefulWidget {
   State<AudioPage> createState() => _AudioPageState();
 }
 
-
-
 class _AudioPageState extends State<AudioPage> {
   ChatSession? chat;
   final ScrollController _scrollController = ScrollController();
   final List<MessageData> _messages = <MessageData>[];
   bool _recording = false;
 
-    @override
+  @override
   void initState() {
     super.initState();
     chat = widget.model.startChat();
@@ -166,14 +164,16 @@ class _AudioPageState extends State<AudioPage> {
                     icon: Icon(
                       Icons.mic,
                       color: _recording
-                        ? Colors.blueGrey
-                        : Theme.of(context).colorScheme.primary,
+                          ? Colors.blueGrey
+                          : Theme.of(context).colorScheme.primary,
                       ),
                     ),
                   const SizedBox.square(
                     dimension: 15,
                   ),
-                  const Text('Tap the mic to record, tap again to submit'),
+                  const Text(
+                    'Tap the mic to record, tap again to submit',
+                  ),
                 ],
               ),
             ),
