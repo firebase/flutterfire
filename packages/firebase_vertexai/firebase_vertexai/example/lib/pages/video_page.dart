@@ -62,7 +62,7 @@ class _VideoPageState extends State<VideoPage> {
       setState(() {
         _messages.add(MessageData(text: response.text, fromUser: false));
       });
-      
+
     } catch (e) {
       print('Error sending video to model: $e');
     }
