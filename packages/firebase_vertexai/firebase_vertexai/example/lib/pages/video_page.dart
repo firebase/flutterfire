@@ -100,7 +100,7 @@ class _VideoPageState extends State<VideoPage> {
                 child: SizedBox(
                   child: ElevatedButton(
                     onPressed: !_loading
-                      ? () async {
+                        ? () async {
                             await _testVideo(widget.model);
                         }
                       : null,
