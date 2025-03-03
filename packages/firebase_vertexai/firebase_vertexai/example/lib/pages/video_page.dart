@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/services.dart';
@@ -54,7 +52,8 @@ class _VideoPageState extends State<VideoPage> {
         _messages.add(MessageData(text: _prompt, fromUser: true));
       });
 
-      final videoPart = InlineDataPart('video/mp4', videoBytes.buffer.asUint8List());
+      final videoPart = 
+          InlineDataPart('video/mp4', videoBytes.buffer.asUint8List());
 
       final response = await widget.model.generateContent([
         Content.multi([prompt, videoPart]),
@@ -102,8 +101,8 @@ class _VideoPageState extends State<VideoPage> {
                   child: ElevatedButton(
                     onPressed: !_loading
                       ? () async {
-                        await _testVideo(widget.model);
-                      }
+                          await _testVideo(widget.model);
+                        }
                       : null,
                     child: const Text('Test Video Prompt'),
                   ),

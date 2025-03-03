@@ -102,7 +102,7 @@ class _AudioPageState extends State<AudioPage> {
       setState(() {
         _messages.add(MessageData(text: textPrompt, fromUser: true));
       });
-      
+
       final response = await widget.model.generateContent([
         Content.multi([prompt, audioPart]),
       ]);
@@ -166,8 +166,8 @@ class _AudioPageState extends State<AudioPage> {
                       color: _recording
                           ? Colors.blueGrey
                           : Theme.of(context).colorScheme.primary,
-                      ),
                     ),
+                  ),
                   const SizedBox.square(
                     dimension: 15,
                   ),
