@@ -47,7 +47,11 @@ class _AudioPageState extends State<AudioPage> {
   }
 
   Future<void> recordAudio() async {
-    if (await record.hasPermission()) {
+    if (!await record.hasPermission()) {
+      print('Audio recording permission denied');
+      return;
+    }
+
       final dir = Directory(
           '${(await getApplicationDocumentsDirectory()).path}/libs/recordings');
 
@@ -65,13 +69,16 @@ class _AudioPageState extends State<AudioPage> {
         ),
         path: filePath,
       );
-    }
   }
 
   Future<void> stopRecord() async {
-    final path = await record.stop();
+    var path = await record.stop();
 
-    if (path != null) {
+    if (path == null) {
+      print('Failed to stop recording');
+      return;
+    }
+
       debugPrint('Recording saved to: $path');
 
       try {
@@ -88,28 +95,24 @@ class _AudioPageState extends State<AudioPage> {
       } catch (e) {
         debugPrint('Error processing recording: $e');
       }
-    } else {
-      debugPrint('Failed to stop recording.');
-    }
   }
 
   Future<void> _submitAudioToModel(audioPart) async {
     try {
-
       String textPrompt = 'What is in the audio recording?';
       final prompt = TextPart('What is in the audio recording?');
+      
       setState(() {
         _messages.add(MessageData(text: textPrompt, fromUser: true));
       });
       
-
       final response = await widget.model.generateContent([
         Content.multi([prompt, audioPart]),
       ]);
+
       setState(() {
         _messages.add(MessageData(text: response.text, fromUser: false));
       });
-
 
       print(response.text);
       debugPrint(response.text);
@@ -180,5 +183,4 @@ class _AudioPageState extends State<AudioPage> {
       ),
     );
   }
-
 }

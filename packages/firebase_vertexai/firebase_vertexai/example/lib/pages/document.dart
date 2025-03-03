@@ -55,16 +55,16 @@ class _DocumentPageState extends State<DocumentPage> {
         _messages.add(MessageData(text: _prompt, fromUser: true));
       });
 
-      final pdfPart = InlineDataPart('application/pdf', docBytes.buffer.asUint8List());
+      final pdfPart =
+          InlineDataPart('application/pdf', docBytes.buffer.asUint8List());
 
       final response = await widget.model.generateContent([
         Content.multi([prompt, pdfPart]),
       ]);
 
-      setState((){
+      setState(() {
         _messages.add(MessageData(text: response.text, fromUser: false));
       });
-      
     } catch (e) {
       print('Error sending document to model: $e');
     }
@@ -98,19 +98,17 @@ class _DocumentPageState extends State<DocumentPage> {
                 vertical: 25,
                 horizontal: 15,
               ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: !_loading
-                          ? () async {
-                              await _testDocumentReading(widget.model);
-                            }
-                          : null,
-                      child: const Text('Test Document Reading'),
-                    ),
+              child: Center(
+                child: Expanded(
+                  child: ElevatedButton(
+                    onPressed: !_loading
+                        ? () async {
+                            await _testDocumentReading(widget.model);
+                          }
+                        : null,
+                    child: const Text('Test Document Reading'),
                   ),
-                ],
+                ),
               ),
             ),
           ],
