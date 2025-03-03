@@ -46,23 +46,12 @@ class _AudioPageState extends State<AudioPage> {
     chat = widget.model.startChat();
   }
 
-  void _scrollDown() {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(
-          milliseconds: 750,
-        ),
-        curve: Curves.easeOutCirc,
-      ),
-    );
-  }
-
   Future<void> recordAudio() async {
     if (await record.hasPermission()) {
       final dir = Directory(
           '${(await getApplicationDocumentsDirectory()).path}/libs/recordings');
 
+      // ignore: avoid_slow_async_io
       if (!await dir.exists()) {
         await dir.create(recursive: true);
       }
@@ -108,7 +97,7 @@ class _AudioPageState extends State<AudioPage> {
     try {
 
       String textPrompt = 'What is in the audio recording?';
-      final prompt = TextPart("What is in the audio recording?");
+      final prompt = TextPart('What is in the audio recording?');
       setState(() {
         _messages.add(MessageData(text: textPrompt, fromUser: true));
       });
@@ -182,7 +171,7 @@ class _AudioPageState extends State<AudioPage> {
                   const SizedBox.square(
                     dimension: 15,
                   ),
-                  const Text('Tap the mic to record, tap again to submit')
+                  const Text('Tap the mic to record, tap again to submit'),
                 ],
               ),
             ),
