@@ -31,28 +31,45 @@ class DocumentPage extends StatefulWidget {
 }
 
 class _DocumentPageState extends State<DocumentPage> {
+  ChatSession? chat;
   late final GenerativeModel model;
   final List<MessageData> _messages = <MessageData>[];
   bool _loading = false;
 
-  void _testDocumentReading(model) async {
+  @override
+  void initState() {
+    super.initState();
+    chat = widget.model.startChat();
+  }
 
-  ByteData docBytes = await rootBundle.load('assets/documents/gemini_summary.pdf');
+  Future<void> _testDocumentReading(model) async {
+    try {
+      ByteData docBytes =
+          await rootBundle.load('assets/documents/gemini_summary.pdf');
 
-  final prompt = TextPart('Write me a summary in one sentence what this document is about.');
+      const _prompt =
+          'Write me a summary in one sentence what this document is about.';
 
-  final content = [
-    Content.multi([
-      prompt,
-      // The only accepted mime types are image/*.
-      InlineDataPart('application/pdf', docBytes.buffer.asUint8List()),
-    ]),
-  ];
+      final prompt = TextPart(_prompt);
 
-  final response = widget.model.generateContent(content);
-  
-  
-}
+      setState(() {
+        _messages.add(MessageData(text: _prompt, fromUser: true));
+      });
+
+      final pdfPart = InlineDataPart('application/pdf', docBytes.buffer.asUint8List());
+
+      final response = await widget.model.generateContent([
+        Content.multi([prompt, pdfPart]),
+      ]);
+
+      setState((){
+        _messages.add(MessageData(text: response.text, fromUser: false));
+      });
+      
+    } catch (e) {
+      print('Error sending document to model: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +105,7 @@ class _DocumentPageState extends State<DocumentPage> {
                     child: ElevatedButton(
                       onPressed: !_loading
                           ? () async {
-                              _testDocumentReading(model);
+                              _testDocumentReading(widget.model);
                             }
                           : null,
                       child: const Text('Test Document Reading'),
@@ -103,5 +120,3 @@ class _DocumentPageState extends State<DocumentPage> {
     );
   }
 }
-
-

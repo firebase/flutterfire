@@ -106,17 +106,20 @@ class _AudioPageState extends State<AudioPage> {
 
   Future<void> _submitAudioToModel(audioPart) async {
     try {
-      widget.model.startChat();
 
       String textPrompt = 'What is in the audio recording?';
       final prompt = TextPart("What is in the audio recording?");
+      setState(() {
+        _messages.add(MessageData(text: textPrompt, fromUser: true));
+      });
+      
 
       final response = await widget.model.generateContent([
         Content.multi([prompt, audioPart]),
       ]);
-
-      _messages.add(MessageData(text: textPrompt, fromUser: true));
-      _messages.add(MessageData(text: response.text, fromUser: false));
+      setState(() {
+        _messages.add(MessageData(text: response.text, fromUser: false));
+      });
 
 
       print(response.text);

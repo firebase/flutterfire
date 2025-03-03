@@ -117,8 +117,8 @@ class _HomeScreenState extends State<HomeScreen> {
               Icons.mic,
               color: Theme.of(context).colorScheme.primary,
             ),
-            label: 'Audio',
-            tooltip: 'Audio',
+            label: 'Audio Prompt',
+            tooltip: 'Audio Prompt',
           ),
           BottomNavigationBarItem(
             icon: Icon(
@@ -159,6 +159,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             label: 'Schema Prompt',
             tooltip: 'Schema Prompt',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.edit_document,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            label: 'Document Prompt',
+            tooltip: 'Document Prompt',
           ),
         ],
         currentIndex: _selectedIndex,
