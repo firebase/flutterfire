@@ -16,7 +16,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import '../widgets/message_widget.dart';
 
@@ -105,7 +104,7 @@ class _DocumentPageState extends State<DocumentPage> {
                     child: ElevatedButton(
                       onPressed: !_loading
                           ? () async {
-                              _testDocumentReading(widget.model);
+                              await _testDocumentReading(widget.model);
                             }
                           : null,
                       child: const Text('Test Document Reading'),

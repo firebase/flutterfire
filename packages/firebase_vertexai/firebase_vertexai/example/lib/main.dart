@@ -25,6 +25,7 @@ import 'pages/token_count_page.dart';
 import 'pages/schema_page.dart';
 import 'pages/imagen_page.dart';
 import 'pages/document.dart';
+import 'pages/video_page.dart';
 
 // REQUIRED if you want to run on Web
 const FirebaseOptions? options = null;
@@ -84,7 +85,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ImagePromptPage(title: 'Image Prompt', model: widget.model),
         ImagenPage(title: 'Imagen Model', model: widget.model),
         SchemaPromptPage(title: 'Schema Prompt', model: widget.model),
-        DocumentPage(title: "Document Prompt", model: widget.model),
+        DocumentPage(title: 'Document Prompt', model: widget.model),
+        VideoPage(title: 'Video Prompt', model: widget.model),
       ];
 
   void _onItemTapped(int index) {
@@ -167,6 +169,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             label: 'Document Prompt',
             tooltip: 'Document Prompt',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.video_collection,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            label: 'Video Prompt',
+            tooltip: 'Video Prompt',
           ),
         ],
         currentIndex: _selectedIndex,
