@@ -102,8 +102,8 @@ class _VideoPageState extends State<VideoPage> {
                     onPressed: !_loading
                         ? () async {
                             await _testVideo(widget.model);
-                        }
-                      : null,
+                          }
+                        : null,
                     child: const Text('Test Video Prompt'),
                   ),
                 ),
