@@ -59,7 +59,7 @@ class ExecuteQueryRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ExecuteQueryRequest',
       package: const $pb.PackageName(
-          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1beta'),
+          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'name')
     ..aOS(2, _omitFieldNames ? '' : 'operationName')
@@ -170,7 +170,7 @@ class ExecuteMutationRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ExecuteMutationRequest',
       package: const $pb.PackageName(
-          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1beta'),
+          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'name')
     ..aOS(2, _omitFieldNames ? '' : 'operationName')
@@ -279,7 +279,7 @@ class ExecuteQueryResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ExecuteQueryResponse',
       package: const $pb.PackageName(
-          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1beta'),
+          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1'),
       createEmptyInstance: create)
     ..aOM<$1.Struct>(1, _omitFieldNames ? '' : 'data',
         subBuilder: $1.Struct.create)
@@ -358,7 +358,7 @@ class ExecuteMutationResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ExecuteMutationResponse',
       package: const $pb.PackageName(
-          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1beta'),
+          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1'),
       createEmptyInstance: create)
     ..aOM<$1.Struct>(1, _omitFieldNames ? '' : 'data',
         subBuilder: $1.Struct.create)
