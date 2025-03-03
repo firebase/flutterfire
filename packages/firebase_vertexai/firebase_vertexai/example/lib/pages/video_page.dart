@@ -98,19 +98,17 @@ class _VideoPageState extends State<VideoPage> {
                 vertical: 25,
                 horizontal: 15,
               ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: !_loading
-                          ? () async {
-                              await _testVideo(widget.model);
-                            }
-                          : null,
-                      child: const Text('Test Video Prompt'),
-                    ),
+              child: Center(
+                child: SizedBox(
+                  child: ElevatedButton(
+                    onPressed: !_loading
+                      ? () async {
+                          await _testVideo(widget.model);
+                        }
+                      : null,
+                    child: const Text('Test Video Prompt'),
                   ),
-                ],
+                ),
               ),
             ),
           ],

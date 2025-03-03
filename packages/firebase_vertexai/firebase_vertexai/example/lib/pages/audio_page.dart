@@ -52,23 +52,22 @@ class _AudioPageState extends State<AudioPage> {
       return;
     }
 
-      final dir = Directory(
-          '${(await getApplicationDocumentsDirectory()).path}/libs/recordings');
+    final dir = Directory('${(await getApplicationDocumentsDirectory()).path}/libs/recordings');
 
-      // ignore: avoid_slow_async_io
-      if (!await dir.exists()) {
-        await dir.create(recursive: true);
-      }
+    // ignore: avoid_slow_async_io
+    if (!await dir.exists()) {
+      await dir.create(recursive: true);
+    }
 
-      String filePath =
-          '${dir.path}/recording_${DateTime.now().millisecondsSinceEpoch}.wav';
+    String filePath =
+        '${dir.path}/recording_${DateTime.now().millisecondsSinceEpoch}.wav';
 
-      await record.start(
-        const RecordConfig(
-          encoder: AudioEncoder.wav,
-        ),
-        path: filePath,
-      );
+    await record.start(
+      const RecordConfig(
+        encoder: AudioEncoder.wav,
+      ),
+      path: filePath,
+    );
   }
 
   Future<void> stopRecord() async {
@@ -79,29 +78,29 @@ class _AudioPageState extends State<AudioPage> {
       return;
     }
 
-      debugPrint('Recording saved to: $path');
+    debugPrint('Recording saved to: $path');
 
-      try {
-        File file = File(path);
-        final audio = await file.readAsBytes();
-        debugPrint('Audio file size: ${audio.length} bytes');
+    try {
+      File file = File(path);
+      final audio = await file.readAsBytes();
+      debugPrint('Audio file size: ${audio.length} bytes');
 
-        final audioPart = InlineDataPart('audio/wav', audio);
+      final audioPart = InlineDataPart('audio/wav', audio);
 
-        await _submitAudioToModel(audioPart);
+      await _submitAudioToModel(audioPart);
 
-        await file.delete();
-        debugPrint('Recording deleted successfully.');
-      } catch (e) {
-        debugPrint('Error processing recording: $e');
-      }
+      await file.delete();
+      debugPrint('Recording deleted successfully.');
+    } catch (e) {
+      debugPrint('Error processing recording: $e');
+    }
   }
 
   Future<void> _submitAudioToModel(audioPart) async {
     try {
       String textPrompt = 'What is in the audio recording?';
       final prompt = TextPart('What is in the audio recording?');
-      
+
       setState(() {
         _messages.add(MessageData(text: textPrompt, fromUser: true));
       });
@@ -167,10 +166,10 @@ class _AudioPageState extends State<AudioPage> {
                     icon: Icon(
                       Icons.mic,
                       color: _recording
-                          ? Colors.blueGrey
-                          : Theme.of(context).colorScheme.primary,
+                        ? Colors.blueGrey
+                        : Theme.of(context).colorScheme.primary,
+                      ),
                     ),
-                  ),
                   const SizedBox.square(
                     dimension: 15,
                   ),

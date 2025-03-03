@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/services.dart';
@@ -43,8 +41,7 @@ class _DocumentPageState extends State<DocumentPage> {
 
   Future<void> _testDocumentReading(model) async {
     try {
-      ByteData docBytes =
-          await rootBundle.load('assets/documents/gemini_summary.pdf');
+      ByteData docBytes = await rootBundle.load('assets/documents/gemini_summary.pdf');
 
       const _prompt =
           'Write me a summary in one sentence what this document is about.';
@@ -99,7 +96,7 @@ class _DocumentPageState extends State<DocumentPage> {
                 horizontal: 15,
               ),
               child: Center(
-                child: Expanded(
+                child: SizedBox(
                   child: ElevatedButton(
                     onPressed: !_loading
                         ? () async {
