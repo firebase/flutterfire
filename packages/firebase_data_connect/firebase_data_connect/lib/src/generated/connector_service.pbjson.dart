@@ -105,7 +105,7 @@ const ExecuteQueryResponse$json = {
       '3': 2,
       '4': 3,
       '5': 11,
-      '6': '.google.firebase.dataconnect.v1beta.GraphqlError',
+      '6': '.google.firebase.dataconnect.v1.GraphqlError',
       '10': 'errors'
     },
   ],
@@ -114,8 +114,8 @@ const ExecuteQueryResponse$json = {
 /// Descriptor for `ExecuteQueryResponse`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List executeQueryResponseDescriptor = $convert.base64Decode(
     'ChRFeGVjdXRlUXVlcnlSZXNwb25zZRIrCgRkYXRhGAEgASgLMhcuZ29vZ2xlLnByb3RvYnVmLl'
-    'N0cnVjdFIEZGF0YRJICgZlcnJvcnMYAiADKAsyMC5nb29nbGUuZmlyZWJhc2UuZGF0YWNvbm5l'
-    'Y3QudjFiZXRhLkdyYXBocWxFcnJvclIGZXJyb3Jz');
+    'N0cnVjdFIEZGF0YRJECgZlcnJvcnMYAiADKAsyLC5nb29nbGUuZmlyZWJhc2UuZGF0YWNvbm5l'
+    'Y3QudjEuR3JhcGhxbEVycm9yUgZlcnJvcnM=');
 
 @$core.Deprecated('Use executeMutationResponseDescriptor instead')
 const ExecuteMutationResponse$json = {
@@ -134,7 +134,7 @@ const ExecuteMutationResponse$json = {
       '3': 2,
       '4': 3,
       '5': 11,
-      '6': '.google.firebase.dataconnect.v1beta.GraphqlError',
+      '6': '.google.firebase.dataconnect.v1.GraphqlError',
       '10': 'errors'
     },
   ],
@@ -143,5 +143,5 @@ const ExecuteMutationResponse$json = {
 /// Descriptor for `ExecuteMutationResponse`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List executeMutationResponseDescriptor = $convert.base64Decode(
     'ChdFeGVjdXRlTXV0YXRpb25SZXNwb25zZRIrCgRkYXRhGAEgASgLMhcuZ29vZ2xlLnByb3RvYn'
-    'VmLlN0cnVjdFIEZGF0YRJICgZlcnJvcnMYAiADKAsyMC5nb29nbGUuZmlyZWJhc2UuZGF0YWNv'
-    'bm5lY3QudjFiZXRhLkdyYXBocWxFcnJvclIGZXJyb3Jz');
+    'VmLlN0cnVjdFIEZGF0YRJECgZlcnJvcnMYAiADKAsyLC5nb29nbGUuZmlyZWJhc2UuZGF0YWNv'
+    'bm5lY3QudjEuR3JhcGhxbEVycm9yUgZlcnJvcnM=');
