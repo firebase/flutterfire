@@ -11,10 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import 'package:meta/meta.dart';
 
 /// Specifies the level of safety filtering for image generation.
 ///
 /// If not specified, default will be "block_medium_and_above".
+@experimental
 enum ImagenSafetyFilterLevel {
   /// Strongest filtering level, most strict blocking.
   blockLowAndAbove('block_low_and_above'),
@@ -56,6 +58,7 @@ enum ImagenSafetyFilterLevel {
 /// Allow generation of people by the model.
 ///
 /// If not specified, the default value is "allow_adult".
+@experimental
 enum ImagenPersonFilterLevel {
   /// Disallow the inclusion of people or faces in images.
   blockAll('dont_allow'),
@@ -91,6 +94,7 @@ enum ImagenPersonFilterLevel {
 /// A class representing safety settings for image generation.
 ///
 /// It includes a safety filter level and a person filter level.
+@experimental
 final class ImagenSafetySettings {
   // ignore: public_member_api_docs
   ImagenSafetySettings(this.safetyFilterLevel, this.personFilterLevel);
@@ -113,6 +117,7 @@ final class ImagenSafetySettings {
 /// The aspect ratio for the image.
 ///
 /// The default value is "1:1".
+@experimental
 enum ImagenAspectRatio {
   /// Square (1:1).
   square1x1('1:1'),
@@ -154,6 +159,7 @@ enum ImagenAspectRatio {
 }
 
 /// Configuration options for image generation.
+@experimental
 final class ImagenGenerationConfig {
   // ignore: public_member_api_docs
   ImagenGenerationConfig(
@@ -194,6 +200,7 @@ final class ImagenGenerationConfig {
 }
 
 /// Represents the image format and compression quality.
+@experimental
 final class ImagenFormat {
   // ignore: public_member_api_docs
   ImagenFormat(this.mimeType, this.compressionQuality);
