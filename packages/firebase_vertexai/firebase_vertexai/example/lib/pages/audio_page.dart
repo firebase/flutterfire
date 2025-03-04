@@ -113,7 +113,6 @@ class _AudioPageState extends State<AudioPage> {
         _messages.add(MessageData(text: response.text, fromUser: false));
       });
 
-      print(response.text);
       debugPrint(response.text);
     } catch (e) {
       debugPrint('Error sending audio to model: $e');
