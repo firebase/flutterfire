@@ -1,27 +1,25 @@
-part of movies;
+part of 'movies.dart';
 
 class AddTimestampVariablesBuilder {
   Timestamp timestamp;
 
-  FirebaseDataConnect _dataConnect;
-
+  final FirebaseDataConnect _dataConnect;
   AddTimestampVariablesBuilder(
     this._dataConnect, {
-    required Timestamp this.timestamp,
+    required this.timestamp,
   });
   Deserializer<AddTimestampData> dataDeserializer =
       (dynamic json) => AddTimestampData.fromJson(jsonDecode(json));
   Serializer<AddTimestampVariables> varsSerializer =
       (AddTimestampVariables vars) => jsonEncode(vars.toJson());
   Future<OperationResult<AddTimestampData, AddTimestampVariables>> execute() {
-    return this.ref().execute();
+    return ref().execute();
   }
 
   MutationRef<AddTimestampData, AddTimestampVariables> ref() {
     AddTimestampVariables vars = AddTimestampVariables(
       timestamp: timestamp,
     );
-
     return _dataConnect.mutation(
         "addTimestamp", dataDeserializer, varsSerializer, vars);
   }
@@ -29,15 +27,12 @@ class AddTimestampVariablesBuilder {
 
 class AddTimestampTimestampHolderInsert {
   String id;
-
   AddTimestampTimestampHolderInsert.fromJson(dynamic json)
-      : id = nativeFromJson<String>(json['id']) {}
+      : id = nativeFromJson<String>(json['id']);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
-
     json['id'] = nativeToJson<String>(id);
-
     return json;
   }
 
@@ -48,16 +43,13 @@ class AddTimestampTimestampHolderInsert {
 
 class AddTimestampData {
   AddTimestampTimestampHolderInsert timestampHolder_insert;
-
   AddTimestampData.fromJson(dynamic json)
       : timestampHolder_insert = AddTimestampTimestampHolderInsert.fromJson(
-            json['timestampHolder_insert']) {}
+            json['timestampHolder_insert']);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
-
     json['timestampHolder_insert'] = timestampHolder_insert.toJson();
-
     return json;
   }
 
@@ -68,15 +60,14 @@ class AddTimestampData {
 
 class AddTimestampVariables {
   Timestamp timestamp;
-
+  @Deprecated(
+      'fromJson is deprecated for Variable classes as they are no longer required for deserialization.')
   AddTimestampVariables.fromJson(Map<String, dynamic> json)
-      : timestamp = Timestamp.fromJson(json['timestamp']) {}
+      : timestamp = Timestamp.fromJson(json['timestamp']);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
-
     json['timestamp'] = timestamp.toJson();
-
     return json;
   }
 

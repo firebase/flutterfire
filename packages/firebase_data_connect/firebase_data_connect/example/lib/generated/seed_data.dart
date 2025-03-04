@@ -1,8 +1,7 @@
-part of movies;
+part of 'movies.dart';
 
 class SeedDataVariablesBuilder {
-  FirebaseDataConnect _dataConnect;
-
+  final FirebaseDataConnect _dataConnect;
   SeedDataVariablesBuilder(
     this._dataConnect,
   );
@@ -10,7 +9,7 @@ class SeedDataVariablesBuilder {
       (dynamic json) => SeedDataData.fromJson(jsonDecode(json));
 
   Future<OperationResult<SeedDataData, void>> execute() {
-    return this.ref().execute();
+    return ref().execute();
   }
 
   MutationRef<SeedDataData, void> ref() {
@@ -21,15 +20,12 @@ class SeedDataVariablesBuilder {
 
 class SeedDataTheMatrix {
   String id;
-
   SeedDataTheMatrix.fromJson(dynamic json)
-      : id = nativeFromJson<String>(json['id']) {}
+      : id = nativeFromJson<String>(json['id']);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
-
     json['id'] = nativeToJson<String>(id);
-
     return json;
   }
 
@@ -40,15 +36,12 @@ class SeedDataTheMatrix {
 
 class SeedDataData {
   SeedDataTheMatrix the_matrix;
-
   SeedDataData.fromJson(dynamic json)
-      : the_matrix = SeedDataTheMatrix.fromJson(json['the_matrix']) {}
+      : the_matrix = SeedDataTheMatrix.fromJson(json['the_matrix']);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
-
     json['the_matrix'] = the_matrix.toJson();
-
     return json;
   }
 
