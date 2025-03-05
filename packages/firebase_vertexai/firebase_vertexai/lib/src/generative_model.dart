@@ -15,17 +15,34 @@
 // ignore_for_file: use_late_for_private_fields_and_variables
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:http/http.dart' as http;
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'api.dart';
 import 'base_model.dart';
 import 'client.dart';
 import 'content.dart';
 import 'function_calling.dart';
+import 'live.dart';
+import 'live_api.dart';
+import 'vertex_version.dart';
+
+const _baseUrl = 'firebasevertexai.googleapis.com';
+const _apiVersion = 'v1beta';
+
+const _baseDailyUrl = 'daily-firebaseml.sandbox.googleapis.com';
+const _apiUrl =
+    'ws/google.firebase.machinelearning.v2beta.LlmBidiService/BidiGenerateContent?key=';
+const _baseGAIUrl = 'generativelanguage.googleapis.com';
+const _apiGAIUrl =
+    'ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=';
+
+const _bidiGoogleAI = false;
 
 /// A multimodel generative model (like Gemini).
 ///
@@ -56,7 +73,9 @@ final class GenerativeModel extends BaseModel {
     ToolConfig? toolConfig,
     Content? systemInstruction,
     http.Client? httpClient,
-  })  : _safetySettings = safetySettings ?? [],
+  })  : _app = app,
+        _location = location,
+        _safetySettings = safetySettings ?? [],
         _generationConfig = generationConfig,
         _tools = tools,
         _toolConfig = toolConfig,
@@ -82,7 +101,9 @@ final class GenerativeModel extends BaseModel {
     ToolConfig? toolConfig,
     Content? systemInstruction,
     ApiClient? apiClient,
-  })  : _safetySettings = safetySettings ?? [],
+  })  : _app = app,
+        _location = location,
+        _safetySettings = safetySettings ?? [],
         _generationConfig = generationConfig,
         _tools = tools,
         _toolConfig = toolConfig,
@@ -103,6 +124,8 @@ final class GenerativeModel extends BaseModel {
   //final Uri _baseUri;
   final ToolConfig? _toolConfig;
   final Content? _systemInstruction;
+  final FirebaseApp _app;
+  final String _location;
 
   //static const _modelsPrefix = 'models/';
 
@@ -211,6 +234,43 @@ final class GenerativeModel extends BaseModel {
       'contents': contents.map((c) => c.toJson()).toList()
     };
     return makeRequest(Task.countTokens, parameters, parseCountTokensResponse);
+  }
+
+  Future<AsyncSession> connect({
+    required String model,
+    LiveGenerationConfig? config,
+    Content? systemInstruction,
+    List<Tool>? tools,
+  }) async {
+    late String uri;
+    late String modelString;
+    if (_bidiGoogleAI) {
+      uri = 'wss://$_baseGAIUrl/$_apiGAIUrl${_app.options.apiKey}';
+      modelString = 'models/$model';
+    } else {
+      uri = 'wss://$_baseDailyUrl/$_apiUrl${_app.options.apiKey}';
+      modelString =
+          'projects/${_app.options.projectId}/locations/$_location/publishers/google/models/$model';
+    }
+
+    final requestJson = {
+      'setup': {
+        'model': modelString,
+        if (config != null) 'generation_config': config.toJson(),
+        if (systemInstruction != null)
+          'system_instruction': systemInstruction.toJson(),
+        if (tools != null) 'tools': tools.map((t) => t.toJson()).toList(),
+      }
+    };
+
+    final request = jsonEncode(requestJson);
+    var ws = WebSocketChannel.connect(Uri.parse(uri));
+    await ws.ready;
+    print(uri);
+    print(request);
+
+    ws.sink.add(request);
+    return AsyncSession(ws: ws);
   }
 }
 

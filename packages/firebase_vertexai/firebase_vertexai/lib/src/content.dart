@@ -60,7 +60,13 @@ final class Content {
   /// Convert the [Content] to json format.
   Map<String, Object?> toJson() => {
         if (role case final role?) 'role': role,
-        'parts': parts.map((p) => p.toJson()).toList()
+        'parts': parts?.map((p) {
+          if (p is InlineDataPart && p.mimeType.startsWith('audio/')) {
+            return p.toJson();
+          } else {
+            return p.toJson();
+          }
+        }).toList(),
       };
 }
 
@@ -72,12 +78,13 @@ Content parseContent(Object jsonObject) {
           {'role': final String role} => role,
           _ => null,
         },
-        parts.map(_parsePart).toList()),
+        parts.map(parsePart).toList()),
     _ => throw unhandledFormat('Content', jsonObject),
   };
 }
 
-Part _parsePart(Object? jsonObject) {
+/// Parse the [Part] from json object.
+Part parsePart(Object? jsonObject) {
   return switch (jsonObject) {
     {'text': final String text} => TextPart(text),
     {
@@ -98,8 +105,8 @@ Part _parsePart(Object? jsonObject) {
       'functionResponse': {'name': String _, 'response': Map<String, Object?> _}
     } =>
       throw UnimplementedError('FunctionResponse part not yet supported'),
-    {'inlineData': {'mimeType': String _, 'data': String _}} =>
-      throw UnimplementedError('inlineData content part not yet supported'),
+    {'inlineData': {'mimeType': String mimeType, 'data': String bytes}} =>
+      InlineDataPart(mimeType, base64Decode(bytes)),
     _ => throw unhandledFormat('Part', jsonObject),
   };
 }
@@ -124,7 +131,7 @@ final class TextPart implements Part {
 /// A [Part] with the byte content of a file.
 final class InlineDataPart implements Part {
   // ignore: public_member_api_docs
-  InlineDataPart(this.mimeType, this.bytes);
+  InlineDataPart(this.mimeType, this.bytes, {this.willContinue});
 
   /// File type of the [InlineDataPart].
   /// https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-multimodal-prompts#media_requirements
@@ -132,9 +139,29 @@ final class InlineDataPart implements Part {
 
   /// Data contents in bytes.
   final Uint8List bytes;
+
+  final bool? willContinue;
   @override
   Object toJson() => {
-        'inlineData': {'data': base64Encode(bytes), 'mimeType': mimeType}
+        'inlineData': {
+          'data': base64Encode(bytes),
+          'mimeType': mimeType,
+          if (willContinue != null) 'willContinue': willContinue,
+        }
+      };
+
+  Object toMediaChunkJson() => {
+        'mimeType': mimeType,
+        'data': base64Encode(bytes),
+        if (willContinue != null) 'willContinue': willContinue,
+      };
+
+  Object toAudioJson() => {
+        'inlineData': {
+          'data': bytes.toString(),
+          'mimeType': mimeType,
+          if (willContinue != null) 'willContinue': willContinue,
+        }
       };
 }
 
