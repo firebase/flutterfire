@@ -1,0 +1,28 @@
+extend type DirectedBy {
+  """
+  ✨ Implicit foreign key field based on `DirectedBy`.`movie`. It must match the value of `Movie`.`id`. See `@ref` for how to customize it.
+  """
+  movieId: UUID! @fdc_generated(from: "DirectedBy.movie", purpose: IMPLICIT_REF_FIELD)
+  """
+  ✨ Implicit foreign key field based on `DirectedBy`.`directedby`. It must match the value of `Person`.`id`. See `@ref` for how to customize it.
+  """
+  directedbyId: UUID! @fdc_generated(from: "DirectedBy.directedby", purpose: IMPLICIT_REF_FIELD)
+}
+extend type Movie {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Movie", purpose: IMPLICIT_KEY_FIELD)
+}
+extend type Person {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Person", purpose: IMPLICIT_KEY_FIELD)
+}
+extend type Thing {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Thing", purpose: IMPLICIT_KEY_FIELD)
+}
