@@ -56,9 +56,6 @@ export 'src/function_calling.dart'
         FunctionDeclaration,
         Tool,
         ToolConfig;
-export 'src/live.dart' show AsyncLive, AsyncSession;
-export 'src/live_api.dart'
-    show LiveGenerationConfig, SpeechConfig, Voices, ResponseModalities;
 export 'src/generative_model.dart' show GenerativeModel;
 export 'src/imagen_api.dart'
     show
@@ -70,4 +67,15 @@ export 'src/imagen_api.dart'
         ImagenAspectRatio;
 export 'src/imagen_content.dart' show ImagenInlineImage;
 export 'src/imagen_model.dart' show ImagenModel;
+export 'src/live_api.dart'
+    show
+        LiveGenerationConfig,
+        SpeechConfig,
+        Voices,
+        ResponseModalities,
+        LiveServerContent,
+        LiveServerToolCall,
+        LiveServerToolCallCancellation;
+export 'src/live_model.dart' show LiveGenerativeModel;
+export 'src/live_session.dart' show LiveSession;
 export 'src/schema.dart' show Schema, SchemaType;

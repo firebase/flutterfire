@@ -30,7 +30,7 @@ import 'imagen_content.dart';
 /// > Warning: For Vertex AI in Firebase, image generation using Imagen 3 models
 /// is in Public Preview, which means that the feature is not subject to any SLA
 /// or deprecation policy and could change in backwards-incompatible ways.
-final class ImagenModel extends BaseModel {
+final class ImagenModel extends BaseApiClientModel {
   ImagenModel._(
       {required FirebaseApp app,
       required String model,

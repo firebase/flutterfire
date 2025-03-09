@@ -46,9 +46,28 @@ class _BidiPageState extends State<BidiPage> {
   bool _loading = false;
   bool _session_opening = false;
   bool _recording = false;
-  late AsyncSession _session;
+  late LiveGenerativeModel _liveModel;
+  late LiveSession _session;
   final _audioManager = AudioStreamManager();
   final _audioRecorder = InMemoryAudioRecorder();
+
+  @override
+  void initState() {
+    super.initState();
+
+    final config = LiveGenerationConfig(
+      speechConfig: SpeechConfig(voice: Voices.Charon),
+      responseModalities: [ResponseModalities.Audio],
+    );
+
+    _liveModel = FirebaseVertexAI.instance.liveGenerativeModel(
+      model: 'gemini-2.0-flash-exp',
+      liveGenerationConfig: config,
+      tools: [
+        Tool.functionDeclarations([lightControlTool]),
+      ],
+    );
+  }
 
   void _scrollDown() {
     WidgetsBinding.instance.addPostFrameCallback(
@@ -224,21 +243,8 @@ class _BidiPageState extends State<BidiPage> {
       _loading = true;
     });
 
-    const modelName = 'gemini-2.0-flash-exp';
-
-    final config = LiveGenerationConfig(
-      speechConfig: SpeechConfig(voice: Voices.Charon),
-      responseModalities: [ResponseModalities.Audio],
-    );
-
     if (!_session_opening) {
-      _session = await widget.model.connect(
-        model: modelName,
-        config: config,
-        tools: [
-          Tool.functionDeclarations([lightControlTool]),
-        ],
-      );
+      _session = await _liveModel.connect();
       _session_opening = true;
       unawaited(_handle_response());
     } else {
@@ -365,7 +371,7 @@ class _BidiPageState extends State<BidiPage> {
     final data = InlineDataPart('audio/pcm', audio, willContinue: true);
     media_chunks.add(data);
 
-    await _session!.stream(mediaChunks: media_chunks);
+    await _session!.sendMediaChunks(mediaChunks: media_chunks);
     // print('Stream realtime audio in one chunk to server in one request');
     //_session.printWsStatus();
     setState(() {
@@ -442,8 +448,8 @@ class _BidiPageState extends State<BidiPage> {
     var chunkBuilder = BytesBuilder();
     var audioIndex = 0;
     await for (var response in responseStream) {
-      if (response.serverContent?.modelTurn != null) {
-        final partList = response.serverContent?.modelTurn?.parts;
+      if (response is LiveServerContent && response.modelTurn != null) {
+        final partList = response.modelTurn?.parts;
         if (partList != null) {
           for (var part in partList) {
             if (part is TextPart) {
@@ -483,7 +489,9 @@ class _BidiPageState extends State<BidiPage> {
       }
 
       // Check if the turn is complete
-      if (response.serverContent?.turnComplete ?? false) {
+      if (response is LiveServerContent &&
+          response.turnComplete != null &&
+          response.turnComplete!) {
         print('Turn complete!');
         if (chunkBuilder.isNotEmpty) {
           Uint8List chunk = await AudioUtil.audioChunkWithHeader(
@@ -496,9 +504,8 @@ class _BidiPageState extends State<BidiPage> {
         }
       }
 
-      if (response.toolCall != null &&
-          response.toolCall!.functionCalls != null) {
-        final functionCalls = response.toolCall!.functionCalls!.toList();
+      if (response is LiveServerToolCall && response.functionCalls != null) {
+        final functionCalls = response.functionCalls!.toList();
         // When the model response with a function call, invoke the function.
         if (functionCalls.isNotEmpty) {
           final functionCall = functionCalls.first;

@@ -40,14 +40,12 @@ enum Task {
 /// Do not instantiate directly.
 abstract class BaseModel {
   // ignore: public_member_api_docs
-  BaseModel({
-    required String model,
-    required String location,
-    required FirebaseApp app,
-    required ApiClient client,
-  })  : _model = normalizeModelName(model),
-        _projectUri = _vertexUri(app, location),
-        _client = client;
+  BaseModel(
+      {required String model,
+      required String location,
+      required FirebaseApp app})
+      : _model = normalizeModelName(model),
+        _projectUri = _vertexUri(app, location);
 
   static const _baseUrl = 'firebasevertexai.googleapis.com';
   static const _apiVersion = 'v1beta';
@@ -55,13 +53,9 @@ abstract class BaseModel {
   final ({String prefix, String name}) _model;
 
   final Uri _projectUri;
-  final ApiClient _client;
 
   /// The normalized model name.
   ({String prefix, String name}) get model => _model;
-
-  /// The API client.
-  ApiClient get client => _client;
 
   /// Returns the model code for a user friendly model name.
   ///
@@ -109,6 +103,21 @@ abstract class BaseModel {
   Uri taskUri(Task task) => _projectUri.replace(
       pathSegments: _projectUri.pathSegments
           .followedBy([_model.prefix, '${_model.name}:${task.name}']));
+}
+
+abstract class BaseApiClientModel extends BaseModel {
+  // ignore: public_member_api_docs
+  BaseApiClientModel({
+    required super.model,
+    required super.location,
+    required super.app,
+    required ApiClient client,
+  }) : _client = client;
+
+  final ApiClient _client;
+
+  /// The API client.
+  ApiClient get client => _client;
 
   /// Make a unary request for [task] with JSON encodable [params].
   Future<T> makeRequest<T>(Task task, Map<String, Object?> params,

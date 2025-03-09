@@ -25,11 +25,17 @@ const _FUNCTION_RESPONSE_REQUIRES_ID =
     'FunctionResponse request must have an `id` field from the'
     ' response of a ToolCall.FunctionalCalls in Google AI.';
 
-class AsyncSession {
+/// Manages asynchronous communication with Gemini model over a WebSocket
+/// connection.
+class LiveSession {
   final WebSocketChannel _ws;
 
-  AsyncSession({required WebSocketChannel ws}) : _ws = ws;
+  LiveSession({required WebSocketChannel ws}) : _ws = ws;
 
+  /// Sends content to the server.
+  ///
+  /// [input] (optional): The content to send.
+  /// [turnComplete] (optional): Indicates if the turn is complete. Defaults to false.
   Future<void> send({
     Content? input,
     bool turnComplete = false,
@@ -43,7 +49,10 @@ class AsyncSession {
     _ws.sink.add(clientJson);
   }
 
-  Future<void> stream({
+  /// Sends realtime input (media chunks) to the server.
+  ///
+  /// [mediaChunks]: The list of media chunks to send.
+  Future<void> sendMediaChunks({
     required List<InlineDataPart> mediaChunks,
   }) async {
     var clientMessage = LiveClientRealtimeInput(mediaChunks: mediaChunks);
@@ -53,55 +62,20 @@ class AsyncSession {
     _ws.sink.add(clientJson);
   }
 
+  /// Receives messages from the server.
+  ///
+  /// Returns a [Stream] of [LiveServerMessage] objects representing the
+  /// messages received from the server.
   Stream<LiveServerMessage> receive() async* {
     await for (var message in _ws.stream) {
       var jsonString = utf8.decode(message);
       var response = json.decode(jsonString);
-      // print(response);
-      Map<String, dynamic> responseDict;
+      //print(response);
 
-      responseDict = _LiveServerMessageFromVertex(response);
-
-      var result = parseServerMessage(responseDict);
+      var result = parseServerMessage(response);
 
       yield result;
     }
-  }
-
-  Stream<LiveServerMessage> startStream({
-    required Stream<InlineDataPart> stream,
-    required String mimeType,
-  }) async* {
-    print('beginning of startStream');
-    var completer = Completer();
-    // Start the send loop. When stream is complete, complete the completer.
-    unawaited(_sendLoop(stream, mimeType, completer));
-
-    // Listen for messages from the WebSocket.
-    // await for (final message in _ws.stream) {
-    //   var jsonString = utf8.decode(message);
-    //   var response = json.decode(jsonString);
-    //   print(response);
-    //   Map<String, dynamic> responseDict;
-
-    //   responseDict = _LiveServerMessageFromVertex(response);
-
-    //   var result = parseServerMessage(responseDict);
-
-    //   if (result.serverContent?.turnComplete ?? false) {
-    //     yield result;
-    //     break;
-    //   }
-    //   yield result;
-    // }
-
-    // Wait for the send loop to complete or the websocket to close.
-    await Future.any([completer.future]);
-
-    // Close the websocket if it's not already closed.
-    // if (_ws.closeCode == null) {
-    //   await _ws.sink.close();
-    // }
   }
 
   Future<void> _sendLoop(
@@ -114,7 +88,7 @@ class AsyncSession {
       await for (final data in dataStream) {
         print('send audio data with size ${data.bytes.length}');
 
-        await stream(mediaChunks: [data]);
+        await sendMediaChunks(mediaChunks: [data]);
 
         // await send(input: Content.inlineData(mimeType, data.bytes));
         // Give a chance for the receive loop to process responses.
@@ -134,40 +108,6 @@ class AsyncSession {
     _ws.sink.add(data);
     printWsStatus();
   }
-
-  Map<String, dynamic> _LiveServerContentFromMldev(dynamic fromObject) {
-    var toObject = <String, dynamic>{};
-    if (fromObject is Map && fromObject.containsKey('modelTurn')) {
-      toObject['model_turn'] = parseContent(fromObject['modelTurn']);
-    }
-    if (fromObject is Map && fromObject.containsKey('turnComplete')) {
-      toObject['turn_complete'] = fromObject['turnComplete'];
-    }
-    return toObject;
-  }
-
-  Map<String, dynamic> _LiveToolCallFromMldev(dynamic fromObject) {
-    var toObject = <String, dynamic>{};
-    if (fromObject is Map && fromObject.containsKey('functionCalls')) {
-      toObject['function_calls'] = fromObject['functionCalls'];
-    }
-    return toObject;
-  }
-
-  // Map<String, dynamic> _LiveServerMessageFromMldev(dynamic fromObject) {
-  //   var toObject = <String, dynamic>{};
-  //   if (fromObject is Map && fromObject.containsKey('serverContent')) {
-  //     toObject['server_content'] =
-  //         _LiveServerContentFromMldev(fromObject['serverContent']);
-  //   }
-  //   if (fromObject is Map && fromObject.containsKey('toolCall')) {
-  //     toObject['tool_call'] = _LiveToolCallFromMldev(fromObject['toolCall']);
-  //   }
-  //   if (fromObject is Map && fromObject.containsKey('toolCallCancellation')) {
-  //     toObject['tool_call_cancellation'] = fromObject['toolCallCancellation'];
-  //   }
-  //   return toObject;
-  // }
 
   Map<String, dynamic> _LiveServerContentFromVertex(dynamic fromObject) {
     var toObject = <String, dynamic>{};
@@ -281,6 +221,7 @@ class AsyncSession {
     }
   }
 
+  /// Closes the WebSocket connection.
   Future<void> close() async {
     await _ws.sink.close();
   }
