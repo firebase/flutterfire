@@ -531,9 +531,9 @@ enum ContentModality {
       'MODALITY_UNSPECIFIED' => ContentModality.unspecified,
       'TEXT' => ContentModality.text,
       'IMAGE' => ContentModality.image,
-      'video' => ContentModality.video,
-      'audio' => ContentModality.audio,
-      'document' => ContentModality.document,
+      'VIDEO' => ContentModality.video,
+      'AUDIO' => ContentModality.audio,
+      'DOCUMENT' => ContentModality.document,
       _ =>
         throw FormatException('Unhandled ContentModality format', jsonObject),
     };
