@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import 'dart:developer';
+
 import 'package:meta/meta.dart';
 
 /// Specifies the level of safety filtering for image generation.
@@ -209,8 +211,12 @@ final class ImagenFormat {
   ImagenFormat.png() : this('image/png', null);
 
   // ignore: public_member_api_docs
-  ImagenFormat.jpeg({int? compressionQuality})
-      : this('image/jpeg', compressionQuality);
+  ImagenFormat.jpeg({this.compressionQuality}) : mimeType = 'image/jpeg' {
+    if (compressionQuality != null &&
+        (compressionQuality! < 0 || compressionQuality! > 100)) {
+      log('ImagenFormat (jpeg): compressionQuality ($compressionQuality) is out of range [0, 100].');
+    }
+  }
 
   /// The MIME type of the image format. The default value is "image/png".
   final String mimeType;
