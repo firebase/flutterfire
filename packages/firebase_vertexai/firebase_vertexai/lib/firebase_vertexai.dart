@@ -73,6 +73,7 @@ export 'src/live_api.dart'
         SpeechConfig,
         Voices,
         ResponseModalities,
+        LiveServerMessage,
         LiveServerContent,
         LiveServerToolCall,
         LiveServerToolCallCancellation;

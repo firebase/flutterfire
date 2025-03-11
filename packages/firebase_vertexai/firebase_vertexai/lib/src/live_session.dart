@@ -14,11 +14,11 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'content.dart';
+import 'error.dart';
 import 'live_api.dart';
 
 const _FUNCTION_RESPONSE_REQUIRES_ID =
@@ -40,7 +40,7 @@ class LiveSession {
     Content? input,
     bool turnComplete = false,
   }) async {
-    // var clientMessage = _parseClientMessage(input, endOfTurn);
+    _checkWsStatus();
     var clientMessage = input != null
         ? LiveClientContent(turns: [input], turnComplete: turnComplete)
         : LiveClientContent(turnComplete: turnComplete);
@@ -55,6 +55,7 @@ class LiveSession {
   Future<void> sendMediaChunks({
     required List<InlineDataPart> mediaChunks,
   }) async {
+    _checkWsStatus();
     var clientMessage = LiveClientRealtimeInput(mediaChunks: mediaChunks);
 
     var clientJson = jsonEncode(clientMessage.toJson());
@@ -67,6 +68,7 @@ class LiveSession {
   /// Returns a [Stream] of [LiveServerMessage] objects representing the
   /// messages received from the server.
   Stream<LiveServerMessage> receive() async* {
+    _checkWsStatus();
     await for (var message in _ws.stream) {
       var jsonString = utf8.decode(message);
       var response = json.decode(jsonString);
@@ -78,152 +80,35 @@ class LiveSession {
     }
   }
 
-  Future<void> _sendLoop(
-    Stream<InlineDataPart> dataStream,
-    String mimeType,
-    Completer completer,
-  ) async {
-    try {
-      print('start _sendLoop');
-      await for (final data in dataStream) {
-        print('send audio data with size ${data.bytes.length}');
+  /// Receives messages from the server and invokes the [callback] function with each message.
+  ///
+  /// This function asynchronously processes messages from the server and passes each
+  /// [LiveServerMessage] to the provided [callback] function.
+  Future<void> receiveWithCallback(
+      Future<void> Function(LiveServerMessage message) callback) async {
+    _checkWsStatus();
+    await for (var message in _ws.stream) {
+      var jsonString = utf8.decode(message);
+      var response = json.decode(jsonString);
 
-        await sendMediaChunks(mediaChunks: [data]);
+      var result = parseServerMessage(response);
 
-        // await send(input: Content.inlineData(mimeType, data.bytes));
-        // Give a chance for the receive loop to process responses.
-        await Future.delayed(const Duration(milliseconds: 1));
-        printWsStatus();
-      }
-    } finally {
-      print('client audio sent complete');
-      await send(turnComplete: true);
-      // Complete the completer to signal the end of the stream.
-      completer.complete();
-    }
-  }
-
-  Future<void> dumpData(String data) async {
-    print('dump data $data');
-    _ws.sink.add(data);
-    printWsStatus();
-  }
-
-  Map<String, dynamic> _LiveServerContentFromVertex(dynamic fromObject) {
-    var toObject = <String, dynamic>{};
-    if (fromObject is Map && fromObject.containsKey('modelTurn')) {
-      toObject['model_turn'] = parseContent(fromObject['modelTurn']);
-    }
-    if (fromObject is Map && fromObject.containsKey('turnComplete')) {
-      toObject['turn_complete'] = fromObject['turnComplete'];
-    }
-    return toObject;
-  }
-
-  Map<String, dynamic> _LiveToolCallFromVertex(dynamic fromObject) {
-    var toObject = <String, dynamic>{};
-    if (fromObject is Map && fromObject.containsKey('functionCalls')) {
-      toObject['function_calls'] = fromObject['functionCalls'];
-    }
-    return toObject;
-  }
-
-  Map<String, dynamic> _LiveServerMessageFromVertex(dynamic fromObject) {
-    var toObject = <String, dynamic>{};
-    if (fromObject is Map && fromObject.containsKey('serverContent')) {
-      toObject['server_content'] =
-          _LiveServerContentFromVertex(fromObject['serverContent']);
-    }
-    if (fromObject is Map && fromObject.containsKey('toolCall')) {
-      toObject['tool_call'] = _LiveToolCallFromVertex(fromObject['toolCall']);
-    }
-    if (fromObject is Map && fromObject.containsKey('toolCallCancellation')) {
-      toObject['tool_call_cancellation'] = fromObject['toolCallCancellation'];
-    }
-    return toObject;
-  }
-
-  dynamic _parseClientMessage(input, bool endOfTurn) {
-    if (input is String) {
-      input = [input];
-    } else if (input is Map && input.containsKey('data')) {
-      if (input['data'] is List<int>) {
-        var decodedData = base64Encode(input['data']);
-        input['data'] = decodedData;
-      }
-      input = [input];
-    } else if (input is InlineDataPart) {
-      input = [input];
-    } else if (input is Map &&
-        input.containsKey('name') &&
-        input.containsKey('response')) {
-      input = [input];
-    }
-
-    if (input is List &&
-        input.any((e) =>
-            e is Map && e.containsKey('name') && e.containsKey('response'))) {
-      // ToolResponse.FunctionResponse
-      return {
-        'tool_response': {'function_responses': input}
-      };
-    } else if (input is List && input.any((e) => e is String)) {
-      var contents = input.map((e) => Content.text(e)).toList();
-      return {
-        'client_content': {'turns': contents, 'turn_complete': endOfTurn}
-      };
-    } else if (input is List) {
-      if (input.any((e) => e is Map && e.containsKey('data'))) {
-        // Do nothing
-      } else if (input.any((e) => e is InlineDataPart)) {
-        input = input.map((e) => (e as InlineDataPart).toJson()).toList();
-      } else {
-        throw ArgumentError(
-            'Unsupported input type "${input.runtimeType}" or input content "$input"');
-      }
-      return {
-        'realtime_input': {'media_chunks': input}
-      };
-    } else if (input is Map && input.containsKey('content')) {
-      return {'client_content': input};
-    } else if (input is LiveClientRealtimeInput) {
-      var clientMessage = input.toJson();
-      if (clientMessage['realtime_input']['media_chunks'][0]['data']
-          is List<int>) {
-        clientMessage['realtime_input']['media_chunks'] =
-            clientMessage['realtime_input']['media_chunks']
-                .map((e) => {
-                      'data': base64Encode(e['data']),
-                      'mimeType': e['mime_type'],
-                    })
-                .toList();
-      }
-      return clientMessage;
-    } else if (input is LiveClientContent) {
-      return {'client_content': input.toJson()};
-    } else if (input is LiveClientToolResponse) {
-      return {'tool_response': input.toJson()};
-    } else if (input is FunctionResponse) {
-      return {
-        'tool_response': {
-          'function_responses': [input.toJson()]
-        }
-      };
-    } else if (input is List && input[0] is FunctionResponse) {
-      return {
-        'tool_response': {
-          'function_responses': input.map((e) => e.toJson()).toList()
-        }
-      };
-    } else {
-      throw ArgumentError(
-          'Unsupported input type "${input.runtimeType}" or input content "$input"');
+      await callback(result);
     }
   }
 
   /// Closes the WebSocket connection.
   Future<void> close() async {
     await _ws.sink.close();
+  }
+
+  void _checkWsStatus() {
+    if (_ws.closeCode != null) {
+      var message =
+          'WebSocket status: Closed, closeCode: ${_ws.closeCode}, closeReason: ${_ws.closeReason}';
+
+      throw LiveWebSocketClosedException(message);
+    }
   }
 
   void printWsStatus() {

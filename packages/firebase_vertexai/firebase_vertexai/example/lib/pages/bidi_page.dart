@@ -50,6 +50,8 @@ class _BidiPageState extends State<BidiPage> {
   late LiveSession _session;
   final _audioManager = AudioStreamManager();
   final _audioRecorder = InMemoryAudioRecorder();
+  var _chunkBuilder = BytesBuilder();
+  var _audioIndex = 0;
 
   @override
   void initState() {
@@ -246,9 +248,9 @@ class _BidiPageState extends State<BidiPage> {
     if (!_session_opening) {
       _session = await _liveModel.connect();
       _session_opening = true;
-      unawaited(_handle_response());
+      unawaited(_session.receiveWithCallback(_response_callback));
     } else {
-      await _session!.close();
+      await _session.close();
       await _audioManager.stopAudioPlayer();
       await _audioManager.disposeAudioPlayer();
       _session_opening = false;
@@ -393,23 +395,6 @@ class _BidiPageState extends State<BidiPage> {
   //   });
   // }
 
-  Future<void> _sendPremadeAudioPayload() async {
-    setState(() {
-      _loading = true;
-    });
-    final dir = await getDownloadsDirectory();
-    final path = '${dir!.path}/audio_payload.json';
-
-    final file = File(path!);
-    final dataDump = await file.readAsString();
-
-    _session!.dumpData(dataDump);
-
-    setState(() {
-      _loading = false;
-    });
-  }
-
   Future<void> _checkWsStatus() async {
     _session!.printWsStatus();
   }
@@ -443,89 +428,108 @@ class _BidiPageState extends State<BidiPage> {
     });
   }
 
+  Future<void> _response_callback(LiveServerMessage response) async {
+    await _handleLiveServerMessage(response);
+  }
+
   Future<void> _handle_response() async {
     final responseStream = _session!.receive();
-    var chunkBuilder = BytesBuilder();
-    var audioIndex = 0;
     await for (var response in responseStream) {
-      if (response is LiveServerContent && response.modelTurn != null) {
-        final partList = response.modelTurn?.parts;
-        if (partList != null) {
-          for (var part in partList) {
-            if (part is TextPart) {
-              if (!_loading) {
-                setState(() {
-                  _loading = true;
-                });
-              }
-              _messages.add(MessageData(text: part.text, fromUser: false));
-              setState(() {
-                _loading = false;
-                _scrollDown();
-              });
-            } else if (part is InlineDataPart) {
-              print('receive data part: mimeType: ${part.mimeType}');
-              if (part.mimeType.startsWith('audio')) {
-                print('Audio chunk length: ${part.bytes.length}');
+      await _handleLiveServerMessage(response);
+    }
+  }
 
-                chunkBuilder.add(part.bytes);
-                audioIndex++;
+  Future<void> _handleLiveServerMessage(LiveServerMessage response) async {
+    if (response is LiveServerContent && response.modelTurn != null) {
+      await _handleLiveServerContent(response);
+    }
 
-                if (audioIndex == 15) {
-                  Uint8List chunk = await AudioUtil.audioChunkWithHeader(
-                    chunkBuilder.toBytes(),
-                    24000,
-                  );
-                  _audioManager.addAudio(chunk);
-                  chunkBuilder.clear();
-                  audioIndex = 0;
-                }
-              }
-            } else {
-              print('receive part with type ${part.runtimeType}');
-            }
-          }
+    if (response is LiveServerContent &&
+        response.turnComplete != null &&
+        response.turnComplete!) {
+      await _handleTurnComplete();
+    }
+
+    if (response is LiveServerToolCall && response.functionCalls != null) {
+      await _handleLiveServerToolCall(response);
+    }
+  }
+
+  Future<void> _handleLiveServerContent(LiveServerContent response) async {
+    final partList = response.modelTurn?.parts;
+    if (partList != null) {
+      for (var part in partList) {
+        if (part is TextPart) {
+          await _handleTextPart(part);
+        } else if (part is InlineDataPart) {
+          await _handleInlineDataPart(part);
+        } else {
+          print('receive part with type ${part.runtimeType}');
         }
       }
+    }
+  }
 
-      // Check if the turn is complete
-      if (response is LiveServerContent &&
-          response.turnComplete != null &&
-          response.turnComplete!) {
-        print('Turn complete!');
-        if (chunkBuilder.isNotEmpty) {
-          Uint8List chunk = await AudioUtil.audioChunkWithHeader(
-            chunkBuilder.toBytes(),
-            24000,
-          );
-          _audioManager.addAudio(chunk);
-          audioIndex = 0;
-          chunkBuilder.clear();
-        }
+  Future<void> _handleTextPart(TextPart part) async {
+    if (!_loading) {
+      setState(() {
+        _loading = true;
+      });
+    }
+    _messages.add(MessageData(text: part.text, fromUser: false));
+    setState(() {
+      _loading = false;
+      _scrollDown();
+    });
+  }
+
+  Future<void> _handleInlineDataPart(InlineDataPart part) async {
+    print('receive data part: mimeType: ${part.mimeType}');
+    if (part.mimeType.startsWith('audio')) {
+      print('Audio chunk length: ${part.bytes.length}');
+      _chunkBuilder.add(part.bytes);
+      _audioIndex++;
+      if (_audioIndex == 15) {
+        Uint8List chunk = await AudioUtil.audioChunkWithHeader(
+          _chunkBuilder.toBytes(),
+          24000,
+        );
+        _audioManager.addAudio(chunk);
+        _chunkBuilder.clear();
+        _audioIndex = 0;
       }
+    }
+  }
 
-      if (response is LiveServerToolCall && response.functionCalls != null) {
-        final functionCalls = response.functionCalls!.toList();
-        // When the model response with a function call, invoke the function.
-        if (functionCalls.isNotEmpty) {
-          final functionCall = functionCalls.first;
-          if (functionCall.name == 'setLightValues') {
-            var color = functionCall.args['colorTemperature']! as String;
-            var brightness = functionCall.args['brightness']! as int;
-            final functionResult = await _setLightValues(
-                brightness: brightness, colorTemprature: color);
-            // Send the response to the model so that it can use the result to
-            // generate text for the user.
-            await _session!.send(
-              input:
-                  Content.functionResponse(functionCall.name, functionResult),
-            );
-          } else {
-            throw UnimplementedError(
-              'Function not declared to the model: ${functionCall.name}',
-            );
-          }
-        }
+  Future<void> _handleTurnComplete() async {
+    print('Turn complete!');
+    if (_chunkBuilder.isNotEmpty) {
+      Uint8List chunk = await AudioUtil.audioChunkWithHeader(
+        _chunkBuilder.toBytes(),
+        24000,
+      );
+      _audioManager.addAudio(chunk);
+      _audioIndex = 0;
+      _chunkBuilder.clear();
+    }
+  }
+
+  Future<void> _handleLiveServerToolCall(LiveServerToolCall response) async {
+    final functionCalls = response.functionCalls!.toList();
+    if (functionCalls.isNotEmpty) {
+      final functionCall = functionCalls.first;
+      if (functionCall.name == 'setLightValues') {
+        var color = functionCall.args['colorTemperature']! as String;
+        var brightness = functionCall.args['brightness']! as int;
+        final functionResult = await _setLightValues(
+            brightness: brightness, colorTemprature: color);
+        await _session!.send(
+          input: Content.functionResponse(functionCall.name, functionResult),
+        );
+      } else {
+        throw UnimplementedError(
+          'Function not declared to the model: ${functionCall.name}',
+        );
       }
     }
   }
