@@ -28,9 +28,9 @@ const _FUNCTION_RESPONSE_REQUIRES_ID =
 /// Manages asynchronous communication with Gemini model over a WebSocket
 /// connection.
 class LiveSession {
-  final WebSocketChannel _ws;
-
+  // ignore: public_member_api_docs
   LiveSession({required WebSocketChannel ws}) : _ws = ws;
+  final WebSocketChannel _ws;
 
   /// Sends content to the server.
   ///
@@ -60,6 +60,35 @@ class LiveSession {
 
     var clientJson = jsonEncode(clientMessage.toJson());
     // print('Streaming $clientJson');
+    _ws.sink.add(clientJson);
+  }
+
+  /// Starts streaming media chunks to the server from the provided [mediaChunkStream].
+  ///
+  /// This function asynchronously processes each [InlineDataPart] from the given
+  /// [mediaChunkStream] and sends it to the server via the WebSocket connection.
+  ///
+  /// Parameters:
+  /// - [mediaChunkStream]: The stream of [InlineDataPart] objects to send to the server.
+  Future<void> startMediaStream(Stream<InlineDataPart> mediaChunkStream) async {
+    _checkWsStatus();
+
+    try {
+      await for (var chunk in mediaChunkStream) {
+        await _sendMediaChunk(chunk);
+      }
+    } catch (e) {
+      print('Error during stream processing: $e');
+      // Handle the error appropriately (e.g., close the WebSocket, notify the user)
+    } finally {
+      print('Stream processing completed.');
+    }
+  }
+
+  Future<void> _sendMediaChunk(InlineDataPart chunk) async {
+    var clientMessage = LiveClientRealtimeInput(
+        mediaChunks: [chunk]); // Create a list with the single chunk
+    var clientJson = jsonEncode(clientMessage.toJson());
     _ws.sink.add(clientJson);
   }
 

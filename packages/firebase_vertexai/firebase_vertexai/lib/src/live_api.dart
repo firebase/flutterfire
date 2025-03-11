@@ -59,9 +59,6 @@ enum ResponseModalities {
   /// Text response modality.
   Text('TEXT'),
 
-  /// Image response modality.
-  Image('IMAGE'),
-
   /// Audio response modality.
   Audio('AUDIO');
 
@@ -101,81 +98,6 @@ final class LiveGenerationConfig extends BaseGenerationConfig {
               responseModalities.map((modality) => modality.toJson()).toList(),
       };
 }
-
-/// Configures live generation settings.
-// class LiveGenerationConfig {
-//   // ignore: public_member_api_docs
-//   LiveGenerationConfig({
-//     this.speechConfig,
-//     this.responseModalities,
-//     this.candidateCount,
-//     this.maxOutputTokens,
-//     this.temperature,
-//     this.topP,
-//     this.topK,
-//   });
-
-//   /// The speech configuration.
-//   final SpeechConfig? speechConfig;
-
-//   /// The list of desired response modalities.
-//   final List<ResponseModalities>? responseModalities;
-
-//   /// Number of generated responses to return.
-//   ///
-//   /// This value must be between [1, 8], inclusive. If unset, this will default
-//   /// to 1.
-//   final int? candidateCount;
-
-//   /// The maximum number of tokens to include in a candidate.
-//   ///
-//   /// If unset, this will default to output_token_limit specified in the `Model`
-//   /// specification.
-//   final int? maxOutputTokens;
-
-//   /// Controls the randomness of the output.
-//   ///
-//   /// Note: The default value varies by model.
-//   ///
-//   /// Values can range from `[0.0, infinity]`, inclusive. A value temperature
-//   /// must be greater than 0.0.
-//   final double? temperature;
-
-//   /// The maximum cumulative probability of tokens to consider when sampling.
-//   ///
-//   /// The model uses combined Top-k and nucleus sampling. Tokens are sorted
-//   /// based on their assigned probabilities so that only the most likely tokens
-//   /// are considered. Top-k sampling directly limits the maximum number of
-//   /// tokens to consider, while Nucleus sampling limits number of tokens based
-//   /// on the cumulative probability.
-//   ///
-//   /// Note: The default value varies by model.
-//   final double? topP;
-
-//   /// The maximum number of tokens to consider when sampling.
-//   ///
-//   /// The model uses combined Top-k and nucleus sampling. Top-k sampling
-//   /// considers the set of `top_k` most probable tokens. Defaults to 40.
-//   ///
-//   /// Note: The default value varies by model.
-//   final int? topK;
-
-//   /// Convert to json format
-//   Map<String, Object?> toJson() => {
-//         if (candidateCount case final candidateCount?)
-//           'candidateCount': candidateCount,
-//         if (maxOutputTokens case final maxOutputTokens?)
-//           'maxOutputTokens': maxOutputTokens,
-//         if (temperature case final temperature?) 'temperature': temperature,
-//         if (topP case final topP?) 'topP': topP,
-//         if (topK case final topK?) 'topK': topK,
-//         if (speechConfig case final speechConfig?)
-//           'speech_config': speechConfig.toJson(),
-//         if (responseModalities case final responseModalities?)
-//           'response_modalities':
-//               responseModalities.map((modality) => modality.toJson()).toList(),
-//       };
-// }
 
 /// An abstract class representing a message received from a live server.
 ///
@@ -241,6 +163,7 @@ class LiveClientRealtimeInput {
   /// The list of media chunks.
   final List<InlineDataPart>? mediaChunks;
 
+  // ignore: public_member_api_docs
   Map<String, dynamic> toJson() => {
         'realtime_input': {
           'media_chunks':
@@ -263,6 +186,7 @@ class LiveClientContent {
   /// Indicates if the turn is complete.
   final bool? turnComplete;
 
+  // ignore: public_member_api_docs
   Map<String, dynamic> toJson() => {
         'client_content': {
           'turns': turns?.map((e) => e.toJson()).toList(),
@@ -280,11 +204,51 @@ class LiveClientToolResponse {
 
   /// The list of function responses.
   final List<FunctionResponse>? functionResponses;
+  // ignore: public_member_api_docs
   Map<String, dynamic> toJson() => {
         'functionResponses': functionResponses?.map((e) => e.toJson()).toList(),
       };
 }
 
+/// Parses a JSON object received from the live server into a [LiveServerMessage].
+///
+/// This function handles different types of server messages, including:
+/// - Error messages, which result in a [VertexAIException] being thrown.
+/// - `serverContent` messages containing model-generated content.
+/// - `toolCall` messages indicating function calls requested by the model.
+/// - `toolCallCancellation` messages to cancel pending function calls.
+/// - `setupComplete` messages signaling the completion of the server setup.
+///
+/// If the JSON object does not match any of the expected formats, an
+/// [VertexAISdkException] is thrown.
+///
+/// Example:
+/// ```dart
+/// final jsonObject = {
+///   'serverContent': {
+///     'modelTurn': {
+///       'parts': [
+///         {'text': 'Hello, world!'}
+///       ]
+///     },
+///     'turnComplete': true,
+///   }
+/// };
+/// final message = parseServerMessage(jsonObject);
+/// if (message is LiveServerContent) {
+///   print('Received server content: ${message.modelTurn}');
+/// }
+/// ```
+///
+/// Throws:
+/// - [VertexAIException]: If the JSON object contains an error message.
+/// - [VertexAISdkException]: If the JSON object does not match any expected format.
+///
+/// Parameters:
+/// - [jsonObject]: The JSON object received from the live server.
+///
+/// Returns:
+/// - A [LiveServerMessage] object representing the parsed message.
 LiveServerMessage parseServerMessage(Object jsonObject) {
   if (jsonObject case {'error': final Object error}) {
     throw parseError(error);

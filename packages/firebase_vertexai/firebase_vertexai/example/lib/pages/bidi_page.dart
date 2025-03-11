@@ -11,10 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import 'dart:io';
 import 'dart:typed_data';
 import 'dart:async';
-import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import '../widgets/message_widget.dart';
@@ -261,139 +259,19 @@ class _BidiPageState extends State<BidiPage> {
     });
   }
 
-  Future<void> writeAudioFile(
-    List<Uint8List> audioChunks,
-    String filePath,
-    int sampleRate,
-  ) async {
-    final file = File(filePath);
-    final sink = file.openWrite();
-
-    final builder = BytesBuilder();
-    for (final chunk in audioChunks) {
-      builder.add(chunk);
-    }
-
-    Uint8List mergedChunk = builder.toBytes();
-
-    var processedChunk =
-        await AudioUtil.audioChunkWithHeader(mergedChunk, 24000);
-    sink.add(processedChunk);
-
-    await sink.close();
-  }
-
   Future<void> _startRecording() async {
     await _audioRecorder.checkPermission();
-    // await _audioRecorder.startRecordingFile();
-    await _audioRecorder.startRecordingStream(_sendAudioRealtimeWithNoSplit);
+    final audioRecordStream = _audioRecorder.startRecordingStream();
+    // Map the Uint8List stream to InlineDataPart stream
+    final mediaChunkStream = audioRecordStream.map((data) {
+      return InlineDataPart('audio/pcm', data);
+    });
+    await _session.startMediaStream(mediaChunkStream);
   }
 
   Future<void> _stopRecording() async {
     await _audioRecorder.stopRecording();
-    // var audioPrompt = await _audioRecorder.getAudioBytes(fromFile: true);
-    // await _sendAudioRealtimeWithNoSplit(audioPrompt);
-    // await _streamAudioChunks(audioPrompt, 'audio/pcm');
-    // await _sendAudioPrompt(audioPrompt);
-    // await _sendAudioRealtime(audioPrompt);
   }
-
-  List<Uint8List> _splitIntoChunks(Uint8List audioData, int chunkSize) {
-    final chunks = <Uint8List>[];
-
-    for (var i = 0; i < audioData.length; i += chunkSize) {
-      final end =
-          (i + chunkSize < audioData.length) ? i + chunkSize : audioData.length;
-      chunks.add(audioData.sublist(i, end));
-    }
-    return chunks;
-  }
-
-  // Future<void> _streamAudioChunks(Uint8List audioData, String mimeType) async {
-  //   setState(() {
-  //     _loading = true;
-  //   });
-  //   final chunks = _splitIntoChunks(audioData, 1024);
-
-  //   final streamController = StreamController<InlineDataPart>();
-  //   for (var chunk in chunks) {
-  //     if (identical(chunk, chunks.last)) {
-  //       final lastData = InlineDataPart('audio/pcm', chunk, willContinue: true);
-  //       streamController.add(lastData);
-  //     } else {
-  //       final data = InlineDataPart('audio/pcm', chunk, willContinue: true);
-  //       streamController.add(data);
-  //     }
-  //   }
-  //   streamController.close();
-  //   print('streamController has stream closed');
-  //   // Use startStream with the stream of chunks
-  //   await for (final message in _session!
-  //       .startStream(stream: streamController.stream, mimeType: mimeType)) {
-  //     // Process the message received from the server
-  //     print('Received message: $message');
-  //   }
-  //   print('Send all audio chunk to server');
-  //   _session.printWsStatus();
-  //   setState(() {
-  //     _loading = false;
-  //   });
-  // }
-
-  // Future<void> _sendAudioRealtime(Uint8List audio) async {
-  //   setState(() {
-  //     _loading = true;
-  //   });
-  //   final chunks = _splitIntoChunks(audio, 512);
-
-  //   final media_chunks = <InlineDataPart>[];
-  //   for (var chunk in chunks) {
-  //     if (identical(chunk, chunks.last)) {
-  //       final lastData = InlineDataPart('audio/pcm', chunk, willContinue: true);
-  //       media_chunks.add(lastData);
-  //     } else {
-  //       final data = InlineDataPart('audio/pcm', chunk, willContinue: true);
-  //       media_chunks.add(data);
-  //     }
-  //   }
-  //   await _session!.stream(mediaChunks: media_chunks);
-  //   print('Stream realtime audio chunks to server in one request');
-  //   _session.printWsStatus();
-  //   setState(() {
-  //     _loading = false;
-  //   });
-  // }
-
-  Future<void> _sendAudioRealtimeWithNoSplit(Uint8List audio) async {
-    setState(() {
-      _loading = true;
-    });
-
-    final media_chunks = <InlineDataPart>[];
-    final data = InlineDataPart('audio/pcm', audio, willContinue: true);
-    media_chunks.add(data);
-
-    await _session!.sendMediaChunks(mediaChunks: media_chunks);
-    // print('Stream realtime audio in one chunk to server in one request');
-    //_session.printWsStatus();
-    setState(() {
-      _loading = false;
-    });
-  }
-
-  // Future<void> _sendAudioPrompt(Uint8List audio) async {
-  //   setState(() {
-  //     _loading = true;
-  //   });
-  //   final prompt = Content.inlineData('audio/pcm', audio);
-  //   await _session!.send(input: prompt);
-
-  //   print('Sent audio chunk to server');
-  //   _session.printWsStatus();
-  //   setState(() {
-  //     _loading = false;
-  //   });
-  // }
 
   Future<void> _checkWsStatus() async {
     _session!.printWsStatus();
@@ -403,25 +281,14 @@ class _BidiPageState extends State<BidiPage> {
     setState(() {
       _loading = true;
     });
-    if (_session != null) {
-      late Content prompt;
-      if (textPrompt != null) {
-        prompt = Content.text(textPrompt);
-      }
-
-      if (prompt == null) {
-        print('no prompt');
-        setState(() {
-          _loading = false;
-        });
-        return;
-      }
-
-      await _session!.send(input: prompt, turnComplete: true);
-      print('Prompt sent to server');
-      _session.printWsStatus();
-      // await _handle_response();
+    late Content prompt;
+    if (textPrompt != null) {
+      prompt = Content.text(textPrompt);
     }
+
+    await _session!.send(input: prompt, turnComplete: true);
+    print('Prompt sent to server');
+    _session.printWsStatus();
 
     setState(() {
       _loading = false;

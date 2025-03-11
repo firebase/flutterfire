@@ -50,6 +50,8 @@ final class LiveGenerativeModel extends BaseModel {
       Content? systemInstruction})
       : _app = app,
         _location = location,
+        _appCheck = appCheck,
+        _auth = auth,
         _liveGenerationConfig = liveGenerationConfig,
         _tools = tools,
         _systemInstruction = systemInstruction,
@@ -61,6 +63,8 @@ final class LiveGenerativeModel extends BaseModel {
 
   final FirebaseApp _app;
   final String _location;
+  final FirebaseAppCheck? _appCheck;
+  final FirebaseAuth? _auth;
   final LiveGenerationConfig? _liveGenerationConfig;
   final List<Tool>? _tools;
   final Content? _systemInstruction;
@@ -101,8 +105,6 @@ final class LiveGenerativeModel extends BaseModel {
     final request = jsonEncode(requestJson);
     var ws = WebSocketChannel.connect(Uri.parse(uri));
     await ws.ready;
-    print(uri);
-    print(request);
 
     ws.sink.add(request);
     return LiveSession(ws: ws);

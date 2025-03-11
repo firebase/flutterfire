@@ -26,12 +26,6 @@ import 'base_model.dart';
 import 'client.dart';
 import 'content.dart';
 import 'function_calling.dart';
-import 'live_session.dart';
-import 'live_api.dart';
-import 'vertex_version.dart';
-
-const _baseUrl = 'firebasevertexai.googleapis.com';
-const _apiVersion = 'v1beta';
 
 /// A multimodel generative model (like Gemini).
 ///

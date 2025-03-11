@@ -223,9 +223,7 @@ class InMemoryAudioRecorder {
     await _recorder.start(recordConfig, path: _lastAudioPath!);
   }
 
-  Future<void> startRecordingStream(
-    Future<void> Function(Uint8List) onAudioChunk,
-  ) async {
+  Stream<Uint8List> startRecordingStream() async* {
     if (!await _isEncoderSupported(_encoder)) {
       return;
     }
@@ -237,12 +235,10 @@ class InMemoryAudioRecorder {
     final devs = await _recorder.listInputDevices();
     debugPrint(devs.toString());
     final stream = await _recorder.startStream(recordConfig);
-    _recordSubscription = stream.listen((data) {
-      // _audioChunks.add(data);
-      Future.delayed(const Duration(milliseconds: 1));
-      // var resamplerData = Resampler.resampleLinear16(44100, 16000, data);
-      onAudioChunk(data);
-    });
+
+    await for (var data in stream) {
+      yield data;
+    }
   }
 
   Future<void> stopRecording() async {
