@@ -59,6 +59,9 @@ enum ResponseModalities {
   /// Text response modality.
   Text('TEXT'),
 
+  /// Image response modality.
+  Image('IMAGE'),
+
   /// Audio response modality.
   Audio('AUDIO');
 
