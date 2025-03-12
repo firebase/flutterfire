@@ -95,9 +95,9 @@ final class LiveGenerationConfig extends BaseGenerationConfig {
   Map<String, Object?> toJson() => {
         ...super.toJson(),
         if (speechConfig case final speechConfig?)
-          'speech_config': speechConfig.toJson(),
+          'speechConfig': speechConfig.toJson(),
         if (responseModalities case final responseModalities?)
-          'response_modalities':
+          'responseModalities':
               responseModalities.map((modality) => modality.toJson()).toList(),
       };
 }

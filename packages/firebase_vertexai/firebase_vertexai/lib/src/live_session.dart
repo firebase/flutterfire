@@ -59,7 +59,6 @@ class LiveSession {
     var clientMessage = LiveClientRealtimeInput(mediaChunks: mediaChunks);
 
     var clientJson = jsonEncode(clientMessage.toJson());
-    // print('Streaming $clientJson');
     _ws.sink.add(clientJson);
   }
 
