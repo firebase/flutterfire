@@ -603,21 +603,21 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
   }
   if (credentials) {
     [auth signInWithCredential:credentials
-                  completion:^(FIRAuthDataResult *authResult, NSError *error) {
-                    if (error != nil) {
-                      NSDictionary *userInfo = [error userInfo];
-                      NSError *underlyingError = [userInfo objectForKey:NSUnderlyingErrorKey];
+                    completion:^(FIRAuthDataResult *authResult, NSError *error) {
+                      if (error != nil) {
+                        NSDictionary *userInfo = [error userInfo];
+                        NSError *underlyingError = [userInfo objectForKey:NSUnderlyingErrorKey];
 
-                      NSDictionary *firebaseDictionary =
-                          underlyingError.userInfo[@"FIRAuthErrorUserInfoDes"
-                                                   @"erializedResponseKey"];
+                        NSDictionary *firebaseDictionary =
+                            underlyingError.userInfo[@"FIRAuthErrorUserInfoDes"
+                                                     @"erializedResponseKey"];
 
-                      NSString *errorCode = userInfo[@"FIRAuthErrorUserInfoNameKey"];
+                        NSString *errorCode = userInfo[@"FIRAuthErrorUserInfoNameKey"];
 
-                      if (firebaseDictionary == nil && errorCode != nil) {
-                        if ([errorCode isEqual:@"ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL"]) {
-                          completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
-                          return;
+                        if (firebaseDictionary == nil && errorCode != nil) {
+                          if ([errorCode isEqual:@"ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL"]) {
+                            completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
+                            return;
                         }
 
                         // Removing since it's not parsed and causing issue when sending back the
