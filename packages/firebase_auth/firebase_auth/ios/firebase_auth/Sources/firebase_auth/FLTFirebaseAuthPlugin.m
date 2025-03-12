@@ -602,8 +602,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
     return;
   }
   if (credentials) {
-    [auth
-        signInWithCredential:credentials
+    [auth signInWithCredential:credentials
                   completion:^(FIRAuthDataResult *authResult, NSError *error) {
                     if (error != nil) {
                       NSDictionary *userInfo = [error userInfo];
