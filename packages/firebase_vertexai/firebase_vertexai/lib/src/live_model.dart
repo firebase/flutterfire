@@ -16,7 +16,7 @@ import 'dart:convert';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/io.dart';
 
 import 'base_model.dart';
 import 'live_api.dart';
@@ -103,7 +103,8 @@ final class LiveGenerativeModel extends BaseModel {
     };
 
     final request = jsonEncode(requestJson);
-    var ws = WebSocketChannel.connect(Uri.parse(uri));
+    final headers = await BaseModel.firebaseTokens(_appCheck, _auth)();
+    var ws = IOWebSocketChannel.connect(Uri.parse(uri), headers: headers);
     await ws.ready;
 
     ws.sink.add(request);
