@@ -24,22 +24,22 @@ const _kProviderId = 'microsoft.com';
 ///   .then(...);
 /// ```
 ///
-/// If authenticating with Microsoft via a 3rd party, use the returned
-/// `accessToken` to sign-in or link the user with the created credential, for
-/// example:
-///
+/// For native apps, you may also sign-in with [signInWithProvider]. Ensure you have
+/// an app configured in the Microsoft Azure portal.
+/// See Firebase documentation for more information: https://firebase.google.com/docs/auth/flutter/federated-auth?#microsoft
 /// ```dart
-/// String accessToken = '...'; // From 3rd party provider
-/// var microsoftAuthCredential = MicrosoftAuthProvider.credential(accessToken);
-///
-/// FirebaseAuth.instance.signInWithCredential(microsoftAuthCredential)
-///   .then(...);
+/// MicrosoftAuthProvider microsoftProvider = MicrosoftAuthProvider();
+/// microsoftProvider.setCustomParameters({'tenant': 'TENANT ID FROM AZURE PORTAL'},);
+/// await FirebaseAuth.instance.signInWithProvider(microsoftProvider);
 /// ```
 class MicrosoftAuthProvider extends AuthProvider {
   /// Creates a new instance.
   MicrosoftAuthProvider() : super(_kProviderId);
 
   /// Create a new [MicrosoftAuthCredential] from a provided [accessToken];
+  @Deprecated(
+    '`credential()` has been deprecated. Sign-in cannot be directly achieved with OAuth access token based credentials for Microsoft. Please use `signInWithProvider(MicrosoftAuthProvider)` instead.',
+  )
   static OAuthCredential credential(String accessToken) {
     return MicrosoftAuthCredential._credential(
       accessToken,
@@ -85,8 +85,8 @@ class MicrosoftAuthProvider extends AuthProvider {
   }
 }
 
-/// The auth credential returned from calling
-/// [MicrosoftAuthProvider.credential].
+// ignore: deprecated_member_use_from_same_package
+/// [MicrosoftAuthProvider.credential] returns a [MicrosoftAuthCredential] instance.
 class MicrosoftAuthCredential extends OAuthCredential {
   MicrosoftAuthCredential._({
     required String accessToken,
@@ -94,7 +94,6 @@ class MicrosoftAuthCredential extends OAuthCredential {
             providerId: _kProviderId,
             signInMethod: _kProviderId,
             accessToken: accessToken);
-
   factory MicrosoftAuthCredential._credential(String accessToken) {
     return MicrosoftAuthCredential._(accessToken: accessToken);
   }

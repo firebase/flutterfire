@@ -19,41 +19,19 @@ import 'dart:async';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-
 import 'package:http/http.dart' as http;
 
 import 'api.dart';
+import 'base_model.dart';
 import 'client.dart';
 import 'content.dart';
 import 'function_calling.dart';
-import 'vertex_version.dart';
-
-const _baseUrl = 'firebasevertexai.googleapis.com';
-const _apiVersion = 'v1beta';
-
-/// [Task] enum class for [GenerativeModel] to make request.
-enum Task {
-  /// Request type to generate content.
-  generateContent,
-
-  /// Request type to stream content.
-  streamGenerateContent,
-
-  /// Request type to count token.
-  countTokens,
-
-  /// Request type to embed content.
-  embedContent,
-
-  /// Request type to batch embed content.
-  batchEmbedContents;
-}
 
 /// A multimodel generative model (like Gemini).
 ///
 /// Allows generating content, creating embeddings, and counting the number of
 /// tokens in a piece of content.
-final class GenerativeModel {
+final class GenerativeModel extends BaseModel {
   /// Create a [GenerativeModel] backed by the generative model named [model].
   ///
   /// The [model] argument can be a model name (such as `'gemini-pro'`) or a
@@ -78,17 +56,19 @@ final class GenerativeModel {
     ToolConfig? toolConfig,
     Content? systemInstruction,
     http.Client? httpClient,
-  })  : _model = _normalizeModelName(model),
-        _baseUri = _vertexUri(app, location),
-        _safetySettings = safetySettings ?? [],
+  })  : _safetySettings = safetySettings ?? [],
         _generationConfig = generationConfig,
         _tools = tools,
         _toolConfig = toolConfig,
         _systemInstruction = systemInstruction,
-        _client = HttpApiClient(
-            apiKey: app.options.apiKey,
-            httpClient: httpClient,
-            requestHeaders: _firebaseTokens(appCheck, auth));
+        super(
+            model: model,
+            app: app,
+            location: location,
+            client: HttpApiClient(
+                apiKey: app.options.apiKey,
+                httpClient: httpClient,
+                requestHeaders: BaseModel.firebaseTokens(appCheck, auth)));
 
   GenerativeModel._constructTestModel({
     required String model,
@@ -102,78 +82,29 @@ final class GenerativeModel {
     ToolConfig? toolConfig,
     Content? systemInstruction,
     ApiClient? apiClient,
-  })  : _model = _normalizeModelName(model),
-        _baseUri = _vertexUri(app, location),
-        _safetySettings = safetySettings ?? [],
+  })  : _safetySettings = safetySettings ?? [],
         _generationConfig = generationConfig,
         _tools = tools,
         _toolConfig = toolConfig,
         _systemInstruction = systemInstruction,
-        _client = apiClient ??
-            HttpApiClient(
-                apiKey: app.options.apiKey,
-                requestHeaders: _firebaseTokens(appCheck, auth));
+        super(
+            model: model,
+            app: app,
+            location: location,
+            client: apiClient ??
+                HttpApiClient(
+                    apiKey: app.options.apiKey,
+                    requestHeaders: BaseModel.firebaseTokens(appCheck, auth)));
 
-  final ({String prefix, String name}) _model;
   final List<SafetySetting> _safetySettings;
   final GenerationConfig? _generationConfig;
   final List<Tool>? _tools;
-  final ApiClient _client;
-  final Uri _baseUri;
+
+  //final Uri _baseUri;
   final ToolConfig? _toolConfig;
   final Content? _systemInstruction;
 
   //static const _modelsPrefix = 'models/';
-
-  /// Returns the model code for a user friendly model name.
-  ///
-  /// If the model name is already a model code (contains a `/`), use the parts
-  /// directly. Otherwise, return a `models/` model code.
-  static ({String prefix, String name}) _normalizeModelName(String modelName) {
-    if (!modelName.contains('/')) return (prefix: 'models', name: modelName);
-    final parts = modelName.split('/');
-    return (prefix: parts.first, name: parts.skip(1).join('/'));
-  }
-
-  static Uri _vertexUri(FirebaseApp app, String location) {
-    var projectId = app.options.projectId;
-    return Uri.https(
-      _baseUrl,
-      '/$_apiVersion/projects/$projectId/locations/$location/publishers/google',
-    );
-  }
-
-  static FutureOr<Map<String, String>> Function() _firebaseTokens(
-      FirebaseAppCheck? appCheck, FirebaseAuth? auth) {
-    return () async {
-      Map<String, String> headers = {};
-      // Override the client name in Google AI SDK
-      headers['x-goog-api-client'] =
-          'gl-dart/$packageVersion fire/$packageVersion';
-      if (appCheck != null) {
-        final appCheckToken = await appCheck.getToken();
-        if (appCheckToken != null) {
-          headers['X-Firebase-AppCheck'] = appCheckToken;
-        }
-      }
-      if (auth != null) {
-        final idToken = await auth.currentUser?.getIdToken();
-        if (idToken != null) {
-          headers['Authorization'] = 'Firebase $idToken';
-        }
-      }
-      return headers;
-    };
-  }
-
-  Uri _taskUri(Task task) => _baseUri.replace(
-      pathSegments: _baseUri.pathSegments
-          .followedBy([_model.prefix, '${_model.name}:${task.name}']));
-
-  /// Make a unary request for [task] with JSON encodable [params].
-  Future<T> makeRequest<T>(Task task, Map<String, Object?> params,
-          T Function(Map<String, Object?>) parse) =>
-      _client.makeRequest(_taskUri(task), params).then(parse);
 
   Map<String, Object?> _generateContentRequest(
     Iterable<Content> contents, {
@@ -187,7 +118,7 @@ final class GenerativeModel {
     tools ??= _tools;
     toolConfig ??= _toolConfig;
     return {
-      'model': '${_model.prefix}/${_model.name}',
+      'model': '${model.prefix}/${model.name}',
       'contents': contents.map((c) => c.toJson()).toList(),
       if (safetySettings.isNotEmpty)
         'safetySettings': safetySettings.map((s) => s.toJson()).toList(),
@@ -244,8 +175,8 @@ final class GenerativeModel {
       GenerationConfig? generationConfig,
       List<Tool>? tools,
       ToolConfig? toolConfig}) {
-    final response = _client.streamRequest(
-        _taskUri(Task.streamGenerateContent),
+    final response = client.streamRequest(
+        taskUri(Task.streamGenerateContent),
         _generateContentRequest(
           prompt,
           safetySettings: safetySettings,

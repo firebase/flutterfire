@@ -1,3 +1,11 @@
+## 2.21.1
+
+ - **FIX**(core,web): resolve type error in release mode ([#17123](https://github.com/firebase/flutterfire/issues/17123)). ([e9192931](https://github.com/firebase/flutterfire/commit/e91929313d78101dae22ed82ea20117f609d1878))
+
+## 2.21.0
+
+ - **FEAT**: bump Firebase JS SDK to `11.3.1` ([#17091](https://github.com/firebase/flutterfire/issues/17091)). ([a7176a89](https://github.com/firebase/flutterfire/commit/a7176a897b0eb0ea7f5207ed7e43ef9b12cec79f))
+
 ## 2.20.0
 
  - **FEAT**: bump Firebase JS SDK to `11.2.0` ([#17054](https://github.com/firebase/flutterfire/issues/17054)). ([68ed56bd](https://github.com/firebase/flutterfire/commit/68ed56bde89848133d2cbf49974f60b7e52f9be7))
