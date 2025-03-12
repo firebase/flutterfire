@@ -617,20 +617,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
 
                       if (firebaseDictionary == nil && errorCode != nil) {
                         if ([errorCode isEqual:@"ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL"]) {
-                          FIRAuthCredential *authCredential =
-                              userInfo[@"FIRAuthErrorUserInfoUpdatedCredentialKey"];
-
-                          PigeonAuthCredential *pigeonAuthCredential =
-                              [PigeonParser getPigeonAuthCredential:authCredential token:nil];
-
-                          NSDictionary *errorDetails = @{
-                            @"email" : error.userInfo[@"FIRAuthErrorUserInfoEmailKey"],
-                            @"authCredential" : pigeonAuthCredential
-                          };
-                          completion(nil,
-                                     [FlutterError errorWithCode:errorCode
-                                                         message:userInfo[@"NSLocalizedDescription"]
-                                                         details:errorDetails]);
+                          completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
                           return;
                         }
 
