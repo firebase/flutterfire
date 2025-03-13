@@ -40,8 +40,12 @@ class Timestamp implements Comparable<Timestamp> {
 
   /// Create a [Timestamp] fromMicrosecondsSinceEpoch
   factory Timestamp.fromMicrosecondsSinceEpoch(int microseconds) {
-    final int seconds = microseconds ~/ _kMillion;
-    final int nanoseconds = (microseconds - seconds * _kMillion) * _kThousand;
+    int seconds = microseconds ~/ _kMillion;
+    int nanoseconds = (microseconds - seconds * _kMillion) * _kThousand;
+    if (nanoseconds < 0) {
+      seconds -= 1;
+      nanoseconds += _kBillion;
+    }
     return Timestamp(seconds, nanoseconds);
   }
 
