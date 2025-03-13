@@ -11,6 +11,8 @@ part 'add_timestamp.dart';
 
 part 'add_date_and_timestamp.dart';
 
+part 'delete_all_timestamps.dart';
+
 part 'seed_movies.dart';
 
 part 'create_movie.dart';
@@ -30,6 +32,8 @@ part 'list_persons.dart';
 part 'list_thing.dart';
 
 part 'list_timestamps.dart';
+
+part 'list_movies_by_genre.dart';
 
 class MoviesConnector {
   AddPersonVariablesBuilder addPerson() {
@@ -61,6 +65,12 @@ class MoviesConnector {
       dataConnect,
       date: date,
       timestamp: timestamp,
+    );
+  }
+
+  DeleteAllTimestampsVariablesBuilder deleteAllTimestamps() {
+    return DeleteAllTimestampsVariablesBuilder(
+      dataConnect,
     );
   }
 
@@ -133,6 +143,12 @@ class MoviesConnector {
 
   ListTimestampsVariablesBuilder listTimestamps() {
     return ListTimestampsVariablesBuilder(
+      dataConnect,
+    );
+  }
+
+  ListMoviesByGenreVariablesBuilder listMoviesByGenre() {
+    return ListMoviesByGenreVariablesBuilder(
       dataConnect,
     );
   }
