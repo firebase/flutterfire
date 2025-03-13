@@ -42,6 +42,9 @@ class Timestamp implements Comparable<Timestamp> {
   factory Timestamp.fromMicrosecondsSinceEpoch(int microseconds) {
     int seconds = microseconds ~/ _kMillion;
     int nanoseconds = (microseconds - seconds * _kMillion) * _kThousand;
+
+    // Matches implementation in Android SDK:
+    // https://github.com/firebase/firebase-android-sdk/blob/master/firebase-common/src/main/java/com/google/firebase/Timestamp.kt#L114-L121
     if (nanoseconds < 0) {
       seconds -= 1;
       nanoseconds += _kBillion;
