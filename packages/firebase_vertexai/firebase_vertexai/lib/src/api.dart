@@ -266,6 +266,7 @@ enum BlockReason {
   other('OTHER');
 
   const BlockReason(this._jsonString);
+
   // ignore: unused_element
   static BlockReason _parseValue(String jsonObject) {
     return switch (jsonObject) {
@@ -308,6 +309,7 @@ enum HarmCategory {
   dangerousContent('HARM_CATEGORY_DANGEROUS_CONTENT');
 
   const HarmCategory(this._jsonString);
+
   // ignore: unused_element
   static HarmCategory _parseValue(Object jsonObject) {
     return switch (jsonObject) {
@@ -554,7 +556,7 @@ enum ContentModality {
 /// content is blocked.
 final class SafetySetting {
   // ignore: public_member_api_docs
-  SafetySetting(this.category, this.threshold);
+  SafetySetting(this.category, this.threshold, this.method);
 
   /// The category for this setting.
   final HarmCategory category;
@@ -562,9 +564,16 @@ final class SafetySetting {
   /// Controls the probability threshold at which harm is blocked.
   final HarmBlockThreshold threshold;
 
+  /// Specify if the threshold is used for probability or severity score, if
+  /// not specified it will default to [HarmBlockMethod.probability].
+  final HarmBlockMethod? method;
+
   /// Convert to json format.
-  Object toJson() =>
-      {'category': category.toJson(), 'threshold': threshold.toJson()};
+  Object toJson() => {
+        'category': category.toJson(),
+        'threshold': threshold.toJson(),
+        if (method case final method?) 'method': method.toJson(),
+      };
 }
 
 /// Probability of harm which causes content to be blocked.
@@ -595,6 +604,40 @@ enum HarmBlockThreshold {
       'BLOCK_NONE' => HarmBlockThreshold.none,
       _ => throw FormatException(
           'Unhandled HarmBlockThreshold format', jsonObject),
+    };
+  }
+
+  final String _jsonString;
+
+  @override
+  String toString() => name;
+
+  /// Convert to json format.
+  Object toJson() => _jsonString;
+}
+
+/// Specifies how the block method computes the score that will be compared
+/// against the [HarmBlockThreshold] in [SafetySetting].
+enum HarmBlockMethod {
+  /// The harm block method uses both probability and severity scores.
+  severity('SEVERITY'),
+
+  /// The harm block method uses the probability score.
+  probability('PROBABILITY'),
+
+  /// The harm block method is unspecified.
+  unspecified('HARM_BLOCK_METHOD_UNSPECIFIED');
+
+  const HarmBlockMethod(this._jsonString);
+
+  // ignore: unused_element
+  static HarmBlockMethod _parseValue(Object jsonObject) {
+    return switch (jsonObject) {
+      'SEVERITY' => HarmBlockMethod.severity,
+      'PROBABILITY' => HarmBlockMethod.probability,
+      'HARM_BLOCK_METHOD_UNSPECIFIED' => HarmBlockMethod.unspecified,
+      _ =>
+        throw FormatException('Unhandled HarmBlockMethod format', jsonObject),
     };
   }
 
