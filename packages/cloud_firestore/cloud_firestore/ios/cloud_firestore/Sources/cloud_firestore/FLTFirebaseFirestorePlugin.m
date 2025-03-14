@@ -418,9 +418,12 @@ FlutterStandardMethodCodec *_codec;
                 }
               }];
   } @catch (NSException *exception) {
-    NSLog(@"🔥 Exception caught: %@ - %@", exception.name, exception.reason);
-  } @finally {
-    NSLog(@"?????????");
+    NSString *name = exception.name;
+    NSString *reason = exception.reason;
+    completion(
+               [FlutterError errorWithCode:name
+                                   message:reason
+                                    details:nil]);
   }
 }
 
