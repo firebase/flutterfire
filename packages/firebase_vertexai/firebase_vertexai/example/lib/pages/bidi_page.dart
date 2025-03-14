@@ -185,15 +185,6 @@ class _BidiPageState extends State<BidiPage> {
                     )
                   else
                     const CircularProgressIndicator(),
-                  IconButton(
-                    onPressed: () async {
-                      await _checkWsStatus();
-                    },
-                    icon: Icon(
-                      Icons.check,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  )
                 ],
               ),
             ),
@@ -273,10 +264,6 @@ class _BidiPageState extends State<BidiPage> {
     await _audioRecorder.stopRecording();
   }
 
-  Future<void> _checkWsStatus() async {
-    _session!.printWsStatus();
-  }
-
   Future<void> _sendTextPrompt({String? textPrompt}) async {
     setState(() {
       _loading = true;
@@ -288,7 +275,6 @@ class _BidiPageState extends State<BidiPage> {
 
     await _session!.send(input: prompt, turnComplete: true);
     print('Prompt sent to server');
-    _session.printWsStatus();
 
     setState(() {
       _loading = false;
@@ -315,6 +301,12 @@ class _BidiPageState extends State<BidiPage> {
         response.turnComplete != null &&
         response.turnComplete!) {
       await _handleTurnComplete();
+    }
+
+    if (response is LiveServerContent &&
+        response.interrupted != null &&
+        response.interrupted!) {
+      print('Interrupted: $response');
     }
 
     if (response is LiveServerToolCall && response.functionCalls != null) {

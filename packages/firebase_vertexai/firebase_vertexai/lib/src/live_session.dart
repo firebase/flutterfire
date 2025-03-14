@@ -21,10 +21,6 @@ import 'content.dart';
 import 'error.dart';
 import 'live_api.dart';
 
-const _FUNCTION_RESPONSE_REQUIRES_ID =
-    'FunctionResponse request must have an `id` field from the'
-    ' response of a ToolCall.FunctionalCalls in Google AI.';
-
 /// Manages asynchronous communication with Gemini model over a WebSocket
 /// connection.
 class LiveSession {
@@ -136,15 +132,6 @@ class LiveSession {
           'WebSocket status: Closed, closeCode: ${_ws.closeCode}, closeReason: ${_ws.closeReason}';
 
       throw LiveWebSocketClosedException(message);
-    }
-  }
-
-  void printWsStatus() {
-    if (_ws.closeCode != null) {
-      print('WebSocket status: Closed, close code ${_ws.closeCode}');
-      print('Closed reason ${_ws.closeReason}');
-    } else {
-      print('WebSocket status: Open');
     }
   }
 }
