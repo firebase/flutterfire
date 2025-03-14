@@ -99,5 +99,15 @@ void main() {
         }
       }
     });
+
+    test(
+        'pre-1970 Timestamps should match the original DateTime after conversion',
+        () {
+      final date = DateTime(1969, 06, 22, 0, 0, 0, 123);
+      final timestamp = Timestamp.fromDate(date);
+      final timestampAsDateTime = timestamp.toDate();
+
+      expect(date, equals(timestampAsDateTime));
+    });
   });
 }
