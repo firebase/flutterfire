@@ -33,27 +33,27 @@ class DataConnectOperationError extends DataConnectError {
   DataConnectOperationError(
       DataConnectErrorCode code, String message, this.response)
       : super(code, message);
-  final DataConnectOperationResponse response;
+  final DataConnectOperationFailureResponse response;
 }
 
 /// Nested class containing errors and decoded data.
-class DataConnectOperationResponse<T> {
-  DataConnectOperationResponse(this.errors, this.data, this.decodedData);
+class DataConnectOperationFailureResponse<T> {
+  DataConnectOperationFailureResponse(this.errors, this.data, this.decodedData);
   final Map<String, dynamic>? data;
-  final List<ResponseError> errors;
+  final List<DataConnectOperationFailureREsponseErrorInfo> errors;
   final T? decodedData;
 }
 
 /// Error information per error.
-class ResponseError {
-  ResponseError(this.path, this.message);
+class DataConnectOperationFailureREsponseErrorInfo {
+  DataConnectOperationFailureREsponseErrorInfo(this.path, this.message);
   String message;
-  List<PathSegment> path;
+  List<DataConnectOperationFailureErrorInfoPathSegment> path;
 }
 
 /// Path where error occurred.
-class PathSegment {
-  PathSegment({this.field, this.listIndex});
+class DataConnectOperationFailureErrorInfoPathSegment {
+  DataConnectOperationFailureErrorInfoPathSegment({this.field, this.listIndex});
   String? field;
   int? listIndex;
 }

@@ -175,12 +175,15 @@ Data handleResponse<Data>(CommonResponse<Data> commonResponse) {
     Map<String, dynamic>? data =
         jsonDecode(jsonEncoded) as Map<String, dynamic>?;
     Data? decodedData;
-    List<ResponseError> errors = commonResponse.errors
-        .map((e) => ResponseError(
+    List<DataConnectOperationFailureREsponseErrorInfo> errors = commonResponse
+        .errors
+        .map((e) => DataConnectOperationFailureREsponseErrorInfo(
             e.path.values
                 .map((val) => val.hasStringValue()
-                    ? PathSegment(field: val.stringValue)
-                    : PathSegment(listIndex: val.numberValue.toInt()))
+                    ? DataConnectOperationFailureErrorInfoPathSegment(
+                        field: val.stringValue)
+                    : DataConnectOperationFailureErrorInfoPathSegment(
+                        listIndex: val.numberValue.toInt()))
                 .toList(),
             e.message))
         .toList();
@@ -191,7 +194,8 @@ Data handleResponse<Data>(CommonResponse<Data> commonResponse) {
         // nothing required
       }
     }
-    final response = DataConnectOperationResponse(errors, data, decodedData);
+    final response =
+        DataConnectOperationFailureResponse(errors, data, decodedData);
     throw DataConnectOperationError(DataConnectErrorCode.other,
         'failed to invoke operation: ${response.errors}', response);
   }
