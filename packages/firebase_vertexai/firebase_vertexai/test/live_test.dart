@@ -11,18 +11,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import 'dart:async';
-import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_vertexai/src/content.dart';
 import 'package:firebase_vertexai/src/error.dart';
 import 'package:firebase_vertexai/src/live_api.dart';
-import 'package:firebase_vertexai/src/live_model.dart';
-import 'package:firebase_vertexai/src/live_session.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
