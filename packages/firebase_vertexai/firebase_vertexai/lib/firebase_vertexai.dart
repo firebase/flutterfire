@@ -31,6 +31,8 @@ export 'src/api.dart'
         // TODO(cynthiajiang) remove in next breaking change.
         TaskType,
         UsageMetadata;
+export 'src/base_model.dart'
+    show GenerativeModel, ImagenModel, LiveGenerativeModel;
 export 'src/chat.dart' show ChatSession, StartChatExtension;
 export 'src/content.dart'
     show
@@ -56,7 +58,6 @@ export 'src/function_calling.dart'
         FunctionDeclaration,
         Tool,
         ToolConfig;
-export 'src/generative_model.dart' show GenerativeModel;
 export 'src/imagen_api.dart'
     show
         ImagenSafetySettings,
@@ -66,7 +67,6 @@ export 'src/imagen_api.dart'
         ImagenGenerationConfig,
         ImagenAspectRatio;
 export 'src/imagen_content.dart' show ImagenInlineImage;
-export 'src/imagen_model.dart' show ImagenModel;
 export 'src/live_api.dart'
     show
         LiveGenerationConfig,
@@ -77,6 +77,5 @@ export 'src/live_api.dart'
         LiveServerContent,
         LiveServerToolCall,
         LiveServerToolCallCancellation;
-export 'src/live_model.dart' show LiveGenerativeModel;
 export 'src/live_session.dart' show LiveSession;
 export 'src/schema.dart' show Schema, SchemaType;

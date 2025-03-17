@@ -11,22 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-import 'dart:convert';
-import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:web_socket_channel/io.dart';
-
-import 'base_model.dart';
-import 'live_api.dart';
-import 'function_calling.dart';
-import 'content.dart';
-import 'live_session.dart';
-
-const _baseDailyUrl = 'daily-firebaseml.sandbox.googleapis.com';
-const _apiUrl =
-    'ws/google.firebase.machinelearning.v2beta.LlmBidiService/BidiGenerateContent?key=';
+part of vertexai_model;
 
 const _baseAutopushUrl = 'autopush-firebasevertexai.sandbox.googleapis.com';
 const _apiAutopushUrl =
@@ -86,12 +71,12 @@ final class LiveGenerativeModel extends BaseModel {
     } else {
       // uri = 'wss://$_baseDailyUrl/$_apiUrl${_app.options.apiKey}';
       uri =
-          'wss://$_baseAutopushUrl/$_apiAutopushUrl/$_location?key=${_app.options.apiKey}';
+          'wss://${BaseModel._baseUrl}/$_apiAutopushUrl/$_location?key=${_app.options.apiKey}';
       modelString =
           'projects/${_app.options.projectId}/locations/$_location/publishers/google/models/${model.name}';
     }
 
-    final requestJson = {
+    final setupJson = {
       'setup': {
         'model': modelString,
         if (_liveGenerationConfig != null)
@@ -102,13 +87,13 @@ final class LiveGenerativeModel extends BaseModel {
       }
     };
 
-    final request = jsonEncode(requestJson);
+    final request = jsonEncode(setupJson);
     final headers = await BaseModel.firebaseTokens(_appCheck, _auth)();
     var ws = IOWebSocketChannel.connect(Uri.parse(uri), headers: headers);
     await ws.ready;
 
     ws.sink.add(request);
-    return LiveSession(ws: ws);
+    return LiveSession(ws);
   }
 }
 

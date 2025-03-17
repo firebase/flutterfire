@@ -11,14 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-
-import 'base_model.dart';
-import 'client.dart';
-import 'imagen_api.dart';
-import 'imagen_content.dart';
+part of vertexai_model;
 
 /// Represents a remote Imagen model with the ability to generate images using
 /// text prompts.

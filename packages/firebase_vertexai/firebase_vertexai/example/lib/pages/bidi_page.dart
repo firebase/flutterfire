@@ -57,15 +57,17 @@ class _BidiPageState extends State<BidiPage> {
 
     final config = LiveGenerationConfig(
       speechConfig: SpeechConfig(voice: Voices.Charon),
-      responseModalities: [ResponseModalities.Audio],
+      responseModalities: [
+        ResponseModalities.Audio,
+      ],
     );
 
     _liveModel = FirebaseVertexAI.instance.liveGenerativeModel(
       model: 'gemini-2.0-flash-exp',
       liveGenerationConfig: config,
-      tools: [
-        Tool.functionDeclarations([lightControlTool]),
-      ],
+      // tools: [
+      //   Tool.functionDeclarations([lightControlTool]),
+      // ],
     );
   }
 
@@ -159,15 +161,13 @@ class _BidiPageState extends State<BidiPage> {
                         ? () async {
                             if (_recording) {
                               await _stopRecording();
-                              _recording = false;
                             } else {
                               await _startRecording();
-                              _recording = true;
                             }
                           }
                         : null,
                     icon: Icon(
-                      Icons.mic,
+                      _recording ? Icons.stop : Icons.mic,
                       color: _loading
                           ? Theme.of(context).colorScheme.secondary
                           : Theme.of(context).colorScheme.primary,
@@ -210,8 +210,8 @@ class _BidiPageState extends State<BidiPage> {
   );
 
   Future<Map<String, Object?>> _setLightValues(
-      {int? brightness, String? colorTemprature}) async {
-    print('Set brightness: $brightness, colorTemprature: $colorTemprature');
+      {int? brightness, String? colorTemperature}) async {
+    print('Set brightness: $brightness, colorTemprature: $colorTemperature');
     final apiResponse = {
       'colorTemprature': 'warm',
       'brightness': brightness,
@@ -237,7 +237,7 @@ class _BidiPageState extends State<BidiPage> {
     if (!_session_opening) {
       _session = await _liveModel.connect();
       _session_opening = true;
-      unawaited(_session.receiveWithCallback(_response_callback));
+      // unawaited(_session.receiveWithCallback(_response_callback));
     } else {
       await _session.close();
       await _audioManager.stopAudioPlayer();
@@ -251,6 +251,10 @@ class _BidiPageState extends State<BidiPage> {
   }
 
   Future<void> _startRecording() async {
+    setState(() {
+      _recording = true;
+    });
+    print('Start Recording');
     await _audioRecorder.checkPermission();
     final audioRecordStream = _audioRecorder.startRecordingStream();
     // Map the Uint8List stream to InlineDataPart stream
@@ -261,7 +265,13 @@ class _BidiPageState extends State<BidiPage> {
   }
 
   Future<void> _stopRecording() async {
+    print('Stop Recording');
     await _audioRecorder.stopRecording();
+
+    unawaited(_session.receiveWithCallback(_response_callback));
+    setState(() {
+      _recording = false;
+    });
   }
 
   Future<void> _sendTextPrompt({String? textPrompt}) async {
@@ -275,7 +285,7 @@ class _BidiPageState extends State<BidiPage> {
 
     await _session!.send(input: prompt, turnComplete: true);
     print('Prompt sent to server');
-
+    unawaited(_session.receiveWithCallback(_response_callback));
     setState(() {
       _loading = false;
     });
@@ -381,7 +391,7 @@ class _BidiPageState extends State<BidiPage> {
         var color = functionCall.args['colorTemperature']! as String;
         var brightness = functionCall.args['brightness']! as int;
         final functionResult = await _setLightValues(
-            brightness: brightness, colorTemprature: color);
+            brightness: brightness, colorTemperature: color);
         await _session!.send(
           input: Content.functionResponse(functionCall.name, functionResult),
         );

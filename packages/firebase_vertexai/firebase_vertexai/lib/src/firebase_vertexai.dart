@@ -19,9 +19,10 @@ import 'package:firebase_core_platform_interface/firebase_core_platform_interfac
     show FirebasePluginPlatform;
 
 import '../firebase_vertexai.dart';
-import 'generative_model.dart';
-import 'imagen_model.dart';
-import 'live_model.dart';
+import 'base_model.dart';
+// import 'generative_model.dart';
+// import 'imagen_model.dart';
+// import 'live_model.dart';
 
 const _defaultLocation = 'us-central1';
 

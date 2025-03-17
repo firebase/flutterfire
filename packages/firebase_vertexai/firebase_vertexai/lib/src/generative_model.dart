@@ -13,19 +13,7 @@
 // limitations under the License.
 
 // ignore_for_file: use_late_for_private_fields_and_variables
-
-import 'dart:async';
-
-import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:http/http.dart' as http;
-
-import 'api.dart';
-import 'base_model.dart';
-import 'client.dart';
-import 'content.dart';
-import 'function_calling.dart';
+part of vertexai_model;
 
 /// A multimodel generative model (like Gemini).
 ///

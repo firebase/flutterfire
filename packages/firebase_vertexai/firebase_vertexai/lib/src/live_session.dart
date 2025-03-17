@@ -25,8 +25,28 @@ import 'live_api.dart';
 /// connection.
 class LiveSession {
   // ignore: public_member_api_docs
-  LiveSession({required WebSocketChannel ws}) : _ws = ws;
+  LiveSession(this._ws) {
+    _wsSubscription = _ws.stream.listen(
+      (message) {
+        try {
+          var jsonString = utf8.decode(message);
+          var response = json.decode(jsonString);
+
+          _messageController.add(parseServerMessage(response));
+        } catch (e) {
+          print('Error processing message: $e');
+          _messageController.addError(e);
+        }
+      },
+      onError: (error) {
+        _messageController.addError(error);
+      },
+      onDone: _messageController.close,
+    );
+  }
   final WebSocketChannel _ws;
+  final _messageController = StreamController<LiveServerMessage>.broadcast();
+  late StreamSubscription _wsSubscription;
 
   /// Sends content to the server.
   ///
@@ -53,7 +73,6 @@ class LiveSession {
   }) async {
     _checkWsStatus();
     var clientMessage = LiveClientRealtimeInput(mediaChunks: mediaChunks);
-
     var clientJson = jsonEncode(clientMessage.toJson());
     _ws.sink.add(clientJson);
   }
@@ -69,7 +88,7 @@ class LiveSession {
     _checkWsStatus();
 
     try {
-      await for (var chunk in mediaChunkStream) {
+      await for (final chunk in mediaChunkStream) {
         await _sendMediaChunk(chunk);
       }
     } catch (e) {
@@ -93,14 +112,15 @@ class LiveSession {
   /// messages received from the server.
   Stream<LiveServerMessage> receive() async* {
     _checkWsStatus();
-    await for (var message in _ws.stream) {
-      var jsonString = utf8.decode(message);
-      var response = json.decode(jsonString);
-      //print(response);
+    print('Start Receiving message');
 
-      var result = parseServerMessage(response);
-
+    await for (final result in _messageController.stream) {
       yield result;
+      if (result is LiveServerContent &&
+          result.turnComplete != null &&
+          result.turnComplete!) {
+        break; // Exit the loop when the turn is complete
+      }
     }
   }
 
@@ -111,18 +131,50 @@ class LiveSession {
   Future<void> receiveWithCallback(
       Future<void> Function(LiveServerMessage message) callback) async {
     _checkWsStatus();
-    await for (var message in _ws.stream) {
-      var jsonString = utf8.decode(message);
-      var response = json.decode(jsonString);
+    print('Start Receiving message with callback');
 
-      var result = parseServerMessage(response);
-
+    await for (final result in _messageController.stream) {
       await callback(result);
+      if (result is LiveServerContent &&
+          result.turnComplete != null &&
+          result.turnComplete!) {
+        break; // Exit the loop when the turn is complete
+      }
     }
+    // var subscription = _messageController.stream.listen(null);
+    // var completer = Completer();
+
+    // subscription.onData((result) async {
+    //   print('Received message for callback, result: $result');
+    //   await callback(result);
+    //   if (result is LiveServerContent &&
+    //       result.turnComplete != null &&
+    //       result.turnComplete!) {
+    //     completer.complete();
+    //     await subscription.cancel();
+    //   }
+    // });
+
+    // subscription.onError((error) {
+    //   if (!completer.isCompleted) {
+    //     completer.completeError(error);
+    //   }
+    // });
+
+    // subscription.onDone(() {
+    //   print('Received message for callback onDone');
+    //   if (!completer.isCompleted) {
+    //     completer.complete(); // Or completeError if you expect a turnComplete
+    //   }
+    // });
+
+    // await completer.future;
   }
 
   /// Closes the WebSocket connection.
   Future<void> close() async {
+    await _wsSubscription.cancel();
+    await _messageController.close();
     await _ws.sink.close();
   }
 

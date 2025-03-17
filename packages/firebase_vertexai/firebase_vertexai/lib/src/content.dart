@@ -73,12 +73,12 @@ final class Content {
 /// Parse the [Content] from json object.
 Content parseContent(Object jsonObject) {
   return switch (jsonObject) {
+    {'role': final String role, 'parts': final List<Object?> parts} =>
+      Content(role, parts.map(parsePart).toList()),
+    {'role': final String role} =>
+      Content(role, <Part>[]), // Handle case with only role
     {'parts': final List<Object?> parts} => Content(
-        switch (jsonObject) {
-          {'role': final String role} => role,
-          _ => null,
-        },
-        parts.map(parsePart).toList()),
+        null, parts.map(parsePart).toList()), // Handle case with only parts
     _ => throw unhandledFormat('Content', jsonObject),
   };
 }
