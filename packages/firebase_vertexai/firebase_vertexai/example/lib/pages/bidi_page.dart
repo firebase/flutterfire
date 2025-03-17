@@ -254,21 +254,30 @@ class _BidiPageState extends State<BidiPage> {
     setState(() {
       _recording = true;
     });
-    print('Start Recording');
-    await _audioRecorder.checkPermission();
-    final audioRecordStream = _audioRecorder.startRecordingStream();
-    // Map the Uint8List stream to InlineDataPart stream
-    final mediaChunkStream = audioRecordStream.map((data) {
-      return InlineDataPart('audio/pcm', data);
-    });
-    await _session.startMediaStream(mediaChunkStream);
+    try {
+      print('Start Recording');
+      await _audioRecorder.checkPermission();
+      final audioRecordStream = _audioRecorder.startRecordingStream();
+      // Map the Uint8List stream to InlineDataPart stream
+      final mediaChunkStream = audioRecordStream.map((data) {
+        return InlineDataPart('audio/pcm', data);
+      });
+      await _session.startMediaStream(mediaChunkStream);
+    } catch (e) {
+      _showError(e.toString());
+    }
   }
 
   Future<void> _stopRecording() async {
     print('Stop Recording');
-    await _audioRecorder.stopRecording();
+    try {
+      await _audioRecorder.stopRecording();
 
-    unawaited(_session.receiveWithCallback(_response_callback));
+      unawaited(_session.receiveWithCallback(_response_callback));
+    } catch (e) {
+      _showError(e.toString());
+    }
+
     setState(() {
       _recording = false;
     });

@@ -23,6 +23,16 @@ const _apiGAIUrl =
 
 const _bidiGoogleAI = false;
 
+/// A live, generative AI model for real-time interaction.
+///
+/// See the [Cloud
+/// documentation](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/multimodal-live)
+/// for more details about the low-latency, two-way interactions that use text,
+/// audio, and video input, with audio and text output.
+///
+/// > Warning: For Vertex AI in Firebase, Live Model
+/// is in Public Preview, which means that the feature is not subject to any SLA
+/// or deprecation policy and could change in backwards-incompatible ways.
 final class LiveGenerativeModel extends BaseModel {
   LiveGenerativeModel._(
       {required String model,
