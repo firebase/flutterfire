@@ -141,34 +141,6 @@ class LiveSession {
         break; // Exit the loop when the turn is complete
       }
     }
-    // var subscription = _messageController.stream.listen(null);
-    // var completer = Completer();
-
-    // subscription.onData((result) async {
-    //   print('Received message for callback, result: $result');
-    //   await callback(result);
-    //   if (result is LiveServerContent &&
-    //       result.turnComplete != null &&
-    //       result.turnComplete!) {
-    //     completer.complete();
-    //     await subscription.cancel();
-    //   }
-    // });
-
-    // subscription.onError((error) {
-    //   if (!completer.isCompleted) {
-    //     completer.completeError(error);
-    //   }
-    // });
-
-    // subscription.onDone(() {
-    //   print('Received message for callback onDone');
-    //   if (!completer.isCompleted) {
-    //     completer.complete(); // Or completeError if you expect a turnComplete
-    //   }
-    // });
-
-    // await completer.future;
   }
 
   /// Closes the WebSocket connection.

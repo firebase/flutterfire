@@ -50,13 +50,14 @@ class _BidiPageState extends State<BidiPage> {
   final _audioRecorder = InMemoryAudioRecorder();
   var _chunkBuilder = BytesBuilder();
   var _audioIndex = 0;
+  StreamController<bool> _stopController = StreamController<bool>();
 
   @override
   void initState() {
     super.initState();
 
     final config = LiveGenerationConfig(
-      speechConfig: SpeechConfig(voice: Voices.Charon),
+      speechConfig: SpeechConfig(voice: Voices.Fenrir),
       responseModalities: [
         ResponseModalities.Audio,
       ],
@@ -90,6 +91,8 @@ class _BidiPageState extends State<BidiPage> {
       _audioManager.disposeAudioPlayer();
 
       _audioRecorder.stopRecording();
+
+      _stopController.close();
 
       _session_opening = false;
       print('close the websocket session.');
@@ -135,7 +138,7 @@ class _BidiPageState extends State<BidiPage> {
                       autofocus: true,
                       focusNode: _textFieldFocus,
                       controller: _textController,
-                      onSubmitted: _sendChatMessage,
+                      onSubmitted: _sendTextPrompt,
                     ),
                   ),
                   const SizedBox.square(
@@ -176,7 +179,7 @@ class _BidiPageState extends State<BidiPage> {
                   if (!_loading)
                     IconButton(
                       onPressed: () async {
-                        await _sendTextPrompt(textPrompt: _textController.text);
+                        await _sendTextPrompt(_textController.text);
                       },
                       icon: Icon(
                         Icons.send,
@@ -219,16 +222,6 @@ class _BidiPageState extends State<BidiPage> {
     return apiResponse;
   }
 
-  Future<void> _sendChatMessage(String message) async {
-    setState(() {
-      _loading = true;
-    });
-
-    setState(() {
-      _loading = false;
-    });
-  }
-
   Future<void> _setupSession() async {
     setState(() {
       _loading = true;
@@ -237,8 +230,18 @@ class _BidiPageState extends State<BidiPage> {
     if (!_session_opening) {
       _session = await _liveModel.connect();
       _session_opening = true;
+      _stopController = StreamController<bool>();
+      unawaited(
+        processMessagesContinuously(
+          stopSignal: _stopController,
+        ),
+      );
+      //)
       // unawaited(_session.receiveWithCallback(_response_callback));
     } else {
+      _stopController.add(true);
+      await _stopController.close();
+
       await _session.close();
       await _audioManager.stopAudioPlayer();
       await _audioManager.disposeAudioPlayer();
@@ -273,7 +276,7 @@ class _BidiPageState extends State<BidiPage> {
     try {
       await _audioRecorder.stopRecording();
 
-      unawaited(_session.receiveWithCallback(_response_callback));
+      // unawaited(_session.receiveWithCallback(_response_callback));
     } catch (e) {
       _showError(e.toString());
     }
@@ -283,21 +286,56 @@ class _BidiPageState extends State<BidiPage> {
     });
   }
 
-  Future<void> _sendTextPrompt({String? textPrompt}) async {
+  Future<void> _sendTextPrompt(String textPrompt) async {
     setState(() {
       _loading = true;
     });
-    late Content prompt;
-    if (textPrompt != null) {
-      prompt = Content.text(textPrompt);
+    try {
+      late Content prompt = Content.text(textPrompt);
+
+      await _session.send(input: prompt, turnComplete: true);
+      print('Prompt sent to server');
+      // unawaited(_session.receiveWithCallback(_response_callback));
+    } catch (e) {
+      _showError(e.toString());
     }
 
-    await _session!.send(input: prompt, turnComplete: true);
-    print('Prompt sent to server');
-    unawaited(_session.receiveWithCallback(_response_callback));
     setState(() {
       _loading = false;
     });
+  }
+
+  Future<void> processMessagesContinuously({
+    required StreamController<bool> stopSignal,
+  }) async {
+    bool shouldContinue = true;
+
+    //listen to the stop signal stream
+    stopSignal.stream.listen((stop) {
+      if (stop) {
+        shouldContinue = false;
+      }
+    });
+
+    while (shouldContinue) {
+      try {
+        await for (final message in _session.receive()) {
+          // Process the received message
+          print('Received message: $message');
+          await _handleLiveServerMessage(message);
+        }
+        print('Turn complete, restarting receive.');
+      } catch (e) {
+        print('Error in receive stream: $e, restarting receive.');
+        break;
+      }
+
+      // Optionally add a delay before restarting, if needed
+      await Future.delayed(
+        const Duration(milliseconds: 100),
+      ); // Small delay to prevent tight loops
+    }
+    print('processMessagesContinuously stopped');
   }
 
   Future<void> _response_callback(LiveServerMessage response) async {
@@ -305,7 +343,7 @@ class _BidiPageState extends State<BidiPage> {
   }
 
   Future<void> _handle_response() async {
-    final responseStream = _session!.receive();
+    final responseStream = _session.receive();
     await for (var response in responseStream) {
       await _handleLiveServerMessage(response);
     }
@@ -401,7 +439,7 @@ class _BidiPageState extends State<BidiPage> {
         var brightness = functionCall.args['brightness']! as int;
         final functionResult = await _setLightValues(
             brightness: brightness, colorTemperature: color);
-        await _session!.send(
+        await _session.send(
           input: Content.functionResponse(functionCall.name, functionResult),
         );
       } else {
