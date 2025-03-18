@@ -407,16 +407,21 @@ FlutterStandardMethodCodec *_codec;
                         completion:(nonnull void (^)(FlutterError *_Nullable))completion {
   id data = request.data;
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
-  FIRDocumentReference *document = [firestore documentWithPath:request.path];
-
-  [document updateData:data
-            completion:^(NSError *error) {
-              if (error != nil) {
-                completion([self convertToFlutterError:error]);
-              } else {
-                completion(nil);
-              }
-            }];
+  @try {
+    FIRDocumentReference *document = [firestore documentWithPath:request.path];
+    [document updateData:data
+              completion:^(NSError *error) {
+                if (error != nil) {
+                  completion([self convertToFlutterError:error]);
+                } else {
+                  completion(nil);
+                }
+              }];
+  } @catch (NSException *exception) {
+    NSString *name = exception.name;
+    NSString *reason = exception.reason;
+    completion([FlutterError errorWithCode:name message:reason details:nil]);
+  }
 }
 
 - (void)enableNetworkApp:(nonnull FirestorePigeonFirebaseApp *)app
