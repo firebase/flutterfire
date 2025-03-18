@@ -96,6 +96,12 @@ class FirebaseFunctions extends FirebasePluginPlatform {
         delegate.httpsCallableWithUri(_origin, uri, options));
   }
 
+  HttpsCallableStream httpsStreamCallable(
+    String name) {
+    assert(name.isNotEmpty);
+    return HttpsCallableStream._(delegate.httpsStreamCallable(name, _origin));
+  }
+
   /// Changes this instance to point to a Cloud Functions emulator running locally.
   ///
   /// Set the [host] of the local emulator, such as "localhost"

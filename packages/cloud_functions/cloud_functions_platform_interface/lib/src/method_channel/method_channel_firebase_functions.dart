@@ -3,6 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:cloud_functions_platform_interface/src/method_channel/method_channel_https_callable_streams.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
@@ -49,5 +50,10 @@ class MethodChannelFirebaseFunctions extends FirebaseFunctionsPlatform {
   HttpsCallablePlatform httpsCallableWithUri(
       String? origin, Uri uri, HttpsCallableOptions options) {
     return MethodChannelHttpsCallable(this, origin, null, options, uri);
+  }
+
+  @override
+  HttpsCallableStreamsPlatform httpsStreamCallable(String name, String? origin) {
+     return MethodChannelHttpsCallableStreams(name, origin);
   }
 }
