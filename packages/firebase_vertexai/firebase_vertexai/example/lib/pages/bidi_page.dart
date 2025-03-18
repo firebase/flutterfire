@@ -66,9 +66,9 @@ class _BidiPageState extends State<BidiPage> {
     _liveModel = FirebaseVertexAI.instance.liveGenerativeModel(
       model: 'gemini-2.0-flash-exp',
       liveGenerationConfig: config,
-      // tools: [
-      //   Tool.functionDeclarations([lightControlTool]),
-      // ],
+      tools: [
+        Tool.functionDeclarations([lightControlTool]),
+      ],
     );
   }
 
@@ -291,7 +291,7 @@ class _BidiPageState extends State<BidiPage> {
       _loading = true;
     });
     try {
-      late Content prompt = Content.text(textPrompt);
+      final prompt = Content.text(textPrompt);
 
       await _session.send(input: prompt, turnComplete: true);
       print('Prompt sent to server');

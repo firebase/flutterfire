@@ -13,9 +13,8 @@
 // limitations under the License.
 part of vertexai_model;
 
-const _baseAutopushUrl = 'autopush-firebasevertexai.sandbox.googleapis.com';
-const _apiAutopushUrl =
-    'ws/google.firebase.vertexai.v1beta.LlmBidiService/BidiGenerateContent/locations';
+const _apiUrl = 'ws/google.firebase.vertexai';
+const _apiUrlSuffix = 'LlmBidiService/BidiGenerateContent/locations';
 
 const _baseGAIUrl = 'generativelanguage.googleapis.com';
 const _apiGAIUrl =
@@ -79,9 +78,8 @@ final class LiveGenerativeModel extends BaseModel {
       uri = 'wss://$_baseGAIUrl/$_apiGAIUrl${_app.options.apiKey}';
       modelString = '${model.prefix}/${model.name}}';
     } else {
-      // uri = 'wss://$_baseDailyUrl/$_apiUrl${_app.options.apiKey}';
       uri =
-          'wss://${BaseModel._baseUrl}/$_apiAutopushUrl/$_location?key=${_app.options.apiKey}';
+          'wss://${BaseModel._baseUrl}/$_apiUrl.${BaseModel._apiVersion}.$_apiUrlSuffix/$_location?key=${_app.options.apiKey}';
       modelString =
           'projects/${_app.options.projectId}/locations/$_location/publishers/google/models/${model.name}';
     }
