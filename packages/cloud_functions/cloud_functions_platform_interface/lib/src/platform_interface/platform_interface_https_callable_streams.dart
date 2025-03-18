@@ -2,9 +2,11 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 abstract class HttpsCallableStreamsPlatform<R> extends PlatformInterface {
   HttpsCallableStreamsPlatform(
-    this.name,
     this.origin,
-  ) : super(token: _token);
+    this.name,
+    this.uri,
+  )   : assert(name != null || uri != null),
+        super(token: _token);
 
   static final Object _token = Object();
 
@@ -16,7 +18,10 @@ abstract class HttpsCallableStreamsPlatform<R> extends PlatformInterface {
   final String? origin;
 
   /// The name of the function (required, non-nullable)
-  final String name;
+  final String? name;
+
+  /// The URI of the function for 2nd gen functions
+  final Uri? uri;
 
   Stream<T> stream<T>(Object? object);
 

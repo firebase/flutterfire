@@ -7,13 +7,11 @@ import 'package:flutter/services.dart';
 
 import '../../cloud_functions_platform_interface.dart';
 
-
 class MethodChannelHttpsCallableStreams<R>
     extends HttpsCallableStreamsPlatform<R> {
-  
-  MethodChannelHttpsCallableStreams(String name, String? origin)
+  MethodChannelHttpsCallableStreams(String? name, String? origin, Uri? uri)
       : _channel = EventChannel('plugins.flutter.io/firebase_functions/$name'),
-        super(name, origin);
+        super(origin, name, uri);
 
   final EventChannel _channel;
 
