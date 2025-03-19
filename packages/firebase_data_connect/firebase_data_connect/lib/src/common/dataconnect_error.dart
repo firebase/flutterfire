@@ -40,13 +40,13 @@ class DataConnectOperationError extends DataConnectError {
 class DataConnectOperationFailureResponse<T> {
   DataConnectOperationFailureResponse(this.errors, this.data, this.decodedData);
   final Map<String, dynamic>? data;
-  final List<DataConnectOperationFailureREsponseErrorInfo> errors;
+  final List<DataConnectOperationFailureResponseErrorInfo> errors;
   final T? decodedData;
 }
 
 /// Error information per error.
-class DataConnectOperationFailureREsponseErrorInfo {
-  DataConnectOperationFailureREsponseErrorInfo(this.path, this.message);
+class DataConnectOperationFailureResponseErrorInfo {
+  DataConnectOperationFailureResponseErrorInfo(this.path, this.message);
   String message;
   List<DataConnectOperationFailureErrorInfoPathSegment> path;
 }

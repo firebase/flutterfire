@@ -143,11 +143,11 @@ class RestTransport implements DataConnectTransport {
         }
         List<dynamic> errors =
             jsonDecode(jsonEncode(bodyJson['errors'])) as List<dynamic>;
-        List<DataConnectOperationFailureREsponseErrorInfo> suberrors = errors
+        List<DataConnectOperationFailureResponseErrorInfo> suberrors = errors
             .map((e) {
               return jsonDecode(jsonEncode(e)) as Map<String, dynamic>;
             })
-            .map((e) => DataConnectOperationFailureREsponseErrorInfo(
+            .map((e) => DataConnectOperationFailureResponseErrorInfo(
                 (e['path'] as List)
                     .map((val) => val.runtimeType == String
                         ? DataConnectOperationFailureErrorInfoPathSegment(

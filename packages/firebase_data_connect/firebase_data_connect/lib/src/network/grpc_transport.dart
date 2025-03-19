@@ -175,9 +175,9 @@ Data handleResponse<Data>(CommonResponse<Data> commonResponse) {
     Map<String, dynamic>? data =
         jsonDecode(jsonEncoded) as Map<String, dynamic>?;
     Data? decodedData;
-    List<DataConnectOperationFailureREsponseErrorInfo> errors = commonResponse
+    List<DataConnectOperationFailureResponseErrorInfo> errors = commonResponse
         .errors
-        .map((e) => DataConnectOperationFailureREsponseErrorInfo(
+        .map((e) => DataConnectOperationFailureResponseErrorInfo(
             e.path.values
                 .map((val) => val.hasStringValue()
                     ? DataConnectOperationFailureErrorInfoPathSegment(
