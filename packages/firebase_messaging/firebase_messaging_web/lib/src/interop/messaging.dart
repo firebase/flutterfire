@@ -9,6 +9,7 @@ import 'dart:async';
 import 'dart:js_interop';
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
+import 'package:web/web.dart' as web;
 
 import 'messaging_interop.dart' as messaging_interop;
 
@@ -43,7 +44,7 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
 
   /// After calling [requestPermission] you can call this method to get an FCM registration token
   /// that can be used to send push messages to this user.
-  Future<String> getToken({String? vapidKey}) async {
+  Future<String> getToken({String? vapidKey, web.ServiceWorkerRegistration? serviceWorkerRegistration}) async {
     try {
       final token = (await messaging_interop
               .getToken(
@@ -51,7 +52,8 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
                   vapidKey == null
                       ? null
                       : messaging_interop.GetTokenOptions(
-                          vapidKey: vapidKey.toJS))
+                          vapidKey: vapidKey.toJS,
+                          serviceWorkerRegistration: serviceWorkerRegistration))
               .toDart)
           .toDart;
       return token;
