@@ -840,6 +840,43 @@ void main() {
             fail(e.toString());
           }
         });
+        test(
+            'should not throw error when app is deleted and reinit with same app name',
+            () async {
+          try {
+            const appName = 'SecondaryApp';
+
+            final app = await Firebase.initializeApp(
+              name: appName,
+              options: DefaultFirebaseOptions.currentPlatform,
+            );
+
+            var auth1 = FirebaseAuth.instanceFor(app: app);
+
+            await auth1.signInWithEmailAndPassword(
+              email: testEmail,
+              password: testPassword,
+            );
+
+            await app.delete();
+
+            final app2 = await Firebase.initializeApp(
+              name: appName,
+              options: DefaultFirebaseOptions.currentPlatform,
+            );
+
+            final auth2 = FirebaseAuth.instanceFor(app: app2);
+
+            await auth2.signInWithEmailAndPassword(
+              email: testEmail,
+              password: testPassword,
+            );
+          } on FirebaseException catch (e) {
+            fail('Failed with error: $e');
+          } catch (e) {
+            fail(e.toString());
+          }
+        });
       });
 
       group('signOut()', () {

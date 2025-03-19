@@ -35,7 +35,7 @@ jobs:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
-      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af
+      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
         name: Install Node.js 20
         with:
           node-version: '20'
@@ -61,7 +61,7 @@ jobs:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-${{ runner.os }}
           restore-keys: firebase-emulators-v3
-      - uses: subosito/flutter-action@44ac965b96f18d999802d4b807e3256d5a3f9fa1
+      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
         with:
           channel: 'stable'
           cache: true
@@ -103,7 +103,7 @@ jobs:
           ccache -s
       - name: Start Firebase Emulator
         run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
-      - uses: futureware-tech/simulator-action@bde6805eedaeaba7775a9959970edc7d8bf10c4d
+      - uses: futureware-tech/simulator-action@9150831bad21ed25e472017a746f49ccbd0e674a
         id: simulator
         with:
           # List of available simulators: https://github.com/actions/runner-images/blob/main/images/macos/macos-14-Readme.md#installed-simulators

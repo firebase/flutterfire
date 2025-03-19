@@ -13,6 +13,7 @@
 // limitations under the License.
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
+import 'package:firebase_vertexai/src/api.dart';
 import 'package:firebase_vertexai/src/base_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -142,6 +143,7 @@ void main() {
               SafetySetting(
                 HarmCategory.dangerousContent,
                 HarmBlockThreshold.high,
+                HarmBlockMethod.probability,
               ),
             ],
           ),
@@ -151,6 +153,7 @@ void main() {
               {
                 'category': 'HARM_CATEGORY_DANGEROUS_CONTENT',
                 'threshold': 'BLOCK_ONLY_HIGH',
+                'method': 'PROBABILITY',
               },
             ]);
           },
@@ -374,6 +377,7 @@ void main() {
               SafetySetting(
                 HarmCategory.dangerousContent,
                 HarmBlockThreshold.high,
+                HarmBlockMethod.severity,
               ),
             ],
           ),
@@ -382,6 +386,7 @@ void main() {
               {
                 'category': 'HARM_CATEGORY_DANGEROUS_CONTENT',
                 'threshold': 'BLOCK_ONLY_HIGH',
+                'method': 'SEVERITY',
               },
             ]);
           },

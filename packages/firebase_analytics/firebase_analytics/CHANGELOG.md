@@ -1,3 +1,7 @@
+## 11.4.4
+
+ - Update a dependency to the latest release.
+
 ## 11.4.3
 
  - **FIX**(analytics,apple): use correct tag for library name ([#17098](https://github.com/firebase/flutterfire/issues/17098)). ([ca28c304](https://github.com/firebase/flutterfire/commit/ca28c30445e426fff0098606e240e496de8b480c))

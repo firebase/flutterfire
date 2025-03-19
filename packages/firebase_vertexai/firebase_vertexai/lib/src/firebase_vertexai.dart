@@ -17,6 +17,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebasePluginPlatform;
+import 'package:meta/meta.dart';
 
 import '../firebase_vertexai.dart';
 import 'base_model.dart';
@@ -113,6 +114,7 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
   ///
   /// The optional [safetySettings] can be used to control and guide the
   /// generation. See [ImagenSafetySettings] for details.
+  @experimental
   ImagenModel imagenModel(
       {required String model,
       ImagenGenerationConfig? generationConfig,

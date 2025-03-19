@@ -45,7 +45,7 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-  <key>NSMicrophoneUsageDescription</key>
-  <string>Need microphone access for uploading audio</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We need access to the microphone to record audio.</string>
 </dict>
 </plist>

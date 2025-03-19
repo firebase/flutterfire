@@ -1,3 +1,7 @@
+## 1.4.0
+
+ - **FEAT**(vertexai): add Imagen support ([#16976](https://github.com/firebase/flutterfire/issues/16976)). ([cd9d896d](https://github.com/firebase/flutterfire/commit/cd9d896d87ffe9f4949b025ddbb13b88bafbc176))
+
 ## 1.3.0
 
  - **FEAT**(vertexai): add support for token-based usage metrics ([#17065](https://github.com/firebase/flutterfire/issues/17065)). ([b1bd93fb](https://github.com/firebase/flutterfire/commit/b1bd93fb25dbe36621fbc4b13e13bec805b79328))

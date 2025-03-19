@@ -72,7 +72,7 @@ class GraphqlError extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'GraphqlError',
       package: const $pb.PackageName(
-          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1beta'),
+          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'message')
     ..pc<SourceLocation>(
@@ -197,7 +197,7 @@ class SourceLocation extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'SourceLocation',
       package: const $pb.PackageName(
-          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1beta'),
+          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1'),
       createEmptyInstance: create)
     ..a<$core.int>(1, _omitFieldNames ? '' : 'line', $pb.PbFieldType.O3)
     ..a<$core.int>(2, _omitFieldNames ? '' : 'column', $pb.PbFieldType.O3)
@@ -277,7 +277,7 @@ class GraphqlErrorExtensions extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'GraphqlErrorExtensions',
       package: const $pb.PackageName(
-          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1beta'),
+          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'file')
     ..hasRequiredFields = false;
