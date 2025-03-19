@@ -651,7 +651,7 @@ enum HarmBlockMethod {
 }
 
 /// Configuration options for model generation and outputs.
-final class BaseGenerationConfig {
+abstract class BaseGenerationConfig {
   // ignore: public_member_api_docs
   BaseGenerationConfig({
     this.candidateCount,
