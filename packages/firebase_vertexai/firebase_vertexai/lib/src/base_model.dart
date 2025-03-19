@@ -20,6 +20,7 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:http/http.dart' as http;
+import 'package:meta/meta.dart';
 import 'package:web_socket_channel/io.dart';
 
 import 'api.dart';
