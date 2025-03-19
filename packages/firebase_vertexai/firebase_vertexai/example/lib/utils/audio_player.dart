@@ -17,63 +17,10 @@ import 'dart:async';
 import 'package:just_audio/just_audio.dart';
 
 class AudioUtil {
-  static final Uint8List wavHeaderBase = Uint8List.fromList([
-    // "RIFF" (Size will be updated later)
-    82, 73, 70, 70, 0, 0, 0, 0,
-    // WAVE
-    87, 65, 86, 69,
-    // fmt
-    102, 109, 116, 32,
-    // fmt chunk size 16
-    16, 0, 0, 0,
-    // Type of format
-    1, 0,
-    // One channel (Adjust if needed)
-    1, 0,
-    // Sample rate (Will be updated)
-    0, 0, 0, 0,
-    // Byte rate (Will be updated)
-    0, 0, 0, 0,
-    // Block align
-    2, 0, // For 16-bit mono
-    // bitsize
-    16, 0,
-    // "data" (Size will be updated later)
-    100, 97, 116, 97, 0, 0, 0, 0,
-  ]);
-
   static Future<Uint8List> audioChunkWithHeader(
     List<int> data,
     int sampleRate,
   ) async {
-    // var channels = 1;
-    // int byteRate = ((16 * sampleRate * channels) / 8).round();
-    // var size = data.length;
-    // var fileSize = size + 36;
-
-    // // 1. *Copy* the header base:
-    // final header = Uint8List.fromList(
-    //   wavHeaderBase,
-    // ); // Create a *new* Uint8List by copying
-
-    // // 2. Update the *copy* (using byteData view for efficient manipulation)
-    // final byteData = ByteData.view(header.buffer);
-
-    // // RIFF size
-    // byteData.setUint32(4, fileSize, Endian.little);
-    // // Sample rate
-    // byteData.setUint32(20, sampleRate, Endian.little);
-    // // Byte rate
-    // byteData.setUint32(24, byteRate, Endian.little);
-    // // Data size
-    // byteData.setUint32(40, size, Endian.little);
-
-    // // 3. Append the data *after* the header
-    // final combined = Uint8List(36 + size);
-    // combined.setAll(0, header);
-    // combined.setRange(36, 36 + size, data);
-
-    // return combined;
     var channels = 1;
 
     int byteRate = ((16 * sampleRate * channels) / 8).round();

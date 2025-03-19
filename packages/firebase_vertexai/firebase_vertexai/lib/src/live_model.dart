@@ -71,18 +71,10 @@ final class LiveGenerativeModel extends BaseModel {
   /// Returns a [Future] that resolves to an [LiveSession] object upon successful
   /// connection.
   Future<LiveSession> connect() async {
-    late String uri;
-    late String modelString;
-
-    if (_bidiGoogleAI) {
-      uri = 'wss://$_baseGAIUrl/$_apiGAIUrl${_app.options.apiKey}';
-      modelString = '${model.prefix}/${model.name}}';
-    } else {
-      uri =
-          'wss://${BaseModel._baseUrl}/$_apiUrl.${BaseModel._apiVersion}.$_apiUrlSuffix/$_location?key=${_app.options.apiKey}';
-      modelString =
-          'projects/${_app.options.projectId}/locations/$_location/publishers/google/models/${model.name}';
-    }
+    final uri =
+        'wss://${BaseModel._baseUrl}/$_apiUrl.${BaseModel._apiVersion}.$_apiUrlSuffix/$_location?key=${_app.options.apiKey}';
+    final modelString =
+        'projects/${_app.options.projectId}/locations/$_location/publishers/google/models/${model.name}';
 
     final setupJson = {
       'setup': {

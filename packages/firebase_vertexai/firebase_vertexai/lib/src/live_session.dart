@@ -34,7 +34,6 @@ class LiveSession {
 
           _messageController.add(parseServerMessage(response));
         } catch (e) {
-          print('Error processing message: $e');
           _messageController.addError(e);
         }
       },
@@ -61,7 +60,7 @@ class LiveSession {
         ? LiveClientContent(turns: [input], turnComplete: turnComplete)
         : LiveClientContent(turnComplete: turnComplete);
     var clientJson = jsonEncode(clientMessage.toJson());
-    print('Sending $clientJson');
+
     _ws.sink.add(clientJson);
   }
 
@@ -92,8 +91,7 @@ class LiveSession {
         await _sendMediaChunk(chunk);
       }
     } catch (e) {
-      print('Error during stream processing: $e');
-      // Handle the error appropriately (e.g., close the WebSocket, notify the user)
+      throw VertexAISdkException(e.toString());
     } finally {
       print('Stream processing completed.');
     }
@@ -109,10 +107,10 @@ class LiveSession {
   /// Receives messages from the server.
   ///
   /// Returns a [Stream] of [LiveServerMessage] objects representing the
-  /// messages received from the server.
+  /// messages received from the server. The stream will stops once the server
+  /// sends turn complete message.
   Stream<LiveServerMessage> receive() async* {
     _checkWsStatus();
-    print('Start Receiving message');
 
     await for (final result in _messageController.stream) {
       yield result;
@@ -127,11 +125,11 @@ class LiveSession {
   /// Receives messages from the server and invokes the [callback] function with each message.
   ///
   /// This function asynchronously processes messages from the server and passes each
-  /// [LiveServerMessage] to the provided [callback] function.
+  /// [LiveServerMessage] to the provided [callback] function. The operation
+  /// will stops once the server sends turn complete message.
   Future<void> receiveWithCallback(
       Future<void> Function(LiveServerMessage message) callback) async {
     _checkWsStatus();
-    print('Start Receiving message with callback');
 
     await for (final result in _messageController.stream) {
       await callback(result);
