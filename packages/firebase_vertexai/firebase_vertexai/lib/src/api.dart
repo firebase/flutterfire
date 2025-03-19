@@ -651,29 +651,21 @@ enum HarmBlockMethod {
 }
 
 /// Configuration options for model generation and outputs.
-final class GenerationConfig {
+abstract class BaseGenerationConfig {
   // ignore: public_member_api_docs
-  GenerationConfig(
-      {this.candidateCount,
-      this.stopSequences,
-      this.maxOutputTokens,
-      this.temperature,
-      this.topP,
-      this.topK,
-      this.responseMimeType,
-      this.responseSchema});
+  BaseGenerationConfig({
+    this.candidateCount,
+    this.maxOutputTokens,
+    this.temperature,
+    this.topP,
+    this.topK,
+  });
 
   /// Number of generated responses to return.
   ///
   /// This value must be between [1, 8], inclusive. If unset, this will default
   /// to 1.
   final int? candidateCount;
-
-  /// The set of character sequences (up to 5) that will stop output generation.
-  ///
-  /// If specified, the API will stop at the first appearance of a stop
-  /// sequence. The stop sequence will not be included as part of the response.
-  final List<String>? stopSequences;
 
   /// The maximum number of tokens to include in a candidate.
   ///
@@ -708,6 +700,38 @@ final class GenerationConfig {
   /// Note: The default value varies by model.
   final int? topK;
 
+  // ignore: public_member_api_docs
+  Map<String, Object?> toJson() => {
+        if (candidateCount case final candidateCount?)
+          'candidateCount': candidateCount,
+        if (maxOutputTokens case final maxOutputTokens?)
+          'maxOutputTokens': maxOutputTokens,
+        if (temperature case final temperature?) 'temperature': temperature,
+        if (topP case final topP?) 'topP': topP,
+        if (topK case final topK?) 'topK': topK,
+      };
+}
+
+/// Configuration options for model generation and outputs.
+final class GenerationConfig extends BaseGenerationConfig {
+  // ignore: public_member_api_docs
+  GenerationConfig({
+    super.candidateCount,
+    this.stopSequences,
+    super.maxOutputTokens,
+    super.temperature,
+    super.topP,
+    super.topK,
+    this.responseMimeType,
+    this.responseSchema,
+  });
+
+  /// The set of character sequences (up to 5) that will stop output generation.
+  ///
+  /// If specified, the API will stop at the first appearance of a stop
+  /// sequence. The stop sequence will not be included as part of the response.
+  final List<String>? stopSequences;
+
   /// Output response mimetype of the generated candidate text.
   ///
   /// Supported mimetype:
@@ -721,18 +745,12 @@ final class GenerationConfig {
   ///   a schema; currently this is limited to `application/json`.
   final Schema? responseSchema;
 
-  /// Convert to json format
+  @override
   Map<String, Object?> toJson() => {
-        if (candidateCount case final candidateCount?)
-          'candidateCount': candidateCount,
+        ...super.toJson(),
         if (stopSequences case final stopSequences?
             when stopSequences.isNotEmpty)
           'stopSequences': stopSequences,
-        if (maxOutputTokens case final maxOutputTokens?)
-          'maxOutputTokens': maxOutputTokens,
-        if (temperature case final temperature?) 'temperature': temperature,
-        if (topP case final topP?) 'topP': topP,
-        if (topK case final topK?) 'topK': topK,
         if (responseMimeType case final responseMimeType?)
           'responseMimeType': responseMimeType,
         if (responseSchema case final responseSchema?)

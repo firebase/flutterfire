@@ -126,6 +126,21 @@ final class ImagenImagesBlockedException implements Exception {
   String toString() => message;
 }
 
+/// Exception thrown when attempting to send a message over a WebSocket that has already been closed.
+///
+/// This exception indicates that the WebSocket connection was unexpectedly closed
+/// before the message could be sent.
+final class LiveWebSocketClosedException implements Exception {
+  /// Creates a [LiveWebSocketClosedException] with the given error [message].
+  LiveWebSocketClosedException(this.message);
+
+  /// A descriptive message explaining why the WebSocket was closed.
+  final String message;
+
+  @override
+  String toString() => message;
+}
+
 /// Parse the error json object.
 VertexAIException parseError(Object jsonObject) {
   return switch (jsonObject) {

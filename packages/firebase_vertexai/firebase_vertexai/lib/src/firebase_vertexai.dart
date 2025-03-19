@@ -19,12 +19,8 @@ import 'package:firebase_core_platform_interface/firebase_core_platform_interfac
     show FirebasePluginPlatform;
 import 'package:meta/meta.dart';
 
-import 'api.dart';
-import 'content.dart';
-import 'function_calling.dart';
-import 'generative_model.dart';
-import 'imagen_api.dart';
-import 'imagen_model.dart';
+import '../firebase_vertexai.dart';
+import 'base_model.dart';
 
 const _defaultLocation = 'us-central1';
 
@@ -131,5 +127,23 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
         safetySettings: safetySettings,
         appCheck: appCheck,
         auth: auth);
+  }
+
+  LiveGenerativeModel liveGenerativeModel({
+    required String model,
+    LiveGenerationConfig? liveGenerationConfig,
+    List<Tool>? tools,
+    Content? systemInstruction,
+  }) {
+    return createLiveGenerativeModel(
+      app: app,
+      location: location,
+      model: model,
+      liveGenerationConfig: liveGenerationConfig,
+      tools: tools,
+      systemInstruction: systemInstruction,
+      appCheck: appCheck,
+      auth: auth,
+    );
   }
 }

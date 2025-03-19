@@ -15,8 +15,8 @@
 import 'dart:async';
 
 import 'api.dart';
+import 'base_model.dart';
 import 'content.dart';
-import 'generative_model.dart';
 import 'utils/mutex.dart';
 
 /// A back-and-forth chat with a generative model.
