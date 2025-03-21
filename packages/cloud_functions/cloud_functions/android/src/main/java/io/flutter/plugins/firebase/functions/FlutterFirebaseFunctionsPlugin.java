@@ -64,7 +64,7 @@ public class FlutterFirebaseFunctionsPlugin
   }
 
   private void setupEventChannel(Map<String, Object> arguments) {
-    final String eventId = (String) Objects.requireNonNull(arguments.get("eventId"));
+    final String eventId = (String) Objects.requireNonNull(arguments.get("eventChannelId"));
     final String eventChannelName = METHOD_CHANNEL_NAME + "/" + eventId;
     final EventChannel eventChannel =
         new EventChannel(pluginBinding.getBinaryMessenger(), eventChannelName);
