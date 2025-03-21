@@ -19,13 +19,51 @@ enum DataConnectErrorCode { unavailable, unauthorized, other }
 
 /// Error thrown when DataConnect encounters an error.
 class DataConnectError extends FirebaseException {
-  DataConnectError(this.dataConnectErrorCode, message)
+  DataConnectError(this.dataConnectErrorCode, String? message)
       : super(
           plugin: 'Data Connect',
           code: dataConnectErrorCode.toString(),
           message: message,
         );
   final DataConnectErrorCode dataConnectErrorCode;
+}
+
+/// Error thrown when an operation is partially successful.
+class DataConnectOperationError<T> extends DataConnectError {
+  DataConnectOperationError(
+      DataConnectErrorCode code, String message, this.response)
+      : super(code, message);
+  final DataConnectOperationFailureResponse<T> response;
+}
+
+/// Nested class containing errors and decoded data.
+class DataConnectOperationFailureResponse<T> {
+  DataConnectOperationFailureResponse(this.errors, this.data, this.decodedData);
+  final Map<String, dynamic>? data;
+  final List<DataConnectOperationFailureResponseErrorInfo> errors;
+  final T? decodedData;
+}
+
+/// Error information per error.
+class DataConnectOperationFailureResponseErrorInfo {
+  DataConnectOperationFailureResponseErrorInfo(this.path, this.message);
+  String message;
+  List<DataConnectOperationFailureErrorInfoPathSegment> path;
+}
+
+/// Path where error occurred.
+sealed class DataConnectOperationFailureErrorInfoPathSegment {}
+
+class DataConnectOperationFailureErrorInfoFieldPathSegment
+    extends DataConnectOperationFailureErrorInfoPathSegment {
+  final String field;
+  DataConnectOperationFailureErrorInfoFieldPathSegment(this.field);
+}
+
+class DataConnectOperationFailureErrorInfoListIndexPathSegment
+    extends DataConnectOperationFailureErrorInfoPathSegment {
+  final int index;
+  DataConnectOperationFailureErrorInfoListIndexPathSegment(this.index);
 }
 
 typedef Serializer<Variables> = String Function(Variables vars);

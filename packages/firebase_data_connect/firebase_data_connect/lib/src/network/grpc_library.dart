@@ -16,6 +16,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_data_connect/src/generated/graphql_error.pb.dart';
 import 'package:grpc/grpc.dart';
 
 import '../common/common_library.dart';
