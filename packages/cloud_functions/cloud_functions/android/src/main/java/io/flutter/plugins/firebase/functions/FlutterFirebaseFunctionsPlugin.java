@@ -17,6 +17,7 @@ import com.google.firebase.functions.HttpsCallableOptions;
 import com.google.firebase.functions.HttpsCallableReference;
 import com.google.firebase.functions.HttpsCallableResult;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -31,10 +32,16 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class FlutterFirebaseFunctionsPlugin
-    implements FlutterPlugin, FlutterFirebasePlugin, MethodCallHandler {
+    implements FlutterPlugin, FlutterFirebasePlugin, MethodCallHandler, EventChannel.StreamHandler {
 
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_functions";
   private MethodChannel channel;
+  private FlutterPluginBinding pluginBinding;
+
+  private FirebaseFunctions firebaseFunctions;
+
+  private @Nullable String functionName;
+  private @Nullable String functionUri;
 
   /**
    * Default Constructor.
@@ -45,6 +52,7 @@ public class FlutterFirebaseFunctionsPlugin
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+    pluginBinding = binding;
     channel = new MethodChannel(binding.getBinaryMessenger(), METHOD_CHANNEL_NAME);
     channel.setMethodCallHandler(this);
   }
@@ -53,6 +61,20 @@ public class FlutterFirebaseFunctionsPlugin
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
     channel.setMethodCallHandler(null);
     channel = null;
+  }
+
+  private void setupEventChannel(Map<String, Object> arguments) {
+    final String eventId = (String) Objects.requireNonNull(arguments.get("eventChannelId"));
+    final String eventChannelName = METHOD_CHANNEL_NAME + "/" + eventId;
+    final EventChannel eventChannel =
+        new EventChannel(pluginBinding.getBinaryMessenger(), eventChannelName);
+    eventChannel.setStreamHandler(this);
+  }
+
+  private void retrieveArguments(Map<String, Object> arguments) {
+    firebaseFunctions = getFunctions(arguments);
+    functionName = (String) arguments.get("functionName");
+    functionUri = (String) arguments.get("functionUri");
   }
 
   private FirebaseFunctions getFunctions(Map<String, Object> arguments) {
@@ -116,24 +138,27 @@ public class FlutterFirebaseFunctionsPlugin
 
   @Override
   public void onMethodCall(MethodCall call, @NonNull final Result result) {
-    if (!call.method.equals("FirebaseFunctions#call")) {
+    if (call.method.equals("FirebaseFunctions#setEventChannelId")) {
+      assert call.arguments() != null;
+      setupEventChannel(call.arguments());
+      retrieveArguments(call.arguments());
+    } else if (!call.method.equals("FirebaseFunctions#call")) {
+      httpsFunctionCall(call.arguments())
+          .addOnCompleteListener(
+              task -> {
+                if (task.isSuccessful()) {
+                  result.success(task.getResult());
+                } else {
+                  Exception exception = task.getException();
+                  result.error(
+                      "firebase_functions",
+                      exception != null ? exception.getMessage() : null,
+                      getExceptionDetails(exception));
+                }
+              });
+    } else {
       result.notImplemented();
-      return;
     }
-
-    httpsFunctionCall(call.arguments())
-        .addOnCompleteListener(
-            task -> {
-              if (task.isSuccessful()) {
-                result.success(task.getResult());
-              } else {
-                Exception exception = task.getException();
-                result.error(
-                    "firebase_functions",
-                    exception != null ? exception.getMessage() : null,
-                    getExceptionDetails(exception));
-              }
-            });
   }
 
   private Map<String, Object> getExceptionDetails(@Nullable Exception exception) {
@@ -198,4 +223,12 @@ public class FlutterFirebaseFunctionsPlugin
 
     return taskCompletionSource.getTask();
   }
+
+  @Override
+  public void onListen(Object arguments, EventChannel.EventSink events) {
+    // TODO: Implement callable streams
+  }
+
+  @Override
+  public void onCancel(Object arguments) {}
 }

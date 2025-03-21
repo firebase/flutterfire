@@ -7,3 +7,4 @@ export 'src/firebase_functions_exception.dart';
 export 'src/https_callable_options.dart';
 export 'src/platform_interface/platform_interface_firebase_functions.dart';
 export 'src/platform_interface/platform_interface_https_callable.dart';
+export 'src/platform_interface/platform_interface_https_callable_streams.dart';
