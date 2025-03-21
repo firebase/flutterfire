@@ -18,7 +18,7 @@ part of 'common_library.dart';
 enum DataConnectErrorCode { unavailable, unauthorized, other }
 
 /// Error thrown when DataConnect encounters an error.
-class DataConnectError<T> extends FirebaseException {
+class DataConnectError extends FirebaseException {
   DataConnectError(this.dataConnectErrorCode, String? message)
       : super(
           plugin: 'Data Connect',
@@ -29,11 +29,11 @@ class DataConnectError<T> extends FirebaseException {
 }
 
 /// Error thrown when an operation is partially successful.
-class DataConnectOperationError extends DataConnectError {
+class DataConnectOperationError<T> extends DataConnectError {
   DataConnectOperationError(
       DataConnectErrorCode code, String message, this.response)
       : super(code, message);
-  final DataConnectOperationFailureResponse response;
+  final DataConnectOperationFailureResponse<T> response;
 }
 
 /// Nested class containing errors and decoded data.
@@ -48,14 +48,20 @@ class DataConnectOperationFailureResponse<T> {
 class DataConnectOperationFailureResponseErrorInfo {
   DataConnectOperationFailureResponseErrorInfo(this.path, this.message);
   String message;
-  List<DataConnectOperationFailureErrorInfoPathSegment> path;
+  List<PathSegment> path;
 }
 
 /// Path where error occurred.
-class DataConnectOperationFailureErrorInfoPathSegment {
-  DataConnectOperationFailureErrorInfoPathSegment({this.field, this.listIndex});
-  String? field;
-  int? listIndex;
+sealed class PathSegment {}
+
+class StringValue extends PathSegment {
+  final String value;
+  StringValue(this.value);
+}
+
+class IntValue extends PathSegment {
+  final int value;
+  IntValue(this.value);
 }
 
 typedef Serializer<Variables> = String Function(Variables vars);

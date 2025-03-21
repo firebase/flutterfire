@@ -150,10 +150,8 @@ class RestTransport implements DataConnectTransport {
             .map((e) => DataConnectOperationFailureResponseErrorInfo(
                 (e['path'] as List)
                     .map((val) => val.runtimeType == String
-                        ? DataConnectOperationFailureErrorInfoPathSegment(
-                            field: val)
-                        : DataConnectOperationFailureErrorInfoPathSegment(
-                            listIndex: val))
+                        ? StringValue(val)
+                        : IntValue(val))
                     .toList(),
                 e['message']))
             .toList();
