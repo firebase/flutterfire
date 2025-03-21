@@ -3,10 +3,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 abstract class HttpsCallableStreamsPlatform<R> extends PlatformInterface {
   HttpsCallableStreamsPlatform(
+    this.functions,
     this.origin,
     this.name,
     this.uri,
@@ -18,6 +20,9 @@ abstract class HttpsCallableStreamsPlatform<R> extends PlatformInterface {
   static void verify(HttpsCallableStreamsPlatform instance) {
     PlatformInterface.verify(instance, _token);
   }
+
+  /// The [FirebaseFunctionsPlatform] instance.
+  final FirebaseFunctionsPlatform functions;
 
   /// The [origin] of the local emulator, such as "http://localhost:5001"
   final String? origin;
