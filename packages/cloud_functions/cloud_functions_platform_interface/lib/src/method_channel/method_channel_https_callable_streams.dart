@@ -4,13 +4,13 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:flutter/services.dart';
-
 import '../../cloud_functions_platform_interface.dart';
+import 'package:cloud_functions_platform_interface/src/method_channel/utils/extensions.dart';
 
 class MethodChannelHttpsCallableStreams<R>
     extends HttpsCallableStreamsPlatform<R> {
-  MethodChannelHttpsCallableStreams(String? name, String? origin, Uri? uri)
-      : _channel = EventChannel('plugins.flutter.io/firebase_functions/$name'),
+  MethodChannelHttpsCallableStreams(String? origin, String? name, Uri? uri)
+      : _channel = EventChannel('plugins.flutter.io/firebase_functions/${name ?? uri?.toChannelPath()}'),
         super(origin, name, uri);
 
   final EventChannel _channel;
