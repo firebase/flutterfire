@@ -12,7 +12,8 @@ class MethodChannelHttpsCallableStreams<R>
     extends HttpsCallableStreamsPlatform<R> {
   MethodChannelHttpsCallableStreams(FirebaseFunctionsPlatform functions,
       String? origin, String? name, Uri? uri)
-      : _eventChannelId = uri?.pathSegments.join('_').replaceAll('.', '_') ?? '',
+      : _eventChannelId =
+            uri?.pathSegments.join('_').replaceAll('.', '_') ?? '',
         super(functions, origin, name, uri) {
     _channel = EventChannel(
         'plugins.flutter.io/firebase_functions/${name ?? _eventChannelId}');
@@ -24,8 +25,8 @@ class MethodChannelHttpsCallableStreams<R>
   @override
   Stream<T> stream<T>(Object? object) async* {
     try {
-      await MethodChannelFirebaseFunctions.channel
-          .invokeMethod('FirebaseFunctions#setEventChannelId', <String, dynamic>{
+      await MethodChannelFirebaseFunctions.channel.invokeMethod(
+          'FirebaseFunctions#setEventChannelId', <String, dynamic>{
         'eventChannelId': _eventChannelId,
         'appName': functions.app!.name,
         'functionName': name,
