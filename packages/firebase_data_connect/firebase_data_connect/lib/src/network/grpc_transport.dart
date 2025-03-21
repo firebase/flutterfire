@@ -180,8 +180,10 @@ Data handleResponse<Data>(CommonResponse<Data> commonResponse) {
         .map((e) => DataConnectOperationFailureResponseErrorInfo(
             e.path.values
                 .map((val) => val.hasStringValue()
-                    ? StringValue(val.stringValue)
-                    : IntValue(val.numberValue.toInt()))
+                    ? DataConnectOperationFailureErrorInfoFieldPathSegment(
+                        val.stringValue)
+                    : DataConnectOperationFailureErrorInfoListIndexPathSegment(
+                        val.numberValue.toInt()))
                 .toList(),
             e.message))
         .toList();

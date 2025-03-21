@@ -422,7 +422,9 @@ void main() {
             e.response.data!['abc'] == 'def' &&
             e.response.errors.first.message ==
                 'SQL query error: pq: duplicate key value violates unique constraint movie_pkey' &&
-            (e.response.errors.first.path[0] as StringValue).value ==
+            (e.response.errors.first.path[0]
+                        as DataConnectOperationFailureErrorInfoFieldPathSegment)
+                    .field ==
                 'the_matrix' &&
             e.response.decodedData is AbcHolder &&
             (e.response.decodedData as AbcHolder).abc == 'def')),
