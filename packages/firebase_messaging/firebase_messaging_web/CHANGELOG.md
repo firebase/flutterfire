@@ -472,7 +472,7 @@
 
 ## 1.0.5
 
- - **REFACTOR**: Share guard functions accross plugins (#5783).
+ - **REFACTOR**: Share guard functions across plugins (#5783).
 
 ## 1.0.4
 
