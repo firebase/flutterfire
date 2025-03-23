@@ -13,11 +13,12 @@ class HttpsCallableStream<R> {
   @visibleForTesting
   final HttpsCallableStreamsPlatform delegate;
 
-  Stream<Chunk<T>> stream<T>(Object? input) async* {
-    await for (final T value in delegate.stream<T>(input)) {
+  Stream<Chunk<T>> stream<T>([Object? input]) async* {
+    await for (final value in delegate.stream(input)) {
       yield Chunk<T>(value);
     }
   }
 
-// Future<R> get data => delegate.data;
+  Future<Result<R>> get data async =>
+      Result<R>(HttpsCallableResult<R>._(await delegate.data));
 }

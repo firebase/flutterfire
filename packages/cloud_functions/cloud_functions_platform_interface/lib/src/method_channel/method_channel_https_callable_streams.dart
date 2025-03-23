@@ -12,33 +12,54 @@ class MethodChannelHttpsCallableStreams<R>
     extends HttpsCallableStreamsPlatform<R> {
   MethodChannelHttpsCallableStreams(FirebaseFunctionsPlatform functions,
       String? origin, String? name, Uri? uri)
-      : _eventChannelId =
-            uri?.pathSegments.join('_').replaceAll('.', '_') ?? '',
+      : _transformedUri = uri?.pathSegments.join('_').replaceAll('.', '_'),
         super(functions, origin, name, uri) {
-    _channel = EventChannel(
-        'plugins.flutter.io/firebase_functions/${name ?? _eventChannelId}');
+    _eventChannelId = name ?? _transformedUri ?? '';
+    _channel =
+        EventChannel('plugins.flutter.io/firebase_functions/$_eventChannelId');
   }
 
   late final EventChannel _channel;
-  final String _eventChannelId;
+  final String? _transformedUri;
+  late String _eventChannelId;
 
   @override
-  Stream<T> stream<T>(Object? object) async* {
+  Stream<dynamic> stream(Object? parameters) async* {
     try {
-      await MethodChannelFirebaseFunctions.channel.invokeMethod(
-          'FirebaseFunctions#setEventChannelId', <String, dynamic>{
-        'eventChannelId': _eventChannelId,
+      await _registerEventChannelOnNative();
+      final eventData = {
         'appName': functions.app!.name,
         'functionName': name,
         'functionUri': uri?.toString(),
         'origin': origin,
+        'region': functions.region,
+        'parameters': parameters,
+      };
+      yield* _channel.receiveBroadcastStream(eventData).map((message) {
+        if (message is Map) {
+          return Map<String, dynamic>.from(message);
+        }
+        return message;
       });
-      yield* _channel.receiveBroadcastStream(object).cast<T>();
     } catch (e, s) {
       convertPlatformException(e, s);
     }
   }
 
+  Future<void> _registerEventChannelOnNative() async {
+    await MethodChannelFirebaseFunctions.channel.invokeMethod(
+        'FirebaseFunctions#registerEventChannel', <String, dynamic>{
+      'eventChannelId': _eventChannelId,
+    });
+  }
+
   @override
-  Future<R> get data => throw UnimplementedError();
+  Future<dynamic> get data async {
+    final result = await MethodChannelFirebaseFunctions.channel
+        .invokeMethod('FirebaseFunctions#getCompleteResult');
+    if (result is Map) {
+      return Map<String, dynamic>.from(result);
+    }
+    return result;
+  }
 }

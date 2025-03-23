@@ -33,7 +33,7 @@ abstract class HttpsCallableStreamsPlatform<R> extends PlatformInterface {
   /// The URI of the function for 2nd gen functions
   final Uri? uri;
 
-  Stream<T> stream<T>(Object? object);
+  Stream<dynamic> stream(Object? parameters);
 
-  Future<R> get data;
+  Future<dynamic> get data;
 }
