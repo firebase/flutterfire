@@ -33,6 +33,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+
     defaultConfig {
         applicationId = "io.flutter.plugins.firebase.tests"
         // auth requires minSdk 23
