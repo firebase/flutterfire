@@ -48,22 +48,20 @@ class DataConnectOperationFailureResponse<T> {
 class DataConnectOperationFailureResponseErrorInfo {
   DataConnectOperationFailureResponseErrorInfo(this.path, this.message);
   String message;
-  List<DataConnectOperationFailureErrorInfoPathSegment> path;
+  List<DataConnectPathSegment> path;
 }
 
 /// Path where error occurred.
-sealed class DataConnectOperationFailureErrorInfoPathSegment {}
+sealed class DataConnectPathSegment {}
 
-class DataConnectOperationFailureErrorInfoFieldPathSegment
-    extends DataConnectOperationFailureErrorInfoPathSegment {
+class DataConnectFieldPathSegment extends DataConnectPathSegment {
   final String field;
-  DataConnectOperationFailureErrorInfoFieldPathSegment(this.field);
+  DataConnectFieldPathSegment(this.field);
 }
 
-class DataConnectOperationFailureErrorInfoListIndexPathSegment
-    extends DataConnectOperationFailureErrorInfoPathSegment {
+class DataConnectListIndexPathSegment extends DataConnectPathSegment {
   final int index;
-  DataConnectOperationFailureErrorInfoListIndexPathSegment(this.index);
+  DataConnectListIndexPathSegment(this.index);
 }
 
 typedef Serializer<Variables> = String Function(Variables vars);
