@@ -122,6 +122,14 @@ abstract class BaseModel {
           .followedBy([_model.prefix, '${_model.name}:${task.name}']));
 }
 
+/// An abstract base class for models that interact with an API using an [ApiClient].
+///
+/// This class extends [BaseModel] and provides a convenient way to make API requests
+/// using the injected [ApiClient]. It handles the common logic of making requests
+/// and parsing the responses.
+///
+/// Subclasses should define specific API interaction logic and data parsing based on
+/// their requirements.
 abstract class BaseApiClientModel extends BaseModel {
   // ignore: public_member_api_docs
   BaseApiClientModel({

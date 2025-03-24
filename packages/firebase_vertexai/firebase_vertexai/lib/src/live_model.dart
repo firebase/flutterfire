@@ -16,12 +16,6 @@ part of vertexai_model;
 const _apiUrl = 'ws/google.firebase.vertexai';
 const _apiUrlSuffix = 'LlmBidiService/BidiGenerateContent/locations';
 
-const _baseGAIUrl = 'generativelanguage.googleapis.com';
-const _apiGAIUrl =
-    'ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=';
-
-const _bidiGoogleAI = false;
-
 /// A live, generative AI model for real-time interaction.
 ///
 /// See the [Cloud

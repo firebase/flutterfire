@@ -53,16 +53,16 @@ void main() {
     });
 
     test('ResponseModalities enum toJson() returns correct value', () {
-      expect(ResponseModalities.Unspecified.toJson(), 'MODALITY_UNSPECIFIED');
-      expect(ResponseModalities.Text.toJson(), 'TEXT');
-      expect(ResponseModalities.Image.toJson(), 'IMAGE');
-      expect(ResponseModalities.Audio.toJson(), 'AUDIO');
+      expect(ResponseModalities.unspecified.toJson(), 'MODALITY_UNSPECIFIED');
+      expect(ResponseModalities.text.toJson(), 'TEXT');
+      expect(ResponseModalities.image.toJson(), 'IMAGE');
+      expect(ResponseModalities.audio.toJson(), 'AUDIO');
     });
 
     test('LiveGenerationConfig toJson() returns correct JSON', () {
       final liveGenerationConfig = LiveGenerationConfig(
         speechConfig: SpeechConfig(voice: Voices.Charon),
-        responseModalities: [ResponseModalities.Text, ResponseModalities.Audio],
+        responseModalities: [ResponseModalities.text, ResponseModalities.audio],
         candidateCount: 2,
         maxOutputTokens: 100,
         temperature: 0.8,

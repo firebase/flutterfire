@@ -59,7 +59,7 @@ class _BidiPageState extends State<BidiPage> {
     final config = LiveGenerationConfig(
       speechConfig: SpeechConfig(voice: Voices.Fenrir),
       responseModalities: [
-        ResponseModalities.Audio,
+        ResponseModalities.audio,
       ],
     );
 

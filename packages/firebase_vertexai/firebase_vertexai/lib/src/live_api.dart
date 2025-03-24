@@ -17,14 +17,19 @@ import 'error.dart';
 
 /// Represents the available voice options for speech synthesis.
 enum Voices {
+  // ignore: public_member_api_docs, constant_identifier_names
   Aoede('Aoede'),
 
+  // ignore: public_member_api_docs, constant_identifier_names
   Charon('Charon'),
 
+  // ignore: public_member_api_docs, constant_identifier_names
   Fenrir('Fenrir'),
 
+  // ignore: public_member_api_docs, constant_identifier_names
   Kore('Kore'),
 
+  // ignore: public_member_api_docs, constant_identifier_names
   Puck('Puck');
 
   const Voices(this._jsonString);
@@ -54,16 +59,16 @@ class SpeechConfig {
 /// Represents the available response modalities.
 enum ResponseModalities {
   /// Unspecified response modality.
-  Unspecified('MODALITY_UNSPECIFIED'),
+  unspecified('MODALITY_UNSPECIFIED'),
 
   /// Text response modality.
-  Text('TEXT'),
+  text('TEXT'),
 
   /// Image response modality.
-  Image('IMAGE'),
+  image('IMAGE'),
 
   /// Audio response modality.
-  Audio('AUDIO');
+  audio('AUDIO');
 
   const ResponseModalities(this._jsonString);
   final String _jsonString;
