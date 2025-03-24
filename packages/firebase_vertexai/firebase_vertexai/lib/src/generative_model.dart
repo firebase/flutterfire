@@ -44,9 +44,7 @@ final class GenerativeModel extends BaseApiClientModel {
     ToolConfig? toolConfig,
     Content? systemInstruction,
     http.Client? httpClient,
-  })  : _app = app,
-        _location = location,
-        _safetySettings = safetySettings ?? [],
+  })  : _safetySettings = safetySettings ?? [],
         _generationConfig = generationConfig,
         _tools = tools,
         _toolConfig = toolConfig,
@@ -72,9 +70,7 @@ final class GenerativeModel extends BaseApiClientModel {
     ToolConfig? toolConfig,
     Content? systemInstruction,
     ApiClient? apiClient,
-  })  : _app = app,
-        _location = location,
-        _safetySettings = safetySettings ?? [],
+  })  : _safetySettings = safetySettings ?? [],
         _generationConfig = generationConfig,
         _tools = tools,
         _toolConfig = toolConfig,
@@ -92,13 +88,8 @@ final class GenerativeModel extends BaseApiClientModel {
   final GenerationConfig? _generationConfig;
   final List<Tool>? _tools;
 
-  //final Uri _baseUri;
   final ToolConfig? _toolConfig;
   final Content? _systemInstruction;
-  final FirebaseApp _app;
-  final String _location;
-
-  //static const _modelsPrefix = 'models/';
 
   Map<String, Object?> _generateContentRequest(
     Iterable<Content> contents, {

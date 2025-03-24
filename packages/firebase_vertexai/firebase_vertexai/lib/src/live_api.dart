@@ -276,7 +276,7 @@ LiveServerMessage parseServerMessage(Object jsonObject) {
     if (toolContentJson.containsKey('functionCalls')) {
       final functionCallJsons =
           toolContentJson['functionCalls']! as List<dynamic>;
-      for (var functionCallJson in functionCallJsons) {
+      for (final functionCallJson in functionCallJsons) {
         var functionCall =
             parsePart({'functionCall': functionCallJson}) as FunctionCall;
         functionCalls.add(functionCall);

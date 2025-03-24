@@ -60,12 +60,8 @@ final class Content {
   /// Convert the [Content] to json format.
   Map<String, Object?> toJson() => {
         if (role case final role?) 'role': role,
-        'parts': parts?.map((p) {
-          if (p is InlineDataPart && p.mimeType.startsWith('audio/')) {
-            return p.toJson();
-          } else {
-            return p.toJson();
-          }
+        'parts': parts.map((p) {
+          return p.toJson();
         }).toList(),
       };
 }
@@ -140,6 +136,7 @@ final class InlineDataPart implements Part {
   /// Data contents in bytes.
   final Uint8List bytes;
 
+  /// Whether there's more inline data coming for streaming.
   final bool? willContinue;
   @override
   Object toJson() => {
@@ -150,18 +147,11 @@ final class InlineDataPart implements Part {
         }
       };
 
+  /// The representation of the data in media streaming chunk.
   Object toMediaChunkJson() => {
         'mimeType': mimeType,
         'data': base64Encode(bytes),
         if (willContinue != null) 'willContinue': willContinue,
-      };
-
-  Object toAudioJson() => {
-        'inlineData': {
-          'data': bytes.toString(),
-          'mimeType': mimeType,
-          if (willContinue != null) 'willContinue': willContinue,
-        }
       };
 }
 
