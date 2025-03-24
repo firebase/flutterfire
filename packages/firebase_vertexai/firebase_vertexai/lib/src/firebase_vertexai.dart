@@ -129,6 +129,10 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
         auth: auth);
   }
 
+  /// Create a [LiveGenerativeModel] for real-time interaction.
+  ///
+  /// The optional [liveGenerationConfig] can be used to control and guide the
+  /// generation. See [LiveGenerationConfig] for details.
   LiveGenerativeModel liveGenerativeModel({
     required String model,
     LiveGenerationConfig? liveGenerationConfig,

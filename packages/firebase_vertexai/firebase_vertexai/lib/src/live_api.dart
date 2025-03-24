@@ -48,6 +48,7 @@ class SpeechConfig {
 
   /// The voice to use for speech synthesis.
   final Voices? voice;
+  // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
         if (voice != null)
           'voice_config': {
