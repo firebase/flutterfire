@@ -208,10 +208,12 @@ void main() {
         'toolCall': {
           'functionCalls': [
             {
-              'functionCall': {
-                'name': 'test',
-                'args': {'foo': 'bar'}
-              }
+              'name': 'test1',
+              'args': {'foo1': 'bar1'}
+            },
+            {
+              'name': 'test2',
+              'args': {'foo2': 'bar2'}
             }
           ]
         }
