@@ -38,11 +38,10 @@ class DataConnectOperationError<T> extends DataConnectError {
 
 /// Nested class containing errors and decoded data.
 class DataConnectOperationFailureResponse<T> {
-  DataConnectOperationFailureResponse(
-      this.errors, this.rawData, this.decodedData);
+  DataConnectOperationFailureResponse(this.errors, this.rawData, this.data);
   final Map<String, dynamic>? rawData;
   final List<DataConnectOperationFailureResponseErrorInfo> errors;
-  final T? decodedData;
+  final T? data;
 }
 
 /// Error information per error.

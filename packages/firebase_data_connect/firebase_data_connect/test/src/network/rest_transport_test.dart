@@ -425,8 +425,8 @@ void main() {
             (e.response.errors.first.path[0] as DataConnectFieldPathSegment)
                     .field ==
                 'the_matrix' &&
-            e.response.decodedData is AbcHolder &&
-            (e.response.decodedData as AbcHolder).abc == 'def')),
+            e.response.data is AbcHolder &&
+            (e.response.data as AbcHolder).abc == 'def')),
       );
     });
   });
