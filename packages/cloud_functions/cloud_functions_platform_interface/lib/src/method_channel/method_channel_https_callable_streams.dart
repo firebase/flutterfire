@@ -28,11 +28,9 @@ class MethodChannelHttpsCallableStreams<R>
     try {
       await _registerEventChannelOnNative();
       final eventData = {
-        'appName': functions.app!.name,
         'functionName': name,
         'functionUri': uri?.toString(),
         'origin': origin,
-        'region': functions.region,
         'parameters': parameters,
       };
       yield* _channel.receiveBroadcastStream(eventData).map((message) {
@@ -50,6 +48,8 @@ class MethodChannelHttpsCallableStreams<R>
     await MethodChannelFirebaseFunctions.channel.invokeMethod(
         'FirebaseFunctions#registerEventChannel', <String, dynamic>{
       'eventChannelId': _eventChannelId,
+      'appName': functions.app!.name,
+      'region': functions.region,
     });
   }
 

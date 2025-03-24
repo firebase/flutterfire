@@ -16,7 +16,6 @@ import com.google.firebase.functions.FirebaseFunctionsException;
 import com.google.firebase.functions.HttpsCallableOptions;
 import com.google.firebase.functions.HttpsCallableReference;
 import com.google.firebase.functions.HttpsCallableResult;
-import com.google.firebase.functions.StreamResponse;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
@@ -31,16 +30,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import org.reactivestreams.Publisher;
 
 public class FlutterFirebaseFunctionsPlugin
-    implements FlutterPlugin, FlutterFirebasePlugin, MethodCallHandler, EventChannel.StreamHandler {
+    implements FlutterPlugin, FlutterFirebasePlugin, MethodCallHandler {
 
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_functions";
   private MethodChannel channel;
   private FlutterPluginBinding pluginBinding;
 
-  private StreamResponseSubscriber subscriber;
+  private FirebaseFunctionsStreamHandler streamHandler;
 
   /**
    * Default Constructor.
@@ -67,7 +65,9 @@ public class FlutterFirebaseFunctionsPlugin
     final String eventChannelName = METHOD_CHANNEL_NAME + "/" + eventId;
     final EventChannel eventChannel =
         new EventChannel(pluginBinding.getBinaryMessenger(), eventChannelName);
-    eventChannel.setStreamHandler(this);
+    FirebaseFunctions functions = getFunctions(arguments);
+    streamHandler = new FirebaseFunctionsStreamHandler(functions);
+    eventChannel.setStreamHandler(streamHandler);
   }
 
   private FirebaseFunctions getFunctions(Map<String, Object> arguments) {
@@ -133,7 +133,7 @@ public class FlutterFirebaseFunctionsPlugin
     cachedThreadPool.execute(
         () -> {
           try {
-            Object completeResult = subscriber.getResult();
+            Object completeResult = streamHandler.getResult();
             result.success(completeResult);
           } catch (Exception e) {
             result.error("firebase_functions", e.getMessage(), getExceptionDetails(e));
@@ -228,46 +228,5 @@ public class FlutterFirebaseFunctionsPlugin
     cachedThreadPool.execute(() -> taskCompletionSource.setResult(null));
 
     return taskCompletionSource.getTask();
-  }
-
-  @Override
-  public void onListen(Object arguments, EventChannel.EventSink events) {
-    @SuppressWarnings("unchecked")
-    Map<String, Object> argumentsMap = (Map<String, Object>) arguments;
-    httpsStreamCall(argumentsMap, events);
-  }
-
-  private void httpsStreamCall(Map<String, Object> arguments, EventChannel.EventSink events) {
-    try {
-      FirebaseFunctions firebaseFunctions = getFunctions(arguments);
-
-      String functionName = (String) arguments.get("functionName");
-      String functionUri = (String) arguments.get("functionUri");
-      String origin = (String) arguments.get("origin");
-      Object parameters = arguments.get("parameters");
-
-      if (origin != null) {
-        Uri originUri = Uri.parse(origin);
-        firebaseFunctions.useEmulator(originUri.getHost(), originUri.getPort());
-      }
-
-      Publisher<StreamResponse> publisher;
-      if (functionName != null) {
-        publisher = firebaseFunctions.getHttpsCallable(functionName).stream(parameters);
-      } else if (functionUri != null) {
-        publisher = firebaseFunctions.getHttpsCallableFromUrl(new URL(functionUri)).stream();
-      } else {
-        throw new IllegalArgumentException("Either functionName or functionUri must be set");
-      }
-      subscriber = new StreamResponseSubscriber(events);
-      publisher.subscribe(subscriber);
-    } catch (Exception e) {
-      events.error("firebase_functions", e.getMessage(), null);
-    }
-  }
-
-  @Override
-  public void onCancel(Object arguments) {
-    subscriber.cancel();
   }
 }
