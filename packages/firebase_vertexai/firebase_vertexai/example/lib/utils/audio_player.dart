@@ -66,7 +66,7 @@ class AudioUtil {
       (size >> 16) & 0xff,
       (size >> 24) & 0xff,
       // incoming data
-      ...data
+      ...data,
     ]);
     return header;
   }

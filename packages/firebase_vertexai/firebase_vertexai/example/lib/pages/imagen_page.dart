@@ -157,9 +157,6 @@ class _ImagenPageState extends State<ImagenPage> {
 
     if (response.images.isNotEmpty) {
       var imagenImage = response.images[0];
-      for (var image in response.images) {
-        // Process the image
-      }
 
       _generatedContent.add(
         MessageData(

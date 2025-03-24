@@ -14,6 +14,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -93,7 +94,7 @@ class LiveSession {
     } catch (e) {
       throw VertexAISdkException(e.toString());
     } finally {
-      print('Stream processing completed.');
+      log('Stream processing completed.');
     }
   }
 

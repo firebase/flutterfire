@@ -212,8 +212,10 @@ class _BidiPageState extends State<BidiPage> {
     },
   );
 
-  Future<Map<String, Object?>> _setLightValues(
-      {int? brightness, String? colorTemperature}) async {
+  Future<Map<String, Object?>> _setLightValues({
+    int? brightness,
+    String? colorTemperature,
+  }) async {
     print('Set brightness: $brightness, colorTemprature: $colorTemperature');
     final apiResponse = {
       'colorTemprature': 'warm',
@@ -338,17 +340,6 @@ class _BidiPageState extends State<BidiPage> {
     print('processMessagesContinuously stopped');
   }
 
-  Future<void> _response_callback(LiveServerMessage response) async {
-    await _handleLiveServerMessage(response);
-  }
-
-  Future<void> _handle_response() async {
-    final responseStream = _session.receive();
-    await for (var response in responseStream) {
-      await _handleLiveServerMessage(response);
-    }
-  }
-
   Future<void> _handleLiveServerMessage(LiveServerMessage response) async {
     if (response is LiveServerContent && response.modelTurn != null) {
       await _handleLiveServerContent(response);
@@ -374,7 +365,7 @@ class _BidiPageState extends State<BidiPage> {
   Future<void> _handleLiveServerContent(LiveServerContent response) async {
     final partList = response.modelTurn?.parts;
     if (partList != null) {
-      for (var part in partList) {
+      for (final part in partList) {
         if (part is TextPart) {
           await _handleTextPart(part);
         } else if (part is InlineDataPart) {
@@ -438,7 +429,9 @@ class _BidiPageState extends State<BidiPage> {
         var color = functionCall.args['colorTemperature']! as String;
         var brightness = functionCall.args['brightness']! as int;
         final functionResult = await _setLightValues(
-            brightness: brightness, colorTemperature: color);
+          brightness: brightness,
+          colorTemperature: color,
+        );
         await _session.send(
           input: Content.functionResponse(functionCall.name, functionResult),
         );

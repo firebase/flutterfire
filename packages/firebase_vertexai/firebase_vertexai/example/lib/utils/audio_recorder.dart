@@ -29,7 +29,10 @@ class Resampler {
   ///
   /// Returns a new Uint8List containing 16-bit PCM samples resampled to the target rate.
   static Uint8List resampleLinear16(
-      int sourceRate, int targetRate, Uint8List input) {
+    int sourceRate,
+    int targetRate,
+    Uint8List input,
+  ) {
     if (sourceRate == targetRate) return input; // No resampling needed
 
     final outputLength = (input.length * targetRate / sourceRate).round();
@@ -156,7 +159,7 @@ class InMemoryAudioRecorder {
     debugPrint(devs.toString());
     final stream = await _recorder.startStream(recordConfig);
 
-    await for (var data in stream) {
+    await for (final data in stream) {
       yield data;
     }
   }
@@ -172,14 +175,12 @@ class InMemoryAudioRecorder {
     bool fromFile = false,
     bool removeHeader = false,
   }) async {
-    var resultBytes;
+    Uint8List resultBytes;
     if (fromFile) {
       resultBytes = await _getAudioBytesFromFile(_lastAudioPath!);
     } else {
       final builder = BytesBuilder();
-      for (final chunk in _audioChunks) {
-        builder.add(chunk);
-      }
+      _audioChunks.forEach(builder.add);
       resultBytes = builder.toBytes();
     }
 
@@ -208,7 +209,8 @@ class InMemoryAudioRecorder {
     bool removeHeader = false,
   }) async {
     final file = File(_lastAudioPath!);
-    if (!await file.exists()) {
+
+    if (!file.existsSync()) {
       throw Exception('Audio file not found: ${file.path}');
     }
 
