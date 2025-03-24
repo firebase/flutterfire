@@ -419,7 +419,7 @@ void main() {
         ),
         throwsA(predicate((e) =>
             e is DataConnectOperationError &&
-            e.response.data!['abc'] == 'def' &&
+            e.response.rawData!['abc'] == 'def' &&
             e.response.errors.first.message ==
                 'SQL query error: pq: duplicate key value violates unique constraint movie_pkey' &&
             (e.response.errors.first.path[0] as DataConnectFieldPathSegment)
