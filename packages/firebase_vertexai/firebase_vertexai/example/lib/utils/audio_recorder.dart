@@ -45,7 +45,8 @@ class Resampler {
   /// [targetRate]: The desired sample rate of the output audio data.
   /// [input]: The input audio data as a Uint8List containing 16-bit PCM samples.
   ///
-  /// Returns a new Uint8List containing 16-bit PCM samples resampled to the target rate.
+  /// Returns a new Uint8List containing 16-bit PCM samples resampled to the
+  /// target rate.
   static Uint8List resampleLinear16(
     int sourceRate,
     int targetRate,
@@ -172,8 +173,8 @@ class InMemoryAudioRecorder {
       sampleRate: 16000,
       numChannels: 1,
     );
-    final devs = await _recorder.listInputDevices();
-    debugPrint(devs.toString());
+    final devices = await _recorder.listInputDevices();
+    debugPrint(devices.toString());
     final stream = await _recorder.startStream(recordConfig);
 
     await for (final data in stream) {
@@ -188,7 +189,7 @@ class InMemoryAudioRecorder {
     await _recorder.stop();
   }
 
-  Future<Uint8List> getAudioBytes({
+  Future<Uint8List> fetchAudioBytes({
     bool fromFile = false,
     bool removeHeader = false,
   }) async {

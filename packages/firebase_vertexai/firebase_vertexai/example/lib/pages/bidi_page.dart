@@ -383,7 +383,7 @@ class _BidiPageState extends State<BidiPage> {
       _chunkBuilder.add(part.bytes);
       _audioIndex++;
       if (_audioIndex == 15) {
-        Uint8List chunk = await AudioUtil.audioChunkWithHeader(
+        Uint8List chunk = await audioChunkWithHeader(
           _chunkBuilder.toBytes(),
           24000,
         );
@@ -396,7 +396,7 @@ class _BidiPageState extends State<BidiPage> {
 
   Future<void> _handleTurnComplete() async {
     if (_chunkBuilder.isNotEmpty) {
-      Uint8List chunk = await AudioUtil.audioChunkWithHeader(
+      Uint8List chunk = await audioChunkWithHeader(
         _chunkBuilder.toBytes(),
         24000,
       );

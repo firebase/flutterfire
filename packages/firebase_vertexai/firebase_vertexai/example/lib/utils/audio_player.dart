@@ -14,62 +14,62 @@
 
 import 'dart:typed_data';
 import 'dart:async';
+
 import 'package:just_audio/just_audio.dart';
 
-class AudioUtil {
-  static Future<Uint8List> audioChunkWithHeader(
-    List<int> data,
-    int sampleRate,
-  ) async {
-    var channels = 1;
+/// Creates a WAV audio chunk with a properly formatted header.
+Future<Uint8List> audioChunkWithHeader(
+  List<int> data,
+  int sampleRate,
+) async {
+  var channels = 1;
 
-    int byteRate = ((16 * sampleRate * channels) / 8).round();
+  int byteRate = ((16 * sampleRate * channels) / 8).round();
 
-    var size = data.length;
-    var fileSize = size + 36;
+  var size = data.length;
+  var fileSize = size + 36;
 
-    Uint8List header = Uint8List.fromList([
-      // "RIFF"
-      82, 73, 70, 70,
-      fileSize & 0xff,
-      (fileSize >> 8) & 0xff,
-      (fileSize >> 16) & 0xff,
-      (fileSize >> 24) & 0xff,
-      // WAVE
-      87, 65, 86, 69,
-      // fmt
-      102, 109, 116, 32,
-      // fmt chunk size 16
-      16, 0, 0, 0,
-      // Type of format
-      1, 0,
-      // One channel
-      channels, 0,
-      // Sample rate
-      sampleRate & 0xff,
-      (sampleRate >> 8) & 0xff,
-      (sampleRate >> 16) & 0xff,
-      (sampleRate >> 24) & 0xff,
-      // Byte rate
-      byteRate & 0xff,
-      (byteRate >> 8) & 0xff,
-      (byteRate >> 16) & 0xff,
-      (byteRate >> 24) & 0xff,
-      // Uhm
-      ((16 * channels) / 8).round(), 0,
-      // bitsize
-      16, 0,
-      // "data"
-      100, 97, 116, 97,
-      size & 0xff,
-      (size >> 8) & 0xff,
-      (size >> 16) & 0xff,
-      (size >> 24) & 0xff,
-      // incoming data
-      ...data,
-    ]);
-    return header;
-  }
+  Uint8List header = Uint8List.fromList([
+    // "RIFF"
+    82, 73, 70, 70,
+    fileSize & 0xff,
+    (fileSize >> 8) & 0xff,
+    (fileSize >> 16) & 0xff,
+    (fileSize >> 24) & 0xff,
+    // WAVE
+    87, 65, 86, 69,
+    // fmt
+    102, 109, 116, 32,
+    // fmt chunk size 16
+    16, 0, 0, 0,
+    // Type of format
+    1, 0,
+    // One channel
+    channels, 0,
+    // Sample rate
+    sampleRate & 0xff,
+    (sampleRate >> 8) & 0xff,
+    (sampleRate >> 16) & 0xff,
+    (sampleRate >> 24) & 0xff,
+    // Byte rate
+    byteRate & 0xff,
+    (byteRate >> 8) & 0xff,
+    (byteRate >> 16) & 0xff,
+    (byteRate >> 24) & 0xff,
+    // Uhm
+    ((16 * channels) / 8).round(), 0,
+    // bitsize
+    16, 0,
+    // "data"
+    100, 97, 116, 97,
+    size & 0xff,
+    (size >> 8) & 0xff,
+    (size >> 16) & 0xff,
+    (size >> 24) & 0xff,
+    // incoming data
+    ...data,
+  ]);
+  return header;
 }
 
 class ByteStreamAudioSource extends StreamAudioSource {
@@ -92,11 +92,9 @@ class ByteStreamAudioSource extends StreamAudioSource {
 }
 
 class AudioStreamManager {
-  final AudioPlayer _audioPlayer = AudioPlayer();
-  final StreamController<Uint8List> _audioChunkController =
-      StreamController<Uint8List>();
-  var _chunkIndex = 0;
-  ConcatenatingAudioSource _audioSource = ConcatenatingAudioSource(
+  final _audioPlayer = AudioPlayer();
+  final _audioChunkController = StreamController<Uint8List>();
+  var _audioSource = ConcatenatingAudioSource(
     children: [],
   );
 
@@ -128,8 +126,6 @@ class AudioStreamManager {
     var buffer = ByteStreamAudioSource(chunk);
 
     await _audioSource.add(buffer);
-
-    _chunkIndex++;
   }
 
   void addAudio(Uint8List chunk) {
