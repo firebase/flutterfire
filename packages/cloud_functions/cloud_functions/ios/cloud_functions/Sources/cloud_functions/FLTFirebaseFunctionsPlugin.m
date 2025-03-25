@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 #import "include/FLTFirebaseFunctionsPlugin.h"
+#import "include/FLTFunctionsStreamHandler.h"
 
 @import FirebaseFunctions;
 #if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
@@ -14,6 +15,8 @@
 NSString *const kFLTFirebaseFunctionsChannelName = @"plugins.flutter.io/firebase_functions";
 
 @interface FLTFirebaseFunctionsPlugin ()
+@property(nonatomic, strong) NSObject<FlutterPluginRegistrar> *registrar;
+@property(nonatomic, strong) FLTFunctionsStreamHandler *streamHandler;
 @end
 
 @implementation FLTFirebaseFunctionsPlugin
@@ -38,46 +41,55 @@ NSString *const kFLTFirebaseFunctionsChannelName = @"plugins.flutter.io/firebase
   FlutterMethodChannel *channel =
       [FlutterMethodChannel methodChannelWithName:kFLTFirebaseFunctionsChannelName
                                   binaryMessenger:[registrar messenger]];
+  
   FLTFirebaseFunctionsPlugin *instance = [FLTFirebaseFunctionsPlugin sharedInstance];
+  instance.registrar = registrar;
   [registrar addMethodCallDelegate:instance channel:channel];
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
-  if (![@"FirebaseFunctions#call" isEqualToString:call.method]) {
+  if ([@"FirebaseFunctions#registerEventChannel" isEqualToString:call.method]){
+    [self registerEventChannel: call.arguments];
+    flutterResult(nil);
+  }
+  else if ([@"FirebaseFunctions#call" isEqualToString:call.method]) {
+    FLTFirebaseMethodCallErrorBlock errorBlock =
+        ^(NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
+          NSError *_Nullable error) {
+          NSMutableDictionary *httpsErrorDetails = [NSMutableDictionary dictionary];
+          NSString *httpsErrorCode = [NSString stringWithFormat:@"%ld", error.code];
+          NSString *httpsErrorMessage = error.localizedDescription;
+          // FIRFunctionsErrorDomain has been removed and replaced with Swift implementation
+          // https://github.com/firebase/firebase-ios-sdk/blob/main/FirebaseFunctions/Sources/FunctionsError.swift#L18
+          NSString *errorDomain = @"com.firebase.functions";
+          // FIRFunctionsErrorDetailsKey has been deprecated and replaced with Swift implementation
+          // https://github.com/firebase/firebase-ios-sdk/blob/main/FirebaseFunctions/Sources/FunctionsError.swift#L21
+          NSString *detailsKey = @"details";
+          // See also https://github.com/firebase/firebase-ios-sdk/pull/9569
+          if ([error.domain isEqualToString:errorDomain]) {
+            httpsErrorCode = [self mapFunctionsErrorCodes:error.code];
+            if (error.userInfo[detailsKey] != nil) {
+              httpsErrorDetails[@"additionalData"] = error.userInfo[detailsKey];
+            }
+          }
+          httpsErrorDetails[@"code"] = httpsErrorCode;
+          httpsErrorDetails[@"message"] = httpsErrorMessage;
+          flutterResult([FlutterError errorWithCode:httpsErrorCode
+                                            message:httpsErrorMessage
+                                            details:httpsErrorDetails]);
+        };
+
+    FLTFirebaseMethodCallResult *methodCallResult =
+        [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
+
+    [self httpsFunctionCall:call.arguments withMethodCallResult:methodCallResult];
+  }
+  else {
     flutterResult(FlutterMethodNotImplemented);
     return;
   }
 
-  FLTFirebaseMethodCallErrorBlock errorBlock =
-      ^(NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
-        NSError *_Nullable error) {
-        NSMutableDictionary *httpsErrorDetails = [NSMutableDictionary dictionary];
-        NSString *httpsErrorCode = [NSString stringWithFormat:@"%ld", error.code];
-        NSString *httpsErrorMessage = error.localizedDescription;
-        // FIRFunctionsErrorDomain has been removed and replaced with Swift implementation
-        // https://github.com/firebase/firebase-ios-sdk/blob/main/FirebaseFunctions/Sources/FunctionsError.swift#L18
-        NSString *errorDomain = @"com.firebase.functions";
-        // FIRFunctionsErrorDetailsKey has been deprecated and replaced with Swift implementation
-        // https://github.com/firebase/firebase-ios-sdk/blob/main/FirebaseFunctions/Sources/FunctionsError.swift#L21
-        NSString *detailsKey = @"details";
-        // See also https://github.com/firebase/firebase-ios-sdk/pull/9569
-        if ([error.domain isEqualToString:errorDomain]) {
-          httpsErrorCode = [self mapFunctionsErrorCodes:error.code];
-          if (error.userInfo[detailsKey] != nil) {
-            httpsErrorDetails[@"additionalData"] = error.userInfo[detailsKey];
-          }
-        }
-        httpsErrorDetails[@"code"] = httpsErrorCode;
-        httpsErrorDetails[@"message"] = httpsErrorMessage;
-        flutterResult([FlutterError errorWithCode:httpsErrorCode
-                                          message:httpsErrorMessage
-                                          details:httpsErrorDetails]);
-      };
 
-  FLTFirebaseMethodCallResult *methodCallResult =
-      [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
-
-  [self httpsFunctionCall:call.arguments withMethodCallResult:methodCallResult];
 }
 
 #pragma mark - Firebase Functions API
@@ -125,6 +137,25 @@ NSString *const kFLTFirebaseFunctionsChannelName = @"plugins.flutter.io/firebase
                     result.success(callableResult.data);
                   }
                 }];
+}
+
+- (void)registerEventChannel:(id)arguments {
+  NSString *eventId = arguments[@"eventChannelId"];
+  NSString *eventChannelName = [NSString stringWithFormat:@"%@/%@", kFLTFirebaseFunctionsChannelName, eventId];
+  
+  FlutterEventChannel *eventChannel =
+      [FlutterEventChannel eventChannelWithName:eventChannelName binaryMessenger:self.registrar.messenger];
+  
+  NSString *appName = arguments[@"appName"];
+  NSString *region = arguments[@"region"];
+  
+  FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appName];
+  FIRFunctions *functions = [FIRFunctions functionsForApp:app region:region];
+  
+  self.streamHandler = [[FLTFunctionsStreamHandler alloc] initWithFunctions:functions];
+  
+  [eventChannel setStreamHandler:self.streamHandler];
+  
 }
 
 #pragma mark - Utilities
