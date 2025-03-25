@@ -71,7 +71,7 @@ export 'src/live_api.dart'
     show
         LiveGenerationConfig,
         SpeechConfig,
-        Voices,
+        Voice,
         ResponseModalities,
         LiveServerMessage,
         LiveServerContent,

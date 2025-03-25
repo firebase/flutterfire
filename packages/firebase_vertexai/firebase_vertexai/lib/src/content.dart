@@ -86,10 +86,15 @@ Part parsePart(Object? jsonObject) {
     {
       'functionCall': {
         'name': final String name,
-        'args': final Map<String, Object?> args
+        'args': final Map<String, Object?> args,
+        'id': final String? id,
       }
     } =>
-      FunctionCall(name, args),
+      FunctionCall(
+        name,
+        args,
+        id: id,
+      ),
     {
       'file_data': {
         'file_uri': final String fileUri,
@@ -160,7 +165,7 @@ final class InlineDataPart implements Part {
 /// arguments and their values.
 final class FunctionCall implements Part {
   // ignore: public_member_api_docs
-  FunctionCall(this.name, this.args);
+  FunctionCall(this.name, this.args, {this.id});
 
   /// The name of the function to call.
   final String name;
@@ -168,17 +173,26 @@ final class FunctionCall implements Part {
   /// The function parameters and values.
   final Map<String, Object?> args;
 
+  /// The unique id of the function call.
+  ///
+  /// If populated, the client to execute the [FunctionCall]
+  /// and return the response with the matching [id].
+  final String? id;
+
   @override
-  // TODO: Do we need the wrapper object?
   Object toJson() => {
-        'functionCall': {'name': name, 'args': args}
+        'functionCall': {
+          'name': name,
+          'args': args,
+          if (id != null) 'id': id,
+        }
       };
 }
 
 /// The response class for [FunctionCall]
 final class FunctionResponse implements Part {
   // ignore: public_member_api_docs
-  FunctionResponse(this.name, this.response);
+  FunctionResponse(this.name, this.response, {this.id});
 
   /// The name of the function that was called.
   final String name;
@@ -189,9 +203,18 @@ final class FunctionResponse implements Part {
   /// of JSON compatible types, or `Map` from String to JSON compatible types.
   final Map<String, Object?> response;
 
+  /// The id of the function call this response is for.
+  ///
+  /// Populated by the client to match the corresponding [FunctionCall.id].
+  final String? id;
+
   @override
   Object toJson() => {
-        'functionResponse': {'name': name, 'response': response}
+        'functionResponse': {
+          'name': name,
+          'response': response,
+          if (id != null) 'id': id,
+        }
       };
 }
 

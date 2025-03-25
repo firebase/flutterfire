@@ -95,31 +95,39 @@ void main() {
     });
 
     test('FunctionCall toJson', () {
-      final part = FunctionCall('myFunction', {
-        'arguments': [
-          {'text': 'Test'}
-        ]
-      });
+      final part = FunctionCall(
+          'myFunction',
+          {
+            'arguments': [
+              {'text': 'Test'}
+            ],
+          },
+          id: 'myFunctionId');
       final json = part.toJson();
       expect((json as Map)['functionCall']['name'], 'myFunction');
       expect(json['functionCall']['args'].length, 1);
       expect(json['functionCall']['args']['arguments'].length, 1);
       expect(json['functionCall']['args']['arguments'][0]['text'], 'Test');
+      expect(json['functionCall']['id'], 'myFunctionId');
     });
 
     test('FunctionResponse toJson', () {
-      final part = FunctionResponse('myFunction', {
-        'inlineData': {
-          'mimeType': 'application/octet-stream',
-          'data': Uint8List(0)
-        }
-      });
+      final part = FunctionResponse(
+          'myFunction',
+          {
+            'inlineData': {
+              'mimeType': 'application/octet-stream',
+              'data': Uint8List(0)
+            }
+          },
+          id: 'myFunctionId');
       final json = part.toJson();
       expect((json as Map)['functionResponse']['name'], 'myFunction');
       expect(json['functionResponse']['response']['inlineData']['mimeType'],
           'application/octet-stream');
       expect(json['functionResponse']['response']['inlineData']['data'],
           Uint8List(0));
+      expect(json['functionResponse']['id'], 'myFunctionId');
     });
 
     test('FileData toJson', () {
