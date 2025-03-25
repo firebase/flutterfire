@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:firebase_vertexai/src/content.dart';
+import 'package:firebase_vertexai/src/error.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // Mock google_ai classes (if needed)
@@ -135,6 +137,79 @@ void main() {
       final json = part.toJson();
       expect((json as Map)['file_data']['mime_type'], 'image/png');
       expect(json['file_data']['file_uri'], 'gs://bucket-name/path');
+    });
+  });
+
+  group('parsePart', () {
+    test('parses TextPart correctly', () {
+      final json = {'text': 'Hello, world!'};
+      final result = parsePart(json);
+      expect(result, isA<TextPart>());
+      expect((result as TextPart).text, 'Hello, world!');
+    });
+
+    test('parses FunctionCall correctly', () {
+      final json = {
+        'functionCall': {
+          'name': 'myFunction',
+          'args': {'arg1': 1, 'arg2': 'value'},
+          'id': '123',
+        }
+      };
+      final result = parsePart(json);
+      expect(result, isA<FunctionCall>());
+      final functionCall = result as FunctionCall;
+      expect(functionCall.name, 'myFunction');
+      expect(functionCall.args, {'arg1': 1, 'arg2': 'value'});
+      expect(functionCall.id, '123');
+    });
+
+    test('parses FileData correctly', () {
+      final json = {
+        'file_data': {
+          'file_uri': 'file:///path/to/file.txt',
+          'mime_type': 'text/plain',
+        }
+      };
+      final result = parsePart(json);
+      expect(result, isA<FileData>());
+      final fileData = result as FileData;
+      expect(fileData.fileUri, 'file:///path/to/file.txt');
+      expect(fileData.mimeType, 'text/plain');
+    });
+
+    test('parses InlineDataPart correctly', () {
+      final json = {
+        'inlineData': {
+          'mimeType': 'image/png',
+          'data': base64Encode([1, 2, 3])
+        }
+      };
+      final result = parsePart(json);
+      expect(result, isA<InlineDataPart>());
+      final inlineData = result as InlineDataPart;
+      expect(inlineData.mimeType, 'image/png');
+      expect(inlineData.bytes, [1, 2, 3]);
+    });
+
+    test('throws UnimplementedError for functionResponse', () {
+      final json = {
+        'functionResponse': {'name': 'test', 'response': {}}
+      };
+      expect(() => parsePart(json), throwsA(isA<VertexAISdkException>()));
+    });
+
+    test('throws unhandledFormat for invalid JSON', () {
+      final json = {'invalid': 'data'};
+      expect(() => parsePart(json), throwsA(isA<Exception>()));
+    });
+
+    test('throws unhandledFormat for null input', () {
+      expect(() => parsePart(null), throwsA(isA<Exception>()));
+    });
+
+    test('throws unhandledFormat for empty map', () {
+      expect(() => parsePart({}), throwsA(isA<Exception>()));
     });
   });
 }

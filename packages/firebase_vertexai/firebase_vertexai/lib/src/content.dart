@@ -81,20 +81,22 @@ Content parseContent(Object jsonObject) {
 
 /// Parse the [Part] from json object.
 Part parsePart(Object? jsonObject) {
+  if (jsonObject is Map && jsonObject.containsKey('functionCall')) {
+    final functionCall = jsonObject['functionCall'];
+    if (functionCall is Map &&
+        functionCall.containsKey('name') &&
+        functionCall.containsKey('args')) {
+      return FunctionCall(
+        functionCall['name'] as String,
+        functionCall['args'] as Map<String, Object?>,
+        id: functionCall['id'] as String?,
+      );
+    } else {
+      throw unhandledFormat('functionCall', functionCall);
+    }
+  }
   return switch (jsonObject) {
     {'text': final String text} => TextPart(text),
-    {
-      'functionCall': {
-        'name': final String name,
-        'args': final Map<String, Object?> args,
-        'id': final String? id,
-      }
-    } =>
-      FunctionCall(
-        name,
-        args,
-        id: id,
-      ),
     {
       'file_data': {
         'file_uri': final String fileUri,
