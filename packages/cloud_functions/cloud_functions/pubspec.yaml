@@ -36,8 +36,8 @@ flutter:
         package: io.flutter.plugins.firebase.functions
         pluginClass: FlutterFirebaseFunctionsPlugin
       ios:
-        pluginClass: FLTFirebaseFunctionsPlugin
+        pluginClass: FirebaseFunctionsPlugin
       macos:
-        pluginClass: FLTFirebaseFunctionsPlugin
+        pluginClass: FirebaseFunctionsPlugin
       web:
         default_package: cloud_functions_web
