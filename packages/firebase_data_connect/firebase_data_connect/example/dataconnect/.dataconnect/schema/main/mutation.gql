@@ -1,0 +1,497 @@
+extend type Mutation {
+  """
+  ✨ Insert a single `DirectedBy` into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  directedBy_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: DirectedBy_Data!
+  ): DirectedBy_KeyOutput! @fdc_generated(from: "DirectedBy", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `Movie` into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  movie_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Movie_Data!
+  ): Movie_KeyOutput! @fdc_generated(from: "Movie", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `Person` into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  person_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Person_Data!
+  ): Person_KeyOutput! @fdc_generated(from: "Person", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `Thing` into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  thing_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Thing_Data!
+  ): Thing_KeyOutput! @fdc_generated(from: "Thing", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `TimestampHolder` into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  timestampHolder_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: TimestampHolder_Data!
+  ): TimestampHolder_KeyOutput! @fdc_generated(from: "TimestampHolder", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert `DirectedBy` objects into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  directedBy_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [DirectedBy_Data!]!
+  ): [DirectedBy_KeyOutput!]! @fdc_generated(from: "DirectedBy", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `Movie` objects into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  movie_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Movie_Data!]!
+  ): [Movie_KeyOutput!]! @fdc_generated(from: "Movie", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `Person` objects into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  person_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Person_Data!]!
+  ): [Person_KeyOutput!]! @fdc_generated(from: "Person", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `Thing` objects into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  thing_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Thing_Data!]!
+  ): [Thing_KeyOutput!]! @fdc_generated(from: "Thing", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `TimestampHolder` objects into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  timestampHolder_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [TimestampHolder_Data!]!
+  ): [TimestampHolder_KeyOutput!]! @fdc_generated(from: "TimestampHolder", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert or update a single `DirectedBy` into the table, based on the primary key. Returns the key of the newly inserted `DirectedBy`.
+  """
+  directedBy_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: DirectedBy_Data!
+  ): DirectedBy_KeyOutput! @fdc_generated(from: "DirectedBy", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `Movie` into the table, based on the primary key. Returns the key of the newly inserted `Movie`.
+  """
+  movie_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Movie_Data!
+  ): Movie_KeyOutput! @fdc_generated(from: "Movie", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `Person` into the table, based on the primary key. Returns the key of the newly inserted `Person`.
+  """
+  person_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Person_Data!
+  ): Person_KeyOutput! @fdc_generated(from: "Person", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `Thing` into the table, based on the primary key. Returns the key of the newly inserted `Thing`.
+  """
+  thing_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Thing_Data!
+  ): Thing_KeyOutput! @fdc_generated(from: "Thing", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `TimestampHolder` into the table, based on the primary key. Returns the key of the newly inserted `TimestampHolder`.
+  """
+  timestampHolder_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: TimestampHolder_Data!
+  ): TimestampHolder_KeyOutput! @fdc_generated(from: "TimestampHolder", purpose: UPSERT_SINGLE)
+  """
+  ✨ Update a single `DirectedBy` based on `id`, `key` or `first`, setting columns specified in `data`. Returns `null` if not found.
+  """
+  directedBy_update(
+    """
+    The key used to identify the object.
+    """
+    key: DirectedBy_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: DirectedBy_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: DirectedBy_Data!
+  ): DirectedBy_KeyOutput @fdc_generated(from: "DirectedBy", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `Movie` based on `id`, `key` or `first`, setting columns specified in `data`. Returns `null` if not found.
+  """
+  movie_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Movie_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Movie_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Movie_Data!
+  ): Movie_KeyOutput @fdc_generated(from: "Movie", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `Person` based on `id`, `key` or `first`, setting columns specified in `data`. Returns `null` if not found.
+  """
+  person_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Person_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Person_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Person_Data!
+  ): Person_KeyOutput @fdc_generated(from: "Person", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `Thing` based on `id`, `key` or `first`, setting columns specified in `data`. Returns `null` if not found.
+  """
+  thing_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Thing_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Thing_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Thing_Data!
+  ): Thing_KeyOutput @fdc_generated(from: "Thing", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `TimestampHolder` based on `id`, `key` or `first`, setting columns specified in `data`. Returns `null` if not found.
+  """
+  timestampHolder_update(
+    """
+    The key used to identify the object.
+    """
+    key: TimestampHolder_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: TimestampHolder_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: TimestampHolder_Data!
+  ): TimestampHolder_KeyOutput @fdc_generated(from: "TimestampHolder", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update `DirectedBy` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  directedBy_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: DirectedBy_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: DirectedBy_Data!
+  ): Int! @fdc_generated(from: "DirectedBy", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `Movie` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  movie_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Movie_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Movie_Data!
+  ): Int! @fdc_generated(from: "Movie", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `Person` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  person_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Person_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Person_Data!
+  ): Int! @fdc_generated(from: "Person", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `Thing` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  thing_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Thing_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Thing_Data!
+  ): Int! @fdc_generated(from: "Thing", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `TimestampHolder` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  timestampHolder_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: TimestampHolder_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: TimestampHolder_Data!
+  ): Int! @fdc_generated(from: "TimestampHolder", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Delete a single `DirectedBy` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  directedBy_delete(
+    """
+    The key used to identify the object.
+    """
+    key: DirectedBy_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: DirectedBy_FirstRow
+  ): DirectedBy_KeyOutput @fdc_generated(from: "DirectedBy", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `Movie` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  movie_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Movie_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Movie_FirstRow
+  ): Movie_KeyOutput @fdc_generated(from: "Movie", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `Person` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  person_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Person_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Person_FirstRow
+  ): Person_KeyOutput @fdc_generated(from: "Person", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `Thing` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  thing_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Thing_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Thing_FirstRow
+  ): Thing_KeyOutput @fdc_generated(from: "Thing", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `TimestampHolder` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  timestampHolder_delete(
+    """
+    The key used to identify the object.
+    """
+    key: TimestampHolder_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: TimestampHolder_FirstRow
+  ): TimestampHolder_KeyOutput @fdc_generated(from: "TimestampHolder", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete `DirectedBy` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  directedBy_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: DirectedBy_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "DirectedBy", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `Movie` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  movie_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Movie_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Movie", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `Person` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  person_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Person_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Person", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `Thing` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  thing_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Thing_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Thing", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `TimestampHolder` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  timestampHolder_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: TimestampHolder_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "TimestampHolder", purpose: DELETE_MULTIPLE)
+}

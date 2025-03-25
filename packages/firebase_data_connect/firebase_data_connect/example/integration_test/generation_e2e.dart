@@ -64,6 +64,22 @@ void runGenerationTest() {
         expect(ref, isNotNull);
         expect(ref.execute, isNotNull);
       });
+
+      testWidgets(
+          'should populate only non-required fields with builder pattern',
+          (WidgetTester tester) async {
+        final movieBuilder = MoviesConnector.instance.createMovie(
+          genre: 'Action',
+          title: 'Inception',
+          releaseYear: 2010,
+        );
+
+        movieBuilder.rating(4.8);
+
+        final mutationRef = movieBuilder.ref();
+        expect(mutationRef, isNotNull);
+        expect(mutationRef.execute, isNotNull);
+      });
     },
   );
 }

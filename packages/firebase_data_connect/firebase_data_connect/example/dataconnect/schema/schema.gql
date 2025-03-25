@@ -15,7 +15,7 @@ type Movie @table {
 type Thing @table {
   title: Any!
 }
-type TimestampHolder @table {
+type TimestampHolder @table(key: ["timestamp"]) {
   timestamp: Timestamp!
   date: Date
 }

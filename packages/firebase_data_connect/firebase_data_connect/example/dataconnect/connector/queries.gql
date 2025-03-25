@@ -3,6 +3,8 @@ query ListMovies @auth(level: USER) {
   movies {
     id
     title
+    genre
+    releaseYear
     directed_by: people_via_DirectedBy {
       name
     }
@@ -22,24 +24,40 @@ query ListMoviesByPartialTitle($input: String!) @auth(level: PUBLIC) {
 
 query ListPersons @auth(level: USER) {
   people {
-  id
+    id
     name
   }
 }
 query ListThing($data: Any) @auth(level: USER) {
-  things(where: {
-    title: {
-      eq: $data
-    }
-  }) {
+  things(where: { title: { eq: $data } }) {
     title
   }
 }
 
 query ListTimestamps @auth(level: USER) {
   timestampHolders {
-    timestamp,
+    timestamp
     date
+  }
+}
+
+query ListMoviesByGenre($genre: String! = "Action") @auth(level: PUBLIC) {
+  mostPopular: movies(
+    where: { genre: { eq: $genre } }
+    orderBy: { rating: DESC }
+    limit: 10
+  ) {
+    id
+    title
+    rating
+  }
+  mostRecent: movies(
+    where: { genre: { eq: $genre } }
+    orderBy: { releaseYear: DESC }
+  ) {
+    id
+    title
+    rating
   }
 }
 

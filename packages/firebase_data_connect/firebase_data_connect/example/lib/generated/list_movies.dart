@@ -24,6 +24,10 @@ class ListMoviesMovies {
 
   String title;
 
+  String genre;
+
+  int? releaseYear;
+
   List<ListMoviesMoviesDirectedBy> directed_by;
 
   double? rating;
@@ -31,6 +35,10 @@ class ListMoviesMovies {
   ListMoviesMovies.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']),
         title = nativeFromJson<String>(json['title']),
+        genre = nativeFromJson<String>(json['genre']),
+        releaseYear = json['releaseYear'] == null
+            ? null
+            : nativeFromJson<int>(json['releaseYear']),
         directed_by = (json['directed_by'] as List<dynamic>)
             .map((e) => ListMoviesMoviesDirectedBy.fromJson(e))
             .toList(),
@@ -45,6 +53,12 @@ class ListMoviesMovies {
 
     json['title'] = nativeToJson<String>(title);
 
+    json['genre'] = nativeToJson<String>(genre);
+
+    if (releaseYear != null) {
+      json['releaseYear'] = nativeToJson<int?>(releaseYear);
+    }
+
     json['directed_by'] = directed_by.map((e) => e.toJson()).toList();
 
     if (rating != null) {
@@ -57,6 +71,8 @@ class ListMoviesMovies {
   ListMoviesMovies({
     required this.id,
     required this.title,
+    required this.genre,
+    this.releaseYear,
     required this.directed_by,
     this.rating,
   });

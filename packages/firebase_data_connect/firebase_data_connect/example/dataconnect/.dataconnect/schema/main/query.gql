@@ -1,0 +1,207 @@
+extend type Query {
+  """
+  ✨ Look up a single `DirectedBy` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  directedBy(
+    """
+    The key used to identify the object.
+    """
+    key: DirectedBy_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: DirectedBy_FirstRow
+  ): DirectedBy @fdc_generated(from: "DirectedBy", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `Movie` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  movie(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Movie_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Movie_FirstRow
+  ): Movie @fdc_generated(from: "Movie", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `Person` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  person(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Person_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Person_FirstRow
+  ): Person @fdc_generated(from: "Person", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `Thing` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  thing(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Thing_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Thing_FirstRow
+  ): Thing @fdc_generated(from: "Thing", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `TimestampHolder` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  timestampHolder(
+    """
+    The key used to identify the object.
+    """
+    key: TimestampHolder_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: TimestampHolder_FirstRow
+  ): TimestampHolder @fdc_generated(from: "TimestampHolder", purpose: QUERY_SINGLE)
+  """
+  ✨ List `DirectedBy` objects in the table, optionally filtered by `where` conditions.
+  """
+  directedBies(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: DirectedBy_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [DirectedBy_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+  ): [DirectedBy!]! @fdc_generated(from: "DirectedBy", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `Movie` objects in the table, optionally filtered by `where` conditions.
+  """
+  movies(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Movie_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Movie_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+  ): [Movie!]! @fdc_generated(from: "Movie", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `Person` objects in the table, optionally filtered by `where` conditions.
+  """
+  people(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Person_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Person_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+  ): [Person!]! @fdc_generated(from: "Person", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `Thing` objects in the table, optionally filtered by `where` conditions.
+  """
+  things(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Thing_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Thing_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+  ): [Thing!]! @fdc_generated(from: "Thing", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `TimestampHolder` objects in the table, optionally filtered by `where` conditions.
+  """
+  timestampHolders(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: TimestampHolder_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [TimestampHolder_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+  ): [TimestampHolder!]! @fdc_generated(from: "TimestampHolder", purpose: QUERY_MULTIPLE)
+}

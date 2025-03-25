@@ -267,6 +267,7 @@ scripts:
         --ignore "**/*.yaml" \
         --ignore "**/*.xml" \
         --ignore "**/*.g.dart" \
+        --ignore "**/*.mocks.dart" \
         --ignore "**/*.sh" \
         --ignore "**/*.html" \
         --ignore "**/*.js" \
@@ -303,6 +304,7 @@ scripts:
         --ignore "**/*.yaml" \
         --ignore "**/*.xml" \
         --ignore "**/*.g.dart" \
+        --ignore "**/*.mocks.dart" \
         --ignore "**/*.sh" \
         --ignore "**/*.html" \
         --ignore "**/*.js" \
