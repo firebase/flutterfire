@@ -17,18 +17,6 @@ import 'package:firebase_vertexai/src/content.dart';
 import 'package:firebase_vertexai/src/error.dart';
 import 'package:firebase_vertexai/src/live_api.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
-
-// Mock classes for dependencies
-class MockWebSocketChannel extends Mock implements WebSocketChannel {}
-
-class MockWebSocketSink extends Mock implements WebSocketSink {}
-
-// Mock class for callback function
-class MockCallback extends Mock {
-  Future<void> callFuture(LiveServerMessage message) async {}
-}
 
 void main() {
   group('LiveAPI Tests', () {

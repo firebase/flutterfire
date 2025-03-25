@@ -127,13 +127,9 @@ class AudioStreamManager {
   Future<void> _addAudioChunk(Uint8List chunk) async {
     var buffer = ByteStreamAudioSource(chunk);
 
-    print('Add new Audio Chunk to player');
-
-    // The crucial change: use add instead of insert
     await _audioSource.add(buffer);
 
     _chunkIndex++;
-    print('play audio chunk $_chunkIndex');
   }
 
   void addAudio(Uint8List chunk) {
@@ -141,12 +137,10 @@ class AudioStreamManager {
   }
 
   Future<void> stopAudioPlayer() async {
-    print('Stopped and total audio chunks are $_chunkIndex');
     await _audioPlayer.stop();
   }
 
   Future<void> disposeAudioPlayer() async {
-    print('Disposed and total audio chunks are $_chunkIndex');
     await _audioPlayer.dispose();
     await _audioChunkController.close();
   }

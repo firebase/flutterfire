@@ -115,28 +115,7 @@ class LiveSession {
 
     await for (final result in _messageController.stream) {
       yield result;
-      if (result is LiveServerContent &&
-          result.turnComplete != null &&
-          result.turnComplete!) {
-        break; // Exit the loop when the turn is complete
-      }
-    }
-  }
-
-  /// Receives messages from the server and invokes the [callback] function with each message.
-  ///
-  /// This function asynchronously processes messages from the server and passes each
-  /// [LiveServerMessage] to the provided [callback] function. The operation
-  /// will stops once the server sends turn complete message.
-  Future<void> receiveWithCallback(
-      Future<void> Function(LiveServerMessage message) callback) async {
-    _checkWsStatus();
-
-    await for (final result in _messageController.stream) {
-      await callback(result);
-      if (result is LiveServerContent &&
-          result.turnComplete != null &&
-          result.turnComplete!) {
+      if (result case LiveServerContent(turnComplete: true)) {
         break; // Exit the loop when the turn is complete
       }
     }

@@ -20,8 +20,26 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 
+/// An exception thrown when microphone permission is denied or not granted.
+class MicrophonePermissionDeniedException implements Exception {
+  /// The optional message associated with the permission denial.
+  final String? message;
+
+  /// Creates a new [MicrophonePermissionDeniedException] with an optional [message].
+  MicrophonePermissionDeniedException([this.message]);
+
+  @override
+  String toString() {
+    if (message == null) {
+      return 'MicrophonePermissionDeniedException';
+    }
+    return 'MicrophonePermissionDeniedException: $message';
+  }
+}
+
 class Resampler {
-  /// Resamples 16-bit integer PCM audio data from a source sample rate to a target sample rate using linear interpolation.
+  /// Resamples 16-bit integer PCM audio data from a source sample rate to a
+  /// target sample rate using linear interpolation.
   ///
   /// [sourceRate]: The sample rate of the input audio data.
   /// [targetRate]: The desired sample rate of the output audio data.
@@ -81,14 +99,13 @@ class InMemoryAudioRecorder {
     final dir = await getDownloadsDirectory();
     final path =
         '${dir!.path}/audio_${DateTime.now().millisecondsSinceEpoch}.$suffix';
-    print('audio file saved to $path');
     return path;
   }
 
   Future<void> checkPermission() async {
     final hasPermission = await _recorder.hasPermission();
     if (!hasPermission) {
-      print('Not having mic permission');
+      throw MicrophonePermissionDeniedException('Not having mic permission');
     }
   }
 
@@ -111,7 +128,7 @@ class InMemoryAudioRecorder {
     return isSupported;
   }
 
-  Future<void> startRecording({bool fromfile = false}) async {
+  Future<void> startRecording({bool fromFile = false}) async {
     if (!await _isEncoderSupported(_encoder)) {
       return;
     }
@@ -123,7 +140,7 @@ class InMemoryAudioRecorder {
     final devs = await _recorder.listInputDevices();
     debugPrint(devs.toString());
     _lastAudioPath = await _getPath();
-    if (fromfile) {
+    if (fromFile) {
       await _recorder.start(recordConfig, path: _lastAudioPath!);
     } else {
       final stream = await _recorder.startStream(recordConfig);
@@ -215,7 +232,6 @@ class InMemoryAudioRecorder {
     }
 
     var pcmBytes = await file.readAsBytes();
-    print('pcm file ${file.path} has byte size of ${pcmBytes.length}');
     if (removeHeader) {
       pcmBytes = await _removeWavHeader(pcmBytes);
     }

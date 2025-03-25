@@ -13,6 +13,8 @@
 // limitations under the License.
 import 'dart:typed_data';
 import 'dart:async';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import '../widgets/message_widget.dart';
@@ -42,7 +44,7 @@ class _BidiPageState extends State<BidiPage> {
   final FocusNode _textFieldFocus = FocusNode();
   final List<MessageData> _messages = <MessageData>[];
   bool _loading = false;
-  bool _session_opening = false;
+  bool _sessionOpening = false;
   bool _recording = false;
   late LiveGenerativeModel _liveModel;
   late LiveSession _session;
@@ -86,7 +88,7 @@ class _BidiPageState extends State<BidiPage> {
 
   @override
   void dispose() {
-    if (_session_opening) {
+    if (_sessionOpening) {
       _audioManager.stopAudioPlayer();
       _audioManager.disposeAudioPlayer();
 
@@ -94,8 +96,7 @@ class _BidiPageState extends State<BidiPage> {
 
       _stopController.close();
 
-      _session_opening = false;
-      print('close the websocket session.');
+      _sessionOpening = false;
       _session.close();
     }
     super.dispose();
@@ -153,7 +154,7 @@ class _BidiPageState extends State<BidiPage> {
                         : null,
                     icon: Icon(
                       Icons.network_wifi,
-                      color: _session_opening
+                      color: _sessionOpening
                           ? Theme.of(context).colorScheme.secondary
                           : Theme.of(context).colorScheme.primary,
                     ),
@@ -216,7 +217,6 @@ class _BidiPageState extends State<BidiPage> {
     int? brightness,
     String? colorTemperature,
   }) async {
-    print('Set brightness: $brightness, colorTemprature: $colorTemperature');
     final apiResponse = {
       'colorTemprature': 'warm',
       'brightness': brightness,
@@ -229,17 +229,15 @@ class _BidiPageState extends State<BidiPage> {
       _loading = true;
     });
 
-    if (!_session_opening) {
+    if (!_sessionOpening) {
       _session = await _liveModel.connect();
-      _session_opening = true;
+      _sessionOpening = true;
       _stopController = StreamController<bool>();
       unawaited(
         processMessagesContinuously(
           stopSignal: _stopController,
         ),
       );
-      //)
-      // unawaited(_session.receiveWithCallback(_response_callback));
     } else {
       _stopController.add(true);
       await _stopController.close();
@@ -247,7 +245,7 @@ class _BidiPageState extends State<BidiPage> {
       await _session.close();
       await _audioManager.stopAudioPlayer();
       await _audioManager.disposeAudioPlayer();
-      _session_opening = false;
+      _sessionOpening = false;
     }
 
     setState(() {
@@ -260,7 +258,6 @@ class _BidiPageState extends State<BidiPage> {
       _recording = true;
     });
     try {
-      print('Start Recording');
       await _audioRecorder.checkPermission();
       final audioRecordStream = _audioRecorder.startRecordingStream();
       // Map the Uint8List stream to InlineDataPart stream
@@ -274,11 +271,8 @@ class _BidiPageState extends State<BidiPage> {
   }
 
   Future<void> _stopRecording() async {
-    print('Stop Recording');
     try {
       await _audioRecorder.stopRecording();
-
-      // unawaited(_session.receiveWithCallback(_response_callback));
     } catch (e) {
       _showError(e.toString());
     }
@@ -294,10 +288,7 @@ class _BidiPageState extends State<BidiPage> {
     });
     try {
       final prompt = Content.text(textPrompt);
-
       await _session.send(input: prompt, turnComplete: true);
-      print('Prompt sent to server');
-      // unawaited(_session.receiveWithCallback(_response_callback));
     } catch (e) {
       _showError(e.toString());
     }
@@ -323,12 +314,10 @@ class _BidiPageState extends State<BidiPage> {
       try {
         await for (final message in _session.receive()) {
           // Process the received message
-          print('Received message: $message');
           await _handleLiveServerMessage(message);
         }
-        print('Turn complete, restarting receive.');
       } catch (e) {
-        print('Error in receive stream: $e, restarting receive.');
+        _showError(e.toString());
         break;
       }
 
@@ -337,7 +326,6 @@ class _BidiPageState extends State<BidiPage> {
         const Duration(milliseconds: 100),
       ); // Small delay to prevent tight loops
     }
-    print('processMessagesContinuously stopped');
   }
 
   Future<void> _handleLiveServerMessage(LiveServerMessage response) async {
@@ -354,7 +342,7 @@ class _BidiPageState extends State<BidiPage> {
     if (response is LiveServerContent &&
         response.interrupted != null &&
         response.interrupted!) {
-      print('Interrupted: $response');
+      log('Interrupted: $response');
     }
 
     if (response is LiveServerToolCall && response.functionCalls != null) {
@@ -371,7 +359,7 @@ class _BidiPageState extends State<BidiPage> {
         } else if (part is InlineDataPart) {
           await _handleInlineDataPart(part);
         } else {
-          print('receive part with type ${part.runtimeType}');
+          log('receive part with type ${part.runtimeType}');
         }
       }
     }
@@ -391,9 +379,7 @@ class _BidiPageState extends State<BidiPage> {
   }
 
   Future<void> _handleInlineDataPart(InlineDataPart part) async {
-    print('receive data part: mimeType: ${part.mimeType}');
     if (part.mimeType.startsWith('audio')) {
-      print('Audio chunk length: ${part.bytes.length}');
       _chunkBuilder.add(part.bytes);
       _audioIndex++;
       if (_audioIndex == 15) {
@@ -409,7 +395,6 @@ class _BidiPageState extends State<BidiPage> {
   }
 
   Future<void> _handleTurnComplete() async {
-    print('Turn complete!');
     if (_chunkBuilder.isNotEmpty) {
       Uint8List chunk = await AudioUtil.audioChunkWithHeader(
         _chunkBuilder.toBytes(),
