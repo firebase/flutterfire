@@ -13,25 +13,13 @@
 // limitations under the License.
 
 // ignore_for_file: use_late_for_private_fields_and_variables
-
-import 'dart:async';
-
-import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:http/http.dart' as http;
-
-import 'api.dart';
-import 'base_model.dart';
-import 'client.dart';
-import 'content.dart';
-import 'function_calling.dart';
+part of vertexai_model;
 
 /// A multimodel generative model (like Gemini).
 ///
 /// Allows generating content, creating embeddings, and counting the number of
 /// tokens in a piece of content.
-final class GenerativeModel extends BaseModel {
+final class GenerativeModel extends BaseApiClientModel {
   /// Create a [GenerativeModel] backed by the generative model named [model].
   ///
   /// The [model] argument can be a model name (such as `'gemini-pro'`) or a
@@ -100,11 +88,8 @@ final class GenerativeModel extends BaseModel {
   final GenerationConfig? _generationConfig;
   final List<Tool>? _tools;
 
-  //final Uri _baseUri;
   final ToolConfig? _toolConfig;
   final Content? _systemInstruction;
-
-  //static const _modelsPrefix = 'models/';
 
   Map<String, Object?> _generateContentRequest(
     Iterable<Content> contents, {

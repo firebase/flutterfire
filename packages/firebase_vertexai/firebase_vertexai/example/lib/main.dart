@@ -26,6 +26,7 @@ import 'pages/schema_page.dart';
 import 'pages/imagen_page.dart';
 import 'pages/document.dart';
 import 'pages/video_page.dart';
+import 'pages/bidi_page.dart';
 
 // REQUIRED if you want to run on Web
 const FirebaseOptions? options = null;
@@ -35,9 +36,9 @@ void main() async {
   await Firebase.initializeApp();
   await FirebaseAuth.instance.signInAnonymously();
 
-  var vertex_instance =
+  var vertexInstance =
       FirebaseVertexAI.instanceFor(auth: FirebaseAuth.instance);
-  final model = vertex_instance.generativeModel(model: 'gemini-1.5-flash');
+  final model = vertexInstance.generativeModel(model: 'gemini-1.5-flash');
 
   runApp(GenerativeAISample(model: model));
 }
@@ -87,6 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
         SchemaPromptPage(title: 'Schema Prompt', model: widget.model),
         DocumentPage(title: 'Document Prompt', model: widget.model),
         VideoPage(title: 'Video Prompt', model: widget.model),
+        BidiPage(title: 'Bidi Stream', model: widget.model),
       ];
 
   void _onItemTapped(int index) {
@@ -177,6 +179,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             label: 'Video Prompt',
             tooltip: 'Video Prompt',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.stream,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            label: 'Bidi Stream',
+            tooltip: 'Bidi Stream',
           ),
         ],
         currentIndex: _selectedIndex,
