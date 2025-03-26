@@ -131,7 +131,7 @@ void updateVersionsPackageSwift(String firebaseiOSVersion) {
 
 void updateLibraryVersionPureSwiftPlugins() {
   // Packages that require updating library versions
-  const packages = ['firebase_ml_model_downloader', 'firebase_app_installations'];
+  const packages = ['firebase_ml_model_downloader', 'firebase_app_installations', 'cloud_functions'];
 
   for (final package in packages) {
     final pubspecPath = 'packages/$package/$package/pubspec.yaml';
