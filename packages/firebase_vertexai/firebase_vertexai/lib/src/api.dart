@@ -724,6 +724,8 @@ final class GenerationConfig extends BaseGenerationConfig {
     super.topK,
     this.responseMimeType,
     this.responseSchema,
+    this.presencePenalty,
+    this.frequencyPenalty,
   });
 
   /// The set of character sequences (up to 5) that will stop output generation.
@@ -745,6 +747,39 @@ final class GenerationConfig extends BaseGenerationConfig {
   ///   a schema; currently this is limited to `application/json`.
   final Schema? responseSchema;
 
+  /// Controls the likelihood of repeating the same words or phrases already
+  /// generated in the text.
+  ///
+  /// Higher values increase the penalty of repetition, resulting in more
+  /// diverse output.
+  ///
+  /// Note: While both `presencePenalty` and `frequencyPenalty` discourage
+  /// repetition, `presencePenalty` applies the same penalty regardless of how
+  /// many times the word/phrase has already appeared, whereas
+  /// `frequencyPenalty` increases the penalty for *each* repetition of a
+  /// word/phrase.
+  ///
+  /// Important: The range of supported `presencePenalty` values depends on the
+  /// model; see the [Cloud documentation](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference#generationconfig)
+  /// for more details.
+  final double? presencePenalty;
+
+  /// Controls the likelihood of repeating words or phrases, with the penalty
+  /// increasing for each repetition.
+  ///
+  /// Higher values increase the penalty of repetition, resulting in more
+  /// diverse output.
+  ///
+  /// Note: While both `frequencyPenalty` and `presencePenalty` discourage
+  /// repetition, `frequencyPenalty` increases the penalty for *each* repetition
+  /// of a word/phrase, whereas `presencePenalty` applies the same penalty
+  /// regardless of how many times the word/phrase has already appeared.
+  ///
+  /// Important: The range of supported `frequencyPenalty` values depends on the
+  /// model; see the [Cloud documentation](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference#generationconfig)
+  /// for more details.
+  final double? frequencyPenalty;
+
   @override
   Map<String, Object?> toJson() => {
         ...super.toJson(),
@@ -755,7 +790,11 @@ final class GenerationConfig extends BaseGenerationConfig {
           'responseMimeType': responseMimeType,
         if (responseSchema case final responseSchema?)
           'responseSchema': responseSchema,
-      };
++        if (presencePenalty case final presencePenalty?)
++          'presencePenalty': presencePenalty,
++        if (frequencyPenalty case final frequencyPenalty?)
++          'frequencyPenalty': frequencyPenalty,
++      };
 }
 
 /// Type of task for which the embedding will be used.
