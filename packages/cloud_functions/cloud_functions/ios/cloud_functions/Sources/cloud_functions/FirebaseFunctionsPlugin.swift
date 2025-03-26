@@ -110,7 +110,7 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
       function = functions.httpsCallable(url, options: options)
     } else {
       completion(nil, FlutterError(
-        code: "unknown",
+        code: "IllegalArgumentException",
         message: "Either functionName or functionUri must be set",
         details: nil
       ))
