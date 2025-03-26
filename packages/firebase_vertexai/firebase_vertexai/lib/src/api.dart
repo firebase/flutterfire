@@ -753,14 +753,15 @@ final class GenerationConfig extends BaseGenerationConfig {
   /// Higher values increase the penalty of repetition, resulting in more
   /// diverse output.
   ///
-  /// Note: While both `presencePenalty` and `frequencyPenalty` discourage
-  /// repetition, `presencePenalty` applies the same penalty regardless of how
+  /// **Note:** While both [presencePenalty] and [frequencyPenalty] discourage
+  /// repetition, [presencePenalty] applies the same penalty regardless of how
   /// many times the word/phrase has already appeared, whereas
-  /// `frequencyPenalty` increases the penalty for *each* repetition of a
+  /// [frequencyPenalty] increases the penalty for *each* repetition of a
   /// word/phrase.
   ///
-  /// Important: The range of supported `presencePenalty` values depends on the
-  /// model; see the [Cloud documentation](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference#generationconfig)
+  /// **Important:** The range of supported [presencePenalty] values depends on
+  /// the model; see the
+  /// [Cloud documentation](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference#generationconfig)
   /// for more details.
   final double? presencePenalty;
 
@@ -770,13 +771,14 @@ final class GenerationConfig extends BaseGenerationConfig {
   /// Higher values increase the penalty of repetition, resulting in more
   /// diverse output.
   ///
-  /// Note: While both `frequencyPenalty` and `presencePenalty` discourage
-  /// repetition, `frequencyPenalty` increases the penalty for *each* repetition
-  /// of a word/phrase, whereas `presencePenalty` applies the same penalty
+  /// **Note:** While both [frequencyPenalty] and [presencePenalty] discourage
+  /// repetition, [frequencyPenalty] increases the penalty for *each* repetition
+  /// of a word/phrase, whereas [presencePenalty] applies the same penalty
   /// regardless of how many times the word/phrase has already appeared.
   ///
-  /// Important: The range of supported `frequencyPenalty` values depends on the
-  /// model; see the [Cloud documentation](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference#generationconfig)
+  /// **Important:** The range of supported [frequencyPenalty] values depends on
+  /// the model; see the
+  /// [Cloud documentation](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference#generationconfig)
   /// for more details.
   final double? frequencyPenalty;
 
@@ -790,11 +792,11 @@ final class GenerationConfig extends BaseGenerationConfig {
           'responseMimeType': responseMimeType,
         if (responseSchema case final responseSchema?)
           'responseSchema': responseSchema,
-+        if (presencePenalty case final presencePenalty?)
-+          'presencePenalty': presencePenalty,
-+        if (frequencyPenalty case final frequencyPenalty?)
-+          'frequencyPenalty': frequencyPenalty,
-+      };
+        if (presencePenalty case final presencePenalty?)
+          'presencePenalty': presencePenalty,
+        if (frequencyPenalty case final frequencyPenalty?)
+          'frequencyPenalty': frequencyPenalty,
+      };
 }
 
 /// Type of task for which the embedding will be used.
