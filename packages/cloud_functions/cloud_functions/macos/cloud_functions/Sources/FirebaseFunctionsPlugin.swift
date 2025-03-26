@@ -1,1 +1,0 @@
-../../../ios/cloud_functions/Sources/cloud_functions/FirebaseFunctionsPlugin.swift

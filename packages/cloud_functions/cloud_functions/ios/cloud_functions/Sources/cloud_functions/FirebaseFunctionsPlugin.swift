@@ -31,7 +31,7 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
   }
 
   @objc public func firebaseLibraryName() -> String {
-    "flutter-fire-functions"
+    "flutter-fire-fn"
   }
 
   @objc public func flutterChannelName() -> String {
@@ -39,9 +39,17 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
   }
 
   public static func register(with registrar: FlutterPluginRegistrar) {
+    let binaryMessenger: FlutterBinaryMessenger
+
+    #if os(macOS)
+      binaryMessenger = registrar.messenger
+    #elseif os(iOS)
+      binaryMessenger = registrar.messenger()
+    #endif
+
     let channel = FlutterMethodChannel(
       name: kFLTFirebaseFunctionsChannelName,
-      binaryMessenger: registrar.messenger()
+      binaryMessenger: binaryMessenger
     )
     let instance = FirebaseFunctionsPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
@@ -84,51 +92,43 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
 
     let functions = Functions.functions(app: app, region: region ?? "")
 
-    if let origin, !origin.isEmpty {
-      if let url = URL(string: origin) {
-        functions.useEmulator(withHost: url.host ?? "", port: url.port ?? 5001)
-      }
+    if let origin, !origin.isEmpty,
+       let url = URL(string: origin),
+       let host = url.host,
+       let port = url.port {
+      functions.useEmulator(withHost: host, port: port)
     }
 
     let options = HTTPSCallableOptions(requireLimitedUseAppCheckTokens: limitedUseAppCheckToken)
 
     let function: HTTPSCallable
 
-    do {
-      if let functionName, !functionName.isEmpty {
-        function = functions.httpsCallable(functionName, options: options)
-      } else if let functionUri, !functionUri.isEmpty,
-                let url = URL(string: functionUri) {
-        function = functions.httpsCallable(url, options: options)
-      } else {
-        throw NSError(
-          domain: "com.firebase.functions",
-          code: -1,
-          userInfo: [
-            NSLocalizedDescriptionKey: "Either functionName or functionUri must be set",
-          ]
-        )
-      }
-
-      // Set timeout if provided
-      if let timeout {
-        function.timeoutInterval = timeout / 1000
-      }
-
-      function.call(parameters) { result, error in
-        if let error {
-          let flutterError = self.createFlutterError(from: error)
-          completion(nil, flutterError)
-        } else {
-          completion(result?.data, nil)
-        }
-      }
-    } catch {
+    if let functionName, !functionName.isEmpty {
+      function = functions.httpsCallable(functionName, options: options)
+    } else if let functionUri, !functionUri.isEmpty,
+              let url = URL(string: functionUri) {
+      function = functions.httpsCallable(url, options: options)
+    } else {
       completion(nil, FlutterError(
-        code: "illegal_argument",
-        message: error.localizedDescription,
+        code: "unknown",
+        message: "Either functionName or functionUri must be set",
         details: nil
       ))
+      return
+    }
+
+    // Set timeout if provided
+    if let timeout {
+      function.timeoutInterval = timeout / 1000
+    }
+
+    function.call(parameters) { result, error in
+      if let error {
+        let flutterError = self.createFlutterError(from: error)
+        completion(nil, flutterError)
+      } else {
+        completion(result?.data, nil)
+      }
     }
   }
 

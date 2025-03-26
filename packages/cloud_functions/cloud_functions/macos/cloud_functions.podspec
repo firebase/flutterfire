@@ -15,7 +15,7 @@ else
 end
 
 begin
-  required_macos_version = "10.13"
+  required_macos_version = "10.15"
   current_target_definition = Pod::Config.instance.podfile.send(:current_target_definition)
   user_osx_target = current_target_definition.to_hash["platform"]["osx"]
   if (Gem::Version.new(user_osx_target) < Gem::Version.new(required_macos_version))
@@ -43,7 +43,7 @@ Pod::Spec.new do |s|
   s.source           = { :path => '.' }
   s.source_files = 'cloud_functions/Sources/**/*.swift'
   s.public_header_files = 'cloud_functions/Sources/cloud_functions/include/*.h'
-  s.platform = :osx, '10.13'
+  s.platform = :osx, '10.15'
 
   s.swift_version = '5.0'
 
@@ -57,7 +57,6 @@ Pod::Spec.new do |s|
 
   s.static_framework = true
   s.pod_target_xcconfig = {
-    'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\\"#{library_version}\\\" LIBRARY_NAME=\\\"flutter-fire-fn\\\"",
     'DEFINES_MODULE' => 'YES'
   }
 end
