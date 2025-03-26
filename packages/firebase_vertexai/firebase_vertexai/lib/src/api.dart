@@ -659,6 +659,8 @@ abstract class BaseGenerationConfig {
     this.temperature,
     this.topP,
     this.topK,
+    this.presencePenalty,
+    this.frequencyPenalty,
   });
 
   /// Number of generated responses to return.
@@ -700,53 +702,6 @@ abstract class BaseGenerationConfig {
   /// Note: The default value varies by model.
   final int? topK;
 
-  // ignore: public_member_api_docs
-  Map<String, Object?> toJson() => {
-        if (candidateCount case final candidateCount?)
-          'candidateCount': candidateCount,
-        if (maxOutputTokens case final maxOutputTokens?)
-          'maxOutputTokens': maxOutputTokens,
-        if (temperature case final temperature?) 'temperature': temperature,
-        if (topP case final topP?) 'topP': topP,
-        if (topK case final topK?) 'topK': topK,
-      };
-}
-
-/// Configuration options for model generation and outputs.
-final class GenerationConfig extends BaseGenerationConfig {
-  // ignore: public_member_api_docs
-  GenerationConfig({
-    super.candidateCount,
-    this.stopSequences,
-    super.maxOutputTokens,
-    super.temperature,
-    super.topP,
-    super.topK,
-    this.responseMimeType,
-    this.responseSchema,
-    this.presencePenalty,
-    this.frequencyPenalty,
-  });
-
-  /// The set of character sequences (up to 5) that will stop output generation.
-  ///
-  /// If specified, the API will stop at the first appearance of a stop
-  /// sequence. The stop sequence will not be included as part of the response.
-  final List<String>? stopSequences;
-
-  /// Output response mimetype of the generated candidate text.
-  ///
-  /// Supported mimetype:
-  /// - `text/plain`: (default) Text output.
-  /// - `application/json`: JSON response in the candidates.
-  final String? responseMimeType;
-
-  /// Output response schema of the generated candidate text.
-  ///
-  /// - Note: This only applies when the [responseMimeType] supports
-  ///   a schema; currently this is limited to `application/json`.
-  final Schema? responseSchema;
-
   /// Controls the likelihood of repeating the same words or phrases already
   /// generated in the text.
   ///
@@ -782,6 +737,57 @@ final class GenerationConfig extends BaseGenerationConfig {
   /// for more details.
   final double? frequencyPenalty;
 
+  // ignore: public_member_api_docs
+  Map<String, Object?> toJson() => {
+        if (candidateCount case final candidateCount?)
+          'candidateCount': candidateCount,
+        if (maxOutputTokens case final maxOutputTokens?)
+          'maxOutputTokens': maxOutputTokens,
+        if (temperature case final temperature?) 'temperature': temperature,
+        if (topP case final topP?) 'topP': topP,
+        if (topK case final topK?) 'topK': topK,
+        if (presencePenalty case final presencePenalty?)
+          'presencePenalty': presencePenalty,
+        if (frequencyPenalty case final frequencyPenalty?)
+          'frequencyPenalty': frequencyPenalty,
+      };
+}
+
+/// Configuration options for model generation and outputs.
+final class GenerationConfig extends BaseGenerationConfig {
+  // ignore: public_member_api_docs
+  GenerationConfig({
+    super.candidateCount,
+    this.stopSequences,
+    super.maxOutputTokens,
+    super.temperature,
+    super.topP,
+    super.topK,
+    super.presencePenalty,
+    super.frequencyPenalty,
+    this.responseMimeType,
+    this.responseSchema,
+  });
+
+  /// The set of character sequences (up to 5) that will stop output generation.
+  ///
+  /// If specified, the API will stop at the first appearance of a stop
+  /// sequence. The stop sequence will not be included as part of the response.
+  final List<String>? stopSequences;
+
+  /// Output response mimetype of the generated candidate text.
+  ///
+  /// Supported mimetype:
+  /// - `text/plain`: (default) Text output.
+  /// - `application/json`: JSON response in the candidates.
+  final String? responseMimeType;
+
+  /// Output response schema of the generated candidate text.
+  ///
+  /// - Note: This only applies when the [responseMimeType] supports
+  ///   a schema; currently this is limited to `application/json`.
+  final Schema? responseSchema;
+
   @override
   Map<String, Object?> toJson() => {
         ...super.toJson(),
@@ -792,10 +798,6 @@ final class GenerationConfig extends BaseGenerationConfig {
           'responseMimeType': responseMimeType,
         if (responseSchema case final responseSchema?)
           'responseSchema': responseSchema,
-        if (presencePenalty case final presencePenalty?)
-          'presencePenalty': presencePenalty,
-        if (frequencyPenalty case final frequencyPenalty?)
-          'frequencyPenalty': frequencyPenalty,
       };
 }
 
