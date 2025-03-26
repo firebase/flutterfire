@@ -569,7 +569,7 @@
 ## 0.7.0-dev.2
 
  - **DOCS**: update package readme.
- - **DOCS**: update pubspec description to meet minumum length requirement.
+ - **DOCS**: update pubspec description to meet minimum length requirement.
 
 ## 0.7.0-dev.1
 
