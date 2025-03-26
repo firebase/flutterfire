@@ -27,7 +27,7 @@ Pod::Spec.new do |s|
   s.source_files = 'cloud_functions/Sources/**/*.swift'
   s.ios.deployment_target = '13.0'
 
-  s.swift_version = '5.5'
+  s.swift_version = '5.0'
 
   # Flutter dependencies
   s.dependency 'Flutter'
