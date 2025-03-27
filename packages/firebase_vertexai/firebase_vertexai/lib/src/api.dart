@@ -702,11 +702,11 @@ abstract class BaseGenerationConfig {
   /// Note: The default value varies by model.
   final int? topK;
 
-  /// Controls the likelihood of repeating the same words or phrases already
-  /// generated in the text.
+  /// The penalty for repeating the same words or phrases already generated in
+  /// the text.
   ///
-  /// Higher values increase the penalty of repetition, resulting in more
-  /// diverse output.
+  /// Controls the likelihood of repetition. Higher penalty values result in
+  /// more diverse output.
   ///
   /// **Note:** While both [presencePenalty] and [frequencyPenalty] discourage
   /// repetition, [presencePenalty] applies the same penalty regardless of how
@@ -720,11 +720,11 @@ abstract class BaseGenerationConfig {
   /// for more details.
   final double? presencePenalty;
 
-  /// Controls the likelihood of repeating words or phrases, with the penalty
-  /// increasing for each repetition.
+  /// The penalty for repeating words or phrases, with the penalty increasing
+  /// for each repetition.
   ///
-  /// Higher values increase the penalty of repetition, resulting in more
-  /// diverse output.
+  /// Controls the likelihood of repetition. Higher values increase the penalty
+  /// of repetition, resulting in more diverse output.
   ///
   /// **Note:** While both [frequencyPenalty] and [presencePenalty] discourage
   /// repetition, [frequencyPenalty] increases the penalty for *each* repetition
