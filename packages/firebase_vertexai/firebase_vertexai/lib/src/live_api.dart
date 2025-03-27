@@ -89,6 +89,8 @@ final class LiveGenerationConfig extends BaseGenerationConfig {
     super.temperature,
     super.topP,
     super.topK,
+    super.presencePenalty,
+    super.frequencyPenalty,
   });
 
   /// The speech configuration.
