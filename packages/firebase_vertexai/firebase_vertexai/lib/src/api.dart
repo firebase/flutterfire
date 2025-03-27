@@ -716,7 +716,7 @@ abstract class BaseGenerationConfig {
   ///
   /// **Important:** The range of supported [presencePenalty] values depends on
   /// the model; see the
-  /// [Cloud documentation](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference#generationconfig)
+  /// [documentation](https://firebase.google.com/docs/vertex-ai/model-parameters?platform=flutter#configure-model-parameters-gemini)
   /// for more details.
   final double? presencePenalty;
 
@@ -733,7 +733,7 @@ abstract class BaseGenerationConfig {
   ///
   /// **Important:** The range of supported [frequencyPenalty] values depends on
   /// the model; see the
-  /// [Cloud documentation](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference#generationconfig)
+  /// [documentation](https://firebase.google.com/docs/vertex-ai/model-parameters?platform=flutter#configure-model-parameters-gemini)
   /// for more details.
   final double? frequencyPenalty;
 
