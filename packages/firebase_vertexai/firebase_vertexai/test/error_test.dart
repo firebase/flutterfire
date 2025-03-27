@@ -40,7 +40,7 @@ void main() {
           'The Vertex AI in Firebase SDK requires the Vertex AI in Firebase API '
           '(`firebasevertexai.googleapis.com`) to be enabled in your Firebase project. Enable this API '
           'by visiting the Firebase Console at '
-          'https://console.firebase.google.com/project/test-project/genai ' //corrected projectId
+          'https://console.firebase.google.com/project/test-project/genai '
           'and clicking "Get started". If you enabled this API recently, wait a few minutes for the '
           'action to propagate to our systems and then retry.');
     });
@@ -62,9 +62,9 @@ void main() {
           'SDK failed to parse response.\n'
           'This indicates a problem with the Vertex AI in Firebase SDK. '
           'Try updating to the latest version '
-          '(https://pub.dev/packages/firebase_vertexai/versions), ' //added package name.
+          '(https://pub.dev/packages/firebase_vertexai/versions), '
           'or file an issue at '
-          'https://github.com/firebase/flutterfire/issues.'); //corrected github link
+          'https://github.com/firebase/flutterfire/issues.');
     });
 
     test('ImagenImagesBlockedException toString', () {
@@ -143,7 +143,7 @@ void main() {
             'The Vertex AI in Firebase SDK requires the Vertex AI in Firebase API '
             '(`firebasevertexai.googleapis.com`) to be enabled in your Firebase project. Enable this API '
             'by visiting the Firebase Console at '
-            'https://console.firebase.google.com/project/my-project-id/genai ' //corrected project ID.
+            'https://console.firebase.google.com/project/my-project-id/genai '
             'and clicking "Get started". If you enabled this API recently, wait a few minutes for the '
             'action to propagate to our systems and then retry.');
       });
