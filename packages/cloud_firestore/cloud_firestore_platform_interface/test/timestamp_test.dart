@@ -80,5 +80,34 @@ void main() {
 
       expect(epoch, equals(-9999999999));
     });
+
+    test('Timestamp should not throw for dates before 1970', () {
+      final dates = [
+        DateTime(1969, 06, 22, 0, 0, 0, 123),
+        DateTime(1969, 12, 31, 23, 59, 59, 999),
+        DateTime(1900, 01, 01, 12, 30, 45, 500),
+        DateTime(1800, 07, 04, 18, 15, 30, 250),
+        DateTime(0001, 01, 01, 00, 00, 00, 001),
+      ];
+
+      for (final date in dates) {
+        try {
+          final timestamp = Timestamp.fromDate(date);
+          expect(timestamp, isA<Timestamp>());
+        } catch (e) {
+          fail('Timestamp.fromDate threw an error: $e');
+        }
+      }
+    });
+
+    test(
+        'pre-1970 Timestamps should match the original DateTime after conversion',
+        () {
+      final date = DateTime(1969, 06, 22, 0, 0, 0, 123);
+      final timestamp = Timestamp.fromDate(date);
+      final timestampAsDateTime = timestamp.toDate();
+
+      expect(date, equals(timestampAsDateTime));
+    });
   });
 }

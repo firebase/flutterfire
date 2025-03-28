@@ -53,5 +53,22 @@ void runTimestampTests() {
         equals(date.millisecondsSinceEpoch),
       );
     });
+
+    test('set pre-1970 $Timestamp and return', () async {
+      DocumentReference<Map<String, dynamic>> doc =
+          await initializeTest('timestamp');
+      final date = DateTime(1969, 06, 22, 0, 0, 0, 123);
+      final localTimestamp = Timestamp.fromDate(date);
+
+      await doc.set({'foo': localTimestamp});
+
+      DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
+      Timestamp retievedTimestamp = snapshot.data()!['foo'];
+      expect(retievedTimestamp, isA<Timestamp>());
+      expect(
+        retievedTimestamp,
+        equals(localTimestamp),
+      );
+    });
   });
 }
