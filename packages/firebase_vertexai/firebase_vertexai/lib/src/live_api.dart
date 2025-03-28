@@ -17,20 +17,20 @@ import 'error.dart';
 
 /// The available voice options for speech synthesis.
 enum Voice {
-  // ignore: public_member_api_docs, constant_identifier_names
-  Aoede('Aoede'),
+  // ignore: public_member_api_docs
+  aoede('Aoede'),
 
-  // ignore: public_member_api_docs, constant_identifier_names
-  Charon('Charon'),
+  // ignore: public_member_api_docs
+  charon('Charon'),
 
-  // ignore: public_member_api_docs, constant_identifier_names
-  Fenrir('Fenrir'),
+  // ignore: public_member_api_docs
+  fenrir('Fenrir'),
 
-  // ignore: public_member_api_docs, constant_identifier_names
-  Kore('Kore'),
+  // ignore: public_member_api_docs
+  kore('Kore'),
 
-  // ignore: public_member_api_docs, constant_identifier_names
-  Puck('Puck');
+  // ignore: public_member_api_docs
+  puck('Puck');
 
   const Voice(this._jsonString);
   final String _jsonString;
