@@ -94,27 +94,24 @@ class ByteStreamAudioSource extends StreamAudioSource {
 class AudioStreamManager {
   final _audioPlayer = AudioPlayer();
   final _audioChunkController = StreamController<Uint8List>();
+  late Stream<Uint8List> audioStream;
   var _audioSource = ConcatenatingAudioSource(
     children: [],
   );
 
   AudioStreamManager() {
     _initAudioPlayer();
+    audioStream = _audioChunkController.stream.asBroadcastStream();
   }
 
   Future<void> _initAudioPlayer() async {
     // 1. Create a ConcatenatingAudioSource to handle the stream
     await _audioPlayer.setAudioSource(_audioSource);
-
     // 2. Listen to the stream of audio chunks
-    _audioChunkController.stream.listen(_addAudioChunk);
-
-    await _audioPlayer.play(); // Start playing (even if initially empty)
 
     _audioPlayer.processingStateStream.listen((state) async {
       if (state == ProcessingState.completed) {
-        await _audioPlayer
-            .pause(); // Or player.stop() if you want to release resources
+        await _audioPlayer.pause();
         await _audioPlayer.seek(Duration.zero, index: 0);
         await _audioSource.clear();
         await _audioPlayer.play();
@@ -122,14 +119,22 @@ class AudioStreamManager {
     });
   }
 
-  Future<void> _addAudioChunk(Uint8List chunk) async {
-    var buffer = ByteStreamAudioSource(chunk);
+  void addAudioChunk(Uint8List chunk) {
+    _audioChunkController.add(chunk);
+  }
 
+  Future<void> _addAudioToPlayer(Uint8List chunk) async {
+    var buffer = ByteStreamAudioSource(chunk);
     await _audioSource.add(buffer);
   }
 
-  void addAudio(Uint8List chunk) {
-    _audioChunkController.add(chunk);
+  //listen to the audioStream, and add the chunk to the player.
+  void startListening() {
+    audioStream.listen(_addAudioToPlayer);
+  }
+
+  Future<void> startPlayback() async {
+    await _audioPlayer.play();
   }
 
   Future<void> stopAudioPlayer() async {

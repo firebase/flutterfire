@@ -34,7 +34,7 @@ const FirebaseOptions? options = null;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await FirebaseAuth.instance.signInAnonymously();
+  // await FirebaseAuth.instance.signInAnonymously();
 
   var vertexInstance =
       FirebaseVertexAI.instanceFor(auth: FirebaseAuth.instance);
@@ -77,17 +77,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Widget> get _pages => <Widget>[
         // Build _pages dynamically
-        ChatPage(title: 'Chat', model: widget.model),
-        AudioPage(title: 'Audio', model: widget.model),
-        TokenCountPage(title: 'Token Count', model: widget.model),
-        const FunctionCallingPage(
-          title: 'Function Calling',
-        ), // function calling will initial its own model
-        ImagePromptPage(title: 'Image Prompt', model: widget.model),
+        // ChatPage(title: 'Chat', model: widget.model),
+        // AudioPage(title: 'Audio', model: widget.model),
+        // TokenCountPage(title: 'Token Count', model: widget.model),
+        // const FunctionCallingPage(
+        //   title: 'Function Calling',
+        // ), // function calling will initial its own model
+        // ImagePromptPage(title: 'Image Prompt', model: widget.model),
         ImagenPage(title: 'Imagen Model', model: widget.model),
-        SchemaPromptPage(title: 'Schema Prompt', model: widget.model),
-        DocumentPage(title: 'Document Prompt', model: widget.model),
-        VideoPage(title: 'Video Prompt', model: widget.model),
+        // SchemaPromptPage(title: 'Schema Prompt', model: widget.model),
+        // DocumentPage(title: 'Document Prompt', model: widget.model),
+        // VideoPage(title: 'Video Prompt', model: widget.model),
         BidiPage(title: 'Bidi Stream', model: widget.model),
       ];
 
@@ -108,46 +108,46 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.chat,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            label: 'Chat',
-            tooltip: 'Chat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.mic,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            label: 'Audio Prompt',
-            tooltip: 'Audio Prompt',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.numbers,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            label: 'Token Count',
-            tooltip: 'Token Count',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.functions,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            label: 'Function Calling',
-            tooltip: 'Function Calling',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.image,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            label: 'Image Prompt',
-            tooltip: 'Image Prompt',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(
+          //     Icons.chat,
+          //     color: Theme.of(context).colorScheme.primary,
+          //   ),
+          //   label: 'Chat',
+          //   tooltip: 'Chat',
+          // ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(
+          //     Icons.mic,
+          //     color: Theme.of(context).colorScheme.primary,
+          //   ),
+          //   label: 'Audio Prompt',
+          //   tooltip: 'Audio Prompt',
+          // ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(
+          //     Icons.numbers,
+          //     color: Theme.of(context).colorScheme.primary,
+          //   ),
+          //   label: 'Token Count',
+          //   tooltip: 'Token Count',
+          // ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(
+          //     Icons.functions,
+          //     color: Theme.of(context).colorScheme.primary,
+          //   ),
+          //   label: 'Function Calling',
+          //   tooltip: 'Function Calling',
+          // ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(
+          //     Icons.image,
+          //     color: Theme.of(context).colorScheme.primary,
+          //   ),
+          //   label: 'Image Prompt',
+          //   tooltip: 'Image Prompt',
+          // ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.image_search,
@@ -156,30 +156,30 @@ class _HomeScreenState extends State<HomeScreen> {
             label: 'Imagen Model',
             tooltip: 'Imagen Model',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.schema,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            label: 'Schema Prompt',
-            tooltip: 'Schema Prompt',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.edit_document,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            label: 'Document Prompt',
-            tooltip: 'Document Prompt',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.video_collection,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            label: 'Video Prompt',
-            tooltip: 'Video Prompt',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(
+          //     Icons.schema,
+          //     color: Theme.of(context).colorScheme.primary,
+          //   ),
+          //   label: 'Schema Prompt',
+          //   tooltip: 'Schema Prompt',
+          // ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(
+          //     Icons.edit_document,
+          //     color: Theme.of(context).colorScheme.primary,
+          //   ),
+          //   label: 'Document Prompt',
+          //   tooltip: 'Document Prompt',
+          // ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(
+          //     Icons.video_collection,
+          //     color: Theme.of(context).colorScheme.primary,
+          //   ),
+          //   label: 'Video Prompt',
+          //   tooltip: 'Video Prompt',
+          // ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.stream,

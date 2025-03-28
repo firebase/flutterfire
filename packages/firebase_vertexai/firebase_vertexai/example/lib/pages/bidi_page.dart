@@ -38,7 +38,7 @@ class LightControl {
   LightControl({this.brightness, this.colorTemperature});
 }
 
-class _BidiPageState extends State<BidiPage> {
+class _BidiPageState extends State<BidiPage> with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
   final FocusNode _textFieldFocus = FocusNode();
@@ -48,6 +48,7 @@ class _BidiPageState extends State<BidiPage> {
   bool _recording = false;
   late LiveGenerativeModel _liveModel;
   late LiveSession _session;
+  late ImagenModel _imagenModel;
   final _audioManager = AudioStreamManager();
   final _audioRecorder = InMemoryAudioRecorder();
   var _chunkBuilder = BytesBuilder();
@@ -69,8 +70,26 @@ class _BidiPageState extends State<BidiPage> {
       model: 'gemini-2.0-flash-exp',
       liveGenerationConfig: config,
       tools: [
-        Tool.functionDeclarations([lightControlTool]),
+        Tool.functionDeclarations([imagenControlTool]),
       ],
+      systemInstruction: Content.system(
+        'You should always speak in English, but sometime with meows',
+      ),
+    );
+
+    var generationConfig = ImagenGenerationConfig(
+      negativePrompt: 'frog',
+      numberOfImages: 1,
+      aspectRatio: ImagenAspectRatio.square1x1,
+      imageFormat: ImagenFormat.jpeg(compressionQuality: 75),
+    );
+    _imagenModel = FirebaseVertexAI.instance.imagenModel(
+      model: 'imagen-3.0-generate-001',
+      generationConfig: generationConfig,
+      safetySettings: ImagenSafetySettings(
+        ImagenSafetyFilterLevel.blockLowAndAbove,
+        ImagenPersonFilterLevel.allowAdult,
+      ),
     );
   }
 
@@ -224,6 +243,47 @@ class _BidiPageState extends State<BidiPage> {
     return apiResponse;
   }
 
+  final imagenControlTool = FunctionDeclaration(
+    'imagenControl',
+    'Call the imagen api to generate an image',
+    parameters: {
+      'imagePrompt': Schema.string(description: 'Prompt to generate an image'),
+    },
+  );
+
+  Future<Map<String, Object?>> _generateImage({
+    required String imagePrompt,
+  }) async {
+    setState(() {
+      _loading = true;
+    });
+
+    var response = await _imagenModel.generateImages(imagePrompt);
+
+    if (response.images.isNotEmpty) {
+      var imagenImage = response.images[0];
+
+      _messages.add(
+        MessageData(
+          image: Image.memory(imagenImage.bytesBase64Encoded),
+          text: imagePrompt,
+          fromUser: false,
+        ),
+      );
+    } else {
+      // Handle the case where no images were generated
+      _showError('Error: No images were generated.');
+    }
+    setState(() {
+      _loading = false;
+      _scrollDown();
+    });
+    final apiResponse = {
+      'imagePrompt': imagePrompt,
+    };
+    return apiResponse;
+  }
+
   Future<void> _setupSession() async {
     setState(() {
       _loading = true;
@@ -233,6 +293,8 @@ class _BidiPageState extends State<BidiPage> {
       _session = await _liveModel.connect();
       _sessionOpening = true;
       _stopController = StreamController<bool>();
+      _audioManager.startListening();
+      unawaited(_audioManager.startPlayback());
       unawaited(
         processMessagesContinuously(
           stopSignal: _stopController,
@@ -259,9 +321,9 @@ class _BidiPageState extends State<BidiPage> {
     });
     try {
       await _audioRecorder.checkPermission();
-      final audioRecordStream = _audioRecorder.startRecordingStream();
+      var audioRecordStream = _audioRecorder.startRecordingStream();
       // Map the Uint8List stream to InlineDataPart stream
-      final mediaChunkStream = audioRecordStream.map((data) {
+      final mediaChunkStream = audioRecordStream!.map((data) {
         return InlineDataPart('audio/pcm', data);
       });
       await _session.startMediaStream(mediaChunkStream);
@@ -387,7 +449,7 @@ class _BidiPageState extends State<BidiPage> {
           _chunkBuilder.toBytes(),
           24000,
         );
-        _audioManager.addAudio(chunk);
+        _audioManager.addAudioChunk(chunk);
         _chunkBuilder.clear();
         _audioIndex = 0;
       }
@@ -400,7 +462,7 @@ class _BidiPageState extends State<BidiPage> {
         _chunkBuilder.toBytes(),
         24000,
       );
-      _audioManager.addAudio(chunk);
+      _audioManager.addAudioChunk(chunk);
       _audioIndex = 0;
       _chunkBuilder.clear();
     }
@@ -410,13 +472,9 @@ class _BidiPageState extends State<BidiPage> {
     final functionCalls = response.functionCalls!.toList();
     if (functionCalls.isNotEmpty) {
       final functionCall = functionCalls.first;
-      if (functionCall.name == 'setLightValues') {
-        var color = functionCall.args['colorTemperature']! as String;
-        var brightness = functionCall.args['brightness']! as int;
-        final functionResult = await _setLightValues(
-          brightness: brightness,
-          colorTemperature: color,
-        );
+      if (functionCall.name == 'imagenControl') {
+        var imagePrompt = functionCall.args['imagePrompt']! as String;
+        final functionResult = await _generateImage(imagePrompt: imagePrompt);
         await _session.send(
           input: Content.functionResponse(functionCall.name, functionResult),
         );
