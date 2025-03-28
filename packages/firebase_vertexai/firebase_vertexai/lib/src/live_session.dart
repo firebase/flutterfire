@@ -84,7 +84,7 @@ class LiveSession {
   ///
   /// Parameters:
   /// - [mediaChunkStream]: The stream of [InlineDataPart] objects to send to the server.
-  Future<void> startMediaStream(Stream<InlineDataPart> mediaChunkStream) async {
+  Future<void> sendMediaStream(Stream<InlineDataPart> mediaChunkStream) async {
     _checkWsStatus();
 
     try {
