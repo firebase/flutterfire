@@ -84,7 +84,7 @@ class LiveSession {
   ///
   /// Parameters:
   /// - [mediaChunkStream]: The stream of [InlineDataPart] objects to send to the server.
-  Future<void> startMediaStream(Stream<InlineDataPart> mediaChunkStream) async {
+  Future<void> sendMediaStream(Stream<InlineDataPart> mediaChunkStream) async {
     _checkWsStatus();
 
     try {
@@ -131,7 +131,7 @@ class LiveSession {
   void _checkWsStatus() {
     if (_ws.closeCode != null) {
       var message =
-          'WebSocket status: Closed, closeCode: ${_ws.closeCode}, closeReason: ${_ws.closeReason}';
+          'WebSocket Closed, closeCode: ${_ws.closeCode}, closeReason: ${_ws.closeReason}';
 
       throw LiveWebSocketClosedException(message);
     }

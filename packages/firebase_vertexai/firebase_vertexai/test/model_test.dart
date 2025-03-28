@@ -176,6 +176,23 @@ void main() {
         );
       });
 
+      test('can override GenerationConfig repetition penalties', () async {
+        final (client, model) = createModel();
+        const prompt = 'Some prompt';
+        await client.checkRequest(
+          () => model.generateContent([Content.text(prompt)],
+              generationConfig: GenerationConfig(
+                  presencePenalty: 0.5, frequencyPenalty: 0.2)),
+          verifyRequest: (_, request) {
+            expect(request['generationConfig'], {
+              'presencePenalty': 0.5,
+              'frequencyPenalty': 0.2,
+            });
+          },
+          response: arbitraryGenerateContentResponse,
+        );
+      });
+
       test('can pass system instructions', () async {
         const instructions = 'Do a good job';
         final (client, model) = createModel(
