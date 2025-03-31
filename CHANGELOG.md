@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 2025-03-31
+## 2025-03-31 - [BoM 3.9.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-390-2025-03-31)
 
 ### Changes
 
