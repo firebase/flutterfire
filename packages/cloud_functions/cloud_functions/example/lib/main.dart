@@ -35,6 +35,24 @@ class _MyAppState extends State<MyApp> {
   List fruit = [];
 
   @override
+  void initState() {
+    super.initState();
+    FirebaseFunctions.instance
+        .httpsStreamCallable('getFruits')
+        .stream()
+        .listen((data) {
+      print("Chunk >>>> ${data.partialData}");
+    });
+  }
+
+  Future<void> _getTestValues() async { 
+    final streamResult =
+        FirebaseFunctions.instance.httpsStreamCallable('getFruits');
+    final result = await streamResult.data;
+    print("result is >>> ${result.result.data}");
+  }
+
+  @override
   Widget build(BuildContext context) {
     final localhostMapped =
         kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
@@ -60,6 +78,15 @@ class _MyAppState extends State<MyApp> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
+                FloatingActionButton.extended(
+                  onPressed: () async {
+                    _getTestValues();
+                  },
+                  label: const Text('Call Test Values'),
+                  icon: const Icon(Icons.cloud),
+                  backgroundColor: Colors.deepOrange,
+                ),
+                const SizedBox(height: 10),
                 FloatingActionButton.extended(
                   onPressed: () async {
                     // See .github/workflows/scripts/functions/src/index.ts for the example function we
