@@ -6,7 +6,6 @@
 // ignore_for_file: public_member_api_docs
 
 import 'dart:js_interop';
-
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
 import 'functions_interop.dart' as functions_interop;
@@ -84,6 +83,19 @@ class HttpsCallable extends JsObjectWrapper<JSFunction> {
       result! as functions_interop.HttpsCallableResultJsImpl,
     );
   }
+
+  Stream<HttpsCallableResult> stream(JSAny? data) async* {
+    final streamCallable =
+        await (jsObject as functions_interop.HttpsCallable).stream().toDart;
+    final streamResult =
+        streamCallable! as functions_interop.HttpsCallableStreamResultJsImpl;
+
+    await for (final value in streamResult.stream.asStream()) {
+      yield HttpsCallableResult.getInstance(
+        value as functions_interop.HttpsCallableResultJsImpl,
+      );
+    }
+  }
 }
 
 /// Returns Dart representation from JS Object.
@@ -131,6 +143,28 @@ class HttpsCallableResult
   static HttpsCallableResult getInstance(
       functions_interop.HttpsCallableResultJsImpl jsObject) {
     return _expando[jsObject] ??= HttpsCallableResult._fromJsObject(jsObject);
+  }
+
+  dynamic get data {
+    return _data;
+  }
+}
+
+class HttpsCallableStreamResult
+    extends JsObjectWrapper<functions_interop.HttpsCallableStreamResultJsImpl> {
+  HttpsCallableStreamResult._fromJsObject(
+      functions_interop.HttpsCallableStreamResultJsImpl jsObject)
+      : _data = _dartify(jsObject.data),
+        super.fromJsObject(jsObject);
+
+  static final _expando = Expando<HttpsCallableStreamResult>();
+  final dynamic _data;
+
+  /// Creates a new HttpsCallableResult from a [jsObject].
+  static HttpsCallableStreamResult getInstance(
+      functions_interop.HttpsCallableStreamResultJsImpl jsObject) {
+    return _expando[jsObject] ??=
+        HttpsCallableStreamResult._fromJsObject(jsObject);
   }
 
   dynamic get data {
