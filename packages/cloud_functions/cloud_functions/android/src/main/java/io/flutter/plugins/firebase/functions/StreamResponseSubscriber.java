@@ -8,7 +8,8 @@ import android.os.Handler;
 import android.os.Looper;
 import com.google.firebase.functions.StreamResponse;
 import io.flutter.plugin.common.EventChannel;
-import java.util.concurrent.CountDownLatch;
+import java.util.HashMap;
+import java.util.Map;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
@@ -17,10 +18,6 @@ public class StreamResponseSubscriber implements Subscriber<StreamResponse> {
   private final EventChannel.EventSink eventSink;
 
   private final Handler mainThreadHandler = new Handler(Looper.getMainLooper());
-
-  private CountDownLatch latch = new CountDownLatch(1);
-
-  private Object result;
 
   public StreamResponseSubscriber(EventChannel.EventSink eventSink) {
     this.eventSink = eventSink;
@@ -34,12 +31,15 @@ public class StreamResponseSubscriber implements Subscriber<StreamResponse> {
 
   @Override
   public void onNext(StreamResponse streamResponse) {
+    Map<String, Object> messageMap = new HashMap<>();
     if (streamResponse instanceof StreamResponse.Message) {
       Object message = ((StreamResponse.Message) streamResponse).getMessage().getData();
-      mainThreadHandler.post(() -> eventSink.success(message));
+      messageMap.put("message", message);
+      mainThreadHandler.post(() -> eventSink.success(messageMap));
     } else {
-      this.result = ((StreamResponse.Result) streamResponse).getResult().getData();
-      latch.countDown();
+      Object result = ((StreamResponse.Result) streamResponse).getResult().getData();
+      messageMap.put("result", result);
+      mainThreadHandler.post(() -> eventSink.success(messageMap));
     }
   }
 
@@ -47,7 +47,6 @@ public class StreamResponseSubscriber implements Subscriber<StreamResponse> {
   public void onError(Throwable t) {
     if (eventSink != null) {
       eventSink.error("firebase_functions", t.getMessage(), null);
-      latch.countDown();
     }
   }
 
@@ -61,16 +60,6 @@ public class StreamResponseSubscriber implements Subscriber<StreamResponse> {
   public void cancel() {
     if (subscription != null) {
       subscription.cancel();
-      latch.countDown();
-    }
-  }
-
-  public Object getResult() {
-    try {
-      latch.await();
-      return this.result;
-    } catch (Exception e) {
-      throw new RuntimeException(e);
     }
   }
 }

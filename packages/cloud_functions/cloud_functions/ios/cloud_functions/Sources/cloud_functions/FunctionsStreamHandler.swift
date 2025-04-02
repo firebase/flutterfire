@@ -13,13 +13,9 @@ import FirebaseFunctions
 class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
   var functions: Functions
   private var streamTask: Task<Void, Never>?
-  @MainActor private var streamResult: Any?
-  private let continuation: AsyncStream<Any?>.Continuation
-  private let stream: AsyncStream<Any?>
 
   init(functions: Functions) {
     self.functions = functions
-    (stream, continuation) = AsyncStream.makeStream(of: Any?.self)
     super.init()
   }
 
@@ -33,7 +29,6 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
 
   func onCancel(withArguments arguments: Any?) -> FlutterError? {
     streamTask?.cancel()
-    continuation.finish()
     return nil
   }
 
@@ -84,10 +79,11 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
           await MainActor.run {
             switch response {
             case let .message(message):
-              events(message.value)
+              var wrappedMessage: [String: Any?] = ["message": message.value]
+              events(wrappedMessage)
             case let .result(result):
-              self.streamResult = result.value
-              continuation.yield(result.value)
+              var wrappedResult: [String: Any?] = ["result": result.value]
+              events(wrappedResult)
             }
           }
         }
@@ -96,8 +92,6 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
           events(FlutterError(code: "unknown",
                               message: error.localizedDescription,
                               details: ["code": "unknown", "message": error.localizedDescription]))
-          continuation.yield(nil)
-          continuation.finish()
         }
       }
     } else {
@@ -105,17 +99,7 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
         events(FlutterError(code: "unknown",
                             message: "Streaming requires iOS 15+",
                             details: nil))
-        continuation.yield(nil)
       }
-      continuation.finish()
     }
-  }
-
-  @MainActor
-  func getResult() async -> Any? {
-    for await result in stream {
-      return result
-    }
-    return nil
   }
 }

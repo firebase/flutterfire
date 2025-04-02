@@ -62,8 +62,4 @@ public class FirebaseFunctionsStreamHandler implements StreamHandler {
       events.error("firebase_functions", e.getMessage(), null);
     }
   }
-
-  public Object getResult() {
-    return subscriber.getResult();
-  }
 }

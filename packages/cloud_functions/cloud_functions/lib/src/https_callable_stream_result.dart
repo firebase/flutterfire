@@ -3,19 +3,19 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:cloud_functions/cloud_functions.dart';
+part of '../cloud_functions.dart';
 
 /// Represents a response from a Server-Sent Event (SSE) stream.
-sealed class StreamResponse<T> {}
+sealed class StreamResponse {}
 
 /// A chunk received during the stream.
-class Chunk<T> extends StreamResponse<T> {
+class Chunk<T> extends StreamResponse {
   final T partialData;
   Chunk(this.partialData);
 }
 
 /// The final result of the computation, marking the end of the stream.
-class Result<T> extends StreamResponse<T> {
-  final HttpsCallableResult<T> result;
+class Result<R> extends StreamResponse {
+  final HttpsCallableResult<R> result;
   Result(this.result);
 }

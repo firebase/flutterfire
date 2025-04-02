@@ -38,8 +38,6 @@ public class FlutterFirebaseFunctionsPlugin
   private MethodChannel channel;
   private FlutterPluginBinding pluginBinding;
 
-  private FirebaseFunctionsStreamHandler streamHandler;
-
   /**
    * Default Constructor.
    *
@@ -66,7 +64,7 @@ public class FlutterFirebaseFunctionsPlugin
     final EventChannel eventChannel =
         new EventChannel(pluginBinding.getBinaryMessenger(), eventChannelName);
     FirebaseFunctions functions = getFunctions(arguments);
-    streamHandler = new FirebaseFunctionsStreamHandler(functions);
+    FirebaseFunctionsStreamHandler streamHandler = new FirebaseFunctionsStreamHandler(functions);
     eventChannel.setStreamHandler(streamHandler);
   }
 
@@ -129,25 +127,11 @@ public class FlutterFirebaseFunctionsPlugin
     return taskCompletionSource.getTask();
   }
 
-  private void getCompleteResult(Result result) {
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            Object completeResult = streamHandler.getResult();
-            result.success(completeResult);
-          } catch (Exception e) {
-            result.error("firebase_functions", e.getMessage(), getExceptionDetails(e));
-          }
-        });
-  }
-
   @Override
   public void onMethodCall(MethodCall call, @NonNull final Result result) {
     if (call.method.equals("FirebaseFunctions#registerEventChannel")) {
       registerEventChannel(call.arguments());
       result.success(null);
-    } else if (call.method.equals("FirebaseFunctions#getCompleteResult")) {
-      getCompleteResult(result);
     } else if (call.method.equals("FirebaseFunctions#call")) {
       httpsFunctionCall(call.arguments())
           .addOnCompleteListener(

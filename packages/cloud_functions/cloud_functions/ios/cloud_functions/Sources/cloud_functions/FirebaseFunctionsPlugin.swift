@@ -19,7 +19,6 @@ let kFLTFirebaseFunctionsChannelName = "plugins.flutter.io/firebase_functions"
 
 public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin {
   private let binaryMessenger: FlutterBinaryMessenger
-  private var streamHandler: FunctionsStreamHandler?
 
   init(binaryMessenger: FlutterBinaryMessenger) {
     self.binaryMessenger = binaryMessenger
@@ -66,18 +65,11 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     let eventChannelName = "\(kFLTFirebaseFunctionsChannelName)/\(eventChannelId)"
     let eventChannel = FlutterEventChannel(name: eventChannelName, binaryMessenger: binaryMessenger)
     let functions = getFunctions(arguments: arguments)
-    streamHandler = FunctionsStreamHandler(functions: functions)
+    let streamHandler = FunctionsStreamHandler(functions: functions)
     eventChannel.setStreamHandler(streamHandler)
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    if call.method == "FirebaseFunctions#getCompleteResult" {
-      Task {
-        await getCompleteResult(result: result)
-      }
-      return
-    }
-
     guard let arguments = call.arguments as? [String: Any] else {
       result(FlutterError(code: "invalid_arguments",
                           message: "Invalid arguments",
@@ -155,11 +147,6 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
         completion(result?.data, nil)
       }
     }
-  }
-
-  private func getCompleteResult(result: @escaping FlutterResult) async {
-    let value = await streamHandler?.getResult()
-    result(value)
   }
 
   private func getFunctions(arguments: [String: Any]) -> Functions {
