@@ -31,7 +31,7 @@ export const testFunctionTimeout = functions.https.onCall((req, res) => {
     if (data && data.testTimeout) {
       setTimeout(
         () => resolve({ timeLimit: 'exceeded' }),
-        parseInt(data.rawRequest.body, 10)
+        parseInt(data.testTimeout, 10)
       );
     } else {
       reject(
