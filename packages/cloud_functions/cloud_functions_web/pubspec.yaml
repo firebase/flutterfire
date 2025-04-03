@@ -13,6 +13,7 @@ dependencies:
   cloud_functions_platform_interface: ^5.6.4
   firebase_core: ^3.12.1
   firebase_core_web: ^2.21.1
+  web: ^1.1.1
   flutter:
     sdk: flutter
   flutter_web_plugins:
