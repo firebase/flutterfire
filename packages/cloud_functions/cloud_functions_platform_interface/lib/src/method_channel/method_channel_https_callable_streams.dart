@@ -8,8 +8,7 @@ import 'package:cloud_functions_platform_interface/src/method_channel/utils/exce
 import 'package:flutter/services.dart';
 import '../../cloud_functions_platform_interface.dart';
 
-class MethodChannelHttpsCallableStreams<R>
-    extends HttpsCallableStreamsPlatform<R> {
+class MethodChannelHttpsCallableStreams extends HttpsCallableStreamsPlatform {
   MethodChannelHttpsCallableStreams(FirebaseFunctionsPlatform functions,
       String? origin, String? name, HttpsCallableOptions options, Uri? uri)
       : _transformedUri = uri?.pathSegments.join('_').replaceAll('.', '_'),

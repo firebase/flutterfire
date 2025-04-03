@@ -58,7 +58,7 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
     let options = HTTPSCallableOptions(requireLimitedUseAppCheckTokens: limitedUseAppCheckToken)
 
     // Stream handling for iOS 15+
-    if #available(iOS 15.0, *) {
+    if #available(iOS 15.0, macOS 12.0, *) {
       var function: Callable<AnyEncodable, StreamResponse<AnyDecodable, AnyDecodable>>
 
       if let functionName {
@@ -103,7 +103,7 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
     } else {
       await MainActor.run {
         events(FlutterError(code: "unknown",
-                            message: "Streaming requires iOS 15+",
+                            message: "Streaming requires iOS 15+ or macOS 12+",
                             details: nil))
       }
     }

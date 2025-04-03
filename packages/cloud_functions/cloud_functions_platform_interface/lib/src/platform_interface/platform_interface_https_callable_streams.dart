@@ -6,7 +6,7 @@
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-abstract class HttpsCallableStreamsPlatform<R> extends PlatformInterface {
+abstract class HttpsCallableStreamsPlatform extends PlatformInterface {
   HttpsCallableStreamsPlatform(
     this.functions,
     this.origin,
