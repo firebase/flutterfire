@@ -45,6 +45,8 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
     let functionUri = arguments["functionUri"] as? String
     let origin = arguments["origin"] as? String
     let parameters = arguments["arguments"]
+    let timeout = arguments["timeout"] as? Double
+    let limitedUseAppCheckToken = arguments["limitedUseAppCheckToken"] as? Bool ?? false
 
     if let origin,
        let url = URL(string: origin),
@@ -53,14 +55,16 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
       functions.useEmulator(withHost: host, port: port)
     }
 
+    let options = HTTPSCallableOptions(requireLimitedUseAppCheckTokens: limitedUseAppCheckToken)
+
     // Stream handling for iOS 15+
     if #available(iOS 15.0, *) {
-      let function: Callable<AnyEncodable, StreamResponse<AnyDecodable, AnyDecodable>>
+      var function: Callable<AnyEncodable, StreamResponse<AnyDecodable, AnyDecodable>>
 
       if let functionName {
-        function = self.functions.httpsCallable(functionName)
+        function = self.functions.httpsCallable(functionName, options: options)
       } else if let functionUri, let url = URL(string: functionUri) {
-        function = self.functions.httpsCallable(url)
+        function = self.functions.httpsCallable(url, options: options)
       } else {
         await MainActor.run {
           events(FlutterError(code: "IllegalArgumentException",
@@ -68,6 +72,10 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
                               details: nil))
         }
         return
+      }
+
+      if let timeout {
+        function.timeoutInterval = timeout / 1000
       }
 
       do {
@@ -79,11 +87,9 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
           await MainActor.run {
             switch response {
             case let .message(message):
-              var wrappedMessage: [String: Any?] = ["message": message.value]
-              events(wrappedMessage)
+              events(["message": message.value])
             case let .result(result):
-              var wrappedResult: [String: Any?] = ["result": result.value]
-              events(wrappedResult)
+              events(["result": result.value])
             }
           }
         }

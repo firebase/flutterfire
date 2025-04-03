@@ -9,8 +9,11 @@
 library;
 
 import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
+import 'package:web/web.dart' as web;
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
+import 'dart:html';
 
 @JS()
 @staticInterop
@@ -82,10 +85,8 @@ extension HttpsCallableResultJsImplExtension on HttpsCallableResultJsImpl {
 class HttpsCallable {}
 
 extension HttpsCallableExtension on HttpsCallable {
-  external JSPromise stream(
-      [JSAny? data, HttpsCallableStreamOptions? options]);
+  external JSPromise stream([JSAny? data, HttpsCallableStreamOptions? options]);
 }
-
 
 @JS('HttpsCallableStreamResult')
 @staticInterop
@@ -96,7 +97,6 @@ extension HttpsCallableStreamResultJsImplExtension
   external JSPromise data;
   external JsAsyncIterator<JSAny> stream;
 }
-
 
 @JS('HttpsCallableStreamOptions')
 @staticInterop
@@ -113,30 +113,23 @@ extension HttpsCallableStreamOptionsExtension on HttpsCallableStreamOptions {
 
 extension type JsAsyncIterator<T extends JSAny>._(JSObject _)
     implements JSObject {
-  external JSPromise<JsAsyncIteratorState<T>> next();
-
-  Stream<T> asStream() async* {
-    this as SymbolJsImpl;
+  Stream<dynamic> asStream() async* {
+    final symbolJS = web.window.getProperty('Symbol'.toJS)! as JSFunction;
+    final asyncIterator = symbolJS.getProperty('asyncIterator'.toJS);
+    final iterator =
+        (this as JSObject).getProperty(asyncIterator!)! as JsAsyncIterator<T>;
+    window.console.log(iterator);
+    final object = (iterator as JSFunction).callAsFunction()! as JSObject;
     while (true) {
-      final result = await next().toDart;
-      if (result.done) break;
-      yield result.value;
+      // Wait for the next iteration result.
+      final result = await ((object.getProperty('next'.toJS)! as JSFunction)
+              .callAsFunction()! as JSPromise<JSAny>)
+          .toDart;
+      final dartObject = (result.dartify()! as Map).cast<String, dynamic>();
+      if (dartObject['done'] as bool) {
+        break;
+      }
+      yield (result as JSObject).getProperty('value'.toJS);
     }
   }
-}
-
-extension type JsAsyncIteratorState<T extends JSAny>._(JSObject _)
-    implements JSObject {
-  external bool get done;
-
-  external T get value;
-}
-
-
-@JS('Symbol')
-@staticInterop
-extension type SymbolJsImpl(JSObject _) implements JSObject {
-  
-  @JS('asyncIterator')
-  external static JSSymbol asyncIterator;
 }

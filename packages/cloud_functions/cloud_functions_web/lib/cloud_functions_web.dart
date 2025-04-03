@@ -65,7 +65,14 @@ class FirebaseFunctionsWeb extends FirebaseFunctionsPlatform {
   }
 
   @override
-  HttpsCallableStreamsPlatform httpsStreamCallable(String? origin, String name) {
-    return HttpsCallableStreamWeb(this, _delegate, origin, name, null);
+  HttpsCallableStreamsPlatform httpsStreamCallable(
+      String? origin, String name, HttpsCallableOptions options) {
+    return HttpsCallableStreamWeb(this, _delegate, origin, name, options, null);
+  }
+
+  @override
+  HttpsCallableStreamsPlatform httpsStreamCallableWithUri(
+      String? origin, Uri uri, HttpsCallableOptions options) {
+    return HttpsCallableStreamWeb(this, _delegate, origin, null, options, null);
   }
 }

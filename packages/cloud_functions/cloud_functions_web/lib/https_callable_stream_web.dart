@@ -6,17 +6,22 @@
 import 'dart:js_interop';
 
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
+import 'package:cloud_functions_web/interop/functions_interop.dart' as interop;
 
 import 'interop/functions.dart' as functions_interop;
+import 'utils.dart';
 
 class HttpsCallableStreamWeb extends HttpsCallableStreamsPlatform {
   HttpsCallableStreamWeb(
-      super.functions, this._webFunctions, super.origin, super.name, super.uri);
+      FirebaseFunctionsPlatform functions,
+      this._webFunctions,
+      String? origin,
+      String? name,
+      HttpsCallableOptions options,
+      Uri? uri)
+      : super(functions, origin, name, options, uri);
 
   final functions_interop.Functions _webFunctions;
-
-  @override
-  Future get data => throw UnimplementedError();
 
   @override
   Stream<dynamic> stream(Object? parameters) async* {
@@ -37,9 +42,16 @@ class HttpsCallableStreamWeb extends HttpsCallableStreamsPlatform {
     }
 
     final JSAny? parametersJS = parameters?.jsify();
-
-    await for (final value in  callable.stream(parametersJS)){
-      yield value;
+    interop.HttpsCallableStreamOptions callableStreamOptions =
+        interop.HttpsCallableStreamOptions(
+            limitedUseAppCheckTokens: options.limitedUseAppCheckToken.toJS);
+    try {
+      await for (final value
+          in callable.stream(parametersJS, callableStreamOptions)) {
+        yield value;
+      }
+    } catch (e, s) {
+      throw convertFirebaseFunctionsException(e as JSObject, s);
     }
   }
 }

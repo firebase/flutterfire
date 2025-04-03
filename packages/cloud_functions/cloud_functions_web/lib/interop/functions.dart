@@ -84,17 +84,26 @@ class HttpsCallable extends JsObjectWrapper<JSFunction> {
     );
   }
 
-  Stream<HttpsCallableResult> stream(JSAny? data) async* {
-    final streamCallable =
-        await (jsObject as functions_interop.HttpsCallable).stream().toDart;
+  Stream<dynamic> stream(JSAny? data,
+      functions_interop.HttpsCallableStreamOptions? options) async* {
+    final streamCallable = await (jsObject as functions_interop.HttpsCallable)
+        .stream(data, options)
+        .toDart;
     final streamResult =
         streamCallable! as functions_interop.HttpsCallableStreamResultJsImpl;
 
     await for (final value in streamResult.stream.asStream()) {
-      yield HttpsCallableResult.getInstance(
-        value as functions_interop.HttpsCallableResultJsImpl,
-      );
+      // ignore: invalid_runtime_check_with_js_interop_types
+      final message = value is JSObject
+          ? HttpsCallableResult.getInstance(
+              value as functions_interop.HttpsCallableResultJsImpl,
+            )
+          : value;
+      yield {'message': message};
     }
+
+    final result = await streamResult.data.toDart;
+    yield {'result': result};
   }
 }
 

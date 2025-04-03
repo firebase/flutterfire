@@ -54,13 +54,13 @@ class MethodChannelFirebaseFunctions extends FirebaseFunctionsPlatform {
 
   @override
   HttpsCallableStreamsPlatform httpsStreamCallable(
-      String? origin, String name) {
-    return MethodChannelHttpsCallableStreams(this, origin, name, null);
+      String? origin, String name, HttpsCallableOptions options) {
+    return MethodChannelHttpsCallableStreams(this, origin, name, options, null);
   }
 
   @override
   HttpsCallableStreamsPlatform httpsStreamCallableWithUri(
-      String? origin, Uri uri) {
-    return MethodChannelHttpsCallableStreams(this, origin, null, uri);
+      String? origin, Uri uri, HttpsCallableOptions options) {
+    return MethodChannelHttpsCallableStreams(this, origin, null, options, uri);
   }
 }

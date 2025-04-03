@@ -11,9 +11,9 @@ import '../../cloud_functions_platform_interface.dart';
 class MethodChannelHttpsCallableStreams<R>
     extends HttpsCallableStreamsPlatform<R> {
   MethodChannelHttpsCallableStreams(FirebaseFunctionsPlatform functions,
-      String? origin, String? name, Uri? uri)
+      String? origin, String? name, HttpsCallableOptions options, Uri? uri)
       : _transformedUri = uri?.pathSegments.join('_').replaceAll('.', '_'),
-        super(functions, origin, name, uri) {
+        super(functions, origin, name, options, uri) {
     _eventChannelId = name ?? _transformedUri ?? '';
     _channel =
         EventChannel('plugins.flutter.io/firebase_functions/$_eventChannelId');
@@ -32,6 +32,8 @@ class MethodChannelHttpsCallableStreams<R>
         'functionUri': uri?.toString(),
         'origin': origin,
         'parameters': parameters,
+        'limitedUseAppCheckToken': options.limitedUseAppCheckToken,
+        'timeout': options.timeout.inMilliseconds,
       };
       yield* _channel.receiveBroadcastStream(eventData).map((message) {
         if (message is Map) {
@@ -51,15 +53,5 @@ class MethodChannelHttpsCallableStreams<R>
       'appName': functions.app!.name,
       'region': functions.region,
     });
-  }
-
-  @override
-  Future<dynamic> get data async {
-    final result = await MethodChannelFirebaseFunctions.channel
-        .invokeMethod('FirebaseFunctions#getCompleteResult');
-    if (result is Map) {
-      return Map<String, dynamic>.from(result);
-    }
-    return result;
   }
 }

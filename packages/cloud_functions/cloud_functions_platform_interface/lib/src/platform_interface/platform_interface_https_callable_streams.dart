@@ -11,6 +11,7 @@ abstract class HttpsCallableStreamsPlatform<R> extends PlatformInterface {
     this.functions,
     this.origin,
     this.name,
+    this.options,
     this.uri,
   )   : assert(name != null || uri != null),
         super(token: _token);
@@ -33,7 +34,8 @@ abstract class HttpsCallableStreamsPlatform<R> extends PlatformInterface {
   /// The URI of the function for 2nd gen functions
   final Uri? uri;
 
-  Stream<dynamic> stream(Object? parameters);
+  /// Used to set the options for this instance.
+  HttpsCallableOptions options;
 
-  Future<dynamic> get data;
+  Stream<dynamic> stream(Object? parameters);
 }

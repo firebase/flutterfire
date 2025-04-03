@@ -31,15 +31,15 @@ public class StreamResponseSubscriber implements Subscriber<StreamResponse> {
 
   @Override
   public void onNext(StreamResponse streamResponse) {
-    Map<String, Object> messageMap = new HashMap<>();
+    Map<String, Object> responseMap = new HashMap<>();
     if (streamResponse instanceof StreamResponse.Message) {
       Object message = ((StreamResponse.Message) streamResponse).getMessage().getData();
-      messageMap.put("message", message);
-      mainThreadHandler.post(() -> eventSink.success(messageMap));
+      responseMap.put("message", message);
+      mainThreadHandler.post(() -> eventSink.success(responseMap));
     } else {
       Object result = ((StreamResponse.Result) streamResponse).getResult().getData();
-      messageMap.put("result", result);
-      mainThreadHandler.post(() -> eventSink.success(messageMap));
+      responseMap.put("result", result);
+      mainThreadHandler.post(() -> eventSink.success(responseMap));
     }
   }
 
