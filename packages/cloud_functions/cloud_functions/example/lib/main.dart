@@ -33,23 +33,38 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   List fruit = [];
+  List streamResult = [];
 
   @override
   void initState() {
     super.initState();
-    FirebaseFunctions.instance
-        .httpsStreamCallable('getFruits')
-        .stream()
-        .listen((data) {
-      print("Chunk >>>> ${data.partialData}");
-    });
+    streamFunction();
   }
 
-  Future<void> _getTestValues() async { 
-    final streamResult =
-        FirebaseFunctions.instance.httpsStreamCallable('getFruits');
-    final result = await streamResult.data;
-    print("result is >>> ${result.result.data}");
+  void streamFunction() {
+    fruit.clear();
+    FirebaseFunctions.instance.httpsStreamCallable('getFruits').stream().listen(
+      (data) {
+        if (data is Chunk) {
+          setState(() {
+            // adds individual stream values to list
+            fruit.add(data.partialData);
+          });
+        } else if (data is Result) {
+          setState(() {
+            // stores complete stream result
+            streamResult = data.result.data;
+          });
+        }
+      },
+      onError: (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('ERROR: $e'),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -62,15 +77,39 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Firebase Functions Example'),
         ),
-        body: Center(
-          child: ListView.builder(
-            itemCount: fruit.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text('${fruit[index]}'),
-              );
-            },
-          ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: fruit.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text('${fruit[index]}'),
+                  );
+                },
+              ),
+            ),
+            Visibility(
+              visible: streamResult.isNotEmpty,
+              child: const Text(
+                "Stream's Complete Result: ",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: streamResult.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text('${streamResult[index]}'),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
         floatingActionButton: Builder(
           builder: (context) {
@@ -79,10 +118,8 @@ class _MyAppState extends State<MyApp> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 FloatingActionButton.extended(
-                  onPressed: () async {
-                    _getTestValues();
-                  },
-                  label: const Text('Call Test Values'),
+                  onPressed: streamFunction,
+                  label: const Text('Call Stream Function'),
                   icon: const Icon(Icons.cloud),
                   backgroundColor: Colors.deepOrange,
                 ),
@@ -140,6 +177,7 @@ class _MyAppState extends State<MyApp> {
       final result = await callable();
       setState(() {
         fruit.clear();
+        streamResult.clear();
         result.data.forEach((f) {
           fruit.add(f);
         });

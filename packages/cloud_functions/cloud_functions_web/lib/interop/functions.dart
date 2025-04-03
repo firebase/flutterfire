@@ -95,9 +95,9 @@ class HttpsCallable extends JsObjectWrapper<JSFunction> {
     await for (final value in streamResult.stream.asStream()) {
       // ignore: invalid_runtime_check_with_js_interop_types
       final message = value is JSObject
-          ? HttpsCallableResult.getInstance(
-              value as functions_interop.HttpsCallableResultJsImpl,
-            )
+          ? HttpsCallableStreamResult.getInstance(
+              value as functions_interop.HttpsStreamIterableResult,
+            ).data
           : value;
       yield {'message': message};
     }
@@ -160,10 +160,10 @@ class HttpsCallableResult
 }
 
 class HttpsCallableStreamResult
-    extends JsObjectWrapper<functions_interop.HttpsCallableStreamResultJsImpl> {
+    extends JsObjectWrapper<functions_interop.HttpsStreamIterableResult> {
   HttpsCallableStreamResult._fromJsObject(
-      functions_interop.HttpsCallableStreamResultJsImpl jsObject)
-      : _data = _dartify(jsObject.data),
+      functions_interop.HttpsStreamIterableResult jsObject)
+      : _data = _dartify(jsObject.value),
         super.fromJsObject(jsObject);
 
   static final _expando = Expando<HttpsCallableStreamResult>();
@@ -171,7 +171,7 @@ class HttpsCallableStreamResult
 
   /// Creates a new HttpsCallableResult from a [jsObject].
   static HttpsCallableStreamResult getInstance(
-      functions_interop.HttpsCallableStreamResultJsImpl jsObject) {
+      functions_interop.HttpsStreamIterableResult jsObject) {
     return _expando[jsObject] ??=
         HttpsCallableStreamResult._fromJsObject(jsObject);
   }

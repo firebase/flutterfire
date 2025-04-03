@@ -13,7 +13,6 @@ import 'dart:js_interop_unsafe';
 import 'package:web/web.dart' as web;
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
-import 'dart:html';
 
 @JS()
 @staticInterop
@@ -118,7 +117,6 @@ extension type JsAsyncIterator<T extends JSAny>._(JSObject _)
     final asyncIterator = symbolJS.getProperty('asyncIterator'.toJS);
     final iterator =
         (this as JSObject).getProperty(asyncIterator!)! as JsAsyncIterator<T>;
-    window.console.log(iterator);
     final object = (iterator as JSFunction).callAsFunction()! as JSObject;
     while (true) {
       // Wait for the next iteration result.
@@ -129,7 +127,15 @@ extension type JsAsyncIterator<T extends JSAny>._(JSObject _)
       if (dartObject['done'] as bool) {
         break;
       }
-      yield (result as JSObject).getProperty('value'.toJS);
+      yield result as JSObject;
     }
   }
+}
+
+@JS()
+@staticInterop
+abstract class HttpsStreamIterableResult {}
+
+extension HttpsStreamIterableResultExtension on HttpsStreamIterableResult {
+  external JSAny? get value;
 }
