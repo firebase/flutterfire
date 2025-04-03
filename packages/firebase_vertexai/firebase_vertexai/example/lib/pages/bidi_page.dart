@@ -59,7 +59,7 @@ class _BidiPageState extends State<BidiPage> {
     super.initState();
 
     final config = LiveGenerationConfig(
-      speechConfig: SpeechConfig(voice: Voice.Fenrir),
+      speechConfig: SpeechConfig(voice: Voice.fenrir),
       responseModalities: [
         ResponseModalities.audio,
       ],
@@ -264,7 +264,7 @@ class _BidiPageState extends State<BidiPage> {
       final mediaChunkStream = audioRecordStream.map((data) {
         return InlineDataPart('audio/pcm', data);
       });
-      await _session.startMediaStream(mediaChunkStream);
+      await _session.sendMediaStream(mediaChunkStream);
     } catch (e) {
       _showError(e.toString());
     }

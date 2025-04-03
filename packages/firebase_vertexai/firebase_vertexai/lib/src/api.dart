@@ -659,6 +659,8 @@ abstract class BaseGenerationConfig {
     this.temperature,
     this.topP,
     this.topK,
+    this.presencePenalty,
+    this.frequencyPenalty,
   });
 
   /// Number of generated responses to return.
@@ -700,6 +702,41 @@ abstract class BaseGenerationConfig {
   /// Note: The default value varies by model.
   final int? topK;
 
+  /// The penalty for repeating the same words or phrases already generated in
+  /// the text.
+  ///
+  /// Controls the likelihood of repetition. Higher penalty values result in
+  /// more diverse output.
+  ///
+  /// **Note:** While both [presencePenalty] and [frequencyPenalty] discourage
+  /// repetition, [presencePenalty] applies the same penalty regardless of how
+  /// many times the word/phrase has already appeared, whereas
+  /// [frequencyPenalty] increases the penalty for *each* repetition of a
+  /// word/phrase.
+  ///
+  /// **Important:** The range of supported [presencePenalty] values depends on
+  /// the model; see the
+  /// [documentation](https://firebase.google.com/docs/vertex-ai/model-parameters?platform=flutter#configure-model-parameters-gemini)
+  /// for more details.
+  final double? presencePenalty;
+
+  /// The penalty for repeating words or phrases, with the penalty increasing
+  /// for each repetition.
+  ///
+  /// Controls the likelihood of repetition. Higher values increase the penalty
+  /// of repetition, resulting in more diverse output.
+  ///
+  /// **Note:** While both [frequencyPenalty] and [presencePenalty] discourage
+  /// repetition, [frequencyPenalty] increases the penalty for *each* repetition
+  /// of a word/phrase, whereas [presencePenalty] applies the same penalty
+  /// regardless of how many times the word/phrase has already appeared.
+  ///
+  /// **Important:** The range of supported [frequencyPenalty] values depends on
+  /// the model; see the
+  /// [documentation](https://firebase.google.com/docs/vertex-ai/model-parameters?platform=flutter#configure-model-parameters-gemini)
+  /// for more details.
+  final double? frequencyPenalty;
+
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
         if (candidateCount case final candidateCount?)
@@ -709,6 +746,10 @@ abstract class BaseGenerationConfig {
         if (temperature case final temperature?) 'temperature': temperature,
         if (topP case final topP?) 'topP': topP,
         if (topK case final topK?) 'topK': topK,
+        if (presencePenalty case final presencePenalty?)
+          'presencePenalty': presencePenalty,
+        if (frequencyPenalty case final frequencyPenalty?)
+          'frequencyPenalty': frequencyPenalty,
       };
 }
 
@@ -722,6 +763,8 @@ final class GenerationConfig extends BaseGenerationConfig {
     super.temperature,
     super.topP,
     super.topK,
+    super.presencePenalty,
+    super.frequencyPenalty,
     this.responseMimeType,
     this.responseSchema,
   });

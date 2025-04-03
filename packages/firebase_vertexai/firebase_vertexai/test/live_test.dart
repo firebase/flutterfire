@@ -21,15 +21,15 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('LiveAPI Tests', () {
     test('Voices enum toJson() returns correct value', () {
-      expect(Voice.Aoede.toJson(), 'Aoede');
-      expect(Voice.Charon.toJson(), 'Charon');
-      expect(Voice.Fenrir.toJson(), 'Fenrir');
-      expect(Voice.Kore.toJson(), 'Kore');
-      expect(Voice.Puck.toJson(), 'Puck');
+      expect(Voice.aoede.toJson(), 'Aoede');
+      expect(Voice.charon.toJson(), 'Charon');
+      expect(Voice.fenrir.toJson(), 'Fenrir');
+      expect(Voice.kore.toJson(), 'Kore');
+      expect(Voice.puck.toJson(), 'Puck');
     });
 
     test('SpeechConfig toJson() returns correct JSON', () {
-      final speechConfigWithVoice = SpeechConfig(voice: Voice.Aoede);
+      final speechConfigWithVoice = SpeechConfig(voice: Voice.aoede);
       expect(speechConfigWithVoice.toJson(), {
         'voice_config': {
           'prebuilt_voice_config': {'voice_name': 'Aoede'}
@@ -49,7 +49,7 @@ void main() {
 
     test('LiveGenerationConfig toJson() returns correct JSON', () {
       final liveGenerationConfig = LiveGenerationConfig(
-        speechConfig: SpeechConfig(voice: Voice.Charon),
+        speechConfig: SpeechConfig(voice: Voice.charon),
         responseModalities: [ResponseModalities.text, ResponseModalities.audio],
         candidateCount: 2,
         maxOutputTokens: 100,

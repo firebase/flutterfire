@@ -138,7 +138,15 @@ final class LiveWebSocketClosedException implements Exception {
   final String message;
 
   @override
-  String toString() => message;
+  String toString() {
+    if (message.contains('DEADLINE_EXCEEDED')) {
+      return 'The current live session has expired. Please start a new session.';
+    } else if (message.contains('RESOURCE_EXHAUSTED')) {
+      return 'You have exceeded the maximum number of concurrent sessions. '
+          'Please close other sessions and try again later.';
+    }
+    return message;
+  }
 }
 
 /// Parse the error json object.
@@ -150,7 +158,8 @@ VertexAIException parseError(Object jsonObject) {
     } =>
       InvalidApiKey(message),
     {'message': UnsupportedUserLocation._message} => UnsupportedUserLocation(),
-    {'message': final String message} when message.contains('quota') =>
+    {'message': final String message}
+        when message.toLowerCase().contains('quota') =>
       QuotaExceeded(message),
     {
       'message': final String _,
