@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import * as functions from 'firebase-functions';
-// import { onCall } from 'firebase-functions/https';
 import * as functionsv2 from 'firebase-functions/v2';
+
 
 // For example app.
 // noinspection JSUnusedGlobalSymbols
@@ -15,13 +15,20 @@ export const listfruits2ndgen = functionsv2.https.onCall(() => {
 
 // For e2e testing a custom region.
 // noinspection JSUnusedGlobalSymbols
-export const testFunctionCustomRegion = functions.https.onCall(() => 'europe-west1');
+
+export const testFunctionCustomRegion = functions.https.onCall(
+  {
+    region: 'europe-west1'
+  },
+  () => 'europe-west1'
+);
 
 // For e2e testing timeouts.
-export const testFunctionTimeout = functions.https.onCall((data) => {
+export const testFunctionTimeout = functions.https.onCall((req, res) => {
+  const data = req.data
   console.log(JSON.stringify({ data }));
   return new Promise((resolve, reject) => {
-    if (data && data.rawRequest) {
+    if (data && data.testTimeout) {
       setTimeout(
         () => resolve({ timeLimit: 'exceeded' }),
         parseInt(data.rawRequest.body, 10)
