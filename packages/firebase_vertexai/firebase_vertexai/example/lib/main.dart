@@ -16,6 +16,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';
+import 'package:vertex_ai_example/firebase_options.dart';
 
 import 'pages/chat_page.dart';
 import 'pages/audio_page.dart';
@@ -28,12 +29,9 @@ import 'pages/document.dart';
 import 'pages/video_page.dart';
 import 'pages/bidi_page.dart';
 
-// REQUIRED if you want to run on Web
-const FirebaseOptions? options = null;
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseAuth.instance.signInAnonymously();
 
   var vertexInstance =
