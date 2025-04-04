@@ -10,12 +10,14 @@ sealed class StreamResponse {}
 
 /// A chunk received during the stream.
 class Chunk<T> extends StreamResponse {
+  /// The intermediate data received from the server.
   final T partialData;
   Chunk(this.partialData);
 }
 
 /// The final result of the computation, marking the end of the stream.
 class Result<R> extends StreamResponse {
+  /// The final computed result received from the server.
   final HttpsCallableResult<R> result;
   Result(this.result);
 }

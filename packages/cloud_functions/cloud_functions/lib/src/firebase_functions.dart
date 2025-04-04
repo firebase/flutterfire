@@ -109,7 +109,7 @@ class FirebaseFunctions extends FirebasePluginPlatform {
         delegate.httpsStreamCallable(_origin, name, options));
   }
 
-  /// A reference to the streaming Callable HTTPS trigger with the given name.
+  /// A reference to the streaming Callable HTTPS trigger with the given URL.
   ///
   /// Should be URL of the 2nd gen Callable function in Firebase.
   HttpsCallableStream httpsCallableStreamFromUrl(
@@ -122,7 +122,7 @@ class FirebaseFunctions extends FirebasePluginPlatform {
         delegate.httpsStreamCallableWithUri(_origin, uri, options));
   }
 
-  /// A reference to the streaming Callable HTTPS trigger with the given name.
+  /// A reference to the streaming Callable HTTPS trigger with the given URI.
   ///
   /// Should be Uri of the 2nd gen Callable function in Firebase.
   HttpsCallableStream httpsCallableStreamFromUri(

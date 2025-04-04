@@ -6,6 +6,9 @@
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
+/// Interface for [HttpsCallableStream] implementations
+///
+/// A reference to a particular Callable HTTPS trigger in Cloud Functions.
 abstract class HttpsCallableStreamsPlatform extends PlatformInterface {
   HttpsCallableStreamsPlatform(
     this.functions,
@@ -37,5 +40,19 @@ abstract class HttpsCallableStreamsPlatform extends PlatformInterface {
   /// Used to set the options for this instance.
   HttpsCallableOptions options;
 
+  /// Streams data to the specified HTTPS endpoint.
+  ///
+  /// The data passed into the trigger can be any of the following types:
+  ///
+  /// `null`
+  /// `String`
+  /// `num`
+  /// [List], where the contained objects are also one of these types.
+  /// [Map], where the values are also one of these types.
+  ///
+  /// The request to the Cloud Functions backend made by this method
+  /// automatically includes a Firebase Instance ID token to identify the app
+  /// instance. If a user is logged in with Firebase Auth, an auth ID token for
+  /// the user is also automatically included.
   Stream<dynamic> stream(Object? parameters);
 }
