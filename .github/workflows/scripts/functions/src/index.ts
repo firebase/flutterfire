@@ -2,6 +2,7 @@ import * as assert from 'assert';
 import * as functions from 'firebase-functions';
 import * as functionsv2 from 'firebase-functions/v2';
 
+
 // For example app.
 // noinspection JSUnusedGlobalSymbols
 export const listFruit = functions.https.onCall(() => {
@@ -14,12 +15,17 @@ export const listfruits2ndgen = functionsv2.https.onCall(() => {
 
 // For e2e testing a custom region.
 // noinspection JSUnusedGlobalSymbols
-export const testFunctionCustomRegion = functions
-  .region('europe-west1')
-  .https.onCall(() => 'europe-west1');
+
+export const testFunctionCustomRegion = functions.https.onCall(
+  {
+    region: 'europe-west1'
+  },
+  () => 'europe-west1'
+);
 
 // For e2e testing timeouts.
-export const testFunctionTimeout = functions.https.onCall((data) => {
+export const testFunctionTimeout = functions.https.onCall((req, res) => {
+  const data = req.data
   console.log(JSON.stringify({ data }));
   return new Promise((resolve, reject) => {
     if (data && data.testTimeout) {
@@ -40,7 +46,8 @@ export const testFunctionTimeout = functions.https.onCall((data) => {
 
 // For e2e testing errors & return values.
 // noinspection JSUnusedGlobalSymbols
-export const testFunctionDefaultRegion = functions.https.onCall((data) => {
+export const testFunctionDefaultRegion = functions.https.onCall((req, res) => {
+  const data = req.data;
   console.log(JSON.stringify({ data }));
   if (typeof data === 'undefined') {
     return 'undefined';
@@ -66,7 +73,7 @@ export const testFunctionDefaultRegion = functions.https.onCall((data) => {
     return 'array';
   }
 
-  if(data.type === 'rawData') {
+  if (data.type === 'rawData') {
     return data;
   }
 
@@ -159,3 +166,18 @@ export const testFunctionDefaultRegion = functions.https.onCall((data) => {
 export const testMapConvertType = functions.https.onCall((data) => ({
   foo: 'bar',
 }));
+
+exports.getFruits = functions.https.onCall(async (request, response) => {
+  const fruits = ['Apple', 'Mango', 'Banana']
+
+  const allFruits = fruits.map(async (fruit) => {
+    // Stream each fruit as it resolves!
+    if (request.acceptsStreaming) {
+      response?.sendChunk(fruit);
+    }
+    return fruit;
+  });
+
+  // Fallback for non-streaming clients
+  return Promise.all(allFruits);
+});
