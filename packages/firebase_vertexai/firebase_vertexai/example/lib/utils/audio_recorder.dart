@@ -137,6 +137,10 @@ class InMemoryAudioRecorder {
       encoder: _encoder,
       sampleRate: 16000,
       numChannels: 1,
+      androidConfig: const AndroidRecordConfig(
+        muteAudio: true,
+        audioSource: AndroidAudioSource.mic,
+      ),
     );
     final devs = await _recorder.listInputDevices();
     debugPrint(devs.toString());

@@ -30,7 +30,16 @@ enum Voice {
   kore('Kore'),
 
   // ignore: public_member_api_docs
-  puck('Puck');
+  leda('Leda'),
+
+  // ignore: public_member_api_docs
+  orus('Orus'),
+
+  // ignore: public_member_api_docs
+  puck('Puck'),
+
+  // ignore: public_member_api_docs
+  zephyr('Zephyr');
 
   const Voice(this._jsonString);
   final String _jsonString;
