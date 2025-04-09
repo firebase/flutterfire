@@ -1,12 +1,12 @@
-part of movies;
+part of 'movies.dart';
 
 class ThingVariablesBuilder {
   Optional<AnyValue> _title =
       Optional.optional(AnyValue.fromJson, defaultSerializer);
 
-  FirebaseDataConnect _dataConnect;
+  final FirebaseDataConnect _dataConnect;
   ThingVariablesBuilder title(AnyValue t) {
-    this._title.value = t;
+    _title.value = t;
     return this;
   }
 
@@ -18,60 +18,72 @@ class ThingVariablesBuilder {
   Serializer<ThingVariables> varsSerializer =
       (ThingVariables vars) => jsonEncode(vars.toJson());
   Future<OperationResult<ThingData, ThingVariables>> execute() {
-    return this.ref().execute();
+    return ref().execute();
   }
 
   MutationRef<ThingData, ThingVariables> ref() {
     ThingVariables vars = ThingVariables(
       title: _title,
     );
-
     return _dataConnect.mutation(
         "thing", dataDeserializer, varsSerializer, vars);
   }
 }
 
-class ThingThingInsert {
+class ThingAbc {
   String id;
-
-  ThingThingInsert.fromJson(dynamic json)
-      : id = nativeFromJson<String>(json['id']) {}
+  ThingAbc.fromJson(dynamic json) : id = nativeFromJson<String>(json['id']);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
-
     json['id'] = nativeToJson<String>(id);
-
     return json;
   }
 
-  ThingThingInsert({
+  ThingAbc({
+    required this.id,
+  });
+}
+
+class ThingDef {
+  String id;
+  ThingDef.fromJson(dynamic json) : id = nativeFromJson<String>(json['id']);
+
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> json = {};
+    json['id'] = nativeToJson<String>(id);
+    return json;
+  }
+
+  ThingDef({
     required this.id,
   });
 }
 
 class ThingData {
-  ThingThingInsert thing_insert;
-
+  ThingAbc abc;
+  ThingDef def;
   ThingData.fromJson(dynamic json)
-      : thing_insert = ThingThingInsert.fromJson(json['thing_insert']) {}
+      : abc = ThingAbc.fromJson(json['abc']),
+        def = ThingDef.fromJson(json['def']);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
-
-    json['thing_insert'] = thing_insert.toJson();
-
+    json['abc'] = abc.toJson();
+    json['def'] = def.toJson();
     return json;
   }
 
   ThingData({
-    required this.thing_insert,
+    required this.abc,
+    required this.def,
   });
 }
 
 class ThingVariables {
   late Optional<AnyValue> title;
-
+  @Deprecated(
+      'fromJson is deprecated for Variable classes as they are no longer required for deserialization.')
   ThingVariables.fromJson(Map<String, dynamic> json) {
     title = Optional.optional(AnyValue.fromJson, defaultSerializer);
     title.value =
@@ -80,11 +92,9 @@ class ThingVariables {
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
-
     if (title.state == OptionalState.set) {
       json['title'] = title.toJson();
     }
-
     return json;
   }
 

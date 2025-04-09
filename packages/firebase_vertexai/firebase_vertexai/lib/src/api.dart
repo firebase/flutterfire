@@ -651,29 +651,23 @@ enum HarmBlockMethod {
 }
 
 /// Configuration options for model generation and outputs.
-final class GenerationConfig {
+abstract class BaseGenerationConfig {
   // ignore: public_member_api_docs
-  GenerationConfig(
-      {this.candidateCount,
-      this.stopSequences,
-      this.maxOutputTokens,
-      this.temperature,
-      this.topP,
-      this.topK,
-      this.responseMimeType,
-      this.responseSchema});
+  BaseGenerationConfig({
+    this.candidateCount,
+    this.maxOutputTokens,
+    this.temperature,
+    this.topP,
+    this.topK,
+    this.presencePenalty,
+    this.frequencyPenalty,
+  });
 
   /// Number of generated responses to return.
   ///
   /// This value must be between [1, 8], inclusive. If unset, this will default
   /// to 1.
   final int? candidateCount;
-
-  /// The set of character sequences (up to 5) that will stop output generation.
-  ///
-  /// If specified, the API will stop at the first appearance of a stop
-  /// sequence. The stop sequence will not be included as part of the response.
-  final List<String>? stopSequences;
 
   /// The maximum number of tokens to include in a candidate.
   ///
@@ -708,6 +702,79 @@ final class GenerationConfig {
   /// Note: The default value varies by model.
   final int? topK;
 
+  /// The penalty for repeating the same words or phrases already generated in
+  /// the text.
+  ///
+  /// Controls the likelihood of repetition. Higher penalty values result in
+  /// more diverse output.
+  ///
+  /// **Note:** While both [presencePenalty] and [frequencyPenalty] discourage
+  /// repetition, [presencePenalty] applies the same penalty regardless of how
+  /// many times the word/phrase has already appeared, whereas
+  /// [frequencyPenalty] increases the penalty for *each* repetition of a
+  /// word/phrase.
+  ///
+  /// **Important:** The range of supported [presencePenalty] values depends on
+  /// the model; see the
+  /// [documentation](https://firebase.google.com/docs/vertex-ai/model-parameters?platform=flutter#configure-model-parameters-gemini)
+  /// for more details.
+  final double? presencePenalty;
+
+  /// The penalty for repeating words or phrases, with the penalty increasing
+  /// for each repetition.
+  ///
+  /// Controls the likelihood of repetition. Higher values increase the penalty
+  /// of repetition, resulting in more diverse output.
+  ///
+  /// **Note:** While both [frequencyPenalty] and [presencePenalty] discourage
+  /// repetition, [frequencyPenalty] increases the penalty for *each* repetition
+  /// of a word/phrase, whereas [presencePenalty] applies the same penalty
+  /// regardless of how many times the word/phrase has already appeared.
+  ///
+  /// **Important:** The range of supported [frequencyPenalty] values depends on
+  /// the model; see the
+  /// [documentation](https://firebase.google.com/docs/vertex-ai/model-parameters?platform=flutter#configure-model-parameters-gemini)
+  /// for more details.
+  final double? frequencyPenalty;
+
+  // ignore: public_member_api_docs
+  Map<String, Object?> toJson() => {
+        if (candidateCount case final candidateCount?)
+          'candidateCount': candidateCount,
+        if (maxOutputTokens case final maxOutputTokens?)
+          'maxOutputTokens': maxOutputTokens,
+        if (temperature case final temperature?) 'temperature': temperature,
+        if (topP case final topP?) 'topP': topP,
+        if (topK case final topK?) 'topK': topK,
+        if (presencePenalty case final presencePenalty?)
+          'presencePenalty': presencePenalty,
+        if (frequencyPenalty case final frequencyPenalty?)
+          'frequencyPenalty': frequencyPenalty,
+      };
+}
+
+/// Configuration options for model generation and outputs.
+final class GenerationConfig extends BaseGenerationConfig {
+  // ignore: public_member_api_docs
+  GenerationConfig({
+    super.candidateCount,
+    this.stopSequences,
+    super.maxOutputTokens,
+    super.temperature,
+    super.topP,
+    super.topK,
+    super.presencePenalty,
+    super.frequencyPenalty,
+    this.responseMimeType,
+    this.responseSchema,
+  });
+
+  /// The set of character sequences (up to 5) that will stop output generation.
+  ///
+  /// If specified, the API will stop at the first appearance of a stop
+  /// sequence. The stop sequence will not be included as part of the response.
+  final List<String>? stopSequences;
+
   /// Output response mimetype of the generated candidate text.
   ///
   /// Supported mimetype:
@@ -721,18 +788,12 @@ final class GenerationConfig {
   ///   a schema; currently this is limited to `application/json`.
   final Schema? responseSchema;
 
-  /// Convert to json format
+  @override
   Map<String, Object?> toJson() => {
-        if (candidateCount case final candidateCount?)
-          'candidateCount': candidateCount,
+        ...super.toJson(),
         if (stopSequences case final stopSequences?
             when stopSequences.isNotEmpty)
           'stopSequences': stopSequences,
-        if (maxOutputTokens case final maxOutputTokens?)
-          'maxOutputTokens': maxOutputTokens,
-        if (temperature case final temperature?) 'temperature': temperature,
-        if (topP case final topP?) 'topP': topP,
-        if (topK case final topK?) 'topK': topK,
         if (responseMimeType case final responseMimeType?)
           'responseMimeType': responseMimeType,
         if (responseSchema case final responseSchema?)

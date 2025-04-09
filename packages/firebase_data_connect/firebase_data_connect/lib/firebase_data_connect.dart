@@ -17,6 +17,11 @@ export 'src/common/common_library.dart'
     show
         ConnectorConfig,
         DataConnectError,
+        DataConnectFieldPathSegment,
+        DataConnectOperationError,
+        DataConnectListIndexPathSegment,
+        DataConnectOperationFailureResponse,
+        DataConnectOperationFailureResponseErrorInfo,
         DataConnectErrorCode,
         Serializer,
         Deserializer,
