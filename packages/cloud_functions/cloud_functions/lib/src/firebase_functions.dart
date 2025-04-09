@@ -96,44 +96,6 @@ class FirebaseFunctions extends FirebasePluginPlatform {
         delegate.httpsCallableWithUri(_origin, uri, options));
   }
 
-  /// A reference to the streaming Callable HTTPS trigger with the given name.
-  ///
-  /// Should be the name of the Callable function in Firebase that supports streaming.
-  HttpsCallableStream httpsStreamCallable(
-    String name, {
-    HttpsCallableOptions? options,
-  }) {
-    options ??= HttpsCallableOptions();
-    assert(name.isNotEmpty);
-    return HttpsCallableStream._(
-        delegate.httpsStreamCallable(_origin, name, options));
-  }
-
-  /// A reference to the streaming Callable HTTPS trigger with the given URL.
-  ///
-  /// Should be URL of the 2nd gen Callable function in Firebase.
-  HttpsCallableStream httpsCallableStreamFromUrl(
-    String url, {
-    HttpsCallableOptions? options,
-  }) {
-    options ??= HttpsCallableOptions();
-    final uri = Uri.parse(url);
-    return HttpsCallableStream._(
-        delegate.httpsStreamCallableWithUri(_origin, uri, options));
-  }
-
-  /// A reference to the streaming Callable HTTPS trigger with the given URI.
-  ///
-  /// Should be Uri of the 2nd gen Callable function in Firebase.
-  HttpsCallableStream httpsCallableStreamFromUri(
-    Uri uri, {
-    HttpsCallableOptions? options,
-  }) {
-    options ??= HttpsCallableOptions();
-    return HttpsCallableStream._(
-        delegate.httpsStreamCallableWithUri(_origin, uri, options));
-  }
-
   /// Changes this instance to point to a Cloud Functions emulator running locally.
   ///
   /// Set the [host] of the local emulator, such as "localhost"

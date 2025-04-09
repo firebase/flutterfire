@@ -20,5 +20,4 @@ export 'package:cloud_functions_platform_interface/cloud_functions_platform_inte
 part 'src/firebase_functions.dart';
 part 'src/https_callable.dart';
 part 'src/https_callable_result.dart';
-part 'src/https_callable_stream.dart';
 part 'src/https_callable_stream_result.dart';

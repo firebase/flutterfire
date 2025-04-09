@@ -4,7 +4,6 @@
 // found in the LICENSE file.
 
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
-import 'package:cloud_functions_web/https_callable_stream_web.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
@@ -62,17 +61,5 @@ class FirebaseFunctionsWeb extends FirebaseFunctionsPlatform {
   HttpsCallablePlatform httpsCallableWithUri(
       String? origin, Uri uri, HttpsCallableOptions options) {
     return HttpsCallableWeb(this, _delegate, origin, null, options, uri);
-  }
-
-  @override
-  HttpsCallableStreamsPlatform httpsStreamCallable(
-      String? origin, String name, HttpsCallableOptions options) {
-    return HttpsCallableStreamWeb(this, _delegate, origin, name, options, null);
-  }
-
-  @override
-  HttpsCallableStreamsPlatform httpsStreamCallableWithUri(
-      String? origin, Uri uri, HttpsCallableOptions options) {
-    return HttpsCallableStreamWeb(this, _delegate, origin, null, options, null);
   }
 }

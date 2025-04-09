@@ -44,7 +44,7 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
     let functionName = arguments["functionName"] as? String
     let functionUri = arguments["functionUri"] as? String
     let origin = arguments["origin"] as? String
-    let parameters = arguments["arguments"]
+    let parameters = arguments["parameters"]
     let timeout = arguments["timeout"] as? Double
     let limitedUseAppCheckToken = arguments["limitedUseAppCheckToken"] as? Bool ?? false
 
