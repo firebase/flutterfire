@@ -1,1 +1,9 @@
 rootProject.name = 'firebase_app_installations'
+
+dependencyResolutionManagement {
+    versionCatalogs {
+        libs {
+            from(files(rootDir.toPath().resolve("gradle/libs.versions.toml")))
+        }
+    }
+}

@@ -1,1 +1,9 @@
 rootProject.name = 'firebase_ml_model_downloader'
+
+dependencyResolutionManagement {
+    versionCatalogs {
+        libs {
+            from(files(rootDir.toPath().resolve("gradle/libs.versions.toml")))
+        }
+    }
+}

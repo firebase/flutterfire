@@ -1,0 +1,6 @@
+[versions]
+java = "17"
+kotlin = "1.9.22"
+compile-sdk = "35"
+min-sdk = "21"
+target-sdk = "35"
