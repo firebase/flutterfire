@@ -43,7 +43,10 @@ class _MyAppState extends State<MyApp> {
 
   void streamFunction() {
     fruit.clear();
-    FirebaseFunctions.instance.httpsCallable('testStreamResponse').stream().listen(
+    FirebaseFunctions.instance
+        .httpsCallable('testStreamResponse')
+        .stream()
+        .listen(
       (data) {
         if (data is Chunk) {
           setState(() {
