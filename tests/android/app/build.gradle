@@ -4,6 +4,7 @@ plugins {
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
 }
+apply from: file("../../../gradle/global-config.gradle")
 
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file("local.properties")
@@ -25,16 +26,17 @@ if (flutterVersionName == null) {
 
 android {
     namespace = "io.flutter.plugins.firebase.tests"
-    compileSdk = 35
+    compileSdk = targetSdk
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = project.ext.javaVersion
+        targetCompatibility = project.ext.javaVersion
+        coreLibraryDesugaringEnabled true
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17
+        jvmTarget = project.ext.javaVersion
     }
 
     defaultConfig {

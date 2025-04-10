@@ -8,11 +8,13 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.1.2'
+        classpath 'com.android.tools.build:gradle:8.2.1'
     }
 }
 
 apply plugin: 'com.android.library'
+apply from: file("../../../../gradle/global-config.gradle")
+
 
 def getRootProjectExtOrDefaultProperty(name) {
     if (!rootProject.ext.has("FlutterFire")) return project.properties[name]
@@ -26,16 +28,17 @@ android {
       namespace 'io.flutter.plugins.firebase.core'
     }
 
-    compileSdk 35
+    compileSdk project.ext.compileSdk
 
     defaultConfig {
-        minSdk 21
+        minSdkVersion project.ext.minSdk
+        targetSdkVersion project.ext.targetSdk
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility project.ext.javaVersion
+        targetCompatibility project.ext.javaVersion
     }
 
     buildFeatures {

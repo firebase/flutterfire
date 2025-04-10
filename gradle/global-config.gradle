@@ -1,0 +1,6 @@
+ext {
+    javaVersion = JavaVersion.VERSION_17
+    compileSdk = 35
+    minSdk = 21
+    targetSdk = 35
+}
