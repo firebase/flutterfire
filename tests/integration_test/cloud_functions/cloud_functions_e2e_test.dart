@@ -17,6 +17,7 @@ String kTestFunctionDefaultRegion = 'testFunctionDefaultRegion';
 String kTestFunctionCustomRegion = 'testFunctionCustomRegion';
 String kTestFunctionTimeout = 'testFunctionTimeout';
 String kTestMapConvertType = 'testMapConvertType';
+String kTestStreamResponse = 'testStreamResponse';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -245,6 +246,74 @@ void main() {
           expect(results.data, equals('null'));
         },
       );
+    });
+
+    group('HttpsCallableStream', () {
+      test('returns a [StreamResponse]', () {
+        final streamResponseCallable =
+            FirebaseFunctions.instance.httpsCallable(kTestStreamResponse);
+        final stream = streamResponseCallable.stream();
+        expect(stream, emits(isA<StreamResponse>()));
+      });
+
+      test('accepts a string value', () async {
+        final stream =
+            callable.stream('foo').where((event) => event is Chunk);
+        expect(
+          stream,
+          emits(
+            isA<Chunk>()
+                .having((e) => e.partialData, 'partialData', equals('string')),
+          ),
+        );
+      });
+
+      test('accepts a number value', () async {
+        final stream =
+            callable.stream(123).where((event) => event is Chunk);
+        expect(
+          stream,
+          emits(
+            isA<Chunk>()
+                .having((e) => e.partialData, 'partialData', equals('number')),
+          ),
+        );
+      });
+
+      test('accepts no arguments', () async {
+        final stream = callable.stream().where((event) => event is Chunk);
+        expect(
+          stream,
+          emits(
+            isA<Chunk>()
+                .having((e) => e.partialData, 'partialData', equals('null')),
+          ),
+        );
+      });
+
+      test('accepts a false boolean value', () async {
+        final stream =
+            callable.stream(false).where((event) => event is Chunk);
+        expect(
+          stream,
+          emits(
+            isA<Chunk>()
+                .having((e) => e.partialData, 'partialData', equals('boolean')),
+          ),
+        );
+      });
+
+      test('accepts a true boolean value', () async {
+        final stream =
+            callable.stream(true).where((event) => event is Chunk);
+        expect(
+          stream,
+          emits(
+            isA<Chunk>()
+                .having((e) => e.partialData, 'partialData', equals('boolean')),
+          ),
+        );
+      });
     });
   });
 }

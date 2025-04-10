@@ -49,32 +49,37 @@ export const testFunctionTimeout = functions.https.onCall((req, res) => {
 export const testFunctionDefaultRegion = functions.https.onCall((req, res) => {
   const data = req.data;
   console.log(JSON.stringify({ data }));
-  if (typeof data === 'undefined') {
-    return 'undefined';
-  }
+
+  const sendResponse = (value: any) => {
+    if (req.acceptsStreaming && res) {
+      res.sendChunk(value);
+      return value;
+    }
+    return value;
+  };
 
   if (typeof data === 'string') {
-    return 'string';
+    return sendResponse('string');
   }
 
   if (typeof data === 'number') {
-    return 'number';
+    return sendResponse('number');
   }
 
   if (typeof data === 'boolean') {
-    return 'boolean';
+    return sendResponse('boolean');
   }
 
   if (data === null) {
-    return 'null';
+    return sendResponse('null');
   }
 
   if (Array.isArray(data)) {
-    return 'array';
+    return sendResponse('array');
   }
 
   if (data.type === 'rawData') {
-    return data;
+    return sendResponse(data);
   }
 
   const sampleData: {
@@ -160,14 +165,35 @@ export const testFunctionDefaultRegion = functions.https.onCall((req, res) => {
     );
   }
 
-  return outputData;
+  return sendResponse(outputData);
 });
 
 export const testMapConvertType = functions.https.onCall((data) => ({
   foo: 'bar',
 }));
 
-exports.getFruits = functions.https.onCall(async (request, response) => {
+export const testStream = functions.https.onCall((req, res) => {
+  const data = req.data;
+  if (data === null || undefined) {
+    if (req.acceptsStreaming) {
+      res?.sendChunk('null');
+    }
+    return
+  }
+
+  const results = [];
+  results.push(data)
+
+  const allResults = results.map(async (result) => {
+    if (req.acceptsStreaming) {
+      res?.sendChunk(result);
+    }
+    return result;
+  });
+  return Promise.all(allResults);
+})
+
+export const testStreamResponse = functions.https.onCall(async (request, response) => {
   const fruits = ['Apple', 'Mango', 'Banana']
 
   const allFruits = fruits.map(async (fruit) => {

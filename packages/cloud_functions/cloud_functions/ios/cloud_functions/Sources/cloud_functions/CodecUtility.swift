@@ -18,6 +18,8 @@ public struct AnyEncodable: Encodable {
       try container.encodeNil()
     case let stringValue as String:
       try container.encode(stringValue)
+    case let boolValue as Bool:
+      try container.encode(boolValue)
     case let intValue as Int:
       try container.encode(intValue)
     case let int8Value as Int8:
@@ -42,8 +44,6 @@ public struct AnyEncodable: Encodable {
       try container.encode(doubleValue)
     case let floatValue as Float:
       try container.encode(floatValue)
-    case let boolValue as Bool:
-      try container.encode(boolValue)
     case let arrayValue as [Any]:
       try container.encode(arrayValue.map { AnyEncodable($0) })
     case let dictionaryValue as [String: Any]:
