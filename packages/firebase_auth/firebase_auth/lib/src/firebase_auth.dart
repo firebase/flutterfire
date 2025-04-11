@@ -220,11 +220,8 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///  - Thrown if the user is no longer authenticated since his refresh token
   ///    has been expired
   /// - **network-request-failed**:
-  ///  - Thrown if there was a network request error, for example the user don't
-  ///    don't have internet connection
-  /// - **operation-not-allowed**:
-  ///  - Thrown if email/password accounts are not enabled. Enable
-  ///    email/password accounts in the Firebase Console, under the Auth tab.
+  ///  - Thrown if there was a network request error, for example the user
+  ///    doesn't have internet connection
   Future<UserCredential> createUserWithEmailAndPassword({
     required String email,
     required String password,
@@ -498,7 +495,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///    verification code of the credential is not valid.
   /// - **invalid-verification-id**:
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
-  ///    verification ID of the credential is not valid.id.
+  ///    verification ID of the credential is not valid.
   Future<UserCredential> signInWithCredential(AuthCredential credential) async {
     try {
       return UserCredential._(
@@ -570,12 +567,12 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///  - Thrown if the user is no longer authenticated since his refresh token
   ///    has been expired
   /// - **network-request-failed**:
-  ///  - Thrown if there was a network request error, for example the user don't
-  ///    don't have internet connection
+  ///  - Thrown if there was a network request error, for example the user
+  ///    doesn't have internet connection
   /// - **INVALID_LOGIN_CREDENTIALS** or **invalid-credential**:
   ///  - Thrown if the password is invalid for the given email, or the account
   ///    corresponding to the email does not have a password set.
-  ///    depending on if you are using firebase emulator or not the code is
+  ///    Depending on if you are using firebase emulator or not the code is
   ///    different
   /// - **operation-not-allowed**:
   ///  - Thrown if email/password accounts are not enabled. Enable
