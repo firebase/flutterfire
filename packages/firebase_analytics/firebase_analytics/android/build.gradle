@@ -1,6 +1,5 @@
 group 'io.flutter.plugins.firebase.analytics'
 version '1.0-SNAPSHOT'
-apply from: rootProject.file('gradle/global-config.gradle')
 
 buildscript {
     repositories {
