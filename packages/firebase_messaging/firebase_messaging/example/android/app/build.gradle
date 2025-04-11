@@ -7,7 +7,7 @@ plugins {
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
 }
-apply from: file("../../../../../../gradle/global-config.gradle")
+apply from: file("../../../android/local-config.gradle")
 
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file("local.properties")
