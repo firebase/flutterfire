@@ -66,6 +66,8 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
     WebProvider? webProvider,
     AndroidProvider? androidProvider,
     AppleProvider? appleProvider,
+    String? androidDebugToken,
+    String? appleDebugToken,
   }) {
     throw UnimplementedError('activate() is not implemented');
   }

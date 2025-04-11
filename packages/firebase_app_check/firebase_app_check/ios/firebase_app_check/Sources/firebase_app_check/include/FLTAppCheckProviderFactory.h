@@ -7,6 +7,8 @@
 
 @property NSMutableDictionary *_Nullable providers;
 
-- (void)configure:(FIRApp *_Nonnull)app providerName:(NSString *_Nonnull)providerName;
+- (void)configure:(FIRApp *_Nonnull)app
+     providerName:(NSString *_Nonnull)providerName
+       debugToken:(NSString *)debugToken;
 
 @end
