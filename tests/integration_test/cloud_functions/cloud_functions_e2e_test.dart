@@ -352,6 +352,31 @@ void main() {
           isA<Result>(),
         );
       });
+
+      test('accepts a [List]', () async {
+        final stream = callable.stream(data.list).where((event) => event is Chunk);
+        await expectLater(
+          stream,
+          emits(
+            isA<Chunk>()
+                .having((e) => e.partialData, 'partialData', equals('array')),
+          ),
+        );
+      });
+
+      test('accepts a deeply nested [Map]', () async {
+        final stream = callable.stream({
+            'type': 'deepMap',
+            'inputData': data.deepMap,
+          }).where((event) => event is Chunk);
+        await expectLater(
+          stream,
+          emits(
+            isA<Chunk>()
+                .having((e) => e.partialData, 'partialData', equals('array')),
+          ),
+        );
+      });
     });
   });
 }
