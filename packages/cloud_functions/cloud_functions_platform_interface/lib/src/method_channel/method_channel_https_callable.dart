@@ -5,6 +5,8 @@
 
 import 'dart:async';
 
+import 'package:flutter/services.dart';
+
 import '../../cloud_functions_platform_interface.dart';
 import 'method_channel_firebase_functions.dart';
 import 'utils/exception.dart';
@@ -14,7 +16,16 @@ class MethodChannelHttpsCallable extends HttpsCallablePlatform {
   /// Creates a new [MethodChannelHttpsCallable] instance.
   MethodChannelHttpsCallable(FirebaseFunctionsPlatform functions,
       String? origin, String? name, HttpsCallableOptions options, Uri? uri)
-      : super(functions, origin, name, options, uri);
+      : _transformedUri = uri?.pathSegments.join('_').replaceAll('.', '_'),
+        super(functions, origin, name, options, uri) {
+    _eventChannelId = name ?? _transformedUri ?? '';
+    _channel =
+        EventChannel('plugins.flutter.io/firebase_functions/$_eventChannelId');
+  }
+
+  late final EventChannel _channel;
+  final String? _transformedUri;
+  late String _eventChannelId;
 
   @override
   Future<dynamic> call([Object? parameters]) async {
@@ -39,5 +50,37 @@ class MethodChannelHttpsCallable extends HttpsCallablePlatform {
     } catch (e, s) {
       convertPlatformException(e, s);
     }
+  }
+
+  @override
+  Stream<dynamic> stream(Object? parameters) async* {
+    try {
+      await _registerEventChannelOnNative();
+      final eventData = {
+        'functionName': name,
+        'functionUri': uri?.toString(),
+        'origin': origin,
+        'parameters': parameters,
+        'limitedUseAppCheckToken': options.limitedUseAppCheckToken,
+        'timeout': options.timeout.inMilliseconds,
+      };
+      yield* _channel.receiveBroadcastStream(eventData).map((message) {
+        if (message is Map) {
+          return Map<String, dynamic>.from(message);
+        }
+        return message;
+      });
+    } catch (e, s) {
+      convertPlatformException(e, s);
+    }
+  }
+
+  Future<void> _registerEventChannelOnNative() async {
+    await MethodChannelFirebaseFunctions.channel.invokeMethod(
+        'FirebaseFunctions#registerEventChannel', <String, dynamic>{
+      'eventChannelId': _eventChannelId,
+      'appName': functions.app!.name,
+      'region': functions.region,
+    });
   }
 }

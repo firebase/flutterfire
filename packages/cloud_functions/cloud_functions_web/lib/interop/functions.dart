@@ -6,7 +6,6 @@
 // ignore_for_file: public_member_api_docs
 
 import 'dart:js_interop';
-
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
 import 'functions_interop.dart' as functions_interop;
@@ -84,6 +83,28 @@ class HttpsCallable extends JsObjectWrapper<JSFunction> {
       result! as functions_interop.HttpsCallableResultJsImpl,
     );
   }
+
+  Stream<dynamic> stream(JSAny? data,
+      functions_interop.HttpsCallableStreamOptions? options) async* {
+    final streamCallable = await (jsObject as functions_interop.HttpsCallable)
+        .stream(data, options)
+        .toDart;
+    final streamResult =
+        streamCallable! as functions_interop.HttpsCallableStreamResultJsImpl;
+
+    await for (final value in streamResult.stream.asStream()) {
+      // ignore: invalid_runtime_check_with_js_interop_types
+      final message = value is JSObject
+          ? HttpsCallableStreamResult.getInstance(
+              value as functions_interop.HttpsStreamIterableResult,
+            ).data
+          : value;
+      yield {'message': message};
+    }
+
+    final result = await streamResult.data.toDart;
+    yield {'result': result};
+  }
 }
 
 /// Returns Dart representation from JS Object.
@@ -131,6 +152,28 @@ class HttpsCallableResult
   static HttpsCallableResult getInstance(
       functions_interop.HttpsCallableResultJsImpl jsObject) {
     return _expando[jsObject] ??= HttpsCallableResult._fromJsObject(jsObject);
+  }
+
+  dynamic get data {
+    return _data;
+  }
+}
+
+class HttpsCallableStreamResult
+    extends JsObjectWrapper<functions_interop.HttpsStreamIterableResult> {
+  HttpsCallableStreamResult._fromJsObject(
+      functions_interop.HttpsStreamIterableResult jsObject)
+      : _data = _dartify(jsObject.value),
+        super.fromJsObject(jsObject);
+
+  static final _expando = Expando<HttpsCallableStreamResult>();
+  final dynamic _data;
+
+  /// Creates a new HttpsCallableResult from a [jsObject].
+  static HttpsCallableStreamResult getInstance(
+      functions_interop.HttpsStreamIterableResult jsObject) {
+    return _expando[jsObject] ??=
+        HttpsCallableStreamResult._fromJsObject(jsObject);
   }
 
   dynamic get data {

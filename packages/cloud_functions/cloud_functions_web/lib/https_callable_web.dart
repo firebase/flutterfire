@@ -7,6 +7,7 @@ import 'dart:async';
 import 'dart:js_interop';
 
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
+import 'package:cloud_functions_web/interop/functions_interop.dart' as interop;
 
 import 'interop/functions.dart' as functions_interop;
 import 'utils.dart';
@@ -55,5 +56,37 @@ class HttpsCallableWeb extends HttpsCallablePlatform {
     }
 
     return response.data;
+  }
+
+  @override
+  Stream<dynamic> stream(Object? parameters) async* {
+    if (origin != null) {
+      final uri = Uri.parse(origin!);
+
+      _webFunctions.useFunctionsEmulator(uri.host, uri.port);
+    }
+
+    late functions_interop.HttpsCallable callable;
+
+    if (name != null) {
+      callable = _webFunctions.httpsCallable(name!);
+    } else if (uri != null) {
+      callable = _webFunctions.httpsCallableUri(uri!);
+    } else {
+      throw ArgumentError('Either name or uri must be provided');
+    }
+
+    final JSAny? parametersJS = parameters?.jsify();
+    interop.HttpsCallableStreamOptions callableStreamOptions =
+        interop.HttpsCallableStreamOptions(
+            limitedUseAppCheckTokens: options.limitedUseAppCheckToken.toJS);
+    try {
+      await for (final value
+          in callable.stream(parametersJS, callableStreamOptions)) {
+        yield value;
+      }
+    } catch (e, s) {
+      throw convertFirebaseFunctionsException(e as JSObject, s);
+    }
   }
 }
