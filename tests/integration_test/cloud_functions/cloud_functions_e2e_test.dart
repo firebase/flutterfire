@@ -373,7 +373,7 @@ void main() {
           stream,
           emits(
             isA<Chunk>()
-                .having((e) => e.partialData, 'partialData', equals('array')),
+                .having((e) => e.partialData, 'partialData', equals(data.deepMap)),
           ),
         );
       });
