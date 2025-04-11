@@ -9,8 +9,14 @@ export const listFruit = functions.https.onCall(() => {
   return ['Apple', 'Banana', 'Cherry', 'Date', 'Fig', 'Grapes'];
 });
 
-export const listfruits2ndgen = functionsv2.https.onCall(() => {
-  return ['Apple', 'Banana', 'Cherry', 'Date', 'Fig', 'Grapes'];
+export const listfruits2ndgen = functionsv2.https.onCall((res, req) => {
+  const fruitList = ['Apple', 'Banana', 'Cherry', 'Date', 'Fig', 'Grapes'];
+  const allFruits = fruitList.map(async (fruit) => {
+    if (res.acceptsStreaming) {
+      req?.sendChunk(fruit)
+    }
+  })
+  return Promise.all(allFruits);
 });
 
 // For e2e testing a custom region.

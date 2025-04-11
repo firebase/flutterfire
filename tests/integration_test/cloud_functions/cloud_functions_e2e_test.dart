@@ -248,7 +248,7 @@ void main() {
       );
     });
 
-    group('HttpsCallableStream', () {
+    group('HttpsCallable Stream', () {
       test('returns a [StreamResponse]', () {
         final streamResponseCallable =
             FirebaseFunctions.instance.httpsCallable(kTestStreamResponse);
@@ -257,9 +257,8 @@ void main() {
       });
 
       test('accepts a string value', () async {
-        final stream =
-            callable.stream('foo').where((event) => event is Chunk);
-        expect(
+        final stream = callable.stream('foo').where((event) => event is Chunk);
+        await expectLater(
           stream,
           emits(
             isA<Chunk>()
@@ -269,9 +268,11 @@ void main() {
       });
 
       test('accepts a number value', () async {
-        final stream =
-            callable.stream(123).where((event) => event is Chunk);
-        expect(
+        final stream = callable
+            .stream(123)
+            .where((event) => event is Chunk)
+            .asBroadcastStream();
+        await expectLater(
           stream,
           emits(
             isA<Chunk>()
@@ -281,8 +282,11 @@ void main() {
       });
 
       test('accepts no arguments', () async {
-        final stream = callable.stream().where((event) => event is Chunk);
-        expect(
+        final stream = callable
+            .stream()
+            .where((event) => event is Chunk)
+            .asBroadcastStream();
+        await expectLater(
           stream,
           emits(
             isA<Chunk>()
@@ -292,9 +296,8 @@ void main() {
       });
 
       test('accepts a false boolean value', () async {
-        final stream =
-            callable.stream(false).where((event) => event is Chunk);
-        expect(
+        final stream = callable.stream(false).where((event) => event is Chunk);
+        await expectLater(
           stream,
           emits(
             isA<Chunk>()
@@ -304,14 +307,49 @@ void main() {
       });
 
       test('accepts a true boolean value', () async {
-        final stream =
-            callable.stream(true).where((event) => event is Chunk);
-        expect(
+        final stream = callable.stream(true).where((event) => event is Chunk);
+        await expectLater(
           stream,
           emits(
             isA<Chunk>()
                 .having((e) => e.partialData, 'partialData', equals('boolean')),
           ),
+        );
+      });
+
+      test('can be called using an String url', () async {
+        final localhostMapped =
+            kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
+
+        HttpsCallable callable =
+            FirebaseFunctions.instance.httpsCallableFromUrl(
+          'http://$localhostMapped:5001/flutterfire-e2e-tests/us-central1/listfruits2ndgen',
+        );
+
+        final stream = callable.stream();
+        await expectLater(stream, emits(isA<StreamResponse>()));
+      });
+
+      test('can be called using an Uri url', () async {
+        final localhostMapped =
+            kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
+
+        HttpsCallable callable =
+            FirebaseFunctions.instance.httpsCallableFromUri(
+          Uri.parse(
+            'http://$localhostMapped:5001/flutterfire-e2e-tests/us-central1/listfruits2ndgen',
+          ),
+        );
+
+        final stream = callable.stream();
+        await expectLater(stream, emits(isA<StreamResponse>()));
+      });
+
+      test('should emit a [Result] as last value', () async {
+        final stream = await callable.stream().last;
+        expect(
+          stream,
+          isA<Result>(),
         );
       });
     });

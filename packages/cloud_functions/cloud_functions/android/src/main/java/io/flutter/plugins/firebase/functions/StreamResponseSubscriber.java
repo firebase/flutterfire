@@ -46,14 +46,14 @@ public class StreamResponseSubscriber implements Subscriber<StreamResponse> {
   @Override
   public void onError(Throwable t) {
     if (eventSink != null) {
-      eventSink.error("firebase_functions", t.getMessage(), null);
+      mainThreadHandler.post(() -> eventSink.endOfStream());
     }
   }
 
   @Override
   public void onComplete() {
     if (eventSink != null) {
-      eventSink.endOfStream();
+      mainThreadHandler.post(() -> eventSink.endOfStream());
     }
   }
 

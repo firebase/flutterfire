@@ -90,6 +90,7 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
               events(["message": message.value])
             case let .result(result):
               events(["result": result.value])
+              events(FlutterEndOfEventStream)
             }
           }
         }
