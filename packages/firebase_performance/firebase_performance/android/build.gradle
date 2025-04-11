@@ -1,6 +1,5 @@
 group 'io.flutter.plugins.firebaseperformance'
 version '1.0-SNAPSHOT'
-apply from: rootProject.file('gradle/global-config.gradle')
 
 buildscript {
     repositories {
