@@ -33,7 +33,7 @@ def getRootProjectExtOrCoreProperty(name, firebaseCoreProject) {
 }
 
 apply plugin: 'com.android.library'
-apply from: file("../../../../gradle/global-config.gradle")
+apply from: file("local-config.gradle")
 
 android {
   // Conditional for compatibility with AGP <4.2.

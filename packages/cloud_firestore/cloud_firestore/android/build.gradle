@@ -20,7 +20,7 @@ allprojects {
 }
 
 apply plugin: 'com.android.library'
-apply from: file("../../../../gradle/global-config.gradle")
+apply from: file("local-config.gradle")
 
 def firebaseCoreProject = findProject(':firebase_core')
 if (firebaseCoreProject == null) {
