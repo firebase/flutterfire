@@ -370,19 +370,21 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
 
 static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResult *authResult,
                                   NSString *authorizationCode, NSError *error) {
+  void (^completion)(PigeonUserCredential *_Nullable, FlutterError *_Nullable) =
+      object.appleCompletion;
+  if (completion == nil) return;
+
   if (error != nil) {
     if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
-      [object handleMultiFactorError:object.appleArguments
-                          completion:object.appleCompletion
-                           withError:error];
+      [object handleMultiFactorError:object.appleArguments completion:completion withError:error];
     } else {
-      object.appleCompletion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
+      completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
     }
     return;
   }
-  object.appleCompletion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult
-                                                           authorizationCode:authorizationCode],
-                         nil);
+  completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult
+                                               authorizationCode:authorizationCode],
+             nil);
 }
 
 - (void)authorizationController:(ASAuthorizationController *)controller
@@ -418,6 +420,8 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
 
     if (self.isReauthenticatingWithApple == YES) {
       self.isReauthenticatingWithApple = NO;
+      void (^capturedCompletion)(PigeonUserCredential *_Nullable, FlutterError *_Nullable) =
+          self.appleCompletion;
       [[FIRAuth.auth currentUser]
           reauthenticateWithCredential:credential
                             completion:^(FIRAuthDataResult *_Nullable authResult,
@@ -426,16 +430,20 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
                             }];
 
     } else if (self.linkWithAppleUser != nil) {
-      [self.linkWithAppleUser
-          linkWithCredential:credential
-                  completion:^(FIRAuthDataResult *authResult, NSError *error) {
-                    self.linkWithAppleUser = nil;
-                    handleSignInWithApple(self, authResult, authorizationCode, error);
-                  }];
+      FIRUser *userToLink = self.linkWithAppleUser;
+      void (^capturedCompletion)(PigeonUserCredential *_Nullable, FlutterError *_Nullable) =
+          self.appleCompletion;
+      [userToLink linkWithCredential:credential
+                          completion:^(FIRAuthDataResult *authResult, NSError *error) {
+                            self.linkWithAppleUser = nil;
+                            handleSignInWithApple(self, authResult, authorizationCode, error);
+                          }];
 
     } else {
       FIRAuth *signInAuth =
           self.signInWithAppleAuth != nil ? self.signInWithAppleAuth : FIRAuth.auth;
+      void (^capturedCompletion)(PigeonUserCredential *_Nullable, FlutterError *_Nullable) =
+          self.appleCompletion;
       [signInAuth signInWithCredential:credential
                             completion:^(FIRAuthDataResult *_Nullable authResult,
                                          NSError *_Nullable error) {
