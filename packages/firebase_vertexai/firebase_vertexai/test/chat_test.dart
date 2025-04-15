@@ -13,7 +13,7 @@
 // limitations under the License.
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
-import 'package:firebase_vertexai/src/generative_model.dart';
+import 'package:firebase_vertexai/src/base_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'mock.dart';
@@ -68,7 +68,8 @@ void main() {
     test('forwards safety settings', () async {
       final (client, model) = createModel('models/$defaultModelName');
       final chat = model.startChat(safetySettings: [
-        SafetySetting(HarmCategory.dangerousContent, HarmBlockThreshold.high),
+        SafetySetting(HarmCategory.dangerousContent, HarmBlockThreshold.high,
+            HarmBlockMethod.severity),
       ]);
       const prompt = 'Some prompt';
       await client.checkRequest(
@@ -78,6 +79,7 @@ void main() {
             {
               'category': 'HARM_CATEGORY_DANGEROUS_CONTENT',
               'threshold': 'BLOCK_ONLY_HIGH',
+              'method': 'SEVERITY'
             },
           ]);
         },
@@ -88,7 +90,8 @@ void main() {
     test('forwards safety settings and config when streaming', () async {
       final (client, model) = createModel('models/$defaultModelName');
       final chat = model.startChat(safetySettings: [
-        SafetySetting(HarmCategory.dangerousContent, HarmBlockThreshold.high),
+        SafetySetting(HarmCategory.dangerousContent, HarmBlockThreshold.high,
+            HarmBlockMethod.probability),
       ], generationConfig: GenerationConfig(stopSequences: ['a']));
       const prompt = 'Some prompt';
       final responses = await client.checkStreamRequest(
@@ -98,6 +101,7 @@ void main() {
             {
               'category': 'HARM_CATEGORY_DANGEROUS_CONTENT',
               'threshold': 'BLOCK_ONLY_HIGH',
+              'method': 'PROBABILITY',
             },
           ]);
         },

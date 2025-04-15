@@ -1,3 +1,7 @@
+## 5.4.0
+
+ - **FEAT**(functions): migrate cloud functions Apple implementation to Swift ([#17232](https://github.com/firebase/flutterfire/issues/17232)). ([9ebc7bc1](https://github.com/firebase/flutterfire/commit/9ebc7bc130757f918dfab9fbc583e5f6c5b3b565))
+
 ## 5.3.4
 
  - Update a dependency to the latest release.

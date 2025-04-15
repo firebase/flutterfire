@@ -18,11 +18,15 @@ import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';
 
 import 'pages/chat_page.dart';
+import 'pages/audio_page.dart';
 import 'pages/function_calling_page.dart';
 import 'pages/image_prompt_page.dart';
 import 'pages/token_count_page.dart';
 import 'pages/schema_page.dart';
 import 'pages/imagen_page.dart';
+import 'pages/document.dart';
+import 'pages/video_page.dart';
+import 'pages/bidi_page.dart';
 
 // REQUIRED if you want to run on Web
 const FirebaseOptions? options = null;
@@ -32,9 +36,9 @@ void main() async {
   await Firebase.initializeApp();
   await FirebaseAuth.instance.signInAnonymously();
 
-  var vertex_instance =
+  var vertexInstance =
       FirebaseVertexAI.instanceFor(auth: FirebaseAuth.instance);
-  final model = vertex_instance.generativeModel(model: 'gemini-1.5-flash');
+  final model = vertexInstance.generativeModel(model: 'gemini-1.5-flash');
 
   runApp(GenerativeAISample(model: model));
 }
@@ -74,6 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Widget> get _pages => <Widget>[
         // Build _pages dynamically
         ChatPage(title: 'Chat', model: widget.model),
+        AudioPage(title: 'Audio', model: widget.model),
         TokenCountPage(title: 'Token Count', model: widget.model),
         const FunctionCallingPage(
           title: 'Function Calling',
@@ -81,6 +86,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ImagePromptPage(title: 'Image Prompt', model: widget.model),
         ImagenPage(title: 'Imagen Model', model: widget.model),
         SchemaPromptPage(title: 'Schema Prompt', model: widget.model),
+        DocumentPage(title: 'Document Prompt', model: widget.model),
+        VideoPage(title: 'Video Prompt', model: widget.model),
+        BidiPage(title: 'Bidi Stream', model: widget.model),
       ];
 
   void _onItemTapped(int index) {
@@ -107,6 +115,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             label: 'Chat',
             tooltip: 'Chat',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.mic,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            label: 'Audio Prompt',
+            tooltip: 'Audio Prompt',
           ),
           BottomNavigationBarItem(
             icon: Icon(
@@ -147,6 +163,30 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             label: 'Schema Prompt',
             tooltip: 'Schema Prompt',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.edit_document,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            label: 'Document Prompt',
+            tooltip: 'Document Prompt',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.video_collection,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            label: 'Video Prompt',
+            tooltip: 'Video Prompt',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.stream,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            label: 'Bidi Stream',
+            tooltip: 'Bidi Stream',
           ),
         ],
         currentIndex: _selectedIndex,

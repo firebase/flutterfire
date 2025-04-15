@@ -189,6 +189,7 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
               foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
             ),
             onPressed: () async {
+              await MoviesConnector.instance.thing().execute();
               String title = _titleController.text;
               String genre = _genreController.text;
               if (title == '' || genre == '') {
