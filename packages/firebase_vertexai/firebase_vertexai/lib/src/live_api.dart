@@ -68,9 +68,6 @@ class SpeechConfig {
 
 /// The available response modalities.
 enum ResponseModalities {
-  /// Unspecified response modality.
-  unspecified('MODALITY_UNSPECIFIED'),
-
   /// Text response modality.
   text('TEXT'),
 
