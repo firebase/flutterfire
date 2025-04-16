@@ -1,4 +1,4 @@
+javaVersion=17
 compileSdk=35
 minSdk=21
 targetSdk=35
-javaVersion=17
