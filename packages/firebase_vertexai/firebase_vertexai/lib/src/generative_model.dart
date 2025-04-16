@@ -17,7 +17,7 @@ part of vertexai_model;
 
 /// A multimodel generative model (like Gemini).
 ///
-/// Allows generating content, creating embeddings, and counting the number of
+/// Allows generating content and counting the number of
 /// tokens in a piece of content.
 final class GenerativeModel extends BaseApiClientModel {
   /// Create a [GenerativeModel] backed by the generative model named [model].
@@ -36,6 +36,7 @@ final class GenerativeModel extends BaseApiClientModel {
     required String model,
     required String location,
     required FirebaseApp app,
+    required bool useVertexBackend,
     FirebaseAppCheck? appCheck,
     FirebaseAuth? auth,
     List<SafetySetting>? safetySettings,
@@ -50,9 +51,12 @@ final class GenerativeModel extends BaseApiClientModel {
         _toolConfig = toolConfig,
         _systemInstruction = systemInstruction,
         super(
-            model: model,
-            app: app,
-            location: location,
+            serializationStrategy: useVertexBackend
+                ? VertexSerialization()
+                : DeveloperSerialization(),
+            modelUri: useVertexBackend
+                ? _VertexUri(app: app, model: model, location: location)
+                : _GoogleAIUri(model: model),
             client: HttpApiClient(
                 apiKey: app.options.apiKey,
                 httpClient: httpClient,
@@ -62,6 +66,7 @@ final class GenerativeModel extends BaseApiClientModel {
     required String model,
     required String location,
     required FirebaseApp app,
+    required useVertexBackend,
     FirebaseAppCheck? appCheck,
     FirebaseAuth? auth,
     List<SafetySetting>? safetySettings,
@@ -76,9 +81,12 @@ final class GenerativeModel extends BaseApiClientModel {
         _toolConfig = toolConfig,
         _systemInstruction = systemInstruction,
         super(
-            model: model,
-            app: app,
-            location: location,
+            serializationStrategy: useVertexBackend
+                ? VertexSerialization()
+                : DeveloperSerialization(),
+            modelUri: useVertexBackend
+                ? _VertexUri(app: app, model: model, location: location)
+                : _GoogleAIUri(model: model),
             client: apiClient ??
                 HttpApiClient(
                     apiKey: app.options.apiKey,
@@ -90,31 +98,6 @@ final class GenerativeModel extends BaseApiClientModel {
 
   final ToolConfig? _toolConfig;
   final Content? _systemInstruction;
-
-  Map<String, Object?> _generateContentRequest(
-    Iterable<Content> contents, {
-    List<SafetySetting>? safetySettings,
-    GenerationConfig? generationConfig,
-    List<Tool>? tools,
-    ToolConfig? toolConfig,
-  }) {
-    safetySettings ??= _safetySettings;
-    generationConfig ??= _generationConfig;
-    tools ??= _tools;
-    toolConfig ??= _toolConfig;
-    return {
-      'model': '${model.prefix}/${model.name}',
-      'contents': contents.map((c) => c.toJson()).toList(),
-      if (safetySettings.isNotEmpty)
-        'safetySettings': safetySettings.map((s) => s.toJson()).toList(),
-      if (generationConfig != null)
-        'generationConfig': generationConfig.toJson(),
-      if (tools != null) 'tools': tools.map((t) => t.toJson()).toList(),
-      if (toolConfig != null) 'toolConfig': toolConfig.toJson(),
-      if (_systemInstruction case final systemInstruction?)
-        'systemInstruction': systemInstruction.toJson(),
-    };
-  }
 
   /// Generates content responding to [prompt].
   ///
@@ -133,14 +116,16 @@ final class GenerativeModel extends BaseApiClientModel {
           ToolConfig? toolConfig}) =>
       makeRequest(
           Task.generateContent,
-          _generateContentRequest(
+          _serializationStrategy.generateContentRequest(
             prompt,
-            safetySettings: safetySettings,
-            generationConfig: generationConfig,
-            tools: tools,
-            toolConfig: toolConfig,
+            model,
+            safetySettings ?? _safetySettings,
+            generationConfig ?? _generationConfig,
+            tools ?? _tools,
+            toolConfig ?? _toolConfig,
+            _systemInstruction,
           ),
-          parseGenerateContentResponse);
+          _serializationStrategy.parseGenerateContentResponse);
 
   /// Generates a stream of content responding to [prompt].
   ///
@@ -162,14 +147,16 @@ final class GenerativeModel extends BaseApiClientModel {
       ToolConfig? toolConfig}) {
     final response = client.streamRequest(
         taskUri(Task.streamGenerateContent),
-        _generateContentRequest(
+        _serializationStrategy.generateContentRequest(
           prompt,
-          safetySettings: safetySettings,
-          generationConfig: generationConfig,
-          tools: tools,
-          toolConfig: toolConfig,
+          model,
+          safetySettings ?? _safetySettings,
+          generationConfig ?? _generationConfig,
+          tools ?? _tools,
+          toolConfig ?? _toolConfig,
+          _systemInstruction,
         ));
-    return response.map(parseGenerateContentResponse);
+    return response.map(_serializationStrategy.parseGenerateContentResponse);
   }
 
   /// Counts the total number of tokens in [contents].
@@ -192,10 +179,16 @@ final class GenerativeModel extends BaseApiClientModel {
   Future<CountTokensResponse> countTokens(
     Iterable<Content> contents,
   ) async {
-    final parameters = <String, Object?>{
-      'contents': contents.map((c) => c.toJson()).toList()
-    };
-    return makeRequest(Task.countTokens, parameters, parseCountTokensResponse);
+    final parameters = _serializationStrategy.countTokensRequest(
+      contents,
+      model,
+      _safetySettings,
+      _generationConfig,
+      _tools,
+      _toolConfig,
+    );
+    return makeRequest(Task.countTokens, parameters,
+        _serializationStrategy.parseCountTokensResponse);
   }
 }
 
@@ -204,6 +197,7 @@ GenerativeModel createGenerativeModel({
   required FirebaseApp app,
   required String location,
   required String model,
+  required bool useVertexBackend,
   FirebaseAppCheck? appCheck,
   FirebaseAuth? auth,
   GenerationConfig? generationConfig,
@@ -216,6 +210,7 @@ GenerativeModel createGenerativeModel({
       model: model,
       app: app,
       appCheck: appCheck,
+      useVertexBackend: useVertexBackend,
       auth: auth,
       location: location,
       safetySettings: safetySettings,
@@ -233,6 +228,7 @@ GenerativeModel createModelWithClient({
   required String location,
   required String model,
   required ApiClient client,
+  required bool useVertexBackend,
   Content? systemInstruction,
   FirebaseAppCheck? appCheck,
   FirebaseAuth? auth,
@@ -245,6 +241,7 @@ GenerativeModel createModelWithClient({
         model: model,
         app: app,
         appCheck: appCheck,
+        useVertexBackend: useVertexBackend,
         auth: auth,
         location: location,
         safetySettings: safetySettings,

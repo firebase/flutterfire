@@ -15,8 +15,7 @@
 import 'dart:convert';
 
 import 'package:firebase_vertexai/firebase_vertexai.dart';
-import 'package:firebase_vertexai/src/api.dart';
-import 'package:firebase_vertexai/src/error.dart';
+import 'package:firebase_vertexai/src/developer/api.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'utils/matchers.dart';
@@ -56,7 +55,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       expect(
-        () => VertexSerialization().parseGenerateContentResponse(decoded),
+        () => DeveloperSerialization().parseGenerateContentResponse(decoded),
         throwsA(
           isA<VertexAISdkException>().having(
             (e) => e.message,
@@ -95,7 +94,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          VertexSerialization().parseGenerateContentResponse(decoded);
+          DeveloperSerialization().parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -123,96 +122,6 @@ void main() {
             (e) => e.message,
             'message',
             startsWith('Response was blocked due to safety'),
-          ),
-        ),
-      );
-    });
-    test('with service api not enabled', () {
-      const response = '''
-{
-  "error": {
-    "code": 403,
-    "message": "Vertex AI in Firebase API has not been used in project test-project-id-1234 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/firebasevertexai.googleapis.com/overview?project=test-project-id-1234 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.",
-    "status": "PERMISSION_DENIED",
-    "details": [
-      {
-        "@type": "type.googleapis.com/google.rpc.Help",
-        "links": [
-          {
-            "description": "Google developers console API activation",
-            "url": "https://console.developers.google.com/apis/api/firebasevertexai.googleapis.com/overview?project=test-project-id-1234"
-          }
-        ]
-      },
-      {
-        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
-        "reason": "SERVICE_DISABLED",
-        "domain": "googleapis.com",
-        "metadata": {
-          "service": "firebasevertexai.googleapis.com",
-          "consumer": "projects/test-project-id-1234"
-        }
-      }
-    ]
-  }
-}
-''';
-      final decoded = jsonDecode(response) as Object;
-      expect(
-        () => VertexSerialization().parseGenerateContentResponse(decoded),
-        throwsA(
-          isA<ServiceApiNotEnabled>().having(
-            (e) => e.message,
-            'message',
-            startsWith(
-                'The Vertex AI in Firebase SDK requires the Vertex AI in Firebase API'),
-          ),
-        ),
-      );
-    });
-
-    test('with quota exceed', () {
-      const response = '''
-{
-  "error": {
-    "code": 429,
-    "message": "Quota exceeded for quota metric 'Generate Content API requests per minute' and limit 'GenerateContent request limit per minute for a region' of service 'generativelanguage.googleapis.com' for consumer 'project_number:348715329010'.",
-    "status": "RESOURCE_EXHAUSTED",
-    "details": [
-      {
-        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
-        "reason": "RATE_LIMIT_EXCEEDED",
-        "domain": "googleapis.com",
-        "metadata": {
-          "service": "generativelanguage.googleapis.com",
-          "consumer": "projects/348715329010",
-          "quota_limit_value": "0",
-          "quota_limit": "GenerateContentRequestsPerMinutePerProjectPerRegion",
-          "quota_location": "us-east2",
-          "quota_metric": "generativelanguage.googleapis.com/generate_content_requests"
-        }
-      },
-      {
-        "@type": "type.googleapis.com/google.rpc.Help",
-        "links": [
-          {
-            "description": "Request a higher quota limit.",
-            "url": "https://cloud.google.com/docs/quota#requesting_higher_quota"
-          }
-        ]
-      }
-    ]
-  }
-}
-''';
-      final decoded = jsonDecode(response) as Object;
-      expect(
-        () => VertexSerialization().parseGenerateContentResponse(decoded),
-        throwsA(
-          isA<QuotaExceeded>().having(
-            (e) => e.message,
-            'message',
-            startsWith('Quota exceeded for quota metric'),
           ),
         ),
       );
@@ -279,7 +188,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          VertexSerialization().parseGenerateContentResponse(decoded);
+          DeveloperSerialization().parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -413,7 +322,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          VertexSerialization().parseGenerateContentResponse(decoded);
+          DeveloperSerialization().parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -548,7 +457,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          VertexSerialization().parseGenerateContentResponse(decoded);
+          DeveloperSerialization().parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -599,6 +508,63 @@ void main() {
       );
     });
 
+    test('with code execution', () async {
+      const response = '''
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "executableCode": {
+              "language": "PYTHON",
+              "code": "print('hello world')"
+            }
+          },
+          {
+            "codeExecutionResult": {
+              "outcome": "OUTCOME_OK",
+              "output": "hello world"
+            }
+          },
+          {
+            "text": "hello world"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ]
+}
+''';
+      final decoded = jsonDecode(response) as Object;
+      final generateContentResponse =
+          DeveloperSerialization().parseGenerateContentResponse(decoded);
+      expect(
+        generateContentResponse,
+        matchesGenerateContentResponse(
+          GenerateContentResponse(
+            [
+              Candidate(
+                Content.model([
+                  // ExecutableCode(Language.python, 'print(\'hello world\')'),
+                  // CodeExecutionResult(Outcome.ok, 'hello world'),
+                  TextPart('hello world')
+                ]),
+                [],
+                null,
+                FinishReason.stop,
+                null,
+              ),
+            ],
+            null,
+          ),
+        ),
+      );
+    }, skip: 'Code Execution Unsupported');
+
     test('allows missing content', () async {
       const response = '''
 {
@@ -630,7 +596,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          VertexSerialization().parseGenerateContentResponse(decoded);
+          DeveloperSerialization().parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -657,83 +623,6 @@ void main() {
           ], null),
         ),
       );
-    });
-
-    test('response including usage metadata', () async {
-      const response = '''
-{
-  "candidates": [{
-    "content": {
-      "role": "model",
-      "parts": [{
-        "text": "Here is a description of the image:"
-      }]
-    },
-    "finishReason": "STOP"
-  }],
-  "usageMetadata": {
-    "promptTokenCount": 1837,
-    "candidatesTokenCount": 76,
-    "totalTokenCount": 1913,
-    "promptTokensDetails": [{
-      "modality": "TEXT",
-      "tokenCount": 76
-    }, {
-      "modality": "IMAGE",
-      "tokenCount": 1806
-    }],
-    "candidatesTokensDetails": [{
-      "modality": "TEXT",
-      "tokenCount": 76
-    }]
-  }
-}
-        ''';
-      final decoded = jsonDecode(response) as Object;
-      final generateContentResponse =
-          VertexSerialization().parseGenerateContentResponse(decoded);
-      expect(
-          generateContentResponse.text, 'Here is a description of the image:');
-      expect(generateContentResponse.usageMetadata?.totalTokenCount, 1913);
-      expect(
-          generateContentResponse
-              .usageMetadata?.promptTokensDetails?[1].modality,
-          ContentModality.image);
-      expect(
-          generateContentResponse
-              .usageMetadata?.promptTokensDetails?[1].tokenCount,
-          1806);
-      expect(
-          generateContentResponse
-              .usageMetadata?.candidatesTokensDetails?.first.modality,
-          ContentModality.text);
-      expect(
-          generateContentResponse
-              .usageMetadata?.candidatesTokensDetails?.first.tokenCount,
-          76);
-    });
-
-    test('countTokens with modality fields returned', () async {
-      const response = '''
-{
-  "totalTokens": 1837,
-  "totalBillableCharacters": 117,
-  "promptTokensDetails": [{
-    "modality": "IMAGE",
-    "tokenCount": 1806
-  }, {
-    "modality": "TEXT",
-    "tokenCount": 31
-  }]
-}
-        ''';
-      final decoded = jsonDecode(response) as Object;
-      final countTokensResponse =
-          VertexSerialization().parseCountTokensResponse(decoded);
-      expect(countTokensResponse.totalTokens, 1837);
-      expect(countTokensResponse.promptTokensDetails?.first.modality,
-          ContentModality.image);
-      expect(countTokensResponse.promptTokensDetails?.first.tokenCount, 1806);
     });
 
     test('text getter joins content', () async {
@@ -763,7 +652,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          VertexSerialization().parseGenerateContentResponse(decoded);
+          DeveloperSerialization().parseGenerateContentResponse(decoded);
       expect(generateContentResponse.text, 'Initial text And more text');
       expect(generateContentResponse.candidates.single.text,
           'Initial text And more text');
@@ -803,10 +692,12 @@ void main() {
           'API key not valid. Please pass a valid API key.',
         ),
       );
-      expect(() => VertexSerialization().parseGenerateContentResponse(decoded),
+      expect(
+          () => DeveloperSerialization().parseGenerateContentResponse(decoded),
           expectedThrow);
-      expect(() => VertexSerialization().parseCountTokensResponse(decoded),
+      expect(() => DeveloperSerialization().parseCountTokensResponse(decoded),
           expectedThrow);
+      // expect(() => parseEmbedContentResponse(decoded), expectedThrow);
     });
 
     test('for unsupported user location', () async {
@@ -833,10 +724,12 @@ void main() {
           'User location is not supported for the API use.',
         ),
       );
-      expect(() => VertexSerialization().parseGenerateContentResponse(decoded),
+      expect(
+          () => DeveloperSerialization().parseGenerateContentResponse(decoded),
           expectedThrow);
-      expect(() => VertexSerialization().parseCountTokensResponse(decoded),
+      expect(() => DeveloperSerialization().parseCountTokensResponse(decoded),
           expectedThrow);
+      // expect(() => parseEmbedContentResponse(decoded), expectedThrow);
     });
 
     test('for general server errors', () async {
@@ -866,10 +759,12 @@ void main() {
           ),
         ),
       );
-      expect(() => VertexSerialization().parseGenerateContentResponse(decoded),
+      expect(
+          () => DeveloperSerialization().parseGenerateContentResponse(decoded),
           expectedThrow);
-      expect(() => VertexSerialization().parseCountTokensResponse(decoded),
+      expect(() => DeveloperSerialization().parseCountTokensResponse(decoded),
           expectedThrow);
+      // expect(() => parseEmbedContentResponse(decoded), expectedThrow);
     });
   });
 }

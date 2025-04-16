@@ -39,6 +39,7 @@ void main() {
       final client = ClientController();
       final model = createModelWithClient(
           app: app,
+          useVertexBackend: true,
           model: modelName,
           client: client.client,
           location: 'us-central1');
