@@ -7,7 +7,7 @@ import 'package:firebase_auth_platform_interface/src/providers/phone_auth.dart';
 
 import 'firebase_auth_exception.dart';
 
-/// Typedef for a automatic phone number resolution.
+/// Typedef for an automatic phone number resolution.
 ///
 /// This handler can only be called on supported Android devices.
 typedef PhoneVerificationCompleted = void Function(
