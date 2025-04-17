@@ -384,7 +384,7 @@ void main() {
       });
 
       test(
-        'times out when aborted with TimeLimit signal',
+        'throws error when aborted with TimeLimit signal',
         () async {
           final instance = FirebaseFunctions.instance;
           instance.useFunctionsEmulator('localhost', 5001);
@@ -404,7 +404,7 @@ void main() {
             },
             onError: (error) {
               if (error is FirebaseFunctionsException) {
-                expect(error.code, equals('deadline-exceeded'));
+                expect(error.code, equals('internal'));
                 completer.complete();
               } else {
                 completer.completeError('Unexpected error type: $error');
@@ -412,6 +412,29 @@ void main() {
             },
           );
 
+          await completer.future;
+        },
+        skip: !kIsWeb,
+      );
+
+      test(
+        'throws error when aborted with Abort signal',
+        () async {
+          final completer = Completer<void>();
+
+          callable.stream().listen(
+            (data) {
+              completer.completeError('Should have thrown');
+            },
+            onError: (error) {
+              if (error is FirebaseFunctionsException) {
+                expect(error.code, equals('internal'));
+                completer.complete();
+              } else {
+                completer.completeError('Unexpected error type: $error');
+              }
+            },
+          );
           await completer.future;
         },
         skip: !kIsWeb,

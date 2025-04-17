@@ -53,7 +53,6 @@ class TimeLimit extends AbortSignal {
 /// ```dart
 /// final signal = HttpsCallableOptions(webAbortSignal: Abort('User exited'));
 /// ```
-
 class Abort extends AbortSignal {
   final Object? reason;
   Abort([this.reason]);
@@ -74,7 +73,6 @@ class Abort extends AbortSignal {
 ///   ]),
 /// );
 /// ```
-
 class Any extends AbortSignal {
   final List<AbortSignal> signals;
   Any(this.signals);
