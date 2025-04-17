@@ -65,7 +65,7 @@ void main() async {
         print('File copied to: ${copiedConfig.path}');
         break;
       case 'firebase_auth':
-        // Needs minimum compile sdk verstion to 23.
+        // Needs minimum compile sdk verstion to 23 specifically for this package.
         final localConfigGradleFilePath = '${package.path}/android/local-config.gradle';
         final copiedConfig = await globalConfig.copy(
         localConfigGradleFilePath,
