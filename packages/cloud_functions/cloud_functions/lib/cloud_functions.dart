@@ -15,7 +15,13 @@ import 'package:firebase_core_platform_interface/firebase_core_platform_interfac
 import 'package:flutter/foundation.dart';
 
 export 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart'
-    show HttpsCallableOptions, FirebaseFunctionsException;
+    show
+        HttpsCallableOptions,
+        FirebaseFunctionsException,
+        AbortSignal,
+        TimeLimit,
+        Abort,
+        Any;
 
 part 'src/firebase_functions.dart';
 part 'src/https_callable.dart';

@@ -102,12 +102,14 @@ extension HttpsCallableStreamResultJsImplExtension
 @anonymous
 abstract class HttpsCallableStreamOptions {
   external factory HttpsCallableStreamOptions(
-      {JSBoolean? limitedUseAppCheckTokens});
+      {JSBoolean? limitedUseAppCheckTokens, web.AbortSignal? signal});
 }
 
 extension HttpsCallableStreamOptionsExtension on HttpsCallableStreamOptions {
   external JSBoolean? get limitedUseAppCheckTokens;
   external set limitedUseAppCheckTokens(JSBoolean? t);
+  external web.AbortSignal? signal;
+  external set siganl(web.AbortSignal? s);
 }
 
 extension type JsAsyncIterator<T extends JSAny>._(JSObject _)

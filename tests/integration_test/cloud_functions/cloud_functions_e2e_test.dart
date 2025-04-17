@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_functions/cloud_functions.dart';
@@ -354,7 +355,8 @@ void main() {
       });
 
       test('accepts a [List]', () async {
-        final stream = callable.stream(data.list).where((event) => event is Chunk);
+        final stream =
+            callable.stream(data.list).where((event) => event is Chunk);
         await expectLater(
           stream,
           emits(
@@ -366,17 +368,54 @@ void main() {
 
       test('accepts a deeply nested [Map]', () async {
         final stream = callable.stream({
-            'type': 'deepMap',
-            'inputData': data.deepMap,
-          }).where((event) => event is Chunk);
+          'type': 'deepMap',
+          'inputData': data.deepMap,
+        }).where((event) => event is Chunk);
         await expectLater(
           stream,
           emits(
-            isA<Chunk>()
-                .having((e) => e.partialData, 'partialData', equals(data.deepMap)),
+            isA<Chunk>().having(
+              (e) => e.partialData,
+              'partialData',
+              equals(data.deepMap),
+            ),
           ),
         );
       });
+
+      test(
+        'times out when aborted with TimeLimit signal',
+        () async {
+          final instance = FirebaseFunctions.instance;
+          instance.useFunctionsEmulator('localhost', 5001);
+
+          final completer = Completer<void>();
+
+          final timeoutCallable = FirebaseFunctions.instance.httpsCallable(
+            kTestFunctionTimeout,
+            options: HttpsCallableOptions(
+              webAbortSignal: TimeLimit(const Duration(seconds: 3)),
+            ),
+          );
+
+          timeoutCallable.stream().listen(
+            (data) {
+              completer.completeError('Should have thrown');
+            },
+            onError: (error) {
+              if (error is FirebaseFunctionsException) {
+                expect(error.code, equals('deadline-exceeded'));
+                completer.complete();
+              } else {
+                completer.completeError('Unexpected error type: $error');
+              }
+            },
+          );
+
+          await completer.future;
+        },
+        skip: !kIsWeb,
+      );
     });
   });
 }

@@ -33,21 +33,30 @@ export const testFunctionCustomRegion = functions.https.onCall(
 export const testFunctionTimeout = functions.https.onCall((req, res) => {
   const data = req.data
   console.log(JSON.stringify({ data }));
-  return new Promise((resolve, reject) => {
-    if (data && data.testTimeout) {
-      setTimeout(
-        () => resolve({ timeLimit: 'exceeded' }),
-        parseInt(data.testTimeout, 10)
-      );
-    } else {
-      reject(
-        new functions.https.HttpsError(
-          'invalid-argument',
-          'testTimeout must be provided.'
-        )
-      );
-    }
+
+  const timeoutMs = parseInt(data?.testTimeout, 10);
+
+  if (isNaN(timeoutMs)) {
+    throw new functions.https.HttpsError(
+      'invalid-argument',
+      'testTimeout must be provided.'
+    );
+  }
+
+  if (req.acceptsStreaming) {
+    setTimeout(() => {
+      res?.sendChunk({ timeLimit: 'exceeded' });
+    }, timeoutMs);
+
+    return new Promise((resolve) => {
+      setTimeout(resolve, timeoutMs + 100);
+    });
+  }
+
+  return new Promise((resolve) => {
+    setTimeout(() => resolve({ timeLimit: 'exceeded' }), timeoutMs);
   });
+
 });
 
 // For e2e testing errors & return values.

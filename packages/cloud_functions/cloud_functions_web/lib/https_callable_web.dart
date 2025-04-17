@@ -11,6 +11,7 @@ import 'package:cloud_functions_web/interop/functions_interop.dart' as interop;
 
 import 'interop/functions.dart' as functions_interop;
 import 'utils.dart';
+import 'package:web/web.dart' as web;
 
 /// A web specific implementation of [HttpsCallable].
 class HttpsCallableWeb extends HttpsCallablePlatform {
@@ -77,13 +78,34 @@ class HttpsCallableWeb extends HttpsCallablePlatform {
     }
 
     final JSAny? parametersJS = parameters?.jsify();
+    web.AbortSignal? signal;
+    if (options.webAbortSignal != null) {
+      signal = _createJsAbortSignal(options.webAbortSignal!);
+    }
     interop.HttpsCallableStreamOptions callableStreamOptions =
         interop.HttpsCallableStreamOptions(
-            limitedUseAppCheckTokens: options.limitedUseAppCheckToken.toJS);
+            limitedUseAppCheckTokens: options.limitedUseAppCheckToken.toJS,
+            signal: signal);
     try {
       await for (final value
           in callable.stream(parametersJS, callableStreamOptions)) {
         yield value;
+      }
+    } catch (e, s) {
+      throw convertFirebaseFunctionsException(e as JSObject, s);
+    }
+  }
+
+  web.AbortSignal _createJsAbortSignal(AbortSignal signal) {
+    try {
+      switch (signal) {
+        case TimeLimit(:final time):
+          return web.AbortSignal.timeout(time.inMilliseconds);
+        case Abort(:final reason):
+          return web.AbortSignal.abort(reason.jsify());
+        case Any(:final signals):
+          final jsSignals = signals.map(_createJsAbortSignal).toList().toJS;
+          return web.AbortSignal.any(jsSignals);
       }
     } catch (e, s) {
       throw convertFirebaseFunctionsException(e as JSObject, s);
