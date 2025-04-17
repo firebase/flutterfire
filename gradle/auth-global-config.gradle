@@ -1,6 +1,6 @@
 ext {
-    compileSdk=35
+    compileSdk=34
     minSdk=23
-    targetSdk=35
+    targetSdk=34
     javaVersion = JavaVersion.toVersion(17)
 }
