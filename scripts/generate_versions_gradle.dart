@@ -33,7 +33,16 @@ void main() async {
     ],
   );
 
+  final authConfigPath = joinAll(
+    [
+      Directory.current.path,
+      'gradle',
+      'auth-global-config.gradle',
+    ],
+  );
+
   final globalConfig = File(globalConfigPath);
+  final authConfig = File(authConfigPath);
   
   if (!globalConfig.existsSync()) {
     throw Exception(
@@ -42,27 +51,37 @@ void main() async {
   }
 
   for (final package in workspace.filteredPackages.values) {
-    // Skip firebase_data_connect and firebase_vertexai packages as they do not have gradle in them.
-    if (package.name == 'firebase_vertexai') {
-      continue;
-    }
-    else if (package.name == 'firebase_data_connect') {
-      final localConfigGradleFilePath = '${package.path}/example/android/app/local-config.gradle';
-      final copiedConfig = await globalConfig.copy(
-      localConfigGradleFilePath,
-      );
-      // ignore: avoid_print
-      print('File copied to: ${copiedConfig.path}');
-      continue;
-    }
-    else {
-      final localConfigGradleFilePath = '${package.path}/android/local-config.gradle';
+    switch (package.name) {
+      case 'firebase_vertexai':
+        // Skip this package as it does not have gradle in it.
+        break;
+      case 'firebase_data_connect':
+        // Only has gradle in the example application.
+        final localConfigGradleFilePath = '${package.path}/example/android/app/local-config.gradle';
+        final copiedConfig = await authConfig.copy(
+        localConfigGradleFilePath,
+        );
+        // ignore: avoid_print
+        print('File copied to: ${copiedConfig.path}');
+        break;
+      case 'firebase_auth':
+        // Needs minimum compile sdk verstion to 23.
+        final localConfigGradleFilePath = '${package.path}/android/local-config.gradle';
+        final copiedConfig = await globalConfig.copy(
+        localConfigGradleFilePath,
+        );
+        // ignore: avoid_print
+        print('File copied to: ${copiedConfig.path}');
+        break;
+      default:
+        // For all other packages, copy the global-config.gradle file to the local-config.gradle file.
+        final localConfigGradleFilePath = '${package.path}/android/local-config.gradle';
 
-      final copiedConfig = await globalConfig.copy(
-      localConfigGradleFilePath,
-      );
-      // ignore: avoid_print
-      print('File copied to: ${copiedConfig.path}');
+        final copiedConfig = await globalConfig.copy(
+        localConfigGradleFilePath,
+        );
+        // ignore: avoid_print
+        print('File copied to: ${copiedConfig.path}');
     }
   }
 }
