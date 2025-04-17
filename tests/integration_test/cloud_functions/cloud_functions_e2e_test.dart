@@ -421,9 +421,21 @@ void main() {
       test(
         'throws error when aborted with Abort signal',
         () async {
+          final instance = FirebaseFunctions.instance;
+          instance.useFunctionsEmulator('localhost', 5001);
+
           final completer = Completer<void>();
 
-          callable.stream().listen(
+          final timeoutCallable = FirebaseFunctions.instance.httpsCallable(
+            kTestFunctionTimeout,
+            options: HttpsCallableOptions(
+              webAbortSignal: Abort('aborted'),
+            ),
+          );
+
+          timeoutCallable.stream({
+            'testTimeout': const Duration(seconds: 6).inMilliseconds.toString(),
+          }).listen(
             (data) {
               completer.completeError('Should have thrown');
             },
