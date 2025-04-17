@@ -29,28 +29,28 @@ void main() async {
       .firstWhere((package) => package.name == 'firebase_core');
 
   final globalConfig = File(
-    '${firebaseCorePackage.path}/android/global-config.txt',
+    '${firebaseCorePackage.path}/android/global-config.gradle',
   );
   
   if (!globalConfig.existsSync()) {
     throw Exception(
-    'global_config.txt file not found in the expected location.',
+    'global_config.gradle file not found in the expected location.',
     );
   }
 
-  final versions = getVersions(globalConfig);
-
   for (final package in workspace.filteredPackages.values) {
-    final localConfigGradleFile =
-        File('${package.path}/android/local-config.gradle');
+    // Skip firebase_data_connect and firebase_vertexai packages as they do not have gradle in them.
+    if (package.name == 'firebase_data_connect' || package.name == 'firebase_vertexai') {
+      continue;
+    }
+    else {
+      final localConfigGradleFilePath = '${package.path}/android/local-config.gradle';
 
-    if (localConfigGradleFile.existsSync()) {
-      final packageVersionFile =
-          File('${package.path}/android/generated_android_versions.txt');
-      packageVersionFile.writeAsStringSync(await versions);
-      final exampleAppVersionFile = File(
-          '${package.path}/example/android/app/generated_android_versions.txt');
-      exampleAppVersionFile.writeAsStringSync(await versions);
+      final copiedConfig = await globalConfig.copy(
+      localConfigGradleFilePath,
+      );
+      // ignore: avoid_print
+      print('File copied to: ${copiedConfig.path}');
     }
   }
 }
@@ -71,22 +71,4 @@ Future<melos.MelosWorkspace> getMelosWorkspace() async {
   );
 
   return workspace;
-}
-
-Future<String> getVersions(File globalConfig) async {
-  if (globalConfig.existsSync()) {
-    final contents = globalConfig.readAsStringSync();
-    final lines = contents.split('\n');
-    final javaVersion =
-        lines.firstWhere((line) => line.contains('javaVersion'));
-    final compileSdkVersion =
-        lines.firstWhere((line) => line.contains('compileSdk'));
-    final minSdkVersion =
-        lines.firstWhere((line) => line.contains('minSdk'));
-    final targetSdkVersion =
-        lines.firstWhere((line) => line.contains('targetSdk'));
-
-    return '$javaVersion\n$compileSdkVersion\n$minSdkVersion\n$targetSdkVersion';
-  }
-  throw Exception('global-config.txt file has wrong format or something missing.');
 }

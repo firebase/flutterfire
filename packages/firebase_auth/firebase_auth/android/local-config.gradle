@@ -1,19 +1,6 @@
-def versionFile = file("generated_android_versions.txt")
-def versionProps = new Properties()
-
-if (versionFile.exists()) {
-    versionFile.withInputStream { stream ->
-        versionProps.load(stream)
-    }
-} else {
-    throw new GradleException("generated_android_versions.txt not found!")
-}
-
 ext {
-    compileSdk = versionProps['compileSdk'] as Integer
-    minSdk = versionProps['minSdk'] as Integer
-    targetSdk = versionProps['targetSdk'] as Integer
-
-    def javaVerNum = versionProps['javaVersion'] as Integer
-    javaVersion = JavaVersion.toVersion(javaVerNum)
+    compileSdk=35
+    minSdk=21
+    targetSdk=35
+    javaVersion = JavaVersion.toVersion(17)
 }
