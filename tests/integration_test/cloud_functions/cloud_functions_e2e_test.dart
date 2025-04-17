@@ -398,7 +398,9 @@ void main() {
             ),
           );
 
-          timeoutCallable.stream().listen(
+          timeoutCallable.stream({
+            'testTimeout': const Duration(seconds: 6).inMilliseconds.toString(),
+          }).listen(
             (data) {
               completer.completeError('Should have thrown');
             },
@@ -411,7 +413,6 @@ void main() {
               }
             },
           );
-
           await completer.future;
         },
         skip: !kIsWeb,
