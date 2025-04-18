@@ -18,6 +18,12 @@ import FirebaseFunctions
 let kFLTFirebaseFunctionsChannelName = "plugins.flutter.io/firebase_functions"
 
 public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin {
+  private let binaryMessenger: FlutterBinaryMessenger
+
+  init(binaryMessenger: FlutterBinaryMessenger) {
+    self.binaryMessenger = binaryMessenger
+  }
+
   public func firebaseLibraryVersion() -> String {
     versionNumber
   }
@@ -40,7 +46,6 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
 
   public static func register(with registrar: FlutterPluginRegistrar) {
     let binaryMessenger: FlutterBinaryMessenger
-
     #if os(macOS)
       binaryMessenger = registrar.messenger
     #elseif os(iOS)
@@ -51,16 +56,20 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
       name: kFLTFirebaseFunctionsChannelName,
       binaryMessenger: binaryMessenger
     )
-    let instance = FirebaseFunctionsPlugin()
+    let instance = FirebaseFunctionsPlugin(binaryMessenger: binaryMessenger)
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
 
-  public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    guard call.method == "FirebaseFunctions#call" else {
-      result(FlutterMethodNotImplemented)
-      return
-    }
+  private func registerEventChannel(arguments: [String: Any]) {
+    let eventChannelId = arguments["eventChannelId"]!
+    let eventChannelName = "\(kFLTFirebaseFunctionsChannelName)/\(eventChannelId)"
+    let eventChannel = FlutterEventChannel(name: eventChannelName, binaryMessenger: binaryMessenger)
+    let functions = getFunctions(arguments: arguments)
+    let streamHandler = FunctionsStreamHandler(functions: functions)
+    eventChannel.setStreamHandler(streamHandler)
+  }
 
+  public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     guard let arguments = call.arguments as? [String: Any] else {
       result(FlutterError(code: "invalid_arguments",
                           message: "Invalid arguments",
@@ -68,12 +77,20 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
       return
     }
 
-    httpsFunctionCall(arguments: arguments) { success, error in
-      if let error {
-        result(error)
-      } else {
-        result(success)
+    if call.method == "FirebaseFunctions#registerEventChannel" {
+      registerEventChannel(arguments: arguments)
+      result(nil)
+    } else if call.method == "FirebaseFunctions#call" {
+      httpsFunctionCall(arguments: arguments) { success, error in
+        if let error {
+          result(error)
+        } else {
+          result(success)
+        }
       }
+    } else {
+      result(FlutterMethodNotImplemented)
+      return
     }
   }
 
@@ -130,6 +147,13 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
         completion(result?.data, nil)
       }
     }
+  }
+
+  private func getFunctions(arguments: [String: Any]) -> Functions {
+    let appName = arguments["appName"] as? String ?? ""
+    let region = arguments["region"] as? String
+    let app = FLTFirebasePlugin.firebaseAppNamed(appName)!
+    return Functions.functions(app: app, region: region ?? "")
   }
 
   private func createFlutterError(from error: Error) -> FlutterError {

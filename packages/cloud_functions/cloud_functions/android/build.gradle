@@ -64,6 +64,7 @@ android {
     implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
     implementation 'com.google.firebase:firebase-functions'
     implementation 'androidx.annotation:annotation:1.7.0'
+    implementation 'org.reactivestreams:reactive-streams:1.0.4'
   }
 }
 

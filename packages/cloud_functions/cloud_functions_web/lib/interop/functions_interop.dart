@@ -9,6 +9,8 @@
 library;
 
 import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
+import 'package:web/web.dart' as web;
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
@@ -75,4 +77,67 @@ abstract class HttpsCallableResultJsImpl {}
 
 extension HttpsCallableResultJsImplExtension on HttpsCallableResultJsImpl {
   external JSAny? get data;
+}
+
+@JS('HttpsCallable')
+@staticInterop
+class HttpsCallable {}
+
+extension HttpsCallableExtension on HttpsCallable {
+  external JSPromise stream([JSAny? data, HttpsCallableStreamOptions? options]);
+}
+
+@JS('HttpsCallableStreamResult')
+@staticInterop
+class HttpsCallableStreamResultJsImpl {}
+
+extension HttpsCallableStreamResultJsImplExtension
+    on HttpsCallableStreamResultJsImpl {
+  external JSPromise data;
+  external JsAsyncIterator<JSAny> stream;
+}
+
+@JS('HttpsCallableStreamOptions')
+@staticInterop
+@anonymous
+abstract class HttpsCallableStreamOptions {
+  external factory HttpsCallableStreamOptions(
+      {JSBoolean? limitedUseAppCheckTokens, web.AbortSignal? signal});
+}
+
+extension HttpsCallableStreamOptionsExtension on HttpsCallableStreamOptions {
+  external JSBoolean? get limitedUseAppCheckTokens;
+  external set limitedUseAppCheckTokens(JSBoolean? t);
+  external web.AbortSignal? signal;
+  external set siganl(web.AbortSignal? s);
+}
+
+extension type JsAsyncIterator<T extends JSAny>._(JSObject _)
+    implements JSObject {
+  Stream<dynamic> asStream() async* {
+    final symbolJS = web.window.getProperty('Symbol'.toJS)! as JSFunction;
+    final asyncIterator = symbolJS.getProperty('asyncIterator'.toJS);
+    final iterator =
+        (this as JSObject).getProperty(asyncIterator!)! as JsAsyncIterator<T>;
+    final object = (iterator as JSFunction).callAsFunction()! as JSObject;
+    while (true) {
+      // Wait for the next iteration result.
+      final result = await ((object.getProperty('next'.toJS)! as JSFunction)
+              .callAsFunction()! as JSPromise<JSAny>)
+          .toDart;
+      final dartObject = (result.dartify()! as Map).cast<String, dynamic>();
+      if (dartObject['done'] as bool) {
+        break;
+      }
+      yield result as JSObject;
+    }
+  }
+}
+
+@JS()
+@staticInterop
+abstract class HttpsStreamIterableResult {}
+
+extension HttpsStreamIterableResultExtension on HttpsStreamIterableResult {
+  external JSAny? get value;
 }
