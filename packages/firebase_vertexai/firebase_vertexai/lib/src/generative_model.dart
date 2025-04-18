@@ -56,7 +56,7 @@ final class GenerativeModel extends BaseApiClientModel {
             client: HttpApiClient(
                 apiKey: app.options.apiKey,
                 httpClient: httpClient,
-                requestHeaders: BaseModel.firebaseTokens(appCheck, auth)));
+                requestHeaders: BaseModel.firebaseTokens(appCheck, auth, app)));
 
   GenerativeModel._constructTestModel({
     required String model,
@@ -82,7 +82,8 @@ final class GenerativeModel extends BaseApiClientModel {
             client: apiClient ??
                 HttpApiClient(
                     apiKey: app.options.apiKey,
-                    requestHeaders: BaseModel.firebaseTokens(appCheck, auth)));
+                    requestHeaders:
+                        BaseModel.firebaseTokens(appCheck, auth, app)));
 
   final List<SafetySetting> _safetySettings;
   final GenerationConfig? _generationConfig;
