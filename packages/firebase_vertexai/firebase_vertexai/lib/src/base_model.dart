@@ -156,7 +156,7 @@ abstract class BaseModel {
 
   /// Returns a function that generates Firebase auth tokens.
   static FutureOr<Map<String, String>> Function() firebaseTokens(
-      FirebaseAppCheck? appCheck, FirebaseAuth? auth) {
+      FirebaseAppCheck? appCheck, FirebaseAuth? auth, FirebaseApp? app) {
     return () async {
       Map<String, String> headers = {};
       // Override the client name in Google AI SDK
@@ -173,6 +173,9 @@ abstract class BaseModel {
         if (idToken != null) {
           headers['Authorization'] = 'Firebase $idToken';
         }
+      }
+      if (app != null && app.isAutomaticDataCollectionEnabled) {
+        headers['X-Firebase-AppId'] = app.options.appId;
       }
       return headers;
     };

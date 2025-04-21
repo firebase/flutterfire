@@ -44,7 +44,7 @@ final class ImagenModel extends BaseApiClientModel {
             ),
             client: HttpApiClient(
                 apiKey: app.options.apiKey,
-                requestHeaders: BaseModel.firebaseTokens(appCheck, auth)));
+                requestHeaders: BaseModel.firebaseTokens(appCheck, auth, app)));
 
   final ImagenGenerationConfig? _generationConfig;
   final ImagenSafetySettings? _safetySettings;

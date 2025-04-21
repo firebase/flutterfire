@@ -87,7 +87,7 @@ final class LiveGenerativeModel extends BaseModel {
     };
 
     final request = jsonEncode(setupJson);
-    final headers = await BaseModel.firebaseTokens(_appCheck, _auth)();
+    final headers = await BaseModel.firebaseTokens(_appCheck, _auth, _app)();
     var ws = IOWebSocketChannel.connect(Uri.parse(uri), headers: headers);
     await ws.ready;
 
