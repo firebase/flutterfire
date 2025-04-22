@@ -39,6 +39,7 @@ class VoiceConfig {
   // ignore: public_member_api_docs
   VoiceConfig({this.prebuiltVoiceConfig});
 
+  // ignore: public_member_api_docs
   final PrebuiltVoiceConfig? prebuiltVoiceConfig;
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
