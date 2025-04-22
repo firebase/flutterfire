@@ -335,10 +335,10 @@ class _BidiPageState extends State<BidiPage> {
       if (message.modelTurn != null) {
         await _handleLiveServerContent(message);
       }
-      if (message.turnComplete!) {
+      if (message.turnComplete != null && message.turnComplete!) {
         await _handleTurnComplete();
       }
-      if (message.interrupted!) {
+      if (message.interrupted != null && message.interrupted!) {
         log('Interrupted: $response');
       }
     } else if (message is LiveServerToolCall && message.functionCalls != null) {
