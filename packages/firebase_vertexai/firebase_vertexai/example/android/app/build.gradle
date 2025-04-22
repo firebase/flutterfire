@@ -28,7 +28,7 @@ if (flutterVersionName == null) {
 android {
     namespace "com.example.example"
 
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.example.example"
