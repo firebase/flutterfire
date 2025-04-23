@@ -11,7 +11,7 @@ buildscript {
     }
 
     dependencies {
-        classpath ext.androidGradlePluginVersion
+        classpath project.ext.androidGradlePluginVersion
     }
 }
 
