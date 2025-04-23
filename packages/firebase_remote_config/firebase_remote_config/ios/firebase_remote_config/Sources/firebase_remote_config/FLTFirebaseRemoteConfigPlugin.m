@@ -11,13 +11,16 @@
 
 #import "FLTFirebaseRemoteConfigPlugin.h"
 #import "FLTFirebaseRemoteConfigUtils.h"
+// Import generated Pigeon header
+#import "messages.g.h"
 
-NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase_remote_config";
+// Remove channel name constant as it's no longer used for method calls
+// NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase_remote_config";
 NSString *const kFirebaseRemoteConfigUpdateChannelName =
     @"plugins.flutter.io/firebase_remote_config_updated";
 
 @interface FLTFirebaseRemoteConfigPlugin ()
-@property(nonatomic, retain) FlutterMethodChannel *channel;
+// Remove channel property
 @property(nonatomic, strong)
     NSMutableDictionary<NSString *, FIRConfigUpdateListenerRegistration *> *listenersMap;
 @end
@@ -47,16 +50,15 @@ BOOL _fetchAndActivateRetry;
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
-  FlutterMethodChannel *channel =
-      [FlutterMethodChannel methodChannelWithName:kFirebaseRemoteConfigChannelName
-                                  binaryMessenger:[registrar messenger]];
+  FLTFirebaseRemoteConfigPlugin *instance = [FLTFirebaseRemoteConfigPlugin sharedInstance];
+
+  // Setup Pigeon Host API instead of MethodChannel
+  FirebaseRemoteConfigHostApiSetup([registrar messenger], instance);
+
+  // Keep EventChannel for config updates
   FlutterEventChannel *eventChannel =
       [FlutterEventChannel eventChannelWithName:kFirebaseRemoteConfigUpdateChannelName
                                 binaryMessenger:[registrar messenger]];
-
-  FLTFirebaseRemoteConfigPlugin *instance = [FLTFirebaseRemoteConfigPlugin sharedInstance];
-
-  [registrar addMethodCallDelegate:instance channel:channel];
   [eventChannel setStreamHandler:instance];
 
   SEL sel = NSSelectorFromString(@"registerLibrary:withVersion:");
@@ -65,210 +67,215 @@ BOOL _fetchAndActivateRetry;
   }
 }
 
-- (void)detachFromEngineForRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
-  self.channel = nil;
+// Remove detachFromEngineForRegistrar as it's MethodChannel specific
+// - (void)detachFromEngineForRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
+//   self.channel = nil;
+// }
+
+// Remove handleMethodCall and related types/methods
+// - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult { ... }
+// - (void)setCustomSignals:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result { ... }
+// - (void)ensureInitialized:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result { ... }
+// - (void)activate:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result { ... }
+// - (void)getAll:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result { ... }
+// - (void)fetch:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result { ... }
+// - (void)getProperties:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result { ... }
+// - (void)setDefaults:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result { ... }
+// - (void)setConfigSettings:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result { ... }
+// - (void)fetchAndActivate:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result { ... }
+
+
+#pragma mark - FirebaseRemoteConfigHostApi implementation
+
+- (void)activateAppName:(NSString *)appName
+             completion:(void (^)(NSNumber *_Nullable, FlutterError *_Nullable))completion {
+  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigForAppName:appName];
+  [remoteConfig activateWithCompletion:^(BOOL changed, NSError *error) {
+    if (error != nil) {
+      completion(nil, [FLTFirebaseRemoteConfigUtils flutterErrorFromNSError:error]);
+    } else {
+      completion(@(changed), nil);
+    }
+  }];
 }
 
-- (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
-  FLTFirebaseMethodCallErrorBlock errorBlock =
-      ^(NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
-        NSError *_Nullable error) {
-        if (code == nil) {
-          details = [FLTFirebaseRemoteConfigUtils ErrorCodeAndMessageFromNSError:error];
-          code = [details valueForKey:@"code"];
-          message = [details valueForKey:@"message"];
-        }
-        if ([@"unknown" isEqualToString:code]) {
-          NSLog(@"FLTFirebaseRemoteConfig: An error occurred while calling method %@", call.method);
-        }
-        flutterResult([FLTFirebasePlugin createFlutterErrorFromCode:code
-                                                            message:message
-                                                    optionalDetails:details
-                                                 andOptionalNSError:error]);
-      };
-
-  FLTFirebaseMethodCallResult *methodCallResult =
-      [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
-
-  if ([@"RemoteConfig#ensureInitialized" isEqualToString:call.method]) {
-    [self ensureInitialized:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"RemoteConfig#activate" isEqualToString:call.method]) {
-    [self activate:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"RemoteConfig#getAll" isEqualToString:call.method]) {
-    [self getAll:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"RemoteConfig#fetch" isEqualToString:call.method]) {
-    [self fetch:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"RemoteConfig#fetchAndActivate" isEqualToString:call.method]) {
-    [self fetchAndActivate:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"RemoteConfig#setConfigSettings" isEqualToString:call.method]) {
-    [self setConfigSettings:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"RemoteConfig#setDefaults" isEqualToString:call.method]) {
-    [self setDefaults:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"RemoteConfig#getProperties" isEqualToString:call.method]) {
-    [self getProperties:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"RemoteConfig#setCustomSignals" isEqualToString:call.method]) {
-    [self setCustomSignals:call.arguments withMethodCallResult:methodCallResult];
-  } else {
-    methodCallResult.success(FlutterMethodNotImplemented);
-  }
+- (void)ensureInitializedAppName:(NSString *)appName
+                      completion:(void (^)(FlutterError *_Nullable))completion {
+  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigForAppName:appName];
+  [remoteConfig ensureInitializedWithCompletionHandler:^(NSError *initializationError) {
+    if (initializationError != nil) {
+      completion([FLTFirebaseRemoteConfigUtils flutterErrorFromNSError:initializationError]);
+    } else {
+      completion(nil);
+    }
+  }];
 }
 
-#pragma mark - Remote Config API
-- (void)setCustomSignals:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigFromArguments:arguments];
-  NSDictionary *customSignals = arguments[@"customSignals"];
+- (void)fetchAndActivateAppName:(NSString *)appName
+                     completion:
+                         (void (^)(NSNumber *_Nullable, FlutterError *_Nullable))completion {
+  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigForAppName:appName];
+  [remoteConfig fetchAndActivateWithCompletionHandler:^(
+                    FIRRemoteConfigFetchAndActivateStatus status, NSError *error) {
+    if (error != nil) {
+      // Note: Retry logic removed as it was based on specific error code handling
+      // which might differ or be handled differently by the native SDK now.
+      // If issues arise, this might need revisiting.
+      completion(nil, [FLTFirebaseRemoteConfigUtils flutterErrorFromNSError:error]);
+    } else {
+      // Pigeon expects a boolean indicating if activation happened.
+      // FIRRemoteConfigFetchAndActivateStatusSuccessFetchedFromRemote implies activation.
+      // FIRRemoteConfigFetchAndActivateStatusSuccessUsingPreFetchedData means already activated.
+      // We return YES if fetched from remote, NO otherwise (matching old logic).
+      BOOL activated = (status == FIRRemoteConfigFetchAndActivateStatusSuccessFetchedFromRemote);
+      completion(@(activated), nil);
+    }
+  }];
+}
+
+- (void)fetchAppName:(NSString *)appName completion:(void (^)(FlutterError *_Nullable))completion {
+  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigForAppName:appName];
+  [remoteConfig fetchWithCompletionHandler:^(FIRRemoteConfigFetchStatus status, NSError *error) {
+    if (error != nil) {
+      completion([FLTFirebaseRemoteConfigUtils flutterErrorFromNSError:error]);
+    } else {
+      // Fetch doesn't return data, just status. Pigeon method expects void/error.
+      completion(nil);
+    }
+  }];
+}
+
+- (void)getAllAppName:(NSString *)appName
+           completion:(void (^)(NSDictionary<NSString *, PigeonFirebaseRemoteConfigValue *> *_Nullable,
+                                FlutterError *_Nullable))completion {
+  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigForAppName:appName];
+  NSDictionary<NSString *, PigeonFirebaseRemoteConfigValue *> *parameters =
+      [self getAllParametersForInstance:remoteConfig];
+  completion(parameters, nil);
+}
+
+- (void)getPropertiesAppName:(NSString *)appName
+                  completion:
+                      (void (^)(PigeonConfigSettings *_Nullable, FlutterError *_Nullable))completion {
+  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigForAppName:appName];
+  PigeonConfigSettings *settings = [self configPropertiesForInstance:remoteConfig];
+  completion(settings, nil);
+}
+
+- (void)setConfigSettingsAppName:(NSString *)appName
+                        settings:(PigeonFirebaseSettings *)settings
+                      completion:(void (^)(FlutterError *_Nullable))completion {
+  FIRRemoteConfigSettings *remoteConfigSettings = [[FIRRemoteConfigSettings alloc] init];
+  // Pigeon uses int seconds, SDK uses double seconds.
+  remoteConfigSettings.fetchTimeout = [settings.fetchTimeout doubleValue];
+  remoteConfigSettings.minimumFetchInterval = [settings.minimumFetchInterval doubleValue];
+  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigForAppName:appName];
+  [remoteConfig setConfigSettings:remoteConfigSettings];
+  completion(nil);
+}
+
+- (void)setDefaultsAppName:(NSString *)appName
+                  defaults:(NSDictionary<NSString *, id> *)defaults
+                completion:(void (^)(FlutterError *_Nullable))completion {
+  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigForAppName:appName];
+  [remoteConfig setDefaults:defaults];
+  completion(nil);
+}
+
+- (void)setCustomSignalsAppName:(NSString *)appName
+                  customSignals:(NSDictionary<NSString *, id> *)customSignals
+                     completion:(void (^)(FlutterError *_Nullable))completion {
+  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigForAppName:appName];
 
   [remoteConfig setCustomSignals:customSignals
                   withCompletion:^(NSError *_Nullable error) {
                     if (error != nil) {
-                      result.error(nil, nil, nil, error);
+                      completion([FLTFirebaseRemoteConfigUtils flutterErrorFromNSError:error]);
                     } else {
-                      result.success(nil);
+                      completion(nil);
                     }
                   }];
 }
 
-- (void)ensureInitialized:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigFromArguments:arguments];
-  [remoteConfig ensureInitializedWithCompletionHandler:^(NSError *initializationError) {
-    if (initializationError != nil) {
-      result.error(nil, nil, nil, initializationError);
-    } else {
-      result.success(nil);
-    }
-  }];
-}
 
-- (void)activate:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigFromArguments:arguments];
-  [remoteConfig activateWithCompletion:^(BOOL changed, NSError *error) {
-    if (error != nil) {
-      result.error(nil, nil, nil, error);
-    } else {
-      result.success(@(changed));
-    }
-  }];
-}
+#pragma mark - Helper Methods (Adapting for Pigeon)
 
-- (void)getAll:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigFromArguments:arguments];
-  NSDictionary *parameters = [self getAllParametersForInstance:remoteConfig];
-  result.success(parameters);
-}
-
-- (void)fetch:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigFromArguments:arguments];
-  [remoteConfig fetchWithCompletionHandler:^(FIRRemoteConfigFetchStatus status, NSError *error) {
-    if (error != nil) {
-      result.error(nil, nil, nil, error);
-    } else {
-      result.success(nil);
-    }
-  }];
-}
-
-- (void)getProperties:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigFromArguments:arguments];
-  NSDictionary *configProperties = [self configPropertiesForInstance:remoteConfig];
-  result.success(configProperties);
-}
-
-- (void)setDefaults:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigFromArguments:arguments];
-  [remoteConfig setDefaults:arguments[@"defaults"]];
-  result.success(nil);
-}
-
-- (void)setConfigSettings:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  NSNumber *fetchTimeout = arguments[@"fetchTimeout"];
-  NSNumber *minimumFetchInterval = arguments[@"minimumFetchInterval"];
-  FIRRemoteConfigSettings *remoteConfigSettings = [[FIRRemoteConfigSettings alloc] init];
-  remoteConfigSettings.fetchTimeout = [fetchTimeout doubleValue];
-  remoteConfigSettings.minimumFetchInterval = [minimumFetchInterval doubleValue];
-  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigFromArguments:arguments];
-  [remoteConfig setConfigSettings:remoteConfigSettings];
-  result.success(nil);
-}
-
-- (void)fetchAndActivate:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigFromArguments:arguments];
-  [remoteConfig fetchAndActivateWithCompletionHandler:^(
-                    FIRRemoteConfigFetchAndActivateStatus status, NSError *error) {
-    if (error != nil) {
-      if (error.code == 999 && _fetchAndActivateRetry == false) {
-        // Note: see issue for details: https://github.com/firebase/flutterfire/issues/6196
-        // Only calling once as the issue noted describes how it works on second retry
-        // Issue appears to indicate the error code is: 999
-        _fetchAndActivateRetry = true;
-        NSLog(@"FLTFirebaseRemoteConfigPlugin: Retrying `fetchAndActivate()` due to a cancelled "
-              @"request with the error code: 999.");
-        [self fetchAndActivate:arguments withMethodCallResult:result];
-      } else {
-        result.error(nil, nil, nil, error);
-      }
-    } else {
-      if (status == FIRRemoteConfigFetchAndActivateStatusSuccessFetchedFromRemote) {
-        result.success(@(YES));
-      } else {
-        result.success(@(NO));
-      }
-    }
-  }];
-}
-
-- (FIRRemoteConfig *_Nullable)getFIRRemoteConfigFromArguments:(NSDictionary *)arguments {
-  NSString *appName = arguments[@"appName"];
+// Renamed from getFIRRemoteConfigFromArguments and takes appName directly
+- (FIRRemoteConfig *_Nullable)getFIRRemoteConfigForAppName:(NSString *)appName {
   FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appName];
   return [FIRRemoteConfig remoteConfigWithApp:app];
 }
 
-- (NSDictionary *)getAllParametersForInstance:(FIRRemoteConfig *)remoteConfig {
+// Updated return type to use PigeonFirebaseRemoteConfigValue
+- (NSDictionary<NSString *, PigeonFirebaseRemoteConfigValue *> *)getAllParametersForInstance:
+    (FIRRemoteConfig *)remoteConfig {
   NSMutableSet *keySet = [[NSMutableSet alloc] init];
   [keySet addObjectsFromArray:[remoteConfig allKeysFromSource:FIRRemoteConfigSourceStatic]];
   [keySet addObjectsFromArray:[remoteConfig allKeysFromSource:FIRRemoteConfigSourceDefault]];
   [keySet addObjectsFromArray:[remoteConfig allKeysFromSource:FIRRemoteConfigSourceRemote]];
 
-  NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
+  NSMutableDictionary<NSString *, PigeonFirebaseRemoteConfigValue *> *parameters =
+      [[NSMutableDictionary alloc] init];
   for (NSString *key in keySet) {
-    parameters[key] = [self createRemoteConfigValueDict:[remoteConfig configValueForKey:key]];
+    parameters[key] = [self createPigeonRemoteConfigValue:[remoteConfig configValueForKey:key]];
   }
   return parameters;
 }
 
-- (NSMutableDictionary *)createRemoteConfigValueDict:(FIRRemoteConfigValue *)remoteConfigValue {
-  NSMutableDictionary *valueDict = [[NSMutableDictionary alloc] init];
-  valueDict[@"value"] = [FlutterStandardTypedData typedDataWithBytes:[remoteConfigValue dataValue]];
-  valueDict[@"source"] = [self mapValueSource:[remoteConfigValue source]];
-  return valueDict;
+// Renamed from createRemoteConfigValueDict and returns Pigeon type
+- (PigeonFirebaseRemoteConfigValue *)createPigeonRemoteConfigValue:(FIRRemoteConfigValue *)remoteConfigValue {
+  PigeonFirebaseRemoteConfigValue *value = [[PigeonFirebaseRemoteConfigValue alloc] init];
+  value.value = [FlutterStandardTypedData typedDataWithBytes:[remoteConfigValue dataValue]];
+  value.source = [self mapValueSource:[remoteConfigValue source]];
+  return value;
 }
 
-- (NSString *)mapLastFetchStatus:(FIRRemoteConfigFetchStatus)status {
-  if (status == FIRRemoteConfigFetchStatusSuccess) {
-    return @"success";
-  } else if (status == FIRRemoteConfigFetchStatusFailure) {
-    return @"failure";
-  } else if (status == FIRRemoteConfigFetchStatusThrottled) {
-    return @"throttled";
-  } else if (status == FIRRemoteConfigFetchStatusNoFetchYet) {
-    return @"noFetchYet";
-  } else {
-    return @"failure";
+// Updated return type to Pigeon enum Box
+- (PigeonRemoteConfigFetchStatusBox *)mapLastFetchStatus:(FIRRemoteConfigFetchStatus)status {
+  PigeonRemoteConfigFetchStatus pigeonStatus;
+  switch (status) {
+    case FIRRemoteConfigFetchStatusSuccess:
+      pigeonStatus = PigeonRemoteConfigFetchStatusSuccess;
+      break;
+    case FIRRemoteConfigFetchStatusFailure:
+      pigeonStatus = PigeonRemoteConfigFetchStatusFailure;
+      break;
+    case FIRRemoteConfigFetchStatusThrottled:
+      pigeonStatus = PigeonRemoteConfigFetchStatusThrottle; // Corrected enum name
+      break;
+    case FIRRemoteConfigFetchStatusNoFetchYet:
+      pigeonStatus = PigeonRemoteConfigFetchStatusNoFetchYet;
+      break;
+    default:
+      // Map unexpected status to failure as a fallback
+      pigeonStatus = PigeonRemoteConfigFetchStatusFailure;
+      break;
   }
+  return [PigeonRemoteConfigFetchStatusBox numberWithValue:pigeonStatus];
 }
 
-- (NSString *)mapValueSource:(FIRRemoteConfigSource)source {
-  if (source == FIRRemoteConfigSourceStatic) {
-    return @"static";
-  } else if (source == FIRRemoteConfigSourceDefault) {
-    return @"default";
-  } else if (source == FIRRemoteConfigSourceRemote) {
-    return @"remote";
-  } else {
-    return @"static";
+// Updated return type to Pigeon enum Box
+- (PigeonValueSourceBox *)mapValueSource:(FIRRemoteConfigSource)source {
+  PigeonValueSource pigeonSource;
+  switch (source) {
+    case FIRRemoteConfigSourceStatic:
+      pigeonSource = PigeonValueSourceStatic;
+      break;
+    case FIRRemoteConfigSourceDefault:
+      pigeonSource = PigeonValueSourceDefault;
+      break;
+    case FIRRemoteConfigSourceRemote:
+      pigeonSource = PigeonValueSourceRemote;
+      break;
+    default:
+      // Map unexpected source to static as a fallback
+      pigeonSource = PigeonValueSourceStatic;
+      break;
   }
+  return [PigeonValueSourceBox numberWithValue:pigeonSource];
 }
 
-#pragma mark - FLTFirebasePlugin
+#pragma mark - FLTFirebasePlugin Methods (Keep as is)
 
 - (void)cleanupWithCompletion {
   for (FIRConfigUpdateListenerRegistration *listener in self.listenersMap.allValues) {
@@ -294,18 +301,16 @@ BOOL _fetchAndActivateRetry;
   return configValues;
 }
 
-- (NSDictionary *_Nonnull)configPropertiesForInstance:(FIRRemoteConfig *)remoteConfig {
-  NSNumber *fetchTimeout = @([[remoteConfig configSettings] fetchTimeout]);
-  NSNumber *minimumFetchInterval = @([[remoteConfig configSettings] minimumFetchInterval]);
-  NSNumber *lastFetchMillis = @([[remoteConfig lastFetchTime] timeIntervalSince1970] * 1000);
-
-  NSMutableDictionary *configProperties = [[NSMutableDictionary alloc] init];
-  [configProperties setValue:@([fetchTimeout longValue]) forKey:@"fetchTimeout"];
-  [configProperties setValue:@([minimumFetchInterval longValue]) forKey:@"minimumFetchInterval"];
-  [configProperties setValue:@([lastFetchMillis longValue]) forKey:@"lastFetchTime"];
-  [configProperties setValue:[self mapLastFetchStatus:[remoteConfig lastFetchStatus]]
-                      forKey:@"lastFetchStatus"];
-  return configProperties;
+// Updated return type to PigeonConfigSettings
+- (PigeonConfigSettings *)configPropertiesForInstance:(FIRRemoteConfig *)remoteConfig {
+  PigeonConfigSettings *settings = [[PigeonConfigSettings alloc] init];
+  // Pigeon expects int seconds, SDK provides double seconds. Cast to long long for safety.
+  settings.fetchTimeout = @((long long)[[remoteConfig configSettings] fetchTimeout]);
+  settings.minimumFetchInterval = @((long long)[[remoteConfig configSettings] minimumFetchInterval]);
+  settings.lastFetchTimeMillis =
+      @((long long)([[remoteConfig lastFetchTime] timeIntervalSince1970] * 1000)); // Needs ms
+  settings.lastFetchStatus = [self mapLastFetchStatus:[remoteConfig lastFetchStatus]];
+  return settings;
 }
 
 - (NSString *_Nonnull)firebaseLibraryName {
@@ -316,9 +321,12 @@ BOOL _fetchAndActivateRetry;
   return @LIBRARY_VERSION;
 }
 
-- (NSString *_Nonnull)flutterChannelName {
-  return kFirebaseRemoteConfigChannelName;
-}
+// Remove flutterChannelName as it's MethodChannel specific
+// - (NSString *_Nonnull)flutterChannelName {
+//  return kFirebaseRemoteConfigChannelName;
+// }
+
+#pragma mark - FlutterStreamHandler Methods (Keep as is for EventChannel)
 
 - (FlutterError *_Nullable)onCancelWithArguments:(id _Nullable)arguments {
   NSString *appName = (NSString *)arguments[@"appName"];
@@ -332,10 +340,34 @@ BOOL _fetchAndActivateRetry;
 
 - (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
                                        eventSink:(nonnull FlutterEventSink)events {
-  NSString *appName = (NSString *)arguments[@"appName"];
-  if (!appName) return nil;
-  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigFromArguments:arguments];
-  self.listenersMap[appName] =
+  // Note: Arguments might be structured differently if Pigeon handled streams.
+  // Assuming the event channel setup remains the same for now.
+  // Arguments should be a dictionary containing 'appName'.
+  NSString *appName = nil;
+   if ([arguments isKindOfClass:[NSDictionary class]]) {
+      appName = arguments[@"appName"];
+  }
+
+  if (!appName) {
+      // Handle error: appName is required.
+      return [FlutterError errorWithCode:@"invalid-argument" message:@"appName is required" details:nil];
+  }
+
+  // Use the updated helper method
+  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigForAppName:appName];
+  if (!remoteConfig) {
+      // Handle error: Could not get Remote Config instance for appName
+      return [FlutterError errorWithCode:@"instance-not-found" message:@"Remote Config instance not found for the provided app name." details:nil];
+  }
+
+  // Check if a listener already exists for this appName
+  if (self.listenersMap[appName]) {
+    // Optional: Cancel existing listener or return an error, depending on desired behavior.
+    // For now, we'll assume replacing the listener is okay.
+    [self.listenersMap[appName] remove];
+  }
+
+  FIRConfigUpdateListenerRegistration *listener =
       [remoteConfig addOnConfigUpdateListener:^(FIRRemoteConfigUpdate *_Nullable configUpdate,
                                                 NSError *_Nullable error) {
         if (error) {

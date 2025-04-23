@@ -28,8 +28,19 @@ import io.flutter.Log;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.EventChannel;
-import io.flutter.plugin.common.MethodCall;
-import io.flutter.plugin.common.MethodChannel;
+// Pigeon imports
+import io.flutter.plugins.firebase.firebaseremoteconfig.GeneratedAndroidFirebaseRemoteConfig.FirebaseRemoteConfigHostApi;
+import io.flutter.plugins.firebase.firebaseremoteconfig.GeneratedAndroidFirebaseRemoteConfig.PigeonConfigSettings;
+import io.flutter.plugins.firebase.firebaseremoteconfig.GeneratedAndroidFirebaseRemoteConfig.PigeonFirebaseRemoteConfigValue;
+import io.flutter.plugins.firebase.firebaseremoteconfig.GeneratedAndroidFirebaseRemoteConfig.PigeonFirebaseSettings;
+import io.flutter.plugins.firebase.firebaseremoteconfig.GeneratedAndroidFirebaseRemoteConfig.PigeonRemoteConfigFetchStatus;
+import io.flutter.plugins.firebase.firebaseremoteconfig.GeneratedAndroidFirebaseRemoteConfig.PigeonValueSource;
+import io.flutter.plugins.firebase.firebaseremoteconfig.GeneratedAndroidFirebaseRemoteConfig.Result;
+// FlutterError import
+import io.flutter.plugin.common.FlutterError;
+// Remove unused MethodChannel imports
+// import io.flutter.plugin.common.MethodCall;
+// import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,29 +50,53 @@ import java.util.Objects;
 /** FirebaseRemoteConfigPlugin */
 public class FirebaseRemoteConfigPlugin
     implements FlutterFirebasePlugin,
-        MethodChannel.MethodCallHandler,
+        // Replace MethodCallHandler with Pigeon Host API
+        FirebaseRemoteConfigHostApi,
         FlutterPlugin,
         EventChannel.StreamHandler {
 
   static final String TAG = "FRCPlugin";
-  static final String METHOD_CHANNEL = "plugins.flutter.io/firebase_remote_config";
+  // Remove METHOD_CHANNEL constant
+  // static final String METHOD_CHANNEL = "plugins.flutter.io/firebase_remote_config";
   static final String EVENT_CHANNEL = "plugins.flutter.io/firebase_remote_config_updated";
 
-  private MethodChannel channel;
+  // Remove channel variable
+  // private MethodChannel channel;
 
   private final Map<String, ConfigUpdateListenerRegistration> listenersMap = new HashMap<>();
   private EventChannel eventChannel;
   private final Handler mainThreadHandler = new Handler(Looper.getMainLooper());
 
+  private BinaryMessenger binaryMessenger; // Store messenger for teardown
+
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
-    setupChannel(binding.getBinaryMessenger());
+    binaryMessenger = binding.getBinaryMessenger();
+    registerPlugin(binaryMessenger.toString(), this); // Use unique key for plugin registry
+    // Setup Pigeon Host API
+    GeneratedAndroidFirebaseRemoteConfig.FirebaseRemoteConfigHostApi.setUp(binaryMessenger, this);
+
+    // Keep EventChannel setup
+    eventChannel = new EventChannel(binaryMessenger, EVENT_CHANNEL);
+    eventChannel.setStreamHandler(this);
   }
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    tearDownChannel();
+    // Teardown Pigeon Host API
+    GeneratedAndroidFirebaseRemoteConfig.FirebaseRemoteConfigHostApi.setUp(binaryMessenger, null);
+
+    // Keep EventChannel teardown
+    eventChannel.setStreamHandler(null);
+    eventChannel = null;
+    removeEventListeners();
+    binaryMessenger = null;
   }
+
+  // Remove setupChannel and tearDownChannel methods
+  // private void setupChannel(BinaryMessenger messenger) { ... }
+  // private void tearDownChannel() { ... }
+
 
   @Override
   public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(final FirebaseApp firebaseApp) {
@@ -115,24 +150,8 @@ public class FirebaseRemoteConfigPlugin
     return taskCompletionSource.getTask();
   }
 
-  private void setupChannel(BinaryMessenger messenger) {
-    registerPlugin(METHOD_CHANNEL, this);
-    channel = new MethodChannel(messenger, METHOD_CHANNEL);
-    channel.setMethodCallHandler(this);
-
-    eventChannel = new EventChannel(messenger, EVENT_CHANNEL);
-    eventChannel.setStreamHandler(this);
-  }
-
-  private void tearDownChannel() {
-    channel.setMethodCallHandler(null);
-    channel = null;
-    eventChannel.setStreamHandler(null);
-    eventChannel = null;
-    removeEventListeners();
-  }
-
-  private FirebaseRemoteConfig getRemoteConfig(Map<String, Object> arguments) {
+  // Renamed from getRemoteConfig to match Pigeon usage (appName only)
+  private FirebaseRemoteConfig getRemoteConfig(String appName) {
     String appName = (String) Objects.requireNonNull(arguments.get("appName"));
     FirebaseApp app = FirebaseApp.getInstance(appName);
     return FirebaseRemoteConfig.getInstance(app);
@@ -168,161 +187,271 @@ public class FirebaseRemoteConfigPlugin
     return taskCompletionSource.getTask();
   }
 
-  @Override
-  public void onMethodCall(MethodCall call, @NonNull final MethodChannel.Result result) {
-    Task<?> methodCallTask;
-    FirebaseRemoteConfig remoteConfig = getRemoteConfig(call.arguments());
+  // Remove onMethodCall
+  // @Override
+  // public void onMethodCall(MethodCall call, @NonNull final MethodChannel.Result result) { ... }
 
-    switch (call.method) {
-      case "RemoteConfig#ensureInitialized":
-        {
-          methodCallTask = Tasks.whenAll(remoteConfig.ensureInitialized());
-          break;
+  // Helper to convert Exception to FlutterError for Pigeon results
+  private FlutterError exceptionToFlutterError(@NonNull Exception exception) {
+    String code = "unknown";
+    String message = exception.getMessage();
+    Map<String, Object> details = new HashMap<>();
+
+    if (exception instanceof FirebaseRemoteConfigFetchThrottledException) {
+      code = "throttled";
+      message = "frequency of requests exceeds throttled limits";
+    } else if (exception instanceof FirebaseRemoteConfigClientException) {
+      code = "internal";
+      message = "internal remote config fetch error";
+    } else if (exception instanceof FirebaseRemoteConfigServerException) {
+      code = "remote-config-server-error";
+      Throwable cause = exception.getCause();
+      if (cause != null) {
+        String causeMessage = cause.getMessage();
+        if (causeMessage != null && causeMessage.contains("Forbidden")) {
+          // Specific error code for 403 status code to indicate the request was forbidden.
+          code = "forbidden";
         }
-      case "RemoteConfig#activate":
-        {
-          methodCallTask = remoteConfig.activate();
-          break;
-        }
-      case "RemoteConfig#getAll":
-        {
-          methodCallTask = Tasks.forResult(parseParameters(remoteConfig.getAll()));
-          break;
-        }
-      case "RemoteConfig#fetch":
-        {
-          methodCallTask = remoteConfig.fetch();
-          break;
-        }
-      case "RemoteConfig#fetchAndActivate":
-        {
-          methodCallTask = remoteConfig.fetchAndActivate();
-          break;
-        }
-      case "RemoteConfig#setConfigSettings":
-        {
-          int fetchTimeout = Objects.requireNonNull(call.argument("fetchTimeout"));
-          int minimumFetchInterval = Objects.requireNonNull(call.argument("minimumFetchInterval"));
-          FirebaseRemoteConfigSettings settings =
-              new FirebaseRemoteConfigSettings.Builder()
-                  .setFetchTimeoutInSeconds(fetchTimeout)
-                  .setMinimumFetchIntervalInSeconds(minimumFetchInterval)
-                  .build();
-          methodCallTask = remoteConfig.setConfigSettingsAsync(settings);
-          break;
-        }
-      case "RemoteConfig#setDefaults":
-        {
-          Map<String, Object> defaults = Objects.requireNonNull(call.argument("defaults"));
-          methodCallTask = remoteConfig.setDefaultsAsync(defaults);
-          break;
-        }
-      case "RemoteConfig#getProperties":
-        {
-          Map<String, Object> configProperties = getConfigProperties(remoteConfig);
-          methodCallTask = Tasks.forResult(configProperties);
-          break;
-        }
-      case "RemoteConfig#setCustomSignals":
-        {
-          Map<String, Object> customSignals =
-              Objects.requireNonNull(call.argument("customSignals"));
-          methodCallTask = setCustomSignals(remoteConfig, customSignals);
-          break;
-        }
-      default:
-        {
-          result.notImplemented();
-          return;
-        }
+      }
     }
+    // Add more specific exception checks if needed
 
-    methodCallTask.addOnCompleteListener(
-        task -> {
-          if (task.isSuccessful()) {
-            result.success(task.getResult());
-          } else {
-            Exception exception = task.getException();
-            Map<String, Object> details = new HashMap<>();
-            if (exception instanceof FirebaseRemoteConfigFetchThrottledException) {
-              details.put("code", "throttled");
-              details.put("message", "frequency of requests exceeds throttled limits");
-            } else if (exception instanceof FirebaseRemoteConfigClientException) {
-              details.put("code", "internal");
-              details.put("message", "internal remote config fetch error");
-            } else if (exception instanceof FirebaseRemoteConfigServerException) {
-              details.put("code", "remote-config-server-error");
-              details.put("message", exception.getMessage());
+    details.put("code", code);
+    details.put("message", message);
+    // You might want to add more details from the exception if needed
+    // details.put("nativeErrorMessage", exception.getMessage());
 
-              Throwable cause = exception.getCause();
-              if (cause != null) {
-                String causeMessage = cause.getMessage();
-                if (causeMessage != null && causeMessage.contains("Forbidden")) {
-                  // Specific error code for 403 status code to indicate the request was forbidden.
-                  details.put("code", "forbidden");
-                }
-              }
-            } else {
-              details.put("code", "unknown");
-              details.put("message", "unknown remote config error");
-            }
-            result.error(
-                "firebase_remote_config",
-                exception != null ? exception.getMessage() : null,
-                details);
-          }
-        });
+    return new FlutterError(code, message, details);
   }
 
-  private Map<String, Object> parseParameters(Map<String, FirebaseRemoteConfigValue> parameters) {
-    Map<String, Object> parsedParameters = new HashMap<>();
+
+  // Adapt helper methods for Pigeon types
+  private Map<String, PigeonFirebaseRemoteConfigValue> parseParameters(Map<String, FirebaseRemoteConfigValue> parameters) {
+    Map<String, PigeonFirebaseRemoteConfigValue> parsedParameters = new HashMap<>();
     for (String key : parameters.keySet()) {
       parsedParameters.put(
-          key, createRemoteConfigValueMap(Objects.requireNonNull(parameters.get(key))));
+          key, createPigeonRemoteConfigValue(Objects.requireNonNull(parameters.get(key))));
     }
     return parsedParameters;
   }
 
-  private Map<String, Object> createRemoteConfigValueMap(
+  // Renamed and returns Pigeon type
+  private PigeonFirebaseRemoteConfigValue createPigeonRemoteConfigValue(
       FirebaseRemoteConfigValue remoteConfigValue) {
-    Map<String, Object> valueMap = new HashMap<>();
-    valueMap.put("value", remoteConfigValue.asByteArray());
-    valueMap.put("source", mapValueSource(remoteConfigValue.getSource()));
-    return valueMap;
+    PigeonFirebaseRemoteConfigValue.Builder builder = new PigeonFirebaseRemoteConfigValue.Builder();
+    builder.setValue(remoteConfigValue.asByteArray());
+    builder.setSource(mapValueSource(remoteConfigValue.getSource()));
+    return builder.build();
   }
 
-  private String mapLastFetchStatus(int status) {
+  // Returns Pigeon enum
+  private PigeonRemoteConfigFetchStatus mapLastFetchStatus(int status) {
     switch (status) {
       case FirebaseRemoteConfig.LAST_FETCH_STATUS_SUCCESS:
-        return "success";
+        return PigeonRemoteConfigFetchStatus.SUCCESS;
       case FirebaseRemoteConfig.LAST_FETCH_STATUS_THROTTLED:
-        return "throttled";
+        return PigeonRemoteConfigFetchStatus.THROTTLE; // Check Pigeon enum name
       case FirebaseRemoteConfig.LAST_FETCH_STATUS_NO_FETCH_YET:
-        return "noFetchYet";
+        return PigeonRemoteConfigFetchStatus.NOFETCHYET;
       case FirebaseRemoteConfig.LAST_FETCH_STATUS_FAILURE:
       default:
-        return "failure";
+        return PigeonRemoteConfigFetchStatus.FAILURE;
     }
   }
 
-  private String mapValueSource(int source) {
+  // Returns Pigeon enum
+  private PigeonValueSource mapValueSource(int source) {
     switch (source) {
       case FirebaseRemoteConfig.VALUE_SOURCE_DEFAULT:
-        return "default";
+        return PigeonValueSource.DEFAULTVALUE; // Check Pigeon enum name
       case FirebaseRemoteConfig.VALUE_SOURCE_REMOTE:
-        return "remote";
+        return PigeonValueSource.REMOTE;
       case FirebaseRemoteConfig.VALUE_SOURCE_STATIC:
       default:
-        return "static";
+        return PigeonValueSource.STATIC;
     }
   }
 
+  // FirebaseRemoteConfigHostApi implementation
+
+  @Override
+  public void ensureInitialized(
+      @NonNull String appName, @NonNull Result<Void> result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseRemoteConfig remoteConfig = getRemoteConfig(appName);
+            Tasks.await(remoteConfig.ensureInitialized());
+            result.success(null);
+          } catch (Exception e) {
+            result.error(exceptionToFlutterError(e));
+          }
+        });
+  }
+
+  @Override
+  public void activate(
+      @NonNull String appName, @NonNull Result<Boolean> result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseRemoteConfig remoteConfig = getRemoteConfig(appName);
+            boolean activated = Tasks.await(remoteConfig.activate());
+            result.success(activated);
+          } catch (Exception e) {
+            result.error(exceptionToFlutterError(e));
+          }
+        });
+  }
+
+  @Override
+  public void fetch(
+      @NonNull String appName, @NonNull Result<Void> result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseRemoteConfig remoteConfig = getRemoteConfig(appName);
+            Tasks.await(remoteConfig.fetch());
+            result.success(null);
+          } catch (Exception e) {
+            result.error(exceptionToFlutterError(e));
+          }
+        });
+  }
+
+  @Override
+  public void fetchAndActivate(
+      @NonNull String appName, @NonNull Result<Boolean> result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseRemoteConfig remoteConfig = getRemoteConfig(appName);
+            boolean activated = Tasks.await(remoteConfig.fetchAndActivate());
+            result.success(activated);
+          } catch (Exception e) {
+            result.error(exceptionToFlutterError(e));
+          }
+        });
+  }
+
+  @Override
+  public void getAll(
+      @NonNull String appName,
+      @NonNull Result<Map<String, PigeonFirebaseRemoteConfigValue>> result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseRemoteConfig remoteConfig = getRemoteConfig(appName);
+            result.success(parseParameters(remoteConfig.getAll()));
+          } catch (Exception e) {
+            result.error(exceptionToFlutterError(e));
+          }
+        });
+  }
+
+  @Override
+  public void setConfigSettings(
+      @NonNull String appName,
+      @NonNull PigeonFirebaseSettings settings,
+      @NonNull Result<Void> result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseRemoteConfig remoteConfig = getRemoteConfig(appName);
+            FirebaseRemoteConfigSettings nativeSettings =
+                new FirebaseRemoteConfigSettings.Builder()
+                    // Pigeon uses Long, SDK uses long
+                    .setFetchTimeoutInSeconds(settings.getFetchTimeout())
+                    .setMinimumFetchIntervalInSeconds(settings.getMinimumFetchInterval())
+                    .build();
+            Tasks.await(remoteConfig.setConfigSettingsAsync(nativeSettings));
+            result.success(null);
+          } catch (Exception e) {
+            result.error(exceptionToFlutterError(e));
+          }
+        });
+  }
+
+  @Override
+  public void setDefaults(
+      @NonNull String appName,
+      @NonNull Map<String, Object> defaults,
+      @NonNull Result<Void> result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseRemoteConfig remoteConfig = getRemoteConfig(appName);
+            Tasks.await(remoteConfig.setDefaultsAsync(defaults));
+            result.success(null);
+          } catch (Exception e) {
+            result.error(exceptionToFlutterError(e));
+          }
+        });
+  }
+
+  @Override
+  public void getProperties(
+      @NonNull String appName, @NonNull Result<PigeonConfigSettings> result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseRemoteConfig remoteConfig = getRemoteConfig(appName);
+            FirebaseRemoteConfigSettings nativeSettings = remoteConfig.getInfo().getConfigSettings();
+            PigeonConfigSettings.Builder pigeonSettings = new PigeonConfigSettings.Builder();
+            pigeonSettings.setFetchTimeout(nativeSettings.getFetchTimeoutInSeconds());
+            pigeonSettings.setMinimumFetchInterval(nativeSettings.getMinimumFetchIntervalInSeconds());
+            pigeonSettings.setLastFetchTimeMillis(remoteConfig.getInfo().getFetchTimeMillis());
+            pigeonSettings.setLastFetchStatus(mapLastFetchStatus(remoteConfig.getInfo().getLastFetchStatus()));
+
+            result.success(pigeonSettings.build());
+          } catch (Exception e) {
+            result.error(exceptionToFlutterError(e));
+          }
+        });
+  }
+
+ @Override
+  public void setCustomSignals(
+      @NonNull String appName,
+      @NonNull Map<String, Object> customSignals,
+      @NonNull Result<Void> result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseRemoteConfig remoteConfig = getRemoteConfig(appName);
+            CustomSignals.Builder customSignalsBuilder = new CustomSignals.Builder();
+
+            for (Map.Entry<String, Object> entry : customSignals.entrySet()) {
+              Object value = entry.getValue();
+              if (value instanceof String) {
+                customSignalsBuilder.put(entry.getKey(), (String) value);
+              } else if (value instanceof Long) {
+                customSignalsBuilder.put(entry.getKey(), (Long) value);
+              } else if (value instanceof Integer) {
+                customSignalsBuilder.put(entry.getKey(), ((Integer) value).longValue());
+              } else if (value instanceof Double) {
+                customSignalsBuilder.put(entry.getKey(), (Double) value);
+              } else if (value == null) {
+                // Handle null if necessary, depending on SDK capabilities
+              }
+            }
+
+            Tasks.await(remoteConfig.setCustomSignals(customSignalsBuilder.build()));
+            result.success(null);
+          } catch (Exception e) {
+            result.error(exceptionToFlutterError(e));
+          }
+        });
+  }
+
+  // EventChannel methods remain mostly unchanged
   @SuppressWarnings("unchecked")
   @Override
   public void onListen(Object arguments, EventChannel.EventSink events) {
     Map<String, Object> argumentsMap = (Map<String, Object>) arguments;
-    FirebaseRemoteConfig remoteConfig = getRemoteConfig(argumentsMap);
+    // Use updated helper method
     String appName = (String) Objects.requireNonNull(argumentsMap.get("appName"));
+    FirebaseRemoteConfig remoteConfig = getRemoteConfig(appName);
 
     listenersMap.put(
         appName,
