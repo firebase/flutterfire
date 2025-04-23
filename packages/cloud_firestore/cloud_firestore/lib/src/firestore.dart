@@ -214,7 +214,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     }
     if (collectionPath.contains('/')) {
       throw ArgumentError(
-        'A collection path passed to collectionGroup() cannot contain "/".');
+        'A collection path passed to collectionGroup() cannot contain "/".',);
     }
 
     return _JsonQuery(this, _delegate.collectionGroup(collectionPath));
