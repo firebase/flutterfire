@@ -17,6 +17,10 @@
 #import <FLTFirebasePlugin.h>
 #endif
 
+// Import generated Pigeon header
+#import "messages.g.h"
+
+// Conform to Pigeon Host API protocol & FlutterStreamHandler (for events)
 @interface FLTFirebaseRemoteConfigPlugin
-    : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin, FlutterStreamHandler>
+    : FLTFirebasePlugin <FirebaseRemoteConfigHostApi, FLTFirebasePlugin, FlutterStreamHandler>
 @end

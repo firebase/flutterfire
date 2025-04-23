@@ -1,0 +1,115 @@
+// Copyright 2023 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// This file is used to generate the Dart and platform-specific code for the
+// Firebase Remote Config platform interface.
+
+import 'package:pigeon/pigeon.dart';
+
+@ConfigurePigeon(
+  PigeonOptions(
+    // Output for the main package's Dart code
+    dartOut: '../../firebase_remote_config/lib/src/pigeon/messages.g.dart',
+    // Output for the main package's Swift code
+    swiftOut: '../../firebase_remote_config/ios/Classes/messages.g.swift',
+    swiftOptions: SwiftOptions(), // Using default Swift options
+    // Output for the main package's Kotlin code
+    kotlinOut: '../../firebase_remote_config/android/src/main/kotlin/io/flutter/plugins/firebase/firebaseremoteconfig/Messages.g.kt',
+    kotlinOptions: KotlinOptions(
+      package: 'io.flutter.plugins.firebase.firebaseremoteconfig',
+    ),
+    copyrightHeader: 'pigeons/copyright.txt',
+  ),
+)
+
+// Corresponds to the `ValueSource` enum in the Firebase SDKs.
+enum PigeonValueSource {
+  static,
+  defaultValue,
+  remote,
+}
+
+// Corresponds to the `RemoteConfigFetchStatus` enum in the Firebase SDKs.
+enum PigeonRemoteConfigFetchStatus {
+  noFetchYet,
+  success,
+  failure,
+  throttle,
+}
+
+// Data class representing Remote Config settings.
+class PigeonFirebaseSettings {
+  PigeonFirebaseSettings({
+    required this.fetchTimeout,
+    required this.minimumFetchInterval,
+  });
+
+  // Timeout for fetching remote config in seconds.
+  int fetchTimeout;
+  // Minimum interval between fetches in seconds.
+  int minimumFetchInterval;
+}
+
+// Data class representing a Remote Config value.
+class PigeonFirebaseRemoteConfigValue {
+  PigeonFirebaseRemoteConfigValue({
+    this.value,
+    required this.source,
+  });
+
+  // The value of the config parameter. Nullable byte array.
+  Uint8List? value;
+  // The source of the value (e.g., static, default, remote).
+  PigeonValueSource source;
+}
+
+// Data class combining config settings, last fetch time, and status.
+class PigeonConfigSettings {
+  PigeonConfigSettings({
+    required this.fetchTimeout,
+    required this.minimumFetchInterval,
+    required this.lastFetchTimeMillis,
+    required this.lastFetchStatus,
+  });
+
+  // Timeout for fetching remote config in seconds.
+  int fetchTimeout;
+  // Minimum interval between fetches in seconds.
+  int minimumFetchInterval;
+  // Last successful fetch time in milliseconds since epoch.
+  int lastFetchTimeMillis;
+  // Status of the last fetch attempt.
+  PigeonRemoteConfigFetchStatus lastFetchStatus;
+}
+
+// Host API interface for Firebase Remote Config.
+@HostApi()
+abstract class FirebaseRemoteConfigHostApi {
+  @async
+  void ensureInitialized(String appName);
+
+  @async
+  bool activate(String appName);
+
+  @async
+  void fetch(String appName);
+
+  @async
+  bool fetchAndActivate(String appName);
+
+  @async
+  Map<String?, PigeonFirebaseRemoteConfigValue?> getAll(String appName);
+
+  @async
+  void setConfigSettings(String appName, PigeonFirebaseSettings settings);
+
+  @async
+  void setDefaults(String appName, Map<String?, Object?> defaults);
+
+  @async
+  PigeonConfigSettings getProperties(String appName);
+
+  @async
+  void setCustomSignals(String appName, Map<String?, Object?> customSignals);
+}
