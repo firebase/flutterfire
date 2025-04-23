@@ -1,6 +1,9 @@
 group 'io.flutter.plugins.firebase.core'
 version '1.0-SNAPSHOT'
 
+apply plugin: 'com.android.library'
+apply from: file("local-config.gradle")
+
 buildscript {
     repositories {
         google()
@@ -8,13 +11,9 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.2.1'
+        classpath androidGradlePluginVersion
     }
 }
-
-apply plugin: 'com.android.library'
-apply from: file("local-config.gradle")
-
 
 def getRootProjectExtOrDefaultProperty(name) {
     if (!rootProject.ext.has("FlutterFire")) return project.properties[name]

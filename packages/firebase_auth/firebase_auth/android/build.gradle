@@ -1,6 +1,9 @@
 group 'io.flutter.plugins.firebase.auth'
 version '1.0-SNAPSHOT'
 
+apply plugin: 'com.android.library'
+apply from: file("local-config.gradle")
+
 buildscript {
     repositories {
         google()
@@ -8,7 +11,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.2.1'
+        classpath androidGradlePluginVersion
     }
 }
 
@@ -31,9 +34,6 @@ def getRootProjectExtOrCoreProperty(name, firebaseCoreProject) {
     if (!rootProject.ext.get('FlutterFire')[name]) return firebaseCoreProject.properties[name]
     return rootProject.ext.get('FlutterFire').get(name)
 }
-
-apply plugin: 'com.android.library'
-apply from: file("local-config.gradle")
 
 android {
     // Conditional for compatibility with AGP <4.2.
