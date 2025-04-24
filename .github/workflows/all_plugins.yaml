@@ -132,7 +132,7 @@ jobs:
       - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
         with:
         # TODO - enabling swift is on `master` channel at the moment. Update when it's on `stable`
-          channel: 'master'
+          channel: 'stable'
       - name: Setup firebase_core example app to test Swift integration
         # run this before running melos boostrap to ensure the example app is set up
         run: |
