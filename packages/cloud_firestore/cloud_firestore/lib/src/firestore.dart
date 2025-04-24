@@ -213,8 +213,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   Query<Map<String, dynamic>> collectionGroup(String collectionPath) {
     if (collectionPath.isEmpty) {
       throw ArgumentError('A collection path must be a non-empty string.');
-    }
-    if (collectionPath.contains('/')) {
+    } else if (collectionPath.contains('/')) {
       throw ArgumentError(
         'A collection path passed to collectionGroup() cannot contain "/".',
       );
