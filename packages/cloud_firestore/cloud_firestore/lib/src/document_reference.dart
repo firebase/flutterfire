@@ -120,18 +120,15 @@ class _JsonDocumentReference
 
   @override
   CollectionReference<Map<String, dynamic>> collection(String collectionPath) {
-    assert(
-      collectionPath.isNotEmpty,
-      'a collectionPath path must be a non-empty string',
-    );
-    assert(
-      !collectionPath.contains('//'),
-      'a collection path must not contain "//"',
-    );
-    assert(
-      isValidCollectionPath(collectionPath),
-      'a collection path must point to a valid collection.',
-    );
+    if (collectionPath.isEmpty) {
+      throw ArgumentError('A collectionPath must be a non-empty string.');
+    } else if (collectionPath.contains('//')) {
+      throw ArgumentError('A collection path must not contain "//".');
+    } else if (!isValidCollectionPath(collectionPath)) {
+      throw ArgumentError(
+        'A collection path must point to a valid collection.',
+      );
+    }
 
     return _JsonCollectionReference(
       firestore,
