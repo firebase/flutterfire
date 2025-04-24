@@ -18,6 +18,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
+import 'package:vertex_ai_example/utils/audio_input.dart';
 import '../widgets/message_widget.dart';
 import '../utils/audio_player.dart';
 import '../utils/audio_recorder.dart';
@@ -52,11 +53,12 @@ class _BidiPageState extends State<BidiPage> {
   late LiveGenerativeModel _liveModel;
   late LiveSession _session;
   //final _audioManager = AudioStreamManager();
-  final _audioRecorder = InMemoryAudioRecorder();
-  var _chunkBuilder = BytesBuilder();
-  var _audioIndex = 0;
+  //final _audioRecorder = InMemoryAudioRecorder();
+  //var _chunkBuilder = BytesBuilder();
+  //var _audioIndex = 0;
   StreamController<bool> _stopController = StreamController<bool>();
   final AudioOutput audioOutput = AudioOutput();
+  final AudioInput audioInput = AudioInput();
 
   @override
   void initState() {
@@ -81,6 +83,7 @@ class _BidiPageState extends State<BidiPage> {
 
   Future<void> initAudioOutput() async {
     await audioOutput.init();
+    await audioInput.init();
   }
 
   void _scrollDown() {
@@ -101,7 +104,7 @@ class _BidiPageState extends State<BidiPage> {
       //_audioManager.stopAudioPlayer();
       //_audioManager.disposeAudioPlayer();
 
-      _audioRecorder.stopRecording();
+      //_audioRecorder.stopRecording();
 
       _stopController.close();
 
@@ -267,19 +270,23 @@ class _BidiPageState extends State<BidiPage> {
       _recording = true;
     });
     try {
-      print('check permission');
-      await _audioRecorder.checkPermission();
+      //print('check permission');
+
+      //await _audioRecorder.checkPermission();
       print('start recording stream');
-      final audioRecordStream = _audioRecorder.startRecordingStream();
+      //final audioRecordStream = _audioRecorder.startRecordingStream();
+      var inputStream = await audioInput.startRecordingStream();
       print('play stream');
       await audioOutput.playStream();
       // Map the Uint8List stream to InlineDataPart stream
-      Stream<InlineDataPart> inlineDataStream = audioRecordStream.map((data) {
-        print('recording data!');
-        return InlineDataPart('audio/pcm', data);
-      });
+      if (inputStream != null) {
+        Stream<InlineDataPart> inlineDataStream = inputStream.map((data) {
+          print('recording data!');
+          return InlineDataPart('audio/pcm', data);
+        });
 
-      await _session.sendMediaStream(inlineDataStream);
+        await _session.sendMediaStream(inlineDataStream);
+      }
     } catch (e) {
       print(e);
       _showError(e.toString());
@@ -288,7 +295,9 @@ class _BidiPageState extends State<BidiPage> {
 
   Future<void> _stopRecording() async {
     try {
-      await _audioRecorder.stopRecording();
+      //await _audioRecorder.stopRecording();
+
+      await audioInput.stopRecording();
     } catch (e) {
       _showError(e.toString());
     }
@@ -413,7 +422,7 @@ class _BidiPageState extends State<BidiPage> {
     }
   }
 
-  Future<void> _handleTurnComplete() async {
+  /*Future<void> _handleTurnComplete() async {
     if (_chunkBuilder.isNotEmpty) {
       print('turn complete with chunkbuilder not empty');
       /*Uint8List chunk = await audioChunkWithHeader(
@@ -425,7 +434,7 @@ class _BidiPageState extends State<BidiPage> {
       _audioIndex = 0;
       _chunkBuilder.clear();
     }
-  }
+  }*/
 
   Future<void> _handleLiveServerToolCall(LiveServerToolCall response) async {
     final functionCalls = response.functionCalls!.toList();
