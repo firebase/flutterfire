@@ -27,17 +27,17 @@ import 'pages/imagen_page.dart';
 import 'pages/document.dart';
 import 'pages/video_page.dart';
 import 'pages/bidi_page.dart';
+import 'firebase_options.dart';
 
 // REQUIRED if you want to run on Web
-const FirebaseOptions? options = null;
+FirebaseOptions options = DefaultFirebaseOptions.currentPlatform;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  await FirebaseAuth.instance.signInAnonymously();
+  await Firebase.initializeApp(options: options);
+  //await FirebaseAuth.instance.signInAnonymously();
 
-  var vertexInstance =
-      FirebaseVertexAI.instanceFor(auth: FirebaseAuth.instance);
+  var vertexInstance = FirebaseVertexAI.instanceFor();
   final model = vertexInstance.generativeModel(model: 'gemini-1.5-flash');
 
   runApp(GenerativeAISample(model: model));
