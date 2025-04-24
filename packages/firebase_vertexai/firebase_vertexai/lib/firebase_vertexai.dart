@@ -72,11 +72,11 @@ export 'src/live_api.dart'
     show
         LiveGenerationConfig,
         SpeechConfig,
-        Voice,
         ResponseModalities,
         LiveServerMessage,
         LiveServerContent,
         LiveServerToolCall,
-        LiveServerToolCallCancellation;
+        LiveServerToolCallCancellation,
+        LiveServerResponse;
 export 'src/live_session.dart' show LiveSession;
 export 'src/schema.dart' show Schema, SchemaType;
