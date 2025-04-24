@@ -125,7 +125,9 @@ class _JsonDocumentReference
     } else if (collectionPath.contains('//')) {
       throw ArgumentError('A collection path must not contain "//".');
     } else if (!isValidCollectionPath(collectionPath)) {
-      throw ArgumentError('A collection path must point to a valid collection.');
+      throw ArgumentError(
+        'A collection path must point to a valid collection.',
+      );
     }
 
     return _JsonCollectionReference(
