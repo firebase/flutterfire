@@ -93,7 +93,9 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     } else if (collectionPath.contains('//')) {
       throw ArgumentError('A collection path must not contain "//".');
     } else if (!isValidCollectionPath(collectionPath)) {
-      throw ArgumentError('A collection path must point to a valid collection.');
+      throw ArgumentError(
+        'A collection path must point to a valid collection.',
+      );
     }
 
     return _JsonCollectionReference(this, _delegate.collection(collectionPath));
@@ -214,7 +216,8 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     }
     if (collectionPath.contains('/')) {
       throw ArgumentError(
-        'A collection path passed to collectionGroup() cannot contain "/".',);
+        'A collection path passed to collectionGroup() cannot contain "/".',
+      );
     }
 
     return _JsonQuery(this, _delegate.collectionGroup(collectionPath));
