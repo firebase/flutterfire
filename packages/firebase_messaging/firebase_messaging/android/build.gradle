@@ -4,6 +4,8 @@ version '1.0-SNAPSHOT'
 apply plugin: 'com.android.library'
 apply from: file("local-config.gradle")
 
+androidGradlePluginVersion = project.ext.androidGradlePluginVersion
+
 buildscript {
   repositories {
     google()
@@ -11,7 +13,7 @@ buildscript {
   }
 
   dependencies {
-    classpath project.ext.androidGradlePluginVersion
+    classpath androidGradlePluginVersion
   }
 }
 
