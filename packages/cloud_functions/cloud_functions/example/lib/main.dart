@@ -61,11 +61,7 @@ class _MyAppState extends State<MyApp> {
         }
       },
       onError: (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('ERROR: $e'),
-          ),
-        );
+        debugPrint('Error: $e');
       },
     );
   }
