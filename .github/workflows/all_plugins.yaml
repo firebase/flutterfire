@@ -33,8 +33,6 @@ jobs:
           melos-version: '5.3.0'
       - name: 'Run Analyze'
         run: melos analyze-ci
-      - name: Show Xcode version
-        run: xcodebuild -version
 
 
   # Separated from "analyse" action as pubspec_override file is not being taken into account when running `flutter pub publish --dry-run`
@@ -147,6 +145,7 @@ jobs:
           melos-version: '5.3.0'
       - name: 'Swift Integration Setup'
         run: flutter config --enable-swift-package-manager
+        run: xcodebuild -version
       - name: 'Build Apps with Swift Package Manager'
         run: dart ./.github/workflows/scripts/swift-integration.dart $FLUTTER_DEPENDENCIES
 
