@@ -17,6 +17,7 @@ import com.google.firebase.functions.HttpsCallableOptions;
 import com.google.firebase.functions.HttpsCallableReference;
 import com.google.firebase.functions.HttpsCallableResult;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -35,6 +36,7 @@ public class FlutterFirebaseFunctionsPlugin
 
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_functions";
   private MethodChannel channel;
+  private FlutterPluginBinding pluginBinding;
 
   /**
    * Default Constructor.
@@ -45,6 +47,7 @@ public class FlutterFirebaseFunctionsPlugin
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+    pluginBinding = binding;
     channel = new MethodChannel(binding.getBinaryMessenger(), METHOD_CHANNEL_NAME);
     channel.setMethodCallHandler(this);
   }
@@ -53,6 +56,16 @@ public class FlutterFirebaseFunctionsPlugin
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
     channel.setMethodCallHandler(null);
     channel = null;
+  }
+
+  private void registerEventChannel(Map<String, Object> arguments) {
+    final String eventId = (String) Objects.requireNonNull(arguments.get("eventChannelId"));
+    final String eventChannelName = METHOD_CHANNEL_NAME + "/" + eventId;
+    final EventChannel eventChannel =
+        new EventChannel(pluginBinding.getBinaryMessenger(), eventChannelName);
+    FirebaseFunctions functions = getFunctions(arguments);
+    FirebaseFunctionsStreamHandler streamHandler = new FirebaseFunctionsStreamHandler(functions);
+    eventChannel.setStreamHandler(streamHandler);
   }
 
   private FirebaseFunctions getFunctions(Map<String, Object> arguments) {
@@ -116,24 +129,26 @@ public class FlutterFirebaseFunctionsPlugin
 
   @Override
   public void onMethodCall(MethodCall call, @NonNull final Result result) {
-    if (!call.method.equals("FirebaseFunctions#call")) {
+    if (call.method.equals("FirebaseFunctions#registerEventChannel")) {
+      registerEventChannel(call.arguments());
+      result.success(null);
+    } else if (call.method.equals("FirebaseFunctions#call")) {
+      httpsFunctionCall(call.arguments())
+          .addOnCompleteListener(
+              task -> {
+                if (task.isSuccessful()) {
+                  result.success(task.getResult());
+                } else {
+                  Exception exception = task.getException();
+                  result.error(
+                      "firebase_functions",
+                      exception != null ? exception.getMessage() : null,
+                      getExceptionDetails(exception));
+                }
+              });
+    } else {
       result.notImplemented();
-      return;
     }
-
-    httpsFunctionCall(call.arguments())
-        .addOnCompleteListener(
-            task -> {
-              if (task.isSuccessful()) {
-                result.success(task.getResult());
-              } else {
-                Exception exception = task.getException();
-                result.error(
-                    "firebase_functions",
-                    exception != null ? exception.getMessage() : null,
-                    getExceptionDetails(exception));
-              }
-            });
   }
 
   private Map<String, Object> getExceptionDetails(@Nullable Exception exception) {
