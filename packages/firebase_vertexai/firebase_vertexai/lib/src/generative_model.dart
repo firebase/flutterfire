@@ -56,7 +56,7 @@ final class GenerativeModel extends BaseApiClientModel {
                 : DeveloperSerialization(),
             modelUri: useVertexBackend
                 ? _VertexUri(app: app, model: model, location: location)
-                : _GoogleAIUri(model: model),
+                : _GoogleAIUri(app: app, model: model),
             client: HttpApiClient(
                 apiKey: app.options.apiKey,
                 httpClient: httpClient,
@@ -86,7 +86,7 @@ final class GenerativeModel extends BaseApiClientModel {
                 : DeveloperSerialization(),
             modelUri: useVertexBackend
                 ? _VertexUri(app: app, model: model, location: location)
-                : _GoogleAIUri(model: model),
+                : _GoogleAIUri(app: app, model: model),
             client: apiClient ??
                 HttpApiClient(
                     apiKey: app.options.apiKey,

@@ -103,7 +103,8 @@ void main() {
             expect(
               uri,
               Uri.parse(
-                'https://generativelanguage.googleapis.com/v1beta/'
+                'https://firebasevertexai.googleapis.com/v1beta/'
+                'projects/123/'
                 'models/some-model:generateContent',
               ),
             );
@@ -365,7 +366,8 @@ void main() {
             expect(
               uri,
               Uri.parse(
-                'https://generativelanguage.googleapis.com/v1beta/'
+                'https://firebasevertexai.googleapis.com/v1beta/'
+                'projects/123/'
                 'models/some-model:streamGenerateContent',
               ),
             );
@@ -471,7 +473,8 @@ void main() {
             expect(
               uri,
               Uri.parse(
-                'https://generativelanguage.googleapis.com/v1beta/'
+                'https://firebasevertexai.googleapis.com/v1beta/'
+                'projects/123/'
                 'models/some-model:countTokens',
               ),
             );
@@ -575,7 +578,8 @@ void main() {
             expect(
               uri,
               Uri.parse(
-                'https://generativelanguage.googleapis.com/v1beta/'
+                'https://firebasevertexai.googleapis.com/v1beta/'
+                'projects/123/'
                 'models/some-model:embedContent',
               ),
             );
@@ -642,7 +646,8 @@ void main() {
             expect(
               uri,
               Uri.parse(
-                'https://generativelanguage.googleapis.com/v1beta/'
+                'https://firebasevertexai.googleapis.com/v1beta/'
+                'projects/123/'
                 'models/some-model:batchEmbedContents',
               ),
             );
