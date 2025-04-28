@@ -121,13 +121,11 @@ final class _GoogleAIUri implements _ModelUri {
   }
 
   static const _apiVersion = 'v1beta';
-  // TODO - Update to vertex backend URI.
-  static const _baseAuthority = 'generativelanguage.googleapis.com';
-  static const _baseFirebaseAuthority = 'firebasevertexai.googleapis.com';
+  static const _baseAuthority = 'firebasevertexai.googleapis.com';
   static Uri _googleAIBaseUri(
-      {String apiVersion = _apiVersion, required FirebaseApp app}) =>
-     Uri.https(_baseFirebaseAuthority,
-          '$apiVersion/projects/${app.options.projectId}');
+          {String apiVersion = _apiVersion, required FirebaseApp app}) =>
+      Uri.https(
+          _baseAuthority, '$apiVersion/projects/${app.options.projectId}');
   final Uri _baseUri;
 
   @override
