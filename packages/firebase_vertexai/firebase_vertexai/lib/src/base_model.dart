@@ -106,8 +106,9 @@ final class _VertexUri implements _ModelUri {
 final class _GoogleAIUri implements _ModelUri {
   _GoogleAIUri({
     required String model,
+    required FirebaseApp app,
   })  : model = _normalizeModelName(model),
-        _baseUri = _googleAIBaseUri();
+        _baseUri = _googleAIBaseUri(app: app);
 
   /// Returns the model code for a user friendly model name.
   ///
