@@ -43,11 +43,15 @@ final class LiveGenerativeModel extends BaseModel {
         _liveGenerationConfig = liveGenerationConfig,
         _tools = tools,
         _systemInstruction = systemInstruction,
-        super(
-          model: model,
-          app: app,
-          location: location,
+        super._(
+          serializationStrategy: VertexSerialization(),
+          modelUri: _VertexUri(
+            model: model,
+            app: app,
+            location: location,
+          ),
         );
+  static const _apiVersion = 'v1beta';
 
   final FirebaseApp _app;
   final String _location;
@@ -65,10 +69,11 @@ final class LiveGenerativeModel extends BaseModel {
   /// Returns a [Future] that resolves to an [LiveSession] object upon successful
   /// connection.
   Future<LiveSession> connect() async {
-    final uri =
-        'wss://${BaseModel._baseUrl}/$_apiUrl.${BaseModel._apiVersion}.$_apiUrlSuffix/$_location?key=${_app.options.apiKey}';
-    final modelString =
-        'projects/${_app.options.projectId}/locations/$_location/publishers/google/models/${model.name}';
+    final uri = 'wss://${_modelUri.baseAuthority}/'
+        '$_apiUrl.$_apiVersion.$_apiUrlSuffix/'
+        '$_location?key=${_app.options.apiKey}';
+    final modelString = 'projects/${_app.options.projectId}/'
+        'locations/$_location/publishers/google/models/${model.name}';
 
     final setupJson = {
       'setup': {

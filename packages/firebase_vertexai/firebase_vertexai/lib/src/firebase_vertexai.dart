@@ -27,8 +27,13 @@ const _defaultLocation = 'us-central1';
 /// The entrypoint for [FirebaseVertexAI].
 class FirebaseVertexAI extends FirebasePluginPlatform {
   FirebaseVertexAI._(
-      {required this.app, required this.location, this.appCheck, this.auth})
-      : super(app.name, 'plugins.flutter.io/firebase_vertexai');
+      {required this.app,
+      required this.location,
+      required bool useVertexBackend,
+      this.appCheck,
+      this.auth})
+      : _useVertexBackend = useVertexBackend,
+        super(app.name, 'plugins.flutter.io/firebase_vertexai');
 
   /// The [FirebaseApp] for this current [FirebaseVertexAI] instance.
   FirebaseApp app;
@@ -42,6 +47,8 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
 
   /// The service location for this [FirebaseVertexAI] instance.
   String location;
+
+  final bool _useVertexBackend;
 
   static final Map<String, FirebaseVertexAI> _cachedInstances = {};
 
@@ -61,6 +68,18 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
     FirebaseAppCheck? appCheck,
     FirebaseAuth? auth,
     String? location,
+  }) =>
+      vertexAI(app: app, appCheck: appCheck, auth: auth, location: location);
+
+  /// Returns an instance using a specified [FirebaseApp].
+  ///
+  /// If [app] is not provided, the default Firebase app will be used.
+  /// If pass in [appCheck], request session will get protected from abusing.
+  static FirebaseVertexAI vertexAI({
+    FirebaseApp? app,
+    FirebaseAppCheck? appCheck,
+    FirebaseAuth? auth,
+    String? location,
   }) {
     app ??= Firebase.app();
 
@@ -71,7 +90,39 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
     location ??= _defaultLocation;
 
     FirebaseVertexAI newInstance = FirebaseVertexAI._(
-        app: app, location: location, appCheck: appCheck, auth: auth);
+      app: app,
+      location: location,
+      appCheck: appCheck,
+      auth: auth,
+      useVertexBackend: true,
+    );
+    _cachedInstances[app.name] = newInstance;
+
+    return newInstance;
+  }
+
+  /// Returns an instance using a specified [FirebaseApp].
+  ///
+  /// If [app] is not provided, the default Firebase app will be used.
+  /// If pass in [appCheck], request session will get protected from abusing.
+  static FirebaseVertexAI googleAI({
+    FirebaseApp? app,
+    FirebaseAppCheck? appCheck,
+    FirebaseAuth? auth,
+  }) {
+    app ??= Firebase.app();
+
+    if (_cachedInstances.containsKey(app.name)) {
+      return _cachedInstances[app.name]!;
+    }
+
+    FirebaseVertexAI newInstance = FirebaseVertexAI._(
+      app: app,
+      location: _defaultLocation,
+      appCheck: appCheck,
+      auth: auth,
+      useVertexBackend: false,
+    );
     _cachedInstances[app.name] = newInstance;
 
     return newInstance;
@@ -100,6 +151,7 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
       model: model,
       app: app,
       appCheck: appCheck,
+      useVertexBackend: _useVertexBackend,
       auth: auth,
       location: location,
       safetySettings: safetySettings,

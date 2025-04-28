@@ -14,6 +14,7 @@
 
 import 'content.dart';
 import 'error.dart';
+import 'function_calling.dart' show Tool, ToolConfig;
 import 'schema.dart';
 
 /// Response for Count Tokens
@@ -154,6 +155,23 @@ final class UsageMetadata {
   /// List of modalities that were returned in the response.
   final List<ModalityTokenCount>? candidatesTokensDetails;
 }
+
+/// Constructe a UsageMetadata with all it's fields.
+///
+/// Expose access to the private constructor for use within the package..
+UsageMetadata createUsageMetadata({
+  required int? promptTokenCount,
+  required int? candidatesTokenCount,
+  required int? totalTokenCount,
+  required List<ModalityTokenCount>? promptTokensDetails,
+  required List<ModalityTokenCount>? candidatesTokensDetails,
+}) =>
+    UsageMetadata._(
+        promptTokenCount: promptTokenCount,
+        candidatesTokenCount: candidatesTokenCount,
+        totalTokenCount: totalTokenCount,
+        promptTokensDetails: promptTokensDetails,
+        candidatesTokensDetails: candidatesTokensDetails);
 
 /// Response candidate generated from a [GenerativeModel].
 final class Candidate {
@@ -842,53 +860,124 @@ enum TaskType {
   Object toJson() => _jsonString;
 }
 
-/// Parse the json to [GenerateContentResponse]
-GenerateContentResponse parseGenerateContentResponse(Object jsonObject) {
-  if (jsonObject case {'error': final Object error}) throw parseError(error);
-  final candidates = switch (jsonObject) {
-    {'candidates': final List<Object?> candidates} =>
-      candidates.map(_parseCandidate).toList(),
-    _ => <Candidate>[]
-  };
-  final promptFeedback = switch (jsonObject) {
-    {'promptFeedback': final promptFeedback?} =>
-      _parsePromptFeedback(promptFeedback),
-    _ => null,
-  };
-  final usageMedata = switch (jsonObject) {
-    {'usageMetadata': final usageMetadata?} =>
-      _parseUsageMetadata(usageMetadata),
-    _ => null,
-  };
-  return GenerateContentResponse(candidates, promptFeedback,
-      usageMetadata: usageMedata);
+// ignore: public_member_api_docs
+abstract interface class SerializationStrategy {
+  // ignore: public_member_api_docs
+  GenerateContentResponse parseGenerateContentResponse(Object jsonObject);
+  // ignore: public_member_api_docs
+  CountTokensResponse parseCountTokensResponse(Object jsonObject);
+  // ignore: public_member_api_docs
+  Map<String, Object?> generateContentRequest(
+    Iterable<Content> contents,
+    ({String prefix, String name}) model,
+    List<SafetySetting> safetySettings,
+    GenerationConfig? generationConfig,
+    List<Tool>? tools,
+    ToolConfig? toolConfig,
+    Content? systemInstruction,
+  );
+
+  // ignore: public_member_api_docs
+  Map<String, Object?> countTokensRequest(
+    Iterable<Content> contents,
+    ({String prefix, String name}) model,
+    List<SafetySetting> safetySettings,
+    GenerationConfig? generationConfig,
+    List<Tool>? tools,
+    ToolConfig? toolConfig,
+  );
 }
 
-/// Parse the json to [CountTokensResponse]
-CountTokensResponse parseCountTokensResponse(Object jsonObject) {
-  if (jsonObject case {'error': final Object error}) throw parseError(error);
-
-  if (jsonObject is! Map) {
-    throw unhandledFormat('CountTokensResponse', jsonObject);
+// ignore: public_member_api_docs
+final class VertexSerialization implements SerializationStrategy {
+  /// Parse the json to [GenerateContentResponse]
+  @override
+  GenerateContentResponse parseGenerateContentResponse(Object jsonObject) {
+    if (jsonObject case {'error': final Object error}) throw parseError(error);
+    final candidates = switch (jsonObject) {
+      {'candidates': final List<Object?> candidates} =>
+        candidates.map(_parseCandidate).toList(),
+      _ => <Candidate>[]
+    };
+    final promptFeedback = switch (jsonObject) {
+      {'promptFeedback': final promptFeedback?} =>
+        _parsePromptFeedback(promptFeedback),
+      _ => null,
+    };
+    final usageMedata = switch (jsonObject) {
+      {'usageMetadata': final usageMetadata?} =>
+        _parseUsageMetadata(usageMetadata),
+      {'totalTokens': final int totalTokens} =>
+        UsageMetadata._(totalTokenCount: totalTokens),
+      _ => null,
+    };
+    return GenerateContentResponse(candidates, promptFeedback,
+        usageMetadata: usageMedata);
   }
 
-  final totalTokens = jsonObject['totalTokens'] as int;
-  final totalBillableCharacters = switch (jsonObject) {
-    {'totalBillableCharacters': final int totalBillableCharacters} =>
-      totalBillableCharacters,
-    _ => null,
-  };
-  final promptTokensDetails = switch (jsonObject) {
-    {'promptTokensDetails': final List<Object?> promptTokensDetails} =>
-      promptTokensDetails.map(_parseModalityTokenCount).toList(),
-    _ => null,
-  };
+  /// Parse the json to [CountTokensResponse]
+  @override
+  CountTokensResponse parseCountTokensResponse(Object jsonObject) {
+    if (jsonObject case {'error': final Object error}) throw parseError(error);
 
-  return CountTokensResponse(
-    totalTokens,
-    totalBillableCharacters: totalBillableCharacters,
-    promptTokensDetails: promptTokensDetails,
-  );
+    if (jsonObject is! Map) {
+      throw unhandledFormat('CountTokensResponse', jsonObject);
+    }
+
+    final totalTokens = jsonObject['totalTokens'] as int;
+    final totalBillableCharacters = switch (jsonObject) {
+      {'totalBillableCharacters': final int totalBillableCharacters} =>
+        totalBillableCharacters,
+      _ => null,
+    };
+    final promptTokensDetails = switch (jsonObject) {
+      {'promptTokensDetails': final List<Object?> promptTokensDetails} =>
+        promptTokensDetails.map(_parseModalityTokenCount).toList(),
+      _ => null,
+    };
+
+    return CountTokensResponse(
+      totalTokens,
+      totalBillableCharacters: totalBillableCharacters,
+      promptTokensDetails: promptTokensDetails,
+    );
+  }
+
+  @override
+  Map<String, Object?> generateContentRequest(
+    Iterable<Content> contents,
+    ({String prefix, String name}) model,
+    List<SafetySetting> safetySettings,
+    GenerationConfig? generationConfig,
+    List<Tool>? tools,
+    ToolConfig? toolConfig,
+    Content? systemInstruction,
+  ) {
+    return {
+      'model': '${model.prefix}/${model.name}',
+      'contents': contents.map((c) => c.toJson()).toList(),
+      if (safetySettings.isNotEmpty)
+        'safetySettings': safetySettings.map((s) => s.toJson()).toList(),
+      if (generationConfig != null)
+        'generationConfig': generationConfig.toJson(),
+      if (tools != null) 'tools': tools.map((t) => t.toJson()).toList(),
+      if (toolConfig != null) 'toolConfig': toolConfig.toJson(),
+      if (systemInstruction != null)
+        'systemInstruction': systemInstruction.toJson(),
+    };
+  }
+
+  @override
+  Map<String, Object?> countTokensRequest(
+    Iterable<Content> contents,
+    ({String prefix, String name}) model,
+    List<SafetySetting> safetySettings,
+    GenerationConfig? generationConfig,
+    List<Tool>? tools,
+    ToolConfig? toolConfig,
+  ) =>
+      // Everything except contents is ignored.
+      {'contents': contents.map((c) => c.toJson()).toList()};
 }
 
 Candidate _parseCandidate(Object? jsonObject) {

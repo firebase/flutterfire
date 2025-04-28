@@ -36,9 +36,12 @@ final class ImagenModel extends BaseApiClientModel {
       : _generationConfig = generationConfig,
         _safetySettings = safetySettings,
         super(
-            model: model,
-            app: app,
-            location: location,
+            serializationStrategy: VertexSerialization(),
+            modelUri: _VertexUri(
+              model: model,
+              app: app,
+              location: location,
+            ),
             client: HttpApiClient(
                 apiKey: app.options.apiKey,
                 requestHeaders: BaseModel.firebaseTokens(appCheck, auth, app)));

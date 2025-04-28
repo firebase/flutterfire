@@ -69,59 +69,8 @@ class MockApiClient extends Mock implements ApiClient {
   }
 }
 
-// A concrete subclass of BaseModel for testing purposes
-class TestBaseModel extends BaseModel {
-  TestBaseModel({
-    required String model,
-    required String location,
-    required FirebaseApp app,
-  }) : super(model: model, location: location, app: app);
-}
-
-class TestApiClientModel extends BaseApiClientModel {
-  TestApiClientModel({
-    required super.model,
-    required super.location,
-    required super.app,
-    required ApiClient client,
-  }) : super(client: client);
-}
-
 void main() {
   group('BaseModel', () {
-    test('normalizeModelName returns correct prefix and name for model code',
-        () {
-      final result = BaseModel.normalizeModelName('models/my-model');
-      expect(result.prefix, 'models');
-      expect(result.name, 'my-model');
-    });
-
-    test(
-        'normalizeModelName returns correct prefix and name for user-friendly name',
-        () {
-      final result = BaseModel.normalizeModelName('my-model');
-      expect(result.prefix, 'models');
-      expect(result.name, 'my-model');
-    });
-
-    test('taskUri constructs the correct URI for a task', () {
-      final mockApp = MockFirebaseApp();
-      final model = TestBaseModel(
-          model: 'my-model', location: 'us-central1', app: mockApp);
-      final taskUri = model.taskUri(Task.generateContent);
-      expect(taskUri.toString(),
-          'https://firebasevertexai.googleapis.com/v1beta/projects/test-project/locations/us-central1/publishers/google/models/my-model:generateContent');
-    });
-
-    test('taskUri constructs the correct URI for a task with model code', () {
-      final mockApp = MockFirebaseApp();
-      final model = TestBaseModel(
-          model: 'models/my-model', location: 'us-central1', app: mockApp);
-      final taskUri = model.taskUri(Task.countTokens);
-      expect(taskUri.toString(),
-          'https://firebasevertexai.googleapis.com/v1beta/projects/test-project/locations/us-central1/publishers/google/models/my-model:countTokens');
-    });
-
     test('firebaseTokens returns a function that generates headers', () async {
       final tokenFunction = BaseModel.firebaseTokens(null, null, null);
       final headers = await tokenFunction();
@@ -187,35 +136,6 @@ void main() {
       expect(headers['x-goog-api-client'], contains('gl-dart'));
       expect(headers['x-goog-api-client'], contains('fire'));
       expect(headers.length, 4);
-    });
-  });
-
-  group('BaseApiClientModel', () {
-    test('makeRequest returns the parsed response', () async {
-      final mockApp = MockFirebaseApp();
-      final mockClient = MockApiClient();
-      final model = TestApiClientModel(
-          model: 'test-model',
-          location: 'us-central1',
-          app: mockApp,
-          client: mockClient);
-      final params = {'input': 'test'};
-      const task = Task.generateContent;
-
-      final response = await model.makeRequest(
-          task, params, (data) => data['mockResponse']! as String);
-      expect(response, 'success');
-    });
-
-    test('client getter returns the injected ApiClient', () {
-      final mockApp = MockFirebaseApp();
-      final mockClient = MockApiClient();
-      final model = TestApiClientModel(
-          model: 'test-model',
-          location: 'us-central1',
-          app: mockApp,
-          client: mockClient);
-      expect(model.client, mockClient);
     });
   });
 }

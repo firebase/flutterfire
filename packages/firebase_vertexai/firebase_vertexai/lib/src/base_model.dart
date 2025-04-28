@@ -26,6 +26,7 @@ import 'package:web_socket_channel/io.dart';
 import 'api.dart';
 import 'client.dart';
 import 'content.dart';
+import 'developer/api.dart';
 import 'function_calling.dart';
 import 'imagen_api.dart';
 import 'imagen_content.dart';
@@ -52,33 +53,28 @@ enum Task {
   predict,
 }
 
-/// Base class for models.
-///
-/// Do not instantiate directly.
-abstract class BaseModel {
-  // ignore: public_member_api_docs
-  BaseModel(
+abstract interface class _ModelUri {
+  String get baseAuthority;
+  Uri taskUri(Task task);
+  ({String prefix, String name}) get model;
+}
+
+final class _VertexUri implements _ModelUri {
+  _VertexUri(
       {required String model,
       required String location,
       required FirebaseApp app})
-      : _model = normalizeModelName(model),
+      : model = _normalizeModelName(model),
         _projectUri = _vertexUri(app, location);
 
-  static const _baseUrl = 'firebasevertexai.googleapis.com';
+  static const _baseAuthority = 'firebasevertexai.googleapis.com';
   static const _apiVersion = 'v1beta';
-
-  final ({String prefix, String name}) _model;
-
-  final Uri _projectUri;
-
-  /// The normalized model name.
-  ({String prefix, String name}) get model => _model;
 
   /// Returns the model code for a user friendly model name.
   ///
   /// If the model name is already a model code (contains a `/`), use the parts
   /// directly. Otherwise, return a `models/` model code.
-  static ({String prefix, String name}) normalizeModelName(String modelName) {
+  static ({String prefix, String name}) _normalizeModelName(String modelName) {
     if (!modelName.contains('/')) return (prefix: 'models', name: modelName);
     final parts = modelName.split('/');
     return (prefix: parts.first, name: parts.skip(1).join('/'));
@@ -87,10 +83,78 @@ abstract class BaseModel {
   static Uri _vertexUri(FirebaseApp app, String location) {
     var projectId = app.options.projectId;
     return Uri.https(
-      _baseUrl,
+      _baseAuthority,
       '/$_apiVersion/projects/$projectId/locations/$location/publishers/google',
     );
   }
+
+  final Uri _projectUri;
+  @override
+  final ({String prefix, String name}) model;
+
+  @override
+  String get baseAuthority => _baseAuthority;
+
+  @override
+  Uri taskUri(Task task) {
+    return _projectUri.replace(
+        pathSegments: _projectUri.pathSegments
+            .followedBy([model.prefix, '${model.name}:${task.name}']));
+  }
+}
+
+final class _GoogleAIUri implements _ModelUri {
+  _GoogleAIUri({
+    required String model,
+    required FirebaseApp app,
+  })  : model = _normalizeModelName(model),
+        _baseUri = _googleAIBaseUri(app: app);
+
+  /// Returns the model code for a user friendly model name.
+  ///
+  /// If the model name is already a model code (contains a `/`), use the parts
+  /// directly. Otherwise, return a `models/` model code.
+  static ({String prefix, String name}) _normalizeModelName(String modelName) {
+    if (!modelName.contains('/')) return (prefix: 'models', name: modelName);
+    final parts = modelName.split('/');
+    return (prefix: parts.first, name: parts.skip(1).join('/'));
+  }
+
+  static const _apiVersion = 'v1beta';
+  static const _baseAuthority = 'firebasevertexai.googleapis.com';
+  static Uri _googleAIBaseUri(
+          {String apiVersion = _apiVersion, required FirebaseApp app}) =>
+      Uri.https(
+          _baseAuthority, '$apiVersion/projects/${app.options.projectId}');
+  final Uri _baseUri;
+
+  @override
+  final ({String prefix, String name}) model;
+
+  @override
+  String get baseAuthority => _baseAuthority;
+
+  @override
+  Uri taskUri(Task task) => _baseUri.replace(
+      pathSegments: _baseUri.pathSegments
+          .followedBy([model.prefix, '${model.name}:${task.name}']));
+}
+
+/// Base class for models.
+///
+/// Do not instantiate directly.
+abstract class BaseModel {
+  BaseModel._(
+      {required SerializationStrategy serializationStrategy,
+      required _ModelUri modelUri})
+      : _serializationStrategy = serializationStrategy,
+        _modelUri = modelUri;
+
+  final SerializationStrategy _serializationStrategy;
+  final _ModelUri _modelUri;
+
+  /// The normalized model name.
+  ({String prefix, String name}) get model => _modelUri.model;
 
   /// Returns a function that generates Firebase auth tokens.
   static FutureOr<Map<String, String>> Function() firebaseTokens(
@@ -120,9 +184,7 @@ abstract class BaseModel {
   }
 
   /// Returns a URI for the given [task].
-  Uri taskUri(Task task) => _projectUri.replace(
-      pathSegments: _projectUri.pathSegments
-          .followedBy([_model.prefix, '${_model.name}:${task.name}']));
+  Uri taskUri(Task task) => _modelUri.taskUri(task);
 }
 
 /// An abstract base class for models that interact with an API using an [ApiClient].
@@ -136,11 +198,11 @@ abstract class BaseModel {
 abstract class BaseApiClientModel extends BaseModel {
   // ignore: public_member_api_docs
   BaseApiClientModel({
-    required super.model,
-    required super.location,
-    required super.app,
+    required super.serializationStrategy,
+    required super.modelUri,
     required ApiClient client,
-  }) : _client = client;
+  })  : _client = client,
+        super._();
 
   final ApiClient _client;
 
