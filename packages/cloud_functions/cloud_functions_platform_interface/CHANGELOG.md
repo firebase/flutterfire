@@ -1,3 +1,7 @@
+## 5.7.0
+
+ - **FEAT**(cloud_functions): add support for cloud functions stream ([#17214](https://github.com/firebase/flutterfire/issues/17214)). ([509e0f3c](https://github.com/firebase/flutterfire/commit/509e0f3cc984a7b56a67979b4b27aff72defdd55))
+
 ## 5.6.5
 
  - Update a dependency to the latest release.
