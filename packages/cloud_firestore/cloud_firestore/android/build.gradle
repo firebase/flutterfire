@@ -9,10 +9,6 @@ buildscript {
         google()
         mavenCentral()
     }
-
-    dependencies {
-        classpath project.ext.androidGradlePluginVersion
-    }
 }
 
 allprojects {

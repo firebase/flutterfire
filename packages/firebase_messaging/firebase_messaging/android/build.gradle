@@ -11,10 +11,6 @@ buildscript {
     google()
     mavenCentral()
   }
-
-  dependencies {
-    classpath androidGradlePluginVersion
-  }
 }
 
 rootProject.allprojects {
