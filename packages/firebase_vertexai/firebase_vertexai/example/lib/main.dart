@@ -33,6 +33,8 @@ import 'pages/bidi_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Enable this line instead once have the firebase_options.dart generated and
+  // imported through flutterfire_cli.
   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Firebase.initializeApp();
   await FirebaseAuth.instance.signInAnonymously();
@@ -118,7 +120,7 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
       home: HomeScreen(
         key: ValueKey(
           '${_useVertexBackend}_${_currentModel.hashCode}',
-        ), // Ensures HomeScreen rebuilds with new model/backend
+        ),
         model: _currentModel,
         imagenModel: _currentImagenModel,
         useVertexBackend: _useVertexBackend,
@@ -159,7 +161,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
 // Method to build the selected page on demand
   Widget _buildSelectedPage(
-      int index, GenerativeModel currentModel, ImagenModel currentImagenModel) {
+    int index,
+    GenerativeModel currentModel,
+    ImagenModel currentImagenModel,
+    bool useVertexBackend,
+  ) {
     switch (index) {
       case 0:
         return ChatPage(title: 'Chat', model: currentModel);
@@ -169,7 +175,10 @@ class _HomeScreenState extends State<HomeScreen> {
         return TokenCountPage(title: 'Token Count', model: currentModel);
       case 3:
         // FunctionCallingPage initializes its own model as per original design
-        return const FunctionCallingPage(title: 'Function Calling');
+        return FunctionCallingPage(
+          title: 'Function Calling',
+          useVertexBackend: useVertexBackend,
+        );
       case 4:
         return ImagePromptPage(title: 'Image Prompt', model: currentModel);
       case 5:
@@ -190,9 +199,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // The selected page is now built directly here, ensuring it uses the latest `widget.model`.
-    // When `_selectedIndex` changes or `widget.model` (due to toggle) changes,
-    // this `build` method runs, and `_buildSelectedPage` is called with the current values.
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -236,9 +242,12 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: Center(
-        // Call _buildSelectedPage here to construct the page on demand
         child: _buildSelectedPage(
-            widget.selectedIndex, widget.model, widget.imagenModel),
+          widget.selectedIndex,
+          widget.model,
+          widget.imagenModel,
+          widget.useVertexBackend,
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -248,7 +257,6 @@ class _HomeScreenState extends State<HomeScreen> {
         unselectedItemColor:
             Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
         items: const <BottomNavigationBarItem>[
-          // Made const as items are static
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
             label: 'Chat',
