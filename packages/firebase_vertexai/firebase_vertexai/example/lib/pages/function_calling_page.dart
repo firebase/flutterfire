@@ -18,8 +18,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../widgets/message_widget.dart';
 
 class FunctionCallingPage extends StatefulWidget {
-  const FunctionCallingPage(
-      {super.key, required this.title, required this.useVertexBackend});
+  const FunctionCallingPage({
+    super.key,
+    required this.title,
+    required this.useVertexBackend,
+  });
 
   final String title;
   final bool useVertexBackend;

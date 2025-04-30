@@ -206,36 +206,42 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: <Widget>[
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text('Google AI',
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: widget.useVertexBackend
-                            ? Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withOpacity(0.7)
-                            : Theme.of(context).colorScheme.primary)),
+                Text(
+                  'Google AI',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: widget.useVertexBackend
+                        ? Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.7)
+                        : Theme.of(context).colorScheme.primary,
+                  ),
+                ),
                 Switch(
                   value: widget.useVertexBackend,
                   onChanged: widget.onBackendChanged,
-                  activeTrackColor: Colors.green.withOpacity(0.5),
-                  inactiveTrackColor: Colors.blueGrey.withOpacity(0.5),
+                  activeTrackColor: Colors.green.withValues(alpha: 0.5),
+                  inactiveTrackColor: Colors.blueGrey.withValues(alpha: 0.5),
                   activeColor: Colors.green,
                   inactiveThumbColor: Colors.blueGrey,
                 ),
-                Text('Vertex AI',
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: widget.useVertexBackend
-                            ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withOpacity(0.7))),
+                Text(
+                  'Vertex AI',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: widget.useVertexBackend
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.7),
+                  ),
+                ),
               ],
             ),
           ),
@@ -255,7 +261,7 @@ class _HomeScreenState extends State<HomeScreen> {
         unselectedFontSize: 9,
         selectedItemColor: Theme.of(context).colorScheme.primary,
         unselectedItemColor:
-            Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
