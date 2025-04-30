@@ -76,13 +76,12 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
 
   ImagenModel _initializeImagenModel(FirebaseVertexAI instance) {
     var generationConfig = ImagenGenerationConfig(
-      negativePrompt: 'frog',
       numberOfImages: 1,
       aspectRatio: ImagenAspectRatio.square1x1,
       imageFormat: ImagenFormat.jpeg(compressionQuality: 75),
     );
     return instance.imagenModel(
-      model: 'imagen-3.0-generate-001',
+      model: 'imagen-3.0-generate-002',
       generationConfig: generationConfig,
       safetySettings: ImagenSafetySettings(
         ImagenSafetyFilterLevel.blockLowAndAbove,

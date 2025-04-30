@@ -133,22 +133,27 @@ class _ImagenPageState extends State<ImagenPage> {
       _loading = true;
     });
 
-    var response = await widget.model.generateImages(prompt);
+    try {
+      var response = await widget.model.generateImages(prompt);
 
-    if (response.images.isNotEmpty) {
-      var imagenImage = response.images[0];
+      if (response.images.isNotEmpty) {
+        var imagenImage = response.images[0];
 
-      _generatedContent.add(
-        MessageData(
-          image: Image.memory(imagenImage.bytesBase64Encoded),
-          text: prompt,
-          fromUser: false,
-        ),
-      );
-    } else {
-      // Handle the case where no images were generated
-      _showError('Error: No images were generated.');
+        _generatedContent.add(
+          MessageData(
+            image: Image.memory(imagenImage.bytesBase64Encoded),
+            text: prompt,
+            fromUser: false,
+          ),
+        );
+      } else {
+        // Handle the case where no images were generated
+        _showError('Error: No images were generated.');
+      }
+    } catch (e) {
+      _showError(e.toString());
     }
+
     setState(() {
       _loading = false;
       _scrollDown();

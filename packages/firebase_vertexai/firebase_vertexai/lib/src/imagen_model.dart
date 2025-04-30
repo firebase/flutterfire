@@ -29,6 +29,7 @@ final class ImagenModel extends BaseApiClientModel {
       {required FirebaseApp app,
       required String model,
       required String location,
+      required bool useVertexBackend,
       FirebaseAppCheck? appCheck,
       FirebaseAuth? auth,
       ImagenGenerationConfig? generationConfig,
@@ -37,11 +38,9 @@ final class ImagenModel extends BaseApiClientModel {
         _safetySettings = safetySettings,
         super(
             serializationStrategy: VertexSerialization(),
-            modelUri: _VertexUri(
-              model: model,
-              app: app,
-              location: location,
-            ),
+            modelUri: useVertexBackend
+                ? _VertexUri(app: app, model: model, location: location)
+                : _GoogleAIUri(app: app, model: model),
             client: HttpApiClient(
                 apiKey: app.options.apiKey,
                 requestHeaders: BaseModel.firebaseTokens(appCheck, auth, app)));
@@ -118,6 +117,7 @@ ImagenModel createImagenModel({
   required FirebaseApp app,
   required String location,
   required String model,
+  required bool useVertexBackend,
   FirebaseAppCheck? appCheck,
   FirebaseAuth? auth,
   ImagenGenerationConfig? generationConfig,
@@ -129,6 +129,7 @@ ImagenModel createImagenModel({
       appCheck: appCheck,
       auth: auth,
       location: location,
+      useVertexBackend: useVertexBackend,
       safetySettings: safetySettings,
       generationConfig: generationConfig,
     );
