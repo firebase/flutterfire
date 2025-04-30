@@ -18,7 +18,7 @@ import 'dart:io';
 import 'package:cli_util/cli_logging.dart' as logging;
 import 'package:path/path.dart' show joinAll;
 
-// Used to generate a simple txt file for local-config.gradle files to parse in order to use correct java and compilation versions.
+// Used to generate config files from ../gradle/local-config.gradle in order to use correct java and compilation versions.
 
 void main() async {
   final workspace = await getMelosWorkspace();
