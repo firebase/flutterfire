@@ -1,3 +1,7 @@
+## 0.1.4+1
+
+ - Update a dependency to the latest release.
+
 ## 0.1.4
 
  - **FEAT**(fdc): Implemented partial errors ([#17148](https://github.com/firebase/flutterfire/issues/17148)). ([e97eb0b2](https://github.com/firebase/flutterfire/commit/e97eb0b229390afa01e61b9e7bfbd496b51cc80a))

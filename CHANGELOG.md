@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-04-28 - [BoM 3.10.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-3100-2025-04-28)
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v5.6.7`](#cloud_firestore---v567)
+ - [`cloud_firestore_platform_interface` - `v6.6.7`](#cloud_firestore_platform_interface---v667)
+ - [`cloud_functions` - `v5.5.0`](#cloud_functions---v550)
+ - [`cloud_functions_platform_interface` - `v5.7.0`](#cloud_functions_platform_interface---v570)
+ - [`cloud_functions_web` - `v4.11.0`](#cloud_functions_web---v4110)
+ - [`firebase_auth` - `v5.5.3`](#firebase_auth---v553)
+ - [`firebase_vertexai` - `v1.6.0`](#firebase_vertexai---v160)
+ - [`cloud_firestore_web` - `v4.4.7`](#cloud_firestore_web---v447)
+ - [`firebase_data_connect` - `v0.1.4+1`](#firebase_data_connect---v0141)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `cloud_firestore_web` - `v4.4.7`
+ - `firebase_data_connect` - `v0.1.4+1`
+
+---
+
+#### `cloud_firestore` - `v5.6.7`
+
+ - **FIX**(firestore): Change asserts to throw argumentError ([#17302](https://github.com/firebase/flutterfire/issues/17302)). ([ec1e6a5e](https://github.com/firebase/flutterfire/commit/ec1e6a5eef149680b2750900d1f16d8074e09b38))
+ - **FIX**(cloud_firestore): correct nanoseconds calculation for pre-1970 dates ([#17195](https://github.com/firebase/flutterfire/issues/17195)). ([a13deae3](https://github.com/firebase/flutterfire/commit/a13deae3334045fb1a48817ff9300cbe0696d177))
+
+#### `cloud_firestore_platform_interface` - `v6.6.7`
+
+ - **FIX**(cloud_firestore): correct nanoseconds calculation for pre-1970 dates ([#17195](https://github.com/firebase/flutterfire/issues/17195)). ([a13deae3](https://github.com/firebase/flutterfire/commit/a13deae3334045fb1a48817ff9300cbe0696d177))
+
+#### `cloud_functions` - `v5.5.0`
+
+ - **FEAT**(cloud_functions): add support for cloud functions stream ([#17214](https://github.com/firebase/flutterfire/issues/17214)). ([509e0f3c](https://github.com/firebase/flutterfire/commit/509e0f3cc984a7b56a67979b4b27aff72defdd55))
+
+#### `cloud_functions_platform_interface` - `v5.7.0`
+
+ - **FEAT**(cloud_functions): add support for cloud functions stream ([#17214](https://github.com/firebase/flutterfire/issues/17214)). ([509e0f3c](https://github.com/firebase/flutterfire/commit/509e0f3cc984a7b56a67979b4b27aff72defdd55))
+
+#### `cloud_functions_web` - `v4.11.0`
+
+ - **FEAT**(cloud_functions): add support for cloud functions stream ([#17214](https://github.com/firebase/flutterfire/issues/17214)). ([509e0f3c](https://github.com/firebase/flutterfire/commit/509e0f3cc984a7b56a67979b4b27aff72defdd55))
+
+#### `firebase_auth` - `v5.5.3`
+
+ - **FIX**(auth,iOS): include missing email and credential in account-exists-with-different-credential error ([#17180](https://github.com/firebase/flutterfire/issues/17180)). ([2a0bdc64](https://github.com/firebase/flutterfire/commit/2a0bdc64086e99f8a98bd18b472b36bcfe05a9a4))
+
+#### `firebase_vertexai` - `v1.6.0`
+
+ - **FIX**(vertexai): add missing HarmBlockThreshold to exported APIs ([#17249](https://github.com/firebase/flutterfire/issues/17249)). ([59d902c6](https://github.com/firebase/flutterfire/commit/59d902c63bd1bd040f5357cb6a341db446429430))
+ - **FEAT**(vertexai): Live API breaking changes ([#17299](https://github.com/firebase/flutterfire/issues/17299)). ([69cd2a64](https://github.com/firebase/flutterfire/commit/69cd2a640d25e0f2b623f2e631d090ead8af140d))
+
+
 ## 2025-03-31 - [BoM 3.9.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-390-2025-03-31)
 
 ### Changes

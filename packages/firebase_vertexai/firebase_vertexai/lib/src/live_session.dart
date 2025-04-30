@@ -33,7 +33,7 @@ class LiveSession {
           var jsonString = utf8.decode(message);
           var response = json.decode(jsonString);
 
-          _messageController.add(parseServerMessage(response));
+          _messageController.add(parseServerResponse(response));
         } catch (e) {
           _messageController.addError(e);
         }
@@ -45,7 +45,7 @@ class LiveSession {
     );
   }
   final WebSocketChannel _ws;
-  final _messageController = StreamController<LiveServerMessage>.broadcast();
+  final _messageController = StreamController<LiveServerResponse>.broadcast();
   late StreamSubscription _wsSubscription;
 
   /// Sends content to the server.
@@ -107,10 +107,10 @@ class LiveSession {
 
   /// Receives messages from the server.
   ///
-  /// Returns a [Stream] of [LiveServerMessage] objects representing the
+  /// Returns a [Stream] of [LiveServerResponse] objects representing the
   /// messages received from the server. The stream will stops once the server
   /// sends turn complete message.
-  Stream<LiveServerMessage> receive() async* {
+  Stream<LiveServerResponse> receive() async* {
     _checkWsStatus();
 
     await for (final result in _messageController.stream) {

@@ -17,6 +17,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';
 
+// Import after file is generated through flutterfire_cli.
+// import 'package:vertex_ai_example/firebase_options.dart';
+
 import 'pages/chat_page.dart';
 import 'pages/audio_page.dart';
 import 'pages/function_calling_page.dart';
@@ -28,11 +31,11 @@ import 'pages/document.dart';
 import 'pages/video_page.dart';
 import 'pages/bidi_page.dart';
 
-// REQUIRED if you want to run on Web
-const FirebaseOptions? options = null;
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Enable this line instead once have the firebase_options.dart generated and
+  // imported through flutterfire_cli.
+  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Firebase.initializeApp();
   await FirebaseAuth.instance.signInAnonymously();
 
