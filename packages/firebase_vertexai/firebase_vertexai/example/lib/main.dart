@@ -33,28 +33,81 @@ import 'pages/bidi_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Enable this line instead once have the firebase_options.dart generated and
-  // imported through flutterfire_cli.
   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Firebase.initializeApp();
   await FirebaseAuth.instance.signInAnonymously();
-
-  var vertexInstance =
-      FirebaseVertexAI.instanceFor(auth: FirebaseAuth.instance);
-  final model = vertexInstance.generativeModel(model: 'gemini-1.5-flash');
-
-  runApp(GenerativeAISample(model: model));
+  runApp(const GenerativeAISample());
 }
 
-class GenerativeAISample extends StatelessWidget {
-  final GenerativeModel model;
+class GenerativeAISample extends StatefulWidget {
+  const GenerativeAISample({super.key});
 
-  const GenerativeAISample({super.key, required this.model});
+  @override
+  State<GenerativeAISample> createState() => _GenerativeAISampleState();
+}
+
+class _GenerativeAISampleState extends State<GenerativeAISample> {
+  bool _useVertexBackend = false;
+  late GenerativeModel _currentModel;
+  late ImagenModel _currentImagenModel;
+  int _currentBottomNavIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _initializeModel(_useVertexBackend);
+  }
+
+  void _initializeModel(bool useVertexBackend) {
+    if (useVertexBackend) {
+      final vertexInstance =
+          FirebaseVertexAI.instanceFor(auth: FirebaseAuth.instance);
+      _currentModel = vertexInstance.generativeModel(model: 'gemini-1.5-flash');
+      _currentImagenModel = _initializeImagenModel(vertexInstance);
+    } else {
+      final googleAI = FirebaseVertexAI.googleAI(auth: FirebaseAuth.instance);
+      _currentModel = googleAI.generativeModel(model: 'gemini-2.0-flash');
+      _currentImagenModel = _initializeImagenModel(googleAI);
+    }
+  }
+
+  ImagenModel _initializeImagenModel(FirebaseVertexAI instance) {
+    var generationConfig = ImagenGenerationConfig(
+      negativePrompt: 'frog',
+      numberOfImages: 1,
+      aspectRatio: ImagenAspectRatio.square1x1,
+      imageFormat: ImagenFormat.jpeg(compressionQuality: 75),
+    );
+    return instance.imagenModel(
+      model: 'imagen-3.0-generate-001',
+      generationConfig: generationConfig,
+      safetySettings: ImagenSafetySettings(
+        ImagenSafetyFilterLevel.blockLowAndAbove,
+        ImagenPersonFilterLevel.allowAdult,
+      ),
+    );
+  }
+
+  void _toggleBackend(bool value) {
+    setState(() {
+      _useVertexBackend = value;
+    });
+    _initializeModel(_useVertexBackend);
+  }
+
+  void _onBottomNavTapped(int index) {
+    setState(() {
+      _currentBottomNavIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter + Vertex AI',
+      title: 'Flutter + ${_useVertexBackend ? 'Vertex AI' : 'Google AI'}',
+      debugShowCheckedModeBanner: false,
+      themeMode: ThemeMode.dark,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           brightness: Brightness.dark,
@@ -62,137 +115,192 @@ class GenerativeAISample extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: HomeScreen(model: model),
+      home: HomeScreen(
+        key: ValueKey(
+          '${_useVertexBackend}_${_currentModel.hashCode}',
+        ), // Ensures HomeScreen rebuilds with new model/backend
+        model: _currentModel,
+        imagenModel: _currentImagenModel,
+        useVertexBackend: _useVertexBackend,
+        onBackendChanged: _toggleBackend,
+        selectedIndex: _currentBottomNavIndex,
+        onSelectedIndexChanged: _onBottomNavTapped,
+      ),
     );
   }
 }
 
 class HomeScreen extends StatefulWidget {
   final GenerativeModel model;
-  const HomeScreen({super.key, required this.model});
+  final ImagenModel imagenModel;
+  final bool useVertexBackend;
+  final ValueChanged<bool> onBackendChanged;
+  final int selectedIndex;
+  final ValueChanged<int> onSelectedIndexChanged;
+
+  const HomeScreen({
+    super.key,
+    required this.model,
+    required this.imagenModel,
+    required this.useVertexBackend,
+    required this.onBackendChanged,
+    required this.selectedIndex,
+    required this.onSelectedIndexChanged,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
-
-  List<Widget> get _pages => <Widget>[
-        // Build _pages dynamically
-        ChatPage(title: 'Chat', model: widget.model),
-        AudioPage(title: 'Audio', model: widget.model),
-        TokenCountPage(title: 'Token Count', model: widget.model),
-        const FunctionCallingPage(
-          title: 'Function Calling',
-        ), // function calling will initial its own model
-        ImagePromptPage(title: 'Image Prompt', model: widget.model),
-        ImagenPage(title: 'Imagen Model', model: widget.model),
-        SchemaPromptPage(title: 'Schema Prompt', model: widget.model),
-        DocumentPage(title: 'Document Prompt', model: widget.model),
-        VideoPage(title: 'Video Prompt', model: widget.model),
-        BidiPage(title: 'Bidi Stream', model: widget.model),
-      ];
-
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    widget.onSelectedIndexChanged(index);
+  }
+
+// Method to build the selected page on demand
+  Widget _buildSelectedPage(
+      int index, GenerativeModel currentModel, ImagenModel currentImagenModel) {
+    switch (index) {
+      case 0:
+        return ChatPage(title: 'Chat', model: currentModel);
+      case 1:
+        return AudioPage(title: 'Audio', model: currentModel);
+      case 2:
+        return TokenCountPage(title: 'Token Count', model: currentModel);
+      case 3:
+        // FunctionCallingPage initializes its own model as per original design
+        return const FunctionCallingPage(title: 'Function Calling');
+      case 4:
+        return ImagePromptPage(title: 'Image Prompt', model: currentModel);
+      case 5:
+        return ImagenPage(title: 'Imagen Model', model: currentImagenModel);
+      case 6:
+        return SchemaPromptPage(title: 'Schema Prompt', model: currentModel);
+      case 7:
+        return DocumentPage(title: 'Document Prompt', model: currentModel);
+      case 8:
+        return VideoPage(title: 'Video Prompt', model: currentModel);
+      case 9:
+        return BidiPage(title: 'Bidi Stream', model: currentModel);
+      default:
+        // Fallback to the first page in case of an unexpected index
+        return ChatPage(title: 'Chat', model: currentModel);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    // The selected page is now built directly here, ensuring it uses the latest `widget.model`.
+    // When `_selectedIndex` changes or `widget.model` (due to toggle) changes,
+    // this `build` method runs, and `_buildSelectedPage` is called with the current values.
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter + Vertex AI'),
+        title: Text(
+          'Flutter + ${widget.useVertexBackend ? 'Vertex AI' : 'Google AI'}',
+        ),
+        actions: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text('Google AI',
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: widget.useVertexBackend
+                            ? Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withOpacity(0.7)
+                            : Theme.of(context).colorScheme.primary)),
+                Switch(
+                  value: widget.useVertexBackend,
+                  onChanged: widget.onBackendChanged,
+                  activeTrackColor: Colors.green.withOpacity(0.5),
+                  inactiveTrackColor: Colors.blueGrey.withOpacity(0.5),
+                  activeColor: Colors.green,
+                  inactiveThumbColor: Colors.blueGrey,
+                ),
+                Text('Vertex AI',
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: widget.useVertexBackend
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withOpacity(0.7))),
+              ],
+            ),
+          ),
+        ],
       ),
       body: Center(
-        child: _pages.elementAt(_selectedIndex),
+        // Call _buildSelectedPage here to construct the page on demand
+        child: _buildSelectedPage(
+            widget.selectedIndex, widget.model, widget.imagenModel),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
+        type: BottomNavigationBarType.fixed,
+        selectedFontSize: 10,
+        unselectedFontSize: 9,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor:
+            Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+        items: const <BottomNavigationBarItem>[
+          // Made const as items are static
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.chat,
-              color: Theme.of(context).colorScheme.primary,
-            ),
+            icon: Icon(Icons.chat),
             label: 'Chat',
             tooltip: 'Chat',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.mic,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            label: 'Audio Prompt',
+            icon: Icon(Icons.mic),
+            label: 'Audio',
             tooltip: 'Audio Prompt',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.numbers,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            label: 'Token Count',
+            icon: Icon(Icons.numbers),
+            label: 'Tokens',
             tooltip: 'Token Count',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.functions,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            label: 'Function Calling',
+            icon: Icon(Icons.functions),
+            label: 'Functions',
             tooltip: 'Function Calling',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.image,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            label: 'Image Prompt',
+            icon: Icon(Icons.image),
+            label: 'Image',
             tooltip: 'Image Prompt',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.image_search,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            label: 'Imagen Model',
+            icon: Icon(Icons.image_search),
+            label: 'Imagen',
             tooltip: 'Imagen Model',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.schema,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            label: 'Schema Prompt',
+            icon: Icon(Icons.schema),
+            label: 'Schema',
             tooltip: 'Schema Prompt',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.edit_document,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            label: 'Document Prompt',
+            icon: Icon(Icons.edit_document),
+            label: 'Document',
             tooltip: 'Document Prompt',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.video_collection,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            label: 'Video Prompt',
+            icon: Icon(Icons.video_collection),
+            label: 'Video',
             tooltip: 'Video Prompt',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.stream,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            label: 'Bidi Stream',
+            icon: Icon(Icons.stream),
+            label: 'Bidi',
             tooltip: 'Bidi Stream',
           ),
         ],
-        currentIndex: _selectedIndex,
+        currentIndex: widget.selectedIndex,
         onTap: _onItemTapped,
       ),
     );
