@@ -111,6 +111,44 @@ void main() {
       expect(result, 'Deserialized Data');
     });
 
+    test(
+        'invokeOperation should correctly decode UTF-8 response body using bodyBytes',
+        () async {
+      const koreanString = '안녕하세요'; // Example Korean string
+      final jsonResponseWithKorean = '{"data": {"message": "$koreanString"}}';
+
+      // Create a mock response with bodyBytes containing the UTF-8 encoded string
+      final mockResponse = http.Response.bytes(
+        utf8.encode(jsonResponseWithKorean), // Use utf8.encode for bytes
+        200,
+      );
+
+      when(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).thenAnswer((_) async => mockResponse);
+
+      // Simple deserializer to check if the Korean string is correctly decoded
+      final deserializer = (String data) {
+        final decodedJson = jsonDecode(data) as Map<String, dynamic>;
+        return decodedJson['message'];
+      };
+
+      final result = await transport.invokeOperation(
+        'testQuery',
+        'executeQuery',
+        deserializer,
+        null,
+        null,
+        null,
+      );
+
+      expect(result, koreanString);
+    });
+
     test('invokeOperation should throw unauthorized error on 401 response',
         () async {
       final mockResponse = http.Response('Unauthorized', 401);
