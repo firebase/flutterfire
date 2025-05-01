@@ -11,6 +11,7 @@ class RemoteMessage {
   const RemoteMessage(
       {this.senderId,
       this.category,
+      this.actionIdentifier,
       this.collapseKey,
       this.contentAvailable = false,
       this.data = const <String, dynamic>{},
@@ -28,6 +29,7 @@ class RemoteMessage {
     return RemoteMessage(
       senderId: map['senderId'],
       category: map['category'],
+      actionIdentifier: map['actionIdentifier'],
       collapseKey: map['collapseKey'],
       contentAvailable: map['contentAvailable'] ?? false,
       data: map['data'] == null
@@ -76,6 +78,9 @@ class RemoteMessage {
 
   /// The iOS category this notification is assigned to.
   final String? category;
+
+  /// The iOS action identifier for the category
+  final String? actionIdentifier;
 
   /// The collapse key a message was sent with. Used to override existing messages with the same key.
   final String? collapseKey;
