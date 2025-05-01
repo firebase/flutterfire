@@ -115,7 +115,7 @@ void main() {
         'invokeOperation should correctly decode UTF-8 response body using bodyBytes',
         () async {
       const koreanString = '안녕하세요'; // Example Korean string
-      final jsonResponseWithKorean = '{"data": {"message": "$koreanString"}}';
+      const jsonResponseWithKorean = '{"data": {"message": "$koreanString"}}';
 
       // Create a mock response with bodyBytes containing the UTF-8 encoded string
       final mockResponse = http.Response.bytes(
