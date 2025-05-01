@@ -29,14 +29,14 @@ void main() {
       const packageVersion = '1.0.0';
       expect(
         getGoogApiVal(CallerSDKType.core, packageVersion),
-        'gl-dart/$packageVersion fire/$packageVersion ${Platform.operatingSystem}',
+        'gl-dart/$packageVersion fire/$packageVersion platform/${Platform.operatingSystem}',
       );
     });
     test('should return codegen suffix if using gen sdk', () {
       const packageVersion = '1.0.0';
       expect(
         getGoogApiVal(CallerSDKType.generated, packageVersion),
-        'gl-dart/$packageVersion fire/$packageVersion dart/gen ${Platform.operatingSystem}',
+        'gl-dart/$packageVersion fire/$packageVersion dart/gen platform/${Platform.operatingSystem}',
       );
     });
   });
