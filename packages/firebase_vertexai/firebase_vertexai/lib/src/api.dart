@@ -593,7 +593,7 @@ enum HarmBlockThreshold {
   /// Always show regardless of probability of unsafe content.
   none('BLOCK_NONE'),
 
-  /// All content is allowed regardless of harm
+  /// All content is allowed regardless of harm.
   ///
   /// metadata will not be included in the response.
   off('OFF');
