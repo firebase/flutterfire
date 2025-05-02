@@ -591,7 +591,12 @@ enum HarmBlockThreshold {
   high('BLOCK_ONLY_HIGH'),
 
   /// Always show regardless of probability of unsafe content.
-  none('BLOCK_NONE');
+  none('BLOCK_NONE'),
+
+  /// All content is allowed regardless of harm.
+  ///
+  /// metadata will not be included in the response.
+  off('OFF');
 
   const HarmBlockThreshold(this._jsonString);
 
@@ -602,6 +607,7 @@ enum HarmBlockThreshold {
       'BLOCK_MEDIUM_AND_ABOVE' => HarmBlockThreshold.medium,
       'BLOCK_ONLY_HIGH' => HarmBlockThreshold.high,
       'BLOCK_NONE' => HarmBlockThreshold.none,
+      'OFF' => HarmBlockThreshold.off,
       _ => throw FormatException(
           'Unhandled HarmBlockThreshold format', jsonObject),
     };
@@ -797,7 +803,7 @@ final class GenerationConfig extends BaseGenerationConfig {
         if (responseMimeType case final responseMimeType?)
           'responseMimeType': responseMimeType,
         if (responseSchema case final responseSchema?)
-          'responseSchema': responseSchema,
+          'responseSchema': responseSchema.toJson(),
       };
 }
 
