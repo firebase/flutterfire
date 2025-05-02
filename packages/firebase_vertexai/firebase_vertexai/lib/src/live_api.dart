@@ -71,30 +71,12 @@ class SpeechConfig {
       };
 }
 
-/// The available response modalities.
-enum ResponseModalities {
-  /// Text response modality.
-  text('TEXT'),
-
-  /// Image response modality.
-  image('IMAGE'),
-
-  /// Audio response modality.
-  audio('AUDIO');
-
-  const ResponseModalities(this._jsonString);
-  final String _jsonString;
-
-  /// Convert to json format
-  String toJson() => _jsonString;
-}
-
 /// Configures live generation settings.
 final class LiveGenerationConfig extends BaseGenerationConfig {
   // ignore: public_member_api_docs
   LiveGenerationConfig({
     this.speechConfig,
-    this.responseModalities,
+    super.responseModalities,
     super.candidateCount,
     super.maxOutputTokens,
     super.temperature,
@@ -107,17 +89,14 @@ final class LiveGenerationConfig extends BaseGenerationConfig {
   /// The speech configuration.
   final SpeechConfig? speechConfig;
 
-  /// The list of desired response modalities.
-  final List<ResponseModalities>? responseModalities;
+  // /// The list of desired response modalities.
+  // final List<ResponseModalities>? responseModalities;
 
   @override
   Map<String, Object?> toJson() => {
         ...super.toJson(),
         if (speechConfig case final speechConfig?)
           'speechConfig': speechConfig.toJson(),
-        if (responseModalities case final responseModalities?)
-          'responseModalities':
-              responseModalities.map((modality) => modality.toJson()).toList(),
       };
 }
 

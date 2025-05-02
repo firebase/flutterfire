@@ -108,6 +108,15 @@ final class GenerateContentResponse {
   Iterable<FunctionCall> get functionCalls =>
       candidates.firstOrNull?.content.parts.whereType<FunctionCall>() ??
       const [];
+
+  /// The inline data parts of the first candidate in [candidates], if any.
+  ///
+  /// Returns an empty list if there are no candidates, or if the first
+  /// candidate has no [InlineDataPart] parts. There is no error thrown if the
+  /// prompt or response were blocked.
+  Iterable<InlineDataPart> get inlineDatas =>
+      candidates.firstOrNull?.content.parts.whereType<InlineDataPart>() ??
+      const [];
 }
 
 /// Feedback metadata of a prompt specified in a [GenerativeModel] request.
@@ -650,6 +659,24 @@ enum HarmBlockMethod {
   Object toJson() => _jsonString;
 }
 
+/// The available response modalities.
+enum ResponseModalities {
+  /// Text response modality.
+  text('TEXT'),
+
+  /// Image response modality.
+  image('IMAGE'),
+
+  /// Audio response modality.
+  audio('AUDIO');
+
+  const ResponseModalities(this._jsonString);
+  final String _jsonString;
+
+  /// Convert to json format
+  String toJson() => _jsonString;
+}
+
 /// Configuration options for model generation and outputs.
 abstract class BaseGenerationConfig {
   // ignore: public_member_api_docs
@@ -661,6 +688,7 @@ abstract class BaseGenerationConfig {
     this.topK,
     this.presencePenalty,
     this.frequencyPenalty,
+    this.responseModalities,
   });
 
   /// Number of generated responses to return.
@@ -737,6 +765,9 @@ abstract class BaseGenerationConfig {
   /// for more details.
   final double? frequencyPenalty;
 
+  /// The list of desired response modalities.
+  final List<ResponseModalities>? responseModalities;
+
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
         if (candidateCount case final candidateCount?)
@@ -750,6 +781,9 @@ abstract class BaseGenerationConfig {
           'presencePenalty': presencePenalty,
         if (frequencyPenalty case final frequencyPenalty?)
           'frequencyPenalty': frequencyPenalty,
+        if (responseModalities case final responseModalities?)
+          'responseModalities':
+              responseModalities.map((modality) => modality.toJson()).toList(),
       };
 }
 
@@ -765,6 +799,7 @@ final class GenerationConfig extends BaseGenerationConfig {
     super.topK,
     super.presencePenalty,
     super.frequencyPenalty,
+    super.responseModalities,
     this.responseMimeType,
     this.responseSchema,
   });
@@ -989,6 +1024,9 @@ ModalityTokenCount _parseModalityTokenCount(Object? jsonObject) {
 SafetyRating _parseSafetyRating(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('SafetyRating', jsonObject);
+  }
+  if (jsonObject.isEmpty) {
+    return SafetyRating(HarmCategory.unknown, HarmProbability.unknown);
   }
   return SafetyRating(HarmCategory._parseValue(jsonObject['category']),
       HarmProbability._parseValue(jsonObject['probability']),

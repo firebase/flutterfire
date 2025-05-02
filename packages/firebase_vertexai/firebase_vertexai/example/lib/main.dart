@@ -41,7 +41,7 @@ void main() async {
 
   var vertexInstance =
       FirebaseVertexAI.instanceFor(auth: FirebaseAuth.instance);
-  final model = vertexInstance.generativeModel(model: 'gemini-1.5-flash');
+  final model = vertexInstance.generativeModel(model: 'gemini-2.0-flash');
 
   runApp(GenerativeAISample(model: model));
 }
