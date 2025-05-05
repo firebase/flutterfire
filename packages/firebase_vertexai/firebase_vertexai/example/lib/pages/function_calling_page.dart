@@ -18,14 +18,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../widgets/message_widget.dart';
 
 class FunctionCallingPage extends StatefulWidget {
-  const FunctionCallingPage({
-    super.key,
-    required this.title,
-    required this.useVertexBackend,
-  });
+  const FunctionCallingPage({super.key, required this.title});
 
   final String title;
-  final bool useVertexBackend;
 
   @override
   State<FunctionCallingPage> createState() => _FunctionCallingPageState();
@@ -46,23 +41,14 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
   @override
   void initState() {
     super.initState();
-    if (widget.useVertexBackend) {
-      var vertexAI = FirebaseVertexAI.instanceFor(auth: FirebaseAuth.instance);
-      _functionCallModel = vertexAI.generativeModel(
-        model: 'gemini-2.0-flash',
-        tools: [
-          Tool.functionDeclarations([fetchWeatherTool]),
-        ],
-      );
-    } else {
-      var googleAI = FirebaseVertexAI.googleAI(auth: FirebaseAuth.instance);
-      _functionCallModel = googleAI.generativeModel(
-        model: 'gemini-2.0-flash',
-        tools: [
-          Tool.functionDeclarations([fetchWeatherTool]),
-        ],
-      );
-    }
+    var vertex_instance =
+        FirebaseVertexAI.instanceFor(auth: FirebaseAuth.instance);
+    _functionCallModel = vertex_instance.generativeModel(
+      model: 'gemini-1.5-flash',
+      tools: [
+        Tool.functionDeclarations([fetchWeatherTool]),
+      ],
+    );
   }
 
   // This is a hypothetical API to return a fake weather data collection for
@@ -160,7 +146,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       _loading = true;
     });
     final functionCallChat = _functionCallModel.startChat();
-    const prompt = 'What is the weather like in Boston on 10/02 in year 2024?';
+    const prompt = 'What is the weather like in Boston on 10/02 this year?';
 
     // Send the message to the generative model.
     var response = await functionCallChat.sendMessage(
