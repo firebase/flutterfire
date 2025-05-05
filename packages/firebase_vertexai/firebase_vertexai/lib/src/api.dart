@@ -114,7 +114,7 @@ final class GenerateContentResponse {
   /// Returns an empty list if there are no candidates, or if the first
   /// candidate has no [InlineDataPart] parts. There is no error thrown if the
   /// prompt or response were blocked.
-  Iterable<InlineDataPart> get inlineDatas =>
+  Iterable<InlineDataPart> get inlineDataParts =>
       candidates.firstOrNull?.content.parts.whereType<InlineDataPart>() ??
       const [];
 }

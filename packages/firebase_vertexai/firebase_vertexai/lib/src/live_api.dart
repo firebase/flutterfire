@@ -89,9 +89,6 @@ final class LiveGenerationConfig extends BaseGenerationConfig {
   /// The speech configuration.
   final SpeechConfig? speechConfig;
 
-  // /// The list of desired response modalities.
-  // final List<ResponseModalities>? responseModalities;
-
   @override
   Map<String, Object?> toJson() => {
         ...super.toJson(),

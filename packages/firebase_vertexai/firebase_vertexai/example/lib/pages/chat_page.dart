@@ -98,13 +98,13 @@ class _ChatPageState extends State<ChatPage> {
                   if (!_loading)
                     IconButton(
                       onPressed: () async {
-                        await _multiModalityResponse(_textController.text);
+                        await _imageResponse(_textController.text);
                       },
                       icon: Icon(
-                        Icons.model_training,
+                        Icons.image,
                         color: Theme.of(context).colorScheme.primary,
                       ),
-                      tooltip: 'MultiModality response',
+                      tooltip: 'Image response',
                     ),
                   if (!_loading)
                     IconButton(
@@ -163,7 +163,7 @@ class _ChatPageState extends State<ChatPage> {
     }
   }
 
-  Future<void> _multiModalityResponse(String message) async {
+  Future<void> _imageResponse(String message) async {
     setState(() {
       _loading = true;
     });
@@ -175,11 +175,11 @@ class _ChatPageState extends State<ChatPage> {
         generationConfig: GenerationConfig(
           responseModalities: [
             ResponseModalities.text,
-            ResponseModalities.audio,
+            ResponseModalities.image,
           ],
         ),
       );
-      var inlineDatas = response.inlineDatas.toList();
+      var inlineDatas = response.inlineDataParts.toList();
 
       if (inlineDatas.isEmpty) {
         _showError('No response from API.');
@@ -194,10 +194,6 @@ class _ChatPageState extends State<ChatPage> {
                 fromUser: false,
               ),
             );
-          } else {
-            if (inlineData.mimeType.contains('audio')) {
-              print('Got audio response');
-            }
           }
         }
         setState(() {
