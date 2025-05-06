@@ -437,7 +437,9 @@ void main() {
           'totalTokens': 120,
           'totalBillableCharacters': 240,
           'promptTokensDetails': [
-            {'modality': 'TEXT', 'tokenCount': 100},
+            {
+              'modality': 'TEXT',
+            },
             {'modality': 'IMAGE', 'tokenCount': 20}
           ]
         };
@@ -447,7 +449,7 @@ void main() {
         expect(response.promptTokensDetails, isNotNull);
         expect(response.promptTokensDetails, hasLength(2));
         expect(response.promptTokensDetails![0].modality, ContentModality.text);
-        expect(response.promptTokensDetails![0].tokenCount, 100);
+        expect(response.promptTokensDetails![0].tokenCount, 0);
         expect(
             response.promptTokensDetails![1].modality, ContentModality.image);
         expect(response.promptTokensDetails![1].tokenCount, 20);
@@ -595,6 +597,47 @@ void main() {
         expect(response.candidates.first.safetyRatings, isNull);
         expect(response.candidates.first.citationMetadata, isNull);
         expect(response.candidates.first.finishMessage, isNull);
+      });
+
+      test('parses usageMetadata for no tokenCount', () {
+        final json = {
+          'candidates': [basicCandidateJson],
+          'usageMetadata': {
+            'promptTokenCount': 10,
+            'candidatesTokenCount': 20,
+            'totalTokenCount': 30,
+            'promptTokensDetails': [
+              {'modality': 'TEXT', 'tokenCount': 10}
+            ],
+            'candidatesTokensDetails': [
+              {
+                'modality': 'TEXT',
+              }
+            ],
+          }
+        };
+        final response = parseGenerateContentResponse(json);
+        expect(response.candidates, hasLength(1));
+        expect(response.candidates.first.text, 'Hello world');
+        expect(response.candidates.first.finishReason, FinishReason.stop);
+        expect(response.candidates.first.safetyRatings, isNotNull);
+        expect(response.candidates.first.safetyRatings, hasLength(1));
+
+        expect(response.usageMetadata, isNotNull);
+        expect(response.usageMetadata!.promptTokenCount, 10);
+        expect(response.usageMetadata!.candidatesTokenCount, 20);
+        expect(response.usageMetadata!.totalTokenCount, 30);
+        expect(response.usageMetadata!.promptTokensDetails, hasLength(1));
+        expect(response.usageMetadata!.promptTokensDetails!.first.modality,
+            ContentModality.text);
+        expect(
+            response.usageMetadata!.promptTokensDetails!.first.tokenCount, 10);
+        expect(response.usageMetadata!.candidatesTokensDetails, hasLength(1));
+        expect(response.usageMetadata!.candidatesTokensDetails!.first.modality,
+            ContentModality.text);
+        expect(
+            response.usageMetadata!.candidatesTokensDetails!.first.tokenCount,
+            0);
       });
 
       test('parses citationMetadata with "citationSources"', () {

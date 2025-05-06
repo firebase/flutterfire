@@ -1023,8 +1023,13 @@ ModalityTokenCount _parseModalityTokenCount(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('ModalityTokenCount', jsonObject);
   }
-  return ModalityTokenCount(ContentModality._parseValue(jsonObject['modality']),
-      jsonObject['tokenCount'] as int);
+  var modality = ContentModality._parseValue(jsonObject['modality']);
+
+  if (jsonObject.containsKey('tokenCount')) {
+    return ModalityTokenCount(modality, jsonObject['tokenCount'] as int);
+  } else {
+    return ModalityTokenCount(modality, 0);
+  }
 }
 
 SafetyRating _parseSafetyRating(Object? jsonObject) {
