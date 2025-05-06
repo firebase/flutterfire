@@ -13,6 +13,7 @@
 // limitations under the License.
 import 'dart:typed_data';
 
+import 'package:firebase_vertexai/src/api.dart';
 import 'package:firebase_vertexai/src/content.dart';
 import 'package:firebase_vertexai/src/error.dart';
 import 'package:firebase_vertexai/src/live_api.dart';

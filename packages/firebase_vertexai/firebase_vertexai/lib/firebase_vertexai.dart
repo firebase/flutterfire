@@ -27,6 +27,7 @@ export 'src/api.dart'
         HarmProbability,
         HarmBlockMethod,
         PromptFeedback,
+        ResponseModalities,
         SafetyRating,
         SafetySetting,
         // TODO(cynthiajiang) remove in next breaking change.
@@ -72,7 +73,6 @@ export 'src/live_api.dart'
     show
         LiveGenerationConfig,
         SpeechConfig,
-        ResponseModalities,
         LiveServerMessage,
         LiveServerContent,
         LiveServerToolCall,
