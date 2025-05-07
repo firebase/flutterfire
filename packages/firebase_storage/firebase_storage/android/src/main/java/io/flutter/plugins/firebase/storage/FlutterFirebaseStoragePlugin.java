@@ -230,7 +230,7 @@ public class FlutterFirebaseStoragePlugin
     }
   }
 
-  // FirebaseStorageHostApi Reference releated api override
+  // FirebaseStorageHostApi Reference related api override
   @Override
   public void referenceDelete(
       @NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
@@ -562,7 +562,7 @@ public class FlutterFirebaseStoragePlugin
     }
   }
 
-  // FirebaseStorageHostApi Task releated api override
+  // FirebaseStorageHostApi Task related api override
   @Override
   public void taskPause(
       @NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,

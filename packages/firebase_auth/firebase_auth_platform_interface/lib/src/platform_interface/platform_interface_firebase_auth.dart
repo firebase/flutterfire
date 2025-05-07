@@ -230,7 +230,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///  - Thrown if the password is not strong enough.
   /// - **too-many-requests**:
   ///  - Thrown if the user sent too many requests at the same time, for security
-  ///     the api will not allow too many attemps at the same time, user will have
+  ///     the api will not allow too many attempts at the same time, user will have
   ///     to wait for some time
   /// - **user-token-expired**:
   ///  - Thrown if the user is no longer authenticated since his refresh token
@@ -521,7 +521,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///    corresponding to the email does not have a password set.
   /// - **too-many-requests**:
   ///  - Thrown if the user sent too many requests at the same time, for security
-  ///     the api will not allow too many attemps at the same time, user will have
+  ///     the api will not allow too many attempts at the same time, user will have
   ///     to wait for some time
   /// - **user-token-expired**:
   ///  - Thrown if the user is no longer authenticated since his refresh token
