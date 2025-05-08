@@ -63,9 +63,10 @@ class FirebaseAI extends FirebasePluginPlatform {
     String? location,
   }) {
     app ??= Firebase.app();
+    var instanceKey = '${app.name}::vertexai';
 
-    if (_cachedInstances.containsKey(app.name)) {
-      return _cachedInstances[app.name]!;
+    if (_cachedInstances.containsKey(instanceKey)) {
+      return _cachedInstances[instanceKey]!;
     }
 
     location ??= _defaultLocation;
@@ -77,7 +78,7 @@ class FirebaseAI extends FirebasePluginPlatform {
       auth: auth,
       useVertexBackend: true,
     );
-    _cachedInstances[app.name] = newInstance;
+    _cachedInstances[instanceKey] = newInstance;
 
     return newInstance;
   }
@@ -92,9 +93,10 @@ class FirebaseAI extends FirebasePluginPlatform {
     FirebaseAuth? auth,
   }) {
     app ??= Firebase.app();
+    var instanceKey = '${app.name}::googleai';
 
-    if (_cachedInstances.containsKey(app.name)) {
-      return _cachedInstances[app.name]!;
+    if (_cachedInstances.containsKey(instanceKey)) {
+      return _cachedInstances[instanceKey]!;
     }
 
     FirebaseAI newInstance = FirebaseAI._(
@@ -104,7 +106,7 @@ class FirebaseAI extends FirebasePluginPlatform {
       auth: auth,
       useVertexBackend: false,
     );
-    _cachedInstances[app.name] = newInstance;
+    _cachedInstances[instanceKey] = newInstance;
 
     return newInstance;
   }
