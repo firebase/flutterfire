@@ -29,8 +29,6 @@ export 'src/api.dart'
         PromptFeedback,
         SafetyRating,
         SafetySetting,
-        // TODO(cynthiajiang) remove in next breaking change.
-        TaskType,
         UsageMetadata;
 export 'src/base_model.dart'
     show GenerativeModel, ImagenModel, LiveGenerativeModel;
