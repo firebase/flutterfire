@@ -109,6 +109,15 @@ final class GenerateContentResponse {
   Iterable<FunctionCall> get functionCalls =>
       candidates.firstOrNull?.content.parts.whereType<FunctionCall>() ??
       const [];
+
+  /// The inline data parts of the first candidate in [candidates], if any.
+  ///
+  /// Returns an empty list if there are no candidates, or if the first
+  /// candidate has no [InlineDataPart] parts. There is no error thrown if the
+  /// prompt or response were blocked.
+  Iterable<InlineDataPart> get inlineDataParts =>
+      candidates.firstOrNull?.content.parts.whereType<InlineDataPart>() ??
+      const [];
 }
 
 /// Feedback metadata of a prompt specified in a [GenerativeModel] request.
@@ -609,7 +618,12 @@ enum HarmBlockThreshold {
   high('BLOCK_ONLY_HIGH'),
 
   /// Always show regardless of probability of unsafe content.
-  none('BLOCK_NONE');
+  none('BLOCK_NONE'),
+
+  /// All content is allowed regardless of harm.
+  ///
+  /// metadata will not be included in the response.
+  off('OFF');
 
   const HarmBlockThreshold(this._jsonString);
 
@@ -620,6 +634,7 @@ enum HarmBlockThreshold {
       'BLOCK_MEDIUM_AND_ABOVE' => HarmBlockThreshold.medium,
       'BLOCK_ONLY_HIGH' => HarmBlockThreshold.high,
       'BLOCK_NONE' => HarmBlockThreshold.none,
+      'OFF' => HarmBlockThreshold.off,
       _ => throw FormatException(
           'Unhandled HarmBlockThreshold format', jsonObject),
     };
@@ -668,6 +683,24 @@ enum HarmBlockMethod {
   Object toJson() => _jsonString;
 }
 
+/// The available response modalities.
+enum ResponseModalities {
+  /// Text response modality.
+  text('TEXT'),
+
+  /// Image response modality.
+  image('IMAGE'),
+
+  /// Audio response modality.
+  audio('AUDIO');
+
+  const ResponseModalities(this._jsonString);
+  final String _jsonString;
+
+  /// Convert to json format
+  String toJson() => _jsonString;
+}
+
 /// Configuration options for model generation and outputs.
 abstract class BaseGenerationConfig {
   // ignore: public_member_api_docs
@@ -679,6 +712,7 @@ abstract class BaseGenerationConfig {
     this.topK,
     this.presencePenalty,
     this.frequencyPenalty,
+    this.responseModalities,
   });
 
   /// Number of generated responses to return.
@@ -755,6 +789,9 @@ abstract class BaseGenerationConfig {
   /// for more details.
   final double? frequencyPenalty;
 
+  /// The list of desired response modalities.
+  final List<ResponseModalities>? responseModalities;
+
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
         if (candidateCount case final candidateCount?)
@@ -768,6 +805,9 @@ abstract class BaseGenerationConfig {
           'presencePenalty': presencePenalty,
         if (frequencyPenalty case final frequencyPenalty?)
           'frequencyPenalty': frequencyPenalty,
+        if (responseModalities case final responseModalities?)
+          'responseModalities':
+              responseModalities.map((modality) => modality.toJson()).toList(),
       };
 }
 
@@ -783,6 +823,7 @@ final class GenerationConfig extends BaseGenerationConfig {
     super.topK,
     super.presencePenalty,
     super.frequencyPenalty,
+    super.responseModalities,
     this.responseMimeType,
     this.responseSchema,
   });
@@ -815,7 +856,7 @@ final class GenerationConfig extends BaseGenerationConfig {
         if (responseMimeType case final responseMimeType?)
           'responseMimeType': responseMimeType,
         if (responseSchema case final responseSchema?)
-          'responseSchema': responseSchema,
+          'responseSchema': responseSchema.toJson(),
       };
 }
 
@@ -1071,13 +1112,21 @@ ModalityTokenCount _parseModalityTokenCount(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('ModalityTokenCount', jsonObject);
   }
-  return ModalityTokenCount(ContentModality._parseValue(jsonObject['modality']),
-      jsonObject['tokenCount'] as int);
+  var modality = ContentModality._parseValue(jsonObject['modality']);
+
+  if (jsonObject.containsKey('tokenCount')) {
+    return ModalityTokenCount(modality, jsonObject['tokenCount'] as int);
+  } else {
+    return ModalityTokenCount(modality, 0);
+  }
 }
 
 SafetyRating _parseSafetyRating(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('SafetyRating', jsonObject);
+  }
+  if (jsonObject.isEmpty) {
+    return SafetyRating(HarmCategory.unknown, HarmProbability.unknown);
   }
   return SafetyRating(HarmCategory._parseValue(jsonObject['category']),
       HarmProbability._parseValue(jsonObject['probability']),

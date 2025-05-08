@@ -123,7 +123,7 @@ jobs:
           melos exec -c 1 --scope="*example*" --dir-exists="web" -- \
             "flutter build web"
   swift-integration:
-    runs-on: macos-latest
+    runs-on: macos-15
     timeout-minutes: 30
     env:
       FLUTTER_DEPENDENCIES: "cloud_firestore firebase_remote_config cloud_functions firebase_database firebase_auth firebase_storage firebase_analytics firebase_messaging firebase_app_check firebase_in_app_messaging firebase_performance firebase_dynamic_links firebase_crashlytics firebase_ml_model_downloader firebase_app_installations"

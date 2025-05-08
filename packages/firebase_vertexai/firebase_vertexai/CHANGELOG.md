@@ -1,3 +1,8 @@
+## 1.6.0
+
+ - **FIX**(vertexai): add missing HarmBlockThreshold to exported APIs ([#17249](https://github.com/firebase/flutterfire/issues/17249)). ([59d902c6](https://github.com/firebase/flutterfire/commit/59d902c63bd1bd040f5357cb6a341db446429430))
+ - **FEAT**(vertexai): Live API breaking changes ([#17299](https://github.com/firebase/flutterfire/issues/17299)). ([69cd2a64](https://github.com/firebase/flutterfire/commit/69cd2a640d25e0f2b623f2e631d090ead8af140d))
+
 ## 1.5.0
 
  - **FIX**(vertex_ai): handle null predictions ([#17211](https://github.com/firebase/flutterfire/issues/17211)). ([d559703d](https://github.com/firebase/flutterfire/commit/d559703d71904918fc5c0e8ad02b86313738d263))

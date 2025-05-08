@@ -74,7 +74,8 @@ String _harmBlockThresholdtoJson(HarmBlockThreshold? threshold) =>
       HarmBlockThreshold.low => 'BLOCK_LOW_AND_ABOVE',
       HarmBlockThreshold.medium => 'BLOCK_MEDIUM_AND_ABOVE',
       HarmBlockThreshold.high => 'BLOCK_ONLY_HIGH',
-      HarmBlockThreshold.none => 'BLOCK_NONE'
+      HarmBlockThreshold.none => 'BLOCK_NONE',
+      HarmBlockThreshold.off => 'OFF',
     };
 String _harmCategoryToJson(HarmCategory harmCategory) => switch (harmCategory) {
       HarmCategory.unknown => 'HARM_CATEGORY_UNSPECIFIED',
