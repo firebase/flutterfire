@@ -63,8 +63,7 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
 
   void _initializeModel(bool useVertexBackend) {
     if (useVertexBackend) {
-      final vertexInstance =
-          FirebaseAI.vertexAI(auth: FirebaseAuth.instance);
+      final vertexInstance = FirebaseAI.vertexAI(auth: FirebaseAuth.instance);
       _currentModel = vertexInstance.generativeModel(model: 'gemini-1.5-flash');
       _currentImagenModel = _initializeImagenModel(vertexInstance);
     } else {
