@@ -26,6 +26,11 @@ import 'package:meta/meta.dart';
 const _defaultLocation = 'us-central1';
 
 /// The entrypoint for [FirebaseVertexAI].
+@Deprecated(
+  '`FirebaseVertexAI` library and `firebase_vertexai` package have been renamed '
+  'and replaced by the new Firebase AI SDK: `FirebaseAI` in `firebase_ai` package. '
+  'See details in the [migration guide](https://firebase.google.com/docs/vertex-ai/migrate-to-latest-sdk).',
+)
 class FirebaseVertexAI extends FirebasePluginPlatform {
   FirebaseVertexAI._(
       {required this.app,
