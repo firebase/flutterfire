@@ -14,9 +14,9 @@
 
 import 'dart:convert';
 
+import 'package:firebase_ai/src/api.dart';
+import 'package:firebase_ai/src/error.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
-import 'package:firebase_vertexai/src/api.dart';
-import 'package:firebase_vertexai/src/error.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'utils/matchers.dart';

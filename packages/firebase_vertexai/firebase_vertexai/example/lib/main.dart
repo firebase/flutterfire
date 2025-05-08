@@ -14,6 +14,7 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_ai/firebase_ai.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';
 
@@ -62,32 +63,36 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
   }
 
   void _initializeModel(bool useVertexBackend) {
-    if (useVertexBackend) {
-      final vertexInstance =
-          FirebaseVertexAI.instanceFor(auth: FirebaseAuth.instance);
-      _currentModel = vertexInstance.generativeModel(model: 'gemini-1.5-flash');
-      _currentImagenModel = _initializeImagenModel(vertexInstance);
-    } else {
-      final googleAI = FirebaseVertexAI.googleAI(auth: FirebaseAuth.instance);
-      _currentModel = googleAI.generativeModel(model: 'gemini-2.0-flash');
-      _currentImagenModel = _initializeImagenModel(googleAI);
-    }
-  }
-
-  ImagenModel _initializeImagenModel(FirebaseVertexAI instance) {
     var generationConfig = ImagenGenerationConfig(
+      negativePrompt: 'frog',
       numberOfImages: 1,
       aspectRatio: ImagenAspectRatio.square1x1,
       imageFormat: ImagenFormat.jpeg(compressionQuality: 75),
     );
-    return instance.imagenModel(
-      model: 'imagen-3.0-generate-002',
-      generationConfig: generationConfig,
-      safetySettings: ImagenSafetySettings(
-        ImagenSafetyFilterLevel.blockLowAndAbove,
-        ImagenPersonFilterLevel.allowAdult,
-      ),
-    );
+    if (useVertexBackend) {
+      final vertexInstance =
+          FirebaseVertexAI.instanceFor(auth: FirebaseAuth.instance);
+      _currentModel = vertexInstance.generativeModel(model: 'gemini-1.5-flash');
+      _currentImagenModel = vertexInstance.imagenModel(
+        model: 'imagen-3.0-generate-001',
+        generationConfig: generationConfig,
+        safetySettings: ImagenSafetySettings(
+          ImagenSafetyFilterLevel.blockLowAndAbove,
+          ImagenPersonFilterLevel.allowAdult,
+        ),
+      );
+    } else {
+      final googleAI = FirebaseAI.googleAI(auth: FirebaseAuth.instance);
+      _currentModel = googleAI.generativeModel(model: 'gemini-2.0-flash');
+      _currentImagenModel = googleAI.imagenModel(
+        model: 'imagen-3.0-generate-001',
+        generationConfig: generationConfig,
+        safetySettings: ImagenSafetySettings(
+          ImagenSafetyFilterLevel.blockLowAndAbove,
+          ImagenPersonFilterLevel.allowAdult,
+        ),
+      );
+    }
   }
 
   void _toggleBackend(bool value) {

@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:firebase_ai/firebase_ai.dart';
+// ignore: implementation_imports
+import 'package:firebase_ai/src/base_model.dart'
+    show createGenerativeModel, createLiveGenerativeModel, createImagenModel;
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebasePluginPlatform;
 import 'package:meta/meta.dart';
-
-import '../firebase_vertexai.dart';
-import 'base_model.dart';
 
 const _defaultLocation = 'us-central1';
 
@@ -69,13 +70,13 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
     FirebaseAuth? auth,
     String? location,
   }) =>
-      vertexAI(app: app, appCheck: appCheck, auth: auth, location: location);
+      _vertexAI(app: app, appCheck: appCheck, auth: auth, location: location);
 
   /// Returns an instance using a specified [FirebaseApp].
   ///
   /// If [app] is not provided, the default Firebase app will be used.
   /// If pass in [appCheck], request session will get protected from abusing.
-  static FirebaseVertexAI vertexAI({
+  static FirebaseVertexAI _vertexAI({
     FirebaseApp? app,
     FirebaseAppCheck? appCheck,
     FirebaseAuth? auth,
@@ -96,34 +97,6 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
       appCheck: appCheck,
       auth: auth,
       useVertexBackend: true,
-    );
-    _cachedInstances[instanceKey] = newInstance;
-
-    return newInstance;
-  }
-
-  /// Returns an instance using a specified [FirebaseApp].
-  ///
-  /// If [app] is not provided, the default Firebase app will be used.
-  /// If pass in [appCheck], request session will get protected from abusing.
-  static FirebaseVertexAI googleAI({
-    FirebaseApp? app,
-    FirebaseAppCheck? appCheck,
-    FirebaseAuth? auth,
-  }) {
-    app ??= Firebase.app();
-    var instanceKey = '${app.name}::googleai';
-
-    if (_cachedInstances.containsKey(instanceKey)) {
-      return _cachedInstances[instanceKey]!;
-    }
-
-    FirebaseVertexAI newInstance = FirebaseVertexAI._(
-      app: app,
-      location: _defaultLocation,
-      appCheck: appCheck,
-      auth: auth,
-      useVertexBackend: false,
     );
     _cachedInstances[instanceKey] = newInstance;
 

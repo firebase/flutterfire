@@ -13,8 +13,10 @@
 // limitations under the License.
 
 import 'package:flutter/material.dart';
+import 'package:firebase_ai/firebase_ai.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 import '../widgets/message_widget.dart';
 
 class FunctionCallingPage extends StatefulWidget {
@@ -55,7 +57,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
         ],
       );
     } else {
-      var googleAI = FirebaseVertexAI.googleAI(auth: FirebaseAuth.instance);
+      var googleAI = FirebaseAI.googleAI(auth: FirebaseAuth.instance);
       _functionCallModel = googleAI.generativeModel(
         model: 'gemini-2.0-flash',
         tools: [
