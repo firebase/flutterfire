@@ -45,3 +45,9 @@ flutter:
     - assets/images/
     - assets/documents/
     - assets/videos/
+
+dependency_overrides:
+  firebase_ai:
+    path: ../../../firebase_ai/firebase_ai
+  firebase_vertexai:
+    path: ../../firebase_vertexai
