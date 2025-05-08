@@ -9,8 +9,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_example/main.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
 import 'auth.dart';
+import 'dart:io';
 
 /// Displayed as a profile image if the user doesn't have one.
 const placeholderImage =
@@ -39,6 +42,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     user = auth.currentUser!;
+    final FirebaseStorage _storage = FirebaseStorage.instance;
     controller = TextEditingController(text: user.displayName);
 
     controller.addListener(_onNameChanged);
@@ -125,12 +129,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               borderRadius: BorderRadius.circular(40),
                               child: InkWell(
                                 onTap: () async {
-                                  final photoURL = await getPhotoURLFromUser();
-
-                                  if (photoURL != null) {
-                                    await user.updatePhotoURL(photoURL);
-                                  }
-                                },
+  await ProfileUpdateService().pickAndUploadImage();
+},
                                 radius: 50,
                                 child: const SizedBox(
                                   width: 35,
@@ -387,5 +387,88 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _signOut() async {
     await auth.signOut();
     await GoogleSignIn().signOut();
+  }
+}
+
+class ProfileUpdateService {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance; // Using default instance
+
+  // --- Method using putFile ---
+  Future<void> updateProfilePicture(File imageFile) async {
+    final User? user = _auth.currentUser;
+    if (user == null) throw Exception('User not logged in');
+    if (!await imageFile.exists()) throw Exception('Image file does not exist');
+
+    final String uid = user.uid;
+    final String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+    final String fileExtension = imageFile.path.split('.').last;
+    final String fileName = 'profile_$timestamp.$fileExtension';
+    final String filePath = 'auth-storage-test/$uid/$fileName';
+
+    if (kDebugMode) {
+      print('Attempting profile picture upload using putFile:');
+      print('  User ID: $uid');
+      print('  File Path: $filePath');
+      print('  Source File Path: ${imageFile.path}');
+      print('  File Exists: ${await imageFile.exists()}');
+      print('  File Length: ${await imageFile.length()} bytes');
+    }
+
+    try {
+      // Attempt to refresh token explicitly (kept from previous troubleshooting, can be removed if desired for absolute minimum)
+      if (kDebugMode) print('Attempting to refresh ID token...');
+      await user.getIdToken(true); // Force refresh
+      if (kDebugMode) print('ID token refreshed successfully.');
+
+      print('Uploading profile picture (putFile) to: $filePath');
+
+      // Using default instance, or FirebaseStorage.instanceFor(app: Firebase.app()) if preferred
+      final Reference storageRef = _storage.ref(filePath);
+
+      // Upload file using putFile
+      final UploadTask uploadTask = storageRef.putFile(imageFile);
+      final TaskSnapshot snapshot = await uploadTask;
+      final String downloadUrl = await snapshot.ref.getDownloadURL();
+
+      // Update user's photoURL in Firebase Auth
+      await user.updatePhotoURL(downloadUrl);
+      await user.reload(); // Reload user data
+
+      print('Upload successful!');
+
+    } on FirebaseException catch (e) {
+      if (kDebugMode) {
+        print('FirebaseException during profile picture upload (putFile): Code: ${e.code}, Message: ${e.message}, Plugin: ${e.plugin}, StackTrace: ${e.stackTrace}');
+      }
+      // *** THIS IS THE ERROR OBSERVED AFTER LOGOUT/LOGIN ***
+      // Error: FirebaseException: Code: unknown, Message: cannot parse response, Plugin: firebase_storage (iOS 18.4)
+      // Error: FirebaseException: Code: unknown, Message: The operation couldn’t be completed. Message too long, Plugin: firebase_storage (iOS 18.3)
+      rethrow;
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        print('Unexpected error updating profile picture (putFile): $e');
+        print('Stack trace: $stackTrace');
+      }
+      rethrow;
+    }
+  }
+
+  // --- UI Interaction Snippet (Illustrative) ---
+  Future<void> pickAndUploadImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? imageXFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (imageXFile != null) {
+      File imageFile = File(imageXFile.path); // Convert XFile to File
+      try {
+        // Assume ProfileUpdateService instance is available (e.g., via Provider)
+        await ProfileUpdateService().updateProfilePicture(imageFile);
+        // Show success message
+      } catch (e) {
+        // Show error message (this catches the FirebaseException after rethrow)
+        print('Upload failed: $e');
+      }
+    }
   }
 }
