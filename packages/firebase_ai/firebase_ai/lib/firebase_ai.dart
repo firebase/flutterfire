@@ -27,6 +27,7 @@ export 'src/api.dart'
         HarmProbability,
         HarmBlockMethod,
         PromptFeedback,
+        ResponseModalities,
         SafetyRating,
         SafetySetting,
         UsageMetadata;
@@ -70,7 +71,6 @@ export 'src/live_api.dart'
     show
         LiveGenerationConfig,
         SpeechConfig,
-        ResponseModalities,
         LiveServerMessage,
         LiveServerContent,
         LiveServerToolCall,
