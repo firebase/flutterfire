@@ -39,6 +39,14 @@ void main() async {
     ],
   );
 
+  final vertexaiConfigPath = joinAll(
+    [
+      Directory.current.path,
+      'gradle',
+      'vertexai-global-config.gradle',
+    ],
+  );
+
   final exampleAppConfigPath = joinAll(
     [
       Directory.current.path,
@@ -66,6 +74,7 @@ void main() async {
   // Define files using paths
   final globalConfig = File(globalConfigPath);
   final authConfig = File(authConfigPath);
+  final vertexaiConfig = File(vertexaiConfigPath);
   final exampleAppConfig = File(exampleAppConfigPath);
   final perfExampleAppConfig = File(perfExampleAppConfigPath);
   final crashlyticsExampleAppConfig = File(crashlyticsExampleAppConfigPath);
@@ -80,6 +89,12 @@ void main() async {
   if (!authConfig.existsSync()) {
     throw Exception(
     'global_config.gradle file not found in the expected location.',
+    );
+  }
+
+  if (!vertexaiConfig.existsSync()) {
+    throw Exception(
+    'vertexai_config.gradle file not found in the expected location.',
     );
   }
 
@@ -104,13 +119,21 @@ void main() async {
   for (final package in workspace.filteredPackages.values) {
     switch (package.name) {
       case 'firebase_vertexai':
+        // Only has gradle in the example application.
+        final localConfigGradleFilePath = '${package.path}/example/android/app/local-config.gradle';
+        final copiedConfig = await vertexaiConfig.copy(
+        localConfigGradleFilePath,
+        );
+        // ignore: avoid_print
+        print('File copied to: ${copiedConfig.path}');
+
         final exampleAppConfigFilePath = '${package.path}/example/android/settings.gradle';
         final copiedExampleAppConfig = await exampleAppConfig.copy(
         exampleAppConfigFilePath,
         );
         // ignore: avoid_print
         print('File copied to: ${copiedExampleAppConfig.path}');
-        // Only has gradle in example app.
+
         break;
       case 'firebase_data_connect':
         // Only has gradle in the example application.
@@ -160,6 +183,7 @@ void main() async {
           );
           print('File copied to: ${copiedExampleAppConfig.path}');
           // ignore: avoid_print
+
         break;
       case 'firebase_performance':
         // Has a more unique settings.gradle for example app. 
@@ -176,6 +200,7 @@ void main() async {
         );
         print('File copied to: ${copiedExampleAppConfig.path}');
         // ignore: avoid_print
+        
         break;
       default:
         // For all other packages, copy the global-config.gradle file to the local-config.gradle file.

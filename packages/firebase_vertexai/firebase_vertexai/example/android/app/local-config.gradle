@@ -1,0 +1,8 @@
+// For use with example app
+ext {
+    compileSdk=35
+    minSdk=23
+    targetSdk=33
+    javaVersion = JavaVersion.toVersion(17)
+    androidGradlePluginVersion = '8.2.1'
+}
