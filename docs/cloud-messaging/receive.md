@@ -529,13 +529,13 @@ At this point, everything should still be running normally. The final step is in
     ```objc
     #import "NotificationService.h"
     #import "FirebaseMessaging.h"
-    #import "FirebaseAuth.h" // Add this line if you are using FirebaseAuth phone authentication
+    #import <FirebaseAuth/FirebaseAuth-Swift.h> // Add this line if you are using FirebaseAuth phone authentication
     #import <UIKit/UIKit.h> // Add this line if you are using FirebaseAuth phone authentication
 
-    @interface NotificationService ()
+    @interface NotificationService () <NSURLSessionDelegate>
 
-    @property (nonatomic, strong) void (^contentHandler)(UNNotificationContent *contentToDeliver);
-    @property (nonatomic, strong) UNMutableNotificationContent *bestAttemptContent;
+    @property(nonatomic) void (^contentHandler)(UNNotificationContent *contentToDeliver);
+    @property(nonatomic) UNMutableNotificationContent *bestAttemptContent;
 
     @end
 

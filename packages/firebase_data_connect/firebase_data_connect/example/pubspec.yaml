@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
   firebase_core: ^3.13.0
   google_sign_in: ^6.1.0
-  firebase_auth: ^5.5.2
+  firebase_auth: ^5.5.3
   firebase_data_connect:
     path: ../
 
