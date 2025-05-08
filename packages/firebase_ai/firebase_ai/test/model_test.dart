@@ -29,9 +29,6 @@ void main() {
     // Initialize Firebase
     app = await Firebase.initializeApp();
   });
-  test('canary test', () {
-    expect(true, false);
-  });
   group('GenerativeModel', () {
     const defaultModelName = 'some-model';
 
