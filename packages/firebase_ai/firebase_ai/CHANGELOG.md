@@ -1,3 +1,3 @@
-## 0.5.0
+## 2.0.0
 
--  Initial release following package rename.
+-  Initial release following package rename from `firebase_vertexai`.
