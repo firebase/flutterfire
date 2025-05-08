@@ -1,3 +1,3 @@
-## 0.1.0-dev
+## 0.1.0
 
--  Initial release following package rename from `firebase_vertexai`.
+-  Empty release to reserve package name.
