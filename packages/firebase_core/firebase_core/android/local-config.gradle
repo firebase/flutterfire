@@ -1,0 +1,7 @@
+ext {
+    compileSdk=34
+    minSdk=21
+    targetSdk=34
+    javaVersion = JavaVersion.toVersion(17)
+    androidGradlePluginVersion = '8.2.1'
+}
