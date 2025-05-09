@@ -20,64 +20,20 @@ import 'package:path/path.dart' show joinAll;
 
 // Used to generate config files from ../gradle/local-config.gradle in order to use correct java and compilation versions.
 // Also works on every example app in the packages.
+// NOTICE: This script does not update auth or vertexai packages as they are manually updated.
 void main() async {
   final workspace = await getMelosWorkspace();
   // To edit versions for all packages, edit the global-config.gradle file in FlutterFire/Gradle
   final globalConfigPath = joinAll(
     [
       Directory.current.path,
-      'gradle',
+      'scripts',
       'global-config.gradle',
-    ],
-  );
-
-  final authConfigPath = joinAll(
-    [
-      Directory.current.path,
-      'gradle',
-      'auth-global-config.gradle',
-    ],
-  );
-
-  final vertexaiConfigPath = joinAll(
-    [
-      Directory.current.path,
-      'gradle',
-      'vertexai-global-config.gradle',
-    ],
-  );
-
-  final exampleAppConfigPath = joinAll(
-    [
-      Directory.current.path,
-      'gradle',
-      'example-app-settings.gradle',
-    ],
-  );
-
-  final perfExampleAppConfigPath = joinAll(
-    [
-      Directory.current.path,
-      'gradle',
-      'perf-example-app-settings.gradle',
-    ],
-  );
-
-  final crashlyticsExampleAppConfigPath = joinAll(
-    [
-      Directory.current.path,
-      'gradle',
-      'crashlytics-example-app-settings.gradle',
     ],
   );
 
   // Define files using paths
   final globalConfig = File(globalConfigPath);
-  final authConfig = File(authConfigPath);
-  final vertexaiConfig = File(vertexaiConfigPath);
-  final exampleAppConfig = File(exampleAppConfigPath);
-  final perfExampleAppConfig = File(perfExampleAppConfigPath);
-  final crashlyticsExampleAppConfig = File(crashlyticsExampleAppConfigPath);
   
   // Check if the files exist
   if (!globalConfig.existsSync()) {
@@ -86,121 +42,22 @@ void main() async {
     );
   }
 
-  if (!authConfig.existsSync()) {
-    throw Exception(
-    'global_config.gradle file not found in the expected location.',
-    );
-  }
-
-  if (!vertexaiConfig.existsSync()) {
-    throw Exception(
-    'vertexai_config.gradle file not found in the expected location.',
-    );
-  }
-
-  if (!exampleAppConfig.existsSync()) {
-    throw Exception(
-    'example-app-settings.gradle file not found in the expected location.',
-    );
-  }
-
-  if (!perfExampleAppConfig.existsSync()) {
-    throw Exception(
-    'per-example-app-settings.gradle file not found in the expected location.',
-    );
-  }
-
-  if (!crashlyticsExampleAppConfig.existsSync()) {
-    throw Exception(
-    'crashlytics-example-app-settings.gradle file not found in the expected location.',
-    );
-  }
-
   for (final package in workspace.filteredPackages.values) {
     switch (package.name) {
       case 'firebase_vertexai':
-        // Only has gradle in the example application.
-        final localConfigGradleFilePath = '${package.path}/example/android/app/local-config.gradle';
-        final copiedConfig = await vertexaiConfig.copy(
-        localConfigGradleFilePath,
-        );
-        // ignore: avoid_print
-        print('File copied to: ${copiedConfig.path}');
-
-        final exampleAppConfigFilePath = '${package.path}/example/android/settings.gradle';
-        final copiedExampleAppConfig = await exampleAppConfig.copy(
-        exampleAppConfigFilePath,
-        );
-        // ignore: avoid_print
-        print('File copied to: ${copiedExampleAppConfig.path}');
-
+        // skip firebase_vertexai as we manually update it
         break;
       case 'firebase_data_connect':
         // Only has gradle in the example application.
         final localConfigGradleFilePath = '${package.path}/example/android/app/local-config.gradle';
-        final copiedConfig = await authConfig.copy(
+        final copiedConfig = await globalConfig.copy(
         localConfigGradleFilePath,
         );
         // ignore: avoid_print
         print('File copied to: ${copiedConfig.path}');
-
-        final exampleAppConfigFilePath = '${package.path}/example/android/settings.gradle';
-        final copiedExampleAppConfig = await exampleAppConfig.copy(
-        exampleAppConfigFilePath,
-        );
-        // ignore: avoid_print
-        print('File copied to: ${copiedExampleAppConfig.path}');
-
         break;
       case 'firebase_auth':
-        // Needs minimum compile sdk verstion to 23 specifically for this package.
-        final localConfigGradleFilePath = '${package.path}/android/local-config.gradle';
-        final copiedConfig = await globalConfig.copy(
-        localConfigGradleFilePath,
-        );
-        // ignore: avoid_print
-        print('File copied to: ${copiedConfig.path}');
-
-        final exampleAppConfigFilePath = '${package.path}/example/android/settings.gradle';
-        final copiedExampleAppConfig = await exampleAppConfig.copy(
-        exampleAppConfigFilePath,
-        );
-        // ignore: avoid_print
-        print('File copied to: ${copiedExampleAppConfig.path}');
-
-        break;
-      case 'firebase_crashlytics':
-        final localConfigGradleFilePath = '${package.path}/android/local-config.gradle';
-
-          final copiedConfig = await globalConfig.copy(
-          localConfigGradleFilePath,
-          );
-          print('File copied to: ${copiedConfig.path}');
-
-          final exampleAppConfigFilePath = '${package.path}/example/android/settings.gradle';
-          final copiedExampleAppConfig = await crashlyticsExampleAppConfig.copy(
-          exampleAppConfigFilePath,
-          );
-          print('File copied to: ${copiedExampleAppConfig.path}');
-          // ignore: avoid_print
-
-        break;
-      case 'firebase_performance':
-        // Has a more unique settings.gradle for example app. 
-        final localConfigGradleFilePath = '${package.path}/android/local-config.gradle';
-
-        final copiedConfig = await globalConfig.copy(
-        localConfigGradleFilePath,
-        );
-        print('File copied to: ${copiedConfig.path}');
-
-        final exampleAppConfigFilePath = '${package.path}/example/android/settings.gradle';
-        final copiedExampleAppConfig = await perfExampleAppConfig.copy(
-        exampleAppConfigFilePath,
-        );
-        print('File copied to: ${copiedExampleAppConfig.path}');
-        // ignore: avoid_print
-        
+        // Skip firebase_auth as we manually update it
         break;
       default:
         // For all other packages, copy the global-config.gradle file to the local-config.gradle file.
@@ -211,12 +68,12 @@ void main() async {
         );
         print('File copied to: ${copiedConfig.path}');
 
-        final exampleAppConfigFilePath = '${package.path}/example/android/settings.gradle';
-        final copiedExampleAppConfig = await exampleAppConfig.copy(
-        exampleAppConfigFilePath,
+        final gradlePropertiesFilePath = '${package.path}/example/android/gradle.properties';
+        extractAndWriteProperty(
+          globalConfig: globalConfig,
+          gradlePropertiesFile: File(gradlePropertiesFilePath),
         );
-        print('File copied to: ${copiedExampleAppConfig.path}');
-        // ignore: avoid_print
+        print('successfully wrote property to $gradlePropertiesFilePath');
     }
   }
 }
@@ -237,4 +94,51 @@ Future<melos.MelosWorkspace> getMelosWorkspace() async {
   );
 
   return workspace;
+}
+
+Future<void> extractAndWriteProperty({
+  required File globalConfig,
+  required File gradlePropertiesFile,
+}) async {
+
+  const String propertyName = 'androidGradlePluginVersion';
+  if (!await globalConfig.exists()) {
+    print('Global config file not found: ${globalConfig.path}');
+    return;
+  }
+
+  final globalContent = await globalConfig.readAsString();
+
+  // Extract the property from the ext block
+  final regex = RegExp('$propertyName\\s*=\\s*[\'"]?([^\\n\'"]+)[\'"]?');
+  final match = regex.firstMatch(globalContent);
+
+  if (match == null) {
+    print('Property $propertyName not found in global config.');
+    return;
+  }
+
+  final value = match.group(1);
+
+  final lines = await gradlePropertiesFile.exists()
+      ? await gradlePropertiesFile.readAsLines()
+      : [];
+
+  bool updated = false;
+
+  final updatedLines = lines.map((line) {
+    if (line.startsWith('$propertyName=')) {
+      updated = true;
+      return '$propertyName=$value';
+    }
+    return line;
+  }).toList();
+
+  if (!updated) {
+    updatedLines.add('$propertyName=$value');
+  }
+
+  await gradlePropertiesFile.writeAsString(updatedLines.join('\n'));
+
+  print('Wrote $propertyName=$value to ${gradlePropertiesFile.path}');
 }

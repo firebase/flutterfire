@@ -4,7 +4,7 @@ apply from: file("local-config.gradle")
 
 pluginManagement {
     plugins {
-        id "com.android.application" version project.ext.androidGradlePluginVersion
-        id "com.android.library" version project.ext.androidGradlePluginVersion
+        id "com.android.application" version "8.2.1"
+        id "com.android.library" version "8.2.1"
     }
 }

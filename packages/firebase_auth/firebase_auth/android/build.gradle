@@ -37,16 +37,16 @@ android {
       namespace 'io.flutter.plugins.firebase.auth'
     }
 
-    compileSdkVersion project.ext.compileSdk
+    compileSdkVersion 34
 
     defaultConfig {
-        minSdkVersion project.ext.minSdk
+        minSdkVersion 21
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     compileOptions {
-        sourceCompatibility project.ext.javaVersion
-        targetCompatibility project.ext.javaVersion
+        sourceCompatibility JavaVersion.toVersion(17)
+        targetCompatibility JavaVersion.toVersion(17)
     }
 
     buildFeatures {
