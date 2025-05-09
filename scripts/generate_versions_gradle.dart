@@ -21,6 +21,7 @@ import 'package:path/path.dart' show joinAll;
 // Used to generate config files from ../gradle/local-config.gradle in order to use correct java and compilation versions.
 // Also works on every example app in the packages.
 // NOTICE: This script does not update auth or vertexai packages as they are manually updated.
+// Furthermore, this script does not update the test app.
 void main() async {
   final workspace = await getMelosWorkspace();
   // To edit versions for all packages, edit the global-config.gradle file in FlutterFire/Gradle
@@ -55,6 +56,13 @@ void main() async {
         );
         // ignore: avoid_print
         print('File copied to: ${copiedConfig.path}');
+        
+        final gradlePropertiesFilePath = '${package.path}/example/android/gradle.properties';
+        extractAndWriteProperty(
+          globalConfig: globalConfig,
+          gradlePropertiesFile: File(gradlePropertiesFilePath),
+        );
+        print('successfully wrote property to $gradlePropertiesFilePath');
         break;
       case 'firebase_auth':
         // Skip firebase_auth as we manually update it
