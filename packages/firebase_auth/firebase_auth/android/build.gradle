@@ -2,7 +2,6 @@ group 'io.flutter.plugins.firebase.auth'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'com.android.library'
-apply from: file("local-config.gradle")
 
 buildscript {
     repositories {

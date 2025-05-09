@@ -1,7 +1,5 @@
 rootProject.name = 'firebase_auth'
 
-apply from: file("local-config.gradle")
-
 pluginManagement {
     plugins {
         id "com.android.application" version "8.2.1"

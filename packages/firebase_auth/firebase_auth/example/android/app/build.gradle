@@ -7,7 +7,6 @@ plugins {
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
 }
-apply from: file("../../../android/local-config.gradle")
 
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file("local.properties")
@@ -31,14 +30,12 @@ android {
     namespace = "io.flutter.plugins.firebase.auth.example"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
-
     compileOptions {
-        sourceCompatibility = project.ext.javaVersion
-        targetCompatibility = project.ext.javaVersion
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
-    
     kotlinOptions {
-        jvmTarget = project.ext.javaVersion
+        jvmTarget = JavaVersion.VERSION_17
     }
 
     defaultConfig {
