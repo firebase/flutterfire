@@ -49,6 +49,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
   void initState() {
     super.initState();
     if (widget.useVertexBackend) {
+      // ignore: deprecated_member_use
       var vertexAI = FirebaseVertexAI.instanceFor(auth: FirebaseAuth.instance);
       _functionCallModel = vertexAI.generativeModel(
         model: 'gemini-2.0-flash',

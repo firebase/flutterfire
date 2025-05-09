@@ -71,6 +71,7 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
     );
     if (useVertexBackend) {
       final vertexInstance =
+          // ignore: deprecated_member_use
           FirebaseVertexAI.instanceFor(auth: FirebaseAuth.instance);
       _currentModel = vertexInstance.generativeModel(model: 'gemini-1.5-flash');
       _currentImagenModel = vertexInstance.imagenModel(

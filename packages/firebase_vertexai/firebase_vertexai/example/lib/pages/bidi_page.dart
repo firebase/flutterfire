@@ -65,6 +65,7 @@ class _BidiPageState extends State<BidiPage> {
       ],
     );
 
+    // ignore: deprecated_member_use
     _liveModel = FirebaseVertexAI.instance.liveGenerativeModel(
       model: 'gemini-2.0-flash-exp',
       liveGenerationConfig: config,
