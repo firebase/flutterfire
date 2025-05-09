@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:firebase_vertexai/src/error.dart';
+import 'package:firebase_ai/src/error.dart';
+import 'package:firebase_vertexai/firebase_vertexai.dart'
+    show VertexAIException, VertexAISdkException;
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -62,7 +64,7 @@ void main() {
           'SDK failed to parse response.\n'
           'This indicates a problem with the Vertex AI in Firebase SDK. '
           'Try updating to the latest version '
-          '(https://pub.dev/packages/firebase_vertexai/versions), '
+          '(https://pub.dev/packages/firebase_ai/versions), '
           'or file an issue at '
           'https://github.com/firebase/flutterfire/issues.');
     });
