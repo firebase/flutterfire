@@ -1,15 +1,13 @@
-# Firebase AI in Firebase Flutter
+# Firebase AI Flutter
 [![pub package](https://img.shields.io/pub/v/firebase_ai.svg)](https://pub.dev/packages/firebase_ai)
 
 A Flutter plugin to use the [Firebase AI](https://firebase.google.com/docs/vertex-ai/).
 
 To learn more about Firebase AI, please visit the [website](https://cloud.google.com/vertex-ai)
 
-**Generally Available**: Firebase AI in Firebase is now Generally Available (GA) and can be used in production apps
-
 ## Getting Started
 
-To get started with Firebase AI in Firebase Flutter, please [see the documentation](https://firebase.google.com/docs/vertex-ai/get-started?platform=flutter).
+To get started with Firebase AI Flutter, please [see the documentation](https://firebase.google.com/docs/vertex-ai/get-started?platform=flutter).
 
 ## Usage
 

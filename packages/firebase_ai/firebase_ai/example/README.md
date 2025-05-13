@@ -1,6 +1,6 @@
 # firebase_ai_example
 
-Sample app to show how to use Firebase AI in Firebase.
+Sample app to show how to use Firebase AI SDK.
 
 ## Getting Started
 
