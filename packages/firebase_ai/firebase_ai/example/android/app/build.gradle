@@ -26,12 +26,12 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "com.example.example"
+    namespace "io.flutter.plugins.firebase.ai.example"
 
     compileSdk 35
 
     defaultConfig {
-        applicationId "com.example.example"
+        applicationId "io.flutter.plugins.firebase.ai.example"
         minSdk 23
         targetSdk 33
         versionCode flutterVersionCode.toInteger()
