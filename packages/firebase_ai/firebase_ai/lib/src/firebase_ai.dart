@@ -175,6 +175,10 @@ class FirebaseAI extends FirebasePluginPlatform {
     List<Tool>? tools,
     Content? systemInstruction,
   }) {
+    if (!_useVertexBackend) {
+      throw FirebaseAISdkException(
+          'LiveGenerativeModel is currently only supported with the VertexAI backend.');
+    }
     return createLiveGenerativeModel(
       app: app,
       location: location,
