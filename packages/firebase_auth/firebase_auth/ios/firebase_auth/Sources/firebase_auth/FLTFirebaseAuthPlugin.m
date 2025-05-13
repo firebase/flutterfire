@@ -203,7 +203,7 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
     additionalData[kArgumentEmail] = [error userInfo][FIRAuthErrorUserInfoEmailKey];
   }
   // We want to store the credential if present for future sign in if the exception contains a
-  // credential, we pass a token back to Flutter to allow retreival of the credential.
+  // credential, we pass a token back to Flutter to allow retrieval of the credential.
   NSNumber *token = [FLTFirebaseAuthPlugin storeAuthCredentialIfPresent:error];
 
   // additionalData.authCredential

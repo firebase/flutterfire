@@ -368,7 +368,7 @@ void setupSecondBucketTests() {
             );
 
             expect(complete.metadata?.size, kTestString.length);
-            // TOOD - remove this note if still appplicavle - Metadata isn't saved on objects when using the emulator which fails test
+            // TODO - remove this note if still appplicable - Metadata isn't saved on objects when using the emulator which fails test
             expect(complete.metadata?.contentLanguage, 'en');
             expect(complete.metadata?.customMetadata!['activity'], 'test');
           },

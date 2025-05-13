@@ -206,7 +206,7 @@ final class Schema {
   /// intent of a field.
   String? title;
 
-  /// Whether the value mey be null.
+  /// Whether the value may be null.
   bool? nullable;
 
   /// Possible values if this is a [SchemaType.string] with an enum format.

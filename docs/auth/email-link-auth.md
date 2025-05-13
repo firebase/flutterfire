@@ -103,7 +103,7 @@ You can streamline this flow for users who open the sign-in link on the same
 device they request the link, by storing their email address locally - for
 instance using SharedPreferences - when you send the sign-in email. Then,
 use this address to complete the flow.
-Do not pass the user's email in the redirect URL parameters and re-use it as
+Do not pass the user's email in the redirect URL parameters and reuse it as
 this may enable session injections.
 
 After sign-in completion, any previous unverified mechanism of sign-in will be
