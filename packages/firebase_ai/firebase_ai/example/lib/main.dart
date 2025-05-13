@@ -154,6 +154,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   void _onItemTapped(int index) {
+    if (index == 9 && !widget.useVertexBackend) {
+      // Live Stream feature only works with Vertex AI now.
+      return;
+    }
     widget.onSelectedIndexChanged(index);
   }
 
@@ -188,7 +192,12 @@ class _HomeScreenState extends State<HomeScreen> {
       case 8:
         return VideoPage(title: 'Video Prompt', model: currentModel);
       case 9:
-        return BidiPage(title: 'Bidi Stream', model: currentModel);
+        if (useVertexBackend) {
+          return BidiPage(title: 'Live Stream', model: currentModel);
+        } else {
+          // Fallback to the first page in case of an unexpected index
+          return ChatPage(title: 'Chat', model: currentModel);
+        }
       default:
         // Fallback to the first page in case of an unexpected index
         return ChatPage(title: 'Chat', model: currentModel);
@@ -258,58 +267,64 @@ class _HomeScreenState extends State<HomeScreen> {
         selectedFontSize: 10,
         unselectedFontSize: 9,
         selectedItemColor: Theme.of(context).colorScheme.primary,
-        unselectedItemColor:
-            Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
+        unselectedItemColor: widget.useVertexBackend
+            ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)
+            : Colors.grey,
+        items: <BottomNavigationBarItem>[
+          const BottomNavigationBarItem(
             icon: Icon(Icons.chat),
             label: 'Chat',
             tooltip: 'Chat',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.mic),
             label: 'Audio',
             tooltip: 'Audio Prompt',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.numbers),
             label: 'Tokens',
             tooltip: 'Token Count',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.functions),
             label: 'Functions',
             tooltip: 'Function Calling',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.image),
             label: 'Image',
             tooltip: 'Image Prompt',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.image_search),
             label: 'Imagen',
             tooltip: 'Imagen Model',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.schema),
             label: 'Schema',
             tooltip: 'Schema Prompt',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.edit_document),
             label: 'Document',
             tooltip: 'Document Prompt',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.video_collection),
             label: 'Video',
             tooltip: 'Video Prompt',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.stream),
-            label: 'Bidi',
-            tooltip: 'Bidi Stream',
+            icon: Icon(
+              Icons.stream,
+              color: widget.useVertexBackend ? null : Colors.grey,
+            ),
+            label: 'Live',
+            tooltip: widget.useVertexBackend
+                ? 'Live Stream'
+                : 'Live Stream (Currently Disabled)',
           ),
         ],
         currentIndex: widget.selectedIndex,
