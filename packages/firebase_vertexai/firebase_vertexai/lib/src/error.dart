@@ -16,7 +16,7 @@
 ///
 /// The [message] may explain the cause of the failure.
 final class VertexAIException implements Exception {
-  /// Constructor
+  // ignore: public_member_api_docs
   VertexAIException(this.message);
 
   /// Message of the exception
@@ -28,7 +28,7 @@ final class VertexAIException implements Exception {
 
 /// Exception thrown when the server rejects the API key.
 final class InvalidApiKey implements VertexAIException {
-  /// Constructor
+  // ignore: public_member_api_docs
   InvalidApiKey(this.message);
   @override
   final String message;
@@ -81,7 +81,7 @@ final class QuotaExceeded implements VertexAIException {
 
 /// Exception thrown when the server failed to generate content.
 final class ServerException implements VertexAIException {
-  /// Constructor
+  // ignore: public_member_api_docs
   ServerException(this.message);
   @override
   final String message;
@@ -96,7 +96,7 @@ final class ServerException implements VertexAIException {
 /// as an inability to parse a new response format. Resolution paths may include
 /// updating to a new version of the SDK, or filing an issue.
 final class VertexAISdkException implements Exception {
-  /// Constructor
+  // ignore: public_member_api_docs
   VertexAISdkException(this.message);
 
   /// Message of the exception
@@ -108,7 +108,45 @@ final class VertexAISdkException implements Exception {
       'Try updating to the latest version '
       '(https://pub.dev/packages/firebase_vertexai/versions), '
       'or file an issue at '
-      'https://github.com/firebase/flutterfire/issuess.';
+      'https://github.com/firebase/flutterfire/issues.';
+}
+
+/// Exception indicating all images filtered out.
+///
+/// This exception indicates all images were filtered out because they violated
+/// Vertex AI's usage guidelines.
+final class ImagenImagesBlockedException implements Exception {
+  // ignore: public_member_api_docs
+  ImagenImagesBlockedException(this.message);
+
+  /// Message of the exception
+  final String message;
+
+  @override
+  String toString() => message;
+}
+
+/// Exception thrown when attempting to send a message over a WebSocket that has already been closed.
+///
+/// This exception indicates that the WebSocket connection was unexpectedly closed
+/// before the message could be sent.
+final class LiveWebSocketClosedException implements Exception {
+  /// Creates a [LiveWebSocketClosedException] with the given error [message].
+  LiveWebSocketClosedException(this.message);
+
+  /// A descriptive message explaining why the WebSocket was closed.
+  final String message;
+
+  @override
+  String toString() {
+    if (message.contains('DEADLINE_EXCEEDED')) {
+      return 'The current live session has expired. Please start a new session.';
+    } else if (message.contains('RESOURCE_EXHAUSTED')) {
+      return 'You have exceeded the maximum number of concurrent sessions. '
+          'Please close other sessions and try again later.';
+    }
+    return message;
+  }
 }
 
 /// Parse the error json object.
@@ -120,7 +158,8 @@ VertexAIException parseError(Object jsonObject) {
     } =>
       InvalidApiKey(message),
     {'message': UnsupportedUserLocation._message} => UnsupportedUserLocation(),
-    {'message': final String message} when message.contains('quota') =>
+    {'message': final String message}
+        when message.toLowerCase().contains('quota') =>
       QuotaExceeded(message),
     {
       'message': final String _,

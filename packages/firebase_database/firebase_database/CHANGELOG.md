@@ -1,6 +1,29 @@
+## 11.3.5
+
+ - Update a dependency to the latest release.
+
+## 11.3.4
+
+ - Update a dependency to the latest release.
+
+## 11.3.3
+
+ - Update a dependency to the latest release.
+
+## 11.3.2
+
+ - Update a dependency to the latest release.
+
+## 11.3.1
+
+ - Update a dependency to the latest release.
+
+## 11.3.0
+
+ - Update a dependency to the latest release.
+
 ## 11.2.0
 
- - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
  - **FEAT**(database): Swift Package Manager support ([#16783](https://github.com/firebase/flutterfire/issues/16783)). ([1509c33e](https://github.com/firebase/flutterfire/commit/1509c33e0154df52e2d998a82f1eb832e4d13c84))
 
 ## 11.1.6

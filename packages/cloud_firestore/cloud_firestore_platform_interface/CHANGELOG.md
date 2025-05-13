@@ -1,3 +1,31 @@
+## 6.6.7
+
+ - **FIX**(cloud_firestore): correct nanoseconds calculation for pre-1970 dates ([#17195](https://github.com/firebase/flutterfire/issues/17195)). ([a13deae3](https://github.com/firebase/flutterfire/commit/a13deae3334045fb1a48817ff9300cbe0696d177))
+
+## 6.6.6
+
+ - Update a dependency to the latest release.
+
+## 6.6.5
+
+ - Update a dependency to the latest release.
+
+## 6.6.4
+
+ - Update a dependency to the latest release.
+
+## 6.6.3
+
+ - Update a dependency to the latest release.
+
+## 6.6.2
+
+ - Update a dependency to the latest release.
+
+## 6.6.1
+
+ - Update a dependency to the latest release.
+
 ## 6.6.0
 
  - **FEAT**(firestore): add support for VectorValue ([#16476](https://github.com/firebase/flutterfire/issues/16476)). ([cc23f179](https://github.com/firebase/flutterfire/commit/cc23f179082256fe9700f17e3856821b4a6d4240))

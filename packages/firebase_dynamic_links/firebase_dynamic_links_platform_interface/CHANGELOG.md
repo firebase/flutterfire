@@ -1,6 +1,30 @@
+## 0.2.7+5
+
+ - Update a dependency to the latest release.
+
+## 0.2.7+4
+
+ - Update a dependency to the latest release.
+
+## 0.2.7+3
+
+ - Update a dependency to the latest release.
+
+## 0.2.7+2
+
+ - Update a dependency to the latest release.
+
+## 0.2.7+1
+
+ - Update a dependency to the latest release.
+
+## 0.2.7
+
+ - Update a dependency to the latest release.
+
 ## 0.2.6+47
 
- - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
+ - Update a dependency to the latest release.
 
 ## 0.2.6+46
 

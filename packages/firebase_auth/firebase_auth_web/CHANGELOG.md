@@ -1,3 +1,27 @@
+## 5.14.2
+
+ - **FIX**(auth,web): fix an issue that could occur when deleting FirebaseApp ([#17145](https://github.com/firebase/flutterfire/issues/17145)). ([a2246cd0](https://github.com/firebase/flutterfire/commit/a2246cd0ae8a7a53abc2537d7cd66ee079d3b096))
+
+## 5.14.1
+
+ - Update a dependency to the latest release.
+
+## 5.14.0
+
+ - **FEAT**(auth): support for `linkDomain` in `ActionCodeSettings` ([#17099](https://github.com/firebase/flutterfire/issues/17099)). ([090cdb20](https://github.com/firebase/flutterfire/commit/090cdb2078dc66e58aa4b1a3ef9a48101467b6ac))
+
+## 5.13.8
+
+ - Update a dependency to the latest release.
+
+## 5.13.7
+
+ - Update a dependency to the latest release.
+
+## 5.13.6
+
+ - Update a dependency to the latest release.
+
 ## 5.13.5
 
  - Update a dependency to the latest release.

@@ -17,6 +17,7 @@ import 'dart:convert';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_data_connect/src/common/common_library.dart';
+import 'package:firebase_data_connect/src/dataconnect_version.dart';
 import 'package:firebase_data_connect/src/network/rest_library.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -62,7 +63,7 @@ void main() {
     test('should correctly initialize URL with secure protocol', () {
       expect(
         transport.url,
-        'https://testhost:443/v1beta/projects/testProject/locations/testLocation/services/testService/connectors/testConnector',
+        'https://testhost:443/v1/projects/testProject/locations/testLocation/services/testService/connectors/testConnector',
       );
     });
 
@@ -82,7 +83,7 @@ void main() {
 
       expect(
         insecureTransport.url,
-        'http://testhost:443/v1beta/projects/testProject/locations/testLocation/services/testService/connectors/testConnector',
+        'http://testhost:443/v1/projects/testProject/locations/testLocation/services/testService/connectors/testConnector',
       );
     });
 
@@ -260,6 +261,42 @@ void main() {
         ),
       ).called(1);
     });
+    test('invokeOperation should include x-firebase-client headers', () async {
+      final mockResponse = http.Response('{"data": {"key": "value"}}', 200);
+      when(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).thenAnswer((_) async => mockResponse);
+
+      when(mockUser.getIdToken()).thenAnswer((_) async => 'authToken123');
+      when(mockAppCheck.getToken()).thenAnswer((_) async => 'appCheckToken123');
+
+      final deserializer = (String data) => 'Deserialized Data';
+
+      await transport.invokeOperation(
+        'testQuery',
+        'executeQuery',
+        deserializer,
+        null,
+        null,
+        'authToken123',
+      );
+
+      verify(
+        mockHttpClient.post(
+          any,
+          headers: argThat(
+            containsPair(
+                'x-firebase-client', getFirebaseClientVal(packageVersion)),
+            named: 'headers',
+          ),
+          body: anyNamed('body'),
+        ),
+      ).called(1);
+    });
 
     test(
         'invokeOperation should handle missing auth and appCheck tokens gracefully',
@@ -339,5 +376,63 @@ void main() {
         throwsA(isA<DataConnectError>()),
       );
     });
+    test('invokeOperation should decode a partial error if available',
+        () async {
+      final mockResponse = http.Response(
+        '''
+        {
+            "data": {"abc": "def"},
+            "errors": [
+                {
+                    "message": "SQL query error: pq: duplicate key value violates unique constraint movie_pkey",
+                    "locations": [],
+                    "path": [
+                        "the_matrix"
+                    ],
+                    "extensions": null
+                }
+            ]
+        }''',
+        200,
+      );
+      when(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).thenAnswer((_) async => mockResponse);
+
+      final deserializer = (String data) {
+        Map<String, dynamic> decoded = jsonDecode(data) as Map<String, dynamic>;
+        return AbcHolder(decoded['abc']!);
+      };
+
+      expect(
+        () => transport.invokeOperation(
+          'testQuery',
+          'executeQuery',
+          deserializer,
+          null,
+          null,
+          null,
+        ),
+        throwsA(predicate((e) =>
+            e is DataConnectOperationError &&
+            e.response.rawData!['abc'] == 'def' &&
+            e.response.errors.first.message ==
+                'SQL query error: pq: duplicate key value violates unique constraint movie_pkey' &&
+            (e.response.errors.first.path[0] as DataConnectFieldPathSegment)
+                    .field ==
+                'the_matrix' &&
+            e.response.data is AbcHolder &&
+            (e.response.data as AbcHolder).abc == 'def')),
+      );
+    });
   });
+}
+
+class AbcHolder {
+  String abc;
+  AbcHolder(this.abc);
 }

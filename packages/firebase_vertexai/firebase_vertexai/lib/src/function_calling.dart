@@ -20,7 +20,7 @@ import 'schema.dart';
 /// external systems to perform an action, or set of actions, outside of
 /// knowledge and scope of the model.
 final class Tool {
-  /// Constructor
+  // ignore: public_member_api_docs
   Tool._(this._functionDeclarations);
 
   /// Returns a [Tool] instance with list of [FunctionDeclaration].
@@ -54,7 +54,7 @@ final class Tool {
 /// FunctionDeclaration is a representation of a block of code that can be used
 /// as a `Tool` by the model and executed by the client.
 final class FunctionDeclaration {
-  /// Constructor
+  // ignore: public_member_api_docs
   FunctionDeclaration(this.name, this.description,
       {required Map<String, Schema> parameters,
       List<String> optionalParameters = const []})
@@ -82,7 +82,7 @@ final class FunctionDeclaration {
 
 /// Config for tools to use with model.
 final class ToolConfig {
-  /// Constructor
+  // ignore: public_member_api_docs
   ToolConfig({this.functionCallingConfig});
 
   /// Config for function calling.
@@ -98,7 +98,7 @@ final class ToolConfig {
 /// Configuration specifying how the model should use the functions provided as
 /// tools.
 final class FunctionCallingConfig {
-  /// Constructor
+  // ignore: public_member_api_docs
   FunctionCallingConfig._({this.mode, this.allowedFunctionNames});
 
   /// The mode in which function calling should execute.

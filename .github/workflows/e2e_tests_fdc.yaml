@@ -29,7 +29,7 @@ jobs:
       fail-fast: false
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
-      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af
+      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
         name: Install Node.js 20
         with:
           node-version: '20'
@@ -38,12 +38,12 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Firebase Emulator Cache
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-fdc-${{ runner.os }}
           restore-keys: firebase-emulators-v3
-      - uses: subosito/flutter-action@44ac965b96f18d999802d4b807e3256d5a3f9fa1
+      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
         with:
           channel: 'stable'
           cache: true
@@ -60,7 +60,7 @@ jobs:
           sudo npm i -g firebase-tools
       - name: Start Firebase Emulator
         run: |
-          cd ./packages/firebase_data_connect/firebase_data_connect/example 
+          cd ./packages/firebase_data_connect/firebase_data_connect/example
           unset PGSERVICEFILE
           firebase experiments:enable dataconnect
           ./start-firebase-emulator.sh
@@ -72,13 +72,13 @@ jobs:
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@v4
       - name: AVD cache
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
         id: avd-cache
         with:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-${{ runner.os }} 
+          key: avd-${{ runner.os }}
       - name: Start AVD then run E2E tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -96,7 +96,7 @@ jobs:
       fail-fast: false
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
-      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af
+      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
         name: Install Node.js 20
         with:
           node-version: '20'
@@ -105,13 +105,13 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Setup PostgreSQL for Linux/macOS/Windows
-        uses: ikalnytskyi/action-setup-postgres@v7  
+        uses: ikalnytskyi/action-setup-postgres@v7
       - uses: hendrikmuhs/ccache-action@c92f40bee50034e84c763e33b317c77adaa81c92
         name: Xcode Compile Cache
         with:
-          key: xcode-cache-${{ runner.os }}  
+          key: xcode-cache-${{ runner.os }}
           max-size: 700M
-      - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+      - uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
         name: Pods Cache
         id: pods-cache
         with:
@@ -119,12 +119,12 @@ jobs:
           key: ${{ runner.os }}-fdc-pods-v3-${{ hashFiles('tests/ios/Podfile.lock') }}
           restore-keys: ${{ runner.os }}-ios-pods-v2
       - name: Firebase Emulator Cache
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-fdc-${{ runner.os }}
           restore-keys: firebase-emulators-v3
-      - uses: subosito/flutter-action@44ac965b96f18d999802d4b807e3256d5a3f9fa1
+      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
         with:
           channel: 'stable'
           cache: true
@@ -151,7 +151,7 @@ jobs:
       - name: Start Firebase Emulator
         run: |
           sudo chown -R 501:20 "/Users/runner/.npm"
-          cd ./packages/firebase_data_connect/firebase_data_connect/example 
+          cd ./packages/firebase_data_connect/firebase_data_connect/example
           unset PGSERVICEFILE
           firebase experiments:enable dataconnect
           ./start-firebase-emulator.sh
@@ -176,7 +176,7 @@ jobs:
       fail-fast: false
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
-      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af
+      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
         name: Install Node.js 20
         with:
           node-version: '20'
@@ -186,7 +186,7 @@ jobs:
           java-version: '17'
       - name: Setup PostgreSQL for Linux/macOS/Windows
         uses: ikalnytskyi/action-setup-postgres@v7
-      - uses: subosito/flutter-action@44ac965b96f18d999802d4b807e3256d5a3f9fa1
+      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
         with:
           channel: 'stable'
           cache: true
@@ -199,7 +199,7 @@ jobs:
       - name: 'Install Tools'
         run: sudo npm i -g firebase-tools
       - name: Cache Firebase Emulator
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-fdc-${{ runner.os }}
@@ -207,7 +207,7 @@ jobs:
       - name: Start Firebase Emulator
         run: |
           sudo chown -R 501:20 "/Users/runner/.npm"
-          cd ./packages/firebase_data_connect/firebase_data_connect/example 
+          cd ./packages/firebase_data_connect/firebase_data_connect/example
           unset PGSERVICEFILE
           firebase experiments:enable dataconnect
           ./start-firebase-emulator.sh

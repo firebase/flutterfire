@@ -155,6 +155,57 @@ void main() {
         expect(FirebaseRemoteConfig.instance.getInt('does-not-exist'), 0);
         expect(FirebaseRemoteConfig.instance.getDouble('does-not-exist'), 0.0);
       });
+
+      group('setCustomSignals()', () {
+        test('valid signal values; `string`, `number` & `null`', () async {
+          const signals = <String, Object?>{
+            'signal1': 'string',
+            'signal2': 204953,
+            'signal3': 3.24,
+            'signal4': null,
+          };
+
+          await FirebaseRemoteConfig.instance.setCustomSignals(signals);
+        });
+
+        test('invalid signal values throws assertion', () async {
+          const signals = <String, Object?>{
+            'signal1': true,
+          };
+
+          await expectLater(
+            () => FirebaseRemoteConfig.instance.setCustomSignals(signals),
+            throwsA(isA<AssertionError>()),
+          );
+
+          const signals2 = <String, Object?>{
+            'signal1': [1, 2, 3],
+          };
+
+          await expectLater(
+            () => FirebaseRemoteConfig.instance.setCustomSignals(signals2),
+            throwsA(isA<AssertionError>()),
+          );
+
+          const signals3 = <String, Object?>{
+            'signal1': {'key': 'value'},
+          };
+
+          await expectLater(
+            () => FirebaseRemoteConfig.instance.setCustomSignals(signals3),
+            throwsA(isA<AssertionError>()),
+          );
+
+          const signals4 = <String, Object?>{
+            'signal1': false,
+          };
+
+          await expectLater(
+            () => FirebaseRemoteConfig.instance.setCustomSignals(signals4),
+            throwsA(isA<AssertionError>()),
+          );
+        });
+      });
     },
   );
 }

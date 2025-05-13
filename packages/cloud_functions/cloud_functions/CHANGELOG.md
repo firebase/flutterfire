@@ -1,6 +1,33 @@
+## 5.5.0
+
+ - **FEAT**(cloud_functions): add support for cloud functions stream ([#17214](https://github.com/firebase/flutterfire/issues/17214)). ([509e0f3c](https://github.com/firebase/flutterfire/commit/509e0f3cc984a7b56a67979b4b27aff72defdd55))
+
+## 5.4.0
+
+ - **FEAT**(functions): migrate cloud functions Apple implementation to Swift ([#17232](https://github.com/firebase/flutterfire/issues/17232)). ([9ebc7bc1](https://github.com/firebase/flutterfire/commit/9ebc7bc130757f918dfab9fbc583e5f6c5b3b565))
+
+## 5.3.4
+
+ - Update a dependency to the latest release.
+
+## 5.3.3
+
+ - Update a dependency to the latest release.
+
+## 5.3.2
+
+ - Update a dependency to the latest release.
+
+## 5.3.1
+
+ - Update a dependency to the latest release.
+
+## 5.3.0
+
+- Update a dependency to the latest release.
+
 ## 5.2.0
 
- - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
  - **FEAT**(functions): Swift Package Manager support ([#16770](https://github.com/firebase/flutterfire/issues/16770)). ([dc0dee22](https://github.com/firebase/flutterfire/commit/dc0dee221061b8ea7083e9dc1698aeeba8235518))
 
 ## 5.1.5

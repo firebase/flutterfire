@@ -18,8 +18,9 @@ import 'schema.dart';
 
 /// Response for Count Tokens
 final class CountTokensResponse {
-  /// Constructor
-  CountTokensResponse(this.totalTokens, {this.totalBillableCharacters});
+  // ignore: public_member_api_docs
+  CountTokensResponse(this.totalTokens,
+      {this.totalBillableCharacters, this.promptTokensDetails});
 
   /// The number of tokens that the `model` tokenizes the `prompt` into.
   ///
@@ -30,11 +31,14 @@ final class CountTokensResponse {
   ///
   /// Always non-negative.
   final int? totalBillableCharacters;
+
+  /// List of modalities that were processed in the request input.
+  final List<ModalityTokenCount>? promptTokensDetails;
 }
 
 /// Response from the model; supports multiple candidates.
 final class GenerateContentResponse {
-  /// Constructor
+  // ignore: public_member_api_docs
   GenerateContentResponse(this.candidates, this.promptFeedback,
       {this.usageMetadata});
 
@@ -104,11 +108,20 @@ final class GenerateContentResponse {
   Iterable<FunctionCall> get functionCalls =>
       candidates.firstOrNull?.content.parts.whereType<FunctionCall>() ??
       const [];
+
+  /// The inline data parts of the first candidate in [candidates], if any.
+  ///
+  /// Returns an empty list if there are no candidates, or if the first
+  /// candidate has no [InlineDataPart] parts. There is no error thrown if the
+  /// prompt or response were blocked.
+  Iterable<InlineDataPart> get inlineDataParts =>
+      candidates.firstOrNull?.content.parts.whereType<InlineDataPart>() ??
+      const [];
 }
 
 /// Feedback metadata of a prompt specified in a [GenerativeModel] request.
 final class PromptFeedback {
-  /// Constructor
+  // ignore: public_member_api_docs
   PromptFeedback(this.blockReason, this.blockReasonMessage, this.safetyRatings);
 
   /// If set, the prompt was blocked and no candidates are returned.
@@ -127,12 +140,13 @@ final class PromptFeedback {
 
 /// Metadata on the generation request's token usage.
 final class UsageMetadata {
-  /// Constructor
-  UsageMetadata._({
-    this.promptTokenCount,
-    this.candidatesTokenCount,
-    this.totalTokenCount,
-  });
+  // ignore: public_member_api_docs
+  UsageMetadata._(
+      {this.promptTokenCount,
+      this.candidatesTokenCount,
+      this.totalTokenCount,
+      this.promptTokensDetails,
+      this.candidatesTokensDetails});
 
   /// Number of tokens in the prompt.
   final int? promptTokenCount;
@@ -142,12 +156,18 @@ final class UsageMetadata {
 
   /// Total token count for the generation request (prompt + candidates).
   final int? totalTokenCount;
+
+  /// List of modalities that were processed in the request input.
+  final List<ModalityTokenCount>? promptTokensDetails;
+
+  /// List of modalities that were returned in the response.
+  final List<ModalityTokenCount>? candidatesTokensDetails;
 }
 
 /// Response candidate generated from a [GenerativeModel].
 final class Candidate {
   // TODO: token count?
-  /// Constructor
+  // ignore: public_member_api_docs
   Candidate(this.content, this.safetyRatings, this.citationMetadata,
       this.finishReason, this.finishMessage);
 
@@ -212,7 +232,7 @@ final class Candidate {
 /// safety across a number of harm categories and the probability of the harm
 /// classification is included here.
 final class SafetyRating {
-  /// Constructor
+  // ignore: public_member_api_docs
   SafetyRating(this.category, this.probability,
       {this.probabilityScore,
       this.isBlocked,
@@ -255,6 +275,7 @@ enum BlockReason {
   other('OTHER');
 
   const BlockReason(this._jsonString);
+
   // ignore: unused_element
   static BlockReason _parseValue(String jsonObject) {
     return switch (jsonObject) {
@@ -297,6 +318,7 @@ enum HarmCategory {
   dangerousContent('HARM_CATEGORY_DANGEROUS_CONTENT');
 
   const HarmCategory(this._jsonString);
+
   // ignore: unused_element
   static HarmCategory _parseValue(Object jsonObject) {
     return switch (jsonObject) {
@@ -406,7 +428,7 @@ enum HarmSeverity {
 
 /// Source attributions for a piece of content.
 final class CitationMetadata {
-  /// Constructor
+  // ignore: public_member_api_docs
   CitationMetadata(this.citations);
 
   /// Citations to sources for a specific response.
@@ -415,7 +437,7 @@ final class CitationMetadata {
 
 /// Citation to a source for a portion of a specific response.
 final class Citation {
-  /// Constructor
+  // ignore: public_member_api_docs
   Citation(this.startIndex, this.endIndex, this.uri, this.license);
 
   /// Start of segment of the response that is attributed to this source.
@@ -481,13 +503,69 @@ enum FinishReason {
   String toString() => name;
 }
 
+/// Represents token counting info for a single modality.
+final class ModalityTokenCount {
+  /// Constructor
+  ModalityTokenCount(this.modality, this.tokenCount);
+
+  /// The modality associated with this token count.
+  final ContentModality modality;
+
+  /// The number of tokens counted.
+  final int tokenCount;
+}
+
+/// Content part modality.
+enum ContentModality {
+  /// Unspecified modality.
+  unspecified('MODALITY_UNSPECIFIED'),
+
+  /// Plain text.
+  text('TEXT'),
+
+  /// Image.
+  image('IMAGE'),
+
+  /// Video.
+  video('VIDEO'),
+
+  /// Audio.
+  audio('AUDIO'),
+
+  /// Document, e.g. PDF.
+  document('DOCUMENT');
+
+  const ContentModality(this._jsonString);
+
+  static ContentModality _parseValue(Object jsonObject) {
+    return switch (jsonObject) {
+      'MODALITY_UNSPECIFIED' => ContentModality.unspecified,
+      'TEXT' => ContentModality.text,
+      'IMAGE' => ContentModality.image,
+      'VIDEO' => ContentModality.video,
+      'AUDIO' => ContentModality.audio,
+      'DOCUMENT' => ContentModality.document,
+      _ =>
+        throw FormatException('Unhandled ContentModality format', jsonObject),
+    };
+  }
+
+  final String _jsonString;
+
+  @override
+  String toString() => name;
+
+  /// Convert to json format.
+  Object toJson() => _jsonString;
+}
+
 /// Safety setting, affecting the safety-blocking behavior.
 ///
 /// Passing a safety setting for a category changes the allowed probability that
 /// content is blocked.
 final class SafetySetting {
-  /// Constructor
-  SafetySetting(this.category, this.threshold);
+  // ignore: public_member_api_docs
+  SafetySetting(this.category, this.threshold, this.method);
 
   /// The category for this setting.
   final HarmCategory category;
@@ -495,9 +573,16 @@ final class SafetySetting {
   /// Controls the probability threshold at which harm is blocked.
   final HarmBlockThreshold threshold;
 
+  /// Specify if the threshold is used for probability or severity score, if
+  /// not specified it will default to [HarmBlockMethod.probability].
+  final HarmBlockMethod? method;
+
   /// Convert to json format.
-  Object toJson() =>
-      {'category': category.toJson(), 'threshold': threshold.toJson()};
+  Object toJson() => {
+        'category': category.toJson(),
+        'threshold': threshold.toJson(),
+        if (method case final method?) 'method': method.toJson(),
+      };
 }
 
 /// Probability of harm which causes content to be blocked.
@@ -515,7 +600,12 @@ enum HarmBlockThreshold {
   high('BLOCK_ONLY_HIGH'),
 
   /// Always show regardless of probability of unsafe content.
-  none('BLOCK_NONE');
+  none('BLOCK_NONE'),
+
+  /// All content is allowed regardless of harm.
+  ///
+  /// metadata will not be included in the response.
+  off('OFF');
 
   const HarmBlockThreshold(this._jsonString);
 
@@ -526,6 +616,7 @@ enum HarmBlockThreshold {
       'BLOCK_MEDIUM_AND_ABOVE' => HarmBlockThreshold.medium,
       'BLOCK_ONLY_HIGH' => HarmBlockThreshold.high,
       'BLOCK_NONE' => HarmBlockThreshold.none,
+      'OFF' => HarmBlockThreshold.off,
       _ => throw FormatException(
           'Unhandled HarmBlockThreshold format', jsonObject),
     };
@@ -540,30 +631,77 @@ enum HarmBlockThreshold {
   Object toJson() => _jsonString;
 }
 
+/// Specifies how the block method computes the score that will be compared
+/// against the [HarmBlockThreshold] in [SafetySetting].
+enum HarmBlockMethod {
+  /// The harm block method uses both probability and severity scores.
+  severity('SEVERITY'),
+
+  /// The harm block method uses the probability score.
+  probability('PROBABILITY'),
+
+  /// The harm block method is unspecified.
+  unspecified('HARM_BLOCK_METHOD_UNSPECIFIED');
+
+  const HarmBlockMethod(this._jsonString);
+
+  // ignore: unused_element
+  static HarmBlockMethod _parseValue(Object jsonObject) {
+    return switch (jsonObject) {
+      'SEVERITY' => HarmBlockMethod.severity,
+      'PROBABILITY' => HarmBlockMethod.probability,
+      'HARM_BLOCK_METHOD_UNSPECIFIED' => HarmBlockMethod.unspecified,
+      _ =>
+        throw FormatException('Unhandled HarmBlockMethod format', jsonObject),
+    };
+  }
+
+  final String _jsonString;
+
+  @override
+  String toString() => name;
+
+  /// Convert to json format.
+  Object toJson() => _jsonString;
+}
+
+/// The available response modalities.
+enum ResponseModalities {
+  /// Text response modality.
+  text('TEXT'),
+
+  /// Image response modality.
+  image('IMAGE'),
+
+  /// Audio response modality.
+  audio('AUDIO');
+
+  const ResponseModalities(this._jsonString);
+  final String _jsonString;
+
+  /// Convert to json format
+  String toJson() => _jsonString;
+}
+
 /// Configuration options for model generation and outputs.
-final class GenerationConfig {
-  /// Constructor
-  GenerationConfig(
-      {this.candidateCount,
-      this.stopSequences,
-      this.maxOutputTokens,
-      this.temperature,
-      this.topP,
-      this.topK,
-      this.responseMimeType,
-      this.responseSchema});
+abstract class BaseGenerationConfig {
+  // ignore: public_member_api_docs
+  BaseGenerationConfig({
+    this.candidateCount,
+    this.maxOutputTokens,
+    this.temperature,
+    this.topP,
+    this.topK,
+    this.presencePenalty,
+    this.frequencyPenalty,
+    this.responseModalities,
+  });
 
   /// Number of generated responses to return.
   ///
   /// This value must be between [1, 8], inclusive. If unset, this will default
   /// to 1.
   final int? candidateCount;
-
-  /// The set of character sequences (up to 5) that will stop output generation.
-  ///
-  /// If specified, the API will stop at the first appearance of a stop
-  /// sequence. The stop sequence will not be included as part of the response.
-  final List<String>? stopSequences;
 
   /// The maximum number of tokens to include in a candidate.
   ///
@@ -598,6 +736,86 @@ final class GenerationConfig {
   /// Note: The default value varies by model.
   final int? topK;
 
+  /// The penalty for repeating the same words or phrases already generated in
+  /// the text.
+  ///
+  /// Controls the likelihood of repetition. Higher penalty values result in
+  /// more diverse output.
+  ///
+  /// **Note:** While both [presencePenalty] and [frequencyPenalty] discourage
+  /// repetition, [presencePenalty] applies the same penalty regardless of how
+  /// many times the word/phrase has already appeared, whereas
+  /// [frequencyPenalty] increases the penalty for *each* repetition of a
+  /// word/phrase.
+  ///
+  /// **Important:** The range of supported [presencePenalty] values depends on
+  /// the model; see the
+  /// [documentation](https://firebase.google.com/docs/vertex-ai/model-parameters?platform=flutter#configure-model-parameters-gemini)
+  /// for more details.
+  final double? presencePenalty;
+
+  /// The penalty for repeating words or phrases, with the penalty increasing
+  /// for each repetition.
+  ///
+  /// Controls the likelihood of repetition. Higher values increase the penalty
+  /// of repetition, resulting in more diverse output.
+  ///
+  /// **Note:** While both [frequencyPenalty] and [presencePenalty] discourage
+  /// repetition, [frequencyPenalty] increases the penalty for *each* repetition
+  /// of a word/phrase, whereas [presencePenalty] applies the same penalty
+  /// regardless of how many times the word/phrase has already appeared.
+  ///
+  /// **Important:** The range of supported [frequencyPenalty] values depends on
+  /// the model; see the
+  /// [documentation](https://firebase.google.com/docs/vertex-ai/model-parameters?platform=flutter#configure-model-parameters-gemini)
+  /// for more details.
+  final double? frequencyPenalty;
+
+  /// The list of desired response modalities.
+  final List<ResponseModalities>? responseModalities;
+
+  // ignore: public_member_api_docs
+  Map<String, Object?> toJson() => {
+        if (candidateCount case final candidateCount?)
+          'candidateCount': candidateCount,
+        if (maxOutputTokens case final maxOutputTokens?)
+          'maxOutputTokens': maxOutputTokens,
+        if (temperature case final temperature?) 'temperature': temperature,
+        if (topP case final topP?) 'topP': topP,
+        if (topK case final topK?) 'topK': topK,
+        if (presencePenalty case final presencePenalty?)
+          'presencePenalty': presencePenalty,
+        if (frequencyPenalty case final frequencyPenalty?)
+          'frequencyPenalty': frequencyPenalty,
+        if (responseModalities case final responseModalities?)
+          'responseModalities':
+              responseModalities.map((modality) => modality.toJson()).toList(),
+      };
+}
+
+/// Configuration options for model generation and outputs.
+final class GenerationConfig extends BaseGenerationConfig {
+  // ignore: public_member_api_docs
+  GenerationConfig({
+    super.candidateCount,
+    this.stopSequences,
+    super.maxOutputTokens,
+    super.temperature,
+    super.topP,
+    super.topK,
+    super.presencePenalty,
+    super.frequencyPenalty,
+    super.responseModalities,
+    this.responseMimeType,
+    this.responseSchema,
+  });
+
+  /// The set of character sequences (up to 5) that will stop output generation.
+  ///
+  /// If specified, the API will stop at the first appearance of a stop
+  /// sequence. The stop sequence will not be included as part of the response.
+  final List<String>? stopSequences;
+
   /// Output response mimetype of the generated candidate text.
   ///
   /// Supported mimetype:
@@ -611,22 +829,16 @@ final class GenerationConfig {
   ///   a schema; currently this is limited to `application/json`.
   final Schema? responseSchema;
 
-  /// Convert to json format
+  @override
   Map<String, Object?> toJson() => {
-        if (candidateCount case final candidateCount?)
-          'candidateCount': candidateCount,
+        ...super.toJson(),
         if (stopSequences case final stopSequences?
             when stopSequences.isNotEmpty)
           'stopSequences': stopSequences,
-        if (maxOutputTokens case final maxOutputTokens?)
-          'maxOutputTokens': maxOutputTokens,
-        if (temperature case final temperature?) 'temperature': temperature,
-        if (topP case final topP?) 'topP': topP,
-        if (topK case final topK?) 'topK': topK,
         if (responseMimeType case final responseMimeType?)
           'responseMimeType': responseMimeType,
         if (responseSchema case final responseSchema?)
-          'responseSchema': responseSchema,
+          'responseSchema': responseSchema.toJson(),
       };
 }
 
@@ -696,16 +908,28 @@ GenerateContentResponse parseGenerateContentResponse(Object jsonObject) {
 /// Parse the json to [CountTokensResponse]
 CountTokensResponse parseCountTokensResponse(Object jsonObject) {
   if (jsonObject case {'error': final Object error}) throw parseError(error);
-  if (jsonObject case {'totalTokens': final int totalTokens}) {
-    if (jsonObject
-        case {'totalBillableCharacters': final int totalBillableCharacters}) {
-      return CountTokensResponse(totalTokens,
-          totalBillableCharacters: totalBillableCharacters);
-    } else {
-      return CountTokensResponse(totalTokens);
-    }
+
+  if (jsonObject is! Map) {
+    throw unhandledFormat('CountTokensResponse', jsonObject);
   }
-  throw unhandledFormat('CountTokensResponse', jsonObject);
+
+  final totalTokens = jsonObject['totalTokens'] as int;
+  final totalBillableCharacters = switch (jsonObject) {
+    {'totalBillableCharacters': final int totalBillableCharacters} =>
+      totalBillableCharacters,
+    _ => null,
+  };
+  final promptTokensDetails = switch (jsonObject) {
+    {'promptTokensDetails': final List<Object?> promptTokensDetails} =>
+      promptTokensDetails.map(_parseModalityTokenCount).toList(),
+    _ => null,
+  };
+
+  return CountTokensResponse(
+    totalTokens,
+    totalBillableCharacters: totalBillableCharacters,
+    promptTokensDetails: promptTokensDetails,
+  );
 }
 
 Candidate _parseCandidate(Object? jsonObject) {
@@ -777,15 +1001,43 @@ UsageMetadata _parseUsageMetadata(Object jsonObject) {
     {'totalTokenCount': final int totalTokenCount} => totalTokenCount,
     _ => null,
   };
+  final promptTokensDetails = switch (jsonObject) {
+    {'promptTokensDetails': final List<Object?> promptTokensDetails} =>
+      promptTokensDetails.map(_parseModalityTokenCount).toList(),
+    _ => null,
+  };
+  final candidatesTokensDetails = switch (jsonObject) {
+    {'candidatesTokensDetails': final List<Object?> candidatesTokensDetails} =>
+      candidatesTokensDetails.map(_parseModalityTokenCount).toList(),
+    _ => null,
+  };
   return UsageMetadata._(
       promptTokenCount: promptTokenCount,
       candidatesTokenCount: candidatesTokenCount,
-      totalTokenCount: totalTokenCount);
+      totalTokenCount: totalTokenCount,
+      promptTokensDetails: promptTokensDetails,
+      candidatesTokensDetails: candidatesTokensDetails);
+}
+
+ModalityTokenCount _parseModalityTokenCount(Object? jsonObject) {
+  if (jsonObject is! Map) {
+    throw unhandledFormat('ModalityTokenCount', jsonObject);
+  }
+  var modality = ContentModality._parseValue(jsonObject['modality']);
+
+  if (jsonObject.containsKey('tokenCount')) {
+    return ModalityTokenCount(modality, jsonObject['tokenCount'] as int);
+  } else {
+    return ModalityTokenCount(modality, 0);
+  }
 }
 
 SafetyRating _parseSafetyRating(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('SafetyRating', jsonObject);
+  }
+  if (jsonObject.isEmpty) {
+    return SafetyRating(HarmCategory.unknown, HarmProbability.unknown);
   }
   return SafetyRating(HarmCategory._parseValue(jsonObject['category']),
       HarmProbability._parseValue(jsonObject['probability']),

@@ -1002,7 +1002,7 @@ PigeonActionCodeSettings::PigeonActionCodeSettings(
     const std::string& url, const std::string* dynamic_link_domain,
     bool handle_code_in_app, const std::string* i_o_s_bundle_id,
     const std::string* android_package_name, bool android_install_app,
-    const std::string* android_minimum_version)
+    const std::string* android_minimum_version, const std::string* link_domain)
     : url_(url),
       dynamic_link_domain_(
           dynamic_link_domain ? std::optional<std::string>(*dynamic_link_domain)
@@ -1018,7 +1018,9 @@ PigeonActionCodeSettings::PigeonActionCodeSettings(
       android_minimum_version_(
           android_minimum_version
               ? std::optional<std::string>(*android_minimum_version)
-              : std::nullopt) {}
+              : std::nullopt),
+      link_domain_(link_domain ? std::optional<std::string>(*link_domain)
+                               : std::nullopt) {}
 
 const std::string& PigeonActionCodeSettings::url() const { return url_; }
 
@@ -1101,9 +1103,23 @@ void PigeonActionCodeSettings::set_android_minimum_version(
   android_minimum_version_ = value_arg;
 }
 
+const std::string* PigeonActionCodeSettings::link_domain() const {
+  return link_domain_ ? &(*link_domain_) : nullptr;
+}
+
+void PigeonActionCodeSettings::set_link_domain(
+    const std::string_view* value_arg) {
+  link_domain_ =
+      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+}
+
+void PigeonActionCodeSettings::set_link_domain(std::string_view value_arg) {
+  link_domain_ = value_arg;
+}
+
 EncodableList PigeonActionCodeSettings::ToEncodableList() const {
   EncodableList list;
-  list.reserve(7);
+  list.reserve(8);
   list.push_back(EncodableValue(url_));
   list.push_back(dynamic_link_domain_ ? EncodableValue(*dynamic_link_domain_)
                                       : EncodableValue());
@@ -1116,6 +1132,8 @@ EncodableList PigeonActionCodeSettings::ToEncodableList() const {
   list.push_back(android_minimum_version_
                      ? EncodableValue(*android_minimum_version_)
                      : EncodableValue());
+  list.push_back(link_domain_ ? EncodableValue(*link_domain_)
+                              : EncodableValue());
   return list;
 }
 
@@ -1143,6 +1161,10 @@ PigeonActionCodeSettings PigeonActionCodeSettings::FromEncodableList(
   if (!encodable_android_minimum_version.IsNull()) {
     decoded.set_android_minimum_version(
         std::get<std::string>(encodable_android_minimum_version));
+  }
+  auto& encodable_link_domain = list[7];
+  if (!encodable_link_domain.IsNull()) {
+    decoded.set_link_domain(std::get<std::string>(encodable_link_domain));
   }
   return decoded;
 }
