@@ -12,16 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of firebase_data_connect_rest;
+part of 'rest_library.dart';
 
 /// RestTransport makes requests out to the REST endpoints of the configured backend.
 class RestTransport implements DataConnectTransport {
   /// Initializes necessary protocol and port.
-  RestTransport(this.transportOptions, this.options, this.appId, this.sdkType,
-      this.appCheck) {
+  RestTransport(
+    this.transportOptions,
+    this.options,
+    this.appId,
+    this.sdkType,
+    this.appCheck,
+  ) {
     String protocol = 'http';
-    if (transportOptions.isSecure == null ||
-        transportOptions.isSecure == true) {
+    if (transportOptions.isSecure ?? true) {
       protocol += 's';
     }
     String host = transportOptions.host;
@@ -31,12 +35,13 @@ class RestTransport implements DataConnectTransport {
     String service = options.serviceId;
     String connector = options.connector;
     url =
-        '$protocol://$host:$port/v1beta/projects/$project/locations/$location/services/$service/connectors/$connector';
+        '$protocol://$host:$port/v1/projects/$project/locations/$location/services/$service/connectors/$connector';
   }
 
   @override
   FirebaseAppCheck? appCheck;
 
+  @override
   CallerSDKType sdkType;
 
   /// Current endpoint URL.
@@ -44,7 +49,8 @@ class RestTransport implements DataConnectTransport {
   late String url;
 
   @visibleForTesting
-  setHttp(http.Client client) {
+  // ignore: use_setters_to_change_properties
+  void setHttp(http.Client client) {
     _client = client;
   }
 
@@ -78,7 +84,8 @@ class RestTransport implements DataConnectTransport {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'x-goog-api-client': getGoogApiVal(sdkType, packageVersion)
+      'x-goog-api-client': getGoogApiVal(sdkType, packageVersion),
+      'x-firebase-client': getFirebaseClientVal(packageVersion)
     };
     String? appCheckToken;
     try {
@@ -103,71 +110,117 @@ class RestTransport implements DataConnectTransport {
       body['variables'] = json.decode(serializer(vars));
     }
     try {
-      http.Response r = await _client.post(Uri.parse('$url:$endpoint'),
-          body: json.encode(body), headers: headers);
+      http.Response r = await _client.post(
+        Uri.parse('$url:$endpoint'),
+        body: json.encode(body),
+        headers: headers,
+      );
       if (r.statusCode != 200) {
         Map<String, dynamic> bodyJson =
             jsonDecode(r.body) as Map<String, dynamic>;
         String message =
             bodyJson.containsKey('message') ? bodyJson['message']! : r.body;
         throw DataConnectError(
-            r.statusCode == 401
-                ? DataConnectErrorCode.unauthorized
-                : DataConnectErrorCode.other,
-            "Received a status code of ${r.statusCode} with a message '${message}'");
-      } else {
-        Map<String, dynamic> bodyJson =
-            jsonDecode(r.body) as Map<String, dynamic>;
-        if (bodyJson.containsKey("errors") &&
-            (bodyJson['errors'] as List).isNotEmpty) {
-          throw DataConnectError(
-              DataConnectErrorCode.other, bodyJson['errors'].toString());
+          r.statusCode == 401
+              ? DataConnectErrorCode.unauthorized
+              : DataConnectErrorCode.other,
+          "Received a status code of ${r.statusCode} with a message '$message'",
+        );
+      }
+      Map<String, dynamic> bodyJson =
+          jsonDecode(r.body) as Map<String, dynamic>;
+
+      if (bodyJson.containsKey('errors') &&
+          (bodyJson['errors'] as List).isNotEmpty) {
+        Map<String, dynamic>? data = bodyJson['data'];
+        Data? decodedData;
+        if (data != null) {
+          try {
+            decodedData = deserializer(jsonEncode(bodyJson['data']));
+          } catch (e) {
+            // nothing required
+          }
         }
+        List<dynamic> errors =
+            jsonDecode(jsonEncode(bodyJson['errors'])) as List<dynamic>;
+        List<DataConnectOperationFailureResponseErrorInfo> suberrors = errors
+            .map((e) {
+              return jsonDecode(jsonEncode(e)) as Map<String, dynamic>;
+            })
+            .map((e) => DataConnectOperationFailureResponseErrorInfo(
+                (e['path'] as List)
+                    .map((val) => val.runtimeType == String
+                        ? DataConnectFieldPathSegment(val)
+                        : DataConnectListIndexPathSegment(val))
+                    .toList(),
+                e['message']))
+            .toList();
+        final response =
+            DataConnectOperationFailureResponse(suberrors, data, decodedData);
+        throw DataConnectOperationError(DataConnectErrorCode.other,
+            'Failed to invoke operation: ', response);
       }
 
       /// The response we get is in the data field of the response
       /// Once we get the data back, it's not quite json-encoded,
       /// so we have to encode it and then send it to the user's deserializer.
-      return deserializer(jsonEncode(jsonDecode(r.body)['data']));
+      return deserializer(jsonEncode(bodyJson['data']));
     } on Exception catch (e) {
       if (e is DataConnectError) {
         rethrow;
       }
-      throw DataConnectError(DataConnectErrorCode.other,
-          'Failed to invoke operation: ${e.toString()}');
+      throw DataConnectError(
+        DataConnectErrorCode.other,
+        'Failed to invoke operation: $e',
+      );
     }
   }
 
   /// Invokes query REST endpoint.
   @override
   Future<Data> invokeQuery<Data, Variables>(
-      String queryName,
-      Deserializer<Data> deserializer,
-      Serializer<Variables>? serializer,
-      Variables? vars,
-      String? token) async {
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+    String? token,
+  ) async {
     return invokeOperation(
-        queryName, 'executeQuery', deserializer, serializer, vars, token);
+      queryName,
+      'executeQuery',
+      deserializer,
+      serializer,
+      vars,
+      token,
+    );
   }
 
   /// Invokes mutation REST endpoint.
   @override
   Future<Data> invokeMutation<Data, Variables>(
-      String queryName,
-      Deserializer<Data> deserializer,
-      Serializer<Variables>? serializer,
-      Variables? vars,
-      String? token) async {
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+    String? token,
+  ) async {
     return invokeOperation(
-        queryName, 'executeMutation', deserializer, serializer, vars, token);
+      queryName,
+      'executeMutation',
+      deserializer,
+      serializer,
+      vars,
+      token,
+    );
   }
 }
 
 /// Initializes Rest transport for Data Connect.
 DataConnectTransport getTransport(
-        TransportOptions transportOptions,
-        DataConnectOptions options,
-        String appId,
-        CallerSDKType sdkType,
-        FirebaseAppCheck? appCheck) =>
+  TransportOptions transportOptions,
+  DataConnectOptions options,
+  String appId,
+  CallerSDKType sdkType,
+  FirebaseAppCheck? appCheck,
+) =>
     RestTransport(transportOptions, options, appId, sdkType, appCheck);

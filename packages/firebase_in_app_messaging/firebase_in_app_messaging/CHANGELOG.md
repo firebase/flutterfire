@@ -1,3 +1,31 @@
+## 0.8.1+5
+
+ - Update a dependency to the latest release.
+
+## 0.8.1+4
+
+ - Update a dependency to the latest release.
+
+## 0.8.1+3
+
+ - Update a dependency to the latest release.
+
+## 0.8.1+2
+
+ - Update a dependency to the latest release.
+
+## 0.8.1+1
+
+ - Update a dependency to the latest release.
+
+## 0.8.1
+
+ - **FEAT**(in-app-messaging): Swift Package Manager support ([#16851](https://github.com/firebase/flutterfire/issues/16851)). ([e34bec4a](https://github.com/firebase/flutterfire/commit/e34bec4a3f8c09e4903dc7219e1a986f1c26bef2))
+
+## 0.8.0+11
+
+ - Update a dependency to the latest release.
+
 ## 0.8.0+10
 
  - Update a dependency to the latest release.

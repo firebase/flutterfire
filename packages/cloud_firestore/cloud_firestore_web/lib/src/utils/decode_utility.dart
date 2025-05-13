@@ -41,6 +41,15 @@ class DecodeUtility {
         value.instanceof(GeoPointConstructor as JSFunction)) {
       return GeoPoint((value as GeoPointJsImpl).latitude.toDartDouble,
           (value as GeoPointJsImpl).longitude.toDartDouble);
+      // Cannot be done with Dart 3.2 constraints
+      // ignore: invalid_runtime_check_with_js_interop_types
+    } else if (value is JSObject &&
+        value.instanceof(VectorValueConstructor as JSFunction)) {
+      return VectorValue((value as VectorValueJsImpl)
+          .toArray()
+          .toDart
+          .map((JSAny? e) => (e! as JSNumber).toDartDouble)
+          .toList());
     } else if (value is DateTime) {
       return Timestamp.fromDate(value);
       // Cannot be done with Dart 3.2 constraints

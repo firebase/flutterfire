@@ -18,8 +18,9 @@ import 'package:pigeon/pigeon.dart';
       className: 'GeneratedAndroidFirebaseAuth',
     ),
     objcHeaderOut:
-        '../firebase_auth/ios/Classes/Public/firebase_auth_messages.g.h',
-    objcSourceOut: '../firebase_auth/ios/Classes/firebase_auth_messages.g.m',
+        '../firebase_auth/ios/firebase_auth/Sources/firebase_auth/include/Public/firebase_auth_messages.g.h',
+    objcSourceOut:
+        '../firebase_auth/ios/firebase_auth/Sources/firebase_auth/firebase_auth_messages.g.m',
     cppHeaderOut: '../firebase_auth/windows/messages.g.h',
     cppSourceOut: '../firebase_auth/windows/messages.g.cpp',
     cppOptions: CppOptions(namespace: 'firebase_auth_windows'),
@@ -219,6 +220,7 @@ class PigeonActionCodeSettings {
   const PigeonActionCodeSettings({
     required this.url,
     required this.dynamicLinkDomain,
+    required this.linkDomain,
     required this.handleCodeInApp,
     required this.iOSBundleId,
     required this.androidPackageName,
@@ -233,6 +235,7 @@ class PigeonActionCodeSettings {
   final String? androidPackageName;
   final bool androidInstallApp;
   final String? androidMinimumVersion;
+  final String? linkDomain;
 }
 
 class PigeonFirebaseAuthSettings {

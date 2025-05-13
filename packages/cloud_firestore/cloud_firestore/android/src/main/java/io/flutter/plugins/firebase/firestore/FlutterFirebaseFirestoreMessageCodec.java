@@ -23,6 +23,7 @@ import com.google.firebase.firestore.PersistentCacheSettings;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SnapshotMetadata;
+import com.google.firebase.firestore.VectorValue;
 import io.flutter.plugin.common.StandardMessageCodec;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
@@ -55,6 +56,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
   private static final byte DATA_TYPE_FIRESTORE_INSTANCE = (byte) 196;
   private static final byte DATA_TYPE_FIRESTORE_QUERY = (byte) 197;
   private static final byte DATA_TYPE_FIRESTORE_SETTINGS = (byte) 198;
+  private static final byte DATA_TYPE_VECTOR_VALUE = (byte) 199;
 
   @Override
   protected void writeValue(ByteArrayOutputStream stream, Object value) {
@@ -70,6 +72,9 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
       writeAlignment(stream, 8);
       writeDouble(stream, ((GeoPoint) value).getLatitude());
       writeDouble(stream, ((GeoPoint) value).getLongitude());
+    } else if (value instanceof VectorValue) {
+      stream.write(DATA_TYPE_VECTOR_VALUE);
+      writeValue(stream, ((VectorValue) value).toArray());
     } else if (value instanceof DocumentReference) {
       stream.write(DATA_TYPE_DOCUMENT_REFERENCE);
       FirebaseFirestore firestore = ((DocumentReference) value).getFirestore();
@@ -238,6 +243,14 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
       case DATA_TYPE_GEO_POINT:
         readAlignment(buffer, 8);
         return new GeoPoint(buffer.getDouble(), buffer.getDouble());
+      case DATA_TYPE_VECTOR_VALUE:
+        @SuppressWarnings("unchecked")
+        final ArrayList<Double> arrayList = (ArrayList<Double>) readValue(buffer);
+        double[] doubleArray = new double[arrayList.size()];
+        for (int i = 0; i < arrayList.size(); i++) {
+          doubleArray[i] = Objects.requireNonNull(arrayList.get(i), "Null value at index " + i);
+        }
+        return FieldValue.vector(doubleArray);
       case DATA_TYPE_DOCUMENT_REFERENCE:
         FirebaseFirestore firestore = (FirebaseFirestore) readValue(buffer);
         final String path = (String) readValue(buffer);

@@ -12,19 +12,56 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of firebase_data_connect_common;
+part of 'common_library.dart';
 
 /// Types of DataConnect errors that can occur.
 enum DataConnectErrorCode { unavailable, unauthorized, other }
 
 /// Error thrown when DataConnect encounters an error.
 class DataConnectError extends FirebaseException {
-  DataConnectError(this.dataConnectErrorCode, message)
+  DataConnectError(this.dataConnectErrorCode, String? message)
       : super(
-            plugin: 'Data Connect',
-            code: dataConnectErrorCode.toString(),
-            message: message);
+          plugin: 'Data Connect',
+          code: dataConnectErrorCode.toString(),
+          message: message,
+        );
   final DataConnectErrorCode dataConnectErrorCode;
+}
+
+/// Error thrown when an operation is partially successful.
+class DataConnectOperationError<T> extends DataConnectError {
+  DataConnectOperationError(
+      DataConnectErrorCode code, String message, this.response)
+      : super(code, message);
+  final DataConnectOperationFailureResponse<T> response;
+}
+
+/// Nested class containing errors and decoded data.
+class DataConnectOperationFailureResponse<T> {
+  DataConnectOperationFailureResponse(this.errors, this.rawData, this.data);
+  final Map<String, dynamic>? rawData;
+  final List<DataConnectOperationFailureResponseErrorInfo> errors;
+  final T? data;
+}
+
+/// Error information per error.
+class DataConnectOperationFailureResponseErrorInfo {
+  DataConnectOperationFailureResponseErrorInfo(this.path, this.message);
+  String message;
+  List<DataConnectPathSegment> path;
+}
+
+/// Path where error occurred.
+sealed class DataConnectPathSegment {}
+
+class DataConnectFieldPathSegment extends DataConnectPathSegment {
+  final String field;
+  DataConnectFieldPathSegment(this.field);
+}
+
+class DataConnectListIndexPathSegment extends DataConnectPathSegment {
+  final int index;
+  DataConnectListIndexPathSegment(this.index);
 }
 
 typedef Serializer<Variables> = String Function(Variables vars);

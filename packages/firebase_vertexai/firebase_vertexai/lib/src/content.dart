@@ -18,7 +18,7 @@ import 'error.dart';
 
 /// The base structured datatype containing multi-part content of a message.
 final class Content {
-  /// Constructor
+  // ignore: public_member_api_docs
   Content(this.role, this.parts);
 
   /// The producer of the content.
@@ -60,33 +60,43 @@ final class Content {
   /// Convert the [Content] to json format.
   Map<String, Object?> toJson() => {
         if (role case final role?) 'role': role,
-        'parts': parts.map((p) => p.toJson()).toList()
+        'parts': parts.map((p) {
+          return p.toJson();
+        }).toList(),
       };
 }
 
 /// Parse the [Content] from json object.
 Content parseContent(Object jsonObject) {
   return switch (jsonObject) {
+    {'role': final String role, 'parts': final List<Object?> parts} =>
+      Content(role, parts.map(parsePart).toList()),
+    {'role': final String role} =>
+      Content(role, <Part>[]), // Handle case with only role
     {'parts': final List<Object?> parts} => Content(
-        switch (jsonObject) {
-          {'role': final String role} => role,
-          _ => null,
-        },
-        parts.map(_parsePart).toList()),
+        null, parts.map(parsePart).toList()), // Handle case with only parts
     _ => throw unhandledFormat('Content', jsonObject),
   };
 }
 
-Part _parsePart(Object? jsonObject) {
+/// Parse the [Part] from json object.
+Part parsePart(Object? jsonObject) {
+  if (jsonObject is Map && jsonObject.containsKey('functionCall')) {
+    final functionCall = jsonObject['functionCall'];
+    if (functionCall is Map &&
+        functionCall.containsKey('name') &&
+        functionCall.containsKey('args')) {
+      return FunctionCall(
+        functionCall['name'] as String,
+        functionCall['args'] as Map<String, Object?>,
+        id: functionCall['id'] as String?,
+      );
+    } else {
+      throw unhandledFormat('functionCall', functionCall);
+    }
+  }
   return switch (jsonObject) {
     {'text': final String text} => TextPart(text),
-    {
-      'functionCall': {
-        'name': final String name,
-        'args': final Map<String, Object?> args
-      }
-    } =>
-      FunctionCall(name, args),
     {
       'file_data': {
         'file_uri': final String fileUri,
@@ -98,8 +108,8 @@ Part _parsePart(Object? jsonObject) {
       'functionResponse': {'name': String _, 'response': Map<String, Object?> _}
     } =>
       throw UnimplementedError('FunctionResponse part not yet supported'),
-    {'inlineData': {'mimeType': String _, 'data': String _}} =>
-      throw UnimplementedError('inlineData content part not yet supported'),
+    {'inlineData': {'mimeType': String mimeType, 'data': String bytes}} =>
+      InlineDataPart(mimeType, base64Decode(bytes)),
     _ => throw unhandledFormat('Part', jsonObject),
   };
 }
@@ -112,7 +122,7 @@ sealed class Part {
 
 /// A [Part] with the text content.
 final class TextPart implements Part {
-  /// Constructor
+  // ignore: public_member_api_docs
   TextPart(this.text);
 
   /// The text content of the [Part]
@@ -123,8 +133,8 @@ final class TextPart implements Part {
 
 /// A [Part] with the byte content of a file.
 final class InlineDataPart implements Part {
-  /// Constructor
-  InlineDataPart(this.mimeType, this.bytes);
+  // ignore: public_member_api_docs
+  InlineDataPart(this.mimeType, this.bytes, {this.willContinue});
 
   /// File type of the [InlineDataPart].
   /// https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-multimodal-prompts#media_requirements
@@ -132,9 +142,23 @@ final class InlineDataPart implements Part {
 
   /// Data contents in bytes.
   final Uint8List bytes;
+
+  /// Whether there's more inline data coming for streaming.
+  final bool? willContinue;
   @override
   Object toJson() => {
-        'inlineData': {'data': base64Encode(bytes), 'mimeType': mimeType}
+        'inlineData': {
+          'data': base64Encode(bytes),
+          'mimeType': mimeType,
+          if (willContinue != null) 'willContinue': willContinue,
+        }
+      };
+
+  /// The representation of the data in media streaming chunk.
+  Object toMediaChunkJson() => {
+        'mimeType': mimeType,
+        'data': base64Encode(bytes),
+        if (willContinue != null) 'willContinue': willContinue,
       };
 }
 
@@ -142,8 +166,8 @@ final class InlineDataPart implements Part {
 /// a string representing the `FunctionDeclaration.name` with the
 /// arguments and their values.
 final class FunctionCall implements Part {
-  /// Constructor
-  FunctionCall(this.name, this.args);
+  // ignore: public_member_api_docs
+  FunctionCall(this.name, this.args, {this.id});
 
   /// The name of the function to call.
   final String name;
@@ -151,17 +175,26 @@ final class FunctionCall implements Part {
   /// The function parameters and values.
   final Map<String, Object?> args;
 
+  /// The unique id of the function call.
+  ///
+  /// If populated, the client to execute the [FunctionCall]
+  /// and return the response with the matching [id].
+  final String? id;
+
   @override
-  // TODO: Do we need the wrapper object?
   Object toJson() => {
-        'functionCall': {'name': name, 'args': args}
+        'functionCall': {
+          'name': name,
+          'args': args,
+          if (id != null) 'id': id,
+        }
       };
 }
 
 /// The response class for [FunctionCall]
 final class FunctionResponse implements Part {
-  /// Constructor
-  FunctionResponse(this.name, this.response);
+  // ignore: public_member_api_docs
+  FunctionResponse(this.name, this.response, {this.id});
 
   /// The name of the function that was called.
   final String name;
@@ -172,15 +205,24 @@ final class FunctionResponse implements Part {
   /// of JSON compatible types, or `Map` from String to JSON compatible types.
   final Map<String, Object?> response;
 
+  /// The id of the function call this response is for.
+  ///
+  /// Populated by the client to match the corresponding [FunctionCall.id].
+  final String? id;
+
   @override
   Object toJson() => {
-        'functionResponse': {'name': name, 'response': response}
+        'functionResponse': {
+          'name': name,
+          'response': response,
+          if (id != null) 'id': id,
+        }
       };
 }
 
 /// A [Part] with Firebase Storage uri as prompt content
 final class FileData implements Part {
-  /// Constructor
+  // ignore: public_member_api_docs
   FileData(this.mimeType, this.fileUri);
 
   /// File type of the [FileData].

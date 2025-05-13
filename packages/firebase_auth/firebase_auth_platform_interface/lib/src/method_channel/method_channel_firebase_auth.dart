@@ -6,7 +6,6 @@
 import 'dart:async';
 
 import 'package:_flutterfire_internals/_flutterfire_internals.dart';
-import 'package:collection/collection.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_multi_factor.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/utils/convert_auth_provider.dart';
 import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
@@ -437,7 +436,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     try {
       final data = await _api.fetchSignInMethodsForEmail(pigeonDefault, email);
 
-      return data.whereNotNull().toList();
+      return data.nonNulls.toList();
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -483,7 +482,9 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
                 androidPackageName: actionCodeSettings.androidPackageName,
                 androidInstallApp: actionCodeSettings.androidInstallApp,
                 androidMinimumVersion: actionCodeSettings.androidMinimumVersion,
+                // ignore: deprecated_member_use_from_same_package
                 dynamicLinkDomain: actionCodeSettings.dynamicLinkDomain,
+                linkDomain: actionCodeSettings.linkDomain,
               ),
       );
     } catch (e, stack) {
@@ -504,9 +505,11 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
           url: actionCodeSettings.url,
           handleCodeInApp: actionCodeSettings.handleCodeInApp,
           iOSBundleId: actionCodeSettings.iOSBundleId,
+          linkDomain: actionCodeSettings.linkDomain,
           androidPackageName: actionCodeSettings.androidPackageName,
           androidInstallApp: actionCodeSettings.androidInstallApp,
           androidMinimumVersion: actionCodeSettings.androidMinimumVersion,
+          // ignore: deprecated_member_use_from_same_package
           dynamicLinkDomain: actionCodeSettings.dynamicLinkDomain,
         ),
       );

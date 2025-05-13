@@ -173,8 +173,6 @@ class QueryWeb extends QueryPlatform {
             hashCode,
           ),
         );
-      default:
-        throw Exception("Invalid event type: $eventType");
     }
   }
 

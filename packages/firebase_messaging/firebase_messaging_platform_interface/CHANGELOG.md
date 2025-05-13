@@ -1,3 +1,31 @@
+## 4.6.5
+
+ - Update a dependency to the latest release.
+
+## 4.6.4
+
+ - Update a dependency to the latest release.
+
+## 4.6.3
+
+ - Update a dependency to the latest release.
+
+## 4.6.2
+
+ - Update a dependency to the latest release.
+
+## 4.6.1
+
+ - Update a dependency to the latest release.
+
+## 4.6.0
+
+ - **FEAT**(messaging,apple): allow system to display button for in-app notification settings ([#13484](https://github.com/firebase/flutterfire/issues/13484)). ([b36f924e](https://github.com/firebase/flutterfire/commit/b36f924e018f4d88ea5eaf17a779b2c3cf03583d))
+
+## 4.5.49
+
+ - Update a dependency to the latest release.
+
 ## 4.5.48
 
  - Update a dependency to the latest release.

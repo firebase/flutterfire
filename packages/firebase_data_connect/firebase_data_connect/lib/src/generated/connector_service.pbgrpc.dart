@@ -32,20 +32,20 @@ import 'connector_service.pb.dart' as $0;
 
 export 'connector_service.pb.dart';
 
-@$pb.GrpcServiceName('google.firebase.dataconnect.v1beta.ConnectorService')
+@$pb.GrpcServiceName('google.firebase.dataconnect.v1.ConnectorService')
 class ConnectorServiceClient extends $grpc.Client {
   static final _$executeQuery =
       $grpc.ClientMethod<$0.ExecuteQueryRequest, $0.ExecuteQueryResponse>(
-          '/google.firebase.dataconnect.v1beta.ConnectorService/ExecuteQuery',
+          '/google.firebase.dataconnect.v1.ConnectorService/ExecuteQuery',
           ($0.ExecuteQueryRequest value) => value.writeToBuffer(),
           ($core.List<$core.int> value) =>
               $0.ExecuteQueryResponse.fromBuffer(value));
-  static final _$executeMutation = $grpc.ClientMethod<$0.ExecuteMutationRequest,
-          $0.ExecuteMutationResponse>(
-      '/google.firebase.dataconnect.v1beta.ConnectorService/ExecuteMutation',
-      ($0.ExecuteMutationRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) =>
-          $0.ExecuteMutationResponse.fromBuffer(value));
+  static final _$executeMutation =
+      $grpc.ClientMethod<$0.ExecuteMutationRequest, $0.ExecuteMutationResponse>(
+          '/google.firebase.dataconnect.v1.ConnectorService/ExecuteMutation',
+          ($0.ExecuteMutationRequest value) => value.writeToBuffer(),
+          ($core.List<$core.int> value) =>
+              $0.ExecuteMutationResponse.fromBuffer(value));
 
   ConnectorServiceClient($grpc.ClientChannel channel,
       {$grpc.CallOptions? options,
@@ -65,10 +65,9 @@ class ConnectorServiceClient extends $grpc.Client {
   }
 }
 
-@$pb.GrpcServiceName('google.firebase.dataconnect.v1beta.ConnectorService')
+@$pb.GrpcServiceName('google.firebase.dataconnect.v1.ConnectorService')
 abstract class ConnectorServiceBase extends $grpc.Service {
-  $core.String get $name =>
-      'google.firebase.dataconnect.v1beta.ConnectorService';
+  $core.String get $name => 'google.firebase.dataconnect.v1.ConnectorService';
 
   ConnectorServiceBase() {
     $addMethod(

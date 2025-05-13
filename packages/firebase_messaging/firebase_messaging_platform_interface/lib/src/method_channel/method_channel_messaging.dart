@@ -284,6 +284,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     bool criticalAlert = false,
     bool provisional = false,
     bool sound = true,
+    bool providesAppNotificationSettings = false,
   }) async {
     if (defaultTargetPlatform != TargetPlatform.iOS &&
         defaultTargetPlatform != TargetPlatform.macOS &&
@@ -303,6 +304,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
           'criticalAlert': criticalAlert,
           'provisional': provisional,
           'sound': sound,
+          'providesAppNotificationSettings': providesAppNotificationSettings,
         }
       });
 

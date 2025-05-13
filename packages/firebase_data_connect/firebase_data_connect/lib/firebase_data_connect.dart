@@ -12,13 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-library firebase_data_connect;
-
-export 'src/firebase_data_connect.dart';
+export 'src/any_value.dart' show AnyValue, defaultSerializer;
 export 'src/common/common_library.dart'
     show
         ConnectorConfig,
         DataConnectError,
+        DataConnectFieldPathSegment,
+        DataConnectOperationError,
+        DataConnectListIndexPathSegment,
+        DataConnectOperationFailureResponse,
+        DataConnectOperationFailureResponseErrorInfo,
         DataConnectErrorCode,
         Serializer,
         Deserializer,
@@ -26,7 +29,7 @@ export 'src/common/common_library.dart'
 export 'src/core/empty_serializer.dart' show emptySerializer;
 export 'src/core/ref.dart'
     show MutationRef, OperationRef, OperationResult, QueryRef, QueryResult;
-
+export 'src/firebase_data_connect.dart';
 export 'src/optional.dart'
     show
         Optional,
@@ -36,4 +39,3 @@ export 'src/optional.dart'
         listDeserializer,
         listSerializer;
 export 'src/timestamp.dart' show Timestamp;
-export 'src/any_value.dart' show AnyValue, defaultSerializer;

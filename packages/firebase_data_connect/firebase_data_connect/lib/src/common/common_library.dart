@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-library firebase_data_connect_common;
-
 import 'dart:convert';
 
 import 'package:firebase_app_check/firebase_app_check.dart';
+
+import 'dart:io' show Platform;
+
+import 'package:flutter/foundation.dart';
 
 part 'dataconnect_error.dart';
 part 'dataconnect_options.dart';
@@ -28,7 +30,11 @@ String getGoogApiVal(CallerSDKType sdkType, String packageVersion) {
   if (sdkType == CallerSDKType.generated) {
     apiClientValue += ' dart/gen';
   }
-  return apiClientValue;
+  return '$apiClientValue gl-${kIsWeb ? 'web' : Platform.operatingSystem}';
+}
+
+String getFirebaseClientVal(String packageVersion) {
+  return 'flutter-fire-dc/$packageVersion';
 }
 
 /// Transport Options for connecting to a specific host.
@@ -50,7 +56,11 @@ class TransportOptions {
 abstract class DataConnectTransport {
   /// Constructor.
   DataConnectTransport(
-      this.transportOptions, this.options, this.appId, this.sdkType);
+    this.transportOptions,
+    this.options,
+    this.appId,
+    this.sdkType,
+  );
 
   /// Transport options.
   TransportOptions transportOptions;
@@ -69,17 +79,19 @@ abstract class DataConnectTransport {
 
   /// Invokes corresponding query endpoint.
   Future<Data> invokeQuery<Data, Variables>(
-      String queryName,
-      Deserializer<Data> deserializer,
-      Serializer<Variables> serializer,
-      Variables? vars,
-      String? token);
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables> serializer,
+    Variables? vars,
+    String? token,
+  );
 
   /// Invokes corresponding mutation endpoint.
   Future<Data> invokeMutation<Data, Variables>(
-      String queryName,
-      Deserializer<Data> deserializer,
-      Serializer<Variables> serializer,
-      Variables? vars,
-      String? token);
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables> serializer,
+    Variables? vars,
+    String? token,
+  );
 }

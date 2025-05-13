@@ -14,11 +14,16 @@ enum ConfigurationError: Error {
   case invalidFormat(String)
 }
 
-let macosRootDirectory = String(URL(string: #file)!.deletingLastPathComponent().absoluteString
+let firebaseCoreDirectory = String(URL(string: #file)!.deletingLastPathComponent().absoluteString
   .dropLast())
 
 func loadPubspecVersion() throws -> String {
-  let pubspecPath = NSString.path(withComponents: [macosRootDirectory, "..", "..", "pubspec.yaml"])
+  let pubspecPath = NSString.path(withComponents: [
+    firebaseCoreDirectory,
+    "..",
+    "..",
+    "pubspec.yaml",
+  ])
   do {
     let yamlString = try String(contentsOfFile: pubspecPath, encoding: .utf8)
     if let versionLine = yamlString.split(separator: "\n")
@@ -35,11 +40,9 @@ func loadPubspecVersion() throws -> String {
 
 func loadFirebaseSDKVersion() throws -> String {
   let firebaseCoreScriptPath = NSString.path(withComponents: [
-    macosRootDirectory,
+    firebaseCoreDirectory,
     "..",
     "..",
-    "..",
-    "firebase_core",
     "ios",
     "firebase_sdk_version.rb",
   ])
@@ -108,8 +111,12 @@ let package = Package(
       ],
       exclude: [
         // These are now pulled in as a remote dependency from FlutterFire repo
+        "FLTFirebaseCorePlugin.m",
         "FLTFirebasePlugin.m",
         "FLTFirebasePluginRegistry.m",
+        "messages.g.m",
+        "include/firebase_core/FLTFirebaseCorePlugin.h",
+        "include/firebase_core/messages.g.h",
         "include/firebase_core/FLTFirebasePlugin.h",
         "include/firebase_core/FLTFirebasePluginRegistry.h",
       ],

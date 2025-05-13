@@ -1,3 +1,35 @@
+## 1.3.54
+
+ - Update a dependency to the latest release.
+
+## 1.3.53
+
+ - Update a dependency to the latest release.
+
+## 1.3.52
+
+ - Update a dependency to the latest release.
+
+## 1.3.51
+
+ - Update a dependency to the latest release.
+
+## 1.3.50
+
+ - Update a dependency to the latest release.
+
+## 1.3.49
+
+ - Update a dependency to the latest release.
+
+## 1.3.48
+
+ - Update a dependency to the latest release.
+
+## 1.3.47
+
+ - Update a dependency to the latest release.
+
 ## 1.3.46
 
  - Update a dependency to the latest release.
