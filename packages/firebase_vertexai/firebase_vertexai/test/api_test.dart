@@ -12,10 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:firebase_vertexai/src/api.dart';
-import 'package:firebase_vertexai/src/content.dart';
-import 'package:firebase_vertexai/src/error.dart';
-import 'package:firebase_vertexai/src/schema.dart';
+import 'package:firebase_ai/firebase_ai.dart';
+import 'package:firebase_ai/src/api.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 
@@ -68,39 +66,44 @@ void main() {
       });
 
       test(
-          'throws VertexAIException if prompt was blocked without message or reason',
+          'throws FirebaseAIException if prompt was blocked without message or reason',
           () {
         final feedback = PromptFeedback(BlockReason.safety, null, []);
         final response = GenerateContentResponse([], feedback);
         expect(
             () => response.text,
-            throwsA(isA<VertexAIException>().having((e) => e.message, 'message',
-                'Response was blocked due to safety')));
+            throwsA(isA<FirebaseAIException>().having((e) => e.message,
+                'message', 'Response was blocked due to safety')));
       });
 
       test(
-          'throws VertexAIException if prompt was blocked with reason and message',
+          'throws FirebaseAIException if prompt was blocked with reason and message',
           () {
         final feedback =
             PromptFeedback(BlockReason.other, 'Custom block message', []);
         final response = GenerateContentResponse([], feedback);
         expect(
             () => response.text,
-            throwsA(isA<VertexAIException>().having((e) => e.message, 'message',
+            throwsA(isA<FirebaseAIException>().having(
+                (e) => e.message,
+                'message',
                 'Response was blocked due to other: Custom block message')));
       });
 
-      test('throws VertexAIException if first candidate finished due to safety',
+      test(
+          'throws FirebaseAIException if first candidate finished due to safety',
           () {
         final response =
             GenerateContentResponse([candidateFinishedSafety], null);
         expect(
             () => response.text,
-            throwsA(isA<VertexAIException>().having((e) => e.message, 'message',
+            throwsA(isA<FirebaseAIException>().having(
+                (e) => e.message,
+                'message',
                 'Candidate was blocked due to safety: Safety concern')));
       });
       test(
-          'throws VertexAIException if first candidate finished due to safety without message',
+          'throws FirebaseAIException if first candidate finished due to safety without message',
           () {
         final candidateFinishedSafetyNoMsg =
             Candidate(textContent, null, null, FinishReason.safety, '');
@@ -108,18 +111,20 @@ void main() {
             GenerateContentResponse([candidateFinishedSafetyNoMsg], null);
         expect(
             () => response.text,
-            throwsA(isA<VertexAIException>().having((e) => e.message, 'message',
-                'Candidate was blocked due to safety')));
+            throwsA(isA<FirebaseAIException>().having((e) => e.message,
+                'message', 'Candidate was blocked due to safety')));
       });
 
       test(
-          'throws VertexAIException if first candidate finished due to recitation',
+          'throws FirebaseAIException if first candidate finished due to recitation',
           () {
         final response =
             GenerateContentResponse([candidateFinishedRecitation], null);
         expect(
             () => response.text,
-            throwsA(isA<VertexAIException>().having((e) => e.message, 'message',
+            throwsA(isA<FirebaseAIException>().having(
+                (e) => e.message,
+                'message',
                 'Candidate was blocked due to recitation: Recited content')));
       });
 
@@ -176,33 +181,38 @@ void main() {
   group('Candidate', () {
     final textContent = Content.text('Test text');
     group('.text getter', () {
-      test('throws VertexAIException if finishReason is safety with message',
+      test('throws FirebaseAIException if finishReason is safety with message',
           () {
         final candidate = Candidate(textContent, null, null,
             FinishReason.safety, 'Safety block message');
         expect(
             () => candidate.text,
-            throwsA(isA<VertexAIException>().having((e) => e.message, 'message',
+            throwsA(isA<FirebaseAIException>().having(
+                (e) => e.message,
+                'message',
                 'Candidate was blocked due to safety: Safety block message')));
       });
-      test('throws VertexAIException if finishReason is safety without message',
+      test(
+          'throws FirebaseAIException if finishReason is safety without message',
           () {
         final candidate = Candidate(
             textContent, null, null, FinishReason.safety, ''); // Empty message
         expect(
             () => candidate.text,
-            throwsA(isA<VertexAIException>().having((e) => e.message, 'message',
-                'Candidate was blocked due to safety')));
+            throwsA(isA<FirebaseAIException>().having((e) => e.message,
+                'message', 'Candidate was blocked due to safety')));
       });
 
       test(
-          'throws VertexAIException if finishReason is recitation with message',
+          'throws FirebaseAIException if finishReason is recitation with message',
           () {
         final candidate = Candidate(textContent, null, null,
             FinishReason.recitation, 'Recitation block message');
         expect(
             () => candidate.text,
-            throwsA(isA<VertexAIException>().having((e) => e.message, 'message',
+            throwsA(isA<FirebaseAIException>().having(
+                (e) => e.message,
+                'message',
                 'Candidate was blocked due to recitation: Recitation block message')));
       });
 
@@ -443,7 +453,7 @@ void main() {
             {'modality': 'IMAGE', 'tokenCount': 20}
           ]
         };
-        final response = parseCountTokensResponse(json);
+        final response = VertexSerialization().parseCountTokensResponse(json);
         expect(response.totalTokens, 120);
         expect(response.totalBillableCharacters, 240);
         expect(response.promptTokensDetails, isNotNull);
@@ -457,31 +467,31 @@ void main() {
 
       test('parses valid JSON with minimal fields (only totalTokens)', () {
         final json = {'totalTokens': 50};
-        final response = parseCountTokensResponse(json);
+        final response = VertexSerialization().parseCountTokensResponse(json);
         expect(response.totalTokens, 50);
         expect(response.totalBillableCharacters, isNull);
         expect(response.promptTokensDetails, isNull);
       });
 
-      test('throws VertexAIException if JSON contains error field', () {
+      test('throws FirebaseAIException if JSON contains error field', () {
         final json = {
           'error': {'code': 400, 'message': 'Invalid request'}
         };
-        expect(() => parseCountTokensResponse(json),
-            throwsA(isA<VertexAIException>()));
+        expect(() => VertexSerialization().parseCountTokensResponse(json),
+            throwsA(isA<FirebaseAIException>()));
       });
 
       test('throws FormatException for invalid JSON structure (not a Map)', () {
         const json = 'not_a_map';
         expect(
-            () => parseCountTokensResponse(json),
-            throwsA(isA<VertexAISdkException>().having(
+            () => VertexSerialization().parseCountTokensResponse(json),
+            throwsA(isA<FirebaseAISdkException>().having(
                 (e) => e.message, 'message', contains('CountTokensResponse'))));
       });
 
       test('throws if totalTokens is missing', () {
         final json = {'totalBillableCharacters': 100};
-        expect(() => parseCountTokensResponse(json),
+        expect(() => VertexSerialization().parseCountTokensResponse(json),
             throwsA(anything)); // More specific error expected
       });
     });
@@ -531,7 +541,8 @@ void main() {
             ],
           }
         };
-        final response = parseGenerateContentResponse(json);
+        final response =
+            VertexSerialization().parseGenerateContentResponse(json);
         expect(response.candidates, hasLength(1));
         expect(response.candidates.first.text, 'Hello world');
         expect(response.candidates.first.finishReason, FinishReason.stop);
@@ -563,7 +574,8 @@ void main() {
 
       test('parses JSON with no candidates (empty list)', () {
         final json = {'candidates': []};
-        final response = parseGenerateContentResponse(json);
+        final response =
+            VertexSerialization().parseGenerateContentResponse(json);
         expect(response.candidates, isEmpty);
         expect(response.promptFeedback, isNull);
         expect(response.usageMetadata, isNull);
@@ -572,7 +584,8 @@ void main() {
       test('parses JSON with null candidates (treated as empty)', () {
         // The code defaults to <Candidate>[] if 'candidates' key is missing
         final json = {'promptFeedback': null};
-        final response = parseGenerateContentResponse(json);
+        final response =
+            VertexSerialization().parseGenerateContentResponse(json);
         expect(response.candidates, isEmpty);
         expect(response.promptFeedback, isNull);
       });
@@ -590,7 +603,8 @@ void main() {
             }
           ]
         };
-        final response = parseGenerateContentResponse(json);
+        final response =
+            VertexSerialization().parseGenerateContentResponse(json);
         expect(response.candidates, hasLength(1));
         expect(response.candidates.first.text, 'Minimal');
         expect(response.candidates.first.finishReason, isNull);
@@ -616,7 +630,8 @@ void main() {
             ],
           }
         };
-        final response = parseGenerateContentResponse(json);
+        final response =
+            VertexSerialization().parseGenerateContentResponse(json);
         expect(response.candidates, hasLength(1));
         expect(response.candidates.first.text, 'Hello world');
         expect(response.candidates.first.finishReason, FinishReason.stop);
@@ -662,7 +677,8 @@ void main() {
             }
           ]
         };
-        final response = parseGenerateContentResponse(json);
+        final response =
+            VertexSerialization().parseGenerateContentResponse(json);
         final candidate = response.candidates.first;
         expect(candidate.citationMetadata, isNotNull);
         expect(candidate.citationMetadata!.citations, hasLength(1));
@@ -692,7 +708,8 @@ void main() {
             }
           ]
         };
-        final response = parseGenerateContentResponse(json);
+        final response =
+            VertexSerialization().parseGenerateContentResponse(json);
         final candidate = response.candidates.first;
         expect(candidate.citationMetadata, isNotNull);
         expect(candidate.citationMetadata!.citations, hasLength(1));
@@ -701,12 +718,12 @@ void main() {
         expect(candidate.citationMetadata!.citations.first.license, 'MIT');
       });
 
-      test('throws VertexAIException if JSON contains error field', () {
+      test('throws FirebaseAIException if JSON contains error field', () {
         final json = {
           'error': {'code': 500, 'message': 'Internal server error'}
         };
-        expect(() => parseGenerateContentResponse(json),
-            throwsA(isA<VertexAIException>()));
+        expect(() => VertexSerialization().parseGenerateContentResponse(json),
+            throwsA(isA<FirebaseAIException>()));
       });
 
       test('handles missing content in candidate gracefully (empty content)',
@@ -719,7 +736,8 @@ void main() {
             }
           ]
         };
-        final response = parseGenerateContentResponse(json);
+        final response =
+            VertexSerialization().parseGenerateContentResponse(json);
         expect(response.candidates, hasLength(1));
         expect(response.candidates.first.content.parts, isEmpty);
         expect(response.candidates.first.text, isNull);
@@ -730,8 +748,9 @@ void main() {
           'candidates': ['not_a_map_candidate']
         };
         expect(
-            () => parseGenerateContentResponse(jsonResponse),
-            throwsA(isA<VertexAISdkException>()
+            () => VertexSerialization()
+                .parseGenerateContentResponse(jsonResponse),
+            throwsA(isA<FirebaseAISdkException>()
                 .having((e) => e.message, 'message', contains('Candidate'))));
       });
 
@@ -745,8 +764,9 @@ void main() {
           ]
         };
         expect(
-            () => parseGenerateContentResponse(jsonResponse),
-            throwsA(isA<VertexAISdkException>().having(
+            () => VertexSerialization()
+                .parseGenerateContentResponse(jsonResponse),
+            throwsA(isA<FirebaseAISdkException>().having(
                 (e) => e.message, 'message', contains('SafetyRating'))));
       });
       test('throws FormatException for invalid citation metadata structure',
@@ -760,22 +780,25 @@ void main() {
           ]
         };
         expect(
-            () => parseGenerateContentResponse(jsonResponse),
-            throwsA(isA<VertexAISdkException>().having(
+            () => VertexSerialization()
+                .parseGenerateContentResponse(jsonResponse),
+            throwsA(isA<FirebaseAISdkException>().having(
                 (e) => e.message, 'message', contains('CitationMetadata'))));
       });
       test('throws FormatException for invalid prompt feedback structure', () {
         final jsonResponse = {'promptFeedback': 'not_a_map_feedback'};
         expect(
-            () => parseGenerateContentResponse(jsonResponse),
-            throwsA(isA<VertexAISdkException>().having(
+            () => VertexSerialization()
+                .parseGenerateContentResponse(jsonResponse),
+            throwsA(isA<FirebaseAISdkException>().having(
                 (e) => e.message, 'message', contains('PromptFeedback'))));
       });
       test('throws FormatException for invalid usage metadata structure', () {
         final jsonResponse = {'usageMetadata': 'not_a_map_usage'};
         expect(
-            () => parseGenerateContentResponse(jsonResponse),
-            throwsA(isA<VertexAISdkException>().having(
+            () => VertexSerialization()
+                .parseGenerateContentResponse(jsonResponse),
+            throwsA(isA<FirebaseAISdkException>().having(
                 (e) => e.message, 'message', contains('UsageMetadata'))));
       });
       test('throws FormatException for invalid modality token count structure',
@@ -786,8 +809,9 @@ void main() {
           }
         };
         expect(
-            () => parseGenerateContentResponse(jsonResponse),
-            throwsA(isA<VertexAISdkException>().having(
+            () => VertexSerialization()
+                .parseGenerateContentResponse(jsonResponse),
+            throwsA(isA<FirebaseAISdkException>().having(
                 (e) => e.message, 'message', contains('ModalityTokenCount'))));
       });
     });

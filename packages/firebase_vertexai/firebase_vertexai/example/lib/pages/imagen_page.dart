@@ -25,7 +25,7 @@ class ImagenPage extends StatefulWidget {
   });
 
   final String title;
-  final GenerativeModel model;
+  final ImagenModel model;
 
   @override
   State<ImagenPage> createState() => _ImagenPageState();
@@ -37,26 +37,6 @@ class _ImagenPageState extends State<ImagenPage> {
   final FocusNode _textFieldFocus = FocusNode();
   final List<MessageData> _generatedContent = <MessageData>[];
   bool _loading = false;
-  late final ImagenModel _imagenModel;
-
-  @override
-  void initState() {
-    super.initState();
-    var generationConfig = ImagenGenerationConfig(
-      negativePrompt: 'frog',
-      numberOfImages: 1,
-      aspectRatio: ImagenAspectRatio.square1x1,
-      imageFormat: ImagenFormat.jpeg(compressionQuality: 75),
-    );
-    _imagenModel = FirebaseVertexAI.instance.imagenModel(
-      model: 'imagen-3.0-generate-001',
-      generationConfig: generationConfig,
-      safetySettings: ImagenSafetySettings(
-        ImagenSafetyFilterLevel.blockLowAndAbove,
-        ImagenPersonFilterLevel.allowAdult,
-      ),
-    );
-  }
 
   void _scrollDown() {
     WidgetsBinding.instance.addPostFrameCallback(
@@ -153,22 +133,27 @@ class _ImagenPageState extends State<ImagenPage> {
       _loading = true;
     });
 
-    var response = await _imagenModel.generateImages(prompt);
+    try {
+      var response = await widget.model.generateImages(prompt);
 
-    if (response.images.isNotEmpty) {
-      var imagenImage = response.images[0];
+      if (response.images.isNotEmpty) {
+        var imagenImage = response.images[0];
 
-      _generatedContent.add(
-        MessageData(
-          image: Image.memory(imagenImage.bytesBase64Encoded),
-          text: prompt,
-          fromUser: false,
-        ),
-      );
-    } else {
-      // Handle the case where no images were generated
-      _showError('Error: No images were generated.');
+        _generatedContent.add(
+          MessageData(
+            image: Image.memory(imagenImage.bytesBase64Encoded),
+            text: prompt,
+            fromUser: false,
+          ),
+        );
+      } else {
+        // Handle the case where no images were generated
+        _showError('Error: No images were generated.');
+      }
+    } catch (e) {
+      _showError(e.toString());
     }
+
     setState(() {
       _loading = false;
       _scrollDown();
@@ -181,7 +166,7 @@ class _ImagenPageState extends State<ImagenPage> {
   //   });
   //   var gcsUrl = 'gs://vertex-ai-example-ef5a2.appspot.com/imagen';
 
-  //   var response = await _imagenModel.generateImagesGCS(prompt, gcsUrl);
+  //   var response = await widget.model.generateImagesGCS(prompt, gcsUrl);
 
   //   if (response.images.isNotEmpty) {
   //     var imagenImage = response.images[0];

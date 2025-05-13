@@ -13,10 +13,11 @@
 // limitations under the License.
 import 'dart:typed_data';
 
-import 'package:firebase_vertexai/src/api.dart';
-import 'package:firebase_vertexai/src/content.dart';
-import 'package:firebase_vertexai/src/error.dart';
-import 'package:firebase_vertexai/src/live_api.dart';
+import 'package:firebase_ai/src/api.dart';
+import 'package:firebase_ai/src/content.dart';
+import 'package:firebase_ai/src/live_api.dart';
+import 'package:firebase_vertexai/firebase_vertexai.dart'
+    show VertexAISdkException;
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
