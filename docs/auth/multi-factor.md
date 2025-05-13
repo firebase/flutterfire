@@ -7,6 +7,8 @@ Book: /docs/_book.yaml
 
 If you've upgraded to Firebase Authentication with Identity Platform,
  you can add SMS multi-factor authentication to your Flutter app.
+Note: Avoid the use of SMS-based MFA. SMS is an insecure technology that is easy to compromise or spoof with
+no authentication mechanism or eavesdropping protection.
 
 Multi-factor authentication (MFA) increases the security of your app. While attackers
 often compromise passwords and social accounts, intercepting a text message is
