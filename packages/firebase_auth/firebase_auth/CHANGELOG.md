@@ -1,3 +1,11 @@
+## 5.5.3
+
+ - **FIX**(auth,iOS): include missing email and credential in account-exists-with-different-credential error ([#17180](https://github.com/firebase/flutterfire/issues/17180)). ([2a0bdc64](https://github.com/firebase/flutterfire/commit/2a0bdc64086e99f8a98bd18b472b36bcfe05a9a4))
+
+## 5.5.2
+
+ - Update a dependency to the latest release.
+
 ## 5.5.1
 
  - Update a dependency to the latest release.

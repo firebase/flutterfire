@@ -108,6 +108,15 @@ final class GenerateContentResponse {
   Iterable<FunctionCall> get functionCalls =>
       candidates.firstOrNull?.content.parts.whereType<FunctionCall>() ??
       const [];
+
+  /// The inline data parts of the first candidate in [candidates], if any.
+  ///
+  /// Returns an empty list if there are no candidates, or if the first
+  /// candidate has no [InlineDataPart] parts. There is no error thrown if the
+  /// prompt or response were blocked.
+  Iterable<InlineDataPart> get inlineDataParts =>
+      candidates.firstOrNull?.content.parts.whereType<InlineDataPart>() ??
+      const [];
 }
 
 /// Feedback metadata of a prompt specified in a [GenerativeModel] request.
@@ -591,7 +600,12 @@ enum HarmBlockThreshold {
   high('BLOCK_ONLY_HIGH'),
 
   /// Always show regardless of probability of unsafe content.
-  none('BLOCK_NONE');
+  none('BLOCK_NONE'),
+
+  /// All content is allowed regardless of harm.
+  ///
+  /// metadata will not be included in the response.
+  off('OFF');
 
   const HarmBlockThreshold(this._jsonString);
 
@@ -602,6 +616,7 @@ enum HarmBlockThreshold {
       'BLOCK_MEDIUM_AND_ABOVE' => HarmBlockThreshold.medium,
       'BLOCK_ONLY_HIGH' => HarmBlockThreshold.high,
       'BLOCK_NONE' => HarmBlockThreshold.none,
+      'OFF' => HarmBlockThreshold.off,
       _ => throw FormatException(
           'Unhandled HarmBlockThreshold format', jsonObject),
     };
@@ -650,30 +665,43 @@ enum HarmBlockMethod {
   Object toJson() => _jsonString;
 }
 
+/// The available response modalities.
+enum ResponseModalities {
+  /// Text response modality.
+  text('TEXT'),
+
+  /// Image response modality.
+  image('IMAGE'),
+
+  /// Audio response modality.
+  audio('AUDIO');
+
+  const ResponseModalities(this._jsonString);
+  final String _jsonString;
+
+  /// Convert to json format
+  String toJson() => _jsonString;
+}
+
 /// Configuration options for model generation and outputs.
-final class GenerationConfig {
+abstract class BaseGenerationConfig {
   // ignore: public_member_api_docs
-  GenerationConfig(
-      {this.candidateCount,
-      this.stopSequences,
-      this.maxOutputTokens,
-      this.temperature,
-      this.topP,
-      this.topK,
-      this.responseMimeType,
-      this.responseSchema});
+  BaseGenerationConfig({
+    this.candidateCount,
+    this.maxOutputTokens,
+    this.temperature,
+    this.topP,
+    this.topK,
+    this.presencePenalty,
+    this.frequencyPenalty,
+    this.responseModalities,
+  });
 
   /// Number of generated responses to return.
   ///
   /// This value must be between [1, 8], inclusive. If unset, this will default
   /// to 1.
   final int? candidateCount;
-
-  /// The set of character sequences (up to 5) that will stop output generation.
-  ///
-  /// If specified, the API will stop at the first appearance of a stop
-  /// sequence. The stop sequence will not be included as part of the response.
-  final List<String>? stopSequences;
 
   /// The maximum number of tokens to include in a candidate.
   ///
@@ -708,6 +736,86 @@ final class GenerationConfig {
   /// Note: The default value varies by model.
   final int? topK;
 
+  /// The penalty for repeating the same words or phrases already generated in
+  /// the text.
+  ///
+  /// Controls the likelihood of repetition. Higher penalty values result in
+  /// more diverse output.
+  ///
+  /// **Note:** While both [presencePenalty] and [frequencyPenalty] discourage
+  /// repetition, [presencePenalty] applies the same penalty regardless of how
+  /// many times the word/phrase has already appeared, whereas
+  /// [frequencyPenalty] increases the penalty for *each* repetition of a
+  /// word/phrase.
+  ///
+  /// **Important:** The range of supported [presencePenalty] values depends on
+  /// the model; see the
+  /// [documentation](https://firebase.google.com/docs/vertex-ai/model-parameters?platform=flutter#configure-model-parameters-gemini)
+  /// for more details.
+  final double? presencePenalty;
+
+  /// The penalty for repeating words or phrases, with the penalty increasing
+  /// for each repetition.
+  ///
+  /// Controls the likelihood of repetition. Higher values increase the penalty
+  /// of repetition, resulting in more diverse output.
+  ///
+  /// **Note:** While both [frequencyPenalty] and [presencePenalty] discourage
+  /// repetition, [frequencyPenalty] increases the penalty for *each* repetition
+  /// of a word/phrase, whereas [presencePenalty] applies the same penalty
+  /// regardless of how many times the word/phrase has already appeared.
+  ///
+  /// **Important:** The range of supported [frequencyPenalty] values depends on
+  /// the model; see the
+  /// [documentation](https://firebase.google.com/docs/vertex-ai/model-parameters?platform=flutter#configure-model-parameters-gemini)
+  /// for more details.
+  final double? frequencyPenalty;
+
+  /// The list of desired response modalities.
+  final List<ResponseModalities>? responseModalities;
+
+  // ignore: public_member_api_docs
+  Map<String, Object?> toJson() => {
+        if (candidateCount case final candidateCount?)
+          'candidateCount': candidateCount,
+        if (maxOutputTokens case final maxOutputTokens?)
+          'maxOutputTokens': maxOutputTokens,
+        if (temperature case final temperature?) 'temperature': temperature,
+        if (topP case final topP?) 'topP': topP,
+        if (topK case final topK?) 'topK': topK,
+        if (presencePenalty case final presencePenalty?)
+          'presencePenalty': presencePenalty,
+        if (frequencyPenalty case final frequencyPenalty?)
+          'frequencyPenalty': frequencyPenalty,
+        if (responseModalities case final responseModalities?)
+          'responseModalities':
+              responseModalities.map((modality) => modality.toJson()).toList(),
+      };
+}
+
+/// Configuration options for model generation and outputs.
+final class GenerationConfig extends BaseGenerationConfig {
+  // ignore: public_member_api_docs
+  GenerationConfig({
+    super.candidateCount,
+    this.stopSequences,
+    super.maxOutputTokens,
+    super.temperature,
+    super.topP,
+    super.topK,
+    super.presencePenalty,
+    super.frequencyPenalty,
+    super.responseModalities,
+    this.responseMimeType,
+    this.responseSchema,
+  });
+
+  /// The set of character sequences (up to 5) that will stop output generation.
+  ///
+  /// If specified, the API will stop at the first appearance of a stop
+  /// sequence. The stop sequence will not be included as part of the response.
+  final List<String>? stopSequences;
+
   /// Output response mimetype of the generated candidate text.
   ///
   /// Supported mimetype:
@@ -721,22 +829,16 @@ final class GenerationConfig {
   ///   a schema; currently this is limited to `application/json`.
   final Schema? responseSchema;
 
-  /// Convert to json format
+  @override
   Map<String, Object?> toJson() => {
-        if (candidateCount case final candidateCount?)
-          'candidateCount': candidateCount,
+        ...super.toJson(),
         if (stopSequences case final stopSequences?
             when stopSequences.isNotEmpty)
           'stopSequences': stopSequences,
-        if (maxOutputTokens case final maxOutputTokens?)
-          'maxOutputTokens': maxOutputTokens,
-        if (temperature case final temperature?) 'temperature': temperature,
-        if (topP case final topP?) 'topP': topP,
-        if (topK case final topK?) 'topK': topK,
         if (responseMimeType case final responseMimeType?)
           'responseMimeType': responseMimeType,
         if (responseSchema case final responseSchema?)
-          'responseSchema': responseSchema,
+          'responseSchema': responseSchema.toJson(),
       };
 }
 
@@ -921,13 +1023,21 @@ ModalityTokenCount _parseModalityTokenCount(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('ModalityTokenCount', jsonObject);
   }
-  return ModalityTokenCount(ContentModality._parseValue(jsonObject['modality']),
-      jsonObject['tokenCount'] as int);
+  var modality = ContentModality._parseValue(jsonObject['modality']);
+
+  if (jsonObject.containsKey('tokenCount')) {
+    return ModalityTokenCount(modality, jsonObject['tokenCount'] as int);
+  } else {
+    return ModalityTokenCount(modality, 0);
+  }
 }
 
 SafetyRating _parseSafetyRating(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('SafetyRating', jsonObject);
+  }
+  if (jsonObject.isEmpty) {
+    return SafetyRating(HarmCategory.unknown, HarmProbability.unknown);
   }
   return SafetyRating(HarmCategory._parseValue(jsonObject['category']),
       HarmProbability._parseValue(jsonObject['probability']),

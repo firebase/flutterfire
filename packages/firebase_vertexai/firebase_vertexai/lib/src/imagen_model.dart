@@ -11,15 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:meta/meta.dart';
-
-import 'base_model.dart';
-import 'client.dart';
-import 'imagen_api.dart';
-import 'imagen_content.dart';
+part of vertexai_model;
 
 /// Represents a remote Imagen model with the ability to generate images using
 /// text prompts.
@@ -32,7 +24,7 @@ import 'imagen_content.dart';
 /// is in Public Preview, which means that the feature is not subject to any SLA
 /// or deprecation policy and could change in backwards-incompatible ways.
 @experimental
-final class ImagenModel extends BaseModel {
+final class ImagenModel extends BaseApiClientModel {
   ImagenModel._(
       {required FirebaseApp app,
       required String model,
@@ -49,7 +41,7 @@ final class ImagenModel extends BaseModel {
             location: location,
             client: HttpApiClient(
                 apiKey: app.options.apiKey,
-                requestHeaders: BaseModel.firebaseTokens(appCheck, auth)));
+                requestHeaders: BaseModel.firebaseTokens(appCheck, auth, app)));
 
   final ImagenGenerationConfig? _generationConfig;
   final ImagenSafetySettings? _safetySettings;

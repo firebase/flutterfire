@@ -104,7 +104,7 @@ final class ImagenGenerationResponse<T extends ImagenImage> {
   /// Factory method to create an [ImagenGenerationResponse] from a JSON object.
   factory ImagenGenerationResponse.fromJson(Map<String, dynamic> json) {
     final predictions = json['predictions'];
-    if (predictions.isEmpty) {
+    if (predictions == null || predictions.isEmpty) {
       throw ServerException('Got empty prediction with no reason');
     }
 

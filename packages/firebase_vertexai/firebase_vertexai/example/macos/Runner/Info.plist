@@ -28,5 +28,7 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+  <key>NSMicrophoneUsageDescription</key>
+  <string>Permission to Record audio</string>
 </dict>
 </plist>

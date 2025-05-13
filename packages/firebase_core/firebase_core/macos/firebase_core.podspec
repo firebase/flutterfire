@@ -16,7 +16,7 @@ else
 end
 
 begin
-  required_macos_version = "10.12"
+  required_macos_version = "10.15"
   current_target_definition = Pod::Config.instance.podfile.send(:current_target_definition)
   user_osx_target = current_target_definition.to_hash["platform"]["osx"]
   if (Gem::Version.new(user_osx_target) < Gem::Version.new(required_macos_version))
@@ -45,7 +45,7 @@ Pod::Spec.new do |s|
   s.source_files     = 'firebase_core/Sources/firebase_core/**/*.{h,m}'
   s.public_header_files = 'firebase_core/Sources/firebase_core/include/**/*.h'
 
-  s.platform = :osx, '10.13'
+  s.platform = :osx, '10.15'
 
   # Flutter dependencies
   s.dependency 'FlutterMacOS'

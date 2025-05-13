@@ -1,3 +1,7 @@
+## 0.1.6+11
+
+ - **FIX**(app_installations,web): resolve type cast error in `getId` and `getToken` for wasm ([#17181](https://github.com/firebase/flutterfire/issues/17181)). ([14bd67f3](https://github.com/firebase/flutterfire/commit/14bd67f3e9c6a1dc18ef2daf79053cd906d44d88))
+
 ## 0.1.6+10
 
  - Update a dependency to the latest release.
