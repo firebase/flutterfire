@@ -62,7 +62,8 @@ void main() {
     test('constructor serializes List of map', () {
       final listOfMap = [
         {'a': 1, 'b': 2.0},
-        {'c': 3, 'd': 4.0}
+        {'c': 3, 'd': 4.0},
+        {'e': 5, 'f': null},
       ];
       final any = AnyValue(listOfMap);
       expect(any.toJson(), equals(listOfMap));
@@ -73,6 +74,7 @@ void main() {
         [1.0, 2.0, 3.0, 4.0, 5.0],
         ['a', 'b', 'c', 'd', 'e'],
         [true, false, true, false],
+        [1, 2.0, null, 4],
       ];
 
       for (final list in cases) {
