@@ -26,6 +26,8 @@ Future<void> main() async {
     androidProvider: AndroidProvider.debug,
     appleProvider: AppleProvider.debug,
     webProvider: ReCaptchaV3Provider(kWebRecaptchaSiteKey),
+    androidDebugToken: 'your-debug-token',
+    appleDebugToken: 'your-debug-token',
   );
 
   runApp(MyApp());
