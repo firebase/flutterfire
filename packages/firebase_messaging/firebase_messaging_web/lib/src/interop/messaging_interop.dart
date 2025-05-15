@@ -11,6 +11,7 @@ library;
 import 'dart:js_interop';
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
+import 'package:web/web.dart' as web;
 
 @JS()
 @staticInterop
@@ -56,11 +57,9 @@ extension ObserverJsImplX on Observer {
 @staticInterop
 @anonymous
 class GetTokenOptions {
-  // TODO - I imagine we won't be implementing serviceWorkerRegistration type as it extends EventTarget class
-  // external String get serviceWorkerRegistration
   external factory GetTokenOptions({
     JSString? vapidKey,
-    /*dynamic serviceWorkerRegistration */
+    web.ServiceWorkerRegistration? serviceWorkerRegistration
   });
 }
 
