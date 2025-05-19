@@ -385,6 +385,8 @@ NSObject<FlutterMessageCodec> *FirebaseAuthHostApiGetCodec(void);
 - (void)revokeTokenWithAuthorizationCodeApp:(AuthPigeonFirebaseApp *)app
                           authorizationCode:(NSString *)authorizationCode
                                  completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)initializeRecaptchaConfigApp:(AuthPigeonFirebaseApp *)app
+                          completion:(void (^)(FlutterError *_Nullable))completion;
 @end
 
 extern void SetUpFirebaseAuthHostApi(id<FlutterBinaryMessenger> binaryMessenger,

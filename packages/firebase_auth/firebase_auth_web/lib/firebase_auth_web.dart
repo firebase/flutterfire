@@ -633,6 +633,13 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       'revokeTokenWithAuthorizationCode() is only available on apple platforms.',
     );
   }
+
+  @override
+  Future<void> initializeRecaptchaConfig() async {
+    await guardAuthExceptions(
+      () => delegate.initializeRecaptchaConfig(),
+    );
+  }
 }
 
 String getOriginName(String appName) {

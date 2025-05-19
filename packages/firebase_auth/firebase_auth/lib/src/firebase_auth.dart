@@ -819,6 +819,12 @@ class FirebaseAuth extends FirebasePluginPlatform {
     return _delegate.revokeTokenWithAuthorizationCode(authorizationCode);
   }
 
+  /// Initializes the reCAPTCHA Enterprise client proactively to enhance reCAPTCHA signal collection and
+  /// to complete reCAPTCHA-protected flows in a single attempt.
+  Future<void> initializeRecaptchaConfig() {
+    return _delegate.initializeRecaptchaConfig();
+  }
+
   @override
   String toString() {
     return 'FirebaseAuth(app: ${app.name})';

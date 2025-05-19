@@ -2172,4 +2172,16 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
                                     }];
 }
 
+- (void)initializeRecaptchaConfigApp:(AuthPigeonFirebaseApp *)app
+                          completion:(void (^)(FlutterError *_Nullable))completion {
+  FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
+  [auth initializeRecaptchaConfigWithCompletion:^(NSError *_Nullable error) {
+    if (error != nil) {
+      completion([FLTFirebaseAuthPlugin convertToFlutterError:error]);
+    } else {
+      completion(nil);
+    }
+  }];
+}
+
 @end
