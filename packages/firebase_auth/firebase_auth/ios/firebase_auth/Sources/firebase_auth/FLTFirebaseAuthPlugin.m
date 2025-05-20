@@ -2177,7 +2177,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
 #if TARGET_OS_OSX
   NSLog(@"initializeRecaptchaConfigWithCompletion is not supported on the "
         @"MacOS platform.");
-  completion(nil, nil);
+  completion(nil);
 #else
   FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
   [auth initializeRecaptchaConfigWithCompletion:^(NSError *_Nullable error) {
