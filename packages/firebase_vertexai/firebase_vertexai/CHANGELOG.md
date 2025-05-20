@@ -1,3 +1,9 @@
+## 1.7.0
+
+ - **FEAT**(firebaseai): Developer API ([#17342](https://github.com/firebase/flutterfire/issues/17342)). ([dbdd1356](https://github.com/firebase/flutterfire/commit/dbdd13562d75f49f0e46933d49942acac76ab193))
+ - **FEAT**(vertexai): Add responseModality ([#17326](https://github.com/firebase/flutterfire/issues/17326)). ([0b98669c](https://github.com/firebase/flutterfire/commit/0b98669c522243cb71d8e4f355a6c7fa6f62f581))
+ - **FEAT**(vertexai): Add HarmBlockThreshold.OFF ([#17325](https://github.com/firebase/flutterfire/issues/17325)). ([af7710a1](https://github.com/firebase/flutterfire/commit/af7710a134347af01bb6522e90cdacc293a16922))
+
 ## 1.6.0
 
  - **FIX**(vertexai): add missing HarmBlockThreshold to exported APIs ([#17249](https://github.com/firebase/flutterfire/issues/17249)). ([59d902c6](https://github.com/firebase/flutterfire/commit/59d902c63bd1bd040f5357cb6a341db446429430))

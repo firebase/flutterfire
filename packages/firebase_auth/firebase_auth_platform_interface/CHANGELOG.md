@@ -1,3 +1,7 @@
+## 7.6.3
+
+ - **DOCS**(firebase_auth): Removed duplicates; fixed typos; removed "unnecessary use of a null check" ([#16815](https://github.com/firebase/flutterfire/issues/16815)). ([0eb17e13](https://github.com/firebase/flutterfire/commit/0eb17e13587ebfe5c8d64cbba9c0a2ccd0b7ce90))
+
 ## 7.6.2
 
  - Update a dependency to the latest release.

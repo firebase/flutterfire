@@ -3,6 +3,143 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-05-20
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ai` - `v2.1.0`](#firebase_ai---v210)
+ - [`firebase_auth` - `v5.5.4`](#firebase_auth---v554)
+ - [`firebase_auth_platform_interface` - `v7.6.3`](#firebase_auth_platform_interface---v763)
+ - [`firebase_core_web` - `v2.23.0`](#firebase_core_web---v2230)
+ - [`firebase_data_connect` - `v0.1.5`](#firebase_data_connect---v015)
+ - [`firebase_vertexai` - `v1.7.0`](#firebase_vertexai---v170)
+ - [`firebase_auth_web` - `v5.14.3`](#firebase_auth_web---v5143)
+ - [`cloud_firestore_web` - `v4.4.8`](#cloud_firestore_web---v448)
+ - [`firebase_app_installations_web` - `v0.1.6+12`](#firebase_app_installations_web---v01612)
+ - [`firebase_messaging_web` - `v3.10.6`](#firebase_messaging_web---v3106)
+ - [`firebase_remote_config_web` - `v1.8.4`](#firebase_remote_config_web---v184)
+ - [`firebase_database_web` - `v0.2.6+12`](#firebase_database_web---v02612)
+ - [`firebase_core` - `v3.13.1`](#firebase_core---v3131)
+ - [`firebase_analytics_web` - `v0.5.10+12`](#firebase_analytics_web---v051012)
+ - [`firebase_app_check_web` - `v0.2.0+10`](#firebase_app_check_web---v02010)
+ - [`firebase_storage_web` - `v3.10.13`](#firebase_storage_web---v31013)
+ - [`cloud_functions_web` - `v4.11.1`](#cloud_functions_web---v4111)
+ - [`firebase_performance_web` - `v0.1.7+12`](#firebase_performance_web---v01712)
+ - [`cloud_firestore` - `v5.6.8`](#cloud_firestore---v568)
+ - [`firebase_app_installations` - `v0.3.2+6`](#firebase_app_installations---v0326)
+ - [`firebase_messaging` - `v15.2.6`](#firebase_messaging---v1526)
+ - [`firebase_remote_config` - `v5.4.4`](#firebase_remote_config---v544)
+ - [`firebase_database` - `v11.3.6`](#firebase_database---v1136)
+ - [`_flutterfire_internals` - `v1.3.55`](#_flutterfire_internals---v1355)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.5+6`](#firebase_in_app_messaging_platform_interface---v0256)
+ - [`firebase_in_app_messaging` - `v0.8.1+6`](#firebase_in_app_messaging---v0816)
+ - [`cloud_firestore_platform_interface` - `v6.6.8`](#cloud_firestore_platform_interface---v668)
+ - [`firebase_dynamic_links` - `v6.1.6`](#firebase_dynamic_links---v616)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.7+6`](#firebase_dynamic_links_platform_interface---v0276)
+ - [`firebase_crashlytics_platform_interface` - `v3.8.6`](#firebase_crashlytics_platform_interface---v386)
+ - [`firebase_messaging_platform_interface` - `v4.6.6`](#firebase_messaging_platform_interface---v466)
+ - [`firebase_crashlytics` - `v4.3.6`](#firebase_crashlytics---v436)
+ - [`firebase_app_installations_platform_interface` - `v0.1.4+54`](#firebase_app_installations_platform_interface---v01454)
+ - [`firebase_remote_config_platform_interface` - `v1.5.4`](#firebase_remote_config_platform_interface---v154)
+ - [`firebase_database_platform_interface` - `v0.2.6+6`](#firebase_database_platform_interface---v0266)
+ - [`firebase_analytics_platform_interface` - `v4.3.6`](#firebase_analytics_platform_interface---v436)
+ - [`firebase_analytics` - `v11.4.6`](#firebase_analytics---v1146)
+ - [`firebase_app_check` - `v0.3.2+6`](#firebase_app_check---v0326)
+ - [`firebase_ml_model_downloader` - `v0.3.3+4`](#firebase_ml_model_downloader---v0334)
+ - [`firebase_storage_platform_interface` - `v5.2.6`](#firebase_storage_platform_interface---v526)
+ - [`firebase_app_check_platform_interface` - `v0.1.1+6`](#firebase_app_check_platform_interface---v0116)
+ - [`firebase_ml_model_downloader_platform_interface` - `v0.1.5+6`](#firebase_ml_model_downloader_platform_interface---v0156)
+ - [`firebase_storage` - `v12.4.6`](#firebase_storage---v1246)
+ - [`cloud_functions` - `v5.5.1`](#cloud_functions---v551)
+ - [`cloud_functions_platform_interface` - `v5.7.1`](#cloud_functions_platform_interface---v571)
+ - [`firebase_performance_platform_interface` - `v0.1.5+6`](#firebase_performance_platform_interface---v0156)
+ - [`firebase_performance` - `v0.10.1+6`](#firebase_performance---v01016)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_auth_web` - `v5.14.3`
+ - `cloud_firestore_web` - `v4.4.8`
+ - `firebase_app_installations_web` - `v0.1.6+12`
+ - `firebase_messaging_web` - `v3.10.6`
+ - `firebase_remote_config_web` - `v1.8.4`
+ - `firebase_database_web` - `v0.2.6+12`
+ - `firebase_core` - `v3.13.1`
+ - `firebase_analytics_web` - `v0.5.10+12`
+ - `firebase_app_check_web` - `v0.2.0+10`
+ - `firebase_storage_web` - `v3.10.13`
+ - `cloud_functions_web` - `v4.11.1`
+ - `firebase_performance_web` - `v0.1.7+12`
+ - `cloud_firestore` - `v5.6.8`
+ - `firebase_app_installations` - `v0.3.2+6`
+ - `firebase_messaging` - `v15.2.6`
+ - `firebase_remote_config` - `v5.4.4`
+ - `firebase_database` - `v11.3.6`
+ - `_flutterfire_internals` - `v1.3.55`
+ - `firebase_in_app_messaging_platform_interface` - `v0.2.5+6`
+ - `firebase_in_app_messaging` - `v0.8.1+6`
+ - `cloud_firestore_platform_interface` - `v6.6.8`
+ - `firebase_dynamic_links` - `v6.1.6`
+ - `firebase_dynamic_links_platform_interface` - `v0.2.7+6`
+ - `firebase_crashlytics_platform_interface` - `v3.8.6`
+ - `firebase_messaging_platform_interface` - `v4.6.6`
+ - `firebase_crashlytics` - `v4.3.6`
+ - `firebase_app_installations_platform_interface` - `v0.1.4+54`
+ - `firebase_remote_config_platform_interface` - `v1.5.4`
+ - `firebase_database_platform_interface` - `v0.2.6+6`
+ - `firebase_analytics_platform_interface` - `v4.3.6`
+ - `firebase_analytics` - `v11.4.6`
+ - `firebase_app_check` - `v0.3.2+6`
+ - `firebase_ml_model_downloader` - `v0.3.3+4`
+ - `firebase_storage_platform_interface` - `v5.2.6`
+ - `firebase_app_check_platform_interface` - `v0.1.1+6`
+ - `firebase_ml_model_downloader_platform_interface` - `v0.1.5+6`
+ - `firebase_storage` - `v12.4.6`
+ - `cloud_functions` - `v5.5.1`
+ - `cloud_functions_platform_interface` - `v5.7.1`
+ - `firebase_performance_platform_interface` - `v0.1.5+6`
+ - `firebase_performance` - `v0.10.1+6`
+
+---
+
+#### `firebase_ai` - `v2.1.0`
+
+ - **FEAT**(firebaseai): Developer API ([#17342](https://github.com/firebase/flutterfire/issues/17342)). ([dbdd1356](https://github.com/firebase/flutterfire/commit/dbdd13562d75f49f0e46933d49942acac76ab193))
+
+#### `firebase_auth` - `v5.5.4`
+
+ - **FIX**(auth,apple): prevent EXC_BAD_ACCESS crash in Apple Sign-In completion handler ([#17273](https://github.com/firebase/flutterfire/issues/17273)). ([cc7d28ae](https://github.com/firebase/flutterfire/commit/cc7d28ae09036464f7ece6a2637bae6a3c7a292d))
+ - **DOCS**(firebase_auth): Removed duplicates; fixed typos; removed "unnecessary use of a null check" ([#16815](https://github.com/firebase/flutterfire/issues/16815)). ([0eb17e13](https://github.com/firebase/flutterfire/commit/0eb17e13587ebfe5c8d64cbba9c0a2ccd0b7ce90))
+
+#### `firebase_auth_platform_interface` - `v7.6.3`
+
+ - **DOCS**(firebase_auth): Removed duplicates; fixed typos; removed "unnecessary use of a null check" ([#16815](https://github.com/firebase/flutterfire/issues/16815)). ([0eb17e13](https://github.com/firebase/flutterfire/commit/0eb17e13587ebfe5c8d64cbba9c0a2ccd0b7ce90))
+
+#### `firebase_core_web` - `v2.23.0`
+
+ - **FEAT**: bump Firebase JS SDK to 11.7.0 ([#17355](https://github.com/firebase/flutterfire/issues/17355)). ([1c680eb9](https://github.com/firebase/flutterfire/commit/1c680eb97f51269285814309e7fca7a579698834))
+
+#### `firebase_data_connect` - `v0.1.5`
+
+ - **FIX**(data_connect): avoid calling toJson on raw JSON map or null object ([#17356](https://github.com/firebase/flutterfire/issues/17356)). ([7bd63691](https://github.com/firebase/flutterfire/commit/7bd63691ffa7405d24ea4545bd1ac7f8971175b3))
+ - **FEAT**(fdc): Included platform detection changes ([#17308](https://github.com/firebase/flutterfire/issues/17308)). ([e53c7071](https://github.com/firebase/flutterfire/commit/e53c7071e2566b7e016fda312d92dd03fcb1bc9e))
+
+#### `firebase_vertexai` - `v1.7.0`
+
+ - **FEAT**(firebaseai): Developer API ([#17342](https://github.com/firebase/flutterfire/issues/17342)). ([dbdd1356](https://github.com/firebase/flutterfire/commit/dbdd13562d75f49f0e46933d49942acac76ab193))
+ - **FEAT**(vertexai): Add responseModality ([#17326](https://github.com/firebase/flutterfire/issues/17326)). ([0b98669c](https://github.com/firebase/flutterfire/commit/0b98669c522243cb71d8e4f355a6c7fa6f62f581))
+ - **FEAT**(vertexai): Add HarmBlockThreshold.OFF ([#17325](https://github.com/firebase/flutterfire/issues/17325)). ([af7710a1](https://github.com/firebase/flutterfire/commit/af7710a134347af01bb6522e90cdacc293a16922))
+
+
 ## 2025-04-28 - [BoM 3.10.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-3100-2025-04-28)
 
 ### Changes
