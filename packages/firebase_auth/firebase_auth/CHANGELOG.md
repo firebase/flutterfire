@@ -1,3 +1,8 @@
+## 5.5.4
+
+ - **FIX**(auth,apple): prevent EXC_BAD_ACCESS crash in Apple Sign-In completion handler ([#17273](https://github.com/firebase/flutterfire/issues/17273)). ([cc7d28ae](https://github.com/firebase/flutterfire/commit/cc7d28ae09036464f7ece6a2637bae6a3c7a292d))
+ - **DOCS**(firebase_auth): Removed duplicates; fixed typos; removed "unnecessary use of a null check" ([#16815](https://github.com/firebase/flutterfire/issues/16815)). ([0eb17e13](https://github.com/firebase/flutterfire/commit/0eb17e13587ebfe5c8d64cbba9c0a2ccd0b7ce90))
+
 ## 5.5.3
 
  - **FIX**(auth,iOS): include missing email and credential in account-exists-with-different-credential error ([#17180](https://github.com/firebase/flutterfire/issues/17180)). ([2a0bdc64](https://github.com/firebase/flutterfire/commit/2a0bdc64086e99f8a98bd18b472b36bcfe05a9a4))

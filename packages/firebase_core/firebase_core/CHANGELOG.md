@@ -1,3 +1,7 @@
+## 3.13.1
+
+ - Update a dependency to the latest release.
+
 ## 3.13.0
 
  - **FEAT**(core,windows): update C++ SDK to 12.7.0 ([#17238](https://github.com/firebase/flutterfire/issues/17238)). ([b0e5843d](https://github.com/firebase/flutterfire/commit/b0e5843dde670063f755fbc4c52f6e2b070935e4))

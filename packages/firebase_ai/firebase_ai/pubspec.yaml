@@ -20,9 +20,9 @@ environment:
   flutter: ">=3.16.0"
 
 dependencies:
-  firebase_app_check: ^0.3.2+5
-  firebase_auth: ^5.5.2
-  firebase_core: ^3.13.0
+  firebase_app_check: ^0.3.2+6
+  firebase_auth: ^5.5.4
+  firebase_core: ^3.13.1
   firebase_core_platform_interface: ^5.3.1
   flutter:
     sdk: flutter
