@@ -1053,7 +1053,11 @@ void main() {
               () async {
             // Skipping this test as initializeRecaptchaConfig is not supported
             // by the Firebase emulator suite.
-            await FirebaseAuth.instance.initializeRecaptchaConfig();
+            try {
+              await FirebaseAuth.instance.initializeRecaptchaConfig();
+            } catch (e) {
+              fail('Should not have thrown: $e');
+            }
           });
         },
         skip: true,
