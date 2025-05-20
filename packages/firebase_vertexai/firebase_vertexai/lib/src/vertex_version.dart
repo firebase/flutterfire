@@ -12,5 +12,5 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// version number for the package, should be align with pubspec.yaml.
-const packageVersion = '0.1.5';
+/// generated version number for the package, do not manually edit
+const packageVersion = '1.7.0';
