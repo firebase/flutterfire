@@ -1,3 +1,7 @@
+## 5.14.3
+
+ - Update a dependency to the latest release.
+
 ## 5.14.2
 
  - **FIX**(auth,web): fix an issue that could occur when deleting FirebaseApp ([#17145](https://github.com/firebase/flutterfire/issues/17145)). ([a2246cd0](https://github.com/firebase/flutterfire/commit/a2246cd0ae8a7a53abc2537d7cd66ee079d3b096))
@@ -86,7 +90,7 @@
 
 ## 5.11.4
 
- - **FIX**(web): fixing some uncorrect type casting for Web ([#12696](https://github.com/firebase/flutterfire/issues/12696)). ([471b5072](https://github.com/firebase/flutterfire/commit/471b507265a08bbc68277d3a2fdb7ef608c9efcc))
+ - **FIX**(web): fixing some incorrect type casting for Web ([#12696](https://github.com/firebase/flutterfire/issues/12696)). ([471b5072](https://github.com/firebase/flutterfire/commit/471b507265a08bbc68277d3a2fdb7ef608c9efcc))
 
 ## 5.11.3
 
@@ -247,7 +251,7 @@
 ## 5.5.0
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 ## 5.4.0
 

@@ -1,3 +1,7 @@
+## 3.13.1
+
+ - Update a dependency to the latest release.
+
 ## 3.13.0
 
  - **FEAT**(core,windows): update C++ SDK to 12.7.0 ([#17238](https://github.com/firebase/flutterfire/issues/17238)). ([b0e5843d](https://github.com/firebase/flutterfire/commit/b0e5843dde670063f755fbc4c52f6e2b070935e4))
@@ -512,7 +516,7 @@
 
 ## 1.0.4
 
- - **REFACTOR**: Share guard functions accross plugins (#5783).
+ - **REFACTOR**: Share guard functions across plugins (#5783).
  - **CHORE**: update Web plugins to use Firebase JS SDK version 8.4.1 (#4464).
 
 ## 1.0.3
@@ -777,7 +781,7 @@
 
 ## 0.3.2
 
-* Move Android dependency to Gradle BoM to help maintain compatability
+* Move Android dependency to Gradle BoM to help maintain compatibility
   with other FlutterFire plugins.
 
 ## 0.3.1+1

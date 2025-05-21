@@ -12,6 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:firebase_ai/firebase_ai.dart';
+// ignore: implementation_imports
+import 'package:firebase_ai/src/base_model.dart'
+    show createGenerativeModel, createLiveGenerativeModel, createImagenModel;
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -19,16 +23,23 @@ import 'package:firebase_core_platform_interface/firebase_core_platform_interfac
     show FirebasePluginPlatform;
 import 'package:meta/meta.dart';
 
-import '../firebase_vertexai.dart';
-import 'base_model.dart';
-
 const _defaultLocation = 'us-central1';
 
 /// The entrypoint for [FirebaseVertexAI].
+@Deprecated(
+  '`FirebaseVertexAI` library and `firebase_vertexai` package have been renamed '
+  'and replaced by the new Firebase AI SDK: `FirebaseAI` in `firebase_ai` package. '
+  'See details in the [migration guide](https://firebase.google.com/docs/vertex-ai/migrate-to-latest-sdk).',
+)
 class FirebaseVertexAI extends FirebasePluginPlatform {
   FirebaseVertexAI._(
-      {required this.app, required this.location, this.appCheck, this.auth})
-      : super(app.name, 'plugins.flutter.io/firebase_vertexai');
+      {required this.app,
+      required this.location,
+      required bool useVertexBackend,
+      this.appCheck,
+      this.auth})
+      : _useVertexBackend = useVertexBackend,
+        super(app.name, 'plugins.flutter.io/firebase_vertexai');
 
   /// The [FirebaseApp] for this current [FirebaseVertexAI] instance.
   FirebaseApp app;
@@ -42,6 +53,8 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
 
   /// The service location for this [FirebaseVertexAI] instance.
   String location;
+
+  final bool _useVertexBackend;
 
   static final Map<String, FirebaseVertexAI> _cachedInstances = {};
 
@@ -61,18 +74,36 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
     FirebaseAppCheck? appCheck,
     FirebaseAuth? auth,
     String? location,
+  }) =>
+      _vertexAI(app: app, appCheck: appCheck, auth: auth, location: location);
+
+  /// Returns an instance using a specified [FirebaseApp].
+  ///
+  /// If [app] is not provided, the default Firebase app will be used.
+  /// If pass in [appCheck], request session will get protected from abusing.
+  static FirebaseVertexAI _vertexAI({
+    FirebaseApp? app,
+    FirebaseAppCheck? appCheck,
+    FirebaseAuth? auth,
+    String? location,
   }) {
     app ??= Firebase.app();
+    var instanceKey = '${app.name}::vertexai';
 
-    if (_cachedInstances.containsKey(app.name)) {
-      return _cachedInstances[app.name]!;
+    if (_cachedInstances.containsKey(instanceKey)) {
+      return _cachedInstances[instanceKey]!;
     }
 
     location ??= _defaultLocation;
 
     FirebaseVertexAI newInstance = FirebaseVertexAI._(
-        app: app, location: location, appCheck: appCheck, auth: auth);
-    _cachedInstances[app.name] = newInstance;
+      app: app,
+      location: location,
+      appCheck: appCheck,
+      auth: auth,
+      useVertexBackend: true,
+    );
+    _cachedInstances[instanceKey] = newInstance;
 
     return newInstance;
   }
@@ -100,6 +131,7 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
       model: model,
       app: app,
       appCheck: appCheck,
+      useVertexBackend: _useVertexBackend,
       auth: auth,
       location: location,
       safetySettings: safetySettings,
@@ -123,6 +155,7 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
         app: app,
         location: location,
         model: model,
+        useVertexBackend: _useVertexBackend,
         generationConfig: generationConfig,
         safetySettings: safetySettings,
         appCheck: appCheck,

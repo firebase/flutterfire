@@ -11,9 +11,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+import 'package:firebase_ai/src/base_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
-import 'package:firebase_vertexai/src/base_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'mock.dart';
@@ -38,6 +39,7 @@ void main() {
       final client = ClientController();
       final model = createModelWithClient(
           app: app,
+          useVertexBackend: true,
           model: modelName,
           client: client.client,
           location: 'us-central1');

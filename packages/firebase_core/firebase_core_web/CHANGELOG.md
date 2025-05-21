@@ -1,3 +1,7 @@
+## 2.23.0
+
+ - **FEAT**: bump Firebase JS SDK to 11.7.0 ([#17355](https://github.com/firebase/flutterfire/issues/17355)). ([1c680eb9](https://github.com/firebase/flutterfire/commit/1c680eb97f51269285814309e7fca7a579698834))
+
 ## 2.22.0
 
  - **FEAT**: bump Firebase JS SDK to 11.5.0 ([#17243](https://github.com/firebase/flutterfire/issues/17243)). ([aa7fec73](https://github.com/firebase/flutterfire/commit/aa7fec7338f57ec69acd35052ec80769c77a7afd))

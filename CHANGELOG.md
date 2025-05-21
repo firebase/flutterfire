@@ -3,6 +3,146 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-05-20 - [BoM 3.11.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-3110-2025-05-20)
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ai` - `v2.0.0`](#firebase_ai---v200)
+ - [`firebase_auth` - `v5.5.4`](#firebase_auth---v554)
+ - [`firebase_auth_platform_interface` - `v7.6.3`](#firebase_auth_platform_interface---v763)
+ - [`firebase_core_web` - `v2.23.0`](#firebase_core_web---v2230)
+ - [`firebase_data_connect` - `v0.1.5`](#firebase_data_connect---v015)
+ - [`firebase_vertexai` - `v1.7.0`](#firebase_vertexai---v170)
+ - [`firebase_auth_web` - `v5.14.3`](#firebase_auth_web---v5143)
+ - [`cloud_firestore_web` - `v4.4.8`](#cloud_firestore_web---v448)
+ - [`firebase_app_installations_web` - `v0.1.6+12`](#firebase_app_installations_web---v01612)
+ - [`firebase_messaging_web` - `v3.10.6`](#firebase_messaging_web---v3106)
+ - [`firebase_remote_config_web` - `v1.8.4`](#firebase_remote_config_web---v184)
+ - [`firebase_database_web` - `v0.2.6+12`](#firebase_database_web---v02612)
+ - [`firebase_core` - `v3.13.1`](#firebase_core---v3131)
+ - [`firebase_analytics_web` - `v0.5.10+12`](#firebase_analytics_web---v051012)
+ - [`firebase_app_check_web` - `v0.2.0+10`](#firebase_app_check_web---v02010)
+ - [`firebase_storage_web` - `v3.10.13`](#firebase_storage_web---v31013)
+ - [`cloud_functions_web` - `v4.11.1`](#cloud_functions_web---v4111)
+ - [`firebase_performance_web` - `v0.1.7+12`](#firebase_performance_web---v01712)
+ - [`cloud_firestore` - `v5.6.8`](#cloud_firestore---v568)
+ - [`firebase_app_installations` - `v0.3.2+6`](#firebase_app_installations---v0326)
+ - [`firebase_messaging` - `v15.2.6`](#firebase_messaging---v1526)
+ - [`firebase_remote_config` - `v5.4.4`](#firebase_remote_config---v544)
+ - [`firebase_database` - `v11.3.6`](#firebase_database---v1136)
+ - [`_flutterfire_internals` - `v1.3.55`](#_flutterfire_internals---v1355)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.5+6`](#firebase_in_app_messaging_platform_interface---v0256)
+ - [`firebase_in_app_messaging` - `v0.8.1+6`](#firebase_in_app_messaging---v0816)
+ - [`cloud_firestore_platform_interface` - `v6.6.8`](#cloud_firestore_platform_interface---v668)
+ - [`firebase_dynamic_links` - `v6.1.6`](#firebase_dynamic_links---v616)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.7+6`](#firebase_dynamic_links_platform_interface---v0276)
+ - [`firebase_crashlytics_platform_interface` - `v3.8.6`](#firebase_crashlytics_platform_interface---v386)
+ - [`firebase_messaging_platform_interface` - `v4.6.6`](#firebase_messaging_platform_interface---v466)
+ - [`firebase_crashlytics` - `v4.3.6`](#firebase_crashlytics---v436)
+ - [`firebase_app_installations_platform_interface` - `v0.1.4+54`](#firebase_app_installations_platform_interface---v01454)
+ - [`firebase_remote_config_platform_interface` - `v1.5.4`](#firebase_remote_config_platform_interface---v154)
+ - [`firebase_database_platform_interface` - `v0.2.6+6`](#firebase_database_platform_interface---v0266)
+ - [`firebase_analytics_platform_interface` - `v4.3.6`](#firebase_analytics_platform_interface---v436)
+ - [`firebase_analytics` - `v11.4.6`](#firebase_analytics---v1146)
+ - [`firebase_app_check` - `v0.3.2+6`](#firebase_app_check---v0326)
+ - [`firebase_ml_model_downloader` - `v0.3.3+4`](#firebase_ml_model_downloader---v0334)
+ - [`firebase_storage_platform_interface` - `v5.2.6`](#firebase_storage_platform_interface---v526)
+ - [`firebase_app_check_platform_interface` - `v0.1.1+6`](#firebase_app_check_platform_interface---v0116)
+ - [`firebase_ml_model_downloader_platform_interface` - `v0.1.5+6`](#firebase_ml_model_downloader_platform_interface---v0156)
+ - [`firebase_storage` - `v12.4.6`](#firebase_storage---v1246)
+ - [`cloud_functions` - `v5.5.1`](#cloud_functions---v551)
+ - [`cloud_functions_platform_interface` - `v5.7.1`](#cloud_functions_platform_interface---v571)
+ - [`firebase_performance_platform_interface` - `v0.1.5+6`](#firebase_performance_platform_interface---v0156)
+ - [`firebase_performance` - `v0.10.1+6`](#firebase_performance---v01016)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_auth_web` - `v5.14.3`
+ - `cloud_firestore_web` - `v4.4.8`
+ - `firebase_app_installations_web` - `v0.1.6+12`
+ - `firebase_messaging_web` - `v3.10.6`
+ - `firebase_remote_config_web` - `v1.8.4`
+ - `firebase_database_web` - `v0.2.6+12`
+ - `firebase_core` - `v3.13.1`
+ - `firebase_analytics_web` - `v0.5.10+12`
+ - `firebase_app_check_web` - `v0.2.0+10`
+ - `firebase_storage_web` - `v3.10.13`
+ - `cloud_functions_web` - `v4.11.1`
+ - `firebase_performance_web` - `v0.1.7+12`
+ - `cloud_firestore` - `v5.6.8`
+ - `firebase_app_installations` - `v0.3.2+6`
+ - `firebase_messaging` - `v15.2.6`
+ - `firebase_remote_config` - `v5.4.4`
+ - `firebase_database` - `v11.3.6`
+ - `_flutterfire_internals` - `v1.3.55`
+ - `firebase_in_app_messaging_platform_interface` - `v0.2.5+6`
+ - `firebase_in_app_messaging` - `v0.8.1+6`
+ - `cloud_firestore_platform_interface` - `v6.6.8`
+ - `firebase_dynamic_links` - `v6.1.6`
+ - `firebase_dynamic_links_platform_interface` - `v0.2.7+6`
+ - `firebase_crashlytics_platform_interface` - `v3.8.6`
+ - `firebase_messaging_platform_interface` - `v4.6.6`
+ - `firebase_crashlytics` - `v4.3.6`
+ - `firebase_app_installations_platform_interface` - `v0.1.4+54`
+ - `firebase_remote_config_platform_interface` - `v1.5.4`
+ - `firebase_database_platform_interface` - `v0.2.6+6`
+ - `firebase_analytics_platform_interface` - `v4.3.6`
+ - `firebase_analytics` - `v11.4.6`
+ - `firebase_app_check` - `v0.3.2+6`
+ - `firebase_ml_model_downloader` - `v0.3.3+4`
+ - `firebase_storage_platform_interface` - `v5.2.6`
+ - `firebase_app_check_platform_interface` - `v0.1.1+6`
+ - `firebase_ml_model_downloader_platform_interface` - `v0.1.5+6`
+ - `firebase_storage` - `v12.4.6`
+ - `cloud_functions` - `v5.5.1`
+ - `cloud_functions_platform_interface` - `v5.7.1`
+ - `firebase_performance_platform_interface` - `v0.1.5+6`
+ - `firebase_performance` - `v0.10.1+6`
+
+---
+
+#### `firebase_ai` - `v2.0.0`
+
+[feature] Initial release of the Firebase AI Logic SDK (`FirebaseAI`). This SDK *replaces* the previous Vertex AI in Firebase SDK (`FirebaseVertexAI`) to accommodate the evolving set of supported features and services.
+The new Firebase AI Logic SDK provides **preview** support for the Gemini Developer API, including its free tier offering.
+Using the Firebase AI Logic SDK with the Vertex AI Gemini API is still generally available (GA).
+
+To start using the new SDK, import the `firebase_ai` package and use the top-level `FirebaseAI` class. See details in the [migration guide](https://firebase.google.com/docs/vertex-ai/migrate-to-latest-sdk).
+
+#### `firebase_auth` - `v5.5.4`
+
+ - **FIX**(auth,apple): prevent EXC_BAD_ACCESS crash in Apple Sign-In completion handler ([#17273](https://github.com/firebase/flutterfire/issues/17273)). ([cc7d28ae](https://github.com/firebase/flutterfire/commit/cc7d28ae09036464f7ece6a2637bae6a3c7a292d))
+ - **DOCS**(firebase_auth): Removed duplicates; fixed typos; removed "unnecessary use of a null check" ([#16815](https://github.com/firebase/flutterfire/issues/16815)). ([0eb17e13](https://github.com/firebase/flutterfire/commit/0eb17e13587ebfe5c8d64cbba9c0a2ccd0b7ce90))
+
+#### `firebase_auth_platform_interface` - `v7.6.3`
+
+ - **DOCS**(firebase_auth): Removed duplicates; fixed typos; removed "unnecessary use of a null check" ([#16815](https://github.com/firebase/flutterfire/issues/16815)). ([0eb17e13](https://github.com/firebase/flutterfire/commit/0eb17e13587ebfe5c8d64cbba9c0a2ccd0b7ce90))
+
+#### `firebase_core_web` - `v2.23.0`
+
+ - **FEAT**: bump Firebase JS SDK to 11.7.0 ([#17355](https://github.com/firebase/flutterfire/issues/17355)). ([1c680eb9](https://github.com/firebase/flutterfire/commit/1c680eb97f51269285814309e7fca7a579698834))
+
+#### `firebase_data_connect` - `v0.1.5`
+
+ - **FIX**(data_connect): avoid calling toJson on raw JSON map or null object ([#17356](https://github.com/firebase/flutterfire/issues/17356)). ([7bd63691](https://github.com/firebase/flutterfire/commit/7bd63691ffa7405d24ea4545bd1ac7f8971175b3))
+ - **FEAT**(fdc): Included platform detection changes ([#17308](https://github.com/firebase/flutterfire/issues/17308)). ([e53c7071](https://github.com/firebase/flutterfire/commit/e53c7071e2566b7e016fda312d92dd03fcb1bc9e))
+
+#### `firebase_vertexai` - `v1.7.0`
+
+[changed] **Renamed / Replaced:** Vertex AI in Firebase and its `FirebaseVertexAI` library have been renamed and replaced by the new Firebase AI Logic SDK: `FirebaseAI`. This is to accommodate the evolving set of supported features and services. Please migrate to the new `FirebaseAI` module. See details in the [migration guide](https://firebase.google.com/docs/vertex-ai/migrate-to-latest-sdk).
+
+Note: Existing `FirebaseVertexAI` users may continue to use `import firebase_vertexai` and the `FirebaseVertexAI` top-level class, though these will be removed in a future release. Also, going forward, new features will only be added into the new `FirebaseAI` module.
+
 ## 2025-04-28 - [BoM 3.10.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-3100-2025-04-28)
 
 ### Changes
@@ -3314,7 +3454,7 @@ Packages with dependency updates only:
 
 #### `firebase_auth` - `v4.20.0`
 
- - **FIX**(auth,android): remove unecessary error type guarding ([#12816](https://github.com/firebase/flutterfire/issues/12816)). ([7d4c200a](https://github.com/firebase/flutterfire/commit/7d4c200ac6f06a50c2e7ee852aea2c9fa7bcb0ff))
+ - **FIX**(auth,android): remove unnecessary error type guarding ([#12816](https://github.com/firebase/flutterfire/issues/12816)). ([7d4c200a](https://github.com/firebase/flutterfire/commit/7d4c200ac6f06a50c2e7ee852aea2c9fa7bcb0ff))
  - **FEAT**(auth,windows): `verifyBeforeUpdateEmail()` API  support ([#12825](https://github.com/firebase/flutterfire/issues/12825)). ([111b1ad9](https://github.com/firebase/flutterfire/commit/111b1ad91e985b0462532bc579e64342b7f46fe2))
  - **FEAT**(auth): update Pigeon version to 19 ([#12828](https://github.com/firebase/flutterfire/issues/12828)). ([5e76153f](https://github.com/firebase/flutterfire/commit/5e76153fbcd337a26e83abc2b43b651ab6c501bc))
  - **FEAT**: bump CPP SDK to version 11.10.0 ([#12749](https://github.com/firebase/flutterfire/issues/12749)). ([2e410a23](https://github.com/firebase/flutterfire/commit/2e410a232758292baa70f8e78464bd3c62ec0373))
@@ -3730,11 +3870,11 @@ Packages with dependency updates only:
 
 #### `cloud_firestore_web` - `v3.12.2`
 
- - **FIX**(web): fixing some uncorrect type casting for Web ([#12696](https://github.com/firebase/flutterfire/issues/12696)). ([471b5072](https://github.com/firebase/flutterfire/commit/471b507265a08bbc68277d3a2fdb7ef608c9efcc))
+ - **FIX**(web): fixing some incorrect type casting for Web ([#12696](https://github.com/firebase/flutterfire/issues/12696)). ([471b5072](https://github.com/firebase/flutterfire/commit/471b507265a08bbc68277d3a2fdb7ef608c9efcc))
 
 #### `firebase_auth_web` - `v5.11.4`
 
- - **FIX**(web): fixing some uncorrect type casting for Web ([#12696](https://github.com/firebase/flutterfire/issues/12696)). ([471b5072](https://github.com/firebase/flutterfire/commit/471b507265a08bbc68277d3a2fdb7ef608c9efcc))
+ - **FIX**(web): fixing some incorrect type casting for Web ([#12696](https://github.com/firebase/flutterfire/issues/12696)). ([471b5072](https://github.com/firebase/flutterfire/commit/471b507265a08bbc68277d3a2fdb7ef608c9efcc))
 
 
 ## 2024-04-23
@@ -7899,13 +8039,13 @@ Packages with dependency updates only:
 
 #### `firebase_auth` - `v4.7.2`
 
- - **FIX**(auth): fix MFA issue where the error wouldn't be properly catched ([#11370](https://github.com/firebase/flutterfire/issues/11370)). ([72fef03f](https://github.com/firebase/flutterfire/commit/72fef03f775702aaf9a2ce0c6b31aea2a3c200a9))
+ - **FIX**(auth): fix MFA issue where the error wouldn't be properly caught ([#11370](https://github.com/firebase/flutterfire/issues/11370)). ([72fef03f](https://github.com/firebase/flutterfire/commit/72fef03f775702aaf9a2ce0c6b31aea2a3c200a9))
  - **FIX**(auth,android): `getIdToken()` `IllegalStateException` crash fix ([#11362](https://github.com/firebase/flutterfire/issues/11362)). ([e925b4c9](https://github.com/firebase/flutterfire/commit/e925b4c9a937d90de0bdfb59ffa005938b3862dd))
  - **FIX**(auth,apple): pass in Firebase auth instance for correct app when using Provider sign in ([#11284](https://github.com/firebase/flutterfire/issues/11284)). ([1cffae79](https://github.com/firebase/flutterfire/commit/1cffae79ded28808ba55f2f4c9c1b47817987999))
 
 #### `firebase_auth_platform_interface` - `v6.16.1`
 
- - **FIX**(auth): fix MFA issue where the error wouldn't be properly catched ([#11370](https://github.com/firebase/flutterfire/issues/11370)). ([72fef03f](https://github.com/firebase/flutterfire/commit/72fef03f775702aaf9a2ce0c6b31aea2a3c200a9))
+ - **FIX**(auth): fix MFA issue where the error wouldn't be properly caught ([#11370](https://github.com/firebase/flutterfire/issues/11370)). ([72fef03f](https://github.com/firebase/flutterfire/commit/72fef03f775702aaf9a2ce0c6b31aea2a3c200a9))
 
 #### `firebase_auth_web` - `v5.6.2`
 
@@ -8751,7 +8891,7 @@ Packages with other changes:
 #### `cloud_firestore` - `v4.7.0`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `cloud_firestore_odm` - `v1.0.0-dev.58`
 
@@ -8764,7 +8904,7 @@ Packages with other changes:
 #### `cloud_firestore_platform_interface` - `v5.14.0`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `cloud_firestore_web` - `v3.5.0`
 
@@ -8777,7 +8917,7 @@ Packages with other changes:
 #### `cloud_functions_platform_interface` - `v5.4.0`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `cloud_functions_web` - `v4.5.0`
 
@@ -8786,12 +8926,12 @@ Packages with other changes:
 #### `firebase_analytics` - `v10.4.0`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `firebase_analytics_platform_interface` - `v3.6.0`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `firebase_analytics_web` - `v0.5.4`
 
@@ -8800,12 +8940,12 @@ Packages with other changes:
 #### `firebase_app_check` - `v0.1.4`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `firebase_app_check_platform_interface` - `v0.0.8`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `firebase_app_check_web` - `v0.0.10`
 
@@ -8826,17 +8966,17 @@ Packages with other changes:
 #### `firebase_auth` - `v4.6.0`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `firebase_auth_platform_interface` - `v6.15.0`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `firebase_auth_web` - `v5.5.0`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `firebase_core` - `v2.12.0`
 
@@ -8853,12 +8993,12 @@ Packages with other changes:
 #### `firebase_crashlytics` - `v3.3.0`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `firebase_crashlytics_platform_interface` - `v3.6.0`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `firebase_database` - `v10.2.0`
 
@@ -8867,7 +9007,7 @@ Packages with other changes:
 #### `firebase_database_platform_interface` - `v0.2.5`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `firebase_database_web` - `v0.2.3`
 
@@ -8876,12 +9016,12 @@ Packages with other changes:
 #### `firebase_dynamic_links` - `v5.3.0`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `firebase_dynamic_links_platform_interface` - `v0.2.6`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `firebase_in_app_messaging` - `v0.7.3`
 
@@ -8890,7 +9030,7 @@ Packages with other changes:
 #### `firebase_in_app_messaging_platform_interface` - `v0.2.4`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `firebase_messaging` - `v14.6.0`
 
@@ -8899,7 +9039,7 @@ Packages with other changes:
 #### `firebase_messaging_platform_interface` - `v4.5.0`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `firebase_messaging_web` - `v3.5.0`
 
@@ -8912,7 +9052,7 @@ Packages with other changes:
 #### `firebase_ml_model_downloader_platform_interface` - `v0.1.4`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `firebase_performance` - `v0.9.2`
 
@@ -8921,7 +9061,7 @@ Packages with other changes:
 #### `firebase_performance_platform_interface` - `v0.1.4`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `firebase_performance_web` - `v0.1.4`
 
@@ -8946,7 +9086,7 @@ Packages with other changes:
 #### `firebase_storage_platform_interface` - `v4.4.0`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `firebase_storage_web` - `v3.6.0`
 
@@ -8955,48 +9095,48 @@ Packages with other changes:
 #### `firebase_ui_auth` - `v1.4.0`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
  - **DOCS**(firebase_ui_auth): fix phone provider's widget example ([#10917](https://github.com/firebase/flutterfire/issues/10917)). ([c56234ff](https://github.com/firebase/flutterfire/commit/c56234ffd06c29edac6243bf0509b1925390395a))
 
 #### `firebase_ui_database` - `v1.3.0`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `firebase_ui_firestore` - `v1.5.0`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `firebase_ui_localizations` - `v1.5.0`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `firebase_ui_oauth` - `v1.4.0`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `firebase_ui_oauth_apple` - `v1.2.0`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `firebase_ui_oauth_facebook` - `v1.2.0`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `firebase_ui_oauth_google` - `v1.2.0`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `firebase_ui_oauth_twitter` - `v1.2.0`
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 #### `firebase_ui_shared` - `v1.3.0`
 
@@ -13830,14 +13970,14 @@ Packages with dependency updates only:
  - **FIX**: remove default scopes on iOS for Sign in With Apple ([#9477](https://github.com/firebase/flutterfire/issues/9477)). ([3fe02b29](https://github.com/firebase/flutterfire/commit/3fe02b2937135ea6d576c7e445da5f4266ff0fdf))
  - **FEAT**: add Twitter login for Android, iOS and Web ([#9421](https://github.com/firebase/flutterfire/issues/9421)). ([0bc6e6d5](https://github.com/firebase/flutterfire/commit/0bc6e6d5333e6be0d5749a083206f3f5bb79a7ba))
  - **FEAT**: add Yahoo as provider for iOS, Android and Web ([#9443](https://github.com/firebase/flutterfire/issues/9443)). ([6c3108a7](https://github.com/firebase/flutterfire/commit/6c3108a767aca3b1a844b2b5da04b2da45bc9fbd))
- - **DOCS**: fix typo "apperance" in `platform_interface_firebase_auth.dart` ([#9472](https://github.com/firebase/flutterfire/issues/9472)). ([323b917b](https://github.com/firebase/flutterfire/commit/323b917b5eecf0e5161a61c66f6cabac5b23e1b8))
+ - **DOCS**: fix typo "appearance" in `platform_interface_firebase_auth.dart` ([#9472](https://github.com/firebase/flutterfire/issues/9472)). ([323b917b](https://github.com/firebase/flutterfire/commit/323b917b5eecf0e5161a61c66f6cabac5b23e1b8))
 
 #### `firebase_auth_platform_interface` - `v6.7.0`
 
  - **FIX**: fix enrollementTimestamp parsing on Web ([#9440](https://github.com/firebase/flutterfire/issues/9440)). ([639cab7b](https://github.com/firebase/flutterfire/commit/639cab7b84aa33cc1dda144fc89db2236a1945b2))
  - **FEAT**: add Twitter login for Android, iOS and Web ([#9421](https://github.com/firebase/flutterfire/issues/9421)). ([0bc6e6d5](https://github.com/firebase/flutterfire/commit/0bc6e6d5333e6be0d5749a083206f3f5bb79a7ba))
  - **FEAT**: add Yahoo as provider for iOS, Android and Web ([#9443](https://github.com/firebase/flutterfire/issues/9443)). ([6c3108a7](https://github.com/firebase/flutterfire/commit/6c3108a767aca3b1a844b2b5da04b2da45bc9fbd))
- - **DOCS**: fix typo "apperance" in `platform_interface_firebase_auth.dart` ([#9472](https://github.com/firebase/flutterfire/issues/9472)). ([323b917b](https://github.com/firebase/flutterfire/commit/323b917b5eecf0e5161a61c66f6cabac5b23e1b8))
+ - **DOCS**: fix typo "appearance" in `platform_interface_firebase_auth.dart` ([#9472](https://github.com/firebase/flutterfire/issues/9472)). ([323b917b](https://github.com/firebase/flutterfire/commit/323b917b5eecf0e5161a61c66f6cabac5b23e1b8))
 
 #### `firebase_auth_web` - `v4.4.0`
 
@@ -17432,7 +17572,7 @@ Packages with dependency updates only:
 
 #### `firebase_app_check` - `v0.0.6+5`
 
- - **FIX**: workaround iOS build issue when targetting platforms < iOS 11.
+ - **FIX**: workaround iOS build issue when targeting platforms < iOS 11.
 
 #### `firebase_app_installations` - `v0.1.0+6`
 
