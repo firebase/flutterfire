@@ -13,23 +13,17 @@
 // limitations under the License.
 import 'dart:typed_data';
 
-import 'package:firebase_vertexai/src/content.dart';
-import 'package:firebase_vertexai/src/error.dart';
-import 'package:firebase_vertexai/src/live_api.dart';
+import 'package:firebase_ai/src/api.dart';
+import 'package:firebase_ai/src/content.dart';
+import 'package:firebase_ai/src/live_api.dart';
+import 'package:firebase_vertexai/firebase_vertexai.dart'
+    show VertexAISdkException;
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('LiveAPI Tests', () {
-    test('Voices enum toJson() returns correct value', () {
-      expect(Voice.aoede.toJson(), 'Aoede');
-      expect(Voice.charon.toJson(), 'Charon');
-      expect(Voice.fenrir.toJson(), 'Fenrir');
-      expect(Voice.kore.toJson(), 'Kore');
-      expect(Voice.puck.toJson(), 'Puck');
-    });
-
     test('SpeechConfig toJson() returns correct JSON', () {
-      final speechConfigWithVoice = SpeechConfig(voice: Voice.aoede);
+      final speechConfigWithVoice = SpeechConfig(voiceName: 'Aoede');
       expect(speechConfigWithVoice.toJson(), {
         'voice_config': {
           'prebuilt_voice_config': {'voice_name': 'Aoede'}
@@ -41,7 +35,6 @@ void main() {
     });
 
     test('ResponseModalities enum toJson() returns correct value', () {
-      expect(ResponseModalities.unspecified.toJson(), 'MODALITY_UNSPECIFIED');
       expect(ResponseModalities.text.toJson(), 'TEXT');
       expect(ResponseModalities.image.toJson(), 'IMAGE');
       expect(ResponseModalities.audio.toJson(), 'AUDIO');
@@ -49,7 +42,7 @@ void main() {
 
     test('LiveGenerationConfig toJson() returns correct JSON', () {
       final liveGenerationConfig = LiveGenerationConfig(
-        speechConfig: SpeechConfig(voice: Voice.charon),
+        speechConfig: SpeechConfig(voiceName: 'Charon'),
         responseModalities: [ResponseModalities.text, ResponseModalities.audio],
         candidateCount: 2,
         maxOutputTokens: 100,
@@ -184,9 +177,9 @@ void main() {
           'turnComplete': true,
         }
       };
-      final message = parseServerMessage(jsonObject);
-      expect(message, isA<LiveServerContent>());
-      final contentMessage = message as LiveServerContent;
+      final response = parseServerResponse(jsonObject);
+      expect(response.message, isA<LiveServerContent>());
+      final contentMessage = response.message as LiveServerContent;
       expect(contentMessage.turnComplete, true);
       expect(contentMessage.modelTurn, isA<Content>());
     });
@@ -206,9 +199,9 @@ void main() {
           ]
         }
       };
-      final message = parseServerMessage(jsonObject);
-      expect(message, isA<LiveServerToolCall>());
-      final toolCallMessage = message as LiveServerToolCall;
+      final response = parseServerResponse(jsonObject);
+      expect(response.message, isA<LiveServerToolCall>());
+      final toolCallMessage = response.message as LiveServerToolCall;
       expect(toolCallMessage.functionCalls, isA<List<FunctionCall>>());
     });
 
@@ -219,28 +212,29 @@ void main() {
           'ids': ['1', '2']
         }
       };
-      final message = parseServerMessage(jsonObject);
-      expect(message, isA<LiveServerToolCallCancellation>());
-      final cancellationMessage = message as LiveServerToolCallCancellation;
+      final response = parseServerResponse(jsonObject);
+      expect(response.message, isA<LiveServerToolCallCancellation>());
+      final cancellationMessage =
+          response.message as LiveServerToolCallCancellation;
       expect(cancellationMessage.functionIds, ['1', '2']);
     });
 
     test('parseServerMessage parses setupComplete message correctly', () {
       final jsonObject = {'setupComplete': {}};
-      final message = parseServerMessage(jsonObject);
-      expect(message, isA<LiveServerSetupComplete>());
+      final response = parseServerResponse(jsonObject);
+      expect(response.message, isA<LiveServerSetupComplete>());
     });
 
     test('parseServerMessage throws VertexAIException for error message', () {
       final jsonObject = {'error': {}};
-      expect(() => parseServerMessage(jsonObject),
+      expect(() => parseServerResponse(jsonObject),
           throwsA(isA<VertexAISdkException>()));
     });
 
     test('parseServerMessage throws VertexAISdkException for unhandled format',
         () {
       final jsonObject = {'unknown': {}};
-      expect(() => parseServerMessage(jsonObject),
+      expect(() => parseServerResponse(jsonObject),
           throwsA(isA<VertexAISdkException>()));
     });
   });

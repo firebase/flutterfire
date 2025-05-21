@@ -65,12 +65,13 @@ class _BidiPageState extends State<BidiPage> {
     super.initState();
 
     final config = LiveGenerationConfig(
-      speechConfig: SpeechConfig(voice: Voice.fenrir),
+      speechConfig: SpeechConfig(voiceName: 'Fenrir'),
       responseModalities: [
         ResponseModalities.audio,
       ],
     );
 
+    // ignore: deprecated_member_use
     _liveModel = FirebaseVertexAI.instance.liveGenerativeModel(
       model: 'gemini-2.0-flash-exp',
       liveGenerationConfig: config,
@@ -353,25 +354,21 @@ class _BidiPageState extends State<BidiPage> {
     }
   }
 
-  Future<void> _handleLiveServerMessage(LiveServerMessage response) async {
-    if (response is LiveServerContent && response.modelTurn != null) {
-      await _handleLiveServerContent(response);
-    }
+  Future<void> _handleLiveServerMessage(LiveServerResponse response) async {
+    final message = response.message;
 
-    /*if (response is LiveServerContent &&
-        response.turnComplete != null &&
-        response.turnComplete!) {
-      await _handleTurnComplete();
-    }*/
-
-    if (response is LiveServerContent &&
-        response.interrupted != null &&
-        response.interrupted!) {
-      // log('Interrupted: $response');
-    }
-
-    if (response is LiveServerToolCall && response.functionCalls != null) {
-      await _handleLiveServerToolCall(response);
+    if (message is LiveServerContent) {
+      if (message.modelTurn != null) {
+        await _handleLiveServerContent(message);
+      }
+      if (message.turnComplete != null && message.turnComplete!) {
+        await _handleTurnComplete();
+      }
+      if (message.interrupted != null && message.interrupted!) {
+        log('Interrupted: $response');
+      }
+    } else if (message is LiveServerToolCall && message.functionCalls != null) {
+      await _handleLiveServerToolCall(message);
     }
   }
 
