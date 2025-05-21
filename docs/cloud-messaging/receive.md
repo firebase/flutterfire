@@ -539,35 +539,35 @@ At this point, everything should still be running normally. The final step is in
 
 * {Swift}
 
-1.  From the navigator, select your ImageNotification extension
+  1.  From the navigator, select your ImageNotification extension
 
-1.  Open the `NotificationService.swift` file.
+  1.  Open the `NotificationService.swift` file.
 
-1.  Replace the content of `NotificationService.swift` with:
+  1.  Replace the content of `NotificationService.swift` with:
 
-    ```swift
-    import UserNotifications
-    import FirebaseMessaging
+      ```swift
+      import UserNotifications
+      import FirebaseMessaging
 
-    class NotificationService: UNNotificationServiceExtension {
+      class NotificationService: UNNotificationServiceExtension {
 
-        var contentHandler: ((UNNotificationContent) -> Void)?
-        var bestAttemptContent: UNMutableNotificationContent?
+          var contentHandler: ((UNNotificationContent) -> Void)?
+          var bestAttemptContent: UNMutableNotificationContent?
 
-        override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
-            self.contentHandler = contentHandler
-            bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
+          override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
+              self.contentHandler = contentHandler
+              bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
 
-            Messaging.serviceExtension().populateNotificationContent(bestAttemptContent!, withContentHandler: contentHandler)
-        }
+              Messaging.serviceExtension().populateNotificationContent(bestAttemptContent!, withContentHandler: contentHandler)
+          }
 
-        override func serviceExtensionTimeWillExpire() {
-            if let contentHandler = contentHandler, let bestAttemptContent = bestAttemptContent {
-                contentHandler(bestAttemptContent)
-            }
-        }
-    }
-    ```
+          override func serviceExtensionTimeWillExpire() {
+              if let contentHandler = contentHandler, let bestAttemptContent = bestAttemptContent {
+                  contentHandler(bestAttemptContent)
+              }
+          }
+      }
+      ```
 
 * {Objective-C}
 
