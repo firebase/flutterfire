@@ -1,3 +1,27 @@
+## 3.10.13
+
+ - Update a dependency to the latest release.
+
+## 3.10.12
+
+ - Update a dependency to the latest release.
+
+## 3.10.11
+
+ - Update a dependency to the latest release.
+
+## 3.10.10
+
+ - Update a dependency to the latest release.
+
+## 3.10.9
+
+ - Update a dependency to the latest release.
+
+## 3.10.8
+
+ - Update a dependency to the latest release.
+
 ## 3.10.7
 
  - Update a dependency to the latest release.
@@ -457,7 +481,7 @@
 
 ## 1.0.4
 
- - **REFACTOR**: Share guard functions accross plugins (#5783).
+ - **REFACTOR**: Share guard functions across plugins (#5783).
 
 ## 1.0.3
 

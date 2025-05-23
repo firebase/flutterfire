@@ -1,3 +1,27 @@
+## 11.4.6
+
+ - Update a dependency to the latest release.
+
+## 11.4.5
+
+ - Update a dependency to the latest release.
+
+## 11.4.4
+
+ - Update a dependency to the latest release.
+
+## 11.4.3
+
+ - **FIX**(analytics,apple): use correct tag for library name ([#17098](https://github.com/firebase/flutterfire/issues/17098)). ([ca28c304](https://github.com/firebase/flutterfire/commit/ca28c30445e426fff0098606e240e496de8b480c))
+
+## 11.4.2
+
+ - Update a dependency to the latest release.
+
+## 11.4.1
+
+ - Update a dependency to the latest release.
+
 ## 11.4.0
 
 
@@ -209,7 +233,7 @@
 ## 10.4.0
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 ## 10.3.0
 

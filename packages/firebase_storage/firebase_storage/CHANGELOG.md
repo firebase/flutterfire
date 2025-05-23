@@ -1,3 +1,27 @@
+## 12.4.6
+
+ - Update a dependency to the latest release.
+
+## 12.4.5
+
+ - Update a dependency to the latest release.
+
+## 12.4.4
+
+ - Update a dependency to the latest release.
+
+## 12.4.3
+
+ - Update a dependency to the latest release.
+
+## 12.4.2
+
+ - Update a dependency to the latest release.
+
+## 12.4.1
+
+ - **FIX**(storage,android): fix an issue that could crash the app when concurrent calls to removeEventListeners were happening ([#16996](https://github.com/firebase/flutterfire/issues/16996)). ([6499c5f5](https://github.com/firebase/flutterfire/commit/6499c5f5457bca168e6934679562548a94e4f7a8))
+
 ## 12.4.0
 
  - **FIX**(storage): update regex for cloudStoragePath ([#16847](https://github.com/firebase/flutterfire/issues/16847)). ([b0832175](https://github.com/firebase/flutterfire/commit/b08321754c1fc8b773c9ea61c2e09fe866cefacc))

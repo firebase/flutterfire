@@ -1,3 +1,27 @@
+## 15.2.6
+
+ - Update a dependency to the latest release.
+
+## 15.2.5
+
+ - Update a dependency to the latest release.
+
+## 15.2.4
+
+ - Update a dependency to the latest release.
+
+## 15.2.3
+
+ - Update a dependency to the latest release.
+
+## 15.2.2
+
+ - Update a dependency to the latest release.
+
+## 15.2.1
+
+ - **FIX**(messaging,android): remove a deprecation message ([#16995](https://github.com/firebase/flutterfire/issues/16995)). ([b4e46db6](https://github.com/firebase/flutterfire/commit/b4e46db6fcc9080673108599a24bb4c1fe79f0f3))
+
 ## 15.2.0
 
  - **FEAT**(messaging,apple): allow system to display button for in-app notification settings ([#13484](https://github.com/firebase/flutterfire/issues/13484)). ([b36f924e](https://github.com/firebase/flutterfire/commit/b36f924e018f4d88ea5eaf17a779b2c3cf03583d))
@@ -486,7 +510,7 @@
 
  - **FIX**: revert onMessage event handler commit which causes another bug (#6878).
  - **FIX**: allow messages when device is in idle mode (#6730).
- - **FIX**: onMessage event handler for notifcations with `contentAvailable:true` (#6838).
+ - **FIX**: onMessage event handler for notifications with `contentAvailable:true` (#6838).
 
 ## 10.0.5
 

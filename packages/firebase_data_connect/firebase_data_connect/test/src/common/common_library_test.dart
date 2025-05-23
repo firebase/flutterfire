@@ -17,6 +17,7 @@ import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'package:firebase_data_connect/src/common/common_library.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'dart:io' show Platform;
 
 // Mock classes for Firebase dependencies
 
@@ -28,14 +29,14 @@ void main() {
       const packageVersion = '1.0.0';
       expect(
         getGoogApiVal(CallerSDKType.core, packageVersion),
-        'gl-dart/$packageVersion fire/$packageVersion',
+        'gl-dart/$packageVersion fire/$packageVersion gl-${Platform.operatingSystem}',
       );
     });
     test('should return codegen suffix if using gen sdk', () {
       const packageVersion = '1.0.0';
       expect(
         getGoogApiVal(CallerSDKType.generated, packageVersion),
-        'gl-dart/$packageVersion fire/$packageVersion dart/gen',
+        'gl-dart/$packageVersion fire/$packageVersion dart/gen gl-${Platform.operatingSystem}',
       );
     });
   });

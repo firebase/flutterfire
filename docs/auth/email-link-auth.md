@@ -56,7 +56,9 @@ To initiate the authentication flow, present an interface that prompts the user 
 
     * `handleCodeInApp`: Set to `true`. The sign-in operation has to always be completed in the app unlike other out of band email actions (password reset and email verifications). This is because, at the end of the flow, the user is expected to be signed in and their Auth state persisted within the app.
 
-    * `dynamicLinkDomain`: When multiple custom dynamic link domains are defined for a project, specify which one to use when the link is to be opened via a specified mobile app (for example, `example.page.link`). Otherwise the first domain is automatically selected.
+    * `dynamicLinkDomain`: (Deprecated, use `linkDomain`) When multiple custom dynamic link domains are defined for a project, specify which one to use when the link is to be opened via a specified mobile app (for example, `example.page.link`). Otherwise the first domain is automatically selected.
+
+    * `linkDomain`: The optional custom Firebase Hosting domain to use when the link is to be opened via a specified mobile app. The domain must be configured in Firebase Hosting and owned by the project. This cannot be a default Hosting domain (`web.app` or `firebaseapp.com`).  This replaces the deprecated `dynamicLinkDomain` setting.
 
     ```dart
     var acs = ActionCodeSettings(
@@ -73,9 +75,9 @@ To initiate the authentication flow, present an interface that prompts the user 
         androidMinimumVersion: '12');
     ```
 
-1.  Ask the user for their email.
+2.  Ask the user for their email.
 
-1.  Send the authentication link to the user's email, and save the user's email in case the user completes the email sign-in on the same device.
+3.  Send the authentication link to the user's email, and save the user's email in case the user completes the email sign-in on the same device.
 
     ```dart
     var emailAuth = 'someemail@domain.com';
@@ -101,7 +103,7 @@ You can streamline this flow for users who open the sign-in link on the same
 device they request the link, by storing their email address locally - for
 instance using SharedPreferences - when you send the sign-in email. Then,
 use this address to complete the flow.
-Do not pass the user's email in the redirect URL parameters and re-use it as
+Do not pass the user's email in the redirect URL parameters and reuse it as
 this may enable session injections.
 
 After sign-in completion, any previous unverified mechanism of sign-in will be

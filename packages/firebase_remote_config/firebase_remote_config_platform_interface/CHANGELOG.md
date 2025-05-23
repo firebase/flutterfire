@@ -1,3 +1,27 @@
+## 1.5.4
+
+ - Update a dependency to the latest release.
+
+## 1.5.3
+
+ - Update a dependency to the latest release.
+
+## 1.5.2
+
+ - Update a dependency to the latest release.
+
+## 1.5.1
+
+ - Update a dependency to the latest release.
+
+## 1.5.0
+
+ - **FEAT**(remote-config): custom signals support ([#17053](https://github.com/firebase/flutterfire/issues/17053)). ([7cf248a8](https://github.com/firebase/flutterfire/commit/7cf248a8808e3d8f7fed29f18ddaf1fadf329ca3))
+
+## 1.4.49
+
+ - Update a dependency to the latest release.
+
 ## 1.4.48
 
  - Update a dependency to the latest release.

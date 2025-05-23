@@ -1,4 +1,178 @@
 {
+  "3.10.0": {
+    "date": "2025-04-28",
+    "firebase_sdk": {
+      "android": "33.11.0",
+      "ios": "11.10.0",
+      "web": "11.5.0",
+      "windows": "12.7.0"
+    },
+    "packages": {
+      "cloud_firestore": "5.6.7",
+      "cloud_functions": "5.5.0",
+      "firebase_analytics": "11.4.5",
+      "firebase_app_check": "0.3.2+5",
+      "firebase_app_installations": "0.3.2+5",
+      "firebase_auth": "5.5.3",
+      "firebase_core": "3.13.0",
+      "firebase_crashlytics": "4.3.5",
+      "firebase_data_connect": "0.1.4+1",
+      "firebase_database": "11.3.5",
+      "firebase_dynamic_links": "6.1.5",
+      "firebase_in_app_messaging": "0.8.1+5",
+      "firebase_messaging": "15.2.5",
+      "firebase_ml_model_downloader": "0.3.3+3",
+      "firebase_performance": "0.10.1+5",
+      "firebase_remote_config": "5.4.3",
+      "firebase_storage": "12.4.5",
+      "firebase_vertexai": "1.6.0"
+    }
+  },
+  "3.9.0": {
+    "date": "2025-03-31",
+    "firebase_sdk": {
+      "android": "33.11.0",
+      "ios": "11.10.0",
+      "web": "11.5.0",
+      "windows": "12.7.0"
+    },
+    "packages": {
+      "cloud_firestore": "5.6.6",
+      "cloud_functions": "5.4.0",
+      "firebase_analytics": "11.4.5",
+      "firebase_app_check": "0.3.2+5",
+      "firebase_app_installations": "0.3.2+5",
+      "firebase_auth": "5.5.2",
+      "firebase_core": "3.13.0",
+      "firebase_crashlytics": "4.3.5",
+      "firebase_data_connect": "0.1.4",
+      "firebase_database": "11.3.5",
+      "firebase_dynamic_links": "6.1.5",
+      "firebase_in_app_messaging": "0.8.1+5",
+      "firebase_messaging": "15.2.5",
+      "firebase_ml_model_downloader": "0.3.3+3",
+      "firebase_performance": "0.10.1+5",
+      "firebase_remote_config": "5.4.3",
+      "firebase_storage": "12.4.5",
+      "firebase_vertexai": "1.5.0"
+    }
+  },
+  "3.8.0": {
+    "date": "2025-02-26",
+    "firebase_sdk": {
+      "android": "33.9.0",
+      "ios": "11.8.0",
+      "web": "11.3.1",
+      "windows": "12.0.0"
+    },
+    "packages": {
+      "cloud_firestore": "5.6.5",
+      "cloud_functions": "5.3.4",
+      "firebase_analytics": "11.4.4",
+      "firebase_app_check": "0.3.2+4",
+      "firebase_app_installations": "0.3.2+4",
+      "firebase_auth": "5.5.1",
+      "firebase_core": "3.12.1",
+      "firebase_crashlytics": "4.3.4",
+      "firebase_data_connect": "0.1.3+2",
+      "firebase_database": "11.3.4",
+      "firebase_dynamic_links": "6.1.4",
+      "firebase_in_app_messaging": "0.8.1+4",
+      "firebase_messaging": "15.2.4",
+      "firebase_ml_model_downloader": "0.3.3+2",
+      "firebase_performance": "0.10.1+4",
+      "firebase_remote_config": "5.4.2",
+      "firebase_storage": "12.4.4",
+      "firebase_vertexai": "1.4.0"
+    }
+  },
+  "3.7.0": {
+    "date": "2025-02-18",
+    "firebase_sdk": {
+      "android": "33.9.0",
+      "ios": "11.8.0",
+      "web": "11.3.1",
+      "windows": "12.0.0"
+    },
+    "packages": {
+      "cloud_firestore": "5.6.4",
+      "cloud_functions": "5.3.3",
+      "firebase_analytics": "11.4.3",
+      "firebase_app_check": "0.3.2+3",
+      "firebase_app_installations": "0.3.2+3",
+      "firebase_auth": "5.5.0",
+      "firebase_core": "3.12.0",
+      "firebase_crashlytics": "4.3.3",
+      "firebase_data_connect": "0.1.3+1",
+      "firebase_database": "11.3.3",
+      "firebase_dynamic_links": "6.1.3",
+      "firebase_in_app_messaging": "0.8.1+3",
+      "firebase_messaging": "15.2.3",
+      "firebase_ml_model_downloader": "0.3.3+1",
+      "firebase_performance": "0.10.1+3",
+      "firebase_remote_config": "5.4.1",
+      "firebase_storage": "12.4.3",
+      "firebase_vertexai": "1.3.0"
+    }
+  },
+  "3.6.0": {
+    "date": "2025-02-05",
+    "firebase_sdk": {
+      "android": "33.8.0",
+      "ios": "11.7.0",
+      "web": "11.2.0",
+      "windows": "12.0.0"
+    },
+    "packages": {
+      "cloud_firestore": "5.6.3",
+      "cloud_functions": "5.3.2",
+      "firebase_analytics": "11.4.2",
+      "firebase_app_check": "0.3.2+2",
+      "firebase_app_installations": "0.3.2+2",
+      "firebase_auth": "5.4.2",
+      "firebase_core": "3.11.0",
+      "firebase_crashlytics": "4.3.2",
+      "firebase_data_connect": "0.1.3",
+      "firebase_database": "11.3.2",
+      "firebase_dynamic_links": "6.1.2",
+      "firebase_in_app_messaging": "0.8.1+2",
+      "firebase_messaging": "15.2.2",
+      "firebase_ml_model_downloader": "0.3.3",
+      "firebase_performance": "0.10.1+2",
+      "firebase_remote_config": "5.4.0",
+      "firebase_storage": "12.4.2",
+      "firebase_vertexai": "1.2.0"
+    }
+  },
+  "3.5.1": {
+    "date": "2025-01-21",
+    "firebase_sdk": {
+      "android": "33.7.0",
+      "ios": "11.6.0",
+      "web": "11.1.0",
+      "windows": "12.0.0"
+    },
+    "packages": {
+      "cloud_firestore": "5.6.2",
+      "cloud_functions": "5.3.1",
+      "firebase_analytics": "11.4.1",
+      "firebase_app_check": "0.3.2+1",
+      "firebase_app_installations": "0.3.2+1",
+      "firebase_auth": "5.4.1",
+      "firebase_core": "3.10.1",
+      "firebase_crashlytics": "4.3.1",
+      "firebase_data_connect": "0.1.2+7",
+      "firebase_database": "11.3.1",
+      "firebase_dynamic_links": "6.1.1",
+      "firebase_in_app_messaging": "0.8.1+1",
+      "firebase_messaging": "15.2.1",
+      "firebase_ml_model_downloader": "0.3.2+1",
+      "firebase_performance": "0.10.1+1",
+      "firebase_remote_config": "5.3.1",
+      "firebase_storage": "12.4.1",
+      "firebase_vertexai": "1.1.1"
+    }
+  },
   "3.5.0": {
     "date": "2025-01-08",
     "firebase_sdk": {

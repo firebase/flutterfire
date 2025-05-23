@@ -1,3 +1,41 @@
+## 1.7.0
+
+[changed] **Renamed / Replaced:** Vertex AI in Firebase and its `FirebaseVertexAI` library have been renamed and replaced by the new Firebase AI Logic SDK: `FirebaseAI`. This is to accommodate the evolving set of supported features and services. Please migrate to the new `FirebaseAI` module. See details in the [migration guide](https://firebase.google.com/docs/vertex-ai/migrate-to-latest-sdk).
+
+Note: Existing `FirebaseVertexAI` users may continue to use `import firebase_vertexai` and the `FirebaseVertexAI` top-level class, though these will be removed in a future release. Also, going forward, new features will only be added into the new `FirebaseAI` module.
+
+## 1.6.0
+
+ - **FIX**(vertexai): add missing HarmBlockThreshold to exported APIs ([#17249](https://github.com/firebase/flutterfire/issues/17249)). ([59d902c6](https://github.com/firebase/flutterfire/commit/59d902c63bd1bd040f5357cb6a341db446429430))
+ - **FEAT**(vertexai): Live API breaking changes ([#17299](https://github.com/firebase/flutterfire/issues/17299)). ([69cd2a64](https://github.com/firebase/flutterfire/commit/69cd2a640d25e0f2b623f2e631d090ead8af140d))
+
+## 1.5.0
+
+ - **FIX**(vertex_ai): handle null predictions ([#17211](https://github.com/firebase/flutterfire/issues/17211)). ([d559703d](https://github.com/firebase/flutterfire/commit/d559703d71904918fc5c0e8ad02b86313738d263))
+ - **FIX**(vertexai): follow up changes for LiveModel ([#17236](https://github.com/firebase/flutterfire/issues/17236)). ([a7a842ef](https://github.com/firebase/flutterfire/commit/a7a842ef3ecee197dc5c2eefd12781086071d53b))
+ - **FIX**(vertexai): Add meta to the dependency list ([#17208](https://github.com/firebase/flutterfire/issues/17208)). ([5c9c2221](https://github.com/firebase/flutterfire/commit/5c9c222198dc9ea8d1af8535e8d64ca2e2174ea4))
+ - **FEAT**(vertexai): Add repetition penalties to GenerationConfig ([#17234](https://github.com/firebase/flutterfire/issues/17234)). ([6e23afc2](https://github.com/firebase/flutterfire/commit/6e23afc2d7d1ed177f8c54741f2e26a6cbb892e8))
+ - **FEAT**(vertexai): Add Live streaming feature ([#16991](https://github.com/firebase/flutterfire/issues/16991)). ([4ab6b4c9](https://github.com/firebase/flutterfire/commit/4ab6b4c92878eec4c12b2bf57553d85a2288b8f3))
+ - **FEAT**(vertexai): Add HarmBlockMethod ([#17125](https://github.com/firebase/flutterfire/issues/17125)). ([bbf618db](https://github.com/firebase/flutterfire/commit/bbf618dbb0def1c9afaccedf6fcddda80d8c96ac))
+ - **FEAT**(vertexai): Unhandled ContentModality fix with more multimodal examples for vertexai testapp ([#17150](https://github.com/firebase/flutterfire/issues/17150)). ([76461d78](https://github.com/firebase/flutterfire/commit/76461d78631d5e9ce128f5cb79bc21483fd53508))
+
+## 1.4.0
+
+ - **FEAT**(vertexai): add Imagen support ([#16976](https://github.com/firebase/flutterfire/issues/16976)). ([cd9d896d](https://github.com/firebase/flutterfire/commit/cd9d896d87ffe9f4949b025ddbb13b88bafbc176))
+
+## 1.3.0
+
+ - **FEAT**(vertexai): add support for token-based usage metrics ([#17065](https://github.com/firebase/flutterfire/issues/17065)). ([b1bd93fb](https://github.com/firebase/flutterfire/commit/b1bd93fb25dbe36621fbc4b13e13bec805b79328))
+
+## 1.2.0
+
+ - **FIX**(firebase_vertexai): Corrected minor typo in VertexAISDKException ([#17033](https://github.com/firebase/flutterfire/issues/17033)). ([ba543d08](https://github.com/firebase/flutterfire/commit/ba543d08a68f60476ce2b2260506fe035c503aaa))
+ - **FEAT**(vertexai): organize example page and functions ([#17008](https://github.com/firebase/flutterfire/issues/17008)). ([6b76260d](https://github.com/firebase/flutterfire/commit/6b76260de7bc03aa6e1cd68bed2e224d53437239))
+
+## 1.1.1
+
+ - Update a dependency to the latest release.
+
 ## 1.1.0
 
  - **FIX**(firebase_vertexai): Remove unnecessary trailing whitespace ([#16926](https://github.com/firebase/flutterfire/issues/16926)). ([d9c98c40](https://github.com/firebase/flutterfire/commit/d9c98c403b4652c2a962c015e0f05d21ae580a71))

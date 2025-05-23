@@ -1,3 +1,27 @@
+## 4.6.6
+
+ - Update a dependency to the latest release.
+
+## 4.6.5
+
+ - Update a dependency to the latest release.
+
+## 4.6.4
+
+ - Update a dependency to the latest release.
+
+## 4.6.3
+
+ - Update a dependency to the latest release.
+
+## 4.6.2
+
+ - Update a dependency to the latest release.
+
+## 4.6.1
+
+ - Update a dependency to the latest release.
+
 ## 4.6.0
 
  - **FEAT**(messaging,apple): allow system to display button for in-app notification settings ([#13484](https://github.com/firebase/flutterfire/issues/13484)). ([b36f924e](https://github.com/firebase/flutterfire/commit/b36f924e018f4d88ea5eaf17a779b2c3cf03583d))
@@ -201,7 +225,7 @@
 ## 4.5.0
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 ## 4.4.0
 

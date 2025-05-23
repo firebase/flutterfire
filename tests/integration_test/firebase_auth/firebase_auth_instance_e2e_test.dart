@@ -840,6 +840,43 @@ void main() {
             fail(e.toString());
           }
         });
+        test(
+            'should not throw error when app is deleted and reinit with same app name',
+            () async {
+          try {
+            const appName = 'SecondaryApp';
+
+            final app = await Firebase.initializeApp(
+              name: appName,
+              options: DefaultFirebaseOptions.currentPlatform,
+            );
+
+            var auth1 = FirebaseAuth.instanceFor(app: app);
+
+            await auth1.signInWithEmailAndPassword(
+              email: testEmail,
+              password: testPassword,
+            );
+
+            await app.delete();
+
+            final app2 = await Firebase.initializeApp(
+              name: appName,
+              options: DefaultFirebaseOptions.currentPlatform,
+            );
+
+            final auth2 = FirebaseAuth.instanceFor(app: app2);
+
+            await auth2.signInWithEmailAndPassword(
+              email: testEmail,
+              password: testPassword,
+            );
+          } on FirebaseException catch (e) {
+            fail('Failed with error: $e');
+          } catch (e) {
+            fail(e.toString());
+          }
+        });
       });
 
       group('signOut()', () {
@@ -904,13 +941,8 @@ void main() {
 
             Exception e = await getError();
             expect(e, isA<FirebaseAuthException>());
-            // Exception code is returning internal-error but the underlying error is "identitytoolkit.getRecaptchaConfig is not implemented in the Auth Emulator."
-            // This issue on firebase-ios-sdk: https://github.com/firebase/firebase-ios-sdk/issues/14242. Once this is resolved, we ought to reinstate the below.
-            // It works fine on live project but returns internal-error on emulator.
-            if (defaultTargetPlatform != TargetPlatform.iOS) {
-              FirebaseAuthException exception = e as FirebaseAuthException;
-              expect(exception.code, equals('invalid-phone-number'));
-            }
+            FirebaseAuthException exception = e as FirebaseAuthException;
+            expect(exception.code, equals('invalid-phone-number'));
           });
 
           test(

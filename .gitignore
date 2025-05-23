@@ -48,6 +48,7 @@ generated_plugins.cmake
 build/
 .flutter-plugins
 .flutter-plugins-dependencies
+.cxx/
 
 .project
 .classpath

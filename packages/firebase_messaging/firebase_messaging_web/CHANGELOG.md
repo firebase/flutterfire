@@ -1,3 +1,27 @@
+## 3.10.6
+
+ - Update a dependency to the latest release.
+
+## 3.10.5
+
+ - Update a dependency to the latest release.
+
+## 3.10.4
+
+ - Update a dependency to the latest release.
+
+## 3.10.3
+
+ - Update a dependency to the latest release.
+
+## 3.10.2
+
+ - Update a dependency to the latest release.
+
+## 3.10.1
+
+ - Update a dependency to the latest release.
+
 ## 3.10.0
 
  - **FEAT**(messaging,apple): allow system to display button for in-app notification settings ([#13484](https://github.com/firebase/flutterfire/issues/13484)). ([b36f924e](https://github.com/firebase/flutterfire/commit/b36f924e018f4d88ea5eaf17a779b2c3cf03583d))
@@ -456,7 +480,7 @@
 
 ## 1.0.5
 
- - **REFACTOR**: Share guard functions accross plugins (#5783).
+ - **REFACTOR**: Share guard functions across plugins (#5783).
 
 ## 1.0.4
 
