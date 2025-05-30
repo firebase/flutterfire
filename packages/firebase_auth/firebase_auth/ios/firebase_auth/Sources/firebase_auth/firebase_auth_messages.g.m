@@ -1553,6 +1553,32 @@ void SetUpFirebaseAuthHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMesseng
       [channel setMessageHandler:nil];
     }
   }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:[NSString
+                            stringWithFormat:@"%@%@",
+                                             @"dev.flutter.pigeon.firebase_auth_platform_interface."
+                                             @"FirebaseAuthHostApi.initializeRecaptchaConfig",
+                                             messageChannelSuffix]
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseAuthHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(initializeRecaptchaConfigApp:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(initializeRecaptchaConfigApp:completion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        AuthPigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        [api initializeRecaptchaConfigApp:arg_app
+                               completion:^(FlutterError *_Nullable error) {
+                                 callback(wrapResult(nil, error));
+                               }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
 }
 @interface FirebaseAuthUserHostApiCodecReader : FlutterStandardReader
 @end

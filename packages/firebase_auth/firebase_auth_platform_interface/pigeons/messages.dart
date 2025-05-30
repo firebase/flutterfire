@@ -419,6 +419,11 @@ abstract class FirebaseAuthHostApi {
     AuthPigeonFirebaseApp app,
     String authorizationCode,
   );
+
+  @async
+  void initializeRecaptchaConfig(
+    AuthPigeonFirebaseApp app,
+  );
 }
 
 class PigeonIdTokenResult {

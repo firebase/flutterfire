@@ -2642,6 +2642,8 @@ public class GeneratedAndroidFirebaseAuth {
         @NonNull String authorizationCode,
         @NonNull VoidResult result);
 
+    void initializeRecaptchaConfig(@NonNull AuthPigeonFirebaseApp app, @NonNull VoidResult result);
+
     /** The codec used by FirebaseAuthHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
       return FirebaseAuthHostApiCodec.INSTANCE;
@@ -3390,6 +3392,38 @@ public class GeneratedAndroidFirebaseAuth {
                     };
 
                 api.revokeTokenWithAuthorizationCode(appArg, authorizationCodeArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.initializeRecaptchaConfig"
+                    + messageChannelSuffix,
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
+                VoidResult resultCallback =
+                    new VoidResult() {
+                      public void success() {
+                        wrapped.add(0, null);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.initializeRecaptchaConfig(appArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
