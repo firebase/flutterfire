@@ -11,19 +11,15 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import 'dart:typed_data';
 import 'dart:async';
-import 'dart:math'; // For min function
-import 'dart:developer';
+import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
-import 'package:vertex_ai_example/utils/audio_input.dart';
-import '../widgets/message_widget.dart';
-import '../utils/audio_player.dart';
-import '../utils/audio_recorder.dart';
+
+import '../utils/audio_input.dart';
 import '../utils/audio_output.dart';
-import 'package:flutter_soloud/flutter_soloud.dart';
+import '../widgets/message_widget.dart';
 
 class BidiPage extends StatefulWidget {
   const BidiPage({super.key, required this.title, required this.model});
@@ -52,10 +48,6 @@ class _BidiPageState extends State<BidiPage> {
   bool _recording = false;
   late LiveGenerativeModel _liveModel;
   late LiveSession _session;
-  //final _audioManager = AudioStreamManager();
-  //final _audioRecorder = InMemoryAudioRecorder();
-  //var _chunkBuilder = BytesBuilder();
-  //var _audioIndex = 0;
   StreamController<bool> _stopController = StreamController<bool>();
   final AudioOutput audioOutput = AudioOutput();
   final AudioInput audioInput = AudioInput();
@@ -102,13 +94,7 @@ class _BidiPageState extends State<BidiPage> {
   @override
   void dispose() {
     if (_sessionOpening) {
-      //_audioManager.stopAudioPlayer();
-      //_audioManager.disposeAudioPlayer();
-
-      //_audioRecorder.stopRecording();
-
       _stopController.close();
-
       _sessionOpening = false;
       _session.close();
     }
@@ -256,8 +242,6 @@ class _BidiPageState extends State<BidiPage> {
       await _stopController.close();
 
       await _session.close();
-      //await _audioManager.stopAudioPlayer();
-      //await _audioManager.disposeAudioPlayer();
       _sessionOpening = false;
     }
 
@@ -271,18 +255,11 @@ class _BidiPageState extends State<BidiPage> {
       _recording = true;
     });
     try {
-      //print('check permission');
-
-      //await _audioRecorder.checkPermission();
-      print('start recording stream');
-      //final audioRecordStream = _audioRecorder.startRecordingStream();
       var inputStream = await audioInput.startRecordingStream();
-      print('play stream');
       await audioOutput.playStream();
       // Map the Uint8List stream to InlineDataPart stream
       if (inputStream != null) {
         Stream<InlineDataPart> inlineDataStream = inputStream.map((data) {
-          print('recording data!');
           return InlineDataPart('audio/pcm', data);
         });
 
@@ -296,8 +273,6 @@ class _BidiPageState extends State<BidiPage> {
 
   Future<void> _stopRecording() async {
     try {
-      //await _audioRecorder.stopRecording();
-
       await audioInput.stopRecording();
     } catch (e) {
       _showError(e.toString());
@@ -361,11 +336,8 @@ class _BidiPageState extends State<BidiPage> {
       if (message.modelTurn != null) {
         await _handleLiveServerContent(message);
       }
-      if (message.turnComplete != null && message.turnComplete!) {
-        await _handleTurnComplete();
-      }
       if (message.interrupted != null && message.interrupted!) {
-        log('Interrupted: $response');
+        developer.log('Interrupted: $response');
       }
     } else if (message is LiveServerToolCall && message.functionCalls != null) {
       await _handleLiveServerToolCall(message);
@@ -381,7 +353,7 @@ class _BidiPageState extends State<BidiPage> {
         } else if (part is InlineDataPart) {
           await _handleInlineDataPart(part);
         } else {
-          // log('receive part with type ${part.runtimeType}');
+          developer.log('receive part with type ${part.runtimeType}');
         }
       }
     }
@@ -401,37 +373,10 @@ class _BidiPageState extends State<BidiPage> {
   }
 
   Future<void> _handleInlineDataPart(InlineDataPart part) async {
-    print('audio part');
     if (part.mimeType.startsWith('audio')) {
-      //var resampledBytes = resamplePcm16Le(part.bytes, 24000, 16000);
-      SoLoud.instance.addAudioDataStream(audioOutput.stream!, part.bytes);
-      //_chunkBuilder.add(part.bytes);
-      /*_audioIndex++;
-      if (_audioIndex == 15) {
-        /*Uint8List chunk = await audioChunkWithHeader(
-          _chunkBuilder.toBytes(),
-          24000,
-        );*/
-        //_audioManager.addAudio(chunk);
-        _chunkBuilder.clear();
-        _audioIndex = 0;
-      }*/
+      audioOutput.addAudioStream(part.bytes);
     }
   }
-
-  /*Future<void> _handleTurnComplete() async {
-    if (_chunkBuilder.isNotEmpty) {
-      print('turn complete with chunkbuilder not empty');
-      /*Uint8List chunk = await audioChunkWithHeader(
-        _chunkBuilder.toBytes(),
-        24000,
-      );*/
-      //SoLoud.instance.addAudioDataStream(audioOutput.stream!, chunk);
-      //_audioManager.addAudio(chunk);
-      _audioIndex = 0;
-      _chunkBuilder.clear();
-    }
-  }*/
 
   Future<void> _handleLiveServerToolCall(LiveServerToolCall response) async {
     final functionCalls = response.functionCalls!.toList();

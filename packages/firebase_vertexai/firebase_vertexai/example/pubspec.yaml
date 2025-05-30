@@ -27,7 +27,6 @@ dependencies:
     sdk: flutter
   flutter_markdown: ^0.6.20
   flutter_soloud: ^3.1.6
-  just_audio: ^0.9.43
   path_provider: ^2.1.5
   record: ^5.2.1
 
