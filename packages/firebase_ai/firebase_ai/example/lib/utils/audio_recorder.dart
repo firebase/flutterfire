@@ -129,7 +129,7 @@ class InMemoryAudioRecorder {
     return isSupported;
   }
 
-  Future<void> startRecording({bool fromFile = false}) async {
+  Future<void> startRecording() async {
     if (!await _isEncoderSupported(_encoder)) {
       return;
     }
@@ -137,35 +137,20 @@ class InMemoryAudioRecorder {
       encoder: _encoder,
       sampleRate: 16000,
       numChannels: 1,
+      echoCancel: true,
+      noiseSuppress: true,
       androidConfig: const AndroidRecordConfig(
         muteAudio: true,
-        audioSource: AndroidAudioSource.mic,
+        audioSource: AndroidAudioSource.voiceCommunication,
       ),
+      iosConfig: const IosRecordConfig(categoryOptions: []),
     );
     final devs = await _recorder.listInputDevices();
     debugPrint(devs.toString());
     _lastAudioPath = await _getPath();
-    if (fromFile) {
-      await _recorder.start(recordConfig, path: _lastAudioPath!);
-    } else {
-      final stream = await _recorder.startStream(recordConfig);
-      _recordSubscription = stream.listen(_audioChunks.add);
-    }
-  }
 
-  Future<void> startRecordingFile() async {
-    if (!await _isEncoderSupported(_encoder)) {
-      return;
-    }
-    var recordConfig = RecordConfig(
-      encoder: _encoder,
-      sampleRate: 16000,
-      numChannels: 1,
-    );
-    final devs = await _recorder.listInputDevices();
-    debugPrint(devs.toString());
-    _lastAudioPath = await _getPath();
-    await _recorder.start(recordConfig, path: _lastAudioPath!);
+    final stream = await _recorder.startStream(recordConfig);
+    _recordSubscription = stream.listen(_audioChunks.add);
   }
 
   Stream<Uint8List> startRecordingStream() async* {
@@ -193,53 +178,16 @@ class InMemoryAudioRecorder {
     await _recorder.stop();
   }
 
-  Future<Uint8List> fetchAudioBytes({
-    bool fromFile = false,
-    bool removeHeader = false,
-  }) async {
+  Future<Uint8List> fetchAudioBytes() async {
     Uint8List resultBytes;
-    if (fromFile) {
-      resultBytes = await _getAudioBytesFromFile(_lastAudioPath!);
-    } else {
-      final builder = BytesBuilder();
-      _audioChunks.forEach(builder.add);
-      resultBytes = builder.toBytes();
-    }
+
+    final builder = BytesBuilder();
+    _audioChunks.forEach(builder.add);
+    resultBytes = builder.toBytes();
 
     // resample
     resultBytes = Resampler.resampleLinear16(44100, 16000, resultBytes);
-    final dir = await getDownloadsDirectory();
-    final path = '${dir!.path}/audio_resampled.pcm';
-    final file = File(path);
-    final sink = file.openWrite();
 
-    sink.add(resultBytes);
-
-    await sink.close();
     return resultBytes;
-  }
-
-  Future<Uint8List> _removeWavHeader(Uint8List audio) async {
-    // Assuming a standard WAV header size of 44 bytes
-    const wavHeaderSize = 44;
-    final audioData = audio.sublist(wavHeaderSize);
-    return audioData;
-  }
-
-  Future<Uint8List> _getAudioBytesFromFile(
-    String filePath, {
-    bool removeHeader = false,
-  }) async {
-    final file = File(_lastAudioPath!);
-
-    if (!file.existsSync()) {
-      throw Exception('Audio file not found: ${file.path}');
-    }
-
-    var pcmBytes = await file.readAsBytes();
-    if (removeHeader) {
-      pcmBytes = await _removeWavHeader(pcmBytes);
-    }
-    return pcmBytes;
   }
 }
