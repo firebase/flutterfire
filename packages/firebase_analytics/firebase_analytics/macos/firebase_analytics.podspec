@@ -48,10 +48,11 @@ Pod::Spec.new do |s|
   s.authors          = 'The Chromium Authors'
   s.source           = { :path => '.' }
 
-  s.source_files     = 'firebase_analytics/Sources/firebase_analytics/**/*.{h,m}'
+  s.source_files     = 'firebase_analytics/Sources/firebase_analytics/**/*.swift'
   s.public_header_files = 'firebase_analytics/Sources/firebase_analytics/include/*.h'
 
   s.platform = :osx, '10.13'
+  s.swift_version = '5.0'
 
   # Flutter dependencies
   s.dependency 'FlutterMacOS'

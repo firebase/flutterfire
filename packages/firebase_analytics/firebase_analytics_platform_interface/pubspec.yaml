@@ -14,6 +14,7 @@ dependencies:
   flutter:
     sdk: flutter
   meta: ^1.8.0
+  pigeon: 25.3.2
   plugin_platform_interface: ^2.1.3
 
 dev_dependencies:
