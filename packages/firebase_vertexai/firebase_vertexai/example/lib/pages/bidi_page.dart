@@ -71,12 +71,12 @@ class _BidiPageState extends State<BidiPage> {
         Tool.functionDeclarations([lightControlTool]),
       ],
     );
-    initAudioOutput();
+    _initAudio();
   }
 
-  Future<void> initAudioOutput() async {
-    await audioOutput.init();
-    await audioInput.init();
+  Future<void> _initAudio() async {
+    await _audioOutput.init();
+    await _audioInput.init();
   }
 
   void _scrollDown() {
@@ -233,7 +233,7 @@ class _BidiPageState extends State<BidiPage> {
       _sessionOpening = true;
       _stopController = StreamController<bool>();
       unawaited(
-        processMessagesContinuously(
+        _processMessagesContinuously(
           stopSignal: _stopController,
         ),
       );
@@ -255,25 +255,25 @@ class _BidiPageState extends State<BidiPage> {
       _recording = true;
     });
     try {
-      var inputStream = await audioInput.startRecordingStream();
-      await audioOutput.playStream();
+      var inputStream = await _audioInput.startRecordingStream();
+      await _audioOutput.playStream();
       // Map the Uint8List stream to InlineDataPart stream
       if (inputStream != null) {
-        Stream<InlineDataPart> inlineDataStream = inputStream.map((data) {
+        final inlineDataStream = inputStream.map((data) {
           return InlineDataPart('audio/pcm', data);
         });
 
         await _session.sendMediaStream(inlineDataStream);
       }
     } catch (e) {
-      print(e);
+      developer.log(e.toString());
       _showError(e.toString());
     }
   }
 
   Future<void> _stopRecording() async {
     try {
-      await audioInput.stopRecording();
+      await _audioInput.stopRecording();
     } catch (e) {
       _showError(e.toString());
     }
@@ -299,7 +299,7 @@ class _BidiPageState extends State<BidiPage> {
     });
   }
 
-  Future<void> processMessagesContinuously({
+  Future<void> _processMessagesContinuously({
     required StreamController<bool> stopSignal,
   }) async {
     bool shouldContinue = true;
@@ -374,7 +374,7 @@ class _BidiPageState extends State<BidiPage> {
 
   Future<void> _handleInlineDataPart(InlineDataPart part) async {
     if (part.mimeType.startsWith('audio')) {
-      audioOutput.addAudioStream(part.bytes);
+      _audioOutput.addAudioStream(part.bytes);
     }
   }
 

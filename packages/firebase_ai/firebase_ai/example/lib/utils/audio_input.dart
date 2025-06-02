@@ -24,7 +24,7 @@ class AudioInput extends ChangeNotifier {
   Stream<Uint8List>? audioStream;
 
   Future<void> init() async {
-    await checkPermission();
+    await _checkPermission();
   }
 
   @override
@@ -33,7 +33,7 @@ class AudioInput extends ChangeNotifier {
     super.dispose();
   }
 
-  Future<void> checkPermission() async {
+  Future<void> _checkPermission() async {
     final hasPermission = await _recorder.hasPermission();
     if (!hasPermission) {
       throw MicrophonePermissionDeniedException(

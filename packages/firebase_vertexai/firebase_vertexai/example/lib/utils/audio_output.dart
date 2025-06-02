@@ -17,11 +17,11 @@ import 'dart:typed_data';
 import 'package:flutter_soloud/flutter_soloud.dart';
 
 class AudioOutput {
-  AudioSource? stream; // Start playback
+  AudioSource? stream;
   SoundHandle? handle;
 
   Future<void> init() async {
-    /// Initialize the player.
+    // Initialize the player.
     await SoLoud.instance.init(sampleRate: 24000, channels: Channels.mono);
     await setupNewStream();
   }
