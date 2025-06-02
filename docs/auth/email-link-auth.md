@@ -116,11 +116,18 @@ signing in again with the unverified email and password.
 Also make sure you use an HTTPS URL in production to avoid your link being
 potentially intercepted by intermediary servers.
 
+### Complete Sign-in
+
+Firebase Dynamic Links is deprecated, Firebase Hosting is now used to send a sign-in link. Follow the guides for platform specific configuration:
+
+- [Android](https://firebase.google.com/docs/auth/android/email-link-auth#complete-android-signin) and
+- [iOS](https://firebase.google.com/docs/auth/ios/email-link-auth#complete-apple-signin)
+- [Web](https://firebase.google.com/docs/auth/web/email-link-auth#completing_sign-in_in_a_web_page)
+
+
 ### Verify email link and sign in
 
-Firebase Authentication uses Firebase Dynamic Links to send the email link to a mobile device. For sign-in completion via mobile application, the application has to be configured to detect the incoming application link, parse the underlying deep link and then complete the sign-in.
-
-1.  Set up your app to receive Dynamic Links on Flutter in the [guide](/docs/dynamic-links/flutter/receive).
+For sign-in completion via mobile application, the application has to be configured to detect the incoming application link, parse the underlying deep link and then complete the sign-in.
 
 1.  In your link handler, check if the link is meant for email link authentication and, if so, complete the sign-in process.
 
