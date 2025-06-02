@@ -259,7 +259,7 @@ class _BidiPageState extends State<BidiPage> {
       await audioOutput.playStream();
       // Map the Uint8List stream to InlineDataPart stream
       if (inputStream != null) {
-        Stream<InlineDataPart> inlineDataStream = inputStream.map((data) {
+        final inlineDataStream = inputStream.map((data) {
           return InlineDataPart('audio/pcm', data);
         });
 

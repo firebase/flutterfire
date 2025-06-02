@@ -49,8 +49,8 @@ class _BidiPageState extends State<BidiPage> {
   late LiveGenerativeModel _liveModel;
   late LiveSession _session;
   StreamController<bool> _stopController = StreamController<bool>();
-  final AudioOutput audioOutput = AudioOutput();
-  final AudioInput audioInput = AudioInput();
+  final _audioOutput = AudioOutput();
+  final _audioInput = AudioInput();
 
   @override
   void initState() {

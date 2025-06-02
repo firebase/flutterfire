@@ -21,7 +21,7 @@ class AudioOutput {
   SoundHandle? handle;
 
   Future<void> init() async {
-    /// Initialize the player.
+    // Initialize the player.
     await SoLoud.instance.init(sampleRate: 24000, channels: Channels.mono);
     await setupNewStream();
   }
