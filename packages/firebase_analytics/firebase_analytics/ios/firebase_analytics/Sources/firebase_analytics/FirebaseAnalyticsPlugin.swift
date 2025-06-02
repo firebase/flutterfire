@@ -31,9 +31,16 @@ let FLTFirebaseAnalyticsChannelName = "plugins.flutter.io/firebase_analytics"
 public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin,
   FirebaseAnalyticsHostApi {
   public static func register(with registrar: any FlutterPluginRegistrar) {
-    let messenger = registrar.messenger()
+    let binaryMessenger: FlutterBinaryMessenger
+
+    #if os(macOS)
+      binaryMessenger = registrar.messenger
+    #elseif os(iOS)
+      binaryMessenger = registrar.messenger()
+    #endif
+
     let instance = FirebaseAnalyticsPlugin()
-    FirebaseAnalyticsHostApiSetup.setUp(binaryMessenger: messenger, api: instance)
+    FirebaseAnalyticsHostApiSetup.setUp(binaryMessenger: binaryMessenger, api: instance)
   }
 
   func logEvent(event: [String: Any?], completion: @escaping (Result<Void, any Error>) -> Void) {

@@ -18,8 +18,11 @@ PlatformException _createConnectionError(String channelName) {
   );
 }
 
-List<Object?> wrapResponse(
-    {Object? result, PlatformException? error, bool empty = false}) {
+List<Object?> wrapResponse({
+  Object? result,
+  PlatformException? error,
+  bool empty = false,
+}) {
   if (empty) {
     return <Object?>[];
   }
@@ -37,9 +40,11 @@ bool _deepEquals(Object? a, Object? b) {
   }
   if (a is Map && b is Map) {
     return a.length == b.length &&
-        a.entries.every((MapEntry<Object?, Object?> entry) =>
-            (b as Map<Object?, Object?>).containsKey(entry.key) &&
-            _deepEquals(entry.value, b[entry.key]));
+        a.entries.every(
+          (MapEntry<Object?, Object?> entry) =>
+              (b as Map<Object?, Object?>).containsKey(entry.key) &&
+              _deepEquals(entry.value, b[entry.key]),
+        );
   }
   return a == b;
 }
@@ -121,9 +126,10 @@ class FirebaseAnalyticsHostApi {
   /// Constructor for [FirebaseAnalyticsHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  FirebaseAnalyticsHostApi(
-      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
-      : pigeonVar_binaryMessenger = binaryMessenger,
+  FirebaseAnalyticsHostApi({
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  })  : pigeonVar_binaryMessenger = binaryMessenger,
         pigeonVar_messageChannelSuffix =
             messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
   final BinaryMessenger? pigeonVar_binaryMessenger;
@@ -314,7 +320,8 @@ class FirebaseAnalyticsHostApi {
   }
 
   Future<void> setDefaultEventParameters(
-      Map<String, Object?>? parameters) async {
+    Map<String, Object?>? parameters,
+  ) async {
     final String pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setDefaultEventParameters$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
@@ -391,7 +398,8 @@ class FirebaseAnalyticsHostApi {
   }
 
   Future<void> initiateOnDeviceConversionMeasurement(
-      Map<String, String?> arguments) async {
+    Map<String, String?> arguments,
+  ) async {
     final String pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.initiateOnDeviceConversionMeasurement$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
