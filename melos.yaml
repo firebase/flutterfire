@@ -290,6 +290,10 @@ scripts:
         --ignore "**/generated/**" \
         --ignore "**/flutter/generated_plugin_registrant.h" \
         --ignore "**/flutter/generated_plugin_registrant.cc" \
+        --ignore "**/android/app/build.gradle.kts" \
+        --ignore "**/android/build.gradle.kts" \
+        --ignore "**/android/settings.gradle.kts" \
+        --ignore "**/RunnerTests/RunnerTests.swift" \
         .
     description: Add a license header to all necessary files.
 
@@ -326,6 +330,10 @@ scripts:
         --ignore "**/generated/**" \
         --ignore "**/flutter/generated_plugin_registrant.h" \
         --ignore "**/flutter/generated_plugin_registrant.cc" \
+        --ignore "**/android/app/build.gradle.kts" \
+        --ignore "**/android/build.gradle.kts" \
+        --ignore "**/android/settings.gradle.kts" \
+        --ignore "**/RunnerTests/RunnerTests.swift" \
         .
     description: Add a license header to all necessary files.
 
