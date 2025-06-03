@@ -37,8 +37,8 @@ flutter:
         package: io.flutter.plugins.firebase.analytics
         pluginClass: FlutterFirebaseAnalyticsPlugin
       ios:
-        pluginClass: FLTFirebaseAnalyticsPlugin
+        pluginClass: FirebaseAnalyticsPlugin
       macos:
-        pluginClass: FLTFirebaseAnalyticsPlugin
+        pluginClass: FirebaseAnalyticsPlugin
       web:
         default_package: firebase_analytics_web
