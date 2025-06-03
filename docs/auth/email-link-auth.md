@@ -118,7 +118,7 @@ potentially intercepted by intermediary servers.
 
 ### Complete Sign-in
 
-Firebase Dynamic Links is deprecated, Firebase Hosting is now used to send a sign-in link. Follow the guides for platform specific configuration:
+Firebase Dynamic Links is deprecated; Firebase Hosting is now used to send a sign-in link. Follow the guides for platform specific configuration:
 
 - [Android](https://firebase.google.com/docs/auth/android/email-link-auth#complete-android-signin) and
 - [iOS](https://firebase.google.com/docs/auth/ios/email-link-auth#complete-apple-signin)
