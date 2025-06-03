@@ -32,7 +32,7 @@ class AnalyticsEvent {
   final Map<String?, Object?>? parameters;
 }
 
-@HostApi()
+@HostApi(dartHostTestHandler: 'TestFirebaseAnalyticsHostApi')
 abstract class FirebaseAnalyticsHostApi {
   @async
   void logEvent(Map<String, Object?> event);
