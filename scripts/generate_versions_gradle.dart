@@ -19,7 +19,7 @@ import 'package:cli_util/cli_logging.dart' as logging;
 import 'package:path/path.dart' show joinAll;
 
 // Used to generate config files from ../gradle/local-config.gradle in order to use correct java and compilation versions.
-// Also works on every example app in the packages.
+// Tested against every example app in the packages.
 // NOTICE: This script does not update auth or vertexai packages as they are manually updated.
 // Furthermore, this script does not update the test app.
 void main() async {
