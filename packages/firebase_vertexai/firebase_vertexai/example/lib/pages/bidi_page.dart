@@ -11,15 +11,15 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import 'dart:typed_data';
 import 'dart:async';
-import 'dart:developer';
+import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
+
+import '../utils/audio_input.dart';
+import '../utils/audio_output.dart';
 import '../widgets/message_widget.dart';
-import '../utils/audio_player.dart';
-import '../utils/audio_recorder.dart';
 
 class BidiPage extends StatefulWidget {
   const BidiPage({super.key, required this.title, required this.model});
@@ -48,11 +48,9 @@ class _BidiPageState extends State<BidiPage> {
   bool _recording = false;
   late LiveGenerativeModel _liveModel;
   late LiveSession _session;
-  final _audioManager = AudioStreamManager();
-  final _audioRecorder = InMemoryAudioRecorder();
-  var _chunkBuilder = BytesBuilder();
-  var _audioIndex = 0;
   StreamController<bool> _stopController = StreamController<bool>();
+  final _audioOutput = AudioOutput();
+  final _audioInput = AudioInput();
 
   @override
   void initState() {
@@ -73,6 +71,12 @@ class _BidiPageState extends State<BidiPage> {
         Tool.functionDeclarations([lightControlTool]),
       ],
     );
+    _initAudio();
+  }
+
+  Future<void> _initAudio() async {
+    await _audioOutput.init();
+    await _audioInput.init();
   }
 
   void _scrollDown() {
@@ -90,13 +94,7 @@ class _BidiPageState extends State<BidiPage> {
   @override
   void dispose() {
     if (_sessionOpening) {
-      _audioManager.stopAudioPlayer();
-      _audioManager.disposeAudioPlayer();
-
-      _audioRecorder.stopRecording();
-
       _stopController.close();
-
       _sessionOpening = false;
       _session.close();
     }
@@ -235,7 +233,7 @@ class _BidiPageState extends State<BidiPage> {
       _sessionOpening = true;
       _stopController = StreamController<bool>();
       unawaited(
-        processMessagesContinuously(
+        _processMessagesContinuously(
           stopSignal: _stopController,
         ),
       );
@@ -244,8 +242,6 @@ class _BidiPageState extends State<BidiPage> {
       await _stopController.close();
 
       await _session.close();
-      await _audioManager.stopAudioPlayer();
-      await _audioManager.disposeAudioPlayer();
       _sessionOpening = false;
     }
 
@@ -259,21 +255,25 @@ class _BidiPageState extends State<BidiPage> {
       _recording = true;
     });
     try {
-      await _audioRecorder.checkPermission();
-      final audioRecordStream = _audioRecorder.startRecordingStream();
+      var inputStream = await _audioInput.startRecordingStream();
+      await _audioOutput.playStream();
       // Map the Uint8List stream to InlineDataPart stream
-      final mediaChunkStream = audioRecordStream.map((data) {
-        return InlineDataPart('audio/pcm', data);
-      });
-      await _session.sendMediaStream(mediaChunkStream);
+      if (inputStream != null) {
+        final inlineDataStream = inputStream.map((data) {
+          return InlineDataPart('audio/pcm', data);
+        });
+
+        await _session.sendMediaStream(inlineDataStream);
+      }
     } catch (e) {
+      developer.log(e.toString());
       _showError(e.toString());
     }
   }
 
   Future<void> _stopRecording() async {
     try {
-      await _audioRecorder.stopRecording();
+      await _audioInput.stopRecording();
     } catch (e) {
       _showError(e.toString());
     }
@@ -299,7 +299,7 @@ class _BidiPageState extends State<BidiPage> {
     });
   }
 
-  Future<void> processMessagesContinuously({
+  Future<void> _processMessagesContinuously({
     required StreamController<bool> stopSignal,
   }) async {
     bool shouldContinue = true;
@@ -336,11 +336,8 @@ class _BidiPageState extends State<BidiPage> {
       if (message.modelTurn != null) {
         await _handleLiveServerContent(message);
       }
-      if (message.turnComplete != null && message.turnComplete!) {
-        await _handleTurnComplete();
-      }
       if (message.interrupted != null && message.interrupted!) {
-        log('Interrupted: $response');
+        developer.log('Interrupted: $response');
       }
     } else if (message is LiveServerToolCall && message.functionCalls != null) {
       await _handleLiveServerToolCall(message);
@@ -356,7 +353,7 @@ class _BidiPageState extends State<BidiPage> {
         } else if (part is InlineDataPart) {
           await _handleInlineDataPart(part);
         } else {
-          log('receive part with type ${part.runtimeType}');
+          developer.log('receive part with type ${part.runtimeType}');
         }
       }
     }
@@ -377,29 +374,7 @@ class _BidiPageState extends State<BidiPage> {
 
   Future<void> _handleInlineDataPart(InlineDataPart part) async {
     if (part.mimeType.startsWith('audio')) {
-      _chunkBuilder.add(part.bytes);
-      _audioIndex++;
-      if (_audioIndex == 15) {
-        Uint8List chunk = await audioChunkWithHeader(
-          _chunkBuilder.toBytes(),
-          24000,
-        );
-        _audioManager.addAudio(chunk);
-        _chunkBuilder.clear();
-        _audioIndex = 0;
-      }
-    }
-  }
-
-  Future<void> _handleTurnComplete() async {
-    if (_chunkBuilder.isNotEmpty) {
-      Uint8List chunk = await audioChunkWithHeader(
-        _chunkBuilder.toBytes(),
-        24000,
-      );
-      _audioManager.addAudio(chunk);
-      _audioIndex = 0;
-      _chunkBuilder.clear();
+      _audioOutput.addAudioStream(part.bytes);
     }
   }
 
