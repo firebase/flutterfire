@@ -667,6 +667,15 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       );
     }
   }
+
+  @override
+  Future<void> initializeRecaptchaConfig() async {
+    try {
+      await _api.initializeRecaptchaConfig(pigeonDefault);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
+  }
 }
 
 /// Simple helper class to make nullable values transferable through StreamControllers.

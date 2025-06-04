@@ -679,6 +679,25 @@ public class FlutterFirebaseAuthPlugin
   }
 
   @Override
+  public void initializeRecaptchaConfig(
+      @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAuth.VoidResult result) {
+    FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
+    firebaseAuth
+        .initializeRecaptchaConfig()
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                result.success();
+              } else {
+                result.error(
+                    FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
+                        task.getException()));
+              }
+            });
+  }
+
+  @Override
   public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(FirebaseApp firebaseApp) {
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
 

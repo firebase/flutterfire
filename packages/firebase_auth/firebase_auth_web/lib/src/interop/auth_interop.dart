@@ -984,3 +984,6 @@ class PhoneAuthCredentialJsImpl extends AuthCredential {
 extension PhoneAuthCredentialJsImplExtension on PhoneAuthCredentialJsImpl {
   external JSObject toJSON();
 }
+
+@JS()
+external JSPromise initializeRecaptchaConfig(AuthJsImpl auth);
