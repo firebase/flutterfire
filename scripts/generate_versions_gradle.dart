@@ -24,7 +24,7 @@ import 'package:path/path.dart' show joinAll;
 // Furthermore, this script does not update the test app.
 void main() async {
   final workspace = await getMelosWorkspace();
-  // To edit versions for all packages, edit the global-config.gradle file in FlutterFire/Gradle
+  // To edit versions for all packages, edit the global-config.gradle file in ./scripts/global-config.gradle
   final globalConfigPath = joinAll(
     [
       Directory.current.path,
