@@ -697,8 +697,30 @@ enum ResponseModalities {
   const ResponseModalities(this._jsonString);
   final String _jsonString;
 
-  /// Convert to json format
+  // ignore: public_member_api_docs
   String toJson() => _jsonString;
+}
+
+/// Config for thinking features.
+class ThinkingConfig {
+  // ignore: public_member_api_docs
+  ThinkingConfig({this.includeThoughts, this.thinkingBudget});
+
+  /// Whether to include thoughts in the response.
+  ///
+  /// If true, thoughts are returned only when available.
+  bool? includeThoughts;
+
+  /// The number of thoughts tokens that the model should generate.
+  int? thinkingBudget;
+
+  // ignore: public_member_api_docs
+  Map<String, Object?> toJson() => {
+        if (includeThoughts case final includeThoughts?)
+          'includeThoughts': includeThoughts,
+        if (thinkingBudget case final thinkingBudget?)
+          'thinkingBudget': thinkingBudget,
+      };
 }
 
 /// Configuration options for model generation and outputs.
@@ -713,6 +735,7 @@ abstract class BaseGenerationConfig {
     this.presencePenalty,
     this.frequencyPenalty,
     this.responseModalities,
+    this.thinkingConfig,
   });
 
   /// Number of generated responses to return.
@@ -792,6 +815,12 @@ abstract class BaseGenerationConfig {
   /// The list of desired response modalities.
   final List<ResponseModalities>? responseModalities;
 
+  /// Config for thinking features.
+  ///
+  /// An error will be returned if this field is set for models that don't
+  /// support thinking.
+  final ThinkingConfig? thinkingConfig;
+
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
         if (candidateCount case final candidateCount?)
@@ -808,6 +837,8 @@ abstract class BaseGenerationConfig {
         if (responseModalities case final responseModalities?)
           'responseModalities':
               responseModalities.map((modality) => modality.toJson()).toList(),
+        if (thinkingConfig case final thinkingConfig?)
+          'thinkingConfig': thinkingConfig.toJson(),
       };
 }
 
