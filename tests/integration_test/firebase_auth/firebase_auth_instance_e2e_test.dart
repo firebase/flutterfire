@@ -1045,6 +1045,23 @@ void main() {
         },
         skip: true,
       );
+
+      group(
+        'initializeRecaptchaConfig',
+        () {
+          test('initializeRecaptchaConfig completes without throwing',
+              () async {
+            // Skipping this test as initializeRecaptchaConfig is not supported
+            // by the Firebase emulator suite.
+            try {
+              await FirebaseAuth.instance.initializeRecaptchaConfig();
+            } catch (e) {
+              fail('Should not have thrown: $e');
+            }
+          });
+        },
+        skip: true,
+      );
     },
     // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
     skip: defaultTargetPlatform == TargetPlatform.macOS,
