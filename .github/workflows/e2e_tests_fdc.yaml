@@ -90,7 +90,7 @@ jobs:
             flutter test integration_test/e2e_test.dart --dart-define=CI=true -d emulator-5554
 
   ios:
-    runs-on: macos-14
+    runs-on: macos-15
     timeout-minutes: 45
     strategy:
       fail-fast: false
