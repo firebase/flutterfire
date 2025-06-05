@@ -373,6 +373,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     NSMutableDictionary *notificationDict =
         [[FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification] mutableCopy];
     if (response.actionIdentifier != nil) {
+      // message.actionIdentifier
       notificationDict[@"actionIdentifier"] = response.actionIdentifier;
     }
     [_channel invokeMethod:@"Messaging#onMessageOpenedApp" arguments:notificationDict];
