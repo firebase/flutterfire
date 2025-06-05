@@ -46,102 +46,20 @@ void main() async {
   for (final package in workspace.filteredPackages.values) {
     switch (package.name) {
       case 'cloud_firestore':
-        final localConfigGradleFilePath = '${package.path}/android/local-config.gradle';
-
-        final copiedConfig = await globalConfig.copy(
-        localConfigGradleFilePath,
-        );
-        print('File copied to: ${copiedConfig.path}');
-
-        final gradlePropertiesFilePath = '${package.path}/example/android/gradle.properties';
-        extractAndWriteProperty(
-          globalConfig: globalConfig,
-          gradlePropertiesFile: File(gradlePropertiesFilePath),
-        );
-        print('successfully wrote property to $gradlePropertiesFilePath');
-        break;
       case  'cloud_functions':
-        final localConfigGradleFilePath = '${package.path}/android/local-config.gradle';
-
-        final copiedConfig = await globalConfig.copy(
-        localConfigGradleFilePath,
-        );
-        print('File copied to: ${copiedConfig.path}');
-
-        final gradlePropertiesFilePath = '${package.path}/example/android/gradle.properties';
-        extractAndWriteProperty(
-          globalConfig: globalConfig,
-          gradlePropertiesFile: File(gradlePropertiesFilePath),
-        );
-        print('successfully wrote property to $gradlePropertiesFilePath');
-        break;
-      case 'firebase_ai':
-        // skip firebase_ai as we manually update it
-        break;
       case 'firebase_analytics':
-        final localConfigGradleFilePath = '${package.path}/android/local-config.gradle';
-
-        final copiedConfig = await globalConfig.copy(
-        localConfigGradleFilePath,
-        );
-        print('File copied to: ${copiedConfig.path}');
-
-        final gradlePropertiesFilePath = '${package.path}/example/android/gradle.properties';
-        extractAndWriteProperty(
-          globalConfig: globalConfig,
-          gradlePropertiesFile: File(gradlePropertiesFilePath),
-        );
-        print('successfully wrote property to $gradlePropertiesFilePath');
-        break;
       case 'firebase_app_check':
-        final localConfigGradleFilePath = '${package.path}/android/local-config.gradle';
-
-        final copiedConfig = await globalConfig.copy(
-        localConfigGradleFilePath,
-        );
-        print('File copied to: ${copiedConfig.path}');
-
-        final gradlePropertiesFilePath = '${package.path}/example/android/gradle.properties';
-        extractAndWriteProperty(
-          globalConfig: globalConfig,
-          gradlePropertiesFile: File(gradlePropertiesFilePath),
-        );
-        print('successfully wrote property to $gradlePropertiesFilePath');
-        break;
       case 'firebase_app_installations':
-        final localConfigGradleFilePath = '${package.path}/android/local-config.gradle';
-
-        final copiedConfig = await globalConfig.copy(
-        localConfigGradleFilePath,
-        );
-        print('File copied to: ${copiedConfig.path}');
-
-        final gradlePropertiesFilePath = '${package.path}/example/android/gradle.properties';
-        extractAndWriteProperty(
-          globalConfig: globalConfig,
-          gradlePropertiesFile: File(gradlePropertiesFilePath),
-        );
-        print('successfully wrote property to $gradlePropertiesFilePath');
-        break;
-      case 'firebase_auth':
-        // skip firebase_auth as we manually update it
-        break;
       case 'firebase_core':
-       final localConfigGradleFilePath = '${package.path}/android/local-config.gradle';
-
-        final copiedConfig = await globalConfig.copy(
-        localConfigGradleFilePath,
-        );
-        print('File copied to: ${copiedConfig.path}');
-
-        final gradlePropertiesFilePath = '${package.path}/example/android/gradle.properties';
-        extractAndWriteProperty(
-          globalConfig: globalConfig,
-          gradlePropertiesFile: File(gradlePropertiesFilePath),
-        );
-        print('successfully wrote property to $gradlePropertiesFilePath');
-        break;
       case 'firebase_crashlytics':
+      case 'firebase_database':
+      case 'firebase_dynamic_links':
+      case 'firebase_in_app_messaging':
+      case 'firebase_messaging':
+      case 'firebase_ml_model_downloader':
+      case 'firebase_performance':
+      case 'firebase_remote_config':
+      case 'firebase_storage':
         final localConfigGradleFilePath = '${package.path}/android/local-config.gradle';
 
         final copiedConfig = await globalConfig.copy(
@@ -172,128 +90,10 @@ void main() async {
         );
         print('successfully wrote property to $gradlePropertiesFilePath');
         break;
-      case 'firebase_database':
-        final localConfigGradleFilePath = '${package.path}/android/local-config.gradle';
-
-        final copiedConfig = await globalConfig.copy(
-        localConfigGradleFilePath,
-        );
-        print('File copied to: ${copiedConfig.path}');
-
-        final gradlePropertiesFilePath = '${package.path}/example/android/gradle.properties';
-        extractAndWriteProperty(
-          globalConfig: globalConfig,
-          gradlePropertiesFile: File(gradlePropertiesFilePath),
-        );
-        print('successfully wrote property to $gradlePropertiesFilePath');
-        break;
-      case 'firebase_dynamic_links':
-        final localConfigGradleFilePath = '${package.path}/android/local-config.gradle';
-
-        final copiedConfig = await globalConfig.copy(
-        localConfigGradleFilePath,
-        );
-        print('File copied to: ${copiedConfig.path}');
-
-        final gradlePropertiesFilePath = '${package.path}/example/android/gradle.properties';
-        extractAndWriteProperty(
-          globalConfig: globalConfig,
-          gradlePropertiesFile: File(gradlePropertiesFilePath),
-        );
-        print('successfully wrote property to $gradlePropertiesFilePath');
-        break;
-      case 'firebase_in_app_messaging':
-        final localConfigGradleFilePath = '${package.path}/android/local-config.gradle';
-
-        final copiedConfig = await globalConfig.copy(
-        localConfigGradleFilePath,
-        );
-        print('File copied to: ${copiedConfig.path}');
-
-        final gradlePropertiesFilePath = '${package.path}/example/android/gradle.properties';
-        extractAndWriteProperty(
-          globalConfig: globalConfig,
-          gradlePropertiesFile: File(gradlePropertiesFilePath),
-        );
-        print('successfully wrote property to $gradlePropertiesFilePath');
-        break;
-      case 'firebase_messaging':
-        final localConfigGradleFilePath = '${package.path}/android/local-config.gradle';
-
-        final copiedConfig = await globalConfig.copy(
-        localConfigGradleFilePath,
-        );
-        print('File copied to: ${copiedConfig.path}');
-
-        final gradlePropertiesFilePath = '${package.path}/example/android/gradle.properties';
-        extractAndWriteProperty(
-          globalConfig: globalConfig,
-          gradlePropertiesFile: File(gradlePropertiesFilePath),
-        );
-        print('successfully wrote property to $gradlePropertiesFilePath');
-        break;
-      case 'firebase_ml_model_downloader':
-       final localConfigGradleFilePath = '${package.path}/android/local-config.gradle';
-
-        final copiedConfig = await globalConfig.copy(
-        localConfigGradleFilePath,
-        );
-        print('File copied to: ${copiedConfig.path}');
-
-        final gradlePropertiesFilePath = '${package.path}/example/android/gradle.properties';
-        extractAndWriteProperty(
-          globalConfig: globalConfig,
-          gradlePropertiesFile: File(gradlePropertiesFilePath),
-        );
-        print('successfully wrote property to $gradlePropertiesFilePath');
-        break;
-      case 'firebase_performance':
-        final localConfigGradleFilePath = '${package.path}/android/local-config.gradle';
-
-        final copiedConfig = await globalConfig.copy(
-        localConfigGradleFilePath,
-        );
-        print('File copied to: ${copiedConfig.path}');
-
-        final gradlePropertiesFilePath = '${package.path}/example/android/gradle.properties';
-        extractAndWriteProperty(
-          globalConfig: globalConfig,
-          gradlePropertiesFile: File(gradlePropertiesFilePath),
-        );
-        print('successfully wrote property to $gradlePropertiesFilePath');
-        break;
-      case 'firebase_remote_config':
-        final localConfigGradleFilePath = '${package.path}/android/local-config.gradle';
-
-        final copiedConfig = await globalConfig.copy(
-        localConfigGradleFilePath,
-        );
-        print('File copied to: ${copiedConfig.path}');
-
-        final gradlePropertiesFilePath = '${package.path}/example/android/gradle.properties';
-        extractAndWriteProperty(
-          globalConfig: globalConfig,
-          gradlePropertiesFile: File(gradlePropertiesFilePath),
-        );
-        print('successfully wrote property to $gradlePropertiesFilePath');
-        break;
-      case 'firebase_storage':
-        final localConfigGradleFilePath = '${package.path}/android/local-config.gradle';
-
-        final copiedConfig = await globalConfig.copy(
-        localConfigGradleFilePath,
-        );
-        print('File copied to: ${copiedConfig.path}');
-
-        final gradlePropertiesFilePath = '${package.path}/example/android/gradle.properties';
-        extractAndWriteProperty(
-          globalConfig: globalConfig,
-          gradlePropertiesFile: File(gradlePropertiesFilePath),
-        );
-        print('successfully wrote property to $gradlePropertiesFilePath');
-        break;
       case 'firebase_vertexai':
-        // skip firebase_vertexai as we manually update it
+      case 'firebase_ai':
+      case 'firebase_auth':
+        // skip these packages, manually update.
         break;
     }
   }
