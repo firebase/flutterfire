@@ -1,6 +1,9 @@
 group 'io.flutter.plugins.firebase.analytics'
 version '1.0-SNAPSHOT'
 
+apply plugin: 'com.android.library'
+apply from: file("local-config.gradle")
+
 buildscript {
     ext.kotlin_version = "1.8.22"
     repositories {
@@ -43,10 +46,10 @@ android {
         namespace 'io.flutter.plugins.firebase.analytics'
     }
 
-    compileSdk 35
+    compileSdkVersion project.ext.compileSdk
 
     defaultConfig {
-        minSdk 21
+        minSdkVersion project.ext.minSdk
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -55,8 +58,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility project.ext.javaVersion
+        targetCompatibility project.ext.javaVersion
     }
 
     sourceSets {
