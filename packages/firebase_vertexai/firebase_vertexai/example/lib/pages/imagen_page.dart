@@ -12,6 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:typed_data';
+import 'dart:io'; // Though XFile.readAsBytes is available, good to have for other File ops if needed.
+import 'package:image_picker/image_picker.dart';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 //import 'package:firebase_storage/firebase_storage.dart';
@@ -37,6 +41,20 @@ class _ImagenPageState extends State<ImagenPage> {
   final FocusNode _textFieldFocus = FocusNode();
   final List<MessageData> _generatedContent = <MessageData>[];
   bool _loading = false;
+
+  // For image picking
+  ImagenInlineImage? _sourceImageForUpscaling;
+  ImagenInlineImage? _sourceImageForEditing;
+  ImagenInlineImage? _maskImageForEditing;
+
+  // For upscale factor
+  ImagenUpscaleFactor _selectedUpscaleFactor = ImagenUpscaleFactor.x2; // Default
+
+  // For editing parameters
+  final TextEditingController _editPromptController = TextEditingController();
+  final TextEditingController _maskDilationController = TextEditingController();
+  final TextEditingController _editStepsController = TextEditingController();
+  ImagenEditMode _selectedEditMode = ImagenEditMode.inpaint; // Default
 
   void _scrollDown() {
     WidgetsBinding.instance.addPostFrameCallback(
@@ -80,45 +98,160 @@ class _ImagenPageState extends State<ImagenPage> {
                 vertical: 25,
                 horizontal: 15,
               ),
-              child: Row(
+              child: Column(
                 children: [
-                  Expanded(
-                    child: TextField(
-                      autofocus: true,
-                      focusNode: _textFieldFocus,
-                      controller: _textController,
-                    ),
-                  ),
-                  const SizedBox.square(
-                    dimension: 15,
-                  ),
-                  if (!_loading)
-                    IconButton(
-                      onPressed: () async {
-                        await _testImagen(_textController.text);
-                      },
-                      icon: Icon(
-                        Icons.image_search,
-                        color: Theme.of(context).colorScheme.primary,
+                  // Generate Image Row
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          autofocus: true,
+                          focusNode: _textFieldFocus,
+                          decoration: const InputDecoration(
+                            hintText: 'Enter a prompt...',
+                          ),
+                          controller: _textController,
+                        ),
                       ),
-                      tooltip: 'Imagen raw data',
-                    )
-                  else
-                    const CircularProgressIndicator(),
-                  // NOTE: Keep this API private until future release.
-                  // if (!_loading)
-                  //   IconButton(
-                  //     onPressed: () async {
-                  //       await _testImagenGCS(_textController.text);
-                  //     },
-                  //     icon: Icon(
-                  //       Icons.imagesearch_roller,
-                  //       color: Theme.of(context).colorScheme.primary,
-                  //     ),
-                  //     tooltip: 'Imagen GCS',
-                  //   )
-                  // else
-                  //   const CircularProgressIndicator(),
+                      const SizedBox.square(dimension: 15),
+                      if (!_loading)
+                        IconButton(
+                          onPressed: () async {
+                            await _generateImageFromPrompt(_textController.text);
+                          },
+                          icon: Icon(
+                            Icons.image_search,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          tooltip: 'Generate Image',
+                        )
+                      else
+                        const CircularProgressIndicator(),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  // Upscaling UI
+                  const Text('Image Upscaling', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: _loading ? null : _pickSourceImageForUpscaling,
+                        child: const Text('Pick Source'),
+                      ),
+                      if (_sourceImageForUpscaling != null)
+                        Text(_sourceImageForUpscaling!.mimeType, style: const TextStyle(fontSize: 12)),
+                      DropdownButton<ImagenUpscaleFactor>(
+                        value: _selectedUpscaleFactor,
+                        onChanged: _loading ? null : (ImagenUpscaleFactor? newValue) {
+                          if (newValue != null) {
+                            setState(() {
+                              _selectedUpscaleFactor = newValue;
+                            });
+                          }
+                        },
+                        items: ImagenUpscaleFactor.values
+                            .map<DropdownMenuItem<ImagenUpscaleFactor>>(
+                                (ImagenUpscaleFactor value) {
+                          return DropdownMenuItem<ImagenUpscaleFactor>(
+                            value: value,
+                            child: Text(value.name),
+                          );
+                        }).toList(),
+                      ),
+                      ElevatedButton(
+                        onPressed: _loading || _sourceImageForUpscaling == null ? null : _upscaleImage,
+                        child: const Text('Upscale Image'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  // Editing UI
+                  const Text('Image Editing', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: _loading ? null : _pickSourceImageForEditing,
+                        child: const Text('Pick Source'),
+                      ),
+                      if (_sourceImageForEditing != null)
+                         Text(_sourceImageForEditing!.mimeType, style: const TextStyle(fontSize: 12)),
+                      Expanded(
+                        child: TextField(
+                          controller: _editPromptController,
+                          decoration: const InputDecoration(hintText: 'Edit prompt'),
+                          enabled: !_loading,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  // Inpaint/Outpaint Specific UI
+                  const Text('Inpaint/Outpaint', style: TextStyle(fontStyle: FontStyle.italic)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: _loading ? null : _pickMaskImageForEditing,
+                        child: const Text('Pick Mask'),
+                      ),
+                      if (_maskImageForEditing != null)
+                        Text(_maskImageForEditing!.mimeType, style: const TextStyle(fontSize: 12)),
+                      DropdownButton<ImagenEditMode>(
+                        value: _selectedEditMode,
+                        onChanged: _loading ? null : (ImagenEditMode? newValue) {
+                          if (newValue != null) {
+                            setState(() {
+                              _selectedEditMode = newValue;
+                            });
+                          }
+                        },
+                        items: ImagenEditMode.values
+                            .map<DropdownMenuItem<ImagenEditMode>>(
+                                (ImagenEditMode value) {
+                          return DropdownMenuItem<ImagenEditMode>(
+                            value: value,
+                            child: Text(value.name),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _maskDilationController,
+                          decoration: const InputDecoration(hintText: 'Mask Dilation (e.g., 0.01)'),
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                          enabled: !_loading,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextField(
+                          controller: _editStepsController,
+                          decoration: const InputDecoration(hintText: 'Edit Steps (e.g., 50)'),
+                          keyboardType: TextInputType.number,
+                          enabled: !_loading,
+                        ),
+                      ),
+                    ],
+                  ),
+                  ElevatedButton(
+                    onPressed: _loading || _sourceImageForEditing == null || _maskImageForEditing == null
+                                ? null
+                                : _editImageInpaintOutpaint,
+                    child: const Text('Edit (Inpaint/Outpaint)'),
+                  ),
+                  const SizedBox(height: 10),
+                  // Mask-Free Editing Button
+                  const Text('Mask-Free Edit', style: TextStyle(fontStyle: FontStyle.italic)),
+                  ElevatedButton(
+                    onPressed: _loading || _sourceImageForEditing == null ? null : _editImageMaskFree,
+                    child: const Text('Edit (Mask-Free)'),
+                  ),
                 ],
               ),
             ),
@@ -128,7 +261,200 @@ class _ImagenPageState extends State<ImagenPage> {
     );
   }
 
-  Future<void> _testImagen(String prompt) async {
+  Future<ImagenInlineImage?> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    try {
+      final XFile? imageFile = await picker.pickImage(source: ImageSource.gallery);
+      if (imageFile != null) {
+        // Attempt to get mimeType, default if null.
+        // Note: imageFile.mimeType might be null on some platforms or for some files.
+        final String mimeType = imageFile.mimeType ?? 'image/jpeg';
+        final Uint8List imageBytes = await imageFile.readAsBytes();
+        return ImagenInlineImage(bytesBase64Encoded: imageBytes, mimeType: mimeType);
+      }
+    } catch (e) {
+      _showError('Error picking image: $e');
+    }
+    return null;
+  }
+
+  Future<void> _pickSourceImageForUpscaling() async {
+    final pickedImage = await _pickImage();
+    if (pickedImage != null) {
+      setState(() {
+        _sourceImageForUpscaling = pickedImage;
+      });
+    }
+  }
+
+  Future<void> _pickSourceImageForEditing() async {
+    final pickedImage = await _pickImage();
+    if (pickedImage != null) {
+      setState(() {
+        _sourceImageForEditing = pickedImage;
+      });
+    }
+  }
+
+  Future<void> _pickMaskImageForEditing() async {
+    final pickedImage = await _pickImage();
+    if (pickedImage != null) {
+      setState(() {
+        _maskImageForEditing = pickedImage;
+      });
+    }
+  }
+
+  Future<void> _upscaleImage() async {
+    if (_sourceImageForUpscaling == null) {
+      _showError('Please pick a source image for upscaling.');
+      return;
+    }
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      final response = await widget.model.upscaleImage(
+        image: _sourceImageForUpscaling!,
+        upscaleFactor: _selectedUpscaleFactor,
+      );
+      if (response.images.isNotEmpty) {
+        final upscaledImage = response.images[0];
+        setState(() {
+          _generatedContent.add(
+            MessageData(
+              image: Image.memory(upscaledImage.bytesBase64Encoded),
+              text: 'Upscaled image (Factor: ${_selectedUpscaleFactor.name})',
+              fromUser: false,
+            ),
+          );
+          _scrollDown();
+        });
+      } else {
+        _showError('No image was returned from upscaling.');
+      }
+    } catch (e) {
+      _showError('Error upscaling image: $e');
+    }
+
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  Future<void> _editImageInpaintOutpaint() async {
+    if (_sourceImageForEditing == null || _maskImageForEditing == null) {
+      _showError('Please pick a source image and a mask image for inpainting/outpainting.');
+      return;
+    }
+    setState(() {
+      _loading = true;
+    });
+
+    final String prompt = _editPromptController.text;
+    final double? maskDilation = double.tryParse(_maskDilationController.text);
+    final int? editSteps = int.tryParse(_editStepsController.text);
+
+    final editConfig = ImagenEditingConfig(
+      image: _sourceImageForEditing!,
+      mask: _maskImageForEditing!,
+      editMode: _selectedEditMode,
+      maskDilation: maskDilation,
+      editSteps: editSteps,
+      // numberOfImages: 1, // Default in model or could be added to UI
+    );
+
+    try {
+      final response = await widget.model.editImage(
+        prompt,
+        config: editConfig,
+      );
+      if (response.images.isNotEmpty) {
+        final editedImage = response.images[0];
+        setState(() {
+          _generatedContent.add(
+            MessageData(
+              image: Image.memory(editedImage.bytesBase64Encoded),
+              text: 'Edited image (Inpaint/Outpaint): $prompt',
+              fromUser: false,
+            ),
+          );
+          _scrollDown();
+        });
+      } else {
+        _showError('No image was returned from editing.');
+      }
+    } catch (e) {
+      _showError('Error editing image: $e');
+    }
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  Future<void> _editImageMaskFree() async {
+    if (_sourceImageForEditing == null) {
+      _showError('Please pick a source image for mask-free editing.');
+      return;
+    }
+    setState(() {
+      _loading = true;
+    });
+
+    final String prompt = _editPromptController.text;
+    final editConfig = ImagenEditingConfig.maskFree(
+      image: _sourceImageForEditing!,
+      // numberOfImages: 1, // Default in model or could be added to UI
+    );
+
+    try {
+      final response = await widget.model.editImage(
+        prompt,
+        config: editConfig,
+      );
+      if (response.images.isNotEmpty) {
+        final editedImage = response.images[0];
+        setState(() {
+          _generatedContent.add(
+            MessageData(
+              image: Image.memory(editedImage.bytesBase64Encoded),
+              text: 'Edited image (Mask-Free): $prompt',
+              fromUser: false,
+            ),
+          );
+          _scrollDown();
+        });
+      } else {
+        _showError('No image was returned from mask-free editing.');
+      }
+    } catch (e) {
+      _showError('Error performing mask-free edit: $e');
+    }
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  void _showNotImplementedDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Not Implemented'),
+          content: const Text('This feature will be implemented in a later step.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _generateImageFromPrompt(String prompt) async {
     setState(() {
       _loading = true;
     });

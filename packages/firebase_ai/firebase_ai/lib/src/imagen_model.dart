@@ -14,6 +14,9 @@
 
 part of 'base_model.dart';
 
+import 'imagen_api.dart';
+import 'imagen_content.dart';
+
 /// Represents a remote Imagen model with the ability to generate images using
 /// text prompts.
 ///
@@ -57,7 +60,7 @@ final class ImagenModel extends BaseApiClientModel {
       if (gcsUri != null) 'storageUri': gcsUri,
       'sampleCount': _generationConfig?.numberOfImages ?? 1,
       if (_generationConfig?.aspectRatio case final aspectRatio?)
-        'aspectRatio': aspectRatio,
+        'aspectRatio': aspectRatio.toJson(),
       if (_generationConfig?.negativePrompt case final negativePrompt?)
         'negativePrompt': negativePrompt,
       if (_generationConfig?.addWatermark case final addWatermark?)
@@ -110,6 +113,87 @@ final class ImagenModel extends BaseApiClientModel {
         (jsonObject) =>
             parseImagenGenerationResponse<ImagenGCSImage>(jsonObject),
       );
+
+  /// Edits an image based on a prompt and configuration.
+  @experimental
+  Future<ImagenGenerationResponse<ImagenInlineImage>> editImage(
+    String prompt, {
+    required ImagenEditingConfig config,
+  }) async {
+    // Construct the request payload.
+    final payload = {
+      'instances': [
+        {
+          'prompt': prompt,
+          'image': config.image.toJson(),
+          if (config.mask != null) 'mask': config.mask!.toJson(),
+        }
+      ],
+      'parameters': {
+        if (config.editMode != null) 'editMode': config.editMode!.name,
+        if (config.maskDilation != null) 'maskDilation': config.maskDilation,
+        if (config.editSteps != null) 'editSteps': config.editSteps,
+        'sampleCount': config.numberOfImages ?? _generationConfig?.numberOfImages ?? 1,
+
+        // Parameters from model-level _generationConfig and _safetySettings
+        if (_generationConfig?.aspectRatio case final aspectRatio?)
+          'aspectRatio': aspectRatio.toJson(),
+        if (_generationConfig?.negativePrompt case final negativePrompt?)
+          'negativePrompt': negativePrompt,
+        if (_generationConfig?.addWatermark case final addWatermark?)
+          'addWatermark': addWatermark,
+        if (_generationConfig?.imageFormat case final imageFormat?)
+          'outputOption': imageFormat.toJson(),
+        if (_safetySettings?.personFilterLevel case final personFilterLevel?)
+          'personGeneration': personFilterLevel.toJson(),
+        if (_safetySettings?.safetyFilterLevel case final safetyFilterLevel?)
+          'safetySetting': safetyFilterLevel.toJson(),
+      },
+    };
+
+    return makeRequest(
+      Task.predict,
+      payload,
+      (jsonObject) => parseImagenGenerationResponse<ImagenInlineImage>(jsonObject),
+    );
+  }
+
+  /// Upscales an image.
+  @experimental
+  Future<ImagenGenerationResponse<ImagenInlineImage>> upscaleImage({
+    required ImagenInlineImage image,
+    required ImagenUpscaleFactor upscaleFactor,
+    ImagenSafetySettings? safetySettings,
+    ImagenGenerationConfig? generationConfig,
+  }) async {
+    // Construct the request payload for upscaling.
+    final payload = {
+      'instances': [
+        {
+          'image': image.toJson(),
+        }
+      ],
+      'parameters': {
+        'upscaleFactor': upscaleFactor.toJson(),
+        if (generationConfig?.aspectRatio ?? _generationConfig?.aspectRatio case final aspectRatio?)
+          'aspectRatio': aspectRatio.toJson(),
+        if (generationConfig?.addWatermark ?? _generationConfig?.addWatermark case final addWatermark?)
+          'addWatermark': addWatermark,
+        if (generationConfig?.imageFormat ?? _generationConfig?.imageFormat case final imageFormat?)
+          'outputOption': imageFormat.toJson(),
+        if (safetySettings?.personFilterLevel ?? _safetySettings?.personFilterLevel case final personFilterLevel?)
+          'personGeneration': personFilterLevel.toJson(),
+        if (safetySettings?.safetyFilterLevel ?? _safetySettings?.safetyFilterLevel case final safetyFilterLevel?)
+          'safetySetting': safetyFilterLevel.toJson(),
+      },
+    };
+
+    return makeRequest(
+      Task.predict,
+      payload,
+      (jsonObject) => parseImagenGenerationResponse<ImagenInlineImage>(jsonObject),
+    );
+  }
 }
 
 /// Returns a [ImagenModel] using it's private constructor.
