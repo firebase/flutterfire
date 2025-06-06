@@ -12,8 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:flutter/material.dart';
+import 'dart:typed_data';
+
+import 'package:image_picker/image_picker.dart';
 import 'package:firebase_ai/firebase_ai.dart';
+
+import 'package:flutter/material.dart';
 //import 'package:firebase_storage/firebase_storage.dart';
 import '../widgets/message_widget.dart';
 
@@ -37,6 +41,10 @@ class _ImagenPageState extends State<ImagenPage> {
   final FocusNode _textFieldFocus = FocusNode();
   final List<MessageData> _generatedContent = <MessageData>[];
   bool _loading = false;
+
+  // For image picking
+  ImagenInlineImage? _sourceImage;
+  ImagenInlineImage? _maskImageForEditing;
 
   void _scrollDown() {
     WidgetsBinding.instance.addPostFrameCallback(
@@ -80,45 +88,89 @@ class _ImagenPageState extends State<ImagenPage> {
                 vertical: 25,
                 horizontal: 15,
               ),
-              child: Row(
+              child: Column(
                 children: [
-                  Expanded(
-                    child: TextField(
-                      autofocus: true,
-                      focusNode: _textFieldFocus,
-                      controller: _textController,
-                    ),
-                  ),
-                  const SizedBox.square(
-                    dimension: 15,
-                  ),
-                  if (!_loading)
-                    IconButton(
-                      onPressed: () async {
-                        await _testImagen(_textController.text);
-                      },
-                      icon: Icon(
-                        Icons.image_search,
-                        color: Theme.of(context).colorScheme.primary,
+                  // Generate Image Row
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          autofocus: true,
+                          focusNode: _textFieldFocus,
+                          decoration: const InputDecoration(
+                            hintText: 'Enter a prompt...',
+                          ),
+                          controller: _textController,
+                        ),
                       ),
-                      tooltip: 'Imagen raw data',
-                    )
-                  else
-                    const CircularProgressIndicator(),
-                  // NOTE: Keep this API private until future release.
-                  // if (!_loading)
-                  //   IconButton(
-                  //     onPressed: () async {
-                  //       await _testImagenGCS(_textController.text);
-                  //     },
-                  //     icon: Icon(
-                  //       Icons.imagesearch_roller,
-                  //       color: Theme.of(context).colorScheme.primary,
-                  //     ),
-                  //     tooltip: 'Imagen GCS',
-                  //   )
-                  // else
-                  //   const CircularProgressIndicator(),
+                      const SizedBox.square(dimension: 15),
+                      IconButton(
+                        onPressed: () async {
+                          await _pickSourceImage();
+                        },
+                        icon: Icon(
+                          Icons.add_a_photo,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        tooltip: 'Pick Source Image',
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          await _pickMaskImage();
+                        },
+                        icon: Icon(
+                          Icons.add_to_photos,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        tooltip: 'Pick mask',
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          await _editImageMaskFree();
+                        },
+                        icon: Icon(
+                          Icons.edit,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        tooltip: 'Edit Image Mask Free',
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          await _editImageInpaintOutpaint();
+                        },
+                        icon: Icon(
+                          Icons.masks,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        tooltip: 'Mask Inpaint Outpaint',
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          await _upscaleImage();
+                        },
+                        icon: Icon(
+                          Icons.plus_one,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        tooltip: 'Upscale',
+                      ),
+                      if (!_loading)
+                        IconButton(
+                          onPressed: () async {
+                            await _generateImageFromPrompt(
+                              _textController.text,
+                            );
+                          },
+                          icon: Icon(
+                            Icons.image_search,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          tooltip: 'Generate Image',
+                        )
+                      else
+                        const CircularProgressIndicator(),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -128,7 +180,206 @@ class _ImagenPageState extends State<ImagenPage> {
     );
   }
 
-  Future<void> _testImagen(String prompt) async {
+  Future<ImagenInlineImage?> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    try {
+      final XFile? imageFile =
+          await picker.pickImage(source: ImageSource.gallery);
+      if (imageFile != null) {
+        // Attempt to get mimeType, default if null.
+        // Note: imageFile.mimeType might be null on some platforms or for some files.
+        final String mimeType = imageFile.mimeType ?? 'image/jpeg';
+        final Uint8List imageBytes = await imageFile.readAsBytes();
+        return ImagenInlineImage(
+            bytesBase64Encoded: imageBytes, mimeType: mimeType);
+      }
+    } catch (e) {
+      _showError('Error picking image: $e');
+    }
+    return null;
+  }
+
+  Future<void> _pickSourceImage() async {
+    final pickedImage = await _pickImage();
+    if (pickedImage != null) {
+      setState(() {
+        _sourceImage = pickedImage;
+      });
+    }
+  }
+
+  Future<void> _pickMaskImage() async {
+    final pickedImage = await _pickImage();
+    if (pickedImage != null) {
+      setState(() {
+        _maskImageForEditing = pickedImage;
+      });
+    }
+  }
+
+  Future<void> _upscaleImage() async {
+    if (_sourceImage == null) {
+      _showError('Please pick a source image for upscaling.');
+      return;
+    }
+    setState(() {
+      _loading = true;
+    });
+
+    setState(() {
+      _generatedContent.add(
+        MessageData(
+          image: Image.memory(_sourceImage!.bytesBase64Encoded),
+          text:
+              'Try to Upscaled image (Factor: ${ImagenUpscaleFactor.x2.name})',
+          fromUser: true,
+        ),
+      );
+      _scrollDown();
+    });
+
+    try {
+      final response = await widget.model.upscaleImage(
+        image: _sourceImage!,
+        upscaleFactor: ImagenUpscaleFactor.x2,
+      );
+      if (response.images.isNotEmpty) {
+        final upscaledImage = response.images[0];
+        setState(() {
+          _generatedContent.add(
+            MessageData(
+              image: Image.memory(upscaledImage.bytesBase64Encoded),
+              text: 'Upscaled image (Factor: ${ImagenUpscaleFactor.x2.name})',
+              fromUser: false,
+            ),
+          );
+          _scrollDown();
+        });
+      } else {
+        _showError('No image was returned from upscaling.');
+      }
+    } catch (e) {
+      _showError('Error upscaling image: $e');
+    }
+
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  Future<void> _editImageInpaintOutpaint() async {
+    if (_sourceImage == null || _maskImageForEditing == null) {
+      _showError(
+          'Please pick a source image and a mask image for inpainting/outpainting.');
+      return;
+    }
+    setState(() {
+      _loading = true;
+    });
+
+    final String prompt = _textController.text;
+
+    setState(() {
+      _generatedContent.add(
+        MessageData(
+          image: Image.memory(_sourceImage!.bytesBase64Encoded),
+          text: prompt,
+          fromUser: true,
+        ),
+      );
+      _scrollDown();
+    });
+
+    final editConfig = ImagenEditingConfig(
+      image: _sourceImage!,
+      mask: _maskImageForEditing,
+      maskDilation: 0.01,
+      editSteps: 50,
+    );
+
+    try {
+      final response = await widget.model.editImage(
+        prompt,
+        config: editConfig,
+      );
+      if (response.images.isNotEmpty) {
+        final editedImage = response.images[0];
+        setState(() {
+          _generatedContent.add(
+            MessageData(
+              image: Image.memory(editedImage.bytesBase64Encoded),
+              text: 'Edited image (Inpaint/Outpaint): $prompt',
+              fromUser: false,
+            ),
+          );
+          _scrollDown();
+        });
+      } else {
+        _showError('No image was returned from editing.');
+      }
+    } catch (e) {
+      _showError('Error editing image: $e');
+    }
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  Future<void> _editImageMaskFree() async {
+    if (_sourceImage == null) {
+      _showError('Please pick a source image for mask-free editing.');
+      return;
+    }
+    setState(() {
+      _loading = true;
+    });
+
+    final String prompt = _textController.text;
+
+    setState(() {
+      _generatedContent.add(
+        MessageData(
+          image: Image.memory(_sourceImage!.bytesBase64Encoded),
+          text: prompt,
+          fromUser: true,
+        ),
+      );
+      _scrollDown();
+    });
+    final editConfig = ImagenEditingConfig.maskFree(
+      image: _sourceImage!,
+      // numberOfImages: 1, // Default in model or could be added to UI
+    );
+
+    try {
+      final response = await widget.model.editImage(
+        prompt,
+        config: editConfig,
+      );
+      if (response.images.isNotEmpty) {
+        final editedImage = response.images[0];
+        setState(() {
+          _generatedContent.add(
+            MessageData(
+              image: Image.memory(editedImage.bytesBase64Encoded),
+              text: 'Edited image (Mask-Free): $prompt',
+              fromUser: false,
+            ),
+          );
+          _scrollDown();
+        });
+      } else {
+        _showError('No image was returned from mask-free editing.');
+      }
+    } catch (e) {
+      _showError('Error performing mask-free edit: $e');
+    }
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  Future<void> _generateImageFromPrompt(String prompt) async {
     setState(() {
       _loading = true;
     });
