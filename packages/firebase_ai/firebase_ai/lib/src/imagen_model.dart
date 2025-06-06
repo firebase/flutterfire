@@ -14,9 +14,6 @@
 
 part of 'base_model.dart';
 
-import 'imagen_api.dart';
-import 'imagen_content.dart';
-
 /// Represents a remote Imagen model with the ability to generate images using
 /// text prompts.
 ///
@@ -133,7 +130,8 @@ final class ImagenModel extends BaseApiClientModel {
         if (config.editMode != null) 'editMode': config.editMode!.name,
         if (config.maskDilation != null) 'maskDilation': config.maskDilation,
         if (config.editSteps != null) 'editSteps': config.editSteps,
-        'sampleCount': config.numberOfImages ?? _generationConfig?.numberOfImages ?? 1,
+        'sampleCount':
+            config.numberOfImages ?? _generationConfig?.numberOfImages ?? 1,
 
         // Parameters from model-level _generationConfig and _safetySettings
         if (_generationConfig?.aspectRatio case final aspectRatio?)
@@ -154,7 +152,8 @@ final class ImagenModel extends BaseApiClientModel {
     return makeRequest(
       Task.predict,
       payload,
-      (jsonObject) => parseImagenGenerationResponse<ImagenInlineImage>(jsonObject),
+      (jsonObject) =>
+          parseImagenGenerationResponse<ImagenInlineImage>(jsonObject),
     );
   }
 
@@ -175,15 +174,22 @@ final class ImagenModel extends BaseApiClientModel {
       ],
       'parameters': {
         'upscaleFactor': upscaleFactor.toJson(),
-        if (generationConfig?.aspectRatio ?? _generationConfig?.aspectRatio case final aspectRatio?)
+        if (generationConfig?.aspectRatio ?? _generationConfig?.aspectRatio
+            case final aspectRatio?)
           'aspectRatio': aspectRatio.toJson(),
-        if (generationConfig?.addWatermark ?? _generationConfig?.addWatermark case final addWatermark?)
+        if (generationConfig?.addWatermark ?? _generationConfig?.addWatermark
+            case final addWatermark?)
           'addWatermark': addWatermark,
-        if (generationConfig?.imageFormat ?? _generationConfig?.imageFormat case final imageFormat?)
+        if (generationConfig?.imageFormat ?? _generationConfig?.imageFormat
+            case final imageFormat?)
           'outputOption': imageFormat.toJson(),
-        if (safetySettings?.personFilterLevel ?? _safetySettings?.personFilterLevel case final personFilterLevel?)
+        if (safetySettings?.personFilterLevel ??
+                _safetySettings?.personFilterLevel
+            case final personFilterLevel?)
           'personGeneration': personFilterLevel.toJson(),
-        if (safetySettings?.safetyFilterLevel ?? _safetySettings?.safetyFilterLevel case final safetyFilterLevel?)
+        if (safetySettings?.safetyFilterLevel ??
+                _safetySettings?.safetyFilterLevel
+            case final safetyFilterLevel?)
           'safetySetting': safetyFilterLevel.toJson(),
       },
     };
@@ -191,7 +197,8 @@ final class ImagenModel extends BaseApiClientModel {
     return makeRequest(
       Task.predict,
       payload,
-      (jsonObject) => parseImagenGenerationResponse<ImagenInlineImage>(jsonObject),
+      (jsonObject) =>
+          parseImagenGenerationResponse<ImagenInlineImage>(jsonObject),
     );
   }
 }

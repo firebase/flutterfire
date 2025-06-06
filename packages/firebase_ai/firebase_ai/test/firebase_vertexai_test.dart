@@ -17,10 +17,10 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'mock.dart';
+import 'mocks/mock_core.dart';
 
 void main() {
-  setupFirebaseVertexAIMocks();
+  setupFirebaseAIMocks();
   // ignore: unused_local_variable
   late FirebaseApp app;
   // ignore: unused_local_variable

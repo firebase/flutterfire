@@ -17,12 +17,12 @@ import 'package:firebase_ai/src/base_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'mock.dart';
+import 'mocks/mock_core.dart';
 import 'utils/matchers.dart';
 import 'utils/stub_client.dart';
 
 void main() {
-  setupFirebaseVertexAIMocks();
+  setupFirebaseAIMocks();
   late FirebaseApp app;
   setUpAll(() async {
     // Initialize Firebase

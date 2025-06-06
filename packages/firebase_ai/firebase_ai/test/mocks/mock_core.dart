@@ -18,7 +18,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-class MockFirebaseAppVertexAI implements TestFirebaseCoreHostApi {
+class MockFirebaseAppAI implements TestFirebaseCoreHostApi {
   @override
   Future<PigeonInitializeResponse> initializeApp(
     String appName,
@@ -58,16 +58,16 @@ class MockFirebaseAppVertexAI implements TestFirebaseCoreHostApi {
   }
 }
 
-void setupFirebaseVertexAIMocks() {
+void setupFirebaseAIMocks() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  TestFirebaseCoreHostApi.setup(MockFirebaseAppVertexAI());
+  TestFirebaseCoreHostApi.setup(MockFirebaseAppAI());
 }
 
 // FirebaseVertexAIPlatform Mock
-class MockFirebaseVertexAI extends Mock
+class MockFirebaseAI extends Mock
     with
         // ignore: prefer_mixin, plugin_platform_interface needs to migrate to use `mixin`
         MockPlatformInterfaceMixin {
-  MockFirebaseVertexAI();
+  MockFirebaseAI();
 }
