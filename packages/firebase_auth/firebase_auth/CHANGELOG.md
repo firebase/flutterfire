@@ -1,3 +1,7 @@
+## 5.6.0
+
+ - **FEAT**(auth): add support for initializeRecaptchaConfig ([#17365](https://github.com/firebase/flutterfire/issues/17365)). ([73f9028e](https://github.com/firebase/flutterfire/commit/73f9028e114874fddc8a4f76f22b247504a95a02))
+
 ## 5.5.4
 
  - **FIX**(auth,apple): prevent EXC_BAD_ACCESS crash in Apple Sign-In completion handler ([#17273](https://github.com/firebase/flutterfire/issues/17273)). ([cc7d28ae](https://github.com/firebase/flutterfire/commit/cc7d28ae09036464f7ece6a2637bae6a3c7a292d))
