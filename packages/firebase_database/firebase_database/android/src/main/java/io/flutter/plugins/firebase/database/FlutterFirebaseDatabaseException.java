@@ -47,7 +47,12 @@ public class FlutterFirebaseDatabaseException extends Exception {
   }
 
   static FlutterFirebaseDatabaseException fromDatabaseError(DatabaseError e) {
+    return fromDatabaseError(e, null);
+  }
+
+  static FlutterFirebaseDatabaseException fromDatabaseError(DatabaseError e, String path) {
     final int errorCode = e.getCode();
+    
     String code = UNKNOWN_ERROR_CODE;
     String message = UNKNOWN_ERROR_MESSAGE;
 
@@ -62,7 +67,10 @@ public class FlutterFirebaseDatabaseException extends Exception {
         break;
       case DatabaseError.PERMISSION_DENIED:
         code = "permission-denied";
-        message = "Client doesn't have permission to access the desired data. Path: " + this.path();
+        message = "Client doesn't have permission to access the desired data. + Path";
+        if (path != null) {
+          message += " Path: " + path;
+        }
         break;
       case DatabaseError.DISCONNECTED:
         code = "disconnected";
@@ -105,24 +113,36 @@ public class FlutterFirebaseDatabaseException extends Exception {
     final Map<String, Object> additionalData = new HashMap<>();
     final String errorDetails = e.getDetails();
     additionalData.put(Constants.ERROR_DETAILS, errorDetails);
-    return new FlutterFirebaseDatabaseException(code, message, null, additionalData);
+    return new FlutterFirebaseDatabaseException(code, message, path, additionalData);
   }
 
   static FlutterFirebaseDatabaseException fromDatabaseException(DatabaseException e) {
+    return fromDatabaseException(e, null);
+  }
+
+  static FlutterFirebaseDatabaseException fromDatabaseException(DatabaseException e, String path) {
     final DatabaseError error = DatabaseError.fromException(e);
-    return fromDatabaseError(error);
+    return fromDatabaseError(error, path);
   }
 
   static FlutterFirebaseDatabaseException fromException(@Nullable Exception e) {
-    if (e == null) return unknown();
-    return unknown(e.getMessage());
+    return fromException(e, null);
+  }
+
+  static FlutterFirebaseDatabaseException fromException(@Nullable Exception e, @Nullable String path) {
+    if (e == null) return unknown(null, path);
+    return unknown(e.getMessage(), path);
   }
 
   static FlutterFirebaseDatabaseException unknown() {
-    return unknown(null);
+    return unknown(null, null);
   }
 
   static FlutterFirebaseDatabaseException unknown(@Nullable String errorMessage) {
+    return unknown(errorMessage, null);
+  }
+
+  static FlutterFirebaseDatabaseException unknown(@Nullable String errorMessage, @Nullable String path) {
     final Map<String, Object> details = new HashMap<>();
     String code = UNKNOWN_ERROR_CODE;
 
@@ -143,9 +163,12 @@ public class FlutterFirebaseDatabaseException extends Exception {
       // through as a DatabaseError.
       code = "permission-denied";
       message = "Client doesn't have permission to access the desired data.";
+      if (path != null) {
+        message += " Path: " + path;
+      }
     }
 
-    return new FlutterFirebaseDatabaseException(code, message, null, details);
+    return new FlutterFirebaseDatabaseException(code, message, path, details);
   }
 
   public String getCode() {
