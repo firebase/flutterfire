@@ -531,6 +531,12 @@ public class FirebaseDatabasePlugin
             result.success(r);
           } else {
             Exception exception = task.getException();
+            
+            // Extract path from arguments if available
+            String path = null;
+            if (arguments != null && arguments.containsKey(Constants.PATH)) {
+              path = (String) arguments.get(Constants.PATH);
+            }
 
             FlutterFirebaseDatabaseException e;
 
@@ -540,12 +546,20 @@ public class FirebaseDatabasePlugin
               e =
                   FlutterFirebaseDatabaseException.fromDatabaseException(
                       (DatabaseException) exception);
+              // Create a new exception with path information
+              if (path != null) {
+                e = new FlutterFirebaseDatabaseException(e.getCode(), e.getMessage(), path, e.getAdditionalData());
+              }
             } else {
               Log.e(
                   "firebase_database",
                   "An unknown error occurred handling native method call " + call.method,
                   exception);
               e = FlutterFirebaseDatabaseException.fromException(exception);
+              // Create a new exception with path information
+              if (path != null) {
+                e = new FlutterFirebaseDatabaseException(e.getCode(), e.getMessage(), path, e.getAdditionalData());
+              }
             }
 
             result.error(e.getCode(), e.getMessage(), e.getAdditionalData());

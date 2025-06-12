@@ -19,12 +19,19 @@ public class FlutterFirebaseDatabaseException extends Exception {
   private static final String MODULE = "firebase_database";
   private final String code;
   private final String message;
+  private final String path;
   private final Map<String, Object> additionalData;
 
   public FlutterFirebaseDatabaseException(
       @NonNull String code, @NonNull String message, @Nullable Map<String, Object> additionalData) {
+    this(code, message, null, additionalData);
+  }
+
+  public FlutterFirebaseDatabaseException(
+      @NonNull String code, @NonNull String message, @Nullable String path, @Nullable Map<String, Object> additionalData) {
     this.code = code;
     this.message = message;
+    this.path = path;
 
     if (additionalData != null) {
       this.additionalData = additionalData;
@@ -34,11 +41,13 @@ public class FlutterFirebaseDatabaseException extends Exception {
 
     this.additionalData.put(Constants.ERROR_CODE, code);
     this.additionalData.put(Constants.ERROR_MESSAGE, message);
+    if (path != null) {
+      this.additionalData.put("path", path);
+    }
   }
 
   static FlutterFirebaseDatabaseException fromDatabaseError(DatabaseError e) {
     final int errorCode = e.getCode();
-
     String code = UNKNOWN_ERROR_CODE;
     String message = UNKNOWN_ERROR_MESSAGE;
 
@@ -53,7 +62,7 @@ public class FlutterFirebaseDatabaseException extends Exception {
         break;
       case DatabaseError.PERMISSION_DENIED:
         code = "permission-denied";
-        message = "Client doesn't have permission to access the desired data.";
+        message = "Client doesn't have permission to access the desired data. Path: " + this.path();
         break;
       case DatabaseError.DISCONNECTED:
         code = "disconnected";
@@ -96,7 +105,7 @@ public class FlutterFirebaseDatabaseException extends Exception {
     final Map<String, Object> additionalData = new HashMap<>();
     final String errorDetails = e.getDetails();
     additionalData.put(Constants.ERROR_DETAILS, errorDetails);
-    return new FlutterFirebaseDatabaseException(code, message, additionalData);
+    return new FlutterFirebaseDatabaseException(code, message, null, additionalData);
   }
 
   static FlutterFirebaseDatabaseException fromDatabaseException(DatabaseException e) {
@@ -136,7 +145,7 @@ public class FlutterFirebaseDatabaseException extends Exception {
       message = "Client doesn't have permission to access the desired data.";
     }
 
-    return new FlutterFirebaseDatabaseException(code, message, details);
+    return new FlutterFirebaseDatabaseException(code, message, null, details);
   }
 
   public String getCode() {
@@ -145,6 +154,10 @@ public class FlutterFirebaseDatabaseException extends Exception {
 
   public String getMessage() {
     return message;
+  }
+
+  public String getPath() {
+    return path;
   }
 
   public Map<String, Object> getAdditionalData() {
