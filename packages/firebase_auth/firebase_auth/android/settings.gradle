@@ -2,7 +2,7 @@ rootProject.name = 'firebase_auth'
 
 pluginManagement {
     plugins {
-        id "com.android.application" version "8.2.1"
-        id "com.android.library" version "8.2.1"
+        id "com.android.application" version "8.3.0"
+        id "com.android.library" version "8.3.0"
     }
 }
