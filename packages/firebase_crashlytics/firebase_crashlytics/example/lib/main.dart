@@ -72,9 +72,12 @@ class _MyAppState extends State<MyApp> {
   // Define an async function to initialize FlutterFire
   Future<void> _initializeFlutterFire() async {
     if (_kTestingCrashlytics) {
+      // Force enable crashlytics collection enabled if we're testing it.
       await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
       _crashlyticsEnabled = true;
     } else {
+      // Else only enable it in non-debug builds.
+      // You could additionally extend this to allow users to opt-in.
       const enabled = !kDebugMode;
       await FirebaseCrashlytics.instance
           .setCrashlyticsCollectionEnabled(enabled);
