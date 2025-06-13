@@ -19,12 +19,26 @@ public class FlutterFirebaseDatabaseException extends Exception {
   private static final String MODULE = "firebase_database";
   private final String code;
   private final String message;
+  private final String path;
+  private final String operation;
   private final Map<String, Object> additionalData;
 
   public FlutterFirebaseDatabaseException(
       @NonNull String code, @NonNull String message, @Nullable Map<String, Object> additionalData) {
+    this(code, message, null, null, additionalData);
+  }
+
+  public FlutterFirebaseDatabaseException(
+      @NonNull String code, @NonNull String message, @Nullable String path, @Nullable Map<String, Object> additionalData) {
+    this(code, message, path, null, additionalData);
+  }
+
+  public FlutterFirebaseDatabaseException(
+      @NonNull String code, @NonNull String message, @Nullable String path, @Nullable String operation, @Nullable Map<String, Object> additionalData) {
     this.code = code;
     this.message = message;
+    this.path = path;
+    this.operation = operation;
 
     if (additionalData != null) {
       this.additionalData = additionalData;
@@ -34,11 +48,25 @@ public class FlutterFirebaseDatabaseException extends Exception {
 
     this.additionalData.put(Constants.ERROR_CODE, code);
     this.additionalData.put(Constants.ERROR_MESSAGE, message);
+    if (path != null) {
+      this.additionalData.put("path", path);
+    }
+    if (operation != null) {
+      this.additionalData.put("operation", operation);
+    }
   }
 
   static FlutterFirebaseDatabaseException fromDatabaseError(DatabaseError e) {
-    final int errorCode = e.getCode();
+    return fromDatabaseError(e, null, null);
+  }
 
+  static FlutterFirebaseDatabaseException fromDatabaseError(DatabaseError e, String path) {
+    return fromDatabaseError(e, path, null);
+  }
+
+  static FlutterFirebaseDatabaseException fromDatabaseError(DatabaseError e, String path, String operation) {
+    final int errorCode = e.getCode();
+    
     String code = UNKNOWN_ERROR_CODE;
     String message = UNKNOWN_ERROR_MESSAGE;
 
@@ -54,6 +82,12 @@ public class FlutterFirebaseDatabaseException extends Exception {
       case DatabaseError.PERMISSION_DENIED:
         code = "permission-denied";
         message = "Client doesn't have permission to access the desired data.";
+        if (path != null) {
+          message += " Path: " + path;
+        }
+        if (operation != null) {
+          message += " Operation: " + operation;
+        }
         break;
       case DatabaseError.DISCONNECTED:
         code = "disconnected";
@@ -90,30 +124,54 @@ public class FlutterFirebaseDatabaseException extends Exception {
     }
 
     if (code.equals(UNKNOWN_ERROR_CODE)) {
-      return unknown(e.getMessage());
+      return unknown(e.getMessage(), path, operation);
     }
 
     final Map<String, Object> additionalData = new HashMap<>();
     final String errorDetails = e.getDetails();
     additionalData.put(Constants.ERROR_DETAILS, errorDetails);
-    return new FlutterFirebaseDatabaseException(code, message, additionalData);
+    return new FlutterFirebaseDatabaseException(code, message, path, operation, additionalData);
   }
 
   static FlutterFirebaseDatabaseException fromDatabaseException(DatabaseException e) {
+    return fromDatabaseException(e, null, null);
+  }
+
+  static FlutterFirebaseDatabaseException fromDatabaseException(DatabaseException e, String path) {
+    return fromDatabaseException(e, path, null);
+  }
+
+  static FlutterFirebaseDatabaseException fromDatabaseException(DatabaseException e, String path, String operation) {
     final DatabaseError error = DatabaseError.fromException(e);
-    return fromDatabaseError(error);
+    return fromDatabaseError(error, path, operation);
   }
 
   static FlutterFirebaseDatabaseException fromException(@Nullable Exception e) {
-    if (e == null) return unknown();
-    return unknown(e.getMessage());
+    return fromException(e, null, null);
+  }
+
+  static FlutterFirebaseDatabaseException fromException(@Nullable Exception e, @Nullable String path) {
+    return fromException(e, path, null);
+  }
+
+  static FlutterFirebaseDatabaseException fromException(@Nullable Exception e, @Nullable String path, @Nullable String operation) {
+    if (e == null) return unknown(null, path, operation);
+    return unknown(e.getMessage(), path, operation);
   }
 
   static FlutterFirebaseDatabaseException unknown() {
-    return unknown(null);
+    return unknown(null, null, null);
   }
 
   static FlutterFirebaseDatabaseException unknown(@Nullable String errorMessage) {
+    return unknown(errorMessage, null, null);
+  }
+
+  static FlutterFirebaseDatabaseException unknown(@Nullable String errorMessage, @Nullable String path) {
+    return unknown(errorMessage, path, null);
+  }
+
+  static FlutterFirebaseDatabaseException unknown(@Nullable String errorMessage, @Nullable String path, @Nullable String operation) {
     final Map<String, Object> details = new HashMap<>();
     String code = UNKNOWN_ERROR_CODE;
 
@@ -134,9 +192,15 @@ public class FlutterFirebaseDatabaseException extends Exception {
       // through as a DatabaseError.
       code = "permission-denied";
       message = "Client doesn't have permission to access the desired data.";
+      if (path != null) {
+        message += " Path: " + path;
+      }
+      if (operation != null) {
+        message += " Operation: " + operation;
+      }
     }
 
-    return new FlutterFirebaseDatabaseException(code, message, details);
+    return new FlutterFirebaseDatabaseException(code, message, path, operation, details);
   }
 
   public String getCode() {
@@ -145,6 +209,14 @@ public class FlutterFirebaseDatabaseException extends Exception {
 
   public String getMessage() {
     return message;
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public String getOperation() {
+    return operation;
   }
 
   public Map<String, Object> getAdditionalData() {

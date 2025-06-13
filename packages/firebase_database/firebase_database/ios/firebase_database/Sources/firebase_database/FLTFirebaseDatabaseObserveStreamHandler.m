@@ -46,12 +46,16 @@
   };
 
   id cancelBlock = ^(NSError *error) {
-    NSArray *codeAndMessage = [FLTFirebaseDatabaseUtils codeAndMessageFromNSError:error];
+    NSArray *codeAndMessage = [FLTFirebaseDatabaseUtils codeAndMessageFromNSError:error 
+                                                                             path:[_databaseQuery.ref URL]
+                                                                        operation:@"READ"];
     NSString *code = codeAndMessage[0];
     NSString *message = codeAndMessage[1];
     NSDictionary *details = @{
       @"code" : code,
       @"message" : message,
+      @"path" : [_databaseQuery.ref URL] ?: [NSNull null],
+      @"operation" : @"READ",
     };
     dispatch_async(dispatch_get_main_queue(), ^{
       events([FLTFirebasePlugin createFlutterErrorFromCode:code
