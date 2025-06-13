@@ -538,20 +538,48 @@ public class FirebaseDatabasePlugin
               path = (String) arguments.get(Constants.PATH);
             }
 
+            // Determine operation type based on method call
+            String operation = null;
+            switch (call.method) {
+              // Write operations
+              case "DatabaseReference#set":
+              case "DatabaseReference#setWithPriority":
+              case "DatabaseReference#update":
+              case "DatabaseReference#setPriority":
+              case "DatabaseReference#runTransaction":
+              case "OnDisconnect#set":
+              case "OnDisconnect#setWithPriority":
+              case "OnDisconnect#update":
+                operation = "WRITE";
+                break;
+              // Read operations
+              case "Query#get":
+              case "Query#observe":
+                operation = "READ";
+                break;
+              // Operations that don't involve data access
+              case "FirebaseDatabase#goOnline":
+              case "FirebaseDatabase#goOffline":
+              case "FirebaseDatabase#purgeOutstandingWrites":
+              case "Query#keepSynced":
+              case "OnDisconnect#cancel":
+                operation = null;
+                break;
+            }
+
             FlutterFirebaseDatabaseException e;
 
             if (exception instanceof FlutterFirebaseDatabaseException) {
               e = (FlutterFirebaseDatabaseException) exception;
             } else if (exception instanceof DatabaseException) {
-              e =
-                  FlutterFirebaseDatabaseException.fromDatabaseException(
-                      (DatabaseException) exception, path);
+              e = FlutterFirebaseDatabaseException.fromDatabaseException(
+                  (DatabaseException) exception, path, operation);
             } else {
               Log.e(
                   "firebase_database",
                   "An unknown error occurred handling native method call " + call.method,
                   exception);
-              e = FlutterFirebaseDatabaseException.fromException(exception, path);
+              e = FlutterFirebaseDatabaseException.fromException(exception, path, operation);
             }
 
             result.error(e.getCode(), e.getMessage(), e.getAdditionalData());
