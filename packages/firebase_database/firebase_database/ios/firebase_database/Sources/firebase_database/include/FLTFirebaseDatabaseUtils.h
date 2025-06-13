@@ -14,6 +14,8 @@
 + (FIRDatabase *)databaseFromArguments:(id)arguments;
 + (FIRDatabaseReference *)databaseReferenceFromArguments:(id)arguments;
 + (FIRDatabaseQuery *)databaseQueryFromArguments:(id)arguments;
++ (NSDictionary *)dictionaryFromSnapshot:(FIRDataSnapshot *)snapshot
+                    withPreviousChildKey:(NSString *)previousChildName;
 + (FIRDatabaseQuery *)databaseQueryFromArguments:(id)arguments
                     withPreviousChildKey:(NSString *)previousChildKey;
 + (NSDictionary *)dictionaryFromSnapshot:(FIRDataSnapshot *)snapshot;
