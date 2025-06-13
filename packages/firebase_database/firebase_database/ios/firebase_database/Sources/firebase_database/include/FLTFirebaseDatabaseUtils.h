@@ -14,10 +14,15 @@
 + (FIRDatabase *)databaseFromArguments:(id)arguments;
 + (FIRDatabaseReference *)databaseReferenceFromArguments:(id)arguments;
 + (FIRDatabaseQuery *)databaseQueryFromArguments:(id)arguments;
-+ (NSDictionary *)dictionaryFromSnapshot:(FIRDataSnapshot *)snapshot
-                    withPreviousChildKey:(NSString *)previousChildName;
++ (FIRDatabaseQuery *)databaseQueryFromArguments:(id)arguments
+                    withPreviousChildKey:(NSString *)previousChildKey;
 + (NSDictionary *)dictionaryFromSnapshot:(FIRDataSnapshot *)snapshot;
++ (NSDictionary *)dictionaryFromSnapshot:(FIRDataSnapshot *)snapshot
+                    withPreviousChildKey:(NSString *)previousChildKey;
 + (NSArray *)codeAndMessageFromNSError:(NSError *)error;
++ (NSArray *)codeAndMessageFromNSError:(NSError *)error path:(NSString *)path;
++ (NSArray *)codeAndMessageFromNSError:(NSError *)error path:(NSString *)path operation:(NSString *)operation;
++ (FIRDatabaseReference *)databaseReferenceFromArguments:(id)arguments;
 + (FIRDataEventType)eventTypeFromString:(NSString *)eventTypeString;
 
 @end

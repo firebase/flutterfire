@@ -73,12 +73,33 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
       ^(NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
         NSError *_Nullable error) {
         if (code == nil) {
-          NSArray *codeAndErrorMessage = [FLTFirebaseDatabaseUtils codeAndMessageFromNSError:error];
+          // Extract path from arguments if available
+          NSString *path = nil;
+          if (call.arguments != nil && [call.arguments isKindOfClass:[NSDictionary class]]) {
+            path = call.arguments[@"path"];
+          }
+
+          // Determine operation type based on method call
+          NSString *operation = nil;
+          if ([call.method hasPrefix:@"DatabaseReference#"] || [call.method hasPrefix:@"OnDisconnect#"]) {
+            if ([call.method containsString:@"set"] || [call.method containsString:@"update"] || 
+                [call.method containsString:@"runTransaction"]) {
+              operation = @"WRITE";
+            }
+          } else if ([call.method hasPrefix:@"Query#"]) {
+            if ([call.method containsString:@"get"] || [call.method containsString:@"observe"]) {
+              operation = @"READ";
+            }
+          }
+
+          NSArray *codeAndErrorMessage = [FLTFirebaseDatabaseUtils codeAndMessageFromNSError:error path:path operation:operation];
           code = codeAndErrorMessage[0];
           message = codeAndErrorMessage[1];
           details = @{
             @"code" : code,
             @"message" : message,
+            @"path" : path ?: [NSNull null],
+            @"operation" : operation ?: [NSNull null],
           };
         }
         if ([@"unknown" isEqualToString:code]) {

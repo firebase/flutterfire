@@ -184,6 +184,14 @@ static __strong NSMutableDictionary<NSString *, FIRDatabase *> *cachedDatabaseIn
 }
 
 + (NSArray *)codeAndMessageFromNSError:(NSError *)error {
+  return [self codeAndMessageFromNSError:error path:nil operation:nil];
+}
+
++ (NSArray *)codeAndMessageFromNSError:(NSError *)error path:(NSString *)path {
+  return [self codeAndMessageFromNSError:error path:path operation:nil];
+}
+
++ (NSArray *)codeAndMessageFromNSError:(NSError *)error path:(NSString *)path operation:(NSString *)operation {
   NSString *code = @"unknown";
 
   if (error == nil) {
@@ -196,6 +204,12 @@ static __strong NSMutableDictionary<NSString *, FIRDatabase *> *cachedDatabaseIn
     case 1:
       code = @"permission-denied";
       message = @"Client doesn't have permission to access the desired data.";
+      if (path != nil) {
+        message = [message stringByAppendingFormat:@" Path: %@", path];
+      }
+      if (operation != nil) {
+        message = [message stringByAppendingFormat:@" Operation: %@", operation];
+      }
       break;
     case 2:
       code = @"unavailable";
