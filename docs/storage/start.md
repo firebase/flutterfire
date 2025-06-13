@@ -2,6 +2,11 @@ Project: /docs/storage/_project.yaml
 Book: /docs/_book.yaml
 page_type: guide
 
+{# The following is at site root, /third_party/devsite/firebase/en/ #}
+{% include "_local_variables.html" %}
+
+{% include "docs/storage/_local_variables.html" %}
+
 <link rel="stylesheet" type="text/css" href="/styles/docs.css" />
 
 # Get started with Cloud Storage on Flutter
@@ -15,52 +20,30 @@ redundancy. Cloud Storage for Firebase lets you securely upload these files
 directly from mobile devices and web browsers, handling spotty networks with
 ease.
 
+## Before you begin {: #before-you-begin}
 
-## Prerequisites
+1.  If you haven't already, make sure you've completed the
+    [getting started guide for Flutter apps](/docs/flutter/setup).
+    This includes:
 
-[Install and initialize the Firebase SDKs for Flutter](/docs/flutter/setup) if you
-haven't already done so.
+    * Creating a Firebase project.
 
+    * Installing and initializing the Firebase SDKs for Flutter.
+
+1.  Make sure your Firebase project is on the {{blaze_plan_with_link}}. If
+    you're new to Firebase and Google Cloud, check if you're eligible for a
+    [$300 credit](/support/faq#pricing-free-trial).
+
+<<../_includes/_changes-sept-2024-notice.md>>
 
 ## Create a default Cloud Storage bucket {:#create-default-bucket}
 
-1.  From the navigation pane of the [Firebase console](https://console.firebase.google.com/), select **Storage**,
-    then click **Get started**.
+<<../_includes/_create-default-bucket.md>>
 
-1.  Review the messaging about securing your Cloud Storage data using security
-    rules. During development, consider
-    [setting up your rules for public access](#set_up_public_access).
+## Set up public access {: #set_up_public_access}
 
-1.  Select a [location](/docs/projects/locations#types) for your default
-    Cloud Storage bucket.
-
-      * This location setting is your project's
-        [_default Google Cloud Platform (GCP) resource location_](/docs/firestore/locations#default-cloud-location).
-        Note that this location will be used for GCP services in your project
-        that require a location setting, specifically, your
-        [Cloud Firestore](/docs/firestore) database and your
-        [App Engine](//cloud.google.com/appengine/docs/) app
-        (which is required if you use Cloud Scheduler).
-
-      * If you aren't able to select a location, then your project already
-        has a default GCP resource location. It was set either during project
-        creation or when setting up another service that requires a location
-        setting.
-
-    If you're on the Blaze plan, you can
-    [create multiple buckets](#use_multiple_storage_buckets), each with its own
-    [location](//cloud.google.com/storage/docs/bucket-locations).
-
-    Note: After you set your project's default GCP resource location, you
-    cannot change it.
-
-1.  Click **Done**.
-
-
-## Set up public access {:#set_up_public_access}
-
-Cloud Storage for Firebase provides a declarative rules language that allows you
-to define how your data should be structured, how it should be indexed, and when
+Cloud Storage for Firebase provides a declarative rules language that lets you
+define how your data should be structured, how it should be indexed, and when
 your data can be read from and written to. By default, read and write access to
 Cloud Storage is restricted so only authenticated users can read or write
 data. To get started without setting up [Firebase Authentication](/docs/auth), you can
@@ -69,7 +52,6 @@ data. To get started without setting up [Firebase Authentication](/docs/auth), y
 This does make Cloud Storage open to anyone, even people not using your
 app, so be sure to restrict your Cloud Storage again when you set up
 authentication.
-
 
 ## Add the Cloud Storage SDK to your app {:#add-sdk}
 
@@ -92,19 +74,32 @@ authentication.
     import 'package:firebase_storage/firebase_storage.dart';
     ```
 
-
 ## Set up Cloud Storage {:#set-up-cloud-storage}
 
-The first step in accessing your Cloud Storage bucket is to create an
-instance of `FirebaseStorage`:
+1.  Run `flutterfire configure` from your Flutter project directory. This
+    updates the Firebase config file (`firebase_options.dart`) in your app's
+    codebase so that it has the name of your default {{storage}} bucket.
 
-```dart
-final storage = FirebaseStorage.instance;
-```
+    Note: Alternatively to updating your config file, you can explicitly
+    specify the bucket name when you create an instance of `FirebaseStorage`
+    (see next step). You can find the bucket name in the
+    [{{firebase_storage}} _Files_ tab](https://console.firebase.google.com/project/_/storage/){: .external}
+    of the {{name_appmanager}}.
+
+1.  Access your Cloud Storage bucket by creating an instance of
+    `FirebaseStorage`:
+
+    ```dart
+    final storage = FirebaseStorage.instance;
+
+    // Alternatively, explicitly specify the bucket name URL.
+    // final storage = FirebaseStorage.instanceFor(bucket: "gs://<var>BUCKET_NAME</var>");
+    ```
 
 You're ready to start using Cloud Storage!
 
-First, let's learn how to [create a Cloud Storage reference](create-reference).
+Next step? Learn how to
+[create a Cloud Storage reference](create-reference).
 
 ## Advanced setup
 
@@ -177,7 +172,7 @@ final storage = FirebaseStorage.instanceFor(app: customApp);
 ## Next steps
 
 * Prepare to launch your app:
-  * Enable [App Check](/docs/app-check/overview) to help ensure that only
+  * Enable [App Check](/docs/app-check) to help ensure that only
     your apps can access your storage buckets.
   * Set up [budget alerts](/docs/projects/billing/avoid-surprise-bills#set-up-budget-alert-emails)
     for your project in the Google Cloud Console.

@@ -50,15 +50,29 @@ To initiate the authentication flow, present an interface that prompts the user 
 
 1.  Construct the ActionCodeSettings object, which provides Firebase with instructions on how to construct the email link. Set the following fields:
 
-    * `url`: The deep link to embed and any additional state to be passed along. The link's domain has to be whitelisted in the Firebase Console list of authorized domains, which can be found by going to the Settings tab (Authentication -> Settings -> Authorized Domains). The link will redirect the user to this URL if the app is not installed on their device and the app was not able to be installed.
+    * `url`: The deep link to embed and any additional state to be passed along.
+      The link's domain has to be present in the Firebase Console list of
+      authorized domains, which can be found by going to the Settings tab
+      (Authentication -> Settings -> Authorized Domains). The link will redirect
+      the user to this URL if the app is not installed on their device and the
+      app was not able to be installed.
 
     * `androidPackageName` and `IOSBundleId`: The apps to use when the sign-in link is opened on an Android or iOS device. Learn more on how to configure Firebase Dynamic Links to open email action links via mobile apps.
 
     * `handleCodeInApp`: Set to `true`. The sign-in operation has to always be completed in the app unlike other out of band email actions (password reset and email verifications). This is because, at the end of the flow, the user is expected to be signed in and their Auth state persisted within the app.
 
-    * `dynamicLinkDomain`: (Deprecated, use `linkDomain`) When multiple custom dynamic link domains are defined for a project, specify which one to use when the link is to be opened via a specified mobile app (for example, `example.page.link`). Otherwise the first domain is automatically selected.
+    * `dynamicLinkDomain`: (Deprecated, use `linkDomain`) When multiple
+      custom dynamic link domains are defined for a project, specify which one
+      to use when the link is to be opened using a specified mobile app (for
+      example, `example.page.link`). Otherwise the first domain is
+      automatically selected.
 
-    * `linkDomain`: The optional custom Firebase Hosting domain to use when the link is to be opened via a specified mobile app. The domain must be configured in Firebase Hosting and owned by the project. This cannot be a default Hosting domain (`web.app` or `firebaseapp.com`).  This replaces the deprecated `dynamicLinkDomain` setting.
+    * `linkDomain`: The optional custom Firebase Hosting domain to use
+      when the link is to be opened using a specified mobile app. The domain
+      must be configured in Firebase Hosting and owned by the project.
+      This cannot be a default Hosting domain (`web.app` or
+      `firebaseapp.com`). This replaces the deprecated `dynamicLinkDomain`
+      setting.
 
     ```dart
     var acs = ActionCodeSettings(
@@ -120,7 +134,7 @@ potentially intercepted by intermediary servers.
 
 Firebase Dynamic Links is deprecated; Firebase Hosting is now used to send a sign-in link. Follow the guides for platform specific configuration:
 
-- [Android](https://firebase.google.com/docs/auth/android/email-link-auth#complete-android-signin) and
+- [Android](https://firebase.google.com/docs/auth/android/email-link-auth#complete-android-signin)
 - [iOS](https://firebase.google.com/docs/auth/ios/email-link-auth#complete-apple-signin)
 - [Web](https://firebase.google.com/docs/auth/web/email-link-auth#completing_sign-in_in_a_web_page)
 

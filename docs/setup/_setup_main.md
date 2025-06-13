@@ -130,9 +130,11 @@ flutterfire configure
     `DefaultFirebaseOptions` object exported by the configuration file:
 
     ```dart
+    WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
+    runApp(const MyApp());
     ```
 
 1.  Rebuild your Flutter application:
@@ -193,7 +195,8 @@ You're all set! Your Flutter apps are registered and configured to use Firebase.
 {% setvar YES %}<div class="center compare-yes"></div>{% endsetvar %}
 
 Product                                          | Plugin name                    | iOS     | Android | Web     | Other Apple<br>(macOS, etc.) | Windows
--------------------------------------------------|--------------------------------|---------|---------|---------|--------------------------|--------
+-------------------------------------------------|--------------------------------|---------|---------|---------|:--------------------------:|:-------:
+[{{firebase_vertexai}}][vertex ai docs]  <sup>1</sup> | `firebase_ai`             | {{YES}} | {{YES}} | {{YES}} | beta |
 [{{analytics}}][analytics docs]                  | `firebase_analytics`           | {{YES}} | {{YES}} | {{YES}} | beta |
 [{{app_check}}][app check docs]                  | `firebase_app_check`           | {{YES}} | {{YES}} | {{YES}} | beta |
 [{{auth}}][auth docs]                            | `firebase_auth`                | {{YES}} | {{YES}} | {{YES}} | beta | beta
@@ -202,6 +205,7 @@ Product                                          | Plugin name                  
 [{{messaging_longer}}][fcm docs]                 | `firebase_messaging`           | {{YES}} | {{YES}} | {{YES}} | beta |
 [{{storage}}][storage docs]                      | `firebase_storage`             | {{YES}} | {{YES}} | {{YES}} | beta | beta
 [{{crashlytics}}][crashlytics docs]              | `firebase_crashlytics`         | {{YES}} | {{YES}} |         | beta |
+[{{data_connect_short}}][dataconnect docs]       | `firebase_data_connect`        | {{YES}} | {{YES}} | {{YES}} | |
 [{{ddls}}][ddls docs]                            | `firebase_dynamic_links`       | {{YES}} | {{YES}} |         | |
 [{{inappmessaging}}][fiam docs]                  | `firebase_in_app_messaging`    | {{YES}} | {{YES}} |         | |
 [{{firebase_installations}}][installations docs] | `firebase_app_installations`   | {{YES}} | {{YES}} | {{YES}} | beta |
@@ -209,6 +213,12 @@ Product                                          | Plugin name                  
 [{{perfmon}}][perfmon docs]                      | `firebase_performance`         | {{YES}} | {{YES}} | {{YES}} | |
 [{{database}}][rtdb docs]                        | `firebase_database`            | {{YES}} | {{YES}} | {{YES}} | beta |
 [{{remote_config}}][remote config docs]          | `firebase_remote_config`       | {{YES}} | {{YES}} | {{YES}} | beta |
+
+<sup>
+  <b>1</b> <em>{{firebase_vertexai}} was formerly called
+  "{{vertex_ai_in_firebase}}" with the plugin
+  <code>firebase_vertexai</code>.</em>
+</sup>
 
 Caution: Firebase on Windows is not intended for production use cases, only local development workflows.
 
@@ -322,6 +332,7 @@ By default, the Firebase Flutter SDK auto-injects the Firebase JavaScript SDK wh
 [fcm docs]: /docs/cloud-messaging/flutter/client
 [storage docs]: /docs/storage/flutter/start
 [crashlytics docs]: /docs/crashlytics/get-started?platform=flutter
+[dataconnect docs]: /docs/data-connect/flutter-sdk
 [ddls docs]: /docs/dynamic-links/flutter/create
 [fiam docs]: /docs/in-app-messaging/get-started?platform=flutter
 [installations docs]: /docs/projects/manage-installations
@@ -329,3 +340,4 @@ By default, the Firebase Flutter SDK auto-injects the Firebase JavaScript SDK wh
 [perfmon docs]: /docs/perf-mon/flutter/get-started
 [rtdb docs]: /docs/database/flutter/start
 [remote config docs]: /docs/remote-config/get-started?platform=flutter
+[vertex ai docs]: /docs/ai-logic/get-started
