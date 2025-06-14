@@ -15,11 +15,30 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:firebase_ai/firebase_ai.dart';
 import 'package:firebase_ai/src/error.dart';
 import 'package:firebase_ai/src/imagen_content.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'mocks/mock_core.dart';
+
+// Mock HttpApiClient
 void main() {
+  setupFirebaseAIMocks();
+
+  setUpAll(() async {
+    await Firebase.initializeApp(
+      name: 'testApp',
+      options: const FirebaseOptions(
+        apiKey: 'test-api-key',
+        appId: 'test-app-id',
+        messagingSenderId: 'test-sender-id',
+        projectId: 'test-project-id',
+      ),
+    );
+  });
+
   group('ImagenInlineImage', () {
     test('fromJson with valid base64', () {
       final json = {

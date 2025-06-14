@@ -15,6 +15,8 @@ import 'dart:developer';
 
 import 'package:meta/meta.dart';
 
+import 'imagen_content.dart';
+
 /// Specifies the level of safety filtering for image generation.
 ///
 /// If not specified, default will be "block_medium_and_above".
@@ -230,5 +232,88 @@ final class ImagenFormat {
         'mimeType': mimeType,
         if (compressionQuality != null)
           'compressionQuality': compressionQuality,
+      };
+}
+
+/// Enum representing the mode for image editing.
+@experimental
+enum ImagenEditMode {
+  /// Inpaint mode for image editing.
+  inpaint,
+
+  /// Outpaint mode for image editing.
+  outpaint,
+}
+
+/// Enum representing the upscale factor for image upscaling.
+@experimental
+enum ImagenUpscaleFactor {
+  /// Upscale factor of 2x.
+  x2('x2'),
+
+  /// Upscale factor of 4x.
+  x4('x4');
+
+  const ImagenUpscaleFactor(this._jsonString);
+
+  final String _jsonString;
+
+  // ignore: public_member_api_docs
+  String toJson() => _jsonString;
+}
+
+/// Configuration for Imagen image editing.
+@experimental
+final class ImagenEditingConfig {
+  /// Source image for editing.
+  final ImagenInlineImage image;
+
+  /// Mask image for editing, optional for mask-free editing.
+  final ImagenInlineImage? mask;
+
+  /// Mask dilation factor.
+  final double? maskDilation;
+
+  /// Number of editing steps.
+  final int? editSteps;
+
+  /// Number of images to generate.
+  final int? numberOfImages;
+
+  /// Editing mode.
+  final ImagenEditMode? editMode;
+
+  // ignore: public_member_api_docs
+  ImagenEditingConfig({
+    required this.image,
+    this.mask,
+    this.maskDilation,
+    this.editSteps,
+    this.numberOfImages,
+    this.editMode,
+  });
+
+  /// Factory constructor for mask-free image editing.
+  /// Takes numberOfImages as an optional parameter.
+  factory ImagenEditingConfig.maskFree({
+    required ImagenInlineImage image,
+    int? numberOfImages,
+  }) {
+    return ImagenEditingConfig(
+      image: image,
+      numberOfImages: numberOfImages,
+      // Mask and editMode related to masking are left null for mask-free.
+      // Other fields like maskDilation, editSteps are also left null.
+    );
+  }
+
+  // ignore: public_member_api_docs
+  Map<String, dynamic> toJson() => {
+        'image': image.toJson(),
+        if (mask != null) 'mask': mask!.toJson(),
+        if (maskDilation != null) 'maskDilation': maskDilation,
+        if (editSteps != null) 'editSteps': editSteps,
+        if (numberOfImages != null) 'numberOfImages': numberOfImages,
+        if (editMode != null) 'editMode': editMode!.name,
       };
 }

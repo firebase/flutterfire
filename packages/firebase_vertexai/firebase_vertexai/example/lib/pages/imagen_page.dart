@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:flutter/material.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
+
+import 'package:flutter/material.dart';
 //import 'package:firebase_storage/firebase_storage.dart';
 import '../widgets/message_widget.dart';
 
@@ -80,45 +81,39 @@ class _ImagenPageState extends State<ImagenPage> {
                 vertical: 25,
                 horizontal: 15,
               ),
-              child: Row(
+              child: Column(
                 children: [
-                  Expanded(
-                    child: TextField(
-                      autofocus: true,
-                      focusNode: _textFieldFocus,
-                      controller: _textController,
-                    ),
-                  ),
-                  const SizedBox.square(
-                    dimension: 15,
-                  ),
-                  if (!_loading)
-                    IconButton(
-                      onPressed: () async {
-                        await _testImagen(_textController.text);
-                      },
-                      icon: Icon(
-                        Icons.image_search,
-                        color: Theme.of(context).colorScheme.primary,
+                  // Generate Image Row
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          autofocus: true,
+                          focusNode: _textFieldFocus,
+                          decoration: const InputDecoration(
+                            hintText: 'Enter a prompt...',
+                          ),
+                          controller: _textController,
+                        ),
                       ),
-                      tooltip: 'Imagen raw data',
-                    )
-                  else
-                    const CircularProgressIndicator(),
-                  // NOTE: Keep this API private until future release.
-                  // if (!_loading)
-                  //   IconButton(
-                  //     onPressed: () async {
-                  //       await _testImagenGCS(_textController.text);
-                  //     },
-                  //     icon: Icon(
-                  //       Icons.imagesearch_roller,
-                  //       color: Theme.of(context).colorScheme.primary,
-                  //     ),
-                  //     tooltip: 'Imagen GCS',
-                  //   )
-                  // else
-                  //   const CircularProgressIndicator(),
+                      const SizedBox.square(dimension: 15),
+                      if (!_loading)
+                        IconButton(
+                          onPressed: () async {
+                            await _generateImageFromPrompt(
+                              _textController.text,
+                            );
+                          },
+                          icon: Icon(
+                            Icons.image_search,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          tooltip: 'Generate Image',
+                        )
+                      else
+                        const CircularProgressIndicator(),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -128,7 +123,7 @@ class _ImagenPageState extends State<ImagenPage> {
     );
   }
 
-  Future<void> _testImagen(String prompt) async {
+  Future<void> _generateImageFromPrompt(String prompt) async {
     setState(() {
       _loading = true;
     });
