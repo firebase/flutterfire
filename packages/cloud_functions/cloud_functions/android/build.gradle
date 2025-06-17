@@ -3,11 +3,18 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'com.android.library'
 apply from: file("local-config.gradle")
+apply plugin: 'kotlin-android'
 
 buildscript {
+  ext.kotlin_version = "1.8.22"
   repositories {
     google()
     mavenCentral()
+  }
+
+  dependencies {
+      classpath 'com.android.tools.build:gradle:8.1.4'
+      classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
   }
 }
 
@@ -48,7 +55,12 @@ android {
       sourceCompatibility project.ext.javaVersion
       targetCompatibility project.ext.javaVersion
   }
-  
+
+  sourceSets {
+    main.java.srcDirs += "src/main/kotlin"
+    test.java.srcDirs += "src/test/kotlin"
+  }
+
   buildFeatures {
     buildConfig = true
   }
@@ -64,6 +76,12 @@ android {
     implementation 'androidx.annotation:annotation:1.7.0'
     implementation 'org.reactivestreams:reactive-streams:1.0.4'
   }
+
+  kotlinOptions {
+    jvmTarget = JavaVersion.VERSION_17
+  }
+  
 }
 
 apply from: file("./user-agent.gradle")
+apply plugin: 'org.jetbrains.kotlin.android'

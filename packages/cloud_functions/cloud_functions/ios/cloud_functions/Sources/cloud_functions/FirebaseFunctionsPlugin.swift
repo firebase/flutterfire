@@ -15,9 +15,33 @@
 #endif
 import FirebaseFunctions
 
+extension FlutterError: Error {}
+
 let kFLTFirebaseFunctionsChannelName = "plugins.flutter.io/firebase_functions"
 
-public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin {
+public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin,
+  CloudFunctionsHostApi {
+  func call(arguments: [String: Any?], completion: @escaping (Result<Any?, any Error>) -> Void) {
+    httpsFunctionCall(arguments: arguments) { result, error in
+      if let error {
+        completion(.failure(error))
+      } else {
+        completion(.success(result))
+      }
+    }
+  }
+
+  func registerEventChannel(arguments: [String: Any],
+                            completion: @escaping (Result<Void, any Error>) -> Void) {
+    let eventChannelId = arguments["eventChannelId"]!
+    let eventChannelName = "\(kFLTFirebaseFunctionsChannelName)/\(eventChannelId)"
+    let eventChannel = FlutterEventChannel(name: eventChannelName, binaryMessenger: binaryMessenger)
+    let functions = getFunctions(arguments: arguments)
+    let streamHandler = FunctionsStreamHandler(functions: functions)
+    eventChannel.setStreamHandler(streamHandler)
+    completion(.success(()))
+  }
+
   private let binaryMessenger: FlutterBinaryMessenger
 
   init(binaryMessenger: FlutterBinaryMessenger) {
@@ -52,46 +76,8 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
       binaryMessenger = registrar.messenger()
     #endif
 
-    let channel = FlutterMethodChannel(
-      name: kFLTFirebaseFunctionsChannelName,
-      binaryMessenger: binaryMessenger
-    )
     let instance = FirebaseFunctionsPlugin(binaryMessenger: binaryMessenger)
-    registrar.addMethodCallDelegate(instance, channel: channel)
-  }
-
-  private func registerEventChannel(arguments: [String: Any]) {
-    let eventChannelId = arguments["eventChannelId"]!
-    let eventChannelName = "\(kFLTFirebaseFunctionsChannelName)/\(eventChannelId)"
-    let eventChannel = FlutterEventChannel(name: eventChannelName, binaryMessenger: binaryMessenger)
-    let functions = getFunctions(arguments: arguments)
-    let streamHandler = FunctionsStreamHandler(functions: functions)
-    eventChannel.setStreamHandler(streamHandler)
-  }
-
-  public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    guard let arguments = call.arguments as? [String: Any] else {
-      result(FlutterError(code: "invalid_arguments",
-                          message: "Invalid arguments",
-                          details: nil))
-      return
-    }
-
-    if call.method == "FirebaseFunctions#registerEventChannel" {
-      registerEventChannel(arguments: arguments)
-      result(nil)
-    } else if call.method == "FirebaseFunctions#call" {
-      httpsFunctionCall(arguments: arguments) { success, error in
-        if let error {
-          result(error)
-        } else {
-          result(success)
-        }
-      }
-    } else {
-      result(FlutterMethodNotImplemented)
-      return
-    }
+    CloudFunctionsHostApiSetup.setUp(binaryMessenger: binaryMessenger, api: instance)
   }
 
   private func httpsFunctionCall(arguments: [String: Any],
