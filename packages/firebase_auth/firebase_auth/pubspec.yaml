@@ -1,4 +1,5 @@
 name: firebase_auth
+resolution: workspace
 description: Flutter plugin for Firebase Auth, enabling
   authentication using passwords, phone numbers and identity providers
   like Google, Facebook and Twitter.

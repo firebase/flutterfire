@@ -1,4 +1,5 @@
 name: firebase_storage_example
+resolution: workspace
 description: Demonstrates how to use the firebase_storage plugin.
 
 environment:

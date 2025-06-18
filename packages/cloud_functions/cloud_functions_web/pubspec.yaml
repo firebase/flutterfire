@@ -1,4 +1,5 @@
 name: cloud_functions_web
+resolution: workspace
 description: The web implementation of cloud_functions
 homepage: https://github.com/firebase/flutterfire/tree/main/packages/cloud_functions/cloud_functions_web
 repository: https://github.com/firebase/flutterfire/tree/main/packages/cloud_functions/cloud_functions_web

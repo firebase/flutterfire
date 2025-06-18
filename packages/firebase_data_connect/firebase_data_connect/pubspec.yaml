@@ -1,4 +1,5 @@
 name: firebase_data_connect
+resolution: workspace
 description: 'Flutter plugin for Firebase Data Connect, a relational database service that lets you build and scale using a fully-managed PostgreSQL database powered by Cloud SQL.'
 version: 0.1.5+1
 homepage: https://firebase.google.com/docs/data-connect/quickstart?platform=flutter

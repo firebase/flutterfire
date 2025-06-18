@@ -1,4 +1,5 @@
 name: cloud_functions
+resolution: workspace
 description: A Flutter plugin allowing you to use Firebase Cloud Functions.
 version: 5.5.2
 homepage: https://firebase.google.com/docs/functions

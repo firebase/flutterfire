@@ -1,4 +1,5 @@
 name: firebase_analytics_web
+resolution: workspace
 description: The web implementation of firebase_analytics
 homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_analytics/firebase_analytics_web
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_analytics/firebase_analytics_web

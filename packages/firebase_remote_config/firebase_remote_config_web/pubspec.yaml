@@ -1,4 +1,5 @@
 name: firebase_remote_config_web
+resolution: workspace
 description: The web implementation of firebase_remote_config
 homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_remote_config/firebase_remote_config_web
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_remote_config/firebase_remote_config_web

@@ -1,4 +1,5 @@
 name: firebase_analytics_platform_interface
+resolution: workspace
 description: A common platform interface for the firebase_analytics plugin.
 homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_analytics/firebase_analytics_platform_interface
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_analytics/firebase_analytics_platform_interface

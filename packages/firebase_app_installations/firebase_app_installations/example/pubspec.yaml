@@ -1,4 +1,5 @@
 name: firebase_app_installations_example
+resolution: workspace
 description: A new Flutter project.
 
 publish_to: 'none'

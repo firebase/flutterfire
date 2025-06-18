@@ -1,4 +1,5 @@
 name: _flutterfire_internals
+resolution: workspace
 description: A package hosting Dart code shared between FlutterFire plugins.
 homepage: https://firebase.google.com/docs/firestore
 repository: https://github.com/firebase/flutterfire/tree/main/packages/_flutterfire_internals

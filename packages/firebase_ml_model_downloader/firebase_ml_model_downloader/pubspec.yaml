@@ -1,4 +1,5 @@
 name: firebase_ml_model_downloader
+resolution: workspace
 description: A Flutter plugin allowing you to use Firebase Ml Model Downloader.
 version: 0.3.3+5
 homepage: https://firebase.google.com/docs/ml/flutter/use-custom-models

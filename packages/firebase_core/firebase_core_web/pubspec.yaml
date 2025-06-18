@@ -1,4 +1,5 @@
 name: firebase_core_web
+resolution: workspace
 description: The web implementation of firebase_core
 homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_core/firebase_core_web
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_core/firebase_core_web

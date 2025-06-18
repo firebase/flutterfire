@@ -1,4 +1,5 @@
 name: firebase_ml_model_downloader_example
+resolution: workspace
 description: Demonstrates how to use the firebase_ml_model_downloader plugin.
 
 publish_to: 'none'

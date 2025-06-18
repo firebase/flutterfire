@@ -1,4 +1,5 @@
 name: firebase_auth_web
+resolution: workspace
 description: The web implementation of firebase_auth
 homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_auth/firebase_auth_web
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_auth/firebase_auth_web

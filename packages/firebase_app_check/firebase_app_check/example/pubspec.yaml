@@ -1,4 +1,5 @@
 name: firebase_app_check_example
+resolution: workspace
 description: Firebase App Check example application.
 
 publish_to: 'none'

@@ -1,4 +1,5 @@
 name: firebase_remote_config_example
+resolution: workspace
 description: Demonstrates how to use the firebase_remote_config plugin.
 
 environment:

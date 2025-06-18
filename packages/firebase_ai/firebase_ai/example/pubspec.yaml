@@ -1,4 +1,5 @@
 name: firebase_ai_example
+resolution: workspace
 description: "Example project to show how to use the Firebase AI SDK."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.

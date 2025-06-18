@@ -1,4 +1,5 @@
 name: firebase_storage_web
+resolution: workspace
 description: The web implementation of firebase_storage
 homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_storage/firebase_storage_web
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_storage/firebase_storage_web

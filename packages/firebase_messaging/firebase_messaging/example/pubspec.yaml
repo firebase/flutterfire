@@ -1,4 +1,5 @@
 name: firebase_messaging_example
+resolution: workspace
 description: Demonstrates how to use the firebase_messaging plugin.
 
 environment:

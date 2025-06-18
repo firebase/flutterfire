@@ -1,4 +1,5 @@
 name: firebase_analytics_example
+resolution: workspace
 description: Demonstrates how to use the firebase_analytics plugin.
 
 environment:

@@ -1,4 +1,5 @@
 name: firebase_in_app_messaging_example
+resolution: workspace
 description: Demonstrates how to use the firebase_in_app_messaging plugin.
 publish_to: 'none'
 

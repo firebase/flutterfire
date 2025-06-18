@@ -1,4 +1,5 @@
 name: firebase_database_web
+resolution: workspace
 description: The web implementation of firebase_database
 version: 0.2.6+13
 homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_database/firebase_database_web

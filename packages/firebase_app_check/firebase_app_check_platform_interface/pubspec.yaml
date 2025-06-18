@@ -1,4 +1,5 @@
 name: firebase_app_check_platform_interface
+resolution: workspace
 description: A common platform interface for the firebase_app_check plugin.
 homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_app_check/firebase_app_check_platform_interface
 version: 0.1.1+7

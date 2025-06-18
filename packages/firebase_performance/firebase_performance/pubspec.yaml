@@ -1,4 +1,5 @@
 name: firebase_performance
+resolution: workspace
 description:
   Flutter plugin for Google Performance Monitoring for Firebase, an app
   measurement solution that monitors traces and HTTP/S network requests on Android and

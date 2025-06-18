@@ -1,4 +1,5 @@
 name: cloud_firestore_example
+resolution: workspace
 description: Demonstrates how to use the firestore plugin.
 
 environment:

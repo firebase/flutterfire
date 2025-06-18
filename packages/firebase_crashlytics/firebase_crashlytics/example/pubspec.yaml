@@ -1,4 +1,5 @@
 name: firebase_crashlytics_example
+resolution: workspace
 description: Demonstrates how to use the firebase_crashlytics plugin.
 
 environment:
