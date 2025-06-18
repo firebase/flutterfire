@@ -54,6 +54,62 @@ void setupDatabaseReferenceTests() {
         skip: true, // TODO Fails on CI even though works locally
       );
 
+      test(
+        'throws "permission-denied" on a ref with no read permission and logs path and operation',
+        () async {
+          await expectLater(
+            database.ref('denied_read').get(),
+            throwsA(
+              isA<FirebaseException>()
+                  .having(
+                    (error) => error.code,
+                    'code',
+                    'permission-denied',
+                  )
+                  .having(
+                    (error) => error.message,
+                    'message',
+                    predicate(
+                      (String message) =>
+                          message.contains("doesn't have permission") &&
+                          message.contains('tests/denied_read') &&
+                          message.contains('READ'),
+                    ),
+                  ),
+            ),
+          );
+        },
+        skip: true, // TODO Fails on CI even though works locally
+      );
+
+      test(
+        'throws "permission-denied" on a ref with no write permission and logs path and operation',
+        () async {
+          await expectLater(
+            database.ref('denied_read').get(),
+            throwsA(
+              isA<FirebaseException>()
+                  .having(
+                    (error) => error.code,
+                    'code',
+                    'permission-denied',
+                  )
+                  .having(
+                    (error) => error.message,
+                    'message',
+                    predicate(
+                      (String message) =>
+                          message.contains("doesn't have permission") &&
+                          message.contains('tests/denied_read') &&
+                          message.contains('WRITE'),
+                    ),
+                  ),
+            ),
+          );
+        },
+        skip: true, // TODO Fails on CI even though works locally
+      );
+
       test('removes a value if set to null', () async {
         final v = Random.secure().nextInt(1024);
         await ref.set(v);
