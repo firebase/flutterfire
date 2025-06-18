@@ -23,7 +23,6 @@ void main() {
   bool mockPlatformExceptionThrown = false;
   bool mockExceptionThrown = false;
   String kName = 'test_name';
-  Uri kUri = Uri.parse('https://test.com');
   String kOrigin = 'test_origin';
   dynamic kParameters = {'foo': 'bar'};
   HttpsCallableOptions kOptions = HttpsCallableOptions();
