@@ -64,7 +64,7 @@ class FlutterFirebaseFunctionsPlugin
         val functionName = arguments["functionName"] as String?
         val functionUri = arguments["functionUri"] as String?
         val origin = arguments["origin"] as String?
-        val timeout = arguments["timeout"] as Int?
+        val timeout = (arguments["timeout"] as Number?)?.toInt()
         val limitedUseAppCheckToken =
           Objects.requireNonNull(arguments["limitedUseAppCheckToken"]) as Boolean
         val parameters = arguments["parameters"]
