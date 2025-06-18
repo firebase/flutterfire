@@ -9,10 +9,10 @@ workspace:
   - packages/cloud_firestore/cloud_firestore/example
   - packages/cloud_firestore/cloud_firestore_web
   - packages/cloud_firestore/cloud_firestore_platform_interface
-  - packages/cloud_firestore/cloud_functions
-  - packages/cloud_firestore/cloud_functions/example
-  - packages/cloud_firestore/cloud_functions_web
-  - packages/cloud_firestore/cloud_functions_platform_interface
+  - packages/cloud_functions/cloud_functions
+  - packages/cloud_functions/cloud_functions/example
+  - packages/cloud_functions/cloud_functions_web
+  - packages/cloud_functions/cloud_functions_platform_interface
   - packages/firebase_ai/firebase_ai
   - packages/firebase_ai/firebase_ai/example
   - packages/firebase_analytics/firebase_analytics
@@ -73,7 +73,7 @@ workspace:
 
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
+  sdk: '>=3.6.0 <4.0.0'
 
 dev_dependencies:
   cli_util: ^0.4.1

@@ -7,7 +7,7 @@ repository: https://github.com/firebase/flutterfire/tree/main/packages/cloud_fir
 version: 4.4.9
 
 environment:
-  sdk: '>=3.4.0 <4.0.0'
+  sdk: '>=3.6.0 <4.0.0'
   flutter: '>=3.22.0'
 
 dependencies:

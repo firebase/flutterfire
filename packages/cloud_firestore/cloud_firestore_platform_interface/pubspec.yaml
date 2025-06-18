@@ -6,7 +6,7 @@ homepage: https://github.com/firebase/flutterfire/tree/main/packages/cloud_fires
 repository: https://github.com/firebase/flutterfire/tree/main/packages/cloud_firestore/cloud_firestore_platform_interface
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
+  sdk: '>=3.6.0 <4.0.0'
   flutter: '>=3.3.0'
 
 dependencies:
