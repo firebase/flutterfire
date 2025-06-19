@@ -531,7 +531,7 @@ public class FirebaseDatabasePlugin
             result.success(r);
           } else {
             Exception exception = task.getException();
-            
+
             // Extract path from arguments if available
             String path = null;
             if (arguments != null && arguments.containsKey(Constants.PATH)) {
@@ -541,7 +541,7 @@ public class FirebaseDatabasePlugin
             // Determine operation type based on method call
             String operation = null;
             switch (call.method) {
-              // Write operations
+                // Write operations
               case "DatabaseReference#set":
               case "DatabaseReference#setWithPriority":
               case "DatabaseReference#update":
@@ -552,12 +552,12 @@ public class FirebaseDatabasePlugin
               case "OnDisconnect#update":
                 operation = "WRITE";
                 break;
-              // Read operations
+                // Read operations
               case "Query#get":
               case "Query#observe":
                 operation = "READ";
                 break;
-              // Operations that don't involve data access
+                // Operations that don't involve data access
               case "FirebaseDatabase#goOnline":
               case "FirebaseDatabase#goOffline":
               case "FirebaseDatabase#purgeOutstandingWrites":
@@ -579,7 +579,8 @@ public class FirebaseDatabasePlugin
                   "firebase_database",
                   "An unknown error occurred handling native method call " + call.method,
                   exception);
-              e = FlutterFirebaseDatabaseException.fromException(exception, path, operation);
+              e = 
+                  FlutterFirebaseDatabaseException.fromException(exception, path, operation);
             }
 
             result.error(e.getCode(), e.getMessage(), e.getAdditionalData());

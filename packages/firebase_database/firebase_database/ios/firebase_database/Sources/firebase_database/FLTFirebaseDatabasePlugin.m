@@ -83,7 +83,7 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
           NSString *operation = nil;
           if ([call.method hasPrefix:@"DatabaseReference#"] || [call.method hasPrefix:@"OnDisconnect#"]) {
             if ([call.method containsString:@"set"] || [call.method containsString:@"update"] || 
-                [call.method containsString:@"runTransaction"]) {
+                [call.method containsString:@"runTransaction"] || [call.method containsString:@"setPriority"]) {
               operation = @"WRITE";
             }
           } else if ([call.method hasPrefix:@"Query#"]) {

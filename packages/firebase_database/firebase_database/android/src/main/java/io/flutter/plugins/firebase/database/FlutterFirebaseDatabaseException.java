@@ -29,12 +29,19 @@ public class FlutterFirebaseDatabaseException extends Exception {
   }
 
   public FlutterFirebaseDatabaseException(
-      @NonNull String code, @NonNull String message, @Nullable String path, @Nullable Map<String, Object> additionalData) {
+      @NonNull String code,
+      @NonNull String message,
+      @Nullable String path,
+      @Nullable Map<String, Object> additionalData) {
     this(code, message, path, null, additionalData);
   }
 
   public FlutterFirebaseDatabaseException(
-      @NonNull String code, @NonNull String message, @Nullable String path, @Nullable String operation, @Nullable Map<String, Object> additionalData) {
+      @NonNull String code,
+      @NonNull String message,
+      @Nullable String path,
+      @Nullable String operation,
+      @Nullable Map<String, Object> additionalData) {
     this.code = code;
     this.message = message;
     this.path = path;
@@ -56,15 +63,16 @@ public class FlutterFirebaseDatabaseException extends Exception {
     }
   }
 
-  static FlutterFirebaseDatabaseException fromDatabaseError(DatabaseError e) {
+  static FlutterFirebaseDatabaseException fromDatabaseError(final DatabaseError e) {
     return fromDatabaseError(e, null, null);
   }
 
-  static FlutterFirebaseDatabaseException fromDatabaseError(DatabaseError e, String path) {
+  static FlutterFirebaseDatabaseException fromDatabaseError(final DatabaseError e, final String path) {
     return fromDatabaseError(e, path, null);
   }
 
-  static FlutterFirebaseDatabaseException fromDatabaseError(DatabaseError e, String path, String operation) {
+  static FlutterFirebaseDatabaseException fromDatabaseError(
+      final DatabaseError e, final String path, final String operation) {
     final int errorCode = e.getCode();
     
     String code = UNKNOWN_ERROR_CODE;
@@ -133,28 +141,28 @@ public class FlutterFirebaseDatabaseException extends Exception {
     return new FlutterFirebaseDatabaseException(code, message, path, operation, additionalData);
   }
 
-  static FlutterFirebaseDatabaseException fromDatabaseException(DatabaseException e) {
+  static FlutterFirebaseDatabaseException fromDatabaseException(final DatabaseException e) {
     return fromDatabaseException(e, null, null);
   }
 
-  static FlutterFirebaseDatabaseException fromDatabaseException(DatabaseException e, String path) {
+  static FlutterFirebaseDatabaseException fromDatabaseException(final DatabaseException e, final String path) {
     return fromDatabaseException(e, path, null);
   }
 
-  static FlutterFirebaseDatabaseException fromDatabaseException(DatabaseException e, String path, String operation) {
+  static FlutterFirebaseDatabaseException fromDatabaseException(final DatabaseException e, final String path, final String operation) {
     final DatabaseError error = DatabaseError.fromException(e);
     return fromDatabaseError(error, path, operation);
   }
 
-  static FlutterFirebaseDatabaseException fromException(@Nullable Exception e) {
+  static FlutterFirebaseDatabaseException fromException(@Nullable final Exception e) {
     return fromException(e, null, null);
   }
 
-  static FlutterFirebaseDatabaseException fromException(@Nullable Exception e, @Nullable String path) {
+  static FlutterFirebaseDatabaseException fromException(@Nullable final Exception e, @Nullable final String path) {
     return fromException(e, path, null);
   }
 
-  static FlutterFirebaseDatabaseException fromException(@Nullable Exception e, @Nullable String path, @Nullable String operation) {
+  static FlutterFirebaseDatabaseException fromException(@Nullable final Exception e, @Nullable final String path, @Nullable final String operation) {
     if (e == null) return unknown(null, path, operation);
     return unknown(e.getMessage(), path, operation);
   }
@@ -163,15 +171,15 @@ public class FlutterFirebaseDatabaseException extends Exception {
     return unknown(null, null, null);
   }
 
-  static FlutterFirebaseDatabaseException unknown(@Nullable String errorMessage) {
+  static FlutterFirebaseDatabaseException unknown(@Nullable final String errorMessage) {
     return unknown(errorMessage, null, null);
   }
 
-  static FlutterFirebaseDatabaseException unknown(@Nullable String errorMessage, @Nullable String path) {
+  static FlutterFirebaseDatabaseException unknown(@Nullable final String errorMessage, @Nullable final String path) {
     return unknown(errorMessage, path, null);
   }
 
-  static FlutterFirebaseDatabaseException unknown(@Nullable String errorMessage, @Nullable String path, @Nullable String operation) {
+  static FlutterFirebaseDatabaseException unknown(@Nullable final String errorMessage, @Nullable final String path, @Nullable final String operation) {
     final Map<String, Object> details = new HashMap<>();
     String code = UNKNOWN_ERROR_CODE;
 
