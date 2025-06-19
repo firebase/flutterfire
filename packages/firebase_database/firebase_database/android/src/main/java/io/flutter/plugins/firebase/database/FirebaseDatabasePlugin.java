@@ -568,20 +568,11 @@ public class FirebaseDatabasePlugin
             }
 
             FlutterFirebaseDatabaseException e;
-
-            if (exception instanceof FlutterFirebaseDatabaseException) {
-              e = (FlutterFirebaseDatabaseException) exception;
-            } else if (exception instanceof DatabaseException) {
-              e = 
-                  FlutterFirebaseDatabaseException.fromDatabaseError(
-                      (DatabaseException) exception, path);
+            if (exception instanceof DatabaseException) {
+              e = FlutterFirebaseDatabaseException.fromDatabaseException(
+                  (DatabaseException) exception, path, operation);
             } else {
-              Log.e(
-                  "firebase_database",
-                  "An unknown error occurred handling native method call " + call.method,
-                  exception);
-              e = 
-                  FlutterFirebaseDatabaseException.fromException(exception, path, operation);
+              e = FlutterFirebaseDatabaseException.fromException(exception, path, operation);
             }
 
             result.error(e.getCode(), e.getMessage(), e.getAdditionalData());
