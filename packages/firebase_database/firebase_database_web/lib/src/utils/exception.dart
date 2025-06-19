@@ -7,7 +7,7 @@ part of '../../firebase_database_web.dart';
 // Cannot use `guardWebExceptions` since we are inferring the
 // exception type from the message.
 FirebaseException convertFirebaseDatabaseException(Object exception,
-    [StackTrace? stackTrace]) {
+    [StackTrace? stackTrace, String? path, String? operation]) {
   final castedJSObject = exception as core_interop.JSError;
   String code = 'unknown';
   String message = castedJSObject.message?.toDart ?? '';
@@ -32,7 +32,12 @@ FirebaseException convertFirebaseDatabaseException(Object exception,
   } else if (lowerCaseMessage.contains('write was canceled')) {
     code = 'write-cancelled';
   }
-
+  if (path != null) {
+    message += ' at path: $path';
+  }
+  if (operation != null) {
+    message += ' operation: $operation';
+  }
   return FirebaseException(
     plugin: 'firebase_database',
     code: code,

@@ -82,7 +82,7 @@ class QueryWeb extends QueryPlatform {
       final result = await _getQueryDelegateInstance(modifiers).get();
       return webSnapshotToPlatformSnapshot(ref, result);
     } catch (e, s) {
-      throw convertFirebaseDatabaseException(e, s);
+      throw convertFirebaseDatabaseException(e, s, path, 'READ');
     }
   }
 

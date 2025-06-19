@@ -211,7 +211,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
         snapshot: DataSnapshot._fromJsObject(castedJsTransaction.snapshot),
       );
     } catch (e, s) {
-      throw convertFirebaseDatabaseException(e, s);
+      throw convertFirebaseDatabaseException(e, s, path, 'WRITE');
     }
   }
 }
@@ -249,6 +249,12 @@ class QueryEvent {
 class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   /// DatabaseReference to the Query's location.
   DatabaseReference get ref => DatabaseReference.getInstance(jsObject.ref);
+
+  /// The path of this Query.
+  String get path {
+    final refPath = Uri.parse(jsObject.ref.toString()).path;
+    return refPath.isEmpty ? '/' : refPath;
+  }
 
   Stream<QueryEvent> _onValue(String appName, String hashCode) => _createStream(
         'value',
