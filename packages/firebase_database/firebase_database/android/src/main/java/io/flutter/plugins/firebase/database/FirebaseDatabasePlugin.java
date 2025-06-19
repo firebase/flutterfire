@@ -6,7 +6,6 @@ package io.flutter.plugins.firebase.database;
 
 import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.registerPlugin;
 
-import android.util.Log;
 import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
@@ -569,8 +568,9 @@ public class FirebaseDatabasePlugin
 
             FlutterFirebaseDatabaseException e;
             if (exception instanceof DatabaseException) {
-              e = FlutterFirebaseDatabaseException.fromDatabaseException(
-                  (DatabaseException) exception, path, operation);
+              e =
+                  FlutterFirebaseDatabaseException.fromDatabaseException(
+                      (DatabaseException) exception, path, operation);
             } else {
               e = FlutterFirebaseDatabaseException.fromException(exception, path, operation);
             }
