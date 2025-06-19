@@ -1,0 +1,36 @@
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+class PasswordPolicyApi {
+  final String _apiKey;
+  final String _apiUrl = 'https://identitytoolkit.googleapis.com/v2/passwordPolicy?key=';
+
+  PasswordPolicyApi(this._apiKey);
+
+  final int schemaVersion = 1;
+
+  Future<Map<String, dynamic>> fetchPasswordPolicy() async {
+    try {
+      final response = await http.get(Uri.parse('$_apiUrl$_apiKey'));
+      if (response.statusCode == 200) {
+        final policy = json.decode(response.body);
+
+        // Validate schema version
+        final _schemaVersion = policy['schemaVersion'];
+        if (!isCorrectSchemaVersion(_schemaVersion)) {
+          throw Exception('Schema Version mismatch, expected version 1 but got $policy');
+        }
+
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to fetch password policy, status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch password policy: $e');
+    }
+  }
+
+  bool isCorrectSchemaVersion(int _schemaVersion) {
+    return schemaVersion == _schemaVersion;
+  }
+}
