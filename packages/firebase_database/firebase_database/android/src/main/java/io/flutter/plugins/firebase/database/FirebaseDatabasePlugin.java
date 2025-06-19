@@ -572,8 +572,9 @@ public class FirebaseDatabasePlugin
             if (exception instanceof FlutterFirebaseDatabaseException) {
               e = (FlutterFirebaseDatabaseException) exception;
             } else if (exception instanceof DatabaseException) {
-              e = FlutterFirebaseDatabaseException.fromDatabaseException(
-                  (DatabaseException) exception, path, operation);
+              e = 
+                  FlutterFirebaseDatabaseException.fromDatabaseError(
+                      (DatabaseException) exception, path);
             } else {
               Log.e(
                   "firebase_database",
