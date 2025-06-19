@@ -81,7 +81,15 @@ Content parseContent(Object jsonObject) {
 
 /// Parse the [Part] from json object.
 Part parsePart(Object? jsonObject) {
-  if (jsonObject is Map && jsonObject.containsKey('functionCall')) {
+  if (jsonObject is! Map<String, Object?>) {
+    throw unhandledFormat('Part', jsonObject);
+  }
+  // Extract common thought-related fields from the top-level JSON object.
+  final bool? thought = jsonObject['thought'] as bool?;
+  final Uint8List? thoughtSignature = jsonObject.containsKey('thoughtSignature')
+      ? base64Decode(jsonObject['thoughtSignature']! as String)
+      : null;
+  if (jsonObject.containsKey('functionCall')) {
     final functionCall = jsonObject['functionCall'];
     if (functionCall is Map &&
         functionCall.containsKey('name') &&
@@ -90,51 +98,86 @@ Part parsePart(Object? jsonObject) {
         functionCall['name'] as String,
         functionCall['args'] as Map<String, Object?>,
         id: functionCall['id'] as String?,
+        thought: thought,
+        thoughtSignature: thoughtSignature,
       );
     } else {
       throw unhandledFormat('functionCall', functionCall);
     }
   }
   return switch (jsonObject) {
-    {'text': final String text} => TextPart(text),
+    {'text': final String text} => TextPart(
+        text,
+        thought: thought,
+        thoughtSignature: thoughtSignature,
+      ),
     {
       'file_data': {
         'file_uri': final String fileUri,
         'mime_type': final String mimeType
       }
     } =>
-      FileData(mimeType, fileUri),
+      FileData(
+        mimeType,
+        fileUri,
+        thought: thought,
+        thoughtSignature: thoughtSignature,
+      ),
     {
       'functionResponse': {'name': String _, 'response': Map<String, Object?> _}
     } =>
       throw UnimplementedError('FunctionResponse part not yet supported'),
-    {'inlineData': {'mimeType': String mimeType, 'data': String bytes}} =>
-      InlineDataPart(mimeType, base64Decode(bytes)),
+    {
+      'inlineData': {
+        'mimeType': String mimeType,
+        'data': String bytes,
+      }
+    } =>
+      InlineDataPart(
+        mimeType,
+        base64Decode(bytes),
+        thought: thought,
+        thoughtSignature: thoughtSignature,
+      ),
     _ => throw unhandledFormat('Part', jsonObject),
   };
 }
 
 /// A datatype containing media that is part of a multi-part [Content] message.
 sealed class Part {
+  // ignore: public_member_api_docs
+  Part({this.thought, this.thoughtSignature});
+
+  /// Indicates if the part is thought from the model.
+  final bool? thought;
+
+  /// An opaque signature for the thought.
+  ///
+  /// So it can be reused in subsequent requests.
+  final Uint8List? thoughtSignature;
+
   /// Convert the [Part] content to json format.
   Object toJson();
 }
 
 /// A [Part] with the text content.
-final class TextPart implements Part {
+final class TextPart extends Part {
   // ignore: public_member_api_docs
-  TextPart(this.text);
+  TextPart(this.text, {super.thought, super.thoughtSignature});
 
   /// The text content of the [Part]
   final String text;
   @override
-  Object toJson() => {'text': text};
+  Object toJson() => {
+        'text': text,
+      };
 }
 
 /// A [Part] with the byte content of a file.
-final class InlineDataPart implements Part {
+final class InlineDataPart extends Part {
   // ignore: public_member_api_docs
-  InlineDataPart(this.mimeType, this.bytes, {this.willContinue});
+  InlineDataPart(this.mimeType, this.bytes,
+      {this.willContinue, super.thought, super.thoughtSignature});
 
   /// File type of the [InlineDataPart].
   /// https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-multimodal-prompts#media_requirements
@@ -165,9 +208,10 @@ final class InlineDataPart implements Part {
 /// A predicted `FunctionCall` returned from the model that contains
 /// a string representing the `FunctionDeclaration.name` with the
 /// arguments and their values.
-final class FunctionCall implements Part {
+final class FunctionCall extends Part {
   // ignore: public_member_api_docs
-  FunctionCall(this.name, this.args, {this.id});
+  FunctionCall(this.name, this.args,
+      {this.id, super.thought, super.thoughtSignature});
 
   /// The name of the function to call.
   final String name;
@@ -192,7 +236,9 @@ final class FunctionCall implements Part {
 }
 
 /// The response class for [FunctionCall]
-final class FunctionResponse implements Part {
+///
+/// note: this part will not extends [thought] and [thoughtSignature]
+final class FunctionResponse extends Part {
   // ignore: public_member_api_docs
   FunctionResponse(this.name, this.response, {this.id});
 
@@ -221,9 +267,10 @@ final class FunctionResponse implements Part {
 }
 
 /// A [Part] with Firebase Storage uri as prompt content
-final class FileData implements Part {
+final class FileData extends Part {
   // ignore: public_member_api_docs
-  FileData(this.mimeType, this.fileUri);
+  FileData(this.mimeType, this.fileUri,
+      {super.thought, super.thoughtSignature});
 
   /// File type of the [FileData].
   /// https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-multimodal-prompts#media_requirements
@@ -234,6 +281,9 @@ final class FileData implements Part {
 
   @override
   Object toJson() => {
-        'file_data': {'file_uri': fileUri, 'mime_type': mimeType}
+        'file_data': {
+          'file_uri': fileUri,
+          'mime_type': mimeType,
+        }
       };
 }
