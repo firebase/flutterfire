@@ -69,47 +69,51 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
-  FLTFirebaseMethodCallErrorBlock errorBlock =
-      ^(NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
-        NSError *_Nullable error) {
-        if (code == nil) {
-          // Extract path from arguments if available
-          NSString *path = nil;
-          if (call.arguments != nil && [call.arguments isKindOfClass:[NSDictionary class]]) {
-            path = call.arguments[@"path"];
-          }
+  FLTFirebaseMethodCallErrorBlock errorBlock = ^(
+      NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
+      NSError *_Nullable error) {
+    if (code == nil) {
+      // Extract path from arguments if available
+      NSString *path = nil;
+      if (call.arguments != nil && [call.arguments isKindOfClass:[NSDictionary class]]) {
+        path = call.arguments[@"path"];
+      }
 
-          // Determine operation type based on method call
-          NSString *operation = nil;
-          if ([call.method hasPrefix:@"DatabaseReference#"] || [call.method hasPrefix:@"OnDisconnect#"]) {
-            if ([call.method containsString:@"set"] || [call.method containsString:@"update"] || 
-                [call.method containsString:@"runTransaction"] || [call.method containsString:@"setPriority"]) {
-              operation = @"WRITE";
-            }
-          } else if ([call.method hasPrefix:@"Query#"]) {
-            if ([call.method containsString:@"get"] || [call.method containsString:@"observe"]) {
-              operation = @"READ";
-            }
-          }
+      // Determine operation type based on method call
+      NSString *operation = nil;
+      if ([call.method hasPrefix:@"DatabaseReference#"] ||
+          [call.method hasPrefix:@"OnDisconnect#"]) {
+        if ([call.method containsString:@"set"] || [call.method containsString:@"update"] ||
+            [call.method containsString:@"runTransaction"] ||
+            [call.method containsString:@"setPriority"]) {
+          operation = @"WRITE";
+        }
+      } else if ([call.method hasPrefix:@"Query#"]) {
+        if ([call.method containsString:@"get"] || [call.method containsString:@"observe"]) {
+          operation = @"READ";
+        }
+      }
 
-          NSArray *codeAndErrorMessage = [FLTFirebaseDatabaseUtils codeAndMessageFromNSError:error path:path operation:operation];
-          code = codeAndErrorMessage[0];
-          message = codeAndErrorMessage[1];
-          details = @{
-            @"code" : code,
-            @"message" : message,
-            @"path" : path ?: [NSNull null],
-            @"operation" : operation ?: [NSNull null],
-          };
-        }
-        if ([@"unknown" isEqualToString:code]) {
-          NSLog(@"FLTFirebaseDatabase: An error occurred while calling method %@", call.method);
-        }
-        flutterResult([FLTFirebasePlugin createFlutterErrorFromCode:code
-                                                            message:message
-                                                    optionalDetails:details
-                                                 andOptionalNSError:error]);
+      NSArray *codeAndErrorMessage = [FLTFirebaseDatabaseUtils codeAndMessageFromNSError:error
+                                                                                    path:path
+                                                                               operation:operation];
+      code = codeAndErrorMessage[0];
+      message = codeAndErrorMessage[1];
+      details = @{
+        @"code" : code,
+        @"message" : message,
+        @"path" : path ?: [NSNull null],
+        @"operation" : operation ?: [NSNull null],
       };
+    }
+    if ([@"unknown" isEqualToString:code]) {
+      NSLog(@"FLTFirebaseDatabase: An error occurred while calling method %@", call.method);
+    }
+    flutterResult([FLTFirebasePlugin createFlutterErrorFromCode:code
+                                                        message:message
+                                                optionalDetails:details
+                                             andOptionalNSError:error]);
+  };
 
   FLTFirebaseMethodCallResult *methodCallResult =
       [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];

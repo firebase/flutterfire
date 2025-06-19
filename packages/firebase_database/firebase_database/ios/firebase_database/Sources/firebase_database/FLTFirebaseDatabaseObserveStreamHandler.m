@@ -46,9 +46,9 @@
   };
 
   id cancelBlock = ^(NSError *error) {
-    NSArray *codeAndMessage = 
-        [FLTFirebaseDatabaseUtils codeAndMessageFromNSError:error 
-                                                      path:[_databaseQuery.ref URL]
+    NSArray *codeAndMessage =
+        [FLTFirebaseDatabaseUtils codeAndMessageFromNSError:error
+                                                       path:[_databaseQuery.ref URL]
                                                   operation:@"READ"];
     NSString *code = codeAndMessage[0];
     NSString *message = codeAndMessage[1];

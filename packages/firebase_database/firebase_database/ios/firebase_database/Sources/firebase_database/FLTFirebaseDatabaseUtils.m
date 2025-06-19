@@ -191,7 +191,9 @@ static __strong NSMutableDictionary<NSString *, FIRDatabase *> *cachedDatabaseIn
   return [self codeAndMessageFromNSError:error path:path operation:nil];
 }
 
-+ (NSArray *)codeAndMessageFromNSError:(NSError *)error path:(NSString *)path operation:(NSString *)operation {
++ (NSArray *)codeAndMessageFromNSError:(NSError *)error
+                                  path:(NSString *)path
+                             operation:(NSString *)operation {
   NSString *code = @"unknown";
 
   if (error == nil) {
