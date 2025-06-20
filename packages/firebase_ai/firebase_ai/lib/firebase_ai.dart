@@ -65,8 +65,11 @@ export 'src/imagen_api.dart'
         ImagenSafetyFilterLevel,
         ImagenPersonFilterLevel,
         ImagenGenerationConfig,
-        ImagenAspectRatio;
-export 'src/imagen_content.dart' show ImagenInlineImage;
+        ImagenAspectRatio,
+        ImagenEditingConfig,
+        ImagenEditMode,
+        ImagenUpscaleFactor;
+export 'src/imagen_content.dart' show ImagenInlineImage, ImagenGenerationResponse;
 export 'src/live_api.dart'
     show
         LiveGenerationConfig,
