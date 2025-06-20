@@ -734,7 +734,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// - **meetsUppercaseRequirement**: A boolean indicating if the password meets the uppercase requirement.
   /// - **meetsDigitsRequirement**: A boolean indicating if the password meets the digits requirement.
   /// - **meetsSymbolsRequirement**: A boolean indicating if the password meets the symbols requirement.
-  Future Map<String, dynamic> passwordPolicy(FirebaseAuth auth, String password) async {
+  Future Map<String, dynamic> validatePassword(FirebaseAuth auth, String password) async {
     PasswordPolicyApi passwordPolicyApi = PasswordPolicyApi(auth);
     Map<String, dynamic> passwordPolicy = await passwordPolicyApi.fetchPasswordPolicy();
 
