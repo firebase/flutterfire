@@ -7,13 +7,13 @@ import 'package:firebase_core_platform_interface/test.dart';
 
 class MockFirebaseApp implements TestFirebaseCoreHostApi {
   @override
-  Future<PigeonInitializeResponse> initializeApp(
+  Future<CoreInitializeResponse> initializeApp(
     String appName,
-    PigeonFirebaseOptions initializeAppRequest,
+    CoreFirebaseOptions initializeAppRequest,
   ) async {
-    return PigeonInitializeResponse(
+    return CoreInitializeResponse(
       name: appName,
-      options: PigeonFirebaseOptions(
+      options: CoreFirebaseOptions(
         apiKey: '123',
         projectId: '123',
         appId: '123',
@@ -24,11 +24,11 @@ class MockFirebaseApp implements TestFirebaseCoreHostApi {
   }
 
   @override
-  Future<List<PigeonInitializeResponse?>> initializeCore() async {
+  Future<List<CoreInitializeResponse>> initializeCore() async {
     return [
-      PigeonInitializeResponse(
+      CoreInitializeResponse(
         name: defaultFirebaseAppName,
-        options: PigeonFirebaseOptions(
+        options: CoreFirebaseOptions(
           apiKey: '123',
           projectId: '123',
           appId: '123',
@@ -40,8 +40,8 @@ class MockFirebaseApp implements TestFirebaseCoreHostApi {
   }
 
   @override
-  Future<PigeonFirebaseOptions> optionsFromResource() async {
-    return PigeonFirebaseOptions(
+  Future<CoreFirebaseOptions> optionsFromResource() async {
+    return CoreFirebaseOptions(
       apiKey: '123',
       projectId: '123',
       appId: '123',
@@ -55,5 +55,5 @@ class MockFirebaseApp implements TestFirebaseCoreHostApi {
 /// If you need to customize the mock, you can implement [TestFirebaseCoreHostApi]
 /// and call `TestFirebaseCoreHostApi.setup(MyMock());`
 void setupFirebaseCoreMocks() {
-  TestFirebaseCoreHostApi.setup(MockFirebaseApp());
+  TestFirebaseCoreHostApi.setUp(MockFirebaseApp());
 }

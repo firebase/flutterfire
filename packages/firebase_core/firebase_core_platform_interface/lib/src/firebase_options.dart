@@ -57,7 +57,7 @@ class FirebaseOptions {
   /// This constructor is used when platforms cannot directly return a
   /// [FirebaseOptions] instance, for example when data is sent back from a
   /// [MethodChannel].
-  FirebaseOptions.fromPigeon(PigeonFirebaseOptions options)
+  FirebaseOptions.fromPigeon(CoreFirebaseOptions options)
       : apiKey = options.apiKey,
         appId = options.appId,
         messagingSenderId = options.messagingSenderId,
