@@ -4,6 +4,7 @@
 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:core';
 
 class PasswordPolicyApi {
   final String _apiKey;
