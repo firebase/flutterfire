@@ -40,14 +40,21 @@ class PasswordPolicyImpl {
       customStrengthOptions['requireSymbols'] = responseOptions['containsNonAlphanumericCharacter'];
     }
 
-    enforcementState = policy['enforcementState'] == 'ENFORCEMENT_STATE_UNSPECIFIED'
-        ? 'OFF'
-        : policy['enforcementState'];
+    // Handle both 'enforcementState' and 'enforcement' field names
+    final enforcement = policy['enforcementState'] ?? policy['enforcement'];
+    enforcementState = enforcement == 'ENFORCEMENT_STATE_UNSPECIFIED' 
+        ? 'OFF' 
+        : (enforcement ?? 'OFF');
 
-    allowedNonAlphanumericCharacters = responseOptions['allowedNonAlphanumericCharacters'] ?? [];
+    // allowedNonAlphanumericCharacters can be at top level or in customStrengthOptions
+    allowedNonAlphanumericCharacters = List<String>.from(
+      policy['allowedNonAlphanumericCharacters'] ?? 
+      responseOptions['allowedNonAlphanumericCharacters'] ?? 
+      []
+    );
 
     forceUpgradeOnSignin = policy['forceUpgradeOnSignin'] ?? false;
-    schemaVersion = policy['schemaVersion'];
+    schemaVersion = policy['schemaVersion'] ?? 1; // Default to 1 if not provided
   }
 
   Map<String,dynamic> isPasswordValid(String password) {
