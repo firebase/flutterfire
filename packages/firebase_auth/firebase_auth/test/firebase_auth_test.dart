@@ -15,6 +15,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import '../lib/src/password_policy/password_policy_impl.dart';
+import '../lib/src/password_policy/password_policy.dart';
+import '../lib/src/password_policy/password_policy_status.dart';
 
 import './mock.dart';
 
@@ -57,6 +59,7 @@ void main() {
     'schemaVersion': 1,
     'enforcement': 'OFF',
   };
+  final PasswordPolicy kMockPasswordPolicyObject = PasswordPolicy(kMockPasswordPolicy);
   const int kMockPort = 31337;
 
   final TestAuthProvider testAuthProvider = TestAuthProvider();
@@ -789,40 +792,40 @@ void main() {
 
     group('passwordPolicy', () {
       test('passwordPolicy should be initialized with correct parameters', () async {
-        PasswordPolicyImpl passwordPolicy = PasswordPolicyImpl(kMockPasswordPolicy);
-        expect(passwordPolicy.policy, equals(kMockPasswordPolicy));
+        PasswordPolicyImpl passwordPolicy = PasswordPolicyImpl(kMockPasswordPolicyObject);
+        expect(passwordPolicy.policy, equals(kMockPasswordPolicyObject));
       });
 
-      PasswordPolicyImpl passwordPolicy = PasswordPolicyImpl(kMockPasswordPolicy);
+      PasswordPolicyImpl passwordPolicy = PasswordPolicyImpl(kMockPasswordPolicyObject);
 
       test('should return true for valid password', () async {
-        final status = passwordPolicy.isPasswordValid(kMockValidPassword);
-        expect(status['status'], isTrue);
+        final PasswordPolicyStatus status = passwordPolicy.isPasswordValid(kMockValidPassword);
+        expect(status.status, isTrue);
       });
 
       test('should return false for invalid password that is too short', () async {
-        final status = passwordPolicy.isPasswordValid(kMockInvalidPassword);
-        expect(status['status'], isFalse);
+        final PasswordPolicyStatus status = passwordPolicy.isPasswordValid(kMockInvalidPassword);
+        expect(status.status, isFalse);
       });
 
       test('should return false for invalid password with no capital characters', () async {
-        final status = passwordPolicy.isPasswordValid(kMockInvalidPassword2);
-        expect(status['status'], isFalse);
+        final PasswordPolicyStatus status = passwordPolicy.isPasswordValid(kMockInvalidPassword2);
+        expect(status.status, isFalse);
       });
 
       test('should return false for invalid password with no lowercase characters', () async {
-        final status = passwordPolicy.isPasswordValid(kMockInvalidPassword3);
-        expect(status['status'], isFalse);
+        final PasswordPolicyStatus status = passwordPolicy.isPasswordValid(kMockInvalidPassword3);
+        expect(status.status, isFalse);
       });
 
       test('should return false for invalid password with no numbers', () async {
-        final status = passwordPolicy.isPasswordValid(kMockInvalidPassword4);
-        expect(status['status'], isFalse);
+        final PasswordPolicyStatus status = passwordPolicy.isPasswordValid(kMockInvalidPassword4);
+        expect(status.status, isFalse);
       });
 
       test('should return false for invalid password with no symbols', () async {
-        final status = passwordPolicy.isPasswordValid(kMockInvalidPassword5);
-        expect(status['status'], isFalse);
+        final PasswordPolicyStatus status = passwordPolicy.isPasswordValid(kMockInvalidPassword5);
+        expect(status.status, isFalse);
       });
     });
 

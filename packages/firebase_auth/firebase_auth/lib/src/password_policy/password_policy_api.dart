@@ -4,20 +4,21 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
+import 'password_policy.dart';
 import 'dart:convert';
 import 'dart:core';
 
 class PasswordPolicyApi {
-  final FirebaseAuth auth;
+  final FirebaseAuth _auth;
   final String _apiUrl = 'https://identitytoolkit.googleapis.com/v2/passwordPolicy?key=';
 
-  PasswordPolicyApi(this.auth);
+  PasswordPolicyApi(this._auth);
 
-  final int schemaVersion = 1;
+  final int _schemaVersion = 1;
 
   Future<Map<String, dynamic>> fetchPasswordPolicy() async {
     try {
-      final String _apiKey = auth.app.options.apiKey;
+      final String _apiKey = _auth.app.options.apiKey;
       final response = await http.get(Uri.parse('$_apiUrl$_apiKey'));
       if (response.statusCode == 200) {
         final policy = json.decode(response.body);
@@ -28,6 +29,9 @@ class PasswordPolicyApi {
           throw Exception('Schema Version mismatch, expected version 1 but got $policy');
         }
 
+        Map<String, dynamic> rawPolicy = json.decode(response.body);
+        
+
         return json.decode(response.body);
       } else {
         throw Exception('Failed to fetch password policy, status code: ${response.statusCode}');
@@ -37,7 +41,7 @@ class PasswordPolicyApi {
     }
   }
 
-  bool isCorrectSchemaVersion(int _schemaVersion) {
-    return schemaVersion == _schemaVersion;
+  bool isCorrectSchemaVersion(int schemaVersion) {
+    return _schemaVersion == schemaVersion;
   }
 }

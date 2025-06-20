@@ -3,120 +3,74 @@
 // BSD-style license that can be found in the LICENSE file.
 import 'dart:core';
 import 'dart:convert';
+import 'password_policy.dart';
+import 'password_policy_status.dart';
 
 class PasswordPolicyImpl {
-  final Map<String, dynamic> policy;
+  final PasswordPolicy _policy;
 
-  // Backend enforced minimum
-  final int MIN_PASSWORD_LENGTH = 6;
+  PasswordPolicyImpl(this._policy);
 
-  final Map<String, dynamic> customStrengthOptions = {};
-  late final String enforcementState;
-  late final bool forceUpgradeOnSignin;
-  late final int schemaVersion;
-  late final List<String> allowedNonAlphanumericCharacters;
+  // Getter to access the policy
+  PasswordPolicy get policy => _policy;
 
-  PasswordPolicyImpl(this.policy) {
-    _setParametersFromResponse();
-  }
+  PasswordPolicyStatus isPasswordValid(String password) {
+    PasswordPolicyStatus status = PasswordPolicyStatus(true, _policy);
 
-  void _setParametersFromResponse() {
-    final responseOptions = policy['customStrengthOptions'] ?? {};
-
-    customStrengthOptions['minPasswordLength'] = responseOptions['minPasswordLength'] ?? MIN_PASSWORD_LENGTH;
-    if (responseOptions['maxPasswordLength'] != null) {
-      customStrengthOptions['maxPasswordLength'] = responseOptions['maxPasswordLength'];
-    }
-    if (responseOptions['containsLowercaseCharacter'] != null) {
-      customStrengthOptions['requireLowercase'] = responseOptions['containsLowercaseCharacter'];
-    }
-    if (responseOptions['containsUppercaseCharacter'] != null) {
-      customStrengthOptions['requireUppercase'] = responseOptions['containsUppercaseCharacter'];
-    }
-    if (responseOptions['containsNumericCharacter'] != null) {
-      customStrengthOptions['requireDigits'] = responseOptions['containsNumericCharacter'];
-    }
-    if (responseOptions['containsNonAlphanumericCharacter'] != null) {
-      customStrengthOptions['requireSymbols'] = responseOptions['containsNonAlphanumericCharacter'];
-    }
-
-    // Handle both 'enforcementState' and 'enforcement' field names
-    final enforcement = policy['enforcementState'] ?? policy['enforcement'];
-    enforcementState = enforcement == 'ENFORCEMENT_STATE_UNSPECIFIED' 
-        ? 'OFF' 
-        : (enforcement ?? 'OFF');
-
-    // allowedNonAlphanumericCharacters can be at top level or in customStrengthOptions
-    allowedNonAlphanumericCharacters = List<String>.from(
-      policy['allowedNonAlphanumericCharacters'] ?? 
-      responseOptions['allowedNonAlphanumericCharacters'] ?? 
-      []
-    );
-
-    forceUpgradeOnSignin = policy['forceUpgradeOnSignin'] ?? false;
-    schemaVersion = policy['schemaVersion'] ?? 1; // Default to 1 if not provided
-  }
-
-  Map<String,dynamic> isPasswordValid(String password) {
-    Map<String,dynamic> status = {
-      'status': true,
-      'passwordPolicy': policy,
-    };
-
-    validatePasswordLengthOptions(password, status);
-    validatePasswordCharacterOptions(password, status);
+    _validatePasswordLengthOptions(password, status);
+    _validatePasswordCharacterOptions(password, status);
 
     return status;
   }
 
-  void validatePasswordLengthOptions(String password, Map<String,dynamic> status) {
-    int? minPasswordLength = customStrengthOptions['minPasswordLength'];
-    int? maxPasswordLength = customStrengthOptions['maxPasswordLength'];
+  void _validatePasswordLengthOptions(String password, PasswordPolicyStatus status) {
+    int? minPasswordLength = _policy.minPasswordLength;
+    int? maxPasswordLength = _policy.maxPasswordLength;
 
     if (minPasswordLength != null) {
-      status['meetsMinPasswordLength'] = password.length >= minPasswordLength;
-      if (!(status['meetsMinPasswordLength'] as bool)) {
-        status['status'] = false;
+      status.meetsMinPasswordLength = password.length >= minPasswordLength;
+      if (!(status.meetsMinPasswordLength as bool)) {
+        status.status = false;
       }
     }
     if (maxPasswordLength != null) {
-      status['meetsMaxPasswordLength'] = password.length <= maxPasswordLength;
-      if (!(status['meetsMaxPasswordLength'] as bool)) {
-        status['status'] = false;
+      status.meetsMaxPasswordLength = password.length <= maxPasswordLength;
+      if (!(status.meetsMaxPasswordLength as bool)) {
+        status.status = false;
       }
     }
   }
 
-  void validatePasswordCharacterOptions(String password, Map<String,dynamic> status) {
-    bool? requireLowercase = customStrengthOptions['requireLowercase'];
-    bool? requireUppercase = customStrengthOptions['requireUppercase'];
-    bool? requireDigits = customStrengthOptions['requireDigits'];
-    bool? requireSymbols = customStrengthOptions['requireSymbols'];
+  void _validatePasswordCharacterOptions(String password, PasswordPolicyStatus status) {
+    bool? requireLowercase = _policy.containsLowercaseCharacter;
+    bool? requireUppercase = _policy.containsUppercaseCharacter;
+    bool? requireDigits = _policy.containsNumericCharacter;
+    bool? requireSymbols = _policy.containsNonAlphanumericCharacter;
 
     if (requireLowercase == true) {
-      status['meetsLowercaseRequirement'] = password.contains(RegExp(r'[a-z]'));
-      if (!(status['meetsLowercaseRequirement'] as bool)) {
-        status['status'] = false;
+      status.meetsLowercaseRequirement = password.contains(RegExp(r'[a-z]'));
+      if (!(status.meetsLowercaseRequirement as bool)) {
+        status.status = false;
       }
     }
     if (requireUppercase == true) {
-      status['meetsUppercaseRequirement'] = password.contains(RegExp(r'[A-Z]'));
-      if (!(status['meetsUppercaseRequirement'] as bool)) {
-        status['status'] = false;
+      status.meetsUppercaseRequirement = password.contains(RegExp(r'[A-Z]'));
+      if (!(status.meetsUppercaseRequirement as bool)) {
+        status.status = false;
       }
     }
     if (requireDigits == true) {
-      status['meetsDigitsRequirement'] = password.contains(RegExp(r'[0-9]'));
-      if (!(status['meetsDigitsRequirement'] as bool)) {
-        status['status'] = false;
+      status.meetsDigitsRequirement = password.contains(RegExp(r'[0-9]'));
+      if (!(status.meetsDigitsRequirement as bool)) {
+        status.status = false;
       }
     }
     if (requireSymbols == true) {
       // Check if password contains any non-alphanumeric characters
       bool hasSymbol = false;
-      if (allowedNonAlphanumericCharacters.isNotEmpty) {
+      if (_policy.allowedNonAlphanumericCharacters.isNotEmpty) {
         // Check against allowed symbols
-        for (String symbol in allowedNonAlphanumericCharacters) {
+        for (String symbol in _policy.allowedNonAlphanumericCharacters) {
           if (password.contains(symbol)) {
             hasSymbol = true;
             break;
@@ -126,9 +80,9 @@ class PasswordPolicyImpl {
         // Check for any non-alphanumeric character
         hasSymbol = password.contains(RegExp(r'[^a-zA-Z0-9]'));
       }
-      status['meetsSymbolsRequirement'] = hasSymbol;
+      status.meetsSymbolsRequirement = hasSymbol;
       if (!hasSymbol) {
-        status['status'] = false;
+        status.status = false;
       }
     }
   }

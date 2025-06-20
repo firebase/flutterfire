@@ -5,8 +5,10 @@
 
 part of '../firebase_auth.dart';
 
-import 'password_policy/password_policy_impl.dart';
-import 'password_policy/password_policy_api.dart';
+// import 'password_policy/password_policy_impl.dart';
+// import 'password_policy/password_policy_api.dart';
+// import 'password_policy/password_policy.dart';
+// import 'password_policy/password_policy_status.dart';
 
 /// The entry point of the Firebase Authentication SDK.
 class FirebaseAuth extends FirebasePluginPlatform {
@@ -734,13 +736,13 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// - **meetsUppercaseRequirement**: A boolean indicating if the password meets the uppercase requirement.
   /// - **meetsDigitsRequirement**: A boolean indicating if the password meets the digits requirement.
   /// - **meetsSymbolsRequirement**: A boolean indicating if the password meets the symbols requirement.
-  Future Map<String, dynamic> validatePassword(FirebaseAuth auth, String password) async {
-    PasswordPolicyApi passwordPolicyApi = PasswordPolicyApi(auth);
-    Map<String, dynamic> passwordPolicy = await passwordPolicyApi.fetchPasswordPolicy();
+  // Future PasswordPolicyStatus validatePassword(FirebaseAuth auth, String password) async {
+  //   PasswordPolicyApi passwordPolicyApi = PasswordPolicyApi(auth);
+  //   PasswordPolicy passwordPolicy = await passwordPolicyApi.fetchPasswordPolicy();
 
-    PasswordPolicyImpl passwordPolicyImpl = PasswordPolicyImpl(passwordPolicy);
-    return passwordPolicyImpl.isPasswordValid(password);
-  }
+  //   PasswordPolicyImpl passwordPolicyImpl = PasswordPolicyImpl(passwordPolicy);
+  //   return passwordPolicyImpl.isPasswordValid(password);
+  // }
 
   /// Checks a password reset code sent to the user by email or other
   /// out-of-band mechanism.
