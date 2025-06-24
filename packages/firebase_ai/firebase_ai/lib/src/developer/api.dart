@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:convert';
+
+import '../../firebase_ai.dart';
 import '../api.dart'
     show
         BlockReason,
@@ -317,8 +320,7 @@ Part _parsePart(Object? jsonObject) {
       'functionResponse': {'name': String _, 'response': Map<String, Object?> _}
     } =>
       throw UnimplementedError('FunctionResponse part not yet supported'),
-    {'inlineData': {'mimeType': String _, 'data': String _}} =>
-      throw UnimplementedError('inlineData content part not yet supported'),
+    {'inlineData': {'mimeType': String mimeType, 'data': String data}} =>InlineDataPart(mimeType,base64Decode(data)),
     _ => throw unhandledFormat('Part', jsonObject),
   };
 }
