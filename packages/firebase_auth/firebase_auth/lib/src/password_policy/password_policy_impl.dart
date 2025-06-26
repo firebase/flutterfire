@@ -22,15 +22,14 @@ class PasswordPolicyImpl {
     return status;
   }
 
-  void _validatePasswordLengthOptions(String password, PasswordPolicyStatus status) {
-    int? minPasswordLength = _policy.minPasswordLength;
+  void _validatePasswordLengthOptions(
+      String password, PasswordPolicyStatus status) {
+    int minPasswordLength = _policy.minPasswordLength;
     int? maxPasswordLength = _policy.maxPasswordLength;
 
-    if (minPasswordLength != null) {
-      status.meetsMinPasswordLength = password.length >= minPasswordLength;
-      if (!status.meetsMinPasswordLength) {
-        status.status = false;
-      }
+    status.meetsMinPasswordLength = password.length >= minPasswordLength;
+    if (!status.meetsMinPasswordLength) {
+      status.status = false;
     }
     if (maxPasswordLength != null) {
       status.meetsMaxPasswordLength = password.length <= maxPasswordLength;
@@ -40,7 +39,8 @@ class PasswordPolicyImpl {
     }
   }
 
-  void _validatePasswordCharacterOptions(String password, PasswordPolicyStatus status) {
+  void _validatePasswordCharacterOptions(
+      String password, PasswordPolicyStatus status) {
     bool? requireLowercase = _policy.containsLowercaseCharacter;
     bool? requireUppercase = _policy.containsUppercaseCharacter;
     bool? requireDigits = _policy.containsNumericCharacter;

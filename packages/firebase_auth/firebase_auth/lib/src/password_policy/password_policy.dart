@@ -15,30 +15,35 @@ class PasswordPolicy {
   late final List<String> allowedNonAlphanumericCharacters;
   late final String enforcementState;
 
-  PasswordPolicy(this.policy){
+  PasswordPolicy(this.policy) {
     initialize();
   }
 
   void initialize() {
-    final Map<String, dynamic> customStrengthOptions = policy['customStrengthOptions'] ?? {};
-    
+    final Map<String, dynamic> customStrengthOptions =
+        policy['customStrengthOptions'] ?? {};
+
     minPasswordLength = customStrengthOptions['minPasswordLength'] ?? 6;
     maxPasswordLength = customStrengthOptions['maxPasswordLength'];
-    containsLowercaseCharacter = customStrengthOptions['containsLowercaseCharacter'];
-    containsUppercaseCharacter = customStrengthOptions['containsUppercaseCharacter'];
-    containsNumericCharacter = customStrengthOptions['containsNumericCharacter'];
-    containsNonAlphanumericCharacter = customStrengthOptions['containsNonAlphanumericCharacter'];
-    
+    containsLowercaseCharacter =
+        customStrengthOptions['containsLowercaseCharacter'];
+    containsUppercaseCharacter =
+        customStrengthOptions['containsUppercaseCharacter'];
+    containsNumericCharacter =
+        customStrengthOptions['containsNumericCharacter'];
+    containsNonAlphanumericCharacter =
+        customStrengthOptions['containsNonAlphanumericCharacter'];
+
     schemaVersion = policy['schemaVersion'] ?? 1;
     allowedNonAlphanumericCharacters = List<String>.from(
-      policy['allowedNonAlphanumericCharacters'] ?? 
-      customStrengthOptions['allowedNonAlphanumericCharacters'] ?? 
-      [],
+      policy['allowedNonAlphanumericCharacters'] ??
+          customStrengthOptions['allowedNonAlphanumericCharacters'] ??
+          [],
     );
-    
+
     final enforcement = policy['enforcement'] ?? policy['enforcementState'];
-    enforcementState = enforcement == 'ENFORCEMENT_STATE_UNSPECIFIED' 
-        ? 'OFF' 
+    enforcementState = enforcement == 'ENFORCEMENT_STATE_UNSPECIFIED'
+        ? 'OFF'
         : (enforcement ?? 'OFF');
   }
 }

@@ -715,11 +715,11 @@ class FirebaseAuth extends FirebasePluginPlatform {
 
   /// Validates the password against the password policy configured for the project or tenant.
   ///
-  /// If no tenant ID is set on the Auth instance, then this method will use the password policy configured for the project. 
-  /// Otherwise, this method will use the policy configured for the tenant. If a password policy has not been configured, 
+  /// If no tenant ID is set on the Auth instance, then this method will use the password policy configured for the project.
+  /// Otherwise, this method will use the policy configured for the tenant. If a password policy has not been configured,
   /// then the default policy configured for all projects will be used.
   ///
-  /// If an auth flow fails because a submitted password does not meet the password policy requirements and 
+  /// If an auth flow fails because a submitted password does not meet the password policy requirements and
   /// this method has previously been called, then this method will use the most recent policy available when called again.
   ///
   /// Returns a map with the following keys:
@@ -853,11 +853,11 @@ class FirebaseAuth extends FirebasePluginPlatform {
 
   /// Validates a password against the password policy configured for the project or tenant.
   ///
-  /// If no tenant ID is set on the Auth instance, then this method will use the password policy configured for the project. 
-  /// Otherwise, this method will use the policy configured for the tenant. If a password policy has not been configured, 
+  /// If no tenant ID is set on the Auth instance, then this method will use the password policy configured for the project.
+  /// Otherwise, this method will use the policy configured for the tenant. If a password policy has not been configured,
   /// then the default policy configured for all projects will be used.
   ///
-  /// If an auth flow fails because a submitted password does not meet the password policy requirements and this method has previously been called, 
+  /// If an auth flow fails because a submitted password does not meet the password policy requirements and this method has previously been called,
   /// then this method will use the most recent policy available when called again.
   ///
   /// Returns a map with the following keys:
@@ -884,9 +884,11 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// - **operation-not-allowed**:
   ///  - Thrown if email/password accounts are not enabled. Enable
   ///    email/password accounts in the Firebase Console, under the Auth tab.
-  Future<PasswordPolicyStatus> validatePassword(FirebaseAuth auth, String password) async {
+  Future<PasswordPolicyStatus> validatePassword(
+      FirebaseAuth auth, String password) async {
     PasswordPolicyApi passwordPolicyApi = PasswordPolicyApi(auth);
-    PasswordPolicy passwordPolicy = await passwordPolicyApi.fetchPasswordPolicy();
+    PasswordPolicy passwordPolicy =
+        await passwordPolicyApi.fetchPasswordPolicy();
     PasswordPolicyImpl passwordPolicyImpl = PasswordPolicyImpl(passwordPolicy);
     return passwordPolicyImpl.isPasswordValid(password);
   }
