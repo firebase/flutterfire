@@ -52,7 +52,7 @@ abstract class TestFirebaseCoreHostApi {
   Future<CoreInitializeResponse> initializeApp(
       String appName, CoreFirebaseOptions initializeAppRequest);
 
-  Future<List<CoreInitializeResponse>> initializeCore();
+  Future<List<CoreInitializeResponse?>> initializeCore();
 
   Future<CoreFirebaseOptions> optionsFromResource();
 
