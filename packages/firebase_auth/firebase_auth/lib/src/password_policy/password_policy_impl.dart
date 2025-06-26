@@ -2,7 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 import 'dart:core';
-import 'dart:convert';
 import 'password_policy.dart';
 import 'password_policy_status.dart';
 
@@ -29,13 +28,13 @@ class PasswordPolicyImpl {
 
     if (minPasswordLength != null) {
       status.meetsMinPasswordLength = password.length >= minPasswordLength;
-      if (!(status.meetsMinPasswordLength as bool)) {
+      if (!status.meetsMinPasswordLength) {
         status.status = false;
       }
     }
     if (maxPasswordLength != null) {
       status.meetsMaxPasswordLength = password.length <= maxPasswordLength;
-      if (!(status.meetsMaxPasswordLength as bool)) {
+      if (!status.meetsMaxPasswordLength) {
         status.status = false;
       }
     }
@@ -47,30 +46,30 @@ class PasswordPolicyImpl {
     bool? requireDigits = _policy.containsNumericCharacter;
     bool? requireSymbols = _policy.containsNonAlphanumericCharacter;
 
-    if (requireLowercase == true) {
-      status.meetsLowercaseRequirement = password.contains(RegExp(r'[a-z]'));
-      if (!(status.meetsLowercaseRequirement as bool)) {
+    if (requireLowercase ?? false) {
+      status.meetsLowercaseRequirement = password.contains(RegExp('[a-z]'));
+      if (!status.meetsLowercaseRequirement) {
         status.status = false;
       }
     }
-    if (requireUppercase == true) {
-      status.meetsUppercaseRequirement = password.contains(RegExp(r'[A-Z]'));
-      if (!(status.meetsUppercaseRequirement as bool)) {
+    if (requireUppercase ?? false) {
+      status.meetsUppercaseRequirement = password.contains(RegExp('[A-Z]'));
+      if (!status.meetsUppercaseRequirement) {
         status.status = false;
       }
     }
-    if (requireDigits == true) {
-      status.meetsDigitsRequirement = password.contains(RegExp(r'[0-9]'));
-      if (!(status.meetsDigitsRequirement as bool)) {
+    if (requireDigits ?? false) {
+      status.meetsDigitsRequirement = password.contains(RegExp('[0-9]'));
+      if (!status.meetsDigitsRequirement) {
         status.status = false;
       }
     }
-    if (requireSymbols == true) {
+    if (requireSymbols ?? false) {
       // Check if password contains any non-alphanumeric characters
       bool hasSymbol = false;
       if (_policy.allowedNonAlphanumericCharacters.isNotEmpty) {
         // Check against allowed symbols
-        for (String symbol in _policy.allowedNonAlphanumericCharacters) {
+        for (final String symbol in _policy.allowedNonAlphanumericCharacters) {
           if (password.contains(symbol)) {
             hasSymbol = true;
             break;
@@ -78,7 +77,7 @@ class PasswordPolicyImpl {
         }
       } else {
         // Check for any non-alphanumeric character
-        hasSymbol = password.contains(RegExp(r'[^a-zA-Z0-9]'));
+        hasSymbol = password.contains(RegExp('[^a-zA-Z0-9]'));
       }
       status.meetsSymbolsRequirement = hasSymbol;
       if (!hasSymbol) {

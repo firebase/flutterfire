@@ -69,6 +69,10 @@ export 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 export 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebaseException;
 
+// Export password policy classes
+export 'src/password_policy/password_policy.dart';
+export 'src/password_policy/password_policy_status.dart';
+
 part 'src/confirmation_result.dart';
 part 'src/firebase_auth.dart';
 part 'src/multi_factor.dart';

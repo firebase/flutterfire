@@ -33,7 +33,7 @@ class PasswordPolicy {
     allowedNonAlphanumericCharacters = List<String>.from(
       policy['allowedNonAlphanumericCharacters'] ?? 
       customStrengthOptions['allowedNonAlphanumericCharacters'] ?? 
-      []
+      [],
     );
     
     final enforcement = policy['enforcement'] ?? policy['enforcementState'];
