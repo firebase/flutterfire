@@ -74,11 +74,10 @@ firebase::AppOptions CoreFirebaseOptionsToAppOptions(
 }
 
 // Convert a AppOptions to CoreFirebaseOptions
-CoreFirebaseOptions optionsFromFIROptions(
-    const firebase::AppOptions &options) {
-  CoreFirebaseOptions pigeon_options = CoreFirebaseOptions(
-      options.api_key(), options.app_id(), options.messaging_sender_id(),
-      options.project_id());
+CoreFirebaseOptions optionsFromFIROptions(const firebase::AppOptions &options) {
+  CoreFirebaseOptions pigeon_options =
+      CoreFirebaseOptions(options.api_key(), options.app_id(),
+                          options.messaging_sender_id(), options.project_id());
   // AppOptions initialises as empty char so we check to stop empty string to
   // Flutter Same for storage bucket below
   const char *db_url = options.database_url();

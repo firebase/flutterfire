@@ -192,9 +192,8 @@ static NSMutableDictionary<NSString *, NSString *> *customAuthDomains;
   completion([self initializeResponseFromFIRApp:[FIRApp appNamed:appNameIos]], nil);
 }
 
-- (void)initializeCoreWithCompletion:
-(nonnull void (^)(NSArray<CoreInitializeResponse *> *_Nullable,
-                      FlutterError *_Nullable))completion {
+- (void)initializeCoreWithCompletion:(nonnull void (^)(NSArray<CoreInitializeResponse *> *_Nullable,
+                                                       FlutterError *_Nullable))completion {
   void (^initializeCoreBlock)(void) = ^void() {
     NSDictionary<NSString *, FIRApp *> *firebaseApps = [FIRApp allApps];
     NSMutableArray *firebaseAppsArray = [NSMutableArray arrayWithCapacity:firebaseApps.count];
