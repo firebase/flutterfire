@@ -704,41 +704,6 @@ class FirebaseAuth extends FirebasePluginPlatform {
     }
   }
 
-  /// Signs out the current user.
-  ///
-  /// If successful, it also updates
-  /// any [authStateChanges], [idTokenChanges] or [userChanges] stream
-  /// listeners.
-  Future<void> signOut() async {
-    await _delegate.signOut();
-  }
-
-  /// Validates the password against the password policy configured for the project or tenant.
-  ///
-  /// If no tenant ID is set on the Auth instance, then this method will use the password policy configured for the project.
-  /// Otherwise, this method will use the policy configured for the tenant. If a password policy has not been configured,
-  /// then the default policy configured for all projects will be used.
-  ///
-  /// If an auth flow fails because a submitted password does not meet the password policy requirements and
-  /// this method has previously been called, then this method will use the most recent policy available when called again.
-  ///
-  /// Returns a map with the following keys:
-  /// - **status**: A boolean indicating if the password is valid.
-  /// - **passwordPolicy**: The password policy used to validate the password.
-  /// - **meetsMinPasswordLength**: A boolean indicating if the password meets the minimum length requirement.
-  /// - **meetsMaxPasswordLength**: A boolean indicating if the password meets the maximum length requirement.
-  /// - **meetsLowercaseRequirement**: A boolean indicating if the password meets the lowercase requirement.
-  /// - **meetsUppercaseRequirement**: A boolean indicating if the password meets the uppercase requirement.
-  /// - **meetsDigitsRequirement**: A boolean indicating if the password meets the digits requirement.
-  /// - **meetsSymbolsRequirement**: A boolean indicating if the password meets the symbols requirement.
-  // Future PasswordPolicyStatus validatePassword(FirebaseAuth auth, String password) async {
-  //   PasswordPolicyApi passwordPolicyApi = PasswordPolicyApi(auth);
-  //   PasswordPolicy passwordPolicy = await passwordPolicyApi.fetchPasswordPolicy();
-
-  //   PasswordPolicyImpl passwordPolicyImpl = PasswordPolicyImpl(passwordPolicy);
-  //   return passwordPolicyImpl.isPasswordValid(password);
-  // }
-
   /// Checks a password reset code sent to the user by email or other
   /// out-of-band mechanism.
   ///
