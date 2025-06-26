@@ -810,6 +810,15 @@ class FirebaseAuth extends FirebasePluginPlatform {
     return _delegate.revokeTokenWithAuthorizationCode(authorizationCode);
   }
 
+  /// Signs out the current user.
+  ///
+  /// If successful, it also updates
+  /// any [authStateChanges], [idTokenChanges] or [userChanges] stream
+  /// listeners.
+  Future<void> signOut() async {
+    await _delegate.signOut();
+  }
+
   /// Initializes the reCAPTCHA Enterprise client proactively to enhance reCAPTCHA signal collection and
   /// to complete reCAPTCHA-protected flows in a single attempt.
   Future<void> initializeRecaptchaConfig() {
