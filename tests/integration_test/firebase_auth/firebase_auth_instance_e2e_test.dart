@@ -1111,6 +1111,42 @@ void main() {
           expect(status.status, isFalse);
           expect(status.meetsSymbolsRequirement, isFalse);
         });
+
+        test('should throw an exception if the password is empty', () async {
+          try {
+            await FirebaseAuth.instance.validatePassword(
+              FirebaseAuth.instance,
+              '',
+            );
+          } catch (e) {
+            expect(
+              e,
+              isA<FirebaseAuthException>().having(
+                (e) => e.code,
+                'code',
+                equals('invalid-password'),
+              ),
+            );
+          }
+        });
+
+        test('should throw an exception if the password is null', () async {
+          try {
+            await FirebaseAuth.instance.validatePassword(
+              FirebaseAuth.instance,
+              null,
+            );
+          } catch (e) {
+            expect(
+              e,
+              isA<FirebaseAuthException>().having(
+                (e) => e.code,
+                'code',
+                equals('invalid-password'),
+              ),
+            );
+          }
+        });
       });
     },
     // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538

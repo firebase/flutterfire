@@ -859,7 +859,15 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///  - Thrown if email/password accounts are not enabled. Enable
   ///    email/password accounts in the Firebase Console, under the Auth tab.
   Future<PasswordPolicyStatus> validatePassword(
-      FirebaseAuth auth, String password) async {
+    FirebaseAuth auth,
+    String? password,
+  ) async {
+    if (password == null || password.isEmpty) {
+      throw FirebaseAuthException(
+        code: 'invalid-password',
+        message: 'Password cannot be null or empty',
+      );
+    }
     PasswordPolicyApi passwordPolicyApi = PasswordPolicyApi(auth);
     PasswordPolicy passwordPolicy =
         await passwordPolicyApi.fetchPasswordPolicy();
