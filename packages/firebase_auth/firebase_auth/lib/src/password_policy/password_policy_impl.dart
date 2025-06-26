@@ -23,7 +23,7 @@ class PasswordPolicyImpl {
   }
 
   void _validatePasswordLengthOptions(
-      String password, PasswordPolicyStatus status) {
+      String password, PasswordPolicyStatus status,) {
     int minPasswordLength = _policy.minPasswordLength;
     int? maxPasswordLength = _policy.maxPasswordLength;
 
@@ -40,7 +40,7 @@ class PasswordPolicyImpl {
   }
 
   void _validatePasswordCharacterOptions(
-      String password, PasswordPolicyStatus status) {
+      String password, PasswordPolicyStatus status,) {
     bool? requireLowercase = _policy.containsLowercaseCharacter;
     bool? requireUppercase = _policy.containsUppercaseCharacter;
     bool? requireDigits = _policy.containsNumericCharacter;

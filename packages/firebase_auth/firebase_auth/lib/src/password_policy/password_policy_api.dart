@@ -27,14 +27,14 @@ class PasswordPolicyApi {
         final _schemaVersion = policy['schemaVersion'];
         if (!isCorrectSchemaVersion(_schemaVersion)) {
           throw Exception(
-              'Schema Version mismatch, expected version 1 but got $policy');
+              'Schema Version mismatch, expected version 1 but got $policy',);
         }
 
         Map<String, dynamic> rawPolicy = json.decode(response.body);
         return PasswordPolicy(rawPolicy);
       } else {
         throw Exception(
-            'Failed to fetch password policy, status code: ${response.statusCode}');
+            'Failed to fetch password policy, status code: ${response.statusCode}',);
       }
     } catch (e) {
       throw Exception('Failed to fetch password policy: $e');
