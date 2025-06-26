@@ -72,6 +72,8 @@ export 'package:firebase_core_platform_interface/firebase_core_platform_interfac
 // Export password policy classes
 export 'src/password_policy/password_policy.dart';
 export 'src/password_policy/password_policy_status.dart';
+export 'src/password_policy/password_policy_impl.dart';
+export 'src/password_policy/password_policy_api.dart';
 
 part 'src/confirmation_result.dart';
 part 'src/firebase_auth.dart';
