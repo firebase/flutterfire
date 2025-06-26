@@ -5,11 +5,6 @@
 
 part of '../firebase_auth.dart';
 
-// import 'password_policy/password_policy_impl.dart';
-// import 'password_policy/password_policy_api.dart';
-// import 'password_policy/password_policy.dart';
-// import 'password_policy/password_policy_status.dart';
-
 /// The entry point of the Firebase Authentication SDK.
 class FirebaseAuth extends FirebasePluginPlatform {
   // Cached instances of [FirebaseAuth].
@@ -854,6 +849,46 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// to complete reCAPTCHA-protected flows in a single attempt.
   Future<void> initializeRecaptchaConfig() {
     return _delegate.initializeRecaptchaConfig();
+  }
+
+  /// Validates a password against the password policy configured for the project or tenant.
+  ///
+  /// If no tenant ID is set on the Auth instance, then this method will use the password policy configured for the project. 
+  /// Otherwise, this method will use the policy configured for the tenant. If a password policy has not been configured, 
+  /// then the default policy configured for all projects will be used.
+  ///
+  /// If an auth flow fails because a submitted password does not meet the password policy requirements and this method has previously been called, 
+  /// then this method will use the most recent policy available when called again.
+  ///
+  /// Returns a map with the following keys:
+  /// - **status**: A boolean indicating if the password is valid.
+  /// - **passwordPolicy**: The password policy used to validate the password.
+  /// - **meetsMinPasswordLength**: A boolean indicating if the password meets the minimum length requirement.
+  /// - **meetsMaxPasswordLength**: A boolean indicating if the password meets the maximum length requirement.
+  /// - **meetsLowercaseRequirement**: A boolean indicating if the password meets the lowercase requirement.
+  /// - **meetsUppercaseRequirement**: A boolean indicating if the password meets the uppercase requirement.
+  /// - **meetsDigitsRequirement**: A boolean indicating if the password meets the digits requirement.
+  /// - **meetsSymbolsRequirement**: A boolean indicating if the password meets the symbols requirement.
+  ///
+  /// A [FirebaseAuthException] maybe thrown with the following error code:
+  /// - **invalid-password**:
+  ///  - Thrown if the password is invalid.
+  /// - **network-request-failed**:
+  ///  - Thrown if there was a network request error, for example the user
+  ///    doesn't have internet connection
+  /// - **INVALID_LOGIN_CREDENTIALS** or **invalid-credential**:
+  ///  - Thrown if the password is invalid for the given email, or the account
+  ///    corresponding to the email does not have a password set.
+  ///    Depending on if you are using firebase emulator or not the code is
+  ///    different
+  /// - **operation-not-allowed**:
+  ///  - Thrown if email/password accounts are not enabled. Enable
+  ///    email/password accounts in the Firebase Console, under the Auth tab.
+  Future<PasswordPolicyStatus> validatePassword(FirebaseAuth auth, String password) async {
+    PasswordPolicyApi passwordPolicyApi = PasswordPolicyApi(auth);
+    PasswordPolicy passwordPolicy = await passwordPolicyApi.fetchPasswordPolicy();
+    PasswordPolicyImpl passwordPolicyImpl = PasswordPolicyImpl(passwordPolicy);
+    return passwordPolicyImpl.isPasswordValid(password);
   }
 
   @override

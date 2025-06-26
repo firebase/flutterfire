@@ -9,6 +9,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter/foundation.dart';
 
+import 'src/password_policy/password_policy_impl.dart';
+import 'src/password_policy/password_policy_api.dart';
+import 'src/password_policy/password_policy.dart';
+import 'src/password_policy/password_policy_status.dart';
+
 export 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart'
     show
         FirebaseAuthException,

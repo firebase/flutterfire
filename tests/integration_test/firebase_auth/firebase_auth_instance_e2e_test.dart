@@ -1066,13 +1066,13 @@ void main() {
       group('validatePassword()', () {
         test('should validate password', () async {
           final status = await FirebaseAuth.instance.validatePassword(FirebaseAuth.instance, testPassword);
-          expect(status['status'], isTrue);
-          expect(status['meetsMinPasswordLength'], isTrue);
-          expect(status['meetsMaxPasswordLength'], isTrue);
-          expect(status['meetsLowercaseRequirement'], isTrue);
-          expect(status['meetsUppercaseRequirement'], isTrue);
-          expect(status['meetsDigitsRequirement'], isTrue);
-          expect(status['meetsSymbolsRequirement'], isTrue);
+          expect(status.status, isTrue);
+          expect(status.meetsMinPasswordLength, isTrue);
+          expect(status.meetsMaxPasswordLength, isTrue);
+          expect(status.meetsLowercaseRequirement, isTrue);
+          expect(status.meetsUppercaseRequirement, isTrue);
+          expect(status.meetsDigitsRequirement, isTrue);
+          expect(status.meetsSymbolsRequirement, isTrue);
         });
       });
     },

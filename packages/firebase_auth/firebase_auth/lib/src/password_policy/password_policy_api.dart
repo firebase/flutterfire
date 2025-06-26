@@ -16,7 +16,7 @@ class PasswordPolicyApi {
 
   final int _schemaVersion = 1;
 
-  Future<Map<String, dynamic>> fetchPasswordPolicy() async {
+  Future<PasswordPolicy> fetchPasswordPolicy() async {
     try {
       final String _apiKey = _auth.app.options.apiKey;
       final response = await http.get(Uri.parse('$_apiUrl$_apiKey'));
@@ -30,9 +30,7 @@ class PasswordPolicyApi {
         }
 
         Map<String, dynamic> rawPolicy = json.decode(response.body);
-        
-
-        return json.decode(response.body);
+        return PasswordPolicy(rawPolicy);
       } else {
         throw Exception('Failed to fetch password policy, status code: ${response.statusCode}');
       }
