@@ -28,10 +28,7 @@ class MethodChannelFirebase extends FirebasePlatform {
   Future<void> _initializeCore() async {
     List<CoreInitializeResponse> apps = await api.initializeCore();
 
-    apps
-        .where((element) => element != null)
-        .cast<CoreInitializeResponse>()
-        .forEach(_initializeFirebaseAppFromMap);
+    apps.cast<CoreInitializeResponse>().forEach(_initializeFirebaseAppFromMap);
     isCoreInitialized = true;
   }
 
