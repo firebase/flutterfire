@@ -10,9 +10,9 @@ void main(List<String> arguments) async {
     throw Exception('No FlutterFire dependency arguments provided.');
   }
 
-  // Get the current git branch
-  final currentBranch = await getCurrentGitBranch();
-  print('Current git branch: $currentBranch');
+  // Get the current git branch from GitHub Actions environment or fallback to git command
+  final currentBranch = await getCurrentBranch();
+  print('Current branch: $currentBranch');
 
   // Update all Package.swift files to use branch dependencies
   await updatePackageSwiftFiles(currentBranch);
@@ -22,36 +22,63 @@ void main(List<String> arguments) async {
   await buildSwiftExampleApp('macos', plugins);
 }
 
-Future<String> getCurrentGitBranch() async {
-  final result = await Process.run('git', ['branch', '--show-current']);
-  if (result.exitCode != 0) {
-    throw Exception('Failed to get current git branch: ${result.stderr}');
+Future<String> getCurrentBranch() async {
+  // Try GitHub Actions environment variables first
+  String? branch = Platform.environment['GITHUB_HEAD_REF']; // For pull requests
+
+  if (branch == null || branch.isEmpty) {
+    branch = Platform.environment['GITHUB_REF_NAME']; // For direct pushes
   }
-  return result.stdout.toString().trim();
+
+  if (branch == null || branch.isEmpty) {
+    // Fallback to git command for local testing
+    print('GitHub Actions environment variables not found, trying git command...');
+    final result = await Process.run('git', ['branch', '--show-current']);
+    if (result.exitCode != 0) {
+      throw Exception('Failed to get current git branch: ${result.stderr}');
+    }
+    branch = result.stdout.toString().trim();
+  }
+
+  if (branch.isEmpty) {
+    throw Exception('Could not determine current branch from GitHub Actions environment or git command');
+  }
+
+  return branch;
 }
 
 Future<void> updatePackageSwiftFiles(String branch) async {
   print('Updating Package.swift files to use branch: $branch');
 
-  // List of packages to update
-  final packages = [
-    'cloud_firestore',
-    'firebase_remote_config',
-    'cloud_functions',
-    'firebase_database',
-    'firebase_auth',
-    'firebase_storage',
-    'firebase_analytics',
-    'firebase_messaging',
-    'firebase_app_check',
-    'firebase_in_app_messaging',
-    'firebase_performance',
-    'firebase_dynamic_links',
-    'firebase_crashlytics',
-    'firebase_ml_model_downloader',
-    'firebase_app_installations',
-    'firebase_core', // Add firebase_core as well
-  ];
+  // Get packages from FLUTTER_DEPENDENCIES environment variable or use arguments
+  String? flutterDepsEnv = Platform.environment['FLUTTER_DEPENDENCIES'];
+  List<String> packages;
+
+  if (flutterDepsEnv != null && flutterDepsEnv.isNotEmpty) {
+    packages = flutterDepsEnv.split(' ').where((p) => p.isNotEmpty).toList();
+    print('Using packages from FLUTTER_DEPENDENCIES: ${packages.join(', ')}');
+  } else {
+    // Fallback list for local testing
+    packages = [
+      'cloud_firestore',
+      'firebase_remote_config',
+      'cloud_functions',
+      'firebase_database',
+      'firebase_auth',
+      'firebase_storage',
+      'firebase_analytics',
+      'firebase_messaging',
+      'firebase_app_check',
+      'firebase_in_app_messaging',
+      'firebase_performance',
+      'firebase_dynamic_links',
+      'firebase_crashlytics',
+      'firebase_ml_model_downloader',
+      'firebase_app_installations',
+      'firebase_core',
+    ];
+    print('Using fallback package list for local testing: ${packages.join(', ')}');
+  }
 
   // Update root Package.swift
   await updateRootPackageSwift(branch);
