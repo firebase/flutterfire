@@ -9,9 +9,112 @@ void main(List<String> arguments) async {
   if (arguments.isEmpty) {
     throw Exception('No FlutterFire dependency arguments provided.');
   }
+
+  // Get the current git branch
+  final currentBranch = await getCurrentGitBranch();
+  print('Current git branch: $currentBranch');
+
+  // Update all Package.swift files to use branch dependencies
+  await updatePackageSwiftFiles(currentBranch);
+
   final plugins = arguments.join(',');
   await buildSwiftExampleApp('ios', plugins);
   await buildSwiftExampleApp('macos', plugins);
+}
+
+Future<String> getCurrentGitBranch() async {
+  final result = await Process.run('git', ['branch', '--show-current']);
+  if (result.exitCode != 0) {
+    throw Exception('Failed to get current git branch: ${result.stderr}');
+  }
+  return result.stdout.toString().trim();
+}
+
+Future<void> updatePackageSwiftFiles(String branch) async {
+  print('Updating Package.swift files to use branch: $branch');
+
+  // List of packages to update
+  final packages = [
+    'cloud_firestore',
+    'firebase_remote_config',
+    'cloud_functions',
+    'firebase_database',
+    'firebase_auth',
+    'firebase_storage',
+    'firebase_analytics',
+    'firebase_messaging',
+    'firebase_app_check',
+    'firebase_in_app_messaging',
+    'firebase_performance',
+    'firebase_dynamic_links',
+    'firebase_crashlytics',
+    'firebase_ml_model_downloader',
+    'firebase_app_installations',
+    'firebase_core', // Add firebase_core as well
+  ];
+
+  // Update root Package.swift
+  await updateRootPackageSwift(branch);
+
+  // Update each package's Package.swift files
+  for (final package in packages) {
+    await updatePackageSwiftForPackage(package, branch);
+  }
+}
+
+Future<void> updateRootPackageSwift(String branch) async {
+  final packageSwiftPath = 'Package.swift';
+  final file = File(packageSwiftPath);
+
+  if (!file.existsSync()) {
+    print('Warning: Root Package.swift not found at $packageSwiftPath');
+    return;
+  }
+
+  print('Updating root Package.swift');
+  final content = await file.readAsString();
+
+  // For root Package.swift, we don't need to modify it as it doesn't depend on flutterfire
+  // It's the one that provides the firebase-core-shared library
+  print('Root Package.swift does not need modification (it provides dependencies, not consumes them)');
+}
+
+Future<void> updatePackageSwiftForPackage(String packageName, String branch) async {
+  // Check both ios and macos directories
+  final platforms = ['ios', 'macos'];
+
+  for (final platform in platforms) {
+    final packageSwiftPath = 'packages/$packageName/$packageName/$platform/$packageName/Package.swift';
+    final file = File(packageSwiftPath);
+
+    if (!file.existsSync()) {
+      print('Warning: Package.swift not found at $packageSwiftPath');
+      continue;
+    }
+
+    print('Updating $packageSwiftPath');
+    final content = await file.readAsString();
+
+    // Replace exact version dependency with branch dependency
+    String updatedContent = content;
+
+    // Pattern to match the exact version dependency
+    final exactVersionPattern = RegExp(
+      r'\.package\(url: "https://github\.com/firebase/flutterfire", exact: [^)]+\)',
+      multiLine: true
+    );
+
+    // Replace with branch dependency
+    final branchDependency = '.package(url: "https://github.com/firebase/flutterfire", branch: "$branch")';
+
+    if (exactVersionPattern.hasMatch(content)) {
+      updatedContent = content.replaceAll(exactVersionPattern, branchDependency);
+      await file.writeAsString(updatedContent);
+      print('✓ Updated $packageSwiftPath to use branch: $branch');
+    } else {
+      print('⚠ No exact version dependency found in $packageSwiftPath');
+    }
+  }
 }
 
 Future<void> buildSwiftExampleApp(String platform, String plugins) async {
