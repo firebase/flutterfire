@@ -51,7 +51,7 @@ class MockFirebaseAppStorage implements TestFirebaseCoreHostApi {
   }
 
   @override
-  Future<List<CoreInitializeResponse?>> initializeCore() async {
+  Future<List<CoreInitializeResponse>> initializeCore() async {
     return [
       CoreInitializeResponse(
         name: defaultFirebaseAppName,

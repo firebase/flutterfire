@@ -26,7 +26,7 @@ class MethodChannelFirebase extends FirebasePlatform {
   /// any Firebase apps created natively and any constants which are required
   /// for a plugin to function correctly before usage.
   Future<void> _initializeCore() async {
-    List<CoreInitializeResponse?> apps = await api.initializeCore();
+    List<CoreInitializeResponse> apps = await api.initializeCore();
 
     apps
         .where((element) => element != null)
