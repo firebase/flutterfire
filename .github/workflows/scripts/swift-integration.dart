@@ -15,7 +15,7 @@ void main(List<String> arguments) async {
   print('Current branch: $currentBranch');
 
   // Update all Package.swift files to use branch dependencies
-  await updatePackageSwiftFiles(currentBranch);
+  await updatePackageSwiftFiles(currentBranch, arguments);
 
   final plugins = arguments.join(',');
   await buildSwiftExampleApp('ios', plugins);
@@ -47,63 +47,13 @@ Future<String> getCurrentBranch() async {
   return branch;
 }
 
-Future<void> updatePackageSwiftFiles(String branch) async {
+Future<void> updatePackageSwiftFiles(String branch, List<String> packages) async {
   print('Updating Package.swift files to use branch: $branch');
-
-  // Get packages from FLUTTER_DEPENDENCIES environment variable or use arguments
-  String? flutterDepsEnv = Platform.environment['FLUTTER_DEPENDENCIES'];
-  List<String> packages;
-
-  if (flutterDepsEnv != null && flutterDepsEnv.isNotEmpty) {
-    packages = flutterDepsEnv.split(' ').where((p) => p.isNotEmpty).toList();
-    print('Using packages from FLUTTER_DEPENDENCIES: ${packages.join(', ')}');
-  } else {
-    // Fallback list for local testing
-    packages = [
-      'cloud_firestore',
-      'firebase_remote_config',
-      'cloud_functions',
-      'firebase_database',
-      'firebase_auth',
-      'firebase_storage',
-      'firebase_analytics',
-      'firebase_messaging',
-      'firebase_app_check',
-      'firebase_in_app_messaging',
-      'firebase_performance',
-      'firebase_dynamic_links',
-      'firebase_crashlytics',
-      'firebase_ml_model_downloader',
-      'firebase_app_installations',
-      'firebase_core',
-    ];
-    print('Using fallback package list for local testing: ${packages.join(', ')}');
-  }
-
-  // Update root Package.swift
-  await updateRootPackageSwift(branch);
 
   // Update each package's Package.swift files
   for (final package in packages) {
     await updatePackageSwiftForPackage(package, branch);
   }
-}
-
-Future<void> updateRootPackageSwift(String branch) async {
-  final packageSwiftPath = 'Package.swift';
-  final file = File(packageSwiftPath);
-
-  if (!file.existsSync()) {
-    print('Warning: Root Package.swift not found at $packageSwiftPath');
-    return;
-  }
-
-  print('Updating root Package.swift');
-  final content = await file.readAsString();
-
-  // For root Package.swift, we don't need to modify it as it doesn't depend on flutterfire
-  // It's the one that provides the firebase-core-shared library
-  print('Root Package.swift does not need modification (it provides dependencies, not consumes them)');
 }
 
 Future<void> updatePackageSwiftForPackage(String packageName, String branch) async {
