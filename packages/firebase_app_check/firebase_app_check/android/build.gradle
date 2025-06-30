@@ -1,6 +1,9 @@
 group 'io.flutter.plugins.firebase.appcheck'
 version '1.0-SNAPSHOT'
 
+apply plugin: 'com.android.library'
+apply from: file("local-config.gradle")
+
 buildscript {
   repositories {
     google()
@@ -18,8 +21,6 @@ rootProject.allprojects {
     mavenCentral()
   }
 }
-
-apply plugin: 'com.android.library'
 
 def firebaseCoreProject = findProject(':firebase_core')
 if (firebaseCoreProject == null) {
@@ -40,16 +41,16 @@ android {
     namespace 'io.flutter.plugins.firebase.appcheck'
   }
 
-  compileSdk 35
+  compileSdkVersion project.ext.compileSdk
 
   defaultConfig {
-    minSdk 21
+    minSdkVersion project.ext.minSdk
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
 
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_17
-    targetCompatibility JavaVersion.VERSION_17
+    sourceCompatibility project.ext.javaVersion
+    targetCompatibility project.ext.javaVersion
   }
 
   buildFeatures {

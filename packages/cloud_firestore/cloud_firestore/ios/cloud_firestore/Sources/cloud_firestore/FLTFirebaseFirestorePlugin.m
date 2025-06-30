@@ -224,9 +224,8 @@ FlutterStandardMethodCodec *_codec;
     if (pigeonApp.settings.persistenceEnabled != nil) {
       bool persistEnabled = [pigeonApp.settings.persistenceEnabled boolValue];
 
-      // This is the maximum amount of cache allowed. We use the same number on android.
-      // This now causes an exception: kFIRFirestoreCacheSizeUnlimited
-      NSNumber *size = @104857600;
+      // We default to the maximum amount of cache allowed.
+      NSNumber *size = @(kFIRFirestoreCacheSizeUnlimited);
 
       if (pigeonApp.settings.cacheSizeBytes) {
         NSNumber *cacheSizeBytes = pigeonApp.settings.cacheSizeBytes;

@@ -32,8 +32,8 @@
 #else
   [registrar publish:sharedInstance];
 #endif
-  FirebaseCoreHostApiSetup(registrar.messenger, sharedInstance);
-  FirebaseAppHostApiSetup(registrar.messenger, sharedInstance);
+  SetUpFirebaseCoreHostApi(registrar.messenger, sharedInstance);
+  SetUpFirebaseAppHostApi(registrar.messenger, sharedInstance);
 }
 
 // Returns a singleton instance of the Firebase Core plugin.
@@ -81,8 +81,8 @@ static NSMutableDictionary<NSString *, NSString *> *customAuthDomains;
 
 #pragma mark - Helpers
 
-- (PigeonFirebaseOptions *)optionsFromFIROptions:(FIROptions *)options {
-  PigeonFirebaseOptions *pigeonOptions = [PigeonFirebaseOptions alloc];
+- (CoreFirebaseOptions *)optionsFromFIROptions:(FIROptions *)options {
+  CoreFirebaseOptions *pigeonOptions = [CoreFirebaseOptions alloc];
   pigeonOptions.apiKey = (id)options.APIKey ?: [NSNull null];
   pigeonOptions.appId = (id)options.googleAppID ?: [NSNull null];
   pigeonOptions.messagingSenderId = (id)options.GCMSenderID ?: [NSNull null];
@@ -96,9 +96,9 @@ static NSMutableDictionary<NSString *, NSString *> *customAuthDomains;
   return pigeonOptions;
 }
 
-- (PigeonInitializeResponse *)initializeResponseFromFIRApp:(FIRApp *)firebaseApp {
+- (CoreInitializeResponse *)initializeResponseFromFIRApp:(FIRApp *)firebaseApp {
   NSString *appNameDart = [FLTFirebasePlugin firebaseAppNameFromIosName:firebaseApp.name];
-  PigeonInitializeResponse *response = [PigeonInitializeResponse alloc];
+  CoreInitializeResponse *response = [CoreInitializeResponse alloc];
   response.name = appNameDart;
   response.options = [self optionsFromFIROptions:firebaseApp.options];
   response.isAutomaticDataCollectionEnabled = @(firebaseApp.isDataCollectionDefaultEnabled);
@@ -134,8 +134,8 @@ static NSMutableDictionary<NSString *, NSString *> *customAuthDomains;
 #pragma mark - API
 
 - (void)initializeAppAppName:(nonnull NSString *)appName
-        initializeAppRequest:(nonnull PigeonFirebaseOptions *)initializeAppRequest
-                  completion:(nonnull void (^)(PigeonInitializeResponse *_Nullable,
+        initializeAppRequest:(nonnull CoreFirebaseOptions *)initializeAppRequest
+                  completion:(nonnull void (^)(CoreInitializeResponse *_Nullable,
                                                FlutterError *_Nullable))completion {
   NSString *appNameIos = [FLTFirebasePlugin firebaseAppNameFromDartName:appName];
 
@@ -192,9 +192,8 @@ static NSMutableDictionary<NSString *, NSString *> *customAuthDomains;
   completion([self initializeResponseFromFIRApp:[FIRApp appNamed:appNameIos]], nil);
 }
 
-- (void)initializeCoreWithCompletion:
-    (nonnull void (^)(NSArray<PigeonInitializeResponse *> *_Nullable,
-                      FlutterError *_Nullable))completion {
+- (void)initializeCoreWithCompletion:(nonnull void (^)(NSArray<CoreInitializeResponse *> *_Nullable,
+                                                       FlutterError *_Nullable))completion {
   void (^initializeCoreBlock)(void) = ^void() {
     NSDictionary<NSString *, FIRApp *> *firebaseApps = [FIRApp allApps];
     NSMutableArray *firebaseAppsArray = [NSMutableArray arrayWithCapacity:firebaseApps.count];
@@ -215,7 +214,7 @@ static NSMutableDictionary<NSString *, NSString *> *customAuthDomains;
   }
 }
 
-- (void)optionsFromResourceWithCompletion:(nonnull void (^)(PigeonFirebaseOptions *_Nullable,
+- (void)optionsFromResourceWithCompletion:(nonnull void (^)(CoreFirebaseOptions *_Nullable,
                                                             FlutterError *_Nullable))completion {
   // Unsupported on iOS/MacOS.
   completion(nil, nil);

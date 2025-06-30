@@ -1,3 +1,7 @@
+## 7.7.0
+
+ - **FEAT**(auth): add support for initializeRecaptchaConfig ([#17365](https://github.com/firebase/flutterfire/issues/17365)). ([73f9028e](https://github.com/firebase/flutterfire/commit/73f9028e114874fddc8a4f76f22b247504a95a02))
+
 ## 7.6.3
 
  - **DOCS**(firebase_auth): Removed duplicates; fixed typos; removed "unnecessary use of a null check" ([#16815](https://github.com/firebase/flutterfire/issues/16815)). ([0eb17e13](https://github.com/firebase/flutterfire/commit/0eb17e13587ebfe5c8d64cbba9c0a2ccd0b7ce90))
