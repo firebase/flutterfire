@@ -6,6 +6,7 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:flutter/services.dart';
 
 import './utils/exception.dart';
@@ -25,6 +26,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   );
 
   bool? _isCrashlyticsCollectionEnabled;
+  final _api = CrashlyticsHostApi();
 
   @override
   bool get isCrashlyticsCollectionEnabled {
@@ -47,11 +49,9 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
     }
 
     try {
-      Map<String, dynamic>? data =
-          await channel.invokeMapMethod<String, dynamic>(
-              'Crashlytics#checkForUnsentReports');
+      Map<String, dynamic>? data = await _api.checkForUnsentReports();
 
-      return data!['unsentReports'];
+      return data['unsentReports'];
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -60,7 +60,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   @override
   Future<void> crash() async {
     try {
-      await channel.invokeMethod<void>('Crashlytics#crash');
+      await _api.crash();
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -69,7 +69,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   @override
   Future<void> deleteUnsentReports() async {
     try {
-      await channel.invokeMethod<void>('Crashlytics#deleteUnsentReports');
+      await _api.deleteUnsentReports();
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -78,11 +78,9 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   @override
   Future<bool> didCrashOnPreviousExecution() async {
     try {
-      Map<String, dynamic>? data =
-          await channel.invokeMapMethod<String, dynamic>(
-              'Crashlytics#didCrashOnPreviousExecution');
+      Map<String, dynamic>? data = await _api.didCrashOnPreviousExecution();
 
-      return data!['didCrashOnPreviousExecution'];
+      return data['didCrashOnPreviousExecution'];
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -99,8 +97,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
     List<Map<String, String>>? stackTraceElements,
   }) async {
     try {
-      await channel
-          .invokeMethod<void>('Crashlytics#recordError', <String, dynamic>{
+      await _api.recordError(<String, dynamic>{
         'exception': exception,
         'information': information,
         'reason': reason,
@@ -117,7 +114,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   @override
   Future<void> log(String message) async {
     try {
-      await channel.invokeMethod<void>('Crashlytics#log', <String, dynamic>{
+      await _api.log(<String, dynamic>{
         'message': message,
       });
     } on PlatformException catch (e, s) {
@@ -128,7 +125,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   @override
   Future<void> sendUnsentReports() async {
     try {
-      await channel.invokeMethod<void>('Crashlytics#sendUnsentReports');
+      await _api.sendUnsentReports();
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -137,9 +134,8 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   @override
   Future<void> setCrashlyticsCollectionEnabled(bool enabled) async {
     try {
-      Map<String, dynamic>? data = await channel
-          .invokeMapMethod<String, dynamic>(
-              'Crashlytics#setCrashlyticsCollectionEnabled', <String, dynamic>{
+      Map<String, dynamic>? data =
+          await _api.setCrashlyticsCollectionEnabled(<String, bool>{
         'enabled': enabled,
       });
 
@@ -152,8 +148,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   @override
   Future<void> setUserIdentifier(String identifier) async {
     try {
-      await channel.invokeMethod<void>(
-          'Crashlytics#setUserIdentifier', <String, dynamic>{
+      await _api.setUserIdentifier(<String, dynamic>{
         'identifier': identifier,
       });
     } on PlatformException catch (e, s) {
@@ -164,8 +159,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   @override
   Future<void> setCustomKey(String key, String value) async {
     try {
-      await channel
-          .invokeMethod<void>('Crashlytics#setCustomKey', <String, dynamic>{
+      await _api.setCustomKey(<String, dynamic>{
         'key': key,
         'value': value,
       });
