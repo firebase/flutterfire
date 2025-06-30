@@ -265,24 +265,6 @@ enum ImagenUpscaleFactor {
 /// Configuration for Imagen image editing.
 @experimental
 final class ImagenEditingConfig {
-  /// Source image for editing.
-  final ImagenInlineImage image;
-
-  /// Mask image for editing, optional for mask-free editing.
-  final ImagenInlineImage? mask;
-
-  /// Mask dilation factor.
-  final double? maskDilation;
-
-  /// Number of editing steps.
-  final int? editSteps;
-
-  /// Number of images to generate.
-  final int? numberOfImages;
-
-  /// Editing mode.
-  final ImagenEditMode? editMode;
-
   // ignore: public_member_api_docs
   ImagenEditingConfig({
     required this.image,
@@ -306,6 +288,24 @@ final class ImagenEditingConfig {
       // Other fields like maskDilation, editSteps are also left null.
     );
   }
+
+  /// Source image for editing.
+  final ImagenInlineImage image;
+
+  /// Mask image for editing, optional for mask-free editing.
+  final ImagenInlineImage? mask;
+
+  /// Mask dilation factor.
+  final double? maskDilation;
+
+  /// Number of editing steps.
+  final int? editSteps;
+
+  /// Number of images to generate.
+  final int? numberOfImages;
+
+  /// Editing mode.
+  final ImagenEditMode? editMode;
 
   // ignore: public_member_api_docs
   Map<String, dynamic> toJson() => {
