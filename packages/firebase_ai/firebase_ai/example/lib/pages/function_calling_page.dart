@@ -170,26 +170,24 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
     final functionCalls = response.functionCalls.toList();
     // When the model response with a function call, invoke the function.
     if (functionCalls.isNotEmpty) {
-      for (final functionCall in functionCalls) {
-        if (functionCall.name == 'fetchWeather') {
-          Map<String, dynamic> location =
-              functionCall.args['location']! as Map<String, dynamic>;
-          var date = functionCall.args['date']! as String;
-          var city = location['city'] as String;
-          var state = location['state'] as String;
-          final functionResult =
-              await fetchWeather(Location(city, state), date);
-          // Send the response to the model so that it can use the result to
-          // generate text for the user.
-          response = await functionCallChat.sendMessage(
-            Content.functionResponse(functionCall.name, functionResult),
-          );
-        }
+      final functionCall = functionCalls.first;
+      if (functionCall.name == 'fetchWeather') {
+        Map<String, dynamic> location =
+            functionCall.args['location']! as Map<String, dynamic>;
+        var date = functionCall.args['date']! as String;
+        var city = location['city'] as String;
+        var state = location['state'] as String;
+        final functionResult = await fetchWeather(Location(city, state), date);
+        // Send the response to the model so that it can use the result to
+        // generate text for the user.
+        response = await functionCallChat.sendMessage(
+          Content.functionResponse(functionCall.name, functionResult),
+        );
+      } else {
+        throw UnimplementedError(
+          'Function not declared to the model: ${functionCall.name}',
+        );
       }
-    } else {
-      throw UnimplementedError(
-        'Function not declared to the model: fetchWeather',
-      );
     }
     // When the model responds with non-null text content, print it.
     if (response.text case final text?) {
