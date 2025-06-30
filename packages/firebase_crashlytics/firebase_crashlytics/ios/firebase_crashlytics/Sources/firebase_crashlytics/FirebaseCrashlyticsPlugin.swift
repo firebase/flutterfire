@@ -35,24 +35,23 @@ private let kCrashlyticsArgumentDidCrashOnPreviousExecution = "didCrashOnPreviou
 
 @objc(FirebaseCrashlyticsPlugin)
 public class FirebaseCrashlyticsPlugin: NSObject, FLTFirebasePluginProtocol, CrashlyticsHostApi {
-  
+
   private override init() {
       super.init()
       // Register with the Flutter Firebase plugin registry.
     FLTFirebasePluginRegistry.sharedInstance().register(self)
-    Crashlytics.crashlytics().setValue("Flutter", forKey: "developmentPlatformName")
-    Crashlytics.crashlytics().setValue("-1", forKey: "developmentPlatformVersion")
-
+    // Use Objective-C bridge to access private APIs
+    FLTFirebaseCrashlyticsPlatformBridge.setupPlatformInfo()
   }
-  
-  
+
+
   // MARK: - Singleton
 
   // Returns a singleton instance of the Firebase Crashlytics plugin.
   public static let sharedInstance = FirebaseCrashlyticsPlugin()
 
   // MARK: - FlutterPlugin
-  
+
   @objc
   public static func register(with registrar: FlutterPluginRegistrar) {
     let binaryMessenger: FlutterBinaryMessenger
@@ -64,7 +63,7 @@ public class FirebaseCrashlyticsPlugin: NSObject, FLTFirebasePluginProtocol, Cra
     #endif
     CrashlyticsHostApiSetup.setUp(binaryMessenger: binaryMessenger, api: sharedInstance)
   }
-  
+
   func recordError(arguments: [String: Any?],
                    completion: @escaping (Result<Void, any Error>) -> Void) {
     let reason = arguments[kCrashlyticsArgumentReason] as? String
@@ -114,12 +113,19 @@ public class FirebaseCrashlyticsPlugin: NSObject, FLTFirebasePluginProtocol, Cra
 
     let exception = ExceptionModel(name: "FlutterError", reason: finalReason)
     exception.stackTrace = frames
-    exception.onDemand = true
-    exception.isFatal = fatal
+
+    // Use Objective-C bridge to configure private properties and record
+    FLTFirebaseCrashlyticsPlatformBridge.configureExceptionModel(
+      exception,
+      isFatal: fatal,
+      onDemand: true
+    )
 
     if fatal {
-      Crashlytics.crashlytics().record(onDemandExceptionModel: exception)
+      // Use private API via bridge
+      FLTFirebaseCrashlyticsPlatformBridge.recordOnDemandException(exception)
     } else {
+      // Use public API
       Crashlytics.crashlytics().record(exceptionModel: exception)
     }
     completion(.success(()))
@@ -260,12 +266,19 @@ public class FirebaseCrashlyticsPlugin: NSObject, FLTFirebasePluginProtocol, Cra
 
     let exception = ExceptionModel(name: "FlutterError", reason: finalReason)
     exception.stackTrace = frames
-    exception.onDemand = true
-    exception.isFatal = fatal
+
+    // Use Objective-C bridge to configure private properties and record
+    FLTFirebaseCrashlyticsPlatformBridge.configureExceptionModel(
+      exception,
+      isFatal: fatal,
+      onDemand: true
+    )
 
     if fatal {
-      Crashlytics.crashlytics().record(onDemandExceptionModel: exception)
+      // Use private API via bridge
+      FLTFirebaseCrashlyticsPlatformBridge.recordOnDemandException(exception)
     } else {
+      // Use public API
       Crashlytics.crashlytics().record(exceptionModel: exception)
     }
     result.success(nil)

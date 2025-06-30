@@ -31,8 +31,8 @@ Pod::Spec.new do |s|
   s.authors          = 'The Chromium Authors'
   s.source           = { :path => '.' }
 
-  s.source_files     = 'firebase_crashlytics/Sources/firebase_crashlytics/**/*.{swift}'
-  s.public_header_files = 'firebase_crashlytics/Sources/firebase_crashlytics/include/*.h'
+  s.source_files     = 'firebase_crashlytics/Sources/firebase_crashlytics/**/*.{h,m,swift}'
+  s.public_header_files = 'firebase_crashlytics/Sources/firebase_crashlytics/include/*.h', 'firebase_crashlytics/Sources/firebase_crashlytics/FLTFirebaseCrashlyticsPlatformBridge.h'
 
   s.ios.deployment_target = '13.0'
   s.swift_version = '5.0'
@@ -44,8 +44,7 @@ Pod::Spec.new do |s|
   s.static_framework = true
   s.pod_target_xcconfig = {
     'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\\"#{library_version}\\\" LIBRARY_NAME=\\\"flutter-fire-cls\\\"",
-    'DEFINES_MODULE' => 'YES',
-    'SWIFT_OBJC_BRIDGING_HEADER' => 'firebase_crashlytics/Sources/firebase_crashlytics/FirebaseCrashlytics-Bridging-Header.h'
+    'DEFINES_MODULE' => 'YES'
   }
   s.user_target_xcconfig = { 'DEBUG_INFORMATION_FORMAT' => 'dwarf-with-dsym' }
 end
