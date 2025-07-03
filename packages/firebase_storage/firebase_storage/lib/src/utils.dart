@@ -43,13 +43,13 @@ Map<String, String?>? partsFromHttpUrl(String url) {
     return null;
   }
 
-  // firebase storage url
-  // 10.0.2.2 is for Android when using firebase emulator
-  if (decodedUrl.contains(_firebaseStorageHost) ||
-      decodedUrl.contains('localhost') ||
-      decodedUrl.contains('10.0.2.2')) {
+  // 10.0.2.2 is used on Android emulators for connecting to the host machine's Firebase emulator.
+  final isEmulatorHost =
+      decodedUrl.contains('localhost') || decodedUrl.contains('10.0.2.2');
+  final isFirebaseStorageUrl = decodedUrl.contains(_firebaseStorageHost);
+  if (isFirebaseStorageUrl || isEmulatorHost) {
     String origin;
-    if (decodedUrl.contains('localhost') || decodedUrl.contains('10.0.2.2')) {
+    if (isEmulatorHost) {
       Uri uri = Uri.parse(url);
       origin = '^http?://${uri.host}:${uri.port}';
     } else {
@@ -71,8 +71,8 @@ Map<String, String?>? partsFromHttpUrl(String url) {
       'bucket': match.group(1),
       'path': match.group(3),
     };
-    // google cloud storage url
   } else {
+    // Google Cloud storage url
     RegExp cloudStorageRegExp = RegExp(
       '^https?://$_cloudStorageHost$_optionalPort/$_bucketDomain/$_cloudStoragePath',
       caseSensitive: false,
