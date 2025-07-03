@@ -1,3 +1,7 @@
+## 5.6.1
+
+ - Update a dependency to the latest release.
+
 ## 5.6.0
 
  - **FEAT**(functions): add support for Pigeon. Update android to Kotlin. ([#17433](https://github.com/firebase/flutterfire/issues/17433)). ([f852df87](https://github.com/firebase/flutterfire/commit/f852df87a5b53356c1e15f67c3eda8e9aa8fb529))
