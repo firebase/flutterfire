@@ -51,7 +51,7 @@ export 'src/error.dart'
         ServerException,
         UnsupportedUserLocation;
 export 'src/firebase_ai.dart' show FirebaseAI;
-export 'src/function_calling.dart'
+export 'src/tool.dart'
     show
         FunctionCallingConfig,
         FunctionCallingMode,
