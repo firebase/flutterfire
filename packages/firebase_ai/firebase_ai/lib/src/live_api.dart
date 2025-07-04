@@ -28,8 +28,7 @@ class PrebuiltVoiceConfig {
   /// sound demos.
   final String? voiceName;
   // ignore: public_member_api_docs
-  Map<String, Object?> toJson() =>
-      {if (voiceName case final voiceName?) 'voice_name': voiceName};
+  Map<String, Object?> toJson() => {if (voiceName case final voiceName?) 'voice_name': voiceName};
 }
 
 /// Configuration for the voice to be used in speech synthesis.
@@ -58,17 +57,14 @@ class SpeechConfig {
   /// for names and sound demos.
   SpeechConfig({String? voiceName})
       : voiceConfig = voiceName != null
-            ? VoiceConfig(
-                prebuiltVoiceConfig: PrebuiltVoiceConfig(voiceName: voiceName))
+            ? VoiceConfig(prebuiltVoiceConfig: PrebuiltVoiceConfig(voiceName: voiceName))
             : null;
 
   /// The voice config to use for speech synthesis.
   final VoiceConfig? voiceConfig;
   // ignore: public_member_api_docs
-  Map<String, Object?> toJson() => {
-        if (voiceConfig case final voiceConfig?)
-          'voice_config': voiceConfig.toJson()
-      };
+  Map<String, Object?> toJson() =>
+      {if (voiceConfig case final voiceConfig?) 'voice_config': voiceConfig.toJson()};
 }
 
 /// The audio transcription configuration.
@@ -106,8 +102,7 @@ final class LiveGenerationConfig extends BaseGenerationConfig {
   @override
   Map<String, Object?> toJson() => {
         ...super.toJson(),
-        if (speechConfig case final speechConfig?)
-          'speechConfig': speechConfig.toJson(),
+        if (speechConfig case final speechConfig?) 'speechConfig': speechConfig.toJson(),
       };
 }
 
@@ -174,6 +169,7 @@ class LiveServerContent implements LiveServerMessage {
   ///
   /// The transcription is independent to the model turn which means it doesn't
   /// imply any ordering between transcription and model turn.
+  /// The output transcription of the generated content.
   final Transcription? outputTranscription;
 }
 
@@ -406,8 +402,7 @@ LiveServerMessage _parseServerMessage(Object jsonObject) {
     final interrupted = serverContentJson['interrupted'] as bool?;
     Transcription? _parseTranscription(String key) {
       if (serverContentJson.containsKey(key)) {
-        final transcriptionJson =
-            serverContentJson[key] as Map<String, dynamic>;
+        final transcriptionJson = serverContentJson[key] as Map<String, dynamic>;
         return Transcription(
           text: transcriptionJson['text'] as String?,
           finished: transcriptionJson['finished'] as bool?,
@@ -427,11 +422,9 @@ LiveServerMessage _parseServerMessage(Object jsonObject) {
     final toolContentJson = json['toolCall'] as Map<String, dynamic>;
     List<FunctionCall> functionCalls = [];
     if (toolContentJson.containsKey('functionCalls')) {
-      final functionCallJsons =
-          toolContentJson['functionCalls']! as List<dynamic>;
+      final functionCallJsons = toolContentJson['functionCalls']! as List<dynamic>;
       for (final functionCallJson in functionCallJsons) {
-        var functionCall =
-            parsePart({'functionCall': functionCallJson}) as FunctionCall;
+        var functionCall = parsePart({'functionCall': functionCallJson}) as FunctionCall;
         functionCalls.add(functionCall);
       }
     }
