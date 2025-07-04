@@ -94,6 +94,7 @@ export 'src/live_api.dart'
         LiveServerMessage,
         LiveServerContent,
         LiveServerToolCall,
+        Transcription,
         LiveServerToolCallCancellation,
         LiveServerResponse;
 export 'src/live_session.dart' show LiveSession;
