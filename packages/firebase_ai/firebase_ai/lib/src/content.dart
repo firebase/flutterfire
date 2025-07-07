@@ -133,9 +133,6 @@ Part parsePart(Object? jsonObject) {
 
 /// A datatype containing media that is part of a multi-part [Content] message.
 sealed class Part {
-  // ignore: public_member_api_docs
-  Part();
-
   /// Convert the [Part] content to json format.
   Object toJson();
 }
