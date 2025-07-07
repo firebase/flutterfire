@@ -146,6 +146,7 @@ final class UsageMetadata {
       {this.promptTokenCount,
       this.candidatesTokenCount,
       this.totalTokenCount,
+      this.thoughtsTokenCount,
       this.promptTokensDetails,
       this.candidatesTokensDetails});
 
@@ -157,6 +158,9 @@ final class UsageMetadata {
 
   /// Total token count for the generation request (prompt + candidates).
   final int? totalTokenCount;
+
+  /// Number of tokens present in thoughts output.
+  final int? thoughtsTokenCount;
 
   /// List of modalities that were processed in the request input.
   final List<ModalityTokenCount>? promptTokensDetails;
@@ -172,6 +176,7 @@ UsageMetadata createUsageMetadata({
   required int? promptTokenCount,
   required int? candidatesTokenCount,
   required int? totalTokenCount,
+  required int? thoughtsTokenCount,
   required List<ModalityTokenCount>? promptTokensDetails,
   required List<ModalityTokenCount>? candidatesTokensDetails,
 }) =>
@@ -179,6 +184,7 @@ UsageMetadata createUsageMetadata({
         promptTokenCount: promptTokenCount,
         candidatesTokenCount: candidatesTokenCount,
         totalTokenCount: totalTokenCount,
+        thoughtsTokenCount: thoughtsTokenCount,
         promptTokensDetails: promptTokensDetails,
         candidatesTokensDetails: candidatesTokensDetails);
 
@@ -704,20 +710,13 @@ enum ResponseModalities {
 /// Config for thinking features.
 class ThinkingConfig {
   // ignore: public_member_api_docs
-  ThinkingConfig({this.includeThoughts, this.thinkingBudget});
-
-  /// Whether to include thoughts in the response.
-  ///
-  /// If true, thoughts are returned only when available.
-  bool? includeThoughts;
+  ThinkingConfig({this.thinkingBudget});
 
   /// The number of thoughts tokens that the model should generate.
   int? thinkingBudget;
 
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
-        if (includeThoughts case final includeThoughts?)
-          'includeThoughts': includeThoughts,
         if (thinkingBudget case final thinkingBudget?)
           'thinkingBudget': thinkingBudget,
       };

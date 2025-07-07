@@ -84,11 +84,7 @@ Part parsePart(Object? jsonObject) {
   if (jsonObject is! Map<String, Object?>) {
     throw unhandledFormat('Part', jsonObject);
   }
-  // Extract common thought-related fields from the top-level JSON object.
-  final bool? thought = jsonObject['thought'] as bool?;
-  final Uint8List? thoughtSignature = jsonObject.containsKey('thoughtSignature')
-      ? base64Decode(jsonObject['thoughtSignature']! as String)
-      : null;
+
   if (jsonObject.containsKey('functionCall')) {
     final functionCall = jsonObject['functionCall'];
     if (functionCall is Map &&
@@ -98,8 +94,6 @@ Part parsePart(Object? jsonObject) {
         functionCall['name'] as String,
         functionCall['args'] as Map<String, Object?>,
         id: functionCall['id'] as String?,
-        thought: thought,
-        thoughtSignature: thoughtSignature,
       );
     } else {
       throw unhandledFormat('functionCall', functionCall);
@@ -108,8 +102,6 @@ Part parsePart(Object? jsonObject) {
   return switch (jsonObject) {
     {'text': final String text} => TextPart(
         text,
-        thought: thought,
-        thoughtSignature: thoughtSignature,
       ),
     {
       'file_data': {
@@ -120,8 +112,6 @@ Part parsePart(Object? jsonObject) {
       FileData(
         mimeType,
         fileUri,
-        thought: thought,
-        thoughtSignature: thoughtSignature,
       ),
     {
       'functionResponse': {'name': String _, 'response': Map<String, Object?> _}
@@ -136,8 +126,6 @@ Part parsePart(Object? jsonObject) {
       InlineDataPart(
         mimeType,
         base64Decode(bytes),
-        thought: thought,
-        thoughtSignature: thoughtSignature,
       ),
     _ => throw unhandledFormat('Part', jsonObject),
   };
@@ -146,24 +134,16 @@ Part parsePart(Object? jsonObject) {
 /// A datatype containing media that is part of a multi-part [Content] message.
 sealed class Part {
   // ignore: public_member_api_docs
-  Part({this.thought, this.thoughtSignature});
-
-  /// Indicates if the part is thought from the model.
-  final bool? thought;
-
-  /// An opaque signature for the thought.
-  ///
-  /// So it can be reused in subsequent requests.
-  final Uint8List? thoughtSignature;
+  Part();
 
   /// Convert the [Part] content to json format.
   Object toJson();
 }
 
 /// A [Part] with the text content.
-final class TextPart extends Part {
+final class TextPart implements Part {
   // ignore: public_member_api_docs
-  TextPart(this.text, {super.thought, super.thoughtSignature});
+  TextPart(this.text);
 
   /// The text content of the [Part]
   final String text;
@@ -174,10 +154,9 @@ final class TextPart extends Part {
 }
 
 /// A [Part] with the byte content of a file.
-final class InlineDataPart extends Part {
+final class InlineDataPart implements Part {
   // ignore: public_member_api_docs
-  InlineDataPart(this.mimeType, this.bytes,
-      {this.willContinue, super.thought, super.thoughtSignature});
+  InlineDataPart(this.mimeType, this.bytes, {this.willContinue});
 
   /// File type of the [InlineDataPart].
   /// https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-multimodal-prompts#media_requirements
@@ -208,10 +187,9 @@ final class InlineDataPart extends Part {
 /// A predicted `FunctionCall` returned from the model that contains
 /// a string representing the `FunctionDeclaration.name` with the
 /// arguments and their values.
-final class FunctionCall extends Part {
+final class FunctionCall implements Part {
   // ignore: public_member_api_docs
-  FunctionCall(this.name, this.args,
-      {this.id, super.thought, super.thoughtSignature});
+  FunctionCall(this.name, this.args, {this.id});
 
   /// The name of the function to call.
   final String name;
@@ -238,7 +216,7 @@ final class FunctionCall extends Part {
 /// The response class for [FunctionCall]
 ///
 /// note: this part will not extends [thought] and [thoughtSignature]
-final class FunctionResponse extends Part {
+final class FunctionResponse implements Part {
   // ignore: public_member_api_docs
   FunctionResponse(this.name, this.response, {this.id});
 
@@ -267,10 +245,12 @@ final class FunctionResponse extends Part {
 }
 
 /// A [Part] with Firebase Storage uri as prompt content
-final class FileData extends Part {
+final class FileData implements Part {
   // ignore: public_member_api_docs
-  FileData(this.mimeType, this.fileUri,
-      {super.thought, super.thoughtSignature});
+  FileData(
+    this.mimeType,
+    this.fileUri,
+  );
 
   /// File type of the [FileData].
   /// https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-multimodal-prompts#media_requirements
