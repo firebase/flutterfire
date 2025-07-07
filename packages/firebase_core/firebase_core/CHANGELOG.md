@@ -1,3 +1,13 @@
+## 3.15.1
+
+ - Update a dependency to the latest release.
+
+## 3.15.0
+
+ - **FIX**(core): bump Pigeon to v25.3.2 ([#17438](https://github.com/firebase/flutterfire/issues/17438)). ([4d24ef53](https://github.com/firebase/flutterfire/commit/4d24ef534464b39dcaef4151c83c78f87b36fb78))
+ - **FEAT**: bump iOS SDK to version 11.15.0 ([#17469](https://github.com/firebase/flutterfire/issues/17469)). ([84ca4f2a](https://github.com/firebase/flutterfire/commit/84ca4f2a0f3fbb7270b95f15436e0ebb2606dbfa))
+ - **FEAT**: bump Android SDK to version 33.16.0 ([#17470](https://github.com/firebase/flutterfire/issues/17470)). ([f79b786d](https://github.com/firebase/flutterfire/commit/f79b786d69ac037b03ce253236d588e2ff8a5934))
+
 ## 3.14.0
 
  - **FEAT**: bump Firebase iOS SDK to 11.13.0 ([#17378](https://github.com/firebase/flutterfire/issues/17378)). ([10fd1d8f](https://github.com/firebase/flutterfire/commit/10fd1d8f6f8af07dfae27c4bdda7726716f42d7f))

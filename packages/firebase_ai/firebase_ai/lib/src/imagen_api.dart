@@ -197,7 +197,7 @@ final class ImagenGenerationConfig {
         if (numberOfImages != null) 'numberOfImages': numberOfImages,
         if (aspectRatio != null) 'aspectRatio': aspectRatio!.toJson(),
         if (addWatermark != null) 'addWatermark': addWatermark,
-        if (imageFormat != null) 'outputOption': imageFormat!.toJson(),
+        if (imageFormat != null) 'outputOptions': imageFormat!.toJson(),
       };
 }
 

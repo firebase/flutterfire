@@ -16,10 +16,269 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:firebase_ai/src/error.dart';
+import 'package:firebase_ai/src/imagen_api.dart';
 import 'package:firebase_ai/src/imagen_content.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  group('ImagenSafetyFilterLevel', () {
+    test('toJson returns correct string values', () {
+      expect(ImagenSafetyFilterLevel.blockLowAndAbove.toJson(),
+          'block_low_and_above');
+      expect(ImagenSafetyFilterLevel.blockMediumAndAbove.toJson(),
+          'block_medium_and_above');
+      expect(ImagenSafetyFilterLevel.blockOnlyHigh.toJson(), 'block_only_high');
+      expect(ImagenSafetyFilterLevel.blockNone.toJson(), 'block_none');
+    });
+  });
+
+  group('ImagenPersonFilterLevel', () {
+    test('toJson returns correct string values', () {
+      expect(ImagenPersonFilterLevel.blockAll.toJson(), 'dont_allow');
+      expect(ImagenPersonFilterLevel.allowAdult.toJson(), 'allow_adult');
+      expect(ImagenPersonFilterLevel.allowAll.toJson(), 'allow_all');
+    });
+  });
+
+  group('ImagenSafetySettings', () {
+    test('toJson with both values', () {
+      final settings = ImagenSafetySettings(
+        ImagenSafetyFilterLevel.blockMediumAndAbove,
+        ImagenPersonFilterLevel.allowAdult,
+      );
+      final json = settings.toJson();
+      expect(json, {
+        'safetySetting': 'block_medium_and_above',
+        'personGeneration': 'allow_adult',
+      });
+    });
+
+    test('toJson with only safetyFilterLevel', () {
+      final settings = ImagenSafetySettings(
+        ImagenSafetyFilterLevel.blockMediumAndAbove,
+        null,
+      );
+      final json = settings.toJson();
+      expect(json, {
+        'safetySetting': 'block_medium_and_above',
+      });
+    });
+
+    test('toJson with only personFilterLevel', () {
+      final settings = ImagenSafetySettings(
+        null,
+        ImagenPersonFilterLevel.allowAdult,
+      );
+      final json = settings.toJson();
+      expect(json, {
+        'personGeneration': 'allow_adult',
+      });
+    });
+
+    test('toJson with null values', () {
+      final settings = ImagenSafetySettings(null, null);
+      final json = settings.toJson();
+      expect(json, {});
+    });
+  });
+
+  group('ImagenAspectRatio', () {
+    test('toJson returns correct string values', () {
+      expect(ImagenAspectRatio.square1x1.toJson(), '1:1');
+      expect(ImagenAspectRatio.portrait9x16.toJson(), '9:16');
+      expect(ImagenAspectRatio.landscape16x9.toJson(), '16:9');
+      expect(ImagenAspectRatio.portrait3x4.toJson(), '3:4');
+      expect(ImagenAspectRatio.landscape4x3.toJson(), '4:3');
+    });
+  });
+
+  group('ImagenFormat', () {
+    test('constructor with mimeType and compressionQuality', () {
+      final format = ImagenFormat('image/jpeg', 85);
+      expect(format.mimeType, 'image/jpeg');
+      expect(format.compressionQuality, 85);
+    });
+
+    test('png constructor', () {
+      final format = ImagenFormat.png();
+      expect(format.mimeType, 'image/png');
+      expect(format.compressionQuality, isNull);
+    });
+
+    test('jpeg constructor with compressionQuality', () {
+      final format = ImagenFormat.jpeg(compressionQuality: 90);
+      expect(format.mimeType, 'image/jpeg');
+      expect(format.compressionQuality, 90);
+    });
+
+    test('jpeg constructor without compressionQuality', () {
+      final format = ImagenFormat.jpeg();
+      expect(format.mimeType, 'image/jpeg');
+      expect(format.compressionQuality, isNull);
+    });
+
+    test('jpeg constructor logs warning for out of range compressionQuality',
+        () {
+      ImagenFormat.jpeg(compressionQuality: 150);
+      ImagenFormat.jpeg(compressionQuality: -10);
+    });
+
+    test('toJson with mimeType only', () {
+      final format = ImagenFormat('image/png', null);
+      final json = format.toJson();
+      expect(json, {
+        'mimeType': 'image/png',
+      });
+    });
+
+    test('toJson with mimeType and compressionQuality', () {
+      final format = ImagenFormat('image/jpeg', 85);
+      final json = format.toJson();
+      expect(json, {
+        'mimeType': 'image/jpeg',
+        'compressionQuality': 85,
+      });
+    });
+
+    test('png toJson', () {
+      final format = ImagenFormat.png();
+      final json = format.toJson();
+      expect(json, {
+        'mimeType': 'image/png',
+      });
+    });
+
+    test('jpeg toJson with compressionQuality', () {
+      final format = ImagenFormat.jpeg(compressionQuality: 90);
+      final json = format.toJson();
+      expect(json, {
+        'mimeType': 'image/jpeg',
+        'compressionQuality': 90,
+      });
+    });
+  });
+
+  group('ImagenGenerationConfig', () {
+    test('constructor with all parameters', () {
+      final config = ImagenGenerationConfig(
+        numberOfImages: 4,
+        negativePrompt: 'blurry, low quality',
+        aspectRatio: ImagenAspectRatio.landscape16x9,
+        imageFormat: ImagenFormat.jpeg(compressionQuality: 85),
+        addWatermark: true,
+      );
+      expect(config.numberOfImages, 4);
+      expect(config.negativePrompt, 'blurry, low quality');
+      expect(config.aspectRatio, ImagenAspectRatio.landscape16x9);
+      expect(config.imageFormat?.mimeType, 'image/jpeg');
+      expect(config.imageFormat?.compressionQuality, 85);
+      expect(config.addWatermark, true);
+    });
+
+    test('constructor with minimal parameters', () {
+      final config = ImagenGenerationConfig();
+      expect(config.numberOfImages, isNull);
+      expect(config.negativePrompt, isNull);
+      expect(config.aspectRatio, isNull);
+      expect(config.imageFormat, isNull);
+      expect(config.addWatermark, isNull);
+    });
+
+    test('toJson with all parameters', () {
+      final config = ImagenGenerationConfig(
+        numberOfImages: 4,
+        negativePrompt: 'blurry, low quality',
+        aspectRatio: ImagenAspectRatio.landscape16x9,
+        imageFormat: ImagenFormat.jpeg(compressionQuality: 85),
+        addWatermark: true,
+      );
+      final json = config.toJson();
+      expect(json, {
+        'negativePrompt': 'blurry, low quality',
+        'numberOfImages': 4,
+        'aspectRatio': '16:9',
+        'addWatermark': true,
+        'outputOptions': {
+          'mimeType': 'image/jpeg',
+          'compressionQuality': 85,
+        },
+      });
+    });
+
+    test('toJson with only negativePrompt', () {
+      final config = ImagenGenerationConfig(
+        negativePrompt: 'blurry, low quality',
+      );
+      final json = config.toJson();
+      expect(json, {
+        'negativePrompt': 'blurry, low quality',
+      });
+    });
+
+    test('toJson with only numberOfImages', () {
+      final config = ImagenGenerationConfig(
+        numberOfImages: 2,
+      );
+      final json = config.toJson();
+      expect(json, {
+        'numberOfImages': 2,
+      });
+    });
+
+    test('toJson with only aspectRatio', () {
+      final config = ImagenGenerationConfig(
+        aspectRatio: ImagenAspectRatio.portrait9x16,
+      );
+      final json = config.toJson();
+      expect(json, {
+        'aspectRatio': '9:16',
+      });
+    });
+
+    test('toJson with only imageFormat', () {
+      final config = ImagenGenerationConfig(
+        imageFormat: ImagenFormat.png(),
+      );
+      final json = config.toJson();
+      expect(json, {
+        'outputOptions': {
+          'mimeType': 'image/png',
+        },
+      });
+    });
+
+    test('toJson with only addWatermark', () {
+      final config = ImagenGenerationConfig(
+        addWatermark: false,
+      );
+      final json = config.toJson();
+      expect(json, {
+        'addWatermark': false,
+      });
+    });
+
+    test('toJson with empty config', () {
+      final config = ImagenGenerationConfig();
+      final json = config.toJson();
+      expect(json, {});
+    });
+
+    test('toJson with imageFormat uses correct key name "outputOptions"', () {
+      final config = ImagenGenerationConfig(
+        imageFormat: ImagenFormat.jpeg(compressionQuality: 75),
+      );
+      final json = config.toJson();
+
+      expect(json.containsKey('outputOptions'), isTrue);
+      expect(json.containsKey('outputOption'), isFalse);
+
+      expect(json['outputOptions'], {
+        'mimeType': 'image/jpeg',
+        'compressionQuality': 75,
+      });
+    });
+  });
+
   group('ImagenInlineImage', () {
     test('fromJson with valid base64', () {
       final json = {

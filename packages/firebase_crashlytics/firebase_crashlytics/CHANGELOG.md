@@ -1,3 +1,11 @@
+## 4.3.9
+
+ - Update a dependency to the latest release.
+
+## 4.3.8
+
+ - **FIX**(core): bump Pigeon to v25.3.2 ([#17438](https://github.com/firebase/flutterfire/issues/17438)). ([4d24ef53](https://github.com/firebase/flutterfire/commit/4d24ef534464b39dcaef4151c83c78f87b36fb78))
+
 ## 4.3.7
 
  - Update a dependency to the latest release.

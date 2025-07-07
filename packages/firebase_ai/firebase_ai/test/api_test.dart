@@ -11,7 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import 'dart:convert';
 
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:firebase_ai/src/api.dart';
@@ -814,84 +813,6 @@ void main() {
                 .parseGenerateContentResponse(jsonResponse),
             throwsA(isA<FirebaseAISdkException>().having(
                 (e) => e.message, 'message', contains('ModalityTokenCount'))));
-      });
-      test('parsing think in response', () {
-        final thinkingResponse = {
-          'candidates': [
-            {
-              'content': {
-                'role': 'model',
-                'parts': [
-                  {
-                    'thought': true,
-                    'thoughtSignature':
-                        'AZs1mZxTtPTGvGt3coNds9bX/OPfAxNng8MQRqm135XZCOjDgh5qiF/7kP6oSZabZGs1cxsOlpGHPM/LPMwF7mC/1EwAAtfRxJjjUjadryJxI88cp3StLln/DUmKuD0j/BxvcE0IsxVZDY/4wild66L9m3aI0zjYouz0sHS4I0qyysRZ9mEovQNXZ9lZrUfPxJvi+vwa5mgqPkHrhZGsNi3CCTM22GGFxVhoR7bp4szK',
-                    'functionCall': {
-                      'name': 'MyBasicTestFunction',
-                      'args': {
-                        'basicTestIntParameter': 123,
-                        'basicTestEnumParameter': 'MyBasicTestEnum',
-                        'basicTestObjectParameter': {
-                          'BasicTestObjectFloat': 1.23,
-                          'BasicTestObjectBoolean': false
-                        }
-                      }
-                    }
-                  },
-                ]
-              },
-              'finishReason': 'STOP',
-              'avgLogprobs': -0.68999173564295613
-            }
-          ],
-          'usageMetadata': {
-            'promptTokenCount': 114,
-            'candidatesTokenCount': 31,
-            'totalTokenCount': 178,
-            'trafficType': 'ON_DEMAND',
-            'promptTokensDetails': [
-              {'modality': 'TEXT', 'tokenCount': 114}
-            ],
-            'candidatesTokensDetails': [
-              {'modality': 'TEXT', 'tokenCount': 31}
-            ],
-            'thoughtsTokenCount': 33
-          },
-          'modelVersion': 'gemini-2.5-flash-preview-05-20',
-          'createTime': '2025-06-03T18:10:11.100134Z',
-          'responseId': 'gzo_aKaOBuS4qsMPxofMuQM'
-        };
-        final response = VertexSerialization()
-            .parseGenerateContentResponse(thinkingResponse);
-        // ASSERT
-        expect(response.candidates, hasLength(1));
-        final candidate = response.candidates.first;
-        expect(candidate.content.role, 'model');
-        expect(candidate.content.parts, hasLength(1));
-
-        final part = candidate.content.parts.first;
-        expect(part, isA<FunctionCall>());
-
-        final functionCallPart = part as FunctionCall;
-
-        // Check the thought fields
-        expect(functionCallPart.thought, isTrue);
-        expect(functionCallPart.thoughtSignature, isNotNull);
-
-        final expectedSignature = base64Decode(
-            'AZs1mZxTtPTGvGt3coNds9bX/OPfAxNng8MQRqm135XZCOjDgh5qiF/7kP6oSZabZGs1cxsOlpGHPM/LPMwF7mC/1EwAAtfRxJjjUjadryJxI88cp3StLln/DUmKuD0j/BxvcE0IsxVZDY/4wild66L9m3aI0zjYouz0sHS4I0qyysRZ9mEovQNXZ9lZrUfPxJvi+vwa5mgqPkHrhZGsNi3CCTM22GGFxVhoR7bp4szK');
-        expect(functionCallPart.thoughtSignature, equals(expectedSignature));
-
-        // Check the function call details
-        expect(functionCallPart.name, 'MyBasicTestFunction');
-        expect(functionCallPart.args, {
-          'basicTestIntParameter': 123,
-          'basicTestEnumParameter': 'MyBasicTestEnum',
-          'basicTestObjectParameter': {
-            'BasicTestObjectFloat': 1.23,
-            'BasicTestObjectBoolean': false
-          }
-        });
       });
     });
   });

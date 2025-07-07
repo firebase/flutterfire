@@ -1,3 +1,11 @@
+## 0.1.5+3
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+2
+
+ - Update a dependency to the latest release.
+
 ## 0.1.5+1
 
  - **FIX**(fdc): fix an issue where if null is set, an empty value was being sent ([#17373](https://github.com/firebase/flutterfire/issues/17373)). ([53320dc6](https://github.com/firebase/flutterfire/commit/53320dc60fa5639051fbb77d21ed493f23381273))
