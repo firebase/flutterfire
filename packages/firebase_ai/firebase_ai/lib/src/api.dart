@@ -734,7 +734,6 @@ abstract class BaseGenerationConfig {
     this.presencePenalty,
     this.frequencyPenalty,
     this.responseModalities,
-    this.thinkingConfig,
   });
 
   /// Number of generated responses to return.
@@ -814,12 +813,6 @@ abstract class BaseGenerationConfig {
   /// The list of desired response modalities.
   final List<ResponseModalities>? responseModalities;
 
-  /// Config for thinking features.
-  ///
-  /// An error will be returned if this field is set for models that don't
-  /// support thinking.
-  final ThinkingConfig? thinkingConfig;
-
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
         if (candidateCount case final candidateCount?)
@@ -836,8 +829,6 @@ abstract class BaseGenerationConfig {
         if (responseModalities case final responseModalities?)
           'responseModalities':
               responseModalities.map((modality) => modality.toJson()).toList(),
-        if (thinkingConfig case final thinkingConfig?)
-          'thinkingConfig': thinkingConfig.toJson(),
       };
 }
 
@@ -856,6 +847,7 @@ final class GenerationConfig extends BaseGenerationConfig {
     super.responseModalities,
     this.responseMimeType,
     this.responseSchema,
+    this.thinkingConfig,
   });
 
   /// The set of character sequences (up to 5) that will stop output generation.
@@ -877,6 +869,12 @@ final class GenerationConfig extends BaseGenerationConfig {
   ///   a schema; currently this is limited to `application/json`.
   final Schema? responseSchema;
 
+  /// Config for thinking features.
+  ///
+  /// An error will be returned if this field is set for models that don't
+  /// support thinking.
+  final ThinkingConfig? thinkingConfig;
+
   @override
   Map<String, Object?> toJson() => {
         ...super.toJson(),
@@ -887,6 +885,8 @@ final class GenerationConfig extends BaseGenerationConfig {
           'responseMimeType': responseMimeType,
         if (responseSchema case final responseSchema?)
           'responseSchema': responseSchema.toJson(),
+        if (thinkingConfig case final thinkingConfig?)
+          'thinkingConfig': thinkingConfig.toJson(),
       };
 }
 
