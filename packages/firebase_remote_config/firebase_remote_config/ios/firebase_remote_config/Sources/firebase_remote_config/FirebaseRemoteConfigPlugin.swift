@@ -46,7 +46,7 @@ public class FirebaseRemoteConfigPlugin: NSObject, FlutterPlugin, FlutterStreamH
 
     let eventChannel = FlutterEventChannel(
       name: kFirebaseRemoteConfigUpdatedChannelName,
-      binaryMessenger: registrar.messenger()
+      binaryMessenger: binaryMessenger
     )
     eventChannel.setStreamHandler(instance)
 
