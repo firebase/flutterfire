@@ -11,8 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-import 'package:firebase_ai/src/api.dart';
 import 'package:firebase_ai/src/developer/api.dart';
 import 'package:flutter_test/flutter_test.dart';
 

@@ -453,7 +453,7 @@ void main() {
     });
 
     test('toJson with thinkingBudget null', () {
-      final config = ThinkingConfig(thinkingBudget: null);
+      final config = ThinkingConfig();
       // Expecting the key to be absent or the value to be explicitly null,
       // depending on implementation. Current implementation omits the key.
       expect(config.toJson(), {});
@@ -463,7 +463,7 @@ void main() {
       final config = ThinkingConfig(thinkingBudget: 456);
       expect(config.thinkingBudget, 456);
 
-      final configNull = ThinkingConfig(thinkingBudget: null);
+      final configNull = ThinkingConfig();
       expect(configNull.thinkingBudget, isNull);
     });
   });
