@@ -39,8 +39,8 @@ flutter:
         package: io.flutter.plugins.firebase.firebaseremoteconfig
         pluginClass: FirebaseRemoteConfigPlugin
       ios:
-        pluginClass: FLTFirebaseRemoteConfigPlugin
+        pluginClass: FirebaseRemoteConfigPlugin
       macos:
-        pluginClass: FLTFirebaseRemoteConfigPlugin
+        pluginClass: FirebaseRemoteConfigPlugin
       web:
         default_package: firebase_remote_config_web
