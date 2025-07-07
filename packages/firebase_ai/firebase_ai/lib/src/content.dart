@@ -211,8 +211,6 @@ final class FunctionCall implements Part {
 }
 
 /// The response class for [FunctionCall]
-///
-/// note: this part will not extends [thought] and [thoughtSignature]
 final class FunctionResponse implements Part {
   // ignore: public_member_api_docs
   FunctionResponse(this.name, this.response, {this.id});
