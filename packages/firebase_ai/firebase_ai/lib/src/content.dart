@@ -81,11 +81,7 @@ Content parseContent(Object jsonObject) {
 
 /// Parse the [Part] from json object.
 Part parsePart(Object? jsonObject) {
-  if (jsonObject is! Map<String, Object?>) {
-    throw unhandledFormat('Part', jsonObject);
-  }
-
-  if (jsonObject.containsKey('functionCall')) {
+  if (jsonObject is Map && jsonObject.containsKey('functionCall')) {
     final functionCall = jsonObject['functionCall'];
     if (functionCall is Map &&
         functionCall.containsKey('name') &&
@@ -100,33 +96,20 @@ Part parsePart(Object? jsonObject) {
     }
   }
   return switch (jsonObject) {
-    {'text': final String text} => TextPart(
-        text,
-      ),
+    {'text': final String text} => TextPart(text),
     {
       'file_data': {
         'file_uri': final String fileUri,
         'mime_type': final String mimeType
       }
     } =>
-      FileData(
-        mimeType,
-        fileUri,
-      ),
+      FileData(mimeType, fileUri),
     {
       'functionResponse': {'name': String _, 'response': Map<String, Object?> _}
     } =>
       throw UnimplementedError('FunctionResponse part not yet supported'),
-    {
-      'inlineData': {
-        'mimeType': String mimeType,
-        'data': String bytes,
-      }
-    } =>
-      InlineDataPart(
-        mimeType,
-        base64Decode(bytes),
-      ),
+    {'inlineData': {'mimeType': String mimeType, 'data': String bytes}} =>
+      InlineDataPart(mimeType, base64Decode(bytes)),
     _ => throw unhandledFormat('Part', jsonObject),
   };
 }
@@ -145,9 +128,7 @@ final class TextPart implements Part {
   /// The text content of the [Part]
   final String text;
   @override
-  Object toJson() => {
-        'text': text,
-      };
+  Object toJson() => {'text': text};
 }
 
 /// A [Part] with the byte content of a file.
@@ -242,10 +223,7 @@ final class FunctionResponse implements Part {
 /// A [Part] with Firebase Storage uri as prompt content
 final class FileData implements Part {
   // ignore: public_member_api_docs
-  FileData(
-    this.mimeType,
-    this.fileUri,
-  );
+  FileData(this.mimeType, this.fileUri);
 
   /// File type of the [FileData].
   /// https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-multimodal-prompts#media_requirements
@@ -256,9 +234,6 @@ final class FileData implements Part {
 
   @override
   Object toJson() => {
-        'file_data': {
-          'file_uri': fileUri,
-          'mime_type': mimeType,
-        }
+        'file_data': {'file_uri': fileUri, 'mime_type': mimeType}
       };
 }
