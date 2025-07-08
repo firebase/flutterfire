@@ -240,12 +240,12 @@ static NSMutableDictionary<NSString *, NSString *> *customAuthDomains;
 }
 
 - (void)setAutomaticDataCollectionEnabledAppName:(nonnull NSString *)appName
-                                         enabled:(nonnull NSNumber *)enabled
+                                         enabled:(BOOL)enabled
                                       completion:
                                           (nonnull void (^)(FlutterError *_Nullable))completion {
   FIRApp *firebaseApp = [FLTFirebasePlugin firebaseAppNamed:appName];
   if (firebaseApp) {
-    [firebaseApp setDataCollectionDefaultEnabled:[enabled boolValue]];
+    [firebaseApp setDataCollectionDefaultEnabled:enabled];
   }
 
   completion(nil);
