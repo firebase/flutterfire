@@ -192,12 +192,8 @@ class _HomeScreenState extends State<HomeScreen> {
       case 8:
         return VideoPage(title: 'Video Prompt', model: currentModel);
       case 9:
-        if (useVertexBackend) {
-          return BidiPage(title: 'Live Stream', model: currentModel);
-        } else {
-          // Fallback to the first page in case of an unexpected index
-          return ChatPage(title: 'Chat', model: currentModel);
-        }
+        return BidiPage(title: 'Live Stream', model: currentModel);
+
       default:
         // Fallback to the first page in case of an unexpected index
         return ChatPage(title: 'Chat', model: currentModel);
@@ -270,48 +266,48 @@ class _HomeScreenState extends State<HomeScreen> {
         unselectedItemColor: widget.useVertexBackend
             ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)
             : Colors.grey,
-        items: <BottomNavigationBarItem>[
-          const BottomNavigationBarItem(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
             icon: Icon(Icons.chat),
             label: 'Chat',
             tooltip: 'Chat',
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.mic),
             label: 'Audio',
             tooltip: 'Audio Prompt',
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.numbers),
             label: 'Tokens',
             tooltip: 'Token Count',
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.functions),
             label: 'Functions',
             tooltip: 'Function Calling',
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.image),
             label: 'Image',
             tooltip: 'Image Prompt',
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.image_search),
             label: 'Imagen',
             tooltip: 'Imagen Model',
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.schema),
             label: 'Schema',
             tooltip: 'Schema Prompt',
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.edit_document),
             label: 'Document',
             tooltip: 'Document Prompt',
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.video_collection),
             label: 'Video',
             tooltip: 'Video Prompt',
@@ -319,12 +315,9 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomNavigationBarItem(
             icon: Icon(
               Icons.stream,
-              color: widget.useVertexBackend ? null : Colors.grey,
             ),
             label: 'Live',
-            tooltip: widget.useVertexBackend
-                ? 'Live Stream'
-                : 'Live Stream (Currently Disabled)',
+            tooltip: 'Live Stream',
           ),
         ],
         currentIndex: widget.selectedIndex,
