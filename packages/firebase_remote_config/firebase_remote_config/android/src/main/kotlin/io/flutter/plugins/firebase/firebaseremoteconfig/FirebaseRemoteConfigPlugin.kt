@@ -76,7 +76,6 @@ class FirebaseRemoteConfigPlugin
       remoteConfig.info.configSettings.minimumFetchIntervalInSeconds
     configProperties["lastFetchTime"] = remoteConfig.info.fetchTimeMillis
     configProperties["lastFetchStatus"] = mapLastFetchStatus(remoteConfig.info.lastFetchStatus)
-    Log.d(TAG, "Sending fetchTimeout: " + configProperties["fetchTimeout"])
     return configProperties
   }
 
