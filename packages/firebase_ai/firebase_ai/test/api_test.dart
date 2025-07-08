@@ -11,7 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:firebase_ai/src/api.dart';
 
@@ -393,6 +392,7 @@ void main() {
   group('GenerationConfig & BaseGenerationConfig', () {
     test('GenerationConfig toJson with all fields', () {
       final schema = Schema.object(properties: {});
+      final thinkingConfig = ThinkingConfig(thinkingBudget: 100);
       final config = GenerationConfig(
         candidateCount: 1,
         stopSequences: ['\n', 'stop'],
@@ -404,6 +404,7 @@ void main() {
         frequencyPenalty: 0.4,
         responseMimeType: 'application/json',
         responseSchema: schema,
+        thinkingConfig: thinkingConfig,
       );
       expect(config.toJson(), {
         'candidateCount': 1,
@@ -415,8 +416,8 @@ void main() {
         'frequencyPenalty': 0.4,
         'stopSequences': ['\n', 'stop'],
         'responseMimeType': 'application/json',
-        'responseSchema': schema
-            .toJson(), // Schema itself not schema.toJson() in the provided code
+        'responseSchema': schema.toJson(),
+        'thinkingConfig': {'thinkingBudget': 100},
       });
     });
 
@@ -434,6 +435,33 @@ void main() {
         'temperature': 0.7,
         'responseMimeType': 'text/plain',
       });
+    });
+
+    test('GenerationConfig toJson without thinkingConfig', () {
+      final config = GenerationConfig(temperature: 0.5);
+      expect(config.toJson(), {'temperature': 0.5});
+    });
+  });
+
+  group('ThinkingConfig', () {
+    test('toJson with thinkingBudget set', () {
+      final config = ThinkingConfig(thinkingBudget: 123);
+      expect(config.toJson(), {'thinkingBudget': 123});
+    });
+
+    test('toJson with thinkingBudget null', () {
+      final config = ThinkingConfig();
+      // Expecting the key to be absent or the value to be explicitly null,
+      // depending on implementation. Current implementation omits the key.
+      expect(config.toJson(), {});
+    });
+
+    test('constructor initializes thinkingBudget', () {
+      final config = ThinkingConfig(thinkingBudget: 456);
+      expect(config.thinkingBudget, 456);
+
+      final configNull = ThinkingConfig();
+      expect(configNull.thinkingBudget, isNull);
     });
   });
 
