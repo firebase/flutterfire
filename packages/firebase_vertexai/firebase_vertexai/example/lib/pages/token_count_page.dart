@@ -87,8 +87,7 @@ class _TokenCountPageState extends State<TokenCountPage> {
     const prompt = 'tell a short story';
     final content = Content.text(prompt);
     final tokenResponse = await widget.model.countTokens([content]);
-    final tokenResult = 'Count token: ${tokenResponse.totalTokens}, billable '
-        'characters: ${tokenResponse.totalBillableCharacters}';
+    final tokenResult = 'Count token: ${tokenResponse.totalTokens}';
     _messages.add(MessageData(text: tokenResult, fromUser: false));
 
     final contentResponse = await widget.model.generateContent([content]);

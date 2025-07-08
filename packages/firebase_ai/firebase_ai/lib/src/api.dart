@@ -31,6 +31,9 @@ final class CountTokensResponse {
   /// The number of characters that the `model` could bill at.
   ///
   /// Always non-negative.
+  @Deprecated(
+    'Use `totalTokens` instead; Gemini 2.0 series models and newer are always billed by token count.',
+  )
   final int? totalBillableCharacters;
 
   /// List of modalities that were processed in the request input.
