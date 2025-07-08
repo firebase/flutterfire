@@ -80,7 +80,8 @@ final class LiveGenerativeModel extends BaseModel {
   String _googleAIUri() => 'wss://${_modelUri.baseAuthority}/'
       '$_apiUrl.${_modelUri.apiVersion}.$_apiUrlSuffixGoogleAI?key=${_app.options.apiKey}';
 
-  String _googleAIModelString() => 'models/${model.name}';
+  String _googleAIModelString() =>
+      'projects/${_app.options.projectId}/models/${model.name}';
 
   /// Establishes a connection to a live generation service.
   ///
@@ -113,7 +114,11 @@ final class LiveGenerativeModel extends BaseModel {
         : IOWebSocketChannel.connect(Uri.parse(uri), headers: headers);
     await ws.ready;
 
+    print('websocket connect with uri $uri');
+
     ws.sink.add(request);
+
+    print('setup request sent: $setupJson');
     return LiveSession(ws);
   }
 }

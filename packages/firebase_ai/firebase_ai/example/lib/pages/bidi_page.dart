@@ -22,10 +22,15 @@ import '../utils/audio_output.dart';
 import '../widgets/message_widget.dart';
 
 class BidiPage extends StatefulWidget {
-  const BidiPage({super.key, required this.title, required this.model});
+  const BidiPage(
+      {super.key,
+      required this.title,
+      required this.model,
+      required this.useVertexBackend});
 
   final String title;
   final GenerativeModel model;
+  final bool useVertexBackend;
 
   @override
   State<BidiPage> createState() => _BidiPageState();
@@ -64,13 +69,21 @@ class _BidiPageState extends State<BidiPage> {
     );
 
     // ignore: deprecated_member_use
-    _liveModel = FirebaseAI.vertexAI().liveGenerativeModel(
-      model: 'gemini-2.0-flash-exp',
-      liveGenerationConfig: config,
-      tools: [
-        Tool.functionDeclarations([lightControlTool]),
-      ],
-    );
+    _liveModel = widget.useVertexBackend
+        ? FirebaseAI.vertexAI().liveGenerativeModel(
+            model: 'gemini-2.0-flash-exp',
+            liveGenerationConfig: config,
+            tools: [
+              Tool.functionDeclarations([lightControlTool]),
+            ],
+          )
+        : FirebaseAI.googleAI().liveGenerativeModel(
+            model: 'gemini-2.0-flash-live-001',
+            liveGenerationConfig: config,
+            tools: [
+              Tool.functionDeclarations([lightControlTool]),
+            ],
+          );
     _initAudio();
   }
 

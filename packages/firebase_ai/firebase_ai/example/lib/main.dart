@@ -154,10 +154,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   void _onItemTapped(int index) {
-    if (index == 9 && !widget.useVertexBackend) {
-      // Live Stream feature only works with Vertex AI now.
-      return;
-    }
     widget.onSelectedIndexChanged(index);
   }
 
@@ -192,7 +188,11 @@ class _HomeScreenState extends State<HomeScreen> {
       case 8:
         return VideoPage(title: 'Video Prompt', model: currentModel);
       case 9:
-        return BidiPage(title: 'Live Stream', model: currentModel);
+        return BidiPage(
+          title: 'Live Stream',
+          model: currentModel,
+          useVertexBackend: useVertexBackend,
+        );
 
       default:
         // Fallback to the first page in case of an unexpected index
