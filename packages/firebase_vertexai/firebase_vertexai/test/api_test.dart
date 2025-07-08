@@ -25,17 +25,14 @@ void main() {
   group('CountTokensResponse', () {
     test('constructor initializes fields correctly', () {
       final details = [ModalityTokenCount(ContentModality.text, 10)];
-      final response = CountTokensResponse(100,
-          totalBillableCharacters: 50, promptTokensDetails: details);
+      final response = CountTokensResponse(100, promptTokensDetails: details);
       expect(response.totalTokens, 100);
-      expect(response.totalBillableCharacters, 50);
       expect(response.promptTokensDetails, same(details));
     });
 
     test('constructor with null optional fields', () {
       final response = CountTokensResponse(100);
       expect(response.totalTokens, 100);
-      expect(response.totalBillableCharacters, isNull);
       expect(response.promptTokensDetails, isNull);
     });
   });
@@ -445,7 +442,6 @@ void main() {
       test('parses valid full JSON correctly', () {
         final json = {
           'totalTokens': 120,
-          'totalBillableCharacters': 240,
           'promptTokensDetails': [
             {
               'modality': 'TEXT',
@@ -455,7 +451,6 @@ void main() {
         };
         final response = VertexSerialization().parseCountTokensResponse(json);
         expect(response.totalTokens, 120);
-        expect(response.totalBillableCharacters, 240);
         expect(response.promptTokensDetails, isNotNull);
         expect(response.promptTokensDetails, hasLength(2));
         expect(response.promptTokensDetails![0].modality, ContentModality.text);
@@ -469,7 +464,6 @@ void main() {
         final json = {'totalTokens': 50};
         final response = VertexSerialization().parseCountTokensResponse(json);
         expect(response.totalTokens, 50);
-        expect(response.totalBillableCharacters, isNull);
         expect(response.promptTokensDetails, isNull);
       });
 
