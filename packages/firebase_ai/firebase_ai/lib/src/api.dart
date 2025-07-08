@@ -713,7 +713,7 @@ class ThinkingConfig {
   ThinkingConfig({this.thinkingBudget});
 
   /// The number of thoughts tokens that the model should generate.
-  int? thinkingBudget;
+  final int? thinkingBudget;
 
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
