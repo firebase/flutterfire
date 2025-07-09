@@ -28,11 +28,11 @@ import 'api.dart';
 import 'client.dart';
 import 'content.dart';
 import 'developer/api.dart';
-import 'tool.dart';
 import 'imagen_api.dart';
 import 'imagen_content.dart';
 import 'live_api.dart';
 import 'live_session.dart';
+import 'tool.dart';
 import 'vertex_version.dart';
 
 part 'generative_model.dart';

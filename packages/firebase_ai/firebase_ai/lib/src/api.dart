@@ -14,8 +14,8 @@
 
 import 'content.dart';
 import 'error.dart';
-import 'tool.dart' show Tool, ToolConfig;
 import 'schema.dart';
+import 'tool.dart' show Tool, ToolConfig;
 
 /// Response for Count Tokens
 final class CountTokensResponse {
@@ -259,6 +259,7 @@ final class Candidate {
 /// Represents a specific segment within a [Content], often used to pinpoint
 /// the exact location of text or data that grounding information refers to.
 final class Segment {
+  // ignore: public_member_api_docs
   Segment(
       {required this.partIndex,
       required this.startIndex,
@@ -291,6 +292,7 @@ final class Segment {
 
 /// A grounding chunk sourced from the web.
 final class WebGroundingChunk {
+  // ignore: public_member_api_docs
   WebGroundingChunk({this.uri, this.title, this.domain});
 
   /// The URI of the retrieved web page.
@@ -311,6 +313,7 @@ final class WebGroundingChunk {
 /// This is part of the grounding information provided when grounding is
 /// enabled.
 final class GroundingChunk {
+  // ignore: public_member_api_docs
   GroundingChunk({this.web});
 
   /// Contains details if the grounding chunk is from a web source.
@@ -320,6 +323,7 @@ final class GroundingChunk {
 /// Provides information about how a specific segment of the model's response
 /// is supported by the retrieved grounding chunks.
 final class GroundingSupport {
+  // ignore: public_member_api_docs
   GroundingSupport(
       {required this.segment, required this.groundingChunkIndices});
 
@@ -341,6 +345,7 @@ final class GroundingSupport {
 
 /// Google Search entry point for web searches.
 final class SearchEntryPoint {
+  // ignore: public_member_api_docs
   SearchEntryPoint({required this.renderedContent});
 
   /// An HTML/CSS snippet that **must** be embedded in an app to display a
@@ -361,6 +366,7 @@ final class SearchEntryPoint {
 /// or Vertex AI Gemini API (see [Service Terms](https://cloud.google.com/terms/service-terms)
 /// section within the Service Specific Terms).
 final class GroundingMetadata {
+  // ignore: public_member_api_docs
   GroundingMetadata(
       {this.searchEntryPoint,
       required this.groundingChunks,

@@ -663,8 +663,8 @@ void main() {
               '<div></div>');
 
           final groundingChunk = groundingMetadata.groundingChunks.first;
-          expect(groundingChunk.web?.uri, "http://example.com/1");
-          expect(groundingChunk.web?.title, "Example Page 1");
+          expect(groundingChunk.web?.uri, 'http://example.com/1');
+          expect(groundingChunk.web?.title, 'Example Page 1');
           expect(groundingChunk.web?.domain, isNull);
 
           final groundingSupport = groundingMetadata.groundingSupport.first;

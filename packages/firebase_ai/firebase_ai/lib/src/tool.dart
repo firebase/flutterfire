@@ -86,9 +86,10 @@ final class Tool {
 /// or Vertex AI Gemini API (see [Service Terms](https://cloud.google.com/terms/service-terms)
 /// section within the Service Specific Terms).
 final class GoogleSearch {
+  // ignore: public_member_api_docs
   const GoogleSearch();
 
-  // Convert to json object.
+  /// Convert to json object.
   Map<String, Object> toJson() => {};
 }
 
