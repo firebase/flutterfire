@@ -14,7 +14,7 @@ To get started with Data Connect for Flutter, please [see the documentation](htt
 
 ## Usage
 
-To use this plugin, please visit the [Data Connect Usage documentation](https://firebase.google.com/docs/data-connect/gp/schemas-queries-mutations)
+To use this plugin, please visit the [Data Connect Usage documentation](https://firebase.google.com/docs/data-connect/schemas-guide)
 
 ## Issues and feedback
 

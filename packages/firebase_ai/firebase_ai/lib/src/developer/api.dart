@@ -244,10 +244,15 @@ UsageMetadata _parseUsageMetadata(Object jsonObject) {
     {'totalTokenCount': final int totalTokenCount} => totalTokenCount,
     _ => null,
   };
+  final thoughtsTokenCount = switch (jsonObject) {
+    {'thoughtsTokenCount': final int thoughtsTokenCount} => thoughtsTokenCount,
+    _ => null,
+  };
   return createUsageMetadata(
     promptTokenCount: promptTokenCount,
     candidatesTokenCount: candidatesTokenCount,
     totalTokenCount: totalTokenCount,
+    thoughtsTokenCount: thoughtsTokenCount,
     promptTokensDetails: null,
     candidatesTokensDetails: null,
   );
