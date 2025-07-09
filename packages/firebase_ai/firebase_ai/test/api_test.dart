@@ -756,7 +756,7 @@ void main() {
           expect(
               () => VertexSerialization()
                   .parseGenerateContentResponse(jsonResponse),
-              throwsA(isA<FirebaseAIException>().having(
+              throwsA(isA<FirebaseAISdkException>().having(
                   (e) => e.message, 'message', contains('SearchEntryPoint'))));
         });
 
@@ -804,7 +804,7 @@ void main() {
           };
           expect(
               () => VertexSerialization().parseGenerateContentResponse(json),
-              throwsA(isA<FirebaseAIException>().having(
+              throwsA(isA<FirebaseAISdkException>().having(
                   (e) => e.message, 'message', contains('GroundingChunk'))));
         });
 
@@ -820,7 +820,7 @@ void main() {
           };
           expect(
               () => VertexSerialization().parseGenerateContentResponse(json),
-              throwsA(isA<FirebaseAIException>().having(
+              throwsA(isA<FirebaseAISdkException>().having(
                   (e) => e.message, 'message', contains('GroundingSupport'))));
         });
 
@@ -835,7 +835,7 @@ void main() {
           };
           expect(
               () => VertexSerialization().parseGenerateContentResponse(json),
-              throwsA(isA<FirebaseAIException>().having(
+              throwsA(isA<FirebaseAISdkException>().having(
                   (e) => e.message, 'message', contains('SearchEntryPoint'))));
         });
 
@@ -855,7 +855,7 @@ void main() {
           };
           expect(
               () => VertexSerialization().parseGenerateContentResponse(json),
-              throwsA(isA<FirebaseAIException>()
+              throwsA(isA<FirebaseAISdkException>()
                   .having((e) => e.message, 'message', contains('Segment'))));
         });
 
@@ -875,7 +875,7 @@ void main() {
           };
           expect(
               () => VertexSerialization().parseGenerateContentResponse(json),
-              throwsA(isA<FirebaseAIException>().having(
+              throwsA(isA<FirebaseAISdkException>().having(
                   (e) => e.message, 'message', contains('WebGroundingChunk'))));
         });
       });
