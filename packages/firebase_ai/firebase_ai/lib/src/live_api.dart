@@ -121,6 +121,7 @@ class LiveServerContent implements LiveServerMessage {
     this.turnComplete,
     this.interrupted,
     this.outputTranscription,
+    this.inputTranscription,
   });
 
   // TODO(cynthia): Add accessor for media content
@@ -137,6 +138,9 @@ class LiveServerContent implements LiveServerMessage {
 
   /// The output transcription of the generated content.
   final Transcription? outputTranscription;
+
+  /// The input transcription of the generated content.
+  final Transcription? inputTranscription;
 }
 
 /// A tool call in a live stream.
@@ -321,7 +325,6 @@ LiveServerMessage _parseServerMessage(Object jsonObject) {
   }
 
   Map<String, dynamic> json = jsonObject as Map<String, dynamic>;
-
   if (json.containsKey('serverContent')) {
     final serverContentJson = json['serverContent'] as Map<String, dynamic>;
     Content? modelTurn;
@@ -333,6 +336,7 @@ LiveServerMessage _parseServerMessage(Object jsonObject) {
       turnComplete = serverContentJson['turnComplete'] as bool;
     }
     Transcription? outputTranscription;
+    Transcription? inputTranscription;
     if (serverContentJson.containsKey('outputTranscription')) {
       final transcriptionJson =
           serverContentJson['outputTranscription'] as Map<String, dynamic>;
@@ -341,10 +345,19 @@ LiveServerMessage _parseServerMessage(Object jsonObject) {
         finished: transcriptionJson['finished'] as bool?,
       );
     }
+    if (serverContentJson.containsKey('inputTranscription')) {
+      final transcriptionJson =
+          serverContentJson['inputTranscription'] as Map<String, dynamic>;
+      inputTranscription = Transcription(
+        text: transcriptionJson['text'] as String?,
+        finished: transcriptionJson['finished'] as bool?,
+      );
+    }
     return LiveServerContent(
       modelTurn: modelTurn,
       turnComplete: turnComplete,
       outputTranscription: outputTranscription,
+      inputTranscription: inputTranscription,
     );
   } else if (json.containsKey('toolCall')) {
     final toolContentJson = json['toolCall'] as Map<String, dynamic>;
