@@ -240,6 +240,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   @override
   Future<String?> getToken({
     String? vapidKey, // not used yet; web only property
+    Object? serviceWorkerRegistration, // not used yet; web only property
   }) async {
     await _APNSTokenCheck();
 
