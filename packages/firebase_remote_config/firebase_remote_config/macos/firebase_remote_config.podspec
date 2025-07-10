@@ -43,10 +43,11 @@ Pod::Spec.new do |s|
   s.authors          = 'The Chromium Authors'
   s.source           = { :path => '.' }
 
-  s.source_files     = 'firebase_remote_config/Sources/firebase_remote_config/**/*.{h,m}'
-  s.public_header_files = 'firebase_remote_config/Sources/firebase_remote_config/include/*.h'
+  s.source_files     = 'firebase_remote_config/Sources/firebase_remote_config/**/*.swift'
 
   s.platform = :osx, '10.13'
+
+  s.swift_version = '5.0'
 
   # Flutter dependencies
   s.dependency 'FlutterMacOS'
