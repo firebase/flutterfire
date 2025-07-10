@@ -128,7 +128,7 @@ class RestTransport implements DataConnectTransport {
         );
       }
       Map<String, dynamic> bodyJson =
-          jsonDecode(r.body) as Map<String, dynamic>;
+          jsonDecode(utf8.decode(r.bodyBytes)) as Map<String, dynamic>;
 
       if (bodyJson.containsKey('errors') &&
           (bodyJson['errors'] as List).isNotEmpty) {
