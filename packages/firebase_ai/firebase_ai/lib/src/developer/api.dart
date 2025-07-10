@@ -33,7 +33,7 @@ import '../api.dart'
         createUsageMetadata;
 import '../content.dart' show Content, FunctionCall, Part, TextPart;
 import '../error.dart';
-import '../function_calling.dart' show Tool, ToolConfig;
+import '../tool.dart' show Tool, ToolConfig;
 
 HarmProbability _parseHarmProbability(Object jsonObject) =>
     switch (jsonObject) {

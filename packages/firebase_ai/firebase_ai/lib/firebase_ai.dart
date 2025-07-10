@@ -51,13 +51,6 @@ export 'src/error.dart'
         ServerException,
         UnsupportedUserLocation;
 export 'src/firebase_ai.dart' show FirebaseAI;
-export 'src/function_calling.dart'
-    show
-        FunctionCallingConfig,
-        FunctionCallingMode,
-        FunctionDeclaration,
-        Tool,
-        ToolConfig;
 export 'src/imagen_api.dart'
     show
         ImagenSafetySettings,
@@ -78,3 +71,10 @@ export 'src/live_api.dart'
         LiveServerResponse;
 export 'src/live_session.dart' show LiveSession;
 export 'src/schema.dart' show Schema, SchemaType;
+export 'src/tool.dart'
+    show
+        FunctionCallingConfig,
+        FunctionCallingMode,
+        FunctionDeclaration,
+        Tool,
+        ToolConfig;
