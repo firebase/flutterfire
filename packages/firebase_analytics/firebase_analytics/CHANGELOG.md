@@ -1,3 +1,15 @@
+## 11.5.2
+
+ - Update a dependency to the latest release.
+
+## 11.5.1
+
+ - Update a dependency to the latest release.
+
+## 11.5.0
+
+ - **FEAT**(analytics): add Pigeon support for firebase_analytics ([#17403](https://github.com/firebase/flutterfire/issues/17403)). ([57c09139](https://github.com/firebase/flutterfire/commit/57c091395d86a3a40c6520f4b5cffcd8165de4f1))
+
 ## 11.4.6
 
  - Update a dependency to the latest release.

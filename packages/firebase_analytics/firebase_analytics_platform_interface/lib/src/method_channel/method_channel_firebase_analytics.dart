@@ -5,6 +5,7 @@
 import 'dart:async';
 
 import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
+import 'package:firebase_analytics_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +24,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   /// When the user code calls an analytics method, the real instance is
   /// then initialized via the [delegateFor] method.
   MethodChannelFirebaseAnalytics._() : super(appInstance: null);
+  final _api = FirebaseAnalyticsHostApi();
 
   /// Returns a stub instance to allow the platform interface to access
   /// the class instance statically.
@@ -50,7 +52,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   @override
   Future<int?> getSessionId() {
     try {
-      return channel.invokeMethod<int>('Analytics#getSessionId');
+      return _api.getSessionId();
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -63,7 +65,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     AnalyticsCallOptions? callOptions,
   }) {
     try {
-      return channel.invokeMethod<void>('Analytics#logEvent', <String, Object?>{
+      return _api.logEvent(<String, Object?>{
         'eventName': name,
         'parameters': parameters,
       });
@@ -83,20 +85,17 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     bool? securityStorageConsentGranted,
   }) async {
     try {
-      return channel.invokeMethod<void>(
-        'Analytics#setConsent',
-        <String, Object?>{
-          if (adStorageConsentGranted != null)
-            'adStorageConsentGranted': adStorageConsentGranted,
-          if (analyticsStorageConsentGranted != null)
-            'analyticsStorageConsentGranted': analyticsStorageConsentGranted,
-          if (adPersonalizationSignalsConsentGranted != null)
-            'adPersonalizationSignalsConsentGranted':
-                adPersonalizationSignalsConsentGranted,
-          if (adUserDataConsentGranted != null)
-            'adUserDataConsentGranted': adUserDataConsentGranted,
-        },
-      );
+      return _api.setConsent(<String, bool?>{
+        if (adStorageConsentGranted != null)
+          'adStorageConsentGranted': adStorageConsentGranted,
+        if (analyticsStorageConsentGranted != null)
+          'analyticsStorageConsentGranted': analyticsStorageConsentGranted,
+        if (adPersonalizationSignalsConsentGranted != null)
+          'adPersonalizationSignalsConsentGranted':
+              adPersonalizationSignalsConsentGranted,
+        if (adUserDataConsentGranted != null)
+          'adUserDataConsentGranted': adUserDataConsentGranted,
+      });
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -107,10 +106,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     Map<String, Object?>? defaultParameters,
   ) async {
     try {
-      return channel.invokeMethod<void>(
-        'Analytics#setDefaultEventParameters',
-        defaultParameters,
-      );
+      return _api.setDefaultEventParameters(defaultParameters);
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -119,12 +115,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   @override
   Future<void> setAnalyticsCollectionEnabled(bool enabled) {
     try {
-      return channel.invokeMethod<void>(
-        'Analytics#setAnalyticsCollectionEnabled',
-        <String, bool?>{
-          'enabled': enabled,
-        },
-      );
+      return _api.setAnalyticsCollectionEnabled(enabled);
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -136,10 +127,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     AnalyticsCallOptions? callOptions,
   }) {
     try {
-      return channel.invokeMethod<void>(
-        'Analytics#setUserId',
-        <String, String?>{'userId': id},
-      );
+      return _api.setUserId(id);
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -152,7 +140,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     AnalyticsCallOptions? callOptions,
   }) {
     try {
-      return channel.invokeMethod<void>('Analytics#logEvent', <String, Object?>{
+      return _api.logEvent(<String, Object?>{
         'eventName': 'screen_view',
         'parameters': <String, String?>{
           'screen_name': screenName,
@@ -171,11 +159,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     AnalyticsCallOptions? callOptions,
   }) {
     try {
-      return channel
-          .invokeMethod<void>('Analytics#setUserProperty', <String, Object?>{
-        'name': name,
-        'value': value,
-      });
+      return _api.setUserProperty(name, value);
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -184,7 +168,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   @override
   Future<void> resetAnalyticsData() {
     try {
-      return channel.invokeMethod<void>('Analytics#resetAnalyticsData');
+      return _api.resetAnalyticsData();
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -193,7 +177,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   @override
   Future<String?> getAppInstanceId() {
     try {
-      return channel.invokeMethod<String?>('Analytics#getAppInstanceId');
+      return _api.getAppInstanceId();
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -203,10 +187,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   Future<void> setSessionTimeoutDuration(Duration timeout) async {
     try {
       if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-        return channel.invokeMethod<void>(
-            'Analytics#setSessionTimeoutDuration', <String, int>{
-          'milliseconds': timeout.inMilliseconds,
-        });
+        return _api.setSessionTimeoutDuration(timeout.inMilliseconds);
       }
     } catch (e, s) {
       convertPlatformException(e, s);
@@ -221,8 +202,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     String? hashedPhoneNumber,
   }) {
     try {
-      return channel.invokeMethod<void>(
-        'Analytics#initiateOnDeviceConversionMeasurement',
+      return _api.initiateOnDeviceConversionMeasurement(
         <String, String?>{
           'emailAddress': emailAddress,
           'phoneNumber': phoneNumber,

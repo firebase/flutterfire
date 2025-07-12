@@ -804,6 +804,11 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
       .verifyPasswordResetCode(jsObject, code.toJS)
       .toDart
       .then((value) => (value! as JSString).toDart);
+
+  /// Initializes the reCAPTCHA Enterprise client proactively to enhance reCAPTCHA signal collection and
+  /// to complete reCAPTCHA-protected flows in a single attempt.
+  Future initializeRecaptchaConfig() =>
+      auth_interop.initializeRecaptchaConfig(jsObject).toDart;
 }
 
 /// Represents an auth provider.

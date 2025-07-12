@@ -30,8 +30,8 @@ class MethodChannelHttpsCallable extends HttpsCallablePlatform {
   @override
   Future<dynamic> call([Object? parameters]) async {
     try {
-      Object? result = await MethodChannelFirebaseFunctions.channel
-          .invokeMethod('FirebaseFunctions#call', <String, dynamic>{
+      Object? result = await MethodChannelFirebaseFunctions.pigeonChannel
+          .call(<String, dynamic>{
         'appName': functions.app!.name,
         'functionName': name,
         'functionUri': uri?.toString(),
@@ -55,7 +55,12 @@ class MethodChannelHttpsCallable extends HttpsCallablePlatform {
   @override
   Stream<dynamic> stream(Object? parameters) async* {
     try {
-      await _registerEventChannelOnNative();
+      await MethodChannelFirebaseFunctions.pigeonChannel
+          .registerEventChannel(<String, Object>{
+        'eventChannelId': _eventChannelId,
+        'appName': functions.app!.name,
+        'region': functions.region,
+      });
       final eventData = {
         'functionName': name,
         'functionUri': uri?.toString(),
@@ -73,14 +78,5 @@ class MethodChannelHttpsCallable extends HttpsCallablePlatform {
     } catch (e, s) {
       convertPlatformException(e, s);
     }
-  }
-
-  Future<void> _registerEventChannelOnNative() async {
-    await MethodChannelFirebaseFunctions.channel.invokeMethod(
-        'FirebaseFunctions#registerEventChannel', <String, dynamic>{
-      'eventChannelId': _eventChannelId,
-      'appName': functions.app!.name,
-      'region': functions.region,
-    });
   }
 }

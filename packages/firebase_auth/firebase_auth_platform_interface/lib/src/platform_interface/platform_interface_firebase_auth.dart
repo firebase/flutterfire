@@ -706,4 +706,10 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
     throw UnimplementedError(
         'revokeTokenWithAuthorizationCode() is not implemented');
   }
+
+  /// Initializes the reCAPTCHA Enterprise client proactively to enhance reCAPTCHA signal collection and
+  /// to complete reCAPTCHA-protected flows in a single attempt.
+  Future<void> initializeRecaptchaConfig() {
+    throw UnimplementedError('initializeRecaptchaConfig() is not implemented');
+  }
 }
