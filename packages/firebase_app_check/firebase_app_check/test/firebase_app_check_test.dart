@@ -4,9 +4,10 @@
 
 import 'dart:async';
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_test/flutter_test.dart';
+
 import './mock.dart';
 
 void main() {
@@ -57,8 +58,12 @@ void main() {
       test('successful call', () async {
         await appCheck.activate(
           webProvider: ReCaptchaV3Provider('key'),
-          androidDebugToken: 'androidDebug',
-          appleDebugToken: 'appleDebug',
+          providerAndroid: const AndroidDebugProvider(
+            debugToken: 'androidDebug',
+          ),
+          providerApple: const AppleDebugProvider(
+            debugToken: 'appleDebug',
+          ),
         );
 
         expect(
@@ -68,8 +73,8 @@ void main() {
               'FirebaseAppCheck#activate',
               arguments: <String, dynamic>{
                 'appName': defaultFirebaseAppName,
-                'androidProvider': 'playIntegrity',
-                'appleProvider': 'deviceCheck',
+                'androidProvider': 'debug',
+                'appleProvider': 'debug',
                 'androidDebugToken': 'androidDebug',
                 'appleDebugToken': 'appleDebug',
               },

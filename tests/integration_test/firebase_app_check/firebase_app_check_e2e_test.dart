@@ -80,11 +80,13 @@ void main() {
 
       test(
         'debugToken on Android',
-            () async {
+        () async {
           await expectLater(
             FirebaseAppCheck.instance.activate(
               androidProvider: AndroidProvider.debug,
-              androidDebugToken: 'debug_token',
+              providerAndroid: const AndroidDebugProvider(
+                debugToken: 'debug_token',
+              ),
             ),
             completes,
           );
@@ -94,11 +96,13 @@ void main() {
 
       test(
         'debugToken on iOS',
-            () async {
+        () async {
           await expectLater(
             FirebaseAppCheck.instance.activate(
               appleProvider: AppleProvider.debug,
-              appleDebugToken: 'debug_token',
+              providerApple: const AppleDebugProvider(
+                debugToken: 'debug_token',
+              ),
             ),
             completes,
           );
