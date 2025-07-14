@@ -26,8 +26,8 @@ func loadPubspecVersion() throws -> String {
   ])
   do {
     let yamlString = try String(contentsOfFile: pubspecPath, encoding: .utf8)
-    if let versionLine = yamlString.split(separator: "\n")
-      .first(where: { $0.starts(with: "version:") }) {
+    if let versionLine = yamlString.components(separatedBy: .newlines)
+          .first(where: { $0.contains("version:") }) {
       let version = versionLine.split(separator: ":")[1].trimmingCharacters(in: .whitespaces)
       return version.replacingOccurrences(of: "+", with: "-")
     } else {
@@ -46,7 +46,7 @@ func loadFirebaseSDKVersion() throws -> String {
   ])
   do {
     let content = try String(contentsOfFile: firebaseCoreScriptPath, encoding: .utf8)
-    let pattern = #"def firebase_sdk_version!\(\)\n\s+'([^']+)'\nend"#
+    let pattern = #"def firebase_sdk_version!\(\)\s*\n\s*'([^']+)'\s*\n\s*end"#
     if let regex = try? NSRegularExpression(pattern: pattern, options: []),
        let match = regex.firstMatch(
          in: content,

@@ -42,7 +42,7 @@ func loadPubspecVersions() throws -> (packageVersion: String, firebaseCoreVersio
   ])
   do {
     let yamlString = try String(contentsOfFile: pubspecPath, encoding: .utf8)
-    let lines = yamlString.split(separator: "\n")
+    let lines = yamlString.components(separatedBy: .newlines)
 
     guard let packageVersionLine = lines.first(where: { $0.starts(with: "version:") }) else {
       throw ConfigurationError.invalidFormat("No package version line found in pubspec.yaml")

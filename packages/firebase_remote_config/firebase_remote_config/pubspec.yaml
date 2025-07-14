@@ -4,7 +4,7 @@ description:
   re-releasing.
 homepage: https://firebase.google.com/docs/remote-config
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_remote_config/firebase_remote_config
-version: 5.4.7
+version: 5.4.7+1
 topics:
   - firebase
   - remote
@@ -45,5 +45,5 @@ flutter:
         pluginClass: FLTFirebaseRemoteConfigPlugin
       web:
         default_package: firebase_remote_config_web
-      windows: 
+      windows:
         pluginClass: FirebaseRemoteConfigPluginCApi

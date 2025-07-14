@@ -110,12 +110,6 @@ void FirebaseRemoteConfigPlugin::RegisterWithRegistrar(
 
   event_channel->SetStreamHandler(std::move(eventChannelHandler));
 
-  // // method_channel->SetMethodCallHandler([plugin_pointer =
-  // plugin.get()](const auto& call, auto result)
-  // //     {
-  // //         plugin_pointer->HandleMethodCall(call, std::move(result));
-  // //     });
-
   registrar->AddPlugin(std::move(plugin));
 }
 
