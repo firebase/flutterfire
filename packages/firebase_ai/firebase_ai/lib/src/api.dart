@@ -31,6 +31,9 @@ final class CountTokensResponse {
   /// The number of characters that the `model` could bill at.
   ///
   /// Always non-negative.
+  @Deprecated(
+    'Use `totalTokens` instead; Gemini 2.0 series models and newer are always billed by token count.',
+  )
   final int? totalBillableCharacters;
 
   /// List of modalities that were processed in the request input.
@@ -146,6 +149,7 @@ final class UsageMetadata {
       {this.promptTokenCount,
       this.candidatesTokenCount,
       this.totalTokenCount,
+      this.thoughtsTokenCount,
       this.promptTokensDetails,
       this.candidatesTokensDetails});
 
@@ -157,6 +161,9 @@ final class UsageMetadata {
 
   /// Total token count for the generation request (prompt + candidates).
   final int? totalTokenCount;
+
+  /// Number of tokens present in thoughts output.
+  final int? thoughtsTokenCount;
 
   /// List of modalities that were processed in the request input.
   final List<ModalityTokenCount>? promptTokensDetails;
@@ -172,6 +179,7 @@ UsageMetadata createUsageMetadata({
   required int? promptTokenCount,
   required int? candidatesTokenCount,
   required int? totalTokenCount,
+  required int? thoughtsTokenCount,
   required List<ModalityTokenCount>? promptTokensDetails,
   required List<ModalityTokenCount>? candidatesTokensDetails,
 }) =>
@@ -179,6 +187,7 @@ UsageMetadata createUsageMetadata({
         promptTokenCount: promptTokenCount,
         candidatesTokenCount: candidatesTokenCount,
         totalTokenCount: totalTokenCount,
+        thoughtsTokenCount: thoughtsTokenCount,
         promptTokensDetails: promptTokensDetails,
         candidatesTokensDetails: candidatesTokensDetails);
 
@@ -697,8 +706,23 @@ enum ResponseModalities {
   const ResponseModalities(this._jsonString);
   final String _jsonString;
 
-  /// Convert to json format
+  // ignore: public_member_api_docs
   String toJson() => _jsonString;
+}
+
+/// Config for thinking features.
+class ThinkingConfig {
+  // ignore: public_member_api_docs
+  ThinkingConfig({this.thinkingBudget});
+
+  /// The number of thoughts tokens that the model should generate.
+  final int? thinkingBudget;
+
+  // ignore: public_member_api_docs
+  Map<String, Object?> toJson() => {
+        if (thinkingBudget case final thinkingBudget?)
+          'thinkingBudget': thinkingBudget,
+      };
 }
 
 /// Configuration options for model generation and outputs.
@@ -826,6 +850,7 @@ final class GenerationConfig extends BaseGenerationConfig {
     super.responseModalities,
     this.responseMimeType,
     this.responseSchema,
+    this.thinkingConfig,
   });
 
   /// The set of character sequences (up to 5) that will stop output generation.
@@ -847,6 +872,12 @@ final class GenerationConfig extends BaseGenerationConfig {
   ///   a schema; currently this is limited to `application/json`.
   final Schema? responseSchema;
 
+  /// Config for thinking features.
+  ///
+  /// An error will be returned if this field is set for models that don't
+  /// support thinking.
+  final ThinkingConfig? thinkingConfig;
+
   @override
   Map<String, Object?> toJson() => {
         ...super.toJson(),
@@ -857,6 +888,8 @@ final class GenerationConfig extends BaseGenerationConfig {
           'responseMimeType': responseMimeType,
         if (responseSchema case final responseSchema?)
           'responseSchema': responseSchema.toJson(),
+        if (thinkingConfig case final thinkingConfig?)
+          'thinkingConfig': thinkingConfig.toJson(),
       };
 }
 

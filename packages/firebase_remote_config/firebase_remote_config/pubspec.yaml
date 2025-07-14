@@ -4,13 +4,12 @@ description:
   re-releasing.
 homepage: https://firebase.google.com/docs/remote-config
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_remote_config/firebase_remote_config
-version: 5.4.7+1
+version: 5.4.7
 topics:
   - firebase
   - remote
   - config
   - management
-publish_to: https://onepub.dev/api/xhvssdavuh
 
 false_secrets:
   - example/**
@@ -40,10 +39,8 @@ flutter:
         package: io.flutter.plugins.firebase.firebaseremoteconfig
         pluginClass: FirebaseRemoteConfigPlugin
       ios:
-        pluginClass: FLTFirebaseRemoteConfigPlugin
+        pluginClass: FirebaseRemoteConfigPlugin
       macos:
-        pluginClass: FLTFirebaseRemoteConfigPlugin
+        pluginClass: FirebaseRemoteConfigPlugin
       web:
         default_package: firebase_remote_config_web
-      windows:
-        pluginClass: FirebaseRemoteConfigPluginCApi
