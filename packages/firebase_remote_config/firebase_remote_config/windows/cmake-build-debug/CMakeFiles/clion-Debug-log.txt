@@ -1,6 +1,0 @@
-"C:\Users\Andrii\AppData\Local\Programs\CLion Nova\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=C:/Users/Andrii/AppData/Local/Programs/CLion Nova/bin/ninja/win/x64/ninja.exe" -G Ninja -S D:\proj\flutterfire\packages\firebase_remote_config\firebase_remote_config\windows -B D:\proj\flutterfire\packages\firebase_remote_config\firebase_remote_config\windows\cmake-build-debug
-CMake Error at CMakeLists.txt:63 (apply_standard_settings):
-  Unknown CMake command "apply_standard_settings".
-
-
--- Configuring incomplete, errors occurred!
