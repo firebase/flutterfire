@@ -37,8 +37,8 @@ To use the debug provider while running your app in a simulator interactively
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp();
       await FirebaseAppCheck.instance.activate(
-        // Set appleProvider to `AppleProvider.debug`
-        appleProvider: AppleProvider.debug,
+      // Set providerApple to use AppleDebugProvider
+      providerApple: AppleDebugProvider('123a4567-b89c-12d3-e456-789012345678'),
       );
       runApp(App());
     }
@@ -83,9 +83,9 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await FirebaseAppCheck.instance.activate(
-    webRecaptchaSiteKey: 'recaptcha-v3-site-key',
-    // Set androidProvider to `AndroidProvider.debug`
-    androidProvider: AndroidProvider.debug,
+    webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
+    // Set providerAndroid to use AndroidDebugProvider
+    providerAndroid: AndroidDebugProvider('123a4567-b89c-12d3-e456-789012345678'),
   );
   runApp(App());
 }
@@ -153,8 +153,8 @@ If you want to use the debug provider in a testing environment or CI, you can
 manually set the debug token in your app. This is useful when you want to run
 your app in an environment where the debug token is not automatically generated.
 
-To manually set the debug token, use the `androidDebugToken` and `appleDebugToken`
-parameters when activating App Check. For example:
+To manually set the debug token, pass your debug token directly to the debug provider
+classes when activating App Check. For example:
 
 ```dart
 import 'package:flutter/material.dart';
@@ -167,15 +167,11 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await FirebaseAppCheck.instance.activate(
-    webRecaptchaSiteKey: 'recaptcha-v3-site-key',
-    // Set androidProvider to `AndroidProvider.debug`
-    androidProvider: AndroidProvider.debug,
-    // Set appleProvider to `AppleProvider.debug`
-    appleProvider: AppleProvider.debug,
-    // Set the androidDebugToken for Android
-    androidDebugToken: '123a4567-b89c-12d3-e456-789012345678',
-    // Set the appleDebugToken for Apple platforms
-    appleDebugToken: '123a4567-b89c-12d3-e456-789012345678',
+    webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
+    // Set providerAndroid with debug token
+    providerAndroid: AndroidDebugProvider('123a4567-b89c-12d3-e456-789012345678'),
+    // Set providerApple with debug token
+    providerApple: AppleDebugProvider('123a4567-b89c-12d3-e456-789012345678'),
   );
   runApp(App());
 }
