@@ -157,7 +157,7 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
   SetUpFirebaseAuthHostApi(registrar.messenger, instance);
   SetUpFirebaseAuthUserHostApi(registrar.messenger, instance);
 
-#if TARGET_OS_IOS
+#if TARGET_OS_IPHONE
   SetUpMultiFactorUserHostApi(registrar.messenger, instance);
   SetUpMultiFactoResolverHostApi(registrar.messenger, instance);
   SetUpMultiFactorTotpHostApi(registrar.messenger, instance);
