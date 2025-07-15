@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import '../widgets/message_widget.dart';
 
@@ -58,17 +60,27 @@ class _TokenCountPageState extends State<TokenCountPage> {
                 vertical: 25,
                 horizontal: 15,
               ),
-              child: Row(
+              child: Column(
                 children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: !_loading
-                          ? () async {
-                              await _testCountToken();
-                            }
-                          : null,
-                      child: const Text('Count Tokens'),
-                    ),
+                  ElevatedButton(
+                    onPressed: !_loading ? _testCountToken : null,
+                    child: const Text('Count text tokens'),
+                  ),
+                  ElevatedButton(
+                    onPressed: !_loading ? _testCountTokenChat : null,
+                    child: const Text('Count chat tokens'),
+                  ),
+                  ElevatedButton(
+                    onPressed: !_loading ? _testCountTokenImage : null,
+                    child: const Text('Count image tokens'),
+                  ),
+                  ElevatedButton(
+                    onPressed: !_loading ? _testCountTokenVideo : null,
+                    child: const Text('Count video tokens'),
+                  ),
+                  ElevatedButton(
+                    onPressed: !_loading ? _testCountTokenPdf : null,
+                    child: const Text('Count PDF tokens'),
                   ),
                 ],
               ),
@@ -98,6 +110,124 @@ class _TokenCountPageState extends State<TokenCountPage> {
         'totalTokenCount:'
         '${contentResponse.usageMetadata!.totalTokenCount}';
     _messages.add(MessageData(text: contentMetaData, fromUser: false));
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  Future<void> _testCountTokenPdf() async {
+    setState(() {
+      _loading = true;
+    });
+
+    final pdfBytes = (await rootBundle.load('assets/documents/vertex-ai.pdf'))
+        .buffer
+        .asUint8List();
+    const text = 'what is in the document?';
+    final content =
+        Content.multi([DataPart('application/pdf', pdfBytes), TextPart(text)]);
+
+    final tokenResponse = await widget.model.countTokens([content]);
+    final tokenResult = 'Count token from video: ${tokenResponse.totalTokens}';
+    _messages.add(MessageData(text: tokenResult, fromUser: false));
+
+    final contentResponse = await widget.model.generateContent([content]);
+    final contentMetaData = 'result metadata, promptTokenCount:'
+        '${contentResponse.usageMetadata!.promptTokenCount}, '
+        'candidatesTokenCount:'
+        '${contentResponse.usageMetadata!.candidatesTokenCount}, '
+        'totalTokenCount:'
+        '${contentResponse.usageMetadata!.totalTokenCount}';
+    _messages.add(MessageData(text: contentMetaData, fromUser: false));
+
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  Future<void> _testCountTokenVideo() async {
+    setState(() {
+      _loading = true;
+    });
+
+    final busyCatBytes = (await rootBundle.load('assets/videos/busy-cat.mp4'))
+        .buffer
+        .asUint8List();
+    const text = 'what is in the video?';
+    final content =
+        Content.multi([DataPart('video/mp4', busyCatBytes), TextPart(text)]);
+
+    final tokenResponse = await widget.model.countTokens([content]);
+    final tokenResult = 'Count token from video: ${tokenResponse.totalTokens}';
+    _messages.add(MessageData(text: tokenResult, fromUser: false));
+
+    final contentResponse = await widget.model.generateContent([content]);
+    final contentMetaData = 'result metadata, promptTokenCount:'
+        '${contentResponse.usageMetadata!.promptTokenCount}, '
+        'candidatesTokenCount:'
+        '${contentResponse.usageMetadata!.candidatesTokenCount}, '
+        'totalTokenCount:'
+        '${contentResponse.usageMetadata!.totalTokenCount}';
+    _messages.add(MessageData(text: contentMetaData, fromUser: false));
+
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  Future<void> _testCountTokenImage() async {
+    setState(() {
+      _loading = true;
+    });
+
+    final catBytes =
+        (await rootBundle.load('assets/images/cat.jpg')).buffer.asUint8List();
+    const text = 'what is in the image?';
+    final content = Content.multi([DataPart('image/jpeg', catBytes), TextPart(text)]);
+
+    final tokenResponse = await widget.model.countTokens([content]);
+    final tokenResult = 'Count token from image: ${tokenResponse.totalTokens}';
+    _messages.add(MessageData(text: tokenResult, fromUser: false));
+
+    final contentResponse = await widget.model.generateContent([content]);
+    final contentMetaData = 'result metadata, promptTokenCount:'
+        '${contentResponse.usageMetadata!.promptTokenCount}, '
+        'candidatesTokenCount:'
+        '${contentResponse.usageMetadata!.candidatesTokenCount}, '
+        'totalTokenCount:'
+        '${contentResponse.usageMetadata!.totalTokenCount}';
+    _messages.add(MessageData(text: contentMetaData, fromUser: false));
+
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  Future<void> _testCountTokenChat() async {
+    setState(() {
+      _loading = true;
+    });
+
+    final chat = widget.model.startChat(history: [
+      Content.text('hello'),
+      Content.model([TextPart('great to meet you, how can I help? অন্যরা')]),
+    ]);
+    final tokenResponse = await widget.model.countTokens(chat.history);
+    final tokenResult = 'Count token from chat history: '
+        '${tokenResponse.totalTokens}';
+    _messages.add(MessageData(text: tokenResult, fromUser: false));
+
+    const prompt = 'tell a short story';
+    final content = Content.text(prompt);
+    final contentResponse = await chat.sendMessage(content);
+    final contentMetaData = 'result metadata, promptTokenCount:'
+        '${contentResponse.usageMetadata!.promptTokenCount}, '
+        'candidatesTokenCount:'
+        '${contentResponse.usageMetadata!.candidatesTokenCount}, '
+        'totalTokenCount:'
+        '${contentResponse.usageMetadata!.totalTokenCount}';
+    _messages.add(MessageData(text: contentMetaData, fromUser: false));
+
     setState(() {
       _loading = false;
     });
