@@ -212,7 +212,7 @@ class _TokenCountPageState extends State<TokenCountPage> {
 
     final chat = widget.model.startChat(history: [
       Content.text('hello'),
-      Content.model([TextPart('great to meet you, how can I help? অন্যরা')]),
+      Content.model([TextPart('great to meet you, how can I help?')]),
     ]);
     final tokenResponse = await widget.model.countTokens(chat.history);
     final tokenResult = 'Count token from chat history: '
