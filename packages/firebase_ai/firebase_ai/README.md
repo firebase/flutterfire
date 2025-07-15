@@ -1,17 +1,17 @@
-# Firebase AI Flutter
+# Firebase AI Logic Flutter
 [![pub package](https://img.shields.io/pub/v/firebase_ai.svg)](https://pub.dev/packages/firebase_ai)
 
-A Flutter plugin to use the [Firebase AI](https://firebase.google.com/docs/vertex-ai/).
+A Flutter plugin to use the [Firebase AI Logic](https://firebase.google.com/docs/ai-logic).
 
-To learn more about Firebase AI, please visit the [website](https://cloud.google.com/vertex-ai)
+To learn more about Firebase AI, please visit the [website](https://firebase.google.com/docs/ai-logic)
 
 ## Getting Started
 
-To get started with Firebase AI Flutter, please [see the documentation](https://firebase.google.com/docs/vertex-ai/get-started?platform=flutter).
+To get started with Firebase AI Logic Flutter, please [see the documentation](https://firebase.google.com/docs/ai-logic/get-started?platform=flutter).
 
 ## Usage
 
-To start use this plugin, please visit the [Text only prompt documentation](https://firebase.google.com/docs/vertex-ai/text-gen-from-text?platform=flutter)
+To start use this plugin, please visit the [Text only prompt documentation](https://firebase.google.com/docs/ai-logic/generate-text?platform=flutter)
 
 ## Issues and feedback
 
