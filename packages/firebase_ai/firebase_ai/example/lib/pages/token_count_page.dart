@@ -120,12 +120,13 @@ class _TokenCountPageState extends State<TokenCountPage> {
       _loading = true;
     });
 
-    final pdfBytes = (await rootBundle.load('assets/documents/vertex-ai.pdf'))
-        .buffer
-        .asUint8List();
+    final pdfBytes =
+        (await rootBundle.load('assets/documents/gemini_summary.pdf'))
+            .buffer
+            .asUint8List();
     const text = 'what is in the document?';
-    final content =
-        Content.multi([DataPart('application/pdf', pdfBytes), TextPart(text)]);
+    final content = Content.multi(
+        [InlineDataPart('application/pdf', pdfBytes), TextPart(text)]);
 
     final tokenResponse = await widget.model.countTokens([content]);
     final tokenResult = 'Count token from video: ${tokenResponse.totalTokens}';
@@ -150,12 +151,12 @@ class _TokenCountPageState extends State<TokenCountPage> {
       _loading = true;
     });
 
-    final busyCatBytes = (await rootBundle.load('assets/videos/busy-cat.mp4'))
+    final busyCatBytes = (await rootBundle.load('assets/videos/landscape.mp4'))
         .buffer
         .asUint8List();
     const text = 'what is in the video?';
-    final content =
-        Content.multi([DataPart('video/mp4', busyCatBytes), TextPart(text)]);
+    final content = Content.multi(
+        [InlineDataPart('video/mp4', busyCatBytes), TextPart(text)]);
 
     final tokenResponse = await widget.model.countTokens([content]);
     final tokenResult = 'Count token from video: ${tokenResponse.totalTokens}';
@@ -183,7 +184,8 @@ class _TokenCountPageState extends State<TokenCountPage> {
     final catBytes =
         (await rootBundle.load('assets/images/cat.jpg')).buffer.asUint8List();
     const text = 'what is in the image?';
-    final content = Content.multi([DataPart('image/jpeg', catBytes), TextPart(text)]);
+    final content =
+        Content.multi([InlineDataPart('image/jpeg', catBytes), TextPart(text)]);
 
     final tokenResponse = await widget.model.countTokens([content]);
     final tokenResult = 'Count token from image: ${tokenResponse.totalTokens}';
