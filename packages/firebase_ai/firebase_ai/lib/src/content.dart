@@ -13,7 +13,9 @@
 // limitations under the License.
 
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:typed_data';
+
 import 'error.dart';
 
 /// The base structured datatype containing multi-part content of a message.
@@ -81,43 +83,62 @@ Content parseContent(Object jsonObject) {
 
 /// Parse the [Part] from json object.
 Part parsePart(Object? jsonObject) {
-  if (jsonObject is Map && jsonObject.containsKey('functionCall')) {
-    final functionCall = jsonObject['functionCall'];
-    if (functionCall is Map &&
-        functionCall.containsKey('name') &&
-        functionCall.containsKey('args')) {
-      return FunctionCall(
-        functionCall['name'] as String,
-        functionCall['args'] as Map<String, Object?>,
-        id: functionCall['id'] as String?,
-      );
-    } else {
-      throw unhandledFormat('functionCall', functionCall);
-    }
+  if (jsonObject is! Map<String, Object?>) {
+    log('Unhandled part format: $jsonObject');
+    return UnknownPart(<String, Object?>{
+      'unhandled': jsonObject,
+    });
   }
-  return switch (jsonObject) {
-    {'text': final String text} => TextPart(text),
-    {
-      'file_data': {
-        'file_uri': final String fileUri,
-        'mime_type': final String mimeType
+  try {
+    if (jsonObject.containsKey('functionCall')) {
+      final functionCall = jsonObject['functionCall'];
+      if (functionCall is Map &&
+          functionCall.containsKey('name') &&
+          functionCall.containsKey('args')) {
+        return FunctionCall(
+          functionCall['name'] as String,
+          functionCall['args'] as Map<String, Object?>,
+          id: functionCall['id'] as String?,
+        );
+      } else {
+        throw unhandledFormat('functionCall', functionCall);
       }
-    } =>
-      FileData(mimeType, fileUri),
-    {
-      'functionResponse': {'name': String _, 'response': Map<String, Object?> _}
-    } =>
-      throw UnimplementedError('FunctionResponse part not yet supported'),
-    {'inlineData': {'mimeType': String mimeType, 'data': String bytes}} =>
-      InlineDataPart(mimeType, base64Decode(bytes)),
-    _ => throw unhandledFormat('Part', jsonObject),
-  };
+    }
+    return switch (jsonObject) {
+      {'text': final String text} => TextPart(text),
+      {
+        'file_data': {
+          'file_uri': final String fileUri,
+          'mime_type': final String mimeType
+        }
+      } =>
+        FileData(mimeType, fileUri),
+      {'inlineData': {'mimeType': String mimeType, 'data': String bytes}} =>
+        InlineDataPart(mimeType, base64Decode(bytes)),
+      _ => throw unhandledFormat('Part', jsonObject),
+    };
+  } on Object catch (e) {
+    log('unhandled part format: $jsonObject, $e');
+    return UnknownPart(jsonObject);
+  }
 }
 
 /// A datatype containing media that is part of a multi-part [Content] message.
 sealed class Part {
   /// Convert the [Part] content to json format.
   Object toJson();
+}
+
+/// A [Part] that contains unparsable data.
+final class UnknownPart implements Part {
+  // ignore: public_member_api_docs
+  UnknownPart(this.data);
+
+  /// The unparsed data.
+  final Map<String, Object?> data;
+
+  @override
+  Object toJson() => data;
 }
 
 /// A [Part] with the text content.
