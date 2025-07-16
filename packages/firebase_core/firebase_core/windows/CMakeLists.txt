@@ -65,6 +65,7 @@ list(APPEND PLUGIN_SOURCES
   "firebase_core_plugin.h"
   "messages.g.cpp"
   "messages.g.h"
+  "firebase_plugin_registry.cpp"
 )
 
 # Read version from pubspec.yaml
@@ -89,6 +90,7 @@ include_directories(${CMAKE_BINARY_DIR}/generated/)
 # on PLUGIN_NAME above).
 add_library(${PLUGIN_NAME} STATIC
   "include/firebase_core/firebase_core_plugin_c_api.h"
+  "include/firebase_core/firebase_plugin_registry.h"
   "firebase_core_plugin_c_api.cpp"
   ${PLUGIN_SOURCES}
   ${CMAKE_BINARY_DIR}/generated/firebase_core/plugin_version.h
@@ -120,7 +122,7 @@ add_subdirectory(${FIREBASE_CPP_SDK_DIR} bin/ EXCLUDE_FROM_ALL)
 target_include_directories(${PLUGIN_NAME} INTERFACE
   "${FIREBASE_CPP_SDK_DIR}/include")
 
-set(FIREBASE_RELEASE_PATH_LIBS firebase_app firebase_auth firebase_storage firebase_firestore)
+set(FIREBASE_RELEASE_PATH_LIBS firebase_app firebase_auth firebase_storage firebase_firestore firebase_remote_config)
 foreach(firebase_lib IN ITEMS ${FIREBASE_RELEASE_PATH_LIBS})
     get_target_property(firebase_lib_path ${firebase_lib} IMPORTED_LOCATION)
     string(REPLACE "Debug" "Release" firebase_lib_release_path ${firebase_lib_path})
