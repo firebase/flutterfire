@@ -16,7 +16,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:firebase_ai/src/content.dart';
-import 'package:firebase_ai/src/error.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // Mock google_ai classes (if needed)
