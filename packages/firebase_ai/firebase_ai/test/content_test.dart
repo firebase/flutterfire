@@ -199,17 +199,26 @@ void main() {
       expect(() => parsePart(json), throwsA(isA<FirebaseAISdkException>()));
     });
 
-    test('throws unhandledFormat for invalid JSON', () {
+    test('returns UnknownPart for invalid JSON', () {
       final json = {'invalid': 'data'};
-      expect(() => parsePart(json), throwsA(isA<Exception>()));
+      final result = parsePart(json);
+      expect(result, isA<UnknownPart>());
+      final unknownPart = result as UnknownPart;
+      expect(unknownPart.data, json);
     });
 
-    test('throws unhandledFormat for null input', () {
-      expect(() => parsePart(null), throwsA(isA<Exception>()));
+    test('returns UnknownPart for null input', () {
+      final result = parsePart(null);
+      expect(result, isA<UnknownPart>());
+      final unknownPart = result as UnknownPart;
+      expect(unknownPart.data, {'unhandled': null});
     });
 
-    test('throws unhandledFormat for empty map', () {
-      expect(() => parsePart({}), throwsA(isA<Exception>()));
+    test('returns UnknownPart for empty map', () {
+      final result = parsePart({});
+      expect(result, isA<UnknownPart>());
+      final unknownPart = result as UnknownPart;
+      expect(unknownPart.data, {});
     });
   });
 }
