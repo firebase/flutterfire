@@ -89,38 +89,37 @@ Part parsePart(Object? jsonObject) {
       'unhandled': jsonObject,
     });
   }
-  try {
-    if (jsonObject.containsKey('functionCall')) {
-      final functionCall = jsonObject['functionCall'];
-      if (functionCall is Map &&
-          functionCall.containsKey('name') &&
-          functionCall.containsKey('args')) {
-        return FunctionCall(
-          functionCall['name'] as String,
-          functionCall['args'] as Map<String, Object?>,
-          id: functionCall['id'] as String?,
-        );
-      } else {
-        throw unhandledFormat('functionCall', functionCall);
-      }
+
+  if (jsonObject.containsKey('functionCall')) {
+    final functionCall = jsonObject['functionCall'];
+    if (functionCall is Map &&
+        functionCall.containsKey('name') &&
+        functionCall.containsKey('args')) {
+      return FunctionCall(
+        functionCall['name'] as String,
+        functionCall['args'] as Map<String, Object?>,
+        id: functionCall['id'] as String?,
+      );
+    } else {
+      throw unhandledFormat('functionCall', functionCall);
     }
-    return switch (jsonObject) {
-      {'text': final String text} => TextPart(text),
-      {
-        'file_data': {
-          'file_uri': final String fileUri,
-          'mime_type': final String mimeType
-        }
-      } =>
-        FileData(mimeType, fileUri),
-      {'inlineData': {'mimeType': String mimeType, 'data': String bytes}} =>
-        InlineDataPart(mimeType, base64Decode(bytes)),
-      _ => throw unhandledFormat('Part', jsonObject),
-    };
-  } on Object catch (e) {
-    log('unhandled part format: $jsonObject, $e');
-    return UnknownPart(jsonObject);
   }
+  return switch (jsonObject) {
+    {'text': final String text} => TextPart(text),
+    {
+      'file_data': {
+        'file_uri': final String fileUri,
+        'mime_type': final String mimeType
+      }
+    } =>
+      FileData(mimeType, fileUri),
+    {'inlineData': {'mimeType': String mimeType, 'data': String bytes}} =>
+      InlineDataPart(mimeType, base64Decode(bytes)),
+    _ => () {
+        log('unhandled part format: $jsonObject');
+        return UnknownPart(jsonObject);
+      }(),
+  };
 }
 
 /// A datatype containing media that is part of a multi-part [Content] message.
