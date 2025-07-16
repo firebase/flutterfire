@@ -113,13 +113,6 @@ Part parsePart(Object? jsonObject) {
         }
       } =>
         FileData(mimeType, fileUri),
-      {
-        'functionResponse': {
-          'name': String _,
-          'response': Map<String, Object?> _
-        }
-      } =>
-        throw UnimplementedError('FunctionResponse part not yet supported'),
       {'inlineData': {'mimeType': String mimeType, 'data': String bytes}} =>
         InlineDataPart(mimeType, base64Decode(bytes)),
       _ => throw unhandledFormat('Part', jsonObject),

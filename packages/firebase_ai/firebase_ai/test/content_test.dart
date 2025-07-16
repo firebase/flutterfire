@@ -192,11 +192,14 @@ void main() {
       expect(inlineData.bytes, [1, 2, 3]);
     });
 
-    test('throws UnimplementedError for functionResponse', () {
+    test('returns UnknownPart for functionResponse', () {
       final json = {
         'functionResponse': {'name': 'test', 'response': {}}
       };
-      expect(() => parsePart(json), throwsA(isA<FirebaseAISdkException>()));
+      final result = parsePart(json);
+      expect(result, isA<UnknownPart>());
+      final unknownPart = result as UnknownPart;
+      expect(unknownPart.data, json);
     });
 
     test('returns UnknownPart for invalid JSON', () {
@@ -218,7 +221,7 @@ void main() {
       final result = parsePart({});
       expect(result, isA<UnknownPart>());
       final unknownPart = result as UnknownPart;
-      expect(unknownPart.data, {});
+      expect(unknownPart.data, {'unhandled': {}});
     });
   });
 }
