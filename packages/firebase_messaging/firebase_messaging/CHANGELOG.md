@@ -1,3 +1,23 @@
+## 15.2.9
+
+ - Update a dependency to the latest release.
+
+## 15.2.8
+
+ - Update a dependency to the latest release.
+
+## 15.2.7
+
+ - Update a dependency to the latest release.
+
+## 15.2.6
+
+ - Update a dependency to the latest release.
+
+## 15.2.5
+
+ - Update a dependency to the latest release.
+
 ## 15.2.4
 
  - Update a dependency to the latest release.
@@ -502,7 +522,7 @@
 
  - **FIX**: revert onMessage event handler commit which causes another bug (#6878).
  - **FIX**: allow messages when device is in idle mode (#6730).
- - **FIX**: onMessage event handler for notifcations with `contentAvailable:true` (#6838).
+ - **FIX**: onMessage event handler for notifications with `contentAvailable:true` (#6838).
 
 ## 10.0.5
 

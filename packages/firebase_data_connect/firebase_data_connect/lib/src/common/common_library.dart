@@ -16,6 +16,10 @@ import 'dart:convert';
 
 import 'package:firebase_app_check/firebase_app_check.dart';
 
+import 'dart:io' show Platform;
+
+import 'package:flutter/foundation.dart';
+
 part 'dataconnect_error.dart';
 part 'dataconnect_options.dart';
 
@@ -26,7 +30,7 @@ String getGoogApiVal(CallerSDKType sdkType, String packageVersion) {
   if (sdkType == CallerSDKType.generated) {
     apiClientValue += ' dart/gen';
   }
-  return apiClientValue;
+  return '$apiClientValue gl-${kIsWeb ? 'web' : Platform.operatingSystem}';
 }
 
 String getFirebaseClientVal(String packageVersion) {

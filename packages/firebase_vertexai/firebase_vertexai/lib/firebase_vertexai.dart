@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export 'src/api.dart'
+import 'package:firebase_ai/firebase_ai.dart'
+    show FirebaseAIException, FirebaseAISdkException;
+
+export 'package:firebase_ai/firebase_ai.dart'
     show
         BlockReason,
         Candidate,
@@ -25,46 +28,57 @@ export 'src/api.dart'
         HarmBlockThreshold,
         HarmCategory,
         HarmProbability,
+        HarmBlockMethod,
         PromptFeedback,
+        ResponseModalities,
         SafetyRating,
         SafetySetting,
-        // TODO(cynthiajiang) remove in next breaking change.
-        TaskType,
-        UsageMetadata;
-export 'src/chat.dart' show ChatSession, StartChatExtension;
-export 'src/content.dart'
-    show
+        UsageMetadata,
+        GenerativeModel,
+        ImagenModel,
+        LiveGenerativeModel,
+        ChatSession,
+        StartChatExtension,
         Content,
         InlineDataPart,
         FileData,
         FunctionCall,
         FunctionResponse,
         Part,
-        TextPart;
-export 'src/error.dart'
-    show
-        VertexAIException,
-        VertexAISdkException,
+        TextPart,
         InvalidApiKey,
         ServerException,
-        UnsupportedUserLocation;
-export 'src/firebase_vertexai.dart' show FirebaseVertexAI;
-export 'src/function_calling.dart'
-    show
+        UnsupportedUserLocation,
         FunctionCallingConfig,
         FunctionCallingMode,
         FunctionDeclaration,
         Tool,
-        ToolConfig;
-export 'src/generative_model.dart' show GenerativeModel;
-export 'src/imagen_api.dart'
-    show
+        ToolConfig,
         ImagenSafetySettings,
         ImagenFormat,
         ImagenSafetyFilterLevel,
         ImagenPersonFilterLevel,
         ImagenGenerationConfig,
-        ImagenAspectRatio;
-export 'src/imagen_content.dart' show ImagenInlineImage;
-export 'src/imagen_model.dart' show ImagenModel;
-export 'src/schema.dart' show Schema, SchemaType;
+        ImagenAspectRatio,
+        ImagenInlineImage,
+        LiveGenerationConfig,
+        SpeechConfig,
+        LiveServerMessage,
+        LiveServerContent,
+        LiveServerToolCall,
+        LiveServerToolCallCancellation,
+        LiveServerResponse,
+        LiveSession,
+        Schema,
+        SchemaType;
+export 'src/firebase_vertexai.dart' show FirebaseVertexAI;
+
+/// Exception thrown when generating content fails.
+typedef VertexAIException = FirebaseAIException;
+
+/// Exception indicating a stale package version or implementation bug.
+///
+/// This exception indicates a likely problem with the SDK implementation such
+/// as an inability to parse a new response format. Resolution paths may include
+/// updating to a new version of the SDK, or filing an issue.
+typedef VertexAISdkException = FirebaseAISdkException;

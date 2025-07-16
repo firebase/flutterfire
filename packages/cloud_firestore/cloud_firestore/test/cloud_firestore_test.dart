@@ -81,12 +81,12 @@ void main() {
       });
 
       test('does not expect an empty path', () {
-        expect(() => firestore!.collection(''), throwsAssertionError);
+        expect(() => firestore!.collection(''), throwsArgumentError);
       });
 
       test('does accept an invalid path', () {
         // 'foo/bar' points to a document
-        expect(() => firestore!.collection('foo/bar'), throwsAssertionError);
+        expect(() => firestore!.collection('foo/bar'), throwsArgumentError);
       });
     });
 
@@ -96,13 +96,13 @@ void main() {
       });
 
       test('does not expect an empty path', () {
-        expect(() => firestore!.collectionGroup(''), throwsAssertionError);
+        expect(() => firestore!.collectionGroup(''), throwsArgumentError);
       });
 
       test('does accept a path containing "/"', () {
         expect(
           () => firestore!.collectionGroup('foo/bar/baz'),
-          throwsAssertionError,
+          throwsArgumentError,
         );
       });
     });
@@ -113,12 +113,12 @@ void main() {
       });
 
       test('does not expect an empty path', () {
-        expect(() => firestore!.doc(''), throwsAssertionError);
+        expect(() => firestore!.doc(''), throwsArgumentError);
       });
 
       test('does accept an invalid path', () {
         // 'foo' points to a collection
-        expect(() => firestore!.doc('bar'), throwsAssertionError);
+        expect(() => firestore!.doc('bar'), throwsArgumentError);
       });
     });
   });

@@ -11,10 +11,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+import 'package:firebase_ai/src/base_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
-import 'package:firebase_vertexai/src/api.dart';
-import 'package:firebase_vertexai/src/generative_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'mock.dart';
@@ -40,6 +40,7 @@ void main() {
     }) {
       final client = ClientController();
       final model = createModelWithClient(
+          useVertexBackend: true,
           app: app,
           model: modelName,
           client: client.client,
@@ -170,6 +171,23 @@ void main() {
           verifyRequest: (_, request) {
             expect(request['generationConfig'], {
               'stopSequences': ['a'],
+            });
+          },
+          response: arbitraryGenerateContentResponse,
+        );
+      });
+
+      test('can override GenerationConfig repetition penalties', () async {
+        final (client, model) = createModel();
+        const prompt = 'Some prompt';
+        await client.checkRequest(
+          () => model.generateContent([Content.text(prompt)],
+              generationConfig: GenerationConfig(
+                  presencePenalty: 0.5, frequencyPenalty: 0.2)),
+          verifyRequest: (_, request) {
+            expect(request['generationConfig'], {
+              'presencePenalty': 0.5,
+              'frequencyPenalty': 0.2,
             });
           },
           response: arbitraryGenerateContentResponse,

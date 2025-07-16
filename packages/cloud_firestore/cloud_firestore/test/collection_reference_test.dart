@@ -31,7 +31,7 @@ void main() {
     });
 
     test('extends $Query', () {
-      // The `firestore` property is publically accessible via Query.
+      // The `firestore` property is publicly accessible via Query.
       // Is there a better way to test this?
       CollectionReference ref = firestore.collection('foo');
 
@@ -98,19 +98,19 @@ void main() {
 
     test('path must be non-empty strings', () {
       DocumentReference docRef = firestore.doc('foo/bar');
-      expect(() => firestore.collection(''), throwsAssertionError);
-      expect(() => docRef.collection(''), throwsAssertionError);
+      expect(() => firestore.collection(''), throwsArgumentError);
+      expect(() => docRef.collection(''), throwsArgumentError);
     });
 
     test('path must be odd length', () {
       DocumentReference docRef = firestore.doc('foo/bar');
-      expect(() => firestore.collection('foo/bar'), throwsAssertionError);
+      expect(() => firestore.collection('foo/bar'), throwsArgumentError);
       expect(
         () => firestore.collection('foo/bar/baz/quu'),
-        throwsAssertionError,
+        throwsArgumentError,
       );
-      expect(() => docRef.collection('foo/bar'), throwsAssertionError);
-      expect(() => docRef.collection('foo/bar/baz/quu'), throwsAssertionError);
+      expect(() => docRef.collection('foo/bar'), throwsArgumentError);
+      expect(() => docRef.collection('foo/bar/baz/quu'), throwsArgumentError);
     });
 
     test('must not have empty segments', () {
@@ -124,31 +124,31 @@ void main() {
       DocumentReference docRef = colRef.doc('test-document');
 
       for (final path in badPaths) {
-        expect(() => firestore.collection(path), throwsAssertionError);
-        expect(() => firestore.doc(path), throwsAssertionError);
-        expect(() => colRef.doc(path), throwsAssertionError);
-        expect(() => docRef.collection(path), throwsAssertionError);
+        expect(() => firestore.collection(path), throwsArgumentError);
+        expect(() => firestore.doc(path), throwsArgumentError);
+        expect(() => colRef.doc(path), throwsArgumentError);
+        expect(() => docRef.collection(path), throwsArgumentError);
       }
     });
 
     group('validate', () {
       test('path must be non-empty strings', () {
         DocumentReference docRef = firestore.doc('foo/bar');
-        expect(() => firestore.collection(''), throwsAssertionError);
-        expect(() => docRef.collection(''), throwsAssertionError);
+        expect(() => firestore.collection(''), throwsArgumentError);
+        expect(() => docRef.collection(''), throwsArgumentError);
       });
 
       test('path must be odd length', () {
         DocumentReference docRef = firestore.doc('foo/bar');
-        expect(() => firestore.collection('foo/bar'), throwsAssertionError);
+        expect(() => firestore.collection('foo/bar'), throwsArgumentError);
         expect(
           () => firestore.collection('foo/bar/baz/quu'),
-          throwsAssertionError,
+          throwsArgumentError,
         );
-        expect(() => docRef.collection('foo/bar'), throwsAssertionError);
+        expect(() => docRef.collection('foo/bar'), throwsArgumentError);
         expect(
           () => docRef.collection('foo/bar/baz/quu'),
-          throwsAssertionError,
+          throwsArgumentError,
         );
       });
 
@@ -163,10 +163,10 @@ void main() {
         DocumentReference docRef = colRef.doc('test-document');
 
         for (final String path in badPaths) {
-          expect(() => firestore.collection(path), throwsAssertionError);
-          expect(() => firestore.doc(path), throwsAssertionError);
-          expect(() => colRef.doc(path), throwsAssertionError);
-          expect(() => docRef.collection(path), throwsAssertionError);
+          expect(() => firestore.collection(path), throwsArgumentError);
+          expect(() => firestore.doc(path), throwsArgumentError);
+          expect(() => colRef.doc(path), throwsArgumentError);
+          expect(() => docRef.collection(path), throwsArgumentError);
         }
       });
     });

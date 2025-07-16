@@ -1,14 +1,16 @@
 group 'io.flutter.plugins.firebase.cloudfirestore'
 version '1.0-SNAPSHOT'
 
+apply plugin: 'com.android.library'
+apply from: file("local-config.gradle")
+
 buildscript {
     repositories {
         google()
         mavenCentral()
     }
-
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.1.2'
+        classpath 'com.android.tools.build:gradle:8.3.0'
     }
 }
 
@@ -19,7 +21,6 @@ allprojects {
     }
 }
 
-apply plugin: 'com.android.library'
 
 def firebaseCoreProject = findProject(':firebase_core')
 if (firebaseCoreProject == null) {
@@ -40,16 +41,16 @@ android {
       namespace 'io.flutter.plugins.firebase.firestore'
     }
 
-    compileSdk 34
+    compileSdkVersion project.ext.compileSdk
 
     defaultConfig {
-        minSdk 21
+        minSdkVersion project.ext.minSdk
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     compileOptions {
-      sourceCompatibility JavaVersion.VERSION_1_8
-      targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility project.ext.javaVersion
+        targetCompatibility project.ext.javaVersion
     }
 
     buildFeatures {

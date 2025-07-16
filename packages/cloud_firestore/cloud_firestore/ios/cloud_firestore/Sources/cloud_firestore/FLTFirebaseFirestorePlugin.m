@@ -132,11 +132,11 @@ FlutterStandardMethodCodec *_codec;
 }
 
 - (void)cleanupEventListeners {
-  for (FlutterEventChannel *channel in self->_eventChannels) {
+  for (FlutterEventChannel *channel in self->_eventChannels.allValues) {
     [channel setStreamHandler:nil];
   }
   [self->_eventChannels removeAllObjects];
-  for (NSObject<FlutterStreamHandler> *handler in self->_streamHandlers) {
+  for (NSObject<FlutterStreamHandler> *handler in self->_streamHandlers.allValues) {
     [handler onCancelWithArguments:nil];
   }
   [self->_streamHandlers removeAllObjects];
@@ -224,9 +224,8 @@ FlutterStandardMethodCodec *_codec;
     if (pigeonApp.settings.persistenceEnabled != nil) {
       bool persistEnabled = [pigeonApp.settings.persistenceEnabled boolValue];
 
-      // This is the maximum amount of cache allowed. We use the same number on android.
-      // This now causes an exception: kFIRFirestoreCacheSizeUnlimited
-      NSNumber *size = @104857600;
+      // We default to the maximum amount of cache allowed.
+      NSNumber *size = @(kFIRFirestoreCacheSizeUnlimited);
 
       if (pigeonApp.settings.cacheSizeBytes) {
         NSNumber *cacheSizeBytes = pigeonApp.settings.cacheSizeBytes;

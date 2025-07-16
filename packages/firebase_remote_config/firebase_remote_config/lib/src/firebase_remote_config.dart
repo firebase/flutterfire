@@ -164,7 +164,7 @@ class FirebaseRemoteConfig extends FirebasePluginPlatform {
   ///
   /// If a connection to the Remote Config backend is not already open, calling this method will
   /// open it. Multiple listeners can be added by calling this method again, but subsequent calls
-  /// re-use the same connection to the backend.
+  /// reuse the same connection to the backend.
   Stream<RemoteConfigUpdate> get onConfigUpdated {
     return _delegate.onConfigUpdated;
   }

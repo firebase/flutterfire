@@ -1,3 +1,27 @@
+## 4.4.11
+
+ - Update a dependency to the latest release.
+
+## 4.4.10
+
+ - Update a dependency to the latest release.
+
+## 4.4.9
+
+ - Update a dependency to the latest release.
+
+## 4.4.8
+
+ - Update a dependency to the latest release.
+
+## 4.4.7
+
+ - Update a dependency to the latest release.
+
+## 4.4.6
+
+ - Update a dependency to the latest release.
+
 ## 4.4.5
 
  - Update a dependency to the latest release.
@@ -97,7 +121,7 @@
 
 ## 3.12.2
 
- - **FIX**(web): fixing some uncorrect type casting for Web ([#12696](https://github.com/firebase/flutterfire/issues/12696)). ([471b5072](https://github.com/firebase/flutterfire/commit/471b507265a08bbc68277d3a2fdb7ef608c9efcc))
+ - **FIX**(web): fixing some incorrect type casting for Web ([#12696](https://github.com/firebase/flutterfire/issues/12696)). ([471b5072](https://github.com/firebase/flutterfire/commit/471b507265a08bbc68277d3a2fdb7ef608c9efcc))
 
 ## 3.12.1
 
@@ -566,7 +590,7 @@
 
 ## 1.0.6
 
- - **REFACTOR**: Share guard functions accross plugins (#5783).
+ - **REFACTOR**: Share guard functions across plugins (#5783).
 
 ## 1.0.5
 

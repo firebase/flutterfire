@@ -187,6 +187,8 @@ abstract class TestFirebaseAuthHostApi {
   Future<void> revokeTokenWithAuthorizationCode(
       AuthPigeonFirebaseApp app, String authorizationCode);
 
+  Future<void> initializeRecaptchaConfig(AuthPigeonFirebaseApp app);
+
   static void setUp(
     TestFirebaseAuthHostApi? api, {
     BinaryMessenger? binaryMessenger,
@@ -983,6 +985,38 @@ abstract class TestFirebaseAuthHostApi {
           try {
             await api.revokeTokenWithAuthorizationCode(
                 arg_app!, arg_authorizationCode!);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> __pigeon_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.initializeRecaptchaConfig$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(__pigeon_channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(__pigeon_channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.initializeRecaptchaConfig was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.initializeRecaptchaConfig was null, expected non-null AuthPigeonFirebaseApp.');
+          try {
+            await api.initializeRecaptchaConfig(arg_app!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
