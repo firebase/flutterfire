@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 import 'dart:core';
 import 'password_policy.dart';
-import 'password_policy_status.dart';
+import 'password_validation_status.dart';
 
 class PasswordPolicyImpl {
   final PasswordPolicy _policy;
