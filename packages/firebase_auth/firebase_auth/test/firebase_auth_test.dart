@@ -802,46 +802,46 @@ void main() {
           PasswordPolicyImpl(kMockPasswordPolicyObject);
 
       test('should return true for valid password', () async {
-        final PasswordPolicyStatus status =
+        final PasswordValidationStatus status =
             passwordPolicy.isPasswordValid(kMockValidPassword);
-        expect(status.status, isTrue);
+        expect(status.isValid, isTrue);
       });
 
       test('should return false for invalid password that is too short',
           () async {
-        final PasswordPolicyStatus status =
+        final PasswordValidationStatus status =
             passwordPolicy.isPasswordValid(kMockInvalidPassword);
-        expect(status.status, isFalse);
+        expect(status.isValid, isFalse);
       });
 
       test(
           'should return false for invalid password with no capital characters',
           () async {
-        final PasswordPolicyStatus status =
+        final PasswordValidationStatus status =
             passwordPolicy.isPasswordValid(kMockInvalidPassword2);
-        expect(status.status, isFalse);
+        expect(status.isValid, isFalse);
       });
 
       test(
           'should return false for invalid password with no lowercase characters',
           () async {
-        final PasswordPolicyStatus status =
+        final PasswordValidationStatus status =
             passwordPolicy.isPasswordValid(kMockInvalidPassword3);
-        expect(status.status, isFalse);
+        expect(status.isValid, isFalse);
       });
 
       test('should return false for invalid password with no numbers',
           () async {
-        final PasswordPolicyStatus status =
+        final PasswordValidationStatus status =
             passwordPolicy.isPasswordValid(kMockInvalidPassword4);
-        expect(status.status, isFalse);
+        expect(status.isValid, isFalse);
       });
 
       test('should return false for invalid password with no symbols',
           () async {
-        final PasswordPolicyStatus status =
+        final PasswordValidationStatus status =
             passwordPolicy.isPasswordValid(kMockInvalidPassword5);
-        expect(status.status, isFalse);
+        expect(status.isValid, isFalse);
       });
     });
 

@@ -13,8 +13,8 @@ class PasswordPolicyImpl {
   // Getter to access the policy
   PasswordPolicy get policy => _policy;
 
-  PasswordPolicyStatus isPasswordValid(String password) {
-    PasswordPolicyStatus status = PasswordPolicyStatus(true, _policy);
+  PasswordValidationStatus isPasswordValid(String password) {
+    PasswordValidationStatus status = PasswordValidationStatus(true, _policy);
 
     _validatePasswordLengthOptions(password, status);
     _validatePasswordCharacterOptions(password, status);
@@ -24,26 +24,26 @@ class PasswordPolicyImpl {
 
   void _validatePasswordLengthOptions(
     String password,
-    PasswordPolicyStatus status,
+    PasswordValidationStatus status,
   ) {
     int minPasswordLength = _policy.minPasswordLength;
     int? maxPasswordLength = _policy.maxPasswordLength;
 
     status.meetsMinPasswordLength = password.length >= minPasswordLength;
     if (!status.meetsMinPasswordLength) {
-      status.status = false;
+      status.isValid = false;
     }
     if (maxPasswordLength != null) {
       status.meetsMaxPasswordLength = password.length <= maxPasswordLength;
       if (!status.meetsMaxPasswordLength) {
-        status.status = false;
+        status.isValid = false;
       }
     }
   }
 
   void _validatePasswordCharacterOptions(
     String password,
-    PasswordPolicyStatus status,
+    PasswordValidationStatus status,
   ) {
     bool? requireLowercase = _policy.containsLowercaseCharacter;
     bool? requireUppercase = _policy.containsUppercaseCharacter;
@@ -53,19 +53,19 @@ class PasswordPolicyImpl {
     if (requireLowercase ?? false) {
       status.meetsLowercaseRequirement = password.contains(RegExp('[a-z]'));
       if (!status.meetsLowercaseRequirement) {
-        status.status = false;
+        status.isValid = false;
       }
     }
     if (requireUppercase ?? false) {
       status.meetsUppercaseRequirement = password.contains(RegExp('[A-Z]'));
       if (!status.meetsUppercaseRequirement) {
-        status.status = false;
+        status.isValid = false;
       }
     }
     if (requireDigits ?? false) {
       status.meetsDigitsRequirement = password.contains(RegExp('[0-9]'));
       if (!status.meetsDigitsRequirement) {
-        status.status = false;
+        status.isValid = false;
       }
     }
     if (requireSymbols ?? false) {
@@ -85,7 +85,7 @@ class PasswordPolicyImpl {
       }
       status.meetsSymbolsRequirement = hasSymbol;
       if (!hasSymbol) {
-        status.status = false;
+        status.isValid = false;
       }
     }
   }

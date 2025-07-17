@@ -3,8 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 import 'password_policy.dart';
 
-class PasswordPolicyStatus {
-  bool status;
+class PasswordValidationStatus {
+  bool isValid;
   final PasswordPolicy passwordPolicy;
 
   // Initialize all fields to true by default (meaning they pass validation)
@@ -15,5 +15,5 @@ class PasswordPolicyStatus {
   bool meetsDigitsRequirement = true;
   bool meetsSymbolsRequirement = true;
 
-  PasswordPolicyStatus(this.status, this.passwordPolicy);
+  PasswordValidationStatus(this.isValid, this.passwordPolicy);
 }

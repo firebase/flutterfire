@@ -858,7 +858,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// - **operation-not-allowed**:
   ///  - Thrown if email/password accounts are not enabled. Enable
   ///    email/password accounts in the Firebase Console, under the Auth tab.
-  Future<PasswordPolicyStatus> validatePassword(
+  Future<PasswordValidationStatus> validatePassword(
     FirebaseAuth auth,
     String? password,
   ) async {
