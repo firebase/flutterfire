@@ -12,7 +12,7 @@ import 'package:flutter/foundation.dart';
 import 'src/password_policy/password_policy_impl.dart';
 import 'src/password_policy/password_policy_api.dart';
 import 'src/password_policy/password_policy.dart';
-import 'src/password_policy/password_policy_status.dart';
+import 'src/password_policy/password_validation_status.dart';
 
 export 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart'
     show
@@ -71,7 +71,7 @@ export 'package:firebase_core_platform_interface/firebase_core_platform_interfac
 
 // Export password policy classes
 export 'src/password_policy/password_policy.dart';
-export 'src/password_policy/password_policy_status.dart';
+export 'src/password_policy/password_validation_status.dart';
 export 'src/password_policy/password_policy_impl.dart';
 export 'src/password_policy/password_policy_api.dart';
 
