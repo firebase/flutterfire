@@ -14,9 +14,9 @@
 
 import 'dart:convert';
 
+import 'package:firebase_ai/src/api.dart';
+import 'package:firebase_ai/src/error.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
-import 'package:firebase_vertexai/src/api.dart';
-import 'package:firebase_vertexai/src/error.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'utils/matchers.dart';
@@ -56,7 +56,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       expect(
-        () => parseGenerateContentResponse(decoded),
+        () => VertexSerialization().parseGenerateContentResponse(decoded),
         throwsA(
           isA<VertexAISdkException>().having(
             (e) => e.message,
@@ -94,7 +94,8 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse = parseGenerateContentResponse(decoded);
+      final generateContentResponse =
+          VertexSerialization().parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -158,7 +159,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       expect(
-        () => parseGenerateContentResponse(decoded),
+        () => VertexSerialization().parseGenerateContentResponse(decoded),
         throwsA(
           isA<ServiceApiNotEnabled>().having(
             (e) => e.message,
@@ -206,7 +207,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       expect(
-        () => parseGenerateContentResponse(decoded),
+        () => VertexSerialization().parseGenerateContentResponse(decoded),
         throwsA(
           isA<QuotaExceeded>().having(
             (e) => e.message,
@@ -277,7 +278,8 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse = parseGenerateContentResponse(decoded);
+      final generateContentResponse =
+          VertexSerialization().parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -410,7 +412,8 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse = parseGenerateContentResponse(decoded);
+      final generateContentResponse =
+          VertexSerialization().parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -544,7 +547,8 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse = parseGenerateContentResponse(decoded);
+      final generateContentResponse =
+          VertexSerialization().parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -625,7 +629,8 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse = parseGenerateContentResponse(decoded);
+      final generateContentResponse =
+          VertexSerialization().parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -685,7 +690,8 @@ void main() {
 }
         ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse = parseGenerateContentResponse(decoded);
+      final generateContentResponse =
+          VertexSerialization().parseGenerateContentResponse(decoded);
       expect(
           generateContentResponse.text, 'Here is a description of the image:');
       expect(generateContentResponse.usageMetadata?.totalTokenCount, 1913);
@@ -722,7 +728,8 @@ void main() {
 }
         ''';
       final decoded = jsonDecode(response) as Object;
-      final countTokensResponse = parseCountTokensResponse(decoded);
+      final countTokensResponse =
+          VertexSerialization().parseCountTokensResponse(decoded);
       expect(countTokensResponse.totalTokens, 1837);
       expect(countTokensResponse.promptTokensDetails?.first.modality,
           ContentModality.image);
@@ -755,7 +762,8 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse = parseGenerateContentResponse(decoded);
+      final generateContentResponse =
+          VertexSerialization().parseGenerateContentResponse(decoded);
       expect(generateContentResponse.text, 'Initial text And more text');
       expect(generateContentResponse.candidates.single.text,
           'Initial text And more text');
@@ -795,8 +803,10 @@ void main() {
           'API key not valid. Please pass a valid API key.',
         ),
       );
-      expect(() => parseGenerateContentResponse(decoded), expectedThrow);
-      expect(() => parseCountTokensResponse(decoded), expectedThrow);
+      expect(() => VertexSerialization().parseGenerateContentResponse(decoded),
+          expectedThrow);
+      expect(() => VertexSerialization().parseCountTokensResponse(decoded),
+          expectedThrow);
     });
 
     test('for unsupported user location', () async {
@@ -823,8 +833,10 @@ void main() {
           'User location is not supported for the API use.',
         ),
       );
-      expect(() => parseGenerateContentResponse(decoded), expectedThrow);
-      expect(() => parseCountTokensResponse(decoded), expectedThrow);
+      expect(() => VertexSerialization().parseGenerateContentResponse(decoded),
+          expectedThrow);
+      expect(() => VertexSerialization().parseCountTokensResponse(decoded),
+          expectedThrow);
     });
 
     test('for general server errors', () async {
@@ -854,8 +866,10 @@ void main() {
           ),
         ),
       );
-      expect(() => parseGenerateContentResponse(decoded), expectedThrow);
-      expect(() => parseCountTokensResponse(decoded), expectedThrow);
+      expect(() => VertexSerialization().parseGenerateContentResponse(decoded),
+          expectedThrow);
+      expect(() => VertexSerialization().parseCountTokensResponse(decoded),
+          expectedThrow);
     });
   });
 }

@@ -1,0 +1,47 @@
+name: firebase_ai_example
+description: "Example project to show how to use the Firebase AI SDK."
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+# Dependencies specify other packages that your package needs in order to work.
+# To automatically upgrade your package dependencies to the latest versions
+# consider running `flutter pub upgrade --major-versions`. Alternatively,
+# dependencies can be manually updated by changing the version numbers below to
+# the latest version available on pub.dev. To see which dependencies have newer
+# versions available, run `flutter pub outdated`.
+dependencies:
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+
+  cupertino_icons: ^1.0.6
+  firebase_ai: ^2.2.1
+  firebase_core: ^3.15.1
+  firebase_storage: ^12.4.9
+  flutter:
+    sdk: flutter
+  flutter_markdown: ^0.6.20
+  flutter_soloud: ^3.1.6
+  path_provider: ^2.1.5
+  record: ^5.2.1
+
+dev_dependencies:
+  flutter_lints: ^4.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/documents/
+    - assets/videos/

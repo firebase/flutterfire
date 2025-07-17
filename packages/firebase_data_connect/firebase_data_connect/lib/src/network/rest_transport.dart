@@ -35,7 +35,7 @@ class RestTransport implements DataConnectTransport {
     String service = options.serviceId;
     String connector = options.connector;
     url =
-        '$protocol://$host:$port/v1beta/projects/$project/locations/$location/services/$service/connectors/$connector';
+        '$protocol://$host:$port/v1/projects/$project/locations/$location/services/$service/connectors/$connector';
   }
 
   @override
@@ -126,22 +126,45 @@ class RestTransport implements DataConnectTransport {
               : DataConnectErrorCode.other,
           "Received a status code of ${r.statusCode} with a message '$message'",
         );
-      } else {
-        Map<String, dynamic> bodyJson =
-            jsonDecode(r.body) as Map<String, dynamic>;
-        if (bodyJson.containsKey('errors') &&
-            (bodyJson['errors'] as List).isNotEmpty) {
-          throw DataConnectError(
-            DataConnectErrorCode.other,
-            bodyJson['errors'].toString(),
-          );
+      }
+      Map<String, dynamic> bodyJson =
+          jsonDecode(r.body) as Map<String, dynamic>;
+
+      if (bodyJson.containsKey('errors') &&
+          (bodyJson['errors'] as List).isNotEmpty) {
+        Map<String, dynamic>? data = bodyJson['data'];
+        Data? decodedData;
+        if (data != null) {
+          try {
+            decodedData = deserializer(jsonEncode(bodyJson['data']));
+          } catch (e) {
+            // nothing required
+          }
         }
+        List<dynamic> errors =
+            jsonDecode(jsonEncode(bodyJson['errors'])) as List<dynamic>;
+        List<DataConnectOperationFailureResponseErrorInfo> suberrors = errors
+            .map((e) {
+              return jsonDecode(jsonEncode(e)) as Map<String, dynamic>;
+            })
+            .map((e) => DataConnectOperationFailureResponseErrorInfo(
+                (e['path'] as List)
+                    .map((val) => val.runtimeType == String
+                        ? DataConnectFieldPathSegment(val)
+                        : DataConnectListIndexPathSegment(val))
+                    .toList(),
+                e['message']))
+            .toList();
+        final response =
+            DataConnectOperationFailureResponse(suberrors, data, decodedData);
+        throw DataConnectOperationError(DataConnectErrorCode.other,
+            'Failed to invoke operation: ', response);
       }
 
       /// The response we get is in the data field of the response
       /// Once we get the data back, it's not quite json-encoded,
       /// so we have to encode it and then send it to the user's deserializer.
-      return deserializer(jsonEncode(jsonDecode(r.body)['data']));
+      return deserializer(jsonEncode(bodyJson['data']));
     } on Exception catch (e) {
       if (e is DataConnectError) {
         rethrow;

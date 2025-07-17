@@ -1,3 +1,23 @@
+## 0.2.0+13
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+12
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+11
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+10
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+9
+
+ - **FIX**(appcheck,web): replace deprecated members ([#17168](https://github.com/firebase/flutterfire/issues/17168)). ([bb13127a](https://github.com/firebase/flutterfire/commit/bb13127ab6e1a00bb4694fd7e06e3b25643da26e))
+
 ## 0.2.0+8
 
  - Update a dependency to the latest release.

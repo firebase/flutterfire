@@ -36,7 +36,7 @@ const GraphqlError$json = {
       '3': 2,
       '4': 3,
       '5': 11,
-      '6': '.google.firebase.dataconnect.v1beta.SourceLocation',
+      '6': '.google.firebase.dataconnect.v1.SourceLocation',
       '10': 'locations'
     },
     {
@@ -52,7 +52,7 @@ const GraphqlError$json = {
       '3': 4,
       '4': 1,
       '5': 11,
-      '6': '.google.firebase.dataconnect.v1beta.GraphqlErrorExtensions',
+      '6': '.google.firebase.dataconnect.v1.GraphqlErrorExtensions',
       '10': 'extensions'
     },
   ],
@@ -60,11 +60,11 @@ const GraphqlError$json = {
 
 /// Descriptor for `GraphqlError`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List graphqlErrorDescriptor = $convert.base64Decode(
-    'CgxHcmFwaHFsRXJyb3ISGAoHbWVzc2FnZRgBIAEoCVIHbWVzc2FnZRJQCglsb2NhdGlvbnMYAi'
-    'ADKAsyMi5nb29nbGUuZmlyZWJhc2UuZGF0YWNvbm5lY3QudjFiZXRhLlNvdXJjZUxvY2F0aW9u'
-    'Uglsb2NhdGlvbnMSLgoEcGF0aBgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5MaXN0VmFsdWVSBH'
-    'BhdGgSWgoKZXh0ZW5zaW9ucxgEIAEoCzI6Lmdvb2dsZS5maXJlYmFzZS5kYXRhY29ubmVjdC52'
-    'MWJldGEuR3JhcGhxbEVycm9yRXh0ZW5zaW9uc1IKZXh0ZW5zaW9ucw==');
+    'CgxHcmFwaHFsRXJyb3ISGAoHbWVzc2FnZRgBIAEoCVIHbWVzc2FnZRJMCglsb2NhdGlvbnMYAi'
+    'ADKAsyLi5nb29nbGUuZmlyZWJhc2UuZGF0YWNvbm5lY3QudjEuU291cmNlTG9jYXRpb25SCWxv'
+    'Y2F0aW9ucxIuCgRwYXRoGAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLkxpc3RWYWx1ZVIEcGF0aB'
+    'JWCgpleHRlbnNpb25zGAQgASgLMjYuZ29vZ2xlLmZpcmViYXNlLmRhdGFjb25uZWN0LnYxLkdy'
+    'YXBocWxFcnJvckV4dGVuc2lvbnNSCmV4dGVuc2lvbnM=');
 
 @$core.Deprecated('Use sourceLocationDescriptor instead')
 const SourceLocation$json = {

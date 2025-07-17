@@ -65,6 +65,8 @@ class Optional<T> {
   dynamic toJson() {
     if (_value != null) {
       return serializer(_value as T);
+    } else if (state == OptionalState.set) {
+      return null;
     }
     return '';
   }

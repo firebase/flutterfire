@@ -15,8 +15,8 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:firebase_vertexai/src/error.dart';
-import 'package:firebase_vertexai/src/imagen_content.dart';
+import 'package:firebase_ai/src/error.dart';
+import 'package:firebase_ai/src/imagen_content.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

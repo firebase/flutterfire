@@ -90,7 +90,7 @@ jobs:
             flutter test integration_test/e2e_test.dart --dart-define=CI=true -d emulator-5554
 
   ios:
-    runs-on: macos-14
+    runs-on: macos-15
     timeout-minutes: 45
     strategy:
       fail-fast: false
@@ -160,7 +160,7 @@ jobs:
         run: |
           # Boot simulator and wait for System app to be ready.
           # List of available simulators: https://github.com/actions/runner-images/blob/main/images/macos/macos-14-Readme.md#installed-simulators
-          SIMULATOR="iPhone 15"
+          SIMULATOR="iPhone 16"
           xcrun simctl bootstatus "$SIMULATOR" -b
           xcrun simctl logverbose "$SIMULATOR" enable
           # Sleep to allow simulator to settle.

@@ -1,3 +1,27 @@
+## 4.11.4
+
+ - Update a dependency to the latest release.
+
+## 4.11.3
+
+ - Update a dependency to the latest release.
+
+## 4.11.2
+
+ - Update a dependency to the latest release.
+
+## 4.11.1
+
+ - Update a dependency to the latest release.
+
+## 4.11.0
+
+ - **FEAT**(cloud_functions): add support for cloud functions stream ([#17214](https://github.com/firebase/flutterfire/issues/17214)). ([509e0f3c](https://github.com/firebase/flutterfire/commit/509e0f3cc984a7b56a67979b4b27aff72defdd55))
+
+## 4.10.11
+
+ - Update a dependency to the latest release.
+
 ## 4.10.10
 
  - Update a dependency to the latest release.

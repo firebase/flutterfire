@@ -1,3 +1,28 @@
+## 5.6.11
+
+ - Update a dependency to the latest release.
+
+## 5.6.10
+
+ - Update a dependency to the latest release.
+
+## 5.6.9
+
+ - **FIX**(firestore,ios): fix an issue where unlimited cache wasn't properly set on iOS ([#17412](https://github.com/firebase/flutterfire/issues/17412)). ([cad28406](https://github.com/firebase/flutterfire/commit/cad28406d3baf8fa1087be35630c82a79b5c9d92))
+
+## 5.6.8
+
+ - Update a dependency to the latest release.
+
+## 5.6.7
+
+ - **FIX**(firestore): Change asserts to throw argumentError ([#17302](https://github.com/firebase/flutterfire/issues/17302)). ([ec1e6a5e](https://github.com/firebase/flutterfire/commit/ec1e6a5eef149680b2750900d1f16d8074e09b38))
+ - **FIX**(cloud_firestore): correct nanoseconds calculation for pre-1970 dates ([#17195](https://github.com/firebase/flutterfire/issues/17195)). ([a13deae3](https://github.com/firebase/flutterfire/commit/a13deae3334045fb1a48817ff9300cbe0696d177))
+
+## 5.6.6
+
+ - Update a dependency to the latest release.
+
 ## 5.6.5
 
  - Update a dependency to the latest release.
@@ -291,7 +316,7 @@
 ## 4.7.0
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 ## 4.6.0
 

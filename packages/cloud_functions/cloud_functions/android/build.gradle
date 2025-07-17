@@ -1,14 +1,20 @@
 group 'io.flutter.plugins.firebase.cloudfunctions'
 version '1.0-SNAPSHOT'
 
+apply plugin: 'com.android.library'
+apply from: file("local-config.gradle")
+apply plugin: 'kotlin-android'
+
 buildscript {
+  ext.kotlin_version = "1.8.22"
   repositories {
     google()
     mavenCentral()
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:8.1.2'
+      classpath 'com.android.tools.build:gradle:8.1.4'
+      classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
   }
 }
 
@@ -18,8 +24,6 @@ rootProject.allprojects {
     mavenCentral()
   }
 }
-
-apply plugin: 'com.android.library'
 
 def firebaseCoreProject = findProject(':firebase_core')
 if (firebaseCoreProject == null) {
@@ -40,17 +44,23 @@ android {
     namespace 'io.flutter.plugins.firebase.functions'
   }
 
-  compileSdk 34
+  compileSdkVersion project.ext.compileSdk
 
   defaultConfig {
-    minSdk 21
-    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+      minSdkVersion project.ext.minSdk
+      testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
 
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
+      sourceCompatibility project.ext.javaVersion
+      targetCompatibility project.ext.javaVersion
   }
+
+  sourceSets {
+    main.java.srcDirs += "src/main/kotlin"
+    test.java.srcDirs += "src/test/kotlin"
+  }
+
   buildFeatures {
     buildConfig = true
   }
@@ -64,7 +74,14 @@ android {
     implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
     implementation 'com.google.firebase:firebase-functions'
     implementation 'androidx.annotation:annotation:1.7.0'
+    implementation 'org.reactivestreams:reactive-streams:1.0.4'
   }
+
+  kotlinOptions {
+    jvmTarget = JavaVersion.VERSION_17
+  }
+  
 }
 
 apply from: file("./user-agent.gradle")
+apply plugin: 'org.jetbrains.kotlin.android'

@@ -1,14 +1,12 @@
 group 'io.flutter.plugins.firebase.auth'
 version '1.0-SNAPSHOT'
 
+apply plugin: 'com.android.library'
+
 buildscript {
     repositories {
         google()
         mavenCentral()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:8.1.2'
     }
 }
 
@@ -32,23 +30,22 @@ def getRootProjectExtOrCoreProperty(name, firebaseCoreProject) {
     return rootProject.ext.get('FlutterFire').get(name)
 }
 
-apply plugin: 'com.android.library'
-
 android {
     // Conditional for compatibility with AGP <4.2.
     if (project.android.hasProperty("namespace")) {
       namespace 'io.flutter.plugins.firebase.auth'
     }
 
-    compileSdk 34
+    compileSdkVersion 34
 
     defaultConfig {
-        minSdk 23
+        minSdkVersion 21
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.toVersion(17)
+        targetCompatibility JavaVersion.toVersion(17)
     }
 
     buildFeatures {

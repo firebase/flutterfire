@@ -489,91 +489,144 @@ On Apple devices, in order for incoming FCM Notifications to display images from
 
 If you are using Firebase phone authentication, you must add the Firebase Auth pod to your Podfile.
 
+Note: The iOS simulator does not display images in push notifications. You must test on a physical device.
+
 ### Step 1 - Add a notification service extension
 
 1.  In Xcode, click **File > New > Target...**
 1.  A modal will present a list of possible targets; scroll down or use the filter to select **Notification Service Extension**. Click **Next**.
-1.  Add a product name (use "ImageNotification" to follow along with this tutorial), set the language to Objective-C, and click **Finish**.
+1.  Add a product name (use "ImageNotification" to follow along with this tutorial), select either `Swift` or `Objective-C`, and click **Finish**.
 1.  Enable the scheme by clicking **Activate**.
 
 ### Step 2 - Add target to the Podfile
 
-Ensure that your new extension has access to the `Firebase/Messaging` pod by adding it in the Podfile:
+* {Swift}
 
-1.  From the Navigator, open the Podfile: **Pods > Podfile**
+  Ensure that your new extension has access to the `FirebaseMessaging` swift package by adding it to your `Runner` target:
 
-1.  Scroll down to the bottom of the file and add:
+  1.  From the Navigator, [add the Firebase Apple platforms SDK](https://firebase.google.com/docs/ios/setup#add-sdks): **File > Add Package Dependencies...**
 
-    ```ruby
-    target 'ImageNotification' do
-      use_frameworks!
-      pod 'Firebase/Auth' # Add this line if you are using FirebaseAuth phone authentication
-      pod 'Firebase/Messaging'
-    end
-    ```
+  1.  Search or enter package URL:
+      ```
+      https://github.com/firebase/firebase-ios-sdk
+      ```
 
-1.  Install or update your pods using `pod install` from the `ios` or `macos` directory.
+  1. Add to Project `Runner`: **Add Package**
+
+  1. Choose FirebaseMessaging and add to target ImageNotification: **Add Package**
+
+* {Objective-C}
+
+  Ensure that your new extension has access to the `Firebase/Messaging` pod by adding it in the Podfile:
+
+  1.  From the Navigator, open the Podfile: **Pods > Podfile**
+
+  1.  Scroll down to the bottom of the file and add:
+
+      ```ruby
+      target 'ImageNotification' do
+        use_frameworks!
+        pod 'Firebase/Auth' # Add this line if you are using FirebaseAuth phone authentication
+        pod 'Firebase/Messaging'
+      end
+      ```
+
+  1.  Install or update your pods using `pod install` from the `ios` or `macos` directory.
 
 ### Step 3 - Use the extension helper
 
 At this point, everything should still be running normally. The final step is invoking the extension helper.
 
-1.  From the navigator, select your ImageNotification extension
+* {Swift}
 
-1.  Open the `NotificationService.m` file.
+  1.  From the navigator, select your ImageNotification extension
 
-1.  At the top of the file, import `FirebaseMessaging.h` right after the `NotificationService.h` as shown below.
+  1.  Open the `NotificationService.swift` file.
 
-    Replace the content of `NotificationService.m` with:
+  1.  Replace the content of `NotificationService.swift` with:
 
-    ```objc
-    #import "NotificationService.h"
-    #import "FirebaseMessaging.h"
-    #import "FirebaseAuth.h" // Add this line if you are using FirebaseAuth phone authentication
-    #import <UIKit/UIKit.h> // Add this line if you are using FirebaseAuth phone authentication
+      ```swift
+      import UserNotifications
+      import FirebaseMessaging
 
-    @interface NotificationService ()
+      class NotificationService: UNNotificationServiceExtension {
 
-    @property (nonatomic, strong) void (^contentHandler)(UNNotificationContent *contentToDeliver);
-    @property (nonatomic, strong) UNMutableNotificationContent *bestAttemptContent;
+          var contentHandler: ((UNNotificationContent) -> Void)?
+          var bestAttemptContent: UNMutableNotificationContent?
 
-    @end
+          override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
+              self.contentHandler = contentHandler
+              bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
 
-    @implementation NotificationService
+              Messaging.serviceExtension().populateNotificationContent(bestAttemptContent!, withContentHandler: contentHandler)
+          }
 
-    /* Uncomment this if you are using Firebase Auth
-    - (BOOL)application:(UIApplication *)app
-                openURL:(NSURL *)url
-                options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
-      if ([[FIRAuth auth] canHandleURL:url]) {
-        return YES;
+          override func serviceExtensionTimeWillExpire() {
+              if let contentHandler = contentHandler, let bestAttemptContent = bestAttemptContent {
+                  contentHandler(bestAttemptContent)
+              }
+          }
       }
-      return NO;
-    }
+      ```
 
-    - (void)scene:(UIScene *)scene openURLContexts:(NSSet<UIOpenURLContext *> *)URLContexts {
-      for (UIOpenURLContext *urlContext in URLContexts) {
-        [FIRAuth.auth canHandleURL:urlContext.URL];
+* {Objective-C}
+
+  1.  From the navigator, select your ImageNotification extension
+
+  1.  Open the `NotificationService.m` file.
+
+  1.  At the top of the file, import `FirebaseMessaging.h` right after the `NotificationService.h` as shown below.
+
+      Replace the content of `NotificationService.m` with:
+
+      ```objc
+      #import "NotificationService.h"
+      #import "FirebaseMessaging.h"
+      #import <FirebaseAuth/FirebaseAuth-Swift.h> // Add this line if you are using FirebaseAuth phone authentication
+      #import <UIKit/UIKit.h> // Add this line if you are using FirebaseAuth phone authentication
+
+      @interface NotificationService () <NSURLSessionDelegate>
+
+      @property(nonatomic) void (^contentHandler)(UNNotificationContent *contentToDeliver);
+      @property(nonatomic) UNMutableNotificationContent *bestAttemptContent;
+
+      @end
+
+      @implementation NotificationService
+
+      /* Uncomment this if you are using Firebase Auth
+      - (BOOL)application:(UIApplication *)app
+                  openURL:(NSURL *)url
+                  options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
+        if ([[FIRAuth auth] canHandleURL:url]) {
+          return YES;
+        }
+        return NO;
       }
-    }
-    */
 
-    - (void)didReceiveNotificationRequest:(UNNotificationRequest *)request withContentHandler:(void (^)(UNNotificationContent * _Nonnull))contentHandler {
-        self.contentHandler = contentHandler;
-        self.bestAttemptContent = [request.content mutableCopy];
+      - (void)scene:(UIScene *)scene openURLContexts:(NSSet<UIOpenURLContext *> *)URLContexts {
+        for (UIOpenURLContext *urlContext in URLContexts) {
+          [FIRAuth.auth canHandleURL:urlContext.URL];
+        }
+      }
+      */
 
-        // Modify the notification content here...
-        [[FIRMessaging extensionHelper] populateNotificationContent:self.bestAttemptContent withContentHandler:contentHandler];
-    }
+      - (void)didReceiveNotificationRequest:(UNNotificationRequest *)request withContentHandler:(void (^)(UNNotificationContent * _Nonnull))contentHandler {
+          self.contentHandler = contentHandler;
+          self.bestAttemptContent = [request.content mutableCopy];
 
-    - (void)serviceExtensionTimeWillExpire {
-        // Called just before the extension will be terminated by the system.
-        // Use this as an opportunity to deliver your "best attempt" at modified content, otherwise the original push payload will be used.
-        self.contentHandler(self.bestAttemptContent);
-    }
+          // Modify the notification content here...
+          [[FIRMessaging extensionHelper] populateNotificationContent:self.bestAttemptContent withContentHandler:contentHandler];
+      }
 
-    @end
-    ```
+      - (void)serviceExtensionTimeWillExpire {
+          // Called just before the extension will be terminated by the system.
+          // Use this as an opportunity to deliver your "best attempt" at modified content, otherwise the original push payload will be used.
+          self.contentHandler(self.bestAttemptContent);
+      }
+
+      @end
+      ```
 
 ### Step 4 - Add the image to the payload
 

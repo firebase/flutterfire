@@ -60,6 +60,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late Future<void> _initializeFlutterFireFuture;
+  bool _crashlyticsEnabled = true;
 
   Future<void> _testAsyncErrorOnInit() async {
     Future<void>.delayed(const Duration(seconds: 2), () {
@@ -73,11 +74,14 @@ class _MyAppState extends State<MyApp> {
     if (_kTestingCrashlytics) {
       // Force enable crashlytics collection enabled if we're testing it.
       await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+      _crashlyticsEnabled = true;
     } else {
       // Else only enable it in non-debug builds.
       // You could additionally extend this to allow users to opt-in.
+      const enabled = !kDebugMode;
       await FirebaseCrashlytics.instance
-          .setCrashlyticsCollectionEnabled(!kDebugMode);
+          .setCrashlyticsCollectionEnabled(enabled);
+      _crashlyticsEnabled = enabled;
     }
 
     if (_kShouldTestAsyncErrorOnInit) {
@@ -111,6 +115,24 @@ class _MyAppState extends State<MyApp> {
                 return Center(
                   child: Column(
                     children: <Widget>[
+                      ElevatedButton(
+                        onPressed: () async {
+                          final newValue = !_crashlyticsEnabled;
+                          await FirebaseCrashlytics.instance
+                              .setCrashlyticsCollectionEnabled(newValue);
+                          setState(() {
+                            _crashlyticsEnabled = newValue;
+                          });
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                                'Crashlytics reporting has been ${newValue ? 'enabled' : 'disabled'}.'),
+                            duration: const Duration(seconds: 3),
+                          ));
+                        },
+                        child: Text(_crashlyticsEnabled
+                            ? 'Disable Crashlytics'
+                            : 'Enable Crashlytics'),
+                      ),
                       ElevatedButton(
                         onPressed: () {
                           FirebaseCrashlytics.instance

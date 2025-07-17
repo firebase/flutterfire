@@ -819,7 +819,7 @@ extension MemoryLocalCacheExtension on MemoryLocalCache {
   external JSString get kind;
 }
 
-/// A tab manager supportting only one tab, no synchronization will be performed across tabs.
+/// A tab manager supporting only one tab, no synchronization will be performed across tabs.
 @anonymous
 @JS()
 @staticInterop

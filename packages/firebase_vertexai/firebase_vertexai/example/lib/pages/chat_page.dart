@@ -98,6 +98,17 @@ class _ChatPageState extends State<ChatPage> {
                   if (!_loading)
                     IconButton(
                       onPressed: () async {
+                        await _imageResponse(_textController.text);
+                      },
+                      icon: Icon(
+                        Icons.image,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      tooltip: 'Image response',
+                    ),
+                  if (!_loading)
+                    IconButton(
+                      onPressed: () async {
                         await _sendChatMessage(_textController.text);
                       },
                       icon: Icon(
@@ -133,6 +144,58 @@ class _ChatPageState extends State<ChatPage> {
         _showError('No response from API.');
         return;
       } else {
+        setState(() {
+          _loading = false;
+          _scrollDown();
+        });
+      }
+    } catch (e) {
+      _showError(e.toString());
+      setState(() {
+        _loading = false;
+      });
+    } finally {
+      _textController.clear();
+      setState(() {
+        _loading = false;
+      });
+      _textFieldFocus.requestFocus();
+    }
+  }
+
+  Future<void> _imageResponse(String message) async {
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      _messages.add(MessageData(text: message, fromUser: true));
+      var response = await widget.model.generateContent(
+        [Content.text(message)],
+        generationConfig: GenerationConfig(
+          responseModalities: [
+            ResponseModalities.text,
+            ResponseModalities.image,
+          ],
+        ),
+      );
+      var inlineDatas = response.inlineDataParts.toList();
+
+      if (inlineDatas.isEmpty) {
+        _showError('No response from API.');
+        return;
+      } else {
+        for (final inlineData in inlineDatas) {
+          if (inlineData.mimeType.contains('image')) {
+            _messages.add(
+              MessageData(
+                text: response.text,
+                image: Image.memory(inlineData.bytes),
+                fromUser: false,
+              ),
+            );
+          }
+        }
         setState(() {
           _loading = false;
           _scrollDown();

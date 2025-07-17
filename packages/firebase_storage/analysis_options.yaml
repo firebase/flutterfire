@@ -39,7 +39,7 @@ linter:
     always_specify_types: false
 
     # Incompatible with `prefer_final_locals`
-    # Having immutable local variables makes larger functions more predictible
+    # Having immutable local variables makes larger functions more predictable
     # so we will use `prefer_final_locals` instead.
     unnecessary_final: false
 

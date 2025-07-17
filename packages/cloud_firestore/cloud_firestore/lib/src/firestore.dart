@@ -88,18 +88,15 @@ class FirebaseFirestore extends FirebasePluginPlatform {
 
   /// Gets a [CollectionReference] for the specified Firestore path.
   CollectionReference<Map<String, dynamic>> collection(String collectionPath) {
-    assert(
-      collectionPath.isNotEmpty,
-      'a collectionPath path must be a non-empty string',
-    );
-    assert(
-      !collectionPath.contains('//'),
-      'a collection path must not contain "//"',
-    );
-    assert(
-      isValidCollectionPath(collectionPath),
-      'a collection path must point to a valid collection.',
-    );
+    if (collectionPath.isEmpty) {
+      throw ArgumentError('A collection path must be a non-empty string.');
+    } else if (collectionPath.contains('//')) {
+      throw ArgumentError('A collection path must not contain "//".');
+    } else if (!isValidCollectionPath(collectionPath)) {
+      throw ArgumentError(
+        'A collection path must point to a valid collection.',
+      );
+    }
 
     return _JsonCollectionReference(this, _delegate.collection(collectionPath));
   }
@@ -214,14 +211,13 @@ class FirebaseFirestore extends FirebasePluginPlatform {
 
   /// Gets a [Query] for the specified collection group.
   Query<Map<String, dynamic>> collectionGroup(String collectionPath) {
-    assert(
-      collectionPath.isNotEmpty,
-      'a collection path must be a non-empty string',
-    );
-    assert(
-      !collectionPath.contains('/'),
-      'a collection path passed to collectionGroup() cannot contain "/"',
-    );
+    if (collectionPath.isEmpty) {
+      throw ArgumentError('A collection path must be a non-empty string.');
+    } else if (collectionPath.contains('/')) {
+      throw ArgumentError(
+        'A collection path passed to collectionGroup() cannot contain "/".',
+      );
+    }
 
     return _JsonQuery(this, _delegate.collectionGroup(collectionPath));
   }
@@ -237,18 +233,13 @@ class FirebaseFirestore extends FirebasePluginPlatform {
 
   /// Gets a [DocumentReference] for the specified Firestore path.
   DocumentReference<Map<String, dynamic>> doc(String documentPath) {
-    assert(
-      documentPath.isNotEmpty,
-      'a document path must be a non-empty string',
-    );
-    assert(
-      !documentPath.contains('//'),
-      'a collection path must not contain "//"',
-    );
-    assert(
-      isValidDocumentPath(documentPath),
-      'a document path must point to a valid document.',
-    );
+    if (documentPath.isEmpty) {
+      throw ArgumentError('A document path must be a non-empty string.');
+    } else if (documentPath.contains('//')) {
+      throw ArgumentError('A document path must not contain "//".');
+    } else if (!isValidDocumentPath(documentPath)) {
+      throw ArgumentError('A document path must point to a valid document.');
+    }
 
     return _JsonDocumentReference(this, _delegate.doc(documentPath));
   }
@@ -287,7 +278,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// By default transactions are limited to 30 seconds of execution time. This
   /// timeout can be adjusted by setting the timeout parameter.
   ///
-  /// By default transactions will retry 5 times. You can change the number of attemps
+  /// By default transactions will retry 5 times. You can change the number of attempts
   /// with [maxAttempts]. Attempts should be at least 1.
   Future<T> runTransaction<T>(
     TransactionHandler<T> transactionHandler, {
