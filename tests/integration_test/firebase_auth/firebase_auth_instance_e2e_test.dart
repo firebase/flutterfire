@@ -1062,6 +1062,92 @@ void main() {
         },
         skip: true,
       );
+
+      group('validatePassword()', () {
+
+        const String validPassword = 'Password123!'; // For password policy impl testing
+        const String invalidPassword = 'Pa1!';
+        const String invalidPassword2 = 'password123!';
+        const String invalidPassword3 = 'PASSWORD123!';
+        const String invalidPassword4 = 'password!';
+        const String invalidPassword5 = 'Password123';
+
+        test('should validate password that is correct', () async {
+          final PasswordValidationStatus status = await FirebaseAuth.instance.validatePassword(FirebaseAuth.instance, validPassword);
+          expect(status.isValid, isTrue);
+          expect(status.meetsMinPasswordLength, isTrue);
+          expect(status.meetsMaxPasswordLength, isTrue);
+          expect(status.meetsLowercaseRequirement, isTrue);
+          expect(status.meetsUppercaseRequirement, isTrue);
+          expect(status.meetsDigitsRequirement, isTrue);
+          expect(status.meetsSymbolsRequirement, isTrue);
+        });
+
+        test('should not validate a password that is too short', () async {
+          final PasswordValidationStatus status = await FirebaseAuth.instance.validatePassword(FirebaseAuth.instance, invalidPassword);
+          expect(status.isValid, isFalse);
+          expect(status.meetsMinPasswordLength, isFalse);
+        });
+
+        test('should not validate a password that has no uppercase characters', () async {
+          final PasswordValidationStatus status = await FirebaseAuth.instance.validatePassword(FirebaseAuth.instance, invalidPassword2);
+          expect(status.isValid, isFalse);
+          expect(status.meetsUppercaseRequirement, isFalse);
+        });
+
+        test('should not validate a password that has no lowercase characters', () async {
+          final PasswordValidationStatus status = await FirebaseAuth.instance.validatePassword(FirebaseAuth.instance, invalidPassword3);
+          expect(status.isValid, isFalse);
+        });
+
+        test('should not validate a password that has no digits', () async {
+          final PasswordValidationStatus status = await FirebaseAuth.instance.validatePassword(FirebaseAuth.instance, invalidPassword4);
+          expect(status.isValid, isFalse);
+          expect(status.meetsDigitsRequirement, isFalse);
+        });
+
+        test('should not validate a password that has no symbols', () async {
+          final PasswordValidationStatus status = await FirebaseAuth.instance.validatePassword(FirebaseAuth.instance, invalidPassword5);
+          expect(status.isValid, isFalse);
+          expect(status.meetsSymbolsRequirement, isFalse);
+        });
+
+        test('should throw an exception if the password is empty', () async {
+          try {
+            await FirebaseAuth.instance.validatePassword(
+              FirebaseAuth.instance,
+              '',
+            );
+          } catch (e) {
+            expect(
+              e,
+              isA<FirebaseAuthException>().having(
+                (e) => e.code,
+                'code',
+                equals('invalid-password'),
+              ),
+            );
+          }
+        });
+
+        test('should throw an exception if the password is null', () async {
+          try {
+            await FirebaseAuth.instance.validatePassword(
+              FirebaseAuth.instance,
+              null,
+            );
+          } catch (e) {
+            expect(
+              e,
+              isA<FirebaseAuthException>().having(
+                (e) => e.code,
+                'code',
+                equals('invalid-password'),
+              ),
+            );
+          }
+        });
+      });
     },
     // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
     skip: defaultTargetPlatform == TargetPlatform.macOS,
