@@ -41,9 +41,9 @@ dependencies:
   firebase_ml_model_downloader: ^0.3.3+8
   firebase_ml_model_downloader_platform_interface: ^0.1.5+10
   firebase_performance: ^0.10.1+10
-  firebase_remote_config: ^5.5.0
-  firebase_remote_config_platform_interface: ^1.6.0
-  firebase_remote_config_web: ^1.8.8
+  firebase_remote_config: ^5.5.1
+  firebase_remote_config_platform_interface: ^2.0.0
+  firebase_remote_config_web: ^1.8.9
   firebase_storage: ^12.4.10
   firebase_storage_platform_interface: ^5.2.10
   firebase_storage_web: ^3.10.17

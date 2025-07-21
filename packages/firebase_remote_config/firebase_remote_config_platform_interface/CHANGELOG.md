@@ -1,3 +1,7 @@
+## 2.0.0
+
+ - Bump "firebase_remote_config_platform_interface" to `2.0.0`.
+
 ## 1.6.0
 
  - **FEAT**(remote_config): add support for Pigeon. Update iOS to Swift and Android to Swift ([#17489](https://github.com/firebase/flutterfire/issues/17489)). ([08ecc502](https://github.com/firebase/flutterfire/commit/08ecc5029616058c86d0093b9aae3ee8cea811a4))

@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-07-21
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_remote_config_platform_interface` - `v2.0.0`](#firebase_remote_config_platform_interface---v200)
+ - [`firebase_remote_config` - `v5.5.1`](#firebase_remote_config---v551)
+ - [`firebase_remote_config_web` - `v1.8.9`](#firebase_remote_config_web---v189)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_remote_config` - `v5.5.1`
+ - `firebase_remote_config_web` - `v1.8.9`
+
+---
+
+#### `firebase_remote_config_platform_interface` - `v2.0.0`
+
+ - Bump "firebase_remote_config_platform_interface" to `2.0.0`.
+
+
 ## 2025-07-21 - [BoM 3.14.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-3140-2025-07-21)
 
 ### Changes
