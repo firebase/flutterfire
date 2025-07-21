@@ -1,3 +1,7 @@
+## 11.6.0
+
+ - **FEAT**(auth,macos): add support for `publish` and `addApplicationDelegate` on macOS FlutterPluginRegistrar ([#17518](https://github.com/firebase/flutterfire/issues/17518)). ([376bb6ea](https://github.com/firebase/flutterfire/commit/376bb6ea8878df3f25cc1416fe26ace2203fd793))
+
 ## 11.5.2
 
  - Update a dependency to the latest release.

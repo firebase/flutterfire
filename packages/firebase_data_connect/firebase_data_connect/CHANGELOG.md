@@ -1,3 +1,7 @@
+## 0.1.5+4
+
+ - **FIX**(fdc): Fixed readme link  ([#17504](https://github.com/firebase/flutterfire/issues/17504)). ([6068edf9](https://github.com/firebase/flutterfire/commit/6068edf9eab36dbb94768d46a6def97e76f30df2))
+
 ## 0.1.5+3
 
  - Update a dependency to the latest release.
