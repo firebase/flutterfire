@@ -14,7 +14,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-// Password policy classes are now exported from the main library
+// Import internal password policy classes for testing
+import 'package:firebase_auth/src/internal.dart';
 
 import './mock.dart';
 

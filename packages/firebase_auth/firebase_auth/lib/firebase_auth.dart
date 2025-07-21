@@ -9,10 +9,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter/foundation.dart';
 
-import 'src/password_policy/password_policy_impl.dart';
-import 'src/password_policy/password_policy_api.dart';
-import 'src/password_policy/password_policy.dart';
-import 'src/password_policy/password_validation_status.dart';
+// Import internal password policy classes for implementation
+import 'src/internal.dart' show PasswordPolicy, PasswordPolicyApi, PasswordPolicyImpl, PasswordValidationStatus;
 
 export 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart'
     show
@@ -70,6 +68,10 @@ export 'package:firebase_core_platform_interface/firebase_core_platform_interfac
     show FirebaseException;
 
 export 'src/password_policy/password_validation_status.dart';
+// Remove internal class exports - these should not be part of public API
+// export 'src/password_policy/password_policy.dart';
+// export 'src/password_policy/password_policy_api.dart';
+// export 'src/password_policy/password_policy_impl.dart';
 
 part 'src/confirmation_result.dart';
 part 'src/firebase_auth.dart';
