@@ -119,4 +119,11 @@ abstract class FirebaseAppHostApi {
   void delete(
     String appName,
   );
+
+  @async
+  void registerLibrary(
+    String library,
+    String version,
+    String platform,
+  );
 }

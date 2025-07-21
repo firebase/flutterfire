@@ -21,6 +21,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -38,7 +41,8 @@ public class GeneratedAndroidFirebaseCore {
     /** The error details. Must be a datatype supported by the api codec. */
     public final Object details;
 
-    public FlutterError(@NonNull String code, @Nullable String message, @Nullable Object details) {
+    public FlutterError(@NonNull String code, @Nullable String message, @Nullable Object details) 
+    {
       super(message);
       this.code = code;
       this.details = details;
@@ -57,7 +61,7 @@ public class GeneratedAndroidFirebaseCore {
       errorList.add(exception.toString());
       errorList.add(exception.getClass().getSimpleName());
       errorList.add(
-          "Cause: " + exception.getCause() + ", Stacktrace: " + Log.getStackTraceString(exception));
+        "Cause: " + exception.getCause() + ", Stacktrace: " + Log.getStackTraceString(exception));
     }
     return errorList;
   }
@@ -225,46 +229,15 @@ public class GeneratedAndroidFirebaseCore {
 
     @Override
     public boolean equals(Object o) {
-      if (this == o) {
-        return true;
-      }
-      if (o == null || getClass() != o.getClass()) {
-        return false;
-      }
+      if (this == o) { return true; }
+      if (o == null || getClass() != o.getClass()) { return false; }
       CoreFirebaseOptions that = (CoreFirebaseOptions) o;
-      return apiKey.equals(that.apiKey)
-          && appId.equals(that.appId)
-          && messagingSenderId.equals(that.messagingSenderId)
-          && projectId.equals(that.projectId)
-          && Objects.equals(authDomain, that.authDomain)
-          && Objects.equals(databaseURL, that.databaseURL)
-          && Objects.equals(storageBucket, that.storageBucket)
-          && Objects.equals(measurementId, that.measurementId)
-          && Objects.equals(trackingId, that.trackingId)
-          && Objects.equals(deepLinkURLScheme, that.deepLinkURLScheme)
-          && Objects.equals(androidClientId, that.androidClientId)
-          && Objects.equals(iosClientId, that.iosClientId)
-          && Objects.equals(iosBundleId, that.iosBundleId)
-          && Objects.equals(appGroupId, that.appGroupId);
+      return apiKey.equals(that.apiKey) && appId.equals(that.appId) && messagingSenderId.equals(that.messagingSenderId) && projectId.equals(that.projectId) && Objects.equals(authDomain, that.authDomain) && Objects.equals(databaseURL, that.databaseURL) && Objects.equals(storageBucket, that.storageBucket) && Objects.equals(measurementId, that.measurementId) && Objects.equals(trackingId, that.trackingId) && Objects.equals(deepLinkURLScheme, that.deepLinkURLScheme) && Objects.equals(androidClientId, that.androidClientId) && Objects.equals(iosClientId, that.iosClientId) && Objects.equals(iosBundleId, that.iosBundleId) && Objects.equals(appGroupId, that.appGroupId);
     }
 
     @Override
     public int hashCode() {
-      return Objects.hash(
-          apiKey,
-          appId,
-          messagingSenderId,
-          projectId,
-          authDomain,
-          databaseURL,
-          storageBucket,
-          measurementId,
-          trackingId,
-          deepLinkURLScheme,
-          androidClientId,
-          iosClientId,
-          iosBundleId,
-          appGroupId);
+      return Objects.hash(apiKey, appId, messagingSenderId, projectId, authDomain, databaseURL, storageBucket, measurementId, trackingId, deepLinkURLScheme, androidClientId, iosClientId, iosBundleId, appGroupId);
     }
 
     public static final class Builder {
@@ -511,17 +484,10 @@ public class GeneratedAndroidFirebaseCore {
 
     @Override
     public boolean equals(Object o) {
-      if (this == o) {
-        return true;
-      }
-      if (o == null || getClass() != o.getClass()) {
-        return false;
-      }
+      if (this == o) { return true; }
+      if (o == null || getClass() != o.getClass()) { return false; }
       CoreInitializeResponse that = (CoreInitializeResponse) o;
-      return name.equals(that.name)
-          && options.equals(that.options)
-          && Objects.equals(isAutomaticDataCollectionEnabled, that.isAutomaticDataCollectionEnabled)
-          && pluginConstants.equals(that.pluginConstants);
+      return name.equals(that.name) && options.equals(that.options) && Objects.equals(isAutomaticDataCollectionEnabled, that.isAutomaticDataCollectionEnabled) && pluginConstants.equals(that.pluginConstants);
     }
 
     @Override
@@ -628,6 +594,7 @@ public class GeneratedAndroidFirebaseCore {
     }
   }
 
+
   /** Asynchronous error handling return type for non-nullable API method returns. */
   public interface Result<T> {
     /** Success case callback method for handling returns. */
@@ -655,10 +622,7 @@ public class GeneratedAndroidFirebaseCore {
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface FirebaseCoreHostApi {
 
-    void initializeApp(
-        @NonNull String appName,
-        @NonNull CoreFirebaseOptions initializeAppRequest,
-        @NonNull Result<CoreInitializeResponse> result);
+    void initializeApp(@NonNull String appName, @NonNull CoreFirebaseOptions initializeAppRequest, @NonNull Result<CoreInitializeResponse> result);
 
     void initializeCore(@NonNull Result<List<CoreInitializeResponse>> result);
 
@@ -668,26 +632,16 @@ public class GeneratedAndroidFirebaseCore {
     static @NonNull MessageCodec<Object> getCodec() {
       return PigeonCodec.INSTANCE;
     }
-    /**
-     * Sets up an instance of `FirebaseCoreHostApi` to handle messages through the
-     * `binaryMessenger`.
-     */
+    /**Sets up an instance of `FirebaseCoreHostApi` to handle messages through the `binaryMessenger`. */
     static void setUp(@NonNull BinaryMessenger binaryMessenger, @Nullable FirebaseCoreHostApi api) {
       setUp(binaryMessenger, "", api);
     }
-
-    static void setUp(
-        @NonNull BinaryMessenger binaryMessenger,
-        @NonNull String messageChannelSuffix,
-        @Nullable FirebaseCoreHostApi api) {
+    static void setUp(@NonNull BinaryMessenger binaryMessenger, @NonNull String messageChannelSuffix, @Nullable FirebaseCoreHostApi api) {
       messageChannelSuffix = messageChannelSuffix.isEmpty() ? "" : "." + messageChannelSuffix;
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger,
-                "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeApp"
-                    + messageChannelSuffix,
-                getCodec());
+                binaryMessenger, "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeApp" + messageChannelSuffix, getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -717,10 +671,7 @@ public class GeneratedAndroidFirebaseCore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger,
-                "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeCore"
-                    + messageChannelSuffix,
-                getCodec());
+                binaryMessenger, "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeCore" + messageChannelSuffix, getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -747,10 +698,7 @@ public class GeneratedAndroidFirebaseCore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger,
-                "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.optionsFromResource"
-                    + messageChannelSuffix,
-                getCodec());
+                binaryMessenger, "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.optionsFromResource" + messageChannelSuffix, getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -779,37 +727,28 @@ public class GeneratedAndroidFirebaseCore {
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface FirebaseAppHostApi {
 
-    void setAutomaticDataCollectionEnabled(
-        @NonNull String appName, @NonNull Boolean enabled, @NonNull VoidResult result);
+    void setAutomaticDataCollectionEnabled(@NonNull String appName, @NonNull Boolean enabled, @NonNull VoidResult result);
 
-    void setAutomaticResourceManagementEnabled(
-        @NonNull String appName, @NonNull Boolean enabled, @NonNull VoidResult result);
+    void setAutomaticResourceManagementEnabled(@NonNull String appName, @NonNull Boolean enabled, @NonNull VoidResult result);
 
     void delete(@NonNull String appName, @NonNull VoidResult result);
+
+    void registerLibrary(@NonNull String library, @NonNull String version, @NonNull String platform, @NonNull VoidResult result);
 
     /** The codec used by FirebaseAppHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
       return PigeonCodec.INSTANCE;
     }
-    /**
-     * Sets up an instance of `FirebaseAppHostApi` to handle messages through the `binaryMessenger`.
-     */
+    /**Sets up an instance of `FirebaseAppHostApi` to handle messages through the `binaryMessenger`. */
     static void setUp(@NonNull BinaryMessenger binaryMessenger, @Nullable FirebaseAppHostApi api) {
       setUp(binaryMessenger, "", api);
     }
-
-    static void setUp(
-        @NonNull BinaryMessenger binaryMessenger,
-        @NonNull String messageChannelSuffix,
-        @Nullable FirebaseAppHostApi api) {
+    static void setUp(@NonNull BinaryMessenger binaryMessenger, @NonNull String messageChannelSuffix, @Nullable FirebaseAppHostApi api) {
       messageChannelSuffix = messageChannelSuffix.isEmpty() ? "" : "." + messageChannelSuffix;
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger,
-                "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticDataCollectionEnabled"
-                    + messageChannelSuffix,
-                getCodec());
+                binaryMessenger, "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticDataCollectionEnabled" + messageChannelSuffix, getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -839,10 +778,7 @@ public class GeneratedAndroidFirebaseCore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger,
-                "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticResourceManagementEnabled"
-                    + messageChannelSuffix,
-                getCodec());
+                binaryMessenger, "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticResourceManagementEnabled" + messageChannelSuffix, getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -872,10 +808,7 @@ public class GeneratedAndroidFirebaseCore {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger,
-                "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.delete"
-                    + messageChannelSuffix,
-                getCodec());
+                binaryMessenger, "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.delete" + messageChannelSuffix, getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -896,6 +829,37 @@ public class GeneratedAndroidFirebaseCore {
                     };
 
                 api.delete(appNameArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger, "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.registerLibrary" + messageChannelSuffix, getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                String libraryArg = (String) args.get(0);
+                String versionArg = (String) args.get(1);
+                String platformArg = (String) args.get(2);
+                VoidResult resultCallback =
+                    new VoidResult() {
+                      public void success() {
+                        wrapped.add(0, null);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.registerLibrary(libraryArg, versionArg, platformArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
