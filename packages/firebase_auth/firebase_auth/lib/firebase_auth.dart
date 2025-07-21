@@ -10,7 +10,12 @@ import 'package:firebase_core_platform_interface/firebase_core_platform_interfac
 import 'package:flutter/foundation.dart';
 
 // Import internal password policy classes for implementation
-import 'src/internal.dart' show PasswordPolicy, PasswordPolicyApi, PasswordPolicyImpl, PasswordValidationStatus;
+import 'src/internal.dart'
+    show
+        PasswordPolicy,
+        PasswordPolicyApi,
+        PasswordPolicyImpl,
+        PasswordValidationStatus;
 
 export 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart'
     show
