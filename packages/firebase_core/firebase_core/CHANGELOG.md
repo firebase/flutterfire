@@ -1,3 +1,7 @@
+## 3.15.2
+
+ - **FIX**(core): resolve iOS crash when enabling automatic data collection via `setAutomaticDataCollectionEnabled` ([#17497](https://github.com/firebase/flutterfire/issues/17497)). ([cd8b58d0](https://github.com/firebase/flutterfire/commit/cd8b58d053e34e9840bdbd20fd5aa3f698e5fcfa))
+
 ## 3.15.1
 
  - Update a dependency to the latest release.
