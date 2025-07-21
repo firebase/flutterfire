@@ -21,12 +21,33 @@ import 'schema.dart';
 /// knowledge and scope of the model.
 final class Tool {
   // ignore: public_member_api_docs
-  Tool._(this._functionDeclarations);
+  Tool._(this._functionDeclarations, this._googleSearch);
 
   /// Returns a [Tool] instance with list of [FunctionDeclaration].
   static Tool functionDeclarations(
       List<FunctionDeclaration> functionDeclarations) {
-    return Tool._(functionDeclarations);
+    return Tool._(functionDeclarations, null);
+  }
+
+  /// Creates a tool that allows the model to use Grounding with Google Search.
+  ///
+  /// Grounding with Google Search can be used to allow the model to connect to
+  /// Google Search to access and incorporate up-to-date information from the
+  /// web into it's responses.
+  ///
+  /// When using this feature, you are required to comply with the
+  /// "Grounding with Google Search" usage requirements for your chosen API
+  /// provider:
+  /// [Gemini Developer API](https://ai.google.dev/gemini-api/terms#grounding-with-google-search)
+  /// or Vertex AI Gemini API (see [Service Terms](https://cloud.google.com/terms/service-terms)
+  /// section within the Service Specific Terms).
+  ///
+  /// - [googleSearch]: An empty [GoogleSearch] object. The presence of this
+  ///   object in the list of tools enables the model to use Google Search.
+  ///
+  /// Returns a `Tool` configured for Google Search.
+  static Tool googleSearch({GoogleSearch googleSearch = const GoogleSearch()}) {
+    return Tool._(null, googleSearch);
   }
 
   /// A list of `FunctionDeclarations` available to the model that can be used
@@ -39,12 +60,37 @@ final class Tool {
   /// with the role "function" generation context for the next model turn.
   final List<FunctionDeclaration>? _functionDeclarations;
 
+  /// A tool that allows the generative model to connect to Google Search to
+  /// access and incorporate up-to-date information from the web into its
+  /// responses.
+  final GoogleSearch? _googleSearch;
+
   /// Convert to json object.
   Map<String, Object> toJson() => {
         if (_functionDeclarations case final _functionDeclarations?)
           'functionDeclarations':
               _functionDeclarations.map((f) => f.toJson()).toList(),
+        if (_googleSearch case final _googleSearch?)
+          'googleSearch': _googleSearch.toJson()
       };
+}
+
+/// A tool that allows the generative model to connect to Google Search to
+/// access and incorporate up-to-date information from the web into its
+/// responses.
+///
+/// When using this feature, you are required to comply with the
+/// "Grounding with Google Search" usage requirements for your chosen API
+/// provider:
+/// [Gemini Developer API](https://ai.google.dev/gemini-api/terms#grounding-with-google-search)
+/// or Vertex AI Gemini API (see [Service Terms](https://cloud.google.com/terms/service-terms)
+/// section within the Service Specific Terms).
+final class GoogleSearch {
+  // ignore: public_member_api_docs
+  const GoogleSearch();
+
+  /// Convert to json object.
+  Map<String, Object> toJson() => {};
 }
 
 /// Structured representation of a function declaration as defined by the
