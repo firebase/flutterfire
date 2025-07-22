@@ -27,7 +27,7 @@ Pod::Spec.new do |s|
   s.source_files     = 'firebase_dynamic_links/Sources/firebase_dynamic_links/**/*.{h,m}'
   s.public_header_files = 'firebase_dynamic_links/Sources/firebase_dynamic_links/include/*.h'
   s.dependency 'Flutter'
-  s.ios.deployment_target = '13.0'
+  s.ios.deployment_target = '15.0'
   s.static_framework = true
   s.dependency 'firebase_core'
   s.dependency 'Firebase/DynamicLinks', firebase_sdk_version
