@@ -110,6 +110,92 @@ final class ImagenModel extends BaseApiClientModel {
         (jsonObject) =>
             parseImagenGenerationResponse<ImagenGCSImage>(jsonObject),
       );
+
+  /// Edits an image based on a prompt and a list of reference images.
+  @experimental
+  Future<ImagenGenerationResponse<ImagenInlineImage>> editImage(
+    List<ImagenReferenceImage> referenceImages,
+    String prompt, {
+    ImagenEditingConfig? config,
+  }) =>
+      makeRequest(
+        Task.predict,
+        _generateImagenEditRequest(
+          referenceImages,
+          prompt,
+          config: config,
+        ),
+        (jsonObject) =>
+            parseImagenGenerationResponse<ImagenInlineImage>(jsonObject),
+      );
+
+  /// Inpaints an image based on a prompt and a mask.
+  @experimental
+  Future<ImagenGenerationResponse<ImagenInlineImage>> inpaintImage(
+    ImagenInlineImage image,
+    String prompt,
+    ImagenMaskReference mask, {
+    ImagenEditingConfig? config,
+  }) =>
+      editImage(
+        [
+          ImagenRawImage(image: image),
+          mask,
+        ],
+        prompt,
+        config: config,
+      );
+
+  /// Outpaints an image based on a prompt and new dimensions.
+  @experimental
+  Future<ImagenGenerationResponse<ImagenInlineImage>> outpaintImage(
+    ImagenInlineImage image,
+    Dimensions newDimensions, {
+    ImagenImagePlacement newPosition = ImagenImagePlacement.center,
+    String prompt = '',
+    ImagenEditingConfig? config,
+  }) =>
+      editImage(
+        ImagenMaskReference.generateMaskAndPadForOutpainting(
+          image: image,
+          newDimensions: newDimensions,
+          newPosition: newPosition,
+        ),
+        prompt,
+        config: config,
+      );
+
+  Map<String, Object?> _generateImagenEditRequest(
+    List<ImagenReferenceImage> images,
+    String prompt, {
+    ImagenEditingConfig? config,
+  }) {
+    final parameters = <String, Object?>{
+      'sampleCount': _generationConfig?.numberOfImages ?? 1,
+      if (config?.editMode case final editMode?) 'editMode': editMode.toString(),
+      if (config?.editSteps case final editSteps?) 'editSteps': editSteps,
+      if (_generationConfig?.negativePrompt case final negativePrompt?)
+        'negativePrompt': negativePrompt,
+      if (_generationConfig?.addWatermark case final addWatermark?)
+        'addWatermark': addWatermark,
+      if (_generationConfig?.imageFormat case final imageFormat?)
+        'outputOption': imageFormat.toJson(),
+      if (_safetySettings?.personFilterLevel case final personFilterLevel?)
+        'personGeneration': personFilterLevel.toJson(),
+      if (_safetySettings?.safetyFilterLevel case final safetyFilterLevel?)
+        'safetySetting': safetyFilterLevel.toJson(),
+    };
+
+    return {
+      'instances': [
+        {
+          'prompt': prompt,
+          'images': images.map((i) => i.toJson()).toList(),
+        }
+      ],
+      'parameters': parameters,
+    };
+  }
 }
 
 /// Returns a [ImagenModel] using it's private constructor.

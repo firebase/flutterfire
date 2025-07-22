@@ -105,6 +105,19 @@ class _ImagenPageState extends State<ImagenPage> {
                     )
                   else
                     const CircularProgressIndicator(),
+                  if (!_loading)
+                    IconButton(
+                      onPressed: () async {
+                        await _testImagenEdit();
+                      },
+                      icon: Icon(
+                        Icons.edit,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      tooltip: 'Imagen edit',
+                    )
+                  else
+                    const CircularProgressIndicator(),
                   // NOTE: Keep this API private until future release.
                   // if (!_loading)
                   //   IconButton(
@@ -210,5 +223,43 @@ class _ImagenPageState extends State<ImagenPage> {
         );
       },
     );
+  }
+
+  Future<void> _testImagenEdit() async {
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      // TODO: Add a way to select an image from the gallery
+      final image = ImagenInlineImage(data: []);
+      var response = await widget.model.inpaintImage(
+        image,
+        'a dog',
+        ImagenBackgroundMask(),
+      );
+
+      if (response.images.isNotEmpty) {
+        var imagenImage = response.images[0];
+
+        _generatedContent.add(
+          MessageData(
+            image: Image.memory(imagenImage.bytesBase64Encoded),
+            text: 'a dog',
+            fromUser: false,
+          ),
+        );
+      } else {
+        // Handle the case where no images were generated
+        _showError('Error: No images were generated.');
+      }
+    } catch (e) {
+      _showError(e.toString());
+    }
+
+    setState(() {
+      _loading = false;
+      _scrollDown();
+    });
   }
 }
