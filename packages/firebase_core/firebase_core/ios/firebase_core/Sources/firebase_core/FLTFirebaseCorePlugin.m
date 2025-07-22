@@ -89,7 +89,7 @@ static NSMutableDictionary<NSString *, NSString *> *customAuthDomains;
   pigeonOptions.projectId = (id)options.projectID ?: [NSNull null];
   pigeonOptions.databaseURL = (id)options.databaseURL ?: [NSNull null];
   pigeonOptions.storageBucket = (id)options.storageBucket ?: [NSNull null];
-  pigeonOptions.deepLinkURLScheme = (id)options.deepLinkURLScheme ?: [NSNull null];
+  pigeonOptions.deepLinkURLScheme = [NSNull null];
   pigeonOptions.iosBundleId = (id)options.bundleID ?: [NSNull null];
   pigeonOptions.iosClientId = (id)options.clientID ?: [NSNull null];
   pigeonOptions.appGroupId = (id)options.appGroupID ?: [NSNull null];
@@ -161,11 +161,6 @@ static NSMutableDictionary<NSString *, NSString *> *customAuthDomains;
   // kFirebaseOptionsStorageBucket
   if (![options.storageBucket isEqual:[NSNull null]]) {
     options.storageBucket = initializeAppRequest.storageBucket;
-  }
-
-  // kFirebaseOptionsDeepLinkURLScheme
-  if (![initializeAppRequest.deepLinkURLScheme isEqual:[NSNull null]]) {
-    options.deepLinkURLScheme = initializeAppRequest.deepLinkURLScheme;
   }
 
   // kFirebaseOptionsIosBundleId

@@ -129,10 +129,6 @@
     codeSettings.URL = [NSURL URLWithString:settings.url];
   }
 
-  if (settings.dynamicLinkDomain != nil) {
-    codeSettings.dynamicLinkDomain = settings.dynamicLinkDomain;
-  }
-
   if (settings.linkDomain != nil) {
     codeSettings.linkDomain = settings.linkDomain;
   }
