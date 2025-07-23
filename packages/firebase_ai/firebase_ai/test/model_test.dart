@@ -268,6 +268,47 @@ void main() {
         );
       });
 
+      test('can pass rag engine grounding tool', () async {
+        final (client, model) = createModel(
+          tools: [
+            Tool.ragEngine(
+              const RAGEngineGrounding(
+                corpusId: 'corpusId',
+                projectId: 'project-12345',
+                location: 'global',
+                topK: 15,
+              ),
+            ),
+          ],
+        );
+
+        const prompt = 'Some prompt';
+
+        await client.checkRequest(
+          () => model.generateContent([Content.text(prompt)]),
+          verifyRequest: (_, request) {
+            expect(request['tools'], [
+              {
+                'retrieval': {
+                  'vertexRagStore': {
+                    'ragResources': [
+                      {
+                        'ragCorpus':
+                            'projects/project-12345/locations/global/ragCorpora/corpusId',
+                      }
+                    ],
+                    'ragRetrievalConfig': {
+                      'topK': 15,
+                    }
+                  }
+                }
+              },
+            ]);
+          },
+          response: arbitraryGenerateContentResponse,
+        );
+      });
+
       test('can pass a google search tool', () async {
         final (client, model) = createModel(
           tools: [Tool.googleSearch()],

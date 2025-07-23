@@ -76,5 +76,6 @@ export 'src/tool.dart'
         FunctionCallingConfig,
         FunctionCallingMode,
         FunctionDeclaration,
+        RAGEngineGrounding,
         Tool,
         ToolConfig;
