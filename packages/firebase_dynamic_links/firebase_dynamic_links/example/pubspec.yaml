@@ -1,8 +1,9 @@
 name: firebase_dynamic_links_example
+resolution: workspace
 description: Demonstrates how to use the firebase_dynamic_links plugin.
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
+  sdk: '>=3.6.0 <4.0.0'
   flutter: '>=3.3.0'
 
 dependencies:

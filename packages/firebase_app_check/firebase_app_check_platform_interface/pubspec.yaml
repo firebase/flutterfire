@@ -1,10 +1,11 @@
 name: firebase_app_check_platform_interface
+resolution: workspace
 description: A common platform interface for the firebase_app_check plugin.
 homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_app_check/firebase_app_check_platform_interface
 version: 0.1.1+10
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
+  sdk: '>=3.6.0 <4.0.0'
   flutter: '>=3.3.0'
 
 dependencies:

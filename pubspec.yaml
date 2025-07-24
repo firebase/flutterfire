@@ -1,14 +1,420 @@
 name: flutterfire_workspace
+repository: https://github.com/firebase/flutterfire
+
+# globs aren't supported for dart workspaces yet
+# https://github.com/dart-lang/pub/issues/4391
+workspace:
+  - packages/_flutterfire_internals
+  - packages/cloud_firestore/cloud_firestore
+  - packages/cloud_firestore/cloud_firestore/example
+  - packages/cloud_firestore/cloud_firestore_web
+  - packages/cloud_firestore/cloud_firestore_platform_interface
+  - packages/cloud_functions/cloud_functions
+  - packages/cloud_functions/cloud_functions/example
+  - packages/cloud_functions/cloud_functions_web
+  - packages/cloud_functions/cloud_functions_platform_interface
+  - packages/firebase_ai/firebase_ai
+  - packages/firebase_ai/firebase_ai/example
+  - packages/firebase_analytics/firebase_analytics
+  - packages/firebase_analytics/firebase_analytics/example
+  - packages/firebase_analytics/firebase_analytics_web
+  - packages/firebase_analytics/firebase_analytics_platform_interface
+  - packages/firebase_app_check/firebase_app_check
+  - packages/firebase_app_check/firebase_app_check/example
+  - packages/firebase_app_check/firebase_app_check_web
+  - packages/firebase_app_check/firebase_app_check_platform_interface
+  - packages/firebase_app_installations/firebase_app_installations
+  - packages/firebase_app_installations/firebase_app_installations/example
+  - packages/firebase_app_installations/firebase_app_installations_web
+  - packages/firebase_app_installations/firebase_app_installations_platform_interface
+  - packages/firebase_auth/firebase_auth
+  - packages/firebase_auth/firebase_auth/example
+  - packages/firebase_auth/firebase_auth_web
+  - packages/firebase_auth/firebase_auth_platform_interface
+  - packages/firebase_core/firebase_core
+  - packages/firebase_core/firebase_core/example
+  - packages/firebase_core/firebase_core_web
+  - packages/firebase_core/firebase_core_platform_interface
+  - packages/firebase_crashlytics/firebase_crashlytics
+  - packages/firebase_crashlytics/firebase_crashlytics/example
+  - packages/firebase_crashlytics/firebase_crashlytics_platform_interface
+  - packages/firebase_database/firebase_database
+  - packages/firebase_database/firebase_database/example
+  - packages/firebase_database/firebase_database_web
+  - packages/firebase_database/firebase_database_platform_interface
+  - packages/firebase_dynamic_links/firebase_dynamic_links
+  - packages/firebase_dynamic_links/firebase_dynamic_links/example
+  - packages/firebase_dynamic_links/firebase_dynamic_links_platform_interface
+  - packages/firebase_in_app_messaging/firebase_in_app_messaging
+  - packages/firebase_in_app_messaging/firebase_in_app_messaging/example
+  - packages/firebase_in_app_messaging/firebase_in_app_messaging_platform_interface
+  - packages/firebase_messaging/firebase_messaging
+  - packages/firebase_messaging/firebase_messaging/example
+  - packages/firebase_messaging/firebase_messaging_web
+  - packages/firebase_messaging/firebase_messaging_platform_interface
+  - packages/firebase_ml_model_downloader/firebase_ml_model_downloader
+  - packages/firebase_ml_model_downloader/firebase_ml_model_downloader/example
+  - packages/firebase_ml_model_downloader/firebase_ml_model_downloader_platform_interface
+  - packages/firebase_performance/firebase_performance
+  - packages/firebase_performance/firebase_performance/example
+  - packages/firebase_performance/firebase_performance_web
+  - packages/firebase_performance/firebase_performance_platform_interface
+  - packages/firebase_remote_config/firebase_remote_config
+  - packages/firebase_remote_config/firebase_remote_config/example
+  - packages/firebase_remote_config/firebase_remote_config_web
+  - packages/firebase_remote_config/firebase_remote_config_platform_interface
+  - packages/firebase_storage/firebase_storage
+  - packages/firebase_storage/firebase_storage/example
+  - packages/firebase_storage/firebase_storage_web
+  - packages/firebase_storage/firebase_storage_platform_interface
+  - packages/firebase_vertexai/firebase_vertexai
+  - packages/firebase_vertexai/firebase_vertexai/example
+  - tests
+
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
+  sdk: '>=3.6.0 <4.0.0'
 
 dev_dependencies:
   cli_util: ^0.4.1
   glob: ^2.1.2
   intl: ^0.19.0
-  melos: ^5.3.0
+  melos: ^7.0.0-dev.7
   path: ^1.9.0
   pub_semver: ^2.1.4
   yaml: ^3.1.2
-  
+
+melos:
+  command:
+    version:
+      # Generate commit links in package changelogs.
+      linkToCommits: true
+      # # Only allow versioning to happen on main branch.
+      # branch: main
+      # Additionally build a changelog at the root of the workspace.
+      workspaceChangelog: true
+      hooks:
+        preCommit: |
+          dart run scripts/generate_vertexai_version.dart && \
+          dart run scripts/generate_dataconnect_version.dart && \
+          dart run scripts/generate_versions_spm.dart && \
+          git add packages/firebase_vertexai/firebase_vertexai/lib/src/vertex_version.dart && \
+          git add packages/firebase_data_connect/firebase_data_connect/lib/src/dataconnect_version.dart
+        post: |
+          dart run scripts/generate_tag_spm_firebase_core.dart
+
+    bootstrap:
+      # It seems so that running "pub get" in parallel has some issues (like
+      # https://github.com/dart-lang/pub/issues/3404). Disabling this feature
+      # makes the CI much more stable.
+      runPubGetInParallel: false
+      usePubspecOverrides: true
+
+  scripts:
+    lint:all:
+      run: melos run analyze-ci && melos run format-ci
+      description: Run all static analysis checks.
+
+    analyze-ci:
+      # We are setting the concurrency to 1 because a higher concurrency can crash
+      # the analysis server on low performance machines (like GitHub Actions).
+      run: |
+        melos exec -c 1 -- \
+          dart analyze . --fatal-infos
+      description: |
+        Run `dart analyze` in all packages.
+        - Note: you can also rely on your IDEs Dart Analysis / Issues window.
+
+    firebase:emulator:
+      run: |
+        cd .github/workflows/scripts && ./start-firebase-emulator.sh
+      description: |
+        Start the Firebase emulator suite. Used by Functions, Firestore, Auth and Storage
+        integration testing.
+        - Requires Node.js and NPM installed.
+
+    format-ci:
+      run: |
+        dart pub global run flutter_plugin_tools format && \
+        swiftformat .
+      description: |
+        Formats the code of all packages (Java, Objective-C, and Dart).
+        - Requires `flutter_plugin_tools` (`pub global activate flutter_plugin_tools`).
+        - Requires `git`.
+        - Requires `clang-format` (can be installed via Brew on MacOS).
+        - Requires `swiftformat` (can be installed via Brew on macOS).
+
+    build:all:
+      run: |
+        melos run build:example_ios_pub --no-select && \
+        melos run build:example_android_pub --no-select && \
+        melos run build:example_macos --no-select
+      description: Build all example apps.
+
+    build:example_android:
+      run: |
+        melos exec -c 6 --fail-fast -- \
+          "flutter build apk"
+      description: Build a specific example app for Android.
+      packageFilters:
+        dirExists:
+          - android
+        scope: '*example*'
+
+    build:example_android_pub:
+      run: |
+        melos exec -c 6 --fail-fast -- \
+          "flutter build apk"
+      description: Build a specific example app for Android.
+      packageFilters:
+        dirExists:
+          - android
+        scope: '*example*'
+
+    build:example_ios:
+      run: |
+        melos exec -c 6 --fail-fast -- \
+          "flutter build ios --no-codesign"
+      description: Build a specific example app for iOS.
+      packageFilters:
+        dirExists:
+          - ios
+        scope: '*example*'
+
+    build:example_ios_pub:
+      run: |
+        melos exec -c 6 --fail-fast -- \
+          "flutter build ios --no-codesign"
+      description: Build a specific example app for iOS.
+      packageFilters:
+        dirExists:
+          - ios
+        scope: '*example*'
+
+    build:example_macos:
+      run: |
+        melos exec -c 6 --fail-fast -- \
+          "flutter build macos"
+      description: |
+        Build a specific example app for macOS.
+      packageFilters:
+        dirExists:
+          - macos
+        scope: '*example*'
+
+    test:all:
+      run: |
+        melos run test --no-select && \
+        melos run test:web --no-select && \
+        melos run test:e2e --no-select
+      description: |
+        Run all tests available.
+
+    test:
+      run: |
+        melos exec -c 6 --fail-fast -- \
+          "flutter test"
+      description: Run `flutter test` for a specific package.
+      packageFilters:
+        dirExists:
+          - test
+        ignore:
+          - '*web*'
+          - '*example*'
+
+    test:web:
+      run: |
+        melos exec -c 1 --fail-fast -- \
+          "flutter test --platform=chrome"
+      description: Run `flutter test --platform=chrome` for a specific '*web' package.
+      packageFilters:
+        dirExists:
+          - test
+        scope: '*web*'
+
+    test:e2e:
+      run: |
+        melos exec -c 1 --fail-fast -- \
+          "flutter test integration_test/e2e_test.dart"
+      description: |
+        Run all e2e tests.
+      packageFilters:
+        dirExists:
+          - integration_test
+        scope: '*tests*'
+
+    test:e2e:cloud_firestore:
+      run: |
+        cd packages/cloud_firestore/cloud_firestore/example
+        flutter test integration_test/e2e_test.dart
+      description: |
+        Run all e2e tests for cloud_firestore.
+
+    test:e2e:firebase_performance:
+      run: |
+        cd packages/firebase_performance/firebase_performance/example
+        flutter test integration_test/firebase_performance_e2e_test.dart
+      description: |
+        Run all e2e tests for firebase_performance.
+
+    test:e2e:web:
+      run: |
+        melos exec -c 1 --fail-fast -- \
+          "flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=LOCAL_WEB_E2E=true"
+      description: |
+        Run all e2e tests on web platform. Please ensure you have "chromedriver" installed and running.
+      packageFilters:
+        dirExists:
+          - test_driver
+        scope: '*tests*'
+
+    test:e2e:web:cloud_firestore:
+      run: |
+        cd packages/cloud_firestore/cloud_firestore/example
+        flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome
+      description: |
+        Run all e2e tests for cloud_firestore on web platform. Please ensure you have "chromedriver" installed and running.
+
+    test:e2e:web:firebase_performance:
+      run: |
+        cd packages/firebase_performance/firebase_performance/example
+        flutter drive --target=./integration_test/firebase_performance_e2e_test.dart --driver=./test_driver/integration_test.dart --release -d chrome
+      description: |
+        Run all e2e tests for firebase_performance on web platform. Please ensure you have "chromedriver" installed and running.
+
+    clean:deep:
+      run: git clean -x -d -f -q
+      description: Clean things very deeply, can be used to establish "pristine checkout" status.
+
+    test:e2e:windows:
+      run: |
+        melos exec -c 1 --fail-fast -- \
+          "flutter test integration_test/e2e_test.dart -d windows"
+      description: |
+        Run all e2e tests.
+      packageFilters:
+        dirExists:
+          - integration_test
+        scope: '*tests*'
+
+    qualitycheck:
+      run: |
+        melos run clean:deep && \
+        melos clean && \
+        melos bootstrap && \
+        melos run lint:all && \
+        melos run build:all && \
+        melos run test:all
+      description: Run all targets generally expected in CI for a full local quality check.
+
+    generate:pigeon:
+      run: |
+        melos exec -- "flutter pub run pigeon --input ./pigeons/messages.dart" && \
+        melos run generate:pigeon:macos --no-select && \
+        melos run generate:pigeon:android --no-select && \
+        melos run format-ci --no-select
+      packageFilters:
+        fileExists: 'pigeons/messages.dart'
+      description: Generate the pigeon messages for all the supported packages.
+
+    generate:pigeon:macos:
+      run: |
+        melos exec -- "sed -i '' 's;#import <Flutter/Flutter.h>;#if TARGET_OS_OSX\n#import <FlutterMacOS/FlutterMacOS.h>\n#else\n#import <Flutter/Flutter.h>\n#endif;g' ios/Classes/messages.g.m"
+      packageFilters:
+        fileExists: 'ios/Classes/messages.g.m'
+      description: Pigeon does not add the condition to import Flutter or FlutterMacOs. Add the condition
+
+    generate:pigeon:android:
+      run: |
+        melos exec -- "find ./android -type f -name '*Generated*' | xargs sed -i '.bak' 's/ArrayList<Object> toList() {/public ArrayList<Object> toList() {/g'" && \
+        melos exec -- "find ./android -type f -name '*.bak' -delete"
+      packageFilters:
+        dirExists: 'android'
+      description: Transform the method toList() into a public one to be used in EventChannel
+
+    # Additional cleanup lifecycle script, executed when `melos clean` is run.
+    postclean: >
+      melos exec -c 6 -- "flutter clean"
+
+    add-license-header:
+      # If you add here another --ignore flag, add it also to
+      # "check-license-header".
+      run: |
+        addlicense -f header_template.txt \
+          --ignore "**/*.yml" \
+          --ignore "**/*.yaml" \
+          --ignore "**/*.xml" \
+          --ignore "**/*.g.dart" \
+          --ignore "**/*.sh" \
+          --ignore "**/*.html" \
+          --ignore "**/*.js" \
+          --ignore "**/*.ts" \
+          --ignore "**/*.g.h" \
+          --ignore "**/*.g.m" \
+          --ignore "**/*.rb" \
+          --ignore "**/*.txt" \
+          --ignore "**/*.cmake" \
+          --ignore "**/Runner/AppDelegate.swift" \
+          --ignore "**/Runner/MainFlutterWindow.swift" \
+          --ignore "**/Runner/Runner-Bridging-Header.h" \
+          --ignore "**/Runner/AppDelegate.h" \
+          --ignore "**/Runner/AppDelegate.m" \
+          --ignore "**/Runner/main.m" \
+          --ignore "**/MainActivity.kt" \
+          --ignore "**/MainActivity.java" \
+          --ignore "**/FlutterMultiDexApplication.java" \
+          --ignore "**/GeneratedPluginRegistrant.swift" \
+          --ignore "**/Pods/**" \
+          --ignore "**/generated/**" \
+          --ignore "**/flutter/generated_plugin_registrant.h" \
+          --ignore "**/flutter/generated_plugin_registrant.cc" \
+          --ignore "**/android/app/build.gradle.kts" \
+          --ignore "**/android/build.gradle.kts" \
+          --ignore "**/android/settings.gradle.kts" \
+          --ignore "**/RunnerTests/RunnerTests.swift" \
+          .
+      description: Add a license header to all necessary files.
+
+    check-license-header:
+      # If you add here another --ignore flag, add it also to
+      # "add-license-header".
+      run: |
+        addlicense -f header_template.txt \
+          --check \
+          --ignore "**/*.yml" \
+          --ignore "**/*.yaml" \
+          --ignore "**/*.xml" \
+          --ignore "**/*.g.dart" \
+          --ignore "**/*.sh" \
+          --ignore "**/*.html" \
+          --ignore "**/*.js" \
+          --ignore "**/*.ts" \
+          --ignore "**/*.g.h" \
+          --ignore "**/*.g.m" \
+          --ignore "**/*.rb" \
+          --ignore "**/*.txt" \
+          --ignore "**/*.cmake" \
+          --ignore "**/Runner/AppDelegate.swift" \
+          --ignore "**/Runner/MainFlutterWindow.swift" \
+          --ignore "**/Runner/Runner-Bridging-Header.h" \
+          --ignore "**/Runner/AppDelegate.h" \
+          --ignore "**/Runner/AppDelegate.m" \
+          --ignore "**/Runner/main.m" \
+          --ignore "**/MainActivity.kt" \
+          --ignore "**/MainActivity.java" \
+          --ignore "**/FlutterMultiDexApplication.java" \
+          --ignore "**/GeneratedPluginRegistrant.swift" \
+          --ignore "**/Pods/**" \
+          --ignore "**/generated/**" \
+          --ignore "**/flutter/generated_plugin_registrant.h" \
+          --ignore "**/flutter/generated_plugin_registrant.cc" \
+          --ignore "**/android/app/build.gradle.kts" \
+          --ignore "**/android/build.gradle.kts" \
+          --ignore "**/android/settings.gradle.kts" \
+          --ignore "**/RunnerTests/RunnerTests.swift" \
+          .
+      description: Add a license header to all necessary files.
+
+    bom:
+      run: dart scripts/generate_bom.dart
+      description: Generate a Bill of Materials (BOM) file for all packages.

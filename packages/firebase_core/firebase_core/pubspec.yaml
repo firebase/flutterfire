@@ -1,4 +1,5 @@
 name: firebase_core
+resolution: workspace
 description: Flutter plugin for Firebase Core, enabling connecting to multiple
   Firebase apps.
 homepage: https://firebase.google.com/docs/flutter/setup
@@ -12,7 +13,7 @@ false_secrets:
   - example/**
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
+  sdk: '>=3.6.0 <4.0.0'
   flutter: '>=3.3.0'
 
 dependencies:

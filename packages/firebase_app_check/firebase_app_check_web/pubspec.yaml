@@ -1,10 +1,11 @@
 name: firebase_app_check_web
+resolution: workspace
 description: The web implementation of firebase_app_check
 homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_app_check/firebase_app_check_web
 version: 0.2.0+14
 
 environment:
-  sdk: '>=3.4.0 <4.0.0'
+  sdk: '>=3.6.0 <4.0.0'
   flutter: '>=3.22.0'
 
 dependencies:

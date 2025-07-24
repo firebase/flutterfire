@@ -1,10 +1,11 @@
 name: firebase_performance_web
+resolution: workspace
 description: Web implementation of Firebase Performance monitoring.
 homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_performance/firebase_performance_web
 version: 0.1.7+16
 
 environment:
-  sdk: '>=3.4.0 <4.0.0'
+  sdk: '>=3.6.0 <4.0.0'
   flutter: '>=3.22.0'
 
 dependencies:
