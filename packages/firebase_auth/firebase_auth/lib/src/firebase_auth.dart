@@ -868,7 +868,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
         message: 'Password cannot be null or empty',
       );
     }
-    PasswordPolicyApi passwordPolicyApi = PasswordPolicyApi(auth);
+    PasswordPolicyApi passwordPolicyApi = PasswordPolicyApi(auth.app.options.apiKey);
     PasswordPolicy passwordPolicy =
         await passwordPolicyApi.fetchPasswordPolicy();
     PasswordPolicyImpl passwordPolicyImpl = PasswordPolicyImpl(passwordPolicy);
