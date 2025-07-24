@@ -60,7 +60,8 @@ export 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
         RecaptchaVerifierOnExpired,
         RecaptchaVerifierOnError,
         RecaptchaVerifierSize,
-        RecaptchaVerifierTheme;
+        RecaptchaVerifierTheme,
+        PasswordValidationStatus;
 export 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebaseException;
 
