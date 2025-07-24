@@ -16,7 +16,6 @@ import com.google.firebase.appcheck.AppCheckToken;
 import com.google.firebase.appcheck.FirebaseAppCheck;
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory;
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory;
-import com.google.firebase.appcheck.safetynet.*;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.EventChannel;
@@ -36,7 +35,6 @@ public class FlutterFirebaseAppCheckPlugin
   private final Map<EventChannel, TokenChannelStreamHandler> streamHandlers = new HashMap<>();
 
   private final String debugProvider = "debug";
-  private final String safetyNetProvider = "safetyNet";
   private final String playIntegrity = "playIntegrity";
 
   @Nullable private BinaryMessenger messenger;
@@ -80,48 +78,6 @@ public class FlutterFirebaseAppCheckPlugin
             FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
             AppCheckToken tokenResult = Tasks.await(firebaseAppCheck.getLimitedUseAppCheckToken());
             taskCompletionSource.setResult(tokenResult.getToken());
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
-  // SafetyNet is deprecated and is already annotated as such on the user facing Dart API. Please remove annotation when SafetyNet is removed.
-  @SuppressWarnings("deprecation")
-  private Task<Void> activate(Map<String, Object> arguments) {
-    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            String provider = (String) Objects.requireNonNull(arguments.get("androidProvider"));
-
-            switch (provider) {
-              case debugProvider:
-                {
-                  FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
-                  firebaseAppCheck.installAppCheckProviderFactory(
-                      DebugAppCheckProviderFactory.getInstance());
-                  break;
-                }
-              case safetyNetProvider:
-                {
-                  FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
-                  firebaseAppCheck.installAppCheckProviderFactory(
-                      SafetyNetAppCheckProviderFactory.getInstance());
-                  break;
-                }
-              case playIntegrity:
-                {
-                  FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
-                  firebaseAppCheck.installAppCheckProviderFactory(
-                      PlayIntegrityAppCheckProviderFactory.getInstance());
-                  break;
-                }
-            }
-            taskCompletionSource.setResult(null);
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
