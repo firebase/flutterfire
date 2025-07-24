@@ -26,7 +26,6 @@ dependencies:
   firebase_core_platform_interface: ^6.0.0
   flutter:
     sdk: flutter
-  http: ^1.1.0
   meta: ^1.8.0
 dev_dependencies:
   async: ^2.5.0
