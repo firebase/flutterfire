@@ -2,24 +2,22 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:core';
 import 'password_policy.dart';
 
 class PasswordPolicyApi {
-  final FirebaseAuth _auth;
+  final String _apiKey;
   final String _apiUrl =
       'https://identitytoolkit.googleapis.com/v2/passwordPolicy?key=';
 
-  PasswordPolicyApi(this._auth);
+  PasswordPolicyApi(this._apiKey);
 
   final int _schemaVersion = 1;
 
   Future<PasswordPolicy> fetchPasswordPolicy() async {
     try {
-      final String _apiKey = _auth.app.options.apiKey;
       final response = await http.get(Uri.parse('$_apiUrl$_apiKey'));
       if (response.statusCode == 200) {
         final policy = json.decode(response.body);

@@ -16,6 +16,7 @@ dependencies:
   firebase_core: ^3.15.1
   flutter:
     sdk: flutter
+  http: ^1.1.0
   meta: ^1.8.0
   plugin_platform_interface: ^2.1.3
 
