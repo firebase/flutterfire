@@ -1267,7 +1267,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   }
 
   /// Initiates on-device conversion measurement given a user email address.
-  /// Requires dependency GoogleAppMeasurementOnDeviceConversion to be linked in, otherwise it is a no-op.
+  /// Requires Firebase iOS SDK 12.0.0+ with FirebaseAnalytics dependency, otherwise it is a no-op.
   ///
   /// Only available on iOS.
   Future<void> initiateOnDeviceConversionMeasurementWithEmailAddress(
@@ -1284,7 +1284,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   }
 
   /// Initiates on-device conversion measurement given a user phone number in E.164 format.
-  /// Requires dependency GoogleAppMeasurementOnDeviceConversion to be linked in, otherwise it is a no-op.
+  /// Requires Firebase iOS SDK 12.0.0+ with FirebaseAnalytics dependency, otherwise it is a no-op.
   ///
   /// Only available on iOS.
   Future<void> initiateOnDeviceConversionMeasurementWithPhoneNumber(
@@ -1301,7 +1301,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   }
 
   /// Initiates on-device conversion measurement given a sha256-hashed, UTF8 encoded, user email address.
-  /// Requires dependency GoogleAppMeasurementOnDeviceConversion to be linked in, otherwise it is a no-op.
+  /// Requires Firebase iOS SDK 12.0.0+ with FirebaseAnalytics dependency, otherwise it is a no-op.
   ///
   /// Only available on iOS.
   Future<void> initiateOnDeviceConversionMeasurementWithHashedEmailAddress(
@@ -1318,7 +1318,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   }
 
   /// Initiates on-device conversion measurement given a sha256-hashed, UTF8 encoded, phone number in E.164 format.
-  /// Requires dependency GoogleAppMeasurementOnDeviceConversion to be linked in, otherwise it is a no-op.
+  /// Requires Firebase iOS SDK 12.0.0+ with FirebaseAnalytics dependency, otherwise it is a no-op.
   ///
   /// Only available on iOS.
   Future<void> initiateOnDeviceConversionMeasurementWithHashedPhoneNumber(
