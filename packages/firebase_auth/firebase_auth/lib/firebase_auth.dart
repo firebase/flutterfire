@@ -61,9 +61,6 @@ export 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
         RecaptchaVerifierOnError,
         RecaptchaVerifierSize,
         RecaptchaVerifierTheme,
-        PasswordPolicy,
-        PasswordPolicyApi,
-        PasswordPolicyImpl,
         PasswordValidationStatus;
 export 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebaseException;
