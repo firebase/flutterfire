@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -21,18 +21,24 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('ImagenReferenceImage', () {
     test('ImagenRawImage toJson', () {
-      final image = ImagenRawImage(image: ImagenInlineImage(data: []));
+      final image = ImagenRawImage(
+          image: ImagenInlineImage(
+              bytesBase64Encoded: Uint8List.fromList([]),
+              mimeType: 'image/jpeg'));
       final json = image.toJson();
       expect(json, {
-        'image': {'data': 'AA=='}
+        'image': {'bytesBase64Encoded': '', 'mimeType': 'image/jpeg'}
       });
     });
 
     test('ImagenRawMask toJson', () {
-      final image = ImagenRawMask(mask: ImagenInlineImage(data: []));
+      final image = ImagenRawMask(
+          mask: ImagenInlineImage(
+              bytesBase64Encoded: Uint8List.fromList([]),
+              mimeType: 'image/jpeg'));
       final json = image.toJson();
       expect(json, {
-        'image': {'data': 'AA=='},
+        'image': {'bytesBase64Encoded': '', 'mimeType': 'image/jpeg'},
         'mask': {'type': 'user-provided'}
       });
     });
@@ -63,14 +69,15 @@ void main() {
 
     test('ImagenSubjectReference toJson', () {
       final image = ImagenSubjectReference(
-        image: ImagenInlineImage(data: []),
+        image: ImagenInlineImage(
+            bytesBase64Encoded: Uint8List.fromList([]), mimeType: 'image/jpeg'),
         referenceId: 1,
         description: 'a cat',
         subjectType: ImagenSubjectReferenceType.animal,
       );
       final json = image.toJson();
       expect(json, {
-        'image': {'data': 'AA=='},
+        'image': {'bytesBase64Encoded': '', 'mimeType': 'image/jpeg'},
         'referenceId': 1,
         'subject': {'description': 'a cat', 'type': 'animal'}
       });
@@ -78,13 +85,14 @@ void main() {
 
     test('ImagenStyleReference toJson', () {
       final image = ImagenStyleReference(
-        image: ImagenInlineImage(data: []),
+        image: ImagenInlineImage(
+            bytesBase64Encoded: Uint8List.fromList([]), mimeType: 'image/jpeg'),
         referenceId: 1,
         description: 'van gogh style',
       );
       final json = image.toJson();
       expect(json, {
-        'image': {'data': 'AA=='},
+        'image': {'bytesBase64Encoded': '', 'mimeType': 'image/jpeg'},
         'referenceId': 1,
         'style': {'description': 'van gogh style'}
       });
@@ -93,12 +101,13 @@ void main() {
     test('ImagenControlReference toJson', () {
       final image = ImagenControlReference(
         controlType: ImagenControlType.canny,
-        image: ImagenInlineImage(data: []),
+        image: ImagenInlineImage(
+            bytesBase64Encoded: Uint8List.fromList([]), mimeType: 'image/jpeg'),
         referenceId: 1,
       );
       final json = image.toJson();
       expect(json, {
-        'image': {'data': 'AA=='},
+        'image': {'bytesBase64Encoded': '', 'mimeType': 'image/jpeg'},
         'referenceId': 1,
         'control': {'type': 'canny'}
       });

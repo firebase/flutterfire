@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'src/imagen/imagen_reference.dart';
+
 export 'src/api.dart'
     show
         BlockReason,
@@ -51,7 +53,7 @@ export 'src/error.dart'
         ServerException,
         UnsupportedUserLocation;
 export 'src/firebase_ai.dart' show FirebaseAI;
-export 'src/imagen_api.dart'
+export 'src/imagen/imagen_api.dart'
     show
         ImagenSafetySettings,
         ImagenFormat,
@@ -59,7 +61,32 @@ export 'src/imagen_api.dart'
         ImagenPersonFilterLevel,
         ImagenGenerationConfig,
         ImagenAspectRatio;
-export 'src/imagen_content.dart' show ImagenInlineImage;
+export 'src/imagen/imagen_content.dart' show ImagenInlineImage;
+export 'src/imagen/imagen_edit.dart'
+    show
+        ImagenEditMode,
+        ImagenSubjectReferenceType,
+        ImagenControlType,
+        ImagenMaskMode,
+        ImagenMaskConfig,
+        ImagenSubjectConfig,
+        ImagenStyleConfig,
+        ImagenControlConfig,
+        ImagenEditingConfig,
+        ImagenDimensions,
+        ImagenImagePlacement;
+export 'src/imagen/imagen_reference.dart'
+    show
+        ImagenReferenceImage,
+        ImagenMaskReference,
+        ImagenRawImage,
+        ImagenRawMask,
+        ImagenSemanticMask,
+        ImagenBackgroundMask,
+        ImagenForegroundMask,
+        ImagenSubjectReference,
+        ImagenStyleReference,
+        ImagenControlReference;
 export 'src/live_api.dart'
     show
         LiveGenerationConfig,

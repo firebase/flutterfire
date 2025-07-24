@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of 'base_model.dart';
+part of '../base_model.dart';
 
 /// Represents a remote Imagen model with the ability to generate images using
 /// text prompts.
@@ -139,7 +139,7 @@ final class ImagenModel extends BaseApiClientModel {
   }) =>
       editImage(
         [
-          ImagenRawImage(image: image),
+          ImagenRawImage(image: image, referenceId: 0),
           mask,
         ],
         prompt,
@@ -150,20 +150,23 @@ final class ImagenModel extends BaseApiClientModel {
   @experimental
   Future<ImagenGenerationResponse<ImagenInlineImage>> outpaintImage(
     ImagenInlineImage image,
-    Dimensions newDimensions, {
+    ImagenDimensions newDimensions, {
     ImagenImagePlacement newPosition = ImagenImagePlacement.center,
     String prompt = '',
     ImagenEditingConfig? config,
-  }) =>
-      editImage(
-        ImagenMaskReference.generateMaskAndPadForOutpainting(
-          image: image,
-          newDimensions: newDimensions,
-          newPosition: newPosition,
-        ),
-        prompt,
-        config: config,
-      );
+  }) async {
+    final referenceImages =
+        await ImagenMaskReference.generateMaskAndPadForOutpainting(
+      image: image,
+      newDimensions: newDimensions,
+      newPosition: newPosition,
+    );
+    return editImage(
+      referenceImages,
+      prompt,
+      config: config,
+    );
+  }
 
   Map<String, Object?> _generateImagenEditRequest(
     List<ImagenReferenceImage> images,
@@ -172,7 +175,8 @@ final class ImagenModel extends BaseApiClientModel {
   }) {
     final parameters = <String, Object?>{
       'sampleCount': _generationConfig?.numberOfImages ?? 1,
-      if (config?.editMode case final editMode?) 'editMode': editMode.toString(),
+      if (config?.editMode case final editMode?)
+        'editMode': editMode.toString(),
       if (config?.editSteps case final editSteps?) 'editSteps': editSteps,
       if (_generationConfig?.negativePrompt case final negativePrompt?)
         'negativePrompt': negativePrompt,
@@ -190,7 +194,7 @@ final class ImagenModel extends BaseApiClientModel {
       'instances': [
         {
           'prompt': prompt,
-          'images': images.map((i) => i.toJson()).toList(),
+          'referenceImages': images.map((i) => i.toJson()).toList(),
         }
       ],
       'parameters': parameters,

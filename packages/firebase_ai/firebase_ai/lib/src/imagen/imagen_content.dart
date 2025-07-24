@@ -13,8 +13,9 @@
 // limitations under the License.
 import 'dart:convert';
 import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'package:meta/meta.dart';
-import 'error.dart';
+import '../error.dart';
 
 /// Base type of Imagen Image.
 sealed class ImagenImage {
@@ -59,6 +60,12 @@ final class ImagenInlineImage implements ImagenImage {
         'mimeType': mimeType,
         'bytesBase64Encoded': base64Encode(bytesBase64Encoded),
       };
+  // Helper to decode bytes into a dart:ui.Image.
+  Future<ui.Image> asUiImage() async {
+    final codec = await ui.instantiateImageCodec(bytesBase64Encoded);
+    final frame = await codec.getNextFrame();
+    return frame.image;
+  }
 }
 
 /// Represents an image stored in Google Cloud Storage.
