@@ -1,3 +1,15 @@
+## 5.15.3
+
+ - Update a dependency to the latest release.
+
+## 5.15.2
+
+ - Update a dependency to the latest release.
+
+## 5.15.1
+
+ - Update a dependency to the latest release.
+
 ## 5.15.0
 
  - **FEAT**(auth): add support for initializeRecaptchaConfig ([#17365](https://github.com/firebase/flutterfire/issues/17365)). ([73f9028e](https://github.com/firebase/flutterfire/commit/73f9028e114874fddc8a4f76f22b247504a95a02))

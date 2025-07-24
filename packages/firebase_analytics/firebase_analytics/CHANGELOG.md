@@ -1,3 +1,15 @@
+## 11.6.0
+
+ - **FEAT**(auth,macos): add support for `publish` and `addApplicationDelegate` on macOS FlutterPluginRegistrar ([#17518](https://github.com/firebase/flutterfire/issues/17518)). ([376bb6ea](https://github.com/firebase/flutterfire/commit/376bb6ea8878df3f25cc1416fe26ace2203fd793))
+
+## 11.5.2
+
+ - Update a dependency to the latest release.
+
+## 11.5.1
+
+ - Update a dependency to the latest release.
+
 ## 11.5.0
 
  - **FEAT**(analytics): add Pigeon support for firebase_analytics ([#17403](https://github.com/firebase/flutterfire/issues/17403)). ([57c09139](https://github.com/firebase/flutterfire/commit/57c091395d86a3a40c6520f4b5cffcd8165de4f1))

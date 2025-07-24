@@ -37,6 +37,28 @@ void main() {
   const String kMockOobCode = 'oobcode';
   const String kMockURL = 'http://www.example.com';
   const String kMockHost = 'www.example.com';
+  const String kMockValidPassword =
+      'Password123!'; // For password policy impl testing
+  const String kMockInvalidPassword = 'Pa1!';
+  const String kMockInvalidPassword2 = 'password123!';
+  const String kMockInvalidPassword3 = 'PASSWORD123!';
+  const String kMockInvalidPassword4 = 'password!';
+  const String kMockInvalidPassword5 = 'Password123';
+  const Map<String, dynamic> kMockPasswordPolicy = {
+    'customStrengthOptions': {
+      'minPasswordLength': 6,
+      'maxPasswordLength': 12,
+      'containsLowercaseCharacter': true,
+      'containsUppercaseCharacter': true,
+      'containsNumericCharacter': true,
+      'containsNonAlphanumericCharacter': true,
+    },
+    'allowedNonAlphanumericCharacters': ['!'],
+    'schemaVersion': 1,
+    'enforcement': 'OFF',
+  };
+  final PasswordPolicy kMockPasswordPolicyObject =
+      PasswordPolicy(kMockPasswordPolicy);
   const int kMockPort = 31337;
 
   final TestAuthProvider testAuthProvider = TestAuthProvider();
@@ -764,6 +786,61 @@ void main() {
             codeAutoRetrievalTimeout: autoRetrievalTimeout,
           ),
         );
+      });
+    });
+
+    group('passwordPolicy', () {
+      test('passwordPolicy should be initialized with correct parameters',
+          () async {
+        PasswordPolicyImpl passwordPolicy =
+            PasswordPolicyImpl(kMockPasswordPolicyObject);
+        expect(passwordPolicy.policy, equals(kMockPasswordPolicyObject));
+      });
+
+      PasswordPolicyImpl passwordPolicy =
+          PasswordPolicyImpl(kMockPasswordPolicyObject);
+
+      test('should return true for valid password', () async {
+        final PasswordValidationStatus status =
+            passwordPolicy.isPasswordValid(kMockValidPassword);
+        expect(status.isValid, isTrue);
+      });
+
+      test('should return false for invalid password that is too short',
+          () async {
+        final PasswordValidationStatus status =
+            passwordPolicy.isPasswordValid(kMockInvalidPassword);
+        expect(status.isValid, isFalse);
+      });
+
+      test(
+          'should return false for invalid password with no capital characters',
+          () async {
+        final PasswordValidationStatus status =
+            passwordPolicy.isPasswordValid(kMockInvalidPassword2);
+        expect(status.isValid, isFalse);
+      });
+
+      test(
+          'should return false for invalid password with no lowercase characters',
+          () async {
+        final PasswordValidationStatus status =
+            passwordPolicy.isPasswordValid(kMockInvalidPassword3);
+        expect(status.isValid, isFalse);
+      });
+
+      test('should return false for invalid password with no numbers',
+          () async {
+        final PasswordValidationStatus status =
+            passwordPolicy.isPasswordValid(kMockInvalidPassword4);
+        expect(status.isValid, isFalse);
+      });
+
+      test('should return false for invalid password with no symbols',
+          () async {
+        final PasswordValidationStatus status =
+            passwordPolicy.isPasswordValid(kMockInvalidPassword5);
+        expect(status.isValid, isFalse);
       });
     });
 

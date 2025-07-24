@@ -33,7 +33,7 @@ import '../api.dart'
         createUsageMetadata;
 import '../content.dart' show Content, FunctionCall, Part, TextPart;
 import '../error.dart';
-import '../function_calling.dart' show Tool, ToolConfig;
+import '../tool.dart' show Tool, ToolConfig;
 
 HarmProbability _parseHarmProbability(Object jsonObject) =>
     switch (jsonObject) {
@@ -244,10 +244,15 @@ UsageMetadata _parseUsageMetadata(Object jsonObject) {
     {'totalTokenCount': final int totalTokenCount} => totalTokenCount,
     _ => null,
   };
+  final thoughtsTokenCount = switch (jsonObject) {
+    {'thoughtsTokenCount': final int thoughtsTokenCount} => thoughtsTokenCount,
+    _ => null,
+  };
   return createUsageMetadata(
     promptTokenCount: promptTokenCount,
     candidatesTokenCount: candidatesTokenCount,
     totalTokenCount: totalTokenCount,
+    thoughtsTokenCount: thoughtsTokenCount,
     promptTokensDetails: null,
     candidatesTokensDetails: null,
   );

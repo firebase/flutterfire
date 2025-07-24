@@ -1,3 +1,11 @@
+## 2.24.1
+
+ - Update a dependency to the latest release.
+
+## 2.24.0
+
+ - **FEAT**: bump JS SDK to version 11.9.1 ([#17471](https://github.com/firebase/flutterfire/issues/17471)). ([5033db83](https://github.com/firebase/flutterfire/commit/5033db8380bbf3a9a8a0cab13128e5f9c54b9e19))
+
 ## 2.23.0
 
  - **FEAT**: bump Firebase JS SDK to 11.7.0 ([#17355](https://github.com/firebase/flutterfire/issues/17355)). ([1c680eb9](https://github.com/firebase/flutterfire/commit/1c680eb97f51269285814309e7fca7a579698834))

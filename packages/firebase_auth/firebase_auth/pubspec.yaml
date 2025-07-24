@@ -4,7 +4,7 @@ description: Flutter plugin for Firebase Auth, enabling
   like Google, Facebook and Twitter.
 homepage: https://firebase.google.com/docs/auth
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_auth/firebase_auth
-version: 5.6.0
+version: 5.7.0
 topics:
   - firebase
   - authentication
@@ -20,14 +20,13 @@ environment:
   flutter: '>=3.16.0'
 
 dependencies:
-  firebase_auth_platform_interface: ^7.7.0
-  firebase_auth_web: ^5.15.0
-  firebase_core: ^3.14.0
-  firebase_core_platform_interface: ^5.3.1
+  firebase_auth_platform_interface: ^7.7.3
+  firebase_auth_web: ^5.15.3
+  firebase_core: ^3.15.2
+  firebase_core_platform_interface: ^6.0.0
   flutter:
     sdk: flutter
   meta: ^1.8.0
-
 dev_dependencies:
   async: ^2.5.0
   flutter_test:

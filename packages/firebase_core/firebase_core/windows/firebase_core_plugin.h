@@ -34,15 +34,14 @@ class FirebaseCorePlugin : public flutter::Plugin,
   // FirebaseCoreHostApi
   virtual void InitializeApp(
       const std::string &app_name,
-      const PigeonFirebaseOptions &initialize_app_request,
-      std::function<void(ErrorOr<PigeonInitializeResponse> reply)> result)
+      const CoreFirebaseOptions &initialize_app_request,
+      std::function<void(ErrorOr<CoreInitializeResponse> reply)> result)
       override;
   virtual void InitializeCore(
       std::function<void(ErrorOr<flutter::EncodableList> reply)> result)
       override;
   virtual void OptionsFromResource(
-      std::function<void(ErrorOr<PigeonFirebaseOptions> reply)> result)
-      override;
+      std::function<void(ErrorOr<CoreFirebaseOptions> reply)> result) override;
 
   // FirebaseAppHostApi
   virtual void SetAutomaticDataCollectionEnabled(

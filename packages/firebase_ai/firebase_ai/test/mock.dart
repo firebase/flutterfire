@@ -18,13 +18,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-class MockFirebaseAppVertexAI implements TestFirebaseCoreHostApi {
+class MockFirebaseAppAI implements TestFirebaseCoreHostApi {
   @override
-  Future<PigeonInitializeResponse> initializeApp(
+  Future<CoreInitializeResponse> initializeApp(
     String appName,
-    PigeonFirebaseOptions initializeAppRequest,
+    CoreFirebaseOptions initializeAppRequest,
   ) async {
-    return PigeonInitializeResponse(
+    return CoreInitializeResponse(
       name: appName,
       options: initializeAppRequest,
       pluginConstants: {},
@@ -32,11 +32,11 @@ class MockFirebaseAppVertexAI implements TestFirebaseCoreHostApi {
   }
 
   @override
-  Future<List<PigeonInitializeResponse?>> initializeCore() async {
+  Future<List<CoreInitializeResponse>> initializeCore() async {
     return [
-      PigeonInitializeResponse(
+      CoreInitializeResponse(
         name: defaultFirebaseAppName,
-        options: PigeonFirebaseOptions(
+        options: CoreFirebaseOptions(
           apiKey: '123',
           projectId: '123',
           appId: '123',
@@ -48,8 +48,8 @@ class MockFirebaseAppVertexAI implements TestFirebaseCoreHostApi {
   }
 
   @override
-  Future<PigeonFirebaseOptions> optionsFromResource() async {
-    return PigeonFirebaseOptions(
+  Future<CoreFirebaseOptions> optionsFromResource() async {
+    return CoreFirebaseOptions(
       apiKey: '123',
       projectId: '123',
       appId: '123',
@@ -61,13 +61,13 @@ class MockFirebaseAppVertexAI implements TestFirebaseCoreHostApi {
 void setupFirebaseVertexAIMocks() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  TestFirebaseCoreHostApi.setup(MockFirebaseAppVertexAI());
+  TestFirebaseCoreHostApi.setUp(MockFirebaseAppAI());
 }
 
 // FirebaseVertexAIPlatform Mock
-class MockFirebaseVertexAI extends Mock
+class MockFirebaseAI extends Mock
     with
         // ignore: prefer_mixin, plugin_platform_interface needs to migrate to use `mixin`
         MockPlatformInterfaceMixin {
-  MockFirebaseVertexAI();
+  MockFirebaseAI();
 }
