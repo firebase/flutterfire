@@ -188,40 +188,6 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     await _delegate.setUserId(id: id, callOptions: callOptions);
   }
 
-  /// Sets the current [screenName], which specifies the current visual context
-  /// in your app.
-  ///
-  /// This helps identify the areas in your app where users spend their time
-  /// and how they interact with your app.
-  ///
-  /// The class name can optionally be overridden by the [screenClassOverride]
-  /// parameter.
-  ///
-  /// The [screenName] and [screenClassOverride] remain in effect until the
-  /// current `Activity` (in Android) or `UIViewController` (in iOS) changes or
-  /// a new call to [setCurrentScreen] is made.
-  ///
-  /// Setting a null [screenName] clears the current screen name.
-  ///
-  /// See also:
-  ///
-  ///  * https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.html#setCurrentScreen(android.app.Activity, java.lang.String, java.lang.String)
-  ///  * https://firebase.google.com/docs/reference/ios/firebaseanalytics/api/reference/Classes/FIRAnalytics#setscreennamescreenclass
-  @Deprecated(
-    'setCurrentScreen() has been deprecated. Please use logScreenView()',
-  )
-  Future<void> setCurrentScreen({
-    required String? screenName,
-    String screenClassOverride = 'Flutter',
-    AnalyticsCallOptions? callOptions,
-  }) async {
-    await _delegate.setCurrentScreen(
-      screenName: screenName,
-      screenClassOverride: screenClassOverride,
-      callOptions: callOptions,
-    );
-  }
-
   static final RegExp _nonAlphaNumeric = RegExp('[^a-zA-Z0-9_]');
   static final RegExp _alpha = RegExp('[a-zA-Z]');
 
@@ -658,26 +624,6 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
-    );
-  }
-
-  /// Logs the standard `set_checkout_option` event. This event has been deprecated and is unsupported in updated Enhanced Ecommerce reports.
-  /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#SET_CHECKOUT_OPTION
-  @Deprecated('logSetCheckoutOption() has been deprecated.')
-  Future<void> logSetCheckoutOption({
-    required int checkoutStep,
-    required String checkoutOption,
-    Map<String, Object>? parameters,
-  }) {
-    _assertParameterTypesAreCorrect(parameters);
-
-    return _delegate.logEvent(
-      name: 'set_checkout_option',
-      parameters: filterOutNulls(<String, Object?>{
-        _CHECKOUT_STEP: checkoutStep,
-        _CHECKOUT_OPTION: checkoutOption,
-        if (parameters != null) ...parameters,
-      }),
     );
   }
 
