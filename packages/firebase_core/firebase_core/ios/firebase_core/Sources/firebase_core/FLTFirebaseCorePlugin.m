@@ -252,7 +252,7 @@ static NSMutableDictionary<NSString *, NSString *> *customAuthDomains;
 }
 
 - (void)setAutomaticResourceManagementEnabledAppName:(nonnull NSString *)appName
-                                             enabled:(nonnull NSNumber *)enabled
+                                             enabled:(BOOL)enabled
                                           completion:(nonnull void (^)(FlutterError *_Nullable))
                                                          completion {
   // Unsupported on iOS/MacOS.
