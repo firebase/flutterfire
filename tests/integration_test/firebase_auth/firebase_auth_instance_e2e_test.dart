@@ -1150,7 +1150,6 @@ void main() {
       });
     },
     // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
-    skip: defaultTargetPlatform == TargetPlatform.macOS ||
-        defaultTargetPlatform == TargetPlatform.iOS,
+    skip: defaultTargetPlatform == TargetPlatform.macOS,
   );
 }
