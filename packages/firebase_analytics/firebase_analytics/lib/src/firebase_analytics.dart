@@ -1547,9 +1547,3 @@ const String _PROMOTION_ID = 'promotion_id';
 
 /// The name of a product promotion
 const String _PROMOTION_NAME = 'promotion_name';
-
-/// The checkout step (1..N).
-const String _CHECKOUT_STEP = 'checkout_step';
-
-/// Some option on a step in an ecommerce flow.
-const String _CHECKOUT_OPTION = 'checkout_option';
