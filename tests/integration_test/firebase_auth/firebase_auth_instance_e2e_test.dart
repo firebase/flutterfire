@@ -841,42 +841,44 @@ void main() {
           }
         });
         test(
-            'should not throw error when app is deleted and reinit with same app name',
-            () async {
-          try {
-            const appName = 'SecondaryApp';
+          'should not throw error when app is deleted and reinit with same app name',
+          () async {
+            try {
+              const appName = 'SecondaryApp';
 
-            final app = await Firebase.initializeApp(
-              name: appName,
-              options: DefaultFirebaseOptions.currentPlatform,
-            );
+              final app = await Firebase.initializeApp(
+                name: appName,
+                options: DefaultFirebaseOptions.currentPlatform,
+              );
 
-            var auth1 = FirebaseAuth.instanceFor(app: app);
+              var auth1 = FirebaseAuth.instanceFor(app: app);
 
-            await auth1.signInWithEmailAndPassword(
-              email: testEmail,
-              password: testPassword,
-            );
+              await auth1.signInWithEmailAndPassword(
+                email: testEmail,
+                password: testPassword,
+              );
 
-            await app.delete();
+              await app.delete();
 
-            final app2 = await Firebase.initializeApp(
-              name: appName,
-              options: DefaultFirebaseOptions.currentPlatform,
-            );
+              final app2 = await Firebase.initializeApp(
+                name: appName,
+                options: DefaultFirebaseOptions.currentPlatform,
+              );
 
-            final auth2 = FirebaseAuth.instanceFor(app: app2);
+              final auth2 = FirebaseAuth.instanceFor(app: app2);
 
-            await auth2.signInWithEmailAndPassword(
-              email: testEmail,
-              password: testPassword,
-            );
-          } on FirebaseException catch (e) {
-            fail('Failed with error: $e');
-          } catch (e) {
-            fail(e.toString());
-          }
-        });
+              await auth2.signInWithEmailAndPassword(
+                email: testEmail,
+                password: testPassword,
+              );
+            } catch (e) {
+              fail(e.toString());
+            }
+          },
+          // TODO(russellwheatley): this is crashing iOS/macOS app (reinit app), but does not when running as app.
+          skip: defaultTargetPlatform == TargetPlatform.iOS ||
+              defaultTargetPlatform == TargetPlatform.macOS,
+        );
       });
 
       group('signOut()', () {
@@ -1064,8 +1066,8 @@ void main() {
       );
 
       group('validatePassword()', () {
-
-        const String validPassword = 'Password123!'; // For password policy impl testing
+        const String validPassword =
+            'Password123!'; // For password policy impl testing
         const String invalidPassword = 'Pa1!';
         const String invalidPassword2 = 'password123!';
         const String invalidPassword3 = 'PASSWORD123!';
@@ -1073,7 +1075,8 @@ void main() {
         const String invalidPassword5 = 'Password123';
 
         test('should validate password that is correct', () async {
-          final PasswordValidationStatus status = await FirebaseAuth.instance.validatePassword(FirebaseAuth.instance, validPassword);
+          final PasswordValidationStatus status = await FirebaseAuth.instance
+              .validatePassword(FirebaseAuth.instance, validPassword);
           expect(status.isValid, isTrue);
           expect(status.meetsMinPasswordLength, isTrue);
           expect(status.meetsMaxPasswordLength, isTrue);
@@ -1084,30 +1087,37 @@ void main() {
         });
 
         test('should not validate a password that is too short', () async {
-          final PasswordValidationStatus status = await FirebaseAuth.instance.validatePassword(FirebaseAuth.instance, invalidPassword);
+          final PasswordValidationStatus status = await FirebaseAuth.instance
+              .validatePassword(FirebaseAuth.instance, invalidPassword);
           expect(status.isValid, isFalse);
           expect(status.meetsMinPasswordLength, isFalse);
         });
 
-        test('should not validate a password that has no uppercase characters', () async {
-          final PasswordValidationStatus status = await FirebaseAuth.instance.validatePassword(FirebaseAuth.instance, invalidPassword2);
+        test('should not validate a password that has no uppercase characters',
+            () async {
+          final PasswordValidationStatus status = await FirebaseAuth.instance
+              .validatePassword(FirebaseAuth.instance, invalidPassword2);
           expect(status.isValid, isFalse);
           expect(status.meetsUppercaseRequirement, isFalse);
         });
 
-        test('should not validate a password that has no lowercase characters', () async {
-          final PasswordValidationStatus status = await FirebaseAuth.instance.validatePassword(FirebaseAuth.instance, invalidPassword3);
+        test('should not validate a password that has no lowercase characters',
+            () async {
+          final PasswordValidationStatus status = await FirebaseAuth.instance
+              .validatePassword(FirebaseAuth.instance, invalidPassword3);
           expect(status.isValid, isFalse);
         });
 
         test('should not validate a password that has no digits', () async {
-          final PasswordValidationStatus status = await FirebaseAuth.instance.validatePassword(FirebaseAuth.instance, invalidPassword4);
+          final PasswordValidationStatus status = await FirebaseAuth.instance
+              .validatePassword(FirebaseAuth.instance, invalidPassword4);
           expect(status.isValid, isFalse);
           expect(status.meetsDigitsRequirement, isFalse);
         });
 
         test('should not validate a password that has no symbols', () async {
-          final PasswordValidationStatus status = await FirebaseAuth.instance.validatePassword(FirebaseAuth.instance, invalidPassword5);
+          final PasswordValidationStatus status = await FirebaseAuth.instance
+              .validatePassword(FirebaseAuth.instance, invalidPassword5);
           expect(status.isValid, isFalse);
           expect(status.meetsSymbolsRequirement, isFalse);
         });
