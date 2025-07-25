@@ -10,7 +10,6 @@ void main() {
   const String kMockBundleId = 'com.test.bundle';
   const String kMockPackageName = 'com.test.package';
 
-  const String kMockDynamicLinkDomain = 'domain.com';
   const String kMockLinkDomain = 'new.domain.com';
   const bool kMockHandleCodeInApp = true;
   const String kMockUrl = 'https://test.url';
