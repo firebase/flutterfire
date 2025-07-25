@@ -998,8 +998,10 @@ final class GenerationConfig extends BaseGenerationConfig {
     super.responseModalities,
     this.responseMimeType,
     this.responseSchema,
+    this.responseJsonSchema,
     this.thinkingConfig,
-  });
+  }) : assert(responseSchema == null || responseJsonSchema == null,
+            'responseSchema and responseJsonSchema cannot both be set.');
 
   /// The set of character sequences (up to 5) that will stop output generation.
   ///
@@ -1020,6 +1022,17 @@ final class GenerationConfig extends BaseGenerationConfig {
   ///   a schema; currently this is limited to `application/json`.
   final Schema? responseSchema;
 
+  /// The response schema as a JSON string.
+  ///
+  /// - Note: This only applies when the [responseMimeType] supports a schema;
+  ///   currently this is limited to `application/json`.
+  ///
+  /// This schema can include more advanced features of JSON than the [Schema]
+  /// class supports.  See [the Gemini
+  /// documentation](https://ai.google.dev/gemini-api/docs/structured-output#json-schema)
+  /// about the limitations of this feature.
+  final String? responseJsonSchema;
+
   /// Config for thinking features.
   ///
   /// An error will be returned if this field is set for models that don't
@@ -1036,6 +1049,8 @@ final class GenerationConfig extends BaseGenerationConfig {
           'responseMimeType': responseMimeType,
         if (responseSchema case final responseSchema?)
           'responseSchema': responseSchema.toJson(),
+        if (responseJsonSchema case final responseJsonSchema?)
+          'responseSchema': responseJsonSchema,
         if (thinkingConfig case final thinkingConfig?)
           'thinkingConfig': thinkingConfig.toJson(),
       };

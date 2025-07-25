@@ -442,6 +442,29 @@ void main() {
       });
     });
 
+    test('GenerationConfig toJson with responseJsonSchema', () {
+      const jsonSchema = '{"type": "string", "title": "MyString"}';
+      final config = GenerationConfig(
+        responseMimeType: 'application/json',
+        responseJsonSchema: jsonSchema,
+      );
+      expect(config.toJson(), {
+        'responseMimeType': 'application/json',
+        'responseSchema': jsonSchema,
+      });
+    });
+
+    test(
+        'throws assertion if both responseSchema and responseJsonSchema are provided',
+        () {
+      final schema = Schema.object(properties: {});
+      const jsonSchema = '{"type": "string", "title": "MyString"}';
+      expect(
+          () => GenerationConfig(
+              responseSchema: schema, responseJsonSchema: jsonSchema),
+          throwsA(isA<AssertionError>()));
+    });
+
     test('GenerationConfig toJson with empty stopSequences (omitted)', () {
       final config = GenerationConfig(stopSequences: []);
       expect(config.toJson(), {}); // Empty list for stopSequences is omitted
