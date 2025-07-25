@@ -16,7 +16,7 @@ let firebase_ios_sdk_version: String = "12.0.0"
 let package = Package(
   name: "remote_firebase_core",
   platforms: [
-    .iOS("13.0"),
+    .iOS("15.0"),
     .macOS("10.15"),
   ],
   products: [
