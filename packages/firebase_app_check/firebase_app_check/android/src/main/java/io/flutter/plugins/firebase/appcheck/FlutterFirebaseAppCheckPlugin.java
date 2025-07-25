@@ -86,6 +86,39 @@ public class FlutterFirebaseAppCheckPlugin
     return taskCompletionSource.getTask();
   }
 
+  private Task<Void> activate(Map<String, Object> arguments) {
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            String provider = (String) Objects.requireNonNull(arguments.get("androidProvider"));
+
+            switch (provider) {
+              case debugProvider:
+                {
+                  FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
+                  firebaseAppCheck.installAppCheckProviderFactory(
+                      DebugAppCheckProviderFactory.getInstance());
+                  break;
+                }
+              case playIntegrity:
+                {
+                  FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
+                  firebaseAppCheck.installAppCheckProviderFactory(
+                      PlayIntegrityAppCheckProviderFactory.getInstance());
+                  break;
+                }
+            }
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
+  }
+
   private Task<String> getToken(Map<String, Object> arguments) {
     TaskCompletionSource<String> taskCompletionSource = new TaskCompletionSource<>();
 
