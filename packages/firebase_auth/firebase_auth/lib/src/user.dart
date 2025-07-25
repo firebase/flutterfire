@@ -163,7 +163,7 @@ class User {
   ///    user, an `email` and `credential` ([AuthCredential]) fields are also
   ///    provided. You have to link the credential to the existing user with
   ///    that email if you wish to continue signing in with that credential. To
-  ///    do so, call [fetchSignInMethodsForEmail], sign in to `email` via one of
+  ///    do so, sign in to `email` via one of
   ///    the providers returned and then [User.linkWithCredential] the original
   ///    credential to that newly signed in user.
   /// - **operation-not-allowed**:
@@ -225,8 +225,8 @@ class User {
   ///    user, an `email` and `credential` ([AuthCredential]) fields are also
   ///    provided. You have to link the credential to the existing user with
   ///    that email if you wish to continue signing in with that credential.
-  ///    To do so, call [fetchSignInMethodsForEmail], sign in to `email` via one
-  ///    of the providers returned and then [User.linkWithCredential] the
+  ///    To do so, sign in to `email` via one
+  ///    of the providers and then [User.linkWithCredential] the
   ///    original credential to that newly signed in user.
   /// - **operation-not-allowed**:
   ///  - Thrown if you have not enabled the provider in the Firebase Console. Go
@@ -392,8 +392,8 @@ class User {
   ///    user, an `email` and `credential` ([AuthCredential]) fields are also
   ///    provided. You have to link the credential to the existing user with
   ///    that email if you wish to continue signing in with that credential.
-  ///    To do so, call [fetchSignInMethodsForEmail], sign in to `email` via one
-  ///    of the providers returned and then [User.linkWithCredential] the
+  ///    To do so, sign in to `email` via one
+  ///    of the providers and then [User.linkWithCredential] the
   ///    original credential to that newly signed in user.
   /// - **operation-not-allowed**:
   ///  - Thrown if you have not enabled the provider in the Firebase Console. Go
@@ -440,8 +440,8 @@ class User {
   ///    user, an `email` and `credential` ([AuthCredential]) fields are also
   ///    provided. You have to link the credential to the existing user with
   ///    that email if you wish to continue signing in with that credential.
-  ///    To do so, call [fetchSignInMethodsForEmail], sign in to `email` via one
-  ///    of the providers returned and then [User.linkWithCredential] the
+  ///    To do so, sign in to `email` via one
+  ///    of the providers and then [User.linkWithCredential] the
   ///    original credential to that newly signed in user.
   /// - **operation-not-allowed**:
   ///  - Thrown if you have not enabled the provider in the Firebase Console. Go
@@ -584,20 +584,6 @@ class User {
   ///   user to have recently signed in. If this requirement isn't met, ask the
   ///   user to authenticate again and then call [User.reauthenticateWithCredential].
   ///
-  /// A [FirebaseAuthException] maybe thrown with the following error code:
-  /// - **invalid-email**:
-  ///  - Thrown if the email used is invalid.
-  /// - **email-already-in-use**:
-  ///  - Thrown if the email is already used by another user.
-  /// - **requires-recent-login**:
-  ///  - Thrown if the user's last sign-in time does not meet the security
-  ///    threshold. Use [User.reauthenticateWithCredential] to resolve. This
-  ///    does not apply if the user is anonymous.
-  @Deprecated(
-      'updateEmail() has been deprecated. Please use verifyBeforeUpdateEmail() instead.')
-  Future<void> updateEmail(String newEmail) async {
-    await _delegate.updateEmail(newEmail);
-  }
 
   /// Updates the user's password.
   ///
