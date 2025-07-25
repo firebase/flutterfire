@@ -8,9 +8,6 @@ import 'package:firebase_app_check_platform_interface/src/apple_provider.dart';
 /// Converts [AndroidProvider] to [String]
 String getAndroidProviderString(AndroidProvider? provider) {
   switch (provider) {
-    // ignore: deprecated_member_use_from_same_package
-    case AndroidProvider.safetyNet:
-      return 'safetyNet';
     case AndroidProvider.debug:
       return 'debug';
     case AndroidProvider.playIntegrity:

@@ -67,8 +67,6 @@ android {
     implementation 'com.google.firebase:firebase-appcheck-debug'
     implementation 'com.google.firebase:firebase-appcheck-playintegrity'
     implementation 'androidx.annotation:annotation:1.7.0'
-    // SafetyNet is deprecated and not part of Firebase BOM
-    implementation 'com.google.firebase:firebase-appcheck-safetynet:16.1.2'
 
   }
 }
