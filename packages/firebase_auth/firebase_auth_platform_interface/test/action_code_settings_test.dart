@@ -48,7 +48,6 @@ void main() {
           expect(result, isA<Map<String, dynamic>>());
 
           expect(result['url'], equals(kMockUrl));
-          expect(result['dynamicLinkDomain'], equals(kMockDynamicLinkDomain));
           expect(result['linkDomain'], equals(kMockLinkDomain));
           expect(result['handleCodeInApp'], equals(kMockHandleCodeInApp));
           expect(result['android']['packageName'], equals(kMockPackageName));

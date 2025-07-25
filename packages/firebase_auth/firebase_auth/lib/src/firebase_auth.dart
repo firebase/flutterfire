@@ -231,8 +231,6 @@ class FirebaseAuth extends FirebasePluginPlatform {
     );
   }
 
-  /// Returns a list of sign-in methods that can be used to sign in a given
-
   /// Returns a UserCredential from the redirect-based sign-in flow.
   ///
   /// If sign-in succeeded, returns the signed in user. If sign-in was
