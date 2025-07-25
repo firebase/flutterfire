@@ -33,8 +33,6 @@ dependencies:
   firebase_database: ^11.3.10
   firebase_database_platform_interface: ^0.2.6+10
   firebase_database_web: ^0.2.6+16
-  firebase_dynamic_links: ^6.1.10
-  firebase_dynamic_links_platform_interface: ^0.2.7+10
   firebase_messaging: ^15.2.10
   firebase_messaging_platform_interface: ^4.6.10
   firebase_messaging_web: ^3.10.10
