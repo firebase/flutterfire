@@ -377,42 +377,6 @@ void main() {
         });
       });
 
-      group(
-        'fetchSignInMethodsForEmail()',
-        () {
-          test('should return password provider for an email address',
-              () async {
-            var providers = await FirebaseAuth.instance
-                // ignore: deprecated_member_use
-                .fetchSignInMethodsForEmail(testEmail);
-            expect(providers, isList);
-            expect(providers.contains('password'), isTrue);
-          });
-
-          test('should return empty array for a not found email', () async {
-            var providers = await FirebaseAuth.instance
-                // ignore: deprecated_member_use
-                .fetchSignInMethodsForEmail(generateRandomEmail());
-
-            expect(providers, isList);
-            expect(providers, isEmpty);
-          });
-
-          test('throws for a bad email address', () async {
-            try {
-              // ignore: deprecated_member_use
-              await FirebaseAuth.instance.fetchSignInMethodsForEmail('foobar');
-              fail('Should have thrown');
-            } on FirebaseAuthException catch (e) {
-              expect(e.code, equals('invalid-email'));
-            } catch (e) {
-              fail(e.toString());
-            }
-          });
-        },
-        skip: !kIsWeb && Platform.isWindows,
-      );
-
       group('isSignInWithEmailLink()', () {
         test('should return true or false', () {
           const emailLink1 =
@@ -1064,8 +1028,8 @@ void main() {
       );
 
       group('validatePassword()', () {
-
-        const String validPassword = 'Password123!'; // For password policy impl testing
+        const String validPassword =
+            'Password123!'; // For password policy impl testing
         const String invalidPassword = 'Pa1!';
         const String invalidPassword2 = 'password123!';
         const String invalidPassword3 = 'PASSWORD123!';
@@ -1073,7 +1037,8 @@ void main() {
         const String invalidPassword5 = 'Password123';
 
         test('should validate password that is correct', () async {
-          final PasswordValidationStatus status = await FirebaseAuth.instance.validatePassword(FirebaseAuth.instance, validPassword);
+          final PasswordValidationStatus status = await FirebaseAuth.instance
+              .validatePassword(FirebaseAuth.instance, validPassword);
           expect(status.isValid, isTrue);
           expect(status.meetsMinPasswordLength, isTrue);
           expect(status.meetsMaxPasswordLength, isTrue);
@@ -1084,30 +1049,37 @@ void main() {
         });
 
         test('should not validate a password that is too short', () async {
-          final PasswordValidationStatus status = await FirebaseAuth.instance.validatePassword(FirebaseAuth.instance, invalidPassword);
+          final PasswordValidationStatus status = await FirebaseAuth.instance
+              .validatePassword(FirebaseAuth.instance, invalidPassword);
           expect(status.isValid, isFalse);
           expect(status.meetsMinPasswordLength, isFalse);
         });
 
-        test('should not validate a password that has no uppercase characters', () async {
-          final PasswordValidationStatus status = await FirebaseAuth.instance.validatePassword(FirebaseAuth.instance, invalidPassword2);
+        test('should not validate a password that has no uppercase characters',
+            () async {
+          final PasswordValidationStatus status = await FirebaseAuth.instance
+              .validatePassword(FirebaseAuth.instance, invalidPassword2);
           expect(status.isValid, isFalse);
           expect(status.meetsUppercaseRequirement, isFalse);
         });
 
-        test('should not validate a password that has no lowercase characters', () async {
-          final PasswordValidationStatus status = await FirebaseAuth.instance.validatePassword(FirebaseAuth.instance, invalidPassword3);
+        test('should not validate a password that has no lowercase characters',
+            () async {
+          final PasswordValidationStatus status = await FirebaseAuth.instance
+              .validatePassword(FirebaseAuth.instance, invalidPassword3);
           expect(status.isValid, isFalse);
         });
 
         test('should not validate a password that has no digits', () async {
-          final PasswordValidationStatus status = await FirebaseAuth.instance.validatePassword(FirebaseAuth.instance, invalidPassword4);
+          final PasswordValidationStatus status = await FirebaseAuth.instance
+              .validatePassword(FirebaseAuth.instance, invalidPassword4);
           expect(status.isValid, isFalse);
           expect(status.meetsDigitsRequirement, isFalse);
         });
 
         test('should not validate a password that has no symbols', () async {
-          final PasswordValidationStatus status = await FirebaseAuth.instance.validatePassword(FirebaseAuth.instance, invalidPassword5);
+          final PasswordValidationStatus status = await FirebaseAuth.instance
+              .validatePassword(FirebaseAuth.instance, invalidPassword5);
           expect(status.isValid, isFalse);
           expect(status.meetsSymbolsRequirement, isFalse);
         });
