@@ -37,6 +37,6 @@ flutter:
         package: io.flutter.plugins.firebase.crashlytics
         pluginClass: FlutterFirebaseCrashlyticsPlugin
       ios:
-        pluginClass: FLTFirebaseCrashlyticsPlugin
+        pluginClass: FirebaseCrashlyticsPlugin
       macos:
-        pluginClass: FLTFirebaseCrashlyticsPlugin
+        pluginClass: FirebaseCrashlyticsPlugin
