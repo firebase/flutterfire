@@ -1,3 +1,9 @@
+## 5.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**(analytics): remove deprecated methods for breaking change release ([#17560](https://github.com/firebase/flutterfire/issues/17560)). ([ea3034d8](https://github.com/firebase/flutterfire/commit/ea3034d88215d0b99dda9079fd9134afb5fee496))
+
 ## 4.4.3
 
  - Update a dependency to the latest release.

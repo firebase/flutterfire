@@ -1,3 +1,9 @@
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: bump JS SDK to version 12.0.0 ([#17548](https://github.com/firebase/flutterfire/issues/17548)). ([b44c965b](https://github.com/firebase/flutterfire/commit/b44c965b9594c4d37ba5bfcf30f6cec7f931a1d8))
+
 ## 2.24.1
 
  - Update a dependency to the latest release.
