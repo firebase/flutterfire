@@ -147,6 +147,64 @@ Packages with dependency updates only:
  - **BREAKING** **FEAT**(auth): remove deprecated functions ([#17562](https://github.com/firebase/flutterfire/issues/17562)). ([d50aad95](https://github.com/firebase/flutterfire/commit/d50aad954443904d64d4ebd4442ebc63ed702986))
  - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
 
+## Removed Methods
+
+- `ActionCodeSettings.dynamicLinkDomain` - Firebase Dynamic Links is deprecated and will be shut down
+- `MicrosoftAuthProvider.credential()` - Use `signInWithProvider(MicrosoftAuthProvider)` instead
+- `FirebaseAuth.instanceFor()` persistence parameter - Use `setPersistence()` instead
+- `FirebaseAuth.fetchSignInMethodsForEmail()` - Removed for security best practices
+- `User.updateEmail()` - Use `verifyBeforeUpdateEmail()` instead
+
+## Migration Guide
+
+### ActionCodeSettings
+```dart
+// Before
+ActionCodeSettings(
+  url: 'https://example.com',
+  dynamicLinkDomain: 'example.page.link',
+)
+
+// After
+ActionCodeSettings(
+  url: 'https://example.com',
+  linkDomain: 'your-custom-domain.com', // Use custom Firebase Hosting domain
+)
+```
+
+### Microsoft Authentication
+```dart
+// Before
+final credential = MicrosoftAuthProvider.credential(accessToken);
+await FirebaseAuth.instance.signInWithCredential(credential);
+
+// After
+final provider = MicrosoftAuthProvider();
+await FirebaseAuth.instance.signInWithProvider(provider);
+```
+
+### FirebaseAuth Instance
+```dart
+// Before
+FirebaseAuth.instanceFor(app: app, persistence: Persistence.local);
+
+// After
+final auth = FirebaseAuth.instanceFor(app: app);
+auth.setPersistence(Persistence.local);
+```
+
+### Email Updates
+```dart
+// Before
+await user.updateEmail('new@email.com');
+
+// After
+await user.verifyBeforeUpdateEmail('new@email.com');
+```
+
+### Email Sign-in Methods
+The `fetchSignInMethodsForEmail()` method has been removed for security reasons. Consider implementing alternative authentication flows that don't require email enumeration.
+
 #### `firebase_auth_platform_interface` - `v8.0.0`
 
  - **FEAT**(auth): validatePassword method/PasswordPolicy Support ([#17439](https://github.com/firebase/flutterfire/issues/17439)). ([9a032b34](https://github.com/firebase/flutterfire/commit/9a032b344d6a22c1e3a181ae27e511939f2d8972))
@@ -1873,7 +1931,7 @@ Packages with other changes:
  - **FEAT**(messaging,apple): allow system to display button for in-app notification settings ([#13484](https://github.com/firebase/flutterfire/issues/13484)). ([b36f924e](https://github.com/firebase/flutterfire/commit/b36f924e018f4d88ea5eaf17a779b2c3cf03583d))
 
 #### `cloud_functions_web` - `v4.10.6`
- 
+
  - Update a dependency to the latest release.
 
 #### `firebase_analytics_web` - `v0.5.10+6`
