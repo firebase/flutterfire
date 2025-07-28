@@ -1,3 +1,11 @@
+## 6.0.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**(remote_config,android): make `onCancel` accept nullable arguments to avoid crash on hot restart ([#17569](https://github.com/firebase/flutterfire/issues/17569)). ([2b782558](https://github.com/firebase/flutterfire/commit/2b782558666337fd65780231fe07a277986cedce))
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
 ## 5.5.0
 
  - **FEAT**(remote_config): add support for Pigeon. Update iOS to Swift and Android to Swift ([#17489](https://github.com/firebase/flutterfire/issues/17489)). ([08ecc502](https://github.com/firebase/flutterfire/commit/08ecc5029616058c86d0093b9aae3ee8cea811a4))
