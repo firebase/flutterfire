@@ -104,7 +104,7 @@ Future<void> buildSwiftExampleApp(String platform, String plugins) async {
 
   print('Building example app with swift (SPM) integration for $plugins');
 
-  final githubRepository = Platform.environment['GITHUB_REPOSITORY'];
+  final githubRepository = Platform.environment['PR_HEAD_REPO'];
   print('GitHub REPOSITORY >>>>>: $githubRepository');
 
   final directory =
