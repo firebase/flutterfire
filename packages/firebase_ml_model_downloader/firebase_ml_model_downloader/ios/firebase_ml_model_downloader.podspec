@@ -26,7 +26,7 @@ Pod::Spec.new do |s|
   s.source           = { :path => '.' }
   s.source_files = 'firebase_ml_model_downloader/Sources/**/*.swift'
 
-  s.ios.deployment_target = '13.0'
+  s.ios.deployment_target = '15.0'
 
 
   s.dependency 'Flutter'

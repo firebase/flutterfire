@@ -18,8 +18,6 @@ import 'firebase_core/firebase_core_e2e_test.dart' as firebase_core;
 import 'firebase_crashlytics/firebase_crashlytics_e2e_test.dart'
     as firebase_crashlytics;
 import 'firebase_database/firebase_database_e2e_test.dart' as firebase_database;
-import 'firebase_dynamic_links/firebase_dynamic_links_e2e_test.dart'
-    as firebase_dynamic_links;
 import 'firebase_messaging/firebase_messaging_e2e_test.dart'
     as firebase_messaging;
 import 'firebase_ml_model_downloader/firebase_ml_model_downloader_e2e_test.dart'
@@ -59,7 +57,6 @@ void main() {
       firebase_analytics.main();
       cloud_functions.main();
       firebase_app_installations.main();
-      firebase_dynamic_links.main();
       firebase_messaging.main();
       firebase_ml_model_downloader.main();
       firebase_performance.main();
@@ -95,7 +92,6 @@ void runAllTests() {
   firebase_analytics.main();
   cloud_functions.main();
   firebase_app_installations.main();
-  firebase_dynamic_links.main();
   firebase_messaging.main();
   firebase_ml_model_downloader.main();
   firebase_performance.main();

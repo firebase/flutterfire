@@ -27,7 +27,7 @@ Pod::Spec.new do |s|
   s.source_files     = 'firebase_core/Sources/firebase_core/**/*.{h,m}'
   s.public_header_files = 'firebase_core/Sources/firebase_core/include/**/*.h'
 
-  s.ios.deployment_target = '13.0'
+  s.ios.deployment_target = '15.0'
 
   # Flutter dependencies
   s.dependency 'Flutter'

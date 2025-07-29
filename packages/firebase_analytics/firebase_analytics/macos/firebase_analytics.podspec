@@ -2,10 +2,10 @@ require 'yaml'
 
 pubspec = YAML.load_file(File.join('..', 'pubspec.yaml'))
 library_version = pubspec['version'].gsub('+', '-')
-firebase_analytics = 'Firebase/Analytics'
+firebase_analytics = 'FirebaseAnalytics'
 
 if defined?($FirebaseAnalyticsWithoutAdIdSupport)
-firebase_analytics = 'Firebase/AnalyticsWithoutAdIdSupport'
+firebase_analytics = 'FirebaseAnalytics/Core'
 end
 
 if defined?($FirebaseSDKVersion)

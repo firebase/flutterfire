@@ -630,32 +630,6 @@ void main() {
       );
 
       group(
-        'updateEmail()',
-        () {
-          test('should update the email address', () async {
-            String emailBefore = generateRandomEmail();
-            // Setup
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: emailBefore,
-              password: testPassword,
-            );
-            expect(
-              FirebaseAuth.instance.currentUser!.email,
-              equals(emailBefore),
-            );
-
-            // Update user email
-            // ignore: deprecated_member_use
-            await FirebaseAuth.instance.currentUser!.updateEmail(email);
-            expect(FirebaseAuth.instance.currentUser!.email, equals(email));
-          });
-        },
-        skip: !kIsWeb &&
-            (defaultTargetPlatform == TargetPlatform.windows ||
-                defaultTargetPlatform == TargetPlatform.macOS),
-      );
-
-      group(
         'updatePassword()',
         () {
           test('should update the password', () async {

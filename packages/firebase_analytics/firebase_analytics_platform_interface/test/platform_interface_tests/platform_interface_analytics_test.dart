@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_analytics_platform_interface/src/platform_interface/platform_interface_firebase_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
@@ -110,21 +110,6 @@ void main() {
             (e) => e.message,
             'message',
             'setUserId() is not implemented',
-          ),
-        ),
-      );
-    });
-
-    test('throws if .setCurrentScreen() not implemented', () async {
-      await expectLater(
-        () => firebaseAnalyticsPlatform.setCurrentScreen(
-          screenName: 'test screen',
-        ),
-        throwsA(
-          isA<UnimplementedError>().having(
-            (e) => e.message,
-            'message',
-            'setCurrentScreen() is not implemented',
           ),
         ),
       );

@@ -206,7 +206,6 @@ Product                                          | Plugin name                  
 [{{storage}}][storage docs]                      | `firebase_storage`             | {{YES}} | {{YES}} | {{YES}} | beta | beta
 [{{crashlytics}}][crashlytics docs]              | `firebase_crashlytics`         | {{YES}} | {{YES}} |         | beta |
 [{{data_connect_short}}][dataconnect docs]       | `firebase_data_connect`        | {{YES}} | {{YES}} | {{YES}} | |
-[{{ddls}}][ddls docs]                            | `firebase_dynamic_links`       | {{YES}} | {{YES}} |         | |
 [{{inappmessaging}}][fiam docs]                  | `firebase_in_app_messaging`    | {{YES}} | {{YES}} |         | |
 [{{firebase_installations}}][installations docs] | `firebase_app_installations`   | {{YES}} | {{YES}} | {{YES}} | beta |
 [ML Model Downloader][ml docs]                   | `firebase_ml_model_downloader` | {{YES}} | {{YES}} |         | beta |

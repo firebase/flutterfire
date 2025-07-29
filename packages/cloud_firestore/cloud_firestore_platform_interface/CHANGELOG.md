@@ -1,3 +1,9 @@
+## 7.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**(firestore): remove deprecated functions ([#17559](https://github.com/firebase/flutterfire/issues/17559)). ([67017fd6](https://github.com/firebase/flutterfire/commit/67017fd6f139080cec7ecd1b4d75a05f13f238fa))
+
 ## 6.6.12
 
  - Update a dependency to the latest release.

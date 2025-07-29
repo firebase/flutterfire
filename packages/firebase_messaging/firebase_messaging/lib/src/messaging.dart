@@ -212,31 +212,6 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     );
   }
 
-  /// Send a new [RemoteMessage] to the FCM server. Android only.
-  /// Firebase will decommission in June 2024: https://firebase.google.com/docs/reference/android/com/google/firebase/messaging/FirebaseMessaging#send
-  @Deprecated(
-      'This will be removed in a future release. Firebase will decommission in June 2024')
-  Future<void> sendMessage({
-    String? to,
-    Map<String, String>? data,
-    String? collapseKey,
-    String? messageId,
-    String? messageType,
-    int? ttl,
-  }) {
-    if (ttl != null) {
-      assert(ttl >= 0);
-    }
-    return _delegate.sendMessage(
-      to: to ?? '${app.options.messagingSenderId}@fcm.googleapis.com',
-      data: data,
-      collapseKey: collapseKey,
-      messageId: messageId,
-      messageType: messageType,
-      ttl: ttl,
-    );
-  }
-
   /// Enable or disable auto-initialization of Firebase Cloud Messaging.
   Future<void> setAutoInitEnabled(bool enabled) async {
     return _delegate.setAutoInitEnabled(enabled);

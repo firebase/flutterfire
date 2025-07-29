@@ -86,18 +86,6 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
   DocumentReference doc(String documentPath) => DocumentReference.getInstance(
       firestore_interop.doc(jsObject as JSAny, documentPath.toJS));
 
-  Future<void> enablePersistence(
-      [firestore_interop.PersistenceSettings? settings]) {
-    if (settings != null && settings.synchronizeTabs.toDart == true) {
-      return firestore_interop
-          .enableMultiTabIndexedDbPersistence(jsObject)
-          .toDart;
-    }
-    return
-        // ignore: deprecated_member_use_from_same_package
-        firestore_interop.enableIndexedDbPersistence(jsObject).toDart;
-  }
-
 // purely for debug mode and tracking listeners to clean up on "hot restart"
   static final Map<String, int> _snapshotInSyncListeners = {};
   String _snapshotInSyncWindowsKey() {

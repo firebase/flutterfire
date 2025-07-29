@@ -50,7 +50,8 @@ target 'Runner' do
     end
   end
 
-  pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => "#{firebase_sdk_version}"
+  # TODO: Uncomment this when the binary distribution is working again
+  # pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => "#{firebase_sdk_version}"
 end
 
 post_install do |installer|

@@ -1,3 +1,9 @@
+## 0.2.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**(app-check): remove deprecated functions ([#17561](https://github.com/firebase/flutterfire/issues/17561)). ([3e4302c4](https://github.com/firebase/flutterfire/commit/3e4302c4281d1d39c140ff116643d700cd3c5ace))
+
 ## 0.1.1+10
 
  - Update a dependency to the latest release.

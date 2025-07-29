@@ -29,7 +29,7 @@ Pod::Spec.new do |s|
   s.public_header_files = 'firebase_auth/Sources/firebase_auth/include/Public/**/*.h'
   s.private_header_files = 'firebase_auth/Sources/firebase_auth/include/Private/**/*.h'
 
-  s.ios.deployment_target = '13.0'
+  s.ios.deployment_target = '15.0'
   s.dependency 'Flutter'
 
   s.dependency 'firebase_core'

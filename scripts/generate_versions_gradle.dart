@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:melos/melos.dart' as melos;
-import 'package:glob/glob.dart';
 import 'dart:io';
+
 import 'package:cli_util/cli_logging.dart' as logging;
+import 'package:glob/glob.dart';
+import 'package:melos/melos.dart' as melos;
 import 'package:path/path.dart' show joinAll;
 
 // Used to generate config files from ../gradle/local-config.gradle in order to use correct java and compilation versions.
@@ -46,14 +47,13 @@ void main() async {
   for (final package in workspace.filteredPackages.values) {
     switch (package.name) {
       case 'cloud_firestore':
-      case  'cloud_functions':
+      case 'cloud_functions':
       case 'firebase_analytics':
       case 'firebase_app_check':
       case 'firebase_app_installations':
       case 'firebase_core':
       case 'firebase_crashlytics':
       case 'firebase_database':
-      case 'firebase_dynamic_links':
       case 'firebase_in_app_messaging':
       case 'firebase_messaging':
       case 'firebase_ml_model_downloader':
