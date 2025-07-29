@@ -83,6 +83,7 @@ Future<void> updatePackageSwiftForPackage(String packageName, String branch) asy
 
     // handles forked repositories
     final repoSlug = Platform.environment['GITHUB_REPOSITORY'] ?? 'firebase/flutterfire';
+    print('Using repository: $repoSlug');
 
     // Replace with branch dependency
     final branchDependency = '.package(url: "https://github.com/$repoSlug", branch: "$branch")';
