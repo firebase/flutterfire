@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:convert';
+
 import 'package:meta/meta.dart';
 
 /// The desired outcome of the image editing.
@@ -121,7 +123,7 @@ final class ImagenMaskConfig extends ImagenReferenceConfig {
         'maskImageConfig': {
           'maskMode': maskType.toJson(),
           if (maskDilation != null) 'dilation': maskDilation,
-          if (maskClasses != null) 'maskClasses': maskClasses.toString(),
+          if (maskClasses != null) 'maskClasses': jsonEncode(maskClasses),
         },
       };
 }
@@ -157,7 +159,7 @@ final class ImagenStyleConfig extends ImagenReferenceConfig {
   @override
   Map<String, Object?> toJson() => {
         'styleImageConfig': {
-          if (description != null) 'subjectDescription': description,
+          if (description != null) 'styleDescription': description,
         },
       };
 }

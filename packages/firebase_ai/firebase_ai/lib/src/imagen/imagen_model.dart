@@ -139,8 +139,8 @@ final class ImagenModel extends BaseApiClientModel {
   }) =>
       editImage(
         [
-          ImagenRawImage(image: image, referenceId: 0),
           mask,
+          ImagenRawImage(image: image),
         ],
         prompt,
         config: config,
@@ -175,9 +175,9 @@ final class ImagenModel extends BaseApiClientModel {
   }) {
     final parameters = <String, Object?>{
       'sampleCount': _generationConfig?.numberOfImages ?? 1,
-      if (config?.editMode case final editMode?)
-        'editMode': editMode.toString(),
-      if (config?.editSteps case final editSteps?) 'editSteps': editSteps,
+      if (config?.editMode case final editMode?) 'editMode': editMode.toJson(),
+      if (config?.editSteps case final editSteps?)
+        'editConfig': {'baseSteps': editSteps},
       if (_generationConfig?.negativePrompt case final negativePrompt?)
         'negativePrompt': negativePrompt,
       if (_generationConfig?.addWatermark case final addWatermark?)
@@ -191,13 +191,18 @@ final class ImagenModel extends BaseApiClientModel {
     };
 
     return {
+      'parameters': parameters,
       'instances': [
         {
           'prompt': prompt,
-          'referenceImages': images.map((i) => i.toJson()).toList(),
+          'referenceImages': images.asMap().entries.map((entry) {
+            int index = entry.key;
+            var image = entry.value;
+            return image.toJson(
+                referenceIdOverrideIfNull: index + images.length);
+          }).toList(),
         }
       ],
-      'parameters': parameters,
     };
   }
 }

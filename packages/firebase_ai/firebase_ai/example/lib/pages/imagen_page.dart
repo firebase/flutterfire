@@ -243,7 +243,7 @@ class _ImagenPageState extends State<ImagenPage> {
       final response = await widget.model.inpaintImage(
         _sourceImage!,
         prompt,
-        ImagenBackgroundMask(referenceId: 1),
+        ImagenBackgroundMask(),
         config: ImagenEditingConfig(editMode: ImagenEditMode.inpaintInsertion),
       );
       if (response.images.isNotEmpty) {
@@ -345,7 +345,6 @@ class _ImagenPageState extends State<ImagenPage> {
         [
           ImagenStyleReference(
             image: _sourceImage!,
-            referenceId: 1,
             description: 'van goh style',
           ),
         ],

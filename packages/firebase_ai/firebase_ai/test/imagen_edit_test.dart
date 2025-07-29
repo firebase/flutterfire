@@ -24,10 +24,13 @@ void main() {
       final image = ImagenRawImage(
           image: ImagenInlineImage(
               bytesBase64Encoded: Uint8List.fromList([]),
-              mimeType: 'image/jpeg'));
+              mimeType: 'image/jpeg'),
+          referenceId: 1);
       final json = image.toJson();
       expect(json, {
-        'image': {'bytesBase64Encoded': '', 'mimeType': 'image/jpeg'}
+        'referenceType': 'REFERENCE_TYPE_RAW',
+        'referenceId': 1,
+        'referenceImage': {'bytesBase64Encoded': '', 'mimeType': 'image/jpeg'}
       });
     });
 
@@ -35,35 +38,47 @@ void main() {
       final image = ImagenRawMask(
           mask: ImagenInlineImage(
               bytesBase64Encoded: Uint8List.fromList([]),
-              mimeType: 'image/jpeg'));
+              mimeType: 'image/jpeg'),
+          referenceId: 1);
       final json = image.toJson();
       expect(json, {
-        'image': {'bytesBase64Encoded': '', 'mimeType': 'image/jpeg'},
-        'mask': {'type': 'user-provided'}
+        'referenceType': 'REFERENCE_TYPE_MASK',
+        'referenceId': 1,
+        'referenceImage': {'bytesBase64Encoded': '', 'mimeType': 'image/jpeg'},
+        'maskImageConfig': {'maskMode': 'MASK_MODE_USER_PROVIDED'}
       });
     });
 
     test('ImagenSemanticMask toJson', () {
-      final image = ImagenSemanticMask(classes: [1, 2]);
+      final image = ImagenSemanticMask(classes: [1, 2], referenceId: 1);
       final json = image.toJson();
       expect(json, {
-        'mask': {'type': 'semantic'}
+        'referenceType': 'REFERENCE_TYPE_MASK',
+        'referenceId': 1,
+        'maskImageConfig': {
+          'maskMode': 'MASK_MODE_SEMANTIC',
+          'maskClasses': '[1,2]'
+        }
       });
     });
 
     test('ImagenBackgroundMask toJson', () {
-      final image = ImagenBackgroundMask();
+      final image = ImagenBackgroundMask(referenceId: 1);
       final json = image.toJson();
       expect(json, {
-        'mask': {'type': 'background'}
+        'referenceType': 'REFERENCE_TYPE_MASK',
+        'referenceId': 1,
+        'maskImageConfig': {'maskMode': 'MASK_MODE_BACKGROUND'}
       });
     });
 
     test('ImagenForegroundMask toJson', () {
-      final image = ImagenForegroundMask();
+      final image = ImagenForegroundMask(referenceId: 1);
       final json = image.toJson();
       expect(json, {
-        'mask': {'type': 'foreground'}
+        'referenceType': 'REFERENCE_TYPE_MASK',
+        'referenceId': 1,
+        'maskImageConfig': {'maskMode': 'MASK_MODE_FOREGROUND'}
       });
     });
 
@@ -71,15 +86,19 @@ void main() {
       final image = ImagenSubjectReference(
         image: ImagenInlineImage(
             bytesBase64Encoded: Uint8List.fromList([]), mimeType: 'image/jpeg'),
-        referenceId: 1,
         description: 'a cat',
         subjectType: ImagenSubjectReferenceType.animal,
+        referenceId: 1,
       );
       final json = image.toJson();
       expect(json, {
-        'image': {'bytesBase64Encoded': '', 'mimeType': 'image/jpeg'},
+        'referenceType': 'REFERENCE_TYPE_SUBJECT',
         'referenceId': 1,
-        'subject': {'description': 'a cat', 'type': 'animal'}
+        'referenceImage': {'bytesBase64Encoded': '', 'mimeType': 'image/jpeg'},
+        'subjectImageConfig': {
+          'subjectDescription': 'a cat',
+          'subjectType': 'SUBJECT_TYPE_ANIMAL'
+        }
       });
     });
 
@@ -87,14 +106,15 @@ void main() {
       final image = ImagenStyleReference(
         image: ImagenInlineImage(
             bytesBase64Encoded: Uint8List.fromList([]), mimeType: 'image/jpeg'),
-        referenceId: 1,
         description: 'van gogh style',
+        referenceId: 1,
       );
       final json = image.toJson();
       expect(json, {
-        'image': {'bytesBase64Encoded': '', 'mimeType': 'image/jpeg'},
+        'referenceType': 'REFERENCE_TYPE_STYLE',
         'referenceId': 1,
-        'style': {'description': 'van gogh style'}
+        'referenceImage': {'mimeType': 'image/jpeg', 'bytesBase64Encoded': ''},
+        'styleImageConfig': {'styleDescription': 'van gogh style'}
       });
     });
 
@@ -107,9 +127,10 @@ void main() {
       );
       final json = image.toJson();
       expect(json, {
-        'image': {'bytesBase64Encoded': '', 'mimeType': 'image/jpeg'},
+        'referenceType': 'REFERENCE_TYPE_CONTROL',
         'referenceId': 1,
-        'control': {'type': 'canny'}
+        'referenceImage': {'bytesBase64Encoded': '', 'mimeType': 'image/jpeg'},
+        'controlImageConfig': {'controlType': 'CONTROL_TYPE_CANNY'}
       });
     });
   });

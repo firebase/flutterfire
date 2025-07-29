@@ -19,7 +19,7 @@ import 'package:meta/meta.dart';
 import 'imagen_content.dart';
 import 'imagen_edit.dart';
 
-enum ReferenceType {
+enum _ReferenceType {
   UNSPECIFIED('REFERENCE_TYPE_UNSPECIFIED'),
   RAW('REFERENCE_TYPE_RAW'),
   MASK('REFERENCE_TYPE_MASK'),
@@ -29,7 +29,7 @@ enum ReferenceType {
   MASKED_SUBJECT('REFERENCE_TYPE_MASKED_SUBJECT'),
   PRODUCT('REFERENCE_TYPE_PRODUCT');
 
-  const ReferenceType(this._jsonString);
+  const _ReferenceType(this._jsonString);
   final String _jsonString;
 
   @override
@@ -39,26 +39,36 @@ enum ReferenceType {
 /// A reference image for image editing.
 @experimental
 sealed class ImagenReferenceImage {
-  ImagenReferenceImage({
+  ImagenReferenceImage._({
     this.referenceConfig,
     this.image,
-    this.referenceId,
     required this.referenceType,
+    this.referenceId,
   });
 
+  /// A config describing the reference image.
   final ImagenReferenceConfig? referenceConfig;
-  final ImagenInlineImage? image;
-  final int? referenceId;
-  final ReferenceType referenceType;
 
-  Map<String, Object?> toJson() {
+  /// The actual image data of the reference image.
+  final ImagenInlineImage? image;
+
+  /// The type of the reference image.
+  final _ReferenceType referenceType;
+
+  /// The reference ID of the image.
+  final int? referenceId;
+
+  // ignore: public_member_api_docs
+  Map<String, Object?> toJson({int referenceIdOverrideIfNull = 0}) {
     final json = <String, Object?>{};
     json['referenceType'] = referenceType.toString();
-    if (image != null) {
-      json['referenceImage'] = image!.toJson();
-    }
     if (referenceId != null) {
       json['referenceId'] = referenceId;
+    } else {
+      json['referenceId'] = referenceIdOverrideIfNull;
+    }
+    if (image != null) {
+      json['referenceImage'] = image!.toJson();
     }
     if (referenceConfig != null) {
       json.addAll(referenceConfig!.toJson());
@@ -75,7 +85,10 @@ sealed class ImagenMaskReference extends ImagenReferenceImage {
     ImagenMaskConfig? maskConfig,
     super.image,
     super.referenceId,
-  }) : super(referenceType: ReferenceType.MASK, referenceConfig: maskConfig);
+  }) : super._(
+          referenceType: _ReferenceType.MASK,
+          referenceConfig: maskConfig,
+        );
 
   /// Generates a mask and pads the image for outpainting.
   static Future<List<ImagenReferenceImage>> generateMaskAndPadForOutpainting({
@@ -163,14 +176,12 @@ sealed class ImagenMaskReference extends ImagenReferenceImage {
 
     return [
       ImagenRawImage(
-        referenceId: 1,
         image: ImagenInlineImage(
           bytesBase64Encoded: newImageBytes.buffer.asUint8List(),
           mimeType: image.mimeType,
         ),
       ),
       ImagenRawMask(
-        referenceId: 2,
         mask: ImagenInlineImage(
           bytesBase64Encoded: maskBytes.buffer.asUint8List(),
           mimeType: image.mimeType,
@@ -202,7 +213,7 @@ final class ImagenRawImage extends ImagenReferenceImage {
   ImagenRawImage({
     required ImagenInlineImage image,
     super.referenceId,
-  }) : super(image: image, referenceType: ReferenceType.RAW);
+  }) : super._(image: image, referenceType: _ReferenceType.RAW);
 }
 
 /// A raw mask.
@@ -232,6 +243,7 @@ final class ImagenSemanticMask extends ImagenMaskReference {
           maskConfig: ImagenMaskConfig(
             maskType: ImagenMaskMode.semantic,
             maskDilation: dilation,
+            maskClasses: classes,
           ),
         );
 }
@@ -239,8 +251,10 @@ final class ImagenSemanticMask extends ImagenMaskReference {
 /// A background mask.
 @experimental
 final class ImagenBackgroundMask extends ImagenMaskReference {
-  ImagenBackgroundMask({double? dilation, super.referenceId})
-      : super(
+  ImagenBackgroundMask({
+    double? dilation,
+    super.referenceId,
+  }) : super(
           maskConfig: ImagenMaskConfig(
             maskType: ImagenMaskMode.background,
             maskDilation: dilation,
@@ -267,16 +281,16 @@ final class ImagenForegroundMask extends ImagenMaskReference {
 final class ImagenSubjectReference extends ImagenReferenceImage {
   ImagenSubjectReference({
     required ImagenInlineImage image,
-    super.referenceId,
     String? description,
     ImagenSubjectReferenceType? subjectType,
-  }) : super(
+    super.referenceId,
+  }) : super._(
           image: image,
           referenceConfig: ImagenSubjectConfig(
             description: description,
             type: subjectType,
           ),
-          referenceType: ReferenceType.SUBJECT,
+          referenceType: _ReferenceType.SUBJECT,
         );
 }
 
@@ -285,14 +299,14 @@ final class ImagenSubjectReference extends ImagenReferenceImage {
 final class ImagenStyleReference extends ImagenReferenceImage {
   ImagenStyleReference({
     required ImagenInlineImage image,
-    super.referenceId,
     String? description,
-  }) : super(
+    super.referenceId,
+  }) : super._(
           image: image,
           referenceConfig: ImagenStyleConfig(
             description: description,
           ),
-          referenceType: ReferenceType.STYLE,
+          referenceType: _ReferenceType.STYLE,
         );
 }
 
@@ -302,11 +316,11 @@ final class ImagenControlReference extends ImagenReferenceImage {
   ImagenControlReference({
     required ImagenControlType controlType,
     ImagenInlineImage? image,
-    super.referenceId,
     bool? enableComputation,
     int? superpixelRegionSize,
     int? superpixelRuler,
-  }) : super(
+    super.referenceId,
+  }) : super._(
           image: image,
           referenceConfig: ImagenControlConfig(
             controlType: controlType,
@@ -314,6 +328,6 @@ final class ImagenControlReference extends ImagenReferenceImage {
             superpixelRegionSize: superpixelRegionSize,
             superpixelRuler: superpixelRuler,
           ),
-          referenceType: ReferenceType.CONTROL,
+          referenceType: _ReferenceType.CONTROL,
         );
 }
