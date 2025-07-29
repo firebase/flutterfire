@@ -144,6 +144,12 @@ jobs:
           melos-version: '5.3.0'
       - name: 'Swift Integration Setup'
         run: flutter config --enable-swift-package-manager
+      - name: 'Print PR Info'
+        run: |
+          echo "Head repo full name: ${{ github.event.pull_request.head.repo.full_name }}"
+          echo "Head ref: ${{ github.event.pull_request.head.ref }}"
+          echo "Base repo full name: ${{ github.event.pull_request.base.repo.full_name }}"
+          echo "Base ref: ${{ github.event.pull_request.base.ref }}"
       - name: 'Build Apps with Swift Package Manager'
         run: dart ./.github/workflows/scripts/swift-integration.dart $FLUTTER_DEPENDENCIES
 
