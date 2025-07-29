@@ -268,6 +268,22 @@ void main() {
         );
       });
 
+      test('can pass a google search tool', () async {
+        final (client, model) = createModel(
+          tools: [Tool.googleSearch()],
+        );
+        const prompt = 'Some prompt';
+        await client.checkRequest(
+          () => model.generateContent([Content.text(prompt)]),
+          verifyRequest: (_, request) {
+            expect(request['tools'], [
+              {'googleSearch': {}},
+            ]);
+          },
+          response: arbitraryGenerateContentResponse,
+        );
+      });
+
       test('can override tools and function calling config', () async {
         final (client, model) = createModel();
         const prompt = 'Some prompt';

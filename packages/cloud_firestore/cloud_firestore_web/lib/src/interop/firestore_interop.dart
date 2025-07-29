@@ -113,16 +113,6 @@ external FieldPath documentId();
 
 @JS()
 @staticInterop
-@Deprecated(
-  'This function will be removed in a future major release. Instead, set FirestoreSettings.localCache to an instance of PersistentLocalCache to turn on IndexedDb cache.',
-)
-external JSPromise enableIndexedDbPersistence(
-  FirestoreJsImpl firestore, [
-  PersistenceSettings? settings,
-]);
-
-@JS()
-@staticInterop
 external JSPromise enableMultiTabIndexedDbPersistence(
   FirestoreJsImpl firestore,
 );
@@ -743,10 +733,6 @@ abstract class FirestoreSettings {
 }
 
 extension FirestoreSettingsExtension on FirestoreSettings {
-  @Deprecated('Use FirestoreSettings.localCache instead.')
-  //ignore: avoid_setters_without_getters
-  external set cacheSizeBytes(JSNumber i);
-
   //ignore: avoid_setters_without_getters
   external set host(JSString h);
 

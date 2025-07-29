@@ -177,10 +177,12 @@ void main() {
       );
     });
 
-    test('setCurrentScreen', () async {
+    test('logScreenView', () async {
       await expectLater(
-        // ignore: deprecated_member_use
-        FirebaseAnalytics.instance.setCurrentScreen(screenName: 'screen-name'),
+        FirebaseAnalytics.instance.logScreenView(
+          screenName: 'screen-name',
+          screenClass: 'TestScreen',
+        ),
         completes,
       );
     });

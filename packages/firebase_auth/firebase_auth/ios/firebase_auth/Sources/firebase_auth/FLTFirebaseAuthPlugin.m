@@ -152,18 +152,12 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
 
   [registrar addMethodCallDelegate:instance channel:channel];
 
-#if TARGET_OS_OSX
-  // TODO(Salakar): Publish does not exist on MacOS version of
-  // FlutterPluginRegistrar.
-  // TODO(Salakar): addApplicationDelegate does not exist on MacOS version of
-  // FlutterPluginRegistrar. (https://github.com/flutter/flutter/issues/41471)
-  SetUpFirebaseAuthHostApi(registrar.messenger, instance);
-  SetUpFirebaseAuthUserHostApi(registrar.messenger, instance);
-#else
   [registrar publish:instance];
   [registrar addApplicationDelegate:instance];
   SetUpFirebaseAuthHostApi(registrar.messenger, instance);
   SetUpFirebaseAuthUserHostApi(registrar.messenger, instance);
+
+#if TARGET_OS_IPHONE
   SetUpMultiFactorUserHostApi(registrar.messenger, instance);
   SetUpMultiFactoResolverHostApi(registrar.messenger, instance);
   SetUpMultiFactorTotpHostApi(registrar.messenger, instance);

@@ -152,91 +152,6 @@ void runInstanceTests() {
       );
 
       test(
-        'setIndexConfiguration()',
-        () async {
-          Index index1 = Index(
-            collectionGroup: 'bar',
-            queryScope: QueryScope.collectionGroup,
-            fields: [
-              IndexField(
-                fieldPath: 'fieldPath',
-                order: Order.ascending,
-                arrayConfig: ArrayConfig.contains,
-              ),
-            ],
-          );
-
-          Index index2 = Index(
-            collectionGroup: 'baz',
-            queryScope: QueryScope.collection,
-            fields: [
-              IndexField(
-                fieldPath: 'foo',
-                arrayConfig: ArrayConfig.contains,
-              ),
-              IndexField(
-                fieldPath: 'bar',
-                order: Order.descending,
-                arrayConfig: ArrayConfig.contains,
-              ),
-              IndexField(
-                fieldPath: 'baz',
-                order: Order.descending,
-                arrayConfig: ArrayConfig.contains,
-              ),
-            ],
-          );
-
-          FieldOverrides fieldOverride1 = FieldOverrides(
-            fieldPath: 'fieldPath',
-            indexes: [
-              FieldOverrideIndex(
-                queryScope: 'foo',
-                order: Order.ascending,
-                arrayConfig: ArrayConfig.contains,
-              ),
-              FieldOverrideIndex(
-                queryScope: 'bar',
-                order: Order.descending,
-                arrayConfig: ArrayConfig.contains,
-              ),
-              FieldOverrideIndex(
-                queryScope: 'baz',
-                order: Order.descending,
-              ),
-            ],
-            collectionGroup: 'bar',
-          );
-          FieldOverrides fieldOverride2 = FieldOverrides(
-            fieldPath: 'anotherField',
-            indexes: [
-              FieldOverrideIndex(
-                queryScope: 'foo',
-                order: Order.ascending,
-                arrayConfig: ArrayConfig.contains,
-              ),
-              FieldOverrideIndex(
-                queryScope: 'bar',
-                order: Order.descending,
-                arrayConfig: ArrayConfig.contains,
-              ),
-              FieldOverrideIndex(
-                queryScope: 'baz',
-                order: Order.descending,
-              ),
-            ],
-            collectionGroup: 'collectiongroup',
-          );
-          // ignore_for_file: deprecated_member_use
-          await firestore.setIndexConfiguration(
-            indexes: [index1, index2],
-            fieldOverrides: [fieldOverride1, fieldOverride2],
-          );
-        },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
-      );
-
-      test(
         'setIndexConfigurationFromJSON()',
         () async {
           final json = jsonEncode({
@@ -372,8 +287,8 @@ void runInstanceTests() {
               databaseId: 'web-disabled-2',
             );
 
-            // Now try using `enablePersistence()`, web only API
-            await firestore2.enablePersistence();
+            // Enable persistence using settings instead of deprecated enablePersistence()
+            firestore2.settings = const Settings(persistenceEnabled: true);
 
             PersistentCacheIndexManager? indexManager2 =
                 firestore2.persistentCacheIndexManager();
