@@ -104,6 +104,9 @@ Future<void> buildSwiftExampleApp(String platform, String plugins) async {
 
   print('Building example app with swift (SPM) integration for $plugins');
 
+  final githubRepository = Platform.environment['GITHUB_REPOSITORY'];
+  print('GitHub REPOSITORY >>>>>: $githubRepository');
+
   final directory =
       Directory('packages/firebase_core/firebase_core/example/$platform');
   if (!directory.existsSync()) {
