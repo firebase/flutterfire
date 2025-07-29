@@ -84,6 +84,7 @@ Future<void> updatePackageSwiftForPackage(String packageName, String branch) asy
     final headRepo = Platform.environment['PR_HEAD_REPO'];
     final baseRepo = Platform.environment['GITHUB_REPOSITORY'];
 
+    // handles forked repositories
     final repoSlug = headRepo != baseRepo ? headRepo : baseRepo;
 
     // handles forked repositories
@@ -108,9 +109,6 @@ Future<void> buildSwiftExampleApp(String platform, String plugins) async {
   final platformName = platform == 'ios' ? 'iOS' : 'macOS';
 
   print('Building example app with swift (SPM) integration for $plugins');
-
-  final githubRepository = Platform.environment['PR_HEAD_REPO'];
-  print('GitHub REPOSITORY >>>>>: $githubRepository');
 
   final directory =
       Directory('packages/firebase_core/firebase_core/example/$platform');
