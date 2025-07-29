@@ -1050,7 +1050,7 @@ final class GenerationConfig extends BaseGenerationConfig {
         if (responseSchema case final responseSchema?)
           'responseSchema': responseSchema.toJson(),
         if (responseJsonSchema case final responseJsonSchema?)
-          'responseSchema': responseJsonSchema,
+          'responseJsonSchema': responseJsonSchema,
         if (thinkingConfig case final thinkingConfig?)
           'thinkingConfig': thinkingConfig.toJson(),
       };

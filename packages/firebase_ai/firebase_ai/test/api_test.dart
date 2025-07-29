@@ -450,7 +450,7 @@ void main() {
       );
       expect(config.toJson(), {
         'responseMimeType': 'application/json',
-        'responseSchema': jsonSchema,
+        'responseJsonSchema': jsonSchema,
       });
     });
 
