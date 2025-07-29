@@ -3,6 +3,455 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-07-28 - [BoM 4.0.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-400-2025-07-28)
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - [`cloud_firestore` - `v6.0.0`](#cloud_firestore---v600)
+ - [`cloud_firestore_platform_interface` - `v7.0.0`](#cloud_firestore_platform_interface---v700)
+ - [`cloud_firestore_web` - `v5.0.0`](#cloud_firestore_web---v500)
+ - [`cloud_functions` - `v6.0.0`](#cloud_functions---v600)
+ - [`cloud_functions_web` - `v5.0.0`](#cloud_functions_web---v500)
+ - [`firebase_ai` - `v3.0.0`](#firebase_ai---v300)
+ - [`firebase_analytics` - `v12.0.0`](#firebase_analytics---v1200)
+ - [`firebase_analytics_platform_interface` - `v5.0.0`](#firebase_analytics_platform_interface---v500)
+ - [`firebase_analytics_web` - `v0.6.0`](#firebase_analytics_web---v060)
+ - [`firebase_app_check` - `v0.4.0`](#firebase_app_check---v040)
+ - [`firebase_app_check_platform_interface` - `v0.2.0`](#firebase_app_check_platform_interface---v020)
+ - [`firebase_app_installations` - `v0.4.0`](#firebase_app_installations---v040)
+ - [`firebase_auth` - `v6.0.0`](#firebase_auth---v600)
+ - [`firebase_auth_platform_interface` - `v8.0.0`](#firebase_auth_platform_interface---v800)
+ - [`firebase_auth_web` - `v6.0.0`](#firebase_auth_web---v600)
+ - [`firebase_core` - `v4.0.0`](#firebase_core---v400)
+ - [`firebase_core_web` - `v3.0.0`](#firebase_core_web---v300)
+ - [`firebase_crashlytics` - `v5.0.0`](#firebase_crashlytics---v500)
+ - [`firebase_data_connect` - `v0.2.0`](#firebase_data_connect---v020)
+ - [`firebase_database` - `v12.0.0`](#firebase_database---v1200)
+ - [`firebase_in_app_messaging` - `v0.9.0`](#firebase_in_app_messaging---v090)
+ - [`firebase_messaging` - `v16.0.0`](#firebase_messaging---v1600)
+ - [`firebase_messaging_web` - `v4.0.0`](#firebase_messaging_web---v400)
+ - [`firebase_ml_model_downloader` - `v0.4.0`](#firebase_ml_model_downloader---v040)
+ - [`firebase_performance` - `v0.11.0`](#firebase_performance---v0110)
+ - [`firebase_remote_config` - `v6.0.0`](#firebase_remote_config---v600)
+ - [`firebase_storage` - `v13.0.0`](#firebase_storage---v1300)
+ - [`firebase_vertexai` - `v2.0.0`](#firebase_vertexai---v200)
+
+Packages with other changes:
+
+ - [`firebase_messaging_platform_interface` - `v4.7.0`](#firebase_messaging_platform_interface---v470)
+ - [`firebase_app_check_web` - `v0.2.0+15`](#firebase_app_check_web---v02015)
+ - [`_flutterfire_internals` - `v1.3.60`](#_flutterfire_internals---v1360)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.5+11`](#firebase_in_app_messaging_platform_interface---v02511)
+ - [`firebase_database_web` - `v0.2.6+17`](#firebase_database_web---v02617)
+ - [`firebase_app_installations_web` - `v0.1.6+17`](#firebase_app_installations_web---v01617)
+ - [`firebase_app_installations_platform_interface` - `v0.1.4+59`](#firebase_app_installations_platform_interface---v01459)
+ - [`firebase_remote_config_web` - `v1.8.10`](#firebase_remote_config_web---v1810)
+ - [`firebase_remote_config_platform_interface` - `v2.0.1`](#firebase_remote_config_platform_interface---v201)
+ - [`firebase_database_platform_interface` - `v0.2.6+11`](#firebase_database_platform_interface---v02611)
+ - [`firebase_crashlytics_platform_interface` - `v3.8.11`](#firebase_crashlytics_platform_interface---v3811)
+ - [`firebase_ml_model_downloader_platform_interface` - `v0.1.5+11`](#firebase_ml_model_downloader_platform_interface---v01511)
+ - [`firebase_storage_web` - `v3.10.18`](#firebase_storage_web---v31018)
+ - [`firebase_performance_web` - `v0.1.7+17`](#firebase_performance_web---v01717)
+ - [`firebase_performance_platform_interface` - `v0.1.5+11`](#firebase_performance_platform_interface---v01511)
+ - [`firebase_storage_platform_interface` - `v5.2.11`](#firebase_storage_platform_interface---v5211)
+ - [`cloud_functions_platform_interface` - `v5.8.3`](#cloud_functions_platform_interface---v583)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_app_check_web` - `v0.2.0+15`
+ - `_flutterfire_internals` - `v1.3.60`
+ - `firebase_in_app_messaging_platform_interface` - `v0.2.5+11`
+ - `firebase_database_web` - `v0.2.6+17`
+ - `firebase_app_installations_web` - `v0.1.6+17`
+ - `firebase_app_installations_platform_interface` - `v0.1.4+59`
+ - `firebase_remote_config_web` - `v1.8.10`
+ - `firebase_remote_config_platform_interface` - `v2.0.1`
+ - `firebase_database_platform_interface` - `v0.2.6+11`
+ - `firebase_crashlytics_platform_interface` - `v3.8.11`
+ - `firebase_ml_model_downloader_platform_interface` - `v0.1.5+11`
+ - `firebase_storage_web` - `v3.10.18`
+ - `firebase_performance_web` - `v0.1.7+17`
+ - `firebase_performance_platform_interface` - `v0.1.5+11`
+ - `firebase_storage_platform_interface` - `v5.2.11`
+ - `cloud_functions_platform_interface` - `v5.8.3`
+
+---
+
+#### `cloud_firestore` - `v6.0.0`
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**(firestore): remove deprecated functions ([#17559](https://github.com/firebase/flutterfire/issues/17559)). ([67017fd6](https://github.com/firebase/flutterfire/commit/67017fd6f139080cec7ecd1b4d75a05f13f238fa))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+#### `cloud_firestore_platform_interface` - `v7.0.0`
+
+ - **BREAKING** **FEAT**(firestore): remove deprecated functions ([#17559](https://github.com/firebase/flutterfire/issues/17559)). ([67017fd6](https://github.com/firebase/flutterfire/commit/67017fd6f139080cec7ecd1b4d75a05f13f238fa))
+
+#### `cloud_firestore_web` - `v5.0.0`
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**(firestore): remove deprecated functions ([#17559](https://github.com/firebase/flutterfire/issues/17559)). ([67017fd6](https://github.com/firebase/flutterfire/commit/67017fd6f139080cec7ecd1b4d75a05f13f238fa))
+
+#### `cloud_functions` - `v6.0.0`
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+#### `cloud_functions_web` - `v5.0.0`
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+
+#### `firebase_ai` - `v3.0.0`
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+
+#### `firebase_analytics` - `v12.0.0`
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**(analytics): remove deprecated methods for breaking change release ([#17560](https://github.com/firebase/flutterfire/issues/17560)). ([ea3034d8](https://github.com/firebase/flutterfire/commit/ea3034d88215d0b99dda9079fd9134afb5fee496))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+#### `firebase_analytics_platform_interface` - `v5.0.0`
+
+ - **BREAKING** **FEAT**(analytics): remove deprecated methods for breaking change release ([#17560](https://github.com/firebase/flutterfire/issues/17560)). ([ea3034d8](https://github.com/firebase/flutterfire/commit/ea3034d88215d0b99dda9079fd9134afb5fee496))
+
+#### `firebase_analytics_web` - `v0.6.0`
+
+ - **BREAKING** **FEAT**(analytics): remove deprecated methods for breaking change release ([#17560](https://github.com/firebase/flutterfire/issues/17560)). ([ea3034d8](https://github.com/firebase/flutterfire/commit/ea3034d88215d0b99dda9079fd9134afb5fee496))
+
+#### `firebase_app_check` - `v0.4.0`
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**(app-check): remove deprecated functions ([#17561](https://github.com/firebase/flutterfire/issues/17561)). ([3e4302c4](https://github.com/firebase/flutterfire/commit/3e4302c4281d1d39c140ff116643d700cd3c5ace))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+#### `firebase_app_check_platform_interface` - `v0.2.0`
+
+ - **BREAKING** **FEAT**(app-check): remove deprecated functions ([#17561](https://github.com/firebase/flutterfire/issues/17561)). ([3e4302c4](https://github.com/firebase/flutterfire/commit/3e4302c4281d1d39c140ff116643d700cd3c5ace))
+
+#### `firebase_app_installations` - `v0.4.0`
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+#### `firebase_auth` - `v6.0.0`
+
+ - **FEAT**(auth): validatePassword method/PasswordPolicy Support ([#17439](https://github.com/firebase/flutterfire/issues/17439)). ([9a032b34](https://github.com/firebase/flutterfire/commit/9a032b344d6a22c1e3a181ae27e511939f2d8972))
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**(auth): remove deprecated functions ([#17562](https://github.com/firebase/flutterfire/issues/17562)). ([d50aad95](https://github.com/firebase/flutterfire/commit/d50aad954443904d64d4ebd4442ebc63ed702986))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+## Removed Methods
+
+- `ActionCodeSettings.dynamicLinkDomain` - Firebase Dynamic Links is deprecated and will be shut down
+- `MicrosoftAuthProvider.credential()` - Use `signInWithProvider(MicrosoftAuthProvider)` instead
+- `FirebaseAuth.instanceFor()` persistence parameter - Use `setPersistence()` instead
+- `FirebaseAuth.fetchSignInMethodsForEmail()` - Removed for security best practices
+- `User.updateEmail()` - Use `verifyBeforeUpdateEmail()` instead
+
+## Migration Guide
+
+### ActionCodeSettings
+```dart
+// Before
+ActionCodeSettings(
+  url: 'https://example.com',
+  dynamicLinkDomain: 'example.page.link',
+)
+
+// After
+ActionCodeSettings(
+  url: 'https://example.com',
+  linkDomain: 'your-custom-domain.com', // Use custom Firebase Hosting domain
+)
+```
+
+### Microsoft Authentication
+```dart
+// Before
+final credential = MicrosoftAuthProvider.credential(accessToken);
+await FirebaseAuth.instance.signInWithCredential(credential);
+
+// After
+final provider = MicrosoftAuthProvider();
+await FirebaseAuth.instance.signInWithProvider(provider);
+```
+
+### FirebaseAuth Instance
+```dart
+// Before
+FirebaseAuth.instanceFor(app: app, persistence: Persistence.local);
+
+// After
+final auth = FirebaseAuth.instanceFor(app: app);
+auth.setPersistence(Persistence.local);
+```
+
+### Email Updates
+```dart
+// Before
+await user.updateEmail('new@email.com');
+
+// After
+await user.verifyBeforeUpdateEmail('new@email.com');
+```
+
+### Email Sign-in Methods
+The `fetchSignInMethodsForEmail()` method has been removed for security reasons. Consider implementing alternative authentication flows that don't require email enumeration.
+
+#### `firebase_auth_platform_interface` - `v8.0.0`
+
+ - **FEAT**(auth): validatePassword method/PasswordPolicy Support ([#17439](https://github.com/firebase/flutterfire/issues/17439)). ([9a032b34](https://github.com/firebase/flutterfire/commit/9a032b344d6a22c1e3a181ae27e511939f2d8972))
+ - **BREAKING** **FEAT**(auth): remove deprecated functions ([#17562](https://github.com/firebase/flutterfire/issues/17562)). ([d50aad95](https://github.com/firebase/flutterfire/commit/d50aad954443904d64d4ebd4442ebc63ed702986))
+
+#### `firebase_auth_web` - `v6.0.0`
+
+ - **BREAKING** **FEAT**(auth): remove deprecated functions ([#17562](https://github.com/firebase/flutterfire/issues/17562)). ([d50aad95](https://github.com/firebase/flutterfire/commit/d50aad954443904d64d4ebd4442ebc63ed702986))
+
+#### `firebase_core` - `v4.0.0`
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+#### `firebase_core_web` - `v3.0.0`
+
+ - **BREAKING** **FEAT**: bump JS SDK to version 12.0.0 ([#17548](https://github.com/firebase/flutterfire/issues/17548)). ([b44c965b](https://github.com/firebase/flutterfire/commit/b44c965b9594c4d37ba5bfcf30f6cec7f931a1d8))
+
+#### `firebase_crashlytics` - `v5.0.0`
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+#### `firebase_data_connect` - `v0.2.0`
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**(auth): remove deprecated functions ([#17562](https://github.com/firebase/flutterfire/issues/17562)). ([d50aad95](https://github.com/firebase/flutterfire/commit/d50aad954443904d64d4ebd4442ebc63ed702986))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+#### `firebase_database` - `v12.0.0`
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+#### `firebase_in_app_messaging` - `v0.9.0`
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+#### `firebase_messaging` - `v16.0.0`
+
+ - **FEAT**(messaging): remove deprecated functions ([#17563](https://github.com/firebase/flutterfire/issues/17563)). ([1b716261](https://github.com/firebase/flutterfire/commit/1b7162619311e24b7f13a3e3b8c603fb1e05477b))
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+#### `firebase_messaging_web` - `v4.0.0`
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+
+#### `firebase_ml_model_downloader` - `v0.4.0`
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+#### `firebase_performance` - `v0.11.0`
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+#### `firebase_remote_config` - `v6.0.0`
+
+ - **FIX**(remote_config,android): make `onCancel` accept nullable arguments to avoid crash on hot restart ([#17569](https://github.com/firebase/flutterfire/issues/17569)). ([2b782558](https://github.com/firebase/flutterfire/commit/2b782558666337fd65780231fe07a277986cedce))
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+#### `firebase_storage` - `v13.0.0`
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+#### `firebase_vertexai` - `v2.0.0`
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+
+#### `firebase_messaging_platform_interface` - `v4.7.0`
+
+ - **FEAT**(messaging): remove deprecated functions ([#17563](https://github.com/firebase/flutterfire/issues/17563)). ([1b716261](https://github.com/firebase/flutterfire/commit/1b7162619311e24b7f13a3e3b8c603fb1e05477b))
+
+
+## 2025-07-21
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_remote_config_platform_interface` - `v2.0.0`](#firebase_remote_config_platform_interface---v200)
+ - [`firebase_remote_config` - `v5.5.1`](#firebase_remote_config---v551)
+ - [`firebase_remote_config_web` - `v1.8.9`](#firebase_remote_config_web---v189)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_remote_config` - `v5.5.1`
+ - `firebase_remote_config_web` - `v1.8.9`
+
+---
+
+#### `firebase_remote_config_platform_interface` - `v2.0.0`
+
+ - Bump "firebase_remote_config_platform_interface" to `2.0.0`.
+
+
+## 2025-07-21 - [BoM 3.14.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-3140-2025-07-21)
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ai` - `v2.3.0`](#firebase_ai---v230)
+ - [`firebase_analytics` - `v11.6.0`](#firebase_analytics---v1160)
+ - [`firebase_app_installations` - `v0.3.3`](#firebase_app_installations---v033)
+ - [`firebase_auth` - `v5.7.0`](#firebase_auth---v570)
+ - [`firebase_core` - `v3.15.2`](#firebase_core---v3152)
+ - [`firebase_data_connect` - `v0.1.5+4`](#firebase_data_connect---v0154)
+ - [`firebase_remote_config` - `v5.5.0`](#firebase_remote_config---v550)
+ - [`firebase_remote_config_platform_interface` - `v1.6.0`](#firebase_remote_config_platform_interface---v160)
+ - [`firebase_vertexai` - `v1.8.3`](#firebase_vertexai---v183)
+ - [`_flutterfire_internals` - `v1.3.59`](#_flutterfire_internals---v1359)
+ - [`firebase_in_app_messaging` - `v0.8.1+10`](#firebase_in_app_messaging---v08110)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.5+10`](#firebase_in_app_messaging_platform_interface---v02510)
+ - [`firebase_auth_web` - `v5.15.3`](#firebase_auth_web---v5153)
+ - [`firebase_remote_config_web` - `v1.8.8`](#firebase_remote_config_web---v188)
+ - [`firebase_crashlytics_platform_interface` - `v3.8.10`](#firebase_crashlytics_platform_interface---v3810)
+ - [`firebase_crashlytics` - `v4.3.10`](#firebase_crashlytics---v4310)
+ - [`firebase_auth_platform_interface` - `v7.7.3`](#firebase_auth_platform_interface---v773)
+ - [`firebase_database_web` - `v0.2.6+16`](#firebase_database_web---v02616)
+ - [`firebase_database` - `v11.3.10`](#firebase_database---v11310)
+ - [`firebase_database_platform_interface` - `v0.2.6+10`](#firebase_database_platform_interface---v02610)
+ - [`cloud_firestore` - `v5.6.12`](#cloud_firestore---v5612)
+ - [`cloud_firestore_web` - `v4.4.12`](#cloud_firestore_web---v4412)
+ - [`cloud_firestore_platform_interface` - `v6.6.12`](#cloud_firestore_platform_interface---v6612)
+ - [`firebase_dynamic_links` - `v6.1.10`](#firebase_dynamic_links---v6110)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.7+10`](#firebase_dynamic_links_platform_interface---v02710)
+ - [`firebase_app_installations_web` - `v0.1.6+16`](#firebase_app_installations_web---v01616)
+ - [`firebase_app_installations_platform_interface` - `v0.1.4+58`](#firebase_app_installations_platform_interface---v01458)
+ - [`firebase_messaging_web` - `v3.10.10`](#firebase_messaging_web---v31010)
+ - [`firebase_messaging` - `v15.2.10`](#firebase_messaging---v15210)
+ - [`firebase_messaging_platform_interface` - `v4.6.10`](#firebase_messaging_platform_interface---v4610)
+ - [`firebase_analytics_platform_interface` - `v4.4.3`](#firebase_analytics_platform_interface---v443)
+ - [`firebase_analytics_web` - `v0.5.10+16`](#firebase_analytics_web---v051016)
+ - [`firebase_app_check` - `v0.3.2+10`](#firebase_app_check---v03210)
+ - [`firebase_app_check_web` - `v0.2.0+14`](#firebase_app_check_web---v02014)
+ - [`firebase_ml_model_downloader` - `v0.3.3+8`](#firebase_ml_model_downloader---v0338)
+ - [`cloud_functions_web` - `v4.11.5`](#cloud_functions_web---v4115)
+ - [`cloud_functions` - `v5.6.2`](#cloud_functions---v562)
+ - [`firebase_app_check_platform_interface` - `v0.1.1+10`](#firebase_app_check_platform_interface---v01110)
+ - [`cloud_functions_platform_interface` - `v5.8.2`](#cloud_functions_platform_interface---v582)
+ - [`firebase_storage_web` - `v3.10.17`](#firebase_storage_web---v31017)
+ - [`firebase_storage_platform_interface` - `v5.2.10`](#firebase_storage_platform_interface---v5210)
+ - [`firebase_ml_model_downloader_platform_interface` - `v0.1.5+10`](#firebase_ml_model_downloader_platform_interface---v01510)
+ - [`firebase_performance_platform_interface` - `v0.1.5+10`](#firebase_performance_platform_interface---v01510)
+ - [`firebase_performance` - `v0.10.1+10`](#firebase_performance---v010110)
+ - [`firebase_storage` - `v12.4.10`](#firebase_storage---v12410)
+ - [`firebase_performance_web` - `v0.1.7+16`](#firebase_performance_web---v01716)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_vertexai` - `v1.8.3`
+ - `_flutterfire_internals` - `v1.3.59`
+ - `firebase_in_app_messaging` - `v0.8.1+10`
+ - `firebase_in_app_messaging_platform_interface` - `v0.2.5+10`
+ - `firebase_auth_web` - `v5.15.3`
+ - `firebase_remote_config_web` - `v1.8.8`
+ - `firebase_crashlytics_platform_interface` - `v3.8.10`
+ - `firebase_crashlytics` - `v4.3.10`
+ - `firebase_auth_platform_interface` - `v7.7.3`
+ - `firebase_database_web` - `v0.2.6+16`
+ - `firebase_database` - `v11.3.10`
+ - `firebase_database_platform_interface` - `v0.2.6+10`
+ - `cloud_firestore` - `v5.6.12`
+ - `cloud_firestore_web` - `v4.4.12`
+ - `cloud_firestore_platform_interface` - `v6.6.12`
+ - `firebase_dynamic_links` - `v6.1.10`
+ - `firebase_dynamic_links_platform_interface` - `v0.2.7+10`
+ - `firebase_app_installations_web` - `v0.1.6+16`
+ - `firebase_app_installations_platform_interface` - `v0.1.4+58`
+ - `firebase_messaging_web` - `v3.10.10`
+ - `firebase_messaging` - `v15.2.10`
+ - `firebase_messaging_platform_interface` - `v4.6.10`
+ - `firebase_analytics_platform_interface` - `v4.4.3`
+ - `firebase_analytics_web` - `v0.5.10+16`
+ - `firebase_app_check` - `v0.3.2+10`
+ - `firebase_app_check_web` - `v0.2.0+14`
+ - `firebase_ml_model_downloader` - `v0.3.3+8`
+ - `cloud_functions_web` - `v4.11.5`
+ - `cloud_functions` - `v5.6.2`
+ - `firebase_app_check_platform_interface` - `v0.1.1+10`
+ - `cloud_functions_platform_interface` - `v5.8.2`
+ - `firebase_storage_web` - `v3.10.17`
+ - `firebase_storage_platform_interface` - `v5.2.10`
+ - `firebase_ml_model_downloader_platform_interface` - `v0.1.5+10`
+ - `firebase_performance_platform_interface` - `v0.1.5+10`
+ - `firebase_performance` - `v0.10.1+10`
+ - `firebase_storage` - `v12.4.10`
+ - `firebase_performance_web` - `v0.1.7+16`
+
+---
+
+#### `firebase_ai` - `v2.3.0`
+
+ - **FEAT**(firebase_ai): Add support for Grounding with Google Search ([#17468](https://github.com/firebase/flutterfire/issues/17468)). ([2aaf5af0](https://github.com/firebase/flutterfire/commit/2aaf5af08d46d90bd723997b20109362d9f18d32))
+ - **FEAT**(firebaseai): add think feature ([#17409](https://github.com/firebase/flutterfire/issues/17409)). ([18f56142](https://github.com/firebase/flutterfire/commit/18f5614263750e350f549c077040335883fab0b3))
+
+#### `firebase_analytics` - `v11.6.0`
+
+ - **FEAT**(auth,macos): add support for `publish` and `addApplicationDelegate` on macOS FlutterPluginRegistrar ([#17518](https://github.com/firebase/flutterfire/issues/17518)). ([376bb6ea](https://github.com/firebase/flutterfire/commit/376bb6ea8878df3f25cc1416fe26ace2203fd793))
+
+#### `firebase_app_installations` - `v0.3.3`
+
+ - **FEAT**(auth,macos): add support for `publish` and `addApplicationDelegate` on macOS FlutterPluginRegistrar ([#17518](https://github.com/firebase/flutterfire/issues/17518)). ([376bb6ea](https://github.com/firebase/flutterfire/commit/376bb6ea8878df3f25cc1416fe26ace2203fd793))
+
+#### `firebase_auth` - `v5.7.0`
+
+ - **FEAT**(auth,macos): add support for `publish` and `addApplicationDelegate` on macOS FlutterPluginRegistrar ([#17518](https://github.com/firebase/flutterfire/issues/17518)). ([376bb6ea](https://github.com/firebase/flutterfire/commit/376bb6ea8878df3f25cc1416fe26ace2203fd793))
+
+#### `firebase_core` - `v3.15.2`
+
+ - **FIX**(core): resolve iOS crash when enabling automatic data collection via `setAutomaticDataCollectionEnabled` ([#17497](https://github.com/firebase/flutterfire/issues/17497)). ([cd8b58d0](https://github.com/firebase/flutterfire/commit/cd8b58d053e34e9840bdbd20fd5aa3f698e5fcfa))
+
+#### `firebase_data_connect` - `v0.1.5+4`
+
+ - **FIX**(fdc): Fixed readme link  ([#17504](https://github.com/firebase/flutterfire/issues/17504)). ([6068edf9](https://github.com/firebase/flutterfire/commit/6068edf9eab36dbb94768d46a6def97e76f30df2))
+
+#### `firebase_remote_config` - `v5.5.0`
+
+ - **FEAT**(remote_config): add support for Pigeon. Update iOS to Swift and Android to Swift ([#17489](https://github.com/firebase/flutterfire/issues/17489)). ([08ecc502](https://github.com/firebase/flutterfire/commit/08ecc5029616058c86d0093b9aae3ee8cea811a4))
+
+#### `firebase_remote_config_platform_interface` - `v1.6.0`
+
+ - **FEAT**(remote_config): add support for Pigeon. Update iOS to Swift and Android to Swift ([#17489](https://github.com/firebase/flutterfire/issues/17489)). ([08ecc502](https://github.com/firebase/flutterfire/commit/08ecc5029616058c86d0093b9aae3ee8cea811a4))
+
+
 ## 2025-07-03 - [BoM 3.13.1](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-3131-2025-07-03)
 
 ### Changes
@@ -1482,7 +1931,7 @@ Packages with other changes:
  - **FEAT**(messaging,apple): allow system to display button for in-app notification settings ([#13484](https://github.com/firebase/flutterfire/issues/13484)). ([b36f924e](https://github.com/firebase/flutterfire/commit/b36f924e018f4d88ea5eaf17a779b2c3cf03583d))
 
 #### `cloud_functions_web` - `v4.10.6`
- 
+
  - Update a dependency to the latest release.
 
 #### `firebase_analytics_web` - `v0.5.10+6`

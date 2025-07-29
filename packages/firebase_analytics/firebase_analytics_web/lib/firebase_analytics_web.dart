@@ -119,20 +119,6 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   }
 
   @override
-  Future<void> setCurrentScreen({
-    String? screenName,
-    String? screenClassOverride,
-    AnalyticsCallOptions? callOptions,
-  }) async {
-    return convertWebExceptions(() {
-      return _delegate.setCurrentScreen(
-        screenName: screenName,
-        callOptions: callOptions,
-      );
-    });
-  }
-
-  @override
   Future<void> resetAnalyticsData() async {
     throw UnimplementedError('resetAnalyticsData() is not supported on Web.');
   }

@@ -247,18 +247,6 @@ void main() {
         verify(mockUserPlatform.unlink(providerId));
       });
     });
-    group('updateEmail()', () {
-      test('should call updateEmail()', () async {
-        // Necessary as we otherwise get a "null is not a Future<void>" error
-        when(mockUserPlatform.updateEmail(any)).thenAnswer((i) async {});
-
-        const String newEmail = 'newEmail';
-        // ignore: deprecated_member_use_from_same_package
-        await auth.currentUser!.updateEmail(newEmail);
-
-        verify(mockUserPlatform.updateEmail(newEmail));
-      });
-    });
 
     group('updatePassword()', () {
       test('should call updatePassword()', () async {
@@ -480,15 +468,6 @@ class MockUserPlatform extends Mock
   Future<void> sendEmailVerification(ActionCodeSettings? actionCodeSettings) {
     return super.noSuchMethod(
       Invocation.method(#sendEmailVerification, [actionCodeSettings]),
-      returnValue: neverEndingFuture<void>(),
-      returnValueForMissingStub: neverEndingFuture<void>(),
-    );
-  }
-
-  @override
-  Future<void> updateEmail(String? newEmail) {
-    return super.noSuchMethod(
-      Invocation.method(#updateEmail, [newEmail]),
       returnValue: neverEndingFuture<void>(),
       returnValueForMissingStub: neverEndingFuture<void>(),
     );

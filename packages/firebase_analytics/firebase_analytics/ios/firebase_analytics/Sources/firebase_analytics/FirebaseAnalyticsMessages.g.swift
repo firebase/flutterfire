@@ -134,7 +134,7 @@ func deepHashFirebaseAnalyticsMessages(value: Any?, hasher: inout Hasher) {
 /// Generated class from Pigeon that represents data sent in messages.
 struct AnalyticsEvent: Hashable {
   var name: String
-  var parameters: [String?: Any?]? = nil
+  var parameters: [String?: Any?]?
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> AnalyticsEvent? {
