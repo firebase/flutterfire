@@ -81,8 +81,14 @@ Future<void> updatePackageSwiftForPackage(String packageName, String branch) asy
       multiLine: true
     );
 
+    final headRepo = Platform.environment['PR_HEAD_REPO'];
+    final baseRepo = Platform.environment['GITHUB_REPOSITORY'];
+
+    // handles forked repositories
+    final repoSlug = headRepo != baseRepo ? headRepo : baseRepo;
+
     // Replace with branch dependency
-    final branchDependency = '.package(url: "https://github.com/firebase/flutterfire", branch: "$branch")';
+    final branchDependency = '.package(url: "https://github.com/$repoSlug", branch: "$branch")';
 
     if (exactVersionPattern.hasMatch(content)) {
       updatedContent = content.replaceAll(exactVersionPattern, branchDependency);
