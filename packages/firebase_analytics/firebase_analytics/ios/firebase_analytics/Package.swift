@@ -61,13 +61,11 @@ func loadPubspecVersions() throws -> (packageVersion: String, firebaseCoreVersio
   }
 }
 
-let library_version: String
 let firebase_sdk_version_string: String
 let firebase_core_version_string: String
 let shared_spm_tag = "-firebase-core-swift"
 
 do {
-  library_version = try loadPubspecVersions().packageVersion
   firebase_sdk_version_string = try loadFirebaseSDKVersion()
   firebase_core_version_string = try loadPubspecVersions().firebaseCoreVersion
 } catch {
@@ -104,11 +102,6 @@ let package = Package(
       ],
       resources: [
         .process("Resources"),
-      ],
-      cSettings: [
-        .headerSearchPath("include"),
-        .define("LIBRARY_VERSION", to: "\"\(library_version)\""),
-        .define("LIBRARY_NAME", to: "\"flutter-fire-analytics\""),
       ]
     ),
   ]
