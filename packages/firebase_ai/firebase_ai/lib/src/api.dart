@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:convert';
+
 import 'content.dart';
 import 'error.dart';
 import 'schema.dart';
@@ -1020,18 +1022,27 @@ final class GenerationConfig extends BaseGenerationConfig {
   ///
   /// - Note: This only applies when the [responseMimeType] supports
   ///   a schema; currently this is limited to `application/json`.
+  ///
+  /// Only one of [responseSchema] or [responseJsonSchema] may be specified at
+  /// the same time.
   final Schema? responseSchema;
 
-  /// The response schema as a JSON string.
+  /// The response schema as a JSON-compatible map.
   ///
   /// - Note: This only applies when the [responseMimeType] supports a schema;
   ///   currently this is limited to `application/json`.
   ///
   /// This schema can include more advanced features of JSON than the [Schema]
-  /// class supports.  See [the Gemini
-  /// documentation](https://ai.google.dev/gemini-api/docs/structured-output#json-schema)
+  /// class taken by [responseSchema] supports.  See the [Gemini
+  /// documentation](https://ai.google.dev/api/generate-content#FIELDS.response_json_schema)
   /// about the limitations of this feature.
-  final String? responseJsonSchema;
+  ///
+  /// Notably, this feature is only supported on Gemini 2.5 and later. Use
+  /// [responseSchema] for earlier models.
+  ///
+  /// Only one of [responseSchema] or [responseJsonSchema] may be specified at
+  /// the same time.
+  final Map<String, Object?>? responseJsonSchema;
 
   /// Config for thinking features.
   ///
@@ -1050,7 +1061,7 @@ final class GenerationConfig extends BaseGenerationConfig {
         if (responseSchema case final responseSchema?)
           'responseSchema': responseSchema.toJson(),
         if (responseJsonSchema case final responseJsonSchema?)
-          'responseJsonSchema': responseJsonSchema,
+          'responseJsonSchema': json.encode(responseJsonSchema),
         if (thinkingConfig case final thinkingConfig?)
           'thinkingConfig': thinkingConfig.toJson(),
       };

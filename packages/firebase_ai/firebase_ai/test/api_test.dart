@@ -11,6 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+import 'dart:convert';
+
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:firebase_ai/src/api.dart';
 
@@ -443,14 +446,16 @@ void main() {
     });
 
     test('GenerationConfig toJson with responseJsonSchema', () {
-      const jsonSchema = '{"type": "string", "title": "MyString"}';
+      final jsonSchema =
+          (json.decode('{"type": "string", "title": "MyString"}') as Map)
+              .cast<String, Object?>();
       final config = GenerationConfig(
         responseMimeType: 'application/json',
         responseJsonSchema: jsonSchema,
       );
       expect(config.toJson(), {
         'responseMimeType': 'application/json',
-        'responseJsonSchema': jsonSchema,
+        'responseJsonSchema': json.encode(jsonSchema),
       });
     });
 
@@ -458,7 +463,9 @@ void main() {
         'throws assertion if both responseSchema and responseJsonSchema are provided',
         () {
       final schema = Schema.object(properties: {});
-      const jsonSchema = '{"type": "string", "title": "MyString"}';
+      final jsonSchema =
+          (json.decode('{"type": "string", "title": "MyString"}') as Map)
+              .cast<String, Object?>();
       expect(
           () => GenerationConfig(
               responseSchema: schema, responseJsonSchema: jsonSchema),

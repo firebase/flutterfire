@@ -1,7 +1,3 @@
-## 3.1.0
-
- - **FEAT**(firebase_ai): Add support for `responseJsonSchema` in the [GenerationConfig].
-
 ## 3.0.0
 
 > Note: This release has breaking changes.
