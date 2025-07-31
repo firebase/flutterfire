@@ -402,9 +402,13 @@ class _BidiPageState extends State<BidiPage> {
           brightness: brightness,
           colorTemperature: color,
         );
-        await _session.send(
-          input: Content.functionResponse(functionCall.name, functionResult),
-        );
+        await _session.sendToolResponse([
+          FunctionResponse(
+            functionCall.name,
+            functionResult,
+            id: functionCall.id,
+          ),
+        ]);
       } else {
         throw UnimplementedError(
           'Function not declared to the model: ${functionCall.name}',
