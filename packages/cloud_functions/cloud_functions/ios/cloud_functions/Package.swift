@@ -85,7 +85,7 @@ guard let shared_spm_version = Version("\(firebase_core_version_string)\(shared_
 let package = Package(
   name: "cloud_functions",
   platforms: [
-    .iOS("13.0"),
+    .iOS("15.0"),
   ],
   products: [
     .library(name: "cloud-functions", targets: ["cloud_functions"]),

@@ -1,3 +1,14 @@
+## 5.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**(firestore): remove deprecated functions ([#17559](https://github.com/firebase/flutterfire/issues/17559)). ([67017fd6](https://github.com/firebase/flutterfire/commit/67017fd6f139080cec7ecd1b4d75a05f13f238fa))
+
+## 4.4.12
+
+ - Update a dependency to the latest release.
+
 ## 4.4.11
 
  - Update a dependency to the latest release.

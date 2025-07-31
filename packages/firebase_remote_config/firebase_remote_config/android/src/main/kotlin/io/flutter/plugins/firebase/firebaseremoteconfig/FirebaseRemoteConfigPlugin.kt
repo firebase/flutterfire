@@ -206,9 +206,9 @@ class FirebaseRemoteConfigPlugin
       })
   }
 
-  override fun onCancel(arguments: Any) {
+  override fun onCancel(arguments: Any?) {
     // arguments will be null on hot restart, so we will clean up listeners in didReinitializeFirebaseCore()
-    val argumentsMap = arguments as Map<String, Any>
+    val argumentsMap = arguments as? Map<String, Any>
       ?: return
     val appName = Objects.requireNonNull(argumentsMap["appName"]) as String
 
