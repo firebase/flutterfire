@@ -189,22 +189,6 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     }
   }
 
-  /// Enable persistence of Firestore data.
-  @override
-  Future<void> enablePersistence([PersistenceSettings? persistenceSettings]) {
-    _settings = _settings.copyWith(persistenceEnabled: true);
-    if (persistenceSettings != null) {
-      firestore_interop.PersistenceSettings interopSettings =
-          firestore_interop.PersistenceSettings(
-              synchronizeTabs: persistenceSettings.synchronizeTabs.toJS);
-
-      return convertWebExceptions(
-          () => _delegate.enablePersistence(interopSettings));
-    }
-
-    return convertWebExceptions(_delegate.enablePersistence);
-  }
-
   @override
   Future<void> terminate() {
     return convertWebExceptions(_delegate.terminate);

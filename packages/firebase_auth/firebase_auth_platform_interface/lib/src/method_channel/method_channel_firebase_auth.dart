@@ -482,8 +482,6 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
                 androidPackageName: actionCodeSettings.androidPackageName,
                 androidInstallApp: actionCodeSettings.androidInstallApp,
                 androidMinimumVersion: actionCodeSettings.androidMinimumVersion,
-                // ignore: deprecated_member_use_from_same_package
-                dynamicLinkDomain: actionCodeSettings.dynamicLinkDomain,
                 linkDomain: actionCodeSettings.linkDomain,
               ),
       );
@@ -509,8 +507,6 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
           androidPackageName: actionCodeSettings.androidPackageName,
           androidInstallApp: actionCodeSettings.androidInstallApp,
           androidMinimumVersion: actionCodeSettings.androidMinimumVersion,
-          // ignore: deprecated_member_use_from_same_package
-          dynamicLinkDomain: actionCodeSettings.dynamicLinkDomain,
         ),
       );
     } catch (e, stack) {

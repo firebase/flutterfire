@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
   s.authors           = 'The Chromium Authors'
   s.source           = { :path => '.' }
   s.source_files = 'cloud_functions/Sources/**/*.swift'
-  s.ios.deployment_target = '13.0'
+  s.ios.deployment_target = '15.0'
 
   s.swift_version = '5.0'
 

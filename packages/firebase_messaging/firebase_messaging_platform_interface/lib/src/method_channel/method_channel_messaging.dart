@@ -359,35 +359,6 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   }
 
   @override
-  Future<void> sendMessage({
-    required String to,
-    Map<String, String>? data,
-    String? collapseKey,
-    String? messageId,
-    String? messageType,
-    int? ttl,
-  }) async {
-    if (defaultTargetPlatform != TargetPlatform.android) {
-      throw UnimplementedError(
-          'Sending of messages from the Firebase Messaging SDK is only supported on Android devices.');
-    }
-
-    try {
-      await channel.invokeMapMethod('Messaging#sendMessage', {
-        'appName': app.name,
-        'to': to,
-        'data': data,
-        'collapseKey': collapseKey,
-        'messageId': messageId,
-        'messageType': messageType,
-        'ttl': ttl,
-      });
-    } catch (e, stack) {
-      convertPlatformException(e, stack);
-    }
-  }
-
-  @override
   Future<void> subscribeToTopic(String topic) async {
     await _APNSTokenCheck();
 
