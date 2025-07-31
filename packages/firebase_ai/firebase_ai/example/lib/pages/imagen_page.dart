@@ -79,7 +79,11 @@ class _ImagenPageState extends State<ImagenPage> {
                 itemBuilder: (context, idx) {
                   return MessageWidget(
                     text: _generatedContent[idx].text,
-                    image: _generatedContent[idx].image,
+                    image: Image.memory(
+                      _generatedContent[idx].imageBytes!,
+                      cacheWidth: 400,
+                      cacheHeight: 400,
+                    ),
                     isFromUser: _generatedContent[idx].fromUser ?? false,
                   );
                 },
@@ -231,7 +235,7 @@ class _ImagenPageState extends State<ImagenPage> {
 
     final String prompt = _textController.text;
     final promptMessage = MessageData(
-      image: Image.memory(_sourceImage!.bytesBase64Encoded),
+      imageBytes: _sourceImage!.bytesBase64Encoded,
       text: 'Try to inpaint image with prompt: $prompt',
       fromUser: true,
     );
@@ -248,7 +252,7 @@ class _ImagenPageState extends State<ImagenPage> {
       if (response.images.isNotEmpty) {
         final inpaintImage = response.images[0];
         resultMessage = MessageData(
-          image: Image.memory(inpaintImage.bytesBase64Encoded),
+          imageBytes: inpaintImage.bytesBase64Encoded,
           text: 'Inpaint image result with prompt: $prompt',
           fromUser: false,
         );
@@ -283,7 +287,7 @@ class _ImagenPageState extends State<ImagenPage> {
     });
 
     final promptMessage = MessageData(
-      image: Image.memory(_sourceImage!.bytesBase64Encoded),
+      imageBytes: _sourceImage!.bytesBase64Encoded,
       text: 'Outpaint the picture to 1400*1400',
       fromUser: true,
     );
@@ -297,7 +301,7 @@ class _ImagenPageState extends State<ImagenPage> {
       if (response.images.isNotEmpty) {
         final editedImage = response.images[0];
         resultMessage = MessageData(
-          image: Image.memory(editedImage.bytesBase64Encoded),
+          imageBytes: editedImage.bytesBase64Encoded,
           text: 'Edited image Outpaint 1400*1400',
           fromUser: false,
         );
@@ -333,7 +337,7 @@ class _ImagenPageState extends State<ImagenPage> {
 
     final String prompt = _textController.text;
     final promptMessage = MessageData(
-      image: Image.memory(_sourceImage!.bytesBase64Encoded),
+      imageBytes: _sourceImage!.bytesBase64Encoded,
       text: prompt,
       fromUser: true,
     );
@@ -353,7 +357,7 @@ class _ImagenPageState extends State<ImagenPage> {
         final editedImage = response.images[0];
 
         resultMessage = MessageData(
-          image: Image.memory(editedImage.bytesBase64Encoded),
+          imageBytes: editedImage.bytesBase64Encoded,
           text: 'Edited image with style: $prompt',
           fromUser: false,
         );
@@ -390,7 +394,7 @@ class _ImagenPageState extends State<ImagenPage> {
         var imagenImage = response.images[0];
 
         resultMessage = MessageData(
-          image: Image.memory(imagenImage.bytesBase64Encoded),
+          imageBytes: imagenImage.bytesBase64Encoded,
           text: prompt,
           fromUser: false,
         );

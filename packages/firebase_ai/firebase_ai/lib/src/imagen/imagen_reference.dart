@@ -97,8 +97,6 @@ sealed class ImagenMaskReference extends ImagenReferenceImage {
     ImagenImagePlacement newPosition = ImagenImagePlacement.center,
   }) async {
     final originalImage = await image.asUiImage();
-    ui.Image? maskImage;
-    ui.Image? paddedImage;
 
     try {
       // Validate that the new dimensions are strictly larger.
@@ -132,33 +130,30 @@ sealed class ImagenMaskReference extends ImagenReferenceImage {
       final whitePaint = Paint()..color = Colors.white;
       final blackPaint = Paint()..color = Colors.black;
 
-      // 3. Use Dart 3's record pattern for concurrent image creation.
-      // This is much more readable and safer than accessing results by index.
-      final [createMask, createdPaddedImage] = await Future.wait([
-        _createImageFromPainter(
-          width: newDimensions.width,
-          height: newDimensions.height,
-          painter: (canvas, size) {
-            canvas.drawPaint(whitePaint);
-            canvas.drawRect(destRect, blackPaint);
-          },
-        ),
-        _createImageFromPainter(
-          width: newDimensions.width,
-          height: newDimensions.height,
-          painter: (canvas, size) {
-            canvas.drawPaint(blackPaint);
-            canvas.drawImageRect(originalImage, sourceRect, destRect, Paint());
-          },
-        ),
-      ]);
-      maskImage = createMask;
-      paddedImage = createdPaddedImage;
-
+      final maskImage = await _createImageFromPainter(
+        width: newDimensions.width,
+        height: newDimensions.height,
+        painter: (canvas, size) {
+          canvas.drawPaint(whitePaint);
+          canvas.drawRect(destRect, blackPaint);
+        },
+      );
       final maskBytes =
           await maskImage.toByteData(format: ui.ImageByteFormat.png);
+      maskImage.dispose(); // Dispose right away
+
+      // 2. Create, encode, and immediately dispose of the padded image
+      final paddedImage = await _createImageFromPainter(
+        width: newDimensions.width,
+        height: newDimensions.height,
+        painter: (canvas, size) {
+          canvas.drawPaint(blackPaint);
+          canvas.drawImageRect(originalImage, sourceRect, destRect, Paint());
+        },
+      );
       final paddedBytes =
           await paddedImage.toByteData(format: ui.ImageByteFormat.png);
+      paddedImage.dispose(); // Dispose right away
 
       if (paddedBytes == null || maskBytes == null) {
         throw StateError('Failed to encode generated images.');
@@ -181,8 +176,6 @@ sealed class ImagenMaskReference extends ImagenReferenceImage {
       ];
     } finally {
       originalImage.dispose();
-      maskImage?.dispose();
-      paddedImage?.dispose();
     }
   }
 

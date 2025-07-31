@@ -70,7 +70,11 @@ class _ChatPageState extends State<ChatPage> {
                 itemBuilder: (context, idx) {
                   return MessageWidget(
                     text: _messages[idx].text,
-                    image: _messages[idx].image,
+                    image: Image.memory(
+                      _messages[idx].imageBytes!,
+                      cacheWidth: 400,
+                      cacheHeight: 400,
+                    ),
                     isFromUser: _messages[idx].fromUser ?? false,
                   );
                 },
