@@ -446,17 +446,22 @@ void main() {
     });
 
     test('GenerationConfig toJson with responseJsonSchema', () {
-      final jsonSchema =
-          (json.decode('{"type": "string", "title": "MyString"}') as Map)
-              .cast<String, Object?>();
+      final jsonSchema = {
+        'type': 'object',
+        'properties': {
+          'recipeName': {'type': 'string'}
+        },
+        'required': ['recipeName']
+      };
       final config = GenerationConfig(
         responseMimeType: 'application/json',
         responseJsonSchema: jsonSchema,
       );
-      expect(config.toJson(), {
-        'responseMimeType': 'application/json',
-        'responseJsonSchema': json.encode(jsonSchema),
-      });
+      final json = config.toJson();
+      expect(json['responseMimeType'], 'application/json');
+      final dynamic responseSchema = json['responseJsonSchema'];
+      expect(responseSchema, isA<Map<String, Object?>>());
+      expect(responseSchema, equals(jsonSchema));
     });
 
     test(
