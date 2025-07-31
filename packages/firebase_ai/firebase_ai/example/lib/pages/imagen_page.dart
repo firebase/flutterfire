@@ -21,6 +21,9 @@ import 'package:flutter/material.dart';
 //import 'package:firebase_storage/firebase_storage.dart';
 import '../widgets/message_widget.dart';
 
+// Define a constant for the history limit
+const int _MAX_HISTORY = 4;
+
 class ImagenPage extends StatefulWidget {
   const ImagenPage({
     super.key,
@@ -227,17 +230,13 @@ class _ImagenPageState extends State<ImagenPage> {
     });
 
     final String prompt = _textController.text;
+    final promptMessage = MessageData(
+      image: Image.memory(_sourceImage!.bytesBase64Encoded),
+      text: 'Try to inpaint image with prompt: $prompt',
+      fromUser: true,
+    );
 
-    setState(() {
-      _generatedContent.add(
-        MessageData(
-          image: Image.memory(_sourceImage!.bytesBase64Encoded),
-          text: 'Try to inpaint image with prompt: $prompt',
-          fromUser: true,
-        ),
-      );
-      _scrollDown();
-    });
+    MessageData? resultMessage;
 
     try {
       final response = await widget.model.inpaintImage(
@@ -248,16 +247,11 @@ class _ImagenPageState extends State<ImagenPage> {
       );
       if (response.images.isNotEmpty) {
         final inpaintImage = response.images[0];
-        setState(() {
-          _generatedContent.add(
-            MessageData(
-              image: Image.memory(inpaintImage.bytesBase64Encoded),
-              text: 'Inpaint image result with prompt: $prompt',
-              fromUser: false,
-            ),
-          );
-          _scrollDown();
-        });
+        resultMessage = MessageData(
+          image: Image.memory(inpaintImage.bytesBase64Encoded),
+          text: 'Inpaint image result with prompt: $prompt',
+          fromUser: false,
+        );
       } else {
         _showError('No image was returned from inpaint.');
       }
@@ -266,7 +260,16 @@ class _ImagenPageState extends State<ImagenPage> {
     }
 
     setState(() {
+      _generatedContent.add(promptMessage);
+      if (resultMessage != null) {
+        _generatedContent.add(resultMessage);
+      }
+      // Apply history limit here
+      while (_generatedContent.length > _MAX_HISTORY) {
+        _generatedContent.removeAt(0);
+      }
       _loading = false;
+      _scrollDown();
     });
   }
 
@@ -279,17 +282,13 @@ class _ImagenPageState extends State<ImagenPage> {
       _loading = true;
     });
 
-    setState(() {
-      _generatedContent.add(
-        MessageData(
-          image: Image.memory(_sourceImage!.bytesBase64Encoded),
-          text: 'Outpaint the picture to 1400*1400',
-          fromUser: true,
-        ),
-      );
-      _scrollDown();
-    });
+    final promptMessage = MessageData(
+      image: Image.memory(_sourceImage!.bytesBase64Encoded),
+      text: 'Outpaint the picture to 1400*1400',
+      fromUser: true,
+    );
 
+    MessageData? resultMessage;
     try {
       final response = await widget.model.outpaintImage(
         _sourceImage!,
@@ -297,24 +296,29 @@ class _ImagenPageState extends State<ImagenPage> {
       );
       if (response.images.isNotEmpty) {
         final editedImage = response.images[0];
-        setState(() {
-          _generatedContent.add(
-            MessageData(
-              image: Image.memory(editedImage.bytesBase64Encoded),
-              text: 'Edited image Outpaint 1400*1400',
-              fromUser: false,
-            ),
-          );
-          _scrollDown();
-        });
+        resultMessage = MessageData(
+          image: Image.memory(editedImage.bytesBase64Encoded),
+          text: 'Edited image Outpaint 1400*1400',
+          fromUser: false,
+        );
       } else {
         _showError('No image was returned from editing.');
       }
     } catch (e) {
       _showError('Error editing image: $e');
     }
+
     setState(() {
+      _generatedContent.add(promptMessage);
+      if (resultMessage != null) {
+        _generatedContent.add(resultMessage);
+      }
+      // Apply history limit here
+      while (_generatedContent.length > _MAX_HISTORY) {
+        _generatedContent.removeAt(0);
+      }
       _loading = false;
+      _scrollDown();
     });
   }
 
@@ -328,18 +332,12 @@ class _ImagenPageState extends State<ImagenPage> {
     });
 
     final String prompt = _textController.text;
-
-    setState(() {
-      _generatedContent.add(
-        MessageData(
-          image: Image.memory(_sourceImage!.bytesBase64Encoded),
-          text: prompt,
-          fromUser: true,
-        ),
-      );
-      _scrollDown();
-    });
-
+    final promptMessage = MessageData(
+      image: Image.memory(_sourceImage!.bytesBase64Encoded),
+      text: prompt,
+      fromUser: true,
+    );
+    MessageData? resultMessage;
     try {
       final response = await widget.model.editImage(
         [
@@ -353,24 +351,30 @@ class _ImagenPageState extends State<ImagenPage> {
       );
       if (response.images.isNotEmpty) {
         final editedImage = response.images[0];
-        setState(() {
-          _generatedContent.add(
-            MessageData(
-              image: Image.memory(editedImage.bytesBase64Encoded),
-              text: 'Edited image with style: $prompt',
-              fromUser: false,
-            ),
-          );
-          _scrollDown();
-        });
+
+        resultMessage = MessageData(
+          image: Image.memory(editedImage.bytesBase64Encoded),
+          text: 'Edited image with style: $prompt',
+          fromUser: false,
+        );
       } else {
         _showError('No image was returned from style editing.');
       }
     } catch (e) {
       _showError('Error performing style edit: $e');
     }
+
     setState(() {
+      _generatedContent.add(promptMessage);
+      if (resultMessage != null) {
+        _generatedContent.add(resultMessage);
+      }
+      // Apply history limit here
+      while (_generatedContent.length > _MAX_HISTORY) {
+        _generatedContent.removeAt(0);
+      }
       _loading = false;
+      _scrollDown();
     });
   }
 
@@ -378,19 +382,17 @@ class _ImagenPageState extends State<ImagenPage> {
     setState(() {
       _loading = true;
     });
-
+    MessageData? resultMessage;
     try {
       var response = await widget.model.generateImages(prompt);
 
       if (response.images.isNotEmpty) {
         var imagenImage = response.images[0];
 
-        _generatedContent.add(
-          MessageData(
-            image: Image.memory(imagenImage.bytesBase64Encoded),
-            text: prompt,
-            fromUser: false,
-          ),
+        resultMessage = MessageData(
+          image: Image.memory(imagenImage.bytesBase64Encoded),
+          text: prompt,
+          fromUser: false,
         );
       } else {
         // Handle the case where no images were generated
@@ -401,6 +403,13 @@ class _ImagenPageState extends State<ImagenPage> {
     }
 
     setState(() {
+      if (resultMessage != null) {
+        _generatedContent.add(resultMessage);
+      }
+      // Apply history limit here
+      while (_generatedContent.length > _MAX_HISTORY) {
+        _generatedContent.removeAt(0);
+      }
       _loading = false;
       _scrollDown();
     });

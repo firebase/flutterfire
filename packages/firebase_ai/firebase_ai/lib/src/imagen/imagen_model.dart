@@ -164,7 +164,8 @@ final class ImagenModel extends BaseApiClientModel {
     return editImage(
       referenceImages,
       prompt,
-      config: config,
+      config: ImagenEditingConfig(
+          editMode: ImagenEditMode.outpaint, editSteps: config?.editSteps),
     );
   }
 

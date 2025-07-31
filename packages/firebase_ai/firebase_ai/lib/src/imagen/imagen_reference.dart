@@ -97,97 +97,93 @@ sealed class ImagenMaskReference extends ImagenReferenceImage {
     ImagenImagePlacement newPosition = ImagenImagePlacement.center,
   }) async {
     final originalImage = await image.asUiImage();
+    ui.Image? maskImage;
+    ui.Image? paddedImage;
 
-    // Validate that the new dimensions are strictly larger.
-    if (originalImage.width >= newDimensions.width ||
-        originalImage.height >= newDimensions.height) {
-      throw ArgumentError(
-        'New Dimensions must be strictly larger than original image dimensions. '
-        'Original image is: ${originalImage.width}x${originalImage.height}, '
-        'new dimensions are ${newDimensions.width}x${newDimensions.height}',
-      );
-    }
+    try {
+      // Validate that the new dimensions are strictly larger.
+      if (originalImage.width >= newDimensions.width ||
+          originalImage.height >= newDimensions.height) {
+        throw ArgumentError(
+          'New Dimensions must be strictly larger than original image dimensions. '
+          'Original image is: ${originalImage.width}x${originalImage.height}, '
+          'new dimensions are ${newDimensions.width}x${newDimensions.height}',
+        );
+      }
 
-    // Calculate the position of the original image on the new canvas.
-    final normalizedPosition = newPosition.normalizeToDimensions(
-      ImagenDimensions(
-          width: originalImage.width, height: originalImage.height),
-      newDimensions,
-    );
+      // Calculate the position of the original image on the new canvas.
+      final originalDimensions = ImagenDimensions(
+          width: originalImage.width, height: originalImage.height);
+      final normalizedPosition =
+          newPosition.normalizeToDimensions(originalDimensions, newDimensions);
 
-    final x = normalizedPosition.x;
-    final y = normalizedPosition.y;
+      final x = normalizedPosition.x?.toDouble();
+      final y = normalizedPosition.y?.toDouble();
 
-    if (x == null || y == null) {
-      throw StateError('Error normalizing position for mask and padding.');
-    }
+      if (x == null || y == null) {
+        throw StateError('Error normalizing position for mask and padding.');
+      }
 
-    // Define the rectangle where the original image will be drawn.
-    final imageRect = ui.Rect.fromLTWH(
-      x.toDouble(),
-      y.toDouble(),
-      originalImage.width.toDouble(),
-      originalImage.height.toDouble(),
-    );
+      final sourceRect = ui.Rect.fromLTWH(0, 0, originalImage.width.toDouble(),
+          originalImage.height.toDouble());
+      final destRect = ui.Rect.fromLTWH(x, y, originalImage.width.toDouble(),
+          originalImage.height.toDouble());
 
-    // Create both the mask and the new image concurrently.
-    final results = await Future.wait([
-      // Future to create the mask
-      _createImageFromPainter(
-        width: newDimensions.width,
-        height: newDimensions.height,
-        painter: (canvas, size) {
-          // Fill the mask with white, then draw a black rectangle where the image is.
-          canvas.drawPaint(Paint()..color = Colors.white);
-          canvas.drawRect(imageRect, Paint()..color = Colors.black);
-        },
-      ),
-      // Future to create the new padded image
-      _createImageFromPainter(
-        width: newDimensions.width,
-        height: newDimensions.height,
-        painter: (canvas, size) {
-          // Fill the new image with black padding.
-          canvas.drawPaint(Paint()..color = Colors.black);
-          // Draw the original image into the corresponding spot.
-          canvas.drawImageRect(
-            originalImage,
-            ui.Rect.fromLTWH(0, 0, originalImage.width.toDouble(),
-                originalImage.height.toDouble()),
-            imageRect,
-            Paint(),
-          );
-        },
-      ),
-    ]);
+      final whitePaint = Paint()..color = Colors.white;
+      final blackPaint = Paint()..color = Colors.black;
 
-    final newPaddedUiImage = results[1];
-    final maskUiImage = results[0];
-
-    // Convert the generated ui.Image objects back to byte data.
-    final newImageBytes =
-        await newPaddedUiImage.toByteData(format: ui.ImageByteFormat.png);
-    final maskBytes =
-        await maskUiImage.toByteData(format: ui.ImageByteFormat.png);
-
-    if (newImageBytes == null || maskBytes == null) {
-      throw StateError('Failed to encode generated images.');
-    }
-
-    return [
-      ImagenRawImage(
-        image: ImagenInlineImage(
-          bytesBase64Encoded: newImageBytes.buffer.asUint8List(),
-          mimeType: image.mimeType,
+      // 3. Use Dart 3's record pattern for concurrent image creation.
+      // This is much more readable and safer than accessing results by index.
+      final [createMask, createdPaddedImage] = await Future.wait([
+        _createImageFromPainter(
+          width: newDimensions.width,
+          height: newDimensions.height,
+          painter: (canvas, size) {
+            canvas.drawPaint(whitePaint);
+            canvas.drawRect(destRect, blackPaint);
+          },
         ),
-      ),
-      ImagenRawMask(
-        mask: ImagenInlineImage(
-          bytesBase64Encoded: maskBytes.buffer.asUint8List(),
-          mimeType: image.mimeType,
+        _createImageFromPainter(
+          width: newDimensions.width,
+          height: newDimensions.height,
+          painter: (canvas, size) {
+            canvas.drawPaint(blackPaint);
+            canvas.drawImageRect(originalImage, sourceRect, destRect, Paint());
+          },
         ),
-      ),
-    ];
+      ]);
+      maskImage = createMask;
+      paddedImage = createdPaddedImage;
+
+      final maskBytes =
+          await maskImage.toByteData(format: ui.ImageByteFormat.png);
+      final paddedBytes =
+          await paddedImage.toByteData(format: ui.ImageByteFormat.png);
+
+      if (paddedBytes == null || maskBytes == null) {
+        throw StateError('Failed to encode generated images.');
+      }
+
+      // 5. Return a cleaner, more readable list
+      return [
+        ImagenRawImage(
+          image: ImagenInlineImage(
+            bytesBase64Encoded: paddedBytes.buffer.asUint8List(),
+            mimeType: image.mimeType,
+          ),
+        ),
+        ImagenRawMask(
+          mask: ImagenInlineImage(
+            bytesBase64Encoded: maskBytes.buffer.asUint8List(),
+            mimeType: image.mimeType,
+          ),
+        ),
+      ];
+    } finally {
+      originalImage.dispose();
+      maskImage?.dispose();
+      paddedImage?.dispose();
+    }
   }
 
   /// Helper function to create a ui.Image by drawing on a Canvas.
