@@ -78,7 +78,7 @@ class _BidiPageState extends State<BidiPage> {
             ],
           )
         : FirebaseAI.googleAI().liveGenerativeModel(
-            model: 'gemini-2.0-flash-live-001',
+            model: 'gemini-live-2.5-flash-preview',
             liveGenerationConfig: config,
             tools: [
               Tool.functionDeclarations([lightControlTool]),
