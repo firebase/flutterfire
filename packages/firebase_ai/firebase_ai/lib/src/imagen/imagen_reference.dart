@@ -31,9 +31,7 @@ enum _ReferenceType {
 
   const _ReferenceType(this._jsonString);
   final String _jsonString;
-
-  @override
-  String toString() => _jsonString;
+  String toJson() => _jsonString;
 }
 
 /// A reference image for image editing.
@@ -61,7 +59,7 @@ sealed class ImagenReferenceImage {
   // ignore: public_member_api_docs
   Map<String, Object?> toJson({int referenceIdOverrideIfNull = 0}) {
     final json = <String, Object?>{};
-    json['referenceType'] = referenceType.toString();
+    json['referenceType'] = referenceType.toJson();
     if (referenceId != null) {
       json['referenceId'] = referenceId;
     } else {
