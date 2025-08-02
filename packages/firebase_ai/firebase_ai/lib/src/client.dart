@@ -63,9 +63,13 @@ final class HttpApiClient implements ApiClient {
   @override
   Future<Map<String, Object?>> makeRequest(
       Uri uri, Map<String, Object?> body) async {
+    print(uri);
+    final headers = await _headers();
+    print(headers);
+    print(body);
     final response = await (_httpClient?.post ?? http.post)(
       uri,
-      headers: await _headers(),
+      headers: headers,
       body: _utf8Json.encode(body),
     );
     if (response.statusCode >= 500) {

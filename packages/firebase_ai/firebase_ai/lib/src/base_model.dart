@@ -28,15 +28,17 @@ import 'api.dart';
 import 'client.dart';
 import 'content.dart';
 import 'developer/api.dart';
-import 'imagen_api.dart';
-import 'imagen_content.dart';
+import 'imagen/imagen_api.dart';
+import 'imagen/imagen_content.dart';
+import 'imagen/imagen_edit.dart';
+import 'imagen/imagen_reference.dart';
 import 'live_api.dart';
 import 'live_session.dart';
 import 'tool.dart';
 import 'vertex_version.dart';
 
 part 'generative_model.dart';
-part 'imagen_model.dart';
+part 'imagen/imagen_model.dart';
 part 'live_model.dart';
 
 /// [Task] enum class for [GenerativeModel] to make request.

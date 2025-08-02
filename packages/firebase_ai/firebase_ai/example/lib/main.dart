@@ -80,7 +80,7 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
       imageFormat: ImagenFormat.jpeg(compressionQuality: 75),
     );
     return instance.imagenModel(
-      model: 'imagen-3.0-generate-002',
+      model: 'imagen-3.0-capability-001',
       generationConfig: generationConfig,
       safetySettings: ImagenSafetySettings(
         ImagenSafetyFilterLevel.blockLowAndAbove,
