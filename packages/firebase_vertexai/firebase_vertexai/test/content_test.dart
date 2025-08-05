@@ -16,8 +16,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:firebase_ai/src/content.dart';
-import 'package:firebase_vertexai/firebase_vertexai.dart'
-    show VertexAISdkException;
 import 'package:flutter_test/flutter_test.dart';
 
 // Mock google_ai classes (if needed)
@@ -193,24 +191,36 @@ void main() {
       expect(inlineData.bytes, [1, 2, 3]);
     });
 
-    test('throws UnimplementedError for functionResponse', () {
+    test('returns UnknownPart for functionResponse', () {
       final json = {
         'functionResponse': {'name': 'test', 'response': {}}
       };
-      expect(() => parsePart(json), throwsA(isA<VertexAISdkException>()));
+      final result = parsePart(json);
+      expect(result, isA<UnknownPart>());
+      final unknownPart = result as UnknownPart;
+      expect(unknownPart.data, json);
     });
 
-    test('throws unhandledFormat for invalid JSON', () {
+    test('returns UnknownPart for invalid JSON', () {
       final json = {'invalid': 'data'};
-      expect(() => parsePart(json), throwsA(isA<Exception>()));
+      final result = parsePart(json);
+      expect(result, isA<UnknownPart>());
+      final unknownPart = result as UnknownPart;
+      expect(unknownPart.data, json);
     });
 
-    test('throws unhandledFormat for null input', () {
-      expect(() => parsePart(null), throwsA(isA<Exception>()));
+    test('returns UnknownPart for null input', () {
+      final result = parsePart(null);
+      expect(result, isA<UnknownPart>());
+      final unknownPart = result as UnknownPart;
+      expect(unknownPart.data, {'unhandled': null});
     });
 
-    test('throws unhandledFormat for empty map', () {
-      expect(() => parsePart({}), throwsA(isA<Exception>()));
+    test('returns UnknownPart for empty map', () {
+      final result = parsePart({});
+      expect(result, isA<UnknownPart>());
+      final unknownPart = result as UnknownPart;
+      expect(unknownPart.data, {'unhandled': {}});
     });
   });
 }
