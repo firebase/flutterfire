@@ -381,7 +381,7 @@ void setupReferenceTests() {
               'put file some text to compare with uploaded and downloaded';
           final File file = await createFile(
             'read-and-write.txt',
-            largeString: text,
+            string: text,
           );
 
           final Reference ref =

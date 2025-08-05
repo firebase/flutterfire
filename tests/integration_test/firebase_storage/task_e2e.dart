@@ -258,7 +258,6 @@ void setupTaskTests() {
           expect(canceled, isTrue);
           expect(task.snapshot.state, TaskState.canceled);
 
-
           final streamError = await errorReceived.future;
 
           expect(streamError, isNotNull);
@@ -284,14 +283,18 @@ void setupTaskTests() {
           bool canceled = await task.cancel();
           expect(canceled, isTrue);
           expect(task.snapshot.state, TaskState.canceled);
-
         }
 
         test(
           'successfully cancels download task using snapshotEvents',
           () async {
             file = await createFile('ok.txt');
-            task = downloadRef.putFile(file);
+            // Need to put a large file in emulator first to test cancel.
+            final initialPut = downloadRef.putFile(file);
+
+            await initialPut;
+            task = downloadRef.writeToFile(file);
+
             await _testCancelTaskSnapshotEvents(task);
           },
           // There's no DownloadTask on web.
@@ -304,7 +307,10 @@ void setupTaskTests() {
           'successfully cancels download task and provides the last `canceled` event',
           () async {
             file = await createFile('ok.txt');
-            task = downloadRef.putFile(file);
+            final initialPut = downloadRef.putFile(file);
+
+            await initialPut;
+            task = downloadRef.writeToFile(file);
             await _testCancelTaskLastEvent(task);
           },
           // There's no DownloadTask on web.
