@@ -244,7 +244,9 @@ void setupTaskTests() {
 
           task.snapshotEvents.listen(
             (TaskSnapshot snapshot) {
-              started.complete(true);
+              if (!started.isCompleted) {
+                started.complete(true);
+              }
               snapshots.add(snapshot);
             },
             onError: (error) {
