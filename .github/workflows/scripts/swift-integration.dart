@@ -83,6 +83,8 @@ Future<void> updatePackageSwiftForPackage(String packageName, String branch) asy
 
     final headRepo = Platform.environment['PR_HEAD_REPO'];
     final baseRepo = Platform.environment['GITHUB_REPOSITORY'];
+    print('headRepo: $headRepo');
+    print('baseRepo: $baseRepo');
 
     // handles forked repositories
     final repoSlug = headRepo != baseRepo ? headRepo : baseRepo;
