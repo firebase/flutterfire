@@ -80,7 +80,7 @@ guard let shared_spm_version = Version("\(firebase_core_version_string)\(shared_
 let package = Package(
   name: "firebase_ml_model_downloader",
   platforms: [
-    .iOS("13.0"),
+    .iOS("15.0"),
   ],
   products: [
     .library(name: "firebase-ml-model-downloader", targets: ["firebase_ml_model_downloader"]),

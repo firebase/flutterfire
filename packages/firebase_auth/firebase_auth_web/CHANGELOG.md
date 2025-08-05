@@ -1,3 +1,9 @@
+## 6.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**(auth): remove deprecated functions ([#17562](https://github.com/firebase/flutterfire/issues/17562)). ([d50aad95](https://github.com/firebase/flutterfire/commit/d50aad954443904d64d4ebd4442ebc63ed702986))
+
 ## 5.15.3
 
  - Update a dependency to the latest release.

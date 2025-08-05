@@ -145,13 +145,6 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   }
 
   @override
-  Future<void> enablePersistence(
-      [PersistenceSettings? persistenceSettings]) async {
-    throw UnimplementedError(
-        'enablePersistence() is only available for Web. Use [Settings.persistenceEnabled] for other platforms.');
-  }
-
-  @override
   CollectionReferencePlatform collection(String collectionPath) {
     return MethodChannelCollectionReference(this, collectionPath, pigeonApp);
   }
