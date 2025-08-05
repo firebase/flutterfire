@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' as io;
-import 'dart:typed_data';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -30,7 +29,7 @@ Future<void> main() async {
             ? '10.0.2.2'
             : 'localhost';
 
-    // await FirebaseStorage.instance.useStorageEmulator(emulatorHost, 9199);
+    await FirebaseStorage.instance.useStorageEmulator(emulatorHost, 9199);
   }
 
   runApp(StorageExampleApp());
@@ -249,123 +248,64 @@ class _TaskManager extends State<TaskManager> {
     );
   }
 
-  Future<io.File> createFile(String name,
-      {String? largeString, int? sizeInBytes}) async {
-    final io.Directory systemTempDir = io.Directory.systemTemp;
-    final io.File file = await io.File('${systemTempDir.path}/$name').create();
-
-    if (largeString != null) {
-      await file.writeAsString(largeString);
-    } else if (sizeInBytes != null) {
-      // Create a 1GB file by writing data in chunks to avoid memory issues
-      final chunkSize = 1024 * 1024; // 1MB chunks
-      final chunk = Uint8List(chunkSize);
-
-      // Fill chunk with random-ish data to prevent compression
-      for (int i = 0; i < chunkSize; i++) {
-        chunk[i] = (i % 256); // Creates a pattern from 0-255
-      }
-
-      final sink = file.openWrite();
-      final totalChunks = (sizeInBytes / chunkSize).ceil();
-
-      for (int i = 0; i < totalChunks; i++) {
-        if (i == totalChunks - 1) {
-          // Last chunk might be smaller
-          final remainingBytes = sizeInBytes % chunkSize;
-          if (remainingBytes > 0) {
-            sink.add(chunk.sublist(0, remainingBytes));
-          } else {
-            sink.add(chunk);
-          }
-        } else {
-          sink.add(chunk);
-        }
-      }
-
-      await sink.close();
-    } else {
-      // Default fallback
-      await file.writeAsString('A' * 1024); // 1KB default
-    }
-
-    return file;
-  }
-
-  late Task task;
-  late Reference downloadRef;
-  Future<void> _testCancelTask() async {
-
-    bool canceled = await task.cancel();
-    print('canceled: $canceled');
-    print('task.snapshot.state: ${task.snapshot.state}');
-
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Storage Example App'),
-          actions: [
-            PopupMenuButton<UploadType>(
-              onSelected: handleUploadType,
-              icon: const Icon(Icons.add),
-              itemBuilder: (context) => [
+      appBar: AppBar(
+        title: const Text('Storage Example App'),
+        actions: [
+          PopupMenuButton<UploadType>(
+            onSelected: handleUploadType,
+            icon: const Icon(Icons.add),
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                // ignore: sort_child_properties_last
+                child: Text('Upload string'),
+                value: UploadType.string,
+              ),
+              const PopupMenuItem(
+                // ignore: sort_child_properties_last
+                child: Text('Upload local file'),
+                value: UploadType.file,
+              ),
+              const PopupMenuItem(
+                // ignore: sort_child_properties_last
+                child: Text('Upload Uint8List'),
+                value: UploadType.uint8List,
+              ),
+              if (_uploadTasks.isNotEmpty)
                 const PopupMenuItem(
                   // ignore: sort_child_properties_last
-                  child: Text('Upload string'),
-                  value: UploadType.string,
+                  child: Text('Clear list'),
+                  value: UploadType.clear,
                 ),
-                const PopupMenuItem(
-                  // ignore: sort_child_properties_last
-                  child: Text('Upload local file'),
-                  value: UploadType.file,
-                ),
-                const PopupMenuItem(
-                  // ignore: sort_child_properties_last
-                  child: Text('Upload Uint8List'),
-                  value: UploadType.uint8List,
-                ),
-                if (_uploadTasks.isNotEmpty)
-                  const PopupMenuItem(
-                    // ignore: sort_child_properties_last
-                    child: Text('Clear list'),
-                    value: UploadType.clear,
-                  ),
-              ],
+            ],
+          ),
+        ],
+      ),
+      body: _uploadTasks.isEmpty
+          ? const Center(child: Text("Press the '+' button to add a new file."))
+          : ListView.builder(
+              itemCount: _uploadTasks.length,
+              itemBuilder: (context, index) => UploadTaskListTile(
+                task: _uploadTasks[index],
+                onDismissed: () => _removeTaskAtIndex(index),
+                onDownloadLink: () async {
+                  return _downloadLink(_uploadTasks[index].snapshot.ref);
+                },
+                onDownload: () async {
+                  if (kIsWeb) {
+                    return _downloadBytes(_uploadTasks[index].snapshot.ref);
+                  } else {
+                    return _downloadFile(_uploadTasks[index].snapshot.ref);
+                  }
+                },
+                onDelete: () async {
+                  return _delete(_uploadTasks[index].snapshot.ref);
+                },
+              ),
             ),
-          ],
-        ),
-        body: Column(
-          children: [
-            TextButton(
-              onPressed: () async {
-                final file =
-                    await createFile('ok.txt', sizeInBytes: 1073741824); // 1GB
-                downloadRef =
-                    FirebaseStorage.instance.ref('flutter-tests/ok-2.txt'); // 1GB
-                task = downloadRef.writeToFile(file);
-
-                task.snapshotEvents.listen(
-                  (TaskSnapshot snapshot) {
-                    print('snapshot.state: ${snapshot.state}');
-                  },
-                  onError: (error) {
-                    print('Received error: $error');
-                  },
-                );
-              },
-              child: const Text('Upload string'),
-            ),
-            TextButton(
-              onPressed: () async {
-                await _testCancelTask();
-              },
-              child: const Text('Cancel task'),
-            ),
-          ],
-        ));
+    );
   }
 }
 
