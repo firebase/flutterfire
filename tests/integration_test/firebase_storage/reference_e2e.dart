@@ -344,7 +344,10 @@ void setupReferenceTests() {
         test(
           'uploads a file',
           () async {
-            final File file = await createFile('flt-ok.txt');
+            final File file = await createFile(
+              'flt-ok.txt',
+              string: kTestString,
+            );
 
             final Reference ref =
                 storage.ref('flutter-tests').child('flt-ok.txt');
