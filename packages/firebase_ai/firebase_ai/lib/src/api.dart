@@ -172,25 +172,6 @@ final class UsageMetadata {
   final List<ModalityTokenCount>? candidatesTokensDetails;
 }
 
-/// Constructe a UsageMetadata with all it's fields.
-///
-/// Expose access to the private constructor for use within the package..
-UsageMetadata createUsageMetadata({
-  required int? promptTokenCount,
-  required int? candidatesTokenCount,
-  required int? totalTokenCount,
-  required int? thoughtsTokenCount,
-  required List<ModalityTokenCount>? promptTokensDetails,
-  required List<ModalityTokenCount>? candidatesTokensDetails,
-}) =>
-    UsageMetadata._(
-        promptTokenCount: promptTokenCount,
-        candidatesTokenCount: candidatesTokenCount,
-        totalTokenCount: totalTokenCount,
-        thoughtsTokenCount: thoughtsTokenCount,
-        promptTokensDetails: promptTokensDetails,
-        candidatesTokensDetails: candidatesTokensDetails);
-
 /// Response candidate generated from a [GenerativeModel].
 final class Candidate {
   // TODO: token count?
@@ -1128,7 +1109,7 @@ final class VertexSerialization implements SerializationStrategy {
     };
     final usageMedata = switch (jsonObject) {
       {'usageMetadata': final usageMetadata?} =>
-        _parseUsageMetadata(usageMetadata),
+        parseUsageMetadata(usageMetadata),
       {'totalTokens': final int totalTokens} =>
         UsageMetadata._(totalTokenCount: totalTokens),
       _ => null,
@@ -1258,7 +1239,10 @@ PromptFeedback _parsePromptFeedback(Object jsonObject) {
   };
 }
 
-UsageMetadata _parseUsageMetadata(Object jsonObject) {
+/// Parses a UsageMetadata from a JSON object.
+///
+/// Expose access to the private helper for use within the package.
+UsageMetadata parseUsageMetadata(Object jsonObject) {
   if (jsonObject is! Map<String, Object?>) {
     throw unhandledFormat('UsageMetadata', jsonObject);
   }
@@ -1289,7 +1273,7 @@ UsageMetadata _parseUsageMetadata(Object jsonObject) {
       candidatesTokensDetails.map(_parseModalityTokenCount).toList(),
     _ => null,
   };
-  return createUsageMetadata(
+  return UsageMetadata._(
     promptTokenCount: promptTokenCount,
     candidatesTokenCount: candidatesTokenCount,
     totalTokenCount: totalTokenCount,
