@@ -648,8 +648,7 @@ void main() {
           expect(response.usageMetadata!.thoughtsTokenCount, isNull);
         });
 
-        test(
-            'parses usageMetadata when thoughtsTokenCount is present but null',
+        test('parses usageMetadata when thoughtsTokenCount is present but null',
             () {
           final json = {
             'usageMetadata': {
