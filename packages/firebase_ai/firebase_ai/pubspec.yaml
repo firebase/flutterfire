@@ -27,7 +27,7 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^1.1.0
-  meta: ^1.12.0
+  meta: ^1.15.0
   web_socket_channel: ^3.0.1
 
 dev_dependencies:
