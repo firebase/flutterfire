@@ -172,25 +172,6 @@ final class UsageMetadata {
   final List<ModalityTokenCount>? candidatesTokensDetails;
 }
 
-/// Constructe a UsageMetadata with all it's fields.
-///
-/// Expose access to the private constructor for use within the package..
-UsageMetadata createUsageMetadata({
-  required int? promptTokenCount,
-  required int? candidatesTokenCount,
-  required int? totalTokenCount,
-  required int? thoughtsTokenCount,
-  required List<ModalityTokenCount>? promptTokensDetails,
-  required List<ModalityTokenCount>? candidatesTokensDetails,
-}) =>
-    UsageMetadata._(
-        promptTokenCount: promptTokenCount,
-        candidatesTokenCount: candidatesTokenCount,
-        totalTokenCount: totalTokenCount,
-        thoughtsTokenCount: thoughtsTokenCount,
-        promptTokensDetails: promptTokensDetails,
-        candidatesTokensDetails: candidatesTokensDetails);
-
 /// Response candidate generated from a [GenerativeModel].
 final class Candidate {
   // TODO: token count?
@@ -1292,7 +1273,7 @@ UsageMetadata parseUsageMetadata(Object jsonObject) {
       candidatesTokensDetails.map(_parseModalityTokenCount).toList(),
     _ => null,
   };
-  return createUsageMetadata(
+  return UsageMetadata._(
     promptTokenCount: promptTokenCount,
     candidatesTokenCount: candidatesTokenCount,
     totalTokenCount: totalTokenCount,

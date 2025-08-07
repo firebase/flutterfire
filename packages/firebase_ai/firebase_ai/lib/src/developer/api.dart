@@ -20,7 +20,6 @@ import '../api.dart'
         Candidate,
         Citation,
         CitationMetadata,
-        ContentModality,
         CountTokensResponse,
         FinishReason,
         GenerateContentResponse,
@@ -28,13 +27,10 @@ import '../api.dart'
         HarmBlockThreshold,
         HarmCategory,
         HarmProbability,
-        ModalityTokenCount,
         PromptFeedback,
         SafetyRating,
         SafetySetting,
         SerializationStrategy,
-        UsageMetadata,
-        createUsageMetadata,
         parseUsageMetadata;
 import '../content.dart'
     show Content, FunctionCall, InlineDataPart, Part, TextPart;
