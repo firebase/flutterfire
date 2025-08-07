@@ -147,6 +147,26 @@ void main() {
         expect(response.usageMetadata, isNull);
       });
 
+      test('parses usageMetadata when token details are missing', () {
+        final jsonResponse = {
+          'usageMetadata': {
+            'promptTokenCount': 10,
+            'candidatesTokenCount': 25,
+            'totalTokenCount': 35,
+          }
+        };
+
+        final response =
+            DeveloperSerialization().parseGenerateContentResponse(jsonResponse);
+
+        expect(response.usageMetadata, isNotNull);
+        expect(response.usageMetadata!.promptTokenCount, 10);
+        expect(response.usageMetadata!.candidatesTokenCount, 25);
+        expect(response.usageMetadata!.totalTokenCount, 35);
+        expect(response.usageMetadata!.promptTokensDetails, isNull);
+        expect(response.usageMetadata!.candidatesTokensDetails, isNull);
+      });
+
       test('parses inlineData part correctly', () {
         final inlineData = Uint8List.fromList([1, 2, 3, 4]);
         final jsonResponse = {
