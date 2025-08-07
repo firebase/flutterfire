@@ -34,7 +34,8 @@ import '../api.dart'
         SafetySetting,
         SerializationStrategy,
         UsageMetadata,
-        createUsageMetadata;
+        createUsageMetadata,
+        parseUsageMetadata;
 import '../content.dart'
     show Content, FunctionCall, InlineDataPart, Part, TextPart;
 import '../error.dart';
@@ -118,7 +119,7 @@ final class DeveloperSerialization implements SerializationStrategy {
     };
     final usageMedata = switch (jsonObject) {
       {'usageMetadata': final usageMetadata?} =>
-        _parseUsageMetadata(usageMetadata),
+        parseUsageMetadata(usageMetadata),
       _ => null,
     };
     return GenerateContentResponse(candidates, promptFeedback,
@@ -229,72 +230,6 @@ PromptFeedback _parsePromptFeedback(Object jsonObject) {
           },
           safetyRatings.map(_parseSafetyRating).toList()),
     _ => throw unhandledFormat('PromptFeedback', jsonObject),
-  };
-}
-
-UsageMetadata _parseUsageMetadata(Object jsonObject) {
-  if (jsonObject is! Map<String, Object?>) {
-    throw unhandledFormat('UsageMetadata', jsonObject);
-  }
-  final promptTokenCount = switch (jsonObject) {
-    {'promptTokenCount': final int promptTokenCount} => promptTokenCount,
-    _ => null,
-  };
-  final candidatesTokenCount = switch (jsonObject) {
-    {'candidatesTokenCount': final int candidatesTokenCount} =>
-      candidatesTokenCount,
-    _ => null,
-  };
-  final totalTokenCount = switch (jsonObject) {
-    {'totalTokenCount': final int totalTokenCount} => totalTokenCount,
-    _ => null,
-  };
-  final thoughtsTokenCount = switch (jsonObject) {
-    {'thoughtsTokenCount': final int thoughtsTokenCount} => thoughtsTokenCount,
-    _ => null,
-  };
-  final promptTokensDetails = switch (jsonObject) {
-    {'promptTokensDetails': final List<Object?> promptTokensDetails} =>
-      promptTokensDetails.map(_parseModalityTokenCount).toList(),
-    _ => null,
-  };
-  final candidatesTokensDetails = switch (jsonObject) {
-    {'candidatesTokensDetails': final List<Object?> candidatesTokensDetails} =>
-      candidatesTokensDetails.map(_parseModalityTokenCount).toList(),
-    _ => null,
-  };
-  return createUsageMetadata(
-    promptTokenCount: promptTokenCount,
-    candidatesTokenCount: candidatesTokenCount,
-    totalTokenCount: totalTokenCount,
-    thoughtsTokenCount: thoughtsTokenCount,
-    promptTokensDetails: promptTokensDetails,
-    candidatesTokensDetails: candidatesTokensDetails,
-  );
-}
-
-ModalityTokenCount _parseModalityTokenCount(Object? jsonObject) {
-  if (jsonObject is! Map) {
-    throw unhandledFormat('ModalityTokenCount', jsonObject);
-  }
-  final modality = _parseContentModality(jsonObject['modality']);
-
-  if (jsonObject.containsKey('tokenCount')) {
-    return ModalityTokenCount(modality, jsonObject['tokenCount'] as int);
-  } else {
-    return ModalityTokenCount(modality, 0);
-  }
-}
-
-ContentModality _parseContentModality(Object jsonObject) {
-  return switch (jsonObject) {
-    'MODALITY_UNSPECIFIED' => ContentModality.unspecified,
-    'TEXT' => ContentModality.text,
-    'IMAGE' => ContentModality.image,
-    'VIDEO' => ContentModality.video,
-    'AUDIO' => ContentModality.audio,
-    'DOCUMENT' => ContentModality.document,
-    _ => throw unhandledFormat('ContentModality', jsonObject),
   };
 }
 

@@ -1128,7 +1128,7 @@ final class VertexSerialization implements SerializationStrategy {
     };
     final usageMedata = switch (jsonObject) {
       {'usageMetadata': final usageMetadata?} =>
-        _parseUsageMetadata(usageMetadata),
+        parseUsageMetadata(usageMetadata),
       {'totalTokens': final int totalTokens} =>
         UsageMetadata._(totalTokenCount: totalTokens),
       _ => null,
@@ -1258,7 +1258,10 @@ PromptFeedback _parsePromptFeedback(Object jsonObject) {
   };
 }
 
-UsageMetadata _parseUsageMetadata(Object jsonObject) {
+/// Parses a UsageMetadata from a JSON object.
+///
+/// Expose access to the private helper for use within the package.
+UsageMetadata parseUsageMetadata(Object jsonObject) {
   if (jsonObject is! Map<String, Object?>) {
     throw unhandledFormat('UsageMetadata', jsonObject);
   }
