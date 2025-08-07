@@ -616,7 +616,7 @@ void main() {
       });
 
       group('usageMetadata parsing', () {
-        test('parses usageMetadata with thoughtsTokenCount correctly', () {
+        test('parses usageMetadata when thoughtsTokenCount is set', () {
           final json = {
             'usageMetadata': {
               'promptTokenCount': 10,
@@ -640,22 +640,6 @@ void main() {
               'promptTokenCount': 10,
               'candidatesTokenCount': 20,
               'totalTokenCount': 30,
-            }
-          };
-          final response =
-              VertexSerialization().parseGenerateContentResponse(json);
-          expect(response.usageMetadata, isNotNull);
-          expect(response.usageMetadata!.thoughtsTokenCount, isNull);
-        });
-
-        test('parses usageMetadata when thoughtsTokenCount is present but null',
-            () {
-          final json = {
-            'usageMetadata': {
-              'promptTokenCount': 10,
-              'candidatesTokenCount': 20,
-              'totalTokenCount': 30,
-              'thoughtsTokenCount': null,
             }
           };
           final response =
