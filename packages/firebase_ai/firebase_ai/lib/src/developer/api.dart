@@ -40,31 +40,6 @@ import '../content.dart'
 import '../error.dart';
 import '../tool.dart' show Tool, ToolConfig;
 
-ContentModality _parseContentModality(Object jsonObject) {
-  return switch (jsonObject) {
-    'MODALITY_UNSPECIFIED' => ContentModality.unspecified,
-    'TEXT' => ContentModality.text,
-    'IMAGE' => ContentModality.image,
-    'VIDEO' => ContentModality.video,
-    'AUDIO' => ContentModality.audio,
-    'DOCUMENT' => ContentModality.document,
-    _ => throw unhandledFormat('ContentModality', jsonObject),
-  };
-}
-
-ModalityTokenCount _parseModalityTokenCount(Object? jsonObject) {
-  if (jsonObject is! Map) {
-    throw unhandledFormat('ModalityTokenCount', jsonObject);
-  }
-  final modality = _parseContentModality(jsonObject['modality']);
-
-  if (jsonObject.containsKey('tokenCount')) {
-    return ModalityTokenCount(modality, jsonObject['tokenCount'] as int);
-  } else {
-    return ModalityTokenCount(modality, 0);
-  }
-}
-
 HarmProbability _parseHarmProbability(Object jsonObject) =>
     switch (jsonObject) {
       'UNSPECIFIED' => HarmProbability.unknown,
@@ -296,6 +271,31 @@ UsageMetadata _parseUsageMetadata(Object jsonObject) {
     promptTokensDetails: promptTokensDetails,
     candidatesTokensDetails: candidatesTokensDetails,
   );
+}
+
+ModalityTokenCount _parseModalityTokenCount(Object? jsonObject) {
+  if (jsonObject is! Map) {
+    throw unhandledFormat('ModalityTokenCount', jsonObject);
+  }
+  final modality = _parseContentModality(jsonObject['modality']);
+
+  if (jsonObject.containsKey('tokenCount')) {
+    return ModalityTokenCount(modality, jsonObject['tokenCount'] as int);
+  } else {
+    return ModalityTokenCount(modality, 0);
+  }
+}
+
+ContentModality _parseContentModality(Object jsonObject) {
+  return switch (jsonObject) {
+    'MODALITY_UNSPECIFIED' => ContentModality.unspecified,
+    'TEXT' => ContentModality.text,
+    'IMAGE' => ContentModality.image,
+    'VIDEO' => ContentModality.video,
+    'AUDIO' => ContentModality.audio,
+    'DOCUMENT' => ContentModality.document,
+    _ => throw unhandledFormat('ContentModality', jsonObject),
+  };
 }
 
 SafetyRating _parseSafetyRating(Object? jsonObject) {
