@@ -76,19 +76,41 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   @override
   Future<void> activate({
     WebProvider? webProvider,
+    @Deprecated(
+      'Use providerAndroid instead. '
+      'This parameter will be removed in a future major release.',
+    )
     AndroidProvider? androidProvider,
+    @Deprecated(
+      'Use providerApple instead. '
+      'This parameter will be removed in a future major release.',
+    )
     AppleProvider? appleProvider,
+    AndroidAppCheckProvider? providerAndroid,
+    AppleAppCheckProvider? providerApple,
   }) async {
     try {
       await channel.invokeMethod<void>('FirebaseAppCheck#activate', {
         'appName': app.name,
         // Allow value to pass for debug mode for unit testing
         if (defaultTargetPlatform == TargetPlatform.android || kDebugMode)
-          'androidProvider': getAndroidProviderString(androidProvider),
+          'androidProvider': getAndroidProviderString(
+            legacyProvider: androidProvider,
+            newProvider: providerAndroid,
+          ),
+        if (providerAndroid is AndroidDebugProvider &&
+            providerAndroid.debugToken != null)
+          'androidDebugToken': providerAndroid.debugToken,
         if (defaultTargetPlatform == TargetPlatform.iOS ||
             defaultTargetPlatform == TargetPlatform.macOS ||
             kDebugMode)
-          'appleProvider': getAppleProviderString(appleProvider),
+          'appleProvider': getAppleProviderString(
+            legacyProvider: appleProvider,
+            newProvider: providerApple,
+          ),
+        if (providerApple is AppleDebugProvider &&
+            providerApple.debugToken != null)
+          'appleDebugToken': providerApple.debugToken,
       });
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
