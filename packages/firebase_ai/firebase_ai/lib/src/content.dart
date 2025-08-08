@@ -48,8 +48,9 @@ final class Content {
   static Content model(Iterable<Part> parts) => Content('model', [...parts]);
 
   /// Return a [Content] with [FunctionResponse].
-  static Content functionResponse(String name, Map<String, Object?> response) =>
-      Content('function', [FunctionResponse(name, response)]);
+  static Content functionResponse(String name, Map<String, Object?> response,
+          {String? id}) =>
+      Content('function', [FunctionResponse(name, response, id: id)]);
 
   /// Return a [Content] with multiple [FunctionResponse].
   static Content functionResponses(Iterable<FunctionResponse> responses) =>

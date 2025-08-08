@@ -56,6 +56,7 @@ enum Task {
 
 abstract interface class _ModelUri {
   String get baseAuthority;
+  String get apiVersion;
   Uri taskUri(Task task);
   ({String prefix, String name}) get model;
 }
@@ -97,6 +98,9 @@ final class _VertexUri implements _ModelUri {
   String get baseAuthority => _baseAuthority;
 
   @override
+  String get apiVersion => _apiVersion;
+
+  @override
   Uri taskUri(Task task) {
     return _projectUri.replace(
         pathSegments: _projectUri.pathSegments
@@ -134,6 +138,9 @@ final class _GoogleAIUri implements _ModelUri {
 
   @override
   String get baseAuthority => _baseAuthority;
+
+  @override
+  String get apiVersion => _apiVersion;
 
   @override
   Uri taskUri(Task task) => _baseUri.replace(
