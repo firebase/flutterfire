@@ -22,11 +22,12 @@ import '../utils/audio_output.dart';
 import '../widgets/message_widget.dart';
 
 class BidiPage extends StatefulWidget {
-  const BidiPage(
-      {super.key,
-      required this.title,
-      required this.model,
-      required this.useVertexBackend});
+  const BidiPage({
+    super.key,
+    required this.title,
+    required this.model,
+    required this.useVertexBackend,
+  });
 
   final String title;
   final GenerativeModel model;

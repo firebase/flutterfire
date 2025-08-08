@@ -114,11 +114,8 @@ final class LiveGenerativeModel extends BaseModel {
         : IOWebSocketChannel.connect(Uri.parse(uri), headers: headers);
     await ws.ready;
 
-    print('websocket connect with uri $uri');
-
     ws.sink.add(request);
 
-    print('setup request sent: $setupJson');
     return LiveSession(ws);
   }
 }
