@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:convert';
+
 import '../api.dart'
     show
         BlockReason,
@@ -31,7 +33,8 @@ import '../api.dart'
         SerializationStrategy,
         UsageMetadata,
         createUsageMetadata;
-import '../content.dart' show Content, FunctionCall, Part, TextPart;
+import '../content.dart'
+    show Content, FunctionCall, InlineDataPart, Part, TextPart;
 import '../error.dart';
 import '../tool.dart' show Tool, ToolConfig;
 
@@ -322,8 +325,8 @@ Part _parsePart(Object? jsonObject) {
       'functionResponse': {'name': String _, 'response': Map<String, Object?> _}
     } =>
       throw UnimplementedError('FunctionResponse part not yet supported'),
-    {'inlineData': {'mimeType': String _, 'data': String _}} =>
-      throw UnimplementedError('inlineData content part not yet supported'),
+    {'inlineData': {'mimeType': String mimeType, 'data': String bytes}} =>
+      InlineDataPart(mimeType, base64Decode(bytes)),
     _ => throw unhandledFormat('Part', jsonObject),
   };
 }

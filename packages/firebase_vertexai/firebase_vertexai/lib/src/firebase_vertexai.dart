@@ -176,6 +176,7 @@ class FirebaseVertexAI extends FirebasePluginPlatform {
       app: app,
       location: location,
       model: model,
+      useVertexBackend: _useVertexBackend,
       liveGenerationConfig: liveGenerationConfig,
       tools: tools,
       systemInstruction: systemInstruction,

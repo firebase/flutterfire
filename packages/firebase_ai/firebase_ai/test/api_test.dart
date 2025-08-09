@@ -615,6 +615,40 @@ void main() {
         expect(response.usageMetadata!.candidatesTokensDetails, hasLength(1));
       });
 
+      group('usageMetadata parsing', () {
+        test('parses usageMetadata when thoughtsTokenCount is set', () {
+          final json = {
+            'usageMetadata': {
+              'promptTokenCount': 10,
+              'candidatesTokenCount': 20,
+              'totalTokenCount': 30,
+              'thoughtsTokenCount': 5,
+            }
+          };
+          final response =
+              VertexSerialization().parseGenerateContentResponse(json);
+          expect(response.usageMetadata, isNotNull);
+          expect(response.usageMetadata!.promptTokenCount, 10);
+          expect(response.usageMetadata!.candidatesTokenCount, 20);
+          expect(response.usageMetadata!.totalTokenCount, 30);
+          expect(response.usageMetadata!.thoughtsTokenCount, 5);
+        });
+
+        test('parses usageMetadata when thoughtsTokenCount is missing', () {
+          final json = {
+            'usageMetadata': {
+              'promptTokenCount': 10,
+              'candidatesTokenCount': 20,
+              'totalTokenCount': 30,
+            }
+          };
+          final response =
+              VertexSerialization().parseGenerateContentResponse(json);
+          expect(response.usageMetadata, isNotNull);
+          expect(response.usageMetadata!.thoughtsTokenCount, isNull);
+        });
+      });
+
       group('groundingMetadata parsing', () {
         test('parses valid response with full grounding metadata', () {
           final jsonResponse = {
