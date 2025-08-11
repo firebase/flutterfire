@@ -85,7 +85,7 @@ jobs:
           export CCACHE_DEPEND=true
           export CCACHE_INODECACHE=true
           ccache -s
-          flutter build macos --debug --target=./integration_test/e2e_test.dart --device-id=macos --dart-define=CI=true
+          flutter build macos --debug --target=./integration_test/e2e_test.dart --device-id=macos --ignore-timeouts --dart-define=CI=true
           ccache -s
       - name: Start Firebase Emulator
         # Chown the npm cache directory to the runner user to avoid permission issues
