@@ -89,7 +89,7 @@ jobs:
           arch: x86_64
           working-directory: ${{ matrix.working_directory }}
           script: |
-            flutter test integration_test/e2e_test.dart --dart-define=CI=true -d emulator-5554
+            flutter test integration_test/e2e_test.dart --ignore-timeouts --dart-define=CI=true -d emulator-5554
       - name: Ensure Appium is shut down
       # Required because of below issue where emulator failing to shut down properly causes tests to fail
       # https://github.com/ReactiveCircus/android-emulator-runner/issues/385

@@ -1275,6 +1275,10 @@ UsageMetadata _parseUsageMetadata(Object jsonObject) {
     {'totalTokenCount': final int totalTokenCount} => totalTokenCount,
     _ => null,
   };
+  final thoughtsTokenCount = switch (jsonObject) {
+    {'thoughtsTokenCount': final int thoughtsTokenCount} => thoughtsTokenCount,
+    _ => null,
+  };
   final promptTokensDetails = switch (jsonObject) {
     {'promptTokensDetails': final List<Object?> promptTokensDetails} =>
       promptTokensDetails.map(_parseModalityTokenCount).toList(),
@@ -1285,12 +1289,14 @@ UsageMetadata _parseUsageMetadata(Object jsonObject) {
       candidatesTokensDetails.map(_parseModalityTokenCount).toList(),
     _ => null,
   };
-  return UsageMetadata._(
-      promptTokenCount: promptTokenCount,
-      candidatesTokenCount: candidatesTokenCount,
-      totalTokenCount: totalTokenCount,
-      promptTokensDetails: promptTokensDetails,
-      candidatesTokensDetails: candidatesTokensDetails);
+  return createUsageMetadata(
+    promptTokenCount: promptTokenCount,
+    candidatesTokenCount: candidatesTokenCount,
+    totalTokenCount: totalTokenCount,
+    thoughtsTokenCount: thoughtsTokenCount,
+    promptTokensDetails: promptTokensDetails,
+    candidatesTokensDetails: candidatesTokensDetails,
+  );
 }
 
 ModalityTokenCount _parseModalityTokenCount(Object? jsonObject) {

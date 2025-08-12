@@ -11,6 +11,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:firebase_ai/src/content.dart';
 import 'package:firebase_ai/src/developer/api.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -120,6 +124,34 @@ void main() {
         final response =
             DeveloperSerialization().parseGenerateContentResponse(jsonResponse);
         expect(response.usageMetadata, isNull);
+      });
+
+      test('parses inlineData part correctly', () {
+        final inlineData = Uint8List.fromList([1, 2, 3, 4]);
+        final jsonResponse = {
+          'candidates': [
+            {
+              'content': {
+                'role': 'model',
+                'parts': [
+                  {
+                    'inlineData': {
+                      'mimeType': 'application/octet-stream',
+                      'data': base64Encode(inlineData),
+                    }
+                  }
+                ]
+              },
+              'finishReason': 'STOP',
+            }
+          ],
+        };
+        final response =
+            DeveloperSerialization().parseGenerateContentResponse(jsonResponse);
+        final part = response.candidates.first.content.parts.first;
+        expect(part, isA<InlineDataPart>());
+        expect((part as InlineDataPart).mimeType, 'application/octet-stream');
+        expect(part.bytes, inlineData);
       });
     });
   });

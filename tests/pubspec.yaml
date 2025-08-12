@@ -22,9 +22,9 @@ dependencies:
   firebase_app_installations: ^0.4.0
   firebase_app_installations_platform_interface: ^0.1.4+59
   firebase_app_installations_web: ^0.1.6+17
-  firebase_auth: ^6.0.0
-  firebase_auth_platform_interface: ^8.0.0
-  firebase_auth_web: ^6.0.0
+  firebase_auth: ^6.0.1
+  firebase_auth_platform_interface: ^8.1.0
+  firebase_auth_web: ^6.0.1
   firebase_core: ^4.0.0
   firebase_core_platform_interface: ^6.0.0
   firebase_core_web: ^3.0.0
