@@ -267,6 +267,8 @@ Newly opened PRs first go through initial triage which results in one of:
 - **Starting a non trivial review** - if the review requires non trivial effort and the issue is a priority; in this case the maintainer will:
   - Add the "in review" label to the issue.
   - Self assign the PR.
+- **API Changes**
+  - If a change or improvement will affect public API, the team will take longer in the review process.
 
 ### The release process
 
