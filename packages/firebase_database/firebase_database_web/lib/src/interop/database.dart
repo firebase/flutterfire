@@ -126,7 +126,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   ///
   /// This method returns [ThenableReference], [DatabaseReference]
   /// with a [Future] property.
-  ThenableReference push([value]) => ThenableReference.fromJsObject(
+  ThenableReference push([Object? value]) => ThenableReference.fromJsObject(
       database_interop.push(jsObject, value?.jsify()));
 
   /// Removes data from actual database location.
@@ -149,8 +149,8 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   /// Sets a priority for data at actual database location.
   ///
   /// The [priority] must be a [String], [num] or `null`, or the error is thrown.
-  Future setPriority(priority) =>
-      database_interop.setPriority(jsObject, priority).toDart;
+  Future setPriority(Object? priority) =>
+      database_interop.setPriority(jsObject, priority?.jsify()).toDart;
 
   /// Sets data [newVal] at actual database location with provided priority
   /// [newPriority].
@@ -681,7 +681,7 @@ class ThenableReference
         DatabaseReference.getInstance(reference);
       }).toJS)
       .toDart
-      .then((value) => value as DatabaseReference);
+      .then((value) => value! as DatabaseReference);
 
   /// Creates a new ThenableReference from a [jsObject].
   ThenableReference.fromJsObject(
