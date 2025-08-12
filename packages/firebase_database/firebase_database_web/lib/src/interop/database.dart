@@ -676,12 +676,11 @@ class OnDisconnect
 /// See: <https://firebase.google.com/docs/reference/js/firebase.database.ThenableReference>.
 class ThenableReference
     extends DatabaseReference<database_interop.ThenableReferenceJsImpl> {
-  late final Future<DatabaseReference> _future = jsObject
-      .then(((database_interop.ReferenceJsImpl reference) {
-        DatabaseReference.getInstance(reference);
-      }).toJS)
+  late final Future<DatabaseReference> _future = (jsObject as JSPromise)
       .toDart
-      .then((value) => value! as DatabaseReference);
+      .then((value) => DatabaseReference.getInstance(
+            value as database_interop.ReferenceJsImpl,
+          ));
 
   /// Creates a new ThenableReference from a [jsObject].
   ThenableReference.fromJsObject(

@@ -230,7 +230,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   onChanged: widget.onBackendChanged,
                   activeTrackColor: Colors.green.withValues(alpha: 0.5),
                   inactiveTrackColor: Colors.blueGrey.withValues(alpha: 0.5),
-                  activeThumbColor: Colors.green,
+                  // Ignore until activeThumbColor is availble on stable channel.
+                  // ignore: deprecated_member_use
+                  activeColor: Colors.green,
                   inactiveThumbColor: Colors.blueGrey,
                 ),
                 Text(
