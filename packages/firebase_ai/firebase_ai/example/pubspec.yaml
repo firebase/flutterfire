@@ -27,6 +27,7 @@ dependencies:
     sdk: flutter
   flutter_markdown: ^0.6.20
   flutter_soloud: ^3.1.6
+  image: ^4.5.4
   image_picker: ^1.1.2
   path_provider: ^2.1.5
   record: ^5.2.1

@@ -20,9 +20,7 @@ import 'package:firebase_ai/firebase_ai.dart';
 import 'package:flutter/material.dart';
 //import 'package:firebase_storage/firebase_storage.dart';
 import '../widgets/message_widget.dart';
-
-// Define a constant for the history limit
-const int _MAX_HISTORY = 4;
+import '../utils/image_utils.dart';
 
 class ImagenPage extends StatefulWidget {
   const ImagenPage({
@@ -143,7 +141,7 @@ class _ImagenPageState extends State<ImagenPage> {
                       ),
                       IconButton(
                         onPressed: () async {
-                          await _outpaintImageHappyPath();
+                          await _outpaintImage();
                         },
                         icon: Icon(
                           Icons.masks,
@@ -268,16 +266,12 @@ class _ImagenPageState extends State<ImagenPage> {
       if (resultMessage != null) {
         _generatedContent.add(resultMessage);
       }
-      // Apply history limit here
-      while (_generatedContent.length > _MAX_HISTORY) {
-        _generatedContent.removeAt(0);
-      }
       _loading = false;
       _scrollDown();
     });
   }
 
-  Future<void> _outpaintImageHappyPath() async {
+  Future<void> _outpaintImage() async {
     if (_sourceImage == null) {
       _showError('Please pick a source image for outpainting.');
       return;
@@ -294,9 +288,15 @@ class _ImagenPageState extends State<ImagenPage> {
 
     MessageData? resultMessage;
     try {
-      final response = await widget.model.outpaintImage(
-        _sourceImage!,
-        ImagenDimensions(width: 1400, height: 1400),
+      print('Start outpaint');
+      final referenceImages = await generateMaskAndPadForOutpainting(
+        image: _sourceImage!,
+        newDimensions: ImagenDimensions(width: 1400, height: 1400),
+      );
+      final response = await widget.model.editImage(
+        referenceImages,
+        '',
+        config: ImagenEditingConfig(editMode: ImagenEditMode.outpaint),
       );
       if (response.images.isNotEmpty) {
         final editedImage = response.images[0];
@@ -305,6 +305,7 @@ class _ImagenPageState extends State<ImagenPage> {
           text: 'Edited image Outpaint 1400*1400',
           fromUser: false,
         );
+        print('Outpaint done');
       } else {
         _showError('No image was returned from editing.');
       }
@@ -316,10 +317,6 @@ class _ImagenPageState extends State<ImagenPage> {
       _generatedContent.add(promptMessage);
       if (resultMessage != null) {
         _generatedContent.add(resultMessage);
-      }
-      // Apply history limit here
-      while (_generatedContent.length > _MAX_HISTORY) {
-        _generatedContent.removeAt(0);
       }
       _loading = false;
       _scrollDown();
@@ -373,10 +370,7 @@ class _ImagenPageState extends State<ImagenPage> {
       if (resultMessage != null) {
         _generatedContent.add(resultMessage);
       }
-      // Apply history limit here
-      while (_generatedContent.length > _MAX_HISTORY) {
-        _generatedContent.removeAt(0);
-      }
+
       _loading = false;
       _scrollDown();
     });
@@ -410,10 +404,7 @@ class _ImagenPageState extends State<ImagenPage> {
       if (resultMessage != null) {
         _generatedContent.add(resultMessage);
       }
-      // Apply history limit here
-      while (_generatedContent.length > _MAX_HISTORY) {
-        _generatedContent.removeAt(0);
-      }
+
       _loading = false;
       _scrollDown();
     });

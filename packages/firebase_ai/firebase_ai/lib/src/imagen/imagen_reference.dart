@@ -11,9 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import 'dart:ui' as ui;
-
-import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 import 'imagen_content.dart';
@@ -87,111 +84,6 @@ sealed class ImagenMaskReference extends ImagenReferenceImage {
           referenceType: _ReferenceType.MASK,
           referenceConfig: maskConfig,
         );
-
-  /// Generates a mask and pads the image for outpainting.
-  static Future<List<ImagenReferenceImage>> generateMaskAndPadForOutpainting({
-    required ImagenInlineImage image,
-    required ImagenDimensions newDimensions,
-    ImagenImagePlacement newPosition = ImagenImagePlacement.center,
-  }) async {
-    final originalImage = await image.asUiImage();
-
-    try {
-      // Validate that the new dimensions are strictly larger.
-      if (originalImage.width >= newDimensions.width ||
-          originalImage.height >= newDimensions.height) {
-        throw ArgumentError(
-          'New Dimensions must be strictly larger than original image dimensions. '
-          'Original image is: ${originalImage.width}x${originalImage.height}, '
-          'new dimensions are ${newDimensions.width}x${newDimensions.height}',
-        );
-      }
-
-      // Calculate the position of the original image on the new canvas.
-      final originalDimensions = ImagenDimensions(
-          width: originalImage.width, height: originalImage.height);
-      final normalizedPosition =
-          newPosition.normalizeToDimensions(originalDimensions, newDimensions);
-
-      final x = normalizedPosition.x?.toDouble();
-      final y = normalizedPosition.y?.toDouble();
-
-      if (x == null || y == null) {
-        throw StateError('Error normalizing position for mask and padding.');
-      }
-
-      final sourceRect = ui.Rect.fromLTWH(0, 0, originalImage.width.toDouble(),
-          originalImage.height.toDouble());
-      final destRect = ui.Rect.fromLTWH(x, y, originalImage.width.toDouble(),
-          originalImage.height.toDouble());
-
-      final whitePaint = Paint()..color = Colors.white;
-      final blackPaint = Paint()..color = Colors.black;
-
-      final maskImage = await _createImageFromPainter(
-        width: newDimensions.width,
-        height: newDimensions.height,
-        painter: (canvas, size) {
-          canvas.drawPaint(whitePaint);
-          canvas.drawRect(destRect, blackPaint);
-        },
-      );
-      final maskBytes =
-          await maskImage.toByteData(format: ui.ImageByteFormat.png);
-      maskImage.dispose(); // Dispose right away
-
-      // 2. Create, encode, and immediately dispose of the padded image
-      final paddedImage = await _createImageFromPainter(
-        width: newDimensions.width,
-        height: newDimensions.height,
-        painter: (canvas, size) {
-          canvas.drawPaint(blackPaint);
-          canvas.drawImageRect(originalImage, sourceRect, destRect, Paint());
-        },
-      );
-      final paddedBytes =
-          await paddedImage.toByteData(format: ui.ImageByteFormat.png);
-      paddedImage.dispose(); // Dispose right away
-
-      if (paddedBytes == null || maskBytes == null) {
-        throw StateError('Failed to encode generated images.');
-      }
-
-      // 5. Return a cleaner, more readable list
-      return [
-        ImagenRawImage(
-          image: ImagenInlineImage(
-            bytesBase64Encoded: paddedBytes.buffer.asUint8List(),
-            mimeType: image.mimeType,
-          ),
-        ),
-        ImagenRawMask(
-          mask: ImagenInlineImage(
-            bytesBase64Encoded: maskBytes.buffer.asUint8List(),
-            mimeType: image.mimeType,
-          ),
-        ),
-      ];
-    } finally {
-      originalImage.dispose();
-    }
-  }
-
-  /// Helper function to create a ui.Image by drawing on a Canvas.
-  static Future<ui.Image> _createImageFromPainter({
-    required int width,
-    required int height,
-    required void Function(ui.Canvas canvas, ui.Size size) painter,
-  }) {
-    final recorder = ui.PictureRecorder();
-    final canvas = ui.Canvas(recorder);
-    final size = ui.Size(width.toDouble(), height.toDouble());
-
-    painter(canvas, size);
-
-    final picture = recorder.endRecording();
-    return picture.toImage(width, height);
-  }
 }
 
 /// A raw image.

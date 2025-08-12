@@ -146,28 +146,28 @@ final class ImagenModel extends BaseApiClientModel {
         config: config,
       );
 
-  /// Outpaints an image based on a prompt and new dimensions.
-  @experimental
-  Future<ImagenGenerationResponse<ImagenInlineImage>> outpaintImage(
-    ImagenInlineImage image,
-    ImagenDimensions newDimensions, {
-    ImagenImagePlacement newPosition = ImagenImagePlacement.center,
-    String prompt = '',
-    ImagenEditingConfig? config,
-  }) async {
-    final referenceImages =
-        await ImagenMaskReference.generateMaskAndPadForOutpainting(
-      image: image,
-      newDimensions: newDimensions,
-      newPosition: newPosition,
-    );
-    return editImage(
-      referenceImages,
-      prompt,
-      config: ImagenEditingConfig(
-          editMode: ImagenEditMode.outpaint, editSteps: config?.editSteps),
-    );
-  }
+  // /// Outpaints an image based on a prompt and new dimensions.
+  // @experimental
+  // Future<ImagenGenerationResponse<ImagenInlineImage>> outpaintImage(
+  //   ImagenInlineImage image,
+  //   ImagenDimensions newDimensions, {
+  //   ImagenImagePlacement newPosition = ImagenImagePlacement.center,
+  //   String prompt = '',
+  //   ImagenEditingConfig? config,
+  // }) async {
+  //   final referenceImages =
+  //       await ImagenMaskReference.generateMaskAndPadForOutpainting(
+  //     image: image,
+  //     newDimensions: newDimensions,
+  //     newPosition: newPosition,
+  //   );
+  //   return editImage(
+  //     referenceImages,
+  //     prompt,
+  //     config: ImagenEditingConfig(
+  //         editMode: ImagenEditMode.outpaint, editSteps: config?.editSteps),
+  //   );
+  // }
 
   Map<String, Object?> _generateImagenEditRequest(
     List<ImagenReferenceImage> images,
