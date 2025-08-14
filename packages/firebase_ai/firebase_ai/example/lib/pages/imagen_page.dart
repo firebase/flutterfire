@@ -131,6 +131,16 @@ class _ImagenPageState extends State<ImagenPage> {
                       ),
                       IconButton(
                         onPressed: () async {
+                          await _editWithMask();
+                        },
+                        icon: Icon(
+                          Icons.brush,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        tooltip: 'Edit with Mask',
+                      ),
+                      IconButton(
+                        onPressed: () async {
                           await _editWithStyle();
                         },
                         icon: Icon(
@@ -197,6 +207,7 @@ class _ImagenPageState extends State<ImagenPage> {
         final Uint8List imageBytes = await imageFile.readAsBytes();
         return ImagenInlineImage(
             bytesBase64Encoded: imageBytes, mimeType: mimeType);
+        ;
       }
     } catch (e) {
       _showError('Error picking image: $e');
@@ -259,6 +270,63 @@ class _ImagenPageState extends State<ImagenPage> {
       }
     } catch (e) {
       _showError('Error inpaint image: $e');
+    }
+
+    setState(() {
+      _generatedContent.add(promptMessage);
+      if (resultMessage != null) {
+        _generatedContent.add(resultMessage);
+      }
+      _loading = false;
+      _scrollDown();
+    });
+  }
+
+  Future<void> _editWithMask() async {
+    if (_sourceImage == null) {
+      _showError('Please pick a source image for editing.');
+      return;
+    }
+    if (_maskImageForEditing == null) {
+      _showError('Please pick a mask image for editing.');
+      return;
+    }
+
+    setState(() {
+      _loading = true;
+    });
+
+    final String prompt = _textController.text;
+    // Create a message to show what we are doing
+    final promptMessage = MessageData(
+      imageBytes: _sourceImage!.bytesBase64Encoded,
+      text: 'Editing image with mask and prompt: $prompt',
+      fromUser: true,
+    );
+
+    MessageData? resultMessage;
+
+    try {
+      final response = await widget.model.editImage(
+        [
+          ImagenRawImage(image: _sourceImage!),
+          ImagenRawMask(mask: _maskImageForEditing!),
+        ],
+        prompt,
+      );
+
+      if (response.images.isNotEmpty) {
+        final editedImage = response.images[0];
+        resultMessage = MessageData(
+          imageBytes: editedImage.bytesBase64Encoded,
+          text: 'Edited image result with prompt: $prompt',
+          fromUser: false,
+        );
+      } else {
+        _showError('No image was returned from editing with mask.');
+      }
+    } catch (e) {
+      _showError('Error editing image with mask: $e');
     }
 
     setState(() {

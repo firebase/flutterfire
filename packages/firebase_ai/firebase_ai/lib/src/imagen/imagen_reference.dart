@@ -17,14 +17,11 @@ import 'imagen_content.dart';
 import 'imagen_edit.dart';
 
 enum _ReferenceType {
-  UNSPECIFIED('REFERENCE_TYPE_UNSPECIFIED'),
-  RAW('REFERENCE_TYPE_RAW'),
-  MASK('REFERENCE_TYPE_MASK'),
-  CONTROL('REFERENCE_TYPE_CONTROL'),
-  STYLE('REFERENCE_TYPE_STYLE'),
-  SUBJECT('REFERENCE_TYPE_SUBJECT'),
-  MASKED_SUBJECT('REFERENCE_TYPE_MASKED_SUBJECT'),
-  PRODUCT('REFERENCE_TYPE_PRODUCT');
+  raw('REFERENCE_TYPE_RAW'),
+  mask('REFERENCE_TYPE_MASK'),
+  control('REFERENCE_TYPE_CONTROL'),
+  style('REFERENCE_TYPE_STYLE'),
+  subject('REFERENCE_TYPE_SUBJECT');
 
   const _ReferenceType(this._jsonString);
   final String _jsonString;
@@ -82,7 +79,7 @@ sealed class ImagenMaskReference extends ImagenReferenceImage {
     super.image,
     super.referenceId,
   }) : super._(
-          referenceType: _ReferenceType.MASK,
+          referenceType: _ReferenceType.mask,
           referenceConfig: maskConfig,
         );
 }
@@ -94,7 +91,7 @@ final class ImagenRawImage extends ImagenReferenceImage {
   ImagenRawImage({
     required ImagenInlineImage image,
     super.referenceId,
-  }) : super._(image: image, referenceType: _ReferenceType.RAW);
+  }) : super._(image: image, referenceType: _ReferenceType.raw);
 }
 
 /// A raw mask.
@@ -176,7 +173,7 @@ final class ImagenSubjectReference extends ImagenReferenceImage {
             description: description,
             type: subjectType,
           ),
-          referenceType: _ReferenceType.SUBJECT,
+          referenceType: _ReferenceType.subject,
         );
 }
 
@@ -193,7 +190,7 @@ final class ImagenStyleReference extends ImagenReferenceImage {
           referenceConfig: ImagenStyleConfig(
             description: description,
           ),
-          referenceType: _ReferenceType.STYLE,
+          referenceType: _ReferenceType.style,
         );
 }
 
@@ -216,6 +213,6 @@ final class ImagenControlReference extends ImagenReferenceImage {
             superpixelRegionSize: superpixelRegionSize,
             superpixelRuler: superpixelRuler,
           ),
-          referenceType: _ReferenceType.CONTROL,
+          referenceType: _ReferenceType.control,
         );
 }
