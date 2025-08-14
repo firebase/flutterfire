@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import '../widgets/message_widget.dart';
@@ -107,12 +109,32 @@ class _JsonSchemaPageState extends State<JsonSchemaPage> {
       ];
 
       final jsonSchema = {
+        r'$defs': {
+          'person_leaf': {
+            'type': 'object',
+            'properties': {
+              'name': {'type': 'string'},
+            },
+            'required': ['name'],
+          },
+          'person_middle': {
+            'type': 'object',
+            'properties': {
+              'name': {'type': 'string'},
+              'children': {
+                'type': 'array',
+                'items': {r'$ref': r'#/$defs/person_leaf'},
+              },
+            },
+            'required': ['name'],
+          },
+        },
         'type': 'object',
         'properties': {
           'name': {'type': 'string'},
           'children': {
             'type': 'array',
-            'items': {r'$ref': '#'},
+            'items': {r'$ref': r'#/$defs/person_middle'},
           },
         },
         'required': ['name'],
@@ -126,18 +148,14 @@ class _JsonSchemaPageState extends State<JsonSchemaPage> {
         ),
       );
 
-      var text = response.text;
-      _messages.add(MessageData(text: text, fromUser: false));
+      var text = const JsonEncoder.withIndent('  ')
+          .convert(json.decode(response.text ?? '') as Object?);
+      _messages.add(MessageData(text: '```json\n$text\n```', fromUser: false));
 
-      if (text == null) {
-        _showError('No response from API.');
-        return;
-      } else {
-        setState(() {
-          _loading = false;
-          _scrollDown();
-        });
-      }
+      setState(() {
+        _loading = false;
+        _scrollDown();
+      });
     } catch (e) {
       _showError(e.toString());
       setState(() {
