@@ -263,6 +263,7 @@ scripts:
     # "check-license-header".
     run: |
       addlicense -f header_template.txt \
+        --ignore "**/*.gradle" \
         --ignore "**/*.yml" \
         --ignore "**/*.yaml" \
         --ignore "**/*.xml" \
@@ -303,6 +304,7 @@ scripts:
     run: |
       addlicense -f header_template.txt \
         --check \
+        --ignore "**/*.gradle" \
         --ignore "**/*.yml" \
         --ignore "**/*.yaml" \
         --ignore "**/*.xml" \
