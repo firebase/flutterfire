@@ -166,7 +166,7 @@ final class ImagenSubjectReference extends ImagenReferenceImage {
     required ImagenInlineImage image,
     String? description,
     ImagenSubjectReferenceType? subjectType,
-    super.referenceId,
+    required super.referenceId,
   }) : super._(
           image: image,
           referenceConfig: ImagenSubjectConfig(
@@ -184,7 +184,7 @@ final class ImagenStyleReference extends ImagenReferenceImage {
   ImagenStyleReference({
     required ImagenInlineImage image,
     String? description,
-    super.referenceId,
+    required super.referenceId,
   }) : super._(
           image: image,
           referenceConfig: ImagenStyleConfig(

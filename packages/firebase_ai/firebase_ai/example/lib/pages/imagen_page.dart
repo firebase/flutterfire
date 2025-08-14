@@ -412,6 +412,7 @@ class _ImagenPageState extends State<ImagenPage> {
           ImagenStyleReference(
             image: _sourceImage!,
             description: 'van goh style',
+            referenceId: 1,
           ),
         ],
         prompt,
