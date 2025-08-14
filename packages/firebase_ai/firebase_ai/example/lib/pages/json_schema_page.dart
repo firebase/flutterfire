@@ -104,40 +104,46 @@ class _JsonSchemaPageState extends State<JsonSchemaPage> {
     try {
       final content = [
         Content.text(
-          'Generate a family tree with 3 generations.',
+          'Generate a widget hierarchy with a column containing two text widgets ',
         ),
       ];
 
       final jsonSchema = {
         r'$defs': {
-          'person_leaf': {
+          'text_widget': {
+            r'$anchor': 'text_widget',
             'type': 'object',
             'properties': {
-              'name': {'type': 'string'},
+              'type': {'const': 'Text'},
+              'text': {'type': 'string'},
             },
-            'required': ['name'],
-          },
-          'person_middle': {
-            'type': 'object',
-            'properties': {
-              'name': {'type': 'string'},
-              'children': {
-                'type': 'array',
-                'items': {r'$ref': r'#/$defs/person_leaf'},
-              },
-            },
-            'required': ['name'],
+            'required': ['type', 'text'],
           },
         },
         'type': 'object',
         'properties': {
-          'name': {'type': 'string'},
+          'type': {'const': 'Column'},
           'children': {
             'type': 'array',
-            'items': {r'$ref': r'#/$defs/person_middle'},
+            'items': {
+              'anyOf': [
+                {r'$ref': '#text_widget'},
+                {
+                  'type': 'object',
+                  'properties': {
+                    'type': {'const': 'Row'},
+                    'children': {
+                      'type': 'array',
+                      'items': {r'$ref': '#text_widget'},
+                    },
+                  },
+                  'required': ['type', 'children'],
+                }
+              ],
+            },
           },
         },
-        'required': ['name'],
+        'required': ['type', 'children'],
       };
 
       final response = await widget.model.generateContent(
@@ -150,7 +156,7 @@ class _JsonSchemaPageState extends State<JsonSchemaPage> {
 
       var text = const JsonEncoder.withIndent('  ')
           .convert(json.decode(response.text ?? '') as Object?);
-      _messages.add(MessageData(text: '```json\n$text\n```', fromUser: false));
+      _messages.add(MessageData(text: '```json$text```', fromUser: false));
 
       setState(() {
         _loading = false;
