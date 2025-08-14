@@ -53,7 +53,8 @@ Future<_IsolateResult> _generateMaskAndPadInIsolate(
   if (originalImage.width >= params.newDimensions.width ||
       originalImage.height >= params.newDimensions.height) {
     throw ArgumentError(
-        'New Dimensions must be strictly larger than original image dimensions.');
+      'New Dimensions must be strictly larger than original image dimensions.',
+    );
   }
   // 2. Calculate the position
   final originalDimensions = ImagenDimensions(
