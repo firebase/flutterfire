@@ -80,7 +80,7 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
       imageFormat: ImagenFormat.jpeg(compressionQuality: 75),
     );
     return instance.imagenModel(
-      model: 'imagen-3.0-generate-002',
+      model: 'imagen-3.0-capability-001',
       generationConfig: generationConfig,
       safetySettings: ImagenSafetySettings(
         ImagenSafetyFilterLevel.blockLowAndAbove,
@@ -230,7 +230,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onChanged: widget.onBackendChanged,
                   activeTrackColor: Colors.green.withValues(alpha: 0.5),
                   inactiveTrackColor: Colors.blueGrey.withValues(alpha: 0.5),
-                  activeColor: Colors.green,
+                  activeThumbColor: Colors.green,
                   inactiveThumbColor: Colors.blueGrey,
                 ),
                 Text(
