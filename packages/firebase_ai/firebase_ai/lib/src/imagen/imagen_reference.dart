@@ -76,6 +76,7 @@ sealed class ImagenReferenceImage {
 /// A reference image that is a mask.
 @experimental
 sealed class ImagenMaskReference extends ImagenReferenceImage {
+  // ignore: public_member_api_docs
   ImagenMaskReference({
     ImagenMaskConfig? maskConfig,
     super.image,
@@ -89,6 +90,7 @@ sealed class ImagenMaskReference extends ImagenReferenceImage {
 /// A raw image.
 @experimental
 final class ImagenRawImage extends ImagenReferenceImage {
+  // ignore: public_member_api_docs
   ImagenRawImage({
     required ImagenInlineImage image,
     super.referenceId,
@@ -98,6 +100,7 @@ final class ImagenRawImage extends ImagenReferenceImage {
 /// A raw mask.
 @experimental
 final class ImagenRawMask extends ImagenMaskReference {
+  // ignore: public_member_api_docs
   ImagenRawMask({
     required ImagenInlineImage mask,
     double? dilation,
@@ -114,6 +117,7 @@ final class ImagenRawMask extends ImagenMaskReference {
 /// A semantic mask.
 @experimental
 final class ImagenSemanticMask extends ImagenMaskReference {
+  // ignore: public_member_api_docs
   ImagenSemanticMask({
     required List<int> classes,
     double? dilation,
@@ -130,6 +134,7 @@ final class ImagenSemanticMask extends ImagenMaskReference {
 /// A background mask.
 @experimental
 final class ImagenBackgroundMask extends ImagenMaskReference {
+  // ignore: public_member_api_docs
   ImagenBackgroundMask({
     double? dilation,
     super.referenceId,
@@ -144,6 +149,7 @@ final class ImagenBackgroundMask extends ImagenMaskReference {
 /// A foreground mask.
 @experimental
 final class ImagenForegroundMask extends ImagenMaskReference {
+  // ignore: public_member_api_docs
   ImagenForegroundMask({
     double? dilation,
     super.referenceId,
@@ -158,6 +164,7 @@ final class ImagenForegroundMask extends ImagenMaskReference {
 /// A subject reference.
 @experimental
 final class ImagenSubjectReference extends ImagenReferenceImage {
+  // ignore: public_member_api_docs
   ImagenSubjectReference({
     required ImagenInlineImage image,
     String? description,
@@ -176,6 +183,7 @@ final class ImagenSubjectReference extends ImagenReferenceImage {
 /// A style reference.
 @experimental
 final class ImagenStyleReference extends ImagenReferenceImage {
+  // ignore: public_member_api_docs
   ImagenStyleReference({
     required ImagenInlineImage image,
     String? description,
@@ -192,6 +200,7 @@ final class ImagenStyleReference extends ImagenReferenceImage {
 /// A control reference.
 @experimental
 final class ImagenControlReference extends ImagenReferenceImage {
+  // ignore: public_member_api_docs
   ImagenControlReference({
     required ImagenControlType controlType,
     ImagenInlineImage? image,

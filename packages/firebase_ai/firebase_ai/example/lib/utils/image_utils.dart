@@ -45,20 +45,17 @@ class _IsolateResult {
 Future<_IsolateResult> _generateMaskAndPadInIsolate(
   _IsolateParams params,
 ) async {
-  print('[ISOLATE] Starting processing...');
   // 1. Decode the original image
   final originalImage = img.decodeImage(params.imageBytes);
   if (originalImage == null) {
     throw StateError('Failed to decode image in isolate.');
   }
-  print('[ISOLATE] Image decoded.');
   // Validate dimensions
   if (originalImage.width >= params.newDimensions.width ||
       originalImage.height >= params.newDimensions.height) {
     throw ArgumentError(
         'New Dimensions must be strictly larger than original image dimensions.');
   }
-  print('[ISOLATE] Start calculate position.');
   // 2. Calculate the position
   final originalDimensions = ImagenDimensions(
     width: originalImage.width,
@@ -70,7 +67,6 @@ Future<_IsolateResult> _generateMaskAndPadInIsolate(
   );
   final x = normalizedPosition.x ?? 0;
   final y = normalizedPosition.y ?? 0;
-  print('[ISOLATE] Start creating mask image.');
   // 3. Create the mask image
   final mask = img.Image(
     width: params.newDimensions.width,
@@ -86,7 +82,6 @@ Future<_IsolateResult> _generateMaskAndPadInIsolate(
     y2: y + originalImage.height,
     color: img.ColorRgb8(0, 0, 0),
   );
-  print('[ISOLATE] Start creating padded image.');
   // 4. Create the padded image
   final paddedImage = img.Image(
     width: params.newDimensions.width,
@@ -100,11 +95,9 @@ Future<_IsolateResult> _generateMaskAndPadInIsolate(
     dstX: x,
     dstY: y,
   );
-  print('[ISOLATE] encode both mask and padded image.');
   // 5. Encode both images to PNG format (which is lossless)
   final maskBytes = img.encodePng(mask);
   final paddedBytes = img.encodePng(paddedImage);
-  print('[ISOLATE] done processing, return results.');
   return _IsolateResult(
     paddedImageBytes: Uint8List.fromList(paddedBytes),
     maskBytes: Uint8List.fromList(maskBytes),
@@ -117,7 +110,6 @@ Future<List<ImagenReferenceImage>> generateMaskAndPadForOutpainting({
   required ImagenDimensions newDimensions,
   ImagenImagePlacement newPosition = ImagenImagePlacement.center,
 }) async {
-  print('[Outpaint Prepare] Create isolate params.');
   // Prepare the parameters for the isolate
   // Note: We are assuming `image` has a way to get its raw bytes,
   // which seems to be the case from `bytesBase64Encoded` in your example.
@@ -127,11 +119,9 @@ Future<List<ImagenReferenceImage>> generateMaskAndPadForOutpainting({
     newDimensions: newDimensions,
     newPosition: newPosition,
   );
-  print('[Outpaint Prepare] Start compute.');
   // Execute the image processing in a separate isolate and wait for the result
   final result = await compute(_generateMaskAndPadInIsolate, params);
 
-  print('[Outpaint Prepare] Get result from isolate.');
   // Use the resulting bytes to create your final objects
   return [
     ImagenRawImage(

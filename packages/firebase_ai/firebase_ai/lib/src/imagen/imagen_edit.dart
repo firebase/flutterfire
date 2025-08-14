@@ -100,6 +100,7 @@ enum ImagenMaskMode {
   String toJson() => _jsonString;
 }
 
+/// Base class for reference image configurations.
 sealed class ImagenReferenceConfig {
   /// Convert the [ImagenReferenceConfig] content to json format.
   Map<String, Object?> toJson();
@@ -108,14 +109,20 @@ sealed class ImagenReferenceConfig {
 /// The configuration for the mask.
 @experimental
 final class ImagenMaskConfig extends ImagenReferenceConfig {
+  // ignore: public_member_api_docs
   ImagenMaskConfig({
     required this.maskType,
     this.maskDilation,
     this.maskClasses,
   });
 
+  /// The type of the mask.
   final ImagenMaskMode maskType;
+
+  /// The dilation of the mask.
   final double? maskDilation;
+
+  /// The classes of the mask.
   final List<int>? maskClasses;
 
   @override
@@ -131,12 +138,16 @@ final class ImagenMaskConfig extends ImagenReferenceConfig {
 /// The configuration for the subject.
 @experimental
 final class ImagenSubjectConfig extends ImagenReferenceConfig {
+  // ignore: public_member_api_docs
   ImagenSubjectConfig({
     this.description,
     this.type,
   });
 
+  /// A description of the subject.
   final String? description;
+
+  /// The type of the subject.
   final ImagenSubjectReferenceType? type;
 
   @override
@@ -151,10 +162,12 @@ final class ImagenSubjectConfig extends ImagenReferenceConfig {
 /// The configuration for the style.
 @experimental
 final class ImagenStyleConfig extends ImagenReferenceConfig {
+  // ignore: public_member_api_docs
   ImagenStyleConfig({
     this.description,
   });
 
+  /// A description of the style.
   final String? description;
   @override
   Map<String, Object?> toJson() => {
@@ -167,6 +180,7 @@ final class ImagenStyleConfig extends ImagenReferenceConfig {
 /// The configuration for the control.
 @experimental
 final class ImagenControlConfig extends ImagenReferenceConfig {
+  // ignore: public_member_api_docs
   ImagenControlConfig({
     required this.controlType,
     this.enableComputation,
@@ -174,9 +188,16 @@ final class ImagenControlConfig extends ImagenReferenceConfig {
     this.superpixelRuler,
   });
 
+  /// The type of control.
   final ImagenControlType controlType;
+
+  /// Whether to enable computation.
   final bool? enableComputation;
+
+  /// The size of the superpixel region.
   final int? superpixelRegionSize;
+
+  /// The ruler for the superpixel.
   final int? superpixelRuler;
   @override
   Map<String, Object?> toJson() => {
@@ -194,24 +215,32 @@ final class ImagenControlConfig extends ImagenReferenceConfig {
 /// The configuration for image editing.
 @experimental
 final class ImagenEditingConfig {
+  // ignore: public_member_api_docs
   ImagenEditingConfig({
     this.editMode,
     this.editSteps,
   });
 
+  /// The mode of the editing.
   final ImagenEditMode? editMode;
+
+  /// The number of steps for the editing.
   final int? editSteps;
 }
 
 /// The dimensions of an image.
 @experimental
 final class ImagenDimensions {
+  // ignore: public_member_api_docs
   ImagenDimensions({
     required this.width,
     required this.height,
   });
 
+  /// The width of the image.
   final int width;
+
+  /// The height of the image.
   final int height;
 }
 
@@ -220,7 +249,10 @@ final class ImagenDimensions {
 final class ImagenImagePlacement {
   const ImagenImagePlacement._(this.x, this.y);
 
+  /// The x coordinate of the placement.
   final int? x;
+
+  /// The y coordinate of the placement.
   final int? y;
 
   /// Creates a placement from a coordinate.
@@ -261,7 +293,7 @@ final class ImagenImagePlacement {
   static const ImagenImagePlacement bottomRight =
       ImagenImagePlacement._(null, null);
 
-  /// A mock normalization function.
+  /// Normalizes the placement to the given dimensions.
   ImagenImagePlacement normalizeToDimensions(
     ImagenDimensions original,
     ImagenDimensions newDim,

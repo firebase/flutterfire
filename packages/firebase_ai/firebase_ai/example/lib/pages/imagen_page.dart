@@ -288,7 +288,6 @@ class _ImagenPageState extends State<ImagenPage> {
 
     MessageData? resultMessage;
     try {
-      print('Start outpaint');
       final referenceImages = await generateMaskAndPadForOutpainting(
         image: _sourceImage!,
         newDimensions: ImagenDimensions(width: 1400, height: 1400),
@@ -305,7 +304,6 @@ class _ImagenPageState extends State<ImagenPage> {
           text: 'Edited image Outpaint 1400*1400',
           fromUser: false,
         );
-        print('Outpaint done');
       } else {
         _showError('No image was returned from editing.');
       }
