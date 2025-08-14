@@ -18,17 +18,17 @@ import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import '../widgets/message_widget.dart';
 
-class SchemaPromptPage extends StatefulWidget {
-  const SchemaPromptPage({super.key, required this.title, required this.model});
+class JsonSchemaPage extends StatefulWidget {
+  const JsonSchemaPage({super.key, required this.title, required this.model});
 
   final String title;
   final GenerativeModel model;
 
   @override
-  State<SchemaPromptPage> createState() => _SchemaPromptPageState();
+  State<JsonSchemaPage> createState() => _JsonSchemaPageState();
 }
 
-class _SchemaPromptPageState extends State<SchemaPromptPage> {
+class _JsonSchemaPageState extends State<JsonSchemaPage> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
   final FocusNode _textFieldFocus = FocusNode();
@@ -82,10 +82,10 @@ class _SchemaPromptPageState extends State<SchemaPromptPage> {
                     child: ElevatedButton(
                       onPressed: !_loading
                           ? () async {
-                              await _promptSchemaTest();
+                              await _promptJsonSchemaTest();
                             }
                           : null,
-                      child: const Text('Schema Prompt'),
+                      child: const Text('JSON Schema Prompt'),
                     ),
                   ),
                 ],
@@ -97,56 +97,71 @@ class _SchemaPromptPageState extends State<SchemaPromptPage> {
     );
   }
 
-  Future<void> _promptSchemaTest() async {
+  Future<void> _promptJsonSchemaTest() async {
     setState(() {
       _loading = true;
     });
     try {
       final content = [
         Content.text(
-          "For use in a children's card game, generate 10 animal-based "
-          'characters.',
+          'Generate a widget hierarchy with a column containing two text widgets ',
         ),
       ];
 
-      final jsonSchema = Schema.object(
-        properties: {
-          'characters': Schema.array(
-            items: Schema.object(
-              properties: {
-                'name': Schema.string(),
-                'age': Schema.integer(),
-                'species': Schema.string(),
-                'accessory':
-                    Schema.enumString(enumValues: ['hat', 'belt', 'shoes']),
-              },
-            ),
-          ),
+      final jsonSchema = {
+        r'$defs': {
+          'text_widget': {
+            r'$anchor': 'text_widget',
+            'type': 'object',
+            'properties': {
+              'type': {'const': 'Text'},
+              'text': {'type': 'string'},
+            },
+            'required': ['type', 'text'],
+          },
         },
-        optionalProperties: ['accessory'],
-      );
+        'type': 'object',
+        'properties': {
+          'type': {'const': 'Column'},
+          'children': {
+            'type': 'array',
+            'items': {
+              'anyOf': [
+                {r'$ref': '#text_widget'},
+                {
+                  'type': 'object',
+                  'properties': {
+                    'type': {'const': 'Row'},
+                    'children': {
+                      'type': 'array',
+                      'items': {r'$ref': '#text_widget'},
+                    },
+                  },
+                  'required': ['type', 'children'],
+                }
+              ],
+            },
+          },
+        },
+        'required': ['type', 'children'],
+      };
 
       final response = await widget.model.generateContent(
         content,
         generationConfig: GenerationConfig(
           responseMimeType: 'application/json',
-          responseSchema: jsonSchema,
+          responseJsonSchema: jsonSchema,
         ),
       );
 
-      if (response.text == null) {
-        _showError('No response from API.');
-        return;
-      } else {
-        final text = const JsonEncoder.withIndent('  ')
-            .convert(json.decode(response.text!) as Object?);
-        _messages
-            .add(MessageData(text: '```json\n$text\n```', fromUser: false));
-        setState(() {
-          _loading = false;
-          _scrollDown();
-        });
-      }
+      var text = const JsonEncoder.withIndent('  ')
+          .convert(json.decode(response.text ?? '') as Object?);
+      _messages.add(MessageData(text: '```json$text```', fromUser: false));
+
+      setState(() {
+        _loading = false;
+        _scrollDown();
+      });
     } catch (e) {
       _showError(e.toString());
       setState(() {
