@@ -134,12 +134,11 @@ class _SchemaPromptPageState extends State<SchemaPromptPage> {
         ),
       );
 
-      var text = response.text;
-      if (text == null) {
+      if (response.text == null) {
         _showError('No response from API.');
         return;
       } else {
-        text = const JsonEncoder.withIndent('  ')
+        final text = const JsonEncoder.withIndent('  ')
             .convert(json.decode(response.text!) as Object?);
         _messages
             .add(MessageData(text: '```json\n$text\n```', fromUser: false));
