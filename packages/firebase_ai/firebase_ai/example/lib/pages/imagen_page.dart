@@ -206,8 +206,9 @@ class _ImagenPageState extends State<ImagenPage> {
         final String mimeType = imageFile.mimeType ?? 'image/jpeg';
         final Uint8List imageBytes = await imageFile.readAsBytes();
         return ImagenInlineImage(
-            bytesBase64Encoded: imageBytes, mimeType: mimeType);
-        ;
+          bytesBase64Encoded: imageBytes,
+          mimeType: mimeType,
+        );
       }
     } catch (e) {
       _showError('Error picking image: $e');
