@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// ignore_for_file: avoid_print
+
 import 'dart:io';
 
 import 'package:cli_util/cli_logging.dart' as logging;
@@ -36,7 +38,7 @@ void main() async {
 
   // Define files using paths
   final globalConfig = File(globalConfigPath);
-  
+
   // Check if the files exist
   if (!globalConfig.existsSync()) {
     throw Exception(
@@ -68,7 +70,7 @@ void main() async {
         print('File copied to: ${copiedConfig.path}');
 
         final gradlePropertiesFilePath = '${package.path}/example/android/gradle.properties';
-        extractAndWriteProperty(
+        await extractAndWriteProperty(
           globalConfig: globalConfig,
           gradlePropertiesFile: File(gradlePropertiesFilePath),
         );
@@ -80,11 +82,10 @@ void main() async {
         final copiedConfig = await globalConfig.copy(
         localConfigGradleFilePath,
         );
-        // ignore: avoid_print
         print('File copied to: ${copiedConfig.path}');
-        
+
         final gradlePropertiesFilePath = '${package.path}/example/android/gradle.properties';
-        extractAndWriteProperty(
+        await extractAndWriteProperty(
           globalConfig: globalConfig,
           gradlePropertiesFile: File(gradlePropertiesFilePath),
         );
@@ -123,7 +124,7 @@ Future<void> extractAndWriteProperty({
 }) async {
 
   const String propertyName = 'androidGradlePluginVersion';
-  if (!await globalConfig.exists()) {
+  if (!globalConfig.existsSync()) {
     print('Global config file not found: ${globalConfig.path}');
     return;
   }
@@ -141,7 +142,7 @@ Future<void> extractAndWriteProperty({
 
   final value = match.group(1);
 
-  final lines = await gradlePropertiesFile.exists()
+  final lines = gradlePropertiesFile.existsSync()
       ? await gradlePropertiesFile.readAsLines()
       : [];
 
