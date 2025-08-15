@@ -90,6 +90,8 @@ jobs:
             /usr/local/share/powershell \
             /usr/share/dotnet
           df -h /
+      - name: 'Select Xcode 16'
+        run: sudo xcode-select -s /Applications/Xcode_16.app/Contents/Developer
       - name: 'Build Application'
         working-directory: ${{ matrix.working_directory }}
         run: |
