@@ -7,7 +7,7 @@ import 'dart:convert';
 
 void main(List<String> arguments) async {
   if (arguments.isEmpty) {
-    throw Exception('No FlutterFire dependency arguments provided.');
+    throw Exception('No FlutterFire dependency arguments provided nor simulator udid.');
   }
 
   // Get the current git branch from GitHub Actions environment or fallback to git command
