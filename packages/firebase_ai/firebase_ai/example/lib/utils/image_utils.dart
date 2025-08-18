@@ -15,7 +15,7 @@ import 'package:firebase_ai/firebase_ai.dart';
 import 'package:image/image.dart' as img;
 import 'package:flutter/foundation.dart';
 
-// Helper class to pass parameters to the isolate
+/// The parameters passed to the isolate
 class _IsolateParams {
   final Uint8List imageBytes;
   final ImagenDimensions newDimensions;
@@ -28,7 +28,7 @@ class _IsolateParams {
   }) : imageBytes = Uint8List.fromList(imageBytes);
 }
 
-// Helper class to return results from the isolate
+/// The results returned from the isolate
 class _IsolateResult {
   final Uint8List paddedImageBytes;
   final Uint8List maskBytes;
@@ -39,6 +39,8 @@ class _IsolateResult {
   });
 }
 
+/// Processes the image request.
+/// 
 /// This is the top-level function that will run in the background isolate.
 /// It uses the 'image' package for all manipulations.
 Future<_IsolateResult> _generateMaskAndPadInIsolate(
