@@ -142,10 +142,17 @@ jobs:
       - uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa
         with:
           melos-version: '5.3.0'
+      - uses: futureware-tech/simulator-action@9150831bad21ed25e472017a746f49ccbd0e674a
+        id: simulator
+        with:
+          # List of available simulators: https://github.com/actions/runner-images/blob/main/images/macos/macos-14-Readme.md#installed-simulators
+          model: "iPhone 16"
       - name: 'Swift Integration Setup'
         run: flutter config --enable-swift-package-manager
       - name: 'Build Apps with Swift Package Manager'
-        run: dart ./.github/workflows/scripts/swift-integration.dart $FLUTTER_DEPENDENCIES
+        env:
+          SIMULATOR: ${{ steps.simulator.outputs.udid }}
+        run: dart ./.github/workflows/scripts/swift-integration.dart $FLUTTER_DEPENDENCIES $SIMULATOR
 
   test:
     runs-on: ubuntu-latest
