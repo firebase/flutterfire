@@ -346,6 +346,10 @@ Future<void> buildSwiftExampleApp(String platform, String plugins) async {
     print('[DEBUG] Flutter command args: ${flutterArgs.join(' ')}');
   }
 
+  if (platform == 'macos') {
+    await _runCommand('flutter', ['clean']);
+  }
+
   // Run the flutter build command
   final flutterResult = await _runCommand('flutter', flutterArgs);
 
@@ -440,7 +444,7 @@ Future<ProcessResult> _runCommand(
       '[DEBUG] _runCommand: Executing command: $command ${arguments.join(' ')}',
     );
     print('[DEBUG] Current working directory: ${Directory.current.path}');
-  } 
+  }
 
   final process = await Process.start(command, arguments);
 
