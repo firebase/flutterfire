@@ -105,7 +105,7 @@ final class ImagenRawMask extends ImagenMaskReference {
   }) : super(
           image: mask,
           maskConfig: ImagenMaskConfig(
-            maskType: ImagenMaskMode.userProvided,
+            maskMode: ImagenMaskMode.userProvided,
             maskDilation: dilation,
           ),
         );
@@ -121,7 +121,7 @@ final class ImagenSemanticMask extends ImagenMaskReference {
     super.referenceId,
   }) : super(
           maskConfig: ImagenMaskConfig(
-            maskType: ImagenMaskMode.semantic,
+            maskMode: ImagenMaskMode.semantic,
             maskDilation: dilation,
             maskClasses: classes,
           ),
@@ -137,7 +137,7 @@ final class ImagenBackgroundMask extends ImagenMaskReference {
     super.referenceId,
   }) : super(
           maskConfig: ImagenMaskConfig(
-            maskType: ImagenMaskMode.background,
+            maskMode: ImagenMaskMode.background,
             maskDilation: dilation,
           ),
         );
@@ -152,7 +152,7 @@ final class ImagenForegroundMask extends ImagenMaskReference {
     super.referenceId,
   }) : super(
           maskConfig: ImagenMaskConfig(
-            maskType: ImagenMaskMode.foreground,
+            maskMode: ImagenMaskMode.foreground,
             maskDilation: dilation,
           ),
         );

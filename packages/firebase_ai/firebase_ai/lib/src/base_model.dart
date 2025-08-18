@@ -28,6 +28,7 @@ import 'api.dart';
 import 'client.dart';
 import 'content.dart';
 import 'developer/api.dart';
+import 'error.dart';
 import 'imagen/imagen_api.dart';
 import 'imagen/imagen_content.dart';
 import 'imagen/imagen_edit.dart';

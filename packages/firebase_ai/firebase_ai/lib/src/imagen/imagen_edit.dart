@@ -111,13 +111,13 @@ sealed class ImagenReferenceConfig {
 final class ImagenMaskConfig extends ImagenReferenceConfig {
   // ignore: public_member_api_docs
   ImagenMaskConfig({
-    required this.maskType,
+    required this.maskMode,
     this.maskDilation,
     this.maskClasses,
   });
 
   /// The type of the mask.
-  final ImagenMaskMode maskType;
+  final ImagenMaskMode maskMode;
 
   /// The dilation of the mask.
   final double? maskDilation;
@@ -128,7 +128,7 @@ final class ImagenMaskConfig extends ImagenReferenceConfig {
   @override
   Map<String, Object?> toJson() => {
         'maskImageConfig': {
-          'maskMode': maskType.toJson(),
+          'maskMode': maskMode.toJson(),
           if (maskDilation != null) 'dilation': maskDilation,
           if (maskClasses != null) 'maskClasses': jsonEncode(maskClasses),
         },

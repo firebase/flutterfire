@@ -37,6 +37,7 @@ final class ImagenModel extends BaseApiClientModel {
       ImagenSafetySettings? safetySettings})
       : _generationConfig = generationConfig,
         _safetySettings = safetySettings,
+        _useVertexBackend = useVertexBackend,
         super(
             serializationStrategy: VertexSerialization(),
             modelUri: useVertexBackend
@@ -48,6 +49,7 @@ final class ImagenModel extends BaseApiClientModel {
 
   final ImagenGenerationConfig? _generationConfig;
   final ImagenSafetySettings? _safetySettings;
+  final bool _useVertexBackend;
 
   Map<String, Object?> _generateImagenRequest(
     String prompt, {
@@ -174,6 +176,10 @@ final class ImagenModel extends BaseApiClientModel {
     String prompt, {
     ImagenEditingConfig? config,
   }) {
+    if (!_useVertexBackend) {
+      throw FirebaseAIException(
+          'Image editing for Imagen is only supported on Vertex AI backend.');
+    }
     final parameters = <String, Object?>{
       'sampleCount': _generationConfig?.numberOfImages ?? 1,
       if (config?.editMode case final editMode?) 'editMode': editMode.toJson(),
