@@ -35,6 +35,7 @@ Packages with dependency updates only:
 
  - **FIX**(firebaseai): Fix `usageMetadata.thoughtsTokenCount` ([#17608](https://github.com/firebase/flutterfire/issues/17608)). ([fe9ddd33](https://github.com/firebase/flutterfire/commit/fe9ddd331d0ea113d97862728d18b67fb8d3085f))
  - **FIX**(firebase_ai): Expose ThinkingConfig class in firebase_ai.dart for use in GenerationConfig ([#17599](https://github.com/firebase/flutterfire/issues/17599)). ([b03381a4](https://github.com/firebase/flutterfire/commit/b03381a479c6f8c63207b3f709d6d190fd6374d6))
+ - **FEAT**(firebaseai): make Live API working with developer API ([#17503](https://github.com/firebase/flutterfire/issues/17503)). ([467eaa18](https://github.com/firebase/flutterfire/commit/467eaa1810257a420039d29a070314784218a03f))
  - **FEAT**(dev-api): add inlineData support to Developer API ([#17600](https://github.com/firebase/flutterfire/issues/17600)). ([5199edb7](https://github.com/firebase/flutterfire/commit/5199edb7dec526ebb8454c0a2eed3ca33947be7f))
  - **FEAT**(firebaseai): handle unknown parts when parsing content ([#17522](https://github.com/firebase/flutterfire/issues/17522)). ([ac59c249](https://github.com/firebase/flutterfire/commit/ac59c249ade0388b9b375766fb6c2f1b0c4daddd))
 
