@@ -32,7 +32,9 @@ Future<String> getCurrentBranch() async {
 
   if (branch == null || branch.isEmpty) {
     // Fallback to git command for local testing
-    print('GitHub Actions environment variables not found, trying git command...');
+    print(
+      'GitHub Actions environment variables not found, trying git command...',
+    );
     final result = await Process.run('git', ['branch', '--show-current']);
     if (result.exitCode != 0) {
       throw Exception('Failed to get current git branch: ${result.stderr}');
@@ -41,13 +43,18 @@ Future<String> getCurrentBranch() async {
   }
 
   if (branch.isEmpty) {
-    throw Exception('Could not determine current branch from GitHub Actions environment or git command');
+    throw Exception(
+      'Could not determine current branch from GitHub Actions environment or git command',
+    );
   }
 
   return branch;
 }
 
-Future<void> updatePackageSwiftFiles(String branch, List<String> packages) async {
+Future<void> updatePackageSwiftFiles(
+  String branch,
+  List<String> packages,
+) async {
   print('Updating Package.swift files to use branch: $branch');
 
   // Update each package's Package.swift files
@@ -56,12 +63,16 @@ Future<void> updatePackageSwiftFiles(String branch, List<String> packages) async
   }
 }
 
-Future<void> updatePackageSwiftForPackage(String packageName, String branch) async {
+Future<void> updatePackageSwiftForPackage(
+  String packageName,
+  String branch,
+) async {
   // Check both ios and macos directories
   final platforms = ['ios', 'macos'];
 
   for (final platform in platforms) {
-    final packageSwiftPath = 'packages/$packageName/$packageName/$platform/$packageName/Package.swift';
+    final packageSwiftPath =
+        'packages/$packageName/$packageName/$platform/$packageName/Package.swift';
     final file = File(packageSwiftPath);
 
     if (!file.existsSync()) {
@@ -78,7 +89,7 @@ Future<void> updatePackageSwiftForPackage(String packageName, String branch) asy
     // Pattern to match the exact version dependency
     final exactVersionPattern = RegExp(
       r'\.package\(url: "https://github\.com/firebase/flutterfire", exact: [^)]+\)',
-      multiLine: true
+      multiLine: true,
     );
 
     final headRepo = Platform.environment['PR_HEAD_REPO'];
@@ -88,10 +99,14 @@ Future<void> updatePackageSwiftForPackage(String packageName, String branch) asy
     final repoSlug = headRepo != baseRepo ? headRepo : baseRepo;
 
     // Replace with branch dependency
-    final branchDependency = '.package(url: "https://github.com/$repoSlug", branch: "$branch")';
+    final branchDependency =
+        '.package(url: "https://github.com/$repoSlug", branch: "$branch")';
 
     if (exactVersionPattern.hasMatch(content)) {
-      updatedContent = content.replaceAll(exactVersionPattern, branchDependency);
+      updatedContent = content.replaceAll(
+        exactVersionPattern,
+        branchDependency,
+      );
       await file.writeAsString(updatedContent);
       print('✓ Updated $packageSwiftPath to use branch: $branch');
     } else {
@@ -106,8 +121,9 @@ Future<void> buildSwiftExampleApp(String platform, String plugins) async {
 
   print('Building example app with swift (SPM) integration for $plugins');
 
-  final directory =
-      Directory('packages/firebase_core/firebase_core/example/$platform');
+  final directory = Directory(
+    'packages/firebase_core/firebase_core/example/$platform',
+  );
   if (!directory.existsSync()) {
     print('Directory does not exist: ${directory.path}');
     exit(1);
@@ -140,7 +156,8 @@ Future<void> buildSwiftExampleApp(String platform, String plugins) async {
     exit(1);
   } else {
     print(
-        'Successfully built $plugins for $platformName project using Swift Package Manager.');
+      'Successfully built $plugins for $platformName project using Swift Package Manager.',
+    );
 
     Directory.current = Directory('..');
     print('See contents of pubspec.yaml:');
@@ -151,7 +168,9 @@ Future<void> buildSwiftExampleApp(String platform, String plugins) async {
 }
 
 Future<ProcessResult> _runCommand(
-    String command, List<String> arguments) async {
+  String command,
+  List<String> arguments,
+) async {
   final process = await Process.start(command, arguments);
 
   // Listen to stdout
