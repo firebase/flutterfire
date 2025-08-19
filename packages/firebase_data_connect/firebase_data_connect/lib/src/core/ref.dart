@@ -234,8 +234,7 @@ class MutationRef<Data, Variables> extends OperationRef<Data, Variables> {
     try {
       // Logic below is duplicated due to the fact that `executeOperation` returns
       // an `OperationResult` here, and `QueryRef` expects a `QueryResult`.
-      OperationResult<Data, Variables> r =
-          await _executeOperation(_lastToken);
+      OperationResult<Data, Variables> r = await _executeOperation(_lastToken);
       return r;
     } on DataConnectError catch (e) {
       if (shouldRetry &&
