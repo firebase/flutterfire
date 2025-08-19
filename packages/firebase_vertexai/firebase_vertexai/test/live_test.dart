@@ -44,7 +44,6 @@ void main() {
       final liveGenerationConfig = LiveGenerationConfig(
         speechConfig: SpeechConfig(voiceName: 'Charon'),
         responseModalities: [ResponseModalities.text, ResponseModalities.audio],
-        candidateCount: 2,
         maxOutputTokens: 100,
         temperature: 0.8,
         topP: 0.95,
@@ -52,7 +51,6 @@ void main() {
       );
 
       expect(liveGenerationConfig.toJson(), {
-        'candidateCount': 2,
         'maxOutputTokens': 100,
         'temperature': 0.8,
         'topP': 0.95,
