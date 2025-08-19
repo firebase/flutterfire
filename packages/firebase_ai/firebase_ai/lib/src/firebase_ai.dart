@@ -150,7 +150,7 @@ class FirebaseAI extends FirebasePluginPlatform {
       tools: tools,
       toolConfig: toolConfig,
       systemInstruction: systemInstruction,
-      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens ?? false,
+      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
     );
   }
 
@@ -195,7 +195,7 @@ class FirebaseAI extends FirebasePluginPlatform {
       systemInstruction: systemInstruction,
       appCheck: appCheck,
       auth: auth,
-      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens ?? false,
+      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
     );
   }
 }
