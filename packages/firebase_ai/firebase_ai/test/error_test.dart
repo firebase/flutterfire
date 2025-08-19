@@ -19,7 +19,7 @@ void main() {
   group('VertexAI Exceptions', () {
     test('VertexAIException toString', () {
       final exception = FirebaseAIException('Test message');
-      expect(exception.toString(), 'VertexAIException: Test message');
+      expect(exception.toString(), 'FirebaseAIException: Test message');
     });
 
     test('InvalidApiKey toString', () {
