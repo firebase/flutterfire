@@ -76,6 +76,19 @@ void main() {
       expect(model, isA<GenerativeModel>());
     });
 
+    test('Instance creation with useLimitedUseAppCheckTokens', () {
+      final vertexAI = FirebaseAI.vertexAI(
+        app: customApp,
+        appCheck: customAppCheck,
+        location: 'custom-location',
+        useLimitedUseAppCheckTokens: true,
+      );
+      expect(vertexAI.app, equals(customApp));
+      expect(vertexAI.appCheck, equals(customAppCheck));
+      expect(vertexAI.location, equals('custom-location'));
+      expect(vertexAI.useLimitedUseAppCheckTokens, true);
+    });
+
     // ... other tests (e.g., with different parameters)
   });
 }

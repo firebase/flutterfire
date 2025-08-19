@@ -166,14 +166,20 @@ abstract class BaseModel {
 
   /// Returns a function that generates Firebase auth tokens.
   static FutureOr<Map<String, String>> Function() firebaseTokens(
-      FirebaseAppCheck? appCheck, FirebaseAuth? auth, FirebaseApp? app) {
+    FirebaseAppCheck? appCheck,
+    FirebaseAuth? auth,
+    FirebaseApp? app,
+    bool? useLimitedUseAppCheckTokens,
+  ) {
     return () async {
       Map<String, String> headers = {};
       // Override the client name in Google AI SDK
       headers['x-goog-api-client'] =
           'gl-dart/$packageVersion fire/$packageVersion';
       if (appCheck != null) {
-        final appCheckToken = await appCheck.getToken();
+        final appCheckToken = useLimitedUseAppCheckTokens == true
+            ? await appCheck.getLimitedUseToken()
+            : await appCheck.getToken();
         if (appCheckToken != null) {
           headers['X-Firebase-AppCheck'] = appCheckToken;
         }
