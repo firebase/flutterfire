@@ -5,7 +5,7 @@
 import 'dart:io';
 import 'dart:convert';
 
-final debugMode = true;
+final debugMode = false;
 
 void main(List<String> arguments) async {
   if (debugMode) {
@@ -123,9 +123,9 @@ Future<void> updatePackageSwiftFiles(
   String branch,
   List<String> packages,
 ) async {
-  print('Updating Package.swift files to use branch: $branch');
-
   if (debugMode) {
+    print('[DEBUG] updatePackageSwiftFiles: Starting');
+    print('[DEBUG] Branch: $branch');
     print(
       '[DEBUG] updatePackageSwiftFiles: Processing ${packages.length} packages',
     );
@@ -347,6 +347,9 @@ Future<void> buildSwiftExampleApp(String platform, String plugins) async {
   }
 
   if (platform == 'macos') {
+    // TODO: temp solution to macos to remove firebase_messaging from build
+    // See: https://github.com/firebase/flutterfire/actions/runs/17042278122/job/48308815666?pr=17634#step:8:787
+    await _runCommand('flutter', ['pub', 'remove', 'firebase_messaging']);
     await _runCommand('flutter', ['clean']);
   }
 
