@@ -59,11 +59,11 @@ void main() {
       final exception = FirebaseAISdkException('SDK failed to parse response.');
       expect(
           exception.toString(),
-          'SDK failed to parse response.\n' 
-          'This indicates a problem with the Firebase AI Logic SDK. ' 
-          'Try updating to the latest version ' 
-          '(https://pub.dev/packages/firebase_ai/versions), ' 
-          'or file an issue at ' 
+          'SDK failed to parse response.\n'
+          'This indicates a problem with the Firebase AI Logic SDK. '
+          'Try updating to the latest version '
+          '(https://pub.dev/packages/firebase_ai/versions), '
+          'or file an issue at '
           'https://github.com/firebase/flutterfire/issues.');
     });
 
