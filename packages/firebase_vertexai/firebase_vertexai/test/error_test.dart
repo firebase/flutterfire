@@ -62,7 +62,7 @@ void main() {
       expect(
           exception.toString(),
           'SDK failed to parse response.\n'
-          'This indicates a problem with the Firebase AI in Firebase SDK. '
+          'This indicates a problem with the Firebase AI Logic in Firebase SDK. '
           'Try updating to the latest version '
           '(https://pub.dev/packages/firebase_ai/versions), '
           'or file an issue at '
