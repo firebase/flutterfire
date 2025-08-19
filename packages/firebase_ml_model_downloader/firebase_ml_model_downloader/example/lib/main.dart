@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
   FirebaseCustomModel? model;
 
   /// Initially get the lcoal model if found, and asynchronously get the latest one in background.
-  initWithLocalModel() async {
+  void initWithLocalModel() async {
     final newModel = await FirebaseModelDownloader.instance.getModel(
         kModelName, FirebaseModelDownloadType.localModelUpdateInBackground);
 

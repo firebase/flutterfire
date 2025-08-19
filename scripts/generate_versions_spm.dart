@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// ignore_for_file: avoid_print
+
 import 'package:melos/melos.dart' as melos;
 import 'package:glob/glob.dart';
 import 'dart:io';
@@ -131,7 +133,11 @@ void updateVersionsPackageSwift(String firebaseiOSVersion) {
 
 void updateLibraryVersionPureSwiftPlugins() {
   // Packages that require updating library versions
-  const packages = ['firebase_ml_model_downloader', 'firebase_app_installations', 'cloud_functions'];
+  const packages = [
+    'firebase_ml_model_downloader',
+    'firebase_app_installations',
+    'cloud_functions',
+  ];
 
   for (final package in packages) {
     final pubspecPath = 'packages/$package/$package/pubspec.yaml';
