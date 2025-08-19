@@ -256,7 +256,7 @@ class _AuthGateState extends State<AuthGate> {
                                             height: 50,
                                             child: SignInButton(
                                               button,
-                                              onPressed: authButtons[button]!,
+                                              onPressed: authButtons[button],
                                             ),
                                           ),
                                   ),
