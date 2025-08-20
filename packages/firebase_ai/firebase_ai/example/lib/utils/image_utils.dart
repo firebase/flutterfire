@@ -40,7 +40,7 @@ class _IsolateResult {
 }
 
 /// Processes the image request.
-/// 
+///
 /// This is the top-level function that will run in the background isolate.
 /// It uses the 'image' package for all manipulations.
 Future<_IsolateResult> _generateMaskAndPadInIsolate(
