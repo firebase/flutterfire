@@ -121,6 +121,27 @@ final class GenerateContentResponse {
   Iterable<InlineDataPart> get inlineDataParts =>
       candidates.firstOrNull?.content.parts.whereType<InlineDataPart>() ??
       const [];
+
+  /// The thought summary of the first candidate in [candidates], if any.
+  ///
+  /// If the first candidate's content contains any thought parts, this value is
+  /// the concatenation of their text.
+  ///
+  /// If there are no candidates, or if the first candidate does not contain any
+  /// thought parts, this value is `null`.
+  ///
+  /// Important: Thought summaries are only available when `includeThoughts` is
+  /// enabled in the ``ThinkingConfig``. For more information, see the
+  /// [Thinking](https://firebase.google.com/docs/ai-logic/thinking)
+  String? get thoughtSummary {
+    final thoughtParts = candidates.firstOrNull?.content.parts
+        .where((p) => p.isThought == true)
+        .whereType<TextPart>();
+    if (thoughtParts == null || thoughtParts.isEmpty) {
+      return null;
+    }
+    return thoughtParts.map((p) => p.text).join();
+  }
 }
 
 /// Feedback metadata of a prompt specified in a [GenerativeModel] request.
@@ -861,15 +882,20 @@ enum ResponseModalities {
 /// Config for thinking features.
 class ThinkingConfig {
   // ignore: public_member_api_docs
-  ThinkingConfig({this.thinkingBudget});
+  ThinkingConfig({this.thinkingBudget, this.includeThoughts});
 
   /// The number of thoughts tokens that the model should generate.
   final int? thinkingBudget;
+
+  /// Whether to include thoughts in the response.
+  final bool? includeThoughts;
 
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
         if (thinkingBudget case final thinkingBudget?)
           'thinkingBudget': thinkingBudget,
+        if (includeThoughts case final includeThoughts?)
+          'includeThoughts': includeThoughts,
       };
 }
 
