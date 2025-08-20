@@ -11,6 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+import 'dart:convert';
+
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:firebase_ai/src/api.dart';
 
@@ -440,6 +443,38 @@ void main() {
         'responseSchema': schema.toJson(),
         'thinkingConfig': {'thinkingBudget': 100},
       });
+    });
+
+    test('GenerationConfig toJson with responseJsonSchema', () {
+      final jsonSchema = {
+        'type': 'object',
+        'properties': {
+          'recipeName': {'type': 'string'}
+        },
+        'required': ['recipeName']
+      };
+      final config = GenerationConfig(
+        responseMimeType: 'application/json',
+        responseJsonSchema: jsonSchema,
+      );
+      final json = config.toJson();
+      expect(json['responseMimeType'], 'application/json');
+      final dynamic responseSchema = json['responseJsonSchema'];
+      expect(responseSchema, isA<Map<String, Object?>>());
+      expect(responseSchema, equals(jsonSchema));
+    });
+
+    test(
+        'throws assertion if both responseSchema and responseJsonSchema are provided',
+        () {
+      final schema = Schema.object(properties: {});
+      final jsonSchema =
+          (json.decode('{"type": "string", "title": "MyString"}') as Map)
+              .cast<String, Object?>();
+      expect(
+          () => GenerationConfig(
+              responseSchema: schema, responseJsonSchema: jsonSchema),
+          throwsA(isA<AssertionError>()));
     });
 
     test('GenerationConfig toJson with empty stopSequences (omitted)', () {

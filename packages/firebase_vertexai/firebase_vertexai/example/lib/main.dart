@@ -12,25 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ai/firebase_ai.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';
 
+import 'pages/audio_page.dart';
+import 'pages/bidi_page.dart';
 // Import after file is generated through flutterfire_cli.
 // import 'package:vertex_ai_example/firebase_options.dart';
 
 import 'pages/chat_page.dart';
-import 'pages/audio_page.dart';
+import 'pages/document.dart';
 import 'pages/function_calling_page.dart';
 import 'pages/image_prompt_page.dart';
-import 'pages/token_count_page.dart';
-import 'pages/schema_page.dart';
 import 'pages/imagen_page.dart';
-import 'pages/document.dart';
+import 'pages/schema_page.dart';
+import 'pages/token_count_page.dart';
 import 'pages/video_page.dart';
-import 'pages/bidi_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
