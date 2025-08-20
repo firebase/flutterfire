@@ -1024,8 +1024,10 @@ final class GenerationConfig extends BaseGenerationConfig {
     super.responseModalities,
     this.responseMimeType,
     this.responseSchema,
+    this.responseJsonSchema,
     this.thinkingConfig,
-  });
+  }) : assert(responseSchema == null || responseJsonSchema == null,
+            'responseSchema and responseJsonSchema cannot both be set.');
 
   /// The set of character sequences (up to 5) that will stop output generation.
   ///
@@ -1044,7 +1046,27 @@ final class GenerationConfig extends BaseGenerationConfig {
   ///
   /// - Note: This only applies when the [responseMimeType] supports
   ///   a schema; currently this is limited to `application/json`.
+  ///
+  /// Only one of [responseSchema] or [responseJsonSchema] may be specified at
+  /// the same time.
   final Schema? responseSchema;
+
+  /// The response schema as a JSON-compatible map.
+  ///
+  /// - Note: This only applies when the [responseMimeType] supports a schema;
+  ///   currently this is limited to `application/json`.
+  ///
+  /// This schema can include more advanced features of JSON than the [Schema]
+  /// class taken by [responseSchema] supports.  See the [Gemini
+  /// documentation](https://ai.google.dev/api/generate-content#FIELDS.response_json_schema)
+  /// about the limitations of this feature.
+  ///
+  /// Notably, this feature is only supported on Gemini 2.5 and later. Use
+  /// [responseSchema] for earlier models.
+  ///
+  /// Only one of [responseSchema] or [responseJsonSchema] may be specified at
+  /// the same time.
+  final Map<String, Object?>? responseJsonSchema;
 
   /// Config for thinking features.
   ///
@@ -1062,6 +1084,8 @@ final class GenerationConfig extends BaseGenerationConfig {
           'responseMimeType': responseMimeType,
         if (responseSchema case final responseSchema?)
           'responseSchema': responseSchema.toJson(),
+        if (responseJsonSchema case final responseJsonSchema?)
+          'responseJsonSchema': responseJsonSchema,
         if (thinkingConfig case final thinkingConfig?)
           'thinkingConfig': thinkingConfig.toJson(),
       };
