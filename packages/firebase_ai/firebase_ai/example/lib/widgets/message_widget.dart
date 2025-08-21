@@ -11,13 +11,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 class MessageData {
-  MessageData({this.image, this.text, this.fromUser, this.isThought = false});
-  final Image? image;
+  MessageData(
+      {this.imageBytes, this.text, this.fromUser, this.isThought = false});
+  final Uint8List? imageBytes;
   final String? text;
   final bool? fromUser;
   final bool isThought;
