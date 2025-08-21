@@ -16,8 +16,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 class MessageData {
-  MessageData(
-      {this.imageBytes, this.text, this.fromUser, this.isThought = false});
+  MessageData({
+    this.imageBytes,
+    this.text,
+    this.fromUser,
+    this.isThought = false,
+  });
   final Uint8List? imageBytes;
   final String? text;
   final bool? fromUser;

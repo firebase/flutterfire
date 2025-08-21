@@ -106,15 +106,15 @@ class _ChatPageState extends State<ChatPage> {
                 itemBuilder: (context, idx) {
                   final message = _messages[idx];
                   return MessageWidget(
-                    text: _messages[idx].text,
-                    image: _messages[idx].imageBytes != null
+                    text: message.text,
+                    image: message.imageBytes != null
                         ? Image.memory(
-                            _messages[idx].imageBytes!,
+                            message.imageBytes!,
                             cacheWidth: 400,
                             cacheHeight: 400,
                           )
                         : null,
-                    isFromUser: _messages[idx].fromUser ?? false,
+                    isFromUser: message.fromUser ?? false,
                   );
                 },
                 itemCount: _messages.length,

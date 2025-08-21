@@ -196,7 +196,7 @@ void main() {
             [
               Candidate(
                 Content.model([
-                  TextPart('Mountain View, California, United States'),
+                  const TextPart('Mountain View, California, United States'),
                 ]),
                 [
                   SafetyRating(
@@ -329,7 +329,7 @@ void main() {
           GenerateContentResponse(
             [
               Candidate(
-                Content.model([TextPart('placeholder')]),
+                Content.model([const TextPart('placeholder')]),
                 [
                   SafetyRating(
                     HarmCategory.sexuallyExplicit,
@@ -464,7 +464,7 @@ void main() {
           GenerateContentResponse(
             [
               Candidate(
-                Content.model([TextPart('placeholder')]),
+                Content.model([const TextPart('placeholder')]),
                 [
                   SafetyRating(
                     HarmCategory.sexuallyExplicit,
@@ -551,7 +551,7 @@ void main() {
                 Content.model([
                   // ExecutableCode(Language.python, 'print(\'hello world\')'),
                   // CodeExecutionResult(Outcome.ok, 'hello world'),
-                  TextPart('hello world')
+                  const TextPart('hello world')
                 ]),
                 [],
                 null,

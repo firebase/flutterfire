@@ -127,7 +127,9 @@ Part parsePart(Object? jsonObject) {
           isThought: isThought, thoughtSignature: thoughtSignature),
     {'inlineData': {'mimeType': String mimeType, 'data': String bytes}} =>
       InlineDataPart._(mimeType, base64Decode(bytes),
-          isThought: isThought, thoughtSignature: thoughtSignature),
+          willContinue: false,
+          isThought: isThought,
+          thoughtSignature: thoughtSignature),
     _ => () {
         log('unhandled part format: $jsonObject');
         return UnknownPart(jsonObject);
@@ -143,6 +145,7 @@ sealed class Part {
   // ignore: public_member_api_docs
   final bool? isThought;
 
+  // ignore: unused_field
   final String? _thoughtSignature;
 
   /// Convert the [Part] content to json format.
