@@ -96,9 +96,14 @@ final class GenerateContentResponse {
         ),
       // Special case for a single TextPart to avoid iterable chain.
       [
-        Candidate(content: Content(parts: [TextPart(isThought: final isThought, :final text)])),
+        Candidate(
+          content: Content(
+            parts: [TextPart(isThought: final isThought, :final text)]
+          )
+        ),
         ...
-      ] when isThought != true =>
+      ]
+          when isThought != true =>
         text,
       [Candidate(content: Content(:final parts)), ...]
           when parts.any((p) => p is TextPart && p.isThought != true) =>
@@ -117,7 +122,9 @@ final class GenerateContentResponse {
   /// candidate has no [FunctionCall] parts. There is no error thrown if the
   /// prompt or response were blocked.
   Iterable<FunctionCall> get functionCalls =>
-      candidates.firstOrNull?.content.parts.whereType<FunctionCall>() ??
+      candidates.firstOrNull?.content.parts
+          .whereType<FunctionCall>()
+          .where((p) => p.isThought != true) ??
       const [];
 
   /// The inline data parts of the first candidate in [candidates], if any.
@@ -126,7 +133,9 @@ final class GenerateContentResponse {
   /// candidate has no [InlineDataPart] parts. There is no error thrown if the
   /// prompt or response were blocked.
   Iterable<InlineDataPart> get inlineDataParts =>
-      candidates.firstOrNull?.content.parts.whereType<InlineDataPart>() ??
+      candidates.firstOrNull?.content.parts
+          .whereType<InlineDataPart>()
+          .where((p) => p.isThought != true) ??
       const [];
 
   /// The thought summary of the first candidate in [candidates], if any.
