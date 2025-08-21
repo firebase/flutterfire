@@ -95,11 +95,18 @@ final class GenerateContentResponse {
                   : ''),
         ),
       // Special case for a single TextPart to avoid iterable chain.
-      [Candidate(content: Content(parts: [TextPart(:final text)])), ...] =>
+      [
+        Candidate(content: Content(parts: [TextPart(isThought: final isThought, :final text)])),
+        ...
+      ] when isThought != true =>
         text,
       [Candidate(content: Content(:final parts)), ...]
-          when parts.any((p) => p is TextPart) =>
-        parts.whereType<TextPart>().map((p) => p.text).join(),
+          when parts.any((p) => p is TextPart && p.isThought != true) =>
+        parts
+            .whereType<TextPart>()
+            .where((p) => p.isThought != true)
+            .map((p) => p.text)
+            .join(),
       [Candidate(), ...] => null,
     };
   }

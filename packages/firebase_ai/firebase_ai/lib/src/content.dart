@@ -92,7 +92,7 @@ Part parsePart(Object? jsonObject) {
   }
 
   final isThought =
-      jsonObject.containsKey('isThought') && jsonObject['isThought']! as bool;
+      jsonObject.containsKey('thought') && jsonObject['thought']! as bool;
 
   final thoughtSignature = jsonObject.containsKey('thoughtSignature')
       ? jsonObject['thoughtSignature']! as String

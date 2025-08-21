@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:convert';
-
 import '../api.dart'
     show
         BlockReason,
@@ -33,8 +31,7 @@ import '../api.dart'
         SerializationStrategy,
         UsageMetadata,
         createUsageMetadata;
-import '../content.dart'
-    show Content, FunctionCall, InlineDataPart, Part, TextPart;
+import '../content.dart' show Content, parseContent;
 import '../error.dart';
 import '../tool.dart' show Tool, ToolConfig;
 
@@ -185,7 +182,7 @@ Candidate _parseCandidate(Object? jsonObject) {
 
   return Candidate(
     jsonObject.containsKey('content')
-        ? _parseGoogleAIContent(jsonObject['content'] as Object)
+        ? parseContent(jsonObject['content'] as Object)
         : Content(null, []),
     switch (jsonObject) {
       {'safetyRatings': final List<Object?> safetyRatings} =>
@@ -297,36 +294,4 @@ Citation _parseCitationSource(Object? jsonObject) {
     uriString != null ? Uri.parse(uriString) : null,
     jsonObject['license'] as String?,
   );
-}
-
-Content _parseGoogleAIContent(Object jsonObject) {
-  return switch (jsonObject) {
-    {'parts': final List<Object?> parts} => Content(
-        switch (jsonObject) {
-          {'role': final String role} => role,
-          _ => null,
-        },
-        parts.map(_parsePart).toList()),
-    _ => throw unhandledFormat('Content', jsonObject),
-  };
-}
-
-Part _parsePart(Object? jsonObject) {
-  return switch (jsonObject) {
-    {'text': final String text} => TextPart(text),
-    {
-      'functionCall': {
-        'name': final String name,
-        'args': final Map<String, Object?> args
-      }
-    } =>
-      FunctionCall(name, args),
-    {
-      'functionResponse': {'name': String _, 'response': Map<String, Object?> _}
-    } =>
-      throw UnimplementedError('FunctionResponse part not yet supported'),
-    {'inlineData': {'mimeType': String mimeType, 'data': String bytes}} =>
-      InlineDataPart(mimeType, base64Decode(bytes)),
-    _ => throw unhandledFormat('Part', jsonObject),
-  };
 }
