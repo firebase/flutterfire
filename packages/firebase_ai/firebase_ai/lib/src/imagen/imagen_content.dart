@@ -14,7 +14,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:meta/meta.dart';
-import 'error.dart';
+import '../error.dart';
 
 /// Base type of Imagen Image.
 sealed class ImagenImage {
