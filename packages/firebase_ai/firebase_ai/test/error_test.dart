@@ -55,7 +55,7 @@ void main() {
       expect(exception.toString(), 'Server error occurred.');
     });
 
-    test('VertexAISdkException toString', () {
+    test('FirebaseAISdkException toString', () {
       final exception = FirebaseAISdkException('SDK failed to parse response.');
       expect(
           exception.toString(),

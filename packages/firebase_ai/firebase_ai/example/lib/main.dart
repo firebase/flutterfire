@@ -17,16 +17,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-import 'pages/audio_page.dart';
-import 'pages/bidi_page.dart';
 // Import after file is generated through flutterfire_cli.
 // import 'package:firebase_ai_example/firebase_options.dart';
 
+import 'pages/audio_page.dart';
+import 'pages/bidi_page.dart';
 import 'pages/chat_page.dart';
 import 'pages/document.dart';
 import 'pages/function_calling_page.dart';
 import 'pages/image_prompt_page.dart';
 import 'pages/imagen_page.dart';
+import 'pages/json_schema_page.dart';
 import 'pages/schema_page.dart';
 import 'pages/token_count_page.dart';
 import 'pages/video_page.dart';
@@ -64,11 +65,11 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
   void _initializeModel(bool useVertexBackend) {
     if (useVertexBackend) {
       final vertexInstance = FirebaseAI.vertexAI(auth: FirebaseAuth.instance);
-      _currentModel = vertexInstance.generativeModel(model: 'gemini-1.5-flash');
+      _currentModel = vertexInstance.generativeModel(model: 'gemini-2.5-flash');
       _currentImagenModel = _initializeImagenModel(vertexInstance);
     } else {
       final googleAI = FirebaseAI.googleAI(auth: FirebaseAuth.instance);
-      _currentModel = googleAI.generativeModel(model: 'gemini-2.0-flash');
+      _currentModel = googleAI.generativeModel(model: 'gemini-2.5-flash');
       _currentImagenModel = _initializeImagenModel(googleAI);
     }
   }
@@ -80,7 +81,7 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
       imageFormat: ImagenFormat.jpeg(compressionQuality: 75),
     );
     return instance.imagenModel(
-      model: 'imagen-3.0-generate-002',
+      model: 'imagen-3.0-capability-001',
       generationConfig: generationConfig,
       safetySettings: ImagenSafetySettings(
         ImagenSafetyFilterLevel.blockLowAndAbove,
@@ -184,10 +185,12 @@ class _HomeScreenState extends State<HomeScreen> {
       case 6:
         return SchemaPromptPage(title: 'Schema Prompt', model: currentModel);
       case 7:
-        return DocumentPage(title: 'Document Prompt', model: currentModel);
+        return JsonSchemaPage(title: 'JSON Schema', model: currentModel);
       case 8:
-        return VideoPage(title: 'Video Prompt', model: currentModel);
+        return DocumentPage(title: 'Document Prompt', model: currentModel);
       case 9:
+        return VideoPage(title: 'Video Prompt', model: currentModel);
+      case 10:
         return BidiPage(
           title: 'Live Stream',
           model: currentModel,
@@ -301,6 +304,11 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.schema),
             label: 'Schema',
             tooltip: 'Schema Prompt',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.data_object),
+            label: 'JSON',
+            tooltip: 'JSON Schema',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.edit_document),
