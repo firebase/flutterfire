@@ -91,31 +91,45 @@ Part parsePart(Object? jsonObject) {
     });
   }
 
+  final isThought =
+      jsonObject.containsKey('thought') && jsonObject['thought']! as bool;
+
+  final thoughtSignature = jsonObject.containsKey('thoughtSignature')
+      ? jsonObject['thoughtSignature']! as String
+      : null;
+
   if (jsonObject.containsKey('functionCall')) {
     final functionCall = jsonObject['functionCall'];
     if (functionCall is Map &&
         functionCall.containsKey('name') &&
         functionCall.containsKey('args')) {
-      return FunctionCall(
+      return FunctionCall._(
         functionCall['name'] as String,
         functionCall['args'] as Map<String, Object?>,
         id: functionCall['id'] as String?,
+        isThought: isThought,
+        thoughtSignature: thoughtSignature,
       );
     } else {
       throw unhandledFormat('functionCall', functionCall);
     }
   }
   return switch (jsonObject) {
-    {'text': final String text} => TextPart(text),
+    {'text': final String text} => TextPart._(text,
+        isThought: isThought, thoughtSignature: thoughtSignature),
     {
       'file_data': {
         'file_uri': final String fileUri,
         'mime_type': final String mimeType
       }
     } =>
-      FileData(mimeType, fileUri),
+      FileData._(mimeType, fileUri,
+          isThought: isThought, thoughtSignature: thoughtSignature),
     {'inlineData': {'mimeType': String mimeType, 'data': String bytes}} =>
-      InlineDataPart(mimeType, base64Decode(bytes)),
+      InlineDataPart._(mimeType, base64Decode(bytes),
+          willContinue: false,
+          isThought: isThought,
+          thoughtSignature: thoughtSignature),
     _ => () {
         log('unhandled part format: $jsonObject');
         return UnknownPart(jsonObject);
@@ -125,14 +139,23 @@ Part parsePart(Object? jsonObject) {
 
 /// A datatype containing media that is part of a multi-part [Content] message.
 sealed class Part {
+  // ignore: public_member_api_docs
+  const Part({this.isThought, String? thoughtSignature})
+      : _thoughtSignature = thoughtSignature;
+  // ignore: public_member_api_docs
+  final bool? isThought;
+
+  // ignore: unused_field
+  final String? _thoughtSignature;
+
   /// Convert the [Part] content to json format.
   Object toJson();
 }
 
 /// A [Part] that contains unparsable data.
-final class UnknownPart implements Part {
+final class UnknownPart extends Part {
   // ignore: public_member_api_docs
-  UnknownPart(this.data);
+  UnknownPart(this.data) : super(isThought: false, thoughtSignature: null);
 
   /// The unparsed data.
   final Map<String, Object?> data;
@@ -142,9 +165,21 @@ final class UnknownPart implements Part {
 }
 
 /// A [Part] with the text content.
-final class TextPart implements Part {
+final class TextPart extends Part {
   // ignore: public_member_api_docs
-  TextPart(this.text);
+  const TextPart(this.text, {bool? isThought})
+      : super(
+          isThought: isThought,
+          thoughtSignature: null,
+        );
+  const TextPart._(
+    this.text, {
+    bool? isThought,
+    String? thoughtSignature,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: thoughtSignature,
+        );
 
   /// The text content of the [Part]
   final String text;
@@ -153,9 +188,27 @@ final class TextPart implements Part {
 }
 
 /// A [Part] with the byte content of a file.
-final class InlineDataPart implements Part {
+final class InlineDataPart extends Part {
   // ignore: public_member_api_docs
-  InlineDataPart(this.mimeType, this.bytes, {this.willContinue});
+  const InlineDataPart(
+    this.mimeType,
+    this.bytes, {
+    this.willContinue,
+    bool? isThought,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: null,
+        );
+  const InlineDataPart._(
+    this.mimeType,
+    this.bytes, {
+    this.willContinue,
+    bool? isThought,
+    String? thoughtSignature,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: thoughtSignature,
+        );
 
   /// File type of the [InlineDataPart].
   /// https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-multimodal-prompts#media_requirements
@@ -186,9 +239,27 @@ final class InlineDataPart implements Part {
 /// A predicted `FunctionCall` returned from the model that contains
 /// a string representing the `FunctionDeclaration.name` with the
 /// arguments and their values.
-final class FunctionCall implements Part {
+final class FunctionCall extends Part {
   // ignore: public_member_api_docs
-  FunctionCall(this.name, this.args, {this.id});
+  const FunctionCall(
+    this.name,
+    this.args, {
+    this.id,
+    bool? isThought,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: null,
+        );
+  const FunctionCall._(
+    this.name,
+    this.args, {
+    this.id,
+    bool? isThought,
+    String? thoughtSignature,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: thoughtSignature,
+        );
 
   /// The name of the function to call.
   final String name;
@@ -213,9 +284,17 @@ final class FunctionCall implements Part {
 }
 
 /// The response class for [FunctionCall]
-final class FunctionResponse implements Part {
+final class FunctionResponse extends Part {
   // ignore: public_member_api_docs
-  FunctionResponse(this.name, this.response, {this.id});
+  const FunctionResponse(
+    this.name,
+    this.response, {
+    this.id,
+    bool? isThought,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: null,
+        );
 
   /// The name of the function that was called.
   final String name;
@@ -242,9 +321,25 @@ final class FunctionResponse implements Part {
 }
 
 /// A [Part] with Firebase Storage uri as prompt content
-final class FileData implements Part {
+final class FileData extends Part {
   // ignore: public_member_api_docs
-  FileData(this.mimeType, this.fileUri);
+  const FileData(
+    this.mimeType,
+    this.fileUri, {
+    bool? isThought,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: null,
+        );
+  const FileData._(
+    this.mimeType,
+    this.fileUri, {
+    bool? isThought,
+    String? thoughtSignature,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: thoughtSignature,
+        );
 
   /// File type of the [FileData].
   /// https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-multimodal-prompts#media_requirements

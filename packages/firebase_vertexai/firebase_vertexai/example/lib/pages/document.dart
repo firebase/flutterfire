@@ -47,8 +47,6 @@ class _DocumentPageState extends State<DocumentPage> {
       const _prompt =
           'Write me a summary in one sentence what this document is about.';
 
-      final prompt = TextPart(_prompt);
-
       setState(() {
         _messages.add(MessageData(text: _prompt, fromUser: true));
       });
@@ -57,7 +55,7 @@ class _DocumentPageState extends State<DocumentPage> {
           InlineDataPart('application/pdf', docBytes.buffer.asUint8List());
 
       final response = await widget.model.generateContent([
-        Content.multi([prompt, pdfPart]),
+        Content.multi([const TextPart(_prompt), pdfPart]),
       ]);
 
       setState(() {

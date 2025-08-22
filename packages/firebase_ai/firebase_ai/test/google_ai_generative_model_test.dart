@@ -138,7 +138,7 @@ void main() {
           matchesGenerateContentResponse(
             GenerateContentResponse([
               Candidate(
-                Content('model', [TextPart(result)]),
+                Content('model', [const TextPart(result)]),
                 null,
                 null,
                 null,

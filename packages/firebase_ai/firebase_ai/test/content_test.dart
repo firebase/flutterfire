@@ -25,7 +25,7 @@ void main() {
   group('Content tests', () {
     test('constructor', () {
       final content = Content('user',
-          [TextPart('Test'), InlineDataPart('image/png', Uint8List(0))]);
+          [const TextPart('Test'), InlineDataPart('image/png', Uint8List(0))]);
       expect(content.role, 'user');
       expect(content.parts[0], isA<TextPart>());
       expect((content.parts[0] as TextPart).text, 'Test');
@@ -35,7 +35,7 @@ void main() {
     });
 
     test('text()', () {
-      final content = Content('user', [TextPart('Test')]);
+      final content = Content('user', [const TextPart('Test')]);
       expect(content.role, 'user');
       expect(content.parts[0], isA<TextPart>());
     });
@@ -48,7 +48,7 @@ void main() {
 
     test('multi()', () {
       final content = Content('user',
-          [TextPart('Test'), InlineDataPart('image/png', Uint8List(0))]);
+          [const TextPart('Test'), InlineDataPart('image/png', Uint8List(0))]);
       expect(content.parts.length, 2);
       expect(content.parts[0], isA<TextPart>());
       expect(content.parts[1], isA<InlineDataPart>());
@@ -56,7 +56,7 @@ void main() {
 
     test('toJson', () {
       final content = Content('user',
-          [TextPart('Test'), InlineDataPart('image/png', Uint8List(0))]);
+          [const TextPart('Test'), InlineDataPart('image/png', Uint8List(0))]);
       final json = content.toJson();
       expect(json['role'], 'user');
       expect((json['parts']! as List).length, 2);
@@ -83,7 +83,7 @@ void main() {
 
   group('Part tests', () {
     test('TextPart toJson', () {
-      final part = TextPart('Test');
+      const part = TextPart('Test');
       final json = part.toJson();
       expect((json as Map)['text'], 'Test');
     });
@@ -96,7 +96,7 @@ void main() {
     });
 
     test('FunctionCall toJson', () {
-      final part = FunctionCall(
+      const part = FunctionCall(
           'myFunction',
           {
             'arguments': [
@@ -132,7 +132,7 @@ void main() {
     });
 
     test('FileData toJson', () {
-      final part = FileData('image/png', 'gs://bucket-name/path');
+      const part = FileData('image/png', 'gs://bucket-name/path');
       final json = part.toJson();
       expect((json as Map)['file_data']['mime_type'], 'image/png');
       expect(json['file_data']['file_uri'], 'gs://bucket-name/path');

@@ -16,22 +16,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 class MessageData {
-  MessageData({this.imageBytes, this.text, this.fromUser});
+  MessageData({
+    this.imageBytes,
+    this.text,
+    this.fromUser,
+    this.isThought = false,
+  });
   final Uint8List? imageBytes;
   final String? text;
   final bool? fromUser;
+  final bool isThought;
 }
 
 class MessageWidget extends StatelessWidget {
   final Image? image;
   final String? text;
   final bool isFromUser;
+  final bool isThought;
 
   const MessageWidget({
     super.key,
     this.image,
     this.text,
     required this.isFromUser,
+    this.isThought = false,
   });
 
   @override
@@ -44,9 +52,11 @@ class MessageWidget extends StatelessWidget {
           child: Container(
             constraints: const BoxConstraints(maxWidth: 600),
             decoration: BoxDecoration(
-              color: isFromUser
-                  ? Theme.of(context).colorScheme.primaryContainer
-                  : Theme.of(context).colorScheme.surfaceContainerHighest,
+              color: isThought
+                  ? Theme.of(context).colorScheme.secondaryContainer
+                  : isFromUser
+                      ? Theme.of(context).colorScheme.primaryContainer
+                      : Theme.of(context).colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(18),
             ),
             padding: const EdgeInsets.symmetric(

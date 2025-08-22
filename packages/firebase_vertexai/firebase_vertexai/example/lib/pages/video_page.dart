@@ -46,8 +46,6 @@ class _VideoPageState extends State<VideoPage> {
 
       const _prompt = 'Can you tell me what is in the video?';
 
-      final prompt = TextPart(_prompt);
-
       setState(() {
         _messages.add(MessageData(text: _prompt, fromUser: true));
       });
@@ -56,7 +54,7 @@ class _VideoPageState extends State<VideoPage> {
           InlineDataPart('video/mp4', videoBytes.buffer.asUint8List());
 
       final response = await widget.model.generateContent([
-        Content.multi([prompt, videoPart]),
+        Content.multi([const TextPart(_prompt), videoPart]),
       ]);
 
       setState(() {

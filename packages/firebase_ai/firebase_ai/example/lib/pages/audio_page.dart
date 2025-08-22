@@ -99,7 +99,7 @@ class _AudioPageState extends State<AudioPage> {
   Future<void> _submitAudioToModel(audioPart) async {
     try {
       String textPrompt = 'What is in the audio recording?';
-      final prompt = TextPart('What is in the audio recording?');
+      const prompt = TextPart('What is in the audio recording?');
 
       setState(() {
         _messages.add(MessageData(text: textPrompt, fromUser: true));
@@ -137,11 +137,6 @@ class _AudioPageState extends State<AudioPage> {
                 itemBuilder: (context, idx) {
                   return MessageWidget(
                     text: _messages[idx].text,
-                    image: Image.memory(
-                      _messages[idx].imageBytes!,
-                      cacheWidth: 400,
-                      cacheHeight: 400,
-                    ),
                     isFromUser: _messages[idx].fromUser ?? false,
                   );
                 },
