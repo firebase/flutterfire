@@ -6,6 +6,7 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in_dartio/google_sign_in_dartio.dart';
@@ -31,6 +32,9 @@ Future<void> main() async {
   // We store the app and auth to make testing with a named instance easier.
   app = await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await FirebaseAppCheck.instance.activate(
+    webProvider: ReCaptchaEnterpriseProvider('6LeblFcrAAAAAH2VKg4TC_egc2AFCTbLKrXnHRn0'), // ← your actual site key
   );
   auth = FirebaseAuth.instanceFor(app: app);
 
