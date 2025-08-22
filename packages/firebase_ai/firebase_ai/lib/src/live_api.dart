@@ -77,7 +77,6 @@ final class LiveGenerationConfig extends BaseGenerationConfig {
   LiveGenerationConfig({
     this.speechConfig,
     super.responseModalities,
-    super.candidateCount,
     super.maxOutputTokens,
     super.temperature,
     super.topP,
