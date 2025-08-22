@@ -256,7 +256,9 @@ class _AuthGateState extends State<AuthGate> {
                                             height: 50,
                                             child: SignInButton(
                                               button,
-                                              onPressed: authButtons[button],
+                                              // Null check is required by some versions of Dart.
+                                              // ignore: unnecessary_null_checks
+                                              onPressed: authButtons[button]!,
                                             ),
                                           ),
                                   ),

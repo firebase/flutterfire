@@ -72,7 +72,7 @@ class _InstallationsCardState extends State<InstallationsCard> {
   String id = 'None';
   String authToken = 'None';
 
-  init() async {
+  void init() async {
     await getId();
     await getAuthToken();
   }
@@ -101,7 +101,7 @@ class _InstallationsCardState extends State<InstallationsCard> {
     }
   }
 
-  Future<void> getAuthToken([forceRefresh = false]) async {
+  Future<void> getAuthToken([bool forceRefresh = false]) async {
     try {
       final token = await FirebaseInstallations.instance.getToken(forceRefresh);
       setState(() {
