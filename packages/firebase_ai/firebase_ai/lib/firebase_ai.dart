@@ -43,7 +43,8 @@ export 'src/content.dart'
         FunctionCall,
         FunctionResponse,
         Part,
-        TextPart;
+        TextPart,
+        UnknownPart;
 export 'src/error.dart'
     show
         FirebaseAIException,

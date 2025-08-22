@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import 'package:firebase_ai/firebase_ai.dart';
-import 'package:firebase_ai/src/content.dart';
 import 'package:http/http.dart' as http;
 import 'package:matcher/matcher.dart';
 
