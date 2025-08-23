@@ -607,7 +607,7 @@ void main() {
           () => model.countTokens([Content.text(prompt)]),
           verifyRequest: (_, request) {
             final generateContentRequest =
-                request['generateContentRequest'] as Map<String, Object?>;
+                request['generateContentRequest']! as Map<String, Object?>;
             expect(generateContentRequest['tools'], [
               {'googleSearch': {}},
             ]);

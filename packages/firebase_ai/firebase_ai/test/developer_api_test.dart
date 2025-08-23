@@ -14,7 +14,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:firebase_ai/firebase_ai.dart';
 import 'package:firebase_ai/src/content.dart';
 import 'package:firebase_ai/src/developer/api.dart';
 import 'package:firebase_ai/src/error.dart';
