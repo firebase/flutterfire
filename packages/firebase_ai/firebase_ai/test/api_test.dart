@@ -16,6 +16,7 @@ import 'dart:convert';
 
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:firebase_ai/src/api.dart';
+import 'package:firebase_ai/src/error.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 
@@ -946,6 +947,54 @@ void main() {
               () => VertexSerialization().parseGenerateContentResponse(json),
               throwsA(isA<FirebaseAISdkException>().having(
                   (e) => e.message, 'message', contains('WebGroundingChunk'))));
+        });
+
+        test(
+            'parses groundingSupport and filters out entries without a segment',
+            () {
+          final jsonResponse = {
+            'candidates': [
+              {
+                'content': {
+                  'parts': [
+                    {'text': 'Test'}
+                  ]
+                },
+                'finishReason': 'STOP',
+                'groundingMetadata': {
+                  'groundingSupport': [
+                    // Valid entry
+                    {
+                      'segment': {
+                        'startIndex': 0,
+                        'endIndex': 4,
+                        'text': 'Test'
+                      },
+                      'groundingChunkIndices': [0]
+                    },
+                    // Invalid entry - missing segment
+                    {
+                      'groundingChunkIndices': [1]
+                    },
+                    // Invalid entry - empty object
+                    {}
+                  ]
+                }
+              }
+            ]
+          };
+
+          final response =
+              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          final groundingMetadata = response.candidates.first.groundingMetadata;
+
+          expect(groundingMetadata, isNotNull);
+          // The invalid entries should be filtered out.
+          expect(groundingMetadata!.groundingSupport, hasLength(1));
+
+          final validSupport = groundingMetadata.groundingSupport.first;
+          expect(validSupport.segment.text, 'Test');
+          expect(validSupport.groundingChunkIndices, [0]);
         });
       });
 
