@@ -1,9 +1,11 @@
-//
-// Created by Andrii on 13.01.2024.
-//
+/*
+ * Copyright 2025, the Chromium project authors.  Please see the AUTHORS file
+ * for details. All rights reserved. Use of this source code is governed by a
+ * BSD-style license that can be found in the LICENSE file.
+ */
 
-#ifndef TODO_POINTS_FIREBASE_PLUGIN_REGISTRY_H
-#define TODO_POINTS_FIREBASE_PLUGIN_REGISTRY_H
+#ifndef FLUTTER_FIREBASE_PLUGIN_REGISTRY_H
+#define FLUTTER_FIREBASE_PLUGIN_REGISTRY_H
 
 #ifdef BUILDING_SHARED_DLL
 #define DLL_EXPORT __declspec(dllexport)
@@ -43,4 +45,4 @@ namespace firebase_core_windows {
     };
 
 }
-#endif //TODO_POINTS_FIREBASE_PLUGIN_REGISTRY_H
+#endif //FLUTTER_FIREBASE_PLUGIN_REGISTRY_H

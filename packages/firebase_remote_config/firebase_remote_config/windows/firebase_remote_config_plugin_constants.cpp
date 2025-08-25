@@ -1,6 +1,6 @@
-//
-// Created by Andrii on 29.10.2024.
-//
+// Copyright 2025, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
 
 #include "firebase_remote_config_plugin_constants.h"
 
