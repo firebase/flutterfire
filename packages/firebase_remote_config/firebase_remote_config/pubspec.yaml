@@ -4,7 +4,7 @@ description:
   re-releasing.
 homepage: https://firebase.google.com/docs/remote-config
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_remote_config/firebase_remote_config
-version: 5.4.7+1
+version: 5.4.7
 topics:
   - firebase
   - remote
