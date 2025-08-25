@@ -56,7 +56,7 @@ abstract class OperationRef<Data, Variables> {
   Future<bool> _shouldRetry() async {
     String? newToken;
     try {
-      newToken = await this.dataConnect.auth?.currentUser?.getIdToken();
+      newToken = await dataConnect.auth?.currentUser?.getIdToken();
     } catch (e) {
       // Don't retry if there was an issue getting the ID Token.
       log('There was an error attempting to retrieve the ID Token: $e');
@@ -152,12 +152,12 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
   Future<QueryResult<Data, Variables>> execute() async {
     bool shouldRetry = await _shouldRetry();
     try {
-      QueryResult<Data, Variables> r = await this._executeOperation(_lastToken);
+      QueryResult<Data, Variables> r = await _executeOperation(_lastToken);
       return r;
     } on DataConnectError catch (e) {
       if (shouldRetry &&
           e.code == DataConnectErrorCode.unauthorized.toString()) {
-        return this.execute();
+        return execute();
       } else {
         rethrow;
       }
@@ -201,7 +201,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
         .cast<QueryResult<Data, Variables>>();
     if (_queryManager.containsQuery(operationName, variables, varsSerialized)) {
       try {
-        this.execute();
+        execute();
       } catch (_) {
         // Call to `execute` should properly pass the error to the Stream.
         log('Error thrown by execute. The error will propagate via onError.');
@@ -234,13 +234,12 @@ class MutationRef<Data, Variables> extends OperationRef<Data, Variables> {
     try {
       // Logic below is duplicated due to the fact that `executeOperation` returns
       // an `OperationResult` here, and `QueryRef` expects a `QueryResult`.
-      OperationResult<Data, Variables> r =
-          await this._executeOperation(_lastToken);
+      OperationResult<Data, Variables> r = await _executeOperation(_lastToken);
       return r;
     } on DataConnectError catch (e) {
       if (shouldRetry &&
           e.code == DataConnectErrorCode.unauthorized.toString()) {
-        return this.execute();
+        return execute();
       } else {
         rethrow;
       }

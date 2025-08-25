@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of 'base_model.dart';
+part of '../base_model.dart';
 
 /// Represents a remote Imagen model with the ability to generate images using
 /// text prompts.
@@ -37,6 +37,7 @@ final class ImagenModel extends BaseApiClientModel {
       ImagenSafetySettings? safetySettings})
       : _generationConfig = generationConfig,
         _safetySettings = safetySettings,
+        _useVertexBackend = useVertexBackend,
         super(
             serializationStrategy: VertexSerialization(),
             modelUri: useVertexBackend
@@ -48,6 +49,7 @@ final class ImagenModel extends BaseApiClientModel {
 
   final ImagenGenerationConfig? _generationConfig;
   final ImagenSafetySettings? _safetySettings;
+  final bool _useVertexBackend;
 
   Map<String, Object?> _generateImagenRequest(
     String prompt, {
@@ -110,6 +112,83 @@ final class ImagenModel extends BaseApiClientModel {
         (jsonObject) =>
             parseImagenGenerationResponse<ImagenGCSImage>(jsonObject),
       );
+
+  /// Edits an image based on a prompt and a list of reference images.
+  @experimental
+  Future<ImagenGenerationResponse<ImagenInlineImage>> editImage(
+    List<ImagenReferenceImage> referenceImages,
+    String prompt, {
+    ImagenEditingConfig? config,
+  }) =>
+      makeRequest(
+        Task.predict,
+        _generateImagenEditRequest(
+          referenceImages,
+          prompt,
+          config: config,
+        ),
+        (jsonObject) =>
+            parseImagenGenerationResponse<ImagenInlineImage>(jsonObject),
+      );
+
+  /// Inpaints an image based on a prompt and a mask.
+  @experimental
+  Future<ImagenGenerationResponse<ImagenInlineImage>> inpaintImage(
+    ImagenInlineImage image,
+    String prompt,
+    ImagenMaskReference mask, {
+    ImagenEditingConfig? config,
+  }) =>
+      editImage(
+        [
+          mask,
+          ImagenRawImage(image: image),
+        ],
+        prompt,
+        config: config,
+      );
+
+  Map<String, Object?> _generateImagenEditRequest(
+    List<ImagenReferenceImage> images,
+    String prompt, {
+    ImagenEditingConfig? config,
+  }) {
+    if (!_useVertexBackend) {
+      throw FirebaseAIException(
+          'Image editing for Imagen is only supported on Vertex AI backend.');
+    }
+    final parameters = <String, Object?>{
+      'sampleCount': _generationConfig?.numberOfImages ?? 1,
+      if (config?.editMode case final editMode?) 'editMode': editMode.toJson(),
+      if (config?.editSteps case final editSteps?)
+        'editConfig': {'baseSteps': editSteps},
+      if (_generationConfig?.negativePrompt case final negativePrompt?)
+        'negativePrompt': negativePrompt,
+      if (_generationConfig?.addWatermark case final addWatermark?)
+        'addWatermark': addWatermark,
+      if (_generationConfig?.imageFormat case final imageFormat?)
+        'outputOption': imageFormat.toJson(),
+      if (_safetySettings?.personFilterLevel case final personFilterLevel?)
+        'personGeneration': personFilterLevel.toJson(),
+      if (_safetySettings?.safetyFilterLevel case final safetyFilterLevel?)
+        'safetySetting': safetyFilterLevel.toJson(),
+    };
+
+    return {
+      'parameters': parameters,
+      'instances': [
+        {
+          'prompt': prompt,
+          'referenceImages': images.asMap().entries.map((entry) {
+            int index = entry.key;
+            var image = entry.value;
+            return image.toJson(
+                referenceIdOverrideIfNull: index + images.length);
+          }).toList(),
+        }
+      ],
+    };
+  }
 }
 
 /// Returns a [ImagenModel] using it's private constructor.
