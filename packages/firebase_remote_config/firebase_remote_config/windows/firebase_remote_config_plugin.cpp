@@ -353,7 +353,10 @@ void FirebaseRemoteConfigPlugin::EnsureInitialized(
 
 void FirebaseRemoteConfigPlugin::SetCustomSignals(
     const std::string &app_name, const flutter::EncodableMap &custom_signals,
-    std::function<void(std::optional<FlutterError> reply)> result) {}
+    std::function<void(std::optional<FlutterError> reply)> result) {
+  // No implementation in firebase cpp sdk yet
+  result(std::nullopt);
+}
 
 void FirebaseRemoteConfigPlugin::GetAll(
     const std::string &app_name,
