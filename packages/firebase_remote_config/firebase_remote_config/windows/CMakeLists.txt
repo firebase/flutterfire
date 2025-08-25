@@ -24,10 +24,6 @@ list(APPEND PLUGIN_SOURCES
         "firebase_remote_config_plugin_constants.cpp"
          "messages.g.h"
          "messages.g.cpp"
-        # "FirebaseRemoteConfigImplementation.h"
-        # "FirebaseRemoteConfigImplementation.cpp"
-        # "remote_config_pigeon_implemetation.h"
-        # "remote_config_pigeon_implemetation.cpp"
 )
 
 # Read version from pubspec.yaml
