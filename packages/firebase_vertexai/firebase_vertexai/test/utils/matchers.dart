@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import 'package:firebase_ai/src/content.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:http/http.dart' as http;
 import 'package:matcher/matcher.dart';
@@ -33,6 +34,8 @@ Matcher matchesPart(Part part) => switch (part) {
         isA<FunctionResponse>()
             .having((p) => p.name, 'name', name)
             .having((p) => p.response, 'args', response),
+      UnknownPart(data: final data) =>
+        isA<UnknownPart>().having((p) => p.data, 'data', data),
     };
 
 Matcher matchesContent(Content content) => isA<Content>()

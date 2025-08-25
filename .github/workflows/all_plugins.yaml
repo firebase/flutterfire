@@ -124,9 +124,10 @@ jobs:
             "flutter build web"
   swift-integration:
     runs-on: macos-15
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
-      FLUTTER_DEPENDENCIES: "cloud_firestore firebase_remote_config cloud_functions firebase_database firebase_auth firebase_storage firebase_analytics firebase_messaging firebase_app_check firebase_in_app_messaging firebase_performance firebase_dynamic_links firebase_crashlytics firebase_ml_model_downloader firebase_app_installations"
+      FLUTTER_DEPENDENCIES: "cloud_firestore firebase_remote_config cloud_functions firebase_database firebase_auth firebase_storage firebase_analytics firebase_messaging firebase_app_check firebase_in_app_messaging firebase_performance firebase_crashlytics firebase_ml_model_downloader firebase_app_installations"
+      PR_HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
       - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff

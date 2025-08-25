@@ -91,7 +91,7 @@ guard let shared_spm_version = Version("\(firebase_core_version_string)\(shared_
 let package = Package(
   name: "firebase_in_app_messaging",
   platforms: [
-    .iOS("13.0"),
+    .iOS("15.0"),
   ],
   products: [
     .library(name: "firebase-in-app-messaging", targets: ["firebase_in_app_messaging"]),

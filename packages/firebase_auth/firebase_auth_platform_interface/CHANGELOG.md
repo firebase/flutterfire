@@ -1,3 +1,18 @@
+## 8.1.0
+
+ - **FEAT**(auth): add signInSecondFactor property to IdTokenResult for MFA support ([#17589](https://github.com/firebase/flutterfire/issues/17589)). ([a4db26ea](https://github.com/firebase/flutterfire/commit/a4db26ea9cc75f04a4a284e7c633c56f5f4958ad))
+
+## 8.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**(auth): validatePassword method/PasswordPolicy Support ([#17439](https://github.com/firebase/flutterfire/issues/17439)). ([9a032b34](https://github.com/firebase/flutterfire/commit/9a032b344d6a22c1e3a181ae27e511939f2d8972))
+ - **BREAKING** **FEAT**(auth): remove deprecated functions ([#17562](https://github.com/firebase/flutterfire/issues/17562)). ([d50aad95](https://github.com/firebase/flutterfire/commit/d50aad954443904d64d4ebd4442ebc63ed702986))
+
+## 7.7.3
+
+ - Update a dependency to the latest release.
+
 ## 7.7.2
 
  - Update a dependency to the latest release.

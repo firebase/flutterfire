@@ -138,19 +138,6 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
     throw UnimplementedError('setUserId() is not implemented');
   }
 
-  /// Sets the current screen name, which specifies the current visual context
-  /// in your app.
-  ///
-  /// Setting a null [screenName] clears the current screen name.
-  /// [callOptions] are for web platform only.
-  Future<void> setCurrentScreen({
-    String? screenName,
-    String? screenClassOverride,
-    AnalyticsCallOptions? callOptions,
-  }) {
-    throw UnimplementedError('setCurrentScreen() is not implemented');
-  }
-
   /// Sets a user property to the given value.
   /// Setting a null [value] removes the user property.
   /// [callOptions] are for web platform only.
