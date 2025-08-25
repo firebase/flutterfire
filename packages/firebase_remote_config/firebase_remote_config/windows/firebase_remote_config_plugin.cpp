@@ -23,45 +23,36 @@
 #include "firebase_core/firebase_plugin_registry.h"
 #include "firebase_remote_config/plugin_version.h"
 #include "firebase_remote_config_plugin_constants.h"
-
-// #include "messages.g.h"
+#include "messages.g.h"
 // #include "remote_config_pigeon_implemetation.h"
 
 using namespace firebase::remote_config;
 using namespace firebase;
 
-extern "C" firebase_core_windows::FirebasePluginRegistry*
+extern "C" firebase_core_windows::FirebasePluginRegistry *
 GetFlutterFirebaseRegistry();
 
 namespace firebase_remote_config_windows {
-const char* kEventChannelName =
+const char *kEventChannelName =
     "plugins.flutter.io/firebase_remote_config_updated";
-const char* kMethodChannelName = "plugins.flutter.io/firebase_remote_config";
-const char* kRemoteConfigLibrary = "firebase_remote_config_windows";
+const char *kMethodChannelName = "plugins.flutter.io/firebase_remote_config";
+const char *kRemoteConfigLibrary = "firebase_remote_config_windows";
 std::unique_ptr<flutter::EventSink<flutter::EncodableValue>> sink_;
 
-const char* kSetConfigSettingsMethodName = "RemoteConfig#setConfigSettings";
-const char* kSetDefaultsMethodName = "RemoteConfig#setDefaults";
-const char* kEnsureInitializedMethodName = "RemoteConfig#ensureInitialized";
-const char* kFetchMethodName = "RemoteConfig#fetch";
-const char* kActivateMethodName = "RemoteConfig#activate";
-const char* kGetAllMethodName = "RemoteConfig#getAll";
-const char* kGetPropertiesMethodName = "RemoteConfig#getProperties";
-const char* kFetchAndActivateMethodName = "RemoteConfig#fetchAndActivate";
+const char *kSetConfigSettingsMethodName = "RemoteConfig#setConfigSettings";
+const char *kSetDefaultsMethodName = "RemoteConfig#setDefaults";
+const char *kEnsureInitializedMethodName = "RemoteConfig#ensureInitialized";
+const char *kFetchMethodName = "RemoteConfig#fetch";
+const char *kActivateMethodName = "RemoteConfig#activate";
+const char *kGetAllMethodName = "RemoteConfig#getAll";
+const char *kGetPropertiesMethodName = "RemoteConfig#getProperties";
+const char *kFetchAndActivateMethodName = "RemoteConfig#fetchAndActivate";
 
 void FirebaseRemoteConfigPlugin::RegisterWithRegistrar(
-    flutter::PluginRegistrarWindows* registrar) {
+    flutter::PluginRegistrarWindows *registrar) {
   auto plugin = std::make_unique<FirebaseRemoteConfigPlugin>();
 
-  const auto method_channel =
-      std::make_unique<flutter::MethodChannel<flutter::EncodableValue>>(
-          registrar->messenger(), kMethodChannelName,
-          &flutter::StandardMethodCodec::GetInstance());
-
-  method_channel->SetMethodCallHandler(
-      [plugin_pointer = plugin.get()](const auto& call, auto result) {
-        plugin_pointer->HandleMethodCall(call, std::move(result));
-      });
+  FirebaseRemoteConfigHostApi::SetUp(registrar->messenger(), plugin.get());
 
   const auto firebase_registry =
       firebase_core_windows::FirebasePluginRegistry::GetInstance();
@@ -79,7 +70,7 @@ void FirebaseRemoteConfigPlugin::RegisterWithRegistrar(
   auto eventChannelHandler = std::make_unique<
       flutter::StreamHandlerFunctions<flutter::EncodableValue>>(
       [&, plugin_pointer = plugin.get()](
-          const flutter::EncodableValue* arguments,
+          const flutter::EncodableValue *arguments,
           std::unique_ptr<flutter::EventSink<flutter::EncodableValue>> sink)
           -> std::unique_ptr<
               flutter::StreamHandlerError<flutter::EncodableValue>> {
@@ -93,12 +84,12 @@ void FirebaseRemoteConfigPlugin::RegisterWithRegistrar(
         const auto remoteConfig =
             ::firebase::remote_config::RemoteConfig::GetInstance(firebaseApp);
         auto registration = remoteConfig->AddOnConfigUpdateListener(
-            [&sink, this](ConfigUpdate&& config_update,
+            [&sink, this](ConfigUpdate &&config_update,
                           RemoteConfigError error) {
               const auto updatedKeys = config_update.updated_keys;
               flutter::EncodableList keys{};
 
-              for (const auto& key : updatedKeys) {
+              for (const auto &key : updatedKeys) {
                 keys.push_back(flutter::EncodableValue(key));
               }
               sink->Success(flutter::EncodableValue(keys));
@@ -106,7 +97,7 @@ void FirebaseRemoteConfigPlugin::RegisterWithRegistrar(
 
         return nullptr;
       },
-      [](const flutter::EncodableValue* arguments)
+      [](const flutter::EncodableValue *arguments)
           -> std::unique_ptr<
               flutter::StreamHandlerError<flutter::EncodableValue>> {
         return nullptr;
@@ -121,121 +112,18 @@ FirebaseRemoteConfigPlugin::FirebaseRemoteConfigPlugin() {}
 
 FirebaseRemoteConfigPlugin::~FirebaseRemoteConfigPlugin() {}
 
-void FirebaseRemoteConfigPlugin::HandleMethodCall(
-    const flutter::MethodCall<flutter::EncodableValue>& method_call,
-    std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
-  std::cout << "Method call: " << method_call.method_name() << std::endl;
-
-  const auto& method_name = method_call.method_name();
-  try {
-    auto shared_result =
-        std::shared_ptr<flutter::MethodResult<flutter::EncodableValue>>(
-            std::move(result));
-
-    if (method_name == kSetConfigSettingsMethodName) {
-      set_config_settings_(
-          method_call.arguments(),
-          [shared_result](const std::optional<FirebaseRemoteConfigException>&
-                              response_result) {
-            if (response_result.has_value()) {
-              shared_result->Error(kSetConfigSettingsMethodName,
-                                   response_result->what());
-            } else {
-              shared_result->Success();
-            }
-          });
-    } else if (method_name == kSetDefaultsMethodName) {
-      set_defaults_(method_call.arguments(), [shared_result](
-                                                 const auto& response_result) {
-        if (response_result.has_value()) {
-          shared_result->Error(kSetDefaultsMethodName, response_result->what());
-        } else {
-          shared_result->Success();
-        }
-      });
-    } else if (method_name == kGetPropertiesMethodName) {
-      auto properties = get_properties_(method_call.arguments());
-      shared_result->Success(flutter::EncodableValue(properties));
-    } else if (method_name == kGetAllMethodName) {
-      // const auto args = try_get_arguments_(method_call.arguments());
-      const auto all = get_all_(method_call.arguments());
-      shared_result->Success(flutter::EncodableValue(all));
-    } else if (method_name == kEnsureInitializedMethodName) {
-      ensure_initialized_(method_call.arguments(),
-                          [shared_result](const auto& callback_result) {
-                            if (callback_result.has_value()) {
-                              shared_result->Error(kEnsureInitializedMethodName,
-                                                   callback_result->what());
-                            } else {
-                              shared_result->Success();
-                            }
-                          });
-    } else if (method_name == kActivateMethodName) {
-      activate_(method_call.arguments(), [shared_result](
-                                             const auto& callback_result) {
-        if (std::holds_alternative<FirebaseRemoteConfigException>(
-                callback_result)) {
-          shared_result->Error(
-              kActivateMethodName,
-              std::get<FirebaseRemoteConfigException>(callback_result).what());
-        } else {
-          shared_result->Success(
-              flutter::EncodableValue(std::get<bool>(callback_result)));
-        }
-      });
-    } else if (method_name == kFetchMethodName) {
-      fetch_(method_call.arguments(), [shared_result](
-                                          const auto& callback_result) {
-        if (callback_result.has_value()) {
-          shared_result->Error(kFetchMethodName, callback_result->what());
-        } else {
-          shared_result->Success();
-        }
-      });
-    } else if (method_name == kFetchAndActivateMethodName) {
-      fetch_and_activate_(
-          method_call.arguments(),
-          [shared_result](const auto& callback_result) {
-            if (std::holds_alternative<FirebaseRemoteConfigException>(
-                    callback_result)) {
-              shared_result->Error(
-                  kFetchAndActivateMethodName,
-                  std::get<FirebaseRemoteConfigException>(callback_result)
-                      .what());
-            } else {
-              shared_result->Success(
-                  flutter::EncodableValue(std::get<bool>(callback_result)));
-            }
-          });
-    } else {
-      result->NotImplemented();
-    }
-  } catch (const FirebaseRemoteConfigException& e) {
-    result->Error(kSetConfigSettingsMethodName, e.what());
-  } catch (const std::exception& e) {
-    result->Error(kSetConfigSettingsMethodName, e.what());
-  }
-}
-
-void FirebaseRemoteConfigPlugin::get_method_channel_arguments_(
-    flutter::EncodableMap* args) const {
-  for (const auto& [key, value] : *args) {
-    std::cout << "Key: " << std::get<std::string>(key) << std::endl;
-  }
-}
-
 std::vector<firebase::remote_config::ConfigKeyValueVariant>
 FirebaseRemoteConfigPlugin::set_defaults_convert_to_native_(
-    const flutter::EncodableMap& default_parameters) const {
+    const flutter::EncodableMap &default_parameters) const {
   std::vector<ConfigKeyValueVariant> parameters;
   std::vector<std::pair<std::string, std::string>> storage;
 
-  for (const auto& items : default_parameters) {
+  for (const auto &items : default_parameters) {
     if (std::holds_alternative<std::string>(items.first)) {
       std::string key_str = std::get<std::string>(items.first);
 
       ConfigKeyValueVariant kv;
-      char* key = new char[key_str.size() + 1];
+      char *key = new char[key_str.size() + 1];
       // strcpy(key, key_str.c_str());
       strcpy_s(key, sizeof(char) * key_str.size() + 1, key_str.c_str());
       kv.key = key;
@@ -246,6 +134,7 @@ FirebaseRemoteConfigPlugin::set_defaults_convert_to_native_(
 
   return parameters;
 }
+
 firebase::Variant FirebaseRemoteConfigPlugin::set_defaults_to_variant_(
     flutter::EncodableValue encodableValue) const {
   if (std::holds_alternative<bool>(encodableValue)) {
@@ -270,6 +159,7 @@ firebase::Variant FirebaseRemoteConfigPlugin::set_defaults_to_variant_(
 
   return {};
 }
+
 std::string FirebaseRemoteConfigPlugin::map_last_fetch_status_(
     firebase::remote_config::LastFetchStatus lastFetchStatus) const {
   if (lastFetchStatus == kLastFetchStatusSuccess) {
@@ -282,20 +172,21 @@ std::string FirebaseRemoteConfigPlugin::map_last_fetch_status_(
     return "failure";
   }
 }
-flutter::EncodableMap* FirebaseRemoteConfigPlugin::try_get_arguments_(
-    const flutter::EncodableValue* arguments) const {
+
+flutter::EncodableMap *FirebaseRemoteConfigPlugin::try_get_arguments_(
+    const flutter::EncodableValue *arguments) const {
   const auto args = std::get_if<flutter::EncodableMap>(arguments);
-  return args ? const_cast<flutter::EncodableMap*>(args) : nullptr;
+  return args ? const_cast<flutter::EncodableMap *>(args) : nullptr;
 }
 
 std::string FirebaseRemoteConfigPlugin::get_app_name_(
-    flutter::EncodableMap* args) const {
-  const auto& encodable_app_name_arg =
+    flutter::EncodableMap *args) const {
+  const auto &encodable_app_name_arg =
       args->find(flutter::EncodableValue("appName"));
   if (encodable_app_name_arg == args->end()) {
     throw std::exception("Arguments does not contains appName");
   }
-  const auto& app_name_arg =
+  const auto &app_name_arg =
       std::get<std::string>(encodable_app_name_arg->second);
 
   return app_name_arg;
@@ -315,7 +206,7 @@ std::string FirebaseRemoteConfigPlugin::map_source_(ValueSource source) const {
 
 flutter::EncodableMap
 FirebaseRemoteConfigPlugin::create_remote_config_values_map_(
-    std::string key, RemoteConfig* remote_config) const {
+    std::string key, RemoteConfig *remote_config) const {
   flutter::EncodableMap parsed_parameters;
 
   ValueInfo value_info{};
@@ -331,10 +222,10 @@ FirebaseRemoteConfigPlugin::create_remote_config_values_map_(
 
 flutter::EncodableMap FirebaseRemoteConfigPlugin::map_parameters_(
     std::map<std::string, firebase::Variant> parameters,
-    RemoteConfig* remote_config) const {
+    RemoteConfig *remote_config) const {
   flutter::EncodableMap map_;
 
-  for (const auto& val : parameters) {
+  for (const auto &val : parameters) {
     auto param = val.second;
     auto name = val.first;
 
@@ -344,107 +235,145 @@ flutter::EncodableMap FirebaseRemoteConfigPlugin::map_parameters_(
   return map_;
 }
 
-void FirebaseRemoteConfigPlugin::set_config_settings_(
-    const flutter::EncodableValue* arguments,
-    std::function<void(std::optional<FirebaseRemoteConfigException>)>
-        completion) {
-  const auto& args = try_get_arguments_(arguments);
+void FirebaseRemoteConfigPlugin::Fetch(
+    const std::string &app_name,
+    std::function<void(std::optional<FlutterError> reply)> result) {
+  const auto firebaseApp = ::firebase::App::GetInstance(app_name.c_str());
+  const auto remote_config = RemoteConfig::GetInstance(firebaseApp);
 
-  if (!args) {
-    completion(FirebaseRemoteConfigException("Cannot decode arguments"));
-    return;
-  }
+  auto future = remote_config->Fetch();
 
-  const auto app_name = get_app_name_(args);
+  future.OnCompletion([result](const Future<void> &futureResult) {
+    if (futureResult.status() == kFutureStatusComplete) {
+      result({});
+    } else {
+      result(FlutterError("Cannot fetch remote config"));
+    }
+  });
+}
 
-  const auto& encodable_fetch_timeout_arg =
-      args->find(flutter::EncodableValue("fetchTimeout"));
-  if (encodable_fetch_timeout_arg == args->end()) {
-    completion(FirebaseRemoteConfigException("Cannot decode fetch timeout"));
-    return;
-  }
-  const int64_t fetch_timeout_arg =
-      encodable_fetch_timeout_arg->second.LongValue();
+void FirebaseRemoteConfigPlugin::FetchAndActivate(
+    const std::string &app_name,
+    std::function<void(ErrorOr<bool> reply)> result) {
 
-  const auto& encodable_minimum_fetch_interval_arg =
-      args->find(flutter::EncodableValue("minimumFetchInterval"));
-  if (encodable_minimum_fetch_interval_arg == args->end()) {
-    completion(
-        FirebaseRemoteConfigException("Cannot decode minimum fetch interval"));
-    return;
-  }
-  const int64_t minimum_fetch_interval_arg =
-      encodable_minimum_fetch_interval_arg->second.LongValue();
+  const auto firebaseApp = ::firebase::App::GetInstance(app_name.c_str());
+  const auto remote_config = RemoteConfig::GetInstance(firebaseApp);
 
+  auto future = remote_config->FetchAndActivate();
+
+  future.OnCompletion([result](const Future<bool> &futureResult) {
+    if (futureResult.status() == kFutureStatusComplete) {
+      auto operationResult = *futureResult.result();
+      result(operationResult);
+    } else {
+      result(FlutterError("Cannot activate remote config"));
+    }
+  });
+}
+
+void FirebaseRemoteConfigPlugin::Activate(
+    const std::string &app_name,
+    std::function<void(ErrorOr<bool> reply)> result) {
+
+  const auto firebaseApp = ::firebase::App::GetInstance(app_name.c_str());
+  const auto remote_config = RemoteConfig::GetInstance(firebaseApp);
+
+  auto future = remote_config->Activate();
+
+  future.OnCompletion([result](const Future<bool> &futureResult) {
+    if (futureResult.status() == kFutureStatusComplete) {
+      auto operationResult = *futureResult.result();
+      result(operationResult);
+    } else {
+      result(FlutterError("Cannot activate remote config"));
+    }
+  });
+}
+
+void FirebaseRemoteConfigPlugin::SetConfigSettings(
+    const std::string &app_name, const RemoteConfigPigeonSettings &settings,
+    std::function<void(std::optional<FlutterError> reply)> result) {
   const auto firebaseApp = App::GetInstance(app_name.c_str());
   const auto remoteConfig = RemoteConfig::GetInstance(firebaseApp);
 
   const ConfigSettings config_setting{
-      static_cast<uint64_t>(fetch_timeout_arg),
-      static_cast<uint64_t>(minimum_fetch_interval_arg)};
+      static_cast<uint64_t>(settings.fetch_timeout_seconds()),
+      static_cast<uint64_t>(settings.minimum_fetch_interval_seconds())};
 
   auto future = remoteConfig->SetConfigSettings(config_setting);
 
-  future.OnCompletion([completion](const Future<void>& futureResult) {
+  future.OnCompletion([result](const Future<void> &futureResult) {
     if (futureResult.error() == kFutureStatusComplete) {
-      completion({});
+      result({});
     } else {
-      completion(FirebaseRemoteConfigException("Cannot set config settings"));
+      result(FlutterError("Cannot set config settings"));
     }
   });
 }
 
-void FirebaseRemoteConfigPlugin::set_defaults_(
-    const flutter::EncodableValue* arguments,
-    std::function<void(std::optional<FirebaseRemoteConfigException>)>
-        completion) {
-  const auto& args = try_get_arguments_(arguments);
+void FirebaseRemoteConfigPlugin::SetDefaults(
+    const std::string &app_name,
+    const flutter::EncodableMap &default_parameters,
+    std::function<void(std::optional<FlutterError> reply)> result) {
+  App *firebaseApp = App::GetInstance(app_name.c_str());
+  RemoteConfig *remoteConfig = RemoteConfig::GetInstance(firebaseApp);
 
-  if (!args) {
-    completion(FirebaseRemoteConfigException("Cannot decode arguments"));
-    return;
-  }
-
-  const auto app_name = get_app_name_(args);
-
-  const auto& encodable_defaults_arg =
-      args->find(flutter::EncodableValue("defaults"));
-  if (encodable_defaults_arg == args->end()) {
-    completion(FirebaseRemoteConfigException("Cannot decode defaults"));
-    return;
-  }
-  const auto& defaults_arg =
-      std::get<flutter::EncodableMap>(encodable_defaults_arg->second);
-
-  App* firebaseApp = App::GetInstance(app_name.c_str());
-  RemoteConfig* remoteConfig = RemoteConfig::GetInstance(firebaseApp);
-
-  const auto& default_args_native =
-      set_defaults_convert_to_native_(defaults_arg);
+  const auto &default_args_native =
+      set_defaults_convert_to_native_(default_parameters);
 
   auto future = remoteConfig->SetDefaults(default_args_native.data(),
                                           default_args_native.size());
 
-  future.OnCompletion([completion](const Future<void>& futureResult) {
+  future.OnCompletion([result](const Future<void> &futureResult) {
     if (futureResult.error() == kFutureStatusComplete) {
-      completion({});
+      result({});
     } else {
-      completion(FirebaseRemoteConfigException("Cannot set defaults"));
+      result(FlutterError("Cannot set defaults"));
     }
   });
 }
-flutter::EncodableMap FirebaseRemoteConfigPlugin::get_properties_(
-    const flutter::EncodableValue* arguments) {
-  const auto& args = try_get_arguments_(arguments);
 
-  if (!args) {
-    throw FirebaseRemoteConfigException("Cannot decode arguments");
-  }
+void FirebaseRemoteConfigPlugin::EnsureInitialized(
+    const std::string &app_name,
+    std::function<void(std::optional<FlutterError> reply)> result) {
+  const auto firebaseApp = ::firebase::App::GetInstance(app_name.c_str());
+  const auto remote_config = RemoteConfig::GetInstance(firebaseApp);
 
-  const auto app_name = get_app_name_(args);
+  const auto future = remote_config->EnsureInitialized();
 
-  App* firebaseApp = App::GetInstance(app_name.c_str());
-  RemoteConfig* remote_config = RemoteConfig::GetInstance(firebaseApp);
+  future.OnCompletion([result](const Future<ConfigInfo> &futureResult) {
+    if (futureResult.status() == kFutureStatusComplete) {
+      result({});
+    } else {
+      result(
+          FlutterError("Cannot initialize remote config"));
+    }
+  });
+}
+
+void FirebaseRemoteConfigPlugin::SetCustomSignals(
+    const std::string &app_name, const flutter::EncodableMap &custom_signals,
+    std::function<void(std::optional<FlutterError> reply)> result) {}
+
+void FirebaseRemoteConfigPlugin::GetAll(
+    const std::string &app_name,
+    std::function<void(ErrorOr<flutter::EncodableMap> reply)> result) {
+
+  const auto firebaseApp = ::firebase::App::GetInstance(app_name.c_str());
+  const auto remote_config = RemoteConfig::GetInstance(firebaseApp);
+
+  const auto get_all = remote_config->GetAll();
+  //
+  auto all_mapped = map_parameters_(get_all, remote_config);
+  result(all_mapped);
+}
+
+void FirebaseRemoteConfigPlugin::GetProperties(
+    const std::string &app_name,
+    std::function<void(ErrorOr<flutter::EncodableMap> reply)> result) {
+
+  App *firebaseApp = App::GetInstance(app_name.c_str());
+  RemoteConfig *remote_config = RemoteConfig::GetInstance(firebaseApp);
 
   const auto configSettings = remote_config->GetConfigSettings();
   auto fetchTimeout =
@@ -467,130 +396,6 @@ flutter::EncodableMap FirebaseRemoteConfigPlugin::get_properties_(
                  flutter::EncodableValue(lastFetch)});
   values.insert({flutter::EncodableValue("lastFetchStatus"),
                  flutter::EncodableValue(lastFetchStatusMapped.c_str())});
-
-  return values;
-}
-
-void FirebaseRemoteConfigPlugin::ensure_initialized_(
-    const flutter::EncodableValue* arguments,
-    std::function<void(std::optional<FirebaseRemoteConfigException>)>
-        completion) {
-  const auto& args = try_get_arguments_(arguments);
-
-  auto app_name = get_app_name_(args);
-
-  const auto firebaseApp = ::firebase::App::GetInstance(app_name.c_str());
-  const auto remote_config = RemoteConfig::GetInstance(firebaseApp);
-
-  const auto future = remote_config->EnsureInitialized();
-
-  future.OnCompletion([completion](const Future<ConfigInfo>& futureResult) {
-    if (futureResult.status() == kFutureStatusComplete) {
-      completion({});
-    } else {
-      completion(
-          FirebaseRemoteConfigException("Cannot initialize remote config"));
-    }
-  });
-}
-
-void FirebaseRemoteConfigPlugin::activate_(
-    const flutter::EncodableValue* arguments,
-    std::function<void(std::variant<bool, FirebaseRemoteConfigException>)>
-        completion) {
-  const auto& args = try_get_arguments_(arguments);
-  if (!args) {
-    throw FirebaseRemoteConfigException("Cannot decode arguments");
-  }
-
-  const auto app_name = get_app_name_(args);
-
-  const auto firebaseApp = ::firebase::App::GetInstance(app_name.c_str());
-  const auto remote_config = RemoteConfig::GetInstance(firebaseApp);
-
-  auto future = remote_config->Activate();
-
-  future.OnCompletion([completion](const Future<bool>& futureResult) {
-    if (futureResult.status() == kFutureStatusComplete) {
-      auto result = *futureResult.result();
-      completion(std::variant<bool, FirebaseRemoteConfigException>(result));
-    } else {
-      completion(
-          FirebaseRemoteConfigException("Cannot activate remote config"));
-    }
-  });
-}
-
-void FirebaseRemoteConfigPlugin::fetch_(
-    const flutter::EncodableValue* arguments,
-    std::function<void(std::optional<FirebaseRemoteConfigException>)>
-        completion) {
-  const auto& args = try_get_arguments_(arguments);
-
-  if (!args) {
-    throw FirebaseRemoteConfigException("Cannot decode arguments");
-  }
-
-  const auto app_name = get_app_name_(args);
-
-  const auto firebaseApp = ::firebase::App::GetInstance(app_name.c_str());
-  const auto remote_config = RemoteConfig::GetInstance(firebaseApp);
-
-  auto future = remote_config->Fetch();
-
-  future.OnCompletion([completion](const Future<void>& futureResult) {
-    if (futureResult.status() == kFutureStatusComplete) {
-      completion({});
-    } else {
-      completion(FirebaseRemoteConfigException("Cannot fetch remote config"));
-    }
-  });
-}
-
-void FirebaseRemoteConfigPlugin::fetch_and_activate_(
-    const flutter::EncodableValue* arguments,
-    std::function<void(std::variant<bool, FirebaseRemoteConfigException>)>
-        completion) {
-  const auto& args = try_get_arguments_(arguments);
-  if (!args) {
-    throw FirebaseRemoteConfigException("Cannot decode arguments");
-  }
-
-  const auto app_name = get_app_name_(args);
-
-  const auto firebaseApp = ::firebase::App::GetInstance(app_name.c_str());
-  const auto remote_config = RemoteConfig::GetInstance(firebaseApp);
-
-  auto future = remote_config->FetchAndActivate();
-
-  future.OnCompletion([completion](const Future<bool>& futureResult) {
-    if (futureResult.status() == kFutureStatusComplete) {
-      auto result = *futureResult.result();
-      completion(std::variant<bool, FirebaseRemoteConfigException>(result));
-    } else {
-      completion(
-          FirebaseRemoteConfigException("Cannot activate remote config"));
-    }
-  });
-}
-
-flutter::EncodableMap FirebaseRemoteConfigPlugin::get_all_(
-    const flutter::EncodableValue* arguments) const {
-  const auto& args = try_get_arguments_(arguments);
-
-  if (!args) {
-    throw FirebaseRemoteConfigException("Cannot decode arguments");
-  }
-
-  const auto app_name = get_app_name_(args);
-
-  const auto firebaseApp = ::firebase::App::GetInstance(app_name.c_str());
-  const auto remote_config = RemoteConfig::GetInstance(firebaseApp);
-
-  const auto get_all = remote_config->GetAll();
-  //
-  auto all_mapped = map_parameters_(get_all, remote_config);
-
-  return all_mapped;
+  result(values);
 }
 }  // namespace firebase_remote_config_windows

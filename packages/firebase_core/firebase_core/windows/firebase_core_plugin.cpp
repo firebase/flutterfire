@@ -112,24 +112,6 @@ CoreInitializeResponse AppToCoreInitializeResponse(const App &app) {
   return response;
 }
 
-// PigeonInitializeResponse AppToPigeonInitializeResponse(const App &app) {
-//   PigeonInitializeResponse response = PigeonInitializeResponse();
-
-//   auto firebaseRegistry = FirebasePluginRegistry::GetInstance();
-//   std::vector<std::shared_ptr<FlutterFirebasePlugin>>& values = firebaseRegistry->p_constants();
-
-//   response.set_name(app.name());
-//   response.set_options(optionsFromFIROptions(app.options()));
-
-//   flutter::EncodableMap result;
-
-//   for (const std::shared_ptr<FlutterFirebasePlugin> &val: values) {
-//       flutter::EncodableMap constants = val->get_plugin_constants(app);
-//       result[flutter::EncodableValue(val->plugin_name().c_str())] = flutter::EncodableValue(constants);
-//   }
-
-//   response.set_plugin_constants(result);
-
 void FirebaseCorePlugin::InitializeApp(
     const std::string &app_name,
     const CoreFirebaseOptions &initialize_app_request,
