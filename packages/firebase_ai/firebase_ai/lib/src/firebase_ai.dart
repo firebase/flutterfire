@@ -26,13 +26,14 @@ const _defaultLocation = 'us-central1';
 
 /// The entrypoint for generative models.
 class FirebaseAI extends FirebasePluginPlatform {
-  FirebaseAI._(
-      {required this.app,
-      required this.location,
-      required bool useVertexBackend,
-      this.appCheck,
-      this.auth})
-      : _useVertexBackend = useVertexBackend,
+  FirebaseAI._({
+    required this.app,
+    required this.location,
+    required bool useVertexBackend,
+    this.appCheck,
+    this.auth,
+    this.useLimitedUseAppCheckTokens = false,
+  })  : _useVertexBackend = useVertexBackend,
         super(app.name, 'plugins.flutter.io/firebase_vertexai');
 
   /// The [FirebaseApp] for this current [FirebaseAI] instance.
@@ -48,6 +49,9 @@ class FirebaseAI extends FirebasePluginPlatform {
   /// The service location for this [FirebaseAI] instance.
   String location;
 
+  /// Whether to use App Check limited use tokens. Defaults to false.
+  final bool useLimitedUseAppCheckTokens;
+
   final bool _useVertexBackend;
 
   static final Map<String, FirebaseAI> _cachedInstances = {};
@@ -61,6 +65,7 @@ class FirebaseAI extends FirebasePluginPlatform {
     FirebaseAppCheck? appCheck,
     FirebaseAuth? auth,
     String? location,
+    bool? useLimitedUseAppCheckTokens,
   }) {
     app ??= Firebase.app();
     var instanceKey = '${app.name}::vertexai';
@@ -77,6 +82,7 @@ class FirebaseAI extends FirebasePluginPlatform {
       appCheck: appCheck,
       auth: auth,
       useVertexBackend: true,
+      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens ?? false,
     );
     _cachedInstances[instanceKey] = newInstance;
 
@@ -91,6 +97,7 @@ class FirebaseAI extends FirebasePluginPlatform {
     FirebaseApp? app,
     FirebaseAppCheck? appCheck,
     FirebaseAuth? auth,
+    bool? useLimitedUseAppCheckTokens,
   }) {
     app ??= Firebase.app();
     var instanceKey = '${app.name}::googleai';
@@ -105,6 +112,7 @@ class FirebaseAI extends FirebasePluginPlatform {
       appCheck: appCheck,
       auth: auth,
       useVertexBackend: false,
+      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens ?? false,
     );
     _cachedInstances[instanceKey] = newInstance;
 
@@ -142,6 +150,7 @@ class FirebaseAI extends FirebasePluginPlatform {
       tools: tools,
       toolConfig: toolConfig,
       systemInstruction: systemInstruction,
+      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
     );
   }
 
@@ -162,7 +171,8 @@ class FirebaseAI extends FirebasePluginPlatform {
         generationConfig: generationConfig,
         safetySettings: safetySettings,
         appCheck: appCheck,
-        auth: auth);
+        auth: auth,
+        useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens);
   }
 
   /// Create a [LiveGenerativeModel] for real-time interaction.
@@ -185,6 +195,7 @@ class FirebaseAI extends FirebasePluginPlatform {
       systemInstruction: systemInstruction,
       appCheck: appCheck,
       auth: auth,
+      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
     );
   }
 }

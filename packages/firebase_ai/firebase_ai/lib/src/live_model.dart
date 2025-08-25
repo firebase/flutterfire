@@ -34,6 +34,7 @@ final class LiveGenerativeModel extends BaseModel {
       required String location,
       required FirebaseApp app,
       required bool useVertexBackend,
+      bool? useLimitedUseAppCheckTokens,
       FirebaseAppCheck? appCheck,
       FirebaseAuth? auth,
       LiveGenerationConfig? liveGenerationConfig,
@@ -47,6 +48,7 @@ final class LiveGenerativeModel extends BaseModel {
         _liveGenerationConfig = liveGenerationConfig,
         _tools = tools,
         _systemInstruction = systemInstruction,
+        _useLimitedUseAppCheckTokens = useLimitedUseAppCheckTokens,
         super._(
           serializationStrategy: VertexSerialization(),
           modelUri: useVertexBackend
@@ -69,6 +71,7 @@ final class LiveGenerativeModel extends BaseModel {
   final LiveGenerationConfig? _liveGenerationConfig;
   final List<Tool>? _tools;
   final Content? _systemInstruction;
+  final bool? _useLimitedUseAppCheckTokens;
 
   String _vertexAIUri() => 'wss://${_modelUri.baseAuthority}/'
       '$_apiUrl.${_modelUri.apiVersion}.$_apiUrlSuffixVertexAI/'
@@ -107,7 +110,12 @@ final class LiveGenerativeModel extends BaseModel {
     };
 
     final request = jsonEncode(setupJson);
-    final headers = await BaseModel.firebaseTokens(_appCheck, _auth, _app)();
+    final headers = await BaseModel.firebaseTokens(
+      _appCheck,
+      _auth,
+      _app,
+      _useLimitedUseAppCheckTokens,
+    )();
 
     var ws = kIsWeb
         ? WebSocketChannel.connect(Uri.parse(uri))
@@ -126,6 +134,7 @@ LiveGenerativeModel createLiveGenerativeModel({
   required String location,
   required String model,
   required bool useVertexBackend,
+  bool? useLimitedUseAppCheckTokens,
   FirebaseAppCheck? appCheck,
   FirebaseAuth? auth,
   LiveGenerationConfig? liveGenerationConfig,
@@ -139,6 +148,7 @@ LiveGenerativeModel createLiveGenerativeModel({
       auth: auth,
       location: location,
       useVertexBackend: useVertexBackend,
+      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
       liveGenerationConfig: liveGenerationConfig,
       tools: tools,
       systemInstruction: systemInstruction,
