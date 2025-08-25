@@ -61,7 +61,18 @@ class LiveSession {
         ? LiveClientContent(turns: [input], turnComplete: turnComplete)
         : LiveClientContent(turnComplete: turnComplete);
     var clientJson = jsonEncode(clientMessage.toJson());
+    _ws.sink.add(clientJson);
+  }
 
+  /// Sends tool responses for function calling to the server.
+  ///
+  /// [functionResponses] (optional): The list of function responses.
+  Future<void> sendToolResponse(
+      List<FunctionResponse>? functionResponses) async {
+    final toolResponse =
+        LiveClientToolResponse(functionResponses: functionResponses);
+    _checkWsStatus();
+    var clientJson = jsonEncode(toolResponse.toJson());
     _ws.sink.add(clientJson);
   }
 

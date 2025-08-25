@@ -155,15 +155,17 @@ void main() {
       final response = FunctionResponse('test', {});
       final message = LiveClientToolResponse(functionResponses: [response]);
       expect(message.toJson(), {
-        'functionResponses': [
-          {
-            'functionResponse': {'name': 'test', 'response': {}}
-          }
-        ]
+        'toolResponse': {
+          'functionResponses': [
+            {'name': 'test', 'response': {}}
+          ]
+        }
       });
 
       final message2 = LiveClientToolResponse();
-      expect(message2.toJson(), {'functionResponses': null});
+      expect(message2.toJson(), {
+        'toolResponse': {'functionResponses': null}
+      });
     });
 
     test('parseServerMessage parses serverContent message correctly', () {

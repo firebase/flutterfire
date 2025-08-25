@@ -1,3 +1,13 @@
+## 4.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+
+## 3.10.10
+
+ - Update a dependency to the latest release.
+
 ## 3.10.9
 
  - Update a dependency to the latest release.

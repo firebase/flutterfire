@@ -14,8 +14,8 @@
 
 import 'content.dart';
 import 'error.dart';
-import 'function_calling.dart' show Tool, ToolConfig;
 import 'schema.dart';
+import 'tool.dart' show Tool, ToolConfig;
 
 /// Response for Count Tokens
 final class CountTokensResponse {
@@ -31,6 +31,9 @@ final class CountTokensResponse {
   /// The number of characters that the `model` could bill at.
   ///
   /// Always non-negative.
+  @Deprecated(
+    'Use `totalTokens` instead; Gemini 2.0 series models and newer are always billed by token count.',
+  )
   final int? totalBillableCharacters;
 
   /// List of modalities that were processed in the request input.
@@ -146,6 +149,7 @@ final class UsageMetadata {
       {this.promptTokenCount,
       this.candidatesTokenCount,
       this.totalTokenCount,
+      this.thoughtsTokenCount,
       this.promptTokensDetails,
       this.candidatesTokensDetails});
 
@@ -157,6 +161,9 @@ final class UsageMetadata {
 
   /// Total token count for the generation request (prompt + candidates).
   final int? totalTokenCount;
+
+  /// Number of tokens present in thoughts output.
+  final int? thoughtsTokenCount;
 
   /// List of modalities that were processed in the request input.
   final List<ModalityTokenCount>? promptTokensDetails;
@@ -172,6 +179,7 @@ UsageMetadata createUsageMetadata({
   required int? promptTokenCount,
   required int? candidatesTokenCount,
   required int? totalTokenCount,
+  required int? thoughtsTokenCount,
   required List<ModalityTokenCount>? promptTokensDetails,
   required List<ModalityTokenCount>? candidatesTokensDetails,
 }) =>
@@ -179,6 +187,7 @@ UsageMetadata createUsageMetadata({
         promptTokenCount: promptTokenCount,
         candidatesTokenCount: candidatesTokenCount,
         totalTokenCount: totalTokenCount,
+        thoughtsTokenCount: thoughtsTokenCount,
         promptTokensDetails: promptTokensDetails,
         candidatesTokensDetails: candidatesTokensDetails);
 
@@ -187,7 +196,8 @@ final class Candidate {
   // TODO: token count?
   // ignore: public_member_api_docs
   Candidate(this.content, this.safetyRatings, this.citationMetadata,
-      this.finishReason, this.finishMessage);
+      this.finishReason, this.finishMessage,
+      {this.groundingMetadata});
 
   /// Generated content returned from the model.
   final Content content;
@@ -211,6 +221,9 @@ final class Candidate {
 
   /// Message for finish reason.
   final String? finishMessage;
+
+  /// Metadata returned to the client when grounding is enabled.
+  final GroundingMetadata? groundingMetadata;
 
   /// The concatenation of the text parts of [content], if any.
   ///
@@ -241,6 +254,150 @@ final class Candidate {
       _ => null,
     };
   }
+}
+
+/// Represents a specific segment within a [Content], often used to pinpoint
+/// the exact location of text or data that grounding information refers to.
+final class Segment {
+  // ignore: public_member_api_docs
+  Segment(
+      {required this.partIndex,
+      required this.startIndex,
+      required this.endIndex,
+      required this.text});
+
+  /// The zero-based index of the [Part] object within the `parts` array of its
+  /// parent [Content] object.
+  ///
+  /// This identifies which part of the content the segment belongs to.
+  final int partIndex;
+
+  /// The zero-based start index of the segment within the specified [Part],
+  /// measured in UTF-8 bytes.
+  ///
+  /// This offset is inclusive, starting from 0 at the beginning of the
+  /// part's content.
+  final int startIndex;
+
+  /// The zero-based end index of the segment within the specified [Part],
+  /// measured in UTF-8 bytes.
+  ///
+  /// This offset is exclusive, meaning the character at this index is not
+  /// included in the segment.
+  final int endIndex;
+
+  /// The text corresponding to the segment from the response.
+  final String text;
+}
+
+/// A grounding chunk sourced from the web.
+final class WebGroundingChunk {
+  // ignore: public_member_api_docs
+  WebGroundingChunk({this.uri, this.title, this.domain});
+
+  /// The URI of the retrieved web page.
+  final String? uri;
+
+  /// The title of the retrieved web page.
+  final String? title;
+
+  /// The domain of the original URI from which the content was retrieved.
+  ///
+  /// This field is only populated when using the Vertex AI Gemini API.
+  final String? domain;
+}
+
+/// Represents a chunk of retrieved data that supports a claim in the model's
+/// response.
+///
+/// This is part of the grounding information provided when grounding is
+/// enabled.
+final class GroundingChunk {
+  // ignore: public_member_api_docs
+  GroundingChunk({this.web});
+
+  /// Contains details if the grounding chunk is from a web source.
+  final WebGroundingChunk? web;
+}
+
+/// Provides information about how a specific segment of the model's response
+/// is supported by the retrieved grounding chunks.
+final class GroundingSupport {
+  // ignore: public_member_api_docs
+  GroundingSupport(
+      {required this.segment, required this.groundingChunkIndices});
+
+  /// Specifies the segment of the model's response content that this
+  /// grounding support pertains to.
+  final Segment segment;
+
+  /// A list of indices that refer to specific [GroundingChunk]s within the
+  /// [GroundingMetadata.groundingChunks] array.
+  ///
+  /// These referenced chunks are the sources that
+  /// support the claim made in the associated `segment` of the response.
+  /// For example, an array `[1, 3, 4]`
+  /// means that `groundingChunks[1]`, `groundingChunks[3]`, and
+  /// `groundingChunks[4]` are the
+  /// retrieved content supporting this part of the response.
+  final List<int> groundingChunkIndices;
+}
+
+/// Google Search entry point for web searches.
+final class SearchEntryPoint {
+  // ignore: public_member_api_docs
+  SearchEntryPoint({required this.renderedContent});
+
+  /// An HTML/CSS snippet that **must** be embedded in an app to display a
+  /// Google Search entry point for follow-up web searches related to the
+  /// model's "Grounded Response".
+  ///
+  /// To ensure proper rendering, it's recommended to display this content
+  /// within a `WebView`.
+  final String renderedContent;
+}
+
+/// Metadata returned to the client when grounding is enabled.
+///
+/// > Important: If using Grounding with Google Search, you are required to
+/// comply with the "Grounding with Google Search" usage requirements for your
+/// chosen API provider:
+/// [Gemini Developer API](https://ai.google.dev/gemini-api/terms#grounding-with-google-search)
+/// or Vertex AI Gemini API (see [Service Terms](https://cloud.google.com/terms/service-terms)
+/// section within the Service Specific Terms).
+final class GroundingMetadata {
+  // ignore: public_member_api_docs
+  GroundingMetadata(
+      {this.searchEntryPoint,
+      required this.groundingChunks,
+      required this.groundingSupport,
+      required this.webSearchQueries});
+
+  /// Google Search entry point for web searches.
+  ///
+  /// This contains an HTML/CSS snippet that **must** be embedded in an app to
+  // display a Google Search entry point for follow-up web searches related to
+  // the model's "Grounded Response".
+  final SearchEntryPoint? searchEntryPoint;
+
+  /// A list of [GroundingChunk]s.
+  ///
+  /// Each chunk represents a piece of retrieved content (e.g., from a web
+  /// page) that the model used to ground its response.
+  final List<GroundingChunk> groundingChunks;
+
+  /// A list of [GroundingSupport]s.
+  ///
+  /// Each object details how specific segments of the
+  /// model's response are supported by the `groundingChunks`.
+  final List<GroundingSupport> groundingSupport;
+
+  /// A list of web search queries that the model performed to gather the
+  /// grounding information.
+  ///
+  /// These can be used to allow users to explore the search results
+  /// themselves.
+  final List<String> webSearchQueries;
 }
 
 /// Safety rating for a piece of content.
@@ -697,8 +854,23 @@ enum ResponseModalities {
   const ResponseModalities(this._jsonString);
   final String _jsonString;
 
-  /// Convert to json format
+  // ignore: public_member_api_docs
   String toJson() => _jsonString;
+}
+
+/// Config for thinking features.
+class ThinkingConfig {
+  // ignore: public_member_api_docs
+  ThinkingConfig({this.thinkingBudget});
+
+  /// The number of thoughts tokens that the model should generate.
+  final int? thinkingBudget;
+
+  // ignore: public_member_api_docs
+  Map<String, Object?> toJson() => {
+        if (thinkingBudget case final thinkingBudget?)
+          'thinkingBudget': thinkingBudget,
+      };
 }
 
 /// Configuration options for model generation and outputs.
@@ -826,6 +998,7 @@ final class GenerationConfig extends BaseGenerationConfig {
     super.responseModalities,
     this.responseMimeType,
     this.responseSchema,
+    this.thinkingConfig,
   });
 
   /// The set of character sequences (up to 5) that will stop output generation.
@@ -847,6 +1020,12 @@ final class GenerationConfig extends BaseGenerationConfig {
   ///   a schema; currently this is limited to `application/json`.
   final Schema? responseSchema;
 
+  /// Config for thinking features.
+  ///
+  /// An error will be returned if this field is set for models that don't
+  /// support thinking.
+  final ThinkingConfig? thinkingConfig;
+
   @override
   Map<String, Object?> toJson() => {
         ...super.toJson(),
@@ -857,6 +1036,8 @@ final class GenerationConfig extends BaseGenerationConfig {
           'responseMimeType': responseMimeType,
         if (responseSchema case final responseSchema?)
           'responseSchema': responseSchema.toJson(),
+        if (thinkingConfig case final thinkingConfig?)
+          'thinkingConfig': thinkingConfig.toJson(),
       };
 }
 
@@ -1027,29 +1208,33 @@ Candidate _parseCandidate(Object? jsonObject) {
   }
 
   return Candidate(
-    jsonObject.containsKey('content')
-        ? parseContent(jsonObject['content'] as Object)
-        : Content(null, []),
-    switch (jsonObject) {
-      {'safetyRatings': final List<Object?> safetyRatings} =>
-        safetyRatings.map(_parseSafetyRating).toList(),
-      _ => null
-    },
-    switch (jsonObject) {
-      {'citationMetadata': final Object citationMetadata} =>
-        _parseCitationMetadata(citationMetadata),
-      _ => null
-    },
-    switch (jsonObject) {
-      {'finishReason': final Object finishReason} =>
-        FinishReason._parseValue(finishReason),
-      _ => null
-    },
-    switch (jsonObject) {
-      {'finishMessage': final String finishMessage} => finishMessage,
-      _ => null
-    },
-  );
+      jsonObject.containsKey('content')
+          ? parseContent(jsonObject['content'] as Object)
+          : Content(null, []),
+      switch (jsonObject) {
+        {'safetyRatings': final List<Object?> safetyRatings} =>
+          safetyRatings.map(_parseSafetyRating).toList(),
+        _ => null
+      },
+      switch (jsonObject) {
+        {'citationMetadata': final Object citationMetadata} =>
+          _parseCitationMetadata(citationMetadata),
+        _ => null
+      },
+      switch (jsonObject) {
+        {'finishReason': final Object finishReason} =>
+          FinishReason._parseValue(finishReason),
+        _ => null
+      },
+      switch (jsonObject) {
+        {'finishMessage': final String finishMessage} => finishMessage,
+        _ => null
+      },
+      groundingMetadata: switch (jsonObject) {
+        {'groundingMetadata': final Object groundingMetadata} =>
+          _parseGroundingMetadata(groundingMetadata),
+        _ => null
+      });
 }
 
 PromptFeedback _parsePromptFeedback(Object jsonObject) {
@@ -1090,6 +1275,10 @@ UsageMetadata _parseUsageMetadata(Object jsonObject) {
     {'totalTokenCount': final int totalTokenCount} => totalTokenCount,
     _ => null,
   };
+  final thoughtsTokenCount = switch (jsonObject) {
+    {'thoughtsTokenCount': final int thoughtsTokenCount} => thoughtsTokenCount,
+    _ => null,
+  };
   final promptTokensDetails = switch (jsonObject) {
     {'promptTokensDetails': final List<Object?> promptTokensDetails} =>
       promptTokensDetails.map(_parseModalityTokenCount).toList(),
@@ -1100,12 +1289,14 @@ UsageMetadata _parseUsageMetadata(Object jsonObject) {
       candidatesTokensDetails.map(_parseModalityTokenCount).toList(),
     _ => null,
   };
-  return UsageMetadata._(
-      promptTokenCount: promptTokenCount,
-      candidatesTokenCount: candidatesTokenCount,
-      totalTokenCount: totalTokenCount,
-      promptTokensDetails: promptTokensDetails,
-      candidatesTokensDetails: candidatesTokensDetails);
+  return createUsageMetadata(
+    promptTokenCount: promptTokenCount,
+    candidatesTokenCount: candidatesTokenCount,
+    totalTokenCount: totalTokenCount,
+    thoughtsTokenCount: thoughtsTokenCount,
+    promptTokensDetails: promptTokensDetails,
+    candidatesTokensDetails: candidatesTokensDetails,
+  );
 }
 
 ModalityTokenCount _parseModalityTokenCount(Object? jsonObject) {
@@ -1161,5 +1352,116 @@ Citation _parseCitationSource(Object? jsonObject) {
     jsonObject['endIndex'] as int?,
     uriString != null ? Uri.parse(uriString) : null,
     jsonObject['license'] as String?,
+  );
+}
+
+GroundingMetadata _parseGroundingMetadata(Object? jsonObject) {
+  if (jsonObject is! Map) {
+    throw unhandledFormat('GroundingMetadata', jsonObject);
+  }
+
+  final searchEntryPoint = switch (jsonObject) {
+    {'searchEntryPoint': final Object? searchEntryPoint} =>
+      _parseSearchEntryPoint(searchEntryPoint),
+    _ => null,
+  };
+  final groundingChunks = switch (jsonObject) {
+        {'groundingChunks': final List<Object?> groundingChunks} =>
+          groundingChunks.map(_parseGroundingChunk).toList(),
+        _ => null,
+      } ??
+      [];
+  // Filters out null elements, which are returned from _parseGroundingSupport when
+  // segment is null.
+  final groundingSupport = switch (jsonObject) {
+        {'groundingSupport': final List<Object?> groundingSupport} =>
+          groundingSupport
+              .map(_parseGroundingSupport)
+              .whereType<GroundingSupport>()
+              .toList(),
+        _ => null,
+      } ??
+      [];
+  final webSearchQueries = switch (jsonObject) {
+        {'webSearchQueries': final List<String>? webSearchQueries} =>
+          webSearchQueries,
+        _ => null,
+      } ??
+      [];
+
+  return GroundingMetadata(
+      searchEntryPoint: searchEntryPoint,
+      groundingChunks: groundingChunks,
+      groundingSupport: groundingSupport,
+      webSearchQueries: webSearchQueries);
+}
+
+Segment _parseSegment(Object? jsonObject) {
+  if (jsonObject is! Map) {
+    throw unhandledFormat('Segment', jsonObject);
+  }
+
+  return Segment(
+      partIndex: (jsonObject['partIndex'] as int?) ?? 0,
+      startIndex: (jsonObject['startIndex'] as int?) ?? 0,
+      endIndex: (jsonObject['endIndex'] as int?) ?? 0,
+      text: (jsonObject['text'] as String?) ?? '');
+}
+
+WebGroundingChunk _parseWebGroundingChunk(Object? jsonObject) {
+  if (jsonObject is! Map) {
+    throw unhandledFormat('WebGroundingChunk', jsonObject);
+  }
+
+  return WebGroundingChunk(
+    uri: jsonObject['uri'] as String?,
+    title: jsonObject['title'] as String?,
+    domain: jsonObject['domain'] as String?,
+  );
+}
+
+GroundingChunk _parseGroundingChunk(Object? jsonObject) {
+  if (jsonObject is! Map) {
+    throw unhandledFormat('GroundingChunk', jsonObject);
+  }
+
+  return GroundingChunk(
+    web: jsonObject['web'] != null
+        ? _parseWebGroundingChunk(jsonObject['web'])
+        : null,
+  );
+}
+
+GroundingSupport? _parseGroundingSupport(Object? jsonObject) {
+  if (jsonObject is! Map) {
+    throw unhandledFormat('GroundingSupport', jsonObject);
+  }
+
+  final segment = switch (jsonObject) {
+    {'segment': final Object? segment} => _parseSegment(segment),
+    _ => null,
+  };
+  if (segment == null) {
+    return null;
+  }
+
+  return GroundingSupport(
+      segment: segment,
+      groundingChunkIndices:
+          (jsonObject['groundingChunkIndices'] as List<int>?) ?? []);
+}
+
+SearchEntryPoint _parseSearchEntryPoint(Object? jsonObject) {
+  if (jsonObject is! Map) {
+    throw unhandledFormat('SearchEntryPoint', jsonObject);
+  }
+
+  final renderedContent = jsonObject['renderedContent'] as String?;
+  if (renderedContent == null) {
+    throw unhandledFormat('SearchEntryPoint', jsonObject);
+  }
+
+  return SearchEntryPoint(
+    renderedContent: renderedContent,
   );
 }

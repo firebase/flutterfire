@@ -39,3 +39,7 @@ export 'src/providers/play_games_auth.dart';
 export 'src/types.dart';
 export 'src/user_info.dart';
 export 'src/user_metadata.dart';
+export 'src/password_policy/password_policy_api.dart';
+export 'src/password_policy/password_policy_impl.dart';
+export 'src/password_policy/password_policy.dart';
+export 'src/password_policy/password_validation_status.dart';

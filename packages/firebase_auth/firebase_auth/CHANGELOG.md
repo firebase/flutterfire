@@ -1,3 +1,78 @@
+## 6.0.1
+
+ - **FIX**(auth,apple): Move FirebaseAuth imports to implementation files ([#17607](https://github.com/firebase/flutterfire/issues/17607)). ([0c3ccd37](https://github.com/firebase/flutterfire/commit/0c3ccd3722038a47e656b0a703a0395a78befc5b))
+
+## 6.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**(auth): validatePassword method/PasswordPolicy Support ([#17439](https://github.com/firebase/flutterfire/issues/17439)). ([9a032b34](https://github.com/firebase/flutterfire/commit/9a032b344d6a22c1e3a181ae27e511939f2d8972))
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**(auth): remove deprecated functions ([#17562](https://github.com/firebase/flutterfire/issues/17562)). ([d50aad95](https://github.com/firebase/flutterfire/commit/d50aad954443904d64d4ebd4442ebc63ed702986))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+## Removed Methods
+
+- `ActionCodeSettings.dynamicLinkDomain` - Firebase Dynamic Links is deprecated and will be shut down
+- `MicrosoftAuthProvider.credential()` - Use `signInWithProvider(MicrosoftAuthProvider)` instead
+- `FirebaseAuth.instanceFor()` persistence parameter - Use `setPersistence()` instead
+- `FirebaseAuth.fetchSignInMethodsForEmail()` - Removed for security best practices
+- `User.updateEmail()` - Use `verifyBeforeUpdateEmail()` instead
+
+## Migration Guide
+
+### ActionCodeSettings
+```dart
+// Before
+ActionCodeSettings(
+  url: 'https://example.com',
+  dynamicLinkDomain: 'example.page.link',
+)
+
+// After
+ActionCodeSettings(
+  url: 'https://example.com',
+  linkDomain: 'your-custom-domain.com', // Use custom Firebase Hosting domain
+)
+```
+
+### Microsoft Authentication
+```dart
+// Before
+final credential = MicrosoftAuthProvider.credential(accessToken);
+await FirebaseAuth.instance.signInWithCredential(credential);
+
+// After
+final provider = MicrosoftAuthProvider();
+await FirebaseAuth.instance.signInWithProvider(provider);
+```
+
+### FirebaseAuth Instance
+```dart
+// Before
+FirebaseAuth.instanceFor(app: app, persistence: Persistence.local);
+
+// After
+final auth = FirebaseAuth.instanceFor(app: app);
+auth.setPersistence(Persistence.local);
+```
+
+### Email Updates
+```dart
+// Before
+await user.updateEmail('new@email.com');
+
+// After
+await user.verifyBeforeUpdateEmail('new@email.com');
+```
+
+### Email Sign-in Methods
+The `fetchSignInMethodsForEmail()` method has been removed for security reasons. Consider implementing alternative authentication flows that don't require email enumeration.
+
+## 5.7.0
+
+ - **FEAT**(auth,macos): add support for `publish` and `addApplicationDelegate` on macOS FlutterPluginRegistrar ([#17518](https://github.com/firebase/flutterfire/issues/17518)). ([376bb6ea](https://github.com/firebase/flutterfire/commit/376bb6ea8878df3f25cc1416fe26ace2203fd793))
+
 ## 5.6.2
 
  - Update a dependency to the latest release.

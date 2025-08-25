@@ -13,7 +13,9 @@
 // limitations under the License.
 
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:typed_data';
+
 import 'error.dart';
 
 /// The base structured datatype containing multi-part content of a message.
@@ -46,8 +48,9 @@ final class Content {
   static Content model(Iterable<Part> parts) => Content('model', [...parts]);
 
   /// Return a [Content] with [FunctionResponse].
-  static Content functionResponse(String name, Map<String, Object?> response) =>
-      Content('function', [FunctionResponse(name, response)]);
+  static Content functionResponse(String name, Map<String, Object?> response,
+          {String? id}) =>
+      Content('function', [FunctionResponse(name, response, id: id)]);
 
   /// Return a [Content] with multiple [FunctionResponse].
   static Content functionResponses(Iterable<FunctionResponse> responses) =>
@@ -81,7 +84,14 @@ Content parseContent(Object jsonObject) {
 
 /// Parse the [Part] from json object.
 Part parsePart(Object? jsonObject) {
-  if (jsonObject is Map && jsonObject.containsKey('functionCall')) {
+  if (jsonObject is! Map<String, Object?>) {
+    log('Unhandled part format: $jsonObject');
+    return UnknownPart(<String, Object?>{
+      'unhandled': jsonObject,
+    });
+  }
+
+  if (jsonObject.containsKey('functionCall')) {
     final functionCall = jsonObject['functionCall'];
     if (functionCall is Map &&
         functionCall.containsKey('name') &&
@@ -104,13 +114,12 @@ Part parsePart(Object? jsonObject) {
       }
     } =>
       FileData(mimeType, fileUri),
-    {
-      'functionResponse': {'name': String _, 'response': Map<String, Object?> _}
-    } =>
-      throw UnimplementedError('FunctionResponse part not yet supported'),
     {'inlineData': {'mimeType': String mimeType, 'data': String bytes}} =>
       InlineDataPart(mimeType, base64Decode(bytes)),
-    _ => throw unhandledFormat('Part', jsonObject),
+    _ => () {
+        log('unhandled part format: $jsonObject');
+        return UnknownPart(jsonObject);
+      }(),
   };
 }
 
@@ -118,6 +127,18 @@ Part parsePart(Object? jsonObject) {
 sealed class Part {
   /// Convert the [Part] content to json format.
   Object toJson();
+}
+
+/// A [Part] that contains unparsable data.
+final class UnknownPart implements Part {
+  // ignore: public_member_api_docs
+  UnknownPart(this.data);
+
+  /// The unparsed data.
+  final Map<String, Object?> data;
+
+  @override
+  Object toJson() => data;
 }
 
 /// A [Part] with the text content.
