@@ -40,6 +40,12 @@ void main() {
             'candidatesTokenCount': 5,
             'totalTokenCount': 15,
             'thoughtsTokenCount': 3,
+            'promptTokensDetails': [
+              {'modality': 'TEXT', 'tokenCount': 10}
+            ],
+            'candidatesTokensDetails': [
+              {'modality': 'TEXT', 'tokenCount': 25}
+            ],
           }
         };
         final response =
@@ -49,6 +55,15 @@ void main() {
         expect(response.usageMetadata!.candidatesTokenCount, 5);
         expect(response.usageMetadata!.totalTokenCount, 15);
         expect(response.usageMetadata!.thoughtsTokenCount, 3);
+        expect(response.usageMetadata!.promptTokensDetails, isNotNull);
+        expect(response.usageMetadata!.promptTokensDetails, hasLength(1));
+        expect(
+            response.usageMetadata!.promptTokensDetails!.first.tokenCount, 10);
+        expect(response.usageMetadata!.candidatesTokensDetails, isNotNull);
+        expect(response.usageMetadata!.candidatesTokensDetails, hasLength(1));
+        expect(
+            response.usageMetadata!.candidatesTokensDetails!.first.tokenCount,
+            25);
       });
 
       test('parses usageMetadata when thoughtsTokenCount is missing', () {
@@ -69,6 +84,12 @@ void main() {
             'candidatesTokenCount': 5,
             'totalTokenCount': 15,
             // thoughtsTokenCount is missing
+            'promptTokensDetails': [
+              {'modality': 'TEXT', 'tokenCount': 10}
+            ],
+            'candidatesTokensDetails': [
+              {'modality': 'TEXT', 'tokenCount': 25}
+            ],
           }
         };
         final response =
@@ -301,6 +322,26 @@ void main() {
           expect(validSupport.segment.text, 'Test');
           expect(validSupport.groundingChunkIndices, [0]);
         });
+      });
+
+      test('parses usageMetadata when token details are missing', () {
+        final jsonResponse = {
+          'usageMetadata': {
+            'promptTokenCount': 10,
+            'candidatesTokenCount': 25,
+            'totalTokenCount': 35,
+          }
+        };
+
+        final response =
+            DeveloperSerialization().parseGenerateContentResponse(jsonResponse);
+
+        expect(response.usageMetadata, isNotNull);
+        expect(response.usageMetadata!.promptTokenCount, 10);
+        expect(response.usageMetadata!.candidatesTokenCount, 25);
+        expect(response.usageMetadata!.totalTokenCount, 35);
+        expect(response.usageMetadata!.promptTokensDetails, isNull);
+        expect(response.usageMetadata!.candidatesTokensDetails, isNull);
       });
 
       test('parses inlineData part correctly', () {

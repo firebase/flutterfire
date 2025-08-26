@@ -34,9 +34,8 @@ import '../api.dart'
         SearchEntryPoint,
         Segment,
         SerializationStrategy,
-        UsageMetadata,
         WebGroundingChunk,
-        createUsageMetadata;
+        parseUsageMetadata;
 import '../content.dart' show Content, parseContent;
 import '../error.dart';
 import '../tool.dart' show Tool, ToolConfig;
@@ -117,13 +116,13 @@ final class DeveloperSerialization implements SerializationStrategy {
         _parsePromptFeedback(promptFeedback),
       _ => null,
     };
-    final usageMedata = switch (jsonObject) {
+    final usageMetadata = switch (jsonObject) {
       {'usageMetadata': final usageMetadata?} =>
-        _parseUsageMetadata(usageMetadata),
+        parseUsageMetadata(usageMetadata),
       _ => null,
     };
     return GenerateContentResponse(candidates, promptFeedback,
-        usageMetadata: usageMedata);
+        usageMetadata: usageMetadata);
   }
 
   @override
@@ -236,37 +235,6 @@ PromptFeedback _parsePromptFeedback(Object jsonObject) {
           safetyRatings.map(_parseSafetyRating).toList()),
     _ => throw unhandledFormat('PromptFeedback', jsonObject),
   };
-}
-
-UsageMetadata _parseUsageMetadata(Object jsonObject) {
-  if (jsonObject is! Map<String, Object?>) {
-    throw unhandledFormat('UsageMetadata', jsonObject);
-  }
-  final promptTokenCount = switch (jsonObject) {
-    {'promptTokenCount': final int promptTokenCount} => promptTokenCount,
-    _ => null,
-  };
-  final candidatesTokenCount = switch (jsonObject) {
-    {'candidatesTokenCount': final int candidatesTokenCount} =>
-      candidatesTokenCount,
-    _ => null,
-  };
-  final totalTokenCount = switch (jsonObject) {
-    {'totalTokenCount': final int totalTokenCount} => totalTokenCount,
-    _ => null,
-  };
-  final thoughtsTokenCount = switch (jsonObject) {
-    {'thoughtsTokenCount': final int thoughtsTokenCount} => thoughtsTokenCount,
-    _ => null,
-  };
-  return createUsageMetadata(
-    promptTokenCount: promptTokenCount,
-    candidatesTokenCount: candidatesTokenCount,
-    totalTokenCount: totalTokenCount,
-    thoughtsTokenCount: thoughtsTokenCount,
-    promptTokensDetails: null,
-    candidatesTokensDetails: null,
-  );
 }
 
 SafetyRating _parseSafetyRating(Object? jsonObject) {
