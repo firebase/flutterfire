@@ -77,7 +77,6 @@ final class LiveGenerationConfig extends BaseGenerationConfig {
   LiveGenerationConfig({
     this.speechConfig,
     super.responseModalities,
-    super.candidateCount,
     super.maxOutputTokens,
     super.temperature,
     super.topP,
@@ -234,7 +233,15 @@ class LiveClientToolResponse {
   final List<FunctionResponse>? functionResponses;
   // ignore: public_member_api_docs
   Map<String, dynamic> toJson() => {
-        'functionResponses': functionResponses?.map((e) => e.toJson()).toList(),
+        'toolResponse': {
+          'functionResponses': functionResponses
+              ?.map((e) => {
+                    'name': e.name,
+                    'response': e.response,
+                    if (e.id != null) 'id': e.id,
+                  })
+              .toList(),
+        },
       };
 }
 

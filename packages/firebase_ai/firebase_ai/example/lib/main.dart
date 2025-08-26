@@ -12,24 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ai/firebase_ai.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 // Import after file is generated through flutterfire_cli.
 // import 'package:firebase_ai_example/firebase_options.dart';
 
-import 'pages/chat_page.dart';
 import 'pages/audio_page.dart';
+import 'pages/bidi_page.dart';
+import 'pages/chat_page.dart';
+import 'pages/document.dart';
 import 'pages/function_calling_page.dart';
 import 'pages/image_prompt_page.dart';
-import 'pages/token_count_page.dart';
-import 'pages/schema_page.dart';
 import 'pages/imagen_page.dart';
-import 'pages/document.dart';
+import 'pages/json_schema_page.dart';
+import 'pages/schema_page.dart';
+import 'pages/token_count_page.dart';
 import 'pages/video_page.dart';
-import 'pages/bidi_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -64,11 +65,11 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
   void _initializeModel(bool useVertexBackend) {
     if (useVertexBackend) {
       final vertexInstance = FirebaseAI.vertexAI(auth: FirebaseAuth.instance);
-      _currentModel = vertexInstance.generativeModel(model: 'gemini-1.5-flash');
+      _currentModel = vertexInstance.generativeModel(model: 'gemini-2.5-flash');
       _currentImagenModel = _initializeImagenModel(vertexInstance);
     } else {
       final googleAI = FirebaseAI.googleAI(auth: FirebaseAuth.instance);
-      _currentModel = googleAI.generativeModel(model: 'gemini-2.0-flash');
+      _currentModel = googleAI.generativeModel(model: 'gemini-2.5-flash');
       _currentImagenModel = _initializeImagenModel(googleAI);
     }
   }
@@ -80,7 +81,7 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
       imageFormat: ImagenFormat.jpeg(compressionQuality: 75),
     );
     return instance.imagenModel(
-      model: 'imagen-3.0-generate-002',
+      model: 'imagen-3.0-capability-001',
       generationConfig: generationConfig,
       safetySettings: ImagenSafetySettings(
         ImagenSafetyFilterLevel.blockLowAndAbove,
@@ -154,10 +155,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   void _onItemTapped(int index) {
-    if (index == 9 && !widget.useVertexBackend) {
-      // Live Stream feature only works with Vertex AI now.
-      return;
-    }
     widget.onSelectedIndexChanged(index);
   }
 
@@ -170,7 +167,10 @@ class _HomeScreenState extends State<HomeScreen> {
   ) {
     switch (index) {
       case 0:
-        return ChatPage(title: 'Chat', model: currentModel);
+        return ChatPage(
+          title: 'Chat',
+          useVertexBackend: useVertexBackend,
+        );
       case 1:
         return AudioPage(title: 'Audio', model: currentModel);
       case 2:
@@ -188,19 +188,24 @@ class _HomeScreenState extends State<HomeScreen> {
       case 6:
         return SchemaPromptPage(title: 'Schema Prompt', model: currentModel);
       case 7:
-        return DocumentPage(title: 'Document Prompt', model: currentModel);
+        return JsonSchemaPage(title: 'JSON Schema', model: currentModel);
       case 8:
-        return VideoPage(title: 'Video Prompt', model: currentModel);
+        return DocumentPage(title: 'Document Prompt', model: currentModel);
       case 9:
-        if (useVertexBackend) {
-          return BidiPage(title: 'Live Stream', model: currentModel);
-        } else {
-          // Fallback to the first page in case of an unexpected index
-          return ChatPage(title: 'Chat', model: currentModel);
-        }
+        return VideoPage(title: 'Video Prompt', model: currentModel);
+      case 10:
+        return BidiPage(
+          title: 'Live Stream',
+          model: currentModel,
+          useVertexBackend: useVertexBackend,
+        );
+
       default:
         // Fallback to the first page in case of an unexpected index
-        return ChatPage(title: 'Chat', model: currentModel);
+        return ChatPage(
+          title: 'Chat',
+          useVertexBackend: useVertexBackend,
+        );
     }
   }
 
@@ -234,7 +239,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onChanged: widget.onBackendChanged,
                   activeTrackColor: Colors.green.withValues(alpha: 0.5),
                   inactiveTrackColor: Colors.blueGrey.withValues(alpha: 0.5),
-                  activeColor: Colors.green,
+                  activeThumbColor: Colors.green,
                   inactiveThumbColor: Colors.blueGrey,
                 ),
                 Text(
@@ -270,48 +275,53 @@ class _HomeScreenState extends State<HomeScreen> {
         unselectedItemColor: widget.useVertexBackend
             ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)
             : Colors.grey,
-        items: <BottomNavigationBarItem>[
-          const BottomNavigationBarItem(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
             icon: Icon(Icons.chat),
             label: 'Chat',
             tooltip: 'Chat',
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.mic),
             label: 'Audio',
             tooltip: 'Audio Prompt',
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.numbers),
             label: 'Tokens',
             tooltip: 'Token Count',
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.functions),
             label: 'Functions',
             tooltip: 'Function Calling',
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.image),
             label: 'Image',
             tooltip: 'Image Prompt',
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.image_search),
             label: 'Imagen',
             tooltip: 'Imagen Model',
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.schema),
             label: 'Schema',
             tooltip: 'Schema Prompt',
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
+            icon: Icon(Icons.data_object),
+            label: 'JSON',
+            tooltip: 'JSON Schema',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.edit_document),
             label: 'Document',
             tooltip: 'Document Prompt',
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.video_collection),
             label: 'Video',
             tooltip: 'Video Prompt',
@@ -319,12 +329,9 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomNavigationBarItem(
             icon: Icon(
               Icons.stream,
-              color: widget.useVertexBackend ? null : Colors.grey,
             ),
             label: 'Live',
-            tooltip: widget.useVertexBackend
-                ? 'Live Stream'
-                : 'Live Stream (Currently Disabled)',
+            tooltip: 'Live Stream',
           ),
         ],
         currentIndex: widget.selectedIndex,

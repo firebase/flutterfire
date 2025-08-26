@@ -95,11 +95,23 @@ final class GenerateContentResponse {
                   : ''),
         ),
       // Special case for a single TextPart to avoid iterable chain.
-      [Candidate(content: Content(parts: [TextPart(:final text)])), ...] =>
+      [
+        Candidate(
+          content: Content(
+            parts: [TextPart(isThought: final isThought, :final text)]
+          )
+        ),
+        ...
+      ]
+          when isThought != true =>
         text,
       [Candidate(content: Content(:final parts)), ...]
-          when parts.any((p) => p is TextPart) =>
-        parts.whereType<TextPart>().map((p) => p.text).join(),
+          when parts.any((p) => p is TextPart && p.isThought != true) =>
+        parts
+            .whereType<TextPart>()
+            .where((p) => p.isThought != true)
+            .map((p) => p.text)
+            .join(),
       [Candidate(), ...] => null,
     };
   }
@@ -110,7 +122,9 @@ final class GenerateContentResponse {
   /// candidate has no [FunctionCall] parts. There is no error thrown if the
   /// prompt or response were blocked.
   Iterable<FunctionCall> get functionCalls =>
-      candidates.firstOrNull?.content.parts.whereType<FunctionCall>() ??
+      candidates.firstOrNull?.content.parts
+          .whereType<FunctionCall>()
+          .where((p) => p.isThought != true) ??
       const [];
 
   /// The inline data parts of the first candidate in [candidates], if any.
@@ -119,8 +133,31 @@ final class GenerateContentResponse {
   /// candidate has no [InlineDataPart] parts. There is no error thrown if the
   /// prompt or response were blocked.
   Iterable<InlineDataPart> get inlineDataParts =>
-      candidates.firstOrNull?.content.parts.whereType<InlineDataPart>() ??
+      candidates.firstOrNull?.content.parts
+          .whereType<InlineDataPart>()
+          .where((p) => p.isThought != true) ??
       const [];
+
+  /// The thought summary of the first candidate in [candidates], if any.
+  ///
+  /// If the first candidate's content contains any thought parts, this value is
+  /// the concatenation of their text.
+  ///
+  /// If there are no candidates, or if the first candidate does not contain any
+  /// thought parts, this value is `null`.
+  ///
+  /// Important: Thought summaries are only available when `includeThoughts` is
+  /// enabled in the ``ThinkingConfig``. For more information, see the
+  /// [Thinking](https://firebase.google.com/docs/ai-logic/thinking)
+  String? get thoughtSummary {
+    final thoughtParts = candidates.firstOrNull?.content.parts
+        .where((p) => p.isThought == true)
+        .whereType<TextPart>();
+    if (thoughtParts == null || thoughtParts.isEmpty) {
+      return null;
+    }
+    return thoughtParts.map((p) => p.text).join();
+  }
 }
 
 /// Feedback metadata of a prompt specified in a [GenerativeModel] request.
@@ -842,15 +879,20 @@ enum ResponseModalities {
 /// Config for thinking features.
 class ThinkingConfig {
   // ignore: public_member_api_docs
-  ThinkingConfig({this.thinkingBudget});
+  ThinkingConfig({this.thinkingBudget, this.includeThoughts});
 
   /// The number of thoughts tokens that the model should generate.
   final int? thinkingBudget;
+
+  /// Whether to include thoughts in the response.
+  final bool? includeThoughts;
 
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
         if (thinkingBudget case final thinkingBudget?)
           'thinkingBudget': thinkingBudget,
+        if (includeThoughts case final includeThoughts?)
+          'includeThoughts': includeThoughts,
       };
 }
 
@@ -979,8 +1021,10 @@ final class GenerationConfig extends BaseGenerationConfig {
     super.responseModalities,
     this.responseMimeType,
     this.responseSchema,
+    this.responseJsonSchema,
     this.thinkingConfig,
-  });
+  }) : assert(responseSchema == null || responseJsonSchema == null,
+            'responseSchema and responseJsonSchema cannot both be set.');
 
   /// The set of character sequences (up to 5) that will stop output generation.
   ///
@@ -999,7 +1043,27 @@ final class GenerationConfig extends BaseGenerationConfig {
   ///
   /// - Note: This only applies when the [responseMimeType] supports
   ///   a schema; currently this is limited to `application/json`.
+  ///
+  /// Only one of [responseSchema] or [responseJsonSchema] may be specified at
+  /// the same time.
   final Schema? responseSchema;
+
+  /// The response schema as a JSON-compatible map.
+  ///
+  /// - Note: This only applies when the [responseMimeType] supports a schema;
+  ///   currently this is limited to `application/json`.
+  ///
+  /// This schema can include more advanced features of JSON than the [Schema]
+  /// class taken by [responseSchema] supports.  See the [Gemini
+  /// documentation](https://ai.google.dev/api/generate-content#FIELDS.response_json_schema)
+  /// about the limitations of this feature.
+  ///
+  /// Notably, this feature is only supported on Gemini 2.5 and later. Use
+  /// [responseSchema] for earlier models.
+  ///
+  /// Only one of [responseSchema] or [responseJsonSchema] may be specified at
+  /// the same time.
+  final Map<String, Object?>? responseJsonSchema;
 
   /// Config for thinking features.
   ///
@@ -1017,6 +1081,8 @@ final class GenerationConfig extends BaseGenerationConfig {
           'responseMimeType': responseMimeType,
         if (responseSchema case final responseSchema?)
           'responseSchema': responseSchema.toJson(),
+        if (responseJsonSchema case final responseJsonSchema?)
+          'responseJsonSchema': responseJsonSchema,
         if (thinkingConfig case final thinkingConfig?)
           'thinkingConfig': thinkingConfig.toJson(),
       };
@@ -1273,7 +1339,7 @@ UsageMetadata parseUsageMetadata(Object jsonObject) {
       candidatesTokensDetails.map(_parseModalityTokenCount).toList(),
     _ => null,
   };
-  return UsageMetadata._(
+  return createUsageMetadata(
     promptTokenCount: promptTokenCount,
     candidatesTokenCount: candidatesTokenCount,
     totalTokenCount: totalTokenCount,

@@ -15,7 +15,8 @@
 part of 'base_model.dart';
 
 const _apiUrl = 'ws/google.firebase.vertexai';
-const _apiUrlSuffix = 'LlmBidiService/BidiGenerateContent/locations';
+const _apiUrlSuffixVertexAI = 'LlmBidiService/BidiGenerateContent/locations';
+const _apiUrlSuffixGoogleAI = 'GenerativeService/BidiGenerateContent';
 
 /// A live, generative AI model for real-time interaction.
 ///
@@ -32,6 +33,8 @@ final class LiveGenerativeModel extends BaseModel {
       {required String model,
       required String location,
       required FirebaseApp app,
+      required bool useVertexBackend,
+      bool? useLimitedUseAppCheckTokens,
       FirebaseAppCheck? appCheck,
       FirebaseAuth? auth,
       LiveGenerationConfig? liveGenerationConfig,
@@ -39,28 +42,49 @@ final class LiveGenerativeModel extends BaseModel {
       Content? systemInstruction})
       : _app = app,
         _location = location,
+        _useVertexBackend = useVertexBackend,
         _appCheck = appCheck,
         _auth = auth,
         _liveGenerationConfig = liveGenerationConfig,
         _tools = tools,
         _systemInstruction = systemInstruction,
+        _useLimitedUseAppCheckTokens = useLimitedUseAppCheckTokens,
         super._(
           serializationStrategy: VertexSerialization(),
-          modelUri: _VertexUri(
-            model: model,
-            app: app,
-            location: location,
-          ),
+          modelUri: useVertexBackend
+              ? _VertexUri(
+                  model: model,
+                  app: app,
+                  location: location,
+                )
+              : _GoogleAIUri(
+                  model: model,
+                  app: app,
+                ),
         );
-  static const _apiVersion = 'v1beta';
 
   final FirebaseApp _app;
   final String _location;
+  final bool _useVertexBackend;
   final FirebaseAppCheck? _appCheck;
   final FirebaseAuth? _auth;
   final LiveGenerationConfig? _liveGenerationConfig;
   final List<Tool>? _tools;
   final Content? _systemInstruction;
+  final bool? _useLimitedUseAppCheckTokens;
+
+  String _vertexAIUri() => 'wss://${_modelUri.baseAuthority}/'
+      '$_apiUrl.${_modelUri.apiVersion}.$_apiUrlSuffixVertexAI/'
+      '$_location?key=${_app.options.apiKey}';
+
+  String _vertexAIModelString() => 'projects/${_app.options.projectId}/'
+      'locations/$_location/publishers/google/models/${model.name}';
+
+  String _googleAIUri() => 'wss://${_modelUri.baseAuthority}/'
+      '$_apiUrl.${_modelUri.apiVersion}.$_apiUrlSuffixGoogleAI?key=${_app.options.apiKey}';
+
+  String _googleAIModelString() =>
+      'projects/${_app.options.projectId}/models/${model.name}';
 
   /// Establishes a connection to a live generation service.
   ///
@@ -70,11 +94,9 @@ final class LiveGenerativeModel extends BaseModel {
   /// Returns a [Future] that resolves to an [LiveSession] object upon successful
   /// connection.
   Future<LiveSession> connect() async {
-    final uri = 'wss://${_modelUri.baseAuthority}/'
-        '$_apiUrl.$_apiVersion.$_apiUrlSuffix/'
-        '$_location?key=${_app.options.apiKey}';
-    final modelString = 'projects/${_app.options.projectId}/'
-        'locations/$_location/publishers/google/models/${model.name}';
+    final uri = _useVertexBackend ? _vertexAIUri() : _googleAIUri();
+    final modelString =
+        _useVertexBackend ? _vertexAIModelString() : _googleAIModelString();
 
     final setupJson = {
       'setup': {
@@ -88,7 +110,12 @@ final class LiveGenerativeModel extends BaseModel {
     };
 
     final request = jsonEncode(setupJson);
-    final headers = await BaseModel.firebaseTokens(_appCheck, _auth, _app)();
+    final headers = await BaseModel.firebaseTokens(
+      _appCheck,
+      _auth,
+      _app,
+      _useLimitedUseAppCheckTokens,
+    )();
 
     var ws = kIsWeb
         ? WebSocketChannel.connect(Uri.parse(uri))
@@ -96,6 +123,7 @@ final class LiveGenerativeModel extends BaseModel {
     await ws.ready;
 
     ws.sink.add(request);
+
     return LiveSession(ws);
   }
 }
@@ -105,6 +133,8 @@ LiveGenerativeModel createLiveGenerativeModel({
   required FirebaseApp app,
   required String location,
   required String model,
+  required bool useVertexBackend,
+  bool? useLimitedUseAppCheckTokens,
   FirebaseAppCheck? appCheck,
   FirebaseAuth? auth,
   LiveGenerationConfig? liveGenerationConfig,
@@ -117,6 +147,8 @@ LiveGenerativeModel createLiveGenerativeModel({
       appCheck: appCheck,
       auth: auth,
       location: location,
+      useVertexBackend: useVertexBackend,
+      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
       liveGenerationConfig: liveGenerationConfig,
       tools: tools,
       systemInstruction: systemInstruction,

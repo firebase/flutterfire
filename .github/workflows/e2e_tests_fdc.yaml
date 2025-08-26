@@ -100,6 +100,8 @@ jobs:
         name: Install Node.js 20
         with:
           node-version: '20'
+      - name: Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
       - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b
         with:
           distribution: 'temurin'

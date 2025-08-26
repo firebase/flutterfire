@@ -44,7 +44,6 @@ void main() {
       final liveGenerationConfig = LiveGenerationConfig(
         speechConfig: SpeechConfig(voiceName: 'Charon'),
         responseModalities: [ResponseModalities.text, ResponseModalities.audio],
-        candidateCount: 2,
         maxOutputTokens: 100,
         temperature: 0.8,
         topP: 0.95,
@@ -52,7 +51,6 @@ void main() {
       );
 
       expect(liveGenerationConfig.toJson(), {
-        'candidateCount': 2,
         'maxOutputTokens': 100,
         'temperature': 0.8,
         'topP': 0.95,
@@ -87,7 +85,7 @@ void main() {
     });
 
     test('LiveServerToolCall constructor and properties', () {
-      final functionCall = FunctionCall('test', {});
+      const functionCall = FunctionCall('test', {});
       final message = LiveServerToolCall(functionCalls: [functionCall]);
       expect(message.functionCalls, [functionCall]);
 
@@ -152,18 +150,20 @@ void main() {
     });
 
     test('LiveClientToolResponse toJson() returns correct JSON', () {
-      final response = FunctionResponse('test', {});
+      const response = FunctionResponse('test', {});
       final message = LiveClientToolResponse(functionResponses: [response]);
       expect(message.toJson(), {
-        'functionResponses': [
-          {
-            'functionResponse': {'name': 'test', 'response': {}}
-          }
-        ]
+        'toolResponse': {
+          'functionResponses': [
+            {'name': 'test', 'response': {}}
+          ]
+        }
       });
 
       final message2 = LiveClientToolResponse();
-      expect(message2.toJson(), {'functionResponses': null});
+      expect(message2.toJson(), {
+        'toolResponse': {'functionResponses': null}
+      });
     });
 
     test('parseServerMessage parses serverContent message correctly', () {
