@@ -14,10 +14,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
-import 'package:flutter/services.dart';
 import '../widgets/message_widget.dart';
-
-import 'dart:typed_data';
 
 import 'package:image_picker/image_picker.dart';
 
@@ -196,7 +193,7 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
       _generatedContent
           .add(MessageData(text: text, imageBytes: image, fromUser: false));
 
-      if (text == null) {
+      if (text == null && image == null) {
         _showError('No response from API.');
         return;
       } else {
