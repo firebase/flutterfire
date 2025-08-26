@@ -417,35 +417,3 @@ SearchEntryPoint _parseSearchEntryPoint(Object? jsonObject) {
     renderedContent: renderedContent,
   );
 }
-
-Content _parseGoogleAIContent(Object jsonObject) {
-  return switch (jsonObject) {
-    {'parts': final List<Object?> parts} => Content(
-        switch (jsonObject) {
-          {'role': final String role} => role,
-          _ => null,
-        },
-        parts.map(_parsePart).toList()),
-    _ => throw unhandledFormat('Content', jsonObject),
-  };
-}
-
-Part _parsePart(Object? jsonObject) {
-  return switch (jsonObject) {
-    {'text': final String text} => TextPart(text),
-    {
-      'functionCall': {
-        'name': final String name,
-        'args': final Map<String, Object?> args
-      }
-    } =>
-      FunctionCall(name, args),
-    {
-      'functionResponse': {'name': String _, 'response': Map<String, Object?> _}
-    } =>
-      throw UnimplementedError('FunctionResponse part not yet supported'),
-    {'inlineData': {'mimeType': String mimeType, 'data': String bytes}} =>
-      InlineDataPart(mimeType, base64Decode(bytes)),
-    _ => throw unhandledFormat('Part', jsonObject),
-  };
-}
