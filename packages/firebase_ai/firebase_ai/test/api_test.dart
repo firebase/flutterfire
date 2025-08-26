@@ -48,7 +48,7 @@ void main() {
     final candidateWithText =
         Candidate(textContent, null, null, FinishReason.stop, null);
     final candidateWithMultipleTextParts = Candidate(
-        Content('model', [TextPart('Hello'), TextPart(' World')]),
+        Content('model', [const TextPart('Hello'), const TextPart(' World')]),
         null,
         null,
         FinishReason.stop,
@@ -223,8 +223,8 @@ void main() {
       });
 
       test('concatenates text from multiple TextParts', () {
-        final multiPartContent =
-            Content('model', [TextPart('Part 1'), TextPart('. Part 2')]);
+        final multiPartContent = Content(
+            'model', [const TextPart('Part 1'), const TextPart('. Part 2')]);
         final candidate =
             Candidate(multiPartContent, null, null, FinishReason.stop, null);
         expect(candidate.text, 'Part 1. Part 2');
