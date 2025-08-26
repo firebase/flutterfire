@@ -68,7 +68,7 @@ class FirebaseAI extends FirebasePluginPlatform {
     bool? useLimitedUseAppCheckTokens,
   }) {
     app ??= Firebase.app();
-    var instanceKey = '${app.name}::vertexai';
+    var instanceKey = '${app.name}::vertexai::$location';
 
     if (_cachedInstances.containsKey(instanceKey)) {
       return _cachedInstances[instanceKey]!;
