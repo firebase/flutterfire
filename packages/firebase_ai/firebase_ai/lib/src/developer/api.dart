@@ -22,14 +22,20 @@ import '../api.dart'
         FinishReason,
         GenerateContentResponse,
         GenerationConfig,
+        GroundingChunk,
+        GroundingMetadata,
+        GroundingSupport,
         HarmBlockThreshold,
         HarmCategory,
         HarmProbability,
         PromptFeedback,
         SafetyRating,
         SafetySetting,
+        SearchEntryPoint,
+        Segment,
         SerializationStrategy,
         UsageMetadata,
+        WebGroundingChunk,
         createUsageMetadata;
 import '../content.dart' show Content, parseContent;
 import '../error.dart';
@@ -203,6 +209,11 @@ Candidate _parseCandidate(Object? jsonObject) {
       {'finishMessage': final String finishMessage} => finishMessage,
       _ => null
     },
+    groundingMetadata: switch (jsonObject) {
+      {'groundingMetadata': final Object groundingMetadata} =>
+        _parseGroundingMetadata(groundingMetadata),
+      _ => null
+    },
   );
 }
 
@@ -294,4 +305,147 @@ Citation _parseCitationSource(Object? jsonObject) {
     uriString != null ? Uri.parse(uriString) : null,
     jsonObject['license'] as String?,
   );
+}
+
+GroundingMetadata _parseGroundingMetadata(Object? jsonObject) {
+  if (jsonObject is! Map) {
+    throw unhandledFormat('GroundingMetadata', jsonObject);
+  }
+
+  final searchEntryPoint = switch (jsonObject) {
+    {'searchEntryPoint': final Object? searchEntryPoint} =>
+      _parseSearchEntryPoint(searchEntryPoint),
+    _ => null,
+  };
+  final groundingChunks = switch (jsonObject) {
+        {'groundingChunks': final List<Object?> groundingChunks} =>
+          groundingChunks.map(_parseGroundingChunk).toList(),
+        _ => null,
+      } ??
+      [];
+  // Filters out null elements, which are returned from _parseGroundingSupport when
+  // segment is null.
+  final groundingSupport = switch (jsonObject) {
+        {'groundingSupport': final List<Object?> groundingSupport} =>
+          groundingSupport
+              .map(_parseGroundingSupport)
+              .whereType<GroundingSupport>()
+              .toList(),
+        _ => null,
+      } ??
+      [];
+  final webSearchQueries = switch (jsonObject) {
+        {'webSearchQueries': final List<String>? webSearchQueries} =>
+          webSearchQueries,
+        _ => null,
+      } ??
+      [];
+
+  return GroundingMetadata(
+      searchEntryPoint: searchEntryPoint,
+      groundingChunks: groundingChunks,
+      groundingSupport: groundingSupport,
+      webSearchQueries: webSearchQueries);
+}
+
+Segment _parseSegment(Object? jsonObject) {
+  if (jsonObject is! Map) {
+    throw unhandledFormat('Segment', jsonObject);
+  }
+
+  return Segment(
+      partIndex: (jsonObject['partIndex'] as int?) ?? 0,
+      startIndex: (jsonObject['startIndex'] as int?) ?? 0,
+      endIndex: (jsonObject['endIndex'] as int?) ?? 0,
+      text: (jsonObject['text'] as String?) ?? '');
+}
+
+WebGroundingChunk _parseWebGroundingChunk(Object? jsonObject) {
+  if (jsonObject is! Map) {
+    throw unhandledFormat('WebGroundingChunk', jsonObject);
+  }
+
+  return WebGroundingChunk(
+    uri: jsonObject['uri'] as String?,
+    title: jsonObject['title'] as String?,
+    domain: jsonObject['domain'] as String?,
+  );
+}
+
+GroundingChunk _parseGroundingChunk(Object? jsonObject) {
+  if (jsonObject is! Map) {
+    throw unhandledFormat('GroundingChunk', jsonObject);
+  }
+
+  return GroundingChunk(
+    web: jsonObject['web'] != null
+        ? _parseWebGroundingChunk(jsonObject['web'])
+        : null,
+  );
+}
+
+GroundingSupport? _parseGroundingSupport(Object? jsonObject) {
+  if (jsonObject is! Map) {
+    throw unhandledFormat('GroundingSupport', jsonObject);
+  }
+
+  final segment = switch (jsonObject) {
+    {'segment': final Object? segment} => _parseSegment(segment),
+    _ => null,
+  };
+  if (segment == null) {
+    return null;
+  }
+
+  return GroundingSupport(
+      segment: segment,
+      groundingChunkIndices:
+          (jsonObject['groundingChunkIndices'] as List<int>?) ?? []);
+}
+
+SearchEntryPoint _parseSearchEntryPoint(Object? jsonObject) {
+  if (jsonObject is! Map) {
+    throw unhandledFormat('SearchEntryPoint', jsonObject);
+  }
+
+  final renderedContent = jsonObject['renderedContent'] as String?;
+  if (renderedContent == null) {
+    throw unhandledFormat('SearchEntryPoint', jsonObject);
+  }
+
+  return SearchEntryPoint(
+    renderedContent: renderedContent,
+  );
+}
+
+Content _parseGoogleAIContent(Object jsonObject) {
+  return switch (jsonObject) {
+    {'parts': final List<Object?> parts} => Content(
+        switch (jsonObject) {
+          {'role': final String role} => role,
+          _ => null,
+        },
+        parts.map(_parsePart).toList()),
+    _ => throw unhandledFormat('Content', jsonObject),
+  };
+}
+
+Part _parsePart(Object? jsonObject) {
+  return switch (jsonObject) {
+    {'text': final String text} => TextPart(text),
+    {
+      'functionCall': {
+        'name': final String name,
+        'args': final Map<String, Object?> args
+      }
+    } =>
+      FunctionCall(name, args),
+    {
+      'functionResponse': {'name': String _, 'response': Map<String, Object?> _}
+    } =>
+      throw UnimplementedError('FunctionResponse part not yet supported'),
+    {'inlineData': {'mimeType': String mimeType, 'data': String bytes}} =>
+      InlineDataPart(mimeType, base64Decode(bytes)),
+    _ => throw unhandledFormat('Part', jsonObject),
+  };
 }
