@@ -34,9 +34,8 @@ import '../api.dart'
         SearchEntryPoint,
         Segment,
         SerializationStrategy,
-        UsageMetadata,
         WebGroundingChunk,
-        createUsageMetadata;
+        parseUsageMetadata;
 import '../content.dart' show Content, parseContent;
 import '../error.dart';
 import '../tool.dart' show Tool, ToolConfig;
@@ -117,13 +116,13 @@ final class DeveloperSerialization implements SerializationStrategy {
         _parsePromptFeedback(promptFeedback),
       _ => null,
     };
-    final usageMedata = switch (jsonObject) {
+    final usageMetadata = switch (jsonObject) {
       {'usageMetadata': final usageMetadata?} =>
         parseUsageMetadata(usageMetadata),
       _ => null,
     };
     return GenerateContentResponse(candidates, promptFeedback,
-        usageMetadata: usageMedata);
+        usageMetadata: usageMetadata);
   }
 
   @override
