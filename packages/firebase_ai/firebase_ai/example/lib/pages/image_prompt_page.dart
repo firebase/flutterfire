@@ -17,22 +17,57 @@ import 'package:firebase_ai/firebase_ai.dart';
 import 'package:flutter/services.dart';
 import '../widgets/message_widget.dart';
 
+import 'dart:typed_data';
+
+import 'package:image_picker/image_picker.dart';
+
 class ImagePromptPage extends StatefulWidget {
-  const ImagePromptPage({super.key, required this.title, required this.model});
+  const ImagePromptPage(
+      {super.key, required this.title, required this.useVertexBackend});
 
   final String title;
-  final GenerativeModel model;
+
+  final bool useVertexBackend;
 
   @override
   State<ImagePromptPage> createState() => _ImagePromptPageState();
 }
 
 class _ImagePromptPageState extends State<ImagePromptPage> {
+  final ImagePicker _picker = ImagePicker();
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
   final FocusNode _textFieldFocus = FocusNode();
   final List<MessageData> _generatedContent = <MessageData>[];
   bool _loading = false;
+  late final GenerativeModel _model;
+  XFile? _image;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.useVertexBackend) {
+      _model = FirebaseAI.vertexAI(location: 'global').generativeModel(
+        model: 'gemini-2.5-flash-image-preview',
+        generationConfig: GenerationConfig(
+          responseModalities: [
+            ResponseModalities.text,
+            ResponseModalities.image,
+          ],
+        ),
+      );
+    } else {
+      _model = FirebaseAI.googleAI().generativeModel(
+        model: 'gemini-2.5-flash-image-preview',
+        generationConfig: GenerationConfig(
+          responseModalities: [
+            ResponseModalities.text,
+            ResponseModalities.image,
+          ],
+        ),
+      );
+    }
+  }
 
   void _scrollDown() {
     WidgetsBinding.instance.addPostFrameCallback(
@@ -65,11 +100,13 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
                   var content = _generatedContent[idx];
                   return MessageWidget(
                     text: content.text,
-                    image: Image.memory(
-                      content.imageBytes!,
-                      cacheWidth: 400,
-                      cacheHeight: 400,
-                    ),
+                    image: content.imageBytes != null
+                        ? Image.memory(
+                            content.imageBytes!,
+                            cacheWidth: 400,
+                            cacheHeight: 400,
+                          )
+                        : null,
                     isFromUser: content.fromUser ?? false,
                   );
                 },
@@ -88,28 +125,28 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
                       autofocus: true,
                       focusNode: _textFieldFocus,
                       controller: _textController,
+                      onSubmitted: _sendChatMessage,
                     ),
                   ),
                   const SizedBox.square(
                     dimension: 15,
                   ),
-                  if (!_loading)
-                    IconButton(
-                      onPressed: () async {
-                        await _sendImagePrompt(_textController.text);
-                      },
-                      icon: Icon(
-                        Icons.image,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+                  IconButton(
+                    onPressed: () async {
+                      await _pickImage();
+                    },
+                    icon: Icon(
+                      Icons.image,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
+                  ),
                   if (!_loading)
                     IconButton(
                       onPressed: () async {
-                        await _sendStorageUriPrompt(_textController.text);
+                        await _sendChatMessage(_textController.text);
                       },
                       icon: Icon(
-                        Icons.storage,
+                        Icons.send,
                         color: Theme.of(context).colorScheme.primary,
                       ),
                     )
@@ -124,81 +161,40 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
     );
   }
 
-  Future<void> _sendImagePrompt(String message) async {
+  Future<void> _pickImage() async {
+    final image = await _picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _image = image;
+    });
+  }
+
+  Future<void> _sendChatMessage(String message) async {
     setState(() {
       _loading = true;
     });
+
     try {
-      ByteData catBytes = await rootBundle.load('assets/images/cat.jpg');
-      ByteData sconeBytes = await rootBundle.load('assets/images/scones.jpg');
-      final content = [
-        Content.multi([
-          TextPart(message),
-          // The only accepted mime types are image/*.
-          InlineDataPart('image/jpeg', catBytes.buffer.asUint8List()),
-          InlineDataPart('image/jpeg', sconeBytes.buffer.asUint8List()),
-        ]),
-      ];
+      final imageBytes = await _image?.readAsBytes();
       _generatedContent.add(
         MessageData(
-          imageBytes: catBytes.buffer.asUint8List(),
+          imageBytes: imageBytes,
           text: message,
           fromUser: true,
         ),
       );
-      _generatedContent.add(
-        MessageData(
-          imageBytes: sconeBytes.buffer.asUint8List(),
-          fromUser: true,
-        ),
-      );
 
-      var response = await widget.model.generateContent(content);
-      var text = response.text;
-      _generatedContent.add(MessageData(text: text, fromUser: false));
-
-      if (text == null) {
-        _showError('No response from API.');
-        return;
-      } else {
-        setState(() {
-          _loading = false;
-          _scrollDown();
-        });
-      }
-    } catch (e) {
-      _showError(e.toString());
-      setState(() {
-        _loading = false;
-      });
-    } finally {
-      _textController.clear();
-      setState(() {
-        _loading = false;
-      });
-      _textFieldFocus.requestFocus();
-    }
-  }
-
-  Future<void> _sendStorageUriPrompt(String message) async {
-    setState(() {
-      _loading = true;
-    });
-    try {
-      final content = [
+      var response = await _model.generateContent([
         Content.multi([
           TextPart(message),
-          const FileData(
-            'image/jpeg',
-            'gs://vertex-ai-example-ef5a2.appspot.com/foodpic.jpg',
-          ),
+          if (imageBytes != null)
+            // The only accepted mime types are image/*.
+            InlineDataPart('image/jpeg', imageBytes),
         ]),
-      ];
-      _generatedContent.add(MessageData(text: message, fromUser: true));
-
-      var response = await widget.model.generateContent(content);
+      ]);
       var text = response.text;
-      _generatedContent.add(MessageData(text: text, fromUser: false));
+      var image = response.inlineDataParts?.first?.bytes;
+      _generatedContent
+          .add(MessageData(text: text, imageBytes: image, fromUser: false));
 
       if (text == null) {
         _showError('No response from API.');
@@ -218,6 +214,7 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
       _textController.clear();
       setState(() {
         _loading = false;
+        _image = null;
       });
       _textFieldFocus.requestFocus();
     }
