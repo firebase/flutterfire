@@ -3,10 +3,38 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_app_check_platform_interface/src/android_provider.dart';
+import 'package:firebase_app_check_platform_interface/src/android_providers.dart';
 import 'package:firebase_app_check_platform_interface/src/apple_provider.dart';
+import 'package:firebase_app_check_platform_interface/src/apple_providers.dart';
 
-/// Converts [AndroidProvider] to [String]
-String getAndroidProviderString(AndroidProvider? provider) {
+/// Converts [AndroidAppCheckProvider] to [String] with backwards compatibility
+String getAndroidProviderString({
+  AndroidProvider? legacyProvider,
+  AndroidAppCheckProvider? newProvider,
+}) {
+  // Prefer new provider over legacy provider
+  if (newProvider != null) {
+    return newProvider.type;
+  }
+
+  return getLegacyAndroidProviderString(legacyProvider);
+}
+
+/// Converts [AppleAppCheckProvider] to [String] with backwards compatibility
+String getAppleProviderString({
+  AppleProvider? legacyProvider,
+  AppleAppCheckProvider? newProvider,
+}) {
+  // Prefer new provider over legacy provider
+  if (newProvider != null) {
+    return newProvider.type;
+  }
+
+  return getLegacyAppleProviderString(legacyProvider);
+}
+
+/// Converts [AndroidProvider] enum to [String]
+String getLegacyAndroidProviderString(AndroidProvider? provider) {
   switch (provider) {
     case AndroidProvider.debug:
       return 'debug';
@@ -16,8 +44,8 @@ String getAndroidProviderString(AndroidProvider? provider) {
   }
 }
 
-/// Converts [AppleProvider] to [String]
-String getAppleProviderString(AppleProvider? provider) {
+/// Converts [AppleProvider] enum to [String]
+String getLegacyAppleProviderString(AppleProvider? provider) {
   switch (provider) {
     case AppleProvider.debug:
       return 'debug';
