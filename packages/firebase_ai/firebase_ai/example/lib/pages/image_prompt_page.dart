@@ -56,12 +56,6 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
     } else {
       _model = FirebaseAI.googleAI().generativeModel(
         model: 'gemini-2.5-flash-image-preview',
-        generationConfig: GenerationConfig(
-          responseModalities: [
-            ResponseModalities.text,
-            ResponseModalities.image,
-          ],
-        ),
       );
     }
   }
