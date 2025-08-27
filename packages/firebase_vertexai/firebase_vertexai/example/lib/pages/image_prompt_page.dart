@@ -184,7 +184,7 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
       final content = [
         Content.multi([
           TextPart(message),
-          FileData(
+          const FileData(
             'image/jpeg',
             'gs://vertex-ai-example-ef5a2.appspot.com/foodpic.jpg',
           ),

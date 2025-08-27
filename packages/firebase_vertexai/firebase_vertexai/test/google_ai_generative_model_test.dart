@@ -138,7 +138,7 @@ void main() {
           matchesGenerateContentResponse(
             GenerateContentResponse([
               Candidate(
-                Content('model', [TextPart(result)]),
+                Content('model', [const TextPart(result)]),
                 null,
                 null,
                 null,
@@ -334,7 +334,7 @@ void main() {
           },
           response: arbitraryGenerateContentResponse,
         );
-      }, skip: 'No support for code executation');
+      }, skip: 'No support for code execution');
 
       test('can override code execution', () async {
         final (client, model) = createModel();
