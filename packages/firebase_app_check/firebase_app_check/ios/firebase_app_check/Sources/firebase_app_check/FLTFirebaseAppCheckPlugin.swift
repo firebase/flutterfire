@@ -18,7 +18,7 @@ import firebase_core
 
 private let kFLTFirebaseAppCheckChannelName = "plugins.flutter.io/firebase_app_check"
 
-public class FLTFirebaseAppCheckPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin {
+public class FLTFirebaseAppCheckPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin, FirebaseAppCheckHostApi {
     private var eventChannels: [String: FlutterEventChannel] = [:]
     private var streamHandlers: [String: FlutterStreamHandler] = [:]
     private var binaryMessenger: FlutterBinaryMessenger?
@@ -42,6 +42,9 @@ public class FLTFirebaseAppCheckPlugin: NSObject, FLTFirebasePluginProtocol, Flu
         instance.providerFactory = FLTAppCheckProviderFactory()
         AppCheck.setAppCheckProviderFactory(instance.providerFactory)
         
+        // Set up Pigeon API
+        FirebaseAppCheckHostApiSetup.setUp(binaryMessenger: binaryMessenger, api: instance)
+        
         FLTFirebasePluginRegistry.sharedInstance().register(instance)
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
@@ -56,6 +59,11 @@ public class FLTFirebaseAppCheckPlugin: NSObject, FLTFirebasePluginProtocol, Flu
             handler.onCancel(withArguments: nil)
         }
         streamHandlers.removeAll()
+        
+        // Clean up Pigeon API
+        if let messenger = binaryMessenger {
+            FirebaseAppCheckHostApiSetup.setUp(binaryMessenger: messenger, api: nil)
+        }
         
         completion?()
     }
@@ -232,5 +240,83 @@ public class FLTFirebaseAppCheckPlugin: NSObject, FLTFirebasePluginProtocol, Flu
         }
         
         return AppCheck.appCheck(app: app)
+    }
+    
+    // MARK: - FirebaseAppCheckHostApi implementation
+    
+    func activate(
+        appName: String, 
+        webProvider: AppCheckWebProvider, 
+        androidProvider: AppCheckAndroidProvider, 
+        appleProvider: AppCheckAppleProvider, 
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        guard let app = FLTFirebasePlugin.firebaseAppNamed(appName) else {
+            completion(.failure(NSError(domain: "firebase_app_check", code: 1, userInfo: [NSLocalizedDescriptionKey: "Firebase app not found"])))
+            return
+        }
+        
+        let factory = FLTAppCheckProviderFactory()
+        factory.configure(app: app, providerName: appleProvider.providerName)
+        
+        AppCheck.setAppCheckProviderFactory(factory)
+        completion(.success(()))
+    }
+    
+    func getToken(appName: String, forceRefresh: Bool, completion: @escaping (Result<String?, Error>) -> Void) {
+        guard let app = FLTFirebasePlugin.firebaseAppNamed(appName) else {
+            completion(.failure(NSError(domain: "firebase_app_check", code: 1, userInfo: [NSLocalizedDescriptionKey: "Firebase app not found"])))
+            return
+        }
+        
+        guard let appCheck = AppCheck.appCheck(app: app) else {
+            completion(.failure(NSError(domain: "firebase_app_check", code: 1, userInfo: [NSLocalizedDescriptionKey: "AppCheck instance not available"])))
+            return
+        }
+        
+        appCheck.token(forcingRefresh: forceRefresh) { token, error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(token?.token))
+            }
+        }
+    }
+    
+    func setTokenAutoRefreshEnabled(appName: String, isTokenAutoRefreshEnabled: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
+        guard let app = FLTFirebasePlugin.firebaseAppNamed(appName) else {
+            completion(.failure(NSError(domain: "firebase_app_check", code: 1, userInfo: [NSLocalizedDescriptionKey: "Firebase app not found"])))
+            return
+        }
+        
+        guard let appCheck = AppCheck.appCheck(app: app) else {
+            completion(.failure(NSError(domain: "firebase_app_check", code: 1, userInfo: [NSLocalizedDescriptionKey: "AppCheck instance not available"])))
+            return
+        }
+        
+        appCheck.isTokenAutoRefreshEnabled = isTokenAutoRefreshEnabled
+        completion(.success(()))
+    }
+    
+    func getLimitedUseToken(appName: String, completion: @escaping (Result<String, Error>) -> Void) {
+        guard let app = FLTFirebasePlugin.firebaseAppNamed(appName) else {
+            completion(.failure(NSError(domain: "firebase_app_check", code: 1, userInfo: [NSLocalizedDescriptionKey: "Firebase app not found"])))
+            return
+        }
+        
+        guard let appCheck = AppCheck.appCheck(app: app) else {
+            completion(.failure(NSError(domain: "firebase_app_check", code: 1, userInfo: [NSLocalizedDescriptionKey: "AppCheck instance not available"])))
+            return
+        }
+        
+        appCheck.limitedUseToken { token, error in
+            if let error = error {
+                completion(.failure(error))
+            } else if let token = token?.token {
+                completion(.success(token))
+            } else {
+                completion(.failure(NSError(domain: "firebase_app_check", code: 2, userInfo: [NSLocalizedDescriptionKey: "Token is nil"])))
+            }
+        }
     }
 } 

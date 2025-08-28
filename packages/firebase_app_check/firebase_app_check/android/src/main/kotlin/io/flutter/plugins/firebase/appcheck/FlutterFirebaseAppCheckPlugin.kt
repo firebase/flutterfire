@@ -24,8 +24,12 @@ import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin.cachedThreadPool
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.registerPlugin
+import io.flutter.plugins.firebase.firebaseappcheck.AppCheckWebProvider
+import io.flutter.plugins.firebase.firebaseappcheck.AppCheckAndroidProvider
+import io.flutter.plugins.firebase.firebaseappcheck.AppCheckAppleProvider
+import io.flutter.plugins.firebase.firebaseappcheck.FirebaseAppCheckHostApi
 
-class FlutterFirebaseAppCheckPlugin : FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
+class FlutterFirebaseAppCheckPlugin : FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler, FirebaseAppCheckHostApi {
 
     companion object {
         private const val METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_app_check"
@@ -45,6 +49,9 @@ class FlutterFirebaseAppCheckPlugin : FlutterFirebasePlugin, FlutterPlugin, Meth
         channel = MethodChannel(messenger, METHOD_CHANNEL_NAME)
         channel?.setMethodCallHandler(this)
 
+        // Set up Pigeon API
+        FirebaseAppCheckHostApi.setUp(messenger, this)
+
         this.messenger = messenger
     }
 
@@ -55,6 +62,10 @@ class FlutterFirebaseAppCheckPlugin : FlutterFirebasePlugin, FlutterPlugin, Meth
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         channel?.setMethodCallHandler(null)
         channel = null
+        
+        // Clean up Pigeon API
+        FirebaseAppCheckHostApi.setUp(binding.binaryMessenger, null)
+        
         messenger = null
 
         removeEventListeners()
@@ -244,5 +255,80 @@ class FlutterFirebaseAppCheckPlugin : FlutterFirebasePlugin, FlutterPlugin, Meth
             eventChannel.setStreamHandler(null)
         }
         streamHandlers.clear()
+    }
+
+    // Pigeon API implementation
+    override fun activate(
+        appName: String,
+        webProvider: AppCheckWebProvider,
+        androidProvider: AppCheckAndroidProvider,
+        appleProvider: AppCheckAppleProvider,
+        callback: (kotlin.Result<Unit>) -> Unit
+    ) {
+        cachedThreadPool.execute {
+            try {
+                val app = FirebaseApp.getInstance(appName)
+                val firebaseAppCheck = FirebaseAppCheck.getInstance(app)
+
+                when (androidProvider.providerName) {
+                    DEBUG_PROVIDER -> {
+                        firebaseAppCheck.installAppCheckProviderFactory(
+                            DebugAppCheckProviderFactory.getInstance()
+                        )
+                    }
+                    PLAY_INTEGRITY -> {
+                        firebaseAppCheck.installAppCheckProviderFactory(
+                            PlayIntegrityAppCheckProviderFactory.getInstance()
+                        )
+                    }
+                }
+                callback(kotlin.Result.success(Unit))
+            } catch (e: Exception) {
+                callback(kotlin.Result.failure(e))
+            }
+        }
+    }
+
+    override fun getToken(appName: String, forceRefresh: Boolean, callback: (kotlin.Result<String?>) -> Unit) {
+        cachedThreadPool.execute {
+            try {
+                val app = FirebaseApp.getInstance(appName)
+                val firebaseAppCheck = FirebaseAppCheck.getInstance(app)
+                val tokenResult = Tasks.await(firebaseAppCheck.getAppCheckToken(forceRefresh))
+                callback(kotlin.Result.success(tokenResult.token))
+            } catch (e: Exception) {
+                callback(kotlin.Result.failure(e))
+            }
+        }
+    }
+
+    override fun setTokenAutoRefreshEnabled(
+        appName: String,
+        isTokenAutoRefreshEnabled: Boolean,
+        callback: (kotlin.Result<Unit>) -> Unit
+    ) {
+        cachedThreadPool.execute {
+            try {
+                val app = FirebaseApp.getInstance(appName)
+                val firebaseAppCheck = FirebaseAppCheck.getInstance(app)
+                firebaseAppCheck.setTokenAutoRefreshEnabled(isTokenAutoRefreshEnabled)
+                callback(kotlin.Result.success(Unit))
+            } catch (e: Exception) {
+                callback(kotlin.Result.failure(e))
+            }
+        }
+    }
+
+    override fun getLimitedUseToken(appName: String, callback: (kotlin.Result<String>) -> Unit) {
+        cachedThreadPool.execute {
+            try {
+                val app = FirebaseApp.getInstance(appName)
+                val firebaseAppCheck = FirebaseAppCheck.getInstance(app)
+                val tokenResult = Tasks.await(firebaseAppCheck.limitedUseAppCheckToken)
+                callback(kotlin.Result.success(tokenResult.token))
+            } catch (e: Exception) {
+                callback(kotlin.Result.failure(e))
+            }
+        }
     }
 } 
