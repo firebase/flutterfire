@@ -22,6 +22,7 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin
+import io.flutter.plugins.firebase.core.FlutterFirebasePlugin.cachedThreadPool
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.registerPlugin
 
 class FlutterFirebaseAppCheckPlugin : FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
@@ -171,12 +172,13 @@ class FlutterFirebaseAppCheckPlugin : FlutterFirebasePlugin, FlutterPlugin, Meth
     }
 
     override fun onMethodCall(call: MethodCall, @NonNull result: Result) {
+        val arguments = call.arguments<Map<String, Any>>() ?: return
         val methodCallTask: Task<*> = when (call.method) {
-            "FirebaseAppCheck#activate" -> activate(call.arguments())
-            "FirebaseAppCheck#getToken" -> getToken(call.arguments())
-            "FirebaseAppCheck#setTokenAutoRefreshEnabled" -> setTokenAutoRefreshEnabled(call.arguments())
-            "FirebaseAppCheck#registerTokenListener" -> registerTokenListener(call.arguments())
-            "FirebaseAppCheck#getLimitedUseAppCheckToken" -> getLimitedUseAppCheckToken(call.arguments())
+            "FirebaseAppCheck#activate" -> activate(arguments)
+            "FirebaseAppCheck#getToken" -> getToken(arguments)
+            "FirebaseAppCheck#setTokenAutoRefreshEnabled" -> setTokenAutoRefreshEnabled(arguments)
+            "FirebaseAppCheck#registerTokenListener" -> registerTokenListener(arguments)
+            "FirebaseAppCheck#getLimitedUseAppCheckToken" -> getLimitedUseAppCheckToken(arguments)
             else -> {
                 result.notImplemented()
                 return

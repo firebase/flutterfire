@@ -14,17 +14,19 @@ class TokenChannelStreamHandler(private val firebaseAppCheck: FirebaseAppCheck) 
     private var listener: FirebaseAppCheck.AppCheckListener? = null
 
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
-        listener = FirebaseAppCheck.AppCheckListener { result ->
+        val newListener = FirebaseAppCheck.AppCheckListener { result ->
             val event = mapOf("token" to result.token)
             events?.success(event)
         }
-
-        firebaseAppCheck.addAppCheckListener(listener)
+        
+        listener = newListener
+        firebaseAppCheck.addAppCheckListener(newListener)
     }
 
     override fun onCancel(arguments: Any?) {
-        listener?.let {
-            firebaseAppCheck.removeAppCheckListener(it)
+        val currentListener = listener
+        if (currentListener != null) {
+            firebaseAppCheck.removeAppCheckListener(currentListener)
             listener = null
         }
     }
