@@ -470,7 +470,7 @@ enum BlockReason {
   const BlockReason(this._jsonString);
 
   // ignore: unused_element
-  static BlockReason _parseValue(String jsonObject) {
+  static BlockReason parseValue(String jsonObject) {
     return switch (jsonObject) {
       'BLOCK_REASON_UNSPECIFIED' => BlockReason.unknown,
       'SAFETY' => BlockReason.safety,
@@ -680,7 +680,7 @@ enum FinishReason {
   String toJson() => _jsonString;
 
   // ignore: unused_element
-  static FinishReason _parseValue(Object jsonObject) {
+  static FinishReason parseValue(Object jsonObject) {
     return switch (jsonObject) {
       'UNSPECIFIED' => FinishReason.unknown,
       'STOP' => FinishReason.stop,
@@ -1165,12 +1165,12 @@ final class VertexSerialization implements SerializationStrategy {
     if (jsonObject case {'error': final Object error}) throw parseError(error);
     final candidates = switch (jsonObject) {
       {'candidates': final List<Object?> candidates} =>
-        candidates.map(_parseCandidate).toList(),
+        candidates.map(parseCandidate).toList(),
       _ => <Candidate>[]
     };
     final promptFeedback = switch (jsonObject) {
       {'promptFeedback': final promptFeedback?} =>
-        _parsePromptFeedback(promptFeedback),
+        parsePromptFeedback(promptFeedback),
       _ => null,
     };
     final usageMedata = switch (jsonObject) {
@@ -1201,7 +1201,7 @@ final class VertexSerialization implements SerializationStrategy {
     };
     final promptTokensDetails = switch (jsonObject) {
       {'promptTokensDetails': final List<Object?> promptTokensDetails} =>
-        promptTokensDetails.map(_parseModalityTokenCount).toList(),
+        promptTokensDetails.map(parseModalityTokenCount).toList(),
       _ => null,
     };
 
@@ -1249,7 +1249,7 @@ final class VertexSerialization implements SerializationStrategy {
       {'contents': contents.map((c) => c.toJson()).toList()};
 }
 
-Candidate _parseCandidate(Object? jsonObject) {
+Candidate parseCandidate(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('Candidate', jsonObject);
   }
@@ -1265,12 +1265,12 @@ Candidate _parseCandidate(Object? jsonObject) {
       },
       switch (jsonObject) {
         {'citationMetadata': final Object citationMetadata} =>
-          _parseCitationMetadata(citationMetadata),
+          parseCitationMetadata(citationMetadata),
         _ => null
       },
       switch (jsonObject) {
         {'finishReason': final Object finishReason} =>
-          FinishReason._parseValue(finishReason),
+          FinishReason.parseValue(finishReason),
         _ => null
       },
       switch (jsonObject) {
@@ -1279,12 +1279,12 @@ Candidate _parseCandidate(Object? jsonObject) {
       },
       groundingMetadata: switch (jsonObject) {
         {'groundingMetadata': final Object groundingMetadata} =>
-          _parseGroundingMetadata(groundingMetadata),
+          parseGroundingMetadata(groundingMetadata),
         _ => null
       });
 }
 
-PromptFeedback _parsePromptFeedback(Object jsonObject) {
+PromptFeedback parsePromptFeedback(Object jsonObject) {
   return switch (jsonObject) {
     {
       'safetyRatings': final List<Object?> safetyRatings,
@@ -1292,7 +1292,7 @@ PromptFeedback _parsePromptFeedback(Object jsonObject) {
       PromptFeedback(
           switch (jsonObject) {
             {'blockReason': final String blockReason} =>
-              BlockReason._parseValue(blockReason),
+              BlockReason.parseValue(blockReason),
             _ => null,
           },
           switch (jsonObject) {
@@ -1331,12 +1331,12 @@ UsageMetadata parseUsageMetadata(Object jsonObject) {
   };
   final promptTokensDetails = switch (jsonObject) {
     {'promptTokensDetails': final List<Object?> promptTokensDetails} =>
-      promptTokensDetails.map(_parseModalityTokenCount).toList(),
+      promptTokensDetails.map(parseModalityTokenCount).toList(),
     _ => null,
   };
   final candidatesTokensDetails = switch (jsonObject) {
     {'candidatesTokensDetails': final List<Object?> candidatesTokensDetails} =>
-      candidatesTokensDetails.map(_parseModalityTokenCount).toList(),
+      candidatesTokensDetails.map(parseModalityTokenCount).toList(),
     _ => null,
   };
   return UsageMetadata._(
@@ -1349,7 +1349,7 @@ UsageMetadata parseUsageMetadata(Object jsonObject) {
   );
 }
 
-ModalityTokenCount _parseModalityTokenCount(Object? jsonObject) {
+ModalityTokenCount parseModalityTokenCount(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('ModalityTokenCount', jsonObject);
   }
@@ -1379,18 +1379,18 @@ SafetyRating _parseSafetyRating(Object? jsonObject) {
       severityScore: jsonObject['severityScore'] as double?);
 }
 
-CitationMetadata _parseCitationMetadata(Object? jsonObject) {
+CitationMetadata parseCitationMetadata(Object? jsonObject) {
   return switch (jsonObject) {
     {'citationSources': final List<Object?> citationSources} =>
-      CitationMetadata(citationSources.map(_parseCitationSource).toList()),
+      CitationMetadata(citationSources.map(parseCitationSource).toList()),
     // Vertex SDK format uses `citations`
     {'citations': final List<Object?> citationSources} =>
-      CitationMetadata(citationSources.map(_parseCitationSource).toList()),
+      CitationMetadata(citationSources.map(parseCitationSource).toList()),
     _ => throw unhandledFormat('CitationMetadata', jsonObject),
   };
 }
 
-Citation _parseCitationSource(Object? jsonObject) {
+Citation parseCitationSource(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('CitationSource', jsonObject);
   }
@@ -1405,19 +1405,19 @@ Citation _parseCitationSource(Object? jsonObject) {
   );
 }
 
-GroundingMetadata _parseGroundingMetadata(Object? jsonObject) {
+GroundingMetadata parseGroundingMetadata(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('GroundingMetadata', jsonObject);
   }
 
   final searchEntryPoint = switch (jsonObject) {
     {'searchEntryPoint': final Object? searchEntryPoint} =>
-      _parseSearchEntryPoint(searchEntryPoint),
+      parseSearchEntryPoint(searchEntryPoint),
     _ => null,
   };
   final groundingChunks = switch (jsonObject) {
         {'groundingChunks': final List<Object?> groundingChunks} =>
-          groundingChunks.map(_parseGroundingChunk).toList(),
+          groundingChunks.map(parseGroundingChunk).toList(),
         _ => null,
       } ??
       [];
@@ -1426,7 +1426,7 @@ GroundingMetadata _parseGroundingMetadata(Object? jsonObject) {
   final groundingSupport = switch (jsonObject) {
         {'groundingSupport': final List<Object?> groundingSupport} =>
           groundingSupport
-              .map(_parseGroundingSupport)
+              .map(parseGroundingSupport)
               .whereType<GroundingSupport>()
               .toList(),
         _ => null,
@@ -1446,7 +1446,7 @@ GroundingMetadata _parseGroundingMetadata(Object? jsonObject) {
       webSearchQueries: webSearchQueries);
 }
 
-Segment _parseSegment(Object? jsonObject) {
+Segment parseSegment(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('Segment', jsonObject);
   }
@@ -1458,7 +1458,7 @@ Segment _parseSegment(Object? jsonObject) {
       text: (jsonObject['text'] as String?) ?? '');
 }
 
-WebGroundingChunk _parseWebGroundingChunk(Object? jsonObject) {
+WebGroundingChunk parseWebGroundingChunk(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('WebGroundingChunk', jsonObject);
   }
@@ -1470,25 +1470,25 @@ WebGroundingChunk _parseWebGroundingChunk(Object? jsonObject) {
   );
 }
 
-GroundingChunk _parseGroundingChunk(Object? jsonObject) {
+GroundingChunk parseGroundingChunk(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('GroundingChunk', jsonObject);
   }
 
   return GroundingChunk(
     web: jsonObject['web'] != null
-        ? _parseWebGroundingChunk(jsonObject['web'])
+        ? parseWebGroundingChunk(jsonObject['web'])
         : null,
   );
 }
 
-GroundingSupport? _parseGroundingSupport(Object? jsonObject) {
+GroundingSupport? parseGroundingSupport(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('GroundingSupport', jsonObject);
   }
 
   final segment = switch (jsonObject) {
-    {'segment': final Object? segment} => _parseSegment(segment),
+    {'segment': final Object? segment} => parseSegment(segment),
     _ => null,
   };
   if (segment == null) {
@@ -1501,7 +1501,7 @@ GroundingSupport? _parseGroundingSupport(Object? jsonObject) {
           (jsonObject['groundingChunkIndices'] as List<int>?) ?? []);
 }
 
-SearchEntryPoint _parseSearchEntryPoint(Object? jsonObject) {
+SearchEntryPoint parseSearchEntryPoint(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('SearchEntryPoint', jsonObject);
   }
