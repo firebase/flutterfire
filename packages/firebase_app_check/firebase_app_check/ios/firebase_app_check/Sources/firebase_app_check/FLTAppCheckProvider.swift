@@ -28,7 +28,7 @@ class FLTAppCheckProvider: NSObject, AppCheckProvider {
             self.delegateProvider = DeviceCheckProvider(app: app)
             
         case "appAttest":
-            if #available(iOS 14.0, macCatalyst 14.0, tvOS 15.0, watchOS 9.0, *) {
+            if #available(iOS 14.0, macOS 11.3, macCatalyst 14.0, tvOS 15.0, watchOS 9.0, *) {
                 self.delegateProvider = AppAttestProvider(app: app)
             } else {
                 // This is not a valid environment, setup debug provider.
@@ -36,7 +36,7 @@ class FLTAppCheckProvider: NSObject, AppCheckProvider {
             }
             
         case "appAttestWithDeviceCheckFallback":
-            if #available(iOS 14.0, *) {
+            if #available(iOS 14.0, macOS 11.3, *) {
                 self.delegateProvider = AppAttestProvider(app: app)
             } else {
                 self.delegateProvider = DeviceCheckProvider(app: app)

@@ -4,7 +4,7 @@
 
 import Foundation
 
-#if TARGET_OS_OSX
+#if os(macOS)
 import FlutterMacOS
 #else
 import Flutter
