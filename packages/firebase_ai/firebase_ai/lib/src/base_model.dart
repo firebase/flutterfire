@@ -57,10 +57,16 @@ enum Task {
   predict,
 }
 
+enum TemplateTask {
+  /// Request type for server template generate content.
+  templateGenerateContent,
+}
+
 abstract interface class _ModelUri {
   String get baseAuthority;
   String get apiVersion;
   Uri taskUri(Task task);
+  Uri templateTaskUri(TemplateTask task, String templateId);
   ({String prefix, String name}) get model;
 }
 
@@ -70,7 +76,8 @@ final class _VertexUri implements _ModelUri {
       required String location,
       required FirebaseApp app})
       : model = _normalizeModelName(model),
-        _projectUri = _vertexUri(app, location);
+        _projectUri = _vertexUri(app, location),
+        _templateUri = _vertexTemplateUri(app, location);
 
   static const _baseAuthority = 'firebasevertexai.googleapis.com';
   static const _apiVersion = 'v1beta';
@@ -93,7 +100,24 @@ final class _VertexUri implements _ModelUri {
     );
   }
 
+  static String _vertexTemplateId(
+      FirebaseApp app, String location, String templateId) {
+    var projectId = app.options.projectId;
+    return 'projects/$projectId/locations/$location/templates/$templateId';
+  }
+
+  static Uri _vertexTemplateUri(FirebaseApp app, String location) {
+    var projectId = app.options.projectId;
+    return Uri.https(
+      _baseAuthority,
+      '/$_apiVersion/projects/$projectId/locations/$location',
+    );
+  }
+
   final Uri _projectUri;
+
+  final Uri _templateUri;
+
   @override
   final ({String prefix, String name}) model;
 
@@ -109,6 +133,13 @@ final class _VertexUri implements _ModelUri {
         pathSegments: _projectUri.pathSegments
             .followedBy([model.prefix, '${model.name}:${task.name}']));
   }
+
+  @override
+  Uri templateTaskUri(TemplateTask task, String templateId) {
+    return _projectUri.replace(
+        pathSegments: _projectUri.pathSegments
+            .followedBy([model.prefix, '${model.name}:${task.name}']));
+  }
 }
 
 final class _GoogleAIUri implements _ModelUri {
@@ -116,7 +147,8 @@ final class _GoogleAIUri implements _ModelUri {
     required String model,
     required FirebaseApp app,
   })  : model = _normalizeModelName(model),
-        _baseUri = _googleAIBaseUri(app: app);
+        _baseUri = _googleAIBaseUri(app: app),
+        _baseTemplateUri = _googleAIBaseTemplateUri(app: app);
 
   /// Returns the model code for a user friendly model name.
   ///
@@ -130,11 +162,20 @@ final class _GoogleAIUri implements _ModelUri {
 
   static const _apiVersion = 'v1beta';
   static const _baseAuthority = 'firebasevertexai.googleapis.com';
+
   static Uri _googleAIBaseUri(
           {String apiVersion = _apiVersion, required FirebaseApp app}) =>
       Uri.https(
           _baseAuthority, '$apiVersion/projects/${app.options.projectId}');
+
+  static Uri _googleAIBaseTemplateUri(
+          {String apiVersion = _apiVersion, required FirebaseApp app}) =>
+      Uri.https(
+          _baseAuthority, '$apiVersion/projects/${app.options.projectId}');
+
   final Uri _baseUri;
+
+  final Uri _baseTemplateUri;
 
   @override
   final ({String prefix, String name}) model;
@@ -149,6 +190,13 @@ final class _GoogleAIUri implements _ModelUri {
   Uri taskUri(Task task) => _baseUri.replace(
       pathSegments: _baseUri.pathSegments
           .followedBy([model.prefix, '${model.name}:${task.name}']));
+
+  @override
+  Uri templateTaskUri(TemplateTask task, String templateId) {
+    return _baseTemplateUri.replace(
+        pathSegments: _baseTemplateUri.pathSegments
+            .followedBy([model.prefix, '${model.name}:${task.name}']));
+  }
 }
 
 /// Base class for models.
@@ -202,6 +250,9 @@ abstract class BaseModel {
 
   /// Returns a URI for the given [task].
   Uri taskUri(Task task) => _modelUri.taskUri(task);
+
+  Uri templateTaskUri(TemplateTask task, String templateId) =>
+      _modelUri.templateTaskUri(task, templateId);
 }
 
 /// An abstract base class for models that interact with an API using an [ApiClient].
@@ -230,4 +281,13 @@ abstract class BaseApiClientModel extends BaseModel {
   Future<T> makeRequest<T>(Task task, Map<String, Object?> params,
           T Function(Map<String, Object?>) parse) =>
       _client.makeRequest(taskUri(task), params).then(parse);
+
+  Future<T> makeTemplateRequest<T>(
+          TemplateTask task,
+          String templateId,
+          Map<String, Object?> params,
+          T Function(Map<String, Object?>) parse) =>
+      _client
+          .makeRequest(templateTaskUri(task, templateId), params)
+          .then(parse);
 }
