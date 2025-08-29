@@ -12,54 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import '../api.dart' as public;
 import '../api.dart'
     show
         BlockReason,
         Candidate,
-        Citation,
-        CitationMetadata,
         CountTokensResponse,
         FinishReason,
         GenerateContentResponse,
         GenerationConfig,
-        GroundingChunk,
-        GroundingMetadata,
-        GroundingSupport,
         HarmBlockThreshold,
         HarmCategory,
         HarmProbability,
         PromptFeedback,
         SafetyRating,
         SafetySetting,
-        SearchEntryPoint,
-        Segment,
         SerializationStrategy,
-        WebGroundingChunk,
         parseUsageMetadata,
         parseCitationMetadata,
-        parseGroundingMetadata;
+        parseGroundingMetadata,
+        parseCandidate;
 import '../content.dart' show Content, parseContent;
 import '../error.dart';
 import '../tool.dart' show Tool, ToolConfig;
-
-HarmProbability _parseHarmProbability(Object jsonObject) =>
-    switch (jsonObject) {
-      'UNSPECIFIED' => HarmProbability.unknown,
-      'NEGLIGIBLE' => HarmProbability.negligible,
-      'LOW' => HarmProbability.low,
-      'MEDIUM' => HarmProbability.medium,
-      'HIGH' => HarmProbability.high,
-      _ => throw unhandledFormat('HarmProbability', jsonObject),
-    };
-HarmCategory _parseHarmCategory(Object jsonObject) => switch (jsonObject) {
-      'HARM_CATEGORY_UNSPECIFIED' => HarmCategory.unknown,
-      'HARM_CATEGORY_HARASSMENT' => HarmCategory.harassment,
-      'HARM_CATEGORY_HATE_SPEECH' => HarmCategory.hateSpeech,
-      'HARM_CATEGORY_SEXUALLY_EXPLICIT' => HarmCategory.sexuallyExplicit,
-      'HARM_CATEGORY_DANGEROUS_CONTENT' => HarmCategory.dangerousContent,
-      _ => throw unhandledFormat('HarmCategory', jsonObject),
-    };
 
 String _harmBlockThresholdToJson(HarmBlockThreshold? threshold) =>
     switch (threshold) {
@@ -96,7 +70,7 @@ final class DeveloperSerialization implements SerializationStrategy {
     if (jsonObject case {'error': final Object error}) throw parseError(error);
     final candidates = switch (jsonObject) {
       {'candidates': final List<Object?> candidates} =>
-        candidates.map(public.parseCandidate).toList(),
+        candidates.map(_parseCandidate).toList(),
       _ => <Candidate>[]
     };
     final promptFeedback = switch (jsonObject) {
@@ -230,11 +204,35 @@ SafetyRating _parseSafetyRating(Object? jsonObject) {
     {
       'category': final Object category,
       'probability': final Object probability,
-      'blocked': final bool isBlocked,
+      'blocked': final bool? isBlocked,
     } =>
       SafetyRating(
           _parseHarmCategory(category), _parseHarmProbability(probability),
           isBlocked: isBlocked),
+    {
+      'category': final Object category,
+      'probability': final Object probability,
+    } =>
+      SafetyRating(
+          _parseHarmCategory(category), _parseHarmProbability(probability)),
     _ => throw unhandledFormat('SafetyRating', jsonObject),
   };
 }
+
+HarmProbability _parseHarmProbability(Object jsonObject) =>
+    switch (jsonObject) {
+      'UNSPECIFIED' => HarmProbability.unknown,
+      'NEGLIGIBLE' => HarmProbability.negligible,
+      'LOW' => HarmProbability.low,
+      'MEDIUM' => HarmProbability.medium,
+      'HIGH' => HarmProbability.high,
+      _ => throw unhandledFormat('HarmProbability', jsonObject),
+    };
+HarmCategory _parseHarmCategory(Object jsonObject) => switch (jsonObject) {
+      'HARM_CATEGORY_UNSPECIFIED' => HarmCategory.unknown,
+      'HARM_CATEGORY_HARASSMENT' => HarmCategory.harassment,
+      'HARM_CATEGORY_HATE_SPEECH' => HarmCategory.hateSpeech,
+      'HARM_CATEGORY_SEXUALLY_EXPLICIT' => HarmCategory.sexuallyExplicit,
+      'HARM_CATEGORY_DANGEROUS_CONTENT' => HarmCategory.dangerousContent,
+      _ => throw unhandledFormat('HarmCategory', jsonObject),
+    };
