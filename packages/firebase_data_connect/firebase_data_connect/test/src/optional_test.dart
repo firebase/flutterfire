@@ -89,6 +89,13 @@ void main() {
       expect(nativeFromJson<int>(42), equals(42));
       expect(nativeFromJson<bool>(true), equals(true));
       expect(nativeFromJson<String>('Test'), equals('Test'));
+      expect(nativeFromJson<int>('42000000000000'), equals(42000000000000));
+    });
+
+    test('nativeFromJson throws UnsupportedError for bigint’s too big for int',
+        () {
+      expect(() => nativeFromJson<int>('42000000000000000000'),
+          throwsUnsupportedError);
     });
 
     test('nativeToJson correctly serializes null primitive types', () {
