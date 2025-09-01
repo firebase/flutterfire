@@ -14,7 +14,6 @@ void main() {
   setupFirebasePerformanceMocks();
 
   late TestMethodChannelTrace trace;
-  const int kTraceHandle = 1;
   const String kName = 'test-trace-name';
   final List<MethodCall> log = <MethodCall>[];
   // mock props
