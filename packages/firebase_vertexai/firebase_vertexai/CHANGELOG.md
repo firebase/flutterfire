@@ -1,3 +1,9 @@
+## 2.2.0
+
+ - **FIX**(firebaseai): remove candidateCount from LiveGenerationConfig since the connection fails silently when it is set ([#17647](https://github.com/firebase/flutterfire/issues/17647)). ([537a3c30](https://github.com/firebase/flutterfire/commit/537a3c30397a82459c02dfdd70e3a9670c26fd59))
+ - **FEAT**(firebaseai): add thinking feature ([#17652](https://github.com/firebase/flutterfire/issues/17652)). ([5faec2c1](https://github.com/firebase/flutterfire/commit/5faec2c1ddf0682ef9d88fb2d354f5f3f22405fa))
+ - **FEAT**(firebaseai): imagen editing ([#17556](https://github.com/firebase/flutterfire/issues/17556)). ([62811a61](https://github.com/firebase/flutterfire/commit/62811a61354d412c6322bd68004b8d1537e3e483))
+
 ## 2.1.0
 
  - **FEAT**(firebaseai): make Live API working with developer API ([#17503](https://github.com/firebase/flutterfire/issues/17503)). ([467eaa18](https://github.com/firebase/flutterfire/commit/467eaa1810257a420039d29a070314784218a03f))
