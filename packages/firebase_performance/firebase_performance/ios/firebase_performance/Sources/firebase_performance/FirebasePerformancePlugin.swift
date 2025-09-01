@@ -60,12 +60,12 @@ public class FirebasePerformancePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
 
   public func setPerformanceCollectionEnabled(enabled: Bool,
                                               completion: @escaping (Result<Void, Error>) -> Void) {
-    Performance.sharedInstance().isInstrumentationEnabled = enabled
+    Performance.sharedInstance().isDataCollectionEnabled = enabled
     completion(.success(()))
   }
 
   public func isPerformanceCollectionEnabled(completion: @escaping (Result<Bool, Error>) -> Void) {
-    let result = Performance.sharedInstance().isInstrumentationEnabled
+    let result = Performance.sharedInstance().isDataCollectionEnabled
     completion(.success(result))
   }
 
