@@ -4,6 +4,7 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_performance_platform_interface/src/method_channel/method_channel_trace.dart';
+import 'package:firebase_performance_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:flutter/services.dart';
 
 import '../../firebase_performance_platform_interface.dart';
@@ -29,6 +30,8 @@ class MethodChannelFirebasePerformance extends FirebasePerformancePlatform {
     return MethodChannelFirebasePerformance._();
   }
 
+  static final pigeonChannel = FirebasePerformanceHostApi();
+
   /// Instances are cached and reused for incoming event handlers.
   @override
   FirebasePerformancePlatform delegateFor({required FirebaseApp app}) {
@@ -38,10 +41,7 @@ class MethodChannelFirebasePerformance extends FirebasePerformancePlatform {
   @override
   Future<bool> isPerformanceCollectionEnabled() async {
     try {
-      final isPerformanceCollectionEnabled = await channel.invokeMethod<bool>(
-        'FirebasePerformance#isPerformanceCollectionEnabled',
-      );
-      return isPerformanceCollectionEnabled!;
+      return await pigeonChannel.isPerformanceCollectionEnabled();
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -50,10 +50,7 @@ class MethodChannelFirebasePerformance extends FirebasePerformancePlatform {
   @override
   Future<void> setPerformanceCollectionEnabled(bool enabled) async {
     try {
-      await channel.invokeMethod<void>(
-        'FirebasePerformance#setPerformanceCollectionEnabled',
-        <String, Object?>{'enable': enabled},
-      );
+      await pigeonChannel.setPerformanceCollectionEnabled(enabled);
     } catch (e, s) {
       convertPlatformException(e, s);
     }

@@ -41,6 +41,6 @@ flutter:
         package: io.flutter.plugins.firebase.performance
         pluginClass: FlutterFirebasePerformancePlugin
       ios:
-        pluginClass: FLTFirebasePerformancePlugin
+        pluginClass: FirebasePerformancePlugin
       web:
         default_package: firebase_performance_web
