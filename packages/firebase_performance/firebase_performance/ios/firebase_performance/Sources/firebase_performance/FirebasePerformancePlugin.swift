@@ -2,9 +2,18 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import firebase_core
+#if canImport(FlutterMacOS)
+  import FlutterMacOS
+#else
+  import Flutter
+#endif
+
+#if canImport(firebase_core)
+  import firebase_core
+#else
+  import firebase_core_shared
+#endif
 import FirebasePerformance
-import Flutter
 
 let FirebasePerformanceChannelName = "plugins.flutter.io/firebase_performance"
 

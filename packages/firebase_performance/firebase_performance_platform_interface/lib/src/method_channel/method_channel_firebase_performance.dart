@@ -4,7 +4,8 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_performance_platform_interface/src/method_channel/method_channel_trace.dart';
-import 'package:firebase_performance_platform_interface/src/pigeon/messages.pigeon.dart';
+import 'package:firebase_performance_platform_interface/src/pigeon/messages.pigeon.dart'
+    as pigeon;
 import 'package:flutter/services.dart';
 
 import '../../firebase_performance_platform_interface.dart';
@@ -30,7 +31,7 @@ class MethodChannelFirebasePerformance extends FirebasePerformancePlatform {
     return MethodChannelFirebasePerformance._();
   }
 
-  static final pigeonChannel = FirebasePerformanceHostApi();
+  static final pigeonChannel = pigeon.FirebasePerformanceHostApi();
 
   /// Instances are cached and reused for incoming event handlers.
   @override
