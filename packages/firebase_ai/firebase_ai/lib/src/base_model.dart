@@ -67,6 +67,7 @@ abstract interface class _ModelUri {
   String get apiVersion;
   Uri taskUri(Task task);
   Uri templateTaskUri(TemplateTask task, String templateId);
+  String templateName(String templateId);
   ({String prefix, String name}) get model;
 }
 
@@ -100,12 +101,6 @@ final class _VertexUri implements _ModelUri {
     );
   }
 
-  static String _vertexTemplateId(
-      FirebaseApp app, String location, String templateId) {
-    var projectId = app.options.projectId;
-    return 'projects/$projectId/locations/$location/templates/$templateId';
-  }
-
   static Uri _vertexTemplateUri(FirebaseApp app, String location) {
     var projectId = app.options.projectId;
     return Uri.https(
@@ -136,10 +131,17 @@ final class _VertexUri implements _ModelUri {
 
   @override
   Uri templateTaskUri(TemplateTask task, String templateId) {
-    return _projectUri.replace(
-        pathSegments: _projectUri.pathSegments
-            .followedBy([model.prefix, '${model.name}:${task.name}']));
+    return _templateUri.replace(
+        pathSegments: _templateUri.pathSegments
+            .followedBy(['templates', '$templateId:${task.name}']));
   }
+
+  @override
+  String templateName(String templateId) => _templateUri
+      .replace(
+          pathSegments:
+              _templateUri.pathSegments.followedBy(['templates', templateId]))
+      .toString();
 }
 
 final class _GoogleAIUri implements _ModelUri {
@@ -193,10 +195,17 @@ final class _GoogleAIUri implements _ModelUri {
 
   @override
   Uri templateTaskUri(TemplateTask task, String templateId) {
-    return _baseTemplateUri.replace(
-        pathSegments: _baseTemplateUri.pathSegments
-            .followedBy([model.prefix, '${model.name}:${task.name}']));
+    return _baseUri.replace(
+        pathSegments: _baseUri.pathSegments
+            .followedBy(['templates', '$templateId:${task.name}']));
   }
+
+  @override
+  String templateName(String templateId) => _baseTemplateUri
+      .replace(
+          pathSegments: _baseTemplateUri.pathSegments
+              .followedBy(['templates', templateId]))
+      .toString();
 }
 
 /// Base class for models.
@@ -253,6 +262,8 @@ abstract class BaseModel {
 
   Uri templateTaskUri(TemplateTask task, String templateId) =>
       _modelUri.templateTaskUri(task, templateId);
+
+  String templateName(String templateId) => _modelUri.templateName(templateId);
 }
 
 /// An abstract base class for models that interact with an API using an [ApiClient].
@@ -282,12 +293,11 @@ abstract class BaseApiClientModel extends BaseModel {
           T Function(Map<String, Object?>) parse) =>
       _client.makeRequest(taskUri(task), params).then(parse);
 
-  Future<T> makeTemplateRequest<T>(
-          TemplateTask task,
-          String templateId,
-          Map<String, Object?> params,
-          T Function(Map<String, Object?>) parse) =>
-      _client
-          .makeRequest(templateTaskUri(task, templateId), params)
-          .then(parse);
+  Future<T> makeTemplateRequest<T>(TemplateTask task, String templateId,
+      Map<String, Object?> params, T Function(Map<String, Object?>) parse) {
+    params['name'] = templateName(templateId);
+    return _client
+        .makeRequest(templateTaskUri(task, templateId), params)
+        .then(parse);
+  }
 }
