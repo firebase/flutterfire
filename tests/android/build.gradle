@@ -5,6 +5,10 @@ allprojects {
     }
 }
 
+android {
+    compileSdk = 36
+    }
+
 rootProject.buildDir = "../build"
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
