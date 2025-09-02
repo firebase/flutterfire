@@ -2,6 +2,7 @@ group 'io.flutter.plugins.firebase.database'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 apply from: file("local-config.gradle")
 
 buildscript {
@@ -47,6 +48,18 @@ android {
     compileOptions {
         sourceCompatibility project.ext.javaVersion
         targetCompatibility project.ext.javaVersion
+    }
+
+    kotlinOptions {
+        jvmTarget = project.ext.javaVersion
+    }
+
+    sourceSets {
+        main {
+            java {
+                srcDirs = ['src/main/kotlin']
+            }
+        }
     }
 
     buildFeatures {
