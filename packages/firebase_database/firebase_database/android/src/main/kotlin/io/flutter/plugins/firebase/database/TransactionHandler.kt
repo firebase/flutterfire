@@ -36,7 +36,7 @@ class TransactionHandler @JvmOverloads constructor(
         val transactionArgs = mutableMapOf<String, Any>()
 
         snapshotMap[Constants.KEY] = currentData.key ?: ""
-        snapshotMap[Constants.VALUE] = currentData.value ?: ""
+        snapshotMap[Constants.VALUE] = currentData.value
 
         transactionArgs[Constants.SNAPSHOT] = snapshotMap
         transactionArgs[Constants.TRANSACTION_KEY] = transactionKey

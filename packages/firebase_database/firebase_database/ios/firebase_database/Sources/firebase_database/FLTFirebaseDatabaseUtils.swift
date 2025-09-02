@@ -176,8 +176,8 @@ import Foundation
         
         return [
             "key": snapshot.key ?? "",
-            "value": snapshot.value ?? "",
-            "priority": snapshot.priority ?? "",
+            "value": snapshot.value ?? NSNull(),
+            "priority": snapshot.priority ?? NSNull(),
             "childKeys": childKeys
         ]
     }
