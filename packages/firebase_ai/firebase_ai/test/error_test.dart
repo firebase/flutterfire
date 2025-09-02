@@ -19,7 +19,7 @@ void main() {
   group('VertexAI Exceptions', () {
     test('VertexAIException toString', () {
       final exception = FirebaseAIException('Test message');
-      expect(exception.toString(), 'VertexAIException: Test message');
+      expect(exception.toString(), 'FirebaseAIException: Test message');
     });
 
     test('InvalidApiKey toString', () {
@@ -55,12 +55,12 @@ void main() {
       expect(exception.toString(), 'Server error occurred.');
     });
 
-    test('VertexAISdkException toString', () {
+    test('FirebaseAISdkException toString', () {
       final exception = FirebaseAISdkException('SDK failed to parse response.');
       expect(
           exception.toString(),
           'SDK failed to parse response.\n'
-          'This indicates a problem with the Vertex AI in Firebase SDK. '
+          'This indicates a problem with the Firebase AI Logic SDK. '
           'Try updating to the latest version '
           '(https://pub.dev/packages/firebase_ai/versions), '
           'or file an issue at '

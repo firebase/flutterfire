@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import '../widgets/message_widget.dart';
@@ -132,13 +134,14 @@ class _SchemaPromptPageState extends State<SchemaPromptPage> {
         ),
       );
 
-      var text = response.text;
-      _messages.add(MessageData(text: text, fromUser: false));
-
-      if (text == null) {
+      if (response.text == null) {
         _showError('No response from API.');
         return;
       } else {
+        final text = const JsonEncoder.withIndent('  ')
+            .convert(json.decode(response.text!) as Object?);
+        _messages
+            .add(MessageData(text: '```json\n$text\n```', fromUser: false));
         setState(() {
           _loading = false;
           _scrollDown();
