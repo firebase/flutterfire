@@ -101,7 +101,7 @@ final class ImagenModel extends BaseApiClientModel {
   /// prompt.
   /// Note: Keep this API private until future release.
   // ignore: unused_element
-  Future<ImagenGenerationResponse<ImagenGCSImage>> _generateImagesGCS(
+  Future<ImagenGenerationResponse<ImagenGCSImage>> generateImagesGCS(
     String prompt,
     String gcsUri,
   ) =>
