@@ -76,9 +76,40 @@ class LiveSession {
     _ws.sink.add(clientJson);
   }
 
+  /// Sends audio data to the server.
+  ///
+  /// [audio]: The audio data to send.
+  Future<void> sendAudio(InlineDataPart audio) async {
+    _checkWsStatus();
+    var clientMessage = LiveClientRealtimeInput.audio(audio);
+    var clientJson = jsonEncode(clientMessage.toJson());
+    _ws.sink.add(clientJson);
+  }
+
+  /// Sends video data to the server.
+  ///
+  /// [video]: The video data to send.
+  Future<void> sendVideo(InlineDataPart video) async {
+    _checkWsStatus();
+    var clientMessage = LiveClientRealtimeInput.video(video);
+    var clientJson = jsonEncode(clientMessage.toJson());
+    _ws.sink.add(clientJson);
+  }
+
+  /// Sends text data to the server.
+  ///
+  /// [text]: The text data to send.
+  Future<void> sendText(String text) async {
+    _checkWsStatus();
+    var clientMessage = LiveClientRealtimeInput.text(text);
+    var clientJson = jsonEncode(clientMessage.toJson());
+    _ws.sink.add(clientJson);
+  }
+
   /// Sends realtime input (media chunks) to the server.
   ///
   /// [mediaChunks]: The list of media chunks to send.
+  @Deprecated('Use sendAudio, sendVideo, or sendText instead')
   Future<void> sendMediaChunks({
     required List<InlineDataPart> mediaChunks,
   }) async {
@@ -95,6 +126,7 @@ class LiveSession {
   ///
   /// Parameters:
   /// - [mediaChunkStream]: The stream of [InlineDataPart] objects to send to the server.
+  @Deprecated('Use sendAudio, sendVideo, or sendText with a stream instead')
   Future<void> sendMediaStream(Stream<InlineDataPart> mediaChunkStream) async {
     _checkWsStatus();
 
