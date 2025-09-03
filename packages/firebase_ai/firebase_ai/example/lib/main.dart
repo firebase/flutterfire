@@ -167,7 +167,10 @@ class _HomeScreenState extends State<HomeScreen> {
   ) {
     switch (index) {
       case 0:
-        return ChatPage(title: 'Chat', model: currentModel);
+        return ChatPage(
+          title: 'Chat',
+          useVertexBackend: useVertexBackend,
+        );
       case 1:
         return AudioPage(title: 'Audio', model: currentModel);
       case 2:
@@ -199,7 +202,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
       default:
         // Fallback to the first page in case of an unexpected index
-        return ChatPage(title: 'Chat', model: currentModel);
+        return ChatPage(
+          title: 'Chat',
+          useVertexBackend: useVertexBackend,
+        );
     }
   }
 
