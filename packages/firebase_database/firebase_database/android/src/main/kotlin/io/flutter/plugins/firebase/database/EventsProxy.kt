@@ -22,8 +22,8 @@ abstract class EventsProxy @JvmOverloads constructor(
     fun buildAdditionalParams(
         @NonNull eventType: String,
         @Nullable previousChildName: String?
-    ): Map<String, Any> {
-        val params = mutableMapOf<String, Any>()
+    ): Map<String, Any?> {
+        val params = mutableMapOf<String, Any?>()
         params[Constants.EVENT_TYPE] = eventType
 
         if (previousChildName != null) {

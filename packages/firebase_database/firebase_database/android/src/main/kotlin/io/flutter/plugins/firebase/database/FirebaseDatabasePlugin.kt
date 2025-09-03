@@ -254,8 +254,8 @@ class FirebaseDatabasePlugin : FlutterFirebasePlugin, FlutterPlugin, MethodCallH
         return taskCompletionSource.task
     }
 
-    private fun runTransaction(arguments: Map<String, Any>): Task<Map<String, Any>> {
-        val taskCompletionSource = TaskCompletionSource<Map<String, Any>>()
+    private fun runTransaction(arguments: Map<String, Any>): Task<Map<String, Any?>> {
+        val taskCompletionSource = TaskCompletionSource<Map<String, Any?>>()
 
         cachedThreadPool.execute {
             try {
@@ -276,8 +276,8 @@ class FirebaseDatabasePlugin : FlutterFirebasePlugin, FlutterPlugin, MethodCallH
         return taskCompletionSource.task
     }
 
-    private fun queryGet(arguments: Map<String, Any>): Task<Map<String, Any>> {
-        val taskCompletionSource = TaskCompletionSource<Map<String, Any>>()
+    private fun queryGet(arguments: Map<String, Any>): Task<Map<String, Any?>> {
+        val taskCompletionSource = TaskCompletionSource<Map<String, Any?>>()
 
         cachedThreadPool.execute {
             try {

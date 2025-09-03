@@ -24,16 +24,16 @@ class TransactionHandler @JvmOverloads constructor(
     private val transactionKey: Int
 ) : Handler {
     
-    private val transactionCompletionSource = TaskCompletionSource<Map<String, Any>>()
+    private val transactionCompletionSource = TaskCompletionSource<Map<String, Any?>>()
 
-    fun getTask(): Task<Map<String, Any>> {
+    fun getTask(): Task<Map<String, Any?>> {
         return transactionCompletionSource.task
     }
 
     @NonNull
     override fun doTransaction(@NonNull currentData: MutableData): Transaction.Result {
-        val snapshotMap = mutableMapOf<String, Any>()
-        val transactionArgs = mutableMapOf<String, Any>()
+        val snapshotMap = mutableMapOf<String, Any?>()
+        val transactionArgs = mutableMapOf<String, Any?>()
 
         snapshotMap[Constants.KEY] = currentData.key ?: ""
         snapshotMap[Constants.VALUE] = currentData.value
@@ -74,7 +74,7 @@ class TransactionHandler @JvmOverloads constructor(
             }
             currentData != null -> {
                 val payload = FlutterDataSnapshotPayload(currentData)
-                val additionalParams = mutableMapOf<String, Any>()
+                val additionalParams = mutableMapOf<String, Any?>()
                 additionalParams[Constants.COMMITTED] = committed
                 transactionCompletionSource.setResult(payload.withAdditionalParams(additionalParams).toMap())
             }

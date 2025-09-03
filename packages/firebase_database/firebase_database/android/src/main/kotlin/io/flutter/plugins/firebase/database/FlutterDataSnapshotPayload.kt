@@ -10,10 +10,10 @@ import com.google.firebase.database.DataSnapshot
 import java.util.*
 
 class FlutterDataSnapshotPayload(snapshot: DataSnapshot) {
-    private var payloadMap: MutableMap<String, Any> = mutableMapOf()
+    private var payloadMap: MutableMap<String, Any?> = mutableMapOf()
 
     init {
-        val snapshotMap = mutableMapOf<String, Any>()
+        val snapshotMap = mutableMapOf<String, Any?>()
 
         snapshotMap[Constants.KEY] = snapshot.key ?: ""
         snapshotMap[Constants.VALUE] = snapshot.value
@@ -36,7 +36,7 @@ class FlutterDataSnapshotPayload(snapshot: DataSnapshot) {
         payloadMap[Constants.SNAPSHOT] = snapshotMap
     }
 
-    fun withAdditionalParams(params: Map<String, Any>): FlutterDataSnapshotPayload {
+    fun withAdditionalParams(params: Map<String, Any?>): FlutterDataSnapshotPayload {
         val prevPayloadMap = payloadMap
         payloadMap = mutableMapOf()
         payloadMap.putAll(prevPayloadMap)
@@ -44,7 +44,7 @@ class FlutterDataSnapshotPayload(snapshot: DataSnapshot) {
         return this
     }
 
-    fun toMap(): Map<String, Any> {
+    fun toMap(): Map<String, Any?> {
         return payloadMap
     }
 }
