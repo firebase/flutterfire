@@ -5,7 +5,12 @@
  - **FIX**(firebaseai): Export `UnknownPart` ([#17655](https://github.com/firebase/flutterfire/issues/17655)). ([a399e0e1](https://github.com/firebase/flutterfire/commit/a399e0e10328dee89affd1b1def50ebb96d0ae44))
  - **FIX**(firebase_ai): Add `GroundingMetadata` parsing for Developer API ([#17657](https://github.com/firebase/flutterfire/issues/17657)). ([f8ebbaf1](https://github.com/firebase/flutterfire/commit/f8ebbaf10c0ec8f38669371b40bfc125b285d3ea))
  - **FEAT**(firebaseai): add thinking feature ([#17652](https://github.com/firebase/flutterfire/issues/17652)). ([5faec2c1](https://github.com/firebase/flutterfire/commit/5faec2c1ddf0682ef9d88fb2d354f5f3f22405fa))
- - **FEAT**(firebaseai): Add app check limited use token ([#17645](https://github.com/firebase/flutterfire/issues/17645)). ([f2a682a9](https://github.com/firebase/flutterfire/commit/f2a682a90254fb73ef7ef3613d38e4f08fc2fe35))
+ - **FEAT**(firebaseai): Add support for limited-use tokens with Firebase App Check.
+  These limited-use tokens are required for an upcoming optional feature called
+  _replay protection_. We recommend
+  [enabling the usage of limited-use tokens](https://firebase.google.com/docs/ai-logic/app-check)
+  now so that when replay protection becomes available, you can enable it sooner
+  because more of your users will be on versions of your app that send limited-use tokens. ([#17645](https://github.com/firebase/flutterfire/issues/17645)). ([f2a682a9](https://github.com/firebase/flutterfire/commit/f2a682a90254fb73ef7ef3613d38e4f08fc2fe35)). ([f2a682a9](https://github.com/firebase/flutterfire/commit/f2a682a90254fb73ef7ef3613d38e4f08fc2fe35))
  - **FEAT**(firebaseai): imagen editing ([#17556](https://github.com/firebase/flutterfire/issues/17556)). ([62811a61](https://github.com/firebase/flutterfire/commit/62811a61354d412c6322bd68004b8d1537e3e483))
  - **FEAT**(firebaseai): add responseJsonSchema to GenerationConfig ([#17564](https://github.com/firebase/flutterfire/issues/17564)). ([def807a7](https://github.com/firebase/flutterfire/commit/def807a7cc6a65bf51aa223c9b2f96e37acfdf79))
 
