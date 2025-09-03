@@ -16,8 +16,8 @@ class FlutterDataSnapshotPayload(snapshot: DataSnapshot) {
         val snapshotMap = mutableMapOf<String, Any>()
 
         snapshotMap[Constants.KEY] = snapshot.key ?: ""
-        snapshotMap[Constants.VALUE] = snapshot.value ?: null
-        snapshotMap[Constants.PRIORITY] = snapshot.priority ?: null
+        snapshotMap[Constants.VALUE] = snapshot.value
+        snapshotMap[Constants.PRIORITY] = snapshot.priority
 
         val childrenCount = snapshot.childrenCount.toInt()
         if (childrenCount == 0) {
