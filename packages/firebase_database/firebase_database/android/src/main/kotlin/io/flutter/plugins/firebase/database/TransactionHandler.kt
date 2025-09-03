@@ -45,7 +45,7 @@ class TransactionHandler @JvmOverloads constructor(
             val executor = TransactionExecutor(channel)
             val updatedData = executor.execute(transactionArgs)
             @Suppress("UNCHECKED_CAST")
-            val transactionHandlerResult = updatedData as Map<String, Any>
+            val transactionHandlerResult = updatedData as Map<String, Any?>
             val aborted = transactionHandlerResult["aborted"] as Boolean
             val exception = transactionHandlerResult["exception"] as Boolean
             
