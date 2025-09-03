@@ -141,6 +141,18 @@ class _ChatPageState extends State<ChatPage> {
                   if (!_loading)
                     IconButton(
                       onPressed: () async {
+                        await _sendServerTemplateMessage(_textController.text);
+                      },
+                      icon: Icon(
+                        Icons.ten_mp,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    )
+                  else
+                    const CircularProgressIndicator(),
+                  if (!_loading)
+                    IconButton(
+                      onPressed: () async {
                         await _sendChatMessage(_textController.text);
                       },
                       icon: Icon(
@@ -178,6 +190,51 @@ class _ChatPageState extends State<ChatPage> {
       _messages.add(MessageData(text: text, fromUser: false));
 
       if (text == null) {
+        _showError('No response from API.');
+        return;
+      } else {
+        setState(() {
+          _loading = false;
+          _scrollDown();
+        });
+      }
+    } catch (e) {
+      _showError(e.toString());
+      setState(() {
+        _loading = false;
+      });
+    } finally {
+      _textController.clear();
+      setState(() {
+        _loading = false;
+      });
+      _textFieldFocus.requestFocus();
+    }
+  }
+
+  Future<void> _sendServerTemplateMessage(String templatePrompt) async {
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      var response = await _model?.templateGenerateContent(
+        'greeting.prompt',
+        {
+          'inputs': {
+            'name': 'lily',
+            'language': 'Chinese',
+          },
+        },
+      );
+
+      var text = response?.text;
+      var image = response?.inlineDataParts.first;
+      _messages.add(
+        MessageData(text: text, imageBytes: image?.bytes, fromUser: false),
+      );
+
+      if (text == null && image == null) {
         _showError('No response from API.');
         return;
       } else {
