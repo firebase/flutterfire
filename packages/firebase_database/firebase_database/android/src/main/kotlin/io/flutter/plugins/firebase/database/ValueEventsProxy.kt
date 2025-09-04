@@ -12,16 +12,22 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import io.flutter.plugin.common.EventChannel.EventSink
 
-class ValueEventsProxy @JvmOverloads constructor(
-    @NonNull eventSink: EventSink
-) : EventsProxy(eventSink, Constants.EVENT_TYPE_VALUE), ValueEventListener {
-
-    override fun onDataChange(@NonNull snapshot: DataSnapshot) {
-        sendEvent(Constants.EVENT_TYPE_VALUE, snapshot, null)
+class ValueEventsProxy
+  @JvmOverloads
+  constructor(
+    @NonNull eventSink: EventSink,
+  ) : EventsProxy(eventSink, Constants.EVENT_TYPE_VALUE),
+    ValueEventListener {
+    override fun onDataChange(
+      @NonNull snapshot: DataSnapshot,
+    ) {
+      sendEvent(Constants.EVENT_TYPE_VALUE, snapshot, null)
     }
 
-    override fun onCancelled(@NonNull error: DatabaseError) {
-        val e = FlutterFirebaseDatabaseException.fromDatabaseError(error)
-        eventSink.error(e.code, e.message, e.additionalData)
+    override fun onCancelled(
+      @NonNull error: DatabaseError,
+    ) {
+      val e = FlutterFirebaseDatabaseException.fromDatabaseError(error)
+      eventSink.error(e.code, e.message, e.additionalData)
     }
-}
+  }

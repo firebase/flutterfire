@@ -14,46 +14,50 @@ import io.flutter.plugin.common.EventChannel.StreamHandler
 import java.util.*
 
 interface OnDispose {
-    fun run()
+  fun run()
 }
 
-class EventStreamHandler @JvmOverloads constructor(
+class EventStreamHandler
+  @JvmOverloads
+  constructor(
     private val query: Query,
-    private val onDispose: OnDispose
-) : StreamHandler {
-    
+    private val onDispose: OnDispose,
+  ) : StreamHandler {
     private var valueEventListener: ValueEventListener? = null
     private var childEventListener: ChildEventListener? = null
 
     @Suppress("UNCHECKED_CAST")
-    override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
-        val args = arguments as Map<String, Any>
-        val eventType = args[Constants.EVENT_TYPE] as String
+    override fun onListen(
+      arguments: Any?,
+      events: EventChannel.EventSink?,
+    ) {
+      val args = arguments as Map<String, Any>
+      val eventType = args[Constants.EVENT_TYPE] as String
 
-        if (Constants.EVENT_TYPE_VALUE == eventType) {
-            events?.let { eventSink ->
-                valueEventListener = ValueEventsProxy(eventSink)
-                query.addValueEventListener(valueEventListener!!)
-            }
-        } else {
-            events?.let { eventSink ->
-                childEventListener = ChildEventsProxy(eventSink, eventType)
-                query.addChildEventListener(childEventListener!!)
-            }
+      if (Constants.EVENT_TYPE_VALUE == eventType) {
+        events?.let { eventSink ->
+          valueEventListener = ValueEventsProxy(eventSink)
+          query.addValueEventListener(valueEventListener!!)
         }
+      } else {
+        events?.let { eventSink ->
+          childEventListener = ChildEventsProxy(eventSink, eventType)
+          query.addChildEventListener(childEventListener!!)
+        }
+      }
     }
 
     override fun onCancel(arguments: Any?) {
-        onDispose.run()
+      onDispose.run()
 
-        valueEventListener?.let {
-            query.removeEventListener(it)
-            valueEventListener = null
-        }
+      valueEventListener?.let {
+        query.removeEventListener(it)
+        valueEventListener = null
+      }
 
-        childEventListener?.let {
-            query.removeEventListener(it)
-            childEventListener = null
-        }
+      childEventListener?.let {
+        query.removeEventListener(it)
+        childEventListener = null
+      }
     }
-}
+  }

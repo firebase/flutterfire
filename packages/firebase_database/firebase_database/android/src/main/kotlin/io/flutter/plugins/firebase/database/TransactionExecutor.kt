@@ -16,52 +16,57 @@ import java.util.*
 import java.util.concurrent.ExecutionException
 
 class TransactionExecutor constructor(
-    private val channel: MethodChannel
+  private val channel: MethodChannel,
 ) {
-    private val completion = TaskCompletionSource<Any>()
+  private val completion = TaskCompletionSource<Any>()
 
-    @Throws(ExecutionException::class, InterruptedException::class)
-    fun execute(arguments: Map<String, Any>): Any {
-        Handler(Looper.getMainLooper()).post {
-            channel.invokeMethod(
-                Constants.METHOD_CALL_TRANSACTION_HANDLER,
-                arguments,
-                object : MethodChannel.Result {
-                    override fun success(@Nullable result: Any?) {
-                        completion.setResult(result)
-                    }
+  @Throws(ExecutionException::class, InterruptedException::class)
+  fun execute(arguments: Map<String, Any>): Any {
+    Handler(Looper.getMainLooper()).post {
+      channel.invokeMethod(
+        Constants.METHOD_CALL_TRANSACTION_HANDLER,
+        arguments,
+        object : MethodChannel.Result {
+          override fun success(
+            @Nullable result: Any?,
+          ) {
+            completion.setResult(result)
+          }
 
-                    @Suppress("UNCHECKED_CAST")
-                    override fun error(
-                        errorCode: String,
-                        @Nullable errorMessage: String?,
-                        @Nullable errorDetails: Any?
-                    ) {
-                        var message = errorMessage
-                        val additionalData = mutableMapOf<String, Any>()
+          @Suppress("UNCHECKED_CAST")
+          override fun error(
+            errorCode: String,
+            @Nullable errorMessage: String?,
+            @Nullable errorDetails: Any?,
+          ) {
+            var message = errorMessage
+            val additionalData = mutableMapOf<String, Any>()
 
-                        if (message == null) {
-                            message = FlutterFirebaseDatabaseException.UNKNOWN_ERROR_MESSAGE
-                        }
+            if (message == null) {
+              message = FlutterFirebaseDatabaseException.UNKNOWN_ERROR_MESSAGE
+            }
 
-                        if (errorDetails is Map<*, *>) {
-                            additionalData.putAll(errorDetails as Map<String, Any>)
-                        }
+            if (errorDetails is Map<*, *>) {
+              additionalData.putAll(errorDetails as Map<String, Any>)
+            }
 
-                        val e = FlutterFirebaseDatabaseException(
-                            errorCode, message, additionalData
-                        )
+            val e =
+              FlutterFirebaseDatabaseException(
+                errorCode,
+                message,
+                additionalData,
+              )
 
-                        completion.setException(e)
-                    }
+            completion.setException(e)
+          }
 
-                    override fun notImplemented() {
-                        // never called
-                    }
-                }
-            )
-        }
-
-        return Tasks.await(completion.task)
+          override fun notImplemented() {
+            // never called
+          }
+        },
+      )
     }
+
+    return Tasks.await(completion.task)
+  }
 }
