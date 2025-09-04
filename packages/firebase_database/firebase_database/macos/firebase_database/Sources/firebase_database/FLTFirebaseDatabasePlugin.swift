@@ -23,7 +23,7 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
   private var listenerCount: Int = 0
 
   init(messenger: FlutterBinaryMessenger, channel: FlutterMethodChannel) {
-    self.binaryMessenger = messenger
+    binaryMessenger = messenger
     self.channel = channel
     super.init()
   }
@@ -99,7 +99,8 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
       databaseGoOffline(arguments: call.arguments, withMethodCallResult: methodCallResult)
     case "FirebaseDatabase#purgeOutstandingWrites":
       databasePurgeOutstandingWrites(
-        arguments: call.arguments, withMethodCallResult: methodCallResult)
+        arguments: call.arguments, withMethodCallResult: methodCallResult
+      )
     case "DatabaseReference#set":
       databaseSet(arguments: call.arguments, withMethodCallResult: methodCallResult)
     case "DatabaseReference#setWithPriority":
@@ -137,59 +138,55 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
   }
 
   public func pluginConstants(for firebaseApp: FirebaseApp) -> [AnyHashable: Any] {
-    return [:]
+    [:]
   }
 
   @objc public func firebaseLibraryName() -> String {
-    return "flutter-fire-rtdb"
+    "flutter-fire-rtdb"
   }
 
   @objc public func firebaseLibraryVersion() -> String {
-    return "12.0.1"
+    "12.0.1"
   }
 
   @objc public func flutterChannelName() -> String {
-    return kFLTFirebaseDatabaseChannelName
+    kFLTFirebaseDatabaseChannelName
   }
 
   // MARK: - Database API
 
-  private func databaseGoOnline(
-    arguments: Any?, withMethodCallResult result: FLTFirebaseMethodCallResult
-  ) {
+  private func databaseGoOnline(arguments: Any?,
+                                withMethodCallResult result: FLTFirebaseMethodCallResult) {
     guard let args = arguments as? [String: Any] else { return }
     let database = FLTFirebaseDatabaseUtils.database(from: args)
     database.goOnline()
     result.success(nil)
   }
 
-  private func databaseGoOffline(
-    arguments: Any?, withMethodCallResult result: FLTFirebaseMethodCallResult
-  ) {
+  private func databaseGoOffline(arguments: Any?,
+                                 withMethodCallResult result: FLTFirebaseMethodCallResult) {
     guard let args = arguments as? [String: Any] else { return }
     let database = FLTFirebaseDatabaseUtils.database(from: args)
     database.goOffline()
     result.success(nil)
   }
 
-  private func databasePurgeOutstandingWrites(
-    arguments: Any?, withMethodCallResult result: FLTFirebaseMethodCallResult
-  ) {
+  private func databasePurgeOutstandingWrites(arguments: Any?,
+                                              withMethodCallResult result: FLTFirebaseMethodCallResult) {
     guard let args = arguments as? [String: Any] else { return }
     let database = FLTFirebaseDatabaseUtils.database(from: args)
     database.purgeOutstandingWrites()
     result.success(nil)
   }
 
-  private func databaseSet(
-    arguments: Any?, withMethodCallResult result: FLTFirebaseMethodCallResult
-  ) {
+  private func databaseSet(arguments: Any?,
+                           withMethodCallResult result: FLTFirebaseMethodCallResult) {
     guard let args = arguments as? [String: Any] else { return }
     let reference = FLTFirebaseDatabaseUtils.databaseReference(from: args)
     let value = args["value"]
 
     reference.setValue(value) { error, _ in
-      if let error = error {
+      if let error {
         result.error(nil, nil, nil, error)
       } else {
         result.success(nil)
@@ -197,16 +194,15 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     }
   }
 
-  private func databaseSetWithPriority(
-    arguments: Any?, withMethodCallResult result: FLTFirebaseMethodCallResult
-  ) {
+  private func databaseSetWithPriority(arguments: Any?,
+                                       withMethodCallResult result: FLTFirebaseMethodCallResult) {
     guard let args = arguments as? [String: Any] else { return }
     let reference = FLTFirebaseDatabaseUtils.databaseReference(from: args)
     let value = args["value"]
     let priority = args["priority"]
 
     reference.setValue(value, andPriority: priority) { error, _ in
-      if let error = error {
+      if let error {
         result.error(nil, nil, nil, error)
       } else {
         result.success(nil)
@@ -214,16 +210,15 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     }
   }
 
-  private func databaseUpdate(
-    arguments: Any?, withMethodCallResult result: FLTFirebaseMethodCallResult
-  ) {
+  private func databaseUpdate(arguments: Any?,
+                              withMethodCallResult result: FLTFirebaseMethodCallResult) {
     guard let args = arguments as? [String: Any],
-      let values = args["value"] as? [String: Any]
+          let values = args["value"] as? [String: Any]
     else { return }
     let reference = FLTFirebaseDatabaseUtils.databaseReference(from: args)
 
     reference.updateChildValues(values) { error, _ in
-      if let error = error {
+      if let error {
         result.error(nil, nil, nil, error)
       } else {
         result.success(nil)
@@ -231,15 +226,14 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     }
   }
 
-  private func databaseSetPriority(
-    arguments: Any?, withMethodCallResult result: FLTFirebaseMethodCallResult
-  ) {
+  private func databaseSetPriority(arguments: Any?,
+                                   withMethodCallResult result: FLTFirebaseMethodCallResult) {
     guard let args = arguments as? [String: Any] else { return }
     let reference = FLTFirebaseDatabaseUtils.databaseReference(from: args)
     let priority = args["priority"]
 
     reference.setPriority(priority) { error, _ in
-      if let error = error {
+      if let error {
         result.error(nil, nil, nil, error)
       } else {
         result.success(nil)
@@ -247,11 +241,10 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     }
   }
 
-  private func databaseRunTransaction(
-    arguments: Any?, withMethodCallResult result: FLTFirebaseMethodCallResult
-  ) {
+  private func databaseRunTransaction(arguments: Any?,
+                                      withMethodCallResult result: FLTFirebaseMethodCallResult) {
     guard let args = arguments as? [String: Any],
-      let transactionKey = args["transactionKey"] as? Int
+          let transactionKey = args["transactionKey"] as? Int
     else { return }
     let reference = FLTFirebaseDatabaseUtils.databaseReference(from: args)
     let applyLocally = args["transactionApplyLocally"] as? Bool ?? false
@@ -291,9 +284,9 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
       }
       return TransactionResult.success(withValue: currentData)
     } andCompletionBlock: { error, committed, snapshot in
-      if let error = error {
+      if let error {
         result.error(nil, nil, nil, error)
-      } else if let snapshot = snapshot {
+      } else if let snapshot {
         let snapshotDict = FLTFirebaseDatabaseUtils.dictionary(from: snapshot)
         result.success([
           "committed": committed,
@@ -303,15 +296,14 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     }
   }
 
-  private func onDisconnectSet(
-    arguments: Any?, withMethodCallResult result: FLTFirebaseMethodCallResult
-  ) {
+  private func onDisconnectSet(arguments: Any?,
+                               withMethodCallResult result: FLTFirebaseMethodCallResult) {
     guard let args = arguments as? [String: Any] else { return }
     let reference = FLTFirebaseDatabaseUtils.databaseReference(from: args)
     let value = args["value"]
 
     reference.onDisconnectSetValue(value) { error, _ in
-      if let error = error {
+      if let error {
         result.error(nil, nil, nil, error)
       } else {
         result.success(nil)
@@ -319,16 +311,15 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     }
   }
 
-  private func onDisconnectSetWithPriority(
-    arguments: Any?, withMethodCallResult result: FLTFirebaseMethodCallResult
-  ) {
+  private func onDisconnectSetWithPriority(arguments: Any?,
+                                           withMethodCallResult result: FLTFirebaseMethodCallResult) {
     guard let args = arguments as? [String: Any] else { return }
     let reference = FLTFirebaseDatabaseUtils.databaseReference(from: args)
     let value = args["value"]
     let priority = args["priority"]
 
     reference.onDisconnectSetValue(value, andPriority: priority) { error, _ in
-      if let error = error {
+      if let error {
         result.error(nil, nil, nil, error)
       } else {
         result.success(nil)
@@ -336,16 +327,15 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     }
   }
 
-  private func onDisconnectUpdate(
-    arguments: Any?, withMethodCallResult result: FLTFirebaseMethodCallResult
-  ) {
+  private func onDisconnectUpdate(arguments: Any?,
+                                  withMethodCallResult result: FLTFirebaseMethodCallResult) {
     guard let args = arguments as? [String: Any],
-      let values = args["value"] as? [String: Any]
+          let values = args["value"] as? [String: Any]
     else { return }
     let reference = FLTFirebaseDatabaseUtils.databaseReference(from: args)
 
     reference.onDisconnectUpdateChildValues(values) { error, _ in
-      if let error = error {
+      if let error {
         result.error(nil, nil, nil, error)
       } else {
         result.success(nil)
@@ -353,14 +343,13 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     }
   }
 
-  private func onDisconnectCancel(
-    arguments: Any?, withMethodCallResult result: FLTFirebaseMethodCallResult
-  ) {
+  private func onDisconnectCancel(arguments: Any?,
+                                  withMethodCallResult result: FLTFirebaseMethodCallResult) {
     guard let args = arguments as? [String: Any] else { return }
     let reference = FLTFirebaseDatabaseUtils.databaseReference(from: args)
 
     reference.cancelDisconnectOperations { error, _ in
-      if let error = error {
+      if let error {
         result.error(nil, nil, nil, error)
       } else {
         result.success(nil)
@@ -373,31 +362,29 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     let query = FLTFirebaseDatabaseUtils.databaseQuery(from: args)
 
     query.getData { error, snapshot in
-      if let error = error {
+      if let error {
         result.error(nil, nil, nil, error)
-      } else if let snapshot = snapshot {
+      } else if let snapshot {
         let snapshotDict = FLTFirebaseDatabaseUtils.dictionary(from: snapshot)
         result.success(["snapshot": snapshotDict])
       }
     }
   }
 
-  private func queryKeepSynced(
-    arguments: Any?, withMethodCallResult result: FLTFirebaseMethodCallResult
-  ) {
+  private func queryKeepSynced(arguments: Any?,
+                               withMethodCallResult result: FLTFirebaseMethodCallResult) {
     guard let args = arguments as? [String: Any],
-      let value = args["value"] as? Bool
+          let value = args["value"] as? Bool
     else { return }
     let query = FLTFirebaseDatabaseUtils.databaseQuery(from: args)
     query.keepSynced(value)
     result.success(nil)
   }
 
-  private func queryObserve(
-    arguments: Any?, withMethodCallResult result: FLTFirebaseMethodCallResult
-  ) {
+  private func queryObserve(arguments: Any?,
+                            withMethodCallResult result: FLTFirebaseMethodCallResult) {
     guard let args = arguments as? [String: Any],
-      let eventChannelNamePrefix = args["eventChannelNamePrefix"] as? String
+          let eventChannelNamePrefix = args["eventChannelNamePrefix"] as? String
     else { return }
 
     let databaseQuery = FLTFirebaseDatabaseUtils.databaseQuery(from: args)

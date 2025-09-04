@@ -16,7 +16,8 @@ enum ConfigurationError: Error {
 
 let databaseDirectory = String(
   URL(string: #file)!.deletingLastPathComponent().absoluteString
-    .dropLast())
+    .dropLast()
+)
 
 func loadFirebaseSDKVersion() throws -> String {
   let firebaseCoreScriptPath = NSString.path(withComponents: [
@@ -88,10 +89,10 @@ guard let shared_spm_version = Version("\(firebase_core_version_string)\(shared_
 let package = Package(
   name: "firebase_database",
   platforms: [
-    .iOS("15.0")
+    .iOS("15.0"),
   ],
   products: [
-    .library(name: "firebase-database", targets: ["firebase_database"])
+    .library(name: "firebase-database", targets: ["firebase_database"]),
   ],
   dependencies: [
     .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version),
@@ -106,13 +107,13 @@ let package = Package(
         .product(name: "firebase-core-shared", package: "flutterfire"),
       ],
       resources: [
-        .process("Resources")
+        .process("Resources"),
       ],
       cSettings: [
         .headerSearchPath("include"),
         .define("LIBRARY_VERSION", to: "\"\(library_version)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-rtdb\""),
       ]
-    )
+    ),
   ]
 )

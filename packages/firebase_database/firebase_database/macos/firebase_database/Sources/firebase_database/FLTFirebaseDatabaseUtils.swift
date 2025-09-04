@@ -16,9 +16,10 @@ import Foundation
   private static var cachedDatabaseInstances: [String: Database] = [:]
 
   static func dispatchQueue() -> DispatchQueue {
-    struct Static {
+    enum Static {
       static let sharedInstance = DispatchQueue(
-        label: "io.flutter.plugins.firebase.database", qos: .userInitiated)
+        label: "io.flutter.plugins.firebase.database", qos: .userInitiated
+      )
     }
     return Static.sharedInstance
   }
@@ -54,8 +55,7 @@ import Foundation
     }
 
     if let emulatorHost = arguments["emulatorHost"] as? String,
-      let emulatorPort = arguments["emulatorPort"] as? Int
-    {
+       let emulatorPort = arguments["emulatorPort"] as? Int {
       database.useEmulator(withHost: emulatorHost, port: emulatorPort)
     }
 
@@ -69,9 +69,8 @@ import Foundation
     return database.reference(withPath: path)
   }
 
-  private static func databaseQuery(
-    _ query: DatabaseQuery, applyLimitModifier modifier: [String: Any]
-  ) -> DatabaseQuery {
+  private static func databaseQuery(_ query: DatabaseQuery,
+                                    applyLimitModifier modifier: [String: Any]) -> DatabaseQuery {
     let name = modifier["name"] as? String ?? ""
     let limit = modifier["limit"] as? UInt ?? 0
 
@@ -85,9 +84,8 @@ import Foundation
     }
   }
 
-  private static func databaseQuery(
-    _ query: DatabaseQuery, applyOrderModifier modifier: [String: Any]
-  ) -> DatabaseQuery {
+  private static func databaseQuery(_ query: DatabaseQuery,
+                                    applyOrderModifier modifier: [String: Any]) -> DatabaseQuery {
     let name = modifier["name"] as? String ?? ""
 
     switch name {
@@ -105,34 +103,33 @@ import Foundation
     }
   }
 
-  private static func databaseQuery(
-    _ query: DatabaseQuery, applyCursorModifier modifier: [String: Any]
-  ) -> DatabaseQuery {
+  private static func databaseQuery(_ query: DatabaseQuery,
+                                    applyCursorModifier modifier: [String: Any]) -> DatabaseQuery {
     let name = modifier["name"] as? String ?? ""
     let key = modifier["key"] as? String
     let value = modifier["value"]
 
     switch name {
     case "startAt":
-      if let key = key {
+      if let key {
         return query.queryStarting(atValue: value, childKey: key)
       } else {
         return query.queryStarting(atValue: value)
       }
     case "startAfter":
-      if let key = key {
+      if let key {
         return query.queryStarting(afterValue: value, childKey: key)
       } else {
         return query.queryStarting(afterValue: value)
       }
     case "endAt":
-      if let key = key {
+      if let key {
         return query.queryEnding(atValue: value, childKey: key)
       } else {
         return query.queryEnding(atValue: value)
       }
     case "endBefore":
-      if let key = key {
+      if let key {
         return query.queryEnding(beforeValue: value, childKey: key)
       } else {
         return query.queryEnding(beforeValue: value)
@@ -164,10 +161,9 @@ import Foundation
     return query
   }
 
-  static func dictionary(
-    from snapshot: DataSnapshot, withPreviousChildKey previousChildKey: String?
-  ) -> [String: Any] {
-    return [
+  static func dictionary(from snapshot: DataSnapshot,
+                         withPreviousChildKey previousChildKey: String?) -> [String: Any] {
+    [
       "snapshot": dictionary(from: snapshot),
       "previousChildKey": previousChildKey ?? NSNull(),
     ]
@@ -195,7 +191,7 @@ import Foundation
   static func codeAndMessage(from error: Error?) -> [String] {
     var code = "unknown"
 
-    guard let error = error else {
+    guard let error else {
       return [code, "An unknown error has occurred."]
     }
 

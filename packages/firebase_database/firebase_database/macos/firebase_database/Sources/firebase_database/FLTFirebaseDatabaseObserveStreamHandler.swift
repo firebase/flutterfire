@@ -17,21 +17,21 @@ import FlutterMacOS
   }
 
   func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink)
-    -> FlutterError?
-  {
+    -> FlutterError? {
     guard let args = arguments as? [String: Any],
-      let eventTypeString = args["eventType"] as? String
+          let eventTypeString = args["eventType"] as? String
     else {
       return nil
     }
 
     let observeBlock: (DataSnapshot, String?) -> Void = { [weak self] snapshot, previousChildKey in
       var eventDictionary: [String: Any] = [
-        "eventType": eventTypeString
+        "eventType": eventTypeString,
       ]
 
       let snapshotDict = FLTFirebaseDatabaseUtils.dictionary(
-        from: snapshot, withPreviousChildKey: previousChildKey)
+        from: snapshot, withPreviousChildKey: previousChildKey
+      )
       eventDictionary.merge(snapshotDict) { _, new in new }
 
       DispatchQueue.main.async {
@@ -60,7 +60,8 @@ import FlutterMacOS
 
     let eventType = FLTFirebaseDatabaseUtils.eventType(from: eventTypeString)
     databaseHandle = databaseQuery.observe(
-      eventType, andPreviousSiblingKeyWith: observeBlock, withCancel: cancelBlock)
+      eventType, andPreviousSiblingKeyWith: observeBlock, withCancel: cancelBlock
+    )
 
     return nil
   }
