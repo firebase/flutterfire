@@ -25,15 +25,15 @@ class TransactionHandler @JvmOverloads constructor(
 
   @NonNull
   override fun doTransaction(@NonNull currentData: MutableData): Transaction.Result {
-    val snapshotMap = HashMap<String, Any?>().apply {
-      put(Constants.KEY, currentData.key ?: "")
-      put(Constants.VALUE, currentData.value)
-    }
+    val snapshotMap = mapOf(
+      Constants.KEY to (currentData.key ?: ""),
+      Constants.VALUE to currentData.value
+    )
 
-    val transactionArgs = HashMap<String, Any?>().apply {
-      put(Constants.SNAPSHOT, snapshotMap)
-      put(Constants.TRANSACTION_KEY, transactionKey)
-    }
+    val transactionArgs = mapOf(
+      Constants.SNAPSHOT to snapshotMap,
+      Constants.TRANSACTION_KEY to transactionKey
+    )
 
     return try {
       val executor = TransactionExecutor(channel)
