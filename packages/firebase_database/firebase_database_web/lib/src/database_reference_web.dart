@@ -73,7 +73,7 @@ class DatabaseReferenceWeb extends QueryWeb
   }
 
   @override
-  Future<void> setPriority(priority) async {
+  Future<void> setPriority(Object? priority) async {
     try {
       await _delegate.setPriority(priority);
     } catch (e, s) {
