@@ -10,7 +10,7 @@
   _replay protection_. We recommend
   [enabling the usage of limited-use tokens](https://firebase.google.com/docs/ai-logic/app-check)
   now so that when replay protection becomes available, you can enable it sooner
-  because more of your users will be on versions of your app that send limited-use tokens. ([#17645](https://github.com/firebase/flutterfire/issues/17645)). ([f2a682a9](https://github.com/firebase/flutterfire/commit/f2a682a90254fb73ef7ef3613d38e4f08fc2fe35)). ([f2a682a9](https://github.com/firebase/flutterfire/commit/f2a682a90254fb73ef7ef3613d38e4f08fc2fe35))
+  because more of your users will be on versions of your app that send limited-use tokens. ([#17645](https://github.com/firebase/flutterfire/issues/17645)). ([f2a682a9](https://github.com/firebase/flutterfire/commit/f2a682a90254fb73ef7ef3613d38e4f08fc2fe35)). 
  - **FEAT**(firebaseai): imagen editing ([#17556](https://github.com/firebase/flutterfire/issues/17556)). ([62811a61](https://github.com/firebase/flutterfire/commit/62811a61354d412c6322bd68004b8d1537e3e483))
  - **FEAT**(firebaseai): add responseJsonSchema to GenerationConfig ([#17564](https://github.com/firebase/flutterfire/issues/17564)). ([def807a7](https://github.com/firebase/flutterfire/commit/def807a7cc6a65bf51aa223c9b2f96e37acfdf79))
 
