@@ -70,8 +70,72 @@ class TraceAttributes {
   final Map<String, String>? attributes;
 }
 
+class TransactionHandler {
+  const TransactionHandler({
+    required this.transactionKey,
+  });
+
+  final int transactionKey;
+}
+
+class EventObserver {
+  const EventObserver({
+    required this.eventType,
+    required this.eventChannelNamePrefix,
+  });
+
+  final String eventType;
+  final String eventChannelNamePrefix;
+}
+
+class GetOptions {
+  const GetOptions({
+    this.source,
+    this.serverTimestampBehavior,
+  });
+
+  final String? source;
+  final String? serverTimestampBehavior;
+}
+
+class QueryModifiers {
+  const QueryModifiers({
+    this.orderBy,
+    this.limitToFirst,
+    this.limitToLast,
+    this.startAt,
+    this.endAt,
+    this.equalTo,
+  });
+
+  final String? orderBy;
+  final int? limitToFirst;
+  final int? limitToLast;
+  final Object? startAt;
+  final Object? endAt;
+  final Object? equalTo;
+}
+
 @HostApi(dartHostTestHandler: 'TestFirebaseDatabaseHostApi')
 abstract class FirebaseDatabaseHostApi {
+  @async
+  void set(Object? value);
+
+  @async
+  void setWithPriority(Object? value, Object? priority);
+
+  @async
+  void update(Map<String, Object?> value);
+
+  @async
+  void setPriority(Object? priority);
+
+  @async
+  void remove();
+
+  @async
+  void runTransaction(TransactionHandler transactionHandler, bool applyLocally);
+
   @async
   void goOnline();
 
@@ -79,30 +143,18 @@ abstract class FirebaseDatabaseHostApi {
   void goOffline();
 
   @async
-  void setPersistenceEnabled(bool enabled);
-  
-  @async
-  void setPersistenceCacheSizeBytes(int cacheSize);
-
-  @async
-  void setLoggingEnabled(bool enabled);
-  
-  @async
-  void useDatabaseEmulator(String host, int port);
-
-  @async
-  DatabaseReferencePlatform ref([String? path]);
-
-  @async
-  void setPersistenceEnabled(bool enabled);
-
-  @async
-  void refFromURL(String url);
-
-  @async
-  void ref([String? path]);
-
-  @async
   void purgeOutstandingWrites();
+
+  @async
+  void cancel();
+
+  @async
+  void observe(EventObserver observer);
+
+  @async
+  void get(GetOptions options);
+
+  @async
+  void keepSynced(QueryModifiers modifiers, bool value);
   
 }

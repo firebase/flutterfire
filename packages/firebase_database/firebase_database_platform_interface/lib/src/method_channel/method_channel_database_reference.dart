@@ -12,6 +12,15 @@ import 'method_channel_transaction_result.dart';
 import 'utils/exception.dart';
 import 'utils/push_id_generator.dart';
 
+import 'package:firebase_database_platform_interface/src/pigeon/messages.dart';
+import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart';
+
+extension DatabaseReferencePlatformExtension on DatabaseReferencePlatform {
+  Future<void> set(Object? value) async {
+    await FirebaseDatabaseHostApi.set(value);
+  }
+}
+
 /// DatabaseReference represents a particular location in your Firebase
 /// Database and can be used for reading or writing data to that location.
 ///
