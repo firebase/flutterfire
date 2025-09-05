@@ -71,11 +71,40 @@ class SpeechConfig {
       };
 }
 
+/// The audio transcription configuration.
+class AudioTranscriptionConfig {
+  // ignore: public_member_api_docs
+  const AudioTranscriptionConfig({
+    this.enableGeminiAudioTranscription,
+    this.prefixPrompt,
+  });
+
+  /// If true, the server will use Gemini to transcribe the audio.
+  /// Input audio only.
+  final bool? enableGeminiAudioTranscription;
+
+  /// Prefix prompt for the audio transcription op. This is useful to override
+  /// the default prefix prompt that only asks the model to transcribe the
+  /// audio.
+  /// Overriding can be useful to provide additional context to the model
+  /// such as what language is expected to be spoken in the audio.
+  final String? prefixPrompt;
+
+  // ignore: public_member_api_docs
+  Map<String, Object?> toJson() => {
+        if (enableGeminiAudioTranscription != null)
+          'enableGeminiAudioTranscription': enableGeminiAudioTranscription,
+        if (prefixPrompt != null) 'prefixPrompt': prefixPrompt,
+      };
+}
+
 /// Configures live generation settings.
 final class LiveGenerationConfig extends BaseGenerationConfig {
   // ignore: public_member_api_docs
   LiveGenerationConfig({
     this.speechConfig,
+    this.inputAudioTranscription,
+    this.outputAudioTranscription,
     super.responseModalities,
     super.maxOutputTokens,
     super.temperature,
@@ -88,11 +117,22 @@ final class LiveGenerationConfig extends BaseGenerationConfig {
   /// The speech configuration.
   final SpeechConfig? speechConfig;
 
+  /// The transcription of the input aligns with the input audio language.
+  final AudioTranscriptionConfig? inputAudioTranscription;
+
+  /// The transcription of the output aligns with the language code specified for
+  /// the output audio.
+  final AudioTranscriptionConfig? outputAudioTranscription;
+
   @override
   Map<String, Object?> toJson() => {
         ...super.toJson(),
         if (speechConfig case final speechConfig?)
           'speechConfig': speechConfig.toJson(),
+        if (inputAudioTranscription case final inputAudioTranscription?)
+          'inputAudioTranscription': inputAudioTranscription.toJson(),
+        if (outputAudioTranscription case final outputAudioTranscription?)
+          'outputAudioTranscription': outputAudioTranscription.toJson(),
       };
 }
 
