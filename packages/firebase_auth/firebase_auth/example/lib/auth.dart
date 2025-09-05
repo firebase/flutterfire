@@ -12,9 +12,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 typedef OAuthSignIn = void Function();
 
@@ -256,7 +256,7 @@ class _AuthGateState extends State<AuthGate> {
                                             height: 50,
                                             child: SignInButton(
                                               button,
-                                              onPressed: authButtons[button]!,
+                                              onPressed: authButtons[button],
                                             ),
                                           ),
                                   ),

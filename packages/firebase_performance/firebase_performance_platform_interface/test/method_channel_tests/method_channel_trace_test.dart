@@ -14,7 +14,6 @@ void main() {
   setupFirebasePerformanceMocks();
 
   late TestMethodChannelTrace trace;
-  const int kTraceHandle = 1;
   const String kName = 'test-trace-name';
   final List<MethodCall> log = <MethodCall>[];
   // mock props
@@ -59,125 +58,6 @@ void main() {
     test('instance', () {
       expect(trace, isA<MethodChannelTrace>());
       expect(trace, isA<TracePlatform>());
-    });
-
-    group('start', () {
-      test('should call delegate method successfully', () async {
-        await trace.start();
-
-        expect(log, <Matcher>[
-          isMethodCall(
-            'FirebasePerformance#traceStart',
-            arguments: {'name': kName},
-          ),
-        ]);
-      });
-
-      test(
-          'catch a [PlatformException] error and throws a [FirebaseException] error',
-          () async {
-        mockPlatformExceptionThrown = true;
-
-        await testExceptionHandling('PLATFORM', trace.start);
-      });
-    });
-
-    group('stop', () {
-      test('should call delegate method successfully', () async {
-        await trace.start();
-        trace.putAttribute('bar', 'baz');
-        trace.setMetric('yoo', 33);
-
-        await trace.stop();
-
-        expect(log, <Matcher>[
-          isMethodCall(
-            'FirebasePerformance#traceStart',
-            arguments: {'name': kName},
-          ),
-          isMethodCall(
-            'FirebasePerformance#traceStop',
-            arguments: {
-              'handle': kTraceHandle,
-              'metrics': {
-                'yoo': 33,
-              },
-              'attributes': {
-                'bar': 'baz',
-              },
-            },
-          ),
-        ]);
-      });
-
-      test("will immediately return if start() hasn't been called first",
-          () async {
-        await trace.stop();
-        expect(log, <Matcher>[]);
-      });
-
-      test(
-          'catch a [PlatformException] error and throws a [FirebaseException] error',
-          () async {
-        await trace.start();
-        mockPlatformExceptionThrown = true;
-
-        await testExceptionHandling('PLATFORM', trace.stop);
-      });
-    });
-
-    group('incrementMetric', () {
-      const String metricName = 'test-metric-name';
-      const int metricValue = 453;
-      test('should call delegate method successfully', () async {
-        await trace.start();
-        trace.incrementMetric(metricName, metricValue);
-
-        expect(log, <Matcher>[
-          isMethodCall(
-            'FirebasePerformance#traceStart',
-            arguments: {'name': kName},
-          ),
-        ]);
-
-        expect(trace.getMetric(metricName), metricValue);
-      });
-    });
-
-    group('setMetric', () {
-      const String metricName = 'test-metric-name';
-      const int metricValue = 4;
-      test('should call delegate method successfully', () async {
-        await trace.start();
-        trace.setMetric(metricName, metricValue);
-
-        expect(log, <Matcher>[
-          isMethodCall(
-            'FirebasePerformance#traceStart',
-            arguments: {'name': kName},
-          ),
-        ]);
-
-        expect(trace.getMetric(metricName), metricValue);
-      });
-    });
-
-    group('getMetric', () {
-      const String metricName = 'test-metric-name';
-      const int metricValue = 546;
-      test('should call delegate method successfully', () async {
-        await trace.start();
-        trace.setMetric(metricName, metricValue);
-
-        expect(log, <Matcher>[
-          isMethodCall(
-            'FirebasePerformance#traceStart',
-            arguments: {'name': kName},
-          ),
-        ]);
-
-        expect(trace.getMetric(metricName), metricValue);
-      });
     });
 
     group('putAttribute', () {

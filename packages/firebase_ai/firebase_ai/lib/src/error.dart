@@ -23,7 +23,7 @@ final class FirebaseAIException implements Exception {
   final String message;
 
   @override
-  String toString() => 'VertexAIException: $message';
+  String toString() => 'FirebaseAIException: $message';
 }
 
 /// Exception thrown when the server rejects the API key.
@@ -104,7 +104,7 @@ final class FirebaseAISdkException implements Exception {
 
   @override
   String toString() => '$message\n'
-      'This indicates a problem with the Vertex AI in Firebase SDK. '
+      'This indicates a problem with the Firebase AI Logic SDK. '
       'Try updating to the latest version '
       '(https://pub.dev/packages/firebase_ai/versions), '
       'or file an issue at '
