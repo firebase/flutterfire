@@ -195,6 +195,9 @@ final class GenerativeModel extends BaseApiClientModel {
         _serializationStrategy.parseCountTokensResponse);
   }
 
+  /// Generates content from a template with the given [templateId] and [params].
+  ///
+  /// Sends a "templateGenerateContent" API request for the configured model.
   Future<GenerateContentResponse> templateGenerateContent(
     String templateId,
     Map<String, Object?> params,

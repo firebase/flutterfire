@@ -222,19 +222,18 @@ class _ChatPageState extends State<ChatPage> {
         'greeting.prompt',
         {
           'inputs': {
-            'name': 'lily',
-            'language': 'Chinese',
+            'name': templatePrompt,
           },
         },
       );
 
       var text = response?.text;
-      var image = response?.inlineDataParts.first;
+
       _messages.add(
-        MessageData(text: text, imageBytes: image?.bytes, fromUser: false),
+        MessageData(text: text, fromUser: false),
       );
 
-      if (text == null && image == null) {
+      if (text == null) {
         _showError('No response from API.');
         return;
       } else {
