@@ -91,6 +91,7 @@ export 'src/live_api.dart'
     show
         LiveGenerationConfig,
         SpeechConfig,
+        AudioTranscriptionConfig,
         LiveServerMessage,
         LiveServerContent,
         LiveServerToolCall,
