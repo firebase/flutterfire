@@ -51,8 +51,8 @@ class DatabaseReference {
   final String path;
 }
 
-class TransactionHandler {
-  const TransactionHandler({
+class DatabaseTransactionHandler {
+  const DatabaseTransactionHandler({
     required this.transactionKey,
   });
 
@@ -159,7 +159,7 @@ class TransactionOptions {
   });
 
   final String path;
-  final TransactionHandler transactionHandler;
+  final DatabaseTransactionHandler transactionHandler;
   final bool applyLocally;
 }
 

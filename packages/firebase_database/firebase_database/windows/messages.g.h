@@ -135,16 +135,16 @@ class DatabaseReference {
 
 
 // Generated class from Pigeon that represents data sent in messages.
-class TransactionHandler {
+class DatabaseTransactionHandler {
  public:
   // Constructs an object setting all fields.
-  explicit TransactionHandler(int64_t transaction_key);
+  explicit DatabaseTransactionHandler(int64_t transaction_key);
 
   int64_t transaction_key() const;
   void set_transaction_key(int64_t value_arg);
 
  private:
-  static TransactionHandler FromEncodableList(const flutter::EncodableList& list);
+  static DatabaseTransactionHandler FromEncodableList(const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
   friend class TransactionOptions;
   friend class FirebaseDatabaseHostApi;
@@ -397,7 +397,7 @@ class TransactionOptions {
   // Constructs an object setting all fields.
   explicit TransactionOptions(
     const std::string& path,
-    const TransactionHandler& transaction_handler,
+    const DatabaseTransactionHandler& transaction_handler,
     bool apply_locally);
 
   ~TransactionOptions() = default;
@@ -408,8 +408,8 @@ class TransactionOptions {
   const std::string& path() const;
   void set_path(std::string_view value_arg);
 
-  const TransactionHandler& transaction_handler() const;
-  void set_transaction_handler(const TransactionHandler& value_arg);
+  const DatabaseTransactionHandler& transaction_handler() const;
+  void set_transaction_handler(const DatabaseTransactionHandler& value_arg);
 
   bool apply_locally() const;
   void set_apply_locally(bool value_arg);
@@ -420,7 +420,7 @@ class TransactionOptions {
   friend class FirebaseDatabaseHostApi;
   friend class PigeonInternalCodecSerializer;
   std::string path_;
-  std::unique_ptr<TransactionHandler> transaction_handler_;
+  std::unique_ptr<DatabaseTransactionHandler> transaction_handler_;
   bool apply_locally_;
 };
 

@@ -207,29 +207,29 @@ DatabaseReference DatabaseReference::FromEncodableList(const EncodableList& list
   return decoded;
 }
 
-// TransactionHandler
+// DatabaseTransactionHandler
 
-TransactionHandler::TransactionHandler(int64_t transaction_key)
+DatabaseTransactionHandler::DatabaseTransactionHandler(int64_t transaction_key)
  : transaction_key_(transaction_key) {}
 
-int64_t TransactionHandler::transaction_key() const {
+int64_t DatabaseTransactionHandler::transaction_key() const {
   return transaction_key_;
 }
 
-void TransactionHandler::set_transaction_key(int64_t value_arg) {
+void DatabaseTransactionHandler::set_transaction_key(int64_t value_arg) {
   transaction_key_ = value_arg;
 }
 
 
-EncodableList TransactionHandler::ToEncodableList() const {
+EncodableList DatabaseTransactionHandler::ToEncodableList() const {
   EncodableList list;
   list.reserve(1);
   list.push_back(EncodableValue(transaction_key_));
   return list;
 }
 
-TransactionHandler TransactionHandler::FromEncodableList(const EncodableList& list) {
-  TransactionHandler decoded(
+DatabaseTransactionHandler DatabaseTransactionHandler::FromEncodableList(const EncodableList& list) {
+  DatabaseTransactionHandler decoded(
     std::get<int64_t>(list[0]));
   return decoded;
 }
@@ -697,20 +697,20 @@ RemoveOptions RemoveOptions::FromEncodableList(const EncodableList& list) {
 
 TransactionOptions::TransactionOptions(
   const std::string& path,
-  const TransactionHandler& transaction_handler,
+  const DatabaseTransactionHandler& transaction_handler,
   bool apply_locally)
  : path_(path),
-    transaction_handler_(std::make_unique<TransactionHandler>(transaction_handler)),
+    transaction_handler_(std::make_unique<DatabaseTransactionHandler>(transaction_handler)),
     apply_locally_(apply_locally) {}
 
 TransactionOptions::TransactionOptions(const TransactionOptions& other)
  : path_(other.path_),
-    transaction_handler_(std::make_unique<TransactionHandler>(*other.transaction_handler_)),
+    transaction_handler_(std::make_unique<DatabaseTransactionHandler>(*other.transaction_handler_)),
     apply_locally_(other.apply_locally_) {}
 
 TransactionOptions& TransactionOptions::operator=(const TransactionOptions& other) {
   path_ = other.path_;
-  transaction_handler_ = std::make_unique<TransactionHandler>(*other.transaction_handler_);
+  transaction_handler_ = std::make_unique<DatabaseTransactionHandler>(*other.transaction_handler_);
   apply_locally_ = other.apply_locally_;
   return *this;
 }
@@ -724,12 +724,12 @@ void TransactionOptions::set_path(std::string_view value_arg) {
 }
 
 
-const TransactionHandler& TransactionOptions::transaction_handler() const {
+const DatabaseTransactionHandler& TransactionOptions::transaction_handler() const {
   return *transaction_handler_;
 }
 
-void TransactionOptions::set_transaction_handler(const TransactionHandler& value_arg) {
-  transaction_handler_ = std::make_unique<TransactionHandler>(value_arg);
+void TransactionOptions::set_transaction_handler(const DatabaseTransactionHandler& value_arg) {
+  transaction_handler_ = std::make_unique<DatabaseTransactionHandler>(value_arg);
 }
 
 
@@ -754,7 +754,7 @@ EncodableList TransactionOptions::ToEncodableList() const {
 TransactionOptions TransactionOptions::FromEncodableList(const EncodableList& list) {
   TransactionOptions decoded(
     std::get<std::string>(list[0]),
-    std::any_cast<const TransactionHandler&>(std::get<CustomEncodableValue>(list[1])),
+    std::any_cast<const DatabaseTransactionHandler&>(std::get<CustomEncodableValue>(list[1])),
     std::get<bool>(list[2]));
   return decoded;
 }
@@ -800,7 +800,7 @@ EncodableValue PigeonInternalCodecSerializer::ReadValueOfType(
         return CustomEncodableValue(DatabaseReference::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
       }
     case 131: {
-        return CustomEncodableValue(TransactionHandler::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+        return CustomEncodableValue(DatabaseTransactionHandler::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
       }
     case 132: {
         return CustomEncodableValue(EventObserver::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
@@ -851,9 +851,9 @@ void PigeonInternalCodecSerializer::WriteValue(
       WriteValue(EncodableValue(std::any_cast<DatabaseReference>(*custom_value).ToEncodableList()), stream);
       return;
     }
-    if (custom_value->type() == typeid(TransactionHandler)) {
+    if (custom_value->type() == typeid(DatabaseTransactionHandler)) {
       stream->WriteByte(131);
-      WriteValue(EncodableValue(std::any_cast<TransactionHandler>(*custom_value).ToEncodableList()), stream);
+      WriteValue(EncodableValue(std::any_cast<DatabaseTransactionHandler>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(EventObserver)) {

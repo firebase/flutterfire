@@ -152,8 +152,8 @@ class DatabaseReference {
 ;
 }
 
-class TransactionHandler {
-  TransactionHandler({
+class DatabaseTransactionHandler {
+  DatabaseTransactionHandler({
     required this.transactionKey,
   });
 
@@ -168,9 +168,9 @@ class TransactionHandler {
   Object encode() {
     return _toList();  }
 
-  static TransactionHandler decode(Object result) {
+  static DatabaseTransactionHandler decode(Object result) {
     result as List<Object?>;
-    return TransactionHandler(
+    return DatabaseTransactionHandler(
       transactionKey: result[0]! as int,
     );
   }
@@ -178,7 +178,7 @@ class TransactionHandler {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! TransactionHandler || other.runtimeType != runtimeType) {
+    if (other is! DatabaseTransactionHandler || other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -600,7 +600,7 @@ class TransactionOptions {
 
   String path;
 
-  TransactionHandler transactionHandler;
+  DatabaseTransactionHandler transactionHandler;
 
   bool applyLocally;
 
@@ -619,7 +619,7 @@ class TransactionOptions {
     result as List<Object?>;
     return TransactionOptions(
       path: result[0]! as String,
-      transactionHandler: result[1]! as TransactionHandler,
+      transactionHandler: result[1]! as DatabaseTransactionHandler,
       applyLocally: result[2]! as bool,
     );
   }
@@ -697,7 +697,7 @@ class _PigeonCodec extends StandardMessageCodec {
     }    else if (value is DatabaseReference) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
-    }    else if (value is TransactionHandler) {
+    }    else if (value is DatabaseTransactionHandler) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
     }    else if (value is EventObserver) {
@@ -743,7 +743,7 @@ class _PigeonCodec extends StandardMessageCodec {
       case 130: 
         return DatabaseReference.decode(readValue(buffer)!);
       case 131: 
-        return TransactionHandler.decode(readValue(buffer)!);
+        return DatabaseTransactionHandler.decode(readValue(buffer)!);
       case 132: 
         return EventObserver.decode(readValue(buffer)!);
       case 133: 

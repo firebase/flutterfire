@@ -204,15 +204,15 @@ struct DatabaseReference: Hashable {
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
-struct TransactionHandler: Hashable {
+struct DatabaseTransactionHandler: Hashable {
   var transactionKey: Int64
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
-  static func fromList(_ pigeonVar_list: [Any?]) -> TransactionHandler? {
+  static func fromList(_ pigeonVar_list: [Any?]) -> DatabaseTransactionHandler? {
     let transactionKey = pigeonVar_list[0] as! Int64
 
-    return TransactionHandler(
+    return DatabaseTransactionHandler(
       transactionKey: transactionKey
     )
   }
@@ -221,7 +221,7 @@ struct TransactionHandler: Hashable {
       transactionKey
     ]
   }
-  static func == (lhs: TransactionHandler, rhs: TransactionHandler) -> Bool {
+  static func == (lhs: DatabaseTransactionHandler, rhs: DatabaseTransactionHandler) -> Bool {
     return deepEqualsFirebaseDatabaseMessages(lhs.toList(), rhs.toList())  }
   func hash(into hasher: inout Hasher) {
     deepHashFirebaseDatabaseMessages(value: toList(), hasher: &hasher)
@@ -487,14 +487,14 @@ struct RemoveOptions: Hashable {
 /// Generated class from Pigeon that represents data sent in messages.
 struct TransactionOptions: Hashable {
   var path: String
-  var transactionHandler: TransactionHandler
+  var transactionHandler: DatabaseTransactionHandler
   var applyLocally: Bool
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> TransactionOptions? {
     let path = pigeonVar_list[0] as! String
-    let transactionHandler = pigeonVar_list[1] as! TransactionHandler
+    let transactionHandler = pigeonVar_list[1] as! DatabaseTransactionHandler
     let applyLocally = pigeonVar_list[2] as! Bool
 
     return TransactionOptions(
@@ -550,7 +550,7 @@ private class FirebaseDatabaseMessagesPigeonCodecReader: FlutterStandardReader {
     case 130:
       return DatabaseReference.fromList(self.readValue() as! [Any?])
     case 131:
-      return TransactionHandler.fromList(self.readValue() as! [Any?])
+      return DatabaseTransactionHandler.fromList(self.readValue() as! [Any?])
     case 132:
       return EventObserver.fromList(self.readValue() as! [Any?])
     case 133:
@@ -585,7 +585,7 @@ private class FirebaseDatabaseMessagesPigeonCodecWriter: FlutterStandardWriter {
     } else if let value = value as? DatabaseReference {
       super.writeByte(130)
       super.writeValue(value.toList())
-    } else if let value = value as? TransactionHandler {
+    } else if let value = value as? DatabaseTransactionHandler {
       super.writeByte(131)
       super.writeValue(value.toList())
     } else if let value = value as? EventObserver {

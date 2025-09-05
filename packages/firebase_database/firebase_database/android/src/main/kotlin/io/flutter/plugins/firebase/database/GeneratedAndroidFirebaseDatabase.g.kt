@@ -154,14 +154,14 @@ data class DatabaseReference (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class TransactionHandler (
+data class DatabaseTransactionHandler (
   val transactionKey: Long
 )
  {
   companion object {
-    fun fromList(pigeonVar_list: List<Any?>): TransactionHandler {
+    fun fromList(pigeonVar_list: List<Any?>): DatabaseTransactionHandler {
       val transactionKey = pigeonVar_list[0] as Long
-      return TransactionHandler(transactionKey)
+      return DatabaseTransactionHandler(transactionKey)
     }
   }
   fun toList(): List<Any?> {
@@ -170,7 +170,7 @@ data class TransactionHandler (
     )
   }
   override fun equals(other: Any?): Boolean {
-    if (other !is TransactionHandler) {
+    if (other !is DatabaseTransactionHandler) {
       return false
     }
     if (this === other) {
@@ -450,14 +450,14 @@ data class RemoveOptions (
 /** Generated class from Pigeon that represents data sent in messages. */
 data class TransactionOptions (
   val path: String,
-  val transactionHandler: TransactionHandler,
+  val transactionHandler: DatabaseTransactionHandler,
   val applyLocally: Boolean
 )
  {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): TransactionOptions {
       val path = pigeonVar_list[0] as String
-      val transactionHandler = pigeonVar_list[1] as TransactionHandler
+      val transactionHandler = pigeonVar_list[1] as DatabaseTransactionHandler
       val applyLocally = pigeonVar_list[2] as Boolean
       return TransactionOptions(path, transactionHandler, applyLocally)
     }
@@ -523,7 +523,7 @@ private open class GeneratedAndroidFirebaseDatabasePigeonCodec : StandardMessage
       }
       131.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TransactionHandler.fromList(it)
+          DatabaseTransactionHandler.fromList(it)
         }
       }
       132.toByte() -> {
@@ -589,7 +589,7 @@ private open class GeneratedAndroidFirebaseDatabasePigeonCodec : StandardMessage
         stream.write(130)
         writeValue(stream, value.toList())
       }
-      is TransactionHandler -> {
+      is DatabaseTransactionHandler -> {
         stream.write(131)
         writeValue(stream, value.toList())
       }

@@ -142,7 +142,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
     try {
       await MethodChannelDatabase.pigeonChannel.runTransaction(pigeon.TransactionOptions(
         path: path,
-        transactionHandler: pigeon.TransactionHandler(transactionKey: key),
+        transactionHandler: pigeon.DatabaseTransactionHandler(transactionKey: key),
         applyLocally: applyLocally,
       ));
 

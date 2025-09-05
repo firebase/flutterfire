@@ -72,6 +72,10 @@ class FirebaseDatabasePlugin :
 
     methodChannel = MethodChannel(messenger, METHOD_CHANNEL_NAME)
     methodChannel.setMethodCallHandler(this)
+
+    // Set up Pigeon API
+    val pigeonApi = FirebaseDatabaseHostApiImpl()
+    FirebaseDatabaseHostApi.setUp(messenger, pigeonApi)
   }
 
   private fun getDatabase(arguments: Map<String, Any>): FirebaseDatabase {
