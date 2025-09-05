@@ -5,6 +5,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:firebase_database_platform_interface/src/method_channel/utils/utils.dart';
+import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart' as pigeon;
 import 'package:flutter/services.dart';
 
 import 'method_channel_database_reference.dart';
@@ -106,6 +107,22 @@ class MethodChannelDatabase extends DatabasePlatform {
   static const MethodChannel channel =
       MethodChannel('plugins.flutter.io/firebase_database');
 
+  /// The pigeon channel instance to communicate through.
+  static final pigeon.FirebaseDatabaseHostApi pigeonChannel = pigeon.FirebaseDatabaseHostApi();
+
+  /// FirebaseApp pigeon instance
+  pigeon.FirebaseApp get pigeonFirebaseApp {
+    return pigeon.FirebaseApp(
+      appName: app!.name,
+      databaseURL: databaseURL,
+      persistenceEnabled: _persistenceEnabled,
+      cacheSizeBytes: _cacheSizeBytes,
+      loggingEnabled: _loggingEnabled,
+      emulatorHost: _emulatorHost,
+      emulatorPort: _emulatorPort,
+    );
+  }
+
   @override
   void useDatabaseEmulator(String host, int port) {
     _emulatorHost = host;
@@ -138,10 +155,7 @@ class MethodChannelDatabase extends DatabasePlatform {
   @override
   Future<void> goOnline() {
     try {
-      return channel.invokeMethod<void>(
-        'FirebaseDatabase#goOnline',
-        getChannelArguments(),
-      );
+      return pigeonChannel.goOnline(pigeonFirebaseApp);
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -152,10 +166,7 @@ class MethodChannelDatabase extends DatabasePlatform {
   @override
   Future<void> goOffline() {
     try {
-      return channel.invokeMethod<void>(
-        'FirebaseDatabase#goOffline',
-        getChannelArguments(),
-      );
+      return pigeonChannel.goOffline(pigeonFirebaseApp);
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -174,10 +185,7 @@ class MethodChannelDatabase extends DatabasePlatform {
   @override
   Future<void> purgeOutstandingWrites() {
     try {
-      return channel.invokeMethod<void>(
-        'FirebaseDatabase#purgeOutstandingWrites',
-        getChannelArguments(),
-      );
+      return pigeonChannel.purgeOutstandingWrites(pigeonFirebaseApp);
     } catch (e, s) {
       convertPlatformException(e, s);
     }

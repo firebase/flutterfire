@@ -4,6 +4,7 @@
 
 import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
+import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart' as pigeon;
 import 'package:flutter/services.dart';
 
 import 'method_channel_data_snapshot.dart';
@@ -37,7 +38,6 @@ class MethodChannelQuery extends QueryPlatform {
     QueryModifiers modifiers,
     DatabaseEventType eventType,
   ) async* {
-    const channel = MethodChannelDatabase.channel;
     List<Map<String, Object?>> modifierList = modifiers.toList();
     // Create a unique event channel naming prefix using path, app name,
     // databaseUrl, event type and ordered modifier list
@@ -45,16 +45,14 @@ class MethodChannelQuery extends QueryPlatform {
         '$path-${database.app!.name}-${database.databaseURL}-$eventType-$modifierList';
 
     // Create the EventChannel on native.
-    final channelName = await channel.invokeMethod<String>(
-      'Query#observe',
-      database.getChannelArguments({
-        'path': path,
-        'modifiers': modifierList,
-        'eventChannelNamePrefix': eventChannelNamePrefix,
-      }),
-    );
+    final channelName = await MethodChannelDatabase.pigeonChannel.observe(pigeon.EventObserver(
+      path: path,
+      eventType: eventTypeToString(eventType),
+      eventChannelNamePrefix: eventChannelNamePrefix,
+      modifiers: modifierList,
+    ));
 
-    yield* EventChannel(channelName!).receiveGuardedBroadcastStream(
+    yield* EventChannel(channelName).receiveGuardedBroadcastStream(
       arguments: <String, Object?>{'eventType': eventTypeToString(eventType)},
       onError: convertPlatformException,
     ).map(
@@ -67,16 +65,13 @@ class MethodChannelQuery extends QueryPlatform {
   @override
   Future<DataSnapshotPlatform> get(QueryModifiers modifiers) async {
     try {
-      final result = await channel.invokeMapMethod(
-        'Query#get',
-        database.getChannelArguments({
-          'path': path,
-          'modifiers': modifiers.toList(),
-        }),
-      );
+      final result = await MethodChannelDatabase.pigeonChannel.get(pigeon.GetOptions(
+        path: path,
+        modifiers: modifiers.toList(),
+      ));
       return MethodChannelDataSnapshot(
         ref,
-        Map<String, dynamic>.from(result!['snapshot']),
+        Map<String, dynamic>.from(result.snapshot),
       );
     } catch (e, s) {
       convertPlatformException(e, s);
@@ -99,12 +94,11 @@ class MethodChannelQuery extends QueryPlatform {
   @override
   Future<void> keepSynced(QueryModifiers modifiers, bool value) async {
     try {
-      await channel.invokeMethod<void>(
-        'Query#keepSynced',
-        database.getChannelArguments(
-          {'path': path, 'modifiers': modifiers.toList(), 'value': value},
-        ),
-      );
+      await MethodChannelDatabase.pigeonChannel.keepSynced(pigeon.KeepSyncedOptions(
+        path: path,
+        modifiers: modifiers.toList(),
+        value: value,
+      ));
     } catch (e, s) {
       convertPlatformException(e, s);
     }
