@@ -22,52 +22,33 @@ import 'package:pigeon/pigeon.dart';
     copyrightHeader: 'pigeons/copyright.txt',
   ),
 )
-enum HttpMethod {
-  connect,
-  delete,
-  get,
-  head,
-  options,
-  patch,
-  post,
-  put,
-  trace,
-}
 
-class HttpMetricOptions {
-  const HttpMetricOptions({
-    required this.url,
-    required this.httpMethod,
+class FirebaseApp {
+  const FirebaseApp({
+    required this.appName,
+    this.databaseURL,
+    this.persistenceEnabled,
+    this.cacheSizeBytes,
+    this.loggingEnabled,
+    this.emulatorHost,
+    this.emulatorPort,
   });
 
-  final String url;
-  final HttpMethod httpMethod;
+  final String appName;
+  final String? databaseURL;
+  final bool? persistenceEnabled;
+  final int? cacheSizeBytes;
+  final bool? loggingEnabled;
+  final String? emulatorHost;
+  final int? emulatorPort;
 }
 
-class HttpMetricAttributes {
-  const HttpMetricAttributes({
-    this.httpResponseCode,
-    this.requestPayloadSize,
-    this.responsePayloadSize,
-    this.responseContentType,
-    this.attributes,
+class DatabaseReference {
+  const DatabaseReference({
+    required this.path,
   });
 
-  final int? httpResponseCode;
-  final int? requestPayloadSize;
-  final int? responsePayloadSize;
-  final String? responseContentType;
-  final Map<String, String>? attributes;
-}
-
-class TraceAttributes {
-  const TraceAttributes({
-    this.metrics,
-    this.attributes,
-  });
-
-  final Map<String, int>? metrics;
-  final Map<String, String>? attributes;
+  final String path;
 }
 
 class TransactionHandler {
@@ -80,81 +61,169 @@ class TransactionHandler {
 
 class EventObserver {
   const EventObserver({
+    required this.path,
     required this.eventType,
     required this.eventChannelNamePrefix,
+    required this.modifiers,
   });
 
+  final String path;
   final String eventType;
   final String eventChannelNamePrefix;
+  final List<Map<String, Object?>> modifiers;
 }
 
 class GetOptions {
   const GetOptions({
+    required this.path,
+    required this.modifiers,
     this.source,
     this.serverTimestampBehavior,
   });
 
+  final String path;
+  final List<Map<String, Object?>> modifiers;
   final String? source;
   final String? serverTimestampBehavior;
 }
 
-class QueryModifiers {
-  const QueryModifiers({
-    this.orderBy,
-    this.limitToFirst,
-    this.limitToLast,
-    this.startAt,
-    this.endAt,
-    this.equalTo,
+class KeepSyncedOptions {
+  const KeepSyncedOptions({
+    required this.path,
+    required this.modifiers,
+    required this.value,
   });
 
-  final String? orderBy;
-  final int? limitToFirst;
-  final int? limitToLast;
-  final Object? startAt;
-  final Object? endAt;
-  final Object? equalTo;
+  final String path;
+  final List<Map<String, Object?>> modifiers;
+  final bool value;
+}
+
+class OnDisconnectOptions {
+  const OnDisconnectOptions({
+    required this.path,
+    this.value,
+    this.priority,
+  });
+
+  final String path;
+  final Object? value;
+  final Object? priority;
+}
+
+class SetOptions {
+  const SetOptions({
+    required this.path,
+    this.value,
+    this.priority,
+  });
+
+  final String path;
+  final Object? value;
+  final Object? priority;
+}
+
+class UpdateOptions {
+  const UpdateOptions({
+    required this.path,
+    required this.value,
+  });
+
+  final String path;
+  final Map<String, Object?> value;
+}
+
+class SetPriorityOptions {
+  const SetPriorityOptions({
+    required this.path,
+    required this.priority,
+  });
+
+  final String path;
+  final Object priority;
+}
+
+class RemoveOptions {
+  const RemoveOptions({
+    required this.path,
+  });
+
+  final String path;
+}
+
+class TransactionOptions {
+  const TransactionOptions({
+    required this.path,
+    required this.transactionHandler,
+    required this.applyLocally,
+  });
+
+  final String path;
+  final TransactionHandler transactionHandler;
+  final bool applyLocally;
+}
+
+class DataSnapshot {
+  const DataSnapshot({
+    required this.snapshot,
+  });
+
+  final Map<String, Object?> snapshot;
 }
 
 @HostApi(dartHostTestHandler: 'TestFirebaseDatabaseHostApi')
 abstract class FirebaseDatabaseHostApi {
   @async
-  void set(Object? value);
+  void set(SetOptions options);
 
   @async
-  void setWithPriority(Object? value, Object? priority);
+  void setWithPriority(SetOptions options);
 
   @async
-  void update(Map<String, Object?> value);
+  void update(UpdateOptions options);
 
   @async
-  void setPriority(Object? priority);
+  void setPriority(SetPriorityOptions options);
 
   @async
-  void remove();
+  void remove(RemoveOptions options);
 
   @async
-  void runTransaction(TransactionHandler transactionHandler, bool applyLocally);
+  void runTransaction(TransactionOptions options);
 
   @async
-  void goOnline();
+  void goOnline(FirebaseApp app);
 
   @async
-  void goOffline();
+  void goOffline(FirebaseApp app);
 
   @async
-  void purgeOutstandingWrites();
+  void purgeOutstandingWrites(FirebaseApp app);
 
   @async
-  void cancel();
+  void cancel(FirebaseApp app);
 
   @async
-  void observe(EventObserver observer);
+  String observe(EventObserver observer);
 
   @async
-  void get(GetOptions options);
+  DataSnapshot get(GetOptions options);
 
   @async
-  void keepSynced(QueryModifiers modifiers, bool value);
-  
+  void keepSynced(KeepSyncedOptions options);
+
+  @async
+  void onDisconnectSet(OnDisconnectOptions options);
+
+  @async
+  void onDisconnectSetWithPriority(OnDisconnectOptions options);
+
+  @async
+  void onDisconnectUpdate(UpdateOptions options);
+
+  @async
+  void onDisconnectRemove(RemoveOptions options);
+
+  @async
+  void onDisconnectCancel(DatabaseReference reference);
 }

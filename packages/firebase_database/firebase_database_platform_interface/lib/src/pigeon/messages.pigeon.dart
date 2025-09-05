@@ -40,50 +40,63 @@ bool _deepEquals(Object? a, Object? b) {
 }
 
 
-enum HttpMethod {
-  connect,
-  delete,
-  get,
-  head,
-  options,
-  patch,
-  post,
-  put,
-  trace,
-}
-
-class HttpMetricOptions {
-  HttpMetricOptions({
-    required this.url,
-    required this.httpMethod,
+class FirebaseApp {
+  FirebaseApp({
+    required this.appName,
+    this.databaseURL,
+    this.persistenceEnabled,
+    this.cacheSizeBytes,
+    this.loggingEnabled,
+    this.emulatorHost,
+    this.emulatorPort,
   });
 
-  String url;
+  String appName;
 
-  HttpMethod httpMethod;
+  String? databaseURL;
+
+  bool? persistenceEnabled;
+
+  int? cacheSizeBytes;
+
+  bool? loggingEnabled;
+
+  String? emulatorHost;
+
+  int? emulatorPort;
 
   List<Object?> _toList() {
     return <Object?>[
-      url,
-      httpMethod,
+      appName,
+      databaseURL,
+      persistenceEnabled,
+      cacheSizeBytes,
+      loggingEnabled,
+      emulatorHost,
+      emulatorPort,
     ];
   }
 
   Object encode() {
     return _toList();  }
 
-  static HttpMetricOptions decode(Object result) {
+  static FirebaseApp decode(Object result) {
     result as List<Object?>;
-    return HttpMetricOptions(
-      url: result[0]! as String,
-      httpMethod: result[1]! as HttpMethod,
+    return FirebaseApp(
+      appName: result[0]! as String,
+      databaseURL: result[1] as String?,
+      persistenceEnabled: result[2] as bool?,
+      cacheSizeBytes: result[3] as int?,
+      loggingEnabled: result[4] as bool?,
+      emulatorHost: result[5] as String?,
+      emulatorPort: result[6] as int?,
     );
   }
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! HttpMetricOptions || other.runtimeType != runtimeType) {
+    if (other is! FirebaseApp || other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -98,99 +111,33 @@ class HttpMetricOptions {
 ;
 }
 
-class HttpMetricAttributes {
-  HttpMetricAttributes({
-    this.httpResponseCode,
-    this.requestPayloadSize,
-    this.responsePayloadSize,
-    this.responseContentType,
-    this.attributes,
+class DatabaseReference {
+  DatabaseReference({
+    required this.path,
   });
 
-  int? httpResponseCode;
-
-  int? requestPayloadSize;
-
-  int? responsePayloadSize;
-
-  String? responseContentType;
-
-  Map<String, String>? attributes;
+  String path;
 
   List<Object?> _toList() {
     return <Object?>[
-      httpResponseCode,
-      requestPayloadSize,
-      responsePayloadSize,
-      responseContentType,
-      attributes,
+      path,
     ];
   }
 
   Object encode() {
     return _toList();  }
 
-  static HttpMetricAttributes decode(Object result) {
+  static DatabaseReference decode(Object result) {
     result as List<Object?>;
-    return HttpMetricAttributes(
-      httpResponseCode: result[0] as int?,
-      requestPayloadSize: result[1] as int?,
-      responsePayloadSize: result[2] as int?,
-      responseContentType: result[3] as String?,
-      attributes: (result[4] as Map<Object?, Object?>?)?.cast<String, String>(),
+    return DatabaseReference(
+      path: result[0]! as String,
     );
   }
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! HttpMetricAttributes || other.runtimeType != runtimeType) {
-      return false;
-    }
-    if (identical(this, other)) {
-      return true;
-    }
-    return _deepEquals(encode(), other.encode());
-  }
-
-  @override
-  // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
-}
-
-class TraceAttributes {
-  TraceAttributes({
-    this.metrics,
-    this.attributes,
-  });
-
-  Map<String, int>? metrics;
-
-  Map<String, String>? attributes;
-
-  List<Object?> _toList() {
-    return <Object?>[
-      metrics,
-      attributes,
-    ];
-  }
-
-  Object encode() {
-    return _toList();  }
-
-  static TraceAttributes decode(Object result) {
-    result as List<Object?>;
-    return TraceAttributes(
-      metrics: (result[0] as Map<Object?, Object?>?)?.cast<String, int>(),
-      attributes: (result[1] as Map<Object?, Object?>?)?.cast<String, String>(),
-    );
-  }
-
-  @override
-  // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  bool operator ==(Object other) {
-    if (other is! TraceAttributes || other.runtimeType != runtimeType) {
+    if (other is! DatabaseReference || other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -248,18 +195,26 @@ class TransactionHandler {
 
 class EventObserver {
   EventObserver({
+    required this.path,
     required this.eventType,
     required this.eventChannelNamePrefix,
+    required this.modifiers,
   });
+
+  String path;
 
   String eventType;
 
   String eventChannelNamePrefix;
 
+  List<Map<String, Object?>> modifiers;
+
   List<Object?> _toList() {
     return <Object?>[
+      path,
       eventType,
       eventChannelNamePrefix,
+      modifiers,
     ];
   }
 
@@ -269,8 +224,10 @@ class EventObserver {
   static EventObserver decode(Object result) {
     result as List<Object?>;
     return EventObserver(
-      eventType: result[0]! as String,
-      eventChannelNamePrefix: result[1]! as String,
+      path: result[0]! as String,
+      eventType: result[1]! as String,
+      eventChannelNamePrefix: result[2]! as String,
+      modifiers: (result[3] as List<Object?>?)!.cast<Map<String, Object?>>(),
     );
   }
 
@@ -294,9 +251,15 @@ class EventObserver {
 
 class GetOptions {
   GetOptions({
+    required this.path,
+    required this.modifiers,
     this.source,
     this.serverTimestampBehavior,
   });
+
+  String path;
+
+  List<Map<String, Object?>> modifiers;
 
   String? source;
 
@@ -304,6 +267,8 @@ class GetOptions {
 
   List<Object?> _toList() {
     return <Object?>[
+      path,
+      modifiers,
       source,
       serverTimestampBehavior,
     ];
@@ -315,8 +280,10 @@ class GetOptions {
   static GetOptions decode(Object result) {
     result as List<Object?>;
     return GetOptions(
-      source: result[0] as String?,
-      serverTimestampBehavior: result[1] as String?,
+      path: result[0]! as String,
+      modifiers: (result[1] as List<Object?>?)!.cast<Map<String, Object?>>(),
+      source: result[2] as String?,
+      serverTimestampBehavior: result[3] as String?,
     );
   }
 
@@ -338,58 +305,370 @@ class GetOptions {
 ;
 }
 
-class QueryModifiers {
-  QueryModifiers({
-    this.orderBy,
-    this.limitToFirst,
-    this.limitToLast,
-    this.startAt,
-    this.endAt,
-    this.equalTo,
+class KeepSyncedOptions {
+  KeepSyncedOptions({
+    required this.path,
+    required this.modifiers,
+    required this.value,
   });
 
-  String? orderBy;
+  String path;
 
-  int? limitToFirst;
+  List<Map<String, Object?>> modifiers;
 
-  int? limitToLast;
-
-  Object? startAt;
-
-  Object? endAt;
-
-  Object? equalTo;
+  bool value;
 
   List<Object?> _toList() {
     return <Object?>[
-      orderBy,
-      limitToFirst,
-      limitToLast,
-      startAt,
-      endAt,
-      equalTo,
+      path,
+      modifiers,
+      value,
     ];
   }
 
   Object encode() {
     return _toList();  }
 
-  static QueryModifiers decode(Object result) {
+  static KeepSyncedOptions decode(Object result) {
     result as List<Object?>;
-    return QueryModifiers(
-      orderBy: result[0] as String?,
-      limitToFirst: result[1] as int?,
-      limitToLast: result[2] as int?,
-      startAt: result[3],
-      endAt: result[4],
-      equalTo: result[5],
+    return KeepSyncedOptions(
+      path: result[0]! as String,
+      modifiers: (result[1] as List<Object?>?)!.cast<Map<String, Object?>>(),
+      value: result[2]! as bool,
     );
   }
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! QueryModifiers || other.runtimeType != runtimeType) {
+    if (other is! KeepSyncedOptions || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(encode(), other.encode());
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => Object.hashAll(_toList())
+;
+}
+
+class OnDisconnectOptions {
+  OnDisconnectOptions({
+    required this.path,
+    this.value,
+    this.priority,
+  });
+
+  String path;
+
+  Object? value;
+
+  Object? priority;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      path,
+      value,
+      priority,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static OnDisconnectOptions decode(Object result) {
+    result as List<Object?>;
+    return OnDisconnectOptions(
+      path: result[0]! as String,
+      value: result[1],
+      priority: result[2],
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! OnDisconnectOptions || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(encode(), other.encode());
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => Object.hashAll(_toList())
+;
+}
+
+class SetOptions {
+  SetOptions({
+    required this.path,
+    this.value,
+    this.priority,
+  });
+
+  String path;
+
+  Object? value;
+
+  Object? priority;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      path,
+      value,
+      priority,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static SetOptions decode(Object result) {
+    result as List<Object?>;
+    return SetOptions(
+      path: result[0]! as String,
+      value: result[1],
+      priority: result[2],
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! SetOptions || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(encode(), other.encode());
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => Object.hashAll(_toList())
+;
+}
+
+class UpdateOptions {
+  UpdateOptions({
+    required this.path,
+    required this.value,
+  });
+
+  String path;
+
+  Map<String, Object?> value;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      path,
+      value,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static UpdateOptions decode(Object result) {
+    result as List<Object?>;
+    return UpdateOptions(
+      path: result[0]! as String,
+      value: (result[1] as Map<Object?, Object?>?)!.cast<String, Object?>(),
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! UpdateOptions || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(encode(), other.encode());
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => Object.hashAll(_toList())
+;
+}
+
+class SetPriorityOptions {
+  SetPriorityOptions({
+    required this.path,
+    required this.priority,
+  });
+
+  String path;
+
+  Object priority;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      path,
+      priority,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static SetPriorityOptions decode(Object result) {
+    result as List<Object?>;
+    return SetPriorityOptions(
+      path: result[0]! as String,
+      priority: result[1]!,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! SetPriorityOptions || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(encode(), other.encode());
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => Object.hashAll(_toList())
+;
+}
+
+class RemoveOptions {
+  RemoveOptions({
+    required this.path,
+  });
+
+  String path;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      path,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static RemoveOptions decode(Object result) {
+    result as List<Object?>;
+    return RemoveOptions(
+      path: result[0]! as String,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! RemoveOptions || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(encode(), other.encode());
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => Object.hashAll(_toList())
+;
+}
+
+class TransactionOptions {
+  TransactionOptions({
+    required this.path,
+    required this.transactionHandler,
+    required this.applyLocally,
+  });
+
+  String path;
+
+  TransactionHandler transactionHandler;
+
+  bool applyLocally;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      path,
+      transactionHandler,
+      applyLocally,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static TransactionOptions decode(Object result) {
+    result as List<Object?>;
+    return TransactionOptions(
+      path: result[0]! as String,
+      transactionHandler: result[1]! as TransactionHandler,
+      applyLocally: result[2]! as bool,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! TransactionOptions || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(encode(), other.encode());
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => Object.hashAll(_toList())
+;
+}
+
+class DataSnapshot {
+  DataSnapshot({
+    required this.snapshot,
+  });
+
+  Map<String, Object?> snapshot;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      snapshot,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static DataSnapshot decode(Object result) {
+    result as List<Object?>;
+    return DataSnapshot(
+      snapshot: (result[0] as Map<Object?, Object?>?)!.cast<String, Object?>(),
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! DataSnapshot || other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -412,29 +691,44 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
-    }    else if (value is HttpMethod) {
+    }    else if (value is FirebaseApp) {
       buffer.putUint8(129);
-      writeValue(buffer, value.index);
-    }    else if (value is HttpMetricOptions) {
+      writeValue(buffer, value.encode());
+    }    else if (value is DatabaseReference) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
-    }    else if (value is HttpMetricAttributes) {
+    }    else if (value is TransactionHandler) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
-    }    else if (value is TraceAttributes) {
+    }    else if (value is EventObserver) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
-    }    else if (value is TransactionHandler) {
+    }    else if (value is GetOptions) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
-    }    else if (value is EventObserver) {
+    }    else if (value is KeepSyncedOptions) {
       buffer.putUint8(134);
       writeValue(buffer, value.encode());
-    }    else if (value is GetOptions) {
+    }    else if (value is OnDisconnectOptions) {
       buffer.putUint8(135);
       writeValue(buffer, value.encode());
-    }    else if (value is QueryModifiers) {
+    }    else if (value is SetOptions) {
       buffer.putUint8(136);
+      writeValue(buffer, value.encode());
+    }    else if (value is UpdateOptions) {
+      buffer.putUint8(137);
+      writeValue(buffer, value.encode());
+    }    else if (value is SetPriorityOptions) {
+      buffer.putUint8(138);
+      writeValue(buffer, value.encode());
+    }    else if (value is RemoveOptions) {
+      buffer.putUint8(139);
+      writeValue(buffer, value.encode());
+    }    else if (value is TransactionOptions) {
+      buffer.putUint8(140);
+      writeValue(buffer, value.encode());
+    }    else if (value is DataSnapshot) {
+      buffer.putUint8(141);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -445,22 +739,31 @@ class _PigeonCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 129: 
-        final int? value = readValue(buffer) as int?;
-        return value == null ? null : HttpMethod.values[value];
+        return FirebaseApp.decode(readValue(buffer)!);
       case 130: 
-        return HttpMetricOptions.decode(readValue(buffer)!);
+        return DatabaseReference.decode(readValue(buffer)!);
       case 131: 
-        return HttpMetricAttributes.decode(readValue(buffer)!);
-      case 132: 
-        return TraceAttributes.decode(readValue(buffer)!);
-      case 133: 
         return TransactionHandler.decode(readValue(buffer)!);
-      case 134: 
+      case 132: 
         return EventObserver.decode(readValue(buffer)!);
-      case 135: 
+      case 133: 
         return GetOptions.decode(readValue(buffer)!);
+      case 134: 
+        return KeepSyncedOptions.decode(readValue(buffer)!);
+      case 135: 
+        return OnDisconnectOptions.decode(readValue(buffer)!);
       case 136: 
-        return QueryModifiers.decode(readValue(buffer)!);
+        return SetOptions.decode(readValue(buffer)!);
+      case 137: 
+        return UpdateOptions.decode(readValue(buffer)!);
+      case 138: 
+        return SetPriorityOptions.decode(readValue(buffer)!);
+      case 139: 
+        return RemoveOptions.decode(readValue(buffer)!);
+      case 140: 
+        return TransactionOptions.decode(readValue(buffer)!);
+      case 141: 
+        return DataSnapshot.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -480,261 +783,8 @@ class FirebaseDatabaseHostApi {
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<void> set(Object? value) async {
+  Future<void> set(SetOptions options) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.set$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[value]);
-    final List<Object?>? pigeonVar_replyList =
-        await pigeonVar_sendFuture as List<Object?>?;
-    if (pigeonVar_replyList == null) {
-      throw _createConnectionError(pigeonVar_channelName);
-    } else if (pigeonVar_replyList.length > 1) {
-      throw PlatformException(
-        code: pigeonVar_replyList[0]! as String,
-        message: pigeonVar_replyList[1] as String?,
-        details: pigeonVar_replyList[2],
-      );
-    } else {
-      return;
-    }
-  }
-
-  Future<void> setWithPriority(Object? value, Object? priority) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setWithPriority$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[value, priority]);
-    final List<Object?>? pigeonVar_replyList =
-        await pigeonVar_sendFuture as List<Object?>?;
-    if (pigeonVar_replyList == null) {
-      throw _createConnectionError(pigeonVar_channelName);
-    } else if (pigeonVar_replyList.length > 1) {
-      throw PlatformException(
-        code: pigeonVar_replyList[0]! as String,
-        message: pigeonVar_replyList[1] as String?,
-        details: pigeonVar_replyList[2],
-      );
-    } else {
-      return;
-    }
-  }
-
-  Future<void> update(Map<String, Object?> value) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.update$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[value]);
-    final List<Object?>? pigeonVar_replyList =
-        await pigeonVar_sendFuture as List<Object?>?;
-    if (pigeonVar_replyList == null) {
-      throw _createConnectionError(pigeonVar_channelName);
-    } else if (pigeonVar_replyList.length > 1) {
-      throw PlatformException(
-        code: pigeonVar_replyList[0]! as String,
-        message: pigeonVar_replyList[1] as String?,
-        details: pigeonVar_replyList[2],
-      );
-    } else {
-      return;
-    }
-  }
-
-  Future<void> setPriority(Object? priority) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPriority$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[priority]);
-    final List<Object?>? pigeonVar_replyList =
-        await pigeonVar_sendFuture as List<Object?>?;
-    if (pigeonVar_replyList == null) {
-      throw _createConnectionError(pigeonVar_channelName);
-    } else if (pigeonVar_replyList.length > 1) {
-      throw PlatformException(
-        code: pigeonVar_replyList[0]! as String,
-        message: pigeonVar_replyList[1] as String?,
-        details: pigeonVar_replyList[2],
-      );
-    } else {
-      return;
-    }
-  }
-
-  Future<void> remove() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.remove$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
-    final List<Object?>? pigeonVar_replyList =
-        await pigeonVar_sendFuture as List<Object?>?;
-    if (pigeonVar_replyList == null) {
-      throw _createConnectionError(pigeonVar_channelName);
-    } else if (pigeonVar_replyList.length > 1) {
-      throw PlatformException(
-        code: pigeonVar_replyList[0]! as String,
-        message: pigeonVar_replyList[1] as String?,
-        details: pigeonVar_replyList[2],
-      );
-    } else {
-      return;
-    }
-  }
-
-  Future<void> runTransaction(TransactionHandler transactionHandler, bool applyLocally) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.runTransaction$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[transactionHandler, applyLocally]);
-    final List<Object?>? pigeonVar_replyList =
-        await pigeonVar_sendFuture as List<Object?>?;
-    if (pigeonVar_replyList == null) {
-      throw _createConnectionError(pigeonVar_channelName);
-    } else if (pigeonVar_replyList.length > 1) {
-      throw PlatformException(
-        code: pigeonVar_replyList[0]! as String,
-        message: pigeonVar_replyList[1] as String?,
-        details: pigeonVar_replyList[2],
-      );
-    } else {
-      return;
-    }
-  }
-
-  Future<void> goOnline() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOnline$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
-    final List<Object?>? pigeonVar_replyList =
-        await pigeonVar_sendFuture as List<Object?>?;
-    if (pigeonVar_replyList == null) {
-      throw _createConnectionError(pigeonVar_channelName);
-    } else if (pigeonVar_replyList.length > 1) {
-      throw PlatformException(
-        code: pigeonVar_replyList[0]! as String,
-        message: pigeonVar_replyList[1] as String?,
-        details: pigeonVar_replyList[2],
-      );
-    } else {
-      return;
-    }
-  }
-
-  Future<void> goOffline() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOffline$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
-    final List<Object?>? pigeonVar_replyList =
-        await pigeonVar_sendFuture as List<Object?>?;
-    if (pigeonVar_replyList == null) {
-      throw _createConnectionError(pigeonVar_channelName);
-    } else if (pigeonVar_replyList.length > 1) {
-      throw PlatformException(
-        code: pigeonVar_replyList[0]! as String,
-        message: pigeonVar_replyList[1] as String?,
-        details: pigeonVar_replyList[2],
-      );
-    } else {
-      return;
-    }
-  }
-
-  Future<void> purgeOutstandingWrites() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.purgeOutstandingWrites$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
-    final List<Object?>? pigeonVar_replyList =
-        await pigeonVar_sendFuture as List<Object?>?;
-    if (pigeonVar_replyList == null) {
-      throw _createConnectionError(pigeonVar_channelName);
-    } else if (pigeonVar_replyList.length > 1) {
-      throw PlatformException(
-        code: pigeonVar_replyList[0]! as String,
-        message: pigeonVar_replyList[1] as String?,
-        details: pigeonVar_replyList[2],
-      );
-    } else {
-      return;
-    }
-  }
-
-  Future<void> cancel() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.cancel$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
-    final List<Object?>? pigeonVar_replyList =
-        await pigeonVar_sendFuture as List<Object?>?;
-    if (pigeonVar_replyList == null) {
-      throw _createConnectionError(pigeonVar_channelName);
-    } else if (pigeonVar_replyList.length > 1) {
-      throw PlatformException(
-        code: pigeonVar_replyList[0]! as String,
-        message: pigeonVar_replyList[1] as String?,
-        details: pigeonVar_replyList[2],
-      );
-    } else {
-      return;
-    }
-  }
-
-  Future<void> observe(EventObserver observer) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.observe$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[observer]);
-    final List<Object?>? pigeonVar_replyList =
-        await pigeonVar_sendFuture as List<Object?>?;
-    if (pigeonVar_replyList == null) {
-      throw _createConnectionError(pigeonVar_channelName);
-    } else if (pigeonVar_replyList.length > 1) {
-      throw PlatformException(
-        code: pigeonVar_replyList[0]! as String,
-        message: pigeonVar_replyList[1] as String?,
-        details: pigeonVar_replyList[2],
-      );
-    } else {
-      return;
-    }
-  }
-
-  Future<void> get(GetOptions options) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.get$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -756,14 +806,392 @@ class FirebaseDatabaseHostApi {
     }
   }
 
-  Future<void> keepSynced(QueryModifiers modifiers, bool value) async {
+  Future<void> setWithPriority(SetOptions options) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setWithPriority$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[options]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> update(UpdateOptions options) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.update$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[options]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> setPriority(SetPriorityOptions options) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPriority$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[options]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> remove(RemoveOptions options) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.remove$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[options]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> runTransaction(TransactionOptions options) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.runTransaction$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[options]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> goOnline(FirebaseApp app) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOnline$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> goOffline(FirebaseApp app) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOffline$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> purgeOutstandingWrites(FirebaseApp app) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.purgeOutstandingWrites$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> cancel(FirebaseApp app) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.cancel$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<String> observe(EventObserver observer) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.observe$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[observer]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as String?)!;
+    }
+  }
+
+  Future<DataSnapshot> get(GetOptions options) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.get$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[options]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as DataSnapshot?)!;
+    }
+  }
+
+  Future<void> keepSynced(KeepSyncedOptions options) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.keepSynced$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[modifiers, value]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[options]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> onDisconnectSet(OnDisconnectOptions options) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSet$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[options]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> onDisconnectSetWithPriority(OnDisconnectOptions options) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSetWithPriority$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[options]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> onDisconnectUpdate(UpdateOptions options) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectUpdate$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[options]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> onDisconnectRemove(RemoveOptions options) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectRemove$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[options]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> onDisconnectCancel(DatabaseReference reference) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectCancel$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[reference]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {

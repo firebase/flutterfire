@@ -29,218 +29,181 @@ FlutterError CreateConnectionError(const std::string channel_name) {
       EncodableValue(""));
 }
 
-// HttpMetricOptions
+// FirebaseApp
 
-HttpMetricOptions::HttpMetricOptions(
-  const std::string& url,
-  const HttpMethod& http_method)
- : url_(url),
-    http_method_(http_method) {}
+FirebaseApp::FirebaseApp(const std::string& app_name)
+ : app_name_(app_name) {}
 
-const std::string& HttpMetricOptions::url() const {
-  return url_;
+FirebaseApp::FirebaseApp(
+  const std::string& app_name,
+  const std::string* database_u_r_l,
+  const bool* persistence_enabled,
+  const int64_t* cache_size_bytes,
+  const bool* logging_enabled,
+  const std::string* emulator_host,
+  const int64_t* emulator_port)
+ : app_name_(app_name),
+    database_u_r_l_(database_u_r_l ? std::optional<std::string>(*database_u_r_l) : std::nullopt),
+    persistence_enabled_(persistence_enabled ? std::optional<bool>(*persistence_enabled) : std::nullopt),
+    cache_size_bytes_(cache_size_bytes ? std::optional<int64_t>(*cache_size_bytes) : std::nullopt),
+    logging_enabled_(logging_enabled ? std::optional<bool>(*logging_enabled) : std::nullopt),
+    emulator_host_(emulator_host ? std::optional<std::string>(*emulator_host) : std::nullopt),
+    emulator_port_(emulator_port ? std::optional<int64_t>(*emulator_port) : std::nullopt) {}
+
+const std::string& FirebaseApp::app_name() const {
+  return app_name_;
 }
 
-void HttpMetricOptions::set_url(std::string_view value_arg) {
-  url_ = value_arg;
+void FirebaseApp::set_app_name(std::string_view value_arg) {
+  app_name_ = value_arg;
 }
 
 
-const HttpMethod& HttpMetricOptions::http_method() const {
-  return http_method_;
+const std::string* FirebaseApp::database_u_r_l() const {
+  return database_u_r_l_ ? &(*database_u_r_l_) : nullptr;
 }
 
-void HttpMetricOptions::set_http_method(const HttpMethod& value_arg) {
-  http_method_ = value_arg;
+void FirebaseApp::set_database_u_r_l(const std::string_view* value_arg) {
+  database_u_r_l_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+}
+
+void FirebaseApp::set_database_u_r_l(std::string_view value_arg) {
+  database_u_r_l_ = value_arg;
 }
 
 
-EncodableList HttpMetricOptions::ToEncodableList() const {
+const bool* FirebaseApp::persistence_enabled() const {
+  return persistence_enabled_ ? &(*persistence_enabled_) : nullptr;
+}
+
+void FirebaseApp::set_persistence_enabled(const bool* value_arg) {
+  persistence_enabled_ = value_arg ? std::optional<bool>(*value_arg) : std::nullopt;
+}
+
+void FirebaseApp::set_persistence_enabled(bool value_arg) {
+  persistence_enabled_ = value_arg;
+}
+
+
+const int64_t* FirebaseApp::cache_size_bytes() const {
+  return cache_size_bytes_ ? &(*cache_size_bytes_) : nullptr;
+}
+
+void FirebaseApp::set_cache_size_bytes(const int64_t* value_arg) {
+  cache_size_bytes_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
+}
+
+void FirebaseApp::set_cache_size_bytes(int64_t value_arg) {
+  cache_size_bytes_ = value_arg;
+}
+
+
+const bool* FirebaseApp::logging_enabled() const {
+  return logging_enabled_ ? &(*logging_enabled_) : nullptr;
+}
+
+void FirebaseApp::set_logging_enabled(const bool* value_arg) {
+  logging_enabled_ = value_arg ? std::optional<bool>(*value_arg) : std::nullopt;
+}
+
+void FirebaseApp::set_logging_enabled(bool value_arg) {
+  logging_enabled_ = value_arg;
+}
+
+
+const std::string* FirebaseApp::emulator_host() const {
+  return emulator_host_ ? &(*emulator_host_) : nullptr;
+}
+
+void FirebaseApp::set_emulator_host(const std::string_view* value_arg) {
+  emulator_host_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+}
+
+void FirebaseApp::set_emulator_host(std::string_view value_arg) {
+  emulator_host_ = value_arg;
+}
+
+
+const int64_t* FirebaseApp::emulator_port() const {
+  return emulator_port_ ? &(*emulator_port_) : nullptr;
+}
+
+void FirebaseApp::set_emulator_port(const int64_t* value_arg) {
+  emulator_port_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
+}
+
+void FirebaseApp::set_emulator_port(int64_t value_arg) {
+  emulator_port_ = value_arg;
+}
+
+
+EncodableList FirebaseApp::ToEncodableList() const {
   EncodableList list;
-  list.reserve(2);
-  list.push_back(EncodableValue(url_));
-  list.push_back(CustomEncodableValue(http_method_));
+  list.reserve(7);
+  list.push_back(EncodableValue(app_name_));
+  list.push_back(database_u_r_l_ ? EncodableValue(*database_u_r_l_) : EncodableValue());
+  list.push_back(persistence_enabled_ ? EncodableValue(*persistence_enabled_) : EncodableValue());
+  list.push_back(cache_size_bytes_ ? EncodableValue(*cache_size_bytes_) : EncodableValue());
+  list.push_back(logging_enabled_ ? EncodableValue(*logging_enabled_) : EncodableValue());
+  list.push_back(emulator_host_ ? EncodableValue(*emulator_host_) : EncodableValue());
+  list.push_back(emulator_port_ ? EncodableValue(*emulator_port_) : EncodableValue());
   return list;
 }
 
-HttpMetricOptions HttpMetricOptions::FromEncodableList(const EncodableList& list) {
-  HttpMetricOptions decoded(
-    std::get<std::string>(list[0]),
-    std::any_cast<const HttpMethod&>(std::get<CustomEncodableValue>(list[1])));
-  return decoded;
-}
-
-// HttpMetricAttributes
-
-HttpMetricAttributes::HttpMetricAttributes() {}
-
-HttpMetricAttributes::HttpMetricAttributes(
-  const int64_t* http_response_code,
-  const int64_t* request_payload_size,
-  const int64_t* response_payload_size,
-  const std::string* response_content_type,
-  const EncodableMap* attributes)
- : http_response_code_(http_response_code ? std::optional<int64_t>(*http_response_code) : std::nullopt),
-    request_payload_size_(request_payload_size ? std::optional<int64_t>(*request_payload_size) : std::nullopt),
-    response_payload_size_(response_payload_size ? std::optional<int64_t>(*response_payload_size) : std::nullopt),
-    response_content_type_(response_content_type ? std::optional<std::string>(*response_content_type) : std::nullopt),
-    attributes_(attributes ? std::optional<EncodableMap>(*attributes) : std::nullopt) {}
-
-const int64_t* HttpMetricAttributes::http_response_code() const {
-  return http_response_code_ ? &(*http_response_code_) : nullptr;
-}
-
-void HttpMetricAttributes::set_http_response_code(const int64_t* value_arg) {
-  http_response_code_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
-}
-
-void HttpMetricAttributes::set_http_response_code(int64_t value_arg) {
-  http_response_code_ = value_arg;
-}
-
-
-const int64_t* HttpMetricAttributes::request_payload_size() const {
-  return request_payload_size_ ? &(*request_payload_size_) : nullptr;
-}
-
-void HttpMetricAttributes::set_request_payload_size(const int64_t* value_arg) {
-  request_payload_size_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
-}
-
-void HttpMetricAttributes::set_request_payload_size(int64_t value_arg) {
-  request_payload_size_ = value_arg;
-}
-
-
-const int64_t* HttpMetricAttributes::response_payload_size() const {
-  return response_payload_size_ ? &(*response_payload_size_) : nullptr;
-}
-
-void HttpMetricAttributes::set_response_payload_size(const int64_t* value_arg) {
-  response_payload_size_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
-}
-
-void HttpMetricAttributes::set_response_payload_size(int64_t value_arg) {
-  response_payload_size_ = value_arg;
-}
-
-
-const std::string* HttpMetricAttributes::response_content_type() const {
-  return response_content_type_ ? &(*response_content_type_) : nullptr;
-}
-
-void HttpMetricAttributes::set_response_content_type(const std::string_view* value_arg) {
-  response_content_type_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
-}
-
-void HttpMetricAttributes::set_response_content_type(std::string_view value_arg) {
-  response_content_type_ = value_arg;
-}
-
-
-const EncodableMap* HttpMetricAttributes::attributes() const {
-  return attributes_ ? &(*attributes_) : nullptr;
-}
-
-void HttpMetricAttributes::set_attributes(const EncodableMap* value_arg) {
-  attributes_ = value_arg ? std::optional<EncodableMap>(*value_arg) : std::nullopt;
-}
-
-void HttpMetricAttributes::set_attributes(const EncodableMap& value_arg) {
-  attributes_ = value_arg;
-}
-
-
-EncodableList HttpMetricAttributes::ToEncodableList() const {
-  EncodableList list;
-  list.reserve(5);
-  list.push_back(http_response_code_ ? EncodableValue(*http_response_code_) : EncodableValue());
-  list.push_back(request_payload_size_ ? EncodableValue(*request_payload_size_) : EncodableValue());
-  list.push_back(response_payload_size_ ? EncodableValue(*response_payload_size_) : EncodableValue());
-  list.push_back(response_content_type_ ? EncodableValue(*response_content_type_) : EncodableValue());
-  list.push_back(attributes_ ? EncodableValue(*attributes_) : EncodableValue());
-  return list;
-}
-
-HttpMetricAttributes HttpMetricAttributes::FromEncodableList(const EncodableList& list) {
-  HttpMetricAttributes decoded;
-  auto& encodable_http_response_code = list[0];
-  if (!encodable_http_response_code.IsNull()) {
-    decoded.set_http_response_code(std::get<int64_t>(encodable_http_response_code));
+FirebaseApp FirebaseApp::FromEncodableList(const EncodableList& list) {
+  FirebaseApp decoded(
+    std::get<std::string>(list[0]));
+  auto& encodable_database_u_r_l = list[1];
+  if (!encodable_database_u_r_l.IsNull()) {
+    decoded.set_database_u_r_l(std::get<std::string>(encodable_database_u_r_l));
   }
-  auto& encodable_request_payload_size = list[1];
-  if (!encodable_request_payload_size.IsNull()) {
-    decoded.set_request_payload_size(std::get<int64_t>(encodable_request_payload_size));
+  auto& encodable_persistence_enabled = list[2];
+  if (!encodable_persistence_enabled.IsNull()) {
+    decoded.set_persistence_enabled(std::get<bool>(encodable_persistence_enabled));
   }
-  auto& encodable_response_payload_size = list[2];
-  if (!encodable_response_payload_size.IsNull()) {
-    decoded.set_response_payload_size(std::get<int64_t>(encodable_response_payload_size));
+  auto& encodable_cache_size_bytes = list[3];
+  if (!encodable_cache_size_bytes.IsNull()) {
+    decoded.set_cache_size_bytes(std::get<int64_t>(encodable_cache_size_bytes));
   }
-  auto& encodable_response_content_type = list[3];
-  if (!encodable_response_content_type.IsNull()) {
-    decoded.set_response_content_type(std::get<std::string>(encodable_response_content_type));
+  auto& encodable_logging_enabled = list[4];
+  if (!encodable_logging_enabled.IsNull()) {
+    decoded.set_logging_enabled(std::get<bool>(encodable_logging_enabled));
   }
-  auto& encodable_attributes = list[4];
-  if (!encodable_attributes.IsNull()) {
-    decoded.set_attributes(std::get<EncodableMap>(encodable_attributes));
+  auto& encodable_emulator_host = list[5];
+  if (!encodable_emulator_host.IsNull()) {
+    decoded.set_emulator_host(std::get<std::string>(encodable_emulator_host));
+  }
+  auto& encodable_emulator_port = list[6];
+  if (!encodable_emulator_port.IsNull()) {
+    decoded.set_emulator_port(std::get<int64_t>(encodable_emulator_port));
   }
   return decoded;
 }
 
-// TraceAttributes
+// DatabaseReference
 
-TraceAttributes::TraceAttributes() {}
+DatabaseReference::DatabaseReference(const std::string& path)
+ : path_(path) {}
 
-TraceAttributes::TraceAttributes(
-  const EncodableMap* metrics,
-  const EncodableMap* attributes)
- : metrics_(metrics ? std::optional<EncodableMap>(*metrics) : std::nullopt),
-    attributes_(attributes ? std::optional<EncodableMap>(*attributes) : std::nullopt) {}
-
-const EncodableMap* TraceAttributes::metrics() const {
-  return metrics_ ? &(*metrics_) : nullptr;
+const std::string& DatabaseReference::path() const {
+  return path_;
 }
 
-void TraceAttributes::set_metrics(const EncodableMap* value_arg) {
-  metrics_ = value_arg ? std::optional<EncodableMap>(*value_arg) : std::nullopt;
-}
-
-void TraceAttributes::set_metrics(const EncodableMap& value_arg) {
-  metrics_ = value_arg;
+void DatabaseReference::set_path(std::string_view value_arg) {
+  path_ = value_arg;
 }
 
 
-const EncodableMap* TraceAttributes::attributes() const {
-  return attributes_ ? &(*attributes_) : nullptr;
-}
-
-void TraceAttributes::set_attributes(const EncodableMap* value_arg) {
-  attributes_ = value_arg ? std::optional<EncodableMap>(*value_arg) : std::nullopt;
-}
-
-void TraceAttributes::set_attributes(const EncodableMap& value_arg) {
-  attributes_ = value_arg;
-}
-
-
-EncodableList TraceAttributes::ToEncodableList() const {
+EncodableList DatabaseReference::ToEncodableList() const {
   EncodableList list;
-  list.reserve(2);
-  list.push_back(metrics_ ? EncodableValue(*metrics_) : EncodableValue());
-  list.push_back(attributes_ ? EncodableValue(*attributes_) : EncodableValue());
+  list.reserve(1);
+  list.push_back(EncodableValue(path_));
   return list;
 }
 
-TraceAttributes TraceAttributes::FromEncodableList(const EncodableList& list) {
-  TraceAttributes decoded;
-  auto& encodable_metrics = list[0];
-  if (!encodable_metrics.IsNull()) {
-    decoded.set_metrics(std::get<EncodableMap>(encodable_metrics));
-  }
-  auto& encodable_attributes = list[1];
-  if (!encodable_attributes.IsNull()) {
-    decoded.set_attributes(std::get<EncodableMap>(encodable_attributes));
-  }
+DatabaseReference DatabaseReference::FromEncodableList(const EncodableList& list) {
+  DatabaseReference decoded(
+    std::get<std::string>(list[0]));
   return decoded;
 }
 
@@ -274,10 +237,23 @@ TransactionHandler TransactionHandler::FromEncodableList(const EncodableList& li
 // EventObserver
 
 EventObserver::EventObserver(
+  const std::string& path,
   const std::string& event_type,
-  const std::string& event_channel_name_prefix)
- : event_type_(event_type),
-    event_channel_name_prefix_(event_channel_name_prefix) {}
+  const std::string& event_channel_name_prefix,
+  const EncodableList& modifiers)
+ : path_(path),
+    event_type_(event_type),
+    event_channel_name_prefix_(event_channel_name_prefix),
+    modifiers_(modifiers) {}
+
+const std::string& EventObserver::path() const {
+  return path_;
+}
+
+void EventObserver::set_path(std::string_view value_arg) {
+  path_ = value_arg;
+}
+
 
 const std::string& EventObserver::event_type() const {
   return event_type_;
@@ -297,30 +273,69 @@ void EventObserver::set_event_channel_name_prefix(std::string_view value_arg) {
 }
 
 
+const EncodableList& EventObserver::modifiers() const {
+  return modifiers_;
+}
+
+void EventObserver::set_modifiers(const EncodableList& value_arg) {
+  modifiers_ = value_arg;
+}
+
+
 EncodableList EventObserver::ToEncodableList() const {
   EncodableList list;
-  list.reserve(2);
+  list.reserve(4);
+  list.push_back(EncodableValue(path_));
   list.push_back(EncodableValue(event_type_));
   list.push_back(EncodableValue(event_channel_name_prefix_));
+  list.push_back(EncodableValue(modifiers_));
   return list;
 }
 
 EventObserver EventObserver::FromEncodableList(const EncodableList& list) {
   EventObserver decoded(
     std::get<std::string>(list[0]),
-    std::get<std::string>(list[1]));
+    std::get<std::string>(list[1]),
+    std::get<std::string>(list[2]),
+    std::get<EncodableList>(list[3]));
   return decoded;
 }
 
 // GetOptions
 
-GetOptions::GetOptions() {}
+GetOptions::GetOptions(
+  const std::string& path,
+  const EncodableList& modifiers)
+ : path_(path),
+    modifiers_(modifiers) {}
 
 GetOptions::GetOptions(
+  const std::string& path,
+  const EncodableList& modifiers,
   const std::string* source,
   const std::string* server_timestamp_behavior)
- : source_(source ? std::optional<std::string>(*source) : std::nullopt),
+ : path_(path),
+    modifiers_(modifiers),
+    source_(source ? std::optional<std::string>(*source) : std::nullopt),
     server_timestamp_behavior_(server_timestamp_behavior ? std::optional<std::string>(*server_timestamp_behavior) : std::nullopt) {}
+
+const std::string& GetOptions::path() const {
+  return path_;
+}
+
+void GetOptions::set_path(std::string_view value_arg) {
+  path_ = value_arg;
+}
+
+
+const EncodableList& GetOptions::modifiers() const {
+  return modifiers_;
+}
+
+void GetOptions::set_modifiers(const EncodableList& value_arg) {
+  modifiers_ = value_arg;
+}
+
 
 const std::string* GetOptions::source() const {
   return source_ ? &(*source_) : nullptr;
@@ -350,159 +365,424 @@ void GetOptions::set_server_timestamp_behavior(std::string_view value_arg) {
 
 EncodableList GetOptions::ToEncodableList() const {
   EncodableList list;
-  list.reserve(2);
+  list.reserve(4);
+  list.push_back(EncodableValue(path_));
+  list.push_back(EncodableValue(modifiers_));
   list.push_back(source_ ? EncodableValue(*source_) : EncodableValue());
   list.push_back(server_timestamp_behavior_ ? EncodableValue(*server_timestamp_behavior_) : EncodableValue());
   return list;
 }
 
 GetOptions GetOptions::FromEncodableList(const EncodableList& list) {
-  GetOptions decoded;
-  auto& encodable_source = list[0];
+  GetOptions decoded(
+    std::get<std::string>(list[0]),
+    std::get<EncodableList>(list[1]));
+  auto& encodable_source = list[2];
   if (!encodable_source.IsNull()) {
     decoded.set_source(std::get<std::string>(encodable_source));
   }
-  auto& encodable_server_timestamp_behavior = list[1];
+  auto& encodable_server_timestamp_behavior = list[3];
   if (!encodable_server_timestamp_behavior.IsNull()) {
     decoded.set_server_timestamp_behavior(std::get<std::string>(encodable_server_timestamp_behavior));
   }
   return decoded;
 }
 
-// QueryModifiers
+// KeepSyncedOptions
 
-QueryModifiers::QueryModifiers() {}
+KeepSyncedOptions::KeepSyncedOptions(
+  const std::string& path,
+  const EncodableList& modifiers,
+  bool value)
+ : path_(path),
+    modifiers_(modifiers),
+    value_(value) {}
 
-QueryModifiers::QueryModifiers(
-  const std::string* order_by,
-  const int64_t* limit_to_first,
-  const int64_t* limit_to_last,
-  const EncodableValue* start_at,
-  const EncodableValue* end_at,
-  const EncodableValue* equal_to)
- : order_by_(order_by ? std::optional<std::string>(*order_by) : std::nullopt),
-    limit_to_first_(limit_to_first ? std::optional<int64_t>(*limit_to_first) : std::nullopt),
-    limit_to_last_(limit_to_last ? std::optional<int64_t>(*limit_to_last) : std::nullopt),
-    start_at_(start_at ? std::optional<EncodableValue>(*start_at) : std::nullopt),
-    end_at_(end_at ? std::optional<EncodableValue>(*end_at) : std::nullopt),
-    equal_to_(equal_to ? std::optional<EncodableValue>(*equal_to) : std::nullopt) {}
-
-const std::string* QueryModifiers::order_by() const {
-  return order_by_ ? &(*order_by_) : nullptr;
+const std::string& KeepSyncedOptions::path() const {
+  return path_;
 }
 
-void QueryModifiers::set_order_by(const std::string_view* value_arg) {
-  order_by_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
-}
-
-void QueryModifiers::set_order_by(std::string_view value_arg) {
-  order_by_ = value_arg;
+void KeepSyncedOptions::set_path(std::string_view value_arg) {
+  path_ = value_arg;
 }
 
 
-const int64_t* QueryModifiers::limit_to_first() const {
-  return limit_to_first_ ? &(*limit_to_first_) : nullptr;
+const EncodableList& KeepSyncedOptions::modifiers() const {
+  return modifiers_;
 }
 
-void QueryModifiers::set_limit_to_first(const int64_t* value_arg) {
-  limit_to_first_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
-}
-
-void QueryModifiers::set_limit_to_first(int64_t value_arg) {
-  limit_to_first_ = value_arg;
+void KeepSyncedOptions::set_modifiers(const EncodableList& value_arg) {
+  modifiers_ = value_arg;
 }
 
 
-const int64_t* QueryModifiers::limit_to_last() const {
-  return limit_to_last_ ? &(*limit_to_last_) : nullptr;
+bool KeepSyncedOptions::value() const {
+  return value_;
 }
 
-void QueryModifiers::set_limit_to_last(const int64_t* value_arg) {
-  limit_to_last_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
-}
-
-void QueryModifiers::set_limit_to_last(int64_t value_arg) {
-  limit_to_last_ = value_arg;
+void KeepSyncedOptions::set_value(bool value_arg) {
+  value_ = value_arg;
 }
 
 
-const EncodableValue* QueryModifiers::start_at() const {
-  return start_at_ ? &(*start_at_) : nullptr;
-}
-
-void QueryModifiers::set_start_at(const EncodableValue* value_arg) {
-  start_at_ = value_arg ? std::optional<EncodableValue>(*value_arg) : std::nullopt;
-}
-
-void QueryModifiers::set_start_at(const EncodableValue& value_arg) {
-  start_at_ = value_arg;
-}
-
-
-const EncodableValue* QueryModifiers::end_at() const {
-  return end_at_ ? &(*end_at_) : nullptr;
-}
-
-void QueryModifiers::set_end_at(const EncodableValue* value_arg) {
-  end_at_ = value_arg ? std::optional<EncodableValue>(*value_arg) : std::nullopt;
-}
-
-void QueryModifiers::set_end_at(const EncodableValue& value_arg) {
-  end_at_ = value_arg;
-}
-
-
-const EncodableValue* QueryModifiers::equal_to() const {
-  return equal_to_ ? &(*equal_to_) : nullptr;
-}
-
-void QueryModifiers::set_equal_to(const EncodableValue* value_arg) {
-  equal_to_ = value_arg ? std::optional<EncodableValue>(*value_arg) : std::nullopt;
-}
-
-void QueryModifiers::set_equal_to(const EncodableValue& value_arg) {
-  equal_to_ = value_arg;
-}
-
-
-EncodableList QueryModifiers::ToEncodableList() const {
+EncodableList KeepSyncedOptions::ToEncodableList() const {
   EncodableList list;
-  list.reserve(6);
-  list.push_back(order_by_ ? EncodableValue(*order_by_) : EncodableValue());
-  list.push_back(limit_to_first_ ? EncodableValue(*limit_to_first_) : EncodableValue());
-  list.push_back(limit_to_last_ ? EncodableValue(*limit_to_last_) : EncodableValue());
-  list.push_back(start_at_ ? *start_at_ : EncodableValue());
-  list.push_back(end_at_ ? *end_at_ : EncodableValue());
-  list.push_back(equal_to_ ? *equal_to_ : EncodableValue());
+  list.reserve(3);
+  list.push_back(EncodableValue(path_));
+  list.push_back(EncodableValue(modifiers_));
+  list.push_back(EncodableValue(value_));
   return list;
 }
 
-QueryModifiers QueryModifiers::FromEncodableList(const EncodableList& list) {
-  QueryModifiers decoded;
-  auto& encodable_order_by = list[0];
-  if (!encodable_order_by.IsNull()) {
-    decoded.set_order_by(std::get<std::string>(encodable_order_by));
+KeepSyncedOptions KeepSyncedOptions::FromEncodableList(const EncodableList& list) {
+  KeepSyncedOptions decoded(
+    std::get<std::string>(list[0]),
+    std::get<EncodableList>(list[1]),
+    std::get<bool>(list[2]));
+  return decoded;
+}
+
+// OnDisconnectOptions
+
+OnDisconnectOptions::OnDisconnectOptions(const std::string& path)
+ : path_(path) {}
+
+OnDisconnectOptions::OnDisconnectOptions(
+  const std::string& path,
+  const EncodableValue* value,
+  const EncodableValue* priority)
+ : path_(path),
+    value_(value ? std::optional<EncodableValue>(*value) : std::nullopt),
+    priority_(priority ? std::optional<EncodableValue>(*priority) : std::nullopt) {}
+
+const std::string& OnDisconnectOptions::path() const {
+  return path_;
+}
+
+void OnDisconnectOptions::set_path(std::string_view value_arg) {
+  path_ = value_arg;
+}
+
+
+const EncodableValue* OnDisconnectOptions::value() const {
+  return value_ ? &(*value_) : nullptr;
+}
+
+void OnDisconnectOptions::set_value(const EncodableValue* value_arg) {
+  value_ = value_arg ? std::optional<EncodableValue>(*value_arg) : std::nullopt;
+}
+
+void OnDisconnectOptions::set_value(const EncodableValue& value_arg) {
+  value_ = value_arg;
+}
+
+
+const EncodableValue* OnDisconnectOptions::priority() const {
+  return priority_ ? &(*priority_) : nullptr;
+}
+
+void OnDisconnectOptions::set_priority(const EncodableValue* value_arg) {
+  priority_ = value_arg ? std::optional<EncodableValue>(*value_arg) : std::nullopt;
+}
+
+void OnDisconnectOptions::set_priority(const EncodableValue& value_arg) {
+  priority_ = value_arg;
+}
+
+
+EncodableList OnDisconnectOptions::ToEncodableList() const {
+  EncodableList list;
+  list.reserve(3);
+  list.push_back(EncodableValue(path_));
+  list.push_back(value_ ? *value_ : EncodableValue());
+  list.push_back(priority_ ? *priority_ : EncodableValue());
+  return list;
+}
+
+OnDisconnectOptions OnDisconnectOptions::FromEncodableList(const EncodableList& list) {
+  OnDisconnectOptions decoded(
+    std::get<std::string>(list[0]));
+  auto& encodable_value = list[1];
+  if (!encodable_value.IsNull()) {
+    decoded.set_value(encodable_value);
   }
-  auto& encodable_limit_to_first = list[1];
-  if (!encodable_limit_to_first.IsNull()) {
-    decoded.set_limit_to_first(std::get<int64_t>(encodable_limit_to_first));
+  auto& encodable_priority = list[2];
+  if (!encodable_priority.IsNull()) {
+    decoded.set_priority(encodable_priority);
   }
-  auto& encodable_limit_to_last = list[2];
-  if (!encodable_limit_to_last.IsNull()) {
-    decoded.set_limit_to_last(std::get<int64_t>(encodable_limit_to_last));
+  return decoded;
+}
+
+// SetOptions
+
+SetOptions::SetOptions(const std::string& path)
+ : path_(path) {}
+
+SetOptions::SetOptions(
+  const std::string& path,
+  const EncodableValue* value,
+  const EncodableValue* priority)
+ : path_(path),
+    value_(value ? std::optional<EncodableValue>(*value) : std::nullopt),
+    priority_(priority ? std::optional<EncodableValue>(*priority) : std::nullopt) {}
+
+const std::string& SetOptions::path() const {
+  return path_;
+}
+
+void SetOptions::set_path(std::string_view value_arg) {
+  path_ = value_arg;
+}
+
+
+const EncodableValue* SetOptions::value() const {
+  return value_ ? &(*value_) : nullptr;
+}
+
+void SetOptions::set_value(const EncodableValue* value_arg) {
+  value_ = value_arg ? std::optional<EncodableValue>(*value_arg) : std::nullopt;
+}
+
+void SetOptions::set_value(const EncodableValue& value_arg) {
+  value_ = value_arg;
+}
+
+
+const EncodableValue* SetOptions::priority() const {
+  return priority_ ? &(*priority_) : nullptr;
+}
+
+void SetOptions::set_priority(const EncodableValue* value_arg) {
+  priority_ = value_arg ? std::optional<EncodableValue>(*value_arg) : std::nullopt;
+}
+
+void SetOptions::set_priority(const EncodableValue& value_arg) {
+  priority_ = value_arg;
+}
+
+
+EncodableList SetOptions::ToEncodableList() const {
+  EncodableList list;
+  list.reserve(3);
+  list.push_back(EncodableValue(path_));
+  list.push_back(value_ ? *value_ : EncodableValue());
+  list.push_back(priority_ ? *priority_ : EncodableValue());
+  return list;
+}
+
+SetOptions SetOptions::FromEncodableList(const EncodableList& list) {
+  SetOptions decoded(
+    std::get<std::string>(list[0]));
+  auto& encodable_value = list[1];
+  if (!encodable_value.IsNull()) {
+    decoded.set_value(encodable_value);
   }
-  auto& encodable_start_at = list[3];
-  if (!encodable_start_at.IsNull()) {
-    decoded.set_start_at(encodable_start_at);
+  auto& encodable_priority = list[2];
+  if (!encodable_priority.IsNull()) {
+    decoded.set_priority(encodable_priority);
   }
-  auto& encodable_end_at = list[4];
-  if (!encodable_end_at.IsNull()) {
-    decoded.set_end_at(encodable_end_at);
-  }
-  auto& encodable_equal_to = list[5];
-  if (!encodable_equal_to.IsNull()) {
-    decoded.set_equal_to(encodable_equal_to);
-  }
+  return decoded;
+}
+
+// UpdateOptions
+
+UpdateOptions::UpdateOptions(
+  const std::string& path,
+  const EncodableMap& value)
+ : path_(path),
+    value_(value) {}
+
+const std::string& UpdateOptions::path() const {
+  return path_;
+}
+
+void UpdateOptions::set_path(std::string_view value_arg) {
+  path_ = value_arg;
+}
+
+
+const EncodableMap& UpdateOptions::value() const {
+  return value_;
+}
+
+void UpdateOptions::set_value(const EncodableMap& value_arg) {
+  value_ = value_arg;
+}
+
+
+EncodableList UpdateOptions::ToEncodableList() const {
+  EncodableList list;
+  list.reserve(2);
+  list.push_back(EncodableValue(path_));
+  list.push_back(EncodableValue(value_));
+  return list;
+}
+
+UpdateOptions UpdateOptions::FromEncodableList(const EncodableList& list) {
+  UpdateOptions decoded(
+    std::get<std::string>(list[0]),
+    std::get<EncodableMap>(list[1]));
+  return decoded;
+}
+
+// SetPriorityOptions
+
+SetPriorityOptions::SetPriorityOptions(
+  const std::string& path,
+  const EncodableValue& priority)
+ : path_(path),
+    priority_(priority) {}
+
+const std::string& SetPriorityOptions::path() const {
+  return path_;
+}
+
+void SetPriorityOptions::set_path(std::string_view value_arg) {
+  path_ = value_arg;
+}
+
+
+const EncodableValue& SetPriorityOptions::priority() const {
+  return priority_;
+}
+
+void SetPriorityOptions::set_priority(const EncodableValue& value_arg) {
+  priority_ = value_arg;
+}
+
+
+EncodableList SetPriorityOptions::ToEncodableList() const {
+  EncodableList list;
+  list.reserve(2);
+  list.push_back(EncodableValue(path_));
+  list.push_back(priority_);
+  return list;
+}
+
+SetPriorityOptions SetPriorityOptions::FromEncodableList(const EncodableList& list) {
+  SetPriorityOptions decoded(
+    std::get<std::string>(list[0]),
+    list[1]);
+  return decoded;
+}
+
+// RemoveOptions
+
+RemoveOptions::RemoveOptions(const std::string& path)
+ : path_(path) {}
+
+const std::string& RemoveOptions::path() const {
+  return path_;
+}
+
+void RemoveOptions::set_path(std::string_view value_arg) {
+  path_ = value_arg;
+}
+
+
+EncodableList RemoveOptions::ToEncodableList() const {
+  EncodableList list;
+  list.reserve(1);
+  list.push_back(EncodableValue(path_));
+  return list;
+}
+
+RemoveOptions RemoveOptions::FromEncodableList(const EncodableList& list) {
+  RemoveOptions decoded(
+    std::get<std::string>(list[0]));
+  return decoded;
+}
+
+// TransactionOptions
+
+TransactionOptions::TransactionOptions(
+  const std::string& path,
+  const TransactionHandler& transaction_handler,
+  bool apply_locally)
+ : path_(path),
+    transaction_handler_(std::make_unique<TransactionHandler>(transaction_handler)),
+    apply_locally_(apply_locally) {}
+
+TransactionOptions::TransactionOptions(const TransactionOptions& other)
+ : path_(other.path_),
+    transaction_handler_(std::make_unique<TransactionHandler>(*other.transaction_handler_)),
+    apply_locally_(other.apply_locally_) {}
+
+TransactionOptions& TransactionOptions::operator=(const TransactionOptions& other) {
+  path_ = other.path_;
+  transaction_handler_ = std::make_unique<TransactionHandler>(*other.transaction_handler_);
+  apply_locally_ = other.apply_locally_;
+  return *this;
+}
+
+const std::string& TransactionOptions::path() const {
+  return path_;
+}
+
+void TransactionOptions::set_path(std::string_view value_arg) {
+  path_ = value_arg;
+}
+
+
+const TransactionHandler& TransactionOptions::transaction_handler() const {
+  return *transaction_handler_;
+}
+
+void TransactionOptions::set_transaction_handler(const TransactionHandler& value_arg) {
+  transaction_handler_ = std::make_unique<TransactionHandler>(value_arg);
+}
+
+
+bool TransactionOptions::apply_locally() const {
+  return apply_locally_;
+}
+
+void TransactionOptions::set_apply_locally(bool value_arg) {
+  apply_locally_ = value_arg;
+}
+
+
+EncodableList TransactionOptions::ToEncodableList() const {
+  EncodableList list;
+  list.reserve(3);
+  list.push_back(EncodableValue(path_));
+  list.push_back(CustomEncodableValue(*transaction_handler_));
+  list.push_back(EncodableValue(apply_locally_));
+  return list;
+}
+
+TransactionOptions TransactionOptions::FromEncodableList(const EncodableList& list) {
+  TransactionOptions decoded(
+    std::get<std::string>(list[0]),
+    std::any_cast<const TransactionHandler&>(std::get<CustomEncodableValue>(list[1])),
+    std::get<bool>(list[2]));
+  return decoded;
+}
+
+// DataSnapshot
+
+DataSnapshot::DataSnapshot(const EncodableMap& snapshot)
+ : snapshot_(snapshot) {}
+
+const EncodableMap& DataSnapshot::snapshot() const {
+  return snapshot_;
+}
+
+void DataSnapshot::set_snapshot(const EncodableMap& value_arg) {
+  snapshot_ = value_arg;
+}
+
+
+EncodableList DataSnapshot::ToEncodableList() const {
+  EncodableList list;
+  list.reserve(1);
+  list.push_back(EncodableValue(snapshot_));
+  return list;
+}
+
+DataSnapshot DataSnapshot::FromEncodableList(const EncodableList& list) {
+  DataSnapshot decoded(
+    std::get<EncodableMap>(list[0]));
   return decoded;
 }
 
@@ -514,30 +794,43 @@ EncodableValue PigeonInternalCodecSerializer::ReadValueOfType(
   flutter::ByteStreamReader* stream) const {
   switch (type) {
     case 129: {
-        const auto& encodable_enum_arg = ReadValue(stream);
-        const int64_t enum_arg_value = encodable_enum_arg.IsNull() ? 0 : encodable_enum_arg.LongValue();
-        return encodable_enum_arg.IsNull() ? EncodableValue() : CustomEncodableValue(static_cast<HttpMethod>(enum_arg_value));
+        return CustomEncodableValue(FirebaseApp::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
       }
     case 130: {
-        return CustomEncodableValue(HttpMetricOptions::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+        return CustomEncodableValue(DatabaseReference::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
       }
     case 131: {
-        return CustomEncodableValue(HttpMetricAttributes::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
-      }
-    case 132: {
-        return CustomEncodableValue(TraceAttributes::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
-      }
-    case 133: {
         return CustomEncodableValue(TransactionHandler::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
       }
-    case 134: {
+    case 132: {
         return CustomEncodableValue(EventObserver::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
       }
-    case 135: {
+    case 133: {
         return CustomEncodableValue(GetOptions::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
       }
+    case 134: {
+        return CustomEncodableValue(KeepSyncedOptions::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
+    case 135: {
+        return CustomEncodableValue(OnDisconnectOptions::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
     case 136: {
-        return CustomEncodableValue(QueryModifiers::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+        return CustomEncodableValue(SetOptions::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
+    case 137: {
+        return CustomEncodableValue(UpdateOptions::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
+    case 138: {
+        return CustomEncodableValue(SetPriorityOptions::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
+    case 139: {
+        return CustomEncodableValue(RemoveOptions::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
+    case 140: {
+        return CustomEncodableValue(TransactionOptions::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
+    case 141: {
+        return CustomEncodableValue(DataSnapshot::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
       }
     default:
       return flutter::StandardCodecSerializer::ReadValueOfType(type, stream);
@@ -548,44 +841,69 @@ void PigeonInternalCodecSerializer::WriteValue(
   const EncodableValue& value,
   flutter::ByteStreamWriter* stream) const {
   if (const CustomEncodableValue* custom_value = std::get_if<CustomEncodableValue>(&value)) {
-    if (custom_value->type() == typeid(HttpMethod)) {
+    if (custom_value->type() == typeid(FirebaseApp)) {
       stream->WriteByte(129);
-      WriteValue(EncodableValue(static_cast<int>(std::any_cast<HttpMethod>(*custom_value))), stream);
+      WriteValue(EncodableValue(std::any_cast<FirebaseApp>(*custom_value).ToEncodableList()), stream);
       return;
     }
-    if (custom_value->type() == typeid(HttpMetricOptions)) {
+    if (custom_value->type() == typeid(DatabaseReference)) {
       stream->WriteByte(130);
-      WriteValue(EncodableValue(std::any_cast<HttpMetricOptions>(*custom_value).ToEncodableList()), stream);
-      return;
-    }
-    if (custom_value->type() == typeid(HttpMetricAttributes)) {
-      stream->WriteByte(131);
-      WriteValue(EncodableValue(std::any_cast<HttpMetricAttributes>(*custom_value).ToEncodableList()), stream);
-      return;
-    }
-    if (custom_value->type() == typeid(TraceAttributes)) {
-      stream->WriteByte(132);
-      WriteValue(EncodableValue(std::any_cast<TraceAttributes>(*custom_value).ToEncodableList()), stream);
+      WriteValue(EncodableValue(std::any_cast<DatabaseReference>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(TransactionHandler)) {
-      stream->WriteByte(133);
+      stream->WriteByte(131);
       WriteValue(EncodableValue(std::any_cast<TransactionHandler>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(EventObserver)) {
-      stream->WriteByte(134);
+      stream->WriteByte(132);
       WriteValue(EncodableValue(std::any_cast<EventObserver>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(GetOptions)) {
-      stream->WriteByte(135);
+      stream->WriteByte(133);
       WriteValue(EncodableValue(std::any_cast<GetOptions>(*custom_value).ToEncodableList()), stream);
       return;
     }
-    if (custom_value->type() == typeid(QueryModifiers)) {
+    if (custom_value->type() == typeid(KeepSyncedOptions)) {
+      stream->WriteByte(134);
+      WriteValue(EncodableValue(std::any_cast<KeepSyncedOptions>(*custom_value).ToEncodableList()), stream);
+      return;
+    }
+    if (custom_value->type() == typeid(OnDisconnectOptions)) {
+      stream->WriteByte(135);
+      WriteValue(EncodableValue(std::any_cast<OnDisconnectOptions>(*custom_value).ToEncodableList()), stream);
+      return;
+    }
+    if (custom_value->type() == typeid(SetOptions)) {
       stream->WriteByte(136);
-      WriteValue(EncodableValue(std::any_cast<QueryModifiers>(*custom_value).ToEncodableList()), stream);
+      WriteValue(EncodableValue(std::any_cast<SetOptions>(*custom_value).ToEncodableList()), stream);
+      return;
+    }
+    if (custom_value->type() == typeid(UpdateOptions)) {
+      stream->WriteByte(137);
+      WriteValue(EncodableValue(std::any_cast<UpdateOptions>(*custom_value).ToEncodableList()), stream);
+      return;
+    }
+    if (custom_value->type() == typeid(SetPriorityOptions)) {
+      stream->WriteByte(138);
+      WriteValue(EncodableValue(std::any_cast<SetPriorityOptions>(*custom_value).ToEncodableList()), stream);
+      return;
+    }
+    if (custom_value->type() == typeid(RemoveOptions)) {
+      stream->WriteByte(139);
+      WriteValue(EncodableValue(std::any_cast<RemoveOptions>(*custom_value).ToEncodableList()), stream);
+      return;
+    }
+    if (custom_value->type() == typeid(TransactionOptions)) {
+      stream->WriteByte(140);
+      WriteValue(EncodableValue(std::any_cast<TransactionOptions>(*custom_value).ToEncodableList()), stream);
+      return;
+    }
+    if (custom_value->type() == typeid(DataSnapshot)) {
+      stream->WriteByte(141);
+      WriteValue(EncodableValue(std::any_cast<DataSnapshot>(*custom_value).ToEncodableList()), stream);
       return;
     }
   }
@@ -615,9 +933,13 @@ void FirebaseDatabaseHostApi::SetUp(
       channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
         try {
           const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_value_arg = args.at(0);
-          const auto* value_arg = &encodable_value_arg;
-          api->Set(value_arg, [reply](std::optional<FlutterError>&& output) {
+          const auto& encodable_options_arg = args.at(0);
+          if (encodable_options_arg.IsNull()) {
+            reply(WrapError("options_arg unexpectedly null."));
+            return;
+          }
+          const auto& options_arg = std::any_cast<const SetOptions&>(std::get<CustomEncodableValue>(encodable_options_arg));
+          api->Set(options_arg, [reply](std::optional<FlutterError>&& output) {
             if (output.has_value()) {
               reply(WrapError(output.value()));
               return;
@@ -640,11 +962,13 @@ void FirebaseDatabaseHostApi::SetUp(
       channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
         try {
           const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_value_arg = args.at(0);
-          const auto* value_arg = &encodable_value_arg;
-          const auto& encodable_priority_arg = args.at(1);
-          const auto* priority_arg = &encodable_priority_arg;
-          api->SetWithPriority(value_arg, priority_arg, [reply](std::optional<FlutterError>&& output) {
+          const auto& encodable_options_arg = args.at(0);
+          if (encodable_options_arg.IsNull()) {
+            reply(WrapError("options_arg unexpectedly null."));
+            return;
+          }
+          const auto& options_arg = std::any_cast<const SetOptions&>(std::get<CustomEncodableValue>(encodable_options_arg));
+          api->SetWithPriority(options_arg, [reply](std::optional<FlutterError>&& output) {
             if (output.has_value()) {
               reply(WrapError(output.value()));
               return;
@@ -667,13 +991,13 @@ void FirebaseDatabaseHostApi::SetUp(
       channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
         try {
           const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_value_arg = args.at(0);
-          if (encodable_value_arg.IsNull()) {
-            reply(WrapError("value_arg unexpectedly null."));
+          const auto& encodable_options_arg = args.at(0);
+          if (encodable_options_arg.IsNull()) {
+            reply(WrapError("options_arg unexpectedly null."));
             return;
           }
-          const auto& value_arg = std::get<EncodableMap>(encodable_value_arg);
-          api->Update(value_arg, [reply](std::optional<FlutterError>&& output) {
+          const auto& options_arg = std::any_cast<const UpdateOptions&>(std::get<CustomEncodableValue>(encodable_options_arg));
+          api->Update(options_arg, [reply](std::optional<FlutterError>&& output) {
             if (output.has_value()) {
               reply(WrapError(output.value()));
               return;
@@ -696,9 +1020,13 @@ void FirebaseDatabaseHostApi::SetUp(
       channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
         try {
           const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_priority_arg = args.at(0);
-          const auto* priority_arg = &encodable_priority_arg;
-          api->SetPriority(priority_arg, [reply](std::optional<FlutterError>&& output) {
+          const auto& encodable_options_arg = args.at(0);
+          if (encodable_options_arg.IsNull()) {
+            reply(WrapError("options_arg unexpectedly null."));
+            return;
+          }
+          const auto& options_arg = std::any_cast<const SetPriorityOptions&>(std::get<CustomEncodableValue>(encodable_options_arg));
+          api->SetPriority(options_arg, [reply](std::optional<FlutterError>&& output) {
             if (output.has_value()) {
               reply(WrapError(output.value()));
               return;
@@ -720,7 +1048,14 @@ void FirebaseDatabaseHostApi::SetUp(
     if (api != nullptr) {
       channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
         try {
-          api->Remove([reply](std::optional<FlutterError>&& output) {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_options_arg = args.at(0);
+          if (encodable_options_arg.IsNull()) {
+            reply(WrapError("options_arg unexpectedly null."));
+            return;
+          }
+          const auto& options_arg = std::any_cast<const RemoveOptions&>(std::get<CustomEncodableValue>(encodable_options_arg));
+          api->Remove(options_arg, [reply](std::optional<FlutterError>&& output) {
             if (output.has_value()) {
               reply(WrapError(output.value()));
               return;
@@ -743,19 +1078,13 @@ void FirebaseDatabaseHostApi::SetUp(
       channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
         try {
           const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_transaction_handler_arg = args.at(0);
-          if (encodable_transaction_handler_arg.IsNull()) {
-            reply(WrapError("transaction_handler_arg unexpectedly null."));
+          const auto& encodable_options_arg = args.at(0);
+          if (encodable_options_arg.IsNull()) {
+            reply(WrapError("options_arg unexpectedly null."));
             return;
           }
-          const auto& transaction_handler_arg = std::any_cast<const TransactionHandler&>(std::get<CustomEncodableValue>(encodable_transaction_handler_arg));
-          const auto& encodable_apply_locally_arg = args.at(1);
-          if (encodable_apply_locally_arg.IsNull()) {
-            reply(WrapError("apply_locally_arg unexpectedly null."));
-            return;
-          }
-          const auto& apply_locally_arg = std::get<bool>(encodable_apply_locally_arg);
-          api->RunTransaction(transaction_handler_arg, apply_locally_arg, [reply](std::optional<FlutterError>&& output) {
+          const auto& options_arg = std::any_cast<const TransactionOptions&>(std::get<CustomEncodableValue>(encodable_options_arg));
+          api->RunTransaction(options_arg, [reply](std::optional<FlutterError>&& output) {
             if (output.has_value()) {
               reply(WrapError(output.value()));
               return;
@@ -777,7 +1106,14 @@ void FirebaseDatabaseHostApi::SetUp(
     if (api != nullptr) {
       channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
         try {
-          api->GoOnline([reply](std::optional<FlutterError>&& output) {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const FirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          api->GoOnline(app_arg, [reply](std::optional<FlutterError>&& output) {
             if (output.has_value()) {
               reply(WrapError(output.value()));
               return;
@@ -799,7 +1135,14 @@ void FirebaseDatabaseHostApi::SetUp(
     if (api != nullptr) {
       channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
         try {
-          api->GoOffline([reply](std::optional<FlutterError>&& output) {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const FirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          api->GoOffline(app_arg, [reply](std::optional<FlutterError>&& output) {
             if (output.has_value()) {
               reply(WrapError(output.value()));
               return;
@@ -821,7 +1164,14 @@ void FirebaseDatabaseHostApi::SetUp(
     if (api != nullptr) {
       channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
         try {
-          api->PurgeOutstandingWrites([reply](std::optional<FlutterError>&& output) {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const FirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          api->PurgeOutstandingWrites(app_arg, [reply](std::optional<FlutterError>&& output) {
             if (output.has_value()) {
               reply(WrapError(output.value()));
               return;
@@ -843,7 +1193,14 @@ void FirebaseDatabaseHostApi::SetUp(
     if (api != nullptr) {
       channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
         try {
-          api->Cancel([reply](std::optional<FlutterError>&& output) {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const FirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          api->Cancel(app_arg, [reply](std::optional<FlutterError>&& output) {
             if (output.has_value()) {
               reply(WrapError(output.value()));
               return;
@@ -872,13 +1229,13 @@ void FirebaseDatabaseHostApi::SetUp(
             return;
           }
           const auto& observer_arg = std::any_cast<const EventObserver&>(std::get<CustomEncodableValue>(encodable_observer_arg));
-          api->Observe(observer_arg, [reply](std::optional<FlutterError>&& output) {
-            if (output.has_value()) {
-              reply(WrapError(output.value()));
+          api->Observe(observer_arg, [reply](ErrorOr<std::string>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
               return;
             }
             EncodableList wrapped;
-            wrapped.push_back(EncodableValue());
+            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
             reply(EncodableValue(std::move(wrapped)));
           });
         } catch (const std::exception& exception) {
@@ -901,7 +1258,36 @@ void FirebaseDatabaseHostApi::SetUp(
             return;
           }
           const auto& options_arg = std::any_cast<const GetOptions&>(std::get<CustomEncodableValue>(encodable_options_arg));
-          api->Get(options_arg, [reply](std::optional<FlutterError>&& output) {
+          api->Get(options_arg, [reply](ErrorOr<DataSnapshot>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.keepSynced" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_options_arg = args.at(0);
+          if (encodable_options_arg.IsNull()) {
+            reply(WrapError("options_arg unexpectedly null."));
+            return;
+          }
+          const auto& options_arg = std::any_cast<const KeepSyncedOptions&>(std::get<CustomEncodableValue>(encodable_options_arg));
+          api->KeepSynced(options_arg, [reply](std::optional<FlutterError>&& output) {
             if (output.has_value()) {
               reply(WrapError(output.value()));
               return;
@@ -919,24 +1305,134 @@ void FirebaseDatabaseHostApi::SetUp(
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.keepSynced" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSet" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
       channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
         try {
           const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_modifiers_arg = args.at(0);
-          if (encodable_modifiers_arg.IsNull()) {
-            reply(WrapError("modifiers_arg unexpectedly null."));
+          const auto& encodable_options_arg = args.at(0);
+          if (encodable_options_arg.IsNull()) {
+            reply(WrapError("options_arg unexpectedly null."));
             return;
           }
-          const auto& modifiers_arg = std::any_cast<const QueryModifiers&>(std::get<CustomEncodableValue>(encodable_modifiers_arg));
-          const auto& encodable_value_arg = args.at(1);
-          if (encodable_value_arg.IsNull()) {
-            reply(WrapError("value_arg unexpectedly null."));
+          const auto& options_arg = std::any_cast<const OnDisconnectOptions&>(std::get<CustomEncodableValue>(encodable_options_arg));
+          api->OnDisconnectSet(options_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSetWithPriority" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_options_arg = args.at(0);
+          if (encodable_options_arg.IsNull()) {
+            reply(WrapError("options_arg unexpectedly null."));
             return;
           }
-          const auto& value_arg = std::get<bool>(encodable_value_arg);
-          api->KeepSynced(modifiers_arg, value_arg, [reply](std::optional<FlutterError>&& output) {
+          const auto& options_arg = std::any_cast<const OnDisconnectOptions&>(std::get<CustomEncodableValue>(encodable_options_arg));
+          api->OnDisconnectSetWithPriority(options_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectUpdate" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_options_arg = args.at(0);
+          if (encodable_options_arg.IsNull()) {
+            reply(WrapError("options_arg unexpectedly null."));
+            return;
+          }
+          const auto& options_arg = std::any_cast<const UpdateOptions&>(std::get<CustomEncodableValue>(encodable_options_arg));
+          api->OnDisconnectUpdate(options_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectRemove" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_options_arg = args.at(0);
+          if (encodable_options_arg.IsNull()) {
+            reply(WrapError("options_arg unexpectedly null."));
+            return;
+          }
+          const auto& options_arg = std::any_cast<const RemoveOptions&>(std::get<CustomEncodableValue>(encodable_options_arg));
+          api->OnDisconnectRemove(options_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectCancel" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_reference_arg = args.at(0);
+          if (encodable_reference_arg.IsNull()) {
+            reply(WrapError("reference_arg unexpectedly null."));
+            return;
+          }
+          const auto& reference_arg = std::any_cast<const DatabaseReference&>(std::get<CustomEncodableValue>(encodable_reference_arg));
+          api->OnDisconnectCancel(reference_arg, [reply](std::optional<FlutterError>&& output) {
             if (output.has_value()) {
               reply(WrapError(output.value()));
               return;

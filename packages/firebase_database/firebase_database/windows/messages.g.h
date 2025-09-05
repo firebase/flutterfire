@@ -57,116 +57,80 @@ template<class T> class ErrorOr {
 };
 
 
-enum class HttpMethod {
-  kConnect = 0,
-  kDelete = 1,
-  kGet = 2,
-  kHead = 3,
-  kOptions = 4,
-  kPatch = 5,
-  kPost = 6,
-  kPut = 7,
-  kTrace = 8
-};
-
 
 // Generated class from Pigeon that represents data sent in messages.
-class HttpMetricOptions {
- public:
-  // Constructs an object setting all fields.
-  explicit HttpMetricOptions(
-    const std::string& url,
-    const HttpMethod& http_method);
-
-  const std::string& url() const;
-  void set_url(std::string_view value_arg);
-
-  const HttpMethod& http_method() const;
-  void set_http_method(const HttpMethod& value_arg);
-
- private:
-  static HttpMetricOptions FromEncodableList(const flutter::EncodableList& list);
-  flutter::EncodableList ToEncodableList() const;
-  friend class FirebaseDatabaseHostApi;
-  friend class PigeonInternalCodecSerializer;
-  std::string url_;
-  HttpMethod http_method_;
-};
-
-
-// Generated class from Pigeon that represents data sent in messages.
-class HttpMetricAttributes {
+class FirebaseApp {
  public:
   // Constructs an object setting all non-nullable fields.
-  HttpMetricAttributes();
+  explicit FirebaseApp(const std::string& app_name);
 
   // Constructs an object setting all fields.
-  explicit HttpMetricAttributes(
-    const int64_t* http_response_code,
-    const int64_t* request_payload_size,
-    const int64_t* response_payload_size,
-    const std::string* response_content_type,
-    const flutter::EncodableMap* attributes);
+  explicit FirebaseApp(
+    const std::string& app_name,
+    const std::string* database_u_r_l,
+    const bool* persistence_enabled,
+    const int64_t* cache_size_bytes,
+    const bool* logging_enabled,
+    const std::string* emulator_host,
+    const int64_t* emulator_port);
 
-  const int64_t* http_response_code() const;
-  void set_http_response_code(const int64_t* value_arg);
-  void set_http_response_code(int64_t value_arg);
+  const std::string& app_name() const;
+  void set_app_name(std::string_view value_arg);
 
-  const int64_t* request_payload_size() const;
-  void set_request_payload_size(const int64_t* value_arg);
-  void set_request_payload_size(int64_t value_arg);
+  const std::string* database_u_r_l() const;
+  void set_database_u_r_l(const std::string_view* value_arg);
+  void set_database_u_r_l(std::string_view value_arg);
 
-  const int64_t* response_payload_size() const;
-  void set_response_payload_size(const int64_t* value_arg);
-  void set_response_payload_size(int64_t value_arg);
+  const bool* persistence_enabled() const;
+  void set_persistence_enabled(const bool* value_arg);
+  void set_persistence_enabled(bool value_arg);
 
-  const std::string* response_content_type() const;
-  void set_response_content_type(const std::string_view* value_arg);
-  void set_response_content_type(std::string_view value_arg);
+  const int64_t* cache_size_bytes() const;
+  void set_cache_size_bytes(const int64_t* value_arg);
+  void set_cache_size_bytes(int64_t value_arg);
 
-  const flutter::EncodableMap* attributes() const;
-  void set_attributes(const flutter::EncodableMap* value_arg);
-  void set_attributes(const flutter::EncodableMap& value_arg);
+  const bool* logging_enabled() const;
+  void set_logging_enabled(const bool* value_arg);
+  void set_logging_enabled(bool value_arg);
+
+  const std::string* emulator_host() const;
+  void set_emulator_host(const std::string_view* value_arg);
+  void set_emulator_host(std::string_view value_arg);
+
+  const int64_t* emulator_port() const;
+  void set_emulator_port(const int64_t* value_arg);
+  void set_emulator_port(int64_t value_arg);
 
  private:
-  static HttpMetricAttributes FromEncodableList(const flutter::EncodableList& list);
+  static FirebaseApp FromEncodableList(const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
   friend class FirebaseDatabaseHostApi;
   friend class PigeonInternalCodecSerializer;
-  std::optional<int64_t> http_response_code_;
-  std::optional<int64_t> request_payload_size_;
-  std::optional<int64_t> response_payload_size_;
-  std::optional<std::string> response_content_type_;
-  std::optional<flutter::EncodableMap> attributes_;
+  std::string app_name_;
+  std::optional<std::string> database_u_r_l_;
+  std::optional<bool> persistence_enabled_;
+  std::optional<int64_t> cache_size_bytes_;
+  std::optional<bool> logging_enabled_;
+  std::optional<std::string> emulator_host_;
+  std::optional<int64_t> emulator_port_;
 };
 
 
 // Generated class from Pigeon that represents data sent in messages.
-class TraceAttributes {
+class DatabaseReference {
  public:
-  // Constructs an object setting all non-nullable fields.
-  TraceAttributes();
-
   // Constructs an object setting all fields.
-  explicit TraceAttributes(
-    const flutter::EncodableMap* metrics,
-    const flutter::EncodableMap* attributes);
+  explicit DatabaseReference(const std::string& path);
 
-  const flutter::EncodableMap* metrics() const;
-  void set_metrics(const flutter::EncodableMap* value_arg);
-  void set_metrics(const flutter::EncodableMap& value_arg);
-
-  const flutter::EncodableMap* attributes() const;
-  void set_attributes(const flutter::EncodableMap* value_arg);
-  void set_attributes(const flutter::EncodableMap& value_arg);
+  const std::string& path() const;
+  void set_path(std::string_view value_arg);
 
  private:
-  static TraceAttributes FromEncodableList(const flutter::EncodableList& list);
+  static DatabaseReference FromEncodableList(const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
   friend class FirebaseDatabaseHostApi;
   friend class PigeonInternalCodecSerializer;
-  std::optional<flutter::EncodableMap> metrics_;
-  std::optional<flutter::EncodableMap> attributes_;
+  std::string path_;
 };
 
 
@@ -182,6 +146,7 @@ class TransactionHandler {
  private:
   static TransactionHandler FromEncodableList(const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
+  friend class TransactionOptions;
   friend class FirebaseDatabaseHostApi;
   friend class PigeonInternalCodecSerializer;
   int64_t transaction_key_;
@@ -193,8 +158,13 @@ class EventObserver {
  public:
   // Constructs an object setting all fields.
   explicit EventObserver(
+    const std::string& path,
     const std::string& event_type,
-    const std::string& event_channel_name_prefix);
+    const std::string& event_channel_name_prefix,
+    const flutter::EncodableList& modifiers);
+
+  const std::string& path() const;
+  void set_path(std::string_view value_arg);
 
   const std::string& event_type() const;
   void set_event_type(std::string_view value_arg);
@@ -202,13 +172,18 @@ class EventObserver {
   const std::string& event_channel_name_prefix() const;
   void set_event_channel_name_prefix(std::string_view value_arg);
 
+  const flutter::EncodableList& modifiers() const;
+  void set_modifiers(const flutter::EncodableList& value_arg);
+
  private:
   static EventObserver FromEncodableList(const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
   friend class FirebaseDatabaseHostApi;
   friend class PigeonInternalCodecSerializer;
+  std::string path_;
   std::string event_type_;
   std::string event_channel_name_prefix_;
+  flutter::EncodableList modifiers_;
 };
 
 
@@ -216,12 +191,22 @@ class EventObserver {
 class GetOptions {
  public:
   // Constructs an object setting all non-nullable fields.
-  GetOptions();
+  explicit GetOptions(
+    const std::string& path,
+    const flutter::EncodableList& modifiers);
 
   // Constructs an object setting all fields.
   explicit GetOptions(
+    const std::string& path,
+    const flutter::EncodableList& modifiers,
     const std::string* source,
     const std::string* server_timestamp_behavior);
+
+  const std::string& path() const;
+  void set_path(std::string_view value_arg);
+
+  const flutter::EncodableList& modifiers() const;
+  void set_modifiers(const flutter::EncodableList& value_arg);
 
   const std::string* source() const;
   void set_source(const std::string_view* value_arg);
@@ -236,61 +221,225 @@ class GetOptions {
   flutter::EncodableList ToEncodableList() const;
   friend class FirebaseDatabaseHostApi;
   friend class PigeonInternalCodecSerializer;
+  std::string path_;
+  flutter::EncodableList modifiers_;
   std::optional<std::string> source_;
   std::optional<std::string> server_timestamp_behavior_;
 };
 
 
 // Generated class from Pigeon that represents data sent in messages.
-class QueryModifiers {
+class KeepSyncedOptions {
  public:
-  // Constructs an object setting all non-nullable fields.
-  QueryModifiers();
-
   // Constructs an object setting all fields.
-  explicit QueryModifiers(
-    const std::string* order_by,
-    const int64_t* limit_to_first,
-    const int64_t* limit_to_last,
-    const flutter::EncodableValue* start_at,
-    const flutter::EncodableValue* end_at,
-    const flutter::EncodableValue* equal_to);
+  explicit KeepSyncedOptions(
+    const std::string& path,
+    const flutter::EncodableList& modifiers,
+    bool value);
 
-  const std::string* order_by() const;
-  void set_order_by(const std::string_view* value_arg);
-  void set_order_by(std::string_view value_arg);
+  const std::string& path() const;
+  void set_path(std::string_view value_arg);
 
-  const int64_t* limit_to_first() const;
-  void set_limit_to_first(const int64_t* value_arg);
-  void set_limit_to_first(int64_t value_arg);
+  const flutter::EncodableList& modifiers() const;
+  void set_modifiers(const flutter::EncodableList& value_arg);
 
-  const int64_t* limit_to_last() const;
-  void set_limit_to_last(const int64_t* value_arg);
-  void set_limit_to_last(int64_t value_arg);
-
-  const flutter::EncodableValue* start_at() const;
-  void set_start_at(const flutter::EncodableValue* value_arg);
-  void set_start_at(const flutter::EncodableValue& value_arg);
-
-  const flutter::EncodableValue* end_at() const;
-  void set_end_at(const flutter::EncodableValue* value_arg);
-  void set_end_at(const flutter::EncodableValue& value_arg);
-
-  const flutter::EncodableValue* equal_to() const;
-  void set_equal_to(const flutter::EncodableValue* value_arg);
-  void set_equal_to(const flutter::EncodableValue& value_arg);
+  bool value() const;
+  void set_value(bool value_arg);
 
  private:
-  static QueryModifiers FromEncodableList(const flutter::EncodableList& list);
+  static KeepSyncedOptions FromEncodableList(const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
   friend class FirebaseDatabaseHostApi;
   friend class PigeonInternalCodecSerializer;
-  std::optional<std::string> order_by_;
-  std::optional<int64_t> limit_to_first_;
-  std::optional<int64_t> limit_to_last_;
-  std::optional<flutter::EncodableValue> start_at_;
-  std::optional<flutter::EncodableValue> end_at_;
-  std::optional<flutter::EncodableValue> equal_to_;
+  std::string path_;
+  flutter::EncodableList modifiers_;
+  bool value_;
+};
+
+
+// Generated class from Pigeon that represents data sent in messages.
+class OnDisconnectOptions {
+ public:
+  // Constructs an object setting all non-nullable fields.
+  explicit OnDisconnectOptions(const std::string& path);
+
+  // Constructs an object setting all fields.
+  explicit OnDisconnectOptions(
+    const std::string& path,
+    const flutter::EncodableValue* value,
+    const flutter::EncodableValue* priority);
+
+  const std::string& path() const;
+  void set_path(std::string_view value_arg);
+
+  const flutter::EncodableValue* value() const;
+  void set_value(const flutter::EncodableValue* value_arg);
+  void set_value(const flutter::EncodableValue& value_arg);
+
+  const flutter::EncodableValue* priority() const;
+  void set_priority(const flutter::EncodableValue* value_arg);
+  void set_priority(const flutter::EncodableValue& value_arg);
+
+ private:
+  static OnDisconnectOptions FromEncodableList(const flutter::EncodableList& list);
+  flutter::EncodableList ToEncodableList() const;
+  friend class FirebaseDatabaseHostApi;
+  friend class PigeonInternalCodecSerializer;
+  std::string path_;
+  std::optional<flutter::EncodableValue> value_;
+  std::optional<flutter::EncodableValue> priority_;
+};
+
+
+// Generated class from Pigeon that represents data sent in messages.
+class SetOptions {
+ public:
+  // Constructs an object setting all non-nullable fields.
+  explicit SetOptions(const std::string& path);
+
+  // Constructs an object setting all fields.
+  explicit SetOptions(
+    const std::string& path,
+    const flutter::EncodableValue* value,
+    const flutter::EncodableValue* priority);
+
+  const std::string& path() const;
+  void set_path(std::string_view value_arg);
+
+  const flutter::EncodableValue* value() const;
+  void set_value(const flutter::EncodableValue* value_arg);
+  void set_value(const flutter::EncodableValue& value_arg);
+
+  const flutter::EncodableValue* priority() const;
+  void set_priority(const flutter::EncodableValue* value_arg);
+  void set_priority(const flutter::EncodableValue& value_arg);
+
+ private:
+  static SetOptions FromEncodableList(const flutter::EncodableList& list);
+  flutter::EncodableList ToEncodableList() const;
+  friend class FirebaseDatabaseHostApi;
+  friend class PigeonInternalCodecSerializer;
+  std::string path_;
+  std::optional<flutter::EncodableValue> value_;
+  std::optional<flutter::EncodableValue> priority_;
+};
+
+
+// Generated class from Pigeon that represents data sent in messages.
+class UpdateOptions {
+ public:
+  // Constructs an object setting all fields.
+  explicit UpdateOptions(
+    const std::string& path,
+    const flutter::EncodableMap& value);
+
+  const std::string& path() const;
+  void set_path(std::string_view value_arg);
+
+  const flutter::EncodableMap& value() const;
+  void set_value(const flutter::EncodableMap& value_arg);
+
+ private:
+  static UpdateOptions FromEncodableList(const flutter::EncodableList& list);
+  flutter::EncodableList ToEncodableList() const;
+  friend class FirebaseDatabaseHostApi;
+  friend class PigeonInternalCodecSerializer;
+  std::string path_;
+  flutter::EncodableMap value_;
+};
+
+
+// Generated class from Pigeon that represents data sent in messages.
+class SetPriorityOptions {
+ public:
+  // Constructs an object setting all fields.
+  explicit SetPriorityOptions(
+    const std::string& path,
+    const flutter::EncodableValue& priority);
+
+  const std::string& path() const;
+  void set_path(std::string_view value_arg);
+
+  const flutter::EncodableValue& priority() const;
+  void set_priority(const flutter::EncodableValue& value_arg);
+
+ private:
+  static SetPriorityOptions FromEncodableList(const flutter::EncodableList& list);
+  flutter::EncodableList ToEncodableList() const;
+  friend class FirebaseDatabaseHostApi;
+  friend class PigeonInternalCodecSerializer;
+  std::string path_;
+  flutter::EncodableValue priority_;
+};
+
+
+// Generated class from Pigeon that represents data sent in messages.
+class RemoveOptions {
+ public:
+  // Constructs an object setting all fields.
+  explicit RemoveOptions(const std::string& path);
+
+  const std::string& path() const;
+  void set_path(std::string_view value_arg);
+
+ private:
+  static RemoveOptions FromEncodableList(const flutter::EncodableList& list);
+  flutter::EncodableList ToEncodableList() const;
+  friend class FirebaseDatabaseHostApi;
+  friend class PigeonInternalCodecSerializer;
+  std::string path_;
+};
+
+
+// Generated class from Pigeon that represents data sent in messages.
+class TransactionOptions {
+ public:
+  // Constructs an object setting all fields.
+  explicit TransactionOptions(
+    const std::string& path,
+    const TransactionHandler& transaction_handler,
+    bool apply_locally);
+
+  ~TransactionOptions() = default;
+  TransactionOptions(const TransactionOptions& other);
+  TransactionOptions& operator=(const TransactionOptions& other);
+  TransactionOptions(TransactionOptions&& other) = default;
+  TransactionOptions& operator=(TransactionOptions&& other) noexcept = default;
+  const std::string& path() const;
+  void set_path(std::string_view value_arg);
+
+  const TransactionHandler& transaction_handler() const;
+  void set_transaction_handler(const TransactionHandler& value_arg);
+
+  bool apply_locally() const;
+  void set_apply_locally(bool value_arg);
+
+ private:
+  static TransactionOptions FromEncodableList(const flutter::EncodableList& list);
+  flutter::EncodableList ToEncodableList() const;
+  friend class FirebaseDatabaseHostApi;
+  friend class PigeonInternalCodecSerializer;
+  std::string path_;
+  std::unique_ptr<TransactionHandler> transaction_handler_;
+  bool apply_locally_;
+};
+
+
+// Generated class from Pigeon that represents data sent in messages.
+class DataSnapshot {
+ public:
+  // Constructs an object setting all fields.
+  explicit DataSnapshot(const flutter::EncodableMap& snapshot);
+
+  const flutter::EncodableMap& snapshot() const;
+  void set_snapshot(const flutter::EncodableMap& value_arg);
+
+ private:
+  static DataSnapshot FromEncodableList(const flutter::EncodableList& list);
+  flutter::EncodableList ToEncodableList() const;
+  friend class FirebaseDatabaseHostApi;
+  friend class PigeonInternalCodecSerializer;
+  flutter::EncodableMap snapshot_;
 };
 
 
@@ -318,36 +467,58 @@ class FirebaseDatabaseHostApi {
   FirebaseDatabaseHostApi& operator=(const FirebaseDatabaseHostApi&) = delete;
   virtual ~FirebaseDatabaseHostApi() {}
   virtual void Set(
-    const flutter::EncodableValue* value,
+    const SetOptions& options,
     std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void SetWithPriority(
-    const flutter::EncodableValue* value,
-    const flutter::EncodableValue* priority,
+    const SetOptions& options,
     std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void Update(
-    const flutter::EncodableMap& value,
+    const UpdateOptions& options,
     std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void SetPriority(
-    const flutter::EncodableValue* priority,
+    const SetPriorityOptions& options,
     std::function<void(std::optional<FlutterError> reply)> result) = 0;
-  virtual void Remove(std::function<void(std::optional<FlutterError> reply)> result) = 0;
+  virtual void Remove(
+    const RemoveOptions& options,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void RunTransaction(
-    const TransactionHandler& transaction_handler,
-    bool apply_locally,
+    const TransactionOptions& options,
     std::function<void(std::optional<FlutterError> reply)> result) = 0;
-  virtual void GoOnline(std::function<void(std::optional<FlutterError> reply)> result) = 0;
-  virtual void GoOffline(std::function<void(std::optional<FlutterError> reply)> result) = 0;
-  virtual void PurgeOutstandingWrites(std::function<void(std::optional<FlutterError> reply)> result) = 0;
-  virtual void Cancel(std::function<void(std::optional<FlutterError> reply)> result) = 0;
+  virtual void GoOnline(
+    const FirebaseApp& app,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+  virtual void GoOffline(
+    const FirebaseApp& app,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+  virtual void PurgeOutstandingWrites(
+    const FirebaseApp& app,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+  virtual void Cancel(
+    const FirebaseApp& app,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void Observe(
     const EventObserver& observer,
-    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    std::function<void(ErrorOr<std::string> reply)> result) = 0;
   virtual void Get(
     const GetOptions& options,
-    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    std::function<void(ErrorOr<DataSnapshot> reply)> result) = 0;
   virtual void KeepSynced(
-    const QueryModifiers& modifiers,
-    bool value,
+    const KeepSyncedOptions& options,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+  virtual void OnDisconnectSet(
+    const OnDisconnectOptions& options,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+  virtual void OnDisconnectSetWithPriority(
+    const OnDisconnectOptions& options,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+  virtual void OnDisconnectUpdate(
+    const UpdateOptions& options,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+  virtual void OnDisconnectRemove(
+    const RemoveOptions& options,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+  virtual void OnDisconnectCancel(
+    const DatabaseReference& reference,
     std::function<void(std::optional<FlutterError> reply)> result) = 0;
 
   // The codec used by FirebaseDatabaseHostApi.
