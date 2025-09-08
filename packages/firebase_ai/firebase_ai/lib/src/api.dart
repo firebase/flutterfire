@@ -1412,12 +1412,12 @@ GroundingMetadata parseGroundingMetadata(Object? jsonObject) {
 
   final searchEntryPoint = switch (jsonObject) {
     {'searchEntryPoint': final Object? searchEntryPoint} =>
-      parseSearchEntryPoint(searchEntryPoint),
+      _parseSearchEntryPoint(searchEntryPoint),
     _ => null,
   };
   final groundingChunks = switch (jsonObject) {
         {'groundingChunks': final List<Object?> groundingChunks} =>
-          groundingChunks.map(parseGroundingChunk).toList(),
+          groundingChunks.map(_parseGroundingChunk).toList(),
         _ => null,
       } ??
       [];
@@ -1426,7 +1426,7 @@ GroundingMetadata parseGroundingMetadata(Object? jsonObject) {
   final groundingSupport = switch (jsonObject) {
         {'groundingSupport': final List<Object?> groundingSupport} =>
           groundingSupport
-              .map(parseGroundingSupport)
+              .map(_parseGroundingSupport)
               .whereType<GroundingSupport>()
               .toList(),
         _ => null,
@@ -1446,7 +1446,7 @@ GroundingMetadata parseGroundingMetadata(Object? jsonObject) {
       webSearchQueries: webSearchQueries);
 }
 
-Segment parseSegment(Object? jsonObject) {
+Segment _parseSegment(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('Segment', jsonObject);
   }
@@ -1458,7 +1458,7 @@ Segment parseSegment(Object? jsonObject) {
       text: (jsonObject['text'] as String?) ?? '');
 }
 
-WebGroundingChunk parseWebGroundingChunk(Object? jsonObject) {
+WebGroundingChunk _parseWebGroundingChunk(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('WebGroundingChunk', jsonObject);
   }
@@ -1470,25 +1470,25 @@ WebGroundingChunk parseWebGroundingChunk(Object? jsonObject) {
   );
 }
 
-GroundingChunk parseGroundingChunk(Object? jsonObject) {
+GroundingChunk _parseGroundingChunk(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('GroundingChunk', jsonObject);
   }
 
   return GroundingChunk(
     web: jsonObject['web'] != null
-        ? parseWebGroundingChunk(jsonObject['web'])
+        ? _parseWebGroundingChunk(jsonObject['web'])
         : null,
   );
 }
 
-GroundingSupport? parseGroundingSupport(Object? jsonObject) {
+GroundingSupport? _parseGroundingSupport(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('GroundingSupport', jsonObject);
   }
 
   final segment = switch (jsonObject) {
-    {'segment': final Object? segment} => parseSegment(segment),
+    {'segment': final Object? segment} => _parseSegment(segment),
     _ => null,
   };
   if (segment == null) {
@@ -1501,7 +1501,7 @@ GroundingSupport? parseGroundingSupport(Object? jsonObject) {
           (jsonObject['groundingChunkIndices'] as List<int>?) ?? []);
 }
 
-SearchEntryPoint parseSearchEntryPoint(Object? jsonObject) {
+SearchEntryPoint _parseSearchEntryPoint(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('SearchEntryPoint', jsonObject);
   }
