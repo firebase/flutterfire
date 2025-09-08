@@ -178,6 +178,7 @@ Candidate _parseCandidate(Object? jsonObject) {
   );
 }
 
+// Developer API and Vertex AI has different _parseSafetyRating logic.
 PromptFeedback _parsePromptFeedback(Object jsonObject) {
   return switch (jsonObject) {
     {

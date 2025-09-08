@@ -1170,7 +1170,7 @@ final class VertexSerialization implements SerializationStrategy {
     };
     final promptFeedback = switch (jsonObject) {
       {'promptFeedback': final promptFeedback?} =>
-        parsePromptFeedback(promptFeedback),
+        _parsePromptFeedback(promptFeedback),
       _ => null,
     };
     final usageMedata = switch (jsonObject) {
@@ -1201,7 +1201,7 @@ final class VertexSerialization implements SerializationStrategy {
     };
     final promptTokensDetails = switch (jsonObject) {
       {'promptTokensDetails': final List<Object?> promptTokensDetails} =>
-        promptTokensDetails.map(parseModalityTokenCount).toList(),
+        promptTokensDetails.map(_parseModalityTokenCount).toList(),
       _ => null,
     };
 
@@ -1284,7 +1284,7 @@ Candidate parseCandidate(Object? jsonObject) {
       });
 }
 
-PromptFeedback parsePromptFeedback(Object jsonObject) {
+PromptFeedback _parsePromptFeedback(Object jsonObject) {
   return switch (jsonObject) {
     {
       'safetyRatings': final List<Object?> safetyRatings,
@@ -1331,12 +1331,12 @@ UsageMetadata parseUsageMetadata(Object jsonObject) {
   };
   final promptTokensDetails = switch (jsonObject) {
     {'promptTokensDetails': final List<Object?> promptTokensDetails} =>
-      promptTokensDetails.map(parseModalityTokenCount).toList(),
+      promptTokensDetails.map(_parseModalityTokenCount).toList(),
     _ => null,
   };
   final candidatesTokensDetails = switch (jsonObject) {
     {'candidatesTokensDetails': final List<Object?> candidatesTokensDetails} =>
-      candidatesTokensDetails.map(parseModalityTokenCount).toList(),
+      candidatesTokensDetails.map(_parseModalityTokenCount).toList(),
     _ => null,
   };
   return UsageMetadata._(
@@ -1349,7 +1349,7 @@ UsageMetadata parseUsageMetadata(Object jsonObject) {
   );
 }
 
-ModalityTokenCount parseModalityTokenCount(Object? jsonObject) {
+ModalityTokenCount _parseModalityTokenCount(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('ModalityTokenCount', jsonObject);
   }
