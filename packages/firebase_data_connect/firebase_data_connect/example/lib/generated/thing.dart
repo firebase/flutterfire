@@ -1,32 +1,38 @@
 part of 'movies.dart';
 
 class ThingVariablesBuilder {
-  Optional<AnyValue> _title = Optional.optional(AnyValue.fromJson, defaultSerializer);
+  Optional<AnyValue> _title =
+      Optional.optional(AnyValue.fromJson, defaultSerializer);
 
   final FirebaseDataConnect _dataConnect;
   ThingVariablesBuilder title(AnyValue t) {
-   _title.value = t;
-   return this;
+    _title.value = t;
+    return this;
   }
 
-  ThingVariablesBuilder(this._dataConnect, );
-  Deserializer<ThingData> dataDeserializer = (dynamic json)  => ThingData.fromJson(jsonDecode(json));
-  Serializer<ThingVariables> varsSerializer = (ThingVariables vars) => jsonEncode(vars.toJson());
+  ThingVariablesBuilder(
+    this._dataConnect,
+  );
+  Deserializer<ThingData> dataDeserializer =
+      (dynamic json) => ThingData.fromJson(jsonDecode(json));
+  Serializer<ThingVariables> varsSerializer =
+      (ThingVariables vars) => jsonEncode(vars.toJson());
   Future<OperationResult<ThingData, ThingVariables>> execute() {
     return ref().execute();
   }
 
   MutationRef<ThingData, ThingVariables> ref() {
-    ThingVariables vars= ThingVariables(title: _title,);
-    return _dataConnect.mutation("thing", dataDeserializer, varsSerializer, vars);
+    ThingVariables vars = ThingVariables(
+      title: _title,
+    );
+    return _dataConnect.mutation(
+        "thing", dataDeserializer, varsSerializer, vars);
   }
 }
 
 class ThingAbc {
   String id;
-  ThingAbc.fromJson(dynamic json):
-  
-  id = nativeFromJson<String>(json['id']);
+  ThingAbc.fromJson(dynamic json) : id = nativeFromJson<String>(json['id']);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -41,9 +47,7 @@ class ThingAbc {
 
 class ThingDef {
   String id;
-  ThingDef.fromJson(dynamic json):
-  
-  id = nativeFromJson<String>(json['id']);
+  ThingDef.fromJson(dynamic json) : id = nativeFromJson<String>(json['id']);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -59,10 +63,9 @@ class ThingDef {
 class ThingData {
   ThingAbc abc;
   ThingDef def;
-  ThingData.fromJson(dynamic json):
-  
-  abc = ThingAbc.fromJson(json['abc']),
-  def = ThingDef.fromJson(json['def']);
+  ThingData.fromJson(dynamic json)
+      : abc = ThingAbc.fromJson(json['abc']),
+        def = ThingDef.fromJson(json['def']);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -78,19 +81,18 @@ class ThingData {
 }
 
 class ThingVariables {
-  late Optional<AnyValue>title;
-  @Deprecated('fromJson is deprecated for Variable classes as they are no longer required for deserialization.')
+  late Optional<AnyValue> title;
+  @Deprecated(
+      'fromJson is deprecated for Variable classes as they are no longer required for deserialization.')
   ThingVariables.fromJson(Map<String, dynamic> json) {
-  
-  
     title = Optional.optional(AnyValue.fromJson, defaultSerializer);
-    title.value = json['title'] == null ? null : AnyValue.fromJson(json['title']);
-  
+    title.value =
+        json['title'] == null ? null : AnyValue.fromJson(json['title']);
   }
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
-    if(title.state == OptionalState.set) {
+    if (title.state == OptionalState.set) {
       json['title'] = title.toJson();
     }
     return json;
@@ -100,4 +102,3 @@ class ThingVariables {
     required this.title,
   });
 }
-
