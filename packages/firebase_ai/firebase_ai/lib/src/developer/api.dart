@@ -29,8 +29,7 @@ import '../api.dart'
         SerializationStrategy,
         parseUsageMetadata,
         parseCitationMetadata,
-        parseGroundingMetadata,
-        parseCandidate;
+        parseGroundingMetadata;
 import '../content.dart' show Content, parseContent;
 import '../error.dart';
 import '../tool.dart' show Tool, ToolConfig;
@@ -142,6 +141,7 @@ final class DeveloperSerialization implements SerializationStrategy {
       };
 }
 
+// Developer API and Vertex AI has different _parseSafetyRating logic.
 Candidate _parseCandidate(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('Candidate', jsonObject);

@@ -1165,7 +1165,7 @@ final class VertexSerialization implements SerializationStrategy {
     if (jsonObject case {'error': final Object error}) throw parseError(error);
     final candidates = switch (jsonObject) {
       {'candidates': final List<Object?> candidates} =>
-        candidates.map(parseCandidate).toList(),
+        candidates.map(_parseCandidate).toList(),
       _ => <Candidate>[]
     };
     final promptFeedback = switch (jsonObject) {
@@ -1249,7 +1249,7 @@ final class VertexSerialization implements SerializationStrategy {
       {'contents': contents.map((c) => c.toJson()).toList()};
 }
 
-Candidate parseCandidate(Object? jsonObject) {
+Candidate _parseCandidate(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('Candidate', jsonObject);
   }
@@ -1382,15 +1382,15 @@ SafetyRating _parseSafetyRating(Object? jsonObject) {
 CitationMetadata parseCitationMetadata(Object? jsonObject) {
   return switch (jsonObject) {
     {'citationSources': final List<Object?> citationSources} =>
-      CitationMetadata(citationSources.map(parseCitationSource).toList()),
+      CitationMetadata(citationSources.map(_parseCitationSource).toList()),
     // Vertex SDK format uses `citations`
     {'citations': final List<Object?> citationSources} =>
-      CitationMetadata(citationSources.map(parseCitationSource).toList()),
+      CitationMetadata(citationSources.map(_parseCitationSource).toList()),
     _ => throw unhandledFormat('CitationMetadata', jsonObject),
   };
 }
 
-Citation parseCitationSource(Object? jsonObject) {
+Citation _parseCitationSource(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('CitationSource', jsonObject);
   }
