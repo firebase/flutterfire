@@ -115,9 +115,9 @@ class RestTransport implements DataConnectTransport {
         body: json.encode(body),
         headers: headers,
       );
+      Map<String, dynamic> bodyJson =
+          jsonDecode(r.body) as Map<String, dynamic>;
       if (r.statusCode != 200) {
-        Map<String, dynamic> bodyJson =
-            jsonDecode(r.body) as Map<String, dynamic>;
         String message =
             bodyJson.containsKey('message') ? bodyJson['message']! : r.body;
         throw DataConnectError(
@@ -127,8 +127,6 @@ class RestTransport implements DataConnectTransport {
           "Received a status code of ${r.statusCode} with a message '$message'",
         );
       }
-      Map<String, dynamic> bodyJson =
-          jsonDecode(r.body) as Map<String, dynamic>;
 
       if (bodyJson.containsKey('errors') &&
           (bodyJson['errors'] as List).isNotEmpty) {
@@ -141,20 +139,20 @@ class RestTransport implements DataConnectTransport {
             // nothing required
           }
         }
-        List<dynamic> errors =
-            jsonDecode(jsonEncode(bodyJson['errors'])) as List<dynamic>;
-        List<DataConnectOperationFailureResponseErrorInfo> suberrors = errors
-            .map((e) {
-              return jsonDecode(jsonEncode(e)) as Map<String, dynamic>;
-            })
-            .map((e) => DataConnectOperationFailureResponseErrorInfo(
-                (e['path'] as List)
-                    .map((val) => val.runtimeType == String
-                        ? DataConnectFieldPathSegment(val)
-                        : DataConnectListIndexPathSegment(val))
-                    .toList(),
-                e['message']))
-            .toList();
+
+        List<DataConnectOperationFailureResponseErrorInfo> suberrors =
+            handleErrors(bodyJson['errors'])
+                .map<DataConnectOperationFailureResponseErrorInfo>((e) =>
+                    DataConnectOperationFailureResponseErrorInfo(
+                        e.path != null
+                            ? e.path!
+                                .map((val) => val is String
+                                    ? DataConnectFieldPathSegment(val)
+                                    : DataConnectListIndexPathSegment(val))
+                                .toList()
+                            : [].cast<DataConnectPathSegment>(),
+                        e.message))
+                .toList();
         final response =
             DataConnectOperationFailureResponse(suberrors, data, decodedData);
         throw DataConnectOperationError(DataConnectErrorCode.other,
@@ -174,6 +172,12 @@ class RestTransport implements DataConnectTransport {
         'Failed to invoke operation: $e',
       );
     }
+  }
+
+  List<JsonGraphqlResponseError> handleErrors(List<dynamic> errors) {
+    return errors
+        .map((eMap) => JsonGraphqlResponseError(eMap['message'], eMap['path']))
+        .toList();
   }
 
   /// Invokes query REST endpoint.
@@ -224,3 +228,9 @@ DataConnectTransport getTransport(
   FirebaseAppCheck? appCheck,
 ) =>
     RestTransport(transportOptions, options, appId, sdkType, appCheck);
+
+class JsonGraphqlResponseError {
+  String message;
+  List<dynamic>? path;
+  JsonGraphqlResponseError(this.message, this.path);
+}

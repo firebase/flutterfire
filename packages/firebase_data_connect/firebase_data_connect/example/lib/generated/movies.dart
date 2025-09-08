@@ -1,17 +1,6 @@
 library movies;
-
 import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'dart:convert';
-
-part 'list_movies.dart';
-
-part 'list_movies_by_partial_title.dart';
-
-part 'list_persons.dart';
-
-part 'list_thing.dart';
-
-part 'list_timestamps.dart';
 
 part 'add_person.dart';
 
@@ -31,111 +20,101 @@ part 'thing.dart';
 
 part 'seed_data.dart';
 
+part 'list_movies.dart';
+
+part 'get_movie.dart';
+
+part 'list_movies_by_partial_title.dart';
+
+part 'list_persons.dart';
+
+part 'list_thing.dart';
+
+part 'list_timestamps.dart';
+
+
+
+
+
+
+
 class MoviesConnector {
-  ListMoviesVariablesBuilder listMovies() {
-    return ListMoviesVariablesBuilder(
-      dataConnect,
-    );
+  
+  
+  AddPersonVariablesBuilder addPerson () {
+    return AddPersonVariablesBuilder(dataConnect, );
   }
-
-  ListMoviesByPartialTitleVariablesBuilder listMoviesByPartialTitle({
-    required String input,
-  }) {
-    return ListMoviesByPartialTitleVariablesBuilder(
-      dataConnect,
-      input: input,
-    );
+  
+  
+  AddDirectorToMovieVariablesBuilder addDirectorToMovie () {
+    return AddDirectorToMovieVariablesBuilder(dataConnect, );
   }
-
-  ListPersonsVariablesBuilder listPersons() {
-    return ListPersonsVariablesBuilder(
-      dataConnect,
-    );
+  
+  
+  AddTimestampVariablesBuilder addTimestamp ({required Timestamp timestamp, }) {
+    return AddTimestampVariablesBuilder(dataConnect, timestamp: timestamp,);
   }
-
-  ListThingVariablesBuilder listThing() {
-    return ListThingVariablesBuilder(
-      dataConnect,
-    );
+  
+  
+  AddDateAndTimestampVariablesBuilder addDateAndTimestamp ({required DateTime date, required Timestamp timestamp, }) {
+    return AddDateAndTimestampVariablesBuilder(dataConnect, date: date,timestamp: timestamp,);
   }
-
-  ListTimestampsVariablesBuilder listTimestamps() {
-    return ListTimestampsVariablesBuilder(
-      dataConnect,
-    );
+  
+  
+  SeedMoviesVariablesBuilder seedMovies () {
+    return SeedMoviesVariablesBuilder(dataConnect, );
   }
-
-  AddPersonVariablesBuilder addPerson() {
-    return AddPersonVariablesBuilder(
-      dataConnect,
-    );
+  
+  
+  CreateMovieVariablesBuilder createMovie ({required String title, required int releaseYear, required String genre, }) {
+    return CreateMovieVariablesBuilder(dataConnect, title: title,releaseYear: releaseYear,genre: genre,);
   }
-
-  AddDirectorToMovieVariablesBuilder addDirectorToMovie() {
-    return AddDirectorToMovieVariablesBuilder(
-      dataConnect,
-    );
+  
+  
+  DeleteMovieVariablesBuilder deleteMovie ({required String id, }) {
+    return DeleteMovieVariablesBuilder(dataConnect, id: id,);
   }
-
-  AddTimestampVariablesBuilder addTimestamp({
-    required Timestamp timestamp,
-  }) {
-    return AddTimestampVariablesBuilder(
-      dataConnect,
-      timestamp: timestamp,
-    );
+  
+  
+  ThingVariablesBuilder thing () {
+    return ThingVariablesBuilder(dataConnect, );
   }
-
-  AddDateAndTimestampVariablesBuilder addDateAndTimestamp({
-    required DateTime date,
-    required Timestamp timestamp,
-  }) {
-    return AddDateAndTimestampVariablesBuilder(
-      dataConnect,
-      date: date,
-      timestamp: timestamp,
-    );
+  
+  
+  SeedDataVariablesBuilder seedData () {
+    return SeedDataVariablesBuilder(dataConnect, );
   }
-
-  SeedMoviesVariablesBuilder seedMovies() {
-    return SeedMoviesVariablesBuilder(
-      dataConnect,
-    );
+  
+  
+  ListMoviesVariablesBuilder listMovies () {
+    return ListMoviesVariablesBuilder(dataConnect, );
   }
-
-  CreateMovieVariablesBuilder createMovie({
-    required String title,
-    required int releaseYear,
-    required String genre,
-  }) {
-    return CreateMovieVariablesBuilder(
-      dataConnect,
-      title: title,
-      releaseYear: releaseYear,
-      genre: genre,
-    );
+  
+  
+  GetMovieVariablesBuilder getMovie ({required GetMovieVariablesKey key, }) {
+    return GetMovieVariablesBuilder(dataConnect, key: key,);
   }
-
-  DeleteMovieVariablesBuilder deleteMovie({
-    required String id,
-  }) {
-    return DeleteMovieVariablesBuilder(
-      dataConnect,
-      id: id,
-    );
+  
+  
+  ListMoviesByPartialTitleVariablesBuilder listMoviesByPartialTitle ({required String input, }) {
+    return ListMoviesByPartialTitleVariablesBuilder(dataConnect, input: input,);
   }
-
-  ThingVariablesBuilder thing() {
-    return ThingVariablesBuilder(
-      dataConnect,
-    );
+  
+  
+  ListPersonsVariablesBuilder listPersons () {
+    return ListPersonsVariablesBuilder(dataConnect, );
   }
-
-  SeedDataVariablesBuilder seedData() {
-    return SeedDataVariablesBuilder(
-      dataConnect,
-    );
+  
+  
+  ListThingVariablesBuilder listThing () {
+    return ListThingVariablesBuilder(dataConnect, );
   }
+  
+  
+  ListTimestampsVariablesBuilder listTimestamps () {
+    return ListTimestampsVariablesBuilder(dataConnect, );
+  }
+  
 
   static ConnectorConfig connectorConfig = ConnectorConfig(
     'us-west2',
@@ -153,3 +132,4 @@ class MoviesConnector {
 
   FirebaseDataConnect dataConnect;
 }
+

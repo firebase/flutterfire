@@ -5,34 +5,28 @@ class AddPersonVariablesBuilder {
 
   final FirebaseDataConnect _dataConnect;
   AddPersonVariablesBuilder name(String? t) {
-    _name.value = t;
-    return this;
+   _name.value = t;
+   return this;
   }
 
-  AddPersonVariablesBuilder(
-    this._dataConnect,
-  );
-  Deserializer<AddPersonData> dataDeserializer =
-      (dynamic json) => AddPersonData.fromJson(jsonDecode(json));
-  Serializer<AddPersonVariables> varsSerializer =
-      (AddPersonVariables vars) => jsonEncode(vars.toJson());
+  AddPersonVariablesBuilder(this._dataConnect, );
+  Deserializer<AddPersonData> dataDeserializer = (dynamic json)  => AddPersonData.fromJson(jsonDecode(json));
+  Serializer<AddPersonVariables> varsSerializer = (AddPersonVariables vars) => jsonEncode(vars.toJson());
   Future<OperationResult<AddPersonData, AddPersonVariables>> execute() {
     return ref().execute();
   }
 
   MutationRef<AddPersonData, AddPersonVariables> ref() {
-    AddPersonVariables vars = AddPersonVariables(
-      name: _name,
-    );
-    return _dataConnect.mutation(
-        "addPerson", dataDeserializer, varsSerializer, vars);
+    AddPersonVariables vars= AddPersonVariables(name: _name,);
+    return _dataConnect.mutation("addPerson", dataDeserializer, varsSerializer, vars);
   }
 }
 
 class AddPersonPersonInsert {
   String id;
-  AddPersonPersonInsert.fromJson(dynamic json)
-      : id = nativeFromJson<String>(json['id']);
+  AddPersonPersonInsert.fromJson(dynamic json):
+  
+  id = nativeFromJson<String>(json['id']);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -47,8 +41,9 @@ class AddPersonPersonInsert {
 
 class AddPersonData {
   AddPersonPersonInsert person_insert;
-  AddPersonData.fromJson(dynamic json)
-      : person_insert = AddPersonPersonInsert.fromJson(json['person_insert']);
+  AddPersonData.fromJson(dynamic json):
+  
+  person_insert = AddPersonPersonInsert.fromJson(json['person_insert']);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -62,18 +57,19 @@ class AddPersonData {
 }
 
 class AddPersonVariables {
-  late Optional<String> name;
-  @Deprecated(
-      'fromJson is deprecated for Variable classes as they are no longer required for deserialization.')
+  late Optional<String>name;
+  @Deprecated('fromJson is deprecated for Variable classes as they are no longer required for deserialization.')
   AddPersonVariables.fromJson(Map<String, dynamic> json) {
+  
+  
     name = Optional.optional(nativeFromJson, nativeToJson);
-    name.value =
-        json['name'] == null ? null : nativeFromJson<String>(json['name']);
+    name.value = json['name'] == null ? null : nativeFromJson<String>(json['name']);
+  
   }
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
-    if (name.state == OptionalState.set) {
+    if(name.state == OptionalState.set) {
       json['name'] = name.toJson();
     }
     return json;
@@ -83,3 +79,4 @@ class AddPersonVariables {
     required this.name,
   });
 }
+

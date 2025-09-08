@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:async';
+
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -121,6 +123,13 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
 
     QueryRef<ListMoviesData, void> ref =
         MoviesConnector.instance.listMovies().ref();
+    // MoviesConnector.instance.createMovie(title: "Test"), releaseYear: releaseYear, genre: genre)
+    MoviesConnector.instance
+        .getMovie(
+            key:
+                GetMovieVariablesKey(id: "febe8380-7927-40fb-b499-a57593849f2"))
+        .execute()
+        .then((r) {});
 
     ref.subscribe().listen((event) {
       setState(() {
