@@ -16,8 +16,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:firebase_data_connect/src/generated/connector_service.pb.dart';
-import 'package:firebase_data_connect/src/generated/graphql_error.pb.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
