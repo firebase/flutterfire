@@ -123,13 +123,6 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
 
     QueryRef<ListMoviesData, void> ref =
         MoviesConnector.instance.listMovies().ref();
-    // MoviesConnector.instance.createMovie(title: "Test"), releaseYear: releaseYear, genre: genre)
-    MoviesConnector.instance
-        .getMovie(
-            key:
-                GetMovieVariablesKey(id: "febe8380-7927-40fb-b499-a57593849f2"))
-        .execute()
-        .then((r) {});
 
     ref.subscribe().listen((event) {
       setState(() {
