@@ -1379,6 +1379,10 @@ SafetyRating _parseSafetyRating(Object? jsonObject) {
       severityScore: jsonObject['severityScore'] as double?);
 }
 
+/// Parses a [CitationMetadata] from a JSON object.
+///
+/// This function is used internally to convert citation metadata from the API
+/// response.
 CitationMetadata parseCitationMetadata(Object? jsonObject) {
   return switch (jsonObject) {
     {'citationSources': final List<Object?> citationSources} =>
@@ -1405,6 +1409,10 @@ Citation _parseCitationSource(Object? jsonObject) {
   );
 }
 
+/// Parses a [GroundingMetadata] from a JSON object.
+///
+/// This function is used internally to convert grounding metadata from the API
+/// response.
 GroundingMetadata parseGroundingMetadata(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('GroundingMetadata', jsonObject);
