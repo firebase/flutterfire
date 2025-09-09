@@ -72,6 +72,8 @@ final class ImagenModel extends BaseApiClientModel {
         'personGeneration': personFilterLevel.toJson(),
       if (_safetySettings?.safetyFilterLevel case final safetyFilterLevel?)
         'safetySetting': safetyFilterLevel.toJson(),
+      'includeRaiReason': true,
+      'includeSafetyAttributes': true,
     };
 
     return {
@@ -174,6 +176,8 @@ final class ImagenModel extends BaseApiClientModel {
         'personGeneration': personFilterLevel.toJson(),
       if (_safetySettings?.safetyFilterLevel case final safetyFilterLevel?)
         'safetySetting': safetyFilterLevel.toJson(),
+      'includeRaiReason': true,
+      'includeSafetyAttributes': true,
     };
 
     return {
