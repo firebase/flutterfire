@@ -61,7 +61,7 @@ final class ImagenModel extends BaseApiClientModel {
       if (gcsUri != null) 'storageUri': gcsUri,
       'sampleCount': _generationConfig?.numberOfImages ?? 1,
       if (_generationConfig?.aspectRatio case final aspectRatio?)
-        'aspectRatio': aspectRatio,
+        'aspectRatio': aspectRatio.toJson(),
       if (_generationConfig?.negativePrompt case final negativePrompt?)
         'negativePrompt': negativePrompt,
       if (_generationConfig?.addWatermark case final addWatermark?)
