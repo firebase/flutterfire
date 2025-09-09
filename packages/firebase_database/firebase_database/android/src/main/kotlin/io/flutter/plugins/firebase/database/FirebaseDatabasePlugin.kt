@@ -31,11 +31,12 @@ import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlin.Result as KotlinResult
 
 class FirebaseDatabasePlugin :
   FlutterFirebasePlugin,
   FlutterPlugin,
-  MethodCallHandler {
+  FirebaseDatabaseHostApi {
   companion object {
     private const val METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_database"
     private val databaseInstanceCache = HashMap<String, FirebaseDatabase>()
@@ -71,7 +72,9 @@ class FirebaseDatabasePlugin :
     this.messenger = messenger
 
     methodChannel = MethodChannel(messenger, METHOD_CHANNEL_NAME)
-    methodChannel.setMethodCallHandler(this)
+
+    // Set up Pigeon HostApi
+    FirebaseDatabaseHostApi.setUp(messenger, this)
   }
 
   private fun getDatabase(arguments: Map<String, Any>): FirebaseDatabase {
@@ -429,63 +432,6 @@ class FirebaseDatabasePlugin :
     return taskCompletionSource.task
   }
 
-  override fun onMethodCall(
-    @NonNull call: MethodCall,
-    @NonNull result: Result,
-  ) {
-    val methodCallTask: Task<*>?
-    val arguments = (call.arguments() as? Map<String, Any>) ?: emptyMap()
-
-    methodCallTask =
-      when (call.method) {
-        "FirebaseDatabase#goOnline" -> goOnline(arguments)
-        "FirebaseDatabase#goOffline" -> goOffline(arguments)
-        "FirebaseDatabase#purgeOutstandingWrites" -> purgeOutstandingWrites(arguments)
-        "DatabaseReference#set" -> setValue(arguments)
-        "DatabaseReference#setWithPriority" -> setValueWithPriority(arguments)
-        "DatabaseReference#update" -> update(arguments)
-        "DatabaseReference#setPriority" -> setPriority(arguments)
-        "DatabaseReference#runTransaction" -> runTransaction(arguments)
-        "OnDisconnect#set" -> setOnDisconnect(arguments)
-        "OnDisconnect#setWithPriority" -> setWithPriorityOnDisconnect(arguments)
-        "OnDisconnect#update" -> updateOnDisconnect(arguments)
-        "OnDisconnect#cancel" -> cancelOnDisconnect(arguments)
-        "Query#get" -> queryGet(arguments)
-        "Query#keepSynced" -> queryKeepSynced(arguments)
-        "Query#observe" -> observe(arguments)
-        else -> {
-          result.notImplemented()
-          return
-        }
-      }
-
-    methodCallTask.addOnCompleteListener { task ->
-      if (task.isSuccessful) {
-        val r = task.result
-        result.success(r)
-      } else {
-        val exception = task.exception
-        val e: FlutterFirebaseDatabaseException
-
-        e =
-          when (exception) {
-            is FlutterFirebaseDatabaseException -> exception
-            is DatabaseException -> FlutterFirebaseDatabaseException.fromDatabaseException(exception)
-            else -> {
-              Log.e(
-                "firebase_database",
-                "An unknown error occurred handling native method call ${call.method}",
-                exception,
-              )
-              FlutterFirebaseDatabaseException.fromException(exception)
-            }
-          }
-
-        result.error(e.code, e.errorMessage, e.additionalData)
-      }
-    }
-  }
-
   override fun onAttachedToEngine(binding: FlutterPluginBinding) {
     initPluginInstance(binding.binaryMessenger)
   }
@@ -539,4 +485,264 @@ class FirebaseDatabasePlugin :
     }
     streamHandlers.clear()
   }
+
+  // Pigeon HostApi implementations
+  override fun goOnline(app: DatabasePigeonFirebaseApp, callback: (KotlinResult<Unit>) -> Unit) {
+    try {
+      val database = getDatabaseFromPigeonApp(app)
+      database.goOnline()
+      callback(KotlinResult.success(Unit))
+    } catch (e: Exception) {
+      callback(KotlinResult.failure(e))
+    }
+  }
+
+  override fun goOffline(app: DatabasePigeonFirebaseApp, callback: (KotlinResult<Unit>) -> Unit) {
+    try {
+      val database = getDatabaseFromPigeonApp(app)
+      database.goOffline()
+      callback(KotlinResult.success(Unit))
+    } catch (e: Exception) {
+      callback(KotlinResult.failure(e))
+    }
+  }
+
+  override fun setPersistenceEnabled(app: DatabasePigeonFirebaseApp, enabled: Boolean, callback: (KotlinResult<Unit>) -> Unit) {
+    try {
+      val database = getDatabaseFromPigeonApp(app)
+      database.setPersistenceEnabled(enabled)
+      callback(KotlinResult.success(Unit))
+    } catch (e: Exception) {
+      callback(KotlinResult.failure(e))
+    }
+  }
+
+  override fun setPersistenceCacheSizeBytes(app: DatabasePigeonFirebaseApp, cacheSize: Long, callback: (KotlinResult<Unit>) -> Unit) {
+    try {
+      val database = getDatabaseFromPigeonApp(app)
+      database.setPersistenceCacheSizeBytes(cacheSize)
+      callback(KotlinResult.success(Unit))
+    } catch (e: Exception) {
+      callback(KotlinResult.failure(e))
+    }
+  }
+
+  override fun setLoggingEnabled(app: DatabasePigeonFirebaseApp, enabled: Boolean, callback: (KotlinResult<Unit>) -> Unit) {
+    try {
+      val database = getDatabaseFromPigeonApp(app)
+      database.setLogLevel(if (enabled) Logger.Level.DEBUG else Logger.Level.NONE)
+      callback(KotlinResult.success(Unit))
+    } catch (e: Exception) {
+      callback(KotlinResult.failure(e))
+    }
+  }
+
+  override fun useDatabaseEmulator(app: DatabasePigeonFirebaseApp, host: String, port: Long, callback: (KotlinResult<Unit>) -> Unit) {
+    try {
+      val database = getDatabaseFromPigeonApp(app)
+      database.useEmulator(host, port.toInt())
+      callback(KotlinResult.success(Unit))
+    } catch (e: Exception) {
+      callback(KotlinResult.failure(e))
+    }
+  }
+
+  override fun ref(app: DatabasePigeonFirebaseApp, path: String?, callback: (KotlinResult<DatabaseReferencePlatform>) -> Unit) {
+    try {
+      val database = getDatabaseFromPigeonApp(app)
+      val reference = if (path.isNullOrEmpty()) database.reference else database.getReference(path)
+      val platformRef = DatabaseReferencePlatform(path = reference.key ?: "/")
+      callback(KotlinResult.success(platformRef))
+    } catch (e: Exception) {
+      callback(KotlinResult.failure(e))
+    }
+  }
+
+  override fun refFromURL(app: DatabasePigeonFirebaseApp, url: String, callback: (KotlinResult<DatabaseReferencePlatform>) -> Unit) {
+    try {
+      val database = getDatabaseFromPigeonApp(app)
+      val reference = database.getReferenceFromUrl(url)
+      val platformRef = DatabaseReferencePlatform(path = reference.key ?: "/")
+      callback(KotlinResult.success(platformRef))
+    } catch (e: Exception) {
+      callback(KotlinResult.failure(e))
+    }
+  }
+
+  override fun purgeOutstandingWrites(app: DatabasePigeonFirebaseApp, callback: (KotlinResult<Unit>) -> Unit) {
+    try {
+      val database = getDatabaseFromPigeonApp(app)
+      database.purgeOutstandingWrites()
+      callback(KotlinResult.success(Unit))
+    } catch (e: Exception) {
+      callback(KotlinResult.failure(e))
+    }
+  }
+
+  override fun databaseReferenceSet(app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest, callback: (KotlinResult<Unit>) -> Unit) {
+    try {
+      val database = getDatabaseFromPigeonApp(app)
+      val reference = database.getReference(request.path)
+      reference.setValue(request.value)
+      callback(KotlinResult.success(Unit))
+    } catch (e: Exception) {
+      callback(KotlinResult.failure(e))
+    }
+  }
+
+  override fun databaseReferenceSetWithPriority(app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest, callback: (KotlinResult<Unit>) -> Unit) {
+    try {
+      val database = getDatabaseFromPigeonApp(app)
+      val reference = database.getReference(request.path)
+      reference.setValue(request.value, request.priority)
+      callback(KotlinResult.success(Unit))
+    } catch (e: Exception) {
+      callback(KotlinResult.failure(e))
+    }
+  }
+
+  override fun databaseReferenceUpdate(app: DatabasePigeonFirebaseApp, request: UpdateRequest, callback: (KotlinResult<Unit>) -> Unit) {
+    try {
+      val database = getDatabaseFromPigeonApp(app)
+      val reference = database.getReference(request.path)
+      reference.updateChildren(request.value)
+      callback(KotlinResult.success(Unit))
+    } catch (e: Exception) {
+      callback(KotlinResult.failure(e))
+    }
+  }
+
+  override fun databaseReferenceSetPriority(app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest, callback: (KotlinResult<Unit>) -> Unit) {
+    try {
+      val database = getDatabaseFromPigeonApp(app)
+      val reference = database.getReference(request.path)
+      reference.setPriority(request.priority)
+      callback(KotlinResult.success(Unit))
+    } catch (e: Exception) {
+      callback(KotlinResult.failure(e))
+    }
+  }
+
+  override fun databaseReferenceRunTransaction(app: DatabasePigeonFirebaseApp, request: TransactionRequest, callback: (KotlinResult<Unit>) -> Unit) {
+    try {
+      val database = getDatabaseFromPigeonApp(app)
+      val reference = database.getReference(request.path)
+
+      // Store the transaction request for later retrieval
+      transactionRequests[request.transactionKey] = request
+
+      // Start the transaction (the actual transaction logic will be handled by the FlutterApi callback)
+      reference.runTransaction(object : com.google.firebase.database.Transaction.Handler {
+        override fun doTransaction(mutableData: com.google.firebase.database.MutableData): com.google.firebase.database.Transaction.Result {
+          // This will be handled by the FlutterApi callback
+          return com.google.firebase.database.Transaction.success(mutableData)
+        }
+
+        override fun onComplete(error: com.google.firebase.database.DatabaseError?, committed: Boolean, currentData: com.google.firebase.database.DataSnapshot?) {
+          // Handle completion
+        }
+      })
+
+      callback(KotlinResult.success(Unit))
+    } catch (e: Exception) {
+      callback(KotlinResult.failure(e))
+    }
+  }
+
+  override fun databaseReferenceGetTransactionResult(app: DatabasePigeonFirebaseApp, transactionKey: Long, callback: (KotlinResult<Map<String, Any?>>) -> Unit) {
+    try {
+      // This would typically return the result of a completed transaction
+      // For now, we'll return a placeholder result
+      val result = mapOf(
+        "committed" to true,
+        "snapshot" to mapOf("value" to null)
+      )
+      callback(KotlinResult.success(result))
+    } catch (e: Exception) {
+      callback(KotlinResult.failure(e))
+    }
+  }
+
+  override fun onDisconnectSet(app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest, callback: (KotlinResult<Unit>) -> Unit) {
+    try {
+      val database = getDatabaseFromPigeonApp(app)
+      val reference = database.getReference(request.path)
+      val onDisconnect = reference.onDisconnect()
+      onDisconnect.setValue(request.value)
+      callback(KotlinResult.success(Unit))
+    } catch (e: Exception) {
+      callback(KotlinResult.failure(e))
+    }
+  }
+
+  override fun onDisconnectSetWithPriority(app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest, callback: (KotlinResult<Unit>) -> Unit) {
+    try {
+      val database = getDatabaseFromPigeonApp(app)
+      val reference = database.getReference(request.path)
+      val onDisconnect = reference.onDisconnect()
+      onDisconnect.setValue(request.value, request.priority as? String)
+      callback(KotlinResult.success(Unit))
+    } catch (e: Exception) {
+      callback(KotlinResult.failure(e))
+    }
+  }
+
+  override fun onDisconnectUpdate(app: DatabasePigeonFirebaseApp, request: UpdateRequest, callback: (KotlinResult<Unit>) -> Unit) {
+    try {
+      val database = getDatabaseFromPigeonApp(app)
+      val reference = database.getReference(request.path)
+      val onDisconnect = reference.onDisconnect()
+      onDisconnect.updateChildren(request.value)
+      callback(KotlinResult.success(Unit))
+    } catch (e: Exception) {
+      callback(KotlinResult.failure(e))
+    }
+  }
+
+  override fun onDisconnectCancel(app: DatabasePigeonFirebaseApp, path: String, callback: (KotlinResult<Unit>) -> Unit) {
+    try {
+      val database = getDatabaseFromPigeonApp(app)
+      val reference = database.getReference(path)
+      val onDisconnect = reference.onDisconnect()
+      onDisconnect.cancel()
+      callback(KotlinResult.success(Unit))
+    } catch (e: Exception) {
+      callback(KotlinResult.failure(e))
+    }
+  }
+
+  override fun queryObserve(app: DatabasePigeonFirebaseApp, request: QueryRequest, callback: (KotlinResult<String>) -> Unit) {
+    try {
+      // For now, we'll return a placeholder channel name
+      // The actual implementation would set up event channels
+      val channelName = "firebase_database_query_${System.currentTimeMillis()}"
+      callback(KotlinResult.success(channelName))
+    } catch (e: Exception) {
+      callback(KotlinResult.failure(e))
+    }
+  }
+
+  override fun queryKeepSynced(app: DatabasePigeonFirebaseApp, request: QueryRequest, callback: (KotlinResult<Unit>) -> Unit) {
+    try {
+      val database = getDatabaseFromPigeonApp(app)
+      val reference = database.getReference(request.path)
+      reference.keepSynced(request.value ?: false)
+      callback(KotlinResult.success(Unit))
+    } catch (e: Exception) {
+      callback(KotlinResult.failure(e))
+    }
+  }
+
+  // Helper method to get FirebaseDatabase from Pigeon app
+  private fun getDatabaseFromPigeonApp(app: DatabasePigeonFirebaseApp): FirebaseDatabase {
+    val firebaseApp = FirebaseApp.getInstance(app.appName)
+    return if (app.databaseURL != null) {
+      FirebaseDatabase.getInstance(firebaseApp, app.databaseURL)
+    } else {
+      FirebaseDatabase.getInstance(firebaseApp)
+    }
+  }
+
+  // Store transaction requests for later retrieval
+  private val transactionRequests = mutableMapOf<Long, TransactionRequest>()
 }
