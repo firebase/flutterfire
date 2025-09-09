@@ -14,6 +14,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:firebase_ai/src/api.dart';
 import 'package:firebase_ai/src/content.dart';
 import 'package:firebase_ai/src/developer/api.dart';
 import 'package:firebase_ai/src/error.dart';
@@ -370,6 +371,123 @@ void main() {
         expect(part, isA<InlineDataPart>());
         expect((part as InlineDataPart).mimeType, 'application/octet-stream');
         expect(part.bytes, inlineData);
+      });
+
+      test('parses safety ratings specific to developer API', () {
+        final jsonResponse = {
+          'candidates': [
+            {
+              'content': {
+                'parts': [
+                  {'text': 'Test'}
+                ]
+              },
+              'safetyRatings': [
+                {
+                  'category': 'HARM_CATEGORY_DANGEROUS_CONTENT',
+                  'probability': 'HIGH',
+                  'blocked': true,
+                  // These fields should be ignored by the developer parser
+                  'severity': 'HARM_SEVERITY_HIGH',
+                  'severityScore': 0.9
+                }
+              ]
+            }
+          ]
+        };
+        final response =
+            DeveloperSerialization().parseGenerateContentResponse(jsonResponse);
+        final rating = response.candidates.first.safetyRatings!.first;
+        expect(rating.category, HarmCategory.dangerousContent);
+        expect(rating.probability, HarmProbability.high);
+        expect(rating.isBlocked, true);
+        expect(rating.severity, isNull);
+        expect(rating.severityScore, isNull);
+      });
+    });
+
+    group('parseCountTokensResponse', () {
+      test('parses valid JSON correctly', () {
+        final json = {'totalTokens': 123};
+        final response =
+            DeveloperSerialization().parseCountTokensResponse(json);
+        expect(response.totalTokens, 123);
+        // Developer API does not return other fields
+        expect(response.totalBillableCharacters, isNull);
+        expect(response.promptTokensDetails, isNull);
+      });
+
+      test('throws FirebaseAIException on error response', () {
+        final json = {
+          'error': {'code': 400, 'message': 'Invalid request'}
+        };
+        expect(() => DeveloperSerialization().parseCountTokensResponse(json),
+            throwsA(isA<FirebaseAIException>()));
+      });
+
+      test('throws unhandledFormat on invalid JSON', () {
+        final json = {'wrongKey': 123};
+        expect(() => DeveloperSerialization().parseCountTokensResponse(json),
+            throwsA(isA<FirebaseAISdkException>()));
+      });
+    });
+
+    group('generateContentRequest', () {
+      test('serializes safetySettings correctly for developer API', () {
+        final request = DeveloperSerialization().generateContentRequest(
+          [],
+          (prefix: 'models', name: 'gemini-pro'),
+          [
+            SafetySetting(
+                HarmCategory.dangerousContent, HarmBlockThreshold.high, null)
+          ],
+          null,
+          null,
+          null,
+          null,
+        );
+        final safetySettings = request['safetySettings']! as List;
+        expect(safetySettings, hasLength(1));
+        expect(safetySettings.first, {
+          'category': 'HARM_CATEGORY_DANGEROUS_CONTENT',
+          'threshold': 'BLOCK_ONLY_HIGH'
+        });
+      });
+
+      test('throws ArgumentError for safetySetting with method', () {
+        expect(
+            () => DeveloperSerialization().generateContentRequest(
+                  [],
+                  (prefix: 'models', name: 'gemini-pro'),
+                  [
+                    SafetySetting(HarmCategory.dangerousContent,
+                        HarmBlockThreshold.high, HarmBlockMethod.severity)
+                  ],
+                  null,
+                  null,
+                  null,
+                  null,
+                ),
+            throwsA(isA<ArgumentError>()));
+      });
+    });
+
+    group('countTokensRequest', () {
+      test('serializes request with generateContentRequest wrapper', () {
+        final request = DeveloperSerialization().countTokensRequest(
+          [Content.text('hello')],
+          (prefix: 'models', name: 'gemini-pro'),
+          [],
+          null,
+          null,
+          null,
+        );
+        expect(request.containsKey('generateContentRequest'), isTrue);
+        final wrappedRequest =
+            request['generateContentRequest']! as Map<String, Object?>;
+        expect(wrappedRequest['model'], 'models/gemini-pro');
+        final contents = wrappedRequest['contents']! as List;
+        expect(contents, hasLength(1));
       });
     });
   });
