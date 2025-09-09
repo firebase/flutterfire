@@ -469,7 +469,7 @@ enum BlockReason {
 
   const BlockReason(this._jsonString);
 
-  // ignore: unused_element
+  // ignore: public_member_api_docs
   static BlockReason parseValue(String jsonObject) {
     return switch (jsonObject) {
       'BLOCK_REASON_UNSPECIFIED' => BlockReason.unknown,
@@ -679,7 +679,7 @@ enum FinishReason {
   /// Convert to json format
   String toJson() => _jsonString;
 
-  // ignore: unused_element
+  // ignore: public_member_api_docs
   static FinishReason parseValue(Object jsonObject) {
     return switch (jsonObject) {
       'UNSPECIFIED' => FinishReason.unknown,
