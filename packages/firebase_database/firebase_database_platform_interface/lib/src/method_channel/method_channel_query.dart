@@ -50,14 +50,13 @@ class MethodChannelQuery extends QueryPlatform {
     String eventChannelNamePrefix =
         '$path-${database.app!.name}-${database.databaseURL}-$eventType-$modifierList';
 
-    // Create the EventChannel on native.
-    final channelName = await channel.invokeMethod<String>(
-      'Query#observe',
-      database.getChannelArguments({
-        'path': path,
-        'modifiers': modifierList,
-        'eventChannelNamePrefix': eventChannelNamePrefix,
-      }),
+    // Create the EventChannel on native using Pigeon.
+    final channelName = await MethodChannelDatabase.pigeonChannel.queryObserve(
+      _pigeonApp,
+      pigeon.QueryRequest(
+        path: path,
+        modifiers: modifierList,
+      ),
     );
 
     yield* EventChannel(channelName!).receiveGuardedBroadcastStream(
