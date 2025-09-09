@@ -121,6 +121,8 @@ abstract class TestFirebaseDatabaseHostApi {
 
   Future<void> queryKeepSynced(DatabasePigeonFirebaseApp app, QueryRequest request);
 
+  Future<Map<String, Object?>> queryGet(DatabasePigeonFirebaseApp app, QueryRequest request);
+
   static void setUp(TestFirebaseDatabaseHostApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
     messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
     {
@@ -695,6 +697,34 @@ abstract class TestFirebaseDatabaseHostApi {
           try {
             await api.queryKeepSynced(arg_app!, arg_request!);
             return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryGet$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryGet was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final DatabasePigeonFirebaseApp? arg_app = (args[0] as DatabasePigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryGet was null, expected non-null DatabasePigeonFirebaseApp.');
+          final QueryRequest? arg_request = (args[1] as QueryRequest?);
+          assert(arg_request != null,
+              'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryGet was null, expected non-null QueryRequest.');
+          try {
+            final Map<String, Object?> output = await api.queryGet(arg_app!, arg_request!);
+            return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
           }          catch (e) {

@@ -461,6 +461,7 @@ interface FirebaseDatabaseHostApi {
   fun onDisconnectCancel(app: DatabasePigeonFirebaseApp, path: String, callback: (Result<Unit>) -> Unit)
   fun queryObserve(app: DatabasePigeonFirebaseApp, request: QueryRequest, callback: (Result<String>) -> Unit)
   fun queryKeepSynced(app: DatabasePigeonFirebaseApp, request: QueryRequest, callback: (Result<Unit>) -> Unit)
+  fun queryGet(app: DatabasePigeonFirebaseApp, request: QueryRequest, callback: (Result<Map<String, Any?>>) -> Unit)
 
   companion object {
     /** The codec used by FirebaseDatabaseHostApi. */
@@ -886,6 +887,27 @@ interface FirebaseDatabaseHostApi {
                 reply.reply(GeneratedAndroidFirebaseDatabasePigeonUtils.wrapError(error))
               } else {
                 reply.reply(GeneratedAndroidFirebaseDatabasePigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryGet$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val appArg = args[0] as DatabasePigeonFirebaseApp
+            val requestArg = args[1] as QueryRequest
+            api.queryGet(appArg, requestArg) { result: Result<Map<String, Any?>> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidFirebaseDatabasePigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidFirebaseDatabasePigeonUtils.wrapResult(data))
               }
             }
           }

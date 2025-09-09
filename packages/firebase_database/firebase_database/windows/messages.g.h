@@ -437,6 +437,10 @@ class FirebaseDatabaseHostApi {
     const DatabasePigeonFirebaseApp& app,
     const QueryRequest& request,
     std::function<void(std::optional<FlutterError> reply)> result) = 0;
+  virtual void QueryGet(
+    const DatabasePigeonFirebaseApp& app,
+    const QueryRequest& request,
+    std::function<void(ErrorOr<flutter::EncodableMap> reply)> result) = 0;
 
   // The codec used by FirebaseDatabaseHostApi.
   static const flutter::StandardMessageCodec& GetCodec();

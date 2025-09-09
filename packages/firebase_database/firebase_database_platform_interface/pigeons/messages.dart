@@ -172,6 +172,9 @@ abstract class FirebaseDatabaseHostApi {
 
   @async
   void queryKeepSynced(DatabasePigeonFirebaseApp app, QueryRequest request);
+
+  @async
+  Map<String, Object?> queryGet(DatabasePigeonFirebaseApp app, QueryRequest request);
 }
 
 class TransactionHandlerResult {

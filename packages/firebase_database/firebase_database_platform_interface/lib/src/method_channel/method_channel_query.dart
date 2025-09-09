@@ -73,16 +73,16 @@ class MethodChannelQuery extends QueryPlatform {
   @override
   Future<DataSnapshotPlatform> get(QueryModifiers modifiers) async {
     try {
-      final result = await channel.invokeMapMethod(
-        'Query#get',
-        database.getChannelArguments({
-          'path': path,
-          'modifiers': modifiers.toList(),
-        }),
+      final result = await MethodChannelDatabase.pigeonChannel.queryGet(
+        _pigeonApp,
+        pigeon.QueryRequest(
+          path: path,
+          modifiers: modifiers.toList(),
+        ),
       );
       return MethodChannelDataSnapshot(
         ref,
-        Map<String, dynamic>.from(result!['snapshot']),
+        Map<String, dynamic>.from(result['snapshot']! as Map),
       );
     } catch (e, s) {
       convertPlatformException(e, s);

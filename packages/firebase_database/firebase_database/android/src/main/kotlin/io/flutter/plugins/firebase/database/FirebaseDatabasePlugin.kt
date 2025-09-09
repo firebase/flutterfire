@@ -733,6 +733,72 @@ class FirebaseDatabasePlugin :
     }
   }
 
+  override fun queryGet(app: DatabasePigeonFirebaseApp, request: QueryRequest, callback: (KotlinResult<Map<String, Any?>>) -> Unit) {
+    try {
+      val database = getDatabaseFromPigeonApp(app)
+      val reference = database.getReference(request.path)
+      
+      // Apply query modifiers if any
+      var query: com.google.firebase.database.Query = reference
+      for (modifier in request.modifiers) {
+        when (modifier["type"] as String) {
+          "orderByChild" -> query = query.orderByChild(modifier["value"] as String)
+          "orderByKey" -> query = query.orderByKey()
+          "orderByValue" -> query = query.orderByValue()
+          "orderByPriority" -> query = query.orderByPriority()
+          "startAt" -> {
+            val value = modifier["value"]
+            query = when (value) {
+              is String -> query.startAt(value)
+              is Double -> query.startAt(value)
+              is Boolean -> query.startAt(value)
+              else -> query.startAt(value.toString())
+            }
+          }
+          "endAt" -> {
+            val value = modifier["value"]
+            query = when (value) {
+              is String -> query.endAt(value)
+              is Double -> query.endAt(value)
+              is Boolean -> query.endAt(value)
+              else -> query.endAt(value.toString())
+            }
+          }
+          "equalTo" -> {
+            val value = modifier["value"]
+            query = when (value) {
+              is String -> query.equalTo(value)
+              is Double -> query.equalTo(value)
+              is Boolean -> query.equalTo(value)
+              else -> query.equalTo(value.toString())
+            }
+          }
+          "limitToFirst" -> query = query.limitToFirst((modifier["value"] as Number).toInt())
+          "limitToLast" -> query = query.limitToLast((modifier["value"] as Number).toInt())
+        }
+      }
+      
+      // Get the data
+      query.get().addOnCompleteListener { task ->
+        if (task.isSuccessful) {
+          val snapshot = task.result
+          val result = mapOf(
+            "snapshot" to mapOf(
+              "value" to snapshot.value,
+              "key" to snapshot.key,
+              "exists" to snapshot.exists()
+            )
+          )
+          callback(KotlinResult.success(result))
+        } else {
+          callback(KotlinResult.failure(task.exception ?: Exception("Unknown error")))
+        }
+      }
+    } catch (e: Exception) {
+      callback(KotlinResult.failure(e))
+    }
+  }
+
   // Helper method to get FirebaseDatabase from Pigeon app
   private fun getDatabaseFromPigeonApp(app: DatabasePigeonFirebaseApp): FirebaseDatabase {
     val firebaseApp = FirebaseApp.getInstance(app.appName)

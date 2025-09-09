@@ -490,6 +490,7 @@ protocol FirebaseDatabaseHostApi {
   func onDisconnectCancel(app: DatabasePigeonFirebaseApp, path: String, completion: @escaping (Result<Void, Error>) -> Void)
   func queryObserve(app: DatabasePigeonFirebaseApp, request: QueryRequest, completion: @escaping (Result<String, Error>) -> Void)
   func queryKeepSynced(app: DatabasePigeonFirebaseApp, request: QueryRequest, completion: @escaping (Result<Void, Error>) -> Void)
+  func queryGet(app: DatabasePigeonFirebaseApp, request: QueryRequest, completion: @escaping (Result<[String: Any?], Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -873,6 +874,24 @@ class FirebaseDatabaseHostApiSetup {
       }
     } else {
       queryKeepSyncedChannel.setMessageHandler(nil)
+    }
+    let queryGetChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryGet\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      queryGetChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let appArg = args[0] as! DatabasePigeonFirebaseApp
+        let requestArg = args[1] as! QueryRequest
+        api.queryGet(app: appArg, request: requestArg) { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      queryGetChannel.setMessageHandler(nil)
     }
   }
 }
