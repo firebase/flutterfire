@@ -68,10 +68,8 @@ final class ImagenModel extends BaseApiClientModel {
         'addWatermark': addWatermark,
       if (_generationConfig?.imageFormat case final imageFormat?)
         'outputOption': imageFormat.toJson(),
-      if (_safetySettings?.personFilterLevel case final personFilterLevel?)
-        'personGeneration': personFilterLevel.toJson(),
-      if (_safetySettings?.safetyFilterLevel case final safetyFilterLevel?)
-        'safetySetting': safetyFilterLevel.toJson(),
+      if (_safetySettings case final safetySettings?)
+        ...safetySettings.toJson(),
       'includeRaiReason': true,
       'includeSafetyAttributes': true,
     };
@@ -172,10 +170,8 @@ final class ImagenModel extends BaseApiClientModel {
         'addWatermark': addWatermark,
       if (_generationConfig?.imageFormat case final imageFormat?)
         'outputOption': imageFormat.toJson(),
-      if (_safetySettings?.personFilterLevel case final personFilterLevel?)
-        'personGeneration': personFilterLevel.toJson(),
-      if (_safetySettings?.safetyFilterLevel case final safetyFilterLevel?)
-        'safetySetting': safetyFilterLevel.toJson(),
+      if (_safetySettings case final safetySettings?)
+        ...safetySettings.toJson(),
       'includeRaiReason': true,
       'includeSafetyAttributes': true,
     };

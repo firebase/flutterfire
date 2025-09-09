@@ -35,10 +35,7 @@ Map<String, Object?> generateImagenRequest(
       'addWatermark': addWatermark,
     if (generationConfig?.imageFormat case final imageFormat?)
       'outputOption': imageFormat.toJson(),
-    if (safetySettings?.personFilterLevel case final personFilterLevel?)
-      'personGeneration': personFilterLevel.toJson(),
-    if (safetySettings?.safetyFilterLevel case final safetyFilterLevel?)
-      'safetySetting': safetyFilterLevel.toJson(),
+    if (safetySettings case final safetySettings?) ...safetySettings.toJson(),
     'includeRaiReason': true,
     'includeSafetyAttributes': true,
   };
@@ -75,10 +72,7 @@ Map<String, Object?> generateImagenEditRequest(
       'addWatermark': addWatermark,
     if (generationConfig?.imageFormat case final imageFormat?)
       'outputOption': imageFormat.toJson(),
-    if (safetySettings?.personFilterLevel case final personFilterLevel?)
-      'personGeneration': personFilterLevel.toJson(),
-    if (safetySettings?.safetyFilterLevel case final safetyFilterLevel?)
-      'safetySetting': safetyFilterLevel.toJson(),
+    if (safetySettings case final safetySettings?) ...safetySettings.toJson(),
     'includeRaiReason': true,
     'includeSafetyAttributes': true,
   };
