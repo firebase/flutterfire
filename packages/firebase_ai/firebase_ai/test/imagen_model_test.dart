@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:typed_data';
+
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -46,6 +48,53 @@ Map<String, Object?> generateImagenRequest(
       {'prompt': prompt}
     ],
     'parameters': parameters,
+  };
+}
+
+// Copied from imagen_model.dart for testing
+Map<String, Object?> generateImagenEditRequest(
+  List<ImagenReferenceImage> images,
+  String prompt, {
+  bool useVertexBackend = true, // Added for testing the throw
+  ImagenEditingConfig? config,
+  ImagenGenerationConfig? generationConfig,
+  ImagenSafetySettings? safetySettings,
+}) {
+  if (!useVertexBackend) {
+    throw FirebaseAIException(
+        'Image editing for Imagen is only supported on Vertex AI backend.');
+  }
+  final parameters = <String, Object?>{
+    'sampleCount': generationConfig?.numberOfImages ?? 1,
+    if (config?.editMode case final editMode?) 'editMode': editMode.toJson(),
+    if (config?.editSteps case final editSteps?)
+      'editConfig': {'baseSteps': editSteps},
+    if (generationConfig?.negativePrompt case final negativePrompt?)
+      'negativePrompt': negativePrompt,
+    if (generationConfig?.addWatermark case final addWatermark?)
+      'addWatermark': addWatermark,
+    if (generationConfig?.imageFormat case final imageFormat?)
+      'outputOption': imageFormat.toJson(),
+    if (safetySettings?.personFilterLevel case final personFilterLevel?)
+      'personGeneration': personFilterLevel.toJson(),
+    if (safetySettings?.safetyFilterLevel case final safetyFilterLevel?)
+      'safetySetting': safetyFilterLevel.toJson(),
+    'includeRaiReason': true,
+    'includeSafetyAttributes': true,
+  };
+
+  return {
+    'parameters': parameters,
+    'instances': [
+      {
+        'prompt': prompt,
+        'referenceImages': images.asMap().entries.map((entry) {
+          int index = entry.key;
+          var image = entry.value;
+          return image.toJson(referenceIdOverrideIfNull: index + images.length);
+        }).toList(),
+      }
+    ],
   };
 }
 
@@ -140,6 +189,98 @@ void main() {
         expect(request['instances'], [
           {'prompt': 'a sunny beach'}
         ]);
+      });
+    });
+
+    group('generateImagenEditRequest', () {
+      late List<ImagenReferenceImage> referenceImages;
+
+      setUp(() {
+        final dummyBytes = Uint8List.fromList([1, 2, 3]);
+        final dummyInlineImage = ImagenInlineImage(
+            bytesBase64Encoded: dummyBytes, mimeType: 'image/jpeg');
+        referenceImages = [ImagenRawImage(image: dummyInlineImage)];
+      });
+
+      test('creates a basic edit request', () {
+        final request =
+            generateImagenEditRequest(referenceImages, 'make it sunny');
+        final params = request['parameters']! as Map<String, Object?>;
+        expect(params['sampleCount'], 1);
+        expect(params.containsKey('editMode'), isFalse);
+        expect(params['includeRaiReason'], true);
+        expect(params['includeSafetyAttributes'], true);
+
+        final instances = request['instances']! as List;
+        expect(instances, hasLength(1));
+        final instance = instances.first as Map<String, Object?>;
+        expect(instance['prompt'], 'make it sunny');
+        expect(instance['referenceImages'], isNotNull);
+      });
+
+      test('does not include aspectRatio from generation config', () {
+        final config = ImagenGenerationConfig(
+          numberOfImages: 2, // This should be included as sampleCount
+          aspectRatio: ImagenAspectRatio.square1x1, // This should be ignored
+        );
+        final request = generateImagenEditRequest(
+          referenceImages,
+          'add a rainbow',
+          generationConfig: config,
+        );
+        final params = request['parameters']! as Map<String, Object?>;
+        expect(params['sampleCount'], 2);
+        expect(params.containsKey('aspectRatio'), isFalse,
+            reason: 'aspectRatio is not a valid parameter for edit requests.');
+        expect(params['includeRaiReason'], true);
+        expect(params['includeSafetyAttributes'], true);
+      });
+
+      test('includes other valid generation config values', () {
+        final config = ImagenGenerationConfig(
+          negativePrompt: 'rain',
+          addWatermark: true,
+          imageFormat: ImagenFormat.jpeg(),
+        );
+        final request = generateImagenEditRequest(
+          referenceImages,
+          'make it brighter',
+          generationConfig: config,
+        );
+        final params = request['parameters']! as Map<String, Object?>;
+        expect(params['negativePrompt'], 'rain');
+        expect(params['addWatermark'], true);
+        expect(params['outputOption'], {'mimeType': 'image/jpeg'});
+        expect(params['includeRaiReason'], true);
+        expect(params['includeSafetyAttributes'], true);
+      });
+
+      test('includes editing config', () {
+        final editConfig = ImagenEditingConfig(
+          editMode: ImagenEditMode.inpaintInsertion,
+          editSteps: 10,
+        );
+        final request = generateImagenEditRequest(
+          referenceImages,
+          'remove the background',
+          config: editConfig,
+        );
+        final params = request['parameters']! as Map<String, Object?>;
+        expect(params['editMode'], 'EDIT_MODE_INPAINT_INSERTION');
+        expect(params['editConfig'], {'baseSteps': 10});
+        expect(params['includeRaiReason'], true);
+        expect(params['includeSafetyAttributes'], true);
+      });
+
+      test('throws exception if not using Vertex backend', () {
+        expect(
+          () => generateImagenEditRequest(
+            referenceImages,
+            'a prompt',
+            useVertexBackend: false,
+          ),
+          throwsA(isA<FirebaseAIException>()),
+        );
       });
     });
   });
