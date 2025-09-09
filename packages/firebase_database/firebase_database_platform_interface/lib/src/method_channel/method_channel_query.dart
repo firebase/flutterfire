@@ -4,6 +4,7 @@
 
 import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
+import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart' as pigeon;
 import 'package:flutter/services.dart';
 
 import 'method_channel_data_snapshot.dart';
@@ -24,6 +25,12 @@ class MethodChannelQuery extends QueryPlatform {
 
   final List<String> pathComponents;
 
+  /// Gets the Pigeon app object from the database
+  pigeon.DatabasePigeonFirebaseApp get _pigeonApp {
+    final methodChannelDatabase = database as MethodChannelDatabase;
+    return methodChannelDatabase.pigeonApp;
+  }
+
   @override
   String get path {
     if (pathComponents.isEmpty) return '/';
@@ -37,7 +44,6 @@ class MethodChannelQuery extends QueryPlatform {
     QueryModifiers modifiers,
     DatabaseEventType eventType,
   ) async* {
-    const channel = MethodChannelDatabase.channel;
     List<Map<String, Object?>> modifierList = modifiers.toList();
     // Create a unique event channel naming prefix using path, app name,
     // databaseUrl, event type and ordered modifier list
@@ -99,10 +105,12 @@ class MethodChannelQuery extends QueryPlatform {
   @override
   Future<void> keepSynced(QueryModifiers modifiers, bool value) async {
     try {
-      await channel.invokeMethod<void>(
-        'Query#keepSynced',
-        database.getChannelArguments(
-          {'path': path, 'modifiers': modifiers.toList(), 'value': value},
+      await MethodChannelDatabase.pigeonChannel.queryKeepSynced(
+        _pigeonApp,
+        pigeon.QueryRequest(
+          path: path,
+          modifiers: modifiers.toList(),
+          value: value,
         ),
       );
     } catch (e, s) {

@@ -4,6 +4,7 @@
 
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:firebase_database_platform_interface/src/method_channel/utils/utils.dart';
+import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart' as pigeon;
 
 import 'method_channel_database.dart';
 import 'utils/exception.dart';
@@ -16,15 +17,21 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
     required DatabaseReferencePlatform ref,
   }) : super(database: database, ref: ref);
 
+  /// Gets the Pigeon app object from the database
+  pigeon.DatabasePigeonFirebaseApp get _pigeonApp {
+    final methodChannelDatabase = database as MethodChannelDatabase;
+    return methodChannelDatabase.pigeonApp;
+  }
+
   @override
   Future<void> set(Object? value) async {
     try {
-      await MethodChannelDatabase.channel.invokeMethod<void>(
-        'OnDisconnect#set',
-        database.getChannelArguments({
-          'path': ref.path,
-          if (value != null) 'value': transformValue(value),
-        }),
+      await MethodChannelDatabase.pigeonChannel.onDisconnectSet(
+        _pigeonApp,
+        pigeon.DatabaseReferenceRequest(
+          path: ref.path,
+          value: value != null ? transformValue(value) : null,
+        ),
       );
     } catch (e, s) {
       convertPlatformException(e, s);
@@ -34,14 +41,12 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
   @override
   Future<void> setWithPriority(Object? value, Object? priority) async {
     try {
-      await MethodChannelDatabase.channel.invokeMethod<void>(
-        'OnDisconnect#setWithPriority',
-        database.getChannelArguments(
-          {
-            'path': ref.path,
-            if (value != null) 'value': transformValue(value),
-            if (priority != null) 'priority': priority,
-          },
+      await MethodChannelDatabase.pigeonChannel.onDisconnectSetWithPriority(
+        _pigeonApp,
+        pigeon.DatabaseReferenceRequest(
+          path: ref.path,
+          value: value != null ? transformValue(value) : null,
+          priority: priority,
         ),
       );
     } catch (e, s) {
@@ -55,9 +60,9 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
   @override
   Future<void> cancel() async {
     try {
-      await MethodChannelDatabase.channel.invokeMethod<void>(
-        'OnDisconnect#cancel',
-        database.getChannelArguments({'path': ref.path}),
+      await MethodChannelDatabase.pigeonChannel.onDisconnectCancel(
+        _pigeonApp,
+        ref.path,
       );
     } catch (e, s) {
       convertPlatformException(e, s);
@@ -67,12 +72,12 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
   @override
   Future<void> update(Map<String, Object?> value) async {
     try {
-      await MethodChannelDatabase.channel.invokeMethod<void>(
-        'OnDisconnect#update',
-        database.getChannelArguments({
-          'path': ref.path,
-          'value': transformValue(value),
-        }),
+      await MethodChannelDatabase.pigeonChannel.onDisconnectUpdate(
+        _pigeonApp,
+        pigeon.UpdateRequest(
+          path: ref.path,
+          value: transformValue(value)! as Map<String, Object?>,
+        ),
       );
     } catch (e, s) {
       convertPlatformException(e, s);

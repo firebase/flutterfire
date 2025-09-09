@@ -4,6 +4,7 @@
 
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:firebase_database_platform_interface/src/method_channel/utils/utils.dart';
+import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart' as pigeon;
 
 import 'method_channel_database.dart';
 import 'method_channel_on_disconnect.dart';
@@ -30,6 +31,12 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
           database: database,
           pathComponents: pathComponents,
         );
+
+  /// Gets the Pigeon app object from the database
+  pigeon.DatabasePigeonFirebaseApp get _pigeonApp {
+    final methodChannelDatabase = database as MethodChannelDatabase;
+    return methodChannelDatabase.pigeonApp;
+  }
 
   @override
   DatabaseReferencePlatform child(String path) {
@@ -75,12 +82,12 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   @override
   Future<void> set(Object? value) async {
     try {
-      await MethodChannelDatabase.channel.invokeMethod<void>(
-        'DatabaseReference#set',
-        database.getChannelArguments({
-          'path': path,
-          if (value != null) 'value': transformValue(value),
-        }),
+      await MethodChannelDatabase.pigeonChannel.databaseReferenceSet(
+        _pigeonApp,
+        pigeon.DatabaseReferenceRequest(
+          path: path,
+          value: value != null ? transformValue(value) : null,
+        ),
       );
     } catch (e, s) {
       convertPlatformException(e, s);
@@ -90,13 +97,13 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   @override
   Future<void> setWithPriority(Object? value, Object? priority) async {
     try {
-      await MethodChannelDatabase.channel.invokeMethod<void>(
-        'DatabaseReference#setWithPriority',
-        database.getChannelArguments({
-          'path': path,
-          if (value != null) 'value': transformValue(value),
-          if (priority != null) 'priority': priority,
-        }),
+      await MethodChannelDatabase.pigeonChannel.databaseReferenceSetWithPriority(
+        _pigeonApp,
+        pigeon.DatabaseReferenceRequest(
+          path: path,
+          value: value != null ? transformValue(value) : null,
+          priority: priority,
+        ),
       );
     } catch (e, s) {
       convertPlatformException(e, s);
@@ -106,12 +113,12 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   @override
   Future<void> update(Map<String, Object?> value) async {
     try {
-      await MethodChannelDatabase.channel.invokeMethod<void>(
-        'DatabaseReference#update',
-        database.getChannelArguments({
-          'path': path,
-          'value': transformValue(value),
-        }),
+      await MethodChannelDatabase.pigeonChannel.databaseReferenceUpdate(
+        _pigeonApp,
+        pigeon.UpdateRequest(
+          path: path,
+          value: transformValue(value)! as Map<String, Object?>,
+        ),
       );
     } catch (e, s) {
       convertPlatformException(e, s);
@@ -121,12 +128,12 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   @override
   Future<void> setPriority(Object? priority) async {
     try {
-      await MethodChannelDatabase.channel.invokeMethod<void>(
-        'DatabaseReference#setPriority',
-        database.getChannelArguments({
-          'path': path,
-          if (priority != null) 'priority': priority,
-        }),
+      await MethodChannelDatabase.pigeonChannel.databaseReferenceSetPriority(
+        _pigeonApp,
+        pigeon.DatabaseReferenceRequest(
+          path: path,
+          priority: priority,
+        ),
       );
     } catch (e, s) {
       convertPlatformException(e, s);
@@ -141,7 +148,6 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
     TransactionHandler transactionHandler, {
     bool applyLocally = true,
   }) async {
-    const channel = MethodChannelDatabase.channel;
     final handlers = MethodChannelDatabase.transactions;
     final handlerErrors = MethodChannelDatabase.transactionErrors;
     final key = handlers.isEmpty ? 0 : handlers.keys.last + 1;
@@ -150,13 +156,19 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
     MethodChannelDatabase.transactions[key] = transactionHandler;
 
     try {
-      final result = await channel.invokeMethod(
-        'DatabaseReference#runTransaction',
-        database.getChannelArguments({
-          'path': path,
-          'transactionApplyLocally': applyLocally,
-          'transactionKey': key,
-        }),
+      await MethodChannelDatabase.pigeonChannel.databaseReferenceRunTransaction(
+        _pigeonApp,
+        pigeon.TransactionRequest(
+          path: path,
+          transactionKey: key,
+          applyLocally: applyLocally,
+        ),
+      );
+
+      // Get the transaction result using Pigeon
+      final result = await MethodChannelDatabase.pigeonChannel.databaseReferenceGetTransactionResult(
+        _pigeonApp,
+        key,
       );
 
       // We store Dart only errors that occur inside users handlers - to avoid
@@ -168,9 +180,9 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
       }
 
       return MethodChannelTransactionResult(
-        result!['committed'] as bool,
+        result['committed']! as bool,
         this,
-        Map.from(result!['snapshot']),
+        Map.from(result['snapshot']! as Map),
       );
     } catch (e, s) {
       convertPlatformException(e, s);
