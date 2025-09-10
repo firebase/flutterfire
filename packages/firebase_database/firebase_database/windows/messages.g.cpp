@@ -35,43 +35,49 @@ FlutterError CreateConnectionError(const std::string channel_name) {
 
 DatabasePigeonSettings::DatabasePigeonSettings() {}
 
-DatabasePigeonSettings::DatabasePigeonSettings(
-  const bool* persistence_enabled,
-  const int64_t* cache_size_bytes,
-  const bool* logging_enabled,
-  const std::string* emulator_host,
-  const int64_t* emulator_port)
- : persistence_enabled_(persistence_enabled ? std::optional<bool>(*persistence_enabled) : std::nullopt),
-    cache_size_bytes_(cache_size_bytes ? std::optional<int64_t>(*cache_size_bytes) : std::nullopt),
-    logging_enabled_(logging_enabled ? std::optional<bool>(*logging_enabled) : std::nullopt),
-    emulator_host_(emulator_host ? std::optional<std::string>(*emulator_host) : std::nullopt),
-    emulator_port_(emulator_port ? std::optional<int64_t>(*emulator_port) : std::nullopt) {}
+DatabasePigeonSettings::DatabasePigeonSettings(const bool* persistence_enabled,
+                                               const int64_t* cache_size_bytes,
+                                               const bool* logging_enabled,
+                                               const std::string* emulator_host,
+                                               const int64_t* emulator_port)
+    : persistence_enabled_(persistence_enabled
+                               ? std::optional<bool>(*persistence_enabled)
+                               : std::nullopt),
+      cache_size_bytes_(cache_size_bytes
+                            ? std::optional<int64_t>(*cache_size_bytes)
+                            : std::nullopt),
+      logging_enabled_(logging_enabled ? std::optional<bool>(*logging_enabled)
+                                       : std::nullopt),
+      emulator_host_(emulator_host ? std::optional<std::string>(*emulator_host)
+                                   : std::nullopt),
+      emulator_port_(emulator_port ? std::optional<int64_t>(*emulator_port)
+                                   : std::nullopt) {}
 
 const bool* DatabasePigeonSettings::persistence_enabled() const {
   return persistence_enabled_ ? &(*persistence_enabled_) : nullptr;
 }
 
 void DatabasePigeonSettings::set_persistence_enabled(const bool* value_arg) {
-  persistence_enabled_ = value_arg ? std::optional<bool>(*value_arg) : std::nullopt;
+  persistence_enabled_ =
+      value_arg ? std::optional<bool>(*value_arg) : std::nullopt;
 }
 
 void DatabasePigeonSettings::set_persistence_enabled(bool value_arg) {
   persistence_enabled_ = value_arg;
 }
 
-
 const int64_t* DatabasePigeonSettings::cache_size_bytes() const {
   return cache_size_bytes_ ? &(*cache_size_bytes_) : nullptr;
 }
 
 void DatabasePigeonSettings::set_cache_size_bytes(const int64_t* value_arg) {
-  cache_size_bytes_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
+  cache_size_bytes_ =
+      value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
 }
 
 void DatabasePigeonSettings::set_cache_size_bytes(int64_t value_arg) {
   cache_size_bytes_ = value_arg;
 }
-
 
 const bool* DatabasePigeonSettings::logging_enabled() const {
   return logging_enabled_ ? &(*logging_enabled_) : nullptr;
@@ -85,49 +91,56 @@ void DatabasePigeonSettings::set_logging_enabled(bool value_arg) {
   logging_enabled_ = value_arg;
 }
 
-
 const std::string* DatabasePigeonSettings::emulator_host() const {
   return emulator_host_ ? &(*emulator_host_) : nullptr;
 }
 
-void DatabasePigeonSettings::set_emulator_host(const std::string_view* value_arg) {
-  emulator_host_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void DatabasePigeonSettings::set_emulator_host(
+    const std::string_view* value_arg) {
+  emulator_host_ =
+      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void DatabasePigeonSettings::set_emulator_host(std::string_view value_arg) {
   emulator_host_ = value_arg;
 }
 
-
 const int64_t* DatabasePigeonSettings::emulator_port() const {
   return emulator_port_ ? &(*emulator_port_) : nullptr;
 }
 
 void DatabasePigeonSettings::set_emulator_port(const int64_t* value_arg) {
-  emulator_port_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
+  emulator_port_ =
+      value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
 }
 
 void DatabasePigeonSettings::set_emulator_port(int64_t value_arg) {
   emulator_port_ = value_arg;
 }
 
-
 EncodableList DatabasePigeonSettings::ToEncodableList() const {
   EncodableList list;
   list.reserve(5);
-  list.push_back(persistence_enabled_ ? EncodableValue(*persistence_enabled_) : EncodableValue());
-  list.push_back(cache_size_bytes_ ? EncodableValue(*cache_size_bytes_) : EncodableValue());
-  list.push_back(logging_enabled_ ? EncodableValue(*logging_enabled_) : EncodableValue());
-  list.push_back(emulator_host_ ? EncodableValue(*emulator_host_) : EncodableValue());
-  list.push_back(emulator_port_ ? EncodableValue(*emulator_port_) : EncodableValue());
+  list.push_back(persistence_enabled_ ? EncodableValue(*persistence_enabled_)
+                                      : EncodableValue());
+  list.push_back(cache_size_bytes_ ? EncodableValue(*cache_size_bytes_)
+                                   : EncodableValue());
+  list.push_back(logging_enabled_ ? EncodableValue(*logging_enabled_)
+                                  : EncodableValue());
+  list.push_back(emulator_host_ ? EncodableValue(*emulator_host_)
+                                : EncodableValue());
+  list.push_back(emulator_port_ ? EncodableValue(*emulator_port_)
+                                : EncodableValue());
   return list;
 }
 
-DatabasePigeonSettings DatabasePigeonSettings::FromEncodableList(const EncodableList& list) {
+DatabasePigeonSettings DatabasePigeonSettings::FromEncodableList(
+    const EncodableList& list) {
   DatabasePigeonSettings decoded;
   auto& encodable_persistence_enabled = list[0];
   if (!encodable_persistence_enabled.IsNull()) {
-    decoded.set_persistence_enabled(std::get<bool>(encodable_persistence_enabled));
+    decoded.set_persistence_enabled(
+        std::get<bool>(encodable_persistence_enabled));
   }
   auto& encodable_cache_size_bytes = list[1];
   if (!encodable_cache_size_bytes.IsNull()) {
@@ -151,25 +164,29 @@ DatabasePigeonSettings DatabasePigeonSettings::FromEncodableList(const Encodable
 // DatabasePigeonFirebaseApp
 
 DatabasePigeonFirebaseApp::DatabasePigeonFirebaseApp(
-  const std::string& app_name,
-  const DatabasePigeonSettings& settings)
- : app_name_(app_name),
-    settings_(std::make_unique<DatabasePigeonSettings>(settings)) {}
+    const std::string& app_name, const DatabasePigeonSettings& settings)
+    : app_name_(app_name),
+      settings_(std::make_unique<DatabasePigeonSettings>(settings)) {}
 
 DatabasePigeonFirebaseApp::DatabasePigeonFirebaseApp(
-  const std::string& app_name,
-  const std::string* database_u_r_l,
-  const DatabasePigeonSettings& settings)
- : app_name_(app_name),
-    database_u_r_l_(database_u_r_l ? std::optional<std::string>(*database_u_r_l) : std::nullopt),
-    settings_(std::make_unique<DatabasePigeonSettings>(settings)) {}
+    const std::string& app_name, const std::string* database_u_r_l,
+    const DatabasePigeonSettings& settings)
+    : app_name_(app_name),
+      database_u_r_l_(database_u_r_l
+                          ? std::optional<std::string>(*database_u_r_l)
+                          : std::nullopt),
+      settings_(std::make_unique<DatabasePigeonSettings>(settings)) {}
 
-DatabasePigeonFirebaseApp::DatabasePigeonFirebaseApp(const DatabasePigeonFirebaseApp& other)
- : app_name_(other.app_name_),
-    database_u_r_l_(other.database_u_r_l_ ? std::optional<std::string>(*other.database_u_r_l_) : std::nullopt),
-    settings_(std::make_unique<DatabasePigeonSettings>(*other.settings_)) {}
+DatabasePigeonFirebaseApp::DatabasePigeonFirebaseApp(
+    const DatabasePigeonFirebaseApp& other)
+    : app_name_(other.app_name_),
+      database_u_r_l_(other.database_u_r_l_
+                          ? std::optional<std::string>(*other.database_u_r_l_)
+                          : std::nullopt),
+      settings_(std::make_unique<DatabasePigeonSettings>(*other.settings_)) {}
 
-DatabasePigeonFirebaseApp& DatabasePigeonFirebaseApp::operator=(const DatabasePigeonFirebaseApp& other) {
+DatabasePigeonFirebaseApp& DatabasePigeonFirebaseApp::operator=(
+    const DatabasePigeonFirebaseApp& other) {
   app_name_ = other.app_name_;
   database_u_r_l_ = other.database_u_r_l_;
   settings_ = std::make_unique<DatabasePigeonSettings>(*other.settings_);
@@ -184,42 +201,45 @@ void DatabasePigeonFirebaseApp::set_app_name(std::string_view value_arg) {
   app_name_ = value_arg;
 }
 
-
 const std::string* DatabasePigeonFirebaseApp::database_u_r_l() const {
   return database_u_r_l_ ? &(*database_u_r_l_) : nullptr;
 }
 
-void DatabasePigeonFirebaseApp::set_database_u_r_l(const std::string_view* value_arg) {
-  database_u_r_l_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void DatabasePigeonFirebaseApp::set_database_u_r_l(
+    const std::string_view* value_arg) {
+  database_u_r_l_ =
+      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void DatabasePigeonFirebaseApp::set_database_u_r_l(std::string_view value_arg) {
   database_u_r_l_ = value_arg;
 }
 
-
 const DatabasePigeonSettings& DatabasePigeonFirebaseApp::settings() const {
   return *settings_;
 }
 
-void DatabasePigeonFirebaseApp::set_settings(const DatabasePigeonSettings& value_arg) {
+void DatabasePigeonFirebaseApp::set_settings(
+    const DatabasePigeonSettings& value_arg) {
   settings_ = std::make_unique<DatabasePigeonSettings>(value_arg);
 }
-
 
 EncodableList DatabasePigeonFirebaseApp::ToEncodableList() const {
   EncodableList list;
   list.reserve(3);
   list.push_back(EncodableValue(app_name_));
-  list.push_back(database_u_r_l_ ? EncodableValue(*database_u_r_l_) : EncodableValue());
+  list.push_back(database_u_r_l_ ? EncodableValue(*database_u_r_l_)
+                                 : EncodableValue());
   list.push_back(CustomEncodableValue(*settings_));
   return list;
 }
 
-DatabasePigeonFirebaseApp DatabasePigeonFirebaseApp::FromEncodableList(const EncodableList& list) {
+DatabasePigeonFirebaseApp DatabasePigeonFirebaseApp::FromEncodableList(
+    const EncodableList& list) {
   DatabasePigeonFirebaseApp decoded(
-    std::get<std::string>(list[0]),
-    std::any_cast<const DatabasePigeonSettings&>(std::get<CustomEncodableValue>(list[2])));
+      std::get<std::string>(list[0]),
+      std::any_cast<const DatabasePigeonSettings&>(
+          std::get<CustomEncodableValue>(list[2])));
   auto& encodable_database_u_r_l = list[1];
   if (!encodable_database_u_r_l.IsNull()) {
     decoded.set_database_u_r_l(std::get<std::string>(encodable_database_u_r_l));
@@ -230,16 +250,13 @@ DatabasePigeonFirebaseApp DatabasePigeonFirebaseApp::FromEncodableList(const Enc
 // DatabaseReferencePlatform
 
 DatabaseReferencePlatform::DatabaseReferencePlatform(const std::string& path)
- : path_(path) {}
+    : path_(path) {}
 
-const std::string& DatabaseReferencePlatform::path() const {
-  return path_;
-}
+const std::string& DatabaseReferencePlatform::path() const { return path_; }
 
 void DatabaseReferencePlatform::set_path(std::string_view value_arg) {
   path_ = value_arg;
 }
-
 
 EncodableList DatabaseReferencePlatform::ToEncodableList() const {
   EncodableList list;
@@ -248,33 +265,30 @@ EncodableList DatabaseReferencePlatform::ToEncodableList() const {
   return list;
 }
 
-DatabaseReferencePlatform DatabaseReferencePlatform::FromEncodableList(const EncodableList& list) {
-  DatabaseReferencePlatform decoded(
-    std::get<std::string>(list[0]));
+DatabaseReferencePlatform DatabaseReferencePlatform::FromEncodableList(
+    const EncodableList& list) {
+  DatabaseReferencePlatform decoded(std::get<std::string>(list[0]));
   return decoded;
 }
 
 // DatabaseReferenceRequest
 
 DatabaseReferenceRequest::DatabaseReferenceRequest(const std::string& path)
- : path_(path) {}
+    : path_(path) {}
 
 DatabaseReferenceRequest::DatabaseReferenceRequest(
-  const std::string& path,
-  const EncodableValue* value,
-  const EncodableValue* priority)
- : path_(path),
-    value_(value ? std::optional<EncodableValue>(*value) : std::nullopt),
-    priority_(priority ? std::optional<EncodableValue>(*priority) : std::nullopt) {}
+    const std::string& path, const EncodableValue* value,
+    const EncodableValue* priority)
+    : path_(path),
+      value_(value ? std::optional<EncodableValue>(*value) : std::nullopt),
+      priority_(priority ? std::optional<EncodableValue>(*priority)
+                         : std::nullopt) {}
 
-const std::string& DatabaseReferenceRequest::path() const {
-  return path_;
-}
+const std::string& DatabaseReferenceRequest::path() const { return path_; }
 
 void DatabaseReferenceRequest::set_path(std::string_view value_arg) {
   path_ = value_arg;
 }
-
 
 const EncodableValue* DatabaseReferenceRequest::value() const {
   return value_ ? &(*value_) : nullptr;
@@ -288,19 +302,18 @@ void DatabaseReferenceRequest::set_value(const EncodableValue& value_arg) {
   value_ = value_arg;
 }
 
-
 const EncodableValue* DatabaseReferenceRequest::priority() const {
   return priority_ ? &(*priority_) : nullptr;
 }
 
 void DatabaseReferenceRequest::set_priority(const EncodableValue* value_arg) {
-  priority_ = value_arg ? std::optional<EncodableValue>(*value_arg) : std::nullopt;
+  priority_ =
+      value_arg ? std::optional<EncodableValue>(*value_arg) : std::nullopt;
 }
 
 void DatabaseReferenceRequest::set_priority(const EncodableValue& value_arg) {
   priority_ = value_arg;
 }
-
 
 EncodableList DatabaseReferenceRequest::ToEncodableList() const {
   EncodableList list;
@@ -311,9 +324,9 @@ EncodableList DatabaseReferenceRequest::ToEncodableList() const {
   return list;
 }
 
-DatabaseReferenceRequest DatabaseReferenceRequest::FromEncodableList(const EncodableList& list) {
-  DatabaseReferenceRequest decoded(
-    std::get<std::string>(list[0]));
+DatabaseReferenceRequest DatabaseReferenceRequest::FromEncodableList(
+    const EncodableList& list) {
+  DatabaseReferenceRequest decoded(std::get<std::string>(list[0]));
   auto& encodable_value = list[1];
   if (!encodable_value.IsNull()) {
     decoded.set_value(encodable_value);
@@ -327,29 +340,18 @@ DatabaseReferenceRequest DatabaseReferenceRequest::FromEncodableList(const Encod
 
 // UpdateRequest
 
-UpdateRequest::UpdateRequest(
-  const std::string& path,
-  const EncodableMap& value)
- : path_(path),
-    value_(value) {}
+UpdateRequest::UpdateRequest(const std::string& path, const EncodableMap& value)
+    : path_(path), value_(value) {}
 
-const std::string& UpdateRequest::path() const {
-  return path_;
-}
+const std::string& UpdateRequest::path() const { return path_; }
 
-void UpdateRequest::set_path(std::string_view value_arg) {
-  path_ = value_arg;
-}
+void UpdateRequest::set_path(std::string_view value_arg) { path_ = value_arg; }
 
-
-const EncodableMap& UpdateRequest::value() const {
-  return value_;
-}
+const EncodableMap& UpdateRequest::value() const { return value_; }
 
 void UpdateRequest::set_value(const EncodableMap& value_arg) {
   value_ = value_arg;
 }
-
 
 EncodableList UpdateRequest::ToEncodableList() const {
   EncodableList list;
@@ -360,48 +362,37 @@ EncodableList UpdateRequest::ToEncodableList() const {
 }
 
 UpdateRequest UpdateRequest::FromEncodableList(const EncodableList& list) {
-  UpdateRequest decoded(
-    std::get<std::string>(list[0]),
-    std::get<EncodableMap>(list[1]));
+  UpdateRequest decoded(std::get<std::string>(list[0]),
+                        std::get<EncodableMap>(list[1]));
   return decoded;
 }
 
 // TransactionRequest
 
-TransactionRequest::TransactionRequest(
-  const std::string& path,
-  int64_t transaction_key,
-  bool apply_locally)
- : path_(path),
-    transaction_key_(transaction_key),
-    apply_locally_(apply_locally) {}
+TransactionRequest::TransactionRequest(const std::string& path,
+                                       int64_t transaction_key,
+                                       bool apply_locally)
+    : path_(path),
+      transaction_key_(transaction_key),
+      apply_locally_(apply_locally) {}
 
-const std::string& TransactionRequest::path() const {
-  return path_;
-}
+const std::string& TransactionRequest::path() const { return path_; }
 
 void TransactionRequest::set_path(std::string_view value_arg) {
   path_ = value_arg;
 }
 
-
-int64_t TransactionRequest::transaction_key() const {
-  return transaction_key_;
-}
+int64_t TransactionRequest::transaction_key() const { return transaction_key_; }
 
 void TransactionRequest::set_transaction_key(int64_t value_arg) {
   transaction_key_ = value_arg;
 }
 
-
-bool TransactionRequest::apply_locally() const {
-  return apply_locally_;
-}
+bool TransactionRequest::apply_locally() const { return apply_locally_; }
 
 void TransactionRequest::set_apply_locally(bool value_arg) {
   apply_locally_ = value_arg;
 }
-
 
 EncodableList TransactionRequest::ToEncodableList() const {
   EncodableList list;
@@ -412,47 +403,35 @@ EncodableList TransactionRequest::ToEncodableList() const {
   return list;
 }
 
-TransactionRequest TransactionRequest::FromEncodableList(const EncodableList& list) {
-  TransactionRequest decoded(
-    std::get<std::string>(list[0]),
-    std::get<int64_t>(list[1]),
-    std::get<bool>(list[2]));
+TransactionRequest TransactionRequest::FromEncodableList(
+    const EncodableList& list) {
+  TransactionRequest decoded(std::get<std::string>(list[0]),
+                             std::get<int64_t>(list[1]),
+                             std::get<bool>(list[2]));
   return decoded;
 }
 
 // QueryRequest
 
-QueryRequest::QueryRequest(
-  const std::string& path,
-  const EncodableList& modifiers)
- : path_(path),
-    modifiers_(modifiers) {}
+QueryRequest::QueryRequest(const std::string& path,
+                           const EncodableList& modifiers)
+    : path_(path), modifiers_(modifiers) {}
 
-QueryRequest::QueryRequest(
-  const std::string& path,
-  const EncodableList& modifiers,
-  const bool* value)
- : path_(path),
-    modifiers_(modifiers),
-    value_(value ? std::optional<bool>(*value) : std::nullopt) {}
+QueryRequest::QueryRequest(const std::string& path,
+                           const EncodableList& modifiers, const bool* value)
+    : path_(path),
+      modifiers_(modifiers),
+      value_(value ? std::optional<bool>(*value) : std::nullopt) {}
 
-const std::string& QueryRequest::path() const {
-  return path_;
-}
+const std::string& QueryRequest::path() const { return path_; }
 
-void QueryRequest::set_path(std::string_view value_arg) {
-  path_ = value_arg;
-}
+void QueryRequest::set_path(std::string_view value_arg) { path_ = value_arg; }
 
-
-const EncodableList& QueryRequest::modifiers() const {
-  return modifiers_;
-}
+const EncodableList& QueryRequest::modifiers() const { return modifiers_; }
 
 void QueryRequest::set_modifiers(const EncodableList& value_arg) {
   modifiers_ = value_arg;
 }
-
 
 const bool* QueryRequest::value() const {
   return value_ ? &(*value_) : nullptr;
@@ -462,10 +441,7 @@ void QueryRequest::set_value(const bool* value_arg) {
   value_ = value_arg ? std::optional<bool>(*value_arg) : std::nullopt;
 }
 
-void QueryRequest::set_value(bool value_arg) {
-  value_ = value_arg;
-}
-
+void QueryRequest::set_value(bool value_arg) { value_ = value_arg; }
 
 EncodableList QueryRequest::ToEncodableList() const {
   EncodableList list;
@@ -477,9 +453,8 @@ EncodableList QueryRequest::ToEncodableList() const {
 }
 
 QueryRequest QueryRequest::FromEncodableList(const EncodableList& list) {
-  QueryRequest decoded(
-    std::get<std::string>(list[0]),
-    std::get<EncodableList>(list[1]));
+  QueryRequest decoded(std::get<std::string>(list[0]),
+                       std::get<EncodableList>(list[1]));
   auto& encodable_value = list[2];
   if (!encodable_value.IsNull()) {
     decoded.set_value(std::get<bool>(encodable_value));
@@ -489,19 +464,14 @@ QueryRequest QueryRequest::FromEncodableList(const EncodableList& list) {
 
 // TransactionHandlerResult
 
-TransactionHandlerResult::TransactionHandlerResult(
-  bool aborted,
-  bool exception)
- : aborted_(aborted),
-    exception_(exception) {}
+TransactionHandlerResult::TransactionHandlerResult(bool aborted, bool exception)
+    : aborted_(aborted), exception_(exception) {}
 
-TransactionHandlerResult::TransactionHandlerResult(
-  const EncodableValue* value,
-  bool aborted,
-  bool exception)
- : value_(value ? std::optional<EncodableValue>(*value) : std::nullopt),
-    aborted_(aborted),
-    exception_(exception) {}
+TransactionHandlerResult::TransactionHandlerResult(const EncodableValue* value,
+                                                   bool aborted, bool exception)
+    : value_(value ? std::optional<EncodableValue>(*value) : std::nullopt),
+      aborted_(aborted),
+      exception_(exception) {}
 
 const EncodableValue* TransactionHandlerResult::value() const {
   return value_ ? &(*value_) : nullptr;
@@ -515,24 +485,17 @@ void TransactionHandlerResult::set_value(const EncodableValue& value_arg) {
   value_ = value_arg;
 }
 
-
-bool TransactionHandlerResult::aborted() const {
-  return aborted_;
-}
+bool TransactionHandlerResult::aborted() const { return aborted_; }
 
 void TransactionHandlerResult::set_aborted(bool value_arg) {
   aborted_ = value_arg;
 }
 
-
-bool TransactionHandlerResult::exception() const {
-  return exception_;
-}
+bool TransactionHandlerResult::exception() const { return exception_; }
 
 void TransactionHandlerResult::set_exception(bool value_arg) {
   exception_ = value_arg;
 }
-
 
 EncodableList TransactionHandlerResult::ToEncodableList() const {
   EncodableList list;
@@ -543,10 +506,10 @@ EncodableList TransactionHandlerResult::ToEncodableList() const {
   return list;
 }
 
-TransactionHandlerResult TransactionHandlerResult::FromEncodableList(const EncodableList& list) {
-  TransactionHandlerResult decoded(
-    std::get<bool>(list[1]),
-    std::get<bool>(list[2]));
+TransactionHandlerResult TransactionHandlerResult::FromEncodableList(
+    const EncodableList& list) {
+  TransactionHandlerResult decoded(std::get<bool>(list[1]),
+                                   std::get<bool>(list[2]));
   auto& encodable_value = list[0];
   if (!encodable_value.IsNull()) {
     decoded.set_value(encodable_value);
@@ -554,84 +517,113 @@ TransactionHandlerResult TransactionHandlerResult::FromEncodableList(const Encod
   return decoded;
 }
 
-
 PigeonInternalCodecSerializer::PigeonInternalCodecSerializer() {}
 
 EncodableValue PigeonInternalCodecSerializer::ReadValueOfType(
-  uint8_t type,
-  flutter::ByteStreamReader* stream) const {
+    uint8_t type, flutter::ByteStreamReader* stream) const {
   switch (type) {
     case 129: {
-        return CustomEncodableValue(DatabasePigeonSettings::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
-      }
+      return CustomEncodableValue(DatabasePigeonSettings::FromEncodableList(
+          std::get<EncodableList>(ReadValue(stream))));
+    }
     case 130: {
-        return CustomEncodableValue(DatabasePigeonFirebaseApp::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
-      }
+      return CustomEncodableValue(DatabasePigeonFirebaseApp::FromEncodableList(
+          std::get<EncodableList>(ReadValue(stream))));
+    }
     case 131: {
-        return CustomEncodableValue(DatabaseReferencePlatform::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
-      }
+      return CustomEncodableValue(DatabaseReferencePlatform::FromEncodableList(
+          std::get<EncodableList>(ReadValue(stream))));
+    }
     case 132: {
-        return CustomEncodableValue(DatabaseReferenceRequest::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
-      }
+      return CustomEncodableValue(DatabaseReferenceRequest::FromEncodableList(
+          std::get<EncodableList>(ReadValue(stream))));
+    }
     case 133: {
-        return CustomEncodableValue(UpdateRequest::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
-      }
+      return CustomEncodableValue(UpdateRequest::FromEncodableList(
+          std::get<EncodableList>(ReadValue(stream))));
+    }
     case 134: {
-        return CustomEncodableValue(TransactionRequest::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
-      }
+      return CustomEncodableValue(TransactionRequest::FromEncodableList(
+          std::get<EncodableList>(ReadValue(stream))));
+    }
     case 135: {
-        return CustomEncodableValue(QueryRequest::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
-      }
+      return CustomEncodableValue(QueryRequest::FromEncodableList(
+          std::get<EncodableList>(ReadValue(stream))));
+    }
     case 136: {
-        return CustomEncodableValue(TransactionHandlerResult::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
-      }
+      return CustomEncodableValue(TransactionHandlerResult::FromEncodableList(
+          std::get<EncodableList>(ReadValue(stream))));
+    }
     default:
       return flutter::StandardCodecSerializer::ReadValueOfType(type, stream);
-    }
+  }
 }
 
 void PigeonInternalCodecSerializer::WriteValue(
-  const EncodableValue& value,
-  flutter::ByteStreamWriter* stream) const {
-  if (const CustomEncodableValue* custom_value = std::get_if<CustomEncodableValue>(&value)) {
+    const EncodableValue& value, flutter::ByteStreamWriter* stream) const {
+  if (const CustomEncodableValue* custom_value =
+          std::get_if<CustomEncodableValue>(&value)) {
     if (custom_value->type() == typeid(DatabasePigeonSettings)) {
       stream->WriteByte(129);
-      WriteValue(EncodableValue(std::any_cast<DatabasePigeonSettings>(*custom_value).ToEncodableList()), stream);
+      WriteValue(
+          EncodableValue(std::any_cast<DatabasePigeonSettings>(*custom_value)
+                             .ToEncodableList()),
+          stream);
       return;
     }
     if (custom_value->type() == typeid(DatabasePigeonFirebaseApp)) {
       stream->WriteByte(130);
-      WriteValue(EncodableValue(std::any_cast<DatabasePigeonFirebaseApp>(*custom_value).ToEncodableList()), stream);
+      WriteValue(
+          EncodableValue(std::any_cast<DatabasePigeonFirebaseApp>(*custom_value)
+                             .ToEncodableList()),
+          stream);
       return;
     }
     if (custom_value->type() == typeid(DatabaseReferencePlatform)) {
       stream->WriteByte(131);
-      WriteValue(EncodableValue(std::any_cast<DatabaseReferencePlatform>(*custom_value).ToEncodableList()), stream);
+      WriteValue(
+          EncodableValue(std::any_cast<DatabaseReferencePlatform>(*custom_value)
+                             .ToEncodableList()),
+          stream);
       return;
     }
     if (custom_value->type() == typeid(DatabaseReferenceRequest)) {
       stream->WriteByte(132);
-      WriteValue(EncodableValue(std::any_cast<DatabaseReferenceRequest>(*custom_value).ToEncodableList()), stream);
+      WriteValue(
+          EncodableValue(std::any_cast<DatabaseReferenceRequest>(*custom_value)
+                             .ToEncodableList()),
+          stream);
       return;
     }
     if (custom_value->type() == typeid(UpdateRequest)) {
       stream->WriteByte(133);
-      WriteValue(EncodableValue(std::any_cast<UpdateRequest>(*custom_value).ToEncodableList()), stream);
+      WriteValue(
+          EncodableValue(
+              std::any_cast<UpdateRequest>(*custom_value).ToEncodableList()),
+          stream);
       return;
     }
     if (custom_value->type() == typeid(TransactionRequest)) {
       stream->WriteByte(134);
-      WriteValue(EncodableValue(std::any_cast<TransactionRequest>(*custom_value).ToEncodableList()), stream);
+      WriteValue(EncodableValue(std::any_cast<TransactionRequest>(*custom_value)
+                                    .ToEncodableList()),
+                 stream);
       return;
     }
     if (custom_value->type() == typeid(QueryRequest)) {
       stream->WriteByte(135);
-      WriteValue(EncodableValue(std::any_cast<QueryRequest>(*custom_value).ToEncodableList()), stream);
+      WriteValue(
+          EncodableValue(
+              std::any_cast<QueryRequest>(*custom_value).ToEncodableList()),
+          stream);
       return;
     }
     if (custom_value->type() == typeid(TransactionHandlerResult)) {
       stream->WriteByte(136);
-      WriteValue(EncodableValue(std::any_cast<TransactionHandlerResult>(*custom_value).ToEncodableList()), stream);
+      WriteValue(
+          EncodableValue(std::any_cast<TransactionHandlerResult>(*custom_value)
+                             .ToEncodableList()),
+          stream);
       return;
     }
   }
@@ -640,834 +632,1111 @@ void PigeonInternalCodecSerializer::WriteValue(
 
 /// The codec used by FirebaseDatabaseHostApi.
 const flutter::StandardMessageCodec& FirebaseDatabaseHostApi::GetCodec() {
-  return flutter::StandardMessageCodec::GetInstance(&PigeonInternalCodecSerializer::GetInstance());
+  return flutter::StandardMessageCodec::GetInstance(
+      &PigeonInternalCodecSerializer::GetInstance());
 }
 
-// Sets up an instance of `FirebaseDatabaseHostApi` to handle messages through the `binary_messenger`.
-void FirebaseDatabaseHostApi::SetUp(
-  flutter::BinaryMessenger* binary_messenger,
-  FirebaseDatabaseHostApi* api) {
+// Sets up an instance of `FirebaseDatabaseHostApi` to handle messages through
+// the `binary_messenger`.
+void FirebaseDatabaseHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
+                                    FirebaseDatabaseHostApi* api) {
   FirebaseDatabaseHostApi::SetUp(binary_messenger, api, "");
 }
 
-void FirebaseDatabaseHostApi::SetUp(
-  flutter::BinaryMessenger* binary_messenger,
-  FirebaseDatabaseHostApi* api,
-  const std::string& message_channel_suffix) {
-  const std::string prepended_suffix = message_channel_suffix.length() > 0 ? std::string(".") + message_channel_suffix : "";
+void FirebaseDatabaseHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
+                                    FirebaseDatabaseHostApi* api,
+                                    const std::string& message_channel_suffix) {
+  const std::string prepended_suffix =
+      message_channel_suffix.length() > 0
+          ? std::string(".") + message_channel_suffix
+          : "";
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOnline" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_database_platform_interface."
+        "FirebaseDatabaseHostApi.goOnline" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_arg = std::any_cast<const DatabasePigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
-          api->GoOnline(app_arg, [reply](std::optional<FlutterError>&& output) {
-            if (output.has_value()) {
-              reply(WrapError(output.value()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_arg =
+                  std::any_cast<const DatabasePigeonFirebaseApp&>(
+                      std::get<CustomEncodableValue>(encodable_app_arg));
+              api->GoOnline(app_arg,
+                            [reply](std::optional<FlutterError>&& output) {
+                              if (output.has_value()) {
+                                reply(WrapError(output.value()));
+                                return;
+                              }
+                              EncodableList wrapped;
+                              wrapped.push_back(EncodableValue());
+                              reply(EncodableValue(std::move(wrapped)));
+                            });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue());
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOffline" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_database_platform_interface."
+        "FirebaseDatabaseHostApi.goOffline" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_arg = std::any_cast<const DatabasePigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
-          api->GoOffline(app_arg, [reply](std::optional<FlutterError>&& output) {
-            if (output.has_value()) {
-              reply(WrapError(output.value()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_arg =
+                  std::any_cast<const DatabasePigeonFirebaseApp&>(
+                      std::get<CustomEncodableValue>(encodable_app_arg));
+              api->GoOffline(app_arg,
+                             [reply](std::optional<FlutterError>&& output) {
+                               if (output.has_value()) {
+                                 reply(WrapError(output.value()));
+                                 return;
+                               }
+                               EncodableList wrapped;
+                               wrapped.push_back(EncodableValue());
+                               reply(EncodableValue(std::move(wrapped)));
+                             });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue());
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPersistenceEnabled" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_database_platform_interface."
+        "FirebaseDatabaseHostApi.setPersistenceEnabled" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_arg = std::any_cast<const DatabasePigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
-          const auto& encodable_enabled_arg = args.at(1);
-          if (encodable_enabled_arg.IsNull()) {
-            reply(WrapError("enabled_arg unexpectedly null."));
-            return;
-          }
-          const auto& enabled_arg = std::get<bool>(encodable_enabled_arg);
-          api->SetPersistenceEnabled(app_arg, enabled_arg, [reply](std::optional<FlutterError>&& output) {
-            if (output.has_value()) {
-              reply(WrapError(output.value()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_arg =
+                  std::any_cast<const DatabasePigeonFirebaseApp&>(
+                      std::get<CustomEncodableValue>(encodable_app_arg));
+              const auto& encodable_enabled_arg = args.at(1);
+              if (encodable_enabled_arg.IsNull()) {
+                reply(WrapError("enabled_arg unexpectedly null."));
+                return;
+              }
+              const auto& enabled_arg = std::get<bool>(encodable_enabled_arg);
+              api->SetPersistenceEnabled(
+                  app_arg, enabled_arg,
+                  [reply](std::optional<FlutterError>&& output) {
+                    if (output.has_value()) {
+                      reply(WrapError(output.value()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(EncodableValue());
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue());
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPersistenceCacheSizeBytes" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_database_platform_interface."
+        "FirebaseDatabaseHostApi.setPersistenceCacheSizeBytes" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_arg = std::any_cast<const DatabasePigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
-          const auto& encodable_cache_size_arg = args.at(1);
-          if (encodable_cache_size_arg.IsNull()) {
-            reply(WrapError("cache_size_arg unexpectedly null."));
-            return;
-          }
-          const int64_t cache_size_arg = encodable_cache_size_arg.LongValue();
-          api->SetPersistenceCacheSizeBytes(app_arg, cache_size_arg, [reply](std::optional<FlutterError>&& output) {
-            if (output.has_value()) {
-              reply(WrapError(output.value()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_arg =
+                  std::any_cast<const DatabasePigeonFirebaseApp&>(
+                      std::get<CustomEncodableValue>(encodable_app_arg));
+              const auto& encodable_cache_size_arg = args.at(1);
+              if (encodable_cache_size_arg.IsNull()) {
+                reply(WrapError("cache_size_arg unexpectedly null."));
+                return;
+              }
+              const int64_t cache_size_arg =
+                  encodable_cache_size_arg.LongValue();
+              api->SetPersistenceCacheSizeBytes(
+                  app_arg, cache_size_arg,
+                  [reply](std::optional<FlutterError>&& output) {
+                    if (output.has_value()) {
+                      reply(WrapError(output.value()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(EncodableValue());
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue());
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setLoggingEnabled" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_database_platform_interface."
+        "FirebaseDatabaseHostApi.setLoggingEnabled" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_arg = std::any_cast<const DatabasePigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
-          const auto& encodable_enabled_arg = args.at(1);
-          if (encodable_enabled_arg.IsNull()) {
-            reply(WrapError("enabled_arg unexpectedly null."));
-            return;
-          }
-          const auto& enabled_arg = std::get<bool>(encodable_enabled_arg);
-          api->SetLoggingEnabled(app_arg, enabled_arg, [reply](std::optional<FlutterError>&& output) {
-            if (output.has_value()) {
-              reply(WrapError(output.value()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_arg =
+                  std::any_cast<const DatabasePigeonFirebaseApp&>(
+                      std::get<CustomEncodableValue>(encodable_app_arg));
+              const auto& encodable_enabled_arg = args.at(1);
+              if (encodable_enabled_arg.IsNull()) {
+                reply(WrapError("enabled_arg unexpectedly null."));
+                return;
+              }
+              const auto& enabled_arg = std::get<bool>(encodable_enabled_arg);
+              api->SetLoggingEnabled(
+                  app_arg, enabled_arg,
+                  [reply](std::optional<FlutterError>&& output) {
+                    if (output.has_value()) {
+                      reply(WrapError(output.value()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(EncodableValue());
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue());
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.useDatabaseEmulator" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_database_platform_interface."
+        "FirebaseDatabaseHostApi.useDatabaseEmulator" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_arg = std::any_cast<const DatabasePigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
-          const auto& encodable_host_arg = args.at(1);
-          if (encodable_host_arg.IsNull()) {
-            reply(WrapError("host_arg unexpectedly null."));
-            return;
-          }
-          const auto& host_arg = std::get<std::string>(encodable_host_arg);
-          const auto& encodable_port_arg = args.at(2);
-          if (encodable_port_arg.IsNull()) {
-            reply(WrapError("port_arg unexpectedly null."));
-            return;
-          }
-          const int64_t port_arg = encodable_port_arg.LongValue();
-          api->UseDatabaseEmulator(app_arg, host_arg, port_arg, [reply](std::optional<FlutterError>&& output) {
-            if (output.has_value()) {
-              reply(WrapError(output.value()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_arg =
+                  std::any_cast<const DatabasePigeonFirebaseApp&>(
+                      std::get<CustomEncodableValue>(encodable_app_arg));
+              const auto& encodable_host_arg = args.at(1);
+              if (encodable_host_arg.IsNull()) {
+                reply(WrapError("host_arg unexpectedly null."));
+                return;
+              }
+              const auto& host_arg = std::get<std::string>(encodable_host_arg);
+              const auto& encodable_port_arg = args.at(2);
+              if (encodable_port_arg.IsNull()) {
+                reply(WrapError("port_arg unexpectedly null."));
+                return;
+              }
+              const int64_t port_arg = encodable_port_arg.LongValue();
+              api->UseDatabaseEmulator(
+                  app_arg, host_arg, port_arg,
+                  [reply](std::optional<FlutterError>&& output) {
+                    if (output.has_value()) {
+                      reply(WrapError(output.value()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(EncodableValue());
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue());
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.ref" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_database_platform_interface."
+        "FirebaseDatabaseHostApi.ref" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_arg = std::any_cast<const DatabasePigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
-          const auto& encodable_path_arg = args.at(1);
-          const auto* path_arg = std::get_if<std::string>(&encodable_path_arg);
-          api->Ref(app_arg, path_arg, [reply](ErrorOr<DatabaseReferencePlatform>&& output) {
-            if (output.has_error()) {
-              reply(WrapError(output.error()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_arg =
+                  std::any_cast<const DatabasePigeonFirebaseApp&>(
+                      std::get<CustomEncodableValue>(encodable_app_arg));
+              const auto& encodable_path_arg = args.at(1);
+              const auto* path_arg =
+                  std::get_if<std::string>(&encodable_path_arg);
+              api->Ref(app_arg, path_arg,
+                       [reply](ErrorOr<DatabaseReferencePlatform>&& output) {
+                         if (output.has_error()) {
+                           reply(WrapError(output.error()));
+                           return;
+                         }
+                         EncodableList wrapped;
+                         wrapped.push_back(CustomEncodableValue(
+                             std::move(output).TakeValue()));
+                         reply(EncodableValue(std::move(wrapped)));
+                       });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.refFromURL" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_database_platform_interface."
+        "FirebaseDatabaseHostApi.refFromURL" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_arg = std::any_cast<const DatabasePigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
-          const auto& encodable_url_arg = args.at(1);
-          if (encodable_url_arg.IsNull()) {
-            reply(WrapError("url_arg unexpectedly null."));
-            return;
-          }
-          const auto& url_arg = std::get<std::string>(encodable_url_arg);
-          api->RefFromURL(app_arg, url_arg, [reply](ErrorOr<DatabaseReferencePlatform>&& output) {
-            if (output.has_error()) {
-              reply(WrapError(output.error()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_arg =
+                  std::any_cast<const DatabasePigeonFirebaseApp&>(
+                      std::get<CustomEncodableValue>(encodable_app_arg));
+              const auto& encodable_url_arg = args.at(1);
+              if (encodable_url_arg.IsNull()) {
+                reply(WrapError("url_arg unexpectedly null."));
+                return;
+              }
+              const auto& url_arg = std::get<std::string>(encodable_url_arg);
+              api->RefFromURL(
+                  app_arg, url_arg,
+                  [reply](ErrorOr<DatabaseReferencePlatform>&& output) {
+                    if (output.has_error()) {
+                      reply(WrapError(output.error()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(
+                        CustomEncodableValue(std::move(output).TakeValue()));
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.purgeOutstandingWrites" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_database_platform_interface."
+        "FirebaseDatabaseHostApi.purgeOutstandingWrites" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_arg = std::any_cast<const DatabasePigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
-          api->PurgeOutstandingWrites(app_arg, [reply](std::optional<FlutterError>&& output) {
-            if (output.has_value()) {
-              reply(WrapError(output.value()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_arg =
+                  std::any_cast<const DatabasePigeonFirebaseApp&>(
+                      std::get<CustomEncodableValue>(encodable_app_arg));
+              api->PurgeOutstandingWrites(
+                  app_arg, [reply](std::optional<FlutterError>&& output) {
+                    if (output.has_value()) {
+                      reply(WrapError(output.value()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(EncodableValue());
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue());
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSet" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_database_platform_interface."
+        "FirebaseDatabaseHostApi.databaseReferenceSet" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_arg = std::any_cast<const DatabasePigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
-          const auto& encodable_request_arg = args.at(1);
-          if (encodable_request_arg.IsNull()) {
-            reply(WrapError("request_arg unexpectedly null."));
-            return;
-          }
-          const auto& request_arg = std::any_cast<const DatabaseReferenceRequest&>(std::get<CustomEncodableValue>(encodable_request_arg));
-          api->DatabaseReferenceSet(app_arg, request_arg, [reply](std::optional<FlutterError>&& output) {
-            if (output.has_value()) {
-              reply(WrapError(output.value()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_arg =
+                  std::any_cast<const DatabasePigeonFirebaseApp&>(
+                      std::get<CustomEncodableValue>(encodable_app_arg));
+              const auto& encodable_request_arg = args.at(1);
+              if (encodable_request_arg.IsNull()) {
+                reply(WrapError("request_arg unexpectedly null."));
+                return;
+              }
+              const auto& request_arg =
+                  std::any_cast<const DatabaseReferenceRequest&>(
+                      std::get<CustomEncodableValue>(encodable_request_arg));
+              api->DatabaseReferenceSet(
+                  app_arg, request_arg,
+                  [reply](std::optional<FlutterError>&& output) {
+                    if (output.has_value()) {
+                      reply(WrapError(output.value()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(EncodableValue());
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue());
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetWithPriority" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_database_platform_interface."
+        "FirebaseDatabaseHostApi.databaseReferenceSetWithPriority" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_arg = std::any_cast<const DatabasePigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
-          const auto& encodable_request_arg = args.at(1);
-          if (encodable_request_arg.IsNull()) {
-            reply(WrapError("request_arg unexpectedly null."));
-            return;
-          }
-          const auto& request_arg = std::any_cast<const DatabaseReferenceRequest&>(std::get<CustomEncodableValue>(encodable_request_arg));
-          api->DatabaseReferenceSetWithPriority(app_arg, request_arg, [reply](std::optional<FlutterError>&& output) {
-            if (output.has_value()) {
-              reply(WrapError(output.value()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_arg =
+                  std::any_cast<const DatabasePigeonFirebaseApp&>(
+                      std::get<CustomEncodableValue>(encodable_app_arg));
+              const auto& encodable_request_arg = args.at(1);
+              if (encodable_request_arg.IsNull()) {
+                reply(WrapError("request_arg unexpectedly null."));
+                return;
+              }
+              const auto& request_arg =
+                  std::any_cast<const DatabaseReferenceRequest&>(
+                      std::get<CustomEncodableValue>(encodable_request_arg));
+              api->DatabaseReferenceSetWithPriority(
+                  app_arg, request_arg,
+                  [reply](std::optional<FlutterError>&& output) {
+                    if (output.has_value()) {
+                      reply(WrapError(output.value()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(EncodableValue());
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue());
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceUpdate" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_database_platform_interface."
+        "FirebaseDatabaseHostApi.databaseReferenceUpdate" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_arg = std::any_cast<const DatabasePigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
-          const auto& encodable_request_arg = args.at(1);
-          if (encodable_request_arg.IsNull()) {
-            reply(WrapError("request_arg unexpectedly null."));
-            return;
-          }
-          const auto& request_arg = std::any_cast<const UpdateRequest&>(std::get<CustomEncodableValue>(encodable_request_arg));
-          api->DatabaseReferenceUpdate(app_arg, request_arg, [reply](std::optional<FlutterError>&& output) {
-            if (output.has_value()) {
-              reply(WrapError(output.value()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_arg =
+                  std::any_cast<const DatabasePigeonFirebaseApp&>(
+                      std::get<CustomEncodableValue>(encodable_app_arg));
+              const auto& encodable_request_arg = args.at(1);
+              if (encodable_request_arg.IsNull()) {
+                reply(WrapError("request_arg unexpectedly null."));
+                return;
+              }
+              const auto& request_arg = std::any_cast<const UpdateRequest&>(
+                  std::get<CustomEncodableValue>(encodable_request_arg));
+              api->DatabaseReferenceUpdate(
+                  app_arg, request_arg,
+                  [reply](std::optional<FlutterError>&& output) {
+                    if (output.has_value()) {
+                      reply(WrapError(output.value()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(EncodableValue());
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue());
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetPriority" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_database_platform_interface."
+        "FirebaseDatabaseHostApi.databaseReferenceSetPriority" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_arg = std::any_cast<const DatabasePigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
-          const auto& encodable_request_arg = args.at(1);
-          if (encodable_request_arg.IsNull()) {
-            reply(WrapError("request_arg unexpectedly null."));
-            return;
-          }
-          const auto& request_arg = std::any_cast<const DatabaseReferenceRequest&>(std::get<CustomEncodableValue>(encodable_request_arg));
-          api->DatabaseReferenceSetPriority(app_arg, request_arg, [reply](std::optional<FlutterError>&& output) {
-            if (output.has_value()) {
-              reply(WrapError(output.value()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_arg =
+                  std::any_cast<const DatabasePigeonFirebaseApp&>(
+                      std::get<CustomEncodableValue>(encodable_app_arg));
+              const auto& encodable_request_arg = args.at(1);
+              if (encodable_request_arg.IsNull()) {
+                reply(WrapError("request_arg unexpectedly null."));
+                return;
+              }
+              const auto& request_arg =
+                  std::any_cast<const DatabaseReferenceRequest&>(
+                      std::get<CustomEncodableValue>(encodable_request_arg));
+              api->DatabaseReferenceSetPriority(
+                  app_arg, request_arg,
+                  [reply](std::optional<FlutterError>&& output) {
+                    if (output.has_value()) {
+                      reply(WrapError(output.value()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(EncodableValue());
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue());
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceRunTransaction" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_database_platform_interface."
+        "FirebaseDatabaseHostApi.databaseReferenceRunTransaction" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_arg = std::any_cast<const DatabasePigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
-          const auto& encodable_request_arg = args.at(1);
-          if (encodable_request_arg.IsNull()) {
-            reply(WrapError("request_arg unexpectedly null."));
-            return;
-          }
-          const auto& request_arg = std::any_cast<const TransactionRequest&>(std::get<CustomEncodableValue>(encodable_request_arg));
-          api->DatabaseReferenceRunTransaction(app_arg, request_arg, [reply](std::optional<FlutterError>&& output) {
-            if (output.has_value()) {
-              reply(WrapError(output.value()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_arg =
+                  std::any_cast<const DatabasePigeonFirebaseApp&>(
+                      std::get<CustomEncodableValue>(encodable_app_arg));
+              const auto& encodable_request_arg = args.at(1);
+              if (encodable_request_arg.IsNull()) {
+                reply(WrapError("request_arg unexpectedly null."));
+                return;
+              }
+              const auto& request_arg =
+                  std::any_cast<const TransactionRequest&>(
+                      std::get<CustomEncodableValue>(encodable_request_arg));
+              api->DatabaseReferenceRunTransaction(
+                  app_arg, request_arg,
+                  [reply](std::optional<FlutterError>&& output) {
+                    if (output.has_value()) {
+                      reply(WrapError(output.value()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(EncodableValue());
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue());
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceGetTransactionResult" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_database_platform_interface."
+        "FirebaseDatabaseHostApi.databaseReferenceGetTransactionResult" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_arg = std::any_cast<const DatabasePigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
-          const auto& encodable_transaction_key_arg = args.at(1);
-          if (encodable_transaction_key_arg.IsNull()) {
-            reply(WrapError("transaction_key_arg unexpectedly null."));
-            return;
-          }
-          const int64_t transaction_key_arg = encodable_transaction_key_arg.LongValue();
-          api->DatabaseReferenceGetTransactionResult(app_arg, transaction_key_arg, [reply](ErrorOr<EncodableMap>&& output) {
-            if (output.has_error()) {
-              reply(WrapError(output.error()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_arg =
+                  std::any_cast<const DatabasePigeonFirebaseApp&>(
+                      std::get<CustomEncodableValue>(encodable_app_arg));
+              const auto& encodable_transaction_key_arg = args.at(1);
+              if (encodable_transaction_key_arg.IsNull()) {
+                reply(WrapError("transaction_key_arg unexpectedly null."));
+                return;
+              }
+              const int64_t transaction_key_arg =
+                  encodable_transaction_key_arg.LongValue();
+              api->DatabaseReferenceGetTransactionResult(
+                  app_arg, transaction_key_arg,
+                  [reply](ErrorOr<EncodableMap>&& output) {
+                    if (output.has_error()) {
+                      reply(WrapError(output.error()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(
+                        EncodableValue(std::move(output).TakeValue()));
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSet" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_database_platform_interface."
+        "FirebaseDatabaseHostApi.onDisconnectSet" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_arg = std::any_cast<const DatabasePigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
-          const auto& encodable_request_arg = args.at(1);
-          if (encodable_request_arg.IsNull()) {
-            reply(WrapError("request_arg unexpectedly null."));
-            return;
-          }
-          const auto& request_arg = std::any_cast<const DatabaseReferenceRequest&>(std::get<CustomEncodableValue>(encodable_request_arg));
-          api->OnDisconnectSet(app_arg, request_arg, [reply](std::optional<FlutterError>&& output) {
-            if (output.has_value()) {
-              reply(WrapError(output.value()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_arg =
+                  std::any_cast<const DatabasePigeonFirebaseApp&>(
+                      std::get<CustomEncodableValue>(encodable_app_arg));
+              const auto& encodable_request_arg = args.at(1);
+              if (encodable_request_arg.IsNull()) {
+                reply(WrapError("request_arg unexpectedly null."));
+                return;
+              }
+              const auto& request_arg =
+                  std::any_cast<const DatabaseReferenceRequest&>(
+                      std::get<CustomEncodableValue>(encodable_request_arg));
+              api->OnDisconnectSet(
+                  app_arg, request_arg,
+                  [reply](std::optional<FlutterError>&& output) {
+                    if (output.has_value()) {
+                      reply(WrapError(output.value()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(EncodableValue());
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue());
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSetWithPriority" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_database_platform_interface."
+        "FirebaseDatabaseHostApi.onDisconnectSetWithPriority" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_arg = std::any_cast<const DatabasePigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
-          const auto& encodable_request_arg = args.at(1);
-          if (encodable_request_arg.IsNull()) {
-            reply(WrapError("request_arg unexpectedly null."));
-            return;
-          }
-          const auto& request_arg = std::any_cast<const DatabaseReferenceRequest&>(std::get<CustomEncodableValue>(encodable_request_arg));
-          api->OnDisconnectSetWithPriority(app_arg, request_arg, [reply](std::optional<FlutterError>&& output) {
-            if (output.has_value()) {
-              reply(WrapError(output.value()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_arg =
+                  std::any_cast<const DatabasePigeonFirebaseApp&>(
+                      std::get<CustomEncodableValue>(encodable_app_arg));
+              const auto& encodable_request_arg = args.at(1);
+              if (encodable_request_arg.IsNull()) {
+                reply(WrapError("request_arg unexpectedly null."));
+                return;
+              }
+              const auto& request_arg =
+                  std::any_cast<const DatabaseReferenceRequest&>(
+                      std::get<CustomEncodableValue>(encodable_request_arg));
+              api->OnDisconnectSetWithPriority(
+                  app_arg, request_arg,
+                  [reply](std::optional<FlutterError>&& output) {
+                    if (output.has_value()) {
+                      reply(WrapError(output.value()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(EncodableValue());
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue());
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectUpdate" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_database_platform_interface."
+        "FirebaseDatabaseHostApi.onDisconnectUpdate" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_arg = std::any_cast<const DatabasePigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
-          const auto& encodable_request_arg = args.at(1);
-          if (encodable_request_arg.IsNull()) {
-            reply(WrapError("request_arg unexpectedly null."));
-            return;
-          }
-          const auto& request_arg = std::any_cast<const UpdateRequest&>(std::get<CustomEncodableValue>(encodable_request_arg));
-          api->OnDisconnectUpdate(app_arg, request_arg, [reply](std::optional<FlutterError>&& output) {
-            if (output.has_value()) {
-              reply(WrapError(output.value()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_arg =
+                  std::any_cast<const DatabasePigeonFirebaseApp&>(
+                      std::get<CustomEncodableValue>(encodable_app_arg));
+              const auto& encodable_request_arg = args.at(1);
+              if (encodable_request_arg.IsNull()) {
+                reply(WrapError("request_arg unexpectedly null."));
+                return;
+              }
+              const auto& request_arg = std::any_cast<const UpdateRequest&>(
+                  std::get<CustomEncodableValue>(encodable_request_arg));
+              api->OnDisconnectUpdate(
+                  app_arg, request_arg,
+                  [reply](std::optional<FlutterError>&& output) {
+                    if (output.has_value()) {
+                      reply(WrapError(output.value()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(EncodableValue());
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue());
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectCancel" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_database_platform_interface."
+        "FirebaseDatabaseHostApi.onDisconnectCancel" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_arg = std::any_cast<const DatabasePigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
-          const auto& encodable_path_arg = args.at(1);
-          if (encodable_path_arg.IsNull()) {
-            reply(WrapError("path_arg unexpectedly null."));
-            return;
-          }
-          const auto& path_arg = std::get<std::string>(encodable_path_arg);
-          api->OnDisconnectCancel(app_arg, path_arg, [reply](std::optional<FlutterError>&& output) {
-            if (output.has_value()) {
-              reply(WrapError(output.value()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_arg =
+                  std::any_cast<const DatabasePigeonFirebaseApp&>(
+                      std::get<CustomEncodableValue>(encodable_app_arg));
+              const auto& encodable_path_arg = args.at(1);
+              if (encodable_path_arg.IsNull()) {
+                reply(WrapError("path_arg unexpectedly null."));
+                return;
+              }
+              const auto& path_arg = std::get<std::string>(encodable_path_arg);
+              api->OnDisconnectCancel(
+                  app_arg, path_arg,
+                  [reply](std::optional<FlutterError>&& output) {
+                    if (output.has_value()) {
+                      reply(WrapError(output.value()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(EncodableValue());
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue());
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryObserve" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_database_platform_interface."
+        "FirebaseDatabaseHostApi.queryObserve" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_arg = std::any_cast<const DatabasePigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
-          const auto& encodable_request_arg = args.at(1);
-          if (encodable_request_arg.IsNull()) {
-            reply(WrapError("request_arg unexpectedly null."));
-            return;
-          }
-          const auto& request_arg = std::any_cast<const QueryRequest&>(std::get<CustomEncodableValue>(encodable_request_arg));
-          api->QueryObserve(app_arg, request_arg, [reply](ErrorOr<std::string>&& output) {
-            if (output.has_error()) {
-              reply(WrapError(output.error()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_arg =
+                  std::any_cast<const DatabasePigeonFirebaseApp&>(
+                      std::get<CustomEncodableValue>(encodable_app_arg));
+              const auto& encodable_request_arg = args.at(1);
+              if (encodable_request_arg.IsNull()) {
+                reply(WrapError("request_arg unexpectedly null."));
+                return;
+              }
+              const auto& request_arg = std::any_cast<const QueryRequest&>(
+                  std::get<CustomEncodableValue>(encodable_request_arg));
+              api->QueryObserve(
+                  app_arg, request_arg, [reply](ErrorOr<std::string>&& output) {
+                    if (output.has_error()) {
+                      reply(WrapError(output.error()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(
+                        EncodableValue(std::move(output).TakeValue()));
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryKeepSynced" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_database_platform_interface."
+        "FirebaseDatabaseHostApi.queryKeepSynced" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_arg = std::any_cast<const DatabasePigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
-          const auto& encodable_request_arg = args.at(1);
-          if (encodable_request_arg.IsNull()) {
-            reply(WrapError("request_arg unexpectedly null."));
-            return;
-          }
-          const auto& request_arg = std::any_cast<const QueryRequest&>(std::get<CustomEncodableValue>(encodable_request_arg));
-          api->QueryKeepSynced(app_arg, request_arg, [reply](std::optional<FlutterError>&& output) {
-            if (output.has_value()) {
-              reply(WrapError(output.value()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_arg =
+                  std::any_cast<const DatabasePigeonFirebaseApp&>(
+                      std::get<CustomEncodableValue>(encodable_app_arg));
+              const auto& encodable_request_arg = args.at(1);
+              if (encodable_request_arg.IsNull()) {
+                reply(WrapError("request_arg unexpectedly null."));
+                return;
+              }
+              const auto& request_arg = std::any_cast<const QueryRequest&>(
+                  std::get<CustomEncodableValue>(encodable_request_arg));
+              api->QueryKeepSynced(
+                  app_arg, request_arg,
+                  [reply](std::optional<FlutterError>&& output) {
+                    if (output.has_value()) {
+                      reply(WrapError(output.value()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(EncodableValue());
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue());
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryGet" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_database_platform_interface."
+        "FirebaseDatabaseHostApi.queryGet" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_arg = std::any_cast<const DatabasePigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
-          const auto& encodable_request_arg = args.at(1);
-          if (encodable_request_arg.IsNull()) {
-            reply(WrapError("request_arg unexpectedly null."));
-            return;
-          }
-          const auto& request_arg = std::any_cast<const QueryRequest&>(std::get<CustomEncodableValue>(encodable_request_arg));
-          api->QueryGet(app_arg, request_arg, [reply](ErrorOr<EncodableMap>&& output) {
-            if (output.has_error()) {
-              reply(WrapError(output.error()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_arg =
+                  std::any_cast<const DatabasePigeonFirebaseApp&>(
+                      std::get<CustomEncodableValue>(encodable_app_arg));
+              const auto& encodable_request_arg = args.at(1);
+              if (encodable_request_arg.IsNull()) {
+                reply(WrapError("request_arg unexpectedly null."));
+                return;
+              }
+              const auto& request_arg = std::any_cast<const QueryRequest&>(
+                  std::get<CustomEncodableValue>(encodable_request_arg));
+              api->QueryGet(app_arg, request_arg,
+                            [reply](ErrorOr<EncodableMap>&& output) {
+                              if (output.has_error()) {
+                                reply(WrapError(output.error()));
+                                return;
+                              }
+                              EncodableList wrapped;
+                              wrapped.push_back(EncodableValue(
+                                  std::move(output).TakeValue()));
+                              reply(EncodableValue(std::move(wrapped)));
+                            });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
 }
 
-EncodableValue FirebaseDatabaseHostApi::WrapError(std::string_view error_message) {
-  return EncodableValue(EncodableList{
-    EncodableValue(std::string(error_message)),
-    EncodableValue("Error"),
-    EncodableValue()
-  });
+EncodableValue FirebaseDatabaseHostApi::WrapError(
+    std::string_view error_message) {
+  return EncodableValue(
+      EncodableList{EncodableValue(std::string(error_message)),
+                    EncodableValue("Error"), EncodableValue()});
 }
 
 EncodableValue FirebaseDatabaseHostApi::WrapError(const FlutterError& error) {
-  return EncodableValue(EncodableList{
-    EncodableValue(error.code()),
-    EncodableValue(error.message()),
-    error.details()
-  });
+  return EncodableValue(EncodableList{EncodableValue(error.code()),
+                                      EncodableValue(error.message()),
+                                      error.details()});
 }
 
-// Generated class from Pigeon that represents Flutter messages that can be called from C++.
-FirebaseDatabaseFlutterApi::FirebaseDatabaseFlutterApi(flutter::BinaryMessenger* binary_messenger)
- : binary_messenger_(binary_messenger),
-    message_channel_suffix_("") {}
+// Generated class from Pigeon that represents Flutter messages that can be
+// called from C++.
+FirebaseDatabaseFlutterApi::FirebaseDatabaseFlutterApi(
+    flutter::BinaryMessenger* binary_messenger)
+    : binary_messenger_(binary_messenger), message_channel_suffix_("") {}
 
 FirebaseDatabaseFlutterApi::FirebaseDatabaseFlutterApi(
-  flutter::BinaryMessenger* binary_messenger,
-  const std::string& message_channel_suffix)
- : binary_messenger_(binary_messenger),
-    message_channel_suffix_(message_channel_suffix.length() > 0 ? std::string(".") + message_channel_suffix : "") {}
+    flutter::BinaryMessenger* binary_messenger,
+    const std::string& message_channel_suffix)
+    : binary_messenger_(binary_messenger),
+      message_channel_suffix_(message_channel_suffix.length() > 0
+                                  ? std::string(".") + message_channel_suffix
+                                  : "") {}
 
 const flutter::StandardMessageCodec& FirebaseDatabaseFlutterApi::GetCodec() {
-  return flutter::StandardMessageCodec::GetInstance(&PigeonInternalCodecSerializer::GetInstance());
+  return flutter::StandardMessageCodec::GetInstance(
+      &PigeonInternalCodecSerializer::GetInstance());
 }
 
 void FirebaseDatabaseFlutterApi::CallTransactionHandler(
-  int64_t transaction_key_arg,
-  const EncodableValue* snapshot_value_arg,
-  std::function<void(const TransactionHandlerResult&)>&& on_success,
-  std::function<void(const FlutterError&)>&& on_error) {
-  const std::string channel_name = "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseFlutterApi.callTransactionHandler" + message_channel_suffix_;
+    int64_t transaction_key_arg, const EncodableValue* snapshot_value_arg,
+    std::function<void(const TransactionHandlerResult&)>&& on_success,
+    std::function<void(const FlutterError&)>&& on_error) {
+  const std::string channel_name =
+      "dev.flutter.pigeon.firebase_database_platform_interface."
+      "FirebaseDatabaseFlutterApi.callTransactionHandler" +
+      message_channel_suffix_;
   BasicMessageChannel<> channel(binary_messenger_, channel_name, &GetCodec());
   EncodableValue encoded_api_arguments = EncodableValue(EncodableList{
-    EncodableValue(transaction_key_arg),
-    snapshot_value_arg ? *snapshot_value_arg : EncodableValue(),
+      EncodableValue(transaction_key_arg),
+      snapshot_value_arg ? *snapshot_value_arg : EncodableValue(),
   });
-  channel.Send(encoded_api_arguments, [channel_name, on_success = std::move(on_success), on_error = std::move(on_error)](const uint8_t* reply, size_t reply_size) {
-    std::unique_ptr<EncodableValue> response = GetCodec().DecodeMessage(reply, reply_size);
-    const auto& encodable_return_value = *response;
-    const auto* list_return_value = std::get_if<EncodableList>(&encodable_return_value);
-    if (list_return_value) {
-      if (list_return_value->size() > 1) {
-        on_error(FlutterError(std::get<std::string>(list_return_value->at(0)), std::get<std::string>(list_return_value->at(1)), list_return_value->at(2)));
-      } else {
-        const auto& return_value = std::any_cast<const TransactionHandlerResult&>(std::get<CustomEncodableValue>(list_return_value->at(0)));
-        on_success(return_value);
-      }
-    } else {
-      on_error(CreateConnectionError(channel_name));
-    } 
-  });
+  channel.Send(
+      encoded_api_arguments, [channel_name, on_success = std::move(on_success),
+                              on_error = std::move(on_error)](
+                                 const uint8_t* reply, size_t reply_size) {
+        std::unique_ptr<EncodableValue> response =
+            GetCodec().DecodeMessage(reply, reply_size);
+        const auto& encodable_return_value = *response;
+        const auto* list_return_value =
+            std::get_if<EncodableList>(&encodable_return_value);
+        if (list_return_value) {
+          if (list_return_value->size() > 1) {
+            on_error(
+                FlutterError(std::get<std::string>(list_return_value->at(0)),
+                             std::get<std::string>(list_return_value->at(1)),
+                             list_return_value->at(2)));
+          } else {
+            const auto& return_value =
+                std::any_cast<const TransactionHandlerResult&>(
+                    std::get<CustomEncodableValue>(list_return_value->at(0)));
+            on_success(return_value);
+          }
+        } else {
+          on_error(CreateConnectionError(channel_name));
+        }
+      });
 }
 
 }  // namespace firebase_database_windows
