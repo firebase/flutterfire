@@ -4,7 +4,8 @@
 
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:firebase_database_platform_interface/src/method_channel/utils/utils.dart';
-import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart' as pigeon;
+import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart'
+    as pigeon;
 
 import 'method_channel_database.dart';
 import 'method_channel_on_disconnect.dart';
@@ -97,7 +98,8 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   @override
   Future<void> setWithPriority(Object? value, Object? priority) async {
     try {
-      await MethodChannelDatabase.pigeonChannel.databaseReferenceSetWithPriority(
+      await MethodChannelDatabase.pigeonChannel
+          .databaseReferenceSetWithPriority(
         _pigeonApp,
         pigeon.DatabaseReferenceRequest(
           path: path,
@@ -166,7 +168,8 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
       );
 
       // Get the transaction result using Pigeon
-      final result = await MethodChannelDatabase.pigeonChannel.databaseReferenceGetTransactionResult(
+      final result = await MethodChannelDatabase.pigeonChannel
+          .databaseReferenceGetTransactionResult(
         _pigeonApp,
         key,
       );

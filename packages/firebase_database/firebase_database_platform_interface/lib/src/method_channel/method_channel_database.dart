@@ -6,7 +6,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:firebase_database_platform_interface/src/method_channel/utils/utils.dart';
 import 'package:flutter/services.dart';
-import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart' as pigeon;
+import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart'
+    as pigeon;
 
 import 'method_channel_database_reference.dart';
 import 'utils/exception.dart';
@@ -19,7 +20,8 @@ class MethodChannelArguments {
 
 class _TransactionHandlerFlutterApi extends pigeon.FirebaseDatabaseFlutterApi {
   @override
-  Future<pigeon.TransactionHandlerResult> callTransactionHandler(int transactionKey, Object? snapshotValue) async {
+  Future<pigeon.TransactionHandlerResult> callTransactionHandler(
+      int transactionKey, Object? snapshotValue) async {
     Object? value;
     bool aborted = false;
     bool exception = false;
@@ -121,7 +123,6 @@ class MethodChannelDatabase extends DatabasePlatform {
   /// This is kept for backward compatibility with query operations
   static const MethodChannel channel =
       MethodChannel('plugins.flutter.io/firebase_database');
-
 
   @override
   void useDatabaseEmulator(String host, int port) {

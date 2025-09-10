@@ -22,7 +22,6 @@ import 'package:pigeon/pigeon.dart';
     copyrightHeader: 'pigeons/copyright.txt',
   ),
 )
-
 class DatabasePigeonSettings {
   const DatabasePigeonSettings({
     this.persistenceEnabled,
@@ -115,50 +114,61 @@ abstract class FirebaseDatabaseHostApi {
 
   @async
   void setPersistenceEnabled(DatabasePigeonFirebaseApp app, bool enabled);
-  
+
   @async
-  void setPersistenceCacheSizeBytes(DatabasePigeonFirebaseApp app, int cacheSize);
+  void setPersistenceCacheSizeBytes(
+      DatabasePigeonFirebaseApp app, int cacheSize);
 
   @async
   void setLoggingEnabled(DatabasePigeonFirebaseApp app, bool enabled);
-  
+
   @async
-  void useDatabaseEmulator(DatabasePigeonFirebaseApp app, String host, int port);
+  void useDatabaseEmulator(
+      DatabasePigeonFirebaseApp app, String host, int port);
 
   @async
   DatabaseReferencePlatform ref(DatabasePigeonFirebaseApp app, [String? path]);
 
   @async
-  DatabaseReferencePlatform refFromURL(DatabasePigeonFirebaseApp app, String url);
+  DatabaseReferencePlatform refFromURL(
+      DatabasePigeonFirebaseApp app, String url);
 
   @async
   void purgeOutstandingWrites(DatabasePigeonFirebaseApp app);
 
   // DatabaseReference methods
   @async
-  void databaseReferenceSet(DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
+  void databaseReferenceSet(
+      DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
 
   @async
-  void databaseReferenceSetWithPriority(DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
+  void databaseReferenceSetWithPriority(
+      DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
 
   @async
-  void databaseReferenceUpdate(DatabasePigeonFirebaseApp app, UpdateRequest request);
+  void databaseReferenceUpdate(
+      DatabasePigeonFirebaseApp app, UpdateRequest request);
 
   @async
-  void databaseReferenceSetPriority(DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
+  void databaseReferenceSetPriority(
+      DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
 
   @async
-  void databaseReferenceRunTransaction(DatabasePigeonFirebaseApp app, TransactionRequest request);
+  void databaseReferenceRunTransaction(
+      DatabasePigeonFirebaseApp app, TransactionRequest request);
 
   @async
-  Map<String, Object?> databaseReferenceGetTransactionResult(DatabasePigeonFirebaseApp app, int transactionKey);
+  Map<String, Object?> databaseReferenceGetTransactionResult(
+      DatabasePigeonFirebaseApp app, int transactionKey);
 
   // OnDisconnect methods
   @async
-  void onDisconnectSet(DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
+  void onDisconnectSet(
+      DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
 
   @async
-  void onDisconnectSetWithPriority(DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
+  void onDisconnectSetWithPriority(
+      DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
 
   @async
   void onDisconnectUpdate(DatabasePigeonFirebaseApp app, UpdateRequest request);
@@ -174,7 +184,8 @@ abstract class FirebaseDatabaseHostApi {
   void queryKeepSynced(DatabasePigeonFirebaseApp app, QueryRequest request);
 
   @async
-  Map<String, Object?> queryGet(DatabasePigeonFirebaseApp app, QueryRequest request);
+  Map<String, Object?> queryGet(
+      DatabasePigeonFirebaseApp app, QueryRequest request);
 }
 
 class TransactionHandlerResult {
@@ -193,5 +204,6 @@ class TransactionHandlerResult {
 // ignore: one_member_abstracts
 abstract class FirebaseDatabaseFlutterApi {
   @async
-  TransactionHandlerResult callTransactionHandler(int transactionKey, Object? snapshotValue);
+  TransactionHandlerResult callTransactionHandler(
+      int transactionKey, Object? snapshotValue);
 }

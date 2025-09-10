@@ -13,7 +13,6 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart';
 
-
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
   @override
@@ -21,28 +20,28 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
-    }    else if (value is DatabasePigeonSettings) {
+    } else if (value is DatabasePigeonSettings) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    }    else if (value is DatabasePigeonFirebaseApp) {
+    } else if (value is DatabasePigeonFirebaseApp) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
-    }    else if (value is DatabaseReferencePlatform) {
+    } else if (value is DatabaseReferencePlatform) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
-    }    else if (value is DatabaseReferenceRequest) {
+    } else if (value is DatabaseReferenceRequest) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
-    }    else if (value is UpdateRequest) {
+    } else if (value is UpdateRequest) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
-    }    else if (value is TransactionRequest) {
+    } else if (value is TransactionRequest) {
       buffer.putUint8(134);
       writeValue(buffer, value.encode());
-    }    else if (value is QueryRequest) {
+    } else if (value is QueryRequest) {
       buffer.putUint8(135);
       writeValue(buffer, value.encode());
-    }    else if (value is TransactionHandlerResult) {
+    } else if (value is TransactionHandlerResult) {
       buffer.putUint8(136);
       writeValue(buffer, value.encode());
     } else {
@@ -53,21 +52,21 @@ class _PigeonCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
-      case 129: 
+      case 129:
         return DatabasePigeonSettings.decode(readValue(buffer)!);
-      case 130: 
+      case 130:
         return DatabasePigeonFirebaseApp.decode(readValue(buffer)!);
-      case 131: 
+      case 131:
         return DatabaseReferencePlatform.decode(readValue(buffer)!);
-      case 132: 
+      case 132:
         return DatabaseReferenceRequest.decode(readValue(buffer)!);
-      case 133: 
+      case 133:
         return UpdateRequest.decode(readValue(buffer)!);
-      case 134: 
+      case 134:
         return TransactionRequest.decode(readValue(buffer)!);
-      case 135: 
+      case 135:
         return QueryRequest.decode(readValue(buffer)!);
-      case 136: 
+      case 136:
         return TransactionHandlerResult.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -76,67 +75,97 @@ class _PigeonCodec extends StandardMessageCodec {
 }
 
 abstract class TestFirebaseDatabaseHostApi {
-  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding => TestDefaultBinaryMessengerBinding.instance;
+  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding =>
+      TestDefaultBinaryMessengerBinding.instance;
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
   Future<void> goOnline(DatabasePigeonFirebaseApp app);
 
   Future<void> goOffline(DatabasePigeonFirebaseApp app);
 
-  Future<void> setPersistenceEnabled(DatabasePigeonFirebaseApp app, bool enabled);
+  Future<void> setPersistenceEnabled(
+      DatabasePigeonFirebaseApp app, bool enabled);
 
-  Future<void> setPersistenceCacheSizeBytes(DatabasePigeonFirebaseApp app, int cacheSize);
+  Future<void> setPersistenceCacheSizeBytes(
+      DatabasePigeonFirebaseApp app, int cacheSize);
 
   Future<void> setLoggingEnabled(DatabasePigeonFirebaseApp app, bool enabled);
 
-  Future<void> useDatabaseEmulator(DatabasePigeonFirebaseApp app, String host, int port);
+  Future<void> useDatabaseEmulator(
+      DatabasePigeonFirebaseApp app, String host, int port);
 
-  Future<DatabaseReferencePlatform> ref(DatabasePigeonFirebaseApp app, [String? path]);
+  Future<DatabaseReferencePlatform> ref(DatabasePigeonFirebaseApp app,
+      [String? path]);
 
-  Future<DatabaseReferencePlatform> refFromURL(DatabasePigeonFirebaseApp app, String url);
+  Future<DatabaseReferencePlatform> refFromURL(
+      DatabasePigeonFirebaseApp app, String url);
 
   Future<void> purgeOutstandingWrites(DatabasePigeonFirebaseApp app);
 
-  Future<void> databaseReferenceSet(DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
+  Future<void> databaseReferenceSet(
+      DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
 
-  Future<void> databaseReferenceSetWithPriority(DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
+  Future<void> databaseReferenceSetWithPriority(
+      DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
 
-  Future<void> databaseReferenceUpdate(DatabasePigeonFirebaseApp app, UpdateRequest request);
+  Future<void> databaseReferenceUpdate(
+      DatabasePigeonFirebaseApp app, UpdateRequest request);
 
-  Future<void> databaseReferenceSetPriority(DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
+  Future<void> databaseReferenceSetPriority(
+      DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
 
-  Future<void> databaseReferenceRunTransaction(DatabasePigeonFirebaseApp app, TransactionRequest request);
+  Future<void> databaseReferenceRunTransaction(
+      DatabasePigeonFirebaseApp app, TransactionRequest request);
 
-  Future<Map<String, Object?>> databaseReferenceGetTransactionResult(DatabasePigeonFirebaseApp app, int transactionKey);
+  Future<Map<String, Object?>> databaseReferenceGetTransactionResult(
+      DatabasePigeonFirebaseApp app, int transactionKey);
 
-  Future<void> onDisconnectSet(DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
+  Future<void> onDisconnectSet(
+      DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
 
-  Future<void> onDisconnectSetWithPriority(DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
+  Future<void> onDisconnectSetWithPriority(
+      DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
 
-  Future<void> onDisconnectUpdate(DatabasePigeonFirebaseApp app, UpdateRequest request);
+  Future<void> onDisconnectUpdate(
+      DatabasePigeonFirebaseApp app, UpdateRequest request);
 
   Future<void> onDisconnectCancel(DatabasePigeonFirebaseApp app, String path);
 
-  Future<String> queryObserve(DatabasePigeonFirebaseApp app, QueryRequest request);
+  Future<String> queryObserve(
+      DatabasePigeonFirebaseApp app, QueryRequest request);
 
-  Future<void> queryKeepSynced(DatabasePigeonFirebaseApp app, QueryRequest request);
+  Future<void> queryKeepSynced(
+      DatabasePigeonFirebaseApp app, QueryRequest request);
 
-  Future<Map<String, Object?>> queryGet(DatabasePigeonFirebaseApp app, QueryRequest request);
+  Future<Map<String, Object?>> queryGet(
+      DatabasePigeonFirebaseApp app, QueryRequest request);
 
-  static void setUp(TestFirebaseDatabaseHostApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
-    messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  static void setUp(
+    TestFirebaseDatabaseHostApi? api, {
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) {
+    messageChannelSuffix =
+        messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOnline$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOnline$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOnline was null.');
+              'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOnline was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final DatabasePigeonFirebaseApp? arg_app = (args[0] as DatabasePigeonFirebaseApp?);
+          final DatabasePigeonFirebaseApp? arg_app =
+              (args[0] as DatabasePigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOnline was null, expected non-null DatabasePigeonFirebaseApp.');
           try {
@@ -144,24 +173,32 @@ abstract class TestFirebaseDatabaseHostApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOffline$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOffline$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOffline was null.');
+              'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOffline was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final DatabasePigeonFirebaseApp? arg_app = (args[0] as DatabasePigeonFirebaseApp?);
+          final DatabasePigeonFirebaseApp? arg_app =
+              (args[0] as DatabasePigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOffline was null, expected non-null DatabasePigeonFirebaseApp.');
           try {
@@ -169,24 +206,32 @@ abstract class TestFirebaseDatabaseHostApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPersistenceEnabled$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPersistenceEnabled$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPersistenceEnabled was null.');
+              'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPersistenceEnabled was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final DatabasePigeonFirebaseApp? arg_app = (args[0] as DatabasePigeonFirebaseApp?);
+          final DatabasePigeonFirebaseApp? arg_app =
+              (args[0] as DatabasePigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPersistenceEnabled was null, expected non-null DatabasePigeonFirebaseApp.');
           final bool? arg_enabled = (args[1] as bool?);
@@ -197,24 +242,32 @@ abstract class TestFirebaseDatabaseHostApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPersistenceCacheSizeBytes$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPersistenceCacheSizeBytes$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPersistenceCacheSizeBytes was null.');
+              'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPersistenceCacheSizeBytes was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final DatabasePigeonFirebaseApp? arg_app = (args[0] as DatabasePigeonFirebaseApp?);
+          final DatabasePigeonFirebaseApp? arg_app =
+              (args[0] as DatabasePigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPersistenceCacheSizeBytes was null, expected non-null DatabasePigeonFirebaseApp.');
           final int? arg_cacheSize = (args[1] as int?);
@@ -225,24 +278,32 @@ abstract class TestFirebaseDatabaseHostApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setLoggingEnabled$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setLoggingEnabled$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setLoggingEnabled was null.');
+              'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setLoggingEnabled was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final DatabasePigeonFirebaseApp? arg_app = (args[0] as DatabasePigeonFirebaseApp?);
+          final DatabasePigeonFirebaseApp? arg_app =
+              (args[0] as DatabasePigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setLoggingEnabled was null, expected non-null DatabasePigeonFirebaseApp.');
           final bool? arg_enabled = (args[1] as bool?);
@@ -253,24 +314,32 @@ abstract class TestFirebaseDatabaseHostApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.useDatabaseEmulator$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.useDatabaseEmulator$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.useDatabaseEmulator was null.');
+              'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.useDatabaseEmulator was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final DatabasePigeonFirebaseApp? arg_app = (args[0] as DatabasePigeonFirebaseApp?);
+          final DatabasePigeonFirebaseApp? arg_app =
+              (args[0] as DatabasePigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.useDatabaseEmulator was null, expected non-null DatabasePigeonFirebaseApp.');
           final String? arg_host = (args[1] as String?);
@@ -284,78 +353,104 @@ abstract class TestFirebaseDatabaseHostApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.ref$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.ref$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.ref was null.');
+              'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.ref was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final DatabasePigeonFirebaseApp? arg_app = (args[0] as DatabasePigeonFirebaseApp?);
+          final DatabasePigeonFirebaseApp? arg_app =
+              (args[0] as DatabasePigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.ref was null, expected non-null DatabasePigeonFirebaseApp.');
           final String? arg_path = (args[1] as String?);
           try {
-            final DatabaseReferencePlatform output = await api.ref(arg_app!, arg_path);
+            final DatabaseReferencePlatform output =
+                await api.ref(arg_app!, arg_path);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.refFromURL$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.refFromURL$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.refFromURL was null.');
+              'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.refFromURL was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final DatabasePigeonFirebaseApp? arg_app = (args[0] as DatabasePigeonFirebaseApp?);
+          final DatabasePigeonFirebaseApp? arg_app =
+              (args[0] as DatabasePigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.refFromURL was null, expected non-null DatabasePigeonFirebaseApp.');
           final String? arg_url = (args[1] as String?);
           assert(arg_url != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.refFromURL was null, expected non-null String.');
           try {
-            final DatabaseReferencePlatform output = await api.refFromURL(arg_app!, arg_url!);
+            final DatabaseReferencePlatform output =
+                await api.refFromURL(arg_app!, arg_url!);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.purgeOutstandingWrites$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.purgeOutstandingWrites$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.purgeOutstandingWrites was null.');
+              'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.purgeOutstandingWrites was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final DatabasePigeonFirebaseApp? arg_app = (args[0] as DatabasePigeonFirebaseApp?);
+          final DatabasePigeonFirebaseApp? arg_app =
+              (args[0] as DatabasePigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.purgeOutstandingWrites was null, expected non-null DatabasePigeonFirebaseApp.');
           try {
@@ -363,27 +458,36 @@ abstract class TestFirebaseDatabaseHostApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSet$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSet$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSet was null.');
+              'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSet was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final DatabasePigeonFirebaseApp? arg_app = (args[0] as DatabasePigeonFirebaseApp?);
+          final DatabasePigeonFirebaseApp? arg_app =
+              (args[0] as DatabasePigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSet was null, expected non-null DatabasePigeonFirebaseApp.');
-          final DatabaseReferenceRequest? arg_request = (args[1] as DatabaseReferenceRequest?);
+          final DatabaseReferenceRequest? arg_request =
+              (args[1] as DatabaseReferenceRequest?);
           assert(arg_request != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSet was null, expected non-null DatabaseReferenceRequest.');
           try {
@@ -391,27 +495,36 @@ abstract class TestFirebaseDatabaseHostApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetWithPriority$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetWithPriority$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetWithPriority was null.');
+              'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetWithPriority was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final DatabasePigeonFirebaseApp? arg_app = (args[0] as DatabasePigeonFirebaseApp?);
+          final DatabasePigeonFirebaseApp? arg_app =
+              (args[0] as DatabasePigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetWithPriority was null, expected non-null DatabasePigeonFirebaseApp.');
-          final DatabaseReferenceRequest? arg_request = (args[1] as DatabaseReferenceRequest?);
+          final DatabaseReferenceRequest? arg_request =
+              (args[1] as DatabaseReferenceRequest?);
           assert(arg_request != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetWithPriority was null, expected non-null DatabaseReferenceRequest.');
           try {
@@ -419,24 +532,32 @@ abstract class TestFirebaseDatabaseHostApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceUpdate$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceUpdate$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceUpdate was null.');
+              'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceUpdate was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final DatabasePigeonFirebaseApp? arg_app = (args[0] as DatabasePigeonFirebaseApp?);
+          final DatabasePigeonFirebaseApp? arg_app =
+              (args[0] as DatabasePigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceUpdate was null, expected non-null DatabasePigeonFirebaseApp.');
           final UpdateRequest? arg_request = (args[1] as UpdateRequest?);
@@ -447,27 +568,36 @@ abstract class TestFirebaseDatabaseHostApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetPriority$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetPriority$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetPriority was null.');
+              'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetPriority was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final DatabasePigeonFirebaseApp? arg_app = (args[0] as DatabasePigeonFirebaseApp?);
+          final DatabasePigeonFirebaseApp? arg_app =
+              (args[0] as DatabasePigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetPriority was null, expected non-null DatabasePigeonFirebaseApp.');
-          final DatabaseReferenceRequest? arg_request = (args[1] as DatabaseReferenceRequest?);
+          final DatabaseReferenceRequest? arg_request =
+              (args[1] as DatabaseReferenceRequest?);
           assert(arg_request != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetPriority was null, expected non-null DatabaseReferenceRequest.');
           try {
@@ -475,27 +605,36 @@ abstract class TestFirebaseDatabaseHostApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceRunTransaction$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceRunTransaction$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceRunTransaction was null.');
+              'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceRunTransaction was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final DatabasePigeonFirebaseApp? arg_app = (args[0] as DatabasePigeonFirebaseApp?);
+          final DatabasePigeonFirebaseApp? arg_app =
+              (args[0] as DatabasePigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceRunTransaction was null, expected non-null DatabasePigeonFirebaseApp.');
-          final TransactionRequest? arg_request = (args[1] as TransactionRequest?);
+          final TransactionRequest? arg_request =
+              (args[1] as TransactionRequest?);
           assert(arg_request != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceRunTransaction was null, expected non-null TransactionRequest.');
           try {
@@ -503,55 +642,74 @@ abstract class TestFirebaseDatabaseHostApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceGetTransactionResult$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceGetTransactionResult$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceGetTransactionResult was null.');
+              'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceGetTransactionResult was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final DatabasePigeonFirebaseApp? arg_app = (args[0] as DatabasePigeonFirebaseApp?);
+          final DatabasePigeonFirebaseApp? arg_app =
+              (args[0] as DatabasePigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceGetTransactionResult was null, expected non-null DatabasePigeonFirebaseApp.');
           final int? arg_transactionKey = (args[1] as int?);
           assert(arg_transactionKey != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceGetTransactionResult was null, expected non-null int.');
           try {
-            final Map<String, Object?> output = await api.databaseReferenceGetTransactionResult(arg_app!, arg_transactionKey!);
+            final Map<String, Object?> output =
+                await api.databaseReferenceGetTransactionResult(
+                    arg_app!, arg_transactionKey!);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSet$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSet$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSet was null.');
+              'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSet was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final DatabasePigeonFirebaseApp? arg_app = (args[0] as DatabasePigeonFirebaseApp?);
+          final DatabasePigeonFirebaseApp? arg_app =
+              (args[0] as DatabasePigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSet was null, expected non-null DatabasePigeonFirebaseApp.');
-          final DatabaseReferenceRequest? arg_request = (args[1] as DatabaseReferenceRequest?);
+          final DatabaseReferenceRequest? arg_request =
+              (args[1] as DatabaseReferenceRequest?);
           assert(arg_request != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSet was null, expected non-null DatabaseReferenceRequest.');
           try {
@@ -559,27 +717,36 @@ abstract class TestFirebaseDatabaseHostApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSetWithPriority$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSetWithPriority$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSetWithPriority was null.');
+              'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSetWithPriority was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final DatabasePigeonFirebaseApp? arg_app = (args[0] as DatabasePigeonFirebaseApp?);
+          final DatabasePigeonFirebaseApp? arg_app =
+              (args[0] as DatabasePigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSetWithPriority was null, expected non-null DatabasePigeonFirebaseApp.');
-          final DatabaseReferenceRequest? arg_request = (args[1] as DatabaseReferenceRequest?);
+          final DatabaseReferenceRequest? arg_request =
+              (args[1] as DatabaseReferenceRequest?);
           assert(arg_request != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSetWithPriority was null, expected non-null DatabaseReferenceRequest.');
           try {
@@ -587,24 +754,32 @@ abstract class TestFirebaseDatabaseHostApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectUpdate$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectUpdate$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectUpdate was null.');
+              'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectUpdate was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final DatabasePigeonFirebaseApp? arg_app = (args[0] as DatabasePigeonFirebaseApp?);
+          final DatabasePigeonFirebaseApp? arg_app =
+              (args[0] as DatabasePigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectUpdate was null, expected non-null DatabasePigeonFirebaseApp.');
           final UpdateRequest? arg_request = (args[1] as UpdateRequest?);
@@ -615,24 +790,32 @@ abstract class TestFirebaseDatabaseHostApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectCancel$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectCancel$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectCancel was null.');
+              'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectCancel was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final DatabasePigeonFirebaseApp? arg_app = (args[0] as DatabasePigeonFirebaseApp?);
+          final DatabasePigeonFirebaseApp? arg_app =
+              (args[0] as DatabasePigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectCancel was null, expected non-null DatabasePigeonFirebaseApp.');
           final String? arg_path = (args[1] as String?);
@@ -643,52 +826,69 @@ abstract class TestFirebaseDatabaseHostApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryObserve$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryObserve$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryObserve was null.');
+              'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryObserve was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final DatabasePigeonFirebaseApp? arg_app = (args[0] as DatabasePigeonFirebaseApp?);
+          final DatabasePigeonFirebaseApp? arg_app =
+              (args[0] as DatabasePigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryObserve was null, expected non-null DatabasePigeonFirebaseApp.');
           final QueryRequest? arg_request = (args[1] as QueryRequest?);
           assert(arg_request != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryObserve was null, expected non-null QueryRequest.');
           try {
-            final String output = await api.queryObserve(arg_app!, arg_request!);
+            final String output =
+                await api.queryObserve(arg_app!, arg_request!);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryKeepSynced$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryKeepSynced$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryKeepSynced was null.');
+              'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryKeepSynced was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final DatabasePigeonFirebaseApp? arg_app = (args[0] as DatabasePigeonFirebaseApp?);
+          final DatabasePigeonFirebaseApp? arg_app =
+              (args[0] as DatabasePigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryKeepSynced was null, expected non-null DatabasePigeonFirebaseApp.');
           final QueryRequest? arg_request = (args[1] as QueryRequest?);
@@ -699,36 +899,46 @@ abstract class TestFirebaseDatabaseHostApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryGet$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryGet$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryGet was null.');
+              'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryGet was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final DatabasePigeonFirebaseApp? arg_app = (args[0] as DatabasePigeonFirebaseApp?);
+          final DatabasePigeonFirebaseApp? arg_app =
+              (args[0] as DatabasePigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryGet was null, expected non-null DatabasePigeonFirebaseApp.');
           final QueryRequest? arg_request = (args[1] as QueryRequest?);
           assert(arg_request != null,
               'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryGet was null, expected non-null QueryRequest.');
           try {
-            final Map<String, Object?> output = await api.queryGet(arg_app!, arg_request!);
+            final Map<String, Object?> output =
+                await api.queryGet(arg_app!, arg_request!);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }

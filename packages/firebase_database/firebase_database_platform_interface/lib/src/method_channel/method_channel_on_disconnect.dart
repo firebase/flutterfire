@@ -4,7 +4,8 @@
 
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:firebase_database_platform_interface/src/method_channel/utils/utils.dart';
-import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart' as pigeon;
+import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart'
+    as pigeon;
 
 import 'method_channel_database.dart';
 import 'utils/exception.dart';
