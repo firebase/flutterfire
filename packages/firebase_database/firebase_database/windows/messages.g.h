@@ -17,17 +17,16 @@
 
 namespace firebase_database_windows {
 
-
 // Generated class from Pigeon.
 
 class FlutterError {
  public:
-  explicit FlutterError(const std::string& code)
-    : code_(code) {}
+  explicit FlutterError(const std::string& code) : code_(code) {}
   explicit FlutterError(const std::string& code, const std::string& message)
-    : code_(code), message_(message) {}
-  explicit FlutterError(const std::string& code, const std::string& message, const flutter::EncodableValue& details)
-    : code_(code), message_(message), details_(details) {}
+      : code_(code), message_(message) {}
+  explicit FlutterError(const std::string& code, const std::string& message,
+                        const flutter::EncodableValue& details)
+      : code_(code), message_(message), details_(details) {}
 
   const std::string& code() const { return code_; }
   const std::string& message() const { return message_; }
@@ -39,7 +38,8 @@ class FlutterError {
   flutter::EncodableValue details_;
 };
 
-template<class T> class ErrorOr {
+template <class T>
+class ErrorOr {
  public:
   ErrorOr(const T& rhs) : v_(rhs) {}
   ErrorOr(const T&& rhs) : v_(std::move(rhs)) {}
@@ -59,8 +59,6 @@ template<class T> class ErrorOr {
   std::variant<T, FlutterError> v_;
 };
 
-
-
 // Generated class from Pigeon that represents data sent in messages.
 class DatabasePigeonSettings {
  public:
@@ -68,12 +66,11 @@ class DatabasePigeonSettings {
   DatabasePigeonSettings();
 
   // Constructs an object setting all fields.
-  explicit DatabasePigeonSettings(
-    const bool* persistence_enabled,
-    const int64_t* cache_size_bytes,
-    const bool* logging_enabled,
-    const std::string* emulator_host,
-    const int64_t* emulator_port);
+  explicit DatabasePigeonSettings(const bool* persistence_enabled,
+                                  const int64_t* cache_size_bytes,
+                                  const bool* logging_enabled,
+                                  const std::string* emulator_host,
+                                  const int64_t* emulator_port);
 
   const bool* persistence_enabled() const;
   void set_persistence_enabled(const bool* value_arg);
@@ -96,7 +93,8 @@ class DatabasePigeonSettings {
   void set_emulator_port(int64_t value_arg);
 
  private:
-  static DatabasePigeonSettings FromEncodableList(const flutter::EncodableList& list);
+  static DatabasePigeonSettings FromEncodableList(
+      const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
   friend class DatabasePigeonFirebaseApp;
   friend class FirebaseDatabaseHostApi;
@@ -109,26 +107,24 @@ class DatabasePigeonSettings {
   std::optional<int64_t> emulator_port_;
 };
 
-
 // Generated class from Pigeon that represents data sent in messages.
 class DatabasePigeonFirebaseApp {
  public:
   // Constructs an object setting all non-nullable fields.
-  explicit DatabasePigeonFirebaseApp(
-    const std::string& app_name,
-    const DatabasePigeonSettings& settings);
+  explicit DatabasePigeonFirebaseApp(const std::string& app_name,
+                                     const DatabasePigeonSettings& settings);
 
   // Constructs an object setting all fields.
-  explicit DatabasePigeonFirebaseApp(
-    const std::string& app_name,
-    const std::string* database_u_r_l,
-    const DatabasePigeonSettings& settings);
+  explicit DatabasePigeonFirebaseApp(const std::string& app_name,
+                                     const std::string* database_u_r_l,
+                                     const DatabasePigeonSettings& settings);
 
   ~DatabasePigeonFirebaseApp() = default;
   DatabasePigeonFirebaseApp(const DatabasePigeonFirebaseApp& other);
   DatabasePigeonFirebaseApp& operator=(const DatabasePigeonFirebaseApp& other);
   DatabasePigeonFirebaseApp(DatabasePigeonFirebaseApp&& other) = default;
-  DatabasePigeonFirebaseApp& operator=(DatabasePigeonFirebaseApp&& other) noexcept = default;
+  DatabasePigeonFirebaseApp& operator=(
+      DatabasePigeonFirebaseApp&& other) noexcept = default;
   const std::string& app_name() const;
   void set_app_name(std::string_view value_arg);
 
@@ -140,7 +136,8 @@ class DatabasePigeonFirebaseApp {
   void set_settings(const DatabasePigeonSettings& value_arg);
 
  private:
-  static DatabasePigeonFirebaseApp FromEncodableList(const flutter::EncodableList& list);
+  static DatabasePigeonFirebaseApp FromEncodableList(
+      const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
   friend class FirebaseDatabaseHostApi;
   friend class FirebaseDatabaseFlutterApi;
@@ -149,7 +146,6 @@ class DatabasePigeonFirebaseApp {
   std::optional<std::string> database_u_r_l_;
   std::unique_ptr<DatabasePigeonSettings> settings_;
 };
-
 
 // Generated class from Pigeon that represents data sent in messages.
 class DatabaseReferencePlatform {
@@ -161,14 +157,14 @@ class DatabaseReferencePlatform {
   void set_path(std::string_view value_arg);
 
  private:
-  static DatabaseReferencePlatform FromEncodableList(const flutter::EncodableList& list);
+  static DatabaseReferencePlatform FromEncodableList(
+      const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
   friend class FirebaseDatabaseHostApi;
   friend class FirebaseDatabaseFlutterApi;
   friend class PigeonInternalCodecSerializer;
   std::string path_;
 };
-
 
 // Generated class from Pigeon that represents data sent in messages.
 class DatabaseReferenceRequest {
@@ -177,10 +173,9 @@ class DatabaseReferenceRequest {
   explicit DatabaseReferenceRequest(const std::string& path);
 
   // Constructs an object setting all fields.
-  explicit DatabaseReferenceRequest(
-    const std::string& path,
-    const flutter::EncodableValue* value,
-    const flutter::EncodableValue* priority);
+  explicit DatabaseReferenceRequest(const std::string& path,
+                                    const flutter::EncodableValue* value,
+                                    const flutter::EncodableValue* priority);
 
   const std::string& path() const;
   void set_path(std::string_view value_arg);
@@ -194,7 +189,8 @@ class DatabaseReferenceRequest {
   void set_priority(const flutter::EncodableValue& value_arg);
 
  private:
-  static DatabaseReferenceRequest FromEncodableList(const flutter::EncodableList& list);
+  static DatabaseReferenceRequest FromEncodableList(
+      const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
   friend class FirebaseDatabaseHostApi;
   friend class FirebaseDatabaseFlutterApi;
@@ -204,14 +200,12 @@ class DatabaseReferenceRequest {
   std::optional<flutter::EncodableValue> priority_;
 };
 
-
 // Generated class from Pigeon that represents data sent in messages.
 class UpdateRequest {
  public:
   // Constructs an object setting all fields.
-  explicit UpdateRequest(
-    const std::string& path,
-    const flutter::EncodableMap& value);
+  explicit UpdateRequest(const std::string& path,
+                         const flutter::EncodableMap& value);
 
   const std::string& path() const;
   void set_path(std::string_view value_arg);
@@ -229,15 +223,12 @@ class UpdateRequest {
   flutter::EncodableMap value_;
 };
 
-
 // Generated class from Pigeon that represents data sent in messages.
 class TransactionRequest {
  public:
   // Constructs an object setting all fields.
-  explicit TransactionRequest(
-    const std::string& path,
-    int64_t transaction_key,
-    bool apply_locally);
+  explicit TransactionRequest(const std::string& path, int64_t transaction_key,
+                              bool apply_locally);
 
   const std::string& path() const;
   void set_path(std::string_view value_arg);
@@ -249,7 +240,8 @@ class TransactionRequest {
   void set_apply_locally(bool value_arg);
 
  private:
-  static TransactionRequest FromEncodableList(const flutter::EncodableList& list);
+  static TransactionRequest FromEncodableList(
+      const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
   friend class FirebaseDatabaseHostApi;
   friend class FirebaseDatabaseFlutterApi;
@@ -259,20 +251,17 @@ class TransactionRequest {
   bool apply_locally_;
 };
 
-
 // Generated class from Pigeon that represents data sent in messages.
 class QueryRequest {
  public:
   // Constructs an object setting all non-nullable fields.
-  explicit QueryRequest(
-    const std::string& path,
-    const flutter::EncodableList& modifiers);
+  explicit QueryRequest(const std::string& path,
+                        const flutter::EncodableList& modifiers);
 
   // Constructs an object setting all fields.
-  explicit QueryRequest(
-    const std::string& path,
-    const flutter::EncodableList& modifiers,
-    const bool* value);
+  explicit QueryRequest(const std::string& path,
+                        const flutter::EncodableList& modifiers,
+                        const bool* value);
 
   const std::string& path() const;
   void set_path(std::string_view value_arg);
@@ -295,20 +284,15 @@ class QueryRequest {
   std::optional<bool> value_;
 };
 
-
 // Generated class from Pigeon that represents data sent in messages.
 class TransactionHandlerResult {
  public:
   // Constructs an object setting all non-nullable fields.
-  explicit TransactionHandlerResult(
-    bool aborted,
-    bool exception);
+  explicit TransactionHandlerResult(bool aborted, bool exception);
 
   // Constructs an object setting all fields.
-  explicit TransactionHandlerResult(
-    const flutter::EncodableValue* value,
-    bool aborted,
-    bool exception);
+  explicit TransactionHandlerResult(const flutter::EncodableValue* value,
+                                    bool aborted, bool exception);
 
   const flutter::EncodableValue* value() const;
   void set_value(const flutter::EncodableValue* value_arg);
@@ -321,7 +305,8 @@ class TransactionHandlerResult {
   void set_exception(bool value_arg);
 
  private:
-  static TransactionHandlerResult FromEncodableList(const flutter::EncodableList& list);
+  static TransactionHandlerResult FromEncodableList(
+      const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
   friend class FirebaseDatabaseHostApi;
   friend class FirebaseDatabaseFlutterApi;
@@ -331,7 +316,6 @@ class TransactionHandlerResult {
   bool exception_;
 };
 
-
 class PigeonInternalCodecSerializer : public flutter::StandardCodecSerializer {
  public:
   PigeonInternalCodecSerializer();
@@ -340,136 +324,122 @@ class PigeonInternalCodecSerializer : public flutter::StandardCodecSerializer {
     return sInstance;
   }
 
-  void WriteValue(
-    const flutter::EncodableValue& value,
-    flutter::ByteStreamWriter* stream) const override;
+  void WriteValue(const flutter::EncodableValue& value,
+                  flutter::ByteStreamWriter* stream) const override;
+
  protected:
   flutter::EncodableValue ReadValueOfType(
-    uint8_t type,
-    flutter::ByteStreamReader* stream) const override;
+      uint8_t type, flutter::ByteStreamReader* stream) const override;
 };
 
-// Generated interface from Pigeon that represents a handler of messages from Flutter.
+// Generated interface from Pigeon that represents a handler of messages from
+// Flutter.
 class FirebaseDatabaseHostApi {
  public:
   FirebaseDatabaseHostApi(const FirebaseDatabaseHostApi&) = delete;
   FirebaseDatabaseHostApi& operator=(const FirebaseDatabaseHostApi&) = delete;
   virtual ~FirebaseDatabaseHostApi() {}
   virtual void GoOnline(
-    const DatabasePigeonFirebaseApp& app,
-    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+      const DatabasePigeonFirebaseApp& app,
+      std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void GoOffline(
-    const DatabasePigeonFirebaseApp& app,
-    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+      const DatabasePigeonFirebaseApp& app,
+      std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void SetPersistenceEnabled(
-    const DatabasePigeonFirebaseApp& app,
-    bool enabled,
-    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+      const DatabasePigeonFirebaseApp& app, bool enabled,
+      std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void SetPersistenceCacheSizeBytes(
-    const DatabasePigeonFirebaseApp& app,
-    int64_t cache_size,
-    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+      const DatabasePigeonFirebaseApp& app, int64_t cache_size,
+      std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void SetLoggingEnabled(
-    const DatabasePigeonFirebaseApp& app,
-    bool enabled,
-    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+      const DatabasePigeonFirebaseApp& app, bool enabled,
+      std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void UseDatabaseEmulator(
-    const DatabasePigeonFirebaseApp& app,
-    const std::string& host,
-    int64_t port,
-    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+      const DatabasePigeonFirebaseApp& app, const std::string& host,
+      int64_t port,
+      std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void Ref(
-    const DatabasePigeonFirebaseApp& app,
-    const std::string* path,
-    std::function<void(ErrorOr<DatabaseReferencePlatform> reply)> result) = 0;
+      const DatabasePigeonFirebaseApp& app, const std::string* path,
+      std::function<void(ErrorOr<DatabaseReferencePlatform> reply)> result) = 0;
   virtual void RefFromURL(
-    const DatabasePigeonFirebaseApp& app,
-    const std::string& url,
-    std::function<void(ErrorOr<DatabaseReferencePlatform> reply)> result) = 0;
+      const DatabasePigeonFirebaseApp& app, const std::string& url,
+      std::function<void(ErrorOr<DatabaseReferencePlatform> reply)> result) = 0;
   virtual void PurgeOutstandingWrites(
-    const DatabasePigeonFirebaseApp& app,
-    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+      const DatabasePigeonFirebaseApp& app,
+      std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void DatabaseReferenceSet(
-    const DatabasePigeonFirebaseApp& app,
-    const DatabaseReferenceRequest& request,
-    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+      const DatabasePigeonFirebaseApp& app,
+      const DatabaseReferenceRequest& request,
+      std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void DatabaseReferenceSetWithPriority(
-    const DatabasePigeonFirebaseApp& app,
-    const DatabaseReferenceRequest& request,
-    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+      const DatabasePigeonFirebaseApp& app,
+      const DatabaseReferenceRequest& request,
+      std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void DatabaseReferenceUpdate(
-    const DatabasePigeonFirebaseApp& app,
-    const UpdateRequest& request,
-    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+      const DatabasePigeonFirebaseApp& app, const UpdateRequest& request,
+      std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void DatabaseReferenceSetPriority(
-    const DatabasePigeonFirebaseApp& app,
-    const DatabaseReferenceRequest& request,
-    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+      const DatabasePigeonFirebaseApp& app,
+      const DatabaseReferenceRequest& request,
+      std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void DatabaseReferenceRunTransaction(
-    const DatabasePigeonFirebaseApp& app,
-    const TransactionRequest& request,
-    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+      const DatabasePigeonFirebaseApp& app, const TransactionRequest& request,
+      std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void DatabaseReferenceGetTransactionResult(
-    const DatabasePigeonFirebaseApp& app,
-    int64_t transaction_key,
-    std::function<void(ErrorOr<flutter::EncodableMap> reply)> result) = 0;
+      const DatabasePigeonFirebaseApp& app, int64_t transaction_key,
+      std::function<void(ErrorOr<flutter::EncodableMap> reply)> result) = 0;
   virtual void OnDisconnectSet(
-    const DatabasePigeonFirebaseApp& app,
-    const DatabaseReferenceRequest& request,
-    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+      const DatabasePigeonFirebaseApp& app,
+      const DatabaseReferenceRequest& request,
+      std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void OnDisconnectSetWithPriority(
-    const DatabasePigeonFirebaseApp& app,
-    const DatabaseReferenceRequest& request,
-    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+      const DatabasePigeonFirebaseApp& app,
+      const DatabaseReferenceRequest& request,
+      std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void OnDisconnectUpdate(
-    const DatabasePigeonFirebaseApp& app,
-    const UpdateRequest& request,
-    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+      const DatabasePigeonFirebaseApp& app, const UpdateRequest& request,
+      std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void OnDisconnectCancel(
-    const DatabasePigeonFirebaseApp& app,
-    const std::string& path,
-    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+      const DatabasePigeonFirebaseApp& app, const std::string& path,
+      std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void QueryObserve(
-    const DatabasePigeonFirebaseApp& app,
-    const QueryRequest& request,
-    std::function<void(ErrorOr<std::string> reply)> result) = 0;
+      const DatabasePigeonFirebaseApp& app, const QueryRequest& request,
+      std::function<void(ErrorOr<std::string> reply)> result) = 0;
   virtual void QueryKeepSynced(
-    const DatabasePigeonFirebaseApp& app,
-    const QueryRequest& request,
-    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+      const DatabasePigeonFirebaseApp& app, const QueryRequest& request,
+      std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void QueryGet(
-    const DatabasePigeonFirebaseApp& app,
-    const QueryRequest& request,
-    std::function<void(ErrorOr<flutter::EncodableMap> reply)> result) = 0;
+      const DatabasePigeonFirebaseApp& app, const QueryRequest& request,
+      std::function<void(ErrorOr<flutter::EncodableMap> reply)> result) = 0;
 
   // The codec used by FirebaseDatabaseHostApi.
   static const flutter::StandardMessageCodec& GetCodec();
-  // Sets up an instance of `FirebaseDatabaseHostApi` to handle messages through the `binary_messenger`.
-  static void SetUp(
-    flutter::BinaryMessenger* binary_messenger,
-    FirebaseDatabaseHostApi* api);
-  static void SetUp(
-    flutter::BinaryMessenger* binary_messenger,
-    FirebaseDatabaseHostApi* api,
-    const std::string& message_channel_suffix);
+  // Sets up an instance of `FirebaseDatabaseHostApi` to handle messages through
+  // the `binary_messenger`.
+  static void SetUp(flutter::BinaryMessenger* binary_messenger,
+                    FirebaseDatabaseHostApi* api);
+  static void SetUp(flutter::BinaryMessenger* binary_messenger,
+                    FirebaseDatabaseHostApi* api,
+                    const std::string& message_channel_suffix);
   static flutter::EncodableValue WrapError(std::string_view error_message);
   static flutter::EncodableValue WrapError(const FlutterError& error);
+
  protected:
   FirebaseDatabaseHostApi() = default;
 };
-// Generated class from Pigeon that represents Flutter messages that can be called from C++.
+// Generated class from Pigeon that represents Flutter messages that can be
+// called from C++.
 class FirebaseDatabaseFlutterApi {
  public:
   FirebaseDatabaseFlutterApi(flutter::BinaryMessenger* binary_messenger);
-  FirebaseDatabaseFlutterApi(
-    flutter::BinaryMessenger* binary_messenger,
-    const std::string& message_channel_suffix);
+  FirebaseDatabaseFlutterApi(flutter::BinaryMessenger* binary_messenger,
+                             const std::string& message_channel_suffix);
   static const flutter::StandardMessageCodec& GetCodec();
   void CallTransactionHandler(
-    int64_t transaction_key,
-    const flutter::EncodableValue* snapshot_value,
-    std::function<void(const TransactionHandlerResult&)>&& on_success,
-    std::function<void(const FlutterError&)>&& on_error);
+      int64_t transaction_key, const flutter::EncodableValue* snapshot_value,
+      std::function<void(const TransactionHandlerResult&)>&& on_success,
+      std::function<void(const FlutterError&)>&& on_error);
+
  private:
   flutter::BinaryMessenger* binary_messenger_;
   std::string message_channel_suffix_;
