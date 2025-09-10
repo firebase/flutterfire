@@ -4,8 +4,8 @@
 
 import FirebaseCore
 import FirebaseDatabase
-import Foundation
 import FlutterMacOS
+import Foundation
 
 #if canImport(firebase_core)
   import firebase_core
@@ -26,56 +26,79 @@ import FlutterMacOS
 
   // MARK: - Database Management
 
-  func goOnline(app: DatabasePigeonFirebaseApp, completion: @escaping (Result<Void, Error>) -> Void) {
+  func goOnline(app: DatabasePigeonFirebaseApp, completion: @escaping (Result<Void, Error>) -> Void)
+  {
     let database = getDatabaseFromPigeonApp(app)
     database.goOnline()
     completion(.success(()))
   }
 
-  func goOffline(app: DatabasePigeonFirebaseApp, completion: @escaping (Result<Void, Error>) -> Void) {
+  func goOffline(
+    app: DatabasePigeonFirebaseApp, completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     let database = getDatabaseFromPigeonApp(app)
     database.goOffline()
     completion(.success(()))
   }
 
-  func setPersistenceEnabled(app: DatabasePigeonFirebaseApp, enabled: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
+  func setPersistenceEnabled(
+    app: DatabasePigeonFirebaseApp, enabled: Bool,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     let database = getDatabaseFromPigeonApp(app)
     database.isPersistenceEnabled = enabled
     completion(.success(()))
   }
 
-  func setPersistenceCacheSizeBytes(app: DatabasePigeonFirebaseApp, cacheSize: Int64, completion: @escaping (Result<Void, Error>) -> Void) {
+  func setPersistenceCacheSizeBytes(
+    app: DatabasePigeonFirebaseApp, cacheSize: Int64,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     let database = getDatabaseFromPigeonApp(app)
     database.persistenceCacheSizeBytes = UInt(cacheSize)
     completion(.success(()))
   }
 
-  func setLoggingEnabled(app: DatabasePigeonFirebaseApp, enabled: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
+  func setLoggingEnabled(
+    app: DatabasePigeonFirebaseApp, enabled: Bool,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     Database.setLoggingEnabled(enabled)
     completion(.success(()))
   }
 
-  func useDatabaseEmulator(app: DatabasePigeonFirebaseApp, host: String, port: Int64, completion: @escaping (Result<Void, Error>) -> Void) {
+  func useDatabaseEmulator(
+    app: DatabasePigeonFirebaseApp, host: String, port: Int64,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     let database = getDatabaseFromPigeonApp(app)
     database.useEmulator(withHost: host, port: Int(port))
     completion(.success(()))
   }
 
-  func ref(app: DatabasePigeonFirebaseApp, path: String?, completion: @escaping (Result<DatabaseReferencePlatform, Error>) -> Void) {
+  func ref(
+    app: DatabasePigeonFirebaseApp, path: String?,
+    completion: @escaping (Result<DatabaseReferencePlatform, Error>) -> Void
+  ) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: path ?? "")
     let result = DatabaseReferencePlatform(path: reference.url)
     completion(.success(result))
   }
 
-  func refFromURL(app: DatabasePigeonFirebaseApp, url: String, completion: @escaping (Result<DatabaseReferencePlatform, Error>) -> Void) {
+  func refFromURL(
+    app: DatabasePigeonFirebaseApp, url: String,
+    completion: @escaping (Result<DatabaseReferencePlatform, Error>) -> Void
+  ) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(fromURL: url)
     let result = DatabaseReferencePlatform(path: reference.url)
     completion(.success(result))
   }
 
-  func purgeOutstandingWrites(app: DatabasePigeonFirebaseApp, completion: @escaping (Result<Void, Error>) -> Void) {
+  func purgeOutstandingWrites(
+    app: DatabasePigeonFirebaseApp, completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     let database = getDatabaseFromPigeonApp(app)
     database.purgeOutstandingWrites()
     completion(.success(()))
@@ -83,10 +106,13 @@ import FlutterMacOS
 
   // MARK: - Database Reference Operations
 
-  func databaseReferenceSet(app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest, completion: @escaping (Result<Void, Error>) -> Void) {
+  func databaseReferenceSet(
+    app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
-    
+
     reference.setValue(request.value) { error, _ in
       if let error = error {
         completion(.failure(error))
@@ -96,10 +122,13 @@ import FlutterMacOS
     }
   }
 
-  func databaseReferenceSetWithPriority(app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest, completion: @escaping (Result<Void, Error>) -> Void) {
+  func databaseReferenceSetWithPriority(
+    app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
-    
+
     reference.setValue(request.value, andPriority: request.priority) { error, _ in
       if let error = error {
         completion(.failure(error))
@@ -109,13 +138,16 @@ import FlutterMacOS
     }
   }
 
-  func databaseReferenceUpdate(app: DatabasePigeonFirebaseApp, request: UpdateRequest, completion: @escaping (Result<Void, Error>) -> Void) {
+  func databaseReferenceUpdate(
+    app: DatabasePigeonFirebaseApp, request: UpdateRequest,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
-    
+
     // Convert [String: Any?] to [String: Any] for Firebase
     let values = request.value.compactMapValues { $0 }
-    
+
     reference.updateChildValues(values) { error, _ in
       if let error = error {
         completion(.failure(error))
@@ -125,10 +157,13 @@ import FlutterMacOS
     }
   }
 
-  func databaseReferenceSetPriority(app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest, completion: @escaping (Result<Void, Error>) -> Void) {
+  func databaseReferenceSetPriority(
+    app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
-    
+
     reference.setPriority(request.priority) { error, _ in
       if let error = error {
         completion(.failure(error))
@@ -138,14 +173,17 @@ import FlutterMacOS
     }
   }
 
-  func databaseReferenceRunTransaction(app: DatabasePigeonFirebaseApp, request: TransactionRequest, completion: @escaping (Result<Void, Error>) -> Void) {
+  func databaseReferenceRunTransaction(
+    app: DatabasePigeonFirebaseApp, request: TransactionRequest,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
-    
+
     reference.runTransactionBlock { currentData in
       let semaphore = DispatchSemaphore(value: 0)
       var transactionResult: TransactionHandlerResult?
-      
+
       // Call the Flutter transaction handler
       let flutterApi = FirebaseDatabaseFlutterApi(binaryMessenger: self.binaryMessenger)
       flutterApi.callTransactionHandler(
@@ -161,17 +199,17 @@ import FlutterMacOS
         }
         semaphore.signal()
       }
-      
+
       semaphore.wait()
-      
+
       guard let result = transactionResult else {
         return TransactionResult.abort()
       }
-      
+
       if result.aborted || result.exception {
         return TransactionResult.abort()
       }
-      
+
       currentData.value = result.value
       return TransactionResult.success(withValue: currentData)
     } andCompletionBlock: { error, committed, snapshot in
@@ -183,7 +221,10 @@ import FlutterMacOS
     }
   }
 
-  func databaseReferenceGetTransactionResult(app: DatabasePigeonFirebaseApp, transactionKey: Int64, completion: @escaping (Result<[String: Any?], Error>) -> Void) {
+  func databaseReferenceGetTransactionResult(
+    app: DatabasePigeonFirebaseApp, transactionKey: Int64,
+    completion: @escaping (Result<[String: Any?], Error>) -> Void
+  ) {
     // This method is used to get transaction results, but in our implementation
     // we handle transactions synchronously, so we return an empty result
     completion(.success([:]))
@@ -191,10 +232,13 @@ import FlutterMacOS
 
   // MARK: - OnDisconnect Operations
 
-  func onDisconnectSet(app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest, completion: @escaping (Result<Void, Error>) -> Void) {
+  func onDisconnectSet(
+    app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
-    
+
     reference.onDisconnectSetValue(request.value) { error, _ in
       if let error = error {
         completion(.failure(error))
@@ -204,10 +248,13 @@ import FlutterMacOS
     }
   }
 
-  func onDisconnectSetWithPriority(app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest, completion: @escaping (Result<Void, Error>) -> Void) {
+  func onDisconnectSetWithPriority(
+    app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
-    
+
     reference.onDisconnectSetValue(request.value, andPriority: request.priority) { error, _ in
       if let error = error {
         completion(.failure(error))
@@ -217,13 +264,16 @@ import FlutterMacOS
     }
   }
 
-  func onDisconnectUpdate(app: DatabasePigeonFirebaseApp, request: UpdateRequest, completion: @escaping (Result<Void, Error>) -> Void) {
+  func onDisconnectUpdate(
+    app: DatabasePigeonFirebaseApp, request: UpdateRequest,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
-    
+
     // Convert [String: Any?] to [String: Any] for Firebase
     let values = request.value.compactMapValues { $0 }
-    
+
     reference.onDisconnectUpdateChildValues(values) { error, _ in
       if let error = error {
         completion(.failure(error))
@@ -233,10 +283,13 @@ import FlutterMacOS
     }
   }
 
-  func onDisconnectCancel(app: DatabasePigeonFirebaseApp, path: String, completion: @escaping (Result<Void, Error>) -> Void) {
+  func onDisconnectCancel(
+    app: DatabasePigeonFirebaseApp, path: String,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: path)
-    
+
     reference.cancelDisconnectOperations { error, _ in
       if let error = error {
         completion(.failure(error))
@@ -248,10 +301,13 @@ import FlutterMacOS
 
   // MARK: - Query Operations
 
-  func queryObserve(app: DatabasePigeonFirebaseApp, request: QueryRequest, completion: @escaping (Result<String, Error>) -> Void) {
+  func queryObserve(
+    app: DatabasePigeonFirebaseApp, request: QueryRequest,
+    completion: @escaping (Result<String, Error>) -> Void
+  ) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
-    
+
     // Apply query modifiers
     var query: DatabaseQuery = reference
     for modifier in request.modifiers {
@@ -292,16 +348,16 @@ import FlutterMacOS
         }
       }
     }
-    
+
     // Generate a unique channel name
     listenerCount += 1
     let channelName = "firebase_database_observe_\(listenerCount)"
-    
+
     let eventChannel = FlutterEventChannel(
       name: channelName,
       binaryMessenger: binaryMessenger
     )
-    
+
     let streamHandler = FLTFirebaseDatabaseObserveStreamHandler(
       databaseQuery: query,
       disposeBlock: { [weak self] in
@@ -309,17 +365,20 @@ import FlutterMacOS
         self?.streamHandlers.removeValue(forKey: channelName)
       }
     )
-    
+
     eventChannel.setStreamHandler(streamHandler)
     streamHandlers[channelName] = streamHandler
-    
+
     completion(.success(channelName))
   }
 
-  func queryKeepSynced(app: DatabasePigeonFirebaseApp, request: QueryRequest, completion: @escaping (Result<Void, Error>) -> Void) {
+  func queryKeepSynced(
+    app: DatabasePigeonFirebaseApp, request: QueryRequest,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
-    
+
     // Apply query modifiers (same logic as queryObserve)
     var query: DatabaseQuery = reference
     for modifier in request.modifiers {
@@ -360,18 +419,21 @@ import FlutterMacOS
         }
       }
     }
-    
+
     if let value = request.value {
       query.keepSynced(value)
     }
-    
+
     completion(.success(()))
   }
 
-  func queryGet(app: DatabasePigeonFirebaseApp, request: QueryRequest, completion: @escaping (Result<[String: Any?], Error>) -> Void) {
+  func queryGet(
+    app: DatabasePigeonFirebaseApp, request: QueryRequest,
+    completion: @escaping (Result<[String: Any?], Error>) -> Void
+  ) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
-    
+
     // Apply query modifiers (same logic as queryObserve)
     var query: DatabaseQuery = reference
     for modifier in request.modifiers {
@@ -412,7 +474,7 @@ import FlutterMacOS
         }
       }
     }
-    
+
     query.getData { error, snapshot in
       if let error = error {
         completion(.failure(error))
@@ -429,38 +491,39 @@ import FlutterMacOS
 
   private func getDatabaseFromPigeonApp(_ app: DatabasePigeonFirebaseApp) -> Database {
     let instanceKey = app.appName + (app.databaseURL ?? "")
-    
+
     if let cachedInstance = Self.cachedDatabaseInstances[instanceKey] {
       return cachedInstance
     }
-    
+
     let firebaseApp = FLTFirebasePlugin.firebaseAppNamed(app.appName)!
     let database: Database
-    
+
     if let databaseURL = app.databaseURL, !databaseURL.isEmpty {
       database = Database.database(app: firebaseApp, url: databaseURL)
     } else {
       database = Database.database(app: firebaseApp)
     }
-    
+
     // Apply settings
     if let persistenceEnabled = app.settings.persistenceEnabled {
       database.isPersistenceEnabled = persistenceEnabled
     }
-    
+
     if let cacheSizeBytes = app.settings.cacheSizeBytes {
       database.persistenceCacheSizeBytes = UInt(cacheSizeBytes)
     }
-    
+
     if let loggingEnabled = app.settings.loggingEnabled {
       Database.setLoggingEnabled(loggingEnabled)
     }
-    
+
     if let emulatorHost = app.settings.emulatorHost,
-       let emulatorPort = app.settings.emulatorPort {
+      let emulatorPort = app.settings.emulatorPort
+    {
       database.useEmulator(withHost: emulatorHost, port: Int(emulatorPort))
     }
-    
+
     Self.cachedDatabaseInstances[instanceKey] = database
     return database
   }

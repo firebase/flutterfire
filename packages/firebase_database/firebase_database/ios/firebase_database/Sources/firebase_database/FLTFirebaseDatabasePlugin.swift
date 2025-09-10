@@ -30,8 +30,9 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     )
 
     // Set up Pigeon API
-    FirebaseDatabaseHostApiSetup.setUp(binaryMessenger: registrar.messenger(), api: instance.hostApi)
-    
+    FirebaseDatabaseHostApiSetup.setUp(
+      binaryMessenger: registrar.messenger(), api: instance.hostApi)
+
     FLTFirebasePluginRegistry.sharedInstance().register(instance)
 
     #if !targetEnvironment(macCatalyst)
