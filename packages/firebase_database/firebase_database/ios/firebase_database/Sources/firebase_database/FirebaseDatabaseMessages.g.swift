@@ -140,11 +140,11 @@ func deepHashFirebaseDatabaseMessages(value: Any?, hasher: inout Hasher) {
 
 /// Generated class from Pigeon that represents data sent in messages.
 struct DatabasePigeonSettings: Hashable {
-  var persistenceEnabled: Bool? = nil
-  var cacheSizeBytes: Int64? = nil
-  var loggingEnabled: Bool? = nil
-  var emulatorHost: String? = nil
-  var emulatorPort: Int64? = nil
+  var persistenceEnabled: Bool?
+  var cacheSizeBytes: Int64?
+  var loggingEnabled: Bool?
+  var emulatorHost: String?
+  var emulatorPort: Int64?
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> DatabasePigeonSettings? {
@@ -185,7 +185,7 @@ struct DatabasePigeonSettings: Hashable {
 /// Generated class from Pigeon that represents data sent in messages.
 struct DatabasePigeonFirebaseApp: Hashable {
   var appName: String
-  var databaseURL: String? = nil
+  var databaseURL: String?
   var settings: DatabasePigeonSettings
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
@@ -249,8 +249,8 @@ struct DatabaseReferencePlatform: Hashable {
 /// Generated class from Pigeon that represents data sent in messages.
 struct DatabaseReferenceRequest: Hashable {
   var path: String
-  var value: Any? = nil
-  var priority: Any? = nil
+  var value: Any?
+  var priority: Any?
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> DatabaseReferenceRequest? {
@@ -354,7 +354,7 @@ struct TransactionRequest: Hashable {
 struct QueryRequest: Hashable {
   var path: String
   var modifiers: [[String: Any?]]
-  var value: Bool? = nil
+  var value: Bool?
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> QueryRequest? {
@@ -388,7 +388,7 @@ struct QueryRequest: Hashable {
 
 /// Generated class from Pigeon that represents data sent in messages.
 struct TransactionHandlerResult: Hashable {
-  var value: Any? = nil
+  var value: Any?
   var aborted: Bool
   var exception: Bool
 
