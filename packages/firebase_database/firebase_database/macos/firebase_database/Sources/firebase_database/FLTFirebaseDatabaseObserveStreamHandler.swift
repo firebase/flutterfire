@@ -17,17 +17,16 @@ import FlutterMacOS
   }
 
   func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink)
-    -> FlutterError?
-  {
+    -> FlutterError? {
     guard let args = arguments as? [String: Any],
-      let eventTypeString = args["eventType"] as? String
+          let eventTypeString = args["eventType"] as? String
     else {
       return nil
     }
 
     let observeBlock: (DataSnapshot, String?) -> Void = { [weak self] snapshot, previousChildKey in
       var eventDictionary: [String: Any] = [
-        "eventType": eventTypeString
+        "eventType": eventTypeString,
       ]
 
       let snapshotDict = FLTFirebaseDatabaseUtils.dictionary(

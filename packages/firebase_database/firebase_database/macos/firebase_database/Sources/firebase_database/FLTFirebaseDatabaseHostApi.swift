@@ -33,72 +33,58 @@ import Foundation
     completion(.success(()))
   }
 
-  func goOffline(
-    app: DatabasePigeonFirebaseApp, completion: @escaping (Result<Void, Error>) -> Void
-  ) {
+  func goOffline(app: DatabasePigeonFirebaseApp,
+                 completion: @escaping (Result<Void, Error>) -> Void) {
     let database = getDatabaseFromPigeonApp(app)
     database.goOffline()
     completion(.success(()))
   }
 
-  func setPersistenceEnabled(
-    app: DatabasePigeonFirebaseApp, enabled: Bool,
-    completion: @escaping (Result<Void, Error>) -> Void
-  ) {
+  func setPersistenceEnabled(app: DatabasePigeonFirebaseApp, enabled: Bool,
+                             completion: @escaping (Result<Void, Error>) -> Void) {
     let database = getDatabaseFromPigeonApp(app)
     database.isPersistenceEnabled = enabled
     completion(.success(()))
   }
 
-  func setPersistenceCacheSizeBytes(
-    app: DatabasePigeonFirebaseApp, cacheSize: Int64,
-    completion: @escaping (Result<Void, Error>) -> Void
-  ) {
+  func setPersistenceCacheSizeBytes(app: DatabasePigeonFirebaseApp, cacheSize: Int64,
+                                    completion: @escaping (Result<Void, Error>) -> Void) {
     let database = getDatabaseFromPigeonApp(app)
     database.persistenceCacheSizeBytes = UInt(cacheSize)
     completion(.success(()))
   }
 
-  func setLoggingEnabled(
-    app: DatabasePigeonFirebaseApp, enabled: Bool,
-    completion: @escaping (Result<Void, Error>) -> Void
-  ) {
+  func setLoggingEnabled(app: DatabasePigeonFirebaseApp, enabled: Bool,
+                         completion: @escaping (Result<Void, Error>) -> Void) {
     Database.setLoggingEnabled(enabled)
     completion(.success(()))
   }
 
-  func useDatabaseEmulator(
-    app: DatabasePigeonFirebaseApp, host: String, port: Int64,
-    completion: @escaping (Result<Void, Error>) -> Void
-  ) {
+  func useDatabaseEmulator(app: DatabasePigeonFirebaseApp, host: String, port: Int64,
+                           completion: @escaping (Result<Void, Error>) -> Void) {
     let database = getDatabaseFromPigeonApp(app)
     database.useEmulator(withHost: host, port: Int(port))
     completion(.success(()))
   }
 
-  func ref(
-    app: DatabasePigeonFirebaseApp, path: String?,
-    completion: @escaping (Result<DatabaseReferencePlatform, Error>) -> Void
-  ) {
+  func ref(app: DatabasePigeonFirebaseApp, path: String?,
+           completion: @escaping (Result<DatabaseReferencePlatform, Error>) -> Void) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: path ?? "")
     let result = DatabaseReferencePlatform(path: reference.url)
     completion(.success(result))
   }
 
-  func refFromURL(
-    app: DatabasePigeonFirebaseApp, url: String,
-    completion: @escaping (Result<DatabaseReferencePlatform, Error>) -> Void
-  ) {
+  func refFromURL(app: DatabasePigeonFirebaseApp, url: String,
+                  completion: @escaping (Result<DatabaseReferencePlatform, Error>) -> Void) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(fromURL: url)
     let result = DatabaseReferencePlatform(path: reference.url)
     completion(.success(result))
   }
 
-  func purgeOutstandingWrites(
-    app: DatabasePigeonFirebaseApp, completion: @escaping (Result<Void, Error>) -> Void
-  ) {
+  func purgeOutstandingWrites(app: DatabasePigeonFirebaseApp,
+                              completion: @escaping (Result<Void, Error>) -> Void) {
     let database = getDatabaseFromPigeonApp(app)
     database.purgeOutstandingWrites()
     completion(.success(()))
@@ -106,15 +92,13 @@ import Foundation
 
   // MARK: - Database Reference Operations
 
-  func databaseReferenceSet(
-    app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest,
-    completion: @escaping (Result<Void, Error>) -> Void
-  ) {
+  func databaseReferenceSet(app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest,
+                            completion: @escaping (Result<Void, Error>) -> Void) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
 
     reference.setValue(request.value) { error, _ in
-      if let error = error {
+      if let error {
         completion(.failure(error))
       } else {
         completion(.success(()))
@@ -122,15 +106,14 @@ import Foundation
     }
   }
 
-  func databaseReferenceSetWithPriority(
-    app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest,
-    completion: @escaping (Result<Void, Error>) -> Void
-  ) {
+  func databaseReferenceSetWithPriority(app: DatabasePigeonFirebaseApp,
+                                        request: DatabaseReferenceRequest,
+                                        completion: @escaping (Result<Void, Error>) -> Void) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
 
     reference.setValue(request.value, andPriority: request.priority) { error, _ in
-      if let error = error {
+      if let error {
         completion(.failure(error))
       } else {
         completion(.success(()))
@@ -138,10 +121,8 @@ import Foundation
     }
   }
 
-  func databaseReferenceUpdate(
-    app: DatabasePigeonFirebaseApp, request: UpdateRequest,
-    completion: @escaping (Result<Void, Error>) -> Void
-  ) {
+  func databaseReferenceUpdate(app: DatabasePigeonFirebaseApp, request: UpdateRequest,
+                               completion: @escaping (Result<Void, Error>) -> Void) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
 
@@ -149,7 +130,7 @@ import Foundation
     let values = request.value.compactMapValues { $0 }
 
     reference.updateChildValues(values) { error, _ in
-      if let error = error {
+      if let error {
         completion(.failure(error))
       } else {
         completion(.success(()))
@@ -157,15 +138,14 @@ import Foundation
     }
   }
 
-  func databaseReferenceSetPriority(
-    app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest,
-    completion: @escaping (Result<Void, Error>) -> Void
-  ) {
+  func databaseReferenceSetPriority(app: DatabasePigeonFirebaseApp,
+                                    request: DatabaseReferenceRequest,
+                                    completion: @escaping (Result<Void, Error>) -> Void) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
 
     reference.setPriority(request.priority) { error, _ in
-      if let error = error {
+      if let error {
         completion(.failure(error))
       } else {
         completion(.success(()))
@@ -173,10 +153,8 @@ import Foundation
     }
   }
 
-  func databaseReferenceRunTransaction(
-    app: DatabasePigeonFirebaseApp, request: TransactionRequest,
-    completion: @escaping (Result<Void, Error>) -> Void
-  ) {
+  func databaseReferenceRunTransaction(app: DatabasePigeonFirebaseApp, request: TransactionRequest,
+                                       completion: @escaping (Result<Void, Error>) -> Void) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
 
@@ -191,9 +169,9 @@ import Foundation
         snapshotValue: currentData.value
       ) { result in
         switch result {
-        case .success(let handlerResult):
+        case let .success(handlerResult):
           transactionResult = handlerResult
-        case .failure(let error):
+        case let .failure(error):
           print("Transaction handler error: \(error)")
           transactionResult = TransactionHandlerResult(value: nil, aborted: true, exception: true)
         }
@@ -213,7 +191,7 @@ import Foundation
       currentData.value = result.value
       return TransactionResult.success(withValue: currentData)
     } andCompletionBlock: { error, committed, snapshot in
-      if let error = error {
+      if let error {
         completion(.failure(error))
       } else {
         completion(.success(()))
@@ -221,10 +199,9 @@ import Foundation
     }
   }
 
-  func databaseReferenceGetTransactionResult(
-    app: DatabasePigeonFirebaseApp, transactionKey: Int64,
-    completion: @escaping (Result<[String: Any?], Error>) -> Void
-  ) {
+  func databaseReferenceGetTransactionResult(app: DatabasePigeonFirebaseApp, transactionKey: Int64,
+                                             completion: @escaping (Result<[String: Any?], Error>)
+                                               -> Void) {
     // This method is used to get transaction results, but in our implementation
     // we handle transactions synchronously, so we return an empty result
     completion(.success([:]))
@@ -232,15 +209,13 @@ import Foundation
 
   // MARK: - OnDisconnect Operations
 
-  func onDisconnectSet(
-    app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest,
-    completion: @escaping (Result<Void, Error>) -> Void
-  ) {
+  func onDisconnectSet(app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest,
+                       completion: @escaping (Result<Void, Error>) -> Void) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
 
     reference.onDisconnectSetValue(request.value) { error, _ in
-      if let error = error {
+      if let error {
         completion(.failure(error))
       } else {
         completion(.success(()))
@@ -248,15 +223,14 @@ import Foundation
     }
   }
 
-  func onDisconnectSetWithPriority(
-    app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest,
-    completion: @escaping (Result<Void, Error>) -> Void
-  ) {
+  func onDisconnectSetWithPriority(app: DatabasePigeonFirebaseApp,
+                                   request: DatabaseReferenceRequest,
+                                   completion: @escaping (Result<Void, Error>) -> Void) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
 
     reference.onDisconnectSetValue(request.value, andPriority: request.priority) { error, _ in
-      if let error = error {
+      if let error {
         completion(.failure(error))
       } else {
         completion(.success(()))
@@ -264,10 +238,8 @@ import Foundation
     }
   }
 
-  func onDisconnectUpdate(
-    app: DatabasePigeonFirebaseApp, request: UpdateRequest,
-    completion: @escaping (Result<Void, Error>) -> Void
-  ) {
+  func onDisconnectUpdate(app: DatabasePigeonFirebaseApp, request: UpdateRequest,
+                          completion: @escaping (Result<Void, Error>) -> Void) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
 
@@ -275,7 +247,7 @@ import Foundation
     let values = request.value.compactMapValues { $0 }
 
     reference.onDisconnectUpdateChildValues(values) { error, _ in
-      if let error = error {
+      if let error {
         completion(.failure(error))
       } else {
         completion(.success(()))
@@ -283,15 +255,13 @@ import Foundation
     }
   }
 
-  func onDisconnectCancel(
-    app: DatabasePigeonFirebaseApp, path: String,
-    completion: @escaping (Result<Void, Error>) -> Void
-  ) {
+  func onDisconnectCancel(app: DatabasePigeonFirebaseApp, path: String,
+                          completion: @escaping (Result<Void, Error>) -> Void) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: path)
 
     reference.cancelDisconnectOperations { error, _ in
-      if let error = error {
+      if let error {
         completion(.failure(error))
       } else {
         completion(.success(()))
@@ -301,10 +271,8 @@ import Foundation
 
   // MARK: - Query Operations
 
-  func queryObserve(
-    app: DatabasePigeonFirebaseApp, request: QueryRequest,
-    completion: @escaping (Result<String, Error>) -> Void
-  ) {
+  func queryObserve(app: DatabasePigeonFirebaseApp, request: QueryRequest,
+                    completion: @escaping (Result<String, Error>) -> Void) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
 
@@ -372,10 +340,8 @@ import Foundation
     completion(.success(channelName))
   }
 
-  func queryKeepSynced(
-    app: DatabasePigeonFirebaseApp, request: QueryRequest,
-    completion: @escaping (Result<Void, Error>) -> Void
-  ) {
+  func queryKeepSynced(app: DatabasePigeonFirebaseApp, request: QueryRequest,
+                       completion: @escaping (Result<Void, Error>) -> Void) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
 
@@ -427,10 +393,8 @@ import Foundation
     completion(.success(()))
   }
 
-  func queryGet(
-    app: DatabasePigeonFirebaseApp, request: QueryRequest,
-    completion: @escaping (Result<[String: Any?], Error>) -> Void
-  ) {
+  func queryGet(app: DatabasePigeonFirebaseApp, request: QueryRequest,
+                completion: @escaping (Result<[String: Any?], Error>) -> Void) {
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
 
@@ -476,9 +440,9 @@ import Foundation
     }
 
     query.getData { error, snapshot in
-      if let error = error {
+      if let error {
         completion(.failure(error))
-      } else if let snapshot = snapshot {
+      } else if let snapshot {
         let snapshotDict = FLTFirebaseDatabaseUtils.dictionary(from: snapshot)
         completion(.success(["snapshot": snapshotDict]))
       } else {
@@ -519,8 +483,7 @@ import Foundation
     }
 
     if let emulatorHost = app.settings.emulatorHost,
-      let emulatorPort = app.settings.emulatorPort
-    {
+       let emulatorPort = app.settings.emulatorPort {
       database.useEmulator(withHost: emulatorHost, port: Int(emulatorPort))
     }
 
