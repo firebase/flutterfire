@@ -8,3 +8,4 @@ analyzer:
   exclude:
     - firebase_database_platform_interface/lib/src/pigeon/messages.pigeon.dart
     - firebase_database_platform_interface/test/pigeon/test_api.dart
+    - firebase_database_platform_interface/pigeons/messages.dart

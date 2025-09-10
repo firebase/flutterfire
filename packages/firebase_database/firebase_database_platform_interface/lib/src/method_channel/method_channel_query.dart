@@ -46,10 +46,6 @@ class MethodChannelQuery extends QueryPlatform {
     DatabaseEventType eventType,
   ) async* {
     List<Map<String, Object?>> modifierList = modifiers.toList();
-    // Create a unique event channel naming prefix using path, app name,
-    // databaseUrl, event type and ordered modifier list
-    String eventChannelNamePrefix =
-        '$path-${database.app!.name}-${database.databaseURL}-$eventType-$modifierList';
 
     // Create the EventChannel on native using Pigeon.
     final channelName = await MethodChannelDatabase.pigeonChannel.queryObserve(
@@ -60,7 +56,7 @@ class MethodChannelQuery extends QueryPlatform {
       ),
     );
 
-    yield* EventChannel(channelName!).receiveGuardedBroadcastStream(
+    yield* EventChannel(channelName).receiveGuardedBroadcastStream(
       arguments: <String, Object?>{'eventType': eventTypeToString(eventType)},
       onError: convertPlatformException,
     ).map(
