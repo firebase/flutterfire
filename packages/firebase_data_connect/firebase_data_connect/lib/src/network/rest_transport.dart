@@ -115,9 +115,9 @@ class RestTransport implements DataConnectTransport {
         body: json.encode(body),
         headers: headers,
       );
+      Map<String, dynamic> bodyJson =
+          jsonDecode(r.body) as Map<String, dynamic>;
       if (r.statusCode != 200) {
-        Map<String, dynamic> bodyJson =
-            jsonDecode(r.body) as Map<String, dynamic>;
         String message =
             bodyJson.containsKey('message') ? bodyJson['message']! : r.body;
         throw DataConnectError(
@@ -127,44 +127,58 @@ class RestTransport implements DataConnectTransport {
           "Received a status code of ${r.statusCode} with a message '$message'",
         );
       }
-      Map<String, dynamic> bodyJson =
-          jsonDecode(r.body) as Map<String, dynamic>;
 
-      if (bodyJson.containsKey('errors') &&
-          (bodyJson['errors'] as List).isNotEmpty) {
-        Map<String, dynamic>? data = bodyJson['data'];
-        Data? decodedData;
-        if (data != null) {
-          try {
-            decodedData = deserializer(jsonEncode(bodyJson['data']));
-          } catch (e) {
-            // nothing required
-          }
-        }
-        List<dynamic> errors =
-            jsonDecode(jsonEncode(bodyJson['errors'])) as List<dynamic>;
-        List<DataConnectOperationFailureResponseErrorInfo> suberrors = errors
-            .map((e) {
-              return jsonDecode(jsonEncode(e)) as Map<String, dynamic>;
-            })
-            .map((e) => DataConnectOperationFailureResponseErrorInfo(
-                (e['path'] as List)
-                    .map((val) => val.runtimeType == String
-                        ? DataConnectFieldPathSegment(val)
-                        : DataConnectListIndexPathSegment(val))
-                    .toList(),
-                e['message']))
-            .toList();
+      List errors = bodyJson['errors'] ?? [];
+      final data = bodyJson['data'];
+      List<DataConnectOperationFailureResponseErrorInfo> suberrors = errors
+          .map((e) => switch (e) {
+                {'path': List? path, 'message': String? message} =>
+                  DataConnectOperationFailureResponseErrorInfo(
+                      (path ?? [])
+                          .map((val) => switch (val) {
+                                String() => DataConnectFieldPathSegment(val),
+                                int() => DataConnectListIndexPathSegment(val),
+                                _ => throw DataConnectError(
+                                    DataConnectErrorCode.other,
+                                    'Incorrect type for $val')
+                              })
+                          .toList(),
+                      message ??
+                          (throw DataConnectError(
+                              DataConnectErrorCode.other, 'Missing message'))),
+                _ => throw DataConnectError(
+                    DataConnectErrorCode.other, 'Unable to parse JSON: $e')
+              })
+          .toList();
+      Data? decodedData;
+      Object? decodeError;
+      try {
+        /// The response we get is in the data field of the response
+        /// Once we get the data back, it's not quite json-encoded,
+        /// so we have to encode it and then send it to the user's deserializer.
+        decodedData = deserializer(jsonEncode(bodyJson['data']));
+      } catch (e) {
+        decodeError = e;
+      }
+      if (suberrors.isNotEmpty) {
         final response =
             DataConnectOperationFailureResponse(suberrors, data, decodedData);
+
         throw DataConnectOperationError(DataConnectErrorCode.other,
             'Failed to invoke operation: ', response);
+      } else {
+        if (decodeError != null) {
+          throw DataConnectError(DataConnectErrorCode.other,
+              'Unable to decode data: $decodeError');
+        }
+        if (decodedData is! Data) {
+          throw DataConnectError(
+            DataConnectErrorCode.other,
+            "Decoded data wasn't parsed properly. Expected $Data, got $decodedData",
+          );
+        }
+        return decodedData;
       }
-
-      /// The response we get is in the data field of the response
-      /// Once we get the data back, it's not quite json-encoded,
-      /// so we have to encode it and then send it to the user's deserializer.
-      return deserializer(jsonEncode(bodyJson['data']));
     } on Exception catch (e) {
       if (e is DataConnectError) {
         rethrow;
