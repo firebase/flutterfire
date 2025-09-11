@@ -641,8 +641,8 @@ class FirebaseDatabasePlugin :
             
             flutterApi.callTransactionHandler(request.transactionKey, mutableData.value) { result ->
               when (result) {
-                is Result.success -> taskCompletionSource.setResult(result.getOrNull()!!)
-                is Result.failure -> taskCompletionSource.setException(result.exceptionOrNull()!!)
+                is KotlinResult.success -> taskCompletionSource.setResult(result.getOrNull()!!)
+                is KotlinResult.failure -> taskCompletionSource.setException(Exception(result.exceptionOrNull()?.message ?: "Unknown error"))
               }
             }
             
