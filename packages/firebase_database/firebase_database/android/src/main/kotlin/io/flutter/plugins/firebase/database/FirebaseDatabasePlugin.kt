@@ -642,7 +642,7 @@ class FirebaseDatabasePlugin :
             flutterApi.callTransactionHandler(request.transactionKey, mutableData.value) { result ->
               result.fold(
                 onSuccess = { taskCompletionSource.setResult(it) },
-                onFailure = { taskCompletionSource.setException(it) }
+                onFailure = { taskCompletionSource.setException(Exception(it.message ?: "Unknown error")) }
               )
             }
 
