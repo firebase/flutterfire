@@ -21,7 +21,9 @@ class MethodChannelArguments {
 class _TransactionHandlerFlutterApi extends pigeon.FirebaseDatabaseFlutterApi {
   @override
   Future<pigeon.TransactionHandlerResult> callTransactionHandler(
-      int transactionKey, Object? snapshotValue,) async {
+    int transactionKey,
+    Object? snapshotValue,
+  ) async {
     Object? value;
     bool aborted = false;
     bool exception = false;
