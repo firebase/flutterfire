@@ -486,7 +486,6 @@ class FirebaseDatabasePlugin :
     streamHandlers.clear()
   }
 
-
   // Pigeon HostApi implementations
   override fun goOnline(app: DatabasePigeonFirebaseApp, callback: (KotlinResult<Unit>) -> Unit) {
     try {
@@ -617,7 +616,7 @@ class FirebaseDatabasePlugin :
     try {
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReference(request.path)
-      reference.setPriority(request.priority)
+      Tasks.await(reference.setPriority(request.priority))
       callback(KotlinResult.success(Unit))
     } catch (e: Exception) {
       callback(KotlinResult.failure(e))
@@ -635,12 +634,16 @@ class FirebaseDatabasePlugin :
       // Start the transaction
       reference.runTransaction(object : com.google.firebase.database.Transaction.Handler {
         override fun doTransaction(mutableData: com.google.firebase.database.MutableData): com.google.firebase.database.Transaction.Result {
-          // For now, implement a simple increment transaction
-          // The proper FlutterApi integration would require async handling which is complex in this context
           try {
-            val currentValue = mutableData.getValue(Int::class.java) ?: 0
-            val newValue = currentValue + 1
-            mutableData.value = newValue
+            // Call the Flutter transaction handler
+            val flutterApi = FirebaseDatabaseFlutterApi(messenger)
+            val handlerResult = Tasks.await(flutterApi.callTransactionHandler(request.transactionKey, mutableData.value))
+            
+            if (handlerResult.aborted || handlerResult.exception) {
+              return com.google.firebase.database.Transaction.abort()
+            }
+            
+            mutableData.value = handlerResult.value
             return com.google.firebase.database.Transaction.success(mutableData)
           } catch (e: Exception) {
             // If there's an error, abort the transaction
@@ -861,14 +864,8 @@ class FirebaseDatabasePlugin :
       query.get().addOnCompleteListener { task ->
         if (task.isSuccessful) {
           val snapshot = task.result
-          val result = mapOf(
-            "snapshot" to mapOf(
-              "value" to snapshot.value,
-              "key" to snapshot.key,
-              "exists" to snapshot.exists()
-            )
-          )
-          callback(KotlinResult.success(result))
+          val payload = FlutterDataSnapshotPayload(snapshot)
+          callback(KotlinResult.success(payload.toMap()))
         } else {
           callback(KotlinResult.failure(task.exception ?: Exception("Unknown error")))
         }
