@@ -31,42 +31,42 @@ class MockFirebaseDatabaseHostApi implements TestFirebaseDatabaseHostApi {
 
   @override
   Future<void> setPersistenceEnabled(
-      pigeon.DatabasePigeonFirebaseApp app, bool enabled) async {
+      pigeon.DatabasePigeonFirebaseApp app, bool enabled,) async {
     log.add(
-        {'method': 'setPersistenceEnabled', 'app': app, 'enabled': enabled});
+        {'method': 'setPersistenceEnabled', 'app': app, 'enabled': enabled},);
   }
 
   @override
   Future<void> setPersistenceCacheSizeBytes(
-      pigeon.DatabasePigeonFirebaseApp app, int cacheSize) async {
+      pigeon.DatabasePigeonFirebaseApp app, int cacheSize,) async {
     log.add({
       'method': 'setPersistenceCacheSizeBytes',
       'app': app,
-      'cacheSize': cacheSize
+      'cacheSize': cacheSize,
     });
   }
 
   @override
   Future<void> setLoggingEnabled(
-      pigeon.DatabasePigeonFirebaseApp app, bool enabled) async {
+      pigeon.DatabasePigeonFirebaseApp app, bool enabled,) async {
     log.add({'method': 'setLoggingEnabled', 'app': app, 'enabled': enabled});
   }
 
   @override
   Future<void> useDatabaseEmulator(
-      pigeon.DatabasePigeonFirebaseApp app, String host, int port) async {
+      pigeon.DatabasePigeonFirebaseApp app, String host, int port,) async {
     log.add({
       'method': 'useDatabaseEmulator',
       'app': app,
       'host': host,
-      'port': port
+      'port': port,
     });
   }
 
   @override
   Future<pigeon.DatabaseReferencePlatform> ref(
       pigeon.DatabasePigeonFirebaseApp app,
-      [String? path]) async {
+      [String? path],) async {
     log.add({'method': 'ref', 'app': app, 'path': path});
     return pigeon.DatabaseReferencePlatform(
       path: path ?? '',
@@ -75,7 +75,7 @@ class MockFirebaseDatabaseHostApi implements TestFirebaseDatabaseHostApi {
 
   @override
   Future<pigeon.DatabaseReferencePlatform> refFromURL(
-      pigeon.DatabasePigeonFirebaseApp app, String url) async {
+      pigeon.DatabasePigeonFirebaseApp app, String url,) async {
     log.add({'method': 'refFromURL', 'app': app, 'url': url});
     return pigeon.DatabaseReferencePlatform(
       path: '',
@@ -84,63 +84,63 @@ class MockFirebaseDatabaseHostApi implements TestFirebaseDatabaseHostApi {
 
   @override
   Future<void> purgeOutstandingWrites(
-      pigeon.DatabasePigeonFirebaseApp app) async {
+      pigeon.DatabasePigeonFirebaseApp app,) async {
     log.add({'method': 'purgeOutstandingWrites', 'app': app});
   }
 
   @override
   Future<void> databaseReferenceSet(pigeon.DatabasePigeonFirebaseApp app,
-      pigeon.DatabaseReferenceRequest request) async {
+      pigeon.DatabaseReferenceRequest request,) async {
     log.add({'method': 'databaseReferenceSet', 'app': app, 'request': request});
   }
 
   @override
   Future<void> databaseReferenceSetWithPriority(
       pigeon.DatabasePigeonFirebaseApp app,
-      pigeon.DatabaseReferenceRequest request) async {
+      pigeon.DatabaseReferenceRequest request,) async {
     log.add({
       'method': 'databaseReferenceSetWithPriority',
       'app': app,
-      'request': request
+      'request': request,
     });
   }
 
   @override
   Future<void> databaseReferenceUpdate(pigeon.DatabasePigeonFirebaseApp app,
-      pigeon.UpdateRequest request) async {
+      pigeon.UpdateRequest request,) async {
     log.add(
-        {'method': 'databaseReferenceUpdate', 'app': app, 'request': request});
+        {'method': 'databaseReferenceUpdate', 'app': app, 'request': request},);
   }
 
   @override
   Future<void> databaseReferenceSetPriority(
       pigeon.DatabasePigeonFirebaseApp app,
-      pigeon.DatabaseReferenceRequest request) async {
+      pigeon.DatabaseReferenceRequest request,) async {
     log.add({
       'method': 'databaseReferenceSetPriority',
       'app': app,
-      'request': request
+      'request': request,
     });
   }
 
   @override
   Future<void> databaseReferenceRunTransaction(
       pigeon.DatabasePigeonFirebaseApp app,
-      pigeon.TransactionRequest request) async {
+      pigeon.TransactionRequest request,) async {
     log.add({
       'method': 'databaseReferenceRunTransaction',
       'app': app,
-      'request': request
+      'request': request,
     });
   }
 
   @override
   Future<Map<String, Object?>> databaseReferenceGetTransactionResult(
-      pigeon.DatabasePigeonFirebaseApp app, int transactionKey) async {
+      pigeon.DatabasePigeonFirebaseApp app, int transactionKey,) async {
     log.add({
       'method': 'databaseReferenceGetTransactionResult',
       'app': app,
-      'transactionKey': transactionKey
+      'transactionKey': transactionKey,
     });
     return {
       'error': null,
@@ -155,48 +155,48 @@ class MockFirebaseDatabaseHostApi implements TestFirebaseDatabaseHostApi {
 
   @override
   Future<void> onDisconnectSet(pigeon.DatabasePigeonFirebaseApp app,
-      pigeon.DatabaseReferenceRequest request) async {
+      pigeon.DatabaseReferenceRequest request,) async {
     log.add({'method': 'onDisconnectSet', 'app': app, 'request': request});
   }
 
   @override
   Future<void> onDisconnectSetWithPriority(pigeon.DatabasePigeonFirebaseApp app,
-      pigeon.DatabaseReferenceRequest request) async {
+      pigeon.DatabaseReferenceRequest request,) async {
     log.add({
       'method': 'onDisconnectSetWithPriority',
       'app': app,
-      'request': request
+      'request': request,
     });
   }
 
   @override
   Future<void> onDisconnectUpdate(pigeon.DatabasePigeonFirebaseApp app,
-      pigeon.UpdateRequest request) async {
+      pigeon.UpdateRequest request,) async {
     log.add({'method': 'onDisconnectUpdate', 'app': app, 'request': request});
   }
 
   @override
   Future<void> onDisconnectCancel(
-      pigeon.DatabasePigeonFirebaseApp app, String path) async {
+      pigeon.DatabasePigeonFirebaseApp app, String path,) async {
     log.add({'method': 'onDisconnectCancel', 'app': app, 'path': path});
   }
 
   @override
   Future<String> queryObserve(
-      pigeon.DatabasePigeonFirebaseApp app, pigeon.QueryRequest request) async {
+      pigeon.DatabasePigeonFirebaseApp app, pigeon.QueryRequest request,) async {
     log.add({'method': 'queryObserve', 'app': app, 'request': request});
     return 'mock/path';
   }
 
   @override
   Future<void> queryKeepSynced(
-      pigeon.DatabasePigeonFirebaseApp app, pigeon.QueryRequest request) async {
+      pigeon.DatabasePigeonFirebaseApp app, pigeon.QueryRequest request,) async {
     log.add({'method': 'queryKeepSynced', 'app': app, 'request': request});
   }
 
   @override
   Future<Map<String, Object?>> queryGet(
-      pigeon.DatabasePigeonFirebaseApp app, pigeon.QueryRequest request) async {
+      pigeon.DatabasePigeonFirebaseApp app, pigeon.QueryRequest request,) async {
     log.add({'method': 'queryGet', 'app': app, 'request': request});
     return {
       'value': 'test-value',
