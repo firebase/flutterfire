@@ -487,10 +487,7 @@ class FirebaseDatabasePlugin :
   }
 
   // Pigeon HostApi implementations
-  override fun goOnline(
-    app: DatabasePigeonFirebaseApp,
-    callback: (KotlinResult<Unit>) -> Unit,
-  ) {
+  override fun goOnline(app: DatabasePigeonFirebaseApp, callback: (KotlinResult<Unit>) -> Unit) {
     try {
       val database = getDatabaseFromPigeonApp(app)
       database.goOnline()
@@ -500,10 +497,7 @@ class FirebaseDatabasePlugin :
     }
   }
 
-  override fun goOffline(
-    app: DatabasePigeonFirebaseApp,
-    callback: (KotlinResult<Unit>) -> Unit,
-  ) {
+  override fun goOffline(app: DatabasePigeonFirebaseApp, callback: (KotlinResult<Unit>) -> Unit) {
     try {
       val database = getDatabaseFromPigeonApp(app)
       database.goOffline()
@@ -513,11 +507,7 @@ class FirebaseDatabasePlugin :
     }
   }
 
-  override fun setPersistenceEnabled(
-    app: DatabasePigeonFirebaseApp,
-    enabled: Boolean,
-    callback: (KotlinResult<Unit>) -> Unit,
-  ) {
+  override fun setPersistenceEnabled(app: DatabasePigeonFirebaseApp, enabled: Boolean, callback: (KotlinResult<Unit>) -> Unit) {
     try {
       val database = getDatabaseFromPigeonApp(app)
       database.setPersistenceEnabled(enabled)
@@ -527,11 +517,7 @@ class FirebaseDatabasePlugin :
     }
   }
 
-  override fun setPersistenceCacheSizeBytes(
-    app: DatabasePigeonFirebaseApp,
-    cacheSize: Long,
-    callback: (KotlinResult<Unit>) -> Unit,
-  ) {
+  override fun setPersistenceCacheSizeBytes(app: DatabasePigeonFirebaseApp, cacheSize: Long, callback: (KotlinResult<Unit>) -> Unit) {
     try {
       val database = getDatabaseFromPigeonApp(app)
       database.setPersistenceCacheSizeBytes(cacheSize)
@@ -541,11 +527,7 @@ class FirebaseDatabasePlugin :
     }
   }
 
-  override fun setLoggingEnabled(
-    app: DatabasePigeonFirebaseApp,
-    enabled: Boolean,
-    callback: (KotlinResult<Unit>) -> Unit,
-  ) {
+  override fun setLoggingEnabled(app: DatabasePigeonFirebaseApp, enabled: Boolean, callback: (KotlinResult<Unit>) -> Unit) {
     try {
       val database = getDatabaseFromPigeonApp(app)
       database.setLogLevel(if (enabled) Logger.Level.DEBUG else Logger.Level.NONE)
@@ -555,12 +537,7 @@ class FirebaseDatabasePlugin :
     }
   }
 
-  override fun useDatabaseEmulator(
-    app: DatabasePigeonFirebaseApp,
-    host: String,
-    port: Long,
-    callback: (KotlinResult<Unit>) -> Unit,
-  ) {
+  override fun useDatabaseEmulator(app: DatabasePigeonFirebaseApp, host: String, port: Long, callback: (KotlinResult<Unit>) -> Unit) {
     try {
       val database = getDatabaseFromPigeonApp(app)
       database.useEmulator(host, port.toInt())
@@ -570,11 +547,7 @@ class FirebaseDatabasePlugin :
     }
   }
 
-  override fun ref(
-    app: DatabasePigeonFirebaseApp,
-    path: String?,
-    callback: (KotlinResult<DatabaseReferencePlatform>) -> Unit,
-  ) {
+  override fun ref(app: DatabasePigeonFirebaseApp, path: String?, callback: (KotlinResult<DatabaseReferencePlatform>) -> Unit) {
     try {
       val database = getDatabaseFromPigeonApp(app)
       val reference = if (path.isNullOrEmpty()) database.reference else database.getReference(path)
@@ -585,11 +558,7 @@ class FirebaseDatabasePlugin :
     }
   }
 
-  override fun refFromURL(
-    app: DatabasePigeonFirebaseApp,
-    url: String,
-    callback: (KotlinResult<DatabaseReferencePlatform>) -> Unit,
-  ) {
+  override fun refFromURL(app: DatabasePigeonFirebaseApp, url: String, callback: (KotlinResult<DatabaseReferencePlatform>) -> Unit) {
     try {
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReferenceFromUrl(url)
@@ -600,10 +569,7 @@ class FirebaseDatabasePlugin :
     }
   }
 
-  override fun purgeOutstandingWrites(
-    app: DatabasePigeonFirebaseApp,
-    callback: (KotlinResult<Unit>) -> Unit,
-  ) {
+  override fun purgeOutstandingWrites(app: DatabasePigeonFirebaseApp, callback: (KotlinResult<Unit>) -> Unit) {
     try {
       val database = getDatabaseFromPigeonApp(app)
       database.purgeOutstandingWrites()
@@ -613,11 +579,7 @@ class FirebaseDatabasePlugin :
     }
   }
 
-  override fun databaseReferenceSet(
-    app: DatabasePigeonFirebaseApp,
-    request: DatabaseReferenceRequest,
-    callback: (KotlinResult<Unit>) -> Unit,
-  ) {
+  override fun databaseReferenceSet(app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest, callback: (KotlinResult<Unit>) -> Unit) {
     try {
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReference(request.path)
@@ -628,11 +590,7 @@ class FirebaseDatabasePlugin :
     }
   }
 
-  override fun databaseReferenceSetWithPriority(
-    app: DatabasePigeonFirebaseApp,
-    request: DatabaseReferenceRequest,
-    callback: (KotlinResult<Unit>) -> Unit,
-  ) {
+  override fun databaseReferenceSetWithPriority(app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest, callback: (KotlinResult<Unit>) -> Unit) {
     try {
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReference(request.path)
@@ -643,11 +601,7 @@ class FirebaseDatabasePlugin :
     }
   }
 
-  override fun databaseReferenceUpdate(
-    app: DatabasePigeonFirebaseApp,
-    request: UpdateRequest,
-    callback: (KotlinResult<Unit>) -> Unit,
-  ) {
+  override fun databaseReferenceUpdate(app: DatabasePigeonFirebaseApp, request: UpdateRequest, callback: (KotlinResult<Unit>) -> Unit) {
     try {
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReference(request.path)
@@ -658,11 +612,7 @@ class FirebaseDatabasePlugin :
     }
   }
 
-  override fun databaseReferenceSetPriority(
-    app: DatabasePigeonFirebaseApp,
-    request: DatabaseReferenceRequest,
-    callback: (KotlinResult<Unit>) -> Unit,
-  ) {
+  override fun databaseReferenceSetPriority(app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest, callback: (KotlinResult<Unit>) -> Unit) {
     try {
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReference(request.path)
@@ -673,85 +623,64 @@ class FirebaseDatabasePlugin :
     }
   }
 
-  override fun databaseReferenceRunTransaction(
-    app: DatabasePigeonFirebaseApp,
-    request: TransactionRequest,
-    callback: (KotlinResult<Unit>) -> Unit,
-  ) {
+  override fun databaseReferenceRunTransaction(app: DatabasePigeonFirebaseApp, request: TransactionRequest, callback: (KotlinResult<Unit>) -> Unit) {
     try {
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReference(request.path)
-
+      
       // Store the transaction request for later retrieval
       transactionRequests[request.transactionKey] = request
-
+      
       // Start the transaction
-      reference.runTransaction(
-        object : com.google.firebase.database.Transaction.Handler {
-          override fun doTransaction(
-            mutableData: com.google.firebase.database.MutableData,
-          ): com.google.firebase.database.Transaction.Result {
-            try {
-              // Call the Flutter transaction handler
-              val flutterApi = FirebaseDatabaseFlutterApi(messenger)
-              val taskCompletionSource = TaskCompletionSource<TransactionHandlerResult>()
-
-              flutterApi.callTransactionHandler(request.transactionKey, mutableData.value) { result ->
-                result.fold(
-                  onSuccess = { tcs.setResult(it) },
-                  onFailure = { tcs.setException(it) },
-                )
-              }
-
-              val handlerResult = Tasks.await(taskCompletionSource.task)
-
-              if (handlerResult.aborted || handlerResult.exception) {
-                return com.google.firebase.database.Transaction
-                  .abort()
-              }
-
-              mutableData.value = handlerResult.value
-              return com.google.firebase.database.Transaction
-                .success(mutableData)
-            } catch (e: Exception) {
-              // If there's an error, abort the transaction
-              return com.google.firebase.database.Transaction
-                .abort()
-            }
-          }
-
-          override fun onComplete(
-            error: com.google.firebase.database.DatabaseError?,
-            committed: Boolean,
-            currentData: com.google.firebase.database.DataSnapshot?,
-          ) {
-            // Store the transaction result for later retrieval
-            val result =
-              mapOf(
-                "committed" to committed,
-                "snapshot" to
-                  mapOf(
-                    "value" to currentData?.value,
-                    "key" to currentData?.key,
-                    "exists" to currentData?.exists(),
-                  ),
+      reference.runTransaction(object : com.google.firebase.database.Transaction.Handler {
+        override fun doTransaction(mutableData: com.google.firebase.database.MutableData): com.google.firebase.database.Transaction.Result {
+          try {
+            // Call the Flutter transaction handler
+            val flutterApi = FirebaseDatabaseFlutterApi(messenger)
+            val taskCompletionSource = TaskCompletionSource<TransactionHandlerResult>()
+            
+            flutterApi.callTransactionHandler(request.transactionKey, mutableData.value) { result ->
+              result.fold(
+                onSuccess = { taskCompletionSource.setResult(it) },
+                onFailure = { taskCompletionSource.setException(it) }
               )
-            transactionResults[request.transactionKey] = result
-          }
-        },
-      )
+            }
 
+            val handlerResult = Tasks.await(taskCompletionSource.task)
+            
+            if (handlerResult.aborted || handlerResult.exception) {
+              return com.google.firebase.database.Transaction.abort()
+            }
+            
+            mutableData.value = handlerResult.value
+            return com.google.firebase.database.Transaction.success(mutableData)
+          } catch (e: Exception) {
+            // If there's an error, abort the transaction
+            return com.google.firebase.database.Transaction.abort()
+          }
+        }
+        
+        override fun onComplete(error: com.google.firebase.database.DatabaseError?, committed: Boolean, currentData: com.google.firebase.database.DataSnapshot?) {          
+          // Store the transaction result for later retrieval
+          val result = mapOf(
+            "committed" to committed,
+            "snapshot" to mapOf(
+              "value" to currentData?.value,
+              "key" to currentData?.key,
+              "exists" to currentData?.exists()
+            )
+          )
+          transactionResults[request.transactionKey] = result
+        }
+      })
+      
       callback(KotlinResult.success(Unit))
     } catch (e: Exception) {
       callback(KotlinResult.failure(e))
     }
   }
 
-  override fun databaseReferenceGetTransactionResult(
-    app: DatabasePigeonFirebaseApp,
-    transactionKey: Long,
-    callback: (KotlinResult<Map<String, Any?>>) -> Unit,
-  ) {
+  override fun databaseReferenceGetTransactionResult(app: DatabasePigeonFirebaseApp, transactionKey: Long, callback: (KotlinResult<Map<String, Any?>>) -> Unit) {
     try {
       // Return the stored transaction result
       val result = transactionResults[transactionKey]
@@ -759,11 +688,10 @@ class FirebaseDatabasePlugin :
         callback(KotlinResult.success(result))
       } else {
         // If no result is available yet, return a default result
-        val defaultResult =
-          mapOf(
-            "committed" to false,
-            "snapshot" to mapOf("value" to null),
-          )
+        val defaultResult = mapOf(
+          "committed" to false,
+          "snapshot" to mapOf("value" to null)
+        )
         callback(KotlinResult.success(defaultResult))
       }
     } catch (e: Exception) {
@@ -771,11 +699,7 @@ class FirebaseDatabasePlugin :
     }
   }
 
-  override fun onDisconnectSet(
-    app: DatabasePigeonFirebaseApp,
-    request: DatabaseReferenceRequest,
-    callback: (KotlinResult<Unit>) -> Unit,
-  ) {
+  override fun onDisconnectSet(app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest, callback: (KotlinResult<Unit>) -> Unit) {
     try {
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReference(request.path)
@@ -787,11 +711,7 @@ class FirebaseDatabasePlugin :
     }
   }
 
-  override fun onDisconnectSetWithPriority(
-    app: DatabasePigeonFirebaseApp,
-    request: DatabaseReferenceRequest,
-    callback: (KotlinResult<Unit>) -> Unit,
-  ) {
+  override fun onDisconnectSetWithPriority(app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest, callback: (KotlinResult<Unit>) -> Unit) {
     try {
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReference(request.path)
@@ -803,11 +723,7 @@ class FirebaseDatabasePlugin :
     }
   }
 
-  override fun onDisconnectUpdate(
-    app: DatabasePigeonFirebaseApp,
-    request: UpdateRequest,
-    callback: (KotlinResult<Unit>) -> Unit,
-  ) {
+  override fun onDisconnectUpdate(app: DatabasePigeonFirebaseApp, request: UpdateRequest, callback: (KotlinResult<Unit>) -> Unit) {
     try {
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReference(request.path)
@@ -819,11 +735,7 @@ class FirebaseDatabasePlugin :
     }
   }
 
-  override fun onDisconnectCancel(
-    app: DatabasePigeonFirebaseApp,
-    path: String,
-    callback: (KotlinResult<Unit>) -> Unit,
-  ) {
+  override fun onDisconnectCancel(app: DatabasePigeonFirebaseApp, path: String, callback: (KotlinResult<Unit>) -> Unit) {
     try {
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReference(path)
@@ -835,16 +747,12 @@ class FirebaseDatabasePlugin :
     }
   }
 
-  override fun queryObserve(
-    app: DatabasePigeonFirebaseApp,
-    request: QueryRequest,
-    callback: (KotlinResult<String>) -> Unit,
-  ) {
+  override fun queryObserve(app: DatabasePigeonFirebaseApp, request: QueryRequest, callback: (KotlinResult<String>) -> Unit) {
     try {
       Log.d("FirebaseDatabase", "🔍 Kotlin: Setting up query observe for path=${request.path}")
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReference(request.path)
-
+      
       // Apply query modifiers if any
       var query: com.google.firebase.database.Query = reference
       for (modifier in request.modifiers) {
@@ -855,68 +763,57 @@ class FirebaseDatabasePlugin :
           "orderByPriority" -> query = query.orderByPriority()
           "startAt" -> {
             val value = modifier["value"]
-            query =
-              when (value) {
-                is String -> query.startAt(value)
-                is Double -> query.startAt(value)
-                is Boolean -> query.startAt(value)
-                else -> query.startAt(value.toString())
-              }
+            query = when (value) {
+              is String -> query.startAt(value)
+              is Double -> query.startAt(value)
+              is Boolean -> query.startAt(value)
+              else -> query.startAt(value.toString())
+            }
           }
           "endAt" -> {
             val value = modifier["value"]
-            query =
-              when (value) {
-                is String -> query.endAt(value)
-                is Double -> query.endAt(value)
-                is Boolean -> query.endAt(value)
-                else -> query.endAt(value.toString())
-              }
+            query = when (value) {
+              is String -> query.endAt(value)
+              is Double -> query.endAt(value)
+              is Boolean -> query.endAt(value)
+              else -> query.endAt(value.toString())
+            }
           }
           "equalTo" -> {
             val value = modifier["value"]
-            query =
-              when (value) {
-                is String -> query.equalTo(value)
-                is Double -> query.equalTo(value)
-                is Boolean -> query.equalTo(value)
-                else -> query.equalTo(value.toString())
-              }
+            query = when (value) {
+              is String -> query.equalTo(value)
+              is Double -> query.equalTo(value)
+              is Boolean -> query.equalTo(value)
+              else -> query.equalTo(value.toString())
+            }
           }
           "limitToFirst" -> query = query.limitToFirst((modifier["value"] as Number).toInt())
           "limitToLast" -> query = query.limitToLast((modifier["value"] as Number).toInt())
         }
       }
-
+      
       // Generate a unique channel name
       val channelName = "firebase_database_query_${System.currentTimeMillis()}_${request.path.hashCode()}"
-
+      
       // Set up the event channel
       val eventChannel = EventChannel(messenger, channelName)
-      val streamHandler =
-        EventStreamHandler(
-          query,
-          object : OnDispose {
-            override fun run() {
-              // Clean up when the stream is disposed
-              streamHandlers.remove(eventChannel)
-            }
-          },
-        )
+      val streamHandler = EventStreamHandler(query, object : OnDispose {
+        override fun run() {
+          // Clean up when the stream is disposed
+          streamHandlers.remove(eventChannel)
+        }
+      })
       eventChannel.setStreamHandler(streamHandler)
       streamHandlers[eventChannel] = streamHandler
-
+      
       callback(KotlinResult.success(channelName))
     } catch (e: Exception) {
       callback(KotlinResult.failure(e))
     }
   }
 
-  override fun queryKeepSynced(
-    app: DatabasePigeonFirebaseApp,
-    request: QueryRequest,
-    callback: (KotlinResult<Unit>) -> Unit,
-  ) {
+  override fun queryKeepSynced(app: DatabasePigeonFirebaseApp, request: QueryRequest, callback: (KotlinResult<Unit>) -> Unit) {
     try {
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReference(request.path)
@@ -927,15 +824,11 @@ class FirebaseDatabasePlugin :
     }
   }
 
-  override fun queryGet(
-    app: DatabasePigeonFirebaseApp,
-    request: QueryRequest,
-    callback: (KotlinResult<Map<String, Any?>>) -> Unit,
-  ) {
+  override fun queryGet(app: DatabasePigeonFirebaseApp, request: QueryRequest, callback: (KotlinResult<Map<String, Any?>>) -> Unit) {
     try {
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReference(request.path)
-
+      
       // Apply query modifiers if any
       var query: com.google.firebase.database.Query = reference
       for (modifier in request.modifiers) {
@@ -946,39 +839,36 @@ class FirebaseDatabasePlugin :
           "orderByPriority" -> query = query.orderByPriority()
           "startAt" -> {
             val value = modifier["value"]
-            query =
-              when (value) {
-                is String -> query.startAt(value)
-                is Double -> query.startAt(value)
-                is Boolean -> query.startAt(value)
-                else -> query.startAt(value.toString())
-              }
+            query = when (value) {
+              is String -> query.startAt(value)
+              is Double -> query.startAt(value)
+              is Boolean -> query.startAt(value)
+              else -> query.startAt(value.toString())
+            }
           }
           "endAt" -> {
             val value = modifier["value"]
-            query =
-              when (value) {
-                is String -> query.endAt(value)
-                is Double -> query.endAt(value)
-                is Boolean -> query.endAt(value)
-                else -> query.endAt(value.toString())
-              }
+            query = when (value) {
+              is String -> query.endAt(value)
+              is Double -> query.endAt(value)
+              is Boolean -> query.endAt(value)
+              else -> query.endAt(value.toString())
+            }
           }
           "equalTo" -> {
             val value = modifier["value"]
-            query =
-              when (value) {
-                is String -> query.equalTo(value)
-                is Double -> query.equalTo(value)
-                is Boolean -> query.equalTo(value)
-                else -> query.equalTo(value.toString())
-              }
+            query = when (value) {
+              is String -> query.equalTo(value)
+              is Double -> query.equalTo(value)
+              is Boolean -> query.equalTo(value)
+              else -> query.equalTo(value.toString())
+            }
           }
           "limitToFirst" -> query = query.limitToFirst((modifier["value"] as Number).toInt())
           "limitToLast" -> query = query.limitToLast((modifier["value"] as Number).toInt())
         }
       }
-
+      
       // Get the data
       query.get().addOnCompleteListener { task ->
         if (task.isSuccessful) {
@@ -1006,7 +896,7 @@ class FirebaseDatabasePlugin :
 
   // Store transaction requests for later retrieval
   private val transactionRequests = mutableMapOf<Long, TransactionRequest>()
-
+  
   // Store transaction results for later retrieval
   private val transactionResults = mutableMapOf<Long, Map<String, Any?>>()
 }
