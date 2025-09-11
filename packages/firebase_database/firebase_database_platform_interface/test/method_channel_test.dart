@@ -208,7 +208,6 @@ class MockFirebaseDatabaseHostApi implements TestFirebaseDatabaseHostApi {
 void main() {
   initializeMethodChannel();
   late FirebaseApp app;
-  late TestDefaultBinaryMessenger? messenger;
   late MockFirebaseDatabaseHostApi mockApi;
 
   setUpAll(() async {
@@ -221,9 +220,6 @@ void main() {
         messagingSenderId: '1234567890',
       ),
     );
-
-    messenger =
-        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
     
     mockApi = MockFirebaseDatabaseHostApi();
     TestFirebaseDatabaseHostApi.setUp(mockApi);
