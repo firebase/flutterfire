@@ -65,8 +65,8 @@ class MockFirebaseDatabaseHostApi implements TestFirebaseDatabaseHostApi {
 
   @override
   Future<pigeon.DatabaseReferencePlatform> ref(
-      pigeon.DatabasePigeonFirebaseApp app,
-      [String? path]) async {
+      // ignore: require_trailing_commas
+      pigeon.DatabasePigeonFirebaseApp app, [String? path]) async {
     log.add({'method': 'ref', 'app': app, 'path': path});
     return pigeon.DatabaseReferencePlatform(
       path: path ?? '',
