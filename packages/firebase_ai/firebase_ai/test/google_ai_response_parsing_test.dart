@@ -196,7 +196,7 @@ void main() {
             [
               Candidate(
                 Content.model([
-                  TextPart('Mountain View, California, United States'),
+                  const TextPart('Mountain View, California, United States'),
                 ]),
                 [
                   SafetyRating(
@@ -233,6 +233,68 @@ void main() {
                 HarmProbability.negligible,
               ),
             ]),
+          ),
+        ),
+      );
+    });
+
+    test('with a blocked safety rating', () async {
+      const response = '''
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "some response"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0,
+      "safetyRatings": [
+        {
+          "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+          "probability": "NEGLIGIBLE",
+          "blocked": true
+        },
+        {
+          "category": "HARM_CATEGORY_HATE_SPEECH",
+          "probability": "NEGLIGIBLE"
+        }
+      ]
+    }
+  ]
+}
+''';
+      final decoded = jsonDecode(response) as Object;
+      final generateContentResponse =
+          DeveloperSerialization().parseGenerateContentResponse(decoded);
+      expect(
+        generateContentResponse,
+        matchesGenerateContentResponse(
+          GenerateContentResponse(
+            [
+              Candidate(
+                Content.model([
+                  const TextPart('some response'),
+                ]),
+                [
+                  SafetyRating(
+                    HarmCategory.sexuallyExplicit,
+                    HarmProbability.negligible,
+                    isBlocked: true,
+                  ),
+                  SafetyRating(
+                      HarmCategory.hateSpeech, HarmProbability.negligible),
+                ],
+                null,
+                FinishReason.stop,
+                null,
+              ),
+            ],
+            null,
           ),
         ),
       );
@@ -329,7 +391,7 @@ void main() {
           GenerateContentResponse(
             [
               Candidate(
-                Content.model([TextPart('placeholder')]),
+                Content.model([const TextPart('placeholder')]),
                 [
                   SafetyRating(
                     HarmCategory.sexuallyExplicit,
@@ -464,7 +526,7 @@ void main() {
           GenerateContentResponse(
             [
               Candidate(
-                Content.model([TextPart('placeholder')]),
+                Content.model([const TextPart('placeholder')]),
                 [
                   SafetyRating(
                     HarmCategory.sexuallyExplicit,
@@ -551,7 +613,7 @@ void main() {
                 Content.model([
                   // ExecutableCode(Language.python, 'print(\'hello world\')'),
                   // CodeExecutionResult(Outcome.ok, 'hello world'),
-                  TextPart('hello world')
+                  const TextPart('hello world')
                 ]),
                 [],
                 null,

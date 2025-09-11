@@ -77,7 +77,6 @@ final class LiveGenerationConfig extends BaseGenerationConfig {
   LiveGenerationConfig({
     this.speechConfig,
     super.responseModalities,
-    super.candidateCount,
     super.maxOutputTokens,
     super.temperature,
     super.topP,
@@ -323,8 +322,13 @@ LiveServerMessage _parseServerMessage(Object jsonObject) {
 
     return LiveServerToolCall(functionCalls: functionCalls);
   } else if (json.containsKey('toolCallCancellation')) {
-    final toolCancelJson =
-        json['toolCallCancellation'] as Map<String, List<String>>;
+    final toolCancelData = json['toolCallCancellation'] as Map;
+    final Map<String, List<String>> toolCancelJson = toolCancelData.map(
+      (key, value) => MapEntry(
+        key as String,
+        (value as List).cast<String>(),
+      ),
+    );
     return LiveServerToolCallCancellation(functionIds: toolCancelJson['ids']);
   } else if (json.containsKey('setupComplete')) {
     return LiveServerSetupComplete();

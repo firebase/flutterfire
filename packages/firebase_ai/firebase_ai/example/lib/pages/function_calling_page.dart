@@ -43,10 +43,19 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
   late final GenerativeModel _codeExecutionModel;
   final List<MessageData> _messages = <MessageData>[];
   bool _loading = false;
+  bool _enableThinking = false;
 
   @override
   void initState() {
     super.initState();
+    _initializeModel();
+  }
+
+  void _initializeModel() {
+    final generationConfig = GenerationConfig(
+      thinkingConfig:
+          _enableThinking ? ThinkingConfig(includeThoughts: true) : null,
+    );
     if (widget.useVertexBackend) {
       var vertexAI = FirebaseAI.vertexAI(auth: FirebaseAuth.instance);
       _functionCallModel = vertexAI.generativeModel(
@@ -64,7 +73,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
     } else {
       var googleAI = FirebaseAI.googleAI(auth: FirebaseAuth.instance);
       _functionCallModel = googleAI.generativeModel(
-        model: 'gemini-2.5-flash',
+        model: 'gemini-2.0-flash',
         tools: [
           Tool.functionDeclarations([fetchWeatherTool]),
         ],
@@ -131,12 +140,24 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SwitchListTile(
+              title: const Text('Enable Thinking'),
+              value: _enableThinking,
+              onChanged: (bool value) {
+                setState(() {
+                  _enableThinking = value;
+                  _initializeModel();
+                });
+              },
+            ),
             Expanded(
               child: ListView.builder(
                 itemBuilder: (context, idx) {
+                  final message = _messages[idx];
                   return MessageWidget(
-                    text: _messages[idx].text,
-                    isFromUser: _messages[idx].fromUser ?? false,
+                    text: message.text,
+                    isFromUser: message.fromUser ?? false,
+                    isThought: message.isThought,
                   );
                 },
                 itemCount: _messages.length,
@@ -182,14 +203,25 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
   Future<void> _testFunctionCalling() async {
     setState(() {
       _loading = true;
+      _messages.clear();
     });
-    final functionCallChat = _functionCallModel.startChat();
-    const prompt = 'What is the weather like in Boston on 10/02 in year 2024?';
+    try {
+      final functionCallChat = _functionCallModel.startChat();
+      const prompt =
+          'What is the weather like in Boston on 10/02 in year 2024?';
 
-    // Send the message to the generative model.
-    var response = await functionCallChat.sendMessage(
-      Content.text(prompt),
-    );
+      _messages.add(MessageData(text: prompt, fromUser: true));
+
+      // Send the message to the generative model.
+      var response = await functionCallChat.sendMessage(
+        Content.text(prompt),
+      );
+
+      final thought = response.thoughtSummary;
+      if (thought != null) {
+        _messages
+            .add(MessageData(text: thought, fromUser: false, isThought: true));
+      }
 
     final functionCalls = response.functionCalls.toList();
     // When the model response with a function call, invoke the function.

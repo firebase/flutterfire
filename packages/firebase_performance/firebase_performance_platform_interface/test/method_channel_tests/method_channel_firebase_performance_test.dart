@@ -75,54 +75,6 @@ void main() {
     expect(result.app, isA<FirebaseApp>());
   });
 
-  group('isPerformanceCollectionEnabled', () {
-    test('should call delegate method successfully', () async {
-      await performance.isPerformanceCollectionEnabled();
-
-      expect(log, <Matcher>[
-        isMethodCall(
-          'FirebasePerformance#isPerformanceCollectionEnabled',
-          arguments: null,
-        ),
-      ]);
-    });
-
-    test(
-        'catch a [PlatformException] error and throws a [FirebaseException] error',
-        () async {
-      mockPlatformExceptionThrown = true;
-
-      await testExceptionHandling(
-        'PLATFORM',
-        performance.isPerformanceCollectionEnabled,
-      );
-    });
-  });
-
-  group('setPerformanceCollectionEnabled', () {
-    test('should call delegate method successfully', () async {
-      await performance.setPerformanceCollectionEnabled(true);
-
-      expect(log, <Matcher>[
-        isMethodCall(
-          'FirebasePerformance#setPerformanceCollectionEnabled',
-          arguments: {'enable': true},
-        ),
-      ]);
-    });
-
-    test(
-        'catch a [PlatformException] error and throws a [FirebaseException] error',
-        () async {
-      mockPlatformExceptionThrown = true;
-
-      await testExceptionHandling(
-        'PLATFORM',
-        () => performance.setPerformanceCollectionEnabled(true),
-      );
-    });
-  });
-
   group('newTrace', () {
     test('should call delegate method successfully', () {
       final trace = performance.newTrace('trace-name');

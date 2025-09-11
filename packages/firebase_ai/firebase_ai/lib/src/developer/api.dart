@@ -12,14 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:convert';
-
 import '../api.dart'
     show
         BlockReason,
         Candidate,
-        Citation,
-        CitationMetadata,
         CountTokensResponse,
         FinishReason,
         GenerateContentResponse,
@@ -31,47 +27,14 @@ import '../api.dart'
         SafetyRating,
         SafetySetting,
         SerializationStrategy,
-        UsageMetadata,
-        createUsageMetadata;
-import '../content.dart'
-    show Content, FunctionCall, InlineDataPart, Part, TextPart;
+        parseUsageMetadata,
+        parseCitationMetadata,
+        parseGroundingMetadata;
+import '../content.dart' show Content, parseContent;
 import '../error.dart';
 import '../tool.dart' show Tool, ToolConfig;
 
-HarmProbability _parseHarmProbability(Object jsonObject) =>
-    switch (jsonObject) {
-      'UNSPECIFIED' => HarmProbability.unknown,
-      'NEGLIGIBLE' => HarmProbability.negligible,
-      'LOW' => HarmProbability.low,
-      'MEDIUM' => HarmProbability.medium,
-      'HIGH' => HarmProbability.high,
-      _ => throw unhandledFormat('HarmProbability', jsonObject),
-    };
-HarmCategory _parseHarmCategory(Object jsonObject) => switch (jsonObject) {
-      'HARM_CATEGORY_UNSPECIFIED' => HarmCategory.unknown,
-      'HARM_CATEGORY_HARASSMENT' => HarmCategory.harassment,
-      'HARM_CATEGORY_HATE_SPEECH' => HarmCategory.hateSpeech,
-      'HARM_CATEGORY_SEXUALLY_EXPLICIT' => HarmCategory.sexuallyExplicit,
-      'HARM_CATEGORY_DANGEROUS_CONTENT' => HarmCategory.dangerousContent,
-      _ => throw unhandledFormat('HarmCategory', jsonObject),
-    };
-
-FinishReason _parseFinishReason(Object jsonObject) => switch (jsonObject) {
-      'UNSPECIFIED' => FinishReason.unknown,
-      'STOP' => FinishReason.stop,
-      'MAX_TOKENS' => FinishReason.maxTokens,
-      'SAFETY' => FinishReason.safety,
-      'RECITATION' => FinishReason.recitation,
-      'OTHER' => FinishReason.other,
-      _ => throw unhandledFormat('FinishReason', jsonObject),
-    };
-BlockReason _parseBlockReason(String jsonObject) => switch (jsonObject) {
-      'BLOCK_REASON_UNSPECIFIED' => BlockReason.unknown,
-      'SAFETY' => BlockReason.safety,
-      'OTHER' => BlockReason.other,
-      _ => throw unhandledFormat('BlockReason', jsonObject),
-    };
-String _harmBlockThresholdtoJson(HarmBlockThreshold? threshold) =>
+String _harmBlockThresholdToJson(HarmBlockThreshold? threshold) =>
     switch (threshold) {
       null => 'HARM_BLOCK_THRESHOLD_UNSPECIFIED',
       HarmBlockThreshold.low => 'BLOCK_LOW_AND_ABOVE',
@@ -95,7 +58,7 @@ Object _safetySettingToJson(SafetySetting safetySetting) {
   }
   return {
     'category': _harmCategoryToJson(safetySetting.category),
-    'threshold': _harmBlockThresholdtoJson(safetySetting.threshold)
+    'threshold': _harmBlockThresholdToJson(safetySetting.threshold)
   };
 }
 
@@ -114,13 +77,13 @@ final class DeveloperSerialization implements SerializationStrategy {
         _parsePromptFeedback(promptFeedback),
       _ => null,
     };
-    final usageMedata = switch (jsonObject) {
+    final usageMetadata = switch (jsonObject) {
       {'usageMetadata': final usageMetadata?} =>
-        _parseUsageMetadata(usageMetadata),
+        parseUsageMetadata(usageMetadata),
       _ => null,
     };
     return GenerateContentResponse(candidates, promptFeedback,
-        usageMetadata: usageMedata);
+        usageMetadata: usageMetadata);
   }
 
   @override
@@ -178,6 +141,7 @@ final class DeveloperSerialization implements SerializationStrategy {
       };
 }
 
+// Developer API and Vertex AI has different _parseSafetyRating logic.
 Candidate _parseCandidate(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('Candidate', jsonObject);
@@ -185,7 +149,7 @@ Candidate _parseCandidate(Object? jsonObject) {
 
   return Candidate(
     jsonObject.containsKey('content')
-        ? _parseGoogleAIContent(jsonObject['content'] as Object)
+        ? parseContent(jsonObject['content'] as Object)
         : Content(null, []),
     switch (jsonObject) {
       {'safetyRatings': final List<Object?> safetyRatings} =>
@@ -194,21 +158,27 @@ Candidate _parseCandidate(Object? jsonObject) {
     },
     switch (jsonObject) {
       {'citationMetadata': final Object citationMetadata} =>
-        _parseCitationMetadata(citationMetadata),
+        parseCitationMetadata(citationMetadata),
       _ => null
     },
     switch (jsonObject) {
       {'finishReason': final Object finishReason} =>
-        _parseFinishReason(finishReason),
+        FinishReason.parseValue(finishReason),
       _ => null
     },
     switch (jsonObject) {
       {'finishMessage': final String finishMessage} => finishMessage,
       _ => null
     },
+    groundingMetadata: switch (jsonObject) {
+      {'groundingMetadata': final Object groundingMetadata} =>
+        parseGroundingMetadata(groundingMetadata),
+      _ => null
+    },
   );
 }
 
+// Developer API and Vertex AI has different _parseSafetyRating logic.
 PromptFeedback _parsePromptFeedback(Object jsonObject) {
   return switch (jsonObject) {
     {
@@ -217,7 +187,7 @@ PromptFeedback _parsePromptFeedback(Object jsonObject) {
       PromptFeedback(
           switch (jsonObject) {
             {'blockReason': final String blockReason} =>
-              _parseBlockReason(blockReason),
+              BlockReason.parseValue(blockReason),
             _ => null,
           },
           switch (jsonObject) {
@@ -230,42 +200,19 @@ PromptFeedback _parsePromptFeedback(Object jsonObject) {
   };
 }
 
-UsageMetadata _parseUsageMetadata(Object jsonObject) {
-  if (jsonObject is! Map<String, Object?>) {
-    throw unhandledFormat('UsageMetadata', jsonObject);
-  }
-  final promptTokenCount = switch (jsonObject) {
-    {'promptTokenCount': final int promptTokenCount} => promptTokenCount,
-    _ => null,
-  };
-  final candidatesTokenCount = switch (jsonObject) {
-    {'candidatesTokenCount': final int candidatesTokenCount} =>
-      candidatesTokenCount,
-    _ => null,
-  };
-  final totalTokenCount = switch (jsonObject) {
-    {'totalTokenCount': final int totalTokenCount} => totalTokenCount,
-    _ => null,
-  };
-  final thoughtsTokenCount = switch (jsonObject) {
-    {'thoughtsTokenCount': final int thoughtsTokenCount} => thoughtsTokenCount,
-    _ => null,
-  };
-  return createUsageMetadata(
-    promptTokenCount: promptTokenCount,
-    candidatesTokenCount: candidatesTokenCount,
-    totalTokenCount: totalTokenCount,
-    thoughtsTokenCount: thoughtsTokenCount,
-    promptTokensDetails: null,
-    candidatesTokensDetails: null,
-  );
-}
-
 SafetyRating _parseSafetyRating(Object? jsonObject) {
   return switch (jsonObject) {
     {
       'category': final Object category,
-      'probability': final Object probability
+      'probability': final Object probability,
+      'blocked': final bool? isBlocked,
+    } =>
+      SafetyRating(
+          _parseHarmCategory(category), _parseHarmProbability(probability),
+          isBlocked: isBlocked),
+    {
+      'category': final Object category,
+      'probability': final Object probability,
     } =>
       SafetyRating(
           _parseHarmCategory(category), _parseHarmProbability(probability)),
@@ -273,60 +220,20 @@ SafetyRating _parseSafetyRating(Object? jsonObject) {
   };
 }
 
-CitationMetadata _parseCitationMetadata(Object? jsonObject) {
-  return switch (jsonObject) {
-    {'citationSources': final List<Object?> citationSources} =>
-      CitationMetadata(citationSources.map(_parseCitationSource).toList()),
-    // Vertex SDK format uses `citations`
-    {'citations': final List<Object?> citationSources} =>
-      CitationMetadata(citationSources.map(_parseCitationSource).toList()),
-    _ => throw unhandledFormat('CitationMetadata', jsonObject),
-  };
-}
-
-Citation _parseCitationSource(Object? jsonObject) {
-  if (jsonObject is! Map) {
-    throw unhandledFormat('CitationSource', jsonObject);
-  }
-
-  final uriString = jsonObject['uri'] as String?;
-
-  return Citation(
-    jsonObject['startIndex'] as int?,
-    jsonObject['endIndex'] as int?,
-    uriString != null ? Uri.parse(uriString) : null,
-    jsonObject['license'] as String?,
-  );
-}
-
-Content _parseGoogleAIContent(Object jsonObject) {
-  return switch (jsonObject) {
-    {'parts': final List<Object?> parts} => Content(
-        switch (jsonObject) {
-          {'role': final String role} => role,
-          _ => null,
-        },
-        parts.map(_parsePart).toList()),
-    _ => throw unhandledFormat('Content', jsonObject),
-  };
-}
-
-Part _parsePart(Object? jsonObject) {
-  return switch (jsonObject) {
-    {'text': final String text} => TextPart(text),
-    {
-      'functionCall': {
-        'name': final String name,
-        'args': final Map<String, Object?> args
-      }
-    } =>
-      FunctionCall(name, args),
-    {
-      'functionResponse': {'name': String _, 'response': Map<String, Object?> _}
-    } =>
-      throw UnimplementedError('FunctionResponse part not yet supported'),
-    {'inlineData': {'mimeType': String mimeType, 'data': String bytes}} =>
-      InlineDataPart(mimeType, base64Decode(bytes)),
-    _ => throw unhandledFormat('Part', jsonObject),
-  };
-}
+HarmProbability _parseHarmProbability(Object jsonObject) =>
+    switch (jsonObject) {
+      'UNSPECIFIED' => HarmProbability.unknown,
+      'NEGLIGIBLE' => HarmProbability.negligible,
+      'LOW' => HarmProbability.low,
+      'MEDIUM' => HarmProbability.medium,
+      'HIGH' => HarmProbability.high,
+      _ => throw unhandledFormat('HarmProbability', jsonObject),
+    };
+HarmCategory _parseHarmCategory(Object jsonObject) => switch (jsonObject) {
+      'HARM_CATEGORY_UNSPECIFIED' => HarmCategory.unknown,
+      'HARM_CATEGORY_HARASSMENT' => HarmCategory.harassment,
+      'HARM_CATEGORY_HATE_SPEECH' => HarmCategory.hateSpeech,
+      'HARM_CATEGORY_SEXUALLY_EXPLICIT' => HarmCategory.sexuallyExplicit,
+      'HARM_CATEGORY_DANGEROUS_CONTENT' => HarmCategory.dangerousContent,
+      _ => throw unhandledFormat('HarmCategory', jsonObject),
+    };

@@ -31,6 +31,7 @@ final class ImagenModel extends BaseApiClientModel {
       required String model,
       required String location,
       required bool useVertexBackend,
+      bool? useLimitedUseAppCheckTokens,
       FirebaseAppCheck? appCheck,
       FirebaseAuth? auth,
       ImagenGenerationConfig? generationConfig,
@@ -45,7 +46,8 @@ final class ImagenModel extends BaseApiClientModel {
                 : _GoogleAIUri(app: app, model: model),
             client: HttpApiClient(
                 apiKey: app.options.apiKey,
-                requestHeaders: BaseModel.firebaseTokens(appCheck, auth, app)));
+                requestHeaders: BaseModel.firebaseTokens(
+                    appCheck, auth, app, useLimitedUseAppCheckTokens)));
 
   final ImagenGenerationConfig? _generationConfig;
   final ImagenSafetySettings? _safetySettings;
@@ -59,17 +61,17 @@ final class ImagenModel extends BaseApiClientModel {
       if (gcsUri != null) 'storageUri': gcsUri,
       'sampleCount': _generationConfig?.numberOfImages ?? 1,
       if (_generationConfig?.aspectRatio case final aspectRatio?)
-        'aspectRatio': aspectRatio,
+        'aspectRatio': aspectRatio.toJson(),
       if (_generationConfig?.negativePrompt case final negativePrompt?)
         'negativePrompt': negativePrompt,
       if (_generationConfig?.addWatermark case final addWatermark?)
         'addWatermark': addWatermark,
       if (_generationConfig?.imageFormat case final imageFormat?)
         'outputOption': imageFormat.toJson(),
-      if (_safetySettings?.personFilterLevel case final personFilterLevel?)
-        'personGeneration': personFilterLevel.toJson(),
-      if (_safetySettings?.safetyFilterLevel case final safetyFilterLevel?)
-        'safetySetting': safetyFilterLevel.toJson(),
+      if (_safetySettings case final safetySettings?)
+        ...safetySettings.toJson(),
+      'includeRaiReason': true,
+      'includeSafetyAttributes': true,
     };
 
     return {
@@ -168,10 +170,10 @@ final class ImagenModel extends BaseApiClientModel {
         'addWatermark': addWatermark,
       if (_generationConfig?.imageFormat case final imageFormat?)
         'outputOption': imageFormat.toJson(),
-      if (_safetySettings?.personFilterLevel case final personFilterLevel?)
-        'personGeneration': personFilterLevel.toJson(),
-      if (_safetySettings?.safetyFilterLevel case final safetyFilterLevel?)
-        'safetySetting': safetyFilterLevel.toJson(),
+      if (_safetySettings case final safetySettings?)
+        ...safetySettings.toJson(),
+      'includeRaiReason': true,
+      'includeSafetyAttributes': true,
     };
 
     return {
@@ -198,6 +200,7 @@ ImagenModel createImagenModel({
   required String location,
   required String model,
   required bool useVertexBackend,
+  bool? useLimitedUseAppCheckTokens,
   FirebaseAppCheck? appCheck,
   FirebaseAuth? auth,
   ImagenGenerationConfig? generationConfig,
@@ -210,6 +213,7 @@ ImagenModel createImagenModel({
       auth: auth,
       location: location,
       useVertexBackend: useVertexBackend,
+      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
       safetySettings: safetySettings,
       generationConfig: generationConfig,
     );

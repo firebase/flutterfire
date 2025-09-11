@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:firebase_ai/src/api.dart';
@@ -43,7 +44,6 @@ void main() {
       final liveGenerationConfig = LiveGenerationConfig(
         speechConfig: SpeechConfig(voiceName: 'Charon'),
         responseModalities: [ResponseModalities.text, ResponseModalities.audio],
-        candidateCount: 2,
         maxOutputTokens: 100,
         temperature: 0.8,
         topP: 0.95,
@@ -51,7 +51,6 @@ void main() {
       );
 
       expect(liveGenerationConfig.toJson(), {
-        'candidateCount': 2,
         'maxOutputTokens': 100,
         'temperature': 0.8,
         'topP': 0.95,
@@ -86,7 +85,7 @@ void main() {
     });
 
     test('LiveServerToolCall constructor and properties', () {
-      final functionCall = FunctionCall('test', {});
+      const functionCall = FunctionCall('test', {});
       final message = LiveServerToolCall(functionCalls: [functionCall]);
       expect(message.functionCalls, [functionCall]);
 
@@ -151,7 +150,7 @@ void main() {
     });
 
     test('LiveClientToolResponse toJson() returns correct JSON', () {
-      final response = FunctionResponse('test', {});
+      const response = FunctionResponse('test', {});
       final message = LiveClientToolResponse(functionResponses: [response]);
       expect(message.toJson(), {
         'toolResponse': {
@@ -208,11 +207,13 @@ void main() {
 
     test('parseServerMessage parses toolCallCancellation message correctly',
         () {
-      final jsonObject = {
-        'toolCallCancellation': {
-          'ids': ['1', '2']
+      final jsonObject = jsonDecode('''
+        {
+          "toolCallCancellation": {
+            "ids": ["1", "2"]
+          }
         }
-      };
+        ''') as Map<String, dynamic>;
       final response = parseServerResponse(jsonObject);
       expect(response.message, isA<LiveServerToolCallCancellation>());
       final cancellationMessage =
