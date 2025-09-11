@@ -39,8 +39,8 @@ class Location {
 }
 
 class _FunctionCallingPageState extends State<FunctionCallingPage> {
-  late final GenerativeModel _functionCallModel;
-  late final GenerativeModel _codeExecutionModel;
+  late GenerativeModel _functionCallModel;
+  late GenerativeModel _codeExecutionModel;
   final List<MessageData> _messages = <MessageData>[];
   bool _loading = false;
   bool _enableThinking = false;
@@ -60,12 +60,14 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       var vertexAI = FirebaseAI.vertexAI(auth: FirebaseAuth.instance);
       _functionCallModel = vertexAI.generativeModel(
         model: 'gemini-2.5-flash',
+        generationConfig: generationConfig,
         tools: [
           Tool.functionDeclarations([fetchWeatherTool]),
         ],
       );
       _codeExecutionModel = vertexAI.generativeModel(
         model: 'gemini-2.5-flash',
+        generationConfig: generationConfig,
         tools: [
           Tool.codeExecution(),
         ],
@@ -73,13 +75,15 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
     } else {
       var googleAI = FirebaseAI.googleAI(auth: FirebaseAuth.instance);
       _functionCallModel = googleAI.generativeModel(
-        model: 'gemini-2.0-flash',
+        model: 'gemini-2.5-flash',
+        generationConfig: generationConfig,
         tools: [
           Tool.functionDeclarations([fetchWeatherTool]),
         ],
       );
       _codeExecutionModel = googleAI.generativeModel(
         model: 'gemini-2.5-flash',
+        generationConfig: generationConfig,
         tools: [
           Tool.codeExecution(),
         ],
@@ -223,31 +227,42 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
             .add(MessageData(text: thought, fromUser: false, isThought: true));
       }
 
-    final functionCalls = response.functionCalls.toList();
-    // When the model response with a function call, invoke the function.
-    if (functionCalls.isNotEmpty) {
-      final functionCall = functionCalls.first;
-      if (functionCall.name == 'fetchWeather') {
-        Map<String, dynamic> location =
-            functionCall.args['location']! as Map<String, dynamic>;
-        var date = functionCall.args['date']! as String;
-        var city = location['city'] as String;
-        var state = location['state'] as String;
-        final functionResult = await fetchWeather(Location(city, state), date);
-        // Send the response to the model so that it can use the result to
-        // generate text for the user.
-        response = await functionCallChat.sendMessage(
-          Content.functionResponse(functionCall.name, functionResult),
-        );
-      } else {
-        throw UnimplementedError(
-          'Function not declared to the model: ${functionCall.name}',
-        );
+      final functionCalls = response.functionCalls.toList();
+      // When the model response with a function call, invoke the function.
+      if (functionCalls.isNotEmpty) {
+        final functionCall = functionCalls.first;
+        if (functionCall.name == 'fetchWeather') {
+          Map<String, dynamic> location =
+              functionCall.args['location']! as Map<String, dynamic>;
+          var date = functionCall.args['date']! as String;
+          var city = location['city'] as String;
+          var state = location['state'] as String;
+          final functionResult =
+              await fetchWeather(Location(city, state), date);
+          // Send the response to the model so that it can use the result to
+          // generate text for the user.
+          response = await functionCallChat.sendMessage(
+            Content.functionResponse(functionCall.name, functionResult),
+          );
+        } else {
+          throw UnimplementedError(
+            'Function not declared to the model: ${functionCall.name}',
+          );
+        }
       }
-    }
-    // When the model responds with non-null text content, print it.
-    if (response.text case final text?) {
-      _messages.add(MessageData(text: text));
+      // When the model responds with non-null text content, print it.
+      if (response.text case final text?) {
+        _messages.add(MessageData(text: text));
+        setState(() {
+          _loading = false;
+        });
+      }
+    } catch (e) {
+      _showError(e.toString());
+      setState(() {
+        _loading = false;
+      });
+    } finally {
       setState(() {
         _loading = false;
       });
@@ -258,37 +273,80 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
     setState(() {
       _loading = true;
     });
-    final codeExecutionChat = _codeExecutionModel.startChat();
-    const prompt = 'What is the sum of the first 50 prime numbers? '
-        'Generate and run code for the calculation, and make sure you get all 50.';
+    try {
+      final codeExecutionChat = _codeExecutionModel.startChat();
+      const prompt = 'What is the sum of the first 50 prime numbers? '
+          'Generate and run code for the calculation, and make sure you get all 50.';
 
-    _messages.add(MessageData(text: prompt, fromUser: true));
+      _messages.add(MessageData(text: prompt, fromUser: true));
 
-    final response = await codeExecutionChat.sendMessage(Content.text(prompt));
+      final response =
+          await codeExecutionChat.sendMessage(Content.text(prompt));
 
-    final buffer = StringBuffer();
-    for (final part in response.candidates.first.content.parts) {
-      if (part is ExecutableCodePart) {
-        buffer.writeln('Executable Code:');
-        buffer.writeln('Language: ${part.language}');
-        buffer.writeln('Code:');
-        buffer.writeln(part.code);
-      } else if (part is CodeExecutionResultPart) {
-        buffer.writeln('Code Execution Result:');
-        buffer.writeln('Outcome: ${part.outcome}');
-        buffer.writeln('Output:');
-        buffer.writeln(part.output);
-      } else if (part is TextPart) {
-        buffer.writeln(part.text);
+      final thought = response.thoughtSummary;
+      if (thought != null) {
+        _messages
+            .add(MessageData(text: thought, fromUser: false, isThought: true));
       }
-    }
 
-    if (buffer.isNotEmpty) {
-      _messages.add(MessageData(text: buffer.toString()));
-    }
+      final buffer = StringBuffer();
+      for (final part in response.candidates.first.content.parts) {
+        if (part is ExecutableCodePart) {
+          buffer.writeln('Executable Code:');
+          buffer.writeln('Language: ${part.language}');
+          buffer.writeln('Code:');
+          buffer.writeln(part.code);
+        } else if (part is CodeExecutionResultPart) {
+          buffer.writeln('Code Execution Result:');
+          buffer.writeln('Outcome: ${part.outcome}');
+          buffer.writeln('Output:');
+          buffer.writeln(part.output);
+        } else if (part is TextPart) {
+          buffer.writeln(part.text);
+        }
+      }
 
-    setState(() {
-      _loading = false;
-    });
+      if (buffer.isNotEmpty) {
+        _messages.add(MessageData(
+          text: buffer.toString(),
+          fromUser: false,
+        ));
+      }
+
+      setState(() {
+        _loading = false;
+      });
+    } catch (e) {
+      _showError(e.toString());
+      setState(() {
+        _loading = false;
+      });
+    } finally {
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
+
+  void _showError(String message) {
+    showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Something went wrong'),
+          content: SingleChildScrollView(
+            child: SelectableText(message),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

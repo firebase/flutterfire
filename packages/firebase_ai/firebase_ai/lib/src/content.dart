@@ -121,8 +121,8 @@ Part parsePart(Object? jsonObject) {
         executableCode.containsKey('language') &&
         executableCode.containsKey('code')) {
       return ExecutableCodePart(
-        executableCode['language'] as String,
-        executableCode['code'] as String,
+        language: CodeLanguage.parseValue(executableCode['language'] as String),
+        code: executableCode['code'] as String,
       );
     } else {
       throw unhandledFormat('executableCode', executableCode);
@@ -134,8 +134,8 @@ Part parsePart(Object? jsonObject) {
         codeExecutionResult.containsKey('outcome') &&
         codeExecutionResult.containsKey('output')) {
       return CodeExecutionResultPart(
-        Outcome.parseValue(codeExecutionResult['outcome'] as String),
-        codeExecutionResult['output'] as String,
+        outcome: Outcome.parseValue(codeExecutionResult['outcome'] as String),
+        output: codeExecutionResult['output'] as String,
       );
     } else {
       throw unhandledFormat('codeExecutionResult', codeExecutionResult);
@@ -382,38 +382,49 @@ final class FileData extends Part {
 }
 
 /// A `Part` that represents the code that is executed by the model.
-final class ExecutableCodePart implements Part {
+final class ExecutableCodePart extends Part {
+  // ignore: public_member_api_docs
+  ExecutableCodePart({
+    required this.language,
+    required this.code,
+    bool? isThought,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: null,
+        );
+
   /// The programming language of the code.
-  final String language;
+  final CodeLanguage language;
 
   /// The source code to be executed.
   final String code;
 
-  // ignore: public_member_api_docs
-  ExecutableCodePart(this.language, this.code);
-
   @override
   Object toJson() => {
-        'executableCode': {'language': language, 'code': code}
+        'executableCode': {'language': language.toJson(), 'code': code}
       };
 }
 
 /// A `Part` that represents the code execution result from the model.
-final class CodeExecutionResultPart implements Part {
+final class CodeExecutionResultPart extends Part {
+  // ignore: public_member_api_docs
+  CodeExecutionResultPart({
+    required this.outcome,
+    required this.output,
+    bool? isThought,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: null,
+        );
+
   /// The result of the execution.
   final Outcome outcome;
 
   /// The stdout from the code execution, or an error message if it failed.
   final String output;
 
-  // ignore: public_member_api_docs
-  CodeExecutionResultPart(this.outcome, this.output);
-
   @override
   Object toJson() => {
-        'codeExecutionResult': {
-          'outcome': outcome.toJson(),
-          'output': output
-        }
+        'codeExecutionResult': {'outcome': outcome.toJson(), 'output': output}
       };
 }

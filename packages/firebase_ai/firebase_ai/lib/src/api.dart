@@ -1524,6 +1524,31 @@ SearchEntryPoint _parseSearchEntryPoint(Object? jsonObject) {
   );
 }
 
+/// Supported programming languages for the generated code.
+enum CodeLanguage {
+  /// Unspecified status. This value should not be used.
+  unspecified('LANGUAGE_UNSPECIFIED'),
+
+  /// Python language.
+  python('PYTHON');
+
+  const CodeLanguage(this._jsonString);
+
+  final String _jsonString;
+
+  /// Convert to json format.
+  String toJson() => _jsonString;
+
+  /// Parse the json string to [CodeLanguage].
+  static CodeLanguage parseValue(String jsonObject) {
+    return switch (jsonObject) {
+      'LANGUAGE_UNSPECIFIED' => CodeLanguage.unspecified,
+      'PYTHON' => CodeLanguage.python,
+      _ => throw FormatException('Unhandled Outcome format', jsonObject),
+    };
+  }
+}
+
 /// Represents the result of the code execution.
 enum Outcome {
   /// Unspecified status. This value should not be used.
