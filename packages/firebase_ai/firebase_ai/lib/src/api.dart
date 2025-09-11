@@ -469,8 +469,8 @@ enum BlockReason {
 
   const BlockReason(this._jsonString);
 
-  // ignore: unused_element
-  static BlockReason _parseValue(String jsonObject) {
+  /// Parse the json to [BlockReason] object.
+  static BlockReason parseValue(String jsonObject) {
     return switch (jsonObject) {
       'BLOCK_REASON_UNSPECIFIED' => BlockReason.unknown,
       'SAFETY' => BlockReason.safety,
@@ -679,8 +679,8 @@ enum FinishReason {
   /// Convert to json format
   String toJson() => _jsonString;
 
-  // ignore: unused_element
-  static FinishReason _parseValue(Object jsonObject) {
+  /// Parse the json to [FinishReason] object.
+  static FinishReason parseValue(Object jsonObject) {
     return switch (jsonObject) {
       'UNSPECIFIED' => FinishReason.unknown,
       'STOP' => FinishReason.stop,
@@ -1265,12 +1265,12 @@ Candidate _parseCandidate(Object? jsonObject) {
       },
       switch (jsonObject) {
         {'citationMetadata': final Object citationMetadata} =>
-          _parseCitationMetadata(citationMetadata),
+          parseCitationMetadata(citationMetadata),
         _ => null
       },
       switch (jsonObject) {
         {'finishReason': final Object finishReason} =>
-          FinishReason._parseValue(finishReason),
+          FinishReason.parseValue(finishReason),
         _ => null
       },
       switch (jsonObject) {
@@ -1279,7 +1279,7 @@ Candidate _parseCandidate(Object? jsonObject) {
       },
       groundingMetadata: switch (jsonObject) {
         {'groundingMetadata': final Object groundingMetadata} =>
-          _parseGroundingMetadata(groundingMetadata),
+          parseGroundingMetadata(groundingMetadata),
         _ => null
       });
 }
@@ -1292,7 +1292,7 @@ PromptFeedback _parsePromptFeedback(Object jsonObject) {
       PromptFeedback(
           switch (jsonObject) {
             {'blockReason': final String blockReason} =>
-              BlockReason._parseValue(blockReason),
+              BlockReason.parseValue(blockReason),
             _ => null,
           },
           switch (jsonObject) {
@@ -1379,7 +1379,11 @@ SafetyRating _parseSafetyRating(Object? jsonObject) {
       severityScore: jsonObject['severityScore'] as double?);
 }
 
-CitationMetadata _parseCitationMetadata(Object? jsonObject) {
+/// Parses a [CitationMetadata] from a JSON object.
+///
+/// This function is used internally to convert citation metadata from the API
+/// response.
+CitationMetadata parseCitationMetadata(Object? jsonObject) {
   return switch (jsonObject) {
     {'citationSources': final List<Object?> citationSources} =>
       CitationMetadata(citationSources.map(_parseCitationSource).toList()),
@@ -1405,7 +1409,11 @@ Citation _parseCitationSource(Object? jsonObject) {
   );
 }
 
-GroundingMetadata _parseGroundingMetadata(Object? jsonObject) {
+/// Parses a [GroundingMetadata] from a JSON object.
+///
+/// This function is used internally to convert grounding metadata from the API
+/// response.
+GroundingMetadata parseGroundingMetadata(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('GroundingMetadata', jsonObject);
   }
