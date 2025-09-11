@@ -637,7 +637,16 @@ class FirebaseDatabasePlugin :
           try {
             // Call the Flutter transaction handler
             val flutterApi = FirebaseDatabaseFlutterApi(messenger)
-            val handlerResult = Tasks.await(flutterApi.callTransactionHandler(request.transactionKey, mutableData.value))
+            val taskCompletionSource = TaskCompletionSource<TransactionHandlerResult>()
+            
+            flutterApi.callTransactionHandler(request.transactionKey, mutableData.value) { result ->
+              when (result) {
+                is Result.success -> taskCompletionSource.setResult(result.getOrNull()!!)
+                is Result.failure -> taskCompletionSource.setException(result.exceptionOrNull()!!)
+              }
+            }
+            
+            val handlerResult = Tasks.await(taskCompletionSource.task)
             
             if (handlerResult.aborted || handlerResult.exception) {
               return com.google.firebase.database.Transaction.abort()
