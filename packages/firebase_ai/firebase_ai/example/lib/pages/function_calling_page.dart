@@ -307,10 +307,12 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       }
 
       if (buffer.isNotEmpty) {
-        _messages.add(MessageData(
-          text: buffer.toString(),
-          fromUser: false,
-        ));
+        _messages.add(
+          MessageData(
+            text: buffer.toString(),
+            fromUser: false,
+          ),
+        );
       }
 
       setState(() {
