@@ -40,6 +40,7 @@ class Location {
 
 class _FunctionCallingPageState extends State<FunctionCallingPage> {
   late GenerativeModel _functionCallModel;
+  late GenerativeModel _codeExecutionModel;
   final List<MessageData> _messages = <MessageData>[];
   bool _loading = false;
   bool _enableThinking = false;
@@ -59,19 +60,33 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       var vertexAI = FirebaseAI.vertexAI(auth: FirebaseAuth.instance);
       _functionCallModel = vertexAI.generativeModel(
         model: 'gemini-2.5-flash',
+        generationConfig: generationConfig,
         tools: [
           Tool.functionDeclarations([fetchWeatherTool]),
         ],
+      );
+      _codeExecutionModel = vertexAI.generativeModel(
+        model: 'gemini-2.5-flash',
         generationConfig: generationConfig,
+        tools: [
+          Tool.codeExecution(),
+        ],
       );
     } else {
       var googleAI = FirebaseAI.googleAI(auth: FirebaseAuth.instance);
       _functionCallModel = googleAI.generativeModel(
         model: 'gemini-2.5-flash',
+        generationConfig: generationConfig,
         tools: [
           Tool.functionDeclarations([fetchWeatherTool]),
         ],
+      );
+      _codeExecutionModel = googleAI.generativeModel(
+        model: 'gemini-2.5-flash',
         generationConfig: generationConfig,
+        tools: [
+          Tool.codeExecution(),
+        ],
       );
     }
   }
@@ -169,6 +184,17 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
                       child: const Text('Test Function Calling'),
                     ),
                   ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: !_loading
+                          ? () async {
+                              await _testCodeExecution();
+                            }
+                          : null,
+                      child: const Text('Test Code Execution'),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -231,6 +257,67 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
           _loading = false;
         });
       }
+    } catch (e) {
+      _showError(e.toString());
+      setState(() {
+        _loading = false;
+      });
+    } finally {
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
+
+  Future<void> _testCodeExecution() async {
+    setState(() {
+      _loading = true;
+    });
+    try {
+      final codeExecutionChat = _codeExecutionModel.startChat();
+      const prompt = 'What is the sum of the first 50 prime numbers? '
+          'Generate and run code for the calculation, and make sure you get all 50.';
+
+      _messages.add(MessageData(text: prompt, fromUser: true));
+
+      final response =
+          await codeExecutionChat.sendMessage(Content.text(prompt));
+
+      final thought = response.thoughtSummary;
+      if (thought != null) {
+        _messages
+            .add(MessageData(text: thought, fromUser: false, isThought: true));
+      }
+
+      final buffer = StringBuffer();
+      for (final part in response.candidates.first.content.parts) {
+        if (part is ExecutableCodePart) {
+          buffer.writeln('Executable Code:');
+          buffer.writeln('Language: ${part.language}');
+          buffer.writeln('Code:');
+          buffer.writeln(part.code);
+        } else if (part is CodeExecutionResultPart) {
+          buffer.writeln('Code Execution Result:');
+          buffer.writeln('Outcome: ${part.outcome}');
+          buffer.writeln('Output:');
+          buffer.writeln(part.output);
+        } else if (part is TextPart) {
+          buffer.writeln(part.text);
+        }
+      }
+
+      if (buffer.isNotEmpty) {
+        _messages.add(
+          MessageData(
+            text: buffer.toString(),
+            fromUser: false,
+          ),
+        );
+      }
+
+      setState(() {
+        _loading = false;
+      });
     } catch (e) {
       _showError(e.toString());
       setState(() {

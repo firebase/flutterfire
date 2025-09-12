@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import 'package:firebase_ai/firebase_ai.dart';
+import 'package:firebase_ai/src/content.dart';
 import 'package:http/http.dart' as http;
 import 'package:matcher/matcher.dart';
 
@@ -33,6 +34,14 @@ Matcher matchesPart(Part part) => switch (part) {
         isA<FunctionResponse>()
             .having((p) => p.name, 'name', name)
             .having((p) => p.response, 'args', response),
+      CodeExecutionResultPart(outcome: final outcome, output: final output) =>
+        isA<CodeExecutionResultPart>()
+            .having((p) => p.outcome, 'outcome', outcome)
+            .having((p) => p.output, 'output', output),
+      ExecutableCodePart(language: final language, code: final code) =>
+        isA<ExecutableCodePart>()
+            .having((p) => p.language, 'language', language)
+            .having((p) => p.code, 'code', code),
       UnknownPart(data: final data) =>
         isA<UnknownPart>().having((p) => p.data, 'data', data),
     };

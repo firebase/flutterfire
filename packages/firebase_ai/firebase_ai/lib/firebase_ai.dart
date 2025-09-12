@@ -44,7 +44,8 @@ export 'src/content.dart'
         FunctionResponse,
         Part,
         TextPart,
-        UnknownPart;
+        ExecutableCodePart,
+        CodeExecutionResultPart;
 export 'src/error.dart'
     show
         FirebaseAIException,
@@ -104,4 +105,6 @@ export 'src/tool.dart'
         FunctionCallingMode,
         FunctionDeclaration,
         Tool,
-        ToolConfig;
+        ToolConfig,
+        GoogleSearch,
+        CodeExecution;
