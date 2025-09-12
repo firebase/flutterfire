@@ -16,6 +16,7 @@
 #include <flutter/method_channel.h>
 #include <flutter/plugin_registrar_windows.h>
 #include <flutter/standard_method_codec.h>
+#include "include/firebase_core/firebase_plugin_registry.h"
 
 #include <future>
 #include <iostream>
@@ -95,7 +96,16 @@ CoreFirebaseOptions optionsFromFIROptions(const firebase::AppOptions& options) {
 
 // Convert a firebase::App to CoreInitializeResponse
 CoreInitializeResponse AppToCoreInitializeResponse(const App& app) {
+  auto firebaseRegistry = FirebasePluginRegistry::GetInstance();
+  std::vector<std::shared_ptr<FlutterFirebasePlugin>>& values = firebaseRegistry->p_constants();
+
   flutter::EncodableMap plugin_constants;
+
+  for (const std::shared_ptr<FlutterFirebasePlugin> &val: values) {
+      flutter::EncodableMap constants = val->get_plugin_constants(app);
+      plugin_constants[flutter::EncodableValue(val->plugin_name().c_str())] = flutter::EncodableValue(constants);
+  }
+
   CoreInitializeResponse response = CoreInitializeResponse(
       app.name(), optionsFromFIROptions(app.options()), plugin_constants);
   return response;
