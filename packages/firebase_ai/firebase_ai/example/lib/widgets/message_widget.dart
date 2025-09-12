@@ -23,7 +23,7 @@ class MessageData {
     this.isThought = false,
   });
   final Uint8List? imageBytes;
-  final String? text;
+  String? text;
   final bool? fromUser;
   final bool isThought;
 }
