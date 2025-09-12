@@ -638,11 +638,14 @@ class FirebaseDatabasePlugin :
       reference.runTransaction(object : com.google.firebase.database.Transaction.Handler {
         override fun doTransaction(mutableData: com.google.firebase.database.MutableData): com.google.firebase.database.Transaction.Result {
           try {
-            // Call the Flutter transaction handler
+            // Call the Flutter transaction handler with the current value
             val flutterApi = FirebaseDatabaseFlutterApi(messenger)
             val taskCompletionSource = TaskCompletionSource<TransactionHandlerResult>()
             
-            flutterApi.callTransactionHandler(request.transactionKey, mutableData.value) { result ->
+            // Ensure we get the current value from mutableData
+            val currentValue = mutableData.value
+            
+            flutterApi.callTransactionHandler(request.transactionKey, currentValue) { result ->
               result.fold(
                 onSuccess = { taskCompletionSource.setResult(it) },
                 onFailure = { taskCompletionSource.setException(Exception(it.message ?: "Unknown error")) }
@@ -655,7 +658,9 @@ class FirebaseDatabasePlugin :
               return com.google.firebase.database.Transaction.abort()
             }
             
-            mutableData.value = handlerResult.value
+            // Set the new value if provided, otherwise keep the current value
+            val newValue = handlerResult.value ?: currentValue
+            mutableData.value = newValue
             return com.google.firebase.database.Transaction.success(mutableData)
           } catch (e: Exception) {
             // If there's an error, abort the transaction
