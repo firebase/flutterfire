@@ -631,6 +631,9 @@ class FirebaseDatabasePlugin :
       // Store the transaction request for later retrieval
       transactionRequests[request.transactionKey] = request
       
+      // Create a TaskCompletionSource to wait for transaction completion
+      val transactionCompletionSource = TaskCompletionSource<Unit>()
+      
       // Start the transaction
       reference.runTransaction(object : com.google.firebase.database.Transaction.Handler {
         override fun doTransaction(mutableData: com.google.firebase.database.MutableData): com.google.firebase.database.Transaction.Result {
@@ -671,9 +674,18 @@ class FirebaseDatabasePlugin :
             )
           )
           transactionResults[request.transactionKey] = result
+          
+          // Complete the transaction
+          if (error != null) {
+            transactionCompletionSource.setException(Exception(error.message))
+          } else {
+            transactionCompletionSource.setResult(Unit)
+          }
         }
       })
       
+      // Wait for the transaction to complete
+      Tasks.await(transactionCompletionSource.task)
       callback(KotlinResult.success(Unit))
     } catch (e: Exception) {
       callback(KotlinResult.failure(e))
