@@ -594,7 +594,16 @@ class FirebaseDatabasePlugin :
     try {
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReference(request.path)
-      reference.setValue(request.value, request.priority)
+      
+      // Handle priority type conversion - Firebase Database expects Any? but Pigeon sends Object?
+      val priority = when (request.priority) {
+        is String -> request.priority
+        is Number -> request.priority
+        null -> null
+        else -> request.priority.toString()
+      }
+      
+      reference.setValue(request.value, priority)
       callback(KotlinResult.success(Unit))
     } catch (e: Exception) {
       callback(KotlinResult.failure(e))
@@ -616,7 +625,17 @@ class FirebaseDatabasePlugin :
     try {
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReference(request.path)
-      Tasks.await(reference.setPriority(request.priority))
+      
+      // Handle priority type conversion - Firebase Database expects Any? but Pigeon sends Object?
+      // Convert the priority to the appropriate type for Firebase
+      val priority = when (request.priority) {
+        is String -> request.priority
+        is Number -> request.priority
+        null -> null
+        else -> request.priority.toString()
+      }
+      
+      Tasks.await(reference.setPriority(priority))
       callback(KotlinResult.success(Unit))
     } catch (e: Exception) {
       callback(KotlinResult.failure(e))
