@@ -43,8 +43,8 @@ Pod::Spec.new do |s|
   s.authors          = 'The Chromium Authors'
   s.source           = { :path => '.' }
 
-  s.source_files     = 'firebase_app_check/Sources/firebase_app_check/**/*.{h,m}'
-  s.public_header_files = 'firebase_app_check/Sources/firebase_app_check/include/*.h'
+  s.source_files     = 'firebase_app_check/Sources/firebase_app_check/**/*.{swift}'
+  s.swift_version = '5.0'
 
   s.platform = :osx, '10.13'
 
