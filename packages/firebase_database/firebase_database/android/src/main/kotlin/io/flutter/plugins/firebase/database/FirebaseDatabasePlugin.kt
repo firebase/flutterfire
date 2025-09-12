@@ -600,12 +600,19 @@ class FirebaseDatabasePlugin :
         is String -> request.priority
         is Number -> request.priority
         null -> null
-        else -> request.priority.toString()
+        else -> {
+          // Log the unexpected type for debugging
+          println("Warning: Unexpected priority type: ${request.priority?.javaClass?.simpleName}, value: $request.priority")
+          request.priority.toString()
+        }
       }
       
       reference.setValue(request.value, priority)
       callback(KotlinResult.success(Unit))
     } catch (e: Exception) {
+      // Log the exception for debugging
+      println("Firebase Database setWithPriority error: ${e.message}")
+      e.printStackTrace()
       callback(KotlinResult.failure(e))
     }
   }
@@ -632,12 +639,19 @@ class FirebaseDatabasePlugin :
         is String -> request.priority
         is Number -> request.priority
         null -> null
-        else -> request.priority.toString()
+        else -> {
+          // Log the unexpected type for debugging
+          println("Warning: Unexpected priority type: ${request.priority?.javaClass?.simpleName}, value: $request.priority")
+          request.priority.toString()
+        }
       }
       
       Tasks.await(reference.setPriority(priority))
       callback(KotlinResult.success(Unit))
     } catch (e: Exception) {
+      // Log the exception for debugging
+      println("Firebase Database setPriority error: ${e.message}")
+      e.printStackTrace()
       callback(KotlinResult.failure(e))
     }
   }
