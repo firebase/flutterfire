@@ -1,6 +1,63 @@
+## 12.0.1
+
+ - Update a dependency to the latest release.
+
+## 12.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**(analytics): remove deprecated methods for breaking change release ([#17560](https://github.com/firebase/flutterfire/issues/17560)). ([ea3034d8](https://github.com/firebase/flutterfire/commit/ea3034d88215d0b99dda9079fd9134afb5fee496))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+## 11.6.0
+
+ - **FEAT**(auth,macos): add support for `publish` and `addApplicationDelegate` on macOS FlutterPluginRegistrar ([#17518](https://github.com/firebase/flutterfire/issues/17518)). ([376bb6ea](https://github.com/firebase/flutterfire/commit/376bb6ea8878df3f25cc1416fe26ace2203fd793))
+
+## 11.5.2
+
+ - Update a dependency to the latest release.
+
+## 11.5.1
+
+ - Update a dependency to the latest release.
+
+## 11.5.0
+
+ - **FEAT**(analytics): add Pigeon support for firebase_analytics ([#17403](https://github.com/firebase/flutterfire/issues/17403)). ([57c09139](https://github.com/firebase/flutterfire/commit/57c091395d86a3a40c6520f4b5cffcd8165de4f1))
+
+## 11.4.6
+
+ - Update a dependency to the latest release.
+
+## 11.4.5
+
+ - Update a dependency to the latest release.
+
+## 11.4.4
+
+ - Update a dependency to the latest release.
+
+## 11.4.3
+
+ - **FIX**(analytics,apple): use correct tag for library name ([#17098](https://github.com/firebase/flutterfire/issues/17098)). ([ca28c304](https://github.com/firebase/flutterfire/commit/ca28c30445e426fff0098606e240e496de8b480c))
+
+## 11.4.2
+
+ - Update a dependency to the latest release.
+
+## 11.4.1
+
+ - Update a dependency to the latest release.
+
+## 11.4.0
+
+
+ - **FEAT**(analytics): Swift Package Manager support ([#13205](https://github.com/firebase/flutterfire/issues/13205)) ([#16790](https://github.com/firebase/flutterfire/issues/16790)). ([56051cf8](https://github.com/firebase/flutterfire/commit/56051cf8570a4b7d3ebc86d4d1cae484f4b116a5))
+
 ## 11.3.6
 
- - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
+ - Update a dependency to the latest release.
 
 ## 11.3.5
 
@@ -204,7 +261,7 @@
 ## 10.4.0
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 ## 10.3.0
 

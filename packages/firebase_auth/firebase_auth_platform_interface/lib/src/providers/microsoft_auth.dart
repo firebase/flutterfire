@@ -24,27 +24,17 @@ const _kProviderId = 'microsoft.com';
 ///   .then(...);
 /// ```
 ///
-/// If authenticating with Microsoft via a 3rd party, use the returned
-/// `accessToken` to sign-in or link the user with the created credential, for
-/// example:
-///
+/// For native apps, you may also sign-in with [signInWithProvider]. Ensure you have
+/// an app configured in the Microsoft Azure portal.
+/// See Firebase documentation for more information: https://firebase.google.com/docs/auth/flutter/federated-auth?#microsoft
 /// ```dart
-/// String accessToken = '...'; // From 3rd party provider
-/// var microsoftAuthCredential = MicrosoftAuthProvider.credential(accessToken);
-///
-/// FirebaseAuth.instance.signInWithCredential(microsoftAuthCredential)
-///   .then(...);
+/// MicrosoftAuthProvider microsoftProvider = MicrosoftAuthProvider();
+/// microsoftProvider.setCustomParameters({'tenant': 'TENANT ID FROM AZURE PORTAL'},);
+/// await FirebaseAuth.instance.signInWithProvider(microsoftProvider);
 /// ```
 class MicrosoftAuthProvider extends AuthProvider {
   /// Creates a new instance.
   MicrosoftAuthProvider() : super(_kProviderId);
-
-  /// Create a new [MicrosoftAuthCredential] from a provided [accessToken];
-  static OAuthCredential credential(String accessToken) {
-    return MicrosoftAuthCredential._credential(
-      accessToken,
-    );
-  }
 
   /// This corresponds to the sign-in method identifier.
   static String get MICROSOFT_SIGN_IN_METHOD {
@@ -82,20 +72,5 @@ class MicrosoftAuthProvider extends AuthProvider {
   ) {
     _parameters = customOAuthParameters;
     return this;
-  }
-}
-
-/// The auth credential returned from calling
-/// [MicrosoftAuthProvider.credential].
-class MicrosoftAuthCredential extends OAuthCredential {
-  MicrosoftAuthCredential._({
-    required String accessToken,
-  }) : super(
-            providerId: _kProviderId,
-            signInMethod: _kProviderId,
-            accessToken: accessToken);
-
-  factory MicrosoftAuthCredential._credential(String accessToken) {
-    return MicrosoftAuthCredential._(accessToken: accessToken);
   }
 }

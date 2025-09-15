@@ -101,7 +101,6 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
 @end
 
 @implementation FLTFirebaseAuthPlugin {
-#if TARGET_OS_IPHONE
   // Map an id to a MultiFactorSession object.
   NSMutableDictionary<NSString *, FIRMultiFactorSession *> *_multiFactorSessionMap;
 
@@ -113,8 +112,6 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
 
   // Map an id to a MultiFactorResolver object.
   NSMutableDictionary<NSString *, FIRTOTPSecret *> *_multiFactorTotpSecretMap;
-
-#endif
 
   NSObject<FlutterBinaryMessenger> *_binaryMessenger;
   NSMutableDictionary<NSString *, FlutterEventChannel *> *_eventChannels;
@@ -133,13 +130,10 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
     _eventChannels = [NSMutableDictionary dictionary];
     _streamHandlers = [NSMutableDictionary dictionary];
 
-#if TARGET_OS_IPHONE
     _multiFactorSessionMap = [NSMutableDictionary dictionary];
     _multiFactorResolverMap = [NSMutableDictionary dictionary];
     _multiFactorAssertionMap = [NSMutableDictionary dictionary];
     _multiFactorTotpSecretMap = [NSMutableDictionary dictionary];
-
-#endif
   }
   return self;
 }
@@ -152,14 +146,6 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
 
   [registrar addMethodCallDelegate:instance channel:channel];
 
-#if TARGET_OS_OSX
-  // TODO(Salakar): Publish does not exist on MacOS version of
-  // FlutterPluginRegistrar.
-  // TODO(Salakar): addApplicationDelegate does not exist on MacOS version of
-  // FlutterPluginRegistrar. (https://github.com/flutter/flutter/issues/41471)
-  SetUpFirebaseAuthHostApi(registrar.messenger, instance);
-  SetUpFirebaseAuthUserHostApi(registrar.messenger, instance);
-#else
   [registrar publish:instance];
   [registrar addApplicationDelegate:instance];
   SetUpFirebaseAuthHostApi(registrar.messenger, instance);
@@ -168,7 +154,6 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
   SetUpMultiFactoResolverHostApi(registrar.messenger, instance);
   SetUpMultiFactorTotpHostApi(registrar.messenger, instance);
   SetUpMultiFactorTotpSecretHostApi(registrar.messenger, instance);
-#endif
 }
 
 + (FlutterError *)convertToFlutterError:(NSError *)error {
@@ -203,7 +188,7 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
     additionalData[kArgumentEmail] = [error userInfo][FIRAuthErrorUserInfoEmailKey];
   }
   // We want to store the credential if present for future sign in if the exception contains a
-  // credential, we pass a token back to Flutter to allow retreival of the credential.
+  // credential, we pass a token back to Flutter to allow retrieval of the credential.
   NSNumber *token = [FLTFirebaseAuthPlugin storeAuthCredentialIfPresent:error];
 
   // additionalData.authCredential
@@ -370,19 +355,21 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
 
 static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResult *authResult,
                                   NSString *authorizationCode, NSError *error) {
+  void (^completion)(PigeonUserCredential *_Nullable, FlutterError *_Nullable) =
+      object.appleCompletion;
+  if (completion == nil) return;
+
   if (error != nil) {
     if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
-      [object handleMultiFactorError:object.appleArguments
-                          completion:object.appleCompletion
-                           withError:error];
+      [object handleMultiFactorError:object.appleArguments completion:completion withError:error];
     } else {
-      object.appleCompletion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
+      completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
     }
     return;
   }
-  object.appleCompletion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult
-                                                           authorizationCode:authorizationCode],
-                         nil);
+  completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult
+                                               authorizationCode:authorizationCode],
+             nil);
 }
 
 - (void)authorizationController:(ASAuthorizationController *)controller
@@ -418,6 +405,8 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
 
     if (self.isReauthenticatingWithApple == YES) {
       self.isReauthenticatingWithApple = NO;
+      void (^capturedCompletion)(PigeonUserCredential *_Nullable, FlutterError *_Nullable) =
+          self.appleCompletion;
       [[FIRAuth.auth currentUser]
           reauthenticateWithCredential:credential
                             completion:^(FIRAuthDataResult *_Nullable authResult,
@@ -426,16 +415,20 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
                             }];
 
     } else if (self.linkWithAppleUser != nil) {
-      [self.linkWithAppleUser
-          linkWithCredential:credential
-                  completion:^(FIRAuthDataResult *authResult, NSError *error) {
-                    self.linkWithAppleUser = nil;
-                    handleSignInWithApple(self, authResult, authorizationCode, error);
-                  }];
+      FIRUser *userToLink = self.linkWithAppleUser;
+      void (^capturedCompletion)(PigeonUserCredential *_Nullable, FlutterError *_Nullable) =
+          self.appleCompletion;
+      [userToLink linkWithCredential:credential
+                          completion:^(FIRAuthDataResult *authResult, NSError *error) {
+                            self.linkWithAppleUser = nil;
+                            handleSignInWithApple(self, authResult, authorizationCode, error);
+                          }];
 
     } else {
       FIRAuth *signInAuth =
           self.signInWithAppleAuth != nil ? self.signInWithAppleAuth : FIRAuth.auth;
+      void (^capturedCompletion)(PigeonUserCredential *_Nullable, FlutterError *_Nullable) =
+          self.appleCompletion;
       [signInAuth signInWithCredential:credential
                             completion:^(FIRAuthDataResult *_Nullable authResult,
                                          NSError *_Nullable error) {
@@ -507,11 +500,6 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
                     completion:(nonnull void (^)(PigeonUserCredential *_Nullable,
                                                  FlutterError *_Nullable))completion
                      withError:(NSError *_Nullable)error {
-#if TARGET_OS_OSX
-  completion(nil, [FlutterError errorWithCode:@"second-factor-required"
-                                      message:error.description
-                                      details:nil]);
-#else
   FIRMultiFactorResolver *resolver =
       (FIRMultiFactorResolver *)error.userInfo[FIRAuthErrorUserInfoMultiFactorResolverKey];
 
@@ -552,7 +540,6 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
   completion(nil, [FlutterError errorWithCode:@"second-factor-required"
                                       message:error.description
                                       details:output]);
-#endif
 }
 
 static void launchAppleSignInRequest(FLTFirebaseAuthPlugin *object, AuthPigeonFirebaseApp *app,
@@ -602,51 +589,58 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
     return;
   }
   if (credentials) {
-    [auth signInWithCredential:credentials
-                    completion:^(FIRAuthDataResult *authResult, NSError *error) {
-                      if (error != nil) {
-                        NSDictionary *userInfo = [error userInfo];
-                        NSError *underlyingError = [userInfo objectForKey:NSUnderlyingErrorKey];
+    [auth
+        signInWithCredential:credentials
+                  completion:^(FIRAuthDataResult *authResult, NSError *error) {
+                    if (error != nil) {
+                      NSDictionary *userInfo = [error userInfo];
+                      NSError *underlyingError = [userInfo objectForKey:NSUnderlyingErrorKey];
 
-                        NSDictionary *firebaseDictionary =
-                            underlyingError.userInfo[@"FIRAuthErrorUserInfoDes"
-                                                     @"erializedResponseKey"];
+                      NSDictionary *firebaseDictionary =
+                          underlyingError.userInfo[@"FIRAuthErrorUserInfoDes"
+                                                   @"erializedResponseKey"];
 
-                        if (firebaseDictionary == nil &&
-                            userInfo[@"FIRAuthErrorUserInfoNameKey"] != nil) {
-                          // Removing since it's not parsed and causing issue when sending back the
-                          // object to Flutter
-                          NSMutableDictionary *mutableUserInfo = [userInfo mutableCopy];
-                          [mutableUserInfo
-                              removeObjectForKey:@"FIRAuthErrorUserInfoUpdatedCredentialKey"];
-                          NSError *modifiedError = [NSError errorWithDomain:error.domain
-                                                                       code:error.code
-                                                                   userInfo:mutableUserInfo];
+                      NSString *errorCode = userInfo[@"FIRAuthErrorUserInfoNameKey"];
 
-                          completion(nil,
-                                     [FlutterError errorWithCode:@"sign-in-failed"
-                                                         message:userInfo[@"NSLocalizedDescription"]
-                                                         details:modifiedError.userInfo]);
-
-                        } else if (firebaseDictionary != nil &&
-                                   firebaseDictionary[@"message"] != nil) {
-                          // error from firebase-ios-sdk is
-                          // buried in underlying error.
-                          completion(nil,
-                                     [FlutterError errorWithCode:@"sign-in-failed"
-                                                         message:error.localizedDescription
-                                                         details:firebaseDictionary[@"message"]]);
-                        } else {
-                          completion(nil, [FlutterError errorWithCode:@"sign-in-failed"
-                                                              message:error.localizedDescription
-                                                              details:error.userInfo]);
+                      if (firebaseDictionary == nil && errorCode != nil) {
+                        if ([errorCode isEqual:@"ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL"]) {
+                          completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
+                          return;
                         }
+
+                        // Removing since it's not parsed and causing issue when sending back the
+                        // object to Flutter
+                        NSMutableDictionary *mutableUserInfo = [userInfo mutableCopy];
+                        [mutableUserInfo
+                            removeObjectForKey:@"FIRAuthErrorUserInfoUpdatedCredentialKey"];
+                        NSError *modifiedError = [NSError errorWithDomain:error.domain
+                                                                     code:error.code
+                                                                 userInfo:mutableUserInfo];
+
+                        completion(nil,
+                                   [FlutterError errorWithCode:@"sign-in-failed"
+                                                       message:userInfo[@"NSLocalizedDescription"]
+                                                       details:modifiedError.userInfo]);
+
+                      } else if (firebaseDictionary != nil &&
+                                 firebaseDictionary[@"message"] != nil) {
+                        // error from firebase-ios-sdk is
+                        // buried in underlying error.
+                        completion(nil,
+                                   [FlutterError errorWithCode:@"sign-in-failed"
+                                                       message:error.localizedDescription
+                                                       details:firebaseDictionary[@"message"]]);
                       } else {
-                        completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult
-                                                                     authorizationCode:nil],
-                                   nil);
+                        completion(nil, [FlutterError errorWithCode:@"sign-in-failed"
+                                                            message:error.localizedDescription
+                                                            details:error.userInfo]);
                       }
-                    }];
+                    } else {
+                      completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult
+                                                                   authorizationCode:nil],
+                                 nil);
+                    }
+                  }];
   }
 }
 
@@ -826,13 +820,11 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
 #endif
 }
 
-#if !TARGET_OS_OSX
 - (FIRMultiFactor *)getAppMultiFactorFromPigeon:(nonnull AuthPigeonFirebaseApp *)app {
   FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
   FIRUser *currentUser = auth.currentUser;
   return currentUser.multiFactor;
 }
-#endif
 
 - (nonnull ASPresentationAnchor)presentationAnchorForAuthorizationController:
     (nonnull ASAuthorizationController *)controller API_AVAILABLE(macos(10.15), ios(13.0)) {
@@ -843,12 +835,16 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
 #endif
 }
 
-#if TARGET_OS_IPHONE
-
 - (void)enrollPhoneApp:(nonnull AuthPigeonFirebaseApp *)app
              assertion:(nonnull PigeonPhoneMultiFactorAssertion *)assertion
            displayName:(nullable NSString *)displayName
             completion:(nonnull void (^)(FlutterError *_Nullable))completion {
+#if TARGET_OS_OSX
+  completion([FlutterError errorWithCode:@"unsupported-platform"
+                                 message:@"Phone authentication is not supported on macOS"
+                                 details:nil]);
+#else
+
   FIRMultiFactor *multiFactor = [self getAppMultiFactorFromPigeon:app];
 
   FIRPhoneAuthCredential *credential =
@@ -870,6 +866,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
                                                            details:nil]);
                           }
                         }];
+#endif
 }
 
 - (void)getEnrolledFactorsApp:(nonnull AuthPigeonFirebaseApp *)app
@@ -960,10 +957,12 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
   FIRMultiFactorAssertion *multiFactorAssertion;
 
   if (assertion != nil) {
+#if TARGET_OS_IPHONE
     FIRPhoneAuthCredential *credential =
         [[FIRPhoneAuthProvider provider] credentialWithVerificationID:[assertion verificationId]
                                                      verificationCode:[assertion verificationCode]];
     multiFactorAssertion = [FIRPhoneMultiFactorGenerator assertionWithCredential:credential];
+#endif
   } else if (totpAssertionId != nil) {
     multiFactorAssertion = _multiFactorAssertionMap[totpAssertionId];
   } else {
@@ -1055,8 +1054,6 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
   [totpSecret openInOTPAppWithQRCodeURL:qrCodeUrl];
   completion(nil);
 }
-
-#endif
 
 - (void)applyActionCodeApp:(nonnull AuthPigeonFirebaseApp *)app
                       code:(nonnull NSString *)code
@@ -2155,6 +2152,24 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
                                         completion(nil);
                                       }
                                     }];
+}
+
+- (void)initializeRecaptchaConfigApp:(AuthPigeonFirebaseApp *)app
+                          completion:(void (^)(FlutterError *_Nullable))completion {
+#if TARGET_OS_OSX
+  NSLog(@"initializeRecaptchaConfigWithCompletion is not supported on the "
+        @"MacOS platform.");
+  completion(nil);
+#else
+  FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
+  [auth initializeRecaptchaConfigWithCompletion:^(NSError *_Nullable error) {
+    if (error != nil) {
+      completion([FLTFirebaseAuthPlugin convertToFlutterError:error]);
+    } else {
+      completion(nil);
+    }
+  }];
+#endif
 }
 
 @end

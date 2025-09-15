@@ -1,3 +1,69 @@
+## 0.2.0+2
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.2.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**(auth): remove deprecated functions ([#17562](https://github.com/firebase/flutterfire/issues/17562)). ([d50aad95](https://github.com/firebase/flutterfire/commit/d50aad954443904d64d4ebd4442ebc63ed702986))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+## 0.1.5+4
+
+ - **FIX**(fdc): Fixed readme link  ([#17504](https://github.com/firebase/flutterfire/issues/17504)). ([6068edf9](https://github.com/firebase/flutterfire/commit/6068edf9eab36dbb94768d46a6def97e76f30df2))
+
+## 0.1.5+3
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+2
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+1
+
+ - **FIX**(fdc): fix an issue where if null is set, an empty value was being sent ([#17373](https://github.com/firebase/flutterfire/issues/17373)). ([53320dc6](https://github.com/firebase/flutterfire/commit/53320dc60fa5639051fbb77d21ed493f23381273))
+
+## 0.1.5
+
+ - **FIX**(data_connect): avoid calling toJson on raw JSON map or null object ([#17356](https://github.com/firebase/flutterfire/issues/17356)). ([7bd63691](https://github.com/firebase/flutterfire/commit/7bd63691ffa7405d24ea4545bd1ac7f8971175b3))
+ - **FEAT**(fdc): Included platform detection changes ([#17308](https://github.com/firebase/flutterfire/issues/17308)). ([e53c7071](https://github.com/firebase/flutterfire/commit/e53c7071e2566b7e016fda312d92dd03fcb1bc9e))
+
+## 0.1.4+1
+
+ - Update a dependency to the latest release.
+
+## 0.1.4
+
+ - **FEAT**(fdc): Implemented partial errors ([#17148](https://github.com/firebase/flutterfire/issues/17148)). ([e97eb0b2](https://github.com/firebase/flutterfire/commit/e97eb0b229390afa01e61b9e7bfbd496b51cc80a))
+ - **FEAT**(fdc): Upgraded from v1beta to v1 ([#17152](https://github.com/firebase/flutterfire/issues/17152)). ([26ae7d36](https://github.com/firebase/flutterfire/commit/26ae7d36359c4daa001b634ca8a903f9d5735184))
+
+## 0.1.3+2
+
+ - **FIX**(fdc): Minor changes to improve score ([#17126](https://github.com/firebase/flutterfire/issues/17126)). ([dbe29870](https://github.com/firebase/flutterfire/commit/dbe29870e4dc81316517032c1eb4ecb95c7ee3f1))
+
+## 0.1.3+1
+
+ - Update a dependency to the latest release.
+
+## 0.1.3
+
+ - **FEAT**(fdc): Added x-firebase-client header ([#17015](https://github.com/firebase/flutterfire/issues/17015)). ([c67075e5](https://github.com/firebase/flutterfire/commit/c67075e537eda46774884d2e40b6e265e64f73b2))
+
+## 0.1.2+7
+
+ - Update a dependency to the latest release.
+
+## 0.1.2+6
+
+ - Update a dependency to the latest release.
+
 ## 0.1.2+5
 
  - **FIX**(fdc): Don't throw when FirebaseAuth is unable to get an ID Token ([#16711](https://github.com/firebase/flutterfire/issues/16711)). ([1ef2044a](https://github.com/firebase/flutterfire/commit/1ef2044a7a9f2004f933147a8494fb82fa4c3c26))

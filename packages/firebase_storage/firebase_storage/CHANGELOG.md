@@ -1,7 +1,62 @@
+## 13.0.1
+
+ - Update a dependency to the latest release.
+
+## 13.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+## 12.4.10
+
+ - Update a dependency to the latest release.
+
+## 12.4.9
+
+ - Update a dependency to the latest release.
+
+## 12.4.8
+
+ - **FIX**(core): bump Pigeon to v25.3.2 ([#17438](https://github.com/firebase/flutterfire/issues/17438)). ([4d24ef53](https://github.com/firebase/flutterfire/commit/4d24ef534464b39dcaef4151c83c78f87b36fb78))
+
+## 12.4.7
+
+ - Update a dependency to the latest release.
+
+## 12.4.6
+
+ - Update a dependency to the latest release.
+
+## 12.4.5
+
+ - Update a dependency to the latest release.
+
+## 12.4.4
+
+ - Update a dependency to the latest release.
+
+## 12.4.3
+
+ - Update a dependency to the latest release.
+
+## 12.4.2
+
+ - Update a dependency to the latest release.
+
+## 12.4.1
+
+ - **FIX**(storage,android): fix an issue that could crash the app when concurrent calls to removeEventListeners were happening ([#16996](https://github.com/firebase/flutterfire/issues/16996)). ([6499c5f5](https://github.com/firebase/flutterfire/commit/6499c5f5457bca168e6934679562548a94e4f7a8))
+
+## 12.4.0
+
+ - **FIX**(storage): update regex for cloudStoragePath ([#16847](https://github.com/firebase/flutterfire/issues/16847)). ([b0832175](https://github.com/firebase/flutterfire/commit/b08321754c1fc8b773c9ea61c2e09fe866cefacc))
+ - **FEAT**(storage): Swift Package Manager support ([#16782](https://github.com/firebase/flutterfire/issues/16782)). ([b5993aef](https://github.com/firebase/flutterfire/commit/b5993aef0bf12d056a366bea9c7ce51c9781e290))
+
 ## 12.3.7
 
  - **FIX**(storage,apple): clean up event channel, stream handler and task on completion ([#16708](https://github.com/firebase/flutterfire/issues/16708)). ([14b4a552](https://github.com/firebase/flutterfire/commit/14b4a552f90ea03b297938ee30423c0e1e7d888e))
- - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
 
 ## 12.3.6
 

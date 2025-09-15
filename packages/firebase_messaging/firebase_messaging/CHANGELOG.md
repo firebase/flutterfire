@@ -1,6 +1,63 @@
+## 16.0.1
+
+ - Update a dependency to the latest release.
+
+## 16.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**(messaging): remove deprecated functions ([#17563](https://github.com/firebase/flutterfire/issues/17563)). ([1b716261](https://github.com/firebase/flutterfire/commit/1b7162619311e24b7f13a3e3b8c603fb1e05477b))
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+## 15.2.10
+
+ - Update a dependency to the latest release.
+
+## 15.2.9
+
+ - Update a dependency to the latest release.
+
+## 15.2.8
+
+ - Update a dependency to the latest release.
+
+## 15.2.7
+
+ - Update a dependency to the latest release.
+
+## 15.2.6
+
+ - Update a dependency to the latest release.
+
+## 15.2.5
+
+ - Update a dependency to the latest release.
+
+## 15.2.4
+
+ - Update a dependency to the latest release.
+
+## 15.2.3
+
+ - Update a dependency to the latest release.
+
+## 15.2.2
+
+ - Update a dependency to the latest release.
+
+## 15.2.1
+
+ - **FIX**(messaging,android): remove a deprecation message ([#16995](https://github.com/firebase/flutterfire/issues/16995)). ([b4e46db6](https://github.com/firebase/flutterfire/commit/b4e46db6fcc9080673108599a24bb4c1fe79f0f3))
+
+## 15.2.0
+
+ - **FEAT**(messaging,apple): allow system to display button for in-app notification settings ([#13484](https://github.com/firebase/flutterfire/issues/13484)). ([b36f924e](https://github.com/firebase/flutterfire/commit/b36f924e018f4d88ea5eaf17a779b2c3cf03583d))
+ - **FEAT**(messaging): Swift Package Manager support ([#13205](https://github.com/firebase/flutterfire/issues/13205)) ([#16786](https://github.com/firebase/flutterfire/issues/16786)). ([165d2ab6](https://github.com/firebase/flutterfire/commit/165d2ab6f9a25d4209ada837b13add584fdd225d))
+
 ## 15.1.6
 
- - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
+ - Update a dependency to the latest release.
 
 ## 15.1.5
 
@@ -481,7 +538,7 @@
 
  - **FIX**: revert onMessage event handler commit which causes another bug (#6878).
  - **FIX**: allow messages when device is in idle mode (#6730).
- - **FIX**: onMessage event handler for notifcations with `contentAvailable:true` (#6838).
+ - **FIX**: onMessage event handler for notifications with `contentAvailable:true` (#6838).
 
 ## 10.0.5
 

@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
+import 'package:firebase_remote_config_web/src/internals.dart';
 import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
@@ -184,5 +185,12 @@ class FirebaseRemoteConfigWeb extends FirebaseRemoteConfigPlatform {
   @override
   Stream<RemoteConfigUpdate> get onConfigUpdated {
     throw UnsupportedError('onConfigUpdated is not supported for web');
+  }
+
+  @override
+  Future<void> setCustomSignals(Map<String, Object?> customSignals) {
+    return convertWebExceptions(
+      () => _delegate.setCustomSignals(customSignals),
+    );
   }
 }

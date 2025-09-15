@@ -18,10 +18,6 @@ part of '../cloud_firestore.dart';
 class FirebaseFirestore extends FirebasePluginPlatform {
   FirebaseFirestore._({
     required this.app,
-    @Deprecated(
-      '`databaseURL` has been deprecated. Please use `databaseId` instead.',
-    )
-    required this.databaseURL,
     required this.databaseId,
   }) : super(app.name, 'plugins.flutter.io/firebase_firestore');
 
@@ -37,23 +33,16 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// Returns an instance using a specified [FirebaseApp].
   static FirebaseFirestore instanceFor({
     required FirebaseApp app,
-    @Deprecated(
-      '`databaseURL` has been deprecated. Please use `databaseId` instead.',
-    )
-    String? databaseURL,
     String? databaseId,
   }) {
-    String firestoreDatabaseId = databaseId ?? databaseURL ?? '(default)';
+    String firestoreDatabaseId = databaseId ?? '(default)';
     String cacheKey = '${app.name}|$firestoreDatabaseId';
     if (_cachedInstances.containsKey(cacheKey)) {
       return _cachedInstances[cacheKey]!;
     }
 
-    FirebaseFirestore newInstance =
-        // Both databaseURL and databaseId are required so we have to pass both for now. We can remove databaseURL in a future release.
-        FirebaseFirestore._(
+    FirebaseFirestore newInstance = FirebaseFirestore._(
       app: app,
-      databaseURL: firestoreDatabaseId,
       databaseId: firestoreDatabaseId,
     );
     _cachedInstances[cacheKey] = newInstance;
@@ -77,29 +66,19 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   FirebaseApp app;
 
   /// Firestore Database ID for this instance. Falls back to default database: "(default)"
-  /// This is deprecated in favor of [databaseId].
-  @Deprecated(
-    '`databaseURL` has been deprecated. Please use `databaseId` instead.',
-  )
-  String databaseURL;
-
-  /// Firestore Database ID for this instance. Falls back to default database: "(default)"
   String databaseId;
 
   /// Gets a [CollectionReference] for the specified Firestore path.
   CollectionReference<Map<String, dynamic>> collection(String collectionPath) {
-    assert(
-      collectionPath.isNotEmpty,
-      'a collectionPath path must be a non-empty string',
-    );
-    assert(
-      !collectionPath.contains('//'),
-      'a collection path must not contain "//"',
-    );
-    assert(
-      isValidCollectionPath(collectionPath),
-      'a collection path must point to a valid collection.',
-    );
+    if (collectionPath.isEmpty) {
+      throw ArgumentError('A collection path must be a non-empty string.');
+    } else if (collectionPath.contains('//')) {
+      throw ArgumentError('A collection path must not contain "//".');
+    } else if (!isValidCollectionPath(collectionPath)) {
+      throw ArgumentError(
+        'A collection path must point to a valid collection.',
+      );
+    }
 
     return _JsonCollectionReference(this, _delegate.collection(collectionPath));
   }
@@ -125,17 +104,6 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// the disclosure of cached data in between user sessions, we strongly recommend not enabling persistence at all.
   Future<void> clearPersistence() {
     return _delegate.clearPersistence();
-  }
-
-  /// Enable persistence of Firestore data for web-only. Use [Settings.persistenceEnabled] for non-web platforms.
-  /// If `enablePersistence()` is not called, it defaults to Memory cache.
-  /// If `enablePersistence(const PersistenceSettings(synchronizeTabs: false))` is called, it persists data for a single browser tab.
-  /// If `enablePersistence(const PersistenceSettings(synchronizeTabs: true))` is called, it persists data across multiple browser tabs.
-  @Deprecated('Use Settings.persistenceEnabled instead.')
-  Future<void> enablePersistence([
-    PersistenceSettings? persistenceSettings,
-  ]) async {
-    return _delegate.enablePersistence(persistenceSettings);
   }
 
   LoadBundleTask loadBundle(Uint8List bundle) {
@@ -214,14 +182,13 @@ class FirebaseFirestore extends FirebasePluginPlatform {
 
   /// Gets a [Query] for the specified collection group.
   Query<Map<String, dynamic>> collectionGroup(String collectionPath) {
-    assert(
-      collectionPath.isNotEmpty,
-      'a collection path must be a non-empty string',
-    );
-    assert(
-      !collectionPath.contains('/'),
-      'a collection path passed to collectionGroup() cannot contain "/"',
-    );
+    if (collectionPath.isEmpty) {
+      throw ArgumentError('A collection path must be a non-empty string.');
+    } else if (collectionPath.contains('/')) {
+      throw ArgumentError(
+        'A collection path passed to collectionGroup() cannot contain "/".',
+      );
+    }
 
     return _JsonQuery(this, _delegate.collectionGroup(collectionPath));
   }
@@ -237,18 +204,13 @@ class FirebaseFirestore extends FirebasePluginPlatform {
 
   /// Gets a [DocumentReference] for the specified Firestore path.
   DocumentReference<Map<String, dynamic>> doc(String documentPath) {
-    assert(
-      documentPath.isNotEmpty,
-      'a document path must be a non-empty string',
-    );
-    assert(
-      !documentPath.contains('//'),
-      'a collection path must not contain "//"',
-    );
-    assert(
-      isValidDocumentPath(documentPath),
-      'a document path must point to a valid document.',
-    );
+    if (documentPath.isEmpty) {
+      throw ArgumentError('A document path must be a non-empty string.');
+    } else if (documentPath.contains('//')) {
+      throw ArgumentError('A document path must not contain "//".');
+    } else if (!isValidDocumentPath(documentPath)) {
+      throw ArgumentError('A document path must point to a valid document.');
+    }
 
     return _JsonDocumentReference(this, _delegate.doc(documentPath));
   }
@@ -287,7 +249,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// By default transactions are limited to 30 seconds of execution time. This
   /// timeout can be adjusted by setting the timeout parameter.
   ///
-  /// By default transactions will retry 5 times. You can change the number of attemps
+  /// By default transactions will retry 5 times. You can change the number of attempts
   /// with [maxAttempts]. Attempts should be at least 1.
   Future<T> runTransaction<T>(
     TransactionHandler<T> transactionHandler, {
@@ -358,31 +320,6 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// Any outstanding [waitForPendingWrites] calls are rejected during user changes.
   Future<void> waitForPendingWrites() {
     return _delegate.waitForPendingWrites();
-  }
-
-  /// Configures indexing for local query execution. Any previous index configuration is overridden.
-  ///
-  /// The index entries themselves are created asynchronously. You can continue to use queries that
-  /// require indexing even if the indices are not yet available. Query execution will automatically
-  /// start using the index once the index entries have been written.
-  ///
-  /// This API is now deprecated
-  @Deprecated(
-    'setIndexConfiguration() has been deprecated. Please use `PersistentCacheIndexManager` instead.',
-  )
-  Future<void> setIndexConfiguration({
-    required List<Index> indexes,
-    List<FieldOverrides>? fieldOverrides,
-  }) async {
-    String json = jsonEncode(
-      {
-        'indexes': indexes.map((index) => index.toMap()).toList(),
-        'fieldOverrides':
-            fieldOverrides?.map((index) => index.toMap()).toList() ?? [],
-      },
-    );
-
-    return _delegate.setIndexConfiguration(json);
   }
 
   PersistentCacheIndexManager? persistentCacheIndexManager() {

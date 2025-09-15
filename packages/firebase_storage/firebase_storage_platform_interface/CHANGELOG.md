@@ -1,6 +1,58 @@
+## 5.2.12
+
+ - Update a dependency to the latest release.
+
+## 5.2.11
+
+ - Update a dependency to the latest release.
+
+## 5.2.10
+
+ - Update a dependency to the latest release.
+
+## 5.2.9
+
+ - Update a dependency to the latest release.
+
+## 5.2.8
+
+ - Update a dependency to the latest release.
+
+## 5.2.7
+
+ - Update a dependency to the latest release.
+
+## 5.2.6
+
+ - Update a dependency to the latest release.
+
+## 5.2.5
+
+ - Update a dependency to the latest release.
+
+## 5.2.4
+
+ - Update a dependency to the latest release.
+
+## 5.2.3
+
+ - Update a dependency to the latest release.
+
+## 5.2.2
+
+ - Update a dependency to the latest release.
+
+## 5.2.1
+
+ - Update a dependency to the latest release.
+
+## 5.2.0
+
+ - **FEAT**(storage): Swift Package Manager support ([#16782](https://github.com/firebase/flutterfire/issues/16782)). ([b5993aef](https://github.com/firebase/flutterfire/commit/b5993aef0bf12d056a366bea9c7ce51c9781e290))
+
 ## 5.1.34
 
- - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
+ - Update a dependency to the latest release.
 
 ## 5.1.33
 
@@ -192,7 +244,7 @@
 ## 4.4.0
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 ## 4.3.0
 

@@ -1,3 +1,57 @@
+## 4.0.1
+
+ - Update a dependency to the latest release.
+
+## 4.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+
+## 3.10.10
+
+ - Update a dependency to the latest release.
+
+## 3.10.9
+
+ - Update a dependency to the latest release.
+
+## 3.10.8
+
+ - Update a dependency to the latest release.
+
+## 3.10.7
+
+ - Update a dependency to the latest release.
+
+## 3.10.6
+
+ - Update a dependency to the latest release.
+
+## 3.10.5
+
+ - Update a dependency to the latest release.
+
+## 3.10.4
+
+ - Update a dependency to the latest release.
+
+## 3.10.3
+
+ - Update a dependency to the latest release.
+
+## 3.10.2
+
+ - Update a dependency to the latest release.
+
+## 3.10.1
+
+ - Update a dependency to the latest release.
+
+## 3.10.0
+
+ - **FEAT**(messaging,apple): allow system to display button for in-app notification settings ([#13484](https://github.com/firebase/flutterfire/issues/13484)). ([b36f924e](https://github.com/firebase/flutterfire/commit/b36f924e018f4d88ea5eaf17a779b2c3cf03583d))
+
 ## 3.9.5
 
  - Update a dependency to the latest release.
@@ -452,7 +506,7 @@
 
 ## 1.0.5
 
- - **REFACTOR**: Share guard functions accross plugins (#5783).
+ - **REFACTOR**: Share guard functions across plugins (#5783).
 
 ## 1.0.4
 

@@ -75,7 +75,7 @@ void main() {
       final optional = Optional.optional(stringDeserializer, stringSerializer);
 
       optional.value = null;
-      expect(optional.toJson(), equals(''));
+      expect(optional.toJson(), equals(null));
     });
 
     test('nativeToJson correctly serializes primitive types', () {
@@ -89,9 +89,25 @@ void main() {
       expect(nativeFromJson<int>(42), equals(42));
       expect(nativeFromJson<bool>(true), equals(true));
       expect(nativeFromJson<String>('Test'), equals('Test'));
+      expect(nativeFromJson<int>('42000000000000'), equals(42000000000000));
     });
 
-    // Since protobuf doesn't distinguish between int and double, we need to do the parsing outselves
+    test('nativeFromJson throws UnsupportedError for bigint’s too big for int',
+        () {
+      expect(() => nativeFromJson<int>('42000000000000000000'),
+          throwsUnsupportedError);
+    });
+
+    test('nativeToJson correctly serializes null primitive types', () {
+      Optional intValue = Optional(nativeFromJson, nativeToJson);
+      intValue.value = null;
+      expect(intValue.toJson(), equals(null));
+      Optional floatValue = Optional(nativeFromJson, nativeToJson);
+      floatValue.value = null;
+      expect(floatValue.toJson(), equals(null));
+    });
+
+    // Since protobuf doesn't distinguish between int and double, we need to do the parsing ourselves
     test('nativeFromJson correctly matches int to int and double to double',
         () {
       double expectedDouble = 42;

@@ -1,3 +1,55 @@
+## 2.0.2
+
+ - Update a dependency to the latest release.
+
+## 2.0.1
+
+ - Update a dependency to the latest release.
+
+## 2.0.0
+
+ - **FEAT**(remote_config): add support for Pigeon. Update iOS to Swift and Android to Swift ([#17489](https://github.com/firebase/flutterfire/issues/17489)). ([08ecc502](https://github.com/firebase/flutterfire/commit/08ecc5029616058c86d0093b9aae3ee8cea811a4))
+
+## 1.5.7
+
+ - Update a dependency to the latest release.
+
+## 1.5.6
+
+ - Update a dependency to the latest release.
+
+## 1.5.5
+
+ - Update a dependency to the latest release.
+
+## 1.5.4
+
+ - Update a dependency to the latest release.
+
+## 1.5.3
+
+ - Update a dependency to the latest release.
+
+## 1.5.2
+
+ - Update a dependency to the latest release.
+
+## 1.5.1
+
+ - Update a dependency to the latest release.
+
+## 1.5.0
+
+ - **FEAT**(remote-config): custom signals support ([#17053](https://github.com/firebase/flutterfire/issues/17053)). ([7cf248a8](https://github.com/firebase/flutterfire/commit/7cf248a8808e3d8f7fed29f18ddaf1fadf329ca3))
+
+## 1.4.49
+
+ - Update a dependency to the latest release.
+
+## 1.4.48
+
+ - Update a dependency to the latest release.
+
 ## 1.4.47
 
  - Update a dependency to the latest release.

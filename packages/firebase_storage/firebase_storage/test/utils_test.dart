@@ -104,6 +104,38 @@ void main() {
       expect(result?['path'], 'path/to/foo_bar.jpg');
     });
 
+    test(
+        'parses HTTP URL correctly when using Android emulator localhost (10.0.2.2)',
+        () {
+      const androidLocalhost = '10.0.2.2';
+
+      final result = partsFromHttpUrl(
+          'http://$androidLocalhost:9199/v0/b/myapp.appspot.com/o/path/to/foo_bar.jpg');
+
+      expect(
+        result,
+        isNotNull,
+        reason:
+            'partsFromHttpUrl should not return null for Android localhost URLs',
+      );
+      expect(result?['bucket'], 'myapp.appspot.com');
+      expect(result?['path'], 'path/to/foo_bar.jpg');
+    });
+
+    test('parses HTTP URL correctly when using standard localhost (127.0.0.1)',
+        () {
+      final result = partsFromHttpUrl(
+          'http://localhost:9199/v0/b/myapp.appspot.com/o/path/to/foo_bar.jpg');
+
+      expect(
+        result,
+        isNotNull,
+        reason: 'partsFromHttpUrl should not return null for localhost URLs',
+      );
+      expect(result?['bucket'], 'myapp.appspot.com');
+      expect(result?['path'], 'path/to/foo_bar.jpg');
+    });
+
     // TODO(helenaford): regexp can't handle no paths
     // test('sets path to default if null', () {
     //   String url =

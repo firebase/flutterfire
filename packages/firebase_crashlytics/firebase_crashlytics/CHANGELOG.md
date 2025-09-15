@@ -1,6 +1,61 @@
+## 5.0.1
+
+ - Update a dependency to the latest release.
+
+## 5.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+## 4.3.10
+
+ - Update a dependency to the latest release.
+
+## 4.3.9
+
+ - Update a dependency to the latest release.
+
+## 4.3.8
+
+ - **FIX**(core): bump Pigeon to v25.3.2 ([#17438](https://github.com/firebase/flutterfire/issues/17438)). ([4d24ef53](https://github.com/firebase/flutterfire/commit/4d24ef534464b39dcaef4151c83c78f87b36fb78))
+
+## 4.3.7
+
+ - Update a dependency to the latest release.
+
+## 4.3.6
+
+ - Update a dependency to the latest release.
+
+## 4.3.5
+
+ - Update a dependency to the latest release.
+
+## 4.3.4
+
+ - Update a dependency to the latest release.
+
+## 4.3.3
+
+ - Update a dependency to the latest release.
+
+## 4.3.2
+
+ - Update a dependency to the latest release.
+
+## 4.3.1
+
+ - Update a dependency to the latest release.
+
+## 4.3.0
+
+ - **FIX**(crashlytics,android): suppress unchecked cast warning ([#16864](https://github.com/firebase/flutterfire/issues/16864)). ([6bd51017](https://github.com/firebase/flutterfire/commit/6bd51017718353d8d07f9ca8283ce8d7c209df2e))
+ - **FEAT**(crashlytics): Swift Package Manager support ([#16811](https://github.com/firebase/flutterfire/issues/16811)). ([f7cd1abe](https://github.com/firebase/flutterfire/commit/f7cd1abe7ea5fdb75891c005b1914e0c05b32131))
+
 ## 4.2.0
 
- - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
  - **FEAT**(crashlytics,android): Support deferred component crash stack trace ([#16789](https://github.com/firebase/flutterfire/issues/16789)). ([d5778f89](https://github.com/firebase/flutterfire/commit/d5778f89700a910f4b96b834975f7e21e43080fc))
 
 ## 4.1.5
@@ -199,7 +254,7 @@
 ## 3.3.0
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 ## 3.2.0
 

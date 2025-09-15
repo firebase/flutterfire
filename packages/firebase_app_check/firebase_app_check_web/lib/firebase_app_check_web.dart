@@ -38,10 +38,10 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
       ensurePluginInitialized: (firebaseApp) async {
         final instance =
             FirebaseAppCheckWeb(app: Firebase.app(firebaseApp.name));
-        final recaptchaType = web
-            .window.sessionStorage[_sessionKeyRecaptchaType(firebaseApp.name)];
-        final recaptchaSiteKey = web.window
-            .sessionStorage[_sessionKeyRecaptchaSiteKey(firebaseApp.name)];
+        final recaptchaType = web.window.sessionStorage
+            .getItem(_sessionKeyRecaptchaType(firebaseApp.name));
+        final recaptchaSiteKey = web.window.sessionStorage
+            .getItem(_sessionKeyRecaptchaSiteKey(firebaseApp.name));
         if (recaptchaType != null && recaptchaSiteKey != null) {
           final WebProvider provider;
           if (recaptchaType == recaptchaTypeV3) {
@@ -120,10 +120,10 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
       } else {
         throw Exception('Invalid web provider: $webProvider');
       }
-      web.window.sessionStorage[_sessionKeyRecaptchaType(app.name)] =
-          recaptchaType;
-      web.window.sessionStorage[_sessionKeyRecaptchaSiteKey(app.name)] =
-          webProvider.siteKey;
+      web.window.sessionStorage
+          .setItem(_sessionKeyRecaptchaType(app.name), recaptchaType);
+      web.window.sessionStorage
+          .setItem(_sessionKeyRecaptchaSiteKey(app.name), webProvider.siteKey);
     }
 
     // activate API no longer exists, recaptcha key has to be passed on initialization of app-check instance.

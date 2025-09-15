@@ -202,8 +202,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   auth_interop.Auth? _webAuth;
 
   auth_interop.Auth get delegate {
-    _webAuth ??= auth_interop.getAuthInstance(core_interop.app(app.name));
-
+    _webAuth = auth_interop.getAuthInstance(core_interop.app(app.name));
     return _webAuth!;
   }
 
@@ -632,6 +631,13 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       String authorizationCode) async {
     throw UnimplementedError(
       'revokeTokenWithAuthorizationCode() is only available on apple platforms.',
+    );
+  }
+
+  @override
+  Future<void> initializeRecaptchaConfig() async {
+    await guardAuthExceptions(
+      () => delegate.initializeRecaptchaConfig(),
     );
   }
 }

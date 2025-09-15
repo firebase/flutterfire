@@ -482,7 +482,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
                 androidPackageName: actionCodeSettings.androidPackageName,
                 androidInstallApp: actionCodeSettings.androidInstallApp,
                 androidMinimumVersion: actionCodeSettings.androidMinimumVersion,
-                dynamicLinkDomain: actionCodeSettings.dynamicLinkDomain,
+                linkDomain: actionCodeSettings.linkDomain,
               ),
       );
     } catch (e, stack) {
@@ -503,10 +503,10 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
           url: actionCodeSettings.url,
           handleCodeInApp: actionCodeSettings.handleCodeInApp,
           iOSBundleId: actionCodeSettings.iOSBundleId,
+          linkDomain: actionCodeSettings.linkDomain,
           androidPackageName: actionCodeSettings.androidPackageName,
           androidInstallApp: actionCodeSettings.androidInstallApp,
           androidMinimumVersion: actionCodeSettings.androidMinimumVersion,
-          dynamicLinkDomain: actionCodeSettings.dynamicLinkDomain,
         ),
       );
     } catch (e, stack) {
@@ -661,6 +661,15 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       throw UnimplementedError(
         'revokeTokenWithAuthorizationCode() is only available on apple platforms.',
       );
+    }
+  }
+
+  @override
+  Future<void> initializeRecaptchaConfig() async {
+    try {
+      await _api.initializeRecaptchaConfig(pigeonDefault);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 }

@@ -104,9 +104,8 @@
   if (![values[@"persistenceEnabled"] isEqual:[NSNull null]]) {
     bool persistEnabled = [((NSNumber *)values[@"persistenceEnabled"]) boolValue];
 
-    // This is the maximum amount of cache allowed. We use the same number on android.
-    // This now causes an exception: kFIRFirestoreCacheSizeUnlimited
-    NSNumber *size = @104857600;
+    // We default to the maximum amount of cache allowed.
+    NSNumber *size = @(kFIRFirestoreCacheSizeUnlimited);
 
     if (![values[@"cacheSizeBytes"] isEqual:[NSNull null]]) {
       NSNumber *cacheSizeBytes = ((NSNumber *)values[@"cacheSizeBytes"]);

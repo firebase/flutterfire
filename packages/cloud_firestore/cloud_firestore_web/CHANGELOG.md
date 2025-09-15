@@ -1,3 +1,62 @@
+## 5.0.1
+
+ - Update a dependency to the latest release.
+
+## 5.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**(firestore): remove deprecated functions ([#17559](https://github.com/firebase/flutterfire/issues/17559)). ([67017fd6](https://github.com/firebase/flutterfire/commit/67017fd6f139080cec7ecd1b4d75a05f13f238fa))
+
+## 4.4.12
+
+ - Update a dependency to the latest release.
+
+## 4.4.11
+
+ - Update a dependency to the latest release.
+
+## 4.4.10
+
+ - Update a dependency to the latest release.
+
+## 4.4.9
+
+ - Update a dependency to the latest release.
+
+## 4.4.8
+
+ - Update a dependency to the latest release.
+
+## 4.4.7
+
+ - Update a dependency to the latest release.
+
+## 4.4.6
+
+ - Update a dependency to the latest release.
+
+## 4.4.5
+
+ - Update a dependency to the latest release.
+
+## 4.4.4
+
+ - Update a dependency to the latest release.
+
+## 4.4.3
+
+ - Update a dependency to the latest release.
+
+## 4.4.2
+
+ - Update a dependency to the latest release.
+
+## 4.4.1
+
+ - Update a dependency to the latest release.
+
 ## 4.4.0
 
  - **FEAT**(firestore): add support for VectorValue ([#16476](https://github.com/firebase/flutterfire/issues/16476)). ([cc23f179](https://github.com/firebase/flutterfire/commit/cc23f179082256fe9700f17e3856821b4a6d4240))
@@ -77,7 +136,7 @@
 
 ## 3.12.2
 
- - **FIX**(web): fixing some uncorrect type casting for Web ([#12696](https://github.com/firebase/flutterfire/issues/12696)). ([471b5072](https://github.com/firebase/flutterfire/commit/471b507265a08bbc68277d3a2fdb7ef608c9efcc))
+ - **FIX**(web): fixing some incorrect type casting for Web ([#12696](https://github.com/firebase/flutterfire/issues/12696)). ([471b5072](https://github.com/firebase/flutterfire/commit/471b507265a08bbc68277d3a2fdb7ef608c9efcc))
 
 ## 3.12.1
 
@@ -546,7 +605,7 @@
 
 ## 1.0.6
 
- - **REFACTOR**: Share guard functions accross plugins (#5783).
+ - **REFACTOR**: Share guard functions across plugins (#5783).
 
 ## 1.0.5
 

@@ -14,7 +14,7 @@ class ActionCodeSettings {
     this.androidPackageName,
     this.androidMinimumVersion,
     this.androidInstallApp = false,
-    this.dynamicLinkDomain,
+    this.linkDomain,
     this.handleCodeInApp = false,
     this.iOSBundleId,
     required this.url,
@@ -37,9 +37,6 @@ class ActionCodeSettings {
   /// The iOS app to open if it is installed on the device.
   final String? iOSBundleId;
 
-  /// Sets an optional Dynamic Link domain.
-  final String? dynamicLinkDomain;
-
   /// The default is false. When true, the action code link will be sent
   /// as a Universal Link or Android App Link and will be opened by the
   /// app if installed.
@@ -48,11 +45,15 @@ class ActionCodeSettings {
   /// Sets the link continue/state URL
   final String url;
 
+  /// The optional custom Firebase Hosting domain to use when the link is to be opened via a specified mobile app.
+  /// The domain must be configured in Firebase Hosting and owned by the project. This cannot be a default Hosting domain (web.app or firebaseapp.com).
+  final String? linkDomain;
+
   /// Returns the current instance as a [Map].
   Map<String, dynamic> asMap() {
     return <String, dynamic>{
       'url': url,
-      'dynamicLinkDomain': dynamicLinkDomain,
+      'linkDomain': linkDomain,
       'handleCodeInApp': handleCodeInApp,
       if (iOSBundleId != null)
         'iOS': {

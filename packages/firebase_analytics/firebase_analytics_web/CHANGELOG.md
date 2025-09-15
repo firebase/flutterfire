@@ -1,3 +1,57 @@
+## 0.6.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.6.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**(analytics): remove deprecated methods for breaking change release ([#17560](https://github.com/firebase/flutterfire/issues/17560)). ([ea3034d8](https://github.com/firebase/flutterfire/commit/ea3034d88215d0b99dda9079fd9134afb5fee496))
+
+## 0.5.10+16
+
+ - Update a dependency to the latest release.
+
+## 0.5.10+15
+
+ - Update a dependency to the latest release.
+
+## 0.5.10+14
+
+ - Update a dependency to the latest release.
+
+## 0.5.10+13
+
+ - Update a dependency to the latest release.
+
+## 0.5.10+12
+
+ - Update a dependency to the latest release.
+
+## 0.5.10+11
+
+ - Update a dependency to the latest release.
+
+## 0.5.10+10
+
+ - Update a dependency to the latest release.
+
+## 0.5.10+9
+
+ - Update a dependency to the latest release.
+
+## 0.5.10+8
+
+ - Update a dependency to the latest release.
+
+## 0.5.10+7
+
+ - Update a dependency to the latest release.
+
+## 0.5.10+6
+
+ - Update a dependency to the latest release.
+
 ## 0.5.10+5
 
  - Update a dependency to the latest release.

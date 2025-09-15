@@ -1,6 +1,61 @@
+## 6.0.1
+
+ - Update a dependency to the latest release.
+
+## 6.0.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**(remote_config,android): make `onCancel` accept nullable arguments to avoid crash on hot restart ([#17569](https://github.com/firebase/flutterfire/issues/17569)). ([2b782558](https://github.com/firebase/flutterfire/commit/2b782558666337fd65780231fe07a277986cedce))
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+## 5.5.0
+
+ - **FEAT**(remote_config): add support for Pigeon. Update iOS to Swift and Android to Swift ([#17489](https://github.com/firebase/flutterfire/issues/17489)). ([08ecc502](https://github.com/firebase/flutterfire/commit/08ecc5029616058c86d0093b9aae3ee8cea811a4))
+
+## 5.4.7
+
+ - Update a dependency to the latest release.
+
+## 5.4.6
+
+ - Update a dependency to the latest release.
+
+## 5.4.5
+
+ - Update a dependency to the latest release.
+
+## 5.4.4
+
+ - Update a dependency to the latest release.
+
+## 5.4.3
+
+ - Update a dependency to the latest release.
+
+## 5.4.2
+
+ - Update a dependency to the latest release.
+
+## 5.4.1
+
+ - Update a dependency to the latest release.
+
+## 5.4.0
+
+ - **FEAT**(remote-config): custom signals support ([#17053](https://github.com/firebase/flutterfire/issues/17053)). ([7cf248a8](https://github.com/firebase/flutterfire/commit/7cf248a8808e3d8f7fed29f18ddaf1fadf329ca3))
+
+## 5.3.1
+
+ - Update a dependency to the latest release.
+
+## 5.3.0
+
+ - Update a dependency to the latest release.
+
 ## 5.2.0
 
- - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
  - **FEAT**(remote_config): Swift Package Manager support ([#16772](https://github.com/firebase/flutterfire/issues/16772)). ([164421ec](https://github.com/firebase/flutterfire/commit/164421ec8d3d67ca0349bce60d2b7731ad704639))
 
 ## 5.1.5

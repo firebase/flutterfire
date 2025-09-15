@@ -251,10 +251,7 @@ void main() {
             },
             skip: kIsWeb ||
                 defaultTargetPlatform == TargetPlatform.macOS ||
-                defaultTargetPlatform == TargetPlatform.windows
-                // on iOS, returning an exception but underlying exception is: "identitytoolkit.getRecaptchaConfig is not implemented in the Auth Emulator."
-                // which might be a result of this issue: https://github.com/firebase/firebase-ios-sdk/issues/14242. Once resolved, try to reinstate.
-                || defaultTargetPlatform == TargetPlatform.iOS,
+                defaultTargetPlatform == TargetPlatform.windows,
           ); // verifyPhoneNumber not supported on web.
 
           test(
@@ -625,32 +622,6 @@ void main() {
               fail('should have thrown an FirebaseAuthException error');
             }
             fail('should have thrown an error');
-          });
-        },
-        skip: !kIsWeb &&
-            (defaultTargetPlatform == TargetPlatform.windows ||
-                defaultTargetPlatform == TargetPlatform.macOS),
-      );
-
-      group(
-        'updateEmail()',
-        () {
-          test('should update the email address', () async {
-            String emailBefore = generateRandomEmail();
-            // Setup
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: emailBefore,
-              password: testPassword,
-            );
-            expect(
-              FirebaseAuth.instance.currentUser!.email,
-              equals(emailBefore),
-            );
-
-            // Update user email
-            // ignore: deprecated_member_use
-            await FirebaseAuth.instance.currentUser!.updateEmail(email);
-            expect(FirebaseAuth.instance.currentUser!.email, equals(email));
           });
         },
         skip: !kIsWeb &&

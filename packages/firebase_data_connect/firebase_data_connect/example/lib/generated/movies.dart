@@ -23,6 +23,8 @@ part 'seed_data.dart';
 
 part 'list_movies.dart';
 
+part 'get_movie.dart';
+
 part 'list_movies_by_partial_title.dart';
 
 part 'list_persons.dart';
@@ -107,6 +109,15 @@ class MoviesConnector {
   ListMoviesVariablesBuilder listMovies() {
     return ListMoviesVariablesBuilder(
       dataConnect,
+    );
+  }
+
+  GetMovieVariablesBuilder getMovie({
+    required GetMovieVariablesKey key,
+  }) {
+    return GetMovieVariablesBuilder(
+      dataConnect,
+      key: key,
     );
   }
 

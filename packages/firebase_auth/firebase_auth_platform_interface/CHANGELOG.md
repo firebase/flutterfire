@@ -1,6 +1,66 @@
+## 8.1.1
+
+ - Update a dependency to the latest release.
+
+## 8.1.0
+
+ - **FEAT**(auth): add signInSecondFactor property to IdTokenResult for MFA support ([#17589](https://github.com/firebase/flutterfire/issues/17589)). ([a4db26ea](https://github.com/firebase/flutterfire/commit/a4db26ea9cc75f04a4a284e7c633c56f5f4958ad))
+
+## 8.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**(auth): validatePassword method/PasswordPolicy Support ([#17439](https://github.com/firebase/flutterfire/issues/17439)). ([9a032b34](https://github.com/firebase/flutterfire/commit/9a032b344d6a22c1e3a181ae27e511939f2d8972))
+ - **BREAKING** **FEAT**(auth): remove deprecated functions ([#17562](https://github.com/firebase/flutterfire/issues/17562)). ([d50aad95](https://github.com/firebase/flutterfire/commit/d50aad954443904d64d4ebd4442ebc63ed702986))
+
+## 7.7.3
+
+ - Update a dependency to the latest release.
+
+## 7.7.2
+
+ - Update a dependency to the latest release.
+
+## 7.7.1
+
+ - Update a dependency to the latest release.
+
+## 7.7.0
+
+ - **FEAT**(auth): add support for initializeRecaptchaConfig ([#17365](https://github.com/firebase/flutterfire/issues/17365)). ([73f9028e](https://github.com/firebase/flutterfire/commit/73f9028e114874fddc8a4f76f22b247504a95a02))
+
+## 7.6.3
+
+ - **DOCS**(firebase_auth): Removed duplicates; fixed typos; removed "unnecessary use of a null check" ([#16815](https://github.com/firebase/flutterfire/issues/16815)). ([0eb17e13](https://github.com/firebase/flutterfire/commit/0eb17e13587ebfe5c8d64cbba9c0a2ccd0b7ce90))
+
+## 7.6.2
+
+ - Update a dependency to the latest release.
+
+## 7.6.1
+
+ - Update a dependency to the latest release.
+
+## 7.6.0
+
+ - **FIX**(auth): deprecate Microsoft provider method not used for authentication ([#17094](https://github.com/firebase/flutterfire/issues/17094)). ([2371d2d8](https://github.com/firebase/flutterfire/commit/2371d2d81a89a87ace898b73329e5189d7413107))
+ - **FEAT**(auth): support for `linkDomain` in `ActionCodeSettings` ([#17099](https://github.com/firebase/flutterfire/issues/17099)). ([090cdb20](https://github.com/firebase/flutterfire/commit/090cdb2078dc66e58aa4b1a3ef9a48101467b6ac))
+
+## 7.5.2
+
+ - Update a dependency to the latest release.
+
+## 7.5.1
+
+ - Update a dependency to the latest release.
+
+## 7.5.0
+
+ - **FEAT**(auth): Swift Package Manager support ([#16773](https://github.com/firebase/flutterfire/issues/16773)). ([69abbe19](https://github.com/firebase/flutterfire/commit/69abbe19bb37e6eb450b0b5123a74c2d68a761c7))
+
 ## 7.4.10
 
- - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
+ - Update a dependency to the latest release.
 
 ## 7.4.9
 
@@ -191,7 +251,7 @@
 
 ## 6.16.1
 
- - **FIX**(auth): fix MFA issue where the error wouldn't be properly catched ([#11370](https://github.com/firebase/flutterfire/issues/11370)). ([72fef03f](https://github.com/firebase/flutterfire/commit/72fef03f775702aaf9a2ce0c6b31aea2a3c200a9))
+ - **FIX**(auth): fix MFA issue where the error wouldn't be properly caught ([#11370](https://github.com/firebase/flutterfire/issues/11370)). ([72fef03f](https://github.com/firebase/flutterfire/commit/72fef03f775702aaf9a2ce0c6b31aea2a3c200a9))
 
 ## 6.16.0
 
@@ -212,7 +272,7 @@
 ## 6.15.0
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 ## 6.14.0
 
@@ -322,7 +382,7 @@
  - **FIX**: fix enrollementTimestamp parsing on Web ([#9440](https://github.com/firebase/flutterfire/issues/9440)). ([639cab7b](https://github.com/firebase/flutterfire/commit/639cab7b84aa33cc1dda144fc89db2236a1945b2))
  - **FEAT**: add Twitter login for Android, iOS and Web ([#9421](https://github.com/firebase/flutterfire/issues/9421)). ([0bc6e6d5](https://github.com/firebase/flutterfire/commit/0bc6e6d5333e6be0d5749a083206f3f5bb79a7ba))
  - **FEAT**: add Yahoo as provider for iOS, Android and Web ([#9443](https://github.com/firebase/flutterfire/issues/9443)). ([6c3108a7](https://github.com/firebase/flutterfire/commit/6c3108a767aca3b1a844b2b5da04b2da45bc9fbd))
- - **DOCS**: fix typo "apperance" in `platform_interface_firebase_auth.dart` ([#9472](https://github.com/firebase/flutterfire/issues/9472)). ([323b917b](https://github.com/firebase/flutterfire/commit/323b917b5eecf0e5161a61c66f6cabac5b23e1b8))
+ - **DOCS**: fix typo "appearance" in `platform_interface_firebase_auth.dart` ([#9472](https://github.com/firebase/flutterfire/issues/9472)). ([323b917b](https://github.com/firebase/flutterfire/commit/323b917b5eecf0e5161a61c66f6cabac5b23e1b8))
 
 ## 6.6.0
 

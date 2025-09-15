@@ -1,3 +1,61 @@
+## 6.0.2
+
+ - Update a dependency to the latest release.
+
+## 6.0.1
+
+ - Update a dependency to the latest release.
+
+## 6.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**(auth): remove deprecated functions ([#17562](https://github.com/firebase/flutterfire/issues/17562)). ([d50aad95](https://github.com/firebase/flutterfire/commit/d50aad954443904d64d4ebd4442ebc63ed702986))
+
+## 5.15.3
+
+ - Update a dependency to the latest release.
+
+## 5.15.2
+
+ - Update a dependency to the latest release.
+
+## 5.15.1
+
+ - Update a dependency to the latest release.
+
+## 5.15.0
+
+ - **FEAT**(auth): add support for initializeRecaptchaConfig ([#17365](https://github.com/firebase/flutterfire/issues/17365)). ([73f9028e](https://github.com/firebase/flutterfire/commit/73f9028e114874fddc8a4f76f22b247504a95a02))
+
+## 5.14.3
+
+ - Update a dependency to the latest release.
+
+## 5.14.2
+
+ - **FIX**(auth,web): fix an issue that could occur when deleting FirebaseApp ([#17145](https://github.com/firebase/flutterfire/issues/17145)). ([a2246cd0](https://github.com/firebase/flutterfire/commit/a2246cd0ae8a7a53abc2537d7cd66ee079d3b096))
+
+## 5.14.1
+
+ - Update a dependency to the latest release.
+
+## 5.14.0
+
+ - **FEAT**(auth): support for `linkDomain` in `ActionCodeSettings` ([#17099](https://github.com/firebase/flutterfire/issues/17099)). ([090cdb20](https://github.com/firebase/flutterfire/commit/090cdb2078dc66e58aa4b1a3ef9a48101467b6ac))
+
+## 5.13.8
+
+ - Update a dependency to the latest release.
+
+## 5.13.7
+
+ - Update a dependency to the latest release.
+
+## 5.13.6
+
+ - Update a dependency to the latest release.
+
 ## 5.13.5
 
  - Update a dependency to the latest release.
@@ -62,7 +120,7 @@
 
 ## 5.11.4
 
- - **FIX**(web): fixing some uncorrect type casting for Web ([#12696](https://github.com/firebase/flutterfire/issues/12696)). ([471b5072](https://github.com/firebase/flutterfire/commit/471b507265a08bbc68277d3a2fdb7ef608c9efcc))
+ - **FIX**(web): fixing some incorrect type casting for Web ([#12696](https://github.com/firebase/flutterfire/issues/12696)). ([471b5072](https://github.com/firebase/flutterfire/commit/471b507265a08bbc68277d3a2fdb7ef608c9efcc))
 
 ## 5.11.3
 
@@ -223,7 +281,7 @@
 ## 5.5.0
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 ## 5.4.0
 

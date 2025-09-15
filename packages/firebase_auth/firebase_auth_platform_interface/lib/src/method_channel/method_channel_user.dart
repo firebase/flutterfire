@@ -198,7 +198,7 @@ class MethodChannelUser extends UserPlatform {
                 androidPackageName: actionCodeSettings.androidPackageName,
                 androidInstallApp: actionCodeSettings.androidInstallApp,
                 androidMinimumVersion: actionCodeSettings.androidMinimumVersion,
-                dynamicLinkDomain: actionCodeSettings.dynamicLinkDomain,
+                linkDomain: actionCodeSettings.linkDomain,
               ),
       );
     } catch (e, stack) {
@@ -308,7 +308,7 @@ class MethodChannelUser extends UserPlatform {
                 androidPackageName: actionCodeSettings.androidPackageName,
                 androidInstallApp: actionCodeSettings.androidInstallApp,
                 androidMinimumVersion: actionCodeSettings.androidMinimumVersion,
-                dynamicLinkDomain: actionCodeSettings.dynamicLinkDomain,
+                linkDomain: actionCodeSettings.linkDomain,
               ),
       );
     } catch (e, stack) {

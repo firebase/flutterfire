@@ -1,6 +1,61 @@
+## 0.4.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.4.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+## 0.3.3
+
+ - **FEAT**(auth,macos): add support for `publish` and `addApplicationDelegate` on macOS FlutterPluginRegistrar ([#17518](https://github.com/firebase/flutterfire/issues/17518)). ([376bb6ea](https://github.com/firebase/flutterfire/commit/376bb6ea8878df3f25cc1416fe26ace2203fd793))
+
+## 0.3.2+9
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+8
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+7
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+6
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+5
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+4
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+3
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+2
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+1
+
+ - Update a dependency to the latest release.
+
+## 0.3.2
+
+ - **FEAT**(app-installations): Swift Package Manager support ([#16856](https://github.com/firebase/flutterfire/issues/16856)). ([547c6d71](https://github.com/firebase/flutterfire/commit/547c6d713ddb6ff339e6d873dae75a29aa3e75eb))
+
 ## 0.3.1+7
 
- - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
+ - Update a dependency to the latest release.
 
 ## 0.3.1+6
 

@@ -445,6 +445,7 @@ class PigeonActionCodeSettings {
     this.androidPackageName,
     required this.androidInstallApp,
     this.androidMinimumVersion,
+    this.linkDomain,
   });
 
   String url;
@@ -461,6 +462,8 @@ class PigeonActionCodeSettings {
 
   String? androidMinimumVersion;
 
+  String? linkDomain;
+
   Object encode() {
     return <Object?>[
       url,
@@ -470,6 +473,7 @@ class PigeonActionCodeSettings {
       androidPackageName,
       androidInstallApp,
       androidMinimumVersion,
+      linkDomain,
     ];
   }
 
@@ -483,6 +487,7 @@ class PigeonActionCodeSettings {
       androidPackageName: result[4] as String?,
       androidInstallApp: result[5]! as bool,
       androidMinimumVersion: result[6] as String?,
+      linkDomain: result[7] as String?,
     );
   }
 }
@@ -1461,6 +1466,30 @@ class FirebaseAuthHostApi {
     );
     final List<Object?>? __pigeon_replyList = await __pigeon_channel
         .send(<Object?>[app, authorizationCode]) as List<Object?>?;
+    if (__pigeon_replyList == null) {
+      throw _createConnectionError(__pigeon_channelName);
+    } else if (__pigeon_replyList.length > 1) {
+      throw PlatformException(
+        code: __pigeon_replyList[0]! as String,
+        message: __pigeon_replyList[1] as String?,
+        details: __pigeon_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> initializeRecaptchaConfig(AuthPigeonFirebaseApp app) async {
+    final String __pigeon_channelName =
+        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.initializeRecaptchaConfig$__pigeon_messageChannelSuffix';
+    final BasicMessageChannel<Object?> __pigeon_channel =
+        BasicMessageChannel<Object?>(
+      __pigeon_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: __pigeon_binaryMessenger,
+    );
+    final List<Object?>? __pigeon_replyList =
+        await __pigeon_channel.send(<Object?>[app]) as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {

@@ -35,7 +35,7 @@ class RestTransport implements DataConnectTransport {
     String service = options.serviceId;
     String connector = options.connector;
     url =
-        '$protocol://$host:$port/v1beta/projects/$project/locations/$location/services/$service/connectors/$connector';
+        '$protocol://$host:$port/v1/projects/$project/locations/$location/services/$service/connectors/$connector';
   }
 
   @override
@@ -85,6 +85,7 @@ class RestTransport implements DataConnectTransport {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'x-goog-api-client': getGoogApiVal(sdkType, packageVersion),
+      'x-firebase-client': getFirebaseClientVal(packageVersion)
     };
     String? appCheckToken;
     try {
@@ -114,9 +115,9 @@ class RestTransport implements DataConnectTransport {
         body: json.encode(body),
         headers: headers,
       );
+      Map<String, dynamic> bodyJson =
+          jsonDecode(r.body) as Map<String, dynamic>;
       if (r.statusCode != 200) {
-        Map<String, dynamic> bodyJson =
-            jsonDecode(r.body) as Map<String, dynamic>;
         String message =
             bodyJson.containsKey('message') ? bodyJson['message']! : r.body;
         throw DataConnectError(
@@ -125,22 +126,59 @@ class RestTransport implements DataConnectTransport {
               : DataConnectErrorCode.other,
           "Received a status code of ${r.statusCode} with a message '$message'",
         );
-      } else {
-        Map<String, dynamic> bodyJson =
-            jsonDecode(r.body) as Map<String, dynamic>;
-        if (bodyJson.containsKey('errors') &&
-            (bodyJson['errors'] as List).isNotEmpty) {
-          throw DataConnectError(
-            DataConnectErrorCode.other,
-            bodyJson['errors'].toString(),
-          );
-        }
       }
 
-      /// The response we get is in the data field of the response
-      /// Once we get the data back, it's not quite json-encoded,
-      /// so we have to encode it and then send it to the user's deserializer.
-      return deserializer(jsonEncode(jsonDecode(r.body)['data']));
+      List errors = bodyJson['errors'] ?? [];
+      final data = bodyJson['data'];
+      List<DataConnectOperationFailureResponseErrorInfo> suberrors = errors
+          .map((e) => switch (e) {
+                {'path': List? path, 'message': String? message} =>
+                  DataConnectOperationFailureResponseErrorInfo(
+                      (path ?? [])
+                          .map((val) => switch (val) {
+                                String() => DataConnectFieldPathSegment(val),
+                                int() => DataConnectListIndexPathSegment(val),
+                                _ => throw DataConnectError(
+                                    DataConnectErrorCode.other,
+                                    'Incorrect type for $val')
+                              })
+                          .toList(),
+                      message ??
+                          (throw DataConnectError(
+                              DataConnectErrorCode.other, 'Missing message'))),
+                _ => throw DataConnectError(
+                    DataConnectErrorCode.other, 'Unable to parse JSON: $e')
+              })
+          .toList();
+      Data? decodedData;
+      Object? decodeError;
+      try {
+        /// The response we get is in the data field of the response
+        /// Once we get the data back, it's not quite json-encoded,
+        /// so we have to encode it and then send it to the user's deserializer.
+        decodedData = deserializer(jsonEncode(bodyJson['data']));
+      } catch (e) {
+        decodeError = e;
+      }
+      if (suberrors.isNotEmpty) {
+        final response =
+            DataConnectOperationFailureResponse(suberrors, data, decodedData);
+
+        throw DataConnectOperationError(DataConnectErrorCode.other,
+            'Failed to invoke operation: ', response);
+      } else {
+        if (decodeError != null) {
+          throw DataConnectError(DataConnectErrorCode.other,
+              'Unable to decode data: $decodeError');
+        }
+        if (decodedData is! Data) {
+          throw DataConnectError(
+            DataConnectErrorCode.other,
+            "Decoded data wasn't parsed properly. Expected $Data, got $decodedData",
+          );
+        }
+        return decodedData;
+      }
     } on Exception catch (e) {
       if (e is DataConnectError) {
         rethrow;

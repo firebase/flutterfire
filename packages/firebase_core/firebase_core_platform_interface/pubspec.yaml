@@ -4,7 +4,7 @@ homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_co
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_core/firebase_core_platform_interface
 # NOTE: We strongly prefer non-breaking changes, even at the expense of a
 # less-clean API. See https://flutter.dev/go/platform-interface-breaking-changes
-version: 5.4.0
+version: 6.0.0
 
 environment:
   sdk: '>=3.2.0 <4.0.0'
@@ -22,4 +22,4 @@ dependencies:
 
 dev_dependencies:
   mockito: ^5.4.0
-  pigeon: 9.2.5
+  pigeon: 25.3.2

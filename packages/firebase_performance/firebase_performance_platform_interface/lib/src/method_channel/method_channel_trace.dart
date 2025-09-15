@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:firebase_performance_platform_interface/src/pigeon/messages.pigeon.dart';
 import '../../firebase_performance_platform_interface.dart';
 import 'method_channel_firebase_performance.dart';
 import 'utils/exception.dart';
@@ -24,11 +25,8 @@ class MethodChannelTrace extends TracePlatform {
     if (_traceHandle != null) return;
 
     try {
-      _traceHandle =
-          await MethodChannelFirebasePerformance.channel.invokeMethod<int>(
-        'FirebasePerformance#traceStart',
-        <String, Object?>{'name': _name},
-      );
+      _traceHandle = await MethodChannelFirebasePerformance.pigeonChannel
+          .startTrace(_name);
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -39,14 +37,12 @@ class MethodChannelTrace extends TracePlatform {
     if (_traceHandle == null || _hasStopped) return;
 
     try {
-      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-        'FirebasePerformance#traceStop',
-        <String, Object?>{
-          'handle': _traceHandle,
-          'metrics': _metrics,
-          'attributes': _attributes,
-        },
+      final attributes = TraceAttributes(
+        metrics: _metrics,
+        attributes: _attributes,
       );
+      await MethodChannelFirebasePerformance.pigeonChannel
+          .stopTrace(_traceHandle!, attributes);
       _hasStopped = true;
     } catch (e, s) {
       convertPlatformException(e, s);

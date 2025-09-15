@@ -1,6 +1,61 @@
+## 0.4.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.4.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+## 0.3.3+8
+
+ - Update a dependency to the latest release.
+
+## 0.3.3+7
+
+ - Update a dependency to the latest release.
+
+## 0.3.3+6
+
+ - Update a dependency to the latest release.
+
+## 0.3.3+5
+
+ - Update a dependency to the latest release.
+
+## 0.3.3+4
+
+ - Update a dependency to the latest release.
+
+## 0.3.3+3
+
+ - Update a dependency to the latest release.
+
+## 0.3.3+2
+
+ - Update a dependency to the latest release.
+
+## 0.3.3+1
+
+ - Update a dependency to the latest release.
+
+## 0.3.3
+
+ - **FEAT**: bump Firebase android SDK to `33.8.0` ([#17048](https://github.com/firebase/flutterfire/issues/17048)). ([0befa109](https://github.com/firebase/flutterfire/commit/0befa109970893f79fb50d2b809b95d797fdc416))
+
+## 0.3.2+1
+
+ - Update a dependency to the latest release.
+
+## 0.3.2
+
+ - **FEAT**(model-downloader): Swift Package Manager support ([#16854](https://github.com/firebase/flutterfire/issues/16854)). ([30b4fb6c](https://github.com/firebase/flutterfire/commit/30b4fb6c1f1db87f24d54f0da0bad0851d688c59))
+
 ## 0.3.1+6
 
- - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
+ - Update a dependency to the latest release.
 
 ## 0.3.1+5
 

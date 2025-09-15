@@ -1,6 +1,64 @@
+## 6.0.1
+
+ - Update a dependency to the latest release.
+
+## 6.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+## 5.6.2
+
+ - Update a dependency to the latest release.
+
+## 5.6.1
+
+ - Update a dependency to the latest release.
+
+## 5.6.0
+
+ - **FEAT**(functions): add support for Pigeon. Update android to Kotlin. ([#17433](https://github.com/firebase/flutterfire/issues/17433)). ([f852df87](https://github.com/firebase/flutterfire/commit/f852df87a5b53356c1e15f67c3eda8e9aa8fb529))
+
+## 5.5.2
+
+ - Update a dependency to the latest release.
+
+## 5.5.1
+
+ - Update a dependency to the latest release.
+
+## 5.5.0
+
+ - **FEAT**(cloud_functions): add support for cloud functions stream ([#17214](https://github.com/firebase/flutterfire/issues/17214)). ([509e0f3c](https://github.com/firebase/flutterfire/commit/509e0f3cc984a7b56a67979b4b27aff72defdd55))
+
+## 5.4.0
+
+ - **FEAT**(functions): migrate cloud functions Apple implementation to Swift ([#17232](https://github.com/firebase/flutterfire/issues/17232)). ([9ebc7bc1](https://github.com/firebase/flutterfire/commit/9ebc7bc130757f918dfab9fbc583e5f6c5b3b565))
+
+## 5.3.4
+
+ - Update a dependency to the latest release.
+
+## 5.3.3
+
+ - Update a dependency to the latest release.
+
+## 5.3.2
+
+ - Update a dependency to the latest release.
+
+## 5.3.1
+
+ - Update a dependency to the latest release.
+
+## 5.3.0
+
+- Update a dependency to the latest release.
+
 ## 5.2.0
 
- - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
  - **FEAT**(functions): Swift Package Manager support ([#16770](https://github.com/firebase/flutterfire/issues/16770)). ([dc0dee22](https://github.com/firebase/flutterfire/commit/dc0dee221061b8ea7083e9dc1698aeeba8235518))
 
 ## 5.1.5
@@ -550,7 +608,7 @@
 ## 0.7.0-dev.2
 
  - **DOCS**: update package readme.
- - **DOCS**: update pubspec description to meet minumum length requirement.
+ - **DOCS**: update pubspec description to meet minimum length requirement.
 
 ## 0.7.0-dev.1
 

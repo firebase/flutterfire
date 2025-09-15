@@ -2,10 +2,10 @@ require 'yaml'
 
 pubspec = YAML.load_file(File.join('..', 'pubspec.yaml'))
 library_version = pubspec['version'].gsub('+', '-')
-firebase_analytics = 'Firebase/Analytics'
+firebase_analytics = 'FirebaseAnalytics'
 
 if defined?($FirebaseAnalyticsWithoutAdIdSupport)
-firebase_analytics = 'Firebase/AnalyticsWithoutAdIdSupport'
+firebase_analytics = 'FirebaseAnalytics/Core'
 end
 
 if defined?($FirebaseSDKVersion)
@@ -30,11 +30,12 @@ Pod::Spec.new do |s|
   s.authors          = 'The Chromium Authors'
   s.source           = { :path => '.' }
 
-  s.source_files     = 'firebase_analytics/Sources/firebase_analytics/**/*.{h,m}'
-  s.public_header_files = 'firebase_analytics/Sources/firebase_analytics/include/*.h'
+  s.source_files     = 'firebase_analytics/Sources/firebase_analytics/**/*.swift'
 
-  s.ios.deployment_target = '13.0'
+  s.ios.deployment_target = '15.0'
   s.dependency 'Flutter'
+
+  s.swift_version = '5.0'
 
   s.dependency 'firebase_core'
   s.dependency firebase_analytics, firebase_sdk_version

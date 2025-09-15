@@ -1,6 +1,63 @@
+## 0.4.0+1
+
+ - **FIX**(app_check,iOS): correctly parse `forceRefresh` argument using `boolValue` ([#17627](https://github.com/firebase/flutterfire/issues/17627)). ([8c0802d0](https://github.com/firebase/flutterfire/commit/8c0802d098c970740a34e83952f56dbe9eb279fd))
+
+## 0.4.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**(app-check): remove deprecated functions ([#17561](https://github.com/firebase/flutterfire/issues/17561)). ([3e4302c4](https://github.com/firebase/flutterfire/commit/3e4302c4281d1d39c140ff116643d700cd3c5ace))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+## 0.3.2+10
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+9
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+8
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+7
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+6
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+5
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+4
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+3
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+2
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+1
+
+ - Update a dependency to the latest release.
+
+## 0.3.2
+
+
+ - **FEAT**(app-check): Swift Package Manager support ([#16810](https://github.com/firebase/flutterfire/issues/16810)). ([f2e3f396](https://github.com/firebase/flutterfire/commit/f2e3f3965e83a6bf8c52c1cd9f80509a08907a84))
+
 ## 0.3.1+7
 
- - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
+ - Update a dependency to the latest release.
 
 ## 0.3.1+6
 
@@ -212,7 +269,7 @@
 ## 0.1.4
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 ## 0.1.3
 
@@ -390,7 +447,7 @@
 
 ## 0.0.6+5
 
- - **FIX**: workaround iOS build issue when targetting platforms < iOS 11. ([c78e0b79](https://github.com/firebase/flutterfire/commit/c78e0b79bde479e78c558d3df92988c130280e81))
+ - **FIX**: workaround iOS build issue when targeting platforms < iOS 11. ([c78e0b79](https://github.com/firebase/flutterfire/commit/c78e0b79bde479e78c558d3df92988c130280e81))
 
 ## 0.0.6+4
 

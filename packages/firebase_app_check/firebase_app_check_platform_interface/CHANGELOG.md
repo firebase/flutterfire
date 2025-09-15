@@ -1,6 +1,61 @@
+## 0.2.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.2.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**(app-check): remove deprecated functions ([#17561](https://github.com/firebase/flutterfire/issues/17561)). ([3e4302c4](https://github.com/firebase/flutterfire/commit/3e4302c4281d1d39c140ff116643d700cd3c5ace))
+
+## 0.1.1+10
+
+ - Update a dependency to the latest release.
+
+## 0.1.1+9
+
+ - Update a dependency to the latest release.
+
+## 0.1.1+8
+
+ - Update a dependency to the latest release.
+
+## 0.1.1+7
+
+ - Update a dependency to the latest release.
+
+## 0.1.1+6
+
+ - Update a dependency to the latest release.
+
+## 0.1.1+5
+
+ - Update a dependency to the latest release.
+
+## 0.1.1+4
+
+ - Update a dependency to the latest release.
+
+## 0.1.1+3
+
+ - Update a dependency to the latest release.
+
+## 0.1.1+2
+
+ - Update a dependency to the latest release.
+
+## 0.1.1+1
+
+ - Update a dependency to the latest release.
+
+## 0.1.1
+
+
+ - **FIX**: Remove dart:io imports for analytics, auth and app check ([#16827](https://github.com/firebase/flutterfire/issues/16827)). ([8c7f57c4](https://github.com/firebase/flutterfire/commit/8c7f57c4a181b8cae3b0d2ba564682ad7d68f484))
+
 ## 0.1.0+41
 
- - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
+ - Update a dependency to the latest release.
 
 ## 0.1.0+40
 
@@ -195,7 +250,7 @@
 ## 0.0.8
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 ## 0.0.7
 

@@ -36,9 +36,6 @@ String getAppleProviderString({
 /// Converts [AndroidProvider] enum to [String]
 String getLegacyAndroidProviderString(AndroidProvider? provider) {
   switch (provider) {
-    // ignore: deprecated_member_use_from_same_package
-    case AndroidProvider.safetyNet:
-      return 'safetyNet';
     case AndroidProvider.debug:
       return 'debug';
     case AndroidProvider.playIntegrity:

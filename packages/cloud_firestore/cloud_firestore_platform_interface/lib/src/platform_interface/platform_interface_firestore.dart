@@ -99,15 +99,6 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
     throw UnimplementedError('clearPersistence() is not implemented');
   }
 
-  /// Enable persistence of Firestore data for web-only. Use [Settings.persistenceEnabled] for non-web platforms.
-  /// If `enablePersistence()` is not called, it defaults to Memory cache.
-  /// If `enablePersistence(const PersistenceSettings(synchronizeTabs: false))` is called, it persists data for a single browser tab.
-  /// If `enablePersistence(const PersistenceSettings(synchronizeTabs: true))` is called, it persists data across multiple browser tabs.
-  Future<void> enablePersistence(
-      [PersistenceSettings? persistenceSettings]) async {
-    throw UnimplementedError('enablePersistence() is not implemented');
-  }
-
   /// Gets a [CollectionReferencePlatform] for the specified Firestore path.
   CollectionReferencePlatform collection(String collectionPath) {
     throw UnimplementedError('collection() is not implemented');
@@ -179,7 +170,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   /// By default transactions are limited to 5 seconds of execution time. This
   /// timeout can be adjusted by setting the [timeout] parameter.
   ///
-  /// By default transactions will retry 5 times. You can change the number of attemps
+  /// By default transactions will retry 5 times. You can change the number of attempts
   /// with [maxAttempts]. Attempts should be at least 1.
   Future<T?> runTransaction<T>(TransactionHandler<T> transactionHandler,
       {Duration timeout = const Duration(seconds: 30), int maxAttempts = 5}) {

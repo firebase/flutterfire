@@ -235,14 +235,18 @@ void setupTaskTests() {
       () {
         late Task task;
 
-        Future<void> _testCancelTask() async {
+        Future<void> _testCancelTaskSnapshotEvents(Task task) async {
           List<TaskSnapshot> snapshots = [];
           expect(task.snapshot.state, TaskState.running);
           final Completer<FirebaseException> errorReceived =
               Completer<FirebaseException>();
+          final Completer<bool> started = Completer<bool>();
 
           task.snapshotEvents.listen(
             (TaskSnapshot snapshot) {
+              if (!started.isCompleted) {
+                started.complete(true);
+              }
               snapshots.add(snapshot);
             },
             onError: (error) {
@@ -250,21 +254,12 @@ void setupTaskTests() {
             },
           );
 
+          await started.future;
+
           bool canceled = await task.cancel();
           expect(canceled, isTrue);
           expect(task.snapshot.state, TaskState.canceled);
 
-          await expectLater(
-            task,
-            throwsA(
-              isA<FirebaseException>()
-                  .having((e) => e.code, 'code', 'canceled'),
-            ),
-          );
-
-          expect(task.snapshot.state, TaskState.canceled);
-
-          // Need to wait for error to be received before checking
           final streamError = await errorReceived.future;
 
           expect(streamError, isNotNull);
@@ -274,14 +269,35 @@ void setupTaskTests() {
             snapshots.every((snapshot) => snapshot.state == TaskState.running),
             isTrue,
           );
+
+          await expectLater(
+            task,
+            throwsA(
+              isA<FirebaseException>()
+                  .having((e) => e.code, 'code', 'canceled'),
+            ),
+          );
+        }
+
+        Future<void> _testCancelTaskLastEvent(Task task) async {
+          expect(task.snapshot.state, TaskState.running);
+
+          bool canceled = await task.cancel();
+          expect(canceled, isTrue);
+          expect(task.snapshot.state, TaskState.canceled);
         }
 
         test(
-          'successfully cancels download task',
+          'successfully cancels download task using snapshotEvents',
           () async {
-            file = await createFile('ok.jpeg', largeString: 'A' * 20000000);
+            file = await createFile('ok.txt');
+            // Need to put a large file in emulator first to test cancel.
+            final initialPut = downloadRef.putFile(file);
+
+            await initialPut;
             task = downloadRef.writeToFile(file);
-            await _testCancelTask();
+
+            await _testCancelTaskSnapshotEvents(task);
           },
           // There's no DownloadTask on web.
           // Windows `task.cancel()` is returning "false", same code on example app works as intended
@@ -290,10 +306,37 @@ void setupTaskTests() {
         );
 
         test(
-          'successfully cancels upload task',
+          'successfully cancels download task and provides the last `canceled` event',
+          () async {
+            file = await createFile('ok.txt');
+            final initialPut = downloadRef.putFile(file);
+
+            await initialPut;
+            task = downloadRef.writeToFile(file);
+            await _testCancelTaskLastEvent(task);
+          },
+          // There's no DownloadTask on web.
+          // Windows `task.cancel()` is returning "false", same code on example app works as intended
+          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+          retry: 2,
+        );
+
+        test(
+          'successfully cancels upload task using snapshotEvents',
           () async {
             task = uploadRef.putString('A' * 20000000);
-            await _testCancelTask();
+            await _testCancelTaskSnapshotEvents(task);
+          },
+          retry: 2,
+          // Windows `task.cancel()` is returning "false", same code on example app works as intended
+          skip: defaultTargetPlatform == TargetPlatform.windows,
+        );
+
+        test(
+          'successfully cancels upload task and provides the last `canceled` event',
+          () async {
+            task = uploadRef.putString('A' * 20000000);
+            await _testCancelTaskLastEvent(task);
           },
           retry: 2,
           // Windows `task.cancel()` is returning "false", same code on example app works as intended

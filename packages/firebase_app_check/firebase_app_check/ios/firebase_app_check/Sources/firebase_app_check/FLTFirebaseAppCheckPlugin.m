@@ -149,7 +149,7 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
 
 - (void)getToken:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRAppCheck *appCheck = [self getFIRAppCheckFromArguments:arguments];
-  bool forceRefresh = arguments[@"forceRefresh"];
+  bool forceRefresh = [arguments[@"forceRefresh"] boolValue];
 
   [appCheck tokenForcingRefresh:forceRefresh
                      completion:^(FIRAppCheckToken *_Nullable token, NSError *_Nullable error) {

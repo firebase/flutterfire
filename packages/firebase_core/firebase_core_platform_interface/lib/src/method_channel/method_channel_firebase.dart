@@ -26,18 +26,15 @@ class MethodChannelFirebase extends FirebasePlatform {
   /// any Firebase apps created natively and any constants which are required
   /// for a plugin to function correctly before usage.
   Future<void> _initializeCore() async {
-    List<PigeonInitializeResponse?> apps = await api.initializeCore();
+    List<CoreInitializeResponse> apps = await api.initializeCore();
 
-    apps
-        .where((element) => element != null)
-        .cast<PigeonInitializeResponse>()
-        .forEach(_initializeFirebaseAppFromMap);
+    apps.cast<CoreInitializeResponse>().forEach(_initializeFirebaseAppFromMap);
     isCoreInitialized = true;
   }
 
   /// Creates and attaches a new [MethodChannelFirebaseApp] to the [MethodChannelFirebase]
   /// and adds any constants to the [FirebasePluginPlatform] class.
-  void _initializeFirebaseAppFromMap(PigeonInitializeResponse response) {
+  void _initializeFirebaseAppFromMap(CoreInitializeResponse response) {
     MethodChannelFirebaseApp methodChannelFirebaseApp =
         MethodChannelFirebaseApp(
       response.name,
@@ -95,7 +92,7 @@ class MethodChannelFirebase extends FirebasePlatform {
       if (defaultApp == null && _options != null) {
         _initializeFirebaseAppFromMap(await api.initializeApp(
             defaultFirebaseAppName,
-            PigeonFirebaseOptions(
+            CoreFirebaseOptions(
               apiKey: _options.apiKey,
               appId: _options.appId,
               messagingSenderId: _options.messagingSenderId,
@@ -163,7 +160,7 @@ class MethodChannelFirebase extends FirebasePlatform {
 
     _initializeFirebaseAppFromMap(await api.initializeApp(
         name,
-        PigeonFirebaseOptions(
+        CoreFirebaseOptions(
           apiKey: options!.apiKey,
           appId: options.appId,
           messagingSenderId: options.messagingSenderId,

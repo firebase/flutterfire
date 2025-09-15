@@ -508,7 +508,8 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
                 iOSBundleId:(nullable NSString *)iOSBundleId
          androidPackageName:(nullable NSString *)androidPackageName
           androidInstallApp:(BOOL)androidInstallApp
-      androidMinimumVersion:(nullable NSString *)androidMinimumVersion {
+      androidMinimumVersion:(nullable NSString *)androidMinimumVersion
+                 linkDomain:(nullable NSString *)linkDomain {
   PigeonActionCodeSettings *pigeonResult = [[PigeonActionCodeSettings alloc] init];
   pigeonResult.url = url;
   pigeonResult.dynamicLinkDomain = dynamicLinkDomain;
@@ -517,6 +518,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   pigeonResult.androidPackageName = androidPackageName;
   pigeonResult.androidInstallApp = androidInstallApp;
   pigeonResult.androidMinimumVersion = androidMinimumVersion;
+  pigeonResult.linkDomain = linkDomain;
   return pigeonResult;
 }
 + (PigeonActionCodeSettings *)fromList:(NSArray *)list {
@@ -528,6 +530,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   pigeonResult.androidPackageName = GetNullableObjectAtIndex(list, 4);
   pigeonResult.androidInstallApp = [GetNullableObjectAtIndex(list, 5) boolValue];
   pigeonResult.androidMinimumVersion = GetNullableObjectAtIndex(list, 6);
+  pigeonResult.linkDomain = GetNullableObjectAtIndex(list, 7);
   return pigeonResult;
 }
 + (nullable PigeonActionCodeSettings *)nullableFromList:(NSArray *)list {
@@ -542,6 +545,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
     self.androidPackageName ?: [NSNull null],
     @(self.androidInstallApp),
     self.androidMinimumVersion ?: [NSNull null],
+    self.linkDomain ?: [NSNull null],
   ];
 }
 @end
@@ -1544,6 +1548,32 @@ void SetUpFirebaseAuthHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMesseng
                                       completion:^(FlutterError *_Nullable error) {
                                         callback(wrapResult(nil, error));
                                       }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:[NSString
+                            stringWithFormat:@"%@%@",
+                                             @"dev.flutter.pigeon.firebase_auth_platform_interface."
+                                             @"FirebaseAuthHostApi.initializeRecaptchaConfig",
+                                             messageChannelSuffix]
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseAuthHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(initializeRecaptchaConfigApp:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(initializeRecaptchaConfigApp:completion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        AuthPigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        [api initializeRecaptchaConfigApp:arg_app
+                               completion:^(FlutterError *_Nullable error) {
+                                 callback(wrapResult(nil, error));
+                               }];
       }];
     } else {
       [channel setMessageHandler:nil];

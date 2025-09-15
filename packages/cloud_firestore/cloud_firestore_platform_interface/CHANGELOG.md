@@ -1,3 +1,61 @@
+## 7.0.1
+
+ - Update a dependency to the latest release.
+
+## 7.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**(firestore): remove deprecated functions ([#17559](https://github.com/firebase/flutterfire/issues/17559)). ([67017fd6](https://github.com/firebase/flutterfire/commit/67017fd6f139080cec7ecd1b4d75a05f13f238fa))
+
+## 6.6.12
+
+ - Update a dependency to the latest release.
+
+## 6.6.11
+
+ - Update a dependency to the latest release.
+
+## 6.6.10
+
+ - Update a dependency to the latest release.
+
+## 6.6.9
+
+ - Update a dependency to the latest release.
+
+## 6.6.8
+
+ - Update a dependency to the latest release.
+
+## 6.6.7
+
+ - **FIX**(cloud_firestore): correct nanoseconds calculation for pre-1970 dates ([#17195](https://github.com/firebase/flutterfire/issues/17195)). ([a13deae3](https://github.com/firebase/flutterfire/commit/a13deae3334045fb1a48817ff9300cbe0696d177))
+
+## 6.6.6
+
+ - Update a dependency to the latest release.
+
+## 6.6.5
+
+ - Update a dependency to the latest release.
+
+## 6.6.4
+
+ - Update a dependency to the latest release.
+
+## 6.6.3
+
+ - Update a dependency to the latest release.
+
+## 6.6.2
+
+ - Update a dependency to the latest release.
+
+## 6.6.1
+
+ - Update a dependency to the latest release.
+
 ## 6.6.0
 
  - **FEAT**(firestore): add support for VectorValue ([#16476](https://github.com/firebase/flutterfire/issues/16476)). ([cc23f179](https://github.com/firebase/flutterfire/commit/cc23f179082256fe9700f17e3856821b4a6d4240))
@@ -226,7 +284,7 @@
 ## 5.14.0
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 ## 5.13.0
 

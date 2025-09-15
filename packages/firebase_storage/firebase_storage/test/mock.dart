@@ -39,11 +39,11 @@ final MockFirebaseStorage kMockStoragePlatform = MockFirebaseStorage();
 
 class MockFirebaseAppStorage implements TestFirebaseCoreHostApi {
   @override
-  Future<PigeonInitializeResponse> initializeApp(
+  Future<CoreInitializeResponse> initializeApp(
     String appName,
-    PigeonFirebaseOptions initializeAppRequest,
+    CoreFirebaseOptions initializeAppRequest,
   ) async {
-    return PigeonInitializeResponse(
+    return CoreInitializeResponse(
       name: appName,
       options: initializeAppRequest,
       pluginConstants: {},
@@ -51,11 +51,11 @@ class MockFirebaseAppStorage implements TestFirebaseCoreHostApi {
   }
 
   @override
-  Future<List<PigeonInitializeResponse?>> initializeCore() async {
+  Future<List<CoreInitializeResponse>> initializeCore() async {
     return [
-      PigeonInitializeResponse(
+      CoreInitializeResponse(
         name: defaultFirebaseAppName,
-        options: PigeonFirebaseOptions(
+        options: CoreFirebaseOptions(
           apiKey: '123',
           projectId: '123',
           appId: '123',
@@ -68,8 +68,8 @@ class MockFirebaseAppStorage implements TestFirebaseCoreHostApi {
   }
 
   @override
-  Future<PigeonFirebaseOptions> optionsFromResource() async {
-    return PigeonFirebaseOptions(
+  Future<CoreFirebaseOptions> optionsFromResource() async {
+    return CoreFirebaseOptions(
       apiKey: '123',
       projectId: '123',
       appId: '123',
@@ -82,7 +82,7 @@ class MockFirebaseAppStorage implements TestFirebaseCoreHostApi {
 void setupFirebaseStorageMocks() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  TestFirebaseCoreHostApi.setup(MockFirebaseAppStorage());
+  TestFirebaseCoreHostApi.setUp(MockFirebaseAppStorage());
 
   // Mock Platform Interface Methods
   when(kMockStoragePlatform.delegateFor(
