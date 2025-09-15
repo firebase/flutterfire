@@ -686,69 +686,35 @@ class FirebaseDatabasePlugin :
       // Store the transaction request for later retrieval
       transactionRequests[request.transactionKey] = request
       
-      // Create a TaskCompletionSource to wait for transaction completion
-      val transactionCompletionSource = TaskCompletionSource<Unit>()
-      
-      // Start the transaction
+      // Start the transaction - simplified approach like iOS
       reference.runTransaction(object : com.google.firebase.database.Transaction.Handler {
         override fun doTransaction(mutableData: com.google.firebase.database.MutableData): com.google.firebase.database.Transaction.Result {
-          try {
-            // Call the Flutter transaction handler with the current value
-            val flutterApi = FirebaseDatabaseFlutterApi(messenger)
-            val taskCompletionSource = TaskCompletionSource<TransactionHandlerResult>()
-            
-            // Ensure we get the current value from mutableData
-            val currentValue = mutableData.value
-            
-            flutterApi.callTransactionHandler(request.transactionKey, currentValue) { result ->
-              result.fold(
-                onSuccess = { taskCompletionSource.setResult(it) },
-                onFailure = { taskCompletionSource.setException(Exception(it.message ?: "Unknown error")) }
-              )
-            }
+          val semaphore = java.util.concurrent.CountDownLatch(1)
+          var transactionResult: TransactionHandlerResult? = null
 
-            // Use a blocking approach without Tasks.await to avoid type mismatch errors
-            val handlerLatch = java.util.concurrent.CountDownLatch(1)
-            var handlerResult: TransactionHandlerResult? = null
-            var handlerException: Exception? = null
-            
-            taskCompletionSource.task.addOnCompleteListener { task ->
-              if (task.isSuccessful) {
-                handlerResult = task.result
-              } else {
-                handlerException = task.exception ?: Exception("Unknown handler error")
+          // Call the Flutter transaction handler
+          val flutterApi = FirebaseDatabaseFlutterApi(messenger)
+          flutterApi.callTransactionHandler(request.transactionKey, mutableData.value) { result ->
+            result.fold(
+              onSuccess = { transactionResult = it },
+              onFailure = { 
+                println("Transaction handler error: ${it.message}")
+                transactionResult = TransactionHandlerResult(value = null, aborted = true, exception = true)
               }
-              handlerLatch.countDown()
-            }
-            
-            // Wait for the handler to complete with timeout
-            try {
-              if (!handlerLatch.await(3, java.util.concurrent.TimeUnit.SECONDS)) {
-                return com.google.firebase.database.Transaction.abort()
-              }
-            } catch (e: InterruptedException) {
-              return com.google.firebase.database.Transaction.abort()
-            }
-            
-            // Check for handler errors
-            if (handlerException != null) {
-              return com.google.firebase.database.Transaction.abort()
-            }
-            
-            val result = handlerResult ?: return com.google.firebase.database.Transaction.abort()
-            
-            if (result.aborted || result.exception) {
-              return com.google.firebase.database.Transaction.abort()
-            }
-            
-            // Set the new value if provided, otherwise keep the current value
-            val newValue = result.value ?: currentValue
-            mutableData.value = newValue
-            return com.google.firebase.database.Transaction.success(mutableData)
-          } catch (e: Exception) {
-            // If there's an error, abort the transaction
+            )
+            semaphore.countDown()
+          }
+
+          semaphore.await()
+
+          val result = transactionResult ?: return com.google.firebase.database.Transaction.abort()
+
+          if (result.aborted || result.exception) {
             return com.google.firebase.database.Transaction.abort()
           }
+
+          mutableData.value = result.value
+          return com.google.firebase.database.Transaction.success(mutableData)
         }
         
         override fun onComplete(error: com.google.firebase.database.DatabaseError?, committed: Boolean, currentData: com.google.firebase.database.DataSnapshot?) {          
@@ -763,40 +729,14 @@ class FirebaseDatabasePlugin :
           )
           transactionResults[request.transactionKey] = result
           
-          // Complete the transaction
+          // Complete the transaction - simplified like iOS
           if (error != null) {
-            transactionCompletionSource.setException(Exception(error.message))
+            callback(KotlinResult.failure(Exception(error.message)))
           } else {
-            transactionCompletionSource.setResult(Unit)
+            callback(KotlinResult.success(Unit))
           }
         }
       })
-      
-      // Wait for the transaction to complete using callback with timeout
-      val task = transactionCompletionSource.task
-      var callbackCalled = false
-      
-      task.addOnCompleteListener { completedTask ->
-        if (!callbackCalled) {
-          callbackCalled = true
-          if (completedTask.isSuccessful) {
-            callback(KotlinResult.success(Unit))
-          } else {
-            val exception = completedTask.exception ?: Exception("Unknown transaction error")
-            println("Firebase Database runTransaction error: ${exception.message}")
-            callback(KotlinResult.failure(exception))
-          }
-        }
-      }
-      
-      // Fallback timeout to ensure callback is always called
-      android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
-        if (!callbackCalled && !task.isComplete) {
-          callbackCalled = true
-          println("Firebase Database runTransaction timeout - calling callback anyway")
-          callback(KotlinResult.success(Unit))
-        }
-      }, 5000) // 5 second timeout for transactions (longer than setPriority)
     } catch (e: Exception) {
       callback(KotlinResult.failure(e))
     }
