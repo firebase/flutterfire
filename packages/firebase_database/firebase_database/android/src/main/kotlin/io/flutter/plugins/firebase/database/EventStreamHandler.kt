@@ -48,16 +48,23 @@ class EventStreamHandler
     }
 
     override fun onCancel(arguments: Any?) {
-      onDispose.run()
+      try {
+        // Remove listeners first to prevent any new events
+        valueEventListener?.let {
+          query.removeEventListener(it)
+          valueEventListener = null
+        }
 
-      valueEventListener?.let {
-        query.removeEventListener(it)
-        valueEventListener = null
-      }
+        childEventListener?.let {
+          query.removeEventListener(it)
+          childEventListener = null
+        }
 
-      childEventListener?.let {
-        query.removeEventListener(it)
-        childEventListener = null
+        // Then run the dispose callback
+        onDispose.run()
+      } catch (e: Exception) {
+        // Log any cleanup errors but don't throw
+        android.util.Log.w("EventStreamHandler", "Error during cleanup: ${e.message}")
       }
     }
   }
