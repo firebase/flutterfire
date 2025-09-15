@@ -736,15 +736,9 @@ class FirebaseDatabasePlugin :
         }
       })
       
-      // Wait for the transaction to complete using callback
-      transactionCompletionSource.task.addOnCompleteListener { task ->
-        if (task.isSuccessful) {
-          callback(KotlinResult.success(Unit))
-        } else {
-          val exception = task.exception ?: Exception("Unknown transaction error")
-          callback(KotlinResult.failure(exception))
-        }
-      }
+      // Wait for the transaction to complete
+      Tasks.await(transactionCompletionSource.task)
+      callback(KotlinResult.success(Unit))
     } catch (e: Exception) {
       callback(KotlinResult.failure(e))
     }
