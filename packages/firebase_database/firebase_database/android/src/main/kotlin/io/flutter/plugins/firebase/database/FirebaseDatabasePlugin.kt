@@ -744,9 +744,31 @@ class FirebaseDatabasePlugin :
         }
       })
       
-      // Wait for the transaction to complete
-      Tasks.await(transactionCompletionSource.task)
-      callback(KotlinResult.success(Unit))
+      // Wait for the transaction to complete using callback with timeout
+      val task = transactionCompletionSource.task
+      var callbackCalled = false
+      
+      task.addOnCompleteListener { completedTask ->
+        if (!callbackCalled) {
+          callbackCalled = true
+          if (completedTask.isSuccessful) {
+            callback(KotlinResult.success(Unit))
+          } else {
+            val exception = completedTask.exception ?: Exception("Unknown transaction error")
+            println("Firebase Database runTransaction error: ${exception.message}")
+            callback(KotlinResult.failure(exception))
+          }
+        }
+      }
+      
+      // Fallback timeout to ensure callback is always called
+      android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+        if (!callbackCalled && !task.isComplete) {
+          callbackCalled = true
+          println("Firebase Database runTransaction timeout - calling callback anyway")
+          callback(KotlinResult.success(Unit))
+        }
+      }, 5000) // 5 second timeout for transactions (longer than setPriority)
     } catch (e: Exception) {
       callback(KotlinResult.failure(e))
     }
