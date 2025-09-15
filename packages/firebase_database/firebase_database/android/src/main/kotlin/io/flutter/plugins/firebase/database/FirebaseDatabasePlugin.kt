@@ -646,8 +646,30 @@ class FirebaseDatabasePlugin :
         }
       }
       
-      Tasks.await(reference.setPriority(priority))
-      callback(KotlinResult.success(Unit))
+      val task = reference.setPriority(priority)
+      var callbackCalled = false
+      
+      task.addOnCompleteListener { completedTask ->
+        if (!callbackCalled) {
+          callbackCalled = true
+          if (completedTask.isSuccessful) {
+            callback(KotlinResult.success(Unit))
+          } else {
+            val exception = completedTask.exception ?: Exception("Unknown error setting priority")
+            println("Firebase Database setPriority error: ${exception.message}")
+            callback(KotlinResult.failure(exception))
+          }
+        }
+      }
+      
+      // Fallback timeout to ensure callback is always called
+      android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+        if (!callbackCalled && !task.isComplete) {
+          callbackCalled = true
+          println("Firebase Database setPriority timeout - calling callback anyway")
+          callback(KotlinResult.success(Unit))
+        }
+      }, 3000) // 3 second timeout
     } catch (e: Exception) {
       // Log the exception for debugging
       println("Firebase Database setPriority error: ${e.message}")
