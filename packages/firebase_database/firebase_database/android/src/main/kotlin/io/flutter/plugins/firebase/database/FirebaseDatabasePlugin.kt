@@ -646,16 +646,8 @@ class FirebaseDatabasePlugin :
         }
       }
       
-      // Use a background thread to avoid blocking
-      Thread {
-        try {
-          Tasks.await(reference.setPriority(priority))
-          callback(KotlinResult.success(Unit))
-        } catch (e: Exception) {
-          println("Firebase Database setPriority error: ${e.message}")
-          callback(KotlinResult.failure(e))
-        }
-      }.start()
+      Tasks.await(reference.setPriority(priority))
+      callback(KotlinResult.success(Unit))
     } catch (e: Exception) {
       // Log the exception for debugging
       println("Firebase Database setPriority error: ${e.message}")
@@ -693,13 +685,7 @@ class FirebaseDatabasePlugin :
               )
             }
 
-            // Use a blocking approach for the transaction handler since it needs to be synchronous
-            val handlerResult = try {
-              Tasks.await(taskCompletionSource.task)
-            } catch (e: Exception) {
-              // If there's an error in the handler, abort the transaction
-              return com.google.firebase.database.Transaction.abort()
-            }
+            val handlerResult = Tasks.await(taskCompletionSource.task)
             
             if (handlerResult.aborted || handlerResult.exception) {
               return com.google.firebase.database.Transaction.abort()
