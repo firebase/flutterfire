@@ -1050,24 +1050,16 @@ class FirebaseDatabasePlugin :
         }
       }
       
-      // Get the data synchronously using semaphore
-      val semaphore = java.util.concurrent.CountDownLatch(1)
-      var result: KotlinResult<Map<String, Any?>>? = null
-      
+      // Get the data
       query.get().addOnCompleteListener { task ->
         if (task.isSuccessful) {
           val snapshot = task.result
           val payload = FlutterDataSnapshotPayload(snapshot)
-          result = KotlinResult.success(payload.toMap())
+          callback(KotlinResult.success(payload.toMap()))
         } else {
-          result = KotlinResult.failure(task.exception ?: Exception("Unknown error"))
+          callback(KotlinResult.failure(task.exception ?: Exception("Unknown error")))
         }
-        semaphore.countDown()
       }
-      
-      // Wait for the result
-      semaphore.await()
-      callback(result ?: KotlinResult.failure(Exception("No result received")))
     } catch (e: Exception) {
       callback(KotlinResult.failure(e))
     }
