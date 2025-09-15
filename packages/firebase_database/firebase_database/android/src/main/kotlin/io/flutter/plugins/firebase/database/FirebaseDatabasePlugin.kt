@@ -707,43 +707,23 @@ class FirebaseDatabasePlugin :
               )
             }
 
-            // Use a semaphore to wait for the handler result synchronously
-            val semaphore = java.util.concurrent.CountDownLatch(1)
-            var handlerResult: TransactionHandlerResult? = null
-            var handlerError: Exception? = null
-            
-            taskCompletionSource.task.addOnCompleteListener { task ->
-              if (task.isSuccessful) {
-                handlerResult = task.result
-              } else {
-                handlerError = task.exception ?: Exception("Unknown handler error")
-              }
-              semaphore.countDown()
-            }
-            
-            // Wait for the handler result with a timeout
+            // Use a simple synchronous approach with proper error handling
             try {
-              if (!semaphore.await(3, java.util.concurrent.TimeUnit.SECONDS)) {
+              val handlerResult = Tasks.await(taskCompletionSource.task, 3, java.util.concurrent.TimeUnit.SECONDS)
+              
+              if (handlerResult.aborted || handlerResult.exception) {
                 return com.google.firebase.database.Transaction.abort()
               }
-            } catch (e: InterruptedException) {
+              
+              // Set the new value if provided, otherwise keep the current value
+              val newValue = handlerResult.value ?: currentValue
+              mutableData.value = newValue
+              return com.google.firebase.database.Transaction.success(mutableData)
+            } catch (e: java.util.concurrent.TimeoutException) {
+              return com.google.firebase.database.Transaction.abort()
+            } catch (e: Exception) {
               return com.google.firebase.database.Transaction.abort()
             }
-            
-            if (handlerError != null) {
-              return com.google.firebase.database.Transaction.abort()
-            }
-            
-            val result = handlerResult ?: return com.google.firebase.database.Transaction.abort()
-            
-            if (result.aborted || result.exception) {
-              return com.google.firebase.database.Transaction.abort()
-            }
-            
-            // Set the new value if provided, otherwise keep the current value
-            val newValue = result.value ?: currentValue
-            mutableData.value = newValue
-            return com.google.firebase.database.Transaction.success(mutableData)
           } catch (e: Exception) {
             // If there's an error, abort the transaction
             return com.google.firebase.database.Transaction.abort()
