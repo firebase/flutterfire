@@ -134,7 +134,7 @@ scripts:
 
   test:
     run: |
-      melos exec -c 6 --fail-fast -- \
+      melos exec -c 6 -- \
         "flutter test"
     description: Run `flutter test` for a specific package.
     packageFilters:
@@ -146,7 +146,7 @@ scripts:
 
   test:web:
     run: |
-      melos exec -c 1 --fail-fast -- \
+      melos exec -c 1 -- \
         "flutter test --platform=chrome"
     description: Run `flutter test --platform=chrome` for a specific '*web' package.
     packageFilters:

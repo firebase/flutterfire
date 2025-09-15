@@ -32,7 +32,10 @@ jobs:
         with:
           melos-version: '5.3.0'
       - name: 'Run Analyze'
-        run: melos analyze-ci
+        run: melos analyze-ci > analyze.log || true
+      - name: 'Summarize analyze failures'
+        if: ${{ always() }}
+        run: ./.github/workflows/scripts/summarize_errors.sh "error •" analyze.log
 
   # Separated from "analyse" action as pubspec_override file is not being taken into account when running `flutter pub publish --dry-run`
   # This will fail on CI until this is fixed: https://github.com/invertase/melos/issues/467
@@ -52,7 +55,10 @@ jobs:
       - name: 'Pub Check'
         run: |
           melos exec -c 1 --no-private --ignore="*example*" -- \
-            dart pub publish --dry-run
+            dart pub publish --dry-run > pub_dry_run.log || true
+      - name: 'Summarize pub dry run failures'
+        if: ${{ always() }}
+        run: ./.github/workflows/scripts/summarize_errors.sh "error" pub_dry_run.log
 
   pub_get_check:
     timeout-minutes: 30
@@ -96,15 +102,14 @@ jobs:
         run: |
           clang-format --version
           swiftformat --version
-      - name: 'Dart, Java and Objective-C '
+      - name: 'Format'
         run: |
           flutter pub global run flutter_plugin_tools format
-          ./.github/workflows/scripts/validate-formatting.sh
-      - name: 'Swift'
-        if: ${{ success() || failure() }}
-        run: |
           swiftformat .
-          ./.github/workflows/scripts/validate-formatting.sh
+          ./.github/workflows/scripts/validate-formatting.sh > format.log || true
+      - name: 'Summarize format failures'
+        if: ${{ always() }}
+        run: ./.github/workflows/scripts/summarize_errors.sh "❌ Some files are incorrectly formatted, see above output." format.log
 
   build_examples_dart:
     timeout-minutes: 30
@@ -162,9 +167,12 @@ jobs:
         with:
           melos-version: '5.3.0'
       - name: 'Flutter Test'
-        run: melos run test --no-select
+        run: melos run test --no-select > test.log || true
       - name: 'Flutter Test - Web'
-        run: melos run test:web --no-select
+        run: melos run test:web --no-select > test_web.log || true
+      - name: 'Summarize test failures'
+        if: ${{ always() }}
+        run: ./.github/workflows/scripts/summarize_errors.sh "Some tests failed." test.log test_web.log
 
   check-files-license-headers:
     runs-on: ubuntu-latest
@@ -187,4 +195,7 @@ jobs:
           run-bootstrap: false
           melos-version: '5.3.0'
       - name: Check license header
-        run: melos run check-license-header
+        run: melos run check-license-header > license_header.log || true
+      - name: 'Summarize license header failures'
+        if: ${{ always() }}
+        run: ./.github/workflows/scripts/summarize_errors.sh "failed" license_header.log
