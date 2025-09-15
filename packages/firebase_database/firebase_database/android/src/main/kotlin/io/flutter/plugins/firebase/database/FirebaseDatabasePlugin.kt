@@ -646,15 +646,16 @@ class FirebaseDatabasePlugin :
         }
       }
       
-      reference.setPriority(priority).addOnCompleteListener { task ->
-        if (task.isSuccessful) {
+      // Use a background thread to avoid blocking
+      Thread {
+        try {
+          Tasks.await(reference.setPriority(priority))
           callback(KotlinResult.success(Unit))
-        } else {
-          val exception = task.exception ?: Exception("Unknown error setting priority")
-          println("Firebase Database setPriority error: ${exception.message}")
-          callback(KotlinResult.failure(exception))
+        } catch (e: Exception) {
+          println("Firebase Database setPriority error: ${e.message}")
+          callback(KotlinResult.failure(e))
         }
-      }
+      }.start()
     } catch (e: Exception) {
       // Log the exception for debugging
       println("Firebase Database setPriority error: ${e.message}")
