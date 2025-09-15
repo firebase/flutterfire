@@ -97,6 +97,14 @@ T nativeFromJson<T>(dynamic input) {
       return DateTime.parse(input) as T;
     } else if (T == String) {
       return input as T;
+    } else if (T == int) {
+      // Int64 is transmitted as String.
+      final value = BigInt.parse(input);
+      if (value.isValidInt) {
+        return value.toInt() as T;
+      } else {
+        throw UnsupportedError('BigInt ($input) too large for Dart int');
+      }
     }
   } else if (input is num) {
     if (input is double && T == int) {
@@ -105,7 +113,7 @@ T nativeFromJson<T>(dynamic input) {
       return input.toDouble() as T;
     }
   }
-  throw UnimplementedError('This type is unimplemented: ${T.runtimeType}');
+  throw UnimplementedError('This type is unimplemented: $T');
 }
 
 DynamicDeserializer<List<T>> listDeserializer<T>(
