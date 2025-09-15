@@ -646,8 +646,15 @@ class FirebaseDatabasePlugin :
         }
       }
       
-      Tasks.await(reference.setPriority(priority))
-      callback(KotlinResult.success(Unit))
+      reference.setPriority(priority).addOnCompleteListener { task ->
+        if (task.isSuccessful) {
+          callback(KotlinResult.success(Unit))
+        } else {
+          val exception = task.exception ?: Exception("Unknown error setting priority")
+          println("Firebase Database setPriority error: ${exception.message}")
+          callback(KotlinResult.failure(exception))
+        }
+      }
     } catch (e: Exception) {
       // Log the exception for debugging
       println("Firebase Database setPriority error: ${e.message}")
@@ -685,7 +692,13 @@ class FirebaseDatabasePlugin :
               )
             }
 
-            val handlerResult = Tasks.await(taskCompletionSource.task)
+            // Use a blocking approach for the transaction handler since it needs to be synchronous
+            val handlerResult = try {
+              Tasks.await(taskCompletionSource.task)
+            } catch (e: Exception) {
+              // If there's an error in the handler, abort the transaction
+              return com.google.firebase.database.Transaction.abort()
+            }
             
             if (handlerResult.aborted || handlerResult.exception) {
               return com.google.firebase.database.Transaction.abort()
@@ -722,9 +735,15 @@ class FirebaseDatabasePlugin :
         }
       })
       
-      // Wait for the transaction to complete
-      Tasks.await(transactionCompletionSource.task)
-      callback(KotlinResult.success(Unit))
+      // Wait for the transaction to complete using callback
+      transactionCompletionSource.task.addOnCompleteListener { task ->
+        if (task.isSuccessful) {
+          callback(KotlinResult.success(Unit))
+        } else {
+          val exception = task.exception ?: Exception("Unknown transaction error")
+          callback(KotlinResult.failure(exception))
+        }
+      }
     } catch (e: Exception) {
       callback(KotlinResult.failure(e))
     }
@@ -805,13 +824,33 @@ class FirebaseDatabasePlugin :
       
       // Apply query modifiers if any
       var query: com.google.firebase.database.Query = reference
+      var hasOrderModifier = false
+      
       for (modifier in request.modifiers) {
         when (modifier["type"] as String) {
-          "orderByChild" -> query = query.orderByChild(modifier["value"] as String)
-          "orderByKey" -> query = query.orderByKey()
-          "orderByValue" -> query = query.orderByValue()
-          "orderByPriority" -> query = query.orderByPriority()
+          "orderByChild" -> {
+            query = query.orderByChild(modifier["value"] as String)
+            hasOrderModifier = true
+          }
+          "orderByKey" -> {
+            query = query.orderByKey()
+            hasOrderModifier = true
+          }
+          "orderByValue" -> {
+            query = query.orderByValue()
+            hasOrderModifier = true
+          }
+          "orderByPriority" -> {
+            query = query.orderByPriority()
+            hasOrderModifier = true
+          }
           "startAt" -> {
+            if (!hasOrderModifier) {
+              // Firebase Database requires an order modifier before startAt
+              // For observe, we can't return null, so we'll create a query that returns no data
+              query = query.limitToFirst(0)
+              break
+            }
             val value = modifier["value"]
             query = when (value) {
               is String -> query.startAt(value)
@@ -820,7 +859,28 @@ class FirebaseDatabasePlugin :
               else -> query.startAt(value.toString())
             }
           }
+          "startAfter" -> {
+            if (!hasOrderModifier) {
+              // Firebase Database requires an order modifier before startAfter
+              // For observe, we can't return null, so we'll create a query that returns no data
+              query = query.limitToFirst(0)
+              break
+            }
+            val value = modifier["value"]
+            query = when (value) {
+              is String -> query.startAfter(value)
+              is Double -> query.startAfter(value)
+              is Boolean -> query.startAfter(value)
+              else -> query.startAfter(value.toString())
+            }
+          }
           "endAt" -> {
+            if (!hasOrderModifier) {
+              // Firebase Database requires an order modifier before endAt
+              // For observe, we can't return null, so we'll create a query that returns no data
+              query = query.limitToFirst(0)
+              break
+            }
             val value = modifier["value"]
             query = when (value) {
               is String -> query.endAt(value)
@@ -829,7 +889,28 @@ class FirebaseDatabasePlugin :
               else -> query.endAt(value.toString())
             }
           }
+          "endBefore" -> {
+            if (!hasOrderModifier) {
+              // Firebase Database requires an order modifier before endBefore
+              // For observe, we can't return null, so we'll create a query that returns no data
+              query = query.limitToFirst(0)
+              break
+            }
+            val value = modifier["value"]
+            query = when (value) {
+              is String -> query.endBefore(value)
+              is Double -> query.endBefore(value)
+              is Boolean -> query.endBefore(value)
+              else -> query.endBefore(value.toString())
+            }
+          }
           "equalTo" -> {
+            if (!hasOrderModifier) {
+              // Firebase Database requires an order modifier before equalTo
+              // For observe, we can't return null, so we'll create a query that returns no data
+              query = query.limitToFirst(0)
+              break
+            }
             val value = modifier["value"]
             query = when (value) {
               is String -> query.equalTo(value)
@@ -881,13 +962,32 @@ class FirebaseDatabasePlugin :
       
       // Apply query modifiers if any
       var query: com.google.firebase.database.Query = reference
+      var hasOrderModifier = false
+      
       for (modifier in request.modifiers) {
         when (modifier["type"] as String) {
-          "orderByChild" -> query = query.orderByChild(modifier["value"] as String)
-          "orderByKey" -> query = query.orderByKey()
-          "orderByValue" -> query = query.orderByValue()
-          "orderByPriority" -> query = query.orderByPriority()
+          "orderByChild" -> {
+            query = query.orderByChild(modifier["value"] as String)
+            hasOrderModifier = true
+          }
+          "orderByKey" -> {
+            query = query.orderByKey()
+            hasOrderModifier = true
+          }
+          "orderByValue" -> {
+            query = query.orderByValue()
+            hasOrderModifier = true
+          }
+          "orderByPriority" -> {
+            query = query.orderByPriority()
+            hasOrderModifier = true
+          }
           "startAt" -> {
+            if (!hasOrderModifier) {
+              // Firebase Database requires an order modifier before startAt
+              callback(KotlinResult.success(mapOf("snapshot" to null)))
+              return
+            }
             val value = modifier["value"]
             query = when (value) {
               is String -> query.startAt(value)
@@ -896,7 +996,26 @@ class FirebaseDatabasePlugin :
               else -> query.startAt(value.toString())
             }
           }
+          "startAfter" -> {
+            if (!hasOrderModifier) {
+              // Firebase Database requires an order modifier before startAfter
+              callback(KotlinResult.success(mapOf("snapshot" to null)))
+              return
+            }
+            val value = modifier["value"]
+            query = when (value) {
+              is String -> query.startAfter(value)
+              is Double -> query.startAfter(value)
+              is Boolean -> query.startAfter(value)
+              else -> query.startAfter(value.toString())
+            }
+          }
           "endAt" -> {
+            if (!hasOrderModifier) {
+              // Firebase Database requires an order modifier before endAt
+              callback(KotlinResult.success(mapOf("snapshot" to null)))
+              return
+            }
             val value = modifier["value"]
             query = when (value) {
               is String -> query.endAt(value)
@@ -905,7 +1024,26 @@ class FirebaseDatabasePlugin :
               else -> query.endAt(value.toString())
             }
           }
+          "endBefore" -> {
+            if (!hasOrderModifier) {
+              // Firebase Database requires an order modifier before endBefore
+              callback(KotlinResult.success(mapOf("snapshot" to null)))
+              return
+            }
+            val value = modifier["value"]
+            query = when (value) {
+              is String -> query.endBefore(value)
+              is Double -> query.endBefore(value)
+              is Boolean -> query.endBefore(value)
+              else -> query.endBefore(value.toString())
+            }
+          }
           "equalTo" -> {
+            if (!hasOrderModifier) {
+              // Firebase Database requires an order modifier before equalTo
+              callback(KotlinResult.success(mapOf("snapshot" to null)))
+              return
+            }
             val value = modifier["value"]
             query = when (value) {
               is String -> query.equalTo(value)
