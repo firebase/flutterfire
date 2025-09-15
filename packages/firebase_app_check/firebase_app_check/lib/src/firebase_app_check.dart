@@ -70,7 +70,12 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
   ///
   /// For more information, see [the Firebase Documentation](https://firebase.google.com/docs/app-check)
   Future<void> activate({
+    @Deprecated(
+      'Use providerWeb instead. '
+      'This parameter will be removed in a future major release.',
+    )
     WebProvider? webProvider,
+    WebProvider? providerWeb,
     AndroidProvider androidProvider = AndroidProvider.playIntegrity,
     AppleProvider appleProvider = AppleProvider.deviceCheck,
     AndroidAppCheckProvider providerAndroid =
@@ -78,8 +83,10 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
     AppleAppCheckProvider providerApple = const AppleDeviceCheckProvider(),
   }) {
     return _delegate.activate(
-      webProvider: webProvider,
+      webProvider: providerWeb ?? webProvider,
+      // ignore: deprecated_member_use
       androidProvider: androidProvider,
+      // ignore: deprecated_member_use
       appleProvider: appleProvider,
       providerAndroid: providerAndroid,
       providerApple: providerApple,

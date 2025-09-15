@@ -13,7 +13,6 @@ export 'package:firebase_app_check_platform_interface/firebase_app_check_platfor
         AndroidAppCheckProvider,
         AndroidDebugProvider,
         AndroidPlayIntegrityProvider,
-        AndroidSafetyNetProvider,
         AppleProvider,
         AppleAppCheckProvider,
         AppleDebugProvider,

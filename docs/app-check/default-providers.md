@@ -84,8 +84,7 @@ Future<void> main() async {
     // Default provider for Android is the Play Integrity provider. You can use the "providerAndroid" parameter to choose
     // your preferred provider. Choose from:
     // 1. AndroidDebugProvider for debug environments
-    // 2. AndroidSafetyNetProvider (will be deprecated in the future)
-    // 3. AndroidPlayIntegrityProvider
+    // 2. AndroidPlayIntegrityProvider
     providerAndroid: AndroidDebugProvider(),
     // Default provider for iOS/macOS is the Device Check provider. You can use the "providerApple" parameter to choose
     // your preferred provider. Choose from:

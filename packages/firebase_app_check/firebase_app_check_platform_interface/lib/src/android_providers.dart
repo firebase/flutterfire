@@ -32,17 +32,3 @@ class AndroidDebugProvider extends AndroidAppCheckProvider {
 class AndroidPlayIntegrityProvider extends AndroidAppCheckProvider {
   const AndroidPlayIntegrityProvider() : super('playIntegrity');
 }
-
-/// Safety Net provider for Android.
-///
-/// @deprecated Safety Net provider is deprecated and will be removed in a future release.
-/// Play Integrity is the recommended provider.
-///
-/// See documentation: https://firebase.google.com/docs/app-check/android/safetynet-provider
-class AndroidSafetyNetProvider extends AndroidAppCheckProvider {
-  @Deprecated(
-    'Safety Net provider is deprecated and will be removed in a future release. '
-    'Play Integrity is the recommended provider.',
-  )
-  const AndroidSafetyNetProvider() : super('safetyNet');
-}

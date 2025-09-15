@@ -69,8 +69,8 @@ void main() {
     test('activate', () async {
       await appCheck.activate(
         webProvider: ReCaptchaV3Provider('test-key'),
-        providerAndroid: AndroidPlayIntegrityProvider(),
-        providerApple: AppleDeviceCheckProvider(),
+        providerAndroid: const AndroidPlayIntegrityProvider(),
+        providerApple: const AppleDeviceCheckProvider(),
       );
       expect(
         methodCallLogger,
@@ -90,8 +90,8 @@ void main() {
     test('activate with debug providers', () async {
       await appCheck.activate(
         webProvider: ReCaptchaV3Provider('test-key'),
-        providerAndroid: AndroidDebugProvider(debugToken: 'androidDebug'),
-        providerApple: AppleDebugProvider(debugToken: 'appleDebug'),
+        providerAndroid: const AndroidDebugProvider(debugToken: 'androidDebug'),
+        providerApple: const AppleDebugProvider(debugToken: 'appleDebug'),
       );
       expect(
         methodCallLogger,
