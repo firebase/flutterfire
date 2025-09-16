@@ -211,7 +211,6 @@ final class UsageMetadata {
 
 /// Response candidate generated from a [GenerativeModel].
 final class Candidate {
-  // TODO: token count?
   // ignore: public_member_api_docs
   Candidate(this.content, this.safetyRatings, this.citationMetadata,
       this.finishReason, this.finishMessage,
@@ -1173,7 +1172,7 @@ final class VertexSerialization implements SerializationStrategy {
         _parsePromptFeedback(promptFeedback),
       _ => null,
     };
-    final usageMedata = switch (jsonObject) {
+    final usageMetadata = switch (jsonObject) {
       {'usageMetadata': final usageMetadata?} =>
         parseUsageMetadata(usageMetadata),
       {'totalTokens': final int totalTokens} =>
@@ -1181,7 +1180,7 @@ final class VertexSerialization implements SerializationStrategy {
       _ => null,
     };
     return GenerateContentResponse(candidates, promptFeedback,
-        usageMetadata: usageMedata);
+        usageMetadata: usageMetadata);
   }
 
   /// Parse the json to [CountTokensResponse]
@@ -1522,4 +1521,65 @@ SearchEntryPoint _parseSearchEntryPoint(Object? jsonObject) {
   return SearchEntryPoint(
     renderedContent: renderedContent,
   );
+}
+
+/// Supported programming languages for the generated code.
+enum CodeLanguage {
+  /// Unspecified status. This value should not be used.
+  unspecified('LANGUAGE_UNSPECIFIED'),
+
+  /// Python language.
+  python('PYTHON');
+
+  const CodeLanguage(this._jsonString);
+
+  final String _jsonString;
+
+  /// Convert to json format.
+  String toJson() => _jsonString;
+
+  /// Parse the json string to [CodeLanguage].
+  static CodeLanguage parseValue(String jsonObject) {
+    return switch (jsonObject) {
+      'LANGUAGE_UNSPECIFIED' => CodeLanguage.unspecified,
+      'PYTHON' => CodeLanguage.python,
+      _ => CodeLanguage
+          .unspecified, // If backend has new change, return unspecified.
+    };
+  }
+}
+
+/// Represents the result of the code execution.
+enum Outcome {
+  /// Unspecified status. This value should not be used.
+  unspecified('OUTCOME_UNSPECIFIED'),
+
+  /// Code execution completed successfully.
+  ok('OUTCOME_OK'),
+
+  /// Code execution finished but with a failure. `stderr` should contain the
+  /// reason.
+  failed('OUTCOME_FAILED'),
+
+  /// Code execution ran for too long, and was cancelled. There may or may not
+  /// be a partial output present.
+  deadlineExceeded('OUTCOME_DEADLINE_EXCEEDED');
+
+  const Outcome(this._jsonString);
+
+  final String _jsonString;
+
+  /// Convert to json format.
+  String toJson() => _jsonString;
+
+  /// Parse the json string to [Outcome].
+  static Outcome parseValue(String jsonObject) {
+    return switch (jsonObject) {
+      'OUTCOME_UNSPECIFIED' => Outcome.unspecified,
+      'OUTCOME_OK' => Outcome.ok,
+      'OUTCOME_FAILED' => Outcome.failed,
+      'OUTCOME_DEADLINE_EXCEEDED' => Outcome.deadlineExceeded,
+      _ => throw FormatException('Unhandled Outcome format', jsonObject),
+    };
+  }
 }
