@@ -2,6 +2,7 @@ group 'io.flutter.plugins.firebase.appcheck'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 apply from: file("local-config.gradle")
 
 buildscript {
@@ -12,6 +13,7 @@ buildscript {
 
   dependencies {
     classpath 'com.android.tools.build:gradle:8.3.0'
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10"
   }
 }
 
@@ -53,6 +55,10 @@ android {
     targetCompatibility project.ext.javaVersion
   }
 
+  kotlinOptions {
+    jvmTarget = project.ext.javaVersion
+  }
+
   buildFeatures {
     buildConfig true
   }
@@ -67,7 +73,7 @@ android {
     implementation 'com.google.firebase:firebase-appcheck-debug'
     implementation 'com.google.firebase:firebase-appcheck-playintegrity'
     implementation 'androidx.annotation:annotation:1.7.0'
-
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.10"
   }
 }
 

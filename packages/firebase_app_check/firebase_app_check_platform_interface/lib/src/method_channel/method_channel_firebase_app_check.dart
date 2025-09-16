@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
+import 'package:firebase_app_check_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:flutter/services.dart';
 
 import '../../firebase_app_check_platform_interface.dart';
@@ -73,6 +74,8 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
     return this;
   }
 
+  final _hostApi = FirebaseAppCheckHostApi();
+
   @override
   Future<void> activate({
     WebProvider? webProvider,
@@ -80,30 +83,38 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
     AppleProvider? appleProvider,
   }) async {
     try {
-      await channel.invokeMethod<void>('FirebaseAppCheck#activate', {
-        'appName': app.name,
-        // Allow value to pass for debug mode for unit testing
-        if (defaultTargetPlatform == TargetPlatform.android || kDebugMode)
-          'androidProvider': getAndroidProviderString(androidProvider),
-        if (defaultTargetPlatform == TargetPlatform.iOS ||
-            defaultTargetPlatform == TargetPlatform.macOS ||
-            kDebugMode)
-          'appleProvider': getAppleProviderString(appleProvider),
-      });
+      // Convert platform interface types to Pigeon types
+      AppCheckWebProvider pigeonWebProvider = AppCheckWebProvider(
+        providerName: webProvider != null ? _getWebProviderString(webProvider) : 'debug'
+      );
+      AppCheckAndroidProvider pigeonAndroidProvider = AppCheckAndroidProvider(
+        providerName: getAndroidProviderString(androidProvider)
+      );
+      AppCheckAppleProvider pigeonAppleProvider = AppCheckAppleProvider(
+        providerName: getAppleProviderString(appleProvider)
+      );
+      
+      await _hostApi.activate(app.name, pigeonWebProvider, pigeonAndroidProvider, pigeonAppleProvider);
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
+    }
+  }
+
+  /// Converts [WebProvider] to [String]
+  String _getWebProviderString(WebProvider? provider) {
+    if (provider is ReCaptchaV3Provider) {
+      return 'reCAPTCHA';
+    } else if (provider is ReCaptchaEnterpriseProvider) {
+      return 'reCAPTCHA';
+    } else {
+      return 'debug';
     }
   }
 
   @override
   Future<String?> getToken(bool forceRefresh) async {
     try {
-      final result = await channel.invokeMethod(
-        'FirebaseAppCheck#getToken',
-        {'appName': app.name, 'forceRefresh': forceRefresh},
-      );
-
-      return result;
+      return await _hostApi.getToken(app.name, forceRefresh);
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -114,13 +125,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
     bool isTokenAutoRefreshEnabled,
   ) async {
     try {
-      await channel.invokeMethod(
-        'FirebaseAppCheck#setTokenAutoRefreshEnabled',
-        {
-          'appName': app.name,
-          'isTokenAutoRefreshEnabled': isTokenAutoRefreshEnabled,
-        },
-      );
+      await _hostApi.setTokenAutoRefreshEnabled(app.name, isTokenAutoRefreshEnabled);
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -134,14 +139,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   @override
   Future<String> getLimitedUseToken() async {
     try {
-      final result = await channel.invokeMethod(
-        'FirebaseAppCheck#getLimitedUseAppCheckToken',
-        {
-          'appName': app.name,
-        },
-      );
-
-      return result;
+      return await _hostApi.getLimitedUseToken(app.name);
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
     }
