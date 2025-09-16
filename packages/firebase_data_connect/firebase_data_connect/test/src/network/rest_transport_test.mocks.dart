@@ -769,6 +769,7 @@ class MockFirebaseAppCheck extends _i1.Mock implements _i10.FirebaseAppCheck {
 
   @override
   _i6.Future<void> activate({
+    _i11.WebProvider? webProvider,
     _i11.WebProvider? providerWeb,
     _i11.AndroidProvider? androidProvider = _i11.AndroidProvider.playIntegrity,
     _i11.AppleProvider? appleProvider = _i11.AppleProvider.deviceCheck,
