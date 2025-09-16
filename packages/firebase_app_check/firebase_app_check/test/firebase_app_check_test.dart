@@ -57,7 +57,7 @@ void main() {
     group('activate', () {
       test('successful call', () async {
         await appCheck.activate(
-          webProvider: ReCaptchaV3Provider('key'),
+          providerWeb: ReCaptchaV3Provider('key'),
           providerAndroid: const AndroidDebugProvider(
             debugToken: 'androidDebug',
           ),

@@ -26,7 +26,7 @@ void main() {
         () async {
           await expectLater(
             FirebaseAppCheck.instance.activate(
-              webProvider: ReCaptchaV3Provider(
+              providerWeb: ReCaptchaV3Provider(
                 '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8',
               ),
             ),
