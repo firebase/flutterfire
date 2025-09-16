@@ -76,9 +76,21 @@ class MethodChannelQuery extends QueryPlatform {
           modifiers: modifiers.toList(),
         ),
       );
+      final snapshotData = result['snapshot'];
+      if (snapshotData == null) {
+        return MethodChannelDataSnapshot(
+          ref,
+          <String, dynamic>{
+            'key': ref.key,
+            'value': null,
+            'priority': null,
+            'childKeys': [],
+          },
+        );
+      }
       return MethodChannelDataSnapshot(
         ref,
-        Map<String, dynamic>.from(result['snapshot']! as Map),
+        Map<String, dynamic>.from(snapshotData as Map),
       );
     } catch (e, s) {
       convertPlatformException(e, s);
