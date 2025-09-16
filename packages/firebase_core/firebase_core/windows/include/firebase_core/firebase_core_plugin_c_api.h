@@ -21,4 +21,8 @@
 FLUTTER_PLUGIN_EXPORT void FirebaseCorePluginCApiRegisterWithRegistrar(
     FlutterDesktopPluginRegistrarRef registrar);
 
+FLUTTER_PLUGIN_EXPORT void RegisterPlugin(
+    std::string channelName,
+    void* flutterFirebasePlugin);
+
 #endif  // FLUTTER_PLUGIN_FIREBASE_CORE_PLUGIN_C_API_H_
