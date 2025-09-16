@@ -961,13 +961,19 @@ class FirebaseDatabasePlugin :
       var query: com.google.firebase.database.Query = reference
       var hasOrderModifier = false
       
+      Log.d("FirebaseDatabase", "🔍 Processing ${request.modifiers.size} modifiers")
       for (modifier in request.modifiers) {
+        Log.d("FirebaseDatabase", "🔍 Modifier: $modifier")
         when (modifier["type"] as String) {
           "orderBy" -> {
+            Log.d("FirebaseDatabase", "🔍 Found orderBy modifier")
             when (modifier["name"] as String) {
               "orderByChild" -> {
-                query = query.orderByChild(modifier["path"] as String)
+                val path = modifier["path"] as String
+                Log.d("FirebaseDatabase", "🔍 Applying orderByChild with path: $path")
+                query = query.orderByChild(path)
                 hasOrderModifier = true
+                Log.d("FirebaseDatabase", "🔍 orderByChild applied successfully")
               }
               "orderByKey" -> {
                 query = query.orderByKey()
@@ -1048,11 +1054,19 @@ class FirebaseDatabasePlugin :
           "limit" -> {
             when (modifier["name"] as String) {
               "limitToFirst" -> {
-                val value = modifier["limit"] as Int
+                val value = when (val limit = modifier["limit"]) {
+                  is Int -> limit
+                  is Number -> limit.toInt()
+                  else -> throw IllegalArgumentException("Invalid limit value: $limit")
+                }
                 query = query.limitToFirst(value)
               }
               "limitToLast" -> {
-                val value = modifier["limit"] as Int
+                val value = when (val limit = modifier["limit"]) {
+                  is Int -> limit
+                  is Number -> limit.toInt()
+                  else -> throw IllegalArgumentException("Invalid limit value: $limit")
+                }
                 query = query.limitToLast(value)
               }
             }
@@ -1064,6 +1078,10 @@ class FirebaseDatabasePlugin :
       query.get().addOnCompleteListener { task ->
         if (task.isSuccessful) {
           val snapshot = task.result
+          Log.d("FirebaseDatabase", "🔍 Query result: ${snapshot.childrenCount} children")
+          for (child in snapshot.children) {
+            Log.d("FirebaseDatabase", "🔍 Child: key=${child.key}, value=${child.value}")
+          }
           val payload = FlutterDataSnapshotPayload(snapshot)
           callback(KotlinResult.success(payload.toMap()))
         } else {
