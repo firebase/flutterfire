@@ -211,7 +211,6 @@ final class UsageMetadata {
 
 /// Response candidate generated from a [GenerativeModel].
 final class Candidate {
-  // TODO: token count?
   // ignore: public_member_api_docs
   Candidate(this.content, this.safetyRatings, this.citationMetadata,
       this.finishReason, this.finishMessage,
@@ -1544,7 +1543,8 @@ enum CodeLanguage {
     return switch (jsonObject) {
       'LANGUAGE_UNSPECIFIED' => CodeLanguage.unspecified,
       'PYTHON' => CodeLanguage.python,
-      _ => throw FormatException('Unhandled Outcome format', jsonObject),
+      _ => CodeLanguage
+          .unspecified, // If backend has new change, return unspecified.
     };
   }
 }

@@ -45,7 +45,8 @@ export 'src/content.dart'
         Part,
         TextPart,
         ExecutableCodePart,
-        CodeExecutionResultPart;
+        CodeExecutionResultPart,
+        UnknownPart;
 export 'src/error.dart'
     show
         FirebaseAIException,
