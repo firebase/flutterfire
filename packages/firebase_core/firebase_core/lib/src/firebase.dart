@@ -68,7 +68,7 @@ class Firebase {
       // for backwards compatibility and simply override the user-provided
       // options.
       options = FirebaseOptions(
-        apiKey: '',
+        apiKey: '12345',
         appId: '1:1:$platformString:1',
         messagingSenderId: '',
         projectId: demoProjectId,
