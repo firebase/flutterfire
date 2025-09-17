@@ -541,18 +541,33 @@ void setupQueryTests() {
           () async {
         final Completer<FirebaseException> errorReceived =
             Completer<FirebaseException>();
-        FirebaseDatabase.instance.ref().child('restricted').onValue.listen(
+        
+        // Set up the listener with proper cleanup
+        final subscription = FirebaseDatabase.instance.ref().child('restricted').onValue.listen(
           (event) {
             // Do nothing
           },
           onError: (error) {
-            errorReceived.complete(error);
+            if (!errorReceived.isCompleted) {
+              errorReceived.complete(error);
+            }
           },
         );
 
-        final streamError = await errorReceived.future;
-        expect(streamError, isA<FirebaseException>());
-        expect(streamError.code, 'permission-denied');
+        try {
+          // Add a timeout to prevent hanging
+          final streamError = await errorReceived.future.timeout(
+            const Duration(seconds: 10),
+            onTimeout: () {
+              throw TimeoutException('Expected permission-denied error did not arrive within 10 seconds');
+            },
+          );
+          expect(streamError, isA<FirebaseException>());
+          expect(streamError.code, 'permission-denied');
+        } finally {
+          // Always cancel the subscription to prevent hanging
+          await subscription.cancel();
+        }
       });
     });
   });
