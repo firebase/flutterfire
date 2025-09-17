@@ -126,10 +126,10 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
   }
 
   if (![reason isEqual:[NSNull null]]) {
-    reason = [NSString stringWithFormat:@"%@. Error thrown %@.", dartExceptionMessage, reason];
     // Log additional custom value to match Android.
     [[FIRCrashlytics crashlytics] setCustomValue:[NSString stringWithFormat:@"thrown %@", reason]
                                           forKey:@"flutter_error_reason"];
+    reason = [NSString stringWithFormat:@"%@. Error thrown %@.", dartExceptionMessage, reason];
   } else {
     reason = dartExceptionMessage;
   }
