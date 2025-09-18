@@ -697,8 +697,7 @@ class FirebaseDatabasePlugin :
           flutterApi.callTransactionHandler(request.transactionKey, mutableData.value) { result ->
             result.fold(
               onSuccess = { transactionResult = it },
-              onFailure = { 
-                println("Transaction handler error: ${it.message}")
+              onFailure = {
                 transactionResult = TransactionHandlerResult(value = null, aborted = true, exception = true)
               }
             )
@@ -731,14 +730,20 @@ class FirebaseDatabasePlugin :
           
           // Complete the transaction - simplified like iOS
           if (error != null) {
-            callback(KotlinResult.failure(Exception(error.message)))
+            callback(KotlinResult.failure(FlutterFirebaseDatabaseException.fromDatabaseError(error)))
           } else {
             callback(KotlinResult.success(Unit))
           }
         }
       })
     } catch (e: Exception) {
-      callback(KotlinResult.failure(e))
+      // Convert generic exceptions to FlutterFirebaseDatabaseException for proper error handling
+      val flutterException = if (e is FlutterFirebaseDatabaseException) {
+        e
+      } else {
+        FlutterFirebaseDatabaseException.unknown(e.message ?: "Unknown transaction error")
+      }
+      callback(KotlinResult.failure(flutterException))
     }
   }
 
