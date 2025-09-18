@@ -26,7 +26,7 @@ void main() {
         () async {
           await expectLater(
             FirebaseAppCheck.instance.activate(
-              webProvider: ReCaptchaV3Provider(
+              providerWeb: ReCaptchaV3Provider(
                 '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8',
               ),
             ),
@@ -76,6 +76,38 @@ void main() {
           // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
         },
         skip: kIsWeb,
+      );
+
+      test(
+        'debugToken on Android',
+        () async {
+          await expectLater(
+            FirebaseAppCheck.instance.activate(
+              androidProvider: AndroidProvider.debug,
+              providerAndroid: const AndroidDebugProvider(
+                debugToken: 'debug_token',
+              ),
+            ),
+            completes,
+          );
+        },
+        skip: defaultTargetPlatform != TargetPlatform.android,
+      );
+
+      test(
+        'debugToken on iOS',
+        () async {
+          await expectLater(
+            FirebaseAppCheck.instance.activate(
+              appleProvider: AppleProvider.debug,
+              providerApple: const AppleDebugProvider(
+                debugToken: 'debug_token',
+              ),
+            ),
+            completes,
+          );
+        },
+        skip: defaultTargetPlatform != TargetPlatform.iOS,
       );
     },
   );

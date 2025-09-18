@@ -108,7 +108,7 @@ final class ImagenSafetySettings {
   final ImagenPersonFilterLevel? personFilterLevel;
 
   // ignore: public_member_api_docs
-  Object toJson() => {
+  Map<String, Object?> toJson() => {
         if (safetyFilterLevel != null)
           'safetySetting': safetyFilterLevel!.toJson(),
         if (personFilterLevel != null)
@@ -194,7 +194,7 @@ final class ImagenGenerationConfig {
   // ignore: public_member_api_docs
   Map<String, dynamic> toJson() => {
         if (negativePrompt != null) 'negativePrompt': negativePrompt,
-        if (numberOfImages != null) 'numberOfImages': numberOfImages,
+        'sampleCount': numberOfImages ?? 1,
         if (aspectRatio != null) 'aspectRatio': aspectRatio!.toJson(),
         if (addWatermark != null) 'addWatermark': addWatermark,
         if (imageFormat != null) 'outputOptions': imageFormat!.toJson(),

@@ -2,11 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'firebase_options.dart';
 
@@ -25,7 +25,9 @@ Future<void> main() async {
       .activate(
     androidProvider: AndroidProvider.debug,
     appleProvider: AppleProvider.debug,
-    webProvider: ReCaptchaV3Provider(kWebRecaptchaSiteKey),
+    providerWeb: ReCaptchaV3Provider(kWebRecaptchaSiteKey),
+    providerAndroid: const AndroidDebugProvider(debugToken: 'androidDebug'),
+    providerApple: const AppleDebugProvider(debugToken: 'appleDebug'),
   );
 
   runApp(MyApp());
@@ -115,7 +117,7 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
                   );
                 }
                 await appCheck.activate(
-                  webProvider: ReCaptchaV3Provider(kWebRecaptchaSiteKey),
+                  providerWeb: ReCaptchaV3Provider(kWebRecaptchaSiteKey),
                 );
                 setMessage('activated!!');
               },
