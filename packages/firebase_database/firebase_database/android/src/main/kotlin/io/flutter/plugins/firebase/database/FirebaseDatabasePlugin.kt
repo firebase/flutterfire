@@ -692,16 +692,19 @@ class FirebaseDatabasePlugin :
           val semaphore = java.util.concurrent.CountDownLatch(1)
           var transactionResult: TransactionHandlerResult? = null
 
-          // Call the Flutter transaction handler
-          val flutterApi = FirebaseDatabaseFlutterApi(messenger)
-          flutterApi.callTransactionHandler(request.transactionKey, mutableData.value) { result ->
-            result.fold(
-              onSuccess = { transactionResult = it },
-              onFailure = {
-                transactionResult = TransactionHandlerResult(value = null, aborted = true, exception = true)
-              }
-            )
-            semaphore.countDown()
+          // Call the Flutter transaction handler on the main thread (required by FlutterJNI)
+          val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
+          mainHandler.post {
+            val flutterApi = FirebaseDatabaseFlutterApi(messenger)
+            flutterApi.callTransactionHandler(request.transactionKey, mutableData.value) { result ->
+              result.fold(
+                onSuccess = { transactionResult = it },
+                onFailure = {
+                  transactionResult = TransactionHandlerResult(value = null, aborted = true, exception = true)
+                }
+              )
+              semaphore.countDown()
+            }
           }
 
           semaphore.await()
@@ -730,7 +733,8 @@ class FirebaseDatabasePlugin :
           
           // Complete the transaction - simplified like iOS
           if (error != null) {
-            callback(KotlinResult.failure(FlutterFirebaseDatabaseException.fromDatabaseError(error)))
+            val ex = FlutterFirebaseDatabaseException.fromDatabaseError(error)
+            callback(KotlinResult.failure(FlutterError("firebase_database", ex.message, ex.additionalData)))
           } else {
             callback(KotlinResult.success(Unit))
           }
@@ -738,12 +742,8 @@ class FirebaseDatabasePlugin :
       })
     } catch (e: Exception) {
       // Convert generic exceptions to FlutterFirebaseDatabaseException for proper error handling
-      val flutterException = if (e is FlutterFirebaseDatabaseException) {
-        e
-      } else {
-        FlutterFirebaseDatabaseException.unknown(e.message ?: "Unknown transaction error")
-      }
-      callback(KotlinResult.failure(flutterException))
+      val flutterException = if (e is FlutterFirebaseDatabaseException) e else FlutterFirebaseDatabaseException.unknown(e.message ?: "Unknown transaction error")
+      callback(KotlinResult.failure(FlutterError("firebase_database", flutterException.message, flutterException.additionalData)))
     }
   }
 
