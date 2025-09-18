@@ -606,7 +606,7 @@ class FirebaseDatabasePlugin :
           request.priority.toString()
         }
       }
-      
+
       reference.setValue(request.value, priority)
       callback(KotlinResult.success(Unit))
     } catch (e: Exception) {
@@ -632,7 +632,7 @@ class FirebaseDatabasePlugin :
     try {
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReference(request.path)
-      
+
       // Handle priority type conversion - Firebase Database expects Any? but Pigeon sends Object?
       // Convert the priority to the appropriate type for Firebase
       val priority = when (request.priority) {
@@ -645,10 +645,10 @@ class FirebaseDatabasePlugin :
           request.priority.toString()
         }
       }
-      
+
       val task = reference.setPriority(priority)
       var callbackCalled = false
-      
+
       task.addOnCompleteListener { completedTask ->
         if (!callbackCalled) {
           callbackCalled = true
@@ -661,7 +661,7 @@ class FirebaseDatabasePlugin :
           }
         }
       }
-      
+
       // Fallback timeout to ensure callback is always called
       android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
         if (!callbackCalled && !task.isComplete) {
@@ -682,10 +682,10 @@ class FirebaseDatabasePlugin :
     try {
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReference(request.path)
-      
+
       // Store the transaction request for later retrieval
       transactionRequests[request.transactionKey] = request
-      
+
       // Start the transaction - simplified approach like iOS
       reference.runTransaction(object : com.google.firebase.database.Transaction.Handler {
         override fun doTransaction(mutableData: com.google.firebase.database.MutableData): com.google.firebase.database.Transaction.Result {
@@ -814,11 +814,11 @@ class FirebaseDatabasePlugin :
       Log.d("FirebaseDatabase", "🔍 Kotlin: Setting up query observe for path=${request.path}")
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReference(request.path)
-      
+
       // Apply query modifiers if any
       var query: com.google.firebase.database.Query = reference
       var hasOrderModifier = false
-      
+
       for (modifier in request.modifiers) {
         when (modifier["type"] as String) {
           "orderBy" -> {
@@ -920,10 +920,10 @@ class FirebaseDatabasePlugin :
           }
         }
       }
-      
+
       // Generate a unique channel name
       val channelName = "firebase_database_query_${System.currentTimeMillis()}_${request.path.hashCode()}"
-      
+
       // Set up the event channel
       val eventChannel = EventChannel(messenger, channelName)
       val streamHandler = EventStreamHandler(query, object : OnDispose {
@@ -956,11 +956,11 @@ class FirebaseDatabasePlugin :
     try {
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReference(request.path)
-      
+
       // Apply query modifiers if any
       var query: com.google.firebase.database.Query = reference
       var hasOrderModifier = false
-      
+
       for (modifier in request.modifiers) {
         when (modifier["type"] as String) {
           "orderBy" -> {
@@ -1067,7 +1067,7 @@ class FirebaseDatabasePlugin :
           }
         }
       }
-      
+
       // Get the data
       query.get().addOnCompleteListener { task ->
         if (task.isSuccessful) {
@@ -1095,7 +1095,7 @@ class FirebaseDatabasePlugin :
 
   // Store transaction requests for later retrieval
   private val transactionRequests = mutableMapOf<Long, TransactionRequest>()
-  
+
   // Store transaction results for later retrieval
   private val transactionResults = mutableMapOf<Long, Map<String, Any?>>()
 }

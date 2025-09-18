@@ -104,7 +104,7 @@ List<String> _childKeysFromValue(Object? value) {
   } else if (value is List) {
     childChildKeys = List<String>.generate(
       value.length,
-      (int index) => '${index - 1}',
+      (int index) => '$index',
     );
   }
   return childChildKeys;
