@@ -306,8 +306,12 @@ abstract class BaseApiClientModel extends BaseModel {
 
   /// Make a unary request for [task] with [templateId] and JSON encodable
   /// [params].
-  Future<T> makeTemplateRequest<T>(TemplateTask task, String templateId,
-      Map<String, Object?> params, T Function(Map<String, Object?>) parse) {
+  Future<T> makeTemplateRequest<T>(
+      TemplateTask task,
+      String templateId,
+      Map<String, Object?> params,
+      Iterable<Content>? history,
+      T Function(Map<String, Object?>) parse) {
     //params['name'] = templateName(templateId);
     return _client
         .makeRequest(templateTaskUri(task, templateId), params)

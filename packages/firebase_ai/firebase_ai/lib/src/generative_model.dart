@@ -203,7 +203,15 @@ final class GenerativeModel extends BaseApiClientModel {
     Map<String, Object?> params,
   ) =>
       makeTemplateRequest(TemplateTask.templateGenerateContent, templateId,
-          params, _serializationStrategy.parseGenerateContentResponse);
+          params, null, _serializationStrategy.parseGenerateContentResponse);
+
+  Future<GenerateContentResponse> templateGenerateContentWithHistory(
+    Iterable<Content> history,
+    String templateId,
+    Map<String, Object?> params,
+  ) =>
+      makeTemplateRequest(TemplateTask.templateGenerateContent, templateId,
+          params, history, _serializationStrategy.parseGenerateContentResponse);
 }
 
 /// Returns a [GenerativeModel] using it's private constructor.

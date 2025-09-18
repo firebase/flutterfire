@@ -166,6 +166,37 @@ final class ChatSession {
   }
 }
 
+final class TemplateChatSession {
+  TemplateChatSession._(this._templateGenerateContent, this._templateId,
+      this._params, this._history);
+
+  final Future<GenerateContentResponse> Function(Iterable<Content> content,
+      String templateId, Map<String, Object?> params) _templateGenerateContent;
+  final String _templateId;
+  final Map<String, Object?> _params;
+  final List<Content> _history;
+
+  final _mutex = Mutex();
+
+  Future<GenerateContentResponse> sendMessage(Content message) async {
+    final lock = await _mutex.acquire();
+    try {
+      final response = await _templateGenerateContent(
+          _history.followedBy([message]), _templateId, _params);
+      if (response.candidates case [final candidate, ...]) {
+        _history.add(message);
+        final normalizedContent = candidate.content.role == null
+            ? Content('model', candidate.content.parts)
+            : candidate.content;
+        _history.add(normalizedContent);
+      }
+      return response;
+    } finally {
+      lock.release();
+    }
+  }
+}
+
 /// [StartChatExtension] on [GenerativeModel]
 extension StartChatExtension on GenerativeModel {
   /// Starts a [ChatSession] that will use this model to respond to messages.
@@ -181,4 +212,10 @@ extension StartChatExtension on GenerativeModel {
           GenerationConfig? generationConfig}) =>
       ChatSession._(generateContent, generateContentStream, history ?? [],
           safetySettings, generationConfig);
+
+  TemplateChatSession startTemplateChat(
+          String templateId, Map<String, Object?> params,
+          {List<Content>? history}) =>
+      TemplateChatSession._(templateGenerateContentWithHistory, templateId,
+          params, history ?? []);
 }

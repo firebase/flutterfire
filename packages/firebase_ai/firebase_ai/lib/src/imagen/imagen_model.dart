@@ -107,6 +107,7 @@ final class ImagenModel extends BaseApiClientModel {
         TemplateTask.templatePredict,
         templateId,
         params,
+        null,
         (jsonObject) =>
             parseImagenGenerationResponse<ImagenInlineImage>(jsonObject),
       );
