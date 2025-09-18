@@ -82,7 +82,7 @@ FCM payloads.
 ## Message handling {: #message-handling}
 
 Based on your application's current state, incoming payloads of different
-[message types](/docs/cloud-messaging/concept-options#notifications_and_data_messages)
+[message types](/docs/cloud-messaging/customize-messages/set-message-type)
 require different implementations to handle them:
 
 ### Foreground messages {: #foreground-messages}
