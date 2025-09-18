@@ -1,3 +1,7 @@
+## 6.0.2
+
+ - Update a dependency to the latest release.
+
 ## 6.0.1
 
  - **FIX**(auth,apple): Move FirebaseAuth imports to implementation files ([#17607](https://github.com/firebase/flutterfire/issues/17607)). ([0c3ccd37](https://github.com/firebase/flutterfire/commit/0c3ccd3722038a47e656b0a703a0395a78befc5b))

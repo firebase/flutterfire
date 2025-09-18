@@ -21,12 +21,12 @@ import 'schema.dart';
 /// knowledge and scope of the model.
 final class Tool {
   // ignore: public_member_api_docs
-  Tool._(this._functionDeclarations, this._googleSearch);
+  Tool._(this._functionDeclarations, this._googleSearch, this._codeExecution);
 
   /// Returns a [Tool] instance with list of [FunctionDeclaration].
   static Tool functionDeclarations(
       List<FunctionDeclaration> functionDeclarations) {
-    return Tool._(functionDeclarations, null);
+    return Tool._(functionDeclarations, null, null);
   }
 
   /// Creates a tool that allows the model to use Grounding with Google Search.
@@ -47,7 +47,13 @@ final class Tool {
   ///
   /// Returns a `Tool` configured for Google Search.
   static Tool googleSearch({GoogleSearch googleSearch = const GoogleSearch()}) {
-    return Tool._(null, googleSearch);
+    return Tool._(null, googleSearch, null);
+  }
+
+  /// Returns a [Tool] instance that enables the model to use Code Execution.
+  static Tool codeExecution(
+      {CodeExecution codeExecution = const CodeExecution()}) {
+    return Tool._(null, null, codeExecution);
   }
 
   /// A list of `FunctionDeclarations` available to the model that can be used
@@ -65,13 +71,18 @@ final class Tool {
   /// responses.
   final GoogleSearch? _googleSearch;
 
+  /// A tool that allows the model to use Code Execution.
+  final CodeExecution? _codeExecution;
+
   /// Convert to json object.
   Map<String, Object> toJson() => {
         if (_functionDeclarations case final _functionDeclarations?)
           'functionDeclarations':
               _functionDeclarations.map((f) => f.toJson()).toList(),
         if (_googleSearch case final _googleSearch?)
-          'googleSearch': _googleSearch.toJson()
+          'googleSearch': _googleSearch.toJson(),
+        if (_codeExecution case final _codeExecution?)
+          'codeExecution': _codeExecution.toJson()
       };
 }
 
@@ -88,6 +99,15 @@ final class Tool {
 final class GoogleSearch {
   // ignore: public_member_api_docs
   const GoogleSearch();
+
+  /// Convert to json object.
+  Map<String, Object> toJson() => {};
+}
+
+/// A tool that allows the model to use Code Execution.
+final class CodeExecution {
+  // ignore: public_member_api_docs
+  const CodeExecution();
 
   /// Convert to json object.
   Map<String, Object> toJson() => {};

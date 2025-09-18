@@ -1,3 +1,7 @@
+## 0.4.0+1
+
+ - **FIX**(app_check,iOS): correctly parse `forceRefresh` argument using `boolValue` ([#17627](https://github.com/firebase/flutterfire/issues/17627)). ([8c0802d0](https://github.com/firebase/flutterfire/commit/8c0802d098c970740a34e83952f56dbe9eb279fd))
+
 ## 0.4.0
 
 > Note: This release has breaking changes.

@@ -33,6 +33,14 @@ Matcher matchesPart(Part part) => switch (part) {
         isA<FunctionResponse>()
             .having((p) => p.name, 'name', name)
             .having((p) => p.response, 'args', response),
+      CodeExecutionResultPart(outcome: final outcome, output: final output) =>
+        isA<CodeExecutionResultPart>()
+            .having((p) => p.outcome, 'outcome', outcome)
+            .having((p) => p.output, 'output', output),
+      ExecutableCodePart(language: final language, code: final code) =>
+        isA<ExecutableCodePart>()
+            .having((p) => p.language, 'language', language)
+            .having((p) => p.code, 'code', code),
       UnknownPart(data: final data) =>
         isA<UnknownPart>().having((p) => p.data, 'data', data),
     };
