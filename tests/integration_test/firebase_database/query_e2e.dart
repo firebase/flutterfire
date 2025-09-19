@@ -481,13 +481,6 @@ void setupQueryTests() {
       test(
         'emits an event when a child is moved',
         () async {
-          // REMOVE THIS WHEN FIXED
-          // Skip this test on emulator as it doesn't properly support orderByChild
-          if (FirebaseDatabase.instance.databaseURL?.contains('localhost') == true ||
-              FirebaseDatabase.instance.databaseURL?.contains('10.0.2.2') == true) {
-            return;
-          }
-          
           await ref.set({
             'alex': {'nuggets': 60},
             'rob': {'nuggets': 56},
