@@ -583,8 +583,19 @@ class FirebaseDatabasePlugin :
     try {
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReference(request.path)
-      reference.setValue(request.value)
-      callback(KotlinResult.success(Unit))
+      val task = reference.setValue(request.value)
+      var callbackCalled = false
+      task.addOnCompleteListener { completedTask ->
+        if (!callbackCalled) {
+          callbackCalled = true
+          if (completedTask.isSuccessful) {
+            callback(KotlinResult.success(Unit))
+          } else {
+            val exception = completedTask.exception ?: Exception("Unknown error setting value")
+            callback(KotlinResult.failure(FlutterError("firebase_database", exception.message, null)))
+          }
+        }
+      }
     } catch (e: Exception) {
       callback(KotlinResult.failure(e))
     }
@@ -607,8 +618,19 @@ class FirebaseDatabasePlugin :
         }
       }
 
-      reference.setValue(request.value, priority)
-      callback(KotlinResult.success(Unit))
+      val task = reference.setValue(request.value, priority)
+      var callbackCalled = false
+      task.addOnCompleteListener { completedTask ->
+        if (!callbackCalled) {
+          callbackCalled = true
+          if (completedTask.isSuccessful) {
+            callback(KotlinResult.success(Unit))
+          } else {
+            val exception = completedTask.exception ?: Exception("Unknown error setting value with priority")
+            callback(KotlinResult.failure(FlutterError("firebase_database", exception.message, null)))
+          }
+        }
+      }
     } catch (e: Exception) {
       // Log the exception for debugging
       println("Firebase Database setWithPriority error: ${e.message}")
