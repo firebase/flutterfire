@@ -238,7 +238,7 @@ class FirebaseDatabasePlugin :
         @Suppress("UNCHECKED_CAST")
         val value = arguments[Constants.VALUE] as Map<String, Any>
         Tasks.await(ref.updateChildren(value))
-        taskCompletionSource.setResult(null)
+            taskCompletionSource.setResult(null)
       } catch (e: Exception) {
         taskCompletionSource.setException(e)
       }
@@ -605,7 +605,7 @@ class FirebaseDatabasePlugin :
     try {
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReference(request.path)
-      
+
       // Handle priority type conversion - Firebase Database expects Any? but Pigeon sends Object?
       val priority = when (request.priority) {
         is String -> request.priority
@@ -640,14 +640,17 @@ class FirebaseDatabasePlugin :
   }
 
   override fun databaseReferenceUpdate(app: DatabasePigeonFirebaseApp, request: UpdateRequest, callback: (KotlinResult<Unit>) -> Unit) {
-    try {
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReference(request.path)
-      reference.updateChildren(request.value)
-      callback(KotlinResult.success(Unit))
-    } catch (e: Exception) {
-      callback(KotlinResult.failure(e))
-    }
+      reference.updateChildren(request.value).addOnCompleteListener { task->
+        if(task.isSuccessful){
+          callback(KotlinResult.success(Unit))
+        }
+        else {
+          val exception = task.exception
+          callback(KotlinResult.failure(FlutterError("firebase_database", exception?.message, null)))
+        }
+      }
   }
 
   override fun databaseReferenceSetPriority(app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest, callback: (KotlinResult<Unit>) -> Unit) {
@@ -740,8 +743,8 @@ class FirebaseDatabasePlugin :
           mutableData.value = result.value
           return com.google.firebase.database.Transaction.success(mutableData)
         }
-        
-        override fun onComplete(error: com.google.firebase.database.DatabaseError?, committed: Boolean, currentData: com.google.firebase.database.DataSnapshot?) {          
+
+        override fun onComplete(error: com.google.firebase.database.DatabaseError?, committed: Boolean, currentData: com.google.firebase.database.DataSnapshot?) {
           // Store the transaction result for later retrieval
           val result = mapOf(
             "committed" to committed,
@@ -752,7 +755,7 @@ class FirebaseDatabasePlugin :
             )
           )
           transactionResults[request.transactionKey] = result
-          
+
           // Complete the transaction - simplified like iOS
           if (error != null) {
             val ex = FlutterFirebaseDatabaseException.fromDatabaseError(error)
@@ -961,7 +964,7 @@ class FirebaseDatabasePlugin :
       })
       eventChannel.setStreamHandler(streamHandler)
       streamHandlers[eventChannel] = streamHandler
-      
+
       callback(KotlinResult.success(channelName))
     } catch (e: Exception) {
       callback(KotlinResult.failure(e))
