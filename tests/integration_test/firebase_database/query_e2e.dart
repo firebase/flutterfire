@@ -534,7 +534,6 @@ void setupQueryTests() {
           () async {
         final Completer<FirebaseException> errorReceived =
             Completer<FirebaseException>();
-
         FirebaseDatabase.instance.ref().child('restricted').onValue.listen(
           (event) {
             // Do nothing
