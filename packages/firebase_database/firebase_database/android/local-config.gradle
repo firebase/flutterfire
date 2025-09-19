@@ -3,5 +3,5 @@ ext {
     minSdk=23
     targetSdk=34
     javaVersion = JavaVersion.toVersion(17)
-    androidGradlePluginVersion = '8.3.0'
+    androidGradlePluginVersion = '8.6.0'
 }
