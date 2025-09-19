@@ -1091,11 +1091,38 @@ class FirebaseDatabasePlugin :
   // Helper method to get FirebaseDatabase from Pigeon app
   private fun getDatabaseFromPigeonApp(app: DatabasePigeonFirebaseApp): FirebaseDatabase {
     val firebaseApp = FirebaseApp.getInstance(app.appName)
-    return if (app.databaseURL != null) {
+    val database = if (app.databaseURL != null) {
       FirebaseDatabase.getInstance(firebaseApp, app.databaseURL)
     } else {
       FirebaseDatabase.getInstance(firebaseApp)
     }
+
+    // Apply settings carried on the Pigeon app object (idempotent across calls)
+    try {
+      app.settings.loggingEnabled?.let { enabled ->
+        database.setLogLevel(if (enabled) Logger.Level.DEBUG else Logger.Level.NONE)
+      }
+
+      // Emulator must be configured before any network usage
+      val emulatorHost = app.settings.emulatorHost
+      val emulatorPort = app.settings.emulatorPort
+      if (emulatorHost != null && emulatorPort != null) {
+        database.useEmulator(emulatorHost, emulatorPort.toInt())
+      }
+
+      app.settings.persistenceEnabled?.let { enabled ->
+        database.setPersistenceEnabled(enabled)
+      }
+
+      app.settings.cacheSizeBytes?.let { size ->
+        database.setPersistenceCacheSizeBytes(size)
+      }
+    } catch (e: DatabaseException) {
+      // Ignore ordering errors if the instance was already used; settings that require
+      // pre-use configuration would have no effect and should not crash tests.
+    }
+
+    return database
   }
 
   // Store transaction requests for later retrieval
