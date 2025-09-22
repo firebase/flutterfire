@@ -104,12 +104,12 @@ void main() {
         test(
           'should have consistent error reason format',
           () async {
-              final eventChannel = const EventChannel('plugins.flutter.io/firebase_crashlytics_test_stream');
+              const eventChannel = EventChannel('plugins.flutter.io/firebase_crashlytics_test_stream');
               final eventStream = eventChannel.receiveBroadcastStream();  
 
               final capturedEvents = <String>[];
 
-              eventStream.listen(capturedEvents.add);
+              eventStream.listen((event) => capturedEvents.add(event.toString()));
 
               await FirebaseCrashlytics.instance.recordError(
             'foo exception',
@@ -120,7 +120,7 @@ void main() {
           expect(capturedEvents, ['thrown foooo reason']);
 
           },
-          skip: (kIsWeb || defaultTargetPlatform == TargetPlatform.macOS) && !isCI,
+          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS || !isCI,
         );
       });
 
