@@ -150,6 +150,7 @@ public class FlutterFirebaseCrashlyticsPlugin
 
   private Task<Void> recordError(final Map<String, Object> arguments) {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+    Handler mainHandler = new Handler(Looper.getMainLooper());
 
     cachedThreadPool.execute(
         () -> {
@@ -178,7 +179,7 @@ public class FlutterFirebaseCrashlyticsPlugin
             if (reason != null) {
               final String crashlyticsErrorReason = "thrown" + reason;
               if (isRunningInCI() && testEventSink != null) {
-                testEventSink.success(crashlyticsErrorReason);
+                mainHandler.post(() -> testEventSink.success(crashlyticsErrorReason));
               }
               // Set a "reason" (to match iOS) to show where the exception was thrown.
               crashlytics.setCustomKey(Constants.FLUTTER_ERROR_REASON, crashlyticsErrorReason);
