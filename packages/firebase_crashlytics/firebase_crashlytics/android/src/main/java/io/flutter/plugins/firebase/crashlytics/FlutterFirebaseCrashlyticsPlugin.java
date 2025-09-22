@@ -177,7 +177,7 @@ public class FlutterFirebaseCrashlyticsPlugin
 
             Exception exception;
             if (reason != null) {
-              final String crashlyticsErrorReason = "thrown" + reason;
+              final String crashlyticsErrorReason = "thrown " + reason;
               if (isRunningInCI() && testEventSink != null) {
                 mainHandler.post(() -> testEventSink.success(crashlyticsErrorReason));
               }
