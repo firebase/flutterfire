@@ -357,8 +357,8 @@ void main() {
               }
             ]
           };
-          final response =
-              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          final response = DeveloperSerialization()
+              .parseGenerateContentResponse(jsonResponse);
           final urlContextMetadata =
               response.candidates.first.urlContextMetadata;
           expect(urlContextMetadata, isNotNull);
@@ -380,8 +380,8 @@ void main() {
               }
             ]
           };
-          final response =
-              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          final response = DeveloperSerialization()
+              .parseGenerateContentResponse(jsonResponse);
           final urlMetadata =
               response.candidates.first.urlContextMetadata!.urlMetadata.first;
           expect(urlMetadata.retrievedUrl, isNull);
@@ -396,8 +396,8 @@ void main() {
               }
             ]
           };
-          final response =
-              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          final response = DeveloperSerialization()
+              .parseGenerateContentResponse(jsonResponse);
           final urlContextMetadata =
               response.candidates.first.urlContextMetadata;
           expect(urlContextMetadata, isNotNull);
@@ -410,8 +410,8 @@ void main() {
               {'finishReason': 'STOP'}
             ]
           };
-          final response =
-              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          final response = DeveloperSerialization()
+              .parseGenerateContentResponse(jsonResponse);
           final candidate = response.candidates.first;
           expect(candidate.urlContextMetadata, isNull);
         });
@@ -423,7 +423,7 @@ void main() {
             ]
           };
           expect(
-              () => VertexSerialization()
+              () => DeveloperSerialization()
                   .parseGenerateContentResponse(jsonResponse),
               throwsA(isA<FirebaseAISdkException>().having((e) => e.message,
                   'message', contains('UrlContextMetadata'))));
@@ -440,7 +440,7 @@ void main() {
             ]
           };
           expect(
-              () => VertexSerialization()
+              () => DeveloperSerialization()
                   .parseGenerateContentResponse(jsonResponse),
               throwsA(isA<FirebaseAISdkException>().having(
                   (e) => e.message, 'message', contains('UrlMetadata'))));

@@ -124,8 +124,8 @@ final class GoogleSearch {
 }
 
 /// A tool that allows you to provide additional context to the models in the
-/// form of public web URLs. By including URLs in your request, the Gemini 
-/// model will access the content from those pages to inform and enhance its 
+/// form of public web URLs. By including URLs in your request, the Gemini
+/// model will access the content from those pages to inform and enhance its
 /// response.
 final class UrlContext {
   // ignore: public_member_api_docs
