@@ -21,12 +21,13 @@ import 'schema.dart';
 /// knowledge and scope of the model.
 final class Tool {
   // ignore: public_member_api_docs
-  Tool._(this._functionDeclarations, this._googleSearch, this._codeExecution);
+  Tool._(this._functionDeclarations, this._googleSearch, this._codeExecution,
+      this._urlContext);
 
   /// Returns a [Tool] instance with list of [FunctionDeclaration].
   static Tool functionDeclarations(
       List<FunctionDeclaration> functionDeclarations) {
-    return Tool._(functionDeclarations, null, null);
+    return Tool._(functionDeclarations, null, null, null);
   }
 
   /// Creates a tool that allows the model to use Grounding with Google Search.
@@ -47,13 +48,26 @@ final class Tool {
   ///
   /// Returns a `Tool` configured for Google Search.
   static Tool googleSearch({GoogleSearch googleSearch = const GoogleSearch()}) {
-    return Tool._(null, googleSearch, null);
+    return Tool._(null, googleSearch, null, null);
   }
 
   /// Returns a [Tool] instance that enables the model to use Code Execution.
   static Tool codeExecution(
       {CodeExecution codeExecution = const CodeExecution()}) {
-    return Tool._(null, null, codeExecution);
+    return Tool._(null, null, codeExecution, null);
+  }
+
+  /// Creates a tool that allows you to provide additional context to the models
+  /// in the form of public web URLs.
+  ///
+  /// By including URLs in your request, the Gemini model will access the
+  /// content from those pages to inform and enhance its response.
+  ///
+  /// - [urlContext]: Specifies the URL context configuration.
+  ///
+  /// Returns a `Tool` configured for URL context.
+  static Tool urlContext({UrlContext urlContext = const UrlContext()}) {
+    return Tool._(null, null, null, urlContext);
   }
 
   /// A list of `FunctionDeclarations` available to the model that can be used
@@ -74,6 +88,9 @@ final class Tool {
   /// A tool that allows the model to use Code Execution.
   final CodeExecution? _codeExecution;
 
+  /// A tool that allows providing URL context to the model.
+  final UrlContext? _urlContext;
+
   /// Convert to json object.
   Map<String, Object> toJson() => {
         if (_functionDeclarations case final _functionDeclarations?)
@@ -82,7 +99,9 @@ final class Tool {
         if (_googleSearch case final _googleSearch?)
           'googleSearch': _googleSearch.toJson(),
         if (_codeExecution case final _codeExecution?)
-          'codeExecution': _codeExecution.toJson()
+          'codeExecution': _codeExecution.toJson(),
+        if (_urlContext case final _urlContext?)
+          'urlContext': _urlContext.toJson(),
       };
 }
 
@@ -99,6 +118,18 @@ final class Tool {
 final class GoogleSearch {
   // ignore: public_member_api_docs
   const GoogleSearch();
+
+  /// Convert to json object.
+  Map<String, Object> toJson() => {};
+}
+
+/// A tool that allows you to provide additional context to the models in the
+/// form of public web URLs. By including URLs in your request, the Gemini 
+/// model will access the content from those pages to inform and enhance its 
+/// response.
+final class UrlContext {
+  // ignore: public_member_api_docs
+  const UrlContext();
 
   /// Convert to json object.
   Map<String, Object> toJson() => {};
