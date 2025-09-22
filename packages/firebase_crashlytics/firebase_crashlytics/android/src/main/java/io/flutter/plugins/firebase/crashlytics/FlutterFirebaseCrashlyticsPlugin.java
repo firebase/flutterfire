@@ -21,6 +21,7 @@ import com.google.firebase.crashlytics.FlutterFirebaseCrashlyticsInternal;
 import com.google.firebase.crashlytics.internal.Logger;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
+import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -34,9 +35,11 @@ import java.util.Objects;
 
 /** FlutterFirebaseCrashlyticsPlugin */
 public class FlutterFirebaseCrashlyticsPlugin
-    implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
+    implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler, EventChannel.StreamHandler {
   public static final String TAG = "FLTFirebaseCrashlytics";
   private MethodChannel channel;
+  private EventChannel testEventChannel;
+  private EventChannel.EventSink testEventSink;
 
   private static final String FIREBASE_CRASHLYTICS_COLLECTION_ENABLED =
       "firebase_crashlytics_collection_enabled";
@@ -59,6 +62,11 @@ public class FlutterFirebaseCrashlyticsPlugin
       channel.setMethodCallHandler(null);
       channel = null;
     }
+  }
+
+  private boolean isRunningInCI() {
+    Map<String, String> env = System.getenv();
+    return env.containsKey("GITHUB_ACTIONS");
   }
 
   private Task<Map<String, Object>> checkForUnsentReports() {
@@ -160,8 +168,12 @@ public class FlutterFirebaseCrashlyticsPlugin
 
             Exception exception;
             if (reason != null) {
+              final String crashlyticsErrorReason = "thrown" + reason;
+              if (isRunningInCI() && testEventSink != null) {
+                testEventSink.success(crashlyticsErrorReason);
+              }
               // Set a "reason" (to match iOS) to show where the exception was thrown.
-              crashlytics.setCustomKey(Constants.FLUTTER_ERROR_REASON, "thrown " + reason);
+              crashlytics.setCustomKey(Constants.FLUTTER_ERROR_REASON, crashlyticsErrorReason);
               exception =
                   new FlutterError(dartExceptionMessage + ". " + "Error thrown " + reason + ".");
             } else {
@@ -465,5 +477,15 @@ public class FlutterFirebaseCrashlyticsPlugin
         });
 
     return taskCompletionSource.getTask();
+  }
+
+  @Override
+  public void onListen(Object arguments, EventChannel.EventSink events) {
+    testEventSink = events;
+  }
+
+  @Override
+  public void onCancel(Object arguments) {
+    testEventSink = null;
   }
 }

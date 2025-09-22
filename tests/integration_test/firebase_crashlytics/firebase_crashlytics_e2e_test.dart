@@ -100,6 +100,31 @@ void main() {
         );
       });
 
+       test(
+          'should have consistent error reason format',
+          () async {
+              final eventChannel = EventChannel('plugins.flutter.io/firebase_crashlytics_test_stream');
+              final eventStream = eventChannel.receiveBroadcastStream();  
+
+              final capturedEvents = <String>[];
+
+              eventStream.listen((event) {
+                capturedEvents.add(event);
+              });
+
+              await FirebaseCrashlytics.instance.recordError(
+            'foo exception',
+            StackTrace.fromString('during testing'),
+            reason: 'foo reason',
+          );
+
+          expect(capturedEvents, ['thrown foooo reason']);
+
+          },
+          skip: (kIsWeb || defaultTargetPlatform == TargetPlatform.macOS) && !isCI,
+        );
+      });
+
       group('log', () {
         // This is currently only testing that we can log without crashing.
         test('accepts any value', () async {
