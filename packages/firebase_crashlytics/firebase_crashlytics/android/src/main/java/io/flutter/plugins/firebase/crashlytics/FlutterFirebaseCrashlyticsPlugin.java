@@ -71,12 +71,6 @@ public class FlutterFirebaseCrashlyticsPlugin
     }
   }
 
-  private boolean isRunningInCI() {
-    Map<String, String> env = System.getenv();
-    //    return env.containsKey("GITHUB_ACTIONS");
-    return true;
-  }
-
   private Task<Map<String, Object>> checkForUnsentReports() {
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
 
@@ -178,9 +172,7 @@ public class FlutterFirebaseCrashlyticsPlugin
             Exception exception;
             if (reason != null) {
               final String crashlyticsErrorReason = "thrown " + reason;
-              if (isRunningInCI() && testEventSink != null) {
-                mainHandler.post(() -> testEventSink.success(crashlyticsErrorReason));
-              }
+              mainHandler.post(() -> testEventSink.success(crashlyticsErrorReason));
               // Set a "reason" (to match iOS) to show where the exception was thrown.
               crashlytics.setCustomKey(Constants.FLUTTER_ERROR_REASON, crashlyticsErrorReason);
               exception =

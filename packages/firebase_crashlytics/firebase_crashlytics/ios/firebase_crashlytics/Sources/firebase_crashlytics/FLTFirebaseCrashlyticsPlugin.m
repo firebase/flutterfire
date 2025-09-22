@@ -74,11 +74,6 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
   [instance.testEventChannel setStreamHandler:instance];
 }
 
-- (BOOL)isRunningInCI {
-  NSDictionary *env = [[NSProcessInfo processInfo] environment];
-  return env[@"GITHUB_ACTIONS"] != nil;
-}
-
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
   FLTFirebaseMethodCallErrorBlock errorBlock =
       ^(NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
@@ -143,9 +138,8 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
 
   if (![reason isEqual:[NSNull null]]) {
     NSString *crashlyticsErrorReason = [NSString stringWithFormat:@"thrown %@", reason];
-    // if ([self isRunningInCI] && self.testEventSink) {
+
     self.testEventSink(crashlyticsErrorReason);
-    // }
     // Log additional custom value to match Android.
     [[FIRCrashlytics crashlytics] setCustomValue:[NSString stringWithFormat:@"thrown %@", reason]
                                           forKey:@"flutter_error_reason"];
