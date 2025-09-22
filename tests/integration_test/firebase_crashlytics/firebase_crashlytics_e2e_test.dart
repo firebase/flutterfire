@@ -9,7 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tests/firebase_options.dart';
-import 'e2e_test.dart';
+import '../e2e_test.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -104,14 +104,12 @@ void main() {
         test(
           'should have consistent error reason format',
           () async {
-              final eventChannel = EventChannel('plugins.flutter.io/firebase_crashlytics_test_stream');
+              final eventChannel = const EventChannel('plugins.flutter.io/firebase_crashlytics_test_stream');
               final eventStream = eventChannel.receiveBroadcastStream();  
 
               final capturedEvents = <String>[];
 
-              eventStream.listen((event) {
-                capturedEvents.add(event);
-              });
+              eventStream.listen(capturedEvents.add);
 
               await FirebaseCrashlytics.instance.recordError(
             'foo exception',
