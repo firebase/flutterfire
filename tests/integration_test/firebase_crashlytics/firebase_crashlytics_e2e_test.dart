@@ -117,7 +117,7 @@ void main() {
             reason: 'foo reason',
           );
 
-          await Future.delayed(const Duration(seconds: 3));
+          // await Future.delayed(const Duration(seconds: 3));
 
           expect(capturedEvents, ['thrown foooo reason']);
 
