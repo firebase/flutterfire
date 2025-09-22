@@ -1,3 +1,7 @@
+## 0.4.1
+
+ - **FEAT**(app-check): Debug token support for the activate method ([#17723](https://github.com/firebase/flutterfire/issues/17723)). ([3c638264](https://github.com/firebase/flutterfire/commit/3c638264565d902ddbe4dff5bb027aef9e1c2140))
+
 ## 0.4.0+1
 
  - **FIX**(app_check,iOS): correctly parse `forceRefresh` argument using `boolValue` ([#17627](https://github.com/firebase/flutterfire/issues/17627)). ([8c0802d0](https://github.com/firebase/flutterfire/commit/8c0802d098c970740a34e83952f56dbe9eb279fd))
