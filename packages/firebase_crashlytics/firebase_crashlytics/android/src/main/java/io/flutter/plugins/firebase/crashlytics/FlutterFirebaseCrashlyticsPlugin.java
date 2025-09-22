@@ -49,6 +49,9 @@ public class FlutterFirebaseCrashlyticsPlugin
     channel = new MethodChannel(messenger, channelName);
     channel.setMethodCallHandler(this);
     FlutterFirebasePluginRegistry.registerPlugin(channelName, this);
+    testEventChannel =
+        new EventChannel(messenger, "plugins.flutter.io/firebase_crashlytics_test_stream");
+    testEventChannel.setStreamHandler(this);
   }
 
   @Override
@@ -62,11 +65,16 @@ public class FlutterFirebaseCrashlyticsPlugin
       channel.setMethodCallHandler(null);
       channel = null;
     }
+    if (testEventChannel != null) {
+      testEventChannel.setStreamHandler(null);
+      testEventChannel = null;
+    }
   }
 
   private boolean isRunningInCI() {
     Map<String, String> env = System.getenv();
-    return env.containsKey("GITHUB_ACTIONS");
+    //    return env.containsKey("GITHUB_ACTIONS");
+    return true;
   }
 
   private Task<Map<String, Object>> checkForUnsentReports() {
