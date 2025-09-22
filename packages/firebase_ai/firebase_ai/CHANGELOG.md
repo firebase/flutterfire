@@ -1,3 +1,9 @@
+## 3.3.0
+
+ - **FIX**(firebaseai): fix the json parse for toolCallCancellation ([#17690](https://github.com/firebase/flutterfire/issues/17690)). ([7c0496d6](https://github.com/firebase/flutterfire/commit/7c0496d6434d81ac35f8df3fe965d0648dcc21bc))
+ - **FEAT**(firebaseai): code execution ([#17661](https://github.com/firebase/flutterfire/issues/17661)). ([032a707d](https://github.com/firebase/flutterfire/commit/032a707dfc773f8dda1832635d2c969cfb426a14))
+ - **FEAT**(firebaseai): add imagen safetysetting attributes ([#17707](https://github.com/firebase/flutterfire/issues/17707)). ([f7070f04](https://github.com/firebase/flutterfire/commit/f7070f042a3e3319dd1001d35e4926e01c78d4dc))
+
 ## 3.2.0
 
  - **FIX**(firebaseai): Added token details parsing for Dev API ([#17609](https://github.com/firebase/flutterfire/issues/17609)). ([4bab0b30](https://github.com/firebase/flutterfire/commit/4bab0b302898d7c1b613593c20c722125e09843d))
