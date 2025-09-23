@@ -61,17 +61,17 @@ final class ImagenModel extends BaseApiClientModel {
       if (gcsUri != null) 'storageUri': gcsUri,
       'sampleCount': _generationConfig?.numberOfImages ?? 1,
       if (_generationConfig?.aspectRatio case final aspectRatio?)
-        'aspectRatio': aspectRatio,
+        'aspectRatio': aspectRatio.toJson(),
       if (_generationConfig?.negativePrompt case final negativePrompt?)
         'negativePrompt': negativePrompt,
       if (_generationConfig?.addWatermark case final addWatermark?)
         'addWatermark': addWatermark,
       if (_generationConfig?.imageFormat case final imageFormat?)
         'outputOption': imageFormat.toJson(),
-      if (_safetySettings?.personFilterLevel case final personFilterLevel?)
-        'personGeneration': personFilterLevel.toJson(),
-      if (_safetySettings?.safetyFilterLevel case final safetyFilterLevel?)
-        'safetySetting': safetyFilterLevel.toJson(),
+      if (_safetySettings case final safetySettings?)
+        ...safetySettings.toJson(),
+      'includeRaiReason': true,
+      'includeSafetyAttributes': true,
     };
 
     return {
@@ -170,10 +170,10 @@ final class ImagenModel extends BaseApiClientModel {
         'addWatermark': addWatermark,
       if (_generationConfig?.imageFormat case final imageFormat?)
         'outputOption': imageFormat.toJson(),
-      if (_safetySettings?.personFilterLevel case final personFilterLevel?)
-        'personGeneration': personFilterLevel.toJson(),
-      if (_safetySettings?.safetyFilterLevel case final safetyFilterLevel?)
-        'safetySetting': safetyFilterLevel.toJson(),
+      if (_safetySettings case final safetySettings?)
+        ...safetySettings.toJson(),
+      'includeRaiReason': true,
+      'includeSafetyAttributes': true,
     };
 
     return {

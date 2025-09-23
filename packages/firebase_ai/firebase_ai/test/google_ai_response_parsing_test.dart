@@ -238,6 +238,68 @@ void main() {
       );
     });
 
+    test('with a blocked safety rating', () async {
+      const response = '''
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "some response"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0,
+      "safetyRatings": [
+        {
+          "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+          "probability": "NEGLIGIBLE",
+          "blocked": true
+        },
+        {
+          "category": "HARM_CATEGORY_HATE_SPEECH",
+          "probability": "NEGLIGIBLE"
+        }
+      ]
+    }
+  ]
+}
+''';
+      final decoded = jsonDecode(response) as Object;
+      final generateContentResponse =
+          DeveloperSerialization().parseGenerateContentResponse(decoded);
+      expect(
+        generateContentResponse,
+        matchesGenerateContentResponse(
+          GenerateContentResponse(
+            [
+              Candidate(
+                Content.model([
+                  const TextPart('some response'),
+                ]),
+                [
+                  SafetyRating(
+                    HarmCategory.sexuallyExplicit,
+                    HarmProbability.negligible,
+                    isBlocked: true,
+                  ),
+                  SafetyRating(
+                      HarmCategory.hateSpeech, HarmProbability.negligible),
+                ],
+                null,
+                FinishReason.stop,
+                null,
+              ),
+            ],
+            null,
+          ),
+        ),
+      );
+    });
+
     test('with a citation', () async {
       const response = '''
 {

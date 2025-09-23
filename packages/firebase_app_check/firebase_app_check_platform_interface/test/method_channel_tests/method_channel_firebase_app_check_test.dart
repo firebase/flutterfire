@@ -69,6 +69,8 @@ void main() {
     test('activate', () async {
       await appCheck.activate(
         webProvider: ReCaptchaV3Provider('test-key'),
+        providerAndroid: const AndroidPlayIntegrityProvider(),
+        providerApple: const AppleDeviceCheckProvider(),
       );
       expect(
         methodCallLogger,
@@ -79,6 +81,29 @@ void main() {
               'appName': defaultFirebaseAppName,
               'androidProvider': 'playIntegrity',
               'appleProvider': 'deviceCheck',
+            },
+          ),
+        ],
+      );
+    });
+
+    test('activate with debug providers', () async {
+      await appCheck.activate(
+        webProvider: ReCaptchaV3Provider('test-key'),
+        providerAndroid: const AndroidDebugProvider(debugToken: 'androidDebug'),
+        providerApple: const AppleDebugProvider(debugToken: 'appleDebug'),
+      );
+      expect(
+        methodCallLogger,
+        <Matcher>[
+          isMethodCall(
+            'FirebaseAppCheck#activate',
+            arguments: {
+              'appName': defaultFirebaseAppName,
+              'androidProvider': 'debug',
+              'appleProvider': 'debug',
+              'androidDebugToken': 'androidDebug',
+              'appleDebugToken': 'appleDebug',
             },
           ),
         ],
