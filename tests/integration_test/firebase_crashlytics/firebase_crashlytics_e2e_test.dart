@@ -107,20 +107,20 @@ void main() {
               const eventChannel = EventChannel('plugins.flutter.io/firebase_crashlytics_test_stream');
               final eventStream = eventChannel.receiveBroadcastStream();  
 
-              final capturedEvents = <String>[];
+              final completer = Completer<String>();
 
-              eventStream.listen((event) => capturedEvents.add(event.toString()));
+              eventStream.listen((event) {
+                completer.complete(event.toString());
+              });
 
               await FirebaseCrashlytics.instance.recordError(
-            'foo exception',
-            StackTrace.fromString('during testing'),
-            reason: 'foo reason',
-          );
+                'foo exception',
+                StackTrace.fromString('during testing'),
+                reason: 'foo reason',
+              );
 
-          // await Future.delayed(const Duration(seconds: 3));
-
-          expect(capturedEvents, ['thrown foooo reason']);
-
+              final event = await completer.future;
+              expect(event, 'thrown foooo reason');
           },
           skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS || !isCI,
         );
