@@ -111,6 +111,7 @@ void main() {
               final completer = Completer<String>();
 
               eventStream.listen((event) {
+                 print('Received event: $event');
                 completer.complete(event.toString());
               });
 
