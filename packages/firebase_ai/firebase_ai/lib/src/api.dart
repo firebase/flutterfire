@@ -187,9 +187,9 @@ final class UsageMetadata {
     this.candidatesTokenCount,
     this.totalTokenCount,
     this.thoughtsTokenCount,
+    this.toolUsePromptTokenCount,
     this.promptTokensDetails,
     this.candidatesTokensDetails,
-    this.toolUsePromptTokenCount,
     this.toolUsePromptTokensDetails,
   });
 

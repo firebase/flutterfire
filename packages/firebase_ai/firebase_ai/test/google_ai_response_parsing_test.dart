@@ -853,14 +853,20 @@ void main() {
           generateContentResponse.candidates.first.urlContextMetadata;
       expect(urlContextMetadata, isNotNull);
       expect(urlContextMetadata!.urlMetadata, hasLength(3));
-      expect(urlContextMetadata.urlMetadata[2].retrievedUrl,
-          Uri.parse('https://a-completely-non-existent-url-for-testing.org'));
-      expect(urlContextMetadata.urlMetadata[2].urlRetrievalStatus,
+      expect(
+          urlContextMetadata.urlMetadata[0].retrievedUrl,
+          Uri.parse(
+              'https://www.nytimes.com/2023/06/25/realestate/barbiecore-home-decor-interior-design.html?action=click&contentCollection=undefined&region=Footer&module=WhatsNext&version=WhatsNext&contentID=WhatsNext&moduleDetail=most-emailed-0&pgtype=undefinedl'));
+      expect(urlContextMetadata.urlMetadata[0].urlRetrievalStatus,
           UrlRetrievalStatus.error);
       expect(urlContextMetadata.urlMetadata[1].retrievedUrl,
           Uri.parse('https://ai.google.dev'));
       expect(urlContextMetadata.urlMetadata[1].urlRetrievalStatus,
           UrlRetrievalStatus.success);
+      expect(urlContextMetadata.urlMetadata[2].retrievedUrl,
+          Uri.parse('https://a-completely-non-existent-url-for-testing.org'));
+      expect(urlContextMetadata.urlMetadata[2].urlRetrievalStatus,
+          UrlRetrievalStatus.error);
     });
 
     test('allows missing content', () async {

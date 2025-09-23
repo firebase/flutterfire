@@ -1055,6 +1055,51 @@ void main() {
           expect(urlMetadata.urlRetrievalStatus, UrlRetrievalStatus.success);
         });
 
+        test(
+            'parses valid response with full url context metadata and list of url metadata',
+            () {
+          final jsonResponse = {
+            'candidates': [
+              {
+                'content': {
+                  'parts': [
+                    {'text': 'Some text'}
+                  ]
+                },
+                'finishReason': 'STOP',
+                'urlContextMetadata': {
+                  'urlMetadata': [
+                    {
+                      'retrievedUrl': 'https://example.com',
+                      'urlRetrievalStatus': 'URL_RETRIEVAL_STATUS_SUCCESS'
+                    },
+                    {
+                      'retrievedUrl': 'https://foo.com',
+                      'urlRetrievalStatus': 'URL_RETRIEVAL_STATUS_ERROR'
+                    }
+                  ]
+                }
+              }
+            ]
+          };
+          final response =
+              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          final urlContextMetadata =
+              response.candidates.first.urlContextMetadata;
+          expect(urlContextMetadata, isNotNull);
+          expect(urlContextMetadata!.urlMetadata, hasLength(2));
+          final firstUrlMetadata = urlContextMetadata.urlMetadata.first;
+          expect(
+              firstUrlMetadata.retrievedUrl, Uri.parse('https://example.com'));
+          expect(
+              firstUrlMetadata.urlRetrievalStatus, UrlRetrievalStatus.success);
+          final secondUrlMetadata = urlContextMetadata.urlMetadata[1];
+          expect(
+              secondUrlMetadata.retrievedUrl, Uri.parse('https://foo.com'));
+          expect(
+              secondUrlMetadata.urlRetrievalStatus, UrlRetrievalStatus.error);
+        });
+
         test('parses response with missing retrievedUrl', () {
           final jsonResponse = {
             'candidates': [
