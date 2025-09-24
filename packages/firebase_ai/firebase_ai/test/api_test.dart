@@ -1094,8 +1094,7 @@ void main() {
           expect(
               firstUrlMetadata.urlRetrievalStatus, UrlRetrievalStatus.success);
           final secondUrlMetadata = urlContextMetadata.urlMetadata[1];
-          expect(
-              secondUrlMetadata.retrievedUrl, Uri.parse('https://foo.com'));
+          expect(secondUrlMetadata.retrievedUrl, Uri.parse('https://foo.com'));
           expect(
               secondUrlMetadata.urlRetrievalStatus, UrlRetrievalStatus.error);
         });

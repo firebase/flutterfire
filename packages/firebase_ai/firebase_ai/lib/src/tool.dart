@@ -66,6 +66,10 @@ final class Tool {
   /// - [urlContext]: Specifies the URL context configuration.
   ///
   /// Returns a `Tool` configured for URL context.
+  ///
+  /// > Warning: For Firebase AI Logic, URL Context
+  /// is in Public Preview, which means that the feature is not subject to any SLA
+  /// or deprecation policy and could change in backwards-incompatible ways.
   static Tool urlContext({UrlContext urlContext = const UrlContext()}) {
     return Tool._(null, null, null, urlContext);
   }
@@ -127,6 +131,10 @@ final class GoogleSearch {
 /// form of public web URLs. By including URLs in your request, the Gemini
 /// model will access the content from those pages to inform and enhance its
 /// response.
+///
+/// > Warning: For Firebase AI Logic, URL Context
+/// is in Public Preview, which means that the feature is not subject to any SLA
+/// or deprecation policy and could change in backwards-incompatible ways.
 final class UrlContext {
   // ignore: public_member_api_docs
   const UrlContext();

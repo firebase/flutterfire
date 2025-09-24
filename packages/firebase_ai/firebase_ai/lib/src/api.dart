@@ -431,6 +431,10 @@ final class GroundingMetadata {
 }
 
 /// The status of a URL retrieval.
+///
+/// > Warning: For Firebase AI Logic, URL Context
+/// is in Public Preview, which means that the feature is not subject to any SLA
+/// or deprecation policy and could change in backwards-incompatible ways.
 enum UrlRetrievalStatus {
   /// Unspecified retrieval status.
   unspecified('URL_RETRIEVAL_STATUS_UNSPECIFIED'),
@@ -468,6 +472,10 @@ enum UrlRetrievalStatus {
 }
 
 /// Metadata for a single URL retrieved by the [UrlContext] tool.
+///
+/// > Warning: For Firebase AI Logic, URL Context
+/// is in Public Preview, which means that the feature is not subject to any SLA
+/// or deprecation policy and could change in backwards-incompatible ways.
 final class UrlMetadata {
   // ignore: public_member_api_docs
   UrlMetadata({this.retrievedUrl, required this.urlRetrievalStatus});
@@ -480,6 +488,10 @@ final class UrlMetadata {
 }
 
 /// Metadata related to the [UrlContext] tool.
+///
+/// > Warning: For Firebase AI Logic, URL Context
+/// is in Public Preview, which means that the feature is not subject to any SLA
+/// or deprecation policy and could change in backwards-incompatible ways.
 final class UrlContextMetadata {
   // ignore: public_member_api_docs
   UrlContextMetadata({required this.urlMetadata});
