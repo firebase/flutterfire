@@ -12,12 +12,11 @@ String getAndroidProviderString({
   AndroidProvider? legacyProvider,
   AndroidAppCheckProvider? newProvider,
 }) {
-  // Prefer new provider over legacy provider
-  if (newProvider != null) {
-    return newProvider.type;
+  if (legacyProvider != null) {
+    return getLegacyAndroidProviderString(legacyProvider);
   }
 
-  return getLegacyAndroidProviderString(legacyProvider);
+  return newProvider?.type ?? 'playIntegrity';
 }
 
 /// Converts [AppleAppCheckProvider] to [String] with backwards compatibility
@@ -25,12 +24,11 @@ String getAppleProviderString({
   AppleProvider? legacyProvider,
   AppleAppCheckProvider? newProvider,
 }) {
-  // Prefer new provider over legacy provider
-  if (newProvider != null) {
-    return newProvider.type;
+  if (legacyProvider != null) {
+    return getLegacyAppleProviderString(legacyProvider);
   }
 
-  return getLegacyAppleProviderString(legacyProvider);
+  return newProvider?.type ?? 'deviceCheck';
 }
 
 /// Converts [AndroidProvider] enum to [String]

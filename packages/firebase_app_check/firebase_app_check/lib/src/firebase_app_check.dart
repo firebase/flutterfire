@@ -80,12 +80,12 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
       'Use providerAndroid instead. '
       'This parameter will be removed in a future major release.',
     )
-    AndroidProvider androidProvider = AndroidProvider.playIntegrity,
+    AndroidProvider? androidProvider,
     @Deprecated(
       'Use providerApple instead. '
       'This parameter will be removed in a future major release.',
     )
-    AppleProvider appleProvider = AppleProvider.deviceCheck,
+    AppleProvider? appleProvider,
     AndroidAppCheckProvider providerAndroid =
         const AndroidPlayIntegrityProvider(),
     AppleAppCheckProvider providerApple = const AppleDeviceCheckProvider(),
