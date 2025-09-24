@@ -17,6 +17,7 @@ export 'package:firebase_app_check_platform_interface/firebase_app_check_platfor
         AppleAppCheckProvider,
         AppleDebugProvider,
         AppleDeviceCheckProvider,
+        AppleAppAttestProvider,
         AppleAppAttestWithDeviceCheckFallbackProvider,
         ReCaptchaEnterpriseProvider,
         ReCaptchaV3Provider;
