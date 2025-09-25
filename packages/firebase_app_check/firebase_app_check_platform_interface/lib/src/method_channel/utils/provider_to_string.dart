@@ -12,10 +12,12 @@ String getAndroidProviderString({
   AndroidProvider? legacyProvider,
   AndroidAppCheckProvider? newProvider,
 }) {
-  if (legacyProvider != null) {
-    return getLegacyAndroidProviderString(legacyProvider);
+  if (newProvider != null && legacyProvider != null) {
+    if (legacyProvider != AndroidProvider.playIntegrity) {
+      // Legacy provider is explicitly set to something other than default
+      return getLegacyAndroidProviderString(legacyProvider);
+    }
   }
-
   return newProvider?.type ?? 'playIntegrity';
 }
 
@@ -24,10 +26,12 @@ String getAppleProviderString({
   AppleProvider? legacyProvider,
   AppleAppCheckProvider? newProvider,
 }) {
-  if (legacyProvider != null) {
-    return getLegacyAppleProviderString(legacyProvider);
+  if (newProvider != null && legacyProvider != null) {
+    if (legacyProvider != AppleProvider.deviceCheck) {
+      // Legacy provider is explicitly set to something other than default
+      return getLegacyAppleProviderString(legacyProvider);
+    }
   }
-
   return newProvider?.type ?? 'deviceCheck';
 }
 
