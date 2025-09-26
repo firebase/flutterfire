@@ -29,7 +29,8 @@ import '../api.dart'
         SerializationStrategy,
         parseUsageMetadata,
         parseCitationMetadata,
-        parseGroundingMetadata;
+        parseGroundingMetadata,
+        parseUrlContextMetadata;
 import '../content.dart' show Content, parseContent;
 import '../error.dart';
 import '../tool.dart' show Tool, ToolConfig;
@@ -173,6 +174,11 @@ Candidate _parseCandidate(Object? jsonObject) {
     groundingMetadata: switch (jsonObject) {
       {'groundingMetadata': final Object groundingMetadata} =>
         parseGroundingMetadata(groundingMetadata),
+      _ => null
+    },
+    urlContextMetadata: switch (jsonObject) {
+      {'urlContextMetadata': final Object urlContextMetadata} =>
+        parseUrlContextMetadata(urlContextMetadata),
       _ => null
     },
   );

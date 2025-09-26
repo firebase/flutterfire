@@ -336,6 +336,22 @@ void main() {
         );
       });
 
+      test('can pass a url context tool', () async {
+        final (client, model) = createModel(
+          tools: [Tool.urlContext()],
+        );
+        const prompt = 'Some prompt';
+        await client.checkRequest(
+          () => model.generateContent([Content.text(prompt)]),
+          verifyRequest: (_, request) {
+            expect(request['tools'], [
+              {'urlContext': {}},
+            ]);
+          },
+          response: arbitraryGenerateContentResponse,
+        );
+      });
+
       test('can enable code execution', () async {
         final (client, model) = createModel(tools: [
           // Tool(codeExecution: CodeExecution()),
