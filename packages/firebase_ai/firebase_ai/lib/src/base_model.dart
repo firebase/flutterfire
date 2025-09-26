@@ -36,7 +36,7 @@ import 'imagen/imagen_reference.dart';
 import 'live_api.dart';
 import 'live_session.dart';
 import 'tool.dart';
-import 'vertex_version.dart';
+import 'firebaseai_version.dart';
 
 part 'generative_model.dart';
 part 'imagen/imagen_model.dart';
