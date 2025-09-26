@@ -8,15 +8,245 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:firebase_database_platform_interface/src/method_channel/method_channel_database.dart';
 import 'package:firebase_database_platform_interface/src/method_channel/method_channel_database_reference.dart';
+import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart'
+    as pigeon;
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'pigeon/test_api.dart';
 import 'test_common.dart';
+
+class MockFirebaseDatabaseHostApi implements TestFirebaseDatabaseHostApi {
+  final List<Map<String, dynamic>> log = <Map<String, dynamic>>[];
+
+  @override
+  Future<void> goOnline(pigeon.DatabasePigeonFirebaseApp app) async {
+    log.add({'method': 'goOnline', 'app': app});
+  }
+
+  @override
+  Future<void> goOffline(pigeon.DatabasePigeonFirebaseApp app) async {
+    log.add({'method': 'goOffline', 'app': app});
+  }
+
+  @override
+  Future<void> setPersistenceEnabled(
+    pigeon.DatabasePigeonFirebaseApp app,
+    bool enabled,
+  ) async {
+    log.add(
+      {'method': 'setPersistenceEnabled', 'app': app, 'enabled': enabled},
+    );
+  }
+
+  @override
+  Future<void> setPersistenceCacheSizeBytes(
+    pigeon.DatabasePigeonFirebaseApp app,
+    int cacheSize,
+  ) async {
+    log.add({
+      'method': 'setPersistenceCacheSizeBytes',
+      'app': app,
+      'cacheSize': cacheSize,
+    });
+  }
+
+  @override
+  Future<void> setLoggingEnabled(
+    pigeon.DatabasePigeonFirebaseApp app,
+    bool enabled,
+  ) async {
+    log.add({'method': 'setLoggingEnabled', 'app': app, 'enabled': enabled});
+  }
+
+  @override
+  Future<void> useDatabaseEmulator(
+    pigeon.DatabasePigeonFirebaseApp app,
+    String host,
+    int port,
+  ) async {
+    log.add({
+      'method': 'useDatabaseEmulator',
+      'app': app,
+      'host': host,
+      'port': port,
+    });
+  }
+
+  @override
+  Future<pigeon.DatabaseReferencePlatform> ref(
+      pigeon.DatabasePigeonFirebaseApp app,
+      // ignore: require_trailing_commas
+      [String? path]) async {
+    log.add({'method': 'ref', 'app': app, 'path': path});
+    return pigeon.DatabaseReferencePlatform(
+      path: path ?? '',
+    );
+  }
+
+  @override
+  Future<pigeon.DatabaseReferencePlatform> refFromURL(
+    pigeon.DatabasePigeonFirebaseApp app,
+    String url,
+  ) async {
+    log.add({'method': 'refFromURL', 'app': app, 'url': url});
+    return pigeon.DatabaseReferencePlatform(
+      path: '',
+    );
+  }
+
+  @override
+  Future<void> purgeOutstandingWrites(
+    pigeon.DatabasePigeonFirebaseApp app,
+  ) async {
+    log.add({'method': 'purgeOutstandingWrites', 'app': app});
+  }
+
+  @override
+  Future<void> databaseReferenceSet(
+    pigeon.DatabasePigeonFirebaseApp app,
+    pigeon.DatabaseReferenceRequest request,
+  ) async {
+    log.add({'method': 'databaseReferenceSet', 'app': app, 'request': request});
+  }
+
+  @override
+  Future<void> databaseReferenceSetWithPriority(
+    pigeon.DatabasePigeonFirebaseApp app,
+    pigeon.DatabaseReferenceRequest request,
+  ) async {
+    log.add({
+      'method': 'databaseReferenceSetWithPriority',
+      'app': app,
+      'request': request,
+    });
+  }
+
+  @override
+  Future<void> databaseReferenceUpdate(
+    pigeon.DatabasePigeonFirebaseApp app,
+    pigeon.UpdateRequest request,
+  ) async {
+    log.add(
+      {'method': 'databaseReferenceUpdate', 'app': app, 'request': request},
+    );
+  }
+
+  @override
+  Future<void> databaseReferenceSetPriority(
+    pigeon.DatabasePigeonFirebaseApp app,
+    pigeon.DatabaseReferenceRequest request,
+  ) async {
+    log.add({
+      'method': 'databaseReferenceSetPriority',
+      'app': app,
+      'request': request,
+    });
+  }
+
+  @override
+  Future<void> databaseReferenceRunTransaction(
+    pigeon.DatabasePigeonFirebaseApp app,
+    pigeon.TransactionRequest request,
+  ) async {
+    log.add({
+      'method': 'databaseReferenceRunTransaction',
+      'app': app,
+      'request': request,
+    });
+  }
+
+  @override
+  Future<Map<String, Object?>> databaseReferenceGetTransactionResult(
+    pigeon.DatabasePigeonFirebaseApp app,
+    int transactionKey,
+  ) async {
+    log.add({
+      'method': 'databaseReferenceGetTransactionResult',
+      'app': app,
+      'transactionKey': transactionKey,
+    });
+    return {
+      'error': null,
+      'committed': true,
+      'snapshot': {
+        'key': 'fakeKey',
+        'value': {'fakeKey': 'updated fakeValue'},
+      },
+      'childKeys': ['fakeKey'],
+    };
+  }
+
+  @override
+  Future<void> onDisconnectSet(
+    pigeon.DatabasePigeonFirebaseApp app,
+    pigeon.DatabaseReferenceRequest request,
+  ) async {
+    log.add({'method': 'onDisconnectSet', 'app': app, 'request': request});
+  }
+
+  @override
+  Future<void> onDisconnectSetWithPriority(
+    pigeon.DatabasePigeonFirebaseApp app,
+    pigeon.DatabaseReferenceRequest request,
+  ) async {
+    log.add({
+      'method': 'onDisconnectSetWithPriority',
+      'app': app,
+      'request': request,
+    });
+  }
+
+  @override
+  Future<void> onDisconnectUpdate(
+    pigeon.DatabasePigeonFirebaseApp app,
+    pigeon.UpdateRequest request,
+  ) async {
+    log.add({'method': 'onDisconnectUpdate', 'app': app, 'request': request});
+  }
+
+  @override
+  Future<void> onDisconnectCancel(
+    pigeon.DatabasePigeonFirebaseApp app,
+    String path,
+  ) async {
+    log.add({'method': 'onDisconnectCancel', 'app': app, 'path': path});
+  }
+
+  @override
+  Future<String> queryObserve(
+    pigeon.DatabasePigeonFirebaseApp app,
+    pigeon.QueryRequest request,
+  ) async {
+    log.add({'method': 'queryObserve', 'app': app, 'request': request});
+    return 'mock/path';
+  }
+
+  @override
+  Future<void> queryKeepSynced(
+    pigeon.DatabasePigeonFirebaseApp app,
+    pigeon.QueryRequest request,
+  ) async {
+    log.add({'method': 'queryKeepSynced', 'app': app, 'request': request});
+  }
+
+  @override
+  Future<Map<String, Object?>> queryGet(
+    pigeon.DatabasePigeonFirebaseApp app,
+    pigeon.QueryRequest request,
+  ) async {
+    log.add({'method': 'queryGet', 'app': app, 'request': request});
+    return {
+      'value': 'test-value',
+      'key': 'test-key',
+    };
+  }
+}
 
 void main() {
   initializeMethodChannel();
   late FirebaseApp app;
-  late TestDefaultBinaryMessenger? messenger;
+  late MockFirebaseDatabaseHostApi mockApi;
 
   setUpAll(() async {
     app = await Firebase.initializeApp(
@@ -29,76 +259,19 @@ void main() {
       ),
     );
 
-    messenger =
-        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+    mockApi = MockFirebaseDatabaseHostApi();
+    TestFirebaseDatabaseHostApi.setUp(mockApi);
   });
 
   group('MethodChannelDatabase', () {
-    const channel = MethodChannel('plugins.flutter.io/firebase_database');
     const eventChannel = MethodChannel('mock/path');
-
-    final List<MethodCall> log = <MethodCall>[];
 
     const String databaseURL = 'https://fake-database-url2.firebaseio.com';
     late MethodChannelDatabase database;
 
     setUp(() async {
       database = MethodChannelDatabase(app: app, databaseURL: databaseURL);
-
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
-        log.add(methodCall);
-
-        switch (methodCall.method) {
-          case 'Query#observe':
-            return 'mock/path';
-          case 'DatabaseReference#runTransaction':
-            late Map<String, dynamic> updatedValue;
-
-            Future<void> simulateTransaction(
-              int transactionKey,
-              String key,
-              dynamic data,
-            ) async {
-              await messenger?.handlePlatformMessage(
-                channel.name,
-                channel.codec.encodeMethodCall(
-                  MethodCall(
-                    'FirebaseDatabase#callTransactionHandler',
-                    <String, dynamic>{
-                      'transactionKey': transactionKey,
-                      'snapshot': <String, dynamic>{
-                        'key': key,
-                        'value': data,
-                      },
-                    },
-                  ),
-                ),
-                (data) {
-                  final decoded = channel.codec.decodeEnvelope(data!);
-                  updatedValue =
-                      Map.from(decoded.cast<String, dynamic>()['value']);
-                },
-              );
-            }
-
-            await simulateTransaction(0, 'fakeKey', {'fakeKey': 'fakeValue'});
-
-            return <String, dynamic>{
-              'error': null,
-              'committed': true,
-              'snapshot': <String, dynamic>{
-                'key': 'fakeKey',
-                'value': updatedValue,
-              },
-              'childKeys': ['fakeKey'],
-            };
-          default:
-            return null;
-        }
-      });
-
-      log.clear();
+      mockApi.log.clear();
     });
 
     test('setting database instance options', () async {
@@ -106,23 +279,16 @@ void main() {
       database.setPersistenceCacheSizeBytes(10000);
       database.setPersistenceEnabled(true);
       database.useDatabaseEmulator('localhost', 1234);
-      // Options are only sent on subsequent calls to method channel.
+      // Options are only sent on subsequent calls to Pigeon.
       await database.goOnline();
       expect(
-        log,
+        mockApi.log,
         <Matcher>[
-          isMethodCall(
-            'FirebaseDatabase#goOnline',
-            arguments: <String, dynamic>{
-              'appName': app.name,
-              'databaseURL': databaseURL,
-              'persistenceEnabled': true,
-              'cacheSizeBytes': 10000,
-              'loggingEnabled': true,
-              'emulatorHost': 'localhost',
-              'emulatorPort': 1234,
-            },
-          ),
+          containsPair('method', 'setLoggingEnabled'),
+          containsPair('method', 'setPersistenceCacheSizeBytes'),
+          containsPair('method', 'setPersistenceEnabled'),
+          containsPair('method', 'useDatabaseEmulator'),
+          containsPair('method', 'goOnline'),
         ],
       );
     });
@@ -130,15 +296,9 @@ void main() {
     test('goOnline', () async {
       await database.goOnline();
       expect(
-        log,
+        mockApi.log,
         <Matcher>[
-          isMethodCall(
-            'FirebaseDatabase#goOnline',
-            arguments: <String, dynamic>{
-              'appName': app.name,
-              'databaseURL': databaseURL,
-            },
-          ),
+          containsPair('method', 'goOnline'),
         ],
       );
     });
@@ -146,15 +306,9 @@ void main() {
     test('goOffline', () async {
       await database.goOffline();
       expect(
-        log,
+        mockApi.log,
         <Matcher>[
-          isMethodCall(
-            'FirebaseDatabase#goOffline',
-            arguments: <String, dynamic>{
-              'appName': app.name,
-              'databaseURL': databaseURL,
-            },
-          ),
+          containsPair('method', 'goOffline'),
         ],
       );
     });
@@ -162,15 +316,9 @@ void main() {
     test('purgeOutstandingWrites', () async {
       await database.purgeOutstandingWrites();
       expect(
-        log,
+        mockApi.log,
         <Matcher>[
-          isMethodCall(
-            'FirebaseDatabase#purgeOutstandingWrites',
-            arguments: <String, dynamic>{
-              'appName': app.name,
-              'databaseURL': databaseURL,
-            },
-          ),
+          containsPair('method', 'purgeOutstandingWrites'),
         ],
       );
     });
@@ -187,49 +335,12 @@ void main() {
         await database.ref('bar').setWithPriority(value, null);
         await database.ref('baz').set(serverValue);
         expect(
-          log,
+          mockApi.log,
           <Matcher>[
-            isMethodCall(
-              'DatabaseReference#set',
-              arguments: <String, dynamic>{
-                'appName': app.name,
-                'databaseURL': databaseURL,
-                'path': 'foo',
-                'value': value,
-              },
-            ),
-            isMethodCall(
-              'DatabaseReference#setWithPriority',
-              arguments: <String, dynamic>{
-                'appName': app.name,
-                'databaseURL': databaseURL,
-                'path': 'bar',
-                'value': value,
-                'priority': priority,
-              },
-            ),
-            isMethodCall(
-              'DatabaseReference#setWithPriority',
-              arguments: <String, dynamic>{
-                'appName': app.name,
-                'databaseURL': databaseURL,
-                'path': 'bar',
-                'value': value,
-              },
-            ),
-            isMethodCall(
-              'DatabaseReference#set',
-              arguments: <String, dynamic>{
-                'appName': app.name,
-                'databaseURL': databaseURL,
-                'path': 'baz',
-                'value': {
-                  'qux': {
-                    '.sv': {'increment': 8},
-                  },
-                },
-              },
-            ),
+            containsPair('method', 'databaseReferenceSet'),
+            containsPair('method', 'databaseReferenceSetWithPriority'),
+            containsPair('method', 'databaseReferenceSetWithPriority'),
+            containsPair('method', 'databaseReferenceSet'),
           ],
         );
       });
@@ -237,17 +348,9 @@ void main() {
         final dynamic value = <String, dynamic>{'hello': 'world'};
         await database.ref('foo').update(value);
         expect(
-          log,
+          mockApi.log,
           <Matcher>[
-            isMethodCall(
-              'DatabaseReference#update',
-              arguments: <String, dynamic>{
-                'appName': app.name,
-                'databaseURL': databaseURL,
-                'path': 'foo',
-                'value': value,
-              },
-            ),
+            containsPair('method', 'databaseReferenceUpdate'),
           ],
         );
       });
@@ -256,17 +359,9 @@ void main() {
         const int priority = 42;
         await database.ref('foo').setPriority(priority);
         expect(
-          log,
+          mockApi.log,
           <Matcher>[
-            isMethodCall(
-              'DatabaseReference#setPriority',
-              arguments: <String, dynamic>{
-                'appName': app.name,
-                'databaseURL': databaseURL,
-                'path': 'foo',
-                'priority': priority,
-              },
-            ),
+            containsPair('method', 'databaseReferenceSetPriority'),
           ],
         );
       });
@@ -282,18 +377,10 @@ void main() {
         });
 
         expect(
-          log,
+          mockApi.log,
           <Matcher>[
-            isMethodCall(
-              'DatabaseReference#runTransaction',
-              arguments: <String, dynamic>{
-                'appName': app.name,
-                'databaseURL': databaseURL,
-                'path': 'foo',
-                'transactionApplyLocally': true,
-                'transactionKey': 0,
-              },
-            ),
+            containsPair('method', 'databaseReferenceRunTransaction'),
+            containsPair('method', 'databaseReferenceGetTransactionResult'),
           ],
         );
 
@@ -320,56 +407,13 @@ void main() {
         await ref.child('por').onDisconnect().setWithPriority(value, value);
         await ref.child('por').onDisconnect().setWithPriority(value, null);
         expect(
-          log,
+          mockApi.log,
           <Matcher>[
-            isMethodCall(
-              'OnDisconnect#set',
-              arguments: <String, dynamic>{
-                'appName': app.name,
-                'databaseURL': databaseURL,
-                'path': 'foo',
-                'value': value,
-              },
-            ),
-            isMethodCall(
-              'OnDisconnect#setWithPriority',
-              arguments: <String, dynamic>{
-                'appName': app.name,
-                'databaseURL': databaseURL,
-                'path': 'bar',
-                'value': value,
-                'priority': priority,
-              },
-            ),
-            isMethodCall(
-              'OnDisconnect#setWithPriority',
-              arguments: <String, dynamic>{
-                'appName': app.name,
-                'databaseURL': databaseURL,
-                'path': 'psi',
-                'value': value,
-                'priority': 'priority',
-              },
-            ),
-            isMethodCall(
-              'OnDisconnect#setWithPriority',
-              arguments: <String, dynamic>{
-                'appName': app.name,
-                'databaseURL': databaseURL,
-                'path': 'por',
-                'value': value,
-                'priority': value,
-              },
-            ),
-            isMethodCall(
-              'OnDisconnect#setWithPriority',
-              arguments: <String, dynamic>{
-                'appName': app.name,
-                'databaseURL': databaseURL,
-                'path': 'por',
-                'value': value,
-              },
-            ),
+            containsPair('method', 'onDisconnectSet'),
+            containsPair('method', 'onDisconnectSetWithPriority'),
+            containsPair('method', 'onDisconnectSetWithPriority'),
+            containsPair('method', 'onDisconnectSetWithPriority'),
+            containsPair('method', 'onDisconnectSetWithPriority'),
           ],
         );
       });
@@ -377,50 +421,27 @@ void main() {
         final dynamic value = <String, dynamic>{'hello': 'world'};
         await database.ref('foo').onDisconnect().update(value);
         expect(
-          log,
+          mockApi.log,
           <Matcher>[
-            isMethodCall(
-              'OnDisconnect#update',
-              arguments: <String, dynamic>{
-                'appName': app.name,
-                'databaseURL': databaseURL,
-                'path': 'foo',
-                'value': value,
-              },
-            ),
+            containsPair('method', 'onDisconnectUpdate'),
           ],
         );
       });
       test('cancel', () async {
         await database.ref('foo').onDisconnect().cancel();
         expect(
-          log,
+          mockApi.log,
           <Matcher>[
-            isMethodCall(
-              'OnDisconnect#cancel',
-              arguments: <String, dynamic>{
-                'appName': app.name,
-                'databaseURL': databaseURL,
-                'path': 'foo',
-              },
-            ),
+            containsPair('method', 'onDisconnectCancel'),
           ],
         );
       });
       test('remove', () async {
         await database.ref('foo').onDisconnect().remove();
         expect(
-          log,
+          mockApi.log,
           <Matcher>[
-            isMethodCall(
-              // Internally calls set(null).
-              'OnDisconnect#set',
-              arguments: <String, dynamic>{
-                'appName': app.name,
-                'databaseURL': databaseURL,
-                'path': 'foo',
-              },
-            ),
+            containsPair('method', 'onDisconnectSet'),
           ],
         );
       });
@@ -432,18 +453,9 @@ void main() {
         final QueryPlatform query = database.ref(path);
         await query.keepSynced(QueryModifiers([]), true);
         expect(
-          log,
+          mockApi.log,
           <Matcher>[
-            isMethodCall(
-              'Query#keepSynced',
-              arguments: <String, dynamic>{
-                'appName': app.name,
-                'databaseURL': databaseURL,
-                'path': path,
-                'modifiers': [],
-                'value': true,
-              },
-            ),
+            containsPair('method', 'queryKeepSynced'),
           ],
         );
       });
@@ -544,19 +556,9 @@ void main() {
         await Future.delayed(Duration.zero);
 
         expect(
-          log,
+          mockApi.log,
           <Matcher>[
-            isMethodCall(
-              'Query#observe',
-              arguments: <String, dynamic>{
-                'appName': app.name,
-                'databaseURL': databaseURL,
-                'path': path,
-                'modifiers': [],
-                'eventChannelNamePrefix':
-                    'foo-testApp-https://fake-database-url2.firebaseio.com-DatabaseEventType.value-[]',
-              },
-            ),
+            containsPair('method', 'queryObserve'),
           ],
         );
       });
