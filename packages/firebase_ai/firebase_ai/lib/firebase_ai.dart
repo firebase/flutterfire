@@ -34,7 +34,8 @@ export 'src/api.dart'
         UsageMetadata;
 export 'src/base_model.dart'
     show GenerativeModel, ImagenModel, LiveGenerativeModel;
-export 'src/chat.dart' show ChatSession, StartChatExtension;
+export 'src/chat.dart'
+    show ChatSession, StartChatExtension, TemplateChatSession;
 export 'src/content.dart'
     show
         Content,

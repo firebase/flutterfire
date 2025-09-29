@@ -309,12 +309,18 @@ abstract class BaseApiClientModel extends BaseModel {
   Future<T> makeTemplateRequest<T>(
       TemplateTask task,
       String templateId,
-      Map<String, Object?> params,
+      Map<String, Object?>? params,
       Iterable<Content>? history,
       T Function(Map<String, Object?>) parse) {
-    //params['name'] = templateName(templateId);
+    Map<String, Object?> body = {};
+    if (params != null) {
+      body['inputs'] = params;
+    }
+    if (history != null) {
+      body['history'] = history.map((c) => c.toJson()).toList();
+    }
     return _client
-        .makeRequest(templateTaskUri(task, templateId), params)
+        .makeRequest(templateTaskUri(task, templateId), body)
         .then(parse);
   }
 }

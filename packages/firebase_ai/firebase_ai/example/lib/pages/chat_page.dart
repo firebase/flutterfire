@@ -33,6 +33,7 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   ChatSession? _chat;
+  TemplateChatSession? _templateChat;
   GenerativeModel? _model;
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
@@ -64,6 +65,9 @@ class _ChatPageState extends State<ChatPage> {
       );
     }
     _chat = _model?.startChat();
+    _templateChat = _model?.startTemplateChat(
+      'chat_history.prompt',
+    );
   }
 
   void _scrollDown() {
@@ -221,11 +225,17 @@ class _ChatPageState extends State<ChatPage> {
       var response = await _model?.templateGenerateContent(
         'greeting.prompt',
         {
-          'inputs': {
-            'name': templatePrompt,
-          },
+          'name': templatePrompt,
+          'language': 'Chinese',
         },
       );
+
+      // var response = await _templateChat?.sendMessage(
+      //   Content.text(templatePrompt),
+      //   {
+      //     'message': templatePrompt,
+      //   },
+      // );
 
       var text = response?.text;
 

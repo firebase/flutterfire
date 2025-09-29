@@ -166,23 +166,54 @@ final class ChatSession {
   }
 }
 
+/// A back-and-forth chat with a server template.
+///
+/// Records messages sent and received in [history]. The history will always
+/// record the content from the first candidate in the
+/// [GenerateContentResponse], other candidates may be available on the returned
+/// response. The history is maintained and updated by the `google_generative_ai`
+/// package and reflects the most current state of the chat session.
 final class TemplateChatSession {
-  TemplateChatSession._(this._templateGenerateContent, this._templateId,
-      this._params, this._history);
+  TemplateChatSession._(
+    this._templateHistoryGenerateContent,
+    this._templateId,
+    this._history,
+  );
 
-  final Future<GenerateContentResponse> Function(Iterable<Content> content,
-      String templateId, Map<String, Object?> params) _templateGenerateContent;
+  final Future<GenerateContentResponse> Function(
+      Iterable<Content> content,
+      String templateId,
+      Map<String, Object?> params) _templateHistoryGenerateContent;
   final String _templateId;
-  final Map<String, Object?> _params;
   final List<Content> _history;
 
   final _mutex = Mutex();
 
-  Future<GenerateContentResponse> sendMessage(Content message) async {
+  /// The content that has been successfully sent to, or received from, the
+  /// generative model.
+  ///
+  /// If there are outstanding requests from calls to [sendMessage],
+  /// these will not be reflected in the history.
+  /// Messages without a candidate in the response are not recorded in history,
+  /// including the message sent to the model.
+  Iterable<Content> get history => _history.skip(0);
+
+  /// Sends [params] to the server template as a continuation of the chat [history].
+  ///
+  /// Prepends the history to the request and uses the provided model to
+  /// generate new content.
+  ///
+  /// When there are no candidates in the response, the [message] and response
+  /// are ignored and will not be recorded in the [history].
+  Future<GenerateContentResponse> sendMessage(
+      Content message, Map<String, Object?> params) async {
     final lock = await _mutex.acquire();
     try {
-      final response = await _templateGenerateContent(
-          _history.followedBy([message]), _templateId, _params);
+      final response = await _templateHistoryGenerateContent(
+        _history.followedBy([message]),
+        _templateId,
+        params,
+      );
       if (response.candidates case [final candidate, ...]) {
         _history.add(message);
         final normalizedContent = candidate.content.role == null
@@ -213,9 +244,8 @@ extension StartChatExtension on GenerativeModel {
       ChatSession._(generateContent, generateContentStream, history ?? [],
           safetySettings, generationConfig);
 
-  TemplateChatSession startTemplateChat(
-          String templateId, Map<String, Object?> params,
+  TemplateChatSession startTemplateChat(String templateId,
           {List<Content>? history}) =>
-      TemplateChatSession._(templateGenerateContentWithHistory, templateId,
-          params, history ?? []);
+      TemplateChatSession._(
+          templateGenerateContentWithHistory, templateId, history ?? []);
 }
