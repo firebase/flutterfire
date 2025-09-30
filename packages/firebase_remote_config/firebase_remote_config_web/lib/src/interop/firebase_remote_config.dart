@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:convert' show utf8;
 import 'dart:js_interop';
 
@@ -158,6 +159,32 @@ class RemoteConfig
         .setCustomSignals(jsObject, customSignals.jsify()! as JSObject)
         .toDart;
   }
+
+  StreamController<RemoteConfigUpdatePayload>? _onConfigUpdatedController;
+
+  Stream<RemoteConfigUpdatePayload> get onConfigUpdated {
+    if (_onConfigUpdatedController == null) {
+      _onConfigUpdatedController =
+          StreamController<RemoteConfigUpdatePayload>.broadcast(sync: true);
+      final errorWrapper = (JSObject error) {
+        _onConfigUpdatedController?.addError(error);
+      };
+      final nextWrapper =
+          (remote_config_interop.ConfigUpdateJsImpl configUpdate) {
+        _onConfigUpdatedController
+            ?.add(RemoteConfigUpdatePayload._fromJsObject(configUpdate));
+      };
+      remote_config_interop.ConfigUpdateObserver observer =
+          remote_config_interop.ConfigUpdateObserver(
+        error: errorWrapper.toJS,
+        next: nextWrapper.toJS,
+      );
+
+      remote_config_interop.onConfigUpdate(jsObject, observer);
+    }
+
+    return _onConfigUpdatedController!.stream;
+  }
 }
 
 ValueSource getSource(String source) {
@@ -219,4 +246,20 @@ enum RemoteConfigLogLevel {
   debug,
   error,
   silent,
+}
+
+class RemoteConfigUpdatePayload
+    extends JsObjectWrapper<remote_config_interop.ConfigUpdateJsImpl> {
+  RemoteConfigUpdatePayload._fromJsObject(
+    remote_config_interop.ConfigUpdateJsImpl jsObject,
+  ) : super.fromJsObject(jsObject);
+
+  Set<String> get updatedKeys {
+    final updatedKeysSet = <String>{};
+    final callback = (JSAny key, JSString value, JSAny set) {
+      updatedKeysSet.add(value.toDart);
+    };
+    jsObject.getUpdatedKeys().forEach(callback.toJS);
+    return updatedKeysSet;
+  }
 }
