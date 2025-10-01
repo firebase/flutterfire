@@ -255,7 +255,7 @@ void main() {
             }
           });
         },
-        skip: !kIsWeb && Platform.isWindows,
+        skip: !kIsWeb && Platform.isWindows && Platform.isMacOS,
       );
 
       group(
@@ -272,7 +272,7 @@ void main() {
             }
           });
         },
-        skip: !kIsWeb && Platform.isWindows,
+        skip: !kIsWeb && Platform.isWindows && Platform.isMacOS,
       );
 
       group(
@@ -292,7 +292,7 @@ void main() {
             }
           });
         },
-        skip: !kIsWeb && Platform.isWindows,
+        skip: !kIsWeb && Platform.isWindows && Platform.isMacOS,
       );
 
       group('createUserWithEmailAndPassword', () {
@@ -443,7 +443,7 @@ void main() {
             }
           });
         },
-        skip: !kIsWeb && Platform.isWindows,
+        skip: !kIsWeb && Platform.isWindows && Platform.isMacOS,
       );
 
       group(
@@ -868,7 +868,7 @@ void main() {
             }
           });
         },
-        skip: !kIsWeb && Platform.isWindows,
+        skip: !kIsWeb && Platform.isWindows && Platform.isMacOS,
       );
 
       group(
