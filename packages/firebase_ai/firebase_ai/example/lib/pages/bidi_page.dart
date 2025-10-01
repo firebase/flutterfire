@@ -307,8 +307,7 @@ class _BidiPageState extends State<BidiPage> {
     });
     try {
       final prompt = Content.text(textPrompt);
-      // await _session.send(input: prompt, turnComplete: true);
-      await _session.sendTextRealtime(textPrompt);
+      await _session.send(input: prompt, turnComplete: true);
     } catch (e) {
       _showError(e.toString());
     }

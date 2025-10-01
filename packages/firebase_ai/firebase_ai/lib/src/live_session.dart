@@ -144,6 +144,7 @@ class LiveSession {
 
   Future<void> _sendMediaChunk(InlineDataPart chunk) async {
     var clientMessage = LiveClientRealtimeInput(
+        // ignore: deprecated_member_use_from_same_package
         mediaChunks: [chunk]); // Create a list with the single chunk
     var clientJson = jsonEncode(clientMessage.toJson());
     _ws.sink.add(clientJson);

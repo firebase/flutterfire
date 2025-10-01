@@ -188,18 +188,21 @@ class LiveClientRealtimeInput {
 
   /// Creates a [LiveClientRealtimeInput] with audio data.
   LiveClientRealtimeInput.audio(this.audio)
+      // ignore: deprecated_member_use_from_same_package
       : mediaChunks = null,
         video = null,
         text = null;
 
   /// Creates a [LiveClientRealtimeInput] with video data.
   LiveClientRealtimeInput.video(this.video)
+      // ignore: deprecated_member_use_from_same_package
       : mediaChunks = null,
         audio = null,
         text = null;
 
   /// Creates a [LiveClientRealtimeInput] with text data.
   LiveClientRealtimeInput.text(this.text)
+      // ignore: deprecated_member_use_from_same_package
       : mediaChunks = null,
         audio = null,
         video = null;
@@ -220,8 +223,10 @@ class LiveClientRealtimeInput {
   // ignore: public_member_api_docs
   Map<String, dynamic> toJson() => {
         'realtime_input': {
+          // ignore: deprecated_member_use_from_same_package
           if (mediaChunks != null)
             'media_chunks':
+                // ignore: deprecated_member_use_from_same_package
                 mediaChunks?.map((e) => e.toMediaChunkJson()).toList(),
           if (audio != null) 'audio': audio!.toMediaChunkJson(),
           if (video != null) 'video': video!.toMediaChunkJson(),
