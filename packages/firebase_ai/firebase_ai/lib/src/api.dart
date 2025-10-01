@@ -1372,6 +1372,12 @@ Candidate _parseCandidate(Object? jsonObject) {
 }
 
 PromptFeedback _parsePromptFeedback(Object jsonObject) {
+  if (jsonObject is! Map) {
+    throw unhandledFormat('PromptFeedback', jsonObject);
+  }
+  if (jsonObject.isEmpty) {
+    return PromptFeedback(null, null, []);
+  }
   return switch (jsonObject) {
     {
       'safetyRatings': final List<Object?> safetyRatings,

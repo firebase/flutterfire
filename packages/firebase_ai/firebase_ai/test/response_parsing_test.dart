@@ -67,6 +67,32 @@ void main() {
       );
     });
 
+    test('with empty promptFeedback', () {
+      const response = '''
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "Mountain View, California, United States"
+          }
+        ],
+        "role": "model"
+      },
+      "index": 0
+    }
+  ],
+  "promptFeedback": {}
+}
+''';
+      final decoded = jsonDecode(response) as Object;
+      expect(
+        VertexSerialization().parseGenerateContentResponse(decoded),
+        isA<GenerateContentResponse>(),
+      );
+    });
+
     test('with a blocked prompt', () {
       const response = '''
 {
