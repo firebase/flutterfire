@@ -280,7 +280,7 @@ class _BidiPageState extends State<BidiPage> {
       // Map the Uint8List stream to InlineDataPart stream
       if (inputStream != null) {
         await for (final data in inputStream) {
-          await _session.sendAudio(InlineDataPart('audio/pcm', data));
+          await _session.sendAudioRealtime(InlineDataPart('audio/pcm', data));
         }
       }
     } catch (e) {
@@ -308,7 +308,7 @@ class _BidiPageState extends State<BidiPage> {
     try {
       final prompt = Content.text(textPrompt);
       // await _session.send(input: prompt, turnComplete: true);
-      await _session.sendText(textPrompt);
+      await _session.sendTextRealtime(textPrompt);
     } catch (e) {
       _showError(e.toString());
     }
