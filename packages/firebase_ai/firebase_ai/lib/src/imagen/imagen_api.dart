@@ -13,8 +13,6 @@
 // limitations under the License.
 import 'dart:developer';
 
-import 'package:meta/meta.dart';
-
 /// Specifies the level of safety filtering for image generation.
 ///
 /// If not specified, default will be "block_medium_and_above".

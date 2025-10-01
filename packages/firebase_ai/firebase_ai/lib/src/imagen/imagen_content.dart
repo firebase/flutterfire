@@ -13,7 +13,6 @@
 // limitations under the License.
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:meta/meta.dart';
 import '../error.dart';
 
 /// Base type of Imagen Image.
