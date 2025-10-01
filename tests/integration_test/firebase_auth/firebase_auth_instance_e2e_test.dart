@@ -193,7 +193,7 @@ void main() {
             );
           });
         },
-        skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS),
+        skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS || Platform.isIOS),
       );
 
       group('test all stream listeners', () {
@@ -255,7 +255,7 @@ void main() {
             }
           });
         },
-        skip: !kIsWeb && Platform.isWindows && Platform.isMacOS,
+        skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS || Platform.isIOS),
       );
 
       group(
@@ -272,7 +272,7 @@ void main() {
             }
           });
         },
-        skip: !kIsWeb && Platform.isWindows && Platform.isMacOS,
+        skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS || Platform.isIOS),
       );
 
       group(
@@ -292,7 +292,7 @@ void main() {
             }
           });
         },
-        skip: !kIsWeb && Platform.isWindows && Platform.isMacOS,
+        skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS || Platform.isIOS),
       );
 
       group('createUserWithEmailAndPassword', () {
@@ -443,7 +443,7 @@ void main() {
             }
           });
         },
-        skip: !kIsWeb && Platform.isWindows && Platform.isMacOS,
+        skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS || Platform.isIOS),
       );
 
       group(
@@ -868,7 +868,7 @@ void main() {
             }
           });
         },
-        skip: !kIsWeb && Platform.isWindows && Platform.isMacOS,
+        skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS),
       );
 
       group(
