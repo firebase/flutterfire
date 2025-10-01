@@ -158,7 +158,6 @@ class FirebaseAI extends FirebasePluginPlatform {
   ///
   /// The optional [safetySettings] can be used to control and guide the
   /// generation. See [ImagenSafetySettings] for details.
-  @experimental
   ImagenModel imagenModel(
       {required String model,
       ImagenGenerationConfig? generationConfig,

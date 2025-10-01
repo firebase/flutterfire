@@ -29,7 +29,6 @@ sealed class ImagenImage {
 }
 
 /// Represents an image stored as a base64-encoded string.
-@experimental
 final class ImagenInlineImage implements ImagenImage {
   // ignore: public_member_api_docs
   ImagenInlineImage({
