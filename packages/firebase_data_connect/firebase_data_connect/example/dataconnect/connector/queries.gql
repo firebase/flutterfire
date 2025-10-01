@@ -10,6 +10,13 @@ query ListMovies @auth(level: USER) {
   }
 }
 
+query GetMovie($key: Movie_Key!) @auth(level: USER) {
+  movie(key: $key) {
+    id
+    title
+  }
+}
+
 # List movies by partial title match
 query ListMoviesByPartialTitle($input: String!) @auth(level: PUBLIC) {
   movies(where: { title: { contains: $input } }) {

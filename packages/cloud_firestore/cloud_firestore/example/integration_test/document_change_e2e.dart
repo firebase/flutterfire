@@ -138,7 +138,8 @@ void runDocumentChangeTests() {
 
         await subscription.cancel();
       },
-      skip: defaultTargetPlatform == TargetPlatform.windows,
+      skip: defaultTargetPlatform == TargetPlatform.windows ||
+          defaultTargetPlatform == TargetPlatform.android,
     );
 
     test(

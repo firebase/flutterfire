@@ -429,6 +429,105 @@ void main() {
             (e.response.data as AbcHolder).abc == 'def')),
       );
     });
+    test(
+        'invokeOperation should decode a partial error if no path is specified',
+        () async {
+      final mockResponse = http.Response(
+        '''
+        {
+            "data": {"abc": "def"},
+            "errors": [
+                {
+                    "message": "invalid pkey",
+                    "locations": [],
+                    "path": null,
+                    "extensions": null
+                }
+            ]
+        }''',
+        200,
+      );
+      when(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).thenAnswer((_) async => mockResponse);
+
+      final deserializer = (String data) {
+        Map<String, dynamic> decoded = jsonDecode(data) as Map<String, dynamic>;
+        return AbcHolder(decoded['abc']!);
+      };
+
+      expect(
+        () => transport.invokeOperation(
+          'testQuery',
+          'executeQuery',
+          deserializer,
+          null,
+          null,
+          null,
+        ),
+        throwsA(predicate((e) =>
+            e is DataConnectOperationError &&
+            e.response.rawData!['abc'] == 'def' &&
+            e.response.errors.first.message == 'invalid pkey' &&
+            e.response.errors.first.path.isEmpty &&
+            e.response.data is AbcHolder &&
+            (e.response.data as AbcHolder).abc == 'def')),
+      );
+    });
+    test(
+        'invokeOperation should decode a partial error if list path is specified',
+        () async {
+      final mockResponse = http.Response(
+        '''
+        {
+            "data": {"abc": "def"},
+            "errors": [
+                {
+                    "message": "invalid pkey",
+                    "locations": [],
+                    "path": [1,2,3],
+                    "extensions": null
+                }
+            ]
+        }''',
+        200,
+      );
+      when(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).thenAnswer((_) async => mockResponse);
+
+      final deserializer = (String data) {
+        Map<String, dynamic> decoded = jsonDecode(data) as Map<String, dynamic>;
+        return AbcHolder(decoded['abc']!);
+      };
+
+      expect(
+          () => transport.invokeOperation(
+                'testQuery',
+                'executeQuery',
+                deserializer,
+                null,
+                null,
+                null,
+              ), throwsA(predicate((e) {
+        return e is DataConnectOperationError &&
+            e.response.rawData!['abc'] == 'def' &&
+            e.response.errors.first.message == 'invalid pkey' &&
+            e.response.errors.first.path.length == 3 &&
+            e.response.errors.first.path.first
+                is DataConnectListIndexPathSegment &&
+            e.response.data is AbcHolder &&
+            (e.response.data as AbcHolder).abc == 'def';
+      })));
+    });
   });
 }
 
