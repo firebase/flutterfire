@@ -223,11 +223,9 @@ class LiveClientRealtimeInput {
   // ignore: public_member_api_docs
   Map<String, dynamic> toJson() => {
         'realtime_input': {
-          // ignore: deprecated_member_use_from_same_package
-          if (mediaChunks != null)
-            'media_chunks':
-                // ignore: deprecated_member_use_from_same_package
-                mediaChunks?.map((e) => e.toMediaChunkJson()).toList(),
+          'media_chunks':
+              // ignore: deprecated_member_use_from_same_package
+              mediaChunks?.map((e) => e.toMediaChunkJson()).toList(),
           if (audio != null) 'audio': audio!.toMediaChunkJson(),
           if (video != null) 'video': video!.toMediaChunkJson(),
           if (text != null) 'text': text,
