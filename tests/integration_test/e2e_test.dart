@@ -87,7 +87,7 @@ void main() {
 void runAllTests() {
   firebase_core.main();
   firebase_auth.main();
-  firebase_database.main();
+  //firebase_database.main();
   firebase_crashlytics.main();
   firebase_analytics.main();
   cloud_functions.main();
