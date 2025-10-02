@@ -133,11 +133,13 @@ class _BidiPageState extends State<BidiPage> {
                 itemBuilder: (context, idx) {
                   return MessageWidget(
                     text: _messages[idx].text,
-                    image: Image.memory(
-                      _messages[idx].imageBytes!,
-                      cacheWidth: 400,
-                      cacheHeight: 400,
-                    ),
+                    image: _messages[idx].imageBytes != null
+                        ? Image.memory(
+                            _messages[idx].imageBytes!,
+                            cacheWidth: 400,
+                            cacheHeight: 400,
+                          )
+                        : null,
                     isFromUser: _messages[idx].fromUser ?? false,
                   );
                 },
@@ -275,13 +277,10 @@ class _BidiPageState extends State<BidiPage> {
     try {
       var inputStream = await _audioInput.startRecordingStream();
       await _audioOutput.playStream();
-      // Map the Uint8List stream to InlineDataPart stream
       if (inputStream != null) {
-        final inlineDataStream = inputStream.map((data) {
-          return InlineDataPart('audio/pcm', data);
-        });
-
-        await _session.sendMediaStream(inlineDataStream);
+        await for (final data in inputStream) {
+          await _session.sendAudioRealtime(InlineDataPart('audio/pcm', data));
+        }
       }
     } catch (e) {
       developer.log(e.toString());

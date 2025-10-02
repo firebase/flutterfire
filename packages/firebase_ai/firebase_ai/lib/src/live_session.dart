@@ -76,9 +76,47 @@ class LiveSession {
     _ws.sink.add(clientJson);
   }
 
+  /// Sends audio data to the server in realtime.
+  ///
+  /// Check https://ai.google.dev/api/live#bidigeneratecontentrealtimeinput for
+  /// details about the realtime input usage.
+  /// [audio]: The audio data to send.
+  Future<void> sendAudioRealtime(InlineDataPart audio) async {
+    _checkWsStatus();
+    var clientMessage = LiveClientRealtimeInput.audio(audio);
+    var clientJson = jsonEncode(clientMessage.toJson());
+    _ws.sink.add(clientJson);
+  }
+
+  /// Sends video data to the server in realtime.
+  ///
+  /// Check https://ai.google.dev/api/live#bidigeneratecontentrealtimeinput for
+  /// details about the realtime input usage.
+  /// [video]: The video data to send.
+  Future<void> sendVideoRealtime(InlineDataPart video) async {
+    _checkWsStatus();
+    var clientMessage = LiveClientRealtimeInput.video(video);
+    var clientJson = jsonEncode(clientMessage.toJson());
+    _ws.sink.add(clientJson);
+  }
+
+  /// Sends text data to the server in realtime.
+  ///
+  /// Check https://ai.google.dev/api/live#bidigeneratecontentrealtimeinput for
+  /// details about the realtime input usage.
+  /// [text]: The text data to send.
+  Future<void> sendTextRealtime(String text) async {
+    _checkWsStatus();
+    var clientMessage = LiveClientRealtimeInput.text(text);
+    var clientJson = jsonEncode(clientMessage.toJson());
+    _ws.sink.add(clientJson);
+  }
+
   /// Sends realtime input (media chunks) to the server.
   ///
   /// [mediaChunks]: The list of media chunks to send.
+  @Deprecated(
+      'Use sendAudioRealtime, sendVideoRealtime, or sendTextRealtime instead')
   Future<void> sendMediaChunks({
     required List<InlineDataPart> mediaChunks,
   }) async {
@@ -95,6 +133,7 @@ class LiveSession {
   ///
   /// Parameters:
   /// - [mediaChunkStream]: The stream of [InlineDataPart] objects to send to the server.
+  @Deprecated('Use sendAudio, sendVideo, or sendText with a stream instead')
   Future<void> sendMediaStream(Stream<InlineDataPart> mediaChunkStream) async {
     _checkWsStatus();
 
@@ -111,6 +150,7 @@ class LiveSession {
 
   Future<void> _sendMediaChunk(InlineDataPart chunk) async {
     var clientMessage = LiveClientRealtimeInput(
+        // ignore: deprecated_member_use_from_same_package
         mediaChunks: [chunk]); // Create a list with the single chunk
     var clientJson = jsonEncode(clientMessage.toJson());
     _ws.sink.add(clientJson);
