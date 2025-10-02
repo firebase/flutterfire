@@ -277,7 +277,6 @@ class _BidiPageState extends State<BidiPage> {
     try {
       var inputStream = await _audioInput.startRecordingStream();
       await _audioOutput.playStream();
-      // Map the Uint8List stream to InlineDataPart stream
       if (inputStream != null) {
         await for (final data in inputStream) {
           await _session.sendAudioRealtime(InlineDataPart('audio/pcm', data));
