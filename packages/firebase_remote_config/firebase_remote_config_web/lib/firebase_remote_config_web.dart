@@ -184,7 +184,8 @@ class FirebaseRemoteConfigWeb extends FirebaseRemoteConfigPlatform {
 
   @override
   Stream<RemoteConfigUpdate> get onConfigUpdated {
-    throw UnsupportedError('onConfigUpdated is not supported for web');
+    return _delegate.onConfigUpdated
+        .map((event) => RemoteConfigUpdate(event.updatedKeys));
   }
 
   @override
