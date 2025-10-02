@@ -78,6 +78,8 @@ class LiveSession {
 
   /// Sends audio data to the server in realtime.
   ///
+  /// Check https://ai.google.dev/api/live#bidigeneratecontentrealtimeinput for
+  /// details about the realtime input usage.
   /// [audio]: The audio data to send.
   Future<void> sendAudioRealtime(InlineDataPart audio) async {
     _checkWsStatus();
@@ -88,6 +90,8 @@ class LiveSession {
 
   /// Sends video data to the server in realtime.
   ///
+  /// Check https://ai.google.dev/api/live#bidigeneratecontentrealtimeinput for
+  /// details about the realtime input usage.
   /// [video]: The video data to send.
   Future<void> sendVideoRealtime(InlineDataPart video) async {
     _checkWsStatus();
@@ -98,6 +102,8 @@ class LiveSession {
 
   /// Sends text data to the server in realtime.
   ///
+  /// Check https://ai.google.dev/api/live#bidigeneratecontentrealtimeinput for
+  /// details about the realtime input usage.
   /// [text]: The text data to send.
   Future<void> sendTextRealtime(String text) async {
     _checkWsStatus();
