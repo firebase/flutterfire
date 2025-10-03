@@ -66,11 +66,11 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
   void _initializeModel(bool useVertexBackend) {
     if (useVertexBackend) {
       final vertexInstance = FirebaseAI.vertexAI(auth: FirebaseAuth.instance);
-      _currentModel = vertexInstance.generativeModel(model: 'gemini-1.5-flash');
+      _currentModel = vertexInstance.generativeModel(model: 'gemini-2.5-flash');
       _currentImagenModel = _initializeImagenModel(vertexInstance);
     } else {
       final googleAI = FirebaseAI.googleAI(auth: FirebaseAuth.instance);
-      _currentModel = googleAI.generativeModel(model: 'gemini-1.5-flash');
+      _currentModel = googleAI.generativeModel(model: 'gemini-2.5-flash');
       _currentImagenModel = _initializeImagenModel(googleAI);
     }
   }
@@ -82,7 +82,7 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
       imageFormat: ImagenFormat.jpeg(compressionQuality: 75),
     );
     return instance.imagenModel(
-      model: 'imagen-3.0-flash-001',
+      model: 'imagen-3.0-capability-001',
       generationConfig: generationConfig,
       safetySettings: ImagenSafetySettings(
         ImagenSafetyFilterLevel.blockLowAndAbove,

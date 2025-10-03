@@ -33,7 +33,6 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   ChatSession? _chat;
-  TemplateChatSession? _templateChat;
   GenerativeModel? _model;
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
