@@ -98,18 +98,6 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
                   if (!_loading)
                     IconButton(
                       onPressed: () async {
-                        await _sendTemplateStorageUriPrompt(
-                          _textController.text,
-                        );
-                      },
-                      icon: Icon(
-                        Icons.ten_mp,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                  if (!_loading)
-                    IconButton(
-                      onPressed: () async {
                         await _sendImagePrompt(_textController.text);
                       },
                       icon: Icon(
@@ -211,63 +199,6 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
       _generatedContent.add(MessageData(text: message, fromUser: true));
 
       var response = await widget.model.generateContent(content);
-      var text = response.text;
-      _generatedContent.add(MessageData(text: text, fromUser: false));
-
-      if (text == null) {
-        _showError('No response from API.');
-        return;
-      } else {
-        setState(() {
-          _loading = false;
-          _scrollDown();
-        });
-      }
-    } catch (e) {
-      _showError(e.toString());
-      setState(() {
-        _loading = false;
-      });
-    } finally {
-      _textController.clear();
-      setState(() {
-        _loading = false;
-      });
-      _textFieldFocus.requestFocus();
-    }
-  }
-
-  Future<void> _sendTemplateStorageUriPrompt(String message) async {
-    setState(() {
-      _loading = true;
-    });
-    try {
-      // final content = [
-      //   Content.multi([
-      //     TextPart(message),
-      //     const FileData(
-      //       'image/jpeg',
-      //       'gs://vertex-ai-example-ef5a2.appspot.com/foodpic.jpg',
-      //     ),
-      //   ]),
-      // ];
-      // _generatedContent.add(MessageData(text: message, fromUser: true));
-
-      ByteData catBytes = await rootBundle.load('assets/images/cat.jpg');
-      _generatedContent.add(MessageData(
-          text: message,
-          imageBytes: catBytes.buffer.asUint8List(),
-          fromUser: true));
-      var response = await widget.model.templateGenerateContent(
-        'media.prompt',
-        {
-          'imageData': {
-            'isInline': true,
-            'mimeType': 'image/jpeg',
-            'contents': base64Encode(catBytes.buffer.asUint8List()),
-          },
-        },
-      );
       var text = response.text;
       _generatedContent.add(MessageData(text: text, fromUser: false));
 

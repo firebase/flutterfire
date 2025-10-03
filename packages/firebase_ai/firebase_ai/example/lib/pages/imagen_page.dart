@@ -172,20 +172,6 @@ class _ImagenPageState extends State<ImagenPage> {
                       if (!_loading)
                         IconButton(
                           onPressed: () async {
-                            await _generateServerTemplateImage(
-                              _textController.text,
-                            );
-                          },
-                          icon: Icon(
-                            Icons.ten_mp,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        )
-                      else
-                        const CircularProgressIndicator(),
-                      if (!_loading)
-                        IconButton(
-                          onPressed: () async {
                             await _generateImageFromPrompt(
                               _textController.text,
                             );
@@ -449,45 +435,6 @@ class _ImagenPageState extends State<ImagenPage> {
 
     setState(() {
       _generatedContent.add(promptMessage);
-      if (resultMessage != null) {
-        _generatedContent.add(resultMessage);
-      }
-
-      _loading = false;
-      _scrollDown();
-    });
-  }
-
-  Future<void> _generateServerTemplateImage(String prompt) async {
-    setState(() {
-      _loading = true;
-    });
-    MessageData? resultMessage;
-    try {
-      var response = await widget.model.templateGenerateImages(
-        'generate_images.prompt',
-        {
-          'prompt': prompt,
-        },
-      );
-
-      if (response.images.isNotEmpty) {
-        var imagenImage = response.images[0];
-
-        resultMessage = MessageData(
-          imageBytes: imagenImage.bytesBase64Encoded,
-          text: prompt,
-          fromUser: false,
-        );
-      } else {
-        // Handle the case where no images were generated
-        _showError('Error: No images were generated.');
-      }
-    } catch (e) {
-      _showError(e.toString());
-    }
-
-    setState(() {
       if (resultMessage != null) {
         _generatedContent.add(resultMessage);
       }
