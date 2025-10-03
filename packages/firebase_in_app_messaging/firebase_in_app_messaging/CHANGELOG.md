@@ -1,3 +1,7 @@
+## 0.9.0+3
+
+ - **FIX**: exclude deprecated `firebase-iid` to avoid duplicate classes with firebase_messaging.
+
 ## 0.9.0+2
 
  - Update a dependency to the latest release.

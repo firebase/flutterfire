@@ -60,7 +60,10 @@ android {
     dependencies {
       api firebaseCoreProject
       implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
-      implementation 'com.google.firebase:firebase-inappmessaging-display'
+      implementation('com.google.firebase:firebase-inappmessaging-display') {
+        // IID is deprecated and clashes with firebase-messaging ≥ 24.
+        exclude group: 'com.google.firebase', module: 'firebase-iid'
+      }
       implementation 'androidx.annotation:annotation:1.7.0'
     }
 }
