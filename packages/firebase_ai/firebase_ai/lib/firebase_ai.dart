@@ -33,9 +33,13 @@ export 'src/api.dart'
         SafetySetting,
         UsageMetadata;
 export 'src/base_model.dart'
-    show GenerativeModel, ImagenModel, LiveGenerativeModel;
-export 'src/chat.dart'
-    show ChatSession, StartChatExtension, TemplateChatSession;
+    show
+        GenerativeModel,
+        ImagenModel,
+        LiveGenerativeModel,
+        TemplateGenerativeModel,
+        TemplateImagenModel;
+export 'src/chat.dart' show ChatSession, StartChatExtension;
 export 'src/content.dart'
     show
         Content,
@@ -101,6 +105,9 @@ export 'src/live_api.dart'
         LiveServerResponse;
 export 'src/live_session.dart' show LiveSession;
 export 'src/schema.dart' show Schema, SchemaType;
+export 'src/server_template/template_chat.dart'
+    show TemplateChatSession, StartTemplateChatExtension;
+
 export 'src/tool.dart'
     show
         FunctionCallingConfig,

@@ -222,20 +222,20 @@ class _ChatPageState extends State<ChatPage> {
     });
 
     try {
-      var response = await _model?.templateGenerateContent(
-        'greeting.prompt',
+      //var response = await _model?.templateGenerateContent(
+      //  'greeting.prompt',
+      //  {
+      //    'name': templatePrompt,
+      //    'language': 'Chinese',
+      //  },
+      //);
+
+      var response = await _templateChat?.sendMessage(
+        Content.text(templatePrompt),
         {
-          'name': templatePrompt,
-          'language': 'Chinese',
+          'message': templatePrompt,
         },
       );
-
-      // var response = await _templateChat?.sendMessage(
-      //   Content.text(templatePrompt),
-      //   {
-      //     'message': templatePrompt,
-      //   },
-      // );
 
       var text = response?.text;
 

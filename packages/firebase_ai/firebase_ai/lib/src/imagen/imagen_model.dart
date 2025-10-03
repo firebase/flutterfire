@@ -97,21 +97,6 @@ final class ImagenModel extends BaseApiClientModel {
             parseImagenGenerationResponse<ImagenInlineImage>(jsonObject),
       );
 
-  /// Generates images from a template with the given [templateId] and [params].
-  @experimental
-  Future<ImagenGenerationResponse<ImagenInlineImage>> templateGenerateImages(
-    String templateId,
-    Map<String, Object?> params,
-  ) =>
-      makeTemplateRequest(
-        TemplateTask.templatePredict,
-        templateId,
-        params,
-        null,
-        (jsonObject) =>
-            parseImagenGenerationResponse<ImagenInlineImage>(jsonObject),
-      );
-
   /// Generates images with format of [ImagenGCSImage] based on the given
   /// prompt.
   /// Note: Keep this API private until future release.

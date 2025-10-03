@@ -194,24 +194,6 @@ final class GenerativeModel extends BaseApiClientModel {
     return makeRequest(Task.countTokens, parameters,
         _serializationStrategy.parseCountTokensResponse);
   }
-
-  /// Generates content from a template with the given [templateId] and [params].
-  ///
-  /// Sends a "templateGenerateContent" API request for the configured model.
-  Future<GenerateContentResponse> templateGenerateContent(
-    String templateId,
-    Map<String, Object?> params,
-  ) =>
-      makeTemplateRequest(TemplateTask.templateGenerateContent, templateId,
-          params, null, _serializationStrategy.parseGenerateContentResponse);
-
-  Future<GenerateContentResponse> templateGenerateContentWithHistory(
-    Iterable<Content> history,
-    String templateId,
-    Map<String, Object?> params,
-  ) =>
-      makeTemplateRequest(TemplateTask.templateGenerateContent, templateId,
-          params, history, _serializationStrategy.parseGenerateContentResponse);
 }
 
 /// Returns a [GenerativeModel] using it's private constructor.

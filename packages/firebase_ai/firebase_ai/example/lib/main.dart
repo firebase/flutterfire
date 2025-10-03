@@ -18,7 +18,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 // Import after file is generated through flutterfire_cli.
-// import 'package:firebase_ai_example/firebase_options.dart';
+import 'package:firebase_ai_example/firebase_options.dart';
 
 import 'pages/audio_page.dart';
 import 'pages/bidi_page.dart';
@@ -36,9 +36,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Enable this line instead once have the firebase_options.dart generated and
   // imported through flutterfire_cli.
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await Firebase.initializeApp();
-  await FirebaseAuth.instance.signInAnonymously();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  //await Firebase.initializeApp();
+  //await FirebaseAuth.instance.signInAnonymously();
   runApp(const GenerativeAISample());
 }
 
