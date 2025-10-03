@@ -198,4 +198,27 @@ class FirebaseAI extends FirebasePluginPlatform {
       useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
     );
   }
+
+  @experimental
+  TemplateGenerativeModel templateGenerativeModel() {
+    return createTemplateGenerativeModel(
+        app: app,
+        location: location,
+        useVertexBackend: _useVertexBackend,
+        useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
+        auth: auth,
+        appCheck: appCheck);
+  }
+
+  @experimental
+  TemplateImagenModel templateImagenModel() {
+    return createTemplateImagenModel(
+      app: app,
+      location: location,
+      useVertexBackend: _useVertexBackend,
+      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
+      auth: auth,
+      appCheck: appCheck,
+    );
+  }
 }
