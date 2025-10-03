@@ -139,7 +139,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
           plugin: 'firebase_messaging',
           code: 'apns-token-not-set',
           message:
-              'APNS token has not been set yet. Please ensure the APNS token is available by calling `getAPNSToken()`.',
+              'APNS token has not been received on the device yet. Please ensure the APNS token is available before calling `getAPNSToken()`.',
         );
       }
     }
