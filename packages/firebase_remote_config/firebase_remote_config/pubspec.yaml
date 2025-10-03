@@ -44,3 +44,5 @@ flutter:
         pluginClass: FirebaseRemoteConfigPlugin
       web:
         default_package: firebase_remote_config_web
+      windows:
+        pluginClass: FirebaseRemoteConfigPluginCApi
