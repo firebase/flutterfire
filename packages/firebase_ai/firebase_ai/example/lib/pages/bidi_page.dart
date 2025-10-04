@@ -57,6 +57,8 @@ class _BidiPageState extends State<BidiPage> {
   StreamController<bool> _stopController = StreamController<bool>();
   final AudioOutput _audioOutput = AudioOutput();
   final AudioInput _audioInput = AudioInput();
+  int? _inputTranscriptionMessageIndex;
+  int? _outputTranscriptionMessageIndex;
 
   @override
   void initState() {
@@ -67,6 +69,8 @@ class _BidiPageState extends State<BidiPage> {
       responseModalities: [
         ResponseModalities.audio,
       ],
+      inputAudioTranscription: AudioTranscriptionConfig(),
+      outputAudioTranscription: AudioTranscriptionConfig(),
     );
 
     // ignore: deprecated_member_use
@@ -131,14 +135,17 @@ class _BidiPageState extends State<BidiPage> {
               child: ListView.builder(
                 controller: _scrollController,
                 itemBuilder: (context, idx) {
+                  final message = _messages[idx];
                   return MessageWidget(
-                    text: _messages[idx].text,
-                    image: Image.memory(
-                      _messages[idx].imageBytes!,
-                      cacheWidth: 400,
-                      cacheHeight: 400,
-                    ),
-                    isFromUser: _messages[idx].fromUser ?? false,
+                    text: message.text,
+                    image: message.imageBytes != null
+                        ? Image.memory(
+                            message.imageBytes!,
+                            cacheWidth: 400,
+                            cacheHeight: 400,
+                          )
+                        : null,
+                    isFromUser: message.fromUser ?? false,
                   );
                 },
                 itemCount: _messages.length,
@@ -353,6 +360,43 @@ class _BidiPageState extends State<BidiPage> {
     if (message is LiveServerContent) {
       if (message.modelTurn != null) {
         await _handleLiveServerContent(message);
+      }
+
+      if (message.inputTranscription?.text != null) {
+        final transcription = message.inputTranscription!;
+        if (_inputTranscriptionMessageIndex != null) {
+          // TODO(cynthia): find a better way to update the message
+          _messages[_inputTranscriptionMessageIndex!].text =
+              '${_messages[_inputTranscriptionMessageIndex!].text}${transcription.text!}';
+        } else {
+          _messages.add(MessageData(
+              text: 'Input transcription: ${transcription.text!}',
+              fromUser: true));
+          _inputTranscriptionMessageIndex = _messages.length - 1;
+        }
+        if (transcription.finished ?? false) {
+          _inputTranscriptionMessageIndex = null;
+        }
+        setState(_scrollDown);
+      }
+      if (message.outputTranscription?.text != null) {
+        final transcription = message.outputTranscription!;
+        if (_outputTranscriptionMessageIndex != null) {
+          _messages[_outputTranscriptionMessageIndex!].text =
+              '${_messages[_outputTranscriptionMessageIndex!].text}${transcription.text!}';
+        } else {
+          _messages.add(
+            MessageData(
+              text: 'Output transcription: ${transcription.text!}',
+              fromUser: false,
+            ),
+          );
+          _outputTranscriptionMessageIndex = _messages.length - 1;
+        }
+        if (transcription.finished ?? false) {
+          _outputTranscriptionMessageIndex = null;
+        }
+        setState(_scrollDown);
       }
       if (message.interrupted != null && message.interrupted!) {
         developer.log('Interrupted: $response');
