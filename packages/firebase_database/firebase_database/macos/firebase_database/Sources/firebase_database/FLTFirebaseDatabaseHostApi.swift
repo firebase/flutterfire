@@ -18,6 +18,14 @@ import Foundation
   private var streamHandlers: [String: FLTFirebaseDatabaseObserveStreamHandler] = [:]
   private var binaryMessenger: FlutterBinaryMessenger
   private var listenerCount: Int = 0
+  private var transactionResults: [Int64: [String: Any?]] = [:]
+
+  private func createFlutterError(_ error: Error) -> PigeonError {
+    let parts = FLTFirebaseDatabaseUtils.codeAndMessage(from: error)
+    let code = parts[0]
+    let message = parts[1]
+    return PigeonError(code: code, message: message, details: nil)
+  }
 
   init(binaryMessenger: FlutterBinaryMessenger) {
     self.binaryMessenger = binaryMessenger
@@ -192,19 +200,38 @@ import Foundation
       return TransactionResult.success(withValue: currentData)
     } andCompletionBlock: { error, committed, snapshot in
       if let error {
-        completion(.failure(error))
-      } else {
-        completion(.success(()))
+        completion(.failure(self.createFlutterError(error)))
+        return
       }
+
+      var snapshotMap: [String: Any?]
+      if let snapshot {
+        let snapshotDict = FLTFirebaseDatabaseUtils.dictionary(from: snapshot)
+        snapshotMap = ["snapshot": snapshotDict]
+      } else {
+        snapshotMap = ["snapshot": NSNull()]
+      }
+
+      self.transactionResults[request.transactionKey] = [
+        "committed": committed,
+        "snapshot": snapshotMap["snapshot"] as Any
+      ]
+
+      completion(.success(()))
     }
   }
 
   func databaseReferenceGetTransactionResult(app: DatabasePigeonFirebaseApp, transactionKey: Int64,
                                              completion: @escaping (Result<[String: Any?], Error>)
                                                -> Void) {
-    // This method is used to get transaction results, but in our implementation
-    // we handle transactions synchronously, so we return an empty result
-    completion(.success([:]))
+    if let result = transactionResults.removeValue(forKey: transactionKey) {
+      completion(.success(result))
+    } else {
+      completion(.success([
+        "committed": false,
+        "snapshot": ["value": NSNull()]
+      ]))
+    }
   }
 
   // MARK: - OnDisconnect Operations
@@ -278,21 +305,28 @@ import Foundation
 
     // Apply query modifiers
     var query: DatabaseQuery = reference
+    var hasOrderModifier = false
     for modifier in request.modifiers {
       if let type = modifier["type"] as? String {
         switch type {
         case "orderByChild":
           if let value = modifier["value"] as? String {
             query = query.queryOrdered(byChild: value)
+            hasOrderModifier = true
           }
         case "orderByKey":
           query = query.queryOrderedByKey()
+          hasOrderModifier = true
         case "orderByValue":
           query = query.queryOrderedByValue()
+          hasOrderModifier = true
         case "orderByPriority":
           query = query.queryOrderedByPriority()
+          hasOrderModifier = true
         case "startAt":
-          if let value = modifier["value"] {
+          if !hasOrderModifier {
+            query = query.queryLimited(toFirst: 0)
+          } else if let value = modifier["value"] {
             query = query.queryStarting(atValue: value)
           }
         case "endAt":
@@ -300,7 +334,9 @@ import Foundation
             query = query.queryEnding(atValue: value)
           }
         case "equalTo":
-          if let value = modifier["value"] {
+          if !hasOrderModifier {
+            query = query.queryLimited(toFirst: 0)
+          } else if let value = modifier["value"] {
             query = query.queryEqual(toValue: value)
           }
         case "limitToFirst":
@@ -398,22 +434,31 @@ import Foundation
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
 
-    // Apply query modifiers (same logic as queryObserve)
+    // Apply query modifiers with handling for missing order
     var query: DatabaseQuery = reference
+    var hasOrderModifier = false
     for modifier in request.modifiers {
       if let type = modifier["type"] as? String {
         switch type {
         case "orderByChild":
           if let value = modifier["value"] as? String {
             query = query.queryOrdered(byChild: value)
+            hasOrderModifier = true
           }
         case "orderByKey":
           query = query.queryOrderedByKey()
+          hasOrderModifier = true
         case "orderByValue":
           query = query.queryOrderedByValue()
+          hasOrderModifier = true
         case "orderByPriority":
           query = query.queryOrderedByPriority()
+          hasOrderModifier = true
         case "startAt":
+          if !hasOrderModifier {
+            completion(.success(["snapshot": NSNull()]))
+            return
+          }
           if let value = modifier["value"] {
             query = query.queryStarting(atValue: value)
           }
@@ -422,6 +467,10 @@ import Foundation
             query = query.queryEnding(atValue: value)
           }
         case "equalTo":
+          if !hasOrderModifier {
+            completion(.success(["snapshot": NSNull()]))
+            return
+          }
           if let value = modifier["value"] {
             query = query.queryEqual(toValue: value)
           }
@@ -441,7 +490,7 @@ import Foundation
 
     query.getData { error, snapshot in
       if let error {
-        completion(.failure(error))
+        completion(.failure(self.createFlutterError(error)))
       } else if let snapshot {
         let snapshotDict = FLTFirebaseDatabaseUtils.dictionary(from: snapshot)
         completion(.success(["snapshot": snapshotDict]))
