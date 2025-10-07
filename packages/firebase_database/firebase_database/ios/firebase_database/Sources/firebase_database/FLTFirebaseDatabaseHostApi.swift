@@ -305,54 +305,89 @@ import Foundation
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
 
-    // Apply query modifiers
+    // Apply query modifiers (matches Dart platform interface shape)
     var query: DatabaseQuery = reference
     var hasOrderModifier = false
     for modifier in request.modifiers {
-      if let type = modifier["type"] as? String {
-        switch type {
-        case "orderByChild":
-          if let value = modifier["value"] as? String {
-            query = query.queryOrdered(byChild: value)
+      guard let type = modifier["type"] as? String else { continue }
+
+      switch type {
+      case "orderBy":
+        if let name = modifier["name"] as? String {
+          switch name {
+          case "orderByChild":
+            if let path = modifier["path"] as? String {
+              query = query.queryOrdered(byChild: path)
+              hasOrderModifier = true
+            }
+          case "orderByKey":
+            query = query.queryOrderedByKey()
             hasOrderModifier = true
+          case "orderByValue":
+            query = query.queryOrderedByValue()
+            hasOrderModifier = true
+          case "orderByPriority":
+            query = query.queryOrderedByPriority()
+            hasOrderModifier = true
+          default:
+            break
           }
-        case "orderByKey":
-          query = query.queryOrderedByKey()
-          hasOrderModifier = true
-        case "orderByValue":
-          query = query.queryOrderedByValue()
-          hasOrderModifier = true
-        case "orderByPriority":
-          query = query.queryOrderedByPriority()
-          hasOrderModifier = true
-        case "startAt":
-          if !hasOrderModifier {
-            // Suppress events when cursors are used without ordering
-            query = query.queryLimited(toFirst: 0)
-          } else if let value = modifier["value"] {
-            query = query.queryStarting(atValue: value)
-          }
-        case "endAt":
-          if let value = modifier["value"] {
-            query = query.queryEnding(atValue: value)
-          }
-        case "equalTo":
-          if !hasOrderModifier {
-            query = query.queryLimited(toFirst: 0)
-          } else if let value = modifier["value"] {
-            query = query.queryEqual(toValue: value)
-          }
-        case "limitToFirst":
-          if let value = modifier["value"] as? NSNumber {
-            query = query.queryLimited(toFirst: value.uintValue)
-          }
-        case "limitToLast":
-          if let value = modifier["value"] as? NSNumber {
-            query = query.queryLimited(toLast: value.uintValue)
-          }
-        default:
-          break
         }
+
+      case "cursor":
+        if let name = modifier["name"] as? String {
+          let value = modifier["value"]
+          let key = modifier["key"] as? String
+          switch name {
+          case "startAt":
+            if !hasOrderModifier {
+              // Suppress events when cursors are used without ordering
+              query = query.queryLimited(toFirst: 0)
+            } else if let key {
+              query = query.queryStarting(atValue: value, childKey: key)
+            } else {
+              query = query.queryStarting(atValue: value)
+            }
+          case "startAfter":
+            if !hasOrderModifier {
+              query = query.queryLimited(toFirst: 0)
+            } else if let key {
+              query = query.queryStarting(afterValue: value, childKey: key)
+            } else {
+              query = query.queryStarting(afterValue: value)
+            }
+          case "endAt":
+            if let key {
+              query = query.queryEnding(atValue: value, childKey: key)
+            } else {
+              query = query.queryEnding(atValue: value)
+            }
+          case "endBefore":
+            if let key {
+              query = query.queryEnding(beforeValue: value, childKey: key)
+            } else {
+              query = query.queryEnding(beforeValue: value)
+            }
+          default:
+            break
+          }
+        }
+
+      case "limit":
+        if let name = modifier["name"] as? String,
+           let limit = modifier["limit"] as? NSNumber {
+          switch name {
+          case "limitToFirst":
+            query = query.queryLimited(toFirst: limit.uintValue)
+          case "limitToLast":
+            query = query.queryLimited(toLast: limit.uintValue)
+          default:
+            break
+          }
+        }
+
+      default:
+        break
       }
     }
 
@@ -387,41 +422,76 @@ import Foundation
     // Apply query modifiers (same logic as queryObserve)
     var query: DatabaseQuery = reference
     for modifier in request.modifiers {
-      if let type = modifier["type"] as? String {
-        switch type {
-        case "orderByChild":
-          if let value = modifier["value"] as? String {
-            query = query.queryOrdered(byChild: value)
+      guard let type = modifier["type"] as? String else { continue }
+
+      switch type {
+      case "orderBy":
+        if let name = modifier["name"] as? String {
+          switch name {
+          case "orderByChild":
+            if let path = modifier["path"] as? String {
+              query = query.queryOrdered(byChild: path)
+            }
+          case "orderByKey":
+            query = query.queryOrderedByKey()
+          case "orderByValue":
+            query = query.queryOrderedByValue()
+          case "orderByPriority":
+            query = query.queryOrderedByPriority()
+          default:
+            break
           }
-        case "orderByKey":
-          query = query.queryOrderedByKey()
-        case "orderByValue":
-          query = query.queryOrderedByValue()
-        case "orderByPriority":
-          query = query.queryOrderedByPriority()
-        case "startAt":
-          if let value = modifier["value"] {
-            query = query.queryStarting(atValue: value)
-          }
-        case "endAt":
-          if let value = modifier["value"] {
-            query = query.queryEnding(atValue: value)
-          }
-        case "equalTo":
-          if let value = modifier["value"] {
-            query = query.queryEqual(toValue: value)
-          }
-        case "limitToFirst":
-          if let value = modifier["value"] as? NSNumber {
-            query = query.queryLimited(toFirst: value.uintValue)
-          }
-        case "limitToLast":
-          if let value = modifier["value"] as? NSNumber {
-            query = query.queryLimited(toLast: value.uintValue)
-          }
-        default:
-          break
         }
+
+      case "cursor":
+        if let name = modifier["name"] as? String {
+          let value = modifier["value"]
+          let key = modifier["key"] as? String
+          switch name {
+          case "startAt":
+            if let key {
+              query = query.queryStarting(atValue: value, childKey: key)
+            } else {
+              query = query.queryStarting(atValue: value)
+            }
+          case "startAfter":
+            if let key {
+              query = query.queryStarting(afterValue: value, childKey: key)
+            } else {
+              query = query.queryStarting(afterValue: value)
+            }
+          case "endAt":
+            if let key {
+              query = query.queryEnding(atValue: value, childKey: key)
+            } else {
+              query = query.queryEnding(atValue: value)
+            }
+          case "endBefore":
+            if let key {
+              query = query.queryEnding(beforeValue: value, childKey: key)
+            } else {
+              query = query.queryEnding(beforeValue: value)
+            }
+          default:
+            break
+          }
+        }
+
+      case "limit":
+        if let name = modifier["name"] as? String,
+           let limit = modifier["limit"] as? NSNumber {
+          switch name {
+          case "limitToFirst":
+            query = query.queryLimited(toFirst: limit.uintValue)
+          case "limitToLast":
+            query = query.queryLimited(toLast: limit.uintValue)
+          default:
+            break
+          }
+        }
+
+      default:
+        break
       }
     }
 
@@ -441,53 +511,86 @@ import Foundation
     var query: DatabaseQuery = reference
     var hasOrderModifier = false
     for modifier in request.modifiers {
-      if let type = modifier["type"] as? String {
-        switch type {
-        case "orderByChild":
-          if let value = modifier["value"] as? String {
-            query = query.queryOrdered(byChild: value)
+      guard let type = modifier["type"] as? String else { continue }
+
+      switch type {
+      case "orderBy":
+        if let name = modifier["name"] as? String {
+          switch name {
+          case "orderByChild":
+            if let path = modifier["path"] as? String {
+              query = query.queryOrdered(byChild: path)
+              hasOrderModifier = true
+            }
+          case "orderByKey":
+            query = query.queryOrderedByKey()
             hasOrderModifier = true
+          case "orderByValue":
+            query = query.queryOrderedByValue()
+            hasOrderModifier = true
+          case "orderByPriority":
+            query = query.queryOrderedByPriority()
+            hasOrderModifier = true
+          default:
+            break
           }
-        case "orderByKey":
-          query = query.queryOrderedByKey()
-          hasOrderModifier = true
-        case "orderByValue":
-          query = query.queryOrderedByValue()
-          hasOrderModifier = true
-        case "orderByPriority":
-          query = query.queryOrderedByPriority()
-          hasOrderModifier = true
-        case "startAt":
-          if !hasOrderModifier {
-            completion(.success(["snapshot": NSNull()]))
-            return
-          }
-          if let value = modifier["value"] {
-            query = query.queryStarting(atValue: value)
-          }
-        case "endAt":
-          if let value = modifier["value"] {
-            query = query.queryEnding(atValue: value)
-          }
-        case "equalTo":
-          if !hasOrderModifier {
-            completion(.success(["snapshot": NSNull()]))
-            return
-          }
-          if let value = modifier["value"] {
-            query = query.queryEqual(toValue: value)
-          }
-        case "limitToFirst":
-          if let value = modifier["value"] as? NSNumber {
-            query = query.queryLimited(toFirst: value.uintValue)
-          }
-        case "limitToLast":
-          if let value = modifier["value"] as? NSNumber {
-            query = query.queryLimited(toLast: value.uintValue)
-          }
-        default:
-          break
         }
+
+      case "cursor":
+        if let name = modifier["name"] as? String {
+          let value = modifier["value"]
+          let key = modifier["key"] as? String
+          switch name {
+          case "startAt", "startAfter":
+            if !hasOrderModifier {
+              completion(.success(["snapshot": NSNull()]))
+              return
+            }
+            if name == "startAt" {
+              if let key {
+                query = query.queryStarting(atValue: value, childKey: key)
+              } else {
+                query = query.queryStarting(atValue: value)
+              }
+            } else { // startAfter
+              if let key {
+                query = query.queryStarting(afterValue: value, childKey: key)
+              } else {
+                query = query.queryStarting(afterValue: value)
+              }
+            }
+          case "endAt":
+            if let key {
+              query = query.queryEnding(atValue: value, childKey: key)
+            } else {
+              query = query.queryEnding(atValue: value)
+            }
+          case "endBefore":
+            if let key {
+              query = query.queryEnding(beforeValue: value, childKey: key)
+            } else {
+              query = query.queryEnding(beforeValue: value)
+            }
+          default:
+            break
+          }
+        }
+
+      case "limit":
+        if let name = modifier["name"] as? String,
+           let limit = modifier["limit"] as? NSNumber {
+          switch name {
+          case "limitToFirst":
+            query = query.queryLimited(toFirst: limit.uintValue)
+          case "limitToLast":
+            query = query.queryLimited(toLast: limit.uintValue)
+          default:
+            break
+          }
+        }
+
+      default:
+        break
       }
     }
 
