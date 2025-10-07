@@ -169,7 +169,7 @@ void setupDatabaseReferenceTests() {
         expect(streamError, isA<FirebaseException>());
         expect(streamError.code, 'permission-denied');
         // Error message says permission denied, but code is unknown
-      }, skip: true);
+      }, skip: true,);
 
       test('Server.increment', () async {
         final FirebaseDatabase database = FirebaseDatabase.instance;
