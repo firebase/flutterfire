@@ -214,7 +214,7 @@ import Foundation
 
       self.transactionResults[request.transactionKey] = [
         "committed": committed,
-        "snapshot": snapshotMap["snapshot"] as Any
+        "snapshot": snapshotMap["snapshot"] as Any,
       ]
 
       completion(.success(()))
@@ -229,7 +229,7 @@ import Foundation
     } else {
       completion(.success([
         "committed": false,
-        "snapshot": ["value": NSNull()]
+        "snapshot": ["value": NSNull()],
       ]))
     }
   }

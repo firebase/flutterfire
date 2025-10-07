@@ -215,7 +215,7 @@ import Foundation
       // Store result for retrieval via databaseReferenceGetTransactionResult
       self.transactionResults[request.transactionKey] = [
         "committed": committed,
-        "snapshot": snapshotMap["snapshot"] as Any
+        "snapshot": snapshotMap["snapshot"] as Any,
       ]
 
       completion(.success(()))
@@ -231,7 +231,7 @@ import Foundation
       // Default result if not available yet
       completion(.success([
         "committed": false,
-        "snapshot": ["value": NSNull()]
+        "snapshot": ["value": NSNull()],
       ]))
     }
   }
