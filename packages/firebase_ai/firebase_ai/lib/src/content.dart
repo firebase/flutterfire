@@ -141,22 +141,34 @@ Part parsePart(Object? jsonObject) {
       throw unhandledFormat('codeExecutionResult', codeExecutionResult);
     }
   }
+
+  if (jsonObject.containsKey('inlineData')) {
+    final inlineDataResult = jsonObject['inlineData'];
+    if (inlineDataResult is Map &&
+        inlineDataResult.containsKey('mimeType') &&
+        inlineDataResult.containsKey('data')) {
+      return InlineDataPart._(
+        inlineDataResult['mimeType'] as String,
+        base64Decode(inlineDataResult['data'] as String),
+        willContinue: inlineDataResult['willContinue'] as bool?,
+        isThought: isThought,
+        thoughtSignature: thoughtSignature,
+      );
+    } else {
+      throw unhandledFormat('inlineData', inlineDataResult);
+    }
+  }
   return switch (jsonObject) {
     {'text': final String text} => TextPart._(text,
         isThought: isThought, thoughtSignature: thoughtSignature),
     {
       'file_data': {
         'file_uri': final String fileUri,
-        'mime_type': final String mimeType
+        'mime_type': final String mimeType,
       }
     } =>
       FileData._(mimeType, fileUri,
           isThought: isThought, thoughtSignature: thoughtSignature),
-    {'inlineData': {'mimeType': String mimeType, 'data': String bytes}} =>
-      InlineDataPart._(mimeType, base64Decode(bytes),
-          willContinue: false,
-          isThought: isThought,
-          thoughtSignature: thoughtSignature),
     _ => () {
         log('unhandled part format: $jsonObject');
         return UnknownPart(jsonObject);
