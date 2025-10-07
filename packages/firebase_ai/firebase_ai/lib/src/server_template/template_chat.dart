@@ -87,8 +87,7 @@ extension StartTemplateChatExtension on TemplateGenerativeModel {
   /// final response = await chat.sendMessage(Content.text('Hello there.'));
   /// print(response.text);
   /// ```
-  TemplateChatSession startTemplateChat(String templateId,
-          {List<Content>? history}) =>
+  TemplateChatSession startChat(String templateId, {List<Content>? history}) =>
       TemplateChatSession._(
           templateGenerateContentWithHistory, templateId, history ?? []);
 }

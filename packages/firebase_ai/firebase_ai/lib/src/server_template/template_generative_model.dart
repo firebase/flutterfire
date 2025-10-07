@@ -46,12 +46,28 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
   ///
   /// Sends a "templateGenerateContent" API request for the configured model.
   @experimental
-  Future<GenerateContentResponse> templateGenerateContent(
+  Future<GenerateContentResponse> generateContent(
     String templateId,
     Map<String, Object?> params,
   ) =>
       makeTemplateRequest(TemplateTask.templateGenerateContent, templateId,
           params, null, _serializationStrategy.parseGenerateContentResponse);
+
+  /// Generates a stream of content responding to [templateId] and [params].
+  ///
+  /// Sends a "templateStreamGenerateContent" API request for the server template,
+  /// and waits for the response.
+  @experimental
+  Stream<GenerateContentResponse> generateContentStream(
+    String templateId,
+    Map<String, Object?> params,
+  ) {
+    final response = client.streamRequest(
+        templateTaskUri(TemplateTask.templateStreamGenerateContent, templateId),
+        params);
+    return response.map(_serializationStrategy.parseGenerateContentResponse);
+  }
+
   @experimental
   Future<GenerateContentResponse> templateGenerateContentWithHistory(
     Iterable<Content> history,

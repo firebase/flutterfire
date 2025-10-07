@@ -42,7 +42,7 @@ final class TemplateImagenModel extends BaseTemplateApiClientModel {
 
   /// Generates images from a template with the given [templateId] and [params].
   @experimental
-  Future<ImagenGenerationResponse<ImagenInlineImage>> templateGenerateImages(
+  Future<ImagenGenerationResponse<ImagenInlineImage>> generateImages(
     String templateId,
     Map<String, Object?> params,
   ) =>

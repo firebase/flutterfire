@@ -57,8 +57,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
           FirebaseAI.googleAI().templateGenerativeModel();
       _templateImagenModel = FirebaseAI.googleAI().templateImagenModel();
     }
-    _chatSession =
-        _templateGenerativeModel?.startTemplateChat('chat_history.prompt');
+    _chatSession = _templateGenerativeModel?.startChat('chat_history.prompt');
   }
 
   void _scrollDown() {
@@ -192,7 +191,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
     try {
       _messages.add(MessageData(text: message, fromUser: true));
       // TODO: Add call to Firebase AI SDK
-      var response = await _templateImagenModel?.templateGenerateImages(
+      var response = await _templateImagenModel?.generateImages(
         'generate_images.prompt',
         {
           'prompt': message,
@@ -306,7 +305,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
     });
 
     try {
-      var response = await _templateGenerativeModel?.templateGenerateContent(
+      var response = await _templateGenerativeModel?.generateContent(
         'greeting.prompt',
         {
           'name': message,

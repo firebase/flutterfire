@@ -59,9 +59,13 @@ enum Task {
   predict,
 }
 
+/// [TemplateTask] enum class for [TemplateGenerativeModel] to make request.
 enum TemplateTask {
   /// Request type for server template generate content.
   templateGenerateContent,
+
+  /// Request type for server template stream generate content
+  templateStreamGenerateContent,
 
   /// Request type for server template for Prediction Services like Imagen.
   templatePredict,
