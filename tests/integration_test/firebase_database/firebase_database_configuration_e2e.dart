@@ -17,10 +17,8 @@ void setupConfigurationTests() {
       () {
         database.setPersistenceCacheSizeBytes(MIN_CACHE_SIZE);
       },
-      // Skipped because it is not supported on web and flaky on iOS/macOS
-      skip: kIsWeb ||
-          defaultTargetPlatform == TargetPlatform.iOS ||
-          defaultTargetPlatform == TargetPlatform.macOS,
+      // Skipped because it is not supported on web
+      skip: kIsWeb,
     );
 
     test(
@@ -28,10 +26,8 @@ void setupConfigurationTests() {
       () {
         database.setPersistenceCacheSizeBytes(MAX_CACHE_SIZE);
       },
-      // Skipped because it is not supported on web and flaky on iOS/macOS
-      skip: kIsWeb ||
-          defaultTargetPlatform == TargetPlatform.iOS ||
-          defaultTargetPlatform == TargetPlatform.macOS,
+      // Skipped because it is not supported on web
+      skip: kIsWeb,
     );
 
     test('setLoggingEnabled to true', () {
