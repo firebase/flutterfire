@@ -196,7 +196,7 @@ import Foundation
     }
 
     let nsError = error as NSError
-    let message: String
+    var message: String
 
     switch nsError.code {
     case 1:
@@ -238,6 +238,10 @@ import Foundation
     default:
       code = "unknown"
       message = error.localizedDescription
+    }
+
+    if code == "unknown" && message.lowercased().contains("permission denied") {
+      code = "permission-denied"
     }
 
     return [code, message]

@@ -24,7 +24,11 @@ import Foundation
     let parts = FLTFirebaseDatabaseUtils.codeAndMessage(from: error)
     let code = parts[0]
     let message = parts[1]
-    return PigeonError(code: code, message: message, details: nil)
+    let details: [String: Any] = [
+      "code": code,
+      "message": message,
+    ]
+    return PigeonError(code: code, message: message, details: details)
   }
 
   init(binaryMessenger: FlutterBinaryMessenger) {
