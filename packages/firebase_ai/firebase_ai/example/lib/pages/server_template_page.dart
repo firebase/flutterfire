@@ -309,7 +309,6 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
         'greeting.prompt',
         {
           'name': message,
-          'language': 'Chinese',
         },
       );
 

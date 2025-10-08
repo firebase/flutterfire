@@ -346,16 +346,16 @@ abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
   final _TemplateUri _templateUri;
 
   /// Make a unary request for [task] with [templateId] and JSON encodable
-  /// [params].
+  /// [inputs].
   Future<T> makeTemplateRequest<T>(
       TemplateTask task,
       String templateId,
-      Map<String, Object?>? params,
+      Map<String, Object?>? inputs,
       Iterable<Content>? history,
       T Function(Map<String, Object?>) parse) {
     Map<String, Object?> body = {};
-    if (params != null) {
-      body['inputs'] = params;
+    if (inputs != null) {
+      body['inputs'] = inputs;
     }
     if (history != null) {
       body['history'] = history.map((c) => c.toJson()).toList();
@@ -363,6 +363,26 @@ abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
     return _client
         .makeRequest(templateTaskUri(task, templateId), body)
         .then(parse);
+  }
+
+  /// Make a unary request for [task] with [templateId] and JSON encodable
+  /// [inputs].
+  Stream<T> streamTemplateRequest<T>(
+      TemplateTask task,
+      String templateId,
+      Map<String, Object?>? inputs,
+      Iterable<Content>? history,
+      T Function(Map<String, Object?>) parse) {
+    Map<String, Object?> body = {};
+    if (inputs != null) {
+      body['inputs'] = inputs;
+    }
+    if (history != null) {
+      body['history'] = history.map((c) => c.toJson()).toList();
+    }
+    final response =
+        _client.streamRequest(templateTaskUri(task, templateId), body);
+    return response.map(parse);
   }
 
   Uri templateTaskUri(TemplateTask task, String templateId) =>

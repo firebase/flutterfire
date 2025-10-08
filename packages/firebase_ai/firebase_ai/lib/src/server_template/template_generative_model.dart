@@ -42,40 +42,56 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
               : _TemplateGoogleAIUri(app: app),
         );
 
-  /// Generates content from a template with the given [templateId] and [params].
+  /// Generates content from a template with the given [templateId] and [inputs].
   ///
   /// Sends a "templateGenerateContent" API request for the configured model.
   @experimental
   Future<GenerateContentResponse> generateContent(
     String templateId,
-    Map<String, Object?> params,
+    Map<String, Object?> inputs,
   ) =>
       makeTemplateRequest(TemplateTask.templateGenerateContent, templateId,
-          params, null, _serializationStrategy.parseGenerateContentResponse);
+          inputs, null, _serializationStrategy.parseGenerateContentResponse);
 
-  /// Generates a stream of content responding to [templateId] and [params].
+  /// Generates a stream of content responding to [templateId] and [inputs].
   ///
   /// Sends a "templateStreamGenerateContent" API request for the server template,
   /// and waits for the response.
   @experimental
   Stream<GenerateContentResponse> generateContentStream(
     String templateId,
-    Map<String, Object?> params,
+    Map<String, Object?> inputs,
   ) {
-    final response = client.streamRequest(
-        templateTaskUri(TemplateTask.templateStreamGenerateContent, templateId),
-        params);
-    return response.map(_serializationStrategy.parseGenerateContentResponse);
+    return streamTemplateRequest(
+        TemplateTask.templateStreamGenerateContent,
+        templateId,
+        inputs,
+        null,
+        _serializationStrategy.parseGenerateContentResponse);
   }
 
   @experimental
   Future<GenerateContentResponse> templateGenerateContentWithHistory(
     Iterable<Content> history,
     String templateId,
-    Map<String, Object?> params,
+    Map<String, Object?> inputs,
   ) =>
       makeTemplateRequest(TemplateTask.templateGenerateContent, templateId,
-          params, history, _serializationStrategy.parseGenerateContentResponse);
+          inputs, history, _serializationStrategy.parseGenerateContentResponse);
+
+  @experimental
+  Stream<GenerateContentResponse> templateGenerateContentWithHistoryStream(
+    Iterable<Content> history,
+    String templateId,
+    Map<String, Object?> inputs,
+  ) {
+    return streamTemplateRequest(
+        TemplateTask.templateStreamGenerateContent,
+        templateId,
+        inputs,
+        history,
+        _serializationStrategy.parseGenerateContentResponse);
+  }
 }
 
 /// Returns a [TemplateGenerativeModel] using it's private constructor.

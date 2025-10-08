@@ -11,9 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import 'dart:async';
+
 import '../api.dart';
 import '../base_model.dart';
 import '../content.dart';
+import '../utils/chat_utils.dart';
 import '../utils/mutex.dart';
 
 /// A back-and-forth chat with a server template.
@@ -26,6 +29,7 @@ import '../utils/mutex.dart';
 final class TemplateChatSession {
   TemplateChatSession._(
     this._templateHistoryGenerateContent,
+    this._templateHistoryGenerateContentStream,
     this._templateId,
     this._history,
   );
@@ -33,7 +37,12 @@ final class TemplateChatSession {
   final Future<GenerateContentResponse> Function(
       Iterable<Content> content,
       String templateId,
-      Map<String, Object?> params) _templateHistoryGenerateContent;
+      Map<String, Object?> inputs) _templateHistoryGenerateContent;
+
+  final Stream<GenerateContentResponse> Function(
+      Iterable<Content> content,
+      String templateId,
+      Map<String, Object?> inputs) _templateHistoryGenerateContentStream;
   final String _templateId;
   final List<Content> _history;
 
@@ -48,7 +57,7 @@ final class TemplateChatSession {
   /// including the message sent to the model.
   Iterable<Content> get history => _history.skip(0);
 
-  /// Sends [params] to the server template as a continuation of the chat [history].
+  /// Sends [inputs] to the server template as a continuation of the chat [history].
   ///
   /// Prepends the history to the request and uses the provided model to
   /// generate new content.
@@ -56,13 +65,13 @@ final class TemplateChatSession {
   /// When there are no candidates in the response, the [message] and response
   /// are ignored and will not be recorded in the [history].
   Future<GenerateContentResponse> sendMessage(
-      Content message, Map<String, Object?> params) async {
+      Content message, Map<String, Object?> inputs) async {
     final lock = await _mutex.acquire();
     try {
       final response = await _templateHistoryGenerateContent(
         _history.followedBy([message]),
         _templateId,
-        params,
+        inputs,
       );
       if (response.candidates case [final candidate, ...]) {
         _history.add(message);
@@ -75,6 +84,36 @@ final class TemplateChatSession {
     } finally {
       lock.release();
     }
+  }
+
+  Stream<GenerateContentResponse> sendMessageStream(
+      Content message, Map<String, Object?> inputs) {
+    final controller = StreamController<GenerateContentResponse>(sync: true);
+    _mutex.acquire().then((lock) async {
+      try {
+        final responses = _templateHistoryGenerateContentStream(
+          _history.followedBy([message]),
+          _templateId,
+          inputs,
+        );
+        final content = <Content>[];
+        await for (final response in responses) {
+          if (response.candidates case [final candidate, ...]) {
+            content.add(candidate.content);
+          }
+          controller.add(response);
+        }
+        if (content.isNotEmpty) {
+          _history.add(message);
+          _history.add(historyAggregate(content));
+        }
+      } catch (e, s) {
+        controller.addError(e, s);
+      }
+      lock.release();
+      unawaited(controller.close());
+    });
+    return controller.stream;
   }
 }
 
@@ -89,5 +128,9 @@ extension StartTemplateChatExtension on TemplateGenerativeModel {
   /// ```
   TemplateChatSession startChat(String templateId, {List<Content>? history}) =>
       TemplateChatSession._(
-          templateGenerateContentWithHistory, templateId, history ?? []);
+        templateGenerateContentWithHistory,
+        templateGenerateContentWithHistoryStream,
+        templateId,
+        history ?? [],
+      );
 }

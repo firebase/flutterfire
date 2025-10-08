@@ -40,16 +40,16 @@ final class TemplateImagenModel extends BaseTemplateApiClientModel {
 
   final bool _useVertexBackend;
 
-  /// Generates images from a template with the given [templateId] and [params].
+  /// Generates images from a template with the given [templateId] and [inputs].
   @experimental
   Future<ImagenGenerationResponse<ImagenInlineImage>> generateImages(
     String templateId,
-    Map<String, Object?> params,
+    Map<String, Object?> inputs,
   ) =>
       makeTemplateRequest(
         TemplateTask.templatePredict,
         templateId,
-        params,
+        inputs,
         null,
         (jsonObject) =>
             parseImagenGenerationResponse<ImagenInlineImage>(jsonObject),
