@@ -112,6 +112,31 @@ class LiveSession {
     _ws.sink.add(clientJson);
   }
 
+  /// User input that is sent in real time.
+  ///
+  /// The different modalities (audio, video and text) are handled as concurrent streams. 
+  /// The ordering across these streams is not guaranteed.
+  Future<void> sendRealtimeInput({
+    InlineDataPart? audio,
+    InlineDataPart? video,
+    String? text,
+    ActivityStart? activityStart,
+    ActivityEnd? activityEnd,
+    bool? audioStreamEnd,
+  }) async {
+    _checkWsStatus();
+    var clientMessage = LiveClientRealtimeInput(
+      audio: audio,
+      video: video,
+      text: text,
+      activityStart: activityStart,
+      activityEnd: activityEnd,
+      audioStreamEnd: audioStreamEnd,
+    );
+    var clientJson = jsonEncode(clientMessage.toJson());
+    _ws.sink.add(clientJson);
+  }
+
   /// Sends realtime input (media chunks) to the server.
   ///
   /// [mediaChunks]: The list of media chunks to send.
