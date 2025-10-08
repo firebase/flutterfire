@@ -239,11 +239,6 @@ import Foundation
       code = "unknown"
       message = error.localizedDescription
     }
-
-    if code == "unknown" && message.lowercased().contains("permission denied") {
-      code = "permission-denied"
-    }
-
     return [code, message]
   }
 
