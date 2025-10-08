@@ -50,6 +50,14 @@ import Foundation
 
   func setPersistenceEnabled(app: DatabasePigeonFirebaseApp, enabled: Bool,
                              completion: @escaping (Result<Void, Error>) -> Void) {
+    // Apple SDK requires persistence to be configured before any database usage.
+    // If an instance already exists, no-op to avoid runtime exceptions.
+    let instanceKey = app.appName + (app.databaseURL ?? "")
+    if Self.cachedDatabaseInstances[instanceKey] != nil {
+      completion(.success(()))
+      return
+    }
+
     let database = getDatabaseFromPigeonApp(app)
     database.isPersistenceEnabled = enabled
     completion(.success(()))
@@ -57,8 +65,20 @@ import Foundation
 
   func setPersistenceCacheSizeBytes(app: DatabasePigeonFirebaseApp, cacheSize: Int64,
                                     completion: @escaping (Result<Void, Error>) -> Void) {
+    // If an instance already exists, no-op to avoid Apple SDK argument exceptions.
+    let instanceKey = app.appName + (app.databaseURL ?? "")
+    if Self.cachedDatabaseInstances[instanceKey] != nil {
+      completion(.success(()))
+      return
+    }
+
     let database = getDatabaseFromPigeonApp(app)
-    database.persistenceCacheSizeBytes = UInt(cacheSize)
+    // Firebase iOS expects cache size between 1MB and 100MB (inclusive).
+    let minCacheSize: UInt = 1 * 1024 * 1024
+    let maxCacheSize: UInt = 100 * 1024 * 1024
+    let requested = cacheSize > 0 ? UInt(cacheSize) : minCacheSize
+    let clamped = max(min(requested, maxCacheSize), minCacheSize)
+    database.persistenceCacheSizeBytes = clamped
     completion(.success(()))
   }
 
@@ -630,7 +650,12 @@ import Foundation
     }
 
     if let cacheSizeBytes = app.settings.cacheSizeBytes {
-      database.persistenceCacheSizeBytes = UInt(cacheSizeBytes)
+      // Clamp configured cache size as well to avoid argument errors.
+      let minCacheSize: UInt = 1 * 1024 * 1024
+      let maxCacheSize: UInt = 100 * 1024 * 1024
+      let requested = cacheSizeBytes > 0 ? UInt(cacheSizeBytes) : minCacheSize
+      let clamped = max(min(requested, maxCacheSize), minCacheSize)
+      database.persistenceCacheSizeBytes = clamped
     }
 
     if let loggingEnabled = app.settings.loggingEnabled {
