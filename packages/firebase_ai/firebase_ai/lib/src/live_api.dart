@@ -196,6 +196,9 @@ class LiveClientRealtimeInput {
     this.audio,
     this.video,
     this.text,
+    this.activityStart,
+    this.activityEnd,
+    this.audioStreamEnd,
   });
 
   /// Creates a [LiveClientRealtimeInput] with audio data.
@@ -203,21 +206,30 @@ class LiveClientRealtimeInput {
       // ignore: deprecated_member_use_from_same_package
       : mediaChunks = null,
         video = null,
-        text = null;
+        text = null,
+        activityStart = null,
+        activityEnd = null,
+        audioStreamEnd = null;
 
   /// Creates a [LiveClientRealtimeInput] with video data.
   LiveClientRealtimeInput.video(this.video)
       // ignore: deprecated_member_use_from_same_package
       : mediaChunks = null,
         audio = null,
-        text = null;
+        text = null,
+        activityStart = null,
+        activityEnd = null,
+        audioStreamEnd = null;
 
   /// Creates a [LiveClientRealtimeInput] with text data.
   LiveClientRealtimeInput.text(this.text)
       // ignore: deprecated_member_use_from_same_package
       : mediaChunks = null,
         audio = null,
-        video = null;
+        video = null,
+        activityStart = null,
+        activityEnd = null,
+        audioStreamEnd = null;
 
   /// The list of media chunks.
   @Deprecated('Use audio, video, or text instead')
@@ -232,6 +244,19 @@ class LiveClientRealtimeInput {
   /// Text data.
   final String? text;
 
+  /// Optional. Marks the start of user activity. This can only be sent if automatic (i.e. server-side) activity detection is disabled.
+  final ActivityStart? activityStart;
+
+  /// Optional. Marks the end of user activity. This can only be sent if automatic (i.e. server-side) activity detection is disabled.
+  final ActivityEnd? activityEnd;
+
+  /// Optional. Optional. Indicates that the audio stream has ended, e.g. because the microphone was turned off.
+  ///
+  /// This should only be sent when automatic activity detection is enabled (which is the default).
+  ///
+  /// The client can reopen the stream by sending an audio message.
+  final bool? audioStreamEnd;
+
   // ignore: public_member_api_docs
   Map<String, dynamic> toJson() => {
         'realtime_input': {
@@ -241,10 +266,29 @@ class LiveClientRealtimeInput {
           if (audio != null) 'audio': audio!.toMediaChunkJson(),
           if (video != null) 'video': video!.toMediaChunkJson(),
           if (text != null) 'text': text,
+          if (activityStart != null) 'activity_start': activityStart!.toJson(),
+          if (activityEnd != null) 'activity_end': activityEnd!.toJson(),
         },
       };
 }
 
+/// Marks the start of user activity.
+class ActivityStart {
+  /// Creates an [ActivityStart] instance.
+  ActivityStart();
+
+  // ignore: public_member_api_docs
+  Map<String, dynamic> toJson() => {};
+}
+
+/// Marks the end of user activity.
+class ActivityEnd {
+  /// Creates an [ActivityEnd] instance.
+  ActivityEnd();
+
+  // ignore: public_member_api_docs
+  Map<String, dynamic> toJson() => {};
+}
 /// Represents content from the client in a live stream.
 class LiveClientContent {
   /// Creates a [LiveClientContent] instance.
