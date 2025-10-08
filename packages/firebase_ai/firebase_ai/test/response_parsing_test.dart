@@ -67,6 +67,32 @@ void main() {
       );
     });
 
+    test('with empty promptFeedback', () {
+      const response = '''
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "Mountain View, California, United States"
+          }
+        ],
+        "role": "model"
+      },
+      "index": 0
+    }
+  ],
+  "promptFeedback": {}
+}
+''';
+      final decoded = jsonDecode(response) as Object;
+      expect(
+        VertexSerialization().parseGenerateContentResponse(decoded),
+        isA<GenerateContentResponse>(),
+      );
+    });
+
     test('with a blocked prompt', () {
       const response = '''
 {
@@ -685,7 +711,8 @@ void main() {
     "candidatesTokensDetails": [{
       "modality": "TEXT",
       "tokenCount": 76
-    }]
+    }],
+    "toolUsePromptTokenCount": 5
   }
 }
         ''';
@@ -695,6 +722,7 @@ void main() {
       expect(
           generateContentResponse.text, 'Here is a description of the image:');
       expect(generateContentResponse.usageMetadata?.totalTokenCount, 1913);
+      expect(generateContentResponse.usageMetadata?.toolUsePromptTokenCount, 5);
       expect(
           generateContentResponse
               .usageMetadata?.promptTokensDetails?[1].modality,
@@ -767,6 +795,311 @@ void main() {
       expect(generateContentResponse.text, 'Initial text And more text');
       expect(generateContentResponse.candidates.single.text,
           'Initial text And more text');
+    });
+
+    test('url context', () {
+      const response = '''
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [
+          {
+            "text": "The Berkshire Hathaway Inc. website serves as the official homepage for the company, providing a message from Warren E. Buffett and various corporate information. It includes annual and interim reports, news releases, SEC filings, and information about the annual meeting. The site also features letters from Warren Buffett and Charlie Munger, details on corporate governance and sustainability, and links to Berkshire Hathaway's operating companies. It also warns about fraudulent claims regarding Mr. Buffett's endorsements and provides information on common stock."
+          }
+        ]
+      },
+      "finishReason": "STOP",
+      "groundingMetadata": {
+        "groundingChunks": [
+          {
+            "web": {
+              "uri": "https://berkshirehathaway.com",
+              "title": "BERKSHIRE HATHAWAY INC."
+            }
+          }
+        ],
+        "groundingSupports": [
+          {
+            "segment": {
+              "startIndex": 273,
+              "endIndex": 450,
+              "text": "The site also features letters from Warren Buffett and Charlie Munger, details on corporate governance and sustainability, and links to Berkshire Hathaway's operating companies."
+            },
+            "groundingChunkIndices": [
+              0
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 503,
+              "endIndex": 567,
+              "text": "Buffett's endorsements and provides information on common stock."
+            },
+            "groundingChunkIndices": [
+              0
+            ]
+          }
+        ]
+      },
+      "urlContextMetadata": {
+        "urlMetadata": [
+          {
+            "retrievedUrl": "https://berkshirehathaway.com",
+            "urlRetrievalStatus": "URL_RETRIEVAL_STATUS_SUCCESS"
+          }
+        ]
+      }
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 13,
+    "candidatesTokenCount": 98,
+    "totalTokenCount": 181,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 13
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 98
+      }
+    ],
+    "toolUsePromptTokenCount": 34,
+    "thoughtsTokenCount": 36
+  }
+}
+''';
+      final decoded = jsonDecode(response) as Object;
+      final generateContentResponse =
+          VertexSerialization().parseGenerateContentResponse(decoded);
+      final candidate = generateContentResponse.candidates.first;
+      final urlContextMetadata = candidate.urlContextMetadata;
+      expect(urlContextMetadata, isNotNull);
+      expect(urlContextMetadata!.urlMetadata, hasLength(1));
+      expect(urlContextMetadata.urlMetadata.first.retrievedUrl,
+          Uri.parse('https://berkshirehathaway.com'));
+      expect(urlContextMetadata.urlMetadata.first.urlRetrievalStatus,
+          UrlRetrievalStatus.success);
+      final usageMetadata = generateContentResponse.usageMetadata;
+      expect(usageMetadata, isNotNull);
+      expect(usageMetadata!.toolUsePromptTokenCount, 34);
+    });
+
+    test('url context mixed validity', () {
+      const response = '''
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [
+          {
+            "text": "The `browse` tool output shows the following:1.  **Valid Page (`https://ai.google.dev`)**: The tool successfully accessed this URL. It returned a `title` (Gemini Developer API | Gemma open models | Google AI for ...) and extensive `content`, indicating that the page is publicly accessible and rendered correctly.2.  **Broken Page (`https://a-completely-non-existent-url-for-testing.org`)**: The tool reported that it was not able to access the website(s). This indicates that the URL likely does not exist or is unreachable, confirming its broken status.3.  **Paywalled Page (`https://www.nytimes.com/2023/06/25/realestate/barbiecore-home-decor-interior-design.html?...`)**: Similar to the broken page, the tool also reported being not able to access the website(s) for this URL, explicitly mentioning paywalls, login requirements or sensitive information as common reasons. This suggests that the content is behind a paywall or requires authentication, making it inaccessible to the browsing tool.In summary, the `browse` tool successfully retrieved content from the valid page, while it was unable to access both the non-existent URL and the paywalled New York Times article, with specific reasons provided for the latter.The `browse` tool successfully retrieved the content and title from `https://ai.google.dev`, indicating it is a valid and accessible page.For `https://a-completely-non-existent-url-for-testing.org`, the tool reported that it was not able to access the website(s), which confirms it as a broken or non-existent page.Similarly, for `https://www.nytimes.com/2023/06/25/realestate/barbiecore-home-decor-interior-design.html?...`, the tool also stated it was not able to access the website(s), citing paywalls, login requirements or sensitive information as common reasons, confirming its paywalled status."
+          }
+        ]
+      },
+      "finishReason": "STOP",
+      "groundingMetadata": {
+        "groundingChunks": [
+          {
+            "web": {
+              "uri": "https://ai.google.dev",
+              "title": "Gemini Developer API | Gemma open models | Google AI for ..."
+            }
+          }
+        ],
+        "groundingSupports": [
+          {
+            "segment": {
+              "startIndex": 134,
+              "endIndex": 317,
+              "text": "It returned a `title` (Gemini Developer API | Gemma open models | Google AI for ...) and extensive `content`, indicating that the page is publicly accessible and rendered correctly."
+            },
+            "groundingChunkIndices": [
+              0
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 465,
+              "endIndex": 565,
+              "text": "This indicates that the URL likely does not exist or is unreachable, confirming its broken status."
+            },
+            "groundingChunkIndices": [
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 892,
+              "endIndex": 1015,
+              "text": "This suggests that the content is behind a paywall or requires authentication, making it inaccessible to the browsing tool."
+            },
+            "groundingChunkIndices": [
+              2
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 1244,
+              "endIndex": 1382,
+              "text": "The `browse` tool successfully retrieved the content and title from `https://ai.google.dev`, indicating it is a valid and accessible page."
+            },
+            "groundingChunkIndices": [
+              0
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 1384,
+              "endIndex": 1563,
+              "text": "For `https://a-completely-non-existent-url-for-testing.org`, the tool reported that it was not able to access the website(s), which confirms it as a broken or non-existent page."
+            },
+            "groundingChunkIndices": [
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 1565,
+              "endIndex": 1855,
+              "text": "Similarly, for `https://www.nytimes.com/2023/06/25/realestate/barbiecore-home-decor-interior-design.html?...`, the tool also stated it was not able to access the website(s), citing paywalls, login requirements or sensitive information as common reasons, confirming its paywalled status."
+            },
+            "groundingChunkIndices": [
+              2
+            ]
+          }
+        ]
+      },
+      "urlContextMetadata": {
+        "urlMetadata": [
+          {
+            "retrievedUrl": "https://www.nytimes.com/2023/06/25/realestate/barbiecore-home-decor-interior-design.html?action=click&contentCollection=undefined&region=Footer&module=WhatsNext&version=WhatsNext&contentID=WhatsNext&moduleDetail=most-emailed-0&pgtype=undefinedl",
+            "urlRetrievalStatus": "URL_RETRIEVAL_STATUS_ERROR"
+          },
+          {
+            "retrievedUrl": "https://ai.google.dev",
+            "urlRetrievalStatus": "URL_RETRIEVAL_STATUS_SUCCESS"
+          },
+          {
+            "retrievedUrl": "https://a-completely-non-existent-url-for-testing.org",
+            "urlRetrievalStatus": "URL_RETRIEVAL_STATUS_ERROR"
+          }
+        ]
+      }
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 116,
+    "candidatesTokenCount": 446,
+    "totalTokenCount": 918,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 116
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 446
+      }
+    ],
+    "toolUsePromptTokenCount": 177,
+    "thoughtsTokenCount": 179
+  }
+}
+''';
+      final decoded = jsonDecode(response) as Object;
+      final generateContentResponse =
+          VertexSerialization().parseGenerateContentResponse(decoded);
+      final urlContextMetadata =
+          generateContentResponse.candidates.first.urlContextMetadata;
+      expect(urlContextMetadata, isNotNull);
+      expect(urlContextMetadata!.urlMetadata, hasLength(3));
+      expect(urlContextMetadata.urlMetadata[2].retrievedUrl,
+          Uri.parse('https://a-completely-non-existent-url-for-testing.org'));
+      expect(urlContextMetadata.urlMetadata[2].urlRetrievalStatus,
+          UrlRetrievalStatus.error);
+      expect(urlContextMetadata.urlMetadata[1].retrievedUrl,
+          Uri.parse('https://ai.google.dev'));
+      expect(urlContextMetadata.urlMetadata[1].urlRetrievalStatus,
+          UrlRetrievalStatus.success);
+    });
+
+    test('url context missing retrievedUrl', () {
+      const response = '''
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [
+          {
+            "text": "I attempted to access the provided URLs, but I was unable to retrieve any content from them. The error message indicated that the websites could not be accessed, possibly due to reasons such as paywalls, login requirements, sensitive information, or other access restrictions. This suggests that these pages are not real in the sense of being publicly accessible or existing web pages. The `example.com` domain is typically used for illustrative purposes and not for actual active websites."
+          }
+        ]
+      },
+      "finishReason": "STOP",
+      "groundingMetadata": {
+        "groundingSupports": [
+          {
+            "segment": {
+              "startIndex": 93,
+              "endIndex": 275,
+              "text": "The error message indicated that the websites could not be accessed, possibly due to reasons such as paywalls, login requirements, sensitive information, or other access restrictions"
+            },
+            "groundingChunkIndices": [
+              0
+            ]
+          }
+        ]
+      },
+      "urlContextMetadata": {
+        "urlMetadata": [
+          {
+            "urlRetrievalStatus": "URL_RETRIEVAL_STATUS_ERROR"
+          }
+        ]
+      }
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 175,
+    "candidatesTokenCount": 93,
+    "totalTokenCount": 564,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 175
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 93
+      }
+    ],
+    "toolUsePromptTokenCount": 60,
+    "thoughtsTokenCount": 236
+  }
+}
+''';
+      final decoded = jsonDecode(response) as Object;
+      final generateContentResponse =
+          VertexSerialization().parseGenerateContentResponse(decoded);
+      final urlContextMetadata =
+          generateContentResponse.candidates.first.urlContextMetadata;
+      expect(urlContextMetadata, isNotNull);
+      expect(urlContextMetadata!.urlMetadata, hasLength(1));
+      expect(urlContextMetadata.urlMetadata[0].retrievedUrl, isNull);
+      expect(urlContextMetadata.urlMetadata[0].urlRetrievalStatus,
+          UrlRetrievalStatus.error);
     });
   });
 

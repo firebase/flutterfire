@@ -1,9 +1,11 @@
 # Firebase AI Logic Flutter
 [![pub package](https://img.shields.io/pub/v/firebase_ai.svg)](https://pub.dev/packages/firebase_ai)
 
-A Flutter plugin to use the [Firebase AI Logic](https://firebase.google.com/docs/ai-logic).
+A Flutter plugin to use the [Firebase AI Logic](https://firebase.google.com/docs/ai-logic) SDK, 
+providing access to the latest generative [AI models](https://firebase.google.com/docs/ai-logic/models)
+like Gemini and Imagen.
 
-To learn more about Firebase AI, please visit the [website](https://firebase.google.com/docs/ai-logic)
+To learn more about Firebase AI, please visit the [Firebase website](https://firebase.google.com/docs/ai-logic)
 
 ## Getting Started
 

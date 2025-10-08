@@ -65,6 +65,45 @@ void main() {
       ]);
     });
   });
+
+  test('.initializeApp() with demoProjectId', () async {
+    const String demoProjectId = 'demo-project-id';
+    const String expectedName = demoProjectId;
+    const FirebaseOptions expectedOptions = FirebaseOptions(
+      apiKey: '12345',
+      // Flutter tests use android as the default platform.
+      appId: '1:1:android:1',
+      messagingSenderId: '',
+      projectId: demoProjectId,
+    );
+
+    final mock = MockFirebaseCore();
+    Firebase.delegatePackingProperty = mock;
+
+    final FirebaseAppPlatform platformApp =
+        FirebaseAppPlatform(expectedName, expectedOptions);
+
+    when(mock.apps).thenReturn([platformApp]);
+    when(mock.app(expectedName)).thenReturn(platformApp);
+    when(mock.initializeApp(name: expectedName, options: expectedOptions))
+        .thenAnswer((_) => Future.value(platformApp));
+
+    // Initialize the app with only a demo project id. The implementation will
+    // set the name and options accordingly.
+    FirebaseApp initializedApp = await Firebase.initializeApp(
+      demoProjectId: demoProjectId,
+    );
+    FirebaseApp app = Firebase.app(expectedName);
+
+    expect(initializedApp, app);
+    verifyInOrder([
+      mock.initializeApp(
+        name: expectedName,
+        options: expectedOptions,
+      ),
+      mock.app(expectedName),
+    ]);
+  });
 }
 
 class MockFirebaseCore extends Mock
