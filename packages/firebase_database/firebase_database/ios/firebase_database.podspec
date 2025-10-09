@@ -37,7 +37,6 @@ Pod::Spec.new do |s|
   s.static_framework = true
   s.pod_target_xcconfig = {
     'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\\"#{library_version}\\\" LIBRARY_NAME=\\\"flutter-fire-rtdb\\\"",
-    'DEFINES_MODULE' => 'YES',
-    'SWIFT_INCLUDE_PATHS' => '"${PODS_TARGET_SRCROOT}/firebase_database/Sources"'
+    'DEFINES_MODULE' => 'YES'
   }
 end

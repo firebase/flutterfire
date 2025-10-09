@@ -7,11 +7,18 @@ import FirebaseDatabase
 import Flutter
 import Foundation
 
+#if canImport(FlutterMacOS)
+  import FlutterMacOS
+#else
+  import Flutter
+#endif
+
 #if canImport(firebase_core)
   import firebase_core
 #else
   import firebase_core_shared
 #endif
+import FirebaseDatabase
 
 @objc(FLTFirebaseDatabasePlugin)
 public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePluginProtocol {
@@ -65,11 +72,11 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     "flutter-fire-rtdb"
   }
 
-  @objc public func firebaseLibraryVersion() -> String {
-    "12.0.1"
+  public func firebaseLibraryVersion() -> String {
+    versionNumber
   }
 
   @objc public func flutterChannelName() -> String {
-    "plugins.flutter.io/firebase_database"
+    FLTFirebaseDatabaseChannelName
   }
 }
