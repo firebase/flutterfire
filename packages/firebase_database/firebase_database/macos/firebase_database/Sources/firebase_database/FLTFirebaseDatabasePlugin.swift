@@ -64,10 +64,10 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
   }
 
   @objc public func firebaseLibraryVersion() -> String {
-    "12.0.1"
+    versionNumber
   }
 
   @objc public func flutterChannelName() -> String {
-    "plugins.flutter.io/firebase_database"
+    FLTFirebaseDatabaseChannelName
   }
 }
