@@ -113,7 +113,8 @@ export 'src/live_api.dart'
         LiveServerToolCallCancellation,
         LiveServerResponse,
         GoingAwayNotice,
-        Transcription;
+        ActivityEnd,
+        ActivityStart;
 export 'src/live_session.dart' show LiveSession;
 export 'src/schema.dart' show JSONSchema, Schema, SchemaType;
 export 'src/server_template/template_chat.dart'
