@@ -132,9 +132,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                         color: Theme.of(context).colorScheme.primary,
                       ),
                       tooltip: 'Imagen',
-                    )
-                  else
-                    const CircularProgressIndicator(),
+                    ),
                   if (!_loading)
                     IconButton(
                       onPressed: () async {
@@ -145,9 +143,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                         color: Theme.of(context).colorScheme.primary,
                       ),
                       tooltip: 'Image Input',
-                    )
-                  else
-                    const CircularProgressIndicator(),
+                    ),
                   if (!_loading)
                     IconButton(
                       onPressed: () async {
@@ -158,9 +154,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                         color: Theme.of(context).colorScheme.primary,
                       ),
                       tooltip: 'Chat',
-                    )
-                  else
-                    const CircularProgressIndicator(),
+                    ),
                   if (!_loading)
                     IconButton(
                       onPressed: () async {
