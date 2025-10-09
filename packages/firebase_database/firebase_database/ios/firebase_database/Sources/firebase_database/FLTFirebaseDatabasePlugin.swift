@@ -20,6 +20,9 @@ import Foundation
 #endif
 import FirebaseDatabase
 
+// Channel name constant to match macOS implementation
+let FLTFirebaseDatabaseChannelName = "plugins.flutter.io/firebase_database"
+
 @objc(FLTFirebaseDatabasePlugin)
 public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePluginProtocol {
   private var binaryMessenger: FlutterBinaryMessenger

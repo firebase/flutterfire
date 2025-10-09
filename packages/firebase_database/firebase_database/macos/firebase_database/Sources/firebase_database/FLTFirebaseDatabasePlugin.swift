@@ -13,6 +13,9 @@ import Foundation
   import firebase_core_shared
 #endif
 
+// Channel name constant to match iOS implementation
+let FLTFirebaseDatabaseChannelName = "plugins.flutter.io/firebase_database"
+
 @objc(FLTFirebaseDatabasePlugin)
 public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePluginProtocol {
   private var binaryMessenger: FlutterBinaryMessenger
