@@ -55,9 +55,25 @@ class FirebaseCoreWeb extends FirebasePlatform {
     );
   }
 
+  static const String libraryName = 'firebase_core';
+
   /// Registers that [FirebaseCoreWeb] is the platform implementation.
   static void registerWith(Registrar registrar) {
+    if (kDebugMode) {
+      final sessionKey = web.window.sessionStorage.getItem(libraryName);
+      if (sessionKey == null) {
+        web.window.sessionStorage.setItem(libraryName, packageVersion);
+        registerVersion(libraryName, packageVersion);
+      }
+    }
+
     FirebasePlatform.instance = FirebaseCoreWeb();
+  }
+
+  // Registers a library's name and version for platform logging purposes.
+  static void registerVersion(String libraryKeyOrName, String version,
+      [String? variant]) {
+    firebase.registerVersion(libraryKeyOrName, version, variant);
   }
 
   /// Returns the Firebase JS SDK Version to use.
