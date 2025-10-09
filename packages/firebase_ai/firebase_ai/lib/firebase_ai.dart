@@ -99,6 +99,8 @@ export 'src/live_api.dart'
         LiveServerSetupComplete,
         Transcription,
         LiveServerToolCallCancellation,
+        ActivityEnd,
+        ActivityStart,
         LiveServerResponse;
 export 'src/live_session.dart' show LiveSession;
 export 'src/schema.dart' show Schema, SchemaType;
