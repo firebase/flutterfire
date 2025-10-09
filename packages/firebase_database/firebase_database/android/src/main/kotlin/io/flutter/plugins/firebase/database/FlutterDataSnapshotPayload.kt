@@ -17,7 +17,7 @@ class FlutterDataSnapshotPayload(
   init {
     val snapshotMap = mutableMapOf<String, Any?>()
 
-    snapshotMap[Constants.KEY] = snapshot.key ?: ""
+    snapshotMap[Constants.KEY] = snapshot.key
     snapshotMap[Constants.VALUE] = snapshot.value
     snapshotMap[Constants.PRIORITY] = snapshot.priority
 
