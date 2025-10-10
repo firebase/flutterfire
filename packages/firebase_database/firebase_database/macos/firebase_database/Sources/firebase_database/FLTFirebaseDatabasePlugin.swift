@@ -288,8 +288,7 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     }
   }
 
-  func databaseReferenceGetTransactionResult(app: DatabasePigeonFirebaseApp, transactionKey: Int64,
-                                             completion: @escaping (Result<[String: Any?], Error>) -> Void) {
+  func databaseReferenceGetTransactionResult(app: DatabasePigeonFirebaseApp, transactionKey: Int64, completion: @escaping (Result<[String: Any?], Error>) -> Void) {
     if let result = transactionResults.removeValue(forKey: transactionKey) {
       completion(.success(result))
     } else {
