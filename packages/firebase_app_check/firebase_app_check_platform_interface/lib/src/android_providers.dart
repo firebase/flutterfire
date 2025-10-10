@@ -36,7 +36,8 @@ class AndroidPlayIntegrityProvider extends AndroidAppCheckProvider {
 /// ReCaptcha Enterprise provider for Android.
 ///
 /// See documentation: <link to docs>
-class AndroidReCaptchaEnterpriseProvider extends AndroidAppCheckProvider {  
-  const AndroidReCaptchaEnterpriseProvider(this.siteKey): super('recaptchaEnterprise');
-   	final String siteKey; 
+class AndroidReCaptchaEnterpriseProvider extends AndroidAppCheckProvider {
+  const AndroidReCaptchaEnterpriseProvider(this.siteKey)
+      : super('recaptchaEnterprise');
+  final String siteKey;
 }
