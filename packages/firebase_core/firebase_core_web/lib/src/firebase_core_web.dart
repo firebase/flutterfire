@@ -64,14 +64,6 @@ class FirebaseCoreWeb extends FirebasePlatform {
     FirebasePlatform.instance = FirebaseCoreWeb();
   }
 
-  static void _registerVersion(
-    String libraryKeyOrName,
-    String version, [
-    String? variant,
-  ]) {
-    firebase.registerVersion(libraryKeyOrName, version, variant);
-  }
-
   /// Registers a library's name and version for platform logging purposes if needed.
   static void _registerVersionIfNeeded(
     String libraryName,
@@ -81,7 +73,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
     final sessionItem = web.window.sessionStorage.getItem(sessionKey);
     if (sessionItem == null) {
       web.window.sessionStorage.setItem(sessionKey, packageVersion);
-      _registerVersion(libraryName, packageVersion);
+      firebase.registerVersion(libraryName, packageVersion);
     }
   }
 
