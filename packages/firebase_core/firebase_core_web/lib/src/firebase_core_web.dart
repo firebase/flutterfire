@@ -64,8 +64,11 @@ class FirebaseCoreWeb extends FirebasePlatform {
     FirebasePlatform.instance = FirebaseCoreWeb();
   }
 
-  static void _registerVersion(String libraryKeyOrName, String version,
-      [String? variant]) {
+  static void _registerVersion(
+    String libraryKeyOrName,
+    String version, [
+    String? variant,
+  ]) {
     firebase.registerVersion(libraryKeyOrName, version, variant);
   }
 
