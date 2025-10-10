@@ -25,8 +25,8 @@ Pod::Spec.new do |s|
   s.authors          = 'The Chromium Authors'
   s.source           = { :path => '.' }
 
-  s.source_files     = 'firebase_database/Sources/firebase_database/**/*.{h,m}'
-  s.public_header_files = 'firebase_database/Sources/firebase_database/include/*.h'
+  s.source_files     = 'firebase_database/Sources/firebase_database/**/*.swift'
+  s.swift_version    = '5.0'
 
   s.ios.deployment_target = '15.0'
   s.dependency 'Flutter'
