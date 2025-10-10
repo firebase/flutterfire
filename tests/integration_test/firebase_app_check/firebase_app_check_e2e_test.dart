@@ -103,6 +103,36 @@ void main() {
         },
         skip: defaultTargetPlatform != TargetPlatform.iOS,
       );
+
+      test(
+        'recaptchaEnterprise on Android',
+        () async {
+          await expectLater(
+            FirebaseAppCheck.instance.activate(
+              providerAndroid: const AndroidReCaptchaEnterpriseProvider(
+                siteKey: '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8',
+              ),
+            ),
+            completes,
+          );
+        },
+        skip: defaultTargetPlatform != TargetPlatform.android,
+      );
+
+      test(
+        'recaptchaEnterprise on iOS',
+        () async {
+          await expectLater(
+            FirebaseAppCheck.instance.activate(
+              providerApple: const AppleReCaptchaEnterpriseProvider(
+                siteKey: '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8',
+              ),
+            ),
+            completes,
+          );
+        },
+        skip: defaultTargetPlatform != TargetPlatform.iOS,
+      );
     },
   );
 }
