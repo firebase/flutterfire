@@ -15,6 +15,8 @@ import 'interop/storage.dart' as storage_interop;
 import 'reference_web.dart';
 import 'utils/errors.dart';
 
+import 'firebase_storage_version.dart';
+
 /// The type for functions that implement the `ref` method of the [FirebaseStorageWeb] class.
 @visibleForTesting
 typedef ReferenceBuilder = ReferencePlatform Function(
@@ -22,6 +24,8 @@ typedef ReferenceBuilder = ReferencePlatform Function(
 
 /// The Web implementation of the FirebaseStoragePlatform.
 class FirebaseStorageWeb extends FirebaseStoragePlatform {
+  static const String _libraryName = 'firebase_storage';
+
   /// Construct the plugin.
   FirebaseStorageWeb({FirebaseApp? app, required String bucket})
       : _bucket = bucket,
@@ -59,6 +63,8 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web.
   static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerVersionIfNeeded(_libraryName, packageVersion);
+
     FirebaseCoreWeb.registerService('storage');
     FirebaseStoragePlatform.instance = FirebaseStorageWeb._nullInstance();
   }

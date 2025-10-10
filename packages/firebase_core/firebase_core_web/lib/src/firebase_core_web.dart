@@ -55,25 +55,34 @@ class FirebaseCoreWeb extends FirebasePlatform {
     );
   }
 
-  static const String libraryName = 'firebase_core';
+  static const String _libraryName = 'firebase_core';
 
   /// Registers that [FirebaseCoreWeb] is the platform implementation.
   static void registerWith(Registrar registrar) {
-    if (kDebugMode) {
-      final sessionKey = web.window.sessionStorage.getItem(libraryName);
-      if (sessionKey == null) {
-        web.window.sessionStorage.setItem(libraryName, packageVersion);
-        registerVersion(libraryName, packageVersion);
-      }
-    }
-
+    registerVersionIfNeeded(_libraryName, packageVersion);
     FirebasePlatform.instance = FirebaseCoreWeb();
   }
 
-  // Registers a library's name and version for platform logging purposes.
-  static void registerVersion(String libraryKeyOrName, String version,
+  static void _registerVersion(String libraryKeyOrName, String version,
       [String? variant]) {
     firebase.registerVersion(libraryKeyOrName, version, variant);
+  }
+
+  /// Registers a library's name and version for platform logging purposes if needed.
+  static void registerVersionIfNeeded(
+    String libraryName,
+    String packageVersion,
+  ) {
+    final sessionKey = _getSessionStorageKey(libraryName);
+    final sessionItem = web.window.sessionStorage.getItem(sessionKey);
+    if (sessionItem == null) {
+      web.window.sessionStorage.setItem(sessionKey, packageVersion);
+      _registerVersion(libraryName, packageVersion);
+    }
+  }
+
+  static String _getSessionStorageKey(String libraryName) {
+    return 'flutterfire-$libraryName';
   }
 
   /// Returns the Firebase JS SDK Version to use.
