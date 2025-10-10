@@ -69,7 +69,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
     String libraryName,
     String packageVersion,
   ) {
-    final sessionKey = _getSessionStorageKey(libraryName);
+    final sessionKey = _getSessionStorageKey(libraryName, packageVersion);
     final sessionItem = web.window.sessionStorage.getItem(sessionKey);
     if (sessionItem == null) {
       web.window.sessionStorage.setItem(sessionKey, packageVersion);
@@ -81,8 +81,8 @@ class FirebaseCoreWeb extends FirebasePlatform {
     _libraryVersions[libraryName] = version;
   }
 
-  static String _getSessionStorageKey(String libraryName) {
-    return 'flutterfire-$libraryName';
+  static String _getSessionStorageKey(String libraryName, String version) {
+    return 'flutterfire-$libraryName-$version';
   }
 
   static void _registerAllLibraryVersions() {
