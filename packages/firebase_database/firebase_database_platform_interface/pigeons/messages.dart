@@ -16,9 +16,6 @@ import 'package:pigeon/pigeon.dart';
     ),
     swiftOut:
         '../firebase_database/ios/firebase_database/Sources/firebase_database/FirebaseDatabaseMessages.g.swift',
-    cppHeaderOut: '../firebase_database/windows/messages.g.h',
-    cppSourceOut: '../firebase_database/windows/messages.g.cpp',
-    cppOptions: CppOptions(namespace: 'firebase_database_windows'),
     copyrightHeader: 'pigeons/copyright.txt',
   ),
 )
