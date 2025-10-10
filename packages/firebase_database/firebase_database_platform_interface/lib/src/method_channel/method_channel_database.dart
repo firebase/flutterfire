@@ -6,7 +6,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:firebase_database_platform_interface/src/method_channel/utils/utils.dart';
 import 'package:flutter/services.dart';
-import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart';
+import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart'
+    as pigeon;
 
 import 'method_channel_database_reference.dart';
 import 'utils/exception.dart';
@@ -17,9 +18,9 @@ class MethodChannelArguments {
   FirebaseApp app;
 }
 
-class _TransactionHandlerFlutterApi extends FirebaseDatabaseFlutterApi {
+class _TransactionHandlerFlutterApi extends pigeon.FirebaseDatabaseFlutterApi {
   @override
-  Future<TransactionHandlerResult> callTransactionHandler(
+  Future<pigeon.TransactionHandlerResult> callTransactionHandler(
     int transactionKey,
     Object? snapshotValue,
   ) async {
@@ -47,7 +48,7 @@ class _TransactionHandlerFlutterApi extends FirebaseDatabaseFlutterApi {
       MethodChannelDatabase.transactionErrors[transactionKey] = e;
     }
 
-    return TransactionHandlerResult(
+    return pigeon.TransactionHandlerResult(
       value: value != null ? transformValue(value) : null,
       aborted: aborted,
       exception: exception,
@@ -59,14 +60,14 @@ class _TransactionHandlerFlutterApi extends FirebaseDatabaseFlutterApi {
 ///
 /// You can get an instance by calling [FirebaseDatabase.instance].
 class MethodChannelDatabase extends DatabasePlatform {
-  final _api = FirebaseDatabaseHostApi();
+  static final pigeonChannel = pigeon.FirebaseDatabaseHostApi();
 
   /// Creates a DatabasePigeonFirebaseApp object with current settings
-  DatabasePigeonFirebaseApp get pigeonApp {
-    return DatabasePigeonFirebaseApp(
+  pigeon.DatabasePigeonFirebaseApp get pigeonApp {
+    return pigeon.DatabasePigeonFirebaseApp(
       appName: app!.name,
       databaseURL: databaseURL,
-      settings: DatabasePigeonSettings(
+      settings: pigeon.DatabasePigeonSettings(
         persistenceEnabled: _persistenceEnabled,
         cacheSizeBytes: _cacheSizeBytes,
         loggingEnabled: _loggingEnabled,
@@ -81,7 +82,7 @@ class MethodChannelDatabase extends DatabasePlatform {
     if (_initialized) return;
 
     // Set up the Pigeon FlutterApi for transaction handler callbacks
-    FirebaseDatabaseFlutterApi.setUp(_TransactionHandlerFlutterApi());
+    pigeon.FirebaseDatabaseFlutterApi.setUp(_TransactionHandlerFlutterApi());
     _initialized = true;
   }
 
@@ -130,7 +131,7 @@ class MethodChannelDatabase extends DatabasePlatform {
     _emulatorHost = host;
     _emulatorPort = port;
     // Call the Pigeon method to set up the emulator
-    _api.useDatabaseEmulator(pigeonApp, host, port);
+    pigeonChannel.useDatabaseEmulator(pigeonApp, host, port);
   }
 
   @override
@@ -145,27 +146,27 @@ class MethodChannelDatabase extends DatabasePlatform {
   void setPersistenceEnabled(bool enabled) {
     _persistenceEnabled = enabled;
     // Call the Pigeon method to set persistence
-    _api.setPersistenceEnabled(pigeonApp, enabled);
+    pigeonChannel.setPersistenceEnabled(pigeonApp, enabled);
   }
 
   @override
   void setPersistenceCacheSizeBytes(int cacheSize) {
     _cacheSizeBytes = cacheSize;
     // Call the Pigeon method to set cache size
-    _api.setPersistenceCacheSizeBytes(pigeonApp, cacheSize);
+    pigeonChannel.setPersistenceCacheSizeBytes(pigeonApp, cacheSize);
   }
 
   @override
   void setLoggingEnabled(bool enabled) {
     _loggingEnabled = enabled;
     // Call the Pigeon method to set logging
-    _api.setLoggingEnabled(pigeonApp, enabled);
+    pigeonChannel.setLoggingEnabled(pigeonApp, enabled);
   }
 
   @override
   Future<void> goOnline() {
     try {
-      return _api.goOnline(pigeonApp);
+      return pigeonChannel.goOnline(pigeonApp);
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -176,7 +177,7 @@ class MethodChannelDatabase extends DatabasePlatform {
   @override
   Future<void> goOffline() {
     try {
-      return _api.goOffline(pigeonApp);
+      return pigeonChannel.goOffline(pigeonApp);
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -195,7 +196,7 @@ class MethodChannelDatabase extends DatabasePlatform {
   @override
   Future<void> purgeOutstandingWrites() {
     try {
-      return _api.purgeOutstandingWrites(pigeonApp);
+      return pigeonChannel.purgeOutstandingWrites(pigeonApp);
     } catch (e, s) {
       convertPlatformException(e, s);
     }
