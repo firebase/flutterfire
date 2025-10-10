@@ -11,11 +11,10 @@ import 'package:firebase_storage_platform_interface/firebase_storage_platform_in
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:meta/meta.dart';
 
+import 'firebase_storage_version.dart';
 import 'interop/storage.dart' as storage_interop;
 import 'reference_web.dart';
 import 'utils/errors.dart';
-
-import 'firebase_storage_version.dart';
 
 /// The type for functions that implement the `ref` method of the [FirebaseStorageWeb] class.
 @visibleForTesting
@@ -24,24 +23,23 @@ typedef ReferenceBuilder = ReferencePlatform Function(
 
 /// The Web implementation of the FirebaseStoragePlatform.
 class FirebaseStorageWeb extends FirebaseStoragePlatform {
-  static const String _libraryName = 'firebase_storage';
-
   /// Construct the plugin.
   FirebaseStorageWeb({FirebaseApp? app, required String bucket})
       : _bucket = bucket,
         super(appInstance: app, bucket: bucket);
-
-  // Empty constructor. This is only used by the registerWith method.
-  // superclass also needs to be initialized and 'bucket' param is required.
-  FirebaseStorageWeb._nullInstance()
-      : _webStorage = null,
-        super(bucket: '');
 
   /// Create a FirebaseStorageWeb injecting a [fb.Storage] object.
   @visibleForTesting
   FirebaseStorageWeb.forMock(this._webStorage,
       {required String bucket, FirebaseApp? app})
       : super(appInstance: app, bucket: bucket);
+
+  // Empty constructor. This is only used by the registerWith method.
+  // superclass also needs to be initialized and 'bucket' param is required.
+  FirebaseStorageWeb._nullInstance()
+      : _webStorage = null,
+        super(bucket: '');
+  static const String _libraryName = 'firebase_storage';
 
   /// The js-interop layer for Firebase Storage
   storage_interop.Storage? _webStorage;
@@ -63,7 +61,7 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web.
   static void registerWith(Registrar registrar) {
-    FirebaseCoreWeb.registerVersionIfNeeded(_libraryName, packageVersion);
+    FirebaseCoreWeb.registerLibraryVersion(_libraryName, packageVersion);
 
     FirebaseCoreWeb.registerService('storage');
     FirebaseStoragePlatform.instance = FirebaseStorageWeb._nullInstance();

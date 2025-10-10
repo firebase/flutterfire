@@ -39,7 +39,7 @@ class FirebaseRemoteConfigWeb extends FirebaseRemoteConfigPlatform {
 
   /// Create the default instance of the [FirebaseRemoteConfigPlatform] as a [FirebaseRemoteConfigWeb]
   static void registerWith(Registrar registrar) {
-    FirebaseCoreWeb.registerVersionIfNeeded(_libraryName, packageVersion);
+    FirebaseCoreWeb.registerLibraryVersion(_libraryName, packageVersion);
 
     FirebaseCoreWeb.registerService(
       'remote-config',

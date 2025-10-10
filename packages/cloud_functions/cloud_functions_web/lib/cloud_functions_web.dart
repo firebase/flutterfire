@@ -40,7 +40,7 @@ class FirebaseFunctionsWeb extends FirebaseFunctionsPlatform {
 
   /// Create the default instance of the [FirebaseFunctionsPlatform] as a [FirebaseFunctionsWeb]
   static void registerWith(Registrar registrar) {
-    FirebaseCoreWeb.registerVersionIfNeeded(_libraryName, packageVersion);
+    FirebaseCoreWeb.registerLibraryVersion(_libraryName, packageVersion);
 
     FirebaseCoreWeb.registerService('functions');
     FirebaseFunctionsPlatform.instance = FirebaseFunctionsWeb.instance;

@@ -40,7 +40,9 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
-    FirebaseCoreWeb.registerVersionIfNeeded(_libraryName, packageVersion);
+    FirebaseCoreWeb.onJSSdkInitialized(() {
+      FirebaseCoreWeb.registerLibraryVersion(_libraryName, packageVersion);
+    });
 
     FirebaseCoreWeb.registerService('analytics');
     FirebaseAnalyticsPlatform.instance = FirebaseAnalyticsWeb();

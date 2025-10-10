@@ -55,7 +55,7 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
-    FirebaseCoreWeb.registerVersionIfNeeded(_libraryName, packageVersion);
+    FirebaseCoreWeb.registerLibraryVersion(_libraryName, packageVersion);
 
     FirebaseCoreWeb.registerService('performance');
     FirebasePerformancePlatform.instance = FirebasePerformanceWeb.instance;

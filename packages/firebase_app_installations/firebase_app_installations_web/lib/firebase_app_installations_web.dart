@@ -37,7 +37,7 @@ class FirebaseAppInstallationsWeb extends FirebaseAppInstallationsPlatform {
 
   /// Create the default instance of the [FirebaseAppInstallationsPlatform] as a [FirebaseAppInstallationsWeb]
   static void registerWith(Registrar registrar) {
-    FirebaseCoreWeb.registerVersionIfNeeded(_libraryName, packageVersion);
+    FirebaseCoreWeb.registerLibraryVersion(_libraryName, packageVersion);
 
     FirebaseCoreWeb.registerService('installations');
     FirebaseAppInstallationsPlatform.instance =
