@@ -61,6 +61,15 @@ App app([String? name]) {
   );
 }
 
+void registerVersion(String libraryKeyOrName, String version,
+    [String? variant]) {
+  firebase_interop.registerVersion(
+    libraryKeyOrName.toJS,
+    version.toJS,
+    variant?.toJS ?? 'flutter-firebase'.toJS,
+  );
+}
+
 class FirebaseError {
   final String code;
   final String message;

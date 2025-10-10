@@ -8,8 +8,10 @@ import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:firebase_core_web/src/firebase_core_version.dart';
 import 'package:firebase_core_web/src/interop/package_web_tweaks.dart';
 import 'package:firebase_core_web/src/interop/utils/es6_interop.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:meta/meta.dart';
 import 'package:web/web.dart' as web;
