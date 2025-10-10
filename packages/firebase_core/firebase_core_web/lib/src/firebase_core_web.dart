@@ -79,7 +79,6 @@ class FirebaseCoreWeb extends FirebasePlatform {
     if (sessionItem == null) {
       web.window.sessionStorage.setItem(sessionKey, packageVersion);
       _registerVersion(libraryName, packageVersion);
-      print('registerVersionIfNeeded: $libraryName, $packageVersion');
     }
   }
 
