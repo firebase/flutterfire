@@ -49,6 +49,10 @@
       self.delegateProvider = [[FIRDeviceCheckProvider alloc] initWithApp:app];
     }
   }
+
+  if ([providerName isEqualToString:@"recaptchaEnterprise"]) {
+    self.delegateProvider = [[FIRReCaptchaEnterpriseProvider alloc] initWithApp:app];
+  }
 }
 
 - (void)getTokenWithCompletion:(nonnull void (^)(FIRAppCheckToken *_Nullable,
