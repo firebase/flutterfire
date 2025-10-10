@@ -1,4 +1,4 @@
-// Copyright 2024 Google LLC
+// Copyright 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -77,7 +77,7 @@ Future<void> _generateVersionFile(String packageName) async {
     print('Processing $webPackageName version $currentVersion');
     
     // Create the version file content
-    final fileContent = '''// Copyright 2024 Google LLC
+    final fileContent = '''// Copyright 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
