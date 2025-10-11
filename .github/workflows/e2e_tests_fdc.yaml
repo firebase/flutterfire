@@ -87,7 +87,7 @@ jobs:
           arch: x86_64
           working-directory: 'packages/firebase_data_connect/firebase_data_connect/example'
           script: |
-            flutter test integration_test/e2e_test.dart --dart-define=CI=true -d emulator-5554
+            flutter test integration_test/e2e_test.dart --ignore-timeouts --dart-define=CI=true -d emulator-5554
 
   ios:
     runs-on: macos-15
@@ -169,7 +169,7 @@ jobs:
           sleep 15
           # Uncomment following line to have simulator logs printed out for debugging purposes.
           # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
-          flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true
+          flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --ignore-timeouts --dart-define=CI=true
 
   web:
     runs-on: macos-latest

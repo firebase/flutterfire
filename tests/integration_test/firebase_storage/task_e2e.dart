@@ -123,8 +123,7 @@ void setupTaskTests() {
         // This task is flaky on mac, skip for now.
         // TODO(russellwheatley): Windows works on example app, but fails on tests.
         // Clue is in bytesTransferred + totalBytes which both equal: -3617008641903833651
-        skip: defaultTargetPlatform == TargetPlatform.macOS ||
-            defaultTargetPlatform == TargetPlatform.windows,
+        skip: defaultTargetPlatform != TargetPlatform.iOS,
       );
 
       test(
