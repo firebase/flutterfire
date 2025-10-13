@@ -1,3 +1,7 @@
+## 0.2.1+1
+
+ - Update a dependency to the latest release.
+
 ## 0.2.1
 
  - **FEAT**(app-check): Debug token support for the activate method ([#17723](https://github.com/firebase/flutterfire/issues/17723)). ([3c638264](https://github.com/firebase/flutterfire/commit/3c638264565d902ddbe4dff5bb027aef9e1c2140))

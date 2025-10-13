@@ -1,3 +1,12 @@
+## 3.4.0
+
+ - **FIX**: update topics in pubspec.yaml for firebase_ai ([#17759](https://github.com/firebase/flutterfire/issues/17759)). ([ab2301d2](https://github.com/firebase/flutterfire/commit/ab2301d2b2943c87279ce7ba4694a90b49eb98fc))
+ - **FIX**(firebase_ai): add validation for PromptFeedback parsing and handle empty cases ([#17753](https://github.com/firebase/flutterfire/issues/17753)). ([91baa07b](https://github.com/firebase/flutterfire/commit/91baa07bb56198c687b670aa4617fb810dfad212))
+ - **FIX**(ai): the package version number wasn't properly updated after migrating from vertex_ai ([#17745](https://github.com/firebase/flutterfire/issues/17745)). ([43059b9b](https://github.com/firebase/flutterfire/commit/43059b9b68b0ba1d9e8fdafffa4e85b6eea8aaf3))
+ - **FEAT**(firebaseai): mark imagen generate function ga ([#17757](https://github.com/firebase/flutterfire/issues/17757)). ([a52255e2](https://github.com/firebase/flutterfire/commit/a52255e26306ea7cb890d48f3b9335d574147a82))
+ - **FEAT**(firebaseai): update of bidi input api ([#17662](https://github.com/firebase/flutterfire/issues/17662)). ([6d1a0daf](https://github.com/firebase/flutterfire/commit/6d1a0daf524bc7a8e24ea45ceb8c7869be78dbc1))
+ - **FEAT**(firebaseai): Add support for URL context ([#17736](https://github.com/firebase/flutterfire/issues/17736)). ([f3656634](https://github.com/firebase/flutterfire/commit/f3656634a5436ce7231aa39fc9b9814e906d2b9d))
+
 ## 3.3.0
 
  - **FIX**(firebaseai): fix the json parse for toolCallCancellation ([#17690](https://github.com/firebase/flutterfire/issues/17690)). ([7c0496d6](https://github.com/firebase/flutterfire/commit/7c0496d6434d81ac35f8df3fe965d0648dcc21bc))

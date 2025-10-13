@@ -1,3 +1,7 @@
+## 6.0.2
+
+ - **FIX**: a bug with the `demoProjectId` arg to `Firebase.initializeApp()` ([#17703](https://github.com/firebase/flutterfire/issues/17703)). ([09d03aac](https://github.com/firebase/flutterfire/commit/09d03aac8ced6f7f9211c24f40b57eb992f2996d))
+
 ## 6.0.1
 
  - **DOCS**(firebase_core): correct androidClientId docs (was incorrectly labeled iOS-only)\n\n- Clarify as Android OAuth client ID\n- Note it is used on Android only\n\nFixes firebase/flutterfire[#13519](https://github.com/firebase/flutterfire/issues/13519) ([#17720](https://github.com/firebase/flutterfire/issues/17720)). ([0b6b13d0](https://github.com/firebase/flutterfire/commit/0b6b13d0e0c0c45386eadb0ceef55e895a8d357b))
