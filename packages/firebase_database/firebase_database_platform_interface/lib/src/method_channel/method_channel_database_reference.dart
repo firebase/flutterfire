@@ -5,7 +5,7 @@
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:firebase_database_platform_interface/src/method_channel/utils/utils.dart';
 import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart'
-    as pigeon;
+    hide DatabaseReferencePlatform;
 
 import 'method_channel_database.dart';
 import 'method_channel_on_disconnect.dart';
@@ -13,6 +13,8 @@ import 'method_channel_query.dart';
 import 'method_channel_transaction_result.dart';
 import 'utils/exception.dart';
 import 'utils/push_id_generator.dart';
+
+final _api = FirebaseDatabaseHostApi();
 
 /// DatabaseReference represents a particular location in your Firebase
 /// Database and can be used for reading or writing data to that location.
@@ -34,7 +36,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
         );
 
   /// Gets the Pigeon app object from the database
-  pigeon.DatabasePigeonFirebaseApp get _pigeonApp {
+  DatabasePigeonFirebaseApp get _pigeonApp {
     final methodChannelDatabase = database as MethodChannelDatabase;
     return methodChannelDatabase.pigeonApp;
   }
@@ -83,9 +85,9 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   @override
   Future<void> set(Object? value) async {
     try {
-      await MethodChannelDatabase.pigeonChannel.databaseReferenceSet(
+      await _api.databaseReferenceSet(
         _pigeonApp,
-        pigeon.DatabaseReferenceRequest(
+        DatabaseReferenceRequest(
           path: path,
           value: value != null ? transformValue(value) : null,
         ),
@@ -98,10 +100,9 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   @override
   Future<void> setWithPriority(Object? value, Object? priority) async {
     try {
-      await MethodChannelDatabase.pigeonChannel
-          .databaseReferenceSetWithPriority(
+      await _api.databaseReferenceSetWithPriority(
         _pigeonApp,
-        pigeon.DatabaseReferenceRequest(
+        DatabaseReferenceRequest(
           path: path,
           value: value != null ? transformValue(value) : null,
           priority: priority,
@@ -115,9 +116,9 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   @override
   Future<void> update(Map<String, Object?> value) async {
     try {
-      await MethodChannelDatabase.pigeonChannel.databaseReferenceUpdate(
+      await _api.databaseReferenceUpdate(
         _pigeonApp,
-        pigeon.UpdateRequest(
+        UpdateRequest(
           path: path,
           value: transformValue(value)! as Map<String, Object?>,
         ),
@@ -130,9 +131,9 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   @override
   Future<void> setPriority(Object? priority) async {
     try {
-      await MethodChannelDatabase.pigeonChannel.databaseReferenceSetPriority(
+      await _api.databaseReferenceSetPriority(
         _pigeonApp,
-        pigeon.DatabaseReferenceRequest(
+        DatabaseReferenceRequest(
           path: path,
           priority: priority,
         ),
@@ -158,9 +159,9 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
     MethodChannelDatabase.transactions[key] = transactionHandler;
 
     try {
-      await MethodChannelDatabase.pigeonChannel.databaseReferenceRunTransaction(
+      await _api.databaseReferenceRunTransaction(
         _pigeonApp,
-        pigeon.TransactionRequest(
+        TransactionRequest(
           path: path,
           transactionKey: key,
           applyLocally: applyLocally,
@@ -168,8 +169,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
       );
 
       // Get the transaction result using Pigeon
-      final result = await MethodChannelDatabase.pigeonChannel
-          .databaseReferenceGetTransactionResult(
+      final result = await _api.databaseReferenceGetTransactionResult(
         _pigeonApp,
         key,
       );

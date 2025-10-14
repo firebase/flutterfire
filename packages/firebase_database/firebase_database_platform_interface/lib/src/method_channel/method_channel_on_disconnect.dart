@@ -5,10 +5,12 @@
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:firebase_database_platform_interface/src/method_channel/utils/utils.dart';
 import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart'
-    as pigeon;
+    hide DatabaseReferencePlatform;
 
 import 'method_channel_database.dart';
 import 'utils/exception.dart';
+
+final _api = FirebaseDatabaseHostApi();
 
 /// Represents a query over the data at a particular location.
 class MethodChannelOnDisconnect extends OnDisconnectPlatform {
@@ -19,7 +21,7 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
   }) : super(database: database, ref: ref);
 
   /// Gets the Pigeon app object from the database
-  pigeon.DatabasePigeonFirebaseApp get _pigeonApp {
+  DatabasePigeonFirebaseApp get _pigeonApp {
     final methodChannelDatabase = database as MethodChannelDatabase;
     return methodChannelDatabase.pigeonApp;
   }
@@ -27,9 +29,9 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
   @override
   Future<void> set(Object? value) async {
     try {
-      await MethodChannelDatabase.pigeonChannel.onDisconnectSet(
+      await _api.onDisconnectSet(
         _pigeonApp,
-        pigeon.DatabaseReferenceRequest(
+        DatabaseReferenceRequest(
           path: ref.path,
           value: value != null ? transformValue(value) : null,
         ),
@@ -42,9 +44,9 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
   @override
   Future<void> setWithPriority(Object? value, Object? priority) async {
     try {
-      await MethodChannelDatabase.pigeonChannel.onDisconnectSetWithPriority(
+      await _api.onDisconnectSetWithPriority(
         _pigeonApp,
-        pigeon.DatabaseReferenceRequest(
+        DatabaseReferenceRequest(
           path: ref.path,
           value: value != null ? transformValue(value) : null,
           priority: priority,
@@ -61,7 +63,7 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
   @override
   Future<void> cancel() async {
     try {
-      await MethodChannelDatabase.pigeonChannel.onDisconnectCancel(
+      await _api.onDisconnectCancel(
         _pigeonApp,
         ref.path,
       );
@@ -73,9 +75,9 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
   @override
   Future<void> update(Map<String, Object?> value) async {
     try {
-      await MethodChannelDatabase.pigeonChannel.onDisconnectUpdate(
+      await _api.onDisconnectUpdate(
         _pigeonApp,
-        pigeon.UpdateRequest(
+        UpdateRequest(
           path: ref.path,
           value: transformValue(value)! as Map<String, Object?>,
         ),

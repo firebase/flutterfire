@@ -5,7 +5,7 @@
 import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart'
-    as pigeon;
+    hide DatabaseReferencePlatform;
 import 'package:flutter/services.dart';
 
 import 'method_channel_data_snapshot.dart';
@@ -13,6 +13,8 @@ import 'method_channel_database.dart';
 import 'method_channel_database_event.dart';
 import 'method_channel_database_reference.dart';
 import 'utils/exception.dart';
+
+final _api = FirebaseDatabaseHostApi();
 
 /// Represents a query over the data at a particular location.
 class MethodChannelQuery extends QueryPlatform {
@@ -27,7 +29,7 @@ class MethodChannelQuery extends QueryPlatform {
   final List<String> pathComponents;
 
   /// Gets the Pigeon app object from the database
-  pigeon.DatabasePigeonFirebaseApp get _pigeonApp {
+  DatabasePigeonFirebaseApp get _pigeonApp {
     final methodChannelDatabase = database as MethodChannelDatabase;
     return methodChannelDatabase.pigeonApp;
   }
@@ -48,9 +50,9 @@ class MethodChannelQuery extends QueryPlatform {
     List<Map<String, Object?>> modifierList = modifiers.toList();
 
     // Create the EventChannel on native using Pigeon.
-    final channelName = await MethodChannelDatabase.pigeonChannel.queryObserve(
+    final channelName = await _api.queryObserve(
       _pigeonApp,
-      pigeon.QueryRequest(
+      QueryRequest(
         path: path,
         modifiers: modifierList,
       ),
@@ -69,9 +71,9 @@ class MethodChannelQuery extends QueryPlatform {
   @override
   Future<DataSnapshotPlatform> get(QueryModifiers modifiers) async {
     try {
-      final result = await MethodChannelDatabase.pigeonChannel.queryGet(
+      final result = await _api.queryGet(
         _pigeonApp,
-        pigeon.QueryRequest(
+        QueryRequest(
           path: path,
           modifiers: modifiers.toList(),
         ),
@@ -113,9 +115,9 @@ class MethodChannelQuery extends QueryPlatform {
   @override
   Future<void> keepSynced(QueryModifiers modifiers, bool value) async {
     try {
-      await MethodChannelDatabase.pigeonChannel.queryKeepSynced(
+      await _api.queryKeepSynced(
         _pigeonApp,
-        pigeon.QueryRequest(
+        QueryRequest(
           path: path,
           modifiers: modifiers.toList(),
           value: value,
