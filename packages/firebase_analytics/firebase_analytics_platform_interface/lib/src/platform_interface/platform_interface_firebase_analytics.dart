@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:meta/meta.dart' show protected;
@@ -202,8 +203,8 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   Future<void> initiateOnDeviceConversionMeasurement({
     String? emailAddress,
     String? phoneNumber,
-    String? hashedEmailAddress,
-    String? hashedPhoneNumber,
+    Uint8List? hashedEmailAddress,
+    Uint8List? hashedPhoneNumber,
   }) {
     throw UnimplementedError(
       'initiateOnDeviceConversionMeasurement() is not implemented',
