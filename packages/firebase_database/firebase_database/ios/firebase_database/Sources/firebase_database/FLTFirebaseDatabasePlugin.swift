@@ -24,7 +24,8 @@ import FirebaseDatabase
 let FLTFirebaseDatabaseChannelName = "plugins.flutter.io/firebase_database"
 
 @objc(FLTFirebaseDatabasePlugin)
-public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePluginProtocol, FirebaseDatabaseHostApi {
+public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePluginProtocol, 
+  FirebaseDatabaseHostApi {
   private var binaryMessenger: FlutterBinaryMessenger
   private static var cachedDatabaseInstances: [String: Database] = [:]
   private var streamHandlers: [String: FLTFirebaseDatabaseObserveStreamHandler] = [:]
@@ -104,7 +105,8 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     completion(.success(()))
   }
 
-  func goOffline(app: DatabasePigeonFirebaseApp, completion: @escaping (Result<Void, Error>) -> Void) {
+  func goOffline(app: DatabasePigeonFirebaseApp, 
+                 completion: @escaping (Result<Void, Error>) -> Void) {
     let database = getDatabaseFromPigeonApp(app)
     database.goOffline()
     completion(.success(()))

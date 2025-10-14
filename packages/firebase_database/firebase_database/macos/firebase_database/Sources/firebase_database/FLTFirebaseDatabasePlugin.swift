@@ -17,7 +17,8 @@ import Foundation
 let FLTFirebaseDatabaseChannelName = "plugins.flutter.io/firebase_database"
 
 @objc(FLTFirebaseDatabasePlugin)
-public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePluginProtocol, FirebaseDatabaseHostApi {
+public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePluginProtocol,
+  FirebaseDatabaseHostApi {
   private var binaryMessenger: FlutterBinaryMessenger
   private static var cachedDatabaseInstances: [String: Database] = [:]
   private var streamHandlers: [String: FLTFirebaseDatabaseObserveStreamHandler] = [:]
@@ -89,13 +90,15 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
 
   // MARK: - Database Management
 
-  func goOnline(app: DatabasePigeonFirebaseApp, completion: @escaping (Result<Void, Error>) -> Void) {
+  func goOnline(app: DatabasePigeonFirebaseApp,
+                completion: @escaping (Result<Void, Error>) -> Void) {
     let database = getDatabaseFromPigeonApp(app)
     database.goOnline()
     completion(.success(()))
   }
 
-  func goOffline(app: DatabasePigeonFirebaseApp, completion: @escaping (Result<Void, Error>) -> Void) {
+  func goOffline(app: DatabasePigeonFirebaseApp,
+                 completion: @escaping (Result<Void, Error>) -> Void) {
     let database = getDatabaseFromPigeonApp(app)
     database.goOffline()
     completion(.success(()))
@@ -288,7 +291,9 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     }
   }
 
-  func databaseReferenceGetTransactionResult(app: DatabasePigeonFirebaseApp, transactionKey: Int64, completion: @escaping (Result<[String: Any?], Error>) -> Void) {
+  func databaseReferenceGetTransactionResult(app: DatabasePigeonFirebaseApp, transactionKey: Int64,
+                                             completion: @escaping (Result<[String: Any?], Error>)
+                                               -> Void) {
     if let result = transactionResults.removeValue(forKey: transactionKey) {
       completion(.success(result))
     } else {
