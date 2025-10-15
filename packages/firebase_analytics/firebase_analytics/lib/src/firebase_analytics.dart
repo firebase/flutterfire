@@ -1251,7 +1251,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   ///
   /// Only available on iOS.
   Future<void> initiateOnDeviceConversionMeasurementWithHashedEmailAddress(
-    String hashedEmailAddress,
+    Uint8List hashedEmailAddress,
   ) async {
     if (defaultTargetPlatform != TargetPlatform.iOS) {
       throw UnimplementedError(
@@ -1268,7 +1268,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   ///
   /// Only available on iOS.
   Future<void> initiateOnDeviceConversionMeasurementWithHashedPhoneNumber(
-    String hashedPhoneNumber,
+    Uint8List hashedPhoneNumber,
   ) async {
     if (defaultTargetPlatform != TargetPlatform.iOS) {
       throw UnimplementedError(
