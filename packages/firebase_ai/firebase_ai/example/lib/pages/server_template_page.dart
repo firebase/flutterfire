@@ -11,8 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../widgets/message_widget.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 
@@ -50,7 +51,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
   void _initializeServerTemplate() {
     if (widget.useVertexBackend) {
       _templateGenerativeModel =
-          FirebaseAI.vertexAI().templateGenerativeModel();
+          FirebaseAI.vertexAI(location: 'global').templateGenerativeModel();
       _templateImagenModel = FirebaseAI.vertexAI().templateImagenModel();
     } else {
       _templateGenerativeModel =
@@ -232,10 +233,25 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
     });
 
     try {
-      _messages.add(MessageData(text: message, fromUser: true));
-      // TODO: Add call to Firebase AI SDK
-      var response = 'Hello! This is a mocked response.';
-      _messages.add(MessageData(text: response, fromUser: false));
+      ByteData catBytes = await rootBundle.load('assets/images/cat.jpg');
+      var imageBytes = catBytes.buffer.asUint8List();
+      _messages.add(
+        MessageData(
+          text: message,
+          imageBytes: imageBytes,
+          fromUser: true,
+        ),
+      );
+
+      var response =
+          await _templateGenerativeModel?.generateContent('media.prompt', {
+        'imageData': {
+          'isInline': true,
+          'mimeType': 'image/jpeg',
+          'contents': base64Encode(imageBytes),
+        }
+      });
+      _messages.add(MessageData(text: response?.text, fromUser: false));
 
       setState(() {
         _loading = false;
@@ -299,10 +315,18 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
     });
 
     try {
+      // var response = await _templateGenerativeModel?.generateContent(
+      //   'greeting.prompt',
+      //   {
+      //     'name': message,
+      //   },
+      // );
+
       var response = await _templateGenerativeModel?.generateContent(
-        'greeting.prompt',
+        'new-greeting',
         {
-          'name': message,
+          'topic': message,
+          'length': '200',
         },
       );
 
