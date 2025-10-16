@@ -16,10 +16,8 @@ import 'package:pigeon/pigeon.dart';
     kotlinOptions: KotlinOptions(
       package: 'io.flutter.plugins.firebase.storage',
     ),
-    objcHeaderOut:
-        '../firebase_storage/ios/firebase_storage/Sources/firebase_storage/include/firebase_storage_messages.g.h',
-    objcSourceOut:
-        '../firebase_storage/ios/firebase_storage/Sources/firebase_storage/firebase_storage_messages.g.m',
+    swiftOut:
+        '../firebase_storage/ios/firebase_storage/Sources/firebase_storage/FirebaseStorageMessages.g.swift',
     cppHeaderOut: '../firebase_storage/windows/messages.g.h',
     cppSourceOut: '../firebase_storage/windows/messages.g.cpp',
     cppOptions: CppOptions(namespace: 'firebase_storage_windows'),
