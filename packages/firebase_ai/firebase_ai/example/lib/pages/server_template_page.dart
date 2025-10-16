@@ -41,6 +41,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
   TemplateGenerativeModel? _templateGenerativeModel;
   TemplateChatSession? _chatSession;
   TemplateImagenModel? _templateImagenModel;
+  TemplateChatSession? _chatFunctionSession;
 
   @override
   void initState() {
@@ -59,6 +60,8 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
       _templateImagenModel = FirebaseAI.googleAI().templateImagenModel();
     }
     _chatSession = _templateGenerativeModel?.startChat('chat_history.prompt');
+    _chatFunctionSession =
+        _templateGenerativeModel?.startChat('function-calling');
   }
 
   void _scrollDown() {
@@ -137,6 +140,17 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                   if (!_loading)
                     IconButton(
                       onPressed: () async {
+                        await _serverTemplateFunctionCall(_textController.text);
+                      },
+                      icon: Icon(
+                        Icons.functions,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      tooltip: 'Function Calling',
+                    ),
+                  if (!_loading)
+                    IconButton(
+                      onPressed: () async {
                         await _serverTemplateImageInput(_textController.text);
                       },
                       icon: Icon(
@@ -178,6 +192,64 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
     );
   }
 
+  Future<void> _serverTemplateFunctionCall(String message) async {
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      _messages.add(
+        MessageData(text: message, fromUser: true),
+      );
+      var response = await _chatFunctionSession?.sendMessage(
+        Content.text(message),
+        {
+          'customerName': message,
+        },
+      );
+
+      _messages.add(MessageData(text: response?.text, fromUser: false));
+
+      final functionCalls = response?.functionCalls.toList();
+      if (functionCalls!.isNotEmpty) {
+        final functionCall = functionCalls.first;
+        if (functionCall.name == 'takePicture') {
+          final functionResult = {
+            'orientation': 'LANDSCAPE',
+            'useFlash': true,
+            'zoom': 2,
+          };
+          var functionResponse = await _chatFunctionSession?.sendMessage(
+            Content.functionResponse(functionCall.name, functionResult),
+            {
+              'orientation': 'LANDSCAPE',
+              'useFlash': true,
+              'zoom': 2,
+            },
+          );
+          _messages
+              .add(MessageData(text: functionResponse?.text, fromUser: false));
+        }
+      }
+
+      setState(() {
+        _loading = false;
+        _scrollDown();
+      });
+    } catch (e) {
+      _showError(e.toString());
+      setState(() {
+        _loading = false;
+      });
+    } finally {
+      _textController.clear();
+      setState(() {
+        _loading = false;
+      });
+      _textFieldFocus.requestFocus();
+    }
+  }
+
   Future<void> _serverTemplateImagen(String message) async {
     setState(() {
       _loading = true;
@@ -185,7 +257,6 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
     MessageData? resultMessage;
     try {
       _messages.add(MessageData(text: message, fromUser: true));
-      // TODO: Add call to Firebase AI SDK
       var response = await _templateImagenModel?.generateImages(
         'generate_images.prompt',
         {
