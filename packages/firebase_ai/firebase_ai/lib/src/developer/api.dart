@@ -16,64 +16,26 @@ import '../api.dart'
     show
         BlockReason,
         Candidate,
-        Citation,
-        CitationMetadata,
         CountTokensResponse,
         FinishReason,
         GenerateContentResponse,
         GenerationConfig,
-        GroundingChunk,
-        GroundingMetadata,
-        GroundingSupport,
         HarmBlockThreshold,
         HarmCategory,
         HarmProbability,
         PromptFeedback,
         SafetyRating,
         SafetySetting,
-        SearchEntryPoint,
-        Segment,
         SerializationStrategy,
-        WebGroundingChunk,
-        parseUsageMetadata;
+        parseUsageMetadata,
+        parseCitationMetadata,
+        parseGroundingMetadata,
+        parseUrlContextMetadata;
 import '../content.dart' show Content, parseContent;
 import '../error.dart';
 import '../tool.dart' show Tool, ToolConfig;
 
-HarmProbability _parseHarmProbability(Object jsonObject) =>
-    switch (jsonObject) {
-      'UNSPECIFIED' => HarmProbability.unknown,
-      'NEGLIGIBLE' => HarmProbability.negligible,
-      'LOW' => HarmProbability.low,
-      'MEDIUM' => HarmProbability.medium,
-      'HIGH' => HarmProbability.high,
-      _ => throw unhandledFormat('HarmProbability', jsonObject),
-    };
-HarmCategory _parseHarmCategory(Object jsonObject) => switch (jsonObject) {
-      'HARM_CATEGORY_UNSPECIFIED' => HarmCategory.unknown,
-      'HARM_CATEGORY_HARASSMENT' => HarmCategory.harassment,
-      'HARM_CATEGORY_HATE_SPEECH' => HarmCategory.hateSpeech,
-      'HARM_CATEGORY_SEXUALLY_EXPLICIT' => HarmCategory.sexuallyExplicit,
-      'HARM_CATEGORY_DANGEROUS_CONTENT' => HarmCategory.dangerousContent,
-      _ => throw unhandledFormat('HarmCategory', jsonObject),
-    };
-
-FinishReason _parseFinishReason(Object jsonObject) => switch (jsonObject) {
-      'UNSPECIFIED' => FinishReason.unknown,
-      'STOP' => FinishReason.stop,
-      'MAX_TOKENS' => FinishReason.maxTokens,
-      'SAFETY' => FinishReason.safety,
-      'RECITATION' => FinishReason.recitation,
-      'OTHER' => FinishReason.other,
-      _ => throw unhandledFormat('FinishReason', jsonObject),
-    };
-BlockReason _parseBlockReason(String jsonObject) => switch (jsonObject) {
-      'BLOCK_REASON_UNSPECIFIED' => BlockReason.unknown,
-      'SAFETY' => BlockReason.safety,
-      'OTHER' => BlockReason.other,
-      _ => throw unhandledFormat('BlockReason', jsonObject),
-    };
-String _harmBlockThresholdtoJson(HarmBlockThreshold? threshold) =>
+String _harmBlockThresholdToJson(HarmBlockThreshold? threshold) =>
     switch (threshold) {
       null => 'HARM_BLOCK_THRESHOLD_UNSPECIFIED',
       HarmBlockThreshold.low => 'BLOCK_LOW_AND_ABOVE',
@@ -97,7 +59,7 @@ Object _safetySettingToJson(SafetySetting safetySetting) {
   }
   return {
     'category': _harmCategoryToJson(safetySetting.category),
-    'threshold': _harmBlockThresholdtoJson(safetySetting.threshold)
+    'threshold': _harmBlockThresholdToJson(safetySetting.threshold)
   };
 }
 
@@ -180,6 +142,7 @@ final class DeveloperSerialization implements SerializationStrategy {
       };
 }
 
+// Developer API and Vertex AI has different _parseSafetyRating logic.
 Candidate _parseCandidate(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('Candidate', jsonObject);
@@ -196,12 +159,12 @@ Candidate _parseCandidate(Object? jsonObject) {
     },
     switch (jsonObject) {
       {'citationMetadata': final Object citationMetadata} =>
-        _parseCitationMetadata(citationMetadata),
+        parseCitationMetadata(citationMetadata),
       _ => null
     },
     switch (jsonObject) {
       {'finishReason': final Object finishReason} =>
-        _parseFinishReason(finishReason),
+        FinishReason.parseValue(finishReason),
       _ => null
     },
     switch (jsonObject) {
@@ -210,12 +173,18 @@ Candidate _parseCandidate(Object? jsonObject) {
     },
     groundingMetadata: switch (jsonObject) {
       {'groundingMetadata': final Object groundingMetadata} =>
-        _parseGroundingMetadata(groundingMetadata),
+        parseGroundingMetadata(groundingMetadata),
+      _ => null
+    },
+    urlContextMetadata: switch (jsonObject) {
+      {'urlContextMetadata': final Object urlContextMetadata} =>
+        parseUrlContextMetadata(urlContextMetadata),
       _ => null
     },
   );
 }
 
+// Developer API and Vertex AI has different _parseSafetyRating logic.
 PromptFeedback _parsePromptFeedback(Object jsonObject) {
   return switch (jsonObject) {
     {
@@ -224,7 +193,7 @@ PromptFeedback _parsePromptFeedback(Object jsonObject) {
       PromptFeedback(
           switch (jsonObject) {
             {'blockReason': final String blockReason} =>
-              _parseBlockReason(blockReason),
+              BlockReason.parseValue(blockReason),
             _ => null,
           },
           switch (jsonObject) {
@@ -241,7 +210,15 @@ SafetyRating _parseSafetyRating(Object? jsonObject) {
   return switch (jsonObject) {
     {
       'category': final Object category,
-      'probability': final Object probability
+      'probability': final Object probability,
+      'blocked': final bool? isBlocked,
+    } =>
+      SafetyRating(
+          _parseHarmCategory(category), _parseHarmProbability(probability),
+          isBlocked: isBlocked),
+    {
+      'category': final Object category,
+      'probability': final Object probability,
     } =>
       SafetyRating(
           _parseHarmCategory(category), _parseHarmProbability(probability)),
@@ -249,139 +226,20 @@ SafetyRating _parseSafetyRating(Object? jsonObject) {
   };
 }
 
-CitationMetadata _parseCitationMetadata(Object? jsonObject) {
-  return switch (jsonObject) {
-    {'citationSources': final List<Object?> citationSources} =>
-      CitationMetadata(citationSources.map(_parseCitationSource).toList()),
-    // Vertex SDK format uses `citations`
-    {'citations': final List<Object?> citationSources} =>
-      CitationMetadata(citationSources.map(_parseCitationSource).toList()),
-    _ => throw unhandledFormat('CitationMetadata', jsonObject),
-  };
-}
-
-Citation _parseCitationSource(Object? jsonObject) {
-  if (jsonObject is! Map) {
-    throw unhandledFormat('CitationSource', jsonObject);
-  }
-
-  final uriString = jsonObject['uri'] as String?;
-
-  return Citation(
-    jsonObject['startIndex'] as int?,
-    jsonObject['endIndex'] as int?,
-    uriString != null ? Uri.parse(uriString) : null,
-    jsonObject['license'] as String?,
-  );
-}
-
-GroundingMetadata _parseGroundingMetadata(Object? jsonObject) {
-  if (jsonObject is! Map) {
-    throw unhandledFormat('GroundingMetadata', jsonObject);
-  }
-
-  final searchEntryPoint = switch (jsonObject) {
-    {'searchEntryPoint': final Object? searchEntryPoint} =>
-      _parseSearchEntryPoint(searchEntryPoint),
-    _ => null,
-  };
-  final groundingChunks = switch (jsonObject) {
-        {'groundingChunks': final List<Object?> groundingChunks} =>
-          groundingChunks.map(_parseGroundingChunk).toList(),
-        _ => null,
-      } ??
-      [];
-  // Filters out null elements, which are returned from _parseGroundingSupport when
-  // segment is null.
-  final groundingSupport = switch (jsonObject) {
-        {'groundingSupport': final List<Object?> groundingSupport} =>
-          groundingSupport
-              .map(_parseGroundingSupport)
-              .whereType<GroundingSupport>()
-              .toList(),
-        _ => null,
-      } ??
-      [];
-  final webSearchQueries = switch (jsonObject) {
-        {'webSearchQueries': final List<String>? webSearchQueries} =>
-          webSearchQueries,
-        _ => null,
-      } ??
-      [];
-
-  return GroundingMetadata(
-      searchEntryPoint: searchEntryPoint,
-      groundingChunks: groundingChunks,
-      groundingSupport: groundingSupport,
-      webSearchQueries: webSearchQueries);
-}
-
-Segment _parseSegment(Object? jsonObject) {
-  if (jsonObject is! Map) {
-    throw unhandledFormat('Segment', jsonObject);
-  }
-
-  return Segment(
-      partIndex: (jsonObject['partIndex'] as int?) ?? 0,
-      startIndex: (jsonObject['startIndex'] as int?) ?? 0,
-      endIndex: (jsonObject['endIndex'] as int?) ?? 0,
-      text: (jsonObject['text'] as String?) ?? '');
-}
-
-WebGroundingChunk _parseWebGroundingChunk(Object? jsonObject) {
-  if (jsonObject is! Map) {
-    throw unhandledFormat('WebGroundingChunk', jsonObject);
-  }
-
-  return WebGroundingChunk(
-    uri: jsonObject['uri'] as String?,
-    title: jsonObject['title'] as String?,
-    domain: jsonObject['domain'] as String?,
-  );
-}
-
-GroundingChunk _parseGroundingChunk(Object? jsonObject) {
-  if (jsonObject is! Map) {
-    throw unhandledFormat('GroundingChunk', jsonObject);
-  }
-
-  return GroundingChunk(
-    web: jsonObject['web'] != null
-        ? _parseWebGroundingChunk(jsonObject['web'])
-        : null,
-  );
-}
-
-GroundingSupport? _parseGroundingSupport(Object? jsonObject) {
-  if (jsonObject is! Map) {
-    throw unhandledFormat('GroundingSupport', jsonObject);
-  }
-
-  final segment = switch (jsonObject) {
-    {'segment': final Object? segment} => _parseSegment(segment),
-    _ => null,
-  };
-  if (segment == null) {
-    return null;
-  }
-
-  return GroundingSupport(
-      segment: segment,
-      groundingChunkIndices:
-          (jsonObject['groundingChunkIndices'] as List<int>?) ?? []);
-}
-
-SearchEntryPoint _parseSearchEntryPoint(Object? jsonObject) {
-  if (jsonObject is! Map) {
-    throw unhandledFormat('SearchEntryPoint', jsonObject);
-  }
-
-  final renderedContent = jsonObject['renderedContent'] as String?;
-  if (renderedContent == null) {
-    throw unhandledFormat('SearchEntryPoint', jsonObject);
-  }
-
-  return SearchEntryPoint(
-    renderedContent: renderedContent,
-  );
-}
+HarmProbability _parseHarmProbability(Object jsonObject) =>
+    switch (jsonObject) {
+      'UNSPECIFIED' => HarmProbability.unknown,
+      'NEGLIGIBLE' => HarmProbability.negligible,
+      'LOW' => HarmProbability.low,
+      'MEDIUM' => HarmProbability.medium,
+      'HIGH' => HarmProbability.high,
+      _ => throw unhandledFormat('HarmProbability', jsonObject),
+    };
+HarmCategory _parseHarmCategory(Object jsonObject) => switch (jsonObject) {
+      'HARM_CATEGORY_UNSPECIFIED' => HarmCategory.unknown,
+      'HARM_CATEGORY_HARASSMENT' => HarmCategory.harassment,
+      'HARM_CATEGORY_HATE_SPEECH' => HarmCategory.hateSpeech,
+      'HARM_CATEGORY_SEXUALLY_EXPLICIT' => HarmCategory.sexuallyExplicit,
+      'HARM_CATEGORY_DANGEROUS_CONTENT' => HarmCategory.dangerousContent,
+      _ => throw unhandledFormat('HarmCategory', jsonObject),
+    };

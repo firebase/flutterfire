@@ -26,9 +26,7 @@
     (nullable PigeonActionCodeSettings *)settings;
 + (PigeonUserCredential *_Nullable)getPigeonUserCredentialFromFIRUser:(nonnull FIRUser *)user;
 + (PigeonIdTokenResult *_Nonnull)parseIdTokenResult:(nonnull FIRAuthTokenResult *)tokenResult;
-#if TARGET_OS_IPHONE
 + (PigeonTotpSecret *_Nonnull)getPigeonTotpSecret:(nonnull FIRTOTPSecret *)secret;
-#endif
 + (PigeonAuthCredential *_Nullable)getPigeonAuthCredential:
                                        (FIRAuthCredential *_Nullable)authCredentialToken
                                                      token:(NSNumber *_Nullable)token;

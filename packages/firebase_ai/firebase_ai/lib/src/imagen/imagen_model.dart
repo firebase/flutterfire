@@ -24,7 +24,6 @@ part of '../base_model.dart';
 /// > Warning: For Vertex AI in Firebase, image generation using Imagen 3 models
 /// is in Public Preview, which means that the feature is not subject to any SLA
 /// or deprecation policy and could change in backwards-incompatible ways.
-@experimental
 final class ImagenModel extends BaseApiClientModel {
   ImagenModel._(
       {required FirebaseApp app,
@@ -61,17 +60,17 @@ final class ImagenModel extends BaseApiClientModel {
       if (gcsUri != null) 'storageUri': gcsUri,
       'sampleCount': _generationConfig?.numberOfImages ?? 1,
       if (_generationConfig?.aspectRatio case final aspectRatio?)
-        'aspectRatio': aspectRatio,
+        'aspectRatio': aspectRatio.toJson(),
       if (_generationConfig?.negativePrompt case final negativePrompt?)
         'negativePrompt': negativePrompt,
       if (_generationConfig?.addWatermark case final addWatermark?)
         'addWatermark': addWatermark,
       if (_generationConfig?.imageFormat case final imageFormat?)
         'outputOption': imageFormat.toJson(),
-      if (_safetySettings?.personFilterLevel case final personFilterLevel?)
-        'personGeneration': personFilterLevel.toJson(),
-      if (_safetySettings?.safetyFilterLevel case final safetyFilterLevel?)
-        'safetySetting': safetyFilterLevel.toJson(),
+      if (_safetySettings case final safetySettings?)
+        ...safetySettings.toJson(),
+      'includeRaiReason': true,
+      'includeSafetyAttributes': true,
     };
 
     return {
@@ -84,7 +83,6 @@ final class ImagenModel extends BaseApiClientModel {
 
   /// Generates images with format of [ImagenInlineImage] based on the given
   /// prompt.
-  @experimental
   Future<ImagenGenerationResponse<ImagenInlineImage>> generateImages(
     String prompt,
   ) =>
@@ -170,10 +168,10 @@ final class ImagenModel extends BaseApiClientModel {
         'addWatermark': addWatermark,
       if (_generationConfig?.imageFormat case final imageFormat?)
         'outputOption': imageFormat.toJson(),
-      if (_safetySettings?.personFilterLevel case final personFilterLevel?)
-        'personGeneration': personFilterLevel.toJson(),
-      if (_safetySettings?.safetyFilterLevel case final safetyFilterLevel?)
-        'safetySetting': safetyFilterLevel.toJson(),
+      if (_safetySettings case final safetySettings?)
+        ...safetySettings.toJson(),
+      'includeRaiReason': true,
+      'includeSafetyAttributes': true,
     };
 
     return {
@@ -194,7 +192,6 @@ final class ImagenModel extends BaseApiClientModel {
 }
 
 /// Returns a [ImagenModel] using it's private constructor.
-@experimental
 ImagenModel createImagenModel({
   required FirebaseApp app,
   required String location,

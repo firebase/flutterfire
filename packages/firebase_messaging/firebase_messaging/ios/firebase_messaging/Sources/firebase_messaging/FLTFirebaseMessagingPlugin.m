@@ -992,7 +992,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     if (apsDict[@"sound"] != nil) {
       if ([apsDict[@"sound"] isKindOfClass:[NSString class]]) {
         // message.notification.apple.sound
-        notification[@"sound"] = @{
+        notificationIOS[@"sound"] = @{
           @"name" : apsDict[@"sound"],
           @"critical" : @NO,
           @"volume" : @1,

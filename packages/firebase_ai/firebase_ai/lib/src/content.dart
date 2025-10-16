@@ -16,6 +16,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 
+import 'api.dart';
 import 'error.dart';
 
 /// The base structured datatype containing multi-part content of a message.
@@ -114,22 +115,60 @@ Part parsePart(Object? jsonObject) {
       throw unhandledFormat('functionCall', functionCall);
     }
   }
+  if (jsonObject.containsKey('executableCode')) {
+    final executableCode = jsonObject['executableCode'];
+    if (executableCode is Map &&
+        executableCode.containsKey('language') &&
+        executableCode.containsKey('code')) {
+      return ExecutableCodePart(
+        language: CodeLanguage.parseValue(executableCode['language'] as String),
+        code: executableCode['code'] as String,
+      );
+    } else {
+      throw unhandledFormat('executableCode', executableCode);
+    }
+  }
+  if (jsonObject.containsKey('codeExecutionResult')) {
+    final codeExecutionResult = jsonObject['codeExecutionResult'];
+    if (codeExecutionResult is Map &&
+        codeExecutionResult.containsKey('outcome') &&
+        codeExecutionResult.containsKey('output')) {
+      return CodeExecutionResultPart(
+        outcome: Outcome.parseValue(codeExecutionResult['outcome'] as String),
+        output: codeExecutionResult['output'] as String,
+      );
+    } else {
+      throw unhandledFormat('codeExecutionResult', codeExecutionResult);
+    }
+  }
+
+  if (jsonObject.containsKey('inlineData')) {
+    final inlineDataResult = jsonObject['inlineData'];
+    if (inlineDataResult is Map &&
+        inlineDataResult.containsKey('mimeType') &&
+        inlineDataResult.containsKey('data')) {
+      return InlineDataPart._(
+        inlineDataResult['mimeType'] as String,
+        base64Decode(inlineDataResult['data'] as String),
+        willContinue: inlineDataResult['willContinue'] as bool?,
+        isThought: isThought,
+        thoughtSignature: thoughtSignature,
+      );
+    } else {
+      throw unhandledFormat('inlineData', inlineDataResult);
+    }
+  }
   return switch (jsonObject) {
     {'text': final String text} => TextPart._(text,
         isThought: isThought, thoughtSignature: thoughtSignature),
     {
       'file_data': {
         'file_uri': final String fileUri,
-        'mime_type': final String mimeType
+        'mime_type': final String mimeType,
       }
     } =>
       FileData._(mimeType, fileUri,
           isThought: isThought, thoughtSignature: thoughtSignature),
-    {'inlineData': {'mimeType': String mimeType, 'data': String bytes}} =>
-      InlineDataPart._(mimeType, base64Decode(bytes),
-          willContinue: false,
-          isThought: isThought,
-          thoughtSignature: thoughtSignature),
     _ => () {
         log('unhandled part format: $jsonObject');
         return UnknownPart(jsonObject);
@@ -351,5 +390,53 @@ final class FileData extends Part {
   @override
   Object toJson() => {
         'file_data': {'file_uri': fileUri, 'mime_type': mimeType}
+      };
+}
+
+/// A `Part` that represents the code that is executed by the model.
+final class ExecutableCodePart extends Part {
+  // ignore: public_member_api_docs
+  ExecutableCodePart({
+    required this.language,
+    required this.code,
+    bool? isThought,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: null,
+        );
+
+  /// The programming language of the code.
+  final CodeLanguage language;
+
+  /// The source code to be executed.
+  final String code;
+
+  @override
+  Object toJson() => {
+        'executableCode': {'language': language.toJson(), 'code': code}
+      };
+}
+
+/// A `Part` that represents the code execution result from the model.
+final class CodeExecutionResultPart extends Part {
+  // ignore: public_member_api_docs
+  CodeExecutionResultPart({
+    required this.outcome,
+    required this.output,
+    bool? isThought,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: null,
+        );
+
+  /// The result of the execution.
+  final Outcome outcome;
+
+  /// The stdout from the code execution, or an error message if it failed.
+  final String output;
+
+  @override
+  Object toJson() => {
+        'codeExecutionResult': {'outcome': outcome.toJson(), 'output': output}
       };
 }

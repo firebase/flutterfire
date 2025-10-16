@@ -44,6 +44,8 @@ export 'src/content.dart'
         FunctionResponse,
         Part,
         TextPart,
+        ExecutableCodePart,
+        CodeExecutionResultPart,
         UnknownPart;
 export 'src/error.dart'
     show
@@ -105,4 +107,7 @@ export 'src/tool.dart'
         FunctionCallingMode,
         FunctionDeclaration,
         Tool,
-        ToolConfig;
+        ToolConfig,
+        GoogleSearch,
+        CodeExecution,
+        UrlContext;

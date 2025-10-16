@@ -13,12 +13,9 @@
 // limitations under the License.
 import 'dart:developer';
 
-import 'package:meta/meta.dart';
-
 /// Specifies the level of safety filtering for image generation.
 ///
 /// If not specified, default will be "block_medium_and_above".
-@experimental
 enum ImagenSafetyFilterLevel {
   /// Strongest filtering level, most strict blocking.
   blockLowAndAbove('block_low_and_above'),
@@ -60,7 +57,6 @@ enum ImagenSafetyFilterLevel {
 /// Allow generation of people by the model.
 ///
 /// If not specified, the default value is "allow_adult".
-@experimental
 enum ImagenPersonFilterLevel {
   /// Disallow the inclusion of people or faces in images.
   blockAll('dont_allow'),
@@ -96,7 +92,6 @@ enum ImagenPersonFilterLevel {
 /// A class representing safety settings for image generation.
 ///
 /// It includes a safety filter level and a person filter level.
-@experimental
 final class ImagenSafetySettings {
   // ignore: public_member_api_docs
   ImagenSafetySettings(this.safetyFilterLevel, this.personFilterLevel);
@@ -108,7 +103,7 @@ final class ImagenSafetySettings {
   final ImagenPersonFilterLevel? personFilterLevel;
 
   // ignore: public_member_api_docs
-  Object toJson() => {
+  Map<String, Object?> toJson() => {
         if (safetyFilterLevel != null)
           'safetySetting': safetyFilterLevel!.toJson(),
         if (personFilterLevel != null)
@@ -119,7 +114,6 @@ final class ImagenSafetySettings {
 /// The aspect ratio for the image.
 ///
 /// The default value is "1:1".
-@experimental
 enum ImagenAspectRatio {
   /// Square (1:1).
   square1x1('1:1'),
@@ -161,7 +155,6 @@ enum ImagenAspectRatio {
 }
 
 /// Configuration options for image generation.
-@experimental
 final class ImagenGenerationConfig {
   // ignore: public_member_api_docs
   ImagenGenerationConfig(
@@ -194,7 +187,7 @@ final class ImagenGenerationConfig {
   // ignore: public_member_api_docs
   Map<String, dynamic> toJson() => {
         if (negativePrompt != null) 'negativePrompt': negativePrompt,
-        if (numberOfImages != null) 'numberOfImages': numberOfImages,
+        'sampleCount': numberOfImages ?? 1,
         if (aspectRatio != null) 'aspectRatio': aspectRatio!.toJson(),
         if (addWatermark != null) 'addWatermark': addWatermark,
         if (imageFormat != null) 'outputOptions': imageFormat!.toJson(),
@@ -202,7 +195,6 @@ final class ImagenGenerationConfig {
 }
 
 /// Represents the image format and compression quality.
-@experimental
 final class ImagenFormat {
   // ignore: public_member_api_docs
   ImagenFormat(this.mimeType, this.compressionQuality);

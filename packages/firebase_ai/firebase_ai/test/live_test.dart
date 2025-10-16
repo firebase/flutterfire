@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:firebase_ai/src/api.dart';
@@ -102,6 +103,7 @@ void main() {
 
     test('LiveClientRealtimeInput toJson() returns correct JSON', () {
       final part = InlineDataPart('audio/pcm', Uint8List.fromList([1, 2, 3]));
+      // ignore: deprecated_member_use_from_same_package
       final message = LiveClientRealtimeInput(mediaChunks: [part]);
       expect(message.toJson(), {
         'realtime_input': {
@@ -206,11 +208,13 @@ void main() {
 
     test('parseServerMessage parses toolCallCancellation message correctly',
         () {
-      final jsonObject = {
-        'toolCallCancellation': {
-          'ids': ['1', '2']
+      final jsonObject = jsonDecode('''
+        {
+          "toolCallCancellation": {
+            "ids": ["1", "2"]
+          }
         }
-      };
+        ''') as Map<String, dynamic>;
       final response = parseServerResponse(jsonObject);
       expect(response.message, isA<LiveServerToolCallCancellation>());
       final cancellationMessage =

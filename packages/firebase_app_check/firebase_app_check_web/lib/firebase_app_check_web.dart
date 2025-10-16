@@ -97,8 +97,18 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   @override
   Future<void> activate({
     WebProvider? webProvider,
+    @Deprecated(
+      'Use providerAndroid instead. '
+      'This parameter will be removed in a future major release.',
+    )
     AndroidProvider? androidProvider,
+    @Deprecated(
+      'Use providerApple instead. '
+      'This parameter will be removed in a future major release.',
+    )
     AppleProvider? appleProvider,
+    AndroidAppCheckProvider? providerAndroid,
+    AppleAppCheckProvider? providerApple,
   }) async {
     // save the recaptcha type and site key for future startups
     if (webProvider != null) {

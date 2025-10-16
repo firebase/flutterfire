@@ -82,7 +82,6 @@
                                              profile:userInfo.profile];
 }
 
-#if TARGET_OS_IPHONE
 + (PigeonTotpSecret *)getPigeonTotpSecret:(FIRTOTPSecret *)secret {
   return [PigeonTotpSecret makeWithCodeIntervalSeconds:nil
                                             codeLength:nil
@@ -90,7 +89,6 @@
                                       hashingAlgorithm:nil
                                              secretKey:secret.sharedSecretKey];
 }
-#endif
 
 + (PigeonAuthCredential *)getPigeonAuthCredential:(FIRAuthCredential *)authCredential
                                             token:(NSNumber *_Nullable)token {
