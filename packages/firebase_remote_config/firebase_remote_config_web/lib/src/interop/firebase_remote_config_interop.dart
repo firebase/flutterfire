@@ -103,3 +103,41 @@ extension SettingsJsImplExtension on SettingsJsImpl {
   external JSNumber get fetchTimeoutMillis;
   external set fetchTimeoutMillis(JSNumber value);
 }
+
+@JS()
+@staticInterop
+@anonymous
+abstract class ConfigUpdateObserver {
+  external factory ConfigUpdateObserver({
+    JSAny complete,
+    JSAny error,
+    JSAny next,
+  });
+}
+
+extension ConfigUpdateObserverJsImpl on ConfigUpdateObserver {
+  external JSAny get next;
+  external JSAny get error;
+  external JSAny get complete;
+}
+
+@JS()
+@staticInterop
+@anonymous
+abstract class ConfigUpdateJsImpl {}
+
+extension ConfigUpdateJsImplExtension on ConfigUpdateJsImpl {
+  external JSSet getUpdatedKeys();
+}
+
+@JS()
+@staticInterop
+external JSFunction onConfigUpdate(
+  RemoteConfigJsImpl remoteConfig,
+  ConfigUpdateObserver observer,
+);
+
+@JS('Set')
+extension type JSSet._(JSObject _) implements JSObject {
+  external void forEach(JSAny callback);
+}

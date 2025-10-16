@@ -7,7 +7,7 @@ import 'package:firebase_messaging_platform_interface/firebase_messaging_platfor
 
 import 'utils.dart';
 
-/// A class representing a notification which has been construted and sent to the
+/// A class representing a notification which has been constructed and sent to the
 /// device via FCM.
 ///
 /// This class can be accessed via a [RemoteMessage.notification].

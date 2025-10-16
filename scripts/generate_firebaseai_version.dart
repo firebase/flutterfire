@@ -21,11 +21,11 @@ Future<void> main() async {
     [
       Directory.current.path,
       'packages',
-      'firebase_vertexai',
-      'firebase_vertexai',
+      'firebase_ai',
+      'firebase_ai',
       'lib',
       'src',
-      'vertex_version.dart',
+      'firebaseai_version.dart',
     ],
   );
 
@@ -33,8 +33,8 @@ Future<void> main() async {
     [
       Directory.current.path,
       'packages',
-      'firebase_vertexai',
-      'firebase_vertexai',
+      'firebase_data_connect',
+      'firebase_data_connect',
       'pubspec.yaml',
     ],
   );

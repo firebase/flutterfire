@@ -103,6 +103,7 @@ void main() {
 
     test('LiveClientRealtimeInput toJson() returns correct JSON', () {
       final part = InlineDataPart('audio/pcm', Uint8List.fromList([1, 2, 3]));
+      // ignore: deprecated_member_use_from_same_package
       final message = LiveClientRealtimeInput(mediaChunks: [part]);
       expect(message.toJson(), {
         'realtime_input': {

@@ -179,18 +179,56 @@ class LiveServerResponse {
 /// Represents realtime input from the client in a live stream.
 class LiveClientRealtimeInput {
   /// Creates a [LiveClientRealtimeInput] instance.
-  ///
-  /// [mediaChunks] (optional): The list of media chunks.
-  LiveClientRealtimeInput({this.mediaChunks});
+  LiveClientRealtimeInput({
+    @Deprecated('Use audio, video, or text instead') this.mediaChunks,
+    this.audio,
+    this.video,
+    this.text,
+  });
+
+  /// Creates a [LiveClientRealtimeInput] with audio data.
+  LiveClientRealtimeInput.audio(this.audio)
+      // ignore: deprecated_member_use_from_same_package
+      : mediaChunks = null,
+        video = null,
+        text = null;
+
+  /// Creates a [LiveClientRealtimeInput] with video data.
+  LiveClientRealtimeInput.video(this.video)
+      // ignore: deprecated_member_use_from_same_package
+      : mediaChunks = null,
+        audio = null,
+        text = null;
+
+  /// Creates a [LiveClientRealtimeInput] with text data.
+  LiveClientRealtimeInput.text(this.text)
+      // ignore: deprecated_member_use_from_same_package
+      : mediaChunks = null,
+        audio = null,
+        video = null;
 
   /// The list of media chunks.
+  @Deprecated('Use audio, video, or text instead')
   final List<InlineDataPart>? mediaChunks;
+
+  /// Audio data.
+  final InlineDataPart? audio;
+
+  /// Video data.
+  final InlineDataPart? video;
+
+  /// Text data.
+  final String? text;
 
   // ignore: public_member_api_docs
   Map<String, dynamic> toJson() => {
         'realtime_input': {
           'media_chunks':
+              // ignore: deprecated_member_use_from_same_package
               mediaChunks?.map((e) => e.toMediaChunkJson()).toList(),
+          if (audio != null) 'audio': audio!.toMediaChunkJson(),
+          if (video != null) 'video': video!.toMediaChunkJson(),
+          if (text != null) 'text': text,
         },
       };
 }

@@ -13,7 +13,6 @@
 // limitations under the License.
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:meta/meta.dart';
 import '../error.dart';
 
 /// Base type of Imagen Image.
@@ -29,7 +28,6 @@ sealed class ImagenImage {
 }
 
 /// Represents an image stored as a base64-encoded string.
-@experimental
 final class ImagenInlineImage implements ImagenImage {
   // ignore: public_member_api_docs
   ImagenInlineImage({

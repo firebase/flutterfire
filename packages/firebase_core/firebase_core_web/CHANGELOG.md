@@ -1,3 +1,11 @@
+## 3.2.0
+
+ - **FEAT**: bump Firebase JS SDK to 12.3.0 ([#17743](https://github.com/firebase/flutterfire/issues/17743)). ([007b2b36](https://github.com/firebase/flutterfire/commit/007b2b366f49263660e946a5a631e6919fc48eac))
+
+## 3.1.1
+
+ - Update a dependency to the latest release.
+
 ## 3.1.0
 
  - **FEAT**: bump Firebase JS SDK to 12.2.1 ([#17678](https://github.com/firebase/flutterfire/issues/17678)). ([a8e802a9](https://github.com/firebase/flutterfire/commit/a8e802a90f3e6bf53808a6996e28e814090a807b))

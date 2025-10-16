@@ -28,8 +28,15 @@ class Firebase {
     return _delegate.apps.map(FirebaseApp._).toList(growable: false);
   }
 
-  /// Initializes a new [FirebaseApp] instance by [name] and [options] and returns
-  /// the created app. This method should be called before any usage of FlutterFire plugins.
+  /// Initializes a new [FirebaseApp] instance by [name] and [options] and
+  /// returns the created app. This method should be called before any usage of
+  /// FlutterFire plugins.
+  ///
+  /// If a [demoProjectId] is provided, a new [FirebaseApp] instance will be
+  /// initialized with a set of default options for demo projects, overriding
+  /// the [options] argument. If no [name] is provided alongside a
+  /// [demoProjectId], the [demoProjectId] will be used as the app name. By
+  /// convention, the [demoProjectId] should begin with "demo-".
   ///
   /// The default app instance can be initialized here simply by passing no "name" as an argument
   /// in both Dart & manual initialization flows.
@@ -52,16 +59,21 @@ class Firebase {
         // We use 'web' as the default platform for unknown platforms.
         platformString = 'web';
       }
-      FirebaseAppPlatform app = await _delegate.initializeApp(
-        options: FirebaseOptions(
-          apiKey: '',
-          appId: '1:1:$platformString:1',
-          messagingSenderId: '',
-          projectId: demoProjectId,
-        ),
+      // A name must be set, otherwise [DEFAULT] will be used and the options
+      // we've provided will be ignored if any platform specific configuration
+      // files exist (i.e. GoogleService-Info.plist for iOS).
+      name ??= demoProjectId;
+      // The user should not set any options if they specify a demo project
+      // id, but it was allowed when this API was first added, so we allow it
+      // for backwards compatibility and simply override the user-provided
+      // options.
+      options = FirebaseOptions(
+        apiKey: '12345',
+        appId: '1:1:$platformString:1',
+        messagingSenderId: '',
+        projectId: demoProjectId,
       );
-
-      return FirebaseApp._(app);
+      // Now fall through to the normal initialization logic.
     }
     FirebaseAppPlatform app = await _delegate.initializeApp(
       name: name,

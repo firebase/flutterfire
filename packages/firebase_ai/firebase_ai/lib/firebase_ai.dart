@@ -116,4 +116,5 @@ export 'src/tool.dart'
         Tool,
         ToolConfig,
         GoogleSearch,
-        CodeExecution;
+        CodeExecution,
+        UrlContext;
