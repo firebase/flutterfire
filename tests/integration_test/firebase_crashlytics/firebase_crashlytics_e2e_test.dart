@@ -5,9 +5,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tests/firebase_options.dart';
+import '../e2e_test.dart';
+import 'dart:async';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -97,6 +100,31 @@ void main() {
               ),
             );
           },
+        );
+
+        test(
+          'should have consistent error reason format',
+          () async {
+              const eventChannel = EventChannel('plugins.flutter.io/firebase_crashlytics_test_stream');
+              final eventStream = eventChannel.receiveBroadcastStream();  
+
+              final completer = Completer<String>();
+
+              eventStream.listen((event) {
+                 print('Received event: $event');
+                completer.complete(event.toString());
+              });
+
+              await FirebaseCrashlytics.instance.recordError(
+                'foo exception',
+                StackTrace.fromString('during testing'),
+                reason: 'foo reason',
+              );
+
+              final event = await completer.future;
+              expect(event, 'thrown foooo reason');
+          },
+          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS || !isCI,
         );
       });
 
