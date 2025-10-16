@@ -31,6 +31,13 @@ external AppJsImpl getApp([JSString? name]);
 @JS()
 external JSPromise deleteApp(AppJsImpl app);
 
+@JS()
+external void registerVersion(
+  JSString libraryKeyOrName,
+  JSString version, [
+  JSString? variant,
+]);
+
 /// FirebaseError is a subclass of the standard Error object.
 /// In addition to a message string, it contains a string-valued code.
 ///
