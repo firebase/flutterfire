@@ -11,11 +11,10 @@ import 'package:pigeon/pigeon.dart';
     dartOut: 'lib/src/pigeon/messages.pigeon.dart',
     // We export in the lib folder to expose the class to other packages.
     dartTestOut: 'test/pigeon/test_api.dart',
-    javaOut:
-        '../firebase_storage/android/src/main/java/io/flutter/plugins/firebase/storage/GeneratedAndroidFirebaseStorage.java',
-    javaOptions: JavaOptions(
+    kotlinOut:
+        '../firebase_storage/android/src/main/kotlin/io/flutter/plugins/firebase/storage/GeneratedAndroidFirebaseStorage.g.kt',
+    kotlinOptions: KotlinOptions(
       package: 'io.flutter.plugins.firebase.storage',
-      className: 'GeneratedAndroidFirebaseStorage',
     ),
     objcHeaderOut:
         '../firebase_storage/ios/firebase_storage/Sources/firebase_storage/include/firebase_storage_messages.g.h',

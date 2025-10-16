@@ -6,11 +6,12 @@
 // ignore_for_file: public_member_api_docs, non_constant_identifier_names, avoid_as, unused_import, unnecessary_parenthesis, unnecessary_import
 // ignore_for_file: avoid_relative_lib_imports
 import 'dart:async';
-import 'dart:typed_data' show Uint8List;
-import 'package:firebase_storage_platform_interface/src/pigeon/messages.pigeon.dart';
+import 'dart:typed_data' show Float64List, Int32List, Int64List, Uint8List;
 import 'package:flutter/foundation.dart' show ReadBuffer, WriteBuffer;
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'package:firebase_storage_platform_interface/src/pigeon/messages.pigeon.dart';
 
 class _TestFirebaseStorageHostApiCodec extends StandardMessageCodec {
   const _TestFirebaseStorageHostApiCodec();
@@ -42,17 +43,17 @@ class _TestFirebaseStorageHostApiCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
-      case 128:
+      case 128: 
         return PigeonFullMetaData.decode(readValue(buffer)!);
-      case 129:
+      case 129: 
         return PigeonListOptions.decode(readValue(buffer)!);
-      case 130:
+      case 130: 
         return PigeonListResult.decode(readValue(buffer)!);
-      case 131:
+      case 131: 
         return PigeonSettableMetadata.decode(readValue(buffer)!);
-      case 132:
+      case 132: 
         return PigeonStorageFirebaseApp.decode(readValue(buffer)!);
-      case 133:
+      case 133: 
         return PigeonStorageReference.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -61,12 +62,10 @@ class _TestFirebaseStorageHostApiCodec extends StandardMessageCodec {
 }
 
 abstract class TestFirebaseStorageHostApi {
-  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding =>
-      TestDefaultBinaryMessengerBinding.instance;
+  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding => TestDefaultBinaryMessengerBinding.instance;
   static const MessageCodec<Object?> codec = _TestFirebaseStorageHostApiCodec();
 
-  Future<PigeonStorageReference> getReferencebyPath(
-      PigeonStorageFirebaseApp app, String path, String? bucket);
+  Future<PigeonStorageReference> getReferencebyPath(PigeonStorageFirebaseApp app, String path, String? bucket);
 
   Future<void> setMaxOperationRetryTime(PigeonStorageFirebaseApp app, int time);
 
@@ -74,114 +73,72 @@ abstract class TestFirebaseStorageHostApi {
 
   Future<void> setMaxDownloadRetryTime(PigeonStorageFirebaseApp app, int time);
 
-  Future<void> useStorageEmulator(
-      PigeonStorageFirebaseApp app, String host, int port);
+  Future<void> useStorageEmulator(PigeonStorageFirebaseApp app, String host, int port);
 
-  Future<void> referenceDelete(
-      PigeonStorageFirebaseApp app, PigeonStorageReference reference);
+  Future<void> referenceDelete(PigeonStorageFirebaseApp app, PigeonStorageReference reference);
 
-  Future<String> referenceGetDownloadURL(
-      PigeonStorageFirebaseApp app, PigeonStorageReference reference);
+  Future<String> referenceGetDownloadURL(PigeonStorageFirebaseApp app, PigeonStorageReference reference);
 
-  Future<PigeonFullMetaData> referenceGetMetaData(
-      PigeonStorageFirebaseApp app, PigeonStorageReference reference);
+  Future<PigeonFullMetaData> referenceGetMetaData(PigeonStorageFirebaseApp app, PigeonStorageReference reference);
 
-  Future<PigeonListResult> referenceList(PigeonStorageFirebaseApp app,
-      PigeonStorageReference reference, PigeonListOptions options);
+  Future<PigeonListResult> referenceList(PigeonStorageFirebaseApp app, PigeonStorageReference reference, PigeonListOptions options);
 
-  Future<PigeonListResult> referenceListAll(
-      PigeonStorageFirebaseApp app, PigeonStorageReference reference);
+  Future<PigeonListResult> referenceListAll(PigeonStorageFirebaseApp app, PigeonStorageReference reference);
 
-  Future<Uint8List?> referenceGetData(PigeonStorageFirebaseApp app,
-      PigeonStorageReference reference, int maxSize);
+  Future<Uint8List?> referenceGetData(PigeonStorageFirebaseApp app, PigeonStorageReference reference, int maxSize);
 
-  Future<String> referencePutData(
-      PigeonStorageFirebaseApp app,
-      PigeonStorageReference reference,
-      Uint8List data,
-      PigeonSettableMetadata settableMetaData,
-      int handle);
+  Future<String> referencePutData(PigeonStorageFirebaseApp app, PigeonStorageReference reference, Uint8List data, PigeonSettableMetadata settableMetaData, int handle);
 
-  Future<String> referencePutString(
-      PigeonStorageFirebaseApp app,
-      PigeonStorageReference reference,
-      String data,
-      int format,
-      PigeonSettableMetadata settableMetaData,
-      int handle);
+  Future<String> referencePutString(PigeonStorageFirebaseApp app, PigeonStorageReference reference, String data, int format, PigeonSettableMetadata settableMetaData, int handle);
 
-  Future<String> referencePutFile(
-      PigeonStorageFirebaseApp app,
-      PigeonStorageReference reference,
-      String filePath,
-      PigeonSettableMetadata? settableMetaData,
-      int handle);
+  Future<String> referencePutFile(PigeonStorageFirebaseApp app, PigeonStorageReference reference, String filePath, PigeonSettableMetadata? settableMetaData, int handle);
 
-  Future<String> referenceDownloadFile(PigeonStorageFirebaseApp app,
-      PigeonStorageReference reference, String filePath, int handle);
+  Future<String> referenceDownloadFile(PigeonStorageFirebaseApp app, PigeonStorageReference reference, String filePath, int handle);
 
-  Future<PigeonFullMetaData> referenceUpdateMetadata(
-      PigeonStorageFirebaseApp app,
-      PigeonStorageReference reference,
-      PigeonSettableMetadata metadata);
+  Future<PigeonFullMetaData> referenceUpdateMetadata(PigeonStorageFirebaseApp app, PigeonStorageReference reference, PigeonSettableMetadata metadata);
 
-  Future<Map<String?, Object?>> taskPause(
-      PigeonStorageFirebaseApp app, int handle);
+  Future<Map<String?, Object?>> taskPause(PigeonStorageFirebaseApp app, int handle);
 
-  Future<Map<String?, Object?>> taskResume(
-      PigeonStorageFirebaseApp app, int handle);
+  Future<Map<String?, Object?>> taskResume(PigeonStorageFirebaseApp app, int handle);
 
-  Future<Map<String?, Object?>> taskCancel(
-      PigeonStorageFirebaseApp app, int handle);
+  Future<Map<String?, Object?>> taskCancel(PigeonStorageFirebaseApp app, int handle);
 
-  static void setup(TestFirebaseStorageHostApi? api,
-      {BinaryMessenger? binaryMessenger}) {
+  static void setup(TestFirebaseStorageHostApi? api, {BinaryMessenger? binaryMessenger}) {
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.getReferencebyPath',
-          codec,
+          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.getReferencebyPath', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.getReferencebyPath was null.');
+          'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.getReferencebyPath was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonStorageFirebaseApp? arg_app =
-              (args[0] as PigeonStorageFirebaseApp?);
+          final PigeonStorageFirebaseApp? arg_app = (args[0] as PigeonStorageFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.getReferencebyPath was null, expected non-null PigeonStorageFirebaseApp.');
           final String? arg_path = (args[1] as String?);
           assert(arg_path != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.getReferencebyPath was null, expected non-null String.');
           final String? arg_bucket = (args[2] as String?);
-          final PigeonStorageReference output =
-              await api.getReferencebyPath(arg_app!, arg_path!, arg_bucket);
+          final PigeonStorageReference output = await api.getReferencebyPath(arg_app!, arg_path!, arg_bucket);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxOperationRetryTime',
-          codec,
+          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxOperationRetryTime', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxOperationRetryTime was null.');
+          'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxOperationRetryTime was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonStorageFirebaseApp? arg_app =
-              (args[0] as PigeonStorageFirebaseApp?);
+          final PigeonStorageFirebaseApp? arg_app = (args[0] as PigeonStorageFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxOperationRetryTime was null, expected non-null PigeonStorageFirebaseApp.');
           final int? arg_time = (args[1] as int?);
@@ -194,21 +151,16 @@ abstract class TestFirebaseStorageHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxUploadRetryTime',
-          codec,
+          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxUploadRetryTime', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxUploadRetryTime was null.');
+          'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxUploadRetryTime was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonStorageFirebaseApp? arg_app =
-              (args[0] as PigeonStorageFirebaseApp?);
+          final PigeonStorageFirebaseApp? arg_app = (args[0] as PigeonStorageFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxUploadRetryTime was null, expected non-null PigeonStorageFirebaseApp.');
           final int? arg_time = (args[1] as int?);
@@ -221,21 +173,16 @@ abstract class TestFirebaseStorageHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxDownloadRetryTime',
-          codec,
+          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxDownloadRetryTime', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxDownloadRetryTime was null.');
+          'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxDownloadRetryTime was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonStorageFirebaseApp? arg_app =
-              (args[0] as PigeonStorageFirebaseApp?);
+          final PigeonStorageFirebaseApp? arg_app = (args[0] as PigeonStorageFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxDownloadRetryTime was null, expected non-null PigeonStorageFirebaseApp.');
           final int? arg_time = (args[1] as int?);
@@ -248,21 +195,16 @@ abstract class TestFirebaseStorageHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.useStorageEmulator',
-          codec,
+          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.useStorageEmulator', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.useStorageEmulator was null.');
+          'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.useStorageEmulator was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonStorageFirebaseApp? arg_app =
-              (args[0] as PigeonStorageFirebaseApp?);
+          final PigeonStorageFirebaseApp? arg_app = (args[0] as PigeonStorageFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.useStorageEmulator was null, expected non-null PigeonStorageFirebaseApp.');
           final String? arg_host = (args[1] as String?);
@@ -278,25 +220,19 @@ abstract class TestFirebaseStorageHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDelete',
-          codec,
+          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDelete', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDelete was null.');
+          'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDelete was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonStorageFirebaseApp? arg_app =
-              (args[0] as PigeonStorageFirebaseApp?);
+          final PigeonStorageFirebaseApp? arg_app = (args[0] as PigeonStorageFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDelete was null, expected non-null PigeonStorageFirebaseApp.');
-          final PigeonStorageReference? arg_reference =
-              (args[1] as PigeonStorageReference?);
+          final PigeonStorageReference? arg_reference = (args[1] as PigeonStorageReference?);
           assert(arg_reference != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDelete was null, expected non-null PigeonStorageReference.');
           await api.referenceDelete(arg_app!, arg_reference!);
@@ -306,216 +242,166 @@ abstract class TestFirebaseStorageHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetDownloadURL',
-          codec,
+          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetDownloadURL', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetDownloadURL was null.');
+          'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetDownloadURL was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonStorageFirebaseApp? arg_app =
-              (args[0] as PigeonStorageFirebaseApp?);
+          final PigeonStorageFirebaseApp? arg_app = (args[0] as PigeonStorageFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetDownloadURL was null, expected non-null PigeonStorageFirebaseApp.');
-          final PigeonStorageReference? arg_reference =
-              (args[1] as PigeonStorageReference?);
+          final PigeonStorageReference? arg_reference = (args[1] as PigeonStorageReference?);
           assert(arg_reference != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetDownloadURL was null, expected non-null PigeonStorageReference.');
-          final String output =
-              await api.referenceGetDownloadURL(arg_app!, arg_reference!);
+          final String output = await api.referenceGetDownloadURL(arg_app!, arg_reference!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetMetaData',
-          codec,
+          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetMetaData', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetMetaData was null.');
+          'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetMetaData was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonStorageFirebaseApp? arg_app =
-              (args[0] as PigeonStorageFirebaseApp?);
+          final PigeonStorageFirebaseApp? arg_app = (args[0] as PigeonStorageFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetMetaData was null, expected non-null PigeonStorageFirebaseApp.');
-          final PigeonStorageReference? arg_reference =
-              (args[1] as PigeonStorageReference?);
+          final PigeonStorageReference? arg_reference = (args[1] as PigeonStorageReference?);
           assert(arg_reference != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetMetaData was null, expected non-null PigeonStorageReference.');
-          final PigeonFullMetaData output =
-              await api.referenceGetMetaData(arg_app!, arg_reference!);
+          final PigeonFullMetaData output = await api.referenceGetMetaData(arg_app!, arg_reference!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceList',
-          codec,
+          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceList', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceList was null.');
+          'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceList was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonStorageFirebaseApp? arg_app =
-              (args[0] as PigeonStorageFirebaseApp?);
+          final PigeonStorageFirebaseApp? arg_app = (args[0] as PigeonStorageFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceList was null, expected non-null PigeonStorageFirebaseApp.');
-          final PigeonStorageReference? arg_reference =
-              (args[1] as PigeonStorageReference?);
+          final PigeonStorageReference? arg_reference = (args[1] as PigeonStorageReference?);
           assert(arg_reference != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceList was null, expected non-null PigeonStorageReference.');
-          final PigeonListOptions? arg_options =
-              (args[2] as PigeonListOptions?);
+          final PigeonListOptions? arg_options = (args[2] as PigeonListOptions?);
           assert(arg_options != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceList was null, expected non-null PigeonListOptions.');
-          final PigeonListResult output =
-              await api.referenceList(arg_app!, arg_reference!, arg_options!);
+          final PigeonListResult output = await api.referenceList(arg_app!, arg_reference!, arg_options!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceListAll',
-          codec,
+          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceListAll', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceListAll was null.');
+          'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceListAll was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonStorageFirebaseApp? arg_app =
-              (args[0] as PigeonStorageFirebaseApp?);
+          final PigeonStorageFirebaseApp? arg_app = (args[0] as PigeonStorageFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceListAll was null, expected non-null PigeonStorageFirebaseApp.');
-          final PigeonStorageReference? arg_reference =
-              (args[1] as PigeonStorageReference?);
+          final PigeonStorageReference? arg_reference = (args[1] as PigeonStorageReference?);
           assert(arg_reference != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceListAll was null, expected non-null PigeonStorageReference.');
-          final PigeonListResult output =
-              await api.referenceListAll(arg_app!, arg_reference!);
+          final PigeonListResult output = await api.referenceListAll(arg_app!, arg_reference!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetData',
-          codec,
+          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetData', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetData was null.');
+          'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetData was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonStorageFirebaseApp? arg_app =
-              (args[0] as PigeonStorageFirebaseApp?);
+          final PigeonStorageFirebaseApp? arg_app = (args[0] as PigeonStorageFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetData was null, expected non-null PigeonStorageFirebaseApp.');
-          final PigeonStorageReference? arg_reference =
-              (args[1] as PigeonStorageReference?);
+          final PigeonStorageReference? arg_reference = (args[1] as PigeonStorageReference?);
           assert(arg_reference != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetData was null, expected non-null PigeonStorageReference.');
           final int? arg_maxSize = (args[2] as int?);
           assert(arg_maxSize != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetData was null, expected non-null int.');
-          final Uint8List? output = await api.referenceGetData(
-              arg_app!, arg_reference!, arg_maxSize!);
+          final Uint8List? output = await api.referenceGetData(arg_app!, arg_reference!, arg_maxSize!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutData',
-          codec,
+          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutData', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutData was null.');
+          'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutData was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonStorageFirebaseApp? arg_app =
-              (args[0] as PigeonStorageFirebaseApp?);
+          final PigeonStorageFirebaseApp? arg_app = (args[0] as PigeonStorageFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutData was null, expected non-null PigeonStorageFirebaseApp.');
-          final PigeonStorageReference? arg_reference =
-              (args[1] as PigeonStorageReference?);
+          final PigeonStorageReference? arg_reference = (args[1] as PigeonStorageReference?);
           assert(arg_reference != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutData was null, expected non-null PigeonStorageReference.');
           final Uint8List? arg_data = (args[2] as Uint8List?);
           assert(arg_data != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutData was null, expected non-null Uint8List.');
-          final PigeonSettableMetadata? arg_settableMetaData =
-              (args[3] as PigeonSettableMetadata?);
+          final PigeonSettableMetadata? arg_settableMetaData = (args[3] as PigeonSettableMetadata?);
           assert(arg_settableMetaData != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutData was null, expected non-null PigeonSettableMetadata.');
           final int? arg_handle = (args[4] as int?);
           assert(arg_handle != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutData was null, expected non-null int.');
-          final String output = await api.referencePutData(arg_app!,
-              arg_reference!, arg_data!, arg_settableMetaData!, arg_handle!);
+          final String output = await api.referencePutData(arg_app!, arg_reference!, arg_data!, arg_settableMetaData!, arg_handle!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString',
-          codec,
+          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString was null.');
+          'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonStorageFirebaseApp? arg_app =
-              (args[0] as PigeonStorageFirebaseApp?);
+          final PigeonStorageFirebaseApp? arg_app = (args[0] as PigeonStorageFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString was null, expected non-null PigeonStorageFirebaseApp.');
-          final PigeonStorageReference? arg_reference =
-              (args[1] as PigeonStorageReference?);
+          final PigeonStorageReference? arg_reference = (args[1] as PigeonStorageReference?);
           assert(arg_reference != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString was null, expected non-null PigeonStorageReference.');
           final String? arg_data = (args[2] as String?);
@@ -524,82 +410,61 @@ abstract class TestFirebaseStorageHostApi {
           final int? arg_format = (args[3] as int?);
           assert(arg_format != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString was null, expected non-null int.');
-          final PigeonSettableMetadata? arg_settableMetaData =
-              (args[4] as PigeonSettableMetadata?);
+          final PigeonSettableMetadata? arg_settableMetaData = (args[4] as PigeonSettableMetadata?);
           assert(arg_settableMetaData != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString was null, expected non-null PigeonSettableMetadata.');
           final int? arg_handle = (args[5] as int?);
           assert(arg_handle != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString was null, expected non-null int.');
-          final String output = await api.referencePutString(
-              arg_app!,
-              arg_reference!,
-              arg_data!,
-              arg_format!,
-              arg_settableMetaData!,
-              arg_handle!);
+          final String output = await api.referencePutString(arg_app!, arg_reference!, arg_data!, arg_format!, arg_settableMetaData!, arg_handle!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile',
-          codec,
+          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile was null.');
+          'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonStorageFirebaseApp? arg_app =
-              (args[0] as PigeonStorageFirebaseApp?);
+          final PigeonStorageFirebaseApp? arg_app = (args[0] as PigeonStorageFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile was null, expected non-null PigeonStorageFirebaseApp.');
-          final PigeonStorageReference? arg_reference =
-              (args[1] as PigeonStorageReference?);
+          final PigeonStorageReference? arg_reference = (args[1] as PigeonStorageReference?);
           assert(arg_reference != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile was null, expected non-null PigeonStorageReference.');
           final String? arg_filePath = (args[2] as String?);
           assert(arg_filePath != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile was null, expected non-null String.');
-          final PigeonSettableMetadata? arg_settableMetaData =
-              (args[3] as PigeonSettableMetadata?);
+          final PigeonSettableMetadata? arg_settableMetaData = (args[3] as PigeonSettableMetadata?);
           final int? arg_handle = (args[4] as int?);
           assert(arg_handle != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile was null, expected non-null int.');
-          final String output = await api.referencePutFile(arg_app!,
-              arg_reference!, arg_filePath!, arg_settableMetaData, arg_handle!);
+          final String output = await api.referencePutFile(arg_app!, arg_reference!, arg_filePath!, arg_settableMetaData, arg_handle!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDownloadFile',
-          codec,
+          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDownloadFile', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDownloadFile was null.');
+          'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDownloadFile was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonStorageFirebaseApp? arg_app =
-              (args[0] as PigeonStorageFirebaseApp?);
+          final PigeonStorageFirebaseApp? arg_app = (args[0] as PigeonStorageFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDownloadFile was null, expected non-null PigeonStorageFirebaseApp.');
-          final PigeonStorageReference? arg_reference =
-              (args[1] as PigeonStorageReference?);
+          final PigeonStorageReference? arg_reference = (args[1] as PigeonStorageReference?);
           assert(arg_reference != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDownloadFile was null, expected non-null PigeonStorageReference.');
           final String? arg_filePath = (args[2] as String?);
@@ -608,125 +473,98 @@ abstract class TestFirebaseStorageHostApi {
           final int? arg_handle = (args[3] as int?);
           assert(arg_handle != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDownloadFile was null, expected non-null int.');
-          final String output = await api.referenceDownloadFile(
-              arg_app!, arg_reference!, arg_filePath!, arg_handle!);
+          final String output = await api.referenceDownloadFile(arg_app!, arg_reference!, arg_filePath!, arg_handle!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceUpdateMetadata',
-          codec,
+          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceUpdateMetadata', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceUpdateMetadata was null.');
+          'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceUpdateMetadata was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonStorageFirebaseApp? arg_app =
-              (args[0] as PigeonStorageFirebaseApp?);
+          final PigeonStorageFirebaseApp? arg_app = (args[0] as PigeonStorageFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceUpdateMetadata was null, expected non-null PigeonStorageFirebaseApp.');
-          final PigeonStorageReference? arg_reference =
-              (args[1] as PigeonStorageReference?);
+          final PigeonStorageReference? arg_reference = (args[1] as PigeonStorageReference?);
           assert(arg_reference != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceUpdateMetadata was null, expected non-null PigeonStorageReference.');
-          final PigeonSettableMetadata? arg_metadata =
-              (args[2] as PigeonSettableMetadata?);
+          final PigeonSettableMetadata? arg_metadata = (args[2] as PigeonSettableMetadata?);
           assert(arg_metadata != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceUpdateMetadata was null, expected non-null PigeonSettableMetadata.');
-          final PigeonFullMetaData output = await api.referenceUpdateMetadata(
-              arg_app!, arg_reference!, arg_metadata!);
+          final PigeonFullMetaData output = await api.referenceUpdateMetadata(arg_app!, arg_reference!, arg_metadata!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskPause',
-          codec,
+          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskPause', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskPause was null.');
+          'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskPause was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonStorageFirebaseApp? arg_app =
-              (args[0] as PigeonStorageFirebaseApp?);
+          final PigeonStorageFirebaseApp? arg_app = (args[0] as PigeonStorageFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskPause was null, expected non-null PigeonStorageFirebaseApp.');
           final int? arg_handle = (args[1] as int?);
           assert(arg_handle != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskPause was null, expected non-null int.');
-          final Map<String?, Object?> output =
-              await api.taskPause(arg_app!, arg_handle!);
+          final Map<String?, Object?> output = await api.taskPause(arg_app!, arg_handle!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskResume',
-          codec,
+          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskResume', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskResume was null.');
+          'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskResume was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonStorageFirebaseApp? arg_app =
-              (args[0] as PigeonStorageFirebaseApp?);
+          final PigeonStorageFirebaseApp? arg_app = (args[0] as PigeonStorageFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskResume was null, expected non-null PigeonStorageFirebaseApp.');
           final int? arg_handle = (args[1] as int?);
           assert(arg_handle != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskResume was null, expected non-null int.');
-          final Map<String?, Object?> output =
-              await api.taskResume(arg_app!, arg_handle!);
+          final Map<String?, Object?> output = await api.taskResume(arg_app!, arg_handle!);
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskCancel',
-          codec,
+          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskCancel', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(channel,
-                (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskCancel was null.');
+          'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskCancel was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonStorageFirebaseApp? arg_app =
-              (args[0] as PigeonStorageFirebaseApp?);
+          final PigeonStorageFirebaseApp? arg_app = (args[0] as PigeonStorageFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskCancel was null, expected non-null PigeonStorageFirebaseApp.');
           final int? arg_handle = (args[1] as int?);
           assert(arg_handle != null,
               'Argument for dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskCancel was null, expected non-null int.');
-          final Map<String?, Object?> output =
-              await api.taskCancel(arg_app!, arg_handle!);
+          final Map<String?, Object?> output = await api.taskCancel(arg_app!, arg_handle!);
           return <Object?>[output];
         });
       }
