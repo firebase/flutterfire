@@ -106,6 +106,14 @@ final class LiveGenerativeModel extends BaseModel {
         if (_systemInstruction != null)
           'system_instruction': _systemInstruction.toJson(),
         if (_tools != null) 'tools': _tools.map((t) => t.toJson()).toList(),
+        if (_liveGenerationConfig != null &&
+            _liveGenerationConfig.inputAudioTranscription != null)
+          'input_audio_transcription':
+              _liveGenerationConfig.inputAudioTranscription!.toJson(),
+        if (_liveGenerationConfig != null &&
+            _liveGenerationConfig.outputAudioTranscription != null)
+          'output_audio_transcription':
+              _liveGenerationConfig.outputAudioTranscription!.toJson(),
       }
     };
 
