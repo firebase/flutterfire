@@ -14,6 +14,7 @@
 
 import 'content.dart';
 import 'error.dart';
+import 'image_config.dart';
 import 'schema.dart';
 import 'tool.dart' show Tool, ToolConfig;
 
@@ -752,7 +753,23 @@ enum FinishReason {
   recitation('RECITATION'),
 
   /// Unknown reason.
-  other('OTHER');
+  other('OTHER'),
+
+  /// Image generation stopped because generated images has safety issues.
+  imageSafety('IMAGE_SAFETY'),
+
+  /// Image generation stopped because generated images has other prohibited
+  /// content.
+  imageProhibitedContent('IMAGE_PROHIBITED_CONTENT'),
+
+  /// Image generation stopped due to recitation.
+  imageRecitation('IMAGE_RECITATION'),
+
+  /// Image generation stopped because of other miscellaneous issue.
+  imageOther('IMAGE_OTHER'),
+
+  /// The model was expected to generate an image, but none was generated.
+  noImage('NO_IMAGE');
 
   const FinishReason(this._jsonString);
 
@@ -770,6 +787,11 @@ enum FinishReason {
       'SAFETY' => FinishReason.safety,
       'RECITATION' => FinishReason.recitation,
       'OTHER' => FinishReason.other,
+      'IMAGE_SAFETY' => FinishReason.imageSafety,
+      'IMAGE_PROHIBITED_CONTENT' => FinishReason.imageProhibitedContent,
+      'IMAGE_RECITATION' => FinishReason.imageRecitation,
+      'IMAGE_OTHER' => FinishReason.imageOther,
+      'NO_IMAGE' => FinishReason.noImage,
       _ => throw FormatException('Unhandled FinishReason format', jsonObject),
     };
   }
@@ -1105,6 +1127,7 @@ final class GenerationConfig extends BaseGenerationConfig {
     this.responseSchema,
     this.responseJsonSchema,
     this.thinkingConfig,
+    this.imageConfig,
   }) : assert(responseSchema == null || responseJsonSchema == null,
             'responseSchema and responseJsonSchema cannot both be set.');
 
@@ -1153,6 +1176,9 @@ final class GenerationConfig extends BaseGenerationConfig {
   /// support thinking.
   final ThinkingConfig? thinkingConfig;
 
+  /// Config for image generation.
+  final ImageConfig? imageConfig;
+
   @override
   Map<String, Object?> toJson() => {
         ...super.toJson(),
@@ -1167,6 +1193,8 @@ final class GenerationConfig extends BaseGenerationConfig {
           'responseJsonSchema': responseJsonSchema,
         if (thinkingConfig case final thinkingConfig?)
           'thinkingConfig': thinkingConfig.toJson(),
+        if (imageConfig case final imageConfig?)
+          'imageConfig': imageConfig.toJson(),
       };
 }
 
