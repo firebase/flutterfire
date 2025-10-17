@@ -2,13 +2,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import Foundation
 import FirebaseStorage
+import Foundation
 
 #if os(iOS)
-import Flutter
+  import Flutter
 #elseif os(macOS)
-import FlutterMacOS
+  import FlutterMacOS
 #endif
 
 final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
@@ -22,19 +22,21 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
   private var pausedHandle: String?
   private var progressHandle: String?
 
-  init(task: StorageObservableTask, storage: Storage, identifier: String, plugin: FLTFirebaseStoragePluginSwift?) {
+  init(task: StorageObservableTask, storage: Storage, identifier: String,
+       plugin: FLTFirebaseStoragePluginSwift?) {
     self.task = task
     self.storage = storage
     self.identifier = identifier
     self.plugin = plugin
   }
 
-  func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+  func onListen(withArguments arguments: Any?,
+                eventSink events: @escaping FlutterEventSink) -> FlutterError? {
     successHandle = task.observe(.success) { snapshot in
       events([
         "taskState": 2, // success
         "appName": self.storage.app.name,
-        "snapshot": self.parseTaskSnapshot(snapshot)
+        "snapshot": self.parseTaskSnapshot(snapshot),
       ])
       self.cleanupObservers()
     }
@@ -44,7 +46,7 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
       events([
         "taskState": 4, // error (including cancellations as errors per platform contract)
         "appName": self.storage.app.name,
-        "error": errorDict
+        "error": errorDict,
       ])
       self.cleanupObservers()
     }
@@ -52,14 +54,14 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
       events([
         "taskState": 0, // paused
         "appName": self.storage.app.name,
-        "snapshot": self.parseTaskSnapshot(snapshot)
+        "snapshot": self.parseTaskSnapshot(snapshot),
       ])
     }
     progressHandle = task.observe(.progress) { snapshot in
       events([
         "taskState": 1, // running
         "appName": self.storage.app.name,
-        "snapshot": self.parseTaskSnapshot(snapshot)
+        "snapshot": self.parseTaskSnapshot(snapshot),
       ])
     }
     return nil
@@ -105,7 +107,8 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
       ]
     }
     let code: String
-    if error.domain == StorageErrorDomain, let storageCode = StorageErrorCode(rawValue: error.code) {
+    if error.domain == StorageErrorDomain,
+       let storageCode = StorageErrorCode(rawValue: error.code) {
       switch storageCode {
       case .objectNotFound: code = "object-not-found"
       case .bucketNotFound: code = "bucket-not-found"
@@ -118,7 +121,7 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
       case .downloadSizeExceeded: code = "download-size-exceeded"
       @unknown default: code = "unknown"
       }
-    } else if error.domain == NSURLErrorDomain && error.code == NSURLErrorCancelled {
+    } else if error.domain == NSURLErrorDomain, error.code == NSURLErrorCancelled {
       code = "canceled"
     } else {
       code = "unknown"
@@ -158,5 +161,3 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
     return out
   }
 }
-
-
