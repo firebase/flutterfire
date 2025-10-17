@@ -25,7 +25,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace = "io.flutter.plugins.firebase.tests"
-    compileSdk = 35
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -41,7 +41,7 @@ android {
     defaultConfig {
         applicationId = "io.flutter.plugins.firebase.tests"
         // auth requires minSdk 23
-        minSdk = 23
+        minSdkVersion flutter.minSdkVersion
         targetSdk = 35
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName

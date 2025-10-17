@@ -26,17 +26,19 @@ using flutter::EncodableValue;
 
 // PigeonStorageFirebaseApp
 
-PigeonStorageFirebaseApp::PigeonStorageFirebaseApp(const std::string& app_name,
-                                                   const std::string& bucket)
-    : app_name_(app_name), bucket_(bucket) {}
+PigeonStorageFirebaseApp::PigeonStorageFirebaseApp(
+  const std::string& app_name,
+  const std::string& bucket)
+ : app_name_(app_name),
+    bucket_(bucket) {}
 
-PigeonStorageFirebaseApp::PigeonStorageFirebaseApp(const std::string& app_name,
-                                                   const std::string* tenant_id,
-                                                   const std::string& bucket)
-    : app_name_(app_name),
-      tenant_id_(tenant_id ? std::optional<std::string>(*tenant_id)
-                           : std::nullopt),
-      bucket_(bucket) {}
+PigeonStorageFirebaseApp::PigeonStorageFirebaseApp(
+  const std::string& app_name,
+  const std::string* tenant_id,
+  const std::string& bucket)
+ : app_name_(app_name),
+    tenant_id_(tenant_id ? std::optional<std::string>(*tenant_id) : std::nullopt),
+    bucket_(bucket) {}
 
 const std::string& PigeonStorageFirebaseApp::app_name() const {
   return app_name_;
@@ -46,25 +48,28 @@ void PigeonStorageFirebaseApp::set_app_name(std::string_view value_arg) {
   app_name_ = value_arg;
 }
 
+
 const std::string* PigeonStorageFirebaseApp::tenant_id() const {
   return tenant_id_ ? &(*tenant_id_) : nullptr;
 }
 
-void PigeonStorageFirebaseApp::set_tenant_id(
-    const std::string_view* value_arg) {
-  tenant_id_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void PigeonStorageFirebaseApp::set_tenant_id(const std::string_view* value_arg) {
+  tenant_id_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void PigeonStorageFirebaseApp::set_tenant_id(std::string_view value_arg) {
   tenant_id_ = value_arg;
 }
 
-const std::string& PigeonStorageFirebaseApp::bucket() const { return bucket_; }
+
+const std::string& PigeonStorageFirebaseApp::bucket() const {
+  return bucket_;
+}
 
 void PigeonStorageFirebaseApp::set_bucket(std::string_view value_arg) {
   bucket_ = value_arg;
 }
+
 
 EncodableList PigeonStorageFirebaseApp::ToEncodableList() const {
   EncodableList list;
@@ -75,10 +80,10 @@ EncodableList PigeonStorageFirebaseApp::ToEncodableList() const {
   return list;
 }
 
-PigeonStorageFirebaseApp PigeonStorageFirebaseApp::FromEncodableList(
-    const EncodableList& list) {
-  PigeonStorageFirebaseApp decoded(std::get<std::string>(list[0]),
-                                   std::get<std::string>(list[2]));
+PigeonStorageFirebaseApp PigeonStorageFirebaseApp::FromEncodableList(const EncodableList& list) {
+  PigeonStorageFirebaseApp decoded(
+    std::get<std::string>(list[0]),
+    std::get<std::string>(list[2]));
   auto& encodable_tenant_id = list[1];
   if (!encodable_tenant_id.IsNull()) {
     decoded.set_tenant_id(std::get<std::string>(encodable_tenant_id));
@@ -88,16 +93,22 @@ PigeonStorageFirebaseApp PigeonStorageFirebaseApp::FromEncodableList(
 
 // PigeonStorageReference
 
-PigeonStorageReference::PigeonStorageReference(const std::string& bucket,
-                                               const std::string& full_path,
-                                               const std::string& name)
-    : bucket_(bucket), full_path_(full_path), name_(name) {}
+PigeonStorageReference::PigeonStorageReference(
+  const std::string& bucket,
+  const std::string& full_path,
+  const std::string& name)
+ : bucket_(bucket),
+    full_path_(full_path),
+    name_(name) {}
 
-const std::string& PigeonStorageReference::bucket() const { return bucket_; }
+const std::string& PigeonStorageReference::bucket() const {
+  return bucket_;
+}
 
 void PigeonStorageReference::set_bucket(std::string_view value_arg) {
   bucket_ = value_arg;
 }
+
 
 const std::string& PigeonStorageReference::full_path() const {
   return full_path_;
@@ -107,11 +118,15 @@ void PigeonStorageReference::set_full_path(std::string_view value_arg) {
   full_path_ = value_arg;
 }
 
-const std::string& PigeonStorageReference::name() const { return name_; }
+
+const std::string& PigeonStorageReference::name() const {
+  return name_;
+}
 
 void PigeonStorageReference::set_name(std::string_view value_arg) {
   name_ = value_arg;
 }
+
 
 EncodableList PigeonStorageReference::ToEncodableList() const {
   EncodableList list;
@@ -122,11 +137,11 @@ EncodableList PigeonStorageReference::ToEncodableList() const {
   return list;
 }
 
-PigeonStorageReference PigeonStorageReference::FromEncodableList(
-    const EncodableList& list) {
-  PigeonStorageReference decoded(std::get<std::string>(list[0]),
-                                 std::get<std::string>(list[1]),
-                                 std::get<std::string>(list[2]));
+PigeonStorageReference PigeonStorageReference::FromEncodableList(const EncodableList& list) {
+  PigeonStorageReference decoded(
+    std::get<std::string>(list[0]),
+    std::get<std::string>(list[1]),
+    std::get<std::string>(list[2]));
   return decoded;
 }
 
@@ -135,21 +150,20 @@ PigeonStorageReference PigeonStorageReference::FromEncodableList(
 PigeonFullMetaData::PigeonFullMetaData() {}
 
 PigeonFullMetaData::PigeonFullMetaData(const EncodableMap* metadata)
-    : metadata_(metadata ? std::optional<EncodableMap>(*metadata)
-                         : std::nullopt) {}
+ : metadata_(metadata ? std::optional<EncodableMap>(*metadata) : std::nullopt) {}
 
 const EncodableMap* PigeonFullMetaData::metadata() const {
   return metadata_ ? &(*metadata_) : nullptr;
 }
 
 void PigeonFullMetaData::set_metadata(const EncodableMap* value_arg) {
-  metadata_ =
-      value_arg ? std::optional<EncodableMap>(*value_arg) : std::nullopt;
+  metadata_ = value_arg ? std::optional<EncodableMap>(*value_arg) : std::nullopt;
 }
 
 void PigeonFullMetaData::set_metadata(const EncodableMap& value_arg) {
   metadata_ = value_arg;
 }
+
 
 EncodableList PigeonFullMetaData::ToEncodableList() const {
   EncodableList list;
@@ -158,8 +172,7 @@ EncodableList PigeonFullMetaData::ToEncodableList() const {
   return list;
 }
 
-PigeonFullMetaData PigeonFullMetaData::FromEncodableList(
-    const EncodableList& list) {
+PigeonFullMetaData PigeonFullMetaData::FromEncodableList(const EncodableList& list) {
   PigeonFullMetaData decoded;
   auto& encodable_metadata = list[0];
   if (!encodable_metadata.IsNull()) {
@@ -171,32 +184,35 @@ PigeonFullMetaData PigeonFullMetaData::FromEncodableList(
 // PigeonListOptions
 
 PigeonListOptions::PigeonListOptions(int64_t max_results)
-    : max_results_(max_results) {}
+ : max_results_(max_results) {}
 
-PigeonListOptions::PigeonListOptions(int64_t max_results,
-                                     const std::string* page_token)
-    : max_results_(max_results),
-      page_token_(page_token ? std::optional<std::string>(*page_token)
-                             : std::nullopt) {}
+PigeonListOptions::PigeonListOptions(
+  int64_t max_results,
+  const std::string* page_token)
+ : max_results_(max_results),
+    page_token_(page_token ? std::optional<std::string>(*page_token) : std::nullopt) {}
 
-int64_t PigeonListOptions::max_results() const { return max_results_; }
+int64_t PigeonListOptions::max_results() const {
+  return max_results_;
+}
 
 void PigeonListOptions::set_max_results(int64_t value_arg) {
   max_results_ = value_arg;
 }
+
 
 const std::string* PigeonListOptions::page_token() const {
   return page_token_ ? &(*page_token_) : nullptr;
 }
 
 void PigeonListOptions::set_page_token(const std::string_view* value_arg) {
-  page_token_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+  page_token_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void PigeonListOptions::set_page_token(std::string_view value_arg) {
   page_token_ = value_arg;
 }
+
 
 EncodableList PigeonListOptions::ToEncodableList() const {
   EncodableList list;
@@ -206,9 +222,9 @@ EncodableList PigeonListOptions::ToEncodableList() const {
   return list;
 }
 
-PigeonListOptions PigeonListOptions::FromEncodableList(
-    const EncodableList& list) {
-  PigeonListOptions decoded(list[0].LongValue());
+PigeonListOptions PigeonListOptions::FromEncodableList(const EncodableList& list) {
+  PigeonListOptions decoded(
+    list[0].LongValue());
   auto& encodable_page_token = list[1];
   if (!encodable_page_token.IsNull()) {
     decoded.set_page_token(std::get<std::string>(encodable_page_token));
@@ -221,132 +237,110 @@ PigeonListOptions PigeonListOptions::FromEncodableList(
 PigeonSettableMetadata::PigeonSettableMetadata() {}
 
 PigeonSettableMetadata::PigeonSettableMetadata(
-    const std::string* cache_control, const std::string* content_disposition,
-    const std::string* content_encoding, const std::string* content_language,
-    const std::string* content_type, const EncodableMap* custom_metadata)
-    : cache_control_(cache_control ? std::optional<std::string>(*cache_control)
-                                   : std::nullopt),
-      content_disposition_(
-          content_disposition ? std::optional<std::string>(*content_disposition)
-                              : std::nullopt),
-      content_encoding_(content_encoding
-                            ? std::optional<std::string>(*content_encoding)
-                            : std::nullopt),
-      content_language_(content_language
-                            ? std::optional<std::string>(*content_language)
-                            : std::nullopt),
-      content_type_(content_type ? std::optional<std::string>(*content_type)
-                                 : std::nullopt),
-      custom_metadata_(custom_metadata
-                           ? std::optional<EncodableMap>(*custom_metadata)
-                           : std::nullopt) {}
+  const std::string* cache_control,
+  const std::string* content_disposition,
+  const std::string* content_encoding,
+  const std::string* content_language,
+  const std::string* content_type,
+  const EncodableMap* custom_metadata)
+ : cache_control_(cache_control ? std::optional<std::string>(*cache_control) : std::nullopt),
+    content_disposition_(content_disposition ? std::optional<std::string>(*content_disposition) : std::nullopt),
+    content_encoding_(content_encoding ? std::optional<std::string>(*content_encoding) : std::nullopt),
+    content_language_(content_language ? std::optional<std::string>(*content_language) : std::nullopt),
+    content_type_(content_type ? std::optional<std::string>(*content_type) : std::nullopt),
+    custom_metadata_(custom_metadata ? std::optional<EncodableMap>(*custom_metadata) : std::nullopt) {}
 
 const std::string* PigeonSettableMetadata::cache_control() const {
   return cache_control_ ? &(*cache_control_) : nullptr;
 }
 
-void PigeonSettableMetadata::set_cache_control(
-    const std::string_view* value_arg) {
-  cache_control_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void PigeonSettableMetadata::set_cache_control(const std::string_view* value_arg) {
+  cache_control_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void PigeonSettableMetadata::set_cache_control(std::string_view value_arg) {
   cache_control_ = value_arg;
 }
 
+
 const std::string* PigeonSettableMetadata::content_disposition() const {
   return content_disposition_ ? &(*content_disposition_) : nullptr;
 }
 
-void PigeonSettableMetadata::set_content_disposition(
-    const std::string_view* value_arg) {
-  content_disposition_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void PigeonSettableMetadata::set_content_disposition(const std::string_view* value_arg) {
+  content_disposition_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
-void PigeonSettableMetadata::set_content_disposition(
-    std::string_view value_arg) {
+void PigeonSettableMetadata::set_content_disposition(std::string_view value_arg) {
   content_disposition_ = value_arg;
 }
+
 
 const std::string* PigeonSettableMetadata::content_encoding() const {
   return content_encoding_ ? &(*content_encoding_) : nullptr;
 }
 
-void PigeonSettableMetadata::set_content_encoding(
-    const std::string_view* value_arg) {
-  content_encoding_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void PigeonSettableMetadata::set_content_encoding(const std::string_view* value_arg) {
+  content_encoding_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void PigeonSettableMetadata::set_content_encoding(std::string_view value_arg) {
   content_encoding_ = value_arg;
 }
 
+
 const std::string* PigeonSettableMetadata::content_language() const {
   return content_language_ ? &(*content_language_) : nullptr;
 }
 
-void PigeonSettableMetadata::set_content_language(
-    const std::string_view* value_arg) {
-  content_language_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void PigeonSettableMetadata::set_content_language(const std::string_view* value_arg) {
+  content_language_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void PigeonSettableMetadata::set_content_language(std::string_view value_arg) {
   content_language_ = value_arg;
 }
 
+
 const std::string* PigeonSettableMetadata::content_type() const {
   return content_type_ ? &(*content_type_) : nullptr;
 }
 
-void PigeonSettableMetadata::set_content_type(
-    const std::string_view* value_arg) {
-  content_type_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void PigeonSettableMetadata::set_content_type(const std::string_view* value_arg) {
+  content_type_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void PigeonSettableMetadata::set_content_type(std::string_view value_arg) {
   content_type_ = value_arg;
 }
 
+
 const EncodableMap* PigeonSettableMetadata::custom_metadata() const {
   return custom_metadata_ ? &(*custom_metadata_) : nullptr;
 }
 
-void PigeonSettableMetadata::set_custom_metadata(
-    const EncodableMap* value_arg) {
-  custom_metadata_ =
-      value_arg ? std::optional<EncodableMap>(*value_arg) : std::nullopt;
+void PigeonSettableMetadata::set_custom_metadata(const EncodableMap* value_arg) {
+  custom_metadata_ = value_arg ? std::optional<EncodableMap>(*value_arg) : std::nullopt;
 }
 
-void PigeonSettableMetadata::set_custom_metadata(
-    const EncodableMap& value_arg) {
+void PigeonSettableMetadata::set_custom_metadata(const EncodableMap& value_arg) {
   custom_metadata_ = value_arg;
 }
+
 
 EncodableList PigeonSettableMetadata::ToEncodableList() const {
   EncodableList list;
   list.reserve(6);
-  list.push_back(cache_control_ ? EncodableValue(*cache_control_)
-                                : EncodableValue());
-  list.push_back(content_disposition_ ? EncodableValue(*content_disposition_)
-                                      : EncodableValue());
-  list.push_back(content_encoding_ ? EncodableValue(*content_encoding_)
-                                   : EncodableValue());
-  list.push_back(content_language_ ? EncodableValue(*content_language_)
-                                   : EncodableValue());
-  list.push_back(content_type_ ? EncodableValue(*content_type_)
-                               : EncodableValue());
-  list.push_back(custom_metadata_ ? EncodableValue(*custom_metadata_)
-                                  : EncodableValue());
+  list.push_back(cache_control_ ? EncodableValue(*cache_control_) : EncodableValue());
+  list.push_back(content_disposition_ ? EncodableValue(*content_disposition_) : EncodableValue());
+  list.push_back(content_encoding_ ? EncodableValue(*content_encoding_) : EncodableValue());
+  list.push_back(content_language_ ? EncodableValue(*content_language_) : EncodableValue());
+  list.push_back(content_type_ ? EncodableValue(*content_type_) : EncodableValue());
+  list.push_back(custom_metadata_ ? EncodableValue(*custom_metadata_) : EncodableValue());
   return list;
 }
 
-PigeonSettableMetadata PigeonSettableMetadata::FromEncodableList(
-    const EncodableList& list) {
+PigeonSettableMetadata PigeonSettableMetadata::FromEncodableList(const EncodableList& list) {
   PigeonSettableMetadata decoded;
   auto& encodable_cache_control = list[0];
   if (!encodable_cache_control.IsNull()) {
@@ -354,18 +348,15 @@ PigeonSettableMetadata PigeonSettableMetadata::FromEncodableList(
   }
   auto& encodable_content_disposition = list[1];
   if (!encodable_content_disposition.IsNull()) {
-    decoded.set_content_disposition(
-        std::get<std::string>(encodable_content_disposition));
+    decoded.set_content_disposition(std::get<std::string>(encodable_content_disposition));
   }
   auto& encodable_content_encoding = list[2];
   if (!encodable_content_encoding.IsNull()) {
-    decoded.set_content_encoding(
-        std::get<std::string>(encodable_content_encoding));
+    decoded.set_content_encoding(std::get<std::string>(encodable_content_encoding));
   }
   auto& encodable_content_language = list[3];
   if (!encodable_content_language.IsNull()) {
-    decoded.set_content_language(
-        std::get<std::string>(encodable_content_language));
+    decoded.set_content_language(std::get<std::string>(encodable_content_language));
   }
   auto& encodable_content_type = list[4];
   if (!encodable_content_type.IsNull()) {
@@ -373,50 +364,57 @@ PigeonSettableMetadata PigeonSettableMetadata::FromEncodableList(
   }
   auto& encodable_custom_metadata = list[5];
   if (!encodable_custom_metadata.IsNull()) {
-    decoded.set_custom_metadata(
-        std::get<EncodableMap>(encodable_custom_metadata));
+    decoded.set_custom_metadata(std::get<EncodableMap>(encodable_custom_metadata));
   }
   return decoded;
 }
 
 // PigeonListResult
 
-PigeonListResult::PigeonListResult(const EncodableList& items,
-                                   const EncodableList& prefixs)
-    : items_(items), prefixs_(prefixs) {}
+PigeonListResult::PigeonListResult(
+  const EncodableList& items,
+  const EncodableList& prefixs)
+ : items_(items),
+    prefixs_(prefixs) {}
 
-PigeonListResult::PigeonListResult(const EncodableList& items,
-                                   const std::string* page_token,
-                                   const EncodableList& prefixs)
-    : items_(items),
-      page_token_(page_token ? std::optional<std::string>(*page_token)
-                             : std::nullopt),
-      prefixs_(prefixs) {}
+PigeonListResult::PigeonListResult(
+  const EncodableList& items,
+  const std::string* page_token,
+  const EncodableList& prefixs)
+ : items_(items),
+    page_token_(page_token ? std::optional<std::string>(*page_token) : std::nullopt),
+    prefixs_(prefixs) {}
 
-const EncodableList& PigeonListResult::items() const { return items_; }
+const EncodableList& PigeonListResult::items() const {
+  return items_;
+}
 
 void PigeonListResult::set_items(const EncodableList& value_arg) {
   items_ = value_arg;
 }
+
 
 const std::string* PigeonListResult::page_token() const {
   return page_token_ ? &(*page_token_) : nullptr;
 }
 
 void PigeonListResult::set_page_token(const std::string_view* value_arg) {
-  page_token_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+  page_token_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void PigeonListResult::set_page_token(std::string_view value_arg) {
   page_token_ = value_arg;
 }
 
-const EncodableList& PigeonListResult::prefixs() const { return prefixs_; }
+
+const EncodableList& PigeonListResult::prefixs() const {
+  return prefixs_;
+}
 
 void PigeonListResult::set_prefixs(const EncodableList& value_arg) {
   prefixs_ = value_arg;
 }
+
 
 EncodableList PigeonListResult::ToEncodableList() const {
   EncodableList list;
@@ -427,10 +425,10 @@ EncodableList PigeonListResult::ToEncodableList() const {
   return list;
 }
 
-PigeonListResult PigeonListResult::FromEncodableList(
-    const EncodableList& list) {
-  PigeonListResult decoded(std::get<EncodableList>(list[0]),
-                           std::get<EncodableList>(list[2]));
+PigeonListResult PigeonListResult::FromEncodableList(const EncodableList& list) {
+  PigeonListResult decoded(
+    std::get<EncodableList>(list[0]),
+    std::get<EncodableList>(list[2]));
   auto& encodable_page_token = list[1];
   if (!encodable_page_token.IsNull()) {
     decoded.set_page_token(std::get<std::string>(encodable_page_token));
@@ -438,83 +436,62 @@ PigeonListResult PigeonListResult::FromEncodableList(
   return decoded;
 }
 
-FirebaseStorageHostApiCodecSerializer::FirebaseStorageHostApiCodecSerializer() {
-}
+
+FirebaseStorageHostApiCodecSerializer::FirebaseStorageHostApiCodecSerializer() {}
 
 EncodableValue FirebaseStorageHostApiCodecSerializer::ReadValueOfType(
-    uint8_t type, flutter::ByteStreamReader* stream) const {
+  uint8_t type,
+  flutter::ByteStreamReader* stream) const {
   switch (type) {
     case 128:
-      return CustomEncodableValue(PigeonFullMetaData::FromEncodableList(
-          std::get<EncodableList>(ReadValue(stream))));
+      return CustomEncodableValue(PigeonFullMetaData::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
     case 129:
-      return CustomEncodableValue(PigeonListOptions::FromEncodableList(
-          std::get<EncodableList>(ReadValue(stream))));
+      return CustomEncodableValue(PigeonListOptions::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
     case 130:
-      return CustomEncodableValue(PigeonListResult::FromEncodableList(
-          std::get<EncodableList>(ReadValue(stream))));
+      return CustomEncodableValue(PigeonListResult::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
     case 131:
-      return CustomEncodableValue(PigeonSettableMetadata::FromEncodableList(
-          std::get<EncodableList>(ReadValue(stream))));
+      return CustomEncodableValue(PigeonSettableMetadata::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
     case 132:
-      return CustomEncodableValue(PigeonStorageFirebaseApp::FromEncodableList(
-          std::get<EncodableList>(ReadValue(stream))));
+      return CustomEncodableValue(PigeonStorageFirebaseApp::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
     case 133:
-      return CustomEncodableValue(PigeonStorageReference::FromEncodableList(
-          std::get<EncodableList>(ReadValue(stream))));
+      return CustomEncodableValue(PigeonStorageReference::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
     default:
       return flutter::StandardCodecSerializer::ReadValueOfType(type, stream);
   }
 }
 
 void FirebaseStorageHostApiCodecSerializer::WriteValue(
-    const EncodableValue& value, flutter::ByteStreamWriter* stream) const {
-  if (const CustomEncodableValue* custom_value =
-          std::get_if<CustomEncodableValue>(&value)) {
+  const EncodableValue& value,
+  flutter::ByteStreamWriter* stream) const {
+  if (const CustomEncodableValue* custom_value = std::get_if<CustomEncodableValue>(&value)) {
     if (custom_value->type() == typeid(PigeonFullMetaData)) {
       stream->WriteByte(128);
-      WriteValue(EncodableValue(std::any_cast<PigeonFullMetaData>(*custom_value)
-                                    .ToEncodableList()),
-                 stream);
+      WriteValue(EncodableValue(std::any_cast<PigeonFullMetaData>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(PigeonListOptions)) {
       stream->WriteByte(129);
-      WriteValue(EncodableValue(std::any_cast<PigeonListOptions>(*custom_value)
-                                    .ToEncodableList()),
-                 stream);
+      WriteValue(EncodableValue(std::any_cast<PigeonListOptions>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(PigeonListResult)) {
       stream->WriteByte(130);
-      WriteValue(
-          EncodableValue(
-              std::any_cast<PigeonListResult>(*custom_value).ToEncodableList()),
-          stream);
+      WriteValue(EncodableValue(std::any_cast<PigeonListResult>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(PigeonSettableMetadata)) {
       stream->WriteByte(131);
-      WriteValue(
-          EncodableValue(std::any_cast<PigeonSettableMetadata>(*custom_value)
-                             .ToEncodableList()),
-          stream);
+      WriteValue(EncodableValue(std::any_cast<PigeonSettableMetadata>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(PigeonStorageFirebaseApp)) {
       stream->WriteByte(132);
-      WriteValue(
-          EncodableValue(std::any_cast<PigeonStorageFirebaseApp>(*custom_value)
-                             .ToEncodableList()),
-          stream);
+      WriteValue(EncodableValue(std::any_cast<PigeonStorageFirebaseApp>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(PigeonStorageReference)) {
       stream->WriteByte(133);
-      WriteValue(
-          EncodableValue(std::any_cast<PigeonStorageReference>(*custom_value)
-                             .ToEncodableList()),
-          stream);
+      WriteValue(EncodableValue(std::any_cast<PigeonStorageReference>(*custom_value).ToEncodableList()), stream);
       return;
     }
   }
@@ -523,1031 +500,793 @@ void FirebaseStorageHostApiCodecSerializer::WriteValue(
 
 /// The codec used by FirebaseStorageHostApi.
 const flutter::StandardMessageCodec& FirebaseStorageHostApi::GetCodec() {
-  return flutter::StandardMessageCodec::GetInstance(
-      &FirebaseStorageHostApiCodecSerializer::GetInstance());
+  return flutter::StandardMessageCodec::GetInstance(&FirebaseStorageHostApiCodecSerializer::GetInstance());
 }
 
-// Sets up an instance of `FirebaseStorageHostApi` to handle messages through
-// the `binary_messenger`.
-void FirebaseStorageHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
-                                   FirebaseStorageHostApi* api) {
+// Sets up an instance of `FirebaseStorageHostApi` to handle messages through the `binary_messenger`.
+void FirebaseStorageHostApi::SetUp(
+  flutter::BinaryMessenger* binary_messenger,
+  FirebaseStorageHostApi* api) {
   {
-    auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_storage_platform_interface."
-        "FirebaseStorageHostApi.getReferencebyPath",
-        &GetCodec());
+    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.getReferencebyPath", &GetCodec());
     if (api != nullptr) {
-      channel->SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg =
-                  std::any_cast<const PigeonStorageFirebaseApp&>(
-                      std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_path_arg = args.at(1);
-              if (encodable_path_arg.IsNull()) {
-                reply(WrapError("path_arg unexpectedly null."));
-                return;
-              }
-              const auto& path_arg = std::get<std::string>(encodable_path_arg);
-              const auto& encodable_bucket_arg = args.at(2);
-              const auto* bucket_arg =
-                  std::get_if<std::string>(&encodable_bucket_arg);
-              api->GetReferencebyPath(
-                  app_arg, path_arg, bucket_arg,
-                  [reply](ErrorOr<PigeonStorageReference>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        CustomEncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const PigeonStorageFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_path_arg = args.at(1);
+          if (encodable_path_arg.IsNull()) {
+            reply(WrapError("path_arg unexpectedly null."));
+            return;
+          }
+          const auto& path_arg = std::get<std::string>(encodable_path_arg);
+          const auto& encodable_bucket_arg = args.at(2);
+          const auto* bucket_arg = std::get_if<std::string>(&encodable_bucket_arg);
+          api->GetReferencebyPath(app_arg, path_arg, bucket_arg, [reply](ErrorOr<PigeonStorageReference>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel->SetMessageHandler(nullptr);
     }
   }
   {
-    auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_storage_platform_interface."
-        "FirebaseStorageHostApi.setMaxOperationRetryTime",
-        &GetCodec());
+    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxOperationRetryTime", &GetCodec());
     if (api != nullptr) {
-      channel->SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg =
-                  std::any_cast<const PigeonStorageFirebaseApp&>(
-                      std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_time_arg = args.at(1);
-              if (encodable_time_arg.IsNull()) {
-                reply(WrapError("time_arg unexpectedly null."));
-                return;
-              }
-              const int64_t time_arg = encodable_time_arg.LongValue();
-              api->SetMaxOperationRetryTime(
-                  app_arg, time_arg,
-                  [reply](std::optional<FlutterError>&& output) {
-                    if (output.has_value()) {
-                      reply(WrapError(output.value()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(EncodableValue());
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const PigeonStorageFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_time_arg = args.at(1);
+          if (encodable_time_arg.IsNull()) {
+            reply(WrapError("time_arg unexpectedly null."));
+            return;
+          }
+          const int64_t time_arg = encodable_time_arg.LongValue();
+          api->SetMaxOperationRetryTime(app_arg, time_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel->SetMessageHandler(nullptr);
     }
   }
   {
-    auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_storage_platform_interface."
-        "FirebaseStorageHostApi.setMaxUploadRetryTime",
-        &GetCodec());
+    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxUploadRetryTime", &GetCodec());
     if (api != nullptr) {
-      channel->SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg =
-                  std::any_cast<const PigeonStorageFirebaseApp&>(
-                      std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_time_arg = args.at(1);
-              if (encodable_time_arg.IsNull()) {
-                reply(WrapError("time_arg unexpectedly null."));
-                return;
-              }
-              const int64_t time_arg = encodable_time_arg.LongValue();
-              api->SetMaxUploadRetryTime(
-                  app_arg, time_arg,
-                  [reply](std::optional<FlutterError>&& output) {
-                    if (output.has_value()) {
-                      reply(WrapError(output.value()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(EncodableValue());
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const PigeonStorageFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_time_arg = args.at(1);
+          if (encodable_time_arg.IsNull()) {
+            reply(WrapError("time_arg unexpectedly null."));
+            return;
+          }
+          const int64_t time_arg = encodable_time_arg.LongValue();
+          api->SetMaxUploadRetryTime(app_arg, time_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel->SetMessageHandler(nullptr);
     }
   }
   {
-    auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_storage_platform_interface."
-        "FirebaseStorageHostApi.setMaxDownloadRetryTime",
-        &GetCodec());
+    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxDownloadRetryTime", &GetCodec());
     if (api != nullptr) {
-      channel->SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg =
-                  std::any_cast<const PigeonStorageFirebaseApp&>(
-                      std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_time_arg = args.at(1);
-              if (encodable_time_arg.IsNull()) {
-                reply(WrapError("time_arg unexpectedly null."));
-                return;
-              }
-              const int64_t time_arg = encodable_time_arg.LongValue();
-              api->SetMaxDownloadRetryTime(
-                  app_arg, time_arg,
-                  [reply](std::optional<FlutterError>&& output) {
-                    if (output.has_value()) {
-                      reply(WrapError(output.value()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(EncodableValue());
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const PigeonStorageFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_time_arg = args.at(1);
+          if (encodable_time_arg.IsNull()) {
+            reply(WrapError("time_arg unexpectedly null."));
+            return;
+          }
+          const int64_t time_arg = encodable_time_arg.LongValue();
+          api->SetMaxDownloadRetryTime(app_arg, time_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel->SetMessageHandler(nullptr);
     }
   }
   {
-    auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_storage_platform_interface."
-        "FirebaseStorageHostApi.useStorageEmulator",
-        &GetCodec());
+    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.useStorageEmulator", &GetCodec());
     if (api != nullptr) {
-      channel->SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg =
-                  std::any_cast<const PigeonStorageFirebaseApp&>(
-                      std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_host_arg = args.at(1);
-              if (encodable_host_arg.IsNull()) {
-                reply(WrapError("host_arg unexpectedly null."));
-                return;
-              }
-              const auto& host_arg = std::get<std::string>(encodable_host_arg);
-              const auto& encodable_port_arg = args.at(2);
-              if (encodable_port_arg.IsNull()) {
-                reply(WrapError("port_arg unexpectedly null."));
-                return;
-              }
-              const int64_t port_arg = encodable_port_arg.LongValue();
-              api->UseStorageEmulator(
-                  app_arg, host_arg, port_arg,
-                  [reply](std::optional<FlutterError>&& output) {
-                    if (output.has_value()) {
-                      reply(WrapError(output.value()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(EncodableValue());
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const PigeonStorageFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_host_arg = args.at(1);
+          if (encodable_host_arg.IsNull()) {
+            reply(WrapError("host_arg unexpectedly null."));
+            return;
+          }
+          const auto& host_arg = std::get<std::string>(encodable_host_arg);
+          const auto& encodable_port_arg = args.at(2);
+          if (encodable_port_arg.IsNull()) {
+            reply(WrapError("port_arg unexpectedly null."));
+            return;
+          }
+          const int64_t port_arg = encodable_port_arg.LongValue();
+          api->UseStorageEmulator(app_arg, host_arg, port_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel->SetMessageHandler(nullptr);
     }
   }
   {
-    auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_storage_platform_interface."
-        "FirebaseStorageHostApi.referenceDelete",
-        &GetCodec());
+    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDelete", &GetCodec());
     if (api != nullptr) {
-      channel->SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg =
-                  std::any_cast<const PigeonStorageFirebaseApp&>(
-                      std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_reference_arg = args.at(1);
-              if (encodable_reference_arg.IsNull()) {
-                reply(WrapError("reference_arg unexpectedly null."));
-                return;
-              }
-              const auto& reference_arg =
-                  std::any_cast<const PigeonStorageReference&>(
-                      std::get<CustomEncodableValue>(encodable_reference_arg));
-              api->ReferenceDelete(
-                  app_arg, reference_arg,
-                  [reply](std::optional<FlutterError>&& output) {
-                    if (output.has_value()) {
-                      reply(WrapError(output.value()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(EncodableValue());
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const PigeonStorageFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_reference_arg = args.at(1);
+          if (encodable_reference_arg.IsNull()) {
+            reply(WrapError("reference_arg unexpectedly null."));
+            return;
+          }
+          const auto& reference_arg = std::any_cast<const PigeonStorageReference&>(std::get<CustomEncodableValue>(encodable_reference_arg));
+          api->ReferenceDelete(app_arg, reference_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel->SetMessageHandler(nullptr);
     }
   }
   {
-    auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_storage_platform_interface."
-        "FirebaseStorageHostApi.referenceGetDownloadURL",
-        &GetCodec());
+    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetDownloadURL", &GetCodec());
     if (api != nullptr) {
-      channel->SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg =
-                  std::any_cast<const PigeonStorageFirebaseApp&>(
-                      std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_reference_arg = args.at(1);
-              if (encodable_reference_arg.IsNull()) {
-                reply(WrapError("reference_arg unexpectedly null."));
-                return;
-              }
-              const auto& reference_arg =
-                  std::any_cast<const PigeonStorageReference&>(
-                      std::get<CustomEncodableValue>(encodable_reference_arg));
-              api->ReferenceGetDownloadURL(
-                  app_arg, reference_arg,
-                  [reply](ErrorOr<std::string>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        EncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const PigeonStorageFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_reference_arg = args.at(1);
+          if (encodable_reference_arg.IsNull()) {
+            reply(WrapError("reference_arg unexpectedly null."));
+            return;
+          }
+          const auto& reference_arg = std::any_cast<const PigeonStorageReference&>(std::get<CustomEncodableValue>(encodable_reference_arg));
+          api->ReferenceGetDownloadURL(app_arg, reference_arg, [reply](ErrorOr<std::string>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel->SetMessageHandler(nullptr);
     }
   }
   {
-    auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_storage_platform_interface."
-        "FirebaseStorageHostApi.referenceGetMetaData",
-        &GetCodec());
+    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetMetaData", &GetCodec());
     if (api != nullptr) {
-      channel->SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg =
-                  std::any_cast<const PigeonStorageFirebaseApp&>(
-                      std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_reference_arg = args.at(1);
-              if (encodable_reference_arg.IsNull()) {
-                reply(WrapError("reference_arg unexpectedly null."));
-                return;
-              }
-              const auto& reference_arg =
-                  std::any_cast<const PigeonStorageReference&>(
-                      std::get<CustomEncodableValue>(encodable_reference_arg));
-              api->ReferenceGetMetaData(
-                  app_arg, reference_arg,
-                  [reply](ErrorOr<PigeonFullMetaData>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        CustomEncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const PigeonStorageFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_reference_arg = args.at(1);
+          if (encodable_reference_arg.IsNull()) {
+            reply(WrapError("reference_arg unexpectedly null."));
+            return;
+          }
+          const auto& reference_arg = std::any_cast<const PigeonStorageReference&>(std::get<CustomEncodableValue>(encodable_reference_arg));
+          api->ReferenceGetMetaData(app_arg, reference_arg, [reply](ErrorOr<PigeonFullMetaData>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel->SetMessageHandler(nullptr);
     }
   }
   {
-    auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_storage_platform_interface."
-        "FirebaseStorageHostApi.referenceList",
-        &GetCodec());
+    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceList", &GetCodec());
     if (api != nullptr) {
-      channel->SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg =
-                  std::any_cast<const PigeonStorageFirebaseApp&>(
-                      std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_reference_arg = args.at(1);
-              if (encodable_reference_arg.IsNull()) {
-                reply(WrapError("reference_arg unexpectedly null."));
-                return;
-              }
-              const auto& reference_arg =
-                  std::any_cast<const PigeonStorageReference&>(
-                      std::get<CustomEncodableValue>(encodable_reference_arg));
-              const auto& encodable_options_arg = args.at(2);
-              if (encodable_options_arg.IsNull()) {
-                reply(WrapError("options_arg unexpectedly null."));
-                return;
-              }
-              const auto& options_arg = std::any_cast<const PigeonListOptions&>(
-                  std::get<CustomEncodableValue>(encodable_options_arg));
-              api->ReferenceList(app_arg, reference_arg, options_arg,
-                                 [reply](ErrorOr<PigeonListResult>&& output) {
-                                   if (output.has_error()) {
-                                     reply(WrapError(output.error()));
-                                     return;
-                                   }
-                                   EncodableList wrapped;
-                                   wrapped.push_back(CustomEncodableValue(
-                                       std::move(output).TakeValue()));
-                                   reply(EncodableValue(std::move(wrapped)));
-                                 });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const PigeonStorageFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_reference_arg = args.at(1);
+          if (encodable_reference_arg.IsNull()) {
+            reply(WrapError("reference_arg unexpectedly null."));
+            return;
+          }
+          const auto& reference_arg = std::any_cast<const PigeonStorageReference&>(std::get<CustomEncodableValue>(encodable_reference_arg));
+          const auto& encodable_options_arg = args.at(2);
+          if (encodable_options_arg.IsNull()) {
+            reply(WrapError("options_arg unexpectedly null."));
+            return;
+          }
+          const auto& options_arg = std::any_cast<const PigeonListOptions&>(std::get<CustomEncodableValue>(encodable_options_arg));
+          api->ReferenceList(app_arg, reference_arg, options_arg, [reply](ErrorOr<PigeonListResult>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel->SetMessageHandler(nullptr);
     }
   }
   {
-    auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_storage_platform_interface."
-        "FirebaseStorageHostApi.referenceListAll",
-        &GetCodec());
+    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceListAll", &GetCodec());
     if (api != nullptr) {
-      channel->SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg =
-                  std::any_cast<const PigeonStorageFirebaseApp&>(
-                      std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_reference_arg = args.at(1);
-              if (encodable_reference_arg.IsNull()) {
-                reply(WrapError("reference_arg unexpectedly null."));
-                return;
-              }
-              const auto& reference_arg =
-                  std::any_cast<const PigeonStorageReference&>(
-                      std::get<CustomEncodableValue>(encodable_reference_arg));
-              api->ReferenceListAll(
-                  app_arg, reference_arg,
-                  [reply](ErrorOr<PigeonListResult>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        CustomEncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const PigeonStorageFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_reference_arg = args.at(1);
+          if (encodable_reference_arg.IsNull()) {
+            reply(WrapError("reference_arg unexpectedly null."));
+            return;
+          }
+          const auto& reference_arg = std::any_cast<const PigeonStorageReference&>(std::get<CustomEncodableValue>(encodable_reference_arg));
+          api->ReferenceListAll(app_arg, reference_arg, [reply](ErrorOr<PigeonListResult>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel->SetMessageHandler(nullptr);
     }
   }
   {
-    auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_storage_platform_interface."
-        "FirebaseStorageHostApi.referenceGetData",
-        &GetCodec());
+    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetData", &GetCodec());
     if (api != nullptr) {
-      channel->SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg =
-                  std::any_cast<const PigeonStorageFirebaseApp&>(
-                      std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_reference_arg = args.at(1);
-              if (encodable_reference_arg.IsNull()) {
-                reply(WrapError("reference_arg unexpectedly null."));
-                return;
-              }
-              const auto& reference_arg =
-                  std::any_cast<const PigeonStorageReference&>(
-                      std::get<CustomEncodableValue>(encodable_reference_arg));
-              const auto& encodable_max_size_arg = args.at(2);
-              if (encodable_max_size_arg.IsNull()) {
-                reply(WrapError("max_size_arg unexpectedly null."));
-                return;
-              }
-              const int64_t max_size_arg = encodable_max_size_arg.LongValue();
-              api->ReferenceGetData(
-                  app_arg, reference_arg, max_size_arg,
-                  [reply](
-                      ErrorOr<std::optional<std::vector<uint8_t>>>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    auto output_optional = std::move(output).TakeValue();
-                    if (output_optional) {
-                      wrapped.push_back(
-                          EncodableValue(std::move(output_optional).value()));
-                    } else {
-                      wrapped.push_back(EncodableValue());
-                    }
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const PigeonStorageFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_reference_arg = args.at(1);
+          if (encodable_reference_arg.IsNull()) {
+            reply(WrapError("reference_arg unexpectedly null."));
+            return;
+          }
+          const auto& reference_arg = std::any_cast<const PigeonStorageReference&>(std::get<CustomEncodableValue>(encodable_reference_arg));
+          const auto& encodable_max_size_arg = args.at(2);
+          if (encodable_max_size_arg.IsNull()) {
+            reply(WrapError("max_size_arg unexpectedly null."));
+            return;
+          }
+          const int64_t max_size_arg = encodable_max_size_arg.LongValue();
+          api->ReferenceGetData(app_arg, reference_arg, max_size_arg, [reply](ErrorOr<std::optional<std::vector<uint8_t>>>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
             }
+            EncodableList wrapped;
+            auto output_optional = std::move(output).TakeValue();
+            if (output_optional) {
+              wrapped.push_back(EncodableValue(std::move(output_optional).value()));
+            } else {
+              wrapped.push_back(EncodableValue());
+            }
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel->SetMessageHandler(nullptr);
     }
   }
   {
-    auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_storage_platform_interface."
-        "FirebaseStorageHostApi.referencePutData",
-        &GetCodec());
+    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutData", &GetCodec());
     if (api != nullptr) {
-      channel->SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg =
-                  std::any_cast<const PigeonStorageFirebaseApp&>(
-                      std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_reference_arg = args.at(1);
-              if (encodable_reference_arg.IsNull()) {
-                reply(WrapError("reference_arg unexpectedly null."));
-                return;
-              }
-              const auto& reference_arg =
-                  std::any_cast<const PigeonStorageReference&>(
-                      std::get<CustomEncodableValue>(encodable_reference_arg));
-              const auto& encodable_data_arg = args.at(2);
-              if (encodable_data_arg.IsNull()) {
-                reply(WrapError("data_arg unexpectedly null."));
-                return;
-              }
-              const auto& data_arg =
-                  std::get<std::vector<uint8_t>>(encodable_data_arg);
-              const auto& encodable_settable_meta_data_arg = args.at(3);
-              if (encodable_settable_meta_data_arg.IsNull()) {
-                reply(WrapError("settable_meta_data_arg unexpectedly null."));
-                return;
-              }
-              const auto& settable_meta_data_arg =
-                  std::any_cast<const PigeonSettableMetadata&>(
-                      std::get<CustomEncodableValue>(
-                          encodable_settable_meta_data_arg));
-              const auto& encodable_handle_arg = args.at(4);
-              if (encodable_handle_arg.IsNull()) {
-                reply(WrapError("handle_arg unexpectedly null."));
-                return;
-              }
-              const int64_t handle_arg = encodable_handle_arg.LongValue();
-              api->ReferencePutData(
-                  app_arg, reference_arg, data_arg, settable_meta_data_arg,
-                  handle_arg, [reply](ErrorOr<std::string>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        EncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const PigeonStorageFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_reference_arg = args.at(1);
+          if (encodable_reference_arg.IsNull()) {
+            reply(WrapError("reference_arg unexpectedly null."));
+            return;
+          }
+          const auto& reference_arg = std::any_cast<const PigeonStorageReference&>(std::get<CustomEncodableValue>(encodable_reference_arg));
+          const auto& encodable_data_arg = args.at(2);
+          if (encodable_data_arg.IsNull()) {
+            reply(WrapError("data_arg unexpectedly null."));
+            return;
+          }
+          const auto& data_arg = std::get<std::vector<uint8_t>>(encodable_data_arg);
+          const auto& encodable_settable_meta_data_arg = args.at(3);
+          if (encodable_settable_meta_data_arg.IsNull()) {
+            reply(WrapError("settable_meta_data_arg unexpectedly null."));
+            return;
+          }
+          const auto& settable_meta_data_arg = std::any_cast<const PigeonSettableMetadata&>(std::get<CustomEncodableValue>(encodable_settable_meta_data_arg));
+          const auto& encodable_handle_arg = args.at(4);
+          if (encodable_handle_arg.IsNull()) {
+            reply(WrapError("handle_arg unexpectedly null."));
+            return;
+          }
+          const int64_t handle_arg = encodable_handle_arg.LongValue();
+          api->ReferencePutData(app_arg, reference_arg, data_arg, settable_meta_data_arg, handle_arg, [reply](ErrorOr<std::string>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel->SetMessageHandler(nullptr);
     }
   }
   {
-    auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_storage_platform_interface."
-        "FirebaseStorageHostApi.referencePutString",
-        &GetCodec());
+    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString", &GetCodec());
     if (api != nullptr) {
-      channel->SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg =
-                  std::any_cast<const PigeonStorageFirebaseApp&>(
-                      std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_reference_arg = args.at(1);
-              if (encodable_reference_arg.IsNull()) {
-                reply(WrapError("reference_arg unexpectedly null."));
-                return;
-              }
-              const auto& reference_arg =
-                  std::any_cast<const PigeonStorageReference&>(
-                      std::get<CustomEncodableValue>(encodable_reference_arg));
-              const auto& encodable_data_arg = args.at(2);
-              if (encodable_data_arg.IsNull()) {
-                reply(WrapError("data_arg unexpectedly null."));
-                return;
-              }
-              const auto& data_arg = std::get<std::string>(encodable_data_arg);
-              const auto& encodable_format_arg = args.at(3);
-              if (encodable_format_arg.IsNull()) {
-                reply(WrapError("format_arg unexpectedly null."));
-                return;
-              }
-              const int64_t format_arg = encodable_format_arg.LongValue();
-              const auto& encodable_settable_meta_data_arg = args.at(4);
-              if (encodable_settable_meta_data_arg.IsNull()) {
-                reply(WrapError("settable_meta_data_arg unexpectedly null."));
-                return;
-              }
-              const auto& settable_meta_data_arg =
-                  std::any_cast<const PigeonSettableMetadata&>(
-                      std::get<CustomEncodableValue>(
-                          encodable_settable_meta_data_arg));
-              const auto& encodable_handle_arg = args.at(5);
-              if (encodable_handle_arg.IsNull()) {
-                reply(WrapError("handle_arg unexpectedly null."));
-                return;
-              }
-              const int64_t handle_arg = encodable_handle_arg.LongValue();
-              api->ReferencePutString(
-                  app_arg, reference_arg, data_arg, format_arg,
-                  settable_meta_data_arg, handle_arg,
-                  [reply](ErrorOr<std::string>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        EncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const PigeonStorageFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_reference_arg = args.at(1);
+          if (encodable_reference_arg.IsNull()) {
+            reply(WrapError("reference_arg unexpectedly null."));
+            return;
+          }
+          const auto& reference_arg = std::any_cast<const PigeonStorageReference&>(std::get<CustomEncodableValue>(encodable_reference_arg));
+          const auto& encodable_data_arg = args.at(2);
+          if (encodable_data_arg.IsNull()) {
+            reply(WrapError("data_arg unexpectedly null."));
+            return;
+          }
+          const auto& data_arg = std::get<std::string>(encodable_data_arg);
+          const auto& encodable_format_arg = args.at(3);
+          if (encodable_format_arg.IsNull()) {
+            reply(WrapError("format_arg unexpectedly null."));
+            return;
+          }
+          const int64_t format_arg = encodable_format_arg.LongValue();
+          const auto& encodable_settable_meta_data_arg = args.at(4);
+          if (encodable_settable_meta_data_arg.IsNull()) {
+            reply(WrapError("settable_meta_data_arg unexpectedly null."));
+            return;
+          }
+          const auto& settable_meta_data_arg = std::any_cast<const PigeonSettableMetadata&>(std::get<CustomEncodableValue>(encodable_settable_meta_data_arg));
+          const auto& encodable_handle_arg = args.at(5);
+          if (encodable_handle_arg.IsNull()) {
+            reply(WrapError("handle_arg unexpectedly null."));
+            return;
+          }
+          const int64_t handle_arg = encodable_handle_arg.LongValue();
+          api->ReferencePutString(app_arg, reference_arg, data_arg, format_arg, settable_meta_data_arg, handle_arg, [reply](ErrorOr<std::string>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel->SetMessageHandler(nullptr);
     }
   }
   {
-    auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_storage_platform_interface."
-        "FirebaseStorageHostApi.referencePutFile",
-        &GetCodec());
+    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile", &GetCodec());
     if (api != nullptr) {
-      channel->SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg =
-                  std::any_cast<const PigeonStorageFirebaseApp&>(
-                      std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_reference_arg = args.at(1);
-              if (encodable_reference_arg.IsNull()) {
-                reply(WrapError("reference_arg unexpectedly null."));
-                return;
-              }
-              const auto& reference_arg =
-                  std::any_cast<const PigeonStorageReference&>(
-                      std::get<CustomEncodableValue>(encodable_reference_arg));
-              const auto& encodable_file_path_arg = args.at(2);
-              if (encodable_file_path_arg.IsNull()) {
-                reply(WrapError("file_path_arg unexpectedly null."));
-                return;
-              }
-              const auto& file_path_arg =
-                  std::get<std::string>(encodable_file_path_arg);
-              const auto& encodable_settable_meta_data_arg = args.at(3);
-              const auto* settable_meta_data_arg =
-                  &(std::any_cast<const PigeonSettableMetadata&>(
-                      std::get<CustomEncodableValue>(
-                          encodable_settable_meta_data_arg)));
-              const auto& encodable_handle_arg = args.at(4);
-              if (encodable_handle_arg.IsNull()) {
-                reply(WrapError("handle_arg unexpectedly null."));
-                return;
-              }
-              const int64_t handle_arg = encodable_handle_arg.LongValue();
-              api->ReferencePutFile(
-                  app_arg, reference_arg, file_path_arg, settable_meta_data_arg,
-                  handle_arg, [reply](ErrorOr<std::string>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        EncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const PigeonStorageFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_reference_arg = args.at(1);
+          if (encodable_reference_arg.IsNull()) {
+            reply(WrapError("reference_arg unexpectedly null."));
+            return;
+          }
+          const auto& reference_arg = std::any_cast<const PigeonStorageReference&>(std::get<CustomEncodableValue>(encodable_reference_arg));
+          const auto& encodable_file_path_arg = args.at(2);
+          if (encodable_file_path_arg.IsNull()) {
+            reply(WrapError("file_path_arg unexpectedly null."));
+            return;
+          }
+          const auto& file_path_arg = std::get<std::string>(encodable_file_path_arg);
+          const auto& encodable_settable_meta_data_arg = args.at(3);
+          const auto* settable_meta_data_arg = &(std::any_cast<const PigeonSettableMetadata&>(std::get<CustomEncodableValue>(encodable_settable_meta_data_arg)));
+          const auto& encodable_handle_arg = args.at(4);
+          if (encodable_handle_arg.IsNull()) {
+            reply(WrapError("handle_arg unexpectedly null."));
+            return;
+          }
+          const int64_t handle_arg = encodable_handle_arg.LongValue();
+          api->ReferencePutFile(app_arg, reference_arg, file_path_arg, settable_meta_data_arg, handle_arg, [reply](ErrorOr<std::string>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel->SetMessageHandler(nullptr);
     }
   }
   {
-    auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_storage_platform_interface."
-        "FirebaseStorageHostApi.referenceDownloadFile",
-        &GetCodec());
+    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDownloadFile", &GetCodec());
     if (api != nullptr) {
-      channel->SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg =
-                  std::any_cast<const PigeonStorageFirebaseApp&>(
-                      std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_reference_arg = args.at(1);
-              if (encodable_reference_arg.IsNull()) {
-                reply(WrapError("reference_arg unexpectedly null."));
-                return;
-              }
-              const auto& reference_arg =
-                  std::any_cast<const PigeonStorageReference&>(
-                      std::get<CustomEncodableValue>(encodable_reference_arg));
-              const auto& encodable_file_path_arg = args.at(2);
-              if (encodable_file_path_arg.IsNull()) {
-                reply(WrapError("file_path_arg unexpectedly null."));
-                return;
-              }
-              const auto& file_path_arg =
-                  std::get<std::string>(encodable_file_path_arg);
-              const auto& encodable_handle_arg = args.at(3);
-              if (encodable_handle_arg.IsNull()) {
-                reply(WrapError("handle_arg unexpectedly null."));
-                return;
-              }
-              const int64_t handle_arg = encodable_handle_arg.LongValue();
-              api->ReferenceDownloadFile(
-                  app_arg, reference_arg, file_path_arg, handle_arg,
-                  [reply](ErrorOr<std::string>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        EncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const PigeonStorageFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_reference_arg = args.at(1);
+          if (encodable_reference_arg.IsNull()) {
+            reply(WrapError("reference_arg unexpectedly null."));
+            return;
+          }
+          const auto& reference_arg = std::any_cast<const PigeonStorageReference&>(std::get<CustomEncodableValue>(encodable_reference_arg));
+          const auto& encodable_file_path_arg = args.at(2);
+          if (encodable_file_path_arg.IsNull()) {
+            reply(WrapError("file_path_arg unexpectedly null."));
+            return;
+          }
+          const auto& file_path_arg = std::get<std::string>(encodable_file_path_arg);
+          const auto& encodable_handle_arg = args.at(3);
+          if (encodable_handle_arg.IsNull()) {
+            reply(WrapError("handle_arg unexpectedly null."));
+            return;
+          }
+          const int64_t handle_arg = encodable_handle_arg.LongValue();
+          api->ReferenceDownloadFile(app_arg, reference_arg, file_path_arg, handle_arg, [reply](ErrorOr<std::string>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel->SetMessageHandler(nullptr);
     }
   }
   {
-    auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_storage_platform_interface."
-        "FirebaseStorageHostApi.referenceUpdateMetadata",
-        &GetCodec());
+    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceUpdateMetadata", &GetCodec());
     if (api != nullptr) {
-      channel->SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg =
-                  std::any_cast<const PigeonStorageFirebaseApp&>(
-                      std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_reference_arg = args.at(1);
-              if (encodable_reference_arg.IsNull()) {
-                reply(WrapError("reference_arg unexpectedly null."));
-                return;
-              }
-              const auto& reference_arg =
-                  std::any_cast<const PigeonStorageReference&>(
-                      std::get<CustomEncodableValue>(encodable_reference_arg));
-              const auto& encodable_metadata_arg = args.at(2);
-              if (encodable_metadata_arg.IsNull()) {
-                reply(WrapError("metadata_arg unexpectedly null."));
-                return;
-              }
-              const auto& metadata_arg =
-                  std::any_cast<const PigeonSettableMetadata&>(
-                      std::get<CustomEncodableValue>(encodable_metadata_arg));
-              api->ReferenceUpdateMetadata(
-                  app_arg, reference_arg, metadata_arg,
-                  [reply](ErrorOr<PigeonFullMetaData>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        CustomEncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const PigeonStorageFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_reference_arg = args.at(1);
+          if (encodable_reference_arg.IsNull()) {
+            reply(WrapError("reference_arg unexpectedly null."));
+            return;
+          }
+          const auto& reference_arg = std::any_cast<const PigeonStorageReference&>(std::get<CustomEncodableValue>(encodable_reference_arg));
+          const auto& encodable_metadata_arg = args.at(2);
+          if (encodable_metadata_arg.IsNull()) {
+            reply(WrapError("metadata_arg unexpectedly null."));
+            return;
+          }
+          const auto& metadata_arg = std::any_cast<const PigeonSettableMetadata&>(std::get<CustomEncodableValue>(encodable_metadata_arg));
+          api->ReferenceUpdateMetadata(app_arg, reference_arg, metadata_arg, [reply](ErrorOr<PigeonFullMetaData>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel->SetMessageHandler(nullptr);
     }
   }
   {
-    auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_storage_platform_interface."
-        "FirebaseStorageHostApi.taskPause",
-        &GetCodec());
+    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskPause", &GetCodec());
     if (api != nullptr) {
-      channel->SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg =
-                  std::any_cast<const PigeonStorageFirebaseApp&>(
-                      std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_handle_arg = args.at(1);
-              if (encodable_handle_arg.IsNull()) {
-                reply(WrapError("handle_arg unexpectedly null."));
-                return;
-              }
-              const int64_t handle_arg = encodable_handle_arg.LongValue();
-              api->TaskPause(
-                  app_arg, handle_arg, [reply](ErrorOr<EncodableMap>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        EncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const PigeonStorageFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_handle_arg = args.at(1);
+          if (encodable_handle_arg.IsNull()) {
+            reply(WrapError("handle_arg unexpectedly null."));
+            return;
+          }
+          const int64_t handle_arg = encodable_handle_arg.LongValue();
+          api->TaskPause(app_arg, handle_arg, [reply](ErrorOr<EncodableMap>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel->SetMessageHandler(nullptr);
     }
   }
   {
-    auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_storage_platform_interface."
-        "FirebaseStorageHostApi.taskResume",
-        &GetCodec());
+    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskResume", &GetCodec());
     if (api != nullptr) {
-      channel->SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg =
-                  std::any_cast<const PigeonStorageFirebaseApp&>(
-                      std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_handle_arg = args.at(1);
-              if (encodable_handle_arg.IsNull()) {
-                reply(WrapError("handle_arg unexpectedly null."));
-                return;
-              }
-              const int64_t handle_arg = encodable_handle_arg.LongValue();
-              api->TaskResume(
-                  app_arg, handle_arg, [reply](ErrorOr<EncodableMap>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        EncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const PigeonStorageFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_handle_arg = args.at(1);
+          if (encodable_handle_arg.IsNull()) {
+            reply(WrapError("handle_arg unexpectedly null."));
+            return;
+          }
+          const int64_t handle_arg = encodable_handle_arg.LongValue();
+          api->TaskResume(app_arg, handle_arg, [reply](ErrorOr<EncodableMap>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel->SetMessageHandler(nullptr);
     }
   }
   {
-    auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_storage_platform_interface."
-        "FirebaseStorageHostApi.taskCancel",
-        &GetCodec());
+    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskCancel", &GetCodec());
     if (api != nullptr) {
-      channel->SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg =
-                  std::any_cast<const PigeonStorageFirebaseApp&>(
-                      std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_handle_arg = args.at(1);
-              if (encodable_handle_arg.IsNull()) {
-                reply(WrapError("handle_arg unexpectedly null."));
-                return;
-              }
-              const int64_t handle_arg = encodable_handle_arg.LongValue();
-              api->TaskCancel(
-                  app_arg, handle_arg, [reply](ErrorOr<EncodableMap>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        EncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const PigeonStorageFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_handle_arg = args.at(1);
+          if (encodable_handle_arg.IsNull()) {
+            reply(WrapError("handle_arg unexpectedly null."));
+            return;
+          }
+          const int64_t handle_arg = encodable_handle_arg.LongValue();
+          api->TaskCancel(app_arg, handle_arg, [reply](ErrorOr<EncodableMap>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel->SetMessageHandler(nullptr);
     }
   }
 }
 
-EncodableValue FirebaseStorageHostApi::WrapError(
-    std::string_view error_message) {
-  return EncodableValue(
-      EncodableList{EncodableValue(std::string(error_message)),
-                    EncodableValue("Error"), EncodableValue()});
+EncodableValue FirebaseStorageHostApi::WrapError(std::string_view error_message) {
+  return EncodableValue(EncodableList{
+    EncodableValue(std::string(error_message)),
+    EncodableValue("Error"),
+    EncodableValue()
+  });
 }
 
 EncodableValue FirebaseStorageHostApi::WrapError(const FlutterError& error) {
-  return EncodableValue(EncodableList{EncodableValue(error.code()),
-                                      EncodableValue(error.message()),
-                                      error.details()});
+  return EncodableValue(EncodableList{
+    EncodableValue(error.code()),
+    EncodableValue(error.message()),
+    error.details()
+  });
 }
 
 }  // namespace firebase_storage_windows
