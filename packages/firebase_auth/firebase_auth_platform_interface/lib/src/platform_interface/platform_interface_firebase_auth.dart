@@ -61,6 +61,8 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
     required Map<dynamic, dynamic> pluginConstants,
   }) {
     var currentUser = pluginConstants['APP_CURRENT_USER'];
+    print('pluginConstants: $pluginConstants');
+    print('currentUser: $currentUser');
 
     if (currentUser != null) {
       currentUser as List<Object?>;
