@@ -5,17 +5,28 @@
 import Foundation
 import FirebaseStorage
 
+#if canImport(firebase_core)
+import firebase_core
+#else
+import firebase_core_shared
+#endif
+
 #if os(iOS)
 import Flutter
 #elseif os(macOS)
 import FlutterMacOS
 #endif
 
+extension FlutterError: Error {}
+
+@objc(FLTFirebaseStoragePlugin)
 final class FLTFirebaseStoragePluginSwift: NSObject, FlutterPlugin, FirebaseStorageHostApi {
   private var channel: FlutterMethodChannel?
   private var messenger: FlutterBinaryMessenger?
   private var eventChannels: [String: FlutterEventChannel] = [:]
   private var streamHandlers: [String: FlutterStreamHandler] = [:]
+  private var handleToTask: [Int64: AnyObject] = [:]
+  private var handleToPath: [Int64: String] = [:]
 
   static func register(with registrar: FlutterPluginRegistrar) {
     let channelName = "plugins.flutter.io/firebase_storage"
@@ -24,7 +35,7 @@ final class FLTFirebaseStoragePluginSwift: NSObject, FlutterPlugin, FirebaseStor
     instance.channel = channel
     instance.messenger = registrar.messenger()
     registrar.addMethodCallDelegate(instance, channel: channel)
-    FirebaseStorageHostApiSetup(registrar.messenger(), instance)
+    FirebaseStorageHostApiSetup.setUp(binaryMessenger: registrar.messenger(), api: instance)
   }
 
   func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -33,7 +44,7 @@ final class FLTFirebaseStoragePluginSwift: NSObject, FlutterPlugin, FirebaseStor
 
   private func storage(app: PigeonStorageFirebaseApp) -> Storage {
     let base = "gs://" + app.bucket
-    let firApp = FLTFirebasePlugin.firebaseAppNamed(app.appName)
+    let firApp = FLTFirebasePlugin.firebaseAppNamed(app.appName)!
     return Storage.storage(app: firApp, url: base)
   }
 
@@ -42,12 +53,12 @@ final class FLTFirebaseStoragePluginSwift: NSObject, FlutterPlugin, FirebaseStor
   }
 
   private func toPigeon(_ ref: StorageReference) -> PigeonStorageReference {
-    return PigeonStorageReference.make(withBucket: ref.bucket, fullPath: ref.fullPath, name: ref.name)
+    return PigeonStorageReference(bucket: ref.bucket, fullPath: ref.fullPath, name: ref.name)
   }
 
   func getReferencebyPath(app: PigeonStorageFirebaseApp, path: String, bucket: String?, completion: @escaping (Result<PigeonStorageReference, Error>) -> Void) {
     let r = storage(app: app).reference(withPath: path)
-    completion(.success(PigeonStorageReference.make(withBucket: bucket, fullPath: r.fullPath, name: r.name)))
+    completion(.success(PigeonStorageReference(bucket: r.bucket, fullPath: r.fullPath, name: r.name)))
   }
 
   func setMaxOperationRetryTime(app: PigeonStorageFirebaseApp, time: Int64, completion: @escaping (Result<Void, Error>) -> Void) {
@@ -87,7 +98,7 @@ final class FLTFirebaseStoragePluginSwift: NSObject, FlutterPlugin, FirebaseStor
   func referenceGetMetaData(app: PigeonStorageFirebaseApp, reference: PigeonStorageReference, completion: @escaping (Result<PigeonFullMetaData, Error>) -> Void) {
     ref(app: app, reference: reference).getMetadata { md, error in
       if let e = error { completion(.failure(self.toFlutterError(e))) } else {
-        completion(.success(PigeonFullMetaData.make(withMetadata: self.metaToDict(md))))
+        completion(.success(PigeonFullMetaData(metadata: self.metaToDict(md))))
       }
     }
   }
@@ -100,9 +111,9 @@ final class FLTFirebaseStoragePluginSwift: NSObject, FlutterPlugin, FirebaseStor
       }
     }
     if let token = options.pageToken {
-      r.list(maxResults: Int(options.maxResults), pageToken: token, completion: block)
+      r.list(maxResults: options.maxResults, pageToken: token, completion: block)
     } else {
-      r.list(maxResults: Int(options.maxResults), completion: block)
+      r.list(maxResults: options.maxResults, completion: block)
     }
   }
 
@@ -112,16 +123,22 @@ final class FLTFirebaseStoragePluginSwift: NSObject, FlutterPlugin, FirebaseStor
     }
   }
 
-  func referenceGetData(app: PigeonStorageFirebaseApp, reference: PigeonStorageReference, maxSize: Int64, completion: @escaping (Result<Data?, Error>) -> Void) {
-    ref(app: app, reference: reference).getData(maxSize: Int(maxSize)) { data, error in
-      if let e = error { completion(.failure(self.toFlutterError(e))) } else { completion(.success(data)) }
+  func referenceGetData(app: PigeonStorageFirebaseApp, reference: PigeonStorageReference, maxSize: Int64, completion: @escaping (Result<FlutterStandardTypedData?, Error>) -> Void) {
+    ref(app: app, reference: reference).getData(maxSize: maxSize) { data, error in
+      if let e = error {
+        completion(.failure(self.toFlutterError(e)))
+      } else if let data = data {
+        completion(.success(FlutterStandardTypedData(bytes: data)))
+      } else {
+        completion(.success(nil))
+      }
     }
   }
 
-  func referencePutData(app: PigeonStorageFirebaseApp, reference: PigeonStorageReference, data: Data, settableMetaData: PigeonSettableMetadata, handle: Int64, completion: @escaping (Result<String, Error>) -> Void) {
+  func referencePutData(app: PigeonStorageFirebaseApp, reference: PigeonStorageReference, data: FlutterStandardTypedData, settableMetaData: PigeonSettableMetadata, handle: Int64, completion: @escaping (Result<String, Error>) -> Void) {
     let r = ref(app: app, reference: reference)
-    let task = r.putData(data, metadata: toMeta(settableMetaData))
-    completion(.success(registerTask(task: task, appName: r.storage.app.name)))
+    let task = r.putData(data.data, metadata: toMeta(settableMetaData))
+    completion(.success(registerTask(task: task, appName: r.storage.app.name, handle: handle, path: r.fullPath)))
   }
 
   func referencePutString(app: PigeonStorageFirebaseApp, reference: PigeonStorageReference, data: String, format: Int64, settableMetaData: PigeonSettableMetadata, handle: Int64, completion: @escaping (Result<String, Error>) -> Void) {
@@ -131,7 +148,7 @@ final class FLTFirebaseStoragePluginSwift: NSObject, FlutterPlugin, FirebaseStor
     else if format == 2 { d = Data(base64Encoded: data.replacingOccurrences(of: "-", with: "+").replacingOccurrences(of: "_", with: "/").padding(toLength: ((data.count+3)/4)*4, withPad: "=", startingAt: 0)) ?? Data() }
     else { d = Data() }
     let task = r.putData(d, metadata: toMeta(settableMetaData))
-    completion(.success(registerTask(task: task, appName: r.storage.app.name)))
+    completion(.success(registerTask(task: task, appName: r.storage.app.name, handle: handle, path: r.fullPath)))
   }
 
   func referencePutFile(app: PigeonStorageFirebaseApp, reference: PigeonStorageReference, filePath: String, settableMetaData: PigeonSettableMetadata?, handle: Int64, completion: @escaping (Result<String, Error>) -> Void) {
@@ -139,32 +156,56 @@ final class FLTFirebaseStoragePluginSwift: NSObject, FlutterPlugin, FirebaseStor
     let url = URL(fileURLWithPath: filePath)
     let task: StorageUploadTask
     if let md = settableMetaData { task = r.putFile(from: url, metadata: toMeta(md)) } else { task = r.putFile(from: url) }
-    completion(.success(registerTask(task: task, appName: r.storage.app.name)))
+    completion(.success(registerTask(task: task, appName: r.storage.app.name, handle: handle, path: r.fullPath)))
   }
 
   func referenceDownloadFile(app: PigeonStorageFirebaseApp, reference: PigeonStorageReference, filePath: String, handle: Int64, completion: @escaping (Result<String, Error>) -> Void) {
     let r = ref(app: app, reference: reference)
     let url = URL(fileURLWithPath: filePath)
     let task = r.write(toFile: url)
-    completion(.success(registerTask(task: task, appName: r.storage.app.name)))
+    completion(.success(registerTask(task: task, appName: r.storage.app.name, handle: handle, path: r.fullPath)))
   }
 
   func referenceUpdateMetadata(app: PigeonStorageFirebaseApp, reference: PigeonStorageReference, metadata: PigeonSettableMetadata, completion: @escaping (Result<PigeonFullMetaData, Error>) -> Void) {
     ref(app: app, reference: reference).updateMetadata(toMeta(metadata)) { md, error in
-      if let e = error { completion(.failure(self.toFlutterError(e))) } else { completion(.success(PigeonFullMetaData.make(withMetadata: self.metaToDict(md)))) }
+      if let e = error { completion(.failure(self.toFlutterError(e))) } else { completion(.success(PigeonFullMetaData(metadata: self.metaToDict(md)))) }
     }
   }
 
   func taskPause(app: PigeonStorageFirebaseApp, handle: Int64, completion: @escaping (Result<[String: Any], Error>) -> Void) {
-    completion(.success(["status": false]))
+    if let task = handleToTask[handle] as? StorageUploadTask {
+      task.pause()
+      completion(.success(["status": true, "snapshot": currentSnapshot(handle: handle)]))
+    } else if let task = handleToTask[handle] as? StorageDownloadTask {
+      task.pause()
+      completion(.success(["status": true, "snapshot": currentSnapshot(handle: handle)]))
+    } else {
+      completion(.success(["status": false]))
+    }
   }
 
   func taskResume(app: PigeonStorageFirebaseApp, handle: Int64, completion: @escaping (Result<[String: Any], Error>) -> Void) {
-    completion(.success(["status": false]))
+    if let task = handleToTask[handle] as? StorageUploadTask {
+      task.resume()
+      completion(.success(["status": true, "snapshot": currentSnapshot(handle: handle)]))
+    } else if let task = handleToTask[handle] as? StorageDownloadTask {
+      task.resume()
+      completion(.success(["status": true, "snapshot": currentSnapshot(handle: handle)]))
+    } else {
+      completion(.success(["status": false]))
+    }
   }
 
   func taskCancel(app: PigeonStorageFirebaseApp, handle: Int64, completion: @escaping (Result<[String: Any], Error>) -> Void) {
-    completion(.success(["status": false]))
+    if let task = handleToTask[handle] as? StorageUploadTask {
+      task.cancel()
+      completion(.success(["status": true, "snapshot": currentSnapshot(handle: handle)]))
+    } else if let task = handleToTask[handle] as? StorageDownloadTask {
+      task.cancel()
+      completion(.success(["status": true, "snapshot": currentSnapshot(handle: handle)]))
+    } else {
+      completion(.success(["status": false]))
+    }
   }
 
   private func toMeta(_ m: PigeonSettableMetadata) -> StorageMetadata {
@@ -202,21 +243,64 @@ final class FLTFirebaseStoragePluginSwift: NSObject, FlutterPlugin, FirebaseStor
   private func listToPigeon(_ list: StorageListResult) -> PigeonListResult {
     let items = list.items.map { toPigeon($0) }
     let prefixes = list.prefixes.map { toPigeon($0) }
-    return PigeonListResult.make(withItems: items, pageToken: list.pageToken, prefixs: prefixes)
+    let itemsOpt: [PigeonStorageReference?] = items.map { Optional($0) }
+    let prefixesOpt: [PigeonStorageReference?] = prefixes.map { Optional($0) }
+    return PigeonListResult(items: itemsOpt, pageToken: list.pageToken, prefixs: prefixesOpt)
   }
 
-  private func registerTask(task: StorageObservableTask, appName: String) -> String {
+  private func registerTask(task: StorageObservableTask, appName: String, handle: Int64, path: String) -> String {
     let uuid = UUID().uuidString
     let channelName = "plugins.flutter.io/firebase_storage/taskEvent/\(uuid)"
     let channel = FlutterEventChannel(name: channelName, binaryMessenger: messenger!)
-    channel.setStreamHandler(FLTTaskStateChannelStreamHandler(task: task, storagePlugin: nil, channelName: channelName, handle: 0))
+    let storageInstance = Storage.storage(app: FLTFirebasePlugin.firebaseAppNamed(appName)!)
+    channel.setStreamHandler(TaskStateChannelStreamHandler(task: task, storage: storageInstance, identifier: channelName, plugin: nil))
     eventChannels[channelName] = channel
+    handleToTask[handle] = task as AnyObject
+    handleToPath[handle] = path
     return uuid
+  }
+
+  private func currentSnapshot(handle: Int64) -> [String: Any] {
+    return [
+      "path": handleToPath[handle] ?? "",
+      "bytesTransferred": 0,
+      "totalBytes": 0,
+    ]
   }
 
   private func toFlutterError(_ error: Error) -> Error {
     let ns = error as NSError
-    return FlutterError(code: "unknown", message: ns.localizedDescription, details: [:])
+    let code = mapStorageErrorCode(ns)
+    let message = standardMessage(for: code) ?? ns.localizedDescription
+    return FlutterError(code: code, message: message, details: [:])
+  }
+
+  private func mapStorageErrorCode(_ error: NSError) -> String {
+    if error.domain == StorageErrorDomain, let code = StorageErrorCode(rawValue: error.code) {
+      switch code {
+      case .objectNotFound: return "object-not-found"
+      case .bucketNotFound: return "bucket-not-found"
+      case .projectNotFound: return "project-not-found"
+      case .quotaExceeded: return "quota-exceeded"
+      case .unauthenticated: return "unauthenticated"
+      case .unauthorized: return "unauthorized"
+      case .retryLimitExceeded: return "retry-limit-exceeded"
+      case .cancelled: return "canceled"
+      case .downloadSizeExceeded: return "download-size-exceeded"
+      @unknown default: return "unknown"
+      }
+    } else if error.domain == NSURLErrorDomain && error.code == NSURLErrorCancelled {
+      return "canceled"
+    }
+    return "unknown"
+  }
+
+  private func standardMessage(for code: String) -> String? {
+    switch code {
+    case "object-not-found": return "No object exists at the desired reference."
+    case "unauthorized": return "User is not authorized to perform the desired action."
+    default: return nil
+    }
   }
 }
 

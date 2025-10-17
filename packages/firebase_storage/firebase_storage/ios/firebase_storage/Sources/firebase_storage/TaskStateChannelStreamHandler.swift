@@ -17,10 +17,10 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
   private let identifier: String
   private weak var plugin: FLTFirebaseStoragePluginSwift?
 
-  private var successHandle: Any?
-  private var failureHandle: Any?
-  private var pausedHandle: Any?
-  private var progressHandle: Any?
+  private var successHandle: String?
+  private var failureHandle: String?
+  private var pausedHandle: String?
+  private var progressHandle: String?
 
   init(task: StorageObservableTask, storage: Storage, identifier: String, plugin: FLTFirebaseStoragePluginSwift?) {
     self.task = task
@@ -40,12 +40,9 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
     }
     failureHandle = task.observe(.failure) { snapshot in
       let err = snapshot.error as NSError?
-      let errorDict: [String: Any] = [
-        "code": "unknown",
-        "message": err?.localizedDescription ?? "An unknown error occurred",
-      ]
+      let errorDict: [String: Any] = self.errorDict(err)
       events([
-        "taskState": 4, // error
+        "taskState": 4, // error (including cancellations as errors per platform contract)
         "appName": self.storage.app.name,
         "error": errorDict
       ])
@@ -70,19 +67,14 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
 
   func onCancel(withArguments arguments: Any?) -> FlutterError? {
     cleanupObservers()
-    if let messenger = plugin?.messenger, let ch = plugin?.eventChannels[identifier] {
-      ch.setStreamHandler(nil)
-      plugin?.eventChannels.removeValue(forKey: identifier)
-      plugin?.streamHandlers.removeValue(forKey: identifier)
-    }
     return nil
   }
 
   private func cleanupObservers() {
-    if let h = successHandle as? String { task.removeObserver(withHandle: h) }
-    if let h = failureHandle as? String { task.removeObserver(withHandle: h) }
-    if let h = pausedHandle as? String { task.removeObserver(withHandle: h) }
-    if let h = progressHandle as? String { task.removeObserver(withHandle: h) }
+    if let h = successHandle { task.removeObserver(withHandle: h) }
+    if let h = failureHandle { task.removeObserver(withHandle: h) }
+    if let h = pausedHandle { task.removeObserver(withHandle: h) }
+    if let h = progressHandle { task.removeObserver(withHandle: h) }
     successHandle = nil
     failureHandle = nil
     pausedHandle = nil
@@ -103,6 +95,47 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
       out["totalBytes"] = 0
     }
     return out
+  }
+
+  private func errorDict(_ error: NSError?) -> [String: Any] {
+    guard let error else {
+      return [
+        "code": "unknown",
+        "message": "An unknown error occurred",
+      ]
+    }
+    let code: String
+    if error.domain == StorageErrorDomain, let storageCode = StorageErrorCode(rawValue: error.code) {
+      switch storageCode {
+      case .objectNotFound: code = "object-not-found"
+      case .bucketNotFound: code = "bucket-not-found"
+      case .projectNotFound: code = "project-not-found"
+      case .quotaExceeded: code = "quota-exceeded"
+      case .unauthenticated: code = "unauthenticated"
+      case .unauthorized: code = "unauthorized"
+      case .retryLimitExceeded: code = "retry-limit-exceeded"
+      case .cancelled: code = "canceled"
+      case .downloadSizeExceeded: code = "download-size-exceeded"
+      @unknown default: code = "unknown"
+      }
+    } else if error.domain == NSURLErrorDomain && error.code == NSURLErrorCancelled {
+      code = "canceled"
+    } else {
+      code = "unknown"
+    }
+    return [
+      "code": code,
+      "message": standardMessage(for: code) ?? error.localizedDescription,
+    ]
+  }
+
+  private func standardMessage(for code: String) -> String? {
+    switch code {
+    case "object-not-found": return "No object exists at the desired reference."
+    case "unauthorized": return "User is not authorized to perform the desired action."
+    case "canceled": return "The operation was canceled."
+    default: return nil
+    }
   }
 
   private func metaToDict(_ md: StorageMetadata) -> [String: Any] {
