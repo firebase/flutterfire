@@ -19,8 +19,7 @@ import Foundation
 
 extension FlutterError: Error {}
 
-@objc(FLTFirebaseStoragePlugin)
-final class FLTFirebaseStoragePluginSwift: NSObject, FlutterPlugin, FirebaseStorageHostApi {
+public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseStorageHostApi {
   private var channel: FlutterMethodChannel?
   private var messenger: FlutterBinaryMessenger?
   private var eventChannels: [String: FlutterEventChannel] = [:]
@@ -28,17 +27,18 @@ final class FLTFirebaseStoragePluginSwift: NSObject, FlutterPlugin, FirebaseStor
   private var handleToTask: [Int64: AnyObject] = [:]
   private var handleToPath: [Int64: String] = [:]
 
-  static func register(with registrar: FlutterPluginRegistrar) {
+  @objc
+  public static func register(with registrar: FlutterPluginRegistrar) {
     let channelName = "plugins.flutter.io/firebase_storage"
     let channel = FlutterMethodChannel(name: channelName, binaryMessenger: registrar.messenger())
-    let instance = FLTFirebaseStoragePluginSwift()
+    let instance = FLTFirebaseStoragePlugin()
     instance.channel = channel
     instance.messenger = registrar.messenger()
     registrar.addMethodCallDelegate(instance, channel: channel)
     FirebaseStorageHostApiSetup.setUp(binaryMessenger: registrar.messenger(), api: instance)
   }
 
-  func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+  public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     result(FlutterMethodNotImplemented)
   }
 
@@ -320,8 +320,7 @@ final class FLTFirebaseStoragePluginSwift: NSObject, FlutterPlugin, FirebaseStor
     channel.setStreamHandler(TaskStateChannelStreamHandler(
       task: task,
       storage: storageInstance,
-      identifier: channelName,
-      plugin: nil
+      identifier: channelName
     ))
     eventChannels[channelName] = channel
     handleToTask[handle] = task as AnyObject

@@ -15,19 +15,16 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
   private let task: StorageObservableTask
   private let storage: Storage
   private let identifier: String
-  private weak var plugin: FLTFirebaseStoragePluginSwift?
 
   private var successHandle: String?
   private var failureHandle: String?
   private var pausedHandle: String?
   private var progressHandle: String?
 
-  init(task: StorageObservableTask, storage: Storage, identifier: String,
-       plugin: FLTFirebaseStoragePluginSwift?) {
+  init(task: StorageObservableTask, storage: Storage, identifier: String) {
     self.task = task
     self.storage = storage
     self.identifier = identifier
-    self.plugin = plugin
   }
 
   func onListen(withArguments arguments: Any?,
