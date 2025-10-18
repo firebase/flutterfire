@@ -17,6 +17,7 @@ import 'dart:async';
 import 'api.dart';
 import 'base_model.dart';
 import 'content.dart';
+import 'utils/chat_utils.dart';
 import 'utils/mutex.dart';
 
 /// A back-and-forth chat with a generative model.
@@ -114,7 +115,7 @@ final class ChatSession {
         }
         if (content.isNotEmpty) {
           _history.add(message);
-          _history.add(_aggregate(content));
+          _history.add(historyAggregate(content));
         }
       } catch (e, s) {
         controller.addError(e, s);
@@ -123,46 +124,6 @@ final class ChatSession {
       unawaited(controller.close());
     });
     return controller.stream;
-  }
-
-  /// Aggregates a list of [Content] responses into a single [Content].
-  ///
-  /// Includes all the [Content.parts] of every element of [contents],
-  /// and concatenates adjacent [TextPart]s into a single [TextPart],
-  /// even across adjacent [Content]s.
-  Content _aggregate(List<Content> contents) {
-    assert(contents.isNotEmpty);
-    final role = contents.first.role ?? 'model';
-    final textBuffer = StringBuffer();
-    // If non-null, only a single text part has been seen.
-    TextPart? previousText;
-    final parts = <Part>[];
-    void addBufferedText() {
-      if (textBuffer.isEmpty) return;
-      if (previousText case final singleText?) {
-        parts.add(singleText);
-        previousText = null;
-      } else {
-        parts.add(TextPart(textBuffer.toString()));
-      }
-      textBuffer.clear();
-    }
-
-    for (final content in contents) {
-      for (final part in content.parts) {
-        if (part case TextPart(:final text)) {
-          if (text.isNotEmpty) {
-            previousText = textBuffer.isEmpty ? part : null;
-            textBuffer.write(text);
-          }
-        } else {
-          addBufferedText();
-          parts.add(part);
-        }
-      }
-    }
-    addBufferedText();
-    return Content(role, parts);
   }
 }
 
