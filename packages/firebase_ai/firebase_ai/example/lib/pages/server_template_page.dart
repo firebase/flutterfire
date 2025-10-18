@@ -53,7 +53,8 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
     if (widget.useVertexBackend) {
       _templateGenerativeModel =
           FirebaseAI.vertexAI(location: 'global').templateGenerativeModel();
-      _templateImagenModel = FirebaseAI.vertexAI().templateImagenModel();
+      _templateImagenModel =
+          FirebaseAI.vertexAI(location: 'global').templateImagenModel();
     } else {
       _templateGenerativeModel =
           FirebaseAI.googleAI().templateGenerativeModel();
@@ -258,7 +259,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
     try {
       _messages.add(MessageData(text: message, fromUser: true));
       var response = await _templateImagenModel?.generateImages(
-        'generate_images.prompt',
+        'new-greeting',
         {
           'prompt': message,
         },
