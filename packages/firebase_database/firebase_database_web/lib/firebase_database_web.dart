@@ -29,7 +29,7 @@ part './src/utils/snapshot_utils.dart';
 /// Web implementation for [DatabasePlatform]
 /// delegates calls to firebase web plugin
 class FirebaseDatabaseWeb extends DatabasePlatform {
-  static const String _libraryName = 'firebase_database';
+  static const String _libraryName = 'flutter-fire-rtdb';
 
   /// Instance of Database from web plugin
   database_interop.Database? _firebaseDatabase;

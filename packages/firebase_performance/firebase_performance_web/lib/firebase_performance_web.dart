@@ -18,7 +18,7 @@ import 'src/firebase_performance_version.dart';
 
 /// Web implementation for [FirebasePerformancePlatform]
 class FirebasePerformanceWeb extends FirebasePerformancePlatform {
-  static const String _libraryName = 'firebase_performance';
+  static const String _libraryName = 'flutter-fire-perf';
 
   /// Stub initializer to allow the [registerWith] to create an instance without
   /// registering the web delegates or listeners.

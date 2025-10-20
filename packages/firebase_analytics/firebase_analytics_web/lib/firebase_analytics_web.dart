@@ -16,7 +16,7 @@ import 'interop/analytics.dart' as analytics_interop;
 
 /// Web implementation of [FirebaseAnalyticsPlatform]
 class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
-  static const String _libraryName = 'firebase_analytics';
+  static const String _libraryName = 'flutter-fire-analytics';
 
   /// instance of Analytics from the web plugin
   analytics_interop.Analytics? _webAnalytics;

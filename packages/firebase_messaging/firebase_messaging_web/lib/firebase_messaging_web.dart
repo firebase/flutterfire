@@ -23,7 +23,7 @@ import 'src/firebase_messaging_version.dart';
 /// Web implementation for [FirebaseMessagingPlatform]
 /// delegates calls to messaging web plugin.
 class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
-  static const String _libraryName = 'firebase_messaging';
+  static const String _libraryName = 'flutter-fire-fcm';
 
   /// Instance of Messaging from the web plugin
   messaging_interop.Messaging? _webMessaging;

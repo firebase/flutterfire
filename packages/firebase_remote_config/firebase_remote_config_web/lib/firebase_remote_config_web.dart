@@ -16,7 +16,7 @@ import 'src/firebase_remote_config_version.dart';
 
 /// Web implementation of [FirebaseRemoteConfigPlatform].
 class FirebaseRemoteConfigWeb extends FirebaseRemoteConfigPlatform {
-  static const String _libraryName = 'firebase_remote_config';
+  static const String _libraryName = 'flutter-fire-rc';
 
   /// The entry point for the [FirebaseRemoteConfigWeb] class.
   FirebaseRemoteConfigWeb({FirebaseApp? app}) : super(appInstance: app);

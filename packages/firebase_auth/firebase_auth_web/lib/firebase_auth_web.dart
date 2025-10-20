@@ -30,7 +30,7 @@ enum StateListener { authStateChange, userStateChange, idTokenChange }
 
 /// The web delegate implementation for [FirebaseAuth].
 class FirebaseAuthWeb extends FirebaseAuthPlatform {
-  static const String _libraryName = 'firebase_auth';
+  static const String _libraryName = 'flutter-fire-auth';
 
   /// Stub initializer to allow the [registerWith] to create an instance without
   /// registering the web delegates or listeners.

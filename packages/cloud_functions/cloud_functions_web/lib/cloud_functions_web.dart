@@ -17,7 +17,7 @@ import 'src/cloud_functions_version.dart';
 
 /// Web implementation of [FirebaseFunctionsPlatform].
 class FirebaseFunctionsWeb extends FirebaseFunctionsPlatform {
-  static const String _libraryName = 'cloud_functions';
+  static const String _libraryName = 'flutter-fire-fn';
 
   /// The entry point for the [FirebaseFunctionsWeb] class.
   FirebaseFunctionsWeb({FirebaseApp? app, required String region})

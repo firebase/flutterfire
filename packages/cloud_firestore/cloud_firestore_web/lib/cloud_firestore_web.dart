@@ -30,7 +30,7 @@ import 'src/cloud_firestore_version.dart';
 /// Web implementation for [FirebaseFirestorePlatform]
 /// delegates calls to firestore web plugin
 class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
-  static const String _libraryName = 'cloud_firestore';
+  static const String _libraryName = 'flutter-fire-fst';
 
   /// instance of Firestore from the web plugin
   firestore_interop.Firestore? _webFirestore;

@@ -19,7 +19,7 @@ import 'src/interop/app_check.dart' as app_check_interop;
 import 'src/firebase_app_check_version.dart';
 
 class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
-  static const String _libraryName = 'firebase_app_check';
+  static const String _libraryName = 'flutter-fire-app-check';
   static const recaptchaTypeV3 = 'recaptcha-v3';
   static const recaptchaTypeEnterprise = 'enterprise';
   static Map<String, StreamController<String?>> _tokenChangesListeners = {};

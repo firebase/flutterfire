@@ -39,7 +39,7 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
   FirebaseStorageWeb._nullInstance()
       : _webStorage = null,
         super(bucket: '');
-  static const String _libraryName = 'firebase_storage';
+  static const String _libraryName = 'flutter-fire-gcs';
 
   /// The js-interop layer for Firebase Storage
   storage_interop.Storage? _webStorage;

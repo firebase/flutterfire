@@ -15,7 +15,7 @@ import 'src/interop/installations.dart' as installations_interop;
 import 'src/firebase_app_installations_version.dart';
 
 class FirebaseAppInstallationsWeb extends FirebaseAppInstallationsPlatform {
-  static const String _libraryName = 'firebase_app_installations';
+  static const String _libraryName = 'flutter-fire-installations';
 
   /// The entry point for the [FirebaseAppInstallationsWeb] class.
   FirebaseAppInstallationsWeb({FirebaseApp? app}) : super(app);
