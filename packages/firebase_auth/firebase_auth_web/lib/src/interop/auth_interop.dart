@@ -240,6 +240,7 @@ external JSPromise verifyBeforeUpdateEmail(
   ActionCodeSettings? actionCodeSettings,
 ]);
 
+@JS()
 external JSPromise<UserJsImpl> unlink(UserJsImpl user, JSString providerId);
 
 @JS()
