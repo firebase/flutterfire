@@ -43,17 +43,14 @@ class MultiFactorUser
       : super.fromJsObject(jsObject);
 
   /// Returns a list of the user's enrolled second factors.
-  List<MultiFactorInfo> get enrolledFactors => jsObject.enrolledFactors.toDart
-      .map((value) =>
-          fromJsMultiFactorInfo(value! as auth.MultiFactorInfoJsImpl))
-      .toList();
+  List<MultiFactorInfo> get enrolledFactors =>
+      jsObject.enrolledFactors.toDart.map(fromJsMultiFactorInfo).toList();
 
   /// Returns the session identifier for a second factor enrollment operation.
   ///
   /// This is used to identify the user trying to enroll a second factor.
-  Future<MultiFactorSession> get session => jsObject.getSession().toDart.then(
-      (value) => MultiFactorSession.fromJsObject(
-          value! as auth_interop.MultiFactorSessionJsImpl));
+  Future<MultiFactorSession> get session =>
+      jsObject.getSession().toDart.then(MultiFactorSession.fromJsObject);
 
   /// Enrolls a second factor as identified by the [MultiFactorAssertion] for the user.
   ///
@@ -235,7 +232,6 @@ class TotpMultiFactorGenerator
     return auth_interop.TotpMultiFactorGeneratorJsImpl.generateSecret(
             session.jsObject)
         .toDart
-        .then((value) =>
-            TotpSecret.fromJsObject(value! as auth_interop.TotpSecretJsImpl));
+        .then(TotpSecret.fromJsObject);
   }
 }

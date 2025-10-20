@@ -23,9 +23,9 @@ Auth getAuthInstance(App app) {
   // Default persistence can be seen here
   // https://github.com/firebase/firebase-js-sdk/blob/main/packages/auth/src/platform_browser/index.ts#L47
   final List<JSAny?> persistences = [
-    auth_interop.indexedDBLocalPersistence as JSAny,
-    auth_interop.browserLocalPersistence as JSAny,
-    auth_interop.browserSessionPersistence as JSAny,
+    auth_interop.indexedDBLocalPersistence,
+    auth_interop.browserLocalPersistence,
+    auth_interop.browserSessionPersistence,
   ];
   return Auth.getInstance(
     auth_interop.initializeAuth(
@@ -128,15 +128,16 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   Future<String> getIdToken([bool forceRefresh = false]) => jsObject
       .getIdToken(forceRefresh.toJS)
       .toDart
-      .then((value) => (value! as JSString).toDart);
+      .then((value) => value.toDart);
 
   /// Links the user account with the given credentials, and returns any
   /// available additional user information, such as user name.
   Future<UserCredential> linkWithCredential(
           auth_interop.OAuthCredential? credential) =>
-      auth_interop.linkWithCredential(jsObject, credential).toDart.then(
-          (value) => UserCredential.fromJsObject(
-              value! as auth_interop.UserCredentialJsImpl));
+      auth_interop
+          .linkWithCredential(jsObject, credential)
+          .toDart
+          .then(UserCredential.fromJsObject);
 
   /// Links the user account with the given [phoneNumber] in E.164 format
   /// (e.g. +16505550101) and [applicationVerifier].
@@ -146,8 +147,7 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
           .linkWithPhoneNumber(
               jsObject, phoneNumber.toJS, applicationVerifier.jsObject)
           .toDart
-          .then((value) => ConfirmationResult.fromJsObject(
-              value! as auth_interop.ConfirmationResultJsImpl));
+          .then(ConfirmationResult.fromJsObject);
 
   /// Links the authenticated [provider] to the user account using
   /// a pop-up based OAuth flow.
@@ -240,7 +240,7 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   Future<User> unlink(String providerId) => auth_interop
       .unlink(jsObject, providerId.toJS)
       .toDart
-      .then((user) => User.getInstance(user! as auth_interop.UserJsImpl)!);
+      .then((user) => User.getInstance(user)!);
 
   /// Updates the user's e-mail address to [newEmail].
   Future<void> updateEmail(String newEmail) =>
@@ -267,8 +267,7 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
         ? jsObject.getIdTokenResult()
         : jsObject.getIdTokenResult(forceRefresh.toJS);
 
-    return promise.toDart.then((value) =>
-        IdTokenResult._fromJsObject(value! as auth_interop.IdTokenResultImpl));
+    return promise.toDart.then(IdTokenResult._fromJsObject);
   }
 
   /// Returns a JSON-serializable representation of this object.
@@ -535,10 +534,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// out-of-band mechanism.
   /// It returns [ActionCodeInfo], metadata about the code.
   Future<auth_interop.ActionCodeInfo> checkActionCode(String code) =>
-      auth_interop
-          .checkActionCode(jsObject, code.toJS)
-          .toDart
-          .then((value) => value! as auth_interop.ActionCodeInfo);
+      auth_interop.checkActionCode(jsObject, code.toJS).toDart;
 
   /// Completes password reset process with a [code] and a [newPassword].
   Future confirmPasswordReset(String code, String newPassword) => auth_interop
