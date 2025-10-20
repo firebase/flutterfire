@@ -1,5 +1,5 @@
-Project: /docs/\_project.yaml
-Book: /docs/\_book.yaml
+Project: /docs/_project.yaml
+Book: /docs/_book.yaml
 
 <link rel="stylesheet" type="text/css" href="/styles/docs.css" />
 
