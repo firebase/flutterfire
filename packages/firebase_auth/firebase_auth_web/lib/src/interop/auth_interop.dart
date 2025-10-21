@@ -828,7 +828,6 @@ extension MultiFactorResolverJsImplExtension on MultiFactorResolverJsImpl {
 }
 
 /// https://firebase.google.com/docs/reference/js/auth.multifactorresolver
-@JS()
 extension type MultiFactorSessionJsImpl._(JSObject _) implements JSObject {}
 
 /// https://firebase.google.com/docs/reference/js/auth.phonemultifactorinfo
