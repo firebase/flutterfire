@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import 'dart:io' show Directory, File;
-import 'package:path/path.dart' show joinAll;
+import 'package:path/path.dart' show basename, joinAll;
 import 'package:yaml/yaml.dart' show YamlMap, loadYaml;
 
 Future<void> main() async {
@@ -23,7 +23,7 @@ Future<void> main() async {
   // Find all packages with _web directories
   await for (final packageDir in packagesDir.list()) {
     if (packageDir is Directory) {
-      final packageName = packageDir.path.split('/').last;
+      final packageName = basename(packageDir.path);
       final webDir = Directory(joinAll([packageDir.path, '${packageName}_web']));
       
       if (await webDir.exists()) {
@@ -77,7 +77,8 @@ Future<void> _generateVersionFile(String packageName) async {
     print('Processing $webPackageName version $currentVersion');
     
     // Create the version file content
-    final fileContent = '''// Copyright 2025 Google LLC
+    final fileContent = '''
+// Copyright 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
