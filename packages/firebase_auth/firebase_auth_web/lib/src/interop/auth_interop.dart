@@ -51,7 +51,7 @@ external JSPromise<ActionCodeInfo> checkActionCode(
     AuthJsImpl auth, JSString oobCode);
 
 @JS()
-external JSPromise confirmPasswordReset(
+external JSPromise/*<void>*/ confirmPasswordReset(
   AuthJsImpl auth,
   JSString oobCode,
   JSString newPassword,
@@ -67,8 +67,7 @@ external void connectAuthEmulator(
 external JSPromise setPersistence(AuthJsImpl auth, Persistence persistence);
 
 @JS()
-// Promise<UserCredential>
-external JSPromise createUserWithEmailAndPassword(
+external JSPromise<UserCredentialJsImpl> createUserWithEmailAndPassword(
   AuthJsImpl auth,
   JSString email,
   JSString password,
@@ -92,7 +91,7 @@ external JSBoolean isSignInWithEmailLink(JSString emailLink);
 
 @JS()
 // Promise<UserCredential>
-external JSPromise getRedirectResult(
+external JSPromise<UserCredentialJsImpl?> getRedirectResult(
   AuthJsImpl auth,
 );
 
@@ -111,50 +110,43 @@ external JSPromise sendPasswordResetEmail(
 ]);
 
 @JS()
-// Promise<UserCredential>
-external JSPromise signInWithCredential(
+external JSPromise<UserCredentialJsImpl> signInWithCredential(
   AuthJsImpl auth,
   OAuthCredential credential,
 );
 
 @JS()
-// Promise<UserCredential>
-external JSPromise signInAnonymously(AuthJsImpl auth);
+external JSPromise<UserCredentialJsImpl> signInAnonymously(AuthJsImpl auth);
 
 @JS()
-// Promise<UserCredential>
-external JSPromise signInWithCustomToken(
+external JSPromise<UserCredentialJsImpl> signInWithCustomToken(
   AuthJsImpl auth,
   JSString token,
 );
 
 @JS()
-// Promise<UserCredential>
-external JSPromise signInWithEmailAndPassword(
+external JSPromise<UserCredentialJsImpl> signInWithEmailAndPassword(
   AuthJsImpl auth,
   JSString email,
   JSString password,
 );
 
 @JS()
-// Promise<UserCredential>
-external JSPromise signInWithEmailLink(
+external JSPromise<UserCredentialJsImpl> signInWithEmailLink(
   AuthJsImpl auth,
   JSString email,
   JSString emailLink,
 );
 
 @JS()
-// Promise<ConfirmationResult>
-external JSPromise signInWithPhoneNumber(
+external JSPromise<ConfirmationResultJsImpl> signInWithPhoneNumber(
   AuthJsImpl auth,
   JSString phoneNumber,
   ApplicationVerifierJsImpl applicationVerifier,
 );
 
 @JS()
-// Promise<UserCredential>
-external JSPromise signInWithPopup(
+external JSPromise<UserCredentialJsImpl> signInWithPopup(
   AuthJsImpl auth,
   AuthProviderJsImpl provider,
 );
@@ -166,14 +158,12 @@ external JSPromise signInWithRedirect(
 );
 
 @JS()
-// Promise<String>
-external JSPromise verifyPasswordResetCode(
+external JSPromise<JSString> verifyPasswordResetCode(
   AuthJsImpl auth,
   JSString code,
 );
 
 @JS()
-// Promise<UserCredential>
 external JSPromise<UserCredentialJsImpl> linkWithCredential(
   UserJsImpl user,
   OAuthCredential? credential,
@@ -187,8 +177,7 @@ external JSPromise<ConfirmationResultJsImpl> linkWithPhoneNumber(
 );
 
 @JS()
-// Promise<UserCredential>
-external JSPromise linkWithPopup(
+external JSPromise<UserCredentialJsImpl> linkWithPopup(
   UserJsImpl user,
   AuthProviderJsImpl provider,
 );
@@ -200,23 +189,20 @@ external JSPromise linkWithRedirect(
 );
 
 @JS()
-// Promise<UserCredential>
-external JSPromise reauthenticateWithCredential(
+external JSPromise<UserCredentialJsImpl> reauthenticateWithCredential(
   UserJsImpl user,
   OAuthCredential credential,
 );
 
 @JS()
-// Promise<ConfirmationResult>
-external JSPromise reauthenticateWithPhoneNumber(
+external JSPromise<ConfirmationResultJsImpl> reauthenticateWithPhoneNumber(
   UserJsImpl user,
   JSString phoneNumber,
   ApplicationVerifierJsImpl applicationVerifier,
 );
 
 @JS()
-// Promise<UserCredential>
-external JSPromise reauthenticateWithPopup(
+external JSPromise<UserCredentialJsImpl> reauthenticateWithPopup(
   UserJsImpl user,
   AuthProviderJsImpl provider,
 );
@@ -581,7 +567,7 @@ extension RecaptchaVerifierJsImplExtension on RecaptchaVerifierJsImpl {
 @JS('ConfirmationResult')
 extension type ConfirmationResultJsImpl._(JSObject _) implements JSObject {
   external JSString get verificationId;
-  external JSPromise confirm(JSString verificationCode);
+  external JSPromise<UserCredentialJsImpl> confirm(JSString verificationCode);
 }
 
 /// A response from [Auth.checkActionCode].
@@ -835,9 +821,10 @@ extension MultiFactorAssertionJsImplExtension on MultiFactorAssertionJsImpl {
 class MultiFactorResolverJsImpl {}
 
 extension MultiFactorResolverJsImplExtension on MultiFactorResolverJsImpl {
-  external JSArray get hints;
+  external JSArray<MultiFactorInfoJsImpl> get hints;
   external MultiFactorSessionJsImpl get session;
-  external JSPromise resolveSignIn(MultiFactorAssertionJsImpl assertion);
+  external JSPromise<UserCredentialJsImpl> resolveSignIn(
+      MultiFactorAssertionJsImpl assertion);
 }
 
 /// https://firebase.google.com/docs/reference/js/auth.multifactorresolver

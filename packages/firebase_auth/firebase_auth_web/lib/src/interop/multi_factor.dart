@@ -141,16 +141,17 @@ class MultiFactorResolver
       : super.fromJsObject(jsObject);
 
   List<MultiFactorInfo> get hints => jsObject.hints.toDart
-      .map<MultiFactorInfo>((value) =>
-          fromJsMultiFactorInfo(value! as auth.MultiFactorInfoJsImpl))
+      .map<MultiFactorInfo>(fromJsMultiFactorInfo)
       .toList();
 
   MultiFactorSession get session =>
       MultiFactorSession.fromJsObject(jsObject.session);
 
   Future<auth.UserCredential> resolveSignIn(MultiFactorAssertion assertion) {
-    return jsObject.resolveSignIn(assertion.jsObject).toDart.then((value) =>
-        auth.UserCredential.fromJsObject(value! as auth.UserCredentialJsImpl));
+    return jsObject
+        .resolveSignIn(assertion.jsObject)
+        .toDart
+        .then(auth.UserCredential.fromJsObject);
   }
 }
 

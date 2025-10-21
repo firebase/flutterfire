@@ -155,8 +155,7 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   Future<UserCredential> linkWithPopup(AuthProvider provider) => auth_interop
       .linkWithPopup(jsObject, provider.jsObject)
       .toDart
-      .then((value) => UserCredential.fromJsObject(
-          value! as auth_interop.UserCredentialJsImpl));
+      .then(UserCredential.fromJsObject);
 
   /// Links the authenticated [provider] to the user account using
   /// a full-page redirect flow.
@@ -170,8 +169,7 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
       auth_interop
           .reauthenticateWithCredential(jsObject, credential)
           .toDart
-          .then((value) => UserCredential.fromJsObject(
-              value! as auth_interop.UserCredentialJsImpl));
+          .then(UserCredential.fromJsObject);
 
   /// Re-authenticates a user using a fresh credential.
   /// Use before operations such as [updatePassword] that require tokens
@@ -184,8 +182,7 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
           .reauthenticateWithPhoneNumber(
               jsObject, phoneNumber.toJS, applicationVerifier.jsObject)
           .toDart
-          .then((value) => ConfirmationResult.fromJsObject(
-              value! as auth_interop.ConfirmationResultJsImpl));
+          .then(ConfirmationResult.fromJsObject);
 
   /// Reauthenticates a user with the specified provider using
   /// a pop-up based OAuth flow.
@@ -194,8 +191,7 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
       auth_interop
           .reauthenticateWithPopup(jsObject, provider.jsObject)
           .toDart
-          .then((value) => UserCredential.fromJsObject(
-              value! as auth_interop.UserCredentialJsImpl));
+          .then(UserCredential.fromJsObject);
 
   /// Reauthenticates a user with the specified OAuth [provider] using
   /// a full-page redirect flow.
@@ -561,7 +557,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
         .createUserWithEmailAndPassword(jsObject, email.toJS, password.toJS)
         .toDart;
 
-    return UserCredential.fromJsObject(u! as auth_interop.UserCredentialJsImpl);
+    return UserCredential.fromJsObject(u);
   }
 
   /// Gets the list of possible sign in methods for the given email address.
@@ -583,13 +579,9 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// if sign is unsuccessful.
   /// The [UserCredential] with a null [User] is returned if no redirect
   /// operation was called.
-  Future<UserCredential?> getRedirectResult() => auth_interop
-      .getRedirectResult(jsObject)
-      .toDart
-      .then((value) => value == null
-          ? null
-          : UserCredential.fromJsObject(
-              value as auth_interop.UserCredentialJsImpl));
+  Future<UserCredential?> getRedirectResult() =>
+      auth_interop.getRedirectResult(jsObject).toDart.then(
+          (value) => value == null ? null : UserCredential.fromJsObject(value));
 
   /// Sends a sign-in email link to the user with the specified email.
   ///
@@ -672,9 +664,10 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// available additional user information, such as user name.
   Future<UserCredential> signInWithCredential(
           auth_interop.OAuthCredential credential) =>
-      auth_interop.signInWithCredential(jsObject, credential).toDart.then(
-          (value) => UserCredential.fromJsObject(
-              value! as auth_interop.UserCredentialJsImpl));
+      auth_interop
+          .signInWithCredential(jsObject, credential)
+          .toDart
+          .then(UserCredential.fromJsObject);
 
   /// Asynchronously signs in as an anonymous user.
   //
@@ -684,8 +677,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   Future<UserCredential> signInAnonymously() => auth_interop
       .signInAnonymously(jsObject)
       .toDart
-      .then((value) => UserCredential.fromJsObject(
-          value! as auth_interop.UserCredentialJsImpl));
+      .then(UserCredential.fromJsObject);
 
   /// Asynchronously signs in using a custom token.
   ///
@@ -697,8 +689,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   Future<UserCredential> signInWithCustomToken(String token) => auth_interop
       .signInWithCustomToken(jsObject, token.toJS)
       .toDart
-      .then((value) => UserCredential.fromJsObject(
-          value! as auth_interop.UserCredentialJsImpl));
+      .then(UserCredential.fromJsObject);
 
   /// Signs in a user asynchronously using a custom [token] and returns any
   /// additional user info data or credentials.
@@ -727,16 +718,14 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
       auth_interop
           .signInWithEmailAndPassword(jsObject, email.toJS, password.toJS)
           .toDart
-          .then((value) => UserCredential.fromJsObject(
-              value! as auth_interop.UserCredentialJsImpl));
+          .then(UserCredential.fromJsObject);
 
   /// Signs in using [email] and [emailLink] link.
   Future<UserCredential> signInWithEmailLink(String email, String emailLink) =>
       auth_interop
           .signInWithEmailLink(jsObject, email.toJS, emailLink.toJS)
           .toDart
-          .then((value) => UserCredential.fromJsObject(
-              value! as auth_interop.UserCredentialJsImpl));
+          .then(UserCredential.fromJsObject);
 
   /// Asynchronously signs in using a phone number in E.164 format
   /// (e.g. +16505550101).
@@ -761,7 +750,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
         .toDart;
 
     return ConfirmationResult.fromJsObject(
-      result! as auth_interop.ConfirmationResultJsImpl,
+      result,
     );
   }
 
@@ -771,8 +760,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   Future<UserCredential> signInWithPopup(AuthProvider provider) => auth_interop
       .signInWithPopup(jsObject, provider.jsObject)
       .toDart
-      .then((value) => UserCredential.fromJsObject(
-          value! as auth_interop.UserCredentialJsImpl));
+      .then(UserCredential.fromJsObject);
 
   /// Signs in using a full-page redirect flow with the given [provider].
   Future signInWithRedirect(AuthProvider provider) =>
@@ -799,7 +787,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   Future<String> verifyPasswordResetCode(String code) => auth_interop
       .verifyPasswordResetCode(jsObject, code.toJS)
       .toDart
-      .then((value) => (value! as JSString).toDart);
+      .then((value) => value.toDart);
 
   /// Initializes the reCAPTCHA Enterprise client proactively to enhance reCAPTCHA signal collection and
   /// to complete reCAPTCHA-protected flows in a single attempt.
@@ -1212,8 +1200,7 @@ class ConfirmationResult
   Future<UserCredential> confirm(String verificationCode) => jsObject
       .confirm(verificationCode.toJS)
       .toDart
-      .then((value) => UserCredential.fromJsObject(
-          value! as auth_interop.UserCredentialJsImpl));
+      .then(UserCredential.fromJsObject);
 }
 
 /// A structure containing a [User], an [OAuthCredential] and [operationType].
