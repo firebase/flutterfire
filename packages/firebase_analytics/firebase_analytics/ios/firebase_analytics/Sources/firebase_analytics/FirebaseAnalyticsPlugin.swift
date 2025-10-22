@@ -136,10 +136,29 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
       Analytics.initiateOnDeviceConversionMeasurement(hashedEmailAddress: data)
     }
     if let hashedPhoneNumber = arguments["hashedPhoneNumber"] as? String,
-       let data = Data(hexString: hashedPhoneNumber) {
+       let data = hexStringToData(hashedPhoneNumber) {
       Analytics.initiateOnDeviceConversionMeasurement(hashedPhoneNumber: data)
     }
     completion(.success(()))
+  }
+
+  private func hexStringToData(_ hexString: String) -> Data? {
+    let length = hexString.count
+    guard length % 2 == 0 else { return nil }
+
+    var data = Data(capacity: length / 2)
+    var index = hexString.startIndex
+
+    for _ in 0 ..< (length / 2) {
+      let nextIndex = hexString.index(index, offsetBy: 2)
+      guard let byte = UInt8(hexString[index ..< nextIndex], radix: 16) else {
+        return nil
+      }
+      data.append(byte)
+      index = nextIndex
+    }
+
+    return data
   }
 
   public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
@@ -160,24 +179,5 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
 
   public func flutterChannelName() -> String {
     FLTFirebaseAnalyticsChannelName
-  }
-}
-
-extension Data {
-  init?(hexString: String) {
-    let len = hexString.count / 2
-    var data = Data(capacity: len)
-    var i = hexString.startIndex
-    for _ in 0 ..< len {
-      let j = hexString.index(i, offsetBy: 2)
-      let bytes = hexString[i ..< j]
-      if var num = UInt8(bytes, radix: 16) {
-        data.append(&num, count: 1)
-      } else {
-        return nil
-      }
-      i = j
-    }
-    self = data
   }
 }
