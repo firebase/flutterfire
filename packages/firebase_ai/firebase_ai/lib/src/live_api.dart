@@ -391,30 +391,24 @@ LiveServerMessage _parseServerMessage(Object jsonObject) {
       turnComplete = serverContentJson['turnComplete'] as bool;
     }
     final interrupted = serverContentJson['interrupted'] as bool?;
-    Transcription? inputTranscription;
-    if (serverContentJson.containsKey('inputTranscription')) {
-      final transcriptionJson =
-          serverContentJson['inputTranscription'] as Map<String, dynamic>;
-      inputTranscription = Transcription(
-        text: transcriptionJson['text'] as String?,
-        finished: transcriptionJson['finished'] as bool?,
-      );
+    Transcription? _parseTranscription(String key) {
+      if (serverContentJson.containsKey(key)) {
+        final transcriptionJson =
+            serverContentJson[key] as Map<String, dynamic>;
+        return Transcription(
+          text: transcriptionJson['text'] as String?,
+          finished: transcriptionJson['finished'] as bool?,
+        );
+      }
+      return null;
     }
-    Transcription? outputTranscription;
-    if (serverContentJson.containsKey('outputTranscription')) {
-      final transcriptionJson =
-          serverContentJson['outputTranscription'] as Map<String, dynamic>;
-      outputTranscription = Transcription(
-        text: transcriptionJson['text'] as String?,
-        finished: transcriptionJson['finished'] as bool?,
-      );
-    }
+
     return LiveServerContent(
       modelTurn: modelTurn,
       turnComplete: turnComplete,
       interrupted: interrupted,
-      inputTranscription: inputTranscription,
-      outputTranscription: outputTranscription,
+      inputTranscription: _parseTranscription('inputTranscription'),
+      outputTranscription: _parseTranscription('outputTranscription'),
     );
   } else if (json.containsKey('toolCall')) {
     final toolContentJson = json['toolCall'] as Map<String, dynamic>;

@@ -359,48 +359,54 @@ class _BidiPageState extends State<BidiPage> {
         await _handleLiveServerContent(message);
       }
 
-      if (message.inputTranscription?.text != null) {
-        final transcription = message.inputTranscription!;
-        if (_inputTranscriptionMessageIndex != null) {
-          // TODO(cynthia): find a better way to update the message
-          _messages[_inputTranscriptionMessageIndex!].text =
-              '${_messages[_inputTranscriptionMessageIndex!].text}${transcription.text!}';
-        } else {
-          _messages.add(MessageData(
-              text: 'Input transcription: ${transcription.text!}',
-              fromUser: true));
-          _inputTranscriptionMessageIndex = _messages.length - 1;
-        }
-        if (transcription.finished ?? false) {
-          _inputTranscriptionMessageIndex = null;
-        }
-        setState(_scrollDown);
-      }
-      if (message.outputTranscription?.text != null) {
-        final transcription = message.outputTranscription!;
-        if (_outputTranscriptionMessageIndex != null) {
-          _messages[_outputTranscriptionMessageIndex!].text =
-              '${_messages[_outputTranscriptionMessageIndex!].text}${transcription.text!}';
-        } else {
-          _messages.add(
-            MessageData(
-              text: 'Output transcription: ${transcription.text!}',
-              fromUser: false,
-            ),
-          );
-          _outputTranscriptionMessageIndex = _messages.length - 1;
-        }
-        if (transcription.finished ?? false) {
-          _outputTranscriptionMessageIndex = null;
-        }
-        setState(_scrollDown);
-      }
+      _inputTranscriptionMessageIndex = _handleTranscription(
+        message.inputTranscription,
+        _inputTranscriptionMessageIndex,
+        'Input transcription: ',
+        true,
+      );
+      _outputTranscriptionMessageIndex = _handleTranscription(
+        message.outputTranscription,
+        _outputTranscriptionMessageIndex,
+        'Output transcription: ',
+        false,
+      );
+
       if (message.interrupted != null && message.interrupted!) {
         developer.log('Interrupted: $response');
       }
     } else if (message is LiveServerToolCall && message.functionCalls != null) {
       await _handleLiveServerToolCall(message);
     }
+  }
+
+  int? _handleTranscription(
+    Transcription? transcription,
+    int? messageIndex,
+    String prefix,
+    bool fromUser,
+  ) {
+    int? index = messageIndex;
+    if (transcription?.text != null) {
+      if (index != null) {
+        _messages[index] = _messages[index].copyWith(
+          text: '${_messages[index].text}${transcription!.text!}',
+        );
+      } else {
+        _messages.add(
+          MessageData(
+            text: '$prefix${transcription!.text!}',
+            fromUser: fromUser,
+          ),
+        );
+        index = _messages.length - 1;
+      }
+      if (transcription.finished ?? false) {
+        index = null;
+      }
+      setState(_scrollDown);
+    }
+    return messageIndex;
   }
 
   Future<void> _handleLiveServerContent(LiveServerContent response) async {
