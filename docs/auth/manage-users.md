@@ -70,7 +70,6 @@ three ways to get a `User` object representing the current user:
   - The auth object has not finished initializing. If you use a listener to keep
     track of the user's sign-in status, you don't need to handle this case.
 
-
 ## Get a user's provider-specific profile information
 
 To get the profile information retrieved from the sign-in providers linked to a
@@ -105,11 +104,13 @@ await user?.updatePhotoURL("https://example.com/jane-q-user/profile.jpg");
 
 ## Set a user's email address
 
-You can set a user's email address with the `updateEmail()` method. For example:
+You can set a user's email address with the `verifyBeforeUpdateEmail()` method. For example:
 
 ```dart
-await user?.updateEmail("janeq@example.com");
+await user?.verifyBeforeUpdateEmail("janeq@example.com");
 ```
+
+This method sends a verification email to the new address. The user's email will be updated only after they verify the new email address.
 
 Note: To set a user's email address, the user must have signed in recently.
 See [Re-authenticate a user](#re-authenticate_a_user).
@@ -189,7 +190,6 @@ await user?.delete();
 
 Important: To set a user's email address, the user must have signed in recently.
 See [Re-authenticate a user](#re-authenticate_a_user).
-
 
 You can also delete users from the Authentication section of the
 [Firebase console](https://console.firebase.google.com/), on the Users page.
