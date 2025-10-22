@@ -204,7 +204,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
       );
       var response = await _chatFunctionSession?.sendMessage(
         Content.text(message),
-        {
+        inputs: {
           'customerName': message,
         },
       );
@@ -222,7 +222,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
           };
           var functionResponse = await _chatFunctionSession?.sendMessage(
             Content.functionResponse(functionCall.name, functionResult),
-            {
+            inputs: {
               'orientation': 'LANDSCAPE',
               'useFlash': true,
               'zoom': 2,
@@ -259,9 +259,9 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
     try {
       _messages.add(MessageData(text: message, fromUser: true));
       var response = await _templateImagenModel?.generateImages(
-        'new-greeting',
-        {
-          'prompt': message,
+        'new-imagen',
+        inputs: {
+          'animal': message,
         },
       );
 
@@ -315,14 +315,16 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
         ),
       );
 
-      var response =
-          await _templateGenerativeModel?.generateContent('media.prompt', {
-        'imageData': {
-          'isInline': true,
-          'mimeType': 'image/jpeg',
-          'contents': base64Encode(imageBytes),
-        }
-      });
+      var response = await _templateGenerativeModel?.generateContent(
+        'media.prompt',
+        inputs: {
+          'imageData': {
+            'isInline': true,
+            'mimeType': 'image/jpeg',
+            'contents': base64Encode(imageBytes),
+          },
+        },
+      );
       _messages.add(MessageData(text: response?.text, fromUser: false));
 
       setState(() {
@@ -354,7 +356,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
       );
       var response = await _chatSession?.sendMessage(
         Content.text(message),
-        {
+        inputs: {
           'message': message,
         },
       );
@@ -387,19 +389,8 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
     });
 
     try {
-      // var response = await _templateGenerativeModel?.generateContent(
-      //   'greeting.prompt',
-      //   {
-      //     'name': message,
-      //   },
-      // );
-
       var response = await _templateGenerativeModel?.generateContent(
         'new-greeting',
-        {
-          'topic': message,
-          'length': '200',
-        },
       );
 
       _messages.add(MessageData(text: response?.text, fromUser: false));

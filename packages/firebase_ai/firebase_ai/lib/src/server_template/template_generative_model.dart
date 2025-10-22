@@ -46,10 +46,8 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
   ///
   /// Sends a "templateGenerateContent" API request for the configured model.
   @experimental
-  Future<GenerateContentResponse> generateContent(
-    String templateId,
-    Map<String, Object?> inputs,
-  ) =>
+  Future<GenerateContentResponse> generateContent(String templateId,
+          {Map<String, Object?>? inputs}) =>
       makeTemplateRequest(TemplateTask.templateGenerateContent, templateId,
           inputs, null, _serializationStrategy.parseGenerateContentResponse);
 
@@ -58,10 +56,8 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
   /// Sends a "templateStreamGenerateContent" API request for the server template,
   /// and waits for the response.
   @experimental
-  Stream<GenerateContentResponse> generateContentStream(
-    String templateId,
-    Map<String, Object?> inputs,
-  ) {
+  Stream<GenerateContentResponse> generateContentStream(String templateId,
+      {Map<String, Object?>? inputs}) {
     return streamTemplateRequest(
         TemplateTask.templateStreamGenerateContent,
         templateId,
@@ -72,19 +68,15 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
 
   @experimental
   Future<GenerateContentResponse> templateGenerateContentWithHistory(
-    Iterable<Content> history,
-    String templateId,
-    Map<String, Object?> inputs,
-  ) =>
+          Iterable<Content> history, String templateId,
+          {Map<String, Object?>? inputs}) =>
       makeTemplateRequest(TemplateTask.templateGenerateContent, templateId,
           inputs, history, _serializationStrategy.parseGenerateContentResponse);
 
   @experimental
   Stream<GenerateContentResponse> templateGenerateContentWithHistoryStream(
-    Iterable<Content> history,
-    String templateId,
-    Map<String, Object?> inputs,
-  ) {
+      Iterable<Content> history, String templateId,
+      {Map<String, Object?>? inputs}) {
     return streamTemplateRequest(
         TemplateTask.templateStreamGenerateContent,
         templateId,
