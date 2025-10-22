@@ -135,7 +135,6 @@ class _BidiPageState extends State<BidiPage> {
               child: ListView.builder(
                 controller: _scrollController,
                 itemBuilder: (context, idx) {
-                  final message = _messages[idx];
                   return MessageWidget(
                     text: _messages[idx].text,
                     image: _messages[idx].imageBytes != null
@@ -359,6 +358,35 @@ class _BidiPageState extends State<BidiPage> {
         await _handleLiveServerContent(message);
       }
 
+      int? _handleTranscription(
+        Transcription? transcription,
+        int? messageIndex,
+        String prefix,
+        bool fromUser,
+      ) {
+        int? currentIndex = messageIndex;
+        if (transcription?.text != null) {
+          if (currentIndex != null) {
+            _messages[currentIndex] = _messages[currentIndex].copyWith(
+              text: '${_messages[currentIndex].text}${transcription!.text!}',
+            );
+          } else {
+            _messages.add(
+              MessageData(
+                text: '$prefix${transcription!.text!}',
+                fromUser: fromUser,
+              ),
+            );
+            currentIndex = _messages.length - 1;
+          }
+          if (transcription.finished ?? false) {
+            currentIndex = null;
+          }
+          setState(_scrollDown);
+        }
+        return currentIndex;
+      }
+
       _inputTranscriptionMessageIndex = _handleTranscription(
         message.inputTranscription,
         _inputTranscriptionMessageIndex,
@@ -378,35 +406,6 @@ class _BidiPageState extends State<BidiPage> {
     } else if (message is LiveServerToolCall && message.functionCalls != null) {
       await _handleLiveServerToolCall(message);
     }
-  }
-
-  int? _handleTranscription(
-    Transcription? transcription,
-    int? messageIndex,
-    String prefix,
-    bool fromUser,
-  ) {
-    int? index = messageIndex;
-    if (transcription?.text != null) {
-      if (index != null) {
-        _messages[index] = _messages[index].copyWith(
-          text: '${_messages[index].text}${transcription!.text!}',
-        );
-      } else {
-        _messages.add(
-          MessageData(
-            text: '$prefix${transcription!.text!}',
-            fromUser: fromUser,
-          ),
-        );
-        index = _messages.length - 1;
-      }
-      if (transcription.finished ?? false) {
-        index = null;
-      }
-      setState(_scrollDown);
-    }
-    return messageIndex;
   }
 
   Future<void> _handleLiveServerContent(LiveServerContent response) async {
