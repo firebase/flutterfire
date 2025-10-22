@@ -108,7 +108,7 @@ class RemoteConfig
   /// Returns all config values.
   Map<String, RemoteConfigValue> getAll() {
     // Return type is Map<Object?, Object?>
-    final map = remote_config_interop.getAll(jsObject).dartify()!
+    final map = remote_config_interop.getAll(jsObject)
         as Map<Object?, Object?>;
     // Cast the map to <String, Object?> to mirror expected return type: Record<string, Value>;
     final castMap = map.cast<String, Object?>();
@@ -120,10 +120,10 @@ class RemoteConfig
 
   RemoteConfigValue getValue(String key) => RemoteConfigValue(
         utf8.encode(
-          remote_config_interop.getValue(jsObject, key.toJS).asString().toDart,
+          remote_config_interop.getValue(jsObject, key.toJS).asString(),
         ),
         getSource(
-          remote_config_interop.getValue(jsObject, key.toJS).getSource().toDart,
+          remote_config_interop.getValue(jsObject, key.toJS).asString(),
         ),
       );
 

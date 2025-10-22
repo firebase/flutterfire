@@ -10,6 +10,7 @@ library;
 import 'dart:js_interop';
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
+import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart';
 
 @JS()
 @staticInterop
@@ -33,7 +34,7 @@ external JSPromise fetchConfig(RemoteConfigJsImpl remoteConfig);
 
 @JS()
 @staticInterop
-external JSAny getAll(RemoteConfigJsImpl remoteConfig);
+external Map<String, RemoteConfigValue> getAll(RemoteConfigJsImpl remoteConfig);
 
 @JS()
 @staticInterop
@@ -49,7 +50,7 @@ external JSString getString(RemoteConfigJsImpl remoteConfig, JSString key);
 
 @JS()
 @staticInterop
-external ValueJsImpl getValue(RemoteConfigJsImpl remoteConfig, JSString key);
+external RemoteConfigValue getValue(RemoteConfigJsImpl remoteConfig, JSString key);
 
 @JS()
 @staticInterop
