@@ -172,7 +172,9 @@ public class FlutterFirebaseCrashlyticsPlugin
             Exception exception;
             if (reason != null) {
               final String crashlyticsErrorReason = "thrown " + reason;
-              mainHandler.post(() -> testEventSink.success(crashlyticsErrorReason));
+              if (testEventSink != null) {
+                mainHandler.post(() -> testEventSink.success(crashlyticsErrorReason));
+              }
               // Set a "reason" (to match iOS) to show where the exception was thrown.
               crashlytics.setCustomKey(Constants.FLUTTER_ERROR_REASON, crashlyticsErrorReason);
               exception =

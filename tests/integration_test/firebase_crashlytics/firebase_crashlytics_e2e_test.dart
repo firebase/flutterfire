@@ -110,8 +110,7 @@ void main() {
 
               final completer = Completer<String>();
 
-              eventStream.listen((event) {
-                 print('Received event: $event');
+              final subscription = eventStream.listen((event) {
                 completer.complete(event.toString());
               });
 
@@ -122,9 +121,10 @@ void main() {
               );
 
               final event = await completer.future;
-              expect(event, 'thrown foooo reason');
+              expect(event, 'thrown foo reason');
+              await subscription.cancel();
           },
-          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS || !isCI,
+          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS,
         );
       });
 
