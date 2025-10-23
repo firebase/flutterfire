@@ -26,10 +26,11 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
   private var streamHandlers: [String: FlutterStreamHandler] = [:]
   private var handleToTask: [Int64: AnyObject] = [:]
   private var handleToPath: [Int64: String] = [:]
-    private var handleToIdentifier: [Int64: String] = [:]
+  private var handleToIdentifier: [Int64: String] = [:]
 
-    // Registry to help stream handler classify failure events as cancellations when initiated from Dart
-    static var canceledIdentifiers = Set<String>()
+  // Registry to help stream handler classify failure events as cancellations when initiated from
+  // Dart
+  static var canceledIdentifiers = Set<String>()
 
   @objc
   public static func register(with registrar: FlutterPluginRegistrar) {
@@ -266,11 +267,15 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
                   completion: @escaping (Result<[String: Any], Error>) -> Void) {
     if let task = handleToTask[handle] as? StorageUploadTask {
       task.cancel()
-      if let id = handleToIdentifier[handle] { FLTFirebaseStoragePlugin.canceledIdentifiers.insert(id) }
+      if let id = handleToIdentifier[handle] {
+        FLTFirebaseStoragePlugin.canceledIdentifiers.insert(id)
+      }
       completion(.success(["status": true, "snapshot": currentSnapshot(handle: handle)]))
     } else if let task = handleToTask[handle] as? StorageDownloadTask {
       task.cancel()
-      if let id = handleToIdentifier[handle] { FLTFirebaseStoragePlugin.canceledIdentifiers.insert(id) }
+      if let id = handleToIdentifier[handle] {
+        FLTFirebaseStoragePlugin.canceledIdentifiers.insert(id)
+      }
       completion(.success(["status": true, "snapshot": currentSnapshot(handle: handle)]))
     } else {
       completion(.success(["status": false]))
