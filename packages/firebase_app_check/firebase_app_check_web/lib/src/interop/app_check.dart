@@ -58,7 +58,8 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
         isTokenAutoRefreshEnabled.toJS,
       );
 
-  Future<app_check_interop.AppCheckTokenResultJsImpl> getToken(bool? forceRefresh) =>
+  Future<app_check_interop.AppCheckTokenResultJsImpl> getToken(
+          bool? forceRefresh) =>
       app_check_interop.getToken(jsObject, forceRefresh?.toJS).toDart;
 
   Future<app_check_interop.AppCheckTokenResultJsImpl> getLimitedUseToken() =>
@@ -88,11 +89,13 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
     return 'no-op';
   }
 
-  Stream<app_check_interop.AppCheckTokenResultJsImpl> onTokenChanged(String appName) {
+  Stream<app_check_interop.AppCheckTokenResultJsImpl> onTokenChanged(
+      String appName) {
     final appCheckWindowsKey = _appCheckWindowsKey(appName);
     unsubscribeWindowsListener(appCheckWindowsKey);
     if (_idTokenChangedController == null) {
-      final nextWrapper = ((app_check_interop.AppCheckTokenResultJsImpl result) {
+      final nextWrapper =
+          ((app_check_interop.AppCheckTokenResultJsImpl result) {
         _idTokenChangedController!.add(result);
       }).toJS;
 
@@ -115,8 +118,8 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
         removeWindowsListener(appCheckWindowsKey);
       }
 
-      _idTokenChangedController =
-          StreamController<app_check_interop.AppCheckTokenResultJsImpl>.broadcast(
+      _idTokenChangedController = StreamController<
+          app_check_interop.AppCheckTokenResultJsImpl>.broadcast(
         onListen: startListen,
         onCancel: stopListen,
         sync: true,
