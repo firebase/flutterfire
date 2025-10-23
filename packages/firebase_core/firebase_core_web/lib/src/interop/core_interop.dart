@@ -52,10 +52,7 @@ extension type FirebaseErrorJsImpl._(JSObject _) implements JSObject {
 }
 
 /// A structure for options provided to Firebase.
-@JS()
-@anonymous
-@staticInterop
-class FirebaseOptions {
+extension type FirebaseOptions._(JSObject _) implements JSObject {
   external factory FirebaseOptions({
     JSString? apiKey,
     JSString? authDomain,
