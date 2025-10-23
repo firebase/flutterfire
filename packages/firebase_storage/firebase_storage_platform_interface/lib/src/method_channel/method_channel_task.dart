@@ -38,7 +38,13 @@ abstract class MethodChannelTask extends TaskPlatform {
           if (taskState == TaskState.error) {
             _didComplete = true;
             final errorMap = Map<String, dynamic>.from(events['error']);
-            final code = errorMap['code'];
+            String code = errorMap['code'];
+
+            // If native surfaced an unknown error but we already transitioned the
+            // task snapshot to canceled (due to a local cancel), surface as canceled.
+            if (code != 'canceled' && snapshot.state == TaskState.canceled) {
+              code = 'canceled';
+            }
 
             final exception = FirebaseException(
               plugin: 'firebase_storage',
