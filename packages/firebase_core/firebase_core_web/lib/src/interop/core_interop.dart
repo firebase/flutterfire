@@ -13,8 +13,7 @@ import 'dart:js_interop';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
 @JS()
-// List<AppJsImpl>
-external JSArray getApps();
+external JSArray<AppJsImpl> getApps();
 
 /// The current SDK version.
 ///
@@ -42,12 +41,7 @@ external void registerVersion(
 /// In addition to a message string, it contains a string-valued code.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.FirebaseError>.
-@JS('FirebaseError')
-@anonymous
-@staticInterop
-abstract class FirebaseErrorJSImpl {}
-
-extension FirebaseErrorExtension on FirebaseErrorJSImpl {
+extension type FirebaseErrorJsImpl._(JSObject _) implements JSObject {
   external JSString get code;
   external JSString get message;
   external JSString get name;
