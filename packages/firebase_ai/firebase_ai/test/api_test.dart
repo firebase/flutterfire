@@ -242,14 +242,17 @@ void main() {
         SafetyRating(HarmCategory.harassment, HarmProbability.low)
       ];
       final citationMeta = CitationMetadata([]);
+      final urlContextMetadata = UrlContextMetadata(urlMetadata: []);
       final candidate = Candidate(
-          content, ratings, citationMeta, FinishReason.stop, 'Finished');
+          content, ratings, citationMeta, FinishReason.stop, 'Finished',
+          urlContextMetadata: urlContextMetadata);
 
       expect(candidate.content, same(content));
       expect(candidate.safetyRatings, same(ratings));
       expect(candidate.citationMetadata, same(citationMeta));
       expect(candidate.finishReason, FinishReason.stop);
       expect(candidate.finishMessage, 'Finished');
+      expect(candidate.urlContextMetadata, same(urlContextMetadata));
     });
   });
 
@@ -411,6 +414,25 @@ void main() {
       expect(metadata.groundingChunks.first, same(groundingChunk));
       expect(metadata.groundingSupport.first, same(groundingSupport));
       expect(metadata.webSearchQueries, ['web query']);
+    });
+  });
+
+  group('UrlContextMetadata', () {
+    test('UrlMetadata constructor', () {
+      final uri = Uri.parse('http://example.com/page');
+      final metadata = UrlMetadata(
+          retrievedUrl: uri, urlRetrievalStatus: UrlRetrievalStatus.success);
+      expect(metadata.retrievedUrl, uri);
+      expect(metadata.urlRetrievalStatus, UrlRetrievalStatus.success);
+    });
+
+    test('UrlContextMetadata constructor', () {
+      final urlMetadata = UrlMetadata(
+          retrievedUrl: Uri.parse('http://example.com'),
+          urlRetrievalStatus: UrlRetrievalStatus.success);
+      final contextMetadata = UrlContextMetadata(urlMetadata: [urlMetadata]);
+      expect(contextMetadata.urlMetadata, hasLength(1));
+      expect(contextMetadata.urlMetadata.first, same(urlMetadata));
     });
   });
 
@@ -659,6 +681,7 @@ void main() {
               'candidatesTokenCount': 20,
               'totalTokenCount': 30,
               'thoughtsTokenCount': 5,
+              'toolUsePromptTokenCount': 12
             }
           };
           final response =
@@ -668,6 +691,7 @@ void main() {
           expect(response.usageMetadata!.candidatesTokenCount, 20);
           expect(response.usageMetadata!.totalTokenCount, 30);
           expect(response.usageMetadata!.thoughtsTokenCount, 5);
+          expect(response.usageMetadata!.toolUsePromptTokenCount, 12);
         });
 
         test('parses usageMetadata when thoughtsTokenCount is missing', () {
@@ -998,6 +1022,162 @@ void main() {
         });
       });
 
+      group('UrlContextMetadata parsing', () {
+        test('parses valid response with full url context metadata', () {
+          final jsonResponse = {
+            'candidates': [
+              {
+                'content': {
+                  'parts': [
+                    {'text': 'Some text'}
+                  ]
+                },
+                'finishReason': 'STOP',
+                'urlContextMetadata': {
+                  'urlMetadata': [
+                    {
+                      'retrievedUrl': 'https://example.com',
+                      'urlRetrievalStatus': 'URL_RETRIEVAL_STATUS_SUCCESS'
+                    }
+                  ]
+                }
+              }
+            ]
+          };
+          final response =
+              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          final urlContextMetadata =
+              response.candidates.first.urlContextMetadata;
+          expect(urlContextMetadata, isNotNull);
+          expect(urlContextMetadata!.urlMetadata, hasLength(1));
+          final urlMetadata = urlContextMetadata.urlMetadata.first;
+          expect(urlMetadata.retrievedUrl, Uri.parse('https://example.com'));
+          expect(urlMetadata.urlRetrievalStatus, UrlRetrievalStatus.success);
+        });
+
+        test(
+            'parses valid response with full url context metadata and list of url metadata',
+            () {
+          final jsonResponse = {
+            'candidates': [
+              {
+                'content': {
+                  'parts': [
+                    {'text': 'Some text'}
+                  ]
+                },
+                'finishReason': 'STOP',
+                'urlContextMetadata': {
+                  'urlMetadata': [
+                    {
+                      'retrievedUrl': 'https://example.com',
+                      'urlRetrievalStatus': 'URL_RETRIEVAL_STATUS_SUCCESS'
+                    },
+                    {
+                      'retrievedUrl': 'https://foo.com',
+                      'urlRetrievalStatus': 'URL_RETRIEVAL_STATUS_ERROR'
+                    }
+                  ]
+                }
+              }
+            ]
+          };
+          final response =
+              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          final urlContextMetadata =
+              response.candidates.first.urlContextMetadata;
+          expect(urlContextMetadata, isNotNull);
+          expect(urlContextMetadata!.urlMetadata, hasLength(2));
+          final firstUrlMetadata = urlContextMetadata.urlMetadata.first;
+          expect(
+              firstUrlMetadata.retrievedUrl, Uri.parse('https://example.com'));
+          expect(
+              firstUrlMetadata.urlRetrievalStatus, UrlRetrievalStatus.success);
+          final secondUrlMetadata = urlContextMetadata.urlMetadata[1];
+          expect(secondUrlMetadata.retrievedUrl, Uri.parse('https://foo.com'));
+          expect(
+              secondUrlMetadata.urlRetrievalStatus, UrlRetrievalStatus.error);
+        });
+
+        test('parses response with missing retrievedUrl', () {
+          final jsonResponse = {
+            'candidates': [
+              {
+                'urlContextMetadata': {
+                  'urlMetadata': [
+                    {'urlRetrievalStatus': 'URL_RETRIEVAL_STATUS_ERROR'}
+                  ]
+                }
+              }
+            ]
+          };
+          final response =
+              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          final urlMetadata =
+              response.candidates.first.urlContextMetadata!.urlMetadata.first;
+          expect(urlMetadata.retrievedUrl, isNull);
+          expect(urlMetadata.urlRetrievalStatus, UrlRetrievalStatus.error);
+        });
+
+        test('handles empty urlMetadata list', () {
+          final jsonResponse = {
+            'candidates': [
+              {
+                'urlContextMetadata': {'urlMetadata': []}
+              }
+            ]
+          };
+          final response =
+              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          final urlContextMetadata =
+              response.candidates.first.urlContextMetadata;
+          expect(urlContextMetadata, isNotNull);
+          expect(urlContextMetadata!.urlMetadata, isEmpty);
+        });
+
+        test('handles missing urlContextMetadata field', () {
+          final jsonResponse = {
+            'candidates': [
+              {'finishReason': 'STOP'}
+            ]
+          };
+          final response =
+              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          final candidate = response.candidates.first;
+          expect(candidate.urlContextMetadata, isNull);
+        });
+
+        test('throws for invalid urlContextMetadata structure', () {
+          final jsonResponse = {
+            'candidates': [
+              {'urlContextMetadata': 'not_a_map'}
+            ]
+          };
+          expect(
+              () => VertexSerialization()
+                  .parseGenerateContentResponse(jsonResponse),
+              throwsA(isA<FirebaseAISdkException>().having((e) => e.message,
+                  'message', contains('UrlContextMetadata'))));
+        });
+
+        test('throws for invalid urlMetadata item in list', () {
+          final jsonResponse = {
+            'candidates': [
+              {
+                'urlContextMetadata': {
+                  'urlMetadata': ['not_a_map']
+                }
+              }
+            ]
+          };
+          expect(
+              () => VertexSerialization()
+                  .parseGenerateContentResponse(jsonResponse),
+              throwsA(isA<FirebaseAISdkException>().having(
+                  (e) => e.message, 'message', contains('UrlMetadata'))));
+        });
+      });
+
       test('parses JSON with no candidates (empty list)', () {
         final json = {'candidates': []};
         final response =
@@ -1054,6 +1234,9 @@ void main() {
                 'modality': 'TEXT',
               }
             ],
+            'toolUsePromptTokensDetails': [
+              {'modality': 'TEXT', 'tokenCount': 12}
+            ],
           }
         };
         final response =
@@ -1079,6 +1262,15 @@ void main() {
         expect(
             response.usageMetadata!.candidatesTokensDetails!.first.tokenCount,
             0);
+        expect(
+            response.usageMetadata!.toolUsePromptTokensDetails, hasLength(1));
+        expect(
+            response.usageMetadata!.toolUsePromptTokensDetails!.first.modality,
+            ContentModality.text);
+        expect(
+            response
+                .usageMetadata!.toolUsePromptTokensDetails!.first.tokenCount,
+            12);
       });
 
       test('parses citationMetadata with "citationSources"', () {

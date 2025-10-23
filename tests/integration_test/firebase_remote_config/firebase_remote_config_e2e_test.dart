@@ -138,8 +138,6 @@ void main() {
 
           await configSubscription.cancel();
         },
-        // This feature is not supported on Web
-        skip: kIsWeb,
       );
 
       test('default values', () async {

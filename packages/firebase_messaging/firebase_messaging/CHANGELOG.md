@@ -1,3 +1,11 @@
+## 16.0.3
+
+ - **FIX**(firebase_messaging): fix null apple notification when sound is of type String ([#17770](https://github.com/firebase/flutterfire/issues/17770)). ([7fe893c0](https://github.com/firebase/flutterfire/commit/7fe893c0075f0abb019c0890bebd1fd3ba37a5d3))
+
+## 16.0.2
+
+ - Update a dependency to the latest release.
+
 ## 16.0.1
 
  - Update a dependency to the latest release.

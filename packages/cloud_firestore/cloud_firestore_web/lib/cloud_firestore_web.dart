@@ -25,9 +25,13 @@ import 'src/query_web.dart';
 import 'src/transaction_web.dart';
 import 'src/write_batch_web.dart';
 
+import 'src/cloud_firestore_version.dart';
+
 /// Web implementation for [FirebaseFirestorePlatform]
 /// delegates calls to firestore web plugin
 class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
+  static const String _libraryName = 'flutter-fire-fst';
+
   /// instance of Firestore from the web plugin
   firestore_interop.Firestore? _webFirestore;
 
@@ -41,6 +45,8 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerLibraryVersion(_libraryName, packageVersion);
+
     FirebaseCoreWeb.registerService('firestore');
     FirebaseFirestorePlatform.instance = FirebaseFirestoreWeb();
   }

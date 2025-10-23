@@ -3,4 +3,4 @@
 // found in the LICENSE file.
 
 // Auto-generated file. Do not edit.
-public let versionNumber = "0.4.0+1"
+public let versionNumber = "0.4.0+3"
