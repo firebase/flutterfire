@@ -59,7 +59,8 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
       );
 
   Future<app_check_interop.AppCheckTokenResultJsImpl> getToken(
-          bool? forceRefresh) =>
+          bool? forceRefresh,
+        ) =>
       app_check_interop.getToken(jsObject, forceRefresh?.toJS).toDart;
 
   Future<app_check_interop.AppCheckTokenResultJsImpl> getLimitedUseToken() =>
@@ -90,7 +91,8 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
   }
 
   Stream<app_check_interop.AppCheckTokenResultJsImpl> onTokenChanged(
-      String appName) {
+      String appName,
+    ) {
     final appCheckWindowsKey = _appCheckWindowsKey(appName);
     unsubscribeWindowsListener(appCheckWindowsKey);
     if (_idTokenChangedController == null) {

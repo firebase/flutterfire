@@ -63,6 +63,7 @@ class ReCaptchaV3Provider implements ReCaptchaProvider {
 class ReCaptchaEnterpriseProvider implements ReCaptchaProvider {
   external factory ReCaptchaEnterpriseProvider(JSString recaptchaKey);
 }
+
 extension type AppCheckTokenResultJsImpl._(JSObject _) implements JSObject {
   external JSString get token;
 }
