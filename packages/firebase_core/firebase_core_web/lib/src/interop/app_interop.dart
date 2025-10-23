@@ -12,7 +12,6 @@ import 'dart:js_interop';
 
 import 'core_interop.dart';
 
-
 extension type AppJsImpl._(JSObject _) implements JSObject {
   external JSString get name;
   external FirebaseOptions get options;
