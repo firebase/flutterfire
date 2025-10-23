@@ -65,5 +65,5 @@ abstract class FirebaseAnalyticsHostApi {
   int? getSessionId();
 
   @async
-  void initiateOnDeviceConversionMeasurement(Map<String, String?> arguments);
+  void initiateOnDeviceConversionMeasurement(Map<String, Object?> arguments);
 }

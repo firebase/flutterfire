@@ -122,7 +122,7 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     }
   }
 
-  func initiateOnDeviceConversionMeasurement(arguments: [String: String?],
+  func initiateOnDeviceConversionMeasurement(arguments: [String: Any?],
                                              completion: @escaping (Result<Void, any Error>)
                                                -> Void) {
     if let emailAddress = arguments["emailAddress"] as? String {
@@ -131,13 +131,11 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     if let phoneNumber = arguments["phoneNumber"] as? String {
       Analytics.initiateOnDeviceConversionMeasurement(phoneNumber: phoneNumber)
     }
-    if let hashedEmailAddress = arguments["hashedEmailAddress"] as? String,
-       let data = hashedEmailAddress.data(using: .utf8) {
-      Analytics.initiateOnDeviceConversionMeasurement(hashedEmailAddress: data)
+    if let hashedEmailAddress = arguments["hashedEmailAddress"] as? FlutterStandardTypedData {
+        Analytics.initiateOnDeviceConversionMeasurement(hashedEmailAddress: hashedEmailAddress.data)
     }
-    if let hashedPhoneNumber = arguments["hashedPhoneNumber"] as? String,
-       let data = hashedPhoneNumber.data(using: .utf8) {
-      Analytics.initiateOnDeviceConversionMeasurement(hashedPhoneNumber: data)
+    if let hashedPhoneNumber = arguments["hashedPhoneNumber"] as? FlutterStandardTypedData {
+        Analytics.initiateOnDeviceConversionMeasurement(hashedPhoneNumber: hashedPhoneNumber.data)
     }
     completion(.success(()))
   }

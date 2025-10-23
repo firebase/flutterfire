@@ -179,12 +179,12 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   Future<void> initiateOnDeviceConversionMeasurement({
     String? emailAddress,
     String? phoneNumber,
-    String? hashedEmailAddress,
-    String? hashedPhoneNumber,
+    Uint8List? hashedEmailAddress,
+    Uint8List? hashedPhoneNumber,
   }) {
     try {
       return _api.initiateOnDeviceConversionMeasurement(
-        <String, String?>{
+        <String, Object?>{
           'emailAddress': emailAddress,
           'phoneNumber': phoneNumber,
           'hashedEmailAddress': hashedEmailAddress,
