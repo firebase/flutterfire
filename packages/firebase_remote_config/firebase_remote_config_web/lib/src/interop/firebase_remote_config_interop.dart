@@ -21,7 +21,7 @@ external JSPromise<JSBoolean> activate(RemoteConfigJsImpl remoteConfig);
 
 @JS()
 @staticInterop
-external JSPromise ensureInitialized(RemoteConfigJsImpl remoteConfig);
+external JSPromise<JSBoolean> ensureInitialized(RemoteConfigJsImpl remoteConfig);
 
 @JS()
 @staticInterop
@@ -29,11 +29,11 @@ external JSPromise<JSBoolean> fetchAndActivate(RemoteConfigJsImpl remoteConfig);
 
 @JS()
 @staticInterop
-external JSPromise fetchConfig(RemoteConfigJsImpl remoteConfig);
+external JSPromise<JSBoolean> fetchConfig(RemoteConfigJsImpl remoteConfig);
 
 @JS()
 @staticInterop
-external JSAny getAll(RemoteConfigJsImpl remoteConfig);
+external JSObject getAll(RemoteConfigJsImpl remoteConfig);
 
 @JS()
 @staticInterop
@@ -53,7 +53,7 @@ external ValueJsImpl getValue(RemoteConfigJsImpl remoteConfig, JSString key);
 
 @JS()
 @staticInterop
-external JSPromise isSupported();
+external JSPromise<JSBoolean> isSupported();
 
 @JS()
 @staticInterop
@@ -66,11 +66,7 @@ external JSPromise setCustomSignals(
 @staticInterop
 external void setLogLevel(RemoteConfigJsImpl remoteConfig, JSString logLevel);
 
-@JS('RemoteConfig')
-@staticInterop
-abstract class RemoteConfigJsImpl {}
-
-extension RemoteConfigJsImplExtension on RemoteConfigJsImpl {
+extension type RemoteConfigJsImpl._(JSObject _) implements JSObject {
   external AppJsImpl get app;
   external SettingsJsImpl get settings;
   external set settings(SettingsJsImpl value);
@@ -80,24 +76,15 @@ extension RemoteConfigJsImplExtension on RemoteConfigJsImpl {
   external JSString get lastFetchStatus;
 }
 
-@JS()
-@staticInterop
-@anonymous
-abstract class ValueJsImpl {}
-
-extension ValueJsImplExtension on ValueJsImpl {
+extension type ValueJsImpl._(JSObject _) implements JSObject {
   external JSBoolean asBoolean();
   external JSNumber asNumber();
   external JSString asString();
   external JSString getSource();
 }
 
-@JS()
-@staticInterop
-@anonymous
-abstract class SettingsJsImpl {}
 
-extension SettingsJsImplExtension on SettingsJsImpl {
+extension type SettingsJsImpl._(JSObject _) implements JSObject {
   external JSNumber get minimumFetchIntervalMillis;
   external set minimumFetchIntervalMillis(JSNumber value);
   external JSNumber get fetchTimeoutMillis;
@@ -121,12 +108,7 @@ extension ConfigUpdateObserverJsImpl on ConfigUpdateObserver {
   external JSAny get complete;
 }
 
-@JS()
-@staticInterop
-@anonymous
-abstract class ConfigUpdateJsImpl {}
-
-extension ConfigUpdateJsImplExtension on ConfigUpdateJsImpl {
+extension type ConfigUpdateJsImpl._(JSObject _) implements JSObject {
   external JSSet getUpdatedKeys();
 }
 
