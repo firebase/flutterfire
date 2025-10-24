@@ -22,6 +22,21 @@ class MessageData {
     this.fromUser,
     this.isThought = false,
   });
+
+  MessageData copyWith({
+    Uint8List? imageBytes,
+    String? text,
+    bool? fromUser,
+    bool? isThought,
+  }) {
+    return MessageData(
+      imageBytes: imageBytes ?? this.imageBytes,
+      text: text ?? this.text,
+      fromUser: fromUser ?? this.fromUser,
+      isThought: isThought ?? this.isThought,
+    );
+  }
+
   final Uint8List? imageBytes;
   final String? text;
   final bool? fromUser;
