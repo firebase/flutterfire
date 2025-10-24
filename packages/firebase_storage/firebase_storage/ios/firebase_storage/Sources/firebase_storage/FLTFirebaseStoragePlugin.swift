@@ -17,8 +17,6 @@ import Foundation
   import FlutterMacOS
 #endif
 
-extension FlutterError: Error {}
-
 public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseStorageHostApi {
   private var channel: FlutterMethodChannel?
   private var messenger: FlutterBinaryMessenger?
@@ -35,12 +33,12 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
   @objc
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channelName = "plugins.flutter.io/firebase_storage"
-    let channel = FlutterMethodChannel(name: channelName, binaryMessenger: registrar.messenger())
+    let channel = FlutterMethodChannel(name: channelName, binaryMessenger: registrar.messenger)
     let instance = FLTFirebaseStoragePlugin()
     instance.channel = channel
-    instance.messenger = registrar.messenger()
+    instance.messenger = registrar.messenger
     registrar.addMethodCallDelegate(instance, channel: channel)
-    FirebaseStorageHostApiSetup.setUp(binaryMessenger: registrar.messenger(), api: instance)
+    FirebaseStorageHostApiSetup.setUp(binaryMessenger: registrar.messenger, api: instance)
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -92,7 +90,6 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
 
   func useStorageEmulator(app: PigeonStorageFirebaseApp, host: String, port: Int64,
                           completion: @escaping (Result<Void, Error>) -> Void) {
-    let key = app.bucket
     let s = storage(app: app)
     s.useEmulator(withHost: host, port: Int(port))
     completion(.success(()))
