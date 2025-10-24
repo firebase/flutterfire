@@ -24,8 +24,7 @@ import '../utils/mutex.dart';
 /// Records messages sent and received in [history]. The history will always
 /// record the content from the first candidate in the
 /// [GenerateContentResponse], other candidates may be available on the returned
-/// response. The history is maintained and updated by the `google_generative_ai`
-/// package and reflects the most current state of the chat session.
+/// response. The history reflects the most current state of the chat session.
 final class TemplateChatSession {
   TemplateChatSession._(
     this._templateHistoryGenerateContent,
@@ -84,6 +83,17 @@ final class TemplateChatSession {
     }
   }
 
+  /// Sends [message] to the server template as a continuation of the chat
+  /// [history].
+  ///
+  /// Returns a stream of responses, which may be chunks of a single aggregate
+  /// response.
+  ///
+  /// Prepends the history to the request and uses the provided model to
+  /// generate new content.
+  ///
+  /// When there are no candidates in the response, the [message] and response
+  /// are ignored and will not be recorded in the [history].
   Stream<GenerateContentResponse> sendMessageStream(Content message,
       {Map<String, Object?>? inputs}) {
     final controller = StreamController<GenerateContentResponse>(sync: true);
@@ -115,7 +125,7 @@ final class TemplateChatSession {
   }
 }
 
-/// [StartTemplateChatExtension] on [GenerativeModel]
+/// An extension on [TemplateGenerativeModel] that provides a `startChat` method.
 extension StartTemplateChatExtension on TemplateGenerativeModel {
   /// Starts a [TemplateChatSession] that will use this model to respond to messages.
   ///

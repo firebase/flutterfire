@@ -25,8 +25,7 @@ import 'utils/mutex.dart';
 /// Records messages sent and received in [history]. The history will always
 /// record the content from the first candidate in the
 /// [GenerateContentResponse], other candidates may be available on the returned
-/// response. The history is maintained and updated by the `google_generative_ai`
-/// package and reflects the most current state of the chat session.
+/// response. The history reflects the most current state of the chat session.
 final class ChatSession {
   ChatSession._(this._generateContent, this._generateContentStream,
       this._history, this._safetySettings, this._generationConfig);

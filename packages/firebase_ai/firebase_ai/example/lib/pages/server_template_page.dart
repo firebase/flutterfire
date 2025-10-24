@@ -222,11 +222,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
           };
           var functionResponse = await _chatFunctionSession?.sendMessage(
             Content.functionResponse(functionCall.name, functionResult),
-            inputs: {
-              'orientation': 'LANDSCAPE',
-              'useFlash': true,
-              'zoom': 2,
-            },
+            inputs: functionResult,
           );
           _messages
               .add(MessageData(text: functionResponse?.text, fromUser: false));

@@ -15,6 +15,7 @@
 // ignore_for_file: use_late_for_private_fields_and_variables
 part of '../base_model.dart';
 
+/// A generative model that connects to a remote server template.
 @experimental
 final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
   TemplateGenerativeModel._({
@@ -66,6 +67,8 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
         _serializationStrategy.parseGenerateContentResponse);
   }
 
+  /// Generates content from a template with the given [templateId], [inputs] and
+  /// [history].
   @experimental
   Future<GenerateContentResponse> templateGenerateContentWithHistory(
           Iterable<Content> history, String templateId,
@@ -73,6 +76,8 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
       makeTemplateRequest(TemplateTask.templateGenerateContent, templateId,
           inputs, history, _serializationStrategy.parseGenerateContentResponse);
 
+  /// Generates a stream of content from a template with the given [templateId],
+  /// [inputs] and [history].
   @experimental
   Stream<GenerateContentResponse> templateGenerateContentWithHistoryStream(
       Iterable<Content> history, String templateId,

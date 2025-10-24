@@ -14,6 +14,7 @@
 
 part of '../base_model.dart';
 
+/// An image model that connects to a remote server template.
 @experimental
 final class TemplateImagenModel extends BaseTemplateApiClientModel {
   TemplateImagenModel._(
@@ -23,7 +24,7 @@ final class TemplateImagenModel extends BaseTemplateApiClientModel {
       bool? useLimitedUseAppCheckTokens,
       FirebaseAppCheck? appCheck,
       FirebaseAuth? auth})
-      : _useVertexBackend = useVertexBackend,
+      : 
         super(
           serializationStrategy: VertexSerialization(),
           modelUri: useVertexBackend
@@ -37,8 +38,6 @@ final class TemplateImagenModel extends BaseTemplateApiClientModel {
               ? _TemplateVertexUri(app: app, location: location)
               : _TemplateGoogleAIUri(app: app),
         );
-
-  final bool _useVertexBackend;
 
   /// Generates images from a template with the given [templateId] and [inputs].
   @experimental
