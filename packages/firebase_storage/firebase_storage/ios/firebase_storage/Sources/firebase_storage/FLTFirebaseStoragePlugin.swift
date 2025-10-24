@@ -35,12 +35,18 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
   @objc
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channelName = "plugins.flutter.io/firebase_storage"
-    let channel = FlutterMethodChannel(name: channelName, binaryMessenger: registrar.messenger)
+    // Resolve platform-specific messenger API differences
+    #if os(iOS)
+      let resolvedMessenger: FlutterBinaryMessenger = registrar.messenger()
+    #else
+      let resolvedMessenger: FlutterBinaryMessenger = registrar.messenger
+    #endif
+    let channel = FlutterMethodChannel(name: channelName, binaryMessenger: resolvedMessenger)
     let instance = FLTFirebaseStoragePlugin()
     instance.channel = channel
-    instance.messenger = registrar.messenger
+    instance.messenger = resolvedMessenger
     registrar.addMethodCallDelegate(instance, channel: channel)
-    FirebaseStorageHostApiSetup.setUp(binaryMessenger: registrar.messenger, api: instance)
+    FirebaseStorageHostApiSetup.setUp(binaryMessenger: resolvedMessenger, api: instance)
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
