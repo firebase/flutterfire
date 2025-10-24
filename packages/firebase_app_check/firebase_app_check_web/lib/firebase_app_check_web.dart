@@ -157,7 +157,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   @override
   Future<String?> getToken(bool forceRefresh) async {
     return convertWebExceptions<Future<String?>>(() async {
-      app_check_interop.AppCheckTokenResult result =
+      app_check_interop.AppCheckTokenResultJsImpl result =
           await _delegate!.getToken(forceRefresh);
       return result.token.toDart;
     });
@@ -166,7 +166,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   @override
   Future<String> getLimitedUseToken() async {
     return convertWebExceptions<Future<String>>(() async {
-      app_check_interop.AppCheckTokenResult result =
+      app_check_interop.AppCheckTokenResultJsImpl result =
           await _delegate!.getLimitedUseToken();
       return result.token.toDart;
     });
