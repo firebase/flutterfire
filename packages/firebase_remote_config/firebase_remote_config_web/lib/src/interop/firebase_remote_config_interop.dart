@@ -33,7 +33,7 @@ external JSPromise<JSBoolean> fetchConfig(RemoteConfigJsImpl remoteConfig);
 
 @JS()
 @staticInterop
-external JSAny getAll(RemoteConfigJsImpl remoteConfig);
+external JSObject getAll(RemoteConfigJsImpl remoteConfig);
 
 @JS()
 @staticInterop
@@ -53,7 +53,7 @@ external ValueJsImpl getValue(RemoteConfigJsImpl remoteConfig, JSString key);
 
 @JS()
 @staticInterop
-external JSPromise isSupported();
+external JSPromise<JSBoolean> isSupported();
 
 @JS()
 @staticInterop
