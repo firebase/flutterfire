@@ -17,6 +17,8 @@ import Foundation
   import FlutterMacOS
 #endif
 
+extension FlutterError: Error {}
+
 public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseStorageHostApi {
   private var channel: FlutterMethodChannel?
   private var messenger: FlutterBinaryMessenger?
@@ -33,12 +35,12 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
   @objc
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channelName = "plugins.flutter.io/firebase_storage"
-    let channel = FlutterMethodChannel(name: channelName, binaryMessenger: registrar.messenger())
+    let channel = FlutterMethodChannel(name: channelName, binaryMessenger: registrar.messenger)
     let instance = FLTFirebaseStoragePlugin()
     instance.channel = channel
-    instance.messenger = registrar.messenger()
+    instance.messenger = registrar.messenger
     registrar.addMethodCallDelegate(instance, channel: channel)
-    FirebaseStorageHostApiSetup.setUp(binaryMessenger: registrar.messenger(), api: instance)
+    FirebaseStorageHostApiSetup.setUp(binaryMessenger: registrar.messenger, api: instance)
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -349,10 +351,7 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     let ns = error as NSError
     let code = mapStorageErrorCode(ns)
     let message = standardMessage(for: code) ?? ns.localizedDescription
-    return NSError(domain: "io.flutter.plugins.firebase.storage", code: 1, userInfo: [
-      NSLocalizedDescriptionKey: message,
-      "code": code,
-    ])
+    return FlutterError(code: code, message: message, details: [:])
   }
 
   private func mapStorageErrorCode(_ error: NSError) -> String {
