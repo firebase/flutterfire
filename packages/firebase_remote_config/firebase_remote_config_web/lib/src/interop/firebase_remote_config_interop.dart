@@ -50,7 +50,7 @@ external JSString getString(RemoteConfigJsImpl remoteConfig, JSString key);
 
 @JS()
 @staticInterop
-external RemoteConfigValue getValue(RemoteConfigJsImpl remoteConfig, JSString key);
+external ValueJsImpl getValue(RemoteConfigJsImpl remoteConfig, JSString key);
 
 @JS()
 @staticInterop
