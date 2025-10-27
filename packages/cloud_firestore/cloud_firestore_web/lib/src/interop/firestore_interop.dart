@@ -27,7 +27,7 @@ external FirestoreJsImpl initializeFirestore(
 @staticInterop
 
 /// Type DocumentReferenceJsImpl
-external JSPromise addDoc(
+external JSPromise<DocumentReferenceJsImpl> addDoc(
   CollectionReferenceJsImpl reference,
   JSAny data,
 );
@@ -123,37 +123,37 @@ external JSPromise enableNetwork(FirestoreJsImpl firestore);
 
 @JS()
 @staticInterop
-external JSPromise getDoc(
+external JSPromise<DocumentSnapshotJsImpl> getDoc(
   DocumentReferenceJsImpl reference,
 );
 
 @JS()
 @staticInterop
-external JSPromise getDocFromCache(
+external JSPromise<DocumentSnapshotJsImpl> getDocFromCache(
   DocumentReferenceJsImpl reference,
 );
 
 @JS()
 @staticInterop
-external JSPromise getDocFromServer(
+external JSPromise<DocumentSnapshotJsImpl> getDocFromServer(
   DocumentReferenceJsImpl reference,
 );
 
 @JS()
 @staticInterop
-external JSPromise getDocs(
+external JSPromise<QuerySnapshotJsImpl> getDocs(
   QueryJsImpl query,
 );
 
 @JS()
 @staticInterop
-external JSPromise getDocsFromCache(
+external JSPromise<QuerySnapshotJsImpl> getDocsFromCache(
   QueryJsImpl query,
 );
 
 @JS()
 @staticInterop
-external JSPromise getDocsFromServer(
+external JSPromise<QuerySnapshotJsImpl> getDocsFromServer(
   QueryJsImpl query,
 );
 
