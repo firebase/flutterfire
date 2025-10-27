@@ -472,7 +472,6 @@ extension type DocumentChangeJsImpl._(JSObject _) implements JSObject {
 @staticInterop
 external DocumentReferenceJsImpl get DocumentReferenceJsConstructor;
 
-
 extension type DocumentReferenceJsImpl._(JSObject _) implements JSObject {
   external FirestoreJsImpl get firestore;
   external JSString get id;
@@ -758,7 +757,7 @@ extension type PersistentMultipleTabManager._(JSObject _) implements JSObject {
 }
 
 /// A garbage collector deletes documents whenever they are not part of any active queries, and have no local mutations attached to them.
-/// 
+///
 extension type MemoryEagerGarbageCollector._(JSObject _) implements JSObject {
   external JSString get kind;
 }
@@ -829,7 +828,8 @@ extension PersistentCacheSettingsExtension on PersistentCacheSettings {
 /// An settings object to configure an PersistentLocalCache instance.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firestore_.persistentsingletabmanagersettings>.
-extension type PersistentSingleTabManagerSettings._(JSObject _) implements JSObject {
+extension type PersistentSingleTabManagerSettings._(JSObject _)
+    implements JSObject {
   /// Whether to force-enable persistent (IndexedDB) cache for the client.
   /// This cannot be used with multi-tab synchronization and is primarily
   /// intended for use with Web Workers.
