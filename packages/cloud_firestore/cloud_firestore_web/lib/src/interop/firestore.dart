@@ -719,8 +719,8 @@ class CollectionReference<T extends firestore_interop.CollectionReferenceJsImpl>
     return _expando[jsObject] ??= CollectionReference._fromJsObject(jsObject);
   }
 
-  factory CollectionReference() => CollectionReference._fromJsObject(
-      firestore_interop.CollectionReferenceJsImpl());
+  factory CollectionReference(firestore_interop.CollectionReferenceJsImpl jsObject) => 
+    CollectionReference._fromJsObject(jsObject);
 
   CollectionReference._fromJsObject(
       firestore_interop.CollectionReferenceJsImpl jsObject)
