@@ -10,7 +10,6 @@ library;
 import 'dart:js_interop';
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
-import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart';
 
 @JS()
 @staticInterop
