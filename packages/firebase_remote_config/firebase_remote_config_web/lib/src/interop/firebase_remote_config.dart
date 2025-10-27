@@ -119,10 +119,10 @@ class RemoteConfig
 
   RemoteConfigValue getValue(String key) => RemoteConfigValue(
         utf8.encode(
-          remote_config_interop.getValue(jsObject, key.toJS).asString(),
+          remote_config_interop.getValue(jsObject, key.toJS).asString().toDart,
         ),
         getSource(
-          remote_config_interop.getValue(jsObject, key.toJS).asString(),
+          remote_config_interop.getValue(jsObject, key.toJS).asString().toDart,
         ),
       );
 
