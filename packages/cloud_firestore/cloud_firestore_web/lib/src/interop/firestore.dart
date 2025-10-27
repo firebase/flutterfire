@@ -731,8 +731,7 @@ class CollectionReference<T extends firestore_interop.CollectionReferenceJsImpl>
     final future =
         firestore_interop.addDoc(jsObject, jsify(data)! as JSObject).toDart;
     final result = await future;
-    return DocumentReference.getInstance(
-        (result)! as firestore_interop.DocumentReferenceJsImpl);
+    return DocumentReference.getInstance(result);
   }
 
   DocumentReference doc([String? documentPath]) {
