@@ -183,16 +183,16 @@ external JSAny serverTimestamp();
 
 @JS()
 @staticInterop
-external JSPromise<ReferenceJsImpl> set(ReferenceJsImpl ref, JSAny? value);
+external JSPromise set(ReferenceJsImpl ref, JSAny? value);
 
 @JS()
 @staticInterop
-external JSPromise<ReferenceJsImpl> setPriority(
+external JSPromise setPriority(
     ReferenceJsImpl ref, /* JSString | JSNumber | null */ JSAny? priority);
 
 @JS()
 @staticInterop
-external JSPromise<ReferenceJsImpl> setWithPriority(ReferenceJsImpl ref, JSAny? value,
+external JSPromise setWithPriority(ReferenceJsImpl ref, JSAny? value,
     /* JSString | JSNumber | null */ JSAny? priority);
 
 @JS()
@@ -231,33 +231,34 @@ extension type QueryConstraintJsImpl._(JSObject _) implements JSObject {
 }
 
 extension type OnDisconnectJsImpl._(JSObject _) implements JSObject {
-  external JSPromise<ReferenceJsImpl> cancel([
+  external JSPromise cancel([
     JSFunction onComplete,
     //void Function(JSAny) onComplete
   ]);
 
-  external JSPromise<ReferenceJsImpl> remove([
+  external JSPromise remove([
     JSFunction onComplete,
     //void Function(JSAny) onComplete
   ]);
 
-  external JSPromise<ReferenceJsImpl> set(
+  external JSPromise set(
     JSAny? value, [
     JSFunction onComplete,
     //void Function(JSAny) onComplete
   ]);
 
-  external JSPromise<ReferenceJsImpl> setWithPriority(
+  external JSPromise setWithPriority(
     JSAny? value,
     JSAny? priority,
   );
 
-  external JSPromise<ReferenceJsImpl> update(
+  external JSPromise update(
     JSAny? values,
   );
 }
 
-extension type ThenableReferenceJsImpl._(JSObject _) implements JSObject {
+extension type ThenableReferenceJsImpl._(JSObject _)
+    implements JSObject, ReferenceJsImpl {
   external JSPromise then([JSFunction? onResolve, JSFunction? onReject]);
 }
 
