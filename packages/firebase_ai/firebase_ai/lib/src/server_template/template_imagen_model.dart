@@ -66,7 +66,7 @@ final class TemplateImagenModel extends BaseTemplateApiClientModel {
   @experimental
   Future<ImagenGenerationResponse<ImagenInlineImage>> generateImages(
           String templateId,
-          {Map<String, Object?>? inputs}) =>
+          {required Map<String, Object?> inputs}) =>
       makeTemplateRequest(
         TemplateTask.templatePredict,
         templateId,

@@ -35,11 +35,12 @@ final class TemplateChatSession {
 
   final Future<GenerateContentResponse> Function(
       Iterable<Content> content, String templateId,
-      {Map<String, Object?>? inputs}) _templateHistoryGenerateContent;
+      {required Map<String, Object?> inputs}) _templateHistoryGenerateContent;
 
   final Stream<GenerateContentResponse> Function(
-      Iterable<Content> content, String templateId,
-      {Map<String, Object?>? inputs}) _templateHistoryGenerateContentStream;
+          Iterable<Content> content, String templateId,
+          {required Map<String, Object?> inputs})
+      _templateHistoryGenerateContentStream;
   final String _templateId;
   final List<Content> _history;
 
@@ -62,7 +63,7 @@ final class TemplateChatSession {
   /// When there are no candidates in the response, the [message] and response
   /// are ignored and will not be recorded in the [history].
   Future<GenerateContentResponse> sendMessage(Content message,
-      {Map<String, Object?>? inputs}) async {
+      {required Map<String, Object?> inputs}) async {
     final lock = await _mutex.acquire();
     try {
       final response = await _templateHistoryGenerateContent(
@@ -95,7 +96,7 @@ final class TemplateChatSession {
   /// When there are no candidates in the response, the [message] and response
   /// are ignored and will not be recorded in the [history].
   Stream<GenerateContentResponse> sendMessageStream(Content message,
-      {Map<String, Object?>? inputs}) {
+      {required Map<String, Object?> inputs}) {
     final controller = StreamController<GenerateContentResponse>(sync: true);
     _mutex.acquire().then((lock) async {
       try {

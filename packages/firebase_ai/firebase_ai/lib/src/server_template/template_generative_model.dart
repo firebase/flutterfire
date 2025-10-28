@@ -74,7 +74,7 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
   /// Sends a "templateGenerateContent" API request for the configured model.
   @experimental
   Future<GenerateContentResponse> generateContent(String templateId,
-          {Map<String, Object?>? inputs}) =>
+          {required Map<String, Object?> inputs}) =>
       makeTemplateRequest(TemplateTask.templateGenerateContent, templateId,
           inputs, null, _serializationStrategy.parseGenerateContentResponse);
 
@@ -84,7 +84,7 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
   /// and waits for the response.
   @experimental
   Stream<GenerateContentResponse> generateContentStream(String templateId,
-      {Map<String, Object?>? inputs}) {
+      {required Map<String, Object?> inputs}) {
     return streamTemplateRequest(
         TemplateTask.templateStreamGenerateContent,
         templateId,
@@ -98,7 +98,7 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
   @experimental
   Future<GenerateContentResponse> templateGenerateContentWithHistory(
           Iterable<Content> history, String templateId,
-          {Map<String, Object?>? inputs}) =>
+          {required Map<String, Object?> inputs}) =>
       makeTemplateRequest(TemplateTask.templateGenerateContent, templateId,
           inputs, history, _serializationStrategy.parseGenerateContentResponse);
 
@@ -107,7 +107,7 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
   @experimental
   Stream<GenerateContentResponse> templateGenerateContentWithHistoryStream(
       Iterable<Content> history, String templateId,
-      {Map<String, Object?>? inputs}) {
+      {required Map<String, Object?> inputs}) {
     return streamTemplateRequest(
         TemplateTask.templateStreamGenerateContent,
         templateId,

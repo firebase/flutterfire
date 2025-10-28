@@ -390,9 +390,8 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
     });
 
     try {
-      var response = await _templateGenerativeModel?.generateContent(
-        'new-greeting',
-      );
+      var response = await _templateGenerativeModel
+          ?.generateContent('new-greeting', inputs: {});
 
       _messages.add(MessageData(text: response?.text, fromUser: false));
 
