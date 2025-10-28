@@ -10,8 +10,7 @@ extension type TransactionResultJsImpl._(JSObject _) implements JSObject {
   external DataSnapshotJsImpl get snapshot;
 }
 
-extension type ReferenceJsImpl._(JSObject _)
-    implements JSObject, QueryJsImpl {
+extension type ReferenceJsImpl._(JSObject _) implements JSObject, QueryJsImpl {
   external JSString? get key;
 
   external ReferenceJsImpl? get parent;
