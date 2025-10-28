@@ -17,6 +17,30 @@ part of '../base_model.dart';
 /// An image model that connects to a remote server template.
 @experimental
 final class TemplateImagenModel extends BaseTemplateApiClientModel {
+  @internal
+  TemplateImagenModel.internal(
+      {required FirebaseApp app,
+      required String location,
+      required bool useVertexBackend,
+      bool? useLimitedUseAppCheckTokens,
+      FirebaseAppCheck? appCheck,
+      FirebaseAuth? auth,
+      http.Client? httpClient})
+      : super(
+          serializationStrategy: VertexSerialization(),
+          modelUri: useVertexBackend
+              ? _VertexUri(app: app, model: '', location: location)
+              : _GoogleAIUri(app: app, model: ''),
+          client: HttpApiClient(
+              apiKey: app.options.apiKey,
+              httpClient: httpClient,
+              requestHeaders: BaseModel.firebaseTokens(
+                  appCheck, auth, app, useLimitedUseAppCheckTokens)),
+          templateUri: useVertexBackend
+              ? _TemplateVertexUri(app: app, location: location)
+              : _TemplateGoogleAIUri(app: app),
+        );
+
   TemplateImagenModel._(
       {required FirebaseApp app,
       required String location,
@@ -24,8 +48,7 @@ final class TemplateImagenModel extends BaseTemplateApiClientModel {
       bool? useLimitedUseAppCheckTokens,
       FirebaseAppCheck? appCheck,
       FirebaseAuth? auth})
-      : 
-        super(
+      : super(
           serializationStrategy: VertexSerialization(),
           modelUri: useVertexBackend
               ? _VertexUri(app: app, model: '', location: location)

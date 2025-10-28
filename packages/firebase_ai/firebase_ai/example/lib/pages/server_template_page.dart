@@ -206,6 +206,9 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
         Content.text(message),
         inputs: {
           'customerName': message,
+          'orientation': 'PORTRAIT',
+          'useFlash': true,
+          'zoom': 2,
         },
       );
 
@@ -215,14 +218,16 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
       if (functionCalls!.isNotEmpty) {
         final functionCall = functionCalls.first;
         if (functionCall.name == 'takePicture') {
+          ByteData catBytes = await rootBundle.load('assets/images/cat.jpg');
+          var imageBytes = catBytes.buffer.asUint8List();
           final functionResult = {
-            'orientation': 'LANDSCAPE',
-            'useFlash': true,
-            'zoom': 2,
+            'aspectRatio': '16:9',
+            'mimeType': 'image/jpeg',
+            'data': base64Encode(imageBytes),
           };
           var functionResponse = await _chatFunctionSession?.sendMessage(
             Content.functionResponse(functionCall.name, functionResult),
-            inputs: functionResult,
+            inputs: {},
           );
           _messages
               .add(MessageData(text: functionResponse?.text, fromUser: false));
@@ -255,7 +260,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
     try {
       _messages.add(MessageData(text: message, fromUser: true));
       var response = await _templateImagenModel?.generateImages(
-        'new-imagen',
+        'portrait-googleai',
         inputs: {
           'animal': message,
         },

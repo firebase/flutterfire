@@ -18,6 +18,32 @@ part of '../base_model.dart';
 /// A generative model that connects to a remote server template.
 @experimental
 final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
+  @internal
+  TemplateGenerativeModel.internal({
+    required String location,
+    required FirebaseApp app,
+    required bool useVertexBackend,
+    bool? useLimitedUseAppCheckTokens,
+    FirebaseAppCheck? appCheck,
+    FirebaseAuth? auth,
+    http.Client? httpClient,
+  }) : super(
+          serializationStrategy: useVertexBackend
+              ? VertexSerialization()
+              : DeveloperSerialization(),
+          modelUri: useVertexBackend
+              ? _VertexUri(app: app, model: '', location: location)
+              : _GoogleAIUri(app: app, model: ''),
+          client: HttpApiClient(
+              apiKey: app.options.apiKey,
+              httpClient: httpClient,
+              requestHeaders: BaseModel.firebaseTokens(
+                  appCheck, auth, app, useLimitedUseAppCheckTokens)),
+          templateUri: useVertexBackend
+              ? _TemplateVertexUri(app: app, location: location)
+              : _TemplateGoogleAIUri(app: app),
+        );
+
   TemplateGenerativeModel._({
     required String location,
     required FirebaseApp app,
