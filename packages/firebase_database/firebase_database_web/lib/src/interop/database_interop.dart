@@ -50,7 +50,7 @@ external void forceWebSockets();
 
 @JS()
 @staticInterop
-external JSPromise /*DataSnapshotJsImpl*/ get(QueryJsImpl query);
+external JSPromise<DataSnapshotJsImpl> get(QueryJsImpl query);
 
 @JS()
 @staticInterop
@@ -164,13 +164,13 @@ external ReferenceJsImpl refFromURL(
 
 @JS()
 @staticInterop
-external JSPromise remove(
+external JSPromise<ReferenceJsImpl> remove(
   ReferenceJsImpl ref,
 );
 
 @JS()
 @staticInterop
-external JSPromise/*<TransactionResultJsImpl>*/ runTransaction(
+external JSPromise<TransactionResultJsImpl> runTransaction(
   ReferenceJsImpl ref,
   JSFunction transactionUpdate,
   // Function(JSAny currentData) transactionUpdate,
@@ -183,16 +183,16 @@ external JSAny serverTimestamp();
 
 @JS()
 @staticInterop
-external JSPromise set(ReferenceJsImpl ref, JSAny? value);
+external JSPromise<ReferenceJsImpl> set(ReferenceJsImpl ref, JSAny? value);
 
 @JS()
 @staticInterop
-external JSPromise setPriority(
+external JSPromise<ReferenceJsImpl> setPriority(
     ReferenceJsImpl ref, /* JSString | JSNumber | null */ JSAny? priority);
 
 @JS()
 @staticInterop
-external JSPromise setWithPriority(ReferenceJsImpl ref, JSAny? value,
+external JSPromise<ReferenceJsImpl> setWithPriority(ReferenceJsImpl ref, JSAny? value,
     /* JSString | JSNumber | null */ JSAny? priority);
 
 @JS()
@@ -220,60 +220,44 @@ abstract class ServerValue {
   external static JSAny get TIMESTAMP;
 }
 
-@JS('Database')
-@staticInterop
-abstract class DatabaseJsImpl {}
-
-extension DatabaseJsImplExtension on DatabaseJsImpl {
+extension type DatabaseJsImpl._(JSObject _) implements JSObject {
   external AppJsImpl get app;
   external set app(AppJsImpl a);
   external JSString get type;
 }
 
-@JS('QueryConstraint')
-@staticInterop
-abstract class QueryConstraintJsImpl {}
-
-extension QueryConstraintJsImplExtension on QueryConstraintJsImpl {
+extension type QueryConstraintJsImpl._(JSObject _) implements JSObject {
   external JSString get type;
 }
 
-@JS('OnDisconnect')
-@staticInterop
-abstract class OnDisconnectJsImpl {}
-
-extension OnDisconnectJsImplExtension on OnDisconnectJsImpl {
-  external JSPromise cancel([
+extension type OnDisconnectJsImpl._(JSObject _) implements JSObject {
+  external JSPromise<ReferenceJsImpl> cancel([
     JSFunction onComplete,
     //void Function(JSAny) onComplete
   ]);
 
-  external JSPromise remove([
+  external JSPromise<ReferenceJsImpl> remove([
     JSFunction onComplete,
     //void Function(JSAny) onComplete
   ]);
 
-  external JSPromise set(
+  external JSPromise<ReferenceJsImpl> set(
     JSAny? value, [
     JSFunction onComplete,
     //void Function(JSAny) onComplete
   ]);
 
-  external JSPromise setWithPriority(
+  external JSPromise<ReferenceJsImpl> setWithPriority(
     JSAny? value,
     JSAny? priority,
   );
 
-  external JSPromise update(
+  external JSPromise<ReferenceJsImpl> update(
     JSAny? values,
   );
 }
 
-@JS('ThenableReference')
-@staticInterop
-abstract class ThenableReferenceJsImpl extends ReferenceJsImpl {}
-
-extension ThenableReferenceJsImplExtension on ThenableReferenceJsImpl {
+extension type ThenableReferenceJsImpl._(JSObject _) implements JSObject {
   external JSPromise then([JSFunction? onResolve, JSFunction? onReject]);
 }
 
@@ -302,12 +286,7 @@ abstract class ListenOptions {
   external static JSBoolean get onlyOnce;
 }
 
-@JS()
-@staticInterop
-@anonymous
-abstract class FirebaseError {}
-
-extension FirebaseErrorExtension on FirebaseError {
+extension type FirebaseError._(JSObject _) implements JSObject {
   external JSString get code;
   external JSString get message;
   external JSString get name;
