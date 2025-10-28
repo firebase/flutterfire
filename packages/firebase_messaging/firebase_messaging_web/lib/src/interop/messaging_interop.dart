@@ -36,7 +36,6 @@ external JSFunction onMessage(
   Observer observer,
 );
 
-@JS('Messaging')
 extension type MessagingJsImpl._(JSObject _) implements JSObject {}
 
 extension type Observer._(JSObject _) implements JSObject {
