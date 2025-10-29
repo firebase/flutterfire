@@ -14,7 +14,8 @@ const kCollectionId = 'test';
 
 class MockWebDocumentSnapshot extends Mock implements web.DocumentSnapshot {}
 
-class MockWebSnapshotMetaData extends Mock implements web.SnapshotMetadata {}
+// Lint error here but tests pass without this.
+// class MockWebSnapshotMetaData extends Mock implements web.SnapshotMetadata {}
 
 class MockFirestoreWeb extends Mock implements web.Firestore {}
 
