@@ -18,6 +18,7 @@ part of '../base_model.dart';
 /// A generative model that connects to a remote server template.
 @experimental
 final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
+  /// Constructor only for test usage
   @internal
   TemplateGenerativeModel.internal({
     required String location,

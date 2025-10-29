@@ -17,6 +17,7 @@ part of '../base_model.dart';
 /// An image model that connects to a remote server template.
 @experimental
 final class TemplateImagenModel extends BaseTemplateApiClientModel {
+  /// Constructor only for test usage
   @internal
   TemplateImagenModel.internal(
       {required FirebaseApp app,

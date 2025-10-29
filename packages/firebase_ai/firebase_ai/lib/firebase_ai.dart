@@ -105,8 +105,6 @@ export 'src/live_api.dart'
         LiveServerResponse;
 export 'src/live_session.dart' show LiveSession;
 export 'src/schema.dart' show Schema, SchemaType;
-export 'src/server_template/template_chat.dart'
-    show TemplateChatSession, StartTemplateChatExtension;
 
 export 'src/tool.dart'
     show
