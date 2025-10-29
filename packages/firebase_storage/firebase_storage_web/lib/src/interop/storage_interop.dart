@@ -143,7 +143,8 @@ extension type FullMetadataJsImpl._(JSObject _)
 }
 
 @JS('UploadMetadata')
-extension type UploadMetadataJsImpl._(JSObject _) implements SettableMetadataJsImpl, JSObject {
+extension type UploadMetadataJsImpl._(JSObject _)
+    implements SettableMetadataJsImpl, JSObject {
   external factory UploadMetadataJsImpl(
       {JSString? md5Hash,
       JSString? cacheControl,

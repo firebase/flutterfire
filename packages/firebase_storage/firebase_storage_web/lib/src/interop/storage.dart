@@ -141,8 +141,7 @@ class StorageReference
   /// Returns a [FullMetadata] from this reference at actual location.
   Future<FullMetadata> getMetadata() async {
     final data = await storage_interop.getMetadata(jsObject).toDart;
-    return FullMetadata.getInstance(
-        data);
+    return FullMetadata.getInstance(data);
   }
 
   /// List items (files) and prefixes (folders) under this storage reference.
