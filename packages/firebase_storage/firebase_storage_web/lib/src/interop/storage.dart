@@ -142,7 +142,7 @@ class StorageReference
   Future<FullMetadata> getMetadata() async {
     final data = await storage_interop.getMetadata(jsObject).toDart;
     return FullMetadata.getInstance(
-        data! as storage_interop.FullMetadataJsImpl);
+        data);
   }
 
   /// List items (files) and prefixes (folders) under this storage reference.
@@ -157,7 +157,7 @@ class StorageReference
   /// [list()] may fail if there are too many unsupported objects in the bucket.
   Future<ListResult> list(ListOptions? options) async {
     final data = await storage_interop.list(jsObject, options?.jsObject).toDart;
-    return ListResult.getInstance(data! as storage_interop.ListResultJsImpl);
+    return ListResult.getInstance(data);
   }
 
   /// List all items (files) and prefixes (folders) under this storage reference.
@@ -173,7 +173,7 @@ class StorageReference
   /// too many results.
   Future<ListResult> listAll() async {
     final data = await storage_interop.listAll(jsObject).toDart;
-    return ListResult.getInstance(data! as storage_interop.ListResultJsImpl);
+    return ListResult.getInstance(data);
   }
 
   /// Uploads data [blob] to the actual location with optional [metadata].

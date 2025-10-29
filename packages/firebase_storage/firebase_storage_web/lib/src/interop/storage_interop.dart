@@ -106,7 +106,8 @@ extension type ReferenceJsImpl._(JSObject _) implements JSObject {
 }
 
 @JS('FullMetadata')
-extension type FullMetadataJsImpl._(JSObject _) implements UploadMetadataJsImpl, JSObject {
+extension type FullMetadataJsImpl._(JSObject _)
+    implements UploadMetadataJsImpl, JSObject {
   external factory FullMetadataJsImpl({
     JSString bucket,
     JSArray? downloadTokens,
