@@ -126,9 +126,10 @@ FlutterStandardMethodCodec *_codec;
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   FLTFirebaseFirestorePlugin *instance =
       [[FLTFirebaseFirestorePlugin alloc] init:[registrar messenger]];
+#if TARGET_OS_IPHONE
   [FLTFirestoreClientLanguage
-      setClientLanguage:[NSString stringWithFormat:@"gl-dart/%@ fire/%@", @LIBRARY_VERSION,
-                                                   @LIBRARY_VERSION]];
+      setClientLanguage:[NSString stringWithFormat:@"gl-dart/%@", @LIBRARY_VERSION]];
+#endif
 
 #if TARGET_OS_OSX
 // TODO(Salakar): Publish does not exist on MacOS version of FlutterPluginRegistrar.

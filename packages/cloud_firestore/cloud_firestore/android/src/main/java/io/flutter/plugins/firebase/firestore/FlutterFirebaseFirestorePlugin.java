@@ -136,10 +136,7 @@ public class FlutterFirebaseFirestorePlugin
   public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
     initInstance(binding.getBinaryMessenger());
     FirestoreChannel.setClientLanguage(
-        "gl-dart/"
-            + io.flutter.plugins.firebase.firestore.BuildConfig.LIBRARY_VERSION
-            + " fire/"
-            + BuildConfig.LIBRARY_VERSION);
+        "gl-dart/" + io.flutter.plugins.firebase.firestore.BuildConfig.LIBRARY_VERSION);
   }
 
   @Override
