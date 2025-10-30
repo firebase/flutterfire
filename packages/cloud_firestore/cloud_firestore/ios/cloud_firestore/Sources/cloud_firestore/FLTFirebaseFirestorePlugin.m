@@ -33,6 +33,10 @@ NSString *const kFLTFirebaseFirestoreTransactionChannelName =
 NSString *const kFLTFirebaseFirestoreLoadBundleChannelName =
     @"plugins.flutter.io/firebase_firestore/loadBundle";
 
+@interface FLTFirestoreClientLanguage : NSObject
++ (void)setClientLanguage:(NSString *)language;
+@end
+
 @interface FLTFirebaseFirestorePlugin ()
 @property(nonatomic, retain) NSMutableDictionary *transactions;
 
@@ -122,6 +126,9 @@ FlutterStandardMethodCodec *_codec;
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   FLTFirebaseFirestorePlugin *instance =
       [[FLTFirebaseFirestorePlugin alloc] init:[registrar messenger]];
+  [FLTFirestoreClientLanguage
+      setClientLanguage:[NSString stringWithFormat:@"gl-dart/%@ fire/%@", @LIBRARY_VERSION,
+                                                   @LIBRARY_VERSION]];
 
 #if TARGET_OS_OSX
 // TODO(Salakar): Publish does not exist on MacOS version of FlutterPluginRegistrar.

@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
   s.license          = { :file => '../LICENSE' }
   s.authors          = 'The Chromium Authors'
   s.source           = { :path => '.' }
-  s.source_files     = 'cloud_firestore/Sources/cloud_firestore/**/*.{h,m}'
+  s.source_files     = 'cloud_firestore/Sources/cloud_firestore/**/*.{h,m,mm}'
   s.public_header_files = 'cloud_firestore/Sources/cloud_firestore/include/Public/**/*.h'
   s.private_header_files = 'cloud_firestore/Sources/cloud_firestore/include/Private/**/*.h'
 
