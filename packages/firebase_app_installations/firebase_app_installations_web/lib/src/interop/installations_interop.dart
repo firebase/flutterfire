@@ -29,13 +29,15 @@ external JSPromise /* void */ deleteInstallations(
 
 @JS()
 @staticInterop
-external JSFunction onIdChange(
-    InstallationsJsImpl installations, JSFunction forceRefresh);
+external JSFunction onIdChange(JSObject installations, JSFunction forceRefresh);
 
-@JS('Installations')
-@staticInterop
-abstract class InstallationsJsImpl {}
-
-extension InstallationsJsImplExtension on InstallationsJsImpl {
+extension type InstallationsJsImplExtension._(JSObject _) implements JSObject {
   external AppJsImpl get app;
+}
+
+extension type InstallationsJsImpl._(JSObject _) implements JSObject {
+  external JSPromise<JSString> getId();
+  external JSPromise<JSString> getToken([JSBoolean? forceRefresh]);
+  external JSPromise deleteInstallations();
+  external JSFunction onIdChange(JSFunction forceRefresh);
 }
