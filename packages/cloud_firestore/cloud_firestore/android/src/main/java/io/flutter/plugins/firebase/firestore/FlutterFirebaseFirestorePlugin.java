@@ -8,6 +8,7 @@ import static com.google.firebase.firestore.AggregateField.average;
 import static com.google.firebase.firestore.AggregateField.count;
 import static com.google.firebase.firestore.AggregateField.sum;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.util.Log;
 import androidx.annotation.NonNull;
@@ -33,6 +34,7 @@ import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.Source;
 import com.google.firebase.firestore.Transaction;
 import com.google.firebase.firestore.WriteBatch;
+import com.google.firebase.firestore.remote.FirestoreChannel;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -129,9 +131,12 @@ public class FlutterFirebaseFirestorePlugin
     }
   }
 
+  @SuppressLint("RestrictedApi")
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
     initInstance(binding.getBinaryMessenger());
+    FirestoreChannel.setClientLanguage(
+        "gl-dart/" + io.flutter.plugins.firebase.firestore.BuildConfig.LIBRARY_VERSION);
   }
 
   @Override
