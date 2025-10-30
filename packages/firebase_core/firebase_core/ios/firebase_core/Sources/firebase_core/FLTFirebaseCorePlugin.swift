@@ -11,7 +11,7 @@ import FlutterMacOS
 import Flutter
 #endif
 
-@objc public class FLTFirebaseCorePlugin: FLTFirebasePlugin, FlutterPlugin, FirebaseCoreHostApi, FirebaseAppHostApi {
+@objc public class FLTFirebaseCorePlugin: FLTFirebasePluginHelper, FlutterPlugin, FLTFirebasePlugin, FirebaseCoreHostApi, FirebaseAppHostApi {
     private var coreInitialized = false
     private static var customAuthDomains: [String: String] = [:]
     
@@ -29,7 +29,7 @@ import Flutter
     // Returns a singleton instance of the Firebase Core plugin.
     @objc public static func sharedInstance() -> FLTFirebaseCorePlugin {
         struct Singleton {
-            static let instance: FLTFirebaseCorePlugin = {
+            static         let instance: FLTFirebaseCorePlugin = {
                 let instance = FLTFirebaseCorePlugin()
                 // Register with the Flutter Firebase plugin registry.
                 FLTFirebasePluginRegistry.shared.registerFirebasePlugin(instance)
@@ -60,27 +60,27 @@ import Flutter
     // MARK: - Helpers
     
     private func optionsFromFIROptions(_ options: FirebaseOptions) -> CoreFirebaseOptions {
-        let pigeonOptions = CoreFirebaseOptions()
-        pigeonOptions.apiKey = options.apiKey
-        pigeonOptions.appId = options.googleAppID
-        pigeonOptions.messagingSenderId = options.gcmSenderID
-        pigeonOptions.projectId = options.projectID
-        pigeonOptions.databaseURL = options.databaseURL
-        pigeonOptions.storageBucket = options.storageBucket
-        pigeonOptions.iosBundleId = options.bundleID
-        pigeonOptions.iosClientId = options.clientID
-        pigeonOptions.appGroupId = options.appGroupID
-        return pigeonOptions
+        return CoreFirebaseOptions(
+            apiKey: options.apiKey ?? "",
+            appId: options.googleAppID,
+            messagingSenderId: options.gcmSenderID,
+            projectId: options.projectID ?? "",
+            databaseURL: options.databaseURL,
+            storageBucket: options.storageBucket,
+            iosClientId: options.clientID,
+            iosBundleId: options.bundleID,
+            appGroupId: options.appGroupID
+        )
     }
     
     private func initializeResponse(from firebaseApp: FirebaseApp) -> CoreInitializeResponse {
-        let appNameDart = FLTFirebasePlugin.firebaseAppName(fromIosName: firebaseApp.name)
-        let response = CoreInitializeResponse()
-        response.name = appNameDart
-        response.options = optionsFromFIROptions(firebaseApp.options)
-        response.isAutomaticDataCollectionEnabled = firebaseApp.isDataCollectionDefaultEnabled as NSNumber
-        response.pluginConstants = FLTFirebasePluginRegistry.shared.pluginConstants(forFIRApp: firebaseApp)
-        return response
+        let appNameDart = FLTFirebasePluginHelper.firebaseAppName(fromIosName: firebaseApp.name)
+        return CoreInitializeResponse(
+            name: appNameDart,
+            options: optionsFromFIROptions(firebaseApp.options),
+            isAutomaticDataCollectionEnabled: firebaseApp.isDataCollectionDefaultEnabled,
+            pluginConstants: FLTFirebasePluginRegistry.shared.pluginConstants(forFIRApp: firebaseApp)
+        )
     }
     
     // MARK: - FLTFirebasePlugin
@@ -94,11 +94,12 @@ import Flutter
     }
     
     @objc public var firebaseLibraryName: String {
-        return String(cString: LIBRARY_NAME, encoding: .utf8) ?? ""
+        return "flutter-fire-core"
     }
     
     @objc public var firebaseLibraryVersion: String {
-        return String(cString: LIBRARY_VERSION, encoding: .utf8) ?? ""
+        // TODO: Get version from Package.swift or build configuration
+        return "4.2.0"
     }
     
     @objc public var flutterChannelName: String {
@@ -108,25 +109,20 @@ import Flutter
     
     // MARK: - API
     
-    public func initializeApp(
+    func initializeApp(
         appName: String,
         initializeAppRequest: CoreFirebaseOptions,
         completion: @escaping (Result<CoreInitializeResponse, Error>) -> Void
     ) {
-        let appNameIos = FLTFirebasePlugin.firebaseAppName(fromDartName: appName)
+        let appNameIos = FLTFirebasePluginHelper.firebaseAppName(fromDartName: appName)
         
-        if let existingApp = FLTFirebasePlugin.firebaseApp(named: appName) {
+        if let existingApp = FLTFirebasePluginHelper.firebaseApp(named: appName) {
             completion(.success(initializeResponse(from: existingApp)))
             return
         }
         
-        guard let appId = initializeAppRequest.appId,
-              let messagingSenderId = initializeAppRequest.messagingSenderId else {
-            completion(.failure(NSError(domain: "FLTFirebaseCore",
-                                       code: -1,
-                                       userInfo: [NSLocalizedDescriptionKey: "Missing required options"])))
-            return
-        }
+        let appId = initializeAppRequest.appId
+        let messagingSenderId = initializeAppRequest.messagingSenderId
         
         let options = FirebaseOptions(googleAppID: appId, gcmSenderID: messagingSenderId)
         options.apiKey = initializeAppRequest.apiKey
@@ -167,13 +163,14 @@ import Flutter
         }
     }
     
-    public func initializeCore(completion: @escaping (Result<[CoreInitializeResponse], Error>) -> Void) {
+    func initializeCore(completion: @escaping (Result<[CoreInitializeResponse], Error>) -> Void) {
         let initializeCoreBlock: () -> Void = {
-            let firebaseApps = FirebaseApp.allApps() ?? [:]
             var firebaseAppsArray: [CoreInitializeResponse] = []
             
-            for (_, firebaseApp) in firebaseApps {
-                firebaseAppsArray.append(self.initializeResponse(from: firebaseApp))
+            if let firebaseApps = FirebaseApp.allApps {
+                for (_, firebaseApp) in firebaseApps {
+                    firebaseAppsArray.append(self.initializeResponse(from: firebaseApp))
+                }
             }
             
             completion(.success(firebaseAppsArray))
@@ -187,13 +184,18 @@ import Flutter
         }
     }
     
-    public func optionsFromResource(completion: @escaping (Result<CoreFirebaseOptions, Error>) -> Void) {
-        // Unsupported on iOS/MacOS.
-        completion(.success(CoreFirebaseOptions()))
+    func optionsFromResource(completion: @escaping (Result<CoreFirebaseOptions, Error>) -> Void) {
+        // Unsupported on iOS/MacOS - return empty options with minimal required fields
+        completion(.success(CoreFirebaseOptions(
+            apiKey: "",
+            appId: "",
+            messagingSenderId: "",
+            projectId: ""
+        )))
     }
     
-    public func delete(appName: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        guard let firebaseApp = FLTFirebasePlugin.firebaseApp(named: appName) else {
+    func delete(appName: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        guard let firebaseApp = FLTFirebasePluginHelper.firebaseApp(named: appName) else {
             completion(.success(()))
             return
         }
@@ -209,18 +211,18 @@ import Flutter
         }
     }
     
-    public func setAutomaticDataCollectionEnabled(
+    func setAutomaticDataCollectionEnabled(
         appName: String,
         enabled: Bool,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
-        if let firebaseApp = FLTFirebasePlugin.firebaseApp(named: appName) {
+        if let firebaseApp = FLTFirebasePluginHelper.firebaseApp(named: appName) {
             firebaseApp.isDataCollectionDefaultEnabled = enabled
         }
         completion(.success(()))
     }
     
-    public func setAutomaticResourceManagementEnabled(
+    func setAutomaticResourceManagementEnabled(
         appName: String,
         enabled: Bool,
         completion: @escaping (Result<Void, Error>) -> Void

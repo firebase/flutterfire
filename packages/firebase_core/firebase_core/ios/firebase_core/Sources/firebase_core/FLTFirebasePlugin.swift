@@ -69,7 +69,7 @@ public typealias FLTFirebaseMethodCallErrorBlock = (String?, String?, [String: A
     }
 }
 
-@objc open class FLTFirebasePlugin: NSObject {
+@objc open class FLTFirebasePluginHelper: NSObject {
     /// Creates a standardized instance of FlutterError using the values returned
     /// through FLTFirebaseMethodCallErrorBlock.
     ///
