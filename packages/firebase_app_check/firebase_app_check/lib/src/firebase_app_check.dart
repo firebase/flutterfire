@@ -47,24 +47,57 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
 
   /// Activates the Firebase App Check service.
   ///
-  /// On web, provide the reCAPTCHA v3 Site Key which can be found in the
-  /// Firebase Console.
+  /// ## Platform Configuration
   ///
-  /// On Android, the default provider is "play integrity". If you wish to set the provider to "safety net" or "debug", you may set the `androidProvider` property using the `AndroidProvider` enum
+  /// **Web**: Provide the reCAPTCHA v3 Site Key using `webProvider`, which can be
+  /// found in the Firebase Console.
   ///
-  /// On iOS or macOS, the default provider is "device check". If you wish to set the provider to "app attest", "debug" or "app attest with fallback to device check"
-  /// ("app attest" is only available on iOS 14.0+, macOS 14.0+), you may set the `appleProvider` property using the `AppleProvider` enum
+  /// **Android**: The default provider is "play integrity". Use `providerAndroid`
+  /// to configure alternative providers such as "safety net", debug providers, or
+  /// custom implementations via `AndroidAppCheckProvider`.
+  ///
+  /// **iOS/macOS**: The default provider is "device check". Use `providerApple`
+  /// to configure alternative providers such as "app attest", debug providers, or
+  /// "app attest with fallback to device check" via `AppleAppCheckProvider`.
+  /// Note: App Attest is only available on iOS 14.0+ and macOS 14.0+.
+  ///
+  /// ## Migration Notice
+  ///
+  /// The `androidProvider` and `appleProvider` parameters will be deprecated
+  /// in a future release. Use `providerAndroid` and `providerApple` instead,
+  /// which support the new provider classes including `AndroidDebugProvider`
+  /// and `AppleDebugProvider` for passing debug tokens directly.
   ///
   /// For more information, see [the Firebase Documentation](https://firebase.google.com/docs/app-check)
   Future<void> activate({
+    @Deprecated(
+      'Use providerWeb instead. '
+      'This parameter will be removed in a future major release.',
+    )
     WebProvider? webProvider,
+    WebProvider? providerWeb,
+    @Deprecated(
+      'Use providerAndroid instead. '
+      'This parameter will be removed in a future major release.',
+    )
     AndroidProvider androidProvider = AndroidProvider.playIntegrity,
+    @Deprecated(
+      'Use providerApple instead. '
+      'This parameter will be removed in a future major release.',
+    )
     AppleProvider appleProvider = AppleProvider.deviceCheck,
+    AndroidAppCheckProvider providerAndroid =
+        const AndroidPlayIntegrityProvider(),
+    AppleAppCheckProvider providerApple = const AppleDeviceCheckProvider(),
   }) {
     return _delegate.activate(
-      webProvider: webProvider,
+      webProvider: providerWeb ?? webProvider,
+      // ignore: deprecated_member_use
       androidProvider: androidProvider,
+      // ignore: deprecated_member_use
       appleProvider: appleProvider,
+      providerAndroid: providerAndroid,
+      providerApple: providerApple,
     );
   }
 

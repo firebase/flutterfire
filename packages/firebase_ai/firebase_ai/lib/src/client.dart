@@ -18,7 +18,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'error.dart';
-import 'vertex_version.dart';
+import 'firebaseai_version.dart';
 
 /// Client name to feed into the request.
 const clientName = 'vertexai-dart/$packageVersion';
@@ -63,9 +63,10 @@ final class HttpApiClient implements ApiClient {
   @override
   Future<Map<String, Object?>> makeRequest(
       Uri uri, Map<String, Object?> body) async {
+    final headers = await _headers();
     final response = await (_httpClient?.post ?? http.post)(
       uri,
-      headers: await _headers(),
+      headers: headers,
       body: _utf8Json.encode(body),
     );
     if (response.statusCode >= 500) {

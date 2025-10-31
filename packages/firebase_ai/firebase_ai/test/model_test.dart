@@ -123,7 +123,7 @@ void main() {
           matchesGenerateContentResponse(
             GenerateContentResponse([
               Candidate(
-                Content('model', [TextPart(result)]),
+                Content('model', [const TextPart(result)]),
                 null,
                 null,
                 null,
@@ -278,6 +278,22 @@ void main() {
           verifyRequest: (_, request) {
             expect(request['tools'], [
               {'googleSearch': {}},
+            ]);
+          },
+          response: arbitraryGenerateContentResponse,
+        );
+      });
+
+      test('can pass a url context tool', () async {
+        final (client, model) = createModel(
+          tools: [Tool.urlContext()],
+        );
+        const prompt = 'Some prompt';
+        await client.checkRequest(
+          () => model.generateContent([Content.text(prompt)]),
+          verifyRequest: (_, request) {
+            expect(request['tools'], [
+              {'urlContext': {}},
             ]);
           },
           response: arbitraryGenerateContentResponse,

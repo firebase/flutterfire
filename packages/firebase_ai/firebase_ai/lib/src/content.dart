@@ -13,7 +13,10 @@
 // limitations under the License.
 
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:typed_data';
+
+import 'api.dart';
 import 'error.dart';
 
 /// The base structured datatype containing multi-part content of a message.
@@ -46,8 +49,9 @@ final class Content {
   static Content model(Iterable<Part> parts) => Content('model', [...parts]);
 
   /// Return a [Content] with [FunctionResponse].
-  static Content functionResponse(String name, Map<String, Object?> response) =>
-      Content('function', [FunctionResponse(name, response)]);
+  static Content functionResponse(String name, Map<String, Object?> response,
+          {String? id}) =>
+      Content('function', [FunctionResponse(name, response, id: id)]);
 
   /// Return a [Content] with multiple [FunctionResponse].
   static Content functionResponses(Iterable<FunctionResponse> responses) =>
@@ -81,49 +85,140 @@ Content parseContent(Object jsonObject) {
 
 /// Parse the [Part] from json object.
 Part parsePart(Object? jsonObject) {
-  if (jsonObject is Map && jsonObject.containsKey('functionCall')) {
+  if (jsonObject is! Map<String, Object?>) {
+    log('Unhandled part format: $jsonObject');
+    return UnknownPart(<String, Object?>{
+      'unhandled': jsonObject,
+    });
+  }
+
+  final isThought =
+      jsonObject.containsKey('thought') && jsonObject['thought']! as bool;
+
+  final thoughtSignature = jsonObject.containsKey('thoughtSignature')
+      ? jsonObject['thoughtSignature']! as String
+      : null;
+
+  if (jsonObject.containsKey('functionCall')) {
     final functionCall = jsonObject['functionCall'];
     if (functionCall is Map &&
         functionCall.containsKey('name') &&
         functionCall.containsKey('args')) {
-      return FunctionCall(
+      return FunctionCall._(
         functionCall['name'] as String,
         functionCall['args'] as Map<String, Object?>,
         id: functionCall['id'] as String?,
+        isThought: isThought,
+        thoughtSignature: thoughtSignature,
       );
     } else {
       throw unhandledFormat('functionCall', functionCall);
     }
   }
+  if (jsonObject.containsKey('executableCode')) {
+    final executableCode = jsonObject['executableCode'];
+    if (executableCode is Map &&
+        executableCode.containsKey('language') &&
+        executableCode.containsKey('code')) {
+      return ExecutableCodePart(
+        language: CodeLanguage.parseValue(executableCode['language'] as String),
+        code: executableCode['code'] as String,
+      );
+    } else {
+      throw unhandledFormat('executableCode', executableCode);
+    }
+  }
+  if (jsonObject.containsKey('codeExecutionResult')) {
+    final codeExecutionResult = jsonObject['codeExecutionResult'];
+    if (codeExecutionResult is Map &&
+        codeExecutionResult.containsKey('outcome') &&
+        codeExecutionResult.containsKey('output')) {
+      return CodeExecutionResultPart(
+        outcome: Outcome.parseValue(codeExecutionResult['outcome'] as String),
+        output: codeExecutionResult['output'] as String,
+      );
+    } else {
+      throw unhandledFormat('codeExecutionResult', codeExecutionResult);
+    }
+  }
+
+  if (jsonObject.containsKey('inlineData')) {
+    final inlineDataResult = jsonObject['inlineData'];
+    if (inlineDataResult is Map &&
+        inlineDataResult.containsKey('mimeType') &&
+        inlineDataResult.containsKey('data')) {
+      return InlineDataPart._(
+        inlineDataResult['mimeType'] as String,
+        base64Decode(inlineDataResult['data'] as String),
+        willContinue: inlineDataResult['willContinue'] as bool?,
+        isThought: isThought,
+        thoughtSignature: thoughtSignature,
+      );
+    } else {
+      throw unhandledFormat('inlineData', inlineDataResult);
+    }
+  }
   return switch (jsonObject) {
-    {'text': final String text} => TextPart(text),
+    {'text': final String text} => TextPart._(text,
+        isThought: isThought, thoughtSignature: thoughtSignature),
     {
       'file_data': {
         'file_uri': final String fileUri,
-        'mime_type': final String mimeType
+        'mime_type': final String mimeType,
       }
     } =>
-      FileData(mimeType, fileUri),
-    {
-      'functionResponse': {'name': String _, 'response': Map<String, Object?> _}
-    } =>
-      throw UnimplementedError('FunctionResponse part not yet supported'),
-    {'inlineData': {'mimeType': String mimeType, 'data': String bytes}} =>
-      InlineDataPart(mimeType, base64Decode(bytes)),
-    _ => throw unhandledFormat('Part', jsonObject),
+      FileData._(mimeType, fileUri,
+          isThought: isThought, thoughtSignature: thoughtSignature),
+    _ => () {
+        log('unhandled part format: $jsonObject');
+        return UnknownPart(jsonObject);
+      }(),
   };
 }
 
 /// A datatype containing media that is part of a multi-part [Content] message.
 sealed class Part {
+  // ignore: public_member_api_docs
+  const Part({this.isThought, String? thoughtSignature})
+      : _thoughtSignature = thoughtSignature;
+  // ignore: public_member_api_docs
+  final bool? isThought;
+
+  // ignore: unused_field
+  final String? _thoughtSignature;
+
   /// Convert the [Part] content to json format.
   Object toJson();
 }
 
-/// A [Part] with the text content.
-final class TextPart implements Part {
+/// A [Part] that contains unparsable data.
+final class UnknownPart extends Part {
   // ignore: public_member_api_docs
-  TextPart(this.text);
+  UnknownPart(this.data) : super(isThought: false, thoughtSignature: null);
+
+  /// The unparsed data.
+  final Map<String, Object?> data;
+
+  @override
+  Object toJson() => data;
+}
+
+/// A [Part] with the text content.
+final class TextPart extends Part {
+  // ignore: public_member_api_docs
+  const TextPart(this.text, {bool? isThought})
+      : super(
+          isThought: isThought,
+          thoughtSignature: null,
+        );
+  const TextPart._(
+    this.text, {
+    bool? isThought,
+    String? thoughtSignature,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: thoughtSignature,
+        );
 
   /// The text content of the [Part]
   final String text;
@@ -132,9 +227,27 @@ final class TextPart implements Part {
 }
 
 /// A [Part] with the byte content of a file.
-final class InlineDataPart implements Part {
+final class InlineDataPart extends Part {
   // ignore: public_member_api_docs
-  InlineDataPart(this.mimeType, this.bytes, {this.willContinue});
+  const InlineDataPart(
+    this.mimeType,
+    this.bytes, {
+    this.willContinue,
+    bool? isThought,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: null,
+        );
+  const InlineDataPart._(
+    this.mimeType,
+    this.bytes, {
+    this.willContinue,
+    bool? isThought,
+    String? thoughtSignature,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: thoughtSignature,
+        );
 
   /// File type of the [InlineDataPart].
   /// https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-multimodal-prompts#media_requirements
@@ -165,9 +278,27 @@ final class InlineDataPart implements Part {
 /// A predicted `FunctionCall` returned from the model that contains
 /// a string representing the `FunctionDeclaration.name` with the
 /// arguments and their values.
-final class FunctionCall implements Part {
+final class FunctionCall extends Part {
   // ignore: public_member_api_docs
-  FunctionCall(this.name, this.args, {this.id});
+  const FunctionCall(
+    this.name,
+    this.args, {
+    this.id,
+    bool? isThought,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: null,
+        );
+  const FunctionCall._(
+    this.name,
+    this.args, {
+    this.id,
+    bool? isThought,
+    String? thoughtSignature,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: thoughtSignature,
+        );
 
   /// The name of the function to call.
   final String name;
@@ -192,9 +323,17 @@ final class FunctionCall implements Part {
 }
 
 /// The response class for [FunctionCall]
-final class FunctionResponse implements Part {
+final class FunctionResponse extends Part {
   // ignore: public_member_api_docs
-  FunctionResponse(this.name, this.response, {this.id});
+  const FunctionResponse(
+    this.name,
+    this.response, {
+    this.id,
+    bool? isThought,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: null,
+        );
 
   /// The name of the function that was called.
   final String name;
@@ -221,9 +360,25 @@ final class FunctionResponse implements Part {
 }
 
 /// A [Part] with Firebase Storage uri as prompt content
-final class FileData implements Part {
+final class FileData extends Part {
   // ignore: public_member_api_docs
-  FileData(this.mimeType, this.fileUri);
+  const FileData(
+    this.mimeType,
+    this.fileUri, {
+    bool? isThought,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: null,
+        );
+  const FileData._(
+    this.mimeType,
+    this.fileUri, {
+    bool? isThought,
+    String? thoughtSignature,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: thoughtSignature,
+        );
 
   /// File type of the [FileData].
   /// https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-multimodal-prompts#media_requirements
@@ -235,5 +390,53 @@ final class FileData implements Part {
   @override
   Object toJson() => {
         'file_data': {'file_uri': fileUri, 'mime_type': mimeType}
+      };
+}
+
+/// A `Part` that represents the code that is executed by the model.
+final class ExecutableCodePart extends Part {
+  // ignore: public_member_api_docs
+  ExecutableCodePart({
+    required this.language,
+    required this.code,
+    bool? isThought,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: null,
+        );
+
+  /// The programming language of the code.
+  final CodeLanguage language;
+
+  /// The source code to be executed.
+  final String code;
+
+  @override
+  Object toJson() => {
+        'executableCode': {'language': language.toJson(), 'code': code}
+      };
+}
+
+/// A `Part` that represents the code execution result from the model.
+final class CodeExecutionResultPart extends Part {
+  // ignore: public_member_api_docs
+  CodeExecutionResultPart({
+    required this.outcome,
+    required this.output,
+    bool? isThought,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: null,
+        );
+
+  /// The result of the execution.
+  final Outcome outcome;
+
+  /// The stdout from the code execution, or an error message if it failed.
+  final String output;
+
+  @override
+  Object toJson() => {
+        'codeExecutionResult': {'outcome': outcome.toJson(), 'output': output}
       };
 }

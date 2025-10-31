@@ -26,7 +26,9 @@ void main() {
   // ignore: unused_local_variable
   late FirebaseAppCheck appCheck;
   late FirebaseApp customApp;
+  late FirebaseApp limitTokenApp;
   late FirebaseAppCheck customAppCheck;
+  late FirebaseAppCheck limitTokenAppCheck;
 
   group('FirebaseAI Tests', () {
     late FirebaseApp app;
@@ -38,8 +40,13 @@ void main() {
         name: 'custom-app',
         options: Firebase.app().options,
       );
+      limitTokenApp = await Firebase.initializeApp(
+        name: 'limit-token-app',
+        options: Firebase.app().options,
+      );
       appCheck = FirebaseAppCheck.instance;
       customAppCheck = FirebaseAppCheck.instanceFor(app: customApp);
+      limitTokenAppCheck = FirebaseAppCheck.instanceFor(app: limitTokenApp);
     });
 
     test('Singleton behavior', () {
@@ -74,6 +81,19 @@ void main() {
       );
 
       expect(model, isA<GenerativeModel>());
+    });
+
+    test('Instance creation with useLimitedUseAppCheckTokens', () {
+      final vertexAIAppCheck = FirebaseAI.vertexAI(
+        app: limitTokenApp,
+        appCheck: limitTokenAppCheck,
+        location: 'limit-token-location',
+        useLimitedUseAppCheckTokens: true,
+      );
+      expect(vertexAIAppCheck.app, equals(limitTokenApp));
+      expect(vertexAIAppCheck.appCheck, equals(limitTokenAppCheck));
+      expect(vertexAIAppCheck.location, equals('limit-token-location'));
+      expect(vertexAIAppCheck.useLimitedUseAppCheckTokens, true);
     });
 
     // ... other tests (e.g., with different parameters)

@@ -16,8 +16,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:firebase_ai/src/error.dart';
-import 'package:firebase_ai/src/imagen_api.dart';
-import 'package:firebase_ai/src/imagen_content.dart';
+import 'package:firebase_ai/src/imagen/imagen_api.dart';
+import 'package:firebase_ai/src/imagen/imagen_content.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -195,7 +195,7 @@ void main() {
       final json = config.toJson();
       expect(json, {
         'negativePrompt': 'blurry, low quality',
-        'numberOfImages': 4,
+        'sampleCount': 4,
         'aspectRatio': '16:9',
         'addWatermark': true,
         'outputOptions': {
@@ -210,9 +210,7 @@ void main() {
         negativePrompt: 'blurry, low quality',
       );
       final json = config.toJson();
-      expect(json, {
-        'negativePrompt': 'blurry, low quality',
-      });
+      expect(json, {'negativePrompt': 'blurry, low quality', 'sampleCount': 1});
     });
 
     test('toJson with only numberOfImages', () {
@@ -221,7 +219,7 @@ void main() {
       );
       final json = config.toJson();
       expect(json, {
-        'numberOfImages': 2,
+        'sampleCount': 2,
       });
     });
 
@@ -230,9 +228,7 @@ void main() {
         aspectRatio: ImagenAspectRatio.portrait9x16,
       );
       final json = config.toJson();
-      expect(json, {
-        'aspectRatio': '9:16',
-      });
+      expect(json, {'aspectRatio': '9:16', 'sampleCount': 1});
     });
 
     test('toJson with only imageFormat', () {
@@ -244,6 +240,7 @@ void main() {
         'outputOptions': {
           'mimeType': 'image/png',
         },
+        'sampleCount': 1
       });
     });
 
@@ -252,15 +249,13 @@ void main() {
         addWatermark: false,
       );
       final json = config.toJson();
-      expect(json, {
-        'addWatermark': false,
-      });
+      expect(json, {'addWatermark': false, 'sampleCount': 1});
     });
 
     test('toJson with empty config', () {
       final config = ImagenGenerationConfig();
       final json = config.toJson();
-      expect(json, {});
+      expect(json, {'sampleCount': 1});
     });
 
     test('toJson with imageFormat uses correct key name "outputOptions"', () {

@@ -147,10 +147,10 @@ class FirebaseOptions {
   /// The URL scheme used by iOS secondary apps for Dynamic Links.
   final String? deepLinkURLScheme;
 
-  /// The Android client ID from the Firebase Console, for example
+  /// The Android OAuth client ID from the Firebase Console, for example
   /// "12345.apps.googleusercontent.com."
   ///
-  /// This value is used by iOS only.
+  /// This value is used on Android only.
   final String? androidClientId;
 
   /// The iOS client ID from the Firebase Console, for example

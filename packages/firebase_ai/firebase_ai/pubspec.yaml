@@ -1,12 +1,12 @@
 name: firebase_ai
 description: Firebase AI SDK.
-version: 3.0.0
+version: 3.4.0
 homepage: https://firebase.google.com/docs/vertex-ai/get-started?platform=flutter
 topics:
   - firebase
-  - vertexai
-  - gemini
   - generative-ai
+  - gemini
+  - imagen
 
 # Explicit about the supported platforms.
 platforms:
@@ -20,10 +20,10 @@ environment:
   flutter: ">=3.16.0"
 
 dependencies:
-  firebase_app_check: ^0.4.0
-  firebase_auth: ^6.0.0
-  firebase_core: ^4.0.0
-  firebase_core_platform_interface: ^6.0.0
+  firebase_app_check: ^0.4.1+1
+  firebase_auth: ^6.1.1
+  firebase_core: ^4.2.0
+  firebase_core_platform_interface: ^6.0.2
   flutter:
     sdk: flutter
   http: ^1.1.0

@@ -22,10 +22,16 @@ import '../utils/audio_output.dart';
 import '../widgets/message_widget.dart';
 
 class BidiPage extends StatefulWidget {
-  const BidiPage({super.key, required this.title, required this.model});
+  const BidiPage({
+    super.key,
+    required this.title,
+    required this.model,
+    required this.useVertexBackend,
+  });
 
   final String title;
   final GenerativeModel model;
+  final bool useVertexBackend;
 
   @override
   State<BidiPage> createState() => _BidiPageState();
@@ -51,6 +57,8 @@ class _BidiPageState extends State<BidiPage> {
   StreamController<bool> _stopController = StreamController<bool>();
   final AudioOutput _audioOutput = AudioOutput();
   final AudioInput _audioInput = AudioInput();
+  int? _inputTranscriptionMessageIndex;
+  int? _outputTranscriptionMessageIndex;
 
   @override
   void initState() {
@@ -61,16 +69,26 @@ class _BidiPageState extends State<BidiPage> {
       responseModalities: [
         ResponseModalities.audio,
       ],
+      inputAudioTranscription: AudioTranscriptionConfig(),
+      outputAudioTranscription: AudioTranscriptionConfig(),
     );
 
     // ignore: deprecated_member_use
-    _liveModel = FirebaseAI.vertexAI().liveGenerativeModel(
-      model: 'gemini-2.0-flash-exp',
-      liveGenerationConfig: config,
-      tools: [
-        Tool.functionDeclarations([lightControlTool]),
-      ],
-    );
+    _liveModel = widget.useVertexBackend
+        ? FirebaseAI.vertexAI().liveGenerativeModel(
+            model: 'gemini-2.0-flash-exp',
+            liveGenerationConfig: config,
+            tools: [
+              Tool.functionDeclarations([lightControlTool]),
+            ],
+          )
+        : FirebaseAI.googleAI().liveGenerativeModel(
+            model: 'gemini-live-2.5-flash-preview',
+            liveGenerationConfig: config,
+            tools: [
+              Tool.functionDeclarations([lightControlTool]),
+            ],
+          );
     _initAudio();
   }
 
@@ -119,7 +137,13 @@ class _BidiPageState extends State<BidiPage> {
                 itemBuilder: (context, idx) {
                   return MessageWidget(
                     text: _messages[idx].text,
-                    image: _messages[idx].image,
+                    image: _messages[idx].imageBytes != null
+                        ? Image.memory(
+                            _messages[idx].imageBytes!,
+                            cacheWidth: 400,
+                            cacheHeight: 400,
+                          )
+                        : null,
                     isFromUser: _messages[idx].fromUser ?? false,
                   );
                 },
@@ -257,13 +281,10 @@ class _BidiPageState extends State<BidiPage> {
     try {
       var inputStream = await _audioInput.startRecordingStream();
       await _audioOutput.playStream();
-      // Map the Uint8List stream to InlineDataPart stream
       if (inputStream != null) {
-        final inlineDataStream = inputStream.map((data) {
-          return InlineDataPart('audio/pcm', data);
-        });
-
-        await _session.sendMediaStream(inlineDataStream);
+        await for (final data in inputStream) {
+          await _session.sendAudioRealtime(InlineDataPart('audio/pcm', data));
+        }
       }
     } catch (e) {
       developer.log(e.toString());
@@ -336,6 +357,49 @@ class _BidiPageState extends State<BidiPage> {
       if (message.modelTurn != null) {
         await _handleLiveServerContent(message);
       }
+
+      int? _handleTranscription(
+        Transcription? transcription,
+        int? messageIndex,
+        String prefix,
+        bool fromUser,
+      ) {
+        int? currentIndex = messageIndex;
+        if (transcription?.text != null) {
+          if (currentIndex != null) {
+            _messages[currentIndex] = _messages[currentIndex].copyWith(
+              text: '${_messages[currentIndex].text}${transcription!.text!}',
+            );
+          } else {
+            _messages.add(
+              MessageData(
+                text: '$prefix${transcription!.text!}',
+                fromUser: fromUser,
+              ),
+            );
+            currentIndex = _messages.length - 1;
+          }
+          if (transcription.finished ?? false) {
+            currentIndex = null;
+          }
+          setState(_scrollDown);
+        }
+        return currentIndex;
+      }
+
+      _inputTranscriptionMessageIndex = _handleTranscription(
+        message.inputTranscription,
+        _inputTranscriptionMessageIndex,
+        'Input transcription: ',
+        true,
+      );
+      _outputTranscriptionMessageIndex = _handleTranscription(
+        message.outputTranscription,
+        _outputTranscriptionMessageIndex,
+        'Output transcription: ',
+        false,
+      );
+
       if (message.interrupted != null && message.interrupted!) {
         developer.log('Interrupted: $response');
       }
@@ -389,9 +453,13 @@ class _BidiPageState extends State<BidiPage> {
           brightness: brightness,
           colorTemperature: color,
         );
-        await _session.send(
-          input: Content.functionResponse(functionCall.name, functionResult),
-        );
+        await _session.sendToolResponse([
+          FunctionResponse(
+            functionCall.name,
+            functionResult,
+            id: functionCall.id,
+          ),
+        ]);
       } else {
         throw UnimplementedError(
           'Function not declared to the model: ${functionCall.name}',

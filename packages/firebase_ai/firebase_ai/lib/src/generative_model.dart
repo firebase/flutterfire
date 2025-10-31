@@ -37,6 +37,7 @@ final class GenerativeModel extends BaseApiClientModel {
     required String location,
     required FirebaseApp app,
     required bool useVertexBackend,
+    bool? useLimitedUseAppCheckTokens,
     FirebaseAppCheck? appCheck,
     FirebaseAuth? auth,
     List<SafetySetting>? safetySettings,
@@ -60,13 +61,15 @@ final class GenerativeModel extends BaseApiClientModel {
             client: HttpApiClient(
                 apiKey: app.options.apiKey,
                 httpClient: httpClient,
-                requestHeaders: BaseModel.firebaseTokens(appCheck, auth, app)));
+                requestHeaders: BaseModel.firebaseTokens(
+                    appCheck, auth, app, useLimitedUseAppCheckTokens)));
 
   GenerativeModel._constructTestModel({
     required String model,
     required String location,
     required FirebaseApp app,
     required useVertexBackend,
+    bool? useLimitedUseAppCheckTokens,
     FirebaseAppCheck? appCheck,
     FirebaseAuth? auth,
     List<SafetySetting>? safetySettings,
@@ -90,8 +93,8 @@ final class GenerativeModel extends BaseApiClientModel {
             client: apiClient ??
                 HttpApiClient(
                     apiKey: app.options.apiKey,
-                    requestHeaders:
-                        BaseModel.firebaseTokens(appCheck, auth, app)));
+                    requestHeaders: BaseModel.firebaseTokens(
+                        appCheck, auth, app, useLimitedUseAppCheckTokens)));
 
   final List<SafetySetting> _safetySettings;
   final GenerationConfig? _generationConfig;
@@ -199,6 +202,7 @@ GenerativeModel createGenerativeModel({
   required String location,
   required String model,
   required bool useVertexBackend,
+  bool? useLimitedUseAppCheckTokens,
   FirebaseAppCheck? appCheck,
   FirebaseAuth? auth,
   GenerationConfig? generationConfig,
@@ -212,6 +216,7 @@ GenerativeModel createGenerativeModel({
       app: app,
       appCheck: appCheck,
       useVertexBackend: useVertexBackend,
+      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
       auth: auth,
       location: location,
       safetySettings: safetySettings,
@@ -230,6 +235,7 @@ GenerativeModel createModelWithClient({
   required String model,
   required ApiClient client,
   required bool useVertexBackend,
+  bool? useLimitedUseAppCheckTokens,
   Content? systemInstruction,
   FirebaseAppCheck? appCheck,
   FirebaseAuth? auth,
@@ -243,6 +249,7 @@ GenerativeModel createModelWithClient({
         app: app,
         appCheck: appCheck,
         useVertexBackend: useVertexBackend,
+        useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
         auth: auth,
         location: location,
         safetySettings: safetySettings,

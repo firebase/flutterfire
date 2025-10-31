@@ -5,16 +5,18 @@
 #import <TargetConditionals.h>
 
 #if TARGET_OS_OSX
-#import <FirebaseAuth/FirebaseAuth.h>
 #import <FlutterMacOS/FlutterMacOS.h>
 #else
 #import <Flutter/Flutter.h>
-@import FirebaseAuth;
 #endif
 
 #import "../Public/firebase_auth_messages.g.h"
 
 #import <Foundation/Foundation.h>
+
+@class FIRAuth;
+@class FIRMultiFactorSession;
+@class FIRPhoneMultiFactorInfo;
 
 NS_ASSUME_NONNULL_BEGIN
 

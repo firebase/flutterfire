@@ -17,7 +17,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebasePluginPlatform;
-import 'package:meta/meta.dart';
 
 import '../firebase_ai.dart';
 import 'base_model.dart';
@@ -26,13 +25,14 @@ const _defaultLocation = 'us-central1';
 
 /// The entrypoint for generative models.
 class FirebaseAI extends FirebasePluginPlatform {
-  FirebaseAI._(
-      {required this.app,
-      required this.location,
-      required bool useVertexBackend,
-      this.appCheck,
-      this.auth})
-      : _useVertexBackend = useVertexBackend,
+  FirebaseAI._({
+    required this.app,
+    required this.location,
+    required bool useVertexBackend,
+    this.appCheck,
+    this.auth,
+    this.useLimitedUseAppCheckTokens = false,
+  })  : _useVertexBackend = useVertexBackend,
         super(app.name, 'plugins.flutter.io/firebase_vertexai');
 
   /// The [FirebaseApp] for this current [FirebaseAI] instance.
@@ -48,6 +48,9 @@ class FirebaseAI extends FirebasePluginPlatform {
   /// The service location for this [FirebaseAI] instance.
   String location;
 
+  /// Whether to use App Check limited use tokens. Defaults to false.
+  final bool useLimitedUseAppCheckTokens;
+
   final bool _useVertexBackend;
 
   static final Map<String, FirebaseAI> _cachedInstances = {};
@@ -61,9 +64,10 @@ class FirebaseAI extends FirebasePluginPlatform {
     FirebaseAppCheck? appCheck,
     FirebaseAuth? auth,
     String? location,
+    bool? useLimitedUseAppCheckTokens,
   }) {
     app ??= Firebase.app();
-    var instanceKey = '${app.name}::vertexai';
+    var instanceKey = '${app.name}::vertexai::$location';
 
     if (_cachedInstances.containsKey(instanceKey)) {
       return _cachedInstances[instanceKey]!;
@@ -77,6 +81,7 @@ class FirebaseAI extends FirebasePluginPlatform {
       appCheck: appCheck,
       auth: auth,
       useVertexBackend: true,
+      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens ?? false,
     );
     _cachedInstances[instanceKey] = newInstance;
 
@@ -91,6 +96,7 @@ class FirebaseAI extends FirebasePluginPlatform {
     FirebaseApp? app,
     FirebaseAppCheck? appCheck,
     FirebaseAuth? auth,
+    bool? useLimitedUseAppCheckTokens,
   }) {
     app ??= Firebase.app();
     var instanceKey = '${app.name}::googleai';
@@ -105,6 +111,7 @@ class FirebaseAI extends FirebasePluginPlatform {
       appCheck: appCheck,
       auth: auth,
       useVertexBackend: false,
+      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens ?? false,
     );
     _cachedInstances[instanceKey] = newInstance;
 
@@ -142,6 +149,7 @@ class FirebaseAI extends FirebasePluginPlatform {
       tools: tools,
       toolConfig: toolConfig,
       systemInstruction: systemInstruction,
+      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
     );
   }
 
@@ -149,7 +157,6 @@ class FirebaseAI extends FirebasePluginPlatform {
   ///
   /// The optional [safetySettings] can be used to control and guide the
   /// generation. See [ImagenSafetySettings] for details.
-  @experimental
   ImagenModel imagenModel(
       {required String model,
       ImagenGenerationConfig? generationConfig,
@@ -162,7 +169,8 @@ class FirebaseAI extends FirebasePluginPlatform {
         generationConfig: generationConfig,
         safetySettings: safetySettings,
         appCheck: appCheck,
-        auth: auth);
+        auth: auth,
+        useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens);
   }
 
   /// Create a [LiveGenerativeModel] for real-time interaction.
@@ -175,19 +183,17 @@ class FirebaseAI extends FirebasePluginPlatform {
     List<Tool>? tools,
     Content? systemInstruction,
   }) {
-    if (!_useVertexBackend) {
-      throw FirebaseAISdkException(
-          'LiveGenerativeModel is currently only supported with the VertexAI backend.');
-    }
     return createLiveGenerativeModel(
       app: app,
       location: location,
       model: model,
+      useVertexBackend: _useVertexBackend,
       liveGenerationConfig: liveGenerationConfig,
       tools: tools,
       systemInstruction: systemInstruction,
       appCheck: appCheck,
       auth: auth,
+      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
     );
   }
 }

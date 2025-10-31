@@ -26,7 +26,7 @@ void main() {
         () async {
           await expectLater(
             FirebaseAppCheck.instance.activate(
-              webProvider: ReCaptchaV3Provider(
+              providerWeb: ReCaptchaV3Provider(
                 '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8',
               ),
             ),
@@ -44,9 +44,7 @@ void main() {
             // Needs a debug token pasted in the Firebase console to work so we catch the exception.
             expect(exception, isA<FirebaseException>());
           }
-          // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
         },
-        skip: kIsWeb,
       );
 
       test(
@@ -73,9 +71,33 @@ void main() {
             // Needs a debug token pasted in the Firebase console to work so we catch the exception.
             expect(exception, isA<FirebaseException>());
           }
-          // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
         },
-        skip: kIsWeb,
+      );
+
+      test(
+        'debugToken on Android',
+        () async {
+          await expectLater(
+            FirebaseAppCheck.instance.activate(
+              providerAndroid: const AndroidDebugProvider(),
+            ),
+            completes,
+          );
+        },
+        skip: defaultTargetPlatform != TargetPlatform.android,
+      );
+
+      test(
+        'debugToken on iOS',
+        () async {
+          await expectLater(
+            FirebaseAppCheck.instance.activate(
+              providerApple: const AppleDebugProvider(),
+            ),
+            completes,
+          );
+        },
+        skip: defaultTargetPlatform != TargetPlatform.iOS,
       );
     },
   );

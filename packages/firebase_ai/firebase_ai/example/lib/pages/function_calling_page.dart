@@ -39,27 +39,53 @@ class Location {
 }
 
 class _FunctionCallingPageState extends State<FunctionCallingPage> {
-  late final GenerativeModel _functionCallModel;
+  late GenerativeModel _functionCallModel;
+  late GenerativeModel _codeExecutionModel;
   final List<MessageData> _messages = <MessageData>[];
   bool _loading = false;
+  bool _enableThinking = false;
 
   @override
   void initState() {
     super.initState();
+    _initializeModel();
+  }
+
+  void _initializeModel() {
+    final generationConfig = GenerationConfig(
+      thinkingConfig:
+          _enableThinking ? ThinkingConfig(includeThoughts: true) : null,
+    );
     if (widget.useVertexBackend) {
       var vertexAI = FirebaseAI.vertexAI(auth: FirebaseAuth.instance);
       _functionCallModel = vertexAI.generativeModel(
-        model: 'gemini-2.0-flash',
+        model: 'gemini-2.5-flash',
+        generationConfig: generationConfig,
         tools: [
           Tool.functionDeclarations([fetchWeatherTool]),
+        ],
+      );
+      _codeExecutionModel = vertexAI.generativeModel(
+        model: 'gemini-2.5-flash',
+        generationConfig: generationConfig,
+        tools: [
+          Tool.codeExecution(),
         ],
       );
     } else {
       var googleAI = FirebaseAI.googleAI(auth: FirebaseAuth.instance);
       _functionCallModel = googleAI.generativeModel(
-        model: 'gemini-2.0-flash',
+        model: 'gemini-2.5-flash',
+        generationConfig: generationConfig,
         tools: [
           Tool.functionDeclarations([fetchWeatherTool]),
+        ],
+      );
+      _codeExecutionModel = googleAI.generativeModel(
+        model: 'gemini-2.5-flash',
+        generationConfig: generationConfig,
+        tools: [
+          Tool.codeExecution(),
         ],
       );
     }
@@ -118,12 +144,24 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SwitchListTile(
+              title: const Text('Enable Thinking'),
+              value: _enableThinking,
+              onChanged: (bool value) {
+                setState(() {
+                  _enableThinking = value;
+                  _initializeModel();
+                });
+              },
+            ),
             Expanded(
               child: ListView.builder(
                 itemBuilder: (context, idx) {
+                  final message = _messages[idx];
                   return MessageWidget(
-                    text: _messages[idx].text,
-                    isFromUser: _messages[idx].fromUser ?? false,
+                    text: message.text,
+                    isFromUser: message.fromUser ?? false,
+                    isThought: message.isThought,
                   );
                 },
                 itemCount: _messages.length,
@@ -146,6 +184,17 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
                       child: const Text('Test Function Calling'),
                     ),
                   ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: !_loading
+                          ? () async {
+                              await _testCodeExecution();
+                            }
+                          : null,
+                      child: const Text('Test Code Execution'),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -158,43 +207,148 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
   Future<void> _testFunctionCalling() async {
     setState(() {
       _loading = true;
+      _messages.clear();
     });
-    final functionCallChat = _functionCallModel.startChat();
-    const prompt = 'What is the weather like in Boston on 10/02 in year 2024?';
+    try {
+      final functionCallChat = _functionCallModel.startChat();
+      const prompt =
+          'What is the weather like in Boston on 10/02 in year 2024?';
 
-    // Send the message to the generative model.
-    var response = await functionCallChat.sendMessage(
-      Content.text(prompt),
-    );
+      _messages.add(MessageData(text: prompt, fromUser: true));
 
-    final functionCalls = response.functionCalls.toList();
-    // When the model response with a function call, invoke the function.
-    if (functionCalls.isNotEmpty) {
-      final functionCall = functionCalls.first;
-      if (functionCall.name == 'fetchWeather') {
-        Map<String, dynamic> location =
-            functionCall.args['location']! as Map<String, dynamic>;
-        var date = functionCall.args['date']! as String;
-        var city = location['city'] as String;
-        var state = location['state'] as String;
-        final functionResult = await fetchWeather(Location(city, state), date);
-        // Send the response to the model so that it can use the result to
-        // generate text for the user.
-        response = await functionCallChat.sendMessage(
-          Content.functionResponse(functionCall.name, functionResult),
-        );
-      } else {
-        throw UnimplementedError(
-          'Function not declared to the model: ${functionCall.name}',
-        );
+      // Send the message to the generative model.
+      var response = await functionCallChat.sendMessage(
+        Content.text(prompt),
+      );
+
+      final thought = response.thoughtSummary;
+      if (thought != null) {
+        _messages
+            .add(MessageData(text: thought, fromUser: false, isThought: true));
       }
-    }
-    // When the model responds with non-null text content, print it.
-    if (response.text case final text?) {
-      _messages.add(MessageData(text: text));
+
+      final functionCalls = response.functionCalls.toList();
+      // When the model response with a function call, invoke the function.
+      if (functionCalls.isNotEmpty) {
+        final functionCall = functionCalls.first;
+        if (functionCall.name == 'fetchWeather') {
+          Map<String, dynamic> location =
+              functionCall.args['location']! as Map<String, dynamic>;
+          var date = functionCall.args['date']! as String;
+          var city = location['city'] as String;
+          var state = location['state'] as String;
+          final functionResult =
+              await fetchWeather(Location(city, state), date);
+          // Send the response to the model so that it can use the result to
+          // generate text for the user.
+          response = await functionCallChat.sendMessage(
+            Content.functionResponse(functionCall.name, functionResult),
+          );
+        } else {
+          throw UnimplementedError(
+            'Function not declared to the model: ${functionCall.name}',
+          );
+        }
+      }
+      // When the model responds with non-null text content, print it.
+      if (response.text case final text?) {
+        _messages.add(MessageData(text: text));
+        setState(() {
+          _loading = false;
+        });
+      }
+    } catch (e) {
+      _showError(e.toString());
+      setState(() {
+        _loading = false;
+      });
+    } finally {
       setState(() {
         _loading = false;
       });
     }
+  }
+
+  Future<void> _testCodeExecution() async {
+    setState(() {
+      _loading = true;
+    });
+    try {
+      final codeExecutionChat = _codeExecutionModel.startChat();
+      const prompt = 'What is the sum of the first 50 prime numbers? '
+          'Generate and run code for the calculation, and make sure you get all 50.';
+
+      _messages.add(MessageData(text: prompt, fromUser: true));
+
+      final response =
+          await codeExecutionChat.sendMessage(Content.text(prompt));
+
+      final thought = response.thoughtSummary;
+      if (thought != null) {
+        _messages
+            .add(MessageData(text: thought, fromUser: false, isThought: true));
+      }
+
+      final buffer = StringBuffer();
+      for (final part in response.candidates.first.content.parts) {
+        if (part is ExecutableCodePart) {
+          buffer.writeln('Executable Code:');
+          buffer.writeln('Language: ${part.language}');
+          buffer.writeln('Code:');
+          buffer.writeln(part.code);
+        } else if (part is CodeExecutionResultPart) {
+          buffer.writeln('Code Execution Result:');
+          buffer.writeln('Outcome: ${part.outcome}');
+          buffer.writeln('Output:');
+          buffer.writeln(part.output);
+        } else if (part is TextPart) {
+          buffer.writeln(part.text);
+        }
+      }
+
+      if (buffer.isNotEmpty) {
+        _messages.add(
+          MessageData(
+            text: buffer.toString(),
+            fromUser: false,
+          ),
+        );
+      }
+
+      setState(() {
+        _loading = false;
+      });
+    } catch (e) {
+      _showError(e.toString());
+      setState(() {
+        _loading = false;
+      });
+    } finally {
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
+
+  void _showError(String message) {
+    showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Something went wrong'),
+          content: SingleChildScrollView(
+            child: SelectableText(message),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

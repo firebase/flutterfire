@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:firebase_ai/src/api.dart';
@@ -43,7 +44,6 @@ void main() {
       final liveGenerationConfig = LiveGenerationConfig(
         speechConfig: SpeechConfig(voiceName: 'Charon'),
         responseModalities: [ResponseModalities.text, ResponseModalities.audio],
-        candidateCount: 2,
         maxOutputTokens: 100,
         temperature: 0.8,
         topP: 0.95,
@@ -51,7 +51,6 @@ void main() {
       );
 
       expect(liveGenerationConfig.toJson(), {
-        'candidateCount': 2,
         'maxOutputTokens': 100,
         'temperature': 0.8,
         'topP': 0.95,
@@ -86,7 +85,7 @@ void main() {
     });
 
     test('LiveServerToolCall constructor and properties', () {
-      final functionCall = FunctionCall('test', {});
+      const functionCall = FunctionCall('test', {});
       final message = LiveServerToolCall(functionCalls: [functionCall]);
       expect(message.functionCalls, [functionCall]);
 
@@ -104,6 +103,7 @@ void main() {
 
     test('LiveClientRealtimeInput toJson() returns correct JSON', () {
       final part = InlineDataPart('audio/pcm', Uint8List.fromList([1, 2, 3]));
+      // ignore: deprecated_member_use_from_same_package
       final message = LiveClientRealtimeInput(mediaChunks: [part]);
       expect(message.toJson(), {
         'realtime_input': {
@@ -151,18 +151,20 @@ void main() {
     });
 
     test('LiveClientToolResponse toJson() returns correct JSON', () {
-      final response = FunctionResponse('test', {});
+      const response = FunctionResponse('test', {});
       final message = LiveClientToolResponse(functionResponses: [response]);
       expect(message.toJson(), {
-        'functionResponses': [
-          {
-            'functionResponse': {'name': 'test', 'response': {}}
-          }
-        ]
+        'toolResponse': {
+          'functionResponses': [
+            {'name': 'test', 'response': {}}
+          ]
+        }
       });
 
       final message2 = LiveClientToolResponse();
-      expect(message2.toJson(), {'functionResponses': null});
+      expect(message2.toJson(), {
+        'toolResponse': {'functionResponses': null}
+      });
     });
 
     test('parseServerMessage parses serverContent message correctly', () {
@@ -206,11 +208,13 @@ void main() {
 
     test('parseServerMessage parses toolCallCancellation message correctly',
         () {
-      final jsonObject = {
-        'toolCallCancellation': {
-          'ids': ['1', '2']
+      final jsonObject = jsonDecode('''
+        {
+          "toolCallCancellation": {
+            "ids": ["1", "2"]
+          }
         }
-      };
+        ''') as Map<String, dynamic>;
       final response = parseServerResponse(jsonObject);
       expect(response.message, isA<LiveServerToolCallCancellation>());
       final cancellationMessage =
@@ -235,6 +239,43 @@ void main() {
       final jsonObject = {'unknown': {}};
       expect(() => parseServerResponse(jsonObject),
           throwsA(isA<FirebaseAISdkException>()));
+    });
+
+    test(
+        'LiveGenerationConfig with transcriptions toJson() returns correct JSON',
+        () {
+      final liveGenerationConfig = LiveGenerationConfig(
+        inputAudioTranscription: AudioTranscriptionConfig(),
+        outputAudioTranscription: AudioTranscriptionConfig(),
+      );
+      // Explicitly, these two config should not exist in the toJson()
+      expect(liveGenerationConfig.toJson(), {});
+    });
+
+    test('parseServerMessage parses serverContent with transcriptions', () {
+      final jsonObject = {
+        'serverContent': {
+          'modelTurn': {
+            'parts': [
+              {'text': 'Hello, world!'}
+            ]
+          },
+          'turnComplete': true,
+          'inputTranscription': {'text': 'input', 'finished': true},
+          'outputTranscription': {'text': 'output', 'finished': false}
+        }
+      };
+      final response = parseServerResponse(jsonObject);
+      expect(response.message, isA<LiveServerContent>());
+      final contentMessage = response.message as LiveServerContent;
+      expect(contentMessage.turnComplete, true);
+      expect(contentMessage.modelTurn, isA<Content>());
+      expect(contentMessage.inputTranscription, isA<Transcription>());
+      expect(contentMessage.inputTranscription?.text, 'input');
+      expect(contentMessage.inputTranscription?.finished, true);
+      expect(contentMessage.outputTranscription, isA<Transcription>());
+      expect(contentMessage.outputTranscription?.text, 'output');
+      expect(contentMessage.outputTranscription?.finished, false);
     });
   });
 }

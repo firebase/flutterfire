@@ -138,7 +138,7 @@ void main() {
           matchesGenerateContentResponse(
             GenerateContentResponse([
               Candidate(
-                Content('model', [TextPart(result)]),
+                Content('model', [const TextPart(result)]),
                 null,
                 null,
                 null,
@@ -320,6 +320,38 @@ void main() {
         );
       });
 
+      test('can pass a google search tool', () async {
+        final (client, model) = createModel(
+          tools: [Tool.googleSearch()],
+        );
+        const prompt = 'Some prompt';
+        await client.checkRequest(
+          () => model.generateContent([Content.text(prompt)]),
+          verifyRequest: (_, request) {
+            expect(request['tools'], [
+              {'googleSearch': {}},
+            ]);
+          },
+          response: arbitraryGenerateContentResponse,
+        );
+      });
+
+      test('can pass a url context tool', () async {
+        final (client, model) = createModel(
+          tools: [Tool.urlContext()],
+        );
+        const prompt = 'Some prompt';
+        await client.checkRequest(
+          () => model.generateContent([Content.text(prompt)]),
+          verifyRequest: (_, request) {
+            expect(request['tools'], [
+              {'urlContext': {}},
+            ]);
+          },
+          response: arbitraryGenerateContentResponse,
+        );
+      });
+
       test('can enable code execution', () async {
         final (client, model) = createModel(tools: [
           // Tool(codeExecution: CodeExecution()),
@@ -461,6 +493,23 @@ void main() {
         );
         await responses.drain<void>();
       });
+
+      test('can pass a google search tool', () async {
+        final (client, model) = createModel(
+          tools: [Tool.googleSearch()],
+        );
+        const prompt = 'Some prompt';
+        final responses = await client.checkStreamRequest(
+          () async => model.generateContentStream([Content.text(prompt)]),
+          verifyRequest: (_, request) {
+            expect(request['tools'], [
+              {'googleSearch': {}},
+            ]);
+          },
+          responses: [arbitraryGenerateContentResponse],
+        );
+        await responses.drain<void>();
+      });
     });
 
     group('count tokens', () {
@@ -564,6 +613,24 @@ void main() {
           },
         );
       }, skip: 'Only content argument supported for countTokens');
+
+      test('can pass a google search tool', () async {
+        final (client, model) = createModel(
+          tools: [Tool.googleSearch()],
+        );
+        const prompt = 'Some prompt';
+        await client.checkRequest(
+          () => model.countTokens([Content.text(prompt)]),
+          verifyRequest: (_, request) {
+            final generateContentRequest =
+                request['generateContentRequest']! as Map<String, Object?>;
+            expect(generateContentRequest['tools'], [
+              {'googleSearch': {}},
+            ]);
+          },
+          response: {'totalTokens': 2},
+        );
+      });
     });
 
     group('embed content', () {

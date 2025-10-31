@@ -16,7 +16,10 @@ import 'package:web/web.dart' as web;
 import 'src/internals.dart';
 import 'src/interop/app_check.dart' as app_check_interop;
 
+import 'src/firebase_app_check_version.dart';
+
 class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
+  static const String _libraryName = 'flutter-fire-app-check';
   static const recaptchaTypeV3 = 'recaptcha-v3';
   static const recaptchaTypeEnterprise = 'enterprise';
   static Map<String, StreamController<String?>> _tokenChangesListeners = {};
@@ -32,6 +35,8 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerLibraryVersion(_libraryName, packageVersion);
+
     FirebaseCoreWeb.registerService(
       'app-check',
       productNameOverride: 'app_check',
@@ -97,8 +102,18 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   @override
   Future<void> activate({
     WebProvider? webProvider,
+    @Deprecated(
+      'Use providerAndroid instead. '
+      'This parameter will be removed in a future major release.',
+    )
     AndroidProvider? androidProvider,
+    @Deprecated(
+      'Use providerApple instead. '
+      'This parameter will be removed in a future major release.',
+    )
     AppleProvider? appleProvider,
+    AndroidAppCheckProvider? providerAndroid,
+    AppleAppCheckProvider? providerApple,
   }) async {
     // save the recaptcha type and site key for future startups
     if (webProvider != null) {
@@ -142,7 +157,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   @override
   Future<String?> getToken(bool forceRefresh) async {
     return convertWebExceptions<Future<String?>>(() async {
-      app_check_interop.AppCheckTokenResult result =
+      app_check_interop.AppCheckTokenResultJsImpl result =
           await _delegate!.getToken(forceRefresh);
       return result.token.toDart;
     });
@@ -151,7 +166,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   @override
   Future<String> getLimitedUseToken() async {
     return convertWebExceptions<Future<String>>(() async {
-      app_check_interop.AppCheckTokenResult result =
+      app_check_interop.AppCheckTokenResultJsImpl result =
           await _delegate!.getLimitedUseToken();
       return result.token.toDart;
     });

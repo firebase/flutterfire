@@ -28,15 +28,18 @@ import 'api.dart';
 import 'client.dart';
 import 'content.dart';
 import 'developer/api.dart';
-import 'imagen_api.dart';
-import 'imagen_content.dart';
+import 'error.dart';
+import 'firebaseai_version.dart';
+import 'imagen/imagen_api.dart';
+import 'imagen/imagen_content.dart';
+import 'imagen/imagen_edit.dart';
+import 'imagen/imagen_reference.dart';
 import 'live_api.dart';
 import 'live_session.dart';
 import 'tool.dart';
-import 'vertex_version.dart';
 
 part 'generative_model.dart';
-part 'imagen_model.dart';
+part 'imagen/imagen_model.dart';
 part 'live_model.dart';
 
 /// [Task] enum class for [GenerativeModel] to make request.
@@ -56,6 +59,7 @@ enum Task {
 
 abstract interface class _ModelUri {
   String get baseAuthority;
+  String get apiVersion;
   Uri taskUri(Task task);
   ({String prefix, String name}) get model;
 }
@@ -97,6 +101,9 @@ final class _VertexUri implements _ModelUri {
   String get baseAuthority => _baseAuthority;
 
   @override
+  String get apiVersion => _apiVersion;
+
+  @override
   Uri taskUri(Task task) {
     return _projectUri.replace(
         pathSegments: _projectUri.pathSegments
@@ -136,6 +143,9 @@ final class _GoogleAIUri implements _ModelUri {
   String get baseAuthority => _baseAuthority;
 
   @override
+  String get apiVersion => _apiVersion;
+
+  @override
   Uri taskUri(Task task) => _baseUri.replace(
       pathSegments: _baseUri.pathSegments
           .followedBy([model.prefix, '${model.name}:${task.name}']));
@@ -159,14 +169,20 @@ abstract class BaseModel {
 
   /// Returns a function that generates Firebase auth tokens.
   static FutureOr<Map<String, String>> Function() firebaseTokens(
-      FirebaseAppCheck? appCheck, FirebaseAuth? auth, FirebaseApp? app) {
+    FirebaseAppCheck? appCheck,
+    FirebaseAuth? auth,
+    FirebaseApp? app,
+    bool? useLimitedUseAppCheckTokens,
+  ) {
     return () async {
       Map<String, String> headers = {};
       // Override the client name in Google AI SDK
       headers['x-goog-api-client'] =
           'gl-dart/$packageVersion fire/$packageVersion';
       if (appCheck != null) {
-        final appCheckToken = await appCheck.getToken();
+        final appCheckToken = useLimitedUseAppCheckTokens == true
+            ? await appCheck.getLimitedUseToken()
+            : await appCheck.getToken();
         if (appCheckToken != null) {
           headers['X-Firebase-AppCheck'] = appCheckToken;
         }

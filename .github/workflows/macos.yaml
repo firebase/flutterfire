@@ -96,4 +96,5 @@ jobs:
           flutter test \
             integration_test/e2e_test.dart \
             -d macos \
-            --dart-define=CI=true
+            --dart-define=CI=true \
+            --ignore-timeouts

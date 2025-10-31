@@ -3,11 +3,17 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'com.android.library'
 apply from: file("local-config.gradle")
+apply plugin: 'kotlin-android'
 
 buildscript {
+    ext.kotlin_version = "1.8.22"
+
     repositories {
         google()
         mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
@@ -47,6 +53,15 @@ android {
     compileOptions {
         sourceCompatibility project.ext.javaVersion
         targetCompatibility project.ext.javaVersion
+    }
+
+    sourceSets {
+        main.java.srcDirs += "src/main/kotlin"
+        test.java.srcDirs += "src/test/kotlin"
+    }
+
+    kotlinOptions {
+        jvmTarget = project.ext.javaVersion
     }
 
     buildFeatures {

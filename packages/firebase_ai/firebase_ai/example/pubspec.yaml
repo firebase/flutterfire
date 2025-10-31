@@ -20,13 +20,15 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
 
   cupertino_icons: ^1.0.6
-  firebase_ai: ^3.0.0
-  firebase_core: ^4.0.0
-  firebase_storage: ^13.0.0
+  firebase_ai: ^3.4.0
+  firebase_core: ^4.2.0
+  firebase_storage: ^13.0.3
   flutter:
     sdk: flutter
   flutter_markdown: ^0.6.20
   flutter_soloud: ^3.1.6
+  image: ^4.5.4
+  image_picker: ^1.1.2
   path_provider: ^2.1.5
   record: ^5.2.1
 

@@ -1,3 +1,19 @@
+## 8.1.3
+
+ - Update a dependency to the latest release.
+
+## 8.1.2
+
+ - Update a dependency to the latest release.
+
+## 8.1.1
+
+ - Update a dependency to the latest release.
+
+## 8.1.0
+
+ - **FEAT**(auth): add signInSecondFactor property to IdTokenResult for MFA support ([#17589](https://github.com/firebase/flutterfire/issues/17589)). ([a4db26ea](https://github.com/firebase/flutterfire/commit/a4db26ea9cc75f04a4a284e7c633c56f5f4958ad))
+
 ## 8.0.0
 
 > Note: This release has breaking changes.

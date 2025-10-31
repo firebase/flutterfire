@@ -1,3 +1,19 @@
+## 6.1.1
+
+ - Update a dependency to the latest release.
+
+## 6.1.0
+
+ - **FEAT**(auth): TOTP macOS support ([#17513](https://github.com/firebase/flutterfire/issues/17513)). ([41890d62](https://github.com/firebase/flutterfire/commit/41890d62a49258df097c19fd3b90e0b5de181526))
+
+## 6.0.2
+
+ - Update a dependency to the latest release.
+
+## 6.0.1
+
+ - **FIX**(auth,apple): Move FirebaseAuth imports to implementation files ([#17607](https://github.com/firebase/flutterfire/issues/17607)). ([0c3ccd37](https://github.com/firebase/flutterfire/commit/0c3ccd3722038a47e656b0a703a0395a78befc5b))
+
 ## 6.0.0
 
 > Note: This release has breaking changes.

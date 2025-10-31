@@ -95,11 +95,23 @@ final class GenerateContentResponse {
                   : ''),
         ),
       // Special case for a single TextPart to avoid iterable chain.
-      [Candidate(content: Content(parts: [TextPart(:final text)])), ...] =>
+      [
+        Candidate(
+          content: Content(
+            parts: [TextPart(isThought: final isThought, :final text)]
+          )
+        ),
+        ...
+      ]
+          when isThought != true =>
         text,
       [Candidate(content: Content(:final parts)), ...]
-          when parts.any((p) => p is TextPart) =>
-        parts.whereType<TextPart>().map((p) => p.text).join(),
+          when parts.any((p) => p is TextPart && p.isThought != true) =>
+        parts
+            .whereType<TextPart>()
+            .where((p) => p.isThought != true)
+            .map((p) => p.text)
+            .join(),
       [Candidate(), ...] => null,
     };
   }
@@ -110,7 +122,9 @@ final class GenerateContentResponse {
   /// candidate has no [FunctionCall] parts. There is no error thrown if the
   /// prompt or response were blocked.
   Iterable<FunctionCall> get functionCalls =>
-      candidates.firstOrNull?.content.parts.whereType<FunctionCall>() ??
+      candidates.firstOrNull?.content.parts
+          .whereType<FunctionCall>()
+          .where((p) => p.isThought != true) ??
       const [];
 
   /// The inline data parts of the first candidate in [candidates], if any.
@@ -119,8 +133,31 @@ final class GenerateContentResponse {
   /// candidate has no [InlineDataPart] parts. There is no error thrown if the
   /// prompt or response were blocked.
   Iterable<InlineDataPart> get inlineDataParts =>
-      candidates.firstOrNull?.content.parts.whereType<InlineDataPart>() ??
+      candidates.firstOrNull?.content.parts
+          .whereType<InlineDataPart>()
+          .where((p) => p.isThought != true) ??
       const [];
+
+  /// The thought summary of the first candidate in [candidates], if any.
+  ///
+  /// If the first candidate's content contains any thought parts, this value is
+  /// the concatenation of their text.
+  ///
+  /// If there are no candidates, or if the first candidate does not contain any
+  /// thought parts, this value is `null`.
+  ///
+  /// Important: Thought summaries are only available when `includeThoughts` is
+  /// enabled in the ``ThinkingConfig``. For more information, see the
+  /// [Thinking](https://firebase.google.com/docs/ai-logic/thinking)
+  String? get thoughtSummary {
+    final thoughtParts = candidates.firstOrNull?.content.parts
+        .where((p) => p.isThought == true)
+        .whereType<TextPart>();
+    if (thoughtParts == null || thoughtParts.isEmpty) {
+      return null;
+    }
+    return thoughtParts.map((p) => p.text).join();
+  }
 }
 
 /// Feedback metadata of a prompt specified in a [GenerativeModel] request.
@@ -145,13 +182,16 @@ final class PromptFeedback {
 /// Metadata on the generation request's token usage.
 final class UsageMetadata {
   // ignore: public_member_api_docs
-  UsageMetadata._(
-      {this.promptTokenCount,
-      this.candidatesTokenCount,
-      this.totalTokenCount,
-      this.thoughtsTokenCount,
-      this.promptTokensDetails,
-      this.candidatesTokensDetails});
+  UsageMetadata._({
+    this.promptTokenCount,
+    this.candidatesTokenCount,
+    this.totalTokenCount,
+    this.thoughtsTokenCount,
+    this.toolUsePromptTokenCount,
+    this.promptTokensDetails,
+    this.candidatesTokensDetails,
+    this.toolUsePromptTokensDetails,
+  });
 
   /// Number of tokens in the prompt.
   final int? promptTokenCount;
@@ -165,39 +205,26 @@ final class UsageMetadata {
   /// Number of tokens present in thoughts output.
   final int? thoughtsTokenCount;
 
+  /// The number of tokens used by tools.
+  final int? toolUsePromptTokenCount;
+
   /// List of modalities that were processed in the request input.
   final List<ModalityTokenCount>? promptTokensDetails;
 
   /// List of modalities that were returned in the response.
   final List<ModalityTokenCount>? candidatesTokensDetails;
-}
 
-/// Constructe a UsageMetadata with all it's fields.
-///
-/// Expose access to the private constructor for use within the package..
-UsageMetadata createUsageMetadata({
-  required int? promptTokenCount,
-  required int? candidatesTokenCount,
-  required int? totalTokenCount,
-  required int? thoughtsTokenCount,
-  required List<ModalityTokenCount>? promptTokensDetails,
-  required List<ModalityTokenCount>? candidatesTokensDetails,
-}) =>
-    UsageMetadata._(
-        promptTokenCount: promptTokenCount,
-        candidatesTokenCount: candidatesTokenCount,
-        totalTokenCount: totalTokenCount,
-        thoughtsTokenCount: thoughtsTokenCount,
-        promptTokensDetails: promptTokensDetails,
-        candidatesTokensDetails: candidatesTokensDetails);
+  /// A list of tokens used by tools whose usage was triggered from a prompt,
+  /// broken down by modality.
+  final List<ModalityTokenCount>? toolUsePromptTokensDetails;
+}
 
 /// Response candidate generated from a [GenerativeModel].
 final class Candidate {
-  // TODO: token count?
   // ignore: public_member_api_docs
   Candidate(this.content, this.safetyRatings, this.citationMetadata,
       this.finishReason, this.finishMessage,
-      {this.groundingMetadata});
+      {this.groundingMetadata, this.urlContextMetadata});
 
   /// Generated content returned from the model.
   final Content content;
@@ -224,6 +251,9 @@ final class Candidate {
 
   /// Metadata returned to the client when grounding is enabled.
   final GroundingMetadata? groundingMetadata;
+
+  /// Metadata returned to the client when the [UrlContext] tool is enabled.
+  final UrlContextMetadata? urlContextMetadata;
 
   /// The concatenation of the text parts of [content], if any.
   ///
@@ -400,6 +430,76 @@ final class GroundingMetadata {
   final List<String> webSearchQueries;
 }
 
+/// The status of a URL retrieval.
+///
+/// > Warning: For Firebase AI Logic, URL Context
+/// is in Public Preview, which means that the feature is not subject to any SLA
+/// or deprecation policy and could change in backwards-incompatible ways.
+enum UrlRetrievalStatus {
+  /// Unspecified retrieval status.
+  unspecified('URL_RETRIEVAL_STATUS_UNSPECIFIED'),
+
+  /// The URL retrieval was successful.
+  success('URL_RETRIEVAL_STATUS_SUCCESS'),
+
+  /// The URL retrieval failed due.
+  error('URL_RETRIEVAL_STATUS_ERROR'),
+
+  /// The URL retrieval failed because the content is behind a paywall.
+  paywall('URL_RETRIEVAL_STATUS_PAYWALL'),
+
+  /// The URL retrieval failed because the content is unsafe.
+  unsafe('URL_RETRIEVAL_STATUS_UNSAFE');
+
+  const UrlRetrievalStatus(this._jsonString);
+  final String _jsonString;
+
+  // ignore: public_member_api_docs
+  String toJson() => _jsonString;
+
+  // ignore: unused_element
+  static UrlRetrievalStatus _parseValue(Object jsonObject) {
+    return switch (jsonObject) {
+      'URL_RETRIEVAL_STATUS_UNSPECIFIED' => UrlRetrievalStatus.unspecified,
+      'URL_RETRIEVAL_STATUS_SUCCESS' => UrlRetrievalStatus.success,
+      'URL_RETRIEVAL_STATUS_ERROR' => UrlRetrievalStatus.error,
+      'URL_RETRIEVAL_STATUS_PAYWALL' => UrlRetrievalStatus.paywall,
+      'URL_RETRIEVAL_STATUS_UNSAFE' => UrlRetrievalStatus.unsafe,
+      _ => UrlRetrievalStatus
+          .unspecified, // Default to unspecified for unknown values.
+    };
+  }
+}
+
+/// Metadata for a single URL retrieved by the [UrlContext] tool.
+///
+/// > Warning: For Firebase AI Logic, URL Context
+/// is in Public Preview, which means that the feature is not subject to any SLA
+/// or deprecation policy and could change in backwards-incompatible ways.
+final class UrlMetadata {
+  // ignore: public_member_api_docs
+  UrlMetadata({this.retrievedUrl, required this.urlRetrievalStatus});
+
+  /// The retrieved URL.
+  final Uri? retrievedUrl;
+
+  /// The status of the URL retrieval.
+  final UrlRetrievalStatus urlRetrievalStatus;
+}
+
+/// Metadata related to the [UrlContext] tool.
+///
+/// > Warning: For Firebase AI Logic, URL Context
+/// is in Public Preview, which means that the feature is not subject to any SLA
+/// or deprecation policy and could change in backwards-incompatible ways.
+final class UrlContextMetadata {
+  // ignore: public_member_api_docs
+  UrlContextMetadata({required this.urlMetadata});
+
+  /// List of [UrlMetadata] used to provide context to the Gemini model.
+  final List<UrlMetadata> urlMetadata;
+}
+
 /// Safety rating for a piece of content.
 ///
 /// The safety rating contains the category of harm and the harm probability
@@ -451,8 +551,8 @@ enum BlockReason {
 
   const BlockReason(this._jsonString);
 
-  // ignore: unused_element
-  static BlockReason _parseValue(String jsonObject) {
+  /// Parse the json to [BlockReason] object.
+  static BlockReason parseValue(String jsonObject) {
     return switch (jsonObject) {
       'BLOCK_REASON_UNSPECIFIED' => BlockReason.unknown,
       'SAFETY' => BlockReason.safety,
@@ -661,8 +761,8 @@ enum FinishReason {
   /// Convert to json format
   String toJson() => _jsonString;
 
-  // ignore: unused_element
-  static FinishReason _parseValue(Object jsonObject) {
+  /// Parse the json to [FinishReason] object.
+  static FinishReason parseValue(Object jsonObject) {
     return switch (jsonObject) {
       'UNSPECIFIED' => FinishReason.unknown,
       'STOP' => FinishReason.stop,
@@ -861,15 +961,20 @@ enum ResponseModalities {
 /// Config for thinking features.
 class ThinkingConfig {
   // ignore: public_member_api_docs
-  ThinkingConfig({this.thinkingBudget});
+  ThinkingConfig({this.thinkingBudget, this.includeThoughts});
 
   /// The number of thoughts tokens that the model should generate.
   final int? thinkingBudget;
+
+  /// Whether to include thoughts in the response.
+  final bool? includeThoughts;
 
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
         if (thinkingBudget case final thinkingBudget?)
           'thinkingBudget': thinkingBudget,
+        if (includeThoughts case final includeThoughts?)
+          'includeThoughts': includeThoughts,
       };
 }
 
@@ -998,8 +1103,10 @@ final class GenerationConfig extends BaseGenerationConfig {
     super.responseModalities,
     this.responseMimeType,
     this.responseSchema,
+    this.responseJsonSchema,
     this.thinkingConfig,
-  });
+  }) : assert(responseSchema == null || responseJsonSchema == null,
+            'responseSchema and responseJsonSchema cannot both be set.');
 
   /// The set of character sequences (up to 5) that will stop output generation.
   ///
@@ -1018,7 +1125,27 @@ final class GenerationConfig extends BaseGenerationConfig {
   ///
   /// - Note: This only applies when the [responseMimeType] supports
   ///   a schema; currently this is limited to `application/json`.
+  ///
+  /// Only one of [responseSchema] or [responseJsonSchema] may be specified at
+  /// the same time.
   final Schema? responseSchema;
+
+  /// The response schema as a JSON-compatible map.
+  ///
+  /// - Note: This only applies when the [responseMimeType] supports a schema;
+  ///   currently this is limited to `application/json`.
+  ///
+  /// This schema can include more advanced features of JSON than the [Schema]
+  /// class taken by [responseSchema] supports.  See the [Gemini
+  /// documentation](https://ai.google.dev/api/generate-content#FIELDS.response_json_schema)
+  /// about the limitations of this feature.
+  ///
+  /// Notably, this feature is only supported on Gemini 2.5 and later. Use
+  /// [responseSchema] for earlier models.
+  ///
+  /// Only one of [responseSchema] or [responseJsonSchema] may be specified at
+  /// the same time.
+  final Map<String, Object?>? responseJsonSchema;
 
   /// Config for thinking features.
   ///
@@ -1036,6 +1163,8 @@ final class GenerationConfig extends BaseGenerationConfig {
           'responseMimeType': responseMimeType,
         if (responseSchema case final responseSchema?)
           'responseSchema': responseSchema.toJson(),
+        if (responseJsonSchema case final responseJsonSchema?)
+          'responseJsonSchema': responseJsonSchema,
         if (thinkingConfig case final thinkingConfig?)
           'thinkingConfig': thinkingConfig.toJson(),
       };
@@ -1126,15 +1255,15 @@ final class VertexSerialization implements SerializationStrategy {
         _parsePromptFeedback(promptFeedback),
       _ => null,
     };
-    final usageMedata = switch (jsonObject) {
+    final usageMetadata = switch (jsonObject) {
       {'usageMetadata': final usageMetadata?} =>
-        _parseUsageMetadata(usageMetadata),
+        parseUsageMetadata(usageMetadata),
       {'totalTokens': final int totalTokens} =>
         UsageMetadata._(totalTokenCount: totalTokens),
       _ => null,
     };
     return GenerateContentResponse(candidates, promptFeedback,
-        usageMetadata: usageMedata);
+        usageMetadata: usageMetadata);
   }
 
   /// Parse the json to [CountTokensResponse]
@@ -1218,12 +1347,12 @@ Candidate _parseCandidate(Object? jsonObject) {
       },
       switch (jsonObject) {
         {'citationMetadata': final Object citationMetadata} =>
-          _parseCitationMetadata(citationMetadata),
+          parseCitationMetadata(citationMetadata),
         _ => null
       },
       switch (jsonObject) {
         {'finishReason': final Object finishReason} =>
-          FinishReason._parseValue(finishReason),
+          FinishReason.parseValue(finishReason),
         _ => null
       },
       switch (jsonObject) {
@@ -1232,12 +1361,23 @@ Candidate _parseCandidate(Object? jsonObject) {
       },
       groundingMetadata: switch (jsonObject) {
         {'groundingMetadata': final Object groundingMetadata} =>
-          _parseGroundingMetadata(groundingMetadata),
+          parseGroundingMetadata(groundingMetadata),
+        _ => null
+      },
+      urlContextMetadata: switch (jsonObject) {
+        {'urlContextMetadata': final Object urlContextMetadata} =>
+          parseUrlContextMetadata(urlContextMetadata),
         _ => null
       });
 }
 
 PromptFeedback _parsePromptFeedback(Object jsonObject) {
+  if (jsonObject is! Map) {
+    throw unhandledFormat('PromptFeedback', jsonObject);
+  }
+  if (jsonObject.isEmpty) {
+    return PromptFeedback(null, null, []);
+  }
   return switch (jsonObject) {
     {
       'safetyRatings': final List<Object?> safetyRatings,
@@ -1245,7 +1385,7 @@ PromptFeedback _parsePromptFeedback(Object jsonObject) {
       PromptFeedback(
           switch (jsonObject) {
             {'blockReason': final String blockReason} =>
-              BlockReason._parseValue(blockReason),
+              BlockReason.parseValue(blockReason),
             _ => null,
           },
           switch (jsonObject) {
@@ -1258,7 +1398,10 @@ PromptFeedback _parsePromptFeedback(Object jsonObject) {
   };
 }
 
-UsageMetadata _parseUsageMetadata(Object jsonObject) {
+/// Parses a UsageMetadata from a JSON object.
+///
+/// Expose access to the private helper for use within the package.
+UsageMetadata parseUsageMetadata(Object jsonObject) {
   if (jsonObject is! Map<String, Object?>) {
     throw unhandledFormat('UsageMetadata', jsonObject);
   }
@@ -1275,6 +1418,15 @@ UsageMetadata _parseUsageMetadata(Object jsonObject) {
     {'totalTokenCount': final int totalTokenCount} => totalTokenCount,
     _ => null,
   };
+  final thoughtsTokenCount = switch (jsonObject) {
+    {'thoughtsTokenCount': final int thoughtsTokenCount} => thoughtsTokenCount,
+    _ => null,
+  };
+  final toolUsePromptTokenCount = switch (jsonObject) {
+    {'toolUsePromptTokenCount': final int toolUsePromptTokenCount} =>
+      toolUsePromptTokenCount,
+    _ => null,
+  };
   final promptTokensDetails = switch (jsonObject) {
     {'promptTokensDetails': final List<Object?> promptTokensDetails} =>
       promptTokensDetails.map(_parseModalityTokenCount).toList(),
@@ -1285,12 +1437,24 @@ UsageMetadata _parseUsageMetadata(Object jsonObject) {
       candidatesTokensDetails.map(_parseModalityTokenCount).toList(),
     _ => null,
   };
+  final toolUsePromptTokensDetails = switch (jsonObject) {
+    {
+      'toolUsePromptTokensDetails': final List<Object?>
+          toolUsePromptTokensDetails
+    } =>
+      toolUsePromptTokensDetails.map(_parseModalityTokenCount).toList(),
+    _ => null,
+  };
   return UsageMetadata._(
-      promptTokenCount: promptTokenCount,
-      candidatesTokenCount: candidatesTokenCount,
-      totalTokenCount: totalTokenCount,
-      promptTokensDetails: promptTokensDetails,
-      candidatesTokensDetails: candidatesTokensDetails);
+    promptTokenCount: promptTokenCount,
+    candidatesTokenCount: candidatesTokenCount,
+    totalTokenCount: totalTokenCount,
+    thoughtsTokenCount: thoughtsTokenCount,
+    toolUsePromptTokenCount: toolUsePromptTokenCount,
+    promptTokensDetails: promptTokensDetails,
+    candidatesTokensDetails: candidatesTokensDetails,
+    toolUsePromptTokensDetails: toolUsePromptTokensDetails,
+  );
 }
 
 ModalityTokenCount _parseModalityTokenCount(Object? jsonObject) {
@@ -1323,7 +1487,11 @@ SafetyRating _parseSafetyRating(Object? jsonObject) {
       severityScore: jsonObject['severityScore'] as double?);
 }
 
-CitationMetadata _parseCitationMetadata(Object? jsonObject) {
+/// Parses a [CitationMetadata] from a JSON object.
+///
+/// This function is used internally to convert citation metadata from the API
+/// response.
+CitationMetadata parseCitationMetadata(Object? jsonObject) {
   return switch (jsonObject) {
     {'citationSources': final List<Object?> citationSources} =>
       CitationMetadata(citationSources.map(_parseCitationSource).toList()),
@@ -1349,7 +1517,11 @@ Citation _parseCitationSource(Object? jsonObject) {
   );
 }
 
-GroundingMetadata _parseGroundingMetadata(Object? jsonObject) {
+/// Parses a [GroundingMetadata] from a JSON object.
+///
+/// This function is used internally to convert grounding metadata from the API
+/// response.
+GroundingMetadata parseGroundingMetadata(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('GroundingMetadata', jsonObject);
   }
@@ -1458,4 +1630,92 @@ SearchEntryPoint _parseSearchEntryPoint(Object? jsonObject) {
   return SearchEntryPoint(
     renderedContent: renderedContent,
   );
+}
+
+UrlMetadata _parseUrlMetadata(Object? jsonObject) {
+  if (jsonObject is! Map) {
+    throw unhandledFormat('UrlMetadata', jsonObject);
+  }
+  final uriString = jsonObject['retrievedUrl'] as String?;
+  return UrlMetadata(
+    retrievedUrl: uriString != null ? Uri.parse(uriString) : null,
+    urlRetrievalStatus:
+        UrlRetrievalStatus._parseValue(jsonObject['urlRetrievalStatus']),
+  );
+}
+
+/// Parses a [UrlContextMetadata] from a JSON object.
+///
+/// This function is used internally to convert URL context metadata from the API
+/// response.
+UrlContextMetadata parseUrlContextMetadata(Object? jsonObject) {
+  if (jsonObject is! Map) {
+    throw unhandledFormat('UrlContextMetadata', jsonObject);
+  }
+  return UrlContextMetadata(
+    urlMetadata: (jsonObject['urlMetadata'] as List<Object?>? ?? [])
+        .map(_parseUrlMetadata)
+        .toList(),
+  );
+}
+
+/// Supported programming languages for the generated code.
+enum CodeLanguage {
+  /// Unspecified status. This value should not be used.
+  unspecified('LANGUAGE_UNSPECIFIED'),
+
+  /// Python language.
+  python('PYTHON');
+
+  const CodeLanguage(this._jsonString);
+
+  final String _jsonString;
+
+  /// Convert to json format.
+  String toJson() => _jsonString;
+
+  /// Parse the json string to [CodeLanguage].
+  static CodeLanguage parseValue(String jsonObject) {
+    return switch (jsonObject) {
+      'LANGUAGE_UNSPECIFIED' => CodeLanguage.unspecified,
+      'PYTHON' => CodeLanguage.python,
+      _ => CodeLanguage
+          .unspecified, // If backend has new change, return unspecified.
+    };
+  }
+}
+
+/// Represents the result of the code execution.
+enum Outcome {
+  /// Unspecified status. This value should not be used.
+  unspecified('OUTCOME_UNSPECIFIED'),
+
+  /// Code execution completed successfully.
+  ok('OUTCOME_OK'),
+
+  /// Code execution finished but with a failure. `stderr` should contain the
+  /// reason.
+  failed('OUTCOME_FAILED'),
+
+  /// Code execution ran for too long, and was cancelled. There may or may not
+  /// be a partial output present.
+  deadlineExceeded('OUTCOME_DEADLINE_EXCEEDED');
+
+  const Outcome(this._jsonString);
+
+  final String _jsonString;
+
+  /// Convert to json format.
+  String toJson() => _jsonString;
+
+  /// Parse the json string to [Outcome].
+  static Outcome parseValue(String jsonObject) {
+    return switch (jsonObject) {
+      'OUTCOME_UNSPECIFIED' => Outcome.unspecified,
+      'OUTCOME_OK' => Outcome.ok,
+      'OUTCOME_FAILED' => Outcome.failed,
+      'OUTCOME_DEADLINE_EXCEEDED' => Outcome.deadlineExceeded,
+      _ => throw FormatException('Unhandled Outcome format', jsonObject),
+    };
+  }
 }

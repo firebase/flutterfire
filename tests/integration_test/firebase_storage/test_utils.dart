@@ -33,10 +33,47 @@ const int testEmulatorPort = 9199;
 
 // Creates a test file with a specified name to
 // a locally directory
-Future<File> createFile(String name, {String? largeString}) async {
+Future<File> createFile(
+  String name, {
+  String? string,
+  int sizeInBytes = 209715200,
+}) async {
   final Directory systemTempDir = Directory.systemTemp;
   final File file = await File('${systemTempDir.path}/$name').create();
-  await file.writeAsString(largeString ?? kTestString);
+
+  if (string != null) {
+    await file.writeAsString(string);
+    return file;
+  }
+
+  // Create a 200MB file by writing data in chunks to avoid memory issues
+  const chunkSize = 1024 * 1024; // 1MB chunks
+  final chunk = Uint8List(chunkSize);
+
+  // Fill chunk with random-ish data to prevent compression
+  for (int i = 0; i < chunkSize; i++) {
+    chunk[i] = i % 256; // Creates a pattern from 0-255
+  }
+
+  final sink = file.openWrite();
+  final totalChunks = (sizeInBytes / chunkSize).ceil();
+
+  for (int i = 0; i < totalChunks; i++) {
+    if (i == totalChunks - 1) {
+      // Last chunk might be smaller
+      final remainingBytes = sizeInBytes % chunkSize;
+      if (remainingBytes > 0) {
+        sink.add(chunk.sublist(0, remainingBytes));
+      } else {
+        sink.add(chunk);
+      }
+    } else {
+      sink.add(chunk);
+    }
+  }
+
+  await sink.close();
+
   return file;
 }
 

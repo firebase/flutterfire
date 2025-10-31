@@ -50,7 +50,7 @@ void main() {
       final (client, model) = createModel('models/$defaultModelName');
       final chat = model.startChat(history: [
         Content.text('Hi!'),
-        Content.model([TextPart('Hello, how can I help you today?')]),
+        Content.model([const TextPart('Hello, how can I help you today?')]),
       ]);
       const prompt = 'Some prompt';
       final response = await client.checkRequest(
