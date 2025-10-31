@@ -39,11 +39,7 @@ external JSFunction httpsCallableFromURL(
 ///
 /// Do not call this constructor directly. Instead, use firebase.functions().
 /// See: <https://firebase.google.com/docs/reference/js/firebase.functions.Functions>.
-@JS('Functions')
-@staticInterop
-abstract class FunctionsJsImpl {}
-
-extension FunctionsJsImplExtension on FunctionsJsImpl {
+extension type FunctionsJsImpl._(JSObject _) implements JSObject {
   external AppJsImpl get app;
   external JSString? get customDomain;
   external JSString get region;
@@ -52,15 +48,9 @@ extension FunctionsJsImplExtension on FunctionsJsImpl {
 /// An HttpsCallableOptions is an option to set timeout property
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.functions.HttpsCallableOptions>.
-@JS('HttpsCallableOptions')
-@staticInterop
-@anonymous
-abstract class HttpsCallableOptions {
+extension type HttpsCallableOptions._(JSObject _) implements JSObject {
   external factory HttpsCallableOptions(
       {JSNumber? timeout, JSBoolean? limitedUseAppCheckTokens});
-}
-
-extension HttpsCallableOptionsExtension on HttpsCallableOptions {
   external JSNumber? get timeout;
   external set timeout(JSNumber? t);
   external JSBoolean? get limitedUseAppCheckTokens;
@@ -70,45 +60,27 @@ extension HttpsCallableOptionsExtension on HttpsCallableOptions {
 /// An HttpsCallableResult wraps a single result from a function call.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/functions.httpscallableresult>.
-@JS('HttpsCallableResult')
-@staticInterop
-@anonymous
-abstract class HttpsCallableResultJsImpl {}
-
-extension HttpsCallableResultJsImplExtension on HttpsCallableResultJsImpl {
+extension type HttpsCallableResultJsImpl._(JSObject _) implements JSObject {
   external JSAny? get data;
 }
 
-@JS('HttpsCallable')
-@staticInterop
-class HttpsCallable {}
-
-extension HttpsCallableExtension on HttpsCallable {
+extension type HttpsCallable._(JSObject _) implements JSObject {
   external JSPromise stream([JSAny? data, HttpsCallableStreamOptions? options]);
 }
 
-@JS('HttpsCallableStreamResult')
-@staticInterop
-class HttpsCallableStreamResultJsImpl {}
-
-extension HttpsCallableStreamResultJsImplExtension
-    on HttpsCallableStreamResultJsImpl {
+extension type HttpsCallableStreamResultJsImpl._(JSObject _)
+    implements JSObject {
   external JSPromise data;
   external JsAsyncIterator<JSAny> stream;
 }
 
-@JS('HttpsCallableStreamOptions')
-@staticInterop
-@anonymous
-abstract class HttpsCallableStreamOptions {
+extension type HttpsCallableStreamOptions._(JSObject _) implements JSObject {
   external factory HttpsCallableStreamOptions(
       {JSBoolean? limitedUseAppCheckTokens, web.AbortSignal? signal});
-}
-
-extension HttpsCallableStreamOptionsExtension on HttpsCallableStreamOptions {
   external JSBoolean? get limitedUseAppCheckTokens;
   external set limitedUseAppCheckTokens(JSBoolean? t);
   external web.AbortSignal? signal;
+  // ignore: avoid_setters_without_getters
   external set siganl(web.AbortSignal? s);
 }
 
@@ -134,10 +106,6 @@ extension type JsAsyncIterator<T extends JSAny>._(JSObject _)
   }
 }
 
-@JS()
-@staticInterop
-abstract class HttpsStreamIterableResult {}
-
-extension HttpsStreamIterableResultExtension on HttpsStreamIterableResult {
+extension type HttpsStreamIterableResult._(JSObject _) implements JSObject {
   external JSAny? get value;
 }
