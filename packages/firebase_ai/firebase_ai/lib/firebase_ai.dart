@@ -55,6 +55,7 @@ export 'src/error.dart'
         ServerException,
         UnsupportedUserLocation;
 export 'src/firebase_ai.dart' show FirebaseAI;
+export 'src/image_config.dart' show ImageConfig, AspectRatio;
 export 'src/imagen/imagen_api.dart'
     show
         ImagenSafetySettings,
