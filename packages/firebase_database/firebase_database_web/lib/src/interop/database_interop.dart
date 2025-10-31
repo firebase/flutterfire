@@ -50,7 +50,7 @@ external void forceWebSockets();
 
 @JS()
 @staticInterop
-external JSPromise /*DataSnapshotJsImpl*/ get(QueryJsImpl query);
+external JSPromise<DataSnapshotJsImpl> get(QueryJsImpl query);
 
 @JS()
 @staticInterop
@@ -164,13 +164,13 @@ external ReferenceJsImpl refFromURL(
 
 @JS()
 @staticInterop
-external JSPromise remove(
+external JSPromise<ReferenceJsImpl> remove(
   ReferenceJsImpl ref,
 );
 
 @JS()
 @staticInterop
-external JSPromise/*<TransactionResultJsImpl>*/ runTransaction(
+external JSPromise<TransactionResultJsImpl> runTransaction(
   ReferenceJsImpl ref,
   JSFunction transactionUpdate,
   // Function(JSAny currentData) transactionUpdate,
@@ -220,29 +220,17 @@ abstract class ServerValue {
   external static JSAny get TIMESTAMP;
 }
 
-@JS('Database')
-@staticInterop
-abstract class DatabaseJsImpl {}
-
-extension DatabaseJsImplExtension on DatabaseJsImpl {
+extension type DatabaseJsImpl._(JSObject _) implements JSObject {
   external AppJsImpl get app;
   external set app(AppJsImpl a);
   external JSString get type;
 }
 
-@JS('QueryConstraint')
-@staticInterop
-abstract class QueryConstraintJsImpl {}
-
-extension QueryConstraintJsImplExtension on QueryConstraintJsImpl {
+extension type QueryConstraintJsImpl._(JSObject _) implements JSObject {
   external JSString get type;
 }
 
-@JS('OnDisconnect')
-@staticInterop
-abstract class OnDisconnectJsImpl {}
-
-extension OnDisconnectJsImplExtension on OnDisconnectJsImpl {
+extension type OnDisconnectJsImpl._(JSObject _) implements JSObject {
   external JSPromise cancel([
     JSFunction onComplete,
     //void Function(JSAny) onComplete
@@ -269,11 +257,8 @@ extension OnDisconnectJsImplExtension on OnDisconnectJsImpl {
   );
 }
 
-@JS('ThenableReference')
-@staticInterop
-abstract class ThenableReferenceJsImpl extends ReferenceJsImpl {}
-
-extension ThenableReferenceJsImplExtension on ThenableReferenceJsImpl {
+extension type ThenableReferenceJsImpl._(JSObject _)
+    implements JSObject, ReferenceJsImpl {
   external JSPromise then([JSFunction? onResolve, JSFunction? onReject]);
 }
 
@@ -302,12 +287,7 @@ abstract class ListenOptions {
   external static JSBoolean get onlyOnce;
 }
 
-@JS()
-@staticInterop
-@anonymous
-abstract class FirebaseError {}
-
-extension FirebaseErrorExtension on FirebaseError {
+extension type FirebaseError._(JSObject _) implements JSObject {
   external JSString get code;
   external JSString get message;
   external JSString get name;
