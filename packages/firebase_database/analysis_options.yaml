@@ -1,0 +1,11 @@
+# Copyright 2025 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# in the LICENSE file.
+
+include: ../../analysis_options.yaml
+
+analyzer:
+  exclude:
+    - firebase_database_platform_interface/lib/src/pigeon/messages.pigeon.dart
+    - firebase_database_platform_interface/test/pigeon/test_api.dart
+    - firebase_database_platform_interface/pigeons/messages.dart

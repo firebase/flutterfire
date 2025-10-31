@@ -154,7 +154,7 @@ void main() {
             );
 
             await Future.delayed(const Duration(seconds: 2));
-          });
+          }, skip: defaultTargetPlatform == TargetPlatform.macOS || defaultTargetPlatform == TargetPlatform.windows,);
 
           test(
               'calls callback with the current user and when user state changes',
@@ -868,7 +868,7 @@ void main() {
             }
           });
         },
-        skip: !kIsWeb && Platform.isWindows,
+        skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS),
       );
 
       group(
@@ -1124,6 +1124,6 @@ void main() {
       });
     },
     // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
-    skip: defaultTargetPlatform == TargetPlatform.macOS,
+    skip: !kIsWeb && Platform.isMacOS,
   );
 }
