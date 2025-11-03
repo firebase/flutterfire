@@ -1,3 +1,7 @@
+## 4.2.1
+
+ - Update a dependency to the latest release.
+
 ## 4.2.0
 
  - **FIX**: a bug with the `demoProjectId` arg to `Firebase.initializeApp()` ([#17703](https://github.com/firebase/flutterfire/issues/17703)). ([09d03aac](https://github.com/firebase/flutterfire/commit/09d03aac8ced6f7f9211c24f40b57eb992f2996d))
