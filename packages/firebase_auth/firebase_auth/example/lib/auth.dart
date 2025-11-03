@@ -256,7 +256,7 @@ class _AuthGateState extends State<AuthGate> {
                                             height: 50,
                                             child: SignInButton(
                                               button,
-                                              // ignore: unneccesary_null_comparison
+                                              // ignore: unnecessary_null_checks
                                               onPressed: authButtons[button]!,
                                             ),
                                           ),
