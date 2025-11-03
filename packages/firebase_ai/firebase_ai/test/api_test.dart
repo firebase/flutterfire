@@ -312,6 +312,8 @@ void main() {
       expect(FinishReason.maxTokens.toJson(), 'MAX_TOKENS');
       expect(FinishReason.safety.toJson(), 'SAFETY');
       expect(FinishReason.recitation.toJson(), 'RECITATION');
+      expect(FinishReason.malformedFunctionCall.toJson(),
+          'MALFORMED_FUNCTION_CALL');
       expect(FinishReason.other.toJson(), 'OTHER');
     });
 
@@ -971,6 +973,18 @@ void main() {
               () => VertexSerialization().parseGenerateContentResponse(json),
               throwsA(isA<FirebaseAISdkException>().having(
                   (e) => e.message, 'message', contains('WebGroundingChunk'))));
+        });
+
+        test('parses malformedFunctionCall finishReason', () {
+          final jsonResponse = {
+            'candidates': [
+              {'finishReason': 'MALFORMED_FUNCTION_CALL'}
+            ]
+          };
+          final response =
+              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          expect(response.candidates.first.finishReason,
+              FinishReason.malformedFunctionCall);
         });
 
         test(
