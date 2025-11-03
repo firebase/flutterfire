@@ -36,55 +36,31 @@ external JSFunction onMessage(
   Observer observer,
 );
 
-@JS('Messaging')
-@staticInterop
-abstract class MessagingJsImpl {}
+extension type MessagingJsImpl._(JSObject _) implements JSObject {}
 
-@JS()
-@staticInterop
-@anonymous
-class Observer {
+extension type Observer._(JSObject _) implements JSObject {
   external factory Observer({JSAny next, JSAny error});
-}
-
-extension ObserverJsImplX on Observer {
   external JSAny get next;
   external JSAny get error;
 }
 
-@JS()
-@staticInterop
-@anonymous
-class GetTokenOptions {
+extension type GetTokenOptions._(JSObject _) implements JSObject {
   // TODO - I imagine we won't be implementing serviceWorkerRegistration type as it extends EventTarget class
   // external String get serviceWorkerRegistration
   external factory GetTokenOptions({
     JSString? vapidKey,
     /*dynamic serviceWorkerRegistration */
   });
-}
-
-extension GetTokenOptionsJsImplX on GetTokenOptions {
   external JSString get vapidKey;
 }
 
-@JS()
-@staticInterop
-@anonymous
-abstract class NotificationPayloadJsImpl {}
-
-extension NotificationPayloadJsImplX on NotificationPayloadJsImpl {
+extension type NotificationPayloadJsImpl._(JSObject _) implements JSObject {
   external JSString? get title;
   external JSString? get body;
   external JSString? get image;
 }
 
-@JS()
-@staticInterop
-@anonymous
-abstract class MessagePayloadJsImpl {}
-
-extension MessagePayloadJsImplX on MessagePayloadJsImpl {
+extension type MessagePayloadJsImpl._(JSObject _) implements JSObject {
   external JSString get messageId;
   external JSString? get collapseKey;
   external FcmOptionsJsImpl? get fcmOptions;
@@ -93,12 +69,7 @@ extension MessagePayloadJsImplX on MessagePayloadJsImpl {
   external JSString? get from;
 }
 
-@JS()
-@staticInterop
-@anonymous
-abstract class FcmOptionsJsImpl {}
-
-extension FcmOptionsJsImplX on FcmOptionsJsImpl {
+extension type FcmOptionsJsImpl._(JSObject _) implements JSObject {
   external JSString? get analyticsLabel;
   external JSString? get link;
 }
