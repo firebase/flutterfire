@@ -32,11 +32,15 @@ import FirebaseCoreInternal
     ///
     /// - Parameter firebasePlugin: The plugin conforming to FLTFirebasePlugin protocol.
     @objc public func registerFirebasePlugin(_ firebasePlugin: FLTFirebasePlugin) {
-        // Register the library with the Firebase backend.
-        #if canImport(FirebaseCoreInternal)
-        FirebaseApp.registerLibrary(withName: firebasePlugin.firebaseLibraryName,
-                                    withVersion: firebasePlugin.firebaseLibraryVersion)
-        #endif
+        // Register the library with the Firebase backend using runtime checking
+        // for compatibility across different Firebase SDK versions.
+        if FirebaseApp.responds(to: NSSelectorFromString("registerLibrary:withVersion:")) {
+            FirebaseApp.perform(
+                NSSelectorFromString("registerLibrary:withVersion:"),
+                with: firebasePlugin.firebaseLibraryName,
+                with: firebasePlugin.firebaseLibraryVersion
+            )
+        }
         
         // Store the plugin delegate for later usage.
         registeredPlugins[firebasePlugin.flutterChannelName] = firebasePlugin
