@@ -19,7 +19,7 @@ import FirebaseMLModelDownloader
 
 let kFLTFirebaseModelDownloaderChannelName = "plugins.flutter.io/firebase_ml_model_downloader"
 
-public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin {
+public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePlugin, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
     let binaryMessenger: FlutterBinaryMessenger
 
@@ -49,15 +49,19 @@ public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePluginProtocol,
     completion()
   }
 
-  public func pluginConstants(for firebaseApp: FirebaseApp) -> [AnyHashable: Any] {
+  public func pluginConstants(for firebaseApp: FirebaseApp) -> [String: Any] {
     [:]
   }
 
-  @objc public func firebaseLibraryName() -> String {
+  public var firebaseLibraryName: String {
     "flutter-fire-ml-downloader"
   }
 
-  @objc public func flutterChannelName() -> String {
+  public var firebaseLibraryVersion: String {
+    versionNumber
+  }
+
+  public var flutterChannelName: String {
     "plugins.flutter.io/firebase_ml_model_downloader"
   }
 

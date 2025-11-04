@@ -170,8 +170,8 @@ class FlutterFirebasePerformancePlugin
     return taskCompletionSource.task
   }
 
-  override fun didReinitializeFirebaseCore(): Task<Void> {
-    val taskCompletionSource = TaskCompletionSource<Void>()
+  override fun didReinitializeFirebaseCore(): Task<Void?> {
+    val taskCompletionSource = TaskCompletionSource<Void?>()
 
     FlutterFirebasePlugin.cachedThreadPool.execute {
       try {

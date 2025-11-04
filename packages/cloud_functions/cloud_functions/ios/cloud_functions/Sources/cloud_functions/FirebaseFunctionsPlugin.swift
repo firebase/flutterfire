@@ -13,13 +13,14 @@
 #else
   import firebase_core_shared
 #endif
+import FirebaseCore
 import FirebaseFunctions
 
 extension FlutterError: Error {}
 
 let kFLTFirebaseFunctionsChannelName = "plugins.flutter.io/firebase_functions"
 
-public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin,
+public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePlugin, FlutterPlugin,
   CloudFunctionsHostApi {
   func call(arguments: [String: Any?], completion: @escaping (Result<Any?, any Error>) -> Void) {
     httpsFunctionCall(arguments: arguments) { result, error in
@@ -48,7 +49,7 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     self.binaryMessenger = binaryMessenger
   }
 
-  public func firebaseLibraryVersion() -> String {
+  public var firebaseLibraryVersion: String {
     versionNumber
   }
 
@@ -56,15 +57,15 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     completion()
   }
 
-  public func pluginConstants(for firebaseApp: FirebaseApp) -> [AnyHashable: Any] {
+  public func pluginConstants(for firebaseApp: FirebaseApp) -> [String: Any] {
     [:]
   }
 
-  @objc public func firebaseLibraryName() -> String {
+  public var firebaseLibraryName: String {
     "flutter-fire-fn"
   }
 
-  @objc public func flutterChannelName() -> String {
+  public var flutterChannelName: String {
     kFLTFirebaseFunctionsChannelName
   }
 

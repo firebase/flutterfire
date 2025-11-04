@@ -79,8 +79,8 @@ class FirebaseRemoteConfigPlugin
     return configProperties
   }
 
-  override fun didReinitializeFirebaseCore(): Task<Void> {
-    val taskCompletionSource = TaskCompletionSource<Void>()
+  override fun didReinitializeFirebaseCore(): Task<Void?> {
+    val taskCompletionSource = TaskCompletionSource<Void?>()
 
     FlutterFirebasePlugin.cachedThreadPool.execute {
       try {

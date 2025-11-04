@@ -13,11 +13,12 @@
 #else
   import firebase_core_shared
 #endif
+import FirebaseCore
 import FirebaseInstallations
 
 let kFLTFirebaseInstallationsChannelName = "plugins.flutter.io/firebase_app_installations"
 
-public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin {
+public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePlugin, FlutterPlugin {
   private var eventSink: FlutterEventSink?
   private var messenger: FlutterBinaryMessenger
   private var streamHandler = [String: IdChangedStreamHandler?]()
@@ -52,15 +53,19 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol, F
     completion()
   }
 
-  public func pluginConstants(for firebaseApp: FirebaseApp) -> [AnyHashable: Any] {
+  public func pluginConstants(for firebaseApp: FirebaseApp) -> [String: Any] {
     [:]
   }
 
-  @objc public func firebaseLibraryName() -> String {
+  public var firebaseLibraryName: String {
     "flutter-fire-installations"
   }
 
-  @objc public func flutterChannelName() -> String {
+  public var firebaseLibraryVersion: String {
+    versionNumber
+  }
+
+  public var flutterChannelName: String {
     kFLTFirebaseInstallationsChannelName
   }
 

@@ -13,31 +13,32 @@
 #else
   import firebase_core_shared
 #endif
+import FirebaseCore
 import FirebasePerformance
 
 let FirebasePerformanceChannelName = "plugins.flutter.io/firebase_performance"
 
 extension FlutterError: Error {}
 
-public class FirebasePerformancePlugin: NSObject, FlutterPlugin, FLTFirebasePluginProtocol,
+public class FirebasePerformancePlugin: NSObject, FlutterPlugin, FLTFirebasePlugin,
   FirebasePerformanceHostApi {
   public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
     completion()
   }
 
-  public func pluginConstants(for firebaseApp: FirebaseApp) -> [AnyHashable: Any] {
+  public func pluginConstants(for firebaseApp: FirebaseApp) -> [String: Any] {
     [:]
   }
 
-  public func firebaseLibraryName() -> String {
+  public var firebaseLibraryName: String {
     "flutter-fire-perf"
   }
 
-  public func firebaseLibraryVersion() -> String {
+  public var firebaseLibraryVersion: String {
     versionNumber
   }
 
-  public func flutterChannelName() -> String {
+  public var flutterChannelName: String {
     FirebasePerformanceChannelName
   }
 
