@@ -719,8 +719,9 @@ class CollectionReference<T extends firestore_interop.CollectionReferenceJsImpl>
     return _expando[jsObject] ??= CollectionReference._fromJsObject(jsObject);
   }
 
-  factory CollectionReference() => CollectionReference._fromJsObject(
-      firestore_interop.CollectionReferenceJsImpl());
+  factory CollectionReference(
+          firestore_interop.CollectionReferenceJsImpl jsObject) =>
+      CollectionReference._fromJsObject(jsObject);
 
   CollectionReference._fromJsObject(
       firestore_interop.CollectionReferenceJsImpl jsObject)
@@ -730,8 +731,7 @@ class CollectionReference<T extends firestore_interop.CollectionReferenceJsImpl>
     final future =
         firestore_interop.addDoc(jsObject, jsify(data)! as JSObject).toDart;
     final result = await future;
-    return DocumentReference.getInstance(
-        (result)! as firestore_interop.DocumentReferenceJsImpl);
+    return DocumentReference.getInstance(result);
   }
 
   DocumentReference doc([String? documentPath]) {
