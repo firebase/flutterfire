@@ -20,7 +20,7 @@ let package = Package(
     .macOS("10.15"),
   ],
   products: [
-    .library(name: "firebase-core-shared", targets: ["firebase_core_shared"]),
+    .library(name: "firebase-core-shared", targets: ["firebase_core"]),
   ],
   dependencies: [
     // TODO: this is fine for now, but will require a way of retrieving the firebase-ios-sdk
@@ -32,16 +32,14 @@ let package = Package(
   ],
   targets: [
     .target(
-      name: "firebase_core_shared",
+      name: "firebase_core",
       dependencies: [
         .product(name: "FirebaseInstallations", package: "firebase-ios-sdk"),
       ],
-      path: "Sources/firebase_core_shared",
-      publicHeadersPath: "include",
-      cSettings: [
-        .headerSearchPath("include/firebase_core"),
-        .define("LIBRARY_VERSION", to: "\"\(firebase_core_version)\""),
-        .define("LIBRARY_NAME", to: "\"flutter-fire-core\""),
+      path: "packages/firebase_core/firebase_core/ios/firebase_core/Sources/firebase_core",
+      swiftSettings: [
+        .define("LIBRARY_VERSION", to: firebase_core_version),
+        .define("LIBRARY_NAME", to: "flutter-fire-core"),
       ]
     ),
   ]
