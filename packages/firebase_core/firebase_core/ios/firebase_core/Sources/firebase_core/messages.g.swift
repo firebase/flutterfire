@@ -27,13 +27,12 @@ final class PigeonError: Error {
   }
 
   var localizedDescription: String {
-    return
-      "PigeonError(code: \(code), message: \(message ?? "<nil>"), details: \(details ?? "<nil>")"
+    "PigeonError(code: \(code), message: \(message ?? "<nil>"), details: \(details ?? "<nil>")"
   }
 }
 
 private func wrapResult(_ result: Any?) -> [Any?] {
-  return [result]
+  [result]
 }
 
 private func wrapError(_ error: Any) -> [Any?] {
@@ -59,7 +58,7 @@ private func wrapError(_ error: Any) -> [Any?] {
 }
 
 private func isNullish(_ value: Any?) -> Bool {
-  return value is NSNull || value == nil
+  value is NSNull || value == nil
 }
 
 private func nilOrValue<T>(_ value: Any?) -> T? {
@@ -103,19 +102,22 @@ func deepEqualsmessages(_ lhs: Any?, _ rhs: Any?) -> Bool {
     return true
 
   default:
-    // Any other type shouldn't be able to be used with pigeon. File an issue if you find this to be untrue.
+    // Any other type shouldn't be able to be used with pigeon. File an issue if you find this to be
+    // untrue.
     return false
   }
 }
 
 func deepHashmessages(value: Any?, hasher: inout Hasher) {
   if let valueList = value as? [AnyHashable] {
-     for item in valueList { deepHashmessages(value: item, hasher: &hasher) }
-     return
+    for item in valueList {
+      deepHashmessages(value: item, hasher: &hasher)
+    }
+    return
   }
 
   if let valueDict = value as? [AnyHashable: AnyHashable] {
-    for key in valueDict.keys { 
+    for key in valueDict.keys {
       hasher.combine(key)
       deepHashmessages(value: valueDict[key]!, hasher: &hasher)
     }
@@ -129,25 +131,22 @@ func deepHashmessages(value: Any?, hasher: inout Hasher) {
   return hasher.combine(String(describing: value))
 }
 
-    
-
 /// Generated class from Pigeon that represents data sent in messages.
 struct CoreFirebaseOptions: Hashable {
   var apiKey: String
   var appId: String
   var messagingSenderId: String
   var projectId: String
-  var authDomain: String? = nil
-  var databaseURL: String? = nil
-  var storageBucket: String? = nil
-  var measurementId: String? = nil
-  var trackingId: String? = nil
-  var deepLinkURLScheme: String? = nil
-  var androidClientId: String? = nil
-  var iosClientId: String? = nil
-  var iosBundleId: String? = nil
-  var appGroupId: String? = nil
-
+  var authDomain: String?
+  var databaseURL: String?
+  var storageBucket: String?
+  var measurementId: String?
+  var trackingId: String?
+  var deepLinkURLScheme: String?
+  var androidClientId: String?
+  var iosClientId: String?
+  var iosBundleId: String?
+  var appGroupId: String?
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> CoreFirebaseOptions? {
@@ -183,8 +182,9 @@ struct CoreFirebaseOptions: Hashable {
       appGroupId: appGroupId
     )
   }
+
   func toList() -> [Any?] {
-    return [
+    [
       apiKey,
       appId,
       messagingSenderId,
@@ -201,8 +201,11 @@ struct CoreFirebaseOptions: Hashable {
       appGroupId,
     ]
   }
+
   static func == (lhs: CoreFirebaseOptions, rhs: CoreFirebaseOptions) -> Bool {
-    return deepEqualsmessages(lhs.toList(), rhs.toList())  }
+    deepEqualsmessages(lhs.toList(), rhs.toList())
+  }
+
   func hash(into hasher: inout Hasher) {
     deepHashmessages(value: toList(), hasher: &hasher)
   }
@@ -212,9 +215,8 @@ struct CoreFirebaseOptions: Hashable {
 struct CoreInitializeResponse: Hashable {
   var name: String
   var options: CoreFirebaseOptions
-  var isAutomaticDataCollectionEnabled: Bool? = nil
+  var isAutomaticDataCollectionEnabled: Bool?
   var pluginConstants: [String?: Any?]
-
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> CoreInitializeResponse? {
@@ -230,16 +232,20 @@ struct CoreInitializeResponse: Hashable {
       pluginConstants: pluginConstants
     )
   }
+
   func toList() -> [Any?] {
-    return [
+    [
       name,
       options,
       isAutomaticDataCollectionEnabled,
       pluginConstants,
     ]
   }
+
   static func == (lhs: CoreInitializeResponse, rhs: CoreInitializeResponse) -> Bool {
-    return deepEqualsmessages(lhs.toList(), rhs.toList())  }
+    deepEqualsmessages(lhs.toList(), rhs.toList())
+  }
+
   func hash(into hasher: inout Hasher) {
     deepHashmessages(value: toList(), hasher: &hasher)
   }
@@ -249,9 +255,9 @@ private class MessagesPigeonCodecReader: FlutterStandardReader {
   override func readValue(ofType type: UInt8) -> Any? {
     switch type {
     case 129:
-      return CoreFirebaseOptions.fromList(self.readValue() as! [Any?])
+      return CoreFirebaseOptions.fromList(readValue() as! [Any?])
     case 130:
-      return CoreInitializeResponse.fromList(self.readValue() as! [Any?])
+      return CoreInitializeResponse.fromList(readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
     }
@@ -274,11 +280,11 @@ private class MessagesPigeonCodecWriter: FlutterStandardWriter {
 
 private class MessagesPigeonCodecReaderWriter: FlutterStandardReaderWriter {
   override func reader(with data: Data) -> FlutterStandardReader {
-    return MessagesPigeonCodecReader(data: data)
+    MessagesPigeonCodecReader(data: data)
   }
 
   override func writer(with data: NSMutableData) -> FlutterStandardWriter {
-    return MessagesPigeonCodecWriter(data: data)
+    MessagesPigeonCodecWriter(data: data)
   }
 }
 
@@ -286,10 +292,10 @@ class MessagesPigeonCodec: FlutterStandardMessageCodec, @unchecked Sendable {
   static let shared = MessagesPigeonCodec(readerWriter: MessagesPigeonCodecReaderWriter())
 }
 
-
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol FirebaseCoreHostApi {
-  func initializeApp(appName: String, initializeAppRequest: CoreFirebaseOptions, completion: @escaping (Result<CoreInitializeResponse, Error>) -> Void)
+  func initializeApp(appName: String, initializeAppRequest: CoreFirebaseOptions,
+                     completion: @escaping (Result<CoreInitializeResponse, Error>) -> Void)
   func initializeCore(completion: @escaping (Result<[CoreInitializeResponse], Error>) -> Void)
   func optionsFromResource(completion: @escaping (Result<CoreFirebaseOptions, Error>) -> Void)
 }
@@ -298,34 +304,45 @@ protocol FirebaseCoreHostApi {
 class FirebaseCoreHostApiSetup {
   static var codec: FlutterStandardMessageCodec { MessagesPigeonCodec.shared }
   /// Sets up an instance of `FirebaseCoreHostApi` to handle messages through the `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseCoreHostApi?, messageChannelSuffix: String = "") {
+  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseCoreHostApi?,
+                    messageChannelSuffix: String = "") {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
-    let initializeAppChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeApp\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
+    let initializeAppChannel = FlutterBasicMessageChannel(
+      name: "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeApp\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
+    )
+    if let api {
       initializeAppChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appNameArg = args[0] as! String
         let initializeAppRequestArg = args[1] as! CoreFirebaseOptions
-        api.initializeApp(appName: appNameArg, initializeAppRequest: initializeAppRequestArg) { result in
-          switch result {
-          case .success(let res):
-            reply(wrapResult(res))
-          case .failure(let error):
-            reply(wrapError(error))
+        api
+          .initializeApp(appName: appNameArg,
+                         initializeAppRequest: initializeAppRequestArg) { result in
+            switch result {
+            case let .success(res):
+              reply(wrapResult(res))
+            case let .failure(error):
+              reply(wrapError(error))
+            }
           }
-        }
       }
     } else {
       initializeAppChannel.setMessageHandler(nil)
     }
-    let initializeCoreChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeCore\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
+    let initializeCoreChannel = FlutterBasicMessageChannel(
+      name: "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeCore\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
+    )
+    if let api {
       initializeCoreChannel.setMessageHandler { _, reply in
         api.initializeCore { result in
           switch result {
-          case .success(let res):
+          case let .success(res):
             reply(wrapResult(res))
-          case .failure(let error):
+          case let .failure(error):
             reply(wrapError(error))
           }
         }
@@ -333,14 +350,18 @@ class FirebaseCoreHostApiSetup {
     } else {
       initializeCoreChannel.setMessageHandler(nil)
     }
-    let optionsFromResourceChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.optionsFromResource\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
+    let optionsFromResourceChannel = FlutterBasicMessageChannel(
+      name: "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.optionsFromResource\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
+    )
+    if let api {
       optionsFromResourceChannel.setMessageHandler { _, reply in
         api.optionsFromResource { result in
           switch result {
-          case .success(let res):
+          case let .success(res):
             reply(wrapResult(res))
-          case .failure(let error):
+          case let .failure(error):
             reply(wrapError(error))
           }
         }
@@ -350,10 +371,13 @@ class FirebaseCoreHostApiSetup {
     }
   }
 }
+
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol FirebaseAppHostApi {
-  func setAutomaticDataCollectionEnabled(appName: String, enabled: Bool, completion: @escaping (Result<Void, Error>) -> Void)
-  func setAutomaticResourceManagementEnabled(appName: String, enabled: Bool, completion: @escaping (Result<Void, Error>) -> Void)
+  func setAutomaticDataCollectionEnabled(appName: String, enabled: Bool,
+                                         completion: @escaping (Result<Void, Error>) -> Void)
+  func setAutomaticResourceManagementEnabled(appName: String, enabled: Bool,
+                                             completion: @escaping (Result<Void, Error>) -> Void)
   func delete(appName: String, completion: @escaping (Result<Void, Error>) -> Void)
 }
 
@@ -361,10 +385,15 @@ protocol FirebaseAppHostApi {
 class FirebaseAppHostApiSetup {
   static var codec: FlutterStandardMessageCodec { MessagesPigeonCodec.shared }
   /// Sets up an instance of `FirebaseAppHostApi` to handle messages through the `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseAppHostApi?, messageChannelSuffix: String = "") {
+  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseAppHostApi?,
+                    messageChannelSuffix: String = "") {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
-    let setAutomaticDataCollectionEnabledChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticDataCollectionEnabled\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
+    let setAutomaticDataCollectionEnabledChannel = FlutterBasicMessageChannel(
+      name: "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticDataCollectionEnabled\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
+    )
+    if let api {
       setAutomaticDataCollectionEnabledChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appNameArg = args[0] as! String
@@ -373,7 +402,7 @@ class FirebaseAppHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case .failure(let error):
+          case let .failure(error):
             reply(wrapError(error))
           }
         }
@@ -381,26 +410,36 @@ class FirebaseAppHostApiSetup {
     } else {
       setAutomaticDataCollectionEnabledChannel.setMessageHandler(nil)
     }
-    let setAutomaticResourceManagementEnabledChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticResourceManagementEnabled\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
+    let setAutomaticResourceManagementEnabledChannel = FlutterBasicMessageChannel(
+      name: "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticResourceManagementEnabled\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
+    )
+    if let api {
       setAutomaticResourceManagementEnabledChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appNameArg = args[0] as! String
         let enabledArg = args[1] as! Bool
-        api.setAutomaticResourceManagementEnabled(appName: appNameArg, enabled: enabledArg) { result in
-          switch result {
-          case .success:
-            reply(wrapResult(nil))
-          case .failure(let error):
-            reply(wrapError(error))
+        api
+          .setAutomaticResourceManagementEnabled(appName: appNameArg,
+                                                 enabled: enabledArg) { result in
+            switch result {
+            case .success:
+              reply(wrapResult(nil))
+            case let .failure(error):
+              reply(wrapError(error))
+            }
           }
-        }
       }
     } else {
       setAutomaticResourceManagementEnabledChannel.setMessageHandler(nil)
     }
-    let deleteChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.delete\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
+    let deleteChannel = FlutterBasicMessageChannel(
+      name: "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.delete\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
+    )
+    if let api {
       deleteChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appNameArg = args[0] as! String
@@ -408,7 +447,7 @@ class FirebaseAppHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case .failure(let error):
+          case let .failure(error):
             reply(wrapError(error))
           }
         }

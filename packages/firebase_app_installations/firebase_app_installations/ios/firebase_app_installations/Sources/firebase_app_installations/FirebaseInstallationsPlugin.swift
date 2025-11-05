@@ -190,7 +190,9 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePlugin, FlutterPl
         }
 
         result(FLTFirebasePluginHelper.createFlutterError(code: errorDetails["code"] as! String,
-                                                          message: errorDetails["message"] as! String,
+                                                          message: errorDetails[
+                                                            "message"
+                                                          ] as! String,
                                                           optionalDetails: errorDetails[
                                                             "additionalData"
                                                           ] as? [String: Any],

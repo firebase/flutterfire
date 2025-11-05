@@ -95,11 +95,11 @@ public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePlugin, Flutter
       }
 
       result(FLTFirebasePluginHelper.createFlutterError(code: errorDetails["code"] as! String,
-                                                  message: errorDetails["message"] as! String,
-                                                  optionalDetails: errorDetails[
-                                                    "additionalData"
-                                                  ] as? [String: Any],
-                                                  andOptionalError: nil as Error?))
+                                                        message: errorDetails["message"] as! String,
+                                                        optionalDetails: errorDetails[
+                                                          "additionalData"
+                                                        ] as? [String: Any],
+                                                        andOptionalError: nil as Error?))
     }
 
     let result = FLTFirebaseMethodCallResult.create(success: result, andErrorBlock: errorBlock)
@@ -189,7 +189,8 @@ public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePlugin, Flutter
   }
 
   func modelDownloaderFromArguments(arguments: [String: Any]) -> ModelDownloader? {
-    let app: FirebaseApp = FLTFirebasePluginHelper.firebaseApp(named: arguments["appName"] as! String)!
+    let app: FirebaseApp = FLTFirebasePluginHelper
+      .firebaseApp(named: arguments["appName"] as! String)!
     return ModelDownloader.modelDownloader(app: app)
   }
 }

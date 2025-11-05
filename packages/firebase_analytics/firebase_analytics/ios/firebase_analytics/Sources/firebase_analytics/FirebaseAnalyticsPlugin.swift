@@ -13,8 +13,8 @@
 #else
   import firebase_core_shared
 #endif
-import FirebaseCore
 import FirebaseAnalytics
+import FirebaseCore
 
 let kFLTFirebaseAnalyticsName = "name"
 let kFLTFirebaseAnalyticsValue = "value"
