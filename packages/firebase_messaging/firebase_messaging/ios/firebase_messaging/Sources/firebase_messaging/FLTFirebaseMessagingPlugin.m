@@ -91,31 +91,31 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
   void (^errorBlock)(NSString *_Nullable, NSString *_Nullable, NSDictionary *_Nullable,
-                     NSError *_Nullable) =
-      ^(NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
-        NSError *_Nullable error) {
-        if (code == nil) {
-          NSDictionary *errorDetails = [self NSDictionaryForNSError:error];
-          code = errorDetails[kMessagingArgumentCode];
-          message = errorDetails[kMessagingArgumentMessage];
-          details = errorDetails;
-        } else {
-          details = @{
-            kMessagingArgumentCode : code,
-            kMessagingArgumentMessage : message,
-          };
-        }
-
-        if ([@"unknown" isEqualToString:code]) {
-          NSLog(@"FLTFirebaseMessaging: An error occurred while calling method %@, errorOrNil => %@",
-                call.method, [error userInfo]);
-        }
-
-        flutterResult([FLTFirebasePluginHelper createFlutterErrorWithCode:code
-                                                                   message:message
-                                                           optionalDetails:details
-                                                            andOptionalError:error]);
+                     NSError *_Nullable) = ^(NSString *_Nullable code, NSString *_Nullable message,
+                                             NSDictionary *_Nullable details,
+                                             NSError *_Nullable error) {
+    if (code == nil) {
+      NSDictionary *errorDetails = [self NSDictionaryForNSError:error];
+      code = errorDetails[kMessagingArgumentCode];
+      message = errorDetails[kMessagingArgumentMessage];
+      details = errorDetails;
+    } else {
+      details = @{
+        kMessagingArgumentCode : code,
+        kMessagingArgumentMessage : message,
       };
+    }
+
+    if ([@"unknown" isEqualToString:code]) {
+      NSLog(@"FLTFirebaseMessaging: An error occurred while calling method %@, errorOrNil => %@",
+            call.method, [error userInfo]);
+    }
+
+    flutterResult([FLTFirebasePluginHelper createFlutterErrorWithCode:code
+                                                              message:message
+                                                      optionalDetails:details
+                                                     andOptionalError:error]);
+  };
 
   FLTFirebaseMethodCallResult *methodCallResult =
       [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];

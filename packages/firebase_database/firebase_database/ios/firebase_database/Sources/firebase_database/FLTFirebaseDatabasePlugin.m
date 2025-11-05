@@ -5,8 +5,8 @@
 @import firebase_core;
 @import FirebaseCore;
 
-#import "FLTFirebaseDatabaseObserveStreamHandler.h"
 #import "FLTFirebaseDatabasePlugin.h"
+#import "FLTFirebaseDatabaseObserveStreamHandler.h"
 #import "FLTFirebaseDatabaseUtils.h"
 
 NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_database";
@@ -83,9 +83,9 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
           NSLog(@"FLTFirebaseDatabase: An error occurred while calling method %@", call.method);
         }
         flutterResult([FLTFirebasePluginHelper createFlutterErrorWithCode:code
-                                                                   message:message
-                                                           optionalDetails:details
-                                                           andOptionalError:error]);
+                                                                  message:message
+                                                          optionalDetails:details
+                                                         andOptionalError:error]);
       };
 
   FLTFirebaseMethodCallResult *methodCallResult =

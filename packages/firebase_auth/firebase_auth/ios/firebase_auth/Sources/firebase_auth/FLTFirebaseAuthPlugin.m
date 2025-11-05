@@ -650,7 +650,8 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
 }
 
 - (FIRAuth *_Nullable)getFIRAuthFromAppNameFromPigeon:(AuthPigeonFirebaseApp *)pigeonApp {
-  FIRApp *app = [FIRApp appNamed:[FLTFirebasePluginHelper firebaseAppNameFromDartName:pigeonApp.appName]];
+  FIRApp *app =
+      [FIRApp appNamed:[FLTFirebasePluginHelper firebaseAppNameFromDartName:pigeonApp.appName]];
   FIRAuth *auth = [FIRAuth authWithApp:app];
 
   auth.tenantID = pigeonApp.tenantId;

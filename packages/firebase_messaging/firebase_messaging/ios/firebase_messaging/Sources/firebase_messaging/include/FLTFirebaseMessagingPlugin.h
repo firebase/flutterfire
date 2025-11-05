@@ -28,24 +28,22 @@
 #if TARGET_OS_OSX
 #ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
 @interface FLTFirebaseMessagingPlugin : NSObject <FlutterPlugin,
-                                                           FLTFirebasePlugin,
-                                                           FIRMessagingDelegate,
-                                                           NSApplicationDelegate,
-                                                           UNUserNotificationCenterDelegate>
+                                                  FLTFirebasePlugin,
+                                                  FIRMessagingDelegate,
+                                                  NSApplicationDelegate,
+                                                  UNUserNotificationCenterDelegate>
 #else
-@interface FLTFirebaseMessagingPlugin : NSObject <FlutterPlugin,
-                                                           FLTFirebasePlugin,
-                                                           FIRMessagingDelegate,
-                                                           NSApplicationDelegate>
+@interface FLTFirebaseMessagingPlugin
+    : NSObject <FlutterPlugin, FLTFirebasePlugin, FIRMessagingDelegate, NSApplicationDelegate>
 #endif
 #else
 #ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
 API_AVAILABLE(ios(10.0))
 @interface FLTFirebaseMessagingPlugin : NSObject <FlutterPlugin,
-                                                           FLTFirebasePlugin,
-                                                           FIRMessagingDelegate,
-                                                           UIApplicationDelegate,
-                                                           UNUserNotificationCenterDelegate>
+                                                  FLTFirebasePlugin,
+                                                  FIRMessagingDelegate,
+                                                  UIApplicationDelegate,
+                                                  UNUserNotificationCenterDelegate>
 #else
 @interface FLTFirebaseMessagingPlugin
     : NSObject <FlutterPlugin, FLTFirebasePlugin, FIRMessagingDelegate>

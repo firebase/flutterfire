@@ -52,9 +52,9 @@
     };
     dispatch_async(dispatch_get_main_queue(), ^{
       events([FLTFirebasePluginHelper createFlutterErrorWithCode:code
-                                                          message:message
-                                                  optionalDetails:details
-                                                  andOptionalError:error]);
+                                                         message:message
+                                                 optionalDetails:details
+                                                andOptionalError:error]);
     });
   };
 

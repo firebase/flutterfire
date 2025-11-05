@@ -59,9 +59,9 @@
       };
       dispatch_async(dispatch_get_main_queue(), ^{
         events([FLTFirebasePluginHelper createFlutterErrorWithCode:code
-                                                     message:message
-                                             optionalDetails:details
-                                          andOptionalNSError:error]);
+                                                           message:message
+                                                   optionalDetails:details
+                                                andOptionalNSError:error]);
       });
     } else {
       dispatch_async(dispatch_get_main_queue(), ^{

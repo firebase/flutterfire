@@ -293,7 +293,8 @@
     NSString *appNameDart = [self readValue];
     NSString *databaseUrl = [self readValue];
     FIRFirestoreSettings *settings = [self readValue];
-    FIRApp *app = [FIRApp appNamed:[FLTFirebasePluginHelper firebaseAppNameFromDartName:appNameDart]];
+    FIRApp *app =
+        [FIRApp appNamed:[FLTFirebasePluginHelper firebaseAppNameFromDartName:appNameDart]];
 
     if ([FLTFirebaseFirestoreUtils getFirestoreInstanceByName:app.name
                                                   databaseURL:databaseUrl] != nil) {

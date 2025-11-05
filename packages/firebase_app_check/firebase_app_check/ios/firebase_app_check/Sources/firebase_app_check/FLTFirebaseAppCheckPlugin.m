@@ -67,9 +67,9 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
   void (^errorBlock)(NSString *_Nullable, NSString *_Nullable, NSDictionary *_Nullable,
-                     NSError *_Nullable) = ^(
-      NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
-      NSError *_Nullable error) {
+                     NSError *_Nullable) = ^(NSString *_Nullable code, NSString *_Nullable message,
+                                             NSDictionary *_Nullable details,
+                                             NSError *_Nullable error) {
     NSMutableDictionary *errorDetails = [NSMutableDictionary dictionary];
     NSString *errorCode;
 

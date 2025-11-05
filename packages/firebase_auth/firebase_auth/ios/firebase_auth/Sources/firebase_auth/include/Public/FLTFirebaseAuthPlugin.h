@@ -15,16 +15,15 @@
 @import firebase_core;
 #import "firebase_auth_messages.g.h"
 
-@interface FLTFirebaseAuthPlugin
-    : NSObject <FlutterPlugin,
-                         FirebaseAuthHostApi,
-                         FirebaseAuthUserHostApi,
-                         MultiFactorUserHostApi,
-                         MultiFactoResolverHostApi,
-                         MultiFactorTotpHostApi,
-                         MultiFactorTotpSecretHostApi,
-                         ASAuthorizationControllerDelegate,
-                         ASAuthorizationControllerPresentationContextProviding>
+@interface FLTFirebaseAuthPlugin : NSObject <FlutterPlugin,
+                                             FirebaseAuthHostApi,
+                                             FirebaseAuthUserHostApi,
+                                             MultiFactorUserHostApi,
+                                             MultiFactoResolverHostApi,
+                                             MultiFactorTotpHostApi,
+                                             MultiFactorTotpSecretHostApi,
+                                             ASAuthorizationControllerDelegate,
+                                             ASAuthorizationControllerPresentationContextProviding>
 
 + (FlutterError *)convertToFlutterError:(NSError *)error;
 @end
