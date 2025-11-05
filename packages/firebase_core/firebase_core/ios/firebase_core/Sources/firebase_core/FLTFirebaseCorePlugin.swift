@@ -20,11 +20,14 @@ import Foundation
 
   @objc public static func register(with registrar: FlutterPluginRegistrar) {
     let instance = sharedInstance()
-    #if !os(macOS)
+    #if os(macOS)
+      let messenger = registrar.messenger
+    #else
       registrar.publish(instance)
+      let messenger = registrar.messenger()
     #endif
-    FirebaseCoreHostApiSetup.setUp(binaryMessenger: registrar.messenger(), api: instance)
-    FirebaseAppHostApiSetup.setUp(binaryMessenger: registrar.messenger(), api: instance)
+    FirebaseCoreHostApiSetup.setUp(binaryMessenger: messenger, api: instance)
+    FirebaseAppHostApiSetup.setUp(binaryMessenger: messenger, api: instance)
   }
 
   // Returns a singleton instance of the Firebase Core plugin.

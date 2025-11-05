@@ -5,12 +5,7 @@
 #import "FirebaseInAppMessagingPlugin.h"
 
 @import FirebaseInAppMessaging;
-
-#if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
-#import <firebase_core/FLTFirebasePluginRegistry.h>
-#else
-#import <FLTFirebasePluginRegistry.h>
-#endif
+@import firebase_core;
 
 NSString *const kFLTFirebaseInAppMessagingChannelName =
     @"plugins.flutter.io/firebase_in_app_messaging";
