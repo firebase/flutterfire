@@ -22,7 +22,7 @@ extension FlutterError: Error {}
 
 public class FirebasePerformancePlugin: NSObject, FlutterPlugin, FLTFirebasePlugin,
   FirebasePerformanceHostApi {
-  public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
+  public func didReinitializeFirebaseCore(completion: @escaping () -> Void) {
     completion()
   }
 

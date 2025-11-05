@@ -143,7 +143,7 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePlugin, FlutterPlugin
     completion(.success(()))
   }
 
-  public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
+  public func didReinitializeFirebaseCore(completion: @escaping () -> Void) {
     completion()
   }
 

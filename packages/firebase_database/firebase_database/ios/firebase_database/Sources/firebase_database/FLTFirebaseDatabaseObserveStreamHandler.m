@@ -3,11 +3,8 @@
 // found in the LICENSE file.
 
 @import FirebaseDatabase;
-#if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
-#import <firebase_core/FLTFirebasePluginRegistry.h>
-#else
-#import <FLTFirebasePluginRegistry.h>
-#endif
+@import firebase_core;
+@import FirebaseCore;
 
 #import "FLTFirebaseDatabaseObserveStreamHandler.h"
 #import "FLTFirebaseDatabaseUtils.h"
@@ -54,10 +51,10 @@
       @"message" : message,
     };
     dispatch_async(dispatch_get_main_queue(), ^{
-      events([FLTFirebasePlugin createFlutterErrorFromCode:code
-                                                   message:message
-                                           optionalDetails:details
-                                        andOptionalNSError:error]);
+      events([FLTFirebasePluginHelper createFlutterErrorWithCode:code
+                                                          message:message
+                                                  optionalDetails:details
+                                                  andOptionalError:error]);
     });
   };
 

@@ -60,7 +60,7 @@ public class FirebaseRemoteConfigPlugin: NSObject, FlutterPlugin, FlutterStreamH
     }
   }
 
-  public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
+  public func didReinitializeFirebaseCore(completion: @escaping () -> Void) {
     completion()
   }
 
@@ -214,7 +214,7 @@ public class FirebaseRemoteConfigPlugin: NSObject, FlutterPlugin, FlutterStreamH
   }
 
   private func getRemoteConfig(from appName: String) -> RemoteConfig {
-    let app = FLTFirebasePlugin.firebaseAppNamed(appName)
+    let app = FLTFirebasePluginHelper.firebaseApp(named: appName)
     return RemoteConfig.remoteConfig(app: app!)
   }
 

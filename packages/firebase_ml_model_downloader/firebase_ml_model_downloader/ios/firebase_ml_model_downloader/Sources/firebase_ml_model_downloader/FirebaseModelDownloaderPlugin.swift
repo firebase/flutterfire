@@ -34,18 +34,14 @@ public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePlugin, Flutter
       binaryMessenger: binaryMessenger
     )
     let instance = FirebaseModelDownloaderPlugin()
-    FLTFirebasePluginRegistry.sharedInstance().register(instance)
+    FLTFirebasePluginRegistry.sharedInstance().registerFirebasePlugin(instance)
     registrar.addMethodCallDelegate(instance, channel: channel)
     #if os(iOS)
       registrar.publish(instance)
     #endif
   }
 
-  public func firebaseLibraryVersion() -> String {
-    versionNumber
-  }
-
-  public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
+  public func didReinitializeFirebaseCore(completion: @escaping () -> Void) {
     completion()
   }
 
@@ -98,12 +94,12 @@ public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePlugin, Flutter
         NSLog("FLTFirebaseModelDownloader: An error occurred while calling method %@", call.method)
       }
 
-      result(FLTFirebasePlugin.createFlutterError(fromCode: errorDetails["code"] as! String,
+      result(FLTFirebasePluginHelper.createFlutterError(code: errorDetails["code"] as! String,
                                                   message: errorDetails["message"] as! String,
                                                   optionalDetails: errorDetails[
                                                     "additionalData"
-                                                  ] as? [AnyHashable: Any],
-                                                  andOptionalNSError: nil))
+                                                  ] as? [String: Any],
+                                                  andOptionalError: nil as Error?))
     }
 
     let result = FLTFirebaseMethodCallResult.create(success: result, andErrorBlock: errorBlock)
@@ -193,7 +189,7 @@ public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePlugin, Flutter
   }
 
   func modelDownloaderFromArguments(arguments: [String: Any]) -> ModelDownloader? {
-    let app: FirebaseApp = FLTFirebasePlugin.firebaseAppNamed(arguments["appName"] as! String)!
+    let app: FirebaseApp = FLTFirebasePluginHelper.firebaseApp(named: arguments["appName"] as! String)!
     return ModelDownloader.modelDownloader(app: app)
   }
 }

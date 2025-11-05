@@ -10,12 +10,7 @@
 #endif
 
 #import <Foundation/Foundation.h>
+@import firebase_core;
 
-#if __has_include(<firebase_core/FLTFirebasePlugin.h>)
-#import <firebase_core/FLTFirebasePlugin.h>
-#else
-#import <FLTFirebasePlugin.h>
-#endif
-
-@interface FLTFirebaseCrashlyticsPlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin>
+@interface FLTFirebaseCrashlyticsPlugin : NSObject <FlutterPlugin, FLTFirebasePlugin>
 @end

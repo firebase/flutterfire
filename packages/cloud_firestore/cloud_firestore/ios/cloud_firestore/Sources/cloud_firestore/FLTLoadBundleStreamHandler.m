@@ -52,7 +52,7 @@
           };
 
           dispatch_async(dispatch_get_main_queue(), ^{
-            events([FLTFirebasePlugin createFlutterErrorFromCode:code
+            events([FLTFirebasePluginHelper createFlutterErrorWithCode:code
                                                          message:message
                                                  optionalDetails:details
                                               andOptionalNSError:error]);

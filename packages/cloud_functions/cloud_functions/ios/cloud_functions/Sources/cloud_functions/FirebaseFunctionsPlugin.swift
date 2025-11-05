@@ -53,7 +53,7 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePlugin, FlutterPlugin
     versionNumber
   }
 
-  public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
+  public func didReinitializeFirebaseCore(completion: @escaping () -> Void) {
     completion()
   }
 
@@ -92,7 +92,7 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePlugin, FlutterPlugin
     let parameters = arguments["parameters"]
     let limitedUseAppCheckToken = arguments["limitedUseAppCheckToken"] as? Bool ?? false
 
-    let app = FLTFirebasePlugin.firebaseAppNamed(appName)!
+    let app = FLTFirebasePluginHelper.firebaseApp(named: appName)!
 
     let functions = Functions.functions(app: app, region: region ?? "")
 
@@ -139,7 +139,7 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePlugin, FlutterPlugin
   private func getFunctions(arguments: [String: Any]) -> Functions {
     let appName = arguments["appName"] as? String ?? ""
     let region = arguments["region"] as? String
-    let app = FLTFirebasePlugin.firebaseAppNamed(appName)!
+    let app = FLTFirebasePluginHelper.firebaseApp(named: appName)!
     return Functions.functions(app: app, region: region ?? "")
   }
 

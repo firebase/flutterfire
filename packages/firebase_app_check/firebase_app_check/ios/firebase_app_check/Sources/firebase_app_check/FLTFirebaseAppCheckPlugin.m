@@ -6,12 +6,8 @@
 #import "FLTTokenRefreshStreamHandler.h"
 
 @import FirebaseAppCheck;
-
-#if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
-#import <firebase_core/FLTFirebasePluginRegistry.h>
-#else
-#import <FLTFirebasePluginRegistry.h>
-#endif
+@import firebase_core;
+@import FirebaseCore;
 
 #import "FLTAppCheckProviderFactory.h"
 
@@ -70,7 +66,8 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
-  FLTFirebaseMethodCallErrorBlock errorBlock = ^(
+  void (^errorBlock)(NSString *_Nullable, NSString *_Nullable, NSDictionary *_Nullable,
+                     NSError *_Nullable) = ^(
       NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
       NSError *_Nullable error) {
     NSMutableDictionary *errorDetails = [NSMutableDictionary dictionary];
@@ -125,7 +122,7 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
   NSString *providerName = arguments[@"appleProvider"];
   NSString *debugToken = arguments[@"appleDebugToken"];
 
-  FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appNameDart];
+  FIRApp *app = [FIRApp appNamed:[FLTFirebasePluginHelper firebaseAppNameFromDartName:appNameDart]];
   [self->providerFactory configure:app providerName:providerName debugToken:debugToken];
   result.success(nil);
 }
@@ -184,11 +181,11 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
 
 #pragma mark - FLTFirebasePlugin
 
-- (void)didReinitializeFirebaseCore:(void (^)(void))completion {
+- (void)didReinitializeFirebaseCoreWithCompletion:(void (^)(void))completion {
   [self cleanupWithCompletion:completion];
 }
 
-- (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *)firebase_app {
+- (NSDictionary *_Nonnull)pluginConstantsFor:(FIRApp *)firebase_app {
   return @{};
 }
 
@@ -208,7 +205,7 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
 
 - (FIRAppCheck *_Nullable)getFIRAppCheckFromArguments:(NSDictionary *)arguments {
   NSString *appNameDart = arguments[@"appName"];
-  FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appNameDart];
+  FIRApp *app = [FIRApp appNamed:[FLTFirebasePluginHelper firebaseAppNameFromDartName:appNameDart]];
   FIRAppCheck *appCheck = [FIRAppCheck appCheckWithApp:app];
 
   return appCheck;

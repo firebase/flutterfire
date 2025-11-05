@@ -41,15 +41,11 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePlugin, FlutterPl
       binaryMessenger: binaryMessenger
     )
     let instance = FirebaseInstallationsPlugin(messenger: binaryMessenger)
-    FLTFirebasePluginRegistry.sharedInstance().register(instance)
+    FLTFirebasePluginRegistry.sharedInstance().registerFirebasePlugin(instance)
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
 
-  public func firebaseLibraryVersion() -> String {
-    versionNumber
-  }
-
-  public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
+  public func didReinitializeFirebaseCore(completion: @escaping () -> Void) {
     completion()
   }
 
@@ -72,7 +68,7 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePlugin, FlutterPl
   /// Gets Installations instance for a Firebase App.
   /// - Returns: a Firebase Installations instance for the passed app from Dart
   private func getInstallations(appName: String) -> Installations {
-    let app: FirebaseApp = FLTFirebasePlugin.firebaseAppNamed(appName)!
+    let app: FirebaseApp = FLTFirebasePluginHelper.firebaseApp(named: appName)!
     return Installations.installations(app: app)
   }
 
@@ -193,12 +189,12 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePlugin, FlutterPl
           )
         }
 
-        result(FLTFirebasePlugin.createFlutterError(fromCode: errorDetails["code"] as! String,
-                                                    message: errorDetails["message"] as! String,
-                                                    optionalDetails: errorDetails[
-                                                      "additionalData"
-                                                    ] as? [AnyHashable: Any],
-                                                    andOptionalNSError: error))
+        result(FLTFirebasePluginHelper.createFlutterError(code: errorDetails["code"] as! String,
+                                                          message: errorDetails["message"] as! String,
+                                                          optionalDetails: errorDetails[
+                                                            "additionalData"
+                                                          ] as? [String: Any],
+                                                          andOptionalError: error))
     }
 
     switch call.method {

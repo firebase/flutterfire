@@ -220,7 +220,7 @@ FlutterStandardMethodCodec *_codec;
     NSString *appNameDart = pigeonApp.appName;
     NSString *databaseUrl = pigeonApp.databaseURL;
 
-    FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appNameDart];
+    FIRApp *app = [FIRApp appNamed:[FLTFirebasePluginHelper firebaseAppNameFromDartName:appNameDart]];
 
     if ([FLTFirebaseFirestoreUtils getFirestoreInstanceByName:app.name
                                                   databaseURL:databaseUrl] != nil) {

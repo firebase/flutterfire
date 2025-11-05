@@ -3,13 +3,10 @@
 // found in the LICENSE file.
 
 @import FirebaseAuth;
+@import firebase_core;
+@import FirebaseCore;
 #import <FirebaseAuth/FirebaseAuth.h>
 #import <TargetConditionals.h>
-#if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
-#import <firebase_core/FLTFirebasePluginRegistry.h>
-#else
-#import <FLTFirebasePluginRegistry.h>
-#endif
 
 #import "include/Private/FLTAuthStateChannelStreamHandler.h"
 #import "include/Private/FLTIdTokenChannelStreamHandler.h"
@@ -20,12 +17,6 @@
 #import "include/Public/FLTFirebaseAuthPlugin.h"
 @import CommonCrypto;
 #import <AuthenticationServices/AuthenticationServices.h>
-
-#if __has_include(<firebase_core/FLTFirebaseCorePlugin.h>)
-#import <firebase_core/FLTFirebaseCorePlugin.h>
-#else
-#import <FLTFirebaseCorePlugin.h>
-#endif
 
 NSString *const kFLTFirebaseAuthChannelName = @"plugins.flutter.io/firebase_auth";
 
@@ -278,7 +269,7 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
 
 #pragma mark - FLTFirebasePlugin
 
-- (void)didReinitializeFirebaseCore:(void (^_Nonnull)(void))completion {
+- (void)didReinitializeFirebaseCoreWithCompletion:(void (^_Nonnull)(void))completion {
   [self cleanupWithCompletion:completion];
 }
 
@@ -294,7 +285,7 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
   return kFLTFirebaseAuthChannelName;
 }
 
-- (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *_Nonnull)firebaseApp {
+- (NSDictionary *_Nonnull)pluginConstantsFor:(FIRApp *_Nonnull)firebaseApp {
   FIRAuth *auth = [FIRAuth authWithApp:firebaseApp];
   return @{
     @"APP_LANGUAGE_CODE" : (id)[auth languageCode] ?: [NSNull null],
@@ -659,7 +650,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
 }
 
 - (FIRAuth *_Nullable)getFIRAuthFromAppNameFromPigeon:(AuthPigeonFirebaseApp *)pigeonApp {
-  FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:pigeonApp.appName];
+  FIRApp *app = [FIRApp appNamed:[FLTFirebasePluginHelper firebaseAppNameFromDartName:pigeonApp.appName]];
   FIRAuth *auth = [FIRAuth authWithApp:app];
 
   auth.tenantID = pigeonApp.tenantId;

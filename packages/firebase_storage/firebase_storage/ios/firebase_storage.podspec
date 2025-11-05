@@ -25,8 +25,7 @@ Pod::Spec.new do |s|
   s.authors          = 'The Chromium Authors'
   s.source           = { :path => '.' }
 
-  s.source_files     = 'firebase_storage/Sources/firebase_storage/**/*.{h,m,swift}'
-  s.public_header_files = 'firebase_storage/Sources/firebase_storage/include/*.h'
+  s.source_files     = 'firebase_storage/Sources/firebase_storage/**/*.swift'
 
   s.swift_version = '5.0'
 

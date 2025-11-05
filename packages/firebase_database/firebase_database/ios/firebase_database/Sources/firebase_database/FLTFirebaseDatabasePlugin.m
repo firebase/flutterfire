@@ -2,11 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
-#import <firebase_core/FLTFirebasePluginRegistry.h>
-#else
-#import <FLTFirebasePluginRegistry.h>
-#endif
+@import firebase_core;
+@import FirebaseCore;
 
 #import "FLTFirebaseDatabaseObserveStreamHandler.h"
 #import "FLTFirebaseDatabasePlugin.h"
@@ -69,7 +66,8 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
-  FLTFirebaseMethodCallErrorBlock errorBlock =
+  void (^errorBlock)(NSString *_Nullable, NSString *_Nullable, NSDictionary *_Nullable,
+                     NSError *_Nullable) =
       ^(NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
         NSError *_Nullable error) {
         if (code == nil) {
@@ -84,10 +82,10 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
         if ([@"unknown" isEqualToString:code]) {
           NSLog(@"FLTFirebaseDatabase: An error occurred while calling method %@", call.method);
         }
-        flutterResult([FLTFirebasePlugin createFlutterErrorFromCode:code
-                                                            message:message
-                                                    optionalDetails:details
-                                                 andOptionalNSError:error]);
+        flutterResult([FLTFirebasePluginHelper createFlutterErrorWithCode:code
+                                                                   message:message
+                                                           optionalDetails:details
+                                                           andOptionalError:error]);
       };
 
   FLTFirebaseMethodCallResult *methodCallResult =
@@ -130,11 +128,11 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
 
 #pragma mark - FLTFirebasePlugin
 
-- (void)didReinitializeFirebaseCore:(void (^)(void))completion {
+- (void)didReinitializeFirebaseCoreWithCompletion:(void (^)(void))completion {
   [self cleanupWithCompletion:completion];
 }
 
-- (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *)firebase_app {
+- (NSDictionary *_Nonnull)pluginConstantsFor:(FIRApp *)firebase_app {
   return @{};
 }
 

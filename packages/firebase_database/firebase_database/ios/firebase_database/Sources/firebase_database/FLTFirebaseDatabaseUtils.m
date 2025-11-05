@@ -3,11 +3,8 @@
 // found in the LICENSE file.
 
 #import "FLTFirebaseDatabaseUtils.h"
-#if __has_include(<firebase_core/FLTFirebasePlugin.h>)
-#import <firebase_core/FLTFirebasePlugin.h>
-#else
-#import <FLTFirebasePlugin.h>
-#endif
+@import firebase_core;
+@import FirebaseCore;
 
 @implementation FLTFirebaseDatabaseUtils
 static __strong NSMutableDictionary<NSString *, FIRDatabase *> *cachedDatabaseInstances = nil;
@@ -34,7 +31,7 @@ static __strong NSMutableDictionary<NSString *, FIRDatabase *> *cachedDatabaseIn
     return cachedInstance;
   }
 
-  FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appName];
+  FIRApp *app = [FIRApp appNamed:appName];
   FIRDatabase *database;
 
   if (databaseURL.length == 0) {

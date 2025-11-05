@@ -7,12 +7,8 @@
 #import "include/ExceptionModel_Platform.h"
 
 @import FirebaseCrashlytics;
-
-#if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
-#import <firebase_core/FLTFirebasePluginRegistry.h>
-#else
-#import <FLTFirebasePluginRegistry.h>
-#endif
+@import firebase_core;
+@import FirebaseCore;
 
 NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/firebase_crashlytics";
 NSString *const kFLTFirebaseCrashlyticsTestChannelName =
@@ -75,7 +71,8 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
-  FLTFirebaseMethodCallErrorBlock errorBlock =
+  void (^errorBlock)(NSString *_Nullable, NSString *_Nullable, NSDictionary *_Nullable,
+                     NSError *_Nullable) =
       ^(NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
         NSError *_Nullable error) {
         // `result.error` is not called in this plugin so this block does nothing.
@@ -239,12 +236,12 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
 
 #pragma mark - FLTFirebasePlugin
 
-- (void)didReinitializeFirebaseCore:(void (^)(void))completion {
+- (void)didReinitializeFirebaseCoreWithCompletion:(void (^)(void))completion {
   // Not required for this plugin, nothing to cleanup between reloads.
   completion();
 }
 
-- (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *)firebase_app {
+- (NSDictionary *_Nonnull)pluginConstantsFor:(FIRApp *)firebase_app {
   return @{
     @"isCrashlyticsCollectionEnabled" :
         @([FIRCrashlytics crashlytics].isCrashlyticsCollectionEnabled)
