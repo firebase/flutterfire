@@ -36,11 +36,7 @@ let package = Package(
       dependencies: [
         .product(name: "FirebaseInstallations", package: "firebase-ios-sdk"),
       ],
-      path: "packages/firebase_core/firebase_core/ios/firebase_core/Sources/firebase_core",
-      swiftSettings: [
-        .define("LIBRARY_VERSION", to: firebase_core_version),
-        .define("LIBRARY_NAME", to: "flutter-fire-core"),
-      ]
+      path: "packages/firebase_core/firebase_core/ios/firebase_core/Sources/firebase_core"
     ),
   ]
 )

@@ -51,7 +51,7 @@
             events([FLTFirebasePluginHelper createFlutterErrorWithCode:code
                                                                message:message
                                                        optionalDetails:details
-                                                    andOptionalNSError:error]);
+                                                        andOptionalError:error]);
           });
         }
       }];

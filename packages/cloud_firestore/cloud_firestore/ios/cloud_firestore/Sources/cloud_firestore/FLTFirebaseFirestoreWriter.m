@@ -4,6 +4,7 @@
 
 @import FirebaseFirestore;
 @import FirebaseCore;
+@import firebase_core;
 
 #import "include/cloud_firestore/Private/FLTFirebaseFirestoreWriter.h"
 #import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
@@ -39,7 +40,8 @@
   } else if ([value isKindOfClass:[FIRDocumentReference class]]) {
     FIRDocumentReference *document = value;
     NSString *documentPath = [document path];
-    NSString *appName = [FLTFirebasePlugin firebaseAppNameFromIosName:document.firestore.app.name];
+    NSString *appName =
+        [FLTFirebasePluginHelper firebaseAppNameFromIosName:document.firestore.app.name];
     [self writeByte:FirestoreDataTypeDocumentReference];
     [self writeValue:appName];
     [self writeValue:documentPath];

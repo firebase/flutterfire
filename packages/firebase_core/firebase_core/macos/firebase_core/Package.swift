@@ -102,10 +102,6 @@ let package = Package(
       ],
       resources: [
         .process("Resources"),
-      ],
-      swiftSettings: [
-        .define("LIBRARY_VERSION", to: library_version_string),
-        .define("LIBRARY_NAME", to: "flutter-fire-core"),
       ]
     ),
   ]
