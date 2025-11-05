@@ -4,6 +4,7 @@
 
 @import FirebaseFirestore;
 @import firebase_core;
+@import FirebaseCore;
 
 #import <TargetConditionals.h>
 #import "FirebaseFirestoreInternal/FIRPersistentCacheIndexManager.h"
