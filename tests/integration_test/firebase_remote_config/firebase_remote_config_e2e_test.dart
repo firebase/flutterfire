@@ -154,6 +154,19 @@ void main() {
         expect(FirebaseRemoteConfig.instance.getDouble('does-not-exist'), 0.0);
       });
 
+      test(
+        'getAll() returns without throwing',
+        () async {
+          try {
+            await FirebaseRemoteConfig.instance.fetchAndActivate();
+            FirebaseRemoteConfig.instance.getAll();
+          } on UnimplementedError catch (e) {
+            fail('getAll() threw an exception: $e');
+          }
+        },
+        skip: !kIsWeb,
+      );
+
       group('setCustomSignals()', () {
         test('valid signal values; `string`, `number` & `null`', () async {
           const signals = <String, Object?>{
