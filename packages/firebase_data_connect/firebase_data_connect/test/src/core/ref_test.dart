@@ -46,7 +46,7 @@ void main() {
       final mockFirebaseDataConnect = MockFirebaseDataConnect();
 
       final result =
-          OperationResult(mockFirebaseDataConnect, mockData, mockRef);
+          OperationResult(mockFirebaseDataConnect, mockData, DataSource.server, mockRef);
 
       expect(result.data, mockData);
       expect(result.ref, mockRef);
@@ -61,7 +61,7 @@ void main() {
       final mockFirebaseDataConnect = MockFirebaseDataConnect();
 
       final queryResult =
-          QueryResult(mockFirebaseDataConnect, mockData, mockRef);
+          QueryResult(mockFirebaseDataConnect, mockData, DataSource.server, mockRef);
 
       expect(queryResult.data, mockData);
       expect(queryResult.ref, mockRef);

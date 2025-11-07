@@ -39,3 +39,6 @@ export 'src/optional.dart'
         listDeserializer,
         listSerializer;
 export 'src/timestamp.dart' show Timestamp;
+export 'src/cache/cache_data_types.dart' show CacheSettings, QueryFetchPolicy;
+export 'src/cache/cache_manager.dart' show Cache;
+export 'src/cache/cache_provider.dart' show CacheProvider;

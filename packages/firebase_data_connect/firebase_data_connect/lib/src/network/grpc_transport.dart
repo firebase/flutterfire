@@ -92,7 +92,7 @@ class GRPCTransport implements DataConnectTransport {
 
   /// Invokes GPRC query endpoint.
   @override
-  Future<Data> invokeQuery<Data, Variables>(
+  Future<ServerResponse> invokeQuery<Data, Variables>(
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
@@ -136,7 +136,7 @@ class GRPCTransport implements DataConnectTransport {
 
   /// Invokes GPRC mutation endpoint.
   @override
-  Future<Data> invokeMutation<Data, Variables>(
+  Future<ServerResponse> invokeMutation<Data, Variables>(
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
@@ -169,8 +169,12 @@ class GRPCTransport implements DataConnectTransport {
   }
 }
 
-Data handleResponse<Data>(CommonResponse<Data> commonResponse) {
+ServerResponse handleResponse<Data>(CommonResponse<Data> commonResponse) {
+  log('handleResponse type ${commonResponse.data.runtimeType}');
   String jsonEncoded = jsonEncode(commonResponse.data);
+  log('handleResponse jsonEncoded ${jsonEncoded.length} $jsonEncoded');
+  Map<String, dynamic> decodedData = jsonDecode(jsonEncoded);
+  log('handleResponse decodedData $decodedData');
   if (commonResponse.errors.isNotEmpty) {
     Map<String, dynamic>? data =
         jsonDecode(jsonEncoded) as Map<String, dynamic>?;
@@ -197,7 +201,9 @@ Data handleResponse<Data>(CommonResponse<Data> commonResponse) {
     throw DataConnectOperationError(DataConnectErrorCode.other,
         'failed to invoke operation: ${response.errors}', response);
   }
-  return commonResponse.deserializer(jsonEncoded);
+  ServerResponse response = ServerResponse(decodedData);
+  print("Converted to server response");
+  return response;
 }
 
 /// Initializes GRPC transport for Data Connect.

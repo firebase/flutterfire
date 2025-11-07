@@ -24,6 +24,12 @@ import './network/transport_library.dart'
     if (dart.library.io) './network/grpc_library.dart'
     if (dart.library.html) './network/rest_library.dart';
 
+import 'cache/in_memory_cache_provider.dart';
+import 'cache/result_tree_processor.dart';
+
+import 'cache/cache_data_types.dart';
+import 'cache/cache_manager.dart';
+
 /// DataConnect class
 class FirebaseDataConnect extends FirebasePluginPlatform {
   /// Constructor for initializing Data Connect
@@ -33,6 +39,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     required this.connectorConfig,
     this.auth,
     this.appCheck,
+    this.cacheSettings,
     CallerSDKType? sdkType,
   })  : options = DataConnectOptions(
           app.options.projectId,
@@ -41,11 +48,25 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
           connectorConfig.serviceId,
         ),
         super(app.name, 'plugins.flutter.io/firebase_data_connect') {
+    if (cacheSettings != null) {
+      switch (cacheSettings!.storage) {
+        case CacheStorage.memory: 
+        print("Creating cacheManager (inmemory)");
+        cacheManager = Cache(InMemoryCacheProvider());
+        case CacheStorage.persistent:
+        //TODO: Switch to Persistent Provider once implemented
+        print("creating cacheManager (persistent)");
+        cacheManager = Cache(InMemoryCacheProvider());
+      }
+    }
     _queryManager = QueryManager(this);
     if (sdkType != null) {
       _sdkType = sdkType;
     }
   }
+
+  /// CacheManager
+  Cache? cacheManager;
 
   /// QueryManager manages ongoing queries, and their subscriptions.
   late QueryManager _queryManager;
@@ -72,6 +93,9 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
 
   /// Data Connect specific config information
   ConnectorConfig connectorConfig;
+
+  /// Cache settings
+  CacheSettings? cacheSettings;
 
   /// Custom transport options for connecting to the Data Connect service.
   @visibleForTesting
@@ -152,6 +176,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     FirebaseApp? app,
     FirebaseAuth? auth,
     FirebaseAppCheck? appCheck,
+    CacheSettings? cacheSettings = const CacheSettings(),
     CallerSDKType? sdkType,
     required ConnectorConfig connectorConfig,
   }) {
@@ -161,6 +186,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
 
     if (cachedInstances[app.name] != null &&
         cachedInstances[app.name]![connectorConfig.toJson()] != null) {
+          print("Returning cached instance for FirebaseDataConnect");
       return cachedInstances[app.name]![connectorConfig.toJson()]!;
     }
 
@@ -168,6 +194,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
       app: app,
       auth: auth,
       appCheck: appCheck,
+      cacheSettings: cacheSettings,
       connectorConfig: connectorConfig,
       sdkType: sdkType,
     );

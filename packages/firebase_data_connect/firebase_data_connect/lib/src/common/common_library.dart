@@ -52,6 +52,13 @@ class TransportOptions {
   bool? isSecure;
 }
 
+class ServerResponse {
+   final Map<String, dynamic> data;
+   Duration? ttl; 
+
+    ServerResponse(this.data, {this.ttl = const Duration(seconds: 5)}); // TODO reduce to zero after testing
+}
+
 /// Interface for transports connecting to the DataConnect backend.
 abstract class DataConnectTransport {
   /// Constructor.
@@ -78,7 +85,7 @@ abstract class DataConnectTransport {
   String appId;
 
   /// Invokes corresponding query endpoint.
-  Future<Data> invokeQuery<Data, Variables>(
+  Future<ServerResponse> invokeQuery<Data, Variables>(
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables> serializer,
@@ -87,7 +94,7 @@ abstract class DataConnectTransport {
   );
 
   /// Invokes corresponding mutation endpoint.
-  Future<Data> invokeMutation<Data, Variables>(
+  Future<ServerResponse> invokeMutation<Data, Variables>(
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables> serializer,
