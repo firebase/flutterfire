@@ -48,13 +48,19 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
   }
 
   @objc public static func register(with registrar: FlutterPluginRegistrar) {
+    #if canImport(FlutterMacOS)
+      let messenger = registrar.messenger
+    #else
+      let messenger = registrar.messenger()
+    #endif
+    
     let instance = FLTFirebaseDatabasePlugin(
-      messenger: registrar.messenger()
+      messenger: messenger
     )
 
     // Set up Pigeon API using plugin as HostApi
     FirebaseDatabaseHostApiSetup.setUp(
-      binaryMessenger: registrar.messenger(), api: instance
+      binaryMessenger: messenger, api: instance
     )
 
     FLTFirebasePluginRegistry.sharedInstance().register(instance)
