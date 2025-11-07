@@ -4,7 +4,6 @@
 
 import FirebaseCore
 import FirebaseDatabase
-import Flutter
 import Foundation
 
 #if canImport(FlutterMacOS)
