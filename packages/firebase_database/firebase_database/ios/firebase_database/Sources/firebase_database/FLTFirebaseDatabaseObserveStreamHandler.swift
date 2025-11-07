@@ -3,7 +3,12 @@
 // found in the LICENSE file.
 
 import FirebaseDatabase
-import Flutter
+
+#if canImport(FlutterMacOS)
+  import FlutterMacOS
+#else
+  import Flutter
+#endif
 
 @objc class FLTFirebaseDatabaseObserveStreamHandler: NSObject, FlutterStreamHandler {
   private var databaseHandle: DatabaseHandle = 0
