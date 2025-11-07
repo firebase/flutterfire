@@ -69,7 +69,7 @@ class RestTransport implements DataConnectTransport {
   String appId;
 
   /// Invokes the current operation, whether its a query or mutation.
-  Future<Data> invokeOperation<Data, Variables>(
+  Future<ServerResponse> invokeOperation<Data, Variables>(
     String queryName,
     String endpoint,
     Deserializer<Data> deserializer,
@@ -127,7 +127,8 @@ class RestTransport implements DataConnectTransport {
           "Received a status code of ${r.statusCode} with a message '$message'",
         );
       }
-
+      return ServerResponse(bodyJson);
+      /*
       List errors = bodyJson['errors'] ?? [];
       final data = bodyJson['data'];
       List<DataConnectOperationFailureResponseErrorInfo> suberrors = errors
@@ -179,6 +180,7 @@ class RestTransport implements DataConnectTransport {
         }
         return decodedData;
       }
+      */
     } on Exception catch (e) {
       if (e is DataConnectError) {
         rethrow;
@@ -192,7 +194,7 @@ class RestTransport implements DataConnectTransport {
 
   /// Invokes query REST endpoint.
   @override
-  Future<Data> invokeQuery<Data, Variables>(
+  Future<ServerResponse> invokeQuery<Data, Variables>(
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
@@ -211,7 +213,7 @@ class RestTransport implements DataConnectTransport {
 
   /// Invokes mutation REST endpoint.
   @override
-  Future<Data> invokeMutation<Data, Variables>(
+  Future<ServerResponse> invokeMutation<Data, Variables>(
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
