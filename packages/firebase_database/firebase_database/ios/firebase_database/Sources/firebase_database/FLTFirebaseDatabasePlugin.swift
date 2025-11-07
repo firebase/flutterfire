@@ -53,7 +53,7 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     #else
       let messenger = registrar.messenger()
     #endif
-    
+
     let instance = FLTFirebaseDatabasePlugin(
       messenger: messenger
     )
