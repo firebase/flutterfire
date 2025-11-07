@@ -20,7 +20,7 @@ let package = Package(
     .macOS("10.15"),
   ],
   products: [
-    .library(name: "firebase-core-shared", targets: ["firebase_core_shared"]),
+    .library(name: "firebase-core-shared", targets: ["firebase_core"]),
   ],
   dependencies: [
     // TODO: this is fine for now, but will require a way of retrieving the firebase-ios-sdk
@@ -32,7 +32,7 @@ let package = Package(
   ],
   targets: [
     .target(
-      name: "firebase_core_shared",
+      name: "firebase_core",
       dependencies: [
         .product(name: "FirebaseInstallations", package: "firebase-ios-sdk"),
       ],
