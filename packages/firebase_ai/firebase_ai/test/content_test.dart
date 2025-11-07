@@ -93,6 +93,27 @@ void main() {
       final json = part.toJson();
       expect((json as Map)['inlineData']['mimeType'], 'image/png');
       expect(json['inlineData']['data'], '');
+      expect(json['inlineData'].containsKey('willContinue'), false);
+    });
+
+    test('DataPart with false willContinue toJson', () {
+      final part =
+          InlineDataPart('image/png', Uint8List(0), willContinue: false);
+      final json = part.toJson();
+      expect((json as Map)['inlineData']['mimeType'], 'image/png');
+      expect(json['inlineData']['data'], '');
+      expect(json['inlineData'].containsKey('willContinue'), true);
+      expect(json['inlineData']['willContinue'], false);
+    });
+
+    test('DataPart with true willContinue toJson', () {
+      final part =
+          InlineDataPart('image/png', Uint8List(0), willContinue: true);
+      final json = part.toJson();
+      expect((json as Map)['inlineData']['mimeType'], 'image/png');
+      expect(json['inlineData']['data'], '');
+      expect(json['inlineData'].containsKey('willContinue'), true);
+      expect(json['inlineData']['willContinue'], true);
     });
 
     test('FunctionCall toJson', () {
@@ -181,6 +202,38 @@ void main() {
       final json = {
         'inlineData': {
           'mimeType': 'image/png',
+          'data': base64Encode([1, 2, 3]),
+          'willContinue': true
+        }
+      };
+      final result = parsePart(json);
+      expect(result, isA<InlineDataPart>());
+      final inlineData = result as InlineDataPart;
+      expect(inlineData.mimeType, 'image/png');
+      expect(inlineData.bytes, [1, 2, 3]);
+      expect(inlineData.willContinue, true);
+    });
+
+    test('parses InlineDataPart with false willContinue', () {
+      final json = {
+        'inlineData': {
+          'mimeType': 'image/png',
+          'data': base64Encode([1, 2, 3]),
+          'willContinue': false
+        }
+      };
+      final result = parsePart(json);
+      expect(result, isA<InlineDataPart>());
+      final inlineData = result as InlineDataPart;
+      expect(inlineData.mimeType, 'image/png');
+      expect(inlineData.bytes, [1, 2, 3]);
+      expect(inlineData.willContinue, false);
+    });
+
+    test('parses InlineDataPart without willContinue', () {
+      final json = {
+        'inlineData': {
+          'mimeType': 'image/png',
           'data': base64Encode([1, 2, 3])
         }
       };
@@ -189,6 +242,7 @@ void main() {
       final inlineData = result as InlineDataPart;
       expect(inlineData.mimeType, 'image/png');
       expect(inlineData.bytes, [1, 2, 3]);
+      expect(inlineData.willContinue, null);
     });
 
     test('returns UnknownPart for functionResponse', () {

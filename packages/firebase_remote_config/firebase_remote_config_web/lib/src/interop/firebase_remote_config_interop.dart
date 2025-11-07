@@ -33,7 +33,7 @@ external JSPromise fetchConfig(RemoteConfigJsImpl remoteConfig);
 
 @JS()
 @staticInterop
-external JSAny getAll(RemoteConfigJsImpl remoteConfig);
+external JSObject getAll(RemoteConfigJsImpl remoteConfig);
 
 @JS()
 @staticInterop
@@ -66,11 +66,7 @@ external JSPromise setCustomSignals(
 @staticInterop
 external void setLogLevel(RemoteConfigJsImpl remoteConfig, JSString logLevel);
 
-@JS('RemoteConfig')
-@staticInterop
-abstract class RemoteConfigJsImpl {}
-
-extension RemoteConfigJsImplExtension on RemoteConfigJsImpl {
+extension type RemoteConfigJsImpl._(JSObject _) implements JSObject {
   external AppJsImpl get app;
   external SettingsJsImpl get settings;
   external set settings(SettingsJsImpl value);
@@ -80,26 +76,49 @@ extension RemoteConfigJsImplExtension on RemoteConfigJsImpl {
   external JSString get lastFetchStatus;
 }
 
-@JS()
-@staticInterop
-@anonymous
-abstract class ValueJsImpl {}
-
-extension ValueJsImplExtension on ValueJsImpl {
+extension type ValueJsImpl._(JSObject _) implements JSObject {
   external JSBoolean asBoolean();
   external JSNumber asNumber();
   external JSString asString();
   external JSString getSource();
 }
 
-@JS()
-@staticInterop
-@anonymous
-abstract class SettingsJsImpl {}
-
-extension SettingsJsImplExtension on SettingsJsImpl {
+extension type SettingsJsImpl._(JSObject _) implements JSObject {
   external JSNumber get minimumFetchIntervalMillis;
   external set minimumFetchIntervalMillis(JSNumber value);
   external JSNumber get fetchTimeoutMillis;
   external set fetchTimeoutMillis(JSNumber value);
+}
+
+@JS()
+@staticInterop
+@anonymous
+abstract class ConfigUpdateObserver {
+  external factory ConfigUpdateObserver({
+    JSAny complete,
+    JSAny error,
+    JSAny next,
+  });
+}
+
+extension type ConfigUpdateObserverJsImpl._(JSObject _) implements JSObject {
+  external JSAny get next;
+  external JSAny get error;
+  external JSAny get complete;
+}
+
+extension type ConfigUpdateJsImpl._(JSObject _) implements JSObject {
+  external JSSet getUpdatedKeys();
+}
+
+@JS()
+@staticInterop
+external JSFunction onConfigUpdate(
+  RemoteConfigJsImpl remoteConfig,
+  ConfigUpdateObserver observer,
+);
+
+@JS('Set')
+extension type JSSet._(JSObject _) implements JSObject {
+  external void forEach(JSAny callback);
 }

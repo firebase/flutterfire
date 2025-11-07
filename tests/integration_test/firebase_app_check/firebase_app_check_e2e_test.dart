@@ -44,9 +44,7 @@ void main() {
             // Needs a debug token pasted in the Firebase console to work so we catch the exception.
             expect(exception, isA<FirebaseException>());
           }
-          // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
         },
-        skip: kIsWeb,
       );
 
       test(
@@ -73,9 +71,7 @@ void main() {
             // Needs a debug token pasted in the Firebase console to work so we catch the exception.
             expect(exception, isA<FirebaseException>());
           }
-          // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
         },
-        skip: kIsWeb,
       );
 
       test(

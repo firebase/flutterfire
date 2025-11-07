@@ -21,6 +21,7 @@ import com.google.firebase.crashlytics.FlutterFirebaseCrashlyticsInternal;
 import com.google.firebase.crashlytics.internal.Logger;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
+import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -34,9 +35,11 @@ import java.util.Objects;
 
 /** FlutterFirebaseCrashlyticsPlugin */
 public class FlutterFirebaseCrashlyticsPlugin
-    implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
+    implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler, EventChannel.StreamHandler {
   public static final String TAG = "FLTFirebaseCrashlytics";
   private MethodChannel channel;
+  private EventChannel testEventChannel;
+  private EventChannel.EventSink testEventSink;
 
   private static final String FIREBASE_CRASHLYTICS_COLLECTION_ENABLED =
       "firebase_crashlytics_collection_enabled";
@@ -46,6 +49,9 @@ public class FlutterFirebaseCrashlyticsPlugin
     channel = new MethodChannel(messenger, channelName);
     channel.setMethodCallHandler(this);
     FlutterFirebasePluginRegistry.registerPlugin(channelName, this);
+    testEventChannel =
+        new EventChannel(messenger, "plugins.flutter.io/firebase_crashlytics_test_stream");
+    testEventChannel.setStreamHandler(this);
   }
 
   @Override
@@ -58,6 +64,10 @@ public class FlutterFirebaseCrashlyticsPlugin
     if (channel != null) {
       channel.setMethodCallHandler(null);
       channel = null;
+    }
+    if (testEventChannel != null) {
+      testEventChannel.setStreamHandler(null);
+      testEventChannel = null;
     }
   }
 
@@ -134,6 +144,7 @@ public class FlutterFirebaseCrashlyticsPlugin
 
   private Task<Void> recordError(final Map<String, Object> arguments) {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+    Handler mainHandler = new Handler(Looper.getMainLooper());
 
     cachedThreadPool.execute(
         () -> {
@@ -160,8 +171,12 @@ public class FlutterFirebaseCrashlyticsPlugin
 
             Exception exception;
             if (reason != null) {
+              final String crashlyticsErrorReason = "thrown " + reason;
+              if (testEventSink != null) {
+                mainHandler.post(() -> testEventSink.success(crashlyticsErrorReason));
+              }
               // Set a "reason" (to match iOS) to show where the exception was thrown.
-              crashlytics.setCustomKey(Constants.FLUTTER_ERROR_REASON, "thrown " + reason);
+              crashlytics.setCustomKey(Constants.FLUTTER_ERROR_REASON, crashlyticsErrorReason);
               exception =
                   new FlutterError(dartExceptionMessage + ". " + "Error thrown " + reason + ".");
             } else {
@@ -465,5 +480,15 @@ public class FlutterFirebaseCrashlyticsPlugin
         });
 
     return taskCompletionSource.getTask();
+  }
+
+  @Override
+  public void onListen(Object arguments, EventChannel.EventSink events) {
+    testEventSink = events;
+  }
+
+  @Override
+  public void onCancel(Object arguments) {
+    testEventSink = null;
   }
 }

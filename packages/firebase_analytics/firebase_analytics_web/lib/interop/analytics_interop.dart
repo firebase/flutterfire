@@ -65,10 +65,6 @@ external void setUserProperties(
   JSObject? callOptions,
 );
 
-@JS('Analytics')
-@staticInterop
-abstract class AnalyticsJsImpl {}
-
-extension AnalyticsJsImplExtension on AnalyticsJsImpl {
+extension type AnalyticsJsImpl._(JSObject _) implements JSObject {
   external AppJsImpl get app;
 }

@@ -93,11 +93,13 @@ export 'src/live_api.dart'
     show
         LiveGenerationConfig,
         SpeechConfig,
+        AudioTranscriptionConfig,
         LiveServerMessage,
         LiveServerContent,
         LiveServerToolCall,
         LiveServerToolCallCancellation,
-        LiveServerResponse;
+        LiveServerResponse,
+        Transcription;
 export 'src/live_session.dart' show LiveSession;
 export 'src/schema.dart' show Schema, SchemaType;
 export 'src/tool.dart'

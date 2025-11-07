@@ -17,6 +17,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:web/web.dart' as web;
 
+import 'src/firebase_auth_version.dart';
+
 import 'src/firebase_auth_web_confirmation_result.dart';
 import 'src/firebase_auth_web_recaptcha_verifier_factory.dart';
 import 'src/firebase_auth_web_user.dart';
@@ -28,6 +30,8 @@ enum StateListener { authStateChange, userStateChange, idTokenChange }
 
 /// The web delegate implementation for [FirebaseAuth].
 class FirebaseAuthWeb extends FirebaseAuthPlatform {
+  static const String _libraryName = 'flutter-fire-auth';
+
   /// Stub initializer to allow the [registerWith] to create an instance without
   /// registering the web delegates or listeners.
   FirebaseAuthWeb._()
@@ -46,6 +50,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerLibraryVersion(_libraryName, packageVersion);
+
     FirebaseCoreWeb.registerService(
       'auth',
       ensurePluginInitialized: (firebaseApp) async {

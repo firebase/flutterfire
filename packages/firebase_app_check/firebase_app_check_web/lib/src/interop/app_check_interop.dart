@@ -21,14 +21,14 @@ external AppCheckJsImpl initializeAppCheck(
 
 @JS()
 @staticInterop
-external JSPromise /* AppCheckTokenResult */ getToken(
+external JSPromise<AppCheckTokenResultJsImpl> getToken(
   AppCheckJsImpl? appCheck,
   JSBoolean? forceRefresh,
 );
 
 @JS()
 @staticInterop
-external JSPromise /* AppCheckTokenResult */ getLimitedUseToken(
+external JSPromise<AppCheckTokenResultJsImpl> getLimitedUseToken(
   AppCheckJsImpl? appCheck,
 );
 
@@ -64,11 +64,7 @@ class ReCaptchaEnterpriseProvider implements ReCaptchaProvider {
   external factory ReCaptchaEnterpriseProvider(JSString recaptchaKey);
 }
 
-@JS()
-@staticInterop
-abstract class AppCheckTokenResult {}
-
-extension AppCheckTokenResultJsImplX on AppCheckTokenResult {
+extension type AppCheckTokenResultJsImpl._(JSObject _) implements JSObject {
   external JSString get token;
 }
 
@@ -88,10 +84,6 @@ extension AppCheckOptionsJsImplX on AppCheckOptions {
   external ReCaptchaProvider get provider;
 }
 
-@JS('AppCheck')
-@staticInterop
-abstract class AppCheckJsImpl {}
-
-extension AppCheckJsImplX on AppCheckJsImpl {
+extension type AppCheckJsImpl._(JSObject _) implements JSObject {
   external AppJsImpl get app;
 }

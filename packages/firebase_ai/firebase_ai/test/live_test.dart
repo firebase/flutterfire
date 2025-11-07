@@ -103,6 +103,7 @@ void main() {
 
     test('LiveClientRealtimeInput toJson() returns correct JSON', () {
       final part = InlineDataPart('audio/pcm', Uint8List.fromList([1, 2, 3]));
+      // ignore: deprecated_member_use_from_same_package
       final message = LiveClientRealtimeInput(mediaChunks: [part]);
       expect(message.toJson(), {
         'realtime_input': {
@@ -238,6 +239,43 @@ void main() {
       final jsonObject = {'unknown': {}};
       expect(() => parseServerResponse(jsonObject),
           throwsA(isA<FirebaseAISdkException>()));
+    });
+
+    test(
+        'LiveGenerationConfig with transcriptions toJson() returns correct JSON',
+        () {
+      final liveGenerationConfig = LiveGenerationConfig(
+        inputAudioTranscription: AudioTranscriptionConfig(),
+        outputAudioTranscription: AudioTranscriptionConfig(),
+      );
+      // Explicitly, these two config should not exist in the toJson()
+      expect(liveGenerationConfig.toJson(), {});
+    });
+
+    test('parseServerMessage parses serverContent with transcriptions', () {
+      final jsonObject = {
+        'serverContent': {
+          'modelTurn': {
+            'parts': [
+              {'text': 'Hello, world!'}
+            ]
+          },
+          'turnComplete': true,
+          'inputTranscription': {'text': 'input', 'finished': true},
+          'outputTranscription': {'text': 'output', 'finished': false}
+        }
+      };
+      final response = parseServerResponse(jsonObject);
+      expect(response.message, isA<LiveServerContent>());
+      final contentMessage = response.message as LiveServerContent;
+      expect(contentMessage.turnComplete, true);
+      expect(contentMessage.modelTurn, isA<Content>());
+      expect(contentMessage.inputTranscription, isA<Transcription>());
+      expect(contentMessage.inputTranscription?.text, 'input');
+      expect(contentMessage.inputTranscription?.finished, true);
+      expect(contentMessage.outputTranscription, isA<Transcription>());
+      expect(contentMessage.outputTranscription?.text, 'output');
+      expect(contentMessage.outputTranscription?.finished, false);
     });
   });
 }

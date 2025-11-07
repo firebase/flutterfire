@@ -6,8 +6,8 @@ environment:
   flutter: '>=3.3.0'
 
 dependencies:
-  firebase_core: ^4.1.1
-  firebase_database: ^12.0.2
+  firebase_core: ^4.2.1
+  firebase_database: ^12.0.4
   flutter:
     sdk: flutter
 

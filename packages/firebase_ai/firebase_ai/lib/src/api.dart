@@ -751,6 +751,9 @@ enum FinishReason {
   /// The candidate content was flagged for recitation reasons.
   recitation('RECITATION'),
 
+  /// The candidate content was flagged for malformed function call reasons.
+  malformedFunctionCall('MALFORMED_FUNCTION_CALL'),
+
   /// Unknown reason.
   other('OTHER');
 
@@ -770,6 +773,7 @@ enum FinishReason {
       'SAFETY' => FinishReason.safety,
       'RECITATION' => FinishReason.recitation,
       'OTHER' => FinishReason.other,
+      'MALFORMED_FUNCTION_CALL' => FinishReason.malformedFunctionCall,
       _ => throw FormatException('Unhandled FinishReason format', jsonObject),
     };
   }
