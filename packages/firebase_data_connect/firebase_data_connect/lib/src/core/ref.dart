@@ -13,22 +13,31 @@
 // limitations under the License.
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 
 import '../../firebase_data_connect.dart';
 import '../common/common_library.dart';
 
+
+/// Result data source
+enum DataSource {
+  cache, // results come from cache
+  server // results come from server
+}
+
 /// Result of an Operation Request (query/mutation).
 class OperationResult<Data, Variables> {
-  OperationResult(this.dataConnect, this.data, this.ref);
+  OperationResult(this.dataConnect, this.data, this.source, this.ref);
   Data data;
+  DataSource source;
   OperationRef<Data, Variables> ref;
   FirebaseDataConnect dataConnect;
 }
 
 /// Result of a query request. Created to hold extra variables in the future.
 class QueryResult<Data, Variables> extends OperationResult<Data, Variables> {
-  QueryResult(super.dataConnect, super.data, super.ref);
+  QueryResult(super.dataConnect, super.data, super.source, super.ref );
 }
 
 /// Reference to a specific query.
@@ -52,7 +61,8 @@ abstract class OperationRef<Data, Variables> {
 
   FirebaseDataConnect dataConnect;
 
-  Future<OperationResult<Data, Variables>> execute();
+  Future<OperationResult<Data, Variables>> execute({QueryFetchPolicy fetchPolicy = QueryFetchPolicy.preferCache});
+
   Future<bool> _shouldRetry() async {
     String? newToken;
     try {
@@ -65,17 +75,88 @@ abstract class OperationRef<Data, Variables> {
     _lastToken = newToken;
     return shouldRetry;
   }
+
+  // Converts a hydrated Json tree to Typed Data
+  Data _convertBodyJsonToData(Map<String, dynamic> bodyJson) {
+    print("convertBodyBodyToData ${bodyJson}");
+    List errors = bodyJson['errors'] ?? [];
+      final data = bodyJson['data'] ?? bodyJson;
+      List<DataConnectOperationFailureResponseErrorInfo> suberrors = errors
+          .map((e) => switch (e) {
+                {'path': List? path, 'message': String? message} =>
+                  DataConnectOperationFailureResponseErrorInfo(
+                      (path ?? [])
+                          .map((val) => switch (val) {
+                                String() => DataConnectFieldPathSegment(val),
+                                int() => DataConnectListIndexPathSegment(val),
+                                _ => throw DataConnectError(
+                                    DataConnectErrorCode.other,
+                                    'Incorrect type for $val')
+                              })
+                          .toList(),
+                      message ??
+                          (throw DataConnectError(
+                              DataConnectErrorCode.other, 'Missing message'))),
+                _ => throw DataConnectError(
+                    DataConnectErrorCode.other, 'Unable to parse JSON: $e')
+              })
+          .toList();
+      Data? decodedData;
+      Object? decodeError;
+      try {
+        /// The response we get is in the data field of the response
+        /// Once we get the data back, it's not quite json-encoded,
+        /// so we have to encode it and then send it to the user's deserializer.
+        decodedData = deserializer(jsonEncode(data));
+      } catch (e) {
+        decodeError = e;
+      }
+      if (suberrors.isNotEmpty) {
+        final response =
+            DataConnectOperationFailureResponse(suberrors, data, decodedData);
+
+        throw DataConnectOperationError(DataConnectErrorCode.other,
+            'Failed to invoke operation: ', response);
+      } else {
+        if (decodeError != null) {
+          throw DataConnectError(DataConnectErrorCode.other,
+              'Unable to decode data: $decodeError');
+        }
+        if (decodedData is! Data) {
+          throw DataConnectError(
+            DataConnectErrorCode.other,
+            "Decoded data wasn't parsed properly. Expected $Data, got $decodedData",
+          );
+        }
+        return decodedData;
+      }
+  }
 }
 
-/// Tracks currently active queries, and emits events when a new query is executed.
 class QueryManager {
-  QueryManager(this.dataConnect);
+  QueryManager(this.dataConnect) {
+    if (dataConnect.cacheManager != null) {
+      _impactedQueriesSubscription = dataConnect.cacheManager!.impactedQueries.listen((impactedQueryIds) {
+        for (final queryId in impactedQueryIds) {
+          final queryParts = queryId.split('-');
+          final queryName = queryParts[0];
+          final varsAsStr = queryParts.sublist(1).join('-');
+          if (trackedQueries[queryName] != null && trackedQueries[queryName]![varsAsStr] != null) {
+            final queryRef = trackedQueries[queryName]![varsAsStr]!;
+            queryRef.execute(fetchPolicy: QueryFetchPolicy.cacheOnly);
+          }
+        }
+      });
+    }
+  }
 
   /// FirebaseDataConnect instance;
   FirebaseDataConnect dataConnect;
 
+  StreamSubscription? _impactedQueriesSubscription;
+
   /// Keeps track of what queries are currently active.
-  Map<String, Map<String, StreamController<dynamic>>> trackedQueries = {};
+  Map<String, Map<String, QueryRef>> trackedQueries = {};
   bool containsQuery<Variables>(
     String queryName,
     Variables variables,
@@ -86,45 +167,27 @@ class QueryManager {
         trackedQueries[queryName]![key] != null;
   }
 
-  Stream addQuery<Variables>(
-    String queryName,
-    Variables variables,
-    String varsAsStr,
+  Stream addQuery<Data, Variables>(
+    QueryRef<Data, Variables> ref,
   ) {
-    // TODO(mtewani): Replace with more stable encoder
-    String key = varsAsStr;
+    final queryName = ref.operationName;
+    final varsAsStr = ref.serializer(ref.variables as Variables);
     if (trackedQueries[queryName] == null) {
-      trackedQueries[queryName] = <String, StreamController>{};
+      trackedQueries[queryName] = <String, QueryRef>{};
     }
-    if (trackedQueries[queryName]![key] == null) {
-      trackedQueries[queryName]![key] = StreamController.broadcast();
+    if (trackedQueries[queryName]![varsAsStr] == null) {
+      trackedQueries[queryName]![varsAsStr] = ref;
     }
-    return trackedQueries[queryName]![key]!.stream;
+
+    final streamController = StreamController<QueryResult<Data, Variables>>.broadcast();
+    ref.execute().then((value) => streamController.add(value)).catchError((error) => streamController.addError(error));
+
+    return streamController.stream;
   }
 
-  Future<void> triggerCallback<Data, Variables>(
-    String operationName,
-    String varsAsStr,
-    QueryRef<Data, Variables> ref,
-    Data? data,
-    Exception? error,
-  ) async {
-    String key = varsAsStr;
-    if (trackedQueries[operationName] == null ||
-        trackedQueries[operationName]![key] == null) {
-      return;
-    }
-    // ignore: close_sinks
-    StreamController stream = trackedQueries[operationName]![key]!;
 
-    if (!stream.isClosed) {
-      if (error != null) {
-        stream.addError(error);
-      } else {
-        stream
-            .add(QueryResult<Data, Variables>(dataConnect, data as Data, ref));
-      }
-    }
+  void dispose() {
+    _impactedQueriesSubscription?.cancel();
   }
 }
 
@@ -148,66 +211,89 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 
   QueryManager _queryManager;
 
-  @override
-  Future<QueryResult<Data, Variables>> execute() async {
+  Future<QueryResult<Data, Variables>> execute(
+      {QueryFetchPolicy fetchPolicy = QueryFetchPolicy.preferCache}) async {
+        print("execute called with policy $fetchPolicy");
+    if (dataConnect.cacheManager != null) {
+      switch (fetchPolicy) {
+        case QueryFetchPolicy.cacheOnly:
+          return _executeFromCache(fetchPolicy);
+        case QueryFetchPolicy.preferCache:
+          try {
+            print("preferCache policy - checking cache");
+            return await _executeFromCache(fetchPolicy);
+          } catch (e) {
+            print("error executing from cache. trying server");
+            return _executeFromServer();
+          }
+        case QueryFetchPolicy.serverOnly:
+          return _executeFromServer();
+      }
+    } else {
+      return _executeFromServer();
+    }
+  }
+
+  String get _queryId => '$operationName-${serializer(variables as Variables)}';
+
+  Future<QueryResult<Data, Variables>> _executeFromCache(
+      QueryFetchPolicy fetchPolicy) async {
+
+        print("_executeFromCache called with policy $fetchPolicy");
+    final cacheManager = dataConnect.cacheManager!;
+    bool allowStale = fetchPolicy == QueryFetchPolicy.cacheOnly; //if its cache only, we always allow stale
+    final cachedData = await cacheManager.get(_queryId, allowStale);
+  
+    if (cachedData != null) {
+      print("cached data is not null. Returning result");
+      String jsonStr = jsonEncode(cachedData);
+      print("cached data $jsonStr");
+      final result = QueryResult(dataConnect, deserializer(jsonEncode(cachedData['data'] ?? cachedData)), DataSource.cache, this);
+      return result;
+    } else {
+      print("_executeFromCache cachedData is null");
+      if (fetchPolicy == QueryFetchPolicy.cacheOnly) {
+        throw DataConnectError(DataConnectErrorCode.cacheMiss, 'Cache miss');
+      } else {
+        throw DataConnectError(
+            DataConnectErrorCode.cacheMiss, 'Stale cache miss');
+      }
+    }
+  }
+
+  Future<QueryResult<Data, Variables>> _executeFromServer() async {
+    print("_executeFromServer called ");
     bool shouldRetry = await _shouldRetry();
     try {
-      QueryResult<Data, Variables> r = await _executeOperation(_lastToken);
-      return r;
+      ServerResponse serverResponse = await _transport.invokeQuery<Data, Variables>(
+        operationName,
+        deserializer,
+        serializer,
+        variables,
+        _lastToken,
+      );
+
+      if (dataConnect.cacheManager != null) {
+        print("Updating cache");
+        await dataConnect.cacheManager!.update(_queryId, serverResponse);
+      }
+      Data typedData = _convertBodyJsonToData(serverResponse.data);
+
+      QueryResult<Data, Variables> res = QueryResult(dataConnect, typedData, DataSource.server, this);
+      return res;
+      
     } on DataConnectError catch (e) {
       if (shouldRetry &&
           e.code == DataConnectErrorCode.unauthorized.toString()) {
-        return execute();
+        return _executeFromServer();
       } else {
         rethrow;
       }
     }
   }
 
-  Future<QueryResult<Data, Variables>> _executeOperation(String? token) async {
-    try {
-      Data data = await _transport.invokeQuery<Data, Variables>(
-        operationName,
-        deserializer,
-        serializer,
-        variables,
-        token,
-      );
-      QueryResult<Data, Variables> res = QueryResult(dataConnect, data, this);
-      await _queryManager.triggerCallback<Data, Variables>(
-        operationName,
-        serializer(variables as Variables),
-        this,
-        res.data,
-        null,
-      );
-      return res;
-    } on Exception catch (e) {
-      await _queryManager.triggerCallback<Data, Variables>(
-        operationName,
-        serializer(variables as Variables),
-        this,
-        null,
-        e,
-      );
-      rethrow;
-    }
-  }
-
   Stream<QueryResult<Data, Variables>> subscribe() {
-    String varsSerialized = serializer(variables as Variables);
-    Stream<QueryResult<Data, Variables>> res = _queryManager
-        .addQuery(operationName, variables, varsSerialized)
-        .cast<QueryResult<Data, Variables>>();
-    if (_queryManager.containsQuery(operationName, variables, varsSerialized)) {
-      try {
-        execute();
-      } catch (_) {
-        // Call to `execute` should properly pass the error to the Stream.
-        log('Error thrown by execute. The error will propagate via onError.');
-      }
-    }
-    return res;
+    return _queryManager.addQuery(this).cast<QueryResult<Data, Variables>>();
   }
 }
 
@@ -229,7 +315,7 @@ class MutationRef<Data, Variables> extends OperationRef<Data, Variables> {
         );
 
   @override
-  Future<OperationResult<Data, Variables>> execute() async {
+  Future<OperationResult<Data, Variables>> execute({QueryFetchPolicy fetchPolicy = QueryFetchPolicy.serverOnly}) async {
     bool shouldRetry = await _shouldRetry();
     try {
       // Logic below is duplicated due to the fact that `executeOperation` returns
@@ -239,7 +325,7 @@ class MutationRef<Data, Variables> extends OperationRef<Data, Variables> {
     } on DataConnectError catch (e) {
       if (shouldRetry &&
           e.code == DataConnectErrorCode.unauthorized.toString()) {
-        return execute();
+        return _executeOperation(_lastToken);
       } else {
         rethrow;
       }
@@ -249,13 +335,16 @@ class MutationRef<Data, Variables> extends OperationRef<Data, Variables> {
   Future<OperationResult<Data, Variables>> _executeOperation(
     String? token,
   ) async {
-    Data data = await _transport.invokeMutation<Data, Variables>(
+    ServerResponse serverResponse = await _transport.invokeMutation<Data, Variables>(
       operationName,
       deserializer,
       serializer,
       variables,
       token,
     );
-    return OperationResult(dataConnect, data, this);
+
+    Data typedData = _convertBodyJsonToData(serverResponse.data);
+
+    return OperationResult(dataConnect, typedData, DataSource.server, this);
   }
 }
