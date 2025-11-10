@@ -64,7 +64,6 @@ final class HttpApiClient implements ApiClient {
   Future<Map<String, Object?>> makeRequest(
       Uri uri, Map<String, Object?> body) async {
     final headers = await _headers();
-    print('uri: $uri \nbody: $body \nheaders: $headers');
     final response = await (_httpClient?.post ?? http.post)(
       uri,
       headers: headers,
