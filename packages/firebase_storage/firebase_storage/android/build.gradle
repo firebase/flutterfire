@@ -5,9 +5,14 @@ apply plugin: 'com.android.library'
 apply from: file("local-config.gradle")
 
 buildscript {
+    ext.kotlin_version = "1.8.22"
     repositories {
         google()
         mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.1.4'
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
     }
 }
 
@@ -39,6 +44,8 @@ def getRootProjectExtOrCoreProperty(name, firebaseCoreProject) {
     return rootProject.ext.get('FlutterFire').get(name)
 }
 
+apply plugin: 'kotlin-android'
+
 android {
     // Conditional for compatibility with AGP <4.2.
     if (project.android.hasProperty("namespace")) {
@@ -52,9 +59,18 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    kotlinOptions {
+        jvmTarget = project.ext.javaVersion
+    }
+
     compileOptions {
         sourceCompatibility project.ext.javaVersion
         targetCompatibility project.ext.javaVersion
+    }
+
+    sourceSets {
+        main.java.srcDirs += "src/main/kotlin"
+        test.java.srcDirs += "src/test/kotlin"
     }
 
     buildFeatures {

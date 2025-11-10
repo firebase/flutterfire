@@ -189,7 +189,9 @@ The file must import both the app and messaging SDKs, initialize Firebase and ex
 Next, the worker must be registered. Within the `index.html` file, register the worker by modifying the `<script>` tag which bootstraps Flutter:
 
 ```html
-<script src="flutter_bootstrap.js" async>
+<script src="flutter_bootstrap.js" async></script>
+
+<script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
       navigator.serviceWorker.register('firebase-messaging-sw.js', {

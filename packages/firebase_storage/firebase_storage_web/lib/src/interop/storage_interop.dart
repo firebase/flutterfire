@@ -42,16 +42,16 @@ external JSPromise<JSString> getDownloadURL(ReferenceJsImpl ref);
 
 @JS()
 @staticInterop
-external JSPromise /* FullMetadataJsImpl */ getMetadata(ReferenceJsImpl ref);
+external JSPromise<FullMetadataJsImpl> getMetadata(ReferenceJsImpl ref);
 
 @JS()
 @staticInterop
-external JSPromise /* ListResultJsImpl */ list(ReferenceJsImpl ref,
+external JSPromise<ListResultJsImpl> list(ReferenceJsImpl ref,
     [ListOptionsJsImpl? listOptions]);
 
 @JS()
 @staticInterop
-external JSPromise /* ListResultJsImpl */ listAll(ReferenceJsImpl ref);
+external JSPromise<ListResultJsImpl> listAll(ReferenceJsImpl ref);
 
 @JS()
 @staticInterop
@@ -61,7 +61,7 @@ external ReferenceJsImpl ref(JSAny storageOrRef, [JSString? urlOrPath]);
 
 @JS()
 @staticInterop
-external JSPromise /* FullMetadataJsImpl */ updateMetadata(
+external JSPromise<FullMetadataJsImpl> updateMetadata(
     ReferenceJsImpl ref, SettableMetadataJsImpl settableMetadata);
 
 @JS()
@@ -81,11 +81,7 @@ extension EmulatorOptionsJsImplX on EmulatorOptions {
   external JSString? get mockUserToken;
 }
 
-@JS('FirebaseStorage')
-@staticInterop
-abstract class StorageJsImpl {}
-
-extension StorageJsImplX on StorageJsImpl {
+extension type StorageJsImpl._(JSObject _) implements JSObject {
   external AppJsImpl get app;
   external set app(AppJsImpl a);
   external JSNumber get maxOperationRetryTime;
@@ -94,11 +90,7 @@ extension StorageJsImplX on StorageJsImpl {
   external set maxUploadRetryTime(JSNumber t);
 }
 
-@JS('StorageReference')
-@staticInterop
-abstract class ReferenceJsImpl {}
-
-extension ReferenceJsImplX on ReferenceJsImpl {
+extension type ReferenceJsImpl._(JSObject _) implements JSObject {
   external JSString get bucket;
   external set bucket(JSString s);
   external JSString get fullPath;
@@ -114,9 +106,8 @@ extension ReferenceJsImplX on ReferenceJsImpl {
 }
 
 @JS('FullMetadata')
-@staticInterop
-@anonymous
-class FullMetadataJsImpl extends UploadMetadataJsImpl {
+extension type FullMetadataJsImpl._(JSObject _)
+    implements UploadMetadataJsImpl, JSObject {
   external factory FullMetadataJsImpl({
     JSString bucket,
     JSArray? downloadTokens,
@@ -136,9 +127,7 @@ class FullMetadataJsImpl extends UploadMetadataJsImpl {
     JSString? contentType,
     JSAny? customMetadata,
   });
-}
 
-extension FullMetadataJsImplX on FullMetadataJsImpl {
   external JSString get bucket;
   // TODO - new API.
   external JSArray? get downloadTokens;
@@ -154,9 +143,8 @@ extension FullMetadataJsImplX on FullMetadataJsImpl {
 }
 
 @JS('UploadMetadata')
-@staticInterop
-@anonymous
-class UploadMetadataJsImpl extends SettableMetadataJsImpl {
+extension type UploadMetadataJsImpl._(JSObject _)
+    implements SettableMetadataJsImpl, JSObject {
   external factory UploadMetadataJsImpl(
       {JSString? md5Hash,
       JSString? cacheControl,
@@ -165,18 +153,12 @@ class UploadMetadataJsImpl extends SettableMetadataJsImpl {
       JSString? contentLanguage,
       JSString? contentType,
       JSAny? customMetadata});
-}
 
-extension UploadMetadataJsImplX on UploadMetadataJsImpl {
   external JSString? get md5Hash;
   external set md5Hash(JSString? s);
 }
 
-@JS('UploadTask')
-@staticInterop
-abstract class UploadTaskJsImpl {}
-
-extension UploadTaskJsImplX on UploadTaskJsImpl {
+extension type UploadTaskJsImpl._(JSObject _) implements JSObject {
   external UploadTaskSnapshotJsImpl get snapshot;
   external set snapshot(UploadTaskSnapshotJsImpl t);
   external JSBoolean cancel();
@@ -188,12 +170,7 @@ extension UploadTaskJsImplX on UploadTaskJsImpl {
       [JSFunction? onResolve, JSFunction? onReject]);
 }
 
-@JS('UploadTaskSnapshot')
-@staticInterop
-@anonymous
-abstract class UploadTaskSnapshotJsImpl {}
-
-extension UploadTaskSnapshotJsImplX on UploadTaskSnapshotJsImpl {
+extension type UploadTaskSnapshotJsImpl._(JSObject _) implements JSObject {
   external JSNumber get bytesTransferred;
   external FullMetadataJsImpl get metadata;
   external ReferenceJsImpl get ref;
@@ -203,9 +180,7 @@ extension UploadTaskSnapshotJsImplX on UploadTaskSnapshotJsImpl {
 }
 
 @JS('SettableMetadata')
-@staticInterop
-@anonymous
-class SettableMetadataJsImpl {
+extension type SettableMetadataJsImpl._(JSObject _) implements JSObject {
   external factory SettableMetadataJsImpl(
       {JSString? cacheControl,
       JSString? contentDisposition,
@@ -213,9 +188,7 @@ class SettableMetadataJsImpl {
       JSString? contentLanguage,
       JSString? contentType,
       JSAny? customMetadata});
-}
 
-extension SettableMetadataJsImplX on SettableMetadataJsImpl {
   external JSString? get cacheControl;
   external set cacheControl(JSString? s);
   external JSString? get contentDisposition;
@@ -244,12 +217,7 @@ extension ListOptionsJsImplX on ListOptionsJsImpl {
   external JSString? get pageToken;
 }
 
-@JS('ListResult')
-@staticInterop
-@anonymous
-class ListResultJsImpl {}
-
-extension ListResultJsImplX on ListResultJsImpl {
+extension type ListResultJsImpl._(JSObject _) implements JSObject {
   external JSArray /* ReferenceJsImpl */ get items;
   external JSString? get nextPageToken;
   external JSArray /* ReferenceJsImpl */ get prefixes;

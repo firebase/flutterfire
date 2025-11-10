@@ -18,9 +18,13 @@ import 'src/internals.dart';
 import 'src/interop/messaging.dart' as messaging_interop;
 import 'src/utils.dart' as utils;
 
+import 'src/firebase_messaging_version.dart';
+
 /// Web implementation for [FirebaseMessagingPlatform]
 /// delegates calls to messaging web plugin.
 class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
+  static const String _libraryName = 'flutter-fire-fcm';
+
   /// Instance of Messaging from the web plugin
   messaging_interop.Messaging? _webMessaging;
 
@@ -44,6 +48,8 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerLibraryVersion(_libraryName, packageVersion);
+
     FirebaseCoreWeb.registerService('messaging');
     FirebaseMessagingPlatform.instance = FirebaseMessagingWeb();
   }
