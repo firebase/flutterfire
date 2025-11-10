@@ -124,7 +124,8 @@ void main() {
     test('generateImages can make successful request', () async {
       final mockHttp = MockClient((request) async {
         final body = jsonDecode(request.body) as Map<String, Object?>;
-        expect(request.url.path, endsWith('/templates/$templateId:predict'));
+        expect(request.url.path,
+            endsWith('/templates/$templateId:templatePredict'));
         expect(body['inputs'], {'prompt': 'A cat'});
         return http.Response(jsonEncode(_arbitraryImagenResponse), 200,
             headers: {'content-type': 'application/json'});
