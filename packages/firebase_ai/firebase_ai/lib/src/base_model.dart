@@ -254,9 +254,10 @@ final class _TemplateGoogleAIUri implements _TemplateUri {
       '$_templateName/templates/$templateId';
 }
 
-/// Base class for models.
+/// The base class for all Firebase AI models.
 ///
-/// Do not instantiate directly.
+/// This class provides the basic functionality for interacting with the
+/// Firebase AI API. It is not intended to be instantiated directly.
 abstract class BaseModel {
   BaseModel._(
       {required SerializationStrategy serializationStrategy,
@@ -307,14 +308,15 @@ abstract class BaseModel {
   Uri taskUri(Task task) => _modelUri.taskUri(task);
 }
 
-/// An abstract base class for models that interact with an API using an [ApiClient].
+/// An abstract base class for models that interact with an API using an
+/// [ApiClient].
 ///
-/// This class extends [BaseModel] and provides a convenient way to make API requests
-/// using the injected [ApiClient]. It handles the common logic of making requests
-/// and parsing the responses.
+/// This class extends [BaseModel] and provides a convenient way to make API
+/// requests using the injected [ApiClient]. It handles the common logic of
+/// making requests and parsing the responses.
 ///
-/// Subclasses should define specific API interaction logic and data parsing based on
-/// their requirements.
+/// Subclasses should define specific API interaction logic and data parsing
+/// based on their requirements.
 abstract class BaseApiClientModel extends BaseModel {
   // ignore: public_member_api_docs
   BaseApiClientModel({
@@ -335,7 +337,14 @@ abstract class BaseApiClientModel extends BaseModel {
       _client.makeRequest(taskUri(task), params).then(parse);
 }
 
+/// An abstract base class for models that interact with a template-based API
+/// using an [ApiClient].
+///
+/// This class extends [BaseApiClientModel] and provides functionality for
+/// making requests to a template-based API. It handles the common logic of
+/// making requests and parsing the responses.
 abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
+  // ignore: public_member_api_docs
   BaseTemplateApiClientModel(
       {required super.serializationStrategy,
       required super.modelUri,
@@ -345,8 +354,11 @@ abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
 
   final _TemplateUri _templateUri;
 
-  /// Make a unary request for [task] with [templateId] and JSON encodable
-  /// [inputs].
+  /// Makes a unary request to a template-based API.
+  ///
+  /// This method sends a request to the API with the given [task], [templateId],
+  /// and [inputs]. It returns a [Future] that completes with the parsed
+  /// response.
   Future<T> makeTemplateRequest<T>(
       TemplateTask task,
       String templateId,
@@ -365,8 +377,10 @@ abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
         .then(parse);
   }
 
-  /// Make a unary request for [task] with [templateId] and JSON encodable
-  /// [inputs].
+  /// Makes a streaming request to a template-based API.
+  ///
+  /// This method sends a request to the API with the given [task], [templateId],
+  /// and [inputs]. It returns a [Stream] of parsed responses.
   Stream<T> streamTemplateRequest<T>(
       TemplateTask task,
       String templateId,
@@ -385,9 +399,11 @@ abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
     return response.map(parse);
   }
 
+  /// Returns the URI for the given [task] and [templateId].
   Uri templateTaskUri(TemplateTask task, String templateId) =>
       _templateUri.templateTaskUri(task, templateId);
 
+  /// Returns the template name for the given [templateId].
   String templateName(String templateId) =>
       _templateUri.templateName(templateId);
 }

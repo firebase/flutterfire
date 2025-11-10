@@ -198,6 +198,9 @@ class FirebaseAI extends FirebasePluginPlatform {
     );
   }
 
+  /// Returns a [TemplateGenerativeModel] instance.
+  ///
+  /// This is an experimental API and may change in the future.
   @experimental
   TemplateGenerativeModel templateGenerativeModel() {
     return createTemplateGenerativeModel(
@@ -209,6 +212,9 @@ class FirebaseAI extends FirebasePluginPlatform {
         appCheck: appCheck);
   }
 
+  /// Returns a [TemplateImagenModel] instance.
+  ///
+  /// This is an experimental API and may change in the future.
   @experimental
   TemplateImagenModel templateImagenModel() {
     return createTemplateImagenModel(
