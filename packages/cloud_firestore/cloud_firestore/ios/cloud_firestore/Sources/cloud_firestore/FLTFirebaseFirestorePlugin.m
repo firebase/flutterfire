@@ -6,6 +6,7 @@
 @import firebase_core;
 @import FirebaseCore;
 
+#import "include/cloud_firestore/Public/FLTFirebaseFirestorePlugin.h"
 #import <TargetConditionals.h>
 #import "FirebaseFirestoreInternal/FIRPersistentCacheIndexManager.h"
 #import "include/cloud_firestore/Private/FLTDocumentSnapshotStreamHandler.h"
@@ -16,7 +17,6 @@
 #import "include/cloud_firestore/Private/FLTSnapshotsInSyncStreamHandler.h"
 #import "include/cloud_firestore/Private/FLTTransactionStreamHandler.h"
 #import "include/cloud_firestore/Private/FirestorePigeonParser.h"
-#import "include/cloud_firestore/Public/FLTFirebaseFirestorePlugin.h"
 
 NSString *const kFLTFirebaseFirestoreChannelName = @"plugins.flutter.io/firebase_firestore";
 NSString *const kFLTFirebaseFirestoreQuerySnapshotEventChannelName =

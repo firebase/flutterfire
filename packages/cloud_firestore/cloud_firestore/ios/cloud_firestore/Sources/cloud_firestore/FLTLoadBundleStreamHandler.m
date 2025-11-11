@@ -12,8 +12,8 @@
 @import FirebaseFirestore;
 @import firebase_core;
 
-#import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
 #import "include/cloud_firestore/Private/FLTLoadBundleStreamHandler.h"
+#import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
 
 @interface FLTLoadBundleStreamHandler ()
 @property(readwrite, strong) FIRLoadBundleTask *task;
@@ -51,7 +51,7 @@
             events([FLTFirebasePluginHelper createFlutterErrorWithCode:code
                                                                message:message
                                                        optionalDetails:details
-                                                        andOptionalError:error]);
+                                                      andOptionalError:error]);
           });
         }
       }];

@@ -5,8 +5,8 @@
 @import FirebaseFirestore;
 @import firebase_core;
 
-#import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
 #import "include/cloud_firestore/Private/FLTQuerySnapshotStreamHandler.h"
+#import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
 #import "include/cloud_firestore/Private/FirestorePigeonParser.h"
 #import "include/cloud_firestore/Public/CustomPigeonHeaderFirestore.h"
 
@@ -57,7 +57,7 @@
         events([FLTFirebasePluginHelper createFlutterErrorWithCode:code
                                                            message:message
                                                    optionalDetails:details
-                                                    andOptionalError:error]);
+                                                  andOptionalError:error]);
       });
     } else {
       dispatch_async(dispatch_get_main_queue(), ^{

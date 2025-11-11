@@ -81,8 +81,9 @@ class MethodChannelDatabase extends DatabasePlatform {
   @override
   Map<String, Object?> getChannelArguments([Map<String, Object?>? other]) {
     // Fall back to app's databaseURL if not explicitly provided
-    final String? effectiveDatabaseURL = databaseURL ?? app?.options.databaseURL;
-    
+    final String? effectiveDatabaseURL =
+        databaseURL ?? app?.options.databaseURL;
+
     return {
       'appName': app!.name,
       if (effectiveDatabaseURL != null) 'databaseURL': effectiveDatabaseURL,

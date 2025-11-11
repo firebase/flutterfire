@@ -34,11 +34,15 @@ static __strong NSMutableDictionary<NSString *, FIRDatabase *> *cachedDatabaseIn
   // Convert Dart app name to iOS app name using the helper
   NSString *appNameIos = [FLTFirebasePluginHelper firebaseAppNameFromDartName:appName];
   FIRApp *app = [FIRApp appNamed:appNameIos];
-  
+
   if (app == nil) {
-    @throw [NSException exceptionWithName:@"InvalidFIRApp"
-                                   reason:[NSString stringWithFormat:@"No Firebase app found with name '%@'. Make sure Firebase.initializeApp() is called first.", appName]
-                                 userInfo:nil];
+    @throw [NSException
+        exceptionWithName:@"InvalidFIRApp"
+                   reason:[NSString
+                              stringWithFormat:@"No Firebase app found with name '%@'. Make sure "
+                                               @"Firebase.initializeApp() is called first.",
+                                               appName]
+                 userInfo:nil];
   }
   FIRDatabase *database;
 
@@ -55,9 +59,15 @@ static __strong NSMutableDictionary<NSString *, FIRDatabase *> *cachedDatabaseIn
     database = [FIRDatabase databaseForApp:app URL:urlToUse];
   } else {
     // No databaseURL found - throw a helpful error
-    @throw [NSException exceptionWithName:@"FIRDatabaseMissingURL"
-                                   reason:[NSString stringWithFormat:@"No databaseURL found for Firebase app '%@'. Please ensure the app is initialized with a databaseURL in FirebaseOptions, or pass a databaseURL when accessing the database.", appName]
-                                 userInfo:nil];
+    @throw [NSException
+        exceptionWithName:@"FIRDatabaseMissingURL"
+                   reason:[NSString
+                              stringWithFormat:
+                                  @"No databaseURL found for Firebase app '%@'. Please ensure the "
+                                  @"app is initialized with a databaseURL in FirebaseOptions, or "
+                                  @"pass a databaseURL when accessing the database.",
+                                  appName]
+                 userInfo:nil];
   }
 
   //  [database setCallbackQueue:[self dispatchQueue]];
