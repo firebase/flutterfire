@@ -31,13 +31,33 @@ static __strong NSMutableDictionary<NSString *, FIRDatabase *> *cachedDatabaseIn
     return cachedInstance;
   }
 
-  FIRApp *app = [FIRApp appNamed:appName];
+  // Convert Dart app name to iOS app name using the helper
+  NSString *appNameIos = [FLTFirebasePluginHelper firebaseAppNameFromDartName:appName];
+  FIRApp *app = [FIRApp appNamed:appNameIos];
+  
+  if (app == nil) {
+    @throw [NSException exceptionWithName:@"InvalidFIRApp"
+                                   reason:[NSString stringWithFormat:@"No Firebase app found with name '%@'. Make sure Firebase.initializeApp() is called first.", appName]
+                                 userInfo:nil];
+  }
   FIRDatabase *database;
 
-  if (databaseURL.length == 0) {
-    database = [FIRDatabase databaseForApp:app];
+  // Determine the database URL to use
+  // On iOS, we MUST always provide a URL - unlike Android which can fall back
+  NSString *urlToUse = databaseURL;
+  if (urlToUse.length == 0) {
+    // Fall back to the app's configured databaseURL
+    urlToUse = app.options.databaseURL;
+  }
+
+  // iOS requires a URL to be provided - it cannot infer it from app.options alone
+  if (urlToUse != nil && urlToUse.length > 0) {
+    database = [FIRDatabase databaseForApp:app URL:urlToUse];
   } else {
-    database = [FIRDatabase databaseForApp:app URL:databaseURL];
+    // No databaseURL found - throw a helpful error
+    @throw [NSException exceptionWithName:@"FIRDatabaseMissingURL"
+                                   reason:[NSString stringWithFormat:@"No databaseURL found for Firebase app '%@'. Please ensure the app is initialized with a databaseURL in FirebaseOptions, or pass a databaseURL when accessing the database.", appName]
+                                 userInfo:nil];
   }
 
   //  [database setCallbackQueue:[self dispatchQueue]];

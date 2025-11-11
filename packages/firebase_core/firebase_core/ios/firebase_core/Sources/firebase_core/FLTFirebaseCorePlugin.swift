@@ -118,11 +118,47 @@ import Foundation
                      completion: @escaping (Result<CoreInitializeResponse, Error>) -> Void) {
     let appNameIos = FLTFirebasePluginHelper.firebaseAppName(fromDartName: appName)
 
+    // If app already exists and has the same configuration, return it
+    // Otherwise, we need to delete and recreate it with the new options
     if let existingApp = FLTFirebasePluginHelper.firebaseApp(named: appName) {
+      let existingOptions = existingApp.options
+      
+      // Check if the existing app has the required databaseURL if one is being provided
+      if let newDatabaseURL = initializeAppRequest.databaseURL,
+         existingOptions.databaseURL == nil || existingOptions.databaseURL != newDatabaseURL {
+        // Need to reconfigure - delete the existing app first
+        existingApp.delete { success in
+          if success {
+            // Now configure with new options
+            self.configureNewApp(appName: appName, appNameIos: appNameIos,
+                               initializeAppRequest: initializeAppRequest,
+                               completion: completion)
+          } else {
+            completion(.failure(NSError(domain: "FLTFirebaseCore",
+                                       code: -1,
+                                       userInfo: [
+                                         NSLocalizedDescriptionKey: "Failed to delete existing Firebase app for reconfiguration",
+                                       ])))
+          }
+        }
+        return
+      }
+      
+      // App exists with same config, return it
       completion(.success(initializeResponse(from: existingApp)))
       return
     }
 
+    // No existing app, create new one
+    configureNewApp(appName: appName, appNameIos: appNameIos,
+                   initializeAppRequest: initializeAppRequest,
+                   completion: completion)
+  }
+  
+  private func configureNewApp(appName: String,
+                              appNameIos: String,
+                              initializeAppRequest: CoreFirebaseOptions,
+                              completion: @escaping (Result<CoreInitializeResponse, Error>) -> Void) {
     let appId = initializeAppRequest.appId
     let messagingSenderId = initializeAppRequest.messagingSenderId
 
