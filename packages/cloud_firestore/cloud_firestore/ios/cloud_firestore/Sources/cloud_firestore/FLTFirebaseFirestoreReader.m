@@ -4,10 +4,10 @@
 
 @import FirebaseFirestore;
 @import FirebaseCore;
-#if __has_include(<firebase_core/firebase_core.h>)
-@import firebase_core;
-#else
+#ifdef SWIFT_PACKAGE
 @import firebase_core_shared;
+#else
+@import firebase_core;
 #endif
 
 #import "include/cloud_firestore/Private/FLTFirebaseFirestoreReader.h"

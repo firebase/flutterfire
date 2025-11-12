@@ -5,10 +5,10 @@
 #import "FirebaseInAppMessagingPlugin.h"
 
 @import FirebaseInAppMessaging;
-#if __has_include(<firebase_core/firebase_core.h>)
-@import firebase_core;
-#else
+#ifdef SWIFT_PACKAGE
 @import firebase_core_shared;
+#else
+@import firebase_core;
 #endif
 
 NSString *const kFLTFirebaseInAppMessagingChannelName =
