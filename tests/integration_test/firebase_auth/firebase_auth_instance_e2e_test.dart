@@ -868,7 +868,7 @@ void main() {
             }
           });
         },
-        skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS),
+        skip: defaultTargetPlatform == TargetPlatform.macOS || defaultTargetPlatform == TargetPlatform.windows,
       );
 
       group(
@@ -1124,6 +1124,6 @@ void main() {
       });
     },
     // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
-    skip: !kIsWeb && Platform.isMacOS,
+    skip: defaultTargetPlatform == TargetPlatform.macOS,
   );
 }
