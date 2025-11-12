@@ -6,7 +6,11 @@
 #import "FLTTokenRefreshStreamHandler.h"
 
 @import FirebaseAppCheck;
+#if __has_include(<firebase_core/firebase_core.h>)
 @import firebase_core;
+#else
+@import firebase_core_shared;
+#endif
 @import FirebaseCore;
 
 #import "FLTAppCheckProviderFactory.h"

@@ -10,7 +10,11 @@
 //
 
 @import FirebaseFirestore;
+#if __has_include(<firebase_core/firebase_core.h>)
 @import firebase_core;
+#else
+@import firebase_core_shared;
+#endif
 
 #import "include/cloud_firestore/Private/FLTLoadBundleStreamHandler.h"
 #import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"

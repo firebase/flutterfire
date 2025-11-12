@@ -3,7 +3,11 @@
 // found in the LICENSE file.
 
 @import FirebaseAuth;
+#if __has_include(<firebase_core/firebase_core.h>)
 @import firebase_core;
+#else
+@import firebase_core_shared;
+#endif
 @import FirebaseCore;
 #import <FirebaseAuth/FirebaseAuth.h>
 #import <TargetConditionals.h>

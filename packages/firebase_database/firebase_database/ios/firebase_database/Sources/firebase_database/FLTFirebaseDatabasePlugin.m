@@ -2,7 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#if __has_include(<firebase_core/firebase_core.h>)
 @import firebase_core;
+#else
+@import firebase_core_shared;
+#endif
 @import FirebaseCore;
 
 #import "FLTFirebaseDatabasePlugin.h"

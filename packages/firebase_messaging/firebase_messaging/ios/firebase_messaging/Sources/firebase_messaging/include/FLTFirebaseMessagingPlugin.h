@@ -14,7 +14,11 @@
 #import <Foundation/Foundation.h>
 #import <UserNotifications/UserNotifications.h>
 
+#if __has_include(<firebase_core/firebase_core.h>)
 @import firebase_core;
+#else
+@import firebase_core_shared;
+#endif
 
 #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 #define __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
