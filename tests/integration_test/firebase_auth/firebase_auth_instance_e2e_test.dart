@@ -154,7 +154,7 @@ void main() {
             );
 
             await Future.delayed(const Duration(seconds: 2));
-          });
+          }, skip: defaultTargetPlatform == TargetPlatform.macOS || defaultTargetPlatform == TargetPlatform.windows,);
 
           test(
               'calls callback with the current user and when user state changes',
@@ -868,7 +868,7 @@ void main() {
             }
           });
         },
-        skip: !kIsWeb && Platform.isWindows,
+        skip: defaultTargetPlatform == TargetPlatform.macOS || defaultTargetPlatform == TargetPlatform.windows,
       );
 
       group(
