@@ -1,1 +1,0 @@
-../../../../ios/firebase_database/Sources/firebase_database/FLTFirebaseDatabasePlugin.m
