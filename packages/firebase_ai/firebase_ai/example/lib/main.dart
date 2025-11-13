@@ -31,6 +31,7 @@ import 'pages/json_schema_page.dart';
 import 'pages/schema_page.dart';
 import 'pages/token_count_page.dart';
 import 'pages/video_page.dart';
+import 'pages/server_template_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -199,6 +200,11 @@ class _HomeScreenState extends State<HomeScreen> {
           model: currentModel,
           useVertexBackend: useVertexBackend,
         );
+      case 11:
+        return ServerTemplatePage(
+          title: 'Server Template',
+          useVertexBackend: useVertexBackend,
+        );
 
       default:
         // Fallback to the first page in case of an unexpected index
@@ -227,18 +233,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(
                     fontSize: 12,
                     color: widget.useVertexBackend
-                        ? Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.7)
+                        ? Theme.of(context).colorScheme.onSurface.withAlpha(180)
                         : Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 Switch(
                   value: widget.useVertexBackend,
                   onChanged: widget.onBackendChanged,
-                  activeTrackColor: Colors.green.withValues(alpha: 0.5),
-                  inactiveTrackColor: Colors.blueGrey.withValues(alpha: 0.5),
+                  activeTrackColor: Colors.green.withAlpha(128),
+                  inactiveTrackColor: Colors.blueGrey.withAlpha(128),
                   activeThumbColor: Colors.green,
                   inactiveThumbColor: Colors.blueGrey,
                 ),
@@ -251,7 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         : Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withValues(alpha: 0.7),
+                            .withAlpha(180),
                   ),
                 ),
               ],
@@ -273,7 +276,7 @@ class _HomeScreenState extends State<HomeScreen> {
         unselectedFontSize: 9,
         selectedItemColor: Theme.of(context).colorScheme.primary,
         unselectedItemColor: widget.useVertexBackend
-            ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)
+            ? Theme.of(context).colorScheme.onSurface.withAlpha(180)
             : Colors.grey,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -332,6 +335,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             label: 'Live',
             tooltip: 'Live Stream',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.storage,
+            ),
+            label: 'Server',
+            tooltip: 'Server Template',
           ),
         ],
         currentIndex: widget.selectedIndex,

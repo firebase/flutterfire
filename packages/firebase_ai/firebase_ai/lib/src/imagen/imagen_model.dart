@@ -39,7 +39,9 @@ final class ImagenModel extends BaseApiClientModel {
         _safetySettings = safetySettings,
         _useVertexBackend = useVertexBackend,
         super(
-            serializationStrategy: VertexSerialization(),
+            serializationStrategy: useVertexBackend
+                ? VertexSerialization()
+                : DeveloperSerialization(),
             modelUri: useVertexBackend
                 ? _VertexUri(app: app, model: model, location: location)
                 : _GoogleAIUri(app: app, model: model),

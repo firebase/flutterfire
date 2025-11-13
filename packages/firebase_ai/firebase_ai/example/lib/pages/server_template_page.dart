@@ -11,27 +11,54 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:firebase_ai/firebase_ai.dart';
 import 'package:flutter/services.dart';
 import '../widgets/message_widget.dart';
+import 'package:firebase_ai/firebase_ai.dart';
 
-class ImagePromptPage extends StatefulWidget {
-  const ImagePromptPage({super.key, required this.title, required this.model});
+class ServerTemplatePage extends StatefulWidget {
+  const ServerTemplatePage({
+    super.key,
+    required this.title,
+    required this.useVertexBackend,
+  });
 
   final String title;
-  final GenerativeModel model;
+  final bool useVertexBackend;
 
   @override
-  State<ImagePromptPage> createState() => _ImagePromptPageState();
+  State<ServerTemplatePage> createState() => _ServerTemplatePageState();
 }
 
-class _ImagePromptPageState extends State<ImagePromptPage> {
+class _ServerTemplatePageState extends State<ServerTemplatePage> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
   final FocusNode _textFieldFocus = FocusNode();
-  final List<MessageData> _generatedContent = <MessageData>[];
+  final List<MessageData> _messages = <MessageData>[];
   bool _loading = false;
+
+  TemplateGenerativeModel? _templateGenerativeModel;
+  TemplateImagenModel? _templateImagenModel;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeServerTemplate();
+  }
+
+  void _initializeServerTemplate() {
+    if (widget.useVertexBackend) {
+      _templateGenerativeModel =
+          FirebaseAI.vertexAI(location: 'global').templateGenerativeModel();
+      _templateImagenModel =
+          FirebaseAI.vertexAI(location: 'global').templateImagenModel();
+    } else {
+      _templateGenerativeModel =
+          FirebaseAI.googleAI().templateGenerativeModel();
+      _templateImagenModel = FirebaseAI.googleAI().templateImagenModel();
+    }
+  }
 
   void _scrollDown() {
     WidgetsBinding.instance.addPostFrameCallback(
@@ -61,20 +88,20 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
               child: ListView.builder(
                 controller: _scrollController,
                 itemBuilder: (context, idx) {
-                  var content = _generatedContent[idx];
+                  final message = _messages[idx];
                   return MessageWidget(
-                    text: content.text,
-                    image: content.imageBytes == null
-                        ? null
-                        : Image.memory(
-                            content.imageBytes!,
+                    text: message.text,
+                    image: message.imageBytes != null
+                        ? Image.memory(
+                            message.imageBytes!,
                             cacheWidth: 400,
                             cacheHeight: 400,
-                          ),
-                    isFromUser: content.fromUser ?? false,
+                          )
+                        : null,
+                    isFromUser: message.fromUser ?? false,
                   );
                 },
-                itemCount: _generatedContent.length,
+                itemCount: _messages.length,
               ),
             ),
             Padding(
@@ -89,6 +116,7 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
                       autofocus: true,
                       focusNode: _textFieldFocus,
                       controller: _textController,
+                      onSubmitted: _sendServerTemplateMessage,
                     ),
                   ),
                   const SizedBox.square(
@@ -97,22 +125,35 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
                   if (!_loading)
                     IconButton(
                       onPressed: () async {
-                        await _sendImagePrompt(_textController.text);
+                        await _serverTemplateImagen(_textController.text);
+                      },
+                      icon: Icon(
+                        Icons.image_search,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      tooltip: 'Imagen',
+                    ),
+                  if (!_loading)
+                    IconButton(
+                      onPressed: () async {
+                        await _serverTemplateImageInput(_textController.text);
                       },
                       icon: Icon(
                         Icons.image,
                         color: Theme.of(context).colorScheme.primary,
                       ),
+                      tooltip: 'Image Input',
                     ),
                   if (!_loading)
                     IconButton(
                       onPressed: () async {
-                        await _sendStorageUriPrompt(_textController.text);
+                        await _sendServerTemplateMessage(_textController.text);
                       },
                       icon: Icon(
-                        Icons.storage,
+                        Icons.send,
                         color: Theme.of(context).colorScheme.primary,
                       ),
+                      tooltip: 'Generate',
                     )
                   else
                     const CircularProgressIndicator(),
@@ -125,48 +166,40 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
     );
   }
 
-  Future<void> _sendImagePrompt(String message) async {
+  Future<void> _serverTemplateImagen(String message) async {
     setState(() {
       _loading = true;
     });
+    MessageData? resultMessage;
     try {
-      ByteData catBytes = await rootBundle.load('assets/images/cat.jpg');
-      ByteData sconeBytes = await rootBundle.load('assets/images/scones.jpg');
-      final content = [
-        Content.multi([
-          TextPart(message),
-          // The only accepted mime types are image/*.
-          InlineDataPart('image/jpeg', catBytes.buffer.asUint8List()),
-          InlineDataPart('image/jpeg', sconeBytes.buffer.asUint8List()),
-        ]),
-      ];
-      _generatedContent.add(
-        MessageData(
-          imageBytes: catBytes.buffer.asUint8List(),
+      _messages.add(MessageData(text: message, fromUser: true));
+      var response = await _templateImagenModel?.generateImages(
+        'portrait-googleai',
+        inputs: {
+          'animal': message,
+        },
+      );
+
+      if (response!.images.isNotEmpty) {
+        var imagenImage = response.images[0];
+
+        resultMessage = MessageData(
+          imageBytes: imagenImage.bytesBase64Encoded,
           text: message,
-          fromUser: true,
-        ),
-      );
-      _generatedContent.add(
-        MessageData(
-          imageBytes: sconeBytes.buffer.asUint8List(),
-          fromUser: true,
-        ),
-      );
-
-      var response = await widget.model.generateContent(content);
-      var text = response.text;
-      _generatedContent.add(MessageData(text: text, fromUser: false));
-
-      if (text == null) {
-        _showError('No response from API.');
-        return;
+          fromUser: false,
+        );
       } else {
-        setState(() {
-          _loading = false;
-          _scrollDown();
-        });
+        // Handle the case where no images were generated
+        _showError('Error: No images were generated.');
       }
+
+      setState(() {
+        if (resultMessage != null) {
+          _messages.add(resultMessage);
+        }
+        _loading = false;
+        _scrollDown();
+      });
     } catch (e) {
       _showError(e.toString());
       setState(() {
@@ -181,35 +214,68 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
     }
   }
 
-  Future<void> _sendStorageUriPrompt(String message) async {
+  Future<void> _serverTemplateImageInput(String message) async {
     setState(() {
       _loading = true;
     });
+
     try {
-      final content = [
-        Content.multi([
-          TextPart(message),
-          const FileData(
-            'image/jpeg',
-            'gs://vertex-ai-example-ef5a2.appspot.com/foodpic.jpg',
-          ),
-        ]),
-      ];
-      _generatedContent.add(MessageData(text: message, fromUser: true));
+      ByteData catBytes = await rootBundle.load('assets/images/cat.jpg');
+      var imageBytes = catBytes.buffer.asUint8List();
+      _messages.add(
+        MessageData(
+          text: message,
+          imageBytes: imageBytes,
+          fromUser: true,
+        ),
+      );
 
-      var response = await widget.model.generateContent(content);
-      var text = response.text;
-      _generatedContent.add(MessageData(text: text, fromUser: false));
+      var response = await _templateGenerativeModel?.generateContent(
+        'media.prompt',
+        inputs: {
+          'imageData': {
+            'isInline': true,
+            'mimeType': 'image/jpeg',
+            'contents': base64Encode(imageBytes),
+          },
+        },
+      );
+      _messages.add(MessageData(text: response?.text, fromUser: false));
 
-      if (text == null) {
-        _showError('No response from API.');
-        return;
-      } else {
-        setState(() {
-          _loading = false;
-          _scrollDown();
-        });
-      }
+      setState(() {
+        _loading = false;
+        _scrollDown();
+      });
+    } catch (e) {
+      _showError(e.toString());
+      setState(() {
+        _loading = false;
+      });
+    } finally {
+      _textController.clear();
+      setState(() {
+        _loading = false;
+      });
+      _textFieldFocus.requestFocus();
+    }
+  }
+
+  Future<void> _sendServerTemplateMessage(String message) async {
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      _messages.add(MessageData(text: message, fromUser: true));
+      var response = await _templateGenerativeModel
+          ?.generateContent('new-greeting', inputs: {});
+
+      _messages.add(MessageData(text: response?.text, fromUser: false));
+
+      setState(() {
+        _loading = false;
+        _scrollDown();
+      });
     } catch (e) {
       _showError(e.toString());
       setState(() {
