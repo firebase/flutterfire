@@ -63,7 +63,7 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
       binaryMessenger: messenger, api: instance
     )
 
-    FLTFirebasePluginRegistry.sharedInstance().register(instance)
+    FLTFirebasePluginRegistry.sharedInstance().registerFirebasePlugin(instance)
 
     #if !targetEnvironment(macCatalyst)
       registrar.publish(instance)
@@ -691,7 +691,7 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
       return cachedInstance
     }
 
-    let firebaseApp = FLTFirebasePlugin.firebaseAppNamed(app.appName)!
+    let firebaseApp = FLTFirebasePluginHelper.firebaseApp(named: app.appName)!
     let database: Database
 
     if let databaseURL = app.databaseURL, !databaseURL.isEmpty {

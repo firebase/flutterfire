@@ -110,7 +110,6 @@ let package = Package(
         .process("Resources"),
       ],
       cSettings: [
-        .headerSearchPath("include"),
         .define("LIBRARY_VERSION", to: "\"\(library_version)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-rtdb\""),
       ]
