@@ -15,6 +15,7 @@
 import 'dart:convert';
 
 import 'package:firebase_ai/firebase_ai.dart';
+import 'package:firebase_ai/src/base_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -61,11 +62,11 @@ void main() {
     TemplateGenerativeModel createModel(http.Client client,
         {bool useVertexBackend = true}) {
       // ignore: invalid_use_of_internal_member
-      return TemplateGenerativeModel.internal(
+      return createTestTemplateGenerativeModel(
         app: app,
         location: location,
         useVertexBackend: useVertexBackend,
-        httpClient: client,
+        client: client,
       );
     }
 
@@ -113,12 +114,11 @@ void main() {
     TemplateImagenModel createModel(http.Client client,
         {bool useVertexBackend = true}) {
       // ignore: invalid_use_of_internal_member
-      return TemplateImagenModel.internal(
-        app: app,
-        location: location,
-        useVertexBackend: useVertexBackend,
-        httpClient: client,
-      );
+      return createTestTemplateImagenModel(
+          app: app,
+          location: location,
+          useVertexBackend: useVertexBackend,
+          client: client);
     }
 
     test('generateImages can make successful request', () async {

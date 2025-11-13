@@ -18,15 +18,10 @@ part of '../base_model.dart';
 /// A generative model that connects to a remote server template.
 @experimental
 final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
-  /// Constructor only for test usage
-  @internal
-  TemplateGenerativeModel.internal({
+  TemplateGenerativeModel._test({
     required String location,
     required FirebaseApp app,
     required bool useVertexBackend,
-    bool? useLimitedUseAppCheckTokens,
-    FirebaseAppCheck? appCheck,
-    FirebaseAuth? auth,
     http.Client? httpClient,
   }) : super(
           serializationStrategy: useVertexBackend
@@ -38,8 +33,7 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
           client: HttpApiClient(
               apiKey: app.options.apiKey,
               httpClient: httpClient,
-              requestHeaders: BaseModel.firebaseTokens(
-                  appCheck, auth, app, useLimitedUseAppCheckTokens)),
+              requestHeaders: BaseModel.firebaseTokens(null, null, app, false)),
           templateUri: useVertexBackend
               ? _TemplateVertexUri(app: app, location: location)
               : _TemplateGoogleAIUri(app: app),
@@ -97,6 +91,7 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
 
 /// Returns a [TemplateGenerativeModel] using its private constructor.
 @experimental
+@internal
 TemplateGenerativeModel createTemplateGenerativeModel({
   required FirebaseApp app,
   required String location,
@@ -112,4 +107,20 @@ TemplateGenerativeModel createTemplateGenerativeModel({
       useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
       auth: auth,
       location: location,
+    );
+
+/// Returns a [TemplateGenerativeModel] for test case.
+@experimental
+@internal
+TemplateGenerativeModel createTestTemplateGenerativeModel({
+  required FirebaseApp app,
+  required String location,
+  required bool useVertexBackend,
+  required http.Client client,
+}) =>
+    TemplateGenerativeModel._test(
+      app: app,
+      useVertexBackend: useVertexBackend,
+      location: location,
+      httpClient: client,
     );

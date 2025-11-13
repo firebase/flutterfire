@@ -17,15 +17,10 @@ part of '../base_model.dart';
 /// An image model that connects to a remote server template.
 @experimental
 final class TemplateImagenModel extends BaseTemplateApiClientModel {
-  /// Constructor only for test usage
-  @internal
-  TemplateImagenModel.internal(
+  TemplateImagenModel._testModel(
       {required FirebaseApp app,
       required String location,
       required bool useVertexBackend,
-      bool? useLimitedUseAppCheckTokens,
-      FirebaseAppCheck? appCheck,
-      FirebaseAuth? auth,
       http.Client? httpClient})
       : super(
           serializationStrategy: VertexSerialization(),
@@ -35,8 +30,7 @@ final class TemplateImagenModel extends BaseTemplateApiClientModel {
           client: HttpApiClient(
               apiKey: app.options.apiKey,
               httpClient: httpClient,
-              requestHeaders: BaseModel.firebaseTokens(
-                  appCheck, auth, app, useLimitedUseAppCheckTokens)),
+              requestHeaders: BaseModel.firebaseTokens(null, null, app, false)),
           templateUri: useVertexBackend
               ? _TemplateVertexUri(app: app, location: location)
               : _TemplateGoogleAIUri(app: app),
@@ -50,7 +44,9 @@ final class TemplateImagenModel extends BaseTemplateApiClientModel {
       FirebaseAppCheck? appCheck,
       FirebaseAuth? auth})
       : super(
-          serializationStrategy: VertexSerialization(),
+          serializationStrategy: useVertexBackend
+              ? VertexSerialization()
+              : DeveloperSerialization(),
           modelUri: useVertexBackend
               ? _VertexUri(app: app, model: '', location: location)
               : _GoogleAIUri(app: app, model: ''),
@@ -78,8 +74,9 @@ final class TemplateImagenModel extends BaseTemplateApiClientModel {
       );
 }
 
-/// Returns a [TemplateImagenModel] using it's private constructor.
+/// Returns a [TemplateImagenModel] using its private constructor.
 @experimental
+@internal
 TemplateImagenModel createTemplateImagenModel({
   required FirebaseApp app,
   required String location,
@@ -95,4 +92,20 @@ TemplateImagenModel createTemplateImagenModel({
       location: location,
       useVertexBackend: useVertexBackend,
       useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
+    );
+
+/// Returns a [TemplateImagenModel] using its private constructor.
+@experimental
+@internal
+TemplateImagenModel createTestTemplateImagenModel({
+  required FirebaseApp app,
+  required String location,
+  required bool useVertexBackend,
+  required http.Client client,
+}) =>
+    TemplateImagenModel._testModel(
+      app: app,
+      location: location,
+      useVertexBackend: useVertexBackend,
+      httpClient: client,
     );
