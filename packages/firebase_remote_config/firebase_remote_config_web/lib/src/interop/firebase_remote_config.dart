@@ -123,7 +123,7 @@ class RemoteConfig
           remote_config_interop.getValue(jsObject, key.toJS).asString().toDart,
         ),
         getSource(
-          remote_config_interop.getValue(jsObject, key.toJS).asString().toDart,
+          remote_config_interop.getValue(jsObject, key.toJS).getSource().toDart,
         ),
       );
 
