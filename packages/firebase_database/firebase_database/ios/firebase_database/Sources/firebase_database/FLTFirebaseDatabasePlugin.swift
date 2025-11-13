@@ -81,24 +81,24 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
 
   // MARK: - FLTFirebasePlugin
 
-  public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
+  public func didReinitializeFirebaseCore(completion: @escaping () -> Void) {
     cleanup()
     completion()
   }
 
-  public func pluginConstants(for firebaseApp: FirebaseApp) -> [AnyHashable: Any] {
+  public func pluginConstants(for firebaseApp: FirebaseApp) -> [String: Any] {
     [:]
   }
 
-  @objc public func firebaseLibraryName() -> String {
+  public var firebaseLibraryName: String {
     "flutter-fire-rtdb"
   }
 
-  public func firebaseLibraryVersion() -> String {
+  public var firebaseLibraryVersion: String {
     versionNumber
   }
 
-  @objc public func flutterChannelName() -> String {
+  public var flutterChannelName: String {
     FLTFirebaseDatabaseChannelName
   }
 
