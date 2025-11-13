@@ -23,7 +23,7 @@ import FirebaseDatabase
 let FLTFirebaseDatabaseChannelName = "plugins.flutter.io/firebase_database"
 
 @objc(FLTFirebaseDatabasePlugin)
-public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePluginProtocol,
+public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlugin,
   FirebaseDatabaseHostApi {
   private var binaryMessenger: FlutterBinaryMessenger
   private static var cachedDatabaseInstances: [String: Database] = [:]
