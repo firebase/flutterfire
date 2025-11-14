@@ -3,10 +3,10 @@
 // found in the LICENSE file.
 
 @import FirebaseFirestore;
-#if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
-#import <firebase_core/FLTFirebasePluginRegistry.h>
+#ifdef SWIFT_PACKAGE
+@import firebase_core_shared;
 #else
-#import <FLTFirebasePluginRegistry.h>
+@import firebase_core;
 #endif
 
 #import "include/cloud_firestore/Private/FLTDocumentSnapshotStreamHandler.h"
@@ -48,10 +48,10 @@
         @"message" : message,
       };
       dispatch_async(dispatch_get_main_queue(), ^{
-        events([FLTFirebasePlugin createFlutterErrorFromCode:code
-                                                     message:message
-                                             optionalDetails:details
-                                          andOptionalNSError:error]);
+        events([FLTFirebasePluginHelper createFlutterErrorWithCode:code
+                                                           message:message
+                                                   optionalDetails:details
+                                                  andOptionalError:error]);
       });
     } else {
       dispatch_async(dispatch_get_main_queue(), ^{

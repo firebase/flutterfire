@@ -55,7 +55,7 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
 
   private func storage(app: PigeonStorageFirebaseApp) -> Storage {
     let base = "gs://" + app.bucket
-    let firApp = FLTFirebasePlugin.firebaseAppNamed(app.appName)!
+    let firApp = FLTFirebasePluginHelper.firebaseApp(named: app.appName)!
     return Storage.storage(app: firApp, url: base)
   }
 
@@ -332,7 +332,7 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     let uuid = UUID().uuidString
     let channelName = "plugins.flutter.io/firebase_storage/taskEvent/\(uuid)"
     let channel = FlutterEventChannel(name: channelName, binaryMessenger: messenger!)
-    let storageInstance = Storage.storage(app: FLTFirebasePlugin.firebaseAppNamed(appName)!)
+    let storageInstance = Storage.storage(app: FLTFirebasePluginHelper.firebaseApp(named: appName)!)
     channel.setStreamHandler(TaskStateChannelStreamHandler(
       task: task,
       storage: storageInstance,

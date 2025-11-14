@@ -10,12 +10,12 @@
 #endif
 
 #import <Foundation/Foundation.h>
-#if __has_include(<firebase_core/FLTFirebasePlugin.h>)
-#import <firebase_core/FLTFirebasePlugin.h>
+#ifdef SWIFT_PACKAGE
+@import firebase_core_shared;
 #else
-#import <FLTFirebasePlugin.h>
+@import firebase_core;
 #endif
 #import "FLTAppCheckProviderFactory.h"
 
-@interface FLTFirebaseAppCheckPlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin>
+@interface FLTFirebaseAppCheckPlugin : NSObject <FlutterPlugin, FLTFirebasePlugin>
 @end

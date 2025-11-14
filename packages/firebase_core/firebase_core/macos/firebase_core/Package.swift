@@ -70,7 +70,6 @@ func loadFirebaseSDKVersion() throws -> String {
 
 let library_version_string: String
 let firebase_sdk_version_string: String
-let shared_spm_tag = "-firebase-core-swift"
 
 do {
   library_version_string = try loadPubspecVersion()
@@ -83,12 +82,6 @@ guard let firebase_sdk_version = Version(firebase_sdk_version_string) else {
   fatalError("Invalid Firebase SDK version: \(firebase_sdk_version_string)")
 }
 
-// TODO: - we can try using existing firebase_core tag once flutterfire/Package.swift is part of release cycle
-// but I don't think it'll work as Swift versioning requires version-[tag name]
-guard let shared_spm_version = Version("\(library_version_string)\(shared_spm_tag)") else {
-  fatalError("Invalid firebase_core version: \(library_version_string)\(shared_spm_tag)")
-}
-
 let package = Package(
   name: "firebase_core",
   platforms: [
@@ -99,7 +92,6 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version),
-    .package(url: "https://github.com/firebase/flutterfire", exact: shared_spm_version),
   ],
   targets: [
     .target(
@@ -107,26 +99,9 @@ let package = Package(
       dependencies: [
         // No product for firebase-core so we pull in the smallest one
         .product(name: "FirebaseInstallations", package: "firebase-ios-sdk"),
-        .product(name: "firebase-core-shared", package: "flutterfire"),
-      ],
-      exclude: [
-        // These are now pulled in as a remote dependency from FlutterFire repo
-        "FLTFirebaseCorePlugin.m",
-        "FLTFirebasePlugin.m",
-        "FLTFirebasePluginRegistry.m",
-        "messages.g.m",
-        "include/firebase_core/FLTFirebaseCorePlugin.h",
-        "include/firebase_core/messages.g.h",
-        "include/firebase_core/FLTFirebasePlugin.h",
-        "include/firebase_core/FLTFirebasePluginRegistry.h",
       ],
       resources: [
         .process("Resources"),
-      ],
-      cSettings: [
-        .headerSearchPath("include/firebase_core"),
-        .define("LIBRARY_VERSION", to: "\"\(library_version_string)\""),
-        .define("LIBRARY_NAME", to: "\"flutter-fire-core\""),
       ]
     ),
   ]

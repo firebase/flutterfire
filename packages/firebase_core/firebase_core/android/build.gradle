@@ -2,12 +2,17 @@ group 'io.flutter.plugins.firebase.core'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 apply from: file("local-config.gradle")
 
 buildscript {
+    ext.kotlin_version = '1.9.10'
     repositories {
         google()
         mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
@@ -36,6 +41,10 @@ android {
         targetCompatibility project.ext.javaVersion
     }
 
+    kotlinOptions {
+        jvmTarget = project.ext.javaVersion
+    }
+
     buildFeatures {
         buildConfig true
     }
@@ -49,6 +58,7 @@ android {
         implementation "com.google.firebase:firebase-common"
 
         implementation 'androidx.annotation:annotation:1.7.0'
+        implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     }
 }
 

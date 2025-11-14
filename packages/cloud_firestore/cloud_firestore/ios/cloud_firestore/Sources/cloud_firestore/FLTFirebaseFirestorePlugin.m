@@ -3,12 +3,14 @@
 // found in the LICENSE file.
 
 @import FirebaseFirestore;
-#if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
-#import <firebase_core/FLTFirebasePluginRegistry.h>
+#ifdef SWIFT_PACKAGE
+@import firebase_core_shared;
 #else
-#import <FLTFirebasePluginRegistry.h>
+@import firebase_core;
 #endif
+@import FirebaseCore;
 
+#import "include/cloud_firestore/Public/FLTFirebaseFirestorePlugin.h"
 #import <TargetConditionals.h>
 #import "FirebaseFirestoreInternal/FIRPersistentCacheIndexManager.h"
 #import "include/cloud_firestore/Private/FLTDocumentSnapshotStreamHandler.h"
@@ -19,7 +21,6 @@
 #import "include/cloud_firestore/Private/FLTSnapshotsInSyncStreamHandler.h"
 #import "include/cloud_firestore/Private/FLTTransactionStreamHandler.h"
 #import "include/cloud_firestore/Private/FirestorePigeonParser.h"
-#import "include/cloud_firestore/Public/FLTFirebaseFirestorePlugin.h"
 
 NSString *const kFLTFirebaseFirestoreChannelName = @"plugins.flutter.io/firebase_firestore";
 NSString *const kFLTFirebaseFirestoreQuerySnapshotEventChannelName =
@@ -220,7 +221,8 @@ FlutterStandardMethodCodec *_codec;
     NSString *appNameDart = pigeonApp.appName;
     NSString *databaseUrl = pigeonApp.databaseURL;
 
-    FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appNameDart];
+    FIRApp *app =
+        [FIRApp appNamed:[FLTFirebasePluginHelper firebaseAppNameFromDartName:appNameDart]];
 
     if ([FLTFirebaseFirestoreUtils getFirestoreInstanceByName:app.name
                                                   databaseURL:databaseUrl] != nil) {
