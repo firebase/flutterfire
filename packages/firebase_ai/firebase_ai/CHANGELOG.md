@@ -1,3 +1,7 @@
+## 3.6.0
+
+ - **FEAT**(firebaseai): Added support for Server Prompt Template ([#17767](https://github.com/firebase/flutterfire/issues/17767)). ([8ff653e5](https://github.com/firebase/flutterfire/commit/8ff653e5bad247fe4f2f72afef45375606509d11))
+
 ## 3.5.0
 
  - **FEAT**(firebase_ai): add malformedFunctionCall reason to FinishReason enum and update tests ([#17834](https://github.com/firebase/flutterfire/issues/17834)). ([38fc083b](https://github.com/firebase/flutterfire/commit/38fc083b0f940158cb9aeb01fe9e9b96ed162e70))
