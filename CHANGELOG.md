@@ -3,6 +3,61 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-11-17
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_database_platform_interface` - `v0.3.0`](#firebase_database_platform_interface---v030)
+ - [`firebase_ai` - `v3.6.0`](#firebase_ai---v360)
+ - [`firebase_crashlytics` - `v5.0.5`](#firebase_crashlytics---v505)
+ - [`firebase_data_connect` - `v0.2.2`](#firebase_data_connect---v022)
+ - [`firebase_database` - `v12.1.0`](#firebase_database---v1210)
+ - [`firebase_remote_config_web` - `v1.10.1`](#firebase_remote_config_web---v1101)
+ - [`firebase_database_web` - `v0.2.7+1`](#firebase_database_web---v0271)
+ - [`firebase_remote_config` - `v6.1.2`](#firebase_remote_config---v612)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_database_web` - `v0.2.7+1`
+ - `firebase_remote_config` - `v6.1.2`
+
+---
+
+#### `firebase_database_platform_interface` - `v0.3.0`
+
+ - **FEAT**(database): add support for Pigeon. Update iOS to Swift and Android to Kotlin ([#17686](https://github.com/firebase/flutterfire/issues/17686)). ([dac0b0bd](https://github.com/firebase/flutterfire/commit/dac0b0bd033b1c51446aedf0413740ef426877b8))
+
+#### `firebase_ai` - `v3.6.0`
+
+ - **FEAT**(firebaseai): Added support for Server Prompt Template ([#17767](https://github.com/firebase/flutterfire/issues/17767)). ([8ff653e5](https://github.com/firebase/flutterfire/commit/8ff653e5bad247fe4f2f72afef45375606509d11))
+
+#### `firebase_crashlytics` - `v5.0.5`
+
+ - **FIX**(crashlytics,ios): remove warning regarding legacy firebase_app_id_file.json file ([#17852](https://github.com/firebase/flutterfire/issues/17852)). ([fb93470e](https://github.com/firebase/flutterfire/commit/fb93470e13fc7afc40ee310cc85185e89cb63dd0))
+
+#### `firebase_data_connect` - `v0.2.2`
+
+ - **FEAT**(database): add support for Pigeon. Update iOS to Swift and Android to Kotlin ([#17686](https://github.com/firebase/flutterfire/issues/17686)). ([dac0b0bd](https://github.com/firebase/flutterfire/commit/dac0b0bd033b1c51446aedf0413740ef426877b8))
+
+#### `firebase_database` - `v12.1.0`
+
+ - **FEAT**(database): add support for Pigeon. Update iOS to Swift and Android to Kotlin ([#17686](https://github.com/firebase/flutterfire/issues/17686)). ([dac0b0bd](https://github.com/firebase/flutterfire/commit/dac0b0bd033b1c51446aedf0413740ef426877b8))
+
+#### `firebase_remote_config_web` - `v1.10.1`
+
+ - **FIX**(firebase_remote_config,web): update getSource method call in RemoteConfig class and add test for getAll() method ([#17847](https://github.com/firebase/flutterfire/issues/17847)). ([71138573](https://github.com/firebase/flutterfire/commit/7113857365a8332a5feaac3fd5dbbda1b3a500ff))
+
+
 ## 2025-11-03 - [BoM 4.5.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-450-2025-11-03)
 
 ### Changes
