@@ -1223,6 +1223,9 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     bool? subscription,
     num? value,
   }) {
+    if (!Platform.isIOS) {
+      throw UnimplementedError('logInAppPurchase() is only supported on iOS.');
+    }
     return _delegate.logEvent(
       name: 'in_app_purchase',
       parameters: filterOutNulls(<String, Object?>{

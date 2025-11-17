@@ -70,9 +70,6 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) async {
-    if (name == 'in_app_purchase') {
-      throw UnimplementedError('in_app_purchase() is not supported on Web.');
-    }
     return convertWebExceptions(() {
       return _delegate.logEvent(
         name: name,
