@@ -11,7 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:flutter/services.dart';
@@ -65,11 +64,13 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
                   var content = _generatedContent[idx];
                   return MessageWidget(
                     text: content.text,
-                    image: Image.memory(
-                      content.imageBytes!,
-                      cacheWidth: 400,
-                      cacheHeight: 400,
-                    ),
+                    image: content.imageBytes == null
+                        ? null
+                        : Image.memory(
+                            content.imageBytes!,
+                            cacheWidth: 400,
+                            cacheHeight: 400,
+                          ),
                     isFromUser: content.fromUser ?? false,
                   );
                 },

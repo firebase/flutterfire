@@ -28,20 +28,20 @@ dependencies:
   firebase_core: ^4.2.1
   firebase_core_platform_interface: ^6.0.2
   firebase_core_web: ^3.3.0
-  firebase_crashlytics: ^5.0.4
+  firebase_crashlytics: ^5.0.5
   firebase_crashlytics_platform_interface: ^3.8.15
-  firebase_database: ^12.0.4
-  firebase_database_platform_interface: ^0.2.6+15
-  firebase_database_web: ^0.2.7
+  firebase_database: ^12.1.0
+  firebase_database_platform_interface: ^0.3.0
+  firebase_database_web: ^0.2.7+1
   firebase_messaging: ^16.0.4
   firebase_messaging_platform_interface: ^4.7.4
   firebase_messaging_web: ^4.1.0
   firebase_ml_model_downloader: ^0.4.0+4
   firebase_ml_model_downloader_platform_interface: ^0.1.5+15
   firebase_performance: ^0.11.1+2
-  firebase_remote_config: ^6.1.1
+  firebase_remote_config: ^6.1.2
   firebase_remote_config_platform_interface: ^2.0.5
-  firebase_remote_config_web: ^1.10.0
+  firebase_remote_config_web: ^1.10.1
   firebase_storage: ^13.0.4
   firebase_storage_platform_interface: ^5.2.15
   firebase_storage_web: ^3.11.0
