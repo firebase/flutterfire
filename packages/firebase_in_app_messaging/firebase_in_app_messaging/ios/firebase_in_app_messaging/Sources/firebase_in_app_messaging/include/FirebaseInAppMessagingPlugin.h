@@ -6,7 +6,7 @@
 #import <TargetConditionals.h>
 
 #import <Foundation/Foundation.h>
-#ifdef SWIFT_PACKAGE
+#if __has_include(<firebase_core_shared/firebase_core_shared-Swift.h>)
 @import firebase_core_shared;
 #else
 @import firebase_core;
