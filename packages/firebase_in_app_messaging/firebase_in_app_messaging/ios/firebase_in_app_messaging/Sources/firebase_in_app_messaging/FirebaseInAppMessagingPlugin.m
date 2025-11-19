@@ -5,7 +5,7 @@
 #import "FirebaseInAppMessagingPlugin.h"
 
 @import FirebaseInAppMessaging;
-#if __has_include(<firebase_core_shared/firebase_core_shared-Swift.h>)
+#ifdef SWIFT_PACKAGE
 @import firebase_core_shared;
 #else
 @import firebase_core;
