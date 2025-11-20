@@ -959,7 +959,7 @@ class FirebaseDatabasePlugin :
       val streamHandler = EventStreamHandler(query, object : OnDispose {
         override fun run() {
           // Clean up when the stream is disposed
-          streamHandlers.remove(eventChannel)
+         eventChannel.setStreamHandler(null)
         }
       })
       eventChannel.setStreamHandler(streamHandler)
