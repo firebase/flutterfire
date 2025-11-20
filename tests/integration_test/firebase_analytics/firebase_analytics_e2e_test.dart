@@ -170,6 +170,27 @@ void main() {
       );
     });
 
+    test(
+      'logInAppPurchase',
+      () async {
+        await expectLater(
+          FirebaseAnalytics.instance.logInAppPurchase(
+            currency: 'USD',
+            freeTrial: false,
+            price: 4.99,
+            priceIsDiscounted: false,
+            productID: 'com.example.product',
+            productName: 'Example Product',
+            quantity: 1,
+            subscription: true,
+            value: 4.99,
+          ),
+          completes,
+        );
+      },
+      skip: defaultTargetPlatform != TargetPlatform.iOS,
+    );
+
     test('setUserId', () async {
       await expectLater(
         FirebaseAnalytics.instance.setUserId(id: 'foo'),

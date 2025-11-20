@@ -1205,6 +1205,43 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     );
   }
 
+  /// Logs the standard `in_app_purchase` event.
+  ///
+  /// This event signifies that an item(s) was purchased by a user.
+  ///
+  /// This API supports manually logging in-app purchase events on iOS and Android.
+  /// This is especially useful in cases where purchases happen outside the native
+  /// billing systems (e.g. custom payment flows).
+  Future<void> logInAppPurchase({
+    String? currency,
+    bool? freeTrial,
+    double? price,
+    bool? priceIsDiscounted,
+    String? productID,
+    String? productName,
+    int? quantity,
+    bool? subscription,
+    num? value,
+  }) {
+    if (defaultTargetPlatform != TargetPlatform.iOS) {
+      throw UnimplementedError('logInAppPurchase() is only supported on iOS.');
+    }
+    return _delegate.logEvent(
+      name: 'in_app_purchase',
+      parameters: filterOutNulls(<String, Object?>{
+        _CURRENCY: currency,
+        _FREE_TRIAL: freeTrial,
+        _PRICE: price,
+        _PRICE_IS_DISCOUNTED: priceIsDiscounted,
+        _PRODUCT_ID: productID,
+        _PRODUCT_NAME: productName,
+        _QUANTITY: quantity,
+        _SUBSCRIPTION: subscription,
+        _VALUE: value,
+      }),
+    );
+  }
+
   /// Sets the duration of inactivity that terminates the current session.
   ///
   /// The default value is 1800000 milliseconds (30 minutes).
@@ -1547,3 +1584,24 @@ const String _PROMOTION_ID = 'promotion_id';
 
 /// The name of a product promotion
 const String _PROMOTION_NAME = 'promotion_name';
+
+/// Whether the purchase is a free trial
+const String _FREE_TRIAL = 'free_trial';
+
+/// The price of the item
+const String _PRICE = 'price';
+
+/// Whether the price is discounted
+const String _PRICE_IS_DISCOUNTED = 'price_is_discounted';
+
+/// The ID of the product
+const String _PRODUCT_ID = 'product_id';
+
+/// The name of the product
+const String _PRODUCT_NAME = 'product_name';
+
+/// The quantity of the product
+const String _QUANTITY = 'quantity';
+
+/// Whether the purchase is a subscription
+const String _SUBSCRIPTION = 'subscription';
