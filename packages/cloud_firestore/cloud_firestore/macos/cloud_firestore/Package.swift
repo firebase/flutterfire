@@ -112,6 +112,7 @@ let package = Package(
         .headerSearchPath("include/cloud_firestore/Public"),
         .define("LIBRARY_VERSION", to: "\"\(library_version)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-fst\""),
+        .define("SWIFT_PACKAGE"),
       ]
     ),
   ]

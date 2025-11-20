@@ -13,13 +13,14 @@
 #else
   import firebase_core_shared
 #endif
+import FirebaseCore
 import FirebaseFunctions
 
 extension FlutterError: Error {}
 
 let kFLTFirebaseFunctionsChannelName = "plugins.flutter.io/firebase_functions"
 
-public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin,
+public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePlugin, FlutterPlugin,
   CloudFunctionsHostApi {
   func call(arguments: [String: Any?], completion: @escaping (Result<Any?, any Error>) -> Void) {
     httpsFunctionCall(arguments: arguments) { result, error in
@@ -48,23 +49,23 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     self.binaryMessenger = binaryMessenger
   }
 
-  public func firebaseLibraryVersion() -> String {
+  public var firebaseLibraryVersion: String {
     versionNumber
   }
 
-  public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
+  public func didReinitializeFirebaseCore(completion: @escaping () -> Void) {
     completion()
   }
 
-  public func pluginConstants(for firebaseApp: FirebaseApp) -> [AnyHashable: Any] {
+  public func pluginConstants(for firebaseApp: FirebaseApp) -> [String: Any] {
     [:]
   }
 
-  @objc public func firebaseLibraryName() -> String {
+  public var firebaseLibraryName: String {
     "flutter-fire-fn"
   }
 
-  @objc public func flutterChannelName() -> String {
+  public var flutterChannelName: String {
     kFLTFirebaseFunctionsChannelName
   }
 
@@ -91,7 +92,7 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     let parameters = arguments["parameters"]
     let limitedUseAppCheckToken = arguments["limitedUseAppCheckToken"] as? Bool ?? false
 
-    let app = FLTFirebasePlugin.firebaseAppNamed(appName)!
+    let app = FLTFirebasePluginHelper.firebaseApp(named: appName)!
 
     let functions = Functions.functions(app: app, region: region ?? "")
 
@@ -138,7 +139,7 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
   private func getFunctions(arguments: [String: Any]) -> Functions {
     let appName = arguments["appName"] as? String ?? ""
     let region = arguments["region"] as? String
-    let app = FLTFirebasePlugin.firebaseAppNamed(appName)!
+    let app = FLTFirebasePluginHelper.firebaseApp(named: appName)!
     return Functions.functions(app: app, region: region ?? "")
   }
 

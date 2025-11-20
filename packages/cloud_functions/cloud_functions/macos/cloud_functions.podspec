@@ -42,7 +42,6 @@ Pod::Spec.new do |s|
   s.authors          = 'The Chromium Authors'
   s.source           = { :path => '.' }
   s.source_files = 'cloud_functions/Sources/**/*.swift'
-  s.public_header_files = 'cloud_functions/Sources/cloud_functions/include/*.h'
   s.platform = :osx, '10.15'
 
   s.swift_version = '5.0'

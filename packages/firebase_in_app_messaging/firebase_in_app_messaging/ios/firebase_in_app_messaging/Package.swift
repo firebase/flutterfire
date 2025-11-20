@@ -113,6 +113,7 @@ let package = Package(
       ],
       cSettings: [
         .headerSearchPath("include"),
+        .define("SWIFT_PACKAGE"),
         .define("LIBRARY_VERSION", to: "\"\(library_version)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-fiam\""),
       ]

@@ -108,6 +108,7 @@ let package = Package(
       cSettings: [
         .headerSearchPath("include/cloud_firestore/Private"),
         .headerSearchPath("include/cloud_firestore/Public"),
+        .define("SWIFT_PACKAGE"),
         .define("LIBRARY_VERSION", to: "\"\(library_version)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-fst\""),
       ]

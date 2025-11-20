@@ -18,7 +18,6 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin
-import io.flutter.plugins.firebase.core.FlutterFirebasePlugin.cachedThreadPool
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry
 import java.util.Objects
 
@@ -39,10 +38,10 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
     this.messenger = messenger
   }
 
-  override fun getPluginConstantsForFirebaseApp(firebaseApp: FirebaseApp?): Task<MutableMap<String, Any>> {
-    val taskCompletionSource = TaskCompletionSource<MutableMap<String, Any>>()
+  override fun getPluginConstantsForFirebaseApp(firebaseApp: FirebaseApp): Task<Map<String, Any>> {
+    val taskCompletionSource = TaskCompletionSource<Map<String, Any>>()
 
-    cachedThreadPool.execute {
+    FlutterFirebasePlugin.cachedThreadPool.execute {
       try {
         taskCompletionSource.setResult(HashMap())
       } catch (e: Exception) {
@@ -53,10 +52,10 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
     return taskCompletionSource.task
   }
 
-  override fun didReinitializeFirebaseCore(): Task<Void> {
-    val taskCompletionSource = TaskCompletionSource<Void>()
+  override fun didReinitializeFirebaseCore(): Task<Void?> {
+    val taskCompletionSource = TaskCompletionSource<Void?>()
 
-    cachedThreadPool.execute {
+    FlutterFirebasePlugin.cachedThreadPool.execute {
       try {
         taskCompletionSource.setResult(null)
       } catch (e: java.lang.Exception) {
@@ -84,7 +83,7 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
   private fun handleGetSessionId(): Task<Long> {
     val taskCompletionSource = TaskCompletionSource<Long>()
 
-    cachedThreadPool.execute {
+    FlutterFirebasePlugin.cachedThreadPool.execute {
       try {
         taskCompletionSource.setResult(
           Tasks.await(
@@ -102,7 +101,7 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
   private fun handleLogEvent(arguments: Map<String, Any?>): Task<Void> {
     val taskCompletionSource = TaskCompletionSource<Void>()
 
-    cachedThreadPool.execute {
+    FlutterFirebasePlugin.cachedThreadPool.execute {
       try {
         val eventName =
           Objects.requireNonNull(arguments[Constants.EVENT_NAME]) as String
@@ -125,7 +124,7 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
   private fun handleSetUserId(userId: String?): Task<Void> {
     val taskCompletionSource = TaskCompletionSource<Void>()
 
-    cachedThreadPool.execute {
+    FlutterFirebasePlugin.cachedThreadPool.execute {
       try {
         analytics.setUserId(userId)
         taskCompletionSource.setResult(null)
@@ -140,7 +139,7 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
   private fun handleSetAnalyticsCollectionEnabled(enabled: Boolean): Task<Void> {
     val taskCompletionSource = TaskCompletionSource<Void>()
 
-    cachedThreadPool.execute {
+    FlutterFirebasePlugin.cachedThreadPool.execute {
       try {
         analytics.setAnalyticsCollectionEnabled(enabled)
         taskCompletionSource.setResult(null)
@@ -155,7 +154,7 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
   private fun handleSetSessionTimeoutDuration(milliseconds: Long): Task<Void> {
     val taskCompletionSource = TaskCompletionSource<Void>()
 
-    cachedThreadPool.execute {
+    FlutterFirebasePlugin.cachedThreadPool.execute {
       try {
         analytics.setSessionTimeoutDuration(milliseconds)
         taskCompletionSource.setResult(null)
@@ -170,7 +169,7 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
   private fun handleSetUserProperty(name: String, value: String?): Task<Void> {
     val taskCompletionSource = TaskCompletionSource<Void>()
 
-    cachedThreadPool.execute {
+    FlutterFirebasePlugin.cachedThreadPool.execute {
       try {
         analytics.setUserProperty(name, value)
         taskCompletionSource.setResult(null)
@@ -185,7 +184,7 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
   private fun handleResetAnalyticsData(): Task<Void> {
     val taskCompletionSource = TaskCompletionSource<Void>()
 
-    cachedThreadPool.execute {
+    FlutterFirebasePlugin.cachedThreadPool.execute {
       try {
         analytics.resetAnalyticsData()
         taskCompletionSource.setResult(null)
@@ -200,7 +199,7 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
   private fun handleSetConsent(arguments: Map<String, Boolean?>): Task<Void> {
     val taskCompletionSource = TaskCompletionSource<Void>()
 
-    cachedThreadPool.execute {
+    FlutterFirebasePlugin.cachedThreadPool.execute {
       try {
         val adStorageGranted =
           arguments[Constants.AD_STORAGE_CONSENT_GRANTED]
@@ -255,7 +254,7 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
   private fun handleSetDefaultEventParameters(parameters: Map<String, Any?>?): Task<Void> {
     val taskCompletionSource = TaskCompletionSource<Void>()
 
-    cachedThreadPool.execute {
+    FlutterFirebasePlugin.cachedThreadPool.execute {
       try {
         analytics.setDefaultEventParameters(
           createBundleFromMap(
@@ -274,7 +273,7 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
   private fun handleGetAppInstanceId(): Task<String> {
     val taskCompletionSource = TaskCompletionSource<String>()
 
-    cachedThreadPool.execute {
+    FlutterFirebasePlugin.cachedThreadPool.execute {
       try {
         taskCompletionSource.setResult(
           Tasks.await(

@@ -4,12 +4,12 @@
 
 @import FirebaseFirestore;
 @import FirebaseCore;
-
-#if __has_include(<firebase_core/FLTFirebasePlugin.h>)
-#import <firebase_core/FLTFirebasePlugin.h>
+#ifdef SWIFT_PACKAGE
+@import firebase_core_shared;
 #else
-#import <FLTFirebasePlugin.h>
+@import firebase_core;
 #endif
+
 #import "include/cloud_firestore/Private/FLTFirebaseFirestoreReader.h"
 #import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
 
@@ -297,7 +297,8 @@
     NSString *appNameDart = [self readValue];
     NSString *databaseUrl = [self readValue];
     FIRFirestoreSettings *settings = [self readValue];
-    FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appNameDart];
+    FIRApp *app =
+        [FIRApp appNamed:[FLTFirebasePluginHelper firebaseAppNameFromDartName:appNameDart]];
 
     if ([FLTFirebaseFirestoreUtils getFirestoreInstanceByName:app.name
                                                   databaseURL:databaseUrl] != nil) {
