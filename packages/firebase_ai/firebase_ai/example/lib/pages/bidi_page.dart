@@ -20,6 +20,7 @@ import 'package:firebase_ai/firebase_ai.dart';
 import '../utils/audio_input.dart';
 import '../utils/audio_output.dart';
 import '../widgets/message_widget.dart';
+import '../widgets/audio_visualizer.dart';
 
 class BidiPage extends StatefulWidget {
   const BidiPage({
@@ -73,17 +74,16 @@ class _BidiPageState extends State<BidiPage> {
       outputAudioTranscription: AudioTranscriptionConfig(),
     );
 
-    // ignore: deprecated_member_use
     _liveModel = widget.useVertexBackend
         ? FirebaseAI.vertexAI().liveGenerativeModel(
-            model: 'gemini-2.0-flash-exp',
+            model: 'gemini-live-2.5-flash-preview-native-audio-09-2025',
             liveGenerationConfig: config,
             tools: [
               Tool.functionDeclarations([lightControlTool]),
             ],
           )
         : FirebaseAI.googleAI().liveGenerativeModel(
-            model: 'gemini-live-2.5-flash-preview',
+            model: 'gemini-2.5-flash-native-audio-preview-09-2025',
             liveGenerationConfig: config,
             tools: [
               Tool.functionDeclarations([lightControlTool]),
@@ -145,6 +145,7 @@ class _BidiPageState extends State<BidiPage> {
                           )
                         : null,
                     isFromUser: _messages[idx].fromUser ?? false,
+                    isThought: _messages[idx].isThought,
                   );
                 },
                 itemCount: _messages.length,
@@ -164,6 +165,13 @@ class _BidiPageState extends State<BidiPage> {
                       controller: _textController,
                       onSubmitted: _sendTextPrompt,
                     ),
+                  ),
+                  const SizedBox.square(
+                    dimension: 15,
+                  ),
+                  AudioVisualizer(
+                    audioStreamIsActive: _recording,
+                    amplitudeStream: _audioInput.amplitudeStream,
                   ),
                   const SizedBox.square(
                     dimension: 15,
@@ -309,8 +317,9 @@ class _BidiPageState extends State<BidiPage> {
       _loading = true;
     });
     try {
-      final prompt = Content.text(textPrompt);
-      await _session.send(input: prompt, turnComplete: true);
+      //final prompt = Content.text(textPrompt);
+      // await _session.send(input: prompt, turnComplete: true);
+      await _session.sendTextRealtime(textPrompt);
     } catch (e) {
       _showError(e.toString());
     }
@@ -429,7 +438,13 @@ class _BidiPageState extends State<BidiPage> {
         _loading = true;
       });
     }
-    _messages.add(MessageData(text: part.text, fromUser: false));
+    _messages.add(
+      MessageData(
+        text: part.text,
+        fromUser: false,
+        isThought: part.isThought ?? false,
+      ),
+    );
     setState(() {
       _loading = false;
       _scrollDown();

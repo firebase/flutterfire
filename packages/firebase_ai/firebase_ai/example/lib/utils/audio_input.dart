@@ -15,6 +15,8 @@
 import 'package:flutter/material.dart';
 import 'package:record/record.dart';
 import 'dart:typed_data';
+import 'dart:async';
+import 'package:waveform_flutter/waveform_flutter.dart' as wf;
 
 class AudioInput extends ChangeNotifier {
   final _recorder = AudioRecorder();
@@ -22,6 +24,10 @@ class AudioInput extends ChangeNotifier {
   bool isRecording = false;
   bool isPaused = false;
   Stream<Uint8List>? audioStream;
+
+  Stream<wf.Amplitude>? amplitudeStream;
+  StreamSubscription? _amplitudeSubscription;
+  StreamController<wf.Amplitude>? _amplitudeStreamController;
 
   Future<void> init() async {
     await _checkPermission();
@@ -56,6 +62,16 @@ class AudioInput extends ChangeNotifier {
     );
     await _recorder.listInputDevices();
     audioStream = await _recorder.startStream(recordConfig);
+
+    _amplitudeStreamController = StreamController<wf.Amplitude>.broadcast();
+    _amplitudeSubscription = _recorder!
+        .onAmplitudeChanged(const Duration(milliseconds: 100))
+        .listen((amp) {
+      _amplitudeStreamController?.add(
+        wf.Amplitude(current: amp.current, max: amp.max),
+      );
+    });
+    amplitudeStream = _amplitudeStreamController?.stream;
     isRecording = true;
     notifyListeners();
     return audioStream;
@@ -63,6 +79,9 @@ class AudioInput extends ChangeNotifier {
 
   Future<void> stopRecording() async {
     await _recorder.stop();
+    await _amplitudeSubscription?.cancel();
+    await _amplitudeStreamController?.close();
+    amplitudeStream = null;
     isRecording = false;
     notifyListeners();
   }
