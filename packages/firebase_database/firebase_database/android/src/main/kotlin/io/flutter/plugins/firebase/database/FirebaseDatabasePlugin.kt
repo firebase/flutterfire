@@ -939,11 +939,11 @@ class FirebaseDatabasePlugin :
           "limit" -> {
             when (modifier["name"] as String) {
               "limitToFirst" -> {
-                val value = modifier["limit"] as Int
+                val value = (modifier["limit"] as Number).toInt()
                 query = query.limitToFirst(value)
               }
               "limitToLast" -> {
-                val value = modifier["limit"] as Int
+                val value = (modifier["limit"] as Number).toInt()
                 query = query.limitToLast(value)
               }
             }
