@@ -19,8 +19,10 @@ import 'package:firebase_ai/firebase_ai.dart';
 
 import '../utils/audio_input.dart';
 import '../utils/audio_output.dart';
+import '../utils/video_input.dart';
 import '../widgets/message_widget.dart';
 import '../widgets/audio_visualizer.dart';
+import '../widgets/camera_previews.dart';
 
 class BidiPage extends StatefulWidget {
   const BidiPage({
@@ -58,8 +60,11 @@ class _BidiPageState extends State<BidiPage> {
   StreamController<bool> _stopController = StreamController<bool>();
   final AudioOutput _audioOutput = AudioOutput();
   final AudioInput _audioInput = AudioInput();
+  final VideoInput _videoInput = VideoInput();
   int? _inputTranscriptionMessageIndex;
   int? _outputTranscriptionMessageIndex;
+  bool _isCameraOn = false;
+  bool _videoIsInitialized = false;
 
   @override
   void initState() {
@@ -90,11 +95,23 @@ class _BidiPageState extends State<BidiPage> {
             ],
           );
     _initAudio();
+    _initVideo();
   }
 
   Future<void> _initAudio() async {
     await _audioOutput.init();
     await _audioInput.init();
+  }
+
+  Future<void> _initVideo() async {
+    try {
+      await _videoInput.init();
+      setState(() {
+        _videoIsInitialized = true;
+      });
+    } catch (e) {
+      developer.log('Error during video initialization: $e');
+    }
   }
 
   void _scrollDown() {
@@ -131,6 +148,15 @@ class _BidiPageState extends State<BidiPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (_isCameraOn)
+              Container(
+                height: 200,
+                color: Colors.black,
+                alignment: Alignment.center,
+                child: FullCameraPreview(
+                  controller: _videoInput.cameraController!,
+                ),
+              ),
             Expanded(
               child: ListView.builder(
                 controller: _scrollController,
@@ -208,6 +234,17 @@ class _BidiPageState extends State<BidiPage> {
                           : Theme.of(context).colorScheme.primary,
                     ),
                   ),
+                  IconButton(
+                    tooltip: 'Toggle Camera',
+                    onPressed:
+                        _isCameraOn ? _stopVideoStream : _startVideoStream,
+                    icon: Icon(
+                      _isCameraOn ? Icons.videocam_off : Icons.videocam,
+                      color: _loading
+                          ? Theme.of(context).colorScheme.secondary
+                          : Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
                   if (!_loading)
                     IconButton(
                       onPressed: () async {
@@ -256,6 +293,11 @@ class _BidiPageState extends State<BidiPage> {
   }
 
   Future<void> _setupSession() async {
+    // Initialize the camera controller here to ensure it's fresh for each call.
+    // This prevents a bug where the camera preview freezes on subsequent calls.
+    if (_videoIsInitialized) {
+      await _videoInput.initializeCameraController();
+    }
     setState(() {
       _loading = true;
     });
@@ -309,6 +351,29 @@ class _BidiPageState extends State<BidiPage> {
 
     setState(() {
       _recording = false;
+    });
+  }
+
+  Future<void> _startVideoStream() async {
+    if (!_videoIsInitialized || !_recording || _isCameraOn) {
+      return;
+    }
+
+    var imageStream = _videoInput.startStreamingImages();
+
+    await for (final data in imageStream) {
+      await _session.sendVideoRealtime(InlineDataPart('image/jpeg', data));
+    }
+
+    setState(() {
+      _isCameraOn = true;
+    });
+  }
+
+  Future<void> _stopVideoStream() async {
+    await _videoInput.stopStreamingImages();
+    setState(() {
+      _isCameraOn = false;
     });
   }
 
