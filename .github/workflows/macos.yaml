@@ -49,6 +49,7 @@ jobs:
           key: xcode-cache-${{ runner.os }}
           max-size: 700M
         name: Pods Cache
+        continue-on-error: true
         uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
         id: pods-cache
         with:
@@ -59,6 +60,7 @@ jobs:
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        continue-on-error: true
         with:
           # Must match the save path exactly
           path: ~/.cache/firebase/emulators
@@ -102,6 +104,7 @@ jobs:
             --dart-define=CI=true \
             --ignore-timeouts
       - name: Save Firestore Emulator Cache
+        continue-on-error: true
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
         if: github.ref == 'refs/heads/main'
         uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57
@@ -110,6 +113,7 @@ jobs:
           # Must match the restore path exactly
           path: ~/.cache/firebase/emulators
       - name: Save Pods Cache
+        continue-on-error: true
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
         if: github.ref == 'refs/heads/main'
         uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57

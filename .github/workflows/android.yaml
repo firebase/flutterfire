@@ -46,6 +46,7 @@ jobs:
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        continue-on-error: true
         with:
           # Must match the save path exactly
           path: ~/.cache/firebase/emulators
@@ -85,6 +86,7 @@ jobs:
           remove-large-packages: true
       - name: AVD cache
         uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        continue-on-error: true
         id: avd-cache
         with:
           # Must match the save path exactly
