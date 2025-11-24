@@ -44,8 +44,10 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
       - name: Firebase Emulator Cache
-        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        id: firebase-emulator-cache
+        uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
         with:
+          # Must match the save path exactly
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-${{ runner.os }}
           restore-keys: firebase-emulators-v3
@@ -82,9 +84,10 @@ jobs:
           remove-docker-images: true
           remove-large-packages: true
       - name: AVD cache
-        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
         id: avd-cache
         with:
+          # Must match the save path exactly
           path: |
             ~/.android/avd/*
             ~/.android/adb*
@@ -104,3 +107,21 @@ jobs:
       # https://github.com/ReactiveCircus/android-emulator-runner/issues/385
         run: |
           pgrep -f appium && pkill -f appium || echo "No Appium process found"
+      - name: Save Firestore Emulator Cache
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        with:
+          key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
+          # Must match the restore path exactly
+          path: ~/.cache/firebase/emulators
+      - name: Save Android Emulator Cache
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        with:
+          key: ${{ steps.avd-cache.outputs.cache-primary-key }}
+          # Must match the restore path exactly
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
