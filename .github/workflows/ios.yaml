@@ -59,6 +59,10 @@ jobs:
           path: tests/ios/Pods
           key: pods-v3-${{ runner.os }}-${{ hashFiles('tests/ios/Podfile.lock') }}
           restore-keys: pods-v3-${{ runner.os }}
+      - name: 'Install Tools'
+        run: |
+          sudo npm i -g firebase-tools
+          echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
@@ -66,7 +70,7 @@ jobs:
         with:
           # Must match the save path exactly
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v3-${{ runner.os }}
+          key: firebase-emulators-v3-${{ runner.os }}-${{ env.FIREBASE_TOOLS_VERSION }}
           restore-keys: firebase-emulators-v3
       - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
         with:
@@ -80,9 +84,6 @@ jobs:
           melos-version: '5.3.0'
       - name: 'Bootstrap package'
         run: melos bootstrap --scope tests && melos bootstrap --scope "cloud_firestore*"
-      - name: 'Install Tools'
-        run: |
-          sudo npm i -g firebase-tools
       - name: 'Free up space'
         run: |
           sudo rm -rf \
