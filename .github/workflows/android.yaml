@@ -81,6 +81,10 @@ jobs:
             ~/.android/avd/*
             ~/.android/adb*
           key: avd-${{ runner.os }}
+      - name: Remove cached AVD
+        run: |
+          rm -rf ~/.android/avd
+          rm -f ~/.android/adb*
       - name: Start AVD then run E2E tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
