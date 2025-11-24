@@ -52,6 +52,7 @@ jobs:
           save: "${{ github.ref == 'refs/heads/main' }}"
           max-size: 700M
       - uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        continue-on-error: true
         name: Pods Cache
         id: pods-cache
         with:
@@ -62,6 +63,7 @@ jobs:
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        continue-on-error: true
         with:
           # Must match the save path exactly
           path: ~/.cache/firebase/emulators
@@ -126,6 +128,7 @@ jobs:
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
         if: github.ref == 'refs/heads/main'
         uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        continue-on-error: true
         with:
           key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
           # Must match the restore paths exactly
@@ -134,6 +137,7 @@ jobs:
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
         if: github.ref == 'refs/heads/main'
         uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        continue-on-error: true
         with:
           key: ${{ steps.pods-cache.outputs.cache-primary-key }}
           # Must match the restore paths exactly
