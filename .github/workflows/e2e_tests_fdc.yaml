@@ -38,8 +38,10 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Firebase Emulator Cache
-        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        id: firebase-emulator-cache
+        uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
         with:
+          # Must match the save path exactly
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-fdc-${{ runner.os }}
           restore-keys: firebase-emulators-v3
@@ -80,9 +82,10 @@ jobs:
           remove-docker-images: true
           remove-large-packages: true
       - name: AVD cache
-        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
         id: avd-cache
         with:
+          # Must match the save path exactly
           path: |
             ~/.android/avd/*
             ~/.android/adb*
@@ -96,6 +99,24 @@ jobs:
           working-directory: 'packages/firebase_data_connect/firebase_data_connect/example'
           script: |
             flutter test integration_test/e2e_test.dart --dart-define=CI=true -d emulator-5554
+      - name: Save Android Emulator Cache
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        with:
+          key: ${{ steps.avd-cache.outputs.cache-primary-key }}
+          # Must match the restore path exactly
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+      - name: Save Firestore Emulator Cache
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        with:
+          key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
+          # Must match the restore path exactly
+          path: ~/.cache/firebase/emulators
 
   ios:
     runs-on: macos-15
@@ -121,16 +142,19 @@ jobs:
         with:
           key: xcode-cache-${{ runner.os }}
           max-size: 700M
-      - uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
+      - uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
         name: Pods Cache
         id: pods-cache
         with:
+          # Must match the save path exactly
           path: tests/ios/Pods
           key: ${{ runner.os }}-fdc-pods-v3-${{ hashFiles('tests/ios/Podfile.lock') }}
           restore-keys: ${{ runner.os }}-ios-pods-v2
       - name: Firebase Emulator Cache
-        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        id: firebase-emulator-cache
+        uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
         with:
+          # Must match the save path exactly
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-fdc-${{ runner.os }}
           restore-keys: firebase-emulators-v3
@@ -178,6 +202,22 @@ jobs:
           # Uncomment following line to have simulator logs printed out for debugging purposes.
           # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
           flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true
+      - name: Save Firestore Emulator Cache
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        with:
+          key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
+          # Must match the restore path exactly
+          path: ~/.cache/firebase/emulators
+      - name: Save Pods Cache
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        with:
+          key: ${{ steps.pods-cache.outputs.cache-primary-key }}
+          # Must match the restore paths exactly
+          path: tests/ios/Pods
 
   web:
     runs-on: macos-latest
@@ -208,9 +248,11 @@ jobs:
         run: melos bootstrap --scope "firebase_data_connect*"
       - name: 'Install Tools'
         run: sudo npm i -g firebase-tools
-      - name: Cache Firebase Emulator
-        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
+      - name: Firebase Emulator Cache
+        id: firebase-emulator-cache
+        uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
         with:
+          # Must match the save path exactly
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-fdc-${{ runner.os }}
           restore-keys: firebase-emulators-v3
@@ -237,3 +279,19 @@ jobs:
           exit 1
           fi
         shell: bash
+      - name: Save Firestore Emulator Cache
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        with:
+          key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
+          # Must match the restore path exactly
+          path: ~/.cache/firebase/emulators
+      - name: Save Pods Cache
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        with:
+          key: ${{ steps.pods-cache.outputs.cache-primary-key }}
+          # Must match the restore paths exactly
+          path: tests/ios/Pods
