@@ -27,6 +27,10 @@ jobs:
     timeout-minutes: 45
     strategy:
       fail-fast: false
+    env:
+      AVD_ARCH: x86_64
+      AVD_API_LEVEL: 34
+      AVD_TARGET: google_apis
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
       - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
@@ -37,6 +41,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
+      - name: 'Install Tools'
+        run: |
+          sudo npm i -g firebase-tools
+          echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
@@ -44,7 +52,7 @@ jobs:
         with:
           # Must match the save path exactly
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v3-fdc-${{ runner.os }}
+          key: firebase-emulators-v3-fdc-${{ runner.os }}-${{ env.FIREBASE_TOOLS_VERSION }}
           restore-keys: firebase-emulators-v3
       - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
         with:
@@ -58,9 +66,6 @@ jobs:
           melos-version: '5.3.0'
       - name: 'Bootstrap package'
         run: melos bootstrap --scope "firebase_data_connect*"
-      - name: 'Install Tools'
-        run: |
-          sudo npm i -g firebase-tools
       - name: Start Firebase Emulator
         run: |
           cd ./packages/firebase_data_connect/firebase_data_connect/example
@@ -91,13 +96,13 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-${{ runner.os }}
+          key: avd-${{ runner.os }}-${{ env.AVD_API_LEVEL }}-${{ env.AVD_TARGET }}-${{ env.AVD_ARCH }}
       - name: Start AVD then run E2E tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 34
-          target: google_apis
-          arch: x86_64
+          api-level: ${{ env.AVD_API_LEVEL }}
+          target: ${{ env.AVD_TARGET }}
+          arch: ${{ env.AVD_ARCH }}
           emulator-build: 14214601
           working-directory: 'packages/firebase_data_connect/firebase_data_connect/example'
           script: |
@@ -157,6 +162,10 @@ jobs:
           path: tests/ios/Pods
           key: ${{ runner.os }}-fdc-pods-v3-${{ hashFiles('tests/ios/Podfile.lock') }}
           restore-keys: ${{ runner.os }}-ios-pods-v2
+      - name: 'Install Tools'
+        run: |
+          sudo npm i -g firebase-tools
+          echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
@@ -164,7 +173,7 @@ jobs:
         with:
           # Must match the save path exactly
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v3-fdc-${{ runner.os }}
+          key: firebase-emulators-v3-${{ runner.os }}-${{ env.FIREBASE_TOOLS_VERSION }}
           restore-keys: firebase-emulators-v3
       - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
         with:
@@ -176,9 +185,6 @@ jobs:
           melos-version: '5.3.0'
       - name: 'Bootstrap package'
         run: melos bootstrap --scope "firebase_data_connect*"
-      - name: 'Install Tools'
-        run: |
-          sudo npm i -g firebase-tools
       - name: 'Build Application'
         working-directory: 'packages/firebase_data_connect/firebase_data_connect/example'
         run: |
@@ -257,15 +263,17 @@ jobs:
       - name: 'Bootstrap package'
         run: melos bootstrap --scope "firebase_data_connect*"
       - name: 'Install Tools'
-        run: sudo npm i -g firebase-tools
-      - name: Firebase Emulator Cache
+        run: |
+          sudo npm i -g firebase-tools
+          echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
+     - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
         continue-on-error: true
         with:
           # Must match the save path exactly
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v3-fdc-${{ runner.os }}
+          key: firebase-emulators-v3-fdc-${{ runner.os }}-${{ env.FIREBASE_TOOLS_VERSION }}
           restore-keys: firebase-emulators-v3
       - name: Start Firebase Emulator
         run: |
