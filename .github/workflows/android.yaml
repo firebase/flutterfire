@@ -90,7 +90,7 @@ jobs:
             ~/.android/adb*
           key: avd-${{ runner.os }}
       - name: Start AVD then run E2E tests
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: reactivecircus/android-emulator-runner@b530d96654c385303d652368551fb075bc2f0b6b
         with:
           api-level: 34
           target: google_apis
