@@ -61,10 +61,12 @@ App app([String? name]) {
   );
 }
 
-void registerVersion(String libraryKeyOrName, String version) {
+void registerVersion(String libraryKeyOrName, String version,
+    [String? variant]) {
   firebase_interop.registerVersion(
     libraryKeyOrName.toJS,
     version.toJS,
+    variant?.toJS,
   );
 }
 
