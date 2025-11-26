@@ -31,6 +31,26 @@ void setupQueryTests() {
         expect(snapshot.value, isNull);
       });
 
+      test(
+        'streams respect orderByChild with numeric startAt',
+        () async {
+          await ref.set({
+            't1': {'timestamp': 1, 'value': 'old'},
+            't2': {'timestamp': 1000, 'value': 'current'},
+          });
+
+          final events = await ref
+              .orderByChild('timestamp')
+              .startAt(1000)
+              .onChildAdded
+              .take(1)
+              .toList();
+
+          expect(events.single.snapshot.key, 't2');
+          expect(events.single.snapshot.child('value').value, 'current');
+        },
+      );
+
       test('starts at the correct value', () async {
         await ref.set({
           'a': 1,
