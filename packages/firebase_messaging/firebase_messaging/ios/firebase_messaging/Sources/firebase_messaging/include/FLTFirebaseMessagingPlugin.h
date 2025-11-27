@@ -49,10 +49,10 @@ API_AVAILABLE(ios(10.0))
                                                            FLTFirebasePlugin,
                                                            FIRMessagingDelegate,
                                                            UIApplicationDelegate,
-                                                           UNUserNotificationCenterDelegate>
+                                                           FlutterSceneLifeCycleDelegate>
 #else
 @interface FLTFirebaseMessagingPlugin
-    : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin, FIRMessagingDelegate>
+    : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin, FIRMessagingDelegate, FlutterSceneLifeCycleDelegate>
 #endif
 #endif
 @end

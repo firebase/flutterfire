@@ -89,6 +89,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   [registrar addMethodCallDelegate:instance channel:channel];
 #if !TARGET_OS_OSX
   [registrar publish:instance];  // iOS only supported
+  [registrar addSceneDelegate:instance];
 #endif
 }
 
@@ -252,6 +253,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   // https://github.com/google/GoogleUtilities/pull/162/files#diff-6bb6d1c46632fc66405a524071cc4baca5fc6a1a6c0eefef81d8c3e2c89cbc13L520-L533
   // broke notifications which was released with firebase-ios-sdk v11.0.0
   [_registrar addApplicationDelegate:self];
+  // [_registrar addSceneDelegate:self];
 #endif
 
   // Set UNUserNotificationCenter but preserve original delegate if necessary.
