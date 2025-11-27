@@ -66,7 +66,7 @@ void registerVersion(String libraryKeyOrName, String version,
   firebase_interop.registerVersion(
     libraryKeyOrName.toJS,
     version.toJS,
-    variant?.toJS ?? 'flutter-firebase'.toJS,
+    variant?.toJS,
   );
 }
 
