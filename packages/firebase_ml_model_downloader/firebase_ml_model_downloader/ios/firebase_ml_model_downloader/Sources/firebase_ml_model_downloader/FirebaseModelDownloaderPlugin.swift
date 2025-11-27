@@ -19,7 +19,7 @@ import FirebaseMLModelDownloader
 
 let kFLTFirebaseModelDownloaderChannelName = "plugins.flutter.io/firebase_ml_model_downloader"
 
-public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin {
+public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePlugin, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
     let binaryMessenger: FlutterBinaryMessenger
 
@@ -34,30 +34,30 @@ public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePluginProtocol,
       binaryMessenger: binaryMessenger
     )
     let instance = FirebaseModelDownloaderPlugin()
-    FLTFirebasePluginRegistry.sharedInstance().register(instance)
+    FLTFirebasePluginRegistry.sharedInstance().registerFirebasePlugin(instance)
     registrar.addMethodCallDelegate(instance, channel: channel)
     #if os(iOS)
       registrar.publish(instance)
     #endif
   }
 
-  public func firebaseLibraryVersion() -> String {
-    versionNumber
-  }
-
-  public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
+  public func didReinitializeFirebaseCore(completion: @escaping () -> Void) {
     completion()
   }
 
-  public func pluginConstants(for firebaseApp: FirebaseApp) -> [AnyHashable: Any] {
+  public func pluginConstants(for firebaseApp: FirebaseApp) -> [String: Any] {
     [:]
   }
 
-  @objc public func firebaseLibraryName() -> String {
+  public var firebaseLibraryName: String {
     "flutter-fire-ml-downloader"
   }
 
-  @objc public func flutterChannelName() -> String {
+  public var firebaseLibraryVersion: String {
+    versionNumber
+  }
+
+  public var flutterChannelName: String {
     "plugins.flutter.io/firebase_ml_model_downloader"
   }
 
@@ -94,12 +94,12 @@ public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePluginProtocol,
         NSLog("FLTFirebaseModelDownloader: An error occurred while calling method %@", call.method)
       }
 
-      result(FLTFirebasePlugin.createFlutterError(fromCode: errorDetails["code"] as! String,
-                                                  message: errorDetails["message"] as! String,
-                                                  optionalDetails: errorDetails[
-                                                    "additionalData"
-                                                  ] as? [AnyHashable: Any],
-                                                  andOptionalNSError: nil))
+      result(FLTFirebasePluginHelper.createFlutterError(code: errorDetails["code"] as! String,
+                                                        message: errorDetails["message"] as! String,
+                                                        optionalDetails: errorDetails[
+                                                          "additionalData"
+                                                        ] as? [String: Any],
+                                                        andOptionalError: nil as Error?))
     }
 
     let result = FLTFirebaseMethodCallResult.create(success: result, andErrorBlock: errorBlock)
@@ -189,7 +189,8 @@ public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePluginProtocol,
   }
 
   func modelDownloaderFromArguments(arguments: [String: Any]) -> ModelDownloader? {
-    let app: FirebaseApp = FLTFirebasePlugin.firebaseAppNamed(arguments["appName"] as! String)!
+    let app: FirebaseApp = FLTFirebasePluginHelper
+      .firebaseApp(named: arguments["appName"] as! String)!
     return ModelDownloader.modelDownloader(app: app)
   }
 }

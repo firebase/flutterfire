@@ -22,7 +22,6 @@ import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.EventChannel.StreamHandler
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin
-import io.flutter.plugins.firebase.core.FlutterFirebasePlugin.cachedThreadPool
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry
 import java.io.File
 import java.util.Locale
@@ -443,18 +442,18 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
     callback(Result.success(Unit))
   }
 
-  override fun getPluginConstantsForFirebaseApp(firebaseApp: FirebaseApp?): Task<MutableMap<String, Any>> {
-    val taskCompletionSource = TaskCompletionSource<MutableMap<String, Any>>()
-    cachedThreadPool.execute {
+  override fun getPluginConstantsForFirebaseApp(firebaseApp: FirebaseApp): Task<Map<String, Any>> {
+    val taskCompletionSource = TaskCompletionSource<Map<String, Any>>()
+    FlutterFirebasePlugin.cachedThreadPool.execute {
       val obj = HashMap<String, Any>()
       taskCompletionSource.setResult(obj)
     }
     return taskCompletionSource.task
   }
 
-  override fun didReinitializeFirebaseCore(): Task<Void> {
-    val taskCompletionSource = TaskCompletionSource<Void>()
-    cachedThreadPool.execute {
+  override fun didReinitializeFirebaseCore(): Task<Void?> {
+    val taskCompletionSource = TaskCompletionSource<Void?>()
+    FlutterFirebasePlugin.cachedThreadPool.execute {
       FlutterFirebaseStorageTask.cancelInProgressTasks()
       taskCompletionSource.setResult(null)
       removeEventListeners()
