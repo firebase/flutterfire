@@ -17,16 +17,17 @@
 
 namespace firebase_remote_config_windows {
 
+
 // Generated class from Pigeon.
 
 class FlutterError {
  public:
-  explicit FlutterError(const std::string& code) : code_(code) {}
+  explicit FlutterError(const std::string& code)
+    : code_(code) {}
   explicit FlutterError(const std::string& code, const std::string& message)
-      : code_(code), message_(message) {}
-  explicit FlutterError(const std::string& code, const std::string& message,
-                        const flutter::EncodableValue& details)
-      : code_(code), message_(message), details_(details) {}
+    : code_(code), message_(message) {}
+  explicit FlutterError(const std::string& code, const std::string& message, const flutter::EncodableValue& details)
+    : code_(code), message_(message), details_(details) {}
 
   const std::string& code() const { return code_; }
   const std::string& message() const { return message_; }
@@ -38,8 +39,7 @@ class FlutterError {
   flutter::EncodableValue details_;
 };
 
-template <class T>
-class ErrorOr {
+template<class T> class ErrorOr {
  public:
   ErrorOr(const T& rhs) : v_(rhs) {}
   ErrorOr(const T&& rhs) : v_(std::move(rhs)) {}
@@ -58,12 +58,15 @@ class ErrorOr {
   std::variant<T, FlutterError> v_;
 };
 
+
+
 // Generated class from Pigeon that represents data sent in messages.
 class RemoteConfigPigeonSettings {
  public:
   // Constructs an object setting all fields.
-  explicit RemoteConfigPigeonSettings(int64_t fetch_timeout_seconds,
-                                      int64_t minimum_fetch_interval_seconds);
+  explicit RemoteConfigPigeonSettings(
+    int64_t fetch_timeout_seconds,
+    int64_t minimum_fetch_interval_seconds);
 
   int64_t fetch_timeout_seconds() const;
   void set_fetch_timeout_seconds(int64_t value_arg);
@@ -72,14 +75,14 @@ class RemoteConfigPigeonSettings {
   void set_minimum_fetch_interval_seconds(int64_t value_arg);
 
  private:
-  static RemoteConfigPigeonSettings FromEncodableList(
-      const flutter::EncodableList& list);
+  static RemoteConfigPigeonSettings FromEncodableList(const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
   friend class FirebaseRemoteConfigHostApi;
   friend class PigeonInternalCodecSerializer;
   int64_t fetch_timeout_seconds_;
   int64_t minimum_fetch_interval_seconds_;
 };
+
 
 class PigeonInternalCodecSerializer : public flutter::StandardCodecSerializer {
  public:
@@ -89,62 +92,64 @@ class PigeonInternalCodecSerializer : public flutter::StandardCodecSerializer {
     return sInstance;
   }
 
-  void WriteValue(const flutter::EncodableValue& value,
-                  flutter::ByteStreamWriter* stream) const override;
-
+  void WriteValue(
+    const flutter::EncodableValue& value,
+    flutter::ByteStreamWriter* stream) const override;
  protected:
   flutter::EncodableValue ReadValueOfType(
-      uint8_t type, flutter::ByteStreamReader* stream) const override;
+    uint8_t type,
+    flutter::ByteStreamReader* stream) const override;
 };
 
-// Generated interface from Pigeon that represents a handler of messages from
-// Flutter.
+// Generated interface from Pigeon that represents a handler of messages from Flutter.
 class FirebaseRemoteConfigHostApi {
  public:
   FirebaseRemoteConfigHostApi(const FirebaseRemoteConfigHostApi&) = delete;
-  FirebaseRemoteConfigHostApi& operator=(const FirebaseRemoteConfigHostApi&) =
-      delete;
+  FirebaseRemoteConfigHostApi& operator=(const FirebaseRemoteConfigHostApi&) = delete;
   virtual ~FirebaseRemoteConfigHostApi() {}
   virtual void Fetch(
-      const std::string& app_name,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    const std::string& app_name,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void FetchAndActivate(
-      const std::string& app_name,
-      std::function<void(ErrorOr<bool> reply)> result) = 0;
-  virtual void Activate(const std::string& app_name,
-                        std::function<void(ErrorOr<bool> reply)> result) = 0;
+    const std::string& app_name,
+    std::function<void(ErrorOr<bool> reply)> result) = 0;
+  virtual void Activate(
+    const std::string& app_name,
+    std::function<void(ErrorOr<bool> reply)> result) = 0;
   virtual void SetConfigSettings(
-      const std::string& app_name, const RemoteConfigPigeonSettings& settings,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    const std::string& app_name,
+    const RemoteConfigPigeonSettings& settings,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void SetDefaults(
-      const std::string& app_name,
-      const flutter::EncodableMap& default_parameters,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    const std::string& app_name,
+    const flutter::EncodableMap& default_parameters,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void EnsureInitialized(
-      const std::string& app_name,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    const std::string& app_name,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void SetCustomSignals(
-      const std::string& app_name, const flutter::EncodableMap& custom_signals,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    const std::string& app_name,
+    const flutter::EncodableMap& custom_signals,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void GetAll(
-      const std::string& app_name,
-      std::function<void(ErrorOr<flutter::EncodableMap> reply)> result) = 0;
+    const std::string& app_name,
+    std::function<void(ErrorOr<flutter::EncodableMap> reply)> result) = 0;
   virtual void GetProperties(
-      const std::string& app_name,
-      std::function<void(ErrorOr<flutter::EncodableMap> reply)> result) = 0;
+    const std::string& app_name,
+    std::function<void(ErrorOr<flutter::EncodableMap> reply)> result) = 0;
 
   // The codec used by FirebaseRemoteConfigHostApi.
   static const flutter::StandardMessageCodec& GetCodec();
-  // Sets up an instance of `FirebaseRemoteConfigHostApi` to handle messages
-  // through the `binary_messenger`.
-  static void SetUp(flutter::BinaryMessenger* binary_messenger,
-                    FirebaseRemoteConfigHostApi* api);
-  static void SetUp(flutter::BinaryMessenger* binary_messenger,
-                    FirebaseRemoteConfigHostApi* api,
-                    const std::string& message_channel_suffix);
+  // Sets up an instance of `FirebaseRemoteConfigHostApi` to handle messages through the `binary_messenger`.
+  static void SetUp(
+    flutter::BinaryMessenger* binary_messenger,
+    FirebaseRemoteConfigHostApi* api);
+  static void SetUp(
+    flutter::BinaryMessenger* binary_messenger,
+    FirebaseRemoteConfigHostApi* api,
+    const std::string& message_channel_suffix);
   static flutter::EncodableValue WrapError(std::string_view error_message);
   static flutter::EncodableValue WrapError(const FlutterError& error);
-
  protected:
   FirebaseRemoteConfigHostApi() = default;
 };
