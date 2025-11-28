@@ -21,13 +21,19 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry;
+import io.flutter.plugins.firebase.installations.GeneratedAndroidFirebaseAppInstallations;
+import io.flutter.plugins.firebase.installations.GeneratedAndroidFirebaseAppInstallations.AppInstallationsPigeonFirebaseApp;
+import io.flutter.plugins.firebase.installations.GeneratedAndroidFirebaseAppInstallations.AppInstallationsPigeonSettings;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 /** FirebaseInstallationsPlugin */
 public class FirebaseInstallationsPlugin
-    implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
+    implements FlutterFirebasePlugin,
+        FlutterPlugin,
+        MethodCallHandler,
+        GeneratedAndroidFirebaseAppInstallations.FirebaseAppInstallationsHostApi {
   private MethodChannel channel;
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_app_installations";
   private final Map<EventChannel, EventChannel.StreamHandler> streamHandlers = new HashMap<>();
@@ -38,6 +44,9 @@ public class FirebaseInstallationsPlugin
     final MethodChannel channel = new MethodChannel(binaryMessenger, METHOD_CHANNEL_NAME);
     channel.setMethodCallHandler(this);
     this.messenger = binaryMessenger;
+    // Set up Pigeon host API handlers.
+    GeneratedAndroidFirebaseAppInstallations.FirebaseAppInstallationsHostApi.setUp(
+        binaryMessenger, this);
     return channel;
   }
 
@@ -60,6 +69,12 @@ public class FirebaseInstallationsPlugin
 
   private FirebaseInstallations getInstallations(Map<String, Object> arguments) {
     @NonNull String appName = (String) Objects.requireNonNull(arguments.get("appName"));
+    FirebaseApp app = FirebaseApp.getInstance(appName);
+    return FirebaseInstallations.getInstance(app);
+  }
+
+  private FirebaseInstallations getInstallations(AppInstallationsPigeonFirebaseApp appArg) {
+    @NonNull String appName = appArg.getAppName();
     FirebaseApp app = FirebaseApp.getInstance(appName);
     return FirebaseInstallations.getInstance(app);
   }
@@ -143,6 +158,85 @@ public class FirebaseInstallationsPlugin
         });
 
     return taskCompletionSource.getTask();
+  }
+
+  // Pigeon FirebaseAppInstallationsHostApi implementation.
+
+  @Override
+  public void initializeApp(
+      @NonNull AppInstallationsPigeonFirebaseApp app,
+      @NonNull AppInstallationsPigeonSettings settings,
+      @NonNull GeneratedAndroidFirebaseAppInstallations.VoidResult result) {
+    // Currently there is no per-app configurable behavior required on Android for these settings.
+    // We execute asynchronously to keep the threading model consistent.
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            // Touch the instance to ensure it's initialized.
+            getInstallations(app);
+            result.success();
+          } catch (Exception e) {
+            result.error(e);
+          }
+        });
+  }
+
+  @Override
+  public void delete(
+      @NonNull AppInstallationsPigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAppInstallations.VoidResult result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            Tasks.await(getInstallations(app).delete());
+            result.success();
+          } catch (Exception e) {
+            result.error(e);
+          }
+        });
+  }
+
+  @Override
+  public void getId(
+      @NonNull AppInstallationsPigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAppInstallations.Result<String> result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            String id = Tasks.await(getInstallations(app).getId());
+            result.success(id);
+          } catch (Exception e) {
+            result.error(e);
+          }
+        });
+  }
+
+  @Override
+  public void getToken(
+      @NonNull AppInstallationsPigeonFirebaseApp app,
+      @NonNull Boolean forceRefresh,
+      @NonNull GeneratedAndroidFirebaseAppInstallations.Result<String> result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseInstallations firebaseInstallations = getInstallations(app);
+            InstallationTokenResult tokenResult =
+                Tasks.await(firebaseInstallations.getToken(forceRefresh));
+            result.success(tokenResult.getToken());
+          } catch (Exception e) {
+            result.error(e);
+          }
+        });
+  }
+
+  @Override
+  public void onIdChange(
+      @NonNull AppInstallationsPigeonFirebaseApp app,
+      @NonNull String newId,
+      @NonNull GeneratedAndroidFirebaseAppInstallations.VoidResult result) {
+    // The Dart side currently uses an EventChannel-based listener, so this Pigeon hook
+    // is a no-op placeholder to satisfy the interface.
+    result.success();
   }
 
   @Override
