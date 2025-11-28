@@ -17,7 +17,8 @@ import FirebaseInstallations
 
 let kFLTFirebaseInstallationsChannelName = "plugins.flutter.io/firebase_app_installations"
 
-public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin {
+public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol,
+  FlutterPlugin, FirebaseAppInstallationsHostApi {
   private var eventSink: FlutterEventSink?
   private var messenger: FlutterBinaryMessenger
   private var streamHandler = [String: IdChangedStreamHandler?]()
@@ -42,6 +43,9 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol, F
     let instance = FirebaseInstallationsPlugin(messenger: binaryMessenger)
     FLTFirebasePluginRegistry.sharedInstance().register(instance)
     registrar.addMethodCallDelegate(instance, channel: channel)
+
+    // Set up Pigeon host API handlers for Dart-side FirebaseAppInstallationsHostApi.
+    SetUpFirebaseAppInstallationsHostApi(binaryMessenger, instance)
   }
 
   public func firebaseLibraryVersion() -> String {
@@ -69,6 +73,10 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol, F
   private func getInstallations(appName: String) -> Installations {
     let app: FirebaseApp = FLTFirebasePlugin.firebaseAppNamed(appName)!
     return Installations.installations(app: app)
+  }
+
+  private func getInstallations(app: AppInstallationsPigeonFirebaseApp) -> Installations {
+    getInstallations(appName: app.appName)
   }
 
   /// Gets Installations Id for an instance.
@@ -120,6 +128,80 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol, F
             result(tokenResult?.authToken)
           }
       }
+  }
+
+  // MARK: - FirebaseAppInstallationsHostApi (Pigeon)
+
+  public func initializeAppApp(
+    _ app: AppInstallationsPigeonFirebaseApp,
+    settings: AppInstallationsPigeonSettings,
+    completion: @escaping (FlutterError?) -> Void
+  ) {
+    // Currently no per-app settings are applied on iOS; ensure the instance is created.
+    _ = getInstallations(app: app)
+    completion(nil)
+  }
+
+  public func deleteApp(
+    _ app: AppInstallationsPigeonFirebaseApp,
+    completion: @escaping (FlutterError?) -> Void
+  ) {
+    let instance = getInstallations(app: app)
+    instance.delete { error in
+      if let error = error as NSError? {
+        let code = self
+          .mapInstallationsErrorCodes(code: UInt(error.code)) as String
+        completion(FlutterError(code: code, message: error.localizedDescription, details: nil))
+      } else {
+        completion(nil)
+      }
+    }
+  }
+
+  public func getIdApp(
+    _ app: AppInstallationsPigeonFirebaseApp,
+    completion: @escaping (String?, FlutterError?) -> Void
+  ) {
+    let instance = getInstallations(app: app)
+    instance.installationID { id, error in
+      if let error = error as NSError? {
+        let code = self
+          .mapInstallationsErrorCodes(code: UInt(error.code)) as String
+        completion(nil, FlutterError(code: code, message: error.localizedDescription, details: nil))
+      } else {
+        completion(id, nil)
+      }
+    }
+  }
+
+  public func getTokenApp(
+    _ app: AppInstallationsPigeonFirebaseApp,
+    forceRefresh: Bool,
+    completion: @escaping (String?, FlutterError?) -> Void
+  ) {
+    let instance = getInstallations(app: app)
+    instance.authTokenForcingRefresh(forceRefresh) { tokenResult, error in
+      if let error = error as NSError? {
+        let code = self
+          .mapInstallationsErrorCodes(code: UInt(error.code)) as String
+        completion(
+          nil,
+          FlutterError(code: code, message: error.localizedDescription, details: nil)
+        )
+      } else {
+        completion(tokenResult?.authToken, nil)
+      }
+    }
+  }
+
+  public func onIdChangeApp(
+    _ app: AppInstallationsPigeonFirebaseApp,
+    newId: String,
+    completion: @escaping (FlutterError?) -> Void
+  ) {
+    // The Dart side currently uses an EventChannel-based listener, so this Pigeon hook
+    // is a no-op placeholder to satisfy the interface.
+    completion(nil)
   }
 
   /// Registers a listener for changes in the Installations Id.
