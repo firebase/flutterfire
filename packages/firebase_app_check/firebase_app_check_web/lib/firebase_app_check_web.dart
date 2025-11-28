@@ -43,10 +43,19 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
       ensurePluginInitialized: (firebaseApp) async {
         final instance =
             FirebaseAppCheckWeb(app: Firebase.app(firebaseApp.name));
-        final recaptchaType = web.window.sessionStorage
+        var recaptchaType = web.window.localStorage
             .getItem(_sessionKeyRecaptchaType(firebaseApp.name));
-        final recaptchaSiteKey = web.window.sessionStorage
+        var recaptchaSiteKey = web.window.localStorage
             .getItem(_sessionKeyRecaptchaSiteKey(firebaseApp.name));
+
+        // For backwards compatibility, with previously used session storage
+        if (recaptchaType == null || recaptchaSiteKey == null) {
+          recaptchaType = web.window.sessionStorage
+              .getItem(_sessionKeyRecaptchaType(firebaseApp.name));
+          recaptchaSiteKey = web.window.sessionStorage
+              .getItem(_sessionKeyRecaptchaSiteKey(firebaseApp.name));
+        }
+
         if (recaptchaType != null && recaptchaSiteKey != null) {
           final WebProvider provider;
           if (recaptchaType == recaptchaTypeV3) {
@@ -125,9 +134,9 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
       } else {
         throw Exception('Invalid web provider: $webProvider');
       }
-      web.window.sessionStorage
+      web.window.localStorage
           .setItem(_sessionKeyRecaptchaType(app.name), recaptchaType);
-      web.window.sessionStorage
+      web.window.localStorage
           .setItem(_sessionKeyRecaptchaSiteKey(app.name), webProvider.siteKey);
     }
 
