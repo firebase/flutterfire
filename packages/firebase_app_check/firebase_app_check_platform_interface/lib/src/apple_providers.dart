@@ -54,3 +54,12 @@ class AppleAppAttestWithDeviceCheckFallbackProvider
   const AppleAppAttestWithDeviceCheckFallbackProvider()
       : super('appAttestWithDeviceCheckFallback');
 }
+
+/// ReCaptcha Enterprise provider for Apple platforms.
+///
+/// See documentation: <link to docs>
+class AppleReCaptchaEnterpriseProvider extends AppleAppCheckProvider {
+  const AppleReCaptchaEnterpriseProvider(this.siteKey)
+      : super('recaptchaEnterprise');
+  final String siteKey;
+}
