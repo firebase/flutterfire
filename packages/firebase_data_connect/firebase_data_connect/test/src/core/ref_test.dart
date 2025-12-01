@@ -45,8 +45,8 @@ void main() {
       final mockRef = MockOperationRef();
       final mockFirebaseDataConnect = MockFirebaseDataConnect();
 
-      final result =
-          OperationResult(mockFirebaseDataConnect, mockData, DataSource.server, mockRef);
+      final result = OperationResult(
+          mockFirebaseDataConnect, mockData, DataSource.server, mockRef);
 
       expect(result.data, mockData);
       expect(result.ref, mockRef);
@@ -60,8 +60,8 @@ void main() {
       final mockRef = MockOperationRef();
       final mockFirebaseDataConnect = MockFirebaseDataConnect();
 
-      final queryResult =
-          QueryResult(mockFirebaseDataConnect, mockData, DataSource.server, mockRef);
+      final queryResult = QueryResult(
+          mockFirebaseDataConnect, mockData, DataSource.server, mockRef);
 
       expect(queryResult.data, mockData);
       expect(queryResult.ref, mockRef);
@@ -81,8 +81,21 @@ void main() {
     test(
         'addQuery should create a new StreamController if query does not exist',
         () {
-      final stream =
-          queryManager.addQuery('testQuery', 'variables', 'varsAsStr');
+      final deserializer = (String data) => 'Deserialized Data';
+      String varSerializer(Object? _) {
+        return 'varsAsStr';
+      }
+
+      QueryRef ref = QueryRef(
+        mockDataConnect,
+        'testQuery',
+        MockDataConnectTransport(),
+        deserializer,
+        QueryManager(mockDataConnect),
+        varSerializer,
+        'variables',
+      );
+      final stream = queryManager.addQuery(ref);
 
       expect(queryManager.trackedQueries['testQuery'], isNotNull);
       expect(queryManager.trackedQueries['testQuery']!['varsAsStr'], isNotNull);

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import 'dart:convert';
+import 'package:crypto/crypto.dart';
 
 import 'package:firebase_app_check/firebase_app_check.dart';
 
@@ -37,6 +38,14 @@ String getFirebaseClientVal(String packageVersion) {
   return 'flutter-fire-dc/$packageVersion';
 }
 
+String convertToSha256(String inputString) {
+  List<int> bytes = utf8.encode(inputString);
+  Digest digest = sha256.convert(bytes);
+  String sha256Hash = digest.toString();
+
+  return sha256Hash;
+}
+
 /// Transport Options for connecting to a specific host.
 class TransportOptions {
   /// Constructor
@@ -53,10 +62,12 @@ class TransportOptions {
 }
 
 class ServerResponse {
-   final Map<String, dynamic> data;
-   Duration? ttl; 
+  final Map<String, dynamic> data;
+  Duration? ttl;
 
-    ServerResponse(this.data, {this.ttl = const Duration(seconds: 5)}); // TODO reduce to zero after testing
+  ServerResponse(this.data,
+      {this.ttl =
+          const Duration(seconds: 5)}); // TODO reduce to zero after testing
 }
 
 /// Interface for transports connecting to the DataConnect backend.

@@ -1,4 +1,3 @@
-
 // Copyright 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,23 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:convert';
+
+import 'package:firebase_data_connect/src/cache/cache_provider.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 /// Type of storage to use for the cache
-enum CacheStorage {
-  persistent, 
-  memory
-}
+enum CacheStorage { persistent, memory }
 
 const String GlobalIDKey = 'cacheId';
 
 /// Configuration for the cache
 class CacheSettings {
-  /// The type of storage to use (e.g., "persistent", "ephemeral")
+  /// The type of storage to use (e.g., "persistent", "memory")
   final CacheStorage storage;
 
   /// The maximum size of the cache in bytes
   final int maxSizeBytes;
 
-  const CacheSettings({this.storage = CacheStorage.memory, this.maxSizeBytes = 100000000});
+  /// Duration for which cache is used before revalidation with server
+  final Duration maxAge;
+
+  const CacheSettings(
+      {this.storage = kIsWeb ? CacheStorage.memory : CacheStorage.persistent,
+      this.maxSizeBytes = kIsWeb ? 40000000 : 100000000,
+      this.maxAge = Duration.zero});
 }
 
 /// Enum to control the fetch policy for a query
@@ -59,7 +66,7 @@ class ResultTree {
   DateTime lastAccessed;
 
   /// A reference to the root `EntityNode` of the dehydrated tree.
-  final EntityNode rootObject;
+  //final EntityNode rootObject;
 
   /// Checks if cached data is stale
   bool isStale() {
@@ -67,23 +74,37 @@ class ResultTree {
       return true; // stale
     } else {
       return false;
-    } 
+    }
   }
-
 
   ResultTree(
       {required this.data,
       required this.ttl,
       required this.cachedAt,
-      required this.lastAccessed,
-      required this.rootObject});
+      required this.lastAccessed});
+
+  factory ResultTree.fromJson(Map<String, dynamic> json) => ResultTree(
+        data: Map<String, dynamic>.from(json['data'] as Map),
+        ttl: Duration(microseconds: json['ttl'] as int),
+        cachedAt: DateTime.parse(json['cachedAt'] as String),
+        lastAccessed: DateTime.parse(json['lastAccessed'] as String),
+      );
+
+  Map<String, dynamic> toJson() => {
+        'data': data,
+        'ttl': ttl.inMicroseconds,
+        'cachedAt': cachedAt.toIso8601String(),
+        'lastAccessed': lastAccessed.toIso8601String(),
+      };
+
+  factory ResultTree.fromRawJson(String source) =>
+      ResultTree.fromJson(json.decode(source) as Map<String, dynamic>);
+
+  String toRawJson() => json.encode(toJson());
 }
 
 /// Target encoding mode
-enum EncodingMode {
-  hydrated,
-  dehydrated
-}
+enum EncodingMode { hydrated, dehydrated }
 
 /// Represents a normalized data entity.
 class EntityDataObject {
@@ -109,8 +130,23 @@ class EntityDataObject {
     return _serverValues;
   }
 
-  EntityDataObject(
-      {required this.guid});
+  EntityDataObject({required this.guid});
+
+  factory EntityDataObject.fromRawJson(String source) =>
+      EntityDataObject.fromJson(json.decode(source) as Map<String, dynamic>);
+
+  String toRawJson() => json.encode(toJson());
+
+  factory EntityDataObject.fromJson(Map<String, dynamic> json) =>
+      EntityDataObject(
+        guid: json[GlobalIDKey] as String,
+      ).._serverValues =
+          Map<String, dynamic>.from(json['_serverValues'] as Map);
+
+  Map<String, dynamic> toJson() => {
+        GlobalIDKey: guid,
+        '_serverValues': _serverValues,
+      };
 }
 
 /// A tree-like data structure that represents the dehydrated or hydrated query result.
@@ -120,18 +156,89 @@ class EntityNode {
 
   /// A dictionary of scalar values (if the node does not represent a normalized entity).
   final Map<String, dynamic>? scalarValues;
+  static const String scalarsKey = 'scalars';
 
   /// A dictionary of references to other `EntityNode`s (for nested objects).
   final Map<String, EntityNode>? nestedObjects;
+  static const String objectsKey = 'objects';
 
   /// A dictionary of lists of other `EntityNode`s (for arrays of objects).
   final Map<String, List<EntityNode>>? nestedObjectLists;
+  static const String listsKey = 'lists';
 
   EntityNode(
       {this.entity,
       this.scalarValues,
       this.nestedObjects,
       this.nestedObjectLists});
+
+  factory EntityNode.fromJson(
+      Map<String, dynamic> json, CacheProvider cacheProvider) {
+    EntityDataObject? entity = null;
+    if (json[GlobalIDKey] != null) {
+      entity = cacheProvider.getEntityDataObject(json[GlobalIDKey]);
+    }
+
+    Map<String, dynamic>? scalars = null;
+    if (json[scalarsKey] != null) {
+      scalars = json[scalarsKey];
+    }
+
+    Map<String, EntityNode>? objects;
+    if (json[objectsKey] != null) {
+      Map<String, dynamic> srcObjMap = json[objectsKey] as Map<String, dynamic>;
+      objects = {};
+      srcObjMap.forEach((key, value) {
+        Map<String, dynamic> objValue = value as Map<String, dynamic>;
+        EntityNode node = EntityNode.fromJson(objValue, cacheProvider);
+        objects?[key] = node;
+      });
+    }
+
+    Map<String, List<EntityNode>>? objLists;
+    if (json[listsKey] != null) {
+      Map<String, dynamic> srcListMap = json[listsKey] as Map<String, dynamic>;
+      objLists = {};
+      srcListMap.forEach((key, value) {
+        List<EntityNode> enodeList = [];
+        List<dynamic> jsonList = value as List<dynamic>;
+        jsonList.forEach((jsonObj) {
+          Map<String, dynamic> jmap = jsonObj as Map<String, dynamic>;
+          EntityNode en = EntityNode.fromJson(jmap, cacheProvider);
+          enodeList.add(en);
+        });
+        objLists?[key] = enodeList;
+      });
+    }
+    return EntityNode(
+        entity: entity,
+        scalarValues: scalars,
+        nestedObjects: objects,
+        nestedObjectLists: objLists);
+  }
+
+/*
+  factory EntityNode.fromJson(Map<String, dynamic> json, CacheProvider cacheProvider) => EntityNode(
+        entity: json[GlobalIDKey] == null
+            ? null
+            : cacheProvider.getEntityDataObject(json[GlobalIDKey]),
+        scalarValues: json['scalars'] == null
+            ? null
+            : Map<String, dynamic>.from(json['scalars'] as Map),
+        nestedObjects: json['objects'] == null
+            ? null
+            : (json['objects'] as Map<String, dynamic>).map(
+                (k, e) => MapEntry(
+                    k, EntityNode.fromJson(e as Map<String, dynamic>, cacheProvider))),
+        nestedObjectLists: json['lists'] == null
+            ? null
+            : (json['lists'] as Map<String, dynamic>).map((k, e) =>
+                MapEntry(
+                    k,
+                    List<EntityNode>.from((e as List<dynamic>).map((x) =>
+                        EntityNode.fromJson(x as Map<String, dynamic>, cacheProvider))))),
+      );
+      */
 
   Map<String, dynamic> toJson({EncodingMode mode = EncodingMode.hydrated}) {
     Map<String, dynamic> jsonData = {};
@@ -153,14 +260,13 @@ class EntityNode {
       if (nestedObjectLists != null) {
         nestedObjectLists!.forEach((key, edoList) {
           List<Map<String, dynamic>> jsonList = [];
-          edoList.forEach((edo){
+          edoList.forEach((edo) {
             jsonList.add(edo.toJson(mode: mode));
           });
           jsonData[key] = jsonList;
         });
       }
-
-    } // if hydrated 
+    } // if hydrated
     else if (mode == EncodingMode.dehydrated) {
       // encode the guid so we can extract the EntityDataObject
       if (entity != null) {
@@ -168,31 +274,28 @@ class EntityNode {
       }
 
       if (scalarValues != null) {
-        jsonData['scalars'] = scalarValues;
+        jsonData[scalarsKey] = scalarValues;
       }
 
       if (nestedObjects != null) {
-        List<Map<String, dynamic>> nestedObjectsJson = [];
-        nestedObjects!.forEach((key, edo){
-          Map<String, dynamic> obj = {};
-          obj[key] = edo.toJson(mode: mode);
-          nestedObjectsJson.add(obj);
-        }); 
-        jsonData['objects'] = nestedObjectsJson;
+        Map<String, dynamic> nestedObjectsJson = {};
+        nestedObjects!.forEach((key, edo) {
+          nestedObjectsJson[key] = edo.toJson(mode: mode);
+        });
+        jsonData[objectsKey] = nestedObjectsJson;
       }
 
       if (nestedObjectLists != null) {
-        List<Map<String, dynamic>> nestedObjectListsJson = [];
-        nestedObjectLists!.forEach((key, edoList){
+        Map<String, dynamic> nestedObjectListsJson = {};
+        nestedObjectLists!.forEach((key, edoList) {
           List<Map<String, dynamic>> jsonList = [];
-          edoList.forEach((edo){
+          edoList.forEach((edo) {
             jsonList.add(edo.toJson(mode: mode));
           });
-          nestedObjectListsJson.add({key: jsonList});
+          nestedObjectListsJson[key] = jsonList;
         });
-        jsonData['lists'] = nestedObjectListsJson;
+        jsonData[listsKey] = nestedObjectListsJson;
       }
-
     }
     return jsonData;
   }
