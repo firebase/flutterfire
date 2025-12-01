@@ -31,7 +31,7 @@ class InMemoryCacheProvider implements CacheProvider {
 
   @override
   Future<bool> initialize() async {
-    // nothing to be intialized.
+    // nothing to be intialized
     return true;
   }
 

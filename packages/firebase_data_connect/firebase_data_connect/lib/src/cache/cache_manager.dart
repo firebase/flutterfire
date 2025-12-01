@@ -92,6 +92,17 @@ class Cache {
       return;
     }
 
+    if (_cacheProvider == null) {
+      return;
+    }
+
+    // we have a provider lets ensure its initialized
+    bool? initialized = await providerInitialization;
+    if (initialized == null || initialized == false) {
+      developer.log('CacheProvider not initialized. Cache not functional');
+      return;
+    }
+
     final dehydrationResult = await _resultTreeProcessor.dehydrate(
         queryId, serverResponse.data, _cacheProvider!);
 
