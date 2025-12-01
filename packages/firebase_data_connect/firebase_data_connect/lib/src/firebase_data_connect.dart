@@ -24,9 +24,6 @@ import './network/transport_library.dart'
     if (dart.library.io) './network/grpc_library.dart'
     if (dart.library.html) './network/rest_library.dart';
 
-import 'cache/in_memory_cache_provider.dart';
-import 'cache/result_tree_processor.dart';
-
 import 'cache/cache_data_types.dart';
 import 'cache/cache_manager.dart';
 
@@ -48,17 +45,6 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
           connectorConfig.serviceId,
         ),
         super(app.name, 'plugins.flutter.io/firebase_data_connect') {
-    if (cacheSettings != null) {
-      switch (cacheSettings!.storage) {
-        case CacheStorage.memory: 
-        print("Creating cacheManager (inmemory)");
-        cacheManager = Cache(InMemoryCacheProvider());
-        case CacheStorage.persistent:
-        //TODO: Switch to Persistent Provider once implemented
-        print("creating cacheManager (persistent)");
-        cacheManager = Cache(InMemoryCacheProvider());
-      }
-    }
     _queryManager = QueryManager(this);
     if (sdkType != null) {
       _sdkType = sdkType;
@@ -115,6 +101,13 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     );
   }
 
+  @visibleForTesting
+  void checkAndInitializeCache() {
+    if (cacheSettings != null) {
+      cacheManager = Cache(cacheSettings!, this);
+    }
+  }
+
   /// Returns a [QueryRef] object.
   QueryRef<Data, Variables> query<Data, Variables>(
     String operationName,
@@ -123,6 +116,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     Variables? vars,
   ) {
     checkTransport();
+    checkAndInitializeCache();
     return QueryRef<Data, Variables>(
       this,
       operationName,
@@ -161,6 +155,11 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   }) {
     String mappedHost = automaticHostMapping ? getMappedHost(host) : host;
     transportOptions = TransportOptions(mappedHost, port, isSecure);
+
+    if (cacheManager != null) {
+      cacheManager?.dispose();
+      cacheManager = null;
+    }
   }
 
   /// Currently cached DataConnect instances. Maps from app name to ConnectorConfigStr, DataConnect.
@@ -176,7 +175,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     FirebaseApp? app,
     FirebaseAuth? auth,
     FirebaseAppCheck? appCheck,
-    CacheSettings? cacheSettings = const CacheSettings(),
+    CacheSettings? cacheSettings,
     CallerSDKType? sdkType,
     required ConnectorConfig connectorConfig,
   }) {
@@ -186,7 +185,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
 
     if (cachedInstances[app.name] != null &&
         cachedInstances[app.name]![connectorConfig.toJson()] != null) {
-          print("Returning cached instance for FirebaseDataConnect");
+      print("Returning cached instance for FirebaseDataConnect");
       return cachedInstances[app.name]![connectorConfig.toJson()]!;
     }
 

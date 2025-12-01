@@ -15,7 +15,13 @@
 part of 'common_library.dart';
 
 /// Types of DataConnect errors that can occur.
-enum DataConnectErrorCode { unavailable, unauthorized, cacheMiss, codecFailed, other }
+enum DataConnectErrorCode {
+  unavailable,
+  unauthorized,
+  cacheMiss,
+  codecFailed,
+  other
+}
 
 /// Error thrown when DataConnect encounters an error.
 class DataConnectError extends FirebaseException {

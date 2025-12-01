@@ -1,4 +1,3 @@
-
 // Copyright 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,9 +16,24 @@ import 'cache_data_types.dart';
 import 'cache_provider.dart';
 
 /// An in-memory implementation of the `CacheProvider`.
-class InMemoryCacheProvider implements CacheProvider { 
+class InMemoryCacheProvider implements CacheProvider {
   final Map<String, ResultTree> _resultTrees = {};
   final Map<String, EntityDataObject> _edos = {};
+
+  final String cacheIdentifier;
+
+  InMemoryCacheProvider(this.cacheIdentifier);
+
+  @override
+  String identifier() {
+    return cacheIdentifier;
+  }
+
+  @override
+  Future<bool> initialize() async {
+    // nothing to be intialized
+    return true;
+  }
 
   @override
   void saveResultTree(String queryId, ResultTree resultTree) {
