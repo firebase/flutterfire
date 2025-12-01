@@ -1,4 +1,3 @@
-
 // Copyright 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +18,12 @@ import 'cache_data_types.dart';
 ///
 /// This allows for different storage implementations to be used (e.g., in-memory, SQLite, IndexedDB).
 abstract class CacheProvider {
+  /// Identifier for this provider
+  String identifier();
+
+  /// Initialize the provider async
+  Future<bool> initialize();
+
   /// Stores a `ResultTree` object.
   void saveResultTree(String queryId, ResultTree resultTree);
 

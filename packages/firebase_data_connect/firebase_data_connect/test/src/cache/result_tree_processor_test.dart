@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'package:firebase_data_connect/src/cache/cache_data_types.dart';
 import 'package:firebase_data_connect/src/cache/result_tree_processor.dart';
@@ -25,7 +24,6 @@ import 'dart:collection';
 import 'package:firebase_data_connect/src/cache/in_memory_cache_provider.dart';
 
 void main() {
-
   const String simpleQueryResponse = '''
     {"data": {"items":[
     
@@ -35,8 +33,6 @@ void main() {
     ]}}
   ''';
 
-  
-
   // query two has same object as query one so should refer to same Entity.
   const String simpleQueryResponseTwo = '''
     {"data": {
@@ -45,44 +41,43 @@ void main() {
   ''';
 
   group('CacheProviderTests', () {
-
-    
-
-    // Dehydrate two queries sharing a single object. 
-    // Confirm that same EntityDataObject is present in both the dehydrated queries 
-    test('Test Dehydration - compare common GlobalIDs', () async  {  
+    // Dehydrate two queries sharing a single object.
+    // Confirm that same EntityDataObject is present in both the dehydrated queries
+    test('Test Dehydration - compare common GlobalIDs', () async {
       ResultTreeProcessor rp = ResultTreeProcessor();
-      InMemoryCacheProvider cp = InMemoryCacheProvider();
+      InMemoryCacheProvider cp = InMemoryCacheProvider('inmemprovider');
 
-      Map<String, dynamic> jsonData = jsonDecode(simpleQueryResponse) as Map<String, dynamic>;
-      DehydrationResult result = await rp.dehydrate('itemsSimple', jsonData['data'], cp);
+      Map<String, dynamic> jsonData =
+          jsonDecode(simpleQueryResponse) as Map<String, dynamic>;
+      DehydrationResult result =
+          await rp.dehydrate('itemsSimple', jsonData['data'], cp);
       expect(result.dehydratedTree.nestedObjectLists?.length, 1);
-      expect(result.dehydratedTree.nestedObjectLists?['items']?.length, 2); 
-      expect(result.dehydratedTree.nestedObjectLists?['items']?.first.entity, isNotNull);
+      expect(result.dehydratedTree.nestedObjectLists?['items']?.length, 2);
+      expect(result.dehydratedTree.nestedObjectLists?['items']?.first.entity,
+          isNotNull);
 
-      Map<String, dynamic> jsonDataTwo = jsonDecode(simpleQueryResponseTwo) as Map<String, dynamic>;
-      DehydrationResult resultTwo = await rp.dehydrate('itemsSimpleTwo', jsonDataTwo, cp);
+      Map<String, dynamic> jsonDataTwo =
+          jsonDecode(simpleQueryResponseTwo) as Map<String, dynamic>;
+      DehydrationResult resultTwo =
+          await rp.dehydrate('itemsSimpleTwo', jsonDataTwo, cp);
 
-      List<String>? guids = result.dehydratedTree.nestedObjectLists?['items']?.map((item) => item.entity?.guid)
-                              .where((guid) => guid != null)
-                              .cast<String>()
-                              .toList();
+      List<String>? guids = result.dehydratedTree.nestedObjectLists?['items']
+          ?.map((item) => item.entity?.guid)
+          .where((guid) => guid != null)
+          .cast<String>()
+          .toList();
       if (guids == null) {
         fail('DehydratedTree has no GlobalIDs');
       }
 
-      String? guidTwo = resultTwo.dehydratedTree.nestedObjects?['item']?.entity?.guid;
+      String? guidTwo =
+          resultTwo.dehydratedTree.nestedObjects?['item']?.entity?.guid;
       if (guidTwo == null) {
         fail('Second DehydratedTree has no GlobalID');
       }
 
       bool containsGuid = guids.contains(guidTwo);
       expect(containsGuid, isTrue);
-
     });
-
-  
   }); //test group
-
-
 } //main
