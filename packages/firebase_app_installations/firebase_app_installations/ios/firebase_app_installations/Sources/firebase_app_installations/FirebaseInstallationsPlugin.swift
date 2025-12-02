@@ -132,76 +132,75 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol,
 
   // MARK: - FirebaseAppInstallationsHostApi (Pigeon)
 
-  public func initializeAppApp(
-    _ app: AppInstallationsPigeonFirebaseApp,
+  func initializeApp(
+    app: AppInstallationsPigeonFirebaseApp,
     settings: AppInstallationsPigeonSettings,
-    completion: @escaping (FlutterError?) -> Void
+    completion: @escaping (Result<Void, Error>) -> Void
   ) {
     // Currently no per-app settings are applied on iOS; ensure the instance is created.
     _ = getInstallations(app: app)
-    completion(nil)
+    completion(.success(()))
   }
 
-  public func delete(
-    _ app: AppInstallationsPigeonFirebaseApp,
-    completion: @escaping (FlutterError?) -> Void
+  func delete(
+    app: AppInstallationsPigeonFirebaseApp,
+    completion: @escaping (Result<Void, Error>) -> Void
   ) {
     let instance = getInstallations(app: app)
     instance.delete { error in
-      if let error = error as NSError? {
-        let code = self
-          .mapInstallationsErrorCodes(code: UInt(error.code)) as String
-        completion(FlutterError(code: code, message: error.localizedDescription, details: nil))
+      if let error = error {
+        completion(.failure(error))
       } else {
-        completion(nil)
+        completion(.success(()))
       }
     }
   }
 
-  public func getIdApp(
-    _ app: AppInstallationsPigeonFirebaseApp,
-    completion: @escaping (String?, FlutterError?) -> Void
+  func getId(
+    app: AppInstallationsPigeonFirebaseApp,
+    completion: @escaping (Result<String, Error>) -> Void
   ) {
     let instance = getInstallations(app: app)
     instance.installationID { id, error in
-      if let error = error as NSError? {
-        let code = self
-          .mapInstallationsErrorCodes(code: UInt(error.code)) as String
-        completion(nil, FlutterError(code: code, message: error.localizedDescription, details: nil))
+      if let error = error {
+        completion(.failure(error))
+      } else if let id = id {
+        completion(.success(id))
       } else {
-        completion(id, nil)
+        completion(.failure(NSError(domain: "firebase_app_installations",
+                                    code: -1,
+                                    userInfo: [NSLocalizedDescriptionKey: "Installation ID is nil."])))
       }
     }
   }
 
-  public func getTokenApp(
-    _ app: AppInstallationsPigeonFirebaseApp,
+  func getToken(
+    app: AppInstallationsPigeonFirebaseApp,
     forceRefresh: Bool,
-    completion: @escaping (String?, FlutterError?) -> Void
+    completion: @escaping (Result<String, Error>) -> Void
   ) {
     let instance = getInstallations(app: app)
     instance.authTokenForcingRefresh(forceRefresh) { tokenResult, error in
-      if let error = error as NSError? {
-        let code = self
-          .mapInstallationsErrorCodes(code: UInt(error.code)) as String
-        completion(
-          nil,
-          FlutterError(code: code, message: error.localizedDescription, details: nil)
-        )
+      if let error = error {
+        completion(.failure(error))
+      } else if let token = tokenResult?.authToken {
+        completion(.success(token))
       } else {
-        completion(tokenResult?.authToken, nil)
+        completion(.failure(NSError(domain: "firebase_app_installations",
+                                    code: -1,
+                                    userInfo: [NSLocalizedDescriptionKey: "Auth token is nil."])))
       }
     }
   }
 
-  public func onIdChange(
-    _ app: AppInstallationsPigeonFirebaseApp,
+  func onIdChange(
+    app: AppInstallationsPigeonFirebaseApp,
     newId: String,
-    completion: @escaping (FlutterError?) -> Void
+    completion: @escaping (Result<Void, Error>) -> Void
   ) {
     // The Dart side currently uses an EventChannel-based listener, so this Pigeon hook
     // is a no-op placeholder to satisfy the interface.
-    completion(nil)
+    completion(.success(()))
   }
 
   /// Registers a listener for changes in the Installations Id.
