@@ -89,6 +89,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   [registrar addMethodCallDelegate:instance channel:channel];
 #if !TARGET_OS_OSX
   [registrar publish:instance];  // iOS only supported
+  if (@available(iOS 13.0, *)) {
+    if ([registrar respondsToSelector:@selector(addSceneDelegate:)]) {
+      [registrar performSelector:@selector(addSceneDelegate:) withObject:instance];
+    }
+  }
 #endif
 }
 
@@ -528,6 +533,30 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   }  // if (userInfo[@"gcm.message_id"])
   return NO;
 }  // didReceiveRemoteNotification
+#endif
+
+#pragma mark - SceneDelegate Methods
+
+#if !TARGET_OS_OSX
+- (BOOL)scene:(UIScene *)scene
+    willConnectToSession:(UISceneSession *)session
+                 options:(UISceneConnectionOptions *)connectionOptions {
+  // Handle launch notification if present
+  NSDictionary *remoteNotification =
+      connectionOptions.notificationResponse.notification.request.content.userInfo;
+  if (remoteNotification != nil) {
+    // If remoteNotification exists, it is the notification that opened the app.
+    _initialNotification =
+        [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
+    _initialNotificationID = remoteNotification[@"gcm.message_id"];
+  }
+
+  // Register for remote notifications in scene delegate
+  // This is critical for getting APNS token when using UISceneDelegate
+  [[UIApplication sharedApplication] registerForRemoteNotifications];
+
+  return YES;
+}
 #endif
 
 #pragma mark - Firebase Messaging API
