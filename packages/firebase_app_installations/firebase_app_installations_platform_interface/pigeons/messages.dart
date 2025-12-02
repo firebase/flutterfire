@@ -19,6 +19,8 @@ import 'package:pigeon/pigeon.dart';
         '../firebase_app_installations/ios/firebase_app_installations/Sources/firebase_app_installations/firebase_app_installations_messages.g.h',
     objcSourceOut:
         '../firebase_app_installations/ios/firebase_app_installations/Sources/firebase_app_installations/firebase_app_installations_messages.g.m',
+    swiftOut:
+        '../firebase_app_installations/ios/firebase_app_installations/Sources/firebase_app_installations/FirebaseAppInstallationsMessages.g.swift',
     cppHeaderOut: '../firebase_app_installations/windows/messages.g.h',
     cppSourceOut: '../firebase_app_installations/windows/messages.g.cpp',
     cppOptions: CppOptions(namespace: 'firebase_app_installations_windows'),
