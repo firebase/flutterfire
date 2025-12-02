@@ -142,7 +142,7 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol,
     completion(nil)
   }
 
-  public func deleteApp(
+  public func delete(
     _ app: AppInstallationsPigeonFirebaseApp,
     completion: @escaping (FlutterError?) -> Void
   ) {
@@ -194,7 +194,7 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol,
     }
   }
 
-  public func onIdChangeApp(
+  public func onIdChange(
     _ app: AppInstallationsPigeonFirebaseApp,
     newId: String,
     completion: @escaping (FlutterError?) -> Void
