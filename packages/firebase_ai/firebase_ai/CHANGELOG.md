@@ -1,3 +1,12 @@
+## 3.6.0
+
+ - **FEAT**(firebaseai): Added support for Server Prompt Template ([#17767](https://github.com/firebase/flutterfire/issues/17767)). ([8ff653e5](https://github.com/firebase/flutterfire/commit/8ff653e5bad247fe4f2f72afef45375606509d11))
+
+## 3.5.0
+
+ - **FEAT**(firebase_ai): add malformedFunctionCall reason to FinishReason enum and update tests ([#17834](https://github.com/firebase/flutterfire/issues/17834)). ([38fc083b](https://github.com/firebase/flutterfire/commit/38fc083b0f940158cb9aeb01fe9e9b96ed162e70))
+ - **FEAT**(firebaseai): add bidi transcript ([#17700](https://github.com/firebase/flutterfire/issues/17700)). ([be12eede](https://github.com/firebase/flutterfire/commit/be12eede158bd4a7870bc9a5dcea11b534ca6112))
+
 ## 3.4.0
 
  - **FIX**: update topics in pubspec.yaml for firebase_ai ([#17759](https://github.com/firebase/flutterfire/issues/17759)). ([ab2301d2](https://github.com/firebase/flutterfire/commit/ab2301d2b2943c87279ce7ba4694a90b49eb98fc))
