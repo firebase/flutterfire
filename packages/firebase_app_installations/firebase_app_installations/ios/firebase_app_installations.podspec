@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
   s.license          = { :file => '../LICENSE' }
   s.authors          = 'The Chromium Authors'
   s.source           = { :path => '.' }
-  s.source_files = 'firebase_app_installations/Sources/**/*.swift'
+  s.source_files     = 'firebase_app_installations/Sources/**/*.{swift,h,m}'
 
   s.ios.deployment_target = '15.0'
 
