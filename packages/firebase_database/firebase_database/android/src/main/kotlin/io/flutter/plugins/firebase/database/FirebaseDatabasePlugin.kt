@@ -883,8 +883,7 @@ class FirebaseDatabasePlugin :
                 val value = modifier["value"]
                 query = when (value) {
                   is String -> query.startAt(value)
-                  is Double -> query.startAt(value)
-                  is Int -> query.startAt(value.toDouble())
+                  is Number -> query.startAt(value.toDouble())
                   is Boolean -> query.startAt(value)
                   else -> query.startAt(value.toString())
                 }
