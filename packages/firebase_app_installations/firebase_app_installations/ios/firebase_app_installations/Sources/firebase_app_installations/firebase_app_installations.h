@@ -3,6 +3,5 @@
 
 #import <Foundation/Foundation.h>
 
-#import "firebase_app_installations_messages.g.h"
-
+#import <firebase_app_installations/firebase_app_installations_messages.g.h>
 

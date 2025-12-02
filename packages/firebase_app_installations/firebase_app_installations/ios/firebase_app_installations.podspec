@@ -25,7 +25,10 @@ Pod::Spec.new do |s|
   s.authors          = 'The Chromium Authors'
   s.source           = { :path => '.' }
   s.source_files     = 'firebase_app_installations/Sources/**/*.{swift,h,m}'
-  s.public_header_files = 'firebase_app_installations/Sources/firebase_app_installations/firebase_app_installations.h'
+  s.public_header_files = [
+    'firebase_app_installations/Sources/firebase_app_installations/firebase_app_installations.h',
+    'firebase_app_installations/Sources/firebase_app_installations/firebase_app_installations_messages.g.h',
+  ]
 
   s.ios.deployment_target = '15.0'
 
