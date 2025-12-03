@@ -73,5 +73,3 @@ extern void SetUpFirebaseAppInstallationsHostApiWithSuffix(
 @end
 
 NS_ASSUME_NONNULL_END
-
-

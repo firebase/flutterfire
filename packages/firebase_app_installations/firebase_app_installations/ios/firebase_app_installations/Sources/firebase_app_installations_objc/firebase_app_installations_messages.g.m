@@ -357,5 +357,3 @@ void SetUpFirebaseAppInstallationsHostApiWithSuffix(id<FlutterBinaryMessenger> b
                  }];
 }
 @end
-
-
