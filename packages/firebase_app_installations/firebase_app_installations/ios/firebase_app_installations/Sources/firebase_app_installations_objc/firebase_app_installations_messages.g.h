@@ -62,6 +62,7 @@ extern void SetUpFirebaseAppInstallationsHostApi(
 extern void SetUpFirebaseAppInstallationsHostApiWithSuffix(
     id<FlutterBinaryMessenger> binaryMessenger,
     NSObject<FirebaseAppInstallationsHostApi> *_Nullable api, NSString *messageChannelSuffix);
+
 @interface FirebaseAppInstallationsFlutterApi : NSObject
 - (instancetype)initWithBinaryMessenger:(id<FlutterBinaryMessenger>)binaryMessenger;
 - (instancetype)initWithBinaryMessenger:(id<FlutterBinaryMessenger>)binaryMessenger
@@ -72,3 +73,5 @@ extern void SetUpFirebaseAppInstallationsHostApiWithSuffix(
 @end
 
 NS_ASSUME_NONNULL_END
+
+
