@@ -21,11 +21,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 /** Generated class from Pigeon. */
@@ -41,8 +36,7 @@ public class GeneratedAndroidFirebaseAppInstallations {
     /** The error details. Must be a datatype supported by the api codec. */
     public final Object details;
 
-    public FlutterError(@NonNull String code, @Nullable String message, @Nullable Object details) 
-    {
+    public FlutterError(@NonNull String code, @Nullable String message, @Nullable Object details) {
       super(message);
       this.code = code;
       this.details = details;
@@ -61,14 +55,15 @@ public class GeneratedAndroidFirebaseAppInstallations {
       errorList.add(exception.toString());
       errorList.add(exception.getClass().getSimpleName());
       errorList.add(
-        "Cause: " + exception.getCause() + ", Stacktrace: " + Log.getStackTraceString(exception));
+          "Cause: " + exception.getCause() + ", Stacktrace: " + Log.getStackTraceString(exception));
     }
     return errorList;
   }
 
   @NonNull
   protected static FlutterError createConnectionError(@NonNull String channelName) {
-    return new FlutterError("channel-error",  "Unable to establish connection on channel: " + channelName + ".", "");
+    return new FlutterError(
+        "channel-error", "Unable to establish connection on channel: " + channelName + ".", "");
   }
 
   @Target(METHOD)
@@ -134,15 +129,26 @@ public class GeneratedAndroidFirebaseAppInstallations {
 
     @Override
     public boolean equals(Object o) {
-      if (this == o) { return true; }
-      if (o == null || getClass() != o.getClass()) { return false; }
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
       AppInstallationsPigeonSettings that = (AppInstallationsPigeonSettings) o;
-      return persistenceEnabled.equals(that.persistenceEnabled) && forceRefreshOnSignIn.equals(that.forceRefreshOnSignIn) && forceRefreshOnTokenChange.equals(that.forceRefreshOnTokenChange) && forceRefreshOnAppUpdate.equals(that.forceRefreshOnAppUpdate);
+      return persistenceEnabled.equals(that.persistenceEnabled)
+          && forceRefreshOnSignIn.equals(that.forceRefreshOnSignIn)
+          && forceRefreshOnTokenChange.equals(that.forceRefreshOnTokenChange)
+          && forceRefreshOnAppUpdate.equals(that.forceRefreshOnAppUpdate);
     }
 
     @Override
     public int hashCode() {
-      return Objects.hash(persistenceEnabled, forceRefreshOnSignIn, forceRefreshOnTokenChange, forceRefreshOnAppUpdate);
+      return Objects.hash(
+          persistenceEnabled,
+          forceRefreshOnSignIn,
+          forceRefreshOnTokenChange,
+          forceRefreshOnAppUpdate);
     }
 
     public static final class Builder {
@@ -199,7 +205,8 @@ public class GeneratedAndroidFirebaseAppInstallations {
       return toListResult;
     }
 
-    static @NonNull AppInstallationsPigeonSettings fromList(@NonNull ArrayList<Object> pigeonVar_list) {
+    static @NonNull AppInstallationsPigeonSettings fromList(
+        @NonNull ArrayList<Object> pigeonVar_list) {
       AppInstallationsPigeonSettings pigeonResult = new AppInstallationsPigeonSettings();
       Object persistenceEnabled = pigeonVar_list.get(0);
       pigeonResult.setPersistenceEnabled((Boolean) persistenceEnabled);
@@ -233,8 +240,12 @@ public class GeneratedAndroidFirebaseAppInstallations {
 
     @Override
     public boolean equals(Object o) {
-      if (this == o) { return true; }
-      if (o == null || getClass() != o.getClass()) { return false; }
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
       AppInstallationsPigeonFirebaseApp that = (AppInstallationsPigeonFirebaseApp) o;
       return appName.equals(that.appName);
     }
@@ -268,7 +279,8 @@ public class GeneratedAndroidFirebaseAppInstallations {
       return toListResult;
     }
 
-    static @NonNull AppInstallationsPigeonFirebaseApp fromList(@NonNull ArrayList<Object> pigeonVar_list) {
+    static @NonNull AppInstallationsPigeonFirebaseApp fromList(
+        @NonNull ArrayList<Object> pigeonVar_list) {
       AppInstallationsPigeonFirebaseApp pigeonResult = new AppInstallationsPigeonFirebaseApp();
       Object appName = pigeonVar_list.get(0);
       pigeonResult.setAppName((String) appName);

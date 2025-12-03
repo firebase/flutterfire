@@ -19,43 +19,59 @@ NS_ASSUME_NONNULL_BEGIN
 @interface AppInstallationsPigeonSettings : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)makeWithPersistenceEnabled:(BOOL )persistenceEnabled
-    forceRefreshOnSignIn:(BOOL )forceRefreshOnSignIn
-    forceRefreshOnTokenChange:(BOOL )forceRefreshOnTokenChange
-    forceRefreshOnAppUpdate:(BOOL )forceRefreshOnAppUpdate;
-@property(nonatomic, assign) BOOL  persistenceEnabled;
-@property(nonatomic, assign) BOOL  forceRefreshOnSignIn;
-@property(nonatomic, assign) BOOL  forceRefreshOnTokenChange;
-@property(nonatomic, assign) BOOL  forceRefreshOnAppUpdate;
++ (instancetype)makeWithPersistenceEnabled:(BOOL)persistenceEnabled
+                      forceRefreshOnSignIn:(BOOL)forceRefreshOnSignIn
+                 forceRefreshOnTokenChange:(BOOL)forceRefreshOnTokenChange
+                   forceRefreshOnAppUpdate:(BOOL)forceRefreshOnAppUpdate;
+@property(nonatomic, assign) BOOL persistenceEnabled;
+@property(nonatomic, assign) BOOL forceRefreshOnSignIn;
+@property(nonatomic, assign) BOOL forceRefreshOnTokenChange;
+@property(nonatomic, assign) BOOL forceRefreshOnAppUpdate;
 @end
 
 @interface AppInstallationsPigeonFirebaseApp : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithAppName:(NSString *)appName;
-@property(nonatomic, copy) NSString * appName;
+@property(nonatomic, copy) NSString *appName;
 @end
 
 /// The codec used by all APIs.
 NSObject<FlutterMessageCodec> *nullGetFirebaseAppInstallationsMessagesCodec(void);
 
 @protocol FirebaseAppInstallationsHostApi
-- (void)initializeAppApp:(AppInstallationsPigeonFirebaseApp *)app settings:(AppInstallationsPigeonSettings *)settings completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)deleteApp:(AppInstallationsPigeonFirebaseApp *)app completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)getIdApp:(AppInstallationsPigeonFirebaseApp *)app completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
-- (void)getTokenApp:(AppInstallationsPigeonFirebaseApp *)app forceRefresh:(BOOL)forceRefresh completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
-- (void)onIdChangeApp:(AppInstallationsPigeonFirebaseApp *)app newId:(NSString *)newId completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)initializeAppApp:(AppInstallationsPigeonFirebaseApp *)app
+                settings:(AppInstallationsPigeonSettings *)settings
+              completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)deleteApp:(AppInstallationsPigeonFirebaseApp *)app
+       completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)getIdApp:(AppInstallationsPigeonFirebaseApp *)app
+      completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
+- (void)getTokenApp:(AppInstallationsPigeonFirebaseApp *)app
+       forceRefresh:(BOOL)forceRefresh
+         completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
+- (void)onIdChangeApp:(AppInstallationsPigeonFirebaseApp *)app
+                newId:(NSString *)newId
+           completion:(void (^)(FlutterError *_Nullable))completion;
 @end
 
-extern void SetUpFirebaseAppInstallationsHostApi(id<FlutterBinaryMessenger> binaryMessenger, NSObject<FirebaseAppInstallationsHostApi> *_Nullable api);
+extern void SetUpFirebaseAppInstallationsHostApi(
+    id<FlutterBinaryMessenger> binaryMessenger,
+    NSObject<FirebaseAppInstallationsHostApi> *_Nullable api);
 
-extern void SetUpFirebaseAppInstallationsHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, NSObject<FirebaseAppInstallationsHostApi> *_Nullable api, NSString *messageChannelSuffix);
+extern void SetUpFirebaseAppInstallationsHostApiWithSuffix(
+    id<FlutterBinaryMessenger> binaryMessenger,
+    NSObject<FirebaseAppInstallationsHostApi> *_Nullable api,
+    NSString *messageChannelSuffix);
 
 
 @interface FirebaseAppInstallationsFlutterApi : NSObject
 - (instancetype)initWithBinaryMessenger:(id<FlutterBinaryMessenger>)binaryMessenger;
-- (instancetype)initWithBinaryMessenger:(id<FlutterBinaryMessenger>)binaryMessenger messageChannelSuffix:(nullable NSString *)messageChannelSuffix;
-- (void)registerIdTokenListenerApp:(AppInstallationsPigeonFirebaseApp *)app completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
+- (instancetype)initWithBinaryMessenger:(id<FlutterBinaryMessenger>)binaryMessenger
+                   messageChannelSuffix:(nullable NSString *)messageChannelSuffix;
+- (void)registerIdTokenListenerApp:(AppInstallationsPigeonFirebaseApp *)app
+                        completion:
+                            (void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
 @end
 
 NS_ASSUME_NONNULL_END
