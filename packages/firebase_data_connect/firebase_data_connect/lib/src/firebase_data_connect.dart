@@ -36,8 +36,8 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     required this.connectorConfig,
     this.auth,
     this.appCheck,
-    this.cacheSettings,
     CallerSDKType? sdkType,
+    this.cacheSettings
   })  : options = DataConnectOptions(
           app.options.projectId,
           connectorConfig.location,
@@ -157,6 +157,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     transportOptions = TransportOptions(mappedHost, port, isSecure);
 
     if (cacheManager != null) {
+      // dispose and clean this up. it will get reinitialized for newer QueryRefs that target the emulator.
       cacheManager?.dispose();
       cacheManager = null;
     }
@@ -175,9 +176,9 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     FirebaseApp? app,
     FirebaseAuth? auth,
     FirebaseAppCheck? appCheck,
-    CacheSettings? cacheSettings,
     CallerSDKType? sdkType,
     required ConnectorConfig connectorConfig,
+    CacheSettings? cacheSettings = const CacheSettings()
   }) {
     app ??= Firebase.app();
     auth ??= FirebaseAuth.instanceFor(app: app);
@@ -185,7 +186,6 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
 
     if (cachedInstances[app.name] != null &&
         cachedInstances[app.name]![connectorConfig.toJson()] != null) {
-      print("Returning cached instance for FirebaseDataConnect");
       return cachedInstances[app.name]![connectorConfig.toJson()]!;
     }
 
@@ -193,9 +193,9 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
       app: app,
       auth: auth,
       appCheck: appCheck,
-      cacheSettings: cacheSettings,
       connectorConfig: connectorConfig,
       sdkType: sdkType,
+      cacheSettings: cacheSettings,
     );
     if (cachedInstances[app.name] == null) {
       cachedInstances[app.name] = <String, FirebaseDataConnect>{};

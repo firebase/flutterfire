@@ -38,14 +38,10 @@ class InMemoryCacheProvider implements CacheProvider {
   @override
   void saveResultTree(String queryId, ResultTree resultTree) {
     _resultTrees[queryId] = resultTree;
-    print("Saved resultTree for $queryId $resultTree");
-    print("save InMemoryCacheProvider ${_resultTrees.keys}");
   }
 
   @override
   ResultTree? getResultTree(String queryId) {
-    print("Getting resultTree for $queryId");
-    print("InMemoryCacheProvider ${_resultTrees.keys}");
     return _resultTrees[queryId];
   }
 

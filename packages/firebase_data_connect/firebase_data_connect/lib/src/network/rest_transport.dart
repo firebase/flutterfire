@@ -128,59 +128,6 @@ class RestTransport implements DataConnectTransport {
         );
       }
       return ServerResponse(bodyJson);
-      /*
-      List errors = bodyJson['errors'] ?? [];
-      final data = bodyJson['data'];
-      List<DataConnectOperationFailureResponseErrorInfo> suberrors = errors
-          .map((e) => switch (e) {
-                {'path': List? path, 'message': String? message} =>
-                  DataConnectOperationFailureResponseErrorInfo(
-                      (path ?? [])
-                          .map((val) => switch (val) {
-                                String() => DataConnectFieldPathSegment(val),
-                                int() => DataConnectListIndexPathSegment(val),
-                                _ => throw DataConnectError(
-                                    DataConnectErrorCode.other,
-                                    'Incorrect type for $val')
-                              })
-                          .toList(),
-                      message ??
-                          (throw DataConnectError(
-                              DataConnectErrorCode.other, 'Missing message'))),
-                _ => throw DataConnectError(
-                    DataConnectErrorCode.other, 'Unable to parse JSON: $e')
-              })
-          .toList();
-      Data? decodedData;
-      Object? decodeError;
-      try {
-        /// The response we get is in the data field of the response
-        /// Once we get the data back, it's not quite json-encoded,
-        /// so we have to encode it and then send it to the user's deserializer.
-        decodedData = deserializer(jsonEncode(bodyJson['data']));
-      } catch (e) {
-        decodeError = e;
-      }
-      if (suberrors.isNotEmpty) {
-        final response =
-            DataConnectOperationFailureResponse(suberrors, data, decodedData);
-
-        throw DataConnectOperationError(DataConnectErrorCode.other,
-            'Failed to invoke operation: ', response);
-      } else {
-        if (decodeError != null) {
-          throw DataConnectError(DataConnectErrorCode.other,
-              'Unable to decode data: $decodeError');
-        }
-        if (decodedData is! Data) {
-          throw DataConnectError(
-            DataConnectErrorCode.other,
-            "Decoded data wasn't parsed properly. Expected $Data, got $decodedData",
-          );
-        }
-        return decodedData;
-      }
-      */
     } on Exception catch (e) {
       if (e is DataConnectError) {
         rethrow;

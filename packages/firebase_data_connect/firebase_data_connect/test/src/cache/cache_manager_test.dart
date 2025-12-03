@@ -70,9 +70,9 @@ void main() {
   ''';
 
   group('Cache Provider Tests', () {
-    setUp(() {
+    setUp(() async {
       mockApp = MockFirebaseApp();
-      mockAuth = MockFirebaseAuth();
+      //mockAuth = MockFirebaseAuth();
       mockConnectorConfig = MockConnectorConfig();
 
       when(mockApp.options).thenReturn(
@@ -90,7 +90,6 @@ void main() {
       dataConnect = FirebaseDataConnect(
           app: mockApp,
           connectorConfig: mockConnectorConfig,
-          auth: mockAuth,
           cacheSettings: const CacheSettings(storage: CacheStorage.memory));
       dataConnect.checkTransport();
       dataConnect.checkAndInitializeCache();
@@ -100,6 +99,7 @@ void main() {
       if (dataConnect.cacheManager == null) {
         fail('No cache available');
       }
+
       Cache cache = dataConnect.cacheManager!;
 
       Map<String, dynamic> jsonData =
@@ -116,6 +116,7 @@ void main() {
       if (!kIsWeb) {
         cp = SQLite3CacheProvider('testDb', memory: true);
       }
+      await cp.initialize();
 
       EntityDataObject edo = EntityDataObject(guid: '1234');
       edo.updateServerValue('name', 'test');
@@ -163,11 +164,13 @@ void main() {
       expect(price, 11);
     }); // test shared EDO
 
-    test('SQLiteProvider EntityDataObject persist', () {
+    test('SQLiteProvider EntityDataObject persist', () async {
       CacheProvider cp = InMemoryCacheProvider('inmemprov');
       if (!kIsWeb) {
-        cp = SQLite3CacheProvider('testDb', memory: true);
+        cp = SQLite3CacheProvider('testDb', memory: true);  
       }
+      await cp.initialize();
+
       String oid = '1234';
       EntityDataObject edo = cp.getEntityDataObject(oid);
 

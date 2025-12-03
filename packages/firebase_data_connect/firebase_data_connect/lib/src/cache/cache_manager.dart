@@ -51,7 +51,7 @@ class Cache {
   Stream<Set<String>> get impactedQueries => _impactedQueryController.stream;
 
   String _contructCacheIdentifier() {
-    return '${_settings.storage}-${dataConnect.app.options.projectId}-${dataConnect.app.name}-${dataConnect.connectorConfig.serviceId}-${dataConnect.connectorConfig.connector}-${dataConnect.connectorConfig.location}-${FirebaseAuth.instanceFor(app: dataConnect.app).currentUser?.uid}-${dataConnect.transport.transportOptions.host}';
+    return '${_settings.storage}-${dataConnect.app.options.projectId}-${dataConnect.app.name}-${dataConnect.connectorConfig.serviceId}-${dataConnect.connectorConfig.connector}-${dataConnect.connectorConfig.location}-${dataConnect.auth?.currentUser?.uid ?? 'anon'}-${dataConnect.transport.transportOptions.host}';
   }
 
   void _initializeProvider() {
@@ -77,7 +77,12 @@ class Cache {
   }
 
   void _listenForAuthChanges() {
-    FirebaseAuth.instanceFor(app: dataConnect.app)
+    if (dataConnect.auth == null) {
+      developer.log('Not listening for auth changes since no auth instance in data connect');
+      return;
+    }
+
+    dataConnect.auth!
         .authStateChanges()
         .listen((User? user) {
       _initializeProvider();
@@ -86,9 +91,8 @@ class Cache {
 
   /// Caches a server response.
   Future<void> update(String queryId, ServerResponse serverResponse) async {
-    print("updateCache data for $queryId");
-
     if (_cacheProvider == null) {
+      developer.log('cache update: no provider available');
       return;
     }
 
@@ -105,7 +109,6 @@ class Cache {
     EntityNode rootNode = dehydrationResult.dehydratedTree;
     String dehydratedJson =
         jsonEncode(rootNode.toJson(mode: EncodingMode.dehydrated));
-    print("cacheUpdate: dehydrateResult ${dehydratedJson}");
 
     Duration ttl = serverResponse.ttl != null
         ? serverResponse.ttl!
@@ -118,18 +121,13 @@ class Cache {
         cachedAt: DateTime.now(),
         lastAccessed: DateTime.now());
 
-    print("updateCache - got resultTree $resultTree");
-
     _cacheProvider!.saveResultTree(queryId, resultTree);
-    print("updateCache - savedResultTree $queryId - $resultTree");
 
     _impactedQueryController.add(dehydrationResult.impactedQueryIds);
   }
 
   /// Fetches a cached result.
   Future<Map<String, dynamic>?> get(String queryId, bool allowStale) async {
-    print("getCache for $queryId");
-
     if (_cacheProvider == null) {
       return null;
     }
@@ -142,18 +140,16 @@ class Cache {
     }
 
     final resultTree = _cacheProvider!.getResultTree(queryId);
-    print("getCache resultTree $resultTree");
 
     if (resultTree != null) {
       // Simple TTL check
       if (resultTree.isStale() && !allowStale) {
-        print("getCache result is stale and allowStale is false");
+        developer.log('getCache result is stale and allowStale is false');
         return null;
       }
 
       resultTree.lastAccessed = DateTime.now();
       _cacheProvider!.saveResultTree(queryId, resultTree);
-      print("getCache updated lastAccessed ${resultTree.data}");
 
       EntityNode rootNode =
           EntityNode.fromJson(resultTree.data, _cacheProvider!);

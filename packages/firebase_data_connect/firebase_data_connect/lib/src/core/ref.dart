@@ -78,7 +78,6 @@ abstract class OperationRef<Data, Variables> {
 
   // Converts a hydrated Json tree to Typed Data
   Data _convertBodyJsonToData(Map<String, dynamic> bodyJson) {
-    print("convertBodyBodyToData ${bodyJson}");
     List errors = bodyJson['errors'] ?? [];
     final data = bodyJson['data'] ?? bodyJson;
     List<DataConnectOperationFailureResponseErrorInfo> suberrors = errors
@@ -218,17 +217,14 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 
   Future<QueryResult<Data, Variables>> execute(
       {QueryFetchPolicy fetchPolicy = QueryFetchPolicy.preferCache}) async {
-    print("execute called with policy $fetchPolicy");
     if (dataConnect.cacheManager != null) {
       switch (fetchPolicy) {
         case QueryFetchPolicy.cacheOnly:
           return _executeFromCache(fetchPolicy);
         case QueryFetchPolicy.preferCache:
           try {
-            print("preferCache policy - checking cache");
             return await _executeFromCache(fetchPolicy);
           } catch (e) {
-            print("error executing from cache. trying server");
             return _executeFromServer();
           }
         case QueryFetchPolicy.serverOnly:
@@ -243,16 +239,15 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 
   Future<QueryResult<Data, Variables>> _executeFromCache(
       QueryFetchPolicy fetchPolicy) async {
-    print("_executeFromCache called with policy $fetchPolicy");
+        if (dataConnect.cacheManager == null) {
+          throw DataConnectError(DataConnectErrorCode.cacheMiss, 'Cache miss. No configured cache'); 
+        }
     final cacheManager = dataConnect.cacheManager!;
     bool allowStale = fetchPolicy ==
         QueryFetchPolicy.cacheOnly; //if its cache only, we always allow stale
     final cachedData = await cacheManager.get(_queryId, allowStale);
 
     if (cachedData != null) {
-      print("cached data is not null. Returning result");
-      String jsonStr = jsonEncode(cachedData);
-      print("cached data $jsonStr");
       final result = QueryResult(
           dataConnect,
           deserializer(jsonEncode(cachedData['data'] ?? cachedData)),
@@ -260,18 +255,16 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
           this);
       return result;
     } else {
-      print("_executeFromCache cachedData is null");
       if (fetchPolicy == QueryFetchPolicy.cacheOnly) {
         throw DataConnectError(DataConnectErrorCode.cacheMiss, 'Cache miss');
       } else {
         throw DataConnectError(
-            DataConnectErrorCode.cacheMiss, 'Stale cache miss');
+            DataConnectErrorCode.cacheMiss, 'Possible stale cache miss');
       }
     }
   }
 
   Future<QueryResult<Data, Variables>> _executeFromServer() async {
-    print("_executeFromServer called ");
     bool shouldRetry = await _shouldRetry();
     try {
       ServerResponse serverResponse =
@@ -284,7 +277,6 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
       );
 
       if (dataConnect.cacheManager != null) {
-        print("Updating cache");
         await dataConnect.cacheManager!.update(_queryId, serverResponse);
       }
       Data typedData = _convertBodyJsonToData(serverResponse.data);
