@@ -45,7 +45,10 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol,
     registrar.addMethodCallDelegate(instance, channel: channel)
 
     // Set up Pigeon host API handlers for Dart-side FirebaseAppInstallationsHostApi.
-    SetUpFirebaseAppInstallationsHostApi(binaryMessenger, instance)
+    FirebaseAppInstallationsHostApiSetup.setUp(
+      binaryMessenger: binaryMessenger,
+      api: instance
+    )
   }
 
   public func firebaseLibraryVersion() -> String {
