@@ -39,7 +39,8 @@ class FlutterError {
   flutter::EncodableValue details_;
 };
 
-template <class T> class ErrorOr {
+template <class T>
+class ErrorOr {
  public:
   ErrorOr(const T& rhs) : v_(rhs) {}
   ErrorOr(const T&& rhs) : v_(std::move(rhs)) {}

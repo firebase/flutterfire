@@ -88,8 +88,8 @@ EncodableList AppInstallationsPigeonSettings::ToEncodableList() const {
   return list;
 }
 
-AppInstallationsPigeonSettings AppInstallationsPigeonSettings::FromEncodableList(
-    const EncodableList& list) {
+AppInstallationsPigeonSettings
+AppInstallationsPigeonSettings::FromEncodableList(const EncodableList& list) {
   AppInstallationsPigeonSettings decoded(
       std::get<bool>(list[0]), std::get<bool>(list[1]),
       std::get<bool>(list[2]), std::get<bool>(list[3]));
@@ -148,8 +148,7 @@ EncodableValue PigeonInternalCodecSerializer::ReadValueOfType(
 }
 
 void PigeonInternalCodecSerializer::WriteValue(
-    const EncodableValue& value,
-    flutter::ByteStreamWriter* stream) const {
+    const EncodableValue& value, flutter::ByteStreamWriter* stream) const {
   if (const CustomEncodableValue* custom_value =
           std::get_if<CustomEncodableValue>(&value)) {
     if (custom_value->type() == typeid(AppInstallationsPigeonSettings)) {

@@ -601,9 +601,9 @@ public class GeneratedAndroidFirebaseAppInstallations {
                 String output = (String) listReply.get(0);
                 result.success(output);
               }
-            }  else {
+            } else {
               result.error(createConnectionError(channelName));
-            } 
+            }
           });
     }
   }

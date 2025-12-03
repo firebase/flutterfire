@@ -28,7 +28,9 @@ static NSArray<id> *wrapResult(id result, FlutterError *error) {
 static FlutterError *createConnectionError(NSString *channelName) {
   return [FlutterError
       errorWithCode:@"channel-error"
-            message:[NSString stringWithFormat:@"%@/%@/%@", @"Unable to establish connection on channel: '", channelName, @"'."]
+            message:[NSString stringWithFormat:@"%@/%@/%@",
+                                               @"Unable to establish connection on channel: '",
+                                               channelName, @"'."]
             details:@""];
 }
 
@@ -84,12 +86,14 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
 
 @implementation AppInstallationsPigeonFirebaseApp
 + (instancetype)makeWithAppName:(NSString *)appName {
-  AppInstallationsPigeonFirebaseApp* pigeonResult = [[AppInstallationsPigeonFirebaseApp alloc] init];
+  AppInstallationsPigeonFirebaseApp *pigeonResult =
+      [[AppInstallationsPigeonFirebaseApp alloc] init];
   pigeonResult.appName = appName;
   return pigeonResult;
 }
 + (AppInstallationsPigeonFirebaseApp *)fromList:(NSArray<id> *)list {
-  AppInstallationsPigeonFirebaseApp *pigeonResult = [[AppInstallationsPigeonFirebaseApp alloc] init];
+  AppInstallationsPigeonFirebaseApp *pigeonResult =
+      [[AppInstallationsPigeonFirebaseApp alloc] init];
   pigeonResult.appName = GetNullableObjectAtIndex(list, 0);
   return pigeonResult;
 }
