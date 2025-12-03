@@ -112,9 +112,9 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
 @implementation nullFirebaseAppInstallationsMessagesPigeonCodecReader
 - (nullable id)readValueOfType:(UInt8)type {
   switch (type) {
-    case 129: 
+    case 129:
       return [AppInstallationsPigeonSettings fromList:[self readValue]];
-    case 130: 
+    case 130:
       return [AppInstallationsPigeonFirebaseApp fromList:[self readValue]];
     default:
       return [super readValueOfType:type];
@@ -153,7 +153,8 @@ NSObject<FlutterMessageCodec> *nullGetFirebaseAppInstallationsMessagesCodec(void
   static FlutterStandardMessageCodec *sSharedObject = nil;
   static dispatch_once_t sPred = 0;
   dispatch_once(&sPred, ^{
-    nullFirebaseAppInstallationsMessagesPigeonCodecReaderWriter *readerWriter = [[nullFirebaseAppInstallationsMessagesPigeonCodecReaderWriter alloc] init];
+    nullFirebaseAppInstallationsMessagesPigeonCodecReaderWriter *readerWriter =
+        [[nullFirebaseAppInstallationsMessagesPigeonCodecReaderWriter alloc] init];
     sSharedObject = [FlutterStandardMessageCodec codecWithReaderWriter:readerWriter];
   });
   return sSharedObject;
