@@ -171,113 +171,136 @@ void SetUpFirebaseAppInstallationsHostApiWithSuffix(id<FlutterBinaryMessenger> b
                              ? [NSString stringWithFormat:@".%@", messageChannelSuffix]
                              : @"";
   {
-    FlutterBasicMessageChannel *channel =
-        [[FlutterBasicMessageChannel alloc]
-            initWithName:[NSString stringWithFormat:
-                                       @"%@%@",
-                                       @"dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.initializeApp",
-                                       messageChannelSuffix]
-          binaryMessenger:binaryMessenger
-                    codec:nullGetFirebaseAppInstallationsMessagesCodec()];
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:[NSString stringWithFormat:
+                                      @"%@%@",
+                                      @"dev.flutter.pigeon.firebase_app_installations_platform_"
+                                      @"interface.FirebaseAppInstallationsHostApi.initializeApp",
+                                      messageChannelSuffix]
+        binaryMessenger:binaryMessenger
+                  codec:nullGetFirebaseAppInstallationsMessagesCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(initializeAppApp:settings:completion:)], @"FirebaseAppInstallationsHostApi api (%@) doesn't respond to @selector(initializeAppApp:settings:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(initializeAppApp:settings:completion:)],
+                @"FirebaseAppInstallationsHostApi api (%@) doesn't respond to "
+                @"@selector(initializeAppApp:settings:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray<id> *args = message;
         AppInstallationsPigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         AppInstallationsPigeonSettings *arg_settings = GetNullableObjectAtIndex(args, 1);
-        [api initializeAppApp:arg_app settings:arg_settings completion:^(FlutterError *_Nullable error) {
-          callback(wrapResult(nil, error));
-        }];
+        [api initializeAppApp:arg_app
+                     settings:arg_settings
+                   completion:^(FlutterError *_Nullable error) {
+                     callback(wrapResult(nil, error));
+                   }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-        [[FlutterBasicMessageChannel alloc]
-            initWithName:[NSString stringWithFormat:
-                                       @"%@%@",
-                                       @"dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.delete",
-                                       messageChannelSuffix]
-          binaryMessenger:binaryMessenger
-                    codec:nullGetFirebaseAppInstallationsMessagesCodec()];
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:
+               [NSString stringWithFormat:@"%@%@",
+                                          @"dev.flutter.pigeon.firebase_app_installations_platform_"
+                                          @"interface.FirebaseAppInstallationsHostApi.delete",
+                                          messageChannelSuffix]
+        binaryMessenger:binaryMessenger
+                  codec:nullGetFirebaseAppInstallationsMessagesCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(deleteApp:completion:)], @"FirebaseAppInstallationsHostApi api (%@) doesn't respond to @selector(deleteApp:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(deleteApp:completion:)],
+                @"FirebaseAppInstallationsHostApi api (%@) doesn't respond to "
+                @"@selector(deleteApp:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray<id> *args = message;
         AppInstallationsPigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
-        [api deleteApp:arg_app completion:^(FlutterError *_Nullable error) {
-          callback(wrapResult(nil, error));
-        }];
+        [api deleteApp:arg_app
+            completion:^(FlutterError *_Nullable error) {
+              callback(wrapResult(nil, error));
+            }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-        [[FlutterBasicMessageChannel alloc]
-            initWithName:[NSString stringWithFormat:
-                                       @"%@%@",
-                                       @"dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getId",
-                                       messageChannelSuffix]
-          binaryMessenger:binaryMessenger
-                    codec:nullGetFirebaseAppInstallationsMessagesCodec()];
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:
+               [NSString stringWithFormat:@"%@%@",
+                                          @"dev.flutter.pigeon.firebase_app_installations_platform_"
+                                          @"interface.FirebaseAppInstallationsHostApi.getId",
+                                          messageChannelSuffix]
+        binaryMessenger:binaryMessenger
+                  codec:nullGetFirebaseAppInstallationsMessagesCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(getIdApp:completion:)], @"FirebaseAppInstallationsHostApi api (%@) doesn't respond to @selector(getIdApp:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(getIdApp:completion:)],
+                @"FirebaseAppInstallationsHostApi api (%@) doesn't respond to "
+                @"@selector(getIdApp:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray<id> *args = message;
         AppInstallationsPigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
-        [api getIdApp:arg_app completion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api getIdApp:arg_app
+            completion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
+              callback(wrapResult(output, error));
+            }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-        [[FlutterBasicMessageChannel alloc]
-            initWithName:[NSString stringWithFormat:
-                                       @"%@%@",
-                                       @"dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getToken",
-                                       messageChannelSuffix]
-          binaryMessenger:binaryMessenger
-                    codec:nullGetFirebaseAppInstallationsMessagesCodec()];
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:
+               [NSString stringWithFormat:@"%@%@",
+                                          @"dev.flutter.pigeon.firebase_app_installations_platform_"
+                                          @"interface.FirebaseAppInstallationsHostApi.getToken",
+                                          messageChannelSuffix]
+        binaryMessenger:binaryMessenger
+                  codec:nullGetFirebaseAppInstallationsMessagesCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(getTokenApp:forceRefresh:completion:)], @"FirebaseAppInstallationsHostApi api (%@) doesn't respond to @selector(getTokenApp:forceRefresh:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(getTokenApp:forceRefresh:completion:)],
+                @"FirebaseAppInstallationsHostApi api (%@) doesn't respond to "
+                @"@selector(getTokenApp:forceRefresh:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray<id> *args = message;
         AppInstallationsPigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         BOOL arg_forceRefresh = [GetNullableObjectAtIndex(args, 1) boolValue];
-        [api getTokenApp:arg_app forceRefresh:arg_forceRefresh completion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api getTokenApp:arg_app
+            forceRefresh:arg_forceRefresh
+              completion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
+                callback(wrapResult(output, error));
+              }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-        [[FlutterBasicMessageChannel alloc]
-            initWithName:[NSString stringWithFormat:
-                                       @"%@%@",
-                                       @"dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.onIdChange",
-                                       messageChannelSuffix]
-          binaryMessenger:binaryMessenger
-                    codec:nullGetFirebaseAppInstallationsMessagesCodec()];
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:
+               [NSString stringWithFormat:@"%@%@",
+                                          @"dev.flutter.pigeon.firebase_app_installations_platform_"
+                                          @"interface.FirebaseAppInstallationsHostApi.onIdChange",
+                                          messageChannelSuffix]
+        binaryMessenger:binaryMessenger
+                  codec:nullGetFirebaseAppInstallationsMessagesCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(onIdChangeApp:newId:completion:)], @"FirebaseAppInstallationsHostApi api (%@) doesn't respond to @selector(onIdChangeApp:newId:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(onIdChangeApp:newId:completion:)],
+                @"FirebaseAppInstallationsHostApi api (%@) doesn't respond to "
+                @"@selector(onIdChangeApp:newId:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray<id> *args = message;
         AppInstallationsPigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_newId = GetNullableObjectAtIndex(args, 1);
-        [api onIdChangeApp:arg_app newId:arg_newId completion:^(FlutterError *_Nullable error) {
-          callback(wrapResult(nil, error));
-        }];
+        [api onIdChangeApp:arg_app
+                     newId:arg_newId
+                completion:^(FlutterError *_Nullable error) {
+                  callback(wrapResult(nil, error));
+                }];
       }];
     } else {
       [channel setMessageHandler:nil];
@@ -310,12 +333,13 @@ void SetUpFirebaseAppInstallationsHostApiWithSuffix(id<FlutterBinaryMessenger> b
                             (void (^)(NSString *_Nullable, FlutterError *_Nullable))completion {
   NSString *channelName = [NSString
       stringWithFormat:@"%@%@",
-                       @"dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsFlutterApi.registerIdTokenListener",
+                       @"dev.flutter.pigeon.firebase_app_installations_platform_interface."
+                       @"FirebaseAppInstallationsFlutterApi.registerIdTokenListener",
                        _messageChannelSuffix];
   FlutterBasicMessageChannel *channel = [FlutterBasicMessageChannel
       messageChannelWithName:channelName
-               binaryMessenger:self.binaryMessenger
-                         codec:nullGetFirebaseAppInstallationsMessagesCodec()];
+             binaryMessenger:self.binaryMessenger
+                       codec:nullGetFirebaseAppInstallationsMessagesCodec()];
   [channel sendMessage:@[ arg_app ?: [NSNull null] ]
                  reply:^(NSArray<id> *reply) {
                    if (reply != nil) {
@@ -333,4 +357,3 @@ void SetUpFirebaseAppInstallationsHostApiWithSuffix(id<FlutterBinaryMessenger> b
                  }];
 }
 @end
-

@@ -565,6 +565,7 @@ public class GeneratedAndroidFirebaseAppInstallations {
     public FirebaseAppInstallationsFlutterApi(@NonNull BinaryMessenger argBinaryMessenger) {
       this(argBinaryMessenger, "");
     }
+
     public FirebaseAppInstallationsFlutterApi(
         @NonNull BinaryMessenger argBinaryMessenger, @NonNull String messageChannelSuffix) {
       this.binaryMessenger = argBinaryMessenger;
@@ -575,6 +576,7 @@ public class GeneratedAndroidFirebaseAppInstallations {
     static @NonNull MessageCodec<Object> getCodec() {
       return PigeonCodec.INSTANCE;
     }
+
     public void registerIdTokenListener(
         @NonNull AppInstallationsPigeonFirebaseApp appArg, @NonNull Result<String> result) {
       final String channelName =

@@ -36,10 +36,10 @@ FlutterError CreateConnectionError(const std::string channel_name) {
 AppInstallationsPigeonSettings::AppInstallationsPigeonSettings(
     bool persistence_enabled, bool force_refresh_on_sign_in,
     bool force_refresh_on_token_change, bool force_refresh_on_app_update)
- : persistence_enabled_(persistence_enabled),
-    force_refresh_on_sign_in_(force_refresh_on_sign_in),
-    force_refresh_on_token_change_(force_refresh_on_token_change),
-    force_refresh_on_app_update_(force_refresh_on_app_update) {}
+    : persistence_enabled_(persistence_enabled),
+      force_refresh_on_sign_in_(force_refresh_on_sign_in),
+      force_refresh_on_token_change_(force_refresh_on_token_change),
+      force_refresh_on_app_update_(force_refresh_on_app_update) {}
 
 bool AppInstallationsPigeonSettings::persistence_enabled() const {
   return persistence_enabled_;
@@ -48,7 +48,6 @@ bool AppInstallationsPigeonSettings::persistence_enabled() const {
 void AppInstallationsPigeonSettings::set_persistence_enabled(bool value_arg) {
   persistence_enabled_ = value_arg;
 }
-
 
 bool AppInstallationsPigeonSettings::force_refresh_on_sign_in() const {
   return force_refresh_on_sign_in_;
@@ -77,7 +76,6 @@ void AppInstallationsPigeonSettings::set_force_refresh_on_app_update(
   force_refresh_on_app_update_ = value_arg;
 }
 
-
 EncodableList AppInstallationsPigeonSettings::ToEncodableList() const {
   EncodableList list;
   list.reserve(4);
@@ -91,8 +89,8 @@ EncodableList AppInstallationsPigeonSettings::ToEncodableList() const {
 AppInstallationsPigeonSettings
 AppInstallationsPigeonSettings::FromEncodableList(const EncodableList& list) {
   AppInstallationsPigeonSettings decoded(
-      std::get<bool>(list[0]), std::get<bool>(list[1]),
-      std::get<bool>(list[2]), std::get<bool>(list[3]));
+      std::get<bool>(list[0]), std::get<bool>(list[1]), std::get<bool>(list[2]),
+      std::get<bool>(list[3]));
   return decoded;
 }
 
@@ -100,7 +98,7 @@ AppInstallationsPigeonSettings::FromEncodableList(const EncodableList& list) {
 
 AppInstallationsPigeonFirebaseApp::AppInstallationsPigeonFirebaseApp(
     const std::string& app_name)
- : app_name_(app_name) {}
+    : app_name_(app_name) {}
 
 const std::string& AppInstallationsPigeonFirebaseApp::app_name() const {
   return app_name_;
@@ -110,7 +108,6 @@ void AppInstallationsPigeonFirebaseApp::set_app_name(
     std::string_view value_arg) {
   app_name_ = value_arg;
 }
-
 
 EncodableList AppInstallationsPigeonFirebaseApp::ToEncodableList() const {
   EncodableList list;
@@ -126,7 +123,6 @@ AppInstallationsPigeonFirebaseApp::FromEncodableList(
   return decoded;
 }
 
-
 PigeonInternalCodecSerializer::PigeonInternalCodecSerializer() {}
 
 EncodableValue PigeonInternalCodecSerializer::ReadValueOfType(
@@ -136,15 +132,15 @@ EncodableValue PigeonInternalCodecSerializer::ReadValueOfType(
       return CustomEncodableValue(
           AppInstallationsPigeonSettings::FromEncodableList(
               std::get<EncodableList>(ReadValue(stream))));
-      }
+    }
     case 130: {
       return CustomEncodableValue(
           AppInstallationsPigeonFirebaseApp::FromEncodableList(
               std::get<EncodableList>(ReadValue(stream))));
-      }
+    }
     default:
       return flutter::StandardCodecSerializer::ReadValueOfType(type, stream);
-    }
+  }
 }
 
 void PigeonInternalCodecSerializer::WriteValue(
@@ -182,15 +178,15 @@ FirebaseAppInstallationsHostApi::GetCodec() {
 // Sets up an instance of `FirebaseAppInstallationsHostApi` to handle messages
 // through the `binary_messenger`.
 void FirebaseAppInstallationsHostApi::SetUp(
-  flutter::BinaryMessenger* binary_messenger,
-  FirebaseAppInstallationsHostApi* api) {
+    flutter::BinaryMessenger* binary_messenger,
+    FirebaseAppInstallationsHostApi* api) {
   FirebaseAppInstallationsHostApi::SetUp(binary_messenger, api, "");
 }
 
 void FirebaseAppInstallationsHostApi::SetUp(
-  flutter::BinaryMessenger* binary_messenger,
-  FirebaseAppInstallationsHostApi* api,
-  const std::string& message_channel_suffix) {
+    flutter::BinaryMessenger* binary_messenger,
+    FirebaseAppInstallationsHostApi* api,
+    const std::string& message_channel_suffix) {
   const std::string prepended_suffix =
       message_channel_suffix.length() > 0
           ? std::string(".") + message_channel_suffix
@@ -206,39 +202,38 @@ void FirebaseAppInstallationsHostApi::SetUp(
       channel.SetMessageHandler(
           [api](const EncodableValue& message,
                 const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
               const auto& app_arg =
                   std::any_cast<const AppInstallationsPigeonFirebaseApp&>(
                       std::get<CustomEncodableValue>(encodable_app_arg));
-          const auto& encodable_settings_arg = args.at(1);
-          if (encodable_settings_arg.IsNull()) {
-            reply(WrapError("settings_arg unexpectedly null."));
-            return;
-          }
+              const auto& encodable_settings_arg = args.at(1);
+              if (encodable_settings_arg.IsNull()) {
+                reply(WrapError("settings_arg unexpectedly null."));
+                return;
+              }
               const auto& settings_arg =
                   std::any_cast<const AppInstallationsPigeonSettings&>(
                       std::get<CustomEncodableValue>(encodable_settings_arg));
-              api->InitializeApp(
-                  app_arg, settings_arg,
-                  [reply](std::optional<FlutterError>&& output) {
-            if (output.has_value()) {
-              reply(WrapError(output.value()));
-              return;
+              api->InitializeApp(app_arg, settings_arg,
+                                 [reply](std::optional<FlutterError>&& output) {
+                                   if (output.has_value()) {
+                                     reply(WrapError(output.value()));
+                                     return;
+                                   }
+                                   EncodableList wrapped;
+                                   wrapped.push_back(EncodableValue());
+                                   reply(EncodableValue(std::move(wrapped)));
+                                 });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue());
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
@@ -254,30 +249,30 @@ void FirebaseAppInstallationsHostApi::SetUp(
       channel.SetMessageHandler(
           [api](const EncodableValue& message,
                 const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
               const auto& app_arg =
                   std::any_cast<const AppInstallationsPigeonFirebaseApp&>(
                       std::get<CustomEncodableValue>(encodable_app_arg));
               api->Delete(app_arg,
                           [reply](std::optional<FlutterError>&& output) {
-            if (output.has_value()) {
-              reply(WrapError(output.value()));
-              return;
+                            if (output.has_value()) {
+                              reply(WrapError(output.value()));
+                              return;
+                            }
+                            EncodableList wrapped;
+                            wrapped.push_back(EncodableValue());
+                            reply(EncodableValue(std::move(wrapped)));
+                          });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue());
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
@@ -293,30 +288,30 @@ void FirebaseAppInstallationsHostApi::SetUp(
       channel.SetMessageHandler(
           [api](const EncodableValue& message,
                 const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
               const auto& app_arg =
                   std::any_cast<const AppInstallationsPigeonFirebaseApp&>(
                       std::get<CustomEncodableValue>(encodable_app_arg));
-          api->GetId(app_arg, [reply](ErrorOr<std::string>&& output) {
-            if (output.has_error()) {
-              reply(WrapError(output.error()));
-              return;
-            }
-            EncodableList wrapped;
+              api->GetId(app_arg, [reply](ErrorOr<std::string>&& output) {
+                if (output.has_error()) {
+                  reply(WrapError(output.error()));
+                  return;
+                }
+                EncodableList wrapped;
                 wrapped.push_back(
                     EncodableValue(std::move(output).TakeValue()));
-            reply(EncodableValue(std::move(wrapped)));
+                reply(EncodableValue(std::move(wrapped)));
+              });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
+            }
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
@@ -332,39 +327,38 @@ void FirebaseAppInstallationsHostApi::SetUp(
       channel.SetMessageHandler(
           [api](const EncodableValue& message,
                 const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
               const auto& app_arg =
                   std::any_cast<const AppInstallationsPigeonFirebaseApp&>(
                       std::get<CustomEncodableValue>(encodable_app_arg));
-          const auto& encodable_force_refresh_arg = args.at(1);
-          if (encodable_force_refresh_arg.IsNull()) {
-            reply(WrapError("force_refresh_arg unexpectedly null."));
-            return;
-          }
+              const auto& encodable_force_refresh_arg = args.at(1);
+              if (encodable_force_refresh_arg.IsNull()) {
+                reply(WrapError("force_refresh_arg unexpectedly null."));
+                return;
+              }
               const auto& force_refresh_arg =
                   std::get<bool>(encodable_force_refresh_arg);
-              api->GetToken(
-                  app_arg, force_refresh_arg,
-                  [reply](ErrorOr<std::string>&& output) {
-            if (output.has_error()) {
-              reply(WrapError(output.error()));
-              return;
+              api->GetToken(app_arg, force_refresh_arg,
+                            [reply](ErrorOr<std::string>&& output) {
+                              if (output.has_error()) {
+                                reply(WrapError(output.error()));
+                                return;
+                              }
+                              EncodableList wrapped;
+                              wrapped.push_back(EncodableValue(
+                                  std::move(output).TakeValue()));
+                              reply(EncodableValue(std::move(wrapped)));
+                            });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-                    wrapped.push_back(EncodableValue(
-                        std::move(output).TakeValue()));
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
@@ -380,38 +374,37 @@ void FirebaseAppInstallationsHostApi::SetUp(
       channel.SetMessageHandler(
           [api](const EncodableValue& message,
                 const flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_arg = args.at(0);
-          if (encodable_app_arg.IsNull()) {
-            reply(WrapError("app_arg unexpectedly null."));
-            return;
-          }
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_arg = args.at(0);
+              if (encodable_app_arg.IsNull()) {
+                reply(WrapError("app_arg unexpectedly null."));
+                return;
+              }
               const auto& app_arg =
                   std::any_cast<const AppInstallationsPigeonFirebaseApp&>(
                       std::get<CustomEncodableValue>(encodable_app_arg));
-          const auto& encodable_new_id_arg = args.at(1);
-          if (encodable_new_id_arg.IsNull()) {
-            reply(WrapError("new_id_arg unexpectedly null."));
-            return;
-          }
+              const auto& encodable_new_id_arg = args.at(1);
+              if (encodable_new_id_arg.IsNull()) {
+                reply(WrapError("new_id_arg unexpectedly null."));
+                return;
+              }
               const auto& new_id_arg =
                   std::get<std::string>(encodable_new_id_arg);
-              api->OnIdChange(
-                  app_arg, new_id_arg,
-                  [reply](std::optional<FlutterError>&& output) {
-            if (output.has_value()) {
-              reply(WrapError(output.value()));
-              return;
+              api->OnIdChange(app_arg, new_id_arg,
+                              [reply](std::optional<FlutterError>&& output) {
+                                if (output.has_value()) {
+                                  reply(WrapError(output.value()));
+                                  return;
+                                }
+                                EncodableList wrapped;
+                                wrapped.push_back(EncodableValue());
+                                reply(EncodableValue(std::move(wrapped)));
+                              });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue());
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
@@ -428,49 +421,66 @@ EncodableValue FirebaseAppInstallationsHostApi::WrapError(
 EncodableValue FirebaseAppInstallationsHostApi::WrapError(
     const FlutterError& error) {
   return EncodableValue(EncodableList{EncodableValue(error.code()),
-    EncodableValue(error.message()),
+                                      EncodableValue(error.message()),
                                       error.details()});
 }
 
-// Generated class from Pigeon that represents Flutter messages that can be called from C++.
-FirebaseAppInstallationsFlutterApi::FirebaseAppInstallationsFlutterApi(flutter::BinaryMessenger* binary_messenger)
- : binary_messenger_(binary_messenger),
-    message_channel_suffix_("") {}
+// Generated class from Pigeon that represents Flutter messages that can be
+// called from C++.
+FirebaseAppInstallationsFlutterApi::FirebaseAppInstallationsFlutterApi(
+    flutter::BinaryMessenger* binary_messenger)
+    : binary_messenger_(binary_messenger), message_channel_suffix_("") {}
 
 FirebaseAppInstallationsFlutterApi::FirebaseAppInstallationsFlutterApi(
-  flutter::BinaryMessenger* binary_messenger,
-  const std::string& message_channel_suffix)
- : binary_messenger_(binary_messenger),
-    message_channel_suffix_(message_channel_suffix.length() > 0 ? std::string(".") + message_channel_suffix : "") {}
+    flutter::BinaryMessenger* binary_messenger,
+    const std::string& message_channel_suffix)
+    : binary_messenger_(binary_messenger),
+      message_channel_suffix_(message_channel_suffix.length() > 0
+                                  ? std::string(".") + message_channel_suffix
+                                  : "") {}
 
-const flutter::StandardMessageCodec& FirebaseAppInstallationsFlutterApi::GetCodec() {
-  return flutter::StandardMessageCodec::GetInstance(&PigeonInternalCodecSerializer::GetInstance());
+const flutter::StandardMessageCodec&
+FirebaseAppInstallationsFlutterApi::GetCodec() {
+  return flutter::StandardMessageCodec::GetInstance(
+      &PigeonInternalCodecSerializer::GetInstance());
 }
 
 void FirebaseAppInstallationsFlutterApi::RegisterIdTokenListener(
-  const AppInstallationsPigeonFirebaseApp& app_arg,
-  std::function<void(const std::string&)>&& on_success,
-  std::function<void(const FlutterError&)>&& on_error) {
-  const std::string channel_name = "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsFlutterApi.registerIdTokenListener" + message_channel_suffix_;
+    const AppInstallationsPigeonFirebaseApp& app_arg,
+    std::function<void(const std::string&)>&& on_success,
+    std::function<void(const FlutterError&)>&& on_error) {
+  const std::string channel_name =
+      "dev.flutter.pigeon.firebase_app_installations_platform_interface."
+      "FirebaseAppInstallationsFlutterApi.registerIdTokenListener" +
+      message_channel_suffix_;
   BasicMessageChannel<> channel(binary_messenger_, channel_name, &GetCodec());
   EncodableValue encoded_api_arguments = EncodableValue(EncodableList{
-    CustomEncodableValue(app_arg),
+      CustomEncodableValue(app_arg),
   });
-  channel.Send(encoded_api_arguments, [channel_name, on_success = std::move(on_success), on_error = std::move(on_error)](const uint8_t* reply, size_t reply_size) {
-    std::unique_ptr<EncodableValue> response = GetCodec().DecodeMessage(reply, reply_size);
-    const auto& encodable_return_value = *response;
-    const auto* list_return_value = std::get_if<EncodableList>(&encodable_return_value);
-    if (list_return_value) {
-      if (list_return_value->size() > 1) {
-        on_error(FlutterError(std::get<std::string>(list_return_value->at(0)), std::get<std::string>(list_return_value->at(1)), list_return_value->at(2)));
-      } else {
-        const auto& return_value = std::get<std::string>(list_return_value->at(0));
-        on_success(return_value);
-      }
-    } else {
-      on_error(CreateConnectionError(channel_name));
-    } 
-  });
+  channel.Send(
+      encoded_api_arguments, [channel_name, on_success = std::move(on_success),
+                              on_error = std::move(on_error)](
+                                 const uint8_t* reply, size_t reply_size) {
+        std::unique_ptr<EncodableValue> response =
+            GetCodec().DecodeMessage(reply, reply_size);
+        const auto& encodable_return_value = *response;
+        const auto* list_return_value =
+            std::get_if<EncodableList>(&encodable_return_value);
+        if (list_return_value) {
+          if (list_return_value->size() > 1) {
+            on_error(
+                FlutterError(std::get<std::string>(list_return_value->at(0)),
+                             std::get<std::string>(list_return_value->at(1)),
+                             list_return_value->at(2)));
+          } else {
+            const auto& return_value =
+                std::get<std::string>(list_return_value->at(0));
+            on_success(return_value);
+          }
+        } else {
+          on_error(CreateConnectionError(channel_name));
+        }
+      });
 }
 
 }  // namespace firebase_app_installations_windows

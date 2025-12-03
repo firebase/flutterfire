@@ -17,17 +17,16 @@
 
 namespace firebase_app_installations_windows {
 
-
 // Generated class from Pigeon.
 
 class FlutterError {
  public:
-  explicit FlutterError(const std::string& code)
-    : code_(code) {}
+  explicit FlutterError(const std::string& code) : code_(code) {}
   explicit FlutterError(const std::string& code, const std::string& message)
-    : code_(code), message_(message) {}
-  explicit FlutterError(const std::string& code, const std::string& message, const flutter::EncodableValue& details)
-    : code_(code), message_(message), details_(details) {}
+      : code_(code), message_(message) {}
+  explicit FlutterError(const std::string& code, const std::string& message,
+                        const flutter::EncodableValue& details)
+      : code_(code), message_(message), details_(details) {}
 
   const std::string& code() const { return code_; }
   const std::string& message() const { return message_; }
@@ -60,17 +59,14 @@ class ErrorOr {
   std::variant<T, FlutterError> v_;
 };
 
-
-
 // Generated class from Pigeon that represents data sent in messages.
 class AppInstallationsPigeonSettings {
  public:
   // Constructs an object setting all fields.
-  explicit AppInstallationsPigeonSettings(
-    bool persistence_enabled,
-    bool force_refresh_on_sign_in,
-    bool force_refresh_on_token_change,
-    bool force_refresh_on_app_update);
+  explicit AppInstallationsPigeonSettings(bool persistence_enabled,
+                                          bool force_refresh_on_sign_in,
+                                          bool force_refresh_on_token_change,
+                                          bool force_refresh_on_app_update);
 
   bool persistence_enabled() const;
   void set_persistence_enabled(bool value_arg);
@@ -85,7 +81,8 @@ class AppInstallationsPigeonSettings {
   void set_force_refresh_on_app_update(bool value_arg);
 
  private:
-  static AppInstallationsPigeonSettings FromEncodableList(const flutter::EncodableList& list);
+  static AppInstallationsPigeonSettings FromEncodableList(
+      const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
   friend class FirebaseAppInstallationsHostApi;
   friend class FirebaseAppInstallationsFlutterApi;
@@ -95,7 +92,6 @@ class AppInstallationsPigeonSettings {
   bool force_refresh_on_token_change_;
   bool force_refresh_on_app_update_;
 };
-
 
 // Generated class from Pigeon that represents data sent in messages.
 class AppInstallationsPigeonFirebaseApp {
@@ -107,14 +103,14 @@ class AppInstallationsPigeonFirebaseApp {
   void set_app_name(std::string_view value_arg);
 
  private:
-  static AppInstallationsPigeonFirebaseApp FromEncodableList(const flutter::EncodableList& list);
+  static AppInstallationsPigeonFirebaseApp FromEncodableList(
+      const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
   friend class FirebaseAppInstallationsHostApi;
   friend class FirebaseAppInstallationsFlutterApi;
   friend class PigeonInternalCodecSerializer;
   std::string app_name_;
 };
-
 
 class PigeonInternalCodecSerializer : public flutter::StandardCodecSerializer {
  public:
@@ -124,67 +120,69 @@ class PigeonInternalCodecSerializer : public flutter::StandardCodecSerializer {
     return sInstance;
   }
 
-  void WriteValue(
-    const flutter::EncodableValue& value,
-    flutter::ByteStreamWriter* stream) const override;
+  void WriteValue(const flutter::EncodableValue& value,
+                  flutter::ByteStreamWriter* stream) const override;
+
  protected:
   flutter::EncodableValue ReadValueOfType(
-    uint8_t type,
-    flutter::ByteStreamReader* stream) const override;
+      uint8_t type, flutter::ByteStreamReader* stream) const override;
 };
 
-// Generated interface from Pigeon that represents a handler of messages from Flutter.
+// Generated interface from Pigeon that represents a handler of messages from
+// Flutter.
 class FirebaseAppInstallationsHostApi {
  public:
-  FirebaseAppInstallationsHostApi(const FirebaseAppInstallationsHostApi&) = delete;
-  FirebaseAppInstallationsHostApi& operator=(const FirebaseAppInstallationsHostApi&) = delete;
+  FirebaseAppInstallationsHostApi(const FirebaseAppInstallationsHostApi&) =
+      delete;
+  FirebaseAppInstallationsHostApi& operator=(
+      const FirebaseAppInstallationsHostApi&) = delete;
   virtual ~FirebaseAppInstallationsHostApi() {}
   virtual void InitializeApp(
-    const AppInstallationsPigeonFirebaseApp& app,
-    const AppInstallationsPigeonSettings& settings,
-    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+      const AppInstallationsPigeonFirebaseApp& app,
+      const AppInstallationsPigeonSettings& settings,
+      std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void Delete(
-    const AppInstallationsPigeonFirebaseApp& app,
-    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+      const AppInstallationsPigeonFirebaseApp& app,
+      std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void GetId(
-    const AppInstallationsPigeonFirebaseApp& app,
-    std::function<void(ErrorOr<std::string> reply)> result) = 0;
+      const AppInstallationsPigeonFirebaseApp& app,
+      std::function<void(ErrorOr<std::string> reply)> result) = 0;
   virtual void GetToken(
-    const AppInstallationsPigeonFirebaseApp& app,
-    bool force_refresh,
-    std::function<void(ErrorOr<std::string> reply)> result) = 0;
+      const AppInstallationsPigeonFirebaseApp& app, bool force_refresh,
+      std::function<void(ErrorOr<std::string> reply)> result) = 0;
   virtual void OnIdChange(
-    const AppInstallationsPigeonFirebaseApp& app,
-    const std::string& new_id,
-    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+      const AppInstallationsPigeonFirebaseApp& app, const std::string& new_id,
+      std::function<void(std::optional<FlutterError> reply)> result) = 0;
 
   // The codec used by FirebaseAppInstallationsHostApi.
   static const flutter::StandardMessageCodec& GetCodec();
-  // Sets up an instance of `FirebaseAppInstallationsHostApi` to handle messages through the `binary_messenger`.
-  static void SetUp(
-    flutter::BinaryMessenger* binary_messenger,
-    FirebaseAppInstallationsHostApi* api);
-  static void SetUp(
-    flutter::BinaryMessenger* binary_messenger,
-    FirebaseAppInstallationsHostApi* api,
-    const std::string& message_channel_suffix);
+  // Sets up an instance of `FirebaseAppInstallationsHostApi` to handle messages
+  // through the `binary_messenger`.
+  static void SetUp(flutter::BinaryMessenger* binary_messenger,
+                    FirebaseAppInstallationsHostApi* api);
+  static void SetUp(flutter::BinaryMessenger* binary_messenger,
+                    FirebaseAppInstallationsHostApi* api,
+                    const std::string& message_channel_suffix);
   static flutter::EncodableValue WrapError(std::string_view error_message);
   static flutter::EncodableValue WrapError(const FlutterError& error);
+
  protected:
   FirebaseAppInstallationsHostApi() = default;
 };
-// Generated class from Pigeon that represents Flutter messages that can be called from C++.
+// Generated class from Pigeon that represents Flutter messages that can be
+// called from C++.
 class FirebaseAppInstallationsFlutterApi {
  public:
-  FirebaseAppInstallationsFlutterApi(flutter::BinaryMessenger* binary_messenger);
   FirebaseAppInstallationsFlutterApi(
-    flutter::BinaryMessenger* binary_messenger,
-    const std::string& message_channel_suffix);
+      flutter::BinaryMessenger* binary_messenger);
+  FirebaseAppInstallationsFlutterApi(flutter::BinaryMessenger* binary_messenger,
+                                     const std::string& message_channel_suffix);
   static const flutter::StandardMessageCodec& GetCodec();
   void RegisterIdTokenListener(
-    const AppInstallationsPigeonFirebaseApp& app,
-    std::function<void(const std::string&)>&& on_success,
-    std::function<void(const FlutterError&)>&& on_error);
+      const AppInstallationsPigeonFirebaseApp& app,
+      std::function<void(const std::string&)>&& on_success,
+      std::function<void(const FlutterError&)>&& on_error);
+
  private:
   flutter::BinaryMessenger* binary_messenger_;
   std::string message_channel_suffix_;
