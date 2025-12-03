@@ -34,10 +34,8 @@ FlutterError CreateConnectionError(const std::string channel_name) {
 // AppInstallationsPigeonSettings
 
 AppInstallationsPigeonSettings::AppInstallationsPigeonSettings(
-    bool persistence_enabled,
-    bool force_refresh_on_sign_in,
-    bool force_refresh_on_token_change,
-    bool force_refresh_on_app_update)
+    bool persistence_enabled, bool force_refresh_on_sign_in,
+    bool force_refresh_on_token_change, bool force_refresh_on_app_update)
     : persistence_enabled_(persistence_enabled),
       force_refresh_on_sign_in_(force_refresh_on_sign_in),
       force_refresh_on_token_change_(force_refresh_on_token_change),
@@ -90,8 +88,7 @@ EncodableList AppInstallationsPigeonSettings::ToEncodableList() const {
   return list;
 }
 
-AppInstallationsPigeonSettings
-AppInstallationsPigeonSettings::FromEncodableList(
+AppInstallationsPigeonSettings AppInstallationsPigeonSettings::FromEncodableList(
     const EncodableList& list) {
   AppInstallationsPigeonSettings decoded(
       std::get<bool>(list[0]), std::get<bool>(list[1]),

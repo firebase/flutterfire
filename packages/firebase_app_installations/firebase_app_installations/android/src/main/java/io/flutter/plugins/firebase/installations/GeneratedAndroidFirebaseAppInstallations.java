@@ -347,37 +347,60 @@ public class GeneratedAndroidFirebaseAppInstallations {
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface FirebaseAppInstallationsHostApi {
 
-    void initializeApp(@NonNull AppInstallationsPigeonFirebaseApp app, @NonNull AppInstallationsPigeonSettings settings, @NonNull VoidResult result);
+    void initializeApp(
+        @NonNull AppInstallationsPigeonFirebaseApp app,
+        @NonNull AppInstallationsPigeonSettings settings,
+        @NonNull VoidResult result);
 
     void delete(@NonNull AppInstallationsPigeonFirebaseApp app, @NonNull VoidResult result);
 
     void getId(@NonNull AppInstallationsPigeonFirebaseApp app, @NonNull Result<String> result);
 
-    void getToken(@NonNull AppInstallationsPigeonFirebaseApp app, @NonNull Boolean forceRefresh, @NonNull Result<String> result);
+    void getToken(
+        @NonNull AppInstallationsPigeonFirebaseApp app,
+        @NonNull Boolean forceRefresh,
+        @NonNull Result<String> result);
 
-    void onIdChange(@NonNull AppInstallationsPigeonFirebaseApp app, @NonNull String newId, @NonNull VoidResult result);
+    void onIdChange(
+        @NonNull AppInstallationsPigeonFirebaseApp app,
+        @NonNull String newId,
+        @NonNull VoidResult result);
 
     /** The codec used by FirebaseAppInstallationsHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
       return PigeonCodec.INSTANCE;
     }
-    /**Sets up an instance of `FirebaseAppInstallationsHostApi` to handle messages through the `binaryMessenger`. */
-    static void setUp(@NonNull BinaryMessenger binaryMessenger, @Nullable FirebaseAppInstallationsHostApi api) {
+
+    /**
+     * Sets up an instance of `FirebaseAppInstallationsHostApi` to handle messages through the
+     * `binaryMessenger`.
+     */
+    static void setUp(
+        @NonNull BinaryMessenger binaryMessenger, @Nullable FirebaseAppInstallationsHostApi api) {
       setUp(binaryMessenger, "", api);
     }
-    static void setUp(@NonNull BinaryMessenger binaryMessenger, @NonNull String messageChannelSuffix, @Nullable FirebaseAppInstallationsHostApi api) {
+
+    static void setUp(
+        @NonNull BinaryMessenger binaryMessenger,
+        @NonNull String messageChannelSuffix,
+        @Nullable FirebaseAppInstallationsHostApi api) {
       messageChannelSuffix = messageChannelSuffix.isEmpty() ? "" : "." + messageChannelSuffix;
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.initializeApp" + messageChannelSuffix, getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.initializeApp"
+                    + messageChannelSuffix,
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                AppInstallationsPigeonFirebaseApp appArg = (AppInstallationsPigeonFirebaseApp) args.get(0);
-                AppInstallationsPigeonSettings settingsArg = (AppInstallationsPigeonSettings) args.get(1);
+                AppInstallationsPigeonFirebaseApp appArg =
+                    (AppInstallationsPigeonFirebaseApp) args.get(0);
+                AppInstallationsPigeonSettings settingsArg =
+                    (AppInstallationsPigeonSettings) args.get(1);
                 VoidResult resultCallback =
                     new VoidResult() {
                       public void success() {
@@ -400,13 +423,17 @@ public class GeneratedAndroidFirebaseAppInstallations {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.delete" + messageChannelSuffix, getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.delete"
+                    + messageChannelSuffix,
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                AppInstallationsPigeonFirebaseApp appArg = (AppInstallationsPigeonFirebaseApp) args.get(0);
+                AppInstallationsPigeonFirebaseApp appArg =
+                    (AppInstallationsPigeonFirebaseApp) args.get(0);
                 VoidResult resultCallback =
                     new VoidResult() {
                       public void success() {
@@ -429,13 +456,17 @@ public class GeneratedAndroidFirebaseAppInstallations {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getId" + messageChannelSuffix, getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getId"
+                    + messageChannelSuffix,
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                AppInstallationsPigeonFirebaseApp appArg = (AppInstallationsPigeonFirebaseApp) args.get(0);
+                AppInstallationsPigeonFirebaseApp appArg =
+                    (AppInstallationsPigeonFirebaseApp) args.get(0);
                 Result<String> resultCallback =
                     new Result<String>() {
                       public void success(String result) {
@@ -458,13 +489,17 @@ public class GeneratedAndroidFirebaseAppInstallations {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getToken" + messageChannelSuffix, getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getToken"
+                    + messageChannelSuffix,
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                AppInstallationsPigeonFirebaseApp appArg = (AppInstallationsPigeonFirebaseApp) args.get(0);
+                AppInstallationsPigeonFirebaseApp appArg =
+                    (AppInstallationsPigeonFirebaseApp) args.get(0);
                 Boolean forceRefreshArg = (Boolean) args.get(1);
                 Result<String> resultCallback =
                     new Result<String>() {
@@ -488,13 +523,17 @@ public class GeneratedAndroidFirebaseAppInstallations {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.onIdChange" + messageChannelSuffix, getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.onIdChange"
+                    + messageChannelSuffix,
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                AppInstallationsPigeonFirebaseApp appArg = (AppInstallationsPigeonFirebaseApp) args.get(0);
+                AppInstallationsPigeonFirebaseApp appArg =
+                    (AppInstallationsPigeonFirebaseApp) args.get(0);
                 String newIdArg = (String) args.get(1);
                 VoidResult resultCallback =
                     new VoidResult() {
@@ -525,32 +564,38 @@ public class GeneratedAndroidFirebaseAppInstallations {
     public FirebaseAppInstallationsFlutterApi(@NonNull BinaryMessenger argBinaryMessenger) {
       this(argBinaryMessenger, "");
     }
-    public FirebaseAppInstallationsFlutterApi(@NonNull BinaryMessenger argBinaryMessenger, @NonNull String messageChannelSuffix) {
+    public FirebaseAppInstallationsFlutterApi(
+        @NonNull BinaryMessenger argBinaryMessenger, @NonNull String messageChannelSuffix) {
       this.binaryMessenger = argBinaryMessenger;
       this.messageChannelSuffix = messageChannelSuffix.isEmpty() ? "" : "." + messageChannelSuffix;
     }
 
-    /**
-     * Public interface for sending reply.
-     * The codec used by FirebaseAppInstallationsFlutterApi.
-     */
+    /** Public interface for sending reply. The codec used by FirebaseAppInstallationsFlutterApi. */
     static @NonNull MessageCodec<Object> getCodec() {
       return PigeonCodec.INSTANCE;
     }
-    public void registerIdTokenListener(@NonNull AppInstallationsPigeonFirebaseApp appArg, @NonNull Result<String> result) {
-      final String channelName = "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsFlutterApi.registerIdTokenListener" + messageChannelSuffix;
+    public void registerIdTokenListener(
+        @NonNull AppInstallationsPigeonFirebaseApp appArg, @NonNull Result<String> result) {
+      final String channelName =
+          "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsFlutterApi.registerIdTokenListener"
+              + messageChannelSuffix;
       BasicMessageChannel<Object> channel =
-          new BasicMessageChannel<>(
-              binaryMessenger, channelName, getCodec());
+          new BasicMessageChannel<>(binaryMessenger, channelName, getCodec());
       channel.send(
           new ArrayList<>(Collections.singletonList(appArg)),
           channelReply -> {
             if (channelReply instanceof List) {
               List<Object> listReply = (List<Object>) channelReply;
               if (listReply.size() > 1) {
-                result.error(new FlutterError((String) listReply.get(0), (String) listReply.get(1), listReply.get(2)));
+                result.error(
+                    new FlutterError(
+                        (String) listReply.get(0), (String) listReply.get(1), listReply.get(2)));
               } else if (listReply.get(0) == null) {
-                result.error(new FlutterError("null-error", "Flutter api returned null value for non-null return value.", ""));
+                result.error(
+                    new FlutterError(
+                        "null-error",
+                        "Flutter api returned null value for non-null return value.",
+                        ""));
               } else {
                 @SuppressWarnings("ConstantConditions")
                 String output = (String) listReply.get(0);

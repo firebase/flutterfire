@@ -26,7 +26,10 @@ static NSArray<id> *wrapResult(id result, FlutterError *error) {
 }
 
 static FlutterError *createConnectionError(NSString *channelName) {
-  return [FlutterError errorWithCode:@"channel-error" message:[NSString stringWithFormat:@"%@/%@/%@", @"Unable to establish connection on channel: '", channelName, @"'."] details:@""];
+  return [FlutterError
+      errorWithCode:@"channel-error"
+            message:[NSString stringWithFormat:@"%@/%@/%@", @"Unable to establish connection on channel: '", channelName, @"'."]
+            details:@""];
 }
 
 static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
@@ -47,11 +50,11 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
 @end
 
 @implementation AppInstallationsPigeonSettings
-+ (instancetype)makeWithPersistenceEnabled:(BOOL )persistenceEnabled
-    forceRefreshOnSignIn:(BOOL )forceRefreshOnSignIn
-    forceRefreshOnTokenChange:(BOOL )forceRefreshOnTokenChange
-    forceRefreshOnAppUpdate:(BOOL )forceRefreshOnAppUpdate {
-  AppInstallationsPigeonSettings* pigeonResult = [[AppInstallationsPigeonSettings alloc] init];
++ (instancetype)makeWithPersistenceEnabled:(BOOL)persistenceEnabled
+                      forceRefreshOnSignIn:(BOOL)forceRefreshOnSignIn
+                 forceRefreshOnTokenChange:(BOOL)forceRefreshOnTokenChange
+                   forceRefreshOnAppUpdate:(BOOL)forceRefreshOnAppUpdate {
+  AppInstallationsPigeonSettings *pigeonResult = [[AppInstallationsPigeonSettings alloc] init];
   pigeonResult.persistenceEnabled = persistenceEnabled;
   pigeonResult.forceRefreshOnSignIn = forceRefreshOnSignIn;
   pigeonResult.forceRefreshOnTokenChange = forceRefreshOnTokenChange;
