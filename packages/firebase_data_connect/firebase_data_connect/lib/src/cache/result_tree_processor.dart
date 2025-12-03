@@ -33,19 +33,12 @@ class ResultTreeProcessor {
       Map<String, dynamic> serverResponse, CacheProvider cacheProvider) async {
     final impactedQueryIds = <String>{};
 
-    print("dehydrate: ${jsonEncode(serverResponse)}");
-
     Map<String, dynamic> jsonData = serverResponse;
     if (serverResponse.containsKey('data')) {
       jsonData = serverResponse['data'];
     }
     final rootNode =
         _dehydrateNode(queryId, jsonData, cacheProvider, impactedQueryIds);
-
-    //debug only
-
-    print(
-        "dehydrated rootNode ${jsonEncode(rootNode.toJson(mode: EncodingMode.dehydrated))}");
 
     return DehydrationResult(rootNode, impactedQueryIds);
   }
@@ -55,7 +48,6 @@ class ResultTreeProcessor {
     if (data is Map<String, dynamic>) {
       if (data.containsKey(GlobalIDKey)) {
         final guid = data[GlobalIDKey] as String;
-        print("dehydrate - obj with globalId ${guid}");
 
         final serverValues = <String, dynamic>{};
         final nestedObjects = <String, EntityNode>{};
@@ -69,12 +61,6 @@ class ResultTreeProcessor {
             EntityNode en =
                 _dehydrateNode(queryId, value, cacheProvider, impactedQueryIds);
             nestedObjects[key] = en;
-            if (en != null) {
-              print(
-                  'dehydrate - got nestedObject EN for key ${key} ${en!.scalarValues?.length} ${en!.nestedObjectLists?.length} ${en!.nestedObjects?.length}');
-            } else {
-              print("dehydrate - EntityNode is null");
-            }
           } else if (value is List) {
             final nodeList = <EntityNode>[];
             for (final item in value) {
@@ -93,15 +79,12 @@ class ResultTreeProcessor {
         existingEdo.setServerValues(serverValues);
         cacheProvider.saveEntityDataObject(existingEdo);
 
-        print(
-            "dehydrate - returning EN ${existingEdo.guid} with EDO ${existingEdo}");
         return EntityNode(
             entity: existingEdo,
             nestedObjects: nestedObjects,
             nestedObjectLists: nestedObjectLists);
       } else {
         // GlobalID check
-        print("dehydrate - no globalID ${data}");
         final scalarValues = <String, dynamic>{};
         final nestedObjects = <String, EntityNode>{};
         final nestedObjectLists = <String, List<EntityNode>>{};
@@ -114,22 +97,17 @@ class ResultTreeProcessor {
             nestedObjects[key] =
                 _dehydrateNode(queryId, value, cacheProvider, impactedQueryIds);
           } else if (value is List) {
-            print("dehydrate - listValue for key ${key} count ${value.length}");
             final nodeList = <EntityNode>[];
             for (final item in value) {
               nodeList.add(_dehydrateNode(
                   queryId, item, cacheProvider, impactedQueryIds));
             }
             nestedObjectLists[key] = nodeList;
-            print(
-                "dehydrate - added to lists ${key} ${nodeList.length} ${jsonEncode(nodeList)}");
           } else {
             scalarValues[key] = value;
           }
         }
-        print(
-            "dehydrate - returning an EN with scalaraValues ${scalarValues.length} nestedObjectLists ${nestedObjectLists.length} nestedObjects ${nestedObjects.length}");
-
+      
         return EntityNode(
             scalarValues: scalarValues,
             nestedObjects: nestedObjects,

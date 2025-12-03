@@ -171,10 +171,10 @@ class GRPCTransport implements DataConnectTransport {
 
 ServerResponse handleResponse<Data>(CommonResponse<Data> commonResponse) {
   log('handleResponse type ${commonResponse.data.runtimeType}');
+  Map<String, dynamic>? jsond = commonResponse.data as Map<String, dynamic>?;
+  log('handleResponse got json data $jsond');
   String jsonEncoded = jsonEncode(commonResponse.data);
-  log('handleResponse jsonEncoded ${jsonEncoded.length} $jsonEncoded');
-  Map<String, dynamic> decodedData = jsonDecode(jsonEncoded);
-  log('handleResponse decodedData $decodedData');
+
   if (commonResponse.errors.isNotEmpty) {
     Map<String, dynamic>? data =
         jsonDecode(jsonEncoded) as Map<String, dynamic>?;
@@ -201,9 +201,13 @@ ServerResponse handleResponse<Data>(CommonResponse<Data> commonResponse) {
     throw DataConnectOperationError(DataConnectErrorCode.other,
         'failed to invoke operation: ${response.errors}', response);
   }
-  ServerResponse response = ServerResponse(decodedData);
-  print("Converted to server response");
-  return response;
+
+  // no errors - return a standard response
+  if (jsond != null) {
+    return ServerResponse(jsond!);
+  } else {
+    return ServerResponse({});
+  }
 }
 
 /// Initializes GRPC transport for Data Connect.
