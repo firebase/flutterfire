@@ -13,7 +13,6 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:firebase_app_installations_platform_interface/src/pigeon/messages.pigeon.dart';
 
-
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
   @override
@@ -21,10 +20,10 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
-    }    else if (value is AppInstallationsPigeonSettings) {
+    } else if (value is AppInstallationsPigeonSettings) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    }    else if (value is AppInstallationsPigeonFirebaseApp) {
+    } else if (value is AppInstallationsPigeonFirebaseApp) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
     } else {
@@ -35,9 +34,9 @@ class _PigeonCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
-      case 129: 
+      case 129:
         return AppInstallationsPigeonSettings.decode(readValue(buffer)!);
-      case 130: 
+      case 130:
         return AppInstallationsPigeonFirebaseApp.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -46,36 +45,52 @@ class _PigeonCodec extends StandardMessageCodec {
 }
 
 abstract class TestFirebaseAppInstallationsHostApi {
-  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding => TestDefaultBinaryMessengerBinding.instance;
+  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding =>
+      TestDefaultBinaryMessengerBinding.instance;
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
-  Future<void> initializeApp(AppInstallationsPigeonFirebaseApp app, AppInstallationsPigeonSettings settings);
+  Future<void> initializeApp(AppInstallationsPigeonFirebaseApp app,
+      AppInstallationsPigeonSettings settings);
 
   Future<void> delete(AppInstallationsPigeonFirebaseApp app);
 
   Future<String> getId(AppInstallationsPigeonFirebaseApp app);
 
-  Future<String> getToken(AppInstallationsPigeonFirebaseApp app, bool forceRefresh);
+  Future<String> getToken(
+      AppInstallationsPigeonFirebaseApp app, bool forceRefresh);
 
   Future<void> onIdChange(AppInstallationsPigeonFirebaseApp app, String newId);
 
-  static void setUp(TestFirebaseAppInstallationsHostApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
-    messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  static void setUp(
+    TestFirebaseAppInstallationsHostApi? api, {
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) {
+    messageChannelSuffix =
+        messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.initializeApp$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.initializeApp$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.initializeApp was null.');
+              'Argument for dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.initializeApp was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AppInstallationsPigeonFirebaseApp? arg_app = (args[0] as AppInstallationsPigeonFirebaseApp?);
+          final AppInstallationsPigeonFirebaseApp? arg_app =
+              (args[0] as AppInstallationsPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.initializeApp was null, expected non-null AppInstallationsPigeonFirebaseApp.');
-          final AppInstallationsPigeonSettings? arg_settings = (args[1] as AppInstallationsPigeonSettings?);
+          final AppInstallationsPigeonSettings? arg_settings =
+              (args[1] as AppInstallationsPigeonSettings?);
           assert(arg_settings != null,
               'Argument for dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.initializeApp was null, expected non-null AppInstallationsPigeonSettings.');
           try {
@@ -83,24 +98,32 @@ abstract class TestFirebaseAppInstallationsHostApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.delete$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.delete$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.delete was null.');
+              'Argument for dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.delete was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AppInstallationsPigeonFirebaseApp? arg_app = (args[0] as AppInstallationsPigeonFirebaseApp?);
+          final AppInstallationsPigeonFirebaseApp? arg_app =
+              (args[0] as AppInstallationsPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.delete was null, expected non-null AppInstallationsPigeonFirebaseApp.');
           try {
@@ -108,24 +131,32 @@ abstract class TestFirebaseAppInstallationsHostApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getId$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getId$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getId was null.');
+              'Argument for dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getId was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AppInstallationsPigeonFirebaseApp? arg_app = (args[0] as AppInstallationsPigeonFirebaseApp?);
+          final AppInstallationsPigeonFirebaseApp? arg_app =
+              (args[0] as AppInstallationsPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getId was null, expected non-null AppInstallationsPigeonFirebaseApp.');
           try {
@@ -133,52 +164,69 @@ abstract class TestFirebaseAppInstallationsHostApi {
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getToken$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getToken$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getToken was null.');
+              'Argument for dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getToken was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AppInstallationsPigeonFirebaseApp? arg_app = (args[0] as AppInstallationsPigeonFirebaseApp?);
+          final AppInstallationsPigeonFirebaseApp? arg_app =
+              (args[0] as AppInstallationsPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getToken was null, expected non-null AppInstallationsPigeonFirebaseApp.');
           final bool? arg_forceRefresh = (args[1] as bool?);
           assert(arg_forceRefresh != null,
               'Argument for dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getToken was null, expected non-null bool.');
           try {
-            final String output = await api.getToken(arg_app!, arg_forceRefresh!);
+            final String output =
+                await api.getToken(arg_app!, arg_forceRefresh!);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.onIdChange$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.onIdChange$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.onIdChange was null.');
+              'Argument for dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.onIdChange was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AppInstallationsPigeonFirebaseApp? arg_app = (args[0] as AppInstallationsPigeonFirebaseApp?);
+          final AppInstallationsPigeonFirebaseApp? arg_app =
+              (args[0] as AppInstallationsPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.onIdChange was null, expected non-null AppInstallationsPigeonFirebaseApp.');
           final String? arg_newId = (args[1] as String?);
@@ -189,8 +237,9 @@ abstract class TestFirebaseAppInstallationsHostApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }

@@ -14,7 +14,9 @@ import 'utils/exception.dart';
 
 class MethodChannelFirebaseAppInstallations
     extends FirebaseAppInstallationsPlatform {
-  final FirebaseAppInstallationsHostApi _api = FirebaseAppInstallationsHostApi();
+  final FirebaseAppInstallationsHostApi _api =
+      FirebaseAppInstallationsHostApi();
+
   /// Returns a stub instance to allow the platform interface to access
   /// the class instance statically.
   static MethodChannelFirebaseAppInstallations get instance {

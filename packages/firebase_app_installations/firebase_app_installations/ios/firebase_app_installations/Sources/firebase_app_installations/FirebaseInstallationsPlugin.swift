@@ -135,23 +135,19 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol,
 
   // MARK: - FirebaseAppInstallationsHostApi (Pigeon)
 
-  func initializeApp(
-    app: AppInstallationsPigeonFirebaseApp,
-    settings: AppInstallationsPigeonSettings,
-    completion: @escaping (Result<Void, Error>) -> Void
-  ) {
+  func initializeApp(app: AppInstallationsPigeonFirebaseApp,
+                     settings: AppInstallationsPigeonSettings,
+                     completion: @escaping (Result<Void, Error>) -> Void) {
     // Currently no per-app settings are applied on iOS; ensure the instance is created.
     _ = getInstallations(app: app)
     completion(.success(()))
   }
 
-  func delete(
-    app: AppInstallationsPigeonFirebaseApp,
-    completion: @escaping (Result<Void, Error>) -> Void
-  ) {
+  func delete(app: AppInstallationsPigeonFirebaseApp,
+              completion: @escaping (Result<Void, Error>) -> Void) {
     let instance = getInstallations(app: app)
     instance.delete { error in
-      if let error = error {
+      if let error {
         completion(.failure(error))
       } else {
         completion(.success(()))
@@ -159,32 +155,30 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol,
     }
   }
 
-  func getId(
-    app: AppInstallationsPigeonFirebaseApp,
-    completion: @escaping (Result<String, Error>) -> Void
-  ) {
+  func getId(app: AppInstallationsPigeonFirebaseApp,
+             completion: @escaping (Result<String, Error>) -> Void) {
     let instance = getInstallations(app: app)
     instance.installationID { id, error in
-      if let error = error {
+      if let error {
         completion(.failure(error))
-      } else if let id = id {
+      } else if let id {
         completion(.success(id))
       } else {
         completion(.failure(NSError(domain: "firebase_app_installations",
                                     code: -1,
-                                    userInfo: [NSLocalizedDescriptionKey: "Installation ID is nil."])))
+                                    userInfo: [
+                                      NSLocalizedDescriptionKey: "Installation ID is nil.",
+                                    ])))
       }
     }
   }
 
-  func getToken(
-    app: AppInstallationsPigeonFirebaseApp,
-    forceRefresh: Bool,
-    completion: @escaping (Result<String, Error>) -> Void
-  ) {
+  func getToken(app: AppInstallationsPigeonFirebaseApp,
+                forceRefresh: Bool,
+                completion: @escaping (Result<String, Error>) -> Void) {
     let instance = getInstallations(app: app)
     instance.authTokenForcingRefresh(forceRefresh) { tokenResult, error in
-      if let error = error {
+      if let error {
         completion(.failure(error))
       } else if let token = tokenResult?.authToken {
         completion(.success(token))
@@ -196,11 +190,9 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol,
     }
   }
 
-  func onIdChange(
-    app: AppInstallationsPigeonFirebaseApp,
-    newId: String,
-    completion: @escaping (Result<Void, Error>) -> Void
-  ) {
+  func onIdChange(app: AppInstallationsPigeonFirebaseApp,
+                  newId: String,
+                  completion: @escaping (Result<Void, Error>) -> Void) {
     // The Dart side currently uses an EventChannel-based listener, so this Pigeon hook
     // is a no-op placeholder to satisfy the interface.
     completion(.success(()))

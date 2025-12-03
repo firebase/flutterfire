@@ -27,13 +27,12 @@ final class PigeonError: Error {
   }
 
   var localizedDescription: String {
-    return
-      "PigeonError(code: \(code), message: \(message ?? "<nil>"), details: \(details ?? "<nil>")"
+    "PigeonError(code: \(code), message: \(message ?? "<nil>"), details: \(details ?? "<nil>")"
   }
 }
 
 private func wrapResult(_ result: Any?) -> [Any?] {
-  return [result]
+  [result]
 }
 
 private func wrapError(_ error: Any) -> [Any?] {
@@ -59,11 +58,15 @@ private func wrapError(_ error: Any) -> [Any?] {
 }
 
 private func createConnectionError(withChannelName channelName: String) -> PigeonError {
-  return PigeonError(code: "channel-error", message: "Unable to establish connection on channel: '\(channelName)'.", details: "")
+  PigeonError(
+    code: "channel-error",
+    message: "Unable to establish connection on channel: '\(channelName)'.",
+    details: ""
+  )
 }
 
 private func isNullish(_ value: Any?) -> Bool {
-  return value is NSNull || value == nil
+  value is NSNull || value == nil
 }
 
 private func nilOrValue<T>(_ value: Any?) -> T? {
@@ -107,19 +110,22 @@ func deepEqualsFirebaseAppInstallationsMessages(_ lhs: Any?, _ rhs: Any?) -> Boo
     return true
 
   default:
-    // Any other type shouldn't be able to be used with pigeon. File an issue if you find this to be untrue.
+    // Any other type shouldn't be able to be used with pigeon. File an issue if you find this to be
+    // untrue.
     return false
   }
 }
 
 func deepHashFirebaseAppInstallationsMessages(value: Any?, hasher: inout Hasher) {
   if let valueList = value as? [AnyHashable] {
-     for item in valueList { deepHashFirebaseAppInstallationsMessages(value: item, hasher: &hasher) }
-     return
+    for item in valueList {
+      deepHashFirebaseAppInstallationsMessages(value: item, hasher: &hasher)
+    }
+    return
   }
 
   if let valueDict = value as? [AnyHashable: AnyHashable] {
-    for key in valueDict.keys { 
+    for key in valueDict.keys {
       hasher.combine(key)
       deepHashFirebaseAppInstallationsMessages(value: valueDict[key]!, hasher: &hasher)
     }
@@ -133,15 +139,12 @@ func deepHashFirebaseAppInstallationsMessages(value: Any?, hasher: inout Hasher)
   return hasher.combine(String(describing: value))
 }
 
-    
-
 /// Generated class from Pigeon that represents data sent in messages.
 struct AppInstallationsPigeonSettings: Hashable {
   var persistenceEnabled: Bool
   var forceRefreshOnSignIn: Bool
   var forceRefreshOnTokenChange: Bool
   var forceRefreshOnAppUpdate: Bool
-
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> AppInstallationsPigeonSettings? {
@@ -157,16 +160,21 @@ struct AppInstallationsPigeonSettings: Hashable {
       forceRefreshOnAppUpdate: forceRefreshOnAppUpdate
     )
   }
+
   func toList() -> [Any?] {
-    return [
+    [
       persistenceEnabled,
       forceRefreshOnSignIn,
       forceRefreshOnTokenChange,
       forceRefreshOnAppUpdate,
     ]
   }
-  static func == (lhs: AppInstallationsPigeonSettings, rhs: AppInstallationsPigeonSettings) -> Bool {
-    return deepEqualsFirebaseAppInstallationsMessages(lhs.toList(), rhs.toList())  }
+
+  static func == (lhs: AppInstallationsPigeonSettings,
+                  rhs: AppInstallationsPigeonSettings) -> Bool {
+    deepEqualsFirebaseAppInstallationsMessages(lhs.toList(), rhs.toList())
+  }
+
   func hash(into hasher: inout Hasher) {
     deepHashFirebaseAppInstallationsMessages(value: toList(), hasher: &hasher)
   }
@@ -176,7 +184,6 @@ struct AppInstallationsPigeonSettings: Hashable {
 struct AppInstallationsPigeonFirebaseApp: Hashable {
   var appName: String
 
-
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> AppInstallationsPigeonFirebaseApp? {
     let appName = pigeonVar_list[0] as! String
@@ -185,13 +192,18 @@ struct AppInstallationsPigeonFirebaseApp: Hashable {
       appName: appName
     )
   }
+
   func toList() -> [Any?] {
-    return [
-      appName
+    [
+      appName,
     ]
   }
-  static func == (lhs: AppInstallationsPigeonFirebaseApp, rhs: AppInstallationsPigeonFirebaseApp) -> Bool {
-    return deepEqualsFirebaseAppInstallationsMessages(lhs.toList(), rhs.toList())  }
+
+  static func == (lhs: AppInstallationsPigeonFirebaseApp,
+                  rhs: AppInstallationsPigeonFirebaseApp) -> Bool {
+    deepEqualsFirebaseAppInstallationsMessages(lhs.toList(), rhs.toList())
+  }
+
   func hash(into hasher: inout Hasher) {
     deepHashFirebaseAppInstallationsMessages(value: toList(), hasher: &hasher)
   }
@@ -201,9 +213,9 @@ private class FirebaseAppInstallationsMessagesPigeonCodecReader: FlutterStandard
   override func readValue(ofType type: UInt8) -> Any? {
     switch type {
     case 129:
-      return AppInstallationsPigeonSettings.fromList(self.readValue() as! [Any?])
+      return AppInstallationsPigeonSettings.fromList(readValue() as! [Any?])
     case 130:
-      return AppInstallationsPigeonFirebaseApp.fromList(self.readValue() as! [Any?])
+      return AppInstallationsPigeonFirebaseApp.fromList(readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
     }
@@ -226,36 +238,54 @@ private class FirebaseAppInstallationsMessagesPigeonCodecWriter: FlutterStandard
 
 private class FirebaseAppInstallationsMessagesPigeonCodecReaderWriter: FlutterStandardReaderWriter {
   override func reader(with data: Data) -> FlutterStandardReader {
-    return FirebaseAppInstallationsMessagesPigeonCodecReader(data: data)
+    FirebaseAppInstallationsMessagesPigeonCodecReader(data: data)
   }
 
   override func writer(with data: NSMutableData) -> FlutterStandardWriter {
-    return FirebaseAppInstallationsMessagesPigeonCodecWriter(data: data)
+    FirebaseAppInstallationsMessagesPigeonCodecWriter(data: data)
   }
 }
 
-class FirebaseAppInstallationsMessagesPigeonCodec: FlutterStandardMessageCodec, @unchecked Sendable {
-  static let shared = FirebaseAppInstallationsMessagesPigeonCodec(readerWriter: FirebaseAppInstallationsMessagesPigeonCodecReaderWriter())
+class FirebaseAppInstallationsMessagesPigeonCodec: FlutterStandardMessageCodec,
+  @unchecked Sendable {
+  static let shared =
+    FirebaseAppInstallationsMessagesPigeonCodec(
+      readerWriter: FirebaseAppInstallationsMessagesPigeonCodecReaderWriter()
+    )
 }
-
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol FirebaseAppInstallationsHostApi {
-  func initializeApp(app: AppInstallationsPigeonFirebaseApp, settings: AppInstallationsPigeonSettings, completion: @escaping (Result<Void, Error>) -> Void)
-  func delete(app: AppInstallationsPigeonFirebaseApp, completion: @escaping (Result<Void, Error>) -> Void)
-  func getId(app: AppInstallationsPigeonFirebaseApp, completion: @escaping (Result<String, Error>) -> Void)
-  func getToken(app: AppInstallationsPigeonFirebaseApp, forceRefresh: Bool, completion: @escaping (Result<String, Error>) -> Void)
-  func onIdChange(app: AppInstallationsPigeonFirebaseApp, newId: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func initializeApp(app: AppInstallationsPigeonFirebaseApp,
+                     settings: AppInstallationsPigeonSettings,
+                     completion: @escaping (Result<Void, Error>) -> Void)
+  func delete(app: AppInstallationsPigeonFirebaseApp,
+              completion: @escaping (Result<Void, Error>) -> Void)
+  func getId(app: AppInstallationsPigeonFirebaseApp,
+             completion: @escaping (Result<String, Error>) -> Void)
+  func getToken(app: AppInstallationsPigeonFirebaseApp, forceRefresh: Bool,
+                completion: @escaping (Result<String, Error>) -> Void)
+  func onIdChange(app: AppInstallationsPigeonFirebaseApp, newId: String,
+                  completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
 class FirebaseAppInstallationsHostApiSetup {
-  static var codec: FlutterStandardMessageCodec { FirebaseAppInstallationsMessagesPigeonCodec.shared }
-  /// Sets up an instance of `FirebaseAppInstallationsHostApi` to handle messages through the `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseAppInstallationsHostApi?, messageChannelSuffix: String = "") {
+  static var codec: FlutterStandardMessageCodec {
+    FirebaseAppInstallationsMessagesPigeonCodec.shared
+  }
+
+  /// Sets up an instance of `FirebaseAppInstallationsHostApi` to handle messages through the
+  /// `binaryMessenger`.
+  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseAppInstallationsHostApi?,
+                    messageChannelSuffix: String = "") {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
-    let initializeAppChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.initializeApp\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
+    let initializeAppChannel = FlutterBasicMessageChannel(
+      name: "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.initializeApp\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
+    )
+    if let api {
       initializeAppChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appArg = args[0] as! AppInstallationsPigeonFirebaseApp
@@ -264,7 +294,7 @@ class FirebaseAppInstallationsHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case .failure(let error):
+          case let .failure(error):
             reply(wrapError(error))
           }
         }
@@ -272,8 +302,12 @@ class FirebaseAppInstallationsHostApiSetup {
     } else {
       initializeAppChannel.setMessageHandler(nil)
     }
-    let deleteChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.delete\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
+    let deleteChannel = FlutterBasicMessageChannel(
+      name: "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.delete\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
+    )
+    if let api {
       deleteChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appArg = args[0] as! AppInstallationsPigeonFirebaseApp
@@ -281,7 +315,7 @@ class FirebaseAppInstallationsHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case .failure(let error):
+          case let .failure(error):
             reply(wrapError(error))
           }
         }
@@ -289,16 +323,20 @@ class FirebaseAppInstallationsHostApiSetup {
     } else {
       deleteChannel.setMessageHandler(nil)
     }
-    let getIdChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getId\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
+    let getIdChannel = FlutterBasicMessageChannel(
+      name: "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getId\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
+    )
+    if let api {
       getIdChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appArg = args[0] as! AppInstallationsPigeonFirebaseApp
         api.getId(app: appArg) { result in
           switch result {
-          case .success(let res):
+          case let .success(res):
             reply(wrapResult(res))
-          case .failure(let error):
+          case let .failure(error):
             reply(wrapError(error))
           }
         }
@@ -306,17 +344,21 @@ class FirebaseAppInstallationsHostApiSetup {
     } else {
       getIdChannel.setMessageHandler(nil)
     }
-    let getTokenChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getToken\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
+    let getTokenChannel = FlutterBasicMessageChannel(
+      name: "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getToken\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
+    )
+    if let api {
       getTokenChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appArg = args[0] as! AppInstallationsPigeonFirebaseApp
         let forceRefreshArg = args[1] as! Bool
         api.getToken(app: appArg, forceRefresh: forceRefreshArg) { result in
           switch result {
-          case .success(let res):
+          case let .success(res):
             reply(wrapResult(res))
-          case .failure(let error):
+          case let .failure(error):
             reply(wrapError(error))
           }
         }
@@ -324,8 +366,12 @@ class FirebaseAppInstallationsHostApiSetup {
     } else {
       getTokenChannel.setMessageHandler(nil)
     }
-    let onIdChangeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.onIdChange\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
+    let onIdChangeChannel = FlutterBasicMessageChannel(
+      name: "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.onIdChange\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
+    )
+    if let api {
       onIdChangeChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appArg = args[0] as! AppInstallationsPigeonFirebaseApp
@@ -334,7 +380,7 @@ class FirebaseAppInstallationsHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case .failure(let error):
+          case let .failure(error):
             reply(wrapError(error))
           }
         }
@@ -344,10 +390,13 @@ class FirebaseAppInstallationsHostApiSetup {
     }
   }
 }
+
 /// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
 protocol FirebaseAppInstallationsFlutterApiProtocol {
-  func registerIdTokenListener(app appArg: AppInstallationsPigeonFirebaseApp, completion: @escaping (Result<String, PigeonError>) -> Void)
+  func registerIdTokenListener(app appArg: AppInstallationsPigeonFirebaseApp,
+                               completion: @escaping (Result<String, PigeonError>) -> Void)
 }
+
 class FirebaseAppInstallationsFlutterApi: FirebaseAppInstallationsFlutterApiProtocol {
   private let binaryMessenger: FlutterBinaryMessenger
   private let messageChannelSuffix: String
@@ -355,12 +404,19 @@ class FirebaseAppInstallationsFlutterApi: FirebaseAppInstallationsFlutterApiProt
     self.binaryMessenger = binaryMessenger
     self.messageChannelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
   }
+
   var codec: FirebaseAppInstallationsMessagesPigeonCodec {
-    return FirebaseAppInstallationsMessagesPigeonCodec.shared
+    FirebaseAppInstallationsMessagesPigeonCodec.shared
   }
-  func registerIdTokenListener(app appArg: AppInstallationsPigeonFirebaseApp, completion: @escaping (Result<String, PigeonError>) -> Void) {
-    let channelName: String = "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsFlutterApi.registerIdTokenListener\(messageChannelSuffix)"
-    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+
+  func registerIdTokenListener(app appArg: AppInstallationsPigeonFirebaseApp,
+                               completion: @escaping (Result<String, PigeonError>) -> Void) {
+    let channelName = "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsFlutterApi.registerIdTokenListener\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(
+      name: channelName,
+      binaryMessenger: binaryMessenger,
+      codec: codec
+    )
     channel.sendMessage([appArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {
         completion(.failure(createConnectionError(withChannelName: channelName)))
@@ -372,7 +428,11 @@ class FirebaseAppInstallationsFlutterApi: FirebaseAppInstallationsFlutterApiProt
         let details: String? = nilOrValue(listResponse[2])
         completion(.failure(PigeonError(code: code, message: message, details: details)))
       } else if listResponse[0] == nil {
-        completion(.failure(PigeonError(code: "null-error", message: "Flutter api returned null value for non-null return value.", details: "")))
+        completion(.failure(PigeonError(
+          code: "null-error",
+          message: "Flutter api returned null value for non-null return value.",
+          details: ""
+        )))
       } else {
         let result = listResponse[0] as! String
         completion(.success(result))

@@ -18,7 +18,8 @@ PlatformException _createConnectionError(String channelName) {
   );
 }
 
-List<Object?> wrapResponse({Object? result, PlatformException? error, bool empty = false}) {
+List<Object?> wrapResponse(
+    {Object? result, PlatformException? error, bool empty = false}) {
   if (empty) {
     return <Object?>[];
   }
@@ -27,20 +28,21 @@ List<Object?> wrapResponse({Object? result, PlatformException? error, bool empty
   }
   return <Object?>[error.code, error.message, error.details];
 }
+
 bool _deepEquals(Object? a, Object? b) {
   if (a is List && b is List) {
     return a.length == b.length &&
         a.indexed
-        .every(((int, dynamic) item) => _deepEquals(item.$2, b[item.$1]));
+            .every(((int, dynamic) item) => _deepEquals(item.$2, b[item.$1]));
   }
   if (a is Map && b is Map) {
-    return a.length == b.length && a.entries.every((MapEntry<Object?, Object?> entry) =>
-        (b as Map<Object?, Object?>).containsKey(entry.key) &&
-        _deepEquals(entry.value, b[entry.key]));
+    return a.length == b.length &&
+        a.entries.every((MapEntry<Object?, Object?> entry) =>
+            (b as Map<Object?, Object?>).containsKey(entry.key) &&
+            _deepEquals(entry.value, b[entry.key]));
   }
   return a == b;
 }
-
 
 class AppInstallationsPigeonSettings {
   AppInstallationsPigeonSettings({
@@ -68,7 +70,8 @@ class AppInstallationsPigeonSettings {
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static AppInstallationsPigeonSettings decode(Object result) {
     result as List<Object?>;
@@ -83,7 +86,8 @@ class AppInstallationsPigeonSettings {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! AppInstallationsPigeonSettings || other.runtimeType != runtimeType) {
+    if (other is! AppInstallationsPigeonSettings ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -94,8 +98,7 @@ class AppInstallationsPigeonSettings {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class AppInstallationsPigeonFirebaseApp {
@@ -112,7 +115,8 @@ class AppInstallationsPigeonFirebaseApp {
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static AppInstallationsPigeonFirebaseApp decode(Object result) {
     result as List<Object?>;
@@ -124,7 +128,8 @@ class AppInstallationsPigeonFirebaseApp {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! AppInstallationsPigeonFirebaseApp || other.runtimeType != runtimeType) {
+    if (other is! AppInstallationsPigeonFirebaseApp ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -135,10 +140,8 @@ class AppInstallationsPigeonFirebaseApp {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
-
 
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
@@ -147,10 +150,10 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
-    }    else if (value is AppInstallationsPigeonSettings) {
+    } else if (value is AppInstallationsPigeonSettings) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    }    else if (value is AppInstallationsPigeonFirebaseApp) {
+    } else if (value is AppInstallationsPigeonFirebaseApp) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
     } else {
@@ -161,9 +164,9 @@ class _PigeonCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
-      case 129: 
+      case 129:
         return AppInstallationsPigeonSettings.decode(readValue(buffer)!);
-      case 130: 
+      case 130:
         return AppInstallationsPigeonFirebaseApp.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -175,23 +178,29 @@ class FirebaseAppInstallationsHostApi {
   /// Constructor for [FirebaseAppInstallationsHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  FirebaseAppInstallationsHostApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
+  FirebaseAppInstallationsHostApi(
+      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
       : pigeonVar_binaryMessenger = binaryMessenger,
-        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+        pigeonVar_messageChannelSuffix =
+            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
   final BinaryMessenger? pigeonVar_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<void> initializeApp(AppInstallationsPigeonFirebaseApp app, AppInstallationsPigeonSettings settings) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.initializeApp$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+  Future<void> initializeApp(AppInstallationsPigeonFirebaseApp app,
+      AppInstallationsPigeonSettings settings) async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.initializeApp$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, settings]);
+    final Future<Object?> pigeonVar_sendFuture =
+        pigeonVar_channel.send(<Object?>[app, settings]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -208,13 +217,16 @@ class FirebaseAppInstallationsHostApi {
   }
 
   Future<void> delete(AppInstallationsPigeonFirebaseApp app) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.delete$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.delete$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app]);
+    final Future<Object?> pigeonVar_sendFuture =
+        pigeonVar_channel.send(<Object?>[app]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -231,13 +243,16 @@ class FirebaseAppInstallationsHostApi {
   }
 
   Future<String> getId(AppInstallationsPigeonFirebaseApp app) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getId$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getId$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app]);
+    final Future<Object?> pigeonVar_sendFuture =
+        pigeonVar_channel.send(<Object?>[app]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -258,14 +273,18 @@ class FirebaseAppInstallationsHostApi {
     }
   }
 
-  Future<String> getToken(AppInstallationsPigeonFirebaseApp app, bool forceRefresh) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getToken$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+  Future<String> getToken(
+      AppInstallationsPigeonFirebaseApp app, bool forceRefresh) async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getToken$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, forceRefresh]);
+    final Future<Object?> pigeonVar_sendFuture =
+        pigeonVar_channel.send(<Object?>[app, forceRefresh]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -286,14 +305,18 @@ class FirebaseAppInstallationsHostApi {
     }
   }
 
-  Future<void> onIdChange(AppInstallationsPigeonFirebaseApp app, String newId) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.onIdChange$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+  Future<void> onIdChange(
+      AppInstallationsPigeonFirebaseApp app, String newId) async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.onIdChange$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, newId]);
+    final Future<Object?> pigeonVar_sendFuture =
+        pigeonVar_channel.send(<Object?>[app, newId]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -315,20 +338,29 @@ abstract class FirebaseAppInstallationsFlutterApi {
 
   Future<String> registerIdTokenListener(AppInstallationsPigeonFirebaseApp app);
 
-  static void setUp(FirebaseAppInstallationsFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
-    messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  static void setUp(
+    FirebaseAppInstallationsFlutterApi? api, {
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) {
+    messageChannelSuffix =
+        messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsFlutterApi.registerIdTokenListener$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsFlutterApi.registerIdTokenListener$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);
       } else {
         pigeonVar_channel.setMessageHandler((Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsFlutterApi.registerIdTokenListener was null.');
+              'Argument for dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsFlutterApi.registerIdTokenListener was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AppInstallationsPigeonFirebaseApp? arg_app = (args[0] as AppInstallationsPigeonFirebaseApp?);
+          final AppInstallationsPigeonFirebaseApp? arg_app =
+              (args[0] as AppInstallationsPigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsFlutterApi.registerIdTokenListener was null, expected non-null AppInstallationsPigeonFirebaseApp.');
           try {
@@ -336,8 +368,9 @@ abstract class FirebaseAppInstallationsFlutterApi {
             return wrapResponse(result: output);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }

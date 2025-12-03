@@ -52,7 +52,8 @@ class AppInstallationsPigeonFirebaseApp {
 @HostApi(dartHostTestHandler: 'TestFirebaseAppInstallationsHostApi')
 abstract class FirebaseAppInstallationsHostApi {
   @async
-  void initializeApp(AppInstallationsPigeonFirebaseApp app, AppInstallationsPigeonSettings settings);
+  void initializeApp(AppInstallationsPigeonFirebaseApp app,
+      AppInstallationsPigeonSettings settings);
 
   @async
   void delete(AppInstallationsPigeonFirebaseApp app);
