@@ -112,6 +112,7 @@ let package = Package(
         .headerSearchPath("include/firebase_auth/Public"),
         .define("LIBRARY_VERSION", to: "\"\(library_version)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-auth\""),
+        .define("SWIFT_PACKAGE"),
       ]
     ),
   ]

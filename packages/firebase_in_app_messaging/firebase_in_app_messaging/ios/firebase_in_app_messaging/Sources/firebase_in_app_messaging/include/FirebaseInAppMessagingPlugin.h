@@ -6,12 +6,11 @@
 #import <TargetConditionals.h>
 
 #import <Foundation/Foundation.h>
-
-#if __has_include(<firebase_core/FLTFirebasePlugin.h>)
-#import <firebase_core/FLTFirebasePlugin.h>
+#ifdef SWIFT_PACKAGE
+@import firebase_core_shared;
 #else
-#import <FLTFirebasePlugin.h>
+@import firebase_core;
 #endif
 
-@interface FirebaseInAppMessagingPlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin>
+@interface FirebaseInAppMessagingPlugin : NSObject <FlutterPlugin, FLTFirebasePlugin>
 @end

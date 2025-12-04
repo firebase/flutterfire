@@ -13,6 +13,7 @@
 #else
   import firebase_core_shared
 #endif
+import FirebaseCore
 import FirebaseRemoteConfig
 
 let kFirebaseRemoteConfigChannelName = "plugins.flutter.io/firebase_remote_config"
@@ -21,13 +22,13 @@ let kFirebaseRemoteConfigUpdatedChannelName = "plugins.flutter.io/firebase_remot
 extension FlutterError: Error {}
 
 public class FirebaseRemoteConfigPlugin: NSObject, FlutterPlugin, FlutterStreamHandler,
-  FLTFirebasePluginProtocol, FirebaseRemoteConfigHostApi {
+  FLTFirebasePlugin, FirebaseRemoteConfigHostApi {
   private var listenersMap: [String: ConfigUpdateListenerRegistration] = [:]
   private var fetchAndActivateRetry = false
 
   static let shared: FirebaseRemoteConfigPlugin = {
     let instance = FirebaseRemoteConfigPlugin()
-    FLTFirebasePluginRegistry.sharedInstance().register(instance)
+    FLTFirebasePluginRegistry.sharedInstance().registerFirebasePlugin(instance)
     instance.fetchAndActivateRetry = false
     return instance
   }()
@@ -53,17 +54,17 @@ public class FirebaseRemoteConfigPlugin: NSObject, FlutterPlugin, FlutterStreamH
     if FirebaseApp.responds(to: NSSelectorFromString("registerLibrary:withVersion:")) {
       FirebaseApp.perform(
         NSSelectorFromString("registerLibrary:withVersion:"),
-        with: instance.firebaseLibraryName(),
-        with: instance.firebaseLibraryVersion()
+        with: instance.firebaseLibraryName,
+        with: instance.firebaseLibraryVersion
       )
     }
   }
 
-  public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
+  public func didReinitializeFirebaseCore(completion: @escaping () -> Void) {
     completion()
   }
 
-  public func pluginConstants(for firebaseApp: FirebaseApp) -> [AnyHashable: Any] {
+  public func pluginConstants(for firebaseApp: FirebaseApp) -> [String: Any] {
     let firebaseRemoteConfig = RemoteConfig.remoteConfig(app: firebaseApp)
     let configProperties = configProperties(for: firebaseRemoteConfig)
     var configValues: [String: Any] = configProperties
@@ -173,15 +174,15 @@ public class FirebaseRemoteConfigPlugin: NSObject, FlutterPlugin, FlutterStreamH
     completion(.success(configProperties(for: config)))
   }
 
-  public func firebaseLibraryName() -> String {
+  public var firebaseLibraryName: String {
     "flutter-fire-rc"
   }
 
-  public func firebaseLibraryVersion() -> String {
+  public var firebaseLibraryVersion: String {
     versionNumber
   }
 
-  public func flutterChannelName() -> String {
+  public var flutterChannelName: String {
     kFirebaseRemoteConfigChannelName
   }
 
@@ -213,7 +214,7 @@ public class FirebaseRemoteConfigPlugin: NSObject, FlutterPlugin, FlutterStreamH
   }
 
   private func getRemoteConfig(from appName: String) -> RemoteConfig {
-    let app = FLTFirebasePlugin.firebaseAppNamed(appName)
+    let app = FLTFirebasePluginHelper.firebaseApp(named: appName)
     return RemoteConfig.remoteConfig(app: app!)
   }
 

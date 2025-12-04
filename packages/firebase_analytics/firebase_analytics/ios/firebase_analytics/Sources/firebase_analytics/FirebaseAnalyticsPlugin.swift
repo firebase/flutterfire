@@ -14,6 +14,7 @@
   import firebase_core_shared
 #endif
 import FirebaseAnalytics
+import FirebaseCore
 
 let kFLTFirebaseAnalyticsName = "name"
 let kFLTFirebaseAnalyticsValue = "value"
@@ -28,7 +29,7 @@ let kFLTFirebaseAnalyticsUserId = "userId"
 
 let FLTFirebaseAnalyticsChannelName = "plugins.flutter.io/firebase_analytics"
 
-public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin,
+public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePlugin, FlutterPlugin,
   FirebaseAnalyticsHostApi {
   public static func register(with registrar: any FlutterPluginRegistrar) {
     let binaryMessenger: FlutterBinaryMessenger
@@ -142,23 +143,23 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     completion(.success(()))
   }
 
-  public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
+  public func didReinitializeFirebaseCore(completion: @escaping () -> Void) {
     completion()
   }
 
-  public func pluginConstants(for firebaseApp: FirebaseApp) -> [AnyHashable: Any] {
+  public func pluginConstants(for firebaseApp: FirebaseApp) -> [String: Any] {
     [:]
   }
 
-  public func firebaseLibraryName() -> String {
+  public var firebaseLibraryName: String {
     "flutter-fire-analytics"
   }
 
-  public func firebaseLibraryVersion() -> String {
+  public var firebaseLibraryVersion: String {
     versionNumber
   }
 
-  public func flutterChannelName() -> String {
+  public var flutterChannelName: String {
     FLTFirebaseAnalyticsChannelName
   }
 }

@@ -49,7 +49,6 @@ Pod::Spec.new do |s|
   s.source           = { :path => '.' }
 
   s.source_files     = 'firebase_analytics/Sources/firebase_analytics/**/*.swift'
-  s.public_header_files = 'firebase_analytics/Sources/firebase_analytics/include/*.h'
 
   s.platform = :osx, '10.13'
   s.swift_version = '5.0'

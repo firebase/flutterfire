@@ -33,7 +33,7 @@ import Foundation
       return cachedInstance
     }
 
-    let app = FLTFirebasePlugin.firebaseAppNamed(appName)!
+    let app = FLTFirebasePluginHelper.firebaseApp(named: appName)!
     let database: Database
 
     if databaseURL.isEmpty {

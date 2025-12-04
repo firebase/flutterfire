@@ -10,14 +10,14 @@
 #endif
 
 #import <Foundation/Foundation.h>
-#if __has_include(<firebase_core/FLTFirebasePlugin.h>)
-#import <firebase_core/FLTFirebasePlugin.h>
+#ifdef SWIFT_PACKAGE
+@import firebase_core_shared;
 #else
-#import <FLTFirebasePlugin.h>
+@import firebase_core;
 #endif
 #import "FirestoreMessages.g.h"
 
 @interface FLTFirebaseFirestorePlugin
-    : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin, FirebaseFirestoreHostApi>
+    : NSObject <FlutterPlugin, FLTFirebasePlugin, FirebaseFirestoreHostApi>
 + (NSMutableDictionary<NSNumber *, NSString *> *)serverTimestampMap;
 @end

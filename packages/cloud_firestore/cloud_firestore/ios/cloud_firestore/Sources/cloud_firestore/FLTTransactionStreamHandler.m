@@ -3,14 +3,15 @@
 // found in the LICENSE file.
 
 @import FirebaseFirestore;
-#if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
-#import <firebase_core/FLTFirebasePluginRegistry.h>
+#ifdef SWIFT_PACKAGE
+@import firebase_core_shared;
 #else
-#import <FLTFirebasePluginRegistry.h>
+@import firebase_core;
 #endif
+@import FirebaseCore;
 
-#import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
 #import "include/cloud_firestore/Private/FLTTransactionStreamHandler.h"
+#import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
 #import "include/cloud_firestore/Private/FirestorePigeonParser.h"
 
 @interface FLTTransactionStreamHandler ()
@@ -55,8 +56,9 @@
     strongSelf.started(transaction);
 
     dispatch_async(dispatch_get_main_queue(), ^{
-      events(
-          @{@"appName" : [FLTFirebasePlugin firebaseAppNameFromIosName:self.firestore.app.name]});
+      events(@{
+        @"appName" : [FLTFirebasePluginHelper firebaseAppNameFromIosName:self.firestore.app.name]
+      });
     });
 
     long timedOut = dispatch_semaphore_wait(

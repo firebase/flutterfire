@@ -458,8 +458,8 @@ class FirebaseDatabasePlugin :
     return taskCompletionSource.task
   }
 
-  override fun didReinitializeFirebaseCore(): Task<Void> {
-    val taskCompletionSource = TaskCompletionSource<Void>()
+  override fun didReinitializeFirebaseCore(): Task<Void?> {
+    val taskCompletionSource = TaskCompletionSource<Void?>()
 
     cachedThreadPool.execute {
       try {

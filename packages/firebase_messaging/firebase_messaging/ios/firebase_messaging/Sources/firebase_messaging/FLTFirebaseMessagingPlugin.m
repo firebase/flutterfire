@@ -4,11 +4,12 @@
 #import <TargetConditionals.h>
 
 #import <GoogleUtilities/GULAppDelegateSwizzler.h>
-#if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
-#import <firebase_core/FLTFirebasePluginRegistry.h>
+#ifdef SWIFT_PACKAGE
+@import firebase_core_shared;
 #else
-#import <FLTFirebasePluginRegistry.h>
+@import firebase_core;
 #endif
+@import FirebaseCore;
 #import <objc/message.h>
 
 #import "FLTFirebaseMessagingPlugin.h"
@@ -93,9 +94,10 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
-  FLTFirebaseMethodCallErrorBlock errorBlock = ^(
-      NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
-      NSError *_Nullable error) {
+  void (^errorBlock)(NSString *_Nullable, NSString *_Nullable, NSDictionary *_Nullable,
+                     NSError *_Nullable) = ^(NSString *_Nullable code, NSString *_Nullable message,
+                                             NSDictionary *_Nullable details,
+                                             NSError *_Nullable error) {
     if (code == nil) {
       NSDictionary *errorDetails = [self NSDictionaryForNSError:error];
       code = errorDetails[kMessagingArgumentCode];
@@ -113,10 +115,10 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
             call.method, [error userInfo]);
     }
 
-    flutterResult([FLTFirebasePlugin createFlutterErrorFromCode:code
-                                                        message:message
-                                                optionalDetails:details
-                                             andOptionalNSError:error]);
+    flutterResult([FLTFirebasePluginHelper createFlutterErrorWithCode:code
+                                                              message:message
+                                                      optionalDetails:details
+                                                     andOptionalError:error]);
   };
 
   FLTFirebaseMethodCallResult *methodCallResult =
@@ -291,7 +293,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     }
 
     if (shouldReplaceDelegate) {
-      __strong FLTFirebasePlugin<UNUserNotificationCenterDelegate> *strongSelf = self;
+      __strong FLTFirebaseMessagingPlugin<UNUserNotificationCenterDelegate> *strongSelf = self;
       notificationCenter.delegate = strongSelf;
     }
   }
@@ -686,11 +688,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 #pragma mark - FLTFirebasePlugin
 
-- (void)didReinitializeFirebaseCore:(void (^)(void))completion {
+- (void)didReinitializeFirebaseCoreWithCompletion:(void (^)(void))completion {
   completion();
 }
 
-- (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *)firebase_app {
+- (NSDictionary *_Nonnull)pluginConstantsFor:(FIRApp *)firebase_app {
   return @{
     @"AUTO_INIT_ENABLED" : @([FIRMessaging messaging].isAutoInitEnabled),
   };

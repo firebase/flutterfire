@@ -14,10 +14,10 @@
 #import <Foundation/Foundation.h>
 #import <UserNotifications/UserNotifications.h>
 
-#if __has_include(<firebase_core/FLTFirebasePlugin.h>)
-#import <firebase_core/FLTFirebasePlugin.h>
+#ifdef SWIFT_PACKAGE
+@import firebase_core_shared;
 #else
-#import <FLTFirebasePlugin.h>
+@import firebase_core;
 #endif
 
 #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
@@ -31,28 +31,26 @@
 
 #if TARGET_OS_OSX
 #ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
-@interface FLTFirebaseMessagingPlugin : FLTFirebasePlugin <FlutterPlugin,
-                                                           FLTFirebasePlugin,
-                                                           FIRMessagingDelegate,
-                                                           NSApplicationDelegate,
-                                                           UNUserNotificationCenterDelegate>
+@interface FLTFirebaseMessagingPlugin : NSObject <FlutterPlugin,
+                                                  FLTFirebasePlugin,
+                                                  FIRMessagingDelegate,
+                                                  NSApplicationDelegate,
+                                                  UNUserNotificationCenterDelegate>
 #else
-@interface FLTFirebaseMessagingPlugin : FLTFirebasePlugin <FlutterPlugin,
-                                                           FLTFirebasePlugin,
-                                                           FIRMessagingDelegate,
-                                                           NSApplicationDelegate>
+@interface FLTFirebaseMessagingPlugin
+    : NSObject <FlutterPlugin, FLTFirebasePlugin, FIRMessagingDelegate, NSApplicationDelegate>
 #endif
 #else
 #ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
 API_AVAILABLE(ios(10.0))
-@interface FLTFirebaseMessagingPlugin : FLTFirebasePlugin <FlutterPlugin,
-                                                           FLTFirebasePlugin,
-                                                           FIRMessagingDelegate,
-                                                           UIApplicationDelegate,
-                                                           UNUserNotificationCenterDelegate>
+@interface FLTFirebaseMessagingPlugin : NSObject <FlutterPlugin,
+                                                  FLTFirebasePlugin,
+                                                  FIRMessagingDelegate,
+                                                  UIApplicationDelegate,
+                                                  UNUserNotificationCenterDelegate>
 #else
 @interface FLTFirebaseMessagingPlugin
-    : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin, FIRMessagingDelegate>
+    : NSObject <FlutterPlugin, FLTFirebasePlugin, FIRMessagingDelegate>
 #endif
 #endif
 @end

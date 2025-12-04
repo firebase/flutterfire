@@ -12,23 +12,22 @@
 
 #import <AuthenticationServices/AuthenticationServices.h>
 #import <Foundation/Foundation.h>
-#if __has_include(<firebase_core/FLTFirebasePlugin.h>)
-#import <firebase_core/FLTFirebasePlugin.h>
+#ifdef SWIFT_PACKAGE
+@import firebase_core_shared;
 #else
-#import <FLTFirebasePlugin.h>
+@import firebase_core;
 #endif
 #import "firebase_auth_messages.g.h"
 
-@interface FLTFirebaseAuthPlugin
-    : FLTFirebasePlugin <FlutterPlugin,
-                         FirebaseAuthHostApi,
-                         FirebaseAuthUserHostApi,
-                         MultiFactorUserHostApi,
-                         MultiFactoResolverHostApi,
-                         MultiFactorTotpHostApi,
-                         MultiFactorTotpSecretHostApi,
-                         ASAuthorizationControllerDelegate,
-                         ASAuthorizationControllerPresentationContextProviding>
+@interface FLTFirebaseAuthPlugin : NSObject <FlutterPlugin,
+                                             FirebaseAuthHostApi,
+                                             FirebaseAuthUserHostApi,
+                                             MultiFactorUserHostApi,
+                                             MultiFactoResolverHostApi,
+                                             MultiFactorTotpHostApi,
+                                             MultiFactorTotpSecretHostApi,
+                                             ASAuthorizationControllerDelegate,
+                                             ASAuthorizationControllerPresentationContextProviding>
 
 + (FlutterError *)convertToFlutterError:(NSError *)error;
 @end
