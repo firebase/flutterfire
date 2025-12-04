@@ -61,6 +61,10 @@ public class FirebaseInstallationsPlugin
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
     channel.setMethodCallHandler(null);
+    if (messenger != null) {
+      GeneratedAndroidFirebaseAppInstallations.FirebaseAppInstallationsHostApi.setUp(
+          messenger, null);
+    }
     channel = null;
     messenger = null;
 
