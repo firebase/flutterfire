@@ -23,11 +23,6 @@ class MethodChannelFirebaseAppInstallations
     return MethodChannelFirebaseAppInstallations._();
   }
 
-  /// The [MethodChannelFirebaseFunctions] method channel.
-  static const MethodChannel channel = MethodChannel(
-    'plugins.flutter.io/firebase_app_installations',
-  );
-
   static final Map<String, StreamController<String>> _idTokenChangesListeners =
       <String, StreamController<String>>{};
 
@@ -37,11 +32,12 @@ class MethodChannelFirebaseAppInstallations
     final controller = _idTokenChangesListeners[app.name] =
         StreamController<String>.broadcast();
 
-    channel.invokeMethod<String>(
-        'FirebaseInstallations#registerIdChangeListener', {
-      'appName': app.name,
-    }).then((channelName) {
-      final events = EventChannel(channelName!, channel.codec);
+    _api
+        .registerIdChangeListener(
+          AppInstallationsPigeonFirebaseApp(appName: app.name),
+        )
+        .then((channelName) {
+      final events = EventChannel(channelName);
 
       events
           .receiveGuardedBroadcastStream(onError: convertPlatformException)

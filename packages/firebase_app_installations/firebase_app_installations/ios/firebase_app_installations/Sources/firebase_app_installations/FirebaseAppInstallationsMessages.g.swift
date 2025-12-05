@@ -267,6 +267,8 @@ protocol FirebaseAppInstallationsHostApi {
                 completion: @escaping (Result<String, Error>) -> Void)
   func onIdChange(app: AppInstallationsPigeonFirebaseApp, newId: String,
                   completion: @escaping (Result<Void, Error>) -> Void)
+  func registerIdChangeListener(app: AppInstallationsPigeonFirebaseApp,
+                                completion: @escaping (Result<String, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -387,6 +389,27 @@ class FirebaseAppInstallationsHostApiSetup {
       }
     } else {
       onIdChangeChannel.setMessageHandler(nil)
+    }
+    let registerIdChangeListenerChannel = FlutterBasicMessageChannel(
+      name: "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.registerIdChangeListener\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
+    )
+    if let api {
+      registerIdChangeListenerChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let appArg = args[0] as! AppInstallationsPigeonFirebaseApp
+        api.registerIdChangeListener(app: appArg) { result in
+          switch result {
+          case let .success(res):
+            reply(wrapResult(res))
+          case let .failure(error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      registerIdChangeListenerChannel.setMessageHandler(nil)
     }
   }
 }

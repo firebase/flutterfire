@@ -66,6 +66,11 @@ abstract class FirebaseAppInstallationsHostApi {
 
   @async
   void onIdChange(AppInstallationsPigeonFirebaseApp app, String newId);
+
+  /// Registers an ID change listener on the host and returns the EventChannel name
+  /// used to stream token changes for the given app.
+  @async
+  String registerIdChangeListener(AppInstallationsPigeonFirebaseApp app);
 }
 
 @FlutterApi()

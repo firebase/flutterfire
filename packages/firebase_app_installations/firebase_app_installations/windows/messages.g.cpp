@@ -425,6 +425,9 @@ EncodableValue FirebaseAppInstallationsHostApi::WrapError(
                                       error.details()});
 }
 
+// Note: The concrete Windows plugin does not yet implement RegisterIdChangeListener;
+// this stub keeps the generated HostApi interface in sync with Dart/iOS/Android.
+
 // Generated class from Pigeon that represents Flutter messages that can be
 // called from C++.
 FirebaseAppInstallationsFlutterApi::FirebaseAppInstallationsFlutterApi(

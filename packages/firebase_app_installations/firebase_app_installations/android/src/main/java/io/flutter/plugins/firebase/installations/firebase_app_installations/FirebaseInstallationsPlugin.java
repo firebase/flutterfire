@@ -60,45 +60,10 @@ public class FirebaseInstallationsPlugin
     removeEventListeners();
   }
 
-  private FirebaseInstallations getInstallations(Map<String, Object> arguments) {
-    @NonNull String appName = (String) Objects.requireNonNull(arguments.get("appName"));
-    FirebaseApp app = FirebaseApp.getInstance(appName);
-    return FirebaseInstallations.getInstance(app);
-  }
-
   private FirebaseInstallations getInstallations(AppInstallationsPigeonFirebaseApp appArg) {
     @NonNull String appName = appArg.getAppName();
     FirebaseApp app = FirebaseApp.getInstance(appName);
     return FirebaseInstallations.getInstance(app);
-  }
-
-  private Task<String> registerIdChangeListener(Map<String, Object> arguments) {
-    TaskCompletionSource<String> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            String appName = (String) Objects.requireNonNull(arguments.get("appName"));
-            FirebaseInstallations firebaseInstallations = getInstallations(arguments);
-
-            io.flutter.plugins.firebase.installations.firebase_app_installations
-                    .TokenChannelStreamHandler
-                handler =
-                    new io.flutter.plugins.firebase.installations.firebase_app_installations
-                        .TokenChannelStreamHandler(firebaseInstallations);
-
-            final String name = METHOD_CHANNEL_NAME + "/token/" + appName;
-            final EventChannel channel = new EventChannel(messenger, name);
-            channel.setStreamHandler(handler);
-            streamHandlers.put(channel, handler);
-
-            taskCompletionSource.setResult(name);
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
   }
 
   // Pigeon FirebaseAppInstallationsHostApi implementation.
@@ -186,6 +151,36 @@ public class FirebaseInstallationsPlugin
     // The Dart side currently uses an EventChannel-based listener, so this Pigeon hook
     // is a no-op placeholder to satisfy the interface.
     result.success();
+  }
+
+  @Override
+  public void registerIdChangeListener(
+      @NonNull AppInstallationsPigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAppInstallations.Result<String> result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseInstallations firebaseInstallations = getInstallations(app);
+            @NonNull String appName = app.getAppName();
+
+            io.flutter.plugins.firebase.installations.firebase_app_installations
+                    .TokenChannelStreamHandler
+                handler =
+                    new io.flutter.plugins.firebase.installations.firebase_app_installations
+                        .TokenChannelStreamHandler(firebaseInstallations);
+
+            final String name = METHOD_CHANNEL_NAME + "/token/" + appName;
+            final EventChannel channel = new EventChannel(messenger, name);
+            channel.setStreamHandler(handler);
+            streamHandlers.put(channel, handler);
+
+            result.success(name);
+          } catch (Exception e) {
+            result.error(
+                new GeneratedAndroidFirebaseAppInstallations.FlutterError(
+                    "firebase_app_installations", e.getMessage(), getExceptionDetails(e)));
+          }
+        });
   }
 
   private Map<String, Object> getExceptionDetails(@Nullable Exception exception) {

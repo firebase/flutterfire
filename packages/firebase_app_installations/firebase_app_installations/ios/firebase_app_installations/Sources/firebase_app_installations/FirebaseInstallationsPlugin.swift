@@ -198,6 +198,23 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol,
     completion(.success(()))
   }
 
+  func registerIdChangeListener(app: AppInstallationsPigeonFirebaseApp,
+                                completion: @escaping (Result<String, Error>) -> Void) {
+    let instance = getInstallations(app: app)
+    let appName = app.appName
+    let eventChannelName = kFLTFirebaseInstallationsChannelName + "/token/" + appName
+
+    let eventChannel = FlutterEventChannel(name: eventChannelName, binaryMessenger: messenger)
+
+    if streamHandler[eventChannelName] == nil {
+      streamHandler[eventChannelName] = IdChangedStreamHandler(instance: instance)
+    }
+
+    eventChannel.setStreamHandler(streamHandler[eventChannelName]!)
+
+    completion(.success(eventChannelName))
+  }
+
   /// Registers a listener for changes in the Installations Id.
   /// - Parameter arguments: the arguments passed by the Dart calling method
   /// - Parameter result: the result instance used to send the result to Dart.

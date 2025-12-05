@@ -153,6 +153,9 @@ class FirebaseAppInstallationsHostApi {
   virtual void OnIdChange(
       const AppInstallationsPigeonFirebaseApp& app, const std::string& new_id,
       std::function<void(std::optional<FlutterError> reply)> result) = 0;
+  virtual void RegisterIdChangeListener(
+      const AppInstallationsPigeonFirebaseApp& app,
+      std::function<void(ErrorOr<std::string> reply)> result) = 0;
 
   // The codec used by FirebaseAppInstallationsHostApi.
   static const flutter::StandardMessageCodec& GetCodec();

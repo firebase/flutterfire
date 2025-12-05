@@ -367,6 +367,10 @@ public class GeneratedAndroidFirebaseAppInstallations {
         @NonNull String newId,
         @NonNull VoidResult result);
 
+    void registerIdChangeListener(
+        @NonNull AppInstallationsPigeonFirebaseApp app,
+        @NonNull Result<String> result);
+
     /** The codec used by FirebaseAppInstallationsHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
       return PigeonCodec.INSTANCE;
@@ -550,6 +554,39 @@ public class GeneratedAndroidFirebaseAppInstallations {
                     };
 
                 api.onIdChange(appArg, newIdArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.registerIdChangeListener"
+                    + messageChannelSuffix,
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                AppInstallationsPigeonFirebaseApp appArg =
+                    (AppInstallationsPigeonFirebaseApp) args.get(0);
+                Result<String> resultCallback =
+                    new Result<String>() {
+                      public void success(String result) {
+                        wrapped.add(0, result);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.registerIdChangeListener(appArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
