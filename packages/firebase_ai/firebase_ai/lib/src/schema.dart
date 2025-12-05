@@ -180,6 +180,60 @@ final class Schema {
           anyOf: schemas,
         );
 
+  /// Parse a [Schema] from json object.
+  factory Schema.fromJson(Map<String, Object?> json) {
+    final anyOfJson = json['anyOf'] as List<Object?>?;
+    final SchemaType type;
+    if (anyOfJson != null) {
+      type = SchemaType.anyOf;
+    } else {
+      // ignore: cast_nullable_to_non_nullable
+      type = SchemaType.fromJson(json['type'] as String);
+    }
+
+    final propertiesJson = json['properties'] as Map<String, Object?>?;
+    final Map<String, Schema>? properties;
+    if (propertiesJson != null) {
+      properties = {
+        for (final entry in propertiesJson.entries)
+          entry.key: Schema.fromJson(entry.value! as Map<String, Object?>),
+      };
+    } else {
+      properties = null;
+    }
+
+    // Convert 'required' back to 'optionalProperties'
+    final requiredJson = json['required'] as List<Object?>?;
+    final List<String>? optionalProperties;
+    if (properties != null && requiredJson != null) {
+      final required = requiredJson.cast<String>().toSet();
+      optionalProperties = properties.keys.where((key) => !required.contains(key)).toList();
+    } else {
+      optionalProperties = null;
+    }
+
+    final itemsJson = json['items'] as Map<String, Object?>?;
+    final anyOf = anyOfJson?.map((e) => Schema.fromJson(e! as Map<String, Object?>)).toList();
+
+    return Schema(
+      type,
+      format: json['format'] as String?,
+      description: json['description'] as String?,
+      title: json['title'] as String?,
+      nullable: json['nullable'] as bool?,
+      enumValues: (json['enum'] as List<Object?>?)?.cast<String>(),
+      items: itemsJson != null ? Schema.fromJson(itemsJson) : null,
+      minItems: json['minItems'] as int?,
+      maxItems: json['maxItems'] as int?,
+      minimum: (json['minimum'] as num?)?.toDouble(),
+      maximum: (json['maximum'] as num?)?.toDouble(),
+      properties: properties,
+      optionalProperties: optionalProperties,
+      propertyOrdering: (json['propertyOrdering'] as List<Object?>?)?.cast<String>(),
+      anyOf: anyOf,
+    );
+  }
+
   /// The type of this value.
   SchemaType type;
 
@@ -256,7 +310,6 @@ final class Schema {
   /// ```
   /// Schema.anyOf(schemas: [Schema.string(), Schema.integer()]);
   List<Schema>? anyOf;
-
   /// Convert to json object.
   Map<String, Object> toJson() => {
         if (type != SchemaType.anyOf)
@@ -312,6 +365,17 @@ enum SchemaType {
 
   /// This schema is anyOf type.
   anyOf;
+
+  /// Parse a [SchemaType] from json string.
+  static SchemaType fromJson(String json) => switch (json.toUpperCase()) {
+        'STRING' => string,
+        'NUMBER' => number,
+        'INTEGER' => integer,
+        'BOOLEAN' => boolean,
+        'ARRAY' => array,
+        'OBJECT' => object,
+        _ => throw FormatException('Unknown SchemaType: $json'),
+      };
 
   /// Convert to json object.
   String toJson() => switch (this) {
