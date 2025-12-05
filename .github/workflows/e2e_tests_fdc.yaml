@@ -116,7 +116,7 @@ jobs:
           java-version: '17'
       - name: Setup PostgreSQL for Linux/macOS/Windows
         uses: ikalnytskyi/action-setup-postgres@v7
-      - uses: hendrikmuhs/ccache-action@c92f40bee50034e84c763e33b317c77adaa81c92
+      - uses: hendrikmuhs/ccache-action@bfa03e1de4d7f7c3e80ad9109feedd05c4f5a716
         name: Xcode Compile Cache
         with:
           key: xcode-cache-${{ runner.os }}
