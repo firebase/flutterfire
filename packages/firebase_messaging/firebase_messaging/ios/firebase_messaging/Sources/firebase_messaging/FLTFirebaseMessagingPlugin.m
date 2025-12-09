@@ -542,8 +542,14 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     willConnectToSession:(UISceneSession *)session
                  options:(UISceneConnectionOptions *)connectionOptions {
   // Handle launch notification if present
-  NSDictionary *remoteNotification =
-      connectionOptions.notificationResponse.notification.request.content.userInfo;
+  // With scene delegates, the notification can be in notificationResponse if user tapped it
+
+  NSDictionary *remoteNotification = nil;
+  if (connectionOptions.notificationResponse != nil) {
+    remoteNotification =
+        connectionOptions.notificationResponse.notification.request.content.userInfo;
+  }
+
   if (remoteNotification != nil) {
     // If remoteNotification exists, it is the notification that opened the app.
     _initialNotification =
@@ -551,11 +557,82 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     _initialNotificationID = remoteNotification[@"gcm.message_id"];
   }
 
+  // Mark that initial notification has been gathered (even if nil)
+  _initialNotificationGathered = YES;
+  [self initialNotificationCallback];
+
+  [GULAppDelegateSwizzler registerAppDelegateInterceptor:self];
+  [GULAppDelegateSwizzler proxyOriginalDelegateIncludingAPNSMethods];
+
+  SEL didReceiveRemoteNotificationWithCompletionSEL =
+      NSSelectorFromString(@"application:didReceiveRemoteNotification:fetchCompletionHandler:");
+  if ([[GULAppDelegateSwizzler sharedApplication].delegate
+          respondsToSelector:didReceiveRemoteNotificationWithCompletionSEL]) {
+    // noop - user has own implementation of this method in their AppDelegate, this
+    // means GULAppDelegateSwizzler will have already replaced it with a donor method
+  } else {
+    // add our own donor implementation of
+    // application:didReceiveRemoteNotification:fetchCompletionHandler:
+    Method donorMethod = class_getInstanceMethod(object_getClass(self),
+                                                 didReceiveRemoteNotificationWithCompletionSEL);
+    class_addMethod(object_getClass([GULAppDelegateSwizzler sharedApplication].delegate),
+                    didReceiveRemoteNotificationWithCompletionSEL,
+                    method_getImplementation(donorMethod), method_getTypeEncoding(donorMethod));
+  }
+
+#if !TARGET_OS_OSX
+  // `[_registrar addApplicationDelegate:self];` alone doesn't work for notifications to be received
+  // without the above swizzling This commit:
+  // https://github.com/google/GoogleUtilities/pull/162/files#diff-6bb6d1c46632fc66405a524071cc4baca5fc6a1a6c0eefef81d8c3e2c89cbc13L520-L533
+  // broke notifications which was released with firebase-ios-sdk v11.0.0
+  [_registrar addApplicationDelegate:self];
+#endif
+
+  // Ensure UNUserNotificationCenter delegate is set up for scene delegates
+  // This is critical for foreground notifications to work with scene delegates
+  if (@available(iOS 10.0, *)) {
+    BOOL shouldReplaceDelegate = YES;
+    UNUserNotificationCenter *notificationCenter =
+        [UNUserNotificationCenter currentNotificationCenter];
+
+    if (notificationCenter.delegate != nil) {
+      // If a UNUserNotificationCenterDelegate is set and it conforms to
+      // FlutterAppLifeCycleProvider then we don't want to replace it on iOS as the earlier
+      // call to `[_registrar addApplicationDelegate:self];` will automatically delegate calls
+      // to this plugin. If we replace it, it will cause a stack overflow. See
+      // https://github.com/firebasefire/issues/4026.
+      if ([notificationCenter.delegate conformsToProtocol:@protocol(FlutterAppLifeCycleProvider)]) {
+        // Note this one only executes if Firebase swizzling is **enabled**.
+        shouldReplaceDelegate = NO;
+      }
+
+      if (shouldReplaceDelegate && _originalNotificationCenterDelegate == nil) {
+        // Preserve original delegate if it exists
+        _originalNotificationCenterDelegate = notificationCenter.delegate;
+        _originalNotificationCenterDelegateRespondsTo.openSettingsForNotification =
+            (unsigned int)[_originalNotificationCenterDelegate
+                respondsToSelector:@selector(userNotificationCenter:openSettingsForNotification:)];
+        _originalNotificationCenterDelegateRespondsTo.willPresentNotification =
+            (unsigned int)[_originalNotificationCenterDelegate
+                respondsToSelector:@selector(userNotificationCenter:
+                                            willPresentNotification:withCompletionHandler:)];
+        _originalNotificationCenterDelegateRespondsTo.didReceiveNotificationResponse =
+            (unsigned int)[_originalNotificationCenterDelegate
+                respondsToSelector:@selector(userNotificationCenter:
+                                       didReceiveNotificationResponse:withCompletionHandler:)];
+      }
+    }
+
+    if (shouldReplaceDelegate && notificationCenter.delegate != self) {
+      // Set our delegate
+      __strong FLTFirebasePlugin<UNUserNotificationCenterDelegate> *strongSelf = self;
+      notificationCenter.delegate = strongSelf;
+    }
+  }
+
   // Register for remote notifications in scene delegate
   // This is critical for getting APNS token when using UISceneDelegate
   [[UIApplication sharedApplication] registerForRemoteNotifications];
-
-  return YES;
 }
 #endif
 
