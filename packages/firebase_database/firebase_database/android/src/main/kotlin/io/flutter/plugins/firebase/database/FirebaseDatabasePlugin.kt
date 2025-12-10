@@ -883,8 +883,7 @@ class FirebaseDatabasePlugin :
                 val value = modifier["value"]
                 query = when (value) {
                   is String -> query.startAt(value)
-                  is Double -> query.startAt(value)
-                  is Int -> query.startAt(value.toDouble())
+                  is Number -> query.startAt(value.toDouble())
                   is Boolean -> query.startAt(value)
                   else -> query.startAt(value.toString())
                 }
@@ -939,11 +938,11 @@ class FirebaseDatabasePlugin :
           "limit" -> {
             when (modifier["name"] as String) {
               "limitToFirst" -> {
-                val value = modifier["limit"] as Int
+                val value = (modifier["limit"] as Number).toInt()
                 query = query.limitToFirst(value)
               }
               "limitToLast" -> {
-                val value = modifier["limit"] as Int
+                val value = (modifier["limit"] as Number).toInt()
                 query = query.limitToLast(value)
               }
             }
@@ -959,7 +958,7 @@ class FirebaseDatabasePlugin :
       val streamHandler = EventStreamHandler(query, object : OnDispose {
         override fun run() {
           // Clean up when the stream is disposed
-          streamHandlers.remove(eventChannel)
+         eventChannel.setStreamHandler(null)
         }
       })
       eventChannel.setStreamHandler(streamHandler)
