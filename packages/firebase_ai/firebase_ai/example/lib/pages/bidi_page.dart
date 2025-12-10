@@ -76,14 +76,14 @@ class _BidiPageState extends State<BidiPage> {
     // ignore: deprecated_member_use
     _liveModel = widget.useVertexBackend
         ? FirebaseAI.vertexAI().liveGenerativeModel(
-            model: 'gemini-2.0-flash-exp',
+            model: 'gemini-live-2.5-flash-preview-native-audio-09-2025',
             liveGenerationConfig: config,
             tools: [
               Tool.functionDeclarations([lightControlTool]),
             ],
           )
         : FirebaseAI.googleAI().liveGenerativeModel(
-            model: 'gemini-live-2.5-flash-preview',
+            model: 'gemini-2.5-flash-native-audio-preview-09-2025',
             liveGenerationConfig: config,
             tools: [
               Tool.functionDeclarations([lightControlTool]),
