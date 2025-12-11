@@ -40,6 +40,9 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   NSString *_notificationOpenedAppID;
   NSString *_foregroundUniqueIdentifier;
 
+  // Track if scene delegate connected (for iOS 13+ scene delegate support)
+  BOOL _sceneDidConnect;
+
 #ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
   API_AVAILABLE(ios(10), macosx(10.14))
   __weak id<UNUserNotificationCenterDelegate> _originalNotificationCenterDelegate;
@@ -59,6 +62,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   self = [super init];
   if (self) {
     _initialNotificationGathered = NO;
+    _sceneDidConnect = NO;
     _channel = channel;
     _registrar = registrar;
     // Application
@@ -223,9 +227,24 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     _initialNotification =
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
     _initialNotificationID = remoteNotification[@"gcm.message_id"];
+    _initialNotificationGathered = YES;
+    [self initialNotificationCallback];
+  } else if (_sceneDidConnect) {
+    // For scene delegates, if no notification was found in connectionOptions,
+    // delay marking as gathered to allow didReceiveRemoteNotification to fire first
+    // for contentAvailable notifications that caused the app to launch
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)),
+                   dispatch_get_main_queue(), ^{
+                     if (!self->_initialNotificationGathered) {
+                       self->_initialNotificationGathered = YES;
+                       [self initialNotificationCallback];
+                     }
+                   });
+  } else {
+    // For non-scene delegate apps, mark as gathered immediately
+    _initialNotificationGathered = YES;
+    [self initialNotificationCallback];
   }
-  _initialNotificationGathered = YES;
-  [self initialNotificationCallback];
 
   [GULAppDelegateSwizzler registerAppDelegateInterceptor:self];
   [GULAppDelegateSwizzler proxyOriginalDelegateIncludingAPNSMethods];
@@ -478,6 +497,15 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
       [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:userInfo];
   // Only handle notifications from FCM.
   if (userInfo[@"gcm.message_id"]) {
+    // For scene delegate apps: if this notification arrives during cold launch
+    // (before initial notification gathering is complete) and no notification was found
+    // in connectionOptions, this is the notification that caused the launch.
+    if (_sceneDidConnect && !_initialNotificationGathered && _initialNotification == nil) {
+      _initialNotification = notificationDict;
+      _initialNotificationID = userInfo[@"gcm.message_id"];
+      _initialNotificationGathered = YES;
+      [self initialNotificationCallback];
+    }
     if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
       __block BOOL completed = NO;
 
@@ -548,6 +576,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
                  options:(UISceneConnectionOptions *)connectionOptions {
   // Handle launch notification if present
   // With scene delegates, the notification can be in notificationResponse if user tapped it
+  _sceneDidConnect = YES;
 
   NSDictionary *remoteNotification = nil;
   if (connectionOptions.notificationResponse != nil) {
