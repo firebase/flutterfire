@@ -33,10 +33,26 @@ class CacheSettings {
   /// Duration for which cache is used before revalidation with server
   final Duration maxAge;
 
-  const CacheSettings(
-      {this.storage = kIsWeb ? CacheStorage.memory : CacheStorage.persistent,
-      this.maxSizeBytes = kIsWeb ? 40000000 : 100000000,
-      this.maxAge = Duration.zero});
+  // Internal const constructor
+  const CacheSettings._internal({
+    required this.storage,
+    required this.maxSizeBytes,
+    required this.maxAge,
+  });
+
+  // Factory constructor to handle the logic
+  factory CacheSettings({
+    CacheStorage? storage,
+    int? maxSizeBytes,
+    Duration maxAge = Duration.zero,
+  }) {
+    return CacheSettings._internal(
+      storage:
+          storage ?? (kIsWeb ? CacheStorage.memory : CacheStorage.persistent),
+      maxSizeBytes: maxSizeBytes ?? (kIsWeb ? 40000000 : 100000000),
+      maxAge: maxAge,
+    );
+  }
 }
 
 /// Enum to control the fetch policy for a query
