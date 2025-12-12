@@ -157,7 +157,6 @@ final class LiveGenerationConfig extends BaseGenerationConfig {
       {this.speechConfig,
       this.inputAudioTranscription,
       this.outputAudioTranscription,
-      this.sessionResumption,
       this.contextWindowCompression,
       super.responseModalities,
       super.maxOutputTokens,
@@ -176,9 +175,6 @@ final class LiveGenerationConfig extends BaseGenerationConfig {
   /// The transcription of the output aligns with the language code specified for
   /// the output audio.
   final AudioTranscriptionConfig? outputAudioTranscription;
-
-  /// The session resumption configuration.
-  final SessionResumptionConfig? sessionResumption;
 
   /// The context window compression configuration.
   final ContextWindowCompressionConfig? contextWindowCompression;
