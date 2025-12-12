@@ -13,14 +13,12 @@
 // limitations under the License.
 
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer' as developer;
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_data_connect/firebase_data_connect.dart';
-import 'package:firebase_data_connect/src/cache/in_memory_cache_provider.dart';
-import 'package:firebase_data_connect/src/cache/sqlite_cache_provider.dart';
-import 'package:flutter/foundation.dart';
+import 'cache_provider.dart';
+import 'in_memory_cache_provider.dart' if (dart.library.io) 'sqlite_cache_provider.dart';
 
 import '../common/common_library.dart';
 
@@ -38,10 +36,10 @@ class Cache {
 
   factory Cache(CacheSettings settings, FirebaseDataConnect dataConnect) {
     Cache c = Cache._internal(settings, dataConnect);
-     
+
     c._initializeProvider();
     c._listenForAuthChanges();
-    
+
     return c;
   }
 
@@ -60,31 +58,20 @@ class Cache {
       return;
     }
 
-    if (kIsWeb) {
-      // change this once we support persistence for web
-      _cacheProvider = InMemoryCacheProvider(identifier);
-      providerInitialization = _cacheProvider?.initialize();
-      return;
-    }
+    bool memory = _settings.storage == CacheStorage.memory;
+    _cacheProvider = cacheImplementation(identifier, memory);
 
-    switch (_settings.storage) {
-      case CacheStorage.memory:
-        _cacheProvider = SQLite3CacheProvider(identifier, memory: true);
-      case CacheStorage.persistent:
-        _cacheProvider = SQLite3CacheProvider(identifier);
-    }
     providerInitialization = _cacheProvider?.initialize();
   }
 
   void _listenForAuthChanges() {
     if (dataConnect.auth == null) {
-      developer.log('Not listening for auth changes since no auth instance in data connect');
+      developer.log(
+          'Not listening for auth changes since no auth instance in data connect');
       return;
     }
 
-    dataConnect.auth!
-        .authStateChanges()
-        .listen((User? user) {
+    dataConnect.auth!.authStateChanges().listen((User? user) {
       _initializeProvider();
     });
   }
@@ -107,23 +94,25 @@ class Cache {
         queryId, serverResponse.data, _cacheProvider!);
 
     EntityNode rootNode = dehydrationResult.dehydratedTree;
-    String dehydratedJson =
-        jsonEncode(rootNode.toJson(mode: EncodingMode.dehydrated));
+    Map<String, dynamic> dehydratedMap =
+        rootNode.toJson(mode: EncodingMode.dehydrated);
 
     Duration ttl = serverResponse.ttl != null
         ? serverResponse.ttl!
         : Duration(seconds: 10);
     final resultTree = ResultTree(
-        data: rootNode.toJson(
-            mode: EncodingMode
-                .dehydrated), // Storing the original response for now
+        data: dehydratedMap,
         ttl: ttl, // Default TTL
         cachedAt: DateTime.now(),
         lastAccessed: DateTime.now());
 
     _cacheProvider!.saveResultTree(queryId, resultTree);
 
-    _impactedQueryController.add(dehydrationResult.impactedQueryIds);
+    Set<String> impactedQueryIds = dehydrationResult.impactedQueryIds;
+    impactedQueryIds.remove(queryId); // remove query being cached
+    print(
+        'adding to impactedQueryController ${dehydrationResult.impactedQueryIds}');
+    _impactedQueryController.add(impactedQueryIds);
   }
 
   /// Fetches a cached result.

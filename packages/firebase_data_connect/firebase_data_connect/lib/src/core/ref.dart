@@ -133,10 +133,20 @@ abstract class OperationRef<Data, Variables> {
 }
 
 class QueryManager {
-  QueryManager(this.dataConnect) {
+  QueryManager(this.dataConnect);
+
+  /// FirebaseDataConnect instance;
+  FirebaseDataConnect dataConnect;
+
+  StreamSubscription? _impactedQueriesSubscription;
+
+  void initializeImpactedQueriesSub() {
+    // this is dependent on the cachemanager, which is initialized lazily
+    // this should be called whenever cacheManager is initialized.
     if (dataConnect.cacheManager != null) {
       _impactedQueriesSubscription =
           dataConnect.cacheManager!.impactedQueries.listen((impactedQueryIds) {
+        print('impactedQueries received updated $impactedQueryIds');
         for (final queryId in impactedQueryIds) {
           final queryParts = queryId.split('-');
           final queryName = queryParts[0];
@@ -151,11 +161,6 @@ class QueryManager {
     }
   }
 
-  /// FirebaseDataConnect instance;
-  FirebaseDataConnect dataConnect;
-
-  StreamSubscription? _impactedQueriesSubscription;
-
   /// Keeps track of what queries are currently active.
   Map<String, Map<String, QueryRef>> trackedQueries = {};
   bool containsQuery<Variables>(
@@ -168,7 +173,7 @@ class QueryManager {
         trackedQueries[queryName]![key] != null;
   }
 
-  Stream addQuery<Data, Variables>(
+  StreamController<QueryResult<Data, Variables>> addQuery<Data, Variables>(
     QueryRef<Data, Variables> ref,
   ) {
     final queryName = ref.operationName;
@@ -184,10 +189,10 @@ class QueryManager {
         StreamController<QueryResult<Data, Variables>>.broadcast();
     ref
         .execute()
-        .then((value) => streamController.add(value))
-        .catchError((error) => streamController.addError(error));
+        .then(streamController.add)
+        .catchError(streamController.addError);
 
-    return streamController.stream;
+    return streamController;
   }
 
   void dispose() {
@@ -215,6 +220,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 
   QueryManager _queryManager;
 
+  @override
   Future<QueryResult<Data, Variables>> execute(
       {QueryFetchPolicy fetchPolicy = QueryFetchPolicy.preferCache}) async {
     if (dataConnect.cacheManager != null) {
@@ -239,21 +245,27 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 
   Future<QueryResult<Data, Variables>> _executeFromCache(
       QueryFetchPolicy fetchPolicy) async {
-        if (dataConnect.cacheManager == null) {
-          throw DataConnectError(DataConnectErrorCode.cacheMiss, 'Cache miss. No configured cache'); 
-        }
+    if (dataConnect.cacheManager == null) {
+      throw DataConnectError(
+          DataConnectErrorCode.cacheMiss, 'Cache miss. No configured cache');
+    }
     final cacheManager = dataConnect.cacheManager!;
     bool allowStale = fetchPolicy ==
         QueryFetchPolicy.cacheOnly; //if its cache only, we always allow stale
     final cachedData = await cacheManager.get(_queryId, allowStale);
 
     if (cachedData != null) {
-      final result = QueryResult(
-          dataConnect,
-          deserializer(jsonEncode(cachedData['data'] ?? cachedData)),
-          DataSource.cache,
-          this);
-      return result;
+      try {
+        final result = QueryResult(
+            dataConnect,
+            deserializer(jsonEncode(cachedData['data'] ?? cachedData)),
+            DataSource.cache,
+            this);
+        publishResultToStream(result);
+        return result;
+      } catch (e) {
+        rethrow;
+      }
     } else {
       if (fetchPolicy == QueryFetchPolicy.cacheOnly) {
         throw DataConnectError(DataConnectErrorCode.cacheMiss, 'Cache miss');
@@ -283,6 +295,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 
       QueryResult<Data, Variables> res =
           QueryResult(dataConnect, typedData, DataSource.server, this);
+      publishResultToStream(res);
       return res;
     } on DataConnectError catch (e) {
       if (shouldRetry &&
@@ -294,8 +307,25 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
     }
   }
 
+  StreamController<QueryResult<Data, Variables>>? _streamController;
+
   Stream<QueryResult<Data, Variables>> subscribe() {
-    return _queryManager.addQuery(this).cast<QueryResult<Data, Variables>>();
+    StreamController<QueryResult<Data, Variables>> sc =
+        _queryManager.addQuery(this);
+    _streamController = sc;
+    return sc.stream.cast<QueryResult<Data, Variables>>();
+  }
+
+  void publishResultToStream(QueryResult<Data, Variables> result) {
+    if (_streamController != null) {
+      _streamController?.add(result);
+    }
+  }
+
+  void publishErrorToStream(Error err) {
+    if (_streamController != null) {
+      _streamController?.addError(err);
+    }
   }
 }
 

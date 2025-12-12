@@ -16,8 +16,6 @@ import '../common/common_library.dart';
 import 'cache_data_types.dart';
 import 'cache_provider.dart';
 
-import 'dart:convert';
-
 class DehydrationResult {
   final EntityNode dehydratedTree;
   final Set<String> impactedQueryIds;
@@ -47,6 +45,7 @@ class ResultTreeProcessor {
       CacheProvider cacheProvider, Set<String> impactedQueryIds) {
     if (data is Map<String, dynamic>) {
       if (data.containsKey(GlobalIDKey)) {
+        // data contains a unique entity id. we can normalize
         final guid = data[GlobalIDKey] as String;
 
         final serverValues = <String, dynamic>{};
@@ -76,7 +75,7 @@ class ResultTreeProcessor {
         final existingEdo = cacheProvider.getEntityDataObject(guid);
         existingEdo.referencedFrom.add(queryId);
         impactedQueryIds.addAll(existingEdo.referencedFrom);
-        existingEdo.setServerValues(serverValues);
+        existingEdo.setServerValues(serverValues, queryId);
         cacheProvider.saveEntityDataObject(existingEdo);
 
         return EntityNode(
@@ -85,6 +84,7 @@ class ResultTreeProcessor {
             nestedObjectLists: nestedObjectLists);
       } else {
         // GlobalID check
+        // no entity id. scalar data must be stored inline.
         final scalarValues = <String, dynamic>{};
         final nestedObjects = <String, EntityNode>{};
         final nestedObjectLists = <String, List<EntityNode>>{};
@@ -107,7 +107,7 @@ class ResultTreeProcessor {
             scalarValues[key] = value;
           }
         }
-      
+
         return EntityNode(
             scalarValues: scalarValues,
             nestedObjects: nestedObjects,

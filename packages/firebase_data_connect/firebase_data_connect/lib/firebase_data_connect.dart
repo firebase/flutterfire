@@ -40,6 +40,6 @@ export 'src/optional.dart'
         listSerializer;
 export 'src/timestamp.dart' show Timestamp;
 export 'src/cache/cache_data_types.dart' show CacheSettings, QueryFetchPolicy;
-export 'src/cache/cache_manager.dart' show Cache;
-export 'src/cache/cache_provider.dart' show CacheProvider;
-export 'src/cache/sqlite_cache_provider.dart' show SQLite3CacheProvider;
+//export 'src/cache/cache_manager.dart' show Cache;
+//export 'src/cache/cache_provider.dart' show CacheProvider;
+//export 'src/cache/sqlite_cache_provider.dart' show SQLite3CacheProvider;
