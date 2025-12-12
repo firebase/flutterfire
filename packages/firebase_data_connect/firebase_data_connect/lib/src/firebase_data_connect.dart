@@ -179,7 +179,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
       FirebaseAppCheck? appCheck,
       CallerSDKType? sdkType,
       required ConnectorConfig connectorConfig,
-      CacheSettings? cacheSettings = const CacheSettings()}) {
+      CacheSettings? cacheSettings}) {
     app ??= Firebase.app();
     auth ??= FirebaseAuth.instanceFor(app: app);
     appCheck ??= FirebaseAppCheck.instanceFor(app: app);
@@ -189,6 +189,9 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
           print('Returning cached FirebaseDataConnect instance');
       return cachedInstances[app.name]![connectorConfig.toJson()]!;
     }
+
+    //TODO remove after testing since CS should be null by default
+    cacheSettings = cacheSettings ?? CacheSettings();
 
     FirebaseDataConnect newInstance = FirebaseDataConnect(
       app: app,
