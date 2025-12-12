@@ -112,6 +112,12 @@ final class LiveGenerativeModel extends BaseModel {
           if (_liveGenerationConfig.outputAudioTranscription != null)
             'output_audio_transcription':
                 _liveGenerationConfig.outputAudioTranscription!.toJson(),
+          if (_liveGenerationConfig.sessionResumption
+              case final sessionResumption?)
+            'sessionResumption': sessionResumption.toJson(),
+          if (_liveGenerationConfig.contextWindowCompression
+              case final contextWindowCompression?)
+            'contextWindowCompression': contextWindowCompression.toJson()
         },
       }
     };
