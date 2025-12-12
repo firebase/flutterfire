@@ -31,14 +31,14 @@ import 'cache/cache_manager.dart';
 class FirebaseDataConnect extends FirebasePluginPlatform {
   /// Constructor for initializing Data Connect
   @visibleForTesting
-  FirebaseDataConnect({
-    required this.app,
-    required this.connectorConfig,
-    this.auth,
-    this.appCheck,
-    CallerSDKType? sdkType,
-    this.cacheSettings
-  })  : options = DataConnectOptions(
+  FirebaseDataConnect(
+      {required this.app,
+      required this.connectorConfig,
+      this.auth,
+      this.appCheck,
+      CallerSDKType? sdkType,
+      this.cacheSettings})
+      : options = DataConnectOptions(
           app.options.projectId,
           connectorConfig.location,
           connectorConfig.connector,
@@ -103,8 +103,9 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
 
   @visibleForTesting
   void checkAndInitializeCache() {
-    if (cacheSettings != null) {
+    if (cacheSettings != null && cacheManager == null) {
       cacheManager = Cache(cacheSettings!, this);
+      _queryManager.initializeImpactedQueriesSub();
     }
   }
 
@@ -172,20 +173,20 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   ///
   /// If [app] is not provided, the default Firebase app will be used.
   /// If pass in [appCheck], request session will get protected from abusing.
-  static FirebaseDataConnect instanceFor({
-    FirebaseApp? app,
-    FirebaseAuth? auth,
-    FirebaseAppCheck? appCheck,
-    CallerSDKType? sdkType,
-    required ConnectorConfig connectorConfig,
-    CacheSettings? cacheSettings = const CacheSettings()
-  }) {
+  static FirebaseDataConnect instanceFor(
+      {FirebaseApp? app,
+      FirebaseAuth? auth,
+      FirebaseAppCheck? appCheck,
+      CallerSDKType? sdkType,
+      required ConnectorConfig connectorConfig,
+      CacheSettings? cacheSettings = const CacheSettings()}) {
     app ??= Firebase.app();
     auth ??= FirebaseAuth.instanceFor(app: app);
     appCheck ??= FirebaseAppCheck.instanceFor(app: app);
 
     if (cachedInstances[app.name] != null &&
         cachedInstances[app.name]![connectorConfig.toJson()] != null) {
+          print('Returning cached FirebaseDataConnect instance');
       return cachedInstances[app.name]![connectorConfig.toJson()]!;
     }
 

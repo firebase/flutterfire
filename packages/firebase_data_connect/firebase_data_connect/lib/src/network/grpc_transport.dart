@@ -204,7 +204,7 @@ ServerResponse handleResponse<Data>(CommonResponse<Data> commonResponse) {
 
   // no errors - return a standard response
   if (jsond != null) {
-    return ServerResponse(jsond!);
+    return ServerResponse(jsond);
   } else {
     return ServerResponse({});
   }

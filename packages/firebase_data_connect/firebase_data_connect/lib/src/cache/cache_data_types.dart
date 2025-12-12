@@ -115,14 +115,22 @@ class EntityDataObject {
   Map<String, dynamic> _serverValues = {};
 
   /// A set of identifiers for the `QueryRef`s that reference this EDO.
-  final Set<String> referencedFrom = {};
+  Set<String> referencedFrom = {};
 
-  void updateServerValue(String prop, dynamic value) {
+  void updateServerValue(String prop, dynamic value, String? requestor) {
     _serverValues[prop] = value;
+
+    if (requestor != null) {
+      referencedFrom.add(requestor);
+    }
   }
 
-  void setServerValues(Map<String, dynamic> values) {
+  void setServerValues(Map<String, dynamic> values, String? requestor) {
     _serverValues = values;
+
+    if (requestor != null) {
+      referencedFrom.add(requestor);
+    }
   }
 
   /// Dictionary of prop-values contained in this EDO
@@ -137,16 +145,26 @@ class EntityDataObject {
 
   String toRawJson() => json.encode(toJson());
 
-  factory EntityDataObject.fromJson(Map<String, dynamic> json) =>
-      EntityDataObject(
-        guid: json[GlobalIDKey] as String,
-      ).._serverValues =
-          Map<String, dynamic>.from(json['_serverValues'] as Map);
-
   Map<String, dynamic> toJson() => {
         GlobalIDKey: guid,
         '_serverValues': _serverValues,
+        'referencedFrom': referencedFrom.toList(),
       };
+
+  factory EntityDataObject.fromJson(Map<String, dynamic> json) {
+    EntityDataObject edo = EntityDataObject(
+      guid: json[GlobalIDKey] as String,
+    );
+    edo.setServerValues(
+        Map<String, dynamic>.from(json['_serverValues'] as Map), null);
+
+    List<dynamic>? rf = json['referencedFrom'];
+    if (rf != null) {
+      edo.referencedFrom = rf.cast<String>().toSet();
+    }
+
+    return edo;
+  }
 }
 
 /// A tree-like data structure that represents the dehydrated or hydrated query result.
@@ -174,12 +192,12 @@ class EntityNode {
 
   factory EntityNode.fromJson(
       Map<String, dynamic> json, CacheProvider cacheProvider) {
-    EntityDataObject? entity = null;
+    EntityDataObject? entity;
     if (json[GlobalIDKey] != null) {
       entity = cacheProvider.getEntityDataObject(json[GlobalIDKey]);
     }
 
-    Map<String, dynamic>? scalars = null;
+    Map<String, dynamic>? scalars;
     if (json[scalarsKey] != null) {
       scalars = json[scalarsKey];
     }

@@ -24,20 +24,24 @@ class SQLite3CacheProvider implements CacheProvider {
   final String _identifier;
   final bool memory;
 
+  final String entityDataTable = 'entity_data';
+  final String resultTreeTable = 'query_results';
+  final String entityDataRefsTable = 'entity_data_query_refs';
+
   SQLite3CacheProvider(this._identifier, {this.memory = false});
 
   @override
   Future<bool> initialize() async {
     try {
-    if (memory) {
-      _db = sqlite3.open(':memory:');
-    } else {
-      final dbPath = await getApplicationDocumentsDirectory();
-      final path = join(dbPath.path, '{$_identifier}.db');
-      _db = sqlite3.open(path);
-    }
-    _createTables();
-    return true;
+      if (memory) {
+        _db = sqlite3.open(':memory:');
+      } else {
+        final dbPath = await getApplicationDocumentsDirectory();
+        final path = join(dbPath.path, '{$_identifier}.db');
+        _db = sqlite3.open(path);
+      }
+      _createTables();
+      return true;
     } catch (e) {
       developer.log('Error initializing SQLiteProvider $e');
       return false;
@@ -46,13 +50,13 @@ class SQLite3CacheProvider implements CacheProvider {
 
   void _createTables() {
     _db.execute('''
-      CREATE TABLE IF NOT EXISTS result_trees (
+      CREATE TABLE IF NOT EXISTS $resultTreeTable (
         query_id TEXT PRIMARY KEY,
         result_tree TEXT
       );
     ''');
     _db.execute('''
-      CREATE TABLE IF NOT EXISTS entity_data_objects (
+      CREATE TABLE IF NOT EXISTS $entityDataTable (
         guid TEXT PRIMARY KEY,
         entity_data_object TEXT
       );
@@ -66,14 +70,14 @@ class SQLite3CacheProvider implements CacheProvider {
 
   @override
   void clear() {
-    _db.execute('DELETE FROM result_trees');
-    _db.execute('DELETE FROM entity_data_objects');
+    _db.execute('DELETE FROM $resultTreeTable');
+    _db.execute('DELETE FROM $entityDataTable');
   }
 
   @override
   EntityDataObject getEntityDataObject(String guid) {
     final resultSet = _db.select(
-      'SELECT entity_data_object FROM entity_data_objects WHERE guid = ?',
+      'SELECT entity_data_object FROM $entityDataTable WHERE guid = ?',
       [guid],
     );
     if (resultSet.isEmpty) {
@@ -88,7 +92,7 @@ class SQLite3CacheProvider implements CacheProvider {
   @override
   ResultTree? getResultTree(String queryId) {
     final resultSet = _db.select(
-      'SELECT result_tree FROM result_trees WHERE query_id = ?',
+      'SELECT result_tree FROM $resultTreeTable WHERE query_id = ?',
       [queryId],
     );
     if (resultSet.isEmpty) {
@@ -104,17 +108,22 @@ class SQLite3CacheProvider implements CacheProvider {
 
   @override
   void saveEntityDataObject(EntityDataObject edo) {
+    String rawJson = edo.toRawJson();
+    developer.log(
+        'saveEntityDataObject ${edo.guid} refs ${edo.referencedFrom} $rawJson');
     _db.execute(
-      'INSERT OR REPLACE INTO entity_data_objects (guid, entity_data_object) VALUES (?, ?)',
-      [edo.guid, edo.toRawJson()],
+      'INSERT OR REPLACE INTO $entityDataTable (guid, entity_data_object) VALUES (?, ?)',
+      [edo.guid, rawJson],
     );
   }
 
   @override
   void saveResultTree(String queryId, ResultTree resultTree) {
     _db.execute(
-      'INSERT OR REPLACE INTO result_trees (query_id, result_tree) VALUES (?, ?)',
+      'INSERT OR REPLACE INTO $resultTreeTable (query_id, result_tree) VALUES (?, ?)',
       [queryId, resultTree.toRawJson()],
     );
   }
 }
+
+CacheProvider cacheImplementation(String identifier, bool memory) => SQLite3CacheProvider(identifier, memory: memory);

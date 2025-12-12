@@ -16,7 +16,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'package:firebase_data_connect/src/common/common_library.dart';
 import 'package:firebase_data_connect/src/cache/cache_data_types.dart';
+import 'package:firebase_data_connect/src/cache/cache_manager.dart';
+import 'package:firebase_data_connect/src/cache/cache_provider.dart';
 import 'package:firebase_data_connect/src/cache/in_memory_cache_provider.dart';
+import 'package:firebase_data_connect/src/cache/sqlite_cache_provider.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -119,8 +122,8 @@ void main() {
       await cp.initialize();
 
       EntityDataObject edo = EntityDataObject(guid: '1234');
-      edo.updateServerValue('name', 'test');
-      edo.updateServerValue('desc', 'testDesc');
+      edo.updateServerValue('name', 'test', null);
+      edo.updateServerValue('desc', 'testDesc', null);
 
       cp.saveEntityDataObject(edo);
       EntityDataObject edo2 = cp.getEntityDataObject('1234');
@@ -167,7 +170,7 @@ void main() {
     test('SQLiteProvider EntityDataObject persist', () async {
       CacheProvider cp = InMemoryCacheProvider('inmemprov');
       if (!kIsWeb) {
-        cp = SQLite3CacheProvider('testDb', memory: true);  
+        cp = SQLite3CacheProvider('testDb', memory: true);
       }
       await cp.initialize();
 
@@ -177,7 +180,7 @@ void main() {
       String testValue = 'testValue';
       String testProp = 'testProp';
 
-      edo.updateServerValue(testProp, testValue);
+      edo.updateServerValue(testProp, testValue, null);
 
       cp.saveEntityDataObject(edo);
 
