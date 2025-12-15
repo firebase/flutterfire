@@ -1,3 +1,7 @@
+## 3.11.1
+
+ - Update a dependency to the latest release.
+
 ## 3.11.0
 
  - **FIX**(storage,web): More explicit interop types ([#17828](https://github.com/firebase/flutterfire/issues/17828)). ([65a441e7](https://github.com/firebase/flutterfire/commit/65a441e7cd08d4803a7a28834c069743af2dcf4d))
