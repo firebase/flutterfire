@@ -93,6 +93,7 @@ jobs:
           api-level: 34
           target: google_apis
           arch: x86_64
+          emulator-build: 14214601
           working-directory: 'packages/firebase_data_connect/firebase_data_connect/example'
           script: |
             flutter test integration_test/e2e_test.dart --dart-define=CI=true -d emulator-5554
