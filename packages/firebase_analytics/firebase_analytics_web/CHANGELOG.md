@@ -1,3 +1,7 @@
+## 0.6.1+1
+
+ - Update a dependency to the latest release.
+
 ## 0.6.1
 
  - **FIX**(analytics,web): More explicit interop types ([#17811](https://github.com/firebase/flutterfire/issues/17811)). ([311a57cb](https://github.com/firebase/flutterfire/commit/311a57cbb3fd36b9979d652a9105d64e01556620))

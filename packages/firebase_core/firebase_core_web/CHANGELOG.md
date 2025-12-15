@@ -1,3 +1,7 @@
+## 3.3.1
+
+ - **REFACTOR**(firebase_core,web): remove variant fallback in registerVersion ([#17874](https://github.com/firebase/flutterfire/issues/17874)). ([44d99a94](https://github.com/firebase/flutterfire/commit/44d99a94f00eb34a175a36ee35c074afcadf9890))
+
 ## 3.3.0
 
  - **FIX**(core,web): More explicit interop types ([#17809](https://github.com/firebase/flutterfire/issues/17809)). ([795567a6](https://github.com/firebase/flutterfire/commit/795567a64f20c7982e171d4dd66bd7ec61a7035b))

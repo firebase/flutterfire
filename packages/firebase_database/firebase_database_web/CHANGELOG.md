@@ -1,3 +1,7 @@
+## 0.2.7+2
+
+ - **FIX**(firebase_database,web): return correct DatabaseReference instance in ThenableReference ([#17915](https://github.com/firebase/flutterfire/issues/17915)). ([c0e682ee](https://github.com/firebase/flutterfire/commit/c0e682eeaf506a746219b3cc3dd7dd7e93f94dca))
+
 ## 0.2.7+1
 
  - Update a dependency to the latest release.

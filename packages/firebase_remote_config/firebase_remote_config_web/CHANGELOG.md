@@ -1,3 +1,7 @@
+## 1.10.2
+
+ - Update a dependency to the latest release.
+
 ## 1.10.1
 
  - **FIX**(firebase_remote_config,web): update getSource method call in RemoteConfig class and add test for getAll() method ([#17847](https://github.com/firebase/flutterfire/issues/17847)). ([71138573](https://github.com/firebase/flutterfire/commit/7113857365a8332a5feaac3fd5dbbda1b3a500ff))
