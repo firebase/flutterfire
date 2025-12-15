@@ -126,4 +126,5 @@ class SQLite3CacheProvider implements CacheProvider {
   }
 }
 
-CacheProvider cacheImplementation(String identifier, bool memory) => SQLite3CacheProvider(identifier, memory: memory);
+CacheProvider cacheImplementation(String identifier, bool memory) =>
+    SQLite3CacheProvider(identifier, memory: memory);

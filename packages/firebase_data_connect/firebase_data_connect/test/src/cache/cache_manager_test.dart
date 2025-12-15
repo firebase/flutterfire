@@ -93,7 +93,7 @@ void main() {
       dataConnect = FirebaseDataConnect(
           app: mockApp,
           connectorConfig: mockConnectorConfig,
-          cacheSettings: const CacheSettings(storage: CacheStorage.memory));
+          cacheSettings: CacheSettings(storage: CacheStorage.memory));
       dataConnect.checkTransport();
       dataConnect.checkAndInitializeCache();
     });

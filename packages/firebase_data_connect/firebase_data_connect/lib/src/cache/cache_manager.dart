@@ -18,7 +18,8 @@ import 'dart:developer' as developer;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'cache_provider.dart';
-import 'in_memory_cache_provider.dart' if (dart.library.io) 'sqlite_cache_provider.dart';
+import 'in_memory_cache_provider.dart'
+    if (dart.library.io) 'sqlite_cache_provider.dart';
 
 import '../common/common_library.dart';
 
@@ -110,8 +111,6 @@ class Cache {
 
     Set<String> impactedQueryIds = dehydrationResult.impactedQueryIds;
     impactedQueryIds.remove(queryId); // remove query being cached
-    print(
-        'adding to impactedQueryController ${dehydrationResult.impactedQueryIds}');
     _impactedQueryController.add(impactedQueryIds);
   }
 

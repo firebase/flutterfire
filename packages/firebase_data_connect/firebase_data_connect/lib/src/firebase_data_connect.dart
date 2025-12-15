@@ -186,7 +186,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
 
     if (cachedInstances[app.name] != null &&
         cachedInstances[app.name]![connectorConfig.toJson()] != null) {
-          print('Returning cached FirebaseDataConnect instance');
+      print('Returning cached FirebaseDataConnect instance');
       return cachedInstances[app.name]![connectorConfig.toJson()]!;
     }
 
