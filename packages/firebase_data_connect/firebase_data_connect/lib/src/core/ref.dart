@@ -146,7 +146,6 @@ class QueryManager {
     if (dataConnect.cacheManager != null) {
       _impactedQueriesSubscription =
           dataConnect.cacheManager!.impactedQueries.listen((impactedQueryIds) {
-        print('impactedQueries received updated $impactedQueryIds');
         for (final queryId in impactedQueryIds) {
           final queryParts = queryId.split('-');
           final queryName = queryParts[0];

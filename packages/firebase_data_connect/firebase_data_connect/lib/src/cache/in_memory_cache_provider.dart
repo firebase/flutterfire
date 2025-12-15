@@ -31,8 +31,7 @@ class InMemoryCacheProvider implements CacheProvider {
 
   @override
   Future<bool> initialize() async {
-    // nothing to be intialized
-    print('Initialize inmemory provider called');
+    // nothing to be intialized.
     return true;
   }
 
@@ -55,7 +54,6 @@ class InMemoryCacheProvider implements CacheProvider {
   EntityDataObject getEntityDataObject(String guid) {
     EntityDataObject? edo = _edos[guid];
     if (edo != null) {
-      print('Returning existing edo for $guid');
       return edo;
     } else {
       edo = EntityDataObject(guid: guid);
@@ -76,4 +74,5 @@ class InMemoryCacheProvider implements CacheProvider {
   }
 }
 
-CacheProvider cacheImplementation(String identifier, bool memory) => InMemoryCacheProvider(identifier);
+CacheProvider cacheImplementation(String identifier, bool memory) =>
+    InMemoryCacheProvider(identifier);
