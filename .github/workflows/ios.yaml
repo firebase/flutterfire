@@ -44,7 +44,7 @@ jobs:
       - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
       - uses: hendrikmuhs/ccache-action@c92f40bee50034e84c763e33b317c77adaa81c92
         name: Xcode Compile Cache
         with:

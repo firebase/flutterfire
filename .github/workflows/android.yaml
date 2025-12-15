@@ -42,7 +42,7 @@ jobs:
       - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
       - name: Firebase Emulator Cache
         uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
         with:
@@ -95,6 +95,7 @@ jobs:
           api-level: 34
           target: google_apis
           arch: x86_64
+          emulator-build: 14214601
           working-directory: ${{ matrix.working_directory }}
           script: |
             flutter test integration_test/e2e_test.dart --ignore-timeouts --dart-define=CI=true -d emulator-5554
