@@ -26,7 +26,6 @@ class SQLite3CacheProvider implements CacheProvider {
 
   final String entityDataTable = 'entity_data';
   final String resultTreeTable = 'query_results';
-  final String entityDataRefsTable = 'entity_data_query_refs';
 
   SQLite3CacheProvider(this._identifier, {this.memory = false});
 
@@ -37,7 +36,7 @@ class SQLite3CacheProvider implements CacheProvider {
         _db = sqlite3.open(':memory:');
       } else {
         final dbPath = await getApplicationDocumentsDirectory();
-        final path = join(dbPath.path, '{$_identifier}.db');
+        final path = join(dbPath.path, '$_identifier.db');
         _db = sqlite3.open(path);
       }
       _createTables();
@@ -109,8 +108,6 @@ class SQLite3CacheProvider implements CacheProvider {
   @override
   void saveEntityDataObject(EntityDataObject edo) {
     String rawJson = edo.toRawJson();
-    developer.log(
-        'saveEntityDataObject ${edo.guid} refs ${edo.referencedFrom} $rawJson');
     _db.execute(
       'INSERT OR REPLACE INTO $entityDataTable (guid, entity_data_object) VALUES (?, ?)',
       [edo.guid, rawJson],

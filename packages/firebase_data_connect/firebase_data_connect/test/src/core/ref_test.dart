@@ -92,7 +92,7 @@ void main() {
         MockDataConnectTransport(),
         deserializer,
         QueryManager(mockDataConnect),
-        varSerializer,
+        emptySerializer,
         'variables',
       );
       final stream = queryManager.addQuery(ref);

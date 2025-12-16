@@ -44,9 +44,9 @@ class ResultTreeProcessor {
   EntityNode _dehydrateNode(String queryId, dynamic data,
       CacheProvider cacheProvider, Set<String> impactedQueryIds) {
     if (data is Map<String, dynamic>) {
-      if (data.containsKey(GlobalIDKey)) {
+      if (data.containsKey(kGlobalIDKey)) {
         // data contains a unique entity id. we can normalize
-        final guid = data[GlobalIDKey] as String;
+        final guid = data[kGlobalIDKey] as String;
 
         final serverValues = <String, dynamic>{};
         final nestedObjects = <String, EntityNode>{};

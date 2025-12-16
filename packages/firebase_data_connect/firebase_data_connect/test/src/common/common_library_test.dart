@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:nativewrappers/_internal/vm/bin/vmservice_io.dart';
-
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'package:firebase_data_connect/src/common/common_library.dart';

@@ -20,7 +20,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 /// Type of storage to use for the cache
 enum CacheStorage { persistent, memory }
 
-const String GlobalIDKey = 'cacheId';
+const String kGlobalIDKey = 'cacheId';
 
 /// Configuration for the cache
 class CacheSettings {
@@ -86,11 +86,7 @@ class ResultTree {
 
   /// Checks if cached data is stale
   bool isStale() {
-    if (DateTime.now().difference(cachedAt) > ttl) {
-      return true; // stale
-    } else {
-      return false;
-    }
+    return DateTime.now().difference(cachedAt) > ttl;
   }
 
   ResultTree(
@@ -162,14 +158,14 @@ class EntityDataObject {
   String toRawJson() => json.encode(toJson());
 
   Map<String, dynamic> toJson() => {
-        GlobalIDKey: guid,
+        kGlobalIDKey: guid,
         '_serverValues': _serverValues,
         'referencedFrom': referencedFrom.toList(),
       };
 
   factory EntityDataObject.fromJson(Map<String, dynamic> json) {
     EntityDataObject edo = EntityDataObject(
-      guid: json[GlobalIDKey] as String,
+      guid: json[kGlobalIDKey] as String,
     );
     edo.setServerValues(
         Map<String, dynamic>.from(json['_serverValues'] as Map), null);
@@ -209,8 +205,8 @@ class EntityNode {
   factory EntityNode.fromJson(
       Map<String, dynamic> json, CacheProvider cacheProvider) {
     EntityDataObject? entity;
-    if (json[GlobalIDKey] != null) {
-      entity = cacheProvider.getEntityDataObject(json[GlobalIDKey]);
+    if (json[kGlobalIDKey] != null) {
+      entity = cacheProvider.getEntityDataObject(json[kGlobalIDKey]);
     }
 
     Map<String, dynamic>? scalars;
@@ -251,29 +247,6 @@ class EntityNode {
         nestedObjectLists: objLists);
   }
 
-/*
-  factory EntityNode.fromJson(Map<String, dynamic> json, CacheProvider cacheProvider) => EntityNode(
-        entity: json[GlobalIDKey] == null
-            ? null
-            : cacheProvider.getEntityDataObject(json[GlobalIDKey]),
-        scalarValues: json['scalars'] == null
-            ? null
-            : Map<String, dynamic>.from(json['scalars'] as Map),
-        nestedObjects: json['objects'] == null
-            ? null
-            : (json['objects'] as Map<String, dynamic>).map(
-                (k, e) => MapEntry(
-                    k, EntityNode.fromJson(e as Map<String, dynamic>, cacheProvider))),
-        nestedObjectLists: json['lists'] == null
-            ? null
-            : (json['lists'] as Map<String, dynamic>).map((k, e) =>
-                MapEntry(
-                    k,
-                    List<EntityNode>.from((e as List<dynamic>).map((x) =>
-                        EntityNode.fromJson(x as Map<String, dynamic>, cacheProvider))))),
-      );
-      */
-
   Map<String, dynamic> toJson({EncodingMode mode = EncodingMode.hydrated}) {
     Map<String, dynamic> jsonData = {};
     if (mode == EncodingMode.hydrated) {
@@ -304,7 +277,7 @@ class EntityNode {
     else if (mode == EncodingMode.dehydrated) {
       // encode the guid so we can extract the EntityDataObject
       if (entity != null) {
-        jsonData[GlobalIDKey] = entity!.guid;
+        jsonData[kGlobalIDKey] = entity!.guid;
       }
 
       if (scalarValues != null) {
