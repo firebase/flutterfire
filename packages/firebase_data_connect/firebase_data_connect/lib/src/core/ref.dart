@@ -308,11 +308,9 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 
   StreamController<QueryResult<Data, Variables>>? _streamController;
 
-  Stream<QueryResult<Data, Variables>> subscribe() {
-    StreamController<QueryResult<Data, Variables>> sc =
-        _queryManager.addQuery(this);
-    _streamController = sc;
-    return sc.stream.cast<QueryResult<Data, Variables>>();
+  Stream<QueryResult<Data, Variables>> subscribe() {    
+    _streamController = _queryManager.addQuery(this);
+    return _streamController!.stream.cast<QueryResult<Data, Variables>>();
   }
 
   void publishResultToStream(QueryResult<Data, Variables> result) {
