@@ -49,12 +49,14 @@ class Cache {
   /// Stream of impacted query IDs.
   Stream<Set<String>> get impactedQueries => _impactedQueryController.stream;
 
-  String _contructCacheIdentifier() {
-    return '${_settings.storage}-${dataConnect.app.options.projectId}-${dataConnect.app.name}-${dataConnect.connectorConfig.serviceId}-${dataConnect.connectorConfig.connector}-${dataConnect.connectorConfig.location}-${dataConnect.auth?.currentUser?.uid ?? 'anon'}-${dataConnect.transport.transportOptions.host}';
+  String _constructCacheIdentifier() {
+    final rawIdentifier =
+        '${_settings.storage}-${dataConnect.app.options.projectId}-${dataConnect.app.name}-${dataConnect.connectorConfig.serviceId}-${dataConnect.connectorConfig.connector}-${dataConnect.connectorConfig.location}-${dataConnect.auth?.currentUser?.uid ?? 'anon'}-${dataConnect.transport.transportOptions.host}';
+    return convertToSha256(rawIdentifier);
   }
 
   void _initializeProvider() {
-    String identifier = _contructCacheIdentifier();
+    String identifier = _constructCacheIdentifier();
     if (_cacheProvider != null && _cacheProvider?.identifier() == identifier) {
       return;
     }
@@ -85,8 +87,7 @@ class Cache {
     }
 
     // we have a provider lets ensure its initialized
-    bool? initialized = await providerInitialization;
-    if (initialized == null || initialized == false) {
+    if (await providerInitialization != true) {
       developer.log('CacheProvider not initialized. Cache not functional');
       return;
     }

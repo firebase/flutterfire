@@ -170,9 +170,7 @@ class GRPCTransport implements DataConnectTransport {
 }
 
 ServerResponse handleResponse<Data>(CommonResponse<Data> commonResponse) {
-  log('handleResponse type ${commonResponse.data.runtimeType}');
   Map<String, dynamic>? jsond = commonResponse.data as Map<String, dynamic>?;
-  log('handleResponse got json data $jsond');
   String jsonEncoded = jsonEncode(commonResponse.data);
 
   if (commonResponse.errors.isNotEmpty) {

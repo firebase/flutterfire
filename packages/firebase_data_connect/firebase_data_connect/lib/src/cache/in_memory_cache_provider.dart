@@ -52,14 +52,7 @@ class InMemoryCacheProvider implements CacheProvider {
 
   @override
   EntityDataObject getEntityDataObject(String guid) {
-    EntityDataObject? edo = _edos[guid];
-    if (edo != null) {
-      return edo;
-    } else {
-      edo = EntityDataObject(guid: guid);
-      _edos[guid] = edo;
-      return edo;
-    }
+    return _edos.putIfAbsent(guid, () => EntityDataObject(guid: guid));
   }
 
   @override
