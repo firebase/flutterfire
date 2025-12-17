@@ -99,12 +99,12 @@ class Cache {
     Map<String, dynamic> dehydratedMap =
         rootNode.toJson(mode: EncodingMode.dehydrated);
 
-    Duration ttl = serverResponse.ttl != null
-        ? serverResponse.ttl!
-        : Duration(seconds: 10);
+    // if we have server ttl, that overrides maxAge from cacheSettings
+    Duration ttl =
+        serverResponse.ttl != null ? serverResponse.ttl! : _settings.maxAge;
     final resultTree = ResultTree(
         data: dehydratedMap,
-        ttl: ttl, // Default TTL
+        ttl: ttl,
         cachedAt: DateTime.now(),
         lastAccessed: DateTime.now());
 
@@ -122,8 +122,7 @@ class Cache {
     }
 
     // we have a provider lets ensure its initialized
-    bool? initialized = await providerInitialization;
-    if (initialized == null || initialized == false) {
+    if (await providerInitialization != true) {
       developer.log('CacheProvider not initialized. Cache not functional');
       return null;
     }

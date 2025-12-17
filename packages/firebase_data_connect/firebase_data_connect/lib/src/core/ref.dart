@@ -235,7 +235,6 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
     }
   }
 
-  //String get _queryId => '$operationName::${serializer(variables as Variables)}';
   String get _queryId =>
       QueryManager.createQueryId(operationName, variables, serializer);
 
