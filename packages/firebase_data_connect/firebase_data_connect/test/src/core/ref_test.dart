@@ -92,14 +92,14 @@ void main() {
         MockDataConnectTransport(),
         deserializer,
         QueryManager(mockDataConnect),
-        emptySerializer,
+        varSerializer,
         'variables',
       );
       final stream = queryManager.addQuery(ref);
 
-      expect(queryManager.trackedQueries['testQuery'], isNotNull);
-      expect(queryManager.trackedQueries['testQuery']!['varsAsStr'], isNotNull);
-      expect(stream, isA<Stream>());
+      //expect(queryManager.trackedQueries['testQuery'], isNotNull);
+      expect(queryManager.trackedQueries['testQuery::varsAsStr'], isNotNull);
+      expect(stream, isA<StreamController>());
     });
   });
 

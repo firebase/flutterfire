@@ -118,15 +118,24 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   ) {
     checkTransport();
     checkAndInitializeCache();
-    return QueryRef<Data, Variables>(
-      this,
-      operationName,
-      transport,
-      dataDeserializer,
-      _queryManager,
-      varsSerializer,
-      vars,
-    );
+    String queryId =
+        QueryManager.createQueryId(operationName, vars, varsSerializer);
+
+    QueryRef<Data, Variables>? ref =
+        _queryManager.trackedQueries[queryId] as QueryRef<Data, Variables>?;
+    if (ref != null) {
+      return ref;
+    } else {
+      return QueryRef<Data, Variables>(
+        this,
+        operationName,
+        transport,
+        dataDeserializer,
+        _queryManager,
+        varsSerializer,
+        vars,
+      );
+    }
   }
 
   /// Returns a [MutationRef] object.

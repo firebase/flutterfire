@@ -147,12 +147,8 @@ class QueryManager {
       _impactedQueriesSubscription =
           dataConnect.cacheManager!.impactedQueries.listen((impactedQueryIds) {
         for (final queryId in impactedQueryIds) {
-          final queryParts = queryId.split('-');
-          final queryName = queryParts[0];
-          final varsAsStr = queryParts.sublist(1).join('-');
-          if (trackedQueries[queryName] != null &&
-              trackedQueries[queryName]![varsAsStr] != null) {
-            final queryRef = trackedQueries[queryName]![varsAsStr]!;
+          final queryRef = trackedQueries[queryId];
+          if (queryRef != null) {
             queryRef.execute(fetchPolicy: QueryFetchPolicy.cacheOnly);
           }
         }
@@ -161,37 +157,36 @@ class QueryManager {
   }
 
   /// Keeps track of what queries are currently active.
-  Map<String, Map<String, QueryRef>> trackedQueries = {};
+  Map<String, QueryRef> trackedQueries = {};
+
   bool containsQuery<Variables>(
     String queryName,
     Variables variables,
     String varsAsStr,
   ) {
-    String key = varsAsStr;
-    return (trackedQueries[queryName] != null) &&
-        trackedQueries[queryName]![key] != null;
+    String key = '$queryName::$varsAsStr';
+    return (trackedQueries[key] != null);
   }
 
   StreamController<QueryResult<Data, Variables>> addQuery<Data, Variables>(
     QueryRef<Data, Variables> ref,
   ) {
-    final queryName = ref.operationName;
-    final varsAsStr = ref.serializer(ref.variables as Variables);
-    if (trackedQueries[queryName] == null) {
-      trackedQueries[queryName] = <String, QueryRef>{};
-    }
-    if (trackedQueries[queryName]![varsAsStr] == null) {
-      trackedQueries[queryName]![varsAsStr] = ref;
-    }
+    final queryId = ref._queryId;
+    trackedQueries[queryId] = ref;
 
     final streamController =
         StreamController<QueryResult<Data, Variables>>.broadcast();
-    ref
-        .execute()
-        .then(streamController.add)
-        .catchError(streamController.addError);
 
     return streamController;
+  }
+
+  static String createQueryId<QueryVariables>(String queryName,
+      QueryVariables? vars, Serializer<QueryVariables> varSerializer) {
+    if (vars != null) {
+      return '$queryName::${varSerializer(vars)}';
+    } else {
+      return queryName;
+    }
   }
 
   void dispose() {
@@ -240,7 +235,9 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
     }
   }
 
-  String get _queryId => '$operationName-${serializer(variables as Variables)}';
+  //String get _queryId => '$operationName::${serializer(variables as Variables)}';
+  String get _queryId =>
+      QueryManager.createQueryId(operationName, variables, serializer);
 
   Future<QueryResult<Data, Variables>> _executeFromCache(
       QueryFetchPolicy fetchPolicy) async {
@@ -309,7 +306,12 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
   StreamController<QueryResult<Data, Variables>>? _streamController;
 
   Stream<QueryResult<Data, Variables>> subscribe() {
-    _streamController = _queryManager.addQuery(this);
+    _streamController ??= _queryManager.addQuery(this);
+
+    execute()
+        .then(_streamController!.add)
+        .catchError(_streamController!.addError);
+
     return _streamController!.stream.cast<QueryResult<Data, Variables>>();
   }
 
