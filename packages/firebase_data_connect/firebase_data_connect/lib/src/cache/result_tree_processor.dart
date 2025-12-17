@@ -44,72 +44,60 @@ class ResultTreeProcessor {
   EntityNode _dehydrateNode(String queryId, dynamic data,
       CacheProvider cacheProvider, Set<String> impactedQueryIds) {
     if (data is Map<String, dynamic>) {
-      if (data.containsKey(kGlobalIDKey)) {
-        // data contains a unique entity id. we can normalize
-        final guid = data[kGlobalIDKey] as String;
+      // data contains a unique entity id. we can normalize
+      final guid = data[kGlobalIDKey] as String?;
 
-        final serverValues = <String, dynamic>{};
-        final nestedObjects = <String, EntityNode>{};
-        final nestedObjectLists = <String, List<EntityNode>>{};
+      final serverValues = <String, dynamic>{};
+      final nestedObjects = <String, EntityNode>{};
+      final nestedObjectLists = <String, List<EntityNode>>{};
 
-        for (final entry in data.entries) {
-          final key = entry.key;
-          final value = entry.value;
+      for (final entry in data.entries) {
+        final key = entry.key;
+        final value = entry.value;
 
-          if (value is Map<String, dynamic>) {
-            EntityNode en =
-                _dehydrateNode(queryId, value, cacheProvider, impactedQueryIds);
-            nestedObjects[key] = en;
-          } else if (value is List) {
-            final nodeList = <EntityNode>[];
-            for (final item in value) {
+        if (value is Map<String, dynamic>) {
+          EntityNode en =
+              _dehydrateNode(queryId, value, cacheProvider, impactedQueryIds);
+          nestedObjects[key] = en;
+        } else if (value is List) {
+          final nodeList = <EntityNode>[];
+          final scalarValueList = <dynamic>[];
+          for (final item in value) {
+            if (item is Map<String, dynamic>) {
               nodeList.add(_dehydrateNode(
                   queryId, item, cacheProvider, impactedQueryIds));
+            } else {
+              // assuming scalar - we don't handle array of arrays
+              scalarValueList.add(item);
             }
+          }
+
+          // we either do object lists or scalar lists stored with scalars
+          // we don't handle mixed lists.
+          if (nodeList.isNotEmpty) {
             nestedObjectLists[key] = nodeList;
           } else {
-            serverValues[key] = value;
+            serverValues[key] = scalarValueList;
           }
+        } else {
+          serverValues[key] = value;
         }
+      }
 
+      if (guid != null) {
         final existingEdo = cacheProvider.getEntityDataObject(guid);
-        existingEdo.referencedFrom.add(queryId);
-        impactedQueryIds.addAll(existingEdo.referencedFrom);
+        //existingEdo.referencedFrom.add(queryId);
         existingEdo.setServerValues(serverValues, queryId);
         cacheProvider.saveEntityDataObject(existingEdo);
+        impactedQueryIds.addAll(existingEdo.referencedFrom);
 
         return EntityNode(
             entity: existingEdo,
             nestedObjects: nestedObjects,
             nestedObjectLists: nestedObjectLists);
       } else {
-        // GlobalID check
-        // no entity id. scalar data must be stored inline.
-        final scalarValues = <String, dynamic>{};
-        final nestedObjects = <String, EntityNode>{};
-        final nestedObjectLists = <String, List<EntityNode>>{};
-
-        for (final entry in data.entries) {
-          final key = entry.key;
-          final value = entry.value;
-
-          if (value is Map<String, dynamic>) {
-            nestedObjects[key] =
-                _dehydrateNode(queryId, value, cacheProvider, impactedQueryIds);
-          } else if (value is List) {
-            final nodeList = <EntityNode>[];
-            for (final item in value) {
-              nodeList.add(_dehydrateNode(
-                  queryId, item, cacheProvider, impactedQueryIds));
-            }
-            nestedObjectLists[key] = nodeList;
-          } else {
-            scalarValues[key] = value;
-          }
-        }
-
         return EntityNode(
-            scalarValues: scalarValues,
+            scalarValues: serverValues,
             nestedObjects: nestedObjects,
             nestedObjectLists: nestedObjectLists);
       }
@@ -129,47 +117,34 @@ class ResultTreeProcessor {
 
   Future<dynamic> _hydrateNode(
       EntityNode node, CacheProvider cacheProvider) async {
+    final Map<String, dynamic> data = {};
     if (node.entity != null) {
       final edo = cacheProvider.getEntityDataObject(node.entity!.guid);
-      final data = Map<String, dynamic>.from(edo.fields());
+      data.addAll(edo.fields());
+    }
 
-      if (node.nestedObjects != null) {
-        for (final entry in node.nestedObjects!.entries) {
-          data[entry.key] = await _hydrateNode(entry.value, cacheProvider);
-        }
-      }
-
-      if (node.nestedObjectLists != null) {
-        for (final entry in node.nestedObjectLists!.entries) {
-          final list = <dynamic>[];
-          for (final item in entry.value) {
-            list.add(await _hydrateNode(item, cacheProvider));
-          }
-          data[entry.key] = list;
-        }
-      }
-
-      return data;
-    } else if (node.scalarValues != null) {
+    if (node.scalarValues != null) {
       if (node.scalarValues!.containsKey('value')) {
         return node.scalarValues!['value'];
       }
       return node.scalarValues;
-    } else if (node.nestedObjects != null) {
-      final data = <String, dynamic>{};
+    }
+    if (node.nestedObjects != null) {
       for (final entry in node.nestedObjects!.entries) {
         data[entry.key] = await _hydrateNode(entry.value, cacheProvider);
       }
-      return data;
-    } else if (node.nestedObjectLists != null &&
-        node.nestedObjectLists!.containsKey('list')) {
-      final list = <dynamic>[];
-      for (final item in node.nestedObjectLists!['list']!) {
-        list.add(await _hydrateNode(item, cacheProvider));
-      }
-      return list;
-    } else {
-      return {};
     }
+
+    if (node.nestedObjectLists != null) {
+      for (final entry in node.nestedObjectLists!.entries) {
+        final list = <dynamic>[];
+        for (final item in entry.value) {
+          list.add(await _hydrateNode(item, cacheProvider));
+        }
+        data[entry.key] = list;
+      }
+    }
+
+    return data;
   }
 }

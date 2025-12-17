@@ -81,9 +81,6 @@ class ResultTree {
   /// The timestamp when the result was last accessed.
   DateTime lastAccessed;
 
-  /// A reference to the root `EntityNode` of the dehydrated tree.
-  //final EntityNode rootObject;
-
   /// Checks if cached data is stale
   bool isStale() {
     return DateTime.now().difference(cachedAt) > ttl;
