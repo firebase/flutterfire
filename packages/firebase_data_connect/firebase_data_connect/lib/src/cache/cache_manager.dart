@@ -57,7 +57,7 @@ class Cache {
 
   void _initializeProvider() {
     String identifier = _constructCacheIdentifier();
-    if (_cacheProvider != null && _cacheProvider?.identifier() == identifier) {
+    if (_cacheProvider != null && _cacheProvider!.identifier() == identifier) {
       return;
     }
 

@@ -149,7 +149,7 @@ class QueryManager {
         for (final queryId in impactedQueryIds) {
           final queryRef = trackedQueries[queryId];
           if (queryRef != null) {
-            queryRef.execute(fetchPolicy: QueryFetchPolicy.cacheOnly);
+            queryRef.execute(fetchPolicy: QueryFetchPolicy.cacheOnly).catchError((e) => log('Error executing impacted query $e'));
           }
         }
       });
