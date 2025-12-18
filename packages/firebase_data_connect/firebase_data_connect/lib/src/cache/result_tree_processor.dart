@@ -86,7 +86,6 @@ class ResultTreeProcessor {
 
       if (guid != null) {
         final existingEdo = cacheProvider.getEntityDataObject(guid);
-        //existingEdo.referencedFrom.add(queryId);
         existingEdo.setServerValues(serverValues, queryId);
         cacheProvider.saveEntityDataObject(existingEdo);
         impactedQueryIds.addAll(existingEdo.referencedFrom);
@@ -124,11 +123,9 @@ class ResultTreeProcessor {
     }
 
     if (node.scalarValues != null) {
-      if (node.scalarValues!.containsKey('value')) {
-        return node.scalarValues!['value'];
-      }
-      return node.scalarValues;
+      data.addAll(node.scalarValues!);
     }
+    
     if (node.nestedObjects != null) {
       for (final entry in node.nestedObjects!.entries) {
         data[entry.key] = await _hydrateNode(entry.value, cacheProvider);
