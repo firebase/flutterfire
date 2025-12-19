@@ -39,4 +39,14 @@ void main() {
       });
     });
   });
+
+  group('apps getter', () {
+    setUp(() async {
+      FirebasePlatform.instance = FirebaseCoreWeb();
+    });
+
+    test('should return empty list when Firebase is not initialized', () {
+      expect(FirebasePlatform.instance.apps, isEmpty);
+    });
+  });
 }
