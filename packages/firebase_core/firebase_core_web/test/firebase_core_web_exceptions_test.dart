@@ -45,9 +45,7 @@ void main() {
       FirebasePlatform.instance = FirebaseCoreWeb();
     });
 
-    test(
-        'should return empty list when Firebase is not initialized',
-        () {
+    test('should return empty list when Firebase is not initialized', () {
       expect(FirebasePlatform.instance.apps, isEmpty);
     });
   });
