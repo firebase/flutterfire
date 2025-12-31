@@ -44,7 +44,7 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
       - name: Firebase Emulator Cache
-        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-${{ runner.os }}
@@ -82,7 +82,7 @@ jobs:
           remove-docker-images: true
           remove-large-packages: true
       - name: AVD cache
-        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
         id: avd-cache
         with:
           path: |
