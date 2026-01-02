@@ -144,7 +144,7 @@ class TestDataConnectTransport extends DataConnectTransport {
   }
 
   @override
-  Future<Data> invokeQuery<Data, Variables>(
+  Future<ServerResponse> invokeQuery<Data, Variables>(
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
@@ -152,11 +152,11 @@ class TestDataConnectTransport extends DataConnectTransport {
     String? authToken,
   ) async {
     // Simulate query invocation logic here
-    return deserializer('{}');
+    return ServerResponse({});
   }
 
   @override
-  Future<Data> invokeMutation<Data, Variables>(
+  Future<ServerResponse> invokeMutation<Data, Variables>(
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
@@ -164,6 +164,6 @@ class TestDataConnectTransport extends DataConnectTransport {
     String? authToken,
   ) async {
     // Simulate mutation invocation logic here
-    return deserializer('{}');
+    return ServerResponse({});
   }
 }
