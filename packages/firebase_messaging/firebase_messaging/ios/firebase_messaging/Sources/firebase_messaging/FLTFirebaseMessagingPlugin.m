@@ -355,8 +355,18 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   // this fix)
   NSString *notificationIdentifier = notification.request.identifier;
 
-  if (notification.request.content.userInfo[@"gcm.message_id"] &&
-      ![notificationIdentifier isEqualToString:_foregroundUniqueIdentifier]) {
+  BOOL shouldCheckForDuplicate = NO;
+#if !TARGET_OS_OSX
+  if (@available(iOS 18.0, *)) {
+    if (!@available(iOS 18.1, *)) {
+      // Only iOS 18.0 specifically
+      shouldCheckForDuplicate =
+          [notificationIdentifier isEqualToString:_foregroundUniqueIdentifier];
+    }
+  }
+#endif
+
+  if (notification.request.content.userInfo[@"gcm.message_id"] && !shouldCheckForDuplicate) {
     NSDictionary *notificationDict =
         [FLTFirebaseMessagingPlugin NSDictionaryFromUNNotification:notification];
     [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
@@ -385,7 +395,15 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     }
     completionHandler(presentationOptions);
   }
-  _foregroundUniqueIdentifier = notificationIdentifier;
+
+  // Store notification identifier for iOS 18.0 duplicate detection
+#if !TARGET_OS_OSX
+  if (@available(iOS 18.0, *)) {
+    if (!@available(iOS 18.1, *)) {
+      _foregroundUniqueIdentifier = notificationIdentifier;
+    }
+  }
+#endif
 }
 
 // Called when a user interacts with a notification.
