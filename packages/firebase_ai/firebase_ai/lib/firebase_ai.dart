@@ -96,14 +96,17 @@ export 'src/imagen/imagen_reference.dart'
         ImagenControlReference;
 export 'src/live_api.dart'
     show
-        LiveGenerationConfig,
-        SpeechConfig,
         AudioTranscriptionConfig,
+        GoAway,
+        LiveGenerationConfig,
         LiveServerMessage,
         LiveServerContent,
         LiveServerToolCall,
         LiveServerToolCallCancellation,
         LiveServerResponse,
+        SessionResumptionConfig,
+        SessionResumptionUpdate,
+        SpeechConfig,
         Transcription;
 export 'src/live_session.dart' show LiveSession;
 export 'src/schema.dart' show Schema, SchemaType;
