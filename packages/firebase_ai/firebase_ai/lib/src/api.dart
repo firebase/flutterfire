@@ -1004,13 +1004,13 @@ class ThinkingConfig {
       {this.thinkingBudget, this.thinkingLevel, this.includeThoughts});
 
   /// Initializes [ThinkingConfig] with [thinkingBudget].
-  factory ThinkingConfig.withThinkingBudget(int thinkingBudget,
+  factory ThinkingConfig.withThinkingBudget(int? thinkingBudget,
           {bool? includeThoughts}) =>
       ThinkingConfig._(
           thinkingBudget: thinkingBudget, includeThoughts: includeThoughts);
 
   /// Initializes [ThinkingConfig] with [thinkingLevel].
-  factory ThinkingConfig.withThinkingLevel(ThinkingLevel thinkingLevel,
+  factory ThinkingConfig.withThinkingLevel(ThinkingLevel? thinkingLevel,
           {bool? includeThoughts}) =>
       ThinkingConfig._(
           thinkingLevel: thinkingLevel, includeThoughts: includeThoughts);

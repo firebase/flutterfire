@@ -23,6 +23,7 @@ export 'src/api.dart'
         GenerateContentResponse,
         GenerationConfig,
         ThinkingConfig,
+        ThinkingLevel,
         HarmBlockThreshold,
         HarmCategory,
         HarmProbability,
