@@ -962,21 +962,85 @@ enum ResponseModalities {
   String toJson() => _jsonString;
 }
 
+/// A preset that balances the trade-off between reasoning quality and response
+/// speed for a model's "thinking" process.
+enum ThinkingLevel {
+  /// Minimal thinking level.
+  minimal('MINIMAL'),
+
+  /// Low thinking level.
+  low('LOW'),
+
+  /// Medium thinking level.
+  medium('MEDIUM'),
+
+  /// High thinking level.
+  high('HIGH');
+
+  const ThinkingLevel(this._jsonString);
+  final String _jsonString;
+
+  // ignore: public_member_api_docs
+  String toJson() => _jsonString;
+}
+
 /// Config for thinking features.
 class ThinkingConfig {
-  // ignore: public_member_api_docs
-  ThinkingConfig({this.thinkingBudget, this.includeThoughts});
+  /// Deprecated public Constructor of [ThinkingConfig].
+  ///
+  /// Keep for backwards compatibility.
+  /// [thinkingBudget] and [thinkingLevel] cannot be set at the same time.
+  @Deprecated(
+      'Use ThinkingConfig.withThinkingBudget() or ThinkingConfig.withThinkingLevel() instead.')
+  ThinkingConfig(
+      {this.thinkingBudget, this.thinkingLevel, this.includeThoughts})
+      : assert(
+          !(thinkingBudget != null && thinkingLevel != null),
+          'thinkingBudget and thinkingLevel cannot be set at the same time.',
+        );
+
+  // Private constructor
+  ThinkingConfig._(
+      {this.thinkingBudget, this.thinkingLevel, this.includeThoughts});
+
+  /// Initializes [ThinkingConfig] with [thinkingBudget].
+  factory ThinkingConfig.withThinkingBudget(int thinkingBudget,
+          {bool? includeThoughts}) =>
+      ThinkingConfig._(
+          thinkingBudget: thinkingBudget, includeThoughts: includeThoughts);
+
+  /// Initializes [ThinkingConfig] with [thinkingLevel].
+  factory ThinkingConfig.withThinkingLevel(ThinkingLevel thinkingLevel,
+          {bool? includeThoughts}) =>
+      ThinkingConfig._(
+          thinkingLevel: thinkingLevel, includeThoughts: includeThoughts);
 
   /// The number of thoughts tokens that the model should generate.
+  ///
+  /// The range of supported thinking budget values depends on the model.
+  /// https://firebase.google.com/docs/ai-logic/thinking?api=dev#supported-thinking-budget-values
+  /// To use the default thinking budget or thinking level for a model, set this
+  /// value to null or omit it.
+  /// To disable thinking, when supported by the model, set this value to `0`.
+  /// To use dynamic thinking, allowing the model to decide on the thinking
+  /// budget based on the task, set this value to `-1`.
   final int? thinkingBudget;
 
   /// Whether to include thoughts in the response.
   final bool? includeThoughts;
 
+  /// A preset that controls the model's "thinking" process.
+  ///
+  /// Use [ThinkingLevel.low] for faster responses on less complex tasks, and
+  /// [ThinkingLevel.high] for better reasoning on more complex tasks.
+  final ThinkingLevel? thinkingLevel;
+
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
         if (thinkingBudget case final thinkingBudget?)
           'thinkingBudget': thinkingBudget,
+        if (thinkingLevel case final thinkingLevel?)
+          'thinkingLevel': thinkingLevel,
         if (includeThoughts case final includeThoughts?)
           'includeThoughts': includeThoughts,
       };
