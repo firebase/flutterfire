@@ -964,6 +964,8 @@ enum ResponseModalities {
 
 /// A preset that balances the trade-off between reasoning quality and response
 /// speed for a model's "thinking" process.
+///
+/// Note, not all models support every level.
 enum ThinkingLevel {
   /// Minimal thinking level.
   minimal('MINIMAL'),
@@ -1004,12 +1006,17 @@ class ThinkingConfig {
       {this.thinkingBudget, this.thinkingLevel, this.includeThoughts});
 
   /// Initializes [ThinkingConfig] with [thinkingBudget].
+  ///
+  /// Used for Gemini models 2.5 and earlier.
   factory ThinkingConfig.withThinkingBudget(int? thinkingBudget,
           {bool? includeThoughts}) =>
       ThinkingConfig._(
           thinkingBudget: thinkingBudget, includeThoughts: includeThoughts);
 
   /// Initializes [ThinkingConfig] with [thinkingLevel].
+  ///
+  /// Used for Gemini models 3.0 and newer.
+  /// See https://ai.google.dev/gemini-api/docs/thinking#thinking-levels
   factory ThinkingConfig.withThinkingLevel(ThinkingLevel? thinkingLevel,
           {bool? includeThoughts}) =>
       ThinkingConfig._(
