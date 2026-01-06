@@ -986,7 +986,7 @@ enum ThinkingLevel {
 
 /// Config for thinking features.
 class ThinkingConfig {
-  /// Deprecated public Constructor of [ThinkingConfig].
+  /// Deprecated public constructor of [ThinkingConfig].
   ///
   /// Keep for backwards compatibility.
   /// [thinkingBudget] and [thinkingLevel] cannot be set at the same time.

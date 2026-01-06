@@ -536,8 +536,8 @@ void main() {
       final config = ThinkingConfig.withThinkingLevel(ThinkingLevel.high,
           includeThoughts: true);
 
-      expect(config.toJson(),
-          {'thinkingLevel': 'HIGH', 'includeThoughts': true});
+      expect(
+          config.toJson(), {'thinkingLevel': 'HIGH', 'includeThoughts': true});
     });
 
     test('toJson with includeThoughts set', () {
@@ -550,9 +550,7 @@ void main() {
       final config = ThinkingConfig();
 
       // Expecting the key to be absent or the value to be explicitly null,
-
       // depending on implementation. Current implementation omits the key.
-
       expect(config.toJson(), {});
     });
 
@@ -560,9 +558,7 @@ void main() {
       final config = ThinkingConfig(thinkingBudget: 456);
 
       expect(config.thinkingBudget, 456);
-
       expect(config.thinkingLevel, isNull);
-
       expect(config.includeThoughts, isNull);
     });
 
@@ -570,9 +566,7 @@ void main() {
       final config = ThinkingConfig(thinkingLevel: ThinkingLevel.low);
 
       expect(config.thinkingBudget, isNull);
-
       expect(config.thinkingLevel, ThinkingLevel.low);
-
       expect(config.includeThoughts, isNull);
     });
 
@@ -580,9 +574,7 @@ void main() {
       final config = ThinkingConfig(includeThoughts: true);
 
       expect(config.thinkingBudget, isNull);
-
       expect(config.thinkingLevel, isNull);
-
       expect(config.includeThoughts, isTrue);
     });
 
@@ -591,9 +583,7 @@ void main() {
           ThinkingConfig.withThinkingBudget(789, includeThoughts: false);
 
       expect(config.thinkingBudget, 789);
-
       expect(config.thinkingLevel, isNull);
-
       expect(config.includeThoughts, isFalse);
     });
 
@@ -602,9 +592,7 @@ void main() {
           includeThoughts: true);
 
       expect(config.thinkingBudget, isNull);
-
       expect(config.thinkingLevel, ThinkingLevel.medium);
-
       expect(config.includeThoughts, isTrue);
     });
 
