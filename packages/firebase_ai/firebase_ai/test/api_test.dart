@@ -537,7 +537,7 @@ void main() {
           includeThoughts: true);
 
       expect(config.toJson(),
-          {'thinkingLevel': ThinkingLevel.high, 'includeThoughts': true});
+          {'thinkingLevel': 'HIGH', 'includeThoughts': true});
     });
 
     test('toJson with includeThoughts set', () {

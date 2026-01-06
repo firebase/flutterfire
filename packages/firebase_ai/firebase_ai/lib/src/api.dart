@@ -1040,7 +1040,7 @@ class ThinkingConfig {
         if (thinkingBudget case final thinkingBudget?)
           'thinkingBudget': thinkingBudget,
         if (thinkingLevel case final thinkingLevel?)
-          'thinkingLevel': thinkingLevel,
+          'thinkingLevel': thinkingLevel.toJson(),
         if (includeThoughts case final includeThoughts?)
           'includeThoughts': includeThoughts,
       };
