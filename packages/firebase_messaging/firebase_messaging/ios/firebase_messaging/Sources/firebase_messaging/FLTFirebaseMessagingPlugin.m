@@ -353,10 +353,20 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   // See this Apple issue: https://forums.developer.apple.com/forums/thread/761597
   // when it has been resolved, "_foregroundUniqueIdentifier" can be removed (i.e. the commit for
   // this fix)
-  NSString *notificationIdentifier = notification.request.identifier;
+  NSDictionary *userInfo = notification.request.content.userInfo;
+  NSString *messageID = userInfo[@"gcm.message_id"];
 
-  if (notification.request.content.userInfo[@"gcm.message_id"] &&
-      ![notificationIdentifier isEqualToString:_foregroundUniqueIdentifier]) {
+  BOOL shouldCheckForDuplicate = NO;
+#if !TARGET_OS_OSX
+  if (@available(iOS 18.0, *)) {
+    if (!@available(iOS 18.1, *)) {
+      // Only iOS 18.0 specifically
+      shouldCheckForDuplicate = [messageID isEqualToString:_foregroundUniqueIdentifier];
+    }
+  }
+#endif
+
+  if (messageID && !shouldCheckForDuplicate) {
     NSDictionary *notificationDict =
         [FLTFirebaseMessagingPlugin NSDictionaryFromUNNotification:notification];
     [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
@@ -385,7 +395,15 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     }
     completionHandler(presentationOptions);
   }
-  _foregroundUniqueIdentifier = notificationIdentifier;
+
+  // Store notification identifier for iOS 18.0 duplicate detection
+#if !TARGET_OS_OSX
+  if (@available(iOS 18.0, *)) {
+    if (!@available(iOS 18.1, *)) {
+      _foregroundUniqueIdentifier = messageID;
+    }
+  }
+#endif
 }
 
 // Called when a user interacts with a notification.
