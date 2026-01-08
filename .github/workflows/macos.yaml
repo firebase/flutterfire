@@ -49,7 +49,7 @@ jobs:
           key: xcode-cache-${{ runner.os }}
           save: "${{ github.ref == 'refs/heads/main' }}"
           max-size: 700M
-        name: Pods Cache
+      - name: Pods Cache
         continue-on-error: true
         uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
         id: pods-cache

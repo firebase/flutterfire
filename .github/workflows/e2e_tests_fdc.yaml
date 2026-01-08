@@ -274,7 +274,7 @@ jobs:
         run: |
           sudo npm i -g firebase-tools
           echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
-     - name: Firebase Emulator Cache
+      - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
         continue-on-error: true
