@@ -56,8 +56,8 @@ jobs:
         with:
           # Must match the save path exactly
           path: tests/macos/Pods
-          key: pods-v3-${{ runner.os }}-${{ hashFiles('tests/macos/Podfile.lock') }}
-          restore-keys: pods-v3-${{ runner.os }}
+          key: pods-v3-${{ runner.os }}-macos-${{ hashFiles('tests/pubspec.lock') }}
+          restore-keys: pods-v3-${{ runner.os }}-macos
       - name: 'Install Tools'
         run: |
           sudo npm i -g firebase-tools
@@ -126,4 +126,4 @@ jobs:
         with:
           key: ${{ steps.pods-cache.outputs.cache-primary-key }}
           # Must match the restore paths exactly
-          path: tests/ios/Pods
+          path: tests/macos/Pods
