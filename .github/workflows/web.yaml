@@ -58,7 +58,7 @@ jobs:
       - name: 'Install Tools'
         run: sudo npm i -g firebase-tools
       - name: Cache Firebase Emulator
-        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-${{ runner.os }}
@@ -110,7 +110,7 @@ jobs:
       - name: 'Install Tools'
         run: sudo npm i -g firebase-tools
       - name: Cache Firebase Emulator
-        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-${{ runner.os }}
@@ -167,7 +167,7 @@ jobs:
       - name: 'Install Tools'
         run: sudo npm i -g firebase-tools
       - name: Cache Firebase Emulator
-        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-${{ runner.os }}
