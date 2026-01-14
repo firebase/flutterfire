@@ -138,8 +138,6 @@ void main() {
 
           await configSubscription.cancel();
         },
-        // This feature is not supported on Web
-        skip: kIsWeb,
       );
 
       test('default values', () async {
@@ -155,6 +153,19 @@ void main() {
         expect(FirebaseRemoteConfig.instance.getInt('does-not-exist'), 0);
         expect(FirebaseRemoteConfig.instance.getDouble('does-not-exist'), 0.0);
       });
+
+      test(
+        'getAll() returns without throwing',
+        () async {
+          try {
+            await FirebaseRemoteConfig.instance.fetchAndActivate();
+            FirebaseRemoteConfig.instance.getAll();
+          } on UnimplementedError catch (e) {
+            fail('getAll() threw an exception: $e');
+          }
+        },
+        skip: !kIsWeb,
+      );
 
       group('setCustomSignals()', () {
         test('valid signal values; `string`, `number` & `null`', () async {

@@ -1,3 +1,15 @@
+## 4.7.5
+
+ - Update a dependency to the latest release.
+
+## 4.7.4
+
+ - Update a dependency to the latest release.
+
+## 4.7.3
+
+ - **FIX**(firebase_messaging): update APNS token error message for clarity ([#17763](https://github.com/firebase/flutterfire/issues/17763)). ([08a04332](https://github.com/firebase/flutterfire/commit/08a0433264f9797451dea1804257e439be11e64a))
+
 ## 4.7.2
 
  - Update a dependency to the latest release.

@@ -33,6 +33,10 @@ jobs:
       matrix:
         working_directory:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
+    env:
+      AVD_ARCH: x86_64
+      AVD_API_LEVEL: 34
+      AVD_TARGET: google_apis
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
       - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
@@ -42,12 +46,21 @@ jobs:
       - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
+      - name: 'Install Tools'
+        run: |
+          sudo npm i -g firebase-tools
+          echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
-        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        id: firebase-emulator-cache
+        uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        continue-on-error: true
         with:
+          # The firebase emulators are pure javascript and java, OS-independent
+          enableCrossOsArchive: true
+          # Must match the save path exactly
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v3-${{ runner.os }}
+          key: firebase-emulators-v3-${{ env.FIREBASE_TOOLS_VERSION }}
           restore-keys: firebase-emulators-v3
       - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
         with:
@@ -61,9 +74,6 @@ jobs:
           melos-version: '5.3.0'
       - name: 'Bootstrap package'
         run: melos bootstrap --scope tests && melos bootstrap --scope "cloud_firestore*"
-      - name: 'Install Tools'
-        run: |
-          sudo npm i -g firebase-tools
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: Enable KVM
@@ -73,20 +83,31 @@ jobs:
           sudo udevadm trigger --name-match=kvm
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@v4
+      - name: Free Disk Space (Ubuntu)
+        uses: AdityaGarg8/remove-unwanted-software@90e01b21170618765a73370fcc3abbd1684a7793
+        with:
+          remove-dotnet: true
+          remove-haskell: true
+          remove-codeql: true
+          remove-docker-images: true
+          remove-large-packages: true
       - name: AVD cache
-        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        continue-on-error: true
         id: avd-cache
         with:
+          # Must match the save path exactly
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-${{ runner.os }}
+          key: avd-${{ runner.os }}-${{ env.AVD_API_LEVEL }}-${{ env.AVD_TARGET }}-${{ env.AVD_ARCH }}
       - name: Start AVD then run E2E tests
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: reactivecircus/android-emulator-runner@b530d96654c385303d652368551fb075bc2f0b6b
         with:
-          api-level: 34
-          target: google_apis
-          arch: x86_64
+          api-level: ${{ env.AVD_API_LEVEL }}
+          target: ${{ env.AVD_TARGET }}
+          arch: ${{ env.AVD_ARCH }}
+          emulator-build: 14214601
           working-directory: ${{ matrix.working_directory }}
           script: |
             flutter test integration_test/e2e_test.dart --ignore-timeouts --dart-define=CI=true -d emulator-5554
@@ -95,3 +116,23 @@ jobs:
       # https://github.com/ReactiveCircus/android-emulator-runner/issues/385
         run: |
           pgrep -f appium && pkill -f appium || echo "No Appium process found"
+      - name: Save Firestore Emulator Cache
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        with:
+          # The firebase emulators are pure javascript and java, OS-independent
+          enableCrossOsArchive: true
+          key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
+          # Must match the restore path exactly
+          path: ~/.cache/firebase/emulators
+      - name: Save Android Emulator Cache
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        with:
+          key: ${{ steps.avd-cache.outputs.cache-primary-key }}
+          # Must match the restore path exactly
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*

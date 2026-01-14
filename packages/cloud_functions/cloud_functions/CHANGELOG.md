@@ -1,3 +1,15 @@
+## 6.0.5
+
+ - **FIX**(cloud_functions): fix formatting in FunctionsStreamHandler ([#17891](https://github.com/firebase/flutterfire/issues/17891)). ([345e14f4](https://github.com/firebase/flutterfire/commit/345e14f4bcd7cc3fe6341910c7c7cd9c9ce988dd))
+
+## 6.0.4
+
+ - Update a dependency to the latest release.
+
+## 6.0.3
+
+ - Update a dependency to the latest release.
+
 ## 6.0.2
 
  - Update a dependency to the latest release.

@@ -1,3 +1,16 @@
+## 0.1.7+1
+
+ - Update a dependency to the latest release.
+
+## 0.1.7
+
+ - **FIX**(installations,web): More explicit interop types ([#17819](https://github.com/firebase/flutterfire/issues/17819)). ([64986b1b](https://github.com/firebase/flutterfire/commit/64986b1b8128359ed66965f9342f2465007fc1cd))
+ - **FEAT**(web): add `registerVersion` support for packages ([#17780](https://github.com/firebase/flutterfire/issues/17780)). ([3c8c83d4](https://github.com/firebase/flutterfire/commit/3c8c83d4251f2965ae6fb1fe7b64c21dcb94e9ec))
+
+## 0.1.6+20
+
+ - Update a dependency to the latest release.
+
 ## 0.1.6+19
 
  - Update a dependency to the latest release.

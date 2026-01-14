@@ -1,3 +1,15 @@
+## 0.2.1+3
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+2
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+1
+
+ - **FIX**(app_check): Deprecate androidProvider and appleProvider parameters in activate method ([#17742](https://github.com/firebase/flutterfire/issues/17742)). ([4e7f800e](https://github.com/firebase/flutterfire/commit/4e7f800e94a895c6553bd3c1595b4f06ac69bb81))
+
 ## 0.2.1
 
  - **FEAT**(app-check): Debug token support for the activate method ([#17723](https://github.com/firebase/flutterfire/issues/17723)). ([3c638264](https://github.com/firebase/flutterfire/commit/3c638264565d902ddbe4dff5bb027aef9e1c2140))

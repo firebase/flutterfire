@@ -19,8 +19,9 @@ command:
       preCommit: |
         dart run scripts/generate_firebaseai_version.dart && \
         dart run scripts/generate_dataconnect_version.dart && \
+        dart run scripts/generate_versions_web.dart && \
         dart run scripts/generate_versions_spm.dart && \
-        git add packages/firebase_data_connect/firebase_data_connect/lib/src/dataconnect_version.dart
+        git add packages/firebase_data_connect/firebase_data_connect/lib/src/dataconnect_version.dart && git add packages/*/*_web/lib/src/*_version.dart
       post: |
         dart run scripts/generate_tag_spm_firebase_core.dart
 

@@ -1,3 +1,17 @@
+## 4.3.0
+
+ - **FEAT**: bump Firebase iOS SDK to 12.6.0 ([#17857](https://github.com/firebase/flutterfire/issues/17857)). ([668331b4](https://github.com/firebase/flutterfire/commit/668331b446726daef719a68b43b34af7b1ae411f))
+
+## 4.2.1
+
+ - Update a dependency to the latest release.
+
+## 4.2.0
+
+ - **FIX**: a bug with the `demoProjectId` arg to `Firebase.initializeApp()` ([#17703](https://github.com/firebase/flutterfire/issues/17703)). ([09d03aac](https://github.com/firebase/flutterfire/commit/09d03aac8ced6f7f9211c24f40b57eb992f2996d))
+ - **FEAT**: bump Android SDK to version 34.4.0 ([#17786](https://github.com/firebase/flutterfire/issues/17786)). ([3edfc18d](https://github.com/firebase/flutterfire/commit/3edfc18d94c82fa81740fe61d075a09195aa9610))
+ - **FEAT**: bump Firebase iOS SDK to 12.4.0 ([#17779](https://github.com/firebase/flutterfire/issues/17779)). ([51ed3fbb](https://github.com/firebase/flutterfire/commit/51ed3fbbc2eecf41850db604e7bd145fe0db130c))
+
 ## 4.1.1
 
  - Update a dependency to the latest release.

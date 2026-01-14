@@ -10,10 +10,14 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
+import 'src/firebase_analytics_version.dart';
+
 import 'interop/analytics.dart' as analytics_interop;
 
 /// Web implementation of [FirebaseAnalyticsPlatform]
 class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
+  static const String _libraryName = 'flutter-fire-analytics';
+
   /// instance of Analytics from the web plugin
   analytics_interop.Analytics? _webAnalytics;
 
@@ -36,6 +40,8 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerLibraryVersion(_libraryName, packageVersion);
+
     FirebaseCoreWeb.registerService('analytics');
     FirebaseAnalyticsPlatform.instance = FirebaseAnalyticsWeb();
   }

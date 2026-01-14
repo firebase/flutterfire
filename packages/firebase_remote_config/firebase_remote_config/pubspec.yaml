@@ -4,7 +4,7 @@ description:
   re-releasing.
 homepage: https://firebase.google.com/docs/remote-config
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_remote_config/firebase_remote_config
-version: 6.0.2
+version: 6.1.3
 topics:
   - firebase
   - remote
@@ -19,10 +19,10 @@ environment:
   flutter: '>=3.3.0'
 
 dependencies:
-  firebase_core: ^4.1.1
-  firebase_core_platform_interface: ^6.0.1
-  firebase_remote_config_platform_interface: ^2.0.3
-  firebase_remote_config_web: ^1.8.12
+  firebase_core: ^4.3.0
+  firebase_core_platform_interface: ^6.0.2
+  firebase_remote_config_platform_interface: ^2.0.6
+  firebase_remote_config_web: ^1.10.2
   flutter:
     sdk: flutter
 

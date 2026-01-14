@@ -1,3 +1,19 @@
+## 6.1.3
+
+ - Update a dependency to the latest release.
+
+## 6.1.2
+
+ - Update a dependency to the latest release.
+
+## 6.1.1
+
+ - Update a dependency to the latest release.
+
+## 6.1.0
+
+ - **FEAT**(remote_config,web): add web support for `onConfigUpdated` ([#17750](https://github.com/firebase/flutterfire/issues/17750)). ([799b12e4](https://github.com/firebase/flutterfire/commit/799b12e4b31a2c7c8f251dd4adbbf65227bfc1b6))
+
 ## 6.0.2
 
  - Update a dependency to the latest release.

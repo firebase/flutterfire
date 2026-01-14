@@ -1,3 +1,15 @@
+## 0.1.8+1
+
+ - Update a dependency to the latest release.
+
+## 0.1.8
+
+ - **FEAT**(web): add `registerVersion` support for packages ([#17780](https://github.com/firebase/flutterfire/issues/17780)). ([3c8c83d4](https://github.com/firebase/flutterfire/commit/3c8c83d4251f2965ae6fb1fe7b64c21dcb94e9ec))
+
+## 0.1.7+20
+
+ - Update a dependency to the latest release.
+
 ## 0.1.7+19
 
  - Update a dependency to the latest release.

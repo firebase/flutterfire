@@ -62,9 +62,9 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
       var function: Callable<AnyEncodable, StreamResponse<AnyDecodable, AnyDecodable>>
 
       if let functionName {
-        function = self.functions.httpsCallable(functionName, options: options)
+        function = functions.httpsCallable(functionName, options: options)
       } else if let functionUri, let url = URL(string: functionUri) {
-        function = self.functions.httpsCallable(url, options: options)
+        function = functions.httpsCallable(url, options: options)
       } else {
         await MainActor.run {
           events(FlutterError(code: "IllegalArgumentException",

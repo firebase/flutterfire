@@ -33,7 +33,7 @@ jobs:
       - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
       - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
         name: Install Node.js 20
         with:
@@ -65,7 +65,7 @@ jobs:
       - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
       - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
         name: Install Node.js 20
         with:
@@ -87,4 +87,3 @@ jobs:
           npm install -g firebase-tools
       - name: Start Firebase Emulator and run tests
         run: cd ./.github/workflows/scripts && firebase emulators:exec --project flutterfire-e2e-tests "cd ../../../packages/cloud_firestore/cloud_firestore/example && flutter build windows"
-

@@ -1,3 +1,16 @@
+## 0.2.2+1
+
+ - **FIX**(app-check): token not available on new session ([#17872](https://github.com/firebase/flutterfire/issues/17872)). ([702de52e](https://github.com/firebase/flutterfire/commit/702de52e2245006ae5a07a61a7571bd271d8423c))
+
+## 0.2.2
+
+ - **FIX**(app-check,web): More explicit interop types ([#17810](https://github.com/firebase/flutterfire/issues/17810)). ([f9ca8193](https://github.com/firebase/flutterfire/commit/f9ca81939f541004e8c34935ec8f314821ef6d05))
+ - **FEAT**(web): add `registerVersion` support for packages ([#17780](https://github.com/firebase/flutterfire/issues/17780)). ([3c8c83d4](https://github.com/firebase/flutterfire/commit/3c8c83d4251f2965ae6fb1fe7b64c21dcb94e9ec))
+
+## 0.2.1+1
+
+ - Update a dependency to the latest release.
+
 ## 0.2.1
 
  - **FEAT**(app-check): Debug token support for the activate method ([#17723](https://github.com/firebase/flutterfire/issues/17723)). ([3c638264](https://github.com/firebase/flutterfire/commit/3c638264565d902ddbe4dff5bb027aef9e1c2140))

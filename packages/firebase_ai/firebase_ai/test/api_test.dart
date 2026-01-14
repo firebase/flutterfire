@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// ignore_for_file: deprecated_member_use_from_same_package
 import 'dart:convert';
 
 import 'package:firebase_ai/src/api.dart';
@@ -312,6 +313,8 @@ void main() {
       expect(FinishReason.maxTokens.toJson(), 'MAX_TOKENS');
       expect(FinishReason.safety.toJson(), 'SAFETY');
       expect(FinishReason.recitation.toJson(), 'RECITATION');
+      expect(FinishReason.malformedFunctionCall.toJson(),
+          'MALFORMED_FUNCTION_CALL');
       expect(FinishReason.other.toJson(), 'OTHER');
     });
 
@@ -525,11 +528,27 @@ void main() {
   group('ThinkingConfig', () {
     test('toJson with thinkingBudget set', () {
       final config = ThinkingConfig(thinkingBudget: 123);
+
       expect(config.toJson(), {'thinkingBudget': 123});
     });
 
-    test('toJson with thinkingBudget null', () {
+    test('toJson with thinkingLevel set', () {
+      final config = ThinkingConfig.withThinkingLevel(ThinkingLevel.high,
+          includeThoughts: true);
+
+      expect(
+          config.toJson(), {'thinkingLevel': 'HIGH', 'includeThoughts': true});
+    });
+
+    test('toJson with includeThoughts set', () {
+      final config = ThinkingConfig(includeThoughts: true);
+
+      expect(config.toJson(), {'includeThoughts': true});
+    });
+
+    test('toJson with thinkingBudget and thinkingLevel null', () {
       final config = ThinkingConfig();
+
       // Expecting the key to be absent or the value to be explicitly null,
       // depending on implementation. Current implementation omits the key.
       expect(config.toJson(), {});
@@ -537,10 +556,53 @@ void main() {
 
     test('constructor initializes thinkingBudget', () {
       final config = ThinkingConfig(thinkingBudget: 456);
-      expect(config.thinkingBudget, 456);
 
-      final configNull = ThinkingConfig();
-      expect(configNull.thinkingBudget, isNull);
+      expect(config.thinkingBudget, 456);
+      expect(config.thinkingLevel, isNull);
+      expect(config.includeThoughts, isNull);
+    });
+
+    test('constructor initializes thinkingLevel', () {
+      final config = ThinkingConfig(thinkingLevel: ThinkingLevel.low);
+
+      expect(config.thinkingBudget, isNull);
+      expect(config.thinkingLevel, ThinkingLevel.low);
+      expect(config.includeThoughts, isNull);
+    });
+
+    test('constructor initializes includeThoughts', () {
+      final config = ThinkingConfig(includeThoughts: true);
+
+      expect(config.thinkingBudget, isNull);
+      expect(config.thinkingLevel, isNull);
+      expect(config.includeThoughts, isTrue);
+    });
+
+    test('withThinkingBudget factory initializes correctly', () {
+      final config =
+          ThinkingConfig.withThinkingBudget(789, includeThoughts: false);
+
+      expect(config.thinkingBudget, 789);
+      expect(config.thinkingLevel, isNull);
+      expect(config.includeThoughts, isFalse);
+    });
+
+    test('withThinkingLevel factory initializes correctly', () {
+      final config = ThinkingConfig.withThinkingLevel(ThinkingLevel.medium,
+          includeThoughts: true);
+
+      expect(config.thinkingBudget, isNull);
+      expect(config.thinkingLevel, ThinkingLevel.medium);
+      expect(config.includeThoughts, isTrue);
+    });
+
+    test(
+        'deprecated constructor throws AssertionError if both thinkingBudget and thinkingLevel are provided',
+        () {
+      expect(
+          () => ThinkingConfig(
+              thinkingBudget: 100, thinkingLevel: ThinkingLevel.high),
+          throwsA(isA<AssertionError>()));
     });
   });
 
@@ -971,6 +1033,18 @@ void main() {
               () => VertexSerialization().parseGenerateContentResponse(json),
               throwsA(isA<FirebaseAISdkException>().having(
                   (e) => e.message, 'message', contains('WebGroundingChunk'))));
+        });
+
+        test('parses malformedFunctionCall finishReason', () {
+          final jsonResponse = {
+            'candidates': [
+              {'finishReason': 'MALFORMED_FUNCTION_CALL'}
+            ]
+          };
+          final response =
+              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          expect(response.candidates.first.finishReason,
+              FinishReason.malformedFunctionCall);
         });
 
         test(

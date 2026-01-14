@@ -4,7 +4,7 @@ description:
   solution that provides insight on app usage and user engagement on Android and iOS.
 homepage: https://firebase.google.com/docs/analytics
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_analytics/firebase_analytics
-version: 12.0.2
+version: 12.1.0
 topics:
   - firebase
   - analytics
@@ -19,10 +19,10 @@ environment:
   flutter: '>=3.3.0'
 
 dependencies:
-  firebase_analytics_platform_interface: ^5.0.2
-  firebase_analytics_web: ^0.6.0+2
-  firebase_core: ^4.1.1
-  firebase_core_platform_interface: ^6.0.1
+  firebase_analytics_platform_interface: ^5.0.5
+  firebase_analytics_web: ^0.6.1+1
+  firebase_core: ^4.3.0
+  firebase_core_platform_interface: ^6.0.2
   flutter:
     sdk: flutter
 
