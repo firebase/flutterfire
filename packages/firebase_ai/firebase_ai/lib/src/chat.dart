@@ -147,28 +147,69 @@ final class ChatSession {
   /// Waits to read the entire streamed response before recording the message
   /// and response and allowing pending messages to be sent.
   Stream<GenerateContentResponse> sendMessageStream(Content message) {
-    final controller = StreamController<GenerateContentResponse>(sync: true);
+    final controller = StreamController<GenerateContentResponse>();
     _mutex.acquire().then((lock) async {
       try {
-        final responses = _generateContentStream(_history.followedBy([message]),
-            safetySettings: _safetySettings,
-            generationConfig: _generationConfig);
-        final content = <Content>[];
-        await for (final response in responses) {
-          if (response.candidates case [final candidate, ...]) {
-            content.add(candidate.content);
+        final requestHistory = <Content>[message];
+        var turn = 0;
+        while (turn < _maxTurns) {
+          final responses = _generateContentStream(
+              _history.followedBy(requestHistory),
+              safetySettings: _safetySettings,
+              generationConfig: _generationConfig);
+
+          final turnChunks = <GenerateContentResponse>[];
+          await for (final response in responses) {
+            turnChunks.add(response);
+            controller.add(response);
           }
-          controller.add(response);
+          if (turnChunks.isEmpty) break;
+          final aggregatedContent = historyAggregate(turnChunks.map((r) {
+            final content = r.candidates.firstOrNull?.content;
+            if (content == null) {
+              throw Exception('No content in response candidate');
+            }
+            return content;
+          }).toList());
+
+          final functionCalls =
+              aggregatedContent.parts.whereType<FunctionCall>().toList();
+
+          if (functionCalls.isEmpty) {
+            _history.addAll(requestHistory);
+            _history.add(aggregatedContent);
+            return;
+          }
+
+          requestHistory.add(aggregatedContent);
+          final functionResponseFutures =
+              functionCalls.map((functionCall) async {
+            final function = _autoFunctionDeclarations?[functionCall.name];
+            if (function == null) {
+              throw Exception(
+                  'Unknown function call: ${functionCall.name}, please add '
+                  'the function to the tools.');
+            }
+            Object? result;
+            try {
+              result = await function.callable(functionCall.args);
+            } catch (e) {
+              result = e.toString();
+            }
+            return FunctionResponse(functionCall.name, {'result': result});
+          });
+          final functionResponseParts =
+              await Future.wait(functionResponseFutures);
+          requestHistory.add(Content.functionResponses(functionResponseParts));
+          turn++;
         }
-        if (content.isNotEmpty) {
-          _history.add(message);
-          _history.add(historyAggregate(content));
-        }
+        throw Exception('Max turns of $_maxTurns reached.');
       } catch (e, s) {
         controller.addError(e, s);
+      } finally {
+        lock.release();
+        unawaited(controller.close());
       }
-      lock.release();
-      unawaited(controller.close());
     });
     return controller.stream;
   }
