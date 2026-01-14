@@ -97,6 +97,15 @@ final class Tool {
   /// A tool that allows providing URL context to the model.
   final UrlContext? _urlContext;
 
+  /// Returns a list of all [AutoFunctionDeclaration] objects
+  /// found within the [_functionDeclarations] list.
+  List<AutoFunctionDeclaration> get autoFunctionDeclarations {
+    return _functionDeclarations
+            ?.whereType<AutoFunctionDeclaration>()
+            .toList() ??
+        [];
+  }
+
   /// Convert to json object.
   Map<String, Object> toJson() => {
         if (_functionDeclarations case final _functionDeclarations?)

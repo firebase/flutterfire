@@ -17,6 +17,7 @@ import 'dart:async';
 import 'api.dart';
 import 'base_model.dart';
 import 'content.dart';
+import 'tool.dart';
 import 'utils/chat_utils.dart';
 import 'utils/mutex.dart';
 
@@ -27,8 +28,20 @@ import 'utils/mutex.dart';
 /// [GenerateContentResponse], other candidates may be available on the returned
 /// response. The history reflects the most current state of the chat session.
 final class ChatSession {
-  ChatSession._(this._generateContent, this._generateContentStream,
-      this._history, this._safetySettings, this._generationConfig);
+  ChatSession._(
+      this._generateContent,
+      this._generateContentStream,
+      this._history,
+      this._safetySettings,
+      this._generationConfig,
+      this._tools,
+      this._maxTurns)
+      : _autoFunctionDeclarations = _tools
+            ?.expand((tool) => tool.autoFunctionDeclarations)
+            .fold(<String, AutoFunctionDeclaration>{}, (map, function) {
+          map?[function.name] = function;
+          return map;
+        });
   final Future<GenerateContentResponse> Function(Iterable<Content> content,
       {List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig}) _generateContent;
@@ -41,6 +54,9 @@ final class ChatSession {
   final List<Content> _history;
   final List<SafetySetting>? _safetySettings;
   final GenerationConfig? _generationConfig;
+  final List<Tool>? _tools;
+  final Map<String, AutoFunctionDeclaration>? _autoFunctionDeclarations;
+  final int _maxTurns;
 
   /// The content that has been successfully sent to, or received from, the
   /// generative model.
@@ -66,16 +82,48 @@ final class ChatSession {
   Future<GenerateContentResponse> sendMessage(Content message) async {
     final lock = await _mutex.acquire();
     try {
-      final response = await _generateContent(_history.followedBy([message]),
-          safetySettings: _safetySettings, generationConfig: _generationConfig);
-      if (response.candidates case [final candidate, ...]) {
-        _history.add(message);
-        final normalizedContent = candidate.content.role == null
-            ? Content('model', candidate.content.parts)
-            : candidate.content;
-        _history.add(normalizedContent);
+      final requestHistory = <Content>[message];
+      var turn = 0;
+      while (turn < _maxTurns) {
+        final response = await _generateContent(
+            _history.followedBy(requestHistory),
+            safetySettings: _safetySettings,
+            generationConfig: _generationConfig);
+
+        final functionCalls = response.functionCalls;
+        if (functionCalls.isEmpty) {
+          if (response.candidates case [final candidate, ...]) {
+            _history.addAll(requestHistory);
+            final normalizedContent = candidate.content.role == null
+                ? Content('model', candidate.content.parts)
+                : candidate.content;
+            _history.add(normalizedContent);
+          }
+          return response;
+        }
+
+        requestHistory.add(response.candidates.first.content);
+        final functionResponses = <Part>[];
+        for (final functionCall in functionCalls) {
+          final function = _autoFunctionDeclarations?[functionCall.name];
+          if (function == null) {
+            throw Exception(
+                'Unknown function call: ${functionCall.name}, please add '
+                'the function to the tools.');
+          }
+          Object? result;
+          try {
+            result = await function.callable(functionCall.args);
+          } catch (e) {
+            result = e.toString();
+          }
+          functionResponses
+              .add(FunctionResponse(functionCall.name, {'result': result}));
+        }
+        requestHistory.add(Content('function', functionResponses));
+        turn++;
       }
-      return response;
+      throw Exception('Max turns of $_maxTurns reached.');
     } finally {
       lock.release();
     }
@@ -138,7 +186,8 @@ extension StartChatExtension on GenerativeModel {
   ChatSession startChat(
           {List<Content>? history,
           List<SafetySetting>? safetySettings,
-          GenerationConfig? generationConfig}) =>
+          GenerationConfig? generationConfig,
+          int? maxTurns}) =>
       ChatSession._(generateContent, generateContentStream, history ?? [],
-          safetySettings, generationConfig);
+          safetySettings, generationConfig, tools, maxTurns ?? 5);
 }

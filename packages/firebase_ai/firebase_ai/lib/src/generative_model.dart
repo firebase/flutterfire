@@ -48,7 +48,7 @@ final class GenerativeModel extends BaseApiClientModel {
     http.Client? httpClient,
   })  : _safetySettings = safetySettings ?? [],
         _generationConfig = generationConfig,
-        _tools = tools,
+        this.tools = tools,
         _toolConfig = toolConfig,
         _systemInstruction = systemInstruction,
         super(
@@ -80,7 +80,7 @@ final class GenerativeModel extends BaseApiClientModel {
     ApiClient? apiClient,
   })  : _safetySettings = safetySettings ?? [],
         _generationConfig = generationConfig,
-        _tools = tools,
+        this.tools = tools,
         _toolConfig = toolConfig,
         _systemInstruction = systemInstruction,
         super(
@@ -98,7 +98,9 @@ final class GenerativeModel extends BaseApiClientModel {
 
   final List<SafetySetting> _safetySettings;
   final GenerationConfig? _generationConfig;
-  final List<Tool>? _tools;
+
+  /// List of [Tool] registered in the model
+  final List<Tool>? tools;
 
   final ToolConfig? _toolConfig;
   final Content? _systemInstruction;
@@ -125,7 +127,7 @@ final class GenerativeModel extends BaseApiClientModel {
             model,
             safetySettings ?? _safetySettings,
             generationConfig ?? _generationConfig,
-            tools ?? _tools,
+            tools ?? this.tools,
             toolConfig ?? _toolConfig,
             _systemInstruction,
           ),
@@ -156,7 +158,7 @@ final class GenerativeModel extends BaseApiClientModel {
           model,
           safetySettings ?? _safetySettings,
           generationConfig ?? _generationConfig,
-          tools ?? _tools,
+          tools ?? this.tools,
           toolConfig ?? _toolConfig,
           _systemInstruction,
         ));
@@ -188,7 +190,7 @@ final class GenerativeModel extends BaseApiClientModel {
       model,
       _safetySettings,
       _generationConfig,
-      _tools,
+      tools,
       _toolConfig,
     );
     return makeRequest(Task.countTokens, parameters,
