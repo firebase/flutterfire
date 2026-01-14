@@ -113,6 +113,7 @@ export 'src/schema.dart' show Schema, SchemaType;
 
 export 'src/tool.dart'
     show
+        AutoFunctionDeclaration,
         FunctionCallingConfig,
         FunctionCallingMode,
         FunctionDeclaration,

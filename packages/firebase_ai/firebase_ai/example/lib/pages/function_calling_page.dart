@@ -40,7 +40,9 @@ class Location {
 
 class _FunctionCallingPageState extends State<FunctionCallingPage> {
   late GenerativeModel _functionCallModel;
+  late GenerativeModel _autoFunctionCallModel;
   late GenerativeModel _codeExecutionModel;
+  late final AutoFunctionDeclaration _autoFetchWeatherTool;
   final List<MessageData> _messages = <MessageData>[];
   bool _loading = false;
   bool _enableThinking = false;
@@ -48,7 +50,41 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
   @override
   void initState() {
     super.initState();
+    _autoFetchWeatherTool = AutoFunctionDeclaration(
+      name: 'fetchWeather',
+      description:
+          'Get the weather conditions for a specific city on a specific date.',
+      parameters: {
+        'location': Schema.object(
+          description:
+              'The name of the city and its state for which to get the weather. Only cities in the USA are supported.',
+          properties: {
+            'city': Schema.string(
+              description: 'The city of the location.',
+            ),
+            'state': Schema.string(
+              description: 'The state of the location.',
+            ),
+          },
+        ),
+        'date': Schema.string(
+          description:
+              'The date for which to get the weather. Date must be in the format: YYYY-MM-DD.',
+        ),
+      },
+      callable: _fetchWeatherCallable,
+    );
     _initializeModel();
+  }
+
+  Future<Map<String, Object?>> _fetchWeatherCallable(
+    Map<String, Object?> args,
+  ) async {
+    final locationData = args['location']! as Map<String, Object?>;
+    final city = locationData['city']! as String;
+    final state = locationData['state']! as String;
+    final date = args['date']! as String;
+    return fetchWeather(Location(city, state), date);
   }
 
   void _initializeModel() {
@@ -69,6 +105,13 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
           Tool.functionDeclarations([fetchWeatherTool]),
         ],
       );
+      _autoFunctionCallModel = vertexAI.generativeModel(
+        model: 'gemini-2.5-flash',
+        generationConfig: generationConfig,
+        tools: [
+          Tool.functionDeclarations([_autoFetchWeatherTool]),
+        ],
+      );
       _codeExecutionModel = vertexAI.generativeModel(
         model: 'gemini-2.5-flash',
         generationConfig: generationConfig,
@@ -83,6 +126,13 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
         generationConfig: generationConfig,
         tools: [
           Tool.functionDeclarations([fetchWeatherTool]),
+        ],
+      );
+      _autoFunctionCallModel = googleAI.generativeModel(
+        model: 'gemini-2.5-flash',
+        generationConfig: generationConfig,
+        tools: [
+          Tool.functionDeclarations([_autoFetchWeatherTool]),
         ],
       );
       _codeExecutionModel = googleAI.generativeModel(
@@ -176,29 +226,48 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
                 vertical: 25,
                 horizontal: 15,
               ),
-              child: Row(
+              child: Column(
                 children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: !_loading
-                          ? () async {
-                              await _testFunctionCalling();
-                            }
-                          : null,
-                      child: const Text('Test Function Calling'),
-                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: !_loading
+                              ? () async {
+                                  await _testFunctionCalling();
+                                }
+                              : null,
+                          child: const Text('Manual FC'),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: !_loading
+                              ? () async {
+                                  await _testCodeExecution();
+                                }
+                              : null,
+                          child: const Text('Code Execution'),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: !_loading
-                          ? () async {
-                              await _testCodeExecution();
-                            }
-                          : null,
-                      child: const Text('Test Code Execution'),
-                    ),
-                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: !_loading
+                              ? () async {
+                                  await _testAutoFunctionCalling();
+                                }
+                              : null,
+                          child: const Text('Auto Function Calling'),
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
@@ -206,6 +275,46 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _testAutoFunctionCalling() async {
+    setState(() {
+      _loading = true;
+      _messages.clear();
+    });
+    try {
+      final autoFunctionCallChat = _autoFunctionCallModel.startChat();
+      const prompt =
+          'What is the weather like in Boston on 10/02 in year 2024?';
+
+      _messages.add(MessageData(text: prompt, fromUser: true));
+      setState(() {});
+
+      // Send the message to the generative model.
+      final response = await autoFunctionCallChat.sendMessage(
+        Content.text(prompt),
+      );
+
+      final thought = response.thoughtSummary;
+      if (thought != null) {
+        _messages
+            .add(MessageData(text: thought, fromUser: false, isThought: true));
+      }
+
+      // The SDK should have handled the function call automatically.
+      // The final response should contain the text from the model.
+      if (response.text case final text?) {
+        _messages.add(MessageData(text: text));
+      } else {
+        _messages.add(MessageData(text: 'No text response from model.'));
+      }
+    } catch (e) {
+      _showError(e.toString());
+    } finally {
+      setState(() {
+        _loading = false;
+      });
+    }
   }
 
   Future<void> _testFunctionCalling() async {
