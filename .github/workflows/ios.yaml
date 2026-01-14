@@ -44,24 +44,36 @@ jobs:
       - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
       - uses: hendrikmuhs/ccache-action@c92f40bee50034e84c763e33b317c77adaa81c92
         name: Xcode Compile Cache
         with:
           key: xcode-cache-${{ runner.os }}
+          save: "${{ github.ref == 'refs/heads/main' }}"
           max-size: 700M
-      - uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
+      - uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        continue-on-error: true
         name: Pods Cache
         id: pods-cache
         with:
+          # Must match the save path exactly
           path: tests/ios/Pods
           key: pods-v3-${{ runner.os }}-${{ hashFiles('tests/ios/Podfile.lock') }}
           restore-keys: pods-v3-${{ runner.os }}
+      - name: 'Install Tools'
+        run: |
+          sudo npm i -g firebase-tools
+          echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
-        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        id: firebase-emulator-cache
+        uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        continue-on-error: true
         with:
+          # The firebase emulators are pure javascript and java, OS-independent
+          enableCrossOsArchive: true
+          # Must match the save path exactly
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v3-${{ runner.os }}
+          key: firebase-emulators-v3-${{ env.FIREBASE_TOOLS_VERSION }}
           restore-keys: firebase-emulators-v3
       - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
         with:
@@ -75,9 +87,6 @@ jobs:
           melos-version: '5.3.0'
       - name: 'Bootstrap package'
         run: melos bootstrap --scope tests && melos bootstrap --scope "cloud_firestore*"
-      - name: 'Install Tools'
-        run: |
-          sudo npm i -g firebase-tools
       - name: 'Free up space'
         run: |
           sudo rm -rf \
@@ -118,3 +127,23 @@ jobs:
           # Uncomment following line to have simulator logs printed out for debugging purposes.
           # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
           flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --ignore-timeouts --dart-define=CI=true
+      - name: Save Firestore Emulator Cache
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        continue-on-error: true
+        with:
+          # The firebase emulators are pure javascript and java, OS-independent
+          enableCrossOsArchive: true
+          key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
+          # Must match the restore paths exactly
+          path: ~/.cache/firebase/emulators
+      - name: Save Pods Cache
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        continue-on-error: true
+        with:
+          key: ${{ steps.pods-cache.outputs.cache-primary-key }}
+          # Must match the restore paths exactly
+          path: tests/ios/Pods

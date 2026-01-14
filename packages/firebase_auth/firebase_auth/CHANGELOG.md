@@ -1,3 +1,15 @@
+## 6.1.3
+
+ - Update a dependency to the latest release.
+
+## 6.1.2
+
+ - Update a dependency to the latest release.
+
+## 6.1.1
+
+ - Update a dependency to the latest release.
+
 ## 6.1.0
 
  - **FEAT**(auth): TOTP macOS support ([#17513](https://github.com/firebase/flutterfire/issues/17513)). ([41890d62](https://github.com/firebase/flutterfire/commit/41890d62a49258df097c19fd3b90e0b5de181526))

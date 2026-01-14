@@ -1,3 +1,16 @@
+## 4.1.1
+
+ - Update a dependency to the latest release.
+
+## 4.1.0
+
+ - **REFACTOR**(messaging,web): convert classes to extension types for improved interop ([#17820](https://github.com/firebase/flutterfire/issues/17820)). ([ec5813a0](https://github.com/firebase/flutterfire/commit/ec5813a0cc590ba4501f26d5c3e5adb6a121b658))
+ - **FEAT**(web): add `registerVersion` support for packages ([#17780](https://github.com/firebase/flutterfire/issues/17780)). ([3c8c83d4](https://github.com/firebase/flutterfire/commit/3c8c83d4251f2965ae6fb1fe7b64c21dcb94e9ec))
+
+## 4.0.3
+
+ - Update a dependency to the latest release.
+
 ## 4.0.2
 
  - Update a dependency to the latest release.

@@ -1,3 +1,16 @@
+## 3.3.1
+
+ - **REFACTOR**(firebase_core,web): remove variant fallback in registerVersion ([#17874](https://github.com/firebase/flutterfire/issues/17874)). ([44d99a94](https://github.com/firebase/flutterfire/commit/44d99a94f00eb34a175a36ee35c074afcadf9890))
+
+## 3.3.0
+
+ - **FIX**(core,web): More explicit interop types ([#17809](https://github.com/firebase/flutterfire/issues/17809)). ([795567a6](https://github.com/firebase/flutterfire/commit/795567a64f20c7982e171d4dd66bd7ec61a7035b))
+ - **FEAT**(web): add `registerVersion` support for packages ([#17780](https://github.com/firebase/flutterfire/issues/17780)). ([3c8c83d4](https://github.com/firebase/flutterfire/commit/3c8c83d4251f2965ae6fb1fe7b64c21dcb94e9ec))
+
+## 3.2.0
+
+ - **FEAT**: bump Firebase JS SDK to 12.3.0 ([#17743](https://github.com/firebase/flutterfire/issues/17743)). ([007b2b36](https://github.com/firebase/flutterfire/commit/007b2b366f49263660e946a5a631e6919fc48eac))
+
 ## 3.1.1
 
  - Update a dependency to the latest release.

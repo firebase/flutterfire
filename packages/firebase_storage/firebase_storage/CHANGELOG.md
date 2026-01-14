@@ -1,3 +1,15 @@
+## 13.0.5
+
+ - Update a dependency to the latest release.
+
+## 13.0.4
+
+ - **REFACTOR**(storage): Refactor Java and Objc to Kotlin and Swift ([#17795](https://github.com/firebase/flutterfire/issues/17795)). ([9cc9054c](https://github.com/firebase/flutterfire/commit/9cc9054c22feb18f5aec187484da8dfab9b07391))
+
+## 13.0.3
+
+ - Update a dependency to the latest release.
+
 ## 13.0.2
 
  - Update a dependency to the latest release.

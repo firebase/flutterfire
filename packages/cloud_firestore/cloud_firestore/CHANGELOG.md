@@ -1,3 +1,15 @@
+## 6.1.1
+
+ - Update a dependency to the latest release.
+
+## 6.1.0
+
+ - **FEAT**(firestore): add client language support for Firestore plugin on Android and iOS ([#17830](https://github.com/firebase/flutterfire/issues/17830)). ([74a37ae6](https://github.com/firebase/flutterfire/commit/74a37ae68446e700ed6cc9f9307ff296a9ff20d8))
+
+## 6.0.3
+
+ - Update a dependency to the latest release.
+
 ## 6.0.2
 
  - Update a dependency to the latest release.

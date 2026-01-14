@@ -1,3 +1,20 @@
+## 1.10.2
+
+ - Update a dependency to the latest release.
+
+## 1.10.1
+
+ - **FIX**(firebase_remote_config,web): update getSource method call in RemoteConfig class and add test for getAll() method ([#17847](https://github.com/firebase/flutterfire/issues/17847)). ([71138573](https://github.com/firebase/flutterfire/commit/7113857365a8332a5feaac3fd5dbbda1b3a500ff))
+
+## 1.10.0
+
+ - **FIX**(remote-config): js interop types ([#17806](https://github.com/firebase/flutterfire/issues/17806)). ([725a33ac](https://github.com/firebase/flutterfire/commit/725a33acd6a2f945578025b19bb2aaac0fe6290b))
+ - **FEAT**(web): add `registerVersion` support for packages ([#17780](https://github.com/firebase/flutterfire/issues/17780)). ([3c8c83d4](https://github.com/firebase/flutterfire/commit/3c8c83d4251f2965ae6fb1fe7b64c21dcb94e9ec))
+
+## 1.9.0
+
+ - **FEAT**(remote_config,web): add web support for `onConfigUpdated` ([#17750](https://github.com/firebase/flutterfire/issues/17750)). ([799b12e4](https://github.com/firebase/flutterfire/commit/799b12e4b31a2c7c8f251dd4adbbf65227bfc1b6))
+
 ## 1.8.12
 
  - Update a dependency to the latest release.

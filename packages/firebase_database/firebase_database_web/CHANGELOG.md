@@ -1,3 +1,20 @@
+## 0.2.7+2
+
+ - **FIX**(firebase_database,web): return correct DatabaseReference instance in ThenableReference ([#17915](https://github.com/firebase/flutterfire/issues/17915)). ([c0e682ee](https://github.com/firebase/flutterfire/commit/c0e682eeaf506a746219b3cc3dd7dd7e93f94dca))
+
+## 0.2.7+1
+
+ - Update a dependency to the latest release.
+
+## 0.2.7
+
+ - **FIX**(database,web): more explicit interop types ([#17823](https://github.com/firebase/flutterfire/issues/17823)). ([16037fbb](https://github.com/firebase/flutterfire/commit/16037fbbdf7db0c06a21ce8111493bcf848673b4))
+ - **FEAT**(web): add `registerVersion` support for packages ([#17780](https://github.com/firebase/flutterfire/issues/17780)). ([3c8c83d4](https://github.com/firebase/flutterfire/commit/3c8c83d4251f2965ae6fb1fe7b64c21dcb94e9ec))
+
+## 0.2.6+20
+
+ - Update a dependency to the latest release.
+
 ## 0.2.6+19
 
  - Update a dependency to the latest release.

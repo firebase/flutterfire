@@ -53,8 +53,12 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
 
   void _initializeModel() {
     final generationConfig = GenerationConfig(
-      thinkingConfig:
-          _enableThinking ? ThinkingConfig(includeThoughts: true) : null,
+      thinkingConfig: _enableThinking
+          ? ThinkingConfig.withThinkingLevel(
+              ThinkingLevel.high,
+              includeThoughts: true,
+            )
+          : null,
     );
     if (widget.useVertexBackend) {
       var vertexAI = FirebaseAI.vertexAI(auth: FirebaseAuth.instance);

@@ -1,3 +1,16 @@
+## 16.1.0
+
+ - **FIX**(messaging,iOS): refactor notification handling in scene delegate methods ([#17905](https://github.com/firebase/flutterfire/issues/17905)). ([6fd8929b](https://github.com/firebase/flutterfire/commit/6fd8929b667df23eed21df288c9f8d8f213ea8ad))
+ - **FEAT**(firebase_messaging,iOS): add scene delegate support for `firebase_messaging` ([#17888](https://github.com/firebase/flutterfire/issues/17888)). ([a8633970](https://github.com/firebase/flutterfire/commit/a8633970c841a43699c54a9c6ce4e9669b74e268))
+
+## 16.0.4
+
+ - Update a dependency to the latest release.
+
+## 16.0.3
+
+ - **FIX**(firebase_messaging): fix null apple notification when sound is of type String ([#17770](https://github.com/firebase/flutterfire/issues/17770)). ([7fe893c0](https://github.com/firebase/flutterfire/commit/7fe893c0075f0abb019c0890bebd1fd3ba37a5d3))
+
 ## 16.0.2
 
  - Update a dependency to the latest release.

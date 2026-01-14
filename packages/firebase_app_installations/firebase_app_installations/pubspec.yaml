@@ -1,6 +1,6 @@
 name: firebase_app_installations
 description: A Flutter plugin allowing you to use Firebase Installations.
-version: 0.4.0+2
+version: 0.4.0+5
 homepage: https://firebase.google.com/docs/projects/manage-installations#flutter
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_app_installations/firebase_app_installations
 topics:
@@ -17,10 +17,10 @@ environment:
   flutter: '>=3.3.0'
 
 dependencies:
-  firebase_app_installations_platform_interface: ^0.1.4+61
-  firebase_app_installations_web: ^0.1.6+19
-  firebase_core: ^4.1.1
-  firebase_core_platform_interface: ^6.0.1
+  firebase_app_installations_platform_interface: ^0.1.4+64
+  firebase_app_installations_web: ^0.1.7+1
+  firebase_core: ^4.3.0
+  firebase_core_platform_interface: ^6.0.2
   flutter:
     sdk: flutter
 

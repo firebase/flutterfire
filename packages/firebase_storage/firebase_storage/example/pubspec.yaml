@@ -5,8 +5,8 @@ environment:
   sdk: '>=3.4.0 <4.0.0'
 
 dependencies:
-  firebase_core: ^4.1.1
-  firebase_storage: ^13.0.2
+  firebase_core: ^4.3.0
+  firebase_storage: ^13.0.5
   flutter:
     sdk: flutter
   image_picker: ^1.1.2

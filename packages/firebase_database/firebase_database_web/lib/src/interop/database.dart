@@ -78,8 +78,7 @@ class Database
 /// can be used for reading or writing data to that database location.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.database.Reference>.
-class DatabaseReference<T extends database_interop.ReferenceJsImpl>
-    extends Query<T> {
+class DatabaseReference extends Query<database_interop.ReferenceJsImpl> {
   static final _expando = Expando<DatabaseReference>();
 
   /// The last part of the current path.
@@ -204,11 +203,9 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
                 applyLocally: applyLocally.toJS),
           )
           .toDart;
-      final castedJsTransaction =
-          jsTransactionResult as database_interop.TransactionResultJsImpl;
       return Transaction(
-        committed: (castedJsTransaction.committed).toDart,
-        snapshot: DataSnapshot._fromJsObject(castedJsTransaction.snapshot),
+        committed: (jsTransactionResult.committed).toDart,
+        snapshot: DataSnapshot._fromJsObject(jsTransactionResult.snapshot),
       );
     } catch (e, s) {
       throw convertFirebaseDatabaseException(e, s);
@@ -317,8 +314,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
     final jsSnapshotPromise = database_interop.get(jsObject);
     final snapshot = await jsSnapshotPromise.toDart;
 
-    return DataSnapshot.getInstance(
-        snapshot as database_interop.DataSnapshotJsImpl);
+    return DataSnapshot.getInstance(snapshot);
   }
 
   /// Returns a Query with the ending point [value]. The ending point
@@ -674,18 +670,19 @@ class OnDisconnect
 /// [Future] property.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.database.ThenableReference>.
-class ThenableReference
-    extends DatabaseReference<database_interop.ThenableReferenceJsImpl> {
-  late final Future<DatabaseReference> _future = jsObject
-      .then(((database_interop.ReferenceJsImpl reference) {
-        DatabaseReference.getInstance(reference);
-      }).toJS)
-      .toDart
-      .then((value) => value as DatabaseReference);
+class ThenableReference extends DatabaseReference {
+  late final Future<DatabaseReference> _future =
+      (jsObject as database_interop.ThenableReferenceJsImpl)
+          .then(((database_interop.ReferenceJsImpl reference) {
+            return reference;
+          }).toJS)
+          .toDart
+          .then((value) => DatabaseReference.getInstance(
+              value as database_interop.ReferenceJsImpl));
 
   /// Creates a new ThenableReference from a [jsObject].
   ThenableReference.fromJsObject(
-    super.jsObject,
+    database_interop.ThenableReferenceJsImpl super.jsObject,
   ) : super._fromJsObject();
 
   /// A Future property.

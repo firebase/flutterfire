@@ -57,6 +57,8 @@ class _BidiPageState extends State<BidiPage> {
   StreamController<bool> _stopController = StreamController<bool>();
   final AudioOutput _audioOutput = AudioOutput();
   final AudioInput _audioInput = AudioInput();
+  int? _inputTranscriptionMessageIndex;
+  int? _outputTranscriptionMessageIndex;
 
   @override
   void initState() {
@@ -67,19 +69,21 @@ class _BidiPageState extends State<BidiPage> {
       responseModalities: [
         ResponseModalities.audio,
       ],
+      inputAudioTranscription: AudioTranscriptionConfig(),
+      outputAudioTranscription: AudioTranscriptionConfig(),
     );
 
     // ignore: deprecated_member_use
     _liveModel = widget.useVertexBackend
         ? FirebaseAI.vertexAI().liveGenerativeModel(
-            model: 'gemini-2.0-flash-exp',
+            model: 'gemini-live-2.5-flash-preview-native-audio-09-2025',
             liveGenerationConfig: config,
             tools: [
               Tool.functionDeclarations([lightControlTool]),
             ],
           )
         : FirebaseAI.googleAI().liveGenerativeModel(
-            model: 'gemini-live-2.5-flash-preview',
+            model: 'gemini-2.5-flash-native-audio-preview-09-2025',
             liveGenerationConfig: config,
             tools: [
               Tool.functionDeclarations([lightControlTool]),
@@ -353,6 +357,49 @@ class _BidiPageState extends State<BidiPage> {
       if (message.modelTurn != null) {
         await _handleLiveServerContent(message);
       }
+
+      int? _handleTranscription(
+        Transcription? transcription,
+        int? messageIndex,
+        String prefix,
+        bool fromUser,
+      ) {
+        int? currentIndex = messageIndex;
+        if (transcription?.text != null) {
+          if (currentIndex != null) {
+            _messages[currentIndex] = _messages[currentIndex].copyWith(
+              text: '${_messages[currentIndex].text}${transcription!.text!}',
+            );
+          } else {
+            _messages.add(
+              MessageData(
+                text: '$prefix${transcription!.text!}',
+                fromUser: fromUser,
+              ),
+            );
+            currentIndex = _messages.length - 1;
+          }
+          if (transcription.finished ?? false) {
+            currentIndex = null;
+          }
+          setState(_scrollDown);
+        }
+        return currentIndex;
+      }
+
+      _inputTranscriptionMessageIndex = _handleTranscription(
+        message.inputTranscription,
+        _inputTranscriptionMessageIndex,
+        'Input transcription: ',
+        true,
+      );
+      _outputTranscriptionMessageIndex = _handleTranscription(
+        message.outputTranscription,
+        _outputTranscriptionMessageIndex,
+        'Output transcription: ',
+        false,
+      );
+
       if (message.interrupted != null && message.interrupted!) {
         developer.log('Interrupted: $response');
       }

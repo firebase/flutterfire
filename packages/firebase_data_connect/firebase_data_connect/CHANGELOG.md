@@ -1,3 +1,19 @@
+## 0.2.2+1
+
+ - Update a dependency to the latest release.
+
+## 0.2.2
+
+ - **FEAT**(database): add support for Pigeon. Update iOS to Swift and Android to Kotlin ([#17686](https://github.com/firebase/flutterfire/issues/17686)). ([dac0b0bd](https://github.com/firebase/flutterfire/commit/dac0b0bd033b1c51446aedf0413740ef426877b8))
+
+## 0.2.1+2
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+1
+
+ - **FIX**(app_check): Deprecate androidProvider and appleProvider parameters in activate method ([#17742](https://github.com/firebase/flutterfire/issues/17742)). ([4e7f800e](https://github.com/firebase/flutterfire/commit/4e7f800e94a895c6553bd3c1595b4f06ac69bb81))
+
 ## 0.2.1
 
  - **FIX**(fdc): add support Int64 to nativeFromJson ([#17673](https://github.com/firebase/flutterfire/issues/17673)). ([451e7a46](https://github.com/firebase/flutterfire/commit/451e7a462ef8ecc2e4134ad6f8aec10f13793bf4))

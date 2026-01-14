@@ -1,3 +1,16 @@
+## 6.1.1
+
+ - Update a dependency to the latest release.
+
+## 6.1.0
+
+ - **FIX**(auth): fix JS interop lints ([#17802](https://github.com/firebase/flutterfire/issues/17802)). ([0956646a](https://github.com/firebase/flutterfire/commit/0956646a0e1f88cbb416b748b4738a8bd83ad616))
+ - **FEAT**(web): add `registerVersion` support for packages ([#17780](https://github.com/firebase/flutterfire/issues/17780)). ([3c8c83d4](https://github.com/firebase/flutterfire/commit/3c8c83d4251f2965ae6fb1fe7b64c21dcb94e9ec))
+
+## 6.0.4
+
+ - Update a dependency to the latest release.
+
 ## 6.0.3
 
  - Update a dependency to the latest release.

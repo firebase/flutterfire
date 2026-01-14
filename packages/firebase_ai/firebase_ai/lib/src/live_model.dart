@@ -103,13 +103,20 @@ final class LiveGenerativeModel extends BaseModel {
     final setupJson = {
       'setup': {
         'model': modelString,
-        if (_liveGenerationConfig != null)
-          'generation_config': _liveGenerationConfig.toJson(),
         if (_systemInstruction != null)
           'system_instruction': _systemInstruction.toJson(),
         for (final entry in _extraConfig.entries)
           entry.key: entry.value,
         if (_tools != null) 'tools': _tools.map((t) => t.toJson()).toList(),
+        if (_liveGenerationConfig != null) ...{
+          'generation_config': _liveGenerationConfig.toJson(),
+          if (_liveGenerationConfig.inputAudioTranscription != null)
+            'input_audio_transcription':
+                _liveGenerationConfig.inputAudioTranscription!.toJson(),
+          if (_liveGenerationConfig.outputAudioTranscription != null)
+            'output_audio_transcription':
+                _liveGenerationConfig.outputAudioTranscription!.toJson(),
+        },
       }
     };
 

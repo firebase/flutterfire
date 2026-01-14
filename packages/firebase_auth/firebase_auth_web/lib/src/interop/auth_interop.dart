@@ -47,11 +47,11 @@ external Persistence browserLocalPersistence;
 external Persistence indexedDBLocalPersistence;
 
 @JS()
-// Promise<ActionCode>
-external JSPromise checkActionCode(AuthJsImpl auth, JSString oobCode);
+external JSPromise<ActionCodeInfo> checkActionCode(
+    AuthJsImpl auth, JSString oobCode);
 
 @JS()
-external JSPromise confirmPasswordReset(
+external JSPromise/*<void>*/ confirmPasswordReset(
   AuthJsImpl auth,
   JSString oobCode,
   JSString newPassword,
@@ -67,8 +67,7 @@ external void connectAuthEmulator(
 external JSPromise setPersistence(AuthJsImpl auth, Persistence persistence);
 
 @JS()
-// Promise<UserCredential>
-external JSPromise createUserWithEmailAndPassword(
+external JSPromise<UserCredentialJsImpl> createUserWithEmailAndPassword(
   AuthJsImpl auth,
   JSString email,
   JSString password,
@@ -92,7 +91,7 @@ external JSBoolean isSignInWithEmailLink(JSString emailLink);
 
 @JS()
 // Promise<UserCredential>
-external JSPromise getRedirectResult(
+external JSPromise<UserCredentialJsImpl?> getRedirectResult(
   AuthJsImpl auth,
 );
 
@@ -111,50 +110,43 @@ external JSPromise sendPasswordResetEmail(
 ]);
 
 @JS()
-// Promise<UserCredential>
-external JSPromise signInWithCredential(
+external JSPromise<UserCredentialJsImpl> signInWithCredential(
   AuthJsImpl auth,
   OAuthCredential credential,
 );
 
 @JS()
-// Promise<UserCredential>
-external JSPromise signInAnonymously(AuthJsImpl auth);
+external JSPromise<UserCredentialJsImpl> signInAnonymously(AuthJsImpl auth);
 
 @JS()
-// Promise<UserCredential>
-external JSPromise signInWithCustomToken(
+external JSPromise<UserCredentialJsImpl> signInWithCustomToken(
   AuthJsImpl auth,
   JSString token,
 );
 
 @JS()
-// Promise<UserCredential>
-external JSPromise signInWithEmailAndPassword(
+external JSPromise<UserCredentialJsImpl> signInWithEmailAndPassword(
   AuthJsImpl auth,
   JSString email,
   JSString password,
 );
 
 @JS()
-// Promise<UserCredential>
-external JSPromise signInWithEmailLink(
+external JSPromise<UserCredentialJsImpl> signInWithEmailLink(
   AuthJsImpl auth,
   JSString email,
   JSString emailLink,
 );
 
 @JS()
-// Promise<ConfirmationResult>
-external JSPromise signInWithPhoneNumber(
+external JSPromise<ConfirmationResultJsImpl> signInWithPhoneNumber(
   AuthJsImpl auth,
   JSString phoneNumber,
   ApplicationVerifierJsImpl applicationVerifier,
 );
 
 @JS()
-// Promise<UserCredential>
-external JSPromise signInWithPopup(
+external JSPromise<UserCredentialJsImpl> signInWithPopup(
   AuthJsImpl auth,
   AuthProviderJsImpl provider,
 );
@@ -166,30 +158,26 @@ external JSPromise signInWithRedirect(
 );
 
 @JS()
-// Promise<String>
-external JSPromise verifyPasswordResetCode(
+external JSPromise<JSString> verifyPasswordResetCode(
   AuthJsImpl auth,
   JSString code,
 );
 
 @JS()
-// Promise<UserCredential>
-external JSPromise linkWithCredential(
+external JSPromise<UserCredentialJsImpl> linkWithCredential(
   UserJsImpl user,
   OAuthCredential? credential,
 );
 
 @JS()
-// Promise<ConfirmationResult>
-external JSPromise linkWithPhoneNumber(
+external JSPromise<ConfirmationResultJsImpl> linkWithPhoneNumber(
   UserJsImpl user,
   JSString phoneNumber,
   ApplicationVerifierJsImpl applicationVerifier,
 );
 
 @JS()
-// Promise<UserCredential>
-external JSPromise linkWithPopup(
+external JSPromise<UserCredentialJsImpl> linkWithPopup(
   UserJsImpl user,
   AuthProviderJsImpl provider,
 );
@@ -201,23 +189,20 @@ external JSPromise linkWithRedirect(
 );
 
 @JS()
-// Promise<UserCredential>
-external JSPromise reauthenticateWithCredential(
+external JSPromise<UserCredentialJsImpl> reauthenticateWithCredential(
   UserJsImpl user,
   OAuthCredential credential,
 );
 
 @JS()
-// Promise<ConfirmationResult>
-external JSPromise reauthenticateWithPhoneNumber(
+external JSPromise<ConfirmationResultJsImpl> reauthenticateWithPhoneNumber(
   UserJsImpl user,
   JSString phoneNumber,
   ApplicationVerifierJsImpl applicationVerifier,
 );
 
 @JS()
-// Promise<UserCredential>
-external JSPromise reauthenticateWithPopup(
+external JSPromise<UserCredentialJsImpl> reauthenticateWithPopup(
   UserJsImpl user,
   AuthProviderJsImpl provider,
 );
@@ -242,8 +227,7 @@ external JSPromise verifyBeforeUpdateEmail(
 ]);
 
 @JS()
-// Promise<User>
-external JSPromise unlink(UserJsImpl user, JSString providerId);
+external JSPromise<UserJsImpl> unlink(UserJsImpl user, JSString providerId);
 
 @JS()
 external JSPromise updateEmail(UserJsImpl user, JSString newEmail);
@@ -307,12 +291,7 @@ extension AuthJsImplExtension on AuthJsImpl {
   external JSPromise signOut();
 }
 
-@anonymous
-@JS()
-@staticInterop
-abstract class IdTokenResultImpl {}
-
-extension IdTokenResultImplExtension on IdTokenResultImpl {
+extension type IdTokenResultImpl._(JSObject _) implements JSObject {
   external JSString get authTime;
   external JSObject get claims;
   external JSString get expirationTime;
@@ -321,12 +300,7 @@ extension IdTokenResultImplExtension on IdTokenResultImpl {
   external JSString get token;
 }
 
-@anonymous
-@JS()
-@staticInterop
-abstract class UserInfoJsImpl {}
-
-extension UserInfoJsImplExtension on UserInfoJsImpl {
+extension type UserInfoJsImpl._(JSObject _) implements JSObject {
   external JSString? get displayName;
   external JSString? get email;
   external JSString? get phoneNumber;
@@ -336,12 +310,7 @@ extension UserInfoJsImplExtension on UserInfoJsImpl {
 }
 
 /// https://firebase.google.com/docs/reference/js/firebase.User
-@anonymous
-@JS()
-@staticInterop
-abstract class UserJsImpl extends UserInfoJsImpl {}
-
-extension UserJsImplExtension on UserJsImpl {
+extension type UserJsImpl._(JSObject _) implements UserInfoJsImpl {
   external JSBoolean get emailVerified;
   external JSBoolean get isAnonymous;
   external JSArray get providerData;
@@ -349,8 +318,9 @@ extension UserJsImplExtension on UserJsImpl {
   external JSString? get tenantId;
   external UserMetadata get metadata;
   external JSPromise delete();
-  external JSPromise getIdToken([JSBoolean? opt_forceRefresh]);
-  external JSPromise getIdTokenResult([JSBoolean? opt_forceRefresh]);
+  external JSPromise<JSString> getIdToken([JSBoolean? opt_forceRefresh]);
+  external JSPromise<IdTokenResultImpl> getIdTokenResult(
+      [JSBoolean? opt_forceRefresh]);
   external JSPromise reload();
   external JSObject toJSON();
 }
@@ -358,11 +328,7 @@ extension UserJsImplExtension on UserJsImpl {
 /// An enumeration of the possible persistence mechanism types.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.Auth#.Persistence>
-@JS('Persistence')
-@staticInterop
-class Persistence {}
-
-extension PersistenceExtension on Persistence {
+extension type Persistence._(JSObject _) implements JSObject {
   external JSString get type;
 }
 
@@ -599,22 +565,15 @@ extension RecaptchaVerifierJsImplExtension on RecaptchaVerifierJsImpl {
 }
 
 @JS('ConfirmationResult')
-@staticInterop
-abstract class ConfirmationResultJsImpl {}
-
-extension ConfirmationResultJsImplExtension on ConfirmationResultJsImpl {
+extension type ConfirmationResultJsImpl._(JSObject _) implements JSObject {
   external JSString get verificationId;
-  external JSPromise confirm(JSString verificationCode);
+  external JSPromise<UserCredentialJsImpl> confirm(JSString verificationCode);
 }
 
 /// A response from [Auth.checkActionCode].
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.ActionCodeInfo>.
-@JS()
-@staticInterop
-abstract class ActionCodeInfo {}
-
-extension ActionCodeInfoExtension on ActionCodeInfo {
+extension type ActionCodeInfo._(JSObject _) implements JSObject {
   external ActionCodeData get data;
 }
 
@@ -673,23 +632,14 @@ extension AuthErrorExtension on AuthError {
   external JSObject get customData;
 }
 
-@JS()
-@staticInterop
-class AuthErrorCustomData {}
-
-extension AuthErrorCustomDataExtension on AuthErrorCustomData {
+extension type AuthErrorCustomData._(JSObject _) implements JSObject {
   external JSString get appName;
   external JSString? get email;
   external JSString? get phoneNumber;
   external JSString? get tenantId;
 }
 
-@JS()
-@staticInterop
-@anonymous
-class ActionCodeData {}
-
-extension ActionCodeDataExtension on ActionCodeData {
+extension type ActionCodeData._(JSObject _) implements JSObject {
   external JSString? get email;
   external JSString? get previousEmail;
 }
@@ -796,12 +746,7 @@ extension AndroidSettingsExtension on AndroidSettings {
 }
 
 /// https://firebase.google.com/docs/reference/js/auth.usercredential
-@JS()
-@staticInterop
-@anonymous
-class UserCredentialJsImpl {}
-
-extension UserCredentialJsImplExtension on UserCredentialJsImpl {
+extension type UserCredentialJsImpl._(JSObject _) implements JSObject {
   external UserJsImpl get user;
   external JSString get operationType;
   external AdditionalUserInfoJsImpl get additionalUserInfo;
@@ -844,20 +789,15 @@ external JSObject get browserPopupRedirectResolver;
 class MultiFactorUserJsImpl {}
 
 extension MultiFactorUserJsImplExtension on MultiFactorUserJsImpl {
-  external JSArray get enrolledFactors;
+  external JSArray<MultiFactorInfoJsImpl> get enrolledFactors;
   external JSPromise enroll(
       MultiFactorAssertionJsImpl assertion, JSString? displayName);
-  external JSPromise getSession();
+  external JSPromise<MultiFactorSessionJsImpl> getSession();
   external JSPromise unenroll(JSAny /* MultiFactorInfo | string */ option);
 }
 
 /// https://firebase.google.com/docs/reference/js/auth.multifactorinfo
-@JS()
-@staticInterop
-@anonymous
-class MultiFactorInfoJsImpl {}
-
-extension MultiFactorInfoJsImplExtension on MultiFactorInfoJsImpl {
+extension type MultiFactorInfoJsImpl._(JSObject _) implements JSObject {
   external JSString? get displayName;
   external JSString get enrollmentTime;
   external JSString get factorId;
@@ -881,30 +821,26 @@ extension MultiFactorAssertionJsImplExtension on MultiFactorAssertionJsImpl {
 class MultiFactorResolverJsImpl {}
 
 extension MultiFactorResolverJsImplExtension on MultiFactorResolverJsImpl {
-  external JSArray get hints;
+  external JSArray<MultiFactorInfoJsImpl> get hints;
   external MultiFactorSessionJsImpl get session;
-  external JSPromise resolveSignIn(MultiFactorAssertionJsImpl assertion);
+  external JSPromise<UserCredentialJsImpl> resolveSignIn(
+      MultiFactorAssertionJsImpl assertion);
 }
 
 /// https://firebase.google.com/docs/reference/js/auth.multifactorresolver
-@JS()
-@staticInterop
-@anonymous
-class MultiFactorSessionJsImpl {}
+extension type MultiFactorSessionJsImpl._(JSObject _) implements JSObject {}
 
 /// https://firebase.google.com/docs/reference/js/auth.phonemultifactorinfo
 @JS('PhoneMultiFactorInfo')
-@staticInterop
-class PhoneMultiFactorInfoJsImpl extends MultiFactorInfoJsImpl {}
-
-extension PhoneMultiFactorInfoJsImplExtension on PhoneMultiFactorInfoJsImpl {
+extension type PhoneMultiFactorInfoJsImpl._(JSObject _)
+    implements MultiFactorInfoJsImpl {
   external JSString get phoneNumber;
 }
 
 /// https://firebase.google.com/docs/reference/js/auth.totpmultifactorinfo
 @JS('TotpMultiFactorInfo')
-@staticInterop
-class TotpMultiFactorInfoJsImpl extends MultiFactorInfoJsImpl {}
+extension type TotpMultiFactorInfoJsImpl._(JSObject _)
+    implements MultiFactorInfoJsImpl {}
 
 /// https://firebase.google.com/docs/reference/js/auth.phonemultifactorenrollinfooptions
 @JS()
@@ -932,10 +868,7 @@ extension PhoneMultiFactorGeneratorJsImplExtension
 
 /// https://firebase.google.com/docs/reference/js/auth.totpsecret
 @JS('TotpSecret')
-@staticInterop
-class TotpSecretJsImpl {}
-
-extension TotpSecretJsImplExtension on TotpSecretJsImpl {
+extension type TotpSecretJsImpl._(JSObject _) implements JSObject {
   external JSNumber get codeIntervalSeconds;
   external JSNumber get codeLength;
   external JSString get enrollmentCompletionDeadline;
@@ -954,7 +887,8 @@ class TotpMultiFactorGeneratorJsImpl {
       TotpSecretJsImpl secret, JSString oneTimePassword);
   external static TotpMultiFactorAssertionJsImpl? assertionForSignIn(
       JSString enrollmentId, JSString oneTimePassword);
-  external static JSPromise generateSecret(MultiFactorSessionJsImpl session);
+  external static JSPromise<TotpSecretJsImpl> generateSecret(
+      MultiFactorSessionJsImpl session);
 }
 
 extension TotpMultiFactorGeneratorJsImplExtension

@@ -17,6 +17,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebasePluginPlatform;
+import 'package:meta/meta.dart';
 
 import '../firebase_ai.dart';
 import 'base_model.dart';
@@ -196,6 +197,35 @@ class FirebaseAI extends FirebasePluginPlatform {
       appCheck: appCheck,
       auth: auth,
       useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
+    );
+  }
+
+  /// Returns a [TemplateGenerativeModel] instance.
+  ///
+  /// This is an experimental API and may change in the future.
+  @experimental
+  TemplateGenerativeModel templateGenerativeModel() {
+    return createTemplateGenerativeModel(
+        app: app,
+        location: location,
+        useVertexBackend: _useVertexBackend,
+        useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
+        auth: auth,
+        appCheck: appCheck);
+  }
+
+  /// Returns a [TemplateImagenModel] instance.
+  ///
+  /// This is an experimental API and may change in the future.
+  @experimental
+  TemplateImagenModel templateImagenModel() {
+    return createTemplateImagenModel(
+      app: app,
+      location: location,
+      useVertexBackend: _useVertexBackend,
+      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
+      auth: auth,
+      appCheck: appCheck,
     );
   }
 }

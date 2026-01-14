@@ -29,6 +29,11 @@
 // Suppress warning - use can add the Flutter plugin for Firebase Analytics.
 #define FIREBASE_ANALYTICS_SUPPRESS_WARNING
 
+// Forward declaration for FlutterSceneLifeCycleDelegate if not available
+#if !TARGET_OS_OSX
+@protocol FlutterSceneLifeCycleDelegate;
+#endif
+
 #if TARGET_OS_OSX
 #ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
 @interface FLTFirebaseMessagingPlugin : FLTFirebasePlugin <FlutterPlugin,
@@ -48,11 +53,21 @@ API_AVAILABLE(ios(10.0))
 @interface FLTFirebaseMessagingPlugin : FLTFirebasePlugin <FlutterPlugin,
                                                            FLTFirebasePlugin,
                                                            FIRMessagingDelegate,
-                                                           UIApplicationDelegate,
-                                                           UNUserNotificationCenterDelegate>
+                                                           UIApplicationDelegate
+#if __has_include(<Flutter/FlutterSceneLifeCycleDelegate.h>) || defined(FlutterSceneLifeCycleDelegate)
+                                                           ,
+                                                           FlutterSceneLifeCycleDelegate
+#endif
+                                                           >
 #else
-@interface FLTFirebaseMessagingPlugin
-    : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin, FIRMessagingDelegate>
+@interface FLTFirebaseMessagingPlugin : FLTFirebasePlugin <FlutterPlugin,
+                                                           FLTFirebasePlugin,
+                                                           FIRMessagingDelegate
+#if __has_include(<Flutter/FlutterSceneLifeCycleDelegate.h>) || defined(FlutterSceneLifeCycleDelegate)
+                                                           ,
+                                                           FlutterSceneLifeCycleDelegate
+#endif
+                                                           >
 #endif
 #endif
 @end

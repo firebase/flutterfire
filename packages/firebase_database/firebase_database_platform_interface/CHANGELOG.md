@@ -1,3 +1,19 @@
+## 0.3.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.3.0
+
+ - **FEAT**(database): add support for Pigeon. Update iOS to Swift and Android to Kotlin ([#17686](https://github.com/firebase/flutterfire/issues/17686)). ([dac0b0bd](https://github.com/firebase/flutterfire/commit/dac0b0bd033b1c51446aedf0413740ef426877b8))
+
+## 0.2.6+15
+
+ - Update a dependency to the latest release.
+
+## 0.2.6+14
+
+ - Update a dependency to the latest release.
+
 ## 0.2.6+13
 
  - Update a dependency to the latest release.

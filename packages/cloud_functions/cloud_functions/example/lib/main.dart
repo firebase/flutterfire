@@ -45,19 +45,20 @@ class _MyAppState extends State<MyApp> {
     fruit.clear();
     FirebaseFunctions.instance
         .httpsCallable('testStreamResponse')
-        .stream()
+        .stream<String, List<dynamic>>()
         .listen(
       (data) {
-        if (data is Chunk) {
-          setState(() {
-            // adds individual stream values to list
-            fruit.add(data.partialData);
-          });
-        } else if (data is Result) {
-          setState(() {
-            // stores complete stream result
-            streamResult = List.from(data.result.data);
-          });
+        switch (data) {
+          case Chunk<String, List<dynamic>>(:final partialData):
+            setState(() {
+              // adds individual stream values to list
+              fruit.add(partialData);
+            });
+          case Result<String, List<dynamic>>(:final result):
+            setState(() {
+              // stores complete stream result
+              streamResult = List.from(result.data);
+            });
         }
       },
       onError: (e) {

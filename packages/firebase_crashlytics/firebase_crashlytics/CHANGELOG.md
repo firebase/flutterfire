@@ -1,3 +1,19 @@
+## 5.0.6
+
+ - Update a dependency to the latest release.
+
+## 5.0.5
+
+ - **FIX**(crashlytics,ios): remove warning regarding legacy firebase_app_id_file.json file ([#17852](https://github.com/firebase/flutterfire/issues/17852)). ([fb93470e](https://github.com/firebase/flutterfire/commit/fb93470e13fc7afc40ee310cc85185e89cb63dd0))
+
+## 5.0.4
+
+ - **FIX**(crashlytics,iOS): reorder error reason logging to match Android implementation ([#17713](https://github.com/firebase/flutterfire/issues/17713)). ([0a9cbcef](https://github.com/firebase/flutterfire/commit/0a9cbcefa6d1f7866d63f78523ced3bd98bce03e))
+
+## 5.0.3
+
+ - Update a dependency to the latest release.
+
 ## 5.0.2
 
  - Update a dependency to the latest release.

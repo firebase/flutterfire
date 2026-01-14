@@ -39,6 +39,8 @@ class FirebaseCoreWeb extends FirebasePlatform {
     'core': FirebaseWebService._('app', override: 'core'),
   };
 
+  static Map<String, String> _libraryVersions = {};
+
   /// Internally registers a Firebase Service to be initialized.
   static void registerService(
     String service, {
@@ -55,9 +57,32 @@ class FirebaseCoreWeb extends FirebasePlatform {
     );
   }
 
+  static const String _libraryName = 'flutter-fire-core';
+
   /// Registers that [FirebaseCoreWeb] is the platform implementation.
   static void registerWith(Registrar registrar) {
     FirebasePlatform.instance = FirebaseCoreWeb();
+  }
+
+  /// Registers a library's name and version for platform logging purposes if needed.
+  static void _registerVersionIfNeeded(
+    String libraryName,
+    String packageVersion,
+  ) {
+    final sessionKey = 'flutterfire-$libraryName-$packageVersion';
+    final sessionItem = web.window.sessionStorage.getItem(sessionKey);
+    if (sessionItem == null) {
+      web.window.sessionStorage.setItem(sessionKey, packageVersion);
+      firebase.registerVersion(libraryName, packageVersion);
+    }
+  }
+
+  static void registerLibraryVersion(String libraryName, String version) {
+    _libraryVersions[libraryName] = version;
+  }
+
+  static void _registerAllLibraryVersions() {
+    _libraryVersions.forEach(_registerVersionIfNeeded);
   }
 
   /// Returns the Firebase JS SDK Version to use.
@@ -195,11 +220,18 @@ class FirebaseCoreWeb extends FirebasePlatform {
         );
       }),
     );
+    registerLibraryVersion(_libraryName, packageVersion);
+    _registerAllLibraryVersions();
   }
 
   /// Returns all created [FirebaseAppPlatform] instances.
   @override
   List<FirebaseAppPlatform> get apps {
+    // Check if Firebase core module is loaded before accessing firebase.apps
+    if (globalContext.getProperty('firebase_core'.toJS) == null) {
+      return [];
+    }
+
     try {
       return firebase.apps.map(_createFromJsApp).toList(growable: false);
     } catch (exception, stackTrace) {

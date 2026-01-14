@@ -16,7 +16,10 @@ import 'package:web/web.dart' as web;
 import 'src/internals.dart';
 import 'src/interop/app_check.dart' as app_check_interop;
 
+import 'src/firebase_app_check_version.dart';
+
 class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
+  static const String _libraryName = 'flutter-fire-app-check';
   static const recaptchaTypeV3 = 'recaptcha-v3';
   static const recaptchaTypeEnterprise = 'enterprise';
   static Map<String, StreamController<String?>> _tokenChangesListeners = {};
@@ -32,16 +35,27 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerLibraryVersion(_libraryName, packageVersion);
+
     FirebaseCoreWeb.registerService(
       'app-check',
       productNameOverride: 'app_check',
       ensurePluginInitialized: (firebaseApp) async {
         final instance =
             FirebaseAppCheckWeb(app: Firebase.app(firebaseApp.name));
-        final recaptchaType = web.window.sessionStorage
+        var recaptchaType = web.window.localStorage
             .getItem(_sessionKeyRecaptchaType(firebaseApp.name));
-        final recaptchaSiteKey = web.window.sessionStorage
+        var recaptchaSiteKey = web.window.localStorage
             .getItem(_sessionKeyRecaptchaSiteKey(firebaseApp.name));
+
+        // For backwards compatibility, with previously used session storage
+        if (recaptchaType == null || recaptchaSiteKey == null) {
+          recaptchaType = web.window.sessionStorage
+              .getItem(_sessionKeyRecaptchaType(firebaseApp.name));
+          recaptchaSiteKey = web.window.sessionStorage
+              .getItem(_sessionKeyRecaptchaSiteKey(firebaseApp.name));
+        }
+
         if (recaptchaType != null && recaptchaSiteKey != null) {
           final WebProvider provider;
           if (recaptchaType == recaptchaTypeV3) {
@@ -120,9 +134,9 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
       } else {
         throw Exception('Invalid web provider: $webProvider');
       }
-      web.window.sessionStorage
+      web.window.localStorage
           .setItem(_sessionKeyRecaptchaType(app.name), recaptchaType);
-      web.window.sessionStorage
+      web.window.localStorage
           .setItem(_sessionKeyRecaptchaSiteKey(app.name), webProvider.siteKey);
     }
 
@@ -152,7 +166,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   @override
   Future<String?> getToken(bool forceRefresh) async {
     return convertWebExceptions<Future<String?>>(() async {
-      app_check_interop.AppCheckTokenResult result =
+      app_check_interop.AppCheckTokenResultJsImpl result =
           await _delegate!.getToken(forceRefresh);
       return result.token.toDart;
     });
@@ -161,7 +175,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   @override
   Future<String> getLimitedUseToken() async {
     return convertWebExceptions<Future<String>>(() async {
-      app_check_interop.AppCheckTokenResult result =
+      app_check_interop.AppCheckTokenResultJsImpl result =
           await _delegate!.getLimitedUseToken();
       return result.token.toDart;
     });
