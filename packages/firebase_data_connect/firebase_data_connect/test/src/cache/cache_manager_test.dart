@@ -14,6 +14,8 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_data_connect/firebase_data_connect.dart';
+import 'package:firebase_data_connect/src/core/ref.dart';
+import 'package:firebase_data_connect/src/network/rest_library.dart';
 import 'package:firebase_data_connect/src/common/common_library.dart';
 import 'package:firebase_data_connect/src/cache/cache_data_types.dart';
 import 'package:firebase_data_connect/src/cache/cache_manager.dart';
@@ -21,6 +23,8 @@ import 'package:firebase_data_connect/src/cache/cache_provider.dart';
 import 'package:firebase_data_connect/src/cache/in_memory_cache_provider.dart';
 import 'package:firebase_data_connect/src/cache/sqlite_cache_provider.dart';
 import 'package:flutter/foundation.dart';
+
+import 'package:http/http.dart' as http;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'dart:convert';
@@ -31,6 +35,7 @@ import 'package:mockito/mockito.dart';
 import '../core/ref_test.dart';
 @GenerateNiceMocks([MockSpec<FirebaseApp>(), MockSpec<ConnectorConfig>()])
 import '../firebase_data_connect_test.mocks.dart';
+import '../network/rest_transport_test.mocks.dart';
 
 class MockTransportOptions extends Mock implements TransportOptions {}
 
@@ -41,6 +46,9 @@ void main() {
   late MockFirebaseAuth mockAuth;
   late MockConnectorConfig mockConnectorConfig;
   late FirebaseDataConnect dataConnect;
+  late MockClient mockHttpClient;
+  late RestTransport transport;
+  const Duration maxAgeSeconds = Duration(milliseconds: 200);
 
   const String entityObject = '''
     {"desc":"itemDesc1","name":"itemOne", "cacheId":"123","price":4}
@@ -86,14 +94,31 @@ void main() {
           projectId: 'fake_project_id',
         ),
       );
-      when(mockConnectorConfig.location).thenReturn('us-central1');
-      when(mockConnectorConfig.connector).thenReturn('connector');
-      when(mockConnectorConfig.serviceId).thenReturn('serviceId');
+      when(mockConnectorConfig.location).thenReturn('testLocation');
+      when(mockConnectorConfig.connector).thenReturn('testConnector');
+      when(mockConnectorConfig.serviceId).thenReturn('testService');
+
+      mockHttpClient = MockClient();
+      transport = RestTransport(
+        TransportOptions('testhost', 443, true),
+        DataConnectOptions(
+          'testProject',
+          'testLocation',
+          'testConnector',
+          'testService',
+        ),
+        'testAppId',
+        CallerSDKType.core,
+        null,
+      );
+      transport.setHttp(mockHttpClient);
 
       dataConnect = FirebaseDataConnect(
           app: mockApp,
           connectorConfig: mockConnectorConfig,
-          cacheSettings: CacheSettings(storage: CacheStorage.memory));
+          cacheSettings: CacheSettings(
+              storage: CacheStorage.memory, maxAge: maxAgeSeconds));
+      dataConnect.transport = transport;
       dataConnect.checkTransport();
       dataConnect.checkAndInitializeCache();
     });
@@ -188,6 +213,52 @@ void main() {
       String value = edo2.fields()[testProp];
 
       expect(testValue, value);
+    });
+
+    test('maxAge conformance', () async {
+      final deserializer = (String data) => 'Deserialized Data';
+      final mockResponseSuccess = http.Response('{"success": true}', 200);
+
+      if (dataConnect.cacheManager == null) {
+        fail('No cacheManager available');
+      }
+
+      Cache cache = dataConnect.cacheManager!;
+
+      Map<String, dynamic> jsonData =
+          jsonDecode(simpleQueryResponse) as Map<String, dynamic>;
+      await cache.update('itemsSimple', ServerResponse(jsonData));
+
+      QueryRef ref = QueryRef(
+        dataConnect,
+        'operation',
+        transport,
+        deserializer,
+        QueryManager(dataConnect),
+        emptySerializer,
+        null,
+      );
+      when(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).thenAnswer((_) async => mockResponseSuccess);
+
+      QueryResult result = await ref.execute();
+      expect(result.source, DataSource.server);
+
+      // call execute immediately. Should be within maxAge so source should be cache
+      QueryResult result2 = await ref.execute();
+      expect(result2.source, DataSource.cache);
+
+      // now lets add delay beyond maxAge and result source should be server
+      await Future.delayed(
+          Duration(milliseconds: maxAgeSeconds.inMilliseconds + 100), () async {
+        QueryResult resultDelayed = await ref.execute();
+        expect(resultDelayed.source, DataSource.server);
+      });
     });
   }); // test group
 } //main
