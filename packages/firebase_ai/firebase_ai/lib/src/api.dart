@@ -259,7 +259,7 @@ final class Candidate {
   ///
   /// If this candidate was finished for a reason of [FinishReason.recitation]
   /// or [FinishReason.safety], accessing this text will throw a
-  /// [GenerativeAIException].
+  /// [FirebaseAIException].
   ///
   /// If [content] contains any text parts, this value is the concatenation of
   /// the text.
