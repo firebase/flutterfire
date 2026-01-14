@@ -125,7 +125,7 @@ class ResultTreeProcessor {
     if (node.scalarValues != null) {
       data.addAll(node.scalarValues!);
     }
-    
+
     if (node.nestedObjects != null) {
       for (final entry in node.nestedObjects!.entries) {
         data[entry.key] = await _hydrateNode(entry.value, cacheProvider);

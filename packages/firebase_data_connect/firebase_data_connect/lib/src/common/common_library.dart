@@ -65,7 +65,7 @@ class ServerResponse {
   final Map<String, dynamic> data;
   Duration? ttl;
 
-  ServerResponse(this.data); 
+  ServerResponse(this.data);
 }
 
 /// Interface for transports connecting to the DataConnect backend.
