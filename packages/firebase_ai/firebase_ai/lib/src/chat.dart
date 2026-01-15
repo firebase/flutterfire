@@ -39,7 +39,7 @@ final class ChatSession {
       : _autoFunctionDeclarations = _tools
             ?.expand((tool) => tool.autoFunctionDeclarations)
             .fold(<String, AutoFunctionDeclaration>{}, (map, function) {
-          map[function.name] = function;
+          map?[function.name] = function;
           return map;
         });
   final Future<GenerateContentResponse> Function(Iterable<Content> content,
