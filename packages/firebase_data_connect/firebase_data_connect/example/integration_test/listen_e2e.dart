@@ -64,7 +64,7 @@ void runListenTests() {
             .ref()
             .execute();
 
-        await MoviesConnector.instance.listMovies().ref().execute();
+        await MoviesConnector.instance.listMovies().ref().execute(fetchPolicy: QueryFetchPolicy.serverOnly);
 
         // Wait for the listener to receive the movie update
         final bool hasListenerReceived = await hasBeenListened.future;
