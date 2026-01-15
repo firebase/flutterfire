@@ -41,11 +41,15 @@ class Location {
 class _FunctionCallingPageState extends State<FunctionCallingPage> {
   late GenerativeModel _functionCallModel;
   late GenerativeModel _autoFunctionCallModel;
+  late GenerativeModel _parallelAutoFunctionCallModel;
   late GenerativeModel _codeExecutionModel;
   late final AutoFunctionDeclaration _autoFetchWeatherTool;
   final List<MessageData> _messages = <MessageData>[];
   bool _loading = false;
   bool _enableThinking = false;
+
+  late final AutoFunctionDeclaration _autoFindRestaurantsTool;
+  late final AutoFunctionDeclaration _autoGetRestaurantMenuTool;
 
   @override
   void initState() {
@@ -74,7 +78,70 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       },
       callable: _fetchWeatherCallable,
     );
+    _autoFindRestaurantsTool = AutoFunctionDeclaration(
+      name: 'findRestaurants',
+      description: 'Find restaurants of a certain cuisine in a given location.',
+      parameters: {
+        'cuisine': Schema.string(
+          description: 'The cuisine of the restaurant.',
+        ),
+        'location': Schema.string(
+          description:
+              'The location to search for restaurants. e.g. San Francisco, CA',
+        ),
+      },
+      callable: (args) async {
+        final cuisine = args['cuisine']! as String;
+        final location = args['location']! as String;
+        return findRestaurants(cuisine, location);
+      },
+    );
+    _autoGetRestaurantMenuTool = AutoFunctionDeclaration(
+      name: 'getRestaurantMenu',
+      description: 'Get the menu for a specific restaurant.',
+      parameters: {
+        'restaurantName': Schema.string(
+          description: 'The name of the restaurant.',
+        ),
+      },
+      callable: (args) async {
+        final restaurantName = args['restaurantName']! as String;
+        return getRestaurantMenu(restaurantName);
+      },
+    );
     _initializeModel();
+  }
+
+  Future<Map<String, Object?>> findRestaurants(
+    String cuisine,
+    String location,
+  ) async {
+    // This is a mock response.
+    return {
+      'restaurants': [
+        {
+          'name': 'The Golden Spoon',
+          'cuisine': 'Vegetarian',
+          'location': 'San Francisco, CA',
+        },
+        {
+          'name': 'Green Leaf Bistro',
+          'cuisine': 'Vegetarian',
+          'location': 'San Francisco, CA',
+        },
+      ],
+    };
+  }
+
+  Future<Map<String, Object?>> getRestaurantMenu(String restaurantName) async {
+    // This is a mock response.
+    return {
+      'menu': [
+        {'name': 'Lentil Soup', 'price': '8.99'},
+        {'name': 'Garden Salad', 'price': '10.99'},
+        {'name': 'Mushroom Risotto', 'price': '15.99'},
+      ],
+    };
   }
 
   Future<Map<String, Object?>> _fetchWeatherCallable(
@@ -112,6 +179,15 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
           Tool.functionDeclarations([_autoFetchWeatherTool]),
         ],
       );
+      _parallelAutoFunctionCallModel = vertexAI.generativeModel(
+        model: 'gemini-2.5-flash',
+        generationConfig: generationConfig,
+        tools: [
+          Tool.functionDeclarations(
+            [_autoFindRestaurantsTool, _autoGetRestaurantMenuTool],
+          ),
+        ],
+      );
       _codeExecutionModel = vertexAI.generativeModel(
         model: 'gemini-2.5-flash',
         generationConfig: generationConfig,
@@ -133,6 +209,15 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
         generationConfig: generationConfig,
         tools: [
           Tool.functionDeclarations([_autoFetchWeatherTool]),
+        ],
+      );
+      _parallelAutoFunctionCallModel = googleAI.generativeModel(
+        model: 'gemini-2.5-flash',
+        generationConfig: generationConfig,
+        tools: [
+          Tool.functionDeclarations(
+            [_autoFindRestaurantsTool, _autoGetRestaurantMenuTool],
+          ),
         ],
       );
       _codeExecutionModel = googleAI.generativeModel(
@@ -266,6 +351,17 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
                           child: const Text('Auto Function Calling'),
                         ),
                       ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: !_loading
+                              ? () async {
+                                  await _testParallelAutoFunctionCalling();
+                                }
+                              : null,
+                          child: const Text('Parallel Auto FC'),
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -293,7 +389,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
                         ),
                       ),
                     ],
-                  ),
+                  )
                 ],
               ),
             ),
@@ -301,6 +397,46 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _testParallelAutoFunctionCalling() async {
+    setState(() {
+      _loading = true;
+      _messages.clear();
+    });
+    try {
+      final autoFunctionCallChat = _parallelAutoFunctionCallModel.startChat();
+      const prompt =
+          'Find me a good vegetarian restaurant in San Francisco and get its menu.';
+
+      _messages.add(MessageData(text: prompt, fromUser: true));
+      setState(() {});
+
+      // Send the message to the generative model.
+      final response = await autoFunctionCallChat.sendMessage(
+        Content.text(prompt),
+      );
+
+      final thought = response.thoughtSummary;
+      if (thought != null) {
+        _messages
+            .add(MessageData(text: thought, fromUser: false, isThought: true));
+      }
+
+      // The SDK should have handled the function call automatically.
+      // The final response should contain the text from the model.
+      if (response.text case final text?) {
+        _messages.add(MessageData(text: text));
+      } else {
+        _messages.add(MessageData(text: 'No text response from model.'));
+      }
+    } catch (e) {
+      _showError(e.toString());
+    } finally {
+      setState(() {
+        _loading = false;
+      });
+    }
   }
 
   Future<void> _testStreamFunctionCalling() async {
