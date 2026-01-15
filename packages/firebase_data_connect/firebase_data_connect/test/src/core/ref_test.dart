@@ -15,6 +15,7 @@
 // ignore_for_file: unused_local_variable
 
 import 'dart:async';
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -216,5 +217,209 @@ void main() {
         ),
       ).called(2);
     });
-  });
+
+    test('throw Error if server throws one', () {
+      final deserializer = (String data) => 'Deserialized Data';
+      final mockResponse = http.Response(
+        '''
+{
+    "data": {},
+    "errors": [
+        {
+            "message": "SQL query error: pq: duplicate key value violates unique constraint movie_pkey",
+            "locations": [],
+            "path": [
+                "the_matrix"
+            ],
+            "extensions": null
+        }
+    ]
+}''',
+        200,
+      ); // mockResponse
+
+      QueryRef ref = QueryRef(
+        mockDataConnect,
+        'operation',
+        transport,
+        deserializer,
+        QueryManager(mockDataConnect),
+        emptySerializer,
+        null,
+      );
+
+      when(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).thenAnswer((_) async => mockResponse);
+
+      expect(() async => ref.execute(), throwsA(isA<DataConnectError>()));
+    }); // throwServerError
+
+    test('should decode partial error if available', () async {
+      final mockResponse = http.Response(
+        '''
+        {
+            "data": {"abc": "def"},
+            "errors": [
+                {
+                    "message": "SQL query error: pq: duplicate key value violates unique constraint movie_pkey",
+                    "locations": [],
+                    "path": [
+                        "the_matrix"
+                    ],
+                    "extensions": null
+                }
+            ]
+        }''',
+        200,
+      );
+      when(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).thenAnswer((_) async => mockResponse);
+
+      final deserializer = (String data) {
+        Map<String, dynamic> decoded = jsonDecode(data) as Map<String, dynamic>;
+        return AbcHolder(decoded['abc']!);
+      };
+
+      QueryRef ref = QueryRef(
+        mockDataConnect,
+        'operation',
+        transport,
+        deserializer,
+        QueryManager(mockDataConnect),
+        emptySerializer,
+        null,
+      );
+
+      expect(
+        () async => ref.execute(),
+        throwsA(predicate((e) =>
+            e is DataConnectOperationError &&
+            e.response.rawData!['abc'] == 'def' &&
+            e.response.errors.first.message ==
+                'SQL query error: pq: duplicate key value violates unique constraint movie_pkey' &&
+            (e.response.errors.first.path[0] as DataConnectFieldPathSegment)
+                    .field ==
+                'the_matrix' &&
+            e.response.data is AbcHolder &&
+            (e.response.data as AbcHolder).abc == 'def')),
+      );
+    }); // decodePartialError
+
+    test('should decode partial error if error has no path', () {
+      final mockResponse = http.Response(
+        '''
+        {
+            "data": {"abc": "def"},
+            "errors": [
+                {
+                    "message": "invalid pkey",
+                    "locations": [],
+                    "path": null,
+                    "extensions": null
+                }
+            ]
+        }''',
+        200,
+      );
+      when(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).thenAnswer((_) async => mockResponse);
+
+      final deserializer = (String data) {
+        Map<String, dynamic> decoded = jsonDecode(data) as Map<String, dynamic>;
+        return AbcHolder(decoded['abc']!);
+      };
+
+      QueryRef ref = QueryRef(
+        mockDataConnect,
+        'operation',
+        transport,
+        deserializer,
+        QueryManager(mockDataConnect),
+        emptySerializer,
+        null,
+      );
+
+      expect(
+        () async => ref.execute(),
+        throwsA(predicate((e) =>
+            e is DataConnectOperationError &&
+            e.response.rawData!['abc'] == 'def' &&
+            e.response.errors.first.message == 'invalid pkey' &&
+            e.response.errors.first.path.isEmpty &&
+            e.response.data is AbcHolder &&
+            (e.response.data as AbcHolder).abc == 'def')),
+      );
+    }); // testPartialErrorWithoutPath
+
+    test('should decode partial error if path is specified', () async {
+      final mockResponse = http.Response(
+        '''
+        {
+            "data": {"abc": "def"},
+            "errors": [
+                {
+                    "message": "invalid pkey",
+                    "locations": [],
+                    "path": [1,2,3],
+                    "extensions": null
+                }
+            ]
+        }''',
+        200,
+      );
+      when(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).thenAnswer((_) async => mockResponse);
+
+      final deserializer = (String data) {
+        Map<String, dynamic> decoded = jsonDecode(data) as Map<String, dynamic>;
+        return AbcHolder(decoded['abc']!);
+      };
+
+      QueryRef ref = QueryRef(
+        mockDataConnect,
+        'operation',
+        transport,
+        deserializer,
+        QueryManager(mockDataConnect),
+        emptySerializer,
+        null,
+      );
+
+      expect(() async => ref.execute(), throwsA(predicate((e) {
+        return e is DataConnectOperationError &&
+            e.response.rawData!['abc'] == 'def' &&
+            e.response.errors.first.message == 'invalid pkey' &&
+            e.response.errors.first.path.length == 3 &&
+            e.response.errors.first.path.first
+                is DataConnectListIndexPathSegment &&
+            e.response.data is AbcHolder &&
+            (e.response.data as AbcHolder).abc == 'def';
+      })));
+    }); // testPartialErrorWithPath
+  }); // group(QueryRef)
+}
+
+class AbcHolder {
+  String abc;
+  AbcHolder(this.abc);
 }
