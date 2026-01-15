@@ -150,8 +150,7 @@ class QueryManager {
           final queryRef = trackedQueries[queryId];
           if (queryRef != null) {
             try {
-              await queryRef.execute(
-                  fetchPolicy: QueryFetchPolicy.cacheOnly);
+              await queryRef.execute(fetchPolicy: QueryFetchPolicy.cacheOnly);
             } catch (e) {
               log('Error executing impacted query $e');
             }
