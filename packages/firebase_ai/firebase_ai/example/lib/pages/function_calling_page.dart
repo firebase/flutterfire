@@ -267,7 +267,33 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
                         ),
                       ),
                     ],
-                  )
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: !_loading
+                              ? () async {
+                                  await _testStreamFunctionCalling();
+                                }
+                              : null,
+                          child: const Text('Stream FC'),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: !_loading
+                              ? () async {
+                                  await _testAutoStreamFunctionCalling();
+                                }
+                              : null,
+                          child: const Text('Auto Stream FC'),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -275,6 +301,144 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _testStreamFunctionCalling() async {
+    setState(() {
+      _loading = true;
+      _messages.clear();
+    });
+    try {
+      final functionCallChat = _functionCallModel.startChat();
+      const prompt =
+          'What is the weather like in Boston, MA on 10/02 in year 2024?';
+
+      _messages.add(MessageData(text: prompt, fromUser: true));
+      setState(() {});
+
+      // Send the message to the generative model.
+      final responseStream = functionCallChat.sendMessageStream(
+        Content.text(prompt),
+      );
+
+      GenerateContentResponse? lastResponse;
+      await for (final response in responseStream) {
+        lastResponse = response;
+        final thought = response.thoughtSummary;
+        if (thought != null) {
+          _messages.add(
+            MessageData(text: thought, fromUser: false, isThought: true),
+          );
+          setState(() {});
+        }
+      }
+
+      final functionCalls = lastResponse?.functionCalls.toList();
+      // When the model response with a function call, invoke the function.
+      if (functionCalls != null && functionCalls.isNotEmpty) {
+        final functionCall = functionCalls.first;
+        if (functionCall.name == 'fetchWeather') {
+          final location =
+              functionCall.args['location']! as Map<String, dynamic>;
+          final date = functionCall.args['date']! as String;
+          final city = location['city'] as String;
+          final state = location['state'] as String;
+          final functionResult =
+              await fetchWeather(Location(city, state), date);
+          // Send the response to the model so that it can use the result to
+          // generate text for the user.
+          final responseStream2 = functionCallChat.sendMessageStream(
+            Content.functionResponse(functionCall.name, functionResult),
+          );
+
+          var accumulatedText = '';
+          _messages.add(MessageData(text: accumulatedText));
+          setState(() {});
+
+          await for (final response in responseStream2) {
+            if (response.text case final text?) {
+              accumulatedText += text;
+              _messages.last = _messages.last.copyWith(text: accumulatedText);
+              setState(() {});
+            }
+          }
+        } else {
+          throw UnimplementedError(
+            'Function not declared to the model: ${functionCall.name}',
+          );
+        }
+      } else if (lastResponse?.text case final text?) {
+        // This would be if no function call was returned.
+        _messages.add(MessageData(text: text));
+        setState(() {});
+      } else {
+        _messages.add(MessageData(text: 'No text response from model.'));
+      }
+    } catch (e) {
+      _showError(e.toString());
+    } finally {
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
+
+  Future<void> _testAutoStreamFunctionCalling() async {
+    setState(() {
+      _loading = true;
+      _messages.clear();
+    });
+    try {
+      final autoFunctionCallChat = _autoFunctionCallModel.startChat();
+      const prompt =
+          'What is the weather like in Boston, MA on 10/02 in year 2024?';
+
+      _messages.add(MessageData(text: prompt, fromUser: true));
+      setState(() {});
+
+      // Send the message to the generative model.
+      final responseStream = autoFunctionCallChat.sendMessageStream(
+        Content.text(prompt),
+      );
+
+      var accumulatedText = '';
+      MessageData? modelMessage;
+
+      await for (final response in responseStream) {
+        final thought = response.thoughtSummary;
+        if (thought != null) {
+          _messages.add(
+            MessageData(text: thought, fromUser: false, isThought: true),
+          );
+          setState(() {});
+        }
+
+        // The SDK should have handled the function call automatically.
+        // The final response should contain the text from the model.
+        if (response.text case final text?) {
+          accumulatedText += text;
+          if (modelMessage == null) {
+            modelMessage = MessageData(text: accumulatedText);
+            _messages.add(modelMessage);
+          } else {
+            modelMessage = modelMessage.copyWith(text: accumulatedText);
+            _messages.last = modelMessage;
+          }
+          setState(() {});
+        }
+      }
+
+      if (accumulatedText.isEmpty) {
+        _messages.add(MessageData(text: 'No text response from model.'));
+        setState(() {});
+      }
+    } catch (e) {
+      _showError(e.toString());
+    } finally {
+      setState(() {
+        _loading = false;
+      });
+    }
   }
 
   Future<void> _testAutoFunctionCalling() async {
