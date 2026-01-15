@@ -91,7 +91,18 @@ final class ChatSession {
             generationConfig: _generationConfig);
 
         final functionCalls = response.functionCalls;
-        if (functionCalls.isEmpty) {
+
+        // Only trigger auto-execution if:
+        // 1. We have auto-functions configured.
+        // 2. The response actually contains function calls.
+        // 3. ALL called functions exist in our declarations (prevents crashes).
+        final shouldAutoExecute = _autoFunctionDeclarations != null &&
+            _autoFunctionDeclarations.isNotEmpty &&
+            functionCalls.isNotEmpty &&
+            functionCalls
+                .every((c) => _autoFunctionDeclarations.containsKey(c.name));
+        if (!shouldAutoExecute) {
+          // Standard handling: Update history and return the response to the user.
           if (response.candidates case [final candidate, ...]) {
             _history.addAll(requestHistory);
             final normalizedContent = candidate.content.role == null
@@ -102,18 +113,15 @@ final class ChatSession {
           return response;
         }
 
+        // Auto function execution
         requestHistory.add(response.candidates.first.content);
         final functionResponses = <Part>[];
         for (final functionCall in functionCalls) {
-          final function = _autoFunctionDeclarations?[functionCall.name];
-          if (function == null) {
-            throw Exception(
-                'Unknown function call: ${functionCall.name}, please add '
-                'the function to the tools.');
-          }
+          final function = _autoFunctionDeclarations[functionCall.name];
+
           Object? result;
           try {
-            result = await function.callable(functionCall.args);
+            result = await function!.callable(functionCall.args);
           } catch (e) {
             result = e.toString();
           }
@@ -175,7 +183,14 @@ final class ChatSession {
           final functionCalls =
               aggregatedContent.parts.whereType<FunctionCall>().toList();
 
-          if (functionCalls.isEmpty) {
+          // Check if we should actually execute these functions.
+          final shouldAutoExecute = _autoFunctionDeclarations != null &&
+              _autoFunctionDeclarations.isNotEmpty &&
+              functionCalls.isNotEmpty &&
+              functionCalls
+                  .every((c) => _autoFunctionDeclarations.containsKey(c.name));
+
+          if (!shouldAutoExecute) {
             _history.addAll(requestHistory);
             _history.add(aggregatedContent);
             return;
@@ -184,15 +199,11 @@ final class ChatSession {
           requestHistory.add(aggregatedContent);
           final functionResponseFutures =
               functionCalls.map((functionCall) async {
-            final function = _autoFunctionDeclarations?[functionCall.name];
-            if (function == null) {
-              throw Exception(
-                  'Unknown function call: ${functionCall.name}, please add '
-                  'the function to the tools.');
-            }
+            final function = _autoFunctionDeclarations[functionCall.name];
+
             Object? result;
             try {
-              result = await function.callable(functionCall.args);
+              result = await function!.callable(functionCall.args);
             } catch (e) {
               result = e.toString();
             }

@@ -51,7 +51,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
   void initState() {
     super.initState();
     _autoFetchWeatherTool = AutoFunctionDeclaration(
-      name: 'fetchWeather',
+      name: 'autofetchWeather',
       description:
           'Get the weather conditions for a specific city on a specific date.',
       parameters: {
@@ -285,7 +285,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
     try {
       final autoFunctionCallChat = _autoFunctionCallModel.startChat();
       const prompt =
-          'What is the weather like in Boston on 10/02 in year 2024?';
+          'What is the weather like in Boston, MA on 10/02 in year 2024?';
 
       _messages.add(MessageData(text: prompt, fromUser: true));
       setState(() {});
@@ -325,7 +325,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
     try {
       final functionCallChat = _functionCallModel.startChat();
       const prompt =
-          'What is the weather like in Boston on 10/02 in year 2024?';
+          'What is the weather like in Boston, MA on 10/02 in year 2024?';
 
       _messages.add(MessageData(text: prompt, fromUser: true));
 
