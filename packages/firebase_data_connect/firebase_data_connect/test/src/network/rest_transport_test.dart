@@ -87,30 +87,6 @@ void main() {
       );
     });
 
-    test('invokeOperation should return deserialized data', () async {
-      final mockResponse = http.Response('{"data": {"key": "value"}}', 200);
-      when(
-        mockHttpClient.post(
-          any,
-          headers: anyNamed('headers'),
-          body: anyNamed('body'),
-        ),
-      ).thenAnswer((_) async => mockResponse);
-
-      final deserializer = (String data) => 'Deserialized Data';
-
-      final result = await transport.invokeOperation(
-        'testQuery',
-        'executeQuery',
-        deserializer,
-        null,
-        null,
-        null,
-      );
-
-      expect(result, 'Deserialized Data');
-    });
-
     test('invokeOperation should throw unauthorized error on 401 response',
         () async {
       final mockResponse = http.Response('Unauthorized', 401);

@@ -12,14 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:firebase_data_connect/firebase_data_connect.dart';
-import 'package:firebase_data_connect/src/cache/cache_data_types.dart';
 import 'package:firebase_data_connect/src/cache/result_tree_processor.dart';
-import 'package:firebase_data_connect/src/common/common_library.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'dart:convert';
-import 'dart:collection';
 
 import 'package:firebase_data_connect/src/cache/in_memory_cache_provider.dart';
 

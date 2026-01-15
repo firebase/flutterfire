@@ -32,7 +32,6 @@ import 'dart:convert';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../core/ref_test.dart';
 @GenerateNiceMocks([MockSpec<FirebaseApp>(), MockSpec<ConnectorConfig>()])
 import '../firebase_data_connect_test.mocks.dart';
 import '../network/rest_transport_test.mocks.dart';
@@ -43,16 +42,11 @@ class MockDataConnectTransport extends Mock implements DataConnectTransport {}
 
 void main() {
   late MockFirebaseApp mockApp;
-  late MockFirebaseAuth mockAuth;
   late MockConnectorConfig mockConnectorConfig;
   late FirebaseDataConnect dataConnect;
   late MockClient mockHttpClient;
   late RestTransport transport;
   const Duration maxAgeSeconds = Duration(milliseconds: 200);
-
-  const String entityObject = '''
-    {"desc":"itemDesc1","name":"itemOne", "cacheId":"123","price":4}
-  ''';
 
   const String simpleQueryResponse = '''
     {"data": {"items":[

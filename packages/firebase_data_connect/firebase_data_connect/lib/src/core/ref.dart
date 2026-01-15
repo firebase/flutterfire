@@ -144,14 +144,17 @@ class QueryManager {
     // this is dependent on the cachemanager, which is initialized lazily
     // this should be called whenever cacheManager is initialized.
     if (dataConnect.cacheManager != null) {
-      _impactedQueriesSubscription =
-          dataConnect.cacheManager!.impactedQueries.listen((impactedQueryIds) {
+      _impactedQueriesSubscription = dataConnect.cacheManager!.impactedQueries
+          .listen((impactedQueryIds) async {
         for (final queryId in impactedQueryIds) {
           final queryRef = trackedQueries[queryId];
           if (queryRef != null) {
-            queryRef
-                .execute(fetchPolicy: QueryFetchPolicy.cacheOnly)
-                .catchError((e) => log('Error executing impacted query $e'));
+            try {
+              await queryRef.execute(
+                  fetchPolicy: QueryFetchPolicy.cacheOnly);
+            } catch (e) {
+              log('Error executing impacted query $e');
+            }
           }
         }
       });
