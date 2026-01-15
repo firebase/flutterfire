@@ -91,9 +91,13 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
         ),
       },
       callable: (args) async {
-        final cuisine = args['cuisine']! as String;
-        final location = args['location']! as String;
-        return findRestaurants(cuisine, location);
+        final cuisine = args['cuisine'];
+        final location = args['location'];
+        if (cuisine is String && location is String) {
+          return findRestaurants(cuisine, location);
+        }
+        // It's good practice to handle cases where arguments are missing or have the wrong type.
+        throw Exception('Missing or invalid arguments for findRestaurants');
       },
     );
     _autoGetRestaurantMenuTool = AutoFunctionDeclaration(
