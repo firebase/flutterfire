@@ -17,6 +17,7 @@ import 'dart:async';
 import 'api.dart';
 import 'base_model.dart';
 import 'content.dart';
+import 'tool.dart';
 import 'utils/chat_utils.dart';
 import 'utils/mutex.dart';
 
@@ -27,8 +28,20 @@ import 'utils/mutex.dart';
 /// [GenerateContentResponse], other candidates may be available on the returned
 /// response. The history reflects the most current state of the chat session.
 final class ChatSession {
-  ChatSession._(this._generateContent, this._generateContentStream,
-      this._history, this._safetySettings, this._generationConfig);
+  ChatSession._(
+      this._generateContent,
+      this._generateContentStream,
+      this._history,
+      this._safetySettings,
+      this._generationConfig,
+      List<Tool>? tools,
+      this._maxTurns)
+      : _autoFunctionDeclarations = tools
+            ?.expand((tool) => tool.autoFunctionDeclarations)
+            .fold(<String, AutoFunctionDeclaration>{}, (map, function) {
+          map?[function.name] = function;
+          return map;
+        });
   final Future<GenerateContentResponse> Function(Iterable<Content> content,
       {List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig}) _generateContent;
@@ -41,6 +54,8 @@ final class ChatSession {
   final List<Content> _history;
   final List<SafetySetting>? _safetySettings;
   final GenerationConfig? _generationConfig;
+  final Map<String, AutoFunctionDeclaration>? _autoFunctionDeclarations;
+  final int _maxTurns;
 
   /// The content that has been successfully sent to, or received from, the
   /// generative model.
@@ -66,16 +81,56 @@ final class ChatSession {
   Future<GenerateContentResponse> sendMessage(Content message) async {
     final lock = await _mutex.acquire();
     try {
-      final response = await _generateContent(_history.followedBy([message]),
-          safetySettings: _safetySettings, generationConfig: _generationConfig);
-      if (response.candidates case [final candidate, ...]) {
-        _history.add(message);
-        final normalizedContent = candidate.content.role == null
-            ? Content('model', candidate.content.parts)
-            : candidate.content;
-        _history.add(normalizedContent);
+      final requestHistory = <Content>[message];
+      var turn = 0;
+      while (turn < _maxTurns) {
+        final response = await _generateContent(
+            _history.followedBy(requestHistory),
+            safetySettings: _safetySettings,
+            generationConfig: _generationConfig);
+
+        final functionCalls = response.functionCalls;
+
+        // Only trigger auto-execution if:
+        // 1. We have auto-functions configured.
+        // 2. The response actually contains function calls.
+        // 3. ALL called functions exist in our declarations (prevents crashes).
+        final shouldAutoExecute = _autoFunctionDeclarations != null &&
+            _autoFunctionDeclarations.isNotEmpty &&
+            functionCalls.isNotEmpty &&
+            functionCalls
+                .every((c) => _autoFunctionDeclarations.containsKey(c.name));
+        if (!shouldAutoExecute) {
+          // Standard handling: Update history and return the response to the user.
+          if (response.candidates case [final candidate, ...]) {
+            _history.addAll(requestHistory);
+            final normalizedContent = candidate.content.role == null
+                ? Content('model', candidate.content.parts)
+                : candidate.content;
+            _history.add(normalizedContent);
+          }
+          return response;
+        }
+
+        // Auto function execution
+        requestHistory.add(response.candidates.first.content);
+        final functionResponses = <Part>[];
+        for (final functionCall in functionCalls) {
+          final function = _autoFunctionDeclarations[functionCall.name];
+
+          Object? result;
+          try {
+            result = await function!.callable(functionCall.args);
+          } catch (e) {
+            result = e.toString();
+          }
+          functionResponses
+              .add(FunctionResponse(functionCall.name, {'result': result}));
+        }
+        requestHistory.add(Content('function', functionResponses));
+        turn++;
       }
-      return response;
+      throw Exception('Max turns of $_maxTurns reached.');
     } finally {
       lock.release();
     }
@@ -99,28 +154,72 @@ final class ChatSession {
   /// Waits to read the entire streamed response before recording the message
   /// and response and allowing pending messages to be sent.
   Stream<GenerateContentResponse> sendMessageStream(Content message) {
-    final controller = StreamController<GenerateContentResponse>(sync: true);
+    final controller = StreamController<GenerateContentResponse>();
     _mutex.acquire().then((lock) async {
       try {
-        final responses = _generateContentStream(_history.followedBy([message]),
-            safetySettings: _safetySettings,
-            generationConfig: _generationConfig);
-        final content = <Content>[];
-        await for (final response in responses) {
-          if (response.candidates case [final candidate, ...]) {
-            content.add(candidate.content);
+        final requestHistory = <Content>[message];
+        var turn = 0;
+        while (turn < _maxTurns) {
+          final responses = _generateContentStream(
+              _history.followedBy(requestHistory),
+              safetySettings: _safetySettings,
+              generationConfig: _generationConfig);
+
+          final turnChunks = <GenerateContentResponse>[];
+          await for (final response in responses) {
+            turnChunks.add(response);
+            controller.add(response);
           }
-          controller.add(response);
+          if (turnChunks.isEmpty) break;
+          final aggregatedContent = historyAggregate(turnChunks.map((r) {
+            final content = r.candidates.firstOrNull?.content;
+            if (content == null) {
+              throw Exception('No content in response candidate');
+            }
+            return content;
+          }).toList());
+
+          final functionCalls =
+              aggregatedContent.parts.whereType<FunctionCall>().toList();
+
+          // Check if we should actually execute these functions.
+          final shouldAutoExecute = _autoFunctionDeclarations != null &&
+              _autoFunctionDeclarations.isNotEmpty &&
+              functionCalls.isNotEmpty &&
+              functionCalls
+                  .every((c) => _autoFunctionDeclarations.containsKey(c.name));
+
+          if (!shouldAutoExecute) {
+            _history.addAll(requestHistory);
+            _history.add(aggregatedContent);
+            return;
+          }
+
+          requestHistory.add(aggregatedContent);
+          final functionResponseFutures =
+              functionCalls.map((functionCall) async {
+            final function = _autoFunctionDeclarations[functionCall.name];
+
+            Object? result;
+            try {
+              result = await function!.callable(functionCall.args);
+            } catch (e) {
+              result = e.toString();
+            }
+            return FunctionResponse(functionCall.name, {'result': result});
+          });
+          final functionResponseParts =
+              await Future.wait(functionResponseFutures);
+          requestHistory.add(Content.functionResponses(functionResponseParts));
+          turn++;
         }
-        if (content.isNotEmpty) {
-          _history.add(message);
-          _history.add(historyAggregate(content));
-        }
+        throw Exception('Max turns of $_maxTurns reached.');
       } catch (e, s) {
         controller.addError(e, s);
+      } finally {
+        lock.release();
+        unawaited(controller.close());
       }
-      lock.release();
-      unawaited(controller.close());
     });
     return controller.stream;
   }
@@ -138,7 +237,8 @@ extension StartChatExtension on GenerativeModel {
   ChatSession startChat(
           {List<Content>? history,
           List<SafetySetting>? safetySettings,
-          GenerationConfig? generationConfig}) =>
+          GenerationConfig? generationConfig,
+          int? maxTurns}) =>
       ChatSession._(generateContent, generateContentStream, history ?? [],
-          safetySettings, generationConfig);
+          safetySettings, generationConfig, tools, maxTurns ?? 5);
 }
