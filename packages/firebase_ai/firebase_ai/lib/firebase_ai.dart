@@ -104,6 +104,7 @@ export 'src/live_api.dart'
         LiveServerToolCall,
         LiveServerToolCallCancellation,
         LiveServerResponse,
+        GoingAwayNotice,
         Transcription;
 export 'src/live_session.dart' show LiveSession;
 export 'src/schema.dart' show Schema, SchemaType;

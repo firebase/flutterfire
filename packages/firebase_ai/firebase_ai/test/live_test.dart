@@ -233,8 +233,8 @@ void main() {
         'goAway': {'timeLeft': '50s'}
       };
       final response = parseServerResponse(jsonObject);
-      expect(response.message, isA<LiveServerGoAway>());
-      final goAwayMessage = response.message as LiveServerGoAway;
+      expect(response.message, isA<GoingAwayNotice>());
+      final goAwayMessage = response.message as GoingAwayNotice;
       expect(goAwayMessage.timeLeft, '50s');
     });
 

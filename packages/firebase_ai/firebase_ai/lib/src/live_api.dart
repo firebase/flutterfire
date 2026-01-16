@@ -209,12 +209,16 @@ class LiveServerToolCallCancellation implements LiveServerMessage {
   final List<String>? functionIds;
 }
 
-/// A message indicating that the live server is going away.
-class LiveServerGoAway implements LiveServerMessage {
-  /// Creates a [LiveServerGoAway] instance.
-  const LiveServerGoAway({this.timeLeft});
+/// A server message indicating that the server will not be able to service the
+/// client soon.
+class GoingAwayNotice implements LiveServerMessage {
+  /// Creates a [GoingAwayNotice] instance.
+  ///
+  /// [timeLeft] (optional): The remaining time before the connection will be
+  /// terminated.
+  const GoingAwayNotice({this.timeLeft});
 
-  /// The time left in seconds for the live session to be terminated.
+  /// The remaining time before the connection will be terminated as ABORTED.
   final String? timeLeft;
 }
 
@@ -446,7 +450,7 @@ LiveServerMessage _parseServerMessage(Object jsonObject) {
     return LiveServerSetupComplete();
   } else if (json.containsKey('goAway')) {
     final goAwayJson = json['goAway'] as Map;
-    return LiveServerGoAway(timeLeft: goAwayJson['timeLeft'] as String?);
+    return GoingAwayNotice(timeLeft: goAwayJson['timeLeft'] as String?);
   } else {
     throw unhandledFormat('LiveServerMessage', json);
   }
