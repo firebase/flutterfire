@@ -111,6 +111,13 @@ public class FlutterFirebaseAppCheckPlugin
                       PlayIntegrityAppCheckProviderFactory.getInstance());
                   break;
                 }
+              case recaptchaEnterprise:
+                {
+                  FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
+                  firebaseAppCheck.installAppCheckProviderFactory(
+                      ReCaptchaEnterpriseAppCheckProviderFactory.getInstance());
+                  break;
+                }
             }
             taskCompletionSource.setResult(null);
           } catch (Exception e) {
