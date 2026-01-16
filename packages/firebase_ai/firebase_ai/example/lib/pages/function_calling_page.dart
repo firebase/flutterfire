@@ -253,7 +253,8 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       final state = location['state'] as String;
       return fetchWeather(Location(city, state), date);
     }
-    throw UnimplementedError('Function not declared to the model: ${call.name}');
+    throw UnimplementedError(
+        'Function not declared to the model: ${call.name}');
   }
 
   Future<void> _runTest(Future<void> Function() testBody) async {
@@ -337,7 +338,8 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: !_loading ? _testAutoFunctionCalling : null,
+                          onPressed:
+                              !_loading ? _testAutoFunctionCalling : null,
                           child: const Text('Auto Function Calling'),
                         ),
                       ),
@@ -357,18 +359,16 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: !_loading
-                              ? _testStreamFunctionCalling
-                              : null,
+                          onPressed:
+                              !_loading ? _testStreamFunctionCalling : null,
                           child: const Text('Stream FC'),
                         ),
                       ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: !_loading
-                              ? _testAutoStreamFunctionCalling
-                              : null,
+                          onPressed:
+                              !_loading ? _testAutoStreamFunctionCalling : null,
                           child: const Text('Auto Stream FC'),
                         ),
                       ),
@@ -522,8 +522,6 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       }
     });
   }
-
-
 
   Future<void> _testFunctionCalling() async {
     await _runTest(() async {
