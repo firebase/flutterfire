@@ -167,71 +167,41 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
             )
           : null,
     );
-    if (widget.useVertexBackend) {
-      var vertexAI = FirebaseAI.vertexAI(auth: FirebaseAuth.instance);
-      _functionCallModel = vertexAI.generativeModel(
-        model: 'gemini-2.5-flash',
-        generationConfig: generationConfig,
-        tools: [
-          Tool.functionDeclarations([fetchWeatherTool]),
-        ],
-      );
-      _autoFunctionCallModel = vertexAI.generativeModel(
-        model: 'gemini-2.5-flash',
-        generationConfig: generationConfig,
-        tools: [
-          Tool.functionDeclarations([_autoFetchWeatherTool]),
-        ],
-      );
-      _parallelAutoFunctionCallModel = vertexAI.generativeModel(
-        model: 'gemini-2.5-flash',
-        generationConfig: generationConfig,
-        tools: [
-          Tool.functionDeclarations(
-            [_autoFindRestaurantsTool, _autoGetRestaurantMenuTool],
-          ),
-        ],
-      );
-      _codeExecutionModel = vertexAI.generativeModel(
-        model: 'gemini-2.5-flash',
-        generationConfig: generationConfig,
-        tools: [
-          Tool.codeExecution(),
-        ],
-      );
-    } else {
-      var googleAI = FirebaseAI.googleAI(auth: FirebaseAuth.instance);
-      _functionCallModel = googleAI.generativeModel(
-        model: 'gemini-2.5-flash',
-        generationConfig: generationConfig,
-        tools: [
-          Tool.functionDeclarations([fetchWeatherTool]),
-        ],
-      );
-      _autoFunctionCallModel = googleAI.generativeModel(
-        model: 'gemini-2.5-flash',
-        generationConfig: generationConfig,
-        tools: [
-          Tool.functionDeclarations([_autoFetchWeatherTool]),
-        ],
-      );
-      _parallelAutoFunctionCallModel = googleAI.generativeModel(
-        model: 'gemini-2.5-flash',
-        generationConfig: generationConfig,
-        tools: [
-          Tool.functionDeclarations(
-            [_autoFindRestaurantsTool, _autoGetRestaurantMenuTool],
-          ),
-        ],
-      );
-      _codeExecutionModel = googleAI.generativeModel(
-        model: 'gemini-2.5-flash',
-        generationConfig: generationConfig,
-        tools: [
-          Tool.codeExecution(),
-        ],
-      );
-    }
+
+    final aiClient = widget.useVertexBackend
+        ? FirebaseAI.vertexAI(auth: FirebaseAuth.instance)
+        : FirebaseAI.googleAI(auth: FirebaseAuth.instance);
+
+    _functionCallModel = aiClient.generativeModel(
+      model: 'gemini-2.5-flash',
+      generationConfig: generationConfig,
+      tools: [
+        Tool.functionDeclarations([fetchWeatherTool]),
+      ],
+    );
+    _autoFunctionCallModel = aiClient.generativeModel(
+      model: 'gemini-2.5-flash',
+      generationConfig: generationConfig,
+      tools: [
+        Tool.functionDeclarations([_autoFetchWeatherTool]),
+      ],
+    );
+    _parallelAutoFunctionCallModel = aiClient.generativeModel(
+      model: 'gemini-2.5-flash',
+      generationConfig: generationConfig,
+      tools: [
+        Tool.functionDeclarations(
+          [_autoFindRestaurantsTool, _autoGetRestaurantMenuTool],
+        ),
+      ],
+    );
+    _codeExecutionModel = aiClient.generativeModel(
+      model: 'gemini-2.5-flash',
+      generationConfig: generationConfig,
+      tools: [
+        Tool.codeExecution(),
+      ],
+    );
   }
 
   // This is a hypothetical API to return a fake weather data collection for
@@ -274,6 +244,17 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       ),
     },
   );
+
+  Future<Map<String, Object?>> _executeFunctionCall(FunctionCall call) async {
+    if (call.name == 'fetchWeather') {
+      final location = call.args['location']! as Map<String, dynamic>;
+      final date = call.args['date']! as String;
+      final city = location['city'] as String;
+      final state = location['state'] as String;
+      return fetchWeather(Location(city, state), date);
+    }
+    throw UnimplementedError('Function not declared to the model: ${call.name}');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -321,22 +302,14 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: !_loading
-                              ? () async {
-                                  await _testFunctionCalling();
-                                }
-                              : null,
+                          onPressed: !_loading ? _testFunctionCalling : null,
                           child: const Text('Manual FC'),
                         ),
                       ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: !_loading
-                              ? () async {
-                                  await _testCodeExecution();
-                                }
-                              : null,
+                          onPressed: !_loading ? _testCodeExecution : null,
                           child: const Text('Code Execution'),
                         ),
                       ),
@@ -347,11 +320,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: !_loading
-                              ? () async {
-                                  await _testAutoFunctionCalling();
-                                }
-                              : null,
+                          onPressed: !_loading ? _testAutoFunctionCalling : null,
                           child: const Text('Auto Function Calling'),
                         ),
                       ),
@@ -359,9 +328,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
                       Expanded(
                         child: ElevatedButton(
                           onPressed: !_loading
-                              ? () async {
-                                  await _testParallelAutoFunctionCalling();
-                                }
+                              ? () => _testAutoFunctionCalling(parallel: true)
                               : null,
                           child: const Text('Parallel Auto FC'),
                         ),
@@ -374,9 +341,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
                       Expanded(
                         child: ElevatedButton(
                           onPressed: !_loading
-                              ? () async {
-                                  await _testStreamFunctionCalling();
-                                }
+                              ? _testStreamFunctionCalling
                               : null,
                           child: const Text('Stream FC'),
                         ),
@@ -385,9 +350,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
                       Expanded(
                         child: ElevatedButton(
                           onPressed: !_loading
-                              ? () async {
-                                  await _testAutoStreamFunctionCalling();
-                                }
+                              ? _testAutoStreamFunctionCalling
                               : null,
                           child: const Text('Auto Stream FC'),
                         ),
@@ -403,15 +366,19 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
     );
   }
 
-  Future<void> _testParallelAutoFunctionCalling() async {
+  Future<void> _testAutoFunctionCalling({bool parallel = false}) async {
     setState(() {
       _loading = true;
       _messages.clear();
     });
     try {
-      final autoFunctionCallChat = _parallelAutoFunctionCallModel.startChat();
-      const prompt =
-          'Find me a good vegetarian restaurant in San Francisco and get its menu.';
+      final model =
+          parallel ? _parallelAutoFunctionCallModel : _autoFunctionCallModel;
+      final prompt = parallel
+          ? 'Find me a good vegetarian restaurant in San Francisco and get its menu.'
+          : 'What is the weather like in Boston, MA on 10/02 in year 2024?';
+
+      final autoFunctionCallChat = model.startChat();
 
       _messages.add(MessageData(text: prompt, fromUser: true));
       setState(() {});
@@ -477,35 +444,23 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       // When the model response with a function call, invoke the function.
       if (functionCalls != null && functionCalls.isNotEmpty) {
         final functionCall = functionCalls.first;
-        if (functionCall.name == 'fetchWeather') {
-          final location =
-              functionCall.args['location']! as Map<String, dynamic>;
-          final date = functionCall.args['date']! as String;
-          final city = location['city'] as String;
-          final state = location['state'] as String;
-          final functionResult =
-              await fetchWeather(Location(city, state), date);
-          // Send the response to the model so that it can use the result to
-          // generate text for the user.
-          final responseStream2 = functionCallChat.sendMessageStream(
-            Content.functionResponse(functionCall.name, functionResult),
-          );
+        final functionResult = await _executeFunctionCall(functionCall);
+        // Send the response to the model so that it can use the result to
+        // generate text for the user.
+        final responseStream2 = functionCallChat.sendMessageStream(
+          Content.functionResponse(functionCall.name, functionResult),
+        );
 
-          var accumulatedText = '';
-          _messages.add(MessageData(text: accumulatedText));
-          setState(() {});
+        var accumulatedText = '';
+        _messages.add(MessageData(text: accumulatedText));
+        setState(() {});
 
-          await for (final response in responseStream2) {
-            if (response.text case final text?) {
-              accumulatedText += text;
-              _messages.last = _messages.last.copyWith(text: accumulatedText);
-              setState(() {});
-            }
+        await for (final response in responseStream2) {
+          if (response.text case final text?) {
+            accumulatedText += text;
+            _messages.last = _messages.last.copyWith(text: accumulatedText);
+            setState(() {});
           }
-        } else {
-          throw UnimplementedError(
-            'Function not declared to the model: ${functionCall.name}',
-          );
         }
       } else if (lastResponse?.text case final text?) {
         // This would be if no function call was returned.
@@ -581,45 +536,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
     }
   }
 
-  Future<void> _testAutoFunctionCalling() async {
-    setState(() {
-      _loading = true;
-      _messages.clear();
-    });
-    try {
-      final autoFunctionCallChat = _autoFunctionCallModel.startChat();
-      const prompt =
-          'What is the weather like in Boston, MA on 10/02 in year 2024?';
 
-      _messages.add(MessageData(text: prompt, fromUser: true));
-      setState(() {});
-
-      // Send the message to the generative model.
-      final response = await autoFunctionCallChat.sendMessage(
-        Content.text(prompt),
-      );
-
-      final thought = response.thoughtSummary;
-      if (thought != null) {
-        _messages
-            .add(MessageData(text: thought, fromUser: false, isThought: true));
-      }
-
-      // The SDK should have handled the function call automatically.
-      // The final response should contain the text from the model.
-      if (response.text case final text?) {
-        _messages.add(MessageData(text: text));
-      } else {
-        _messages.add(MessageData(text: 'No text response from model.'));
-      }
-    } catch (e) {
-      _showError(e.toString());
-    } finally {
-      setState(() {
-        _loading = false;
-      });
-    }
-  }
 
   Future<void> _testFunctionCalling() async {
     setState(() {
@@ -648,24 +565,12 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       // When the model response with a function call, invoke the function.
       if (functionCalls.isNotEmpty) {
         final functionCall = functionCalls.first;
-        if (functionCall.name == 'fetchWeather') {
-          Map<String, dynamic> location =
-              functionCall.args['location']! as Map<String, dynamic>;
-          var date = functionCall.args['date']! as String;
-          var city = location['city'] as String;
-          var state = location['state'] as String;
-          final functionResult =
-              await fetchWeather(Location(city, state), date);
-          // Send the response to the model so that it can use the result to
-          // generate text for the user.
-          response = await functionCallChat.sendMessage(
-            Content.functionResponse(functionCall.name, functionResult),
-          );
-        } else {
-          throw UnimplementedError(
-            'Function not declared to the model: ${functionCall.name}',
-          );
-        }
+        final functionResult = await _executeFunctionCall(functionCall);
+        // Send the response to the model so that it can use the result to
+        // generate text for the user.
+        response = await functionCallChat.sendMessage(
+          Content.functionResponse(functionCall.name, functionResult),
+        );
       }
       // When the model responds with non-null text content, print it.
       if (response.text case final text?) {
