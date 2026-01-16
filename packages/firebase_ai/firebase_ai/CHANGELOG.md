@@ -1,3 +1,7 @@
+## 3.6.1
+
+ - Update a dependency to the latest release.
+
 ## 3.6.0
 
  - **FEAT**(firebaseai): Added support for Server Prompt Template ([#17767](https://github.com/firebase/flutterfire/issues/17767)). ([8ff653e5](https://github.com/firebase/flutterfire/commit/8ff653e5bad247fe4f2f72afef45375606509d11))

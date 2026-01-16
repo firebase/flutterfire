@@ -1,3 +1,7 @@
+## 4.3.0
+
+ - **FEAT**: bump Firebase iOS SDK to 12.6.0 ([#17857](https://github.com/firebase/flutterfire/issues/17857)). ([668331b4](https://github.com/firebase/flutterfire/commit/668331b446726daef719a68b43b34af7b1ae411f))
+
 ## 4.2.1
 
  - Update a dependency to the latest release.

@@ -63,13 +63,13 @@ class HttpsCallable {
   /// automatically includes a Firebase Instance ID token to identify the app
   /// instance. If a user is logged in with Firebase Auth, an auth ID token for
   /// the user is also automatically included.
-  Stream<StreamResponse> stream<T, R>([Object? input]) async* {
+  Stream<StreamResponse<T, R>> stream<T, R>([Object? input]) async* {
     await for (final value in delegate.stream(input).asBroadcastStream()) {
       if (value is Map) {
         if (value.containsKey('message')) {
-          yield Chunk<T>(value['message'] as T);
+          yield Chunk<T, R>(value['message'] as T);
         } else if (value.containsKey('result')) {
-          yield Result<R>(HttpsCallableResult._(value['result'] as R));
+          yield Result<T, R>(HttpsCallableResult._(value['result'] as R));
         }
       }
     }

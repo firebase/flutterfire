@@ -1,3 +1,7 @@
+## 5.0.6
+
+ - Update a dependency to the latest release.
+
 ## 5.0.5
 
  - **FIX**(crashlytics,ios): remove warning regarding legacy firebase_app_id_file.json file ([#17852](https://github.com/firebase/flutterfire/issues/17852)). ([fb93470e](https://github.com/firebase/flutterfire/commit/fb93470e13fc7afc40ee310cc85185e89cb63dd0))

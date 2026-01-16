@@ -49,8 +49,12 @@ class _ChatPageState extends State<ChatPage> {
 
   void _initializeChat() {
     final generationConfig = GenerationConfig(
-      thinkingConfig:
-          _enableThinking ? ThinkingConfig(includeThoughts: true) : null,
+      thinkingConfig: _enableThinking
+          ? ThinkingConfig.withThinkingLevel(
+              ThinkingLevel.high,
+              includeThoughts: true,
+            )
+          : null,
     );
     if (widget.useVertexBackend) {
       _model = FirebaseAI.vertexAI(auth: FirebaseAuth.instance).generativeModel(

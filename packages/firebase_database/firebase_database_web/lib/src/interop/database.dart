@@ -674,10 +674,11 @@ class ThenableReference extends DatabaseReference {
   late final Future<DatabaseReference> _future =
       (jsObject as database_interop.ThenableReferenceJsImpl)
           .then(((database_interop.ReferenceJsImpl reference) {
-            DatabaseReference.getInstance(reference);
+            return reference;
           }).toJS)
           .toDart
-          .then((value) => value as DatabaseReference);
+          .then((value) => DatabaseReference.getInstance(
+              value as database_interop.ReferenceJsImpl));
 
   /// Creates a new ThenableReference from a [jsObject].
   ThenableReference.fromJsObject(
