@@ -1,0 +1,1 @@
+../../../../ios/firebase_app_installations/Sources/firebase_app_installations/FirebaseAppInstallationsMessages.g.swift
