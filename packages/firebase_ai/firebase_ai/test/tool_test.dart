@@ -23,7 +23,7 @@ void main() {
       Future<Map<String, Object?>> myFunction(Map<String, Object?> args) async {
         return {
           'result': 'Hello, ${args['name']}!',
-          'age_plus_ten': (args['age'] as int) + 10,
+          'age_plus_ten': (args['age']! as int) + 10,
         };
       }
 
@@ -39,7 +39,6 @@ void main() {
         description:
             'Greets a user with their name and calculates age plus ten.',
         parameters: parametersSchema,
-        optionalParameters: const [],
         callable: myFunction,
       );
 

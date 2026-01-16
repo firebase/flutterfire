@@ -34,9 +34,9 @@ final class ChatSession {
       this._history,
       this._safetySettings,
       this._generationConfig,
-      this._tools,
+      List<Tool>? tools,
       this._maxTurns)
-      : _autoFunctionDeclarations = _tools
+      : _autoFunctionDeclarations = tools
             ?.expand((tool) => tool.autoFunctionDeclarations)
             .fold(<String, AutoFunctionDeclaration>{}, (map, function) {
           map?[function.name] = function;
@@ -54,7 +54,6 @@ final class ChatSession {
   final List<Content> _history;
   final List<SafetySetting>? _safetySettings;
   final GenerationConfig? _generationConfig;
-  final List<Tool>? _tools;
   final Map<String, AutoFunctionDeclaration>? _autoFunctionDeclarations;
   final int _maxTurns;
 
