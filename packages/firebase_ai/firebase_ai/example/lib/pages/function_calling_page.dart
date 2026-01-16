@@ -254,7 +254,8 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       return fetchWeather(Location(city, state), date);
     }
     throw UnimplementedError(
-        'Function not declared to the model: ${call.name}');
+      'Function not declared to the model: ${call.name}',
+    );
   }
 
   Future<void> _runTest(Future<void> Function() testBody) async {
