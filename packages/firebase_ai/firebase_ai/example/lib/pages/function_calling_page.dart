@@ -256,6 +256,23 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
     throw UnimplementedError('Function not declared to the model: ${call.name}');
   }
 
+  Future<void> _runTest(Future<void> Function() testBody) async {
+    if (_loading) return;
+    setState(() {
+      _loading = true;
+      _messages.clear();
+    });
+    try {
+      await testBody();
+    } catch (e) {
+      _showError(e.toString());
+    } finally {
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -367,11 +384,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
   }
 
   Future<void> _testAutoFunctionCalling({bool parallel = false}) async {
-    setState(() {
-      _loading = true;
-      _messages.clear();
-    });
-    try {
+    await _runTest(() async {
       final model =
           parallel ? _parallelAutoFunctionCallModel : _autoFunctionCallModel;
       final prompt = parallel
@@ -401,21 +414,11 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       } else {
         _messages.add(MessageData(text: 'No text response from model.'));
       }
-    } catch (e) {
-      _showError(e.toString());
-    } finally {
-      setState(() {
-        _loading = false;
-      });
-    }
+    });
   }
 
   Future<void> _testStreamFunctionCalling() async {
-    setState(() {
-      _loading = true;
-      _messages.clear();
-    });
-    try {
+    await _runTest(() async {
       final functionCallChat = _functionCallModel.startChat();
       const prompt =
           'What is the weather like in Boston, MA on 10/02 in year 2024?';
@@ -469,21 +472,11 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       } else {
         _messages.add(MessageData(text: 'No text response from model.'));
       }
-    } catch (e) {
-      _showError(e.toString());
-    } finally {
-      setState(() {
-        _loading = false;
-      });
-    }
+    });
   }
 
   Future<void> _testAutoStreamFunctionCalling() async {
-    setState(() {
-      _loading = true;
-      _messages.clear();
-    });
-    try {
+    await _runTest(() async {
       final autoFunctionCallChat = _autoFunctionCallModel.startChat();
       const prompt =
           'What is the weather like in Boston, MA on 10/02 in year 2024?';
@@ -527,28 +520,19 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
         _messages.add(MessageData(text: 'No text response from model.'));
         setState(() {});
       }
-    } catch (e) {
-      _showError(e.toString());
-    } finally {
-      setState(() {
-        _loading = false;
-      });
-    }
+    });
   }
 
 
 
   Future<void> _testFunctionCalling() async {
-    setState(() {
-      _loading = true;
-      _messages.clear();
-    });
-    try {
+    await _runTest(() async {
       final functionCallChat = _functionCallModel.startChat();
       const prompt =
           'What is the weather like in Boston, MA on 10/02 in year 2024?';
 
       _messages.add(MessageData(text: prompt, fromUser: true));
+      setState(() {});
 
       // Send the message to the generative model.
       var response = await functionCallChat.sendMessage(
@@ -575,32 +559,18 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       // When the model responds with non-null text content, print it.
       if (response.text case final text?) {
         _messages.add(MessageData(text: text));
-        setState(() {
-          _loading = false;
-        });
       }
-    } catch (e) {
-      _showError(e.toString());
-      setState(() {
-        _loading = false;
-      });
-    } finally {
-      setState(() {
-        _loading = false;
-      });
-    }
+    });
   }
 
   Future<void> _testCodeExecution() async {
-    setState(() {
-      _loading = true;
-    });
-    try {
+    await _runTest(() async {
       final codeExecutionChat = _codeExecutionModel.startChat();
       const prompt = 'What is the sum of the first 50 prime numbers? '
           'Generate and run code for the calculation, and make sure you get all 50.';
 
       _messages.add(MessageData(text: prompt, fromUser: true));
+      setState(() {});
 
       final response =
           await codeExecutionChat.sendMessage(Content.text(prompt));
@@ -636,20 +606,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
           ),
         );
       }
-
-      setState(() {
-        _loading = false;
-      });
-    } catch (e) {
-      _showError(e.toString());
-      setState(() {
-        _loading = false;
-      });
-    } finally {
-      setState(() {
-        _loading = false;
-      });
-    }
+    });
   }
 
   void _showError(String message) {
