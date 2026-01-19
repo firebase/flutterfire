@@ -1,3 +1,7 @@
+## 6.0.6
+
+ - **FIX**(cloud_functions): enhance stream response types for better type safety ([#17938](https://github.com/firebase/flutterfire/issues/17938)). ([b89e5890](https://github.com/firebase/flutterfire/commit/b89e5890dfe7ce725022c9e470ee34ff64eb7a99))
+
 ## 6.0.5
 
  - **FIX**(cloud_functions): fix formatting in FunctionsStreamHandler ([#17891](https://github.com/firebase/flutterfire/issues/17891)). ([345e14f4](https://github.com/firebase/flutterfire/commit/345e14f4bcd7cc3fe6341910c7c7cd9c9ce988dd))

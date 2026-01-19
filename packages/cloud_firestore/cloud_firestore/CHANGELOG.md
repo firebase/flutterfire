@@ -1,3 +1,7 @@
+## 6.1.2
+
+ - **FIX**(firestore,android): avoid ConcurrentModificationException by collecting Firestore instances before termination ([#17956](https://github.com/firebase/flutterfire/issues/17956)). ([f94bbd68](https://github.com/firebase/flutterfire/commit/f94bbd688c3c0aaa62ba9117b23902c10297ea84))
+
 ## 6.1.1
 
  - Update a dependency to the latest release.
