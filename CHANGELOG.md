@@ -116,7 +116,6 @@ Packages with dependency updates only:
 
  - **FIX**(firebase_ai): add missing error exports for ServiceApiNotEnabled and QuotaExceeded ([#17928](https://github.com/firebase/flutterfire/issues/17928)). ([fc6dd40f](https://github.com/firebase/flutterfire/commit/fc6dd40f59a1ead2865cfb93ad6e76b07da4097f))
  - **FEAT**(firebase_ai): add LiveServerGoAway message for session termination ([#17843](https://github.com/firebase/flutterfire/issues/17843)). ([e9ffbad8](https://github.com/firebase/flutterfire/commit/e9ffbad814f57b81c61c289902270fabaa6eb290))
- - **FEAT**(firebaseai): auto function calling ([#17950](https://github.com/firebase/flutterfire/issues/17950)). ([c83c3eab](https://github.com/firebase/flutterfire/commit/c83c3eab17c65720bd100f198ec1a4fed1c797c9))
  - **FEAT**(firebase_ai): add thinking level to ThinkingConfig ([#17937](https://github.com/firebase/flutterfire/issues/17937)). ([e4a06521](https://github.com/firebase/flutterfire/commit/e4a065217e4acd0a356afc51e698b12c1fe2609b))
 
 #### `firebase_core` - `v4.4.0`
