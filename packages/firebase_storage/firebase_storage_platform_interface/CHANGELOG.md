@@ -1,3 +1,7 @@
+## 5.2.17
+
+ - Update a dependency to the latest release.
+
 ## 5.2.16
 
  - Update a dependency to the latest release.

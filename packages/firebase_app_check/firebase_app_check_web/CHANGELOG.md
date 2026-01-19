@@ -1,3 +1,7 @@
+## 0.2.2+2
+
+ - Update a dependency to the latest release.
+
 ## 0.2.2+1
 
  - **FIX**(app-check): token not available on new session ([#17872](https://github.com/firebase/flutterfire/issues/17872)). ([702de52e](https://github.com/firebase/flutterfire/commit/702de52e2245006ae5a07a61a7571bd271d8423c))

@@ -1,3 +1,7 @@
+## 12.1.2
+
+ - **FIX**(database,iOS): ensure transaction handler calls are executed on the main thread ([#17953](https://github.com/firebase/flutterfire/issues/17953)). ([5f8c8e87](https://github.com/firebase/flutterfire/commit/5f8c8e874fcf5689a01830a5569fdad234637c1e))
+
 ## 12.1.1
 
  - **FIX**(database,android): improve type handling for startAt query modifier and add test for numeric startAt ([#17880](https://github.com/firebase/flutterfire/issues/17880)). ([bbb2895c](https://github.com/firebase/flutterfire/commit/bbb2895cc7d47ebb081b4fd8db186d0e8408da49))
