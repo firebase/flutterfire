@@ -228,6 +228,16 @@ void main() {
       expect(response.message, isA<LiveServerSetupComplete>());
     });
 
+    test('parseServerMessage parses goAway message correctly', () {
+      final jsonObject = {
+        'goAway': {'timeLeft': '50s'}
+      };
+      final response = parseServerResponse(jsonObject);
+      expect(response.message, isA<GoingAwayNotice>());
+      final goAwayMessage = response.message as GoingAwayNotice;
+      expect(goAwayMessage.timeLeft, '50s');
+    });
+
     test('parseServerMessage throws VertexAIException for error message', () {
       final jsonObject = {'error': {}};
       expect(() => parseServerResponse(jsonObject),
