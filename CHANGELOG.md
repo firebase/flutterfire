@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 2026-01-19
+## 2026-01-19 - [BoM 4.8.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-480-2026-01-19)
 
 ### Changes
 
