@@ -418,10 +418,9 @@ final class GroundingMetadata {
 
   /// A list of [GroundingSupport]s.
   ///
-  /// This list will always be empty. See b/477107542.
-  /// Keeping for backwards compatibility.
+  /// Keeping for backwards compatibility. See b/477107542.
   @Deprecated('Use groundingSupports instead')
-  final List<GroundingSupport> groundingSupport = [];
+  List<GroundingSupport> get groundingSupport => groundingSupports;
 
   /// A list of [GroundingSupport]s.
   ///
