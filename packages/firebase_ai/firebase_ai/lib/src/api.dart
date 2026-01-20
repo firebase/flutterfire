@@ -418,6 +418,13 @@ final class GroundingMetadata {
 
   /// A list of [GroundingSupport]s.
   ///
+  /// This list will always be empty. See b/477107542.
+  /// Keeping for backwards compatibility.
+  @Deprecated('Use groundingSupports instead')
+  final List<GroundingSupport> groundingSupport = [];
+
+  /// A list of [GroundingSupport]s.
+  ///
   /// Each object details how specific segments of the
   /// model's response are supported by the `groundingChunks`.
   final List<GroundingSupport> groundingSupports;
