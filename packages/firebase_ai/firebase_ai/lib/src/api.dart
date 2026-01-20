@@ -400,7 +400,7 @@ final class GroundingMetadata {
   GroundingMetadata(
       {this.searchEntryPoint,
       required this.groundingChunks,
-      required this.groundingSupport,
+      required this.groundingSupports,
       required this.webSearchQueries});
 
   /// Google Search entry point for web searches.
@@ -420,7 +420,7 @@ final class GroundingMetadata {
   ///
   /// Each object details how specific segments of the
   /// model's response are supported by the `groundingChunks`.
-  final List<GroundingSupport> groundingSupport;
+  final List<GroundingSupport> groundingSupports;
 
   /// A list of web search queries that the model performed to gather the
   /// grounding information.
@@ -1614,9 +1614,9 @@ GroundingMetadata parseGroundingMetadata(Object? jsonObject) {
       [];
   // Filters out null elements, which are returned from _parseGroundingSupport when
   // segment is null.
-  final groundingSupport = switch (jsonObject) {
-        {'groundingSupport': final List<Object?> groundingSupport} =>
-          groundingSupport
+  final groundingSupports = switch (jsonObject) {
+        {'groundingSupports': final List<Object?> groundingSupports} =>
+          groundingSupports
               .map(_parseGroundingSupport)
               .whereType<GroundingSupport>()
               .toList(),
@@ -1633,7 +1633,7 @@ GroundingMetadata parseGroundingMetadata(Object? jsonObject) {
   return GroundingMetadata(
       searchEntryPoint: searchEntryPoint,
       groundingChunks: groundingChunks,
-      groundingSupport: groundingSupport,
+      groundingSupports: groundingSupports,
       webSearchQueries: webSearchQueries);
 }
 
@@ -1689,7 +1689,7 @@ GroundingSupport? _parseGroundingSupport(Object? jsonObject) {
   return GroundingSupport(
       segment: segment,
       groundingChunkIndices:
-          (jsonObject['groundingChunkIndices'] as List<int>?) ?? []);
+          (jsonObject['groundingChunkIndices'] as List?)?.cast<int>() ?? []);
 }
 
 SearchEntryPoint _parseSearchEntryPoint(Object? jsonObject) {
