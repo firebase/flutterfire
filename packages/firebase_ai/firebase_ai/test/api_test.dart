@@ -403,19 +403,19 @@ void main() {
     test('constructor initializes fields correctly', () {
       final searchEntryPoint = SearchEntryPoint(renderedContent: '<div></div>');
       final groundingChunk = GroundingChunk(web: WebGroundingChunk(uri: 'uri'));
-      final groundingSupport = GroundingSupport(
+      final groundingSupports = GroundingSupport(
           segment: Segment(startIndex: 0, partIndex: 0, endIndex: 1, text: ''),
           groundingChunkIndices: [0]);
       final metadata = GroundingMetadata(
         searchEntryPoint: searchEntryPoint,
         groundingChunks: [groundingChunk],
-        groundingSupport: [groundingSupport],
+        groundingSupports: [groundingSupports],
         webSearchQueries: ['web query'],
       );
 
       expect(metadata.searchEntryPoint, same(searchEntryPoint));
       expect(metadata.groundingChunks.first, same(groundingChunk));
-      expect(metadata.groundingSupport.first, same(groundingSupport));
+      expect(metadata.groundingSupports.first, same(groundingSupports));
       expect(metadata.webSearchQueries, ['web query']);
     });
   });
@@ -793,7 +793,7 @@ void main() {
                       }
                     }
                   ],
-                  'groundingSupport': [
+                  'groundingSupports': [
                     {
                       'segment': {
                         'startIndex': 5,
@@ -823,12 +823,12 @@ void main() {
           expect(groundingChunk.web?.title, 'Example Page 1');
           expect(groundingChunk.web?.domain, isNull);
 
-          final groundingSupport = groundingMetadata.groundingSupport.first;
-          expect(groundingSupport.segment.startIndex, 5);
-          expect(groundingSupport.segment.endIndex, 13);
-          expect(groundingSupport.segment.partIndex, 0);
-          expect(groundingSupport.segment.text, 'grounded');
-          expect(groundingSupport.groundingChunkIndices, [0]);
+          final groundingSupports = groundingMetadata.groundingSupports.first;
+          expect(groundingSupports.segment.startIndex, 5);
+          expect(groundingSupports.segment.endIndex, 13);
+          expect(groundingSupports.segment.partIndex, 0);
+          expect(groundingSupports.segment.text, 'grounded');
+          expect(groundingSupports.groundingChunkIndices, [0]);
         });
 
         test('parses with empty or minimal grounding sub-components', () {
@@ -847,7 +847,7 @@ void main() {
                     {},
                     {'web': {}},
                   ],
-                  'groundingSupport': [
+                  'groundingSupports': [
                     {},
                     {
                       'groundingChunkIndices': [0],
@@ -884,10 +884,10 @@ void main() {
           expect(groundingMetadata.groundingChunks[1].web?.domain, isNull);
 
           expect(
-              groundingMetadata.groundingSupport,
+              groundingMetadata.groundingSupports,
               hasLength(
                   1)); // GroundingSupport's without a segment are filtered out
-          final firstSupport = groundingMetadata.groundingSupport[0];
+          final firstSupport = groundingMetadata.groundingSupports[0];
           expect(firstSupport.segment, isNotNull);
           expect(firstSupport.groundingChunkIndices, isNotEmpty);
         });
@@ -931,7 +931,7 @@ void main() {
                 'groundingMetadata': {
                   // searchEntryPoint is missing
                   // groundingChunks is missing (defaults to [])
-                  // groundingSupport is missing (defaults to [])
+                  // groundingSupports is missing (defaults to [])
                   // webSearchQueries is missing (defaults to [])
                 }
               }
@@ -944,7 +944,7 @@ void main() {
           expect(groundingMetadata, isNotNull);
           expect(groundingMetadata!.searchEntryPoint, isNull);
           expect(groundingMetadata.groundingChunks, isEmpty);
-          expect(groundingMetadata.groundingSupport, isEmpty);
+          expect(groundingMetadata.groundingSupports, isEmpty);
           expect(groundingMetadata.webSearchQueries, isEmpty);
         });
 
@@ -964,12 +964,13 @@ void main() {
                   (e) => e.message, 'message', contains('GroundingChunk'))));
         });
 
-        test('throws FormatException for invalid item in groundingSupport', () {
+        test('throws FormatException for invalid item in groundingSupports',
+            () {
           final json = {
             'candidates': [
               {
                 'groundingMetadata': {
-                  'groundingSupport': ['not_a_map']
+                  'groundingSupports': ['not_a_map']
                 }
               }
             ]
@@ -996,13 +997,13 @@ void main() {
         });
 
         test(
-            'throws FormatException for invalid segment structure in groundingSupport',
+            'throws FormatException for invalid segment structure in groundingSupports',
             () {
           final json = {
             'candidates': [
               {
                 'groundingMetadata': {
-                  'groundingSupport': [
+                  'groundingSupports': [
                     {'segment': 'not_a_map'}
                   ]
                 }
@@ -1048,7 +1049,7 @@ void main() {
         });
 
         test(
-            'parses groundingSupport and filters out entries without a segment',
+            'parses groundingSupports and filters out entries without a segment',
             () {
           final jsonResponse = {
             'candidates': [
@@ -1060,7 +1061,7 @@ void main() {
                 },
                 'finishReason': 'STOP',
                 'groundingMetadata': {
-                  'groundingSupport': [
+                  'groundingSupports': [
                     // Valid entry
                     {
                       'segment': {
@@ -1088,9 +1089,9 @@ void main() {
 
           expect(groundingMetadata, isNotNull);
           // The invalid entries should be filtered out.
-          expect(groundingMetadata!.groundingSupport, hasLength(1));
+          expect(groundingMetadata!.groundingSupports, hasLength(1));
 
-          final validSupport = groundingMetadata.groundingSupport.first;
+          final validSupport = groundingMetadata.groundingSupports.first;
           expect(validSupport.segment.text, 'Test');
           expect(validSupport.groundingChunkIndices, [0]);
         });
