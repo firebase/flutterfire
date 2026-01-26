@@ -14,6 +14,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../utils/function_call_utils.dart';
 import '../widgets/message_widget.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 
@@ -43,6 +44,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
 
   TemplateChatSession? _chatSession;
   TemplateChatSession? _chatFunctionSession;
+  TemplateChatSession? _chatAutoFunctionSession;
 
   @override
   void initState() {
@@ -63,7 +65,16 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
     }
     _chatSession = _templateGenerativeModel?.startChat('chat_history.prompt');
     _chatFunctionSession =
-        _templateGenerativeModel?.startChat('function-calling');
+        _templateGenerativeModel?.startChat('cj-function-calling-weather');
+    _chatAutoFunctionSession = _templateGenerativeModel?.startChat(
+      'cj-function-calling-weather',
+      autoFunctions: [
+        TemplateAutoFunction(
+          name: 'fetchWeather',
+          callable: fetchWeatherCallable,
+        ),
+      ],
+    );
   }
 
   void _scrollDown() {
@@ -131,6 +142,19 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                   if (!_loading)
                     IconButton(
                       onPressed: () async {
+                        await _serverTemplateAutoFunctionCall(
+                          _textController.text,
+                        );
+                      },
+                      icon: Icon(
+                        Icons.auto_mode,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      tooltip: 'Auto Function Calling',
+                    ),
+                  if (!_loading)
+                    IconButton(
+                      onPressed: () async {
                         await _serverTemplateFunctionCall(_textController.text);
                       },
                       icon: Icon(
@@ -194,37 +218,79 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
     );
   }
 
-  Future<void> _serverTemplateFunctionCall(String message) async {
+  Future<void> _serverTemplateAutoFunctionCall(String message) async {
+    await _handleServerTemplateMessage(message, (message) async {
+      var response = await _chatAutoFunctionSession?.sendMessage(
+        Content.text(message),
+        inputs: {},
+      );
+
+      _messages.add(MessageData(text: response?.text, fromUser: false));
+
+      // final functionCalls = response?.functionCalls.toList();
+      // if (functionCalls!.isNotEmpty) {
+      //   final functionCall = functionCalls.first;
+      //   if (functionCall.name == 'fetchWeather') {
+      //     final location =
+      //         functionCall.args['location']! as Map<String, dynamic>;
+      //     final date = functionCall.args['date']! as String;
+      //     final city = location['city'] as String;
+      //     final state = location['state'] as String;
+      //     final functionResult =
+      //         await fetchWeather(Location(city, state), date);
+      //     var functionResponse = await _chatFunctionSession?.sendMessage(
+      //       Content.functionResponse(functionCall.name, functionResult),
+      //       inputs: {},
+      //     );
+      //     _messages
+      //         .add(MessageData(text: functionResponse?.text, fromUser: false));
+      //   }
+      // }
+    });
+  }
+
+  Future<void> _handleServerTemplateMessage(
+    String message,
+    Future<void> Function(String) generateContent,
+  ) async {
     setState(() {
       _loading = true;
     });
 
     try {
-      _messages.add(
-        MessageData(text: message, fromUser: true),
-      );
+      _messages.add(MessageData(text: message, fromUser: true));
+      await generateContent(message);
+    } catch (e) {
+      _showError(e.toString());
+    } finally {
+      _textController.clear();
+      setState(() {
+        _loading = false;
+      });
+      _textFieldFocus.requestFocus();
+      _scrollDown();
+    }
+  }
+
+  Future<void> _serverTemplateFunctionCall(String message) async {
+    await _handleServerTemplateMessage(message, (message) async {
       var response = await _chatFunctionSession?.sendMessage(
         Content.text(message),
-        inputs: {
-          'customerName': message,
-          'orientation': 'PORTRAIT',
-          'useFlash': true,
-          'zoom': 2,
-        },
+        inputs: {},
       );
 
       _messages.add(MessageData(text: response?.text, fromUser: false));
       final functionCalls = response?.functionCalls.toList();
       if (functionCalls!.isNotEmpty) {
         final functionCall = functionCalls.first;
-        if (functionCall.name == 'takePicture') {
-          ByteData catBytes = await rootBundle.load('assets/images/cat.jpg');
-          var imageBytes = catBytes.buffer.asUint8List();
-          final functionResult = {
-            'aspectRatio': '16:9',
-            'mimeType': 'image/jpeg',
-            'data': base64Encode(imageBytes),
-          };
+        if (functionCall.name == 'fetchWeather') {
+          final location =
+              functionCall.args['location']! as Map<String, dynamic>;
+          final date = functionCall.args['date']! as String;
+          final city = location['city'] as String;
+          final state = location['state'] as String;
+          final functionResult =
+              await fetchWeather(Location(city, state), date);
           var functionResponse = await _chatFunctionSession?.sendMessage(
             Content.functionResponse(functionCall.name, functionResult),
             inputs: {},
@@ -233,33 +299,11 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
               .add(MessageData(text: functionResponse?.text, fromUser: false));
         }
       }
-      setState(() {
-        _loading = false;
-        _scrollDown();
-      });
-    } catch (e) {
-      _showError(e.toString());
-      setState(() {
-        _loading = false;
-      });
-    } finally {
-      _textController.clear();
-      setState(() {
-        _loading = false;
-      });
-      _textFieldFocus.requestFocus();
-    }
+    });
   }
 
   Future<void> _serverTemplateChat(String message) async {
-    setState(() {
-      _loading = true;
-    });
-
-    try {
-      _messages.add(
-        MessageData(text: message, fromUser: true),
-      );
+    await _handleServerTemplateMessage(message, (message) async {
       var response = await _chatSession?.sendMessage(
         Content.text(message),
         inputs: {
@@ -270,31 +314,12 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
       var text = response?.text;
 
       _messages.add(MessageData(text: text, fromUser: false));
-      setState(() {
-        _loading = false;
-        _scrollDown();
-      });
-    } catch (e) {
-      _showError(e.toString());
-      setState(() {
-        _loading = false;
-      });
-    } finally {
-      _textController.clear();
-      setState(() {
-        _loading = false;
-      });
-      _textFieldFocus.requestFocus();
-    }
+    });
   }
 
   Future<void> _serverTemplateImagen(String message) async {
-    setState(() {
-      _loading = true;
-    });
-    MessageData? resultMessage;
-    try {
-      _messages.add(MessageData(text: message, fromUser: true));
+    await _handleServerTemplateMessage(message, (message) async {
+      MessageData? resultMessage;
       var response = await _templateImagenModel?.generateImages(
         'portrait-googleai',
         inputs: {
@@ -314,34 +339,14 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
         // Handle the case where no images were generated
         _showError('Error: No images were generated.');
       }
-
-      setState(() {
-        if (resultMessage != null) {
-          _messages.add(resultMessage);
-        }
-        _loading = false;
-        _scrollDown();
-      });
-    } catch (e) {
-      _showError(e.toString());
-      setState(() {
-        _loading = false;
-      });
-    } finally {
-      _textController.clear();
-      setState(() {
-        _loading = false;
-      });
-      _textFieldFocus.requestFocus();
-    }
+      if (resultMessage != null) {
+        _messages.add(resultMessage);
+      }
+    });
   }
 
   Future<void> _serverTemplateImageInput(String message) async {
-    setState(() {
-      _loading = true;
-    });
-
-    try {
+    await _handleServerTemplateMessage(message, (message) async {
       ByteData catBytes = await rootBundle.load('assets/images/cat.jpg');
       var imageBytes = catBytes.buffer.asUint8List();
       _messages.add(
@@ -353,7 +358,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
       );
 
       var response = await _templateGenerativeModel?.generateContent(
-        'media.prompt',
+        'media',
         inputs: {
           'imageData': {
             'isInline': true,
@@ -363,53 +368,16 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
         },
       );
       _messages.add(MessageData(text: response?.text, fromUser: false));
-
-      setState(() {
-        _loading = false;
-        _scrollDown();
-      });
-    } catch (e) {
-      _showError(e.toString());
-      setState(() {
-        _loading = false;
-      });
-    } finally {
-      _textController.clear();
-      setState(() {
-        _loading = false;
-      });
-      _textFieldFocus.requestFocus();
-    }
+    });
   }
 
   Future<void> _sendServerTemplateMessage(String message) async {
-    setState(() {
-      _loading = true;
-    });
-
-    try {
-      _messages.add(MessageData(text: message, fromUser: true));
+    await _handleServerTemplateMessage(message, (message) async {
       var response = await _templateGenerativeModel
           ?.generateContent('new-greeting', inputs: {});
 
       _messages.add(MessageData(text: response?.text, fromUser: false));
-
-      setState(() {
-        _loading = false;
-        _scrollDown();
-      });
-    } catch (e) {
-      _showError(e.toString());
-      setState(() {
-        _loading = false;
-      });
-    } finally {
-      _textController.clear();
-      setState(() {
-        _loading = false;
-      });
-      _textFieldFocus.requestFocus();
-    }
+    });
   }
 
   void _showError(String message) {

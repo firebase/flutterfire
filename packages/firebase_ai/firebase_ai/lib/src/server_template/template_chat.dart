@@ -19,6 +19,23 @@ import '../content.dart';
 import '../utils/chat_utils.dart';
 import '../utils/mutex.dart';
 
+final class TemplateAutoFunction {
+  TemplateAutoFunction({
+    required this.name,
+    required this.callable,
+  });
+
+  /// The name of the function.
+  ///
+  /// Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum
+  /// length of 63.
+  final String name;
+
+  /// The callable function that this declaration represents.
+  final FutureOr<Map<String, Object?>> Function(Map<String, Object?> args)
+      callable;
+}
+
 /// A back-and-forth chat with a server template.
 ///
 /// Records messages sent and received in [history]. The history will always
@@ -31,7 +48,9 @@ final class TemplateChatSession {
     this._templateHistoryGenerateContentStream,
     this._templateId,
     this._history,
-  );
+    List<TemplateAutoFunction> autoFunctionLists,
+    this._maxTurns,
+  ) : _autoFunctions = {for (var item in autoFunctionLists) item.name: item};
 
   final Future<GenerateContentResponse> Function(
       Iterable<Content> content, String templateId,
@@ -43,6 +62,8 @@ final class TemplateChatSession {
       _templateHistoryGenerateContentStream;
   final String _templateId;
   final List<Content> _history;
+  final Map<String, TemplateAutoFunction> _autoFunctions;
+  final int _maxTurns;
 
   final _mutex = Mutex();
 
@@ -66,19 +87,51 @@ final class TemplateChatSession {
       {required Map<String, Object?> inputs}) async {
     final lock = await _mutex.acquire();
     try {
-      final response = await _templateHistoryGenerateContent(
-        _history.followedBy([message]),
-        _templateId,
-        inputs: inputs,
-      );
-      if (response.candidates case [final candidate, ...]) {
-        _history.add(message);
-        final normalizedContent = candidate.content.role == null
-            ? Content('model', candidate.content.parts)
-            : candidate.content;
-        _history.add(normalizedContent);
+      final requestHistory = <Content>[message];
+      var turn = 0;
+      while (turn < _maxTurns) {
+        final response = await _templateHistoryGenerateContent(
+          _history.followedBy(requestHistory),
+          _templateId,
+          inputs: inputs,
+        );
+
+        final functionCalls = response.functionCalls;
+        final shouldAutoExecute = _autoFunctions.isNotEmpty &&
+            functionCalls.isNotEmpty &&
+            functionCalls.every((c) => _autoFunctions.containsKey(c.name));
+
+        if (!shouldAutoExecute) {
+          // Standard handling: Update history and return the response to the user.
+          if (response.candidates case [final candidate, ...]) {
+            _history.add(message);
+            final normalizedContent = candidate.content.role == null
+                ? Content('model', candidate.content.parts)
+                : candidate.content;
+            _history.add(normalizedContent);
+          }
+          return response;
+        }
+
+        // Auto function execution
+        requestHistory.add(response.candidates.first.content);
+        final functionResponses = <Part>[];
+        for (final functionCall in functionCalls) {
+          final function = _autoFunctions[functionCall.name];
+
+          Object? result;
+          try {
+            result = await function!.callable(functionCall.args);
+          } catch (e) {
+            result = e.toString();
+          }
+          functionResponses
+              .add(FunctionResponse(functionCall.name, {'result': result}));
+        }
+        requestHistory.add(Content('function', functionResponses));
+        turn++;
       }
-      return response;
+      throw Exception('Max turns of $_maxTurns reached.');
     } finally {
       lock.release();
     }
@@ -135,11 +188,15 @@ extension StartTemplateChatExtension on TemplateGenerativeModel {
   /// final response = await chat.sendMessage(Content.text('Hello there.'));
   /// print(response.text);
   /// ```
-  TemplateChatSession startChat(String templateId, {List<Content>? history}) =>
+  TemplateChatSession startChat(String templateId,
+          {List<Content>? history,
+          List<TemplateAutoFunction>? autoFunctions,
+          int? maxTurns}) =>
       TemplateChatSession._(
-        templateGenerateContentWithHistory,
-        templateGenerateContentWithHistoryStream,
-        templateId,
-        history ?? [],
-      );
+          templateGenerateContentWithHistory,
+          templateGenerateContentWithHistoryStream,
+          templateId,
+          history ?? [],
+          autoFunctions ?? [],
+          maxTurns ?? 5);
 }
