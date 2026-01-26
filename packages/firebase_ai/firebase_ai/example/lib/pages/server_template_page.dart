@@ -41,6 +41,9 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
   TemplateGenerativeModel? _templateGenerativeModel;
   TemplateImagenModel? _templateImagenModel;
 
+  TemplateChatSession? _chatSession;
+  TemplateChatSession? _chatFunctionSession;
+
   @override
   void initState() {
     super.initState();
@@ -58,6 +61,9 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
           FirebaseAI.googleAI().templateGenerativeModel();
       _templateImagenModel = FirebaseAI.googleAI().templateImagenModel();
     }
+    _chatSession = _templateGenerativeModel?.startChat('chat_history.prompt');
+    _chatFunctionSession =
+        _templateGenerativeModel?.startChat('function-calling');
   }
 
   void _scrollDown() {
@@ -125,6 +131,28 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                   if (!_loading)
                     IconButton(
                       onPressed: () async {
+                        await _serverTemplateFunctionCall(_textController.text);
+                      },
+                      icon: Icon(
+                        Icons.functions,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      tooltip: 'Function Calling',
+                    ),
+                  if (!_loading)
+                    IconButton(
+                      onPressed: () async {
+                        await _serverTemplateChat(_textController.text);
+                      },
+                      icon: Icon(
+                        Icons.chat,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      tooltip: 'Chat',
+                    ),
+                  if (!_loading)
+                    IconButton(
+                      onPressed: () async {
                         await _serverTemplateImagen(_textController.text);
                       },
                       icon: Icon(
@@ -164,6 +192,100 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
         ),
       ),
     );
+  }
+
+  Future<void> _serverTemplateFunctionCall(String message) async {
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      _messages.add(
+        MessageData(text: message, fromUser: true),
+      );
+      var response = await _chatFunctionSession?.sendMessage(
+        Content.text(message),
+        inputs: {
+          'customerName': message,
+          'orientation': 'PORTRAIT',
+          'useFlash': true,
+          'zoom': 2,
+        },
+      );
+
+      _messages.add(MessageData(text: response?.text, fromUser: false));
+      final functionCalls = response?.functionCalls.toList();
+      if (functionCalls!.isNotEmpty) {
+        final functionCall = functionCalls.first;
+        if (functionCall.name == 'takePicture') {
+          ByteData catBytes = await rootBundle.load('assets/images/cat.jpg');
+          var imageBytes = catBytes.buffer.asUint8List();
+          final functionResult = {
+            'aspectRatio': '16:9',
+            'mimeType': 'image/jpeg',
+            'data': base64Encode(imageBytes),
+          };
+          var functionResponse = await _chatFunctionSession?.sendMessage(
+            Content.functionResponse(functionCall.name, functionResult),
+            inputs: {},
+          );
+          _messages
+              .add(MessageData(text: functionResponse?.text, fromUser: false));
+        }
+      }
+      setState(() {
+        _loading = false;
+        _scrollDown();
+      });
+    } catch (e) {
+      _showError(e.toString());
+      setState(() {
+        _loading = false;
+      });
+    } finally {
+      _textController.clear();
+      setState(() {
+        _loading = false;
+      });
+      _textFieldFocus.requestFocus();
+    }
+  }
+
+  Future<void> _serverTemplateChat(String message) async {
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      _messages.add(
+        MessageData(text: message, fromUser: true),
+      );
+      var response = await _chatSession?.sendMessage(
+        Content.text(message),
+        inputs: {
+          'message': message,
+        },
+      );
+
+      var text = response?.text;
+
+      _messages.add(MessageData(text: text, fromUser: false));
+      setState(() {
+        _loading = false;
+        _scrollDown();
+      });
+    } catch (e) {
+      _showError(e.toString());
+      setState(() {
+        _loading = false;
+      });
+    } finally {
+      _textController.clear();
+      setState(() {
+        _loading = false;
+      });
+      _textFieldFocus.requestFocus();
+    }
   }
 
   Future<void> _serverTemplateImagen(String message) async {
