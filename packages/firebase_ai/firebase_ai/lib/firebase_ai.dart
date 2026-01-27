@@ -32,7 +32,8 @@ export 'src/api.dart'
         ResponseModalities,
         SafetyRating,
         SafetySetting,
-        UsageMetadata;
+        UsageMetadata,
+        ModalityTokenCount;
 export 'src/base_model.dart'
     show
         GenerativeModel,
