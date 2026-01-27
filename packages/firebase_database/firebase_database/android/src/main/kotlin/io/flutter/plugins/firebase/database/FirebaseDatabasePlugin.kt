@@ -1086,6 +1086,7 @@ class FirebaseDatabasePlugin :
         }
       }
 
+      // apply the keepSynced to the query
       query.keepSynced(request.value ?: false)
       callback(KotlinResult.success(Unit))
     } catch (e: Exception) {
