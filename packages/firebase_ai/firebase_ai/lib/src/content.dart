@@ -16,6 +16,8 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 
+import 'package:meta/meta.dart';
+
 import 'api.dart';
 import 'error.dart';
 
@@ -120,9 +122,11 @@ Part parsePart(Object? jsonObject) {
     if (executableCode is Map &&
         executableCode.containsKey('language') &&
         executableCode.containsKey('code')) {
-      return ExecutableCodePart(
+      return ExecutableCodePart._(
         language: CodeLanguage.parseValue(executableCode['language'] as String),
         code: executableCode['code'] as String,
+        isThought: isThought,
+        thoughtSignature: thoughtSignature,
       );
     } else {
       throw unhandledFormat('executableCode', executableCode);
@@ -133,9 +137,11 @@ Part parsePart(Object? jsonObject) {
     if (codeExecutionResult is Map &&
         codeExecutionResult.containsKey('outcome') &&
         codeExecutionResult.containsKey('output')) {
-      return CodeExecutionResultPart(
+      return CodeExecutionResultPart._(
         outcome: Outcome.parseValue(codeExecutionResult['outcome'] as String),
         output: codeExecutionResult['output'] as String,
+        isThought: isThought,
+        thoughtSignature: thoughtSignature,
       );
     } else {
       throw unhandledFormat('codeExecutionResult', codeExecutionResult);
@@ -188,7 +194,11 @@ sealed class Part {
   final String? _thoughtSignature;
 
   /// Convert the [Part] content to json format.
-  Object toJson();
+  Object toJson() => {
+        if (isThought case final isThought?) 'thought': isThought,
+        if (_thoughtSignature case final thoughtSignature?)
+          'thoughtSignature': thoughtSignature,
+      };
 }
 
 /// A [Part] that contains unparsable data.
@@ -200,7 +210,10 @@ final class UnknownPart extends Part {
   final Map<String, Object?> data;
 
   @override
-  Object toJson() => data;
+  Object toJson() {
+    final superJson = super.toJson() as Map<String, Object?>;
+    return <String, Object?>{...superJson, ...data};
+  }
 }
 
 /// A [Part] with the text content.
@@ -211,6 +224,18 @@ final class TextPart extends Part {
           isThought: isThought,
           thoughtSignature: null,
         );
+
+  @visibleForTesting
+  // ignore: public_member_api_docs
+  const TextPart.forTest(
+    this.text, {
+    bool? isThought,
+    String? thoughtSignature,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: thoughtSignature,
+        );
+
   const TextPart._(
     this.text, {
     bool? isThought,
@@ -223,7 +248,10 @@ final class TextPart extends Part {
   /// The text content of the [Part]
   final String text;
   @override
-  Object toJson() => {'text': text};
+  Object toJson() {
+    final superJson = super.toJson() as Map<String, Object?>;
+    return <String, Object?>{...superJson, 'text': text};
+  }
 }
 
 /// A [Part] with the byte content of a file.
@@ -238,6 +266,20 @@ final class InlineDataPart extends Part {
           isThought: isThought,
           thoughtSignature: null,
         );
+
+  @visibleForTesting
+  // ignore: public_member_api_docs
+  const InlineDataPart.forTest(
+    this.mimeType,
+    this.bytes, {
+    this.willContinue,
+    bool? isThought,
+    String? thoughtSignature,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: thoughtSignature,
+        );
+
   const InlineDataPart._(
     this.mimeType,
     this.bytes, {
@@ -259,13 +301,17 @@ final class InlineDataPart extends Part {
   /// Whether there's more inline data coming for streaming.
   final bool? willContinue;
   @override
-  Object toJson() => {
-        'inlineData': {
-          'data': base64Encode(bytes),
-          'mimeType': mimeType,
-          if (willContinue != null) 'willContinue': willContinue,
-        }
-      };
+  Object toJson() {
+    final superJson = super.toJson() as Map<String, Object?>;
+    return <String, Object?>{
+      ...superJson,
+      'inlineData': {
+        'data': base64Encode(bytes),
+        'mimeType': mimeType,
+        if (willContinue != null) 'willContinue': willContinue,
+      },
+    };
+  }
 
   /// The representation of the data in media streaming chunk.
   Object toMediaChunkJson() => {
@@ -289,6 +335,20 @@ final class FunctionCall extends Part {
           isThought: isThought,
           thoughtSignature: null,
         );
+
+  @visibleForTesting
+  // ignore: public_member_api_docs
+  const FunctionCall.forTest(
+    this.name,
+    this.args, {
+    this.id,
+    bool? isThought,
+    String? thoughtSignature,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: thoughtSignature,
+        );
+
   const FunctionCall._(
     this.name,
     this.args, {
@@ -313,13 +373,17 @@ final class FunctionCall extends Part {
   final String? id;
 
   @override
-  Object toJson() => {
-        'functionCall': {
-          'name': name,
-          'args': args,
-          if (id != null) 'id': id,
-        }
-      };
+  Object toJson() {
+    final superJson = super.toJson() as Map<String, Object?>;
+    return <String, Object?>{
+      ...superJson,
+      'functionCall': {
+        'name': name,
+        'args': args,
+        if (id != null) 'id': id,
+      },
+    };
+  }
 }
 
 /// The response class for [FunctionCall]
@@ -350,13 +414,17 @@ final class FunctionResponse extends Part {
   final String? id;
 
   @override
-  Object toJson() => {
-        'functionResponse': {
-          'name': name,
-          'response': response,
-          if (id != null) 'id': id,
-        }
-      };
+  Object toJson() {
+    final superJson = super.toJson() as Map<String, Object?>;
+    return <String, Object?>{
+      ...superJson,
+      'functionResponse': {
+        'name': name,
+        'response': response,
+        if (id != null) 'id': id,
+      },
+    };
+  }
 }
 
 /// A [Part] with Firebase Storage uri as prompt content
@@ -370,6 +438,19 @@ final class FileData extends Part {
           isThought: isThought,
           thoughtSignature: null,
         );
+
+  @visibleForTesting
+  // ignore: public_member_api_docs
+  const FileData.forTest(
+    this.mimeType,
+    this.fileUri, {
+    bool? isThought,
+    String? thoughtSignature,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: thoughtSignature,
+        );
+
   const FileData._(
     this.mimeType,
     this.fileUri, {
@@ -388,9 +469,13 @@ final class FileData extends Part {
   final String fileUri;
 
   @override
-  Object toJson() => {
-        'file_data': {'file_uri': fileUri, 'mime_type': mimeType}
-      };
+  Object toJson() {
+    final superJson = super.toJson() as Map<String, Object?>;
+    return <String, Object?>{
+      ...superJson,
+      'file_data': {'file_uri': fileUri, 'mime_type': mimeType},
+    };
+  }
 }
 
 /// A `Part` that represents the code that is executed by the model.
@@ -405,6 +490,16 @@ final class ExecutableCodePart extends Part {
           thoughtSignature: null,
         );
 
+  ExecutableCodePart._({
+    required this.language,
+    required this.code,
+    bool? isThought,
+    String? thoughtSignature,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: thoughtSignature,
+        );
+
   /// The programming language of the code.
   final CodeLanguage language;
 
@@ -412,9 +507,13 @@ final class ExecutableCodePart extends Part {
   final String code;
 
   @override
-  Object toJson() => {
-        'executableCode': {'language': language.toJson(), 'code': code}
-      };
+  Object toJson() {
+    final superJson = super.toJson() as Map<String, Object?>;
+    return <String, Object?>{
+      ...superJson,
+      'executableCode': {'language': language.toJson(), 'code': code},
+    };
+  }
 }
 
 /// A `Part` that represents the code execution result from the model.
@@ -429,6 +528,16 @@ final class CodeExecutionResultPart extends Part {
           thoughtSignature: null,
         );
 
+  CodeExecutionResultPart._({
+    required this.outcome,
+    required this.output,
+    bool? isThought,
+    String? thoughtSignature,
+  }) : super(
+          isThought: isThought,
+          thoughtSignature: thoughtSignature,
+        );
+
   /// The result of the execution.
   final Outcome outcome;
 
@@ -436,7 +545,11 @@ final class CodeExecutionResultPart extends Part {
   final String output;
 
   @override
-  Object toJson() => {
-        'codeExecutionResult': {'outcome': outcome.toJson(), 'output': output}
-      };
+  Object toJson() {
+    final superJson = super.toJson() as Map<String, Object?>;
+    return <String, Object?>{
+      ...superJson,
+      'codeExecutionResult': {'outcome': outcome.toJson(), 'output': output},
+    };
+  }
 }

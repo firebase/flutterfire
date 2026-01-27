@@ -181,7 +181,7 @@ void main() {
                       }
                     }
                   ],
-                  'groundingSupport': [
+                  'groundingSupports': [
                     {
                       'segment': {
                         'startIndex': 5,
@@ -211,12 +211,12 @@ void main() {
           expect(groundingChunk.web?.title, 'Example Page 1');
           expect(groundingChunk.web?.domain, isNull);
 
-          final groundingSupport = groundingMetadata.groundingSupport.first;
-          expect(groundingSupport.segment.startIndex, 5);
-          expect(groundingSupport.segment.endIndex, 13);
-          expect(groundingSupport.segment.partIndex, 0);
-          expect(groundingSupport.segment.text, 'grounded');
-          expect(groundingSupport.groundingChunkIndices, [0]);
+          final groundingSupports = groundingMetadata.groundingSupports.first;
+          expect(groundingSupports.segment.startIndex, 5);
+          expect(groundingSupports.segment.endIndex, 13);
+          expect(groundingSupports.segment.partIndex, 0);
+          expect(groundingSupports.segment.text, 'grounded');
+          expect(groundingSupports.groundingChunkIndices, [0]);
         });
 
         test(
@@ -244,7 +244,7 @@ void main() {
           expect(groundingMetadata, isNotNull);
           expect(groundingMetadata!.searchEntryPoint, isNull);
           expect(groundingMetadata.groundingChunks, isEmpty);
-          expect(groundingMetadata.groundingSupport, isEmpty);
+          expect(groundingMetadata.groundingSupports, isEmpty);
           expect(groundingMetadata.webSearchQueries, isEmpty);
         });
 
@@ -287,7 +287,7 @@ void main() {
         });
 
         test(
-            'parses groundingSupport and filters out entries without a segment',
+            'parses groundingSupports and filters out entries without a segment',
             () {
           final jsonResponse = {
             'candidates': [
@@ -299,7 +299,7 @@ void main() {
                 },
                 'finishReason': 'STOP',
                 'groundingMetadata': {
-                  'groundingSupport': [
+                  'groundingSupports': [
                     // Valid entry
                     {
                       'segment': {
@@ -327,9 +327,9 @@ void main() {
 
           expect(groundingMetadata, isNotNull);
           // The invalid entries should be filtered out.
-          expect(groundingMetadata!.groundingSupport, hasLength(1));
+          expect(groundingMetadata!.groundingSupports, hasLength(1));
 
-          final validSupport = groundingMetadata.groundingSupport.first;
+          final validSupport = groundingMetadata.groundingSupports.first;
           expect(validSupport.segment.text, 'Test');
           expect(validSupport.groundingChunkIndices, [0]);
         });

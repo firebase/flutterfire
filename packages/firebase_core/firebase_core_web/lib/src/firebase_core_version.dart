@@ -13,4 +13,4 @@
 // limitations under the License.
 
 /// generated version number for the package, do not manually edit
-const packageVersion = '4.3.0';
+const packageVersion = '4.4.0';

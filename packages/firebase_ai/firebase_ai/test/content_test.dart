@@ -82,81 +82,105 @@ void main() {
   });
 
   group('Part tests', () {
-    test('TextPart toJson', () {
-      const part = TextPart('Test');
-      final json = part.toJson();
-      expect((json as Map)['text'], 'Test');
+    test('TextPart with isThought and thoughtSignature toJson', () {
+      const part =
+          TextPart.forTest('Test', isThought: true, thoughtSignature: 'sig');
+      final json = part.toJson() as Map;
+      expect(json['text'], 'Test');
+      expect(json['thought'], true);
+      expect(json['thoughtSignature'], 'sig');
     });
 
-    test('DataPart toJson', () {
-      final part = InlineDataPart('image/png', Uint8List(0));
-      final json = part.toJson();
-      expect((json as Map)['inlineData']['mimeType'], 'image/png');
-      expect(json['inlineData']['data'], '');
-      expect(json['inlineData'].containsKey('willContinue'), false);
+    test('DataPart with isThought and thoughtSignature toJson', () {
+      final part = InlineDataPart.forTest('image/png', Uint8List(0),
+          isThought: true, thoughtSignature: 'sig');
+      final json = part.toJson() as Map;
+      final inlineData = json['inlineData'] as Map;
+      expect(inlineData['mimeType'], 'image/png');
+      expect(inlineData['data'], '');
+      expect(json.containsKey('willContinue'), false);
+      expect(json['thought'], true);
+      expect(json['thoughtSignature'], 'sig');
     });
 
     test('DataPart with false willContinue toJson', () {
       final part =
           InlineDataPart('image/png', Uint8List(0), willContinue: false);
-      final json = part.toJson();
-      expect((json as Map)['inlineData']['mimeType'], 'image/png');
-      expect(json['inlineData']['data'], '');
-      expect(json['inlineData'].containsKey('willContinue'), true);
-      expect(json['inlineData']['willContinue'], false);
+      final json = part.toJson() as Map;
+      final inlineData = json['inlineData'] as Map;
+      expect(inlineData['mimeType'], 'image/png');
+      expect(inlineData['data'], '');
+      expect(inlineData.containsKey('willContinue'), true);
+      expect(inlineData['willContinue'], false);
     });
 
     test('DataPart with true willContinue toJson', () {
       final part =
           InlineDataPart('image/png', Uint8List(0), willContinue: true);
-      final json = part.toJson();
-      expect((json as Map)['inlineData']['mimeType'], 'image/png');
-      expect(json['inlineData']['data'], '');
-      expect(json['inlineData'].containsKey('willContinue'), true);
-      expect(json['inlineData']['willContinue'], true);
+      final json = part.toJson() as Map;
+      final inlineData = json['inlineData'] as Map;
+      expect(inlineData['mimeType'], 'image/png');
+      expect(inlineData['data'], '');
+      expect(inlineData.containsKey('willContinue'), true);
+      expect(inlineData['willContinue'], true);
     });
 
-    test('FunctionCall toJson', () {
-      const part = FunctionCall(
+    test('FunctionCall with isThought and thoughtSignature toJson', () {
+      const part = FunctionCall.forTest(
           'myFunction',
           {
             'arguments': [
               {'text': 'Test'}
             ],
           },
-          id: 'myFunctionId');
-      final json = part.toJson();
-      expect((json as Map)['functionCall']['name'], 'myFunction');
-      expect(json['functionCall']['args'].length, 1);
-      expect(json['functionCall']['args']['arguments'].length, 1);
-      expect(json['functionCall']['args']['arguments'][0]['text'], 'Test');
-      expect(json['functionCall']['id'], 'myFunctionId');
+          id: 'myFunctionId',
+          isThought: true,
+          thoughtSignature: 'sig');
+      final json = part.toJson() as Map;
+      final functionCall = json['functionCall'] as Map;
+      expect(functionCall['name'], 'myFunction');
+      final args = functionCall['args'] as Map;
+      expect(args.length, 1);
+      final arguments = args['arguments'] as List;
+      expect(arguments.length, 1);
+      final text = arguments[0] as Map;
+      expect(text['text'], 'Test');
+      expect(functionCall['id'], 'myFunctionId');
+      expect(json['thought'], true);
+      expect(json['thoughtSignature'], 'sig');
     });
 
-    test('FunctionResponse toJson', () {
+    test('FunctionResponse with isThought', () {
       final part = FunctionResponse(
-          'myFunction',
-          {
-            'inlineData': {
-              'mimeType': 'application/octet-stream',
-              'data': Uint8List(0)
-            }
-          },
-          id: 'myFunctionId');
-      final json = part.toJson();
-      expect((json as Map)['functionResponse']['name'], 'myFunction');
-      expect(json['functionResponse']['response']['inlineData']['mimeType'],
-          'application/octet-stream');
-      expect(json['functionResponse']['response']['inlineData']['data'],
-          Uint8List(0));
-      expect(json['functionResponse']['id'], 'myFunctionId');
+        'myFunction',
+        {
+          'inlineData': {
+            'mimeType': 'application/octet-stream',
+            'data': Uint8List(0)
+          }
+        },
+        id: 'myFunctionId',
+        isThought: true,
+      );
+      final json = part.toJson() as Map;
+      final functionResponse = json['functionResponse'] as Map;
+      expect(functionResponse['name'], 'myFunction');
+      final response = functionResponse['response'] as Map;
+      final inlineData = response['inlineData'] as Map;
+      expect(inlineData['mimeType'], 'application/octet-stream');
+      expect(inlineData['data'], Uint8List(0));
+      expect(functionResponse['id'], 'myFunctionId');
+      expect(json['thought'], true);
     });
 
-    test('FileData toJson', () {
-      const part = FileData('image/png', 'gs://bucket-name/path');
-      final json = part.toJson();
-      expect((json as Map)['file_data']['mime_type'], 'image/png');
-      expect(json['file_data']['file_uri'], 'gs://bucket-name/path');
+    test('FileData with isThought and thoughtSignature toJson', () {
+      const part = FileData.forTest('image/png', 'gs://bucket-name/path',
+          isThought: true);
+      final json = part.toJson() as Map;
+      final fileData = json['file_data'] as Map;
+      expect(fileData['mime_type'], 'image/png');
+      expect(fileData['file_uri'], 'gs://bucket-name/path');
+      expect(json['thought'], true);
     });
   });
 

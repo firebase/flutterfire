@@ -255,19 +255,21 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
       let semaphore = DispatchSemaphore(value: 0)
       var transactionResult: TransactionHandlerResult?
 
-      let flutterApi = FirebaseDatabaseFlutterApi(binaryMessenger: self.binaryMessenger)
-      flutterApi.callTransactionHandler(
-        transactionKey: request.transactionKey,
-        snapshotValue: currentData.value
-      ) { result in
-        switch result {
-        case let .success(handlerResult):
-          transactionResult = handlerResult
-        case let .failure(error):
-          print("Transaction handler error: \(error)")
-          transactionResult = TransactionHandlerResult(value: nil, aborted: true, exception: true)
+      DispatchQueue.main.async {
+        let flutterApi = FirebaseDatabaseFlutterApi(binaryMessenger: self.binaryMessenger)
+        flutterApi.callTransactionHandler(
+          transactionKey: request.transactionKey,
+          snapshotValue: currentData.value
+        ) { result in
+          switch result {
+          case let .success(handlerResult):
+            transactionResult = handlerResult
+          case let .failure(error):
+            print("Transaction handler error: \(error)")
+            transactionResult = TransactionHandlerResult(value: nil, aborted: true, exception: true)
+          }
+          semaphore.signal()
         }
-        semaphore.signal()
       }
 
       semaphore.wait()

@@ -1,4 +1,32 @@
 {
+  "4.8.0": {
+    "date": "2026-01-19",
+    "firebase_sdk": {
+      "android": "34.7.0",
+      "ios": "12.8.0",
+      "web": "12.7.0",
+      "windows": "12.7.0"
+    },
+    "packages": {
+      "cloud_firestore": "6.1.2",
+      "cloud_functions": "6.0.6",
+      "firebase_ai": "3.7.0",
+      "firebase_analytics": "12.1.1",
+      "firebase_app_check": "0.4.1+4",
+      "firebase_app_installations": "0.4.0+6",
+      "firebase_auth": "6.1.4",
+      "firebase_core": "4.4.0",
+      "firebase_crashlytics": "5.0.7",
+      "firebase_data_connect": "0.2.2+2",
+      "firebase_database": "12.1.2",
+      "firebase_in_app_messaging": "0.9.0+6",
+      "firebase_messaging": "16.1.1",
+      "firebase_ml_model_downloader": "0.4.0+6",
+      "firebase_performance": "0.11.1+4",
+      "firebase_remote_config": "6.1.4",
+      "firebase_storage": "13.0.6"
+    }
+  },
   "4.7.0": {
     "date": "2025-12-15",
     "firebase_sdk": {
