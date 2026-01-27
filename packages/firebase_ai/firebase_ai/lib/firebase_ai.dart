@@ -35,7 +35,8 @@ export 'src/api.dart'
         SafetyRating,
         SafetySetting,
         UsageMetadata,
-        WebGroundingChunk;
+        WebGroundingChunk,
+        ModalityTokenCount;
 export 'src/base_model.dart'
     show
         GenerativeModel,
