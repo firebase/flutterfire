@@ -185,19 +185,39 @@ final class UsageMetadata {
   UsageMetadata._({
     this.promptTokenCount,
     this.candidatesTokenCount,
+    this.responseTokenCount,
+    this.cachedContentTokenCount,
     this.totalTokenCount,
     this.thoughtsTokenCount,
     this.toolUsePromptTokenCount,
     this.promptTokensDetails,
     this.candidatesTokensDetails,
+    this.responseTokensDetails,
+    this.cacheTokensDetails,
     this.toolUsePromptTokensDetails,
   });
 
   /// Number of tokens in the prompt.
+  ///
+  /// When cachedContent is set, this is still the total effective prompt size
+  /// meaning this includes the number of tokens in the cached content.
   final int? promptTokenCount;
 
   /// Total number of tokens across the generated candidates.
+  ///
+  /// This field is used in the standard GenerateContent API.
   final int? candidatesTokenCount;
+
+  /// Total number of tokens across all the generated response candidates.
+  ///
+  /// This field is used in the Live API and is equivalent to
+  /// [candidatesTokenCount] in the standard API.
+  final int? responseTokenCount;
+
+  /// Number of tokens in the cached part of the prompt (the cached content).
+  ///
+  /// This field is available in the Live API.
+  final int? cachedContentTokenCount;
 
   /// Total token count for the generation request (prompt + candidates).
   final int? totalTokenCount;
@@ -212,7 +232,20 @@ final class UsageMetadata {
   final List<ModalityTokenCount>? promptTokensDetails;
 
   /// List of modalities that were returned in the response.
+  ///
+  /// This field is used in the standard GenerateContent API.
   final List<ModalityTokenCount>? candidatesTokensDetails;
+
+  /// List of modalities that were returned in the response.
+  ///
+  /// This field is used in the Live API and is equivalent to
+  /// [candidatesTokensDetails] in the standard API.
+  final List<ModalityTokenCount>? responseTokensDetails;
+
+  /// List of modalities of the cached content in the request input.
+  ///
+  /// This field is available in the Live API.
+  final List<ModalityTokenCount>? cacheTokensDetails;
 
   /// A list of tokens used by tools whose usage was triggered from a prompt,
   /// broken down by modality.
@@ -1489,6 +1522,15 @@ UsageMetadata parseUsageMetadata(Object jsonObject) {
       candidatesTokenCount,
     _ => null,
   };
+  final responseTokenCount = switch (jsonObject) {
+    {'responseTokenCount': final int responseTokenCount} => responseTokenCount,
+    _ => null,
+  };
+  final cachedContentTokenCount = switch (jsonObject) {
+    {'cachedContentTokenCount': final int cachedContentTokenCount} =>
+      cachedContentTokenCount,
+    _ => null,
+  };
   final totalTokenCount = switch (jsonObject) {
     {'totalTokenCount': final int totalTokenCount} => totalTokenCount,
     _ => null,
@@ -1512,6 +1554,16 @@ UsageMetadata parseUsageMetadata(Object jsonObject) {
       candidatesTokensDetails.map(_parseModalityTokenCount).toList(),
     _ => null,
   };
+  final responseTokensDetails = switch (jsonObject) {
+    {'responseTokensDetails': final List<Object?> responseTokensDetails} =>
+      responseTokensDetails.map(_parseModalityTokenCount).toList(),
+    _ => null,
+  };
+  final cacheTokensDetails = switch (jsonObject) {
+    {'cacheTokensDetails': final List<Object?> cacheTokensDetails} =>
+      cacheTokensDetails.map(_parseModalityTokenCount).toList(),
+    _ => null,
+  };
   final toolUsePromptTokensDetails = switch (jsonObject) {
     {
       'toolUsePromptTokensDetails': final List<Object?>
@@ -1523,11 +1575,15 @@ UsageMetadata parseUsageMetadata(Object jsonObject) {
   return UsageMetadata._(
     promptTokenCount: promptTokenCount,
     candidatesTokenCount: candidatesTokenCount,
+    responseTokenCount: responseTokenCount,
+    cachedContentTokenCount: cachedContentTokenCount,
     totalTokenCount: totalTokenCount,
     thoughtsTokenCount: thoughtsTokenCount,
     toolUsePromptTokenCount: toolUsePromptTokenCount,
     promptTokensDetails: promptTokensDetails,
     candidatesTokensDetails: candidatesTokensDetails,
+    responseTokensDetails: responseTokensDetails,
+    cacheTokensDetails: cacheTokensDetails,
     toolUsePromptTokensDetails: toolUsePromptTokensDetails,
   );
 }
