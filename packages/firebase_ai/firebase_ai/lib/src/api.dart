@@ -191,6 +191,8 @@ final class UsageMetadata {
     this.promptTokensDetails,
     this.candidatesTokensDetails,
     this.toolUsePromptTokensDetails,
+    this.cacheTokensDetails,
+    this.cachedContentTokenCount,
   });
 
   /// Number of tokens in the prompt.
@@ -217,6 +219,14 @@ final class UsageMetadata {
   /// A list of tokens used by tools whose usage was triggered from a prompt,
   /// broken down by modality.
   final List<ModalityTokenCount>? toolUsePromptTokensDetails;
+
+  /// The number of tokens in the prompt that were served from the cache.
+  /// If implicit caching is not active or no content was cached, this will be 0.
+  final int? cachedContentTokenCount;
+
+  /// Detailed breakdown of the cached tokens by modality (e.g., text, image).
+  /// This list provides granular insight into which parts of the content were cached.
+  final List<ModalityTokenCount>? cacheTokensDetails;
 }
 
 /// Response candidate generated from a [GenerativeModel].
@@ -1526,6 +1536,16 @@ UsageMetadata parseUsageMetadata(Object jsonObject) {
       toolUsePromptTokensDetails.map(_parseModalityTokenCount).toList(),
     _ => null,
   };
+  final cachedContentTokenCount = switch (jsonObject) {
+    {'cachedContentTokenCount': final int cachedContentTokenCount} =>
+      cachedContentTokenCount,
+    _ => null,
+  };
+  final cacheTokensDetails = switch (jsonObject) {
+    {'cacheTokensDetails': final List<Object?> cacheTokensDetails} =>
+      cacheTokensDetails.map(_parseModalityTokenCount).toList(),
+    _ => null,
+  };
   return UsageMetadata._(
     promptTokenCount: promptTokenCount,
     candidatesTokenCount: candidatesTokenCount,
@@ -1535,6 +1555,8 @@ UsageMetadata parseUsageMetadata(Object jsonObject) {
     promptTokensDetails: promptTokensDetails,
     candidatesTokensDetails: candidatesTokensDetails,
     toolUsePromptTokensDetails: toolUsePromptTokensDetails,
+    cachedContentTokenCount: cachedContentTokenCount,
+    cacheTokensDetails: cacheTokensDetails,
   );
 }
 
