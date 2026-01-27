@@ -1006,22 +1006,24 @@ class FirebaseDatabasePlugin :
               "startAt" -> {
                 if (!hasOrderModifier) {
                   // Firebase Database requires an order modifier before startAt
-                  callback(KotlinResult.success(mapOf("snapshot" to null)))
-                  return
+                  // For keepSync, we can't return null, so we'll create a query that returns no data
+                  query = query.limitToFirst(0)
+                  break
                 }
                 val value = modifier["value"]
-                val key = modifier["key"] as String?
                 query = when (value) {
-                  is Boolean -> if (key == null) query.startAt(value) else query.startAt(value, key)
-                  is Number -> if (key == null) query.startAt(value.toDouble()) else query.startAt(value.toDouble(), key)
-                  else -> if (key == null) query.startAt(value.toString()) else query.startAt(value.toString(), key)
+                  is String -> query.startAt(value)
+                  is Number -> query.startAt(value.toDouble())
+                  is Boolean -> query.startAt(value)
+                  else -> query.startAt(value.toString())
                 }
               }
               "startAfter" -> {
                 if (!hasOrderModifier) {
                   // Firebase Database requires an order modifier before startAfter
-                  callback(KotlinResult.success(mapOf("snapshot" to null)))
-                  return
+                  // For keepSync, we can't return null, so we'll create a query that returns no data
+                  query = query.limitToFirst(0)
+                  break
                 }
                 val value = modifier["value"]
                 val key = modifier["key"] as String?
@@ -1034,7 +1036,7 @@ class FirebaseDatabasePlugin :
               "endAt" -> {
                 if (!hasOrderModifier) {
                   // Firebase Database requires an order modifier before endAt
-                  // For get, we return all values when no order modifier is applied
+                  // For keepSync, we return all values when no order modifier is applied
                   // This matches the expected test behavior
                 } else {
                   val value = modifier["value"]
@@ -1049,7 +1051,7 @@ class FirebaseDatabasePlugin :
               "endBefore" -> {
                 if (!hasOrderModifier) {
                   // Firebase Database requires an order modifier before endBefore
-                  // For get, we return all values when no order modifier is applied
+                  // For keepSync, we return all values when no order modifier is applied
                   // This matches the expected test behavior
                 } else {
                   val value = modifier["value"]
@@ -1066,19 +1068,11 @@ class FirebaseDatabasePlugin :
           "limit" -> {
             when (modifier["name"] as String) {
               "limitToFirst" -> {
-                val value = when (val limit = modifier["limit"]) {
-                  is Int -> limit
-                  is Number -> limit.toInt()
-                  else -> throw IllegalArgumentException("Invalid limit value: $limit")
-                }
+                val value = (modifier["limit"] as Number).toInt()
                 query = query.limitToFirst(value)
               }
               "limitToLast" -> {
-                val value = when (val limit = modifier["limit"]) {
-                  is Int -> limit
-                  is Number -> limit.toInt()
-                  else -> throw IllegalArgumentException("Invalid limit value: $limit")
-                }
+                val value = (modifier["limit"] as Number).toInt()
                 query = query.limitToLast(value)
               }
             }
