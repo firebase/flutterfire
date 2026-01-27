@@ -277,5 +277,112 @@ void main() {
       expect(contentMessage.outputTranscription?.text, 'output');
       expect(contentMessage.outputTranscription?.finished, false);
     });
+
+    test('parseServerMessage parses usageMetadata correctly', () {
+      final jsonObject = {
+        'serverContent': {
+          'modelTurn': {
+            'parts': [
+              {'text': 'Hello, world!'}
+            ]
+          },
+          'turnComplete': true,
+        },
+        'usageMetadata': {
+          'promptTokenCount': 10,
+          'responseTokenCount': 25,
+          'cachedContentTokenCount': 5,
+          'totalTokenCount': 35,
+          'thoughtsTokenCount': 3,
+          'toolUsePromptTokenCount': 12,
+          'promptTokensDetails': [
+            {'modality': 'TEXT', 'tokenCount': 10}
+          ],
+          'responseTokensDetails': [
+            {'modality': 'TEXT', 'tokenCount': 25}
+          ],
+          'cacheTokensDetails': [
+            {'modality': 'TEXT', 'tokenCount': 5}
+          ],
+          'toolUsePromptTokensDetails': [
+            {'modality': 'TEXT', 'tokenCount': 12}
+          ],
+        }
+      };
+      final response = parseServerResponse(jsonObject);
+      expect(response.message, isA<LiveServerContent>());
+      expect(response.usageMetadata, isNotNull);
+      expect(response.usageMetadata!.promptTokenCount, 10);
+      expect(response.usageMetadata!.responseTokenCount, 25);
+      expect(response.usageMetadata!.cachedContentTokenCount, 5);
+      expect(response.usageMetadata!.totalTokenCount, 35);
+      expect(response.usageMetadata!.thoughtsTokenCount, 3);
+      expect(response.usageMetadata!.toolUsePromptTokenCount, 12);
+      expect(response.usageMetadata!.promptTokensDetails, hasLength(1));
+      expect(
+          response.usageMetadata!.promptTokensDetails!.first.modality.name,
+          'text');
+      expect(
+          response.usageMetadata!.promptTokensDetails!.first.tokenCount, 10);
+      expect(response.usageMetadata!.responseTokensDetails, hasLength(1));
+      expect(
+          response.usageMetadata!.responseTokensDetails!.first.modality.name,
+          'text');
+      expect(
+          response.usageMetadata!.responseTokensDetails!.first.tokenCount, 25);
+      expect(response.usageMetadata!.cacheTokensDetails, hasLength(1));
+      expect(response.usageMetadata!.cacheTokensDetails!.first.modality.name,
+          'text');
+      expect(response.usageMetadata!.cacheTokensDetails!.first.tokenCount, 5);
+      expect(response.usageMetadata!.toolUsePromptTokensDetails, hasLength(1));
+      expect(
+          response.usageMetadata!.toolUsePromptTokensDetails!.first.modality
+              .name,
+          'text');
+      expect(
+          response.usageMetadata!.toolUsePromptTokensDetails!.first.tokenCount,
+          12);
+    });
+
+    test('parseServerMessage parses message without usageMetadata', () {
+      final jsonObject = {
+        'serverContent': {
+          'modelTurn': {
+            'parts': [
+              {'text': 'Hello, world!'}
+            ]
+          },
+          'turnComplete': true,
+        }
+      };
+      final response = parseServerResponse(jsonObject);
+      expect(response.message, isA<LiveServerContent>());
+      expect(response.usageMetadata, isNull);
+    });
+
+    test('parseServerMessage parses usageMetadata with partial fields', () {
+      final jsonObject = {
+        'serverContent': {
+          'modelTurn': {
+            'parts': [
+              {'text': 'Hello, world!'}
+            ]
+          },
+          'turnComplete': true,
+        },
+        'usageMetadata': {
+          'promptTokenCount': 10,
+          'totalTokenCount': 35,
+        }
+      };
+      final response = parseServerResponse(jsonObject);
+      expect(response.message, isA<LiveServerContent>());
+      expect(response.usageMetadata, isNotNull);
+      expect(response.usageMetadata!.promptTokenCount, 10);
+      expect(response.usageMetadata!.totalTokenCount, 35);
+      expect(response.usageMetadata!.responseTokenCount, isNull);
+      expect(response.usageMetadata!.cachedContentTokenCount, isNull);
+      expect(response.usageMetadata!.candidatesTokenCount, isNull);
+    });
   });
 }
