@@ -104,25 +104,24 @@ void main() {
         test(
           'should have consistent error reason format',
           () async {
-            const eventChannel = EventChannel(
-                'plugins.flutter.io/firebase_crashlytics_test_stream');
-            final eventStream = eventChannel.receiveBroadcastStream();
+              const eventChannel = EventChannel('plugins.flutter.io/firebase_crashlytics_test_stream');
+              final eventStream = eventChannel.receiveBroadcastStream();  
 
-            final completer = Completer<String>();
+              final completer = Completer<String>();
 
-            final subscription = eventStream.listen((event) {
-              completer.complete(event.toString());
-            });
+              final subscription = eventStream.listen((event) {
+                completer.complete(event.toString());
+              });
 
-            await FirebaseCrashlytics.instance.recordError(
-              'foo exception',
-              StackTrace.fromString('during testing'),
-              reason: 'foo reason',
-            );
+              await FirebaseCrashlytics.instance.recordError(
+                'foo exception',
+                StackTrace.fromString('during testing'),
+                reason: 'foo reason',
+              );
 
-            final event = await completer.future;
-            expect(event, 'thrown foo reason');
-            await subscription.cancel();
+              final event = await completer.future;
+              expect(event, 'thrown foo reason');
+              await subscription.cancel();
           },
           skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS,
         );
