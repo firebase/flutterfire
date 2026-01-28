@@ -134,7 +134,8 @@ Usage Metadata:
       _messages.add(MessageData(text: message, fromUser: false));
     } else {
       _messages.add(
-          MessageData(text: 'No usage metadata available.', fromUser: false));
+        MessageData(text: 'No usage metadata available.', fromUser: false),
+      );
     }
 
     setState(() {
