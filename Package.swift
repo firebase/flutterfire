@@ -12,7 +12,7 @@ import PackageDescription
 let firebase_core_version: String = "4.4.0"
 let firebase_ios_sdk_version: String = "12.8.0"
 
-// Shared Swift package manager code for firebase core
+/// Shared Swift package manager code for firebase core
 let package = Package(
   name: "remote_firebase_core",
   platforms: [

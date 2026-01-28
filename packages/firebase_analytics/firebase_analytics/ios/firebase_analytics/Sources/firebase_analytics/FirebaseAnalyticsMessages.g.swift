@@ -224,7 +224,10 @@ protocol FirebaseAnalyticsHostApi {
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
 class FirebaseAnalyticsHostApiSetup {
-  static var codec: FlutterStandardMessageCodec { FirebaseAnalyticsMessagesPigeonCodec.shared }
+  static var codec: FlutterStandardMessageCodec {
+    FirebaseAnalyticsMessagesPigeonCodec.shared
+  }
+
   /// Sets up an instance of `FirebaseAnalyticsHostApi` to handle messages through the
   /// `binaryMessenger`.
   static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseAnalyticsHostApi?,
