@@ -727,7 +727,8 @@ void main() {
           generateContentResponse.text, 'Here is a description of the image:');
       expect(generateContentResponse.usageMetadata?.totalTokenCount, 1913);
       expect(generateContentResponse.usageMetadata?.toolUsePromptTokenCount, 5);
-      expect(generateContentResponse.usageMetadata?.cachedContentTokenCount, 10);
+      expect(
+          generateContentResponse.usageMetadata?.cachedContentTokenCount, 10);
       expect(
           generateContentResponse
               .usageMetadata?.cacheTokensDetails?.first.modality,
