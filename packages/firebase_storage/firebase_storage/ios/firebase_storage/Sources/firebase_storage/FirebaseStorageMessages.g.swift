@@ -354,7 +354,10 @@ protocol FirebaseStorageHostApi {
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
 class FirebaseStorageHostApiSetup {
   /// The codec used by FirebaseStorageHostApi.
-  static var codec: FlutterStandardMessageCodec { FirebaseStorageHostApiCodec.shared }
+  static var codec: FlutterStandardMessageCodec {
+    FirebaseStorageHostApiCodec.shared
+  }
+
   /// Sets up an instance of `FirebaseStorageHostApi` to handle messages through the
   /// `binaryMessenger`.
   static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseStorageHostApi?) {

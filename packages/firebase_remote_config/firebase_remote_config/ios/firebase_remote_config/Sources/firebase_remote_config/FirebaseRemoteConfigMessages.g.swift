@@ -220,7 +220,10 @@ protocol FirebaseRemoteConfigHostApi {
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
 class FirebaseRemoteConfigHostApiSetup {
-  static var codec: FlutterStandardMessageCodec { FirebaseRemoteConfigMessagesPigeonCodec.shared }
+  static var codec: FlutterStandardMessageCodec {
+    FirebaseRemoteConfigMessagesPigeonCodec.shared
+  }
+
   /// Sets up an instance of `FirebaseRemoteConfigHostApi` to handle messages through the
   /// `binaryMessenger`.
   static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseRemoteConfigHostApi?,

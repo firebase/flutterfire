@@ -94,7 +94,10 @@ protocol CloudFunctionsHostApi {
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
 class CloudFunctionsHostApiSetup {
-  static var codec: FlutterStandardMessageCodec { CloudFunctionsMessagesPigeonCodec.shared }
+  static var codec: FlutterStandardMessageCodec {
+    CloudFunctionsMessagesPigeonCodec.shared
+  }
+
   /// Sets up an instance of `CloudFunctionsHostApi` to handle messages through the
   /// `binaryMessenger`.
   static func setUp(binaryMessenger: FlutterBinaryMessenger, api: CloudFunctionsHostApi?,

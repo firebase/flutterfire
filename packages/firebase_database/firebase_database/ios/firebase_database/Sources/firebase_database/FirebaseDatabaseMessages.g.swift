@@ -548,7 +548,10 @@ protocol FirebaseDatabaseHostApi {
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
 class FirebaseDatabaseHostApiSetup {
-  static var codec: FlutterStandardMessageCodec { FirebaseDatabaseMessagesPigeonCodec.shared }
+  static var codec: FlutterStandardMessageCodec {
+    FirebaseDatabaseMessagesPigeonCodec.shared
+  }
+
   /// Sets up an instance of `FirebaseDatabaseHostApi` to handle messages through the
   /// `binaryMessenger`.
   static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseDatabaseHostApi?,

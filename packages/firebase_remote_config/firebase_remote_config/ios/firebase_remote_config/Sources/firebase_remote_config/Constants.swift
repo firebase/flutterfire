@@ -2,5 +2,5 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// Auto-generated file. Do not edit.
+/// Auto-generated file. Do not edit.
 public let versionNumber = "5.4.7"
