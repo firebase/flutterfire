@@ -28,8 +28,8 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
   private var handleToPath: [Int64: String] = [:]
   private var handleToIdentifier: [Int64: String] = [:]
 
-  // Registry to help stream handler classify failure events as cancellations when initiated from
-  // Dart
+  /// Registry to help stream handler classify failure events as cancellations when initiated from
+  /// Dart
   static var canceledIdentifiers = Set<String>()
 
   @objc
