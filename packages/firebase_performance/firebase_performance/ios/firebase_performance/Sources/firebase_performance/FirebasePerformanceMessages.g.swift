@@ -325,7 +325,10 @@ protocol FirebasePerformanceHostApi {
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
 class FirebasePerformanceHostApiSetup {
-  static var codec: FlutterStandardMessageCodec { FirebasePerformanceMessagesPigeonCodec.shared }
+  static var codec: FlutterStandardMessageCodec {
+    FirebasePerformanceMessagesPigeonCodec.shared
+  }
+
   /// Sets up an instance of `FirebasePerformanceHostApi` to handle messages through the
   /// `binaryMessenger`.
   static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebasePerformanceHostApi?,
