@@ -48,6 +48,8 @@ class LiveSession {
   final _messageController = StreamController<LiveServerResponse>.broadcast();
   late StreamSubscription _wsSubscription;
 
+  String? sessionId;
+
   /// Sends content to the server.
   ///
   /// [input] (optional): The content to send.

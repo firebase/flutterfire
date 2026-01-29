@@ -51,12 +51,13 @@ class _BidiPageState extends State<BidiPage> {
   final List<MessageData> _messages = <MessageData>[];
   bool _loading = false;
   bool _sessionOpening = false;
-        bool _recording = false;
-        late LiveGenerativeModel _liveModel;
-        late LiveSession _session;
-        String? _sessionId;
-        StreamController<bool> _stopController = StreamController<bool>();
-        final AudioOutput _audioOutput = AudioOutput();  final AudioInput _audioInput = AudioInput();
+  bool _recording = false;
+  late LiveGenerativeModel _liveModel;
+  late LiveSession _session;
+  String? _sessionId;
+  StreamController<bool> _stopController = StreamController<bool>();
+  final AudioOutput _audioOutput = AudioOutput();
+  final AudioInput _audioInput = AudioInput();
   int? _inputTranscriptionMessageIndex;
   int? _outputTranscriptionMessageIndex;
 
@@ -431,10 +432,10 @@ class _BidiPageState extends State<BidiPage> {
       }
     } else if (message is LiveServerToolCall && message.functionCalls != null) {
       await _handleLiveServerToolCall(message);
-    } else if (message is GoAway) {
-      developer.log('GoAway message received: $response');
+    } else if (message is GoingAwayNotice) {
+      developer.log('GoAway message received: $message');
     } else if (message is SessionResumptionUpdate) {
-      developer.log('SessionResumptionUpdate message received: $response');
+      developer.log('SessionResumptionUpdate message received: $message');
     }
   }
 

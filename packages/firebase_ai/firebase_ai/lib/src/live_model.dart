@@ -94,7 +94,7 @@ final class LiveGenerativeModel extends BaseModel {
   /// Returns a [Future] that resolves to an [LiveSession] object upon successful
   /// connection.
   Future<LiveSession> connect(
-      {SessionResumptionConfig? sessionResumption}) async {
+      {SessionResumptionConfig? sessionResumption, String? sessionId}) async {
     final uri = _useVertexBackend ? _vertexAIUri() : _googleAIUri();
     final modelString =
         _useVertexBackend ? _vertexAIModelString() : _googleAIModelString();
