@@ -16,7 +16,6 @@ import 'dart:convert';
 
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:firebase_ai/src/api.dart';
-import 'package:firebase_ai/src/error.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'utils/matchers.dart';
@@ -712,7 +711,12 @@ void main() {
       "modality": "TEXT",
       "tokenCount": 76
     }],
-    "toolUsePromptTokenCount": 5
+    "toolUsePromptTokenCount": 5,
+    "cachedContentTokenCount": 10,
+    "cacheTokensDetails": [{
+      "modality": "TEXT",
+      "tokenCount": 10
+    }]
   }
 }
         ''';
@@ -723,6 +727,16 @@ void main() {
           generateContentResponse.text, 'Here is a description of the image:');
       expect(generateContentResponse.usageMetadata?.totalTokenCount, 1913);
       expect(generateContentResponse.usageMetadata?.toolUsePromptTokenCount, 5);
+      expect(
+          generateContentResponse.usageMetadata?.cachedContentTokenCount, 10);
+      expect(
+          generateContentResponse
+              .usageMetadata?.cacheTokensDetails?.first.modality,
+          ContentModality.text);
+      expect(
+          generateContentResponse
+              .usageMetadata?.cacheTokensDetails?.first.tokenCount,
+          10);
       expect(
           generateContentResponse
               .usageMetadata?.promptTokensDetails?[1].modality,

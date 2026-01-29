@@ -287,15 +287,15 @@ class LiveServerToolCallCancellation implements LiveServerMessage {
 
 /// A server message indicating that the server will not be able to service the
 /// client soon.
-class GoAway implements LiveServerMessage {
-  /// Creates a [GoAway] instance.
+class GoingAwayNotice implements LiveServerMessage {
+  /// Creates a [GoingAwayNotice] instance.
   ///
   /// [timeLeft] (optional): The remaining time before the connection will be
   /// terminated.
-  GoAway({this.timeLeft});
+  const GoingAwayNotice({this.timeLeft});
 
   /// The remaining time before the connection will be terminated as ABORTED.
-  final Duration? timeLeft;
+  final String? timeLeft;
 }
 
 /// An update of the session resumption state.
@@ -554,14 +554,7 @@ LiveServerMessage _parseServerMessage(Object jsonObject) {
     return LiveServerSetupComplete();
   } else if (json.containsKey('goAway')) {
     final goAwayJson = json['goAway'] as Map<String, dynamic>;
-    Duration? timeLeft;
-    if (goAwayJson.containsKey('timeLeft')) {
-      final timeLeftString = goAwayJson['timeLeft'] as String;
-      final seconds =
-          int.parse(timeLeftString.substring(0, timeLeftString.length - 1));
-      timeLeft = Duration(seconds: seconds);
-    }
-    return GoAway(timeLeft: timeLeft);
+    return GoingAwayNotice(timeLeft: goAwayJson['timeLeft'] as String?);
   } else if (json.containsKey('sessionResumptionUpdate')) {
     final sessionResumptionUpdateJson =
         json['sessionResumptionUpdate'] as Map<String, dynamic>;

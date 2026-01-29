@@ -1,3 +1,11 @@
+## 5.1.2
+
+ - Update a dependency to the latest release.
+
+## 5.1.1
+
+ - Update a dependency to the latest release.
+
 ## 5.1.0
 
  - **FIX**(firestore,web): More explicit interop types ([#17818](https://github.com/firebase/flutterfire/issues/17818)). ([8ceb461c](https://github.com/firebase/flutterfire/commit/8ceb461cb4f887bc2b1a36151188135ae1189f88))

@@ -6,17 +6,17 @@
 part of '../cloud_functions.dart';
 
 /// Represents a response from a Server-Sent Event (SSE) stream.
-sealed class StreamResponse {}
+sealed class StreamResponse<T, R> {}
 
 /// A chunk received during the stream.
-class Chunk<T> extends StreamResponse {
+class Chunk<T, R> extends StreamResponse<T, R> {
   /// The intermediate data received from the server.
   final T partialData;
   Chunk(this.partialData);
 }
 
 /// The final result of the computation, marking the end of the stream.
-class Result<R> extends StreamResponse {
+class Result<T, R> extends StreamResponse<T, R> {
   /// The final computed result received from the server.
   final HttpsCallableResult<R> result;
   Result(this.result);

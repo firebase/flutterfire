@@ -1,3 +1,12 @@
+## 16.1.1
+
+ - **FIX**(messaging,iOS): scope iOS 18 duplicate notification workaround to iOS 18.0 only ([#17932](https://github.com/firebase/flutterfire/issues/17932)). ([c78f56ea](https://github.com/firebase/flutterfire/commit/c78f56ea0fd0d5ba0b565a11cbf9acce73f93401))
+
+## 16.1.0
+
+ - **FIX**(messaging,iOS): refactor notification handling in scene delegate methods ([#17905](https://github.com/firebase/flutterfire/issues/17905)). ([6fd8929b](https://github.com/firebase/flutterfire/commit/6fd8929b667df23eed21df288c9f8d8f213ea8ad))
+ - **FEAT**(firebase_messaging,iOS): add scene delegate support for `firebase_messaging` ([#17888](https://github.com/firebase/flutterfire/issues/17888)). ([a8633970](https://github.com/firebase/flutterfire/commit/a8633970c841a43699c54a9c6ce4e9669b74e268))
+
 ## 16.0.4
 
  - Update a dependency to the latest release.

@@ -70,6 +70,17 @@ class _TokenCountPageState extends State<TokenCountPage> {
                       child: const Text('Count Tokens'),
                     ),
                   ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: !_loading
+                          ? () async {
+                              await _testUsageMetadata();
+                            }
+                          : null,
+                      child: const Text('Usage Metadata'),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -89,6 +100,43 @@ class _TokenCountPageState extends State<TokenCountPage> {
     final tokenResponse = await widget.model.countTokens([content]);
     final tokenResult = 'Token Count: ${tokenResponse.totalTokens}';
     _messages.add(MessageData(text: tokenResult, fromUser: false));
+
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  Future<void> _testUsageMetadata() async {
+    setState(() {
+      _loading = true;
+    });
+
+    const prompt =
+        'Tell a story about a magic backpack and the person who found it.';
+    final content = [Content.text(prompt)];
+    final response = await widget.model.generateContent(content);
+    final usageMetadata = response.usageMetadata;
+
+    if (usageMetadata != null) {
+      final message = '''
+Usage Metadata:
+- promptTokenCount: ${usageMetadata.promptTokenCount}
+- candidatesTokenCount: ${usageMetadata.candidatesTokenCount}
+- totalTokenCount: ${usageMetadata.totalTokenCount}
+- thoughtsTokenCount: ${usageMetadata.thoughtsTokenCount}
+- toolUsePromptTokenCount: ${usageMetadata.toolUsePromptTokenCount}
+- cachedContentTokenCount: ${usageMetadata.cachedContentTokenCount}
+- promptTokensDetails: ${usageMetadata.promptTokensDetails?.map((d) => '${d.modality}: ${d.tokenCount}')}
+- candidatesTokensDetails: ${usageMetadata.candidatesTokensDetails?.map((d) => '${d.modality}: ${d.tokenCount}')}
+- toolUsePromptTokensDetails: ${usageMetadata.toolUsePromptTokensDetails?.map((d) => '${d.modality}: ${d.tokenCount}')}
+- cacheTokensDetails: ${usageMetadata.cacheTokensDetails?.map((d) => '${d.modality}: ${d.tokenCount}')}
+''';
+      _messages.add(MessageData(text: message, fromUser: false));
+    } else {
+      _messages.add(
+        MessageData(text: 'No usage metadata available.', fromUser: false),
+      );
+    }
 
     setState(() {
       _loading = false;

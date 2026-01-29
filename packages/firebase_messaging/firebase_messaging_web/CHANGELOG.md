@@ -1,3 +1,11 @@
+## 4.1.2
+
+ - Update a dependency to the latest release.
+
+## 4.1.1
+
+ - Update a dependency to the latest release.
+
 ## 4.1.0
 
  - **REFACTOR**(messaging,web): convert classes to extension types for improved interop ([#17820](https://github.com/firebase/flutterfire/issues/17820)). ([ec5813a0](https://github.com/firebase/flutterfire/commit/ec5813a0cc590ba4501f26d5c3e5adb6a121b658))

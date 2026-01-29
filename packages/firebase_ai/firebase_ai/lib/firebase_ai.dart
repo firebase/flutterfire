@@ -23,6 +23,7 @@ export 'src/api.dart'
         GenerateContentResponse,
         GenerationConfig,
         ThinkingConfig,
+        ThinkingLevel,
         HarmBlockThreshold,
         HarmCategory,
         HarmProbability,
@@ -58,6 +59,8 @@ export 'src/error.dart'
         FirebaseAISdkException,
         InvalidApiKey,
         ServerException,
+        ServiceApiNotEnabled,
+        QuotaExceeded,
         UnsupportedUserLocation;
 export 'src/firebase_ai.dart' show FirebaseAI;
 export 'src/imagen/imagen_api.dart'
@@ -97,7 +100,6 @@ export 'src/imagen/imagen_reference.dart'
 export 'src/live_api.dart'
     show
         AudioTranscriptionConfig,
-        GoAway,
         LiveGenerationConfig,
         LiveServerMessage,
         LiveServerContent,
@@ -107,12 +109,14 @@ export 'src/live_api.dart'
         SessionResumptionConfig,
         SessionResumptionUpdate,
         SpeechConfig,
+        GoingAwayNotice,
         Transcription;
 export 'src/live_session.dart' show LiveSession;
 export 'src/schema.dart' show Schema, SchemaType;
 
 export 'src/tool.dart'
     show
+        AutoFunctionDeclaration,
         FunctionCallingConfig,
         FunctionCallingMode,
         FunctionDeclaration,
