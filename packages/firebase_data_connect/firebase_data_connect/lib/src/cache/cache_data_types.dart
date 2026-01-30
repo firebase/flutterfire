@@ -15,12 +15,109 @@
 import 'dart:convert';
 
 import 'package:firebase_data_connect/src/cache/cache_provider.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:firebase_data_connect/src/common/common_library.dart';
+import 'package:flutter/foundation.dart' show kIsWeb, listEquals;
 
 /// Type of storage to use for the cache
 enum CacheStorage { persistent, memory }
 
-const String kGlobalIDKey = 'cacheId';
+const String kGlobalIDKey = 'guid';
+
+class DataConnectPath {
+  final List<DataConnectPathSegment> components;
+
+  DataConnectPath([List<DataConnectPathSegment>? components])
+      : components = components ?? [];
+
+  DataConnectPath appending(DataConnectPathSegment segment) {
+    return DataConnectPath([...components, segment]);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DataConnectPath &&
+          runtimeType == other.runtimeType &&
+          listEquals(components, other.components);
+
+  @override
+  int get hashCode => Object.hashAll(components);
+
+  @override
+  String toString() => 'DataConnectPath($components)';
+}
+
+class PathMetadata {
+  final DataConnectPath path;
+  final String? entityId;
+
+  PathMetadata({required this.path, this.entityId});
+}
+
+class PathMetadataResponse {
+  final List<DataConnectPathSegment> path;
+  final String? entityId;
+  final List<String>? entityIds;
+
+  PathMetadataResponse({required this.path, this.entityId, this.entityIds});
+
+  factory PathMetadataResponse.fromJson(Map<String, dynamic> json) {
+    return PathMetadataResponse(
+      path: (json['path'] as List).map((e) => _parsePathSegment(e)).toList(),
+      entityId: json['entityId'] as String?,
+      entityIds: (json['entityIds'] as List?)?.cast<String>(),
+    );
+  }
+}
+
+DataConnectPathSegment _parsePathSegment(dynamic segment) {
+  if (segment is String) {
+    return DataConnectFieldPathSegment(segment);
+  } else if (segment is int) {
+    return DataConnectListIndexPathSegment(segment);
+  }
+  throw ArgumentError('Invalid path segment type: ${segment.runtimeType}');
+}
+
+class ExtensionResponse {
+  final Duration? maxAge;
+  final List<PathMetadataResponse> dataConnect;
+
+  ExtensionResponse({this.maxAge, required this.dataConnect});
+
+  factory ExtensionResponse.fromJson(Map<String, dynamic> json) {
+    return ExtensionResponse(
+      maxAge: json['ttl'] != null ? Duration(seconds: json['ttl'] as int) : null,
+      dataConnect: (json['dataConnect'] as List?)
+              ?.map(
+                  (e) => PathMetadataResponse.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+    );
+  }
+
+  Map<DataConnectPath, PathMetadata> flattenPathMetadata() {
+    final Map<DataConnectPath, PathMetadata> result = {};
+    for (final pmr in dataConnect) {
+      if (pmr.entityId != null) {
+        final pm =
+            PathMetadata(path: DataConnectPath(pmr.path), entityId: pmr.entityId);
+        result[pm.path] = pm;
+      }
+
+      if (pmr.entityIds != null) {
+        for (var i = 0; i < pmr.entityIds!.length; i++) {
+          final entityId = pmr.entityIds![i];
+          final indexPath = DataConnectPath(pmr.path)
+              .appending(DataConnectListIndexPathSegment(i));
+          final pm = PathMetadata(path: indexPath, entityId: entityId);
+          result[pm.path] = pm;
+        }
+      }
+    }
+    return result;
+  }
+}
 
 /// Configuration for the cache
 class CacheSettings {
