@@ -51,18 +51,27 @@ void main() {
   const String simpleQueryResponse = '''
     {"data": {"items":[
     
-    {"desc":"itemDesc1","name":"itemOne", "cacheId":"123","price":4},
-    {"desc":"itemDesc2","name":"itemTwo", "cacheId":"345","price":7}
+    {"desc":"itemDesc1","name":"itemOne","price":4},
+    {"desc":"itemDesc2","name":"itemTwo","price":7}
     
     ]}}
   ''';
+
+  final Map<String, dynamic> simpleQueryExtensions = {
+    "dataConnect": [
+      {
+        "path": ["items"],
+        "entityIds": ["123", "345"]
+      }
+    ]
+  };
 
   // query that updates the price for cacheId 123 to 11
   const String simpleQueryResponseUpdate = '''
     {"data": {"items":[
     
-    {"desc":"itemDesc1","name":"itemOne", "cacheId":"123","price":11},
-    {"desc":"itemDesc2","name":"itemTwo", "cacheId":"345","price":7}
+    {"desc":"itemDesc1","name":"itemOne","price":11},
+    {"desc":"itemDesc2","name":"itemTwo","price":7}
     
     ]}}
   ''';
@@ -70,9 +79,18 @@ void main() {
   // query two has same object as query one so should refer to same Entity.
   const String simpleQueryTwoResponse = '''
     {"data": {
-    "item": { "desc":"itemDesc1","name":"itemOne", "cacheId":"123","price":4 }
+    "item": { "desc":"itemDesc1","name":"itemOne","price":4 }
     }}
   ''';
+
+  final Map<String, dynamic> simpleQueryTwoExtensions = {
+    "dataConnect": [
+      {
+        "path": ["item"],
+        "entityId": "123"
+      }
+    ]
+  };
 
   group('Cache Provider Tests', () {
     setUp(() async {
@@ -126,7 +144,8 @@ void main() {
 
       Map<String, dynamic> jsonData =
           jsonDecode(simpleQueryResponse) as Map<String, dynamic>;
-      await cache.update('itemsSimple', ServerResponse(jsonData));
+      await cache.update(
+          'itemsSimple', ServerResponse(jsonData, extensions: simpleQueryExtensions));
 
       Map<String, dynamic>? cachedData = await cache.get('itemsSimple', true);
 
@@ -162,15 +181,18 @@ void main() {
 
       Map<String, dynamic> jsonDataOne =
           jsonDecode(simpleQueryResponse) as Map<String, dynamic>;
-      await cache.update(queryOneId, ServerResponse(jsonDataOne));
+      await cache.update(
+          queryOneId, ServerResponse(jsonDataOne, extensions: simpleQueryExtensions));
 
       Map<String, dynamic> jsonDataTwo =
           jsonDecode(simpleQueryTwoResponse) as Map<String, dynamic>;
-      await cache.update(queryTwoId, ServerResponse(jsonDataTwo));
+      await cache.update(queryTwoId,
+          ServerResponse(jsonDataTwo, extensions: simpleQueryTwoExtensions));
 
       Map<String, dynamic> jsonDataOneUpdate =
           jsonDecode(simpleQueryResponseUpdate) as Map<String, dynamic>;
-      await cache.update(queryOneId, ServerResponse(jsonDataOneUpdate));
+      await cache.update(queryOneId,
+          ServerResponse(jsonDataOneUpdate, extensions: simpleQueryExtensions));
       // shared object should be updated.
       // now reload query two from cache and check object value.
       // it should be updated
@@ -221,7 +243,8 @@ void main() {
 
       Map<String, dynamic> jsonData =
           jsonDecode(simpleQueryResponse) as Map<String, dynamic>;
-      await cache.update('itemsSimple', ServerResponse(jsonData));
+      await cache.update(
+          'itemsSimple', ServerResponse(jsonData, extensions: simpleQueryExtensions));
 
       QueryRef ref = QueryRef(
         dataConnect,

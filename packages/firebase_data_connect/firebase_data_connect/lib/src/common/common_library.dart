@@ -64,8 +64,9 @@ class TransportOptions {
 class ServerResponse {
   final Map<String, dynamic> data;
   Duration? ttl;
+  final Map<String, dynamic>? extensions;
 
-  ServerResponse(this.data);
+  ServerResponse(this.data, {this.extensions});
 }
 
 /// Interface for transports connecting to the DataConnect backend.
