@@ -87,6 +87,29 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
         null,
         _serializationStrategy.parseGenerateContentResponse);
   }
+
+  /// Generates content from a template with the given [templateId], [inputs] and
+  /// [history].
+  @experimental
+  Future<GenerateContentResponse> templateGenerateContentWithHistory(
+          Iterable<Content> history, String templateId,
+          {required Map<String, Object?> inputs}) =>
+      makeTemplateRequest(TemplateTask.templateGenerateContent, templateId,
+          inputs, history, _serializationStrategy.parseGenerateContentResponse);
+
+  /// Generates a stream of content from a template with the given [templateId],
+  /// [inputs] and [history].
+  @experimental
+  Stream<GenerateContentResponse> templateGenerateContentWithHistoryStream(
+      Iterable<Content> history, String templateId,
+      {required Map<String, Object?> inputs}) {
+    return streamTemplateRequest(
+        TemplateTask.templateStreamGenerateContent,
+        templateId,
+        inputs,
+        history,
+        _serializationStrategy.parseGenerateContentResponse);
+  }
 }
 
 /// Returns a [TemplateGenerativeModel] using its private constructor.
