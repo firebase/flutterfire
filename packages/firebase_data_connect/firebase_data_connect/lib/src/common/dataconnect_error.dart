@@ -63,11 +63,37 @@ sealed class DataConnectPathSegment {}
 class DataConnectFieldPathSegment extends DataConnectPathSegment {
   final String field;
   DataConnectFieldPathSegment(this.field);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DataConnectFieldPathSegment &&
+          runtimeType == other.runtimeType &&
+          field == other.field;
+
+  @override
+  int get hashCode => field.hashCode;
+
+  @override
+  String toString() => field;
 }
 
 class DataConnectListIndexPathSegment extends DataConnectPathSegment {
   final int index;
   DataConnectListIndexPathSegment(this.index);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DataConnectListIndexPathSegment &&
+          runtimeType == other.runtimeType &&
+          index == other.index;
+
+  @override
+  int get hashCode => index.hashCode;
+
+  @override
+  String toString() => index.toString();
 }
 
 typedef Serializer<Variables> = String Function(Variables vars);

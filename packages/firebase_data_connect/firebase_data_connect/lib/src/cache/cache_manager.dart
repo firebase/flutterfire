@@ -92,16 +92,25 @@ class Cache {
       return;
     }
 
+    final Map<DataConnectPath, PathMetadata> paths =
+        serverResponse.extensions != null
+            ? ExtensionResponse.fromJson(serverResponse.extensions!)
+                .flattenPathMetadata()
+            : {};
+
     final dehydrationResult = await _resultTreeProcessor.dehydrate(
-        queryId, serverResponse.data, _cacheProvider!);
+        queryId, serverResponse.data, _cacheProvider!, paths);
 
     EntityNode rootNode = dehydrationResult.dehydratedTree;
     Map<String, dynamic> dehydratedMap =
         rootNode.toJson(mode: EncodingMode.dehydrated);
 
     // if we have server ttl, that overrides maxAge from cacheSettings
-    Duration ttl =
-        serverResponse.ttl != null ? serverResponse.ttl! : _settings.maxAge;
+    Duration ttl = serverResponse.extensions != null &&
+            serverResponse.extensions!['ttl'] != null
+        ? Duration(seconds: serverResponse.extensions!['ttl'] as int)
+        : (serverResponse.ttl ?? _settings.maxAge);
+
     final resultTree = ResultTree(
         data: dehydratedMap,
         ttl: ttl,

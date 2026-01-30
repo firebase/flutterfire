@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:firebase_data_connect/src/cache/cache_data_types.dart';
 import 'package:firebase_data_connect/src/cache/result_tree_processor.dart';
+import 'package:firebase_data_connect/src/common/common_library.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'dart:convert';
@@ -23,18 +25,35 @@ void main() {
   const String simpleQueryResponse = '''
     {"data": {"items":[
     
-    {"desc":"itemDesc1","name":"itemOne", "cacheId":"123","price":4},
-    {"desc":"itemDesc2","name":"itemTwo", "cacheId":"345","price":7}
+    {"desc":"itemDesc1","name":"itemOne","price":4},
+    {"desc":"itemDesc2","name":"itemTwo","price":7}
     
     ]}}
   ''';
 
+  final Map<DataConnectPath, PathMetadata> simpleQueryPaths = {
+    DataConnectPath([DataConnectFieldPathSegment('items'), DataConnectListIndexPathSegment(0)]):
+        PathMetadata(
+            path: DataConnectPath([DataConnectFieldPathSegment('items'), DataConnectListIndexPathSegment(0)]),
+            entityId: '123'),
+    DataConnectPath([DataConnectFieldPathSegment('items'), DataConnectListIndexPathSegment(1)]):
+        PathMetadata(
+            path: DataConnectPath([DataConnectFieldPathSegment('items'), DataConnectListIndexPathSegment(1)]),
+            entityId: '345'),
+  };
+
   // query two has same object as query one so should refer to same Entity.
   const String simpleQueryResponseTwo = '''
     {"data": {
-    "item": { "desc":"itemDesc1","name":"itemOne", "cacheId":"123","price":4 }
+    "item": { "desc":"itemDesc1","name":"itemOne","price":4 }
     }}
   ''';
+
+  final Map<DataConnectPath, PathMetadata> simpleQueryTwoPaths = {
+    DataConnectPath([DataConnectFieldPathSegment('item')]): PathMetadata(
+        path: DataConnectPath([DataConnectFieldPathSegment('item')]),
+        entityId: '123'),
+  };
 
   group('CacheProviderTests', () {
     // Dehydrate two queries sharing a single object.
@@ -46,7 +65,7 @@ void main() {
       Map<String, dynamic> jsonData =
           jsonDecode(simpleQueryResponse) as Map<String, dynamic>;
       DehydrationResult result =
-          await rp.dehydrate('itemsSimple', jsonData['data'], cp);
+          await rp.dehydrate('itemsSimple', jsonData['data'], cp, simpleQueryPaths);
       expect(result.dehydratedTree.nestedObjectLists?.length, 1);
       expect(result.dehydratedTree.nestedObjectLists?['items']?.length, 2);
       expect(result.dehydratedTree.nestedObjectLists?['items']?.first.entity,
@@ -55,7 +74,7 @@ void main() {
       Map<String, dynamic> jsonDataTwo =
           jsonDecode(simpleQueryResponseTwo) as Map<String, dynamic>;
       DehydrationResult resultTwo =
-          await rp.dehydrate('itemsSimpleTwo', jsonDataTwo, cp);
+          await rp.dehydrate('itemsSimpleTwo', jsonDataTwo['data'], cp, simpleQueryTwoPaths);
 
       List<String>? guids = result.dehydratedTree.nestedObjectLists?['items']
           ?.map((item) => item.entity?.guid)

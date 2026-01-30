@@ -27,25 +27,36 @@ class DehydrationResult {
 class ResultTreeProcessor {
   /// Takes a server response, traverses the data, creates or updates `EntityDataObject`s,
   /// and builds a dehydrated `EntityNode` tree.
-  Future<DehydrationResult> dehydrate(String queryId,
-      Map<String, dynamic> serverResponse, CacheProvider cacheProvider) async {
+  Future<DehydrationResult> dehydrate(
+      String queryId,
+      Map<String, dynamic> serverResponse,
+      CacheProvider cacheProvider,
+      Map<DataConnectPath, PathMetadata> paths) async {
     final impactedQueryIds = <String>{};
 
     Map<String, dynamic> jsonData = serverResponse;
     if (serverResponse.containsKey('data')) {
       jsonData = serverResponse['data'];
     }
-    final rootNode =
-        _dehydrateNode(queryId, jsonData, cacheProvider, impactedQueryIds);
+    final rootNode = _dehydrateNode(queryId, jsonData, cacheProvider,
+        impactedQueryIds, DataConnectPath(), paths);
 
     return DehydrationResult(rootNode, impactedQueryIds);
   }
 
-  EntityNode _dehydrateNode(String queryId, dynamic data,
-      CacheProvider cacheProvider, Set<String> impactedQueryIds) {
+  EntityNode _dehydrateNode(
+      String queryId,
+      dynamic data,
+      CacheProvider cacheProvider,
+      Set<String> impactedQueryIds,
+      DataConnectPath path,
+      Map<DataConnectPath, PathMetadata> paths) {
     if (data is Map<String, dynamic>) {
-      // data contains a unique entity id. we can normalize
-      final guid = data[kGlobalIDKey] as String?;
+      // Look up entityId for current path
+      String? guid;
+      if (paths.containsKey(path)) {
+        guid = paths[path]?.entityId;
+      }
 
       final serverValues = <String, dynamic>{};
       final nestedObjects = <String, EntityNode>{};
@@ -56,16 +67,29 @@ class ResultTreeProcessor {
         final value = entry.value;
 
         if (value is Map<String, dynamic>) {
-          EntityNode en =
-              _dehydrateNode(queryId, value, cacheProvider, impactedQueryIds);
+          EntityNode en = _dehydrateNode(
+              queryId,
+              value,
+              cacheProvider,
+              impactedQueryIds,
+              path.appending(DataConnectFieldPathSegment(key)),
+              paths);
           nestedObjects[key] = en;
         } else if (value is List) {
           final nodeList = <EntityNode>[];
           final scalarValueList = <dynamic>[];
-          for (final item in value) {
+          for (var i = 0; i < value.length; i++) {
+            final item = value[i];
             if (item is Map<String, dynamic>) {
               nodeList.add(_dehydrateNode(
-                  queryId, item, cacheProvider, impactedQueryIds));
+                  queryId,
+                  item,
+                  cacheProvider,
+                  impactedQueryIds,
+                  path
+                      .appending(DataConnectFieldPathSegment(key))
+                      .appending(DataConnectListIndexPathSegment(i)),
+                  paths));
             } else {
               // assuming scalar - we don't handle array of arrays
               scalarValueList.add(item);
