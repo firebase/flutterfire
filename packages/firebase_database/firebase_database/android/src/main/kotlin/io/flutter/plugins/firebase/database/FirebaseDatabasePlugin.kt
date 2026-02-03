@@ -881,11 +881,11 @@ class FirebaseDatabasePlugin :
                   break
                 }
                 val value = modifier["value"]
+                val key = modifier["key"] as String?
                 query = when (value) {
-                  is String -> query.startAt(value)
-                  is Number -> query.startAt(value.toDouble())
-                  is Boolean -> query.startAt(value)
-                  else -> query.startAt(value.toString())
+                  is Boolean -> if (key == null) query.startAt(value) else query.startAt(value, key)
+                  is Number -> if (key == null) query.startAt(value.toDouble()) else query.startAt(value.toDouble(), key)
+                  else -> if (key == null) query.startAt(value.toString()) else query.startAt(value.toString(), key)
                 }
               }
               "startAfter" -> {
@@ -1011,11 +1011,11 @@ class FirebaseDatabasePlugin :
                   break
                 }
                 val value = modifier["value"]
+                val key = modifier["key"] as String?
                 query = when (value) {
-                  is String -> query.startAt(value)
-                  is Number -> query.startAt(value.toDouble())
-                  is Boolean -> query.startAt(value)
-                  else -> query.startAt(value.toString())
+                  is Boolean -> if (key == null) query.startAt(value) else query.startAt(value, key)
+                  is Number -> if (key == null) query.startAt(value.toDouble()) else query.startAt(value.toDouble(), key)
+                  else -> if (key == null) query.startAt(value.toString()) else query.startAt(value.toString(), key)
                 }
               }
               "startAfter" -> {
