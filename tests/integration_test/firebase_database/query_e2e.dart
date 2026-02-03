@@ -604,5 +604,113 @@ void setupQueryTests() {
         expect(streamError.code, 'permission-denied');
       });
     });
+
+    group('keepSynced', () {
+      test('multiple queries can enable keepSynced without crashing', () async {
+        await ref.set({
+          'a': {'value': 1},
+          'b': {'value': 2},
+          'c': {'value': 3},
+        });
+
+        // Enable keepSynced on multiple different queries
+        final query1 = ref.orderByChild('value').limitToFirst(2);
+        final query2 = ref.orderByChild('value').limitToLast(2);
+        final query3 = ref.orderByKey().startAt('a');
+        final query4 = ref.orderByValue();
+
+        // These should all complete without throwing
+        await query1.keepSynced(true);
+        await query2.keepSynced(true);
+        await query3.keepSynced(true);
+        await query4.keepSynced(true);
+
+        // Verify data is still accessible after enabling keepSynced
+        final snapshot = await ref.get();
+        expect(snapshot.value, isNotNull);
+      });
+
+      test('multiple queries can disable keepSynced without crashing', () async {
+        await ref.set({
+          'a': {'value': 1},
+          'b': {'value': 2},
+          'c': {'value': 3},
+        });
+
+        final query1 = ref.orderByChild('value').limitToFirst(2);
+        final query2 = ref.orderByChild('value').limitToLast(2);
+        final query3 = ref.orderByKey().startAt('a');
+
+        // First enable keepSynced
+        await query1.keepSynced(true);
+        await query2.keepSynced(true);
+        await query3.keepSynced(true);
+
+        // Then disable keepSynced on all queries - should not crash
+        await query1.keepSynced(false);
+        await query2.keepSynced(false);
+        await query3.keepSynced(false);
+
+        // Verify data is still accessible after disabling keepSynced
+        final snapshot = await ref.get();
+        expect(snapshot.value, isNotNull);
+      });
+
+      test(
+          'calling keepSynced multiple times on same query does not crash',
+          () async {
+        await ref.set({
+          'a': 1,
+          'b': 2,
+        });
+
+        final query = ref.orderByValue().limitToFirst(5);
+
+        // Call keepSynced multiple times on the same query
+        await query.keepSynced(true);
+        await query.keepSynced(true);
+        await query.keepSynced(false);
+        await query.keepSynced(true);
+        await query.keepSynced(false);
+        await query.keepSynced(false);
+
+        // Should complete without any issues
+        final snapshot = await ref.get();
+        expect(snapshot.value, isNotNull);
+      });
+
+      test('keepSynced works with various query combinations', () async {
+        await ref.set({
+          'item1': {'name': 'alpha', 'priority': 1},
+          'item2': {'name': 'beta', 'priority': 2},
+          'item3': {'name': 'gamma', 'priority': 3},
+          'item4': {'name': 'delta', 'priority': 4},
+        });
+
+        // Test various query combinations with keepSynced
+        final queries = [
+          ref.orderByChild('name'),
+          ref.orderByChild('priority').startAt(2),
+          ref.orderByChild('priority').endAt(3),
+          ref.orderByChild('priority').equalTo(2),
+          ref.orderByKey().limitToFirst(2),
+          ref.orderByKey().limitToLast(2),
+        ];
+
+        // Enable keepSynced on all queries
+        for (final query in queries) {
+          await query.keepSynced(true);
+        }
+
+        // Disable keepSynced on all queries
+        for (final query in queries) {
+          await query.keepSynced(false);
+        }
+
+        // Verify everything still works
+        final snapshot = await ref.get();
+        expect(snapshot.children.length, 4);
+      });
+    });
   });
 }
