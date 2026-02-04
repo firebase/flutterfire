@@ -54,7 +54,8 @@ class _BidiPageState extends State<BidiPage> {
   bool _recording = false;
   late LiveGenerativeModel _liveModel;
   late LiveSession _session;
-  String? _sessionId;
+  String? _activeSessionHandle;
+  int? _lastProcessedIndex;
   StreamController<bool> _stopController = StreamController<bool>();
   final AudioOutput _audioOutput = AudioOutput();
   final AudioInput _audioInput = AudioInput();
@@ -255,23 +256,26 @@ class _BidiPageState extends State<BidiPage> {
 
     if (!_sessionOpening) {
       try {
-        if (_sessionId != null) {
-          _session = await _liveModel.connect(sessionId: _sessionId!);
+        if (_activeSessionHandle != null) {
+          _session = await _liveModel.connect(
+            sessionResumption: SessionResumptionConfig(
+                handle: _activeSessionHandle, transparent: true),
+          );
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Resumed session with ID: $_sessionId'),
+                content: Text(
+                    'Resumed session with session handle: $_activeSessionHandle'),
               ),
             );
           }
         } else {
           _session = await _liveModel.connect();
         }
-        _sessionId = _session.sessionId;
       } on Exception catch (e) {
         developer.log('Error setting up session: $e, starting a new one.');
         _session = await _liveModel.connect();
-        _sessionId = _session.sessionId;
+
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -433,8 +437,12 @@ class _BidiPageState extends State<BidiPage> {
     } else if (message is LiveServerToolCall && message.functionCalls != null) {
       await _handleLiveServerToolCall(message);
     } else if (message is GoingAwayNotice) {
-      developer.log('GoAway message received: $message');
-    } else if (message is SessionResumptionUpdate) {
+      developer.log('GoAway message received, time left: ${message.timeLeft}');
+    } else if (message is SessionResumptionUpdate &&
+        message.resumable != null &&
+        message.resumable!) {
+      _activeSessionHandle = message.newHandle;
+      _lastProcessedIndex = message.lastConsumedClientMessageIndex;
       developer.log('SessionResumptionUpdate message received: $message');
     }
   }

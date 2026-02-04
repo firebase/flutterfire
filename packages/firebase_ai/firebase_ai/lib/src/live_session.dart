@@ -48,8 +48,6 @@ class LiveSession {
   final _messageController = StreamController<LiveServerResponse>.broadcast();
   late StreamSubscription _wsSubscription;
 
-  String? sessionId;
-
   /// Sends content to the server.
   ///
   /// [input] (optional): The content to send.
@@ -168,7 +166,11 @@ class LiveSession {
 
     await for (final result in _messageController.stream) {
       yield result;
-      if (result case LiveServerContent(turnComplete: true)) {
+      final message = result.message;
+
+      if (message is LiveServerContent &&
+          message.turnComplete != null &&
+          message.turnComplete!) {
         break; // Exit the loop when the turn is complete
       }
     }
