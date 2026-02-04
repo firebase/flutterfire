@@ -67,6 +67,8 @@ abstract class TestFirebaseAnalyticsHostApi {
   Future<void> initiateOnDeviceConversionMeasurement(
       Map<String, String?> arguments);
 
+  Future<void> logTransaction(String transactionId);
+
   static void setUp(
     TestFirebaseAnalyticsHostApi? api, {
     BinaryMessenger? binaryMessenger,
@@ -399,6 +401,38 @@ abstract class TestFirebaseAnalyticsHostApi {
               'Argument for dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.initiateOnDeviceConversionMeasurement was null, expected non-null Map<String, String?>.');
           try {
             await api.initiateOnDeviceConversionMeasurement(arg_arguments!);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.logTransaction$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.logTransaction was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final String? arg_transactionId = (args[0] as String?);
+          assert(arg_transactionId != null,
+              'Argument for dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.logTransaction was null, expected non-null String.');
+          try {
+            await api.logTransaction(arg_transactionId!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);

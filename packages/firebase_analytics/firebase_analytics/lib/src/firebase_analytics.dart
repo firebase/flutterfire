@@ -1242,6 +1242,15 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     );
   }
 
+  /// Logs verified in-app purchase events in Google Analytics for Firebase
+  /// after a purchase is successful.
+  Future<void> logTransaction(String transactionId) async {
+    if (defaultTargetPlatform != TargetPlatform.iOS) {
+      throw UnimplementedError('logTransaction() is only supported on iOS.');
+    }
+    return _delegate.logTransaction(transactionId: transactionId);
+  }
+
   /// Sets the duration of inactivity that terminates the current session.
   ///
   /// The default value is 1800000 milliseconds (30 minutes).
