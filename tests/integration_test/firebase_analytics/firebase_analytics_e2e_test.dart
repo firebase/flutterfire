@@ -356,5 +356,16 @@ void main() {
       },
       skip: kIsWeb || defaultTargetPlatform != TargetPlatform.iOS,
     );
+
+    test(
+      'logTransaction',
+      () async {
+        await expectLater(
+          FirebaseAnalytics.instance.logTransaction('12345'),
+          completes,
+        );
+      },
+      skip: defaultTargetPlatform != TargetPlatform.iOS,
+    );
   });
 }
