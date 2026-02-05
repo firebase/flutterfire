@@ -1250,8 +1250,10 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// You can obtain the [transactionId] from the
   /// [in_app_purchase](https://pub.dev/packages/in_app_purchase) package.
   Future<void> logTransaction(String transactionId) async {
-    if (defaultTargetPlatform != TargetPlatform.iOS) {
-      throw UnimplementedError('logTransaction() is only supported on iOS.');
+    if (defaultTargetPlatform != TargetPlatform.iOS &&
+        defaultTargetPlatform != TargetPlatform.macOS) {
+      throw UnimplementedError(
+          'logTransaction() is only supported on iOS and macOS.');
     }
     return _delegate.logTransaction(transactionId: transactionId);
   }
