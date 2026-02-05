@@ -365,7 +365,8 @@ void main() {
           completes,
         );
       },
-      skip: defaultTargetPlatform != TargetPlatform.iOS,
+      skip: defaultTargetPlatform != TargetPlatform.iOS &&
+          defaultTargetPlatform != TargetPlatform.macOS,
     );
   });
 }
