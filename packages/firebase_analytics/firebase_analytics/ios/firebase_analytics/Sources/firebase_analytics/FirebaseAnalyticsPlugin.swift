@@ -145,9 +145,38 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     completion(.success(()))
   }
 
-  @available(iOS 15.0, macOS 12.0, *)
   func logTransaction(transactionId: String,
                       completion: @escaping (Result<Void, any Error>) -> Void) {
+    #if os(macOS)
+      if #available(macOS 12.0, *) {
+        logTransactionWithStoreKit(transactionId: transactionId, completion: completion)
+      } else {
+        completion(.failure(FlutterError(
+          code: "firebase_analytics",
+          message: "logTransaction() is only supported on macOS 12.0 or newer",
+          details: nil
+        )))
+      }
+    #else
+      if #available(iOS 15.0, *) {
+        logTransactionWithStoreKit(transactionId: transactionId, completion: completion)
+      } else {
+        completion(.failure(FlutterError(
+          code: "firebase_analytics",
+          message: "logTransaction() is only supported on iOS 15.0 or newer",
+          details: nil
+        )))
+      }
+    #endif
+  }
+
+  #if os(macOS)
+    @available(macOS 12.0, *)
+  #else
+    @available(iOS 15.0, *)
+  #endif
+  private func logTransactionWithStoreKit(transactionId: String,
+                                          completion: @escaping (Result<Void, any Error>) -> Void) {
     Task {
       do {
         guard let id = UInt64(transactionId) else {
@@ -158,32 +187,35 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
           )))
           return
         }
-        let transaction = try await fetchTransaction(
-          by: UInt64(id)
-        )
 
-        Analytics.logTransaction(transaction!)
+        var foundTransaction: Transaction?
+        for await result in Transaction.all {
+          switch result {
+          case let .verified(transaction):
+            if transaction.id == id {
+              foundTransaction = transaction
+              break
+            }
+          case .unverified:
+            continue
+          }
+        }
 
+        guard let transaction = foundTransaction else {
+          completion(.failure(FlutterError(
+            code: "firebase_analytics",
+            message: "Transaction not found",
+            details: nil
+          )))
+          return
+        }
+
+        Analytics.logTransaction(transaction)
         completion(.success(()))
       } catch {
         completion(.failure(error))
       }
     }
-  }
-
-  @available(iOS 15.0, macOS 12.0, *)
-  private func fetchTransaction(by id: UInt64) async throws -> Transaction? {
-    for await result in Transaction.all {
-      switch result {
-      case let .verified(transaction):
-        if transaction.id == id {
-          return transaction
-        }
-      case .unverified:
-        continue
-      }
-    }
-    return nil
   }
 
   public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
