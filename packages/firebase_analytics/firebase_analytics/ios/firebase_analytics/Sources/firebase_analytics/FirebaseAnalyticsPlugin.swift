@@ -145,9 +145,9 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     completion(.success(()))
   }
 
+  @available(iOS 15.0, macOS 12.0, *)
   func logTransaction(transactionId: String,
                       completion: @escaping (Result<Void, any Error>) -> Void) {
-    if #available(iOS 15.0, macOS 12.0, *) {
       Task {
         do {
           guard let id = UInt64(transactionId) else {
@@ -169,12 +169,6 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
           completion(.failure(error))
         }
       }
-    } else {
-      completion(.failure(FlutterError(
-        code: "firebase_analytics",
-        message: "logTransaction requires iOS 15+ or macOS 12+",
-        details: nil
-      )))
     }
   }
 
