@@ -171,6 +171,7 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     }
   }
 
+  @available(iOS 15.0, macOS 12.0, *)
   private func fetchTransaction(by id: UInt64) async throws -> Transaction? {
     for await result in Transaction.all {
       switch result {
