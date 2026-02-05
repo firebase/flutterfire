@@ -99,30 +99,6 @@ final class LiveGenerativeModel extends BaseModel {
     final modelString =
         _useVertexBackend ? _vertexAIModelString() : _googleAIModelString();
 
-    final setupJson = {
-      'setup': {
-        'model': modelString,
-        if (_systemInstruction != null)
-          'system_instruction': _systemInstruction.toJson(),
-        if (_tools != null) 'tools': _tools.map((t) => t.toJson()).toList(),
-        if (sessionResumption != null)
-          'session_resumption': sessionResumption.toJson(),
-        if (_liveGenerationConfig != null) ...{
-          'generation_config': _liveGenerationConfig.toJson(),
-          if (_liveGenerationConfig.inputAudioTranscription != null)
-            'input_audio_transcription':
-                _liveGenerationConfig.inputAudioTranscription!.toJson(),
-          if (_liveGenerationConfig.outputAudioTranscription != null)
-            'output_audio_transcription':
-                _liveGenerationConfig.outputAudioTranscription!.toJson(),
-          if (_liveGenerationConfig.contextWindowCompression
-              case final contextWindowCompression?)
-            'contextWindowCompression': contextWindowCompression.toJson()
-        },
-      }
-    };
-
-    final request = jsonEncode(setupJson);
     final headers = await BaseModel.firebaseTokens(
       _appCheck,
       _auth,
@@ -130,14 +106,15 @@ final class LiveGenerativeModel extends BaseModel {
       _useLimitedUseAppCheckTokens,
     )();
 
-    var ws = kIsWeb
-        ? WebSocketChannel.connect(Uri.parse(uri))
-        : IOWebSocketChannel.connect(Uri.parse(uri), headers: headers);
-    await ws.ready;
-
-    ws.sink.add(request);
-
-    return LiveSession(ws);
+    return LiveSession.connect(
+      uri: uri,
+      headers: headers,
+      modelString: modelString,
+      systemInstruction: _systemInstruction,
+      tools: _tools,
+      sessionResumption: sessionResumption,
+      liveGenerationConfig: _liveGenerationConfig,
+    );
   }
 }
 

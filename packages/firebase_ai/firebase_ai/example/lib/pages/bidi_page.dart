@@ -438,6 +438,21 @@ class _BidiPageState extends State<BidiPage> {
       await _handleLiveServerToolCall(message);
     } else if (message is GoingAwayNotice) {
       developer.log('GoAway message received, time left: ${message.timeLeft}');
+      if (_activeSessionHandle != null) {
+        await _session.resumeSession(
+          sessionResumption: SessionResumptionConfig(
+            handle: _activeSessionHandle,
+            transparent: true,
+          ),
+        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Session is going away, resuming...'),
+            ),
+          );
+        }
+      }
     } else if (message is SessionResumptionUpdate &&
         message.resumable != null &&
         message.resumable!) {
