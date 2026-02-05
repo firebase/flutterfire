@@ -148,26 +148,25 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
   @available(iOS 15.0, macOS 12.0, *)
   func logTransaction(transactionId: String,
                       completion: @escaping (Result<Void, any Error>) -> Void) {
-      Task {
-        do {
-          guard let id = UInt64(transactionId) else {
-            completion(.failure(FlutterError(
-              code: "firebase_analytics",
-              message: "Invalid transactionId",
-              details: nil
-            )))
-            return
-          }
-          let transaction = try await fetchTransaction(
-            by: UInt64(id)
-          )
-
-          Analytics.logTransaction(transaction!)
-
-          completion(.success(()))
-        } catch {
-          completion(.failure(error))
+    Task {
+      do {
+        guard let id = UInt64(transactionId) else {
+          completion(.failure(FlutterError(
+            code: "firebase_analytics",
+            message: "Invalid transactionId",
+            details: nil
+          )))
+          return
         }
+        let transaction = try await fetchTransaction(
+          by: UInt64(id)
+        )
+
+        Analytics.logTransaction(transaction!)
+
+        completion(.success(()))
+      } catch {
+        completion(.failure(error))
       }
     }
   }
