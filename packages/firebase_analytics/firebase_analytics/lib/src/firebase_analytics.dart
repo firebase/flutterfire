@@ -1253,7 +1253,8 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     if (defaultTargetPlatform != TargetPlatform.iOS &&
         defaultTargetPlatform != TargetPlatform.macOS) {
       throw UnimplementedError(
-          'logTransaction() is only supported on iOS and macOS.');
+        'logTransaction() is only supported on iOS and macOS.',
+      );
     }
     return _delegate.logTransaction(transactionId: transactionId);
   }
