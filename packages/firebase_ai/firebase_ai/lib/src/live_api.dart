@@ -133,20 +133,16 @@ class SessionResumptionConfig {
   /// [transparent] (optional): If set, requests the server to send updates with
   /// the message index of the last client message included in the session
   /// state.
-  SessionResumptionConfig({this.handle, this.transparent});
+  SessionResumptionConfig({this.handle});
 
   /// The session resumption handle of the previous session to restore.
   ///
   /// If not present, a new session will be started.
   final String? handle;
 
-  /// If set, requests the server to send updates with the message index of the
-  /// last client message included in the session state.
-  final bool? transparent;
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
         if (handle case final handle?) 'handle': handle,
-        if (transparent case final transparent?) 'transparent': transparent,
       };
 }
 

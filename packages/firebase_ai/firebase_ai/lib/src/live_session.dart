@@ -30,8 +30,7 @@ import 'tool.dart';
 class LiveSession {
   // ignore: public_member_api_docs
   LiveSession._(
-    this._ws,
-    this._messageController, {
+    this._ws, {
     required String uri,
     required Map<String, String> headers,
     required String modelString,
@@ -43,23 +42,9 @@ class LiveSession {
         _modelString = modelString,
         _systemInstruction = systemInstruction,
         _tools = tools,
-        _liveGenerationConfig = liveGenerationConfig {
-    _wsSubscription = _ws.stream.listen(
-      (message) {
-        try {
-          var jsonString = utf8.decode(message);
-          var response = json.decode(jsonString);
-
-          _messageController.add(parseServerResponse(response));
-        } catch (e) {
-          _messageController.addError(e);
-        }
-      },
-      onError: (error) {
-        _messageController.addError(error);
-      },
-      onDone: _messageController.close,
-    );
+        _liveGenerationConfig = liveGenerationConfig,
+        _messageController = StreamController<LiveServerResponse>.broadcast() {
+    _listenToWebSocket();
   }
 
   /// Establishes a connection to a live generation service.
@@ -70,6 +55,47 @@ class LiveSession {
   /// Returns a [Future] that resolves to an [LiveSession] object upon successful
   /// connection.
   static Future<LiveSession> connect({
+    required String uri,
+    required Map<String, String> headers,
+    required String modelString,
+    Content? systemInstruction,
+    List<Tool>? tools,
+    SessionResumptionConfig? sessionResumption,
+    LiveGenerationConfig? liveGenerationConfig,
+  }) async {
+    final ws = await _performWebSocketSetup(
+      uri: uri,
+      headers: headers,
+      modelString: modelString,
+      systemInstruction: systemInstruction,
+      tools: tools,
+      sessionResumption: sessionResumption,
+      liveGenerationConfig: liveGenerationConfig,
+    );
+    return LiveSession._(
+      ws,
+      uri: uri,
+      headers: headers,
+      modelString: modelString,
+      systemInstruction: systemInstruction,
+      tools: tools,
+      liveGenerationConfig: liveGenerationConfig,
+    );
+  }
+
+  // Persisted values for session resumption.
+  final String _uri;
+  final Map<String, String> _headers;
+  final String _modelString;
+  final Content? _systemInstruction;
+  final List<Tool>? _tools;
+  final LiveGenerationConfig? _liveGenerationConfig;
+
+  WebSocketChannel _ws;
+  StreamController<LiveServerResponse> _messageController;
+  late StreamSubscription _wsSubscription;
+
+  static Future<WebSocketChannel> _performWebSocketSetup({
     required String uri,
     required Map<String, String> headers,
     required String modelString,
@@ -108,46 +134,44 @@ class LiveSession {
     await ws.ready;
 
     ws.sink.add(request);
-    return LiveSession._(
-      ws,
-      StreamController<LiveServerResponse>.broadcast(),
-      uri: uri,
-      headers: headers,
-      modelString: modelString,
-      systemInstruction: systemInstruction,
-      tools: tools,
-      liveGenerationConfig: liveGenerationConfig,
+    return ws;
+  }
+
+  void _listenToWebSocket() {
+    _wsSubscription = _ws.stream.listen(
+      (message) {
+        try {
+          var jsonString = utf8.decode(message);
+          var response = json.decode(jsonString);
+
+          _messageController.add(parseServerResponse(response));
+        } catch (e) {
+          _messageController.addError(e);
+        }
+      },
+      onError: (error) {
+        _messageController.addError(error);
+      },
+      onDone: _messageController.close,
     );
   }
 
-  // Persisted values for session resumption.
-  final String _uri;
-  final Map<String, String> _headers;
-  final String _modelString;
-  final Content? _systemInstruction;
-  final List<Tool>? _tools;
-  final LiveGenerationConfig? _liveGenerationConfig;
-
-  WebSocketChannel _ws;
-  StreamController<LiveServerResponse> _messageController;
-  late StreamSubscription _wsSubscription;
-
   Future<void> resumeSession(
-      {required SessionResumptionConfig sessionResumption,
-      LiveGenerationConfig? liveGenerationConfig}) async {
+      {SessionResumptionConfig? sessionResumption}) async {
     await close();
-    final newSession = await connect(
+
+    _ws = await _performWebSocketSetup(
       uri: _uri,
       headers: _headers,
       modelString: _modelString,
       systemInstruction: _systemInstruction,
       tools: _tools,
       sessionResumption: sessionResumption,
-      liveGenerationConfig: liveGenerationConfig ?? _liveGenerationConfig,
+      liveGenerationConfig: _liveGenerationConfig,
     );
-    _ws = newSession._ws;
-    _messageController = newSession._messageController;
-    _wsSubscription = newSession._wsSubscription;
+
+    _messageController = StreamController<LiveServerResponse>.broadcast();
+    _listenToWebSocket();
   }
 
   /// Sends content to the server.

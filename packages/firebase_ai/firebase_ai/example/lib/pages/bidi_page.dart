@@ -256,22 +256,24 @@ class _BidiPageState extends State<BidiPage> {
 
     if (!_sessionOpening) {
       try {
-        if (_activeSessionHandle != null) {
-          _session = await _liveModel.connect(
-            sessionResumption: SessionResumptionConfig(
-                handle: _activeSessionHandle, transparent: true),
-          );
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                    'Resumed session with session handle: $_activeSessionHandle'),
-              ),
-            );
-          }
-        } else {
-          _session = await _liveModel.connect();
-        }
+        // if (_activeSessionHandle != null) {
+
+        //   if (context.mounted) {
+        //     ScaffoldMessenger.of(context).showSnackBar(
+        //       SnackBar(
+        //         content: Text(
+        //             'Resumed session with session handle: $_activeSessionHandle'),
+        //       ),
+        //     );
+        //   }
+        // } else {
+        //   _session = await _liveModel.connect();
+        // }
+        _session = await _liveModel.connect(
+          sessionResumption: SessionResumptionConfig(
+            handle: _activeSessionHandle,
+          ),
+        );
       } on Exception catch (e) {
         developer.log('Error setting up session: $e, starting a new one.');
         _session = await _liveModel.connect();
@@ -439,10 +441,10 @@ class _BidiPageState extends State<BidiPage> {
     } else if (message is GoingAwayNotice) {
       developer.log('GoAway message received, time left: ${message.timeLeft}');
       if (_activeSessionHandle != null) {
+        developer.log('Resume Session with handle: $_activeSessionHandle');
         await _session.resumeSession(
           sessionResumption: SessionResumptionConfig(
             handle: _activeSessionHandle,
-            transparent: true,
           ),
         );
         if (mounted) {
@@ -458,7 +460,9 @@ class _BidiPageState extends State<BidiPage> {
         message.resumable!) {
       _activeSessionHandle = message.newHandle;
       _lastProcessedIndex = message.lastConsumedClientMessageIndex;
-      developer.log('SessionResumptionUpdate message received: $message');
+      developer.log(
+        'SessionResumptionUpdate message received: session handle ${message.newHandle}, processId ${message.lastConsumedClientMessageIndex}',
+      );
     }
   }
 
