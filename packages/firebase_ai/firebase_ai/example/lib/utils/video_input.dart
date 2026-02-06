@@ -15,24 +15,31 @@
 import 'dart:developer';
 import 'dart:async';
 import 'dart:typed_data';
+import 'dart:io';
 import 'package:camera/camera.dart';
+import 'package:camera_macos/camera_macos.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class VideoInput extends ChangeNotifier {
-  late List<CameraDescription> _cameras;
-  CameraController? _cameraController;
-  CameraDescription? _selectedCamera;
+  List<dynamic> _cameras = [];
+  dynamic _cameraController;
+  dynamic _selectedCamera;
   bool controllerInitialized = false;
   Timer? _captureTimer;
   StreamController<Uint8List> _imageStreamController = StreamController();
   bool _isStreaming = false;
 
-  List<CameraDescription> get cameras => _cameras;
-  CameraController? get cameraController => _cameraController;
+  List<dynamic> get cameras => _cameras;
+  dynamic get cameraController => _cameraController;
 
   Future<void> init() async {
     try {
-      _cameras = await availableCameras();
+      if (!kIsWeb && Platform.isMacOS) {
+        _cameras = await CameraMacOS.instance.listDevices();
+      } else {
+        _cameras = await availableCameras();
+      }
       if (_cameras.isNotEmpty) {
         _selectedCamera = _cameras[0];
       }
@@ -46,14 +53,35 @@ class VideoInput extends ChangeNotifier {
     super.dispose();
     stopStreamingImages();
     if (controllerInitialized && _cameraController != null) {
-      _cameraController!.dispose();
+      if (!kIsWeb && Platform.isMacOS) {
+        (_cameraController as CameraMacOSController).destroy();
+      } else {
+        (_cameraController as CameraController).dispose();
+      }
     }
   }
 
+  String? get selectedCameraId {
+    if (_selectedCamera == null) return null;
+    if (!kIsWeb && Platform.isMacOS) {
+      return (_selectedCamera as CameraMacOSDevice).deviceId;
+    }
+    return null;
+  }
+
+  void setMacOSController(CameraMacOSController controller) {
+    _cameraController = controller;
+    controllerInitialized = true;
+    notifyListeners();
+  }
+
   Future<void> initializeCameraController() async {
-    var cameraController = _cameraController;
-    if (controllerInitialized && cameraController != null) {
-      await cameraController.dispose();
+    if (controllerInitialized && _cameraController != null) {
+      if (!kIsWeb && Platform.isMacOS) {
+        await (_cameraController as CameraMacOSController).destroy();
+      } else {
+        await (_cameraController as CameraController).dispose();
+      }
       controllerInitialized = false;
     }
 
@@ -62,31 +90,47 @@ class VideoInput extends ChangeNotifier {
       return;
     }
 
-    _cameraController = CameraController(
-      _selectedCamera!,
-      ResolutionPreset.veryHigh,
-      enableAudio: false,
-      imageFormatGroup: ImageFormatGroup.jpeg,
-    );
-    try {
-      await _cameraController!.initialize();
-      controllerInitialized = true;
+    if (!kIsWeb && Platform.isMacOS) {
+      // On macOS, we rely on CameraMacOSView to initialize the controller.
+      controllerInitialized = false;
       notifyListeners();
-    } catch (e) {
-      log('Error initializing camera: $e');
+    } else {
+      _cameraController = CameraController(
+        _selectedCamera as CameraDescription,
+        ResolutionPreset.veryHigh,
+        enableAudio: false,
+        imageFormatGroup: ImageFormatGroup.jpeg,
+      );
+      try {
+        await (_cameraController as CameraController).initialize();
+        controllerInitialized = true;
+        notifyListeners();
+      } catch (e) {
+        log('Error initializing camera: $e');
+      }
     }
   }
 
   Stream<Uint8List> startStreamingImages() {
-    if (_cameraController == null || !_cameraController!.value.isInitialized) {
+    final bool isInitialized = !kIsWeb && Platform.isMacOS
+        ? _cameraController != null
+        : (_cameraController as CameraController?)?.value.isInitialized ??
+            false;
+
+    if (_cameraController == null || !isInitialized) {
       throw ErrorSummary('Unable to start image stream');
     }
 
     _captureTimer = Timer.periodic(
       const Duration(seconds: 1), // Capture images at 1 frame per second
       (timer) async {
+        final bool currentIsInitialized = !kIsWeb && Platform.isMacOS
+            ? _cameraController != null
+            : (_cameraController as CameraController?)?.value.isInitialized ??
+                false;
+
         if (_cameraController == null ||
-            !_cameraController!.value.isInitialized ||
+            !currentIsInitialized ||
             !_isStreaming) {
           log("Stopping timer due to invalid state.");
           stopStreamingImages();
@@ -94,14 +138,21 @@ class VideoInput extends ChangeNotifier {
         }
 
         try {
-          // Prevent taking picture if already taking one
-          if (_cameraController!.value.isTakingPicture) {
-            return;
+          if (!kIsWeb && Platform.isMacOS) {
+            final controller = _cameraController as CameraMacOSController;
+            log("Taking picture (macOS)...");
+            final CameraMacOSFile? image = await controller.takePicture();
+            if (image != null && image.bytes != null) {
+              _imageStreamController.add(image.bytes!);
+            }
+          } else {
+            final controller = _cameraController as CameraController;
+            if (controller.value.isTakingPicture) return;
+            log("Taking picture...");
+            final XFile imageFile = await controller.takePicture();
+            Uint8List imageBytes = await imageFile.readAsBytes();
+            _imageStreamController.add(imageBytes);
           }
-          log("Taking picture...");
-          final XFile imageFile = await _cameraController!.takePicture();
-          Uint8List imageBytes = await imageFile.readAsBytes();
-          _imageStreamController.add(imageBytes);
         } catch (e) {
           log('Error taking picture: $e');
         }
@@ -124,11 +175,25 @@ class VideoInput extends ChangeNotifier {
 
   Future<void> flipCamera() async {
     if (_cameras.length > 1) {
-      final otherCamera = _cameras.firstWhere(
-        (camera) => camera.lensDirection != _selectedCamera?.lensDirection,
-        orElse: () => _cameras[0],
-      );
-      _selectedCamera = otherCamera;
+      if (!kIsWeb && Platform.isMacOS) {
+        final currentSelected = _selectedCamera as CameraMacOSDevice;
+        final otherCamera = _cameras.firstWhere(
+          (camera) =>
+              (camera as CameraMacOSDevice).deviceId !=
+              currentSelected.deviceId,
+          orElse: () => _cameras[0],
+        );
+        _selectedCamera = otherCamera;
+      } else {
+        final currentSelected = _selectedCamera as CameraDescription;
+        final otherCamera = _cameras.firstWhere(
+          (camera) =>
+              (camera as CameraDescription).lensDirection !=
+              currentSelected.lensDirection,
+          orElse: () => _cameras[0],
+        );
+        _selectedCamera = otherCamera;
+      }
       await initializeCameraController();
     }
   }

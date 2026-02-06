@@ -13,6 +13,7 @@
 // limitations under the License.
 import 'dart:async';
 import 'dart:developer' as developer;
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
@@ -154,7 +155,11 @@ class _BidiPageState extends State<BidiPage> {
                 color: Colors.black,
                 alignment: Alignment.center,
                 child: FullCameraPreview(
-                  controller: _videoInput.cameraController!,
+                  controller: _videoInput.cameraController,
+                  deviceId: _videoInput.selectedCameraId,
+                  onInitialized: (controller) {
+                    _videoInput.setMacOSController(controller);
+                  },
                 ),
               ),
             Expanded(
@@ -359,15 +364,23 @@ class _BidiPageState extends State<BidiPage> {
       return;
     }
 
+    setState(() {
+      _isCameraOn = true;
+    });
+
+    if (Platform.isMacOS) {
+      // On macOS, the controller is initialized by the CameraMacOSView.
+      // We need to wait for it to be available.
+      while (_videoInput.cameraController == null) {
+        await Future.delayed(const Duration(milliseconds: 100));
+      }
+    }
+
     var imageStream = _videoInput.startStreamingImages();
 
     await for (final data in imageStream) {
       await _session.sendVideoRealtime(InlineDataPart('image/jpeg', data));
     }
-
-    setState(() {
-      _isCameraOn = true;
-    });
   }
 
   Future<void> _stopVideoStream() async {

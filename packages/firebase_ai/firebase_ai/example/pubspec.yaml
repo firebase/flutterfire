@@ -20,6 +20,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
 
   camera: ^0.11.2+1
+  camera_macos: ^0.0.9
   cupertino_icons: ^1.0.6
   firebase_ai: ^3.7.0
   firebase_core: ^4.4.0

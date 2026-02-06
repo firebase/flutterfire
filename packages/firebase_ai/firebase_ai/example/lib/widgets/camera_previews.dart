@@ -12,21 +12,39 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:io';
+
 import 'package:camera/camera.dart';
+import 'package:camera_macos/camera_macos.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter/material.dart';
 
 class SquareCameraPreview extends StatelessWidget {
-  const SquareCameraPreview({required this.controller, super.key});
+  const SquareCameraPreview({
+    required this.controller,
+    this.deviceId,
+    this.onInitialized,
+    super.key,
+  });
 
-  final CameraController controller;
+  final dynamic controller;
+  final String? deviceId;
+  final Function(CameraMacOSController)? onInitialized;
 
   @override
   Widget build(BuildContext context) {
+    double aspectRatio = 1.0;
+    if (!kIsWeb && Platform.isMacOS) {
+      //aspectRatio = (controller as CameraMacOSController?)?.aspectRatio ?? 1.0;
+    } else {
+      aspectRatio = (controller as CameraController?)?.value.aspectRatio ?? 1.0;
+    }
+
     return Center(
       child: Container(
-        width: 352.0, // Adjusted from 350 to be a multiple of 4
-        height: 352.0,
+        width: 352, // Adjusted from 350 to be a multiple of 4
+        height: 352,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
         ),
@@ -39,8 +57,19 @@ class SquareCameraPreview extends StatelessWidget {
             // The camera preview is often not a square. To fill the 1:1 aspect
             // ratio, we scale the preview to cover the area and clip it.
             child: Transform.scale(
-              scale: controller.value.aspectRatio / 1,
-              child: Center(child: CameraPreview(controller)),
+              scale: aspectRatio / 1,
+              child: Center(
+                child: !kIsWeb && Platform.isMacOS
+                    ? CameraMacOSView(
+                        deviceId: deviceId,
+                        cameraMode: CameraMacOSMode.photo,
+                        onCameraInizialized:
+                            (CameraMacOSController controller) {
+                          onInitialized?.call(controller);
+                        },
+                      )
+                    : CameraPreview(controller as CameraController),
+              ),
             ),
           ),
         ),
@@ -50,9 +79,16 @@ class SquareCameraPreview extends StatelessWidget {
 }
 
 class FullCameraPreview extends StatefulWidget {
-  const FullCameraPreview({required this.controller, super.key});
+  const FullCameraPreview({
+    required this.controller,
+    this.deviceId,
+    this.onInitialized,
+    super.key,
+  });
 
-  final CameraController controller;
+  final dynamic controller;
+  final String? deviceId;
+  final Function(CameraMacOSController)? onInitialized;
 
   @override
   State<FullCameraPreview> createState() => _FullCameraPreviewState();
@@ -83,7 +119,15 @@ class _FullCameraPreviewState extends State<FullCameraPreview>
       padding: const EdgeInsets.all(16),
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(16)),
-        child: CameraPreview(widget.controller),
+        child: !kIsWeb && Platform.isMacOS
+            ? CameraMacOSView(
+                deviceId: widget.deviceId,
+                cameraMode: CameraMacOSMode.photo,
+                onCameraInizialized: (CameraMacOSController controller) {
+                  widget.onInitialized?.call(controller);
+                },
+              )
+            : CameraPreview(widget.controller as CameraController),
       ),
     ).animate(controller: _animController).scaleXY().fadeIn();
   }

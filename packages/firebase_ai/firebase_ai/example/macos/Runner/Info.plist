@@ -30,6 +30,8 @@
 	<string>NSApplication</string>
   <key>NSMicrophoneUsageDescription</key>
   <string>Permission to Record audio</string>
+  <key>NSCameraUsageDescription</key>
+  <string>This app needs access to the camera to take pictures and record videos.</string>
   <key>NSPhotoLibraryUsageDescription</key>
   <string>This app needs access to your photo library to let you select a profile picture.</string>
 </dict>
