@@ -1,0 +1,30 @@
+name: Podspec Lint
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  podspec-lint:
+    name: Lint iOS Podspec
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby (bundler)
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
+      - name: Install CocoaPods
+        run: |
+          gem install cocoapods
+          pod repo update
+
+      - name: Validate Podspec
+        working-directory: ./packages/firebase_auth/firebase_auth/ios
+        run: |
+          pod spec lint firebase_auth.podspec --allow-warnings --use-libraries --verbose
