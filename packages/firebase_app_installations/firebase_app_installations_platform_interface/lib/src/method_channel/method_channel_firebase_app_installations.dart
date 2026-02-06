@@ -8,21 +8,20 @@ import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_app_installations_platform_interface/firebase_app_installations_platform_interface.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_app_installations_platform_interface/src/pigeon/messages.pigeon.dart';
 
 import 'utils/exception.dart';
 
 class MethodChannelFirebaseAppInstallations
     extends FirebaseAppInstallationsPlatform {
+  final FirebaseAppInstallationsHostApi _api =
+      FirebaseAppInstallationsHostApi();
+
   /// Returns a stub instance to allow the platform interface to access
   /// the class instance statically.
   static MethodChannelFirebaseAppInstallations get instance {
     return MethodChannelFirebaseAppInstallations._();
   }
-
-  /// The [MethodChannelFirebaseFunctions] method channel.
-  static const MethodChannel channel = MethodChannel(
-    'plugins.flutter.io/firebase_app_installations',
-  );
 
   static final Map<String, StreamController<String>> _idTokenChangesListeners =
       <String, StreamController<String>>{};
@@ -33,11 +32,12 @@ class MethodChannelFirebaseAppInstallations
     final controller = _idTokenChangesListeners[app.name] =
         StreamController<String>.broadcast();
 
-    channel.invokeMethod<String>(
-        'FirebaseInstallations#registerIdChangeListener', {
-      'appName': app.name,
-    }).then((channelName) {
-      final events = EventChannel(channelName!, channel.codec);
+    _api
+        .registerIdChangeListener(
+          AppInstallationsPigeonFirebaseApp(appName: app.name),
+        )
+        .then((channelName) {
+      final events = EventChannel(channelName);
 
       events
           .receiveGuardedBroadcastStream(onError: convertPlatformException)
@@ -62,9 +62,9 @@ class MethodChannelFirebaseAppInstallations
   @override
   Future<void> delete() async {
     try {
-      await channel.invokeMethod('FirebaseInstallations#delete', {
-        'appName': app!.name,
-      });
+      await _api.delete(
+        AppInstallationsPigeonFirebaseApp(appName: app!.name),
+      );
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -73,12 +73,9 @@ class MethodChannelFirebaseAppInstallations
   @override
   Future<String> getId() async {
     try {
-      final id = (await channel.invokeMethod<String>(
-        'FirebaseInstallations#getId',
-        {'appName': app!.name},
-      ))!;
-
-      return id;
+      return await _api.getId(
+        AppInstallationsPigeonFirebaseApp(appName: app!.name),
+      );
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -87,12 +84,10 @@ class MethodChannelFirebaseAppInstallations
   @override
   Future<String> getToken(bool forceRefresh) async {
     try {
-      final id = (await channel.invokeMethod<String>(
-        'FirebaseInstallations#getToken',
-        {'appName': app!.name, 'forceRefresh': forceRefresh},
-      ))!;
-
-      return id;
+      return await _api.getToken(
+        AppInstallationsPigeonFirebaseApp(appName: app!.name),
+        forceRefresh,
+      );
     } catch (e, s) {
       convertPlatformException(e, s);
     }
