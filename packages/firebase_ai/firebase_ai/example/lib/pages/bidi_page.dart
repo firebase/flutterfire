@@ -492,6 +492,8 @@ class _BidiPageState extends State<BidiPage> {
       }
     } else if (message is LiveServerToolCall && message.functionCalls != null) {
       await _handleLiveServerToolCall(message);
+    } else if (message is GoingAwayNotice) {
+      developer.log('Session is going away in ${message.timeLeft} seconds');
     }
   }
 

@@ -63,6 +63,7 @@ class SquareCameraPreview extends StatelessWidget {
                     ? CameraMacOSView(
                         deviceId: deviceId,
                         cameraMode: CameraMacOSMode.photo,
+                        enableAudio: false,
                         onCameraInizialized:
                             (CameraMacOSController controller) {
                           onInitialized?.call(controller);
@@ -123,6 +124,7 @@ class _FullCameraPreviewState extends State<FullCameraPreview>
             ? CameraMacOSView(
                 deviceId: widget.deviceId,
                 cameraMode: CameraMacOSMode.photo,
+                enableAudio: false,
                 onCameraInizialized: (CameraMacOSController controller) {
                   widget.onInitialized?.call(controller);
                 },
