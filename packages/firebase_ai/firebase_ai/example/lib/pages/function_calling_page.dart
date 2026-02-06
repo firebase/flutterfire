@@ -40,55 +40,168 @@ class Location {
 
 class _FunctionCallingPageState extends State<FunctionCallingPage> {
   late GenerativeModel _functionCallModel;
+  late GenerativeModel _autoFunctionCallModel;
+  late GenerativeModel _parallelAutoFunctionCallModel;
   late GenerativeModel _codeExecutionModel;
+  late final AutoFunctionDeclaration _autoFetchWeatherTool;
   final List<MessageData> _messages = <MessageData>[];
   bool _loading = false;
   bool _enableThinking = false;
 
+  late final AutoFunctionDeclaration _autoFindRestaurantsTool;
+  late final AutoFunctionDeclaration _autoGetRestaurantMenuTool;
+
   @override
   void initState() {
     super.initState();
+    _autoFetchWeatherTool = AutoFunctionDeclaration(
+      name: 'autofetchWeather',
+      description:
+          'Get the weather conditions for a specific city on a specific date.',
+      parameters: {
+        'location': Schema.object(
+          description:
+              'The name of the city and its state for which to get the weather. Only cities in the USA are supported.',
+          properties: {
+            'city': Schema.string(
+              description: 'The city of the location.',
+            ),
+            'state': Schema.string(
+              description: 'The state of the location.',
+            ),
+          },
+        ),
+        'date': Schema.string(
+          description:
+              'The date for which to get the weather. Date must be in the format: YYYY-MM-DD.',
+        ),
+      },
+      callable: _fetchWeatherCallable,
+    );
+    _autoFindRestaurantsTool = AutoFunctionDeclaration(
+      name: 'findRestaurants',
+      description: 'Find restaurants of a certain cuisine in a given location.',
+      parameters: {
+        'cuisine': Schema.string(
+          description: 'The cuisine of the restaurant.',
+        ),
+        'location': Schema.string(
+          description:
+              'The location to search for restaurants. e.g. San Francisco, CA',
+        ),
+      },
+      callable: (args) async {
+        final cuisine = args['cuisine'];
+        final location = args['location'];
+        if (cuisine is String && location is String) {
+          return findRestaurants(cuisine, location);
+        }
+        // It's good practice to handle cases where arguments are missing or have the wrong type.
+        throw Exception('Missing or invalid arguments for findRestaurants');
+      },
+    );
+    _autoGetRestaurantMenuTool = AutoFunctionDeclaration(
+      name: 'getRestaurantMenu',
+      description: 'Get the menu for a specific restaurant.',
+      parameters: {
+        'restaurantName': Schema.string(
+          description: 'The name of the restaurant.',
+        ),
+      },
+      callable: (args) async {
+        final restaurantName = args['restaurantName']! as String;
+        return getRestaurantMenu(restaurantName);
+      },
+    );
     _initializeModel();
+  }
+
+  Future<Map<String, Object?>> findRestaurants(
+    String cuisine,
+    String location,
+  ) async {
+    // This is a mock response.
+    return {
+      'restaurants': [
+        {
+          'name': 'The Golden Spoon',
+          'cuisine': 'Vegetarian',
+          'location': 'San Francisco, CA',
+        },
+        {
+          'name': 'Green Leaf Bistro',
+          'cuisine': 'Vegetarian',
+          'location': 'San Francisco, CA',
+        },
+      ],
+    };
+  }
+
+  Future<Map<String, Object?>> getRestaurantMenu(String restaurantName) async {
+    // This is a mock response.
+    return {
+      'menu': [
+        {'name': 'Lentil Soup', 'price': '8.99'},
+        {'name': 'Garden Salad', 'price': '10.99'},
+        {'name': 'Mushroom Risotto', 'price': '15.99'},
+      ],
+    };
+  }
+
+  Future<Map<String, Object?>> _fetchWeatherCallable(
+    Map<String, Object?> args,
+  ) async {
+    final locationData = args['location']! as Map<String, Object?>;
+    final city = locationData['city']! as String;
+    final state = locationData['state']! as String;
+    final date = args['date']! as String;
+    return fetchWeather(Location(city, state), date);
   }
 
   void _initializeModel() {
     final generationConfig = GenerationConfig(
-      thinkingConfig:
-          _enableThinking ? ThinkingConfig(includeThoughts: true) : null,
+      thinkingConfig: _enableThinking
+          ? ThinkingConfig.withThinkingLevel(
+              ThinkingLevel.high,
+              includeThoughts: true,
+            )
+          : null,
     );
-    if (widget.useVertexBackend) {
-      var vertexAI = FirebaseAI.vertexAI(auth: FirebaseAuth.instance);
-      _functionCallModel = vertexAI.generativeModel(
-        model: 'gemini-2.5-flash',
-        generationConfig: generationConfig,
-        tools: [
-          Tool.functionDeclarations([fetchWeatherTool]),
-        ],
-      );
-      _codeExecutionModel = vertexAI.generativeModel(
-        model: 'gemini-2.5-flash',
-        generationConfig: generationConfig,
-        tools: [
-          Tool.codeExecution(),
-        ],
-      );
-    } else {
-      var googleAI = FirebaseAI.googleAI(auth: FirebaseAuth.instance);
-      _functionCallModel = googleAI.generativeModel(
-        model: 'gemini-2.5-flash',
-        generationConfig: generationConfig,
-        tools: [
-          Tool.functionDeclarations([fetchWeatherTool]),
-        ],
-      );
-      _codeExecutionModel = googleAI.generativeModel(
-        model: 'gemini-2.5-flash',
-        generationConfig: generationConfig,
-        tools: [
-          Tool.codeExecution(),
-        ],
-      );
-    }
+
+    final aiClient = widget.useVertexBackend
+        ? FirebaseAI.vertexAI(auth: FirebaseAuth.instance)
+        : FirebaseAI.googleAI(auth: FirebaseAuth.instance);
+
+    _functionCallModel = aiClient.generativeModel(
+      model: 'gemini-2.5-flash',
+      generationConfig: generationConfig,
+      tools: [
+        Tool.functionDeclarations([fetchWeatherTool]),
+      ],
+    );
+    _autoFunctionCallModel = aiClient.generativeModel(
+      model: 'gemini-2.5-flash',
+      generationConfig: generationConfig,
+      tools: [
+        Tool.functionDeclarations([_autoFetchWeatherTool]),
+      ],
+    );
+    _parallelAutoFunctionCallModel = aiClient.generativeModel(
+      model: 'gemini-2.5-flash',
+      generationConfig: generationConfig,
+      tools: [
+        Tool.functionDeclarations(
+          [_autoFindRestaurantsTool, _autoGetRestaurantMenuTool],
+        ),
+      ],
+    );
+    _codeExecutionModel = aiClient.generativeModel(
+      model: 'gemini-2.5-flash',
+      generationConfig: generationConfig,
+      tools: [
+        Tool.codeExecution(),
+      ],
+    );
   }
 
   // This is a hypothetical API to return a fake weather data collection for
@@ -132,6 +245,36 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
     },
   );
 
+  Future<Map<String, Object?>> _executeFunctionCall(FunctionCall call) async {
+    if (call.name == 'fetchWeather') {
+      final location = call.args['location']! as Map<String, dynamic>;
+      final date = call.args['date']! as String;
+      final city = location['city'] as String;
+      final state = location['state'] as String;
+      return fetchWeather(Location(city, state), date);
+    }
+    throw UnimplementedError(
+      'Function not declared to the model: ${call.name}',
+    );
+  }
+
+  Future<void> _runTest(Future<void> Function() testBody) async {
+    if (_loading) return;
+    setState(() {
+      _loading = true;
+      _messages.clear();
+    });
+    try {
+      await testBody();
+    } catch (e) {
+      _showError(e.toString());
+    } finally {
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -172,28 +315,65 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
                 vertical: 25,
                 horizontal: 15,
               ),
-              child: Row(
+              child: Column(
                 children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: !_loading
-                          ? () async {
-                              await _testFunctionCalling();
-                            }
-                          : null,
-                      child: const Text('Test Function Calling'),
-                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: !_loading ? _testFunctionCalling : null,
+                          child: const Text('Manual FC'),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: !_loading ? _testCodeExecution : null,
+                          child: const Text('Code Execution'),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: !_loading
-                          ? () async {
-                              await _testCodeExecution();
-                            }
-                          : null,
-                      child: const Text('Test Code Execution'),
-                    ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed:
+                              !_loading ? _testAutoFunctionCalling : null,
+                          child: const Text('Auto Function Calling'),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: !_loading
+                              ? () => _testAutoFunctionCalling(parallel: true)
+                              : null,
+                          child: const Text('Parallel Auto FC'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed:
+                              !_loading ? _testStreamFunctionCalling : null,
+                          child: const Text('Stream FC'),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed:
+                              !_loading ? _testAutoStreamFunctionCalling : null,
+                          child: const Text('Auto Stream FC'),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -204,17 +384,154 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
     );
   }
 
-  Future<void> _testFunctionCalling() async {
-    setState(() {
-      _loading = true;
-      _messages.clear();
-    });
-    try {
-      final functionCallChat = _functionCallModel.startChat();
-      const prompt =
-          'What is the weather like in Boston on 10/02 in year 2024?';
+  Future<void> _testAutoFunctionCalling({bool parallel = false}) async {
+    await _runTest(() async {
+      final model =
+          parallel ? _parallelAutoFunctionCallModel : _autoFunctionCallModel;
+      final prompt = parallel
+          ? 'Find me a good vegetarian restaurant in San Francisco and get its menu.'
+          : 'What is the weather like in Boston, MA on 10/02 in year 2024?';
+
+      final autoFunctionCallChat = model.startChat();
 
       _messages.add(MessageData(text: prompt, fromUser: true));
+      setState(() {});
+
+      // Send the message to the generative model.
+      final response = await autoFunctionCallChat.sendMessage(
+        Content.text(prompt),
+      );
+
+      final thought = response.thoughtSummary;
+      if (thought != null) {
+        _messages
+            .add(MessageData(text: thought, fromUser: false, isThought: true));
+      }
+
+      // The SDK should have handled the function call automatically.
+      // The final response should contain the text from the model.
+      if (response.text case final text?) {
+        _messages.add(MessageData(text: text));
+      } else {
+        _messages.add(MessageData(text: 'No text response from model.'));
+      }
+    });
+  }
+
+  Future<void> _testStreamFunctionCalling() async {
+    await _runTest(() async {
+      final functionCallChat = _functionCallModel.startChat();
+      const prompt =
+          'What is the weather like in Boston, MA on 10/02 in year 2024?';
+
+      _messages.add(MessageData(text: prompt, fromUser: true));
+      setState(() {});
+
+      // Send the message to the generative model.
+      final responseStream = functionCallChat.sendMessageStream(
+        Content.text(prompt),
+      );
+
+      GenerateContentResponse? lastResponse;
+      await for (final response in responseStream) {
+        lastResponse = response;
+        final thought = response.thoughtSummary;
+        if (thought != null) {
+          _messages.add(
+            MessageData(text: thought, fromUser: false, isThought: true),
+          );
+          setState(() {});
+        }
+      }
+
+      final functionCalls = lastResponse?.functionCalls.toList();
+      // When the model response with a function call, invoke the function.
+      if (functionCalls != null && functionCalls.isNotEmpty) {
+        final functionCall = functionCalls.first;
+        final functionResult = await _executeFunctionCall(functionCall);
+        // Send the response to the model so that it can use the result to
+        // generate text for the user.
+        final responseStream2 = functionCallChat.sendMessageStream(
+          Content.functionResponse(functionCall.name, functionResult),
+        );
+
+        var accumulatedText = '';
+        _messages.add(MessageData(text: accumulatedText));
+        setState(() {});
+
+        await for (final response in responseStream2) {
+          if (response.text case final text?) {
+            accumulatedText += text;
+            _messages.last = _messages.last.copyWith(text: accumulatedText);
+            setState(() {});
+          }
+        }
+      } else if (lastResponse?.text case final text?) {
+        // This would be if no function call was returned.
+        _messages.add(MessageData(text: text));
+        setState(() {});
+      } else {
+        _messages.add(MessageData(text: 'No text response from model.'));
+      }
+    });
+  }
+
+  Future<void> _testAutoStreamFunctionCalling() async {
+    await _runTest(() async {
+      final autoFunctionCallChat = _autoFunctionCallModel.startChat();
+      const prompt =
+          'What is the weather like in Boston, MA on 10/02 in year 2024?';
+
+      _messages.add(MessageData(text: prompt, fromUser: true));
+      setState(() {});
+
+      // Send the message to the generative model.
+      final responseStream = autoFunctionCallChat.sendMessageStream(
+        Content.text(prompt),
+      );
+
+      var accumulatedText = '';
+      MessageData? modelMessage;
+
+      await for (final response in responseStream) {
+        final thought = response.thoughtSummary;
+        if (thought != null) {
+          _messages.add(
+            MessageData(text: thought, fromUser: false, isThought: true),
+          );
+          setState(() {});
+        }
+
+        // The SDK should have handled the function call automatically.
+        // The final response should contain the text from the model.
+        if (response.text case final text?) {
+          accumulatedText += text;
+          if (modelMessage == null) {
+            modelMessage = MessageData(text: accumulatedText);
+            _messages.add(modelMessage);
+          } else {
+            modelMessage = modelMessage.copyWith(text: accumulatedText);
+            _messages.last = modelMessage;
+          }
+          setState(() {});
+        }
+      }
+
+      if (accumulatedText.isEmpty) {
+        _messages.add(MessageData(text: 'No text response from model.'));
+        setState(() {});
+      }
+    });
+  }
+
+  Future<void> _testFunctionCalling() async {
+    await _runTest(() async {
+      final functionCallChat = _functionCallModel.startChat();
+      const prompt =
+          'What is the weather like in Boston, MA on 10/02 in year 2024?';
+
+      _messages.add(MessageData(text: prompt, fromUser: true));
+      setState(() {});
 
       // Send the message to the generative model.
       var response = await functionCallChat.sendMessage(
@@ -231,54 +548,28 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       // When the model response with a function call, invoke the function.
       if (functionCalls.isNotEmpty) {
         final functionCall = functionCalls.first;
-        if (functionCall.name == 'fetchWeather') {
-          Map<String, dynamic> location =
-              functionCall.args['location']! as Map<String, dynamic>;
-          var date = functionCall.args['date']! as String;
-          var city = location['city'] as String;
-          var state = location['state'] as String;
-          final functionResult =
-              await fetchWeather(Location(city, state), date);
-          // Send the response to the model so that it can use the result to
-          // generate text for the user.
-          response = await functionCallChat.sendMessage(
-            Content.functionResponse(functionCall.name, functionResult),
-          );
-        } else {
-          throw UnimplementedError(
-            'Function not declared to the model: ${functionCall.name}',
-          );
-        }
+        final functionResult = await _executeFunctionCall(functionCall);
+        // Send the response to the model so that it can use the result to
+        // generate text for the user.
+        response = await functionCallChat.sendMessage(
+          Content.functionResponse(functionCall.name, functionResult),
+        );
       }
       // When the model responds with non-null text content, print it.
       if (response.text case final text?) {
         _messages.add(MessageData(text: text));
-        setState(() {
-          _loading = false;
-        });
       }
-    } catch (e) {
-      _showError(e.toString());
-      setState(() {
-        _loading = false;
-      });
-    } finally {
-      setState(() {
-        _loading = false;
-      });
-    }
+    });
   }
 
   Future<void> _testCodeExecution() async {
-    setState(() {
-      _loading = true;
-    });
-    try {
+    await _runTest(() async {
       final codeExecutionChat = _codeExecutionModel.startChat();
       const prompt = 'What is the sum of the first 50 prime numbers? '
           'Generate and run code for the calculation, and make sure you get all 50.';
 
       _messages.add(MessageData(text: prompt, fromUser: true));
+      setState(() {});
 
       final response =
           await codeExecutionChat.sendMessage(Content.text(prompt));
@@ -314,20 +605,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
           ),
         );
       }
-
-      setState(() {
-        _loading = false;
-      });
-    } catch (e) {
-      _showError(e.toString());
-      setState(() {
-        _loading = false;
-      });
-    } finally {
-      setState(() {
-        _loading = false;
-      });
-    }
+    });
   }
 
   void _showError(String message) {

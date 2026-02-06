@@ -227,6 +227,11 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// Returns all created [FirebaseAppPlatform] instances.
   @override
   List<FirebaseAppPlatform> get apps {
+    // Check if Firebase core module is loaded before accessing firebase.apps
+    if (globalContext.getProperty('firebase_core'.toJS) == null) {
+      return [];
+    }
+
     try {
       return firebase.apps.map(_createFromJsApp).toList(growable: false);
     } catch (exception, stackTrace) {

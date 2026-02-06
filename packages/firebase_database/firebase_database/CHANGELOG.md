@@ -1,3 +1,13 @@
+## 12.1.2
+
+ - **FIX**(database,iOS): ensure transaction handler calls are executed on the main thread ([#17953](https://github.com/firebase/flutterfire/issues/17953)). ([5f8c8e87](https://github.com/firebase/flutterfire/commit/5f8c8e874fcf5689a01830a5569fdad234637c1e))
+
+## 12.1.1
+
+ - **FIX**(database,android): improve type handling for startAt query modifier and add test for numeric startAt ([#17880](https://github.com/firebase/flutterfire/issues/17880)). ([bbb2895c](https://github.com/firebase/flutterfire/commit/bbb2895cc7d47ebb081b4fd8db186d0e8408da49))
+ - **FIX**(database,Android): resolve limit modifier type casting ([#17867](https://github.com/firebase/flutterfire/issues/17867)). ([20152819](https://github.com/firebase/flutterfire/commit/20152819c6cd5d648718f266f80adeeb79fa5e97))
+ - **FIX**(database): properly dispose event channel stream handler ([#17864](https://github.com/firebase/flutterfire/issues/17864)). ([0f9c4450](https://github.com/firebase/flutterfire/commit/0f9c44501cbcdb89963fd292fe595b24b83fdfe0))
+
 ## 12.1.0
 
  - **FEAT**(database): add support for Pigeon. Update iOS to Swift and Android to Kotlin ([#17686](https://github.com/firebase/flutterfire/issues/17686)). ([dac0b0bd](https://github.com/firebase/flutterfire/commit/dac0b0bd033b1c51446aedf0413740ef426877b8))

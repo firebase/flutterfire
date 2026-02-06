@@ -191,6 +191,8 @@ final class UsageMetadata {
     this.promptTokensDetails,
     this.candidatesTokensDetails,
     this.toolUsePromptTokensDetails,
+    this.cacheTokensDetails,
+    this.cachedContentTokenCount,
   });
 
   /// Number of tokens in the prompt.
@@ -217,6 +219,14 @@ final class UsageMetadata {
   /// A list of tokens used by tools whose usage was triggered from a prompt,
   /// broken down by modality.
   final List<ModalityTokenCount>? toolUsePromptTokensDetails;
+
+  /// The number of tokens in the prompt that were served from the cache.
+  /// If implicit caching is not active or no content was cached, this will be 0.
+  final int? cachedContentTokenCount;
+
+  /// Detailed breakdown of the cached tokens by modality (e.g., text, image).
+  /// This list provides granular insight into which parts of the content were cached.
+  final List<ModalityTokenCount>? cacheTokensDetails;
 }
 
 /// Response candidate generated from a [GenerativeModel].
@@ -259,7 +269,7 @@ final class Candidate {
   ///
   /// If this candidate was finished for a reason of [FinishReason.recitation]
   /// or [FinishReason.safety], accessing this text will throw a
-  /// [GenerativeAIException].
+  /// [FirebaseAIException].
   ///
   /// If [content] contains any text parts, this value is the concatenation of
   /// the text.
@@ -400,7 +410,7 @@ final class GroundingMetadata {
   GroundingMetadata(
       {this.searchEntryPoint,
       required this.groundingChunks,
-      required this.groundingSupport,
+      required this.groundingSupports,
       required this.webSearchQueries});
 
   /// Google Search entry point for web searches.
@@ -418,9 +428,15 @@ final class GroundingMetadata {
 
   /// A list of [GroundingSupport]s.
   ///
+  /// Keeping for backwards compatibility. See b/477107542.
+  @Deprecated('Use groundingSupports instead')
+  List<GroundingSupport> get groundingSupport => groundingSupports;
+
+  /// A list of [GroundingSupport]s.
+  ///
   /// Each object details how specific segments of the
   /// model's response are supported by the `groundingChunks`.
-  final List<GroundingSupport> groundingSupport;
+  final List<GroundingSupport> groundingSupports;
 
   /// A list of web search queries that the model performed to gather the
   /// grounding information.
@@ -962,21 +978,92 @@ enum ResponseModalities {
   String toJson() => _jsonString;
 }
 
+/// A preset that balances the trade-off between reasoning quality and response
+/// speed for a model's "thinking" process.
+///
+/// Note, not all models support every level.
+enum ThinkingLevel {
+  /// Minimal thinking level.
+  minimal('MINIMAL'),
+
+  /// Low thinking level.
+  low('LOW'),
+
+  /// Medium thinking level.
+  medium('MEDIUM'),
+
+  /// High thinking level.
+  high('HIGH');
+
+  const ThinkingLevel(this._jsonString);
+  final String _jsonString;
+
+  // ignore: public_member_api_docs
+  String toJson() => _jsonString;
+}
+
 /// Config for thinking features.
 class ThinkingConfig {
-  // ignore: public_member_api_docs
-  ThinkingConfig({this.thinkingBudget, this.includeThoughts});
+  /// Deprecated public constructor of [ThinkingConfig].
+  ///
+  /// Keep for backwards compatibility.
+  /// [thinkingBudget] and [thinkingLevel] cannot be set at the same time.
+  @Deprecated(
+      'Use ThinkingConfig.withThinkingBudget() or ThinkingConfig.withThinkingLevel() instead.')
+  ThinkingConfig(
+      {this.thinkingBudget, this.thinkingLevel, this.includeThoughts})
+      : assert(
+          !(thinkingBudget != null && thinkingLevel != null),
+          'thinkingBudget and thinkingLevel cannot be set at the same time.',
+        );
+
+  // Private constructor
+  ThinkingConfig._(
+      {this.thinkingBudget, this.thinkingLevel, this.includeThoughts});
+
+  /// Initializes [ThinkingConfig] with [thinkingBudget].
+  ///
+  /// Used for Gemini models 2.5 and earlier.
+  factory ThinkingConfig.withThinkingBudget(int? thinkingBudget,
+          {bool? includeThoughts}) =>
+      ThinkingConfig._(
+          thinkingBudget: thinkingBudget, includeThoughts: includeThoughts);
+
+  /// Initializes [ThinkingConfig] with [thinkingLevel].
+  ///
+  /// Used for Gemini models 3.0 and newer.
+  /// See https://ai.google.dev/gemini-api/docs/thinking#thinking-levels
+  factory ThinkingConfig.withThinkingLevel(ThinkingLevel? thinkingLevel,
+          {bool? includeThoughts}) =>
+      ThinkingConfig._(
+          thinkingLevel: thinkingLevel, includeThoughts: includeThoughts);
 
   /// The number of thoughts tokens that the model should generate.
+  ///
+  /// The range of supported thinking budget values depends on the model.
+  /// https://firebase.google.com/docs/ai-logic/thinking?api=dev#supported-thinking-budget-values
+  /// To use the default thinking budget or thinking level for a model, set this
+  /// value to null or omit it.
+  /// To disable thinking, when supported by the model, set this value to `0`.
+  /// To use dynamic thinking, allowing the model to decide on the thinking
+  /// budget based on the task, set this value to `-1`.
   final int? thinkingBudget;
 
   /// Whether to include thoughts in the response.
   final bool? includeThoughts;
 
+  /// A preset that controls the model's "thinking" process.
+  ///
+  /// Use [ThinkingLevel.low] for faster responses on less complex tasks, and
+  /// [ThinkingLevel.high] for better reasoning on more complex tasks.
+  final ThinkingLevel? thinkingLevel;
+
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
         if (thinkingBudget case final thinkingBudget?)
           'thinkingBudget': thinkingBudget,
+        if (thinkingLevel case final thinkingLevel?)
+          'thinkingLevel': thinkingLevel.toJson(),
         if (includeThoughts case final includeThoughts?)
           'includeThoughts': includeThoughts,
       };
@@ -1449,6 +1536,16 @@ UsageMetadata parseUsageMetadata(Object jsonObject) {
       toolUsePromptTokensDetails.map(_parseModalityTokenCount).toList(),
     _ => null,
   };
+  final cachedContentTokenCount = switch (jsonObject) {
+    {'cachedContentTokenCount': final int cachedContentTokenCount} =>
+      cachedContentTokenCount,
+    _ => null,
+  };
+  final cacheTokensDetails = switch (jsonObject) {
+    {'cacheTokensDetails': final List<Object?> cacheTokensDetails} =>
+      cacheTokensDetails.map(_parseModalityTokenCount).toList(),
+    _ => null,
+  };
   return UsageMetadata._(
     promptTokenCount: promptTokenCount,
     candidatesTokenCount: candidatesTokenCount,
@@ -1458,6 +1555,8 @@ UsageMetadata parseUsageMetadata(Object jsonObject) {
     promptTokensDetails: promptTokensDetails,
     candidatesTokensDetails: candidatesTokensDetails,
     toolUsePromptTokensDetails: toolUsePromptTokensDetails,
+    cachedContentTokenCount: cachedContentTokenCount,
+    cacheTokensDetails: cacheTokensDetails,
   );
 }
 
@@ -1543,9 +1642,9 @@ GroundingMetadata parseGroundingMetadata(Object? jsonObject) {
       [];
   // Filters out null elements, which are returned from _parseGroundingSupport when
   // segment is null.
-  final groundingSupport = switch (jsonObject) {
-        {'groundingSupport': final List<Object?> groundingSupport} =>
-          groundingSupport
+  final groundingSupports = switch (jsonObject) {
+        {'groundingSupports': final List<Object?> groundingSupports} =>
+          groundingSupports
               .map(_parseGroundingSupport)
               .whereType<GroundingSupport>()
               .toList(),
@@ -1562,7 +1661,7 @@ GroundingMetadata parseGroundingMetadata(Object? jsonObject) {
   return GroundingMetadata(
       searchEntryPoint: searchEntryPoint,
       groundingChunks: groundingChunks,
-      groundingSupport: groundingSupport,
+      groundingSupports: groundingSupports,
       webSearchQueries: webSearchQueries);
 }
 
@@ -1618,7 +1717,7 @@ GroundingSupport? _parseGroundingSupport(Object? jsonObject) {
   return GroundingSupport(
       segment: segment,
       groundingChunkIndices:
-          (jsonObject['groundingChunkIndices'] as List<int>?) ?? []);
+          (jsonObject['groundingChunkIndices'] as List?)?.cast<int>() ?? []);
 }
 
 SearchEntryPoint _parseSearchEntryPoint(Object? jsonObject) {

@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:async';
+
 import 'schema.dart';
 
 /// Tool details that the model may use to generate a response.
@@ -95,6 +97,15 @@ final class Tool {
   /// A tool that allows providing URL context to the model.
   final UrlContext? _urlContext;
 
+  /// Returns a list of all [AutoFunctionDeclaration] objects
+  /// found within the [_functionDeclarations] list.
+  List<AutoFunctionDeclaration> get autoFunctionDeclarations {
+    return _functionDeclarations
+            ?.whereType<AutoFunctionDeclaration>()
+            .toList() ??
+        [];
+  }
+
   /// Convert to json object.
   Map<String, Object> toJson() => {
         if (_functionDeclarations case final _functionDeclarations?)
@@ -158,7 +169,7 @@ final class CodeExecution {
 /// Included in this declaration are the function name and parameters. This
 /// FunctionDeclaration is a representation of a block of code that can be used
 /// as a `Tool` by the model and executed by the client.
-final class FunctionDeclaration {
+class FunctionDeclaration {
   // ignore: public_member_api_docs
   FunctionDeclaration(this.name, this.description,
       {required Map<String, Schema> parameters,
@@ -183,6 +194,29 @@ final class FunctionDeclaration {
         'description': description,
         'parameters': _schemaObject.toJson()
       };
+}
+
+/// A [FunctionDeclaration] for auto function calling.
+final class AutoFunctionDeclaration extends FunctionDeclaration {
+  /// Creates an [AutoFunctionDeclaration].
+  ///
+  /// - [name]: The name of the function.
+  /// - [description]: A brief description of the function.
+  /// - [parameters]: The parameters of the function as a map of names to
+  ///   [Schema] objects.
+  /// - [callable]: The actual function implementation.
+  AutoFunctionDeclaration({
+    required String name,
+    required String description,
+    required Map<String, Schema> parameters,
+    List<String> optionalParameters = const [],
+    required this.callable,
+  }) : super(name, description,
+            parameters: parameters, optionalParameters: optionalParameters);
+
+  /// The callable function that this declaration represents.
+  final FutureOr<Map<String, Object?>> Function(Map<String, Object?> args)
+      callable;
 }
 
 /// Config for tools to use with model.
