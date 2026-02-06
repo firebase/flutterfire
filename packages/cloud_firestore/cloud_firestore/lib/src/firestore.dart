@@ -339,6 +339,25 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     return null;
   }
 
+  /// Returns a [PipelineSource] for creating and executing pipelines.
+  ///
+  /// Pipelines allow you to perform complex queries and transformations on
+  /// Firestore data using a fluent API.
+  ///
+  /// Example:
+  /// ```dart
+  /// final snapshot = await FirebaseFirestore.instance
+  ///     .pipeline()
+  ///     .collection('users')
+  ///     .where(PipelineFilter(Field('age'), isGreaterThan: 18))
+  ///     .sort(Field('name').ascending())
+  ///     .limit(10)
+  ///     .execute();
+  /// ```
+  PipelineSource pipeline() {
+    return PipelineSource._(this);
+  }
+
   /// Configures indexing for local query execution. Any previous index configuration is overridden.
   ///
   /// The index entries themselves are created asynchronously. You can continue to use queries that
