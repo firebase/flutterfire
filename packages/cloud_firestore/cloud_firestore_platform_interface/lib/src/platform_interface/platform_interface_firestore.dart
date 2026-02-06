@@ -243,6 +243,14 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
     throw UnimplementedError('setLoggingEnabled() is not implemented');
   }
 
+  /// Executes a pipeline and returns the results.
+  ///
+  /// The [stages] parameter contains the serialized pipeline stages.
+  Future<PipelineSnapshotPlatform> executePipeline(
+      List<Map<String, dynamic>> stages) {
+    throw UnimplementedError('executePipeline() is not implemented');
+  }
+
   @override
   //ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) =>
