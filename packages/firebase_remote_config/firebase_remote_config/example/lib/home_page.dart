@@ -32,6 +32,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () async {
               final FirebaseRemoteConfig remoteConfig =
                   FirebaseRemoteConfig.instance;
+              // await remoteConfig.ensureInitialized();
               await remoteConfig.setConfigSettings(
                 RemoteConfigSettings(
                   fetchTimeout: const Duration(seconds: 10),
