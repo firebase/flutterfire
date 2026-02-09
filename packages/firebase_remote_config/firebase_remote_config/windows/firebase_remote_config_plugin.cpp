@@ -270,8 +270,7 @@ void FirebaseRemoteConfigPlugin::GetAll(
     std::function<void(ErrorOr<flutter::EncodableMap> reply)> result) {
   RemoteConfig* remote_config = GetRemoteConfigFromPigeon(app_name);
 
-  // Use GetAll() which returns typed Variants preserving correct values
-  // (including booleans), matching the C++ SDK's own integration tests.
+  // Use GetAll() to enumerate keys and detect value types via Variant.
   std::map<std::string, Variant> all_values = remote_config->GetAll();
   flutter::EncodableMap parameters;
 
@@ -279,12 +278,21 @@ void FirebaseRemoteConfigPlugin::GetAll(
     const std::string& key = kv.first;
     const Variant& variant = kv.second;
 
-    // Get source info via GetString (source is correct regardless of getter)
     firebase::remote_config::ValueInfo info;
-    remote_config->GetString(key.c_str(), &info);
+    std::string str_value;
 
-    // Convert variant to its string representation, then to bytes
-    std::string str_value = VariantToString(variant);
+    if (variant.is_bool()) {
+      // The desktop C++ SDK's Variant::bool_value() and GetString() may
+      // return incorrect values for boolean parameters (e.g. "false" for
+      // a value that is actually "true"). GetBoolean() correctly reads the
+      // activated boolean value.
+      bool bval = remote_config->GetBoolean(key.c_str(), &info);
+      str_value = bval ? "true" : "false";
+    } else {
+      remote_config->GetString(key.c_str(), &info);
+      str_value = VariantToString(variant);
+    }
+
     std::vector<uint8_t> byte_data(str_value.begin(), str_value.end());
 
     flutter::EncodableMap value_map;
