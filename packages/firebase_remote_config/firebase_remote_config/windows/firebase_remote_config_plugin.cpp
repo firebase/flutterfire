@@ -21,7 +21,6 @@
 #include <flutter/standard_method_codec.h>
 
 #include <future>
-#include <iostream>
 #include <map>
 #include <memory>
 #include <sstream>
@@ -294,22 +293,11 @@ void FirebaseRemoteConfigPlugin::GetAll(
 
     // Get source info via GetString (source is correct regardless of getter)
     firebase::remote_config::ValueInfo info;
-    std::string raw_str = remote_config->GetString(key.c_str(), &info);
+    remote_config->GetString(key.c_str(), &info);
 
     // Convert variant to its string representation, then to bytes
     std::string str_value = VariantToString(variant);
     std::vector<uint8_t> byte_data(str_value.begin(), str_value.end());
-
-    // Debug: log variant type, raw GetString, GetBoolean for each key
-    std::cerr << "[RC_CPP] key=" << key
-              << " variant_type=" << static_cast<int>(variant.type())
-              << " is_bool=" << variant.is_bool()
-              << " is_int=" << variant.is_int64()
-              << " is_string=" << variant.is_string()
-              << " GetString=\"" << raw_str << "\""
-              << " GetBoolean=" << remote_config->GetBoolean(key.c_str())
-              << " VariantToString=\"" << str_value << "\""
-              << std::endl;
 
     flutter::EncodableMap value_map;
     value_map[flutter::EncodableValue("value")] =
