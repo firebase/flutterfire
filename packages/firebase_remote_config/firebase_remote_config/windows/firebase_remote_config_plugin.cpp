@@ -5,7 +5,18 @@
 #include "firebase_remote_config_plugin.h"
 
 // This must be included before many other Windows headers.
+#include <flutter/event_channel.h>
+#include <flutter/method_channel.h>
+#include <flutter/plugin_registrar_windows.h>
+#include <flutter/standard_method_codec.h>
 #include <windows.h>
+
+#include <future>
+#include <map>
+#include <memory>
+#include <sstream>
+#include <string>
+#include <vector>
 
 #include "firebase/app.h"
 #include "firebase/future.h"
@@ -14,18 +25,6 @@
 #include "firebase_core/firebase_core_plugin_c_api.h"
 #include "firebase_remote_config/plugin_version.h"
 #include "messages.g.h"
-
-#include <flutter/event_channel.h>
-#include <flutter/method_channel.h>
-#include <flutter/plugin_registrar_windows.h>
-#include <flutter/standard_method_codec.h>
-
-#include <future>
-#include <map>
-#include <memory>
-#include <sstream>
-#include <string>
-#include <vector>
 
 using ::firebase::App;
 using ::firebase::Future;
@@ -65,8 +64,7 @@ RemoteConfig* GetRemoteConfigFromPigeon(const std::string& app_name) {
   return remote_config;
 }
 
-static std::string MapValueSource(
-    firebase::remote_config::ValueSource source) {
+static std::string MapValueSource(firebase::remote_config::ValueSource source) {
   switch (source) {
     case firebase::remote_config::kValueSourceRemoteValue:
       return "remote";
@@ -105,10 +103,9 @@ static std::string GetRemoteConfigErrorCode(int error) {
 
 static FlutterError ParseError(const firebase::FutureBase& completed_future) {
   std::string error_code = GetRemoteConfigErrorCode(completed_future.error());
-  std::string error_message =
-      completed_future.error_message()
-          ? completed_future.error_message()
-          : "An unknown error occurred";
+  std::string error_message = completed_future.error_message()
+                                  ? completed_future.error_message()
+                                  : "An unknown error occurred";
 
   return FlutterError(error_code, error_message);
 }
@@ -119,14 +116,13 @@ void FirebaseRemoteConfigPlugin::Fetch(
   RemoteConfig* remote_config = GetRemoteConfigFromPigeon(app_name);
 
   Future<void> future = remote_config->Fetch();
-  future.OnCompletion(
-      [result](const Future<void>& completed_future) {
-        if (completed_future.error() != 0) {
-          result(ParseError(completed_future));
-        } else {
-          result(std::nullopt);
-        }
-      });
+  future.OnCompletion([result](const Future<void>& completed_future) {
+    if (completed_future.error() != 0) {
+      result(ParseError(completed_future));
+    } else {
+      result(std::nullopt);
+    }
+  });
 }
 
 void FirebaseRemoteConfigPlugin::FetchAndActivate(
@@ -135,15 +131,14 @@ void FirebaseRemoteConfigPlugin::FetchAndActivate(
   RemoteConfig* remote_config = GetRemoteConfigFromPigeon(app_name);
 
   Future<bool> future = remote_config->FetchAndActivate();
-  future.OnCompletion(
-      [result](const Future<bool>& completed_future) {
-        if (completed_future.error() != 0) {
-          result(ParseError(completed_future));
-        } else {
-          bool activated = *completed_future.result();
-          result(activated);
-        }
-      });
+  future.OnCompletion([result](const Future<bool>& completed_future) {
+    if (completed_future.error() != 0) {
+      result(ParseError(completed_future));
+    } else {
+      bool activated = *completed_future.result();
+      result(activated);
+    }
+  });
 }
 
 void FirebaseRemoteConfigPlugin::Activate(
@@ -152,20 +147,18 @@ void FirebaseRemoteConfigPlugin::Activate(
   RemoteConfig* remote_config = GetRemoteConfigFromPigeon(app_name);
 
   Future<bool> future = remote_config->Activate();
-  future.OnCompletion(
-      [result](const Future<bool>& completed_future) {
-        if (completed_future.error() != 0) {
-          result(ParseError(completed_future));
-        } else {
-          bool activated = *completed_future.result();
-          result(activated);
-        }
-      });
+  future.OnCompletion([result](const Future<bool>& completed_future) {
+    if (completed_future.error() != 0) {
+      result(ParseError(completed_future));
+    } else {
+      bool activated = *completed_future.result();
+      result(activated);
+    }
+  });
 }
 
 void FirebaseRemoteConfigPlugin::SetConfigSettings(
-    const std::string& app_name,
-    const RemoteConfigPigeonSettings& settings,
+    const std::string& app_name, const RemoteConfigPigeonSettings& settings,
     std::function<void(std::optional<FlutterError> reply)> result) {
   RemoteConfig* remote_config = GetRemoteConfigFromPigeon(app_name);
 
@@ -176,14 +169,13 @@ void FirebaseRemoteConfigPlugin::SetConfigSettings(
       settings.fetch_timeout_seconds() * 1000;
 
   Future<void> future = remote_config->SetConfigSettings(config_settings);
-  future.OnCompletion(
-      [result](const Future<void>& completed_future) {
-        if (completed_future.error() != 0) {
-          result(ParseError(completed_future));
-        } else {
-          result(std::nullopt);
-        }
-      });
+  future.OnCompletion([result](const Future<void>& completed_future) {
+    if (completed_future.error() != 0) {
+      result(ParseError(completed_future));
+    } else {
+      result(std::nullopt);
+    }
+  });
 }
 
 void FirebaseRemoteConfigPlugin::SetDefaults(
@@ -220,14 +212,13 @@ void FirebaseRemoteConfigPlugin::SetDefaults(
 
   Future<void> future =
       remote_config->SetDefaults(defaults.data(), defaults.size());
-  future.OnCompletion(
-      [result](const Future<void>& completed_future) {
-        if (completed_future.error() != 0) {
-          result(ParseError(completed_future));
-        } else {
-          result(std::nullopt);
-        }
-      });
+  future.OnCompletion([result](const Future<void>& completed_future) {
+    if (completed_future.error() != 0) {
+      result(ParseError(completed_future));
+    } else {
+      result(std::nullopt);
+    }
+  });
 }
 
 void FirebaseRemoteConfigPlugin::EnsureInitialized(
@@ -236,19 +227,17 @@ void FirebaseRemoteConfigPlugin::EnsureInitialized(
   RemoteConfig* remote_config = GetRemoteConfigFromPigeon(app_name);
 
   Future<ConfigInfo> future = remote_config->EnsureInitialized();
-  future.OnCompletion(
-      [result](const Future<ConfigInfo>& completed_future) {
-        if (completed_future.error() != 0) {
-          result(ParseError(completed_future));
-        } else {
-          result(std::nullopt);
-        }
-      });
+  future.OnCompletion([result](const Future<ConfigInfo>& completed_future) {
+    if (completed_future.error() != 0) {
+      result(ParseError(completed_future));
+    } else {
+      result(std::nullopt);
+    }
+  });
 }
 
 void FirebaseRemoteConfigPlugin::SetCustomSignals(
-    const std::string& app_name,
-    const flutter::EncodableMap& custom_signals,
+    const std::string& app_name, const flutter::EncodableMap& custom_signals,
     std::function<void(std::optional<FlutterError> reply)> result) {
   // SetCustomSignals is not supported on the C++ SDK for desktop platforms.
   result(FlutterError("unimplemented",
@@ -320,13 +309,11 @@ void FirebaseRemoteConfigPlugin::GetProperties(
   const ConfigInfo& info = remote_config->GetInfo();
   const ConfigSettings config_settings = remote_config->GetConfigSettings();
 
-  int64_t fetch_timeout_seconds =
-      static_cast<int64_t>(config_settings.fetch_timeout_in_milliseconds /
-                           1000);
+  int64_t fetch_timeout_seconds = static_cast<int64_t>(
+      config_settings.fetch_timeout_in_milliseconds / 1000);
   int64_t minimum_fetch_interval_seconds = static_cast<int64_t>(
       config_settings.minimum_fetch_interval_in_milliseconds / 1000);
-  int64_t last_fetch_time_millis =
-      static_cast<int64_t>(info.fetch_time);
+  int64_t last_fetch_time_millis = static_cast<int64_t>(info.fetch_time);
 
   flutter::EncodableMap properties;
   properties[flutter::EncodableValue("fetchTimeout")] =
@@ -336,8 +323,7 @@ void FirebaseRemoteConfigPlugin::GetProperties(
   properties[flutter::EncodableValue("lastFetchTime")] =
       flutter::EncodableValue(last_fetch_time_millis);
   properties[flutter::EncodableValue("lastFetchStatus")] =
-      flutter::EncodableValue(
-          MapLastFetchStatus(info.last_fetch_status));
+      flutter::EncodableValue(MapLastFetchStatus(info.last_fetch_status));
 
   result(properties);
 }

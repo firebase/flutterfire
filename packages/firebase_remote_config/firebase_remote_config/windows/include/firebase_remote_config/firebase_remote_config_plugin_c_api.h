@@ -19,8 +19,7 @@
 extern "C" {
 #endif
 
-FLUTTER_PLUGIN_EXPORT void
-FirebaseRemoteConfigPluginCApiRegisterWithRegistrar(
+FLUTTER_PLUGIN_EXPORT void FirebaseRemoteConfigPluginCApiRegisterWithRegistrar(
     FlutterDesktopPluginRegistrarRef registrar);
 
 #if defined(__cplusplus)

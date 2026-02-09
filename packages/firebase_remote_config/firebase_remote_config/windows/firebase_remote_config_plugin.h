@@ -43,8 +43,7 @@ class FirebaseRemoteConfigPlugin : public flutter::Plugin,
   void Activate(const std::string& app_name,
                 std::function<void(ErrorOr<bool> reply)> result) override;
   void SetConfigSettings(
-      const std::string& app_name,
-      const RemoteConfigPigeonSettings& settings,
+      const std::string& app_name, const RemoteConfigPigeonSettings& settings,
       std::function<void(std::optional<FlutterError> reply)> result) override;
   void SetDefaults(
       const std::string& app_name,
@@ -54,17 +53,14 @@ class FirebaseRemoteConfigPlugin : public flutter::Plugin,
       const std::string& app_name,
       std::function<void(std::optional<FlutterError> reply)> result) override;
   void SetCustomSignals(
-      const std::string& app_name,
-      const flutter::EncodableMap& custom_signals,
+      const std::string& app_name, const flutter::EncodableMap& custom_signals,
       std::function<void(std::optional<FlutterError> reply)> result) override;
-  void GetAll(
-      const std::string& app_name,
-      std::function<void(ErrorOr<flutter::EncodableMap> reply)> result)
+  void GetAll(const std::string& app_name,
+              std::function<void(ErrorOr<flutter::EncodableMap> reply)> result)
       override;
-  void GetProperties(
-      const std::string& app_name,
-      std::function<void(ErrorOr<flutter::EncodableMap> reply)> result)
-      override;
+  void GetProperties(const std::string& app_name,
+                     std::function<void(ErrorOr<flutter::EncodableMap> reply)>
+                         result) override;
 
  private:
   static flutter::BinaryMessenger* binaryMessenger;
