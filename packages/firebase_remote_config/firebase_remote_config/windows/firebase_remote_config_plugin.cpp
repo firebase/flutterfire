@@ -21,7 +21,7 @@
 #include <flutter/standard_method_codec.h>
 
 #include <future>
-#include <iostream>
+#include <map>
 #include <memory>
 #include <sstream>
 #include <string>
@@ -138,17 +138,9 @@ void FirebaseRemoteConfigPlugin::FetchAndActivate(
   future.OnCompletion(
       [result](const Future<bool>& completed_future) {
         if (completed_future.error() != 0) {
-          std::cerr << "[RC_DEBUG_CPP] FetchAndActivate error: "
-                    << completed_future.error() << " - "
-                    << (completed_future.error_message()
-                            ? completed_future.error_message()
-                            : "unknown")
-                    << std::endl;
           result(ParseError(completed_future));
         } else {
           bool activated = *completed_future.result();
-          std::cerr << "[RC_DEBUG_CPP] FetchAndActivate success, activated="
-                    << activated << std::endl;
           result(activated);
         }
       });
@@ -263,34 +255,49 @@ void FirebaseRemoteConfigPlugin::SetCustomSignals(
                       "SetCustomSignals is not supported on Windows."));
 }
 
+// Convert a Variant to its string representation, matching what the mobile
+// SDKs return as raw bytes. Using GetAll() (which returns typed Variants)
+// instead of GetString() ensures boolean values are correctly represented,
+// as the C++ desktop SDK's GetString() may not handle boolean Variants
+// properly.
+static std::string VariantToString(const Variant& variant) {
+  if (variant.is_bool()) {
+    return variant.bool_value() ? "true" : "false";
+  } else if (variant.is_int64()) {
+    return std::to_string(variant.int64_value());
+  } else if (variant.is_double()) {
+    std::ostringstream oss;
+    oss << variant.double_value();
+    return oss.str();
+  } else if (variant.is_string()) {
+    return variant.string_value();
+  } else if (variant.is_mutable_string()) {
+    return variant.mutable_string();
+  }
+  return "";
+}
+
 void FirebaseRemoteConfigPlugin::GetAll(
     const std::string& app_name,
     std::function<void(ErrorOr<flutter::EncodableMap> reply)> result) {
   RemoteConfig* remote_config = GetRemoteConfigFromPigeon(app_name);
 
-  // Get all keys and build a map of values with sources
-  std::vector<std::string> keys = remote_config->GetKeys();
+  // Use GetAll() which returns typed Variants preserving correct values
+  // (including booleans), matching the C++ SDK's own integration tests.
+  std::map<std::string, Variant> all_values = remote_config->GetAll();
   flutter::EncodableMap parameters;
 
-  std::cerr << "[RC_DEBUG_CPP] GetAll: found " << keys.size() << " keys"
-            << std::endl;
+  for (const auto& kv : all_values) {
+    const std::string& key = kv.first;
+    const Variant& variant = kv.second;
 
-  for (const auto& key : keys) {
+    // Get source info via GetString (source is correct regardless of getter)
     firebase::remote_config::ValueInfo info;
-    // Use GetData() to get raw bytes, matching iOS (dataValue) and Android
-    // (asByteArray()) behavior. GetString() may incorrectly convert certain
-    // value types (e.g. returning "false" for boolean "true").
-    std::vector<unsigned char> raw_data =
-        remote_config->GetData(key.c_str(), &info);
+    remote_config->GetString(key.c_str(), &info);
 
-    std::string value_for_log(raw_data.begin(), raw_data.end());
-    std::cerr << "[RC_DEBUG_CPP] key=" << key << ", GetData=\""
-              << value_for_log << "\", GetString=\""
-              << remote_config->GetString(key.c_str()) << "\", GetBoolean="
-              << remote_config->GetBoolean(key.c_str())
-              << ", source=" << static_cast<int>(info.source) << std::endl;
-
-    std::vector<uint8_t> byte_data(raw_data.begin(), raw_data.end());
+    // Convert variant to its string representation, then to bytes
+    std::string str_value = VariantToString(variant);
+    std::vector<uint8_t> byte_data(str_value.begin(), str_value.end());
 
     flutter::EncodableMap value_map;
     value_map[flutter::EncodableValue("value")] =
@@ -320,12 +327,6 @@ void FirebaseRemoteConfigPlugin::GetProperties(
       config_settings.minimum_fetch_interval_in_milliseconds / 1000);
   int64_t last_fetch_time_millis =
       static_cast<int64_t>(info.fetch_time);
-
-  std::cerr << "[RC_DEBUG_CPP] GetProperties: fetchTimeout=" << fetch_timeout_seconds
-            << "s, minFetchInterval=" << minimum_fetch_interval_seconds
-            << "s, lastFetchTime=" << last_fetch_time_millis
-            << "ms, lastFetchStatus=" << MapLastFetchStatus(info.last_fetch_status)
-            << std::endl;
 
   flutter::EncodableMap properties;
   properties[flutter::EncodableValue("fetchTimeout")] =

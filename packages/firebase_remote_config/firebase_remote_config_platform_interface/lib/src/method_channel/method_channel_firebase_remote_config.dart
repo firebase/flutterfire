@@ -231,24 +231,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
 
   Future<void> _updateConfigParameters() async {
     Map<dynamic, Object?> parameters = await _api.getAll(app.name);
-    // Debug logging for Windows investigation
-    print('[RC_DEBUG] getAll returned ${parameters.length} keys: ${parameters.keys.toList()}');
-    for (final key in parameters.keys) {
-      final rawValue = parameters[key];
-      if (rawValue is Map) {
-        final value = rawValue['value'];
-        final source = rawValue['source'];
-        print('[RC_DEBUG] key=$key, source=$source, value type=${value.runtimeType}, value=$value');
-      } else {
-        print('[RC_DEBUG] key=$key, rawValue type=${rawValue.runtimeType}, rawValue=$rawValue');
-      }
-    }
     _activeParameters = _parseParameters(parameters);
-    print('[RC_DEBUG] _activeParameters keys: ${_activeParameters.keys.toList()}');
-    for (final key in _activeParameters.keys) {
-      final rcv = _activeParameters[key]!;
-      print('[RC_DEBUG] param key=$key, asString=${rcv.asString()}, asBool=${rcv.asBool()}, source=${rcv.source}');
-    }
   }
 
   Future<void> _updateConfigProperties() async {
