@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2026-02-09
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ai` - `v3.8.0`](#firebase_ai---v380)
+ - [`firebase_analytics` - `v12.1.2`](#firebase_analytics---v1212)
+ - [`firebase_database` - `v12.1.3`](#firebase_database---v1213)
+
+---
+
+#### `firebase_ai` - `v3.8.0`
+
+ - **FIX**(firebase_ai): Rename `groundingSupport` to `groundingSupports` ([#17961](https://github.com/firebase/flutterfire/issues/17961)). ([cfb90989](https://github.com/firebase/flutterfire/commit/cfb909896d8ae9edc49b10f1def5b64dcc3dfb35))
+ - **FEAT**(firebaseai): implicit caching, add metadata ([#17979](https://github.com/firebase/flutterfire/issues/17979)). ([e5fc7587](https://github.com/firebase/flutterfire/commit/e5fc7587e372ba2daa7500d4e9ce30e0537ff889))
+
+#### `firebase_analytics` - `v12.1.2`
+
+ - **FIX**(firebase_analytics): update logInAppPurchase documentation to specify iOS support only ([#17968](https://github.com/firebase/flutterfire/issues/17968)). ([b3caa545](https://github.com/firebase/flutterfire/commit/b3caa54592d431a1ac1b7007a154cdf739b0e406))
+
+#### `firebase_database` - `v12.1.3`
+
+ - **FIX**(firebase_database): Add modifiers to keepSynced ref in android ([#17978](https://github.com/firebase/flutterfire/issues/17978)). ([8b1e05f6](https://github.com/firebase/flutterfire/commit/8b1e05f69544f22eaac568ea217cdce1299ded47))
+
+
 ## 2026-01-19 - [BoM 4.8.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-480-2026-01-19)
 
 ### Changes
