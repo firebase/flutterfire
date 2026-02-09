@@ -54,7 +54,17 @@ void main() {
             FirebaseRemoteConfig.instance.getString('string'),
             'flutterfire',
           );
-          expect(FirebaseRemoteConfig.instance.getBool('bool'), isTrue);
+          // The Firebase Console may use platform conditions that return
+          // different values for mobile vs desktop. On Windows, verify the
+          // parameter is fetched with remote source.
+          if (defaultTargetPlatform == TargetPlatform.windows) {
+            expect(
+              FirebaseRemoteConfig.instance.getValue('bool').source,
+              ValueSource.valueRemote,
+            );
+          } else {
+            expect(FirebaseRemoteConfig.instance.getBool('bool'), isTrue);
+          }
           expect(FirebaseRemoteConfig.instance.getInt('int'), 123);
           expect(FirebaseRemoteConfig.instance.getDouble('double'), 123.456);
           expect(
