@@ -277,13 +277,20 @@ void FirebaseRemoteConfigPlugin::GetAll(
 
   for (const auto& key : keys) {
     firebase::remote_config::ValueInfo info;
-    std::string value_str = remote_config->GetString(key.c_str(), &info);
+    // Use GetData() to get raw bytes, matching iOS (dataValue) and Android
+    // (asByteArray()) behavior. GetString() may incorrectly convert certain
+    // value types (e.g. returning "false" for boolean "true").
+    std::vector<unsigned char> raw_data =
+        remote_config->GetData(key.c_str(), &info);
 
-    std::cerr << "[RC_DEBUG_CPP] key=" << key << ", value_str=\"" << value_str
-              << "\", source=" << static_cast<int>(info.source) << std::endl;
+    std::string value_for_log(raw_data.begin(), raw_data.end());
+    std::cerr << "[RC_DEBUG_CPP] key=" << key << ", GetData=\""
+              << value_for_log << "\", GetString=\""
+              << remote_config->GetString(key.c_str()) << "\", GetBoolean="
+              << remote_config->GetBoolean(key.c_str())
+              << ", source=" << static_cast<int>(info.source) << std::endl;
 
-    // Convert the string value to byte data (Uint8List)
-    std::vector<uint8_t> byte_data(value_str.begin(), value_str.end());
+    std::vector<uint8_t> byte_data(raw_data.begin(), raw_data.end());
 
     flutter::EncodableMap value_map;
     value_map[flutter::EncodableValue("value")] =
