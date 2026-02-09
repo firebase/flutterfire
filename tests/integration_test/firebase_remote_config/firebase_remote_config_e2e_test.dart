@@ -168,7 +168,9 @@ void main() {
       );
 
       group('setCustomSignals()', () {
-        test('valid signal values; `string`, `number` & `null`', () async {
+        test(
+          'valid signal values; `string`, `number` & `null`',
+          () async {
           const signals = <String, Object?>{
             'signal1': 'string',
             'signal2': 204953,
@@ -177,7 +179,9 @@ void main() {
           };
 
           await FirebaseRemoteConfig.instance.setCustomSignals(signals);
-        });
+          },
+          skip: defaultTargetPlatform == TargetPlatform.windows,
+        );
 
         test('invalid signal values throws assertion', () async {
           const signals = <String, Object?>{

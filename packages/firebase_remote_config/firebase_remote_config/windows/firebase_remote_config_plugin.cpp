@@ -298,7 +298,7 @@ void FirebaseRemoteConfigPlugin::GetProperties(
   int64_t minimum_fetch_interval_seconds = static_cast<int64_t>(
       config_settings.minimum_fetch_interval_in_milliseconds / 1000);
   int64_t last_fetch_time_millis =
-      static_cast<int64_t>(info.fetch_time);
+      static_cast<int64_t>(info.fetch_time) * 1000;
 
   flutter::EncodableMap properties;
   properties[flutter::EncodableValue("fetchTimeout")] =
