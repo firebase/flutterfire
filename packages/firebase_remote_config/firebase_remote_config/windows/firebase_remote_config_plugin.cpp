@@ -13,7 +13,6 @@
 #include <future>
 #include <map>
 #include <memory>
-#include <sstream>
 #include <string>
 #include <vector>
 
@@ -243,57 +242,19 @@ void FirebaseRemoteConfigPlugin::SetCustomSignals(
                       "SetCustomSignals is not supported on Windows."));
 }
 
-// Convert a Variant to its string representation, matching what the mobile
-// SDKs return as raw bytes. Using GetAll() (which returns typed Variants)
-// instead of GetString() ensures boolean values are correctly represented,
-// as the C++ desktop SDK's GetString() may not handle boolean Variants
-// properly.
-static std::string VariantToString(const Variant& variant) {
-  if (variant.is_bool()) {
-    return variant.bool_value() ? "true" : "false";
-  } else if (variant.is_int64()) {
-    return std::to_string(variant.int64_value());
-  } else if (variant.is_double()) {
-    std::ostringstream oss;
-    oss << variant.double_value();
-    return oss.str();
-  } else if (variant.is_string()) {
-    return variant.string_value();
-  } else if (variant.is_mutable_string()) {
-    return variant.mutable_string();
-  }
-  return "";
-}
-
 void FirebaseRemoteConfigPlugin::GetAll(
     const std::string& app_name,
     std::function<void(ErrorOr<flutter::EncodableMap> reply)> result) {
   RemoteConfig* remote_config = GetRemoteConfigFromPigeon(app_name);
 
-  // Use GetAll() to enumerate keys and detect value types via Variant.
-  std::map<std::string, Variant> all_values = remote_config->GetAll();
+  std::vector<std::string> keys = remote_config->GetKeys();
   flutter::EncodableMap parameters;
 
-  for (const auto& kv : all_values) {
-    const std::string& key = kv.first;
-    const Variant& variant = kv.second;
-
+  for (const auto& key : keys) {
     firebase::remote_config::ValueInfo info;
-    std::string str_value;
+    std::string value_str = remote_config->GetString(key.c_str(), &info);
 
-    if (variant.is_bool()) {
-      // The desktop C++ SDK's Variant::bool_value() and GetString() may
-      // return incorrect values for boolean parameters (e.g. "false" for
-      // a value that is actually "true"). GetBoolean() correctly reads the
-      // activated boolean value.
-      bool bval = remote_config->GetBoolean(key.c_str(), &info);
-      str_value = bval ? "true" : "false";
-    } else {
-      remote_config->GetString(key.c_str(), &info);
-      str_value = VariantToString(variant);
-    }
-
-    std::vector<uint8_t> byte_data(str_value.begin(), str_value.end());
+    std::vector<uint8_t> byte_data(value_str.begin(), value_str.end());
 
     flutter::EncodableMap value_map;
     value_map[flutter::EncodableValue("value")] =
