@@ -247,10 +247,10 @@ void FirebaseRemoteConfigPlugin::GetAll(
     std::function<void(ErrorOr<flutter::EncodableMap> reply)> result) {
   RemoteConfig* remote_config = GetRemoteConfigFromPigeon(app_name);
 
-  std::vector<std::string> keys = remote_config->GetKeys();
+  std::map<std::string, Variant> all_configs = remote_config->GetAll();
   flutter::EncodableMap parameters;
 
-  for (const auto& key : keys) {
+  for (const auto& [key, variant] : all_configs) {
     firebase::remote_config::ValueInfo info;
     std::string value_str = remote_config->GetString(key.c_str(), &info);
 
