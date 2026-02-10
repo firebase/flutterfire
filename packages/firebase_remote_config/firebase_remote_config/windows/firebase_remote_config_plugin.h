@@ -7,20 +7,27 @@
 #ifndef FLUTTER_PLUGIN_FIREBASE_REMOTE_CONFIG_PLUGIN_H_
 #define FLUTTER_PLUGIN_FIREBASE_REMOTE_CONFIG_PLUGIN_H_
 
+#include <flutter/event_channel.h>
 #include <flutter/method_channel.h>
 #include <flutter/plugin_registrar_windows.h>
 
+#include <map>
 #include <memory>
+#include <string>
 
 #include "firebase/app.h"
 #include "firebase/future.h"
 #include "firebase/remote_config.h"
+#include "firebase/remote_config/config_update_listener_registration.h"
 #include "messages.g.h"
 
 namespace firebase_remote_config_windows {
 
+class ConfigUpdateStreamHandler;
+
 class FirebaseRemoteConfigPlugin : public flutter::Plugin,
                                    public FirebaseRemoteConfigHostApi {
+  friend class ConfigUpdateStreamHandler;
  public:
   static void RegisterWithRegistrar(flutter::PluginRegistrarWindows* registrar);
 
@@ -64,6 +71,12 @@ class FirebaseRemoteConfigPlugin : public flutter::Plugin,
 
  private:
   static flutter::BinaryMessenger* binaryMessenger;
+  static std::unique_ptr<flutter::EventChannel<flutter::EncodableValue>>
+      event_channel_;
+  static std::map<
+      std::string,
+      firebase::remote_config::ConfigUpdateListenerRegistration>
+      listeners_map_;
 };
 
 }  // namespace firebase_remote_config_windows
