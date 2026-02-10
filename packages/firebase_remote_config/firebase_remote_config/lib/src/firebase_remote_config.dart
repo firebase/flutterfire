@@ -163,6 +163,11 @@ class FirebaseRemoteConfig extends FirebasePluginPlatform {
   /// On web, you must call [fetchAndActivate] before listening to this stream. Events will only be
   /// received after an initial call to [fetchAndActivate].
   ///
+  /// Note: Real-time config updates are not yet supported on Windows and other
+  /// desktop platforms by the Firebase C++ SDK. The listener will be registered
+  /// but no events will be received. Use [fetchAndActivate] to manually check
+  /// for updates on desktop platforms.
+  ///
   /// If a connection to the Remote Config backend is not already open, calling this method will
   /// open it. Multiple listeners can be added by calling this method again, but subsequent calls
   /// reuse the same connection to the backend.
