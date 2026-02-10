@@ -33,8 +33,99 @@ using ::firebase::remote_config::RemoteConfig;
 
 namespace firebase_remote_config_windows {
 
-static std::string kLibraryName = "flutter-fire-rc";
+static const std::string kLibraryName = "flutter-fire-rc";
+static const std::string kEventChannelName =
+    "plugins.flutter.io/firebase_remote_config_updated";
+
 flutter::BinaryMessenger* FirebaseRemoteConfigPlugin::binaryMessenger = nullptr;
+std::unique_ptr<flutter::EventChannel<flutter::EncodableValue>>
+    FirebaseRemoteConfigPlugin::event_channel_ = nullptr;
+std::map<std::string,
+         firebase::remote_config::ConfigUpdateListenerRegistration>
+    FirebaseRemoteConfigPlugin::listeners_map_;
+
+// StreamHandler for config update events.
+// Note: The Firebase C++ SDK does not yet support real-time config updates on
+// desktop platforms. The listener is registered but the callback will not fire.
+// This implementation is ready for when the SDK adds desktop support.
+class ConfigUpdateStreamHandler
+    : public flutter::StreamHandler<flutter::EncodableValue> {
+ public:
+  std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
+  OnListenInternal(
+      const flutter::EncodableValue* arguments,
+      std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
+      override {
+    events_ = std::move(events);
+
+    std::string app_name = "[DEFAULT]";
+    if (arguments) {
+      const auto* args_map =
+          std::get_if<flutter::EncodableMap>(arguments);
+      if (args_map) {
+        auto it = args_map->find(flutter::EncodableValue("appName"));
+        if (it != args_map->end()) {
+          const auto* name = std::get_if<std::string>(&it->second);
+          if (name) {
+            app_name = *name;
+          }
+        }
+      }
+    }
+
+    App* app = App::GetInstance(app_name.c_str());
+    RemoteConfig* remote_config = RemoteConfig::GetInstance(app);
+
+    auto registration = remote_config->AddOnConfigUpdateListener(
+        [this](firebase::remote_config::ConfigUpdate&& config_update,
+               firebase::remote_config::RemoteConfigError error) {
+          if (error != firebase::remote_config::kRemoteConfigErrorNone) {
+            events_->Error("firebase_remote_config",
+                           "Error listening for config updates.");
+            return;
+          }
+          flutter::EncodableList updated_keys;
+          for (const auto& key : config_update.updated_keys) {
+            updated_keys.push_back(flutter::EncodableValue(key));
+          }
+          events_->Success(flutter::EncodableValue(updated_keys));
+        });
+
+    FirebaseRemoteConfigPlugin::listeners_map_[app_name] =
+        std::move(registration);
+
+    return nullptr;
+  }
+
+  std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
+  OnCancelInternal(const flutter::EncodableValue* arguments) override {
+    std::string app_name = "[DEFAULT]";
+    if (arguments) {
+      const auto* args_map =
+          std::get_if<flutter::EncodableMap>(arguments);
+      if (args_map) {
+        auto it = args_map->find(flutter::EncodableValue("appName"));
+        if (it != args_map->end()) {
+          const auto* name = std::get_if<std::string>(&it->second);
+          if (name) {
+            app_name = *name;
+          }
+        }
+      }
+    }
+
+    auto it = FirebaseRemoteConfigPlugin::listeners_map_.find(app_name);
+    if (it != FirebaseRemoteConfigPlugin::listeners_map_.end()) {
+      it->second.Remove();
+      FirebaseRemoteConfigPlugin::listeners_map_.erase(it);
+    }
+
+    return nullptr;
+  }
+
+ private:
+  std::unique_ptr<flutter::EventSink<flutter::EncodableValue>> events_;
+};
 
 // static
 void FirebaseRemoteConfigPlugin::RegisterWithRegistrar(
@@ -47,6 +138,14 @@ void FirebaseRemoteConfigPlugin::RegisterWithRegistrar(
 
   binaryMessenger = registrar->messenger();
 
+  // Set up EventChannel for config update listening
+  event_channel_ =
+      std::make_unique<flutter::EventChannel<flutter::EncodableValue>>(
+          binaryMessenger, kEventChannelName,
+          &flutter::StandardMethodCodec::GetInstance());
+  event_channel_->SetStreamHandler(
+      std::make_unique<ConfigUpdateStreamHandler>());
+
   // Register for platform logging
   App::RegisterLibrary(kLibraryName.c_str(), getPluginVersion().c_str(),
                        nullptr);
@@ -54,7 +153,12 @@ void FirebaseRemoteConfigPlugin::RegisterWithRegistrar(
 
 FirebaseRemoteConfigPlugin::FirebaseRemoteConfigPlugin() {}
 
-FirebaseRemoteConfigPlugin::~FirebaseRemoteConfigPlugin() = default;
+FirebaseRemoteConfigPlugin::~FirebaseRemoteConfigPlugin() {
+  for (auto& [app_name, registration] : listeners_map_) {
+    registration.Remove();
+  }
+  listeners_map_.clear();
+}
 
 RemoteConfig* GetRemoteConfigFromPigeon(const std::string& app_name) {
   App* app = App::GetInstance(app_name.c_str());
