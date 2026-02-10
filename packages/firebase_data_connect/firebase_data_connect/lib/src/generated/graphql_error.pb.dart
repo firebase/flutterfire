@@ -1,16 +1,3 @@
-// Copyright 2024 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
 //
 //  Generated code. Do not modify.
 //  source: graphql_error.proto
@@ -62,49 +49,36 @@ class GraphqlError extends $pb.GeneratedMessage {
     return $result;
   }
   GraphqlError._() : super();
-  factory GraphqlError.fromBuffer($core.List<$core.int> i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(i, r);
-  factory GraphqlError.fromJson($core.String i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(i, r);
+  factory GraphqlError.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory GraphqlError.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GraphqlError',
-      package: const $pb.PackageName(
-          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1'),
-      createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'GraphqlError', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firebase.dataconnect.v1'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'message')
-    ..pc<SourceLocation>(
-        2, _omitFieldNames ? '' : 'locations', $pb.PbFieldType.PM,
-        subBuilder: SourceLocation.create)
-    ..aOM<$1.ListValue>(3, _omitFieldNames ? '' : 'path',
-        subBuilder: $1.ListValue.create)
-    ..aOM<GraphqlErrorExtensions>(4, _omitFieldNames ? '' : 'extensions',
-        subBuilder: GraphqlErrorExtensions.create)
-    ..hasRequiredFields = false;
+    ..pc<SourceLocation>(2, _omitFieldNames ? '' : 'locations', $pb.PbFieldType.PM, subBuilder: SourceLocation.create)
+    ..aOM<$1.ListValue>(3, _omitFieldNames ? '' : 'path', subBuilder: $1.ListValue.create)
+    ..aOM<GraphqlErrorExtensions>(4, _omitFieldNames ? '' : 'extensions', subBuilder: GraphqlErrorExtensions.create)
+    ..hasRequiredFields = false
+  ;
 
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-      'Will be removed in next major version')
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
   GraphqlError clone() => GraphqlError()..mergeFromMessage(this);
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-      'Will be removed in next major version')
-  GraphqlError copyWith(void Function(GraphqlError) updates) =>
-      super.copyWith((message) => updates(message as GraphqlError))
-          as GraphqlError;
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  GraphqlError copyWith(void Function(GraphqlError) updates) => super.copyWith((message) => updates(message as GraphqlError)) as GraphqlError;
 
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static GraphqlError create() => GraphqlError._();
   GraphqlError createEmptyInstance() => create();
-  static $pb.PbList<GraphqlError> createRepeated() =>
-      $pb.PbList<GraphqlError>();
+  static $pb.PbList<GraphqlError> createRepeated() => $pb.PbList<GraphqlError>();
   @$core.pragma('dart2js:noInline')
-  static GraphqlError getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GraphqlError>(create);
+  static GraphqlError getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GraphqlError>(create);
   static GraphqlError? _defaultInstance;
 
   /// The detailed error message.
@@ -113,10 +87,7 @@ class GraphqlError extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get message => $_getSZ(0);
   @$pb.TagNumber(1)
-  set message($core.String v) {
-    $_setString(0, v);
-  }
-
+  set message($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
   $core.bool hasMessage() => $_has(0);
   @$pb.TagNumber(1)
@@ -144,10 +115,7 @@ class GraphqlError extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $1.ListValue get path => $_getN(2);
   @$pb.TagNumber(3)
-  set path($1.ListValue v) {
-    setField(3, v);
-  }
-
+  set path($1.ListValue v) { setField(3, v); }
   @$pb.TagNumber(3)
   $core.bool hasPath() => $_has(2);
   @$pb.TagNumber(3)
@@ -159,10 +127,7 @@ class GraphqlError extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   GraphqlErrorExtensions get extensions => $_getN(3);
   @$pb.TagNumber(4)
-  set extensions(GraphqlErrorExtensions v) {
-    setField(4, v);
-  }
-
+  set extensions(GraphqlErrorExtensions v) { setField(4, v); }
   @$pb.TagNumber(4)
   $core.bool hasExtensions() => $_has(3);
   @$pb.TagNumber(4)
@@ -187,53 +152,41 @@ class SourceLocation extends $pb.GeneratedMessage {
     return $result;
   }
   SourceLocation._() : super();
-  factory SourceLocation.fromBuffer($core.List<$core.int> i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(i, r);
-  factory SourceLocation.fromJson($core.String i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(i, r);
+  factory SourceLocation.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory SourceLocation.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'SourceLocation',
-      package: const $pb.PackageName(
-          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1'),
-      createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'SourceLocation', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firebase.dataconnect.v1'), createEmptyInstance: create)
     ..a<$core.int>(1, _omitFieldNames ? '' : 'line', $pb.PbFieldType.O3)
     ..a<$core.int>(2, _omitFieldNames ? '' : 'column', $pb.PbFieldType.O3)
-    ..hasRequiredFields = false;
+    ..hasRequiredFields = false
+  ;
 
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-      'Will be removed in next major version')
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
   SourceLocation clone() => SourceLocation()..mergeFromMessage(this);
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-      'Will be removed in next major version')
-  SourceLocation copyWith(void Function(SourceLocation) updates) =>
-      super.copyWith((message) => updates(message as SourceLocation))
-          as SourceLocation;
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  SourceLocation copyWith(void Function(SourceLocation) updates) => super.copyWith((message) => updates(message as SourceLocation)) as SourceLocation;
 
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static SourceLocation create() => SourceLocation._();
   SourceLocation createEmptyInstance() => create();
-  static $pb.PbList<SourceLocation> createRepeated() =>
-      $pb.PbList<SourceLocation>();
+  static $pb.PbList<SourceLocation> createRepeated() => $pb.PbList<SourceLocation>();
   @$core.pragma('dart2js:noInline')
-  static SourceLocation getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<SourceLocation>(create);
+  static SourceLocation getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SourceLocation>(create);
   static SourceLocation? _defaultInstance;
 
   /// Line number starting at 1.
   @$pb.TagNumber(1)
   $core.int get line => $_getIZ(0);
   @$pb.TagNumber(1)
-  set line($core.int v) {
-    $_setSignedInt32(0, v);
-  }
-
+  set line($core.int v) { $_setSignedInt32(0, v); }
   @$pb.TagNumber(1)
   $core.bool hasLine() => $_has(0);
   @$pb.TagNumber(1)
@@ -243,10 +196,7 @@ class SourceLocation extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.int get column => $_getIZ(1);
   @$pb.TagNumber(2)
-  set column($core.int v) {
-    $_setSignedInt32(1, v);
-  }
-
+  set column($core.int v) { $_setSignedInt32(1, v); }
   @$pb.TagNumber(2)
   $core.bool hasColumn() => $_has(1);
   @$pb.TagNumber(2)
@@ -267,44 +217,33 @@ class GraphqlErrorExtensions extends $pb.GeneratedMessage {
     return $result;
   }
   GraphqlErrorExtensions._() : super();
-  factory GraphqlErrorExtensions.fromBuffer($core.List<$core.int> i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(i, r);
-  factory GraphqlErrorExtensions.fromJson($core.String i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(i, r);
+  factory GraphqlErrorExtensions.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory GraphqlErrorExtensions.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GraphqlErrorExtensions',
-      package: const $pb.PackageName(
-          _omitMessageNames ? '' : 'google.firebase.dataconnect.v1'),
-      createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'GraphqlErrorExtensions', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firebase.dataconnect.v1'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'file')
-    ..hasRequiredFields = false;
+    ..hasRequiredFields = false
+  ;
 
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-      'Will be removed in next major version')
-  GraphqlErrorExtensions clone() =>
-      GraphqlErrorExtensions()..mergeFromMessage(this);
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-      'Will be removed in next major version')
-  GraphqlErrorExtensions copyWith(
-          void Function(GraphqlErrorExtensions) updates) =>
-      super.copyWith((message) => updates(message as GraphqlErrorExtensions))
-          as GraphqlErrorExtensions;
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  GraphqlErrorExtensions clone() => GraphqlErrorExtensions()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  GraphqlErrorExtensions copyWith(void Function(GraphqlErrorExtensions) updates) => super.copyWith((message) => updates(message as GraphqlErrorExtensions)) as GraphqlErrorExtensions;
 
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static GraphqlErrorExtensions create() => GraphqlErrorExtensions._();
   GraphqlErrorExtensions createEmptyInstance() => create();
-  static $pb.PbList<GraphqlErrorExtensions> createRepeated() =>
-      $pb.PbList<GraphqlErrorExtensions>();
+  static $pb.PbList<GraphqlErrorExtensions> createRepeated() => $pb.PbList<GraphqlErrorExtensions>();
   @$core.pragma('dart2js:noInline')
-  static GraphqlErrorExtensions getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GraphqlErrorExtensions>(create);
+  static GraphqlErrorExtensions getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GraphqlErrorExtensions>(create);
   static GraphqlErrorExtensions? _defaultInstance;
 
   /// The source file name where the error occurred.
@@ -313,16 +252,13 @@ class GraphqlErrorExtensions extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get file => $_getSZ(0);
   @$pb.TagNumber(1)
-  set file($core.String v) {
-    $_setString(0, v);
-  }
-
+  set file($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
   $core.bool hasFile() => $_has(0);
   @$pb.TagNumber(1)
   void clearFile() => clearField(1);
 }
 
+
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
-const _omitMessageNames =
-    $core.bool.fromEnvironment('protobuf.omit_message_names');
+const _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');

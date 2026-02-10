@@ -97,8 +97,9 @@ class Cache {
             ? ExtensionResponse.fromJson(serverResponse.extensions!)
                 .flattenPathMetadata()
             : {};
-
-    final dehydrationResult = await _resultTreeProcessor.dehydrate(
+    print("flattenedPaths ${paths}");
+    
+    final dehydrationResult = await _resultTreeProcessor.dehydrateResults(
         queryId, serverResponse.data, _cacheProvider!, paths);
 
     EntityNode rootNode = dehydrationResult.dehydratedTree;
@@ -117,7 +118,7 @@ class Cache {
         cachedAt: DateTime.now(),
         lastAccessed: DateTime.now());
 
-    _cacheProvider!.saveResultTree(queryId, resultTree);
+    _cacheProvider!.setResultTree(queryId, resultTree);
 
     Set<String> impactedQueryIds = dehydrationResult.impactedQueryIds;
     impactedQueryIds.remove(queryId); // remove query being cached
@@ -125,7 +126,7 @@ class Cache {
   }
 
   /// Fetches a cached result.
-  Future<Map<String, dynamic>?> get(String queryId, bool allowStale) async {
+  Future<Map<String, dynamic>?> resultTree(String queryId, bool allowStale) async {
     if (_cacheProvider == null) {
       return null;
     }
@@ -146,7 +147,7 @@ class Cache {
       }
 
       resultTree.lastAccessed = DateTime.now();
-      _cacheProvider!.saveResultTree(queryId, resultTree);
+      _cacheProvider!.setResultTree(queryId, resultTree);
 
       EntityNode rootNode =
           EntityNode.fromJson(resultTree.data, _cacheProvider!);
@@ -156,11 +157,6 @@ class Cache {
     }
 
     return null;
-  }
-
-  /// Invalidates the cache.
-  Future<void> invalidate() async {
-    _cacheProvider?.clear();
   }
 
   void dispose() {

@@ -173,6 +173,8 @@ ServerResponse handleResponse<Data>(CommonResponse<Data> commonResponse) {
   Map<String, dynamic>? jsond = commonResponse.data as Map<String, dynamic>?;
   String jsonEncoded = jsonEncode(commonResponse.data);
 
+  Map<String, dynamic> jsonExt = commonResponse.extensions as Map<String, dynamic>;
+
   if (commonResponse.errors.isNotEmpty) {
     Map<String, dynamic>? data =
         jsonDecode(jsonEncoded) as Map<String, dynamic>?;
@@ -202,7 +204,7 @@ ServerResponse handleResponse<Data>(CommonResponse<Data> commonResponse) {
 
   // no errors - return a standard response
   if (jsond != null) {
-    return ServerResponse(jsond);
+    return ServerResponse(jsond, extensions: jsonExt);
   } else {
     return ServerResponse({});
   }
@@ -219,20 +221,23 @@ DataConnectTransport getTransport(
     GRPCTransport(transportOptions, options, appId, sdkType, appCheck);
 
 class CommonResponse<Data> {
-  CommonResponse(this.deserializer, this.data, this.errors);
+  CommonResponse(this.deserializer, this.data, this.errors, this.extensions);
   static CommonResponse<Data> fromExecuteMutation<Data>(
       Deserializer<Data> deserializer, ExecuteMutationResponse response) {
     return CommonResponse(
-        deserializer, response.data.toProto3Json(), response.errors);
+        deserializer, response.data.toProto3Json(), response.errors, null);
   }
 
   static CommonResponse<Data> fromExecuteQuery<Data>(
       Deserializer<Data> deserializer, ExecuteQueryResponse response) {
+        print("grpc data:\n ${response.data.toProto3Json()}");
+        print("grpc extensions:\n ${response.extensions?.toProto3Json() ?? "nil extension"}");
     return CommonResponse(
-        deserializer, response.data.toProto3Json(), response.errors);
+        deserializer, response.data.toProto3Json(), response.errors, response.extensions.toProto3Json());
   }
 
   final Deserializer<Data> deserializer;
   final Object? data;
   final List<GraphqlError> errors;
+  final Object? extensions;
 }

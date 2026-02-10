@@ -58,6 +58,7 @@ class DataConnectOperationFailureResponseErrorInfo {
 }
 
 /// Path where error occurred.
+@immutable
 sealed class DataConnectPathSegment {}
 
 class DataConnectFieldPathSegment extends DataConnectPathSegment {

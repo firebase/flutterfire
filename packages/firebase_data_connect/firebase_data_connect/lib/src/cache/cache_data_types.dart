@@ -16,6 +16,7 @@ import 'dart:convert';
 
 import 'package:firebase_data_connect/src/cache/cache_provider.dart';
 import 'package:firebase_data_connect/src/common/common_library.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb, listEquals;
 
 /// Type of storage to use for the cache
@@ -23,6 +24,7 @@ enum CacheStorage { persistent, memory }
 
 const String kGlobalIDKey = 'guid';
 
+@immutable
 class DataConnectPath {
   final List<DataConnectPathSegment> components;
 
@@ -47,13 +49,20 @@ class DataConnectPath {
   String toString() => 'DataConnectPath($components)';
 }
 
+/// Additional information about object / field identified by a path
 class PathMetadata {
   final DataConnectPath path;
   final String? entityId;
 
   PathMetadata({required this.path, this.entityId});
+
+  @override
+  String toString() {
+    return '$path : ${entityId ?? "nil"}';
+  }
 }
 
+/// Represents the server response contained within the extension response
 class PathMetadataResponse {
   final List<DataConnectPathSegment> path;
   final String? entityId;
@@ -73,12 +82,14 @@ class PathMetadataResponse {
 DataConnectPathSegment _parsePathSegment(dynamic segment) {
   if (segment is String) {
     return DataConnectFieldPathSegment(segment);
-  } else if (segment is int) {
-    return DataConnectListIndexPathSegment(segment);
+  } else if (segment is double || segment is int) {
+    int index = (segment is double) ? segment.toInt() : segment;
+    return DataConnectListIndexPathSegment(index);
   }
   throw ArgumentError('Invalid path segment type: ${segment.runtimeType}');
 }
 
+/// Represents the extension section within the server response
 class ExtensionResponse {
   final Duration? maxAge;
   final List<PathMetadataResponse> dataConnect;
@@ -124,16 +135,12 @@ class CacheSettings {
   /// The type of storage to use (e.g., "persistent", "memory")
   final CacheStorage storage;
 
-  /// The maximum size of the cache in bytes
-  final int maxSizeBytes;
-
   /// Duration for which cache is used before revalidation with server
   final Duration maxAge;
 
   // Internal const constructor
   const CacheSettings._internal({
     required this.storage,
-    required this.maxSizeBytes,
     required this.maxAge,
   });
 
@@ -146,7 +153,6 @@ class CacheSettings {
     return CacheSettings._internal(
       storage:
           storage ?? (kIsWeb ? CacheStorage.memory : CacheStorage.persistent),
-      maxSizeBytes: maxSizeBytes ?? (kIsWeb ? 40000000 : 100000000),
       maxAge: maxAge,
     );
   }
@@ -300,7 +306,7 @@ class EntityNode {
       Map<String, dynamic> json, CacheProvider cacheProvider) {
     EntityDataObject? entity;
     if (json[kGlobalIDKey] != null) {
-      entity = cacheProvider.getEntityDataObject(json[kGlobalIDKey]);
+      entity = cacheProvider.getEntityData(json[kGlobalIDKey]);
     }
 
     Map<String, dynamic>? scalars;
