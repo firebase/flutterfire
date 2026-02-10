@@ -40,8 +40,7 @@ static const std::string kEventChannelName =
 flutter::BinaryMessenger* FirebaseRemoteConfigPlugin::binaryMessenger = nullptr;
 std::unique_ptr<flutter::EventChannel<flutter::EncodableValue>>
     FirebaseRemoteConfigPlugin::event_channel_ = nullptr;
-std::map<std::string,
-         firebase::remote_config::ConfigUpdateListenerRegistration>
+std::map<std::string, firebase::remote_config::ConfigUpdateListenerRegistration>
     FirebaseRemoteConfigPlugin::listeners_map_;
 
 // StreamHandler for config update events.
@@ -60,8 +59,7 @@ class ConfigUpdateStreamHandler
 
     std::string app_name = "[DEFAULT]";
     if (arguments) {
-      const auto* args_map =
-          std::get_if<flutter::EncodableMap>(arguments);
+      const auto* args_map = std::get_if<flutter::EncodableMap>(arguments);
       if (args_map) {
         auto it = args_map->find(flutter::EncodableValue("appName"));
         if (it != args_map->end()) {
@@ -101,8 +99,7 @@ class ConfigUpdateStreamHandler
   OnCancelInternal(const flutter::EncodableValue* arguments) override {
     std::string app_name = "[DEFAULT]";
     if (arguments) {
-      const auto* args_map =
-          std::get_if<flutter::EncodableMap>(arguments);
+      const auto* args_map = std::get_if<flutter::EncodableMap>(arguments);
       if (args_map) {
         auto it = args_map->find(flutter::EncodableValue("appName"));
         if (it != args_map->end()) {

@@ -28,6 +28,7 @@ class ConfigUpdateStreamHandler;
 class FirebaseRemoteConfigPlugin : public flutter::Plugin,
                                    public FirebaseRemoteConfigHostApi {
   friend class ConfigUpdateStreamHandler;
+
  public:
   static void RegisterWithRegistrar(flutter::PluginRegistrarWindows* registrar);
 
@@ -73,9 +74,8 @@ class FirebaseRemoteConfigPlugin : public flutter::Plugin,
   static flutter::BinaryMessenger* binaryMessenger;
   static std::unique_ptr<flutter::EventChannel<flutter::EncodableValue>>
       event_channel_;
-  static std::map<
-      std::string,
-      firebase::remote_config::ConfigUpdateListenerRegistration>
+  static std::map<std::string,
+                  firebase::remote_config::ConfigUpdateListenerRegistration>
       listeners_map_;
 };
 
