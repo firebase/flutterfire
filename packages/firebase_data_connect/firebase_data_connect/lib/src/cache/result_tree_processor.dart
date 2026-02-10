@@ -53,7 +53,6 @@ class ResultTreeProcessor {
       Set<String> impactedQueryIds,
       DataConnectPath path,
       Map<DataConnectPath, PathMetadata> paths) {
-    developer.log('dehydrating for path $path');
     if (data is Map<String, dynamic>) {
       // Look up entityId for current path
       String? guid;
@@ -68,7 +67,6 @@ class ResultTreeProcessor {
       for (final entry in data.entries) {
         final key = entry.key;
         final value = entry.value;
-        developer.log('processing $key for value type ${value.runtimeType}');
         if (value is Map<String, dynamic>) {
           //developer.log('detected Map for $key');
           EntityNode en = _dehydrateNode(
@@ -113,8 +111,6 @@ class ResultTreeProcessor {
             scalarValues[key] = scalarValueList;
           } else {
             // we have empty array. save key as scalar since we can't determine type
-            developer
-                .log('detected empty array for key $key. storing as scalar');
             scalarValues[key] = value;
           }
           // end list handling
@@ -124,8 +120,6 @@ class ResultTreeProcessor {
         }
       }
 
-      developer.log(
-          'Returning EntityNode for $path guid $guid values \nscalars: $scalarValues \nnestedObjects: $nestedObjectLists \nnestedObjectLists: $nestedObjectLists');
       if (guid != null) {
         final existingEdo = cacheProvider.getEntityData(guid);
         existingEdo.setServerValues(scalarValues, queryId);
