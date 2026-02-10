@@ -117,9 +117,8 @@ class SQLite3CacheProvider implements CacheProvider {
       [guid],
     );
     if (resultSet.isEmpty) {
-      // not found lets create an empty one and save it.
+      // not found lets create an empty one
       EntityDataObject edo = EntityDataObject(guid: guid);
-      updateEntityData(edo);
       return edo;
     }
     return EntityDataObject.fromRawJson(resultSet.first['data'] as String);
