@@ -151,8 +151,10 @@ class Cache {
 
       EntityNode rootNode =
           EntityNode.fromJson(resultTree.data, _cacheProvider!);
+
       Map<String, dynamic> hydratedJson =
-          rootNode.toJson(); //default mode for toJson is hydrate
+          await _resultTreeProcessor.hydrateResults(rootNode, _cacheProvider!);
+
       return hydratedJson;
     }
 
