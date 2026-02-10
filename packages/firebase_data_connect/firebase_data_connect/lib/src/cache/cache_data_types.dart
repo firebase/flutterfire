@@ -72,7 +72,7 @@ class PathMetadataResponse {
 
   factory PathMetadataResponse.fromJson(Map<String, dynamic> json) {
     return PathMetadataResponse(
-      path: (json['path'] as List).map((e) => _parsePathSegment(e)).toList(),
+      path: (json['path'] as List).map(_parsePathSegment).toList(),
       entityId: json['entityId'] as String?,
       entityIds: (json['entityIds'] as List?)?.cast<String>(),
     );
