@@ -117,6 +117,7 @@ class RestTransport implements DataConnectTransport {
       );
       Map<String, dynamic> bodyJson =
           jsonDecode(r.body) as Map<String, dynamic>;
+
       if (r.statusCode != 200) {
         String message =
             bodyJson.containsKey('message') ? bodyJson['message']! : r.body;

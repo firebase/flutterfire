@@ -173,8 +173,8 @@ ServerResponse handleResponse<Data>(CommonResponse<Data> commonResponse) {
   Map<String, dynamic>? jsond = commonResponse.data as Map<String, dynamic>?;
   String jsonEncoded = jsonEncode(commonResponse.data);
 
-  Map<String, dynamic> jsonExt =
-      commonResponse.extensions as Map<String, dynamic>;
+  Map<String, dynamic>? jsonExt =
+      commonResponse.extensions as Map<String, dynamic>?;
 
   if (commonResponse.errors.isNotEmpty) {
     Map<String, dynamic>? data =

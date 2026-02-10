@@ -58,10 +58,10 @@ void main() {
   ''';
 
   final Map<String, dynamic> simpleQueryExtensions = {
-    "dataConnect": [
+    'dataConnect': [
       {
-        "path": ["items"],
-        "entityIds": ["123", "345"]
+        'path': ['items'],
+        'entityIds': ['123', '345']
       }
     ]
   };
@@ -84,10 +84,10 @@ void main() {
   ''';
 
   final Map<String, dynamic> simpleQueryTwoExtensions = {
-    "dataConnect": [
+    'dataConnect': [
       {
-        "path": ["item"],
-        "entityId": "123"
+        'path': ['item'],
+        'entityId': '123'
       }
     ]
   };
