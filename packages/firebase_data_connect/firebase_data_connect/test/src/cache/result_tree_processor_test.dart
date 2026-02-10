@@ -65,7 +65,7 @@ void main() {
       Map<String, dynamic> jsonData =
           jsonDecode(simpleQueryResponse) as Map<String, dynamic>;
       DehydrationResult result =
-          await rp.dehydrate('itemsSimple', jsonData['data'], cp, simpleQueryPaths);
+          await rp.dehydrateResults('itemsSimple', jsonData['data'], cp, simpleQueryPaths);
       expect(result.dehydratedTree.nestedObjectLists?.length, 1);
       expect(result.dehydratedTree.nestedObjectLists?['items']?.length, 2);
       expect(result.dehydratedTree.nestedObjectLists?['items']?.first.entity,
@@ -74,7 +74,7 @@ void main() {
       Map<String, dynamic> jsonDataTwo =
           jsonDecode(simpleQueryResponseTwo) as Map<String, dynamic>;
       DehydrationResult resultTwo =
-          await rp.dehydrate('itemsSimpleTwo', jsonDataTwo['data'], cp, simpleQueryTwoPaths);
+          await rp.dehydrateResults('itemsSimpleTwo', jsonDataTwo['data'], cp, simpleQueryTwoPaths);
 
       List<String>? guids = result.dehydratedTree.nestedObjectLists?['items']
           ?.map((item) => item.entity?.guid)

@@ -251,7 +251,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
     final cacheManager = dataConnect.cacheManager!;
     bool allowStale = fetchPolicy ==
         QueryFetchPolicy.cacheOnly; //if its cache only, we always allow stale
-    final cachedData = await cacheManager.get(_queryId, allowStale);
+    final cachedData = await cacheManager.resultTree(_queryId, allowStale);
 
     if (cachedData != null) {
       try {
