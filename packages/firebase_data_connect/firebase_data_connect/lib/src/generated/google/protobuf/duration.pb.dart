@@ -88,25 +88,33 @@ class Duration extends $pb.GeneratedMessage with $mixin.DurationMixin {
     return $result;
   }
   Duration._() : super();
-  factory Duration.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory Duration.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  factory Duration.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory Duration.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Duration', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.protobuf'), createEmptyInstance: create, toProto3Json: $mixin.DurationMixin.toProto3JsonHelper, fromProto3Json: $mixin.DurationMixin.fromProto3JsonHelper)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Duration',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'google.protobuf'),
+      createEmptyInstance: create,
+      toProto3Json: $mixin.DurationMixin.toProto3JsonHelper,
+      fromProto3Json: $mixin.DurationMixin.fromProto3JsonHelper)
     ..aInt64(1, _omitFieldNames ? '' : 'seconds')
     ..a<$core.int>(2, _omitFieldNames ? '' : 'nanos', $pb.PbFieldType.O3)
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+      'Will be removed in next major version')
   Duration clone() => Duration()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  Duration copyWith(void Function(Duration) updates) => super.copyWith((message) => updates(message as Duration)) as Duration;
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+      'Will be removed in next major version')
+  Duration copyWith(void Function(Duration) updates) =>
+      super.copyWith((message) => updates(message as Duration)) as Duration;
 
   $pb.BuilderInfo get info_ => _i;
 
@@ -115,7 +123,8 @@ class Duration extends $pb.GeneratedMessage with $mixin.DurationMixin {
   Duration createEmptyInstance() => create();
   static $pb.PbList<Duration> createRepeated() => $pb.PbList<Duration>();
   @$core.pragma('dart2js:noInline')
-  static Duration getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Duration>(create);
+  static Duration getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Duration>(create);
   static Duration? _defaultInstance;
 
   /// Signed seconds of the span of time. Must be from -315,576,000,000
@@ -124,7 +133,10 @@ class Duration extends $pb.GeneratedMessage with $mixin.DurationMixin {
   @$pb.TagNumber(1)
   $fixnum.Int64 get seconds => $_getI64(0);
   @$pb.TagNumber(1)
-  set seconds($fixnum.Int64 v) { $_setInt64(0, v); }
+  set seconds($fixnum.Int64 v) {
+    $_setInt64(0, v);
+  }
+
   @$pb.TagNumber(1)
   $core.bool hasSeconds() => $_has(0);
   @$pb.TagNumber(1)
@@ -139,13 +151,16 @@ class Duration extends $pb.GeneratedMessage with $mixin.DurationMixin {
   @$pb.TagNumber(2)
   $core.int get nanos => $_getIZ(1);
   @$pb.TagNumber(2)
-  set nanos($core.int v) { $_setSignedInt32(1, v); }
+  set nanos($core.int v) {
+    $_setSignedInt32(1, v);
+  }
+
   @$pb.TagNumber(2)
   $core.bool hasNanos() => $_has(1);
   @$pb.TagNumber(2)
   void clearNanos() => clearField(2);
 }
 
-
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
-const _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

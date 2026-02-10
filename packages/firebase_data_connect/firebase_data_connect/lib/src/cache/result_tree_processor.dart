@@ -53,7 +53,7 @@ class ResultTreeProcessor {
       Set<String> impactedQueryIds,
       DataConnectPath path,
       Map<DataConnectPath, PathMetadata> paths) {
-        developer.log('dehydrating for path $path');
+    developer.log('dehydrating for path $path');
     if (data is Map<String, dynamic>) {
       // Look up entityId for current path
       String? guid;
@@ -104,16 +104,18 @@ class ResultTreeProcessor {
           // we don't normalize mixed lists. We store them as-is for reconstruction from cache.
           if (nodeList.isNotEmpty && scalarValueList.isNotEmpty) {
             // mixed type array - we directly store the json as-is
-            developer.log('detected mixed type array for key $key. storing as-is');
-            scalarValues[key] = value; 
+            developer
+                .log('detected mixed type array for key $key. storing as-is');
+            scalarValues[key] = value;
           } else if (nodeList.isNotEmpty) {
             nestedObjectLists[key] = nodeList;
           } else if (scalarValueList.isNotEmpty) {
             scalarValues[key] = scalarValueList;
           } else {
             // we have empty array. save key as scalar since we can't determine type
-            developer.log('detected empty array for key $key. storing as scalar');
-             scalarValues[key] = value;
+            developer
+                .log('detected empty array for key $key. storing as scalar');
+            scalarValues[key] = value;
           }
           // end list handling
         } else {
@@ -122,7 +124,8 @@ class ResultTreeProcessor {
         }
       }
 
-      developer.log('Returning EntityNode for $path guid $guid values \nscalars: $scalarValues \nnestedObjects: $nestedObjectLists \nnestedObjectLists: $nestedObjectLists');
+      developer.log(
+          'Returning EntityNode for $path guid $guid values \nscalars: $scalarValues \nnestedObjects: $nestedObjectLists \nnestedObjectLists: $nestedObjectLists');
       if (guid != null) {
         final existingEdo = cacheProvider.getEntityData(guid);
         existingEdo.setServerValues(scalarValues, queryId);

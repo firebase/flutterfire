@@ -17,7 +17,15 @@ import 'dart:typed_data' as $typed_data;
 const GraphqlResponseExtensions$json = {
   '1': 'GraphqlResponseExtensions',
   '2': [
-    {'1': 'data_connect', '3': 1, '4': 3, '5': 11, '6': '.google.firebase.dataconnect.v1.GraphqlResponseExtensions.DataConnectProperties', '10': 'dataConnect'},
+    {
+      '1': 'data_connect',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6':
+          '.google.firebase.dataconnect.v1.GraphqlResponseExtensions.DataConnectProperties',
+      '10': 'dataConnect'
+    },
   ],
   '3': [GraphqlResponseExtensions_DataConnectProperties$json],
 };
@@ -26,10 +34,24 @@ const GraphqlResponseExtensions$json = {
 const GraphqlResponseExtensions_DataConnectProperties$json = {
   '1': 'DataConnectProperties',
   '2': [
-    {'1': 'path', '3': 1, '4': 1, '5': 11, '6': '.google.protobuf.ListValue', '10': 'path'},
+    {
+      '1': 'path',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.ListValue',
+      '10': 'path'
+    },
     {'1': 'entity_id', '3': 2, '4': 1, '5': 9, '10': 'entityId'},
     {'1': 'entity_ids', '3': 3, '4': 3, '5': 9, '10': 'entityIds'},
-    {'1': 'max_age', '3': 4, '4': 1, '5': 11, '6': '.google.protobuf.Duration', '10': 'maxAge'},
+    {
+      '1': 'max_age',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Duration',
+      '10': 'maxAge'
+    },
   ],
 };
 
@@ -41,4 +63,3 @@ final $typed_data.Uint8List graphqlResponseExtensionsDescriptor = $convert.base6
     'llcxIuCgRwYXRoGAEgASgLMhouZ29vZ2xlLnByb3RvYnVmLkxpc3RWYWx1ZVIEcGF0aBIbCgll'
     'bnRpdHlfaWQYAiABKAlSCGVudGl0eUlkEh0KCmVudGl0eV9pZHMYAyADKAlSCWVudGl0eUlkcx'
     'IyCgdtYXhfYWdlGAQgASgLMhkuZ29vZ2xlLnByb3RvYnVmLkR1cmF0aW9uUgZtYXhBZ2U=');
-

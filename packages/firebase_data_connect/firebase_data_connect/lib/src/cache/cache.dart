@@ -97,8 +97,7 @@ class Cache {
             ? ExtensionResponse.fromJson(serverResponse.extensions!)
                 .flattenPathMetadata()
             : {};
-    print("flattenedPaths ${paths}");
-    
+
     final dehydrationResult = await _resultTreeProcessor.dehydrateResults(
         queryId, serverResponse.data, _cacheProvider!, paths);
 
@@ -126,7 +125,8 @@ class Cache {
   }
 
   /// Fetches a cached result.
-  Future<Map<String, dynamic>?> resultTree(String queryId, bool allowStale) async {
+  Future<Map<String, dynamic>?> resultTree(
+      String queryId, bool allowStale) async {
     if (_cacheProvider == null) {
       return null;
     }

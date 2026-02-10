@@ -173,7 +173,8 @@ ServerResponse handleResponse<Data>(CommonResponse<Data> commonResponse) {
   Map<String, dynamic>? jsond = commonResponse.data as Map<String, dynamic>?;
   String jsonEncoded = jsonEncode(commonResponse.data);
 
-  Map<String, dynamic> jsonExt = commonResponse.extensions as Map<String, dynamic>;
+  Map<String, dynamic> jsonExt =
+      commonResponse.extensions as Map<String, dynamic>;
 
   if (commonResponse.errors.isNotEmpty) {
     Map<String, dynamic>? data =
@@ -230,10 +231,8 @@ class CommonResponse<Data> {
 
   static CommonResponse<Data> fromExecuteQuery<Data>(
       Deserializer<Data> deserializer, ExecuteQueryResponse response) {
-        print("grpc data:\n ${response.data.toProto3Json()}");
-        print("grpc extensions:\n ${response.extensions?.toProto3Json() ?? "nil extension"}");
-    return CommonResponse(
-        deserializer, response.data.toProto3Json(), response.errors, response.extensions.toProto3Json());
+    return CommonResponse(deserializer, response.data.toProto3Json(),
+        response.errors, response.extensions.toProto3Json());
   }
 
   final Deserializer<Data> deserializer;

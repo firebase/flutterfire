@@ -32,14 +32,24 @@ void main() {
   ''';
 
   final Map<DataConnectPath, PathMetadata> simpleQueryPaths = {
-    DataConnectPath([DataConnectFieldPathSegment('items'), DataConnectListIndexPathSegment(0)]):
-        PathMetadata(
-            path: DataConnectPath([DataConnectFieldPathSegment('items'), DataConnectListIndexPathSegment(0)]),
-            entityId: '123'),
-    DataConnectPath([DataConnectFieldPathSegment('items'), DataConnectListIndexPathSegment(1)]):
-        PathMetadata(
-            path: DataConnectPath([DataConnectFieldPathSegment('items'), DataConnectListIndexPathSegment(1)]),
-            entityId: '345'),
+    DataConnectPath([
+      DataConnectFieldPathSegment('items'),
+      DataConnectListIndexPathSegment(0)
+    ]): PathMetadata(
+        path: DataConnectPath([
+          DataConnectFieldPathSegment('items'),
+          DataConnectListIndexPathSegment(0)
+        ]),
+        entityId: '123'),
+    DataConnectPath([
+      DataConnectFieldPathSegment('items'),
+      DataConnectListIndexPathSegment(1)
+    ]): PathMetadata(
+        path: DataConnectPath([
+          DataConnectFieldPathSegment('items'),
+          DataConnectListIndexPathSegment(1)
+        ]),
+        entityId: '345'),
   };
 
   // query two has same object as query one so should refer to same Entity.
@@ -64,8 +74,8 @@ void main() {
 
       Map<String, dynamic> jsonData =
           jsonDecode(simpleQueryResponse) as Map<String, dynamic>;
-      DehydrationResult result =
-          await rp.dehydrateResults('itemsSimple', jsonData['data'], cp, simpleQueryPaths);
+      DehydrationResult result = await rp.dehydrateResults(
+          'itemsSimple', jsonData['data'], cp, simpleQueryPaths);
       expect(result.dehydratedTree.nestedObjectLists?.length, 1);
       expect(result.dehydratedTree.nestedObjectLists?['items']?.length, 2);
       expect(result.dehydratedTree.nestedObjectLists?['items']?.first.entity,
@@ -73,8 +83,8 @@ void main() {
 
       Map<String, dynamic> jsonDataTwo =
           jsonDecode(simpleQueryResponseTwo) as Map<String, dynamic>;
-      DehydrationResult resultTwo =
-          await rp.dehydrateResults('itemsSimpleTwo', jsonDataTwo['data'], cp, simpleQueryTwoPaths);
+      DehydrationResult resultTwo = await rp.dehydrateResults(
+          'itemsSimpleTwo', jsonDataTwo['data'], cp, simpleQueryTwoPaths);
 
       List<String>? guids = result.dehydratedTree.nestedObjectLists?['items']
           ?.map((item) => item.entity?.guid)

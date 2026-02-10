@@ -98,10 +98,11 @@ class ExtensionResponse {
 
   factory ExtensionResponse.fromJson(Map<String, dynamic> json) {
     return ExtensionResponse(
-      maxAge: json['ttl'] != null ? Duration(seconds: json['ttl'] as int) : null,
+      maxAge:
+          json['ttl'] != null ? Duration(seconds: json['ttl'] as int) : null,
       dataConnect: (json['dataConnect'] as List?)
-              ?.map(
-                  (e) => PathMetadataResponse.fromJson(e as Map<String, dynamic>))
+              ?.map((e) =>
+                  PathMetadataResponse.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
     );
@@ -111,8 +112,8 @@ class ExtensionResponse {
     final Map<DataConnectPath, PathMetadata> result = {};
     for (final pmr in dataConnect) {
       if (pmr.entityId != null) {
-        final pm =
-            PathMetadata(path: DataConnectPath(pmr.path), entityId: pmr.entityId);
+        final pm = PathMetadata(
+            path: DataConnectPath(pmr.path), entityId: pmr.entityId);
         result[pm.path] = pm;
       }
 
@@ -147,7 +148,6 @@ class CacheSettings {
   // Factory constructor to handle the logic
   factory CacheSettings({
     CacheStorage? storage,
-    int? maxSizeBytes,
     Duration maxAge = Duration.zero,
   }) {
     return CacheSettings._internal(

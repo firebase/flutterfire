@@ -144,10 +144,11 @@ void main() {
 
       Map<String, dynamic> jsonData =
           jsonDecode(simpleQueryResponse) as Map<String, dynamic>;
-      await cache.update(
-          'itemsSimple', ServerResponse(jsonData, extensions: simpleQueryExtensions));
+      await cache.update('itemsSimple',
+          ServerResponse(jsonData, extensions: simpleQueryExtensions));
 
-      Map<String, dynamic>? cachedData = await cache.resultTree('itemsSimple', true);
+      Map<String, dynamic>? cachedData =
+          await cache.resultTree('itemsSimple', true);
 
       expect(jsonData['data'], cachedData);
     }); // test set get
@@ -181,8 +182,8 @@ void main() {
 
       Map<String, dynamic> jsonDataOne =
           jsonDecode(simpleQueryResponse) as Map<String, dynamic>;
-      await cache.update(
-          queryOneId, ServerResponse(jsonDataOne, extensions: simpleQueryExtensions));
+      await cache.update(queryOneId,
+          ServerResponse(jsonDataOne, extensions: simpleQueryExtensions));
 
       Map<String, dynamic> jsonDataTwo =
           jsonDecode(simpleQueryTwoResponse) as Map<String, dynamic>;
@@ -243,8 +244,8 @@ void main() {
 
       Map<String, dynamic> jsonData =
           jsonDecode(simpleQueryResponse) as Map<String, dynamic>;
-      await cache.update(
-          'itemsSimple', ServerResponse(jsonData, extensions: simpleQueryExtensions));
+      await cache.update('itemsSimple',
+          ServerResponse(jsonData, extensions: simpleQueryExtensions));
 
       QueryRef ref = QueryRef(
         dataConnect,
@@ -308,7 +309,8 @@ void main() {
       await cache.update('queryAnyValue',
           ServerResponse(jsonData, extensions: anyValueSingleExt));
 
-      Map<String, dynamic>? cachedData = await cache.resultTree('queryAnyValue', true);
+      Map<String, dynamic>? cachedData =
+          await cache.resultTree('queryAnyValue', true);
 
       expect(cachedData?['anyValueItem']?['name'], 'AnyItem B');
       List<dynamic> values = cachedData?['anyValueItem']?['blob']?['values'];

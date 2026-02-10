@@ -46,7 +46,8 @@ class SQLite3CacheProvider implements CacheProvider {
       } else {
         int major = curVersion ~/ 1000000;
         if (major != 1) {
-          developer.log('Unsupported schema major version $major detected. Expected 1');
+          developer.log(
+              'Unsupported schema major version $major detected. Expected 1');
           return false;
         }
       }
