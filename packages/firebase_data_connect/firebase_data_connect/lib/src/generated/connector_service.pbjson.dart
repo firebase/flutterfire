@@ -18,8 +18,23 @@ const ExecuteQueryRequest$json = {
   '1': 'ExecuteQueryRequest',
   '2': [
     {'1': 'name', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'name'},
-    {'1': 'operation_name', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'operationName'},
-    {'1': 'variables', '3': 3, '4': 1, '5': 11, '6': '.google.protobuf.Struct', '8': {}, '10': 'variables'},
+    {
+      '1': 'operation_name',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '10': 'operationName'
+    },
+    {
+      '1': 'variables',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Struct',
+      '8': {},
+      '10': 'variables'
+    },
   ],
 };
 
@@ -34,8 +49,23 @@ const ExecuteMutationRequest$json = {
   '1': 'ExecuteMutationRequest',
   '2': [
     {'1': 'name', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'name'},
-    {'1': 'operation_name', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'operationName'},
-    {'1': 'variables', '3': 3, '4': 1, '5': 11, '6': '.google.protobuf.Struct', '8': {}, '10': 'variables'},
+    {
+      '1': 'operation_name',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '10': 'operationName'
+    },
+    {
+      '1': 'variables',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Struct',
+      '8': {},
+      '10': 'variables'
+    },
   ],
 };
 
@@ -49,9 +79,30 @@ final $typed_data.Uint8List executeMutationRequestDescriptor = $convert.base64De
 const ExecuteQueryResponse$json = {
   '1': 'ExecuteQueryResponse',
   '2': [
-    {'1': 'data', '3': 1, '4': 1, '5': 11, '6': '.google.protobuf.Struct', '10': 'data'},
-    {'1': 'errors', '3': 2, '4': 3, '5': 11, '6': '.google.firebase.dataconnect.v1.GraphqlError', '10': 'errors'},
-    {'1': 'extensions', '3': 3, '4': 1, '5': 11, '6': '.google.firebase.dataconnect.v1.GraphqlResponseExtensions', '10': 'extensions'},
+    {
+      '1': 'data',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Struct',
+      '10': 'data'
+    },
+    {
+      '1': 'errors',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.google.firebase.dataconnect.v1.GraphqlError',
+      '10': 'errors'
+    },
+    {
+      '1': 'extensions',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.firebase.dataconnect.v1.GraphqlResponseExtensions',
+      '10': 'extensions'
+    },
   ],
 };
 
@@ -67,9 +118,30 @@ final $typed_data.Uint8List executeQueryResponseDescriptor = $convert.base64Deco
 const ExecuteMutationResponse$json = {
   '1': 'ExecuteMutationResponse',
   '2': [
-    {'1': 'data', '3': 1, '4': 1, '5': 11, '6': '.google.protobuf.Struct', '10': 'data'},
-    {'1': 'errors', '3': 2, '4': 3, '5': 11, '6': '.google.firebase.dataconnect.v1.GraphqlError', '10': 'errors'},
-    {'1': 'extensions', '3': 3, '4': 1, '5': 11, '6': '.google.firebase.dataconnect.v1.GraphqlResponseExtensions', '10': 'extensions'},
+    {
+      '1': 'data',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Struct',
+      '10': 'data'
+    },
+    {
+      '1': 'errors',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.google.firebase.dataconnect.v1.GraphqlError',
+      '10': 'errors'
+    },
+    {
+      '1': 'extensions',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.firebase.dataconnect.v1.GraphqlResponseExtensions',
+      '10': 'extensions'
+    },
   ],
 };
 
@@ -80,4 +152,3 @@ final $typed_data.Uint8List executeMutationResponseDescriptor = $convert.base64D
     'bm5lY3QudjEuR3JhcGhxbEVycm9yUgZlcnJvcnMSWQoKZXh0ZW5zaW9ucxgDIAEoCzI5Lmdvb2'
     'dsZS5maXJlYmFzZS5kYXRhY29ubmVjdC52MS5HcmFwaHFsUmVzcG9uc2VFeHRlbnNpb25zUgpl'
     'eHRlbnNpb25z');
-
