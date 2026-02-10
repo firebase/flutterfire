@@ -151,38 +151,6 @@ class ResultTreeProcessor {
   /// from the `CacheProvider`, and reconstructs the original data structure.
   Future<Map<String, dynamic>> hydrateResults(
       EntityNode dehydratedTree, CacheProvider cacheProvider) async {
-    return await _hydrateNode(dehydratedTree, cacheProvider)
-        as Map<String, dynamic>;
-  }
-
-  Future<dynamic> _hydrateNode(
-      EntityNode node, CacheProvider cacheProvider) async {
-    final Map<String, dynamic> data = {};
-    if (node.entity != null) {
-      final edo = cacheProvider.getEntityData(node.entity!.guid);
-      data.addAll(edo.fields());
-    }
-
-    if (node.scalarValues != null) {
-      data.addAll(node.scalarValues!);
-    }
-
-    if (node.nestedObjects != null) {
-      for (final entry in node.nestedObjects!.entries) {
-        data[entry.key] = await _hydrateNode(entry.value, cacheProvider);
-      }
-    }
-
-    if (node.nestedObjectLists != null) {
-      for (final entry in node.nestedObjectLists!.entries) {
-        final list = <dynamic>[];
-        for (final item in entry.value) {
-          list.add(await _hydrateNode(item, cacheProvider));
-        }
-        data[entry.key] = list;
-      }
-    }
-
-    return data;
+    return dehydratedTree.toJson(); //default mode for toJson is hydrate
   }
 }
