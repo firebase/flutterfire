@@ -40,7 +40,7 @@ class CountAll extends PipelineAggregateFunction {
 
 /// Counts non-null values of the specified expression
 class Count extends PipelineAggregateFunction {
-  final PipelineExpression expression;
+  final Expression expression;
 
   Count(this.expression);
 

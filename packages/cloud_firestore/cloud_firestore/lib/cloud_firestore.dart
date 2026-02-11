@@ -58,6 +58,7 @@ part 'src/persistent_cache_index_manager.dart';
 part 'src/pipeline.dart';
 part 'src/pipeline_aggregate.dart';
 part 'src/pipeline_distance.dart';
+part 'src/pipeline_execute_options.dart';
 part 'src/pipeline_expression.dart';
 part 'src/pipeline_ordering.dart';
 part 'src/pipeline_sample.dart';

@@ -1,4 +1,4 @@
-// Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
+// Copyright 2026, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
@@ -10,13 +10,13 @@ abstract class PipelineSerializable {
 }
 
 /// Base class for all pipeline expressions
-abstract class PipelineExpression implements PipelineSerializable {
-  String? _alias;
-
-  /// Assigns an alias to this expression
-  PipelineExpression as(String alias) {
-    _alias = alias;
-    return this;
+abstract class Expression implements PipelineSerializable {
+  /// Creates an aliased expression
+  AliasedExpression as(String alias) {
+    return AliasedExpression(
+      alias: alias,
+      expression: this,
+    );
   }
 
   /// Creates a descending ordering for this expression
@@ -29,27 +29,54 @@ abstract class PipelineExpression implements PipelineSerializable {
     return Ordering(this, OrderDirection.asc);
   }
 
-  String? get alias => _alias;
-
   String get name;
 
   @override
   Map<String, dynamic> toMap() {
-    final map = <String, dynamic>{
+    return {
       'name': name,
     };
-    if (_alias != null) {
-      map['alias'] = _alias;
-    }
-    return map;
   }
 }
 
 /// Base class for function expressions
-abstract class FunctionExpression extends PipelineExpression {}
+abstract class FunctionExpression extends Expression {}
+
+/// Base class for selectable expressions (can be used in select stage)
+abstract class Selectable extends Expression {
+  String get alias;
+  Expression get expression;
+}
+
+/// Represents an aliased expression wrapper
+class AliasedExpression extends Selectable {
+  @override
+  final String alias;
+
+  @override
+  final Expression expression;
+
+  AliasedExpression({
+    required this.alias,
+    required this.expression,
+  });
+
+  @override
+  String get name => 'alias';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expression': expression.toMap(),
+      },
+    };
+  }
+}
 
 /// Represents a field reference in a pipeline expression
-class Field extends PipelineExpression {
+class Field extends Selectable {
   final String fieldName;
 
   Field(this.fieldName);
@@ -58,17 +85,24 @@ class Field extends PipelineExpression {
   String get name => 'field';
 
   @override
+  String get alias => fieldName;
+
+  @override
+  Expression get expression => this;
+
+  @override
   Map<String, dynamic> toMap() {
-    final map = super.toMap();
-    map['args'] = {
-      'field': fieldName,
+    return {
+      'name': name,
+      'args': {
+        'field': fieldName,
+      },
     };
-    return map;
   }
 }
 
 /// Represents a constant literal value in a pipeline expression
-class Constant extends PipelineExpression {
+class Constant extends Expression {
   final dynamic literal;
 
   Constant(this.literal);
@@ -78,17 +112,18 @@ class Constant extends PipelineExpression {
 
   @override
   Map<String, dynamic> toMap() {
-    final map = super.toMap();
-    map['args'] = {
-      'literal': literal,
+    return {
+      'name': name,
+      'args': {
+        'literal': literal,
+      },
     };
-    return map;
   }
 }
 
 /// Represents a concatenation function expression
 class Concat extends FunctionExpression {
-  final List<PipelineExpression> expressions;
+  final List<Expression> expressions;
 
   Concat(this.expressions);
 
@@ -97,35 +132,17 @@ class Concat extends FunctionExpression {
 
   @override
   Map<String, dynamic> toMap() {
-    final map = super.toMap();
-    map['args'] = {
-      'expressions': expressions.map((expr) => expr.toMap()).toList(),
+    return {
+      'name': name,
+      'args': {
+        'expressions': expressions.map((expr) => expr.toMap()).toList(),
+      },
     };
-    return map;
-  }
-}
-
-/// Represents an aliased expression wrapper
-class AliasedExpression extends PipelineExpression {
-  final PipelineExpression expression;
-
-  AliasedExpression(this.expression);
-
-  @override
-  String get name => 'alias';
-
-  @override
-  Map<String, dynamic> toMap() {
-    final map = super.toMap();
-    map['args'] = {
-      'expression': expression.toMap(),
-    };
-    return map;
   }
 }
 
 /// Base class for boolean expressions used in filtering
-abstract class BooleanExpression extends PipelineExpression {}
+abstract class BooleanExpression extends Expression {}
 
 /// Represents a filter expression for pipeline where clauses
 class PipelineFilter extends BooleanExpression {
@@ -246,8 +263,8 @@ class PipelineFilter extends BooleanExpression {
     if (expression30 != null) expressions.add(expression30);
 
     return PipelineFilter._internal(
-      orExpression: _combineExpressions(expressions, 'or'),
       andExpression: null,
+      orExpression: _combineExpressions(expressions, 'or'),
     );
   }
 

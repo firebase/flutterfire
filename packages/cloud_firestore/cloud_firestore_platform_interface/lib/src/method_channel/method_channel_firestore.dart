@@ -15,6 +15,8 @@ import 'package:flutter/services.dart';
 
 import 'method_channel_collection_reference.dart';
 import 'method_channel_document_reference.dart';
+import 'method_channel_pipeline.dart';
+import 'method_channel_pipeline_snapshot.dart';
 import 'method_channel_query.dart';
 import 'method_channel_transaction.dart';
 import 'method_channel_write_batch.dart';
@@ -348,6 +350,35 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
       );
     } catch (e, stack) {
       convertPlatformException(e, stack);
+    }
+  }
+
+  @override
+  PipelinePlatform pipeline(List<Map<String, dynamic>> initialStages) {
+    return MethodChannelPipeline(this, pigeonApp, stages: initialStages);
+  }
+
+  @override
+  Future<PipelineSnapshotPlatform> executePipeline(
+    List<Map<String, dynamic>> stages, {
+    Map<String, dynamic>? options,
+  }) async {
+    try {
+      final MethodChannel channel = const MethodChannel(
+        'plugins.flutter.io/firebase_firestore',
+      );
+      final result = await channel.invokeMethod<Map<String, dynamic>>(
+        'Pipeline#execute',
+        <String, dynamic>{
+          'app': pigeonApp,
+          'stages': stages,
+          if (options != null) 'options': options,
+        },
+      );
+
+      return MethodChannelPipelineSnapshot(this, pigeonApp, result!);
+    } on PlatformException catch (e, stack) {
+      throw convertPlatformException(e, stack);
     }
   }
 }
