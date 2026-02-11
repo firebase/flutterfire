@@ -49,6 +49,11 @@ class AudioInput extends ChangeNotifier {
   }
 
   Future<Stream<Uint8List>?> startRecordingStream() async {
+    await _amplitudeSubscription?.cancel();
+    if (_amplitudeStreamController != null &&
+        !_amplitudeStreamController!.isClosed) {
+      await _amplitudeStreamController!.close();
+    }
     var recordConfig = RecordConfig(
       encoder: _encoder,
       sampleRate: 24000,

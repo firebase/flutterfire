@@ -12,10 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:io';
-
 import 'package:camera/camera.dart';
-import 'package:camera_macos/camera_macos.dart';
+import 'package:camera_macos/camera_macos.dart' deferred as camera_macos_lib;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter/material.dart';
@@ -30,12 +28,12 @@ class SquareCameraPreview extends StatelessWidget {
 
   final dynamic controller;
   final String? deviceId;
-  final Function(CameraMacOSController)? onInitialized;
+  final Function(dynamic)? onInitialized;
 
   @override
   Widget build(BuildContext context) {
     double aspectRatio = 1.0;
-    if (!kIsWeb && Platform.isMacOS) {
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
       //aspectRatio = (controller as CameraMacOSController?)?.aspectRatio ?? 1.0;
     } else {
       aspectRatio = (controller as CameraController?)?.value.aspectRatio ?? 1.0;
@@ -59,14 +57,23 @@ class SquareCameraPreview extends StatelessWidget {
             child: Transform.scale(
               scale: aspectRatio / 1,
               child: Center(
-                child: !kIsWeb && Platform.isMacOS
-                    ? CameraMacOSView(
-                        deviceId: deviceId,
-                        cameraMode: CameraMacOSMode.photo,
-                        enableAudio: false,
-                        onCameraInizialized:
-                            (CameraMacOSController controller) {
-                          onInitialized?.call(controller);
+                child: !kIsWeb && defaultTargetPlatform == TargetPlatform.macOS
+                    ? FutureBuilder(
+                        future: camera_macos_lib.loadLibrary(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            return camera_macos_lib.CameraMacOSView(
+                              deviceId: deviceId,
+                              cameraMode:
+                                  camera_macos_lib.CameraMacOSMode.photo,
+                              enableAudio: false,
+                              onCameraInizialized: (dynamic controller) {
+                                onInitialized?.call(controller);
+                              },
+                            );
+                          }
+                          return const SizedBox.shrink();
                         },
                       )
                     : CameraPreview(controller as CameraController),
@@ -89,7 +96,7 @@ class FullCameraPreview extends StatefulWidget {
 
   final dynamic controller;
   final String? deviceId;
-  final Function(CameraMacOSController)? onInitialized;
+  final Function(dynamic)? onInitialized;
 
   @override
   State<FullCameraPreview> createState() => _FullCameraPreviewState();
@@ -120,13 +127,21 @@ class _FullCameraPreviewState extends State<FullCameraPreview>
       padding: const EdgeInsets.all(16),
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(16)),
-        child: !kIsWeb && Platform.isMacOS
-            ? CameraMacOSView(
-                deviceId: widget.deviceId,
-                cameraMode: CameraMacOSMode.photo,
-                enableAudio: false,
-                onCameraInizialized: (CameraMacOSController controller) {
-                  widget.onInitialized?.call(controller);
+        child: !kIsWeb && defaultTargetPlatform == TargetPlatform.macOS
+            ? FutureBuilder(
+                future: camera_macos_lib.loadLibrary(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return camera_macos_lib.CameraMacOSView(
+                      deviceId: widget.deviceId,
+                      cameraMode: camera_macos_lib.CameraMacOSMode.photo,
+                      enableAudio: false,
+                      onCameraInizialized: (dynamic controller) {
+                        widget.onInitialized?.call(controller);
+                      },
+                    );
+                  }
+                  return const SizedBox.shrink();
                 },
               )
             : CameraPreview(widget.controller as CameraController),

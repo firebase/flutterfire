@@ -13,7 +13,7 @@
 // limitations under the License.
 import 'dart:async';
 import 'dart:developer' as developer;
-import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
@@ -95,8 +95,6 @@ class _BidiPageState extends State<BidiPage> {
               Tool.functionDeclarations([lightControlTool]),
             ],
           );
-    _initAudio();
-    _initVideo();
   }
 
   Future<void> _initAudio() async {
@@ -116,14 +114,10 @@ class _BidiPageState extends State<BidiPage> {
   }
 
   void _scrollDown() {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(
-          milliseconds: 750,
-        ),
-        curve: Curves.easeOutCirc,
-      ),
+    if (!_scrollController.hasClients) return;
+
+    _scrollController.jumpTo(
+      _scrollController.position.maxScrollExtent,
     );
   }
 
@@ -139,134 +133,127 @@ class _BidiPageState extends State<BidiPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (_isCameraOn)
-              Container(
-                height: 200,
-                color: Colors.black,
-                alignment: Alignment.center,
-                child: FullCameraPreview(
-                  controller: _videoInput.cameraController,
-                  deviceId: _videoInput.selectedCameraId,
-                  onInitialized: (controller) {
-                    _videoInput.setMacOSController(controller);
-                  },
-                ),
-              ),
-            Expanded(
-              child: ListView.builder(
-                controller: _scrollController,
-                itemBuilder: (context, idx) {
-                  return MessageWidget(
-                    text: _messages[idx].text,
-                    image: _messages[idx].imageBytes != null
-                        ? Image.memory(
-                            _messages[idx].imageBytes!,
-                            cacheWidth: 400,
-                            cacheHeight: 400,
-                          )
-                        : null,
-                    isFromUser: _messages[idx].fromUser ?? false,
-                    isThought: _messages[idx].isThought,
-                  );
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (_isCameraOn)
+            Container(
+              height: 200,
+              color: Colors.black,
+              alignment: Alignment.center,
+              child: FullCameraPreview(
+                controller: _videoInput.cameraController,
+                deviceId: _videoInput.selectedCameraId,
+                onInitialized: (controller) {
+                  _videoInput.setMacOSController(controller);
                 },
-                itemCount: _messages.length,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 25,
-                horizontal: 15,
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      autofocus: true,
-                      focusNode: _textFieldFocus,
-                      controller: _textController,
-                      onSubmitted: _sendTextPrompt,
-                    ),
-                  ),
-                  const SizedBox.square(
-                    dimension: 15,
-                  ),
-                  AudioVisualizer(
-                    audioStreamIsActive: _recording,
-                    amplitudeStream: _audioInput.amplitudeStream,
-                  ),
-                  const SizedBox.square(
-                    dimension: 15,
-                  ),
-                  IconButton(
-                    tooltip: 'Start Streaming',
-                    onPressed: !_loading
-                        ? () async {
-                            await _setupSession();
-                          }
-                        : null,
-                    icon: Icon(
-                      Icons.network_wifi,
-                      color: _sessionOpening
-                          ? Theme.of(context).colorScheme.secondary
-                          : Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  IconButton(
-                    tooltip: 'Send Stream Message',
-                    onPressed: !_loading
-                        ? () async {
-                            if (_recording) {
-                              await _stopRecording();
-                            } else {
-                              await _startRecording();
-                            }
-                          }
-                        : null,
-                    icon: Icon(
-                      _recording ? Icons.stop : Icons.mic,
-                      color: _loading
-                          ? Theme.of(context).colorScheme.secondary
-                          : Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  IconButton(
-                    tooltip: 'Toggle Camera',
-                    onPressed:
-                        _isCameraOn ? _stopVideoStream : _startVideoStream,
-                    icon: Icon(
-                      _isCameraOn ? Icons.videocam_off : Icons.videocam,
-                      color: _loading
-                          ? Theme.of(context).colorScheme.secondary
-                          : Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  if (!_loading)
-                    IconButton(
-                      onPressed: () async {
-                        await _sendTextPrompt(_textController.text);
-                      },
-                      icon: Icon(
-                        Icons.send,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    )
-                  else
-                    const CircularProgressIndicator(),
-                ],
-              ),
+          Expanded(
+            child: ListView.builder(
+              controller: _scrollController,
+              itemBuilder: (context, idx) {
+                return MessageWidget(
+                  text: _messages[idx].text,
+                  image: _messages[idx].imageBytes != null
+                      ? Image.memory(
+                          _messages[idx].imageBytes!,
+                          cacheWidth: 400,
+                          cacheHeight: 400,
+                        )
+                      : null,
+                  isFromUser: _messages[idx].fromUser ?? false,
+                  isThought: _messages[idx].isThought,
+                );
+              },
+              itemCount: _messages.length,
             ),
-          ],
-        ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 25,
+              horizontal: 15,
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    focusNode: _textFieldFocus,
+                    controller: _textController,
+                    onSubmitted: _sendTextPrompt,
+                  ),
+                ),
+                const SizedBox.square(
+                  dimension: 15,
+                ),
+                AudioVisualizer(
+                  audioStreamIsActive: _recording,
+                  amplitudeStream: _audioInput.amplitudeStream,
+                ),
+                const SizedBox.square(
+                  dimension: 15,
+                ),
+                IconButton(
+                  tooltip: 'Start Streaming',
+                  onPressed: !_loading
+                      ? () async {
+                          await _setupSession();
+                        }
+                      : null,
+                  icon: Icon(
+                    Icons.network_wifi,
+                    color: _sessionOpening
+                        ? Theme.of(context).colorScheme.secondary
+                        : Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                IconButton(
+                  tooltip: 'Send Stream Message',
+                  onPressed: !_loading
+                      ? () async {
+                          if (_recording) {
+                            await _stopRecording();
+                          } else {
+                            await _startRecording();
+                          }
+                        }
+                      : null,
+                  icon: Icon(
+                    _recording ? Icons.stop : Icons.mic,
+                    color: _loading
+                        ? Theme.of(context).colorScheme.secondary
+                        : Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                IconButton(
+                  tooltip: 'Toggle Camera',
+                  onPressed: _isCameraOn ? _stopVideoStream : _startVideoStream,
+                  icon: Icon(
+                    _isCameraOn ? Icons.videocam_off : Icons.videocam,
+                    color: _loading
+                        ? Theme.of(context).colorScheme.secondary
+                        : Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                if (!_loading)
+                  IconButton(
+                    onPressed: () async {
+                      await _sendTextPrompt(_textController.text);
+                    },
+                    icon: Icon(
+                      Icons.send,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  )
+                else
+                  const CircularProgressIndicator(),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -298,14 +285,25 @@ class _BidiPageState extends State<BidiPage> {
   }
 
   Future<void> _setupSession() async {
-    // Initialize the camera controller here to ensure it's fresh for each call.
-    // This prevents a bug where the camera preview freezes on subsequent calls.
-    if (_videoIsInitialized) {
-      await _videoInput.initializeCameraController();
-    }
     setState(() {
       _loading = true;
     });
+
+    try {
+      await _initAudio();
+    } catch (e) {
+      developer.log('Audio Hardware init error: $e');
+    }
+
+    try {
+      if (!_videoIsInitialized) {
+        await _initVideo();
+      } else {
+        await _videoInput.initializeCameraController();
+      }
+    } catch (e) {
+      developer.log('Video Hardware init error: $e');
+    }
 
     if (!_sessionOpening) {
       _session = await _liveModel.connect();
@@ -337,9 +335,16 @@ class _BidiPageState extends State<BidiPage> {
       var inputStream = await _audioInput.startRecordingStream();
       await _audioOutput.playStream();
       if (inputStream != null) {
-        await for (final data in inputStream) {
-          await _session.sendAudioRealtime(InlineDataPart('audio/pcm', data));
-        }
+        inputStream.listen(
+          (data) {
+            _session.sendAudioRealtime(InlineDataPart('audio/pcm', data));
+          },
+          onError: (e) {
+            developer.log('Audio Stream Error: $e');
+            _stopRecording();
+          },
+          cancelOnError: true,
+        );
       }
     } catch (e) {
       developer.log(e.toString());
@@ -368,7 +373,7 @@ class _BidiPageState extends State<BidiPage> {
       _isCameraOn = true;
     });
 
-    if (Platform.isMacOS) {
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
       // On macOS, the controller is initialized by the CameraMacOSView.
       // We need to wait for it to be available.
       while (_videoInput.cameraController == null) {
@@ -376,11 +381,12 @@ class _BidiPageState extends State<BidiPage> {
       }
     }
 
-    var imageStream = _videoInput.startStreamingImages();
-
-    await for (final data in imageStream) {
-      await _session.sendVideoRealtime(InlineDataPart('image/jpeg', data));
-    }
+    _videoInput.startStreamingImages().listen(
+      (data) {
+        _session.sendVideoRealtime(InlineDataPart('image/jpeg', data));
+      },
+      onError: (e) => developer.log('Video Stream Error: $e'),
+    );
   }
 
   Future<void> _stopVideoStream() async {
@@ -410,30 +416,13 @@ class _BidiPageState extends State<BidiPage> {
   Future<void> _processMessagesContinuously({
     required StreamController<bool> stopSignal,
   }) async {
-    bool shouldContinue = true;
-
-    //listen to the stop signal stream
-    stopSignal.stream.listen((stop) {
-      if (stop) {
-        shouldContinue = false;
+    try {
+      await for (final message in _session.receive()) {
+        if (!mounted) break;
+        await _handleLiveServerMessage(message);
       }
-    });
-
-    while (shouldContinue) {
-      try {
-        await for (final message in _session.receive()) {
-          // Process the received message
-          await _handleLiveServerMessage(message);
-        }
-      } catch (e) {
-        _showError(e.toString());
-        break;
-      }
-
-      // Optionally add a delay before restarting, if needed
-      await Future.delayed(
-        const Duration(milliseconds: 100),
-      ); // Small delay to prevent tight loops
+    } catch (e) {
+      _showError(e.toString());
     }
   }
 
@@ -468,8 +457,13 @@ class _BidiPageState extends State<BidiPage> {
           }
           if (transcription.finished ?? false) {
             currentIndex = null;
+            setState(_scrollDown);
+          } else {
+            // Use a scheduled frame instead of an immediate setState
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) setState(() {});
+            });
           }
-          setState(_scrollDown);
         }
         return currentIndex;
       }

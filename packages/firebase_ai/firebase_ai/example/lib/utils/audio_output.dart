@@ -22,7 +22,16 @@ class AudioOutput {
 
   Future<void> init() async {
     // Initialize the player.
-    await SoLoud.instance.init(sampleRate: 24000, channels: Channels.mono);
+    if (!SoLoud.instance.isInitialized) {
+      try {
+        await SoLoud.instance.init(
+          sampleRate: 24000,
+          channels: Channels.mono,
+        );
+      } catch (e) {
+        print('SoLoud Init Error: $e');
+      }
+    }
     await setupNewStream();
   }
 
