@@ -58,8 +58,8 @@ jobs:
         with:
           # Must match the save path exactly
           path: tests/ios/Pods
-          key: pods-v3-${{ runner.os }}-${{ hashFiles('tests/ios/Podfile.lock') }}
-          restore-keys: pods-v3-${{ runner.os }}
+          key: pods-v3-${{ runner.os }}-ios-${{ hashFiles('tests/pubspec.lock') }}
+          restore-keys: pods-v3-${{ runner.os }}-ios
       - name: 'Install Tools'
         run: |
           sudo npm i -g firebase-tools
@@ -79,8 +79,8 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-          cache-key: flutter-${{ runner.os }}
-          pub-cache-key: pub-${{ runner.os }}
+          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
+          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
       - uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa
         with:
           run-bootstrap: false

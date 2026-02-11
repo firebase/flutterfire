@@ -147,6 +147,17 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                   if (!_loading)
                     IconButton(
                       onPressed: () async {
+                        await _serverTemplateUrlContext(_textController.text);
+                      },
+                      icon: Icon(
+                        Icons.link,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      tooltip: 'URL Context',
+                    ),
+                  if (!_loading)
+                    IconButton(
+                      onPressed: () async {
                         await _sendServerTemplateMessage(_textController.text);
                       },
                       icon: Icon(
@@ -164,6 +175,70 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
         ),
       ),
     );
+  }
+
+  Future<void> _serverTemplateUrlContext(String message) async {
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      _messages.add(MessageData(text: message, fromUser: true));
+      var response = await _templateGenerativeModel
+          ?.generateContent('cj-urlcontext', inputs: {'url': message});
+
+      final candidate = response?.candidates.first;
+      if (candidate == null) {
+        _messages.add(MessageData(text: 'No response', fromUser: false));
+      } else {
+        final responseText = candidate.text ?? '';
+        final groundingMetadata = candidate.groundingMetadata;
+        final urlContextMetadata = candidate.urlContextMetadata;
+
+        final buffer = StringBuffer(responseText);
+        if (groundingMetadata != null) {
+          buffer.writeln('\n\n--- Grounding Metadata ---');
+          buffer.writeln('Web Search Queries:');
+          for (final query in groundingMetadata.webSearchQueries) {
+            buffer.writeln(' - $query');
+          }
+          buffer.writeln('\nGrounding Chunks:');
+          for (final chunk in groundingMetadata.groundingChunks) {
+            if (chunk.web != null) {
+              buffer.writeln(' - Web Chunk:');
+              buffer.writeln('   - Title: ${chunk.web!.title}');
+              buffer.writeln('   - URI: ${chunk.web!.uri}');
+              buffer.writeln('   - Domain: ${chunk.web!.domain}');
+            }
+          }
+        }
+
+        if (urlContextMetadata != null) {
+          buffer.writeln('\n\n--- URL Context Metadata ---');
+          for (final data in urlContextMetadata.urlMetadata) {
+            buffer.writeln(' - URL: ${data.retrievedUrl}');
+            buffer.writeln('   Status: ${data.urlRetrievalStatus}');
+          }
+        }
+        _messages.add(MessageData(text: buffer.toString(), fromUser: false));
+      }
+
+      setState(() {
+        _loading = false;
+        _scrollDown();
+      });
+    } catch (e) {
+      _showError(e.toString());
+      setState(() {
+        _loading = false;
+      });
+    } finally {
+      _textController.clear();
+      setState(() {
+        _loading = false;
+      });
+      _textFieldFocus.requestFocus();
+    }
   }
 
   Future<void> _serverTemplateImagen(String message) async {

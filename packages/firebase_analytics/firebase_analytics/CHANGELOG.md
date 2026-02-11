@@ -1,3 +1,11 @@
+## 12.1.2
+
+ - **FIX**(firebase_analytics): update logInAppPurchase documentation to specify iOS support only ([#17968](https://github.com/firebase/flutterfire/issues/17968)). ([b3caa545](https://github.com/firebase/flutterfire/commit/b3caa54592d431a1ac1b7007a154cdf739b0e406))
+
+## 12.1.1
+
+ - Update a dependency to the latest release.
+
 ## 12.1.0
 
  - **FEAT**(firebase_analytics): add `logInAppPurchase` support for iOS ([#17851](https://github.com/firebase/flutterfire/issues/17851)). ([e54252c0](https://github.com/firebase/flutterfire/commit/e54252c000531a5cd552acb362e3dcc5da7f9bf3))

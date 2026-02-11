@@ -56,7 +56,7 @@ final class ServiceApiNotEnabled implements FirebaseAIException {
       'The Vertex AI in Firebase SDK requires the Vertex AI in Firebase API '
       '(`firebasevertexai.googleapis.com`) to be enabled in your Firebase project. Enable this API '
       'by visiting the Firebase Console at '
-      'https://console.firebase.google.com/project/$_id/genai '
+      'https://console.firebase.google.com/project/$_id/ailogic '
       'and clicking "Get started". If you enabled this API recently, wait a few minutes for the '
       'action to propagate to our systems and then retry.';
 

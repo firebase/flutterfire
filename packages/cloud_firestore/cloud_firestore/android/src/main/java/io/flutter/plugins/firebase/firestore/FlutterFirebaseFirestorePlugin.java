@@ -207,15 +207,17 @@ public class FlutterFirebaseFirestorePlugin
         () -> {
           try {
             // Context is ignored by API so we don't send it over even though annotated non-null.
+            List<FirebaseFirestore> firestoresToTerminate;
             synchronized (firestoreInstanceCache) {
-              for (Map.Entry<FirebaseFirestore, FlutterFirebaseFirestoreExtension> entry :
-                  firestoreInstanceCache.entrySet()) {
-                FirebaseFirestore firestore = entry.getKey();
+              // Collect all firestore instances first to avoid ConcurrentModificationException
+              firestoresToTerminate = new ArrayList<>(firestoreInstanceCache.keySet());
+              for (FirebaseFirestore firestore : firestoresToTerminate) {
                 Tasks.await(firestore.terminate());
                 FlutterFirebaseFirestorePlugin.destroyCachedFirebaseFirestoreInstanceForKey(
                     firestore);
               }
             }
+
             removeEventListeners();
 
             taskCompletionSource.setResult(null);

@@ -26,9 +26,8 @@ func loadFirebaseSDKVersion() throws -> String {
     "generated_firebase_sdk_version.txt",
   ])
   do {
-    let version = try String(contentsOfFile: firebaseCoreScriptPath, encoding: .utf8)
+    return try String(contentsOfFile: firebaseCoreScriptPath, encoding: .utf8)
       .trimmingCharacters(in: .whitespacesAndNewlines)
-    return version
   } catch {
     throw
       ConfigurationError

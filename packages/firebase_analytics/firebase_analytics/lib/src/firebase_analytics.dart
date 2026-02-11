@@ -1209,7 +1209,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   ///
   /// This event signifies that an item(s) was purchased by a user.
   ///
-  /// This API supports manually logging in-app purchase events on iOS and Android.
+  /// This API supports manually logging in-app purchase events on iOS.
   /// This is especially useful in cases where purchases happen outside the native
   /// billing systems (e.g. custom payment flows).
   Future<void> logInAppPurchase({

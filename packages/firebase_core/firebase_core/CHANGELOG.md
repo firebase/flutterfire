@@ -1,3 +1,8 @@
+## 4.4.0
+
+ - **FEAT**: bump Firebase iOS SDK to 12.8.0 ([#17947](https://github.com/firebase/flutterfire/issues/17947)). ([4eb249ec](https://github.com/firebase/flutterfire/commit/4eb249ec5d870a960d3834e40fd0f3c3b871430c))
+ - **FEAT**: bump Firebase android SDK to 34.7.0 ([#17948](https://github.com/firebase/flutterfire/issues/17948)). ([6eef0511](https://github.com/firebase/flutterfire/commit/6eef051143ecff2351d6f893e797badc6d202a26))
+
 ## 4.3.0
 
  - **FEAT**: bump Firebase iOS SDK to 12.6.0 ([#17857](https://github.com/firebase/flutterfire/issues/17857)). ([668331b4](https://github.com/firebase/flutterfire/commit/668331b446726daef719a68b43b34af7b1ae411f))

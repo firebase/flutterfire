@@ -191,6 +191,8 @@ final class UsageMetadata {
     this.promptTokensDetails,
     this.candidatesTokensDetails,
     this.toolUsePromptTokensDetails,
+    this.cacheTokensDetails,
+    this.cachedContentTokenCount,
   });
 
   /// Number of tokens in the prompt.
@@ -217,6 +219,14 @@ final class UsageMetadata {
   /// A list of tokens used by tools whose usage was triggered from a prompt,
   /// broken down by modality.
   final List<ModalityTokenCount>? toolUsePromptTokensDetails;
+
+  /// The number of tokens in the prompt that were served from the cache.
+  /// If implicit caching is not active or no content was cached, this will be 0.
+  final int? cachedContentTokenCount;
+
+  /// Detailed breakdown of the cached tokens by modality (e.g., text, image).
+  /// This list provides granular insight into which parts of the content were cached.
+  final List<ModalityTokenCount>? cacheTokensDetails;
 }
 
 /// Response candidate generated from a [GenerativeModel].
@@ -400,7 +410,7 @@ final class GroundingMetadata {
   GroundingMetadata(
       {this.searchEntryPoint,
       required this.groundingChunks,
-      required this.groundingSupport,
+      required this.groundingSupports,
       required this.webSearchQueries});
 
   /// Google Search entry point for web searches.
@@ -418,9 +428,15 @@ final class GroundingMetadata {
 
   /// A list of [GroundingSupport]s.
   ///
+  /// Keeping for backwards compatibility. See b/477107542.
+  @Deprecated('Use groundingSupports instead')
+  List<GroundingSupport> get groundingSupport => groundingSupports;
+
+  /// A list of [GroundingSupport]s.
+  ///
   /// Each object details how specific segments of the
   /// model's response are supported by the `groundingChunks`.
-  final List<GroundingSupport> groundingSupport;
+  final List<GroundingSupport> groundingSupports;
 
   /// A list of web search queries that the model performed to gather the
   /// grounding information.
@@ -1520,6 +1536,16 @@ UsageMetadata parseUsageMetadata(Object jsonObject) {
       toolUsePromptTokensDetails.map(_parseModalityTokenCount).toList(),
     _ => null,
   };
+  final cachedContentTokenCount = switch (jsonObject) {
+    {'cachedContentTokenCount': final int cachedContentTokenCount} =>
+      cachedContentTokenCount,
+    _ => null,
+  };
+  final cacheTokensDetails = switch (jsonObject) {
+    {'cacheTokensDetails': final List<Object?> cacheTokensDetails} =>
+      cacheTokensDetails.map(_parseModalityTokenCount).toList(),
+    _ => null,
+  };
   return UsageMetadata._(
     promptTokenCount: promptTokenCount,
     candidatesTokenCount: candidatesTokenCount,
@@ -1529,6 +1555,8 @@ UsageMetadata parseUsageMetadata(Object jsonObject) {
     promptTokensDetails: promptTokensDetails,
     candidatesTokensDetails: candidatesTokensDetails,
     toolUsePromptTokensDetails: toolUsePromptTokensDetails,
+    cachedContentTokenCount: cachedContentTokenCount,
+    cacheTokensDetails: cacheTokensDetails,
   );
 }
 
@@ -1614,9 +1642,9 @@ GroundingMetadata parseGroundingMetadata(Object? jsonObject) {
       [];
   // Filters out null elements, which are returned from _parseGroundingSupport when
   // segment is null.
-  final groundingSupport = switch (jsonObject) {
-        {'groundingSupport': final List<Object?> groundingSupport} =>
-          groundingSupport
+  final groundingSupports = switch (jsonObject) {
+        {'groundingSupports': final List<Object?> groundingSupports} =>
+          groundingSupports
               .map(_parseGroundingSupport)
               .whereType<GroundingSupport>()
               .toList(),
@@ -1633,7 +1661,7 @@ GroundingMetadata parseGroundingMetadata(Object? jsonObject) {
   return GroundingMetadata(
       searchEntryPoint: searchEntryPoint,
       groundingChunks: groundingChunks,
-      groundingSupport: groundingSupport,
+      groundingSupports: groundingSupports,
       webSearchQueries: webSearchQueries);
 }
 
@@ -1689,7 +1717,7 @@ GroundingSupport? _parseGroundingSupport(Object? jsonObject) {
   return GroundingSupport(
       segment: segment,
       groundingChunkIndices:
-          (jsonObject['groundingChunkIndices'] as List<int>?) ?? []);
+          (jsonObject['groundingChunkIndices'] as List?)?.cast<int>() ?? []);
 }
 
 SearchEntryPoint _parseSearchEntryPoint(Object? jsonObject) {

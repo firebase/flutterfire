@@ -67,10 +67,11 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   FirebaseRemoteConfigPlatform setInitialValues({
     required Map<dynamic, dynamic> remoteConfigValues,
   }) {
-    final fetchTimeout = Duration(seconds: remoteConfigValues['fetchTimeout']);
+    final fetchTimeout =
+        Duration(seconds: remoteConfigValues['fetchTimeout'] ?? 60);
     final minimumFetchInterval =
-        Duration(seconds: remoteConfigValues['minimumFetchInterval']);
-    final lastFetchMillis = remoteConfigValues['lastFetchTime'];
+        Duration(seconds: remoteConfigValues['minimumFetchInterval'] ?? 43200);
+    final lastFetchMillis = remoteConfigValues['lastFetchTime'] ?? 0;
     final lastFetchStatus = remoteConfigValues['lastFetchStatus'];
 
     _settings = RemoteConfigSettings(
@@ -79,7 +80,8 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
     );
     _lastFetchTime = DateTime.fromMillisecondsSinceEpoch(lastFetchMillis);
     _lastFetchStatus = _parseFetchStatus(lastFetchStatus);
-    _activeParameters = _parseParameters(remoteConfigValues['parameters']);
+    _activeParameters =
+        _parseParameters(remoteConfigValues['parameters'] ?? {});
     return this;
   }
 
