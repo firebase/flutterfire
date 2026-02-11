@@ -18,17 +18,17 @@ class PipelineSource {
       throw ArgumentError('A collection path must not contain "//".');
     }
 
-    return Pipeline._(_firestore, [
-      _CollectionPipelineStage(collectionPath),
-    ]);
+    final stage = _CollectionPipelineStage(collectionPath);
+    final delegate = _firestore._delegate.pipeline([stage.toMap()]);
+    return Pipeline._(_firestore, delegate);
   }
 
   /// Creates a pipeline from a collection reference
   Pipeline collectionReference(
       CollectionReference<Map<String, dynamic>> collectionReference) {
-    return Pipeline._(_firestore, [
-      _CollectionPipelineStage(collectionReference.path),
-    ]);
+    final stage = _CollectionPipelineStage(collectionReference.path);
+    final delegate = _firestore._delegate.pipeline([stage.toMap()]);
+    return Pipeline._(_firestore, delegate);
   }
 
   /// Creates a pipeline from a collection group
@@ -41,9 +41,9 @@ class PipelineSource {
       );
     }
 
-    return Pipeline._(_firestore, [
-      _CollectionGroupPipelineStage(collectionId),
-    ]);
+    final stage = _CollectionGroupPipelineStage(collectionId);
+    final delegate = _firestore._delegate.pipeline([stage.toMap()]);
+    return Pipeline._(_firestore, delegate);
   }
 
   /// Creates a pipeline from a list of document references
@@ -52,15 +52,15 @@ class PipelineSource {
       throw ArgumentError('Documents list must not be empty.');
     }
 
-    return Pipeline._(_firestore, [
-      _DocumentsPipelineStage(documents),
-    ]);
+    final stage = _DocumentsPipelineStage(documents);
+    final delegate = _firestore._delegate.pipeline([stage.toMap()]);
+    return Pipeline._(_firestore, delegate);
   }
 
   /// Creates a pipeline from the entire database
   Pipeline database() {
-    return Pipeline._(_firestore, [
-      _DatabasePipelineStage(),
-    ]);
+    final stage = _DatabasePipelineStage();
+    final delegate = _firestore._delegate.pipeline([stage.toMap()]);
+    return Pipeline._(_firestore, delegate);
   }
 }

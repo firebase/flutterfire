@@ -88,7 +88,7 @@ final class _CollectionGroupPipelineStage extends PipelineStage {
 
 /// Stage for adding fields to documents
 final class _AddFieldsStage extends PipelineStage {
-  final List<PipelineExpression> expressions;
+  final List<Expression> expressions;
 
   _AddFieldsStage(this.expressions);
 
@@ -129,7 +129,7 @@ final class _AggregateStage extends PipelineStage {
 
 /// Stage for getting distinct values
 final class _DistinctStage extends PipelineStage {
-  final List<PipelineExpression> expressions;
+  final List<Expression> expressions;
 
   _DistinctStage(this.expressions);
 
@@ -243,7 +243,7 @@ final class _RemoveFieldsStage extends PipelineStage {
 
 /// Stage for replacing documents
 final class _ReplaceWithStage extends PipelineStage {
-  final PipelineExpression expression;
+  final Expression expression;
 
   _ReplaceWithStage(this.expression);
 
@@ -281,7 +281,7 @@ final class _SampleStage extends PipelineStage {
 
 /// Stage for selecting specific fields
 final class _SelectStage extends PipelineStage {
-  final List<PipelineExpression> expressions;
+  final List<Selectable> expressions;
 
   _SelectStage(this.expressions);
 
@@ -323,7 +323,7 @@ final class _SortStage extends PipelineStage {
 
 /// Stage for unnesting arrays
 final class _UnnestStage extends PipelineStage {
-  final PipelineExpression expression;
+  final Expression expression;
   final String? indexField;
 
   _UnnestStage(this.expression, this.indexField);
@@ -360,7 +360,7 @@ final class _UnionStage extends PipelineStage {
     return {
       'stage': name,
       'args': {
-        'pipeline': pipeline.getSerializableStages(),
+        'pipeline': pipeline.stages,
       },
     };
   }

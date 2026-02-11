@@ -6,15 +6,31 @@ part of '../cloud_firestore.dart';
 
 /// A pipeline for querying and transforming Firestore data
 class Pipeline {
-  final List<PipelineStage> _stages;
   final FirebaseFirestore _firestore;
+  final PipelinePlatform _delegate;
 
-  Pipeline._(this._firestore, this._stages);
+  Pipeline._(this._firestore, this._delegate) {
+    PipelinePlatform.verify(_delegate);
+  }
+
+  /// Exposes the [stages] on the pipeline delegate.
+  ///
+  /// This should only be used for testing to ensure that all
+  /// pipeline stages are correctly set on the underlying delegate
+  /// when being tested from a different package.
+  @visibleForTesting
+  List<Map<String, dynamic>> get stages {
+    return _delegate.stages;
+  }
 
   /// Executes the pipeline and returns a snapshot of the results
-  Future<PipelineSnapshot> execute() async {
-    final platformSnapshot =
-        await _firestore._delegate.executePipeline(_toSerializableStages());
+  Future<PipelineSnapshot> execute({ExecuteOptions? options}) async {
+    final optionsMap = options != null
+        ? {
+            'indexMode': options.indexMode.name,
+          }
+        : null;
+    final platformSnapshot = await _delegate.execute(options: optionsMap);
     return _convertPlatformSnapshot(platformSnapshot);
   }
 
@@ -35,52 +51,42 @@ class Pipeline {
     return PipelineSnapshot._(results, platformSnapshot.executionTime);
   }
 
-  /// Converts stages to serializable format for platform communication
-  List<Map<String, dynamic>> _toSerializableStages() {
-    return _stages.map((stage) => stage.toMap()).toList();
-  }
-
-  /// Public method to get serializable stages (used by union stage)
-  List<Map<String, dynamic>> getSerializableStages() {
-    return _toSerializableStages();
-  }
-
   // Pipeline Actions
 
   /// Adds fields to documents using expressions
   Pipeline addFields(
-    PipelineExpression expression1, [
-    PipelineExpression? expression2,
-    PipelineExpression? expression3,
-    PipelineExpression? expression4,
-    PipelineExpression? expression5,
-    PipelineExpression? expression6,
-    PipelineExpression? expression7,
-    PipelineExpression? expression8,
-    PipelineExpression? expression9,
-    PipelineExpression? expression10,
-    PipelineExpression? expression11,
-    PipelineExpression? expression12,
-    PipelineExpression? expression13,
-    PipelineExpression? expression14,
-    PipelineExpression? expression15,
-    PipelineExpression? expression16,
-    PipelineExpression? expression17,
-    PipelineExpression? expression18,
-    PipelineExpression? expression19,
-    PipelineExpression? expression20,
-    PipelineExpression? expression21,
-    PipelineExpression? expression22,
-    PipelineExpression? expression23,
-    PipelineExpression? expression24,
-    PipelineExpression? expression25,
-    PipelineExpression? expression26,
-    PipelineExpression? expression27,
-    PipelineExpression? expression28,
-    PipelineExpression? expression29,
-    PipelineExpression? expression30,
+    Expression expression1, [
+    Expression? expression2,
+    Expression? expression3,
+    Expression? expression4,
+    Expression? expression5,
+    Expression? expression6,
+    Expression? expression7,
+    Expression? expression8,
+    Expression? expression9,
+    Expression? expression10,
+    Expression? expression11,
+    Expression? expression12,
+    Expression? expression13,
+    Expression? expression14,
+    Expression? expression15,
+    Expression? expression16,
+    Expression? expression17,
+    Expression? expression18,
+    Expression? expression19,
+    Expression? expression20,
+    Expression? expression21,
+    Expression? expression22,
+    Expression? expression23,
+    Expression? expression24,
+    Expression? expression25,
+    Expression? expression26,
+    Expression? expression27,
+    Expression? expression28,
+    Expression? expression29,
+    Expression? expression30,
   ]) {
-    final expressions = <PipelineExpression>[expression1];
+    final expressions = <Expression>[expression1];
     if (expression2 != null) expressions.add(expression2);
     if (expression3 != null) expressions.add(expression3);
     if (expression4 != null) expressions.add(expression4);
@@ -111,10 +117,11 @@ class Pipeline {
     if (expression29 != null) expressions.add(expression29);
     if (expression30 != null) expressions.add(expression30);
 
-    return Pipeline._(_firestore, [
-      ..._stages,
-      _AddFieldsStage(expressions),
-    ]);
+    final stage = _AddFieldsStage(expressions);
+    return Pipeline._(
+      _firestore,
+      _delegate.addStage(stage.toMap()),
+    );
   }
 
   /// Aggregates data using aggregate functions
@@ -181,46 +188,47 @@ class Pipeline {
     if (aggregateFunction29 != null) functions.add(aggregateFunction29);
     if (aggregateFunction30 != null) functions.add(aggregateFunction30);
 
-    return Pipeline._(_firestore, [
-      ..._stages,
-      _AggregateStage(functions),
-    ]);
+    final stage = _AggregateStage(functions);
+    return Pipeline._(
+      _firestore,
+      _delegate.addStage(stage.toMap()),
+    );
   }
 
   /// Gets distinct values based on expressions
   Pipeline distinct(
-    PipelineExpression expression1, [
-    PipelineExpression? expression2,
-    PipelineExpression? expression3,
-    PipelineExpression? expression4,
-    PipelineExpression? expression5,
-    PipelineExpression? expression6,
-    PipelineExpression? expression7,
-    PipelineExpression? expression8,
-    PipelineExpression? expression9,
-    PipelineExpression? expression10,
-    PipelineExpression? expression11,
-    PipelineExpression? expression12,
-    PipelineExpression? expression13,
-    PipelineExpression? expression14,
-    PipelineExpression? expression15,
-    PipelineExpression? expression16,
-    PipelineExpression? expression17,
-    PipelineExpression? expression18,
-    PipelineExpression? expression19,
-    PipelineExpression? expression20,
-    PipelineExpression? expression21,
-    PipelineExpression? expression22,
-    PipelineExpression? expression23,
-    PipelineExpression? expression24,
-    PipelineExpression? expression25,
-    PipelineExpression? expression26,
-    PipelineExpression? expression27,
-    PipelineExpression? expression28,
-    PipelineExpression? expression29,
-    PipelineExpression? expression30,
+    Expression expression1, [
+    Expression? expression2,
+    Expression? expression3,
+    Expression? expression4,
+    Expression? expression5,
+    Expression? expression6,
+    Expression? expression7,
+    Expression? expression8,
+    Expression? expression9,
+    Expression? expression10,
+    Expression? expression11,
+    Expression? expression12,
+    Expression? expression13,
+    Expression? expression14,
+    Expression? expression15,
+    Expression? expression16,
+    Expression? expression17,
+    Expression? expression18,
+    Expression? expression19,
+    Expression? expression20,
+    Expression? expression21,
+    Expression? expression22,
+    Expression? expression23,
+    Expression? expression24,
+    Expression? expression25,
+    Expression? expression26,
+    Expression? expression27,
+    Expression? expression28,
+    Expression? expression29,
+    Expression? expression30,
   ]) {
-    final expressions = <PipelineExpression>[expression1];
+    final expressions = <Expression>[expression1];
     if (expression2 != null) expressions.add(expression2);
     if (expression3 != null) expressions.add(expression3);
     if (expression4 != null) expressions.add(expression4);
@@ -251,10 +259,11 @@ class Pipeline {
     if (expression29 != null) expressions.add(expression29);
     if (expression30 != null) expressions.add(expression30);
 
-    return Pipeline._(_firestore, [
-      ..._stages,
-      _DistinctStage(expressions),
-    ]);
+    final stage = _DistinctStage(expressions);
+    return Pipeline._(
+      _firestore,
+      _delegate.addStage(stage.toMap()),
+    );
   }
 
   /// Finds nearest vectors using vector similarity search
@@ -264,27 +273,30 @@ class Pipeline {
     DistanceMeasure distanceMeasure, {
     int? limit,
   }) {
-    return Pipeline._(_firestore, [
-      ..._stages,
-      _FindNearestStage(vectorField, vectorValue, distanceMeasure,
-          limit: limit),
-    ]);
+    final stage = _FindNearestStage(vectorField, vectorValue, distanceMeasure,
+        limit: limit);
+    return Pipeline._(
+      _firestore,
+      _delegate.addStage(stage.toMap()),
+    );
   }
 
   /// Limits the number of results
   Pipeline limit(int limit) {
-    return Pipeline._(_firestore, [
-      ..._stages,
-      _LimitStage(limit),
-    ]);
+    final stage = _LimitStage(limit);
+    return Pipeline._(
+      _firestore,
+      _delegate.addStage(stage.toMap()),
+    );
   }
 
   /// Offsets the results
   Pipeline offset(int offset) {
-    return Pipeline._(_firestore, [
-      ..._stages,
-      _OffsetStage(offset),
-    ]);
+    final stage = _OffsetStage(offset);
+    return Pipeline._(
+      _firestore,
+      _delegate.addStage(stage.toMap()),
+    );
   }
 
   /// Removes specified fields from documents
@@ -351,62 +363,65 @@ class Pipeline {
     if (fieldPath29 != null) fieldPaths.add(fieldPath29);
     if (fieldPath30 != null) fieldPaths.add(fieldPath30);
 
-    return Pipeline._(_firestore, [
-      ..._stages,
-      _RemoveFieldsStage(fieldPaths),
-    ]);
+    final stage = _RemoveFieldsStage(fieldPaths);
+    return Pipeline._(
+      _firestore,
+      _delegate.addStage(stage.toMap()),
+    );
   }
 
   /// Replaces documents with the result of an expression
-  Pipeline replaceWith(PipelineExpression expression) {
-    return Pipeline._(_firestore, [
-      ..._stages,
-      _ReplaceWithStage(expression),
-    ]);
+  Pipeline replaceWith(Expression expression) {
+    final stage = _ReplaceWithStage(expression);
+    return Pipeline._(
+      _firestore,
+      _delegate.addStage(stage.toMap()),
+    );
   }
 
   /// Samples documents using a sampling strategy
   Pipeline sample(PipelineSample sample) {
-    return Pipeline._(_firestore, [
-      ..._stages,
-      _SampleStage(sample),
-    ]);
+    final stage = _SampleStage(sample);
+    return Pipeline._(
+      _firestore,
+      _delegate.addStage(stage.toMap()),
+    );
   }
 
-  /// Selects specific fields using expressions
+  /// Selects specific fields using selectable expressions
   Pipeline select(
-    PipelineExpression expression1, [
-    PipelineExpression? expression2,
-    PipelineExpression? expression3,
-    PipelineExpression? expression4,
-    PipelineExpression? expression5,
-    PipelineExpression? expression6,
-    PipelineExpression? expression7,
-    PipelineExpression? expression8,
-    PipelineExpression? expression9,
-    PipelineExpression? expression10,
-    PipelineExpression? expression11,
-    PipelineExpression? expression12,
-    PipelineExpression? expression13,
-    PipelineExpression? expression14,
-    PipelineExpression? expression15,
-    PipelineExpression? expression16,
-    PipelineExpression? expression17,
-    PipelineExpression? expression18,
-    PipelineExpression? expression19,
-    PipelineExpression? expression20,
-    PipelineExpression? expression21,
-    PipelineExpression? expression22,
-    PipelineExpression? expression23,
-    PipelineExpression? expression24,
-    PipelineExpression? expression25,
-    PipelineExpression? expression26,
-    PipelineExpression? expression27,
-    PipelineExpression? expression28,
-    PipelineExpression? expression29,
-    PipelineExpression? expression30,
+    Selectable expression1, [
+    Selectable? expression2,
+    Selectable? expression3,
+    Selectable? expression4,
+    Selectable? expression5,
+    Selectable? expression6,
+    Selectable? expression7,
+    Selectable? expression8,
+    Selectable? expression9,
+    Selectable? expression10,
+    Selectable? expression11,
+    Selectable? expression12,
+    Selectable? expression13,
+    Selectable? expression14,
+    Selectable? expression15,
+    Selectable? expression16,
+    Selectable? expression17,
+    Selectable? expression18,
+    Selectable? expression19,
+    Selectable? expression20,
+    Selectable? expression21,
+    Selectable? expression22,
+    Selectable? expression23,
+    Selectable? expression24,
+    Selectable? expression25,
+    Selectable? expression26,
+    Selectable? expression27,
+    Selectable? expression28,
+    Selectable? expression29,
+    Selectable? expression30,
   ]) {
-    final expressions = <PipelineExpression>[expression1];
+    final expressions = <Selectable>[expression1];
     if (expression2 != null) expressions.add(expression2);
     if (expression3 != null) expressions.add(expression3);
     if (expression4 != null) expressions.add(expression4);
@@ -437,41 +452,46 @@ class Pipeline {
     if (expression29 != null) expressions.add(expression29);
     if (expression30 != null) expressions.add(expression30);
 
-    return Pipeline._(_firestore, [
-      ..._stages,
-      _SelectStage(expressions),
-    ]);
+    final stage = _SelectStage(expressions);
+    return Pipeline._(
+      _firestore,
+      _delegate.addStage(stage.toMap()),
+    );
   }
 
   /// Sorts results using an ordering specification
   Pipeline sort(Ordering ordering) {
-    return Pipeline._(_firestore, [
-      ..._stages,
-      _SortStage(ordering),
-    ]);
+    final stage = _SortStage(ordering);
+    return Pipeline._(
+      _firestore,
+      _delegate.addStage(stage.toMap()),
+    );
   }
 
   /// Unnests arrays into separate documents
-  Pipeline unnest(PipelineExpression expression, [String? indexField]) {
-    return Pipeline._(_firestore, [
-      ..._stages,
-      _UnnestStage(expression, indexField),
-    ]);
+  Pipeline unnest(Expression expression, [String? indexField]) {
+    final stage = _UnnestStage(expression, indexField);
+    return Pipeline._(
+      _firestore,
+      _delegate.addStage(stage.toMap()),
+    );
   }
 
   /// Unions results with another pipeline
   Pipeline union(Pipeline pipeline) {
-    return Pipeline._(_firestore, [
-      ..._stages,
-      _UnionStage(pipeline),
-    ]);
+    final stage = _UnionStage(pipeline);
+    return Pipeline._(
+      _firestore,
+      _delegate.addStage(stage.toMap()),
+    );
   }
 
   /// Filters documents using a boolean expression
   Pipeline where(BooleanExpression expression) {
-    return Pipeline._(_firestore, [
-      ..._stages,
-      _WhereStage(expression),
-    ]);
+    final stage = _WhereStage(expression);
+    return Pipeline._(
+      _firestore,
+      _delegate.addStage(stage.toMap()),
+    );
   }
 }
