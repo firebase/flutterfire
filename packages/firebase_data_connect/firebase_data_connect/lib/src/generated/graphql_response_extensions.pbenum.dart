@@ -1,6 +1,6 @@
 //
 //  Generated code. Do not modify.
-//  source: graphql_error.proto
+//  source: graphql_response_extensions.proto
 //
 // @dart = 2.12
 
