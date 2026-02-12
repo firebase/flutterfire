@@ -5,7 +5,7 @@
 part of '../cloud_firestore.dart';
 
 /// Base interface for pipeline serialization
-abstract class PipelineSerializable {
+mixin PipelineSerializable {
   Map<String, dynamic> toMap();
 }
 
@@ -101,11 +101,11 @@ class Field extends Selectable {
   }
 }
 
-/// Represents a constant literal value in a pipeline expression
+/// Represents a constant value in a pipeline expression
 class Constant extends Expression {
-  final dynamic literal;
+  final Object value;
 
-  Constant(this.literal);
+  Constant(this.value);
 
   @override
   String get name => 'constant';
@@ -115,7 +115,7 @@ class Constant extends Expression {
     return {
       'name': name,
       'args': {
-        'literal': literal,
+        'value': value,
       },
     };
   }
