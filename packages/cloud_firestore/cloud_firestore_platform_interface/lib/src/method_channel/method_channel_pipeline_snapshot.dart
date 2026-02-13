@@ -12,22 +12,23 @@ class MethodChannelPipelineSnapshot extends PipelineSnapshotPlatform {
   final List<PipelineResultPlatform> _results;
   final DateTime _executionTime;
 
-  /// Creates a [MethodChannelPipelineSnapshot] from the given [data]
+  /// Creates a [MethodChannelPipelineSnapshot] from the given [pigeonSnapshot]
   MethodChannelPipelineSnapshot(
     FirebaseFirestorePlatform firestore,
     FirestorePigeonFirebaseApp pigeonApp,
-    Map<String, dynamic> data,
-  )   : _results = (data['results'] as List)
+    PigeonPipelineSnapshot pigeonSnapshot,
+  )   : _results = (pigeonSnapshot.results ?? [])
+            .whereType<PigeonPipelineResult>()
             .map((result) => MethodChannelPipelineResult(
                   firestore,
                   pigeonApp,
-                  result['document'] as String,
-                  DateTime.fromMillisecondsSinceEpoch(result['createTime']),
-                  DateTime.fromMillisecondsSinceEpoch(result['updateTime']),
+                  result.documentPath,
+                  DateTime.fromMillisecondsSinceEpoch(result.createTime),
+                  DateTime.fromMillisecondsSinceEpoch(result.updateTime),
                 ))
             .toList(),
         _executionTime = DateTime.fromMillisecondsSinceEpoch(
-          data['executionTime'] as int,
+          pigeonSnapshot.executionTime,
         ),
         super();
 

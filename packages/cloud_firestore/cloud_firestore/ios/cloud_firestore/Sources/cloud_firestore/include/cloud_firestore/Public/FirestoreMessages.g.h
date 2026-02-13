@@ -165,6 +165,8 @@ typedef NS_ENUM(NSUInteger, AggregateType) {
 @class PigeonDocumentSnapshot;
 @class PigeonDocumentChange;
 @class PigeonQuerySnapshot;
+@class PigeonPipelineResult;
+@class PigeonPipelineSnapshot;
 @class PigeonGetOptions;
 @class PigeonDocumentOption;
 @class PigeonTransactionCommand;
@@ -229,7 +231,7 @@ typedef NS_ENUM(NSUInteger, AggregateType) {
 @property(nonatomic, assign) DocumentChangeType type;
 @property(nonatomic, strong) PigeonDocumentSnapshot *document;
 @property(nonatomic, strong) NSNumber *oldIndex;
-@property(nonatomic, strong) NSNumber *index;
+@property(nonatomic, strong) NSNumber *newIndex;
 @end
 
 @interface PigeonQuerySnapshot : NSObject
@@ -241,6 +243,26 @@ typedef NS_ENUM(NSUInteger, AggregateType) {
 @property(nonatomic, strong) NSArray<PigeonDocumentSnapshot *> *documents;
 @property(nonatomic, strong) NSArray<PigeonDocumentChange *> *documentChanges;
 @property(nonatomic, strong) PigeonSnapshotMetadata *metadata;
+@end
+
+@interface PigeonPipelineResult : NSObject
+/// `init` unavailable to enforce nonnull fields, see the `make` class method.
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)makeWithDocumentPath:(NSString *)documentPath
+                          createTime:(NSNumber *)createTime
+                          updateTime:(NSNumber *)updateTime;
+@property(nonatomic, copy) NSString *documentPath;
+@property(nonatomic, strong) NSNumber *createTime;
+@property(nonatomic, strong) NSNumber *updateTime;
+@end
+
+@interface PigeonPipelineSnapshot : NSObject
+/// `init` unavailable to enforce nonnull fields, see the `make` class method.
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)makeWithResults:(NSArray<PigeonPipelineResult *> *)results
+                  executionTime:(NSNumber *)executionTime;
+@property(nonatomic, strong) NSArray<PigeonPipelineResult *> *results;
+@property(nonatomic, strong) NSNumber *executionTime;
 @end
 
 @interface PigeonGetOptions : NSObject
@@ -416,6 +438,11 @@ NSObject<FlutterMessageCodec> *FirebaseFirestoreHostApiGetCodec(void);
 - (void)persistenceCacheIndexManagerRequestApp:(FirestorePigeonFirebaseApp *)app
                                        request:(PersistenceCacheIndexManagerRequest)request
                                     completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)executePipelineApp:(FirestorePigeonFirebaseApp *)app
+                    stages:(NSArray<NSDictionary<NSString *, id> *> *)stages
+                   options:(nullable NSDictionary<NSString *, id> *)options
+                completion:(void (^)(PigeonPipelineSnapshot *_Nullable,
+                                     FlutterError *_Nullable))completion;
 @end
 
 extern void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,

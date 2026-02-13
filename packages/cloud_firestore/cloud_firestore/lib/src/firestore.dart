@@ -354,6 +354,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   ///     .limit(10)
   ///     .execute();
   /// ```
+  // ignore: use_to_and_as_if_applicable
   PipelineSource pipeline() {
     return PipelineSource._(this);
   }

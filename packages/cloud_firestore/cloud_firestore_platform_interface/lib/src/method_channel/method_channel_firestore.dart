@@ -364,21 +364,25 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     Map<String, dynamic>? options,
   }) async {
     try {
-      final MethodChannel channel = const MethodChannel(
-        'plugins.flutter.io/firebase_firestore',
-      );
-      final result = await channel.invokeMethod<Map<String, dynamic>>(
-        'Pipeline#execute',
-        <String, dynamic>{
-          'app': pigeonApp,
-          'stages': stages,
-          if (options != null) 'options': options,
-        },
+      // Convert stages to Pigeon format (List<Map<String?, Object?>?>)
+      final List<Map<String?, Object?>?> pigeonStages = stages.map((stage) {
+        return stage.map(MapEntry<String?, Object?>.new);
+      }).toList();
+
+      // Convert options to Pigeon format (Map<String?, Object?>?)
+      final Map<String?, Object?>? pigeonOptions = options?.map(
+        MapEntry<String?, Object?>.new,
       );
 
-      return MethodChannelPipelineSnapshot(this, pigeonApp, result!);
-    } on PlatformException catch (e, stack) {
-      throw convertPlatformException(e, stack);
+      final PigeonPipelineSnapshot result = await pigeonChannel.executePipeline(
+        pigeonApp,
+        pigeonStages,
+        pigeonOptions,
+      );
+
+      return MethodChannelPipelineSnapshot(this, pigeonApp, result);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 }
