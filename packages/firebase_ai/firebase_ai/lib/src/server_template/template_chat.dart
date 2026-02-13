@@ -47,6 +47,7 @@ final class TemplateChatSession {
     this._templateHistoryGenerateContent,
     this._templateHistoryGenerateContentStream,
     this._templateId,
+    this._inputs,
     this._history,
     List<TemplateAutoFunction> autoFunctionLists,
     this._maxTurns,
@@ -60,7 +61,9 @@ final class TemplateChatSession {
           Iterable<Content> content, String templateId,
           {required Map<String, Object?> inputs})
       _templateHistoryGenerateContentStream;
+
   final String _templateId;
+  final Map<String, Object?> _inputs;
   final List<Content> _history;
   final Map<String, TemplateAutoFunction> _autoFunctions;
   final int _maxTurns;
@@ -76,15 +79,14 @@ final class TemplateChatSession {
   /// including the message sent to the model.
   Iterable<Content> get history => _history.skip(0);
 
-  /// Sends [inputs] to the server template as a continuation of the chat [history].
+  /// Sends [message] to the server template as a continuation of the chat [history].
   ///
   /// Prepends the history to the request and uses the provided model to
-  /// generate new content.
+  /// generate new content, providing the session's initialized inputs.
   ///
   /// When there are no candidates in the response, the [message] and response
   /// are ignored and will not be recorded in the [history].
-  Future<GenerateContentResponse> sendMessage(Content message,
-      {required Map<String, Object?> inputs}) async {
+  Future<GenerateContentResponse> sendMessage(Content message) async {
     final lock = await _mutex.acquire();
     try {
       final requestHistory = <Content>[message];
@@ -93,7 +95,7 @@ final class TemplateChatSession {
         final response = await _templateHistoryGenerateContent(
           _history.followedBy(requestHistory),
           _templateId,
-          inputs: inputs,
+          inputs: _inputs,
         );
 
         final functionCalls = response.functionCalls;
@@ -144,19 +146,18 @@ final class TemplateChatSession {
   /// response.
   ///
   /// Prepends the history to the request and uses the provided model to
-  /// generate new content.
+  /// generate new content, providing the session's initialized inputs.
   ///
   /// When there are no candidates in the response, the [message] and response
   /// are ignored and will not be recorded in the [history].
-  Stream<GenerateContentResponse> sendMessageStream(Content message,
-      {required Map<String, Object?> inputs}) {
+  Stream<GenerateContentResponse> sendMessageStream(Content message) {
     final controller = StreamController<GenerateContentResponse>(sync: true);
     _mutex.acquire().then((lock) async {
       try {
         final responses = _templateHistoryGenerateContentStream(
           _history.followedBy([message]),
           _templateId,
-          inputs: inputs,
+          inputs: _inputs,
         );
         final content = <Content>[];
         await for (final response in responses) {
@@ -184,18 +185,20 @@ extension StartTemplateChatExtension on TemplateGenerativeModel {
   /// Starts a [TemplateChatSession] that will use this model to respond to messages.
   ///
   /// ```dart
-  /// final chat = model.startChat();
+  /// final chat = model.startChat('my_template', inputs: {'language': 'en'});
   /// final response = await chat.sendMessage(Content.text('Hello there.'));
   /// print(response.text);
   /// ```
   TemplateChatSession startChat(String templateId,
-          {List<Content>? history,
+          {required Map<String, Object?> inputs,
+          List<Content>? history,
           List<TemplateAutoFunction>? autoFunctions,
           int? maxTurns}) =>
       TemplateChatSession._(
           templateGenerateContentWithHistory,
           templateGenerateContentWithHistoryStream,
           templateId,
+          inputs,
           history ?? [],
           autoFunctions ?? [],
           maxTurns ?? 5);

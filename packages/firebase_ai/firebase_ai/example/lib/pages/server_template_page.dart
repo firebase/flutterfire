@@ -63,11 +63,19 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
           FirebaseAI.googleAI().templateGenerativeModel();
       _templateImagenModel = FirebaseAI.googleAI().templateImagenModel();
     }
-    _chatSession = _templateGenerativeModel?.startChat('chat_history.prompt');
-    _chatFunctionSession =
-        _templateGenerativeModel?.startChat('cj-function-calling-weather');
+
+    // Inputs are now provided ONCE here when creating the session
+    _chatSession = _templateGenerativeModel?.startChat(
+      'chat_history.prompt',
+      inputs: {},
+    );
+    _chatFunctionSession = _templateGenerativeModel?.startChat(
+      'cj-function-calling-weather',
+      inputs: {},
+    );
     _chatAutoFunctionSession = _templateGenerativeModel?.startChat(
       'cj-function-calling-weather',
+      inputs: {},
       autoFunctions: [
         TemplateAutoFunction(
           name: 'fetchWeather',
@@ -229,101 +237,6 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
     );
   }
 
-  Future<void> _serverTemplateUrlContext(String message) async {
-    setState(() {
-      _loading = true;
-    });
-
-    try {
-      _messages.add(MessageData(text: message, fromUser: true));
-      var response = await _templateGenerativeModel
-          ?.generateContent('cj-urlcontext', inputs: {'url': message});
-
-      final candidate = response?.candidates.first;
-      if (candidate == null) {
-        _messages.add(MessageData(text: 'No response', fromUser: false));
-      } else {
-        final responseText = candidate.text ?? '';
-        final groundingMetadata = candidate.groundingMetadata;
-        final urlContextMetadata = candidate.urlContextMetadata;
-
-        final buffer = StringBuffer(responseText);
-        if (groundingMetadata != null) {
-          buffer.writeln('\n\n--- Grounding Metadata ---');
-          buffer.writeln('Web Search Queries:');
-          for (final query in groundingMetadata.webSearchQueries) {
-            buffer.writeln(' - $query');
-          }
-          buffer.writeln('\nGrounding Chunks:');
-          for (final chunk in groundingMetadata.groundingChunks) {
-            if (chunk.web != null) {
-              buffer.writeln(' - Web Chunk:');
-              buffer.writeln('   - Title: ${chunk.web!.title}');
-              buffer.writeln('   - URI: ${chunk.web!.uri}');
-              buffer.writeln('   - Domain: ${chunk.web!.domain}');
-            }
-          }
-        }
-
-        if (urlContextMetadata != null) {
-          buffer.writeln('\n\n--- URL Context Metadata ---');
-          for (final data in urlContextMetadata.urlMetadata) {
-            buffer.writeln(' - URL: ${data.retrievedUrl}');
-            buffer.writeln('   Status: ${data.urlRetrievalStatus}');
-          }
-        }
-        _messages.add(MessageData(text: buffer.toString(), fromUser: false));
-      }
-
-      setState(() {
-        _loading = false;
-        _scrollDown();
-      });
-    } catch (e) {
-      _showError(e.toString());
-      setState(() {
-        _loading = false;
-      });
-    } finally {
-      _textController.clear();
-      setState(() {
-        _loading = false;
-      });
-      _textFieldFocus.requestFocus();
-    }
-  }
-
-  Future<void> _serverTemplateAutoFunctionCall(String message) async {
-    await _handleServerTemplateMessage(message, (message) async {
-      var response = await _chatAutoFunctionSession?.sendMessage(
-        Content.text(message),
-        inputs: {},
-      );
-
-      _messages.add(MessageData(text: response?.text, fromUser: false));
-
-      // final functionCalls = response?.functionCalls.toList();
-      // if (functionCalls!.isNotEmpty) {
-      //   final functionCall = functionCalls.first;
-      //   if (functionCall.name == 'fetchWeather') {
-      //     final location =
-      //         functionCall.args['location']! as Map<String, dynamic>;
-      //     final date = functionCall.args['date']! as String;
-      //     final city = location['city'] as String;
-      //     final state = location['state'] as String;
-      //     final functionResult =
-      //         await fetchWeather(Location(city, state), date);
-      //     var functionResponse = await _chatFunctionSession?.sendMessage(
-      //       Content.functionResponse(functionCall.name, functionResult),
-      //       inputs: {},
-      //     );
-      //     _messages
-      //         .add(MessageData(text: functionResponse?.text, fromUser: false));
-      //   }
-      // }
-    });
-  }
-
   Future<void> _handleServerTemplateMessage(
     String message,
     Future<void> Function(String) generateContent,
@@ -347,11 +260,69 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
     }
   }
 
+  Future<void> _serverTemplateUrlContext(String message) async {
+    await _handleServerTemplateMessage(
+      message,
+      (message) async {
+        _messages.add(MessageData(text: message, fromUser: true));
+        var response = await _templateGenerativeModel
+            ?.generateContent('cj-urlcontext', inputs: {'url': message});
+
+        final candidate = response?.candidates.first;
+        if (candidate == null) {
+          _messages.add(MessageData(text: 'No response', fromUser: false));
+        } else {
+          final responseText = candidate.text ?? '';
+          final groundingMetadata = candidate.groundingMetadata;
+          final urlContextMetadata = candidate.urlContextMetadata;
+
+          final buffer = StringBuffer(responseText);
+          if (groundingMetadata != null) {
+            buffer.writeln('\n\n--- Grounding Metadata ---');
+            buffer.writeln('Web Search Queries:');
+            for (final query in groundingMetadata.webSearchQueries) {
+              buffer.writeln(' - $query');
+            }
+            buffer.writeln('\nGrounding Chunks:');
+            for (final chunk in groundingMetadata.groundingChunks) {
+              if (chunk.web != null) {
+                buffer.writeln(' - Web Chunk:');
+                buffer.writeln('   - Title: ${chunk.web!.title}');
+                buffer.writeln('   - URI: ${chunk.web!.uri}');
+                buffer.writeln('   - Domain: ${chunk.web!.domain}');
+              }
+            }
+          }
+
+          if (urlContextMetadata != null) {
+            buffer.writeln('\n\n--- URL Context Metadata ---');
+            for (final data in urlContextMetadata.urlMetadata) {
+              buffer.writeln(' - URL: ${data.retrievedUrl}');
+              buffer.writeln('   Status: ${data.urlRetrievalStatus}');
+            }
+          }
+          _messages.add(MessageData(text: buffer.toString(), fromUser: false));
+        }
+      },
+    );
+  }
+
+  Future<void> _serverTemplateAutoFunctionCall(String message) async {
+    await _handleServerTemplateMessage(message, (message) async {
+      // Inputs are no longer passed during sendMessage
+      var response = await _chatAutoFunctionSession?.sendMessage(
+        Content.text(message),
+      );
+
+      _messages.add(MessageData(text: response?.text, fromUser: false));
+    });
+  }
+
   Future<void> _serverTemplateFunctionCall(String message) async {
     await _handleServerTemplateMessage(message, (message) async {
+      // Inputs are no longer passed during sendMessage
       var response = await _chatFunctionSession?.sendMessage(
         Content.text(message),
-        inputs: {},
       );
 
       _messages.add(MessageData(text: response?.text, fromUser: false));
@@ -366,9 +337,10 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
           final state = location['state'] as String;
           final functionResult =
               await fetchWeather(Location(city, state), date);
+
+          // Respond to the function call
           var functionResponse = await _chatFunctionSession?.sendMessage(
             Content.functionResponse(functionCall.name, functionResult),
-            inputs: {},
           );
           _messages
               .add(MessageData(text: functionResponse?.text, fromUser: false));
@@ -379,11 +351,9 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
 
   Future<void> _serverTemplateChat(String message) async {
     await _handleServerTemplateMessage(message, (message) async {
+      // Inputs are no longer passed during sendMessage
       var response = await _chatSession?.sendMessage(
         Content.text(message),
-        inputs: {
-          'message': message,
-        },
       );
 
       var text = response?.text;
