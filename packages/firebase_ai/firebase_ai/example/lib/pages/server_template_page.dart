@@ -51,18 +51,19 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
 
   void _initializeServerTemplate() {
     if (widget.useVertexBackend) {
-      // ignore: experimental_member_use
       _templateGenerativeModel =
+          // ignore: experimental_member_use
           FirebaseAI.vertexAI(location: 'global').templateGenerativeModel();
-      // ignore: experimental_member_use
       _templateImagenModel =
+          // ignore: experimental_member_use
           FirebaseAI.vertexAI(location: 'global').templateImagenModel();
     } else {
-      // ignore: experimental_member_use
       _templateGenerativeModel =
+          // ignore: experimental_member_use
           FirebaseAI.googleAI().templateGenerativeModel();
-      // ignore: experimental_member_use
-      _templateImagenModel = FirebaseAI.googleAI().templateImagenModel();
+      _templateImagenModel =
+          // ignore: experimental_member_use
+          FirebaseAI.googleAI().templateImagenModel();
     }
   }
 
@@ -190,8 +191,8 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
 
     try {
       _messages.add(MessageData(text: message, fromUser: true));
-      // ignore: experimental_member_use
       var response = await _templateGenerativeModel
+          // ignore: experimental_member_use
           ?.generateContent('cj-urlcontext', inputs: {'url': message});
 
       final candidate = response?.candidates.first;
@@ -351,8 +352,8 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
 
     try {
       _messages.add(MessageData(text: message, fromUser: true));
-      // ignore: experimental_member_use
       var response = await _templateGenerativeModel
+          // ignore: experimental_member_use
           ?.generateContent('new-greeting', inputs: {});
 
       _messages.add(MessageData(text: response?.text, fromUser: false));
