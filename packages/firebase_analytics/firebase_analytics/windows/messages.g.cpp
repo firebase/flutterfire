@@ -525,6 +525,45 @@ void FirebaseAnalyticsHostApi::SetUp(
       channel.SetMessageHandler(nullptr);
     }
   }
+  {
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_analytics_platform_interface."
+        "FirebaseAnalyticsHostApi.logTransaction" +
+            prepended_suffix,
+        &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_transaction_id_arg = args.at(0);
+              if (encodable_transaction_id_arg.IsNull()) {
+                reply(WrapError("transaction_id_arg unexpectedly null."));
+                return;
+              }
+              const auto& transaction_id_arg =
+                  std::get<std::string>(encodable_transaction_id_arg);
+              api->LogTransaction(
+                  transaction_id_arg,
+                  [reply](std::optional<FlutterError>&& output) {
+                    if (output.has_value()) {
+                      reply(WrapError(output.value()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(EncodableValue());
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
+            }
+          });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
 }
 
 EncodableValue FirebaseAnalyticsHostApi::WrapError(
