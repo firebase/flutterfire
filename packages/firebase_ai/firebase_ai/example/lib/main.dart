@@ -18,7 +18,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 // Import after file is generated through flutterfire_cli.
-import 'package:firebase_ai_example/firebase_options.dart';
+//import 'package:firebase_ai_example/firebase_options.dart';
 
 import 'pages/audio_page.dart';
 import 'pages/bidi_page.dart';

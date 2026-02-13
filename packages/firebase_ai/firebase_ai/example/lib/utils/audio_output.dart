@@ -12,64 +12,87 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:developer';
 import 'dart:typed_data';
-
 import 'package:flutter_soloud/flutter_soloud.dart';
 
 class AudioOutput {
+  var initialized = false;
   AudioSource? stream;
   SoundHandle? handle;
+  final int sampleRate = 24000;
+  final Channels channels = Channels.mono;
+  final BufferType format = BufferType.s16le; // pcm16bits
 
   Future<void> init() async {
-    // Initialize the player.
+    if (initialized) {
+      return;
+    }
+
+    /// Initialize the player (singleton).
+    await SoLoud.instance.init(sampleRate: sampleRate, channels: channels);
+    initialized = true;
+  }
+
+  Future<void> dispose() async {
+    if (initialized) {
+      SoLoud.instance.disposeAllSources();
+      SoLoud.instance.deinit();
+      initialized = false;
+    }
+  }
+
+  SoLoud get instance => SoLoud.instance;
+
+  AudioSource? setupNewStream() {
     if (!SoLoud.instance.isInitialized) {
-      try {
-        await SoLoud.instance.init(
-          sampleRate: 24000,
-          channels: Channels.mono,
-        );
-      } catch (e) {
-        print('SoLoud Init Error: $e');
-      }
+      return null;
     }
-    await setupNewStream();
-  }
 
-  Future<void> setupNewStream() async {
-    if (SoLoud.instance.isInitialized) {
-      // Stop and clear any previous playback handle if it's still valid
-      await stopStream(); // Ensure previous sound is stopped
-
-      stream = SoLoud.instance.setBufferStream(
-        maxBufferSizeBytes:
-            1024 * 1024 * 10, // 10MB of max buffer (not allocated)
-        bufferingType: BufferingType.released,
-        bufferingTimeNeeds: 0,
-        onBuffering: (isBuffering, handle, time) {},
-      );
-      // Reset handle to null until the stream is played again
-      handle = null;
-    }
-  }
-
-  Future<AudioSource?> playStream() async {
-    handle = await SoLoud.instance.play(stream!);
+    stream = SoLoud.instance.setBufferStream(
+      bufferingType: BufferingType.released,
+      bufferingTimeNeeds: 0,
+      sampleRate: sampleRate,
+      channels: channels,
+      format: format,
+      onBuffering: (isBuffering, handle, time) {
+        log('Buffering: $isBuffering, Time: $time');
+      },
+    );
+    log('New audio output stream buffer created.');
     return stream;
   }
 
-  Future<void> stopStream() async {
-    if (stream != null &&
-        handle != null &&
-        SoLoud.instance.getIsValidVoiceHandle(handle!)) {
-      SoLoud.instance.setDataIsEnded(stream!);
-      await SoLoud.instance.stop(handle!);
+  Future<AudioSource?> playStream() async {
+    var myStream = setupNewStream();
+    if (!SoLoud.instance.isInitialized || myStream == null) {
+      return null;
+    }
+    // Play audio stream
+    handle = await SoLoud.instance.play(myStream);
+    stream = myStream;
+    return stream;
+  }
 
-      // Clear old stream, set up new session for next time.
-      await setupNewStream();
+  void addDataToAudioStream(Uint8List audioChunk) {
+    var currentStream = stream;
+    if (currentStream != null) {
+      SoLoud.instance.addAudioDataStream(currentStream, audioChunk);
     }
   }
 
-  void addAudioStream(Uint8List audioChunk) {
-    SoLoud.instance.addAudioDataStream(stream!, audioChunk);
+  Future<void> stopStream() async {
+    var currentStream = stream;
+    var currentHandle = handle;
+
+    // Stream doesn't exist or handle is not valid - so nothing to stop.
+    if (currentStream == null ||
+        currentHandle == null ||
+        !SoLoud.instance.getIsValidVoiceHandle(currentHandle)) {
+      return;
+    }
+    // End data to stream & stop currently playing sound from handle
+    SoLoud.instance.setDataIsEnded(currentStream);
+    await SoLoud.instance.stop(currentHandle);
   }
 }

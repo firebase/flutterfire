@@ -98,8 +98,17 @@ class _BidiPageState extends State<BidiPage> {
   }
 
   Future<void> _initAudio() async {
-    await _audioOutput.init();
-    await _audioInput.init();
+    try {
+      await _audioOutput.init();
+    } catch (e) {
+      developer.log('Audio Output init error: $e');
+    }
+
+    try {
+      await _audioInput.init();
+    } catch (e) {
+      developer.log('Audio Input init error: $e');
+    }
   }
 
   Future<void> _initVideo() async {
@@ -144,13 +153,16 @@ class _BidiPageState extends State<BidiPage> {
               height: 200,
               color: Colors.black,
               alignment: Alignment.center,
-              child: FullCameraPreview(
-                controller: _videoInput.cameraController,
-                deviceId: _videoInput.selectedCameraId,
-                onInitialized: (controller) {
-                  _videoInput.setMacOSController(controller);
-                },
-              ),
+              child: (_videoInput.cameraController != null &&
+                      _videoInput.controllerInitialized)
+                  ? FullCameraPreview(
+                      controller: _videoInput.cameraController,
+                      deviceId: _videoInput.selectedCameraId,
+                      onInitialized: (controller) {
+                        _videoInput.setMacOSController(controller);
+                      },
+                    )
+                  : const Center(child: CircularProgressIndicator()),
             ),
           Expanded(
             child: ListView.builder(
@@ -288,12 +300,7 @@ class _BidiPageState extends State<BidiPage> {
     setState(() {
       _loading = true;
     });
-
-    try {
-      await _initAudio();
-    } catch (e) {
-      developer.log('Audio Hardware init error: $e');
-    }
+    await _initAudio();
 
     try {
       if (!_videoIsInitialized) {
@@ -347,8 +354,8 @@ class _BidiPageState extends State<BidiPage> {
         );
       }
     } catch (e) {
-      developer.log(e.toString());
-      _showError(e.toString());
+      developer.log('bidi_page._startRecording(): $e');
+      developer.log('bidi_page._startRecording(): $e');
     }
   }
 
@@ -369,6 +376,16 @@ class _BidiPageState extends State<BidiPage> {
       return;
     }
 
+    await Future.delayed(const Duration(milliseconds: 1000));
+    if (!_videoInput.controllerInitialized ||
+        _videoInput.cameraController == null) {
+      try {
+        await _videoInput.initializeCameraController();
+      } catch (e) {
+        developer.log('Camera init failed: $e');
+        return; // Stop if we can't get the camera
+      }
+    }
     setState(() {
       _isCameraOn = true;
     });
@@ -527,7 +544,7 @@ class _BidiPageState extends State<BidiPage> {
 
   Future<void> _handleInlineDataPart(InlineDataPart part) async {
     if (part.mimeType.startsWith('audio')) {
-      _audioOutput.addAudioStream(part.bytes);
+      _audioOutput.addDataToAudioStream(part.bytes);
     }
   }
 

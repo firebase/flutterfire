@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:record/record.dart';
-import 'dart:typed_data';
 import 'dart:async';
 import 'package:waveform_flutter/waveform_flutter.dart' as wf;
 
 class AudioInput extends ChangeNotifier {
   final _recorder = AudioRecorder();
-  final AudioEncoder _encoder = AudioEncoder.pcm16bits;
+
+  final AudioEncoder _mobileEncoder = AudioEncoder.pcm16bits;
+
   bool isRecording = false;
   bool isPaused = false;
   Stream<Uint8List>? audioStream;
@@ -54,9 +55,37 @@ class AudioInput extends ChangeNotifier {
         !_amplitudeStreamController!.isClosed) {
       await _amplitudeStreamController!.close();
     }
+
+    // 1. DEVICE SELECTION LOGIC
+    // Fetch all devices to find the real microphone
+    final devices = await _recorder.listInputDevices();
+    InputDevice? selectedDevice;
+
+    try {
+      // Find the device that is NOT BlackHole and looks like a built-in mic.
+      // Browsers often name it "Default - Internal Microphone" or "Built-in Audio".
+      selectedDevice = devices.firstWhere(
+        (device) {
+          final label = device.label.toLowerCase();
+          return !label.contains('blackhole') &&
+              (label.contains('internal') ||
+                  label.contains('built-in') ||
+                  label.contains('macbook'));
+        },
+        // Fallback: Just find anything that isn't Blackhole
+        orElse: () => devices.firstWhere(
+          (d) => !d.label.toLowerCase().contains('blackhole'),
+          orElse: () => devices.first, // Absolute fallback
+        ),
+      );
+    } catch (e) {
+      debugPrint('Error selecting device: $e');
+    }
+
     var recordConfig = RecordConfig(
-      encoder: _encoder,
+      encoder: _mobileEncoder,
       sampleRate: 24000,
+      device: selectedDevice,
       numChannels: 1,
       echoCancel: true,
       noiseSuppress: true,
@@ -65,7 +94,7 @@ class AudioInput extends ChangeNotifier {
       ),
       iosConfig: const IosRecordConfig(categoryOptions: []),
     );
-    await _recorder.listInputDevices();
+
     audioStream = await _recorder.startStream(recordConfig);
 
     _amplitudeStreamController = StreamController<wf.Amplitude>.broadcast();
