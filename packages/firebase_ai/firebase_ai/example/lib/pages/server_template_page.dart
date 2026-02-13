@@ -38,7 +38,9 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
   final List<MessageData> _messages = <MessageData>[];
   bool _loading = false;
 
+  // ignore: experimental_member_use
   TemplateGenerativeModel? _templateGenerativeModel;
+  // ignore: experimental_member_use
   TemplateImagenModel? _templateImagenModel;
 
   @override
@@ -49,13 +51,17 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
 
   void _initializeServerTemplate() {
     if (widget.useVertexBackend) {
+      // ignore: experimental_member_use
       _templateGenerativeModel =
           FirebaseAI.vertexAI(location: 'global').templateGenerativeModel();
+      // ignore: experimental_member_use
       _templateImagenModel =
           FirebaseAI.vertexAI(location: 'global').templateImagenModel();
     } else {
+      // ignore: experimental_member_use
       _templateGenerativeModel =
           FirebaseAI.googleAI().templateGenerativeModel();
+      // ignore: experimental_member_use
       _templateImagenModel = FirebaseAI.googleAI().templateImagenModel();
     }
   }
@@ -184,6 +190,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
 
     try {
       _messages.add(MessageData(text: message, fromUser: true));
+      // ignore: experimental_member_use
       var response = await _templateGenerativeModel
           ?.generateContent('cj-urlcontext', inputs: {'url': message});
 
@@ -248,6 +255,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
     MessageData? resultMessage;
     try {
       _messages.add(MessageData(text: message, fromUser: true));
+      // ignore: experimental_member_use
       var response = await _templateImagenModel?.generateImages(
         'portrait-googleai',
         inputs: {
@@ -305,6 +313,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
         ),
       );
 
+      // ignore: experimental_member_use
       var response = await _templateGenerativeModel?.generateContent(
         'media.prompt',
         inputs: {
@@ -342,6 +351,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
 
     try {
       _messages.add(MessageData(text: message, fromUser: true));
+      // ignore: experimental_member_use
       var response = await _templateGenerativeModel
           ?.generateContent('new-greeting', inputs: {});
 
