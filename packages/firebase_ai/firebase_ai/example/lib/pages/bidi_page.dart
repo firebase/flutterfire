@@ -62,6 +62,7 @@ class _BidiPageState extends State<BidiPage> {
   final AudioOutput _audioOutput = AudioOutput();
   final AudioInput _audioInput = AudioInput();
   final VideoInput _videoInput = VideoInput();
+  StreamSubscription? _audioSubscription;
   int? _inputTranscriptionMessageIndex;
   int? _outputTranscriptionMessageIndex;
   bool _isCameraOn = false;
@@ -153,16 +154,25 @@ class _BidiPageState extends State<BidiPage> {
               height: 200,
               color: Colors.black,
               alignment: Alignment.center,
-              child: (_videoInput.cameraController != null &&
-                      _videoInput.controllerInitialized)
+              child: (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS)
                   ? FullCameraPreview(
                       controller: _videoInput.cameraController,
                       deviceId: _videoInput.selectedCameraId,
                       onInitialized: (controller) {
+                        // This is where the controller actually gets born on macOS
                         _videoInput.setMacOSController(controller);
                       },
                     )
-                  : const Center(child: CircularProgressIndicator()),
+                  : (_videoInput.cameraController != null &&
+                          _videoInput.controllerInitialized)
+                      ? FullCameraPreview(
+                          controller: _videoInput.cameraController,
+                          deviceId: _videoInput.selectedCameraId,
+                          onInitialized: (controller) {
+                            // Web/Mobile callback (often unused if controller passed in)
+                          },
+                        )
+                      : const Center(child: CircularProgressIndicator()),
             ),
           Expanded(
             child: ListView.builder(
@@ -335,6 +345,8 @@ class _BidiPageState extends State<BidiPage> {
   }
 
   Future<void> _startRecording() async {
+    await _audioSubscription?.cancel();
+    _audioSubscription = null;
     setState(() {
       _recording = true;
     });
@@ -342,7 +354,7 @@ class _BidiPageState extends State<BidiPage> {
       var inputStream = await _audioInput.startRecordingStream();
       await _audioOutput.playStream();
       if (inputStream != null) {
-        inputStream.listen(
+        _audioSubscription = inputStream.listen(
           (data) {
             _session.sendAudioRealtime(InlineDataPart('audio/pcm', data));
           },
@@ -355,11 +367,14 @@ class _BidiPageState extends State<BidiPage> {
       }
     } catch (e) {
       developer.log('bidi_page._startRecording(): $e');
-      developer.log('bidi_page._startRecording(): $e');
+      _showError('bidi_page._startRecording(): $e');
+      setState(() => _recording = false);
     }
   }
 
   Future<void> _stopRecording() async {
+    await _audioSubscription?.cancel();
+    _audioSubscription = null;
     try {
       await _audioInput.stopRecording();
     } catch (e) {
@@ -372,38 +387,78 @@ class _BidiPageState extends State<BidiPage> {
   }
 
   Future<void> _startVideoStream() async {
-    if (!_videoIsInitialized || !_recording || _isCameraOn) {
-      return;
-    }
+    // 1. Re-entry Guard: Prevent multiple clicks while switching
+    if (_loading || !_videoIsInitialized) return;
 
-    await Future.delayed(const Duration(milliseconds: 1000));
-    if (!_videoInput.controllerInitialized ||
-        _videoInput.cameraController == null) {
-      try {
-        await _videoInput.initializeCameraController();
-      } catch (e) {
-        developer.log('Camera init failed: $e');
-        return; // Stop if we can't get the camera
-      }
-    }
+    // 2. Capture the current recording state
+    bool wasRecording = _recording;
+
     setState(() {
-      _isCameraOn = true;
+      _loading = true; // Lock the UI during the switch
     });
 
-    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
-      // On macOS, the controller is initialized by the CameraMacOSView.
-      // We need to wait for it to be available.
-      while (_videoInput.cameraController == null) {
-        await Future.delayed(const Duration(milliseconds: 100));
+    try {
+      if (wasRecording) {
+        await _stopRecording();
       }
-    }
 
-    _videoInput.startStreamingImages().listen(
-      (data) {
-        _session.sendVideoRealtime(InlineDataPart('image/jpeg', data));
-      },
-      onError: (e) => developer.log('Video Stream Error: $e'),
-    );
+      // 4. Wait for ripple/UI (Prevent freeze)
+      await Future.delayed(const Duration(milliseconds: 250));
+
+      // 5. Initialize Camera if needed
+      if (!_videoInput.controllerInitialized ||
+          _videoInput.cameraController == null) {
+        await _videoInput.initializeCameraController();
+      }
+
+      // 6. Mount Camera UI
+      setState(() {
+        _isCameraOn = true;
+      });
+
+      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
+        // ✅ Because we set _cameraController to null in stopStreamingImages,
+        // this loop will now CORRECTLY wait for the new View to initialize.
+        int attempts = 0;
+        while (_videoInput.cameraController == null) {
+          if (attempts > 50) break; // 5 second timeout safety
+          await Future.delayed(const Duration(milliseconds: 100));
+          attempts++;
+        }
+      }
+
+      // 7. Wait for Mac Camera to Settle (Prevent audio hijack)
+      await Future.delayed(const Duration(milliseconds: 1000));
+
+      // 8. CLEAN RESTART: Use the helper method!
+      // Only restart if we were recording before.
+      if (wasRecording) {
+        developer.log('Resuming audio session...');
+        await _startRecording();
+      }
+
+      // 9. Start Video Stream
+      _videoInput.startStreamingImages().listen(
+        (data) {
+          String mimeType = 'image/jpeg';
+          if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
+            if (data.length > 3 && data[0] == 0x89 && data[1] == 0x50) {
+              mimeType = 'image/png';
+            }
+          }
+          _session.sendVideoRealtime(InlineDataPart(mimeType, data));
+        },
+        onError: (e) => developer.log('Video Stream Error: $e'),
+      );
+    } catch (e) {
+      developer.log('Error switching to video: $e');
+      _showError(e.toString());
+    } finally {
+      // 10. Always unlock the UI
+      setState(() {
+        _loading = false;
+      });
+    }
   }
 
   Future<void> _stopVideoStream() async {

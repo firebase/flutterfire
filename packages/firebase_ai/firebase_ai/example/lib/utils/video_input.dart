@@ -144,10 +144,13 @@ class VideoInput extends ChangeNotifier {
           if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
             final controller = _cameraController as CameraMacOSController;
             log('Taking picture (macOS)...');
-            final image = await controller.takePicture();
+            final CameraMacOSFile? image = await controller.takePicture();
             if (image != null && image.bytes != null) {
               log('(macOS) has image with byte size ${image.bytes!.length}...');
-              _imageStreamController.add(image.bytes!);
+
+              if (!_imageStreamController.isClosed) {
+                _imageStreamController.add(image.bytes!);
+              }
             }
           } else {
             final controller = _cameraController as CameraController;
@@ -175,11 +178,24 @@ class VideoInput extends ChangeNotifier {
     }
     _captureTimer?.cancel();
     _captureTimer = null;
+
     if (!_imageStreamController.isClosed) {
       await _imageStreamController.close();
     }
     _imageStreamController = StreamController<Uint8List>.broadcast();
     _isStreaming = false;
+
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
+      // On macOS, the view owns the controller, so we just forget our reference.
+      _cameraController = null;
+      controllerInitialized = false;
+    } else {
+      // On Web/Mobile, we dispose it manually.
+      await (_cameraController as CameraController?)?.dispose();
+      _cameraController = null;
+      controllerInitialized = false;
+    }
+    notifyListeners();
   }
 
   Future<void> flipCamera() async {

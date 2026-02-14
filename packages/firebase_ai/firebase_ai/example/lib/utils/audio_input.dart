@@ -19,12 +19,15 @@ import 'package:waveform_flutter/waveform_flutter.dart' as wf;
 
 class AudioInput extends ChangeNotifier {
   final _recorder = AudioRecorder();
-
-  final AudioEncoder _mobileEncoder = AudioEncoder.pcm16bits;
+  final AudioEncoder _encoder = AudioEncoder.pcm16bits;
 
   bool isRecording = false;
   bool isPaused = false;
-  Stream<Uint8List>? audioStream;
+
+  StreamController<Uint8List>? _audioDataController;
+  StreamSubscription? _recorderStreamSub;
+
+  Stream<Uint8List>? get audioStream => _audioDataController?.stream;
 
   Stream<wf.Amplitude>? amplitudeStream;
   StreamSubscription? _amplitudeSubscription;
@@ -37,6 +40,7 @@ class AudioInput extends ChangeNotifier {
   @override
   void dispose() {
     _recorder.dispose();
+    _audioDataController?.close();
     super.dispose();
   }
 
@@ -55,6 +59,13 @@ class AudioInput extends ChangeNotifier {
         !_amplitudeStreamController!.isClosed) {
       await _amplitudeStreamController!.close();
     }
+
+    await _recorderStreamSub?.cancel();
+    if (_audioDataController != null && !_audioDataController!.isClosed) {
+      await _audioDataController!.close();
+    }
+
+    _audioDataController = StreamController<Uint8List>();
 
     // 1. DEVICE SELECTION LOGIC
     // Fetch all devices to find the real microphone
@@ -83,7 +94,7 @@ class AudioInput extends ChangeNotifier {
     }
 
     var recordConfig = RecordConfig(
-      encoder: _mobileEncoder,
+      encoder: _encoder,
       sampleRate: 24000,
       device: selectedDevice,
       numChannels: 1,
@@ -95,7 +106,25 @@ class AudioInput extends ChangeNotifier {
       iosConfig: const IosRecordConfig(categoryOptions: []),
     );
 
-    audioStream = await _recorder.startStream(recordConfig);
+    final rawStream = await _recorder.startStream(recordConfig);
+
+    _recorderStreamSub = rawStream.listen(
+      (data) {
+        if (_audioDataController != null && !_audioDataController!.isClosed) {
+          _audioDataController!.add(data);
+        }
+      },
+      onError: (e) {
+        debugPrint('Recorder stream error: $e');
+        if (_audioDataController != null && !_audioDataController!.isClosed) {
+          _audioDataController!.addError(e);
+        }
+      },
+      onDone: () {
+        // Do not close the controller here automatically; let stopRecording handle it
+        // to prevent race conditions in the UI.
+      },
+    );
 
     _amplitudeStreamController = StreamController<wf.Amplitude>.broadcast();
     _amplitudeSubscription = _recorder!
@@ -106,16 +135,27 @@ class AudioInput extends ChangeNotifier {
       );
     });
     amplitudeStream = _amplitudeStreamController?.stream;
+
     isRecording = true;
     notifyListeners();
-    return audioStream;
+
+    return _audioDataController!.stream;
   }
 
   Future<void> stopRecording() async {
-    await _recorder.stop();
+    try {
+      await _recorder.stop();
+    } catch (e) {
+      debugPrint('Error stopping recorder hardware: $e');
+    }
     await _amplitudeSubscription?.cancel();
     await _amplitudeStreamController?.close();
     amplitudeStream = null;
+
+    await _recorderStreamSub?.cancel();
+    await _audioDataController?.close();
+    _audioDataController = null;
+    
     isRecording = false;
     notifyListeners();
   }
