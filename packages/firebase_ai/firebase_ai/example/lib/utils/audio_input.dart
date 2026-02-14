@@ -18,7 +18,7 @@ import 'dart:async';
 import 'package:waveform_flutter/waveform_flutter.dart' as wf;
 
 class AudioInput extends ChangeNotifier {
-  final _recorder = AudioRecorder();
+  AudioRecorder _recorder = AudioRecorder();
   final AudioEncoder _encoder = AudioEncoder.pcm16bits;
 
   bool isRecording = false;
@@ -67,6 +67,18 @@ class AudioInput extends ChangeNotifier {
 
     _audioDataController = StreamController<Uint8List>();
 
+    // Re-instantiate the recorder to ensure we get a fresh stream.
+    // This fixes "Stream has already been listened to" errors when restarting recording.
+    try {
+      if (await _recorder.isRecording()) {
+        await _recorder.stop();
+      }
+    } catch (e) {
+      debugPrint('Error stopping recorder: $e');
+    }
+    await _recorder.dispose();
+    _recorder = AudioRecorder();
+
     // 1. DEVICE SELECTION LOGIC
     // Fetch all devices to find the real microphone
     final devices = await _recorder.listInputDevices();
@@ -110,10 +122,12 @@ class AudioInput extends ChangeNotifier {
 
     _recorderStreamSub = rawStream.listen(
       (data) {
-        if (_audioDataController != null && !_audioDataController!.isClosed) {
+        if (data.isNotEmpty && _audioDataController != null && !_audioDataController!.isClosed) {
+          // debugPrint('AudioInput: received ${data.length} bytes');
           _audioDataController!.add(data);
         }
       },
+
       onError: (e) {
         debugPrint('Recorder stream error: $e');
         if (_audioDataController != null && !_audioDataController!.isClosed) {
@@ -155,7 +169,7 @@ class AudioInput extends ChangeNotifier {
     await _recorderStreamSub?.cancel();
     await _audioDataController?.close();
     _audioDataController = null;
-    
+
     isRecording = false;
     notifyListeners();
   }

@@ -143,11 +143,8 @@ class VideoInput extends ChangeNotifier {
         try {
           if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
             final controller = _cameraController as CameraMacOSController;
-            log('Taking picture (macOS)...');
             final CameraMacOSFile? image = await controller.takePicture();
             if (image != null && image.bytes != null) {
-              log('(macOS) has image with byte size ${image.bytes!.length}...');
-
               if (!_imageStreamController.isClosed) {
                 _imageStreamController.add(image.bytes!);
               }
@@ -155,7 +152,6 @@ class VideoInput extends ChangeNotifier {
           } else {
             final controller = _cameraController as CameraController;
             if (controller.value.isTakingPicture) return;
-            log('Taking picture...');
             final XFile imageFile = await controller.takePicture();
             Uint8List imageBytes = await imageFile.readAsBytes();
             if (!_imageStreamController.isClosed) {
