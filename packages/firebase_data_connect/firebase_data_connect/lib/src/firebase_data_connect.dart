@@ -199,7 +199,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     }
 
     //TODO remove after testing since CS should be null by default
-    cacheSettings = cacheSettings ?? CacheSettings();
+    final resolvedCacheSettings = cacheSettings ?? CacheSettings();
 
     FirebaseDataConnect newInstance = FirebaseDataConnect(
       app: app,
@@ -207,7 +207,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
       appCheck: appCheck,
       connectorConfig: connectorConfig,
       sdkType: sdkType,
-      cacheSettings: cacheSettings,
+      cacheSettings: resolvedCacheSettings,
     );
     if (cachedInstances[app.name] == null) {
       cachedInstances[app.name] = <String, FirebaseDataConnect>{};
