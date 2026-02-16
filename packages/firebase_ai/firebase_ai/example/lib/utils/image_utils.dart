@@ -18,7 +18,9 @@ import 'package:flutter/foundation.dart';
 /// The parameters passed to the isolate
 class _IsolateParams {
   final Uint8List imageBytes;
+  // ignore: experimental_member_use
   final ImagenDimensions newDimensions;
+  // ignore: experimental_member_use
   final ImagenImagePlacement newPosition;
 
   _IsolateParams({
@@ -59,6 +61,7 @@ Future<_IsolateResult> _generateMaskAndPadInIsolate(
     );
   }
   // 2. Calculate the position
+  // ignore: experimental_member_use
   final originalDimensions = ImagenDimensions(
     width: originalImage.width,
     height: originalImage.height,
@@ -107,9 +110,12 @@ Future<_IsolateResult> _generateMaskAndPadInIsolate(
 }
 
 /// Generates a mask and pads the image for outpainting.
+// ignore: experimental_member_use
 Future<List<ImagenReferenceImage>> generateMaskAndPadForOutpainting({
   required ImagenInlineImage image,
+  // ignore: experimental_member_use
   required ImagenDimensions newDimensions,
+  // ignore: experimental_member_use
   ImagenImagePlacement newPosition = ImagenImagePlacement.center,
 }) async {
   // Prepare the parameters for the isolate
@@ -126,12 +132,14 @@ Future<List<ImagenReferenceImage>> generateMaskAndPadForOutpainting({
 
   // Use the resulting bytes to create your final objects
   return [
+    // ignore: experimental_member_use
     ImagenRawImage(
       image: ImagenInlineImage(
         bytesBase64Encoded: result.paddedImageBytes,
         mimeType: 'image/png', // The isolate always returns PNG
       ),
     ),
+    // ignore: experimental_member_use
     ImagenRawMask(
       mask: ImagenInlineImage(
         bytesBase64Encoded: result.maskBytes,
