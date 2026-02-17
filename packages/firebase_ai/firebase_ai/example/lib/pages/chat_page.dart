@@ -191,8 +191,8 @@ class _ChatPageState extends State<ChatPage> {
         _showError('No response from API.');
         return;
       }
-      var text = '';
-      _messages.add(MessageData(text: text, fromUser: false));
+      final textBuffer = StringBuffer();
+      _messages.add(MessageData(text: textBuffer.toString(), fromUser: false));
 
       await for (final response in responseStream) {
         final thought = response.thoughtSummary;
@@ -202,14 +202,15 @@ class _ChatPageState extends State<ChatPage> {
             MessageData(text: thought, fromUser: false, isThought: true),
           );
         }
-        text += response.text ?? '';
+        textBuffer.write(response.text ?? '');
         setState(() {
-          _messages.last = MessageData(text: text, fromUser: false);
+          _messages.last =
+              MessageData(text: textBuffer.toString(), fromUser: false);
         });
         _scrollDown();
       }
 
-      if (text.isEmpty) {
+      if (textBuffer.isEmpty) {
         _showError('No response from API.');
         return;
       }
