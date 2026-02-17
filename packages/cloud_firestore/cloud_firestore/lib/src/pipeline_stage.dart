@@ -108,7 +108,7 @@ final class _AddFieldsStage extends PipelineStage {
 
 /// Stage for aggregating data
 final class _AggregateStage extends PipelineStage {
-  final List<PipelineAggregateFunction> aggregateFunctions;
+  final List<AliasedAggregateFunction> aggregateFunctions;
 
   _AggregateStage(this.aggregateFunctions);
 
@@ -127,9 +127,33 @@ final class _AggregateStage extends PipelineStage {
   }
 }
 
+/// Stage for aggregating data with options and grouping
+final class _AggregateStageWithOptions extends PipelineStage {
+  final AggregateStage aggregateStage;
+  final AggregateOptions? options;
+
+  _AggregateStageWithOptions(this.aggregateStage, this.options);
+
+  @override
+  String get name => 'aggregate';
+
+  @override
+  Map<String, dynamic> toMap() {
+    final map = aggregateStage.toMap();
+    final optionsMap = options?.toMap();
+    return {
+      'stage': name,
+      'args': {
+        'aggregate_stage': map,
+        'options': optionsMap,
+      },
+    };
+  }
+}
+
 /// Stage for getting distinct values
 final class _DistinctStage extends PipelineStage {
-  final List<Expression> expressions;
+  final List<Selectable> expressions;
 
   _DistinctStage(this.expressions);
 
@@ -323,7 +347,7 @@ final class _SortStage extends PipelineStage {
 
 /// Stage for unnesting arrays
 final class _UnnestStage extends PipelineStage {
-  final Expression expression;
+  final Selectable expression;
   final String? indexField;
 
   _UnnestStage(this.expression, this.indexField);

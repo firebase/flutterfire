@@ -6,27 +6,45 @@ part of '../cloud_firestore.dart';
 
 /// Base class for aggregate functions used in pipelines
 abstract class PipelineAggregateFunction implements PipelineSerializable {
-  String? _alias;
-
   /// Assigns an alias to this aggregate function
-  PipelineAggregateFunction as(String alias) {
-    _alias = alias;
-    return this;
+  AliasedAggregateFunction as(String alias) {
+    return AliasedAggregateFunction(
+      alias: alias,
+      aggregateFunction: this,
+    );
   }
-
-  String? get alias => _alias;
 
   String get name;
 
   @override
   Map<String, dynamic> toMap() {
-    final map = <String, dynamic>{
+    return <String, dynamic>{
       'name': name,
     };
-    if (_alias != null) {
-      map['alias'] = _alias;
-    }
-    return map;
+  }
+}
+
+/// Represents an aggregate function with an alias
+class AliasedAggregateFunction implements PipelineSerializable {
+  final String _alias;
+  final PipelineAggregateFunction aggregateFunction;
+
+  AliasedAggregateFunction({
+    required String alias,
+    required this.aggregateFunction,
+  }) : _alias = alias;
+
+  String get alias => _alias;
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': 'alias',
+      'args': {
+        'alias': _alias,
+        'aggregate_function': aggregateFunction.toMap(),
+      },
+    };
   }
 }
 
@@ -54,5 +72,40 @@ class Count extends PipelineAggregateFunction {
       'expression': expression.toMap(),
     };
     return map;
+  }
+}
+
+/// Represents an aggregate stage with functions and optional grouping
+class AggregateStage implements PipelineSerializable {
+  final List<AliasedAggregateFunction> accumulators;
+  final List<Selectable>? groups;
+
+  AggregateStage({
+    required this.accumulators,
+    this.groups,
+  });
+
+  @override
+  Map<String, dynamic> toMap() {
+    final map = <String, dynamic>{
+      'accumulators': accumulators.map((acc) => acc.toMap()).toList(),
+    };
+    if (groups != null && groups!.isNotEmpty) {
+      map['groups'] = groups!.map((group) => group.toMap()).toList();
+    }
+    return map;
+  }
+}
+
+/// Options for aggregate operations
+class AggregateOptions implements PipelineSerializable {
+  // Add any aggregate-specific options here as needed
+  // For now, this is a placeholder for future options
+
+  AggregateOptions();
+
+  @override
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{};
   }
 }

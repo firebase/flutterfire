@@ -553,7 +553,32 @@ abstract class Expression implements PipelineSerializable {
   static Expression constantVector(VectorValue value) => Constant(value);
 
   /// Creates a constant expression from any value (convenience)
-  static Expression constant(Object? value) => Constant(value!);
+  ///
+  /// Valid types: String, num, bool, DateTime, Timestamp, GeoPoint, List<int> (byte[]),
+  /// Blob, DocumentReference, VectorValue
+  static Expression constant(Object? value) {
+    if (value == null) {
+      return Constant(null);
+    }
+    // Validate that the value is one of the accepted types
+    if (value is! String &&
+        value is! num &&
+        value is! bool &&
+        value is! DateTime &&
+        value is! Timestamp &&
+        value is! GeoPoint &&
+        value is! List<int> &&
+        value is! Blob &&
+        value is! DocumentReference &&
+        value is! VectorValue) {
+      throw ArgumentError(
+        'Constant value must be one of: String, num, bool, DateTime, Timestamp, '
+        'GeoPoint, List<int> (byte[]), Blob, DocumentReference, or VectorValue. '
+        'Got: ${value.runtimeType}',
+      );
+    }
+    return Constant(value);
+  }
 
   /// Creates a field reference expression from a field path string
   static Field field(String fieldPath) => Field(fieldPath);
@@ -732,6 +757,11 @@ abstract class Expression implements PipelineSerializable {
   /// Checks if an expression produces an error
   static BooleanExpression isErrorStatic(Expression expr) {
     return _IsErrorExpression(expr);
+  }
+
+  /// Negates a boolean expression
+  static BooleanExpression not(BooleanExpression expression) {
+    return _NotExpression(expression);
   }
 
   /// Joins array elements with a delimiter
@@ -1191,10 +1221,33 @@ class _NullExpression extends Expression {
 }
 
 /// Represents a constant value in a pipeline expression
+///
+/// Valid types: String, num, bool, DateTime, Timestamp, GeoPoint, List<int> (byte[]),
+/// Blob, DocumentReference, VectorValue, or null
 class Constant extends Expression {
-  final Object value;
+  final Object? value;
 
-  Constant(this.value);
+  Constant(this.value) {
+    if (value != null) {
+      // Validate that the value is one of the accepted types
+      if (value is! String &&
+          value is! num &&
+          value is! bool &&
+          value is! DateTime &&
+          value is! Timestamp &&
+          value is! GeoPoint &&
+          value is! List<int> &&
+          value is! Blob &&
+          value is! DocumentReference &&
+          value is! VectorValue) {
+        throw ArgumentError(
+          'Constant value must be one of: String, num, bool, DateTime, Timestamp, '
+          'GeoPoint, List<int> (byte[]), Blob, DocumentReference, or VectorValue. '
+          'Got: ${value.runtimeType}',
+        );
+      }
+    }
+  }
 
   @override
   String get name => 'constant';
@@ -2225,6 +2278,26 @@ class _ExistsExpression extends BooleanExpression {
 
   @override
   String get name => 'exists';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expression': expression.toMap(),
+      },
+    };
+  }
+}
+
+/// Represents a not (negation) function expression
+class _NotExpression extends BooleanExpression {
+  final BooleanExpression expression;
+
+  _NotExpression(this.expression);
+
+  @override
+  String get name => 'not';
 
   @override
   Map<String, dynamic> toMap() {

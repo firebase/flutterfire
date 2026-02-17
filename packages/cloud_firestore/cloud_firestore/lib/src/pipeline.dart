@@ -55,69 +55,58 @@ class Pipeline {
 
   /// Adds fields to documents using expressions
   Pipeline addFields(
-    Expression expression1, [
-    Expression? expression2,
-    Expression? expression3,
-    Expression? expression4,
-    Expression? expression5,
-    Expression? expression6,
-    Expression? expression7,
-    Expression? expression8,
-    Expression? expression9,
-    Expression? expression10,
-    Expression? expression11,
-    Expression? expression12,
-    Expression? expression13,
-    Expression? expression14,
-    Expression? expression15,
-    Expression? expression16,
-    Expression? expression17,
-    Expression? expression18,
-    Expression? expression19,
-    Expression? expression20,
-    Expression? expression21,
-    Expression? expression22,
-    Expression? expression23,
-    Expression? expression24,
-    Expression? expression25,
-    Expression? expression26,
-    Expression? expression27,
-    Expression? expression28,
-    Expression? expression29,
-    Expression? expression30,
+    Selectable selectable1, [
+    Selectable? selectable2,
+    Selectable? selectable3,
+    Selectable? selectable4,
+    Selectable? selectable5,
+    Selectable? selectable6,
+    Selectable? selectable7,
+    Selectable? selectable8,
+    Selectable? selectable9,
+    Selectable? selectable10,
+    Selectable? selectable11,
+    Selectable? selectable12,
+    Selectable? selectable13,
+    Selectable? selectable14,
+    Selectable? selectable15,
+    Selectable? selectable16,
+    Selectable? selectable17,
+    Selectable? selectable18,
+    Selectable? selectable19,
+    Selectable? selectable20,
+    Selectable? selectable21,
+    Selectable? selectable22,
+    Selectable? selectable23,
+    Selectable? selectable24,
+    Selectable? selectable25,
+    Selectable? selectable26,
+    Selectable? selectable27,
+    Selectable? selectable28,
+    Selectable? selectable29,
+    Selectable? selectable30,
   ]) {
-    final expressions = <Expression>[expression1];
-    if (expression2 != null) expressions.add(expression2);
-    if (expression3 != null) expressions.add(expression3);
-    if (expression4 != null) expressions.add(expression4);
-    if (expression5 != null) expressions.add(expression5);
-    if (expression6 != null) expressions.add(expression6);
-    if (expression7 != null) expressions.add(expression7);
-    if (expression8 != null) expressions.add(expression8);
-    if (expression9 != null) expressions.add(expression9);
-    if (expression10 != null) expressions.add(expression10);
-    if (expression11 != null) expressions.add(expression11);
-    if (expression12 != null) expressions.add(expression12);
-    if (expression13 != null) expressions.add(expression13);
-    if (expression14 != null) expressions.add(expression14);
-    if (expression15 != null) expressions.add(expression15);
-    if (expression16 != null) expressions.add(expression16);
-    if (expression17 != null) expressions.add(expression17);
-    if (expression18 != null) expressions.add(expression18);
-    if (expression19 != null) expressions.add(expression19);
-    if (expression20 != null) expressions.add(expression20);
-    if (expression21 != null) expressions.add(expression21);
-    if (expression22 != null) expressions.add(expression22);
-    if (expression23 != null) expressions.add(expression23);
-    if (expression24 != null) expressions.add(expression24);
-    if (expression25 != null) expressions.add(expression25);
-    if (expression26 != null) expressions.add(expression26);
-    if (expression27 != null) expressions.add(expression27);
-    if (expression28 != null) expressions.add(expression28);
-    if (expression29 != null) expressions.add(expression29);
-    if (expression30 != null) expressions.add(expression30);
-
-    final stage = _AddFieldsStage(expressions);
+    final selectables = <Selectable>[selectable1];
+    if (selectable2 != null) selectables.add(selectable2);
+    if (selectable3 != null) selectables.add(selectable3);
+    if (selectable4 != null) selectables.add(selectable4);
+    if (selectable5 != null) selectables.add(selectable5);
+    if (selectable6 != null) selectables.add(selectable6);
+    if (selectable7 != null) selectables.add(selectable7);
+    if (selectable8 != null) selectables.add(selectable8);
+    if (selectable9 != null) selectables.add(selectable9);
+    if (selectable10 != null) selectables.add(selectable10);
+    if (selectable21 != null) selectables.add(selectable21);
+    if (selectable22 != null) selectables.add(selectable22);
+    if (selectable23 != null) selectables.add(selectable23);
+    if (selectable24 != null) selectables.add(selectable24);
+    if (selectable25 != null) selectables.add(selectable25);
+    if (selectable26 != null) selectables.add(selectable26);
+    if (selectable27 != null) selectables.add(selectable27);
+    if (selectable28 != null) selectables.add(selectable28);
+    if (selectable29 != null) selectables.add(selectable29);
+    if (selectable30 != null) selectables.add(selectable30);
+    final stage = _AddFieldsStage(selectables);
     return Pipeline._(
       _firestore,
       _delegate.addStage(stage.toMap()),
@@ -126,38 +115,38 @@ class Pipeline {
 
   /// Aggregates data using aggregate functions
   Pipeline aggregate(
-    PipelineAggregateFunction aggregateFunction1, [
-    PipelineAggregateFunction? aggregateFunction2,
-    PipelineAggregateFunction? aggregateFunction3,
-    PipelineAggregateFunction? aggregateFunction4,
-    PipelineAggregateFunction? aggregateFunction5,
-    PipelineAggregateFunction? aggregateFunction6,
-    PipelineAggregateFunction? aggregateFunction7,
-    PipelineAggregateFunction? aggregateFunction8,
-    PipelineAggregateFunction? aggregateFunction9,
-    PipelineAggregateFunction? aggregateFunction10,
-    PipelineAggregateFunction? aggregateFunction11,
-    PipelineAggregateFunction? aggregateFunction12,
-    PipelineAggregateFunction? aggregateFunction13,
-    PipelineAggregateFunction? aggregateFunction14,
-    PipelineAggregateFunction? aggregateFunction15,
-    PipelineAggregateFunction? aggregateFunction16,
-    PipelineAggregateFunction? aggregateFunction17,
-    PipelineAggregateFunction? aggregateFunction18,
-    PipelineAggregateFunction? aggregateFunction19,
-    PipelineAggregateFunction? aggregateFunction20,
-    PipelineAggregateFunction? aggregateFunction21,
-    PipelineAggregateFunction? aggregateFunction22,
-    PipelineAggregateFunction? aggregateFunction23,
-    PipelineAggregateFunction? aggregateFunction24,
-    PipelineAggregateFunction? aggregateFunction25,
-    PipelineAggregateFunction? aggregateFunction26,
-    PipelineAggregateFunction? aggregateFunction27,
-    PipelineAggregateFunction? aggregateFunction28,
-    PipelineAggregateFunction? aggregateFunction29,
-    PipelineAggregateFunction? aggregateFunction30,
+    AliasedAggregateFunction aggregateFunction1, [
+    AliasedAggregateFunction? aggregateFunction2,
+    AliasedAggregateFunction? aggregateFunction3,
+    AliasedAggregateFunction? aggregateFunction4,
+    AliasedAggregateFunction? aggregateFunction5,
+    AliasedAggregateFunction? aggregateFunction6,
+    AliasedAggregateFunction? aggregateFunction7,
+    AliasedAggregateFunction? aggregateFunction8,
+    AliasedAggregateFunction? aggregateFunction9,
+    AliasedAggregateFunction? aggregateFunction10,
+    AliasedAggregateFunction? aggregateFunction11,
+    AliasedAggregateFunction? aggregateFunction12,
+    AliasedAggregateFunction? aggregateFunction13,
+    AliasedAggregateFunction? aggregateFunction14,
+    AliasedAggregateFunction? aggregateFunction15,
+    AliasedAggregateFunction? aggregateFunction16,
+    AliasedAggregateFunction? aggregateFunction17,
+    AliasedAggregateFunction? aggregateFunction18,
+    AliasedAggregateFunction? aggregateFunction19,
+    AliasedAggregateFunction? aggregateFunction20,
+    AliasedAggregateFunction? aggregateFunction21,
+    AliasedAggregateFunction? aggregateFunction22,
+    AliasedAggregateFunction? aggregateFunction23,
+    AliasedAggregateFunction? aggregateFunction24,
+    AliasedAggregateFunction? aggregateFunction25,
+    AliasedAggregateFunction? aggregateFunction26,
+    AliasedAggregateFunction? aggregateFunction27,
+    AliasedAggregateFunction? aggregateFunction28,
+    AliasedAggregateFunction? aggregateFunction29,
+    AliasedAggregateFunction? aggregateFunction30,
   ]) {
-    final functions = <PipelineAggregateFunction>[aggregateFunction1];
+    final functions = <AliasedAggregateFunction>[aggregateFunction1];
     if (aggregateFunction2 != null) functions.add(aggregateFunction2);
     if (aggregateFunction3 != null) functions.add(aggregateFunction3);
     if (aggregateFunction4 != null) functions.add(aggregateFunction4);
@@ -195,40 +184,92 @@ class Pipeline {
     );
   }
 
+  /// Performs optionally grouped aggregation operations on the documents from previous stages.
+  ///
+  /// This method allows you to calculate aggregate values over a set of documents, optionally
+  /// grouped by one or more fields or expressions. You can specify:
+  ///
+  /// - **Grouping Fields or Expressions**: One or more fields or functions to group the documents by.
+  ///   For each distinct combination of values in these fields, a separate group is created.
+  ///   If no grouping fields are provided, a single group containing all documents is used.
+  ///
+  /// - **Aggregate Functions**: One or more accumulation operations to perform within each group.
+  ///   These are defined using [AliasedAggregateFunction] expressions, which are typically created
+  ///   by calling `.as('alias')` on [PipelineAggregateFunction] instances. Each aggregation calculates
+  ///   a value (e.g., sum, average, count) based on the documents within its group.
+  ///
+  /// Example:
+  /// ```dart
+  /// pipeline.aggregateStage(
+  ///   AggregateStage(
+  ///     accumulators: [
+  ///       Expression.field('likes').sum().as('total_likes'),
+  ///       Expression.field('likes').average().as('avg_likes'),
+  ///     ],
+  ///     groups: [Expression.field('category')],
+  ///   ),
+  /// );
+  /// ```
+  ///
+  /// With options:
+  /// ```dart
+  /// pipeline.aggregateStage(
+  ///   AggregateStage(
+  ///     accumulators: [
+  ///       Expression.field('likes').sum().as('total_likes'),
+  ///     ],
+  ///   ),
+  ///   options: AggregateOptions(),
+  /// );
+  /// ```
+  Pipeline aggregateStage(
+    AggregateStage aggregateStage, {
+    AggregateOptions? options,
+  }) {
+    final stage = _AggregateStageWithOptions(
+      aggregateStage,
+      options ?? AggregateOptions(),
+    );
+    return Pipeline._(
+      _firestore,
+      _delegate.addStage(stage.toMap()),
+    );
+  }
+
   /// Gets distinct values based on expressions
   Pipeline distinct(
-    Expression expression1, [
-    Expression? expression2,
-    Expression? expression3,
-    Expression? expression4,
-    Expression? expression5,
-    Expression? expression6,
-    Expression? expression7,
-    Expression? expression8,
-    Expression? expression9,
-    Expression? expression10,
-    Expression? expression11,
-    Expression? expression12,
-    Expression? expression13,
-    Expression? expression14,
-    Expression? expression15,
-    Expression? expression16,
-    Expression? expression17,
-    Expression? expression18,
-    Expression? expression19,
-    Expression? expression20,
-    Expression? expression21,
-    Expression? expression22,
-    Expression? expression23,
-    Expression? expression24,
-    Expression? expression25,
-    Expression? expression26,
-    Expression? expression27,
-    Expression? expression28,
-    Expression? expression29,
-    Expression? expression30,
+    Selectable expression1, [
+    Selectable? expression2,
+    Selectable? expression3,
+    Selectable? expression4,
+    Selectable? expression5,
+    Selectable? expression6,
+    Selectable? expression7,
+    Selectable? expression8,
+    Selectable? expression9,
+    Selectable? expression10,
+    Selectable? expression11,
+    Selectable? expression12,
+    Selectable? expression13,
+    Selectable? expression14,
+    Selectable? expression15,
+    Selectable? expression16,
+    Selectable? expression17,
+    Selectable? expression18,
+    Selectable? expression19,
+    Selectable? expression20,
+    Selectable? expression21,
+    Selectable? expression22,
+    Selectable? expression23,
+    Selectable? expression24,
+    Selectable? expression25,
+    Selectable? expression26,
+    Selectable? expression27,
+    Selectable? expression28,
+    Selectable? expression29,
+    Selectable? expression30,
   ]) {
-    final expressions = <Expression>[expression1];
+    final expressions = <Selectable>[expression1];
     if (expression2 != null) expressions.add(expression2);
     if (expression3 != null) expressions.add(expression3);
     if (expression4 != null) expressions.add(expression4);
@@ -469,7 +510,7 @@ class Pipeline {
   }
 
   /// Unnests arrays into separate documents
-  Pipeline unnest(Expression expression, [String? indexField]) {
+  Pipeline unnest(Selectable expression, [String? indexField]) {
     final stage = _UnnestStage(expression, indexField);
     return Pipeline._(
       _firestore,
