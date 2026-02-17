@@ -262,7 +262,7 @@ public class FirebaseRemoteConfigPlugin: NSObject, FlutterPlugin, FlutterStreamH
     [
       "fetchTimeout": Int(config.configSettings.fetchTimeout),
       "minimumFetchInterval": Int(config.configSettings.minimumFetchInterval),
-      "lastFetchTime": Int(config.lastFetchTime?.timeIntervalSince1970 ?? 0 * 1000),
+      "lastFetchTime": Int((config.lastFetchTime?.timeIntervalSince1970 ?? 0) * 1000),
       "lastFetchStatus": mapFetchStatus(config.lastFetchStatus),
     ]
   }
