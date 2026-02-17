@@ -58,7 +58,6 @@ class _BidiPageState extends State<BidiPage> {
   bool _recording = false;
   late LiveGenerativeModel _liveModel;
   late LiveSession _session;
-  StreamController<bool> _stopController = StreamController<bool>();
   final AudioOutput _audioOutput = AudioOutput();
   final AudioInput _audioInput = AudioInput();
   final VideoInput _videoInput = VideoInput();
@@ -134,7 +133,6 @@ class _BidiPageState extends State<BidiPage> {
   @override
   void dispose() {
     if (_sessionOpening) {
-      _stopController.close();
       _sessionOpening = false;
       _session.close();
     }
@@ -325,16 +323,10 @@ class _BidiPageState extends State<BidiPage> {
     if (!_sessionOpening) {
       _session = await _liveModel.connect();
       _sessionOpening = true;
-      _stopController = StreamController<bool>();
       unawaited(
-        _processMessagesContinuously(
-          stopSignal: _stopController,
-        ),
+        _processMessagesContinuously(),
       );
     } else {
-      _stopController.add(true);
-      await _stopController.close();
-
       await _session.close();
       _sessionOpening = false;
     }
@@ -485,9 +477,7 @@ class _BidiPageState extends State<BidiPage> {
     });
   }
 
-  Future<void> _processMessagesContinuously({
-    required StreamController<bool> stopSignal,
-  }) async {
+  Future<void> _processMessagesContinuously() async {
     try {
       await for (final message in _session.receive()) {
         if (!mounted) break;
