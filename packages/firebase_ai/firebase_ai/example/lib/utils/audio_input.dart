@@ -122,12 +122,13 @@ class AudioInput extends ChangeNotifier {
 
     _recorderStreamSub = rawStream.listen(
       (data) {
-        if (data.isNotEmpty && _audioDataController != null && !_audioDataController!.isClosed) {
+        if (data.isNotEmpty &&
+            _audioDataController != null &&
+            !_audioDataController!.isClosed) {
           // debugPrint('AudioInput: received ${data.length} bytes');
           _audioDataController!.add(data);
         }
       },
-
       onError: (e) {
         debugPrint('Recorder stream error: $e');
         if (_audioDataController != null && !_audioDataController!.isClosed) {
