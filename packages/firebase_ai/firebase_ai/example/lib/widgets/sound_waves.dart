@@ -28,8 +28,7 @@ class CenterCircle extends StatelessWidget {
         size: const Size(160, 160),
         painter: NestedCirclesPainter(
           color: Theme.of(context).colorScheme.primary,
-          strokeWidth: 1.0,
-          gapBetweenCircles: 4.0,
+          strokeWidth: 1,
         ),
         child: child,
       ),

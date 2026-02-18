@@ -63,7 +63,7 @@ class VideoInput extends ChangeNotifier {
   String? get selectedCameraId {
     if (_selectedCamera == null) return null;
     if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
-      return (_selectedCamera).deviceId;
+      return _selectedCamera.deviceId;
     }
     return null;
   }

@@ -32,7 +32,7 @@ class SquareCameraPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double aspectRatio = 1.0;
+    double aspectRatio = 1;
     if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
       //aspectRatio = (controller as CameraMacOSController?)?.aspectRatio ?? 1.0;
     } else {

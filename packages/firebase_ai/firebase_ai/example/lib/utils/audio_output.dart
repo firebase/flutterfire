@@ -17,7 +17,7 @@ import 'dart:typed_data';
 import 'package:flutter_soloud/flutter_soloud.dart';
 
 class AudioOutput {
-  var initialized = false;
+  bool initialized = false;
   AudioSource? stream;
   SoundHandle? handle;
   final int sampleRate = 24000;
@@ -36,7 +36,7 @@ class AudioOutput {
 
   Future<void> dispose() async {
     if (initialized) {
-      SoLoud.instance.disposeAllSources();
+      await SoLoud.instance.disposeAllSources();
       SoLoud.instance.deinit();
       initialized = false;
     }
@@ -70,8 +70,7 @@ class AudioOutput {
     }
     // Play audio stream
     handle = await SoLoud.instance.play(myStream);
-    stream = myStream;
-    return stream;
+    return stream = myStream;
   }
 
   void addDataToAudioStream(Uint8List audioChunk) {
