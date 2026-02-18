@@ -302,31 +302,37 @@ class PigeonQuerySnapshot {
 
 class PigeonPipelineResult {
   PigeonPipelineResult({
-    required this.documentPath,
-    required this.createTime,
-    required this.updateTime,
+    this.documentPath,
+    this.createTime,
+    this.updateTime,
+    this.data,
   });
 
-  String documentPath;
+  String? documentPath;
 
-  int createTime;
+  int? createTime;
 
-  int updateTime;
+  int? updateTime;
+
+  /// All fields in the result (from PipelineResult.data() on Android).
+  Map<String?, Object?>? data;
 
   Object encode() {
     return <Object?>[
       documentPath,
       createTime,
       updateTime,
+      data,
     ];
   }
 
   static PigeonPipelineResult decode(Object result) {
     result as List<Object?>;
     return PigeonPipelineResult(
-      documentPath: result[0]! as String,
-      createTime: result[1]! as int,
-      updateTime: result[2]! as int,
+      documentPath: result[0] as String?,
+      createTime: result[1] as int?,
+      updateTime: result[2] as int?,
+      data: (result[3] as Map<Object?, Object?>?)?.cast<String?, Object?>(),
     );
   }
 }

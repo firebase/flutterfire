@@ -859,68 +859,74 @@ public class GeneratedAndroidFirebaseFirestore {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static final class PigeonPipelineResult {
-    private @NonNull String documentPath;
+    private @Nullable String documentPath;
 
-    public @NonNull String getDocumentPath() {
+    public @Nullable String getDocumentPath() {
       return documentPath;
     }
 
-    public void setDocumentPath(@NonNull String setterArg) {
-      if (setterArg == null) {
-        throw new IllegalStateException("Nonnull field \"documentPath\" is null.");
-      }
+    public void setDocumentPath(@Nullable String setterArg) {
       this.documentPath = setterArg;
     }
 
-    private @NonNull Long createTime;
+    private @Nullable Long createTime;
 
-    public @NonNull Long getCreateTime() {
+    public @Nullable Long getCreateTime() {
       return createTime;
     }
 
-    public void setCreateTime(@NonNull Long setterArg) {
-      if (setterArg == null) {
-        throw new IllegalStateException("Nonnull field \"createTime\" is null.");
-      }
+    public void setCreateTime(@Nullable Long setterArg) {
       this.createTime = setterArg;
     }
 
-    private @NonNull Long updateTime;
+    private @Nullable Long updateTime;
 
-    public @NonNull Long getUpdateTime() {
+    public @Nullable Long getUpdateTime() {
       return updateTime;
     }
 
-    public void setUpdateTime(@NonNull Long setterArg) {
-      if (setterArg == null) {
-        throw new IllegalStateException("Nonnull field \"updateTime\" is null.");
-      }
+    public void setUpdateTime(@Nullable Long setterArg) {
       this.updateTime = setterArg;
     }
 
-    /** Constructor is non-public to enforce null safety; use Builder. */
-    PigeonPipelineResult() {}
+    /** All fields in the result (from PipelineResult.data() on Android). */
+    private @Nullable Map<String, Object> data;
+
+    public @Nullable Map<String, Object> getData() {
+      return data;
+    }
+
+    public void setData(@Nullable Map<String, Object> setterArg) {
+      this.data = setterArg;
+    }
 
     public static final class Builder {
 
       private @Nullable String documentPath;
 
-      public @NonNull Builder setDocumentPath(@NonNull String setterArg) {
+      public @NonNull Builder setDocumentPath(@Nullable String setterArg) {
         this.documentPath = setterArg;
         return this;
       }
 
       private @Nullable Long createTime;
 
-      public @NonNull Builder setCreateTime(@NonNull Long setterArg) {
+      public @NonNull Builder setCreateTime(@Nullable Long setterArg) {
         this.createTime = setterArg;
         return this;
       }
 
       private @Nullable Long updateTime;
 
-      public @NonNull Builder setUpdateTime(@NonNull Long setterArg) {
+      public @NonNull Builder setUpdateTime(@Nullable Long setterArg) {
         this.updateTime = setterArg;
+        return this;
+      }
+
+      private @Nullable Map<String, Object> data;
+
+      public @NonNull Builder setData(@Nullable Map<String, Object> setterArg) {
+        this.data = setterArg;
         return this;
       }
 
@@ -929,16 +935,18 @@ public class GeneratedAndroidFirebaseFirestore {
         pigeonReturn.setDocumentPath(documentPath);
         pigeonReturn.setCreateTime(createTime);
         pigeonReturn.setUpdateTime(updateTime);
+        pigeonReturn.setData(data);
         return pigeonReturn;
       }
     }
 
     @NonNull
     ArrayList<Object> toList() {
-      ArrayList<Object> toListResult = new ArrayList<Object>(3);
+      ArrayList<Object> toListResult = new ArrayList<Object>(4);
       toListResult.add(documentPath);
       toListResult.add(createTime);
       toListResult.add(updateTime);
+      toListResult.add(data);
       return toListResult;
     }
 
@@ -956,6 +964,8 @@ public class GeneratedAndroidFirebaseFirestore {
           (updateTime == null)
               ? null
               : ((updateTime instanceof Integer) ? (Integer) updateTime : (Long) updateTime));
+      Object data = list.get(3);
+      pigeonResult.setData((Map<String, Object>) data);
       return pigeonResult;
     }
   }

@@ -120,14 +120,17 @@ class PigeonQuerySnapshot {
 
 class PigeonPipelineResult {
   const PigeonPipelineResult({
-    required this.documentPath,
-    required this.createTime,
-    required this.updateTime,
+    this.documentPath,
+    this.createTime,
+    this.updateTime,
+    this.data,
   });
 
-  final String documentPath;
-  final int createTime; // Timestamp in milliseconds since epoch
-  final int updateTime; // Timestamp in milliseconds since epoch
+  final String? documentPath;
+  final int? createTime; // Timestamp in milliseconds since epoch
+  final int? updateTime; // Timestamp in milliseconds since epoch
+  /// All fields in the result (from PipelineResult.data() on Android).
+  final Map<String?, Object?>? data;
 }
 
 class PigeonPipelineSnapshot {

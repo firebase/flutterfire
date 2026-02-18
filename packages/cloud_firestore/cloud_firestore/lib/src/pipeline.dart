@@ -36,7 +36,8 @@ class Pipeline {
 
   /// Converts platform snapshot to public snapshot
   PipelineSnapshot _convertPlatformSnapshot(
-      PipelineSnapshotPlatform platformSnapshot) {
+    PipelineSnapshotPlatform platformSnapshot,
+  ) {
     final results = platformSnapshot.results.map((platformResult) {
       return PipelineResult(
         document: _JsonDocumentReference(
@@ -45,6 +46,7 @@ class Pipeline {
         ),
         createTime: platformResult.createTime,
         updateTime: platformResult.updateTime,
+        data: platformResult.data,
       );
     }).toList();
 

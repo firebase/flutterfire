@@ -346,18 +346,31 @@ class PigeonQuerySnapshot {
 // Generated class from Pigeon that represents data sent in messages.
 class PigeonPipelineResult {
  public:
-  // Constructs an object setting all fields.
-  explicit PigeonPipelineResult(const std::string& document_path,
-                                int64_t create_time, int64_t update_time);
+  // Constructs an object setting all non-nullable fields.
+  PigeonPipelineResult();
 
-  const std::string& document_path() const;
+  // Constructs an object setting all fields.
+  explicit PigeonPipelineResult(const std::string* document_path,
+                                const int64_t* create_time,
+                                const int64_t* update_time,
+                                const flutter::EncodableMap* data);
+
+  const std::string* document_path() const;
+  void set_document_path(const std::string_view* value_arg);
   void set_document_path(std::string_view value_arg);
 
-  int64_t create_time() const;
+  const int64_t* create_time() const;
+  void set_create_time(const int64_t* value_arg);
   void set_create_time(int64_t value_arg);
 
-  int64_t update_time() const;
+  const int64_t* update_time() const;
+  void set_update_time(const int64_t* value_arg);
   void set_update_time(int64_t value_arg);
+
+  // All fields in the result (from PipelineResult.data() on Android).
+  const flutter::EncodableMap* data() const;
+  void set_data(const flutter::EncodableMap* value_arg);
+  void set_data(const flutter::EncodableMap& value_arg);
 
  private:
   static PigeonPipelineResult FromEncodableList(
@@ -365,9 +378,10 @@ class PigeonPipelineResult {
   flutter::EncodableList ToEncodableList() const;
   friend class FirebaseFirestoreHostApi;
   friend class FirebaseFirestoreHostApiCodecSerializer;
-  std::string document_path_;
-  int64_t create_time_;
-  int64_t update_time_;
+  std::optional<std::string> document_path_;
+  std::optional<int64_t> create_time_;
+  std::optional<int64_t> update_time_;
+  std::optional<flutter::EncodableMap> data_;
 };
 
 // Generated class from Pigeon that represents data sent in messages.

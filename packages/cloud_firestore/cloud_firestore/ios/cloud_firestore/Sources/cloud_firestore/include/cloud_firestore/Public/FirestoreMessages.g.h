@@ -246,14 +246,15 @@ typedef NS_ENUM(NSUInteger, AggregateType) {
 @end
 
 @interface PigeonPipelineResult : NSObject
-/// `init` unavailable to enforce nonnull fields, see the `make` class method.
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)makeWithDocumentPath:(NSString *)documentPath
-                          createTime:(NSNumber *)createTime
-                          updateTime:(NSNumber *)updateTime;
-@property(nonatomic, copy) NSString *documentPath;
-@property(nonatomic, strong) NSNumber *createTime;
-@property(nonatomic, strong) NSNumber *updateTime;
++ (instancetype)makeWithDocumentPath:(nullable NSString *)documentPath
+                          createTime:(nullable NSNumber *)createTime
+                          updateTime:(nullable NSNumber *)updateTime
+                                data:(nullable NSDictionary<NSString *, id> *)data;
+@property(nonatomic, copy, nullable) NSString *documentPath;
+@property(nonatomic, strong, nullable) NSNumber *createTime;
+@property(nonatomic, strong, nullable) NSNumber *updateTime;
+/// All fields in the result (from PipelineResult.data() on Android).
+@property(nonatomic, strong, nullable) NSDictionary<NSString *, id> *data;
 @end
 
 @interface PigeonPipelineSnapshot : NSObject

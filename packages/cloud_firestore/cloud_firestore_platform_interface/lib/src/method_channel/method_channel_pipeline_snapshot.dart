@@ -17,14 +17,19 @@ class MethodChannelPipelineSnapshot extends PipelineSnapshotPlatform {
     FirebaseFirestorePlatform firestore,
     FirestorePigeonFirebaseApp pigeonApp,
     PigeonPipelineSnapshot pigeonSnapshot,
-  )   : _results = (pigeonSnapshot.results ?? [])
+  )   : _results = pigeonSnapshot.results
             .whereType<PigeonPipelineResult>()
             .map((result) => MethodChannelPipelineResult(
                   firestore,
                   pigeonApp,
                   result.documentPath,
-                  DateTime.fromMillisecondsSinceEpoch(result.createTime),
-                  DateTime.fromMillisecondsSinceEpoch(result.updateTime),
+                  result.createTime != null
+                      ? DateTime.fromMillisecondsSinceEpoch(result.createTime!)
+                      : null,
+                  result.updateTime != null
+                      ? DateTime.fromMillisecondsSinceEpoch(result.updateTime!)
+                      : null,
+                  result.data?.cast<String, dynamic>(),
                 ))
             .toList(),
         _executionTime = DateTime.fromMillisecondsSinceEpoch(
@@ -43,28 +48,34 @@ class MethodChannelPipelineSnapshot extends PipelineSnapshotPlatform {
 /// communicate with Firebase plugins.
 class MethodChannelPipelineResult extends PipelineResultPlatform {
   final DocumentReferencePlatform _document;
-  final DateTime _createTime;
-  final DateTime _updateTime;
+  final DateTime? _createTime;
+  final DateTime? _updateTime;
+  final Map<String, dynamic>? _data;
 
   MethodChannelPipelineResult(
     FirebaseFirestorePlatform firestore,
     FirestorePigeonFirebaseApp pigeonApp,
-    String documentPath,
+    String? documentPath,
     this._createTime,
     this._updateTime,
+    Map<String, dynamic>? data,
   )   : _document = MethodChannelDocumentReference(
           firestore,
-          documentPath,
+          documentPath ?? '',
           pigeonApp,
         ),
+        _data = data,
         super();
 
   @override
   DocumentReferencePlatform get document => _document;
 
   @override
-  DateTime get createTime => _createTime;
+  DateTime? get createTime => _createTime;
 
   @override
-  DateTime get updateTime => _updateTime;
+  DateTime? get updateTime => _updateTime;
+
+  @override
+  Map<String, dynamic>? get data => _data;
 }

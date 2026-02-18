@@ -33,8 +33,12 @@ abstract class PipelineResultPlatform extends PlatformInterface {
   DocumentReferencePlatform get document;
 
   /// The creation time of the document
-  DateTime get createTime;
+  DateTime? get createTime;
 
   /// The update time of the document
-  DateTime get updateTime;
+  DateTime? get updateTime;
+
+  /// All fields in the result (from PipelineResult.data() on the native SDK).
+  /// Returns null if the result has no data.
+  Map<String, dynamic>? get data;
 }

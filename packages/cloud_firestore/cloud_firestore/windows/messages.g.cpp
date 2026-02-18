@@ -399,46 +399,102 @@ PigeonQuerySnapshot PigeonQuerySnapshot::FromEncodableList(
 
 // PigeonPipelineResult
 
-PigeonPipelineResult::PigeonPipelineResult(const std::string& document_path,
-                                           int64_t create_time,
-                                           int64_t update_time)
-    : document_path_(document_path),
-      create_time_(create_time),
-      update_time_(update_time) {}
+PigeonPipelineResult::PigeonPipelineResult() {}
 
-const std::string& PigeonPipelineResult::document_path() const {
-  return document_path_;
+PigeonPipelineResult::PigeonPipelineResult(const std::string* document_path,
+                                           const int64_t* create_time,
+                                           const int64_t* update_time,
+                                           const EncodableMap* data)
+    : document_path_(document_path ? std::optional<std::string>(*document_path)
+                                   : std::nullopt),
+      create_time_(create_time ? std::optional<int64_t>(*create_time)
+                               : std::nullopt),
+      update_time_(update_time ? std::optional<int64_t>(*update_time)
+                               : std::nullopt),
+      data_(data ? std::optional<EncodableMap>(*data) : std::nullopt) {}
+
+const std::string* PigeonPipelineResult::document_path() const {
+  return document_path_ ? &(*document_path_) : nullptr;
+}
+
+void PigeonPipelineResult::set_document_path(
+    const std::string_view* value_arg) {
+  document_path_ =
+      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void PigeonPipelineResult::set_document_path(std::string_view value_arg) {
   document_path_ = value_arg;
 }
 
-int64_t PigeonPipelineResult::create_time() const { return create_time_; }
+const int64_t* PigeonPipelineResult::create_time() const {
+  return create_time_ ? &(*create_time_) : nullptr;
+}
+
+void PigeonPipelineResult::set_create_time(const int64_t* value_arg) {
+  create_time_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
+}
 
 void PigeonPipelineResult::set_create_time(int64_t value_arg) {
   create_time_ = value_arg;
 }
 
-int64_t PigeonPipelineResult::update_time() const { return update_time_; }
+const int64_t* PigeonPipelineResult::update_time() const {
+  return update_time_ ? &(*update_time_) : nullptr;
+}
+
+void PigeonPipelineResult::set_update_time(const int64_t* value_arg) {
+  update_time_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
+}
 
 void PigeonPipelineResult::set_update_time(int64_t value_arg) {
   update_time_ = value_arg;
 }
 
+const EncodableMap* PigeonPipelineResult::data() const {
+  return data_ ? &(*data_) : nullptr;
+}
+
+void PigeonPipelineResult::set_data(const EncodableMap* value_arg) {
+  data_ = value_arg ? std::optional<EncodableMap>(*value_arg) : std::nullopt;
+}
+
+void PigeonPipelineResult::set_data(const EncodableMap& value_arg) {
+  data_ = value_arg;
+}
+
 EncodableList PigeonPipelineResult::ToEncodableList() const {
   EncodableList list;
-  list.reserve(3);
-  list.push_back(EncodableValue(document_path_));
-  list.push_back(EncodableValue(create_time_));
-  list.push_back(EncodableValue(update_time_));
+  list.reserve(4);
+  list.push_back(document_path_ ? EncodableValue(*document_path_)
+                                : EncodableValue());
+  list.push_back(create_time_ ? EncodableValue(*create_time_)
+                              : EncodableValue());
+  list.push_back(update_time_ ? EncodableValue(*update_time_)
+                              : EncodableValue());
+  list.push_back(data_ ? EncodableValue(*data_) : EncodableValue());
   return list;
 }
 
 PigeonPipelineResult PigeonPipelineResult::FromEncodableList(
     const EncodableList& list) {
-  PigeonPipelineResult decoded(std::get<std::string>(list[0]),
-                               list[1].LongValue(), list[2].LongValue());
+  PigeonPipelineResult decoded;
+  auto& encodable_document_path = list[0];
+  if (!encodable_document_path.IsNull()) {
+    decoded.set_document_path(std::get<std::string>(encodable_document_path));
+  }
+  auto& encodable_create_time = list[1];
+  if (!encodable_create_time.IsNull()) {
+    decoded.set_create_time(encodable_create_time.LongValue());
+  }
+  auto& encodable_update_time = list[2];
+  if (!encodable_update_time.IsNull()) {
+    decoded.set_update_time(encodable_update_time.LongValue());
+  }
+  auto& encodable_data = list[3];
+  if (!encodable_data.IsNull()) {
+    decoded.set_data(std::get<EncodableMap>(encodable_data));
+  }
   return decoded;
 }
 

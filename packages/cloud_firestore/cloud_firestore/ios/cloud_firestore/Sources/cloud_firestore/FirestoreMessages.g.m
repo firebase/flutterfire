@@ -421,23 +421,23 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 @end
 
 @implementation PigeonPipelineResult
-+ (instancetype)makeWithDocumentPath:(NSString *)documentPath
-                          createTime:(NSNumber *)createTime
-                          updateTime:(NSNumber *)updateTime {
++ (instancetype)makeWithDocumentPath:(nullable NSString *)documentPath
+                          createTime:(nullable NSNumber *)createTime
+                          updateTime:(nullable NSNumber *)updateTime
+                                data:(nullable NSDictionary<NSString *, id> *)data {
   PigeonPipelineResult *pigeonResult = [[PigeonPipelineResult alloc] init];
   pigeonResult.documentPath = documentPath;
   pigeonResult.createTime = createTime;
   pigeonResult.updateTime = updateTime;
+  pigeonResult.data = data;
   return pigeonResult;
 }
 + (PigeonPipelineResult *)fromList:(NSArray *)list {
   PigeonPipelineResult *pigeonResult = [[PigeonPipelineResult alloc] init];
   pigeonResult.documentPath = GetNullableObjectAtIndex(list, 0);
-  NSAssert(pigeonResult.documentPath != nil, @"");
   pigeonResult.createTime = GetNullableObjectAtIndex(list, 1);
-  NSAssert(pigeonResult.createTime != nil, @"");
   pigeonResult.updateTime = GetNullableObjectAtIndex(list, 2);
-  NSAssert(pigeonResult.updateTime != nil, @"");
+  pigeonResult.data = GetNullableObjectAtIndex(list, 3);
   return pigeonResult;
 }
 + (nullable PigeonPipelineResult *)nullableFromList:(NSArray *)list {
@@ -448,6 +448,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
     (self.documentPath ?: [NSNull null]),
     (self.createTime ?: [NSNull null]),
     (self.updateTime ?: [NSNull null]),
+    (self.data ?: [NSNull null]),
   ];
 }
 @end

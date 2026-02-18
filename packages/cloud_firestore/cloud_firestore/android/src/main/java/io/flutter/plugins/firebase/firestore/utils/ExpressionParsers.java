@@ -395,9 +395,12 @@ class ExpressionParsers {
       functionName = (String) aggregateMap.get("name");
     }
     Map<String, Object> args = (Map<String, Object>) aggregateMap.get("args");
-
-    Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
-    Expression expr = parseExpression(exprMap);
+    Map<String, Object> exprMap;
+    Expression expr = null;
+    if (args != null) {
+      exprMap = (Map<String, Object>) args.get("expression");
+      expr = parseExpression(exprMap);
+    }
 
     switch (functionName) {
       case "sum":
@@ -412,6 +415,8 @@ class ExpressionParsers {
         return AggregateFunction.minimum(expr);
       case "maximum":
         return AggregateFunction.maximum(expr);
+      case "count_all":
+        return AggregateFunction.countAll();
       default:
         throw new IllegalArgumentException("Unknown aggregate function: " + functionName);
     }
