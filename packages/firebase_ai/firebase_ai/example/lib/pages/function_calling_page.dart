@@ -480,7 +480,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
     await _runTest(() async {
       final autoFunctionCallChat = _autoFunctionCallModel.startChat();
       const prompt =
-          'What is the weather like in Boston, MA on 10/02 in year 2024?';
+          'Tell a bedtime story, and in the end show what is the weather like in Boston, MA on 10/02 in year 2024?';
 
       _messages.add(MessageData(text: prompt, fromUser: true));
       setState(() {});
