@@ -390,6 +390,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
       _messages
           .add(MessageData(text: 'Testing code execution', fromUser: true));
       final response = await _templateGenerativeModel
+          // ignore: experimental_member_use
           ?.generateContent('cj-code-execution', inputs: {});
 
       final buffer = StringBuffer();
