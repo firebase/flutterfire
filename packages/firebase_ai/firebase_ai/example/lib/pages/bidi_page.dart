@@ -13,13 +13,17 @@
 // limitations under the License.
 import 'dart:async';
 import 'dart:developer' as developer;
+import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 
 import '../utils/audio_input.dart';
 import '../utils/audio_output.dart';
+import '../utils/video_input.dart';
 import '../widgets/message_widget.dart';
+import '../widgets/audio_visualizer.dart';
+import '../widgets/camera_previews.dart';
 
 class BidiPage extends StatefulWidget {
   const BidiPage({
@@ -54,11 +58,14 @@ class _BidiPageState extends State<BidiPage> {
   bool _recording = false;
   late LiveGenerativeModel _liveModel;
   late LiveSession _session;
-  StreamController<bool> _stopController = StreamController<bool>();
   final AudioOutput _audioOutput = AudioOutput();
   final AudioInput _audioInput = AudioInput();
+  final VideoInput _videoInput = VideoInput();
+  StreamSubscription? _audioSubscription;
   int? _inputTranscriptionMessageIndex;
   int? _outputTranscriptionMessageIndex;
+  bool _isCameraOn = false;
+  bool _videoIsInitialized = false;
 
   @override
   void initState() {
@@ -73,7 +80,6 @@ class _BidiPageState extends State<BidiPage> {
       outputAudioTranscription: AudioTranscriptionConfig(),
     );
 
-    // ignore: deprecated_member_use
     _liveModel = widget.useVertexBackend
         ? FirebaseAI.vertexAI().liveGenerativeModel(
             model: 'gemini-live-2.5-flash-preview-native-audio-09-2025',
@@ -89,30 +95,44 @@ class _BidiPageState extends State<BidiPage> {
               Tool.functionDeclarations([lightControlTool]),
             ],
           );
-    _initAudio();
   }
 
   Future<void> _initAudio() async {
-    await _audioOutput.init();
-    await _audioInput.init();
+    try {
+      await _audioOutput.init();
+    } catch (e) {
+      developer.log('Audio Output init error: $e');
+    }
+
+    try {
+      await _audioInput.init();
+    } catch (e) {
+      developer.log('Audio Input init error: $e');
+    }
+  }
+
+  Future<void> _initVideo() async {
+    try {
+      await _videoInput.init();
+      setState(() {
+        _videoIsInitialized = true;
+      });
+    } catch (e) {
+      developer.log('Error during video initialization: $e');
+    }
   }
 
   void _scrollDown() {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(
-          milliseconds: 750,
-        ),
-        curve: Curves.easeOutCirc,
-      ),
+    if (!_scrollController.hasClients) return;
+
+    _scrollController.jumpTo(
+      _scrollController.position.maxScrollExtent,
     );
   }
 
   @override
   void dispose() {
     if (_sessionOpening) {
-      _stopController.close();
       _sessionOpening = false;
       _session.close();
     }
@@ -121,102 +141,139 @@ class _BidiPageState extends State<BidiPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: ListView.builder(
-                controller: _scrollController,
-                itemBuilder: (context, idx) {
-                  return MessageWidget(
-                    text: _messages[idx].text,
-                    image: _messages[idx].imageBytes != null
-                        ? Image.memory(
-                            _messages[idx].imageBytes!,
-                            cacheWidth: 400,
-                            cacheHeight: 400,
-                          )
-                        : null,
-                    isFromUser: _messages[idx].fromUser ?? false,
-                  );
-                },
-                itemCount: _messages.length,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 25,
-                horizontal: 15,
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      autofocus: true,
-                      focusNode: _textFieldFocus,
-                      controller: _textController,
-                      onSubmitted: _sendTextPrompt,
-                    ),
-                  ),
-                  const SizedBox.square(
-                    dimension: 15,
-                  ),
-                  IconButton(
-                    tooltip: 'Start Streaming',
-                    onPressed: !_loading
-                        ? () async {
-                            await _setupSession();
-                          }
-                        : null,
-                    icon: Icon(
-                      Icons.network_wifi,
-                      color: _sessionOpening
-                          ? Theme.of(context).colorScheme.secondary
-                          : Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  IconButton(
-                    tooltip: 'Send Stream Message',
-                    onPressed: !_loading
-                        ? () async {
-                            if (_recording) {
-                              await _stopRecording();
-                            } else {
-                              await _startRecording();
-                            }
-                          }
-                        : null,
-                    icon: Icon(
-                      _recording ? Icons.stop : Icons.mic,
-                      color: _loading
-                          ? Theme.of(context).colorScheme.secondary
-                          : Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  if (!_loading)
-                    IconButton(
-                      onPressed: () async {
-                        await _sendTextPrompt(_textController.text);
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (_isCameraOn)
+            Container(
+              height: 200,
+              color: Colors.black,
+              alignment: Alignment.center,
+              child: (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS)
+                  ? FullCameraPreview(
+                      controller: _videoInput.cameraController,
+                      deviceId: _videoInput.selectedCameraId,
+                      onInitialized: (controller) {
+                        // This is where the controller actually gets born on macOS
+                        _videoInput.setMacOSController(controller);
                       },
-                      icon: Icon(
-                        Icons.send,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
                     )
-                  else
-                    const CircularProgressIndicator(),
-                ],
-              ),
+                  : (_videoInput.cameraController != null &&
+                          _videoInput.controllerInitialized)
+                      ? FullCameraPreview(
+                          controller: _videoInput.cameraController,
+                          deviceId: _videoInput.selectedCameraId,
+                          onInitialized: (controller) {
+                            // Web/Mobile callback (often unused if controller passed in)
+                          },
+                        )
+                      : const Center(child: CircularProgressIndicator()),
             ),
-          ],
-        ),
+          Expanded(
+            child: ListView.builder(
+              controller: _scrollController,
+              itemBuilder: (context, idx) {
+                return MessageWidget(
+                  text: _messages[idx].text,
+                  image: _messages[idx].imageBytes != null
+                      ? Image.memory(
+                          _messages[idx].imageBytes!,
+                          cacheWidth: 400,
+                          cacheHeight: 400,
+                        )
+                      : null,
+                  isFromUser: _messages[idx].fromUser ?? false,
+                  isThought: _messages[idx].isThought,
+                );
+              },
+              itemCount: _messages.length,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 25,
+              horizontal: 15,
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    focusNode: _textFieldFocus,
+                    controller: _textController,
+                    onSubmitted: _sendTextPrompt,
+                  ),
+                ),
+                const SizedBox.square(
+                  dimension: 15,
+                ),
+                AudioVisualizer(
+                  audioStreamIsActive: _recording,
+                  amplitudeStream: _audioInput.amplitudeStream,
+                ),
+                const SizedBox.square(
+                  dimension: 15,
+                ),
+                IconButton(
+                  tooltip: 'Start Streaming',
+                  onPressed: !_loading
+                      ? () async {
+                          await _setupSession();
+                        }
+                      : null,
+                  icon: Icon(
+                    Icons.network_wifi,
+                    color: _sessionOpening
+                        ? Theme.of(context).colorScheme.secondary
+                        : Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                IconButton(
+                  tooltip: 'Send Stream Message',
+                  onPressed: !_loading
+                      ? () async {
+                          if (_recording) {
+                            await _stopRecording();
+                          } else {
+                            await _startRecording();
+                          }
+                        }
+                      : null,
+                  icon: Icon(
+                    _recording ? Icons.stop : Icons.mic,
+                    color: _loading
+                        ? Theme.of(context).colorScheme.secondary
+                        : Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                IconButton(
+                  tooltip: 'Toggle Camera',
+                  onPressed: _isCameraOn ? _stopVideoStream : _startVideoStream,
+                  icon: Icon(
+                    _isCameraOn ? Icons.videocam_off : Icons.videocam,
+                    color: _loading
+                        ? Theme.of(context).colorScheme.secondary
+                        : Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                if (!_loading)
+                  IconButton(
+                    onPressed: () async {
+                      await _sendTextPrompt(_textController.text);
+                    },
+                    icon: Icon(
+                      Icons.send,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  )
+                else
+                  const CircularProgressIndicator(),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -251,20 +308,25 @@ class _BidiPageState extends State<BidiPage> {
     setState(() {
       _loading = true;
     });
+    await _initAudio();
+
+    try {
+      if (!_videoIsInitialized) {
+        await _initVideo();
+      } else {
+        await _videoInput.initializeCameraController();
+      }
+    } catch (e) {
+      developer.log('Video Hardware init error: $e');
+    }
 
     if (!_sessionOpening) {
       _session = await _liveModel.connect();
       _sessionOpening = true;
-      _stopController = StreamController<bool>();
       unawaited(
-        _processMessagesContinuously(
-          stopSignal: _stopController,
-        ),
+        _processMessagesContinuously(),
       );
     } else {
-      _stopController.add(true);
-      await _stopController.close();
-
       await _session.close();
       _sessionOpening = false;
     }
@@ -275,6 +337,8 @@ class _BidiPageState extends State<BidiPage> {
   }
 
   Future<void> _startRecording() async {
+    await _audioSubscription?.cancel();
+    _audioSubscription = null;
     setState(() {
       _recording = true;
     });
@@ -282,17 +346,27 @@ class _BidiPageState extends State<BidiPage> {
       var inputStream = await _audioInput.startRecordingStream();
       await _audioOutput.playStream();
       if (inputStream != null) {
-        await for (final data in inputStream) {
-          await _session.sendAudioRealtime(InlineDataPart('audio/pcm', data));
-        }
+        _audioSubscription = inputStream.listen(
+          (data) {
+            _session.sendAudioRealtime(InlineDataPart('audio/pcm', data));
+          },
+          onError: (e) {
+            developer.log('Audio Stream Error: $e');
+            _stopRecording();
+          },
+          cancelOnError: true,
+        );
       }
     } catch (e) {
-      developer.log(e.toString());
-      _showError(e.toString());
+      developer.log('bidi_page._startRecording(): $e');
+      _showError('bidi_page._startRecording(): $e');
+      setState(() => _recording = false);
     }
   }
 
   Future<void> _stopRecording() async {
+    await _audioSubscription?.cancel();
+    _audioSubscription = null;
     try {
       await _audioInput.stopRecording();
     } catch (e) {
@@ -304,13 +378,96 @@ class _BidiPageState extends State<BidiPage> {
     });
   }
 
+  Future<void> _startVideoStream() async {
+    // 1. Re-entry Guard: Prevent multiple clicks while switching
+    if (_loading || !_videoIsInitialized) return;
+
+    // 2. Capture the current recording state
+    bool wasRecording = _recording;
+
+    setState(() {
+      _loading = true; // Lock the UI during the switch
+    });
+
+    try {
+      if (wasRecording) {
+        await _stopRecording();
+      }
+
+      // 4. Wait for ripple/UI (Prevent freeze)
+      await Future.delayed(const Duration(milliseconds: 250));
+
+      // 5. Initialize Camera if needed
+      if (!_videoInput.controllerInitialized ||
+          _videoInput.cameraController == null) {
+        await _videoInput.initializeCameraController();
+      }
+
+      // 6. Mount Camera UI
+      setState(() {
+        _isCameraOn = true;
+      });
+
+      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
+        // ✅ Because we set _cameraController to null in stopStreamingImages,
+        // this loop will now CORRECTLY wait for the new View to initialize.
+        int attempts = 0;
+        while (_videoInput.cameraController == null) {
+          if (attempts > 50) break; // 5 second timeout safety
+          await Future.delayed(const Duration(milliseconds: 100));
+          attempts++;
+        }
+      }
+
+      // 7. Wait for Mac Camera to Settle (Prevent audio hijack)
+      await Future.delayed(const Duration(milliseconds: 1000));
+
+      // 8. CLEAN RESTART: Use the helper method!
+      // Only restart if we were recording before.
+      if (wasRecording) {
+        developer.log('Resuming audio session...');
+        await _startRecording();
+      }
+
+      // 9. Start Video Stream
+      _videoInput.startStreamingImages().listen(
+        (data) {
+          String mimeType = 'image/jpeg';
+          if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
+            if (data.length > 3 && data[0] == 0x89 && data[1] == 0x50) {
+              mimeType = 'image/png';
+            }
+          }
+          _session.sendVideoRealtime(InlineDataPart(mimeType, data));
+        },
+        onError: (e) => developer.log('Video Stream Error: $e'),
+      );
+    } catch (e) {
+      developer.log('Error switching to video: $e');
+      _showError(e.toString());
+    } finally {
+      // 10. Always unlock the UI
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
+
+  Future<void> _stopVideoStream() async {
+    await _videoInput.stopStreamingImages();
+    setState(() {
+      _isCameraOn = false;
+    });
+  }
+
   Future<void> _sendTextPrompt(String textPrompt) async {
     setState(() {
       _loading = true;
     });
     try {
-      final prompt = Content.text(textPrompt);
-      await _session.send(input: prompt, turnComplete: true);
+      //final prompt = Content.text(textPrompt);
+      // await _session.send(input: prompt, turnComplete: true);
+      await _session.sendTextRealtime(textPrompt);
     } catch (e) {
       _showError(e.toString());
     }
@@ -320,33 +477,14 @@ class _BidiPageState extends State<BidiPage> {
     });
   }
 
-  Future<void> _processMessagesContinuously({
-    required StreamController<bool> stopSignal,
-  }) async {
-    bool shouldContinue = true;
-
-    //listen to the stop signal stream
-    stopSignal.stream.listen((stop) {
-      if (stop) {
-        shouldContinue = false;
+  Future<void> _processMessagesContinuously() async {
+    try {
+      await for (final message in _session.receive()) {
+        if (!mounted) break;
+        await _handleLiveServerMessage(message);
       }
-    });
-
-    while (shouldContinue) {
-      try {
-        await for (final message in _session.receive()) {
-          // Process the received message
-          await _handleLiveServerMessage(message);
-        }
-      } catch (e) {
-        _showError(e.toString());
-        break;
-      }
-
-      // Optionally add a delay before restarting, if needed
-      await Future.delayed(
-        const Duration(milliseconds: 100),
-      ); // Small delay to prevent tight loops
+    } catch (e) {
+      _showError(e.toString());
     }
   }
 
@@ -381,8 +519,13 @@ class _BidiPageState extends State<BidiPage> {
           }
           if (transcription.finished ?? false) {
             currentIndex = null;
+            setState(_scrollDown);
+          } else {
+            // Use a scheduled frame instead of an immediate setState
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) setState(() {});
+            });
           }
-          setState(_scrollDown);
         }
         return currentIndex;
       }
@@ -405,6 +548,8 @@ class _BidiPageState extends State<BidiPage> {
       }
     } else if (message is LiveServerToolCall && message.functionCalls != null) {
       await _handleLiveServerToolCall(message);
+    } else if (message is GoingAwayNotice) {
+      developer.log('Session is going away in ${message.timeLeft} seconds');
     }
   }
 
@@ -429,7 +574,13 @@ class _BidiPageState extends State<BidiPage> {
         _loading = true;
       });
     }
-    _messages.add(MessageData(text: part.text, fromUser: false));
+    _messages.add(
+      MessageData(
+        text: part.text,
+        fromUser: false,
+        isThought: part.isThought ?? false,
+      ),
+    );
     setState(() {
       _loading = false;
       _scrollDown();
@@ -438,7 +589,7 @@ class _BidiPageState extends State<BidiPage> {
 
   Future<void> _handleInlineDataPart(InlineDataPart part) async {
     if (part.mimeType.startsWith('audio')) {
-      _audioOutput.addAudioStream(part.bytes);
+      _audioOutput.addDataToAudioStream(part.bytes);
     }
   }
 
