@@ -129,7 +129,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                   const SizedBox.square(
                     dimension: 15,
                   ),
-                  if (!_loading)
+                  if (!_loading) ...[
                     IconButton(
                       onPressed: () async {
                         await _serverTemplateImagen(_textController.text);
@@ -140,7 +140,6 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                       ),
                       tooltip: 'Imagen',
                     ),
-                  if (!_loading)
                     IconButton(
                       onPressed: () async {
                         await _serverTemplateImageInput(_textController.text);
@@ -151,7 +150,6 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                       ),
                       tooltip: 'Image Input',
                     ),
-                  if (!_loading)
                     IconButton(
                       onPressed: () async {
                         await _serverTemplateUrlContext(_textController.text);
@@ -162,7 +160,6 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                       ),
                       tooltip: 'URL Context',
                     ),
-                  if (!_loading)
                     IconButton(
                       onPressed: () async {
                         await _sendServerTemplateMessage(_textController.text);
@@ -173,7 +170,6 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                       ),
                       tooltip: 'Generate',
                     ),
-                  if (!_loading)
                     IconButton(
                       onPressed: _testCodeExecution,
                       icon: Icon(
@@ -181,8 +177,8 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                         color: Theme.of(context).colorScheme.primary,
                       ),
                       tooltip: 'Test Code Execution',
-                    )
-                  else
+                    ),
+                  ] else
                     const CircularProgressIndicator(),
                 ],
               ),
@@ -396,7 +392,6 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
       final response = await _templateGenerativeModel
           ?.generateContent('cj-code-execution', inputs: {});
 
-      //_messages.add(MessageData(text: response?.text, fromUser: false));
       final buffer = StringBuffer();
       for (final part in response!.candidates.first.content.parts) {
         if (part is ExecutableCodePart) {
