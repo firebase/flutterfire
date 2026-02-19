@@ -24,17 +24,21 @@ import './network/transport_library.dart'
     if (dart.library.io) './network/grpc_library.dart'
     if (dart.library.html) './network/rest_library.dart';
 
+import 'cache/cache_data_types.dart';
+import 'cache/cache_manager.dart';
+
 /// DataConnect class
 class FirebaseDataConnect extends FirebasePluginPlatform {
   /// Constructor for initializing Data Connect
   @visibleForTesting
-  FirebaseDataConnect({
-    required this.app,
-    required this.connectorConfig,
-    this.auth,
-    this.appCheck,
-    CallerSDKType? sdkType,
-  })  : options = DataConnectOptions(
+  FirebaseDataConnect(
+      {required this.app,
+      required this.connectorConfig,
+      this.auth,
+      this.appCheck,
+      CallerSDKType? sdkType,
+      this.cacheSettings})
+      : options = DataConnectOptions(
           app.options.projectId,
           connectorConfig.location,
           connectorConfig.connector,
@@ -46,6 +50,9 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
       _sdkType = sdkType;
     }
   }
+
+  /// CacheManager
+  Cache? cacheManager;
 
   /// QueryManager manages ongoing queries, and their subscriptions.
   late QueryManager _queryManager;
@@ -73,6 +80,9 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   /// Data Connect specific config information
   ConnectorConfig connectorConfig;
 
+  /// Cache settings
+  CacheSettings? cacheSettings;
+
   /// Custom transport options for connecting to the Data Connect service.
   @visibleForTesting
   TransportOptions? transportOptions;
@@ -91,6 +101,14 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     );
   }
 
+  @visibleForTesting
+  void checkAndInitializeCache() {
+    if (cacheSettings != null && cacheManager == null) {
+      cacheManager = Cache(cacheSettings!, this);
+      _queryManager.initializeImpactedQueriesSub();
+    }
+  }
+
   /// Returns a [QueryRef] object.
   QueryRef<Data, Variables> query<Data, Variables>(
     String operationName,
@@ -99,15 +117,25 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     Variables? vars,
   ) {
     checkTransport();
-    return QueryRef<Data, Variables>(
-      this,
-      operationName,
-      transport,
-      dataDeserializer,
-      _queryManager,
-      varsSerializer,
-      vars,
-    );
+    checkAndInitializeCache();
+    String queryId =
+        QueryManager.createQueryId(operationName, vars, varsSerializer);
+
+    QueryRef<Data, Variables>? ref =
+        _queryManager.trackedQueries[queryId] as QueryRef<Data, Variables>?;
+    if (ref != null) {
+      return ref;
+    } else {
+      return QueryRef<Data, Variables>(
+        this,
+        operationName,
+        transport,
+        dataDeserializer,
+        _queryManager,
+        varsSerializer,
+        vars,
+      );
+    }
   }
 
   /// Returns a [MutationRef] object.
@@ -137,6 +165,12 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   }) {
     String mappedHost = automaticHostMapping ? getMappedHost(host) : host;
     transportOptions = TransportOptions(mappedHost, port, isSecure);
+
+    if (cacheManager != null) {
+      // dispose and clean this up. it will get reinitialized for newer QueryRefs that target the emulator.
+      cacheManager?.dispose();
+      cacheManager = null;
+    }
   }
 
   /// Currently cached DataConnect instances. Maps from app name to ConnectorConfigStr, DataConnect.
@@ -148,13 +182,13 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   ///
   /// If [app] is not provided, the default Firebase app will be used.
   /// If pass in [appCheck], request session will get protected from abusing.
-  static FirebaseDataConnect instanceFor({
-    FirebaseApp? app,
-    FirebaseAuth? auth,
-    FirebaseAppCheck? appCheck,
-    CallerSDKType? sdkType,
-    required ConnectorConfig connectorConfig,
-  }) {
+  static FirebaseDataConnect instanceFor(
+      {FirebaseApp? app,
+      FirebaseAuth? auth,
+      FirebaseAppCheck? appCheck,
+      CallerSDKType? sdkType,
+      required ConnectorConfig connectorConfig,
+      CacheSettings? cacheSettings}) {
     app ??= Firebase.app();
     auth ??= FirebaseAuth.instanceFor(app: app);
     appCheck ??= FirebaseAppCheck.instanceFor(app: app);
@@ -164,12 +198,16 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
       return cachedInstances[app.name]![connectorConfig.toJson()]!;
     }
 
+    //TODO remove after testing since CS should be null by default
+    final resolvedCacheSettings = cacheSettings ?? CacheSettings();
+
     FirebaseDataConnect newInstance = FirebaseDataConnect(
       app: app,
       auth: auth,
       appCheck: appCheck,
       connectorConfig: connectorConfig,
       sdkType: sdkType,
+      cacheSettings: resolvedCacheSettings,
     );
     if (cachedInstances[app.name] == null) {
       cachedInstances[app.name] = <String, FirebaseDataConnect>{};

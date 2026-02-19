@@ -49,7 +49,7 @@ class TransportStub implements DataConnectTransport {
 
   /// Stub for invoking a mutation.
   @override
-  Future<Data> invokeMutation<Data, Variables>(
+  Future<ServerResponse> invokeMutation<Data, Variables>(
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
@@ -62,7 +62,7 @@ class TransportStub implements DataConnectTransport {
 
   /// Stub for invoking a query.
   @override
-  Future<Data> invokeQuery<Data, Variables>(
+  Future<ServerResponse> invokeQuery<Data, Variables>(
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serialize,
