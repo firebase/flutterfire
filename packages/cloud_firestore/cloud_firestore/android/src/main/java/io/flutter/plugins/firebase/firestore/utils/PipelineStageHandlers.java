@@ -6,7 +6,6 @@
 
 package io.flutter.plugins.firebase.firestore.utils;
 
-import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -20,6 +19,7 @@ import com.google.firebase.firestore.pipeline.Field;
 import com.google.firebase.firestore.pipeline.FindNearestOptions;
 import com.google.firebase.firestore.pipeline.FindNearestStage;
 import com.google.firebase.firestore.pipeline.Ordering;
+import com.google.firebase.firestore.pipeline.SampleStage;
 import com.google.firebase.firestore.pipeline.Selectable;
 import com.google.firebase.firestore.pipeline.UnnestOptions;
 import java.util.List;
@@ -27,7 +27,6 @@ import java.util.Map;
 
 /** Handles parsing and applying pipeline stages to Pipeline instances. */
 class PipelineStageHandlers {
-  private static final String TAG = "PipelineStageHandlers";
   private final ExpressionParsers parsers;
 
   PipelineStageHandlers(@NonNull ExpressionParsers parsers) {
@@ -65,7 +64,7 @@ class PipelineStageHandlers {
       case "replace_with":
         return handleReplaceWith(pipeline, args);
       case "union":
-        return handleUnion(pipeline, args);
+        return handleUnion(pipeline, args, firestore);
       case "sample":
         return handleSample(pipeline, args);
       case "find_nearest":
@@ -257,21 +256,31 @@ class PipelineStageHandlers {
     return pipeline.replaceWith(expression);
   }
 
-  private Pipeline handleUnion(@NonNull Pipeline pipeline, @Nullable Map<String, Object> args) {
-    // Union requires a nested pipeline
+  @SuppressWarnings("unchecked")
+  private Pipeline handleUnion(
+      @NonNull Pipeline pipeline,
+      @Nullable Map<String, Object> args,
+      @NonNull FirebaseFirestore firestore) {
     List<Map<String, Object>> nestedStages = (List<Map<String, Object>>) args.get("pipeline");
-    // Note: This would require creating a nested pipeline, which may not be directly
-    // supported. This is a placeholder for now.
-    Log.w(TAG, "Union stage not yet fully implemented");
-    throw new UnsupportedOperationException("Union stage not yet implemented");
+    if (nestedStages == null || nestedStages.isEmpty()) {
+      throw new IllegalArgumentException("'union' requires a non-empty 'pipeline' argument");
+    }
+    Pipeline otherPipeline = PipelineParser.buildPipeline(firestore, nestedStages);
+    return pipeline.union(otherPipeline);
   }
 
   private Pipeline handleSample(@NonNull Pipeline pipeline, @Nullable Map<String, Object> args) {
     // Sample stage parsing
     Map<String, Object> sampleMap = (Map<String, Object>) args;
     // Parse sample configuration
-    Log.w(TAG, "Sample stage not yet fully implemented");
-    throw new UnsupportedOperationException("Sample stage not yet implemented");
+    String type = (String) sampleMap.get("type");
+    if (type == "percentage") {
+      double value = (double) sampleMap.get("value");
+      return pipeline.sample(SampleStage.withPercentage(value));
+    } else {
+      int value = (int) sampleMap.get("value");
+      return pipeline.sample(SampleStage.withDocLimit(value));
+    }
   }
 
   @SuppressWarnings("unchecked")

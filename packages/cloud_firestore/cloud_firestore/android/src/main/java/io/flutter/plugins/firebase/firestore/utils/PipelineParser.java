@@ -38,14 +38,21 @@ public class PipelineParser {
       @NonNull List<Map<String, Object>> stages,
       @Nullable Map<String, Object> options)
       throws Exception {
-    if (stages == null || stages.isEmpty()) {
-      throw new IllegalArgumentException("Pipeline must have at least one stage");
-    }
+    Pipeline pipeline = buildPipeline(firestore, stages);
+    Task<Snapshot> task = pipeline.execute();
+    return Tasks.await(task);
+  }
 
+  /**
+   * Builds a Pipeline from a list of stage maps without executing it. Used when a stage (e.g.
+   * union) requires another pipeline as an argument.
+   */
+  @SuppressWarnings("unchecked")
+  public static Pipeline buildPipeline(
+      @NonNull FirebaseFirestore firestore, @NonNull List<Map<String, Object>> stages) {
     PipelineSource pipelineSource = firestore.pipeline();
     Pipeline pipeline = null;
 
-    // Process each stage in order
     for (int i = 0; i < stages.size(); i++) {
       Map<String, Object> stageMap = stages.get(i);
       String stageName = (String) stageMap.get("stage");
@@ -53,21 +60,16 @@ public class PipelineParser {
         throw new IllegalArgumentException("Stage must have a 'stage' field");
       }
 
-      @SuppressWarnings("unchecked")
       Map<String, Object> args = (Map<String, Object>) stageMap.get("args");
 
       if (i == 0) {
-        // First stage must be a source stage (collection, collection_group, documents, database)
         pipeline = applySourceStage(pipelineSource, stageName, args, firestore);
       } else {
-        // Subsequent stages are methods on the Pipeline instance
         pipeline = stageHandlers.applyStage(pipeline, stageName, args, firestore);
       }
     }
 
-    // Execute the pipeline
-    Task<Snapshot> task = pipeline.execute();
-    return Tasks.await(task);
+    return pipeline;
   }
 
   /**

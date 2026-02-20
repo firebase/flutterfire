@@ -127,26 +127,4 @@ class ExpressionHelpers {
             + "GeoPoint, byte[], Blob, DocumentReference, or VectorValue. Got: "
             + value.getClass().getName());
   }
-
-  /** Safely extracts a single expression from args map. */
-  @SuppressWarnings("unchecked")
-  static Map<String, Object> extractExpression(
-      @NonNull Map<String, Object> args, @NonNull String key) {
-    Map<String, Object> exprMap = (Map<String, Object>) args.get(key);
-    if (exprMap == null) {
-      throw new IllegalArgumentException("Missing required expression argument: " + key);
-    }
-    return exprMap;
-  }
-
-  /** Safely extracts a list of expressions from args map. */
-  @SuppressWarnings("unchecked")
-  static List<Map<String, Object>> extractExpressionList(
-      @NonNull Map<String, Object> args, @NonNull String key) {
-    List<Map<String, Object>> exprMaps = (List<Map<String, Object>>) args.get(key);
-    if (exprMaps == null || exprMaps.isEmpty()) {
-      throw new IllegalArgumentException("Missing or empty expression list: " + key);
-    }
-    return exprMaps;
-  }
 }
