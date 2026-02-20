@@ -1115,6 +1115,51 @@ void main() {
       expect(urlContextMetadata.urlMetadata[0].urlRetrievalStatus,
           UrlRetrievalStatus.error);
     });
+
+    test('with an empty function call', () async {
+      const response = '''
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "functionCall": {
+              "name": "current_time"
+            }
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ]
+}
+''';
+      final decoded = jsonDecode(response) as Object;
+      final generateContentResponse =
+          VertexSerialization().parseGenerateContentResponse(decoded);
+      expect(
+        generateContentResponse,
+        matchesGenerateContentResponse(
+          GenerateContentResponse(
+            [
+              Candidate(
+                Content.model([
+                  const FunctionCall('current_time', {}),
+                ]),
+                null,
+                null,
+                FinishReason.stop,
+                null,
+              ),
+            ],
+            null,
+          ),
+        ),
+      );
+    });
   });
 
   group('parses and throws error responses', () {
