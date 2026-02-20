@@ -18,7 +18,7 @@ import 'package:firebase_data_connect/src/core/ref.dart';
 import 'package:firebase_data_connect/src/network/rest_library.dart';
 import 'package:firebase_data_connect/src/common/common_library.dart';
 import 'package:firebase_data_connect/src/cache/cache_data_types.dart';
-import 'package:firebase_data_connect/src/cache/cache_manager.dart';
+import 'package:firebase_data_connect/src/cache/cache.dart';
 import 'package:firebase_data_connect/src/cache/cache_provider.dart';
 import 'package:firebase_data_connect/src/cache/in_memory_cache_provider.dart';
 import 'package:firebase_data_connect/src/cache/sqlite_cache_provider.dart';
@@ -51,18 +51,27 @@ void main() {
   const String simpleQueryResponse = '''
     {"data": {"items":[
     
-    {"desc":"itemDesc1","name":"itemOne", "cacheId":"123","price":4},
-    {"desc":"itemDesc2","name":"itemTwo", "cacheId":"345","price":7}
+    {"desc":"itemDesc1","name":"itemOne","price":4},
+    {"desc":"itemDesc2","name":"itemTwo","price":7}
     
     ]}}
   ''';
+
+  final Map<String, dynamic> simpleQueryExtensions = {
+    'dataConnect': [
+      {
+        'path': ['items'],
+        'entityIds': ['123', '345']
+      }
+    ]
+  };
 
   // query that updates the price for cacheId 123 to 11
   const String simpleQueryResponseUpdate = '''
     {"data": {"items":[
     
-    {"desc":"itemDesc1","name":"itemOne", "cacheId":"123","price":11},
-    {"desc":"itemDesc2","name":"itemTwo", "cacheId":"345","price":7}
+    {"desc":"itemDesc1","name":"itemOne","price":11},
+    {"desc":"itemDesc2","name":"itemTwo","price":7}
     
     ]}}
   ''';
@@ -70,9 +79,18 @@ void main() {
   // query two has same object as query one so should refer to same Entity.
   const String simpleQueryTwoResponse = '''
     {"data": {
-    "item": { "desc":"itemDesc1","name":"itemOne", "cacheId":"123","price":4 }
+    "item": { "desc":"itemDesc1","name":"itemOne","price":4 }
     }}
   ''';
+
+  final Map<String, dynamic> simpleQueryTwoExtensions = {
+    'dataConnect': [
+      {
+        'path': ['item'],
+        'entityId': '123'
+      }
+    ]
+  };
 
   group('Cache Provider Tests', () {
     setUp(() async {
@@ -126,9 +144,11 @@ void main() {
 
       Map<String, dynamic> jsonData =
           jsonDecode(simpleQueryResponse) as Map<String, dynamic>;
-      await cache.update('itemsSimple', ServerResponse(jsonData));
+      await cache.update('itemsSimple',
+          ServerResponse(jsonData, extensions: simpleQueryExtensions));
 
-      Map<String, dynamic>? cachedData = await cache.get('itemsSimple', true);
+      Map<String, dynamic>? cachedData =
+          await cache.resultTree('itemsSimple', true);
 
       expect(jsonData['data'], cachedData);
     }); // test set get
@@ -144,8 +164,8 @@ void main() {
       edo.updateServerValue('name', 'test', null);
       edo.updateServerValue('desc', 'testDesc', null);
 
-      cp.saveEntityDataObject(edo);
-      EntityDataObject edo2 = cp.getEntityDataObject('1234');
+      cp.updateEntityData(edo);
+      EntityDataObject edo2 = cp.getEntityData('1234');
 
       expect(edo.fields().length, edo2.fields().length);
       expect(edo.fields()['name'], edo2.fields()['name']);
@@ -162,21 +182,24 @@ void main() {
 
       Map<String, dynamic> jsonDataOne =
           jsonDecode(simpleQueryResponse) as Map<String, dynamic>;
-      await cache.update(queryOneId, ServerResponse(jsonDataOne));
+      await cache.update(queryOneId,
+          ServerResponse(jsonDataOne, extensions: simpleQueryExtensions));
 
       Map<String, dynamic> jsonDataTwo =
           jsonDecode(simpleQueryTwoResponse) as Map<String, dynamic>;
-      await cache.update(queryTwoId, ServerResponse(jsonDataTwo));
+      await cache.update(queryTwoId,
+          ServerResponse(jsonDataTwo, extensions: simpleQueryTwoExtensions));
 
       Map<String, dynamic> jsonDataOneUpdate =
           jsonDecode(simpleQueryResponseUpdate) as Map<String, dynamic>;
-      await cache.update(queryOneId, ServerResponse(jsonDataOneUpdate));
+      await cache.update(queryOneId,
+          ServerResponse(jsonDataOneUpdate, extensions: simpleQueryExtensions));
       // shared object should be updated.
       // now reload query two from cache and check object value.
       // it should be updated
 
       Map<String, dynamic>? jsonDataTwoUpdated =
-          await cache.get(queryTwoId, true);
+          await cache.resultTree(queryTwoId, true);
       if (jsonDataTwoUpdated == null) {
         fail('No query two found in cache');
       }
@@ -194,16 +217,16 @@ void main() {
       await cp.initialize();
 
       String oid = '1234';
-      EntityDataObject edo = cp.getEntityDataObject(oid);
+      EntityDataObject edo = cp.getEntityData(oid);
 
       String testValue = 'testValue';
       String testProp = 'testProp';
 
       edo.updateServerValue(testProp, testValue, null);
 
-      cp.saveEntityDataObject(edo);
+      cp.updateEntityData(edo);
 
-      EntityDataObject edo2 = cp.getEntityDataObject(oid);
+      EntityDataObject edo2 = cp.getEntityData(oid);
       String value = edo2.fields()[testProp];
 
       expect(testValue, value);
@@ -221,7 +244,8 @@ void main() {
 
       Map<String, dynamic> jsonData =
           jsonDecode(simpleQueryResponse) as Map<String, dynamic>;
-      await cache.update('itemsSimple', ServerResponse(jsonData));
+      await cache.update('itemsSimple',
+          ServerResponse(jsonData, extensions: simpleQueryExtensions));
 
       QueryRef ref = QueryRef(
         dataConnect,
@@ -253,6 +277,48 @@ void main() {
         QueryResult resultDelayed = await ref.execute();
         expect(resultDelayed.source, DataSource.server);
       });
+    });
+
+    test('Test AnyValue Caching', () async {
+      if (dataConnect.cacheManager == null) {
+        fail('No cache available');
+      }
+
+      Cache cache = dataConnect.cacheManager!;
+
+      const String anyValueSingleData = '''
+      {"data": {"anyValueItem":
+        { "name": "AnyItem B",
+          "blob": {"values":["A", 45, {"embedKey": "embedVal"}, ["A", "AA"]]}
+        }
+      }}
+      ''';
+
+      final Map<String, dynamic> anyValueSingleExt = {
+        'dataConnect': [
+          {
+            'path': ['anyValueItem'],
+            'entityId': 'AnyValueItemSingle_ID'
+          }
+        ]
+      };
+
+      Map<String, dynamic> jsonData =
+          jsonDecode(anyValueSingleData) as Map<String, dynamic>;
+
+      await cache.update('queryAnyValue',
+          ServerResponse(jsonData, extensions: anyValueSingleExt));
+
+      Map<String, dynamic>? cachedData =
+          await cache.resultTree('queryAnyValue', true);
+
+      expect(cachedData?['anyValueItem']?['name'], 'AnyItem B');
+      List<dynamic> values = cachedData?['anyValueItem']?['blob']?['values'];
+      expect(values.length, 4);
+      expect(values[0], 'A');
+      expect(values[1], 45);
+      expect(values[2], {'embedKey': 'embedVal'});
+      expect(values[3], ['A', 'AA']);
     });
   }); // test group
 } //main

@@ -25,7 +25,7 @@ import './network/transport_library.dart'
     if (dart.library.html) './network/rest_library.dart';
 
 import 'cache/cache_data_types.dart';
-import 'cache/cache_manager.dart';
+import 'cache/cache.dart';
 
 /// DataConnect class
 class FirebaseDataConnect extends FirebasePluginPlatform {
