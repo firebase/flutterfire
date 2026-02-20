@@ -103,12 +103,12 @@ Part parsePart(Object? jsonObject) {
 
   if (jsonObject.containsKey('functionCall')) {
     final functionCall = jsonObject['functionCall'];
-    if (functionCall is Map &&
-        functionCall.containsKey('name') &&
-        functionCall.containsKey('args')) {
+    if (functionCall is Map && functionCall.containsKey('name')) {
       return FunctionCall._(
         functionCall['name'] as String,
-        functionCall['args'] as Map<String, Object?>,
+        functionCall.containsKey('args')
+            ? functionCall['args'] as Map<String, Object?>
+            : <String, Object?>{},
         id: functionCall['id'] as String?,
         isThought: isThought,
         thoughtSignature: thoughtSignature,
