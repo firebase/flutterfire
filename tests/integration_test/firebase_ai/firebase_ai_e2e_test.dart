@@ -35,7 +35,8 @@ void main() {
     test('test against all json responses from vertexai-sdk-test-data',
         () async {
       final treeUrl = Uri.parse(
-          'https://api.github.com/repos/FirebaseExtended/vertexai-sdk-test-data/git/trees/main?recursive=1');
+        'https://api.github.com/repos/FirebaseExtended/vertexai-sdk-test-data/git/trees/main?recursive=1',
+      );
       final treeResponse = await http.get(treeUrl);
       if (treeResponse.statusCode != 200) {
         fail('Failed to fetch tree: ${treeResponse.statusCode}');
@@ -51,7 +52,8 @@ void main() {
       for (final file in jsonFiles) {
         final path = file['path'] as String;
         final rawUrl = Uri.parse(
-            'https://raw.githubusercontent.com/FirebaseExtended/vertexai-sdk-test-data/main/$path');
+          'https://raw.githubusercontent.com/FirebaseExtended/vertexai-sdk-test-data/main/$path',
+        );
         final response = await http.get(rawUrl);
         if (response.statusCode != 200) {
           continue;
@@ -88,8 +90,11 @@ void main() {
         } catch (e) {
           if (path.contains('failure') && !path.contains('success')) {
             // Expected to fail
-            expect(e, isA<Exception>(),
-                reason: 'Expected an Exception but got $e for $path');
+            expect(
+              e,
+              isA<Exception>(),
+              reason: 'Expected an Exception but got $e for $path',
+            );
           } else {
             fail('Failed to parse success file $path: $e');
           }
