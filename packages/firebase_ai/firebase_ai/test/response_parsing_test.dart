@@ -1116,6 +1116,105 @@ void main() {
           UrlRetrievalStatus.error);
     });
 
+    test('with unknown safety ratings', () async {
+      const response = '''
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "Some text"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0,
+      "safetyRatings": [
+        {
+          "category": "HARM_CATEGORY_HARASSMENT",
+          "probability": "MEDIUM"
+        },
+        {
+          "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+          "probability": "FAKE_NEW_HARM_PROBABILITY"
+        },
+        {
+          "category": "FAKE_NEW_HARM_CATEGORY",
+          "probability": "HIGH"
+        }
+      ]
+    }
+  ],
+  "promptFeedback": {
+    "safetyRatings": [
+      {
+        "category": "HARM_CATEGORY_HARASSMENT",
+        "probability": "MEDIUM"
+      },
+      {
+        "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+        "probability": "FAKE_NEW_HARM_PROBABILITY"
+      },
+      {
+        "category": "FAKE_NEW_HARM_CATEGORY",
+        "probability": "HIGH"
+      }
+    ]
+  }
+}
+''';
+      final decoded = jsonDecode(response) as Object;
+      final generateContentResponse =
+          VertexSerialization().parseGenerateContentResponse(decoded);
+      expect(
+        generateContentResponse,
+        matchesGenerateContentResponse(
+          GenerateContentResponse(
+            [
+              Candidate(
+                Content.model([
+                  const TextPart('Some text'),
+                ]),
+                [
+                  SafetyRating(
+                    HarmCategory.harassment,
+                    HarmProbability.medium,
+                  ),
+                  SafetyRating(
+                    HarmCategory.dangerousContent,
+                    HarmProbability.unknown,
+                  ),
+                  SafetyRating(
+                    HarmCategory.unknown,
+                    HarmProbability.high,
+                  ),
+                ],
+                null,
+                FinishReason.stop,
+                null,
+              ),
+            ],
+            PromptFeedback(null, null, [
+              SafetyRating(
+                HarmCategory.harassment,
+                HarmProbability.medium,
+              ),
+              SafetyRating(
+                HarmCategory.dangerousContent,
+                HarmProbability.unknown,
+              ),
+              SafetyRating(
+                HarmCategory.unknown,
+                HarmProbability.high,
+              ),
+            ]),
+          ),
+        ),
+      );
+    });
+
     test('with an empty function call', () async {
       const response = '''
 {
