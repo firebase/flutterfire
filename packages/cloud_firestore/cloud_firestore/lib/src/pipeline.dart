@@ -502,9 +502,72 @@ class Pipeline {
     );
   }
 
-  /// Sorts results using an ordering specification
-  Pipeline sort(Ordering ordering) {
-    final stage = _SortStage(ordering);
+  /// Sorts results using one or more ordering specifications.
+  /// Orderings are applied in sequence (e.g. primary sort by first, then by second, etc.).
+  Pipeline sort(
+    Ordering order, [
+    Ordering? order2,
+    Ordering? order3,
+    Ordering? order4,
+    Ordering? order5,
+    Ordering? order6,
+    Ordering? order7,
+    Ordering? order8,
+    Ordering? order9,
+    Ordering? order10,
+    Ordering? order11,
+    Ordering? order12,
+    Ordering? order13,
+    Ordering? order14,
+    Ordering? order15,
+    Ordering? order16,
+    Ordering? order17,
+    Ordering? order18,
+    Ordering? order19,
+    Ordering? order20,
+    Ordering? order21,
+    Ordering? order22,
+    Ordering? order23,
+    Ordering? order24,
+    Ordering? order25,
+    Ordering? order26,
+    Ordering? order27,
+    Ordering? order28,
+    Ordering? order29,
+    Ordering? order30,
+  ]) {
+    final orderings = <Ordering>[order];
+    if (order2 != null) orderings.add(order2);
+    if (order3 != null) orderings.add(order3);
+    if (order4 != null) orderings.add(order4);
+    if (order5 != null) orderings.add(order5);
+    if (order6 != null) orderings.add(order6);
+    if (order7 != null) orderings.add(order7);
+    if (order8 != null) orderings.add(order8);
+    if (order9 != null) orderings.add(order9);
+    if (order10 != null) orderings.add(order10);
+    if (order11 != null) orderings.add(order11);
+    if (order12 != null) orderings.add(order12);
+    if (order13 != null) orderings.add(order13);
+    if (order14 != null) orderings.add(order14);
+    if (order15 != null) orderings.add(order15);
+    if (order16 != null) orderings.add(order16);
+    if (order17 != null) orderings.add(order17);
+    if (order18 != null) orderings.add(order18);
+    if (order19 != null) orderings.add(order19);
+    if (order20 != null) orderings.add(order20);
+    if (order21 != null) orderings.add(order21);
+    if (order22 != null) orderings.add(order22);
+    if (order23 != null) orderings.add(order23);
+    if (order24 != null) orderings.add(order24);
+    if (order25 != null) orderings.add(order25);
+    if (order26 != null) orderings.add(order26);
+    if (order27 != null) orderings.add(order27);
+    if (order28 != null) orderings.add(order28);
+    if (order29 != null) orderings.add(order29);
+    if (order30 != null) orderings.add(order30);
+
+    final stage = _SortStage(orderings);
     return Pipeline._(
       _firestore,
       _delegate.addStage(stage.toMap()),

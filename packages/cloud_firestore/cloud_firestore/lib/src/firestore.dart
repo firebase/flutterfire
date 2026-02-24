@@ -350,7 +350,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   ///     .pipeline()
   ///     .collection('users')
   ///     .where(PipelineFilter(Field('age'), isGreaterThan: 18))
-  ///     .sort(Field('name').ascending())
+  ///     .sort(Field('name').ascending(), Field('age').descending())
   ///     .limit(10)
   ///     .execute();
   /// ```

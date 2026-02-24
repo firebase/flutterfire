@@ -325,9 +325,9 @@ final class _SelectStage extends PipelineStage {
 
 /// Stage for sorting results
 final class _SortStage extends PipelineStage {
-  final Ordering ordering;
+  final List<Ordering> orderings;
 
-  _SortStage(this.ordering);
+  _SortStage(this.orderings);
 
   @override
   String get name => 'sort';
@@ -337,9 +337,13 @@ final class _SortStage extends PipelineStage {
     return {
       'stage': name,
       'args': {
-        'expression': ordering.expression.toMap(),
-        'order_direction':
-            ordering.direction == OrderDirection.asc ? 'asc' : 'desc',
+        'orderings': orderings
+            .map((o) => {
+                  'expression': o.expression.toMap(),
+                  'order_direction':
+                      o.direction == OrderDirection.asc ? 'asc' : 'desc',
+                })
+            .toList(),
       },
     };
   }

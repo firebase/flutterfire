@@ -90,12 +90,33 @@ class PipelineStageHandlers {
     return pipeline.offset(offset.intValue());
   }
 
+  @SuppressWarnings("unchecked")
   private Pipeline handleSort(@NonNull Pipeline pipeline, @Nullable Map<String, Object> args) {
-    Map<String, Object> orderingMap = (Map<String, Object>) args.get("expression");
-    Expression expression = parsers.parseExpression(orderingMap);
-    String direction = (String) args.get("order_direction");
-    Ordering ordering = "asc".equals(direction) ? expression.ascending() : expression.descending();
-    return pipeline.sort(ordering);
+    List<Map<String, Object>> orderingMaps = (List<Map<String, Object>>) args.get("orderings");
+    if (orderingMaps == null || orderingMaps.isEmpty()) {
+      throw new IllegalArgumentException("'sort' requires at least one ordering");
+    }
+
+    Map<String, Object> firstMap = orderingMaps.get(0);
+    Expression expression =
+        parsers.parseExpression((Map<String, Object>) firstMap.get("expression"));
+    String direction = (String) firstMap.get("order_direction");
+    Ordering firstOrdering =
+        "asc".equals(direction) ? expression.ascending() : expression.descending();
+
+    if (orderingMaps.size() == 1) {
+      return pipeline.sort(firstOrdering);
+    }
+
+    Ordering[] additionalOrderings = new Ordering[orderingMaps.size() - 1];
+    for (int i = 1; i < orderingMaps.size(); i++) {
+      Map<String, Object> map = orderingMaps.get(i);
+      expression = parsers.parseExpression((Map<String, Object>) map.get("expression"));
+      direction = (String) map.get("order_direction");
+      additionalOrderings[i - 1] =
+          "asc".equals(direction) ? expression.ascending() : expression.descending();
+    }
+    return pipeline.sort(firstOrdering, additionalOrderings);
   }
 
   private Pipeline handleSelect(@NonNull Pipeline pipeline, @Nullable Map<String, Object> args) {

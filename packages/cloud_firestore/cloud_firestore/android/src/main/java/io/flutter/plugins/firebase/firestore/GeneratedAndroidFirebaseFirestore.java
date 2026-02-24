@@ -218,20 +218,6 @@ public class GeneratedAndroidFirebaseFirestore {
     }
   }
 
-  /** Sample mode for the pipeline sample stage. */
-  public enum PipelineSampleMode {
-    /** Sample a fixed number of documents. */
-    SIZE(0),
-    /** Sample a percentage of documents (0.0 to 1.0). */
-    PERCENTAGE(1);
-
-    final int index;
-
-    private PipelineSampleMode(final int index) {
-      this.index = index;
-    }
-  }
-
   /** Generated class from Pigeon that represents data sent in messages. */
   public static final class PigeonFirebaseSettings {
     private @Nullable Boolean persistenceEnabled;
