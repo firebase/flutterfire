@@ -38,7 +38,9 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
   final List<MessageData> _messages = <MessageData>[];
   bool _loading = false;
 
+  // ignore: experimental_member_use
   TemplateGenerativeModel? _templateGenerativeModel;
+  // ignore: experimental_member_use
   TemplateImagenModel? _templateImagenModel;
 
   @override
@@ -50,13 +52,18 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
   void _initializeServerTemplate() {
     if (widget.useVertexBackend) {
       _templateGenerativeModel =
+          // ignore: experimental_member_use
           FirebaseAI.vertexAI(location: 'global').templateGenerativeModel();
       _templateImagenModel =
+          // ignore: experimental_member_use
           FirebaseAI.vertexAI(location: 'global').templateImagenModel();
     } else {
       _templateGenerativeModel =
+          // ignore: experimental_member_use
           FirebaseAI.googleAI().templateGenerativeModel();
-      _templateImagenModel = FirebaseAI.googleAI().templateImagenModel();
+      _templateImagenModel =
+          // ignore: experimental_member_use
+          FirebaseAI.googleAI().templateImagenModel();
     }
   }
 
@@ -122,7 +129,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                   const SizedBox.square(
                     dimension: 15,
                   ),
-                  if (!_loading)
+                  if (!_loading) ...[
                     IconButton(
                       onPressed: () async {
                         await _serverTemplateImagen(_textController.text);
@@ -133,7 +140,6 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                       ),
                       tooltip: 'Imagen',
                     ),
-                  if (!_loading)
                     IconButton(
                       onPressed: () async {
                         await _serverTemplateImageInput(_textController.text);
@@ -144,7 +150,16 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                       ),
                       tooltip: 'Image Input',
                     ),
-                  if (!_loading)
+                    IconButton(
+                      onPressed: () async {
+                        await _serverTemplateUrlContext(_textController.text);
+                      },
+                      icon: Icon(
+                        Icons.link,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      tooltip: 'URL Context',
+                    ),
                     IconButton(
                       onPressed: () async {
                         await _sendServerTemplateMessage(_textController.text);
@@ -154,8 +169,16 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                         color: Theme.of(context).colorScheme.primary,
                       ),
                       tooltip: 'Generate',
-                    )
-                  else
+                    ),
+                    IconButton(
+                      onPressed: _testCodeExecution,
+                      icon: Icon(
+                        Icons.code,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      tooltip: 'Test Code Execution',
+                    ),
+                  ] else
                     const CircularProgressIndicator(),
                 ],
               ),
@@ -166,6 +189,71 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
     );
   }
 
+  Future<void> _serverTemplateUrlContext(String message) async {
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      _messages.add(MessageData(text: message, fromUser: true));
+      var response = await _templateGenerativeModel
+          // ignore: experimental_member_use
+          ?.generateContent('cj-urlcontext', inputs: {'url': message});
+
+      final candidate = response?.candidates.first;
+      if (candidate == null) {
+        _messages.add(MessageData(text: 'No response', fromUser: false));
+      } else {
+        final responseText = candidate.text ?? '';
+        final groundingMetadata = candidate.groundingMetadata;
+        final urlContextMetadata = candidate.urlContextMetadata;
+
+        final buffer = StringBuffer(responseText);
+        if (groundingMetadata != null) {
+          buffer.writeln('\n\n--- Grounding Metadata ---');
+          buffer.writeln('Web Search Queries:');
+          for (final query in groundingMetadata.webSearchQueries) {
+            buffer.writeln(' - $query');
+          }
+          buffer.writeln('\nGrounding Chunks:');
+          for (final chunk in groundingMetadata.groundingChunks) {
+            if (chunk.web != null) {
+              buffer.writeln(' - Web Chunk:');
+              buffer.writeln('   - Title: ${chunk.web!.title}');
+              buffer.writeln('   - URI: ${chunk.web!.uri}');
+              buffer.writeln('   - Domain: ${chunk.web!.domain}');
+            }
+          }
+        }
+
+        if (urlContextMetadata != null) {
+          buffer.writeln('\n\n--- URL Context Metadata ---');
+          for (final data in urlContextMetadata.urlMetadata) {
+            buffer.writeln(' - URL: ${data.retrievedUrl}');
+            buffer.writeln('   Status: ${data.urlRetrievalStatus}');
+          }
+        }
+        _messages.add(MessageData(text: buffer.toString(), fromUser: false));
+      }
+
+      setState(() {
+        _loading = false;
+        _scrollDown();
+      });
+    } catch (e) {
+      _showError(e.toString());
+      setState(() {
+        _loading = false;
+      });
+    } finally {
+      _textController.clear();
+      setState(() {
+        _loading = false;
+      });
+      _textFieldFocus.requestFocus();
+    }
+  }
+
   Future<void> _serverTemplateImagen(String message) async {
     setState(() {
       _loading = true;
@@ -173,6 +261,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
     MessageData? resultMessage;
     try {
       _messages.add(MessageData(text: message, fromUser: true));
+      // ignore: experimental_member_use
       var response = await _templateImagenModel?.generateImages(
         'portrait-googleai',
         inputs: {
@@ -230,6 +319,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
         ),
       );
 
+      // ignore: experimental_member_use
       var response = await _templateGenerativeModel?.generateContent(
         'media.prompt',
         inputs: {
@@ -268,9 +358,66 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
     try {
       _messages.add(MessageData(text: message, fromUser: true));
       var response = await _templateGenerativeModel
+          // ignore: experimental_member_use
           ?.generateContent('new-greeting', inputs: {});
 
       _messages.add(MessageData(text: response?.text, fromUser: false));
+
+      setState(() {
+        _loading = false;
+        _scrollDown();
+      });
+    } catch (e) {
+      _showError(e.toString());
+      setState(() {
+        _loading = false;
+      });
+    } finally {
+      _textController.clear();
+      setState(() {
+        _loading = false;
+      });
+      _textFieldFocus.requestFocus();
+    }
+  }
+
+  Future<void> _testCodeExecution() async {
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      _messages
+          .add(MessageData(text: 'Testing code execution', fromUser: true));
+      final response = await _templateGenerativeModel
+          // ignore: experimental_member_use
+          ?.generateContent('cj-code-execution', inputs: {});
+
+      final buffer = StringBuffer();
+      for (final part in response!.candidates.first.content.parts) {
+        if (part is ExecutableCodePart) {
+          buffer.writeln('Executable Code:');
+          buffer.writeln('Language: ${part.language}');
+          buffer.writeln('Code:');
+          buffer.writeln(part.code);
+        } else if (part is CodeExecutionResultPart) {
+          buffer.writeln('Code Execution Result:');
+          buffer.writeln('Outcome: ${part.outcome}');
+          buffer.writeln('Output:');
+          buffer.writeln(part.output);
+        } else if (part is TextPart) {
+          buffer.writeln(part.text);
+        }
+      }
+
+      if (buffer.isNotEmpty) {
+        _messages.add(
+          MessageData(
+            text: buffer.toString(),
+            fromUser: false,
+          ),
+        );
+      }
 
       setState(() {
         _loading = false;

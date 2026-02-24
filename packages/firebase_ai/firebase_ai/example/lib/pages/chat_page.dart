@@ -50,10 +50,10 @@ class _ChatPageState extends State<ChatPage> {
   void _initializeChat() {
     final generationConfig = GenerationConfig(
       thinkingConfig: _enableThinking
-          ? ThinkingConfig.withThinkingLevel(
-              ThinkingLevel.high,
+          ? ThinkingConfig.withThinkingBudget(
+              null,
               includeThoughts: true,
-            )
+            ) // Using thinkingBudget since we are testing with gemini 2.5
           : null,
     );
     if (widget.useVertexBackend) {
@@ -143,14 +143,27 @@ class _ChatPageState extends State<ChatPage> {
                     dimension: 15,
                   ),
                   if (!_loading)
-                    IconButton(
-                      onPressed: () async {
-                        await _sendChatMessage(_textController.text);
-                      },
-                      icon: Icon(
-                        Icons.send,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            _sendChatMessage(_textController.text);
+                          },
+                          icon: Icon(
+                            Icons.send,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            _sendStreamingChatMessage(_textController.text);
+                          },
+                          icon: Icon(
+                            Icons.stream,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                      ],
                     )
                   else
                     const CircularProgressIndicator(),
@@ -161,6 +174,55 @@ class _ChatPageState extends State<ChatPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _sendStreamingChatMessage(String message) async {
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      _messages.add(MessageData(text: message, fromUser: true));
+      final responseStream = _chat?.sendMessageStream(
+        Content.text(message),
+      );
+
+      if (responseStream == null) {
+        _showError('No response from API.');
+        return;
+      }
+      final textBuffer = StringBuffer();
+      _messages.add(MessageData(text: textBuffer.toString(), fromUser: false));
+
+      await for (final response in responseStream) {
+        final thought = response.thoughtSummary;
+        if (thought != null) {
+          _messages.insert(
+            _messages.length - 1,
+            MessageData(text: thought, fromUser: false, isThought: true),
+          );
+        }
+        textBuffer.write(response.text ?? '');
+        setState(() {
+          _messages.last =
+              MessageData(text: textBuffer.toString(), fromUser: false);
+        });
+        _scrollDown();
+      }
+
+      if (textBuffer.isEmpty) {
+        _showError('No response from API.');
+        return;
+      }
+    } catch (e) {
+      _showError(e.toString());
+    } finally {
+      _textController.clear();
+      setState(() {
+        _loading = false;
+      });
+      _textFieldFocus.requestFocus();
+    }
   }
 
   Future<void> _sendChatMessage(String message) async {

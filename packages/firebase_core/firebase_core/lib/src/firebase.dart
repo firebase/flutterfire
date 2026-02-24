@@ -48,6 +48,7 @@ class Firebase {
     FirebaseOptions? options,
     String? demoProjectId,
   }) async {
+    FirebaseOptions? resolvedOptions = options;
     if (demoProjectId != null) {
       late final String platformString;
       if (defaultTargetPlatform == TargetPlatform.android) {
@@ -67,7 +68,7 @@ class Firebase {
       // id, but it was allowed when this API was first added, so we allow it
       // for backwards compatibility and simply override the user-provided
       // options.
-      options = FirebaseOptions(
+      resolvedOptions = FirebaseOptions(
         apiKey: '12345',
         appId: '1:1:$platformString:1',
         messagingSenderId: '',
@@ -77,7 +78,7 @@ class Firebase {
     }
     FirebaseAppPlatform app = await _delegate.initializeApp(
       name: name,
-      options: options,
+      options: resolvedOptions,
     );
 
     return FirebaseApp._(app);
