@@ -58,7 +58,7 @@ class PathMetadata {
 
   @override
   String toString() {
-    return '$path : ${entityId ?? "nil"}';
+    return '$path : ${entityId ?? "null"}';
   }
 }
 
