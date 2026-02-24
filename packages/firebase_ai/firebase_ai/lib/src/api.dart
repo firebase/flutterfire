@@ -573,7 +573,7 @@ enum BlockReason {
       'BLOCK_REASON_UNSPECIFIED' => BlockReason.unknown,
       'SAFETY' => BlockReason.safety,
       'OTHER' => BlockReason.other,
-      _ => throw FormatException('Unhandled BlockReason format', jsonObject),
+      _ => BlockReason.unknown,
     };
   }
 
@@ -618,7 +618,7 @@ enum HarmCategory {
       'HARM_CATEGORY_HATE_SPEECH' => HarmCategory.hateSpeech,
       'HARM_CATEGORY_SEXUALLY_EXPLICIT' => HarmCategory.sexuallyExplicit,
       'HARM_CATEGORY_DANGEROUS_CONTENT' => HarmCategory.dangerousContent,
-      _ => throw FormatException('Unhandled HarmCategory format', jsonObject),
+      _ => HarmCategory.unknown,
     };
   }
 
@@ -661,8 +661,7 @@ enum HarmProbability {
       'LOW' => HarmProbability.low,
       'MEDIUM' => HarmProbability.medium,
       'HIGH' => HarmProbability.high,
-      _ =>
-        throw FormatException('Unhandled HarmProbability format', jsonObject),
+      _ => HarmProbability.unknown,
     };
   }
 
@@ -704,7 +703,7 @@ enum HarmSeverity {
       'HARM_SEVERITY_LOW' => HarmSeverity.low,
       'HARM_SEVERITY_MEDIUM' => HarmSeverity.medium,
       'HARM_SEVERITY_HIGH' => HarmSeverity.high,
-      _ => throw FormatException('Unhandled HarmSeverity format', jsonObject),
+      _ => HarmSeverity.unknown,
     };
   }
 
@@ -790,7 +789,7 @@ enum FinishReason {
       'RECITATION' => FinishReason.recitation,
       'OTHER' => FinishReason.other,
       'MALFORMED_FUNCTION_CALL' => FinishReason.malformedFunctionCall,
-      _ => throw FormatException('Unhandled FinishReason format', jsonObject),
+      _ => FinishReason.other,
     };
   }
 
@@ -840,8 +839,7 @@ enum ContentModality {
       'VIDEO' => ContentModality.video,
       'AUDIO' => ContentModality.audio,
       'DOCUMENT' => ContentModality.document,
-      _ =>
-        throw FormatException('Unhandled ContentModality format', jsonObject),
+      _ => ContentModality.unspecified,
     };
   }
 
@@ -946,8 +944,7 @@ enum HarmBlockMethod {
       'SEVERITY' => HarmBlockMethod.severity,
       'PROBABILITY' => HarmBlockMethod.probability,
       'HARM_BLOCK_METHOD_UNSPECIFIED' => HarmBlockMethod.unspecified,
-      _ =>
-        throw FormatException('Unhandled HarmBlockMethod format', jsonObject),
+      _ => HarmBlockMethod.unspecified,
     };
   }
 
@@ -1292,7 +1289,7 @@ enum TaskType {
       'SEMANTIC_SIMILARITY' => TaskType.semanticSimilarity,
       'CLASSIFICATION' => TaskType.classification,
       'CLUSTERING' => TaskType.clustering,
-      _ => throw FormatException('Unhandled TaskType format', jsonObject),
+      _ => TaskType.unspecified,
     };
   }
 
@@ -1818,7 +1815,7 @@ enum Outcome {
       'OUTCOME_OK' => Outcome.ok,
       'OUTCOME_FAILED' => Outcome.failed,
       'OUTCOME_DEADLINE_EXCEEDED' => Outcome.deadlineExceeded,
-      _ => throw FormatException('Unhandled Outcome format', jsonObject),
+      _ => Outcome.unspecified,
     };
   }
 }
