@@ -129,7 +129,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                   const SizedBox.square(
                     dimension: 15,
                   ),
-                  if (!_loading)
+                  if (!_loading) ...[
                     IconButton(
                       onPressed: () async {
                         await _serverTemplateImagen(_textController.text);
@@ -140,7 +140,6 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                       ),
                       tooltip: 'Imagen',
                     ),
-                  if (!_loading)
                     IconButton(
                       onPressed: () async {
                         await _serverTemplateImageInput(_textController.text);
@@ -151,7 +150,6 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                       ),
                       tooltip: 'Image Input',
                     ),
-                  if (!_loading)
                     IconButton(
                       onPressed: () async {
                         await _serverTemplateUrlContext(_textController.text);
@@ -162,7 +160,6 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                       ),
                       tooltip: 'URL Context',
                     ),
-                  if (!_loading)
                     IconButton(
                       onPressed: () async {
                         await _sendServerTemplateMessage(_textController.text);
@@ -172,8 +169,16 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                         color: Theme.of(context).colorScheme.primary,
                       ),
                       tooltip: 'Generate',
-                    )
-                  else
+                    ),
+                    IconButton(
+                      onPressed: _testCodeExecution,
+                      icon: Icon(
+                        Icons.code,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      tooltip: 'Test Code Execution',
+                    ),
+                  ] else
                     const CircularProgressIndicator(),
                 ],
               ),
@@ -357,6 +362,62 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
           ?.generateContent('new-greeting', inputs: {});
 
       _messages.add(MessageData(text: response?.text, fromUser: false));
+
+      setState(() {
+        _loading = false;
+        _scrollDown();
+      });
+    } catch (e) {
+      _showError(e.toString());
+      setState(() {
+        _loading = false;
+      });
+    } finally {
+      _textController.clear();
+      setState(() {
+        _loading = false;
+      });
+      _textFieldFocus.requestFocus();
+    }
+  }
+
+  Future<void> _testCodeExecution() async {
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      _messages
+          .add(MessageData(text: 'Testing code execution', fromUser: true));
+      final response = await _templateGenerativeModel
+          // ignore: experimental_member_use
+          ?.generateContent('cj-code-execution', inputs: {});
+
+      final buffer = StringBuffer();
+      for (final part in response!.candidates.first.content.parts) {
+        if (part is ExecutableCodePart) {
+          buffer.writeln('Executable Code:');
+          buffer.writeln('Language: ${part.language}');
+          buffer.writeln('Code:');
+          buffer.writeln(part.code);
+        } else if (part is CodeExecutionResultPart) {
+          buffer.writeln('Code Execution Result:');
+          buffer.writeln('Outcome: ${part.outcome}');
+          buffer.writeln('Output:');
+          buffer.writeln(part.output);
+        } else if (part is TextPart) {
+          buffer.writeln(part.text);
+        }
+      }
+
+      if (buffer.isNotEmpty) {
+        _messages.add(
+          MessageData(
+            text: buffer.toString(),
+            fromUser: false,
+          ),
+        );
+      }
 
       setState(() {
         _loading = false;

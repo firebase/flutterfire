@@ -18,7 +18,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 // Import after file is generated through flutterfire_cli.
-// import 'package:firebase_ai_example/firebase_options.dart';
+//import 'package:firebase_ai_example/firebase_options.dart';
 
 import 'pages/audio_page.dart';
 import 'pages/bidi_page.dart';
@@ -54,7 +54,14 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
   bool _useVertexBackend = false;
   late GenerativeModel _currentModel;
   late ImagenModel _currentImagenModel;
-  int _currentBottomNavIndex = 0;
+
+  static final ThemeData _darkTheme = ThemeData(
+    colorScheme: ColorScheme.fromSeed(
+      brightness: Brightness.dark,
+      seedColor: const Color.fromARGB(255, 171, 222, 244),
+    ),
+    useMaterial3: true,
+  );
 
   @override
   void initState() {
@@ -98,25 +105,13 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
     _initializeModel(_useVertexBackend);
   }
 
-  void _onBottomNavTapped(int index) {
-    setState(() {
-      _currentBottomNavIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter + ${_useVertexBackend ? 'Vertex AI' : 'Google AI'}',
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          brightness: Brightness.dark,
-          seedColor: const Color.fromARGB(255, 171, 222, 244),
-        ),
-        useMaterial3: true,
-      ),
+      theme: _darkTheme,
       home: HomeScreen(
         key: ValueKey(
           '${_useVertexBackend}_${_currentModel.hashCode}',
@@ -125,8 +120,6 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
         imagenModel: _currentImagenModel,
         useVertexBackend: _useVertexBackend,
         onBackendChanged: _toggleBackend,
-        selectedIndex: _currentBottomNavIndex,
-        onSelectedIndexChanged: _onBottomNavTapped,
       ),
     );
   }
@@ -137,8 +130,6 @@ class HomeScreen extends StatefulWidget {
   final ImagenModel imagenModel;
   final bool useVertexBackend;
   final ValueChanged<bool> onBackendChanged;
-  final int selectedIndex;
-  final ValueChanged<int> onSelectedIndexChanged;
 
   const HomeScreen({
     super.key,
@@ -146,8 +137,6 @@ class HomeScreen extends StatefulWidget {
     required this.imagenModel,
     required this.useVertexBackend,
     required this.onBackendChanged,
-    required this.selectedIndex,
-    required this.onSelectedIndexChanged,
   });
 
   @override
@@ -155,8 +144,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
+
   void _onItemTapped(int index) {
-    widget.onSelectedIndexChanged(index);
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
 // Method to build the selected page on demand
@@ -264,7 +257,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Center(
         child: _buildSelectedPage(
-          widget.selectedIndex,
+          _selectedIndex,
           widget.model,
           widget.imagenModel,
           widget.useVertexBackend,
@@ -344,7 +337,7 @@ class _HomeScreenState extends State<HomeScreen> {
             tooltip: 'Server Template',
           ),
         ],
-        currentIndex: widget.selectedIndex,
+        currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
     );
