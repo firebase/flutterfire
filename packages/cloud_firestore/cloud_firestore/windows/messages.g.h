@@ -15,6 +15,8 @@
 #include <optional>
 #include <string>
 
+#include "firestore_codec.h"
+
 namespace cloud_firestore_windows {
 
 // Generated class from Pigeon.
@@ -237,10 +239,11 @@ class PigeonSnapshotMetadata {
   bool is_from_cache() const;
   void set_is_from_cache(bool value_arg);
 
- private:
   static PigeonSnapshotMetadata FromEncodableList(
       const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
+
+ private:
   friend class PigeonDocumentSnapshot;
   friend class PigeonQuerySnapshot;
   friend class FirebaseFirestoreHostApi;
@@ -271,10 +274,11 @@ class PigeonDocumentSnapshot {
   const PigeonSnapshotMetadata& metadata() const;
   void set_metadata(const PigeonSnapshotMetadata& value_arg);
 
- private:
   static PigeonDocumentSnapshot FromEncodableList(
       const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
+
+ private:
   friend class PigeonDocumentChange;
   friend class FirebaseFirestoreHostApi;
   friend class FirebaseFirestoreHostApiCodecSerializer;
@@ -303,10 +307,11 @@ class PigeonDocumentChange {
   int64_t new_index() const;
   void set_new_index(int64_t value_arg);
 
- private:
   static PigeonDocumentChange FromEncodableList(
       const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
+
+ private:
   friend class FirebaseFirestoreHostApi;
   friend class FirebaseFirestoreHostApiCodecSerializer;
   DocumentChangeType type_;
@@ -672,7 +677,7 @@ class AggregateQueryResponse {
 };
 
 class FirebaseFirestoreHostApiCodecSerializer
-    : public flutter::StandardCodecSerializer {
+    : public cloud_firestore_windows::FirestoreCodec {
  public:
   FirebaseFirestoreHostApiCodecSerializer();
   inline static FirebaseFirestoreHostApiCodecSerializer& GetInstance() {
