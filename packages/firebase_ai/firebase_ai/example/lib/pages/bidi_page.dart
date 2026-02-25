@@ -262,6 +262,7 @@ class _BidiPageState extends State<BidiPage> {
                 ),
                 if (!_loading)
                   IconButton(
+                    tooltip: 'Send Text',
                     onPressed: () async {
                       await _sendTextPrompt(_textController.text);
                     },
@@ -513,7 +514,7 @@ class _BidiPageState extends State<BidiPage> {
   Future<void> _processMessagesContinuously() async {
     try {
       await for (final message in _session.receive()) {
-        if (!mounted) break;
+        //if (!mounted) break;
         await _handleLiveServerMessage(message);
       }
     } catch (e) {

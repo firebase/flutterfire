@@ -233,6 +233,7 @@ class LiveSession {
   /// [text]: The text data to send.
   Future<void> sendTextRealtime(String text) async {
     _checkWsStatus();
+    log('sendTextRealtime: $text');
     var clientMessage = LiveClientRealtimeInput.text(text);
     var clientJson = jsonEncode(clientMessage.toJson());
     _ws.sink.add(clientJson);
@@ -292,13 +293,6 @@ class LiveSession {
 
     await for (final result in _messageController.stream) {
       yield result;
-      final message = result.message;
-
-      if (message is LiveServerContent &&
-          message.turnComplete != null &&
-          message.turnComplete!) {
-        break; // Exit the loop when the turn is complete
-      }
     }
   }
 
