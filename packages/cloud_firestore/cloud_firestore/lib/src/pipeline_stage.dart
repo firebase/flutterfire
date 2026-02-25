@@ -363,7 +363,7 @@ final class _UnnestStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     final map = <String, dynamic>{
       'stage': name,
-      'args': {
+      'args': <String, dynamic>{
         'expression': expression.toMap(),
       },
     };
