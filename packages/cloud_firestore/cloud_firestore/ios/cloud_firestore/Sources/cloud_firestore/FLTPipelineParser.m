@@ -38,6 +38,7 @@ static NSError *parseError(NSString *message) {
 - (FIRExprBridge *)parseExpression:(NSDictionary<NSString *, id> *)map error:(NSError **)error;
 - (FIRExprBridge *)parseBooleanExpression:(NSDictionary<NSString *, id> *)map
                                     error:(NSError **)error;
+- (FIRExprBridge *)rightExprFromValue:(id)value error:(NSError **)error;
 @end
 
 @implementation FLTPipelineExpressionParser
@@ -241,7 +242,157 @@ static NSError *parseError(NSString *message) {
     return [[FIRFunctionExprBridge alloc] initWithName:name Args:argsArray];
   }
 
+  // -------------------------------------------------------------------------
+  // PipelineFilter (name "filter"): operator-based (and/or) or field-based
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"filter"]) {
+    return [self parseFilterExpressionWithArgs:args error:error];
+  }
+
   if (error) *error = parseError([NSString stringWithFormat:@"Unsupported expression: %@", name]);
+  return nil;
+}
+
+- (FIRExprBridge *)rightExprFromValue:(id)value error:(NSError **)error {
+  if ([value isKindOfClass:[NSDictionary class]]) {
+    return [self parseExpression:(NSDictionary *)value error:error];
+  }
+  return [[FIRConstantBridge alloc] init:value];
+}
+
+- (FIRExprBridge *)parseFilterExpressionWithArgs:(NSDictionary *)args error:(NSError **)error {
+  // Operator-based: and/or with expressions array (from PipelineFilter.and / .or)
+  NSString *operator= args[@"operator"];
+  NSArray *exprMaps = args[@"expressions"];
+  if ([operator isKindOfClass:[NSString class]] && [exprMaps isKindOfClass:[NSArray class]]) {
+    if (exprMaps.count == 0) {
+      if (error) *error = parseError(@"filter with operator requires at least one expression");
+      return nil;
+    }
+    if (exprMaps.count == 1) {
+      id em = exprMaps[0];
+      if (![em isKindOfClass:[NSDictionary class]]) {
+        if (error) *error = parseError(@"filter expressions must be maps");
+        return nil;
+      }
+      return [self parseBooleanExpression:(NSDictionary *)em error:error];
+    }
+    NSMutableArray<FIRExprBridge *> *all = [NSMutableArray array];
+    for (id em in exprMaps) {
+      if (![em isKindOfClass:[NSDictionary class]]) continue;
+      FIRExprBridge *e = [self parseBooleanExpression:(NSDictionary *)em error:error];
+      if (!e) return nil;
+      [all addObject:e];
+    }
+    if (all.count == 0) return nil;
+    return [[FIRFunctionExprBridge alloc] initWithName:operator Args:all];
+  }
+
+  // Field-based: field + isEqualTo, isGreaterThan, etc.
+  NSString *fieldName = args[@"field"];
+  if (![fieldName isKindOfClass:[NSString class]]) {
+    if (error) *error = parseError(@"filter requires operator+expressions or field");
+    return nil;
+  }
+  FIRExprBridge *fieldExpr = [[FIRFieldBridge alloc] initWithName:fieldName];
+
+  static NSArray *filterComparisonKeys = nil;
+  static dispatch_once_t filterOnce;
+  dispatch_once(&filterOnce, ^{
+    filterComparisonKeys = @[
+      @"isEqualTo", @"isNotEqualTo", @"isGreaterThan", @"isGreaterThanOrEqualTo", @"isLessThan",
+      @"isLessThanOrEqualTo", @"arrayContains", @"arrayContainsAny", @"whereIn", @"whereNotIn",
+      @"isNull", @"isNotNull"
+    ];
+  });
+  for (NSString *key in filterComparisonKeys) {
+    id value = args[key];
+    if (value == nil) continue;
+
+    if ([key isEqualToString:@"isEqualTo"]) {
+      FIRExprBridge *right = [self rightExprFromValue:value error:error];
+      if (!right) return nil;
+      return [[FIRFunctionExprBridge alloc] initWithName:@"equal" Args:@[ fieldExpr, right ]];
+    }
+    if ([key isEqualToString:@"isNotEqualTo"]) {
+      FIRExprBridge *right = [self rightExprFromValue:value error:error];
+      if (!right) return nil;
+      return [[FIRFunctionExprBridge alloc] initWithName:@"not_equal" Args:@[ fieldExpr, right ]];
+    }
+    if ([key isEqualToString:@"isGreaterThan"]) {
+      FIRExprBridge *right = [self rightExprFromValue:value error:error];
+      if (!right) return nil;
+      return [[FIRFunctionExprBridge alloc] initWithName:@"greater_than"
+                                                    Args:@[ fieldExpr, right ]];
+    }
+    if ([key isEqualToString:@"isGreaterThanOrEqualTo"]) {
+      FIRExprBridge *right = [self rightExprFromValue:value error:error];
+      if (!right) return nil;
+      return [[FIRFunctionExprBridge alloc] initWithName:@"greater_than_or_equal"
+                                                    Args:@[ fieldExpr, right ]];
+    }
+    if ([key isEqualToString:@"isLessThan"]) {
+      FIRExprBridge *right = [self rightExprFromValue:value error:error];
+      if (!right) return nil;
+      return [[FIRFunctionExprBridge alloc] initWithName:@"less_than" Args:@[ fieldExpr, right ]];
+    }
+    if ([key isEqualToString:@"isLessThanOrEqualTo"]) {
+      FIRExprBridge *right = [self rightExprFromValue:value error:error];
+      if (!right) return nil;
+      return [[FIRFunctionExprBridge alloc] initWithName:@"less_than_or_equal"
+                                                    Args:@[ fieldExpr, right ]];
+    }
+    if ([key isEqualToString:@"arrayContains"]) {
+      FIRExprBridge *right = [self rightExprFromValue:value error:error];
+      if (!right) return nil;
+      return [[FIRFunctionExprBridge alloc] initWithName:@"array_contains"
+                                                    Args:@[ fieldExpr, right ]];
+    }
+    if ([key isEqualToString:@"arrayContainsAny"] || [key isEqualToString:@"whereIn"]) {
+      NSArray *valuesList = [value isKindOfClass:[NSArray class]] ? value : @[];
+      NSMutableArray<FIRExprBridge *> *valueExprs = [NSMutableArray array];
+      for (id v in valuesList) {
+        FIRExprBridge *ve = [self rightExprFromValue:v error:error];
+        if (!ve) return nil;
+        [valueExprs addObject:ve];
+      }
+      if (valueExprs.count == 0) {
+        if (error) *error = parseError(@"arrayContainsAny/whereIn requires non-empty list");
+        return nil;
+      }
+      NSMutableArray *argsArray = [NSMutableArray arrayWithObject:fieldExpr];
+      [argsArray addObjectsFromArray:valueExprs];
+      return [[FIRFunctionExprBridge alloc] initWithName:@"equal_any" Args:argsArray];
+    }
+    if ([key isEqualToString:@"whereNotIn"]) {
+      NSArray *valuesList = [value isKindOfClass:[NSArray class]] ? value : @[];
+      NSMutableArray<FIRExprBridge *> *valueExprs = [NSMutableArray array];
+      for (id v in valuesList) {
+        FIRExprBridge *ve = [self rightExprFromValue:v error:error];
+        if (!ve) return nil;
+        [valueExprs addObject:ve];
+      }
+      if (valueExprs.count == 0) {
+        if (error) *error = parseError(@"whereNotIn requires non-empty list");
+        return nil;
+      }
+      NSMutableArray *argsArray = [NSMutableArray arrayWithObject:fieldExpr];
+      [argsArray addObjectsFromArray:valueExprs];
+      return [[FIRFunctionExprBridge alloc] initWithName:@"not_equal_any" Args:argsArray];
+    }
+    if ([key isEqualToString:@"isNull"]) {
+      FIRExprBridge *right = [[FIRConstantBridge alloc] init:[NSNull null]];
+      return [[FIRFunctionExprBridge alloc] initWithName:@"equal" Args:@[ fieldExpr, right ]];
+    }
+    if ([key isEqualToString:@"isNotNull"]) {
+      FIRExprBridge *right = [[FIRConstantBridge alloc] init:[NSNull null]];
+      return [[FIRFunctionExprBridge alloc] initWithName:@"not_equal" Args:@[ fieldExpr, right ]];
+    }
+  }
+
+  if (error)
+    *error =
+        parseError(@"filter requires at least one comparison (isEqualTo, isGreaterThan, etc.)");
   return nil;
 }
 
