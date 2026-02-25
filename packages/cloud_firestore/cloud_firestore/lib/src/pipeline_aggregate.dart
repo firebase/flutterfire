@@ -75,6 +75,101 @@ class Count extends PipelineAggregateFunction {
   }
 }
 
+/// Sums numeric values of the specified expression
+class Sum extends PipelineAggregateFunction {
+  final Expression expression;
+
+  Sum(this.expression);
+
+  @override
+  String get name => 'sum';
+
+  @override
+  Map<String, dynamic> toMap() {
+    final map = super.toMap();
+    map['args'] = {
+      'expression': expression.toMap(),
+    };
+    return map;
+  }
+}
+
+/// Calculates average of numeric values of the specified expression
+class Average extends PipelineAggregateFunction {
+  final Expression expression;
+
+  Average(this.expression);
+
+  @override
+  String get name => 'average';
+
+  @override
+  Map<String, dynamic> toMap() {
+    final map = super.toMap();
+    map['args'] = {
+      'expression': expression.toMap(),
+    };
+    return map;
+  }
+}
+
+/// Counts distinct values of the specified expression
+class CountDistinct extends PipelineAggregateFunction {
+  final Expression expression;
+
+  CountDistinct(this.expression);
+
+  @override
+  String get name => 'count_distinct';
+
+  @override
+  Map<String, dynamic> toMap() {
+    final map = super.toMap();
+    map['args'] = {
+      'expression': expression.toMap(),
+    };
+    return map;
+  }
+}
+
+/// Finds minimum value of the specified expression
+class Minimum extends PipelineAggregateFunction {
+  final Expression expression;
+
+  Minimum(this.expression);
+
+  @override
+  String get name => 'minimum';
+
+  @override
+  Map<String, dynamic> toMap() {
+    final map = super.toMap();
+    map['args'] = {
+      'expression': expression.toMap(),
+    };
+    return map;
+  }
+}
+
+/// Finds maximum value of the specified expression
+class Maximum extends PipelineAggregateFunction {
+  final Expression expression;
+
+  Maximum(this.expression);
+
+  @override
+  String get name => 'maximum';
+
+  @override
+  Map<String, dynamic> toMap() {
+    final map = super.toMap();
+    map['args'] = {
+      'expression': expression.toMap(),
+    };
+    return map;
+  }
+}
+
 /// Represents an aggregate stage with functions and optional grouping
 class AggregateStage implements PipelineSerializable {
   final List<AliasedAggregateFunction> accumulators;
