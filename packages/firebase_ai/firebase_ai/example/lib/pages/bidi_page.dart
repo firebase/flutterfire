@@ -325,19 +325,6 @@ class _BidiPageState extends State<BidiPage> {
 
     if (!_sessionOpening) {
       try {
-        // if (_activeSessionHandle != null) {
-
-        //   if (context.mounted) {
-        //     ScaffoldMessenger.of(context).showSnackBar(
-        //       SnackBar(
-        //         content: Text(
-        //             'Resumed session with session handle: $_activeSessionHandle'),
-        //       ),
-        //     );
-        //   }
-        // } else {
-        //   _session = await _liveModel.connect();
-        // }
         _session = await _liveModel.connect(
           sessionResumption: SessionResumptionConfig(
             handle: _activeSessionHandle,
@@ -585,6 +572,7 @@ class _BidiPageState extends State<BidiPage> {
     } else if (message is GoingAwayNotice) {
       developer.log('GoAway message received, time left: ${message.timeLeft}');
       if (_activeSessionHandle != null) {
+        developer.log('=====================================================');
         developer.log('Resume Session with handle: $_activeSessionHandle');
         await _session.resumeSession(
           sessionResumption: SessionResumptionConfig(

@@ -158,7 +158,8 @@ class LiveSession {
 
   Future<void> resumeSession(
       {SessionResumptionConfig? sessionResumption}) async {
-    await close();
+    await _wsSubscription.cancel();
+    await _ws.sink.close();
 
     _ws = await _performWebSocketSetup(
       uri: _uri,
@@ -170,7 +171,6 @@ class LiveSession {
       liveGenerationConfig: _liveGenerationConfig,
     );
 
-    _messageController = StreamController<LiveServerResponse>.broadcast();
     _listenToWebSocket();
   }
 
@@ -209,6 +209,7 @@ class LiveSession {
   /// [audio]: The audio data to send.
   Future<void> sendAudioRealtime(InlineDataPart audio) async {
     _checkWsStatus();
+    log('send-AUDIO-Realtime: size: ${audio.bytes.length}, mime: ${audio.mimeType}');
     var clientMessage = LiveClientRealtimeInput.audio(audio);
     var clientJson = jsonEncode(clientMessage.toJson());
     _ws.sink.add(clientJson);
@@ -221,6 +222,7 @@ class LiveSession {
   /// [video]: The video data to send.
   Future<void> sendVideoRealtime(InlineDataPart video) async {
     _checkWsStatus();
+    log('send-VIDEO-Realtime: size: ${video.bytes.length}, mime: ${video.mimeType}');
     var clientMessage = LiveClientRealtimeInput.video(video);
     var clientJson = jsonEncode(clientMessage.toJson());
     _ws.sink.add(clientJson);
@@ -292,6 +294,7 @@ class LiveSession {
     _checkWsStatus();
 
     await for (final result in _messageController.stream) {
+      log('live_session.received result, ${result.message.runtimeType}');
       yield result;
     }
   }
