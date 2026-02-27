@@ -15,20 +15,126 @@
 import 'dart:convert';
 
 import 'package:firebase_data_connect/src/cache/cache_provider.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:firebase_data_connect/src/common/common_library.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart' show kIsWeb, listEquals;
 
 /// Type of storage to use for the cache
 enum CacheStorage { persistent, memory }
 
-const String kGlobalIDKey = 'cacheId';
+const String kGlobalIDKey = 'guid';
+
+@immutable
+class DataConnectPath {
+  final List<DataConnectPathSegment> components;
+
+  DataConnectPath([List<DataConnectPathSegment>? components])
+      : components = components ?? [];
+
+  DataConnectPath appending(DataConnectPathSegment segment) {
+    return DataConnectPath([...components, segment]);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DataConnectPath &&
+          runtimeType == other.runtimeType &&
+          listEquals(components, other.components);
+
+  @override
+  int get hashCode => Object.hashAll(components);
+
+  @override
+  String toString() => 'DataConnectPath($components)';
+}
+
+/// Additional information about object / field identified by a path
+class PathMetadata {
+  final DataConnectPath path;
+  final String? entityId;
+
+  PathMetadata({required this.path, this.entityId});
+
+  @override
+  String toString() {
+    return '$path : ${entityId ?? "null"}';
+  }
+}
+
+/// Represents the server response contained within the extension response
+class PathMetadataResponse {
+  final List<DataConnectPathSegment> path;
+  final String? entityId;
+  final List<String>? entityIds;
+
+  PathMetadataResponse({required this.path, this.entityId, this.entityIds});
+
+  factory PathMetadataResponse.fromJson(Map<String, dynamic> json) {
+    return PathMetadataResponse(
+      path: (json['path'] as List).map(_parsePathSegment).toList(),
+      entityId: json['entityId'] as String?,
+      entityIds: (json['entityIds'] as List?)?.cast<String>(),
+    );
+  }
+}
+
+DataConnectPathSegment _parsePathSegment(dynamic segment) {
+  if (segment is String) {
+    return DataConnectFieldPathSegment(segment);
+  } else if (segment is double || segment is int) {
+    int index = (segment is double) ? segment.toInt() : segment;
+    return DataConnectListIndexPathSegment(index);
+  }
+  throw ArgumentError('Invalid path segment type: ${segment.runtimeType}');
+}
+
+/// Represents the extension section within the server response
+class ExtensionResponse {
+  final Duration? maxAge;
+  final List<PathMetadataResponse> dataConnect;
+
+  ExtensionResponse({this.maxAge, required this.dataConnect});
+
+  factory ExtensionResponse.fromJson(Map<String, dynamic> json) {
+    return ExtensionResponse(
+      maxAge:
+          json['ttl'] != null ? Duration(seconds: json['ttl'] as int) : null,
+      dataConnect: (json['dataConnect'] as List?)
+              ?.map((e) =>
+                  PathMetadataResponse.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+    );
+  }
+
+  Map<DataConnectPath, PathMetadata> flattenPathMetadata() {
+    final Map<DataConnectPath, PathMetadata> result = {};
+    for (final pmr in dataConnect) {
+      if (pmr.entityId != null) {
+        final pm = PathMetadata(
+            path: DataConnectPath(pmr.path), entityId: pmr.entityId);
+        result[pm.path] = pm;
+      }
+
+      if (pmr.entityIds != null) {
+        for (var i = 0; i < pmr.entityIds!.length; i++) {
+          final entityId = pmr.entityIds![i];
+          final indexPath = DataConnectPath(pmr.path)
+              .appending(DataConnectListIndexPathSegment(i));
+          final pm = PathMetadata(path: indexPath, entityId: entityId);
+          result[pm.path] = pm;
+        }
+      }
+    }
+    return result;
+  }
+}
 
 /// Configuration for the cache
 class CacheSettings {
   /// The type of storage to use (e.g., "persistent", "memory")
   final CacheStorage storage;
-
-  /// The maximum size of the cache in bytes
-  final int maxSizeBytes;
 
   /// Duration for which cache is used before revalidation with server
   final Duration maxAge;
@@ -36,20 +142,17 @@ class CacheSettings {
   // Internal const constructor
   const CacheSettings._internal({
     required this.storage,
-    required this.maxSizeBytes,
     required this.maxAge,
   });
 
   // Factory constructor to handle the logic
   factory CacheSettings({
     CacheStorage? storage,
-    int? maxSizeBytes,
     Duration maxAge = Duration.zero,
   }) {
     return CacheSettings._internal(
       storage:
           storage ?? (kIsWeb ? CacheStorage.memory : CacheStorage.persistent),
-      maxSizeBytes: maxSizeBytes ?? (kIsWeb ? 40000000 : 100000000),
       maxAge: maxAge,
     );
   }
@@ -203,7 +306,7 @@ class EntityNode {
       Map<String, dynamic> json, CacheProvider cacheProvider) {
     EntityDataObject? entity;
     if (json[kGlobalIDKey] != null) {
-      entity = cacheProvider.getEntityDataObject(json[kGlobalIDKey]);
+      entity = cacheProvider.getEntityData(json[kGlobalIDKey]);
     }
 
     Map<String, dynamic>? scalars;

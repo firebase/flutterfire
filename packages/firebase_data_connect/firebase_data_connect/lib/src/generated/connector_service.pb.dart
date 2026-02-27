@@ -1,16 +1,3 @@
-// Copyright 2024 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
 //
 //  Generated code. Do not modify.
 //  source: connector_service.proto
@@ -27,7 +14,8 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import 'google/protobuf/struct.pb.dart' as $1;
-import 'graphql_error.pb.dart' as $2;
+import 'graphql_error.pb.dart' as $3;
+import 'graphql_response_extensions.pb.dart' as $4;
 
 /// The ExecuteQuery request to Firebase Data Connect.
 class ExecuteQueryRequest extends $pb.GeneratedMessage {
@@ -257,7 +245,8 @@ class ExecuteMutationRequest extends $pb.GeneratedMessage {
 class ExecuteQueryResponse extends $pb.GeneratedMessage {
   factory ExecuteQueryResponse({
     $1.Struct? data,
-    $core.Iterable<$2.GraphqlError>? errors,
+    $core.Iterable<$3.GraphqlError>? errors,
+    $4.GraphqlResponseExtensions? extensions,
   }) {
     final $result = create();
     if (data != null) {
@@ -265,6 +254,9 @@ class ExecuteQueryResponse extends $pb.GeneratedMessage {
     }
     if (errors != null) {
       $result.errors.addAll(errors);
+    }
+    if (extensions != null) {
+      $result.extensions = extensions;
     }
     return $result;
   }
@@ -283,9 +275,11 @@ class ExecuteQueryResponse extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<$1.Struct>(1, _omitFieldNames ? '' : 'data',
         subBuilder: $1.Struct.create)
-    ..pc<$2.GraphqlError>(
+    ..pc<$3.GraphqlError>(
         2, _omitFieldNames ? '' : 'errors', $pb.PbFieldType.PM,
-        subBuilder: $2.GraphqlError.create)
+        subBuilder: $3.GraphqlError.create)
+    ..aOM<$4.GraphqlResponseExtensions>(3, _omitFieldNames ? '' : 'extensions',
+        subBuilder: $4.GraphqlResponseExtensions.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -329,14 +323,30 @@ class ExecuteQueryResponse extends $pb.GeneratedMessage {
 
   /// Errors of this response.
   @$pb.TagNumber(2)
-  $core.List<$2.GraphqlError> get errors => $_getList(1);
+  $core.List<$3.GraphqlError> get errors => $_getList(1);
+
+  /// Additional response information.
+  @$pb.TagNumber(3)
+  $4.GraphqlResponseExtensions get extensions => $_getN(2);
+  @$pb.TagNumber(3)
+  set extensions($4.GraphqlResponseExtensions v) {
+    setField(3, v);
+  }
+
+  @$pb.TagNumber(3)
+  $core.bool hasExtensions() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearExtensions() => clearField(3);
+  @$pb.TagNumber(3)
+  $4.GraphqlResponseExtensions ensureExtensions() => $_ensure(2);
 }
 
 /// The ExecuteMutation response from Firebase Data Connect.
 class ExecuteMutationResponse extends $pb.GeneratedMessage {
   factory ExecuteMutationResponse({
     $1.Struct? data,
-    $core.Iterable<$2.GraphqlError>? errors,
+    $core.Iterable<$3.GraphqlError>? errors,
+    $4.GraphqlResponseExtensions? extensions,
   }) {
     final $result = create();
     if (data != null) {
@@ -344,6 +354,9 @@ class ExecuteMutationResponse extends $pb.GeneratedMessage {
     }
     if (errors != null) {
       $result.errors.addAll(errors);
+    }
+    if (extensions != null) {
+      $result.extensions = extensions;
     }
     return $result;
   }
@@ -362,9 +375,11 @@ class ExecuteMutationResponse extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<$1.Struct>(1, _omitFieldNames ? '' : 'data',
         subBuilder: $1.Struct.create)
-    ..pc<$2.GraphqlError>(
+    ..pc<$3.GraphqlError>(
         2, _omitFieldNames ? '' : 'errors', $pb.PbFieldType.PM,
-        subBuilder: $2.GraphqlError.create)
+        subBuilder: $3.GraphqlError.create)
+    ..aOM<$4.GraphqlResponseExtensions>(3, _omitFieldNames ? '' : 'extensions',
+        subBuilder: $4.GraphqlResponseExtensions.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -409,7 +424,22 @@ class ExecuteMutationResponse extends $pb.GeneratedMessage {
 
   /// Errors of this response.
   @$pb.TagNumber(2)
-  $core.List<$2.GraphqlError> get errors => $_getList(1);
+  $core.List<$3.GraphqlError> get errors => $_getList(1);
+
+  /// Additional response information.
+  @$pb.TagNumber(3)
+  $4.GraphqlResponseExtensions get extensions => $_getN(2);
+  @$pb.TagNumber(3)
+  set extensions($4.GraphqlResponseExtensions v) {
+    setField(3, v);
+  }
+
+  @$pb.TagNumber(3)
+  $core.bool hasExtensions() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearExtensions() => clearField(3);
+  @$pb.TagNumber(3)
+  $4.GraphqlResponseExtensions ensureExtensions() => $_ensure(2);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

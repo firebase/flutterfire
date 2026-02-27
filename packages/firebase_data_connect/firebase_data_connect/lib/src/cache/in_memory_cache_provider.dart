@@ -16,6 +16,7 @@ import 'cache_data_types.dart';
 import 'cache_provider.dart';
 
 /// An in-memory implementation of the `CacheProvider`.
+/// This is used for the web platform
 class InMemoryCacheProvider implements CacheProvider {
   final Map<String, ResultTree> _resultTrees = {};
   final Map<String, EntityDataObject> _edos = {};
@@ -31,12 +32,12 @@ class InMemoryCacheProvider implements CacheProvider {
 
   @override
   Future<bool> initialize() async {
-    // nothing to be intialized.
+    // nothing to be intialized
     return true;
   }
 
   @override
-  void saveResultTree(String queryId, ResultTree resultTree) {
+  void setResultTree(String queryId, ResultTree resultTree) {
     _resultTrees[queryId] = resultTree;
   }
 
@@ -46,18 +47,13 @@ class InMemoryCacheProvider implements CacheProvider {
   }
 
   @override
-  void saveEntityDataObject(EntityDataObject edo) {
+  void updateEntityData(EntityDataObject edo) {
     _edos[edo.guid] = edo;
   }
 
   @override
-  EntityDataObject getEntityDataObject(String guid) {
+  EntityDataObject getEntityData(String guid) {
     return _edos.putIfAbsent(guid, () => EntityDataObject(guid: guid));
-  }
-
-  @override
-  void manageCacheSize() {
-    // In-memory cache doesn't have a size limit in this implementation.
   }
 
   @override

@@ -117,6 +117,7 @@ class RestTransport implements DataConnectTransport {
       );
       Map<String, dynamic> bodyJson =
           jsonDecode(r.body) as Map<String, dynamic>;
+
       if (r.statusCode != 200) {
         String message =
             bodyJson.containsKey('message') ? bodyJson['message']! : r.body;
@@ -127,7 +128,13 @@ class RestTransport implements DataConnectTransport {
           "Received a status code of ${r.statusCode} with a message '$message'",
         );
       }
-      return ServerResponse(bodyJson);
+      final Map<String, dynamic>? extensions =
+          bodyJson['extensions'] as Map<String, dynamic>?;
+      final serverResponse = ServerResponse(bodyJson, extensions: extensions);
+      if (extensions != null && extensions.containsKey('ttl')) {
+        serverResponse.ttl = Duration(seconds: extensions['ttl'] as int);
+      }
+      return serverResponse;
     } on Exception catch (e) {
       if (e is DataConnectError) {
         rethrow;
