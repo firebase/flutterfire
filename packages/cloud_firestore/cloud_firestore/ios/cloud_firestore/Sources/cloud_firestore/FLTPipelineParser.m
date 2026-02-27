@@ -405,6 +405,25 @@ static NSError *parseError(NSString *message) {
 
 @implementation FLTPipelineParser
 
+/// Returns the key (alias or field name) for an expression map in select/distinct stages.
+/// Uses args.alias if present; otherwise for "field" expressions uses args.field. Returns nil if
+/// no key can be determined (caller should error).
++ (NSString *)keyForExpressionMap:(NSDictionary *)em error:(NSError **)error {
+  NSString *alias = [em valueForKeyPath:@"args.alias"];
+  if ([alias isKindOfClass:[NSString class]] && alias.length > 0) {
+    return alias;
+  }
+  if ([em[@"name"] isEqualToString:@"field"]) {
+    NSString *field = [em valueForKeyPath:@"args.field"];
+    if ([field isKindOfClass:[NSString class]]) return field;
+    if (error) *error = parseError(@"field expression must have args.field");
+    return nil;
+  }
+  if (error)
+    *error = parseError(@"select/distinct expression must have alias or be a field reference");
+  return nil;
+}
+
 + (NSArray<FIRStageBridge *> *)
     parseStagesWithFirestore:(FIRFirestore *)firestore
                       stages:(NSArray<NSDictionary<NSString *, id> *> *)stages
@@ -537,18 +556,9 @@ static NSError *parseError(NSString *message) {
             if (error) *error = parseErr;
             return nil;
           }
-          NSString *alias = [em valueForKeyPath:@"args.alias"];
-          if (alias) {
-            fields[alias] = expr;
-          } else {
-            NSString *fn = em[@"name"];
-            if ([fn isEqualToString:@"field"]) {
-              NSString *field = [em valueForKeyPath:@"args.field"];
-              fields[field ?: @"_"] = expr;
-            } else {
-              fields[[NSString stringWithFormat:@"_%lu", (unsigned long)fields.count]] = expr;
-            }
-          }
+          NSString *key = [self keyForExpressionMap:em error:error];
+          if (!key) return nil;
+          fields[key] = expr;
         }
         stage = [[FIRSelectStageBridge alloc] initWithSelections:fields];
       } else if ([stageName isEqualToString:@"add_fields"]) {
@@ -587,15 +597,16 @@ static NSError *parseError(NSString *message) {
           return nil;
         }
         NSMutableDictionary<NSString *, FIRExprBridge *> *fields = [NSMutableDictionary dictionary];
-        for (NSUInteger j = 0; j < exprMaps.count; j++) {
-          id em = exprMaps[j];
+        for (id em in exprMaps) {
           if (![em isKindOfClass:[NSDictionary class]]) continue;
           FIRExprBridge *expr = [exprParser parseExpression:em error:&parseErr];
           if (!expr) {
             if (error) *error = parseErr;
             return nil;
           }
-          fields[[NSString stringWithFormat:@"_%lu", (unsigned long)j]] = expr;
+          NSString *key = [self keyForExpressionMap:em error:error];
+          if (!key) return nil;
+          fields[key] = expr;
         }
         stage = [[FIRDistinctStageBridge alloc] initWithGroups:fields];
       } else if ([stageName isEqualToString:@"replace_with"]) {
