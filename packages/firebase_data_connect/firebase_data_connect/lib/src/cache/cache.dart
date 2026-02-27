@@ -50,9 +50,13 @@ class Cache {
   Stream<Set<String>> get impactedQueries => _impactedQueryController.stream;
 
   String _constructCacheIdentifier() {
-    final rawIdentifier =
-        '${_settings.storage}-${dataConnect.app.options.projectId}-${dataConnect.app.name}-${dataConnect.connectorConfig.serviceId}-${dataConnect.connectorConfig.connector}-${dataConnect.connectorConfig.location}-${dataConnect.auth?.currentUser?.uid ?? 'anon'}-${dataConnect.transport.transportOptions.host}';
-    return convertToSha256(rawIdentifier);
+    final rawPrefix =
+        '${_settings.storage}-${dataConnect.app.options.projectId}-${dataConnect.app.name}-${dataConnect.connectorConfig.serviceId}-${dataConnect.connectorConfig.connector}-${dataConnect.connectorConfig.location}-${dataConnect.transport.transportOptions.host}';
+    final prefixSha = convertToSha256(rawPrefix);
+    final rawSuffix = dataConnect.auth?.currentUser?.uid ?? 'anon';
+    final suffixSha = convertToSha256(rawSuffix);
+
+    return '$prefixSha-$suffixSha';
   }
 
   void _initializeProvider() {
