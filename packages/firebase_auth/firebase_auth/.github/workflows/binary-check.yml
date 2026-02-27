@@ -1,0 +1,63 @@
+name: iOS binary symbol check
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  binary-check:
+    name: Build example iOS app and verify plugin symbol
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install CocoaPods
+        run: |
+          sudo gem install cocoapods
+          pod repo update
+
+      - name: Install Dart deps (example)
+        working-directory: ./packages/firebase_auth/firebase_auth/example
+        run: flutter pub get
+
+      - name: Install Pods (example)
+        working-directory: ./packages/firebase_auth/firebase_auth/example/ios
+        run: pod install --repo-update
+
+      - name: Build example iOS app (Release)
+        working-directory: ./packages/firebase_auth/firebase_auth/example/ios
+        run: |
+          set -o pipefail
+          # Build into workspace-local derived data so we can locate products reliably
+          xcodebuild -workspace Runner.xcworkspace -scheme Runner -configuration Release -sdk iphoneos \
+            -derivedDataPath $GITHUB_WORKSPACE/build/derivedData clean build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+
+      - name: Locate built firebase_auth.framework
+        run: |
+          FRAMEWORK=$(find $GITHUB_WORKSPACE/build/derivedData -name "firebase_auth.framework" | head -n 1)
+          echo "FOUND_FRAMEWORK=$FRAMEWORK" >> $GITHUB_ENV
+          if [ -z "$FRAMEWORK" ]; then
+            echo "firebase_auth.framework not found in derived data"
+            find $GITHUB_WORKSPACE/build/derivedData -maxdepth 4 -type d -print || true
+            exit 1
+          fi
+
+      - name: Verify FLTFirebaseAuthPlugin symbol is exported
+        run: |
+          set -o pipefail
+          echo "Checking framework: $FOUND_FRAMEWORK"
+          if nm -gU "$FOUND_FRAMEWORK/firebase_auth" | grep -q "_OBJC_CLASS_\$_FLTFirebaseAuthPlugin"; then
+            echo "Symbol _OBJC_CLASS_$_FLTFirebaseAuthPlugin found"
+          else
+            echo "Symbol _OBJC_CLASS_$_FLTFirebaseAuthPlugin NOT found. Dumping symbols for debugging:"
+            nm -gU "$FOUND_FRAMEWORK/firebase_auth" || true
+            exit 1
+          fi
