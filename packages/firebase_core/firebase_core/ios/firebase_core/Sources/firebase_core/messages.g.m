@@ -224,11 +224,11 @@ void SetUpFirebaseCoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMesseng
         binaryMessenger:binaryMessenger
                   codec:nullGetMessagesCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(initializeAppAppName:
-                                                  initializeAppRequest:completion:)],
-                @"FirebaseCoreHostApi api (%@) doesn't respond to "
-                @"@selector(initializeAppAppName:initializeAppRequest:completion:)",
-                api);
+      NSCAssert(
+          [api respondsToSelector:@selector(initializeAppAppName:initializeAppRequest:completion:)],
+          @"FirebaseCoreHostApi api (%@) doesn't respond to "
+          @"@selector(initializeAppAppName:initializeAppRequest:completion:)",
+          api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray<id> *args = message;
         NSString *arg_appName = GetNullableObjectAtIndex(args, 0);
@@ -313,11 +313,13 @@ void SetUpFirebaseAppHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenge
         binaryMessenger:binaryMessenger
                   codec:nullGetMessagesCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector
-                     (setAutomaticDataCollectionEnabledAppName:enabled:completion:)],
-                @"FirebaseAppHostApi api (%@) doesn't respond to "
-                @"@selector(setAutomaticDataCollectionEnabledAppName:enabled:completion:)",
-                api);
+      NSCAssert(
+          [api
+              respondsToSelector:@selector(
+                                     setAutomaticDataCollectionEnabledAppName:enabled:completion:)],
+          @"FirebaseAppHostApi api (%@) doesn't respond to "
+          @"@selector(setAutomaticDataCollectionEnabledAppName:enabled:completion:)",
+          api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray<id> *args = message;
         NSString *arg_appName = GetNullableObjectAtIndex(args, 0);
@@ -342,8 +344,8 @@ void SetUpFirebaseAppHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenge
         binaryMessenger:binaryMessenger
                   codec:nullGetMessagesCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector
-                     (setAutomaticResourceManagementEnabledAppName:enabled:completion:)],
+      NSCAssert([api respondsToSelector:@selector(setAutomaticResourceManagementEnabledAppName:
+                                                  enabled:completion:)],
                 @"FirebaseAppHostApi api (%@) doesn't respond to "
                 @"@selector(setAutomaticResourceManagementEnabledAppName:enabled:completion:)",
                 api);
