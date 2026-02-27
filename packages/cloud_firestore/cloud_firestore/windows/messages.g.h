@@ -136,7 +136,7 @@ enum class AggregateSource {
 
 // [PersistenceCacheIndexManagerRequest] represents the request types for the
 // persistence cache index manager.
-enum class PersistenceCacheIndexManagerRequestEnum {
+enum class PersistenceCacheIndexManagerRequest {
   enableIndexAutoCreation = 0,
   disableIndexAutoCreation = 1,
   deleteAllIndexes = 2
@@ -346,6 +346,70 @@ class PigeonQuerySnapshot {
   flutter::EncodableList documents_;
   flutter::EncodableList document_changes_;
   PigeonSnapshotMetadata metadata_;
+};
+
+// Generated class from Pigeon that represents data sent in messages.
+class PigeonPipelineResult {
+ public:
+  // Constructs an object setting all non-nullable fields.
+  PigeonPipelineResult();
+
+  // Constructs an object setting all fields.
+  explicit PigeonPipelineResult(const std::string* document_path,
+                                const int64_t* create_time,
+                                const int64_t* update_time,
+                                const flutter::EncodableMap* data);
+
+  const std::string* document_path() const;
+  void set_document_path(const std::string_view* value_arg);
+  void set_document_path(std::string_view value_arg);
+
+  const int64_t* create_time() const;
+  void set_create_time(const int64_t* value_arg);
+  void set_create_time(int64_t value_arg);
+
+  const int64_t* update_time() const;
+  void set_update_time(const int64_t* value_arg);
+  void set_update_time(int64_t value_arg);
+
+  // All fields in the result (from PipelineResult.data() on Android).
+  const flutter::EncodableMap* data() const;
+  void set_data(const flutter::EncodableMap* value_arg);
+  void set_data(const flutter::EncodableMap& value_arg);
+
+ private:
+  static PigeonPipelineResult FromEncodableList(
+      const flutter::EncodableList& list);
+  flutter::EncodableList ToEncodableList() const;
+  friend class FirebaseFirestoreHostApi;
+  friend class FirebaseFirestoreHostApiCodecSerializer;
+  std::optional<std::string> document_path_;
+  std::optional<int64_t> create_time_;
+  std::optional<int64_t> update_time_;
+  std::optional<flutter::EncodableMap> data_;
+};
+
+// Generated class from Pigeon that represents data sent in messages.
+class PigeonPipelineSnapshot {
+ public:
+  // Constructs an object setting all fields.
+  explicit PigeonPipelineSnapshot(const flutter::EncodableList& results,
+                                  int64_t execution_time);
+
+  const flutter::EncodableList& results() const;
+  void set_results(const flutter::EncodableList& value_arg);
+
+  int64_t execution_time() const;
+  void set_execution_time(int64_t value_arg);
+
+ private:
+  static PigeonPipelineSnapshot FromEncodableList(
+      const flutter::EncodableList& list);
+  flutter::EncodableList ToEncodableList() const;
+  friend class FirebaseFirestoreHostApi;
+  friend class FirebaseFirestoreHostApiCodecSerializer;
+  flutter::EncodableList results_;
+  int64_t execution_time_;
 };
 
 // Generated class from Pigeon that represents data sent in messages.
@@ -724,8 +788,13 @@ class FirebaseFirestoreHostApi {
       std::function<void(ErrorOr<std::string> reply)> result) = 0;
   virtual void PersistenceCacheIndexManagerRequest(
       const FirestorePigeonFirebaseApp& app,
-      const PersistenceCacheIndexManagerRequestEnum& request,
+      const PersistenceCacheIndexManagerRequest& request,
       std::function<void(std::optional<FlutterError> reply)> result) = 0;
+  virtual void ExecutePipeline(
+      const FirestorePigeonFirebaseApp& app,
+      const flutter::EncodableList& stages,
+      const flutter::EncodableMap* options,
+      std::function<void(ErrorOr<PigeonPipelineSnapshot> reply)> result) = 0;
 
   // The codec used by FirebaseFirestoreHostApi.
   static const flutter::StandardMessageCodec& GetCodec();

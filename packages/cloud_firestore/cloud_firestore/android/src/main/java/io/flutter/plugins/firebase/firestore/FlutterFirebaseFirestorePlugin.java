@@ -28,6 +28,8 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.MemoryCacheSettings;
 import com.google.firebase.firestore.PersistentCacheIndexManager;
 import com.google.firebase.firestore.PersistentCacheSettings;
+import com.google.firebase.firestore.Pipeline;
+import com.google.firebase.firestore.PipelineResult;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
@@ -52,6 +54,7 @@ import io.flutter.plugins.firebase.firestore.streamhandler.SnapshotsInSyncStream
 import io.flutter.plugins.firebase.firestore.streamhandler.TransactionStreamHandler;
 import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
 import io.flutter.plugins.firebase.firestore.utils.PigeonParser;
+import io.flutter.plugins.firebase.firestore.utils.PipelineParser;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -982,5 +985,74 @@ public class FlutterFirebaseFirestorePlugin
                 PigeonParser.parsePigeonServerTimestampBehavior(
                     parameters.getServerTimestampBehavior()),
                 PigeonParser.parseListenSource(source))));
+  }
+
+  @Override
+  public void executePipeline(
+      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
+      @NonNull List<Map<String, Object>> stages,
+      @Nullable Map<String, Object> options,
+      @NonNull
+          GeneratedAndroidFirebaseFirestore.Result<
+                  GeneratedAndroidFirebaseFirestore.PigeonPipelineSnapshot>
+              result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseFirestore firestore = getFirestoreFromPigeon(app);
+
+            // Execute pipeline using Android Firestore SDK
+            Pipeline.Snapshot snapshot = PipelineParser.executePipeline(firestore, stages, options);
+
+            // Convert Pipeline.Snapshot to PigeonPipelineSnapshot
+            List<GeneratedAndroidFirebaseFirestore.PigeonPipelineResult> pipelineResults =
+                new ArrayList<>();
+
+            // Iterate through snapshot results
+            for (PipelineResult pipelineResult : snapshot.getResults()) {
+              GeneratedAndroidFirebaseFirestore.PigeonPipelineResult.Builder resultBuilder =
+                  new GeneratedAndroidFirebaseFirestore.PigeonPipelineResult.Builder();
+              if (pipelineResult.getRef() != null) {
+                resultBuilder.setDocumentPath(pipelineResult.getRef().getPath());
+              }
+
+              // Convert timestamps (assuming they're in milliseconds)
+              if (pipelineResult.getCreateTime() != null) {
+                resultBuilder.setCreateTime(pipelineResult.getCreateTime().toDate().getTime());
+              } else {
+                resultBuilder.setCreateTime(0L);
+              }
+
+              if (pipelineResult.getUpdateTime() != null) {
+                resultBuilder.setUpdateTime(pipelineResult.getUpdateTime().toDate().getTime());
+              } else {
+                resultBuilder.setUpdateTime(0L);
+              }
+
+              Map<String, Object> data = pipelineResult.getData();
+              if (data != null) {
+                resultBuilder.setData(data);
+              }
+
+              pipelineResults.add(resultBuilder.build());
+            }
+
+            // Build the snapshot
+            GeneratedAndroidFirebaseFirestore.PigeonPipelineSnapshot.Builder snapshotBuilder =
+                new GeneratedAndroidFirebaseFirestore.PigeonPipelineSnapshot.Builder();
+            snapshotBuilder.setResults(pipelineResults);
+
+            // Set execution time (use current time if not available from snapshot)
+            if (snapshot.getExecutionTime() != null) {
+              snapshotBuilder.setExecutionTime(snapshot.getExecutionTime().toDate().getTime());
+            } else {
+              snapshotBuilder.setExecutionTime(System.currentTimeMillis());
+            }
+
+            result.success(snapshotBuilder.build());
+          } catch (Exception e) {
+            ExceptionConverter.sendErrorToFlutter(result, e);
+          }
+        });
   }
 }

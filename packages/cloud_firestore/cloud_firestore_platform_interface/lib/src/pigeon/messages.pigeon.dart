@@ -301,6 +301,69 @@ class PigeonQuerySnapshot {
   }
 }
 
+class PigeonPipelineResult {
+  PigeonPipelineResult({
+    this.documentPath,
+    this.createTime,
+    this.updateTime,
+    this.data,
+  });
+
+  String? documentPath;
+
+  int? createTime;
+
+  int? updateTime;
+
+  /// All fields in the result (from PipelineResult.data() on Android).
+  Map<String?, Object?>? data;
+
+  Object encode() {
+    return <Object?>[
+      documentPath,
+      createTime,
+      updateTime,
+      data,
+    ];
+  }
+
+  static PigeonPipelineResult decode(Object result) {
+    result as List<Object?>;
+    return PigeonPipelineResult(
+      documentPath: result[0] as String?,
+      createTime: result[1] as int?,
+      updateTime: result[2] as int?,
+      data: (result[3] as Map<Object?, Object?>?)?.cast<String?, Object?>(),
+    );
+  }
+}
+
+class PigeonPipelineSnapshot {
+  PigeonPipelineSnapshot({
+    required this.results,
+    required this.executionTime,
+  });
+
+  List<PigeonPipelineResult?> results;
+
+  int executionTime;
+
+  Object encode() {
+    return <Object?>[
+      results,
+      executionTime,
+    ];
+  }
+
+  static PigeonPipelineSnapshot decode(Object result) {
+    result as List<Object?>;
+    return PigeonPipelineSnapshot(
+      results: (result[0] as List<Object?>?)!.cast<PigeonPipelineResult?>(),
+      executionTime: result[1]! as int,
+    );
+  }
+}
+
 class PigeonGetOptions {
   PigeonGetOptions({
     required this.source,
@@ -586,17 +649,23 @@ class _FirebaseFirestoreHostApiCodec extends FirestoreMessageCodec {
     } else if (value is PigeonGetOptions) {
       buffer.putUint8(136);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonQueryParameters) {
+    } else if (value is PigeonPipelineResult) {
       buffer.putUint8(137);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonQuerySnapshot) {
+    } else if (value is PigeonPipelineSnapshot) {
       buffer.putUint8(138);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonSnapshotMetadata) {
+    } else if (value is PigeonQueryParameters) {
       buffer.putUint8(139);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonTransactionCommand) {
+    } else if (value is PigeonQuerySnapshot) {
       buffer.putUint8(140);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonSnapshotMetadata) {
+      buffer.putUint8(141);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonTransactionCommand) {
+      buffer.putUint8(142);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -625,12 +694,16 @@ class _FirebaseFirestoreHostApiCodec extends FirestoreMessageCodec {
       case 136:
         return PigeonGetOptions.decode(readValue(buffer)!);
       case 137:
-        return PigeonQueryParameters.decode(readValue(buffer)!);
+        return PigeonPipelineResult.decode(readValue(buffer)!);
       case 138:
-        return PigeonQuerySnapshot.decode(readValue(buffer)!);
+        return PigeonPipelineSnapshot.decode(readValue(buffer)!);
       case 139:
-        return PigeonSnapshotMetadata.decode(readValue(buffer)!);
+        return PigeonQueryParameters.decode(readValue(buffer)!);
       case 140:
+        return PigeonQuerySnapshot.decode(readValue(buffer)!);
+      case 141:
+        return PigeonSnapshotMetadata.decode(readValue(buffer)!);
+      case 142:
         return PigeonTransactionCommand.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -1340,6 +1413,39 @@ class FirebaseFirestoreHostApi {
       );
     } else {
       return;
+    }
+  }
+
+  Future<PigeonPipelineSnapshot> executePipeline(
+    FirestorePigeonFirebaseApp arg_app,
+    List<Map<String?, Object?>?> arg_stages,
+    Map<String?, Object?>? arg_options,
+  ) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+      'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.executePipeline',
+      codec,
+      binaryMessenger: _binaryMessenger,
+    );
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_app, arg_stages, arg_options]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as PigeonPipelineSnapshot?)!;
     }
   }
 }

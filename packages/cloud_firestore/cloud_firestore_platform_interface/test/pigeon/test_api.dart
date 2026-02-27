@@ -7,11 +7,11 @@
 // ignore_for_file: avoid_relative_lib_imports
 import 'dart:async';
 import 'dart:typed_data' show Uint8List;
-
-import 'package:cloud_firestore_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:flutter/foundation.dart' show ReadBuffer, WriteBuffer;
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'package:cloud_firestore_platform_interface/src/pigeon/messages.pigeon.dart';
 
 class _TestFirebaseFirestoreHostApiCodec extends StandardMessageCodec {
   const _TestFirebaseFirestoreHostApiCodec();
@@ -44,17 +44,23 @@ class _TestFirebaseFirestoreHostApiCodec extends StandardMessageCodec {
     } else if (value is PigeonGetOptions) {
       buffer.putUint8(136);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonQueryParameters) {
+    } else if (value is PigeonPipelineResult) {
       buffer.putUint8(137);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonQuerySnapshot) {
+    } else if (value is PigeonPipelineSnapshot) {
       buffer.putUint8(138);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonSnapshotMetadata) {
+    } else if (value is PigeonQueryParameters) {
       buffer.putUint8(139);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonTransactionCommand) {
+    } else if (value is PigeonQuerySnapshot) {
       buffer.putUint8(140);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonSnapshotMetadata) {
+      buffer.putUint8(141);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonTransactionCommand) {
+      buffer.putUint8(142);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -63,22 +69,40 @@ class _TestFirebaseFirestoreHostApiCodec extends StandardMessageCodec {
 
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
-    return switch (type) {
-      128 => AggregateQuery.decode(readValue(buffer)!),
-      129 => AggregateQueryResponse.decode(readValue(buffer)!),
-      130 => DocumentReferenceRequest.decode(readValue(buffer)!),
-      131 => FirestorePigeonFirebaseApp.decode(readValue(buffer)!),
-      132 => PigeonDocumentChange.decode(readValue(buffer)!),
-      133 => PigeonDocumentOption.decode(readValue(buffer)!),
-      134 => PigeonDocumentSnapshot.decode(readValue(buffer)!),
-      135 => PigeonFirebaseSettings.decode(readValue(buffer)!),
-      136 => PigeonGetOptions.decode(readValue(buffer)!),
-      137 => PigeonQueryParameters.decode(readValue(buffer)!),
-      138 => PigeonQuerySnapshot.decode(readValue(buffer)!),
-      139 => PigeonSnapshotMetadata.decode(readValue(buffer)!),
-      140 => PigeonTransactionCommand.decode(readValue(buffer)!),
-      _ => super.readValueOfType(type, buffer)
-    };
+    switch (type) {
+      case 128:
+        return AggregateQuery.decode(readValue(buffer)!);
+      case 129:
+        return AggregateQueryResponse.decode(readValue(buffer)!);
+      case 130:
+        return DocumentReferenceRequest.decode(readValue(buffer)!);
+      case 131:
+        return FirestorePigeonFirebaseApp.decode(readValue(buffer)!);
+      case 132:
+        return PigeonDocumentChange.decode(readValue(buffer)!);
+      case 133:
+        return PigeonDocumentOption.decode(readValue(buffer)!);
+      case 134:
+        return PigeonDocumentSnapshot.decode(readValue(buffer)!);
+      case 135:
+        return PigeonFirebaseSettings.decode(readValue(buffer)!);
+      case 136:
+        return PigeonGetOptions.decode(readValue(buffer)!);
+      case 137:
+        return PigeonPipelineResult.decode(readValue(buffer)!);
+      case 138:
+        return PigeonPipelineSnapshot.decode(readValue(buffer)!);
+      case 139:
+        return PigeonQueryParameters.decode(readValue(buffer)!);
+      case 140:
+        return PigeonQuerySnapshot.decode(readValue(buffer)!);
+      case 141:
+        return PigeonSnapshotMetadata.decode(readValue(buffer)!);
+      case 142:
+        return PigeonTransactionCommand.decode(readValue(buffer)!);
+      default:
+        return super.readValueOfType(type, buffer);
+    }
   }
 }
 
@@ -195,6 +219,12 @@ abstract class TestFirebaseFirestoreHostApi {
   Future<void> persistenceCacheIndexManagerRequest(
     FirestorePigeonFirebaseApp app,
     PersistenceCacheIndexManagerRequest request,
+  );
+
+  Future<PigeonPipelineSnapshot> executePipeline(
+    FirestorePigeonFirebaseApp app,
+    List<Map<String?, Object?>?> stages,
+    Map<String?, Object?>? options,
   );
 
   static void setup(
@@ -1085,6 +1115,44 @@ abstract class TestFirebaseFirestoreHostApi {
           );
           await api.persistenceCacheIndexManagerRequest(arg_app!, arg_request!);
           return <Object?>[];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.executePipeline',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.executePipeline was null.',
+          );
+          final List<Object?> args = (message as List<Object?>?)!;
+          final FirestorePigeonFirebaseApp? arg_app =
+              (args[0] as FirestorePigeonFirebaseApp?);
+          assert(
+            arg_app != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.executePipeline was null, expected non-null FirestorePigeonFirebaseApp.',
+          );
+          final List<Map<String?, Object?>?>? arg_stages =
+              (args[1] as List<Object?>?)?.cast<Map<String?, Object?>?>();
+          assert(
+            arg_stages != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.executePipeline was null, expected non-null List<Map<String?, Object?>?>.',
+          );
+          final Map<String?, Object?>? arg_options =
+              (args[2] as Map<Object?, Object?>?)?.cast<String?, Object?>();
+          final PigeonPipelineSnapshot output =
+              await api.executePipeline(arg_app!, arg_stages!, arg_options);
+          return <Object?>[output];
         });
       }
     }

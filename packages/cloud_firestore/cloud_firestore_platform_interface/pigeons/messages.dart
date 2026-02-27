@@ -118,6 +118,31 @@ class PigeonQuerySnapshot {
   final PigeonSnapshotMetadata metadata;
 }
 
+class PigeonPipelineResult {
+  const PigeonPipelineResult({
+    this.documentPath,
+    this.createTime,
+    this.updateTime,
+    this.data,
+  });
+
+  final String? documentPath;
+  final int? createTime; // Timestamp in milliseconds since epoch
+  final int? updateTime; // Timestamp in milliseconds since epoch
+  /// All fields in the result (from PipelineResult.data() on Android).
+  final Map<String?, Object?>? data;
+}
+
+class PigeonPipelineSnapshot {
+  const PigeonPipelineSnapshot({
+    required this.results,
+    required this.executionTime,
+  });
+
+  final List<PigeonPipelineResult?> results;
+  final int executionTime; // Timestamp in milliseconds since epoch
+}
+
 /// An enumeration of firestore source types.
 enum Source {
   /// Causes Firestore to try to retrieve an up-to-date (server-retrieved) snapshot, but fall back to
@@ -441,5 +466,12 @@ abstract class FirebaseFirestoreHostApi {
   void persistenceCacheIndexManagerRequest(
     FirestorePigeonFirebaseApp app,
     PersistenceCacheIndexManagerRequest request,
+  );
+
+  @async
+  PigeonPipelineSnapshot executePipeline(
+    FirestorePigeonFirebaseApp app,
+    List<Map<String?, Object?>?> stages,
+    Map<String?, Object?>? options,
   );
 }

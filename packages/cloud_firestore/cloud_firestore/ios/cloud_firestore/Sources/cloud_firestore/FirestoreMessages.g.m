@@ -168,6 +168,18 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 - (NSArray *)toList;
 @end
 
+@interface PigeonPipelineResult ()
++ (PigeonPipelineResult *)fromList:(NSArray *)list;
++ (nullable PigeonPipelineResult *)nullableFromList:(NSArray *)list;
+- (NSArray *)toList;
+@end
+
+@interface PigeonPipelineSnapshot ()
++ (PigeonPipelineSnapshot *)fromList:(NSArray *)list;
++ (nullable PigeonPipelineSnapshot *)nullableFromList:(NSArray *)list;
+- (NSArray *)toList;
+@end
+
 @interface PigeonGetOptions ()
 + (PigeonGetOptions *)fromList:(NSArray *)list;
 + (nullable PigeonGetOptions *)nullableFromList:(NSArray *)list;
@@ -406,6 +418,66 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
     (self.documents ?: [NSNull null]),
     (self.documentChanges ?: [NSNull null]),
     (self.metadata ? [self.metadata toList] : [NSNull null]),
+  ];
+}
+@end
+
+@implementation PigeonPipelineResult
++ (instancetype)makeWithDocumentPath:(nullable NSString *)documentPath
+                          createTime:(nullable NSNumber *)createTime
+                          updateTime:(nullable NSNumber *)updateTime
+                                data:(nullable NSDictionary<NSString *, id> *)data {
+  PigeonPipelineResult *pigeonResult = [[PigeonPipelineResult alloc] init];
+  pigeonResult.documentPath = documentPath;
+  pigeonResult.createTime = createTime;
+  pigeonResult.updateTime = updateTime;
+  pigeonResult.data = data;
+  return pigeonResult;
+}
++ (PigeonPipelineResult *)fromList:(NSArray *)list {
+  PigeonPipelineResult *pigeonResult = [[PigeonPipelineResult alloc] init];
+  pigeonResult.documentPath = GetNullableObjectAtIndex(list, 0);
+  pigeonResult.createTime = GetNullableObjectAtIndex(list, 1);
+  pigeonResult.updateTime = GetNullableObjectAtIndex(list, 2);
+  pigeonResult.data = GetNullableObjectAtIndex(list, 3);
+  return pigeonResult;
+}
++ (nullable PigeonPipelineResult *)nullableFromList:(NSArray *)list {
+  return (list) ? [PigeonPipelineResult fromList:list] : nil;
+}
+- (NSArray *)toList {
+  return @[
+    (self.documentPath ?: [NSNull null]),
+    (self.createTime ?: [NSNull null]),
+    (self.updateTime ?: [NSNull null]),
+    (self.data ?: [NSNull null]),
+  ];
+}
+@end
+
+@implementation PigeonPipelineSnapshot
++ (instancetype)makeWithResults:(NSArray<PigeonPipelineResult *> *)results
+                  executionTime:(NSNumber *)executionTime {
+  PigeonPipelineSnapshot *pigeonResult = [[PigeonPipelineSnapshot alloc] init];
+  pigeonResult.results = results;
+  pigeonResult.executionTime = executionTime;
+  return pigeonResult;
+}
++ (PigeonPipelineSnapshot *)fromList:(NSArray *)list {
+  PigeonPipelineSnapshot *pigeonResult = [[PigeonPipelineSnapshot alloc] init];
+  pigeonResult.results = GetNullableObjectAtIndex(list, 0);
+  NSAssert(pigeonResult.results != nil, @"");
+  pigeonResult.executionTime = GetNullableObjectAtIndex(list, 1);
+  NSAssert(pigeonResult.executionTime != nil, @"");
+  return pigeonResult;
+}
++ (nullable PigeonPipelineSnapshot *)nullableFromList:(NSArray *)list {
+  return (list) ? [PigeonPipelineSnapshot fromList:list] : nil;
+}
+- (NSArray *)toList {
+  return @[
+    (self.results ?: [NSNull null]),
+    (self.executionTime ?: [NSNull null]),
   ];
 }
 @end
@@ -673,12 +745,16 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
     case 136:
       return [PigeonGetOptions fromList:[self readValue]];
     case 137:
-      return [PigeonQueryParameters fromList:[self readValue]];
+      return [PigeonPipelineResult fromList:[self readValue]];
     case 138:
-      return [PigeonQuerySnapshot fromList:[self readValue]];
+      return [PigeonPipelineSnapshot fromList:[self readValue]];
     case 139:
-      return [PigeonSnapshotMetadata fromList:[self readValue]];
+      return [PigeonQueryParameters fromList:[self readValue]];
     case 140:
+      return [PigeonQuerySnapshot fromList:[self readValue]];
+    case 141:
+      return [PigeonSnapshotMetadata fromList:[self readValue]];
+    case 142:
       return [PigeonTransactionCommand fromList:[self readValue]];
     default:
       return [super readValueOfType:type];
@@ -717,17 +793,23 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   } else if ([value isKindOfClass:[PigeonGetOptions class]]) {
     [self writeByte:136];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonQueryParameters class]]) {
+  } else if ([value isKindOfClass:[PigeonPipelineResult class]]) {
     [self writeByte:137];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonQuerySnapshot class]]) {
+  } else if ([value isKindOfClass:[PigeonPipelineSnapshot class]]) {
     [self writeByte:138];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonSnapshotMetadata class]]) {
+  } else if ([value isKindOfClass:[PigeonQueryParameters class]]) {
     [self writeByte:139];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonTransactionCommand class]]) {
+  } else if ([value isKindOfClass:[PigeonQuerySnapshot class]]) {
     [self writeByte:140];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonSnapshotMetadata class]]) {
+    [self writeByte:141];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonTransactionCommand class]]) {
+    [self writeByte:142];
     [self writeValue:[value toList]];
   } else {
     [super writeValue:value];
@@ -1374,6 +1456,34 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
                                          completion:^(FlutterError *_Nullable error) {
                                            callback(wrapResult(nil, error));
                                          }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.cloud_firestore_platform_interface."
+                        @"FirebaseFirestoreHostApi.executePipeline"
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseFirestoreHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(executePipelineApp:stages:options:completion:)],
+                @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
+                @"@selector(executePipelineApp:stages:options:completion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        NSArray<NSDictionary<NSString *, id> *> *arg_stages = GetNullableObjectAtIndex(args, 1);
+        NSDictionary<NSString *, id> *arg_options = GetNullableObjectAtIndex(args, 2);
+        [api executePipelineApp:arg_app
+                         stages:arg_stages
+                        options:arg_options
+                     completion:^(PigeonPipelineSnapshot *_Nullable output,
+                                  FlutterError *_Nullable error) {
+                       callback(wrapResult(output, error));
+                     }];
       }];
     } else {
       [channel setMessageHandler:nil];

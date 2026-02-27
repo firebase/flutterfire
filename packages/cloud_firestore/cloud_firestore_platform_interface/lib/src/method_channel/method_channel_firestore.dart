@@ -15,6 +15,8 @@ import 'package:flutter/services.dart';
 
 import 'method_channel_collection_reference.dart';
 import 'method_channel_document_reference.dart';
+import 'method_channel_pipeline.dart';
+import 'method_channel_pipeline_snapshot.dart';
 import 'method_channel_query.dart';
 import 'method_channel_transaction.dart';
 import 'method_channel_write_batch.dart';
@@ -346,6 +348,39 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
       await pigeonChannel.setLoggingEnabled(
         enabled,
       );
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
+  }
+
+  @override
+  PipelinePlatform pipeline(List<Map<String, dynamic>> initialStages) {
+    return MethodChannelPipeline(this, pigeonApp, stages: initialStages);
+  }
+
+  @override
+  Future<PipelineSnapshotPlatform> executePipeline(
+    List<Map<String, dynamic>> stages, {
+    Map<String, dynamic>? options,
+  }) async {
+    try {
+      // Convert stages to Pigeon format (List<Map<String?, Object?>?>)
+      final List<Map<String?, Object?>?> pigeonStages = stages.map((stage) {
+        return stage.map(MapEntry<String?, Object?>.new);
+      }).toList();
+
+      // Convert options to Pigeon format (Map<String?, Object?>?)
+      final Map<String?, Object?>? pigeonOptions = options?.map(
+        MapEntry<String?, Object?>.new,
+      );
+
+      final PigeonPipelineSnapshot result = await pigeonChannel.executePipeline(
+        pigeonApp,
+        pigeonStages,
+        pigeonOptions,
+      );
+
+      return MethodChannelPipelineSnapshot(this, pigeonApp, result);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
