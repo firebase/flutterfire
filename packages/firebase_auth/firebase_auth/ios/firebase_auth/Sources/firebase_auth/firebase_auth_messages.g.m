@@ -1065,11 +1065,11 @@ void SetUpFirebaseAuthHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMesseng
         binaryMessenger:binaryMessenger
                   codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(confirmPasswordResetApp:
-                                                                     code:newPassword:completion:)],
-                @"FirebaseAuthHostApi api (%@) doesn't respond to "
-                @"@selector(confirmPasswordResetApp:code:newPassword:completion:)",
-                api);
+      NSCAssert(
+          [api respondsToSelector:@selector(confirmPasswordResetApp:code:newPassword:completion:)],
+          @"FirebaseAuthHostApi api (%@) doesn't respond to "
+          @"@selector(confirmPasswordResetApp:code:newPassword:completion:)",
+          api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         AuthPigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
@@ -1096,11 +1096,13 @@ void SetUpFirebaseAuthHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMesseng
         binaryMessenger:binaryMessenger
                   codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector
-                     (createUserWithEmailAndPasswordApp:email:password:completion:)],
-                @"FirebaseAuthHostApi api (%@) doesn't respond to "
-                @"@selector(createUserWithEmailAndPasswordApp:email:password:completion:)",
-                api);
+      NSCAssert(
+          [api
+              respondsToSelector:@selector(
+                                     createUserWithEmailAndPasswordApp:email:password:completion:)],
+          @"FirebaseAuthHostApi api (%@) doesn't respond to "
+          @"@selector(createUserWithEmailAndPasswordApp:email:password:completion:)",
+          api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         AuthPigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
@@ -1213,11 +1215,12 @@ void SetUpFirebaseAuthHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMesseng
         binaryMessenger:binaryMessenger
                   codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector
-                     (signInWithEmailAndPasswordApp:email:password:completion:)],
-                @"FirebaseAuthHostApi api (%@) doesn't respond to "
-                @"@selector(signInWithEmailAndPasswordApp:email:password:completion:)",
-                api);
+      NSCAssert(
+          [api respondsToSelector:@selector(
+                                      signInWithEmailAndPasswordApp:email:password:completion:)],
+          @"FirebaseAuthHostApi api (%@) doesn't respond to "
+          @"@selector(signInWithEmailAndPasswordApp:email:password:completion:)",
+          api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         AuthPigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
@@ -1245,11 +1248,11 @@ void SetUpFirebaseAuthHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMesseng
         binaryMessenger:binaryMessenger
                   codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(signInWithEmailLinkApp:
-                                                                   email:emailLink:completion:)],
-                @"FirebaseAuthHostApi api (%@) doesn't respond to "
-                @"@selector(signInWithEmailLinkApp:email:emailLink:completion:)",
-                api);
+      NSCAssert(
+          [api respondsToSelector:@selector(signInWithEmailLinkApp:email:emailLink:completion:)],
+          @"FirebaseAuthHostApi api (%@) doesn't respond to "
+          @"@selector(signInWithEmailLinkApp:email:emailLink:completion:)",
+          api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         AuthPigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
@@ -1277,11 +1280,11 @@ void SetUpFirebaseAuthHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMesseng
         binaryMessenger:binaryMessenger
                   codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(signInWithProviderApp:
-                                                         signInProvider:completion:)],
-                @"FirebaseAuthHostApi api (%@) doesn't respond to "
-                @"@selector(signInWithProviderApp:signInProvider:completion:)",
-                api);
+      NSCAssert(
+          [api respondsToSelector:@selector(signInWithProviderApp:signInProvider:completion:)],
+          @"FirebaseAuthHostApi api (%@) doesn't respond to "
+          @"@selector(signInWithProviderApp:signInProvider:completion:)",
+          api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         AuthPigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
@@ -1361,8 +1364,8 @@ void SetUpFirebaseAuthHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMesseng
         binaryMessenger:binaryMessenger
                   codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector
-                     (sendPasswordResetEmailApp:email:actionCodeSettings:completion:)],
+      NSCAssert([api respondsToSelector:
+                         @selector(sendPasswordResetEmailApp:email:actionCodeSettings:completion:)],
                 @"FirebaseAuthHostApi api (%@) doesn't respond to "
                 @"@selector(sendPasswordResetEmailApp:email:actionCodeSettings:completion:)",
                 api);
@@ -1392,8 +1395,8 @@ void SetUpFirebaseAuthHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMesseng
         binaryMessenger:binaryMessenger
                   codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector
-                     (sendSignInLinkToEmailApp:email:actionCodeSettings:completion:)],
+      NSCAssert([api respondsToSelector:
+                         @selector(sendSignInLinkToEmailApp:email:actionCodeSettings:completion:)],
                 @"FirebaseAuthHostApi api (%@) doesn't respond to "
                 @"@selector(sendSignInLinkToEmailApp:email:actionCodeSettings:completion:)",
                 api);
@@ -1535,7 +1538,7 @@ void SetUpFirebaseAuthHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMesseng
                   codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(revokeTokenWithAuthorizationCodeApp:
-                                                                    authorizationCode:completion:)],
+                                                  authorizationCode:completion:)],
                 @"FirebaseAuthHostApi api (%@) doesn't respond to "
                 @"@selector(revokeTokenWithAuthorizationCodeApp:authorizationCode:completion:)",
                 api);
@@ -1844,11 +1847,11 @@ void SetUpFirebaseAuthUserHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMes
         binaryMessenger:binaryMessenger
                   codec:FirebaseAuthUserHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(reauthenticateWithCredentialApp:
-                                                                            input:completion:)],
-                @"FirebaseAuthUserHostApi api (%@) doesn't respond to "
-                @"@selector(reauthenticateWithCredentialApp:input:completion:)",
-                api);
+      NSCAssert(
+          [api respondsToSelector:@selector(reauthenticateWithCredentialApp:input:completion:)],
+          @"FirebaseAuthUserHostApi api (%@) doesn't respond to "
+          @"@selector(reauthenticateWithCredentialApp:input:completion:)",
+          api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         AuthPigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
@@ -1874,11 +1877,12 @@ void SetUpFirebaseAuthUserHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMes
         binaryMessenger:binaryMessenger
                   codec:FirebaseAuthUserHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(reauthenticateWithProviderApp:
-                                                                 signInProvider:completion:)],
-                @"FirebaseAuthUserHostApi api (%@) doesn't respond to "
-                @"@selector(reauthenticateWithProviderApp:signInProvider:completion:)",
-                api);
+      NSCAssert(
+          [api respondsToSelector:@selector(
+                                      reauthenticateWithProviderApp:signInProvider:completion:)],
+          @"FirebaseAuthUserHostApi api (%@) doesn't respond to "
+          @"@selector(reauthenticateWithProviderApp:signInProvider:completion:)",
+          api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         AuthPigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
@@ -1929,11 +1933,12 @@ void SetUpFirebaseAuthUserHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMes
         binaryMessenger:binaryMessenger
                   codec:FirebaseAuthUserHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(sendEmailVerificationApp:
-                                                        actionCodeSettings:completion:)],
-                @"FirebaseAuthUserHostApi api (%@) doesn't respond to "
-                @"@selector(sendEmailVerificationApp:actionCodeSettings:completion:)",
-                api);
+      NSCAssert(
+          [api respondsToSelector:@selector(
+                                      sendEmailVerificationApp:actionCodeSettings:completion:)],
+          @"FirebaseAuthUserHostApi api (%@) doesn't respond to "
+          @"@selector(sendEmailVerificationApp:actionCodeSettings:completion:)",
+          api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         AuthPigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
@@ -2099,8 +2104,8 @@ void SetUpFirebaseAuthUserHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMes
         binaryMessenger:binaryMessenger
                   codec:FirebaseAuthUserHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector
-                     (verifyBeforeUpdateEmailApp:newEmail:actionCodeSettings:completion:)],
+      NSCAssert([api respondsToSelector:@selector(verifyBeforeUpdateEmailApp:newEmail:
+                                                  actionCodeSettings:completion:)],
                 @"FirebaseAuthUserHostApi api (%@) doesn't respond to "
                 @"@selector(verifyBeforeUpdateEmailApp:newEmail:actionCodeSettings:completion:)",
                 api);
@@ -2204,11 +2209,11 @@ void SetUpMultiFactorUserHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMess
         binaryMessenger:binaryMessenger
                   codec:MultiFactorUserHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(enrollPhoneApp:
-                                                       assertion:displayName:completion:)],
-                @"MultiFactorUserHostApi api (%@) doesn't respond to "
-                @"@selector(enrollPhoneApp:assertion:displayName:completion:)",
-                api);
+      NSCAssert(
+          [api respondsToSelector:@selector(enrollPhoneApp:assertion:displayName:completion:)],
+          @"MultiFactorUserHostApi api (%@) doesn't respond to "
+          @"@selector(enrollPhoneApp:assertion:displayName:completion:)",
+          api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         AuthPigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
@@ -2234,11 +2239,11 @@ void SetUpMultiFactorUserHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMess
         binaryMessenger:binaryMessenger
                   codec:MultiFactorUserHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(enrollTotpApp:
-                                                    assertionId:displayName:completion:)],
-                @"MultiFactorUserHostApi api (%@) doesn't respond to "
-                @"@selector(enrollTotpApp:assertionId:displayName:completion:)",
-                api);
+      NSCAssert(
+          [api respondsToSelector:@selector(enrollTotpApp:assertionId:displayName:completion:)],
+          @"MultiFactorUserHostApi api (%@) doesn't respond to "
+          @"@selector(enrollTotpApp:assertionId:displayName:completion:)",
+          api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         AuthPigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
@@ -2430,8 +2435,8 @@ void SetUpMultiFactoResolverHostApiWithSuffix(id<FlutterBinaryMessenger> binaryM
         binaryMessenger:binaryMessenger
                   codec:MultiFactoResolverHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector
-                     (resolveSignInResolverId:assertion:totpAssertionId:completion:)],
+      NSCAssert([api respondsToSelector:
+                         @selector(resolveSignInResolverId:assertion:totpAssertionId:completion:)],
                 @"MultiFactoResolverHostApi api (%@) doesn't respond to "
                 @"@selector(resolveSignInResolverId:assertion:totpAssertionId:completion:)",
                 api);
@@ -2549,8 +2554,8 @@ void SetUpMultiFactorTotpHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMess
         binaryMessenger:binaryMessenger
                   codec:MultiFactorTotpHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(getAssertionForEnrollmentSecretKey:
-                                                                     oneTimePassword:completion:)],
+      NSCAssert([api respondsToSelector:
+                         @selector(getAssertionForEnrollmentSecretKey:oneTimePassword:completion:)],
                 @"MultiFactorTotpHostApi api (%@) doesn't respond to "
                 @"@selector(getAssertionForEnrollmentSecretKey:oneTimePassword:completion:)",
                 api);
@@ -2579,8 +2584,8 @@ void SetUpMultiFactorTotpHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMess
         binaryMessenger:binaryMessenger
                   codec:MultiFactorTotpHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(getAssertionForSignInEnrollmentId:
-                                                                    oneTimePassword:completion:)],
+      NSCAssert([api respondsToSelector:
+                         @selector(getAssertionForSignInEnrollmentId:oneTimePassword:completion:)],
                 @"MultiFactorTotpHostApi api (%@) doesn't respond to "
                 @"@selector(getAssertionForSignInEnrollmentId:oneTimePassword:completion:)",
                 api);
@@ -2627,11 +2632,12 @@ void SetUpMultiFactorTotpSecretHostApiWithSuffix(id<FlutterBinaryMessenger> bina
         binaryMessenger:binaryMessenger
                   codec:MultiFactorTotpSecretHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(generateQrCodeUrlSecretKey:
-                                                                 accountName:issuer:completion:)],
-                @"MultiFactorTotpSecretHostApi api (%@) doesn't respond to "
-                @"@selector(generateQrCodeUrlSecretKey:accountName:issuer:completion:)",
-                api);
+      NSCAssert(
+          [api respondsToSelector:@selector(
+                                      generateQrCodeUrlSecretKey:accountName:issuer:completion:)],
+          @"MultiFactorTotpSecretHostApi api (%@) doesn't respond to "
+          @"@selector(generateQrCodeUrlSecretKey:accountName:issuer:completion:)",
+          api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         NSString *arg_secretKey = GetNullableObjectAtIndex(args, 0);
