@@ -77,7 +77,11 @@ class ExpressionHelpers {
    * types: String, Number, Boolean, Date, Timestamp, GeoPoint, byte[], Blob, DocumentReference,
    * VectorValue
    */
-  static Expression parseConstantValue(@NonNull Object value) {
+  static Expression parseConstantValue(Object value) {
+
+    if (value == null) {
+      return Expression.nullValue();
+    }
 
     if (value instanceof String) {
       return Expression.constant((String) value);
