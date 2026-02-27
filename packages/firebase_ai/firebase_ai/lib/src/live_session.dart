@@ -209,7 +209,6 @@ class LiveSession {
   /// [audio]: The audio data to send.
   Future<void> sendAudioRealtime(InlineDataPart audio) async {
     _checkWsStatus();
-    log('send-AUDIO-Realtime: size: ${audio.bytes.length}, mime: ${audio.mimeType}');
     var clientMessage = LiveClientRealtimeInput.audio(audio);
     var clientJson = jsonEncode(clientMessage.toJson());
     _ws.sink.add(clientJson);
@@ -222,7 +221,6 @@ class LiveSession {
   /// [video]: The video data to send.
   Future<void> sendVideoRealtime(InlineDataPart video) async {
     _checkWsStatus();
-    log('send-VIDEO-Realtime: size: ${video.bytes.length}, mime: ${video.mimeType}');
     var clientMessage = LiveClientRealtimeInput.video(video);
     var clientJson = jsonEncode(clientMessage.toJson());
     _ws.sink.add(clientJson);
