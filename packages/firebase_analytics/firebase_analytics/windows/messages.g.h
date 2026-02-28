@@ -138,6 +138,9 @@ class FirebaseAnalyticsHostApi {
   virtual void InitiateOnDeviceConversionMeasurement(
       const flutter::EncodableMap& arguments,
       std::function<void(std::optional<FlutterError> reply)> result) = 0;
+  virtual void LogTransaction(
+      const std::string& transaction_id,
+      std::function<void(std::optional<FlutterError> reply)> result) = 0;
 
   // The codec used by FirebaseAnalyticsHostApi.
   static const flutter::StandardMessageCodec& GetCodec();

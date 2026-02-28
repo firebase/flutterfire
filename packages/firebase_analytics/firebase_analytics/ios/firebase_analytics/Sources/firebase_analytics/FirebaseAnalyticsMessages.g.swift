@@ -220,6 +220,7 @@ protocol FirebaseAnalyticsHostApi {
   func getSessionId(completion: @escaping (Result<Int64?, Error>) -> Void)
   func initiateOnDeviceConversionMeasurement(arguments: [String: String?],
                                              completion: @escaping (Result<Void, Error>) -> Void)
+  func logTransaction(transactionId: String, completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -458,6 +459,27 @@ class FirebaseAnalyticsHostApiSetup {
       }
     } else {
       initiateOnDeviceConversionMeasurementChannel.setMessageHandler(nil)
+    }
+    let logTransactionChannel = FlutterBasicMessageChannel(
+      name: "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.logTransaction\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
+    )
+    if let api {
+      logTransactionChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let transactionIdArg = args[0] as! String
+        api.logTransaction(transactionId: transactionIdArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case let .failure(error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      logTransactionChannel.setMessageHandler(nil)
     }
   }
 }

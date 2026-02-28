@@ -195,4 +195,15 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
       convertPlatformException(e, s);
     }
   }
+
+  @override
+  Future<void> logTransaction({
+    required String transactionId,
+  }) {
+    try {
+      return _api.logTransaction(transactionId);
+    } catch (e, s) {
+      convertPlatformException(e, s);
+    }
+  }
 }

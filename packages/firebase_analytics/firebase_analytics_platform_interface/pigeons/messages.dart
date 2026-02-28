@@ -66,4 +66,7 @@ abstract class FirebaseAnalyticsHostApi {
 
   @async
   void initiateOnDeviceConversionMeasurement(Map<String, String?> arguments);
+
+  @async
+  void logTransaction(String transactionId);
 }

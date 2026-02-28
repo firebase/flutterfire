@@ -14,6 +14,7 @@
   import firebase_core_shared
 #endif
 import FirebaseAnalytics
+import StoreKit
 
 let kFLTFirebaseAnalyticsName = "name"
 let kFLTFirebaseAnalyticsValue = "value"
@@ -27,6 +28,8 @@ let kFLTFirebaseAdUserDataConsentGranted = "adUserDataConsentGranted"
 let kFLTFirebaseAnalyticsUserId = "userId"
 
 let FLTFirebaseAnalyticsChannelName = "plugins.flutter.io/firebase_analytics"
+
+extension FlutterError: Error {}
 
 public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin,
   FirebaseAnalyticsHostApi {
@@ -140,6 +143,79 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
       Analytics.initiateOnDeviceConversionMeasurement(hashedPhoneNumber: data)
     }
     completion(.success(()))
+  }
+
+  func logTransaction(transactionId: String,
+                      completion: @escaping (Result<Void, any Error>) -> Void) {
+    #if os(macOS)
+      if #available(macOS 12.0, *) {
+        logTransactionWithStoreKit(transactionId: transactionId, completion: completion)
+      } else {
+        completion(.failure(FlutterError(
+          code: "firebase_analytics",
+          message: "logTransaction() is only supported on macOS 12.0 or newer",
+          details: nil
+        )))
+      }
+    #else
+      if #available(iOS 15.0, *) {
+        logTransactionWithStoreKit(transactionId: transactionId, completion: completion)
+      } else {
+        completion(.failure(FlutterError(
+          code: "firebase_analytics",
+          message: "logTransaction() is only supported on iOS 15.0 or newer",
+          details: nil
+        )))
+      }
+    #endif
+  }
+
+  #if os(macOS)
+    @available(macOS 12.0, *)
+  #else
+    @available(iOS 15.0, *)
+  #endif
+  private func logTransactionWithStoreKit(transactionId: String,
+                                          completion: @escaping (Result<Void, any Error>) -> Void) {
+    Task {
+      do {
+        guard let id = UInt64(transactionId) else {
+          completion(.failure(FlutterError(
+            code: "firebase_analytics",
+            message: "Invalid transactionId",
+            details: nil
+          )))
+          return
+        }
+
+        var foundTransaction: Transaction?
+        for await result in Transaction.all {
+          switch result {
+          case let .verified(transaction):
+            if transaction.id == id {
+              foundTransaction = transaction
+              break
+            }
+          case .unverified:
+            continue
+          }
+        }
+
+        guard let transaction = foundTransaction else {
+          completion(.failure(FlutterError(
+            code: "firebase_analytics",
+            message: "Transaction not found",
+            details: nil
+          )))
+          return
+        }
+
+        Analytics.logTransaction(transaction)
+        completion(.success(()))
+      } catch {
+        completion(.failure(error))
+      }
+    }
   }
 
   public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
