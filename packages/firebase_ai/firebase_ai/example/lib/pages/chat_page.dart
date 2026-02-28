@@ -58,13 +58,33 @@ class _ChatPageState extends State<ChatPage> {
     );
     if (widget.useVertexBackend) {
       _model = FirebaseAI.vertexAI(auth: FirebaseAuth.instance).generativeModel(
-        model: 'gemini-2.5-flash',
+        //
+        model: 'gemini-3-pro-preview',
         generationConfig: generationConfig,
       );
     } else {
       _model = FirebaseAI.googleAI(auth: FirebaseAuth.instance).generativeModel(
-        model: 'gemini-2.5-flash',
-        generationConfig: generationConfig,
+        model: 'gemini-3-pro-preview',
+        generationConfig: GenerationConfig(
+          thinkingConfig: ThinkingConfig(thinkingBudget: 24576), // high
+        ),
+        tools: [
+          Tool.functionDeclarations([
+            FunctionDeclaration(
+              'fetchWeather',
+              'Fetch the weather for a given location and date',
+              parameters: {
+                'location': Schema.string(),
+                'date': Schema.string(),
+              },
+              optionalParameters: ['date'],
+            ),
+          ]),
+        ],
+        toolConfig: ToolConfig(
+          functionCallingConfig: FunctionCallingConfig.auto(),
+        ),
+        systemInstruction: Content.system('You are a helpful assistant that can fetch the weather for a given location and date.'),
       );
     }
     _chat = _model?.startChat();
