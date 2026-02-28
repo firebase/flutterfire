@@ -16,17 +16,128 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
+import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'content.dart';
 import 'error.dart';
 import 'live_api.dart';
+import 'tool.dart';
 
 /// Manages asynchronous communication with Gemini model over a WebSocket
 /// connection.
 class LiveSession {
   // ignore: public_member_api_docs
-  LiveSession(this._ws) {
+  LiveSession._(
+    this._ws, {
+    required String uri,
+    required Map<String, String> headers,
+    required String modelString,
+    Content? systemInstruction,
+    List<Tool>? tools,
+    LiveGenerationConfig? liveGenerationConfig,
+  })  : _uri = uri,
+        _headers = headers,
+        _modelString = modelString,
+        _systemInstruction = systemInstruction,
+        _tools = tools,
+        _liveGenerationConfig = liveGenerationConfig,
+        _messageController = StreamController<LiveServerResponse>.broadcast() {
+    _listenToWebSocket();
+  }
+
+  /// Establishes a connection to a live generation service.
+  ///
+  /// This function handles the WebSocket connection setup and returns an [LiveSession]
+  /// object that can be used to communicate with the service.
+  ///
+  /// Returns a [Future] that resolves to an [LiveSession] object upon successful
+  /// connection.
+  static Future<LiveSession> connect({
+    required String uri,
+    required Map<String, String> headers,
+    required String modelString,
+    Content? systemInstruction,
+    List<Tool>? tools,
+    SessionResumptionConfig? sessionResumption,
+    LiveGenerationConfig? liveGenerationConfig,
+  }) async {
+    final ws = await _performWebSocketSetup(
+      uri: uri,
+      headers: headers,
+      modelString: modelString,
+      systemInstruction: systemInstruction,
+      tools: tools,
+      sessionResumption: sessionResumption,
+      liveGenerationConfig: liveGenerationConfig,
+    );
+    return LiveSession._(
+      ws,
+      uri: uri,
+      headers: headers,
+      modelString: modelString,
+      systemInstruction: systemInstruction,
+      tools: tools,
+      liveGenerationConfig: liveGenerationConfig,
+    );
+  }
+
+  // Persisted values for session resumption.
+  final String _uri;
+  final Map<String, String> _headers;
+  final String _modelString;
+  final Content? _systemInstruction;
+  final List<Tool>? _tools;
+  final LiveGenerationConfig? _liveGenerationConfig;
+
+  WebSocketChannel _ws;
+  StreamController<LiveServerResponse> _messageController;
+  late StreamSubscription _wsSubscription;
+
+  static Future<WebSocketChannel> _performWebSocketSetup({
+    required String uri,
+    required Map<String, String> headers,
+    required String modelString,
+    Content? systemInstruction,
+    List<Tool>? tools,
+    SessionResumptionConfig? sessionResumption,
+    LiveGenerationConfig? liveGenerationConfig,
+  }) async {
+    final setupJson = {
+      'setup': {
+        'model': modelString,
+        if (systemInstruction != null)
+          'system_instruction': systemInstruction.toJson(),
+        if (tools != null) 'tools': tools.map((t) => t.toJson()).toList(),
+        if (sessionResumption != null)
+          'session_resumption': sessionResumption.toJson(),
+        if (liveGenerationConfig != null) ...{
+          'generation_config': liveGenerationConfig.toJson(),
+          if (liveGenerationConfig.inputAudioTranscription != null)
+            'input_audio_transcription':
+                liveGenerationConfig.inputAudioTranscription!.toJson(),
+          if (liveGenerationConfig.outputAudioTranscription != null)
+            'output_audio_transcription':
+                liveGenerationConfig.outputAudioTranscription!.toJson(),
+          if (liveGenerationConfig.contextWindowCompression
+              case final contextWindowCompression?)
+            'contextWindowCompression': contextWindowCompression.toJson()
+        },
+      }
+    };
+
+    final request = jsonEncode(setupJson);
+    final ws = kIsWeb
+        ? WebSocketChannel.connect(Uri.parse(uri))
+        : IOWebSocketChannel.connect(Uri.parse(uri), headers: headers);
+    await ws.ready;
+
+    ws.sink.add(request);
+    return ws;
+  }
+
+  void _listenToWebSocket() {
     _wsSubscription = _ws.stream.listen(
       (message) {
         try {
@@ -44,9 +155,24 @@ class LiveSession {
       onDone: _messageController.close,
     );
   }
-  final WebSocketChannel _ws;
-  final _messageController = StreamController<LiveServerResponse>.broadcast();
-  late StreamSubscription _wsSubscription;
+
+  Future<void> resumeSession(
+      {SessionResumptionConfig? sessionResumption}) async {
+    await close();
+
+    _ws = await _performWebSocketSetup(
+      uri: _uri,
+      headers: _headers,
+      modelString: _modelString,
+      systemInstruction: _systemInstruction,
+      tools: _tools,
+      sessionResumption: sessionResumption,
+      liveGenerationConfig: _liveGenerationConfig,
+    );
+
+    _messageController = StreamController<LiveServerResponse>.broadcast();
+    _listenToWebSocket();
+  }
 
   /// Sends content to the server.
   ///
@@ -166,7 +292,11 @@ class LiveSession {
 
     await for (final result in _messageController.stream) {
       yield result;
-      if (result case LiveServerContent(turnComplete: true)) {
+      final message = result.message;
+
+      if (message is LiveServerContent &&
+          message.turnComplete != null &&
+          message.turnComplete!) {
         break; // Exit the loop when the turn is complete
       }
     }

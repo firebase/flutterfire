@@ -58,6 +58,8 @@ class _BidiPageState extends State<BidiPage> {
   bool _recording = false;
   late LiveGenerativeModel _liveModel;
   late LiveSession _session;
+  String? _activeSessionHandle;
+  int? _lastProcessedIndex;
   final AudioOutput _audioOutput = AudioOutput();
   final AudioInput _audioInput = AudioInput();
   final VideoInput _videoInput = VideoInput();
@@ -321,7 +323,38 @@ class _BidiPageState extends State<BidiPage> {
     }
 
     if (!_sessionOpening) {
-      _session = await _liveModel.connect();
+      try {
+        // if (_activeSessionHandle != null) {
+
+        //   if (context.mounted) {
+        //     ScaffoldMessenger.of(context).showSnackBar(
+        //       SnackBar(
+        //         content: Text(
+        //             'Resumed session with session handle: $_activeSessionHandle'),
+        //       ),
+        //     );
+        //   }
+        // } else {
+        //   _session = await _liveModel.connect();
+        // }
+        _session = await _liveModel.connect(
+          sessionResumption: SessionResumptionConfig(
+            handle: _activeSessionHandle,
+          ),
+        );
+      } on Exception catch (e) {
+        developer.log('Error setting up session: $e, starting a new one.');
+        _session = await _liveModel.connect();
+
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Previous session expired, started a new one.'),
+            ),
+          );
+        }
+      }
+
       _sessionOpening = true;
       unawaited(
         _processMessagesContinuously(),
@@ -549,7 +582,30 @@ class _BidiPageState extends State<BidiPage> {
     } else if (message is LiveServerToolCall && message.functionCalls != null) {
       await _handleLiveServerToolCall(message);
     } else if (message is GoingAwayNotice) {
-      developer.log('Session is going away in ${message.timeLeft} seconds');
+      developer.log('GoAway message received, time left: ${message.timeLeft}');
+      if (_activeSessionHandle != null) {
+        developer.log('Resume Session with handle: $_activeSessionHandle');
+        await _session.resumeSession(
+          sessionResumption: SessionResumptionConfig(
+            handle: _activeSessionHandle,
+          ),
+        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Session is going away, resuming...'),
+            ),
+          );
+        }
+      }
+    } else if (message is SessionResumptionUpdate &&
+        message.resumable != null &&
+        message.resumable!) {
+      _activeSessionHandle = message.newHandle;
+      _lastProcessedIndex = message.lastConsumedClientMessageIndex;
+      developer.log(
+        'SessionResumptionUpdate message received: session handle ${message.newHandle}, processId ${message.lastConsumedClientMessageIndex}',
+      );
     }
   }
 
