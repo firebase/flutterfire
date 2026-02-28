@@ -417,8 +417,12 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   // coming from a terminated state.
   if (_notificationOpenedAppID != nil &&
       ![_initialNotificationID isEqualToString:_notificationOpenedAppID]) {
-    NSDictionary *notificationDict =
-        [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
+    NSMutableDictionary *notificationDict =
+        [[FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification] mutableCopy];
+    if (response.actionIdentifier != nil) {
+      // message.actionIdentifier
+      notificationDict[@"actionIdentifier"] = response.actionIdentifier;
+    }
     [_channel invokeMethod:@"Messaging#onMessageOpenedApp" arguments:notificationDict];
   }
 
