@@ -15,98 +15,153 @@ import com.google.firebase.installations.InstallationTokenResult;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.EventChannel;
-import io.flutter.plugin.common.MethodCall;
-import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
-import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry;
+import io.flutter.plugins.firebase.installations.GeneratedAndroidFirebaseAppInstallations;
+import io.flutter.plugins.firebase.installations.GeneratedAndroidFirebaseAppInstallations.AppInstallationsPigeonFirebaseApp;
+import io.flutter.plugins.firebase.installations.GeneratedAndroidFirebaseAppInstallations.AppInstallationsPigeonSettings;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 /** FirebaseInstallationsPlugin */
 public class FirebaseInstallationsPlugin
-    implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
-  private MethodChannel channel;
+    implements FlutterFirebasePlugin,
+        FlutterPlugin,
+        GeneratedAndroidFirebaseAppInstallations.FirebaseAppInstallationsHostApi {
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_app_installations";
   private final Map<EventChannel, EventChannel.StreamHandler> streamHandlers = new HashMap<>();
 
   @Nullable private BinaryMessenger messenger;
 
-  private MethodChannel setup(BinaryMessenger binaryMessenger) {
-    final MethodChannel channel = new MethodChannel(binaryMessenger, METHOD_CHANNEL_NAME);
-    channel.setMethodCallHandler(this);
+  private void setup(BinaryMessenger binaryMessenger) {
     this.messenger = binaryMessenger;
-    return channel;
+    // Set up Pigeon host API handlers.
+    GeneratedAndroidFirebaseAppInstallations.FirebaseAppInstallationsHostApi.setUp(
+        binaryMessenger, this);
   }
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
     BinaryMessenger binaryMessenger = flutterPluginBinding.getBinaryMessenger();
-    channel = setup(binaryMessenger);
+    setup(binaryMessenger);
 
     FlutterFirebasePluginRegistry.registerPlugin(METHOD_CHANNEL_NAME, this);
   }
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    channel.setMethodCallHandler(null);
-    channel = null;
+    if (messenger != null) {
+      GeneratedAndroidFirebaseAppInstallations.FirebaseAppInstallationsHostApi.setUp(
+          messenger, null);
+    }
     messenger = null;
 
     removeEventListeners();
   }
 
-  private FirebaseInstallations getInstallations(Map<String, Object> arguments) {
-    @NonNull String appName = (String) Objects.requireNonNull(arguments.get("appName"));
+  private FirebaseInstallations getInstallations(AppInstallationsPigeonFirebaseApp appArg) {
+    @NonNull String appName = appArg.getAppName();
     FirebaseApp app = FirebaseApp.getInstance(appName);
     return FirebaseInstallations.getInstance(app);
   }
 
-  private Task<String> getId(Map<String, Object> arguments) {
-    TaskCompletionSource<String> taskCompletionSource = new TaskCompletionSource<>();
+  // Pigeon FirebaseAppInstallationsHostApi implementation.
 
+  @Override
+  public void initializeApp(
+      @NonNull AppInstallationsPigeonFirebaseApp app,
+      @NonNull AppInstallationsPigeonSettings settings,
+      @NonNull GeneratedAndroidFirebaseAppInstallations.VoidResult result) {
+    // Currently there is no per-app configurable behavior required on Android for these settings.
+    // We execute asynchronously to keep the threading model consistent.
     cachedThreadPool.execute(
         () -> {
           try {
-            taskCompletionSource.setResult(Tasks.await(getInstallations(arguments).getId()));
+            // Touch the instance to ensure it's initialized.
+            getInstallations(app);
+            result.success();
           } catch (Exception e) {
-            taskCompletionSource.setException(e);
+            result.error(
+                new GeneratedAndroidFirebaseAppInstallations.FlutterError(
+                    "firebase_app_installations", e.getMessage(), getExceptionDetails(e)));
           }
         });
-
-    return taskCompletionSource.getTask();
   }
 
-  private Task<String> getToken(Map<String, Object> arguments) {
-    TaskCompletionSource<String> taskCompletionSource = new TaskCompletionSource<>();
-
+  @Override
+  public void delete(
+      @NonNull AppInstallationsPigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAppInstallations.VoidResult result) {
     cachedThreadPool.execute(
         () -> {
           try {
-            FirebaseInstallations firebaseInstallations = getInstallations(arguments);
-            Boolean forceRefresh = (Boolean) Objects.requireNonNull(arguments.get("forceRefresh"));
+            Tasks.await(getInstallations(app).delete());
+            result.success();
+          } catch (Exception e) {
+            result.error(
+                new GeneratedAndroidFirebaseAppInstallations.FlutterError(
+                    "firebase_app_installations", e.getMessage(), getExceptionDetails(e)));
+          }
+        });
+  }
+
+  @Override
+  public void getId(
+      @NonNull AppInstallationsPigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAppInstallations.Result<String> result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            String id = Tasks.await(getInstallations(app).getId());
+            result.success(id);
+          } catch (Exception e) {
+            result.error(
+                new GeneratedAndroidFirebaseAppInstallations.FlutterError(
+                    "firebase_app_installations", e.getMessage(), getExceptionDetails(e)));
+          }
+        });
+  }
+
+  @Override
+  public void getToken(
+      @NonNull AppInstallationsPigeonFirebaseApp app,
+      @NonNull Boolean forceRefresh,
+      @NonNull GeneratedAndroidFirebaseAppInstallations.Result<String> result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseInstallations firebaseInstallations = getInstallations(app);
             InstallationTokenResult tokenResult =
                 Tasks.await(firebaseInstallations.getToken(forceRefresh));
-
-            taskCompletionSource.setResult(tokenResult.getToken());
+            result.success(tokenResult.getToken());
           } catch (Exception e) {
-            taskCompletionSource.setException(e);
+            result.error(
+                new GeneratedAndroidFirebaseAppInstallations.FlutterError(
+                    "firebase_app_installations", e.getMessage(), getExceptionDetails(e)));
           }
         });
-
-    return taskCompletionSource.getTask();
   }
 
-  private Task<String> registerIdChangeListener(Map<String, Object> arguments) {
-    TaskCompletionSource<String> taskCompletionSource = new TaskCompletionSource<>();
+  @Override
+  public void onIdChange(
+      @NonNull AppInstallationsPigeonFirebaseApp app,
+      @NonNull String newId,
+      @NonNull GeneratedAndroidFirebaseAppInstallations.VoidResult result) {
+    // The Dart side currently uses an EventChannel-based listener, so this Pigeon hook
+    // is a no-op placeholder to satisfy the interface.
+    result.success();
+  }
 
+  @Override
+  public void registerIdChangeListener(
+      @NonNull AppInstallationsPigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAppInstallations.Result<String> result) {
     cachedThreadPool.execute(
         () -> {
           try {
-            String appName = (String) Objects.requireNonNull(arguments.get("appName"));
-            FirebaseInstallations firebaseInstallations = getInstallations(arguments);
+            FirebaseInstallations firebaseInstallations = getInstallations(app);
+            @NonNull String appName = app.getAppName();
 
             io.flutter.plugins.firebase.installations.firebase_app_installations
                     .TokenChannelStreamHandler
@@ -119,65 +174,11 @@ public class FirebaseInstallationsPlugin
             channel.setStreamHandler(handler);
             streamHandlers.put(channel, handler);
 
-            taskCompletionSource.setResult(name);
+            result.success(name);
           } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
-  private Task<Void> deleteId(Map<String, Object> arguments) {
-    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            Tasks.await(getInstallations(arguments).delete());
-
-            taskCompletionSource.setResult(null);
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
-  @Override
-  public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-    Task<?> methodCallTask;
-
-    switch (call.method) {
-      case "FirebaseInstallations#getId":
-        methodCallTask = getId(call.arguments());
-        break;
-      case "FirebaseInstallations#getToken":
-        methodCallTask = getToken(call.arguments());
-        break;
-      case "FirebaseInstallations#delete":
-        methodCallTask = deleteId(call.arguments());
-        break;
-      case "FirebaseInstallations#registerIdChangeListener":
-        methodCallTask = registerIdChangeListener(call.arguments());
-        break;
-
-      default:
-        result.notImplemented();
-        return;
-    }
-
-    methodCallTask.addOnCompleteListener(
-        task -> {
-          if (task.isSuccessful()) {
-            result.success(task.getResult());
-          } else {
-            Exception exception = task.getException();
             result.error(
-                "firebase_app_installations",
-                exception != null ? exception.getMessage() : null,
-                getExceptionDetails(exception));
+                new GeneratedAndroidFirebaseAppInstallations.FlutterError(
+                    "firebase_app_installations", e.getMessage(), getExceptionDetails(e)));
           }
         });
   }

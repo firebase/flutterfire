@@ -99,6 +99,14 @@ let package = Package(
         // Wrapper dependency
         .product(name: "firebase-core-shared", package: "flutterfire"),
       ],
+      // Exclude Objective-C sources that are used only for CocoaPods/iOS integration.
+      // The macOS Swift Package target is pure Swift and uses the Swift Pigeon
+      // types defined in FirebaseAppInstallationsMessages.g.swift instead.
+      exclude: [
+        "Sources/firebase_app_installations/firebase_app_installations.h",
+        "Sources/firebase_app_installations/firebase_app_installations_messages.g.h",
+        "Sources/firebase_app_installations/firebase_app_installations_messages.g.m",
+      ],
       resources: [
         .process("Resources"),
       ]
