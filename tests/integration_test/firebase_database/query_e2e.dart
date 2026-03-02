@@ -444,8 +444,10 @@ void setupQueryTests() {
           // Set data first, then subscribe. onChildAdded fires for
           // existing children on initial listen, avoiding race conditions
           // with native listener registration.
-          await ref.child('foo').set('foo');
-          await ref.child('bar').set('bar');
+          // Use keys that sort alphabetically in the expected order,
+          // since onChildAdded returns children in key order.
+          await ref.child('a_first').set('foo');
+          await ref.child('b_second').set('bar');
 
           final events = await ref.onChildAdded.take(2).toList();
 
@@ -466,6 +468,8 @@ void setupQueryTests() {
 
           final completer = Completer<DatabaseEvent>();
           final subscription = ref.onChildRemoved.listen((event) {
+            // Skip probe events used for listener registration
+            if (event.snapshot.key == '__probe__') return;
             if (!completer.isCompleted) completer.complete(event);
           });
 
