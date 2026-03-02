@@ -225,17 +225,15 @@ jobs:
           # Uncomment following line to have simulator logs printed out for debugging purposes.
           # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
           # The iOS simulator sometimes fails to connect the VM Service, hanging for
-          # 12 minutes before timing out. Use a 6-minute timeout and retry once with
+          # 12 minutes before timing out. Use a 6-minute limit and retry once with
           # a simulator reboot. Normal connection takes 30s-5min.
-          if timeout 360 flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true --timeout 10x; then
-            echo "Tests passed on first attempt."
-          else
+          perl -e 'alarm 360; exec @ARGV' -- flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true --timeout 10x || {
             echo "First attempt failed or timed out. Rebooting simulator and retrying..."
             xcrun simctl shutdown "$SIMULATOR" || true
             xcrun simctl boot "$SIMULATOR"
             xcrun simctl bootstatus "$SIMULATOR" -b
             flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true --timeout 10x
-          fi
+          }
       - name: Save Firestore Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
         if: github.ref == 'refs/heads/main'
