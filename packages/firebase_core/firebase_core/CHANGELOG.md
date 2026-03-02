@@ -1,5 +1,6 @@
 ## 4.5.0
 
+ - **FEAT**(core,windows): update C++ Desktop SDK to 13.4.0. This may require updating your Visual Studio version and C++ build tools. ([#18006](https://github.com/firebase/flutterfire/issues/18006)). ([a6ec167f](https://github.com/firebase/flutterfire/commit/a6ec167f4ece9c9b455a916366781f482cc380b3))
  - **FIX**: resolve lint issues ([#18017](https://github.com/firebase/flutterfire/issues/18017)). ([e8e85397](https://github.com/firebase/flutterfire/commit/e8e85397ccdcab6c8b84348884b4673f86b79d1c))
  - **FEAT**: bump Firebase iOS SDK to 12.9.0 ([#18034](https://github.com/firebase/flutterfire/issues/18034)). ([c45894e2](https://github.com/firebase/flutterfire/commit/c45894e23895f9add8c152d13324920babe9b708))
  - **FEAT**: bump Firebase android SDK to 34.9.0 ([#18016](https://github.com/firebase/flutterfire/issues/18016)). ([b218dbff](https://github.com/firebase/flutterfire/commit/b218dbffd72d0bf666ff94f79a3de1e24d038df0))
