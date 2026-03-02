@@ -27,7 +27,6 @@ FLUTTER_PLUGIN_EXPORT void FirebaseCorePluginCApiRegisterWithRegistrar(
 // Firebase.initializeApp(). The channel_name should match the Dart
 // MethodChannel name (e.g. "plugins.flutter.io/firebase_auth").
 FLUTTER_PLUGIN_EXPORT void RegisterFlutterFirebasePlugin(
-    const std::string& channel_name,
-    FlutterFirebasePlugin* plugin);
+    const std::string& channel_name, FlutterFirebasePlugin* plugin);
 
 #endif  // FLUTTER_PLUGIN_FIREBASE_CORE_PLUGIN_C_API_H_

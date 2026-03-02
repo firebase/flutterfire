@@ -22,7 +22,7 @@ class FlutterFirebasePluginRegistry {
  public:
   // Registers a plugin with the given channel name.
   static void RegisterPlugin(const std::string& channel_name,
-                              FlutterFirebasePlugin* plugin);
+                             FlutterFirebasePlugin* plugin);
 
   // Collects constants from all registered plugins for the given app.
   // Returns a map keyed by channel name, with each value being the plugin's
