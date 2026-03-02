@@ -65,6 +65,8 @@ list(APPEND PLUGIN_SOURCES
   "firebase_core_plugin.h"
   "messages.g.cpp"
   "messages.g.h"
+  "flutter_firebase_plugin_registry.h"
+  "flutter_firebase_plugin_registry.cpp"
 )
 
 # Read version from pubspec.yaml
