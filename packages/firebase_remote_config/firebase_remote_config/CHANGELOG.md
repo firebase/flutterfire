@@ -1,3 +1,8 @@
+## 6.2.0
+
+ - **FIX**(remote_config): correct `lastFetchTime` calculation ([#18004](https://github.com/firebase/flutterfire/issues/18004)). ([92f03e08](https://github.com/firebase/flutterfire/commit/92f03e08e9b5362c180da16d60d869568daf2c55))
+ - **FEAT**(remote-config,windows): add support for windows ([#18006](https://github.com/firebase/flutterfire/issues/18006)). ([a6ec167f](https://github.com/firebase/flutterfire/commit/a6ec167f4ece9c9b455a916366781f482cc380b3))
+
 ## 6.1.4
 
  - Update a dependency to the latest release.
