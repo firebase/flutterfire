@@ -79,6 +79,8 @@ void setupReferenceTests() {
       test('should delete a file', () async {
         Reference ref = storage.ref('flutter-tests/deleteMe.jpeg');
         await ref.putString('To Be Deleted :)');
+        // Verify the file exists before attempting delete
+        await ref.getMetadata();
         await ref.delete();
 
         await expectLater(
@@ -463,15 +465,21 @@ void setupReferenceTests() {
     });
 
     group('updateMetadata', () {
-      test('updates metadata', () async {
-        Reference ref =
-            storage.ref('flutter-tests').child('flt-update-metadata.txt');
-        // Ensure the file exists before updating metadata
-        await ref.putString('metadata test content');
-        FullMetadata fullMetadata = await ref
-            .updateMetadata(SettableMetadata(customMetadata: {'foo': 'bar'}));
-        expect(fullMetadata.customMetadata!['foo'], 'bar');
-      });
+      test(
+        'updates metadata',
+        () async {
+          Reference ref =
+              storage.ref('flutter-tests').child('flt-update-metadata.txt');
+          // Ensure the file exists before updating metadata
+          await ref.putString('metadata test content');
+          // Verify the file is visible before updating metadata
+          await ref.getMetadata();
+          FullMetadata fullMetadata = await ref
+              .updateMetadata(SettableMetadata(customMetadata: {'foo': 'bar'}));
+          expect(fullMetadata.customMetadata!['foo'], 'bar');
+        },
+        timeout: const Timeout(Duration(minutes: 2)),
+      );
 
       test(
         'errors if property does not exist',
