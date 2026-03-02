@@ -213,7 +213,7 @@ jobs:
           unset PGSERVICEFILE
           firebase experiments:enable dataconnect
           ./start-firebase-emulator.sh
-      - uses: futureware-tech/simulator-action@9150831bad21ed25e472017a746f49ccbd0e674a
+      - uses: futureware-tech/simulator-action@e89aa8f93d3aec35083ff49d2854d07f7186f7f5
         id: simulator
         with:
           model: "iPhone 16"
