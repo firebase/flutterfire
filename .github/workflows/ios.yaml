@@ -114,7 +114,7 @@ jobs:
           ccache -s
       - name: Start Firebase Emulator
         run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
-      - uses: futureware-tech/simulator-action@9150831bad21ed25e472017a746f49ccbd0e674a
+      - uses: futureware-tech/simulator-action@e89aa8f93d3aec35083ff49d2854d07f7186f7f5
         id: simulator
         with:
           # List of available simulators: https://github.com/actions/runner-images/blob/main/images/macos/macos-14-Readme.md#installed-simulators
@@ -126,7 +126,16 @@ jobs:
         run: |
           # Uncomment following line to have simulator logs printed out for debugging purposes.
           # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
-          flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --ignore-timeouts --dart-define=CI=true
+          # The iOS simulator sometimes fails to connect the VM Service, hanging for
+          # 12 minutes before timing out. Use a 6-minute limit and retry once with
+          # a simulator reboot. Normal connection takes 30s-5min.
+          perl -e 'alarm 360; exec @ARGV' -- flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --timeout 10x --dart-define=CI=true || {
+            echo "First attempt failed or timed out. Rebooting simulator and retrying..."
+            xcrun simctl shutdown "$SIMULATOR" || true
+            xcrun simctl boot "$SIMULATOR"
+            xcrun simctl bootstatus "$SIMULATOR" -b
+            flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --timeout 10x --dart-define=CI=true
+          }
       - name: Save Firestore Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
         if: github.ref == 'refs/heads/main'

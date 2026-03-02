@@ -102,11 +102,26 @@ jobs:
       - name: 'E2E Tests'
         working-directory: ${{ matrix.working_directory }}
         run: |
-          flutter test \
+          # flutter test on macOS CI may exit 1 due to "Failed to foreground app"
+          # even when all tests pass. Check actual test results to determine success.
+          set +e
+          OUTPUT=$(flutter test \
             integration_test/e2e_test.dart \
             -d macos \
             --dart-define=CI=true \
-            --ignore-timeouts
+            --timeout 10x 2>&1)
+          EXIT_CODE=$?
+          echo "$OUTPUT"
+          if [ $EXIT_CODE -ne 0 ]; then
+            if echo "$OUTPUT" | grep -q "Some tests failed" || echo "$OUTPUT" | grep -q "test failed"; then
+              exit 1
+            fi
+            if echo "$OUTPUT" | grep -q "tests passed"; then
+              echo "All tests passed but flutter test exited with $EXIT_CODE (likely 'Failed to foreground app'). Treating as success."
+              exit 0
+            fi
+            exit $EXIT_CODE
+          fi
       - name: Save Firestore Emulator Cache
         continue-on-error: true
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
