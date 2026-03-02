@@ -106,7 +106,7 @@ jobs:
             integration_test/e2e_test.dart \
             -d macos \
             --dart-define=CI=true \
-            --ignore-timeouts
+            --timeout 10x
       - name: Save Firestore Emulator Cache
         continue-on-error: true
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.

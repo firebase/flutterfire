@@ -250,7 +250,7 @@ void setupReferenceTests() {
             Uint8List data = Uint8List.fromList(list);
 
             final Reference ref =
-                storage.ref('flutter-tests').child('flt-ok.txt');
+                storage.ref('flutter-tests').child('flt-put-data.txt');
 
             final TaskSnapshot complete = await ref.putData(
               data,
@@ -312,9 +312,9 @@ void setupReferenceTests() {
       test(
         'throws [UnimplementedError] for native platforms',
         () async {
-          final File file = await createFile('flt-ok.txt');
+          final File file = await createFile('flt-put-blob.txt');
           final Reference ref =
-              storage.ref('flutter-tests').child('flt-ok.txt');
+              storage.ref('flutter-tests').child('flt-put-blob.txt');
 
           await expectLater(
             () => ref.putBlob(
@@ -345,12 +345,12 @@ void setupReferenceTests() {
           'uploads a file',
           () async {
             final File file = await createFile(
-              'flt-ok.txt',
+              'flt-put-file.txt',
               string: kTestString,
             );
 
             final Reference ref =
-                storage.ref('flutter-tests').child('flt-ok.txt');
+                storage.ref('flutter-tests').child('flt-put-file.txt');
 
             final TaskSnapshot complete = await ref.putFile(
               file,
@@ -429,7 +429,8 @@ void setupReferenceTests() {
       test('uploads a string and downloads to check its content', () async {
         const text =
             'put string some text to compare with uploaded and downloaded';
-        final Reference ref = storage.ref('flutter-tests').child('flt-ok.txt');
+        final Reference ref =
+            storage.ref('flutter-tests').child('flt-put-string.txt');
         final TaskSnapshot complete = await ref.putString(text);
         expect(complete.totalBytes, greaterThan(0));
         expect(complete.state, TaskState.success);
@@ -463,7 +464,10 @@ void setupReferenceTests() {
 
     group('updateMetadata', () {
       test('updates metadata', () async {
-        Reference ref = storage.ref('flutter-tests').child('flt-ok.txt');
+        Reference ref =
+            storage.ref('flutter-tests').child('flt-update-metadata.txt');
+        // Ensure the file exists before updating metadata
+        await ref.putString('metadata test content');
         FullMetadata fullMetadata = await ref
             .updateMetadata(SettableMetadata(customMetadata: {'foo': 'bar'}));
         expect(fullMetadata.customMetadata!['foo'], 'bar');

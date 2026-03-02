@@ -126,7 +126,7 @@ jobs:
         run: |
           # Uncomment following line to have simulator logs printed out for debugging purposes.
           # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
-          flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --ignore-timeouts --dart-define=CI=true
+          flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --timeout 10x --dart-define=CI=true
       - name: Save Firestore Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
         if: github.ref == 'refs/heads/main'
