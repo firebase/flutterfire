@@ -61,11 +61,18 @@ class TransportOptions {
   bool? isSecure;
 }
 
+/// Encapsulates the response from server
 class ServerResponse {
+  /// Data returned from server
   final Map<String, dynamic> data;
+
+  /// duration for which the results are considered not stale
   Duration? ttl;
 
-  ServerResponse(this.data);
+  /// Additional data provided in extensions
+  final Map<String, dynamic>? extensions;
+
+  ServerResponse(this.data, {this.extensions});
 }
 
 /// Interface for transports connecting to the DataConnect backend.

@@ -299,12 +299,12 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
                 respondsToSelector:@selector(userNotificationCenter:openSettingsForNotification:)];
         _originalNotificationCenterDelegateRespondsTo.willPresentNotification =
             (unsigned int)[_originalNotificationCenterDelegate
-                respondsToSelector:@selector(userNotificationCenter:
-                                            willPresentNotification:withCompletionHandler:)];
+                respondsToSelector:@selector(userNotificationCenter:willPresentNotification:
+                                             withCompletionHandler:)];
         _originalNotificationCenterDelegateRespondsTo.didReceiveNotificationResponse =
             (unsigned int)[_originalNotificationCenterDelegate
-                respondsToSelector:@selector(userNotificationCenter:
-                                       didReceiveNotificationResponse:withCompletionHandler:)];
+                respondsToSelector:@selector(userNotificationCenter:didReceiveNotificationResponse:
+                                             withCompletionHandler:)];
       }
     }
 

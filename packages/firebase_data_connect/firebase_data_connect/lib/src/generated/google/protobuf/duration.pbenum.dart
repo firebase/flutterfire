@@ -1,6 +1,6 @@
 //
 //  Generated code. Do not modify.
-//  source: graphql_error.proto
+//  source: google/protobuf/duration.proto
 //
 // @dart = 2.12
 
