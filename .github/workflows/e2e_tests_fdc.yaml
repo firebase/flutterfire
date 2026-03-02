@@ -213,16 +213,15 @@ jobs:
           unset PGSERVICEFILE
           firebase experiments:enable dataconnect
           ./start-firebase-emulator.sh
+      - uses: futureware-tech/simulator-action@9150831bad21ed25e472017a746f49ccbd0e674a
+        id: simulator
+        with:
+          model: "iPhone 16"
       - name: 'E2E Tests'
         working-directory: 'packages/firebase_data_connect/firebase_data_connect/example'
+        env:
+          SIMULATOR: ${{ steps.simulator.outputs.udid }}
         run: |
-          # Boot simulator and wait for System app to be ready.
-          # List of available simulators: https://github.com/actions/runner-images/blob/main/images/macos/macos-14-Readme.md#installed-simulators
-          SIMULATOR="iPhone 16"
-          xcrun simctl bootstatus "$SIMULATOR" -b
-          xcrun simctl logverbose "$SIMULATOR" enable
-          # Sleep to allow simulator to settle.
-          sleep 15
           # Uncomment following line to have simulator logs printed out for debugging purposes.
           # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
           flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true --timeout 10x
