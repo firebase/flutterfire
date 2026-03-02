@@ -108,11 +108,10 @@ void setupTaskTests() {
         retry: 2,
         // TODO(russellwheatley): Windows works on example app, but fails on tests.
         // Clue is in bytesTransferred + totalBytes which both equal: -3617008641903833651
-        skip: !kIsWeb && (
-            defaultTargetPlatform == TargetPlatform.windows ||
-            defaultTargetPlatform == TargetPlatform.android ||
-            defaultTargetPlatform == TargetPlatform.macOS
-          ),
+        skip: !kIsWeb &&
+            (defaultTargetPlatform == TargetPlatform.windows ||
+                defaultTargetPlatform == TargetPlatform.android ||
+                defaultTargetPlatform == TargetPlatform.macOS),
       );
 
       // TODO(Salakar): Test is flaky on CI - needs investigating ('[firebase_storage/unknown] An unknown error occurred, please check the server response.')
@@ -126,11 +125,10 @@ void setupTaskTests() {
         // This task is flaky on mac, skip for now.
         // TODO(russellwheatley): Windows works on example app, but fails on tests.
         // Clue is in bytesTransferred + totalBytes which both equal: -3617008641903833651
-        skip: !kIsWeb && (
-            defaultTargetPlatform == TargetPlatform.macOS ||
-            defaultTargetPlatform == TargetPlatform.windows ||
-            defaultTargetPlatform == TargetPlatform.android
-          ),
+        skip: !kIsWeb &&
+            (defaultTargetPlatform == TargetPlatform.macOS ||
+                defaultTargetPlatform == TargetPlatform.windows ||
+                defaultTargetPlatform == TargetPlatform.android),
       );
 
       test(

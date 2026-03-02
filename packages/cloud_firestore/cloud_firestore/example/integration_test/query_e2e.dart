@@ -352,8 +352,7 @@ void runQueryTests() {
         expect(snapshots[0].docs[0].data()['foo'], equals('bar'));
 
         expect(snapshots[1].docs.length, equals(2));
-        final doc1 =
-            snapshots[1].docs.firstWhere((doc) => doc.id == 'doc1');
+        final doc1 = snapshots[1].docs.firstWhere((doc) => doc.id == 'doc1');
         expect(doc1.data()['bar'], equals('baz'));
 
         expect(snapshots[2].docs.length, equals(1));
@@ -363,8 +362,7 @@ void runQueryTests() {
         );
 
         expect(snapshots[3].docs.length, equals(2));
-        final doc2set =
-            snapshots[3].docs.firstWhere((doc) => doc.id == 'doc2');
+        final doc2set = snapshots[3].docs.firstWhere((doc) => doc.id == 'doc2');
         expect(doc2set.data()['foo'], equals('bar'));
 
         expect(snapshots[4].docs.length, equals(2));

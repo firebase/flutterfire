@@ -479,8 +479,8 @@ void setupQueryTests() {
 
           await ref.child('bar').remove();
 
-          final event = await completer.future
-              .timeout(const Duration(seconds: 10));
+          final event =
+              await completer.future.timeout(const Duration(seconds: 10));
           expect(event.snapshot.value, 'bar');
           expect(event.type, DatabaseEventType.childRemoved);
 
@@ -520,8 +520,7 @@ void setupQueryTests() {
           await childRef.child('bar').set('baz');
           await childRef.child('foo').set('bar');
 
-          await receivedTwo.future
-              .timeout(const Duration(seconds: 10));
+          await receivedTwo.future.timeout(const Duration(seconds: 10));
 
           expect(events[0].snapshot.key, 'bar');
           expect(events[0].snapshot.value, 'baz');
@@ -564,8 +563,7 @@ void setupQueryTests() {
           await ref.child('greg/nuggets').set(57);
           await ref.child('rob/nuggets').set(61);
 
-          await receivedTwo.future
-              .timeout(const Duration(seconds: 10));
+          await receivedTwo.future.timeout(const Duration(seconds: 10));
 
           expect(events[0].snapshot.value, {'nuggets': 57});
           expect(events[0].type, DatabaseEventType.childMoved);
