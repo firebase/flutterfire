@@ -13,6 +13,7 @@ dependencies:
   cloud_functions_platform_interface: ^5.8.9
   cloud_functions_web: ^5.1.2
   collection: ^1.15.0
+  firebase_ai: ^3.8.0
   firebase_analytics: ^12.1.2
   firebase_analytics_platform_interface: ^5.0.6
   firebase_analytics_web: ^0.6.1+2
