@@ -42,8 +42,11 @@ void main() {
           password: testPassword,
         );
       } on FirebaseAuthException catch (e) {
-        // Web platform may retain user state after emulator clear
-        if (e.code != 'email-already-in-use') rethrow;
+        // 'email-already-in-use': web may retain user state after emulator clear
+        // 'keychain-error': known macOS issue needing keychain sharing entitlement
+        if (e.code != 'email-already-in-use' && e.code != 'keychain-error') {
+          rethrow;
+        }
       }
 
       try {
@@ -54,8 +57,9 @@ void main() {
         );
         await emulatorDisableUser(disabledUserCredential.user!.uid);
       } on FirebaseAuthException catch (e) {
-        // Web platform may retain user state after emulator clear
-        if (e.code != 'email-already-in-use') rethrow;
+        if (e.code != 'email-already-in-use' && e.code != 'keychain-error') {
+          rethrow;
+        }
       }
       await ensureSignedOut();
     });
