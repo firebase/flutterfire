@@ -148,6 +148,13 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
 
   [registrar publish:instance];
   [registrar addApplicationDelegate:instance];
+#if !TARGET_OS_OSX
+  if (@available(iOS 13.0, *)) {
+    if ([registrar respondsToSelector:@selector(addSceneDelegate:)]) {
+      [registrar performSelector:@selector(addSceneDelegate:) withObject:instance];
+    }
+  }
+#endif
   SetUpFirebaseAuthHostApi(registrar.messenger, instance);
   SetUpFirebaseAuthUserHostApi(registrar.messenger, instance);
   SetUpMultiFactorUserHostApi(registrar.messenger, instance);
@@ -273,6 +280,18 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary *)options {
   return [[FIRAuth auth] canHandleURL:url];
+}
+
+#pragma mark - SceneDelegate
+
+- (BOOL)scene:(UIScene *)scene
+    openURLContexts:(NSSet<UIOpenURLContext *> *)URLContexts API_AVAILABLE(ios(13.0)) {
+  for (UIOpenURLContext *urlContext in URLContexts) {
+    if ([[FIRAuth auth] canHandleURL:urlContext.URL]) {
+      return YES;
+    }
+  }
+  return NO;
 }
 #endif
 
@@ -831,6 +850,31 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
 #if TARGET_OS_OSX
   return [[NSApplication sharedApplication] keyWindow];
 #else
+  // UIApplication.keyWindow is deprecated in iOS 13+ with UIScene lifecycle.
+  // Walk the connected scenes to find the foreground active window.
+  if (@available(iOS 15.0, *)) {
+    for (UIScene *scene in [UIApplication sharedApplication].connectedScenes) {
+      if (scene.activationState == UISceneActivationStateForegroundActive &&
+          [scene isKindOfClass:[UIWindowScene class]]) {
+        UIWindowScene *windowScene = (UIWindowScene *)scene;
+        if (windowScene.keyWindow) {
+          return windowScene.keyWindow;
+        }
+      }
+    }
+  } else if (@available(iOS 13.0, *)) {
+    for (UIScene *scene in [UIApplication sharedApplication].connectedScenes) {
+      if (scene.activationState == UISceneActivationStateForegroundActive &&
+          [scene isKindOfClass:[UIWindowScene class]]) {
+        UIWindowScene *windowScene = (UIWindowScene *)scene;
+        for (UIWindow *window in windowScene.windows) {
+          if (window.isKeyWindow) {
+            return window;
+          }
+        }
+      }
+    }
+  }
   return [[UIApplication sharedApplication] keyWindow];
 #endif
 }
