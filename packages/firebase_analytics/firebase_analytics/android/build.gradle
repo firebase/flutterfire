@@ -25,7 +25,6 @@ rootProject.allprojects {
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
 
 def firebaseCoreProject = findProject(':firebase_core')
 if (firebaseCoreProject == null) {

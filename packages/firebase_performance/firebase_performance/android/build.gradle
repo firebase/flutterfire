@@ -3,7 +3,6 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'com.android.library'
 apply from: file("local-config.gradle")
-apply plugin: 'kotlin-android'
 
 buildscript {
     ext.kotlin_version = "1.8.22"

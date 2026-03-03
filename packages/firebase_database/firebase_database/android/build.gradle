@@ -2,7 +2,6 @@ group 'io.flutter.plugins.firebase.database'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
 apply from: file("local-config.gradle")
 
 buildscript {
