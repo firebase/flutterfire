@@ -49,10 +49,6 @@ android {
         targetCompatibility project.ext.javaVersion
     }
 
-    kotlinOptions {
-        jvmTarget = project.ext.javaVersion
-    }
-
     sourceSets {
         main {
             java {

@@ -76,10 +76,6 @@ android {
     implementation 'org.reactivestreams:reactive-streams:1.0.4'
   }
 
-  kotlinOptions {
-    jvmTarget = JavaVersion.VERSION_17
-  }
-  
 }
 
 apply from: file("./user-agent.gradle")
