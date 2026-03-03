@@ -176,8 +176,8 @@ class _ButtonAndTextState extends State<_ButtonAndText> {
       padding: const EdgeInsets.all(8),
       child: Row(
         children: [
-          Text(_text ?? widget.defaultText),
-          const Spacer(),
+          Expanded(child: Text(_text ?? widget.defaultText)),
+          const SizedBox(width: 8),
           ElevatedButton(
             onPressed: () async {
               final result = await widget.onPressed();
