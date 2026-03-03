@@ -456,6 +456,19 @@ void runDocumentReferenceTests() {
         expect(data['infinity'], equals(double.infinity));
         expect(data['negative_infinity'], equals(double.negativeInfinity));
       });
+
+      test('sets data with DocumentReference as map key', () async {
+        DocumentReference<Map<String, dynamic>> document =
+            await initializeTest('document-set-ref-key');
+        DocumentReference<Map<String, dynamic>> refKey =
+            FirebaseFirestore.instance.doc('foo/bar');
+        await document.set({
+          'myMap': {refKey: 42.0},
+        });
+        DocumentSnapshot<Map<String, dynamic>> snapshot = await document.get();
+        final myMap = snapshot.data()!['myMap'] as Map<String, dynamic>;
+        expect(myMap[refKey.path], equals(42.0));
+      });
     });
 
     group('DocumentReference.update()', () {
