@@ -12,6 +12,13 @@ Both native platforms and web support creating a credential which can then be pa
 or `linkWithCredential` methods. Alternatively on web platforms, you can trigger the authentication process via
 a popup or redirect.
 
+Note: On Android, `signInWithProvider` opens a Chrome Custom Tab for the OAuth flow. If your
+`AndroidManifest.xml` contains `android:taskAffinity=""` (Flutter's default template), the Custom Tab
+will close when the user switches apps (e.g. to open a password manager), and returning will give a
+`web-context-already-presented` error. To fix this, remove `android:taskAffinity=""` from your
+`AndroidManifest.xml`.
+{: .callout .callout-warning}
+
 ## Google
 
 Most configuration is already setup when using Google Sign-In with Firebase, however you need to ensure your machine's
