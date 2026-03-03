@@ -226,10 +226,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 - (void)setupNotificationHandlingWithRemoteNotification:
     (nullable NSDictionary *)remoteNotification {
-  // If notification handling was already set up (e.g. from application_onDidFinishLaunchingNotification)
-  // and we're called again (e.g. from scene:willConnectToSession:), only process the notification
-  // but skip delegate/swizzler re-registration to avoid _originalNotificationCenterDelegate
-  // being set to self, which causes infinite recursion in didReceiveNotificationResponse. See #18037.
+  // If notification handling was already set up (e.g. from
+  // application_onDidFinishLaunchingNotification) and we're called again (e.g. from
+  // scene:willConnectToSession:), only process the notification but skip delegate/swizzler
+  // re-registration to avoid _originalNotificationCenterDelegate being set to self, which causes
+  // infinite recursion in didReceiveNotificationResponse. See #18037.
   if (_notificationHandlingSetup) {
     if (remoteNotification != nil) {
       _initialNotification =
