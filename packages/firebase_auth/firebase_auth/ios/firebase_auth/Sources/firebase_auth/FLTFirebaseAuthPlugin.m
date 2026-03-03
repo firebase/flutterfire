@@ -2109,9 +2109,8 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
                                                                                  reloadError]);
                                                               } else {
                                                                 completion(
-                                                                    [PigeonParser
-                                                                        getPigeonDetails:
-                                                                            currentUser],
+                                                                    [PigeonParser getPigeonDetails:
+                                                                                      currentUser],
                                                                     nil);
                                                               }
                                                             }];
