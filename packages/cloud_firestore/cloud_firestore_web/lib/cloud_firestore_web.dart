@@ -145,6 +145,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
       sslEnabled: firestoreSettings.sslEnabled,
       cacheSizeBytes: firestoreSettings.cacheSizeBytes,
       ignoreUndefinedProperties: firestoreSettings.ignoreUndefinedProperties,
+      webPersistentTabManager: firestoreSettings.webPersistentTabManager,
     );
     // Union type MemoryLocalCache | PersistentLocalCache
     dynamic localCache;
@@ -152,10 +153,28 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     if (persistenceEnabled == null || persistenceEnabled == false) {
       localCache = firestore_interop.memoryLocalCache(null);
     } else {
-      localCache = firestore_interop
-          .persistentLocalCache(firestore_interop.PersistentCacheSettings(
-        cacheSizeBytes: firestoreSettings.cacheSizeBytes?.toJS,
-      ));
+      final tabManagerSetting = firestoreSettings.webPersistentTabManager;
+      final firestore_interop.PersistentCacheSettings cacheSettings;
+      if (tabManagerSetting is WebPersistentMultipleTabManager) {
+        cacheSettings = firestore_interop.PersistentCacheSettings(
+          cacheSizeBytes: firestoreSettings.cacheSizeBytes?.toJS,
+          tabManager: firestore_interop.persistentMultipleTabManager(),
+        );
+      } else if (tabManagerSetting is WebPersistentSingleTabManager) {
+        cacheSettings = firestore_interop.PersistentCacheSettings(
+          cacheSizeBytes: firestoreSettings.cacheSizeBytes?.toJS,
+          tabManager: firestore_interop.persistentSingleTabManager(
+            firestore_interop.PersistentSingleTabManagerSettings(
+              forceOwnership: tabManagerSetting.forceOwnership.toJS,
+            ),
+          ),
+        );
+      } else {
+        cacheSettings = firestore_interop.PersistentCacheSettings(
+          cacheSizeBytes: firestoreSettings.cacheSizeBytes?.toJS,
+        );
+      }
+      localCache = firestore_interop.persistentLocalCache(cacheSettings);
     }
     if (firestoreSettings.host != null &&
         firestoreSettings.sslEnabled != null) {
