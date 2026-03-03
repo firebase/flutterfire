@@ -61,7 +61,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
           final WebProvider provider;
           if (recaptchaType == recaptchaTypeDebug) {
             final debugToken =
-                recaptchaSiteKey?.isNotEmpty == true ? recaptchaSiteKey : null;
+                recaptchaSiteKey?.isNotEmpty ?? false ? recaptchaSiteKey : null;
             provider = WebDebugProvider(debugToken: debugToken);
           } else if (recaptchaSiteKey != null) {
             if (recaptchaType == recaptchaTypeV3) {
