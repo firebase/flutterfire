@@ -225,8 +225,7 @@ cloud_firestore_windows::FirestoreCodec::ReadValueOfType(
 
       firebase::App* app = firebase::App::GetInstance(appName.c_str());
 
-      Firestore* firestore =
-          Firestore::GetInstance(app, databaseUrl.c_str());
+      Firestore* firestore = Firestore::GetInstance(app, databaseUrl.c_str());
       firestore->set_settings(settings);
 
       CloudFirestorePlugin::firestoreInstances_[cacheKey] =
