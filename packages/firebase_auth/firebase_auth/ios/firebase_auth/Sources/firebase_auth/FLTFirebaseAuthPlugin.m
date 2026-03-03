@@ -1947,7 +1947,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
     if (error != nil) {
       completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
     } else {
-      completion([PigeonParser getPigeonDetails:auth.currentUser], nil);
+      completion([PigeonParser getPigeonDetails:currentUser], nil);
     }
   }];
 }
@@ -2023,7 +2023,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
                       if (reloadError != nil) {
                         completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:reloadError]);
                       } else {
-                        completion([PigeonParser getPigeonDetails:auth.currentUser], nil);
+                        completion([PigeonParser getPigeonDetails:currentUser], nil);
                       }
                     }];
                   }
@@ -2053,7 +2053,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
                 if (reloadError != nil) {
                   completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:reloadError]);
                 } else {
-                  completion([PigeonParser getPigeonDetails:auth.currentUser], nil);
+                  completion([PigeonParser getPigeonDetails:currentUser], nil);
                 }
               }];
             }
@@ -2111,7 +2111,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
                                                                 completion(
                                                                     [PigeonParser
                                                                         getPigeonDetails:
-                                                                            auth.currentUser],
+                                                                            currentUser],
                                                                     nil);
                                                               }
                                                             }];
@@ -2164,7 +2164,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
         if (reloadError != nil) {
           completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:reloadError]);
         } else {
-          completion([PigeonParser getPigeonDetails:auth.currentUser], nil);
+          completion([PigeonParser getPigeonDetails:currentUser], nil);
         }
       }];
     }
