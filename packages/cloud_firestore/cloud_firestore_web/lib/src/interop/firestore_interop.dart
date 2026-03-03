@@ -335,13 +335,20 @@ external JSObject get and;
 @staticInterop
 external WriteBatchJsImpl writeBatch(FirestoreJsImpl firestore);
 
-@JS('Firestore')
-@staticInterop
-abstract class FirestoreJsImpl {}
-
-extension FirestoreJsImplExtension on FirestoreJsImpl {
+extension type FirestoreJsImpl._(JSObject _) implements JSObject {
   external AppJsImpl get app;
   external JSString get type;
+
+  /// Returns the pipeline source for building and executing pipelines.
+  external JSAny pipeline();
+}
+
+@JS()
+@staticInterop
+external PipelinesJsImpl get pipelines;
+
+extension type PipelinesJsImpl._(JSObject _) implements JSObject {
+  external JSPromise<PipelineSnapshotJsImpl> execute(JSAny pipeline);
 }
 
 extension type WriteBatchJsImpl._(JSObject _) implements JSObject {
@@ -1007,3 +1014,72 @@ extension type AggregateQuerySnapshotJsImpl._(JSObject _) implements JSObject {
 @JS()
 @staticInterop
 abstract class PersistentCacheIndexManager {}
+
+/// Entry point for defining the data source of a Firestore Pipeline.
+/// Use .collection(), .collectionGroup(), .database(), or .documents().
+extension type PipelineSourceJsImpl._(JSObject _) implements JSObject {
+  /// Returns all documents from the entire collection (can be nested).
+  external PipelineJsImpl collection(JSString collectionPath);
+
+  /// Returns all documents from a collection ID regardless of parent.
+  external PipelineJsImpl collectionGroup(JSString collectionId);
+
+  /// Returns all documents from the entire database.
+  external PipelineJsImpl database();
+
+  /// Sets the pipeline source to the given document paths or references.
+  external PipelineJsImpl documents(JSArray docs);
+}
+
+/// Pipeline returned by PipelineSource methods; chain stages and call execute().
+/// See: https://firebase.google.com/docs/reference/js/firestore_pipelines.pipeline
+extension type PipelineJsImpl._(JSObject _) implements JSObject {
+  external JSPromise<PipelineSnapshotJsImpl> execute(
+      [PipelineExecuteOptions? options]);
+  external PipelineJsImpl limit(JSNumber limit);
+  external PipelineJsImpl offset(JSNumber offset);
+  external PipelineJsImpl where(JSAny condition);
+  external PipelineJsImpl sort(JSAny orderingOrOptions);
+  external PipelineJsImpl addFields(JSAny fieldOrOptions);
+  external PipelineJsImpl select(JSAny selectionOrOptions);
+  external PipelineJsImpl distinct(JSAny groupOrOptions);
+  external PipelineJsImpl aggregate(JSAny accumulatorOrOptions);
+  external PipelineJsImpl sample(JSAny documentsOrOptions);
+  external PipelineJsImpl unnest(JSAny selectableOrOptions);
+  external PipelineJsImpl removeFields(JSAny fieldOrOptions);
+  external PipelineJsImpl replaceWith(JSAny fieldNameOrOptions);
+  external PipelineJsImpl findNearest(JSAny options);
+  external PipelineJsImpl union(JSAny otherOrOptions);
+  external PipelineJsImpl rawStage(JSString name, JSArray params,
+      [JSAny? options]);
+}
+
+/// Options for pipeline execution (e.g. index mode).
+@anonymous
+@JS()
+@staticInterop
+abstract class PipelineExecuteOptions {
+  external factory PipelineExecuteOptions({JSString? indexMode});
+}
+
+extension PipelineExecuteOptionsExtension on PipelineExecuteOptions {
+  external JSString? get indexMode;
+  external set indexMode(JSString? v);
+}
+
+/// Snapshot of pipeline execution results.
+extension type PipelineSnapshotJsImpl._(JSObject _) implements JSObject {
+  /// Array of [PipelineResultJsImpl].
+  external JSArray get results;
+
+  /// Execution time (if provided by SDK).
+  external JSAny? get executionTime;
+}
+
+/// Single result in a pipeline snapshot (document + data).
+extension type PipelineResultJsImpl._(JSObject _) implements JSObject {
+  external DocumentReferenceJsImpl get ref;
+  external JSObject? data();
+  external JSAny? get createTime;
+  external JSAny? get updateTime;
+}

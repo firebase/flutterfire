@@ -213,6 +213,14 @@ class FirebaseCoreWeb extends FirebasePlatform {
         if (ignored.contains(service.override ?? service.name)) {
           return Future.value();
         }
+        final firestoreServiceName = 'firestore';
+
+        if (service.name == firestoreServiceName) {
+          return injectSrcScript(
+            'https://www.gstatic.com/firebasejs/$version/firebase-firestore-pipelines.js',
+            'firebase_$firestoreServiceName',
+          );
+        }
 
         return injectSrcScript(
           'https://www.gstatic.com/firebasejs/$version/firebase-${service.name}.js',
