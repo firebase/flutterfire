@@ -629,5 +629,39 @@ void runDocumentReferenceTests() {
         timeout: const Timeout.factor(3),
       );
     });
+
+    group('DocumentReference as field value', () {
+      // Regression test for https://github.com/firebase/flutterfire/issues/18028
+      test('can store and read a DocumentReference as a field value', () async {
+        final doc = await initializeTest('doc-ref-field');
+        final targetDoc = firestore.doc('flutter-tests/target-doc');
+
+        await doc.set({'ref': targetDoc});
+
+        final snapshot = await doc.get();
+        final refValue = snapshot.data()!['ref'];
+        expect(refValue, isA<DocumentReference>());
+        expect((refValue as DocumentReference).path, targetDoc.path);
+      });
+
+      test('can query by DocumentReference value', () async {
+        final collection =
+            firestore.collection('flutter-tests/doc-ref-query/items');
+        final targetDoc = firestore.doc('flutter-tests/target-doc');
+
+        // Clean up
+        final existing = await collection.get();
+        for (final doc in existing.docs) {
+          await doc.reference.delete();
+        }
+
+        await collection.add({'ref': targetDoc, 'name': 'test'});
+
+        final querySnapshot =
+            await collection.where('ref', isEqualTo: targetDoc).get();
+        expect(querySnapshot.docs, hasLength(1));
+        expect(querySnapshot.docs.first.data()['name'], 'test');
+      });
+    });
   });
 }
