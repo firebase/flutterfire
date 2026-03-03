@@ -6,6 +6,9 @@ on:
   schedule:
     - cron: '0 9 * * *'
 
+permissions:
+  issues: write
+
 jobs:
   remove-label:
     if: >
