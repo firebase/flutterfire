@@ -137,7 +137,8 @@ class Settings {
           this.webExperimentalLongPollingOptions,
       ignoreUndefinedProperties:
           ignoreUndefinedProperties ?? this.ignoreUndefinedProperties,
-      webPersistentTabManager: webPersistentTabManager ?? this.webPersistentTabManager,
+      webPersistentTabManager:
+          webPersistentTabManager ?? this.webPersistentTabManager,
     );
   }
 

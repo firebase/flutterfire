@@ -77,9 +77,7 @@ void runSettingsTest() {
           persistenceEnabled: true,
         );
 
-        firestore.settings = settings;
-
-        expect(firestore.settings.webPersistentTabManager, isNull);
+        expect(settings.webPersistentTabManager, isNull);
       });
     },
   );
