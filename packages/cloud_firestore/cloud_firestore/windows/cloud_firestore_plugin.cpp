@@ -706,10 +706,12 @@ void CloudFirestorePlugin::EnableNetwork(
 void CloudFirestorePlugin::Terminate(
     const FirestorePigeonFirebaseApp& app,
     std::function<void(std::optional<FlutterError> reply)> result) {
+  std::string cacheKey = app.app_name() + "-" + app.database_u_r_l();
   Firestore* firestore = GetFirestoreFromPigeon(app);
   firestore->Terminate().OnCompletion(
-      [result](const Future<void>& completed_future) {
+      [result, cacheKey](const Future<void>& completed_future) {
         if (completed_future.error() == firebase::firestore::kErrorOk) {
+          CloudFirestorePlugin::firestoreInstances_.erase(cacheKey);
           result(std::nullopt);
         } else {
           result(CloudFirestorePlugin::ParseError(completed_future));
