@@ -335,8 +335,10 @@ void FirebaseDatabasePlugin::RegisterWithRegistrar(
 }
 
 // --- Helper: Extract namespace from a Firebase RTDB URL ---
-// e.g. "https://my-project-default-rtdb.firebaseio.com" -> "my-project-default-rtdb"
-// e.g. "https://my-project-default-rtdb.europe-west1.firebasedatabase.app" -> "my-project-default-rtdb"
+// e.g. "https://my-project-default-rtdb.firebaseio.com" ->
+// "my-project-default-rtdb" e.g.
+// "https://my-project-default-rtdb.europe-west1.firebasedatabase.app" ->
+// "my-project-default-rtdb"
 static std::string ExtractNamespaceFromUrl(const std::string& url) {
   // Strip scheme
   std::string host = url;
