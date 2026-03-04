@@ -20,6 +20,7 @@ void main() {
           webExperimentalLongPollingOptions: WebExperimentalLongPollingOptions(
             timeoutDuration: Duration(seconds: 4),
           ),
+          webPersistentTabManager: WebPersistentMultipleTabManager(),
         ),
         equals(
           const Settings(
@@ -33,6 +34,7 @@ void main() {
                 WebExperimentalLongPollingOptions(
               timeoutDuration: Duration(seconds: 4),
             ),
+            webPersistentTabManager: WebPersistentMultipleTabManager(),
           ),
         ),
       );
@@ -110,6 +112,62 @@ void main() {
 
     test('CACHE_SIZE_UNLIMITED returns -1', () {
       expect(Settings.CACHE_SIZE_UNLIMITED, equals(-1));
+    });
+
+    test('WebPersistentTabManager equality', () {
+      expect(
+        const WebPersistentMultipleTabManager(),
+        equals(const WebPersistentMultipleTabManager()),
+      );
+
+      expect(
+        const WebPersistentSingleTabManager(),
+        equals(const WebPersistentSingleTabManager()),
+      );
+
+      expect(
+        const WebPersistentSingleTabManager(forceOwnership: true),
+        equals(const WebPersistentSingleTabManager(forceOwnership: true)),
+      );
+
+      expect(
+        const WebPersistentSingleTabManager(forceOwnership: true),
+        isNot(equals(const WebPersistentSingleTabManager())),
+      );
+
+      expect(
+        const WebPersistentMultipleTabManager(),
+        isNot(equals(const WebPersistentSingleTabManager())),
+      );
+    });
+
+    test('Settings with different webPersistentTabManager are not equal', () {
+      expect(
+        const Settings(
+          persistenceEnabled: true,
+          webPersistentTabManager: WebPersistentMultipleTabManager(),
+        ),
+        isNot(equals(
+          const Settings(
+            persistenceEnabled: true,
+            webPersistentTabManager: WebPersistentSingleTabManager(),
+          ),
+        )),
+      );
+    });
+
+    test('copyWith preserves webPersistentTabManager', () {
+      const settings = Settings(
+        persistenceEnabled: true,
+        webPersistentTabManager: WebPersistentMultipleTabManager(),
+      );
+
+      final copied = settings.copyWith(host: 'localhost');
+
+      expect(copied.webPersistentTabManager,
+          isA<WebPersistentMultipleTabManager>());
+      expect(copied.host, 'localhost');
+      expect(copied.persistenceEnabled, true);
     });
   });
 }
