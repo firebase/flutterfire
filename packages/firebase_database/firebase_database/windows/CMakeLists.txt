@@ -46,7 +46,8 @@ target_compile_definitions(${PLUGIN_NAME} PRIVATE -DINTERNAL_EXPERIMENTAL=1)
 
 set(MSVC_RUNTIME_MODE MD)
 set(firebase_libs firebase_core_plugin firebase_database)
-target_link_libraries(${PLUGIN_NAME} PRIVATE "${firebase_libs}" "${ADDITIONAL_LIBS}")
+set(RTDB_ADDITIONAL_LIBS iphlpapi psapi userenv)
+target_link_libraries(${PLUGIN_NAME} PRIVATE "${firebase_libs}" "${ADDITIONAL_LIBS}" "${RTDB_ADDITIONAL_LIBS}")
 
 target_include_directories(${PLUGIN_NAME} INTERFACE
   "${CMAKE_CURRENT_SOURCE_DIR}/include")
