@@ -21,6 +21,9 @@ on:
       - '**/example/**'
       - '**.md'
 
+permissions:
+  contents: read
+
 jobs:
   android:
     runs-on: ubuntu-latest
