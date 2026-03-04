@@ -371,9 +371,7 @@ Future<void> main() async {
             .thenReturn(mockUploadTaskPlatform);
 
         jpgRef.putData(
-            data,
-            SettableMetadata(
-                customMetadata: {'activity': 'test'}));
+            data, SettableMetadata(customMetadata: {'activity': 'test'}));
 
         final captured = verify(mockJpgReference.putData(data, captureAny))
             .captured
@@ -390,12 +388,11 @@ Future<void> main() async {
 
         List<int> list = utf8.encode('hello');
         Uint8List data = Uint8List.fromList(list);
-        when(mockReference.putData(data, null))
-            .thenReturn(mockUploadTaskPlatform);
+        when(mockReference.putData(data)).thenReturn(mockUploadTaskPlatform);
 
         noExtRef.putData(data);
 
-        verify(mockReference.putData(data, null));
+        verify(mockReference.putData(data));
       });
     });
 
@@ -416,10 +413,9 @@ Future<void> main() async {
 
         jpgRef.putBlob('blob-data');
 
-        final captured =
-            verify(mockJpgReference.putBlob(any, captureAny))
-                .captured
-                .single as SettableMetadata;
+        final captured = verify(mockJpgReference.putBlob(any, captureAny))
+            .captured
+            .single as SettableMetadata;
         expect(captured.contentType, 'image/jpeg');
       });
 
@@ -430,10 +426,9 @@ Future<void> main() async {
         jpgRef.putBlob(
             'blob-data', SettableMetadata(contentType: 'text/plain'));
 
-        final captured =
-            verify(mockJpgReference.putBlob(any, captureAny))
-                .captured
-                .single as SettableMetadata;
+        final captured = verify(mockJpgReference.putBlob(any, captureAny))
+            .captured
+            .single as SettableMetadata;
         expect(captured.contentType, 'text/plain');
       });
     });
