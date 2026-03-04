@@ -353,8 +353,8 @@ extension type PipelinesJsImpl._(JSObject _) implements JSObject {
   external JSPromise<PipelineSnapshotJsImpl> execute(JSAny pipeline);
 
   // --- Expression builders ---
-  external JSAny field(JSString path);
-  external JSAny constant(JSAny value);
+  external ExpressionJsImpl field(JSString path);
+  external ExpressionJsImpl constant(JSAny value);
 
   // --- Boolean / comparison ---
   external JSAny equal(JSAny left, JSAny right);
@@ -399,6 +399,27 @@ extension type AggregateFunctionJsImpl._(JSObject _) implements JSObject {
   external JSAny asAlias(JSString alias);
 }
 
+extension type ExpressionJsImpl._(JSObject _) implements JSObject {
+  @JS('as')
+  external JSAny asAlias(JSString alias);
+
+  external ExpressionJsImpl add(JSAny right);
+  external ExpressionJsImpl subtract(JSAny right);
+  external ExpressionJsImpl multiply(JSAny right);
+  external ExpressionJsImpl divide(JSAny right);
+  external ExpressionJsImpl modulo(JSAny right);
+  external ExpressionJsImpl length();
+  external ExpressionJsImpl concat(JSAny right);
+  external ExpressionJsImpl toLowerCase();
+  external ExpressionJsImpl toUpperCase();
+  external ExpressionJsImpl trim();
+}
+
+extension type SelectableJsImpl._(JSObject _) implements JSObject {
+  @JS('as')
+  external JSAny asAlias(JSString alias);
+}
+
 /// Aliased aggregate for use in aggregate() stage accumulators.
 /// Mirrors Firebase JS SDK: constructor(aggregate, alias, _methodName?).
 @JS('AliasedAggregate')
@@ -418,6 +439,12 @@ extension type AggregateStageOptionsJsImpl._(JSObject _) implements JSObject {
 
   external set accumulators(JSAny value);
   external set groups(JSAny value);
+}
+
+extension type AddFieldsOptionsJsImpl._(JSObject _) implements JSObject {
+  AddFieldsOptionsJsImpl() : this._(JSObject.new());
+
+  external set fields(JSAny value);
 }
 
 extension type WriteBatchJsImpl._(JSObject _) implements JSObject {

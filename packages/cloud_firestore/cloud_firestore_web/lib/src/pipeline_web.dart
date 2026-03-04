@@ -60,12 +60,12 @@ class PipelineResultWeb extends PipelineResultPlatform {
     firestore_interop.Firestore firestoreWeb,
     interop.PipelineResultJsImpl jsResult,
   )   : _document = jsResult.ref != null
-          ? DocumentReferenceWeb(
-              firestore,
-              firestoreWeb,
-              jsResult.ref!.path.toDart,
-            )
-          : null,
+            ? DocumentReferenceWeb(
+                firestore,
+                firestoreWeb,
+                jsResult.ref!.path.toDart,
+              )
+            : null,
         _createTime = _timestampToDateTime(jsResult.createTime),
         _updateTime = _timestampToDateTime(jsResult.updateTime),
         _data = _dataFromResult(jsResult),

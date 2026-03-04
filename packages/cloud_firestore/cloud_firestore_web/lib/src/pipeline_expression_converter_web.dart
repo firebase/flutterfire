@@ -18,8 +18,9 @@ class PipelineExpressionConverterWeb {
 
   final interop.PipelinesJsImpl _pipelines;
 
-  /// Converts a serialized expression map to a JS Expression/BooleanExpression.
-  JSAny? toExpression(Map<String, dynamic> map) {
+  /// Converts a serialized value expression to JS Expression (field, constant only).
+  /// For boolean expressions (equal, not_equal, and, or, etc.) use [toBooleanExpression].
+  interop.ExpressionJsImpl toExpression(Map<String, dynamic> map) {
     final name = map['name'] as String?;
     final args = map['args'];
     final argsMap = args is Map<String, dynamic> ? args : <String, dynamic>{};
@@ -28,73 +29,72 @@ class PipelineExpressionConverterWeb {
       case 'field':
         final path = (argsMap['field'] as String?) ?? '';
         return _pipelines.field(path.toJS);
+      case 'add':
+        final leftJsExpr =
+            toExpression(argsMap['left'] as Map<String, dynamic>);
+        final rightJsExpr =
+            toExpression(argsMap['right'] as Map<String, dynamic>);
+        return leftJsExpr.add(rightJsExpr);
       case 'constant':
       case 'null':
         final value = argsMap['value'];
-        final jsValue = jsify(value);
-        if (jsValue == null) {
+        if (value == null) {
           throw UnsupportedError(
             'constant(null) is not supported on web; use a non-null value.',
           );
         }
-        return _pipelines.constant(jsValue);
+        return _pipelines.constant(jsify(value)!);
+      // return _pipelines.constant(value.toJS);
+      default:
+        return throw UnsupportedError(
+          'Unsupported expression: $name',
+        );
+    }
+  }
+
+  /// Converts a serialized boolean expression to JS BooleanExpression for where().
+  /// Handles equal, not_equal, comparisons, and, or, not, exists, is_absent, is_error, array_contains.
+  /// Sub-expressions (e.g. left/right of equal) can be value expressions or nested boolean expressions.
+  /// Returns null if [map] is not a recognized boolean or value expression.
+  JSAny? toBooleanExpression(Map<String, dynamic> map) {
+    final name = map['name'] as String?;
+    final args = map['args'];
+    final argsMap = args is Map<String, dynamic> ? args : <String, dynamic>{};
+
+    JSAny leftJs(Map<String, dynamic> left) => toExpression(left);
+    JSAny rightJs(Map<String, dynamic> right) => toExpression(right);
+
+    switch (name) {
       case 'equal':
-        final left = argsMap['left'];
-        final right = argsMap['right'];
-        if (left == null || right == null) return null;
-        final leftJs = toExpression(left as Map<String, dynamic>);
-        final rightJs = toExpression(right as Map<String, dynamic>);
-        if (leftJs == null || rightJs == null) return null;
-        return _pipelines.equal(leftJs, rightJs);
+        return _pipelines.equal(leftJs(argsMap['left'] as Map<String, dynamic>),
+            rightJs(argsMap['right'] as Map<String, dynamic>));
       case 'not_equal':
-        final left = argsMap['left'];
-        final right = argsMap['right'];
-        if (left == null || right == null) return null;
-        final leftJs = toExpression(left as Map<String, dynamic>);
-        final rightJs = toExpression(right as Map<String, dynamic>);
-        if (leftJs == null || rightJs == null) return null;
-        return _pipelines.notEqual(leftJs, rightJs);
+        return _pipelines.notEqual(
+            leftJs(argsMap['left'] as Map<String, dynamic>),
+            rightJs(argsMap['right'] as Map<String, dynamic>));
       case 'greater_than':
-        final left = argsMap['left'];
-        final right = argsMap['right'];
-        if (left == null || right == null) return null;
-        final leftJs = toExpression(left as Map<String, dynamic>);
-        final rightJs = toExpression(right as Map<String, dynamic>);
-        if (leftJs == null || rightJs == null) return null;
-        return _pipelines.greaterThan(leftJs, rightJs);
+        return _pipelines.greaterThan(
+            leftJs(argsMap['left'] as Map<String, dynamic>),
+            rightJs(argsMap['right'] as Map<String, dynamic>));
       case 'greater_than_or_equal':
-        final left = argsMap['left'];
-        final right = argsMap['right'];
-        if (left == null || right == null) return null;
-        final leftJs = toExpression(left as Map<String, dynamic>);
-        final rightJs = toExpression(right as Map<String, dynamic>);
-        if (leftJs == null || rightJs == null) return null;
-        return _pipelines.greaterThanOrEqual(leftJs, rightJs);
+        return _pipelines.greaterThanOrEqual(
+            leftJs(argsMap['left'] as Map<String, dynamic>),
+            rightJs(argsMap['right'] as Map<String, dynamic>));
       case 'less_than':
-        final left = argsMap['left'];
-        final right = argsMap['right'];
-        if (left == null || right == null) return null;
-        final leftJs = toExpression(left as Map<String, dynamic>);
-        final rightJs = toExpression(right as Map<String, dynamic>);
-        if (leftJs == null || rightJs == null) return null;
-        return _pipelines.lessThan(leftJs, rightJs);
+        return _pipelines.lessThan(
+            leftJs(argsMap['left'] as Map<String, dynamic>),
+            rightJs(argsMap['right'] as Map<String, dynamic>));
       case 'less_than_or_equal':
-        final left = argsMap['left'];
-        final right = argsMap['right'];
-        if (left == null || right == null) return null;
-        final leftJs = toExpression(left as Map<String, dynamic>);
-        final rightJs = toExpression(right as Map<String, dynamic>);
-        if (leftJs == null || rightJs == null) return null;
-        return _pipelines.lessThanOrEqual(leftJs, rightJs);
+        return _pipelines.lessThanOrEqual(
+            leftJs(argsMap['left'] as Map<String, dynamic>),
+            rightJs(argsMap['right'] as Map<String, dynamic>));
       case 'filter':
         final operator = argsMap['operator'] as String?;
         final expressions = argsMap['expressions'] as List<dynamic>?;
         if (expressions == null || expressions.isEmpty) return null;
         final jsList = expressions
             .map((e) => toExpression(e as Map<String, dynamic>))
-            .whereType<JSAny>()
             .toList();
-        if (jsList.isEmpty) return null;
         if (jsList.length == 1) return jsList.single;
         JSAny result = jsList[0];
         for (var i = 1; i < jsList.length; i++) {
@@ -104,49 +104,24 @@ class PipelineExpressionConverterWeb {
         }
         return result;
       case 'not':
-        final expression = argsMap['expression'];
-        if (expression == null) return null;
-        final exprJs = toExpression(expression as Map<String, dynamic>);
-        return exprJs != null ? _pipelines.not(exprJs) : null;
+        return _pipelines
+            .not(leftJs(argsMap['expression'] as Map<String, dynamic>));
       case 'exists':
-        final expression = argsMap['expression'] ?? argsMap['array'];
-        if (expression == null) return null;
-        final exprJs = toExpression(expression as Map<String, dynamic>);
-        return exprJs != null ? _pipelines.exists(exprJs) : null;
+        return _pipelines
+            .exists(leftJs(argsMap['expression'] as Map<String, dynamic>));
       case 'is_absent':
-        final expression = argsMap['expression'] ?? argsMap['array'];
-        if (expression == null) return null;
-        final exprJs = toExpression(expression as Map<String, dynamic>);
-        return exprJs != null ? _pipelines.isAbsent(exprJs) : null;
+        return _pipelines
+            .isAbsent(leftJs(argsMap['expression'] as Map<String, dynamic>));
       case 'is_error':
-        final expression = argsMap['expression'] ?? argsMap['array'];
-        if (expression == null) return null;
-        final exprJs = toExpression(expression as Map<String, dynamic>);
-        return exprJs != null ? _pipelines.isError(exprJs) : null;
+        return _pipelines
+            .isError(leftJs(argsMap['expression'] as Map<String, dynamic>));
       case 'array_contains':
-        final array = argsMap['array'];
-        final element = argsMap['element'];
-        if (array == null || element == null) return null;
-        final arrayJs = toExpression(array as Map<String, dynamic>);
-        final elementJs = toExpression(element as Map<String, dynamic>);
-        if (arrayJs == null || elementJs == null) return null;
-        return _pipelines.arrayContains(arrayJs, elementJs);
+        return _pipelines.arrayContains(
+            leftJs(argsMap['array'] as Map<String, dynamic>),
+            rightJs(argsMap['element'] as Map<String, dynamic>));
       default:
         return null;
     }
-  }
-
-  /// Converts a serialized boolean expression to JS BooleanExpression for where().
-  JSAny toBooleanExpression(Map<String, dynamic> map) {
-    final js = toExpression(map);
-    if (js == null) {
-      throw UnsupportedError(
-        'Pipeline where() on web requires the Firebase JS pipeline expression API '
-        '(e.g. field, constant, equal, and, or from firebase/firestore/pipelines). '
-        'Ensure the pipelines module is loaded.',
-      );
-    }
-    return js;
   }
 
   /// Converts orderings list to JS SortStageOptions. Each item: { expression, order_direction }.
@@ -158,7 +133,6 @@ class PipelineExpressionConverterWeb {
       final dir = m['order_direction'] as String?;
       if (expr == null) continue;
       final exprJs = toExpression(expr as Map<String, dynamic>);
-      if (exprJs == null) continue;
       final ordering = (dir == 'desc')
           ? _pipelines.descending(exprJs)
           : _pipelines.ascending(exprJs);
@@ -179,18 +153,13 @@ class PipelineExpressionConverterWeb {
   JSAny toAddFieldsOptions(List<dynamic> expressions) {
     final list = <JSAny>[];
     for (final e in expressions) {
+      print('e: $e');
       final sel =
           toSelectable(e is Map<String, dynamic> ? e : <String, dynamic>{});
       if (sel != null) list.add(sel);
     }
-    if (list.isEmpty) {
-      throw UnsupportedError(
-        'Pipeline addFields() on web requires the Firebase JS pipeline expression API.',
-      );
-    }
-    final obj = JSObject.new;
-    setProperty(obj, 'fields', list.toJS);
-    return obj as JSAny;
+
+    return interop.AddFieldsOptionsJsImpl()..fields = list.toJS;
   }
 
   /// Converts a single expression map to a JS Selectable (field or aliased).
@@ -208,7 +177,8 @@ class PipelineExpressionConverterWeb {
       if (alias == null || expression == null) return null;
       final exprJs = toExpression(expression as Map<String, dynamic>);
       if (exprJs == null) return null;
-      return _pipelines.aliased(exprJs, alias.toJS);
+      // return _pipelines.aliased(exprJs, alias.toJS);
+      return exprJs.asAlias(alias.toJS);
     }
     final exprJs = toExpression(map);
     return exprJs;
@@ -253,7 +223,8 @@ class PipelineExpressionConverterWeb {
   /// Converts aggregate stage args to JS AggregateStageOptions.
   /// Input shape: { aggregate_functions: [...] } or { aggregate_stage: { aggregate_functions: [...] } } or { accumulators: [...] }.
   /// Each list item is an aliased aggregate: { name: 'alias', args: { alias: String, aggregate_function: { name, args?: { expression } } } }.
-  interop.AggregateStageOptionsJsImpl toAggregateOptions(Map<String, dynamic> map) {
+  interop.AggregateStageOptionsJsImpl toAggregateOptions(
+      Map<String, dynamic> map) {
     final aggregateFunctions = _getAggregateFunctionsList(map);
     if (aggregateFunctions.isEmpty) {
       throw UnsupportedError(
@@ -326,7 +297,8 @@ class PipelineExpressionConverterWeb {
       value is Map<String, dynamic> ? value : null;
 
   /// Builds one aggregate function (sum, average, count_all, etc.) from serialized [name] and optional [exprJs].
-  interop.AggregateFunctionJsImpl? _buildAggregateFunction(String name, JSAny? exprJs) {
+  interop.AggregateFunctionJsImpl? _buildAggregateFunction(
+      String name, JSAny? exprJs) {
     switch (name) {
       case 'count_all':
         return _pipelines.countAll();

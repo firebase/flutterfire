@@ -86,16 +86,22 @@ interop.PipelineJsImpl _applyStage(
 
   switch (name) {
     case 'limit':
-      final limit = map['limit'] as int? ?? 0;
+      final limit = map['limit'] as int;
       return pipeline.limit(limit.toJS);
     case 'offset':
-      final offset = map['offset'] as int? ?? 0;
+      final offset = map['offset'] as int;
       return pipeline.offset(offset.toJS);
     case 'where':
       final expression = map['expression'];
       if (expression == null) return pipeline;
-      return pipeline.where(
-          converter.toBooleanExpression(expression as Map<String, dynamic>));
+      final condition =
+          converter.toBooleanExpression(expression as Map<String, dynamic>);
+      if (condition == null) {
+        throw UnsupportedError(
+          'Pipeline where() on web: could not parse the condition expression.',
+        );
+      }
+      return pipeline.where(condition);
     case 'sort':
       final orderings = map['orderings'] as List<dynamic>?;
       if (orderings == null || orderings.isEmpty) return pipeline;

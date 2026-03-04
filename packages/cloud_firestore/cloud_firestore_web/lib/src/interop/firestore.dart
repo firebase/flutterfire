@@ -1096,7 +1096,9 @@ class PipelineResult
   }
 
   PipelineResult._fromJsObject(firestore_interop.PipelineResultJsImpl jsObject)
-      : _ref = jsObject.ref != null ? DocumentReference.getInstance(jsObject.ref!) : null,
+      : _ref = jsObject.ref != null
+            ? DocumentReference.getInstance(jsObject.ref!)
+            : null,
         _data = _dataFromResult(jsObject),
         _createTime = _timestampToDateTime(jsObject.createTime),
         _updateTime = _timestampToDateTime(jsObject.updateTime),
