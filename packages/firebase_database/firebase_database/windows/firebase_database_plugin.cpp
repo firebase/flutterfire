@@ -610,9 +610,6 @@ void FirebaseDatabasePlugin::DatabaseReferenceRunTransaction(
   int64_t transaction_key = request.transaction_key();
   bool apply_locally = request.apply_locally();
 
-  // Store a reference to this plugin and the transaction results map
-  auto* plugin = this;
-
   struct TransactionContext {
     flutter::BinaryMessenger* messenger;
     int64_t transaction_key;
