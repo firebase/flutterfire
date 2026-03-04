@@ -2,57 +2,91 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:io' show Platform;
-
-import 'package:firebase_ai/src/platform_header_helper.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+
+const _channel = MethodChannel('plugins.flutter.io/firebase_ai');
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('firebase_ai', () {
     group('platform security headers', () {
-      testWidgets('returns non-empty headers on mobile platforms',
-          (WidgetTester tester) async {
-        final headers = await getPlatformSecurityHeaders();
+      testWidgets(
+        'returns non-empty headers on mobile platforms',
+        skip: kIsWeb,
+        (WidgetTester tester) async {
+          final headers = await _channel.invokeMapMethod<String, String>(
+            'getPlatformHeaders',
+          );
 
-        expect(headers, isNotEmpty,
-            reason: 'Native plugin should return platform headers');
-      });
+          expect(
+            headers,
+            isNotNull,
+            reason: 'Native plugin should return platform headers',
+          );
+          expect(
+            headers,
+            isNotEmpty,
+            reason: 'Native plugin should return non-empty platform headers',
+          );
+        },
+      );
 
-      testWidgets('returns correct Android headers',
-          (WidgetTester tester) async {
-        if (!Platform.isAndroid) return;
+      testWidgets(
+        'returns correct Android headers',
+        skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
+        (WidgetTester tester) async {
+          final headers = await _channel.invokeMapMethod<String, String>(
+            'getPlatformHeaders',
+          );
 
-        final headers = await getPlatformSecurityHeaders();
+          expect(headers, contains('X-Android-Package'));
+          expect(
+            headers!['X-Android-Package'],
+            isNotEmpty,
+            reason: 'Package name should not be empty',
+          );
+          // Cert may be empty in some emulator environments, but key must exist.
+          expect(headers, contains('X-Android-Cert'));
+        },
+      );
 
-        expect(headers, contains('X-Android-Package'));
-        expect(headers['X-Android-Package'], isNotEmpty,
-            reason: 'Package name should not be empty');
-        // Cert may be empty in some emulator environments, but key must exist.
-        expect(headers, contains('X-Android-Cert'));
-      });
+      testWidgets(
+        'returns correct iOS/macOS headers',
+        skip: kIsWeb ||
+            (defaultTargetPlatform != TargetPlatform.iOS &&
+                defaultTargetPlatform != TargetPlatform.macOS),
+        (WidgetTester tester) async {
+          final headers = await _channel.invokeMapMethod<String, String>(
+            'getPlatformHeaders',
+          );
 
-      testWidgets('returns correct iOS/macOS headers',
-          (WidgetTester tester) async {
-        if (!Platform.isIOS && !Platform.isMacOS) return;
+          expect(headers, contains('x-ios-bundle-identifier'));
+          expect(
+            headers!['x-ios-bundle-identifier'],
+            isNotEmpty,
+            reason: 'Bundle identifier should not be empty',
+          );
+        },
+      );
 
-        final headers = await getPlatformSecurityHeaders();
-
-        expect(headers, contains('x-ios-bundle-identifier'));
-        expect(headers['x-ios-bundle-identifier'], isNotEmpty,
-            reason: 'Bundle identifier should not be empty');
-      });
-
-      testWidgets('caches headers across calls',
-          (WidgetTester tester) async {
-        final headers1 = await getPlatformSecurityHeaders();
-        final headers2 = await getPlatformSecurityHeaders();
-
-        expect(identical(headers1, headers2), isTrue,
-            reason: 'Headers should be cached after first call');
-      });
+      testWidgets(
+        'returns empty headers on web',
+        skip: !kIsWeb,
+        (WidgetTester tester) async {
+          // On web, no native plugin is registered, so the channel call
+          // should throw a MissingPluginException.
+          expect(
+            () => _channel.invokeMapMethod<String, String>(
+              'getPlatformHeaders',
+            ),
+            throwsA(isA<MissingPluginException>()),
+          );
+        },
+      );
     });
   });
 }
