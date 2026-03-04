@@ -4,21 +4,6 @@
 
 #include "firebase_database_plugin.h"
 
-#include "firebase/app.h"
-#include "firebase/database.h"
-#include "firebase/database/common.h"
-#include "firebase/database/data_snapshot.h"
-#include "firebase/database/database_reference.h"
-#include "firebase/database/disconnection.h"
-#include "firebase/database/listener.h"
-#include "firebase/database/mutable_data.h"
-#include "firebase/database/query.h"
-#include "firebase/future.h"
-#include "firebase/log.h"
-#include "firebase/variant.h"
-#include "firebase_database/plugin_version.h"
-#include "messages.g.h"
-
 #include <flutter/event_channel.h>
 #include <flutter/event_stream_handler_functions.h>
 #include <flutter/standard_method_codec.h>
@@ -34,6 +19,21 @@
 #include <string>
 #include <thread>
 #include <vector>
+
+#include "firebase/app.h"
+#include "firebase/database.h"
+#include "firebase/database/common.h"
+#include "firebase/database/data_snapshot.h"
+#include "firebase/database/database_reference.h"
+#include "firebase/database/disconnection.h"
+#include "firebase/database/listener.h"
+#include "firebase/database/mutable_data.h"
+#include "firebase/database/query.h"
+#include "firebase/future.h"
+#include "firebase/log.h"
+#include "firebase/variant.h"
+#include "firebase_database/plugin_version.h"
+#include "messages.g.h"
 
 using firebase::App;
 using firebase::Future;
@@ -423,8 +423,7 @@ void FirebaseDatabasePlugin::SetLoggingEnabled(
 }
 
 void FirebaseDatabasePlugin::UseDatabaseEmulator(
-    const DatabasePigeonFirebaseApp& app, const std::string& host,
-    int64_t port,
+    const DatabasePigeonFirebaseApp& app, const std::string& host, int64_t port,
     std::function<void(std::optional<FlutterError> reply)> result) {
   // The C++ SDK does not have a direct emulator API.
   // The emulator host/port should be set via the database URL or settings
@@ -517,14 +516,13 @@ void FirebaseDatabasePlugin::DatabaseReferenceSet(
   Variant value = request.value() ? EncodableValueToVariant(*request.value())
                                   : Variant::Null();
 
-  ref.SetValue(value).OnCompletion(
-      [result](const Future<void>& future) {
-        if (future.error() == Error::kErrorNone) {
-          result(std::nullopt);
-        } else {
-          result(FirebaseDatabasePlugin::ParseError(future));
-        }
-      });
+  ref.SetValue(value).OnCompletion([result](const Future<void>& future) {
+    if (future.error() == Error::kErrorNone) {
+      result(std::nullopt);
+    } else {
+      result(FirebaseDatabasePlugin::ParseError(future));
+    }
+  });
 }
 
 void FirebaseDatabasePlugin::DatabaseReferenceSetWithPriority(
@@ -566,14 +564,13 @@ void FirebaseDatabasePlugin::DatabaseReferenceUpdate(
   DatabaseReference ref = database->GetReference(request.path().c_str());
   Variant values = EncodableValueToVariant(EncodableValue(request.value()));
 
-  ref.UpdateChildren(values).OnCompletion(
-      [result](const Future<void>& future) {
-        if (future.error() == Error::kErrorNone) {
-          result(std::nullopt);
-        } else {
-          result(FirebaseDatabasePlugin::ParseError(future));
-        }
-      });
+  ref.UpdateChildren(values).OnCompletion([result](const Future<void>& future) {
+    if (future.error() == Error::kErrorNone) {
+      result(std::nullopt);
+    } else {
+      result(FirebaseDatabasePlugin::ParseError(future));
+    }
+  });
 }
 
 void FirebaseDatabasePlugin::DatabaseReferenceSetPriority(
@@ -591,19 +588,17 @@ void FirebaseDatabasePlugin::DatabaseReferenceSetPriority(
                          ? EncodableValueToVariant(*request.priority())
                          : Variant::Null();
 
-  ref.SetPriority(priority).OnCompletion(
-      [result](const Future<void>& future) {
-        if (future.error() == Error::kErrorNone) {
-          result(std::nullopt);
-        } else {
-          result(FirebaseDatabasePlugin::ParseError(future));
-        }
-      });
+  ref.SetPriority(priority).OnCompletion([result](const Future<void>& future) {
+    if (future.error() == Error::kErrorNone) {
+      result(std::nullopt);
+    } else {
+      result(FirebaseDatabasePlugin::ParseError(future));
+    }
+  });
 }
 
 void FirebaseDatabasePlugin::DatabaseReferenceRunTransaction(
-    const DatabasePigeonFirebaseApp& app,
-    const TransactionRequest& request,
+    const DatabasePigeonFirebaseApp& app, const TransactionRequest& request,
     std::function<void(std::optional<FlutterError> reply)> result) {
   Database* database = GetDatabaseFromPigeon(app);
   if (!database) {
@@ -629,7 +624,8 @@ void FirebaseDatabasePlugin::DatabaseReferenceRunTransaction(
                                      &transaction_results_, result};
 
   ref.RunTransaction(
-      [](MutableData* data, void* context) -> firebase::database::TransactionResult {
+      [](MutableData* data,
+         void* context) -> firebase::database::TransactionResult {
         auto* ctx = static_cast<TransactionContext*>(context);
 
         // Convert current data to EncodableValue
@@ -862,7 +858,8 @@ void FirebaseDatabasePlugin::QueryObserve(
   }
 
   DatabaseReference ref = database->GetReference(request.path().c_str());
-  firebase::database::Query query = ApplyQueryModifiers(ref, request.modifiers());
+  firebase::database::Query query =
+      ApplyQueryModifiers(ref, request.modifiers());
 
   // The event type will be passed as an argument when the Dart side calls
   // listen on the EventChannel. We need to create the appropriate handler.
@@ -924,9 +921,8 @@ void FirebaseDatabasePlugin::QueryObserve(
           }
           void OnCancelled(const Error& error,
                            const char* error_message) override {
-            events_->Error(
-                FirebaseDatabasePlugin::GetDatabaseErrorCode(error),
-                error_message ? error_message : "Unknown error");
+            events_->Error(FirebaseDatabasePlugin::GetDatabaseErrorCode(error),
+                           error_message ? error_message : "Unknown error");
           }
 
          private:
@@ -960,9 +956,8 @@ void FirebaseDatabasePlugin::QueryObserve(
           }
           void OnCancelled(const Error& error,
                            const char* error_message) override {
-            events_->Error(
-                FirebaseDatabasePlugin::GetDatabaseErrorCode(error),
-                error_message ? error_message : "Unknown error");
+            events_->Error(FirebaseDatabasePlugin::GetDatabaseErrorCode(error),
+                           error_message ? error_message : "Unknown error");
           }
 
          private:
@@ -1028,7 +1023,8 @@ void FirebaseDatabasePlugin::QueryKeepSynced(
   }
 
   DatabaseReference ref = database->GetReference(request.path().c_str());
-  firebase::database::Query query = ApplyQueryModifiers(ref, request.modifiers());
+  firebase::database::Query query =
+      ApplyQueryModifiers(ref, request.modifiers());
 
   bool keep_synced = request.value() ? *request.value() : false;
   query.SetKeepSynchronized(keep_synced);
@@ -1045,24 +1041,24 @@ void FirebaseDatabasePlugin::QueryGet(
   }
 
   DatabaseReference ref = database->GetReference(request.path().c_str());
-  firebase::database::Query query = ApplyQueryModifiers(ref, request.modifiers());
+  firebase::database::Query query =
+      ApplyQueryModifiers(ref, request.modifiers());
 
-  query.GetValue().OnCompletion(
-      [result](const Future<DataSnapshot>& future) {
-        if (future.error() == Error::kErrorNone) {
-          const DataSnapshot* snapshot = future.result();
-          EncodableMap result_map;
-          if (snapshot) {
-            result_map[EncodableValue("snapshot")] = EncodableValue(
-                FirebaseDatabasePlugin::DataSnapshotToEncodableMap(*snapshot));
-          } else {
-            result_map[EncodableValue("snapshot")] = EncodableValue();
-          }
-          result(result_map);
-        } else {
-          result(FirebaseDatabasePlugin::ParseError(future));
-        }
-      });
+  query.GetValue().OnCompletion([result](const Future<DataSnapshot>& future) {
+    if (future.error() == Error::kErrorNone) {
+      const DataSnapshot* snapshot = future.result();
+      EncodableMap result_map;
+      if (snapshot) {
+        result_map[EncodableValue("snapshot")] = EncodableValue(
+            FirebaseDatabasePlugin::DataSnapshotToEncodableMap(*snapshot));
+      } else {
+        result_map[EncodableValue("snapshot")] = EncodableValue();
+      }
+      result(result_map);
+    } else {
+      result(FirebaseDatabasePlugin::ParseError(future));
+    }
+  });
 }
 
 }  // namespace firebase_database_windows

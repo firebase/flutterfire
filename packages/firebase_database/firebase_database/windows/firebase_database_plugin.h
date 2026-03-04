@@ -64,14 +64,12 @@ class FirebaseDatabasePlugin : public flutter::Plugin,
       const DatabasePigeonFirebaseApp& app, const std::string& host,
       int64_t port,
       std::function<void(std::optional<FlutterError> reply)> result) override;
-  void Ref(
-      const DatabasePigeonFirebaseApp& app, const std::string* path,
-      std::function<void(ErrorOr<DatabaseReferencePlatform> reply)> result)
+  void Ref(const DatabasePigeonFirebaseApp& app, const std::string* path,
+           std::function<void(ErrorOr<DatabaseReferencePlatform> reply)> result)
       override;
-  void RefFromURL(
-      const DatabasePigeonFirebaseApp& app, const std::string& url,
-      std::function<void(ErrorOr<DatabaseReferencePlatform> reply)> result)
-      override;
+  void RefFromURL(const DatabasePigeonFirebaseApp& app, const std::string& url,
+                  std::function<void(ErrorOr<DatabaseReferencePlatform> reply)>
+                      result) override;
   void PurgeOutstandingWrites(
       const DatabasePigeonFirebaseApp& app,
       std::function<void(std::optional<FlutterError> reply)> result) override;
@@ -91,8 +89,7 @@ class FirebaseDatabasePlugin : public flutter::Plugin,
       const DatabaseReferenceRequest& request,
       std::function<void(std::optional<FlutterError> reply)> result) override;
   void DatabaseReferenceRunTransaction(
-      const DatabasePigeonFirebaseApp& app,
-      const TransactionRequest& request,
+      const DatabasePigeonFirebaseApp& app, const TransactionRequest& request,
       std::function<void(std::optional<FlutterError> reply)> result) override;
   void DatabaseReferenceGetTransactionResult(
       const DatabasePigeonFirebaseApp& app, int64_t transaction_key,
@@ -118,10 +115,10 @@ class FirebaseDatabasePlugin : public flutter::Plugin,
   void QueryKeepSynced(
       const DatabasePigeonFirebaseApp& app, const QueryRequest& request,
       std::function<void(std::optional<FlutterError> reply)> result) override;
-  void QueryGet(
-      const DatabasePigeonFirebaseApp& app, const QueryRequest& request,
-      std::function<void(ErrorOr<flutter::EncodableMap> reply)> result)
-      override;
+  void QueryGet(const DatabasePigeonFirebaseApp& app,
+                const QueryRequest& request,
+                std::function<void(ErrorOr<flutter::EncodableMap> reply)>
+                    result) override;
 
   static flutter::BinaryMessenger* messenger_;
   static std::map<
@@ -135,8 +132,7 @@ class FirebaseDatabasePlugin : public flutter::Plugin,
   firebase::database::Database* GetDatabaseFromPigeon(
       const DatabasePigeonFirebaseApp& app);
   firebase::database::Query ApplyQueryModifiers(
-      firebase::database::Query query,
-      const flutter::EncodableList& modifiers);
+      firebase::database::Query query, const flutter::EncodableList& modifiers);
 
   std::map<int64_t, flutter::EncodableMap> transaction_results_;
   int listener_count_ = 0;
