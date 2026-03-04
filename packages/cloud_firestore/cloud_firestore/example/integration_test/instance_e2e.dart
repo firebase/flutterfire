@@ -160,7 +160,7 @@ void runInstanceTests() {
           // been terminated".
           final instance = FirebaseFirestore.instanceFor(
             app: Firebase.app(),
-            databaseId: 'terminate-reinit-test',
+            databaseId: 'flutterfire-2',
           );
 
           // Use Firestore so it is fully initialized
