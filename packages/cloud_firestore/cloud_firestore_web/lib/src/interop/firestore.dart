@@ -1085,7 +1085,7 @@ class PipelineResult
     extends JsObjectWrapper<firestore_interop.PipelineResultJsImpl> {
   static final _expando = Expando<PipelineResult>();
 
-  late final DocumentReference _ref;
+  late final DocumentReference? _ref;
   late final Map<String, dynamic>? _data;
   late final DateTime? _createTime;
   late final DateTime? _updateTime;
@@ -1096,7 +1096,7 @@ class PipelineResult
   }
 
   PipelineResult._fromJsObject(firestore_interop.PipelineResultJsImpl jsObject)
-      : _ref = DocumentReference.getInstance(jsObject.ref),
+      : _ref = jsObject.ref != null ? DocumentReference.getInstance(jsObject.ref!) : null,
         _data = _dataFromResult(jsObject),
         _createTime = _timestampToDateTime(jsObject.createTime),
         _updateTime = _timestampToDateTime(jsObject.updateTime),
@@ -1122,7 +1122,7 @@ class PipelineResult
     return null;
   }
 
-  DocumentReference get ref => _ref;
+  DocumentReference? get ref => _ref;
   Map<String, dynamic>? get data => _data;
   DateTime? get createTime => _createTime;
   DateTime? get updateTime => _updateTime;
@@ -1138,15 +1138,24 @@ class PipelineSnapshot
 
   static PipelineSnapshot getInstance(
       firestore_interop.PipelineSnapshotJsImpl jsObject) {
+    print('PipelineSnapshot.getInstance: jsObject = $jsObject');
+    // Bypass Expando to test if key type causes the error:
+    // return PipelineSnapshot._fromJsObject(jsObject);
     return _expando[jsObject] ??= PipelineSnapshot._fromJsObject(jsObject);
+  }
+
+  static List<PipelineResult> _buildResults(
+      firestore_interop.PipelineSnapshotJsImpl jsObject) {
+    final rawResults = jsObject.results.toDart;
+    return rawResults
+        .cast<firestore_interop.PipelineResultJsImpl>()
+        .map(PipelineResult.getInstance)
+        .toList();
   }
 
   PipelineSnapshot._fromJsObject(
       firestore_interop.PipelineSnapshotJsImpl jsObject)
-      : _results = jsObject.results.toDart
-            .cast<firestore_interop.PipelineResultJsImpl>()
-            .map(PipelineResult.getInstance)
-            .toList(),
+      : _results = _buildResults(jsObject),
         _executionTime = _executionTimeFromJs(jsObject.executionTime),
         super.fromJsObject(jsObject);
 

@@ -6,13 +6,14 @@ part of 'cloud_firestore.dart';
 
 /// Result of executing a pipeline
 class PipelineResult {
-  final DocumentReference<Map<String, dynamic>> document;
+  /// The document reference, or null for aggregate-only results (no document row).
+  final DocumentReference<Map<String, dynamic>>? document;
   final DateTime? createTime;
   final DateTime? updateTime;
   final Map<String, dynamic>? _data;
 
   PipelineResult({
-    required this.document,
+    this.document,
     this.createTime,
     this.updateTime,
     Map<String, dynamic>? data,

@@ -29,8 +29,8 @@ abstract class PipelineResultPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
-  /// The document reference
-  DocumentReferencePlatform get document;
+  /// The document reference. Null for aggregate-only results (no document row).
+  DocumentReferencePlatform? get document;
 
   /// The creation time of the document
   DateTime? get createTime;

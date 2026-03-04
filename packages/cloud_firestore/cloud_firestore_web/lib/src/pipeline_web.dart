@@ -59,17 +59,19 @@ class PipelineResultWeb extends PipelineResultPlatform {
     FirebaseFirestorePlatform firestore,
     firestore_interop.Firestore firestoreWeb,
     interop.PipelineResultJsImpl jsResult,
-  )   : _document = DocumentReferenceWeb(
-          firestore,
-          firestoreWeb,
-          jsResult.ref.path.toDart,
-        ),
+  )   : _document = jsResult.ref != null
+          ? DocumentReferenceWeb(
+              firestore,
+              firestoreWeb,
+              jsResult.ref!.path.toDart,
+            )
+          : null,
         _createTime = _timestampToDateTime(jsResult.createTime),
         _updateTime = _timestampToDateTime(jsResult.updateTime),
         _data = _dataFromResult(jsResult),
         super();
 
-  final DocumentReferencePlatform _document;
+  final DocumentReferencePlatform? _document;
   final DateTime? _createTime;
   final DateTime? _updateTime;
   final Map<String, dynamic>? _data;
@@ -93,7 +95,7 @@ class PipelineResultWeb extends PipelineResultPlatform {
   }
 
   @override
-  DocumentReferencePlatform get document => _document;
+  DocumentReferencePlatform? get document => _document;
 
   @override
   DateTime? get createTime => _createTime;

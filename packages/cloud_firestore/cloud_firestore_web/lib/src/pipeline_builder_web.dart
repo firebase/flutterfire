@@ -18,9 +18,7 @@ interop.PipelineJsImpl buildPipelineFromStages(
   if (stages.isEmpty) {
     throw ArgumentError('Pipeline must have at least one stage (source).');
   }
-  print(jsFirestore);
   final source = jsFirestore.pipeline();
-  print('source: $source');
   final first = stages.first;
   final stageName = first['stage'] as String?;
 
@@ -28,7 +26,7 @@ interop.PipelineJsImpl buildPipelineFromStages(
   interop.PipelineJsImpl pipeline = _applySourceStage(
       source as interop.PipelineSourceJsImpl, jsFirestore, stageName, first);
 
-  final converter = PipelineExpressionConverterWeb(jsFirestore);
+  final converter = PipelineExpressionConverterWeb(interop.pipelines);
 
   // Apply remaining stages
   for (var i = 1; i < stages.length; i++) {

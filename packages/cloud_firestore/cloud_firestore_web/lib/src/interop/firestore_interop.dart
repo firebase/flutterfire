@@ -347,8 +347,77 @@ extension type FirestoreJsImpl._(JSObject _) implements JSObject {
 @staticInterop
 external PipelinesJsImpl get pipelines;
 
+/// Pipeline expression API — mirrors the Firebase JS SDK pipelines module.
+/// Use these to build expressions for where(), sort(), addFields(), aggregate(), etc.
 extension type PipelinesJsImpl._(JSObject _) implements JSObject {
   external JSPromise<PipelineSnapshotJsImpl> execute(JSAny pipeline);
+
+  // --- Expression builders ---
+  external JSAny field(JSString path);
+  external JSAny constant(JSAny value);
+
+  // --- Boolean / comparison ---
+  external JSAny equal(JSAny left, JSAny right);
+  external JSAny notEqual(JSAny left, JSAny right);
+  external JSAny greaterThan(JSAny left, JSAny right);
+  external JSAny greaterThanOrEqual(JSAny left, JSAny right);
+  external JSAny lessThan(JSAny left, JSAny right);
+  external JSAny lessThanOrEqual(JSAny left, JSAny right);
+  external JSAny and(JSAny a, JSAny b);
+  external JSAny or(JSAny a, JSAny b);
+  external JSAny not(JSAny expr);
+
+  // --- Existence / type checks ---
+  external JSAny exists(JSAny expr);
+  external JSAny isAbsent(JSAny expr);
+  external JSAny isError(JSAny expr);
+
+  // --- Array ---
+  external JSAny arrayContains(JSAny array, JSAny element);
+
+  // --- Ordering (for sort stage) ---
+  external JSAny ascending(JSAny expr);
+  external JSAny descending(JSAny expr);
+
+  // --- Aggregates ---
+  external AggregateFunctionJsImpl sum(JSAny expr);
+  external AggregateFunctionJsImpl average(JSAny expr);
+  external AggregateFunctionJsImpl count(JSAny expr);
+  external AggregateFunctionJsImpl countDistinct(JSAny expr);
+  external AggregateFunctionJsImpl minimum(JSAny expr);
+  external AggregateFunctionJsImpl maximum(JSAny expr);
+  external AggregateFunctionJsImpl countAll();
+
+  // --- Aliased (for select/addFields/aggregate output names) ---
+  external JSAny aliased(JSAny expr, JSString alias);
+}
+
+/// Aggregate function (result of sum(), average(), count(), etc. on pipelines).
+/// Has .as(alias) to create an aliased aggregate for accumulators.
+extension type AggregateFunctionJsImpl._(JSObject _) implements JSObject {
+  @JS('as')
+  external JSAny asAlias(JSString alias);
+}
+
+/// Aliased aggregate for use in aggregate() stage accumulators.
+/// Mirrors Firebase JS SDK: constructor(aggregate, alias, _methodName?).
+@JS('AliasedAggregate')
+@staticInterop
+abstract class AliasedAggregateJsImpl {
+  external factory AliasedAggregateJsImpl(
+    JSAny aggregate,
+    JSString alias, [
+    JSString? methodName,
+  ]);
+}
+
+/// Options for the aggregate() pipeline stage.
+/// Mirrors Firebase JS SDK AggregateStageOptions: { accumulators, groups? }.
+extension type AggregateStageOptionsJsImpl._(JSObject _) implements JSObject {
+  AggregateStageOptionsJsImpl() : this._(JSObject.new());
+
+  external set accumulators(JSAny value);
+  external set groups(JSAny value);
 }
 
 extension type WriteBatchJsImpl._(JSObject _) implements JSObject {
@@ -1043,7 +1112,7 @@ extension type PipelineJsImpl._(JSObject _) implements JSObject {
   external PipelineJsImpl addFields(JSAny fieldOrOptions);
   external PipelineJsImpl select(JSAny selectionOrOptions);
   external PipelineJsImpl distinct(JSAny groupOrOptions);
-  external PipelineJsImpl aggregate(JSAny accumulatorOrOptions);
+  external PipelineJsImpl aggregate(AggregateStageOptionsJsImpl options);
   external PipelineJsImpl sample(JSAny documentsOrOptions);
   external PipelineJsImpl unnest(JSAny selectableOrOptions);
   external PipelineJsImpl removeFields(JSAny fieldOrOptions);
@@ -1078,7 +1147,7 @@ extension type PipelineSnapshotJsImpl._(JSObject _) implements JSObject {
 
 /// Single result in a pipeline snapshot (document + data).
 extension type PipelineResultJsImpl._(JSObject _) implements JSObject {
-  external DocumentReferenceJsImpl get ref;
+  external DocumentReferenceJsImpl? get ref;
   external JSObject? data();
   external JSAny? get createTime;
   external JSAny? get updateTime;

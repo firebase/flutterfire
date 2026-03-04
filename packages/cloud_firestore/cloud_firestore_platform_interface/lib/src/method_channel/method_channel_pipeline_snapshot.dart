@@ -47,7 +47,7 @@ class MethodChannelPipelineSnapshot extends PipelineSnapshotPlatform {
 /// An implementation of [PipelineResultPlatform] that uses [MethodChannel] to
 /// communicate with Firebase plugins.
 class MethodChannelPipelineResult extends PipelineResultPlatform {
-  final DocumentReferencePlatform _document;
+  final DocumentReferencePlatform? _document;
   final DateTime? _createTime;
   final DateTime? _updateTime;
   final Map<String, dynamic>? _data;
@@ -59,16 +59,18 @@ class MethodChannelPipelineResult extends PipelineResultPlatform {
     this._createTime,
     this._updateTime,
     Map<String, dynamic>? data,
-  )   : _document = MethodChannelDocumentReference(
-          firestore,
-          documentPath ?? '',
-          pigeonApp,
-        ),
+  )   : _document = (documentPath != null && documentPath.isNotEmpty)
+            ? MethodChannelDocumentReference(
+                firestore,
+                documentPath,
+                pigeonApp,
+              )
+            : null,
         _data = data,
         super();
 
   @override
-  DocumentReferencePlatform get document => _document;
+  DocumentReferencePlatform? get document => _document;
 
   @override
   DateTime? get createTime => _createTime;
