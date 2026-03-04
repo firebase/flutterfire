@@ -334,6 +334,29 @@ void FirebaseDatabasePlugin::RegisterWithRegistrar(
                        nullptr);
 }
 
+// --- Helper: Extract namespace from a Firebase RTDB URL ---
+// e.g. "https://my-project-default-rtdb.firebaseio.com" -> "my-project-default-rtdb"
+// e.g. "https://my-project-default-rtdb.europe-west1.firebasedatabase.app" -> "my-project-default-rtdb"
+static std::string ExtractNamespaceFromUrl(const std::string& url) {
+  // Strip scheme
+  std::string host = url;
+  auto scheme_end = host.find("://");
+  if (scheme_end != std::string::npos) {
+    host = host.substr(scheme_end + 3);
+  }
+  // Strip path
+  auto slash = host.find('/');
+  if (slash != std::string::npos) {
+    host = host.substr(0, slash);
+  }
+  // Namespace is the first label of the host
+  auto dot = host.find('.');
+  if (dot != std::string::npos) {
+    return host.substr(0, dot);
+  }
+  return host;
+}
+
 // --- Helper: Get Database instance from Pigeon app ---
 Database* FirebaseDatabasePlugin::GetDatabaseFromPigeon(
     const DatabasePigeonFirebaseApp& app) {
@@ -342,9 +365,28 @@ Database* FirebaseDatabasePlugin::GetDatabaseFromPigeon(
     return nullptr;
   }
 
+  // Apply settings
+  const auto& settings = app.settings();
+
   Database* database = nullptr;
   const std::string* url = app.database_u_r_l();
-  if (url && !url->empty()) {
+
+  // If emulator is configured, construct an emulator URL
+  const std::string* emulator_host = settings.emulator_host();
+  const int64_t* emulator_port = settings.emulator_port();
+  if (emulator_host && emulator_port) {
+    // Extract namespace from the original database URL
+    std::string ns;
+    if (url && !url->empty()) {
+      ns = ExtractNamespaceFromUrl(*url);
+    } else {
+      // Fallback: use project ID + "-default-rtdb"
+      ns = std::string(firebase_app->options().project_id()) + "-default-rtdb";
+    }
+    std::string emulator_url = "http://" + *emulator_host + ":" +
+                               std::to_string(*emulator_port) + "?ns=" + ns;
+    database = Database::GetInstance(firebase_app, emulator_url.c_str());
+  } else if (url && !url->empty()) {
     database = Database::GetInstance(firebase_app, url->c_str());
   } else {
     database = Database::GetInstance(firebase_app);
@@ -352,8 +394,6 @@ Database* FirebaseDatabasePlugin::GetDatabaseFromPigeon(
 
   if (!database) return nullptr;
 
-  // Apply settings
-  const auto& settings = app.settings();
   if (settings.persistence_enabled()) {
     database->set_persistence_enabled(*settings.persistence_enabled());
   }
