@@ -135,7 +135,6 @@ class FirebaseDatabasePlugin : public flutter::Plugin,
       firebase::database::Query query, const flutter::EncodableList& modifiers);
 
   std::map<int64_t, flutter::EncodableMap> transaction_results_;
-  int listener_count_ = 0;
 };
 
 }  // namespace firebase_database_windows
