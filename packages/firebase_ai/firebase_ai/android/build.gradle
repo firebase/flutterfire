@@ -1,0 +1,38 @@
+group 'io.flutter.plugins.firebase.ai'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'com.android.library'
+apply from: file("local-config.gradle")
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+android {
+    if (project.android.hasProperty("namespace")) {
+      namespace 'io.flutter.plugins.firebase.ai'
+    }
+
+    compileSdk project.ext.compileSdk
+
+    defaultConfig {
+        minSdkVersion project.ext.minSdk
+        targetSdkVersion project.ext.targetSdk
+    }
+
+    compileOptions {
+        sourceCompatibility project.ext.javaVersion
+        targetCompatibility project.ext.javaVersion
+    }
+
+    kotlinOptions {
+        jvmTarget = project.ext.javaVersion
+    }
+
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+}

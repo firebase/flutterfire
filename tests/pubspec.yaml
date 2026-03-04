@@ -42,6 +42,7 @@ dependencies:
   firebase_remote_config: ^6.2.0
   firebase_remote_config_platform_interface: ^2.1.0
   firebase_remote_config_web: ^1.10.4
+  firebase_ai: ^3.9.0
   firebase_storage: ^13.1.0
   firebase_storage_platform_interface: ^5.2.18
   firebase_storage_web: ^3.11.3

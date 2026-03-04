@@ -30,6 +30,7 @@ import 'content.dart';
 import 'developer/api.dart';
 import 'error.dart';
 import 'firebaseai_version.dart';
+import 'platform_header_helper.dart';
 import 'imagen/imagen_api.dart';
 import 'imagen/imagen_content.dart';
 import 'imagen/imagen_edit.dart';
@@ -300,6 +301,10 @@ abstract class BaseModel {
       if (app != null && app.isAutomaticDataCollectionEnabled) {
         headers['X-Firebase-AppId'] = app.options.appId;
       }
+      // Add platform-specific headers for API key restrictions.
+      // Android: X-Android-Package + X-Android-Cert
+      // iOS/macOS: x-ios-bundle-identifier
+      headers.addAll(await getPlatformSecurityHeaders());
       return headers;
     };
   }
