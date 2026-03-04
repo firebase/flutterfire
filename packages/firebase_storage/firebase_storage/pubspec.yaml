@@ -25,6 +25,7 @@ dependencies:
   firebase_storage_web: ^3.11.3
   flutter:
     sdk: flutter
+  mime: ^2.0.0
 
 dev_dependencies:
   flutter_test:
