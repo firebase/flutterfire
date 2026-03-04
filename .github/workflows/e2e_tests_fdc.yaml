@@ -338,7 +338,7 @@ jobs:
           path: ~/.cache/firebase/emulators
 
   web-wasm:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     timeout-minutes: 15
     strategy:
       fail-fast: false
