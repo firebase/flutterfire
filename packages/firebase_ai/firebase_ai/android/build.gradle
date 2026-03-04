@@ -4,6 +4,12 @@ version '1.0-SNAPSHOT'
 apply plugin: 'com.android.library'
 apply from: file("local-config.gradle")
 
+// AGP 9+ has built-in Kotlin support; older versions need the plugin explicitly.
+def agpMajor = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0] as int
+if (agpMajor < 9) {
+  apply plugin: 'kotlin-android'
+}
+
 buildscript {
     repositories {
         google()
@@ -16,11 +22,10 @@ android {
       namespace 'io.flutter.plugins.firebase.ai'
     }
 
-    compileSdk project.ext.compileSdk
+    compileSdkVersion project.ext.compileSdk
 
     defaultConfig {
         minSdkVersion project.ext.minSdk
-        targetSdkVersion project.ext.targetSdk
     }
 
     compileOptions {
@@ -28,8 +33,14 @@ android {
         targetCompatibility project.ext.javaVersion
     }
 
-    kotlinOptions {
-        jvmTarget = project.ext.javaVersion
+    if (agpMajor < 9) {
+      kotlinOptions {
+          jvmTarget = project.ext.javaVersion
+      }
+    }
+
+    sourceSets {
+        main.java.srcDirs += "src/main/kotlin"
     }
 
     lintOptions {
