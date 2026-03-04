@@ -304,10 +304,8 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// This method is useful only when you want to force this instance to release
   ///  all of its resources or in combination with [clearPersistence()] to ensure
   ///  that all local state is destroyed between test runs.
-  Future<void> terminate() async {
-    await _delegate.terminate();
-    _cachedInstances.remove('${app.name}|$databaseId');
-    _delegatePackingProperty = null;
+  Future<void> terminate() {
+    return _delegate.terminate();
   }
 
   /// Waits until all currently pending writes for the active user have been
