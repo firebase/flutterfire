@@ -215,11 +215,18 @@ For further information, see this [issue](https://github.com/firebase/flutterfir
   and [enable Apple as a sign-in provider](/docs/auth/web/apple#enable-apple-as-a-sign-in-provider).
 
 
+To have Apple present the full first-time sign-in UI (including the "Share/Hide email" option),
+you must request the `email` and `name` scopes:
+{: .callout .callout-info}
+
 ```dart
 import 'package:firebase_auth/firebase_auth.dart';
 
 Future<UserCredential> signInWithApple() async {
   final appleProvider = AppleAuthProvider();
+  appleProvider.addScope('email');
+  appleProvider.addScope('name');
+
   if (kIsWeb) {
     await FirebaseAuth.instance.signInWithPopup(appleProvider);
   } else {
@@ -266,6 +273,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 Future<UserCredential> signInWithApple() async {
   final appleProvider = AppleAuthProvider();
+  appleProvider.addScope('email');
+  appleProvider.addScope('name');
 
   UserCredential userCredential = await FirebaseAuth.instance.signInWithPopup(appleProvider);
   // Keep the authorization code returned from Apple platforms
