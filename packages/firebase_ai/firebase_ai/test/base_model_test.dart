@@ -80,9 +80,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('BaseModel', () {
-    setUp(() {
-      clearPlatformSecurityHeadersCache();
-    });
+    setUp(clearPlatformSecurityHeadersCache);
 
     test('firebaseTokens returns a function that generates headers', () async {
       final tokenFunction = BaseModel.firebaseTokens(null, null, null, false);

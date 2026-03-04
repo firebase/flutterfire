@@ -19,9 +19,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  setUp(() {
-    clearPlatformSecurityHeadersCache();
-  });
+  setUp(clearPlatformSecurityHeadersCache);
 
   tearDown(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger

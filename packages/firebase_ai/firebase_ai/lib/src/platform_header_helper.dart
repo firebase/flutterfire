@@ -14,7 +14,6 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:meta/meta.dart';
 
 /// Method channel for the native platform helper plugin.
 @visibleForTesting

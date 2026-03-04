@@ -30,13 +30,13 @@ import 'content.dart';
 import 'developer/api.dart';
 import 'error.dart';
 import 'firebaseai_version.dart';
-import 'platform_header_helper.dart';
 import 'imagen/imagen_api.dart';
 import 'imagen/imagen_content.dart';
 import 'imagen/imagen_edit.dart';
 import 'imagen/imagen_reference.dart';
 import 'live_api.dart';
 import 'live_session.dart';
+import 'platform_header_helper.dart';
 import 'tool.dart';
 
 part 'generative_model.dart';
