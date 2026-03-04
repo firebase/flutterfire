@@ -490,6 +490,62 @@ void main() {
           }
           expect(FirebaseAuth.instance.currentUser, isNull);
         });
+
+        test(
+          'should preserve photoURL after reload',
+          () async {
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: email,
+              password: testPassword,
+            );
+            await FirebaseAuth.instance.currentUser!.updatePhotoURL(
+              'http://photo.url/test.jpg',
+            );
+            await FirebaseAuth.instance.currentUser!.reload();
+
+            expect(
+              FirebaseAuth.instance.currentUser!.photoURL,
+              'http://photo.url/test.jpg',
+            );
+
+            // Reload again to exercise the PigeonParser path
+            // with a non-null photoURL
+            await FirebaseAuth.instance.currentUser!.reload();
+
+            expect(
+              FirebaseAuth.instance.currentUser!.photoURL,
+              'http://photo.url/test.jpg',
+            );
+            expect(
+              FirebaseAuth.instance.currentUser!.displayName,
+              isNull,
+            );
+          },
+          skip: kIsWeb ||
+              defaultTargetPlatform == TargetPlatform.macOS ||
+              defaultTargetPlatform == TargetPlatform.windows,
+        );
+
+        test(
+          'should handle reload when photoURL is null',
+          () async {
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: email,
+              password: testPassword,
+            );
+
+            // User created without photoURL — reload should not crash
+            await FirebaseAuth.instance.currentUser!.reload();
+
+            expect(
+              FirebaseAuth.instance.currentUser!.photoURL,
+              isNull,
+            );
+          },
+          skip: kIsWeb ||
+              defaultTargetPlatform == TargetPlatform.macOS ||
+              defaultTargetPlatform == TargetPlatform.windows,
+        );
       });
 
       group(

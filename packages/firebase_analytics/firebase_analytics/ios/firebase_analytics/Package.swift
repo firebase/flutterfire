@@ -79,6 +79,11 @@ guard let shared_spm_version = Version("\(firebase_core_version_string)\(shared_
   fatalError("Invalid firebase_core version: \(firebase_core_version_string)\(shared_spm_tag)")
 }
 
+// Set FIREBASE_ANALYTICS_WITHOUT_ADID=true to use FirebaseAnalyticsWithoutAdIdSupport
+// e.g. FIREBASE_ANALYTICS_WITHOUT_ADID=true flutter build ios
+let useWithoutAdId = ProcessInfo.processInfo.environment["FIREBASE_ANALYTICS_WITHOUT_ADID"] != nil
+let analyticsProduct = useWithoutAdId ? "FirebaseAnalyticsWithoutAdIdSupport" : "FirebaseAnalytics"
+
 let package = Package(
   name: "firebase_analytics",
   platforms: [
@@ -95,7 +100,7 @@ let package = Package(
     .target(
       name: "firebase_analytics",
       dependencies: [
-        .product(name: "FirebaseAnalytics", package: "firebase-ios-sdk"),
+        .product(name: analyticsProduct, package: "firebase-ios-sdk"),
         // Wrapper dependency
         .product(name: "firebase-core-shared", package: "flutterfire"),
       ],

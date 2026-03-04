@@ -1,3 +1,7 @@
+## 6.1.3
+
+ - **FIX**: resolve lint issues ([#18017](https://github.com/firebase/flutterfire/issues/18017)). ([e8e85397](https://github.com/firebase/flutterfire/commit/e8e85397ccdcab6c8b84348884b4673f86b79d1c))
+
 ## 6.1.2
 
  - **FIX**(firestore,android): avoid ConcurrentModificationException by collecting Firestore instances before termination ([#17956](https://github.com/firebase/flutterfire/issues/17956)). ([f94bbd68](https://github.com/firebase/flutterfire/commit/f94bbd688c3c0aaa62ba9117b23902c10297ea84))

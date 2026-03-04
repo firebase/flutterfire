@@ -25,19 +25,16 @@ abstract class CacheProvider {
   Future<bool> initialize();
 
   /// Stores a `ResultTree` object.
-  void saveResultTree(String queryId, ResultTree resultTree);
+  void setResultTree(String queryId, ResultTree resultTree);
 
   /// Retrieves a `ResultTree` object.
   ResultTree? getResultTree(String queryId);
 
   /// Stores an `EntityDataObject` object.
-  void saveEntityDataObject(EntityDataObject edo);
+  void updateEntityData(EntityDataObject edo);
 
   /// Retrieves an `EntityDataObject` object.
-  EntityDataObject getEntityDataObject(String guid);
-
-  /// Manages the cache size and eviction policies.
-  void manageCacheSize();
+  EntityDataObject getEntityData(String guid);
 
   /// Clears all data from the cache.
   void clear();

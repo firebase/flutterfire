@@ -44,7 +44,7 @@ void main() {
         () => convertPlatformException(platformException, StackTrace.empty),
         throwsA(
           isA<FirebaseAuthException>()
-              .having((e) => e.code, 'code', 'BLOCKING_FUNCTION_ERROR_RESPONSE')
+              .having((e) => e.code, 'code', 'blocking-function-error-response')
               .having((e) => e.message, 'message',
                   '{"error":{"details":"The user is not allowed to log in","message":"","status":"PERMISSION_DENIED"}}'),
         ),

@@ -328,52 +328,47 @@ void runQueryTests() {
 
         Stream<QuerySnapshot<Map<String, dynamic>>> stream =
             collection.snapshots();
-        int call = 0;
+        final snapshots = <QuerySnapshot<Map<String, dynamic>>>[];
+        final receivedAll = Completer<void>();
 
-        StreamSubscription subscription = stream.listen(
-          expectAsync1(
-            (QuerySnapshot<Map<String, dynamic>> snapshot) {
-              call++;
-              if (call == 1) {
-                expect(snapshot.docs.length, equals(1));
-                QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-                    snapshot.docs[0];
-                expect(documentSnapshot.data()['foo'], equals('bar'));
-              } else if (call == 2) {
-                expect(snapshot.docs.length, equals(2));
-                QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-                    snapshot.docs.firstWhere((doc) => doc.id == 'doc1');
-                expect(documentSnapshot.data()['bar'], equals('baz'));
-              } else if (call == 3) {
-                expect(snapshot.docs.length, equals(1));
-                expect(
-                  snapshot.docs.where((doc) => doc.id == 'doc1').isEmpty,
-                  isTrue,
-                );
-              } else if (call == 4) {
-                expect(snapshot.docs.length, equals(2));
-                QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-                    snapshot.docs.firstWhere((doc) => doc.id == 'doc2');
-                expect(documentSnapshot.data()['foo'], equals('bar'));
-              } else if (call == 5) {
-                expect(snapshot.docs.length, equals(2));
-                QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-                    snapshot.docs.firstWhere((doc) => doc.id == 'doc2');
-                expect(documentSnapshot.data()['foo'], equals('baz'));
-              } else {
-                fail('Should not have been called');
-              }
-            },
-            count: 5,
-            reason: 'Stream should only have been called five times.',
-          ),
-        );
+        StreamSubscription subscription = stream.listen((snapshot) {
+          snapshots.add(snapshot);
+          if (snapshots.length >= 5 && !receivedAll.isCompleted) {
+            receivedAll.complete();
+          }
+        });
 
+        // Wait for initial snapshot before making changes
         await Future.delayed(const Duration(milliseconds: 500));
         await collection.doc('doc1').set({'bar': 'baz'});
         await collection.doc('doc1').delete();
         await collection.doc('doc2').set({'foo': 'bar'});
         await collection.doc('doc2').update({'foo': 'baz'});
+
+        // Wait for all 5 snapshots with a timeout instead of hanging forever
+        await receivedAll.future.timeout(const Duration(seconds: 30));
+
+        expect(snapshots[0].docs.length, equals(1));
+        expect(snapshots[0].docs[0].data()['foo'], equals('bar'));
+
+        expect(snapshots[1].docs.length, equals(2));
+        final doc1 = snapshots[1].docs.firstWhere((doc) => doc.id == 'doc1');
+        expect(doc1.data()['bar'], equals('baz'));
+
+        expect(snapshots[2].docs.length, equals(1));
+        expect(
+          snapshots[2].docs.where((doc) => doc.id == 'doc1').isEmpty,
+          isTrue,
+        );
+
+        expect(snapshots[3].docs.length, equals(2));
+        final doc2set = snapshots[3].docs.firstWhere((doc) => doc.id == 'doc2');
+        expect(doc2set.data()['foo'], equals('bar'));
+
+        expect(snapshots[4].docs.length, equals(2));
+        final doc2update =
+            snapshots[4].docs.firstWhere((doc) => doc.id == 'doc2');
+        expect(doc2update.data()['foo'], equals('baz'));
 
         await subscription.cancel();
       });

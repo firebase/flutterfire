@@ -9,6 +9,7 @@
 
 #include "firebase/app.h"
 #include "firebase_core/plugin_version.h"
+#include "flutter_firebase_plugin_registry.h"
 #include "messages.g.h"
 
 // For getPlatformVersion; remove unless needed for your plugin implementation.
@@ -95,7 +96,8 @@ CoreFirebaseOptions optionsFromFIROptions(const firebase::AppOptions& options) {
 
 // Convert a firebase::App to CoreInitializeResponse
 CoreInitializeResponse AppToCoreInitializeResponse(const App& app) {
-  flutter::EncodableMap plugin_constants;
+  flutter::EncodableMap plugin_constants =
+      FlutterFirebasePluginRegistry::GetPluginConstantsForFirebaseApp(app);
   CoreInitializeResponse response = CoreInitializeResponse(
       app.name(), optionsFromFIROptions(app.options()), plugin_constants);
   return response;
@@ -116,7 +118,11 @@ void FirebaseCorePlugin::InitializeApp(
 
 void FirebaseCorePlugin::InitializeCore(
     std::function<void(ErrorOr<flutter::EncodableList> reply)> result) {
-  // TODO: Missing function to get the list of currently initialized apps
+  if (coreInitialized) {
+    FlutterFirebasePluginRegistry::DidReinitializeFirebaseCore();
+  }
+  coreInitialized = true;
+
   std::vector<CoreInitializeResponse> initializedApps;
   std::vector<App*> all_apps = App::GetApps();
   for (const App* app : all_apps) {

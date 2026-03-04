@@ -1,3 +1,9 @@
+## 0.2.3
+
+ - **REFACTOR**(fdc): Support for entityId path extensions and hardening ([#17988](https://github.com/firebase/flutterfire/issues/17988)). ([fed585f5](https://github.com/firebase/flutterfire/commit/fed585f5a9b65d683cefdc7fa97ed2692e4ec817))
+ - **FIX**: resolve lint issues ([#18017](https://github.com/firebase/flutterfire/issues/18017)). ([e8e85397](https://github.com/firebase/flutterfire/commit/e8e85397ccdcab6c8b84348884b4673f86b79d1c))
+ - **FEAT**(fdc): Data Connect client sdk caching ([#17890](https://github.com/firebase/flutterfire/issues/17890)). ([02a019bc](https://github.com/firebase/flutterfire/commit/02a019bc25bb4a49d62c1079ed15e0c3aec8a5ec))
+
 ## 0.2.2+2
 
  - Update a dependency to the latest release.

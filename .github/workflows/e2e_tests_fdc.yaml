@@ -102,7 +102,7 @@ jobs:
             ~/.android/adb*
           key: avd-${{ runner.os }}-${{ env.AVD_API_LEVEL }}-${{ env.AVD_TARGET }}-${{ env.AVD_ARCH }}
       - name: Start AVD then run E2E tests
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: reactivecircus/android-emulator-runner@b530d96654c385303d652368551fb075bc2f0b6b
         with:
           api-level: ${{ env.AVD_API_LEVEL }}
           target: ${{ env.AVD_TARGET }}
@@ -110,7 +110,7 @@ jobs:
           emulator-build: 14214601
           working-directory: 'packages/firebase_data_connect/firebase_data_connect/example'
           script: |
-            flutter test integration_test/e2e_test.dart --dart-define=CI=true -d emulator-5554
+            flutter test integration_test/e2e_test.dart --dart-define=CI=true --timeout 10x -d emulator-5554
       - name: Save Android Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
         if: github.ref == 'refs/heads/main'
@@ -153,7 +153,7 @@ jobs:
           java-version: '21'
       - name: Setup PostgreSQL for Linux/macOS/Windows
         uses: ikalnytskyi/action-setup-postgres@v7
-      - uses: hendrikmuhs/ccache-action@c92f40bee50034e84c763e33b317c77adaa81c92
+      - uses: hendrikmuhs/ccache-action@5ebbd400eff9e74630f759d94ddd7b6c26299639
         name: Xcode Compile Cache
         with:
           key: xcode-cache-${{ runner.os }}
@@ -213,19 +213,27 @@ jobs:
           unset PGSERVICEFILE
           firebase experiments:enable dataconnect
           ./start-firebase-emulator.sh
+      - uses: futureware-tech/simulator-action@e89aa8f93d3aec35083ff49d2854d07f7186f7f5
+        id: simulator
+        with:
+          model: "iPhone 16"
       - name: 'E2E Tests'
         working-directory: 'packages/firebase_data_connect/firebase_data_connect/example'
+        env:
+          SIMULATOR: ${{ steps.simulator.outputs.udid }}
         run: |
-          # Boot simulator and wait for System app to be ready.
-          # List of available simulators: https://github.com/actions/runner-images/blob/main/images/macos/macos-14-Readme.md#installed-simulators
-          SIMULATOR="iPhone 16"
-          xcrun simctl bootstatus "$SIMULATOR" -b
-          xcrun simctl logverbose "$SIMULATOR" enable
-          # Sleep to allow simulator to settle.
-          sleep 15
           # Uncomment following line to have simulator logs printed out for debugging purposes.
           # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
-          flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true
+          # The iOS simulator sometimes fails to connect the VM Service, hanging for
+          # 12 minutes before timing out. Use a 6-minute limit and retry once with
+          # a simulator reboot. Normal connection takes 30s-5min.
+          perl -e 'alarm 360; exec @ARGV' -- flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true --timeout 10x || {
+            echo "First attempt failed or timed out. Rebooting simulator and retrying..."
+            xcrun simctl shutdown "$SIMULATOR" || true
+            xcrun simctl boot "$SIMULATOR"
+            xcrun simctl bootstatus "$SIMULATOR" -b
+            flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true --timeout 10x
+          }
       - name: Save Firestore Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
         if: github.ref == 'refs/heads/main'
