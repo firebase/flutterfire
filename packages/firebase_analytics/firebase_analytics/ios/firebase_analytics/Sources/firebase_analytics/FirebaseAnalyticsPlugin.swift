@@ -132,7 +132,7 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
       Analytics.initiateOnDeviceConversionMeasurement(phoneNumber: phoneNumber)
     }
     if let hashedEmailAddress = arguments["hashedEmailAddress"] as? String,
-       let data = hashedEmailAddress.data(using: .utf8) {
+       let data = hexStringToData(hashedEmailAddress) {
       Analytics.initiateOnDeviceConversionMeasurement(hashedEmailAddress: data)
     }
     if let hashedPhoneNumber = arguments["hashedPhoneNumber"] as? String,
