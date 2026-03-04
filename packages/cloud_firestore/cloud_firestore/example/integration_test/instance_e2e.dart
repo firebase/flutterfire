@@ -181,6 +181,10 @@ void runInstanceTests() {
           // The doc should not exist because we cleared persistence and
           // this is a fresh connection.
           expect(snapshot.exists, isFalse);
+
+          // Clean up: terminate so the native instance cache is cleared
+          // for subsequent tests that may use the same databaseId.
+          await instance.terminate();
         },
         skip: kIsWeb,
       );
