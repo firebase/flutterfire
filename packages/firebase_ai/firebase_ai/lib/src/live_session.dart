@@ -156,6 +156,14 @@ class LiveSession {
     );
   }
 
+  /// Resumes an existing live session with the server.
+  ///
+  /// This closes the current WebSocket connection and establishes a new one using
+  /// the same configuration (URI, headers, model, system instruction, tools, etc.)
+  /// as the original session.
+  ///
+  /// [sessionResumption] (optional): The configuration for session resumption,
+  /// such as the handle to the previous session state to restore.
   Future<void> resumeSession(
       {SessionResumptionConfig? sessionResumption}) async {
     await _wsSubscription.cancel();

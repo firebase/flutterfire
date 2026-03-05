@@ -100,6 +100,8 @@ export 'src/imagen/imagen_reference.dart'
 export 'src/live_api.dart'
     show
         AudioTranscriptionConfig,
+        ContextWindowCompressionConfig,
+        GoingAwayNotice,
         LiveGenerationConfig,
         LiveServerMessage,
         LiveServerContent,
@@ -108,8 +110,8 @@ export 'src/live_api.dart'
         LiveServerResponse,
         SessionResumptionConfig,
         SessionResumptionUpdate,
+        SlidingWindow,
         SpeechConfig,
-        GoingAwayNotice,
         Transcription;
 export 'src/live_session.dart' show LiveSession;
 export 'src/schema.dart' show Schema, SchemaType;
