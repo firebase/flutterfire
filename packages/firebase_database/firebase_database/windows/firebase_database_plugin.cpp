@@ -329,16 +329,17 @@ FirebaseDatabasePlugin::~FirebaseDatabasePlugin() {
   // Clean up event channels (which own the stream handlers via
   // SetStreamHandler). Destroying them triggers DatabaseGenericStreamHandler
   // destructors that remove active listeners from queries.
+  // Must happen before deleting Database instances.
   event_channels_.clear();
   stream_handlers_.clear();
   transaction_results_.clear();
 
-  // Disconnect all database instances to close WebSocket connections and
-  // allow background threads to exit cleanly.
+  // Delete all Database instances to properly shut down WebSocket connections
+  // and stop background scheduler threads. The Database destructor calls
+  // DeleteInternal() which cleans up the Repo, closes connections, and removes
+  // the instance from the singleton cache.
   for (auto* db : active_databases_) {
-    if (db) {
-      db->GoOffline();
-    }
+    delete db;
   }
   active_databases_.clear();
 }
