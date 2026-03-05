@@ -63,21 +63,26 @@ std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
 std::map<std::string, firebase::database::Database*>
     FirebaseDatabasePlugin::database_instances_;
 
-// atexit handler: disconnect all Database instances before static destruction.
-// The C++ SDK's App::~App() triggers Database::DeleteInternal() which joins
-// background threads (WebSocket event loop + scheduler). If the WebSocket is
-// still connected, the thread join can hang, causing the test runner to kill
-// the process with exit code 1. Calling GoOffline() closes the WebSocket
-// connection so threads can exit cleanly before the joins happen.
-static void DisconnectDatabaseInstances() {
+// atexit handler: clean up Database resources before static destruction.
+// 1. Clear event channels to trigger StreamHandler destruction, which
+//    unregisters listeners from the Database while it's still alive.
+// 2. Call GoOffline() to close WebSocket connections so thread joins
+//    during App::~App() → Database::DeleteInternal() complete quickly.
+static void CleanupBeforeStaticDestruction() {
+  // Destroy event channels and stream handlers first. This triggers
+  // StreamHandler destructors which call RemoveValueListener /
+  // RemoveChildListener while the Database is still valid.
+  FirebaseDatabasePlugin::event_channels_.clear();
+  FirebaseDatabasePlugin::stream_handlers_.clear();
+
+  // Disconnect all Database instances to close WebSocket connections.
   for (auto& pair : FirebaseDatabasePlugin::database_instances_) {
     if (pair.second) {
       pair.second->GoOffline();
     }
   }
-  // Give the scheduler thread time to process the GoOffline callbacks
-  // and close WebSocket connections before static destruction begins.
-  std::this_thread::sleep_for(std::chrono::milliseconds(200));
+  // Give the scheduler thread time to process GoOffline callbacks.
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
 }
 
 // --- Helper: Register an EventChannel with a generated name ---
@@ -353,9 +358,9 @@ void FirebaseDatabasePlugin::RegisterWithRegistrar(
   App::RegisterLibrary(kLibraryName.c_str(), getPluginVersion().c_str(),
                        nullptr);
 
-  // Register atexit handler to disconnect Database instances before
-  // static destruction triggers thread joins in the C++ SDK.
-  std::atexit(DisconnectDatabaseInstances);
+  // Register atexit handler to clean up listeners and disconnect
+  // before static destruction triggers thread joins in the C++ SDK.
+  std::atexit(CleanupBeforeStaticDestruction);
 }
 
 // --- Helper: Extract namespace from a Firebase RTDB URL ---
@@ -955,13 +960,20 @@ void FirebaseDatabasePlugin::QueryObserve(
         : query_(query), value_listener_(nullptr), child_listener_(nullptr) {}
 
     ~DatabaseGenericStreamHandler() override {
-      // Do NOT remove listeners here. During process shutdown, the Query's
-      // underlying Database may already be destroyed (static destruction
-      // order). Listeners are removed in OnCancelInternal when Dart cancels
-      // the stream during normal operation. The C++ SDK will clean up any
-      // remaining listeners when the Database instance is destroyed.
-      delete value_listener_;
-      delete child_listener_;
+      // Remove listeners before deleting to avoid dangling pointers in the
+      // Database's internal listener list. Query::RemoveXxxListener() checks
+      // if (internal_) first, so this is a safe no-op if the Database was
+      // already destroyed (the cleanup mechanism nullifies internal_).
+      if (value_listener_) {
+        query_.RemoveValueListener(value_listener_);
+        delete value_listener_;
+        value_listener_ = nullptr;
+      }
+      if (child_listener_) {
+        query_.RemoveChildListener(child_listener_);
+        delete child_listener_;
+        child_listener_ = nullptr;
+      }
     }
 
    protected:
