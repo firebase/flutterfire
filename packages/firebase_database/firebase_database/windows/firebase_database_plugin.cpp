@@ -326,21 +326,13 @@ firebase::database::Query FirebaseDatabasePlugin::ApplyQueryModifiers(
 FirebaseDatabasePlugin::FirebaseDatabasePlugin() {}
 
 FirebaseDatabasePlugin::~FirebaseDatabasePlugin() {
-  // Clean up event channels (which own the stream handlers via
-  // SetStreamHandler). Destroying them triggers DatabaseGenericStreamHandler
-  // destructors that remove active listeners from queries.
-  // Must happen before deleting Database instances.
+  // Clear our own maps. The EventChannel/StreamHandler destructors will
+  // run but won't try to remove SDK listeners (handled safely in
+  // DatabaseGenericStreamHandler's destructor). The C++ SDK cleans up its
+  // own Database instances during static destruction.
   event_channels_.clear();
   stream_handlers_.clear();
   transaction_results_.clear();
-
-  // Delete all Database instances to properly shut down WebSocket connections
-  // and stop background scheduler threads. The Database destructor calls
-  // DeleteInternal() which cleans up the Repo, closes connections, and removes
-  // the instance from the singleton cache.
-  for (auto* db : active_databases_) {
-    delete db;
-  }
   active_databases_.clear();
 }
 
@@ -937,14 +929,13 @@ void FirebaseDatabasePlugin::QueryObserve(
         : query_(query), value_listener_(nullptr), child_listener_(nullptr) {}
 
     ~DatabaseGenericStreamHandler() override {
-      if (value_listener_) {
-        query_.RemoveValueListener(value_listener_);
-        delete value_listener_;
-      }
-      if (child_listener_) {
-        query_.RemoveChildListener(child_listener_);
-        delete child_listener_;
-      }
+      // Do NOT remove listeners here. During process shutdown, the Query's
+      // underlying Database may already be destroyed (static destruction
+      // order). Listeners are removed in OnCancelInternal when Dart cancels
+      // the stream during normal operation. The C++ SDK will clean up any
+      // remaining listeners when the Database instance is destroyed.
+      delete value_listener_;
+      delete child_listener_;
     }
 
    protected:
