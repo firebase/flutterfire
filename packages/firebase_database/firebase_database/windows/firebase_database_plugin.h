@@ -127,8 +127,7 @@ class FirebaseDatabasePlugin : public flutter::Plugin,
       event_channels_;
   static std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
       stream_handlers_;
-  static std::map<std::string,
-                   std::unique_ptr<firebase::database::Database>>
+  static std::map<std::string, firebase::database::Database*>
       database_instances_;
 
  private:

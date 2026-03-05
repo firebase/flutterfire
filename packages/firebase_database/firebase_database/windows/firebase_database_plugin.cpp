@@ -10,6 +10,7 @@
 
 #include <chrono>
 #include <condition_variable>
+#include <cstdlib>
 #include <functional>
 #include <iostream>
 #include <map>
@@ -59,8 +60,25 @@ std::map<std::string,
     FirebaseDatabasePlugin::event_channels_;
 std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
     FirebaseDatabasePlugin::stream_handlers_;
-std::map<std::string, std::unique_ptr<firebase::database::Database>>
+std::map<std::string, firebase::database::Database*>
     FirebaseDatabasePlugin::database_instances_;
+
+// atexit handler: disconnect all Database instances before static destruction.
+// The C++ SDK's App::~App() triggers Database::DeleteInternal() which joins
+// background threads (WebSocket event loop + scheduler). If the WebSocket is
+// still connected, the thread join can hang, causing the test runner to kill
+// the process with exit code 1. Calling GoOffline() closes the WebSocket
+// connection so threads can exit cleanly before the joins happen.
+static void DisconnectDatabaseInstances() {
+  for (auto& pair : FirebaseDatabasePlugin::database_instances_) {
+    if (pair.second) {
+      pair.second->GoOffline();
+    }
+  }
+  // Give the scheduler thread time to process the GoOffline callbacks
+  // and close WebSocket connections before static destruction begins.
+  std::this_thread::sleep_for(std::chrono::milliseconds(200));
+}
 
 // --- Helper: Register an EventChannel with a generated name ---
 static std::string RegisterEventChannel(
@@ -334,6 +352,10 @@ void FirebaseDatabasePlugin::RegisterWithRegistrar(
   registrar->AddPlugin(std::move(plugin));
   App::RegisterLibrary(kLibraryName.c_str(), getPluginVersion().c_str(),
                        nullptr);
+
+  // Register atexit handler to disconnect Database instances before
+  // static destruction triggers thread joins in the C++ SDK.
+  std::atexit(DisconnectDatabaseInstances);
 }
 
 // --- Helper: Extract namespace from a Firebase RTDB URL ---
@@ -391,9 +413,12 @@ Database* FirebaseDatabasePlugin::GetDatabaseFromPigeon(
 
   std::string cache_key = app.app_name() + "-" + effective_url;
 
-  // Return cached instance if available
-  if (database_instances_.find(cache_key) != database_instances_.end()) {
-    return database_instances_[cache_key].get();
+  // Return cached instance if available (raw pointer, not owned).
+  // The C++ SDK manages Database instance lifetime internally.
+  // App::~App() triggers Database::DeleteInternal() during static destruction.
+  auto it = database_instances_.find(cache_key);
+  if (it != database_instances_.end()) {
+    return it->second;
   }
 
   // Create new instance
@@ -413,11 +438,10 @@ Database* FirebaseDatabasePlugin::GetDatabaseFromPigeon(
     database->set_log_level(firebase::kLogLevelDebug);
   }
 
-  // Take ownership via unique_ptr (same pattern as Firestore).
-  // During static destruction, the unique_ptr destroys the Database
-  // instance, which joins background threads for clean shutdown.
-  database_instances_[cache_key] =
-      std::unique_ptr<Database>(database);
+  // Cache raw pointer. We do NOT take ownership — the C++ SDK manages
+  // the Database lifetime via App's CleanupNotifier. This matches the
+  // pattern used by firebase_auth and firebase_storage.
+  database_instances_[cache_key] = database;
 
   return database;
 }
