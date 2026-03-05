@@ -10,6 +10,7 @@
 
 #include <chrono>
 #include <condition_variable>
+#include <cstdlib>
 #include <functional>
 #include <iostream>
 #include <map>
@@ -62,6 +63,24 @@ std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
     FirebaseDatabasePlugin::stream_handlers_;
 std::set<firebase::database::Database*>
     FirebaseDatabasePlugin::active_databases_;
+
+// atexit handler: destroy Database instances so the C++ SDK's background
+// threads (scheduler worker, WebSocket event loop) are properly joined
+// before ExitProcess() terminates them.  This is necessary because
+// Dart's exit() bypasses C++ stack unwinding, so the plugin destructor
+// and Flutter engine cleanup never run.
+static void CleanupDatabaseInstances() {
+  // Clear event channels first (destroys stream handlers / listeners)
+  FirebaseDatabasePlugin::event_channels_.clear();
+  FirebaseDatabasePlugin::stream_handlers_.clear();
+
+  // Delete each Database instance — this triggers Repo destruction which
+  // joins the scheduler thread and WebSocket event loop thread.
+  for (auto* db : FirebaseDatabasePlugin::active_databases_) {
+    delete db;
+  }
+  FirebaseDatabasePlugin::active_databases_.clear();
+}
 
 // --- Helper: Register an EventChannel with a generated name ---
 static std::string RegisterEventChannel(
@@ -326,14 +345,10 @@ firebase::database::Query FirebaseDatabasePlugin::ApplyQueryModifiers(
 FirebaseDatabasePlugin::FirebaseDatabasePlugin() {}
 
 FirebaseDatabasePlugin::~FirebaseDatabasePlugin() {
-  // Clear our own maps. The EventChannel/StreamHandler destructors will
-  // run but won't try to remove SDK listeners (handled safely in
-  // DatabaseGenericStreamHandler's destructor). The C++ SDK cleans up its
-  // own Database instances during static destruction.
-  event_channels_.clear();
-  stream_handlers_.clear();
+  // Run the same cleanup as the atexit handler. This covers the normal
+  // window-close path. The atexit handler is idempotent (checks empty set).
+  CleanupDatabaseInstances();
   transaction_results_.clear();
-  active_databases_.clear();
 }
 
 void FirebaseDatabasePlugin::RegisterWithRegistrar(
@@ -344,6 +359,12 @@ void FirebaseDatabasePlugin::RegisterWithRegistrar(
   registrar->AddPlugin(std::move(plugin));
   App::RegisterLibrary(kLibraryName.c_str(), getPluginVersion().c_str(),
                        nullptr);
+
+  // Register an atexit handler to properly shut down Database instances.
+  // Dart's exit() calls C exit() which runs atexit handlers before
+  // ExitProcess(). Without this, the C++ SDK's background threads
+  // (scheduler, WebSocket) are forcefully terminated, causing exit code 1.
+  std::atexit(CleanupDatabaseInstances);
 }
 
 // --- Helper: Extract namespace from a Firebase RTDB URL ---
