@@ -28,12 +28,19 @@ const emulatorHost = 'localhost';
 
 // The C++ SDK for RTDB on Windows does not support the database emulator.
 // Integration tests require the emulator, so they are skipped on Windows.
-bool get _isWindows => !kIsWeb && defaultTargetPlatform == TargetPlatform.windows;
+bool get _isWindows =>
+    !kIsWeb && defaultTargetPlatform == TargetPlatform.windows;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('firebase_database', skip: _isWindows ? 'Windows does not support the RTDB emulator' : null, () {
+  if (_isWindows) {
+    test('skipped on Windows – RTDB emulator not supported', () {},
+        skip: 'Windows does not support the RTDB emulator');
+    return;
+  }
+
+  group('firebase_database', () {
     setUpAll(() async {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
