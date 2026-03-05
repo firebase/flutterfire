@@ -12,7 +12,6 @@
 #include <flutter/plugin_registrar_windows.h>
 
 #include <memory>
-#include <set>
 
 #include "firebase/database.h"
 #include "firebase/database/common.h"
@@ -128,7 +127,9 @@ class FirebaseDatabasePlugin : public flutter::Plugin,
       event_channels_;
   static std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
       stream_handlers_;
-  static std::set<firebase::database::Database*> active_databases_;
+  static std::map<std::string,
+                   std::unique_ptr<firebase::database::Database>>
+      database_instances_;
 
  private:
   firebase::database::Database* GetDatabaseFromPigeon(

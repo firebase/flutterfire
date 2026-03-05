@@ -10,13 +10,11 @@
 
 #include <chrono>
 #include <condition_variable>
-#include <cstdlib>
 #include <functional>
 #include <iostream>
 #include <map>
 #include <memory>
 #include <mutex>
-#include <set>
 #include <sstream>
 #include <string>
 #include <thread>
@@ -61,26 +59,8 @@ std::map<std::string,
     FirebaseDatabasePlugin::event_channels_;
 std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
     FirebaseDatabasePlugin::stream_handlers_;
-std::set<firebase::database::Database*>
-    FirebaseDatabasePlugin::active_databases_;
-
-// atexit handler: destroy Database instances so the C++ SDK's background
-// threads (scheduler worker, WebSocket event loop) are properly joined
-// before ExitProcess() terminates them.  This is necessary because
-// Dart's exit() bypasses C++ stack unwinding, so the plugin destructor
-// and Flutter engine cleanup never run.
-static void CleanupDatabaseInstances() {
-  // Clear event channels first (destroys stream handlers / listeners)
-  FirebaseDatabasePlugin::event_channels_.clear();
-  FirebaseDatabasePlugin::stream_handlers_.clear();
-
-  // Delete each Database instance — this triggers Repo destruction which
-  // joins the scheduler thread and WebSocket event loop thread.
-  for (auto* db : FirebaseDatabasePlugin::active_databases_) {
-    delete db;
-  }
-  FirebaseDatabasePlugin::active_databases_.clear();
-}
+std::map<std::string, std::unique_ptr<firebase::database::Database>>
+    FirebaseDatabasePlugin::database_instances_;
 
 // --- Helper: Register an EventChannel with a generated name ---
 static std::string RegisterEventChannel(
@@ -344,12 +324,7 @@ firebase::database::Query FirebaseDatabasePlugin::ApplyQueryModifiers(
 
 FirebaseDatabasePlugin::FirebaseDatabasePlugin() {}
 
-FirebaseDatabasePlugin::~FirebaseDatabasePlugin() {
-  // Run the same cleanup as the atexit handler. This covers the normal
-  // window-close path. The atexit handler is idempotent (checks empty set).
-  CleanupDatabaseInstances();
-  transaction_results_.clear();
-}
+FirebaseDatabasePlugin::~FirebaseDatabasePlugin() {}
 
 void FirebaseDatabasePlugin::RegisterWithRegistrar(
     flutter::PluginRegistrarWindows* registrar) {
@@ -359,12 +334,6 @@ void FirebaseDatabasePlugin::RegisterWithRegistrar(
   registrar->AddPlugin(std::move(plugin));
   App::RegisterLibrary(kLibraryName.c_str(), getPluginVersion().c_str(),
                        nullptr);
-
-  // Register an atexit handler to properly shut down Database instances.
-  // Dart's exit() calls C exit() which runs atexit handlers before
-  // ExitProcess(). Without this, the C++ SDK's background threads
-  // (scheduler, WebSocket) are forcefully terminated, causing exit code 1.
-  std::atexit(CleanupDatabaseInstances);
 }
 
 // --- Helper: Extract namespace from a Firebase RTDB URL ---
@@ -400,36 +369,42 @@ Database* FirebaseDatabasePlugin::GetDatabaseFromPigeon(
     return nullptr;
   }
 
-  // Apply settings
   const auto& settings = app.settings();
-
-  Database* database = nullptr;
   const std::string* url = app.database_u_r_l();
 
-  // If emulator is configured, construct an emulator URL
+  // Build a cache key from app name + effective URL (like Firestore does)
+  std::string effective_url;
   const std::string* emulator_host = settings.emulator_host();
   const int64_t* emulator_port = settings.emulator_port();
   if (emulator_host && emulator_port) {
-    // Extract namespace from the original database URL
     std::string ns;
     if (url && !url->empty()) {
       ns = ExtractNamespaceFromUrl(*url);
     } else {
-      // Fallback: use project ID + "-default-rtdb"
       ns = std::string(firebase_app->options().project_id()) + "-default-rtdb";
     }
-    std::string emulator_url = "http://" + *emulator_host + ":" +
-                               std::to_string(*emulator_port) + "?ns=" + ns;
-    database = Database::GetInstance(firebase_app, emulator_url.c_str());
+    effective_url = "http://" + *emulator_host + ":" +
+                    std::to_string(*emulator_port) + "?ns=" + ns;
   } else if (url && !url->empty()) {
-    database = Database::GetInstance(firebase_app, url->c_str());
+    effective_url = *url;
+  }
+
+  std::string cache_key = app.app_name() + "-" + effective_url;
+
+  // Return cached instance if available
+  if (database_instances_.find(cache_key) != database_instances_.end()) {
+    return database_instances_[cache_key].get();
+  }
+
+  // Create new instance
+  Database* database = nullptr;
+  if (!effective_url.empty()) {
+    database = Database::GetInstance(firebase_app, effective_url.c_str());
   } else {
     database = Database::GetInstance(firebase_app);
   }
 
   if (!database) return nullptr;
-
-  active_databases_.insert(database);
 
   if (settings.persistence_enabled()) {
     database->set_persistence_enabled(*settings.persistence_enabled());
@@ -437,6 +412,12 @@ Database* FirebaseDatabasePlugin::GetDatabaseFromPigeon(
   if (settings.logging_enabled() && *settings.logging_enabled()) {
     database->set_log_level(firebase::kLogLevelDebug);
   }
+
+  // Take ownership via unique_ptr (same pattern as Firestore).
+  // During static destruction, the unique_ptr destroys the Database
+  // instance, which joins background threads for clean shutdown.
+  database_instances_[cache_key] =
+      std::unique_ptr<Database>(database);
 
   return database;
 }
