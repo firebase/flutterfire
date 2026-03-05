@@ -361,7 +361,6 @@ void FirebaseDatabasePlugin::RegisterWithRegistrar(
   // Register atexit handler to clean up listeners and disconnect
   // before static destruction triggers thread joins in the C++ SDK.
   std::atexit(CleanupBeforeStaticDestruction);
-
 }
 
 // --- Helper: Get Database instance from Pigeon app ---
